@@ -1,11 +1,55 @@
 <?php
-$unlink_file = array('_unterverzeichnis_.htaccess',
+$unlink_file = array('_installer/images/icons/error.gif', // neu
+                     '_installer/banktransfer_blz.sql', // neu
+                     '_installer/change_language_id.sql', // neu
+                     '_installer/db_upgrade.php', // neu
+                     '_installer/images/button_administration_tool.gif', // neu
+                     '_installer/images/button_back.gif', // neu
+                     '_installer/images/button_cancel.gif', // neu
+                     '_installer/images/button_catalog.gif', // neu
+                     '_installer/images/button_continue.gif', // neu
+                     '_installer/images/button_new_install.gif', // neu
+                     '_installer/images/button_retry.gif', // neu
+                     '_installer/images/button_upgrade.gif', // neu
+                     '_installer/images/error.gif', // neu
+                     '_installer/images/step1.gif', // neu
+                     '_installer/images/step2.gif', // neu
+                     '_installer/images/step3.gif', // neu
+                     '_installer/images/step4.gif', // neu
+                     '_installer/images/step5.gif', // neu
+                     '_installer/images/step6.gif', // neu
+                     '_installer/images/step7.gif', // neu
+                     '_installer/images/step8.gif', // neu
+                     '_installer/images/title_index.gif', // neu
+                     '_installer/modified.sql', // neu
+                     '_installer/update_1.0.1.0_to_1.0.2.0.sql', // neu
+                     '_installer/update_1.0.2.0_to_1.0.3.0.sql', // neu
+                     '_installer/update_1.0.3.0_to_1.0.4.0.sql', // neu
+                     '_installer/update_1.0.4.0_to_1.0.5.0.sql', // neu
+                     '_installer/update_1.0.5.0_to_1.0.6.0.sql', // neu
+                     '_installer/update_1.0.6.0_to_2.0.0.0.sql', // neu
+                     '_installer/update_xtc3.0.4sp2.1_to_1.00.sql', // neu
+                     '_installer/version106r8', // neu
+                     '_installer/version106r9', // neu
+                     '_unterverzeichnis_.htaccess',
                      'admin/billsafe_orders_2hp.php',
                      'admin/blacklist.php', // neu
                      'admin/cleverreach.html', // neu
                      'admin/sofortueberweisung_install.php', // neu
                      'admin/stock_list.php', // neu
                      'admin/fck_wrapper.php',
+                     'admin/images/icons/fastnav/icon_backup.jpg', // neu
+                     'admin/images/icons/fastnav/icon_categories.jpg', // neu
+                     'admin/images/icons/fastnav/icon_content.jpg', // neu
+                     'admin/images/icons/fastnav/icon_credits.jpg', // neu
+                     'admin/images/icons/fastnav/icon_credits2.jpg', // neu
+                     'admin/images/icons/fastnav/icon_customers.jpg', // neu
+                     'admin/images/icons/fastnav/icon_logout.jpg', // neu
+                     'admin/images/icons/fastnav/icon_newsletter.jpg', // neu
+                     'admin/images/icons/fastnav/icon_order_status.jpg', // neu
+                     'admin/images/icons/fastnav/icon_orders.jpg', // neu
+                     'admin/images/icons/fastnav/icon_shipping_status.jpg', // neu
+                     'admin/images/icons/fastnav/icon_shop.jpg', // neu
                      'admin/images/icons/heading_configuration.gif', // neu
                      'admin/images/icons/heading_content.gif', // neu
                      'admin/images/icons/heading_customers.gif', // neu
@@ -23,18 +67,20 @@ $unlink_file = array('_unterverzeichnis_.htaccess',
                      'admin/images/top_support.gif', // neu
                      'admin/includes/classes/sessions.php', // neu
                      'admin/includes/configure.org.php',
-                     'admin/includes/modules/easybill.action.php',
-                     'admin/includes/modules/easybill.button.php',
-                     'admin/includes/modules/easybill.info.php',
-                     'admin/includes/modules/export/froogle.php', // neu
-                     'admin/includes/modules/export/image_processing_step.php', // neu
-                     'admin/includes/modules/export/tag_cloud.php', // neu
-                     'admin/includes/stylesheet_stocklist.css', // neu
-                     'admin/includes/stylesheet_stocklist_print.css', // neu
                      'admin/includes/modules/carp/carp.php',
                      'admin/includes/modules/carp/carpconf.php',
                      'admin/includes/modules/carp/carpinc.php',
                      'admin/includes/modules/carp/carpsetupinc.php',
+                     'admin/includes/modules/easybill.action.php',
+                     'admin/includes/modules/easybill.button.php',
+                     'admin/includes/modules/easybill.info.php',
+                     'admin/includes/modules/export/froogle.php', // neu
+                     'admin/includes/modules/export/googlebase.php', // neu
+                     'admin/includes/modules/export/image_processing_step.php', // neu
+                     'admin/includes/modules/export/janolaw.php', // neu
+                     'admin/includes/modules/export/tag_cloud.php', // neu
+                     'admin/includes/modules/export/xtbooster.php', // neu
+                     'admin/includes/modules/export/xtbooster.php', // neu
                      'admin/includes/modules/export/image_processing.php',
                      'admin/includes/modules/export/image_processing_new.php',
                      'admin/includes/modules/export/image_processing_new_step.php',
@@ -45,6 +91,7 @@ $unlink_file = array('_unterverzeichnis_.htaccess',
                      'admin/includes/modules/fckeditor/editor/filemanager/browser/default/frmresourceslist.html',
                      'admin/includes/modules/fckeditor/editor/filemanager/browser/default/frmresourcetype.html',
                      'admin/includes/modules/fckeditor/editor/filemanager/browser/default/frmupload.html',
+                     'admin/includes/modules/graduated-prices-edit.php', // neu
                      'admin/includes/modules/magpierss/AUTHORS',
                      'admin/includes/modules/magpierss/ChangeLog',
                      'admin/includes/modules/magpierss/CHANGES',
@@ -53,14 +100,22 @@ $unlink_file = array('_unterverzeichnis_.htaccess',
                      'admin/includes/modules/magpierss/rss_parse.inc',
                      'admin/includes/modules/magpierss/rss_utils.inc',
                      'admin/includes/modules/magpierss/extlib/Snoopy.class.inc',
+                     'admin/includes/stylesheet_stocklist.css', // neu
+                     'admin/includes/stylesheet_stocklist_print.css', // neu
                      'admin/rss/index.html',
                      'admin/rss/xt-news.cache',
                      'admin/rss/xtc.cache',
                      'checkout_iclear.php',
                      'copyright.php',
+                     'export/xml_export.php', // neu
+                     'favicon.ico', // neu
                      'google_sitemap.php', // neu
+                     'images/icons/kl_epaypal_de.gif', // neu
+                     'images/icons/kl_epaypal_en.gif', // neu
                      'images/icons/luupay.gif', // neu
                      'images/icons/sofortueberweisung_icon.gif', // neu
+                     'inc/search_replace_iso-8859-1.php', // neu
+                     'inc/search_replace_iso-8859-15.php', // neu
                      'inc/xtc_convert_linefeeds.inc.php', // neu
                      'inc/xtc_delete_file.inc.php', // neu
                      'inc/xtc_db_connect_installer.inc.php',
@@ -100,13 +155,17 @@ $unlink_file = array('_unterverzeichnis_.htaccess',
                      'includes/modules/payment/billsafe_2hp.php',
                      'includes/modules/payment/cc.php',
                      'includes/modules/payment/iclear.php',
+                     'includes/shopgate/shopgate_library/.htaccess', // neu
+                     'includes/shopgate/.htaccess', // neu
                      'INFO.txt', // neu
                      'lang/english/admin/blacklist.php', // neu
                      'lang/english/easybill.php',
+                     'lang/english/modules/payment/images/logo_750.gif', // neu
                      'lang/english/modules/payment/billsafe_2hp.php',
                      'lang/english/modules/payment/cc.php',
                      'lang/english/modules/payment/iclear.php',
                      'lang/german/admin/blacklist.php', // neu
+                     'lang/german/checkout_confirmation.php', // neu
                      'lang/german/easybill.php',
                      'lang/german/modules/payment/billsafe_2hp.php',
                      'lang/german/modules/payment/cc.php',
@@ -131,6 +190,7 @@ $unlink_file = array('_unterverzeichnis_.htaccess',
                      'templates/'.CURRENT_TEMPLATE.'/smarty/function.googleanalytics.php',
                      'templates/'.CURRENT_TEMPLATE.'/smarty/function.piwik.php',
                      'templates/'.CURRENT_TEMPLATE.'/smarty/function.onlytext.php',
+                     'update.php', // neu
                      'update_1.0.5.0_to_1.0.6.0.sql',
                      'wpcallback.php', // neu
                      'wsdl_iclear_order.php',

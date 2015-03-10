@@ -325,7 +325,7 @@
   define('CONNECT_FTP', 'FTP verbinden');
   // EOC flth new permission change system
   
-  define('TITLE_SELECT_CHARSET', 'W&auml;hlen Sie ein Charset aus:');
+  define('TITLE_SELECT_CHARSET', 'W&auml;hlen Sie eine Zeichenkodierung (Charset) aus:');
 
   define('ENTRY_PASSWORD_ERROR_MIN_LOWER', 'Ihr Passwort muss mindestens %s Kleinbuchstaben enthalten.');
   define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Ihr Passwort muss mindestens %s Grossbuchstaben enthalten.');
