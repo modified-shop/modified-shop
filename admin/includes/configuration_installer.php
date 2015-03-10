@@ -477,7 +477,7 @@ function insert_into_config_group_table($values_group)
       $insert_into = "INSERT INTO ".TABLE_CONFIGURATION_GROUP ." VALUES ";
       if (xtc_db_query($insert_into.$value)) {
         $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION_GROUP.' '.$value, 'success');
-        return true;
+        $install = true;
       } else {
         $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION_GROUP.' '.$value, 'error');
       }
@@ -507,7 +507,7 @@ function update_config_group_table($values_group)
       $update = "UPDATE ".TABLE_CONFIGURATION_GROUP." SET ".$cfg_values." WHERE configuration_group_id = '" . $cfg_id . "'";
       if (xtc_db_query($update)) {
         $messageStack->add_session('OK: '.$update, 'success');
-        return true;
+        $install = true;
       } else {
         $messageStack->add_session('ERROR: '.$update, 'error');
       }
