@@ -145,7 +145,7 @@
       <div class="smallText pdg2 flt-l" style="margin-left:80px;">
         <?php
         echo xtc_draw_form('forminactive', FILENAME_CATEGORIES, '', 'get');
-        echo '<label for="search_inactive" style="vertical-align:middle;line-height:32px;" >'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .'</label>';
+        echo '<label for="search_inactive">'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .'</label>';
         echo '<div style="display:inline;margin:0px 10px 0px 5px;">' . xtc_draw_selection_field('search_inactive', 'checkbox', '1', $search_inactive, '', 'style="vertical-align:middle;" onclick="this.form.submit();"'). '</div>';
         ?>
         </form>

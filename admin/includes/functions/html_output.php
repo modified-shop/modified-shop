@@ -173,7 +173,7 @@
     if ( ($checked == true) || (isset($GLOBALS[$name]) && ($GLOBALS[$name] == 'on')) || ($value && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $value)) || ($value && ($value == $compare)) ) {
       $selection .= ' checked="checked"';
     }
-    
+    $parameters = (strpos($parameters,'class="') !== false ? str_replace('class="', 'class="fmChkBox ',$parameters) : $parameters . ' class="fmChkBox"');
     if (xtc_not_null($parameters)) $selection .= ' ' . $parameters;
     
     $selection .= '>';

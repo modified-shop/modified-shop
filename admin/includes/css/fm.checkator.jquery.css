@@ -1,0 +1,73 @@
+/**
+ * Checkator jQuery Plugin
+ * A plugin for radio and checkbox elements
+ * version 1.0, Dec 20th, 2013
+ * by Ingi P. Jacobsen
+ */
+
+/* RESET */
+input[type=radio],
+input[type=checkbox] {
+	margin-bottom: 0;
+}
+
+/* SOURCE ELEMENT (when checkator is enabled on an element) */
+.checkator_source {
+	position: relative;
+	z-index: 2;
+	display: block;
+}
+
+/* SHARED SETTING */
+.checkator_holder { /* Holder for the new element */
+	display: inline-block;
+	position: relative;
+}
+.checkator { /* New element */
+	border: 2px solid #abadb3;
+	background-color: #fff;
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1;
+}
+.checkator_source:checked+.checkator:after { /* Checked element dot */
+	background-color: #7fa92c;
+	display: block;
+	content: ' ';
+	top: 20%;
+	right: 20%;
+	bottom: 20%;
+	left: 20%;
+	position: absolute;
+}
+.checkator_source:focus+.checkator { /* Focused element */
+	border: 2px solid #cc0;
+}
+.checkator_source:hover+.checkator { /* Hovered element */
+	/* Bug: There is a bug in chrome preventing this from working correctly */
+	background-color: #def;
+	border: 2px solid #79b;
+}
+
+
+/* RADIO SETTINGS */
+.checkator.radio {
+	border-radius: 50%;
+}
+.checkator.radio:after {
+	border-radius: 50%;
+}
+
+/* CHECKBOX SETTINGS */
+.checkator.checkbox { /* New element */
+	border: 2px solid #abadb3;
+}
+
+.fmChkBox {
+  width: 17px;
+  height: 17px;
+}
