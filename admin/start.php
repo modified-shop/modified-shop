@@ -168,11 +168,7 @@ require (DIR_WS_INCLUDES.'head.php');
 <body>   
   <!-- header //-->
   <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-  <table class="tableBody pdg5">
-    <tr>
-      <td><?php include(DIR_WS_MODULES.FILENAME_SECURITY_CHECK); ?></td>
-    </tr>
-  </table>
+  <?php include(DIR_WS_MODULES.FILENAME_SECURITY_CHECK); ?>
   <!-- header_eof //-->
   <table class="tableBody pdg5">
     <tr>
