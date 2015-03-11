@@ -91,7 +91,6 @@ if ($_POST['cpath'] != '') {
 ?>
 
 
-<?php // BOC new button to send only checked post values, noRiddle ?>
 <div class="main" style="margin:10px 0;">
     <a class="button button_save" style="display:none;"><?php echo ATTR_SAVE_ACTIVE;?></a>
     <?php
@@ -101,7 +100,7 @@ if ($_POST['cpath'] != '') {
        }
    ?>
 </div>
-<?php // EOC new button to send only checked post values, noRiddle ?>
+
 <table id="attributes" class="collapse">
 <?php
 
@@ -237,7 +236,7 @@ if ($_POST['cpath'] != '') {
 ?>
   
 </table>
-<?php // BOC new button to send only checked post values, noRiddle ?>
+
 <div class="main" style="margin:10px 0;">
     <a class="button button_save" style="display:none;"><?php echo ATTR_SAVE_ACTIVE;?></a>
     <?php
@@ -248,7 +247,7 @@ if ($_POST['cpath'] != '') {
     echo isset($_GET['options_id']) ? '<input type="hidden" name="get_options_id" value="'.$_GET['options_id'].'">'. PHP_EOL : '';
     ?>
 </div>
- <?php // EOC new button to send only checked post values, noRiddle ?>
+
 </form>
 </td>
 </tr>
