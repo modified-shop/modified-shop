@@ -142,7 +142,7 @@
         <div class="main pdg2"><?php echo HEADING_TITLE; ?></div>
 
       </div>
-      <div class="smallText pdg2 flt-l" style="margin-left:80px;">
+      <div class="smallText pdg2 flt-l" style="margin: 3px 0 0 80px;">
         <?php
         echo xtc_draw_form('forminactive', FILENAME_CATEGORIES, '', 'get');
         echo '<label for="search_inactive">'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .'</label>';
