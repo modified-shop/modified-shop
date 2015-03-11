@@ -122,7 +122,7 @@ if ($_POST['cpath'] != '') {
       // Print the Option Name
       $output = '';
       $output .= '<tr id="oid-' . $current_product_option_id . '" class="dataTableHeadingRow">'. PHP_EOL;
-      $output .= '<td class="dataTableHeadingContent" style="width:150px">'.xtc_draw_checkbox_field('set_'.$current_product_option_id, $current_product_option_id).'&nbsp;&nbsp;<strong>' . $current_product_option_name . '</strong></td>'. PHP_EOL;
+      $output .= '<td class="dataTableHeadingContent" style="width:150px">'.xtc_draw_checkbox_field('set_'.$current_product_option_id, $current_product_option_id, false, '', 'class="select_all"').'&nbsp;&nbsp;<strong>' . $current_product_option_name . '</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="width:95px"><strong>'.SORT_ORDER.'</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_MODEL.'</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_EAN.'</strong></td>'. PHP_EOL;
