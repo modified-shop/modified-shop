@@ -41,6 +41,9 @@
   $options[] = (array ('id' => 'products_options_name', 'text' => TEXT_OPTION_NAME));
   $options_dropdown_order = xtc_draw_pull_down_menu('selected', $options, $option_order_by, 'onchange="go_option()" ') ."\n";
 
+  $prefix_array = array(array('id' => '+', 'text' => '+'),
+                        array('id' => '-', 'text' => '-'));
+
   //Anzahl Spalten
   $colspan = 9;
 
@@ -190,26 +193,16 @@ if ($_POST['cpath'] != '') {
           $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_model" value="' . (isset($attr_array['attributes_model'])?$attr_array['attributes_model']:'') . '" size="15"></td>'. PHP_EOL;
           $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_ean" value="' . (isset($attr_array['attributes_ean'])?$attr_array['attributes_ean']:'') . '" size="15"></td>'. PHP_EOL;
           $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_stock" value="' . (isset($attr_array['attributes_stock'])?$attr_array['attributes_stock']:'') . '" size="10"></td>'. PHP_EOL;
-          
+                    
           //Weight
           $output .= '<td class="main nobr">'. PHP_EOL;
-          $output .= '   <select'.$disable.'name="' . $current_value_id . '_weight_prefix">'. PHP_EOL;
-          $prefix_array = array('+','-'); //weight prefix
-          foreach ($prefix_array as $prefix) {
-            $output .= '     <option value="'.$prefix.'"' . (isset($attr_array['weight_prefix']) && $attr_array['weight_prefix'] == $prefix ? ' selected="selected"' : '') . '>'.$prefix.'</option>'. PHP_EOL;
-          }
-          $output .= '    </select>'. PHP_EOL;
+          $output .= xtc_draw_pull_down_menu($current_value_id . '_weight_prefix', $prefix_array, (isset($attr_array['weight_prefix'])?$attr_array['weight_prefix']:''), $disable). PHP_EOL;
           $output .= '<input'.$disable.'type="text" name="' . $current_value_id . '_weight" value="' . (isset($attr_array['options_values_weight']) ? $attr_array['options_values_weight'] : '') . '" size="10">'. PHP_EOL;
           $output .= '</td>'. PHP_EOL;
               
           ///Price
           $output .= '<td class="main nobr">'. PHP_EOL;
-          $output .= '   <select'.$disable.'name="' . $current_value_id . '_prefix">'. PHP_EOL;
-          $prefix_array = array('+','-'); //price prefix
-          foreach ($prefix_array as $prefix) {
-            $output .= '     <option value="'.$prefix.'"' . (isset($attr_array['price_prefix']) && $attr_array['price_prefix'] == $prefix ? ' selected="selected"' : '') . '>'.$prefix.'</option>'. PHP_EOL;
-          } 
-          $output .= '    </select>'. PHP_EOL;
+          $output .= xtc_draw_pull_down_menu($current_value_id . '_prefix', $prefix_array, (isset($attr_array['price_prefix'])?$attr_array['price_prefix']:''), $disable). PHP_EOL;
           $output .= '<input'.$disable.'type="text" name="' . $current_value_id . '_price" value="' . $attribute_value_price_calculate . '" size="10">'. $attribute_value_price_calculate_netto. PHP_EOL;
           $output .= '</td>'. PHP_EOL;
           $output .= '</tr>'. PHP_EOL;
