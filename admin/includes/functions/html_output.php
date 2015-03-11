@@ -292,9 +292,16 @@
    */
   function draw_on_off_selection($name, $select_array, $key_value, $params = '') {
     $string = '<span class="cfg_select_option">';
+    if (!is_array($select_array) && $select_array == 'checkbox') {
+      $select_array = array(
+          array('id'=> 0,'text'=> CFG_TXT_NO),
+          array('id'=> 1,'text'=> CFG_TXT_YES)
+      );
+    }
     for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
       $string .= '<input id="cfg_so_'.strtolower($name).($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$select_array[$i]['id'].'"';
       if ($key_value == $select_array[$i]['id']) $string .= ' checked';
+      $string .= ($params ? ' ' . $params : '');
       $string .= '><label for="cfg_so_'.strtolower($name).($i?"_$i":'').'" class="'.($key_value == $select_array[$i]['id'] ? 'cfg_so_before ':'').'cfg_sov_'.($select_array[$i]['id'] ? 'true' : 'false').'">';
       $string .= $select_array[$i]['text'] . '</label>';
     }
