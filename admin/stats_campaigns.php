@@ -109,6 +109,21 @@ if ($endDateG) {
 	$endDate = mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"));
 }
 
+$day_array = array();
+for ($i = 1; $i < 32; $i++) {
+  $day_array[] = array('id' => $i, 'text' => $i);
+}
+
+$month_array = array();
+for ($i = 1; $i < 13; $i++) {
+  $month_array[] = array('id' => $i, 'text' => strftime("%B", mktime(0, 0, 0, $i, 1)));
+}
+
+$year_array = array();
+for ($i = 10; $i >= 0; $i--) {
+  $year_array[] = array('id' => date("Y") - $i, 'text' => date("Y") - $i);
+}
+
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>
@@ -154,49 +169,18 @@ require (DIR_WS_INCLUDES.'head.php');
                   <input type="radio" name="report" value="4" <?php if ($srView == 4) echo "checked"; ?>><?php echo REPORT_TYPE_DAILY; ?><br />
                 </td>
                 <td class="menuBoxHeading">
-                  <?php echo REPORT_START_DATE;?><br />
-                  <select class="SlectBox" name="startD" size="1">
-                    <?php                                  
+                  <?php 
+                    $day = $month = $year = 1;
                     if ($startDate) {
-                      $j = date("j", $startDate);                                    
-                    } else {
-                      $j = 1;
+                      $day = date("j", $startDate);
+                      $month = date("n", $startDate);
+                      $year = date("Y") - date("Y", $startDate);                                  
                     }
-                    for ($i = 1; $i < 32; $i++) {
-                      ?>
-                      <option value="<?php echo $i; ?>"<?php if ($j == $i) echo " selected"; ?>><?php echo $i; ?></option>
-                      <?php
-                    }
-                    ?>
-                  </select>
-                  <select class="SlectBox" name="startM" size="1">
-                    <?php
-                    if ($startDate) {
-                      $m = date("n", $startDate);
-                    } else {
-                      $m = 1;
-                    }
-                    for ($i = 1; $i < 13; $i++) {
-                      ?>
-                      <option value="<?php echo $i; ?>"<?php if ($m == $i) echo " selected"; ?>><?php echo strftime("%B", mktime(0, 0, 0, $i, 1)); ?></option>
-                      <?php
-                    }
-                    ?>
-                  </select>
-                  <select class="SlectBox" name="startY" size="1">
-                    <?php
-                    if ($startDate) {
-                      $y = date("Y") - date("Y", $startDate);
-                    } else {
-                      $y = 0;
-                    }
-                    for ($i = 10; $i >= 0; $i--) {
-                      ?>
-                      <option value="<?php echo date("Y") - $i; ?>"<?php if ($y == $i) echo " selected"; ?>><?php echo date("Y") - $i; ?></option>
-                      <?php
-                    }
-                    ?>
-                  </select>
+                    echo REPORT_START_DATE.'<br/>';
+                    echo xtc_draw_pull_down_menu('startD', $day_array, $day);
+                    echo xtc_draw_pull_down_menu('startM', $month_array, $month);
+                    echo xtc_draw_pull_down_menu('startY', $year_array, $year);
+                  ?>
                 </td>
                 <td rowspan="2" class="menuBoxHeading txta-l">
                   <?php echo REPORT_STATUS_FILTER; ?><br />
@@ -209,51 +193,20 @@ require (DIR_WS_INCLUDES.'head.php');
               </tr>
               <tr>
                 <td class="menuBoxHeading">
-                  <?php echo REPORT_END_DATE; ?><br />
-                  <select class="SlectBox" name="endD" size="1">
-                    <?php
-                    echo $endDate;
-                    
+                  <?php 
+                    $day = date("j");
+                    $month = date("n");
+                    $year = 0;
                     if ($endDate) {
-                      $j = date("j", $endDate - (60 * 60 * 24));
-                    } else {
-                      $j = date("j");
+                      $day = date("j", $endDate - (60 * 60 * 24));
+                      $month = date("n", $endDate - 60* 60 * 24);
+                      $year = date("Y") - date("Y", $endDate - 60* 60 * 24);
                     }
-                    for ($i = 1; $i < 32; $i++) {
-                      ?>
-                      <option value="<?php echo $i; ?>"<?php if ($j == $i) echo " selected"; ?>><?php echo $i; ?></option>
-                      <?php
-                    }
-                    ?>
-                  </select>
-                  <select class="SlectBox" name="endM" size="1">
-                    <?php
-                    if ($endDate) {
-                      $m = date("n", $endDate - 60* 60 * 24);
-                    } else {
-                      $m = date("n");
-                    }
-                    for ($i = 1; $i < 13; $i++) {
-                      ?>
-                      <option value="<?php echo $i; ?>"<?php if ($m == $i) echo " selected"; ?>><?php echo strftime("%B", mktime(0, 0, 0, $i, 1)); ?></option>
-                      <?php
-                    }
-                    ?>
-                  </select>
-                  <select class="SlectBox" name="endY" size="1">
-                    <?php
-                    if ($endDate) {
-                      $y = date("Y") - date("Y", $endDate - 60* 60 * 24);
-                    } else {
-                      $y = 0;
-                    }
-                    for ($i = 10; $i >= 0; $i--) {
-                      ?>
-                      <option value="<?php echo date("Y") - $i; ?>"<?php if ($y == $i) echo " selected"; ?>><?php echo date("Y") - $i; ?></option>
-                      <?php
-                    }
-                    ?>
-                  </select>
+                    echo REPORT_END_DATE.'<br/>';
+                    echo xtc_draw_pull_down_menu('endD', $day_array, $day);
+                    echo xtc_draw_pull_down_menu('endM', $month_array, $month);
+                    echo xtc_draw_pull_down_menu('endY', $year_array, $year);
+                  ?>
                 </td>
               </tr>
             </table>  

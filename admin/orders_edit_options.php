@@ -37,10 +37,8 @@
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION;?></b></td>
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION_VALUE;?></b></td>
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRICE . TEXT_SMALL_NETTO;?></b></td>
-    <td class="dataTableHeadingContent"><b><?php echo TEXT_PRICE_PREFIX;?></b></td>
-    <td class="dataTableHeadingContent">&nbsp;</td>
-    <td class="dataTableHeadingContent">&nbsp;</td>
-    <td class="dataTableHeadingContent">&nbsp;</td>
+    <td class="dataTableHeadingContent txta-c"><b><?php echo TEXT_PRICE_PREFIX;?></b></td>
+    <td class="dataTableHeadingContent" colspan="2">&nbsp;</td>
   </tr>
   <?php
     while($attributes = xtc_db_fetch_array($attributes_query)) {
@@ -56,13 +54,7 @@
           <td class="dataTableContent"><?php echo xtc_draw_input_field('products_options', $attributes['products_options'], 'size="20"');?></td>
           <td class="dataTableContent"><?php echo xtc_draw_input_field('products_options_values', $attributes['products_options_values'], 'size="20"');?></td>
           <td class="dataTableContent"><?php echo xtc_draw_input_field('options_values_price',$attributes['options_values_price'], 'size="10"');?></td>
-          <td class="dataTableContent txta-c"><?php echo $attributes['price_prefix'];?></td>
-          <td class="dataTableContent">
-            <select class="SlectBox" name="prefix">
-              <option value="+">+
-              <option value="-">-
-            </select>
-          </td>
+          <td class="dataTableContent txta-c"><?php echo xtc_draw_pull_down_menu('prefix', array(array('id' => '+', 'text' => '+'),array('id' => '-', 'text' => '-')), $attributes['price_prefix']); ?></td>
           <td class="dataTableContent">
             <?php
               echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
@@ -131,7 +123,7 @@
           <?php echo xtc_draw_hidden_field('options_values_price', $products['options_values_price']);?>
           <?php echo $xtPrice->xtcFormat($xtPrice->xtcCalculateCurr($options_values_price),true);?>
         </td>
-        <td class="dataTableContent">
+        <td class="dataTableContent txta-r">
           <?php
             echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>'; //web28 -2011-06-08 - change BUTTON_EDIT to BUTTON_INSERT
           ?>

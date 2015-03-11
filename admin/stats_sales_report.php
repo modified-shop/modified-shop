@@ -174,8 +174,60 @@
   $sr = new sales_report($srView, $startDate, $endDate, $srSort, $srStatus, $srFilter,$srPayment);
   $startDate = $sr->startDate;
   $endDate = $sr->endDate;
-  //echo 'SD'.$startDate;
   
+  $day_array = array();
+  for ($i = 1; $i < 32; $i++) {
+    $day_array[] = array('id' => $i, 'text' => $i);
+  }
+
+  $month_array = array();
+  for ($i = 1; $i < 13; $i++) {
+    $month_array[] = array('id' => $i, 'text' => strftime("%B", mktime(0, 0, 0, $i, 1)));
+  }
+
+  $year_array = array();
+  for ($i = 10; $i >= 0; $i--) {
+    $year_array[] = array('id' => date("Y") - $i, 'text' => date("Y") - $i);
+  }
+
+  $sort_array = array();
+  for ($i = 0; $i < 7; $i++) {
+    $sort_array[] = array('id' => $i, 'text' => constant('SORT_VAL'.$i));
+  }
+
+  $exp_array = array(array('id' => 0, 'text' => EXP_NORMAL),
+                     array('id' => 1, 'text' => EXP_HTML),
+                     array('id' => 2, 'text' => EXP_CSV)
+                     );
+  
+  $payment_array = array(array('id' => 0, 'text' => REPORT_ALL));
+  $payments = explode(';', MODULE_PAYMENT_INSTALLED);
+  for ($i=0, $n=count($payments); $i<$n; $i++){
+    require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i]);
+    $payment_array[] = array('id' => substr($payments[$i], 0, strrpos($payments[$i], '.')), 'text' => constant('MODULE_PAYMENT_'.strtoupper($payment).'_TEXT_TITLE'));
+  }
+
+  $status_array = array(array('id' => 0, 'text' => REPORT_ALL),
+                        array('id' => ORDER_STATUSES_FOR_SALES_STATISTICS, 'text' => REPORT_SALES_STATISTICS));
+  foreach ($sr->status as $value) {
+    $status_array[] = array('id' => $value["orders_status_id"], 'text' => $value["orders_status_name"]);
+  }
+
+  $max_array = array(array('id' => 0, 'text' => REPORT_ALL),
+                     array('id' => 1, 'text' => '1'),
+                     array('id' => 3, 'text' => '3'),
+                     array('id' => 5, 'text' => '5'),
+                     array('id' => 10, 'text' => '10'),
+                     array('id' => 25, 'text' => '25'),
+                     array('id' => 50, 'text' => '50'),
+                     );
+
+  $detail_array = array(array('id' => 0, 'text' => DET_HEAD_ONLY),
+                        array('id' => 1, 'text' => DET_DETAIL),
+                        array('id' => 2, 'text' => DET_DETAIL_ONLY)
+                       );
+
+
 
   if ($srExp < 2) {
     // not for csv export
@@ -228,168 +280,63 @@
                                 <input type="radio" name="report" value="4" <?php if ($srView == 4) echo "checked"; ?>><?php echo REPORT_TYPE_DAILY; ?><br />
                               </td>
                               <td class="menuBoxHeading">
-                                <?php echo REPORT_START_DATE;?><br />
-                                <select class="SlectBox" name="startD" size="1">
-                                  <?php                                  
+                                <?php 
+                                  $day = $month = $year = 1;
                                   if ($startDate) {
-                                    $j = date("j", $startDate);                                    
-                                  } else {
-                                    $j = 1;
+                                    $day = date("j", $startDate);
+                                    $month = date("n", $startDate);
+                                    $year = date("Y") - date("Y", $startDate);                                  
                                   }
-                                  for ($i = 1; $i < 32; $i++) {
-                                    ?>
-                                    <option value="<?php echo $i; ?>"<?php if ($j == $i) echo " selected"; ?>><?php echo $i; ?></option>
-                                    <?php
-                                  }
-                                  ?>
-                                </select>
-                                <select class="SlectBox" name="startM" size="1">
-                                  <?php
-                                  if ($startDate) {
-                                    $m = date("n", $startDate);
-                                  } else {
-                                    $m = 1;
-                                  }
-                                  for ($i = 1; $i < 13; $i++) {
-                                    ?>
-                                    <option value="<?php echo $i; ?>"<?php if ($m == $i) echo " selected"; ?>><?php echo strftime("%B", mktime(0, 0, 0, $i, 1)); ?></option>
-                                    <?php
-                                  }
-                                  ?>
-                                </select>
-                                <select class="SlectBox" name="startY" size="1">
-                                  <?php
-                                  if ($startDate) {
-                                    $y = date("Y") - date("Y", $startDate);
-                                  } else {
-                                    $y = 0;
-                                  }
-                                  for ($i = 10; $i >= 0; $i--) {
-                                    ?>
-                                    <option value="<?php echo date("Y") - $i; ?>"<?php if ($y == $i) echo " selected"; ?>><?php echo date("Y") - $i; ?></option>
-                                    <?php
-                                  }
-                                  ?>
-                                </select>
+                                  echo REPORT_START_DATE.'<br/>';
+                                  echo xtc_draw_pull_down_menu('startD', $day_array, $day);
+                                  echo xtc_draw_pull_down_menu('startM', $month_array, $month);
+                                  echo xtc_draw_pull_down_menu('startY', $year_array, $year);
+                                ?>
                               </td>
                               <td rowspan="2" class="menuBoxHeading txta-l">
-                                <?php echo REPORT_DETAIL; ?><br />
-                                <select class="SlectBox" name="detail" size="1">
-                                  <option value="0"<?php if ($srDetail == 0) echo "selected"; ?>><?php echo DET_HEAD_ONLY; ?></option>
-                                  <option value="1"<?php if ($srDetail == 1) echo " selected"; ?>><?php echo DET_DETAIL; ?></option>
-                                  <option value="2"<?php if ($srDetail == 2) echo " selected"; ?>><?php echo DET_DETAIL_ONLY; ?></option>
-                                </select>
-                                <br />
-                                <?php echo REPORT_MAX; ?><br />
-                                <select class="SlectBox" name="max" size="1">
-                                  <option value="0"><?php echo REPORT_ALL; ?></option>
-                                  <option<?php if ($srMax == 1) echo " selected"; ?>>1</option>
-                                  <option<?php if ($srMax == 3) echo " selected"; ?>>3</option>
-                                  <option<?php if ($srMax == 5) echo " selected"; ?>>5</option>
-                                  <option<?php if ($srMax == 10) echo " selected"; ?>>10</option>
-                                  <option<?php if ($srMax == 25) echo " selected"; ?>>25</option>
-                                  <option<?php if ($srMax == 50) echo " selected"; ?>>50</option>
-                                </select>
+                                <?php 
+                                  echo REPORT_DETAIL.'<br/>'; 
+                                  echo xtc_draw_pull_down_menu('detail', $detail_array, $srDetail);
+                                  echo '<br/>';
+                                  echo REPORT_MAX.'<br/>'; 
+                                  echo xtc_draw_pull_down_menu('max', $max_array, $srMax);
+                                ?>
                               </td>
                               <td rowspan="2" class="menuBoxHeading txta-l">
-                                <?php echo REPORT_STATUS_FILTER; ?><br />
-                                <select class="SlectBox" name="status" size="1">
-                                  <option value="0"><?php echo REPORT_ALL; ?></option>
-                                  <option value="<?php echo ORDER_STATUSES_FOR_SALES_STATISTICS . '"'.($srStatus == ORDER_STATUSES_FOR_SALES_STATISTICS ? ' selected':'').'>' . REPORT_SALES_STATISTICS; ?></option>
-                                  <?php
-                                  foreach ($sr->status as $value) {
-                                    ?>
-                                    <option value="<?php echo $value["orders_status_id"]?>"<?php if ($srStatus == $value["orders_status_id"]) echo " selected"; ?>><?php echo $value["orders_status_name"] ; ?></option>
-                                    <?php
-                                  }
-                                  ?>
-                                </select>
-                                <br />
-                                <?php echo REPORT_PAYMENT_FILTER; ?><br />
-                                <select class="SlectBox" name="payment" size="1">
-                                  <option value="0" <?php if ($srPayment === 0) echo " selected"; ?>><?php echo REPORT_ALL; ?></option>
-                                  <?php
-                                  $payments = explode(';', MODULE_PAYMENT_INSTALLED);
-                                  for ($i=0; $i<count($payments); $i++){
-                                    require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i]);
-                                    $payment = substr($payments[$i], 0, strrpos($payments[$i], '.'));
-                                    $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payment).'_TEXT_TITLE');
-                                    ?>
-                                    <option value="<?php echo $payment; ?>"<?php if ($srPayment === $payment) echo " selected"; ?>><?php echo $payment_text ; ?></option>
-                                    <?php
-                                  }
-                                  ?>
-                                </select>
-                                <br />
+                                <?php 
+                                  echo REPORT_STATUS_FILTER.'<br/>'; 
+                                  echo xtc_draw_pull_down_menu('status', $status_array, $srStatus);
+                                  echo '<br/>';
+                                  echo REPORT_PAYMENT_FILTER.'<br/>'; 
+                                  echo xtc_draw_pull_down_menu('payment', $payment_array, $srPayment);
+                                ?>
                               </td>
                               <td rowspan="2" class="menuBoxHeading txta-l">
-                                <?php echo REPORT_EXP; ?><br />
-                                <select class="SlectBox" name="export" size="1">
-                                  <option value="0" selected><?php echo EXP_NORMAL; ?></option>
-                                  <option value="1"><?php echo EXP_HTML; ?></option>
-                                  <option value="2"><?php echo EXP_CSV; ?></option>
-                                </select>
-                                <br />
-                                <?php echo REPORT_SORT; ?><br />
-                                <select class="SlectBox" name="sort" size="1">
-                                  <option value="0"<?php if ($srSort == 0) echo " selected"; ?>><?php echo SORT_VAL0; ?></option>
-                                  <option value="1"<?php if ($srSort == 1) echo " selected"; ?>><?php echo SORT_VAL1; ?></option>
-                                  <option value="2"<?php if ($srSort == 2) echo " selected"; ?>><?php echo SORT_VAL2; ?></option>
-                                  <option value="3"<?php if ($srSort == 3) echo " selected"; ?>><?php echo SORT_VAL3; ?></option>
-                                  <option value="4"<?php if ($srSort == 4) echo " selected"; ?>><?php echo SORT_VAL4; ?></option>
-                                  <option value="5"<?php if ($srSort == 5) echo " selected"; ?>><?php echo SORT_VAL5; ?></option>
-                                  <option value="6"<?php if ($srSort == 6) echo " selected"; ?>><?php echo SORT_VAL6; ?></option>
-                                </select>
-                                <br />
+                                <?php 
+                                  echo REPORT_EXP.'<br/>'; 
+                                  echo xtc_draw_pull_down_menu('export', $exp_array, $srExp);
+                                  echo '<br/>';
+                                  echo REPORT_SORT.'<br/>'; 
+                                  echo xtc_draw_pull_down_menu('sort', $sort_array, $srSort);
+                                ?>
                               </td>
                             </tr>
                             <tr>
                               <td class="menuBoxHeading">
-                                <?php echo REPORT_END_DATE; ?><br />
-                                <select class="SlectBox" name="endD" size="1">
-                                  <?php
-                                  echo $endDate;
-                                  
+                                <?php 
+                                  $day = date("j");
+                                  $month = date("n");
+                                  $year = 0;
                                   if ($endDate) {
-                                    $j = date("j", $endDate - (60 * 60 * 24));
-                                  } else {
-                                    $j = date("j");
+                                    $day = date("j", $endDate - (60 * 60 * 24));
+                                    $month = date("n", $endDate - 60* 60 * 24);
+                                    $year = date("Y") - date("Y", $endDate - 60* 60 * 24);
                                   }
-                                  for ($i = 1; $i < 32; $i++) {
-                                    ?>
-                                    <option value="<?php echo $i; ?>"<?php if ($j == $i) echo " selected"; ?>><?php echo $i; ?></option>
-                                    <?php
-                                  }
-                                  ?>
-                                </select>
-                                <select class="SlectBox" name="endM" size="1">
-                                  <?php
-                                  if ($endDate) {
-                                    $m = date("n", $endDate - 60* 60 * 24);
-                                  } else {
-                                    $m = date("n");
-                                  }
-                                  for ($i = 1; $i < 13; $i++) {
-                                    ?>
-                                    <option value="<?php echo $i; ?>"<?php if ($m == $i) echo " selected"; ?>><?php echo strftime("%B", mktime(0, 0, 0, $i, 1)); ?></option>
-                                    <?php
-                                  }
-                                  ?>
-                                </select>
-                                <select class="SlectBox" name="endY" size="1">
-                                  <?php
-                                  if ($endDate) {
-                                    $y = date("Y") - date("Y", $endDate - 60* 60 * 24);
-                                  } else {
-                                    $y = 0;
-                                  }
-                                  for ($i = 10; $i >= 0; $i--) {
-                                    ?>
-                                    <option value="<?php echo date("Y") - $i; ?>"<?php if ($y == $i) echo " selected"; ?>><?php echo date("Y") - $i; ?></option>
-                                    <?php
-                                  }
-                                  ?>
-                                </select>
+                                  echo REPORT_END_DATE.'<br/>';
+                                  echo xtc_draw_pull_down_menu('endD', $day_array, $day);
+                                  echo xtc_draw_pull_down_menu('endM', $month_array, $month);
+                                  echo xtc_draw_pull_down_menu('endY', $year_array, $year);
+                                ?>
                               </td>
                             </tr>
                           </table>  
