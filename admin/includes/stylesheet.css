@@ -1553,7 +1553,7 @@ min-width:1024px;
 width:100%;
 top:0px;
 position: fixed;
-z-index:9999999;
+z-index:2000;
 height:42px;
 }
 .row_adminbar {
