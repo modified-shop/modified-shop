@@ -100,7 +100,7 @@
             $categorie_data = xtc_db_fetch_array($categorie_query);
             ?>
             <tr>
-              <td class="categories_view_data"><input type="checkbox" name="ids[]" value="<?php echo $cross_data['ID']; ?>"></td>
+              <td class="categories_view_data"><?php echo xtc_draw_checkbox_field('ids[]', $cross_data['ID']); ?></td>
               <td class="categories_view_data txta-l"><input name="sort[<?php echo $cross_data['ID']; ?>]" type="text" size="3" value="<?php echo $cross_data['sort_order']; ?>"></td>
               <td class="categories_view_data txta-l"><?php echo xtc_draw_pull_down_menu('group_name['.$cross_data['ID'].']',$cross_sell_groups,$cross_data['products_xsell_grp_name_id']); ?></td>
               <td class="categories_view_data txta-l"><?php echo $cross_data['products_model']; ?></td>
@@ -253,7 +253,7 @@
               $categorie_data = xtc_db_fetch_array($categorie_query);
               ?>
               <tr>
-                <td class="categories_view_data"><input type="checkbox" name="ids[]" value="<?php echo $search_data['products_id']; ?>"></td>
+                <td class="categories_view_data"><?php echo xtc_draw_checkbox_field('ids[]', $search_data['products_id']); ?></td>
                 <td class="categories_view_data txta-l"><?php echo xtc_draw_pull_down_menu('group_name['.$search_data['products_id'].']',$cross_sell_groups); ?></td>
                 <td class="categories_view_data txta-l"><?php echo $search_data['products_model']; ?></td>
                 <td class="categories_view_data txta-l"><?php echo $search_data['products_name']; ?></td>

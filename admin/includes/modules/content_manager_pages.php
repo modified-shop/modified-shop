@@ -372,13 +372,12 @@ if (!$action) {
                 <div class="customers-groups">
                   <?php
                   for ($g=0, $z=sizeof($customers_statuses_array); $g<$z; $g++) {
+                    $checked = false;
                     if (strstr($content_lang['group_ids'], 'c_'.$customers_statuses_array[$g]['id'].'_group')) {
-                      $checked='checked ';
-                    } else {
-                      $checked='';
+                      $checked = true;
                     }
-                    echo '<input type="checkbox" name="groups['.$i.']['.$languages[$l]['id'].'][]" value="'.$customers_statuses_array[$g]['id'].'"'.$checked.'> '.$customers_statuses_array[$g]['text'].'<br />';
-                    }
+                    xtc_draw_checkbox_field('groups['.$i.']['.$languages[$l]['id'].'][]', $customers_statuses_array[$g]['id'], $checked).'<br />';
+                  }
                   ?>
                 </div>
               </td>

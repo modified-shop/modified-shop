@@ -122,7 +122,7 @@ if ($_POST['cpath'] != '') {
       // Print the Option Name
       $output = '';
       $output .= '<tr id="oid-' . $current_product_option_id . '" class="dataTableHeadingRow">'. PHP_EOL;
-      $output .= '<td class="dataTableHeadingContent" style="width:150px"><input type="checkbox" class="select_all" name="set_'.$current_product_option_id.'" value="'.$current_product_option_id.'">&nbsp;&nbsp;<strong>' . $current_product_option_name . '</strong></td>'. PHP_EOL;
+      $output .= '<td class="dataTableHeadingContent" style="width:150px">'.xtc_draw_checkbox_field('set_'.$current_product_option_id, $current_product_option_id).'&nbsp;&nbsp;<strong>' . $current_product_option_name . '</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="width:95px"><strong>'.SORT_ORDER.'</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_MODEL.'</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_EAN.'</strong></td>'. PHP_EOL;
@@ -158,8 +158,8 @@ if ($_POST['cpath'] != '') {
           $rowClass = rowClass($i) . ' oid-'.$current_product_option_id;
           $current_value_id = $line['products_options_values_id'];
           $isSelected = checkAttribute($current_value_id, $_POST['current_product_id'], $current_product_option_id);
-          $checked = ($isSelected) ? ' checked="checked"' : '';
-          $disable = (empty($checked)) ? ' disabled="true" ' : ' ';
+          $checked = ($isSelected) ? true : false;
+          $disable = ($checked === false) ? ' disabled="true" ' : ' ';
           
           if ($isSelected) {
             $isChecked = true;
@@ -183,7 +183,7 @@ if ($_POST['cpath'] != '') {
           $output .= '<tr class="' . $rowClass . '">'. PHP_EOL;
           //1st col
           $output .= '<td class="main nobr">'. PHP_EOL;
-          $output .= '<input type="checkbox" name="optionValues[]" class="cbx_optval cb check_'.$current_product_option_id.'" value="' . $current_value_id . '"' . $checked . '>&nbsp;&nbsp;' . $current_value_name . '&nbsp;&nbsp;'. PHP_EOL;
+          $output .= xtc_draw_checkbox_field('optionValues[]', $current_value_id, $checked, '', 'class="cbx_optval cb check_'.$current_product_option_id.'"').'&nbsp;&nbsp;' . $current_value_name . '&nbsp;&nbsp;'. PHP_EOL;
           $output .= '</td>'. PHP_EOL;
           
           $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_sortorder" value="' . (isset($attr_array['sortorder'])?$attr_array['sortorder']:'') . '" size="8"></td>'. PHP_EOL;
