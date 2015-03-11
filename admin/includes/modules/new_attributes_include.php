@@ -41,8 +41,10 @@
   $options[] = (array ('id' => 'products_options_name', 'text' => TEXT_OPTION_NAME));
   $options_dropdown_order = xtc_draw_pull_down_menu('selected', $options, $option_order_by, 'onchange="go_option()" ') ."\n";
 
-  $prefix_array = array(array('id' => '+', 'text' => '+'),
-                        array('id' => '-', 'text' => '-'));
+  $prefix_array = array(
+    array('id' => '+', 'text' => '&nbsp;+&nbsp;'),
+    array('id' => '-', 'text' => '&nbsp;-&nbsp;')
+  );
 
   //Anzahl Spalten
   $colspan = 9;
