@@ -105,6 +105,8 @@ function unfold(oid)
 function en_disabled(obj)
 {
     obj.closest('tr').find('input[type=text], select').not('input[type=checkbox]').attr('disabled', !obj.is(':checked'));
+    obj.closest('tr').find('.SumoSelect').toggleClass('disabled', !obj.is(':checked'));
+    
     //download fields
     obj.closest('tr').next('tr').not('[class^=attributes]').find('input[type=text], select').attr('disabled', !obj.is(':checked'));
 }
