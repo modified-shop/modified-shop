@@ -1,4 +1,4 @@
-.SlectBox, .SlectBoxa { width: 200px; padding: 5px 5px; -moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box; }
+.SlectBox, .SlectBoxa { width: auto; padding: 5px 5px; -moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box; }
 td.dataTableConfig .SlectBox { width: 100%;-moz-box-sizing: border-box;-webkit-box-sizing: border-box;box-sizing: border-box; }
 td.dataTableConfig .SumoSelect {width:100%; }
 .SumoSelect > p { margin: 0px;}
