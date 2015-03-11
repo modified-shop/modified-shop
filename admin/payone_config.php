@@ -519,7 +519,7 @@ require (DIR_WS_INCLUDES.'head.php');
 						<tr>
 							<td class="main payone_config">
 								<?php foreach($messages as $msg) { ?>
-								<p class="message"><?php echo $msg ?></p>
+								<p class="success_message"><?php echo $msg ?></p>
 								<?php }; ?>
                 
                 <?php if ($payone->checkConfig() === false) { ?>
