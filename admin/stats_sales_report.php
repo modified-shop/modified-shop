@@ -113,7 +113,7 @@
   if (isset($_GET['sort']) && (xtc_not_null($_GET['sort'])) ) {
     $srSort = $_GET['sort'];
   }
-  if ($srSort < 1 || $srSort > 6) {
+  if ($srSort < 0 || $srSort > 6) {
     $srSort = $srDefaultSort;
   }
 
@@ -171,7 +171,7 @@
   }
   
   require(DIR_WS_CLASSES . 'sales_report.php');
-  $sr = new sales_report($srView, $startDate, $endDate, $srSort, $srStatus, $srFilter,$srPayment);
+  $sr = new sales_report($srView, $startDate, $endDate, $srSort, $srStatus, $srFilter, $srPayment);
   $startDate = $sr->startDate;
   $endDate = $sr->endDate;
   
@@ -204,9 +204,9 @@
   $payments = explode(';', MODULE_PAYMENT_INSTALLED);
   for ($i=0, $n=count($payments); $i<$n; $i++){
     require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i]);
-    $payment = substr($payments[$i], 0, strrpos($payments[$i], '.'));
-    $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payment).'_TEXT_TITLE');
-    $payment_array[] = array('id' => $payment, 'text' => $payment_text);
+    $payment_id = substr($payments[$i], 0, strrpos($payments[$i], '.'));
+    $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payment_id).'_TEXT_TITLE');
+    $payment_array[] = array('id' => $payment_id, 'text' => $payment_text);
   }
 
   $status_array = array(array('id' => 0, 'text' => REPORT_ALL),
@@ -287,7 +287,7 @@
                                   if ($startDate) {
                                     $day = date("j", $startDate);
                                     $month = date("n", $startDate);
-                                    $year = date("Y") - date("Y", $startDate);                                  
+                                    $year = date("Y", $startDate);                                  
                                   }
                                   echo REPORT_START_DATE.'<br/>';
                                   echo xtc_draw_pull_down_menu('startD', $day_array, $day);
@@ -331,8 +331,8 @@
                                   $year = 0;
                                   if ($endDate) {
                                     $day = date("j", $endDate - (60 * 60 * 24));
-                                    $month = date("n", $endDate - 60* 60 * 24);
-                                    $year = date("Y") - date("Y", $endDate - 60* 60 * 24);
+                                    $month = date("n", $endDate - (60* 60 * 24));
+                                    $year = date("Y", $endDate - (60* 60 * 24));
                                   }
                                   echo REPORT_END_DATE.'<br/>';
                                   echo xtc_draw_pull_down_menu('endD', $day_array, $day);
