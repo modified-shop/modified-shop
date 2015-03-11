@@ -123,12 +123,11 @@ if (USE_WYSIWYG == 'true') {
                 <?php
                 $customers_groups = xtc_get_shop_conf('SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS');
                 for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
+                  $checked = false;
                   if (strstr($customers_groups,'c_'.$customers_statuses_array[$i]['id'].'_group')) {
-                    $checked='checked ';
-                  } else {
-                    $checked='';
+                    $checked = true;
                   }
-                  echo '<input type="checkbox" name="customers_groups[]" value="'.$customers_statuses_array[$i]['id'].'"'.$checked.'> '.$customers_statuses_array[$i]['text'].'<br />';
+                  echo xtc_draw_checkbox_field('customers_groups[]', $customers_statuses_array[$i]['id'], $checked).' '.$customers_statuses_array[$i]['text'].'<br />';
                   }
                 ?>
               </div>

@@ -248,12 +248,11 @@ if (!$action) {
                   <div class="customers-groups">
                     <?php
                       for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
+                        $checked = false;
                         if (strstr($content['group_ids'],'c_'.$customers_statuses_array[$i]['id'].'_group')) {
-                          $checked = 'checked ';
-                        } else {
-                          $checked = '';
+                          $checked = true;
                         }
-                        echo '<input type="checkbox" name="groups[]" value="'.$customers_statuses_array[$i]['id'].'"'.$checked.'> '.$customers_statuses_array[$i]['text'].'<br />';
+                        xtc_draw_checkbox_field('groups[]', $customers_statuses_array[$i]['id'], $checked).' '.$customers_statuses_array[$i]['text'].'<br />';
                       }
                     ?>
                   </div>
