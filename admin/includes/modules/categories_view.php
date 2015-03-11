@@ -54,7 +54,7 @@
   $search = (isset($_GET['search']) ? $_GET['search'] : '');
   $search_id = (isset($_GET['search_id']) ? $_GET['search_id'] : '');
 
-  $search_inactive = (isset($_GET['search_inactive']) ? true : false);
+  $search_inactive = (isset($_GET['search_inactive']) && $_GET['search_inactive'] == 1 ? true : false);
   $display_categories = !$search_inactive;
 
   // get sorting option and switch accordingly
@@ -142,11 +142,14 @@
         <div class="main pdg2"><?php echo HEADING_TITLE; ?></div>
 
       </div>
-      <div class="smallText pdg2 flt-l" style="margin: 3px 0 0 80px;">
+      <div class="smallText pdg2 flt-l" style="margin-left:80px;">
         <?php
         echo xtc_draw_form('forminactive', FILENAME_CATEGORIES, '', 'get');
+        if (isset($_GET['cPath'])) {
+          echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
+        }
         echo '<label for="search_inactive">'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .'</label>';
-        echo '<div style="display:inline;margin:0px 10px 0px 5px;">' . xtc_draw_selection_field('search_inactive', 'checkbox', '1', $search_inactive, '', 'style="vertical-align:middle;" onclick="this.form.submit();"'). '</div>';
+        echo '<div style="display:inline;margin:0px 10px 0px 5px;">' . draw_on_off_selection('search_inactive', 'checkbox', $search_inactive, 'style="vertical-align:middle;" onclick="this.form.submit();"') . '</div>';
         ?>
         </form>
       </div>

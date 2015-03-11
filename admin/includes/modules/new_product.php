@@ -119,7 +119,7 @@
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_STARTPAGE; ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_selection_field('products_startpage', 'checkbox', '1',isset($pInfo->products_startpage) && $pInfo->products_startpage==1 ? true : false); ?></span></td>
+            <td><span class="main"><?php echo draw_on_off_selection('products_startpage', 'checkbox', (isset($pInfo->products_startpage) && $pInfo->products_startpage==1 ? true : false)) ?></span></td>
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_STARTPAGE_SORT; ?></span></td>
@@ -131,8 +131,8 @@
           </tr>
           <tr>
             <td>
-              <span class="main"><?php echo TEXT_PRODUCTS_VPE_VISIBLE. xtc_draw_selection_field('products_vpe_status', 'checkbox', '1',$pInfo->products_vpe_status==1 ? true : false);?></span>
-              <div class="flt-r">
+              <span class="main"><?php echo TEXT_PRODUCTS_VPE_VISIBLE. '&nbsp;' . draw_on_off_selection('products_vpe_status', 'checkbox', (isset($pInfo->products_vpe_status) && $pInfo->products_vpe_status==1 ? true : false));?></span>
+              <div class="flt-r" style="margin-top:5px">
               <span class="main"><?php echo TEXT_PRODUCTS_VPE_VALUE; ?></span>
               </div>                
             </td>
@@ -144,7 +144,7 @@
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_FSK18; ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_checkbox_field('fsk18', '1', $pInfo->products_fsk18=='1'); ?></span></td>
+            <td><span class="main"><?php echo draw_on_off_selection('fsk18', 'checkbox', (isset($pInfo->products_fsk18) && $pInfo->products_fsk18==1 ? true : false)); ?></span></td>
           </tr>
         </table>
       </div>
