@@ -49,8 +49,8 @@ if (is_array($_POST) && count($_POST) > 0) {
       $_SESSION['CSRFName'] = xtc_RandomString(6);
       $_SESSION['CSRFToken'] = xtc_RandomString(32);
       if (defined('RUN_MODE_ADMIN')) {
-        $messageStack->add('CSRFToken manipulation', 'warning');
-        $messageStack->add_session('CSRFToken manipulation', 'warning');
+        $messageStack->add(CSRF_TOKEN_MANIPULATION, 'warning');
+        $messageStack->add_session(CSRF_TOKEN_MANIPULATION, 'warning');
       }
     }
   } else {
@@ -63,8 +63,8 @@ if (is_array($_POST) && count($_POST) > 0) {
     $_SESSION['CSRFName'] = xtc_RandomString(6);
     $_SESSION['CSRFToken'] = xtc_RandomString(32);
     if (defined('RUN_MODE_ADMIN')) {
-      $messageStack->add('CSRFToken not defined', 'warning');
-      $messageStack->add_session('CSRFToken not defined', 'warning');
+      $messageStack->add(CSRF_TOKEN_NOT_DEFINED, 'warning');
+      $messageStack->add_session(CSRF_TOKEN_NOT_DEFINED, 'warning');
     }
   }
 } elseif ($CSRFKeep === false) {
