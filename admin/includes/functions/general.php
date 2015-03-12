@@ -2807,7 +2807,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param string $value
    * @return
    */
-  function xtc_draw_gender_pull_down($name, $value) {
+  function xtc_draw_gender_pull_down($name, $value, $parameters = '') {
     return xtc_draw_pull_down_menu(
       $name,
       array(
@@ -2815,7 +2815,8 @@ function xtc_output_string($string, $translate = false, $protected = false) {
         array('id' => 'm', 'text' => TEXT_MR),
         array('id' => 'f', 'text' => TEXT_MRS)
       ),
-      $value
+      $value,
+      $parameters
     );
   }
 
