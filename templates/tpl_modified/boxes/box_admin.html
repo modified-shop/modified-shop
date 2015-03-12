@@ -26,6 +26,15 @@
       </li>
     {/if}
   
+    {if isset($CUSTOMERS)}
+      <li class="togglemenu">
+        <a class="togglelink" href="{$CUSTOMERS}"><img src="{$tpl_path}img/adminbar_customers.png" alt="" /></a>
+        <ul>
+          <li class="info">{$CUSTOMERS_INFO}</li>
+        </ul>
+      </li>
+    {/if}
+
     {if isset($CATEGORIES)}
       <li class="togglemenu">
         <a class="togglelink" href="{$CATEGORIES}"><img src="{$tpl_path}img/adminbar_categories.png" alt="" /></a>
@@ -56,15 +65,6 @@
       </li>
     {/if}
   
-    {if isset($CUSTOMERS)}
-      <li class="togglemenu">
-        <a class="togglelink" href="{$CUSTOMERS}"><img src="{$tpl_path}img/adminbar_customers.png" alt="" /></a>
-        <ul>
-          <li class="info">{$CUSTOMERS_INFO}</li>
-        </ul>
-      </li>
-    {/if}
-
     {if isset($SHOP_OFFLINE)}
       <li class="togglemenu">
         {if isset($SHOP_OFFLINE_LINK)}<a class="togglelink" href="{$SHOP_OFFLINE_LINK}" title="{#ab_offline#}">{/if}<img src="{$tpl_path}img/adminbar_offline.png" alt="" />{if isset($SHOP_OFFLINE_LINK)}</a>{/if}

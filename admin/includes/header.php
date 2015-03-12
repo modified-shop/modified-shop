@@ -77,6 +77,14 @@
               'class' => ''
             );
           $favorites[2] = array(
+              'file'  => 'customers.php',
+              'par'  => '', 
+              'mode'  => 0,
+              'icon'  => 'icon_customers.png',
+              'name'  => BOX_CUSTOMERS,
+              'class' => ''
+            );
+          $favorites[3] = array(
               'file'  => 'categories.php',
               'par'  => '', 
               'mode'  => 0,
@@ -84,20 +92,12 @@
               'name'  => BOX_CATEGORIES,
               'class' => ''
             );
-          $favorites[3] = array(
+          $favorites[4] = array(
               'file'  => 'content_manager.php',
               'par'  => '', 
               'mode'  => 0,
               'icon'  => 'icon_content.png',
               'name'  => BOX_CONTENT,
-              'class' => ''
-            );
-          $favorites[4] = array(
-              'file'  => 'customers.php',
-              'par'  => '', 
-              'mode'  => 0,
-              'icon'  => 'icon_customers.png',
-              'name'  => BOX_CUSTOMERS,
               'class' => ''
             );
           $favorites[5] = array(
