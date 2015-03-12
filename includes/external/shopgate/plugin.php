@@ -181,7 +181,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		$customersInfo = array(
 				'customers_info_id' 				=> $userId,
-				'customers_info_number_of_logons'	=> 0,
+				'customers_info_number_of_logons'	=> 1,
 				'customers_info_date_account_created' => $date,
 				'customers_info_date_account_last_modified' => $date,
 		);
