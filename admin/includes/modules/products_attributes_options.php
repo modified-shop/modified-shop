@@ -29,7 +29,7 @@ if ($_GET['action'] != 'delete_product_option') {
   $options[] = (array ('id' => 'products_options_id', 'text' => TEXT_OPTION_ID));
   $options[] = (array ('id' => 'products_options_name', 'text' => TEXT_OPTION_NAME));
   $options[] = (array ('id' => 'products_options_sortorder', 'text' => TEXT_SORTORDER));
-  $options_dropdown_order = xtc_draw_pull_down_menu('selected', $options, $_GET['option_order_by'], 'onchange="go_option()" ') ."\n";
+  $options_dropdown_order = '<span class="select_f12">'.xtc_draw_pull_down_menu('selected', $options, $_GET['option_order_by'], 'onchange="go_option()" ') .'</span>'."\n";
 
   //BOF Sortierung nach...
   if ($_GET['option_order_by']) {

@@ -38,10 +38,10 @@ input[type=checkbox] {
 	background-color: #7fa92c;
 	display: block;
 	content: ' ';
-	top: 20%;
-	right: 20%;
-	bottom: 20%;
-	left: 20%;
+	top: 2px;
+	right: 2px;
+	bottom: 2px;
+	left: 2px;
 	position: absolute;
 }
 .checkator_source:focus+.checkator { /* Focused element */
