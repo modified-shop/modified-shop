@@ -54,7 +54,7 @@
           <td class="dataTableContent"><?php echo xtc_draw_input_field('products_options', $attributes['products_options'], 'size="20"');?></td>
           <td class="dataTableContent"><?php echo xtc_draw_input_field('products_options_values', $attributes['products_options_values'], 'size="20"');?></td>
           <td class="dataTableContent"><?php echo xtc_draw_input_field('options_values_price',$attributes['options_values_price'], 'size="10"');?></td>
-          <td class="dataTableContent txta-c"><span class="select_w60"><?php echo xtc_draw_pull_down_menu('prefix', array(array('id' => '+', 'text' => '+'),array('id' => '-', 'text' => '-')), $attributes['price_prefix']); ?></span></td>
+          <td class="dataTableContent txta-c"><?php echo xtc_draw_pull_down_menu('prefix', array(array('id' => '+', 'text' => '+'),array('id' => '-', 'text' => '-')), $attributes['price_prefix']); ?></td>
           <td class="dataTableContent">
             <?php
               echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';

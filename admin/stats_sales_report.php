@@ -290,9 +290,9 @@
                                     $year = date("Y", $startDate);                                  
                                   }
                                   echo REPORT_START_DATE.'<br/>';
-                                  echo '<span class="select_w60">'.xtc_draw_pull_down_menu('startD', $day_array, $day).'</span>';
-                                  echo '<span class="select_w120">'.xtc_draw_pull_down_menu('startM', $month_array, $month).'</span>';
-                                  echo '<span class="select_w80">'.xtc_draw_pull_down_menu('startY', $year_array, $year).'</span>';
+                                  echo xtc_draw_pull_down_menu('startD', $day_array, $day);
+                                  echo xtc_draw_pull_down_menu('startM', $month_array, $month);
+                                  echo xtc_draw_pull_down_menu('startY', $year_array, $year);
                                 ?>
                               </td>
                               <td rowspan="2" class="menuBoxHeading txta-l">
@@ -335,9 +335,9 @@
                                     $year = date("Y", $endDate - (60* 60 * 24));
                                   }
                                   echo REPORT_END_DATE.'<br/>';
-                                  echo '<span class="select_w60">'.xtc_draw_pull_down_menu('endD', $day_array, $day).'</span>';
-                                  echo '<span class="select_w120">'.xtc_draw_pull_down_menu('endM', $month_array, $month).'</span>';
-                                  echo '<span class="select_w80">'.xtc_draw_pull_down_menu('endY', $year_array, $year).'</span>';
+                                  echo xtc_draw_pull_down_menu('endD', $day_array, $day);
+                                  echo xtc_draw_pull_down_menu('endM', $month_array, $month);
+                                  echo xtc_draw_pull_down_menu('endY', $year_array, $year);
                                 ?>
                               </td>
                             </tr>
