@@ -326,7 +326,7 @@ if ($category_depth == 'nested') {
   */
 } else {
 
-  $shop_content_data = $main->getContentData(5);
+  $shop_content_data = $main->getContentData(5, '', '' false);
 
   $default_smarty->assign('title', $shop_content_data['content_heading']);
 

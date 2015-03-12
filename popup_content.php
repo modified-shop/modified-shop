@@ -16,7 +16,7 @@
 
 require ('includes/application_top.php');
 
-$content_data = $main->getContentData($_GET['coID']);
+$content_data = $main->getContentData($_GET['coID'], '', '', false);
 
 $popup_smarty = new Smarty;
 

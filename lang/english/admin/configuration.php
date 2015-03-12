@@ -918,5 +918,5 @@ define('GUEST_ACCOUNT_EDIT_TITLE', 'Edit guest accounts');
 define('GUEST_ACCOUNT_EDIT_DESC', 'enable guest accounts to see and edit avvount details?');
 
 define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail signature');
-define('EMAIL_SIGNATURE_ID_DESC', 'Select content for the E-Mail signature.<br/><b>Attention:</b> content must be active.');
+define('EMAIL_SIGNATURE_ID_DESC', 'Select content for the E-Mail signature.');
 ?>
