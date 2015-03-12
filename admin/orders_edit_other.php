@@ -184,7 +184,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
         <?php
         $order_total_query = xtc_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . $_GET['oID'] . "' and class = 'ot_shipping' ");
         $order_total = xtc_db_fetch_array($order_total_query);
-        echo xtc_draw_input_field('value', $order_total['value']);        
+        echo xtc_draw_input_field('value', $order_total['value'], 'class="txta-r"');        
         ?>
       </td>
        <td class="dataTableContent">
@@ -223,7 +223,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       <?php echo xtc_draw_form('ot_edit', FILENAME_ORDERS_EDIT, 'action=ot_edit', 'post'); ?>
         <td class="dataTableContent"><?php echo $total_text; ?></td>
         <td class="dataTableContent"><?php echo xtc_draw_input_field('title', $ototal['title'], 'size=40'); ?></td>
-        <td class="dataTableContent"><?php echo xtc_draw_input_field('value', $ototal['value']); ?></td>
+        <td class="dataTableContent"><?php echo xtc_draw_input_field('value', $ototal['value'], 'class="txta-r"'); ?></td>
         <td class="dataTableContent">
           <?php
           echo xtc_draw_hidden_field('class', $total);
