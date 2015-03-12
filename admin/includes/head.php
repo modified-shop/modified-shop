@@ -51,11 +51,11 @@
   <!--[if lt IE 9]><script src="includes/javascript/html5.js"></script><![endif]-->
   
   <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>  
-  <script type="text/javascript" src="includes/javascript/jquery.sumoselect.min.js"></script>
+  <script type="text/javascript" src="includes/javascript/jquery.sumoselect.js"></script>
   <script type="text/javascript" src="includes/javascript/fm.checkator.jquery.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
-      $('.SlectBox').SumoSelect({ autoWidth: true, minWidth: 60});
+      $('.SlectBox').SumoSelect({ autoWidth: true, minWidth: 60, addWidth: 15, maxAddWidth: 300});
       $('.fmChkBox').checkator();
     });
   </script>
