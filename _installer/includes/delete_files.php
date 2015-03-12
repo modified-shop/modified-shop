@@ -105,6 +105,11 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/rss/index.html',
                      'admin/rss/xt-news.cache',
                      'admin/rss/xtc.cache',
+                     'callback/sofort/callback.php', // neu
+                     'callback/sofort/helperFunctions.php', // neu
+                     'callback/sofort/sofort.ini', // neu
+                     'callback/sofort/sofort.php', // neu
+                     'callback/sofort/sofortInstall.php', // neu
                      'checkout_iclear.php',
                      'copyright.php',
                      'export/xml_export.php', // neu
@@ -152,24 +157,67 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'includes/configure.org.php',
                      'includes/modules/reviews.php',
                      'includes/modules/module.easybill.php',
+                     'includes/modules/order_total/ot_sofort.php', // neu
                      'includes/modules/payment/billsafe_2hp.php',
                      'includes/modules/payment/cc.php',
                      'includes/modules/payment/iclear.php',
+                     'includes/modules/payment/luupws.php', // neu
+                     'includes/modules/payment/pn_sofortueberweisung.php', // neu
+                     'includes/modules/payment/sofort_lastschrift.php', // neu
+                     'includes/modules/payment/sofort_sofortlastschrift.php', // neu
+                     'includes/modules/payment/sofort_sofortrechnung.php', // neu
+                     'includes/modules/payment/sofort_sofortueberweisung.php', // neu
+                     'includes/modules/payment/sofort_sofortvorkasse.php', // neu
+                     'includes/modules/payment/sofortueberweisung.php', // neu
+                     'includes/modules/payment/sofortueberweisungredirect.php', // neu
+                     'includes/modules/payment/sofortueberweisungvorkasse.php', // neu
+                     'includes/modules/payment/worldpay.php', // neu
+                     'includes/modules/sofort_vorkasse.php', // neu
                      'includes/shopgate/shopgate_library/.htaccess', // neu
                      'includes/shopgate/.htaccess', // neu
                      'INFO.txt', // neu
                      'lang/english/admin/blacklist.php', // neu
+                     'lang/english/checkout_confirmation.php', // neu
+                     'lang/english/sofortueberweisung_abort.php', // neu
                      'lang/english/easybill.php',
+                     'lang/english/modules/order_total/ot_sofort.php', // neu
                      'lang/english/modules/payment/images/logo_750.gif', // neu
                      'lang/english/modules/payment/billsafe_2hp.php',
                      'lang/english/modules/payment/cc.php',
                      'lang/english/modules/payment/iclear.php',
+                     'lang/english/modules/payment/luupws.php', // neu
+                     'lang/english/modules/payment/pn_sofortueberweisung.php', // neu
+                     'lang/english/modules/payment/sofort_general.php', // neu
+                     'lang/english/modules/payment/sofort_lastschrift.php', // neu
+                     'lang/english/modules/payment/sofort_sofortlastschrift.php', // neu
+                     'lang/english/modules/payment/sofort_sofortrechnung.php', // neu
+                     'lang/english/modules/payment/sofort_sofortueberweisung.php', // neu
+                     'lang/english/modules/payment/sofort_sofortvorkasse.php', // neu
+                     'lang/english/modules/payment/sofortueberweisung.php', // neu
+                     'lang/english/modules/payment/sofortueberweisungredirect.php', // neu
+                     'lang/english/modules/payment/sofortueberweisungvorkasse.php', // neu
+                     'lang/english/modules/payment/worldpay.php', // neu
                      'lang/german/admin/blacklist.php', // neu
                      'lang/german/checkout_confirmation.php', // neu
+                     'lang/german/sofortueberweisung_abort.php', // neu
                      'lang/german/easybill.php',
+                     'lang/german/modules/order_total/ot_sofort.php', // neu
+                     'lang/german/modules/payment/images/logo_750.gif', // neu
                      'lang/german/modules/payment/billsafe_2hp.php',
                      'lang/german/modules/payment/cc.php',
                      'lang/german/modules/payment/iclear.php',
+                     'lang/german/modules/payment/luupws.php', // neu
+                     'lang/german/modules/payment/pn_sofortueberweisung.php', // neu
+                     'lang/german/modules/payment/sofort_general.php', // neu
+                     'lang/german/modules/payment/sofort_lastschrift.php', // neu
+                     'lang/german/modules/payment/sofort_sofortlastschrift.php', // neu
+                     'lang/german/modules/payment/sofort_sofortrechnung.php', // neu
+                     'lang/german/modules/payment/sofort_sofortueberweisung.php', // neu
+                     'lang/german/modules/payment/sofort_sofortvorkasse.php', // neu
+                     'lang/german/modules/payment/sofortueberweisung.php', // neu
+                     'lang/german/modules/payment/sofortueberweisungredirect.php', // neu
+                     'lang/german/modules/payment/sofortueberweisungvorkasse.php', // neu
+                     'lang/german/modules/payment/worldpay.php', // neu
                      'LICENSE', // neu
                      'media_content.php',
                      'popup_cvv.php',
@@ -177,15 +225,47 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'shopstat/.htaccess',
                      'show_product_thumbs.php',
                      'sitemap1.xml', // neu
+                     'sofortueberweisung_abort.php', // neu
+                     'sofortueberweisung_checkout_success.php', // neu
+                     'sofortueberweisung_tracking.php', // neu
+                     'templates/xtc5/buttons/english/button_arrow_left.gif', // neu
+                     'templates/xtc5/buttons/english/button_arrow_right.gif', // neu
+                     'templates/xtc5/buttons/english/button_ask_a_question.gif', // neu
+                     'templates/xtc5/buttons/english/button_bonus_add.gif', // neu
+                     'templates/xtc5/buttons/english/sofortueberweisung_.gif', // neu
+                     'templates/xtc5/buttons/english/sofortueberweisung_block.gif', // neu
+                     'templates/xtc5/buttons/english/sofortueberweisung_info.gif', // neu
+                     'templates/xtc5/buttons/english/sofortueberweisung_paynow.gif', // neu
+                     'templates/xtc5/buttons/german/button_arrow_left.gif', // neu
+                     'templates/xtc5/buttons/german/button_arrow_right.gif', // neu
+                     'templates/xtc5/buttons/german/button_ask_a_question.gif', // neu
+                     'templates/xtc5/buttons/german/button_bonus_add.gif', // neu
+                     'templates/xtc5/buttons/german/button_details.gif', // neu
+                     'templates/xtc5/buttons/german/button_more.gif', // neu
+                     'templates/xtc5/buttons/german/button_notifications.gif', // neu
+                     'templates/xtc5/buttons/german/button_remove_notifications.gif', // neu
+                     'templates/xtc5/buttons/german/button_search_small.gif', // neu
+                     'templates/xtc5/buttons/german/button_sign_guestbook.gif', // neu
+                     'templates/xtc5/buttons/german/button_tell_a_friend.gif', // neu
+                     'templates/xtc5/buttons/german/sofortueberweisung_.gif', // neu
+                     'templates/xtc5/buttons/german/sofortueberweisung_block.gif', // neu
+                     'templates/xtc5/buttons/german/sofortueberweisung_info.gif', // neu
+                     'templates/xtc5/buttons/german/sofortueberweisung_paynow.gif', // neu                     
                      'templates/xtc5/css/no_javascript.css',
                      'templates/xtc5/mail/german/widerruf.txt',
                      'templates/xtc5/mail/german/widerruf.html',
                      'templates/xtc5/mail/english/widerruf.txt',
                      'templates/xtc5/mail/english/widerruf.html',
+                     'templates/xtc5/module/account_newsletter.html', // neu
+                     'templates/xtc5/module/google_sitemap.html', // neu
+                     'templates/xtc5/module/sofort_vorkasse.html', // neu
                      'templates/xtc5/smarty/function.facebook_badge.php',
                      'templates/xtc5/smarty/function.googleanalytics.php',
                      'templates/xtc5/smarty/function.piwik.php',
                      'templates/xtc5/smarty/function.onlytext.php',
+                     'templates/'.CURRENT_TEMPLATE.'/module/account_newsletter.html', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/module/google_sitemap.html', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/module/sofort_vorkasse.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/smarty/function.facebook_badge.php',
                      'templates/'.CURRENT_TEMPLATE.'/smarty/function.googleanalytics.php',
                      'templates/'.CURRENT_TEMPLATE.'/smarty/function.piwik.php',

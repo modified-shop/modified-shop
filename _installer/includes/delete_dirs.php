@@ -8,6 +8,7 @@ $unlink_dir = array('_installer/buttons', // neu
                     'admin/includes/modules/magpierss',
                     'admin/includes/modules/magpierss/extlib',
                     'admin/rss',
+                    'callback/pn_sofortueberweisung', // neu
                     'images/infobox', // neu
                     'includes/classes/Smarty_2.6.22',
                     'includes/classes/Smarty_2.6.26',
@@ -18,6 +19,8 @@ $unlink_dir = array('_installer/buttons', // neu
                     'includes/nusoap', // neu
                     'includes/shopgate', // neu
                     'shopstat',
+                    'callback/sofort/library', // neu
+                    'callback/sofort/ressources', // neu
                     'xtc_installer', // neu
                     );
 ?>
