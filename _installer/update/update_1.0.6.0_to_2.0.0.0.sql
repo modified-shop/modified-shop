@@ -529,4 +529,8 @@ ALTER TABLE geo_zones ADD UNIQUE idx_geo_zone_name (geo_zone_name);
 #Tomcraft - 2015-02-25 - change geo_zone_name/geo_zone_info
 UPDATE geo_zones SET geo_zone_name = 'Steuerzone Nicht-EU-Ausland', geo_zone_description = 'Steuerzone für Nicht-EU-Ausland', geo_zone_info = '1' WHERE geo_zone_name = 'Steuerzone EU-Ausland';
 
+#GTB - 2015-03-12 - add Signature
+INSERT INTO `content_manager` (`languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_active`, `content_group`, `content_delete`) VALUES ('1','E-Mail Signature','','<b>Company</b><br />Address<br />Location<br />Homepage<br />E-mail:<br />Phone:<br />Fax:<br />CEO:<br />VAT Reg No:','0','1','','1','11','0');
+INSERT INTO `content_manager` (`languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_active`, `content_group`, `content_delete`) VALUES ('2','E-Mail Signatur','','Firma<br />Adresse<br />Ort<br />Homepage<br />E-Mail:<br />Fon:<br />Fax:<br />USt-IdNr.:<br />Handelsregister<br />Gesch&auml;ftsf&uuml;hrer:','0','1','','1','11','0');
+
 # Keep an empty line at the end of this file for the db_updater to work properly

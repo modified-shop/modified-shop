@@ -22,10 +22,16 @@ function xtc_php_mail($from_email_address, $from_email_name,
                       $email_subject, $message_body_html, $message_body_plain
                      )
 {
-  global $mail_error, $order;
+  global $mail_error, $order, $main;
 
   // include needed function
   require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+  
+  // includes main class
+  if (!is_object($main)) {
+    require_once(DIR_FS_CATALOG.'includes/classes/main.php');
+    $main = new main();
+  }
 
   $mailsmarty= new Smarty;
   $mailsmarty->compile_dir = DIR_FS_CATALOG.'templates_c';
@@ -35,12 +41,14 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $lang_data['directory'] = isset($_SESSION['language']) ? $_SESSION['language'] : '';
   $lang_data['language_charset'] = isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : '';
   $lang_data['code'] = isset($_SESSION['language_code']) ? $_SESSION['language_code'] : '';
+  $lang_data['languages_id'] = isset($_SESSION['languages_id']) ? $_SESSION['languages_id'] : '';
   $where= '';
   if (empty($lang_data['directory']) || empty($lang_data['language_charset']) || empty($lang_data['code'])) {
      $where = " WHERE code = '".DEFAULT_LANGUAGE."'";
   }
   if (isset($order) && is_object($order)) {
-     $where = " WHERE directory = '".$order->info['language']."'";
+    $where = " WHERE directory = '".$order->info['language']."'";
+    $customers_status = $order->info['status'];
   }
 
   if ($where) {
@@ -66,9 +74,13 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $html_signatur = '';
   $txt_signatur = '';
   if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.html')) {
+    $shop_content_data = $main->getContentData(EMAIL_SIGNATURE_TEXT, $lang_data['languages_id'], ((isset($customers_status)) ? $customers_status : DEFAULT_CUSTOMERS_STATUS_ID_GUEST));    
+    $mailsmarty->assign('SIGNATURE_HTML', $shop_content_data['content_text']);
     $html_signatur = '<br />' .$mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.html'); 
   }
   if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.txt')) {
+    $shop_content_data = $main->getContentData(EMAIL_SIGNATURE_TEXT, $lang_data['languages_id'], ((isset($customers_status)) ? $customers_status : DEFAULT_CUSTOMERS_STATUS_ID_GUEST));
+    $mailsmarty->assign('SIGNATURE_TXT', $shop_content_data['content_text']);
     $txt_signatur = "\n" . $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.txt'); 
   }
 
