@@ -336,7 +336,7 @@ define('STORE_DB_SLOW_QUERY_TIME_TITLE' , 'Slow Query Log - Zeit');
 define('STORE_DB_SLOW_QUERY_TIME_DESC' , 'Bitte die Zeit eintragen, ab welcher die SQL Queries in das Logfile geschrieben werden.');
 
 define('DISPLAY_PAGE_PARSE_TIME_TITLE' , 'Berechnungszeiten der Seiten anzeigen');
-define('DISPLAY_PAGE_PARSE_TIME_DESC' , 'Wenn das Speichern der Berechnungszeiten f&uuml;r Seiten eingeschaltet ist, k&ouml;nnen diese im Footer angezeigt werden.<br /><strong>none</strong>: deaktiviert<br /><strong>admin</strong>: Nur der Admin sieht die Berechnungszeiten<br /><strong>all</strong>: Jeder sieht die Berechnungszeiten');
+define('DISPLAY_PAGE_PARSE_TIME_DESC' , 'Wenn das Speichern der Berechnungszeiten f&uuml;r Seiten eingeschaltet ist, k&ouml;nnen diese im Footer angezeigt werden.<br /><strong>deaktiviert</strong>: Deaktiviert die Anzeige komplett<br /><strong>admin</strong>: Nur der Admin sieht die Berechnungszeiten<br /><strong>all</strong>: Jeder sieht die Berechnungszeiten');
 define('STORE_DB_TRANSACTIONS_TITLE' , 'Speichern der Datenbank Abfragen');
 define('STORE_DB_TRANSACTIONS_DESC' , 'Speichern der einzelnen Datenbank Abfragen im Logfile f&uuml;r Berechnungszeiten<br/><strong>Achtung: Datei kann bei l&auml;ngerer Laufzeit sehr gro&szlig; werden!</strong>.<br/><br/>Die Logdatei wird im Ordner /log im Hauptverzeichnis gespeichert.');
 
