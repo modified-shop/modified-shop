@@ -1548,7 +1548,7 @@ display: none;
 .adminbar {
 background: #222;
 margin-bottom:0px;
-min-width:1000px;
+min-width:990px;
 width:100%;
 top:0px;
 position: fixed;
