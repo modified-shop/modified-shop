@@ -197,13 +197,13 @@ if ($_POST['cpath'] != '') {
                     
           //Weight
           $output .= '<td class="main nobr">'. PHP_EOL;
-          $output .= '<span class="select_w60">'.xtc_draw_pull_down_menu($current_value_id . '_weight_prefix', $prefix_array, (isset($attr_array['weight_prefix'])?$attr_array['weight_prefix']:''), $disable).'</span>'. PHP_EOL;
+          $output .= xtc_draw_pull_down_menu($current_value_id . '_weight_prefix', $prefix_array, (isset($attr_array['weight_prefix'])?$attr_array['weight_prefix']:''), $disable). PHP_EOL;
           $output .= '<input'.$disable.'type="text" name="' . $current_value_id . '_weight" value="' . (isset($attr_array['options_values_weight']) ? $attr_array['options_values_weight'] : '') . '" size="10">'. PHP_EOL;
           $output .= '</td>'. PHP_EOL;
               
           ///Price
           $output .= '<td class="main nobr">'. PHP_EOL;
-          $output .= '<span class="select_w60">'.xtc_draw_pull_down_menu($current_value_id . '_prefix', $prefix_array, (isset($attr_array['price_prefix'])?$attr_array['price_prefix']:''), $disable).'</span>'. PHP_EOL;
+          $output .= xtc_draw_pull_down_menu($current_value_id . '_prefix', $prefix_array, (isset($attr_array['price_prefix'])?$attr_array['price_prefix']:''), $disable). PHP_EOL;
           $output .= '<input'.$disable.'type="text" name="' . $current_value_id . '_price" value="' . $attribute_value_price_calculate . '" size="10">'. $attribute_value_price_calculate_netto. PHP_EOL;
           $output .= '</td>'. PHP_EOL;
           $output .= '</tr>'. PHP_EOL;
