@@ -70,9 +70,9 @@ $currencies = new currencies();
         <td class="dataTableContent"><?php echo xtc_draw_input_field('products_quantity', $order->products[$i]['qty'], 'size="2"');?></td>
         <td class="dataTableContent"><?php echo xtc_draw_input_field('products_name', $order->products[$i]['name'], 'size="20"');?></td>
         <td class="dataTableContent"><?php echo xtc_draw_input_field('products_model', $order->products[$i]['model'], 'size="10"');?></td>
-        <td class="dataTableContent"><?php echo xtc_draw_input_field('products_tax', $order->products[$i]['tax'], 'size="6"');?></td>
-        <td class="dataTableContent"><?php echo xtc_draw_input_field('products_price', $order->products[$i]['price'], 'size="10"');?></td>
-        <td class="dataTableContent"><?php echo $order->products[$i]['final_price'];?></td>
+        <td class="dataTableContent"><?php echo xtc_draw_input_field('products_tax', $order->products[$i]['tax'], 'class="txta-r" size="6"');?></td>
+        <td class="dataTableContent"><?php echo xtc_draw_input_field('products_price', $order->products[$i]['price'], 'class="txta-r" size="10"');?></td>
+        <td class="dataTableContent txta-r"><?php echo $order->products[$i]['final_price'];?></td>
         <td class="dataTableContent">
           <?php
           echo xtc_draw_hidden_field('allow_tax', $order->products[$i]['allow_tax']);
