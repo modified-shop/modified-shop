@@ -915,5 +915,5 @@ define('GUEST_ACCOUNT_EDIT_TITLE', 'Gastkonten bearbeiten');
 define('GUEST_ACCOUNT_EDIT_DESC', 'D&uuml;rfen G&auml;ste ihre Accountdetails sehen und bearbeiten?');
 
 define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail Signatur');
-define('EMAIL_SIGNATURE_ID_DESC', 'W&auml;hlen sie den Content aus, der als Signatur verwendet werden soll.');
+define('EMAIL_SIGNATURE_ID_DESC', 'W&auml;hlen sie den Content aus, der als Signatur in den Shop E-Mails verwendet werden soll.');
 ?>
