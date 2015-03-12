@@ -1383,7 +1383,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 }
                 ?>
                 <!-- Bestellung Sichern Anfang //-->
-                <div class="smallText pdg2 flt-r mrg5">
+                <div class="clear smallText pdg2 flt-r mrg5">
                       <?php
                       echo TEXT_SAVE_ORDER;
                       echo xtc_draw_form('save_order', FILENAME_ORDERS_EDIT, 'action=save_order', 'post');
