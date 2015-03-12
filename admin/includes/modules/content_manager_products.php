@@ -252,7 +252,7 @@ if (!$action) {
                         if (strstr($content['group_ids'],'c_'.$customers_statuses_array[$i]['id'].'_group')) {
                           $checked = true;
                         }
-                        xtc_draw_checkbox_field('groups[]', $customers_statuses_array[$i]['id'], $checked).' '.$customers_statuses_array[$i]['text'].'<br />';
+                        echo xtc_draw_checkbox_field('groups[]', $customers_statuses_array[$i]['id'], $checked).' '.$customers_statuses_array[$i]['text'].'<br />';
                       }
                     ?>
                   </div>
