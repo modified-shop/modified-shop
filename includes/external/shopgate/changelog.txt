@@ -1,5 +1,28 @@
 '''Deutsch'''
 
+'''Version 2.9.6'''
+* Link zu dem Shopgate-Wiki amgepasst 
+
+'''Version 2.9.5'''
+* nutzt die Shopgate Library 2.9.10
+
+'''Version 2.9.4'''
+* Fehler bei dem Setzen des Versandstatus behoben
+* Fehler behoben, bei dem sich durch Shopgate angelegte Gastbenutzer nicht mehr mit ihrer E-Mail-Adresse im Desktop-Shop registrieren konnten
+
+'''Version 2.9.3'''
+* Fehler beim Auslesen der Request-Parameter für die mobile Weiterleitung behoben
+* nutzt die Shopgate Library 2.9.6
+
+'''Version 2.9.2'''
+* Fehler bei der Validierung von Versandmethoden behoben(Steuerberechnung)
+
+'''Version 2.9.1'''
+* Shopgate Menü-Links aktualisiert
+* Fehler bei dem Auslesen der validen Versandmethoden behoben
+* die Standard-Weiterleitung kann nicht mehr über die Konfiguration des Plugins aktiviert werden
+* Fehler bei der mobilen Weiterleitung der Hauptseite behoben
+
 '''Version 2.9.0'''
 * Fehler im Export der Versandmethoden behoben
 * dynamisches setzen von Konstanten für das Auslesen von Versandmethoden verbessert
@@ -286,6 +309,29 @@
 
 
 '''English'''
+
+'''Version 2.9.6'''
+* link to the Shopgate-Wiki adapted
+
+'''Version 2.9.5'''
+* uses Shopgate Library 2.9.10
+
+'''Version 2.9.4'''
+* bug in setting the right shipping status fixed
+* fixed a bug that prevented registration with an email address that has previously been added as guest user by Shopgate
+
+'''Version 2.9.3'''
+* fixed a bug in accessing request parameters for mobile redirect
+* uses Shopgate Library 2.9.6
+
+'''Version 2.9.2'''
+* fixed a bug in getting the valid shipping methods(tax calculation)
+
+'''Version 2.9.1'''
+* updated Shopgate menu links
+* the default redirect cannot be enabled in the plugin's configuration page anymore
+* fixed a bug in getting the valid shipping methods
+* fixed a bug in the mobile redirect for the welcome page
 
 '''Version 2.9.0'''
 * dynamic initialising of shipping module constants improved 

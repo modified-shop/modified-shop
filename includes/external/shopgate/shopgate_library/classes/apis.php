@@ -265,6 +265,9 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		
 		if(!$this->preventResponseOutput) {
 			$this->response->setData($this->responseData);
+			if (empty($this->params['error_reporting']) && ob_get_contents()) {
+				ob_clean();
+			}
 			$this->response->send();
 		}
 		

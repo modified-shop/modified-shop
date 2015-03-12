@@ -155,6 +155,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'includes/classes/sessions.php', // neu
                      'includes/classes/cc_validation.php',
                      'includes/configure.org.php',
+                     'includes/external/shopgate/shopgate_library/vendors/mobile_redirect.class.php', // neu
                      'includes/modules/reviews.php',
                      'includes/modules/module.easybill.php',
                      'includes/modules/order_total/ot_sofort.php', // neu

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * Shopgate GmbH
 *
 * URHEBERRECHTSHINWEIS
@@ -20,40 +20,26 @@
 *
 *  @author Shopgate GmbH <interfaces@shopgate.com>
 */
-##### XTCM BOF #####
 include_once DIR_FS_CATALOG.'includes/external/shopgate/base/shopgate_config.php';
 include_once DIR_FS_CATALOG.'includes/external/shopgate/base/includes/modules/payment/ShopgateInstallHelper.php';
-##### XTCM EOF #####
 
 class shopgate {
 	var $code, $title, $description, $enabled, $sort_order;
 
 	function shopgate() {
-		global $order;
-
 		$this->code = 'shopgate';
 		$this->title = MODULE_PAYMENT_SHOPGATE_TEXT_TITLE;
 		$this->description = MODULE_PAYMENT_SHOPGATE_TEXT_DESCRIPTION;
-###### XTC3 | XTCM | GambioGX | osCommerce BOF #####
-//
-//
-//
-//
 		$this->enabled = ((MODULE_PAYMENT_SHOPGATE_STATUS == 'True') ? true : false);
-		$this->sort_order = MODULE_PAYMENT_SHOPGATE_SORT_ORDER;
-###### XTC3 | XTCM | GambioGX | osCommerce BOF #####
+		$this->sort_order = 88457;
 	}
 	
 	function mobile_payment() {
-		global $order;
-	
 		$this->code = 'shopgate';
 		$this->title = MODULE_PAYMENT_SHOPGATE_TEXT_TITLE;
 		$this->description = MODULE_PAYMENT_SHOPGATE_TEXT_DESCRIPTION;
-###### XTC3 | XTCM | GambioGX | osCommerce BOF #####
 		$this->enabled = false;
-		$this->sort_order = MODULE_PAYMENT_SHOPGATE_SORT_ORDER;
-###### XTC3 | XTCM | GambioGX | osCommerce BOF #####
+		$this->sort_order = 88457;
 	}
 
 	function update_status() {
@@ -115,9 +101,8 @@ class shopgate {
 			define('TABLE_ORDERS_SHOPGATE_ORDER', 'orders_shopgate_order');
 		}
 		xtc_db_query("delete from ".TABLE_CONFIGURATION." where configuration_key in ('MODULE_PAYMENT_SHOPGATE_STATUS', 'MODULE_PAYMENT_SHOPGATE_ALLOWED', 'MODULE_PAYMENT_SHOPGATE_ORDER_STATUS_ID')");
-		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_SHOPGATE_STATUS', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_SHOPGATE_ALLOWED', '0', '6', '1', now())");
-		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_SHOPGATE_SORT_ORDER', '0', '6', '1', now())");
+		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_SHOPGATE_STATUS', 'True', '6', '".$this->sort_order."', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_SHOPGATE_ALLOWED', '0', '6', '".$this->sort_order."', now())");
 		$result = xtc_db_query('select configuration_key,configuration_value from configuration as c where c.configuration_key = "'.ShopgateInstallHelper::SHOPGATE_DATABASE_CONFIG_KEY.'"');
 		$row	= xtc_db_fetch_array($result);
 		if(empty($row)){
@@ -126,9 +111,7 @@ class shopgate {
 
 		$this->installTable();
 		$this->updateDatabase();
-##### XTC3 | XTCM | GambioGX BOF #####
 		$this->grantAdminAccess();
-##### XTC3 | XTCM | GambioGX EOF #####
 		$installHelper = new ShopgateInstallHelper();
 		$installHelper->sendData();
 	}
@@ -138,20 +121,10 @@ class shopgate {
 	 */
 	function remove() {
 		// MODULE_PAYMENT_SHOPGATE_ORDER_STATUS_ID - Keep this on removing for old installation
-		xtc_db_query("delete from ".TABLE_CONFIGURATION." where configuration_key in ('MODULE_PAYMENT_SHOPGATE_STATUS', 'MODULE_PAYMENT_SHOPGATE_ALLOWED', 'MODULE_PAYMENT_SHOPGATE_SORT_ORDER', 'MODULE_PAYMENT_SHOPGATE_ORDER_STATUS_ID')");
-		
-###### XTC3 | XTCM | GambioGX | osCommerce BOF #####
-//
-//
-###### XTC3 | XTCM | GambioGX | osCommerce EOF #####
-		
-##### XTC3 | XTCM | GambioGX BOF #####
-    /*
+		xtc_db_query("delete from ".TABLE_CONFIGURATION." where configuration_key in ('MODULE_PAYMENT_SHOPGATE_STATUS', 'MODULE_PAYMENT_SHOPGATE_ALLOWED', 'MODULE_PAYMENT_SHOPGATE_ORDER_STATUS_ID')");
 		if( !$this->checkColumn("shopgate", TABLE_ADMIN_ACCESS) ) {
 			xtc_db_query("alter table ".TABLE_ADMIN_ACCESS." DROP COLUMN shopgate");
 		}
-		*/
-##### XTC3 | XTCM | GambioGX EOF #####
 	}
 
 	/**
@@ -160,10 +133,9 @@ class shopgate {
 	 * @return multitype:
 	 */
 	function keys() {
-		return array('MODULE_PAYMENT_SHOPGATE_STATUS', 'MODULE_PAYMENT_SHOPGATE_SORT_ORDER');
+		return array('MODULE_PAYMENT_SHOPGATE_STATUS');
 	}
 	
-##### XTC3 | XTCM | GambioGX BOF #####
 	/**
 	 * set grant access to shopgate configuration
 	 * to the current user and main administrator
@@ -184,7 +156,6 @@ class shopgate {
 			xtc_db_query("update ".TABLE_ADMIN_ACCESS." SET shopgate = 5 where customers_id = 'groups'");
 		}
 	}
-##### XTC3 | XTCM | GambioGX EOF #####
 	
 	/**
 	 * Install the shopgate order table
@@ -204,15 +175,6 @@ class shopgate {
 					`created` datetime DEFAULT NULL,
 					PRIMARY KEY (`shopgate_order_id`)
 			) ENGINE=MyISAM; ");
-###### XTC3 | XTCM | GambioGX | osCommerce BOF #####
-//
-//
-//
-//
-//
-//
-//
-###### XTC3 | XTCM | GambioGX | osCommerce EOF #####
 	}
 	
 	/**
@@ -260,11 +222,8 @@ class shopgate {
 			return;
 		}
 		
-		// load global configuration
 		try {
-##### XTCM BOF #####
-			$config = new ShopgateConfigModified();
-##### XTCM EOF #####
+			$config = new ShopgateConfigModified();// load global configuration
 			$config->loadFile();
 		} catch (ShopgateLibraryException $e) {
 			if (!($config instanceof ShopgateConfig)) {
@@ -326,9 +285,7 @@ class shopgate {
 		
 		// get the actual definition of the plugin version
 		if(!defined("SHOPGATE_PLUGIN_VERSION")) {
-##### XTCM BOF #####
 			require_once(DIR_FS_CATALOG.'includes/external/shopgate/plugin.php');
-##### XTCM EOF #####
 		}
 		// shopgate table version equals to the SHOPGATE_PLUGIN_VERSION, save that version to the config file
 		$config->setShopgateTableVersion(SHOPGATE_PLUGIN_VERSION);
@@ -348,6 +305,8 @@ class shopgate {
 	 *
 	 * @param string $columnName
 	 * @param string $table
+	 *
+	 * @return bool
 	 */
 	private function checkColumn($columnName, $table = TABLE_ORDERS_SHOPGATE_ORDER) {
 		$result = xtc_db_query("show columns from `{$table}`");

@@ -49,7 +49,7 @@ class ShopgateCouponModel {
 	 * @return array
 	 */
 	public function getZoneByCountryId($zoneCountryId) {
-		$query = "select * from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_FLAT_ZONE . "' and zone_country_id = '" . $zoneCountryId . "' order by zone_id";
+		$query = "select * from " . TABLE_ZONES_TO_GEO_ZONES . " where zone_country_id = '" . $zoneCountryId . "' order by zone_id";
 		$result = xtc_db_query($query);
 		$CountryResult = xtc_db_fetch_array($result);
 		return $CountryResult;

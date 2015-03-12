@@ -20,6 +20,6 @@
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
-require_once 'includes/application_top.php';
-include_once DIR_FS_CATALOG
-	. 'includes/external/shopgate/base/admin/shopgate.php';
+class ShopgateItemXmlModel extends ShopgateItemModel{
+
+}
