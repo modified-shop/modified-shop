@@ -259,7 +259,8 @@
           'shipping_unallowed' => $shipping_unallowed,
           'customers_password' => $customers_password,
           'customers_date_added' => 'now()',
-          'customers_last_modified' => 'now()'
+          'customers_last_modified' => 'now()',
+          'password_request_time' => 'now()'
         );
 
       if (ACCOUNT_GENDER == 'true')

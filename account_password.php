@@ -68,6 +68,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 			xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_password = '".xtc_encrypt_password($password_new)."', customers_last_modified=now() WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
 			xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." SET customers_info_date_account_last_modified = now() WHERE customers_info_id = '".(int) $_SESSION['customer_id']."'");
 			$messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');
+			unset($_SESSION['customer_password_change']);
 			
 			xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 		} else {
