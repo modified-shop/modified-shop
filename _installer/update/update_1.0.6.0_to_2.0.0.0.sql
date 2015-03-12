@@ -531,8 +531,8 @@ UPDATE geo_zones SET geo_zone_name = 'Steuerzone Nicht-EU-Ausland', geo_zone_des
 
 #GTB - 2015-03-12 - add Signature
 UPDATE content_manager SET content_group = 1011 WHERE content_group = 11;
-INSERT INTO `content_manager` (`languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_active`, `content_group`, `content_delete`) VALUES ('1','E-Mail Signature','','<b>Company</b><br />Address<br />Location<br />Homepage<br />E-mail:<br />Phone:<br />Fax:<br />CEO:<br />VAT Reg No:','0','1','','1','11','0');
-INSERT INTO `content_manager` (`languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_active`, `content_group`, `content_delete`) VALUES ('2','E-Mail Signatur','','Firma<br />Adresse<br />Ort<br />Homepage<br />E-Mail:<br />Fon:<br />Fax:<br />USt-IdNr.:<br />Handelsregister<br />Gesch&auml;ftsf&uuml;hrer:','0','1','','1','11','0');
+INSERT INTO `content_manager` (`languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_active`, `content_group`, `content_delete`) VALUES ('1','E-Mail Signature','','<b>Company</b><br />Address<br />Location<br />Homepage<br />E-mail:<br />Phone:<br />Fax:<br />CEO:<br />VAT Reg No:','0','1','','0','11','0');
+INSERT INTO `content_manager` (`languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_active`, `content_group`, `content_delete`) VALUES ('2','E-Mail Signatur','','Firma<br />Adresse<br />Ort<br />Homepage<br />E-Mail:<br />Fon:<br />Fax:<br />USt-IdNr.:<br />Handelsregister<br />Gesch&auml;ftsf&uuml;hrer:','0','1','','0','11','0');
 
 #GTB - 2015-03-12 - brute force login
 ALTER TABLE customers ADD password_request_time DATETIME DEFAULT '0000-00-00 00:00:00' AFTER password_request_key;
