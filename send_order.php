@@ -37,7 +37,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   if (isset($_SESSION['paypal_express_new_customer']) && $_SESSION['paypal_express_new_customer'] == 'true' && isset($_SESSION['ACCOUNT_PASSWORD']) && $_SESSION['ACCOUNT_PASSWORD'] == 'true') {
     require_once (DIR_FS_INC.'xtc_create_password.inc.php');
     require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
-    $password_encrypted =  xtc_RandomString(10);
+    $password_encrypted =  xtc_create_random_value(ENTRY_PASSWORD_MIN_LENGTH * 2);
     $password = xtc_encrypt_password($password_encrypted);
     $sql_data_array = array(
         'customers_password' => $password

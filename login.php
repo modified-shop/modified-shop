@@ -22,15 +22,16 @@
 
 include ('includes/application_top.php');
 
+define('LOGIN_NUM', 2);
+define('LOGIN_TIME', 3600);
+defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
+
 if (isset ($_SESSION['customer_id'])) {
 	xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 
 // create smarty elements
 $smarty = new Smarty;
-
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
@@ -42,6 +43,7 @@ if ($session_started == false) {
 	xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE));
 }
 
+$error = false;
 $info_message = ''; 
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	$email_address = xtc_db_prepare_input($_POST['email_address']);
@@ -55,21 +57,59 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	                                             customers_gender, 
 	                                             customers_password, 
 	                                             customers_email_address, 
-	                                             customers_default_address_id 
+	                                             customers_default_address_id,
+	                                             customers_login_tries,
+	                                             customers_login_time,
+	                                             password_request_key,
+	                                             password_request_time
 	                                        FROM ".TABLE_CUSTOMERS." 
 	                                       WHERE customers_email_address = '".xtc_db_input($email_address)."' 
 	                                         AND account_type = '0'");
 	if (!xtc_db_num_rows($check_customer_query)) {
-		$info_message = TEXT_LOGIN_ERROR;
+		$messageStack->add('login', TEXT_LOGIN_ERROR);
 	} else {
 		$check_customer = xtc_db_fetch_array($check_customer_query);
+		
+		// Captcha
+		if ($check_customer['customers_login_tries'] >= LOGIN_NUM 
+		    && (time() - strtotime($check_customer['customers_login_time'])) < LOGIN_TIME) 
+		{
+		  if (strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) {
+        $messageStack->add('login', TEXT_WRONG_CODE);
+			  xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
+			                   SET customers_login_tries = customers_login_tries+1, 
+			                       customers_login_time = now() 
+			                 WHERE customers_email_address = '".xtc_db_input($email_address)."'");
+		    $error = true;
+		  }
+		  $_SESSION['bruteforce_captcha'] = true;
+		  unset($_SESSION['vvcode']);
+    }
+		
 		// Check that password is good
 		if (xtc_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id']) !== true) {
-			$info_message = TEXT_LOGIN_ERROR;
-		} else {
+			$messageStack->add('login', TEXT_LOGIN_ERROR);
+			xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
+			                 SET customers_login_tries = customers_login_tries+1, 
+			                     customers_login_time = now() 
+			               WHERE customers_email_address = '".xtc_db_input($email_address)."'");
+      // Captcha
+      if ($check_customer['customers_login_tries'] >= LOGIN_NUM 
+          && (time() - strtotime($check_customer['customers_login_time'])) < LOGIN_TIME) 
+      {
+        $_SESSION['bruteforce_captcha'] = true;
+      }
+		} elseif ($error === false) {		
 			if (SESSION_RECREATE == 'True') {
 				xtc_session_recreate();
 			}
+      
+      // reset Login tries
+      unset($_SESSION['bruteforce_captcha']);
+      xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
+                       SET customers_login_tries = '0', 
+                           customers_login_time = now() 
+                     WHERE customers_email_address = '".xtc_db_input($email_address)."'");
 
 			$check_country_query = xtc_db_query("SELECT entry_country_id, 
 			                                            entry_zone_id 
@@ -100,6 +140,11 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 			if (isset($econda) && is_object($econda)) {
 			  $econda->_loginUser();			
       }
+
+      if (strtotime($check_customer['password_request_time']) > 0) {
+        $_SESSION['customer_password_change'] = true;
+        xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_PASSWORD, 'info_message=need_change_pwd', 'SSL'), 'SSL');
+      }
       
       // define pages allowed to redirect
       $redirect_array = array(FILENAME_ACCOUNT_HISTORY_INFO, 
@@ -123,10 +168,18 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	}
 }
 
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 $breadcrumb->add(NAVBAR_TITLE_LOGIN, xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 require (DIR_WS_INCLUDES.'header.php');
 
 $smarty->assign('info_message', (isset($_GET['info_message']) ? get_message('info_message') : $info_message));
+
+if ($messageStack->size('login') > 0) {
+	$smarty->assign('info_message', $messageStack->output('login'));
+}
+
 $smarty->assign('account_option', ACCOUNT_OPTIONS);
 $smarty->assign('BUTTON_NEW_ACCOUNT', '<a href="'.xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 $smarty->assign('BUTTON_LOGIN', xtc_image_submit('button_login.gif', IMAGE_BUTTON_LOGIN));
@@ -139,6 +192,11 @@ $smarty->assign('INPUT_MAIL', xtc_draw_input_field('email_address'));
 $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));
 $smarty->assign('LINK_LOST_PASSWORD', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, '', 'SSL'));
 $smarty->assign('FORM_END', '</form>');
+
+if (isset($_SESSION['bruteforce_captcha'])) {
+  $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL').'" alt="Captcha" />');
+  $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+}
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;

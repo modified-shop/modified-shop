@@ -77,7 +77,8 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && isset($_PO
       $case = 'first_opt_in';
       $info_message = TEXT_LINK_MAIL_SENDED;
       xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
-                       SET password_request_key = '".$vlcode."' 
+                       SET password_request_key = '".xtc_db_input($vlcode)."',
+                           password_request_time = now()
                      WHERE customers_id = '".$check_customer['customers_id']."'");
       // send email
       xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
@@ -103,7 +104,8 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && isset($_PO
 if (isset ($_GET['action']) && ($_GET['action'] == 'verified')) {
   $check_customer_query = xtc_db_query("SELECT customers_id, 
                                                customers_email_address, 
-                                               password_request_key 
+                                               password_request_key,
+                                               password_request_time
                                           FROM ".TABLE_CUSTOMERS." 
                                          WHERE customers_id = '".(int)$_GET['customers_id']."' 
                                            AND password_request_key = '".xtc_db_input($_GET['key'])."'");
@@ -111,6 +113,9 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'verified')) {
   if (!xtc_db_num_rows($check_customer_query) || $_GET['key'] == '') {
     $case = 'no_account';
     $info_message = TEXT_NO_ACCOUNT;
+  } elseif (time() > (strtotime($check_customer['password_request_time']) + 3600)) {
+    $case = 'double_opt';
+    $info_message = TEXT_REQUEST_NOT_VALID;
   } else {
     $newpass = xtc_create_random_value(ENTRY_PASSWORD_MIN_LENGTH * 2);
     $crypted_password = xtc_encrypt_password($newpass);

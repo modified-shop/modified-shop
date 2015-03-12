@@ -685,12 +685,12 @@ if (defined('PAYPAL_API_VERSION')) {
                         'customers_email_address' => $email_address,
                         'customers_telephone' => $telephone,
                         'customers_date_added' => 'now()',
-                        'customers_last_modified' => 'now()');
+                        'customers_last_modified' => 'now()',
+                        'password_request_time' => 'now()');
       xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
       $_SESSION['paypal_express_new_customer'] = 'true';
       $_SESSION['customer_id'] = xtc_db_insert_id();
-      $user_id = xtc_db_insert_id();
-      xtc_write_user_info($user_id);
+      xtc_write_user_info($_SESSION['customer_id']);
       $sql_data_array = array(
                         'customers_id' => $_SESSION['customer_id'],
                         'entry_firstname' => $firstname,

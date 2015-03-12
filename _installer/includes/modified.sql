@@ -454,11 +454,14 @@ CREATE TABLE customers (
   delete_user CHAR(1) DEFAULT '1' NOT NULL,
   account_type INT(1) NOT NULL DEFAULT 0,
   password_request_key VARCHAR(32) NOT NULL,
+  password_request_time DATETIME DEFAULT '0000-00-00 00:00:00',
   payment_unallowed VARCHAR(255) NOT NULL,
   shipping_unallowed VARCHAR(255) NOT NULL,
   refferers_id VARCHAR(32) DEFAULT '0' NOT NULL,
   customers_date_added DATETIME DEFAULT '0000-00-00 00:00:00',
   customers_last_modified DATETIME DEFAULT '0000-00-00 00:00:00',
+  customers_login_tries INT(11) NOT NULL DEFAULT '0',
+  customers_login_time DATETIME DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (customers_id),
   KEY idx_customers_email_address (customers_email_address)
 ) ENGINE=MyISAM;
