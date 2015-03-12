@@ -21,22 +21,27 @@ class protectedshops {
   var $enabled;
   var $description;
   var $extended_description;
+  var $update;
+  var $content;
 
   function __construct() {
     $this->code = 'protectedshops';
     $this->title = MODULE_PROTECTEDSHOPS_TEXT_TITLE;
     $this->description = MODULE_PROTECTEDSHOPS_TEXT_DESCRIPTION;
     $this->enabled = ((MODULE_PROTECTEDSHOPS_STATUS == 'true') ? true : false);
-    
+  }
+ 
+  function init_ps() {
     $this->update = new protectedshops_update();
     $params = array('Request' => 'GetDocumentInfo',
                     'ShopId' => $this->update->token,
                     );
-    $this->content = $this->update->request_document($params);
+    $this->content = $this->update->request_document($params); 
   }
- 
+  
   function process() {
     if ($this->enabled === true && $_POST['export'] == 'yes') {
+      $this->init_ps();
       $this->update->check_update();
     }
   }
@@ -86,6 +91,8 @@ class protectedshops {
   
   // autoinstall
   function auto_install() {
+    $this->init_ps();
+    
     // Documents
     if (isset($this->content['DocumentDate']) && is_array($this->content['DocumentDate'])) {
       foreach ($this->content['DocumentDate'] as $type => $date) {
