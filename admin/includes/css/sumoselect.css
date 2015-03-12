@@ -8,10 +8,10 @@ td.dataTableConfig .SumoSelect {width:100%; }
 .SumoSelect > .optWrapper > .options > li label, .SumoSelect > .CaptionCont { user-select: none; -o-user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; }
 .SumoSelect { display: inline-block; position: relative; }
 .SumoSelect > .CaptionCont { position: relative;min-height: 20px; background-color: #fafafa;border-color: #c6c6c6 #dadada #eaeaea;-webkit-border-radius: 2px;-moz-border-radius: 2px;border-radius: 2px;border-style: solid;border-width: 1px;}
-.SumoSelect > .CaptionCont > span { display: block; padding-right: 30px; white-space: nowrap; line-height:20px;}
+.SumoSelect > .CaptionCont > span { display: block; padding-right: 22px; white-space: nowrap; line-height:20px;}
 /*placeholder style*/
 .SumoSelect > .CaptionCont > span.placeholder { color: #ccc; font-style: italic; }
-.SumoSelect > .CaptionCont > label { position: absolute; top: 0px; right: 0px; bottom: 0px; width: 28px; background-color: #c8c8c8; }
+.SumoSelect > .CaptionCont > label { position: absolute; top: 0px; right: 0px; bottom: 0px; width: 22px; background-color: #c8c8c8; }
 .SumoSelect > .CaptionCont > label > i { background-image: url('images/arrow_sans_down-16.png'); background-position: center center; width: 16px; height: 16px; display: block; position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto; }
 .SumoSelect > .optWrapper { top: 30px; width: 100%; position: absolute; left: 0; opacity: 0; visibility: hidden; transition: opacity 300ms ease-out, top 300ms ease-out, visibility 300ms ease-out; -webkit-transition: opacity 300ms ease-out, top 300ms ease-out, visibility 300ms ease-out; -moz-transition: opacity 300ms ease-out, top 300ms ease-out, visibility 300ms ease-out; -ms-transition: opacity 300ms ease-out, top 300ms ease-out, visibility 300ms ease-out; -o-transition: opacity 300ms ease-out, top 300ms ease-out, visibility 300ms ease-out; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; z-index: -100; background: #fff; border: 1px solid #ddd; box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.11); border-radius: 3px; }
 .SumoSelect > .optWrapper.open { top: 33px; visibility: visible; opacity: 1; z-index: 1000; }

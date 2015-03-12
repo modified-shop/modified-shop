@@ -67,8 +67,7 @@ function unfold(oid)
     var input_types = $('input[type=text],select');
     var input_fields = rows_oid.find(input_types);
     var checkboxes = rows_oid.find('.cbx_optval');
-    var $cbx_selall = $(elemID).find('input.select_all');
-    var $cbx_checkator = $(elemID).find('.checkator_holder');
+    var cbx_selall = $(elemID).find('input.select_all,.checkator_holder');
 
     if (flag) {
         //Ein/Ausklappen
@@ -76,10 +75,8 @@ function unfold(oid)
         if ($(elemID).hasClass("att-red")) {
             $(elemID).removeClass('att-red').addClass('att-green');
             if (debug) console.log('className close: ',$(elemID).attr('class'));
-            $cbx_selall.attr('disabled',true);
-            $cbx_selall.hide();
-            $cbx_checkator.attr('disabled',true);
-            $cbx_checkator.hide();
+            cbx_selall.attr('disabled',true);
+            cbx_selall.hide();
             $('input[type="hidden"][value="' + oid + '"]').remove();
             $(input_fields).attr('disabled',true);
             $(checkboxes).attr('disabled',true);
@@ -87,10 +84,8 @@ function unfold(oid)
         } else {
             $(elemID).removeClass('att-green').addClass('att-red');
             if (debug) console.log('className open: ',$(elemID).attr('class'));
-            $cbx_selall.attr('disabled',false);
-            $cbx_selall.show();
-            $cbx_checkator.attr('disabled',false);
-            $cbx_checkator.show();
+            cbx_selall.attr('disabled',false);
+            cbx_selall.show();
             $('form[name="SUBMIT_ATTRIBUTES"]').append('<input type="hidden" name="options_id[]" value="' + oid + '" />');
             $(checkboxes).attr('disabled',false);
             checkboxes.each(function() {
