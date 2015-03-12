@@ -82,7 +82,7 @@ class splitPageResults {
                 $display_links .= PREVNEXT_BUTTON_PREV . '&nbsp;&nbsp;';
             }
 
-            $display_links .= sprintf(TEXT_RESULT_PAGE, xtc_draw_pull_down_menu($page_name, $pages_array, $current_page_number, 'onChange="this.form.submit();"'), $num_pages);
+            $display_links .= '<span class="select_w80">'.sprintf(TEXT_RESULT_PAGE, xtc_draw_pull_down_menu($page_name, $pages_array, $current_page_number, 'onChange="this.form.submit();"'), $num_pages).'</span>';
 
             if (($current_page_number < $num_pages) && ($num_pages != 1)) {
                 $display_links .= '&nbsp;&nbsp;<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . ($current_page_number + 1)) . '" class="splitPageLink">' . PREVNEXT_BUTTON_NEXT . '</a>';

@@ -210,7 +210,7 @@ if (xtc_db_num_rows($products)) {
                   
                 <div class="pageHeading">&nbsp;<?php echo HEADING_TITLE_VAL; ?>&nbsp;&nbsp;&nbsp;
                   <span  class="main"><?php echo TEXT_OPTION_ID_FILTER;?></span>
-                  <select class="SlectBox" name="option_id_filter" onchange="option_filter(this)">
+                  <span class="select_f12"><select class="SlectBox" name="option_id_filter" onchange="option_filter(this)"></span>
                     <option value="" name="">---</option>
                     <?php echo $options_dropdown_select;?>
                   </select>
