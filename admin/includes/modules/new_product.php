@@ -192,11 +192,11 @@
     <table class="tableInput border0">
       <tr>
         <td style="width:260px"><span class="main"><?php echo TEXT_CHOOSE_INFO_TEMPLATE; ?>:</span></td>
-        <td><span class="main"><?php echo $catfunc->create_templates_dropdown_menu('info_template', '/module/product_info/', $pInfo->product_template ,'style="width: 220px"'); ?></span></td>
+        <td><span class="main"><?php echo $catfunc->create_templates_dropdown_menu('info_template', '/module/product_info/', $pInfo->product_template ,'style="width: 250px"'); ?></span></td>
       </tr>
       <tr>
         <td><span class="main"><?php echo TEXT_CHOOSE_OPTIONS_TEMPLATE; ?>:</span></td>
-        <td><span class="main"><?php echo $catfunc->create_templates_dropdown_menu('options_template', '/module/product_options/', $pInfo->options_template, 'style="width: 220px"'); ?></span></td>
+        <td><span class="main"><?php echo $catfunc->create_templates_dropdown_menu('options_template', '/module/product_options/', $pInfo->options_template, 'style="width: 250px"'); ?></span></td>
       </tr>
     </table>
     
