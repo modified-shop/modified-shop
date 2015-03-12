@@ -24,9 +24,6 @@ require_once 'includes/application_top.php';
 require(DIR_FS_CATALOG.'/includes/external/shopgate/shopgate_library/shopgate.php');
 require(DIR_FS_CATALOG.'/includes/external/shopgate/base/shopgate_config.php');
 
-define('SHOPGATE_LINK_HOME', 'http://www.shopgate.com');
-define('SHOPGATE_LINK_WIKI', 'http://support.shopgate.com/hc/en-us/articles/202911763');
-
 $encodings = array('UTF-8', 'ISO-8859-1', 'ISO-8859-15');
 $error = array();
 
@@ -235,7 +232,7 @@ if($_GET["sg_option"] === "config") {
 			require(DIR_FS_LANGUAGES . $languageDirectory . '/modules/shipping/' . $shippingModule);
 			
 			$shippingModule = substr($shippingModule, 0, strrpos($shippingModule, '.'));
-			$sgInstalledShippingModules[$shippingModule] = constant(MODULE_SHIPPING_.strtoupper($shippingModule)._TEXT_TITLE);
+			$sgInstalledShippingModules[$shippingModule] = constant('MODULE_SHIPPING_'.strtoupper($shippingModule).'_TEXT_TITLE');
 		}
 	}
 }
@@ -272,7 +269,7 @@ if (defined('RUN_MODE_ADMIN')) {
 </script>
 <style type="text/css">
 	.shopgate_iframe {
-		width: 1300px;
+		width: 100%;
 		min-height: 600px;
 		height: 100%;
 		border: 0;
@@ -348,31 +345,40 @@ if (defined('RUN_MODE_ADMIN')) {
 </style>
 </head>
 <?php $tableClass = 'dataTableContent'; ?>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
+<body>
 
-<!-- header --><?php require(DIR_WS_INCLUDES . 'header.php'); ?><!-- header_eof //-->
+	<!-- header //-->
+	<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+	<!-- header_eof //-->
 
-<!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-	<tr>
-		<td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-			<table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1"
-				   cellpadding="1" class="columnLeft">
-				<?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-			</table>
-		</td>
-		<!-- body_text //-->
-		<td class="boxCenter" width="100%" valign="top" style="height: 100%;">
-			<table border="0" width="100%" cellspacing="0" cellpadding="2" style="height:100%;">
-				<tr>
-					<td>
-						<div class="pageHeading">
-							<?php echo SHOPGATE_CONFIG_TITLE; ?>
-						</div>
-					</td>
-				</tr>
-				<tr style="height: 100%;">
-					<td class="main" style="height: 100%; vertical-align: top;">
+	<!-- body //-->
+  <table class="tableBody">
+    <tr>
+      <?php //left_navigation
+      if (USE_ADMIN_TOP_MENU == 'false') {
+        echo '<td class="columnLeft2">'.PHP_EOL;
+        echo '<!-- left_navigation //-->'.PHP_EOL;       
+        require_once(DIR_WS_INCLUDES . 'column_left.php');
+        echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+        echo '</td>'.PHP_EOL;      
+      }
+      ?>
+      <!-- body_text //-->
+			<td class="boxCenter">
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_modules.png'); ?></div>
+        <div class="pageHeading pdg2">Shopgate</div>
+        <div class="main">Modules</div>   
+				<table class="tableCenter">
+          <tr>
+            <td valign="middle" class="dataTableHeadingContent" style="width:250px;">
+              <?php echo SHOPGATE_CONFIG_TITLE; ?>
+            </td>
+            <td valign="middle" class="dataTableHeadingContent">
+              <a href="<?php echo xtc_href_link('modules.php', 'set=payment&module=shopgate'); ?>"><u>Einstellungen</u></a>  
+            </td>
+          </tr>
+					<tr style="height: 100%;">
+						<td class="main" style="height: 100%; vertical-align: top;" colspan="2">
 						<?php if(!empty($shopgate_message)):?>
 							<div class="shopgate_red_message">
 								<strong style="color: red;"><?php echo SHOPGATE_CONFIG_ERROR; ?></strong>

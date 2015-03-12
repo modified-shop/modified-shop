@@ -24,10 +24,8 @@
 
 ### Plugin ###
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING', 'Encoding des Shopsystems');
-define('SHOPGATE_CONFIG_EXTENDED_ENCODING_DESCRIPTION',
-	'W&auml;hlen Sie das Encoding Ihres Shopsystems. &Uuml;blicherweise ist f&uuml;r Versionen vor 1.06 "ISO-8859-15" zu w&auml;hlen.'
-);
-define('SHOPGATE_CONFIG_WIKI_LINK', 'https://wiki.shopgate.com/Modified/de');
+define('SHOPGATE_CONFIG_EXTENDED_ENCODING_DESCRIPTION', 'W&auml;hlen Sie das Encoding Ihres Shopsystems. &Uuml;blicherweise ist f&uuml;r Versionen vor 1.06 "ISO-8859-15" zu w&auml;hlen.');
+define('SHOPGATE_CONFIG_WIKI_LINK', 'http://wiki.shopgate.com/Modified/de');
 
 ### Menu ###
 define('BOX_SHOPGATE', 'Shopgate');
@@ -36,9 +34,10 @@ define('BOX_SHOPGATE_HELP', 'Installationshilfe');
 define('BOX_SHOPGATE_CONFIG', 'Einstellungen');
 
 ### Links ###
-define('SHOPGATE_LINK_HOME', 'https://www.shopgate.com');
-define('SHOPGATE_LINK_REGISTER', 'https://www.shopgate.com/welcome/shop_register');
-define('SHOPGATE_LINK_LOGIN', 'https://www.shopgate.com/users/login/0/2');
+define('SHOPGATE_LINK_HOME', 'https://www.shopgate.com/?partner=30051');
+define('SHOPGATE_LINK_REGISTER', 'https://www.shopgate.com/welcome/shop_register?partner=30051');
+define('SHOPGATE_LINK_LOGIN', 'https://www.shopgate.com/users/login/0/2?partner=30051');
+define('SHOPGATE_LINK_WIKI', 'http://support.shopgate.com/hc/en-us/articles/202911763');
 
 ### Konfiguration ###
 define('SHOPGATE_CONFIG_TITLE', 'SHOPGATE');

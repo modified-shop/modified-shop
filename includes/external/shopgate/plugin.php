@@ -21,7 +21,7 @@
 *  @author Shopgate GmbH <interfaces@shopgate.com>
 */
 define('SHOPGATE_PLUGIN_VERSION', '2.9.5');
-require_once(dirname(__FILE__) . '/model/ShopgateModelLoader.php');
+require_once(dirname(__FILE__) . '/Model/ShopgateModelLoader.php');
 require_once(dirname(__FILE__) . '/helper/ShopgatePluginInitHelper.php');
 /**
  * Modified eCommerce Plugin for Shopgate
@@ -136,7 +136,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		
 		$customersInfo = array(
 				'customers_info_id' 				=> $userId,
-				'customers_info_number_of_logons'	=> 0,
+				'customers_info_number_of_logons'	=> 1,
 				'customers_info_date_account_created' => $date,
 				'customers_info_date_account_last_modified' => $date,
 		);
@@ -600,7 +600,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		// password's correct?
 		$customerData = xtc_db_fetch_array($customerResult);
-		if (!xtc_validate_password($pass, $customerData['customers_password'])) {
+		if (!xtc_validate_password($pass, $customerData['customers_password'], $customerData['customers_id'])) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_WRONG_USERNAME_OR_PASSWORD, 'User: '.$userUtf8);
 		}
 
@@ -3313,9 +3313,9 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				if (isset($_SESSION['paypal_express_new_customer']) && $_SESSION['paypal_express_new_customer'] == 'true' && isset($_SESSION['ACCOUNT_PASSWORD']) && $_SESSION['ACCOUNT_PASSWORD'] == 'true') {
 					require_once (DIR_FS_INC.'xtc_create_password.inc.php');
 					require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
-					$password_encrypted =  xtc_RandomString(10);
+					$password_encrypted =  xtc_RandomString(ENTRY_PASSWORD_MIN_LENGTH * 2);
 					$password = xtc_encrypt_password($password_encrypted);
-					xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "' where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
+					xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "', password_request_time = now() where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
 					$smarty->assign('NEW_PASSWORD', $password_encrypted);
 				}
 				// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
