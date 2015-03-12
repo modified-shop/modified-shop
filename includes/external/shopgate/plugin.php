@@ -3764,9 +3764,9 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				if (isset($_SESSION['paypal_express_new_customer']) && $_SESSION['paypal_express_new_customer'] == 'true' && isset($_SESSION['ACCOUNT_PASSWORD']) && $_SESSION['ACCOUNT_PASSWORD'] == 'true') {
 					require_once (DIR_FS_INC.'xtc_create_password.inc.php');
 					require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
-					$password_encrypted =  xtc_RandomString(10);
+					$password_encrypted =  xtc_RandomString(ENTRY_PASSWORD_MIN_LENGTH * 2);
 					$password = xtc_encrypt_password($password_encrypted);
-					xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "' where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
+					xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "', password_request_time = now() where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
 					$smarty->assign('NEW_PASSWORD', $password_encrypted);
 				}
 				// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
