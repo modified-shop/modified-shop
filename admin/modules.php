@@ -35,12 +35,14 @@
       case 'shipping':
         $module_type = 'shipping';
         $module_directory = DIR_FS_CATALOG_MODULES . 'shipping/';
+        $module_directory_include = DIR_WS_CATALOG.DIR_WS_MODULES . 'shipping/';
         $module_key = 'MODULE_SHIPPING_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
         break;
       case 'ordertotal':
         $module_type = 'order_total';
         $module_directory = DIR_FS_CATALOG_MODULES . 'order_total/';
+        $module_directory_include = DIR_WS_CATALOG.DIR_WS_MODULES . 'order_total/';
         $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
         break;
@@ -48,6 +50,7 @@
       default:
         $module_type = 'payment';
         $module_directory = DIR_FS_CATALOG_MODULES . 'payment/';
+        $module_directory_include = DIR_WS_CATALOG.DIR_WS_MODULES . 'payment/';
         $module_key = 'MODULE_PAYMENT_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_PAYMENT);
         if (isset($_GET['error'])) {
@@ -338,7 +341,7 @@ if (xtc_not_null($action) && !$box) {
                     }
                     ?>
                   </table>
-                  <div class="smallText pdg2"><?php echo TEXT_MODULE_DIRECTORY . ' admin/' . $module_directory; ?></div>
+                  <div class="smallText pdg2"><?php echo TEXT_MODULE_DIRECTORY . $module_directory_include; ?></div>
                 </td>
                 <?php          
                 }

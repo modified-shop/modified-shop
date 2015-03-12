@@ -47,14 +47,16 @@
     switch ($set) {
       case 'system':
         $module_type = 'system';
-        $module_directory = DIR_WS_MODULES . 'system/';
+        $module_directory = DIR_FS_ADMIN.DIR_WS_MODULES . 'system/';
+        $module_directory_include = DIR_WS_ADMIN.DIR_WS_MODULES . 'system/';
         $module_key = 'MODULE_SYSTEM_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_SYSTEM);
         break;
       case 'export':
       default:
         $module_type = 'export';
-        $module_directory = DIR_WS_MODULES . 'export/';
+        $module_directory = DIR_FS_ADMIN.DIR_WS_MODULES . 'export/';
+        $module_directory_include = DIR_WS_ADMIN.DIR_WS_MODULES . 'export/';
         $module_key = 'MODULE_EXPORT_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_EXPORT);
         break;
@@ -373,7 +375,7 @@ if (xtc_not_null($action) && !$box) {
                         }
                         ?>
                       </table>
-                      <div class="smallText pdg2"><?php echo TEXT_MODULE_DIRECTORY . ' admin/' . $module_directory; ?></div>
+                      <div class="smallText pdg2"><?php echo TEXT_MODULE_DIRECTORY . $module_directory_include; ?></div>
                     </td>
                     <?php
                 }
