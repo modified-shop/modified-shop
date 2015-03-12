@@ -109,4 +109,5 @@ function en_disabled(obj)
     
     //download fields
     obj.closest('tr').next('tr').not('[class^=attributes]').find('input[type=text], select').attr('disabled', !obj.is(':checked'));
+    obj.closest('tr').next('tr').not('[class^=attributes]').find('.SumoSelect').toggleClass('disabled', !obj.is(':checked'));
 }
