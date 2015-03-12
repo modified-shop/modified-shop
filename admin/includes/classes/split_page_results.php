@@ -102,7 +102,7 @@ class splitPageResults {
 
             $display_links .= '</form>';
         } else {
-            $display_links = sprintf(TEXT_RESULT_PAGE, $num_pages, $num_pages);
+            $display_links = '<span style="line-height: 28px;">'.sprintf(TEXT_RESULT_PAGE, $num_pages, $num_pages).'</span>';
         }
 
         return $display_links;
@@ -123,7 +123,7 @@ class splitPageResults {
           $from_num = 1;
           $to_num = $query_numrows; 
         }
-        return sprintf($text_output, $from_num, $to_num, $query_numrows);
+        return '<span style="line-height: 28px;">'.sprintf($text_output, $from_num, $to_num, $query_numrows).'</span>';
     }
 }
 ?>
