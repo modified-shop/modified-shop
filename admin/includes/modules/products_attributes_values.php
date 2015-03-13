@@ -210,10 +210,12 @@ if (xtc_db_num_rows($products)) {
                   
                 <div class="pageHeading">&nbsp;<?php echo HEADING_TITLE_VAL; ?>&nbsp;&nbsp;&nbsp;
                   <span  class="main"><?php echo TEXT_OPTION_ID_FILTER;?></span>
-                  <span class="select_f12"><select class="SlectBox" name="option_id_filter" onchange="option_filter(this)"></span>
-                    <option value="" name="">---</option>
-                    <?php echo $options_dropdown_select;?>
-                  </select>
+                  <span class="select_f12">
+                    <select class="SlectBox" name="option_id_filter" onchange="option_filter(this)">
+                      <option value="" name="">---</option>
+                      <?php echo $options_dropdown_select;?>
+                    </select>
+                  </span>
                   <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get'); ?>
                     <span  class="main"><?php  echo  TEXT_SEARCH;  ?></span> 
                     <input type="text" name="search_optionsname" size="20" value="<?php echo $_GET['search_optionsname']; ?>">
@@ -285,7 +287,7 @@ while ($values_values = xtc_db_fetch_array($values)) {
                         <input type="hidden" name="value_id" value="<?php echo $values_values['products_options_values_id']; ?>">
                         <input type="hidden" name="option_id" value="<?php echo $values_values['products_options_id']; ?>">
                       </td>
-                      <td align="center" class="dataTableContent">&nbsp;<select class="SlectBox" name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
+                      <td align="center" class="dataTableContent">&nbsp;<select class="SlectBox" id="option_id" name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
                       <td class="dataTableContent"><?php echo $inputs; ?></td>
                       <td class="dataTableContent txta-c update">&nbsp;<?php echo xtc_button(BUTTON_UPDATE); ?>&nbsp;<?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'value_page='.$_GET['value_page'].$option_filter, 'NONSSL')); ?>&nbsp;</td>
                     </tr>
@@ -317,4 +319,17 @@ while ($values_values = xtc_db_fetch_array($values)) {
  // ############ EOF DEFAULT ############ //
   }
 ?>
+<script type="text/javascript">
+//HOTFIX NO option_id in $_POST array
+$(document).ready(function () {
+  $('form[name="values"]').submit( function(eventObj ) 
+  {
+      var check_option_id = "<?php echo ( isset( $_POST['option_id'] ) && $_POST['option_id'] != '') ? 1 : 0; ?>";
+      if (check_option_id == 0) {
+        $(this).append("<input name='option_id' value='"+ $('#option_id').val() +"' type='hidden'>");
+      }
+      return true;
+  })
+});
+</script>
 <!-- option value eof //-->
