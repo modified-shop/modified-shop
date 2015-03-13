@@ -250,7 +250,7 @@ if (xtc_db_num_rows($products)) {
                   <?php echo xtc_draw_form('values', FILENAME_PRODUCTS_ATTRIBUTES, 'action=add_product_option_values&value_page=' . $_GET['value_page'].$option_filter, 'post'); ?>
                   <tr class="dataTableRowSelected">
                     <td class="dataTableContent txta-c">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
-                    <td align="left" class="dataTableContent">&nbsp;<select class="SlectBox" name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
+                    <td align="left" class="dataTableContent">&nbsp;<select class="SlectBox" id="option_id" name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
                     <td class="dataTableContent"><input type="hidden" name="value_id" value="<?php echo $next_id; ?>"><?php echo $inputs; ?></td>
                     <td class="dataTableContent txta-c">&nbsp;<?php echo xtc_button(BUTTON_INSERT); ?>&nbsp;</td>
                   </tr>
@@ -320,12 +320,12 @@ while ($values_values = xtc_db_fetch_array($values)) {
   }
 ?>
 <script type="text/javascript">
-//HOTFIX NO option_id in $_POST array
+//HOTFIX sumoselect  - no option_id in $_POST array
 $(document).ready(function () {
   $('form[name="values"]').submit( function(eventObj ) 
   {
       var check_option_id = "<?php echo ( isset( $_POST['option_id'] ) && $_POST['option_id'] != '') ? 1 : 0; ?>";
-      if (check_option_id == 0) {
+      if (check_option_id == "0") {
         $(this).append("<input name='option_id' value='"+ $('#option_id').val() +"' type='hidden'>");
       }
       return true;
