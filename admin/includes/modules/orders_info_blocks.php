@@ -293,6 +293,7 @@
 
         <!-- BOC ORDER TRACK & TRACE BLOCK -->
         <div class="heading"><?php echo TABLE_HEADING_TRACK_TRACE; ?></div>
+        <?php echo xtc_draw_form('carriers', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=inserttracking'); ?>
         <table cellspacing="0" cellpadding="5" class="table borderall">
           <tr>
             <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
@@ -312,13 +313,12 @@
             }
           ?>
           <tr>
-            <?php echo xtc_draw_form('carriers', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=inserttracking'); ?>
               <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); ?></td>
               <td class="smallText" align="center"><?php echo  xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
               <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo BUTTON_UPDATE; ?>"></td>
-            </form>
           </tr>
         </table>
+        </form>
         <!-- EOC ORDER TRACK & TRACE BLOCK -->
 
         <!-- BOC ORDER HISTORY BLOCK -->
@@ -380,11 +380,11 @@
 
         <!-- BOC ORDER STATUS BLOCK -->
         <div class="heading"><?php echo TEXT_ORDER_STATUS; ?></div>
+        <?php echo xtc_draw_form('status', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=update_order'); ?>
         <table cellspacing="0" cellpadding="2" class="table">
           <tr>
             <td class="main"><b><?php echo TABLE_HEADING_COMMENTS; ?></b></td>
           </tr>
-          <?php echo xtc_draw_form('status', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=update_order'); ?>
           <tr>
             <td class="main"><?php echo xtc_draw_textarea_field('comments', 'soft', '60', '8', $order->info['comments']); ?></td>
           </tr>
@@ -415,8 +415,8 @@
               ?>
             </td>
           </tr>
-          </form>
         </table>
+        </form>
         <!-- EOC ORDER STATUS BLOCK -->
 
         <!-- BOC BUTTONS BLOCK -->

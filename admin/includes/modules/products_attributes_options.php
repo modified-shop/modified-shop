@@ -103,10 +103,10 @@ if ($_GET['action'] == 'delete_product_option') {
                           );
   $options_values = xtc_db_fetch_array($options);
 ?>
-                  <table class="option-table mrg5">
-                    <tr>
-                      <td class="pageHeading" colspan="3">&nbsp;<?php echo $options_values['products_options_name']; ?>&nbsp;</td>
-                    </tr>
+    <table class="option-table mrg5">
+      <tr>
+        <td class="pageHeading" colspan="3">&nbsp;<?php echo $options_values['products_options_name']; ?>&nbsp;</td>
+      </tr>
 <?php
   $products = xtc_db_query("-- products_attributes.php
                           SELECT p.products_id,
@@ -127,73 +127,81 @@ if ($_GET['action'] == 'delete_product_option') {
   if (xtc_db_num_rows($products)) {
   //Produkt zugeordnet - Warnung - Attributemerkmal kann nicht gelöscht werden
 ?>
-                    <tr class="dataTableHeadingRow">
-                      <td class="dataTableHeadingContent txta-c">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
-                      <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_PRODUCT; ?>&nbsp;</td>
-                      <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
-                    </tr>
+      <tr class="dataTableHeadingRow">
+        <td class="dataTableHeadingContent txta-c">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
+        <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_PRODUCT; ?>&nbsp;</td>
+        <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
+      </tr>
 <?php
-while ($products_values = xtc_db_fetch_array($products)) {
-  $rows++;
+    while ($products_values = xtc_db_fetch_array($products)) {
+      $rows++;
 ?>
-                    <tr class="dataTableRow">
-                      <td class="dataTableContent txta-c">&nbsp;<?php echo $products_values['products_id']; ?>&nbsp;</td>
-                      <td class="dataTableContent">&nbsp;<?php echo $products_values['products_name']; ?>&nbsp;</td>
-                      <td class="dataTableContent">&nbsp;<?php echo $products_values['products_options_values_name']; ?>&nbsp;</td>
-                    </tr>
+      <tr class="dataTableRow">
+        <td class="dataTableContent txta-c">&nbsp;<?php echo $products_values['products_id']; ?>&nbsp;</td>
+        <td class="dataTableContent">&nbsp;<?php echo $products_values['products_name']; ?>&nbsp;</td>
+        <td class="dataTableContent">&nbsp;<?php echo $products_values['products_options_values_name']; ?>&nbsp;</td>
+      </tr>
 <?php
-}
+    }
 ?>
-                    <tr>
-                      <td colspan="3" class="main" style="background-color: #d4d4d4;">
-                        <div style="margin:10px 0";>
-                          <?php echo TEXT_WARNING_OF_DELETE; ?>&nbsp;&nbsp;&nbsp;
-                          <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'option_page=' . $_GET['option_page'] . '&attribute_page=' . $attribute_page, 'NONSSL'));?>
-                        </div>
-                      </td>
-                    </tr>
+      <tr>
+        <td colspan="3" class="main" style="background-color: #d4d4d4;">
+          <div style="margin:10px 0";>
+            <?php echo TEXT_WARNING_OF_DELETE; ?>&nbsp;&nbsp;&nbsp;
+            <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'option_page=' . $_GET['option_page'] . '&attribute_page=' . $attribute_page, 'NONSSL'));?>
+          </div>
+        </td>
+      </tr>
 <?php
-} else {
+  } else {
 //Produkt nicht zugeordnet - Ok - Attributemerkmal kann gelöscht werden
 ?>
-                    <tr>
-                      <td class="main" colspan="3" style="background-color: #d4d4d4;">
-                      <div style="margin:10px 0";>
-                      <?php echo TEXT_OK_TO_DELETE; ?>&nbsp;&nbsp;&nbsp;
-                      <?php echo xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option&option_id=' . $_GET['option_id']. '&option_page=' . $_GET['option_page'], 'NONSSL'));?>&nbsp;&nbsp;&nbsp;
-                      <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'order_by=' . $order_by . '&page=' . $page.'&option_page=' . $_GET['option_page'], 'NONSSL'));?>&nbsp;
-                      </div>
-                    </tr>
+      <tr>
+        <td class="main" colspan="3" style="background-color: #d4d4d4;">
+        <div style="margin:10px 0";>
+        <?php echo TEXT_OK_TO_DELETE; ?>&nbsp;&nbsp;&nbsp;
+        <?php echo xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option&option_id=' . $_GET['option_id']. '&option_page=' . $_GET['option_page'], 'NONSSL'));?>&nbsp;&nbsp;&nbsp;
+        <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'order_by=' . $order_by . '&page=' . $page.'&option_page=' . $_GET['option_page'], 'NONSSL'));?>&nbsp;
+        </div>
+      </tr>
 <?php
-}
+  }
 ?>
-                  </table>
+    </table>
 <?php
   // ############  EOF DELETE  ############ //
 } else {
   // ############  BOF DEFAULT  ############ //
 ?>
                   
-                  <div class="pageHeading">&nbsp;<?php echo HEADING_TITLE_OPT; ?>&nbsp;                          
-                      <?php  
-                        echo xtc_draw_form('option_order_by', FILENAME_PRODUCTS_ATTRIBUTES, '', 'post');
-                        echo $options_dropdown_order; ?>
-                        </form>&nbsp;&nbsp;
-                        <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get'); ?>
-                          <span class="main"><?php echo TEXT_SEARCH; ?></span> 
-                          <input type="text" name="searchoption" size="20" value="<?php echo $_GET['searchoption']; ?>">
-                        </form>
-                  </div>
-                    
-                  <div class="smallText pdg2 mrg5" style="width:1000px;"><?php echo $option_pages;?></div>
+    <div class="pageHeading">&nbsp;<?php echo HEADING_TITLE_OPT; ?>&nbsp;                          
+        <?php  
+          echo xtc_draw_form('option_order_by', FILENAME_PRODUCTS_ATTRIBUTES, '', 'post');
+          echo $options_dropdown_order; ?>
+          </form>&nbsp;&nbsp;
+          <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get'); ?>
+            <span class="main"><?php echo TEXT_SEARCH; ?></span> 
+            <input type="text" name="searchoption" size="20" value="<?php echo $_GET['searchoption']; ?>">
+          </form>
+    </div>
+      
+    <div class="smallText pdg2 mrg5" style="width:1000px;"><?php echo $option_pages;?></div>
+<?php            
+    if ($_GET['action'] != 'update_option') {
+      echo xtc_draw_form('options', FILENAME_PRODUCTS_ATTRIBUTES, 'action=add_product_options&option_page=' . $option_page, 'post');
+    }
+    elseif ($_GET['action'] == 'update_option') {
+      echo xtc_draw_form('option', FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option_name&option_page='.$_GET['option_page'], 'post');
+    }
+?>
 
-                  <table class="option-table mrg5">
-                    <tr class="dataTableHeadingRow">
-                      <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
-                      <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_SORTORDER; ?>&nbsp;</td>
-                      <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
-                      <td class="dataTableHeadingContent txta-c">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
-                    </tr>
+    <table class="option-table mrg5">
+      <tr class="dataTableHeadingRow">
+        <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
+        <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_SORTORDER; ?>&nbsp;</td>
+        <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
+        <td class="dataTableHeadingContent txta-c">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+      </tr>
 <?php
 // ############  BOF NEW ENTRY  ############ //
 if ($_GET['action'] != 'update_option') {
@@ -210,15 +218,13 @@ if ($_GET['action'] != 'update_option') {
     $inputs.= $lang_img . '&nbsp;<input type="text" name="option_name[' . $languages[$i]['id'] . ']" style="width:200px;">&nbsp;<br />';
   }
   ?>
-                    <?php echo xtc_draw_form('options', FILENAME_PRODUCTS_ATTRIBUTES, 'action=add_product_options&option_page=' . $option_page, 'post'); ?>
-                    <input type="hidden" name="products_options_id" value="<?php echo $next_id;?>">
-                    <tr class="dataTableRowSelected">
-                      <td align="center" class="dataTableContent">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
-                      <td class="dataTableContent"><?php echo TABLE_HEADING_SORTORDER . ':&nbsp;<input type="text" name="products_options_sortorder" style="width:80px;">'; ?></td>
-                      <td class="dataTableContent"><?php echo $inputs; ?></td>                      
-                      <td class="dataTableContent txta-c">&nbsp;<?php echo xtc_button(BUTTON_INSERT); ?>&nbsp;</td>
-                    </tr>
-                    </form>
+      <input type="hidden" name="products_options_id" value="<?php echo $next_id;?>">
+      <tr class="dataTableRowSelected">
+        <td align="center" class="dataTableContent">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
+        <td class="dataTableContent"><?php echo TABLE_HEADING_SORTORDER . ':&nbsp;<input type="text" name="products_options_sortorder" style="width:80px;">'; ?></td>
+        <td class="dataTableContent"><?php echo $inputs; ?></td>                      
+        <td class="dataTableContent txta-c">&nbsp;<?php echo xtc_button(BUTTON_INSERT); ?>&nbsp;</td>
+      </tr>
 <?php
 }
 // ############  EOF NEW ENTRY  ############ //
@@ -244,50 +250,49 @@ while ($options_values = xtc_db_fetch_array($options)) {
       $inputs.= $lang_img . '&nbsp;<input type="text" name="option_name[' . $languages[$i]['id'] . ']" style="width:200px;" value="' . $option_name['products_options_name'] . '">&nbsp;<br />';
     }
   ?>
-                    <?php echo xtc_draw_form('option', FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option_name&option_page='.$_GET['option_page'], 'post'); ?>
-                    <tr class="dataTableRowSelected">
-                      <td class="dataTableContent txta-c">
-                        <?php echo $options_values['products_options_id']; ?><input type="hidden" name="option_id" value="<?php echo $options_values['products_options_id']; ?>">
-                      </td>
-                      <td align="left" class="dataTableContent">
-                        <?php echo TABLE_HEADING_SORTORDER; ?>:&nbsp;<input type="text" name="products_options_sortorder" style="width:80px;" value="<?php echo $options_values['products_options_sortorder']; ?>">
-                      </td>                      
-                      <td class="dataTableContent"><?php echo $inputs; ?></td>
-                      <td class="dataTableContent txta-c update">
-                        <?php echo xtc_button(BUTTON_UPDATE); ?>&nbsp;
-                        <?php //BOF - webkiste - auf der selben Seite bleiben ?>
-                        <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'option_page=' . $_GET['option_page'] .'', 'NONSSL')); ?>
-                        <?php //EOF - webkiste - auf der selben Seite bleiben ?>
-                      </td>
-                    </tr>
-                    </form>
+      <tr class="dataTableRowSelected">
+        <td class="dataTableContent txta-c">
+          <?php echo $options_values['products_options_id']; ?><input type="hidden" name="option_id" value="<?php echo $options_values['products_options_id']; ?>">
+        </td>
+        <td align="left" class="dataTableContent">
+          <?php echo TABLE_HEADING_SORTORDER; ?>:&nbsp;<input type="text" name="products_options_sortorder" style="width:80px;" value="<?php echo $options_values['products_options_sortorder']; ?>">
+        </td>                      
+        <td class="dataTableContent"><?php echo $inputs; ?></td>
+        <td class="dataTableContent txta-c update">
+          <?php echo xtc_button(BUTTON_UPDATE); ?>&nbsp;
+          <?php //BOF - webkiste - auf der selben Seite bleiben ?>
+          <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'option_page=' . $_GET['option_page'] .'', 'NONSSL')); ?>
+          <?php //EOF - webkiste - auf der selben Seite bleiben ?>
+        </td>
+      </tr>
   <?php
   // ############ EOF UPDATE  ############ //
   } else {
      //Standard
   ?>
-                      <tr class="dataTableRow">
-                        <td class="dataTableContent txta-c">&nbsp;<?php echo $options_values["products_options_id"]; ?>&nbsp;</td>
-                        <td class="dataTableContent">&nbsp;<?php echo $options_values["products_options_sortorder"]; ?>&nbsp;</td>                        
-                        <td class="dataTableContent">&nbsp;<?php echo $options_values["products_options_name"]; ?>&nbsp;</td>
-                        <td class="dataTableContent txta-c">
-                          <?php echo xtc_button_link(BUTTON_EDIT, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option&option_id=' . $options_values['products_options_id'] . '&option_order_by=' .
-                          $option_order_by . '&option_page=' . $option_page, 'NONSSL')); ?>&nbsp;&nbsp;
-                           <?php
-                          //BOF - webkiste - auf der selben Seite bleiben
-                          echo xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_product_option&option_id=' . $options_values['products_options_id'] .'&option_page=' . $option_page , 'NONSSL'));
-                          //EOF - webkiste - auf der selben Seite bleiben
-                          ?>
-                        </td>
-                      </tr>
+      <tr class="dataTableRow">
+        <td class="dataTableContent txta-c">&nbsp;<?php echo $options_values["products_options_id"]; ?>&nbsp;</td>
+        <td class="dataTableContent">&nbsp;<?php echo $options_values["products_options_sortorder"]; ?>&nbsp;</td>                        
+        <td class="dataTableContent">&nbsp;<?php echo $options_values["products_options_name"]; ?>&nbsp;</td>
+        <td class="dataTableContent txta-c">
+          <?php echo xtc_button_link(BUTTON_EDIT, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option&option_id=' . $options_values['products_options_id'] . '&option_order_by=' .
+          $option_order_by . '&option_page=' . $option_page, 'NONSSL')); ?>&nbsp;&nbsp;
+           <?php
+          //BOF - webkiste - auf der selben Seite bleiben
+          echo xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_product_option&option_id=' . $options_values['products_options_id'] .'&option_page=' . $option_page , 'NONSSL'));
+          //EOF - webkiste - auf der selben Seite bleiben
+          ?>
+        </td>
+      </tr>
   <?php
   }
 }
 ?>
-</table>
+    </table>
+  </form>
 <?php
 // ############  EOF DEFAULT  ############ //
-  }
+}
 ?>
 <br />
 <!-- options eof //-->
