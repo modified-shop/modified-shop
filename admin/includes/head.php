@@ -55,7 +55,7 @@
   <script type="text/javascript" src="includes/javascript/fm.checkator.jquery.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
-      $('.SlectBox').SumoSelect({ autoWidth: true});
+      $('.SlectBox').SumoSelect({ autoWidth: true, placeholder: '-'});
       $('.fmChkBox').checkator();
     });
   </script>
