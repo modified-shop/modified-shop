@@ -219,6 +219,12 @@
   // Output a form pull down menu
   function xtc_draw_pull_down_menu($name, $values, $default = '', $params = '', $required = false) {
     $field = '<select name="' . $name . '"';
+    if (!is_array($values) && $values == 'checkbox') {
+      $values = array(
+          array('id'=> 0,'text'=> CFG_TXT_NO),
+          array('id'=> 1,'text'=> CFG_TXT_YES)
+      );
+    }
     $params  = preg_replace("'\s+=\s+'",'=',$params);
     $params = (strpos($params,'class="') !== false ? str_replace('class="', 'class="SlectBox ',$params) : $params . ' class="SlectBox"');
     if ($params) $field .= ' ' . $params;
@@ -227,7 +233,7 @@
       foreach ($values as $key=>$val) {
         $field .= '<option value="' .$val['id'] . '"';
         if ( ((strlen($val['id']) > 0) && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $val['id'])) || ($default == $val['id']) ) {
-          $field .= ' SELECTED';
+          $field .= ' selected="selected"';
         }
         $field .= '>' . $val['text'] . '</option>';
       }
@@ -300,7 +306,7 @@
     }
     for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
       $string .= '<input id="cfg_so_'.strtolower($name).($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$select_array[$i]['id'].'"';
-      if ($key_value == $select_array[$i]['id']) $string .= ' checked';
+      if ($key_value == $select_array[$i]['id']) $string .= ' checked="checked"';
       $string .= ($params ? ' ' . $params : '');
       $string .= '><label for="cfg_so_'.strtolower($name).($i?"_$i":'').'" class="'.($key_value == $select_array[$i]['id'] ? 'cfg_so_before ':'').'cfg_sov_'.($select_array[$i]['id'] ? 'true' : 'false').'">';
       $string .= $select_array[$i]['text'] . '</label>';
