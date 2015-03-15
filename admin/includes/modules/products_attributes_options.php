@@ -146,7 +146,7 @@ if ($_GET['action'] == 'delete_product_option') {
 ?>
       <tr>
         <td colspan="3" class="main" style="background-color: #d4d4d4;">
-          <div style="margin:10px 0";>
+          <div style="margin:10px 5px;">
             <?php echo TEXT_WARNING_OF_DELETE; ?>&nbsp;&nbsp;&nbsp;
             <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'option_page=' . $_GET['option_page'] . '&attribute_page=' . $attribute_page, 'NONSSL'));?>
           </div>
@@ -158,7 +158,7 @@ if ($_GET['action'] == 'delete_product_option') {
 ?>
       <tr>
         <td class="main" colspan="3" style="background-color: #d4d4d4;">
-        <div style="margin:10px 0";>
+        <div style="margin:10px 5px;">
         <?php echo TEXT_OK_TO_DELETE; ?>&nbsp;&nbsp;&nbsp;
         <?php echo xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option&option_id=' . $_GET['option_id']. '&option_page=' . $_GET['option_page'], 'NONSSL'));?>&nbsp;&nbsp;&nbsp;
         <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'order_by=' . $order_by . '&page=' . $page.'&option_page=' . $_GET['option_page'], 'NONSSL'));?>&nbsp;
@@ -218,9 +218,8 @@ if ($_GET['action'] != 'update_option') {
     $inputs.= $lang_img . '&nbsp;<input type="text" name="option_name[' . $languages[$i]['id'] . ']" style="width:200px;">&nbsp;<br />';
   }
   ?>
-      <input type="hidden" name="products_options_id" value="<?php echo $next_id;?>">
       <tr class="dataTableRowSelected">
-        <td align="center" class="dataTableContent">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
+        <td align="center" class="dataTableContent"><input type="hidden" name="products_options_id" value="<?php echo $next_id;?>">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
         <td class="dataTableContent"><?php echo TABLE_HEADING_SORTORDER . ':&nbsp;<input type="text" name="products_options_sortorder" style="width:80px;">'; ?></td>
         <td class="dataTableContent"><?php echo $inputs; ?></td>                      
         <td class="dataTableContent txta-c">&nbsp;<?php echo xtc_button(BUTTON_INSERT); ?>&nbsp;</td>

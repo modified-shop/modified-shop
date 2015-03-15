@@ -29,7 +29,7 @@
                            WHERE language_id = '" . (int)$_SESSION['languages_id'] . "'
                         ORDER BY products_options_name");
   while ($options_values = xtc_db_fetch_array($options)) {
-    $selected2 = isset($_GET['option_id']) && $_GET['option_id'] == $options_values['products_options_id'] ? 'selected="selected"' : '';
+    $selected2 = isset($_GET['option_id']) && $_GET['option_id'] == $options_values['products_options_id'] ? ' selected="selected"' : '';
     $options_dropdown_select .= '<option name="' . $options_values['products_options_name'] . '" value="' . $options_values['products_options_id'] . '"' . $selected2 . '>' . $options_values['products_options_name'] . ' ID-' . $options_values['products_options_id']. '</option>';
   }
   //EOF Auswahldropdown
@@ -173,7 +173,7 @@ if (xtc_db_num_rows($products)) {
   ?>
       <tr>
         <td class="main" colspan="3" style="background-color: #d4d4d4;">
-          <div style="margin:10px 0";>
+          <div style="margin:10px 5px;">
             <?php echo TEXT_WARNING_OF_DELETE; ?>&nbsp;&nbsp;&nbsp;
             <?php  //BOF - webkiste - auf der selben Seite bleiben
             echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'value_page=' . $_GET['value_page'], 'NONSSL'));
@@ -187,7 +187,7 @@ if (xtc_db_num_rows($products)) {
 ?>
       <tr>
         <td class="main" colspan="3" style="background-color: #d4d4d4;">
-          <div style="margin:10px 0";>
+          <div style="margin:10px 5px;">
             <?php echo TEXT_OK_TO_DELETE; ?>
             <?php //BOF - webkiste - auf der selben Seite bleiben
             echo xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_value&value_id=' . $_GET['value_id'] . '&value_page=' . $_GET['value_page'] , 'NONSSL'));
