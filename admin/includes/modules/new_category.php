@@ -141,8 +141,8 @@
         <div style="clear:both;padding:5px;"></div>
         <div class="main flt-l" style="width:266px">&nbsp;</div>
         <div class="main">
-          <?php          
-          echo xtc_draw_selection_field('set_groups_permissions', 'checkbox', '1', false). ' ' . TEXT_SET_GROUP_PERMISSIONS;
+          <?php
+          echo xtc_draw_checkbox_field('set_groups_permissions', 1) . ' ' . TEXT_SET_GROUP_PERMISSIONS;
           ?>           
         </div>
         <div style="clear:both"></div>            
@@ -219,7 +219,7 @@
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
-            <td class="dataTableConfig col-middle"><?php echo xtc_draw_selection_field('del_cat_pic', 'checkbox', 'yes'); ?></td>
+            <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('del_cat_pic', 'yes'); ?></td>
           </tr>
         </table>
         <?php

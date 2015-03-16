@@ -36,7 +36,7 @@ if ($_GET['action'] == 'new_product') {
     </tr>    
     <tr>
       <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
-      <td class="dataTableConfig col-middle"><?php echo xtc_draw_selection_field('del_pic', 'checkbox', $pInfo->products_image); ?></td>      
+      <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('del_pic', $pInfo->products_image); ?></td>      
     </tr>
   </table>
   
@@ -61,7 +61,7 @@ if ($_GET['action'] == 'new_product') {
         </tr>        
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
-          <td class="dataTableConfig col-middle"><?php echo xtc_draw_selection_field('del_mo_pic[]', 'checkbox', (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : '')); ?></td>      
+          <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('del_mo_pic[]', (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : '')); ?></td>      
         </tr>
       </table>
       <?php
