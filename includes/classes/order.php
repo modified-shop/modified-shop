@@ -462,7 +462,7 @@
       }
 
       // web28 - set tax country id for using order total in shopping cart
-      if (!isset($tax_address['country_id'])) {
+      if (!isset($tax_address['country_id']) || isset($_SESSION['country'])) {
         $tax_address['country_id'] = isset($_SESSION['country']) ?  $_SESSION['country'] : STORE_COUNTRY;
         $tax_address['zone_id'] = -1;
       }
