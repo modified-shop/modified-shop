@@ -31,7 +31,7 @@ $adminImages = DIR_WS_CATALOG . "lang/". $_SESSION['language'] ."/admin/images/b
       echo xtc_draw_form('SELECT_PRODUCT', FILENAME_NEW_ATTRIBUTES, '', 'post').PHP_EOL;
       echo '<input type="hidden" name="action" value="edit">'.PHP_EOL;
       echo '<div class="main pdg2"><br /><strong>'.SELECT_PRODUCT.'</strong><br /></div>'.PHP_EOL;
-      echo '<div class="main pdg2"><select class="SlectBox" name="current_product_id">'.PHP_EOL;
+      echo '<div class="main pdg2"><select class="SelectBox" name="current_product_id">'.PHP_EOL;
 
       $query = xtc_db_query("SELECT * 
                                FROM ".TABLE_PRODUCTS_DESCRIPTION."  
@@ -57,7 +57,7 @@ $adminImages = DIR_WS_CATALOG . "lang/". $_SESSION['language'] ."/admin/images/b
 
       echo '<div class="main pdg2"><br /><strong>'.SELECT_COPY.'</strong><br /></div>'.PHP_EOL;
 
-      echo '<div class="main pdg2"><select class="SlectBox" name="copy_product_id">'.PHP_EOL;
+      echo '<div class="main pdg2"><select class="SelectBox" name="copy_product_id">'.PHP_EOL;
 
       $copy_query = xtc_db_query("SELECT pd.products_name, 
                                          pd.products_id 
