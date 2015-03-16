@@ -70,6 +70,7 @@ function product_redirect($actual_products_id) {
   if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO 
       && strpos($_SERVER['QUERY_STRING'], 'error') === false 
       && strpos($_SERVER['QUERY_STRING'], 'success') === false
+      && strpos($_SERVER['QUERY_STRING'], 'action') === false
      ) 
   {
     if (SEARCH_ENGINE_FRIENDLY_URLS != 'true') {
