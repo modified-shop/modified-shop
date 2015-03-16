@@ -57,7 +57,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     $customConfig['removeButtons'] = "removeButtons: 'PageBreak',";
     
     //Upload Tab entfernen
-    $customConfig['removeDialogTabs'] = "removeDialogTabs: 'image:advanced;link:advanced',";
+    //$customConfig['removeDialogTabs'] = "removeDialogTabs: 'image:Link;link:Link',";
     
     //toolbarGroups
     $customConfig['toolbarGroups'] ="
