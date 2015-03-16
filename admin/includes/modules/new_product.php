@@ -131,7 +131,7 @@
           </tr>
           <tr>
             <td>
-              <span class="main"><?php echo TEXT_PRODUCTS_VPE_VISIBLE. '&nbsp;' . draw_on_off_selection('products_vpe_status', 'checkbox', (isset($pInfo->products_vpe_status) && $pInfo->products_vpe_status==1 ? true : false));?></span>
+              <span class="main"><?php echo TEXT_PRODUCTS_VPE_VISIBLE. '&nbsp;' . xtc_draw_pull_down_menu('products_vpe_status', 'checkbox', (isset($pInfo->products_vpe_status) && $pInfo->products_vpe_status==1 ? true : false));?></span>
               <div class="flt-r" style="margin-top:5px">
               <span class="main"><?php echo TEXT_PRODUCTS_VPE_VALUE; ?></span>
               </div>                
@@ -144,7 +144,7 @@
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_FSK18; ?></span></td>
-            <td><span class="main"><?php echo draw_on_off_selection('fsk18', 'checkbox', (isset($pInfo->products_fsk18) && $pInfo->products_fsk18==1 ? true : false)); ?></span></td>
+            <td><span class="main"><?php echo xtc_draw_pull_down_menu('fsk18', 'checkbox', (isset($pInfo->products_fsk18) && $pInfo->products_fsk18==1 ? true : false)); ?></span></td>
           </tr>
         </table>
       </div>
