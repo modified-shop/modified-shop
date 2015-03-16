@@ -22,6 +22,7 @@
 
   //BOF Auswahldropdown
   $options_dropdown_select = '';
+  $options_dropdown_array = array();
   $options = xtc_db_query("-- products_attributes.php
                           SELECT products_options_id,
                                  products_options_name
@@ -31,6 +32,7 @@
   while ($options_values = xtc_db_fetch_array($options)) {
     $selected2 = isset($_GET['option_id']) && $_GET['option_id'] == $options_values['products_options_id'] ? ' selected="selected"' : '';
     $options_dropdown_select .= '<option name="' . $options_values['products_options_name'] . '" value="' . $options_values['products_options_id'] . '"' . $selected2 . '>' . $options_values['products_options_name'] . ' ID-' . $options_values['products_options_id']. '</option>';
+    $options_dropdown_array[] =  array('id' => $options_values['products_options_id'], 'text' => $options_values['products_options_name'] . ' ID-' . $options_values['products_options_id']); 
   }
   //EOF Auswahldropdown
 
@@ -204,15 +206,13 @@ if (xtc_db_num_rows($products)) {
 <?php
 // ############ EOF DELETE ############ //
   } else {
+    $add_option = array(array('id' => '','text' => '---'));
 // ############ BOF DEFAULT ############ //
 ?>
       <div class="pageHeading">&nbsp;<?php echo HEADING_TITLE_VAL; ?>&nbsp;&nbsp;&nbsp;
         <span  class="main"><?php echo TEXT_OPTION_ID_FILTER;?></span>
         <span class="select_f12">
-          <select class="SelectBox" name="option_id_filter" onchange="option_filter(this)">
-            <option value="" name="">---</option>
-            <?php echo $options_dropdown_select;?>
-          </select>
+          <?php echo xtc_draw_pull_down_menu('option_id_filter', array_merge($add_option,$options_dropdown_array), (isset($_GET['option_id']) && $_GET['option_id'] ? $_GET['option_id'] : ''), 'onchange="option_filter(this)"').PHP_EOL; ?>
         </span>
         <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get'); ?>
           <span  class="main"><?php  echo  TEXT_SEARCH;  ?></span> 
@@ -253,7 +253,10 @@ if (xtc_db_num_rows($products)) {
     ?>
       <tr class="dataTableRowSelected">
         <td class="dataTableContent txta-c">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
-        <td align="left" class="dataTableContent">&nbsp;<select class="SelectBox" id="option_id" name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
+        <td align="left" class="dataTableContent">&nbsp;
+        <?php echo xtc_draw_pull_down_menu('option_id', $options_dropdown_array, (isset($_GET['option_id']) && $_GET['option_id'] ? $_GET['option_id'] : ''), 'id="option_id"'); ?>
+        &nbsp;
+        </td>
         <td class="dataTableContent"><input type="hidden" name="value_id" value="<?php echo $next_id; ?>"><?php echo $inputs; ?></td>
         <td class="dataTableContent txta-c">&nbsp;<?php echo xtc_button(BUTTON_INSERT); ?>&nbsp;</td>
       </tr>
@@ -288,7 +291,7 @@ while ($values_values = xtc_db_fetch_array($values)) {
           <input type="hidden" name="value_id" value="<?php echo $values_values['products_options_values_id']; ?>">
           <input type="hidden" name="option_id" value="<?php echo $values_values['products_options_id']; ?>">
         </td>
-        <td align="center" class="dataTableContent">&nbsp;<select class="SelectBox" id="option_id" name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
+        <td align="center" class="dataTableContent">&nbsp;<select class="selectBox" id="option_id" name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
         <td class="dataTableContent"><?php echo $inputs; ?></td>
         <td class="dataTableContent txta-c update">&nbsp;<?php echo xtc_button(BUTTON_UPDATE); ?>&nbsp;<?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'value_page='.$_GET['value_page'].$option_filter, 'NONSSL')); ?>&nbsp;</td>
       </tr>
