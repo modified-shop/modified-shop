@@ -266,7 +266,7 @@ if (USE_WYSIWYG == 'true') {
                   </tr>
                   <tr>
                     <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
-                    <td class="dataTableConfig col-middle"><?php echo xtc_draw_selection_field('delete_image', 'checkbox', 'on'); ?></td>
+                    <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('delete_image', 'on'); ?></td>
                   </tr>
                 </table>
                 <?php
