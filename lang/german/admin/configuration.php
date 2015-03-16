@@ -310,7 +310,7 @@ define('SHIPPING_INFOS_DESC' , 'coID der Versandkosten (Default 1) f&uuml;r die 
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_TITLE' , 'Berechnungsmethode der Default-Steuerklasse');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_DESC' , 'keine: keine Versandkostensteuer ausweisen<br />auto proportional: Versandkostensteuer anteilig zur Bestellung ausweisen<br />auto max: Steuersatz der gr&ouml;&szlig;ten Umsatzgruppe als Versandkostensteuer ausweisen');
 
-define('PRODUCT_LIST_FILTER_TITLE' , 'Anzeige der Sortierungsfilter in Artikellisten?');
+define('PRODUCT_LIST_FILTER_TITLE' , 'Anzeige der Sortierungsfilter in Produktlisten?');
 define('PRODUCT_LIST_FILTER_DESC' , 'Anzeige der Sortierungsfilter f&uuml;r Warengruppen/Hersteller etc. Filter (false=inaktiv; true=aktiv)');
 
 define('STOCK_CHECK_TITLE' , '&Uuml;berpr&uuml;fen des Warenbestandes');
@@ -657,9 +657,9 @@ define('USE_ADMIN_LANG_TABS_DESC' , 'Sprachtabs bei den Eingabefeldern f&uuml;r 
 // EOF - Tomcraft - 2009-11-02 - Admin language tabs
 
 // BOF - Hendrik - 2010-08-11 - Thumbnails in admin products list
-define('USE_ADMIN_THUMBS_IN_LIST_TITLE' , 'Artikelliste Bilder');
-define('USE_ADMIN_THUMBS_IN_LIST_DESC' , 'In der Admin Artikelliste eine zus&auml;tzliche Spalte mit Bildern der Kategorien / Artikel anzeigen?');
-define('USE_ADMIN_THUMBS_IN_LIST_STYLE_TITLE', 'Artikelliste Bilder CSS-Style');
+define('USE_ADMIN_THUMBS_IN_LIST_TITLE' , 'Produktlisten Bilder');
+define('USE_ADMIN_THUMBS_IN_LIST_DESC' , 'In der Admin Produktliste eine zus&auml;tzliche Spalte mit Bildern der Kategorien / Artikel anzeigen?');
+define('USE_ADMIN_THUMBS_IN_LIST_STYLE_TITLE', 'Produktlisten Bilder CSS-Style');
 define('USE_ADMIN_THUMBS_IN_LIST_STYLE_DESC', 'Hier k&ouml;nnen einfache CSS Style Angaben eingegeben werden - z.B. f&uuml;r die maximale Breite: max-width:90px;');
 // EOF - Hendrik - 2010-08-11 - Thumbnails in admin products list
 
