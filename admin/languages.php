@@ -64,24 +64,8 @@
           $customers_status_data_query=xtc_db_query("SELECT *
                                                          FROM ".TABLE_CUSTOMERS_STATUS."
                                                         WHERE customers_status_id='".$data['customers_status_id']."'");
-          $group_data=xtc_db_fetch_array($customers_status_data_query);
-          $c_data=array(
-                        'customers_status_id'=>$data['customers_status_id'],
-                        'language_id'=>$insert_id,
-                        'customers_status_name'=>$group_data['customers_status_name'],
-                        'customers_status_public'=>$group_data['customers_status_public'],
-                        'customers_status_image'=>$group_data['customers_status_image'],
-                        'customers_status_discount'=>$group_data['customers_status_discount'],
-                        'customers_status_ot_discount_flag'=>$group_data['customers_status_ot_discount_flag'],
-                        'customers_status_ot_discount'=>$group_data['customers_status_ot_discount'],
-                        'customers_status_graduated_prices'=>$group_data['customers_status_graduated_prices'],
-                        'customers_status_show_price'=>$group_data['customers_status_show_price'],
-                        'customers_status_show_price_tax'=>$group_data['customers_status_show_price_tax'],
-                        'customers_status_add_tax_ot'=>$group_data['customers_status_add_tax_ot'],
-                        'customers_status_payment_unallowed'=>$group_data['customers_status_payment_unallowed'],
-                        'customers_status_shipping_unallowed'=>$group_data['customers_status_shipping_unallowed'],
-                        'customers_status_discount_attributes'=>$group_data['customers_status_discount_attributes']
-                       );
+          $c_data = xtc_db_fetch_array($customers_status_data_query);
+          $c_data['language_id'] = $insert_id;
           xtc_db_perform(TABLE_CUSTOMERS_STATUS, $c_data);
         }
         if (isset($_POST['default']) && $_POST['default'] == 'on') {
@@ -161,11 +145,8 @@
             xtc_db_query("delete from " . TABLE_CATEGORIES_DESCRIPTION . " where language_id = '" . (int)$lngID_to . "'");
             $categories_query = xtc_db_query("select c.categories_id, cd.categories_name from " . TABLE_CATEGORIES . " c left join " . TABLE_CATEGORIES_DESCRIPTION . " cd on c.categories_id = cd.categories_id where cd.language_id = '" . (int)$lngID_from . "'");
             while ($categories = xtc_db_fetch_array($categories_query)) {
-              $sql_data_array = array(
-                'categories_id' => (int)$categories['categories_id'], 
-                'language_id' => (int)$lngID_to, 
-                'categories_name' => $categories['categories_name']
-              );
+              $sql_data_array = $categories;
+              $sql_data_array['language_id'] = (int)$lngID_to;
               xtc_db_perform(TABLE_CATEGORIES_DESCRIPTION,$sql_data_array);
             }
           }
@@ -174,13 +155,8 @@
             xtc_db_query("delete from " . TABLE_PRODUCTS_DESCRIPTION . " where language_id = '" . (int)$lngID_to . "'");
             $products_query = xtc_db_query("select p.products_id, pd.products_name, pd.products_description, pd.products_url from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on p.products_id = pd.products_id where pd.language_id = '" . (int)$lngID_from . "'");
             while ($products = xtc_db_fetch_array($products_query)) {
-              $sql_data_array = array(
-                'products_id' => (int)$products['products_id'], 
-                'language_id' => (int)$lngID_to, 
-                'products_name' => $products['products_name'],
-                'products_description' => $products['products_description'],
-                'products_url' => $products['products_url']
-              );
+              $sql_data_array = $products;
+              $sql_data_array['language_id'] = (int)$lngID_to;
               xtc_db_perform(TABLE_PRODUCTS_DESCRIPTION,$sql_data_array);
             }
           }
@@ -189,11 +165,8 @@
             xtc_db_query("delete from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . (int)$lngID_to . "'");
             $products_options_query = xtc_db_query("select products_options_id, products_options_name from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . (int)$lngID_from . "'");
             while ($products_options = xtc_db_fetch_array($products_options_query)) {
-              $sql_data_array = array(
-                'products_options_id' => (int)$products_options['products_options_id'], 
-                'language_id' => (int)$lngID_to, 
-                'products_options_name' => $products_options['products_options_name']
-              );
+              $sql_data_array = $products_options;
+              $sql_data_array['language_id'] = (int)$lngID_to;
               xtc_db_perform(TABLE_PRODUCTS_OPTIONS,$sql_data_array);
             }
           }
@@ -202,11 +175,8 @@
             xtc_db_query("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id = '" . (int)$lngID_to . "'");
             $products_options_values_query = xtc_db_query("select products_options_values_id, products_options_values_name from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id = '" . (int)$lngID_from . "'");
             while ($products_options_values = xtc_db_fetch_array($products_options_values_query)) {
-              $sql_data_array = array(
-                'products_options_values_id' => (int)$products_options_values['products_options_values_id'], 
-                'language_id' => (int)$lngID_to, 
-                'products_options_values_name' => $products_options_values['products_options_values_name']
-              );
+              $sql_data_array = $products_options_values;
+              $sql_data_array['language_id'] = (int)$lngID_to;
               xtc_db_perform(TABLE_PRODUCTS_OPTIONS_VALUES,$sql_data_array);
             }
           }
@@ -215,11 +185,8 @@
             xtc_db_query("delete from " . TABLE_MANUFACTURERS_INFO . " where languages_id = '" . (int)$lngID_to . "'");
             $manufacturers_query = xtc_db_query("select m.manufacturers_id, mi.manufacturers_url from " . TABLE_MANUFACTURERS . " m left join " . TABLE_MANUFACTURERS_INFO . " mi on m.manufacturers_id = mi.manufacturers_id where mi.languages_id = '" . (int)$lngID_from . "'");
             while ($manufacturers = xtc_db_fetch_array($manufacturers_query)) {
-              $sql_data_array = array(
-                'manufacturers_id' => (int)$manufacturers['manufacturers_id'], 
-                'languages_id' => (int)$lngID_to, 
-                'manufacturers_url' => $manufacturers['manufacturers_url']
-              );
+              $sql_data_array = $orders_status;
+              $sql_data_array['languages_id'] = (int)$lngID_to;
               xtc_db_perform(TABLE_MANUFACTURERS_INFO,$sql_data_array);              
             }
           }
@@ -228,12 +195,8 @@
             xtc_db_query("delete from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$lngID_to . "'");
             $orders_status_query = xtc_db_query("select * from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$lngID_from . "'");
             while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
-              $sql_data_array = array(
-                'orders_status_id' => (int)$orders_status['orders_status_id'], 
-                'language_id' => (int)$lngID_to, 
-                'orders_status_name' => $orders_status['orders_status_name'],
-                'sort_order' => $orders_status['sort_order']
-              );
+              $sql_data_array = $orders_status;
+              $sql_data_array['language_id'] = (int)$lngID_to;
               xtc_db_perform(TABLE_ORDERS_STATUS,$sql_data_array);               
             }
           }
@@ -242,12 +205,8 @@
             xtc_db_query("delete from " . TABLE_SHIPPING_STATUS . " where language_id = '" . (int)$lngID_to . "'");
             $shipping_status_query = xtc_db_query("select * from " . TABLE_SHIPPING_STATUS . " where language_id = '" . (int)$lngID_from . "'");
             while ($shipping_status = xtc_db_fetch_array($shipping_status_query)) {
-              $sql_data_array = array(
-                'shipping_status_id' => (int)$shipping_status['shipping_status_id'], 
-                'language_id' => (int)$lngID_to, 
-                'shipping_status_name' => $shipping_status['shipping_status_name'],
-                'sort_order' => $shipping_status['sort_order']
-              );
+              $sql_data_array = $shipping_status;
+              $sql_data_array['language_id'] = (int)$lngID_to;
               xtc_db_perform(TABLE_SHIPPING_STATUS,$sql_data_array); 
             }
           }
@@ -256,13 +215,31 @@
             xtc_db_query("delete from " . TABLE_PRODUCTS_XSELL_GROUPS . " where language_id = '" . (int)$lngID_to . "'");
             $xsell_grp_query = xtc_db_query("select products_xsell_grp_name_id,xsell_sort_order, groupname from " . TABLE_PRODUCTS_XSELL_GROUPS . " where language_id = '" . (int)$lngID_from . "'");
             while ($xsell_grp = xtc_db_fetch_array($xsell_grp_query)) {
-              $sql_data_array = array(
-                'products_xsell_grp_name_id' => (int)$xsell_grp['products_xsell_grp_name_id'],
-                'xsell_sort_order' => (int)$xsell_grp['xsell_sort_order'],
-                'language_id' => (int)$lngID_to, 
-                'groupname' => $xsell_grp['groupname']
-              );
+              $sql_data_array = $xsell_grp;
+              $sql_data_array['language_id'] = (int)$lngID_to;
               xtc_db_perform(TABLE_PRODUCTS_XSELL_GROUPS,$sql_data_array); 
+            }
+          }
+          // create additional content_manager records
+          if (isset($_POST['c_manager'])) {
+            xtc_db_query("delete from " . TABLE_CONTENT_MANAGER . " where languages_id = '" . (int)$lngID_to . "'");
+            $content_manager_query = xtc_db_query("select * from " . TABLE_CONTENT_MANAGER . " where languages_id = '" . (int)$lngID_from . "'");
+            while ($content_manager = xtc_db_fetch_array($content_manager_query)) {
+              $sql_data_array = $content_manager;
+              $sql_data_array['languages_id'] = (int)$lngID_to;
+              unset($sql_data_array['content_id']);
+              xtc_db_perform(TABLE_CONTENT_MANAGER,$sql_data_array);               
+            }
+          }
+          // create additional product_contents records
+          if (isset($_POST['p_content'])) {
+            xtc_db_query("delete from " . TABLE_PRODUCTS_CONTENT . " where languages_id = '" . (int)$lngID_to . "'");
+            $products_content_query = xtc_db_query("select * from " . TABLE_PRODUCTS_CONTENT . " where languages_id = '" . (int)$lngID_from . "'");
+            while ($products_content = xtc_db_fetch_array($products_content_query)) {
+              $sql_data_array = $products_content;
+              $sql_data_array['languages_id'] = (int)$lngID_to;
+              unset($sql_data_array['content_id']);
+              xtc_db_perform(TABLE_PRODUCTS_CONTENT,$sql_data_array);               
             }
           }
           $messageStack->add_session(TEXT_LANGUAGE_TRANSFER_OK, 'success');
@@ -403,6 +380,8 @@ input[type=checkbox], input[type=radio] {
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('o_status', '1', false) . ' ' . TABLE_ORDERS_STATUS .' <em>(orders_status_name)</em>'.'</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('s_status', '1', false) . ' ' . TABLE_SHIPPING_STATUS .' <em>(shipping_status_name)</em>'.'</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('x_groups', '1', false) . ' ' . TABLE_PRODUCTS_XSELL_GROUPS . ' <em>(xsell_sort_order, groupname)</em>'.'</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('c_manager', '1', false) . ' ' . TABLE_CONTENT_MANAGER . ' <em></em>'.'</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_content', '1', false) . ' ' . TABLE_PRODUCTS_CONTENT . ' <em></em>'.'</div>'.PHP_EOL;
                     echo '<br />'.PHP_EOL;
                     echo '<div class="main important_info mrg5">'.TEXT_LANGUAGE_TRANSFER_INFO2.'</div>';
                     echo '<br />'.PHP_EOL;
