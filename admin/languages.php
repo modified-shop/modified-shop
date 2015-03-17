@@ -22,36 +22,28 @@
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'setlflag':
-          $language_id = xtc_db_prepare_input($_GET['lID']);
-          $status = xtc_db_prepare_input($_GET['flag']);
+          $language_id = (int)$_GET['lID'];
+          $status = (int)$_GET['flag'];
           xtc_db_query("update " . TABLE_LANGUAGES . " set status = '" . xtc_db_input($status) . "' where languages_id = '" . xtc_db_input($language_id) . "'");
-          xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $language_id));
+          xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $language_id));
         break;
        case 'setladminflag':
           $language_id = xtc_db_prepare_input($_GET['lID']);
           $status_admin = xtc_db_prepare_input($_GET['adminflag']);
           xtc_db_query("update " . TABLE_LANGUAGES . " set status_admin = '" . xtc_db_input($status_admin) . "' where languages_id = '" . xtc_db_input($language_id) . "'");
-          xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $language_id));
+          xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $language_id));
         break;
       case 'insert':
-        $name = xtc_db_prepare_input($_POST['name']);
-        $code = xtc_db_prepare_input($_POST['code']);
-        $image = xtc_db_prepare_input($_POST['image']);
-        $directory = xtc_db_prepare_input($_POST['directory']);
-        $sort_order = xtc_db_prepare_input((int)$_POST['sort_order']);
-        $charset = xtc_db_prepare_input($_POST['charset']);
-        $status = xtc_db_prepare_input($_POST['status']);
-        $status_admin = xtc_db_prepare_input($_POST['status_admin']);
-
-        $sql_data_array = array('name' => $name, 
-                                'code' => $code,  
-                                'image' => $image,  
-                                'directory' => $directory,  
-                                'status' => $status,  
-                                'sort_order' => $sort_order, 
-                                'language_charset' => $charset,
-                                'status_admin' => $status_admin
-                                ); 
+        $sql_data_array = array(
+            'name' => xtc_db_prepare_input($_POST['name']), 
+            'code' => xtc_db_prepare_input($_POST['code']),  
+            'image' => xtc_db_prepare_input($_POST['image']),  
+            'directory' => xtc_db_prepare_input($_POST['directory']),  
+            'status' => xtc_db_prepare_input($_POST['status']),  
+            'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
+            'language_charset' => xtc_db_prepare_input($_POST['charset']),
+            'status_admin' => xtc_db_prepare_input($_POST['status_admin'])
+          );
         xtc_db_perform(TABLE_LANGUAGES, $sql_data_array);      
         $insert_id = xtc_db_insert_id();
 
@@ -71,59 +63,52 @@
         if (isset($_POST['default']) && $_POST['default'] == 'on') {
           xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($code) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
         }
-        xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $insert_id));
+        xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $insert_id));
         break;
       case 'save':
-        $lID = xtc_db_prepare_input($_GET['lID']);
-        $name = xtc_db_prepare_input($_POST['name']);
-        $code = xtc_db_prepare_input($_POST['code']);
-        $image = xtc_db_prepare_input($_POST['image']);
-        $directory = xtc_db_prepare_input($_POST['directory']);
-        $sort_order = xtc_db_prepare_input($_POST['sort_order']);
-        $charset = xtc_db_prepare_input($_POST['charset']);
-        $status = xtc_db_prepare_input($_POST['status']);
-        $status_admin = xtc_db_prepare_input($_POST['status_admin']);
+        $lID = (int)$_GET['lID'];
        
-        $sql_data_array = array('name' => $name, 
-                                'code' => $code,  
-                                'image' => $image,  
-                                'directory' => $directory,  
-                                'status' => $status,  
-                                'sort_order' => $sort_order, 
-                                'language_charset' => $charset,
-                                'status_admin' => $status_admin,
-                                ); 
-        xtc_db_perform(TABLE_LANGUAGES, $sql_data_array, 'update', 'languages_id = \''.xtc_db_input($lID).'\'');        
+        $sql_data_array = array(
+            'name' => xtc_db_prepare_input($_POST['name']), 
+            'code' => xtc_db_prepare_input($_POST['code']),  
+            'image' => xtc_db_prepare_input($_POST['image']),  
+            'directory' => xtc_db_prepare_input($_POST['directory']),  
+            'status' => xtc_db_prepare_input($_POST['status']),  
+            'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
+            'language_charset' => xtc_db_prepare_input($_POST['charset']),
+            'status_admin' => xtc_db_prepare_input($_POST['status_admin'])
+          ); 
+        xtc_db_perform(TABLE_LANGUAGES, $sql_data_array, 'update', 'languages_id = \''.$lID.'\'');        
         
         if ($_POST['default'] == 'on') {
           xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($code) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
         }
-        xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']));
+        xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $lID));
         break;
       case 'deleteconfirm':
-        $lID = xtc_db_prepare_input($_GET['lID']);
+        $lID = (int)$_GET['lID'];
         $lng_query = xtc_db_query("select languages_id from " . TABLE_LANGUAGES . " where code = '" . DEFAULT_CURRENCY . "'");
         $lng = xtc_db_fetch_array($lng_query);
         if ($lng['languages_id'] == $lID) {
           xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '' where configuration_key = 'DEFAULT_CURRENCY'");
         }
-        xtc_db_query("delete from " . TABLE_CATEGORIES_DESCRIPTION . " where language_id = '" . (int)$lID . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS_DESCRIPTION . " where language_id = '" . (int)$lID . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . (int)$lID . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id = '" . (int)$lID . "'");
-        xtc_db_query("delete from " . TABLE_MANUFACTURERS_INFO . " where languages_id = '" . (int)$lID . "'");
-        xtc_db_query("delete from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$lID . "'");
-        xtc_db_query("delete from " . TABLE_SHIPPING_STATUS . " where language_id = '" . (int)$lID . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS_XSELL_GROUPS . " where language_id = '" . (int)$lID . "'");
-        xtc_db_query("delete from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$lID . "'");
-        xtc_db_query("delete from " . TABLE_CONTENT_MANAGER . " where languages_id = '" . (int)$lID . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS_CONTENT . " where languages_id = '" . (int)$lID . "'");
-        xtc_db_query("delete from " . TABLE_CUSTOMERS_STATUS . " where language_id = '" . (int)$lID . "'");
+        xtc_db_query("delete from " . TABLE_CATEGORIES_DESCRIPTION . " where language_id = '" . $lID . "'");
+        xtc_db_query("delete from " . TABLE_PRODUCTS_DESCRIPTION . " where language_id = '" . $lID . "'");
+        xtc_db_query("delete from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . $lID . "'");
+        xtc_db_query("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id = '" . $lID . "'");
+        xtc_db_query("delete from " . TABLE_MANUFACTURERS_INFO . " where languages_id = '" . $lID . "'");
+        xtc_db_query("delete from " . TABLE_ORDERS_STATUS . " where language_id = '" . $lID . "'");
+        xtc_db_query("delete from " . TABLE_SHIPPING_STATUS . " where language_id = '" . $lID . "'");
+        xtc_db_query("delete from " . TABLE_PRODUCTS_XSELL_GROUPS . " where language_id = '" . $lID . "'");
+        xtc_db_query("delete from " . TABLE_LANGUAGES . " where languages_id = '" . $lID . "'");
+        xtc_db_query("delete from " . TABLE_CONTENT_MANAGER . " where languages_id = '" . $lID . "'");
+        xtc_db_query("delete from " . TABLE_PRODUCTS_CONTENT . " where languages_id = '" . $lID . "'");
+        xtc_db_query("delete from " . TABLE_CUSTOMERS_STATUS . " where language_id = '" . $lID . "'");
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
         break;
       case 'delete':
-        $lID = xtc_db_prepare_input($_GET['lID']);
-        $lng_query = xtc_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$lID . "'");
+        $lID = (int)$_GET['lID'];
+        $lng_query = xtc_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . $lID . "'");
         $lng = xtc_db_fetch_array($lng_query);
         $remove_language = true;
         if ($lng['code'] == DEFAULT_LANGUAGE) {
@@ -136,108 +121,108 @@
         break;
       case 'transfer':
         //echo '<pre>'.print_r($_POST,1).'</pre>'; EXIT;
-        $lngID_from = xtc_db_prepare_input($_POST['lngID_from']);
-        $lngID_to = xtc_db_prepare_input($_POST['lngID_to']);
+        $lngID_from = (int)$_POST['lngID_from'];
+        $lngID_to =(int)$_POST['lngID_to'];
         
         if ($lngID_from != $lngID_to) {
           // create additional categories_description records
           if (isset($_POST['c_desc'])) {
-            xtc_db_query("delete from " . TABLE_CATEGORIES_DESCRIPTION . " where language_id = '" . (int)$lngID_to . "'");
-            $categories_query = xtc_db_query("select c.categories_id, cd.categories_name from " . TABLE_CATEGORIES . " c left join " . TABLE_CATEGORIES_DESCRIPTION . " cd on c.categories_id = cd.categories_id where cd.language_id = '" . (int)$lngID_from . "'");
+            xtc_db_query("delete from " . TABLE_CATEGORIES_DESCRIPTION . " where language_id = '" . $lngID_to . "'");
+            $categories_query = xtc_db_query("select c.categories_id, cd.categories_name from " . TABLE_CATEGORIES . " c left join " . TABLE_CATEGORIES_DESCRIPTION . " cd on c.categories_id = cd.categories_id where cd.language_id = '" . $lngID_from . "'");
             while ($categories = xtc_db_fetch_array($categories_query)) {
               $sql_data_array = $categories;
-              $sql_data_array['language_id'] = (int)$lngID_to;
+              $sql_data_array['language_id'] = $lngID_to;
               xtc_db_perform(TABLE_CATEGORIES_DESCRIPTION,$sql_data_array);
             }
           }
           // create additional products_description records
           if (isset($_POST['p_desc'])) {
-            xtc_db_query("delete from " . TABLE_PRODUCTS_DESCRIPTION . " where language_id = '" . (int)$lngID_to . "'");
-            $products_query = xtc_db_query("select p.products_id, pd.products_name, pd.products_description, pd.products_url from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on p.products_id = pd.products_id where pd.language_id = '" . (int)$lngID_from . "'");
+            xtc_db_query("delete from " . TABLE_PRODUCTS_DESCRIPTION . " where language_id = '" . $lngID_to . "'");
+            $products_query = xtc_db_query("select p.products_id, pd.products_name, pd.products_description, pd.products_url from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on p.products_id = pd.products_id where pd.language_id = '" . $lngID_from . "'");
             while ($products = xtc_db_fetch_array($products_query)) {
               $sql_data_array = $products;
-              $sql_data_array['language_id'] = (int)$lngID_to;
+              $sql_data_array['language_id'] = $lngID_to;
               xtc_db_perform(TABLE_PRODUCTS_DESCRIPTION,$sql_data_array);
             }
           }
           // create additional products_options records
           if (isset($_POST['p_opt'])) {
-            xtc_db_query("delete from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . (int)$lngID_to . "'");
-            $products_options_query = xtc_db_query("select products_options_id, products_options_name from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . (int)$lngID_from . "'");
+            xtc_db_query("delete from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . $lngID_to . "'");
+            $products_options_query = xtc_db_query("select products_options_id, products_options_name from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . $lngID_from . "'");
             while ($products_options = xtc_db_fetch_array($products_options_query)) {
               $sql_data_array = $products_options;
-              $sql_data_array['language_id'] = (int)$lngID_to;
+              $sql_data_array['language_id'] = $lngID_to;
               xtc_db_perform(TABLE_PRODUCTS_OPTIONS,$sql_data_array);
             }
           }
           // create additional products_options_values records
           if (isset($_POST['p_opt_val'])) {
-            xtc_db_query("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id = '" . (int)$lngID_to . "'");
-            $products_options_values_query = xtc_db_query("select products_options_values_id, products_options_values_name from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id = '" . (int)$lngID_from . "'");
+            xtc_db_query("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id = '" . $lngID_to . "'");
+            $products_options_values_query = xtc_db_query("select products_options_values_id, products_options_values_name from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id = '" . $lngID_from . "'");
             while ($products_options_values = xtc_db_fetch_array($products_options_values_query)) {
               $sql_data_array = $products_options_values;
-              $sql_data_array['language_id'] = (int)$lngID_to;
+              $sql_data_array['language_id'] = $lngID_to;
               xtc_db_perform(TABLE_PRODUCTS_OPTIONS_VALUES,$sql_data_array);
             }
           }
           // create additional manufacturers_info records
           if (isset($_POST['m_info'])) {
-            xtc_db_query("delete from " . TABLE_MANUFACTURERS_INFO . " where languages_id = '" . (int)$lngID_to . "'");
-            $manufacturers_query = xtc_db_query("select m.manufacturers_id, mi.manufacturers_url from " . TABLE_MANUFACTURERS . " m left join " . TABLE_MANUFACTURERS_INFO . " mi on m.manufacturers_id = mi.manufacturers_id where mi.languages_id = '" . (int)$lngID_from . "'");
+            xtc_db_query("delete from " . TABLE_MANUFACTURERS_INFO . " where languages_id = '" . $lngID_to . "'");
+            $manufacturers_query = xtc_db_query("select m.manufacturers_id, mi.manufacturers_url from " . TABLE_MANUFACTURERS . " m left join " . TABLE_MANUFACTURERS_INFO . " mi on m.manufacturers_id = mi.manufacturers_id where mi.languages_id = '" . $lngID_from . "'");
             while ($manufacturers = xtc_db_fetch_array($manufacturers_query)) {
               $sql_data_array = $orders_status;
-              $sql_data_array['languages_id'] = (int)$lngID_to;
+              $sql_data_array['languages_id'] = $lngID_to;
               xtc_db_perform(TABLE_MANUFACTURERS_INFO,$sql_data_array);              
             }
           }
           // create additional orders_status records
           if (isset($_POST['o_status'])) {
-            xtc_db_query("delete from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$lngID_to . "'");
-            $orders_status_query = xtc_db_query("select * from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$lngID_from . "'");
+            xtc_db_query("delete from " . TABLE_ORDERS_STATUS . " where language_id = '" . $lngID_to . "'");
+            $orders_status_query = xtc_db_query("select * from " . TABLE_ORDERS_STATUS . " where language_id = '" . $lngID_from . "'");
             while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
               $sql_data_array = $orders_status;
-              $sql_data_array['language_id'] = (int)$lngID_to;
+              $sql_data_array['language_id'] = $lngID_to;
               xtc_db_perform(TABLE_ORDERS_STATUS,$sql_data_array);               
             }
           }
           // create additional shipping_status records
           if (isset($_POST['s_status'])) {
-            xtc_db_query("delete from " . TABLE_SHIPPING_STATUS . " where language_id = '" . (int)$lngID_to . "'");
-            $shipping_status_query = xtc_db_query("select * from " . TABLE_SHIPPING_STATUS . " where language_id = '" . (int)$lngID_from . "'");
+            xtc_db_query("delete from " . TABLE_SHIPPING_STATUS . " where language_id = '" . $lngID_to . "'");
+            $shipping_status_query = xtc_db_query("select * from " . TABLE_SHIPPING_STATUS . " where language_id = '" . $lngID_from . "'");
             while ($shipping_status = xtc_db_fetch_array($shipping_status_query)) {
               $sql_data_array = $shipping_status;
-              $sql_data_array['language_id'] = (int)$lngID_to;
+              $sql_data_array['language_id'] = $lngID_to;
               xtc_db_perform(TABLE_SHIPPING_STATUS,$sql_data_array); 
             }
           }
           // create additional xsell_groups records
           if (isset($_POST['x_groups'])) {
-            xtc_db_query("delete from " . TABLE_PRODUCTS_XSELL_GROUPS . " where language_id = '" . (int)$lngID_to . "'");
-            $xsell_grp_query = xtc_db_query("select products_xsell_grp_name_id,xsell_sort_order, groupname from " . TABLE_PRODUCTS_XSELL_GROUPS . " where language_id = '" . (int)$lngID_from . "'");
+            xtc_db_query("delete from " . TABLE_PRODUCTS_XSELL_GROUPS . " where language_id = '" . $lngID_to . "'");
+            $xsell_grp_query = xtc_db_query("select products_xsell_grp_name_id,xsell_sort_order, groupname from " . TABLE_PRODUCTS_XSELL_GROUPS . " where language_id = '" . $lngID_from . "'");
             while ($xsell_grp = xtc_db_fetch_array($xsell_grp_query)) {
               $sql_data_array = $xsell_grp;
-              $sql_data_array['language_id'] = (int)$lngID_to;
+              $sql_data_array['language_id'] = $lngID_to;
               xtc_db_perform(TABLE_PRODUCTS_XSELL_GROUPS,$sql_data_array); 
             }
           }
           // create additional content_manager records
           if (isset($_POST['c_manager'])) {
-            xtc_db_query("delete from " . TABLE_CONTENT_MANAGER . " where languages_id = '" . (int)$lngID_to . "'");
-            $content_manager_query = xtc_db_query("select * from " . TABLE_CONTENT_MANAGER . " where languages_id = '" . (int)$lngID_from . "'");
+            xtc_db_query("delete from " . TABLE_CONTENT_MANAGER . " where languages_id = '" . $lngID_to . "'");
+            $content_manager_query = xtc_db_query("select * from " . TABLE_CONTENT_MANAGER . " where languages_id = '" . $lngID_from . "'");
             while ($content_manager = xtc_db_fetch_array($content_manager_query)) {
               $sql_data_array = $content_manager;
-              $sql_data_array['languages_id'] = (int)$lngID_to;
+              $sql_data_array['languages_id'] = $lngID_to;
               unset($sql_data_array['content_id']);
               xtc_db_perform(TABLE_CONTENT_MANAGER,$sql_data_array);               
             }
           }
           // create additional product_contents records
           if (isset($_POST['p_content'])) {
-            xtc_db_query("delete from " . TABLE_PRODUCTS_CONTENT . " where languages_id = '" . (int)$lngID_to . "'");
-            $products_content_query = xtc_db_query("select * from " . TABLE_PRODUCTS_CONTENT . " where languages_id = '" . (int)$lngID_from . "'");
+            xtc_db_query("delete from " . TABLE_PRODUCTS_CONTENT . " where languages_id = '" . $lngID_to . "'");
+            $products_content_query = xtc_db_query("select * from " . TABLE_PRODUCTS_CONTENT . " where languages_id = '" . $lngID_from . "'");
             while ($products_content = xtc_db_fetch_array($products_content_query)) {
               $sql_data_array = $products_content;
-              $sql_data_array['languages_id'] = (int)$lngID_to;
+              $sql_data_array['languages_id'] = $lngID_to;
               unset($sql_data_array['content_id']);
               xtc_db_perform(TABLE_PRODUCTS_CONTENT,$sql_data_array);               
             }
@@ -246,7 +231,7 @@
         } else {
           $messageStack->add_session(TEXT_LANGUAGE_TRANSFER_ERR, 'error');
         }
-        xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
+        xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page']));
         break;
     }
   }
@@ -316,9 +301,9 @@ input[type=checkbox], input[type=radio] {
                     $lInfo = new objectInfo($languages);
                   }
                   if (isset($lInfo) && (is_object($lInfo)) && ($languages['languages_id'] == $lInfo->languages_id) ) {
-                    echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit') . '\'">' . "\n";
+                    echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit') . '\'">' . "\n";
                   } else {
-                    echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $languages['languages_id']) . '\'">' . "\n";
+                    echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $languages['languages_id']) . '\'">' . "\n";
                   }
 
                     if (DEFAULT_LANGUAGE == $languages['code']) {
@@ -331,18 +316,18 @@ input[type=checkbox], input[type=radio] {
                     <td class="dataTableContent">
                       <?php
                       if ($languages['status'] == 1) {
-                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_LANGUAGES, xtc_get_all_get_params(array('page', 'action', 'lID')) . 'action=setlflag&flag=0&lID=' . $languages['languages_id'] . '&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>';
+                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_LANGUAGES, xtc_get_all_get_params(array('page', 'action', 'lID')) . 'action=setlflag&flag=0&lID=' . $languages['languages_id'] . '&page='.(int)$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>';
                       } else {
-                        echo '<a href="' . xtc_href_link(FILENAME_LANGUAGES, xtc_get_all_get_params(array('page', 'action', 'lID')) . 'action=setlflag&flag=1&lID=' . $languages['languages_id'].'&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10, 'style="margin-left: 5px;"');
+                        echo '<a href="' . xtc_href_link(FILENAME_LANGUAGES, xtc_get_all_get_params(array('page', 'action', 'lID')) . 'action=setlflag&flag=1&lID=' . $languages['languages_id'].'&page='.(int)$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10, 'style="margin-left: 5px;"');
                       }
                       ?>
                     </td>
                     <td class="dataTableContent">
                       <?php
                       if ($languages['status_admin'] == 1) {
-                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_LANGUAGES, xtc_get_all_get_params(array('page', 'action', 'lID')) . 'action=setladminflag&adminflag=0&lID=' . $languages['languages_id'] . '&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>';
+                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_LANGUAGES, xtc_get_all_get_params(array('page', 'action', 'lID')) . 'action=setladminflag&adminflag=0&lID=' . $languages['languages_id'] . '&page='.(int)$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>';
                       } else {
-                        echo '<a href="' . xtc_href_link(FILENAME_LANGUAGES, xtc_get_all_get_params(array('page', 'action', 'lID')) . 'action=setladminflag&adminflag=1&lID=' . $languages['languages_id'].'&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10, 'style="margin-left: 5px;"');
+                        echo '<a href="' . xtc_href_link(FILENAME_LANGUAGES, xtc_get_all_get_params(array('page', 'action', 'lID')) . 'action=setladminflag&adminflag=1&lID=' . $languages['languages_id'].'&page='.(int)$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10, 'style="margin-left: 5px;"');
                       }
                       ?>
                     </td>                            
@@ -353,14 +338,14 @@ input[type=checkbox], input[type=radio] {
                 ?>                                                
               </table>
                           
-              <div class="smallText pdg2 flt-l"><?php echo $languages_split->display_count($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_LANGUAGES); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $languages_split->display_links($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+              <div class="smallText pdg2 flt-l"><?php echo $languages_split->display_count($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, (int)$_GET['page'], TEXT_DISPLAY_NUMBER_OF_LANGUAGES); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $languages_split->display_links($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, (int)$_GET['page']); ?></div>
              
               <?php
               if (empty($action)) {
                 ?>
                 <div class="clear"></div>                        
-                <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=new') . '">' . BUTTON_NEW_LANGUAGE . '</a>'; ?></div>
+                <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=new') . '">' . BUTTON_NEW_LANGUAGE . '</a>'; ?></div>
                 
                 <div class="clear"></div>                
                 <div class="transfer main">
@@ -415,11 +400,11 @@ input[type=checkbox], input[type=radio] {
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . '<br />' . xtc_draw_input_field('status_admin'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order'));
                 $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . (int)$_GET['lID']) . '">' . BUTTON_CANCEL . '</a>');
                 break;
               case 'edit':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_LANGUAGE . '</b>');
-                $contents = array('form' => xtc_draw_form('languages', FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=save'));
+                $contents = array('form' => xtc_draw_form('languages', FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=save'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . '<br />' . xtc_draw_input_field('name', $lInfo->name));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CODE . '<br />' . xtc_draw_input_field('code', $lInfo->code));
@@ -431,18 +416,18 @@ input[type=checkbox], input[type=radio] {
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', $lInfo->sort_order));
                 if (DEFAULT_LANGUAGE != $lInfo->code)
                   $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $lInfo->languages_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
               case 'delete':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_LANGUAGE . '</b>');
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br /><b>' . $lInfo->name . '</b>');
-                $contents[] = array('align' => 'center', 'text' => '<br />' . (($remove_language) ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=deleteconfirm') . '">' . BUTTON_DELETE . '</a>' : '') . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br />' . (($remove_language) ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=deleteconfirm') . '">' . BUTTON_DELETE . '</a>' : '') . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $lInfo->languages_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
               default:
                 if (is_object($lInfo)) {
                   $heading[] = array('text' => '<b>' . $lInfo->name . '</b>');
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
                   $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . ' ' . $lInfo->name);
                   $contents[] = array('text' => TEXT_INFO_LANGUAGE_CODE . ' ' . $lInfo->code);
                   $contents[] = array('text' => TEXT_INFO_LANGUAGE_CHARSET_INFO . ' ' . $lInfo->language_charset);
