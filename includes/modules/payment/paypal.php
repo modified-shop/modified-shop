@@ -220,7 +220,7 @@ class paypal {
 		$new_config[] = array('','PAYPAL_COUNTRY_MODE', 'de', 111125, 16, '', 'xtc_cfg_select_option(array("de", "uk"),');
 		$new_config[] = array('','PAYPAL_EXPRESS_ADDRESS_CHANGE', 'true', 111125, 17, '', 'xtc_cfg_select_option(array("true", "false"),');
 		$new_config[] = array('','PAYPAL_EXPRESS_ADDRESS_OVERRIDE', 'true', 111125, 18, '', 'xtc_cfg_select_option(array("true", "false"),');
-		$new_config[] = array('','PAYPAL_API_VERSION', '84.0', 111125, 20, '', '');
+		$new_config[] = array('','PAYPAL_API_VERSION', '119.0', 111125, 20, '', '');
 		$new_config[] = array('','PAYPAL_API_IMAGE', '', 111125, 21,  '', '');
 		$new_config[] = array('','PAYPAL_API_CO_BACK', '', 111125, 22, '', '');
 		$new_config[] = array('','PAYPAL_API_CO_BORD', '', 111125, 23, '', '');
