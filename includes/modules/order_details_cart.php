@@ -69,7 +69,7 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
   
   $image = '';
   if ($products[$i]['image'] != '') {
-    $image = DIR_WS_THUMBNAIL_IMAGES.$products[$i]['image'];
+    $image = $product->productImage($products[$i]['image'],'thumbnail');
   }
 
   //show 'delete button' in shopping cart
