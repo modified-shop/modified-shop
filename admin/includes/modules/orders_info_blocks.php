@@ -313,7 +313,7 @@
                 echo '            <td class="smallText" align="center">'.$tracking['carrier_name'].'</td>'.PHP_EOL;
                 echo '            <td class="smallText" align="left"><a href="'.$tracking['tracking_link'].'" target="_blank">'.$tracking['parcel_id'].'</a></td>'.PHP_EOL;
                 echo '            <td class="smallText" align="center">
-                                    <a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).
+                                    <a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_DELETE).
                                     ((isset($tracking['sc_label_url']) && $tracking['sc_label_url'] != '') ? '<a style="margin-left:10px;" target="_blank" href="'.$tracking['sc_label_url'].'">'.xtc_image(DIR_WS_ICONS.'icon_pdf.gif', DOWNLOAD_LABEL).'</a>' : '').'
                                   </td>'.PHP_EOL;
                 echo '          <tr>'.PHP_EOL;
@@ -363,9 +363,9 @@
                 echo '                  <td class="smallText'.$class.'" align="center">'.xtc_datetime_short($orders_history['date_added']).'</td>'.PHP_EOL;
                 echo '                  <td class="smallText'.$class.'" align="center">';
                 if ($orders_history['customer_notified'] == '1') {
-                  echo xtc_image(DIR_WS_ICONS.'tick.gif', ICON_TICK).'</td>'.PHP_EOL;
+                  echo xtc_image(DIR_WS_ICONS.'tick.gif').'</td>'.PHP_EOL;
                 } else {
-                  echo xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
+                  echo xtc_image(DIR_WS_ICONS.'cross.gif').'</td>'.PHP_EOL;
                 }
                 echo '            <td class="smallText'. $class.'">';
                 if($orders_history['orders_status_id']!='0') {
@@ -377,9 +377,9 @@
                 echo '                  <td class="smallText'.$class.'">'.nl2br(xtc_db_output($orders_history['comments'])).'&nbsp;</td>'. PHP_EOL;                 
                 echo '                  <td class="smallText'.$class.'" align="center">';
                 if ($orders_history['comments_sent'] == '1') {
-                  echo xtc_image(DIR_WS_ICONS.'tick.gif', ICON_TICK).'</td>'.PHP_EOL;
+                  echo xtc_image(DIR_WS_ICONS.'tick.gif').'</td>'.PHP_EOL;
                 } else {
-                  echo xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
+                  echo xtc_image(DIR_WS_ICONS.'cross.gif').'</td>'.PHP_EOL;
                 }
                 echo '</tr>'.PHP_EOL;
                }
