@@ -305,8 +305,8 @@ define('SHIPPING_BOX_PADDING_TITLE' , 'Bei gr&ouml;sseren Leerpaketen - Gewichts
 define('SHIPPING_BOX_PADDING_DESC' , 'F&uuml;r etwa 10% geben Sie 10 ein');
 define('SHOW_SHIPPING_TITLE' , 'Anzeige Versandkosten');
 define('SHOW_SHIPPING_DESC' , 'Verlinkte Anzeige von "zzgl. Versandkosten"');
-define('SHIPPING_INFOS_TITLE' , 'Versandkosten coID');
-define('SHIPPING_INFOS_DESC' , 'coID der Versandkosten (Default 1) f&uuml;r die Verlinkung.');
+define('SHIPPING_INFOS_TITLE' , 'Versandkosten');
+define('SHIPPING_INFOS_DESC' , 'W&auml;hle den Content zur Anzeige der Versandkosten');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_TITLE' , 'Berechnungsmethode der Default-Steuerklasse');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_DESC' , 'keine: keine Versandkostensteuer ausweisen<br />auto proportional: Versandkostensteuer anteilig zur Bestellung ausweisen<br />auto max: Steuersatz der gr&ouml;&szlig;ten Umsatzgruppe als Versandkostensteuer ausweisen');
 
