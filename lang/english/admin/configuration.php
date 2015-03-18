@@ -306,8 +306,8 @@ define('SHIPPING_BOX_PADDING_TITLE' , 'Larger packages - percentage increase');
 define('SHIPPING_BOX_PADDING_DESC' , 'For 10% enter 10');
 define('SHOW_SHIPPING_TITLE' , 'Display shipping costs');
 define('SHOW_SHIPPING_DESC' , 'Show link to shipping costs');
-define('SHIPPING_INFOS_TITLE' , 'coID');
-define('SHIPPING_INFOS_DESC' , 'coID of shipping costs content');
+define('SHIPPING_INFOS_TITLE' , 'Shipping costs');
+define('SHIPPING_INFOS_DESC' , 'Select content to display shipping costs');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_TITLE' , 'Calculation method of default tax class');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_DESC' , 'none: do not show shipping tax<br />auto proportional: show shipping tax proportional to order<br />auto max: show shipping tax, use tax rate of biggest turnover group');
 

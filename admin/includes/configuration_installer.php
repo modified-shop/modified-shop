@@ -89,6 +89,11 @@ $values_group_update = array();
 //configuration_group_id 7 --- "Versandoptionen"
   //$values[] = "(NULL, 'SHIPPING_DEFAULT_TAX_CLASS_METHOD', '1', 7, 7, NULL, NOW(), 'xtc_get_default_tax_class_method_name', 'xtc_cfg_pull_down_default_tax_class_methods(');"; //modified 1.07
 
+  $values_update[] = array (
+                           'values' => "set_function = 'xtc_cfg_select_content(\'SHIPPING_INFOS\','",
+                           'configuration_key' => 'SHIPPING_INFOS'
+                           );
+
 //configuration_group_id 8 --- "Artikel Listen Optionen"
   $values[] = "(NULL, 'SHOW_BUTTON_BUY_NOW', 'false', '8', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'USE_PAGINATION_LIST', 'false', '8', '21', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
