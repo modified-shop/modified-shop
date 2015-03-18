@@ -399,10 +399,10 @@ switch ($action) {
 		$oID = (int)$_GET['oID'];
 		$carrier_id = xtc_db_prepare_input($_POST['carrier_id']);
 		$parcel_id = xtc_db_prepare_input($_POST['parcel_id']);
-		if ($parcel_id == '' && defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
+		if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
       require_once(DIR_FS_EXTERNAL.'shipcloud/class.shipcloud.php');
       $shipcloud = new shipcloud($oID);
-      $shipcloud->create_label($carrier_id);
+      $shipcloud->create_label($_POST);
 		} else {
       $sql_data_array = array('orders_id' => $oID,
                               'carrier_id' => $carrier_id,
