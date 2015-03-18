@@ -226,7 +226,7 @@
       );
     }
     $params  = preg_replace("'\s+=\s+'",'=',$params);
-    $params = (strpos($params,'class="') !== false ? str_replace('class="', 'class="selectBox ',$params) : $params . ' class="selectBox"');
+    $params = (strpos($params,'class="') !== false ? str_replace('class="', 'class="SlectBox ',$params) : $params . ' class="SlectBox"');
     if ($params) $field .= ' ' . $params;
     $field .= '>';
     if (is_array($values)) {
@@ -241,7 +241,7 @@
     $field .= '</select>';
     if ($required)
       $field .= TEXT_FIELD_REQUIRED;
-    $field = '<div class="fnSelectWrap '. strtolower($name) .'">' . $field . '</div>';
+    $field = '<div class="SumoSelect '. strtolower($name) .'">' . $field . '</div>';
     return $field;
   }
 
