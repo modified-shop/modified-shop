@@ -157,4 +157,5 @@ define('CREATE_LABEL', 'Paketschein erstellen');
 define('TEXT_DELETE_LABEL', 'Shipcloud Paketscheine k&ouml;nnen nicht gel&ouml;scht werden.');
 define('TEXT_LABEL_CREATED', 'Paketschein erfolgreich erstellt.');
 define('TEXT_CARRIER_ERROR', 'Paketdienstleister nicht erlaubt.');
+define('TEXT_CARRIER_PLACEHOLDER', 'l&auml;nge cm (std:20), breite cm (std:20), h&ouml;he cm (std:20), Beschreibund (optional)');
 ?>

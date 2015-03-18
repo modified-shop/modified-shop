@@ -32,10 +32,13 @@ class shipcloud {
   }
   
   
-  public function create_label($carrier_id) {
+  public function create_label($params) {
     global $messageStack;
+        
+    $dimension_array = explode(',', preg_replace("'[\r\n\s]+'", '', $params['parcel_id']));
+    list($this->length, $this->width, $this->height, $this->description) = $dimension_array;
     
-    $this->carrier = $this->check_carrier($carrier_id);
+    $this->carrier = $this->check_carrier((int)$params['carrier_id']);
     
     if ($carrier !== false) {
       $request_array = array(
@@ -45,6 +48,7 @@ class shipcloud {
         'package'               => $this->package_data(),
         'reference_number'      => $this->order->info['orders_id'],
         'create_shipping_label' => 'true',
+        'service'               => $params['service'],
       );
       
       if (MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'Shipcloud') {
@@ -79,17 +83,17 @@ class shipcloud {
   
   
   private function check_carrier($carrier_id) { 
-    $carriers_query = xtc_db_query("SELECT LOWER(carrier_name) as name 
-                                      FROM ".TABLE_CARRIERS." 
-                                     WHERE carrier_id = '".(int)$carrier_id."'");
-    $carriers = xtc_db_fetch_array($carriers_query);
+    $check_carrier_query = xtc_db_query("SELECT LOWER(carrier_name) as name 
+                                            FROM ".TABLE_CARRIERS." 
+                                           WHERE carrier_id = '".(int)$carrier_id."'");
+    $check_carrier = xtc_db_fetch_array($check_carrier_query);
 
     $request = get_external_content('https://'.MODULE_SHIPCLOUD_API.'@'.self::SC_URL_CARRIERS, 3, false);
     $request = json_decode($request, true);
     
     if (is_array($request) && count($request) > 0) {
       foreach($request as $carrier) {
-        if ($carrier['name'] == $carriers['name']) {
+        if ($carrier['name'] == $check_carrier['name']) {
           return $carrier['name'];
         }
       }
@@ -155,10 +159,17 @@ class shipcloud {
   
   private function package_data() {
     $package_data = array(
-      'width'  => '20',
-      'length' => '20',
-      'height' => '20',
-      'weight' => $this->calculate_weight()
+      'width'          => (($this->width != '') ? $this->width : '20'),
+      'length'         => (($this->length != '') ? $this->length : '20'),
+      'height'         => (($this->height != '') ? $this->height : '20'),
+      'weight'         => $this->calculate_weight(),
+      'description'    => $this->description,
+      /*
+      'declared_value' => array(
+        'amount'   => $this->order->info['pp_total'],
+        'currency' => $this->order->info['currency']
+      )
+      */
     );
     
     return $package_data;

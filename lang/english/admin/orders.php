@@ -159,4 +159,5 @@ define('CREATE_LABEL', 'Create Label');
 define('TEXT_DELETE_LABEL', 'Shipcloud Label could not get deleted.');
 define('TEXT_LABEL_CREATED', 'Label created.');
 define('TEXT_CARRIER_ERROR', 'Carrier not permitted.');
+define('TEXT_CARRIER_PLACEHOLDER', 'length cm (std:20), width cm (std:20), height cm (std:20), description (optional)');
 ?>

@@ -301,6 +301,11 @@
             <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
           </tr>
           <?php
+            $service_array = array(
+              array('id' => 'standard', 'text' => 'Standard'),
+              array('id' => 'one_day', 'text' => 'Express'),
+              array('id' => 'one_day_early', 'text' => 'Express 10:00'),
+            );
             $tracking_array = get_tracking_link($_GET['oID'], $lang_code);
             if (count($tracking_array) > 0) {
               foreach($tracking_array as $tracking) {
@@ -316,8 +321,13 @@
             }
           ?>
           <tr>
-            <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); ?></td>
-            <td class="smallText" align="center"><?php echo  xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
+            <td class="smallText" align="center">
+              <?php 
+                echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); 
+                echo xtc_draw_pull_down_menu('service', $service_array, $service_array[0]); 
+              ?>
+            </td>
+            <td class="smallText" align="center"><?php echo  xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'.((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? ' placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"' : '')); ?></td>
             <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo ((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? CREATE_LABEL : BUTTON_INSERT); ?>"></td>
           </tr>
         </table>
