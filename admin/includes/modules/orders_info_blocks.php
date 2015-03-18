@@ -296,7 +296,7 @@
         <?php echo xtc_draw_form('carriers', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=inserttracking'); ?>
         <table cellspacing="0" cellpadding="5" class="table borderall">
           <tr>
-            <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
+            <td class="smallText" align="center" style="<?php echo ((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? 'width:255px;' : 'width:100px;'); ?>"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
             <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_PARCEL_LINK; ?></strong></td>
             <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
           </tr>
@@ -324,7 +324,7 @@
             <td class="smallText" align="center">
               <?php 
                 echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); 
-                echo xtc_draw_pull_down_menu('service', $service_array, $service_array[0]); 
+                echo ((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? xtc_draw_pull_down_menu('service', $service_array, $service_array[0]) : ''); 
               ?>
             </td>
             <td class="smallText" align="center"><?php echo  xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'.((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? ' placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"' : '')); ?></td>
