@@ -304,7 +304,7 @@ if (!$action) {
     for ($i=0; $i<$content_count; $i++) {
       for ($l=0; $l<$languages_count; $l++) {
         $tabtmp = "\'tab_lang_$cnt\'," ;
-        $langtabs.= '<li onclick="showTab('. $tabtmp. $counter.')" style="cursor: pointer;" id="tabselect_' . $cnt .'">' .xtc_image(DIR_WS_LANGUAGES . $languages[$l]['directory'] .'/admin/images/'. $languages[$l]['image'], $languages[$l]['name']) . ' ' . $languages[$l]['name'].(($content_count > $languages_count) ? ' ('. ($i + 1) .')' : '').'</li>';
+        $langtabs.= '<li onclick="showTab('. $tabtmp. $counter.')" style="cursor: pointer;" id="tabselect_' . $cnt .'">' .xtc_image(DIR_WS_LANGUAGES . $languages[$l]['directory'] .'/admin/images/'. $languages[$l]['image'], $languages[$l]['name']) . ' ' . $languages[$l]['name'].(($counter > $languages_count) ? ' ('. ($i + 1) .')' : '').'</li>';
         if($cnt > 0) $csstab .= '#tab_lang_' . $cnt .'{display: none;' . $csstabstyle . '}';
         $csstab_nojs .= '#tab_lang_' . $cnt .'{display: block;' . $csstabstyle . '}';
         $cnt ++;
