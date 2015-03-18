@@ -33,7 +33,7 @@
   <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css">
   <link rel="stylesheet" type="text/css" href="includes/css/jquery.alerts.css" />
-  <link rel="stylesheet" type="text/css" href="includes/css/fnselect.css" />
+  <link rel="stylesheet" type="text/css" href="includes/css/sumoselect.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/fm.checkator.jquery.css" />
 
   <?php 
@@ -51,11 +51,12 @@
   <!--[if lt IE 9]><script src="includes/javascript/html5.js"></script><![endif]-->
   
   <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>  
-  <script type="text/javascript" src="includes/javascript/jquery.fnselect.js"></script>
+  <script type="text/javascript" src="includes/javascript/jquery.sumoselect.js"></script>
   
   <script type="text/javascript" src="includes/javascript/fm.checkator.jquery.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
+      $('.SlectBox').SumoSelect({ autoWidth: true, placeholder: '-'});
       $('.fmChkBox').checkator();
     });
   </script>
