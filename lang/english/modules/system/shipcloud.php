@@ -10,30 +10,30 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('MODULE_SHIPCLOUD_TEXT_TITLE', 'Shipcloud - the new generation of parcel shipment');
-define('MODULE_SHIPCLOUD_TEXT_DESCRIPTION', 'Print parcel labels directly out of the Shop.');
-define('MODULE_SHIPCLOUD_STATUS_TITLE', 'Status');
-define('MODULE_SHIPCLOUD_STATUS_DESC', 'Module activate?');
-define('MODULE_SHIPCLOUD_API_TITLE', '<hr noshade>API');
-define('MODULE_SHIPCLOUD_API_DESC', 'API Key von Shipcloud');
-define('MODULE_SHIPCLOUD_COMPANY_TITLE', '<hr noshade>Customer details<br/>');
-define('MODULE_SHIPCLOUD_COMPANY_DESC', 'Company:');
-define('MODULE_SHIPCLOUD_FIRSTNAME_TITLE', '');
-define('MODULE_SHIPCLOUD_FIRSTNAME_DESC', 'Firstname:');
-define('MODULE_SHIPCLOUD_LASTNAME_TITLE', '');
-define('MODULE_SHIPCLOUD_LASTNAME_DESC', 'Lastname:');
-define('MODULE_SHIPCLOUD_ADDRESS_TITLE', '');
-define('MODULE_SHIPCLOUD_ADDRESS_DESC', 'Address:');
-define('MODULE_SHIPCLOUD_POSTCODE_TITLE', '');
-define('MODULE_SHIPCLOUD_POSTCODE_DESC', 'Zip:');
-define('MODULE_SHIPCLOUD_CITY_TITLE', '');
-define('MODULE_SHIPCLOUD_CITY_DESC', 'City:');
-define('MODULE_SHIPCLOUD_LOG_TITLE', '<hr noshade>Log');
-define('MODULE_SHIPCLOUD_LOG_DESC', 'the log file is stored in the folder / log.');
-define('MODULE_SHIPCLOUD_EMAIL_TITLE', '<hr noshade>E-Mail notification');
-define('MODULE_SHIPCLOUD_EMAIL_DESC', 'Notify customer by E-Mail?');
-define('MODULE_SHIPCLOUD_EMAIL_TYPE_TITLE', '<hr noshade>Notification');
 if (defined('_VALID_XTC')) {
+  define('MODULE_SHIPCLOUD_TEXT_TITLE', 'Shipcloud - the new generation of parcel shipment');
+  define('MODULE_SHIPCLOUD_TEXT_DESCRIPTION', 'Print parcel labels directly out of the Shop.');
+  define('MODULE_SHIPCLOUD_STATUS_TITLE', 'Status');
+  define('MODULE_SHIPCLOUD_STATUS_DESC', 'Module activate?');
+  define('MODULE_SHIPCLOUD_API_TITLE', '<hr noshade>API');
+  define('MODULE_SHIPCLOUD_API_DESC', 'API Key von Shipcloud');
+  define('MODULE_SHIPCLOUD_COMPANY_TITLE', '<hr noshade>Customer details<br/>');
+  define('MODULE_SHIPCLOUD_COMPANY_DESC', 'Company:');
+  define('MODULE_SHIPCLOUD_FIRSTNAME_TITLE', '');
+  define('MODULE_SHIPCLOUD_FIRSTNAME_DESC', 'Firstname:');
+  define('MODULE_SHIPCLOUD_LASTNAME_TITLE', '');
+  define('MODULE_SHIPCLOUD_LASTNAME_DESC', 'Lastname:');
+  define('MODULE_SHIPCLOUD_ADDRESS_TITLE', '');
+  define('MODULE_SHIPCLOUD_ADDRESS_DESC', 'Address:');
+  define('MODULE_SHIPCLOUD_POSTCODE_TITLE', '');
+  define('MODULE_SHIPCLOUD_POSTCODE_DESC', 'Zip:');
+  define('MODULE_SHIPCLOUD_CITY_TITLE', '');
+  define('MODULE_SHIPCLOUD_CITY_DESC', 'City:');
+  define('MODULE_SHIPCLOUD_LOG_TITLE', '<hr noshade>Log');
+  define('MODULE_SHIPCLOUD_LOG_DESC', 'the log file is stored in the folder / log.');
+  define('MODULE_SHIPCLOUD_EMAIL_TITLE', '<hr noshade>E-Mail notification');
+  define('MODULE_SHIPCLOUD_EMAIL_DESC', 'Notify customer by E-Mail?');
+  define('MODULE_SHIPCLOUD_EMAIL_TYPE_TITLE', '<hr noshade>Notification');
   define('MODULE_SHIPCLOUD_EMAIL_TYPE_DESC', 'Should the customer be notifyed by the Shop or Shipcloud?<br><Note:</b>For a notification from the Shop must set a Webhook to this URL: '.xtc_catalog_href_link('callback/shipcloud/callback.php', '', 'SSL', false).' in Shipcloud.');
 }
 
