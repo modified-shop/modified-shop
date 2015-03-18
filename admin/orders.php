@@ -170,10 +170,11 @@ if (isset($order) && is_object($order)) {
 
 // Trying to get property of non-object $order->info
 if (isset($order) && is_object($order)) {
-  $lang_query = xtc_db_query("-- /admin/orders.php
-                                SELECT languages_id, code, image
-                                  FROM " . TABLE_LANGUAGES . "
-                                 WHERE directory = '" . $order->info['language'] . "'");
+  $lang_query = xtc_db_query("SELECT languages_id, 
+                                     language_charset
+                                     code
+                                FROM " . TABLE_LANGUAGES . "
+                               WHERE directory = '" . $order->info['language'] . "'");
   $lang_array = xtc_db_fetch_array($lang_query);
   $lang = $lang_array['languages_id'];
   $lang_code = $lang_array['code'];
@@ -187,12 +188,11 @@ if (!isset($lang_charset)) $lang_charset = $_SESSION['language_charset'];
 
 $orders_statuses = array();
 $orders_status_array = array();
-$orders_status_query = xtc_db_query("-- /admin/orders.php
-                                       SELECT orders_status_id,
-                                              orders_status_name
-                                         FROM ".TABLE_ORDERS_STATUS."
-                                        WHERE language_id = '".$lang."'
-                                     ORDER BY sort_order");
+$orders_status_query = xtc_db_query("SELECT orders_status_id,
+                                            orders_status_name
+                                       FROM ".TABLE_ORDERS_STATUS."
+                                      WHERE language_id = '".$lang."'
+                                   ORDER BY sort_order");
 while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
   $orders_statuses[] = array ('id' => $orders_status['orders_status_id'], 'text' => $orders_status['orders_status_name']);
   $orders_status_array[$orders_status['orders_status_id']] = $orders_status['orders_status_name'];
@@ -214,29 +214,26 @@ switch ($action) {
     $status = (int) $_POST['status'];
     $comments = xtc_db_prepare_input($_POST['comments']);
     $order_updated = false;
-    if ($order->info['orders_status'] != $status || $comments != '' || $email_preview) { // EMAIL PREVIEW
+    if ($order->info['orders_status'] != $status || $comments != '' || $email_preview) {
       if (!$email_preview) {  
-        require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_status_requests.php'); // DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
-        xtc_db_query("-- /admin/orders.php
-                      UPDATE ".TABLE_ORDERS."
+        require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_status_requests.php');
+        xtc_db_query("UPDATE ".TABLE_ORDERS."
                          SET orders_status = ".$status.",
                              last_modified = now()
                        WHERE orders_id = ".$oID
                     );
-      }  // EMAIL PREVIEW
+      }
 
       $customer_notified = 0;
       if ($_POST['notify'] == 'on') {
         $notify_comments = ($_POST['notify_comments'] == 'on') ? $comments : '';        
         //fallback gender modified < 2.00
         if (!isset($order->customer['gender']) || empty($order->customer['gender'])) {
-            $gender_query = xtc_db_query("-- /admin/customers.php
-                                      SELECT customers_gender
-                                        FROM " . TABLE_CUSTOMERS . "
-                                       WHERE customers_id = '" .$order->customer['id']. "'
-                                      ");
-            $gender_array = xtc_db_fetch_array($gender_query);
-            $order->customer['gender'] = $gender_array['customers_gender'];
+          $gender_query = xtc_db_query("SELECT customers_gender
+                                          FROM " . TABLE_CUSTOMERS . "
+                                         WHERE customers_id = '" .$order->customer['id']. "'");
+          $gender_array = xtc_db_fetch_array($gender_query);
+          $order->customer['gender'] = $gender_array['customers_gender'];
         } 
         if ($order->customer['gender'] == 'f') {
           $smarty->assign('GENDER', FEMALE);
@@ -250,13 +247,6 @@ switch ($action) {
         $smarty->assign('order', $order);
         $smarty->assign('order_data', $order->getOrderData($oID));
 
-        // assign language to template for caching
-        $smarty->assign('language', $order->info['language']);
-        $smarty->caching = false;
-        // set dirs manual
-        $smarty->template_dir = DIR_FS_CATALOG.'templates';
-        $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
-        $smarty->config_dir = DIR_FS_CATALOG.'lang';
         $smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
         $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
         $smarty->assign('NAME', $order->customer['name']);
@@ -274,6 +264,16 @@ switch ($action) {
         $smarty->assign('ORDER_DATE', xtc_date_long($order->info['date_purchased']));
         $smarty->assign('NOTIFY_COMMENTS', nl2br($notify_comments));
         $smarty->assign('ORDER_STATUS', $orders_status_array[$status]);
+
+        // assign language
+        $smarty->assign('language', $order->info['language']);
+        
+        // set dirs manual
+        $smarty->caching = false;
+        $smarty->template_dir = DIR_FS_CATALOG.'templates';
+        $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
+        $smarty->config_dir = DIR_FS_CATALOG.'lang';
+        
         $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/admin/mail/'.$order->info['language'].'/change_order_mail.html');
         $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/admin/mail/'.$order->info['language'].'/change_order_mail.txt');
         $order_subject_search = array('{$nr}', '{$date}', '{$lastname}', '{$firstname}');
@@ -349,21 +349,14 @@ switch ($action) {
     if(isset($_POST['paypaldelete'])) {
         if(!defined('TABLE_PAYPAL'))define('TABLE_PAYPAL', 'paypal');
         if(!defined('TABLE_PAYPAL_STATUS_HISTORY'))define('TABLE_PAYPAL_STATUS_HISTORY', 'paypal_status_history');
-      $query = xtc_db_query("-- /admin/orders.php
-                             SELECT *
+      $query = xtc_db_query("SELECT *
                                FROM " . TABLE_PAYPAL . "
                               WHERE xtc_order_id = ".$oID
                             );
       while ($values = xtc_db_fetch_array($query)) {
-        xtc_db_query("-- /admin/orders.php
-                      DELETE FROM " . TABLE_PAYPAL_STATUS_HISTORY . "
-                            WHERE paypal_ipn_id = '".$values['paypal_ipn_id']."'
-                     ");
+        xtc_db_query("DELETE FROM " . TABLE_PAYPAL_STATUS_HISTORY . " WHERE paypal_ipn_id = '".$values['paypal_ipn_id']."'");
       }
-      xtc_db_query("-- /admin/orders.php
-                    DELETE FROM " . TABLE_PAYPAL . "
-                          WHERE xtc_order_id = ".$oID
-                  );
+      xtc_db_query("DELETE FROM " . TABLE_PAYPAL . " WHERE xtc_order_id = '".$oID."'");
     }
 
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action'))));
@@ -375,21 +368,14 @@ switch ($action) {
     if(isset($_POST['paypaldelete'])) {
         if(!defined('TABLE_PAYPAL'))define('TABLE_PAYPAL', 'paypal');
         if(!defined('TABLE_PAYPAL_STATUS_HISTORY'))define('TABLE_PAYPAL_STATUS_HISTORY', 'paypal_status_history');
-      $query = xtc_db_query("-- /admin/orders.php
-                             SELECT *
+      $query = xtc_db_query("SELECT *
                                FROM " . TABLE_PAYPAL . "
                               WHERE xtc_order_id = ".$oID
                             );
       while ($values = xtc_db_fetch_array($query)) {
-        xtc_db_query("-- /admin/orders.php
-                      DELETE FROM " . TABLE_PAYPAL_STATUS_HISTORY . "
-                            WHERE paypal_ipn_id = '".$values['paypal_ipn_id']."'
-                     ");
+        xtc_db_query("DELETE FROM " . TABLE_PAYPAL_STATUS_HISTORY . " WHERE paypal_ipn_id = '".$values['paypal_ipn_id']."'");
       }
-      xtc_db_query("-- /admin/orders.php
-                    DELETE FROM " . TABLE_PAYPAL . "
-                          WHERE xtc_order_id = ".$oID
-                  );
+      xtc_db_query("DELETE FROM " . TABLE_PAYPAL . " WHERE xtc_order_id = '".$oID."'");
     }
 
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action'))));
