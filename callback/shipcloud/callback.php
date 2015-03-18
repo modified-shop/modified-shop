@@ -16,30 +16,11 @@ require_once('includes/application_top_callback.php');
 // include needed classes
 require_once(DIR_WS_CLASSES.'order.php');
 
-// include needed functions
-require_once (DIR_FS_INC.'get_tracking_link.inc.php');
-
 // parse callback
 $request = json_decode(file_get_contents("php://input"), true);
 
 if (MODULE_SHIPCLOUD_LOG == 'True') {
   error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' ' . print_r($request, true) . "\n", 3, DIR_FS_LOG.'mod_shipcloud_notification_' .date('Y-m-d') .'.log');
-}
-
-if (!is_array($request)) {
-  $request = Array
-  (
-      'id' => '65da94f3-83ec-4807-9375-ec0a547185b8',
-      'occured_at' => '2015-03-18T10:29:10+01:00',
-      'type' => 'example.event',
-      'data' => Array
-          (
-              'id' => 'es40a6e7a83ea8253f54eb414606626172b523d8',
-              'url' => '/v1/shipments/es40a6e7a83ea8253f54eb414606626172b523d8',
-              'object_type' => 'shipment'
-          )
-
-  );
 }
 
 if (is_array($request) && count($request) > 0) {
