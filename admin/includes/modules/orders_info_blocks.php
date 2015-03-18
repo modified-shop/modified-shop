@@ -306,14 +306,14 @@
               array('id' => 'one_day', 'text' => 'Express'),
               array('id' => 'one_day_early', 'text' => 'Express 10:00'),
             );
-            $tracking_array = get_tracking_link($_GET['oID'], $lang_code);
+            $tracking_array = get_tracking_link($oID, $lang_code);
             if (count($tracking_array) > 0) {
               foreach($tracking_array as $tracking) {
                 echo '          <tr>'.PHP_EOL;
                 echo '            <td class="smallText" align="center">'.$tracking['carrier_name'].'</td>'.PHP_EOL;
                 echo '            <td class="smallText" align="left"><a href="'.$tracking['tracking_link'].'" target="_blank">'.$tracking['parcel_id'].'</a></td>'.PHP_EOL;
                 echo '            <td class="smallText" align="center">
-                                    <a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).
+                                    <a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).
                                     ((isset($tracking['sc_label_url']) && $tracking['sc_label_url'] != '') ? '<a style="margin-left:10px;" target="_blank" href="'.$tracking['sc_label_url'].'">'.xtc_image(DIR_WS_ICONS.'icon_pdf.gif', DOWNLOAD_LABEL).'</a>' : '').'
                                   </td>'.PHP_EOL;
                 echo '          <tr>'.PHP_EOL;

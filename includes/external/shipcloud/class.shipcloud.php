@@ -34,11 +34,13 @@ class shipcloud {
   
   public function create_label($params) {
     global $messageStack;
-        
+    
+    // parse params
+    $this->carrier_id = (int)$params['carrier_id'];
     $dimension_array = explode(',', preg_replace("'[\r\n\s]+'", '', $params['parcel_id']));
     list($this->length, $this->width, $this->height, $this->description) = $dimension_array;
     
-    $this->carrier = $this->check_carrier((int)$params['carrier_id']);
+    $this->carrier = $this->check_carrier();
     
     if ($carrier !== false) {
       $request_array = array(
@@ -62,7 +64,7 @@ class shipcloud {
       if (is_array($request) && count($request) > 0) {
         $messageStack->add_session(TEXT_LABEL_CREATED, 'success');
         $this->logger($request);
-        $this->save_label($request, $carrier_id);
+        $this->save_label($request);
       }
     } else {
       $messageStack->add_session(TEXT_CARRIER_ERROR, 'warning');
@@ -71,9 +73,9 @@ class shipcloud {
   }
 
 
-  private function save_label($request, $carrier_id) {    
+  private function save_label($request) {    
 		$sql_data_array = array('orders_id' => $this->order->info['orders_id'],
-		                        'carrier_id' => $carrier_id,
+		                        'carrier_id' => $this->carrier_id,
 		                        'parcel_id' => $request['carrier_tracking_no'],
 		                        'sc_label_url' => $request['label_url'],
 		                        'sc_id' => $request['id'],
@@ -82,10 +84,10 @@ class shipcloud {
   }
   
   
-  private function check_carrier($carrier_id) { 
+  private function check_carrier() { 
     $check_carrier_query = xtc_db_query("SELECT LOWER(carrier_name) as name 
                                             FROM ".TABLE_CARRIERS." 
-                                           WHERE carrier_id = '".(int)$carrier_id."'");
+                                           WHERE carrier_id = '".$this->carrier_id."'");
     $check_carrier = xtc_db_fetch_array($check_carrier_query);
 
     $request = get_external_content('https://'.MODULE_SHIPCLOUD_API.'@'.self::SC_URL_CARRIERS, 3, false);
