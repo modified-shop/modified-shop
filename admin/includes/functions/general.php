@@ -2856,7 +2856,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                     WHERE languages_id = '".$_SESSION['languages_id']."'
                                  GROUP BY content_group");
     while ($content = xtc_db_fetch_array($content_query)) {
-      $content_array[] = array('id' => $content['content_group'], 'text' => $content['content_title']);
+      $content_array[] = array('id' => $content['content_group'], 'text' => $content['content_title'] . ' (coID: '.$content['content_group'].')');
     }
     return xtc_draw_pull_down_menu(sprintf($name, $cfg_key), $content_array, $cfg_value);
   }
