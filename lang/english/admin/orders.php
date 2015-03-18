@@ -153,4 +153,10 @@ define('TABLE_HEADING_PARCEL_LINK', 'Trackinglink');
 
 define('TEXT_INFO_HEADING_REVERSE_ORDER', 'Reverse order');
 define('TEXT_INFO_REVERSE_INTRO', 'Are you sure you want to reverse this order?');
+
+define('DOWNLOAD_LABEL', 'Download Label');
+define('CREATE_LABEL', 'Create Label');
+define('TEXT_DELETE_LABEL', 'Shipcloud Label could not get deleted.');
+define('TEXT_LABEL_CREATED', 'Label created.');
+define('TEXT_CARRIER_ERROR', 'Carrier not permitted.');
 ?>

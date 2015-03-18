@@ -151,4 +151,10 @@ define('TABLE_HEADING_PARCEL_LINK', 'Trackinglink');
 
 define('TEXT_INFO_HEADING_REVERSE_ORDER', 'Bestellung stornieren');
 define('TEXT_INFO_REVERSE_INTRO', 'Sind Sie sicher, das Sie diese Bestellung stornieren m&ouml;chten?');
+
+define('DOWNLOAD_LABEL', 'Paketschein herunterladen');
+define('CREATE_LABEL', 'Paketschein erstellen');
+define('TEXT_DELETE_LABEL', 'Shipcloud Paketscheine k&ouml;nnen nicht gel&ouml;scht werden.');
+define('TEXT_LABEL_CREATED', 'Paketschein erfolgreich erstellt.');
+define('TEXT_CARRIER_ERROR', 'Paketdienstleister nicht erlaubt.');
 ?>

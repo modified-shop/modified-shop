@@ -307,15 +307,18 @@
                 echo '          <tr>'.PHP_EOL;
                 echo '            <td class="smallText" align="center">'.$tracking['carrier_name'].'</td>'.PHP_EOL;
                 echo '            <td class="smallText" align="left"><a href="'.$tracking['tracking_link'].'" target="_blank">'.$tracking['parcel_id'].'</a></td>'.PHP_EOL;
-                echo '            <td class="smallText" align="center"><a class="button" href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
+                echo '            <td class="smallText" align="center">
+                                    <a class="button" href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).
+                                    ((isset($tracking['sc_label_url']) && $tracking['sc_label_url'] != '') ? '<a style="margin-left:10px;" target="_blank" href="'.$tracking['sc_label_url'].'">'.xtc_image(DIR_WS_ICONS.'icon_pdf.gif', DOWNLOAD_LABEL).'</a>' : '').'
+                                  </td>'.PHP_EOL;
                 echo '          <tr>'.PHP_EOL;
               }
             }
           ?>
           <tr>
-              <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); ?></td>
-              <td class="smallText" align="center"><?php echo  xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
-              <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo BUTTON_UPDATE; ?>"></td>
+            <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); ?></td>
+            <td class="smallText" align="center"><?php echo  xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
+            <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo ((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? CREATE_LABEL : BUTTON_INSERT); ?>"></td>
           </tr>
         </table>
         </form>
@@ -324,56 +327,56 @@
         <!-- BOC ORDER HISTORY BLOCK -->
         <div class="heading"><?php echo TEXT_ORDER_HISTORY; ?></div>
         <table cellspacing="0" cellpadding="5" class="table borderall">
-                <tr>
-                  <td class="smallText" align="center"><b><?php echo TABLE_HEADING_DATE_ADDED; ?></b></td>
-                  <td class="smallText" align="center"><b><?php echo TABLE_HEADING_CUSTOMER_NOTIFIED; ?></b></td>
-                  <td class="smallText" align="center"><b><?php echo TABLE_HEADING_STATUS; ?></b></td>
-                  <td class="smallText" align="center"><b><?php echo TABLE_HEADING_COMMENTS; ?></b></td>
-                  <td class="smallText" align="center"><b><?php echo TABLE_HEADING_COMMENTS_SENT; ?></b></td>
-                </tr>
-                <?php
-                $orders_history_query = xtc_db_query("-- /admin/orders.php
-                                                      SELECT orders_status_id,
-                                                             date_added,
-                                                             customer_notified,
-                                                             comments,
-                                                             comments_sent
-                                                        FROM ".TABLE_ORDERS_STATUS_HISTORY."
-                                                       WHERE orders_id = ".$oID."
-                                                    ORDER BY date_added");
-                $count = xtc_db_num_rows($orders_history_query);
-                if ($count) {
-                  while ($orders_history = xtc_db_fetch_array($orders_history_query)) {
-                    $count--;
-                    $class = ($count == 0) ? ' last_row' : '';
-                    echo '                <tr>'.PHP_EOL;
-                    echo '                  <td class="smallText'.$class.'" align="center">'.xtc_datetime_short($orders_history['date_added']).'</td>'.PHP_EOL;
-                    echo '                  <td class="smallText'.$class.'" align="center">';
-                    if ($orders_history['customer_notified'] == '1') {
-                      echo xtc_image(DIR_WS_ICONS.'tick.gif', ICON_TICK).'</td>'.PHP_EOL;
-                    } else {
-                      echo xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
-                    }
-                    echo '            <td class="smallText'. $class.'">';
-                    if($orders_history['orders_status_id']!='0') {
-                      echo $orders_status_array[$orders_history['orders_status_id']];
-                    }else{
-                      echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';
-                    }
-                    echo '</td>'.PHP_EOL;
-                    echo '                  <td class="smallText'.$class.'">'.nl2br(xtc_db_output($orders_history['comments'])).'&nbsp;</td>'. PHP_EOL;                 
-                    echo '                  <td class="smallText'.$class.'" align="center">';
-                    if ($orders_history['comments_sent'] == '1') {
-                      echo xtc_image(DIR_WS_ICONS.'tick.gif', ICON_TICK).'</td>'.PHP_EOL;
-                    } else {
-                      echo xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
-                    }
-                    echo '</tr>'.PHP_EOL;
-                   }
+          <tr>
+            <td class="smallText" align="center"><b><?php echo TABLE_HEADING_DATE_ADDED; ?></b></td>
+            <td class="smallText" align="center"><b><?php echo TABLE_HEADING_CUSTOMER_NOTIFIED; ?></b></td>
+            <td class="smallText" align="center"><b><?php echo TABLE_HEADING_STATUS; ?></b></td>
+            <td class="smallText" align="center"><b><?php echo TABLE_HEADING_COMMENTS; ?></b></td>
+            <td class="smallText" align="center"><b><?php echo TABLE_HEADING_COMMENTS_SENT; ?></b></td>
+          </tr>
+          <?php
+            $orders_history_query = xtc_db_query("-- /admin/orders.php
+                                                  SELECT orders_status_id,
+                                                         date_added,
+                                                         customer_notified,
+                                                         comments,
+                                                         comments_sent
+                                                    FROM ".TABLE_ORDERS_STATUS_HISTORY."
+                                                   WHERE orders_id = ".$oID."
+                                                ORDER BY date_added");
+            $count = xtc_db_num_rows($orders_history_query);
+            if ($count) {
+              while ($orders_history = xtc_db_fetch_array($orders_history_query)) {
+                $count--;
+                $class = ($count == 0) ? ' last_row' : '';
+                echo '                <tr>'.PHP_EOL;
+                echo '                  <td class="smallText'.$class.'" align="center">'.xtc_datetime_short($orders_history['date_added']).'</td>'.PHP_EOL;
+                echo '                  <td class="smallText'.$class.'" align="center">';
+                if ($orders_history['customer_notified'] == '1') {
+                  echo xtc_image(DIR_WS_ICONS.'tick.gif', ICON_TICK).'</td>'.PHP_EOL;
                 } else {
-                  echo '                <tr>'.PHP_EOL.'            <td class="smallText" colspan="5">'.TEXT_NO_ORDER_HISTORY.'</td>'.PHP_EOL.'                </tr>'.PHP_EOL;
+                  echo xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
                 }
-                ?>
+                echo '            <td class="smallText'. $class.'">';
+                if($orders_history['orders_status_id']!='0') {
+                  echo $orders_status_array[$orders_history['orders_status_id']];
+                }else{
+                  echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';
+                }
+                echo '</td>'.PHP_EOL;
+                echo '                  <td class="smallText'.$class.'">'.nl2br(xtc_db_output($orders_history['comments'])).'&nbsp;</td>'. PHP_EOL;                 
+                echo '                  <td class="smallText'.$class.'" align="center">';
+                if ($orders_history['comments_sent'] == '1') {
+                  echo xtc_image(DIR_WS_ICONS.'tick.gif', ICON_TICK).'</td>'.PHP_EOL;
+                } else {
+                  echo xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
+                }
+                echo '</tr>'.PHP_EOL;
+               }
+            } else {
+              echo '                <tr>'.PHP_EOL.'            <td class="smallText" colspan="5">'.TEXT_NO_ORDER_HISTORY.'</td>'.PHP_EOL.'                </tr>'.PHP_EOL;
+            }
+          ?>
           </tr>
         </table>
         <!-- EOC ORDER HISTORY BLOCK -->

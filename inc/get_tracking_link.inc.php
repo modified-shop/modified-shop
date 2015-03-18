@@ -22,14 +22,19 @@
                                             FROM ".TABLE_ORDERS_TRACKING." ortr
                                             JOIN ".TABLE_CARRIERS." ca
                                                  ON ortr.carrier_id = ca.carrier_id
-                                           WHERE ortr.orders_id = '".(int)$orders_id."'");
+                                           WHERE ortr.orders_id = '".(int)$orders_id."'
+                                           ORDER BY ortr.tracking_id ASC");
     if (xtc_db_num_rows($tracking_links_query) > 0) {
+      $i = 0;
       while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
-        $parcel_link[] = array('carrier_name' => $tracking_link['carrier_name'],
-                               'parcel_id' => $tracking_link['parcel_id'],
-                               'tracking_link' => str_replace(array('$1', '$2'), array($tracking_link['parcel_id'], $lang_code), $tracking_link['carrier_tracking_link']),
-                               'tracking_id' => $tracking_link['tracking_id']
-                               );
+        $parcel_link[$i] = $tracking_link;
+        
+        $parcel_link[$i]['carrier_name'] = $tracking_link['carrier_name'];
+        $parcel_link[$i]['parcel_id'] = $tracking_link['parcel_id'];
+        $parcel_link[$i]['tracking_link'] = str_replace(array('$1', '$2'), array($tracking_link['parcel_id'], $lang_code), $tracking_link['carrier_tracking_link']);
+        $parcel_link[$i]['tracking_id'] = $tracking_link['tracking_id'];
+        
+        $i++;
       }
     }
 
