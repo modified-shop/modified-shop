@@ -101,6 +101,7 @@ class it_recht_kanzlei {
       if ($xml->rechtstext_language == '') {
         $this->return_error('9');
       } else {
+        require_once(DIR_WS_CLASSES.'language.php');
         $lng = new language($xml->rechtstext_language);
         $languages_id = $lng->language['id'];
         if ($lng->language['code'] != $xml->rechtstext_language) {
@@ -209,7 +210,11 @@ class it_recht_kanzlei {
       }
       
       if ($content_group != '') {
-        $check_query = xtc_db_query("SELECT content_text FROM ".TABLE_CONTENT_MANAGER." WHERE content_group = '".$content_group."' AND languages_id = '".$languages_id."' LIMIT 1");
+        $check_query = xtc_db_query("SELECT content_text 
+                                       FROM ".TABLE_CONTENT_MANAGER." 
+                                      WHERE content_group = '".$content_group."' 
+                                        AND languages_id = '".$languages_id."' 
+                                      LIMIT 1");
         $check = xtc_db_fetch_array($check_query);
         if ($check['content_text'] == utf8_decode($xml->rechtstext_html.$pdf_file_text)) {
           $this->return_success();
@@ -217,7 +222,14 @@ class it_recht_kanzlei {
           $sql_data_array = array('content_text' => utf8_decode($xml->rechtstext_html.$pdf_file_text));
           xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
           if (xtc_db_affected_rows() < 1) {
-            $this->return_error('99');
+            $check_content_query = xtc_db_query("SELECT content_text 
+                                                   FROM ".TABLE_CONTENT_MANAGER." 
+                                                  WHERE content_group = '".$content_group."' 
+                                                    AND languages_id = '".$languages_id."'");
+            $check_content = xtc_db_fetch_array($check_content_query);
+            if ($check_content['content_text'] != $sql_data_array['content_text']) {
+              $this->return_error('99');
+            }
           }
         }
       } else {
