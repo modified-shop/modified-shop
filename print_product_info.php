@@ -27,6 +27,7 @@ require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 $info_smarty = new Smarty;
 $info_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 $info_smarty->assign('charset', $_SESSION['language_charset'] ); 
+$info_smarty->assign('base_href', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
 
 if (isset($_GET['pID']) && $_GET['pID']!='') {
   $_GET['products_id'] = xtc_get_prid($_GET['pID']);
