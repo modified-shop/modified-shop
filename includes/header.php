@@ -80,8 +80,10 @@ Please visit our website: www.modified-shop.org
 =========================================================
 -->
 <meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> ------ http://www.modified-shop.org" />
-<base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
 <?php
+if (DIR_WS_BASE == '') {
+  echo '<base href='.(($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'" />';
+}
 if (is_file('templates/'.CURRENT_TEMPLATE.'/css/general.css.php')) {
   require('templates/'.CURRENT_TEMPLATE.'/css/general.css.php');
 } else { //Maintain backwards compatibility for older templates 

@@ -188,11 +188,6 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_begin/','php') as $file) require ($file);
 
-//compatibility for modified eCommerce Shopsoftware 1.06 files
-if (!defined('DIR_WS_BASE')) {
-  define('DIR_WS_BASE', '');
-}
-
 // Set the length of the redeem code, the longer the more secure
 // Kommt eigentlich schon aus der Table configuration
 if(!defined('SECURITY_CODE_LENGTH')) {
@@ -362,4 +357,8 @@ xtc_count_cart();
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_end/','php') as $file) require ($file);
 
+//compatibility for modified eCommerce Shopsoftware 1.06 files
+if (!defined('DIR_WS_BASE')) {
+  define('DIR_WS_BASE', '');
+}
 ?>

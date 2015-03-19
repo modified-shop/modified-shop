@@ -39,8 +39,8 @@
   define('TEMPLATE_HTML_ENGINE', 'html5'); // html5 or xhtml
 
   // categories
-  define('SPECIALS_CATEGORIES', true);
-  define('WHATSNEW_CATEGORIES', true);
+  defined('SPECIALS_CATEGORIES') or define('SPECIALS_CATEGORIES', true);
+  defined('WHATSNEW_CATEGORIES') or define('WHATSNEW_CATEGORIES', true);
 
   // check specials
   if (SPECIALS_CATEGORIES === true) {
@@ -55,4 +55,8 @@
     define('WHATSNEW_EXISTS', check_whatsnew());
   }
   */
+  
+  // set base
+  $ssl_proxy = ((isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? '/' . $_SERVER['HTTP_HOST'] : '');
+  define('DIR_WS_BASE', $ssl_proxy . preg_replace('/\\' . DIRECTORY_SEPARATOR . '\/|\/\//', '/', dirname($PHP_SELF) . '/'));
 ?>
