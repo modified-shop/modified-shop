@@ -378,7 +378,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
           $contents[] = array('text' => '<b>' . TEXT_REDEMPTIONS . '</b>');
           $contents[] = array('text' => TEXT_REDEMPTIONS_TOTAL . '=' . $cc_query_numrows);
           $contents[] = array('text' => TEXT_REDEMPTIONS_CUSTOMER . '=' . xtc_db_num_rows($count_customers));
-          $contents[] = array('text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('page','cpage','action','uid','oldaction')) . 'page='.$_GET['cpage']) . '">' . BUTTON_BACK . '</a>');
+          $contents[] = array('text' => '<a class="button" href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('page','cpage','action','uid','oldaction')) . 'page='.$_GET['cpage']) . '">' . BUTTON_BACK . '</a>');
           ?>
           <td class="boxRight">
           <?php
@@ -441,7 +441,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
           }
         }
         ?>
-        <div class="smallText pdg2 txta-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_COUPON_ADMIN) . '">' . BUTTON_CANCEL . '</a> <input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
+        <div class="smallText pdg2 txta-r"><?php echo '<a class="button" href="' . xtc_href_link(FILENAME_COUPON_ADMIN) . '">' . BUTTON_CANCEL . '</a> <input type="submit" class="button" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
         </form>
       </div>
     </td>
@@ -507,7 +507,9 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_textarea_field('message', 'soft', '60', '15', $_POST['message']); ?></td>
           </tr>
         </table>
-        <div class="smallText txta-r mrg5"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
+        <br/>
+        <div class="smallText mrg5"><?php echo '<a class="button" href="' . xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cpage', 'action','oldaction'))) .'">'. BUTTON_CANCEL . '</a>'; ?></div>
+        <div class="smallText txta-r mrg5"><?php echo '<input type="submit" class="button" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
       </form>
     </td>
     </div>
@@ -614,8 +616,8 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
         ?>
       </table>
       <div class="mrg5">
-      <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_CONFIRM . '"/>'; ?>
-      <?php echo '<input type="submit" name="back" class="button" onclick="this.blur();" value="' . BUTTON_BACK . '"/>'; ?>
+      <?php echo '<input type="submit" class="button" value="' . BUTTON_CONFIRM . '"/>'; ?>
+      <?php echo '<input type="submit" name="back" class="button" value="' . BUTTON_BACK . '"/>'; ?>
       </div>
       </form>      
     </td>
@@ -771,8 +773,8 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
           </tr>
         </table>
         <div class="mrg5">
-        <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_PREVIEW . '"/>'; ?>
-        <?php echo '&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cpage', 'page', 'action','oldaction')) . 'page='.$_GET['cpage']) .'">'. BUTTON_CANCEL . '</a>'; ?>
+        <?php echo '<input type="submit" class="button" value="' . BUTTON_PREVIEW . '"/>'; ?>
+        <?php echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cpage', 'page', 'action','oldaction')) . 'page='.$_GET['cpage']) .'">'. BUTTON_CANCEL . '</a>'; ?>
         </div>
         </form>
       </tr>
@@ -799,7 +801,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
             </form>
         </div> 
         
-        <div style="margin-bottom:10px;"><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link('coupon_admin.php', 'action=new'); ?>"><?php echo BUTTON_INSERT; ?></a></div>
+        <div style="margin-bottom:10px;"><a class="button" href="<?php echo xtc_href_link('coupon_admin.php', 'action=new'); ?>"><?php echo BUTTON_INSERT; ?></a></div>
         <table class="tableCenter">
           <tr>
             <td class="boxCenterLeft">
@@ -865,7 +867,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
               }
               ?>
               <div class="clear"></div>  
-              <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link('coupon_admin.php', 'action=new') . '">' . BUTTON_INSERT . '</a>'; ?></div> 
+              <div class="smallText pdg2 flt-r"><?php echo '<a class="button" href="' . xtc_href_link('coupon_admin.php', 'action=new') . '">' . BUTTON_INSERT . '</a>'; ?></div> 
 
             </td>
             <?php
@@ -901,8 +903,8 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                   }
                   if ($_GET['action'] == 'voucherdelete') {
                     $contents[] = array('text'=> TEXT_CONFIRM_DELETE . '</br></br><div style="text-align:center;">' .
-                                        '<a class="button" onclick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=confirmdelete&cid='.(int)$_GET['cid'],'NONSSL').'">'.BUTTON_CONFIRM.'</a>' .
-                                        '<a class="button" onclick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_CANCEL.'</a></div>'
+                                        '<a class="button" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=confirmdelete&cid='.(int)$_GET['cid'],'NONSSL').'">'.BUTTON_CONFIRM.'</a>' .
+                                        '<a class="button" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_CANCEL.'</a></div>'
                                        );
                   } else {
                     $prod_details = TEXT_NONE;
@@ -918,10 +920,10 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                 
                     $coupon_status = '';
                     if($cInfo->coupon_active == 'N'){
-                      $change_coupon_status = '<a class="button nobr" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=voucher_set_active&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_STATUS_ON.'</a>';
+                      $change_coupon_status = '<a class="button nobr" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=voucher_set_active&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_STATUS_ON.'</a>';
                       $coupon_status = '&status=N';
                     } else {
-                      $change_coupon_status = '<a class="button nobr" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=voucher_set_inactive&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_STATUS_OFF.'</a>';             
+                      $change_coupon_status = '<a class="button nobr" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=voucher_set_inactive&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_STATUS_OFF.'</a>';             
                     }
 
                     $contents[] = array('text'=>COUPON_NAME . ':&nbsp;' . $coupon_name['coupon_name'] . '<br />' .
@@ -936,11 +938,11 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                       DATE_MODIFIED . ':&nbsp;' . xtc_date_short($cInfo->date_modified) . '<br /><br />');
 
                     $contents[] = array('text'=> '<div style="text-align:center;">'.'
-                                 <a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')). 'action=email&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_EMAIL.'</a>' .
-                                 '<a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')).'action=voucheredit&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_EDIT.'</a>' .
+                                 <a class="button" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')). 'action=email&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_EMAIL.'</a>' .
+                                 '<a class="button" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')).'action=voucheredit&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_EDIT.'</a>' .
                                  $change_coupon_status .
-                                 '<a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')). 'action=voucherdelete&cid='.$cInfo->coupon_id.$coupon_status,'NONSSL').'">'.BUTTON_DELETE.'</a>' .
-                                 '<a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('page','cid', 'action', 'oldaction')). 'action=voucherreport&cid='.$cInfo->coupon_id.'&cpage='.$_GET['page'],'NONSSL').'">'.BUTTON_REPORT.'</a></div>'
+                                 '<a class="button" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')). 'action=voucherdelete&cid='.$cInfo->coupon_id.$coupon_status,'NONSSL').'">'.BUTTON_DELETE.'</a>' .
+                                 '<a class="button" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('page','cid', 'action', 'oldaction')). 'action=voucherreport&cid='.$cInfo->coupon_id.'&cpage='.$_GET['page'],'NONSSL').'">'.BUTTON_REPORT.'</a></div>'
                                  );
                   }
                 }
