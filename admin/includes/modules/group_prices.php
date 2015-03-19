@@ -120,7 +120,7 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
               $count = 0;
               while ($staffel_values = xtc_db_fetch_array($staffel_query)) {
                 ?>
-                <tr class="dataTableRowSelected">
+                <tr class="dataTableRow">
                   <td class="dataTableContent"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][quantity]', $staffel_values['quantity'], 'style="width:50px;"'); ?></td>            
                   <td class="dataTableContent">
                     <?php
@@ -143,7 +143,7 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
               }
               $max_staffel = MIN_GROUP_PRICE_STAFFEL;
               if ($count >= $max_staffel) {
-                $max_staffel = $count;
+                $max_staffel = $count+1;
                 xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . (int)$max_staffel . "', last_modified = NOW() where configuration_key='" . 'MIN_GROUP_PRICE_STAFFEL' . "'");
               }
               for ($is=$count; $is<$max_staffel; $is++) {
