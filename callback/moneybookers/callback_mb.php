@@ -10,8 +10,8 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-
-include ('../../includes/application_top_callback.php');
+chdir('../../');
+include ('includes/application_top_callback.php');
 include (DIR_FS_DOCUMENT_ROOT.'callback/moneybookers/moneybookers.php');
 // redirect
 

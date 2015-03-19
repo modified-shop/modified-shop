@@ -14,7 +14,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-include('../../includes/application_top_callback.php');
+chdir('../../');
+include('includes/application_top_callback.php');
 
 include(DIR_WS_CLASSES . 'language.php');
 $lng = new language(xtc_input_validation($_GET['language'], 'char', ''));

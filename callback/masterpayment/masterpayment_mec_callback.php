@@ -19,10 +19,11 @@
  *
  ******************************************************/
 
-include('../../includes/application_top_callback.php');		
-require('../../includes/external/masterpayment/MasterpaymentCallback.class.php');	
+chdir('../../');
+include('includes/application_top_callback.php');		
+require(DIR_FS_EXTERNAL.'masterpayment/MasterpaymentCallback.class.php');	
 	
-if(isset($_POST) && !empty($_POST)) 
+if(isset($_POST) && count($_POST) > 0) 
 {	
 	$masterpaymentCallback = new MasterpaymentCallback($_POST);		
 } else {
