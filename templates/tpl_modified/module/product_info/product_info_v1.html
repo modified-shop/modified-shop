@@ -20,7 +20,7 @@
     <div class="pd_content">
       <div class="pd_infobox">
         <div class="pd_inforow_first"></div>
-        {if $SHIPPING_NAME}<div class="pd_inforow"><strong>{#text_shippingtime#}</strong> {if $SHIPPING_IMAGE}<img class="pd_shipping_image" src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME}" />{/if} {$SHIPPING_NAME}</div>{/if}
+        {if $SHIPPING_NAME}<div class="pd_inforow"><strong>{#text_shippingtime#}</strong> {if $SHIPPING_IMAGE}<img class="pd_shipping_image" src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME}" />{/if} {$SHIPPING_NAME_LINK}</div>{/if}
         {if $PRODUCTS_MODEL != ''}<div class="pd_inforow"><strong>{#model#}</strong> {$PRODUCTS_MODEL}<meta itemprop="model" content="{$PRODUCTS_MODEL}" /></div>{/if}  
         {if $PRODUCTS_EAN != ''}<div class="pd_inforow"><strong>{#ean#}</strong> {$PRODUCTS_EAN}</div>{/if}  
         {if $PRODUCTS_RATING_COUNT > 1}
