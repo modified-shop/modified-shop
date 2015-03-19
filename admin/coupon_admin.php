@@ -407,7 +407,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
     }
 ?>
     <td class="boxCenter">
-      <div class="mrg5" style="width:850px;">
+      <div class="div_box">
        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
         <div class="flt-l">
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
@@ -441,7 +441,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
           }
         }
         ?>
-        <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_COUPON_ADMIN) . '">' . BUTTON_CANCEL . '</a> <input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
+        <div class="smallText pdg2 txta-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_COUPON_ADMIN) . '">' . BUTTON_CANCEL . '</a> <input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
         </form>
       </div>
     </td>
@@ -454,7 +454,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
     $coupon_name = xtc_db_fetch_array($coupon_name_query);
 ?>
     <td class="boxCenter">
-        <div class="mrg5" style="width:850px;">
+      <div class="div_box">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
         <div class="flt-l">
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
@@ -507,7 +507,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_textarea_field('message', 'soft', '60', '15', $_POST['message']); ?></td>
           </tr>
         </table>
-        <div class="smallText flt-r mrg5"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
+        <div class="smallText txta-r mrg5"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
       </form>
     </td>
     </div>
