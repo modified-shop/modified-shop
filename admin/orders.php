@@ -172,7 +172,8 @@ if (isset($order) && is_object($order)) {
 if (isset($order) && is_object($order)) {
   $lang_query = xtc_db_query("SELECT languages_id, 
                                      language_charset
-                                     code
+                                     code,
+                                     image
                                 FROM " . TABLE_LANGUAGES . "
                                WHERE directory = '" . $order->info['language'] . "'");
   $lang_array = xtc_db_fetch_array($lang_query);
