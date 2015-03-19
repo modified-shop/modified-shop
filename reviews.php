@@ -82,7 +82,7 @@ if ($reviews_split->number_of_rows > 0) {
   $reviews_query = xtc_db_query($reviews_split->sql_query);
   while ($reviews = xtc_db_fetch_array($reviews_query)) {
     $module_data[] = array (
-        'PRODUCTS_IMAGE' => DIR_WS_THUMBNAIL_IMAGES.$reviews['products_image'], $reviews['products_name'],
+        'PRODUCTS_IMAGE' => xtc_image(DIR_WS_THUMBNAIL_IMAGES.$reviews['products_image'], $reviews['products_name']),
         'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id='.$reviews['products_id'].'&reviews_id='.$reviews['reviews_id']),
         'PRODUCTS_NAME' => $reviews['products_name'],
         'AUTHOR' => $reviews['customers_name'],

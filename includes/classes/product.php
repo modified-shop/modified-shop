@@ -496,17 +496,17 @@ class product {
 
     if ($name == '') {
       if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file($path.$this->standardImage)) {
-        return $path.$this->standardImage;
+        return DIR_WS_BASE.$path.$this->standardImage;
       }
     } else {
       if (!is_file($path.$name)) {
         if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file($path.$this->standardImage)) {
-          return $path.$this->standardImage;
+          return DIR_WS_BASE.$path.$this->standardImage;
         } else {
           return;
         }
       }
-      return $path.$name;
+      return DIR_WS_BASE.$path.$name;
     }
   }
 }

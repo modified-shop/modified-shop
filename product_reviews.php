@@ -83,13 +83,13 @@ if ($reviews_split->number_of_rows > 0) {
   $reviews_query = xtc_db_query($reviews_split->sql_query);
   while ($reviews = xtc_db_fetch_array($reviews_query)) {
     $module_data[] = array (
-        'PRODUCTS_IMAGE' => DIR_WS_THUMBNAIL_IMAGES.$reviews['products_image'], $reviews['products_name'],
+        'PRODUCTS_IMAGE' => xtc_image(DIR_WS_THUMBNAIL_IMAGES.$reviews['products_image'], $reviews['products_name']),
         'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id='.$reviews['products_id'].'&reviews_id='.$reviews['reviews_id']),
         'PRODUCTS_NAME' => $reviews['products_name'],
         'AUTHOR' => $reviews['customers_name'],
         'DATE' => xtc_date_short($reviews['date_added']),
-        'TEXT' => '('.sprintf(TEXT_REVIEW_WORD_COUNT, xtc_word_count($reviews['reviews_text'], ' ')).') <br />'.nl2br(htmlspecialchars($reviews['reviews_text'])).'...',
-        'TEXT_PLAIN' => nl2br(htmlspecialchars($reviews['reviews_text'])).'...',
+        'TEXT' => '('.sprintf(TEXT_REVIEW_WORD_COUNT, xtc_word_count($reviews['reviews_text'], ' ')).') <br />'.nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',
+        'TEXT_PLAIN' => nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',
         'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"')
       );
   }

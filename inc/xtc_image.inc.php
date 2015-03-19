@@ -27,7 +27,7 @@
 
     // alt is added to the img tag even if it is null to prevent browsers from outputting
     // the image filename as default
-    $image = '<img src="' . xtc_parse_input_field_data($src, array('"' => '&quot;')) . '" alt="' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . '"';
+    $image = '<img src="' . xtc_parse_input_field_data(DIR_WS_BASE.$src, array('"' => '&quot;')) . '" alt="' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . '"';
 
     if (defined('CONFIG_CALCULATE_IMAGE_SIZE') && CONFIG_CALCULATE_IMAGE_SIZE == 'true' && (empty($width) || empty($height)) && is_file($src)) {
       if ($image_size = @getimagesize($src)) {
