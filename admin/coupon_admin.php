@@ -356,13 +356,16 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                 <?php
                 }
                 ?>
-                <?php if (is_object($cc_split)) { ?>
-                <tr>
-                  <td class="smallText">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_COUPON_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</td>
-                  <td class="smallText txta-r">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_COUPON_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'],xtc_get_all_get_params(array('page','uid'))); ?>&nbsp;</td>
-                </tr>
-              <?php } ?>
-              </table>
+              </table>               
+              <?php
+              if (is_object($cc_split)) {
+              ?>
+                <div class="smallText pdg2 flt-l">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_COUPON_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</div> 
+                <div class="smallText pdg2 flt-r">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_COUPON_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'],xtc_get_all_get_params(array('page','uid'))); ?>&nbsp;</div> 
+              <?php
+              }
+              ?>
+              <div class="clear"></div>  
             </td>
           <?php
           $heading = array();
