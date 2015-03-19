@@ -510,7 +510,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
         <br/>
         <div class="smallText mrg5">
           <?php echo '<a class="button" href="' . xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cpage', 'action','oldaction'))) .'">'. BUTTON_CANCEL . '</a>'; ?>
-          <?php echo '<input type="submit" class="button txta-r" value="' . BUTTON_SEND_EMAIL . '"/>'; ?>
+          <?php echo '<input type="submit" class="button flt-r" value="' . BUTTON_SEND_EMAIL . '"/>'; ?>
         </div>
       </form>
     </td>
