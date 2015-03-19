@@ -505,6 +505,17 @@ class SofortLibPayment {
                   `order_id` INT( 11 ) NOT NULL ,
                   INDEX ( `transaction_id` )
                   )");
+
+    $table_array = array(
+      array('column' => 'payment_class', 'default' => 'VARCHAR(64) NOT NULL'),
+      array('column' => 'payment_method', 'default' => 'VARCHAR(128) NOT NULL'),
+    );
+    foreach ($table_array as $table) {
+      $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS." LIKE '".xtc_db_input($table['column'])."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("ALTER TABLE ".TABLE_ORDERS." MODIFY ".$table['column']." ".$table['default']."");
+      }
+    }
 	}
 
 

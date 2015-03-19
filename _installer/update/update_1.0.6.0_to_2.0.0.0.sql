@@ -539,4 +539,7 @@ ALTER TABLE customers ADD password_request_time DATETIME DEFAULT '0000-00-00 00:
 ALTER TABLE customers ADD customers_login_tries INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE customers ADD customers_login_time DATETIME DEFAULT '0000-00-00 00:00:00';
 
+#GTB - 2015-03-19 - change payment_class
+ALTER TABLE orders MODIFY payment_class VARCHAR(64) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
