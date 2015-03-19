@@ -22,7 +22,9 @@ require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
 
 $smarty = new Smarty;
 
-$smarty->assign('base_href', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
+if (DIR_WS_BASE == '') {
+  $smarty->assign('base_href', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
+}
 $smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 
 $oID = (int) $_GET['oID'];

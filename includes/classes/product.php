@@ -494,20 +494,14 @@ class product {
         break;
     }
 
-    if ($name == '') {
+    if ($name == '' || !is_file($path.$name)) {
+      $name = '';
       if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file($path.$this->standardImage)) {
-        return DIR_WS_BASE.$path.$this->standardImage;
+        $name = $this->standardImage;
       }
-    } else {
-      if (!is_file($path.$name)) {
-        if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file($path.$this->standardImage)) {
-          return DIR_WS_BASE.$path.$this->standardImage;
-        } else {
-          return;
-        }
-      }
-      return DIR_WS_BASE.$path.$name;
     }
+    
+    return (($name != '') ? DIR_WS_BASE.$path.$name : '');
   }
 }
 ?>

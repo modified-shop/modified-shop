@@ -1,4 +1,10 @@
 <?php
+define('SPECIALS_CATEGORIES', false);
+define('WHATSNEW_CATEGORIES', false);
+// load Template config
+if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/config/config.php')) {
+  require(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/config/config.php');
+}
 // Smarty Template Engine 
 if (!defined('TEMPLATE_ENGINE')) {
   define('TEMPLATE_ENGINE','smarty_2');
