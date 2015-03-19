@@ -17,6 +17,8 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_STATUS_DESC', 'Modul aktivieren');
   define('MODULE_SHIPCLOUD_API_TITLE', '<hr noshade>API');
   define('MODULE_SHIPCLOUD_API_DESC', 'API Key von Shipcloud');
+  define('MODULE_SHIPCLOUD_PARCEL_TITLE', '<hr noshade>Paketgr&ouml;ssen');
+  define('MODULE_SHIPCLOUD_PARCEL_DESC', 'Bitte geben Sie die Paketgr&ouml;ssen in cm folgendermassen ein: L&auml;nge,Breite,H&ouml;he;<br/>Meherer Paketmasse können mit Semikolon (;) getrennt angegeben werden. zB: 20,40,30;');
   define('MODULE_SHIPCLOUD_COMPANY_TITLE', '<hr noshade>Kundendetails<br/>');
   define('MODULE_SHIPCLOUD_COMPANY_DESC', 'Firma:');
   define('MODULE_SHIPCLOUD_FIRSTNAME_TITLE', '');
@@ -29,6 +31,8 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_POSTCODE_DESC', 'PLZ:');
   define('MODULE_SHIPCLOUD_CITY_TITLE', '');
   define('MODULE_SHIPCLOUD_CITY_DESC', 'Stadt:');
+  define('MODULE_SHIPCLOUD_TELEPHONE_TITLE', '');
+  define('MODULE_SHIPCLOUD_TELEPHONE_DESC', 'Telefon:');
   define('MODULE_SHIPCLOUD_LOG_TITLE', '<hr noshade>Log');
   define('MODULE_SHIPCLOUD_LOG_DESC', 'die Logdatei wird im Ordner /log abgelegt.');
   define('MODULE_SHIPCLOUD_EMAIL_TITLE', '<hr noshade>E-Mail Benachrichtigung');
@@ -50,6 +54,4 @@ define('SHIPMENT.TRACKING.EXCEPTION', 'Ein Problem wurde festgestellt');
 define('SHIPMENT.TRACKING.NOT_DELIVERED', 'nicht zugestellt');
 define('SHIPMENT.TRACKING.NOTIFICATION', 'Interne Mitteilung: Tracking- Ereignisse innerhalb der Sendung ben&ouml;tigt aufw&auml;ndigere Informationen.');
 define('SHIPMENT.TRACKING.UNKNOWN', 'Status unbekannt');
-
-define('EXAMPLE.EVENT', 'Test');
 ?>

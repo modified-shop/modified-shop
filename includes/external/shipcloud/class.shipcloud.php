@@ -37,8 +37,9 @@ class shipcloud {
     
     // parse params
     $this->carrier_id = (int)$params['carrier_id'];
-    $dimension_array = explode(',', preg_replace("'[\r\n\s]+'", '', $params['parcel_id']));
-    list($this->length, $this->width, $this->height, $this->description) = $dimension_array;
+    $dimension_array = explode(',', $params['parcel']);
+    list($this->length, $this->width, $this->height) = $dimension_array;
+    $this->description = $params['description'];
     
     $this->carrier = $this->check_carrier();
     
@@ -111,13 +112,14 @@ class shipcloud {
     $receiver_data = array(
       'first_name'  => $this->order->delivery['firstname'],
       'last_name'   => $this->order->delivery['lastname'],
-      'company'     => ((strtolower($this->carrier) == 'dhl') ? substr($this->order->delivery['company'], 0, 29) : $this->order->delivery['company']),
+      'company'     => ((strtolower($this->carrier) == 'dhl') ? substr($this->order->delivery['company'], 0, 30) : $this->order->delivery['company']),
       'street'      => $street_address['street_name'],
       'street_no'   => $street_address['street_number'],
       'zip_code'    => $this->order->delivery['postcode'],
       'city'        => $this->order->delivery['city'],
       'state'       => $this->order->delivery['state'],
       'country'     => $this->order->delivery['country_iso_2'],
+      'phone'       => $this->order->customer['telephone'],
     );
     
     return $receiver_data;
@@ -131,12 +133,13 @@ class shipcloud {
     $sender_data = array(
       'first_name'  => MODULE_SHIPCLOUD_FIRSTNAME,
       'last_name'   => MODULE_SHIPCLOUD_LASTNAME,
-      'company'     => ((strtolower($this->carrier) == 'dhl') ? substr(MODULE_SHIPCLOUD_COMPANY, 0, 29) : MODULE_SHIPCLOUD_COMPANY),
+      'company'     => ((strtolower($this->carrier) == 'dhl') ? substr(MODULE_SHIPCLOUD_COMPANY, 0, 30) : MODULE_SHIPCLOUD_COMPANY),
       'street'      => $street_address['street_name'],
       'street_no'   => $street_address['street_number'],
       'zip_code'    => MODULE_SHIPCLOUD_POSTCODE,
       'city'        => MODULE_SHIPCLOUD_CITY,
       'country'     => $country['countries_iso_code_2'],
+      'phone'       => MODULE_SHIPCLOUD_TELEPHONE,
     );
     
     return $sender_data;

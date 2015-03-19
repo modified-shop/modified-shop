@@ -89,7 +89,7 @@ if (is_array($request) && count($request) > 0) {
       $smarty->assign('PARCEL_ARRAY', $parcel_link);
     
       $smarty->assign('ORDER_DATE', xtc_date_long($order->info['date_purchased']));
-      $smarty->assign('NOTIFY_COMMENTS', constant(strtoupper($request['type'])));
+      $smarty->assign('NOTIFY_COMMENTS', constant(strtoupper($request['type']['value'])));
 
       $orders_status_query = xtc_db_query("SELECT orders_status_name
                                              FROM ".TABLE_ORDERS_STATUS."
@@ -124,12 +124,10 @@ if (is_array($request) && count($request) > 0) {
                             'orders_status_id' => $order->info['orders_status_id'],
                             'date_added' => 'now()',
                             'customer_notified' => $customer_notified,
-                            'comments' => decode_htmlentities(constant(strtoupper($request['type']))),
+                            'comments' => decode_htmlentities(constant(strtoupper($request['type']['value']))),
                             'comments_sent' => $customer_notified
                             );
     xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
   }
 }
-
-echo 'OK';
 ?>

@@ -296,7 +296,7 @@
         <?php echo xtc_draw_form('carriers', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=inserttracking'); ?>
         <table cellspacing="0" cellpadding="5" class="table borderall">
           <tr>
-            <td class="smallText" align="center" style="<?php echo ((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? 'width:255px;' : 'width:100px;'); ?>"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
+            <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
             <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_PARCEL_LINK; ?></strong></td>
             <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
           </tr>
@@ -306,6 +306,13 @@
               array('id' => 'one_day', 'text' => 'Express'),
               array('id' => 'one_day_early', 'text' => 'Express 10:00'),
             );
+            $parcel_array = array();
+            $dim_array = explode(';', preg_replace("'[\r\n\s]+'", '', MODULE_SHIPCLOUD_PARCEL));
+            for ($p=0, $pn=count($dim_array); $p<$pn; $p++) {
+              if ($dim_array[$p] != '') {
+                $parcel_array[] = array('id' => $dim_array[$p], 'text' => str_replace(',', 'cm x ', $dim_array[$p] .'cm'));
+              }
+            }
             $tracking_array = get_tracking_link($oID, $lang_code);
             if (count($tracking_array) > 0) {
               foreach($tracking_array as $tracking) {
@@ -321,13 +328,19 @@
             }
           ?>
           <tr>
-            <td class="smallText" align="center">
-              <?php 
-                echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); 
-                echo ((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? xtc_draw_pull_down_menu('service', $service_array, $service_array[0]) : ''); 
-              ?>
-            </td>
-            <td class="smallText" align="center"><?php echo  xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'.((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? ' placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"' : '')); ?></td>
+            <?php
+              if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
+                echo '<td class="smallText" align="center" colspan="2">';
+                echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]);
+                echo xtc_draw_pull_down_menu('service', $service_array, $service_array[0]); 
+                echo xtc_draw_pull_down_menu('parcel', $parcel_array, $parcel_array[0]); 
+                echo xtc_draw_input_field('description', '' ,'placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"'); 
+                echo '</td>';
+              } else {
+                echo '<td class="smallText" align="center">'.xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]).'</td>';
+                echo '<td class="smallText" align="center">'.xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"').'</td>';
+              }
+            ?>
             <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo ((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? CREATE_LABEL : BUTTON_INSERT); ?>"></td>
           </tr>
         </table>

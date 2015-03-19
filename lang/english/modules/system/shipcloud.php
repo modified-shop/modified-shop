@@ -17,6 +17,8 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_STATUS_DESC', 'Module activate?');
   define('MODULE_SHIPCLOUD_API_TITLE', '<hr noshade>API');
   define('MODULE_SHIPCLOUD_API_DESC', 'API Key von Shipcloud');
+  define('MODULE_SHIPCLOUD_PARCEL_TITLE', '<hr noshade>Packagesize');
+  define('MODULE_SHIPCLOUD_PARCEL_DESC', 'Please define the Packagesize like this: length,width,height;<br/>You can define more sizes separated by semicolon (;). Exapmple: 20,40,30;');
   define('MODULE_SHIPCLOUD_COMPANY_TITLE', '<hr noshade>Customer details<br/>');
   define('MODULE_SHIPCLOUD_COMPANY_DESC', 'Company:');
   define('MODULE_SHIPCLOUD_FIRSTNAME_TITLE', '');
@@ -29,6 +31,8 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_POSTCODE_DESC', 'Zip:');
   define('MODULE_SHIPCLOUD_CITY_TITLE', '');
   define('MODULE_SHIPCLOUD_CITY_DESC', 'City:');
+  define('MODULE_SHIPCLOUD_TELEPHONE_TITLE', '');
+  define('MODULE_SHIPCLOUD_TELEPHONE_DESC', 'Telephone:');
   define('MODULE_SHIPCLOUD_LOG_TITLE', '<hr noshade>Log');
   define('MODULE_SHIPCLOUD_LOG_DESC', 'the log file is stored in the folder / log.');
   define('MODULE_SHIPCLOUD_EMAIL_TITLE', '<hr noshade>E-Mail notification');
@@ -50,6 +54,4 @@ define('SHIPMENT.TRACKING.EXCEPTION', 'There is a problem with the shipment');
 define('SHIPMENT.TRACKING.NOT_DELIVERED', 'Not delivered');
 define('SHIPMENT.TRACKING.NOTIFICATION', 'Carrier internal notification: Tracking events within the shipment will carry more elaborate information.');
 define('SHIPMENT.TRACKING.UNKNOWN', 'Status unknown');
-
-define('EXAMPLE.EVENT', 'Test');
 ?>
