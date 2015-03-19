@@ -2784,6 +2784,10 @@ p.underline {
   float:right;
   width:360px;
 }
+.rb_rezension_small {
+  float:right;
+  width:230px;
+}
 /* END reviews */
   
 
