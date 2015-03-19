@@ -305,6 +305,7 @@
               array('id' => 'standard', 'text' => 'Standard'),
               array('id' => 'one_day', 'text' => 'Express'),
               array('id' => 'one_day_early', 'text' => 'Express 10:00'),
+              array('id' => 'returns', 'text' => 'Retour'),
             );
             $parcel_array = array();
             $dim_array = explode(';', preg_replace("'[\r\n\s]+'", '', MODULE_SHIPCLOUD_PARCEL));
@@ -334,7 +335,7 @@
                 echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]).'&nbsp;';
                 echo xtc_draw_pull_down_menu('service', $service_array, $service_array[0]).'&nbsp;';
                 echo xtc_draw_pull_down_menu('parcel', $parcel_array, $parcel_array[0]).'&nbsp;';
-                echo xtc_draw_input_field('description', '' , 'style="width:250px;" placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"'); 
+                echo xtc_draw_input_field('description', '' , 'style="width:350px;" placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"'); 
                 echo '</td>';
               } else {
                 echo '<td class="smallText" align="center">'.xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]).'</td>';
