@@ -188,7 +188,7 @@
               echo '<li'.($f['class'] ? ' class="'.$f['class'].'"' : '').'><a href="' . $link . '">'.
                    xtc_image(DIR_WS_ICONS.'fastnav/'.$f['icon'], $f['name'], 32, 32).
                    (isset($f['count']) && $f['count'] ? '<div class="icon_count">'.$f['count'].'</div>' : '').
-                   '</li></a>' . PHP_EOL;
+                   '</a></li>' . PHP_EOL;
             }
           }
         ?>
