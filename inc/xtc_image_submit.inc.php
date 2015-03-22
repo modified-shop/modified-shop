@@ -25,7 +25,7 @@
 
     $image_submit = '<input type="image" src="' . xtc_parse_input_field_data(DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/buttons/' . $_SESSION['language'] . '/'. $image, array('"' => '&quot;')) . '" alt="' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . '"';
 
-    if (xtc_not_null($alt)) $image_submit .= ' title=" ' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . ' "';
+    if (xtc_not_null($alt)) $image_submit .= ' title="' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . '"';
 
     if (xtc_not_null($parameters)) $image_submit .= ' ' . $parameters;
 
