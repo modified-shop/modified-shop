@@ -61,7 +61,7 @@ define('IMAGE_REDEEM_GIFT','Gutschein einl&ouml;sen!');
 define('BOX_TITLE_STATISTICS','Statistik:');
 define('BOX_ENTRY_CUSTOMERS','Kunden:');
 define('BOX_ENTRY_PRODUCTS','Artikel:');
-define('BOX_ENTRY_REVIEWS','Bewertungen:');
+define('BOX_ENTRY_REVIEWS','Rezensionen:');
 define('TEXT_VALIDATING','Nicht best&auml;tigt');
 
 // manufacturer box text
@@ -76,8 +76,8 @@ define('BOX_LOGINBOX_DISCOUNT_TEXT','Rabatt');
 define('BOX_LOGINBOX_DISCOUNT_OT','');
 
 // reviews box text in includes/boxes/reviews.php
-define('BOX_REVIEWS_WRITE_REVIEW', 'Bewerten Sie diesen Artikel!');
-define('BOX_REVIEWS_NO_WRITE_REVIEW', 'Keine Bewertung m&ouml;glich.');
+define('BOX_REVIEWS_WRITE_REVIEW', 'Schreiben Sie eine Rezension zu diesen Artikel!');
+define('BOX_REVIEWS_NO_WRITE_REVIEW', 'Keine Rezension m&ouml;glich.');
 define('BOX_REVIEWS_TEXT_OF_5_STARS', '%s von 5 Sternen!');
 
 // pull down default text
@@ -87,7 +87,7 @@ define('PULL_DOWN_DEFAULT', 'Bitte w&auml;hlen');
 define('JS_ERROR', 'Notwendige Angaben fehlen! Bitte richtig ausf&uuml;llen.\n\n');
 
 define('JS_REVIEW_TEXT', '* Der Text muss aus mindestens ' . REVIEW_TEXT_MIN_LENGTH . ' Buchstaben bestehen.\n\n');
-define('JS_REVIEW_RATING', '* Geben Sie Ihre Bewertung ein.\n\n');
+define('JS_REVIEW_RATING', '* Geben Sie Ihre Bewertung ab.\n\n');
 define('JS_ERROR_NO_PAYMENT_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Zahlungsweise f&uuml;r Ihre Bestellung.\n');
 define('JS_ERROR_SUBMITTED', 'Diese Seite wurde bereits best&auml;tigt. Klicken Sie bitte auf OK und warten Sie, bis der Prozess durchgef&uuml;hrt wurde.');
 define('ERROR_NO_PAYMENT_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Zahlungsweise f&uuml;r Ihre Bestellung.');
@@ -155,7 +155,7 @@ define('ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING', 'Ihre Passw&ouml;rter stimmen ni
 define('TEXT_RESULT_PAGE', 'Seiten:');
 define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', 'Zeige <strong>%d</strong> bis <strong>%d</strong> (von insgesamt <strong>%d</strong> Artikeln)');
 define('TEXT_DISPLAY_NUMBER_OF_ORDERS', 'Zeige <strong>%d</strong> bis <strong>%d</strong> (von insgesamt <strong>%d</strong> Bestellungen)');
-define('TEXT_DISPLAY_NUMBER_OF_REVIEWS', 'Zeige <strong>%d</strong> bis <strong>%d</strong> (von insgesamt <strong>%d</strong> Bewertungen)');
+define('TEXT_DISPLAY_NUMBER_OF_REVIEWS', 'Zeige <strong>%d</strong> bis <strong>%d</strong> (von insgesamt <strong>%d</strong> Rezensionen)');
 define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW', 'Zeige <strong>%d</strong> bis <strong>%d</strong> (von insgesamt <strong>%d</strong> neuen Artikeln)');
 define('TEXT_DISPLAY_NUMBER_OF_SPECIALS', 'Zeige <strong>%d</strong> bis <strong>%d</strong> (von insgesamt <strong>%d</strong> Angeboten)');
 
@@ -236,7 +236,7 @@ define('TEXT_REVIEW_BY', 'von %s');
 define('TEXT_REVIEW_WORD_COUNT', '%s Worte');
 define('TEXT_REVIEW_RATING', 'Bewertung: %s [%s]');
 define('TEXT_REVIEW_DATE_ADDED', 'Hinzugef&uuml;gt am: %s');
-define('TEXT_NO_REVIEWS', 'Es liegen noch keine Bewertungen vor.');
+define('TEXT_NO_REVIEWS', 'Es liegen noch keine Rezensionen vor.');
 define('TEXT_NO_NEW_PRODUCTS', 'Keine neuen Artikel in den letzten '.MAX_DISPLAY_NEW_PRODUCTS_DAYS.' Tagen erschienen. Stattdessen sehen Sie hier die zuletzt erschienenen Artikel.');
 define('TEXT_UNKNOWN_TAX_RATE', 'Unbekannter Steuersatz');
 
@@ -371,9 +371,9 @@ define('NAVBAR_TITLE_PRODUCTS_NEW', 'Neue Artikel');
 define('NAVBAR_TITLE_SHOPPING_CART', 'Warenkorb');
 define('NAVBAR_TITLE_SPECIALS', 'Angebote');
 define('NAVBAR_TITLE_COOKIE_USAGE', 'Cookie-Nutzung');
-define('NAVBAR_TITLE_PRODUCT_REVIEWS', 'Bewertungen');
-define('NAVBAR_TITLE_REVIEWS_WRITE', 'Bewertungen');
-define('NAVBAR_TITLE_REVIEWS','Bewertungen');
+define('NAVBAR_TITLE_PRODUCT_REVIEWS', 'Rezensionen');
+define('NAVBAR_TITLE_REVIEWS_WRITE', 'Rezensionen');
+define('NAVBAR_TITLE_REVIEWS','Rezensionen');
 define('NAVBAR_TITLE_SSL_CHECK', 'Sicherheitshinweis');
 define('NAVBAR_TITLE_CREATE_GUEST_ACCOUNT','Ihre Kundenadresse');
 define('NAVBAR_TITLE_PASSWORD_DOUBLE_OPT','Passwort vergessen?');
@@ -526,9 +526,9 @@ define('TEXT_INFO_DETAILS', ' Details');
 define('TEXT_SAVED_BASKET', 'Bitte &uuml;berpr&uuml;fen Sie Ihren Warenkorb. Dieser enth&auml;lt noch Artikel von einem fr&uuml;heren Besuch.');
 //define('TEXT_PRODUCTS_QTY_REDUCED', 'Die maximal erlaubte St&uuml;ckzahl f&uuml;r den zuletzt hinzugef&uuml;gten bzw. ge&auml;nderten Artikel wurde &uuml;berschritten. Die St&uuml;ckzahl wurde automatisch auf die maximal erlaubte St&uuml;ckzahl reduziert.'); // Now we use MAX_PROD_QTY_EXCEEDED
 
-define('ERROR_REVIEW_TEXT', 'Der Bewertungstext muss aus mindestens ' . REVIEW_TEXT_MIN_LENGTH . ' Zeichen bestehen.');
-define('ERROR_REVIEW_RATING', 'Bitte Geben Sie Ihre Bewertung ab.');
-define('ERROR_REVIEW_AUTHOR', 'Bitte geben sie ihren Namen ein.');
+define('ERROR_REVIEW_TEXT', 'Der Rezensions-Text muss aus mindestens ' . REVIEW_TEXT_MIN_LENGTH . ' Zeichen bestehen.');
+define('ERROR_REVIEW_RATING', 'Bitte geben Sie Ihre Bewertung ab.');
+define('ERROR_REVIEW_AUTHOR', 'Bitte geben sie Ihren Namen ein.');
 
 define('GV_NO_PAYMENT_INFO', '<div class="infomessage">Sie k&ouml;nnen mit Ihrem Guthaben die Bestellung komplett bezahlen. Wenn Sie Ihr Guthaben nicht einl&ouml;sen m&ouml;chten, deaktivieren Sie die Guthabenauswahl und w&auml;hlen eine Zahlungsweise!</div>');
 define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Ihr Guthaben reicht nicht aus um die Bestellung komplett zu bezahlen. Bitte w&auml;hlen Sie zus&auml;tzlich eine Zahlungsweise!</div>');
@@ -542,7 +542,7 @@ define('MAX_PROD_QTY_EXCEEDED', 'Die maximal erlaubte St&uuml;ckzahl i.H.v. ' .M
 
 define('IMAGE_BUTTON_CONTENT_EDIT', 'Content bearbeiten');
 define('PRINTVIEW_INFO', 'Artikeldatenblatt drucken');
-define('PRODUCTS_REVIEW_LINK', 'Bewertung schreiben');
+define('PRODUCTS_REVIEW_LINK', 'Rezension schreiben');
 
 define('TAX_INFO_SMALL_BUSINESS', 'Endpreis nach &sect; 19 UStG.');
 define('TAX_INFO_SMALL_BUSINESS_FOOTER', 'Aufgrund des Kleinunternehmerstatus gem. &sect; 19 UStG erheben wir keine Umsatzsteuer und weisen diese daher auch nicht aus.');

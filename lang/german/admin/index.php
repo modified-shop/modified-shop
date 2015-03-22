@@ -31,7 +31,7 @@ define('BOX_ENTRY_INFORMATION_PORTAL', 'Informationsportal');
 
 define('BOX_ENTRY_CUSTOMERS', 'Kunden:');
 define('BOX_ENTRY_PRODUCTS', 'Artikel:');
-define('BOX_ENTRY_REVIEWS', 'Bewertungen:');
+define('BOX_ENTRY_REVIEWS', 'Rezensionen:');
 
 define('BOX_CONNECTION_PROTECTED', 'Sie sind gesichert durch eine %s sichere SSL Verbindung.');
 define('BOX_CONNECTION_UNPROTECTED', 'Sie sind <span class="col-red">nicht</span> durch eine sichere SSL Verbindung gesichert.');
