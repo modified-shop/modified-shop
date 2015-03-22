@@ -109,8 +109,8 @@ define('ENTRY_TELEPHONE_MIN_LENGTH_DESC' , 'Minimum L&auml;nge der Telefonnummer
 define('ENTRY_PASSWORD_MIN_LENGTH_TITLE' , 'Passwort');
 define('ENTRY_PASSWORD_MIN_LENGTH_DESC' , 'Minimum L&auml;nge des Passworts');
 
-define('REVIEW_TEXT_MIN_LENGTH_TITLE' , 'Bewertungen');
-define('REVIEW_TEXT_MIN_LENGTH_DESC' , 'Minimum L&auml;nge der Texteingabe bei Bewertungen');
+define('REVIEW_TEXT_MIN_LENGTH_TITLE' , 'Rezensionen');
+define('REVIEW_TEXT_MIN_LENGTH_DESC' , 'Minimum L&auml;nge der Texteingabe bei Rezensionen');
 
 define('MIN_DISPLAY_BESTSELLERS_TITLE' , 'Bestseller');
 define('MIN_DISPLAY_BESTSELLERS_DESC' , 'Minimum Anzahl der Bestseller, die angezeigt werden sollen');
@@ -135,10 +135,10 @@ define('MAX_MANUFACTURERS_LIST_TITLE' , 'Hersteller Liste');
 define('MAX_MANUFACTURERS_LIST_DESC' , 'In der Hersteller Box; Wenn der Wert auf "1" gesetzt wird, wird die Herstellerbox als Drop Down Liste angezeigt. Andernfalls als Listen-Box mit der angegebenen Anzahl an Reihen.');
 define('MAX_DISPLAY_MANUFACTURER_NAME_LEN_TITLE' , 'L&auml;nge des Herstellernamens');
 define('MAX_DISPLAY_MANUFACTURER_NAME_LEN_DESC' , 'In der Hersteller Box; Maximum L&auml;nge von Namen in der Herstellerbox');
-define('MAX_DISPLAY_NEW_REVIEWS_TITLE' , 'Neue Bewertungen');
-define('MAX_DISPLAY_NEW_REVIEWS_DESC' , 'Maximum Anzahl an neuen Bewertungen die angezeigt werden sollen');
-define('MAX_RANDOM_SELECT_REVIEWS_TITLE' , 'Auswahlpool der Bewertungen');
-define('MAX_RANDOM_SELECT_REVIEWS_DESC' , 'Aus wieviel Bewertungen sollen die zuf&auml;llig angezeigten Bewertungen in der Box ausgew&auml;hlt werden?');
+define('MAX_DISPLAY_NEW_REVIEWS_TITLE' , 'Neue Rezensionen');
+define('MAX_DISPLAY_NEW_REVIEWS_DESC' , 'Maximum Anzahl an neuen Rezensionen die angezeigt werden sollen');
+define('MAX_RANDOM_SELECT_REVIEWS_TITLE' , 'Auswahlpool der Rezensionen');
+define('MAX_RANDOM_SELECT_REVIEWS_DESC' , 'Aus wie vielen Rezensionen sollen die zuf&auml;llig angezeigten Rezensionen in der Box ausgew&auml;hlt werden?');
 define('MAX_RANDOM_SELECT_NEW_TITLE' , 'Auswahlpool der Neuen Artikel');
 define('MAX_RANDOM_SELECT_NEW_DESC' , 'Aus wieviel neuen Artikeln sollen die zuf&auml;llig angezeigten neuen Artikel in der Box ausgew&auml;hlt werden?');
 define('MAX_RANDOM_SELECT_SPECIALS_TITLE' , 'Auswahlpool der Sonderangebote');
@@ -498,8 +498,8 @@ define('CACHE_LIFETIME_DESC','Zeit in Sekunden, bevor Cache Datein automatisch &
 define('CACHE_CHECK_TITLE','Pr&uuml;fe ob Cache modifiziert');
 define('CACHE_CHECK_DESC','Wenn "true", dann werden If-Modified-Since headers bei ge-cache-tem Content ber&uuml;cksichtigt, und passende HTTP headers werden ausgegeben. Somit werden regelm&auml;ssig aufgerufene Seiten nicht jedesmal neu an den Client versandt.');
 
-define('PRODUCT_REVIEWS_VIEW_TITLE','Bewertungen in Artikeldetails');
-define('PRODUCT_REVIEWS_VIEW_DESC','Anzahl der angezeigten Bewertungen in der Artikeldetailansicht');
+define('PRODUCT_REVIEWS_VIEW_TITLE','Rezensionen in Artikeldetails');
+define('PRODUCT_REVIEWS_VIEW_DESC','Anzahl der angezeigten Rezensionen in der Artikeldetailansicht');
 
 define('DELETE_GUEST_ACCOUNT_TITLE','L&ouml;schen von Gast-Konten');
 define('DELETE_GUEST_ACCOUNT_DESC','Sollen Gast-Konten nach erfolgter Bestellung gel&ouml;scht werden? (Bestelldaten bleiben erhalten)');

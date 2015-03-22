@@ -65,7 +65,7 @@
     require_once(DIR_WS_BOXES . 'order_history.php');
   }
 // -----------------------------------------------------------------------------------------
-//	Nur, wenn Bewertungen erlaubt
+//	Nur, wenn Rezensionen erlaubt
 // -----------------------------------------------------------------------------------------
   if ($_SESSION['customers_status']['customers_status_read_reviews'] == '1') {
     require_once(DIR_WS_BOXES . 'reviews.php');
