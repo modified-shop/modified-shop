@@ -49,5 +49,5 @@ define('TEXT_LANGUAGE_TRANSFER_FROM', 'Von ');
 define('TEXT_LANGUAGE_TRANSFER_TO', ' nach ');
 define('TEXT_LANGUAGE_TRANSFER_OK', 'Transfer erfolgreich!');
 define('TEXT_LANGUAGE_TRANSFER_ERR', 'Bitte unterschiedliche Sprachen w&auml;hlen!');
-define('TEXT_LANGUAGE_TRANSFER_INFO2', 'Achtung, beim Transfer werden die bestehenden Texte &uuml;berschrieben, daher bitte vorher unbedingt die Datenbank sichern!');
+define('TEXT_LANGUAGE_TRANSFER_INFO2', '<strong>ACHTUNG:</strong> Beim Transfer werden die bestehenden Texte &uuml;berschrieben, daher bitte vorher unbedingt die Datenbank sichern!');
 ?>
