@@ -117,7 +117,7 @@ define('BOX_ORDER_TOTAL', 'Zusammenfassung');
 define('BOX_CATEGORIES', 'Kategorien/Artikel');
 define('BOX_PRODUCTS_ATTRIBUTES', 'Artikelmerkmale');
 define('BOX_MANUFACTURERS', 'Hersteller');
-define('BOX_REVIEWS', 'Produkt-Rezensionen');
+define('BOX_REVIEWS', 'Produktrezensionen');
 define('BOX_CAMPAIGNS', 'Kampagnen');
 define('BOX_XSELL_PRODUCTS', 'Cross Marketing');
 define('BOX_SPECIALS', 'Sonderangebote');

@@ -15,7 +15,7 @@
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
-define('HEADING_TITLE', 'Produkt-Rezensionen');
+define('HEADING_TITLE', 'Produktrezensionen');
 
 define('TABLE_HEADING_PRODUCTS', 'Artikel');
 define('TABLE_HEADING_CUSTOMER', 'Kunde');
