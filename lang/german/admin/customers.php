@@ -29,7 +29,7 @@ define('TEXT_DATE_ACCOUNT_LAST_MODIFIED', 'letzte &Auml;nderung:');
 define('TEXT_INFO_DATE_LAST_LOGON', 'letzte Anmeldung:');
 define('TEXT_INFO_NUMBER_OF_LOGONS', 'Anzahl der Anmeldungen:');
 define('TEXT_INFO_COUNTRY', 'Land:');
-define('TEXT_INFO_NUMBER_OF_REVIEWS', 'Anzahl der Produkt-Rezensionen:');
+define('TEXT_INFO_NUMBER_OF_REVIEWS', 'Anzahl der Produktrezensionen:');
 define('TEXT_DELETE_INTRO', 'Wollen Sie diesen Kunden wirklich l&ouml;schen?');
 define('TEXT_DELETE_REVIEWS', '%s Rezension(en) l&ouml;schen');
 define('TEXT_INFO_HEADING_DELETE_CUSTOMER', 'Kunden l&ouml;schen');
