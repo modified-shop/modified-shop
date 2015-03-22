@@ -271,7 +271,7 @@ background-color: #fff;
 height: 35px;
 }
 tr.dataTableRow:nth-child(2n+1) {
-background: none repeat scroll 0 0 #eee;
+background: none repeat scroll 0 0 #fafafa;
 }
 .dataTableRowSelected {
 background-color: #cdd7b3;
@@ -279,7 +279,7 @@ font-weight: bold;
 height: 35px;
 }
 .dataTableRowOver {
-background-color: #dfdfdf; 
+background-color: #eee; 
 height: 35px;
 }
 .dataTableRowSub {
@@ -287,10 +287,10 @@ background-color: #fff;
 height: 35px;
 }
 tr.dataTableRowSub:nth-child(2n+1) {
-background: none repeat scroll 0 0 #eee;
+background: none repeat scroll 0 0 #fafafa;
 }
 .dataTableRowSubOver {
-background-color: #dfdfdf; 
+background-color: #eee; 
 height: 35px;
 }
 
