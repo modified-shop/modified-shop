@@ -76,6 +76,18 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
       }
     }
   }
+  
+  if (!function_exists('xtc_db_set_charset')) {
+    function xtc_db_set_charset($charset, $link='db_link') {
+      global $$link;
+    
+      if (function_exists('mysql_set_charset')) {
+        mysql_set_charset($charset, $$link);
+      } else {
+        xtc_db_query('SET NAMES '.$charset);
+      }  
+    }
+  }
   //EOC compatility functions
   
   function WriteToDumpFile($data) {
@@ -223,12 +235,7 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
       $check_utf8 = strpos($utf8_array['Collation'], 'utf8') === false ? false : true;
     }
     $charset = $check_utf8 ? 'utf8' : 'latin1';
-    if (function_exists('mysql_set_charset') == true) {
-			mysql_set_charset($charset);
-		} else {
-			xtc_db_query('set names '.$charset);
-		}
-
+    xtc_db_set_charset($charset);
     
     $dump['starttime'] = time();
 

@@ -66,6 +66,17 @@
   }
 
 
+  function xtc_db_set_charset($charset, $link='db_link') {
+    global $$link;
+    
+    if (function_exists('mysql_set_charset')) { //requires MySQL 5.0.7 or later
+      mysqli_set_charset($$link, $charset);
+    } else {
+      xtc_db_query('SET NAMES '.$charset);
+    }  
+  }
+
+
   function xtc_db_connect($server=DB_SERVER, $username=DB_SERVER_USERNAME, $password=DB_SERVER_PASSWORD, $database=DB_DATABASE, $link='db_link') {
     global $$link;
 
@@ -90,19 +101,15 @@
       return false;
     }
 
-    if(version_compare(@xtc_db_get_server_info(), '5.0.0', '>=')) {
-      @mysqli_query($$link, "SET SESSION sql_mode=''");
+    if(version_compare(xtc_db_get_server_info(), '5.0.0', '>=')) {
+      xtc_db_query("SET SESSION sql_mode=''");
     }
 
     // set charset defined in configure.php
     if(!defined('DB_SERVER_CHARSET')) {
       define('DB_SERVER_CHARSET','latin1');
     }
-    if(function_exists('mysqli_set_charset')) { //requires MySQL 5.0.6 or later
-      mysqli_set_charset($$link, DB_SERVER_CHARSET);
-    } else {
-      mysqli_query($$link, 'SET NAMES '.DB_SERVER_CHARSET);
-    }    
+    xtc_db_set_charset(DB_SERVER_CHARSET);
 
     return $$link;
   }
