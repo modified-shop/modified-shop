@@ -23,6 +23,7 @@ class vat_validation {
   var $vat_info, $vat_errors;
 
   function vat_validation($vat_id = '', $customers_id = '', $customers_status = '', $country_id = '', $guest = false) {
+
     $vat_id = str_replace(' ', '', $vat_id);
     $this->vat_info = array ();
     $this->vat_errors = array(
@@ -225,41 +226,50 @@ class vat_validation {
       if (is_array($result) && isset($result['valid']) && $result['valid'] == 'true') {
         return 1; // VAT-ID is valid
       } elseif (is_array($result) && isset($result['valid']) && $result['valid'] == 'false') {
-      
-        try {
-          $options = array('soap_version' => SOAP_1_1,
-                           'exceptions' => true,
-                           'trace' => 1,
-                           'cache_wsdl' => WSDL_CACHE_NONE,
-                           'user_agent' => 'Mozilla'
-                           );
-          $client = new SoapClient(VAT_LIVE_CHECK_URL, $options);
-        } catch (Exception $e) {
-          trigger_error('SOAP-Fehler: (Fehlernummer: '. $e->faultcode .', Fehlermeldung: '. $e->faultstring .')', E_USER_ERROR);
-        }
-    
-        if ($client) {
-          try {
-            $result = $client->checkVat($params);
-            if($result->valid == true){
-              return 1;  // VAT-ID is valid
-            } else {
-              return 0;   // VAT-ID is NOT valid
-            }
-          } catch (SoapFault $e) {
-            return $this->vat_errors[$e->faultstring];
-          }
-        }
+        return $this->_checkVatID_EU($vatNumber, $country_iso_code);
         return 0; // VAT-ID is NOT valid
       } elseif(is_array($result) && isset($result['faultstring'])) {
         return $this->vat_errors[$result['faultstring']];
       }      
     }
 
-    return false;
+    return $this->_checkVatID_EU($vatNumber, $country_iso_code);
   }
 
 
+  function _checkVatID_EU($vatNumber, $country_iso_code) {
+
+    $params = array('countryCode' => $country_iso_code, 
+                    'vatNumber' => $vatNumber);
+
+    try {
+      $options = array('soap_version' => SOAP_1_1,
+                       'exceptions' => true,
+                       'trace' => 1,
+                       'cache_wsdl' => WSDL_CACHE_NONE,
+                       'user_agent' => 'Mozilla');
+      $client = new SoapClient(VAT_LIVE_CHECK_URL, $options);
+    } catch (Exception $e) {
+      trigger_error('SOAP-Fehler: (Fehlernummer: '. $e->faultcode .', Fehlermeldung: '. $e->faultstring .')', E_USER_ERROR);
+    }
+
+    if ($client) {
+      try {
+        $result = $client->checkVat($params);
+        if($result->valid == true){
+          return 1;  // VAT-ID is valid
+        } else {
+          return 0;   // VAT-ID is NOT valid
+        }
+      } catch (SoapFault $e) {
+        return $this->vat_errors[$e->faultstring];
+      }
+    }
+    
+    return false;
+  }
+  
+  
   function validate_vatid_offline($country, $vat_id) {
     switch ($country) {
       default:
