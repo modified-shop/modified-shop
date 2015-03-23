@@ -1940,10 +1940,10 @@ INSERT INTO countries VALUES (240,'Serbia','RS','SRB',1,1,0);
 INSERT INTO countries VALUES (241,'Montenegro','ME','MNE',1,1,0);
 
 # currencies
-INSERT INTO currencies VALUES (1,'Euro','EUR','','EUR',',','.','2','1','1.0000', NOW());
-INSERT INTO currencies VALUES (2,'United States Dollar','USD', '$', '', '.', ',', '2','0','1.2978', NOW());
-INSERT INTO currencies VALUES (3,'Schweizer Franken','CHF', 'CHF', '', '.', '', '2','0','1.2044', NOW());
-INSERT INTO currencies VALUES (4,'Great Britain Pound','GBP', '', '&pound;', '.', ',', '2','0','0.8094', NOW());
+INSERT INTO currencies VALUES (1,'Euro','EUR','','EUR',',','.','2','1.0000',NOW(),'1');
+INSERT INTO currencies VALUES (2,'United States Dollar','USD', '$', '', '.', ',', '2','1.2978',NOW(),'0');
+INSERT INTO currencies VALUES (3,'Schweizer Franken','CHF', 'CHF', '', '.', '', '2','1.2044',NOW(),'0');
+INSERT INTO currencies VALUES (4,'Great Britain Pound','GBP', '', '&pound;', '.', ',', '2','0.8094',NOW(),'0');
 
 # database Version
 INSERT INTO database_version(version) VALUES ('MOD_2.0.0.0');
