@@ -402,7 +402,7 @@ function formpartPaymentGenreSpecific($topkey, $config) {
 
 function getActiveCountries() {
 	$query = "SELECT * 
-	            FROM ".TABLE_ORDERS_COUNTRIES." 
+	            FROM ".TABLE_COUNTRIES." 
 	           WHERE status = '1'";
 	$result = xtc_db_query($query);
 	$countries = array();
