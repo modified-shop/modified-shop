@@ -561,11 +561,8 @@ class categories {
       xtc_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', 'products_id = \''.(int)$products_id.'\'');
     }
 
-    //Included specials
-    if (file_exists("includes/modules/categories_specials.php")) {
-      require_once("includes/modules/categories_specials.php");
-      saveSpecialsData($products_id);
-    }
+    //specials
+    $this->saveSpecialsData($products_data);
 
     $languages = xtc_get_languages();
     // Here we go, lets write Group prices into db
@@ -1208,6 +1205,7 @@ class categories {
     } 
   } 
 
+
   function priceCheck($price,$products_tax_rate) {
       if (PRICE_IS_BRUTTO == 'true' && $price) {
           $price = round(($price / ($products_tax_rate + 100) * 100), PRICE_PRECISION);
@@ -1215,6 +1213,48 @@ class categories {
           $price = xtc_round($price, PRICE_PRECISION);
       }
       return $price;
+  }
+
+
+  function saveSpecialsData($products_data) {
+    // insert or update specials
+    if (isset($products_data['specials_price']) && !empty($products_data['specials_price'])) {
+      if (!isset($products_data['specials_quantity']) || empty($products_data['specials_quantity'])) {
+        $products_data['specials_quantity'] = 0;
+      }
+      
+      if (substr($products_data['specials_price'], -1) != '%'){
+        $products_data['specials_price'] = $this->priceCheck($products_data['specials_price'], $products_data['tax_rate']);
+      } else {
+        $products_data['specials_price'] = ($products_data['products_price_hidden'] - (($products_data['specials_price'] / 100) * $products_data['products_price_hidden']));
+      }
+
+      $expires_date = isset($products_data['specials_expires']) && !empty($products_data['specials_expires']) ? date('Y-m-d H:i:s', strtotime($products_data['specials_expires'].' 23:59:59')) : '';
+      $start_date = isset($products_data['specials_start']) && !empty($products_data['specials_start']) ? date('Y-m-d H:i:s', strtotime($products_data['specials_start'].' 00:00:00')) : '';
+    
+      $sql_data_array = array('products_id' => $products_data['products_id'],
+                              'specials_quantity' => (int)$products_data['specials_quantity'],
+                              'specials_new_products_price' => xtc_db_prepare_input($products_data['specials_price']),
+                              'specials_date_added' => 'now()',
+                              'specials_last_modified' => 'now()',
+                              'start_date' => $start_date,
+                              'expires_date' => $expires_date,
+                              'status' => ((isset($products_data['specials_status'])) ? (int)$products_data['specials_status'] : '1')
+                              );
+    
+      if ($products_data['specials_action'] == 'insert') {
+        unset($sql_data_array['specials_last_modified']);
+        xtc_db_perform(TABLE_SPECIALS, $sql_data_array);
+      } else {
+        unset($sql_data_array['specials_date_added']);
+        xtc_db_perform(TABLE_SPECIALS, $sql_data_array, 'update', "specials_id = '" . (int)$products_data['specials_id']  . "'" );    
+      }
+    } 
+  
+    // delete specials
+    if(isset($products_data['specials_delete'])) {
+      xtc_db_query("DELETE FROM " . TABLE_SPECIALS . " WHERE specials_id = '" . xtc_db_input($products_data['specials_id']) . "'");
+    }
   }
   
 }
