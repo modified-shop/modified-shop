@@ -63,24 +63,10 @@
       $expiry = time() + (int)$SESS_LIFE;
       $value = base64_encode($val);
 
-      $check_query = xtc_db_query("-- includes/functions/sessions.php
-                                   SELECT count(*) as total
-                                     FROM " . TABLE_SESSIONS . "
-                                    WHERE sesskey = '" . xtc_db_input($key) . "'");
-      $total = xtc_db_fetch_array($check_query);
+      return xtc_db_query("-- includes/functions/sessions.php
+        REPLACE INTO " . TABLE_SESSIONS . " (sesskey, expiry, value, flag)
+              VALUES ('". xtc_db_input($key) ."', $expiry, '$value', '".$flag."')");
 
-      $sql_data_array = array('sesskey' => $key,
-                              'expiry'  => (int)$expiry,
-                              'value'   => $value,
-                              'flag'    => $flag
-                             );
- 
-      if ($total['total'] > 0) {
-        unset($sql_data_array['sesskey']);
-        return xtc_db_perform(TABLE_SESSIONS, $sql_data_array, 'update', "sesskey='". xtc_db_input($key) ."'");
-      } else {
-        return xtc_db_perform(TABLE_SESSIONS, $sql_data_array);
-      }
     }
 
     function _sess_destroy($key) {
