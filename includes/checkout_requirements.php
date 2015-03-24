@@ -19,6 +19,16 @@ $checkout_position = array(
   'checkout_process.php'      => 4
 );
 
+// if there is nothing in the customers cart, redirect them to the shopping cart page
+if ($_SESSION['cart']->count_contents() < 1) {
+	xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
+}
+
+// check if checkout is allowed
+if (isset($_SESSION['allow_checkout']) && $_SESSION['allow_checkout'] == 'false') {
+  xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
+}
+
 // if the customer is not logged on, redirect them to the login page
 if (!isset($_SESSION['customer_id'])) {
   if (ACCOUNT_OPTIONS == 'guest') {
@@ -31,16 +41,6 @@ if (!isset($_SESSION['customer_id'])) {
 // no checkout if it is not allowed to see prices
 if ($_SESSION['customers_status']['customers_status_show_price'] != '1') {
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT,'','NONSSL'));
-}
-
-// if there is nothing in the customers cart, redirect them to the shopping cart page
-if ($_SESSION['cart']->count_contents() < 1) {
-	xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
-}
-
-// check if checkout is allowed
-if (isset($_SESSION['allow_checkout']) && $_SESSION['allow_checkout'] == 'false') {
-  xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
 }
 
 // Stock Check
