@@ -10,9 +10,9 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-function auto_include($dir, $ext='php') 
+function auto_include($dir, $ext = 'php', $expr = '*') 
 {
-		$files = glob("{$dir}*.".$ext);
+		$files = glob("{$dir}/$expr.".$ext);
 		$files = ((is_array($files)) ? $files : array());
     if (function_exists('debugMessage')) {
         debugMessage('auto_include',$files);
