@@ -70,14 +70,15 @@
               </table>
             </td>
               <?php
+              $address_add_class = '';
               if ($order->delivery['name'] != $order->customer['name'] ||
                   $order->delivery['postcode'] != $order->customer['postcode'] ||
                   $order->delivery['city'] != $order->customer['city'] ||
                   $order->delivery['street_address'] != $order->customer['street_address']) {
-                $address_bgcolor = ' bgcolor="#b8d3e4"';
+                $address_add_class = ' bg_notice';
               }
               ?>
-            <td class="main" valign="top" style="border-right: 1px solid #a3a3a3;"<?php if (isset($address_bgcolor)) echo $address_bgcolor; ?>>
+            <td class="main<?php echo $address_add_class; ?>" valign="top" style="border-right: 1px solid #a3a3a3;">
               <b><?php echo ENTRY_SHIPPING_ADDRESS; ?></b><br />
                <?php echo xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'); ?>
             </td>
