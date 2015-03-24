@@ -52,6 +52,7 @@ $orders_query = xtc_db_query("SELECT orders_id,
                                      orders_status
                                 FROM ".TABLE_ORDERS."
                                WHERE customers_id = '".$_SESSION['customer_id']."'
+                                 AND unix_timestamp(date_purchased) > '".(time() - SESSION_LIFE_CUSTOMERS)."'
                             ORDER BY orders_id DESC
                                LIMIT 1");
 
