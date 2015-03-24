@@ -242,8 +242,8 @@
                                 '".xtc_db_input($postcode)."',
                                 '".xtc_db_input($city)."',
                                 '".xtc_db_input($state)."',
-                                '".xtc_db_input($country)."',
-                                '".xtc_db_input($zone_id)."'
+                                '".(int)$country."',
+                                '".(int)$zone_id."'
                                 )");
 
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_address). "' WHERE configuration_key = 'STORE_OWNER_EMAIL_ADDRESS'");
@@ -252,6 +252,8 @@
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($country). "' WHERE configuration_key = 'SHIPPING_ORIGIN_COUNTRY'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($postcode). "' WHERE configuration_key = 'SHIPPING_ORIGIN_ZIP'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($company). "' WHERE configuration_key = 'STORE_OWNER'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". (int)$country. "' WHERE configuration_key = 'STORE_COUNTRY'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". (int)$zone_id. "' WHERE configuration_key = 'STORE_ZONE'");
 
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($store_name) . '\n' . xtc_db_input($company) . '\n' . xtc_db_input($firstname) . ' ' . xtc_db_input($lastname) . '\n' . xtc_db_input($street_address) . '\n' . xtc_db_input($postcode) . ' ' . xtc_db_input($city) . '\n\n' . xtc_db_input($telephone) . '\n' . xtc_db_input($email_address)."' WHERE configuration_key = 'STORE_NAME_ADDRESS'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_address). "' WHERE configuration_key = 'META_REPLY_TO'");
