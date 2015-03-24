@@ -29,7 +29,8 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers.html', $c
                                           m.manufacturers_name 
                                      FROM ".TABLE_MANUFACTURERS." as m
                                      JOIN ".TABLE_PRODUCTS." as p 
-                                          ON m.manufacturers_id = p.manufacturers_id 
+                                          ON m.manufacturers_id = p.manufacturers_id
+                                             AND p.products_status = '1'
                                  ORDER BY m.manufacturers_name";
   $manufacturers_query = xtDBquery($manufacturers_query);
   $manufacturers_count = xtc_db_num_rows($manufacturers_query, true);

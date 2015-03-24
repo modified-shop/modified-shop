@@ -35,7 +35,13 @@
 
     $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
     
-    $manufacturers_query = "select distinct m.manufacturers_id, m.manufacturers_name from ".TABLE_MANUFACTURERS." as m, ".TABLE_PRODUCTS." as p where m.manufacturers_id=p.manufacturers_id order by m.manufacturers_name";
+    $manufacturers_query = "SELECT DISTINCT m.manufacturers_id,
+                                            m.manufacturers_name 
+                                       FROM ".TABLE_MANUFACTURERS." as m
+                                       JOIN ".TABLE_PRODUCTS." as p 
+                                            ON m.manufacturers_id = p.manufacturers_id
+                                               AND p.products_status = '1'
+                                   ORDER BY m.manufacturers_name";
     $manufacturers_query = xtDBquery($manufacturers_query);
     if (xtc_db_num_rows($manufacturers_query, true) <= MAX_DISPLAY_MANUFACTURERS_IN_A_LIST) {
       // Display a list
