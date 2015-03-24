@@ -53,23 +53,23 @@
   if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $process = true;
 
-    $gender = convert_utf8(xtc_db_prepare_input($_POST['GENDER']));
-    $firstname = convert_utf8(xtc_db_prepare_input($_POST['FIRST_NAME']));
-    $lastname = convert_utf8(xtc_db_prepare_input($_POST['LAST_NAME']));
-    $email_address = convert_utf8(xtc_db_prepare_input($_POST['EMAIL_ADRESS']));
-    $street_address = convert_utf8(xtc_db_prepare_input($_POST['STREET_ADRESS']));
-    $postcode = convert_utf8(xtc_db_prepare_input($_POST['POST_CODE']));
-    $city = convert_utf8(xtc_db_prepare_input($_POST['CITY']));
-    $zone_id = convert_utf8(xtc_db_prepare_input($_POST['zone_id']));
-    $state = convert_utf8(xtc_db_prepare_input($_POST['STATE']));
-    $country = convert_utf8(xtc_db_prepare_input($_POST['COUNTRY']));
-    $telephone = convert_utf8(xtc_db_prepare_input($_POST['TELEPHONE']));
-    $password = convert_utf8(xtc_db_prepare_input($_POST['PASSWORD']));
-    $confirmation = convert_utf8(xtc_db_prepare_input($_POST['PASSWORD_CONFIRMATION']));
-    $store_name = convert_utf8(xtc_db_prepare_input($_POST['STORE_NAME']));
-    $email_from = convert_utf8(xtc_db_prepare_input($_POST['EMAIL_ADRESS_FROM']));
-    $zone_setup = convert_utf8(xtc_db_prepare_input($_POST['ZONE_SETUP']));
-    $company = convert_utf8(xtc_db_prepare_input($_POST['COMPANY']));
+    $gender = xtc_db_prepare_input($_POST['GENDER']);
+    $firstname = xtc_db_prepare_input($_POST['FIRST_NAME']);
+    $lastname = xtc_db_prepare_input($_POST['LAST_NAME']);
+    $email_address = xtc_db_prepare_input($_POST['EMAIL_ADRESS']);
+    $street_address = xtc_db_prepare_input($_POST['STREET_ADRESS']);
+    $postcode = xtc_db_prepare_input($_POST['POST_CODE']);
+    $city = xtc_db_prepare_input($_POST['CITY']);
+    $zone_id = xtc_db_prepare_input($_POST['zone_id']);
+    $state = xtc_db_prepare_input($_POST['STATE']);
+    $country = xtc_db_prepare_input($_POST['COUNTRY']);
+    $telephone = xtc_db_prepare_input($_POST['TELEPHONE']);
+    $password = xtc_db_prepare_input($_POST['PASSWORD']);
+    $confirmation = xtc_db_prepare_input($_POST['PASSWORD_CONFIRMATION']);
+    $store_name = xtc_db_prepare_input($_POST['STORE_NAME']);
+    $email_from = xtc_db_prepare_input($_POST['EMAIL_ADRESS_FROM']);
+    $zone_setup = xtc_db_prepare_input($_POST['ZONE_SETUP']);
+    $company = xtc_db_prepare_input($_POST['COMPANY']);
 
     $error = false;
 
