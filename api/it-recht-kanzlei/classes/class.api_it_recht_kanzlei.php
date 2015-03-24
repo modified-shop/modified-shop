@@ -18,7 +18,7 @@
 
 class it_recht_kanzlei {
   
-  var $modulversion = '1.1';
+  var $modulversion = '1.2';
   var $api_action_flag, 
       $api_version_flag, 
       $api_username_flag, 
