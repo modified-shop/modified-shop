@@ -63,10 +63,8 @@
       $expiry = time() + (int)$SESS_LIFE;
       $value = base64_encode($val);
 
-      return xtc_db_query("-- includes/functions/sessions.php
-        REPLACE INTO " . TABLE_SESSIONS . " (sesskey, expiry, value, flag)
-              VALUES ('". xtc_db_input($key) ."', $expiry, '$value', '".$flag."')");
-
+      return xtc_db_query("REPLACE INTO " . TABLE_SESSIONS . " (sesskey, expiry, value, flag)
+                                 VALUES ('". xtc_db_input($key) ."', '".$expiry."', '".$value."', '".$flag."')");
     }
 
     function _sess_destroy($key) {
@@ -75,11 +73,11 @@
 
     function _sess_gc($maxlifetime) {
       if (DELETE_GUEST_ACCOUNT == 'true') {
-        $customers_guest_query = xtc_db_query("SELECT sesskey
-                                                 FROM " . TABLE_SESSIONS . "
-                                                WHERE expiry < '" . time() . "'");
-        while ($customers_guest = xtc_db_fetch_array($customers_guest_query)) {
-          $details = unserialize_session_data(_sess_read($customers_guest['sesskey']));
+        $session_query = xtc_db_query("SELECT sesskey
+                                         FROM " . TABLE_SESSIONS . "
+                                        WHERE expiry < '" . time() . "'");
+        while ($session = xtc_db_fetch_array($session_query)) {
+          $customers = unserialize_session_data(_sess_read($session['sesskey']));
           if (is_array($customers) && isset($customers['customer_id']) && isset($customers['account_type']) && $customers['account_type'] != '0') {
             xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$customers['customer_id']."'");
             xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$customers['customer_id']."'");
