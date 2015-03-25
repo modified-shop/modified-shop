@@ -201,6 +201,7 @@
                               'customers_telephone' => $telephone,
                               'customers_password' => xtc_encrypt_password($password),
                               'delete_user' => '0',
+                              'customers_date_added' => 'now()',
                               );
       xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
       
@@ -224,6 +225,7 @@
                               'entry_state' => $state,
                               'entry_country_id' => (int)$country,
                               'entry_zone_id' => (int)$zone_id,
+                              'address_date_added' => 'now()',
                               );
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);                                              
 
