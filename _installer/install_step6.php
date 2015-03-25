@@ -199,7 +199,7 @@
                               'customers_email_address' => $email_address,
                               'customers_default_address_id' => '1',
                               'customers_telephone' => $telephone,
-                              'customers_password' => $password,
+                              'customers_password' => xtc_encrypt_password($password),
                               'delete_user' => '0',
                               );
       xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
