@@ -169,7 +169,7 @@ class vat_validation {
     
     // check country 
     $country_check = xtc_get_countriesList($country_id, true);
-    if ($country_check['countries_iso_code_2'] != $country) {
+    if ($country_check['countries_iso_code_2'] != strtoupper($country)) {
       return $results[0];
     }
     
