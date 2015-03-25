@@ -70,15 +70,26 @@
     }
 
     function _sess_destroy($key) {
-      return xtc_db_query("-- includes/functions/sessions.php
-                           DELETE FROM " . TABLE_SESSIONS . "
-                            WHERE sesskey = '" . xtc_db_input($key) . "'");
+      return xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($key) . "'");
     }
 
     function _sess_gc($maxlifetime) {
-      xtc_db_query("-- includes/functions/sessions.php
-                    DELETE FROM " . TABLE_SESSIONS . "
-                    WHERE expiry < '" . time() . "'");
+      if (DELETE_GUEST_ACCOUNT == 'true') {
+        $customers_guest_query = xtc_db_query("SELECT sesskey
+                                                 FROM " . TABLE_SESSIONS . "
+                                                WHERE expiry < '" . time() . "'");
+        while ($customers_guest = xtc_db_fetch_array($customers_guest_query)) {
+          $details = unserialize_session_data(_sess_read($customers_guest['sesskey']));
+          if (is_array($customers) && isset($customers['customer_id']) && isset($customers['account_type']) && $customers['account_type'] != '0') {
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$customers['customer_id']."'");
+            xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$customers['customer_id']."'");
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$customers['customer_id']."'");
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".$customers['customer_id']."'");
+          }
+        }                                       
+      } else {
+        xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < '" . time() . "'");
+      }
       return true;
     }
 
@@ -183,5 +194,31 @@
                        SET session_id = '".xtc_db_input($new_session_id)."' 
                      WHERE session_id = '".xtc_db_input($old_session_id)."'");
     }
+  }
+
+  function unserialize_session_data( $session_data ) {
+    //check for suhosin.session.encrypt
+    if (suhosin_check()) return 'ENCRYPTED';
+ 
+    //check for correct session value  
+    if (strpos($session_data, 'customers_status|') === false) $session_data = '';
+   
+    if ($session_data != '') {
+      $variables = array();
+      $a = preg_split( "/(\w+)\|/", $session_data, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
+      for( $i = 0; $i < count( $a ); $i = $i+2 ) {
+        $variables[$a[$i]] = unserialize( $a[$i+1] );
+      }
+      return($variables);
+    }
+    return '';
+  }
+
+  function suhosin_check() {
+    if ( extension_loaded( "suhosin" ) && ini_get( "suhosin.session.encrypt" ) ) {
+      // suhosin is active and suhosin.session.encrypt is On    
+      return true;      
+    }
+    return false;
   }
 ?>
