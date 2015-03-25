@@ -410,7 +410,7 @@ ALTER TABLE customers_status ADD UNIQUE idx_customers_status_name (customers_sta
 ALTER TABLE module_newsletter MODIFY title VARCHAR(255) NOT NULL;
 ALTER TABLE campaigns MODIFY campaigns_refID VARCHAR(64) NOT NULL;
 ALTER TABLE campaigns ADD UNIQUE idx_campaigns_refID (campaigns_refID);
-ALTER TABLE banners_history ADD UNIQUE idx_banners_id (banners_id);
+ALTER TABLE banners_history ADD KEY idx_banners_id (banners_id);
 ALTER TABLE languages ADD UNIQUE idx_code (code);
 ALTER TABLE languages DROP INDEX idx_languages_name;
 ALTER TABLE content_manager DROP INDEX content_meta_title;
