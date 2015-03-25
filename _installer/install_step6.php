@@ -190,61 +190,42 @@
       xtc_db_query("TRUNCATE `tax_class`");
       xtc_db_query("TRUNCATE `geo_zones`");
       xtc_db_query("TRUNCATE `zones_to_geo_zones`");
+      
+      $sql_data_array = array('customers_id' => '1',
+                              'customers_status' => '0',
+                              'customers_firstname' => $firstname,
+                              'customers_lastname' => $lastname,
+                              'customers_gender' => $gender,
+                              'customers_email_address' => $email_address,
+                              'customers_default_address_id' => '1',
+                              'customers_telephone' => $telephone,
+                              'customers_password' => $password,
+                              'delete_user' => '0',
+                              );
+      xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
+      
+      $sql_data_array = array('customers_info_id' => '1',
+                              'customers_info_date_of_last_logon' => '',
+                              'customers_info_number_of_logons' => '',
+                              'customers_info_date_account_created' => 'now()', 
+                              'customers_info_date_account_last_modified' => '',
+                              'global_product_notifications' => '',
+                              );
+      xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);                                              
 
-      xtc_db_query("insert into " . TABLE_CUSTOMERS . " (
-                                customers_id,
-                                customers_status,
-                                customers_firstname,
-                                customers_lastname,
-                                customers_gender,
-                                customers_email_address,
-                                customers_default_address_id,
-                                customers_telephone,
-                                customers_password,
-                                delete_user) VALUES
-                                ('1',
-                                '0',
-                                '".xtc_db_input($firstname)."',
-                                '".xtc_db_input($lastname)."',
-                                '".xtc_db_input($gender)."',
-                                '".xtc_db_input($email_address)."',
-                                '1',
-                                '".xtc_db_input($telephone)."',
-                                '".xtc_encrypt_password($password)."',
-                                '0')");
-
-      xtc_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (
-                                customers_info_id,
-                                customers_info_date_of_last_logon,
-                                customers_info_number_of_logons,
-                                customers_info_date_account_created,
-                                customers_info_date_account_last_modified,
-                                global_product_notifications) VALUES
-                                ('1','','','now()','','')");
-      xtc_db_query("insert into " .TABLE_ADDRESS_BOOK . " (
-                                customers_id,
-                                entry_gender,
-                                entry_company,
-                                entry_firstname,
-                                entry_lastname,
-                                entry_street_address,
-                                entry_postcode,
-                                entry_city,
-                                entry_state,
-                                entry_country_id,
-                                entry_zone_id) VALUES
-                                ('1',
-                                '".xtc_db_input($gender)."',
-                                '".xtc_db_input($company)."',
-                                '".xtc_db_input($firstname)."',
-                                '".xtc_db_input($lastname)."',
-                                '".xtc_db_input($street_address)."',
-                                '".xtc_db_input($postcode)."',
-                                '".xtc_db_input($city)."',
-                                '".xtc_db_input($state)."',
-                                '".(int)$country."',
-                                '".(int)$zone_id."'
-                                )");
+      $sql_data_array = array('customers_id' => '1',
+                              'entry_gender' => $gender,
+                              'entry_company' => $company,
+                              'entry_firstname' => $firstname,
+                              'entry_lastname' => $lastname,
+                              'entry_street_address' => $street_address,
+                              'entry_postcode' => $postcode,
+                              'entry_city' => $city,
+                              'entry_state' => $state,
+                              'entry_country_id' => (int)$country,
+                              'entry_zone_id' => (int)$zone_id,
+                              );
+      xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);                                              
 
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_address). "' WHERE configuration_key = 'STORE_OWNER_EMAIL_ADDRESS'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($store_name). "' WHERE configuration_key = 'STORE_NAME'");
@@ -404,8 +385,7 @@
             break;
         }
 
-
-// TODO - DUTY INFO
+        // TODO - DUTY INFO
 
         // Steuersätze / tax_rates
         xtc_db_query("TRUNCATE `tax_rates`");
@@ -430,245 +410,7 @@
       }
       
       // customers status
-      xtc_db_query("TRUNCATE `customers_status`");
-
-      // Status Admin
-      xtc_db_query("INSERT INTO customers_status SET customers_status_id = '0',
-                                                     language_id = '2',
-                                                     customers_status_name = 'Admin',
-                                                     customers_status_public = 1,
-                                                     customers_status_min_order = NULL,
-                                                     customers_status_max_order = NULL,
-                                                     customers_status_image = 'admin_status.gif',
-                                                     customers_status_discount = '0.00',
-                                                     customers_status_ot_discount_flag = '1',
-                                                     customers_status_ot_discount = '0.00',
-                                                     customers_status_graduated_prices = '1',
-                                                     customers_status_show_price = '1',
-                                                     customers_status_show_price_tax = '1',
-                                                     customers_status_add_tax_ot = 0,
-                                                     customers_status_payment_unallowed = '',
-                                                     customers_status_shipping_unallowed = '',
-                                                     customers_status_discount_attributes = 0,
-                                                     customers_fsk18 = 1,
-                                                     customers_fsk18_display = 1,
-                                                     customers_status_write_reviews = 1,
-                                                     customers_status_read_reviews = 1");
-
-      xtc_db_query("INSERT INTO customers_status SET customers_status_id = '0',
-                                                     language_id = '1',
-                                                     customers_status_name = 'Admin',
-                                                     customers_status_public = 1,
-                                                     customers_status_min_order = NULL,
-                                                     customers_status_max_order = NULL,
-                                                     customers_status_image = 'admin_status.gif',
-                                                     customers_status_discount = '0.00',
-                                                     customers_status_ot_discount_flag = '1',
-                                                     customers_status_ot_discount = '0.00',
-                                                     customers_status_graduated_prices = '1',
-                                                     customers_status_show_price = '1',
-                                                     customers_status_show_price_tax = '1',
-                                                     customers_status_add_tax_ot = 0,
-                                                     customers_status_payment_unallowed = '',
-                                                     customers_status_shipping_unallowed = '',
-                                                     customers_status_discount_attributes = 0,
-                                                     customers_fsk18 = 1,
-                                                     customers_fsk18_display = 1,
-                                                     customers_status_write_reviews = 1,
-                                                     customers_status_read_reviews = 1");
-
-      // Status guest
-      xtc_db_query("INSERT INTO customers_status SET customers_status_id = '1',
-                                                     language_id = '2',
-                                                     customers_status_name = 'Gast',
-                                                     customers_status_public = 1,
-                                                     customers_status_min_order = NULL,
-                                                     customers_status_max_order = NULL,
-                                                     customers_status_image = 'guest_status.gif',
-                                                     customers_status_discount = '0.00',
-                                                     customers_status_ot_discount_flag = '0',
-                                                     customers_status_ot_discount = '0.00',
-                                                     customers_status_graduated_prices = '0',
-                                                     customers_status_show_price = '1',
-                                                     customers_status_show_price_tax = '1',
-                                                     customers_status_add_tax_ot = 0,
-                                                     customers_status_payment_unallowed = '',
-                                                     customers_status_shipping_unallowed = '',
-                                                     customers_status_discount_attributes = 0,
-                                                     customers_fsk18 = 1,
-                                                     customers_fsk18_display = 1,
-                                                     customers_status_write_reviews = 0,
-                                                     customers_status_read_reviews = 1");
-
-      xtc_db_query("INSERT INTO customers_status SET customers_status_id = '1',
-                                                     language_id = '1',
-                                                     customers_status_name = 'Guest',
-                                                     customers_status_public = 1,
-                                                     customers_status_min_order = NULL,
-                                                     customers_status_max_order = NULL,
-                                                     customers_status_image = 'guest_status.gif',
-                                                     customers_status_discount = '0.00',
-                                                     customers_status_ot_discount_flag = '0',
-                                                     customers_status_ot_discount = '0.00',
-                                                     customers_status_graduated_prices = '0',
-                                                     customers_status_show_price = '1',
-                                                     customers_status_show_price_tax = '1',
-                                                     customers_status_add_tax_ot = 0,
-                                                     customers_status_payment_unallowed = '',
-                                                     customers_status_shipping_unallowed = '',
-                                                     customers_status_discount_attributes = 0,
-                                                     customers_fsk18 = 1,
-                                                     customers_fsk18_display = 1,
-                                                     customers_status_write_reviews = 0,
-                                                     customers_status_read_reviews = 1");
-
-      // Status new customer
-      xtc_db_query("INSERT INTO customers_status SET customers_status_id = '2',
-                                                     language_id = '2',
-                                                     customers_status_name = 'Neuer Kunde',
-                                                     customers_status_public = 1,
-                                                     customers_status_min_order = NULL,
-                                                     customers_status_max_order = NULL,
-                                                     customers_status_image = 'customer_status.gif',
-                                                     customers_status_discount = '0.00',
-                                                     customers_status_ot_discount_flag = '0',
-                                                     customers_status_ot_discount = '0.00',
-                                                     customers_status_graduated_prices = '0',
-                                                     customers_status_show_price = '1',
-                                                     customers_status_show_price_tax = '1',
-                                                     customers_status_add_tax_ot = 0,
-                                                     customers_status_payment_unallowed = '',
-                                                     customers_status_shipping_unallowed = '',
-                                                     customers_status_discount_attributes = 0,
-                                                     customers_fsk18 = 1,
-                                                     customers_fsk18_display = 1,
-                                                     customers_status_write_reviews = 1,
-                                                     customers_status_read_reviews = 1");
-
-      xtc_db_query("INSERT INTO customers_status SET customers_status_id = '2',
-                                                     language_id = '1',
-                                                     customers_status_name = 'New Customer',
-                                                     customers_status_public = 1,
-                                                     customers_status_min_order = NULL,
-                                                     customers_status_max_order = NULL,
-                                                     customers_status_image = 'customer_status.gif',
-                                                     customers_status_discount = '0.00',
-                                                     customers_status_ot_discount_flag = '0',
-                                                     customers_status_ot_discount = '0.00',
-                                                     customers_status_graduated_prices = '0',
-                                                     customers_status_show_price = '1',
-                                                     customers_status_show_price_tax = '1',
-                                                     customers_status_add_tax_ot = 0,
-                                                     customers_status_payment_unallowed = '',
-                                                     customers_status_shipping_unallowed = '',
-                                                     customers_status_discount_attributes = 0,
-                                                     customers_fsk18 = 1,
-                                                     customers_fsk18_display = 1,
-                                                     customers_status_write_reviews = 1,
-                                                     customers_status_read_reviews = 1");
-
-      // Status merchant
-      xtc_db_query("INSERT INTO customers_status SET customers_status_id = '3',
-                                                     language_id = '2',
-                                                     customers_status_name = '".convert_utf8('Händler')."',
-                                                     customers_status_public = 1,
-                                                     customers_status_min_order = NULL,
-                                                     customers_status_max_order = NULL,
-                                                     customers_status_image = 'merchant_status.gif',
-                                                     customers_status_discount = '0.00',
-                                                     customers_status_ot_discount_flag = '0',
-                                                     customers_status_ot_discount = '0.00',
-                                                     customers_status_graduated_prices = '1',
-                                                     customers_status_show_price = 1,
-                                                     customers_status_show_price_tax = 0,
-                                                     customers_status_add_tax_ot = 1,
-                                                     customers_status_payment_unallowed = '',
-                                                     customers_status_shipping_unallowed = '',
-                                                     customers_status_discount_attributes = 0,
-                                                     customers_fsk18 = 1,
-                                                     customers_fsk18_display = 1,
-                                                     customers_status_write_reviews = 1,
-                                                     customers_status_read_reviews = 1");
-
-      xtc_db_query("INSERT INTO customers_status SET customers_status_id = '3',
-                                                     language_id = '1',
-                                                     customers_status_name = 'Merchant',
-                                                     customers_status_public = 1,
-                                                     customers_status_min_order = NULL,
-                                                     customers_status_max_order = NULL,
-                                                     customers_status_image = 'merchant_status.gif',
-                                                     customers_status_discount = '0.00',
-                                                     customers_status_ot_discount_flag = '0',
-                                                     customers_status_ot_discount = '0.00',
-                                                     customers_status_graduated_prices = '1',
-                                                     customers_status_show_price = 1,
-                                                     customers_status_show_price_tax = 0,
-                                                     customers_status_add_tax_ot = 1,
-                                                     customers_status_payment_unallowed = '',
-                                                     customers_status_shipping_unallowed = '',
-                                                     customers_status_discount_attributes = 0,
-                                                     customers_fsk18 = 1,
-                                                     customers_fsk18_display = 1,
-                                                     customers_status_write_reviews = 1,
-                                                     customers_status_read_reviews = 1");
-
-      // Status merchant EU
-      xtc_db_query("INSERT INTO customers_status SET customers_status_id = '4',
-                                                     language_id = '2',
-                                                     customers_status_name = '".convert_utf8('Händler EU')."',
-                                                     customers_status_public = 1,
-                                                     customers_status_min_order = NULL,
-                                                     customers_status_max_order = NULL,
-                                                     customers_status_image = 'merchant_status.gif',
-                                                     customers_status_discount = '0.00',
-                                                     customers_status_ot_discount_flag = '0',
-                                                     customers_status_ot_discount = '0.00',
-                                                     customers_status_graduated_prices = '1',
-                                                     customers_status_show_price = 1,
-                                                     customers_status_show_price_tax = 0,
-                                                     customers_status_add_tax_ot = 0,
-                                                     customers_status_payment_unallowed = '',
-                                                     customers_status_shipping_unallowed = '',
-                                                     customers_status_discount_attributes = 0,
-                                                     customers_fsk18 = 1,
-                                                     customers_fsk18_display = 1,
-                                                     customers_status_write_reviews = 1,
-                                                     customers_status_read_reviews = 1");
-
-      xtc_db_query("INSERT INTO customers_status SET customers_status_id = '4',
-                                                     language_id = '1',
-                                                     customers_status_name = 'Merchant EU',
-                                                     customers_status_public = 1,
-                                                     customers_status_min_order = NULL,
-                                                     customers_status_max_order = NULL,
-                                                     customers_status_image = 'merchant_status.gif',
-                                                     customers_status_discount = '0.00',
-                                                     customers_status_ot_discount_flag = '0',
-                                                     customers_status_ot_discount = '0.00',
-                                                     customers_status_graduated_prices = '1',
-                                                     customers_status_show_price = 1,
-                                                     customers_status_show_price_tax = 0,
-                                                     customers_status_add_tax_ot = 0,
-                                                     customers_status_payment_unallowed = '',
-                                                     customers_status_shipping_unallowed = '',
-                                                     customers_status_discount_attributes = 0,
-                                                     customers_fsk18 = 1,
-                                                     customers_fsk18_display = 1,
-                                                     customers_status_write_reviews = 1,
-                                                     customers_status_read_reviews = 1");
-
-      // create Group prices (Admin wont get own status!)
-      xtc_db_query("DROP TABLE IF EXISTS `personal_offers_by_customers_status_0`");
-      xtc_db_query("DROP TABLE IF EXISTS `personal_offers_by_customers_status_1`");
-      xtc_db_query("DROP TABLE IF EXISTS `personal_offers_by_customers_status_2`");
-      xtc_db_query("DROP TABLE IF EXISTS `personal_offers_by_customers_status_3`");
-      xtc_db_query("DROP TABLE IF EXISTS `personal_offers_by_customers_status_4`");
-      
-      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_0 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ENGINE=MyISAM;");
-      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_1 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ENGINE=MyISAM;");
-      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_2 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ENGINE=MyISAM;");
-      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_3 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ENGINE=MyISAM;");
-      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_4 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ENGINE=MyISAM;");
+      sql_update(DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER . '/includes/customers_status.sql');
       
       if (INSTALL_CHARSET == 'utf8') {
         xtc_db_query("update languages set language_charset='utf-8'");
