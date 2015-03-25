@@ -261,7 +261,7 @@
         $tax_special='';
         $tax_special_text='';
         
-        $sql_file = DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/includes/tax_zones_standard.sql';
+        $sql_file = DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/includes/sql/tax_zones_standard.sql';
         
         switch ($country) {
           case '14':
@@ -376,7 +376,7 @@
             $tax_germany_special='7.0000';
             $tax_germany_special_text='UST 7%';
             
-            $sql_file = DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/includes/tax_zones_switzerland.sql';
+            $sql_file = DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/includes/sql/tax_zones_switzerland.sql';
             break;
           case '222':
             // UK
@@ -412,7 +412,7 @@
       }
       
       // customers status
-      sql_update(DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER . '/includes/customers_status.sql');
+      sql_update(DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER . '/includes/sql/customers_status.sql');
       
       if (INSTALL_CHARSET == 'utf8') {
         xtc_db_query("update languages set language_charset='utf-8'");
