@@ -15,6 +15,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// include needed functions
+include_once(DIR_FS_INC . 'xtc_get_countries.inc.php');
+
 require_once(DIR_FS_EXTERNAL . 'nusoap/nusoap.php');
 
 define ('VAT_LIVE_CHECK_URL', 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl');
@@ -57,7 +60,7 @@ class vat_validation {
     }
     
     if ($vat_id != '') {
-      $validate_vatid = $this->validate_vatid($vat_id);
+      $validate_vatid = $this->validate_vatid($vat_id, $country_id);
       switch ($validate_vatid) {
         case '0' :
           if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
@@ -133,7 +136,7 @@ class vat_validation {
   }
 
 
-  function validate_vatid($vat_id) {
+  function validate_vatid($vat_id, $country_id) {
 
     // remove special chars
     $remove = array (' ', '-', '/', '\\', '.', ':', ',');
@@ -142,7 +145,7 @@ class vat_validation {
     
     $vatNumber = substr($vat_id, 2);
     $country = strtolower(substr($vat_id, 0, 2));
-    
+        
     // 0 = 'invalid'
     // 1 = 'valid'
     // 8 = 'unknown country'
@@ -163,8 +166,24 @@ class vat_validation {
                       97 => '97',
                       98 => '98',
                       99 => '99');
-
-    if($this->live_check == 'true') {
+    
+    // check country 
+    $country_check = xtc_get_countriesList($country_id, true);
+    if ($country_check['countries_iso_code_2'] != $country) {
+      return $results[0];
+    }
+    
+    // check store vatid
+    if (STORE_OWNER_VAT_ID != '') {
+      $vat_id_store_owner = trim(chop(STORE_OWNER_VAT_ID));
+      $vat_id_store_owner = str_replace($remove, '', $vat_id_store_owner);
+      $vat_id_store_owner = substr($vat_id_store_owner, 2);
+      if ($vat_id_store_owner == $vatNumber) {
+        return $results[0];
+      }
+    }
+    
+    if ($this->live_check == 'true') {
       $country_iso_code = strtoupper($country);
 
       //Check VAT for EU countries only
@@ -228,7 +247,7 @@ class vat_validation {
       } elseif (is_array($result) && isset($result['valid']) && $result['valid'] == 'false') {
         return $this->_checkVatID_EU($vatNumber, $country_iso_code);
         return 0; // VAT-ID is NOT valid
-      } elseif(is_array($result) && isset($result['faultstring'])) {
+      } elseif (is_array($result) && isset($result['faultstring'])) {
         return $this->vat_errors[$result['faultstring']];
       }      
     }
@@ -256,7 +275,7 @@ class vat_validation {
     if ($client) {
       try {
         $result = $client->checkVat($params);
-        if($result->valid == true){
+        if ($result->valid == true){
           return 1;  // VAT-ID is valid
         } else {
           return 0;   // VAT-ID is NOT valid
@@ -283,7 +302,7 @@ class vat_validation {
 
         $number = substr(str_replace($country, '', strtolower($vat_id)), 1);
 
-        if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($number) == 8 && is_numeric($number)) {
           return 1;
         } else {
           return 0;
@@ -298,7 +317,7 @@ class vat_validation {
 
         $number = str_replace($country, '', strtolower($vat_id));
 
-        if(strlen($number) == 10 && is_numeric($number)) {
+        if (strlen($number) == 10 && is_numeric($number)) {
           return 1;
         } else {
           return 0;
@@ -310,14 +329,14 @@ class vat_validation {
 
         $number = str_replace($country, '', strtolower($vat_id));
 
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
           }
-        } elseif(strlen($vat_id) == 12) {
-          if(strlen($number) == 10 && is_numeric($number)) {
+        } elseif (strlen($vat_id) == 12) {
+          if (strlen($number) == 10 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -337,7 +356,7 @@ class vat_validation {
 
         $number = str_replace($country, '', strtolower($vat_id));
 
-        if(strlen($number) == 9) {
+        if (strlen($number) == 9) {
           return 1;
         } else {
           return 0;
@@ -347,20 +366,20 @@ class vat_validation {
       // tschechische republik
       case 'cz' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
           }
-        } elseif(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        } elseif (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
           }
-        } elseif(strlen($vat_id) == 12) {
-          if(strlen($number) == 10 && is_numeric($number)) {
+        } elseif (strlen($vat_id) == 12) {
+          if (strlen($number) == 10 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -374,8 +393,8 @@ class vat_validation {
       // deutschland
       case 'de' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -389,8 +408,8 @@ class vat_validation {
       // dänemark
       case 'dk' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -403,8 +422,8 @@ class vat_validation {
       // estland
       case 'ee' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -417,8 +436,8 @@ class vat_validation {
       // griechenland
       case 'el' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -431,8 +450,8 @@ class vat_validation {
       // spanien
       case 'es' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9) {
             return 1;
           } else {
             return 0;
@@ -445,8 +464,8 @@ class vat_validation {
       // finnland
       case 'fi' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -459,8 +478,8 @@ class vat_validation {
       // frankreich
       case 'fr' :
         $number = substr(str_replace($country, '', strtolower($vat_id)),2);
-        if(strlen($vat_id) == 13) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 13) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -473,14 +492,14 @@ class vat_validation {
       // england
       case 'gb' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9) {
             return 1;
           } else {
             return 0;
           }
-        } elseif(strlen($vat_id) == 14) {
-          if(strlen($number) == 12) {
+        } elseif (strlen($vat_id) == 14) {
+          if (strlen($number) == 12) {
             return 1;
           } else {
             return 0;
@@ -493,8 +512,8 @@ class vat_validation {
       // ungarn
       case 'hu' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -507,8 +526,8 @@ class vat_validation {
       // irland
       case 'ie' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8) {
             return 1;
           } else {
             return 0;
@@ -521,8 +540,8 @@ class vat_validation {
       // italien
       case 'it' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 13) {
-          if(strlen($number) == 11 && is_numeric($number)) {
+        if (strlen($vat_id) == 13) {
+          if (strlen($number) == 11 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -535,14 +554,14 @@ class vat_validation {
       // litauen
       case 'lt' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
           }
-        } elseif(strlen($vat_id) == 14) {
-          if(strlen($number) == 12 && is_numeric($number)) {
+        } elseif (strlen($vat_id) == 14) {
+          if (strlen($number) == 12 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -555,8 +574,8 @@ class vat_validation {
       // luxemburg
       case 'lu' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -569,8 +588,8 @@ class vat_validation {
       // lettland
       case 'lv' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 13) {
-          if(strlen($number) == 11 && is_numeric($number)) {
+        if (strlen($vat_id) == 13) {
+          if (strlen($number) == 11 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -583,8 +602,8 @@ class vat_validation {
       // malta
       case 'mt' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -596,8 +615,8 @@ class vat_validation {
       // niederlande
       case 'nl' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 14) {
-          if(strlen($number) == 12) {
+        if (strlen($vat_id) == 14) {
+          if (strlen($number) == 12) {
             return 1;
           } else {
             return 0;
@@ -610,8 +629,8 @@ class vat_validation {
       // polen
       case 'pl' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 12) {
-          if(strlen($number) == 10 && is_numeric($number)) {
+        if (strlen($vat_id) == 12) {
+          if (strlen($number) == 10 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -624,8 +643,8 @@ class vat_validation {
       // portugal
       case 'pt' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -639,8 +658,8 @@ class vat_validation {
       case 'ro' :
         $number = str_replace($country, '', strtolower($vat_id));
 
-        if(strlen($vat_id) > 1 && strlen($vat_id) < 11) {
-          if(is_numeric($number)) {
+        if (strlen($vat_id) > 1 && strlen($vat_id) < 11) {
+          if (is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -653,8 +672,8 @@ class vat_validation {
       // schweden
       case 'se' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 14) {
-          if(strlen($number) == 12 && is_numeric($number)) {
+        if (strlen($vat_id) == 14) {
+          if (strlen($number) == 12 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -667,8 +686,8 @@ class vat_validation {
       // slowenien
       case 'sl' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -681,8 +700,8 @@ class vat_validation {
       // slowenien
       case 'sk' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 12) {
-          if(strlen($number) == 10 && is_numeric($number)) {
+        if (strlen($vat_id) == 12) {
+          if (strlen($number) == 10 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
