@@ -75,7 +75,7 @@ if (xtc_db_num_rows($dbQuery)) {
       echo '<div class="main pdg2">'.PHP_EOL;
       
       echo '<div class="main pdg2">'.PHP_EOL;
-      if (count($product_select) > 1) {
+      if (count($product_select) > 0) {
         echo xtc_draw_pull_down_menu('current_product_id', $product_select).PHP_EOL;
       } else {
         echo 'You have no products at this time.'.PHP_EOL;
@@ -88,7 +88,7 @@ if (xtc_db_num_rows($dbQuery)) {
       echo '<div class="main pdg2"><br /><strong>'.SELECT_COPY.'</strong><br /></div>'.PHP_EOL;
 
       echo '<div class="main pdg2">'.PHP_EOL;
-      if (count($products_copy) > 1) {
+      if (count($products_copy) > 0) {
         echo xtc_draw_pull_down_menu('copy_product_id', $products_copy).PHP_EOL;
       } else {
         echo 'No products to copy attributes from'.PHP_EOL;
