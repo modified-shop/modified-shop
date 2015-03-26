@@ -78,10 +78,10 @@ if (!isset($_SESSION['billto'])) {
 if (!isset($_SESSION['sendto']) || $_SESSION['sendto'] == "") {
   $_SESSION['sendto'] = $_SESSION['billto'];
 }
-require (DIR_WS_CLASSES . 'order.php');
+require_once (DIR_WS_CLASSES . 'order.php');
 $order = new order();
 
-require (DIR_WS_CLASSES . 'order_total.php'); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
+require_once (DIR_WS_CLASSES . 'order_total.php'); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
 $order_total_modules = new order_total(); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
 
 $total_weight = $_SESSION['cart']->show_weight();

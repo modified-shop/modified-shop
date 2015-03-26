@@ -72,7 +72,7 @@ if(isset($_SESSION['payment']) && $_SESSION['payment'] == 'paypalexpress') {
 }
 ### Paypal Express Modul
 
-require (DIR_WS_CLASSES.'order.php');
+require_once (DIR_WS_CLASSES.'order.php');
 $order = new order();
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
@@ -102,12 +102,12 @@ if ($order->delivery['country']['iso_code_2'] != '') {
 	$_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
 }
 // load all enabled shipping modules
-require (DIR_WS_CLASSES.'shipping.php');
+require_once (DIR_WS_CLASSES.'shipping.php');
 $shipping_modules = new shipping;
 
 $free_shipping = false;
-require (DIR_WS_MODULES.'order_total/ot_shipping.php');
-include (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
+require_once (DIR_WS_MODULES.'order_total/ot_shipping.php');
+include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
 $ot_shipping = new ot_shipping;
 $ot_shipping->process();
 

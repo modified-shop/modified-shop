@@ -75,8 +75,8 @@ if (!isset($_SESSION['payment'])) {
 $payment_modules = new payment($_SESSION['payment']);
 
 // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
-require (DIR_WS_CLASSES . 'order_total.php');
-require (DIR_WS_CLASSES . 'order.php');
+require_once (DIR_WS_CLASSES . 'order_total.php');
+require_once (DIR_WS_CLASSES . 'order.php');
 $order = new order();
 
 $payment_modules->update_status();
@@ -109,7 +109,7 @@ if (is_array($payment_modules->modules)) {
 }
 
 // load the selected shipping module
-require (DIR_WS_CLASSES . 'shipping.php');
+require_once (DIR_WS_CLASSES . 'shipping.php');
 $shipping_modules = new shipping($_SESSION['shipping']);
 
 if (SHOW_IP_LOG == 'true') {

@@ -42,14 +42,14 @@ $smarty = new Smarty;
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // load selected payment module
-require_once  (DIR_WS_CLASSES.'payment.php');
+require_once(DIR_WS_CLASSES.'payment.php');
 if (isset($_SESSION['credit_covers'])) {
   $_SESSION['payment'] = ''; //ICW added for CREDIT CLASS 
 }
 $payment_modules = new payment($_SESSION['payment']);
 
 // load the selected shipping module
-require (DIR_WS_CLASSES.'shipping.php');
+require_once(DIR_WS_CLASSES.'shipping.php');
 $shipping_modules = new shipping($_SESSION['shipping']);
 
 require_once(DIR_WS_CLASSES.'order.php');
@@ -58,7 +58,7 @@ $order = new order();
 // load the before_process function from the payment modules
 $payment_modules->before_process();
 
-require (DIR_WS_CLASSES.'order_total.php');
+require_once(DIR_WS_CLASSES.'order_total.php');
 $order_total_modules = new order_total();
 $order_totals = $order_total_modules->process();
 
