@@ -1635,3 +1635,9 @@ color: #d34040;
 .admin_spacer{
 height: 42px;
 }
+
+/*fix for disable sumoselect*/
+.SumoSelect { 
+display: inline-block; 
+position: relative; 
+}
