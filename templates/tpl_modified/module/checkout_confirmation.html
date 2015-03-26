@@ -56,7 +56,7 @@
 {/if}
 {if $PAYMENT_METHOD != ''}
 <div class="twoColums{if $SHIPPING_METHOD} last{/if}">
-  <div class="highlightbox plainright">
+  <div class="highlightbox {if $SHIPPING_METHOD}plainright{else}plainleft{/if}">
     <h4 class="checkout">{#text_payment_method#} <a class="midi" href="{$PAYMENT_EDIT}">{#text_edit#}</a></h4>
     {$PAYMENT_METHOD}
   </div>
@@ -74,7 +74,7 @@
 {/if}
 {if $PAYMENT_INFORMATION != ''}
 <div class="twoColums{if $ORDER_COMMENTS != ''} last stickyright{/if}">
-  <div class="highlightbox plainright">
+  <div class="highlightbox {if $ORDER_COMMENTS != ''}plainright{else}plainleft{/if}">
     <h4 class="checkout">{#text_payment_info#}</h4>
     <table class="paymentinfotable">
       <tr>
