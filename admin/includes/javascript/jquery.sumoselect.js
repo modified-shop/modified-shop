@@ -1,5 +1,5 @@
 ﻿/*!
- * jquery.sumoselect - v1.2.3
+ * jquery.sumoselect - v1.2.4
  * http://hemantnegi.github.io/jquery.sumoselect
  * 2015-03-12 //add autoWidth, minWidth, addWidth, maxAddWidth, consoleLog, fix element is disabled  by web28, www.rpa-com.de
  *
@@ -71,8 +71,9 @@
                     }
                     if (settings.autoWidth && elmtagName == 'select') {
                       var selWidth = parseInt(O.E.outerWidth());
+                      if (settings.consoleLog) console.log('cloneWidth' + elmName + '|' + O.E.width());
                       //Fix element is disabled
-                      if (selWidth < 1) {
+                      if (O.E.width() < 1) { //Fix for opera use width()
                         var clone = O.E.clone();
                         clone.css("visibility","hidden");
                         $('body').append(clone);
