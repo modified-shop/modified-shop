@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Shopgate GmbH
  *
@@ -20,57 +21,75 @@
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
-class ShopgatePluginInitHelper {
-	
+class ShopgatePluginInitHelper
+{
+
 	public function defineXtcValidationConstant()
 	{
-		if(!defined('_VALID_XTC')){
+		if (!defined('_VALID_XTC')) {
 			define('_VALID_XTC', true);
 		}
-		
+
 		if (!defined('DIR_FS_LANGUAGES')) {
-			define('DIR_FS_LANGUAGES', rtrim(DIR_FS_CATALOG, '/'). '/lang/');
+			define('DIR_FS_LANGUAGES', rtrim(DIR_FS_CATALOG, '/') . '/lang/');
 		}
 	}
-	
+
 	public function includeNeededFiles()
 	{
+		// needs to be included before everything else because of the constant PROJECT_MAJOR_VERSION
+
+		require_once(DIR_FS_CATALOG . 'admin/includes/version.php');
+
 		$requiredFiles = array(
 			'inc/xtc_validate_password.inc.php',
 			'inc/xtc_format_price_order.inc.php',
-			//'inc/xtc_db_prepare_input.inc.php',
-			'includes/classes/xtcPrice.php',
+			'includes/classes/xtcPrice.php'
 		);
-		
-		foreach($requiredFiles as $file) {
-			if(file_exists(DIR_FS_CATALOG.$file)){
-				require_once(DIR_FS_CATALOG.$file);
+
+		if (!defined('PROJECT_MAJOR_VERSION')) {
+			$requiredFiles[] = 'inc/xtc_db_prepare_input.inc.php';
+		} else {
+			$requiredFiles[] = 'inc/db_functions_mysql.inc.php';
+		}
+
+		foreach ($requiredFiles as $file) {
+			if (file_exists(DIR_FS_CATALOG . $file)) {
+				require_once(DIR_FS_CATALOG . $file);
 			}
 		}
 	}
-	
+
 	/**
 	 * @param $language
 	 */
 	public function includeShopgateLanguageFile($language)
 	{
-		$languageFile = DIR_FS_CATALOG.'includes/external/shopgate/base/lang/'.$language.'/modules/payment/shopgate.php';
-		if(file_exists($languageFile)){
+		$languageFile = DIR_FS_CATALOG . 'includes/external/shopgate/base/lang/' . $language . '/modules/payment/shopgate.php';
+		if (file_exists($languageFile)) {
 			require_once($languageFile);
 		}
 	}
 	
+	public function includeShopgateWrapper()
+	{
+		$wrapperFile = DIR_FS_CATALOG . 'includes/external/shopgate/base/shopgate_wrapper.php';
+		if (file_exists($wrapperFile)) {
+			require_once($wrapperFile);
+		}
+	}
+
 	/**
 	 * include ShopgateConfig file
 	 */
 	public function includeShopgateConfig()
 	{
-		$configFile = DIR_FS_CATALOG.'includes/external/shopgate/base/shopgate_config.php';
-		if(file_exists($configFile)){
+		$configFile = DIR_FS_CATALOG . 'includes/external/shopgate/base/shopgate_config.php';
+		if (file_exists($configFile)) {
 			require_once($configFile);
 		}
 	}
-	
+
 	/**
 	 * @param $country
 	 *
@@ -79,26 +98,27 @@ class ShopgatePluginInitHelper {
 	public function getDefaultCountryId($country)
 	{
 		// fetch country
-		$qry = "SELECT * FROM `".TABLE_COUNTRIES."` WHERE UPPER(countries_iso_code_2) = UPPER('".$country."')";
+		$qry = "SELECT * FROM `" . TABLE_COUNTRIES . "` WHERE UPPER(countries_iso_code_2) = UPPER('" . $country . "')";
 		$result = xtc_db_query($qry);
 		$qry = xtc_db_fetch_array($result);
 		return !empty($qry['countries_id']) ? $qry['countries_id'] : 'DE';
 	}
-	
+
 	/**
 	 * @param $defaultLanguage
 	 * @param $languageId
 	 * @param $language
 	 */
-	public function getDefaultLanguageData($defaultLanguage, &$languageId, &$language){
+	public function getDefaultLanguageData($defaultLanguage, &$languageId, &$language)
+	{
 		// fetch language
-		$qry = "SELECT * FROM `".TABLE_LANGUAGES."` WHERE UPPER(code) = UPPER('".$defaultLanguage."')";
+		$qry = "SELECT * FROM `" . TABLE_LANGUAGES . "` WHERE UPPER(code) = UPPER('" . $defaultLanguage . "')";
 		$result = xtc_db_query($qry);
 		$qry = xtc_db_fetch_array($result);
 		$languageId = !empty($qry['languages_id']) ? $qry['languages_id'] : 2;
 		$language = !empty($qry['directory']) ? $qry['directory'] : 'german';
 	}
-	
+
 	/**
 	 * @param $defaultCurrency
 	 * @param $exchangeRate
@@ -108,7 +128,7 @@ class ShopgatePluginInitHelper {
 	public function getDefaultCurrencyData($defaultCurrency, &$exchangeRate, &$currencyId, &$currency)
 	{
 		// fetch currency
-		$qry = "SELECT * FROM `".TABLE_CURRENCIES."` WHERE UPPER(code) = UPPER('".$defaultCurrency."')";
+		$qry = "SELECT * FROM `" . TABLE_CURRENCIES . "` WHERE UPPER(code) = UPPER('" . $defaultCurrency . "')";
 		$result = xtc_db_query($qry);
 		$qry = xtc_db_fetch_array($result);
 		$exchangeRate = !empty($qry['value']) ? $qry['value'] : 1;

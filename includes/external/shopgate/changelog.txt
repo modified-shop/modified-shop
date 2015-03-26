@@ -1,7 +1,19 @@
 '''Deutsch'''
 
+'''Version 2.9.9'''
+* Kleine Anpassungen von Modified eCommerce bereitgestellt
+* Kompatibilitätsanpassungen zur neuen Modified eCommerce Version 2.00
+
+'''Version 2.9.8'''
+* Fehler im Produktbilder Export behoben
+
+'''Version 2.9.7'''
+* Fehler im Aufgeteilten Produktexport behoben
+
 '''Version 2.9.6'''
-* Link zu dem Shopgate-Wiki amgepasst 
+* Link zum Shopgate-Wiki angepasst
+* Fehler beim Export der Produktbilder behoben
+* leere Auswahlmöglichkeiten bei Artikelvarianten werden jetzt als doppelter Bindestrich (--) exportiert
 
 '''Version 2.9.5'''
 * nutzt die Shopgate Library 2.9.10
@@ -310,8 +322,20 @@
 
 '''English'''
 
+'''Version 2.9.9'''
+* Small changes provided by Modified eCommerce
+* Compatibility changes for the new version 2.00 of Modified eCommerce
+
+'''Version 2.9.8'''
+* fixed bug in product image export
+
+'''Version 2.9.7'''
+* bug in splitted product export fixed
+
 '''Version 2.9.6'''
-* link to the Shopgate-Wiki adapted
+* adapted link to the Shopgate wiki
+* fixed a bug in exporting product images
+* empty variation values are now exported as double dashes (--)
 
 '''Version 2.9.5'''
 * uses Shopgate Library 2.9.10

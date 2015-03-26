@@ -20,7 +20,7 @@
 *
 *  @author Shopgate GmbH <interfaces@shopgate.com>
 */
-define('SHOPGATE_PLUGIN_VERSION', '2.9.5');
+define('SHOPGATE_PLUGIN_VERSION', '2.9.9');
 require_once(dirname(__FILE__) . '/Model/ShopgateModelLoader.php');
 require_once(dirname(__FILE__) . '/helper/ShopgatePluginInitHelper.php');
 /**
@@ -44,19 +44,21 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	/**
 	 * @var
 	 */
-	private $classWhiteList = array("item","category","review");
+	private $classWhiteList = array("item","category","review","coupon");
 
 	public function startup() {
 
 		$initHelper = new ShopgatePluginInitHelper();
 		$initHelper->defineXtcValidationConstant();
 		$initHelper->includeShopgateConfig();
+		$initHelper->includeShopgateWrapper();
 		$this->config = new ShopgateConfigModified();// initialize configuration
 		$initHelper->getDefaultLanguageData($this->config->getLanguage(), $this->languageId, $this->language);
 		$initHelper->getDefaultCurrencyData($this->config->getCurrency(), $this->exchangeRate, $this->currencyId, $this->currency);
 		$initHelper->includeNeededFiles();
 		$this->countryId = $initHelper->getDefaultCountryId($this->config->getCountry());// fetch country
 		$initHelper->includeShopgateLanguageFile($this->language);
+
 		
 		$modelLoader = new ShopgateModelLoader($this->classWhiteList);
 		$modelLoader->includeModels();
@@ -204,10 +206,10 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$return = array(
 			'modifed eCommerce Version' => '-',
 		);
-		
+
 		if(file_exists('admin/includes/version.php')){
 			$versionInfo = file_get_contents('admin/includes/version.php');
-			
+
 			if(preg_match('/define\(\'PROJECT_VERSION\',(.+)\)/', $versionInfo, $match)){
 				$return['modifed eCommerce Version'] = $match[1];
 			}
@@ -600,7 +602,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		// password's correct?
 		$customerData = xtc_db_fetch_array($customerResult);
-		if (!xtc_validate_password($pass, $customerData['customers_password'], $customerData['customers_id'])) {
+		if (defined('PROJECT_MAJOR_VERSION') && !xtc_validate_password($pass, $customerData['customers_password'], $customerData['customers_id'])
+            || !defined('PROJECT_MAJOR_VERSION') && !xtc_validate_password($pass, $customerData['customers_password'])) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_WRONG_USERNAME_OR_PASSWORD, 'User: '.$userUtf8);
 		}
 
@@ -1088,7 +1091,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 								"orders_status_id"=>$status,
 								"date_added"=>date( 'Y-m-d H:i:s'),
 								"customer_notified"=>false,
-								"comments"=>xtc_db_prepare_input($comments)
+								"comments"=>ShopgateWrapper::db_prepare_input($comments)
 							);
 						}
 
@@ -1118,7 +1121,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 								"orders_status_id"=>$status,
 								"date_added"=>date( 'Y-m-d H:i:s'),
 								"customer_notified"=>false,
-								"comments"=>xtc_db_prepare_input($comments)
+								"comments"=>ShopgateWrapper::db_prepare_input($comments)
 							);
 						}
 
@@ -1753,6 +1756,11 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$i=-1;
 		$old = null;
 		while($variation = xtc_db_fetch_array($query)) {
+			// empty option value names are not allowed at Shopgate, so display double dashes instead
+			if (trim($variation['products_options_values_name']) == '') {
+				$variation['products_options_values_name'] = '--';
+			}
+
 			if($variation["products_options_id"] != $old || is_null($old)){
 				$i++;
 				$old = $variation["products_options_id"];
@@ -1772,7 +1780,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 					for($i = $key+1; $i < count($singleOption); $i++) {
 						if(trim($singleOption[$i]['products_options_values_name']) == trim($optionVariation['products_options_values_name'])) {
 							$indexNumber++;
-							$options[$optionIndex][$i]['products_options_values_name'] .= " $indexNumber";
+							$options[$optionIndex][$i]['products_options_values_name'] = trim($singleOption[$i]['products_options_values_name']) . " $indexNumber";
 						}
 					}
 					// Add index 1 to the actual name if duplicate name-entries found
@@ -2356,7 +2364,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				"orders_status_id"=>$currentOrderStatus,
 				"date_added"=>date('Y-m-d H:i:s'),
 				"customer_notified"=>false,
-				"comments"=>xtc_db_prepare_input($comment),
+				"comments"=>ShopgateWrapper::db_prepare_input($comment),
 			)
 		);
 
@@ -2395,7 +2403,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 						"orders_status_id"=>$currentOrderStatus,
 						"date_added"=>date( 'Y-m-d H:i:s'),
 						"customer_notified"=>false,
-						"comments"=>xtc_db_prepare_input($comments)
+						"comments"=>ShopgateWrapper::db_prepare_input($comments)
 					);
 				}
 
@@ -2433,7 +2441,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 					"orders_status_id"=>$currentOrderStatus,
 					"date_added"=>date( 'Y-m-d H:i:s'),
 					"customer_notified"=>false,
-					"comments"=>xtc_db_prepare_input($comments)
+					"comments"=>ShopgateWrapper::db_prepare_input($comments)
 				);
 
 				break;
@@ -2495,7 +2503,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				"orders_status_id"=>$currentOrderStatus,
 				"date_added"=>date('Y-m-d H:i:s'),
 				"customer_notified"=>false,
-				"comments"=>xtc_db_prepare_input($paymentInformation)
+				"comments"=>ShopgateWrapper::db_prepare_input($paymentInformation)
 			);
 		} else {
 			return $paymentInformation;
@@ -2565,7 +2573,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				"orders_id"				=>	$dbOrderId,
 				"products_model"		=>	$dbProduct["products_model"],
 				"products_id"			=>	$item_number,
-				"products_name"			=>	xtc_db_prepare_input($orderItem->getName()),
+				"products_name"			=>	ShopgateWrapper::db_prepare_input($orderItem->getName()),
 				"products_price"		=>	$orderItem->getUnitAmountWithTax(),
 				"products_discount_made"=>	0,
 				"final_price"			=>	$orderItem->getQuantity() * ($orderItem->getUnitAmountWithTax()),
@@ -2795,7 +2803,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				"orders_status_id"=>$currentOrderStatus,
 				"date_added"=>date("Y-m-d H:i:s", time()-5),// "-5" Damit diese Meldung als erstes oben angezeigt wird
 				"customer_notified"=>false,
-				"comments"=>xtc_db_prepare_input($comments),
+				"comments"=>ShopgateWrapper::db_prepare_input($comments),
 			);
 
 			xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$history);
@@ -2937,7 +2945,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		
 		$ordersTotal = array();
 		$ordersTotal["orders_id"]		= $dbOrderId;
-		$ordersTotal["title"]			= xtc_db_prepare_input("Zwischensumme:");
+		$ordersTotal["title"]			= ShopgateWrapper::db_prepare_input("Zwischensumme:");
 		$ordersTotal["text"]			= $xtPrice->xtcFormat($order->getAmountItems(), true);
 		$ordersTotal["value"]			= $order->getAmountItems();
 		$ordersTotal["class"]			= "ot_subtotal";
@@ -2947,7 +2955,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		
 		$ordersTotal = array();
 		$ordersTotal["orders_id"]		= $dbOrderId;
-		$ordersTotal["title"]			= xtc_db_prepare_input("Versand:");
+		$ordersTotal["title"]			= ShopgateWrapper::db_prepare_input("Versand:");
 		$ordersTotal["text"]			= $xtPrice->xtcFormat($shippingCosts, true);
 		$ordersTotal["value"]			= $shippingCosts;
 		$ordersTotal["class"]			= "ot_shipping";
@@ -2963,7 +2971,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			
 			$ordersTotal = array();
 			$ordersTotal["orders_id"]		= $dbOrderId;
-			$ordersTotal["title"]			= xtc_db_prepare_input('Zahlungsartkosten'. (!empty($paymentInfos['shopgate_payment_name']) ? ' ('.$paymentInfos['shopgate_payment_name'].'):' : ''));
+			$ordersTotal["title"]			= ShopgateWrapper::db_prepare_input('Zahlungsartkosten'. (!empty($paymentInfos['shopgate_payment_name']) ? ' ('.$paymentInfos['shopgate_payment_name'].'):' : ''));
 			$ordersTotal["text"]			= $xtPrice->xtcFormat($order->getAmountShopPayment(), true);
 			$ordersTotal["value"]			= $order->getAmountShopPayment();
 			$ordersTotal["class"]			= "ot_shipping";
@@ -3315,7 +3323,11 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 					require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 					$password_encrypted =  xtc_RandomString(ENTRY_PASSWORD_MIN_LENGTH * 2);
 					$password = xtc_encrypt_password($password_encrypted);
-					xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "', password_request_time = now() where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
+          if (!defined('PROJECT_MAJOR_VERSION')) {
+            xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "' where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
+          } else {
+            xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "', password_request_time = now() where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
+          }
 					$smarty->assign('NEW_PASSWORD', $password_encrypted);
 				}
 				// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul

@@ -162,7 +162,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 		// Ahorn24 fix. 10 products were not found without sorting.
 		$qry .= ' ORDER BY p.products_id ASC ';
 		
-		if(!empty($this->exportLimit) && !empty($this->exportOffset)){
+		if(!is_null($this->exportLimit) && !is_null($this->exportOffset)){
 			$qry .= " LIMIT {$this->exportOffset}, {$this->exportLimit}";
 		}
 		
@@ -456,7 +456,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 	 * @return string
 	 */
 	private function getMainImageUrl(){
-		return HTTP_SERVER.$this->getLocalMainImagePath();
+		return HTTP_SERVER.DIR_WS_CATALOG.DIR_WS_ORIGINAL_IMAGES;
 	}
 	
 	/**
@@ -470,7 +470,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 	 * @return string
 	 */
 	private function getThumbImageUrl(){
-		return HTTP_SERVER.$this->getLocalThumbImagePath();
+		return HTTP_SERVER.DIR_WS_CATALOG.DIR_WS_POPUP_IMAGES;
 	}
 	
 	/**

@@ -32,7 +32,7 @@ if (MODULE_PAYMENT_SHOPGATE_STATUS == 'True' && $admin_access['shopgate'] == 1) 
 	$displayCssClass = 'menuBoxContentLink';
 	$linkNamePrefix  = ' -';
 
-	if (defined('NEW_ADMIN_STYLE')) {
+	if (defined('NEW_ADMIN_STYLE') && defined('PROJECT_MAJOR_VERSION')) {
 		$surroundingHtml = array(
 			'start'	=>	'<li>' .
 						'<a class="menuBoxContentLinkSub" href="#">-'.BOX_SHOPGATE.'</a>' .

@@ -345,40 +345,13 @@ if (defined('RUN_MODE_ADMIN')) {
 </style>
 </head>
 <?php $tableClass = 'dataTableContent'; ?>
-<body>
-
-	<!-- header //-->
-	<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-	<!-- header_eof //-->
-
-	<!-- body //-->
-  <table class="tableBody">
-    <tr>
-      <?php //left_navigation
-      if (USE_ADMIN_TOP_MENU == 'false') {
-        echo '<td class="columnLeft2">'.PHP_EOL;
-        echo '<!-- left_navigation //-->'.PHP_EOL;       
-        require_once(DIR_WS_INCLUDES . 'column_left.php');
-        echo '<!-- left_navigation eof //-->'.PHP_EOL; 
-        echo '</td>'.PHP_EOL;      
-      }
-      ?>
-      <!-- body_text //-->
-			<td class="boxCenter">
-        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_modules.png'); ?></div>
-        <div class="pageHeading pdg2">Shopgate</div>
-        <div class="main">Modules</div>   
-				<table class="tableCenter">
-          <tr>
-            <td valign="middle" class="dataTableHeadingContent" style="width:250px;">
-              <?php echo SHOPGATE_CONFIG_TITLE; ?>
-            </td>
-            <td valign="middle" class="dataTableHeadingContent">
-              <a href="<?php echo xtc_href_link('modules.php', 'set=payment&module=shopgate'); ?>"><u>Einstellungen</u></a>  
-            </td>
-          </tr>
-					<tr style="height: 100%;">
-						<td class="main" style="height: 100%; vertical-align: top;" colspan="2">
+<?php
+if (defined('PROJECT_MAJOR_VERSION')) {
+    require(DIR_FS_CATALOG . 'includes/external/shopgate/base/admin/templates/shopgate_header_v2.php');
+} else {
+    require(DIR_FS_CATALOG . 'includes/external/shopgate/base/admin/templates/shopgate_header_v1.php');
+}
+?>
 						<?php if(!empty($shopgate_message)):?>
 							<div class="shopgate_red_message">
 								<strong style="color: red;"><?php echo SHOPGATE_CONFIG_ERROR; ?></strong>
@@ -557,14 +530,14 @@ if (defined('RUN_MODE_ADMIN')) {
 													<div>
 														<select name="_shopgate_config[currency]">
 															<?php if (!in_array($shopgateConfig['currency'], array_keys($sgCurrencies))): ?>
-								<option value="-"></option>
-							<?php endif; ?>
-							<?php foreach ($sgCurrencies as $sgCurrencyCode => $sgCurrency): ?>
-								<option value="<?php echo $sgCurrencyCode?>"
-									<?php echo $shopgateConfig["currency"]==$sgCurrencyCode?'selected=""':''?>>
-									<?php echo $sgCurrency ?>
-								</option>
-							<?php endforeach; ?>
+															<option value="-"></option>
+															<?php endif; ?>
+															<?php foreach ($sgCurrencies as $sgCurrencyCode => $sgCurrency): ?>
+															<option value="<?php echo $sgCurrencyCode?>"
+																<?php echo $shopgateConfig["currency"]==$sgCurrencyCode?'selected=""':''?>>
+																<?php echo $sgCurrency ?>
+															</option>
+															<?php endforeach; ?>
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_CURRENCY_DESCRIPTION; ?>
@@ -582,13 +555,13 @@ if (defined('RUN_MODE_ADMIN')) {
 													<div>
 														<select name="_shopgate_config[country]">
 															<?php if (!in_array($shopgateConfig['country'], array_keys($sgCountries))): ?>
-								<option value="-"></option>
-							<?php endif; ?>
-							<?php foreach ($sgCountries as $sgCountry): ?>
-								<option value="<?php echo $sgCountry["countries_iso_code_2"]?>" <?php echo $shopgateConfig["country"]==$sgCountry["countries_iso_code_2"]?'selected="selected"':''?>>
-									<?php echo $sgCountry["countries_name"]?>
-								</option>
-							<?php endforeach; ?>
+															<option value="-"></option>
+															<?php endif; ?>
+															<?php foreach ($sgCountries as $sgCountry): ?>
+															<option value="<?php echo $sgCountry["countries_iso_code_2"]?>" <?php echo $shopgateConfig["country"]==$sgCountry["countries_iso_code_2"]?'selected="selected"':''?>>
+																<?php echo $sgCountry["countries_name"]?>
+															</option>
+															<?php endforeach; ?>
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_COUNTRY_DESCRIPTION; ?>
@@ -606,14 +579,14 @@ if (defined('RUN_MODE_ADMIN')) {
 													<div>
 														<select name="_shopgate_config[tax_zone_id]">
 															<?php if (!in_array($shopgateConfig['tax_zone_id'], array_keys($sgTaxZones))): ?>
-								<option value="-"></option>
-							<?php endif; ?>
-							<?php foreach ($sgTaxZones as $sgTaxZone): ?>
-								<option value="<?php echo $sgTaxZone["geo_zone_id"]?>" <?php echo $shopgateConfig["tax_zone_id"]==$sgTaxZone["geo_zone_id"]?'selected=""':''?>>
-									<?php echo $sgTaxZone["geo_zone_name"]?>
-									(<?php echo $sgTaxZone["geo_zone_id"] ?>)
-								</option>
-							<?php endforeach; ?>
+															<option value="-"></option>
+															<?php endif; ?>
+															<?php foreach ($sgTaxZones as $sgTaxZone): ?>
+															<option value="<?php echo $sgTaxZone["geo_zone_id"]?>" <?php echo $shopgateConfig["tax_zone_id"]==$sgTaxZone["geo_zone_id"]?'selected=""':''?>>
+																<?php echo $sgTaxZone["geo_zone_name"]?>
+																(<?php echo $sgTaxZone["geo_zone_id"] ?>)
+															</option>
+															<?php endforeach; ?>
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_TAX_ZONE_DESCRIPTION; ?>
@@ -667,11 +640,11 @@ if (defined('RUN_MODE_ADMIN')) {
 													<div>
 														<select name="_shopgate_config[export_description_type]">
 															<?php foreach($sgExportDescriptionTypes as $sgDescriptionType => $sgDescriptionTypeName): ?>
-								<option value="<?php echo $sgDescriptionType; ?>"
-									<?php echo $shopgateConfig["export_description_type"]==$sgDescriptionType?'selected=""':''?>>
-									<?php echo $sgDescriptionTypeName; ?>
-								</option>
-							<?php endforeach; ?>
+															<option value="<?php echo $sgDescriptionType; ?>"
+																<?php echo $shopgateConfig["export_description_type"]==$sgDescriptionType?'selected=""':''?>>
+																<?php echo $sgDescriptionTypeName; ?>
+															</option>
+															<?php endforeach; ?>
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESCRIPTION; ?>
@@ -689,15 +662,15 @@ if (defined('RUN_MODE_ADMIN')) {
 													<div>
 														<select name="_shopgate_config[customer_price_group]">
 															<?php if (!in_array($shopgateConfig['customer_price_group'], array_keys($sgCustomerGroups)) && $shopgateConfig['customer_price_group'] != '0'): ?>
-								<option value="-"></option>
-							<?php endif; ?>
+															<option value="-"></option>
+															<?php endif; ?>
 															<option value="0"><?php echo SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_OFF; ?></option>
 															<?php foreach($sgCustomerGroups as $sgCustomerGroup): ?>
-								<option value="<?php echo $sgCustomerGroup["customers_status_id"]?>"
-									<?php echo $shopgateConfig["customer_price_group"]==$sgCustomerGroup["customers_status_id"]?'selected=""':''?>>
-									<?php echo $sgCustomerGroup["customers_status_name"]?>
-								</option>
-							<?php endforeach; ?>
+															<option value="<?php echo $sgCustomerGroup["customers_status_id"]?>"
+																<?php echo $shopgateConfig["customer_price_group"]==$sgCustomerGroup["customers_status_id"]?'selected=""':''?>>
+																<?php echo $sgCustomerGroup["customers_status_name"]?>
+															</option>
+															<?php endforeach; ?>
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_DESCRIPTION; ?>
@@ -764,14 +737,14 @@ if (defined('RUN_MODE_ADMIN')) {
 													<div>
 														<select name="_shopgate_config[customers_status_id]">
 															<?php if (!in_array($shopgateConfig['customers_status_id'], array_keys($sgCustomerGroups))): ?>
-								<option value="-"></option>
-							<?php endif; ?>
-							<?php foreach($sgCustomerGroups as $sgCustomerGroup): ?>
-								<option value="<?php echo $sgCustomerGroup["customers_status_id"]?>"
-									<?php echo $shopgateConfig["customers_status_id"]==$sgCustomerGroup["customers_status_id"]?'selected=""':''?>>
-									<?php echo $sgCustomerGroup["customers_status_name"]?>
-								</option>
-							<?php endforeach; ?>
+															<option value="-"></option>
+															<?php endif; ?>
+															<?php foreach($sgCustomerGroups as $sgCustomerGroup): ?>
+															<option value="<?php echo $sgCustomerGroup["customers_status_id"]?>"
+																<?php echo $shopgateConfig["customers_status_id"]==$sgCustomerGroup["customers_status_id"]?'selected=""':''?>>
+																<?php echo $sgCustomerGroup["customers_status_name"]?>
+															</option>
+															<?php endforeach; ?>
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_CUSTOMER_GROUP_DESCRIPTION; ?>
@@ -789,11 +762,11 @@ if (defined('RUN_MODE_ADMIN')) {
 													<div>
 														<select name="_shopgate_config[shipping]">
 															<?php foreach($sgInstalledShippingModules as $sgShippingModuleId => $sgShippingModuleName): ?>
-								<option value="<?php echo $sgShippingModuleId?>"
-									<?php echo $shopgateConfig["shipping"]==$sgShippingModuleId?'selected=""':''?>>
-									<?php echo $sgShippingModuleName ?>
-								</option>
-							<?php endforeach; ?>
+															<option value="<?php echo $sgShippingModuleId?>"
+																<?php echo $shopgateConfig["shipping"]==$sgShippingModuleId?'selected=""':''?>>
+																<?php echo $sgShippingModuleName ?>
+															</option>
+															<?php endforeach; ?>
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_SHIPPING_DESCRIPTION; ?>
@@ -811,21 +784,21 @@ if (defined('RUN_MODE_ADMIN')) {
 													<div>
 														<select name="_shopgate_config[order_status_open]">
 															<?php if (!in_array($shopgateConfig['order_status_open'], array_keys($sgOrderStates))): ?>
-								<option value="-"></option>
-							<?php endif; ?>
-							<?php foreach($sgOrderStates as $sgOrderState): ?>
-								<?php $selected = (
-									($shopgateConfig['order_status_open'] == $sgOrderState['orders_status_id']) &&
-									($shopgateConfig['language'] == $sgOrderState['code']))
-									? 'selected="selected"'
-									: ($shopgateConfig['order_status_open'] == $sgOrderState['orders_status_id'])
-										? 'selected="selected"'
-										: '';
-								?>
-								<option value="<?php echo $sgOrderState["orders_status_id"]?>" <?php echo $selected; ?>>
-									<?php echo $sgOrderState["orders_status_name"]?> (<?php echo $sgOrderState["orders_status_id"]?>)
-								</option>
-							<?php endforeach; ?>
+															<option value="-"></option>
+															<?php endif; ?>
+															<?php foreach($sgOrderStates as $sgOrderState): ?>
+															<?php $selected = (
+																	($shopgateConfig['order_status_open'] == $sgOrderState['orders_status_id']) &&
+																	($shopgateConfig['language'] == $sgOrderState['code']))
+																	? 'selected="selected"'
+																	: ($shopgateConfig['order_status_open'] == $sgOrderState['orders_status_id'])
+																		? 'selected="selected"'
+																		: '';
+															?>
+															<option value="<?php echo $sgOrderState["orders_status_id"]?>" <?php echo $selected; ?>>
+																<?php echo $sgOrderState["orders_status_name"]?> (<?php echo $sgOrderState["orders_status_id"]?>)
+															</option>
+															<?php endforeach; ?>
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_APPROVED_DESCRIPTION; ?>
@@ -843,21 +816,21 @@ if (defined('RUN_MODE_ADMIN')) {
 													<div>
 														<select name="_shopgate_config[order_status_shipping_blocked]">
 															<?php if (!in_array($shopgateConfig['order_status_shipping_blocked'], array_keys($sgOrderStates))): ?>
-								<option value="-"></option>
-							<?php endif; ?>
-							<?php foreach($sgOrderStates as $sgOrderState): ?>
-								<?php $selected = (
-									($shopgateConfig['order_status_shipping_blocked'] == $sgOrderState['orders_status_id']) &&
-									($shopgateConfig['language'] == $sgOrderState['code']))
-									? 'selected="selected"'
-									: ($shopgateConfig['order_status_shipping_blocked'] == $sgOrderState['orders_status_id'])
-										? 'selected="selected"'
-										: '';
-								?>
-								<option value="<?php echo $sgOrderState["orders_status_id"]?>" <?php echo $selected; ?>>
-									<?php echo $sgOrderState["orders_status_name"]?> (<?php echo $sgOrderState["orders_status_id"]?>)
-								</option>
-							<?php endforeach; ?>
+															<option value="-"></option>
+															<?php endif; ?>
+															<?php foreach($sgOrderStates as $sgOrderState): ?>
+															<?php $selected = (
+																	($shopgateConfig['order_status_shipping_blocked'] == $sgOrderState['orders_status_id']) &&
+																	($shopgateConfig['language'] == $sgOrderState['code']))
+																	? 'selected="selected"'
+																	: ($shopgateConfig['order_status_shipping_blocked'] == $sgOrderState['orders_status_id'])
+																		? 'selected="selected"'
+																		: '';
+															?>
+															<option value="<?php echo $sgOrderState["orders_status_id"]?>" <?php echo $selected; ?>>
+																<?php echo $sgOrderState["orders_status_name"]?> (<?php echo $sgOrderState["orders_status_id"]?>)
+															</option>
+															<?php endforeach; ?>
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_BLOCKED_DESCRIPTION; ?>
@@ -875,21 +848,21 @@ if (defined('RUN_MODE_ADMIN')) {
 													<div>
 														<select name="_shopgate_config[order_status_shipped]">
 															<?php if (!in_array($shopgateConfig['order_status_shipped'], array_keys($sgOrderStates))): ?>
-								<option value="-"></option>
-							<?php endif; ?>
-							<?php foreach($sgOrderStates as $sgOrderState): ?>
-								<?php $selected = (
-									($shopgateConfig['order_status_shipped'] == $sgOrderState['orders_status_id']) &&
-									($shopgateConfig['language'] == $sgOrderState['code']))
-									? 'selected="selected"'
-									: ($shopgateConfig['order_status_shipped'] == $sgOrderState['orders_status_id'])
-										? 'selected="selected"'
-										: '';
-								?>
-								<option value="<?php echo $sgOrderState["orders_status_id"]?>" <?php echo $selected; ?>>
-									<?php echo $sgOrderState["orders_status_name"]?> (<?php echo $sgOrderState["orders_status_id"]?>)
-								</option>
-							<?php endforeach; ?>
+															<option value="-"></option>
+															<?php endif; ?>
+															<?php foreach($sgOrderStates as $sgOrderState): ?>
+															<?php $selected = (
+																	($shopgateConfig['order_status_shipped'] == $sgOrderState['orders_status_id']) &&
+																	($shopgateConfig['language'] == $sgOrderState['code']))
+																	? 'selected="selected"'
+																	: ($shopgateConfig['order_status_shipped'] == $sgOrderState['orders_status_id'])
+																		? 'selected="selected"'
+																		: '';
+															?>
+															<option value="<?php echo $sgOrderState["orders_status_id"]?>" <?php echo $selected; ?>>
+																<?php echo $sgOrderState["orders_status_name"]?> (<?php echo $sgOrderState["orders_status_id"]?>)
+															</option>
+															<?php endforeach; ?>
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SENT_DESCRIPTION; ?>
@@ -907,22 +880,22 @@ if (defined('RUN_MODE_ADMIN')) {
 													<div>
 														<select name="_shopgate_config[order_status_cancled]">
 															<?php if (!in_array($shopgateConfig['order_status_cancled'], array_keys($sgOrderStates)) && $shopgateConfig['customer_price_group'] != '-1'): ?>
-								<option value="-"></option>
-							<?php endif; ?>
+															<option value="-"></option>
+															<?php endif; ?>
 															<option value="-1"><?php echo SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED_NOT_SET; ?></option>
 															<?php foreach($sgOrderStates as $sgOrderState): ?>
-								<?php $selected = (
-									($shopgateConfig['order_status_cancled'] == $sgOrderState['orders_status_id']) &&
-									($shopgateConfig['language'] == $sgOrderState['code']))
-									? 'selected="selected"'
-									: ($shopgateConfig['order_status_cancled'] == $sgOrderState['orders_status_id'])
-										? 'selected="selected"'
-										: '';
-								?>
-								<option value="<?php echo $sgOrderState["orders_status_id"]?>" <?php echo $selected; ?>>
-									<?php echo $sgOrderState["orders_status_name"]?> (<?php echo $sgOrderState["orders_status_id"]?>)
-								</option>
-							<?php endforeach; ?>
+															<?php $selected = (
+																	($shopgateConfig['order_status_cancled'] == $sgOrderState['orders_status_id']) &&
+																	($shopgateConfig['language'] == $sgOrderState['code']))
+																	? 'selected="selected"'
+																	: ($shopgateConfig['order_status_cancled'] == $sgOrderState['orders_status_id'])
+																		? 'selected="selected"'
+																		: '';
+															?>
+															<option value="<?php echo $sgOrderState["orders_status_id"]?>" <?php echo $selected; ?>>
+																<?php echo $sgOrderState["orders_status_name"]?> (<?php echo $sgOrderState["orders_status_id"]?>)
+															</option>
+															<?php endforeach; ?>
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED_DESCRIPTION; ?>
@@ -961,10 +934,10 @@ if (defined('RUN_MODE_ADMIN')) {
 													<div>
 														<select name="_shopgate_config[encoding]">
 															<?php foreach ($encodings as $encoding): ?>
-								<option <?php if ($shopgateConfig['encoding'] == $encoding) echo 'selected="selected"'; ?>>
-									<?php echo $encoding; ?>
-								</option>
-							<?php endforeach; ?>
+															<option <?php if ($shopgateConfig['encoding'] == $encoding) echo 'selected="selected"'; ?>>
+																<?php echo $encoding; ?>
+															</option>
+															<?php endforeach; ?>
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_ENCODING_DESCRIPTION; ?>
@@ -1011,9 +984,12 @@ if (defined('RUN_MODE_ADMIN')) {
 		<!-- body_text_eof //-->
 	</tr>
 </table>
-<!-- body_eof //-->
-<!-- footer //--><?php require(DIR_WS_INCLUDES . 'footer.php'); ?><!-- footer_eof //-->
-<br />
+	<!-- body_eof //-->
+
+	<!-- footer //-->
+	<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+	<!-- footer_eof //-->
+	<br />
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

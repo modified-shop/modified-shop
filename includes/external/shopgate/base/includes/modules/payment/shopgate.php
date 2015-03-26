@@ -123,11 +123,6 @@ class shopgate {
 	function remove() {
 		// MODULE_PAYMENT_SHOPGATE_ORDER_STATUS_ID - Keep this on removing for old installation
 		xtc_db_query("delete from ".TABLE_CONFIGURATION." where configuration_key in ('MODULE_PAYMENT_SHOPGATE_STATUS', 'MODULE_PAYMENT_SHOPGATE_ALLOWED', 'MODULE_PAYMENT_SHOPGATE_SORT_ORDER', 'MODULE_PAYMENT_SHOPGATE_ORDER_STATUS_ID')");
-		/*
-		if( !$this->checkColumn("shopgate", TABLE_ADMIN_ACCESS) ) {
-			xtc_db_query("alter table ".TABLE_ADMIN_ACCESS." DROP COLUMN shopgate");
-		}
-		*/
 	}
 
 	/**
