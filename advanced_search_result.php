@@ -215,7 +215,7 @@ if ($errorno) {
         }
         if (SEARCH_IN_MANU == 'true') {
            $where_str .= "OR m.manufacturers_name LIKE ('%".$keyword."%') ";
-           $where_str .= $ent_keyword ? "OR pd.manufacturers_name LIKE ('%".$ent_keyword."%') " : '';
+           $where_str .= $ent_keyword ? "OR m.manufacturers_name LIKE ('%".$ent_keyword."%') " : '';
         }
         $where_str .= "OR pd.products_name LIKE ('%".$keyword."%') ";
         $where_str .= $ent_keyword ? "OR pd.products_name LIKE ('%".$ent_keyword."%') " : '';
