@@ -49,7 +49,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <div class="main pdg2"><?php echo HTTP_CATALOG_SERVER; ?></div>
           </div>
           <div class="clear pdg2"></div>
-          <table class="tableCenter">          
+          <table class="tableCenter mrg5" style="width:900px">          
             <tr>
               <td class="smallText"><strong><?php echo TITLE_SERVER_HOST; ?></strong></td>
               <td class="smallText"><?php echo $system['host'] . ' (' . $system['ip'] . ')'; ?></td>
@@ -84,67 +84,56 @@ require (DIR_WS_INCLUDES.'head.php');
               <td colspan="3" class="smallText"><?php echo $system['php'] . ' (' . TITLE_ZEND_VERSION . ' ' . $system['zend'] . ')'; ?></td>
             </tr>
           </table>
-          <br/>          
-          <?php 
-          ob_start();
-          phpinfo();
-          $phpinfo = array('PHP Info' => array());
-          if (preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s', ob_get_clean(), $matches, PREG_SET_ORDER)){
-            foreach($matches as $match){
-              if (strlen($match[1])) {
-                $phpinfo[$match[1]] = array();
-              } elseif (isset($match[3])) {
-                $keys1 = array_keys($phpinfo);
-                $phpinfo[end($keys1)][$match[2]] = isset($match[4]) ? array($match[3], $match[4]) : $match[3];
-              } else {
-                $keys1 = array_keys($phpinfo);
-                $phpinfo[end($keys1)][] = $match[2];      
-              }
+        </td>
+      </tr>
+    </table>
+    
+    <table style="margin:0 auto">
+      <tr>
+        <td id="phpinfo" >
+          <style type="text/css">
+            #phpinfo{
+              font-family: sans-serif !important;
             }
-          }
-          echo '<table class="tableCenter">';
-          if (count($phpinfo) > 1) {
-            $first = true;
-            foreach($phpinfo as $name => $section) {
-              if ($first === false) {
-                echo '<tr class="dataTableRow"><td colspan="3" class="dataTableContent" style="height:30px;"></td></tr>';
-              }
-              echo '<tr class="dataTableHeadingRow">
-                      <td colspan="3" class="dataTableHeadingContent">'.$name.'</td>
-                    </tr>';
+            #phpinfo td {
+              max-width: 400px !important;
+              word-wrap: break-word !important;
+            }
+            #phpinfo td, th {
+              border: 1px solid #000000!important; 
+              font-size: 75% !important; 
+              vertical-align: baseline !important; 
+            }
+            #phpinfo h1 a{
+              font-size: 100% !important; 
+              font-weight:bold !important;
+            }
+            #phpinfo h2 a:hover{
+              font-size: 100% !important;
+              font-weight:bold !important;
+              font-family: sans-serif !important;
+            }
+          </style>
+          <?php
+          if (function_exists('ob_start')) {
+            ob_start();
+            phpinfo();
+            $phpinfo = ob_get_contents();
+            ob_end_clean();
 
-              foreach($section as $key => $val){
-                if(is_array($val)){
-                  echo '<tr class="dataTableRow'.((strtolower($key) == 'directive') ? 'Over' : '').'">
-                          <td class="dataTableContent" style="border-right: 1px solid #aaa;">'.$key.'</td>
-                          <td class="dataTableContent" style="border-right: 1px solid #aaa;">'.$val[0].'</td>
-                          <td class="dataTableContent">'.$val[1].'</td>
-                        </tr>';                  
-                } elseif (is_string($key)) {
-                  echo '<tr class="dataTableRow">
-                          <td class="dataTableContent" style="border-right: 1px solid #aaa;">'.$key.'</td>
-                          <td colspan="2" class="dataTableContent">'.$val.'</td>
-                        </tr>';
-                } else {
-                  echo '<tr class="dataTableRow">
-                          <td colspan="3" class="dataTableContent">'.$val.'</td>
-                        </tr>';
-                }
-              }
-              $first = false;
-            }
+            $phpinfo = str_replace('border: 1px', '', $phpinfo);
+            preg_match("!<style type=\"text/css\">(.+?)</style>!s", $phpinfo, $regs);
+            $regs[1] = str_replace("\n", "\n#phpinfo ", $regs[1]);
+            $regs[1] = str_replace("#phpinfo body", "body #phpinfo", $regs[1]);
+            $regs[1] .= '{}';
+            echo '<style type="text/css">' . $regs[1] . '</style>';
+            preg_match("!<body>(.+)</body>!s", $phpinfo, $regs);
+            echo $regs[1];
           } else {
-            echo '<tr class="dataTableHeadingRow">
-                    <td colspan="3" class="dataTableHeadingContent">PHP Info</td>
-                  </tr>';
-            echo '<tr class="dataTableRow">
-                    <td colspan="3" class="dataTableContent">Sorry, the phpinfo() function is not accessable. Perhaps, it is disabled <a href="http://php.net/manual/en/function.phpinfo.php">See the documentation.</a></td>
-                  </tr>';
+            phpinfo();
           }
-          echo '</table>';  
           ?>
         </td>
-        <!-- body_text_eof //-->
       </tr>
     </table>
     <!-- body_eof //-->
