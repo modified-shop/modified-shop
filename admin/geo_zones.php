@@ -24,6 +24,7 @@
   $cfg_max_display_countries_key = 'MAX_DISPLAY_NUMBER_OF_COUNTRIES';
   $page_max_display_countries_results = xtc_cfg_save_max_display_results($cfg_max_display_countries_key);
 
+
   switch ($_GET['saction']) {
     case 'insert_sub':
       $zID = xtc_db_prepare_input($_GET['zID']);
@@ -185,7 +186,7 @@ function update_zone(theForm) {
             <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, $page_max_display_countries_results, $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></div>
             <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, $page_max_display_countries_results, MAX_DISPLAY_PAGE_LINKS, $_GET['spage'], 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list', 'spage'); ?></div>
             <div class="clear"></div>
-            <?php echo draw_input_per_page($PHP_SELF,$page_max_display_countries_key,$page_max_display_countries_results); ?>
+            <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('zpage')),$cfg_max_display_countries_key,$page_max_display_countries_results); ?>
             <div class="smallText pdg2 flt-r"><?php if (!$_GET['saction']) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID']) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=new') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             } else {
@@ -227,7 +228,7 @@ function update_zone(theForm) {
             <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, $page_max_display_tax_results, $_GET['zpage'], TEXT_DISPLAY_NUMBER_OF_TAX_ZONES); ?></div>
             <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, $page_max_display_tax_results, MAX_DISPLAY_PAGE_LINKS, $_GET['zpage'], '', 'zpage'); ?></div>
             <div class="clear"></div>
-            <?php echo draw_input_per_page($PHP_SELF,$page_max_display_tax_key,$page_max_display_tax_results); ?> 
+            <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_tax_key,$page_max_display_tax_results); ?> 
             <div class="smallText pdg2 flt-r"><?php if (!$_GET['action']) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=new_zone') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             }
