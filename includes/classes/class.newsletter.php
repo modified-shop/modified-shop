@@ -331,6 +331,31 @@ class newsletter {
           $result = $api->receiverDelete(MODULE_CLEVERREACH_APIKEY, MODULE_CLEVERREACH_GROUP, $mail);
           break;
       }
+      
+      // get unsubscribed
+      $nl_unsubscribe_query = xtc_db_query("SELECT date_added
+                                              FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
+                                             WHERE mail_id < '".$newsletter['mail_id']."'
+                                          ORDER BY mail_id DESC
+                                             LIMIT 1");
+                                             
+      if (xtc_db_num_rows($nl_unsubscribe_query) > 0) {
+        $nl_unsubscribe = xtc_db_fetch_array($nl_unsubscribe_query);
+                                             
+        $page = 0;
+        do {
+          $filter = array('page' => $page++,
+                          'filter' => 'unsubscribed',
+                          'range_start' => date('d.m.Y H:i', strtotime($nl_unsubscribe['date_added'])),
+                          'range_end' => date('d.m.Y H:i', time())
+                          );
+          $return = $api->receiverGetByDate(MODULE_CLEVERREACH_APIKEY, MODULE_CLEVERREACH_GROUP, $filter);
+          if ($return->status == "SUCCESS") {
+            xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
+                                WHERE customers_email_address = '".xtc_db_input($return->data['email'])."'");
+          }        
+        } while ($return->data);
+      }
     }
   }
 
