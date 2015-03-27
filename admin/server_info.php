@@ -18,16 +18,12 @@
 
 require('includes/application_top.php');
 
-if (isset($_REQUEST['phpInfo'])) {
-  phpinfo();
-  exit;
-}
-
 $system = xtc_get_system_information();
-
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-
+<style type="text/css">
+  .dataTableContent a { float:right; }
+</style>
 </head>
 <body>
     <!-- header //-->
@@ -47,10 +43,13 @@ require (DIR_WS_INCLUDES.'head.php');
         ?>
         <!-- body_text //--> 
         <td class="boxCenter">
-        
-          <div class="pageHeading pgd2 mrg5"><?php echo HEADING_TITLE; ?></div>       
-        
-          <table class="tableCenter mrg5" style="width:900px">          
+          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
+          <div class="pageHeading pdg2 flt-l">
+            <?php echo HEADING_TITLE; ?>       
+            <div class="main pdg2"><?php echo HTTP_CATALOG_SERVER; ?></div>
+          </div>
+          <div class="clear pdg2"></div>
+          <table class="tableCenter">          
             <tr>
               <td class="smallText"><strong><?php echo TITLE_SERVER_HOST; ?></strong></td>
               <td class="smallText"><?php echo $system['host'] . ' (' . $system['ip'] . ')'; ?></td>
@@ -84,16 +83,66 @@ require (DIR_WS_INCLUDES.'head.php');
               <td class="smallText"><strong><?php echo TITLE_PHP_VERSION; ?></strong></td>
               <td colspan="3" class="smallText"><?php echo $system['php'] . ' (' . TITLE_ZEND_VERSION . ' ' . $system['zend'] . ')'; ?></td>
             </tr>
-          </table>           
-       
-          <iframe src="<?php echo xtc_href_link(basename($PHP_SELF), 'phpInfo', 'NONSSL'); ?>" style="width:100%;height:700px;border:solid 1px #a3a3a3;">
-          <p>Der verwendete Browser kann leider nicht mit inline Frames (iframe)
-             umgehen:
-             <a href="<?php echo xtc_href_link(basename($PHP_SELF), 'phpInfo', 'NONSSL'); ?>" target="_blank">Hier geht es zur phpinfo()
-             Seite vom System</a>
-          </p>
-          </iframe>
-        
+          </table>
+          <br/>          
+          <?php 
+          ob_start();
+          phpinfo();
+          $phpinfo = array('PHP Info' => array());
+          if (preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s', ob_get_clean(), $matches, PREG_SET_ORDER)){
+            foreach($matches as $match){
+              if (strlen($match[1])) {
+                $phpinfo[$match[1]] = array();
+              } elseif (isset($match[3])) {
+                $keys1 = array_keys($phpinfo);
+                $phpinfo[end($keys1)][$match[2]] = isset($match[4]) ? array($match[3], $match[4]) : $match[3];
+              } else {
+                $keys1 = array_keys($phpinfo);
+                $phpinfo[end($keys1)][] = $match[2];      
+              }
+            }
+          }
+          echo '<table class="tableCenter">';
+          if (count($phpinfo) > 1) {
+            $first = true;
+            foreach($phpinfo as $name => $section) {
+              if ($first === false) {
+                echo '<tr class="dataTableRow"><td colspan="3" class="dataTableContent" style="height:30px;"></td></tr>';
+              }
+              echo '<tr class="dataTableHeadingRow">
+                      <td colspan="3" class="dataTableHeadingContent">'.$name.'</td>
+                    </tr>';
+
+              foreach($section as $key => $val){
+                if(is_array($val)){
+                  echo '<tr class="dataTableRow'.((strtolower($key) == 'directive') ? 'Over' : '').'">
+                          <td class="dataTableContent" style="border-right: 1px solid #aaa;">'.$key.'</td>
+                          <td class="dataTableContent" style="border-right: 1px solid #aaa;">'.$val[0].'</td>
+                          <td class="dataTableContent">'.$val[1].'</td>
+                        </tr>';                  
+                } elseif (is_string($key)) {
+                  echo '<tr class="dataTableRow">
+                          <td class="dataTableContent" style="border-right: 1px solid #aaa;">'.$key.'</td>
+                          <td colspan="2" class="dataTableContent">'.$val.'</td>
+                        </tr>';
+                } else {
+                  echo '<tr class="dataTableRow">
+                          <td colspan="3" class="dataTableContent">'.$val.'</td>
+                        </tr>';
+                }
+              }
+              $first = false;
+            }
+          } else {
+            echo '<tr class="dataTableHeadingRow">
+                    <td colspan="3" class="dataTableHeadingContent">PHP Info</td>
+                  </tr>';
+            echo '<tr class="dataTableRow">
+                    <td colspan="3" class="dataTableContent">Sorry, the phpinfo() function is not accessable. Perhaps, it is disabled <a href="http://php.net/manual/en/function.phpinfo.php">See the documentation.</a></td>
+                  </tr>';
+          }
+          echo '</table>';  
+          ?>
         </td>
         <!-- body_text_eof //-->
       </tr>
