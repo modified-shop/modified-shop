@@ -118,8 +118,8 @@ class cash {
 		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_CASH_ORDER_STATUS_ID', '0', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
 	
 	  // install selfpickup
-	  if (is_file(DIR_FS_CATALOG_MODULES . 'payment/selfpickup.php')) {
-	    require_once(DIR_FS_CATALOG_MODULES . 'payment/selfpickup.php');
+	  if (is_file(DIR_FS_CATALOG_MODULES . 'shipping/selfpickup.php')) {
+	    require_once(DIR_FS_CATALOG_MODULES . 'shipping/selfpickup.php');
 	    $selfpickup = new selfpickup();
 	    if ($selfpickup->check() < 1) {
 	      $selfpickup->install();
