@@ -17,6 +17,13 @@
 
   require('includes/application_top.php');
 
+  //display per page
+  $cfg_max_display_tax_key = 'MAX_DISPLAY_NUMBER_OF_TAX_ZONES';
+  $page_max_display_tax_results = xtc_cfg_save_max_display_results($cfg_max_display_tax_key);
+
+  $cfg_max_display_countries_key = 'MAX_DISPLAY_NUMBER_OF_COUNTRIES';
+  $page_max_display_countries_results = xtc_cfg_save_max_display_results($cfg_max_display_countries_key);
+
   switch ($_GET['saction']) {
     case 'insert_sub':
       $zID = xtc_db_prepare_input($_GET['zID']);
@@ -153,7 +160,7 @@ function update_zone(theForm) {
               <?php
               $rows = 0;
               $zones_query_raw = "select a.association_id, a.zone_country_id, c.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name from " . TABLE_ZONES_TO_GEO_ZONES . " a left join " . TABLE_COUNTRIES . " c on a.zone_country_id = c.countries_id left join " . TABLE_ZONES . " z on a.zone_id = z.zone_id where a.geo_zone_id = " . $_GET['zID'] . " order by association_id";
-              $zones_split = new splitPageResults($_GET['spage'], '20', $zones_query_raw, $zones_query_numrows);
+              $zones_split = new splitPageResults($_GET['spage'], $page_max_display_countries_results, $zones_query_raw, $zones_query_numrows);
               $zones_query = xtc_db_query($zones_query_raw);
               while ($zones = xtc_db_fetch_array($zones_query)) {
                 $rows++;
@@ -175,9 +182,10 @@ function update_zone(theForm) {
               ?>
             </table>
             
-            <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, '20', $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['spage'], 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list', 'spage'); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, $page_max_display_countries_results, $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, $page_max_display_countries_results, MAX_DISPLAY_PAGE_LINKS, $_GET['spage'], 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list', 'spage'); ?></div>
             <div class="clear"></div>
+            <?php echo draw_input_per_page($PHP_SELF,$page_max_display_countries_key,$page_max_display_countries_results); ?>
             <div class="smallText pdg2 flt-r"><?php if (!$_GET['saction']) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID']) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=new') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             } else {
@@ -189,7 +197,7 @@ function update_zone(theForm) {
               </tr>
               <?php
                   $zones_query_raw = "select geo_zone_id, geo_zone_name, geo_zone_description, geo_zone_info, last_modified, date_added from " . TABLE_GEO_ZONES . " order by geo_zone_name";
-                  $zones_split = new splitPageResults($_GET['zpage'], '20', $zones_query_raw, $zones_query_numrows);
+                  $zones_split = new splitPageResults($_GET['zpage'], $page_max_display_tax_results, $zones_query_raw, $zones_query_numrows);
                   $zones_query = xtc_db_query($zones_query_raw);
                   while ($zones = xtc_db_fetch_array($zones_query)) {
                     if (((!$_GET['zID']) || (@$_GET['zID'] == $zones['geo_zone_id'])) && (!$zInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
@@ -216,9 +224,10 @@ function update_zone(theForm) {
                 ?>
             </table>
             
-            <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, '20', $_GET['zpage'], TEXT_DISPLAY_NUMBER_OF_TAX_ZONES); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['zpage'], '', 'zpage'); ?></div>
-            <div class="clear"></div>  
+            <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, $page_max_display_tax_results, $_GET['zpage'], TEXT_DISPLAY_NUMBER_OF_TAX_ZONES); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, $page_max_display_tax_results, MAX_DISPLAY_PAGE_LINKS, $_GET['zpage'], '', 'zpage'); ?></div>
+            <div class="clear"></div>
+            <?php echo draw_input_per_page($PHP_SELF,$page_max_display_tax_key,$page_max_display_tax_results); ?> 
             <div class="smallText pdg2 flt-r"><?php if (!$_GET['action']) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=new_zone') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             }
