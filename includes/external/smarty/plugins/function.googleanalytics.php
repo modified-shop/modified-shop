@@ -19,7 +19,7 @@
 
    Third party contributions:
    Snippets from http://webanalyse-news.de/xtcommerce-tracking-mit-google-analytics-tutorial/
-   and http://code.google.com/intl/de-DE/apis/analytics/docs/tracking/gaTrackingEcommerce.html
+   and https://developers.google.com/analytics/devguides/collection/gajs/
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -83,29 +83,34 @@ function smarty_function_googleanalytics($params, &$smarty) {
 function getOrderDetailsAnalytics() {
   global $last_order; // from checkout_success.php
 
-  $query = xtc_db_query("-- function.googleanalytics.php
-    SELECT value
-    FROM " . TABLE_ORDERS_TOTAL . "
-    WHERE orders_id = '" . $last_order . "' AND class='ot_shipping'");
-  $orders_total_shipping = xtc_db_fetch_array($query);
+  $shipping_query = xtc_db_query("-- function.googleanalytics.php
+                         SELECT value
+                           FROM " . TABLE_ORDERS_TOTAL . "
+                          WHERE orders_id = '" . (int)$last_order . "' 
+                            AND class='ot_shipping'");
+  $shipping = xtc_db_fetch_array($shipping_query);
 
-  $query = xtc_db_query("-- function.googleanalytics.php
-    SELECT value
-    FROM " . TABLE_ORDERS_TOTAL . "
-    WHERE orders_id = '" . $last_order . "' AND class='ot_tax'");
-  $orders_total_tax = xtc_db_fetch_array($query);
+  $tax_query = xtc_db_query("-- function.googleanalytics.php
+                         SELECT value
+                           FROM " . TABLE_ORDERS_TOTAL . "
+                          WHERE orders_id = '" . (int)$last_order . "' 
+                            AND class='ot_tax'");
+  $tax = xtc_db_fetch_array($tax_query);
 
-  $query = xtc_db_query("-- function.googleanalytics.php
-    SELECT value
-    FROM " . TABLE_ORDERS_TOTAL . "
-    WHERE orders_id = '" . $last_order . "' AND class='ot_total'");
-  $orders_total = xtc_db_fetch_array($query);
+  $total_query = xtc_db_query("-- function.googleanalytics.php
+                         SELECT value
+                           FROM " . TABLE_ORDERS_TOTAL . "
+                          WHERE orders_id = '" . (int)$last_order . "' 
+                            AND class='ot_total'");
+  $total = xtc_db_fetch_array($total_query);
 
-  $query = xtc_db_query("-- function.googleanalytics.php
-    SELECT customers_city, customers_state, customers_country
-    FROM " . TABLE_ORDERS . "
-    WHERE orders_id = '" . $last_order . "'");
-  $orders = xtc_db_fetch_array($query);
+  $location_query = xtc_db_query("-- function.googleanalytics.php
+                         SELECT customers_city,
+                                customers_state,
+                                customers_country
+                           FROM " . TABLE_ORDERS . "
+                          WHERE orders_id = '" . (int)$last_order . "'");
+  $location = xtc_db_fetch_array($location_query);
 
   /**
    * _gaq.push(['_addTrans',
@@ -121,35 +126,35 @@ function getOrderDetailsAnalytics() {
    *
    */
   $addTrans = sprintf("_gaq.push(['_addTrans','%s','%s','%s','%s','%s','%s','%s','%s']);\n",
-          $last_order,
-          STORE_NAME,
-          $orders_total['value'],
-          $orders_total_tax["value"],
-          $orders_total_shipping['value'],
-          $orders['customers_city'],
-          $orders['customers_state'],
-          $orders['customers_country']);
+    $last_order,
+    STORE_NAME,
+    $total['value'],
+    $tax["value"],
+    $shipping['value'],
+    $location['customers_city'],
+    $location['customers_state'],
+    $location['customers_country']
+  );
 
-  $query = xtc_db_query("-- function.googleanalytics.php
-    SELECT
-      categories_name,
-      p.products_id,
-      orders_products_id,
-      products_model,
-      products_name,
-      products_price,
-      products_quantity
-    FROM " . TABLE_ORDERS_PRODUCTS . " p,
-         " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc,
-         " . TABLE_CATEGORIES_DESCRIPTION . " cd
-    WHERE p.products_id = ptc.products_id
-    AND ptc.categories_id=cd.categories_id
-    AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-    AND orders_id='" . $last_order . "'
-    GROUP BY p.products_id");
+  $item_query = xtc_db_query("-- function.googleanalytics_universal.php
+                              SELECT cd.categories_name,
+                                     op.products_id,
+                                     op.orders_products_id,
+                                     op.products_model,
+                                     op.products_name,
+                                     op.products_price,
+                                     op.products_quantity
+                                FROM " . TABLE_ORDERS_PRODUCTS . " op
+                                JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+                                     ON op.products_id = p2c.products_id
+                                JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                                     ON p2c.categories_id = cd.categories_id
+                                        AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                               WHERE op.orders_id='" . (int)$last_order . "'
+                            GROUP BY op.products_id");
 
   $addItem = array();
-  while ($order = xtc_db_fetch_array($query)) {
+  while ($item = xtc_db_fetch_array($item_query)) {
     /**
      * _gaq.push(['_addItem',
      *    '1234', // order ID - required
@@ -162,14 +167,16 @@ function getOrderDetailsAnalytics() {
      *
      */
     $addItem[] = sprintf("_gaq.push(['_addItem','%s','%s','%s','%s','%s','%s']);\n",
-            $last_order,
-            $order['products_id'],
-            $order['products_name'],
-            $order['categories_name'],
-            $order['products_price'],
-            $order['products_quantity']);
+      $last_order,
+      $item['products_id'],
+      $item['products_name'],
+      $item['categories_name'],
+      $item['products_price'],
+      $item['products_quantity']
+    );
   }
   $trackTrans = "_gaq.push(['_trackTrans']);\n";
 
   return $addTrans . implode('', $addItem) . $trackTrans;
 }
+?>
