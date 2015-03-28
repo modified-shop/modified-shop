@@ -281,15 +281,15 @@ define('IMAGE_MANIPULATOR_DESC','Image Manipulator for GD2 or GD1<br /><br /><b>
 
 
 define('ACCOUNT_GENDER_TITLE' , 'Salutation');
-define('ACCOUNT_GENDER_DESC' , 'Display salutation in customer account');
+define('ACCOUNT_GENDER_DESC' , 'Display salutation upon customer account creation/editing');
 define('ACCOUNT_DOB_TITLE' , 'Date of Birth');
-define('ACCOUNT_DOB_DESC' , 'Display date of birth in customer account');
+define('ACCOUNT_DOB_DESC' , 'Display date of birth upon customer account creation/editing');
 define('ACCOUNT_COMPANY_TITLE' , 'Company');
-define('ACCOUNT_COMPANY_DESC' , 'Display company in customer account');
+define('ACCOUNT_COMPANY_DESC' , 'Display company upon customer account creation/editing');
 define('ACCOUNT_SUBURB_TITLE' , 'Suburb');
-define('ACCOUNT_SUBURB_DESC' , 'Display suburb in customer account');
+define('ACCOUNT_SUBURB_DESC' , 'Display suburb upon customer account creation/editing');
 define('ACCOUNT_STATE_TITLE' , 'State');
-define('ACCOUNT_STATE_DESC' , 'Display state in customer account');
+define('ACCOUNT_STATE_DESC' , 'Display state upon customer account creation/editing');
 
 define('DEFAULT_CURRENCY_TITLE' , 'Default Currency');
 define('DEFAULT_CURRENCY_DESC' , 'Currency to be used as default');

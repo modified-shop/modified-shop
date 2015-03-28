@@ -280,15 +280,15 @@ define('IMAGE_MANIPULATOR_DESC','Image Manipulator f&uuml;r GD2 oder GD1<br /><b
 
 
 define('ACCOUNT_GENDER_TITLE' , 'Anrede');
-define('ACCOUNT_GENDER_DESC' , 'Die Abfrage f&uuml;r die Anrede im Account benutzen');
+define('ACCOUNT_GENDER_DESC' , 'Anrede bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
 define('ACCOUNT_DOB_TITLE' , 'Geburtsdatum');
-define('ACCOUNT_DOB_DESC' , 'Die Abfrage f&uuml;r das Geburtsdatum im Account benutzen');
+define('ACCOUNT_DOB_DESC' , 'Geburtsdatum bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
 define('ACCOUNT_COMPANY_TITLE' , 'Firma');
-define('ACCOUNT_COMPANY_DESC' , 'Die Abfrage f&uuml;r die Firma im Account benutzen');
+define('ACCOUNT_COMPANY_DESC' , 'Firma bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
 define('ACCOUNT_SUBURB_TITLE' , 'Vorort');
-define('ACCOUNT_SUBURB_DESC' , 'Die Abfrage f&uuml;r den Vorort im Account benutzen');
+define('ACCOUNT_SUBURB_DESC' , 'Vorort bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
 define('ACCOUNT_STATE_TITLE' , 'Bundesland');
-define('ACCOUNT_STATE_DESC' , 'Die Abfrage f&uuml;r das Bundesland im Account benutzen');
+define('ACCOUNT_STATE_DESC' , 'Bundesland bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
 
 define('DEFAULT_CURRENCY_TITLE' , 'Standard W&auml;hrung');
 define('DEFAULT_CURRENCY_DESC' , 'W&auml;hrung die standardm&auml;ssig benutzt wird');
