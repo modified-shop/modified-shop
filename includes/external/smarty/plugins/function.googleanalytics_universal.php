@@ -14,7 +14,7 @@
 
    Usage: Put one of the following tags into the templates\yourtemplate\index.html at the bottom
    {googleanalytics_universal account=UA-XXXXXXX-X} or
-   {googleanalytics_universal account=UA-XXXXXXX-X trackOrders=true}
+   {googleanalytics_universal account=UA-XXXXXXX-X trackorders=true}
    where "UA-XXXXXXX-X" is your Google Analytics ID
 
    Released under the GNU General Public License
