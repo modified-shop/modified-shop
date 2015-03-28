@@ -59,7 +59,7 @@ $dbQuery = xtc_db_query(
    ORDER BY pd.products_name ASC
   ");
 if (xtc_db_num_rows($dbQuery)) {
-  $products_copy[] = array('id'=> '0', 'text'=> 'no copy' );
+  $products_copy[] = array('id'=> '0', 'text'=> TEXT_SELECT );
   while ($line = xtc_db_fetch_array($dbQuery)) {
     $products_copy[] = array('id'=> $line['products_id'], 'text'=> $line['products_name'] .' [' .$line['products_model'] . ']' ); 
   }
