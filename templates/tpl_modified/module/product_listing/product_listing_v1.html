@@ -12,7 +12,7 @@
 
 {if isset($CATEGORIES_LISTING)}{$CATEGORIES_LISTING}{/if}
 
-{if isset($MANUFACTURER_DROPDOWN)}
+{if isset($MANUFACTURER_DROPDOWN) && $MANUFACTURER_DROPDOWN != ''}
 <div class="filter_bar cf">
   <div class="manufacturer_filter">{$MANUFACTURER_DROPDOWN}</div>
 </div>
