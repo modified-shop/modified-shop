@@ -448,7 +448,7 @@ ALTER TABLE banktransfer DROP INDEX orders_id;
 ALTER TABLE banktransfer ADD KEY idx_orders_id (orders_id);
 ALTER TABLE campaigns_ip ADD KEY idx_campaign (campaign);
 ALTER TABLE coupon_gv_queue DROP INDEX uid;
-ALTER TABLE coupon_gv_queue ADD KEY idx_uid (unique_id, customer_id, order_id);
+ALTER TABLE coupon_gv_queue ADD KEY idx_customer_id (customer_id);
 ALTER TABLE tax_rates ADD KEY idx_tax_zone_id (tax_zone_id);
 ALTER TABLE zones_to_geo_zones ADD KEY idx_geo_zone_id (geo_zone_id);
 

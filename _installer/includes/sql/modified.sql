@@ -370,7 +370,7 @@ CREATE TABLE coupon_gv_queue (
   ipaddr VARCHAR(39) NOT NULL DEFAULT '',
   release_flag CHAR(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (unique_id),
-  KEY idx_uid (unique_id, customer_id, order_id)
+  KEY idx_customer_id (customer_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS coupon_redeem_track;
