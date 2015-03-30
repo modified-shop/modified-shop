@@ -1,6 +1,6 @@
 {config_load file="$language/lang_$language.conf" section="boxes"}
 {config_load file="lang_`$language`.custom"}
-{if count($box_content) > 0}
+{if isset($box_content) && count($box_content) > 0}
 <br />
 <div class="headline_big">{#heading_best_sellers#}</div>
 <div class="bxcarousel_box_bestseller">
