@@ -383,6 +383,7 @@ class categories {
     xtc_db_query("DELETE FROM ".TABLE_SPECIALS." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE products_id = '".(int)$product_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE xsell_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_IMAGES." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_DESCRIPTION." WHERE products_id = '".(int)$product_id."'");
