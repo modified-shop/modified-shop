@@ -108,14 +108,14 @@ if ($listing_split->number_of_rows > 0) {
       }
     }
     if ($current_category_id != '0') {
-      $module_smarty->assign('MANUFACTURER_IMAGE', (($manu_image != '') ? DIR_WS_BASE . $manu_image : ''));
+      $module_smarty->assign('MANUFACTURER_IMAGE', ((isset($manu_image) && $manu_image != '') ? DIR_WS_BASE . $manu_image : ''));
       $module_smarty->assign('MANUFACTURER_NAME', $manu['manufacturers_name']);
       $module_smarty->assign('MANUFACTURER_DESCRIPTION', $manu['manufacturers_description']);
       $module_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manu['manufacturers_id'], $manu['manufacturers_name']))); 
     } else {
       $category['categories_name'] = $manu['manufacturers_name'];
       $category['categories_description'] = $manu['manufacturers_description'];
-      $image = $manu_image;
+      $image = ((isset($manu_image) && $manu_image != '') ? $manu_image : '');
     }
   }
 
@@ -133,7 +133,7 @@ if ($listing_split->number_of_rows > 0) {
   $module_smarty->assign('CATEGORIES_NAME', isset($category['categories_name']) ? $category['categories_name'] : '');
   $module_smarty->assign('CATEGORIES_HEADING_TITLE', isset($category['categories_heading_title']) ? $category['categories_heading_title'] : '');
   $module_smarty->assign('CATEGORIES_DESCRIPTION', isset($category['categories_description']) ? $category['categories_description'] : '');
-  $module_smarty->assign('CATEGORIES_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
+  $module_smarty->assign('CATEGORIES_IMAGE', ((isset($image) && $image != '') ? DIR_WS_BASE . $image : ''));
 
   $listing_query = xtDBquery($listing_split->sql_query);
   while ($listing = xtc_db_fetch_array($listing_query, true)) {
