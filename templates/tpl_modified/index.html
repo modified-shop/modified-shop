@@ -27,7 +27,7 @@
 {* ENDE layout_logo *}
 
 <div id="layout_content" class="cf">
-  {if $home}
+  {if isset($home)}
     <div id="col_left">
       {if isset($box_CATEGORIES)}{$box_CATEGORIES}{/if}
       {if isset($box_ADD_QUICKIE)}{$box_ADD_QUICKIE}{/if}
@@ -56,7 +56,7 @@
       {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
     </div>
     {* ENDE col_right *}
-  {elseif $fullcontent}
+  {elseif isset($fullcontent)}
     <div id="col_full" class="cf">
       <div id="content_navbar">
         <ul class="contentnavigation"> 
