@@ -36,6 +36,7 @@ require (DIR_WS_INCLUDES.'head.php');
   font-size: 75% !important; 
   vertical-align: baseline !important; 
   padding: 4px 5px !important;
+  word-wrap: break-word !important;
 }
 #phpinfo h2{
   background-color: #ccc !important;
