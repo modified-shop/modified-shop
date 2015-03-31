@@ -59,10 +59,11 @@ require (DIR_WS_INCLUDES.'head.php');
   #phpinfo h2{
     background-color: #ccc !important;
     padding: 10px;
-    margin-bottom:0;
+    margin-bottom:0!important;
     border: 1px solid #666;
     border-bottom: none;
     margin-top: 20px !important;
+    width: 980px !important;
   }
   #phpinfo h2 a:hover{
     font-size: 100% !important;
