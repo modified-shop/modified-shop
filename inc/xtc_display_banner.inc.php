@@ -46,7 +46,9 @@
     if (xtc_not_null($banner['banners_html_text'])) {
       $banner_string = $banner['banners_html_text'];
     } elseif (xtc_not_null($banner['banners_url'])) {
-      $banner_string = '<a href="' . xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '" onclick="window.open(this.href); return false;">' . xtc_image(DIR_WS_IMAGES.'banner/' . $banner['banners_image'], $banner['banners_title']) . '</a>';
+      $banner_url = xtc_get_top_level_domain($banner['banners_url']);
+      $shop_url = xtc_get_top_level_domain(HTTP_SERVER);
+      $banner_string = '<a href="' . xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '"' . (($shop_url['new'] != $banner_url['new']) ? ' onclick="window.open(this.href); return false;"' : '') . '>' . xtc_image(DIR_WS_IMAGES.'banner/' . $banner['banners_image'], $banner['banners_title']) . '</a>';
     } else {
       $banner_string = xtc_image(DIR_WS_IMAGES.'banner/' . $banner['banners_image'], $banner['banners_title']);
     }
