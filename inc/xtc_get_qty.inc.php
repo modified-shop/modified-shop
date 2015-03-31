@@ -2,27 +2,22 @@
 /* -----------------------------------------------------------------------------------------
    $Id: xtc_get_qty.inc.php 899 2005-04-29 02:40:57Z hhgag $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
+   based on:
+   (c) 2006 XT-Commerce
+
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-function xtc_get_qty($products_id)  {
-
-    if (strpos($products_id,'{'))  {
-      $act_id=substr($products_id,0,strpos($products_id,'{'));
-    } else {
-      $act_id=$products_id;
-    }
-
-    //BOF - Dokuman - 2010-02-26 - set Undefined index
-    //return $_SESSION['actual_content'][$act_id]['qty'];
-    if (isset($_SESSION['actual_content'][$act_id]['qty']))
+  function xtc_get_qty($products_id)  {
+    $act_id = xtc_get_prid($products_id);
+    if (isset($_SESSION['actual_content'][$act_id]['qty'])) {
       return $_SESSION['actual_content'][$act_id]['qty'];
+    }
     return 0;
-    //EOF - Dokuman - 2010-02-26 - set Undefined index
-}
+  }
 ?>
