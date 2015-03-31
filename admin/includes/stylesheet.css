@@ -1641,8 +1641,3 @@ height: 42px;
 display: inline-block; 
 position: relative; 
 }
-
-/* Wrap source code in CKEditor */
-.cke_source {
-white-space: pre-wrap !important;
-}
