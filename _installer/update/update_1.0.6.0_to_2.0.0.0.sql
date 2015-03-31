@@ -542,4 +542,9 @@ ALTER TABLE customers ADD customers_login_time DATETIME DEFAULT '0000-00-00 00:0
 #GTB - 2015-03-19 - change payment_class
 ALTER TABLE orders MODIFY payment_class VARCHAR(64) NOT NULL;
 
+#GTB - 2015-03-31 - add logs
+ALTER TABLE admin_access ADD logs INT(1) NOT NULL DEFAULT 0 AFTER newsfeed;
+UPDATE admin_access SET logs = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET logs = 1 WHERE customers_id = 'groups' LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
