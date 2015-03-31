@@ -114,8 +114,13 @@ require (DIR_WS_INCLUDES.'head.php');
     <!-- body_text //-->
     <td class="boxCenter" width="100%" valign="top">
       <div class="div_box mrg5">
-        <div class="pageHeading pdg2"><?php echo TEXT_ACCOUNTING.' '.$allow_edit['customers_lastname'].' '.$allow_edit['customers_firstname']; ?></div>
-        <div class="div_box" style="margin-bottom:0;">
+        <div class="pageHeading pdg2"><?php echo TEXT_ACCOUNTING.' '.$allow_edit['customers_lastname'].' '.$allow_edit['customers_firstname'] . ' ['. (int)$_GET['cID'] .']'; ?></div>
+        <?php if ($_GET['cID'] == '1') { ?>
+        <div class="main important_info" style="margin-top: 5px;">
+          <?php  echo TEXT_ACCOUNTING_INFO ?> 
+        </div>
+        <?php } ?>
+        <div class="div_box" style="margin-top: 5px; margin-bottom:0;">
           <table class="tableBoxCenter collapse">
             <tr>
               <td colspan="2" class="main"><?php echo TXT_GROUPS; ?></td>
@@ -159,7 +164,14 @@ require (DIR_WS_INCLUDES.'head.php');
             <tr class="dataTableHeadingRow">
               <td class="dataTableHeadingContent" colspan="2" style="vertical-align:middle;"><?php echo TEXT_ACCESS; ?></td>
               <td class="dataTableHeadingContent" style="vertical-align:middle;"><?php echo TEXT_ALLOWED; ?></td>
-              <td class="dataTableHeadingContent txta-r"><div class="smallText"><a class="button" href="#" onclick="set_checkbox(1);"><?php echo BUTTON_SET; ?></a><a class="button" href="#" onclick="set_checkbox(0);"><?php echo BUTTON_UNSET; ?></a></div></td>
+              <td class="dataTableHeadingContent txta-r">
+                <div class="smallText">
+                  <a class="button" href="#" onclick="set_checkbox(1);"><?php echo BUTTON_SET; ?></a>
+                  <?php if ($_GET['cID'] != '1') { ?>
+                  <a class="button" href="#" onclick="set_checkbox(0);"><?php echo BUTTON_UNSET; ?></a>
+                  <?php } ?>
+                </div>
+              </td>
             </tr>
             <?php
             $customers_id = xtc_db_prepare_input($_GET['cID']);

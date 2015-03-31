@@ -44,6 +44,9 @@ input[type=checkbox] {
 	left: 2px;
 	position: absolute;
 }
+.checkator_source:disabled+.checkator:after { /* Disabled element dot*/
+background-color: #D4D0C8;
+}
 .checkator_source:focus+.checkator { /* Focused element */
 	border: 2px solid #cc0;
 }

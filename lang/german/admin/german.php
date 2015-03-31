@@ -568,6 +568,8 @@ define('CFG_TXT_ITEM', 'St&uuml;ck');
 define('CSRF_TOKEN_MANIPULATION', 'CSRFToken Manipulation (Aus Sicherheits-Aspekten ist es nicht mehr erlaubt im Adminbereich in verschiedenen Tabs zu arbeiten.)');
 define('CSRF_TOKEN_NOT_DEFINED', 'CSRFToken nicht definiert (Aus Sicherheits-Aspekten ist es nicht mehr erlaubt im Adminbereich in verschiedenen Tabs zu arbeiten.)');
 
+define('TEXT_ACCOUNTING_INFO','Dem Hauptadmin [1] k&ouml;nnen die Zugriffsrechte nicht entzogen werden!');
+
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);
 ?>
