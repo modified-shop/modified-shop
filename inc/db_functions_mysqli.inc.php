@@ -69,7 +69,7 @@
   function xtc_db_set_charset($charset, $link='db_link') {
     global $$link;
     
-    if (function_exists('mysql_set_charset')) { //requires MySQL 5.0.7 or later
+    if (function_exists('mysqli_set_charset')) { //requires MySQL 5.0.7 or later
       mysqli_set_charset($$link, $charset);
     } else {
       xtc_db_query('SET NAMES '.$charset);
