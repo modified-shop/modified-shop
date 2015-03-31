@@ -23,70 +23,51 @@ require (DIR_WS_INCLUDES.'head.php');
 ?>
 <style type="text/css">
   #phpinfo table {
-    word-wrap: break-word; 
     border-collapse: collapse;
-    padding: 2px;
-    width: 100% !important;
+    width: 980px !important;
+    font-family: sans-serif !important;
   }
-  #phpinfo .center table {
-    margin-top: 0px !important; 
-    text-align: left;
-    margin-bottom: 20px !important; 
-  }
-  #phpinfo .center th {
-    text-align: center !important;
-  }
-  #phpinfo .center tr {
-    line-height: 30px;
-  }
-  #phpinfo .center tr.v {
-    line-height: 12px;
+  #phpinfo td {
+    max-width: 400px !important;
+    word-wrap: break-word !important;
   }
   #phpinfo td, #phpinfo th {
-    border: 1px solid #666;
-    color: #000;
-    font-family: Verdana,Arial,sans-serif;
-    font-size: 10px !important;
-    padding: 3px;
+    font-size: 75% !important; 
     vertical-align: middle !important;
-  }
-  #phpinfo td.v:nth-child(2n+1) {
-    background: none repeat scroll 0 0 #fff !important;
-  }
-  #phpinfo .h {
-    background-color: #ccc !important; 
-    font-weight: bold;
-  }
-  #phpinfo .v {
-    background-color: #fafafa !important; 
-    line-height: 12px;
+    padding: 5px 2px !important; 
   }
   #phpinfo hr {
     width: 100% !important;
   }
-  #phpinfo h2 {
-    background-color: #ccc !important; 
-    font-weight: bold;
-    color: #6d2551;
-    padding: 10px;
-    margin-bottom:0;
-    border-top: 1px solid #666;
-    border-left: 1px solid #666;
-    border-right: 1px solid #666;
-    margin-top: 30px !important; 
-  }
-  #phpinfo tr.h {
-    margin-top:5px;
+  #phpinfo .h {
+    background-color: #ccc !important;
   }
   #phpinfo .e {
+    width: 300px;
     background-color: #cdd7b3 !important; 
-    width: 300px; 
-    font-weight: bold;
-    color: #000000;
-    font-family: Verdana,Arial,sans-serif;
-    font-size: 10px !important;
-    padding: 5px 2px;
-    vertical-align: middle !important;
+  }
+  #phpinfo .v {
+    background-color: #f2f2f2 !important; 
+  }
+  #phpinfo1 h1{
+    background-color: #ccc !important;
+  }
+  #phpinfo h1 a{
+    font-size: 100% !important; 
+    font-weight:bold !important;
+  }
+  #phpinfo h2{
+    background-color: #ccc !important;
+    padding: 10px;
+    margin-bottom:0;
+    border: 1px solid #666;
+    border-bottom: none;
+    margin-top: 20px !important;
+  }
+  #phpinfo h2 a:hover{
+    font-size: 100% !important;
+    font-weight:bold !important;
+    font-family: sans-serif !important;
   }
 </style>
 </head>
