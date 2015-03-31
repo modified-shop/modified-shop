@@ -108,78 +108,77 @@ require (DIR_WS_INCLUDES.'head.php');
         ?>
         <!-- body_text //--> 
         <td class="boxCenter">
-          <div class="div_box">
-            <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
-            <div class="pageHeading pdg2 flt-l">
-              <?php echo HEADING_TITLE; ?>       
-              <div class="main pdg2"><?php echo HTTP_CATALOG_SERVER; ?></div>
-            </div>
-            <div class="clear pdg2"></div>
-            <table class="tableCenter mrg5" style="width:900px">          
-              <tr>
-                <td class="smallText"><strong><?php echo TITLE_SERVER_HOST; ?></strong></td>
-                <td class="smallText"><?php echo $system['host'] . ' (' . $system['ip'] . ')'; ?></td>
-                <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo TITLE_DATABASE_HOST; ?></strong></td>
-                <td class="smallText"><?php echo $system['db_server'] . ' (' . $system['db_ip'] . ')'; ?></td>
-              </tr>
-              <tr>
-                <td class="smallText"><strong><?php echo TITLE_SERVER_OS; ?></strong></td>
-                <td class="smallText"><?php echo $system['system'] . ' ' . $system['kernel']; ?></td>
-                <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo TITLE_DATABASE; ?></strong></td>
-                <td class="smallText"><?php echo $system['db_version']; ?></td>
-              </tr>
-              <tr>
-                <td class="smallText"><strong><?php echo TITLE_SERVER_DATE; ?></strong></td>
-                <td class="smallText"><?php echo $system['date']; ?></td>
-                <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo TITLE_DATABASE_DATE; ?></strong></td>
-                <td class="smallText"><?php echo $system['db_date']; ?></td>
-              </tr>
-              <tr>
-                <td class="smallText"><strong><?php echo TITLE_SERVER_UP_TIME; ?></strong></td>
-                <td colspan="3" class="smallText"><?php echo $system['uptime']; ?></td>
-              </tr>
-              <tr>
-                <td colspan="4"><?php echo xtc_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
-              </tr>
-              <tr>
-                <td class="smallText"><strong><?php echo TITLE_HTTP_SERVER; ?></strong></td>
-                <td colspan="3" class="smallText"><?php echo $system['http_server']; ?></td>
-              </tr>
-              <tr>
-                <td class="smallText"><strong><?php echo TITLE_PHP_VERSION; ?></strong></td>
-                <td colspan="3" class="smallText"><?php echo $system['php'] . ' (' . TITLE_ZEND_VERSION . ' ' . $system['zend'] . ')'; ?></td>
-              </tr>
-            </table>
-            <br/>
-            <table style="margin:0 auto">
-              <tr>
-                <td id="phpinfo" >
-                  <?php
-                  if (function_exists('ob_start')) {
-                    ob_start();
-                    phpinfo();
-                    $phpinfo = ob_get_contents();
-                    ob_end_clean();
-
-                    $phpinfo = str_replace('border: 1px', '', $phpinfo);
-                    preg_match("!<style type=\"text/css\">(.+?)</style>!s", $phpinfo, $regs);
-                    $regs[1] = str_replace("\n", "\n#phpinfo ", $regs[1]);
-                    $regs[1] = str_replace("#phpinfo body", "body #phpinfo", $regs[1]);
-                    $regs[1] .= '{}';
-                    echo '<style type="text/css">' . $regs[1] . '</style>';
-                    preg_match("!<body>(.+)</body>!s", $phpinfo, $regs);
-                    echo $regs[1];
-                  } else {
-                    phpinfo();
-                  }
-                  ?>
-                </td>
-              </tr>
-            </table>
+          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
+          <div class="pageHeading pdg2 flt-l">
+            <?php echo HEADING_TITLE; ?>       
+            <div class="main pdg2"><?php echo HTTP_CATALOG_SERVER; ?></div>
           </div>
+          <div class="clear pdg2"></div>
+          <table class="tableCenter mrg5" style="width:900px">          
+            <tr>
+              <td class="smallText"><strong><?php echo TITLE_SERVER_HOST; ?></strong></td>
+              <td class="smallText"><?php echo $system['host'] . ' (' . $system['ip'] . ')'; ?></td>
+              <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo TITLE_DATABASE_HOST; ?></strong></td>
+              <td class="smallText"><?php echo $system['db_server'] . ' (' . $system['db_ip'] . ')'; ?></td>
+            </tr>
+            <tr>
+              <td class="smallText"><strong><?php echo TITLE_SERVER_OS; ?></strong></td>
+              <td class="smallText"><?php echo $system['system'] . ' ' . $system['kernel']; ?></td>
+              <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo TITLE_DATABASE; ?></strong></td>
+              <td class="smallText"><?php echo $system['db_version']; ?></td>
+            </tr>
+            <tr>
+              <td class="smallText"><strong><?php echo TITLE_SERVER_DATE; ?></strong></td>
+              <td class="smallText"><?php echo $system['date']; ?></td>
+              <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo TITLE_DATABASE_DATE; ?></strong></td>
+              <td class="smallText"><?php echo $system['db_date']; ?></td>
+            </tr>
+            <tr>
+              <td class="smallText"><strong><?php echo TITLE_SERVER_UP_TIME; ?></strong></td>
+              <td colspan="3" class="smallText"><?php echo $system['uptime']; ?></td>
+            </tr>
+            <tr>
+              <td colspan="4"><?php echo xtc_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
+            </tr>
+            <tr>
+              <td class="smallText"><strong><?php echo TITLE_HTTP_SERVER; ?></strong></td>
+              <td colspan="3" class="smallText"><?php echo $system['http_server']; ?></td>
+            </tr>
+            <tr>
+              <td class="smallText"><strong><?php echo TITLE_PHP_VERSION; ?></strong></td>
+              <td colspan="3" class="smallText"><?php echo $system['php'] . ' (' . TITLE_ZEND_VERSION . ' ' . $system['zend'] . ')'; ?></td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table>
+      
+    <table style="margin:10px auto">
+      <tr>
+        <td id="phpinfo" >
+          <?php
+          if (function_exists('ob_start')) {
+            ob_start();
+            phpinfo();
+            $phpinfo = ob_get_contents();
+            ob_end_clean();
+
+            //$phpinfo = str_replace('border: 1px', '', $phpinfo);
+            preg_match("!<style type=\"text/css\">(.+?)</style>!s", $phpinfo, $regs);
+            $regs[1] = str_replace("\n", "\n#phpinfo ", $regs[1]);
+            $regs[1] = str_replace("#phpinfo body", "body #phpinfo", $regs[1]);
+            $regs[1] .= '{}';
+            echo '<style type="text/css">' . $regs[1] . '</style>';
+            preg_match("!<body>(.+)</body>!s", $phpinfo, $regs);
+            echo $regs[1];
+          } else {
+            phpinfo();
+          }
+          ?>
+        </td>
+      </tr>
+    </table>
+         
     <!-- body_eof //-->
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
