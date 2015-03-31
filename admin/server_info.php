@@ -22,54 +22,53 @@ $system = xtc_get_system_information();
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 <style type="text/css">
-  #phpinfo table {
-    border-collapse: collapse;
-    width: 980px !important;
-    font-family: sans-serif !important;
-  }
-  #phpinfo td {
-    max-width: 400px !important;
-    word-wrap: break-word !important;
-  }
-  #phpinfo td, #phpinfo th {
-    font-size: 75% !important; 
-    vertical-align: middle !important;
-    padding: 5px 2px !important; 
-  }
-  #phpinfo hr {
-    width: 100% !important;
-  }
-  #phpinfo .h {
-    background-color: #ccc !important;
-  }
-  #phpinfo .e {
-    width: 300px;
-    background-color: #cdd7b3 !important; 
-  }
-  #phpinfo .v {
-    background-color: #f2f2f2 !important; 
-  }
-  #phpinfo1 h1{
-    background-color: #ccc !important;
-  }
-  #phpinfo h1 a{
-    font-size: 100% !important; 
-    font-weight:bold !important;
-  }
-  #phpinfo h2{
-    background-color: #ccc !important;
-    padding: 10px;
-    margin-bottom:0!important;
-    border: 1px solid #666;
-    border-bottom: none;
-    margin-top: 20px !important;
-    width: 980px !important;
-  }
-  #phpinfo h2 a:hover{
-    font-size: 100% !important;
-    font-weight:bold !important;
-    font-family: sans-serif !important;
-  }
+#phpinfo table {
+  border-collapse: collapse !important;
+  border: 0; width: 934px !important; 
+  box-shadow: 1px 2px 3px #ccc !important;
+}
+#phpinfo .center table {
+  margin: 0 auto !important; 
+  text-align: left !important;
+}
+#phpinfo td, th {
+  border: 1px solid #666 !important;
+  font-size: 75% !important; 
+  vertical-align: baseline !important; 
+  padding: 4px 5px !important;
+}
+#phpinfo h2{
+  background-color: #ccc !important;
+  padding: 10px !important;
+  margin-bottom:0 !important;
+  border: 1px solid #666 !important;
+  border-bottom: none !important;
+}
+#phpinfo h2 a:hover{
+  font-size: 100% !important;
+  font-weight:bold !important;
+  font-family: sans-serif !important;
+}
+#phpinfo .e {
+  background-color: #cdd7b3 !important; 
+  width: 300px !important;
+  font-weight: bold!important;
+}
+#phpinfo .h {
+  background-color: #ccc !important; 
+  font-weight: bold !important;
+}
+#phpinfo .v {
+  background-color: #f2f2f2 !important;
+  max-width: 300px !important;
+  overflow-x: auto !important;
+}
+#phpinfo hr {
+  width: 934px !important; 
+  background-color: #ccc !important; 
+  border: 0 !important; 
+  height: 1px !important;
+}
 </style>
 </head>
 <body>
