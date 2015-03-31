@@ -159,6 +159,7 @@ echo mainMenue(BOX_HEADING_TOOLS);
     if ($admin_access['whos_online'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_WHOS_ONLINE) . '" class="menuBoxContentLink"> -' . BOX_WHOS_ONLINE . '</a></li>';
     if ($admin_access['csv_backend'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CSV_BACKEND) . '" class="menuBoxContentLink"> -' . BOX_IMPORT . '</a></li>';
     if ($admin_access['parcel_carriers'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS) . '" class="menuBoxContentLink"> -' . BOX_PARCEL_CARRIERS . '</a></li>';
+    if ($admin_access['logs'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_LOGS) . '" class="menuBoxContentLink"> -' . BOX_LOGS . '</a></li>';
     if (isset($admin_access['paypal']) && $admin_access['paypal'] == '1') echo '<li><a href="' . xtc_href_link('paypal.php') . '" class="menuBoxContentLink"> -' . BOX_PAYPAL . '</a></li>';
 echo endMenue(BOX_HEADING_TOOLS);
 
