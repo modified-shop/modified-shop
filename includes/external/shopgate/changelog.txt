@@ -1,5 +1,9 @@
 '''Deutsch'''
 
+'''Version 2.9.10'''
+* Fehler beim Import von Bestellungen in sehr alten Shopsystemversionen behoben
+* Fehler beim Initialisieren des Plugins behoben
+
 '''Version 2.9.9'''
 * Kleine Anpassungen von Modified eCommerce bereitgestellt
 * Kompatibilitätsanpassungen zur neuen Modified eCommerce Version 2.00
@@ -321,6 +325,10 @@
 
 
 '''English'''
+
+'''Version 2.9.10'''
+* fixed a bug in importing orders for very old versions of the shopping cart
+* fixed a bug while initializing of the plugin
 
 '''Version 2.9.9'''
 * Small changes provided by Modified eCommerce

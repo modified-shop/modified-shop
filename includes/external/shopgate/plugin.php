@@ -20,7 +20,7 @@
 *
 *  @author Shopgate GmbH <interfaces@shopgate.com>
 */
-define('SHOPGATE_PLUGIN_VERSION', '2.9.9');
+define('SHOPGATE_PLUGIN_VERSION', '2.9.10');
 require_once(dirname(__FILE__) . '/Model/ShopgateModelLoader.php');
 require_once(dirname(__FILE__) . '/helper/ShopgatePluginInitHelper.php');
 /**
@@ -45,6 +45,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	 * @var
 	 */
 	private $classWhiteList = array("item","category","review","coupon");
+	
+	protected $modifiedVersion;
 
 	public function startup() {
 
@@ -70,6 +72,22 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		}
 		
 		$this->zoneId = $this->config->getTaxZoneId();
+		
+		if (file_exists(DIR_FS_CATALOG . "admin/includes/version.php")) {
+			$versionContent = file_get_contents(DIR_FS_CATALOG . "admin/includes/version.php");
+			if (preg_match_all("/define\(\s*'([^']+)'\,\s*'([^']+)'\);/si" , $versionContent , $resultVersion )) {
+				$resultVersion = end($resultVersion);
+				$this->modifiedVersion = $resultVersion[0];
+			}
+		}
+		
+		if (empty($this->modifiedVersion)) {
+			$this->modifiedVersion = PROJECT_VERSION;
+		}
+		
+		if ($version == 'xtcModified') {
+			$version = 0;
+		}
 		
 		return true;
 	}
@@ -1608,7 +1626,6 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	 * @return array|void
 	 */
 	public function checkCart(ShopgateCart $cart) {
-		include_once( rtrim(dirname(__FILE__),"/") . "/Model/ShopgateCouponModel.php");
 		$couponModel = new ShopgateCouponModel();
 		/* Shipping Methods BOF */
 		$result["shipping_methods"] = $this->getShipping($cart,$couponModel);
@@ -3137,24 +3154,10 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 	/**
 	 * @param $version
-	 * @param string $secondVersion
-	 * @return string
+	 * @return bool
 	 */
-	private function modifiedVersionCompare($version,$secondVersion = "" ){
-
-		if(!empty($secondVersion)){
-			return version_compare($version,$secondVersion);
-		}
-
-		$verstionArray = explode(" ",$version);
-		$result = "";
-		for($i = 0; $i<count($verstionArray);$i++){
-			if(strpos($verstionArray[$i], "v1.") !== false){
-				$result = substr($verstionArray[$i],1,count($verstionArray)-1);
-				break;
-			}
-		}
-		return $result;
+	private function assertMinimumVersion($version) {
+		return version_compare($this->modifiedVersion, $version, '>=');
 	}
 
 	/**
@@ -3163,6 +3166,10 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	 * @throws ShopgateLibraryException
 	 */
 	private function sendOrderEmail($insert_id, $userId){
+		if (!$this->assertMinimumVersion('1.00')) {
+			return;
+		}
+		
 		$_SESSION['customer_id'] = $userId;
 		require_once (DIR_FS_INC.'xtc_get_order_data.inc.php');
 		require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
@@ -3172,21 +3179,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			define('SEND_EMAILS', 'true');
 		}
 		
-		$version = "";
-		if(file_exists(DIR_FS_CATALOG . "admin/includes/version.php")){
-			$versionContent = file_get_contents(DIR_FS_CATALOG . "admin/includes/version.php");
-			if( $i = preg_match_all( "/define\(\s*'([^']+)'\,\s*'([^']+)'\);/si" , $versionContent , $resultVersion ) )
-			{
-				$resultVersion = end($resultVersion);
-				$version = $resultVersion[0];
-			}
-		}
-
-		if(empty($version)){
-			$version = PROJECT_VERSION;
-		}
-
-		if(version_compare($this->modifiedVersionCompare($version),"1.05") <= 0){
+		if(!$this->assertMinimumVersion('1.05')){
 			require_once(DIR_FS_CATALOG . "includes/external/shopgate/base/inc/shopgate_php_mail_older_shop_version.inc.php");
 			// check if customer is allowed to send this order!
 			$order_query_check = xtc_db_query("SELECT
