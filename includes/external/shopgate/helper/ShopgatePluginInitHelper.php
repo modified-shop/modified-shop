@@ -39,7 +39,9 @@ class ShopgatePluginInitHelper
 	{
 		// needs to be included before everything else because of the constant PROJECT_MAJOR_VERSION
 
-		require_once(DIR_FS_CATALOG . 'admin/includes/version.php');
+		if(file_exists(DIR_FS_CATALOG . 'admin/includes/version.php')){
+			require_once(DIR_FS_CATALOG . 'admin/includes/version.php');
+		}
 
 		$requiredFiles = array(
 			'inc/xtc_validate_password.inc.php',
