@@ -899,7 +899,7 @@ class categories {
     if ($duplicate_check['total'] < 1) {
       if ($dest_category_id != 0) {
         $sql_data_array = array('products_id' => $src_products_id,
-                                'categories_id' => $dest_categories_id);
+                                'categories_id' => $dest_category_id);
         xtc_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, $sql_data_array, 'update', "products_id = '".$src_products_id."' AND categories_id = '".$src_category_id."'");                   
       }
       if ($dest_category_id == 0) {
