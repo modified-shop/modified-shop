@@ -9,6 +9,7 @@
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------*/
+define('CHMOD_WRITEABLE', 0775);
 
   function scanDirectories($rootDir, $allData=array()) {
     $invisibleFileNames = array(".", "..", ".svn");
@@ -33,7 +34,7 @@
     return (
       is_writable($filename)
       ? true
-      : ( @chmod($filename, 0777) && is_writable($filename)
+      : ( @chmod($filename, CHMOD_WRITEABLE) && is_writable($filename)
           ? true
           : false
         )
@@ -124,7 +125,7 @@
       foreach ($files_to_check as $type => $files) {
         if ($type != 'rdirs') {
           foreach ($files as $file) {
-            if (!ftp_site($ftp, 'CHMOD 0777 '.$path.$file)) {
+            if (!ftp_site($ftp, 'CHMOD '.CHMOD_WRITEABLE.' '.$path.$file)) {
               if ($type == 'files') $error_flag = true;
               if ($type == 'dirs') $folder_flag = true;
               $ftp_message .= CHMOD_WAS_NOT_SUCCESSFUL.'<br />';
@@ -140,16 +141,17 @@
   foreach ($files_to_check as $type => $files) {
     foreach ($files as $file) {
       if ($type != 'rdirs') {
+        $current_permission = substr(sprintf('%o', fileperms(DIR_FS_CATALOG.$file)), -4);
         if (!is_make_writeable(DIR_FS_CATALOG.$file)) {
           if ($type == 'files') {
             $error_flag = true;
             $file_flag = true;
-            $message_arr['file_permission'][] = '<img src="images/icons/error.png" />&nbsp;'.DIR_FS_CATALOG.$file;
+            $message_arr['file_permission'][] = '<img src="images/icons/error.png" />&nbsp;['.$current_permission.'] '.DIR_FS_CATALOG.$file;
           }
           if ($type == 'dirs') {
             $error_flag = true;
             $folder_flag = true;
-            $message_arr['folder_permission'][] = '<img src="images/icons/error.png" />&nbsp;'.DIR_FS_CATALOG.$file;
+            $message_arr['folder_permission'][] = '<img src="images/icons/error.png" />&nbsp;['.$current_permission.'] '.DIR_FS_CATALOG.$file;
           }
         }
       } else {
