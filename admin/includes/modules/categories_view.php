@@ -664,39 +664,6 @@
              // ----------------------------------------------------------------------------------------------------- //
              ?>      
 
-              <tr>
-                <td colspan="11">
-                  <div style="padding-top:10px;">  
-                    <div class="smallText flt-l">
-                      <?php
-                      echo '<a class="btn btn-light" href="javascript:SwitchCheck()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a> | ';
-                      echo '<a class="btn btn-light" href="javascript:SwitchProducts()" onclick="this.blur()">' . TEXT_PRODUCTS . ' (' . $products_count . ')</a> | ';#BUTTON_SWITCH_PRODUCTS 
-                      echo '<a class="btn btn-light" href="javascript:SwitchCategories()" onclick="this.blur()">' . TEXT_CATEGORIES . ' (' . $categories_count . ')</a>';#BUTTON_SWITCH_CATEGORIES
-                      ?>
-                    </div>          
-                    <div class="smallText flt-r">
-                      <?php
-                      echo xtc_draw_form('forminactive', FILENAME_CATEGORIES, '', 'get');
-                      if (isset($_GET['cPath'])) {
-                        echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
-                      }
-                      echo '<label for="search_inactive">'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .' ';
-                      echo '<input type="checkbox" name="search_inactive" '.($search_inactive?' checked="checked"':'').' style="vertical-align:middle;" onclick="this.form.submit();">';
-                      echo '</label>';
-                      ?>
-                      </form>
-                  </div>              
-                </td>
-              </tr> 
-
-               <tr>
-                 <td colspan="11">
-                    <div style="border-top:1px solid #ccc;margin-top:10px;">
-                      <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
-                      <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'action', 'pID', 'cID')) ); ?></div>
-                    </div>
-                 </td>
-               </tr>
             </table>             
             <!-- categories and products table ENDS -->
           </td>
@@ -1042,7 +1009,7 @@
           } //end switch
           if ((xtc_not_null($heading)) && (xtc_not_null($contents))) {
             //display info box
-            echo '<td class="boxRight">' . "\n";
+            echo '<td class="boxRight" rowspan="3">' . "\n";
             $box = new box;
             echo $box->infoBox($heading, $contents);
             echo '</td>' . "\n";
@@ -1051,4 +1018,40 @@
           </form>
 
         </tr>
+
+              <tr>
+                <td>
+                  <div style="padding-top:10px;">  
+                    <div class="smallText flt-l">
+                      <?php
+                      echo '<a class="btn btn-light" href="javascript:SwitchCheck()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a> | ';
+                      echo '<a class="btn btn-light" href="javascript:SwitchProducts()" onclick="this.blur()">' . TEXT_PRODUCTS . ' (' . $products_count . ')</a> | ';#BUTTON_SWITCH_PRODUCTS 
+                      echo '<a class="btn btn-light" href="javascript:SwitchCategories()" onclick="this.blur()">' . TEXT_CATEGORIES . ' (' . $categories_count . ')</a>';#BUTTON_SWITCH_CATEGORIES
+                      ?>
+                    </div>          
+                    <div class="smallText flt-r">
+                      <?php
+                      echo xtc_draw_form('forminactive', FILENAME_CATEGORIES, '', 'get');
+                      if (isset($_GET['cPath'])) echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
+                      echo '<label for="search_inactive">'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .' ';
+                      echo '<input type="checkbox" name="search_inactive"  style="vertical-align:middle;" onclick="this.form.submit();" '.($search_inactive?' selected="selected"':'').'>';
+                      echo '</label>';
+                      ?>
+                      </form>
+                  </div>              
+                </td>
+                <td>          
+                </td>
+              </tr> 
+
+               <tr>
+                 <td>
+                    <div style="border-top:1px solid #ccc;margin-top:10px;">
+                      <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
+                      <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'action', 'pID', 'cID')) ); ?></div>
+                    </div>
+                 </td>
+                <td>          
+                </td>
+               </tr>
       </table>
