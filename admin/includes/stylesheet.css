@@ -1642,21 +1642,13 @@ display: inline-block;
 position: relative; 
 }
 
-
-.smallText.pdg2.flt-l input[type="text"] {
-    display: inline;
-    height: 14px;
-    line-height: 37px;
-    padding: 0 2px;
-    width: 39px;
-}
 .smallText.pdg2.flt-l .button {
-    background: url("../images/icon_save.gif") no-repeat;
+    background: url("../images/icon_save.png") no-repeat;
     border: medium none;
     cursor: pointer;
-    height: 13px;
+    height: 22px;
     position: relative;
     text-indent: -100px;
     top: -2px;
-    width: 13px;
+    width: 22px;
 }
