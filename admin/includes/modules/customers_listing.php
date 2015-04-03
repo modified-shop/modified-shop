@@ -22,15 +22,17 @@
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
           <div class="main pdg2"><?php echo BOX_HEADING_CUSTOMERS; ?></div>
         </div>
-        <div class="pageHeading flt-l" style="margin: 3px 40px;"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CREATE_ACCOUNT) . '">' . BUTTON_CREATE_ACCOUNT . '</a>'; ?></div>
-
-        <?php echo xtc_draw_form('status', FILENAME_CUSTOMERS, '', 'get');
-          $select_data = array ();
-          $select_data = array (array ('id' => '', 'text' => TEXT_SELECT), array ('id' => '100', 'text' => TEXT_ALL_CUSTOMERS));
-        ?>
-        <div class="smallText mrg5"><?php echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status',xtc_array_merge($select_data, $customers_statuses_array), isset($_GET['status']) ? $_GET['status'] : '', 'onChange="this.form.submit();"'); ?></div>
-        </form>
-
+        <div class="pageHeading flt-r" style="width:21%;text-align:right;padding:7px 2%">
+          <?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CREATE_ACCOUNT) . '">' . BUTTON_CREATE_ACCOUNT . '</a>'; ?>
+        </div>
+        <div class="pageHeading flt-r" style="margin: 8px 11px">
+          <?php echo xtc_draw_form('status', FILENAME_CUSTOMERS, '', 'get');
+            $select_data = array ();
+            $select_data = array (array ('id' => '', 'text' => TEXT_SELECT), array ('id' => '100', 'text' => TEXT_ALL_CUSTOMERS));
+          ?>
+          <div class="smallText mrg5"><?php echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status',xtc_array_merge($select_data, $customers_statuses_array), isset($_GET['status']) ? $_GET['status'] : '', 'onChange="this.form.submit();"'); ?></div>
+          </form>
+        </div>
         <div class="clear"></div>
 
         <table class="tableCenter">

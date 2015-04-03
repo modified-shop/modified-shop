@@ -140,34 +140,20 @@
       <div class="flt-l">
         <div class="pageHeading pdg2"><?php echo ($category_name['categories_name'] ? $category_name['categories_name'] : TEXT_TOP); ?></div>
         <div class="main pdg2"><?php echo HEADING_TITLE; ?></div>
-
       </div>
-      <div class="smallText pdg2 flt-l" style="margin-left:80px;">
-        <?php
-        echo xtc_draw_form('forminactive', FILENAME_CATEGORIES, '', 'get');
-        if (isset($_GET['cPath'])) {
-          echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
-        }
-        echo '<label for="search_inactive">'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .'</label>';
-        echo '<div style="display:inline;margin:0px 10px 0px 5px;">' . draw_on_off_selection('search_inactive', 'checkbox', $search_inactive, 'style="vertical-align:middle;" onclick="this.form.submit();"') . '</div>';
-        ?>
-        </form>
+      <div class="smallText pdg2 flt-r" style="width:25%;padding:10px 3px;text-align:right;">
+        <?php if ($cPath) echo '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) .  $cPath_back . '&cID=' . $current_category_id) . '">' . BUTTON_BACK . '</a>&nbsp;'; ?>
       </div>
-      <?php
-      if (CAT_VIEW_DROPDOWN) {
-      ?>
-        <div class="smallText pdg2 flt-l">
+      <?php if (CAT_VIEW_DROPDOWN) { ?>
+        <div class="smallText pdg2 flt-r" style="padding:10px 0">
          <?php
             echo xtc_draw_form('goto', FILENAME_CATEGORIES, '', 'get');
-            echo HEADING_TITLE_GOTO . ' ' . xtc_draw_pull_down_menu('cPath', xtc_get_category_tree(), $current_category_id, 'onchange="this.form.submit();"');
+            echo HEADING_TITLE_GOTO . ' ' . xtc_draw_pull_down_menu('cPath', xtc_get_category_tree(), $current_category_id, 'onchange="this.form.submit();" style="min-width:140px;"');
           ?>
           </form>
         </div>
       <?php
       }
-      ?> 
-
-      <?php
         //multi-actions form STARTS
         if ((isset($_POST['multi_categories']) && xtc_not_null($_POST['multi_categories'])) || (isset($_POST['multi_products']) && xtc_not_null($_POST['multi_products']))) {
           $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action_confirm' . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
@@ -671,11 +657,46 @@
                    ?>
                  </td>
                </tr>
+
                <?php
              // ----------------------------------------------------------------------------------------------------- //
              } //WHILE loop to display products ENDS
              // ----------------------------------------------------------------------------------------------------- //
-             ?>              
+             ?>      
+
+              <tr>
+                <td colspan="11">
+                  <div style="padding-top:10px;">  
+                    <div class="smallText flt-l">
+                      <?php
+                      echo '<a class="btn btn-light" href="javascript:SwitchCheck()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a> | ';
+                      echo '<a class="btn btn-light" href="javascript:SwitchProducts()" onclick="this.blur()">' . TEXT_PRODUCTS . ' (' . $products_count . ')</a> | ';#BUTTON_SWITCH_PRODUCTS 
+                      echo '<a class="btn btn-light" href="javascript:SwitchCategories()" onclick="this.blur()">' . TEXT_CATEGORIES . ' (' . $categories_count . ')</a>';#BUTTON_SWITCH_CATEGORIES
+                      ?>
+                    </div>          
+                    <div class="smallText flt-r">
+                      <?php
+                      echo xtc_draw_form('forminactive', FILENAME_CATEGORIES, '', 'get');
+                      if (isset($_GET['cPath'])) {
+                        echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
+                      }
+                      echo '<label for="search_inactive">'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .' ';
+                      echo '<input type="checkbox" name="search_inactive" '.($search_inactive?' checked="checked"':'').' style="vertical-align:middle;" onclick="this.form.submit();">';
+                      echo '</label>';
+                      ?>
+                      </form>
+                  </div>              
+                </td>
+              </tr> 
+
+               <tr>
+                 <td colspan="11">
+                    <div style="border-top:1px solid #ccc;margin-top:10px;">
+                      <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
+                      <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'action', 'pID', 'cID')) ); ?></div>
+                    </div>
+                 </td>
+               </tr>
             </table>             
             <!-- categories and products table ENDS -->
           </td>
@@ -1028,32 +1049,6 @@
           }
           ?>
           </form>
+
         </tr>
-        <tr>
-          <td>
-            <!-- PAGINATION-->
-            <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'action', 'pID', 'cID')) ); ?></div>
-          </td>
-          <td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td>            
-            <!-- bottom buttons --> 
-            <div style="padding-top:10px;">            
-              <div class="smallText flt-l"><?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br />' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?></div>
-              <div class="smallText flt-r">
-                <?php
-                if ($cPath) {
-                  echo '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) .  $cPath_back . '&cID=' . $current_category_id) . '">' . BUTTON_BACK . '</a>&nbsp;';
-                }
-                echo '<a class="button" href="javascript:SwitchCheck()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a>&nbsp;';
-                echo '<a class="button" href="javascript:SwitchProducts()" onclick="this.blur()">' . BUTTON_SWITCH_PRODUCTS . '</a>&nbsp;';
-                echo '<a class="button" href="javascript:SwitchCategories()" onclick="this.blur()">' . BUTTON_SWITCH_CATEGORIES . '</a>&nbsp;';
-                ?>
-              </div>
-            </div>              
-          </td>
-          <td>&nbsp;</td>
-        </tr>    
       </table>
