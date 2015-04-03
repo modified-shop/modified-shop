@@ -271,9 +271,7 @@
                   }
                 ?>
               </table>
-              <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></div>
-              <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
+
               <?php
               if (isset($_GET['search'])) {
               ?>
@@ -453,11 +451,24 @@
                 }
                 // display right box
                 if ((xtc_not_null($heading)) && (xtc_not_null($contents))) {
-                  echo '            <td class="boxRight">'."\n";
+                  echo '            <td class="boxRight" rowspan="3">'."\n";
                   $box = new box;
                   echo $box->infoBox($heading, $contents);
                   echo '          </td>'."\n";
                 }
               ?>
           </tr>
+
+          <tr>
+            <td>
+              <div class="smallText pdg2 flt-l">
+                <?php echo $customers_split->display_count($customers_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?>
+              </div>
+              <div class="smallText pdg2 flt-r">
+                <?php echo $customers_split->display_links($customers_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?>
+              </div>
+              <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
+            </td>
+          </tr>
+
         </table>
