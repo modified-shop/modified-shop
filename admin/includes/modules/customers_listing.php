@@ -22,17 +22,15 @@
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
           <div class="main pdg2"><?php echo BOX_HEADING_CUSTOMERS; ?></div>
         </div>
-        <div class="pageHeading flt-r" style="width:21%;text-align:right;padding:7px 2%">
-          <?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CREATE_ACCOUNT) . '">' . BUTTON_CREATE_ACCOUNT . '</a>'; ?>
-        </div>
-        <div class="pageHeading flt-r" style="margin: 8px 11px">
-          <?php echo xtc_draw_form('status', FILENAME_CUSTOMERS, '', 'get');
-            $select_data = array ();
-            $select_data = array (array ('id' => '', 'text' => TEXT_SELECT), array ('id' => '100', 'text' => TEXT_ALL_CUSTOMERS));
-          ?>
-          <div class="smallText mrg5"><?php echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status',xtc_array_merge($select_data, $customers_statuses_array), isset($_GET['status']) ? $_GET['status'] : '', 'onChange="this.form.submit();"'); ?></div>
-          </form>
-        </div>
+        <div class="pageHeading flt-l" style="margin: 3px 40px;"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CREATE_ACCOUNT) . '">' . BUTTON_CREATE_ACCOUNT . '</a>'; ?></div>
+
+        <?php echo xtc_draw_form('status', FILENAME_CUSTOMERS, '', 'get');
+          $select_data = array ();
+          $select_data = array (array ('id' => '', 'text' => TEXT_SELECT), array ('id' => '100', 'text' => TEXT_ALL_CUSTOMERS));
+        ?>
+        <div class="smallText mrg5"><?php echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status',xtc_array_merge($select_data, $customers_statuses_array), isset($_GET['status']) ? $_GET['status'] : '', 'onChange="this.form.submit();"'); ?></div>
+        </form>
+
         <div class="clear"></div>
 
         <table class="tableCenter">
@@ -271,7 +269,9 @@
                   }
                 ?>
               </table>
-
+              <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></div>
+              <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
               <?php
               if (isset($_GET['search'])) {
               ?>
@@ -451,24 +451,11 @@
                 }
                 // display right box
                 if ((xtc_not_null($heading)) && (xtc_not_null($contents))) {
-                  echo '            <td class="boxRight" rowspan="3">'."\n";
+                  echo '            <td class="boxRight">'."\n";
                   $box = new box;
                   echo $box->infoBox($heading, $contents);
                   echo '          </td>'."\n";
                 }
               ?>
           </tr>
-
-          <tr>
-            <td>
-              <div class="smallText pdg2 flt-l">
-                <?php echo $customers_split->display_count($customers_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?>
-              </div>
-              <div class="smallText pdg2 flt-r">
-                <?php echo $customers_split->display_links($customers_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?>
-              </div>
-              <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
-            </td>
-          </tr>
-
         </table>
