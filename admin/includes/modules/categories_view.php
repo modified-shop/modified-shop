@@ -746,7 +746,7 @@
                 $contents[] = array('text' => '</table>');
                 //add current category id, for moving products
                 $contents[] = array('text' => '<input type="hidden" name="src_category_id" value="' . $current_category_id . '">');
-                $contents[] = array('align' => 'center', 'text' => '<input class="button'.$dispnone'." type="submit" name="multi_move_confirm" value="' . BUTTON_MOVE . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . (isset($_GET['cPath']) ? 'cPath=' . $cPath : '') . '&pID=' . $pInfo->products_id . '&cID=' . $cInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<input class="button'.$dispnone.'" type="submit" name="multi_move_confirm" value="' . BUTTON_MOVE . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . (isset($_GET['cPath']) ? 'cPath=' . $cPath : '') . '&pID=' . $pInfo->products_id . '&cID=' . $cInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
               }
               // multi_move confirm ENDS
 
