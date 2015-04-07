@@ -70,10 +70,10 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   // check if tmp order need to be created
   if (isset($$_SESSION['payment']->form_action_url) && $$_SESSION['payment']->tmpOrders) {
     $tmp = true;
-    $tmp_status = $$_SESSION['payment']->tmpStatus;
+    $orders_status_id = $$_SESSION['payment']->tmpStatus;
   } else {
     $tmp = false;
-    $tmp_status = $order->info['order_status'];
+    $orders_status_id = $order->info['order_status'];
   }
 
   if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
@@ -136,7 +136,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'shipping_method' => $order->info['shipping_method'],
       'shipping_class' => $order->info['shipping_class'],
       'date_purchased' => 'now()',
-      'orders_status' => $tmp_status,
+      'orders_status' => $orders_status_id,
       'currency' => $order->info['currency'],
       'currency_value' => $order->info['currency_value'],
       'account_type' => $_SESSION['account_type'],
@@ -171,7 +171,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
   $sql_data_array = array (
       'orders_id' => $insert_id,
-      'orders_status_id' => $order->info['order_status'],
+      'orders_status_id' => $orders_status_id,
       'date_added' => 'now()',
       'customer_notified' => $customer_notification,
       'comments' => $order->info['comments']

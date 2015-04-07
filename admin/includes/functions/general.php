@@ -2004,7 +2004,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_cfg_pull_down_order_statuses($order_status_id, $key = '') {
     $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
-    $statuses_array = array (array ('id' => '1', 'text' => TEXT_DEFAULT));
+    $statuses_array = array (array ('id' => DEFAULT_ORDERS_STATUS_ID, 'text' => TEXT_DEFAULT));
     $statuses_query = xtc_db_query("SELECT orders_status_id,
                                            orders_status_name
                                       FROM ".TABLE_ORDERS_STATUS."
