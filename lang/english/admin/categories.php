@@ -236,4 +236,6 @@ define('TEXT_GRADUATED_PRICES_INFO', 'The number of input fields for the Graduat
 define('TEXT_CATEGORY_SETTINGS', 'Category Settings:');
 
 define('ERROR_QTY_SAVE_CHANGED', 'While editing the article, the inventory has been changed and not saved.');
+
+define('TEXT_NO_MOVE_POSSIBLE', 'Not possible to move product.');
 ?>

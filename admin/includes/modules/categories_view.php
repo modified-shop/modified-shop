@@ -724,14 +724,18 @@
                 }
 
                 if (is_array($_POST['multi_products'])) {
-                  foreach ($_POST['multi_products'] AS $multi_product) {
-                    $contents[] = array('text' => '<tr><td style="border-bottom: 1px solid #af417e; margin-bottom: 10px;" class="infoBoxContent"><b>' . xtc_get_products_name($multi_product) . '</b></td></tr>');
-                    $product_categories_string = '';
-                    $product_categories = xtc_output_generated_category_path($multi_product, 'product');
-                    $product_categories_string = '<tr><td class="infoBoxContent">' . $product_categories . '</td></tr>';
-                    $contents[] = array('text' => $product_categories_string);
+                  if ($current_category_id != 0) {
+                    foreach ($_POST['multi_products'] AS $multi_product) {
+                      $contents[] = array('text' => '<tr><td style="border-bottom: 1px solid #af417e; margin-bottom: 10px;" class="infoBoxContent"><b>' . xtc_get_products_name($multi_product) . '</b></td></tr>');
+                      $product_categories_string = '';
+                      $product_categories = xtc_output_generated_category_path($multi_product, 'product');
+                      $product_categories_string = '<tr><td class="infoBoxContent">' . $product_categories . '</td></tr>';
+                      $contents[] = array('text' => $product_categories_string);
+                    }
+                    $category_tree = xtc_get_category_tree('0','','0');
+                  } else {
+                    $contents[] = array('text' => TEXT_NO_MOVE_POSSIBLE);
                   }
-                  $category_tree = xtc_get_category_tree('0','','0');
                 }
                 $contents[] = array('text' => '<tr><td class="infoBoxContent"><strong>' . TEXT_MOVE_ALL . '</strong></td></tr><tr><td>' . xtc_draw_pull_down_menu('move_to_category_id', $category_tree, $current_category_id) . '</td></tr>');
                 //close list table
