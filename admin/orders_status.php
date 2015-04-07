@@ -60,12 +60,11 @@
 
         if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
           // update installed payment
-          $payment_installed = explode(',', MODULE_PAYMENT_INSTALLED);
+          $payment_installed = explode(';', MODULE_PAYMENT_INSTALLED);
           for ($i=0, $n=count($payment_installed); $i<$n; $i++) {
-            $file_extension = substr($payment_installed[$i], strrpos($payment_installed[$i], '.'));
-            $class = basename($payment_installed[$i]);
-            if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $class . $file_extension)) {
-              include(DIR_FS_CATALOG_MODULES . 'payment/' . $class . $file_extension);
+            $class = substr($payment_installed[$i], 0, strrpos($payment_installed[$i], '.'));
+            if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $payment_installed[$i])) {
+              include(DIR_FS_CATALOG_MODULES . 'payment/' . $payment_installed[$i]);
               $module = new $class();
               if (isset($module->order_status) && $module->order_status == DEFAULT_ORDERS_STATUS_ID) {
                 xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
