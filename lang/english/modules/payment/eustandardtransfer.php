@@ -55,4 +55,10 @@
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ALLOWED_TITLE' , 'Allowed zones');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
 
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE_TITLE' , 'Payment Zone');
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE_DESC' , 'If a zone is selected, only enable this payment method for that zone.');
+  
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID_TITLE' , 'Set Order Status');
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID_DESC' , 'Set the status of orders made with this payment module to this value');
+
 ?>
