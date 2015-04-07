@@ -236,4 +236,6 @@ define('TEXT_GRADUATED_PRICES_INFO', 'Die Anzahl der Eingabefelder f&uuml;r die 
 define('TEXT_CATEGORY_SETTINGS', 'Kategorie Einstellungen:');
 
 define('ERROR_QTY_SAVE_CHANGED', 'W&auml;hrend der Bearbeitung des Artikels wurde der Lagerbestand ver&auml;ndert und wurde nicht gespeichert.');
+
+define('TEXT_NO_MOVE_POSSIBLE', 'Artikel kann nicht verschoben werden.');
 ?>
