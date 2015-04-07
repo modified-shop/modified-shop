@@ -1654,5 +1654,5 @@ position: relative;
 }
 
 .dispnone{
-display:none;
+display:none!important;
 }
