@@ -737,7 +737,9 @@
                     $contents[] = array('text' => TEXT_NO_MOVE_POSSIBLE);
                   }
                 }
-                $contents[] = array('text' => '<tr><td class="infoBoxContent"><strong>' . TEXT_MOVE_ALL . '</strong></td></tr><tr><td>' . xtc_draw_pull_down_menu('move_to_category_id', $category_tree, $current_category_id) . '</td></tr>');
+                if (isset($category_tree) && is_array($category_tree)) {
+                  $contents[] = array('text' => '<tr><td class="infoBoxContent"><strong>' . TEXT_MOVE_ALL . '</strong></td></tr><tr><td>' . xtc_draw_pull_down_menu('move_to_category_id', $category_tree, $current_category_id) . '</td></tr>');
+                }
                 //close list table
                 $contents[] = array('text' => '</table>');
                 //add current category id, for moving products
