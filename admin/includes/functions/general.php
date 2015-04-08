@@ -32,6 +32,7 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
+   
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
   /**
@@ -48,7 +49,6 @@
     return $array;
   }
 
-  // Parse the data used in the html tags to ensure the tags will not break
   /**
    * xtc_parse_input_field_data()
    *
@@ -66,17 +66,17 @@
    * @param bool $protected
    * @return
   */
-function xtc_output_string($string, $translate = false, $protected = false) {
-  if ($protected == true) {
-    return encode_htmlspecialchars($string);
-  } else {
-    if ($translate == false) {
-      return xtc_parse_input_field_data($string, array('"' => '&quot;'));
+  function xtc_output_string($string, $translate = false, $protected = false) {
+    if ($protected == true) {
+      return encode_htmlspecialchars($string);
     } else {
-      return xtc_parse_input_field_data($string, $translate);
+      if ($translate == false) {
+        return xtc_parse_input_field_data($string, array('"' => '&quot;'));
+      } else {
+        return xtc_parse_input_field_data($string, $translate);
+      }
     }
   }
-}
 
   /**
    * check_stock()
@@ -116,21 +116,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     }
   }
 
-  // Set Categorie Status
-  /**
-   * xtc_set_categories_status()
-   *
-   * @param mixed $categories_id
-   * @param mixed $status
-   * @return
-   */
-  function xtc_set_categories_status($categories_id, $status) {
-    if ($status != '1' && $status != '0') {
-      return -1;
-    }
-    return xtc_db_query("UPDATE ".TABLE_CATEGORIES." SET categories_status = '".(int)$status."' WHERE categories_id = '".(int)$categories_id."'");
-  }
-
   /**
    * xtc_set_groups()
    *
@@ -158,57 +143,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   }
 
   /**
-   * xtc_set_prodcat_data()
-   *
-   * @param mixed $categories_id
-   * @param mixed $data_array
-   * @param boolean $set_products, $set_categories
-   * @return
-   */
-  function xtc_set_prodcat_data($categories_id, $data_array, $set_products = true, $set_categories = true) {
-    //update products
-    if ($set_products) {
-      // get products in categorie
-      $products_query = xtc_db_query("SELECT products_id
-                                        FROM ".TABLE_PRODUCTS_TO_CATEGORIES."
-                                       WHERE categories_id='".(int)$categories_id."'
-                                     ");
-      while ($products = xtc_db_fetch_array($products_query)) {
-        xtc_db_perform(TABLE_PRODUCTS, $data_array, 'update', "products_id = '".$products['products_id']."'");
-      }
-    }
-    //update categorie
-    if ($set_categories) {
-      xtc_db_perform(TABLE_CATEGORIES, $data_array, 'update', "categories_id = '".(int)$categories_id."'");
-    }
-    // look for deeper categories and go rekursiv
-    $categories_query = xtc_db_query("SELECT categories_id
-                                        FROM ".TABLE_CATEGORIES."
-                                       WHERE parent_id='".(int)$categories_id."'
-                                    ");
-    while ($categories = xtc_db_fetch_array($categories_query)) {
-      xtc_set_prodcat_data($categories['categories_id'], $data_array, $set_products, $set_categories);
-    }
-  }
-
-// Set Admin Access Rights
-  /**
-   * xtc_set_admin_access()
-   *
-   * @param mixed $fieldname
-   * @param mixed $status
-   * @param mixed $cID
-   * @return
-   */
-  function xtc_set_admin_access($fieldname, $status, $customers_id) {
-    if ($status != '1') {
-      $status = '0';
-    }
-    return xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$fieldname." = '".(int)$status."' WHERE customers_id = '".(int)$customers_id."'");
-  }
-
-  // Check whether a referer has enough permission to open an admin page
-  /**
    * xtc_check_permission()
    *
    * @param mixed $pagename
@@ -227,7 +161,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
   }
 
-  // Redirect to another page or site
   /**
    * xtc_redirect()
    *
@@ -248,21 +181,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
 
     header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url)));
     exit();
-  }
-
-  /**
-   * xtc_customers_name()
-   *
-   * @param mixed $customers_id
-   * @return
-   */
-  function xtc_customers_name($customers_id) {
-    $customers = xtc_db_query("SELECT customers_firstname,
-                                      customers_lastname
-                                 FROM ".TABLE_CUSTOMERS."
-                                WHERE customers_id = '".(int)$customers_id."'");
-    $customers_values = xtc_db_fetch_array($customers);
-    return $customers_values['customers_firstname'].' '.$customers_values['customers_lastname'];
   }
 
   /**
@@ -327,9 +245,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   require_once(DIR_FS_INC . 'xtc_date_long.inc.php'); // Use existing function from "/inc/" folder
 
-// Output a raw date string in the selected locale date format
-// $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
-// NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
   /**
    * xtc_date_short()
    *
@@ -345,65 +260,28 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_datetime_short($raw_datetime) {
-    if (($raw_datetime == '0000-00-00 00:00:00') || empty($raw_datetime))
+    if (($raw_datetime == '0000-00-00 00:00:00') || empty($raw_datetime)) {
       return false;
+    }
     $year = (int) substr($raw_datetime, 0, 4);
     $month = (int) substr($raw_datetime, 5, 2);
     $day = (int) substr($raw_datetime, 8, 2);
     $hour = (int) substr($raw_datetime, 11, 2);
     $minute = (int) substr($raw_datetime, 14, 2);
     $second = (int) substr($raw_datetime, 17, 2);
+    
     return strftime(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
   }
 
   /**
-   * xtc_array_merge()
+   * xtc_in_array()
    *
-   * @param mixed $array1
-   * @param mixed $array2
-   * @param string $array3
-   * @return
+   * @param mixed $value
+   * @param array $array
+   * @return boolean
    */
-  function xtc_array_merge($array1, $array2, $array3 = '') {
-      if (!is_array($array1)) {
-        $array1 = array ();
-      }
-      if (!is_array($array2)) {
-        $array2 = array ();
-      }
-      if (!is_array($array3)) {
-        $array3 = array ();
-      }
-    if (function_exists('array_merge')) {
-      $array_merged = array_merge($array1, $array2, $array3);
-    } else {
-      while (list ($key, $val) = each($array1))
-        $array_merged[$key] = $val;
-      while (list ($key, $val) = each($array2))
-        $array_merged[$key] = $val;
-      if (sizeof($array3) > 0)
-        while (list ($key, $val) = each($array3))
-          $array_merged[$key] = $val;
-    }
-    return (array) $array_merged;
-  }
+  require_once(DIR_FS_INC . 'xtc_in_array.inc.php'); // Use existing function from "/inc/" folder
 
-  function xtc_in_array($lookup_value, $lookup_array) {
-    if (function_exists('in_array')) {
-      if (in_array($lookup_value, $lookup_array))
-        return true;
-    } else {
-      reset($lookup_array);
-      while (list ($key, $value) = each($lookup_array)) {
-        if ($value == $lookup_value)
-          return true;
-      }
-    }
-
-    return false;
-  }
-
-  // Alias function for Store configuration values in the Administration Tool
   /**
    * xtc_cfg_get_category_tree()
    *
@@ -425,10 +303,12 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = '', $include_itself = false) {
-    if (!is_array($category_tree_array))
+    if (!is_array($category_tree_array)) {
       $category_tree_array = array ();
-    if ((sizeof($category_tree_array) < 1) && ($exclude != '0'))
+    }
+    if ((sizeof($category_tree_array) < 1) && ($exclude != '0')) {
       $category_tree_array[] = array ('id' => '0', 'text' => TEXT_TOP);
+    }
     if ($include_itself) {
       $category_query = xtc_db_query("SELECT cd.categories_name
                                         FROM ".TABLE_CATEGORIES_DESCRIPTION." cd
@@ -447,8 +327,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                        WHERE c.parent_id = '".(int)$parent_id."'
                                     ORDER BY c.sort_order, cd.categories_name");
     while ($categories = xtc_db_fetch_array($categories_query)) {
-      if ($exclude != $categories['categories_id'])
+      if ($exclude != $categories['categories_id']) {
         $category_tree_array[] = array ('id' => $categories['categories_id'], 'text' => $spacing.$categories['categories_name']);
+      }
       $category_tree_array = xtc_get_category_tree($categories['categories_id'], $spacing.'&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array);
     }
     return $category_tree_array;
@@ -464,6 +345,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_draw_products_pull_down($name, $parameters = '', $exclude = '', $add_price = true, $add_model = true) {
     global $xtPrice;
+    
     if (empty($exclude)) {
       $exclude = array ();
     }
@@ -497,36 +379,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     }
     $select_string .= '</select>';
     return $select_string;
-  }
-
-  /**
-   * xtc_options_name()
-   *
-   * @param mixed $options_id
-   * @return
-   */
-  function xtc_options_name($options_id) {
-    $options = xtc_db_query("SELECT products_options_name
-                               FROM ".TABLE_PRODUCTS_OPTIONS."
-                              WHERE products_options_id = '".(int)$options_id."'
-                                AND language_id = '".(int)$_SESSION['languages_id']."'");
-    $options_values = xtc_db_fetch_array($options);
-    return $options_values['products_options_name'];
-  }
-
-  /**
-   * xtc_values_name()
-   *
-   * @param mixed $values_id
-   * @return
-   */
-  function xtc_values_name($values_id) {
-    $values = xtc_db_query("SELECT products_options_values_name
-                              FROM ".TABLE_PRODUCTS_OPTIONS_VALUES."
-                             WHERE products_options_values_id = '".(int)$values_id."'
-                               AND language_id = '".(int)$_SESSION['languages_id']."'");
-    $values_values = xtc_db_fetch_array($values);
-    return $values_values['products_options_values_name'];
   }
 
   /**
@@ -602,17 +454,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $country_id
    * @return
    */
-  function xtc_get_country_name($country_id) {
-    $country_query = xtc_db_query("SELECT countries_name
-                                     FROM ".TABLE_COUNTRIES."
-                                    WHERE countries_id = '".(int)$country_id."'");
-    if (!xtc_db_num_rows($country_query)) {
-      return $country_id;
-    } else {
-      $country = xtc_db_fetch_array($country_query);
-      return $country['countries_name'];
-    }
-  }
+  require_once(DIR_FS_INC . 'xtc_get_country_name.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_get_zone_name()
@@ -679,25 +521,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   }
 
   /**
-   * xtc_get_geo_zone_name()
-   *
-   * @param mixed $geo_zone_id
-   * @return
-   */
-  function xtc_get_geo_zone_name($geo_zone_id) {
-    $zones_query = xtc_db_query("SELECT geo_zone_name
-                                   FROM ".TABLE_GEO_ZONES."
-                                  WHERE geo_zone_id = '".(int)$geo_zone_id."'");
-    if (!xtc_db_num_rows($zones_query)) {
-      $geo_zone_name = $geo_zone_id;
-    } else {
-      $zones = xtc_db_fetch_array($zones_query);
-      $geo_zone_name = $zones['geo_zone_name'];
-    }
-    return $geo_zone_name;
-  }
-
-  /**
    * xtc_address_format()
    *
    * @param mixed $address_format_id
@@ -707,64 +530,8 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $eoln
    * @return
    */
-  function xtc_address_format($address_format_id, $address, $html, $boln, $eoln) {
-    $address_format_query = xtc_db_query("SELECT address_format as format
-                                            FROM ".TABLE_ADDRESS_FORMAT."
-                                           WHERE address_format_id = '".(int)$address_format_id."'");
-    $address_format = xtc_db_fetch_array($address_format_query);
-
-    $company = isset($address['company']) ? addslashes($address['company']) : '';
-    $firstname = isset($address['firstname']) ? addslashes($address['firstname']) : '';
-    $cid = isset($address['csID']) ? addslashes($address['csID']) : '';
-    $lastname = isset($address['lastname']) ? addslashes($address['lastname']) : '';
-    $street = isset($address['street_address']) ? addslashes($address['street_address']) : '';
-    $suburb = isset($address['suburb']) ? addslashes($address['suburb']) : '';
-    $city = isset($address['city']) ? addslashes($address['city']) : '';
-    $state = isset($address['state']) ? addslashes($address['state']) : '';
-    $country_id = isset($address['country_id']) ? $address['country_id'] : '';
-    $zone_id = isset($address['zone_id']) ? $address['zone_id'] : '';
-    $postcode = isset($address['postcode']) ? addslashes($address['postcode']) : '';
-    $zip = $postcode;
-    $country = isset($address['country_id']) ? xtc_get_country_name($country_id) : '';
-    $state = xtc_get_zone_code($country_id, $zone_id, $state);
-    if ($html) {
-      // HTML Mode
-      $HR = '<hr />';
-      $hr = '<hr />';
-      if ((empty($boln)) && ($eoln == "\n")) { // Values not specified, use rational defaults
-        $CR = '<br />';
-        $cr = '<br />';
-        $eoln = $cr;
-      } else { // Use values supplied
-        $CR = $eoln.$boln;
-        $cr = $CR;
-      }
-    } else {
-      // Text Mode
-      $CR = $eoln;
-      $cr = $CR;
-      $HR = '----------------------------------------';
-      $hr = '----------------------------------------';
-    }
-    $statecomma = '';
-    $streets = $street;
-    if (!empty($suburb))
-      $streets = $street.$cr.$suburb;
-    if (empty($firstname))
-      $firstname = addslashes($address['name']);
-    if (empty($country))
-      $country = addslashes($address['country']);
-    if (!empty($state))
-    $statecomma = $state.', ';
-    $fmt = $address_format['format'];
-    eval ("\$address = \"$fmt\";");
-    $address = stripslashes($address);
-    if ((ACCOUNT_COMPANY == 'true') && (xtc_not_null($company))) {
-      $address = $company.$cr.$address;
-    }
-    return $address;
-  }
-
+  require_once(DIR_FS_INC . 'xtc_address_format.inc.php'); // Use existing function from "/inc/" folder
+  
   /**
    * xtc_get_zone_code()
    *
@@ -782,16 +549,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $params
    * @return
    */
-
-  function xtc_get_uprid($prid, $params) {
-    $uprid = $prid;
-    if ((is_array($params)) && (!strstr($prid, '{'))) {
-      while (list ($option, $value) = each($params)) {
-        $uprid = $uprid.'{'.$option.'}'.$value;
-      }
-    }
-    return $uprid;
-  }
+  require_once(DIR_FS_INC . 'xtc_get_uprid.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_get_prid()
@@ -913,7 +671,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $category_id
    * @param mixed $language_id
    * @return
- */
+   */
   function xtc_get_categories_meta_keywords($category_id, $language_id) {
     $category_query = xtc_db_query("SELECT categories_meta_keywords
                                       FROM ".TABLE_CATEGORIES_DESCRIPTION."
@@ -931,8 +689,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_orders_status_name($orders_status_id, $language_id = '') {
-    if (!$language_id)
+    if (!$language_id) {
       $language_id = $_SESSION['languages_id'];
+    }
     $orders_status_query = xtc_db_query("SELECT orders_status_name
                                            FROM ".TABLE_ORDERS_STATUS."
                                           WHERE orders_status_id = '".(int)$orders_status_id."'
@@ -958,8 +717,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_shipping_status_name($shipping_status_id, $language_id = '') {
-    if (!$language_id)
+    if (!$language_id) {
       $language_id = (int)$_SESSION['languages_id'];
+    }
     $shipping_status_query = xtc_db_query("SELECT shipping_status_name
                                              FROM ".TABLE_SHIPPING_STATUS."
                                             WHERE shipping_status_id = '".(int)$shipping_status_id."'
@@ -1013,8 +773,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_products_vpe_name($products_vpe_id, $language_id = '') {
-    if (!$language_id)
+    if (!$language_id) {
       $language_id = (int)$_SESSION['languages_id'];
+    }
     $products_vpe_query = xtc_db_query("SELECT products_vpe_name
                                           FROM ".TABLE_PRODUCTS_VPE."
                                          WHERE products_vpe_id = '".(int)$products_vpe_id."'
@@ -1048,14 +809,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param integer $language_id
    * @return
    */
-
-  function xtc_get_products_name($product_id, $language_id = 0) {
-    if ($language_id == 0)
-      $language_id = (int)$_SESSION['languages_id'];
-    $product_query = xtc_db_query("select products_name from ".TABLE_PRODUCTS_DESCRIPTION." where products_id = '".$product_id."' and language_id = '".$language_id."'");
-    $product = xtc_db_fetch_array($product_query);
-    return $product['products_name'];
-  }
+  require_once(DIR_FS_INC . 'xtc_get_products_name.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_get_products_description()
@@ -1169,8 +923,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $product['products_url'];
   }
 
-  // Return the manufacturers URL in the needed language
-  // TABLES: manufacturers_info
   /**
    * xtc_get_manufacturer_url()
    *
@@ -1187,24 +939,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $manufacturer['manufacturers_url'];
   }
 
-  // Wrapper for class_exists() function
-  // This function is not available in all PHP versions so we test it before using it.
-  /**
-   * xtc_class_exists()
-  *
-   * @param mixed $class_name
-   * @return
-   */
-  function xtc_class_exists($class_name) {
-    if (function_exists('class_exists')) {
-      return class_exists($class_name);
-    } else {
-      return true;
-    }
-  }
-
-  // Returns an array with countries
-  // TABLES: countries
   /**
    * xtc_get_countries()
    *
@@ -1227,26 +961,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
       $countries_array[] = array ('id' => $countries['countries_id'], 'text' => $countries['countries_name']);
     }
     return $countries_array;
-  }
-
-  // return an array with country zones
-  /**
-   * xtc_get_country_zones()
-   *
-   * @param mixed $country_id
-   * @return
-   */
-  function xtc_get_country_zones($country_id) {
-    $zones_array = array ();
-    $zones_query = xtc_db_query("SELECT zone_id,
-                                        zone_name
-                                   FROM ".TABLE_ZONES."
-                                  WHERE zone_country_id = '".(int)$country_id."'
-                               ORDER BY zone_name");
-    while ($zones = xtc_db_fetch_array($zones_query)) {
-      $zones_array[] = array ('id' => $zones['zone_id'], 'text' => $zones['zone_name']);
-    }
-    return $zones_array;
   }
 
   /**
@@ -1278,7 +992,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $zones;
   }
 
-  // Get list of address_format_id's
   /**
    * xtc_get_address_formats()
    *
@@ -1295,7 +1008,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $address_format_array;
   }
 
-  // Alias function for Store configuration values in the Administration Tool
   /**
    * xtc_cfg_pull_down_country_list()
    *
@@ -1336,11 +1048,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return xtc_draw_pull_down_menu($name, $tax_class_array, $tax_class_id);
   }
 
-  // Function to read in text area in admin
-  //BOF - web28- 2010-07-06 - added missing code
-  //function xtc_cfg_textarea($text) {
-    //return xtc_draw_textarea_field('configuration_value', false, 35, 5, $text);
-  //}
   /**
    * xtc_cfg_textarea()
    *
@@ -1349,10 +1056,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_cfg_textarea($text, $key = '') {
-    $name = (!empty($key)) ? 'configuration[' . $key . ']' : 'configuration_value'; //web28 - 2011-04-26 - fixed set undefined $key
+    $name = (!empty($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
     return xtc_draw_textarea_field($name, false, 35, 3, $text, 'class="textareaModule"');
   }
-  //EOF - web28- 2010-07-06 - added missing code
 
   /**
    * xtc_cfg_get_zone_name()
@@ -1372,7 +1078,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     }
   }
 
-  // Sets the status of a banner
   /**
    * xtc_set_banner_status()
    *
@@ -1382,7 +1087,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   require_once(DIR_FS_INC . 'xtc_set_banner_status.inc.php'); // Use existing function from "/inc/" folder
 
-  // Sets the status of a product on special
   /**
    * xtc_set_specials_status()
    *
@@ -1390,30 +1094,16 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $status
    * @return
    */
+  require_once(DIR_FS_INC . 'xtc_set_specials_status.inc.php'); // Use existing function from "/inc/" folder
 
-  function xtc_set_specials_status($specials_id, $status) {
-    if ($status != '1' && $status != '0') {
-      return -1;
-    }
-    return xtc_db_query("UPDATE ".TABLE_SPECIALS." SET status = '". (int)$status ."', date_status_change = now() WHERE specials_id = '".(int)$specials_id."'"); // remove setting: expires_date = NULL
-  }
-
-  // Sets timeout for the current script.
-  // Cant be used in safe mode.
   /**
    * xtc_set_time_limit()
    *
    * @param mixed $limit
    * @return
    */
-  function xtc_set_time_limit($limit) {
-    if (!get_cfg_var('safe_mode')) {
-      @ set_time_limit($limit);
-    }
-  }
+  require_once(DIR_FS_INC . 'xtc_set_time_limit.inc.php'); // Use existing function from "/inc/" folder
   
-
-  // Alias function for Store configuration values in the Administration Tool
   /**
    * xtc_cfg_select_option()
    *
@@ -1435,7 +1125,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $string.'</span>';
   }
 
-  // Alias function for module configuration keys
   /**
    * xtc_mod_select_option()
    *
@@ -1457,7 +1146,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $string;
   }
 
-  // Retreive server information
   /**
    * xtc_get_system_information()
    *
@@ -1475,78 +1163,47 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     }
 
     return array (
-                  //System information
-                  'date' => date('Y-m-d H:i:s O T'), //DokuMan - 2011-05-10 - Update date with timezone
-                  'os' => PHP_OS,
-                  'system' => php_uname('s'),
-                  'kernel' => php_uname('v'),
-                  'host' => php_uname('n'),
-                  'ip' => gethostbyname(php_uname('n')),
-                  'uptime' => $uptime,
-                  'http_server' => $_SERVER['SERVER_SOFTWARE'],
+      //System information
+      'date' => date('Y-m-d H:i:s O T'),
+      'os' => PHP_OS,
+      'system' => php_uname('s'),
+      'kernel' => php_uname('v'),
+      'host' => php_uname('n'),
+      'ip' => gethostbyname(php_uname('n')),
+      'uptime' => $uptime,
+      'http_server' => $_SERVER['SERVER_SOFTWARE'],
 
-                  //MYSQL information
-                  'db_server' => DB_SERVER, 'db_ip' => gethostbyname(DB_SERVER),
-                  'db_version' => 'MySQL '. xtc_db_get_server_info(),
-                  'db_date' => $db['datetime'], //DokuMan - 2011-05-10 - Update date with timezone
+      //MYSQL information
+      'db_server' => DB_SERVER, 'db_ip' => gethostbyname(DB_SERVER),
+      'db_version' => 'MySQL '. xtc_db_get_server_info(),
+      'db_date' => $db['datetime'],
 
-                  //PHP information
-                  'php' => PHP_VERSION,
-                  'zend' => (function_exists('zend_version') ? zend_version() : ''),
-                  'sapi' => PHP_SAPI,
-                  'int_size' => defined('PHP_INT_SIZE') ? PHP_INT_SIZE : '',
-                  'safe_mode' => (int) @ini_get('safe_mode'),
-                  'open_basedir' => (int) @ini_get('open_basedir'),
-                  'memory_limit' => @ini_get('memory_limit'),
-                  'error_reporting' => error_reporting(),
-                  'display_errors' => (int)@ini_get('display_errors'),
-                  'allow_url_fopen' => (int) @ini_get('allow_url_fopen'),
-                  'allow_url_include' => (int) @ini_get('allow_url_include'),
-                  'file_uploads' => (int) @ini_get('file_uploads'),
-                  'upload_max_filesize' => @ini_get('upload_max_filesize'),
-                  'post_max_size' => @ini_get('post_max_size'),
-                  'disable_functions' => @ini_get('disable_functions'),
-                  'disable_classes' => @ini_get('disable_classes'),
-                  'enable_dl' => (int) @ini_get('enable_dl'),
-                  'magic_quotes_gpc' => (int) @ini_get('magic_quotes_gpc'),
-                  'register_globals' => (int) @ini_get('register_globals'),
-                  'filter.default' => @ini_get('filter.default'),
-                  'zend.ze1_compatibility_mode' => (int) @ini_get('zend.ze1_compatibility_mode'),
-                  'unicode.semantics' => (int) @ini_get('unicode.semantics'),
-                  'zend_thread_safty' => (int) function_exists('zend_thread_id'),
-                  'extensions' => get_loaded_extensions());
-  }
-
-  function xtc_array_shift(& $array) {
-    if (function_exists('array_shift')) {
-      return array_shift($array);
-    } else {
-      $i = 0;
-      $shifted_array = array ();
-      reset($array);
-      while (list ($key, $value) = each($array)) {
-        if ($i > 0) {
-          $shifted_array[$key] = $value;
-        } else {
-          $return = $array[$key];
-        }
-        $i ++;
-      }
-      $array = $shifted_array;
-      return $return;
-    }
-  }
-
-  function xtc_array_reverse($array) {
-    if (function_exists('array_reverse')) {
-      return array_reverse($array);
-    } else {
-      $reversed_array = array ();
-      for ($i = sizeof($array) - 1; $i >= 0; $i --) {
-        $reversed_array[] = $array[$i];
-      }
-      return $reversed_array;
-    }
+      //PHP information
+      'php' => PHP_VERSION,
+      'zend' => (function_exists('zend_version') ? zend_version() : ''),
+      'sapi' => PHP_SAPI,
+      'int_size' => defined('PHP_INT_SIZE') ? PHP_INT_SIZE : '',
+      'safe_mode' => (int) @ini_get('safe_mode'),
+      'open_basedir' => (int) @ini_get('open_basedir'),
+      'memory_limit' => @ini_get('memory_limit'),
+      'error_reporting' => error_reporting(),
+      'display_errors' => (int)@ini_get('display_errors'),
+      'allow_url_fopen' => (int) @ini_get('allow_url_fopen'),
+      'allow_url_include' => (int) @ini_get('allow_url_include'),
+      'file_uploads' => (int) @ini_get('file_uploads'),
+      'upload_max_filesize' => @ini_get('upload_max_filesize'),
+      'post_max_size' => @ini_get('post_max_size'),
+      'disable_functions' => @ini_get('disable_functions'),
+      'disable_classes' => @ini_get('disable_classes'),
+      'enable_dl' => (int) @ini_get('enable_dl'),
+      'magic_quotes_gpc' => (int) @ini_get('magic_quotes_gpc'),
+      'register_globals' => (int) @ini_get('register_globals'),
+      'filter.default' => @ini_get('filter.default'),
+      'zend.ze1_compatibility_mode' => (int) @ini_get('zend.ze1_compatibility_mode'),
+      'unicode.semantics' => (int) @ini_get('unicode.semantics'),
+      'zend_thread_safty' => (int) function_exists('zend_thread_id'),
+      'extensions' => get_loaded_extensions()
+    );
   }
 
   /**
@@ -1559,8 +1216,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_generate_category_path($id, $from = 'category', $categories_array = '', $index = 0) {
-    if (!is_array($categories_array))
+    if (!is_array($categories_array)) {
       $categories_array = array ();
+    }
     if ($from == 'product') {
       $categories_query = xtc_db_query("SELECT categories_id
                                           FROM ".TABLE_PRODUCTS_TO_CATEGORIES."
@@ -1578,8 +1236,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                            WHERE c.categories_id = '".$categories['categories_id']."'");
           $category = xtc_db_fetch_array($category_query);
           $categories_array[$index][] = array ('id' => $categories['categories_id'], 'text' => $category['categories_name']);
-          if ((xtc_not_null($category['parent_id'])) && ($category['parent_id'] != '0'))
+          if ((xtc_not_null($category['parent_id'])) && ($category['parent_id'] != '0')){
             $categories_array = xtc_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
+          }
           $categories_array[$index] = array_reverse($categories_array[$index]);
         }
         $index ++;
@@ -1594,8 +1253,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                        WHERE c.categories_id = '".(int)$id."'");
       $category = xtc_db_fetch_array($category_query);
       $categories_array[$index][] = array ('id' => $id, 'text' => $category['categories_name']);
-      if ((xtc_not_null($category['parent_id'])) && ($category['parent_id'] != '0'))
+      if ((xtc_not_null($category['parent_id'])) && ($category['parent_id'] != '0')) 8
         $categories_array = xtc_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
+      }
     }
     return $categories_array;
   }
@@ -1621,12 +1281,12 @@ function xtc_output_string($string, $translate = false, $protected = false) {
       $calculated_category_path_string = substr($calculated_category_path_string, 0, -16).'<br />';
     }
     $calculated_category_path_string = substr($calculated_category_path_string, 0, -6); //DokuMan - remove <br /> from description
-    if (strlen($calculated_category_path_string) < 1)
+    if (strlen($calculated_category_path_string) < 1) {
       $calculated_category_path_string = TEXT_TOP;
+    }
     return $calculated_category_path_string;
   }
 
-  //deletes all product image files by filename
   /**
    * xtc_del_image_file()
    *
@@ -1695,76 +1355,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   }
 
   /**
-   * xtc_get_file_permissions()
-   *
-   * @param mixed $mode
-   * @return
-   */
-  function xtc_get_file_permissions($mode) {
-    // determine type
-    if (($mode & 0xC000) == 0xC000) { // unix domain socket
-      $type = 's';
-    } elseif (($mode & 0x4000) == 0x4000) { // directory
-      $type = 'd';
-    } elseif (($mode & 0xA000) == 0xA000) { // symbolic link
-      $type = 'l';
-    } elseif (($mode & 0x8000) == 0x8000) { // regular file
-      $type = '-';
-    } elseif (($mode & 0x6000) == 0x6000) { //bBlock special file
-      $type = 'b';
-    } elseif (($mode & 0x2000) == 0x2000) { // character special file
-      $type = 'c';
-    } elseif (($mode & 0x1000) == 0x1000) { // named pipe
-      $type = 'p';
-    } else { // unknown
-      $type = '?';
-    }
-    // determine permissions
-    $owner['read'] = ($mode & 00400) ? 'r' : '-';
-    $owner['write'] = ($mode & 00200) ? 'w' : '-';
-    $owner['execute'] = ($mode & 00100) ? 'x' : '-';
-    $group['read'] = ($mode & 00040) ? 'r' : '-';
-    $group['write'] = ($mode & 00020) ? 'w' : '-';
-    $group['execute'] = ($mode & 00010) ? 'x' : '-';
-    $world['read'] = ($mode & 00004) ? 'r' : '-';
-    $world['write'] = ($mode & 00002) ? 'w' : '-';
-    $world['execute'] = ($mode & 00001) ? 'x' : '-';
-    // adjust for SUID, SGID and sticky bit
-    if ($mode & 0x800)
-      $owner['execute'] = ($owner['execute'] == 'x') ? 's' : 'S';
-    if ($mode & 0x400)
-      $group['execute'] = ($group['execute'] == 'x') ? 's' : 'S';
-    if ($mode & 0x200)
-      $world['execute'] = ($world['execute'] == 'x') ? 't' : 'T';
-    return $type.$owner['read'].$owner['write'].$owner['execute'].$group['read'].$group['write'].$group['execute'].$world['read'].$world['write'].$world['execute'];
-  }
-
-  /**
-   * xtc_array_slice()
-   *
-   * @param mixed $array
-   * @param mixed $offset
-   * @param string $length
-   * @return
-   */
-  function xtc_array_slice($array, $offset, $length = '0') {
-    if (function_exists('array_slice')) {
-      return array_slice($array, $offset, $length);
-    } else {
-      $length = abs($length);
-      if ($length == 0) {
-        $high = sizeof($array);
-      } else {
-        $high = $offset + $length;
-      }
-      for ($i = $offset; $i < $high; $i ++) {
-        $new_array[$i - $offset] = $array[$i];
-      }
-      return $new_array;
-    }
-  }
-
-  /**
    * xtc_remove()
    *
    * @param mixed $source
@@ -1772,8 +1362,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_remove($source) {
     global $messageStack, $xtc_remove_error;
-    if (isset ($xtc_remove_error))
+    if (isset ($xtc_remove_error)) {
       $xtc_remove_error = false;
+    }
     if (is_dir($source)) {
       $dir = dir($source);
       while ($file = $dir->read()) {
@@ -1803,24 +1394,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     }
   }
 
-  // Wrapper for constant() function
-  // Needed because its only available in PHP 4.0.4 and higher.
-  /**
-   * xtc_constant()
-   *
-   * @param mixed $constant
-   * @return
-   */
-  function xtc_constant($constant) {
-    if (function_exists('constant')) {
-      $temp = constant($constant);
-    } else {
-      eval ("\$temp=$constant;");
-    }
-    return $temp;
-  }
-
-  // Output the tax percentage with optional padded decimals
   /**
    * xtc_display_tax_value()
    *
@@ -1828,35 +1401,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $padding
    * @return
    */
-  function xtc_display_tax_value($value, $padding = TAX_DECIMAL_PLACES) {
-    if (strpos($value, '.')) {
-      $loop = true;
-      while ($loop) {
-        if (substr($value, -1) == '0') {
-          $value = substr($value, 0, -1);
-        } else {
-          $loop = false;
-          if (substr($value, -1) == '.') {
-            $value = substr($value, 0, -1);
-          }
-        }
-      }
-    }
-    if ($padding > 0) {
-      if ($decimal_pos = strpos($value, '.')) {
-        $decimals = strlen(substr($value, ($decimal_pos +1)));
-        for ($i = $decimals; $i < $padding; $i ++) {
-          $value .= '0';
-        }
-      } else {
-        $value .= '.';
-        for ($i = 0; $i < $padding; $i ++) {
-          $value .= '0';
-        }
-      }
-    }
-    return $value;
-  }
+  require_once(DIR_FS_INC . 'xtc_display_tax_value.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_get_tax_class_title()
@@ -1898,31 +1443,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
       return 'gif';
     }
     return false;
-  }
-
-  // Wrapper function for round()
-  /**
-   * xtc_round()
-   *
-   * @param mixed $value
-   * @param mixed $precision
-   * @return
-   */
-  function xtc_round($value, $precision) {
-    return round($value, $precision);
-  }
-
-  // Calculates Tax rounding the result
-  /**
-   * xtc_calculate_tax()
-   *
-   * @param mixed $price
-   * @param mixed $tax
-   * @return
-   */
-  function xtc_calculate_tax($price, $tax) {
-    global $currencies;
-    return xtc_round($price * $tax / 100, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']);
   }
 
   /**
@@ -2045,29 +1565,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   require_once(DIR_FS_INC . 'xtc_rand.inc.php'); // Use existing function from "/inc/" folder
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   /**
    * xtc_convert_linefeeds()
    *
@@ -2080,67 +1577,12 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return str_replace($from, $to, $string);
   }
 
-  // Return all customers statuses for a specified language_id and return an array(array())
-  // Use it to make pull_down_menu, checkbox....
   /**
    * xtc_get_customers_statuses()
    *
    * @return
    */
-  function xtc_get_customers_statuses() {
-    $customers_statuses_array = array ();
-    $customers_statuses_query = xtc_db_query("SELECT customers_status_id,
-                                                     customers_status_name,
-                                                     customers_status_public,
-                                                     customers_status_image,
-                                                     customers_status_discount,
-                                                     customers_status_ot_discount_flag,
-                                                     customers_status_ot_discount,
-                                                     customers_status_graduated_prices
-                                                FROM ".TABLE_CUSTOMERS_STATUS."
-                                               WHERE language_id = '".(int)$_SESSION['languages_id']."'
-                                            ORDER BY customers_status_id");
-
-    while ($customers_statuses = xtc_db_fetch_array($customers_statuses_query)) {
-      $customers_statuses_array[] = array ('id' => $customers_statuses['customers_status_id'],
-                                           'text' => $customers_statuses['customers_status_name'],
-                                           'csa_public' => $customers_statuses['customers_status_public'],
-                                           'csa_image' => $customers_statuses['customers_status_image'],
-                                           'csa_discount' => $customers_statuses['customers_status_discount'],
-                                           'csa_ot_discount_flag' => $customers_statuses['customers_status_ot_discount_flag'],
-                                           'csa_ot_discount' => $customers_statuses['customers_status_ot_discount'],
-                                           'csa_graduated_prices' => $customers_statuses['customers_status_graduated_prices']
-                                            );
-    }
-
-    return $customers_statuses_array;
-  }
-
-  /**
-   * xtc_get_customer_status()
-   *
-   * @param mixed $customers_id
-   * @return
-   */
-  function xtc_get_customer_status($customers_id) {
-    $customer_status_array = array ();
-    $customer_status_query = xtc_db_query("SELECT customers_status,
-                                                  member_flag,
-                                                  customers_status_name,
-                                                  customers_status_public,
-                                                  customers_status_image,
-                                                  customers_status_discount,
-                                                  customers_status_ot_discount_flag,
-                                                  customers_status_ot_discount,
-                                                  customers_status_graduated_prices
-                                             FROM ".TABLE_CUSTOMERS."
-                                        LEFT JOIN ".TABLE_CUSTOMERS_STATUS."
-                                                  ON customers_status = customers_status_id
-                                            WHERE customers_id='".$customers_id."'
-                                              AND language_id = '".(int)$_SESSION['languages_id']."'");
-    $customer_status_array = xtc_db_fetch_array($customer_status_query);
-    return $customer_status_array;
-  }
+  require_once(DIR_FS_INC . 'xtc_get_customers_statuses.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_get_customers_status_name()
@@ -2150,8 +1592,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_customers_status_name($customers_status_id, $language_id = '') {
-    if (!$language_id)
+    if (!$language_id) {
       $language_id = $_SESSION['languages_id'];
+    }
     $customers_status_query = xtc_db_query("SELECT customers_status_name
                                               FROM ".TABLE_CUSTOMERS_STATUS."
                                              WHERE customers_status_id = '".(int)$customers_status_id."'
@@ -2160,7 +1603,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $customers_status['customers_status_name'];
   }
 
-  //to set customers status in admin for default value, newsletter, guest...
   /**
    * xtc_cfg_pull_down_customers_status_list()
    *
@@ -2173,8 +1615,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return xtc_draw_pull_down_menu($name, xtc_get_customers_statuses(), $customers_status_id);
   }
 
-  // Function for collecting ip
-  // return all log info for a customer_id
   /**
    * xtc_get_user_info()
    *
@@ -2190,23 +1630,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                        FROM ".TABLE_CUSTOMERS_IP."
                                       WHERE customers_id = '".(int)$customer_id."'");
     return $user_info_array;
-  }
-
-  /**
-   * xtc_get_uploaded_file()
-   *
-   * @param mixed $filename
-   * @return
-   */
-  function xtc_get_uploaded_file($filename) {
-    if (isset ($_FILES[$filename])) {
-      $uploaded_file = array ('name' => $_FILES[$filename]['name'], 'type' => $_FILES[$filename]['type'], 'size' => $_FILES[$filename]['size'], 'tmp_name' => $_FILES[$filename]['tmp_name']);
-    } elseif (isset ($_FILES[$filename])) {
-      $uploaded_file = array ('name' => $_FILES[$filename]['name'], 'type' => $_FILES[$filename]['type'], 'size' => $_FILES[$filename]['size'], 'tmp_name' => $_FILES[$filename]['tmp_name']);
-    } else {
-      $uploaded_file = array ('name' => $GLOBALS[$filename.'_name'], 'type' => $GLOBALS[$filename.'_type'], 'size' => $GLOBALS[$filename.'_size'], 'tmp_name' => $GLOBALS[$filename]);
-    }
-    return $uploaded_file;
   }
 
   /**
@@ -2273,8 +1696,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                               'DECIMAL_PLACES' => $currencies_value['decimal_places'],
                               'VALUE' => $currencies_value['value']);
     // round price
-    if ($allow_tax == 1)
+    if ($allow_tax == 1) {
       $price_string = $price_string / ((100 + $tax_rate) / 100);
+    }
     $price_string = precision($price_string, $currencies_data['DECIMAL_PLACES']);
     if ($price_special == '1') {
       $price_string = $currencies_data['SYMBOL_LEFT'].' '.$price_string.' '.$currencies_data['SYMBOL_RIGHT'];
@@ -2292,6 +1716,29 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   function precision($number, $places) {
     $number = number_format($number, $places, '.', '');
     return $number;
+  }
+
+  /**
+   * xtc_round()
+   *
+   * @param mixed $value
+   * @param mixed $precision
+   * @return
+   */
+  function xtc_round($value, $precision) {
+    return round($value, $precision);
+  }
+
+  /**
+   * xtc_calculate_tax()
+   *
+   * @param mixed $price
+   * @param mixed $tax
+   * @return
+   */
+  function xtc_calculate_tax($price, $tax) {
+    global $currencies;
+    return xtc_round($price * $tax / 100, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']);
   }
 
   /**
@@ -2317,7 +1764,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   function xtc_CheckExt($filename, $ext) {
     $passed = FALSE;
     $testExt = "\.".$ext."$";
-    if (preg_match('/'.$testExt.'/i', $filename)) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
+    if (preg_match('/'.$testExt.'/i', $filename)) {
       $passed = TRUE;
     }
     return $passed;
@@ -2363,7 +1810,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return float
    */
   function xtc_spaceUsed($dir) {
-    $totalspaceUsed = ''; //DokuMan - 2011-09-06 - sum up correct filesize avoiding global variable
+    $totalspaceUsed = '';
 
     if (is_dir($dir)) {
       if ($dh = opendir($dir)) {
@@ -2371,16 +1818,13 @@ function xtc_output_string($string, $translate = false, $protected = false) {
           if (is_dir($dir.$file) && $file != '.' && $file != '..') {
             xtc_spaceUsed($dir.$file.'/');
           } else {
-            //BOF - DokuMan - 2011-09-06 - sum up correct filesize avoiding global variable
-            //$GLOBALS['total'] += filesize($dir.$file);
             $totalspaceUsed += @filesize($dir.$file);
-            //EOF - DokuMan - 2011-09-06 - sum up correct filesize avoiding global variable
           }
         }
         closedir($dh);
       }
     }
-    return $totalspaceUsed; //DokuMan - 2011-09-06 - sum up correct filesize avoiding global variable
+    return $totalspaceUsed;
   }
 
   /**
@@ -2409,7 +1853,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $id1;
   }
 
-  // Update the Customers GV account
   /**
    * xtc_gv_account_update()
    *
@@ -2432,59 +1875,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     } else {
       $gv_query = xtc_db_query("INSERT INTO ".TABLE_COUPON_GV_CUSTOMER." (customer_id, amount) VALUES ('".(int)$customer_id."', '".$coupon_gv['coupon_amount']."')");
     }
-  }
-
-  // Output a day/month/year dropdown selector
-  /**
-   * xtc_draw_date_selector()
-   *
-   * @param mixed $prefix
-   * @param string $date
-   * @return
-   */
-  function xtc_draw_date_selector($prefix, $date = '') {
-    $month_array = array ();
-    $month_array[1] = _JANUARY;
-    $month_array[2] = _FEBRUARY;
-    $month_array[3] = _MARCH;
-    $month_array[4] = _APRIL;
-    $month_array[5] = _MAY;
-    $month_array[6] = _JUNE;
-    $month_array[7] = _JULY;
-    $month_array[8] = _AUGUST;
-    $month_array[9] = _SEPTEMBER;
-    $month_array[10] = _OCTOBER;
-    $month_array[11] = _NOVEMBER;
-    $month_array[12] = _DECEMBER;
-    $usedate = getdate($date);
-    $day = $usedate['mday'];
-    $month = $usedate['mon'];
-    $year = $usedate['year'];
-    $date_selector = '<select name="'.$prefix.'_day">';
-    for ($i = 1; $i < 32; $i ++) {
-      $date_selector .= '<option value="'.$i.'"';
-      if ($i == $day)
-        $date_selector .= 'selected';
-      $date_selector .= '>'.$i.'</option>';
-    }
-    $date_selector .= '</select>';
-    $date_selector .= '<select name="'.$prefix.'_month">';
-    for ($i = 1; $i < 13; $i ++) {
-      $date_selector .= '<option value="'.$i.'"';
-      if ($i == $month)
-        $date_selector .= 'selected';
-      $date_selector .= '>'.$month_array[$i].'</option>';
-    }
-    $date_selector .= '</select>';
-    $date_selector .= '<select name="'.$prefix.'_year">';
-    for ($i = 2001; $i < 2019; $i ++) {
-      $date_selector .= '<option value="'.$i.'"';
-      if ($i == $year)
-        $date_selector .= 'selected';
-      $date_selector .= '>'.$i.'</option>';
-    }
-    $date_selector .= '</select>';
-    return $date_selector;
   }
 
   /**
@@ -2552,7 +1942,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return '<a href="'.$href.'" class="button" onclick="this.blur()" '.$parameter.' >'.$value.'</a>';
   }
 
-  // Return a product's special price (returns nothing if there is no offer)
   /**
    * xtc_get_products_special_price()
    *
@@ -2567,30 +1956,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     $product = xtc_db_fetch_array($product_query);
     return $product['specials_new_products_price'];
   }
-
-  /**
-   * xtc_convert_value()
-   * @note value correction function for wrong input prices, weight, dicscount
-   * @author franky_n
-   * @date 2011-01-17
-   * @param mixed $number
-   * @return
-   */
-  function xtc_convert_value($number) {
-    // Correct wrong input number
-    if ((strpos($number, ",")) && (strpos($number, "."))) {
-      // if price scheme like 1.000,00 change to 1000.00
-      $number = str_replace(".","", $number);
-      $number = str_replace(",",".", $number);
-    }
-    if (strpos($number, ",")) {
-      // if price scheme like 1000,00 change to 1000.00
-      $number = str_replace(",",".", $number);
-    }
-    return $number;
-  }
-
-
 
   /**
    * xtc_get_geoip_data()
@@ -2733,37 +2098,36 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    *
    * @return int configuration value
    */
-  function xtc_cfg_save_max_display_results($cfg_key)
-  {
-      if (isset($_POST[$cfg_key])) {
-        $configuration_value = preg_replace('/[^0-9-]/','',$_POST[$cfg_key]);
-        $configuration_value = xtc_db_prepare_input($configuration_value);
-        $configuration_query = xtc_db_query("SELECT configuration_key,
-                                                    configuration_value
-                                               FROM " . TABLE_CONFIGURATION . "
-                                              WHERE configuration_key = '" . xtc_db_input($cfg_key) . "'
-                                           ");
-        if (xtc_db_num_rows($configuration_query) > 0) {
-          //update
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
-                           SET configuration_value ='" . xtc_db_input($configuration_value) . "',
-                               last_modified = NOW()
-                         WHERE configuration_key='" . xtc_db_input($cfg_key) . "'");
-        } else {
-          //new entry
-          $sql_data_array = array(
-            'configuration_key' => $cfg_key,
-            'configuration_value' => $configuration_value,
-            'configuration_group_id' => '1000',
-            'sort_order' => '-1',
-            'last_modified' => 'now()',
-            'date_added' => 'now()'
-            );
-          xtc_db_perform(TABLE_CONFIGURATION,$sql_data_array);
-        }
-        return $configuration_value;
+  function xtc_cfg_save_max_display_results($cfg_key) {
+    if (isset($_POST[$cfg_key])) {
+      $configuration_value = preg_replace('/[^0-9-]/','',$_POST[$cfg_key]);
+      $configuration_value = xtc_db_prepare_input($configuration_value);
+      $configuration_query = xtc_db_query("SELECT configuration_key,
+                                                  configuration_value
+                                             FROM " . TABLE_CONFIGURATION . "
+                                            WHERE configuration_key = '" . xtc_db_input($cfg_key) . "'
+                                         ");
+      if (xtc_db_num_rows($configuration_query) > 0) {
+        //update
+        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
+                         SET configuration_value ='" . xtc_db_input($configuration_value) . "',
+                             last_modified = NOW()
+                       WHERE configuration_key='" . xtc_db_input($cfg_key) . "'");
+      } else {
+        //new entry
+        $sql_data_array = array(
+          'configuration_key' => $cfg_key,
+          'configuration_value' => $configuration_value,
+          'configuration_group_id' => '1000',
+          'sort_order' => '-1',
+          'last_modified' => 'now()',
+          'date_added' => 'now()'
+          );
+        xtc_db_perform(TABLE_CONFIGURATION,$sql_data_array);
       }
-      return defined($cfg_key) && (int)constant($cfg_key) > 0 ? constant($cfg_key) : 20;
+      return $configuration_value;
+    }
+    return defined($cfg_key) && (int)constant($cfg_key) > 0 ? constant($cfg_key) : 20;
   }
 
   /**
@@ -2886,6 +2250,324 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                     LIMIT 1");
     $content = xtc_db_fetch_array($content_query);
     return $content['content_title'];
+  }
+
+
+
+
+
+
+  /********************************************** NOT USED FUNCTIONS **********************************************/
+  
+  /**
+   * xtc_set_categories_status()
+   *
+   * @param mixed $categories_id
+   * @param mixed $status
+   * @return
+   */
+  function xtc_set_categories_status($categories_id, $status) {
+    if ($status != '1' && $status != '0') {
+      return -1;
+    }
+    return xtc_db_query("UPDATE ".TABLE_CATEGORIES." SET categories_status = '".(int)$status."' WHERE categories_id = '".(int)$categories_id."'");
+  }
+
+  /**
+   * xtc_set_admin_access()
+   *
+   * @param mixed $fieldname
+   * @param mixed $status
+   * @param mixed $cID
+   * @return
+   */
+  function xtc_set_admin_access($fieldname, $status, $customers_id) {
+    if ($status != '1') {
+      $status = '0';
+    }
+    return xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$fieldname." = '".(int)$status."' WHERE customers_id = '".(int)$customers_id."'");
+  }
+
+  /**
+   * xtc_set_prodcat_data()
+   *
+   * @param mixed $categories_id
+   * @param mixed $data_array
+   * @param boolean $set_products, $set_categories
+   * @return
+   */
+  function xtc_set_prodcat_data($categories_id, $data_array, $set_products = true, $set_categories = true) {
+    //update products
+    if ($set_products) {
+      // get products in categorie
+      $products_query = xtc_db_query("SELECT products_id
+                                        FROM ".TABLE_PRODUCTS_TO_CATEGORIES."
+                                       WHERE categories_id='".(int)$categories_id."'
+                                     ");
+      while ($products = xtc_db_fetch_array($products_query)) {
+        xtc_db_perform(TABLE_PRODUCTS, $data_array, 'update', "products_id = '".$products['products_id']."'");
+      }
+    }
+    //update categorie
+    if ($set_categories) {
+      xtc_db_perform(TABLE_CATEGORIES, $data_array, 'update', "categories_id = '".(int)$categories_id."'");
+    }
+    // look for deeper categories and go rekursiv
+    $categories_query = xtc_db_query("SELECT categories_id
+                                        FROM ".TABLE_CATEGORIES."
+                                       WHERE parent_id='".(int)$categories_id."'
+                                    ");
+    while ($categories = xtc_db_fetch_array($categories_query)) {
+      xtc_set_prodcat_data($categories['categories_id'], $data_array, $set_products, $set_categories);
+    }
+  }
+
+  /**
+   * xtc_customers_name()
+   *
+   * @param mixed $customers_id
+   * @return
+   */
+  function xtc_customers_name($customers_id) {
+    $customers = xtc_db_query("SELECT customers_firstname,
+                                      customers_lastname
+                                 FROM ".TABLE_CUSTOMERS."
+                                WHERE customers_id = '".(int)$customers_id."'");
+    $customers_values = xtc_db_fetch_array($customers);
+    return $customers_values['customers_firstname'].' '.$customers_values['customers_lastname'];
+  }
+
+  /**
+   * xtc_options_name()
+   *
+   * @param mixed $options_id
+   * @return
+   */
+  function xtc_options_name($options_id) {
+    $options = xtc_db_query("SELECT products_options_name
+                               FROM ".TABLE_PRODUCTS_OPTIONS."
+                              WHERE products_options_id = '".(int)$options_id."'
+                                AND language_id = '".(int)$_SESSION['languages_id']."'");
+    $options_values = xtc_db_fetch_array($options);
+    return $options_values['products_options_name'];
+  }
+
+  /**
+   * xtc_values_name()
+   *
+   * @param mixed $values_id
+   * @return
+   */
+  function xtc_values_name($values_id) {
+    $values = xtc_db_query("SELECT products_options_values_name
+                              FROM ".TABLE_PRODUCTS_OPTIONS_VALUES."
+                             WHERE products_options_values_id = '".(int)$values_id."'
+                               AND language_id = '".(int)$_SESSION['languages_id']."'");
+    $values_values = xtc_db_fetch_array($values);
+    return $values_values['products_options_values_name'];
+  }
+
+  /**
+   * xtc_get_geo_zone_name()
+   *
+   * @param mixed $geo_zone_id
+   * @return
+   */
+  function xtc_get_geo_zone_name($geo_zone_id) {
+    $zones_query = xtc_db_query("SELECT geo_zone_name
+                                   FROM ".TABLE_GEO_ZONES."
+                                  WHERE geo_zone_id = '".(int)$geo_zone_id."'");
+    if (!xtc_db_num_rows($zones_query)) {
+      $geo_zone_name = $geo_zone_id;
+    } else {
+      $zones = xtc_db_fetch_array($zones_query);
+      $geo_zone_name = $zones['geo_zone_name'];
+    }
+    return $geo_zone_name;
+  }
+
+  /**
+   * xtc_get_country_zones()
+   *
+   * @param mixed $country_id
+   * @return
+   */
+  function xtc_get_country_zones($country_id) {
+    $zones_array = array ();
+    $zones_query = xtc_db_query("SELECT zone_id,
+                                        zone_name
+                                   FROM ".TABLE_ZONES."
+                                  WHERE zone_country_id = '".(int)$country_id."'
+                               ORDER BY zone_name");
+    while ($zones = xtc_db_fetch_array($zones_query)) {
+      $zones_array[] = array ('id' => $zones['zone_id'], 'text' => $zones['zone_name']);
+    }
+    return $zones_array;
+  }
+
+  /**
+   * xtc_get_file_permissions()
+   *
+   * @param mixed $mode
+   * @return
+   */
+  function xtc_get_file_permissions($mode) {
+    // determine type
+    if (($mode & 0xC000) == 0xC000) { // unix domain socket
+      $type = 's';
+    } elseif (($mode & 0x4000) == 0x4000) { // directory
+      $type = 'd';
+    } elseif (($mode & 0xA000) == 0xA000) { // symbolic link
+      $type = 'l';
+    } elseif (($mode & 0x8000) == 0x8000) { // regular file
+      $type = '-';
+    } elseif (($mode & 0x6000) == 0x6000) { //bBlock special file
+      $type = 'b';
+    } elseif (($mode & 0x2000) == 0x2000) { // character special file
+      $type = 'c';
+    } elseif (($mode & 0x1000) == 0x1000) { // named pipe
+      $type = 'p';
+    } else { // unknown
+      $type = '?';
+    }
+    // determine permissions
+    $owner['read'] = ($mode & 00400) ? 'r' : '-';
+    $owner['write'] = ($mode & 00200) ? 'w' : '-';
+    $owner['execute'] = ($mode & 00100) ? 'x' : '-';
+    $group['read'] = ($mode & 00040) ? 'r' : '-';
+    $group['write'] = ($mode & 00020) ? 'w' : '-';
+    $group['execute'] = ($mode & 00010) ? 'x' : '-';
+    $world['read'] = ($mode & 00004) ? 'r' : '-';
+    $world['write'] = ($mode & 00002) ? 'w' : '-';
+    $world['execute'] = ($mode & 00001) ? 'x' : '-';
+    // adjust for SUID, SGID and sticky bit
+    if ($mode & 0x800)
+      $owner['execute'] = ($owner['execute'] == 'x') ? 's' : 'S';
+    if ($mode & 0x400)
+      $group['execute'] = ($group['execute'] == 'x') ? 's' : 'S';
+    if ($mode & 0x200)
+      $world['execute'] = ($world['execute'] == 'x') ? 't' : 'T';
+    return $type.$owner['read'].$owner['write'].$owner['execute'].$group['read'].$group['write'].$group['execute'].$world['read'].$world['write'].$world['execute'];
+  }
+
+  /**
+   * xtc_get_customer_status()
+   *
+   * @param mixed $customers_id
+   * @return
+   */
+  function xtc_get_customer_status($customers_id) {
+    $customer_status_array = array ();
+    $customer_status_query = xtc_db_query("SELECT customers_status,
+                                                  member_flag,
+                                                  customers_status_name,
+                                                  customers_status_public,
+                                                  customers_status_image,
+                                                  customers_status_discount,
+                                                  customers_status_ot_discount_flag,
+                                                  customers_status_ot_discount,
+                                                  customers_status_graduated_prices
+                                             FROM ".TABLE_CUSTOMERS."
+                                        LEFT JOIN ".TABLE_CUSTOMERS_STATUS."
+                                                  ON customers_status = customers_status_id
+                                            WHERE customers_id='".$customers_id."'
+                                              AND language_id = '".(int)$_SESSION['languages_id']."'");
+    $customer_status_array = xtc_db_fetch_array($customer_status_query);
+    return $customer_status_array;
+  }
+
+  /**
+   * xtc_get_uploaded_file()
+   *
+   * @param mixed $filename
+   * @return
+   */
+  function xtc_get_uploaded_file($filename) {
+    if (isset ($_FILES[$filename])) {
+      $uploaded_file = array ('name' => $_FILES[$filename]['name'], 'type' => $_FILES[$filename]['type'], 'size' => $_FILES[$filename]['size'], 'tmp_name' => $_FILES[$filename]['tmp_name']);
+    } elseif (isset ($_FILES[$filename])) {
+      $uploaded_file = array ('name' => $_FILES[$filename]['name'], 'type' => $_FILES[$filename]['type'], 'size' => $_FILES[$filename]['size'], 'tmp_name' => $_FILES[$filename]['tmp_name']);
+    } else {
+      $uploaded_file = array ('name' => $GLOBALS[$filename.'_name'], 'type' => $GLOBALS[$filename.'_type'], 'size' => $GLOBALS[$filename.'_size'], 'tmp_name' => $GLOBALS[$filename]);
+    }
+    return $uploaded_file;
+  }
+
+  /**
+   * xtc_draw_date_selector()
+   *
+   * @param mixed $prefix
+   * @param string $date
+   * @return
+   */
+  function xtc_draw_date_selector($prefix, $date = '') {
+    $month_array = array ();
+    $month_array[1] = _JANUARY;
+    $month_array[2] = _FEBRUARY;
+    $month_array[3] = _MARCH;
+    $month_array[4] = _APRIL;
+    $month_array[5] = _MAY;
+    $month_array[6] = _JUNE;
+    $month_array[7] = _JULY;
+    $month_array[8] = _AUGUST;
+    $month_array[9] = _SEPTEMBER;
+    $month_array[10] = _OCTOBER;
+    $month_array[11] = _NOVEMBER;
+    $month_array[12] = _DECEMBER;
+    $usedate = getdate($date);
+    $day = $usedate['mday'];
+    $month = $usedate['mon'];
+    $year = $usedate['year'];
+    $date_selector = '<select name="'.$prefix.'_day">';
+    for ($i = 1; $i < 32; $i ++) {
+      $date_selector .= '<option value="'.$i.'"';
+      if ($i == $day) {
+        $date_selector .= 'selected';
+      }
+      $date_selector .= '>'.$i.'</option>';
+    }
+    $date_selector .= '</select>';
+    $date_selector .= '<select name="'.$prefix.'_month">';
+    for ($i = 1; $i < 13; $i ++) {
+      $date_selector .= '<option value="'.$i.'"';
+      if ($i == $month) {
+        $date_selector .= 'selected';
+      }
+      $date_selector .= '>'.$month_array[$i].'</option>';
+    }
+    $date_selector .= '</select>';
+    $date_selector .= '<select name="'.$prefix.'_year">';
+    for ($i = 2001; $i < 2019; $i ++) {
+      $date_selector .= '<option value="'.$i.'"';
+      if ($i == $year) {
+        $date_selector .= 'selected';
+      }
+      $date_selector .= '>'.$i.'</option>';
+    }
+    $date_selector .= '</select>';
+    return $date_selector;
+  }
+
+  /**
+   * xtc_convert_value()
+   * @note value correction function for wrong input prices, weight, dicscount
+   * @author franky_n
+   * @date 2011-01-17
+   * @param mixed $number
+   * @return
+   */
+  function xtc_convert_value($number) {
+    // Correct wrong input number
+    if ((strpos($number, ",")) && (strpos($number, "."))) {
+      // if price scheme like 1.000,00 change to 1000.00
+      $number = str_replace(".","", $number);
+      $number = str_replace(",",".", $number);
+    }
+    if (strpos($number, ",")) {
+      // if price scheme like 1000,00 change to 1000.00
+      $number = str_replace(",",".", $number);
+    }
+    return $number;
   }
 
 ?>

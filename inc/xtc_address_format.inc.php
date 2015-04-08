@@ -25,25 +25,26 @@
                                            WHERE address_format_id = '".(int)$address_format_id."'");
     $address_format = xtc_db_fetch_array($address_format_query);
 
-    $company = addslashes($address['company']);
-    $firstname = addslashes($address['firstname']);
-    $lastname = addslashes($address['lastname']);
-    $street = addslashes($address['street_address']);
-    $suburb = addslashes($address['suburb']);
-    $city = addslashes($address['city']);
-    $state = addslashes($address['state']);
-    $country_id = $address['country_id'];
-    $zone_id = $address['zone_id'];
-    $postcode = addslashes($address['postcode']);
+    $company = isset($address['company']) ? addslashes($address['company']) : '';
+    $firstname = isset($address['firstname']) ? addslashes($address['firstname']) : '';
+    $cid = isset($address['csID']) ? addslashes($address['csID']) : '';
+    $lastname = isset($address['lastname']) ? addslashes($address['lastname']) : '';
+    $street = isset($address['street_address']) ? addslashes($address['street_address']) : '';
+    $suburb = isset($address['suburb']) ? addslashes($address['suburb']) : '';
+    $city = isset($address['city']) ? addslashes($address['city']) : '';
+    $state = isset($address['state']) ? addslashes($address['state']) : '';
+    $country_id = isset($address['country_id']) ? $address['country_id'] : '';
+    $zone_id = isset($address['zone_id']) ? $address['zone_id'] : '';
+    $postcode = isset($address['postcode']) ? addslashes($address['postcode']) : '';
     $zip = $postcode;
-    $country = xtc_get_country_name($country_id);
+    $country = isset($address['country_id']) ? xtc_get_country_name($country_id) : '';
     $state = xtc_get_zone_code($country_id, $zone_id, $state);
 
     if ($html) {
-// HTML Mode
+      // HTML Mode
       $HR = '<hr />';
       $hr = '<hr />';
-      if ( ($boln == '') && ($eoln == "\n") ) { // Values not specified, use rational defaults
+      if ((empty($boln)) && ($eoln == "\n")) { // Values not specified, use rational defaults
         $CR = '<br />';
         $cr = '<br />';
         $eoln = $cr;
@@ -52,7 +53,7 @@
         $cr = $CR;
       }
     } else {
-// Text Mode
+      // Text Mode
       $CR = $eoln;
       $cr = $CR;
       $HR = '----------------------------------------';
@@ -77,4 +78,5 @@
 
     return $address;
   }
+ 
  ?>

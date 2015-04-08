@@ -14,8 +14,9 @@
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-  ////
+  
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
   // Recursively handle magic_quotes_gpc turned off.
   // This is due to the possibility of have an array in
   // $HTTP_xxx_VARS
@@ -84,5 +85,125 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       }
       return false;
     }
+  }
+
+  // Wrapper for class_exists() function
+  // This function is not available in all PHP versions so we test it before using it.
+  /**
+   * xtc_class_exists()
+  *
+   * @param mixed $class_name
+   * @return
+   */
+  function xtc_class_exists($class_name) {
+    if (function_exists('class_exists')) {
+      return class_exists($class_name);
+    } else {
+      return true;
+    }
+  }
+
+  /**
+   * xtc_array_merge()
+   *
+   * @param mixed $array1
+   * @param mixed $array2
+   * @param string $array3
+   * @return
+   */
+  function xtc_array_merge($array1, $array2, $array3 = '') {
+      if (!is_array($array1)) {
+        $array1 = array ();
+      }
+      if (!is_array($array2)) {
+        $array2 = array ();
+      }
+      if (!is_array($array3)) {
+        $array3 = array ();
+      }
+    if (function_exists('array_merge')) {
+      $array_merged = array_merge($array1, $array2, $array3);
+    } else {
+      while (list ($key, $val) = each($array1))
+        $array_merged[$key] = $val;
+      while (list ($key, $val) = each($array2))
+        $array_merged[$key] = $val;
+      if (sizeof($array3) > 0)
+        while (list ($key, $val) = each($array3))
+          $array_merged[$key] = $val;
+    }
+    return (array) $array_merged;
+  }
+
+  function xtc_array_shift(& $array) {
+    if (function_exists('array_shift')) {
+      return array_shift($array);
+    } else {
+      $i = 0;
+      $shifted_array = array ();
+      reset($array);
+      while (list ($key, $value) = each($array)) {
+        if ($i > 0) {
+          $shifted_array[$key] = $value;
+        } else {
+          $return = $array[$key];
+        }
+        $i ++;
+      }
+      $array = $shifted_array;
+      return $return;
+    }
+  }
+
+  function xtc_array_reverse($array) {
+    if (function_exists('array_reverse')) {
+      return array_reverse($array);
+    } else {
+      $reversed_array = array ();
+      for ($i = sizeof($array) - 1; $i >= 0; $i --) {
+        $reversed_array[] = $array[$i];
+      }
+      return $reversed_array;
+    }
+  }
+
+  /**
+   * xtc_array_slice()
+   *
+   * @param mixed $array
+   * @param mixed $offset
+   * @param string $length
+   * @return
+   */
+  function xtc_array_slice($array, $offset, $length = '0') {
+    if (function_exists('array_slice')) {
+      return array_slice($array, $offset, $length);
+    } else {
+      $length = abs($length);
+      if ($length == 0) {
+        $high = sizeof($array);
+      } else {
+        $high = $offset + $length;
+      }
+      for ($i = $offset; $i < $high; $i ++) {
+        $new_array[$i - $offset] = $array[$i];
+      }
+      return $new_array;
+    }
+  }
+
+  /**
+   * xtc_constant()
+   *
+   * @param mixed $constant
+   * @return
+   */
+  function xtc_constant($constant) {
+    if (function_exists('constant')) {
+      $temp = constant($constant);
+    } else {
+      eval ("\$temp=$constant;");
+    }
+    return $temp;
   }
 ?>

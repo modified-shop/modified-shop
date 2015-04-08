@@ -15,14 +15,16 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-  function xtc_get_products_name($product_id, $language = '') {
+  function xtc_get_products_name($product_id, $language_id = '') {
 
-    if (empty($language)) $language = $_SESSION['languages_id'];
-
+    if (empty($language_id) || $language_id == 0) {
+      $language_id = $_SESSION['languages_id'];
+    }
+    
     $product_query = "SELECT products_name 
                         FROM " . TABLE_PRODUCTS_DESCRIPTION . " 
                        WHERE products_id = '" . (int)$product_id . "' 
-                         AND language_id = '" . (int)$language . "'";
+                         AND language_id = '" . (int)$language_id . "'";
     $product_query  = xtDBquery($product_query);
     $product = xtc_db_fetch_array($product_query,true);
 

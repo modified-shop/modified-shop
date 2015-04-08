@@ -15,10 +15,16 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-  require_once(DIR_FS_INC . 'xtc_get_countries.inc.php');
   function xtc_get_country_name($country_id) {
-    $country_array = xtc_get_countriesList($country_id);
-
-    return $country_array['countries_name'];
+    $country_query = xtc_db_query("SELECT countries_name
+                                     FROM ".TABLE_COUNTRIES."
+                                    WHERE countries_id = '".(int)$country_id."'");
+    if (!xtc_db_num_rows($country_query)) {
+      return $country_id;
+    } else {
+      $country = xtc_db_fetch_array($country_query);
+      return $country['countries_name'];
+    }
   }
- ?>
+  
+?>
