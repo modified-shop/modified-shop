@@ -209,7 +209,6 @@
           break;
 
       case 'statusconfirm' :
-        $customer_updated = false;
         $check_status_query = xtc_db_query("SELECT customers_firstname,
                                                    customers_lastname,
                                                    customers_email_address,
@@ -218,20 +217,30 @@
                                               FROM ".TABLE_CUSTOMERS."
                                              WHERE customers_id = '".$customers_id."'");
         $check_status = xtc_db_fetch_array($check_status_query);
-        if ($check_status['customers_status'] != $status) {
-          xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_status = '".xtc_db_input($_POST['status'])."' WHERE customers_id = '".$customers_id."'");
+        if ($check_status['customers_status'] != (int)$_POST['status']) {
+          $sql_data_array = array('customers_status' => (int)$_POST['status']);
+          
+          $sql_add_data_array['account_type'] = '1';                        
+          if ($_POST['status'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+            $sql_add_data_array['account_type'] = '0';
+          }
+          xtc_db_perform(TABLE_CUSTOMERS, array_merge($sql_data_array, $sql_add_data_array), 'update', "customers_id = '".$customers_id."'"); 
+
           // update customers status in newsletters_recipients
-          xtc_db_query("UPDATE ".TABLE_NEWSLETTER_RECIPIENTS." SET customers_status = '".xtc_db_input($_POST['status'])."' WHERE customers_id = '".$customers_id."'");
+          xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_id = '".$customers_id."'"); 
+                    
           // create insert for admin access table if customers status is set to 0
           if ($_POST['status'] == 0) {
             xtc_db_query("INSERT INTO  ".TABLE_ADMIN_ACCESS." (customers_id,start) VALUES ('".$customers_id."','1')");
           } else {
             xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$customers_id."'");
           }
-          //Temporarily set due to above commented lines
-          $customer_notified = '0';
-          xtc_db_query("INSERT INTO  ".TABLE_CUSTOMERS_STATUS_HISTORY." (customers_id, new_value, old_value, date_added, customer_notified) VALUES ('".$customers_id."', '".xtc_db_input($_POST['status'])."', '".$check_status['customers_status']."', now(), '".$customer_notified."')");
-          $customer_updated = true;
+          $sql_data_array = array('customers_id' => $customers_id,
+                                  'new_value' => (int)$_POST['status'],
+                                  'old_value' => $check_status['customers_status'],
+                                  'date_added' => 'now()',
+                                  'customer_notified' => '0');
+          xtc_db_perform(TABLE_CUSTOMERS_STATUS_HISTORY, $sql_data_array);          
         }
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID', 'action')).'cID='.$customers_id));
         break;
