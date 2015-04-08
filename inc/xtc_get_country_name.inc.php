@@ -14,7 +14,9 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-   
+  
+  require_once(DIR_FS_INC . 'xtc_get_countries.inc.php'); 
+  
   function xtc_get_country_name($country_id) {
     $country_query = xtc_db_query("SELECT countries_name
                                      FROM ".TABLE_COUNTRIES."
