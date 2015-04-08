@@ -547,4 +547,11 @@ ALTER TABLE admin_access ADD logs INT(1) NOT NULL DEFAULT 0 AFTER newsfeed;
 UPDATE admin_access SET logs = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET logs = 1 WHERE customers_id = 'groups' LIMIT 1;
 
+#GTB - 2015-03-31 - move session configs
+UPDATE configuration SET configuration_value = 'False', configuration_group_id = '6' WHERE configuration_key = 'SESSION_CHECK_SSL_SESSION_ID';
+UPDATE configuration SET configuration_value = 'False', configuration_group_id = '6' WHERE configuration_key = 'SESSION_CHECK_USER_AGENT';
+UPDATE configuration SET configuration_value = 'False', configuration_group_id = '6' WHERE configuration_key = 'SESSION_CHECK_IP_ADDRESS';
+UPDATE configuration SET configuration_value = 'False', configuration_group_id = '6' WHERE configuration_key = 'SESSION_RECREATE';
+
+
 # Keep an empty line at the end of this file for the db_updater to work properly
