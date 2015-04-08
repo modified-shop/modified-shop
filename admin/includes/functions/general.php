@@ -1253,7 +1253,7 @@
                                        WHERE c.categories_id = '".(int)$id."'");
       $category = xtc_db_fetch_array($category_query);
       $categories_array[$index][] = array ('id' => $id, 'text' => $category['categories_name']);
-      if ((xtc_not_null($category['parent_id'])) && ($category['parent_id'] != '0')) 8
+      if ((xtc_not_null($category['parent_id'])) && ($category['parent_id'] != '0')) {
         $categories_array = xtc_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
       }
     }
