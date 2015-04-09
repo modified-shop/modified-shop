@@ -150,7 +150,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   }
   $order_shipping = explode('_', $order->info['shipping_class']);
   $order_shipping = $order_shipping[0];
-  if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $order_shipping)) {
+  if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $order_shipping .'.php')) {
     require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $order_shipping .'.php');
     $order_shipping_text = constant('MODULE_SHIPPING_'.strtoupper($order_shipping).'_TEXT_TITLE');
   }
