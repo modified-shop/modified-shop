@@ -39,10 +39,10 @@
             'code' => xtc_db_prepare_input($_POST['code']),  
             'image' => xtc_db_prepare_input($_POST['image']),  
             'directory' => xtc_db_prepare_input($_POST['directory']),  
-            'status' => xtc_db_prepare_input($_POST['status']),  
+            //'status' => xtc_db_prepare_input($_POST['status']),  
             'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
             'language_charset' => xtc_db_prepare_input($_POST['charset']),
-            'status_admin' => xtc_db_prepare_input($_POST['status_admin'])
+            //'status_admin' => xtc_db_prepare_input($_POST['status_admin'])
           );
         xtc_db_perform(TABLE_LANGUAGES, $sql_data_array);      
         $insert_id = xtc_db_insert_id();
@@ -73,10 +73,10 @@
             'code' => xtc_db_prepare_input($_POST['code']),  
             'image' => xtc_db_prepare_input($_POST['image']),  
             'directory' => xtc_db_prepare_input($_POST['directory']),  
-            'status' => xtc_db_prepare_input($_POST['status']),  
+            //'status' => xtc_db_prepare_input($_POST['status']),  
             'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
             'language_charset' => xtc_db_prepare_input($_POST['charset']),
-            'status_admin' => xtc_db_prepare_input($_POST['status_admin'])
+            //'status_admin' => xtc_db_prepare_input($_POST['status_admin'])
           ); 
         xtc_db_perform(TABLE_LANGUAGES, $sql_data_array, 'update', 'languages_id = \''.$lID.'\'');        
         
@@ -396,8 +396,8 @@ input[type=checkbox], input[type=radio] {
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_input_field('charset'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . xtc_draw_input_field('image', 'icon.gif'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . xtc_draw_input_field('directory'));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . '<br />' . xtc_draw_input_field('status'));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . '<br />' . xtc_draw_input_field('status_admin'));
+                //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . '<br />' . xtc_draw_input_field('status'));
+                //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . '<br />' . xtc_draw_input_field('status_admin'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order'));
                 $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . (int)$_GET['lID']) . '">' . BUTTON_CANCEL . '</a>');
@@ -411,8 +411,8 @@ input[type=checkbox], input[type=radio] {
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_input_field('charset', $lInfo->language_charset));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . xtc_draw_input_field('image', $lInfo->image));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . xtc_draw_input_field('directory', $lInfo->directory));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . '<br />' . xtc_draw_input_field('status', $lInfo->status));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . '<br />' . xtc_draw_input_field('status_admin', $lInfo->status_admin));
+                //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . '<br />' . xtc_draw_input_field('status', $lInfo->status));
+                //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . '<br />' . xtc_draw_input_field('status_admin', $lInfo->status_admin));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', $lInfo->sort_order));
                 if (DEFAULT_LANGUAGE != $lInfo->code)
                   $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
@@ -434,8 +434,8 @@ input[type=checkbox], input[type=radio] {
                   $contents[] = array('text' => 'Language-ID:' . ' ' . $lInfo->languages_id);
                   $contents[] = array('text' => '<br />' . xtc_image(DIR_WS_LANGUAGES . $lInfo->directory . '/' . $lInfo->image, $lInfo->name));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . DIR_WS_LANGUAGES . '<b>' . $lInfo->directory . '</b>');
-                  $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . ' ' . $lInfo->status);
-                  $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . ' '. $lInfo->status_admin);
+                  //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . ' ' . $lInfo->status);
+                  //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . ' '. $lInfo->status_admin);
                   $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . ' ' . $lInfo->sort_order);
                 }
                 break;
