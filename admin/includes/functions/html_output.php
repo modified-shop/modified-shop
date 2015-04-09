@@ -217,7 +217,7 @@
   }
 
   // Output a form pull down menu
-  function xtc_draw_pull_down_menu($name, $values, $default = '', $params = '', $required = false) {
+  function xtc_draw_pull_down_menu($name, $values, $default = '', $params = '', $required = false, $addwrap = true) {
     $field = '<select name="' . $name . '"';
     if (!is_array($values) && $values == 'checkbox') {
       $values = array(
@@ -239,9 +239,13 @@
       }
     }
     $field .= '</select>';
-    if ($required)
+    if ($required) {
       $field .= TEXT_FIELD_REQUIRED;
-    $field = '<div class="SumoSelect '. strtolower($name) .'">' . $field . '</div>';
+    }
+    if ($addwrap) {
+      $name = str_replace(array('[',']'),array('_',''),$name); //fix for name is array:  example[...]
+      $field = '<div class="SumoSelect '. strtolower($name) .'">' . $field . '</div>';
+    }
     return $field;
   }
 
