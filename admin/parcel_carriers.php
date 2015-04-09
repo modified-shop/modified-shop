@@ -77,7 +77,7 @@ require (DIR_WS_INCLUDES.'head.php');
       <td class="boxCenter">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
         <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>       
-        <div class="main pdg2 flt-l">Configuration</div>       
+        <div class="main flt-l">Configuration</div>       
         <table class="tableCenter">      
           <tr>
             <td class="boxCenterLeft">
