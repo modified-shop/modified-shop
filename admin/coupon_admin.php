@@ -314,7 +314,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
       <td class="boxCenter">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
         <div class="flt-l">
-          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
+          <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
         </div>
         <div class="clear"></div>
         <table class="tableCenter">
@@ -410,7 +410,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
       <div class="div_box">
        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
         <div class="flt-l">
-          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
+          <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
         </div>
         <div class="clear"></div> 
         <?php echo xtc_draw_form('mail', FILENAME_COUPON_ADMIN, 'action=send_email_to_user&cid=' . (int)$_GET['cid']); ?>
@@ -457,7 +457,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
       <div class="div_box">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
         <div class="flt-l">
-          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
+          <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
         </div>
         <div class="clear"></div>
         <?php
@@ -522,7 +522,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
     <td class="boxCenter">
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
       <div class="flt-l">
-        <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
+        <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
       </div>
       <div class="clear"></div>      
       <?php echo xtc_draw_form('coupon', 'coupon_admin.php', xtc_get_all_get_params(array('action','oldaction','uid','cid')) . 'action=update_confirm&oldaction=' . $_GET['oldaction'] . '&cid=' . (int)$_GET['cid']); ?>
@@ -706,7 +706,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
     <td class="boxCenter">
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
       <div class="flt-l">
-        <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
+        <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
       </div>
       <div class="clear"></div>
       <?php
@@ -789,7 +789,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
     <td class="boxCenter">     
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
         <div class="flt-l">
-          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
+          <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
         </div>
         
         <div class="main" style="float:left;padding: 3px 20px 0 20px;">

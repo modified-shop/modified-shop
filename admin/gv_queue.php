@@ -126,7 +126,7 @@ require (DIR_WS_INCLUDES.'head.php');
       <td class="boxCenter">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
         <div class="flt-l">
-          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
+          <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
         </div>    
         <table class="tableCenter">
           <tr>
