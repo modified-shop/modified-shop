@@ -83,7 +83,7 @@ if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') !=
 require_once (DIR_FS_INC . 'auto_include.inc.php');
 
 // solve compatibility issues
-require_once (DIR_WS_FUNCTIONS.'compatibility.php');
+require_once (DIR_WS_FUNCTIONS.'compatibillity.php');
 
 // project versison
 require_once (DIR_WS_INCLUDES.'version.php');
