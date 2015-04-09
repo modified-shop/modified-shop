@@ -202,7 +202,7 @@
           <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
         </div>
         <div class="clear"></div>
-      <div class="div_box mrg5">
+      <div class="div_box brd-none pdg2">
         <?php
         if ($_GET['action'] == 'preview' && ($_POST['customers_email_address'] || $_POST['email_to']) ) {
           switch ($_POST['customers_email_address']) {
