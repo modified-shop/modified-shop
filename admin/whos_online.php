@@ -19,7 +19,7 @@
   require('includes/application_top.php');
   
   // include needed functions
-  require(DIR_FS_INC. 'xtc_get_products.inc.php');
+  //require(DIR_FS_INC. 'xtc_get_products.inc.php');
   
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_WHOS_ONLINE_RESULTS';
@@ -161,7 +161,10 @@
             }
             $user_session = unserialize_session_data($session_data);
             if (isset($user_session) && $user_session != '') {
-              $products = xtc_get_products($user_session);
+              if (is_array($user_session['cart']->contents)) {  
+                $products = $user_session['cart']->get_products();
+              }
+              //$products = xtc_get_products($user_session);
               for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
                 $contents[] = array('text' => $products[$i]['quantity'] . ' x ' . $products[$i]['name']);
               }
