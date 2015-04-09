@@ -93,7 +93,7 @@ Versandkosten m&uuml;ssen manuell ge&auml;ndert werden!<br />
 Hierbei sind je nach Kundengruppe die Versandkosten brutto oder netto einzutragen!<br />
 ');
 
-define('TEXT_CUSTOMER_GROUP_INFO', ' <span class="important_info">Bei einem Wechsel der Kundengruppe sind alle Einzelposten der Rechnung neu abzuspeichern!</span>');
+define('TEXT_CUSTOMER_GROUP_INFO', ' Bei einem Wechsel der Kundengruppe sind alle Einzelposten der Rechnung neu abzuspeichern!');
 
 define('TEXT_ORDER_TITLE', 'Titel:');
 define('TEXT_ORDER_VALUE', 'Wert:');

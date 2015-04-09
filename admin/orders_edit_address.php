@@ -190,14 +190,14 @@ if ($_GET['edit_action']=='address') {
     </span></td>
   </tr>
   <tr class="dataTableRow">
-    <td class="dataTableContent" colspan="4">&nbsp;</td>
+    <td class="dataTableContent" colspan="4" style="padding: 0px !important; border-bottom: 0px !important;"><br /><br /><div class="main important_info"><?php echo TEXT_CUSTOMER_GROUP_INFO;?></div></td>
   </tr>
   <tr class="dataTableRow">
     <td class="dataTableContent">
     <?php echo TEXT_CUSTOMER_GROUP;?>
     </td>
     <td class="dataTableContent" colspan="3"><span class="select_f12">
-    <?php echo xtc_draw_pull_down_menu('customers_status', xtc_get_customers_statuses(), $order->info['status'], 'style="width: 200px"'). TEXT_CUSTOMER_GROUP_INFO;?>
+    <?php echo xtc_draw_pull_down_menu('customers_status', xtc_get_customers_statuses(), $order->info['status'], 'style="width: 200px"');?>
     </span></td>
   </tr>
   <tr class="dataTableRow">
@@ -233,18 +233,9 @@ if ($_GET['edit_action']=='address') {
     </td>
   </tr>
   <tr class="dataTableRow">
-    <td class="dataTableContent" colspan="4">&nbsp;</td>
-  </tr>
-  <tr class="dataTableRow">
     <td class="dataTableContent txta-r" colspan="4">
     <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . TEXT_SAVE_CUSTOMERS_DATA . '"/>'; ?>
     </td>
-  </tr>
-  <tr>
-    <td class="dataTableHeadingContent" style="width:10%">&nbsp;</td>
-    <td class="dataTableHeadingContent" style="width:30%">&nbsp;</td>
-    <td class="dataTableHeadingContent" style="width:30%">&nbsp;</td>
-    <td class="dataTableHeadingContent" style="width:30%">&nbsp;</td>
   </tr>
   </table>
 </form>
