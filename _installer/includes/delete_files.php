@@ -66,6 +66,8 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/images/top_shop.gif', // neu
                      'admin/images/top_support.gif', // neu
                      'admin/includes/classes/sessions.php', // neu
+                     'admin/includes/classes/phpmailer.lang-de.php' // neu
+                     'admin/includes/classes/phpmailer.lang-en.php' // neu                     
                      'admin/includes/configure.org.php',
                      'admin/includes/modules/carp/carp.php',
                      'admin/includes/modules/carp/carpconf.php',
