@@ -127,149 +127,155 @@ for ($i = 10; $i >= 0; $i--) {
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>
-<body>
-  <?php
-  require(DIR_WS_INCLUDES . 'header.php');
-  ?>
-  <!-- header_eof //-->
-  <!-- body //-->
-  <table class="tableBody">
-    <tr>
-      <?php
-      if ($srExp < 1) {
-        ?>
-        <?php //left_navigation
-        if (USE_ADMIN_TOP_MENU == 'false') {
-          echo '<td class="columnLeft2">'.PHP_EOL;
-          echo '<!-- left_navigation //-->'.PHP_EOL;       
-          require_once(DIR_WS_INCLUDES . 'column_left.php');
-          echo '<!-- left_navigation eof //-->'.PHP_EOL; 
-          echo '</td>'.PHP_EOL;      
-        }
-        ?>
-        <!-- body_text //-->
+  <body>
+    <?php
+    require(DIR_WS_INCLUDES . 'header.php');
+    ?>
+    <!-- header_eof //-->
+    <!-- body //-->
+    <table class="tableBody">
+      <tr>
         <?php
-      } // end sr_exp
-      ?>
-      <td class="boxCenter">
-        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_statistic.png'); ?></div>
-        <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
-        <div class="main pdg2">Statistics</div>
-        <div class="clear"></div>
-        <?php
-          if ($srExp < 1) {
-            echo xtc_draw_form('campaigns_report', FILENAME_CAMPAIGNS_REPORT, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
-            ?>
-            <table style="border: 1px solid #cccccc; width:100%; padding:5px; background:#f1f1f1;">
-              <tr>
-                <td rowspan="2" class="menuBoxHeading txta-l">
-                  <input type="radio" name="report" value="1" <?php if ($srView == 1) echo "checked"; ?>><?php echo REPORT_TYPE_YEARLY; ?><br />
-                  <input type="radio" name="report" value="2" <?php if ($srView == 2) echo "checked"; ?>><?php echo REPORT_TYPE_MONTHLY; ?><br />
-                  <input type="radio" name="report" value="3" <?php if ($srView == 3) echo "checked"; ?>><?php echo REPORT_TYPE_WEEKLY; ?><br />
-                  <input type="radio" name="report" value="4" <?php if ($srView == 4) echo "checked"; ?>><?php echo REPORT_TYPE_DAILY; ?><br />
-                </td>
-                <td class="menuBoxHeading">
-                  <?php 
-                    $day = $month = $year = 1;
-                    if ($startDate) {
-                      $day = date("j", $startDate);
-                      $month = date("n", $startDate);
-                      $year = date("Y", $startDate);
-                    }
-                    echo REPORT_START_DATE.'<br/>';
-                    echo xtc_draw_pull_down_menu('startD', $day_array, $day);
-                    echo xtc_draw_pull_down_menu('startM', $month_array, $month);
-                    echo xtc_draw_pull_down_menu('startY', $year_array, $year);
-                  ?>
-                </td>
-                <td rowspan="2" class="menuBoxHeading txta-l">
-                  <?php echo REPORT_STATUS_FILTER; ?><br />
-                  <?php echo xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $orders_statuses), $_GET['status']); ?> 
-                  <br /><?php echo REPORT_CAMPAIGN_FILTER; ?><br /> 
-                  <?php echo xtc_draw_pull_down_menu('campaign', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $campaigns), $_GET['campaign']); ?> 
-                </td>
-                <td rowspan="2" align="left" class="menuBoxHeading"><br /></td>
-                <td rowspan="2" align="left" class="menuBoxHeading"><br /></td>
-              </tr>
-              <tr>
-                <td class="menuBoxHeading">
-                  <?php 
-                    $day = date("j");
-                    $month = date("n");
-                    $year = 0;
-                    if ($endDate) {
-                      $day = date("j", $endDate - (60 * 60 * 24));
-                      $month = date("n", $endDate - (60 * 60 * 24));
-                      $year = date("Y", $endDate - (60 * 60 * 24));
-                    }
-                    echo REPORT_END_DATE.'<br/>';
-                    echo xtc_draw_pull_down_menu('endD', $day_array, $day);
-                    echo xtc_draw_pull_down_menu('endM', $month_array, $month);
-                    echo xtc_draw_pull_down_menu('endY', $year_array, $year);
-                  ?>
-                </td>
-              </tr>
-            </table>  
-            <div class="main mrg5 txta-r">
-              <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'; ?>
-            </div>                         
-            </form>
-            <?php
-          } // end of ($srExp < 1)
-
-          if (count($campaign->result)) {
-          ?>               
-            <table class="tableCenter collapse"> 
-              <tr class="dataTableHeadingRow"> 
-                <td class="dataTableHeadingContent" colspan="2" width="25%"><?php echo HEADING_TOTAL; ?></td>
-                <td class="dataTableHeadingContent txta-r" width="10%">&nbsp;</td>
-                <td class="dataTableHeadingContent txta-r" width="15%"><?php echo $campaign->total['leads']; ?></td>
-                <td class="dataTableHeadingContent txta-r" colspan="2" width="30%"><?php echo $campaign->total['sells']; ?></td>
-                <td class="dataTableHeadingContent txta-r" width="20%"><?php echo $campaign->total['sum']; ?></td>
-              </tr>
-              <tr class="dataTableHeadingRow"> 
-                <td class="dataTableHeadingContent" colspan="2" width="25%">&nbsp;</td>
-                <td class="dataTableHeadingContent txta-r" width="10%"><?php echo HEADING_HITS; ?></td>
-                <td class="dataTableHeadingContent txta-r" width="15%"><?php echo HEADING_LEADS; ?></td>
-                <td class="dataTableHeadingContent txta-r" width="15%"><?php echo HEADING_SELLS; ?></td>
-                <td class="dataTableHeadingContent txta-r" width="15%"><?php echo HEADING_LATESELLS; ?></td>
-                <td class="dataTableHeadingContent txta-r" width="20%"><?php echo HEADING_SUM; ?></td>
-              </tr>
-              <?php
-              // show campaigns
-              for ($n = 0; $n < count($campaign->result); $n ++) {
-              ?>
-                <tr class="dataTableRow"> 
-                  <td class="main" colspan="7" style="border-bottom: 2px solid;"><br /><?php echo $campaign->result[$n]['text'].' '.TEXT_REFERER .' ('.$campaign->result[$n]['id'].')'; ?></td>
-                </tr>
+        if ($srExp < 1) {
+          ?>
+          <?php //left_navigation
+          if (USE_ADMIN_TOP_MENU == 'false') {
+            echo '<td class="columnLeft2">'.PHP_EOL;
+            echo '<!-- left_navigation //-->'.PHP_EOL;       
+            require_once(DIR_WS_INCLUDES . 'column_left.php');
+            echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+            echo '</td>'.PHP_EOL;      
+          }
+          ?>
+          <!-- body_text //-->
+          <?php
+        } // end sr_exp
+        ?>
+        <td class="boxCenter">
+          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_statistic.png'); ?></div>
+          <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
+          <div class="main pdg2">Statistics</div>
+          <div class="clear"></div>
+          <table class="tableCenter">      
+            <tr>
+              <td class="boxCenterFull">
                 <?php
-                // show values
-                for ($nn = 0; $nn < count($campaign->result[$n]['result']); $nn ++) {
+                  if ($srExp < 1) {
+                    echo xtc_draw_form('campaigns_report', FILENAME_CAMPAIGNS_REPORT, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+                    ?>
+                    <table style="border: 1px solid #cccccc; width:100%; padding:5px; background:#f1f1f1;">
+                      <tr>
+                        <td rowspan="2" class="menuBoxHeading txta-l">
+                          <input type="radio" name="report" value="1" <?php if ($srView == 1) echo "checked"; ?>><?php echo REPORT_TYPE_YEARLY; ?><br />
+                          <input type="radio" name="report" value="2" <?php if ($srView == 2) echo "checked"; ?>><?php echo REPORT_TYPE_MONTHLY; ?><br />
+                          <input type="radio" name="report" value="3" <?php if ($srView == 3) echo "checked"; ?>><?php echo REPORT_TYPE_WEEKLY; ?><br />
+                          <input type="radio" name="report" value="4" <?php if ($srView == 4) echo "checked"; ?>><?php echo REPORT_TYPE_DAILY; ?><br />
+                        </td>
+                        <td class="menuBoxHeading">
+                          <?php 
+                            $day = $month = $year = 1;
+                            if ($startDate) {
+                              $day = date("j", $startDate);
+                              $month = date("n", $startDate);
+                              $year = date("Y", $startDate);
+                            }
+                            echo REPORT_START_DATE.'<br/>';
+                            echo xtc_draw_pull_down_menu('startD', $day_array, $day);
+                            echo xtc_draw_pull_down_menu('startM', $month_array, $month);
+                            echo xtc_draw_pull_down_menu('startY', $year_array, $year);
+                          ?>
+                        </td>
+                        <td rowspan="2" class="menuBoxHeading txta-l">
+                          <?php echo REPORT_STATUS_FILTER; ?><br />
+                          <?php echo xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $orders_statuses), $_GET['status']); ?> 
+                          <br /><?php echo REPORT_CAMPAIGN_FILTER; ?><br /> 
+                          <?php echo xtc_draw_pull_down_menu('campaign', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $campaigns), $_GET['campaign']); ?> 
+                        </td>
+                        <td rowspan="2" align="left" class="menuBoxHeading"><br /></td>
+                        <td rowspan="2" align="left" class="menuBoxHeading"><br /></td>
+                      </tr>
+                      <tr>
+                        <td class="menuBoxHeading">
+                          <?php 
+                            $day = date("j");
+                            $month = date("n");
+                            $year = 0;
+                            if ($endDate) {
+                              $day = date("j", $endDate - (60 * 60 * 24));
+                              $month = date("n", $endDate - (60 * 60 * 24));
+                              $year = date("Y", $endDate - (60 * 60 * 24));
+                            }
+                            echo REPORT_END_DATE.'<br/>';
+                            echo xtc_draw_pull_down_menu('endD', $day_array, $day);
+                            echo xtc_draw_pull_down_menu('endM', $month_array, $month);
+                            echo xtc_draw_pull_down_menu('endY', $year_array, $year);
+                          ?>
+                        </td>
+                      </tr>
+                    </table>  
+                    <div class="main mrg5 txta-r">
+                      <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'; ?>
+                    </div>                         
+                    </form>
+                    <?php
+                  } // end of ($srExp < 1)
+
+                  if (count($campaign->result)) {
                   ?>
-                  <tr class="dataTableRow"> 
-                    <td class="dataTableContent">&nbsp;</td>
-                    <td class="dataTableContent"><?php echo $campaign->result[$n]['result'][$nn]['range']; ?></td>
-                    <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['hits']; ?></td>
-                    <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['leads'].' ('.$campaign->result[$n]['result'][$nn]['leads_p'].'%)'; ?></td>
-                    <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['sells'].' ('.$campaign->result[$n]['result'][$nn]['sells_p'].'%)'; ?></td>
-                    <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['late_sells'].' ('.$campaign->result[$n]['result'][$nn]['late_sells_p'].'%)'; ?></td>
-                    <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['sum'].' ('.$campaign->result[$n]['result'][$nn]['sum_p'].'%)'; ?></td>
+                <table class="tableCenter collapse"> 
+                  <tr class="dataTableHeadingRow"> 
+                    <td class="dataTableHeadingContent" colspan="2" width="25%"><?php echo HEADING_TOTAL; ?></td>
+                    <td class="dataTableHeadingContent txta-r" width="10%">&nbsp;</td>
+                    <td class="dataTableHeadingContent txta-r" width="15%"><?php echo $campaign->total['leads']; ?></td>
+                    <td class="dataTableHeadingContent txta-r" colspan="2" width="30%"><?php echo $campaign->total['sells']; ?></td>
+                    <td class="dataTableHeadingContent txta-r" width="20%"><?php echo $campaign->total['sum']; ?></td>
+                  </tr>
+                  <tr class="dataTableHeadingRow"> 
+                    <td class="dataTableHeadingContent" colspan="2" width="25%">&nbsp;</td>
+                    <td class="dataTableHeadingContent txta-r" width="10%"><?php echo HEADING_HITS; ?></td>
+                    <td class="dataTableHeadingContent txta-r" width="15%"><?php echo HEADING_LEADS; ?></td>
+                    <td class="dataTableHeadingContent txta-r" width="15%"><?php echo HEADING_SELLS; ?></td>
+                    <td class="dataTableHeadingContent txta-r" width="15%"><?php echo HEADING_LATESELLS; ?></td>
+                    <td class="dataTableHeadingContent txta-r" width="20%"><?php echo HEADING_SUM; ?></td>
                   </tr>
                   <?php
-                }
-                ?>
-                <tr class="dataTableHeadingRow"> 
-                  <td class="dataTableHeadingContent" colspan="2"><strong><?php echo HEADING_SUM; ?></strong></td>
-                  <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['hits_s']; ?></strong></td>
-                  <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['leads_s'].' ('.($campaign->total['leads']> 0 ? ($campaign->result[$n]['leads_s']/$campaign->total['leads']*100):'0').'%)'; ?></strong></td>
-                  <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['sells_s'].' ('.($campaign->total['sells']> 0 ? ($campaign->result[$n]['sells_s']/$campaign->total['sells']*100):'0').'%)'; ?></strong></td>
-                  <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['late_sells_s'].' ('.($campaign->total['sells']> 0 ? ($campaign->result[$n]['late_sells_s']/$campaign->total['sells']*100):'0').'%)'; ?></strong></td>
-                  <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['sum_s'].' ('.($campaign->total['sum_plain']> 0 ? round(($campaign->result[$n]['sum_s']/$campaign->total['sum_plain']*100),0):'0').'%)'; ?></strong></td>
-                </tr>
-                <?php
-              }
-              ?>
-            </table>
+                  // show campaigns
+                  for ($n = 0; $n < count($campaign->result); $n ++) {
+                  ?>
+                    <tr class="dataTableRow"> 
+                      <td class="main" colspan="7" style="border-bottom: 2px solid;"><br /><?php echo $campaign->result[$n]['text'].' '.TEXT_REFERER .' ('.$campaign->result[$n]['id'].')'; ?></td>
+                    </tr>
+                    <?php
+                    // show values
+                    for ($nn = 0; $nn < count($campaign->result[$n]['result']); $nn ++) {
+                      ?>
+                      <tr class="dataTableRow"> 
+                        <td class="dataTableContent">&nbsp;</td>
+                        <td class="dataTableContent"><?php echo $campaign->result[$n]['result'][$nn]['range']; ?></td>
+                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['hits']; ?></td>
+                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['leads'].' ('.$campaign->result[$n]['result'][$nn]['leads_p'].'%)'; ?></td>
+                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['sells'].' ('.$campaign->result[$n]['result'][$nn]['sells_p'].'%)'; ?></td>
+                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['late_sells'].' ('.$campaign->result[$n]['result'][$nn]['late_sells_p'].'%)'; ?></td>
+                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['sum'].' ('.$campaign->result[$n]['result'][$nn]['sum_p'].'%)'; ?></td>
+                      </tr>
+                      <?php
+                    }
+                    ?>
+                    <tr class="dataTableHeadingRow"> 
+                      <td class="dataTableHeadingContent" colspan="2"><strong><?php echo HEADING_SUM; ?></strong></td>
+                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['hits_s']; ?></strong></td>
+                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['leads_s'].' ('.($campaign->total['leads']> 0 ? ($campaign->result[$n]['leads_s']/$campaign->total['leads']*100):'0').'%)'; ?></strong></td>
+                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['sells_s'].' ('.($campaign->total['sells']> 0 ? ($campaign->result[$n]['sells_s']/$campaign->total['sells']*100):'0').'%)'; ?></strong></td>
+                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['late_sells_s'].' ('.($campaign->total['sells']> 0 ? ($campaign->result[$n]['late_sells_s']/$campaign->total['sells']*100):'0').'%)'; ?></strong></td>
+                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['sum_s'].' ('.($campaign->total['sum_plain']> 0 ? round(($campaign->result[$n]['sum_s']/$campaign->total['sum_plain']*100),0):'0').'%)'; ?></strong></td>
+                    </tr>
+                    <?php
+                  }
+                  ?>
+                </table>
+              </td>
+            </tr>
+          </table>
             <?php 
           } 
           ?>

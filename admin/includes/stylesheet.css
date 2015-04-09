@@ -779,6 +779,11 @@ width: 75%;
 vertical-align: top;
 padding: 2px;
 }
+.boxCenterFull {
+width: 100%;
+vertical-align: top;
+padding: 2px;
+}
 .boxRight{
 width: 25%;
 vertical-align: top;

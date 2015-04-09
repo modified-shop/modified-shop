@@ -202,7 +202,6 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
           <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
           <div class="main pdg2 flt-l">Tools</div>
-          <div class="clear main mrg5"> 
           <?php
           if ($action == 'new') {
             $form_action = 'insert';

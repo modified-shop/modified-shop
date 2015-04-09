@@ -264,229 +264,231 @@
               ?>
               <td class="boxCenter">
                 <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_statistic.png'); ?></div>
-                <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
+                <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
                 <div class="main pdg2">Statistics</div>
                 <div class="clear"></div>
-                    
-                  <?php
-                  if ($srExp < 1) {
-                    echo xtc_draw_form('sales_report', FILENAME_SALES_REPORT, '', 'get');
-                    ?>
-                    
-                          <table style="border: 1px solid #cccccc; width:100%; padding:5px; background:#f1f1f1;">
-                            <tr>
-                              <td rowspan="2" class="menuBoxHeading txta-l">
-                                <input type="radio" name="report" value="1" <?php if ($srView == 1) echo "checked"; ?>><?php echo REPORT_TYPE_YEARLY; ?><br />
-                                <input type="radio" name="report" value="2" <?php if ($srView == 2) echo "checked"; ?>><?php echo REPORT_TYPE_MONTHLY; ?><br />
-                                <input type="radio" name="report" value="3" <?php if ($srView == 3) echo "checked"; ?>><?php echo REPORT_TYPE_WEEKLY; ?><br />
-                                <input type="radio" name="report" value="4" <?php if ($srView == 4) echo "checked"; ?>><?php echo REPORT_TYPE_DAILY; ?><br />
-                              </td>
-                              <td class="menuBoxHeading">
-                                <?php 
-                                  $day = $month = $year = 1;
-                                  if ($startDate) {
-                                    $day = date("j", $startDate);
-                                    $month = date("n", $startDate);
-                                    $year = date("Y", $startDate);                                  
-                                  }
-                                  echo REPORT_START_DATE.'<br/>';
-                                  echo xtc_draw_pull_down_menu('startD', $day_array, $day);
-                                  echo xtc_draw_pull_down_menu('startM', $month_array, $month);
-                                  echo xtc_draw_pull_down_menu('startY', $year_array, $year);
-                                ?>
-                              </td>
-                              <td rowspan="2" class="menuBoxHeading txta-l">
-                                <?php 
-                                  echo REPORT_DETAIL.'<br/>'; 
-                                  echo xtc_draw_pull_down_menu('detail', $detail_array, $srDetail);
-                                  echo '<br/>';
-                                  echo REPORT_MAX.'<br/>'; 
-                                  echo xtc_draw_pull_down_menu('max', $max_array, $srMax);
-                                ?>
-                              </td>
-                              <td rowspan="2" class="menuBoxHeading txta-l">
-                                <?php 
-                                  echo REPORT_STATUS_FILTER.'<br/>'; 
-                                  echo xtc_draw_pull_down_menu('status', $status_array, $srStatus);
-                                  echo '<br/>';
-                                  echo REPORT_PAYMENT_FILTER.'<br/>'; 
-                                  echo xtc_draw_pull_down_menu('payment', $payment_array, $srPayment);
-                                ?>
-                              </td>
-                              <td rowspan="2" class="menuBoxHeading txta-l">
-                                <?php 
-                                  echo REPORT_EXP.'<br/>'; 
-                                  echo xtc_draw_pull_down_menu('export', $exp_array, $srExp);
-                                  echo '<br/>';
-                                  echo REPORT_SORT.'<br/>'; 
-                                  echo xtc_draw_pull_down_menu('sort', $sort_array, $srSort);
-                                ?>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td class="menuBoxHeading">
-                                <?php 
-                                  $day = date("j");
-                                  $month = date("n");
-                                  $year = 0;
-                                  if ($endDate) {
-                                    $day = date("j", $endDate - (60 * 60 * 24));
-                                    $month = date("n", $endDate - (60* 60 * 24));
-                                    $year = date("Y", $endDate - (60* 60 * 24));
-                                  }
-                                  echo REPORT_END_DATE.'<br/>';
-                                  echo xtc_draw_pull_down_menu('endD', $day_array, $day);
-                                  echo xtc_draw_pull_down_menu('endM', $month_array, $month);
-                                  echo xtc_draw_pull_down_menu('endY', $year_array, $year);
-                                ?>
-                              </td>
-                            </tr>
-                          </table>  
-                          <div class="main mrg5 txta-r">
-                            <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'; ?>
-                          </div>                         
-                        </form>
-
-                    <?php
-                  } // end of ($srExp < 1)
-                  ?>
-                  
-                      
-                <table class="tableCenter collapse">
-                  <tr class="dataTableHeadingRow">
-                    <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_DATE; ?></td>
-                    <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ORDERS;?></td>
-                    <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ITEMS; ?></td>
-                    <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_REVENUE;?></td>
-                    <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SHIPPING;?></td>
-                  </tr>
-                  <?php
-                } // end of if $srExp < 2 csv export
-
-                $total_order = 0;
-                $total_item = 0;
-                $total_total = 0;
-                $total_shipping = 0;
-        
-                while ($sr->actDate < $sr->endDate) {
-                  $info = $sr->getNext($srDetail);
-                  $last = sizeof($info) - 1;
-                  if ($srExp < 2) {
-                    ?>
-                    <tr class="dataTableRow"onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
+                <table class="tableCenter">      
+                  <tr>
+                    <td class="boxCenterFull">
                       <?php
-                      switch ($srView) {
-                        case '3':
-                          ?>
-                          <td class="dataTableContent txta-r"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
-                          <?php
-                          break;
-                        case '4':
-                          ?>
-                          <td class="dataTableContent txta-r"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)); ?></td>
-                          <?php
-                          break;
-                        default;
-                          ?>
-                          <td class="dataTableContent txta-r"><?php echo xtc_date_short(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
-                         <?php
-                      }
+                      if ($srExp < 1) {
+                        echo xtc_draw_form('sales_report', FILENAME_SALES_REPORT, '', 'get');
+                        ?>
+                    
+                              <table style="border: 1px solid #cccccc; width:100%; padding:5px; background:#f1f1f1;">
+                                <tr>
+                                  <td rowspan="2" class="menuBoxHeading txta-l">
+                                    <input type="radio" name="report" value="1" <?php if ($srView == 1) echo "checked"; ?>><?php echo REPORT_TYPE_YEARLY; ?><br />
+                                    <input type="radio" name="report" value="2" <?php if ($srView == 2) echo "checked"; ?>><?php echo REPORT_TYPE_MONTHLY; ?><br />
+                                    <input type="radio" name="report" value="3" <?php if ($srView == 3) echo "checked"; ?>><?php echo REPORT_TYPE_WEEKLY; ?><br />
+                                    <input type="radio" name="report" value="4" <?php if ($srView == 4) echo "checked"; ?>><?php echo REPORT_TYPE_DAILY; ?><br />
+                                  </td>
+                                  <td class="menuBoxHeading">
+                                    <?php 
+                                      $day = $month = $year = 1;
+                                      if ($startDate) {
+                                        $day = date("j", $startDate);
+                                        $month = date("n", $startDate);
+                                        $year = date("Y", $startDate);                                  
+                                      }
+                                      echo REPORT_START_DATE.'<br/>';
+                                      echo xtc_draw_pull_down_menu('startD', $day_array, $day);
+                                      echo xtc_draw_pull_down_menu('startM', $month_array, $month);
+                                      echo xtc_draw_pull_down_menu('startY', $year_array, $year);
+                                    ?>
+                                  </td>
+                                  <td rowspan="2" class="menuBoxHeading txta-l">
+                                    <?php 
+                                      echo REPORT_DETAIL.'<br/>'; 
+                                      echo xtc_draw_pull_down_menu('detail', $detail_array, $srDetail);
+                                      echo '<br/>';
+                                      echo REPORT_MAX.'<br/>'; 
+                                      echo xtc_draw_pull_down_menu('max', $max_array, $srMax);
+                                    ?>
+                                  </td>
+                                  <td rowspan="2" class="menuBoxHeading txta-l">
+                                    <?php 
+                                      echo REPORT_STATUS_FILTER.'<br/>'; 
+                                      echo xtc_draw_pull_down_menu('status', $status_array, $srStatus);
+                                      echo '<br/>';
+                                      echo REPORT_PAYMENT_FILTER.'<br/>'; 
+                                      echo xtc_draw_pull_down_menu('payment', $payment_array, $srPayment);
+                                    ?>
+                                  </td>
+                                  <td rowspan="2" class="menuBoxHeading txta-l">
+                                    <?php 
+                                      echo REPORT_EXP.'<br/>'; 
+                                      echo xtc_draw_pull_down_menu('export', $exp_array, $srExp);
+                                      echo '<br/>';
+                                      echo REPORT_SORT.'<br/>'; 
+                                      echo xtc_draw_pull_down_menu('sort', $sort_array, $srSort);
+                                    ?>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="menuBoxHeading">
+                                    <?php 
+                                      $day = date("j");
+                                      $month = date("n");
+                                      $year = 0;
+                                      if ($endDate) {
+                                        $day = date("j", $endDate - (60 * 60 * 24));
+                                        $month = date("n", $endDate - (60* 60 * 24));
+                                        $year = date("Y", $endDate - (60* 60 * 24));
+                                      }
+                                      echo REPORT_END_DATE.'<br/>';
+                                      echo xtc_draw_pull_down_menu('endD', $day_array, $day);
+                                      echo xtc_draw_pull_down_menu('endM', $month_array, $month);
+                                      echo xtc_draw_pull_down_menu('endY', $year_array, $year);
+                                    ?>
+                                  </td>
+                                </tr>
+                              </table>  
+                              <div class="main mrg5 txta-r">
+                                <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'; ?>
+                              </div>                         
+                            </form>
+
+                        <?php
+                      } // end of ($srExp < 1)
                       ?>
-                      <td class="dataTableContent txta-r"><?php echo (isset($info[0]['order']) ? $info[0]['order'] : '&nbsp;'); ?></td>
-                      <td class="dataTableContent txta-r"><?php echo (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : '&nbsp;'); ?></td>
-                      <td class="dataTableContent txta-r"><?php echo (isset($info[$last]['totsum']) ? $currencies->format($info[$last]['totsum']) : '&nbsp;' ); ?></td>
-                      <td class="dataTableContent txta-r"><?php echo (isset($info[0]['shipping']) ? $currencies->format($info[0]['shipping']) : '&nbsp;' ); ?></td>
-                    </tr>
-                    <?php
-                      $total_order += (isset($info[0]['order']) ? $info[0]['order'] : 0);
-                      $total_item += (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : 0);
-                      $total_total += (isset($info[$last]['totsum']) ? $info[$last]['totsum'] : 0);
-                      $total_shipping += (isset($info[0]['shipping']) ? $info[0]['shipping'] : 0);
-                 } else {
-                    // csv export
-                    ('Content-type: application/x-octet-stream');
-                    header('Content-disposition: attachment; filename=stats_sales_report.csv');
-                    echo date(DATE_FORMAT, $sr->showDate) . SR_SEPARATOR1 . date(DATE_FORMAT, $sr->showDateEnd) . SR_SEPARATOR1;
-                    echo $info[0]['order'] . SR_SEPARATOR1;
-                    echo $info[$last]['totitem'] . SR_SEPARATOR1;
-                    echo number_format($info[$last]['totsum'], 2, '.', '') . SR_SEPARATOR1;
-                    echo number_format($info[0]['shipping'], 2, '.', '') . "\n";
-                  }
-                  if ($srDetail) {
-                    for ($i = 0; $i <= $last; $i++) {
-                      if ($srMax == 0 or $i < $srMax) {
+                      <table class="tableCenter collapse">
+                        <tr class="dataTableHeadingRow">
+                          <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_DATE; ?></td>
+                          <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ORDERS;?></td>
+                          <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ITEMS; ?></td>
+                          <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_REVENUE;?></td>
+                          <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SHIPPING;?></td>
+                        </tr>
+                        <?php
+                      } // end of if $srExp < 2 csv export
+
+                      $total_order = 0;
+                      $total_item = 0;
+                      $total_total = 0;
+                      $total_shipping = 0;
+        
+                      while ($sr->actDate < $sr->endDate) {
+                        $info = $sr->getNext($srDetail);
+                        $last = sizeof($info) - 1;
                         if ($srExp < 2) {
                           ?>
-                          <tr class="dataTableRow" onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
-                            <td class="dataTableContent">&nbsp;</td>
-                            <td class="dataTableContent txta-l">
-                              <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo ((xtc_not_null($info[$i]['pmodel'])) ? $info[$i]['pmodel'].' : ' : '').$info[$i]['pname']; ?></a>
-                              <?php
-                              if (is_array($info[$i]['attr'])) {
-                                foreach ($info[$i]['attr'] as $attr) {
-                                  $price = 0;
-                                  echo '<div style="font-style:italic; text-indent:10px;">';
-                                  for ($x=0, $n=sizeof($attr['options_values']); $x<$n; $x++) {
-                                    if ($x > 0) echo '<br/>';
-                                    echo $attr['options'][$x] . ': ' . $attr['options_values'][$x];
-                                    echo (($attr['price'][$x]>0) ? ' (' . $attr['price_prefix'][$x] . $currencies->format($attr['price'][$x]) . ')' : '');
-                                  }
-                                  echo '</div>';
-                                }
-                              }
-                              ?>
-                            </td>
-                            <td class="dataTableContent txta-r"><?php echo $info[$i]['pquant']; ?></td>
+                          <tr class="dataTableRow"onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
                             <?php
-                            if ($srDetail == 2) {?>
-                              <td class="dataTableContent txta-r"><?php echo $currencies->format($info[$i]['psum']); ?></td>
-                              <?php
-                            } else {
-                              ?>
-                              <td class="dataTableContent">&nbsp;</td>
-                              <?php
+                            switch ($srView) {
+                              case '3':
+                                ?>
+                                <td class="dataTableContent txta-r"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
+                                <?php
+                                break;
+                              case '4':
+                                ?>
+                                <td class="dataTableContent txta-r"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)); ?></td>
+                                <?php
+                                break;
+                              default;
+                                ?>
+                                <td class="dataTableContent txta-r"><?php echo xtc_date_short(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
+                               <?php
                             }
                             ?>
-                            <td class="dataTableContent">&nbsp;</td>
+                            <td class="dataTableContent txta-r"><?php echo (isset($info[0]['order']) ? $info[0]['order'] : '&nbsp;'); ?></td>
+                            <td class="dataTableContent txta-r"><?php echo (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : '&nbsp;'); ?></td>
+                            <td class="dataTableContent txta-r"><?php echo (isset($info[$last]['totsum']) ? $currencies->format($info[$last]['totsum']) : '&nbsp;' ); ?></td>
+                            <td class="dataTableContent txta-r"><?php echo (isset($info[0]['shipping']) ? $currencies->format($info[0]['shipping']) : '&nbsp;' ); ?></td>
                           </tr>
                           <?php
-                        } else {
-                          // csv export details
-                          echo $info[$i]['pmodel'] . SR_SEPARATOR2 . $info[$i]['pname'] . SR_SEPARATOR2;
-                          if (is_array($info[$i]['attr'])) {
-                            foreach ($info[$i]['attr'] as $attr) {
-                              for ($x=0, $n=sizeof($attr['options_values']); $x<$n; $x++) {
-                                if ($x > 0) echo ', ';
-                                echo $attr['options'][$x] . ': ' . $attr['options_values'][$x];
-                                echo (($attr['price'][$x]>0) ? ' (' . $attr['price_prefix'][$x] . number_format($attr['price'][$x], 2, '.', '') . ')' : '');
+                            $total_order += (isset($info[0]['order']) ? $info[0]['order'] : 0);
+                            $total_item += (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : 0);
+                            $total_total += (isset($info[$last]['totsum']) ? $info[$last]['totsum'] : 0);
+                            $total_shipping += (isset($info[0]['shipping']) ? $info[0]['shipping'] : 0);
+                       } else {
+                          // csv export
+                          ('Content-type: application/x-octet-stream');
+                          header('Content-disposition: attachment; filename=stats_sales_report.csv');
+                          echo date(DATE_FORMAT, $sr->showDate) . SR_SEPARATOR1 . date(DATE_FORMAT, $sr->showDateEnd) . SR_SEPARATOR1;
+                          echo $info[0]['order'] . SR_SEPARATOR1;
+                          echo $info[$last]['totitem'] . SR_SEPARATOR1;
+                          echo number_format($info[$last]['totsum'], 2, '.', '') . SR_SEPARATOR1;
+                          echo number_format($info[0]['shipping'], 2, '.', '') . "\n";
+                        }
+                        if ($srDetail) {
+                          for ($i = 0; $i <= $last; $i++) {
+                            if ($srMax == 0 or $i < $srMax) {
+                              if ($srExp < 2) {
+                                ?>
+                                <tr class="dataTableRow" onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
+                                  <td class="dataTableContent">&nbsp;</td>
+                                  <td class="dataTableContent txta-l">
+                                    <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo ((xtc_not_null($info[$i]['pmodel'])) ? $info[$i]['pmodel'].' : ' : '').$info[$i]['pname']; ?></a>
+                                    <?php
+                                    if (is_array($info[$i]['attr'])) {
+                                      foreach ($info[$i]['attr'] as $attr) {
+                                        $price = 0;
+                                        echo '<div style="font-style:italic; text-indent:10px;">';
+                                        for ($x=0, $n=sizeof($attr['options_values']); $x<$n; $x++) {
+                                          if ($x > 0) echo '<br/>';
+                                          echo $attr['options'][$x] . ': ' . $attr['options_values'][$x];
+                                          echo (($attr['price'][$x]>0) ? ' (' . $attr['price_prefix'][$x] . $currencies->format($attr['price'][$x]) . ')' : '');
+                                        }
+                                        echo '</div>';
+                                      }
+                                    }
+                                    ?>
+                                  </td>
+                                  <td class="dataTableContent txta-r"><?php echo $info[$i]['pquant']; ?></td>
+                                  <?php
+                                  if ($srDetail == 2) {?>
+                                    <td class="dataTableContent txta-r"><?php echo $currencies->format($info[$i]['psum']); ?></td>
+                                    <?php
+                                  } else {
+                                    ?>
+                                    <td class="dataTableContent">&nbsp;</td>
+                                    <?php
+                                  }
+                                  ?>
+                                  <td class="dataTableContent">&nbsp;</td>
+                                </tr>
+                                <?php
+                              } else {
+                                // csv export details
+                                echo $info[$i]['pmodel'] . SR_SEPARATOR2 . $info[$i]['pname'] . SR_SEPARATOR2;
+                                if (is_array($info[$i]['attr'])) {
+                                  foreach ($info[$i]['attr'] as $attr) {
+                                    for ($x=0, $n=sizeof($attr['options_values']); $x<$n; $x++) {
+                                      if ($x > 0) echo ', ';
+                                      echo $attr['options'][$x] . ': ' . $attr['options_values'][$x];
+                                      echo (($attr['price'][$x]>0) ? ' (' . $attr['price_prefix'][$x] . number_format($attr['price'][$x], 2, '.', '') . ')' : '');
+                                    }
+                                  }
+                                }
+                                echo SR_SEPARATOR2;
+                                if ($srDetail == 2) {
+                                  echo $info[$i]['pquant'] . SR_SEPARATOR2;
+                                  echo number_format($info[$i]['psum'], 2, '.', '') . SR_SEPARATOR2;
+                                } else {
+                                  echo $info[$i]['pquant'] . SR_SEPARATOR2;
+                                  echo SR_SEPARATOR2;
+                                }
+                                echo "\n";
                               }
                             }
                           }
-                          echo SR_SEPARATOR2;
-                          if ($srDetail == 2) {
-                            echo $info[$i]['pquant'] . SR_SEPARATOR2;
-                            echo number_format($info[$i]['psum'], 2, '.', '') . SR_SEPARATOR2;
-                          } else {
-                            echo $info[$i]['pquant'] . SR_SEPARATOR2;
-                            echo SR_SEPARATOR2;
-                          }
-                          echo "\n";
                         }
                       }
-                    }
-                  }
-                }
-                if ($srExp < 2) {
-                ?>
-                  <tr class="dataTableHeadingRow">
-                    <td class="dataTableHeadingContent txta-r"><?php echo BOX_ORDER_TOTAL; ?></td>
-                    <td class="dataTableHeadingContent txta-r"><?php echo $total_order;?></td>
-                    <td class="dataTableHeadingContent txta-r"><?php echo $total_item; ?></td>
-                    <td class="dataTableHeadingContent txta-r"><?php echo $currencies->format($total_total);?></td>
-                    <td class="dataTableHeadingContent txta-r"><?php echo $currencies->format($total_shipping);?></td>
-                  </tr>
+                      if ($srExp < 2) {
+                      ?>
+                        <tr class="dataTableHeadingRow">
+                          <td class="dataTableHeadingContent txta-r"><?php echo BOX_ORDER_TOTAL; ?></td>
+                          <td class="dataTableHeadingContent txta-r"><?php echo $total_order;?></td>
+                          <td class="dataTableHeadingContent txta-r"><?php echo $total_item; ?></td>
+                          <td class="dataTableHeadingContent txta-r"><?php echo $currencies->format($total_total);?></td>
+                          <td class="dataTableHeadingContent txta-r"><?php echo $currencies->format($total_shipping);?></td>
+                        </tr>
+                    </table>
+                  </td>
+                </tr>
               </table>
-          
             </td>
             <!-- body_text_eof //-->
           </tr>

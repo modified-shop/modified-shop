@@ -178,7 +178,7 @@ if (USE_WYSIWYG == 'true') {
       ?>
       <!-- body_text //-->
       <td class="boxCenter">   
-        <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
+        <div class="pageHeading pdg2 mrg5"><?php echo HEADING_TITLE; ?></div>
         <?php
         if (isset($_GET['action']) && ($_GET['action']=='edit' || $_GET['action']=='new')) {
           if ($_GET['action'] == 'new') {

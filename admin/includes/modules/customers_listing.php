@@ -19,7 +19,7 @@
 
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_customers.png'); ?></div>
         <div class="flt-l">
-          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
+          <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>
           <div class="main pdg2"><?php echo BOX_HEADING_CUSTOMERS; ?></div>
         </div>
         <div class="pageHeading flt-l" style="margin: 3px 40px;"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CREATE_ACCOUNT) . '">' . BUTTON_CREATE_ACCOUNT . '</a>'; ?></div>

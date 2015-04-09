@@ -48,76 +48,95 @@ require (DIR_WS_INCLUDES.'head.php');
     <!-- body_text //-->
     <td class="boxCenter">
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_statistic.png'); ?></div>
-      <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
+      <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
       <div class="main pdg2">Statistics</div>
-      
-      <table class="tableCenter collapse">
-        <tr class="dataTableHeadingRow">
-          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_NUMBER; ?></td>
-          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODEL; ?></td>
-          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
-          <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_QUANTITY; ?>&nbsp;</td>
-        </tr>
-        <?php
-        $rows = (isset($_GET['page']) && $_GET['page'] > 1) ? $_GET['page']*$page_max_display_results-$page_max_display_results : 0;   
-        $products_query_raw = "SELECT p.products_id,
-                                      p.products_model,
-                                      p.products_quantity,
-                                      pd.products_name,
-                                      p2c.categories_id 
-                                 FROM " . TABLE_PRODUCTS . " p
-                                 JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                                      ON pd.products_id = p.products_id  
-                                         AND pd.language_id = '" . $_SESSION['languages_id'] . "' 
-                                 JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-                                      ON p2c.products_id = p.products_id
-                                         AND p2c.categories_id != '0' 
-                             GROUP BY p.products_id  
-                             ORDER BY products_quantity ASC";
-        $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $products_query_raw, $products_query_numrows, 'p.products_id');
-        $products_query = xtc_db_query($products_query_raw);
-        while ($products = xtc_db_fetch_array($products_query)) {
-          $rows++;
-          $rows = str_pad($rows, strlen($page_max_display_results), '0', STR_PAD_LEFT);
-          echo '<tr class="dataTableRow brd-t" onmouseover="this.className=\'dataTableRowOver brd-t\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow brd-t\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_STOCK_WARNING . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($products['categories_id']), 'NONSSL') . '\'">
-                  <td class="dataTableContent">' . $rows . '.</td>
-                  <td class="dataTableContent">' .  $products['products_model'] . '</td>
-                  <td class="dataTableContent"><b>' . $products['products_name'] . '</b></td>
-                  <td class="dataTableContent txta-c">';
-          if ($products['products_quantity'] <='0') {
-            echo '<span class="col-red"><b>'.$products['products_quantity'].'</b></span>';
-          } else {
-            echo $products['products_quantity'];
-          }
-          echo '  </td>
-                </tr>';
 
-          $products_attributes_query = xtc_db_query("SELECT
-                                                         pov.products_options_values_name,
-                                                         pa.attributes_model,
-                                                         pa.attributes_stock
-                                                     FROM
-                                                         " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
-                                                     WHERE
-                                                         pa.products_id = '".$products['products_id'] . "' AND pov.products_options_values_id = pa.options_values_id AND pov.language_id = '" . $_SESSION['languages_id'] . "' ORDER BY pa.attributes_stock");
+
+
+      <table class="tableCenter">      
+        <tr>
+          <td class="boxCenterFull">
+
+
+
+            <table class="tableCenter collapse">
+              <tr class="dataTableHeadingRow">
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_NUMBER; ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODEL; ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
+                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_QUANTITY; ?>&nbsp;</td>
+              </tr>
+              <?php
+              $rows = (isset($_GET['page']) && $_GET['page'] > 1) ? $_GET['page']*$page_max_display_results-$page_max_display_results : 0;   
+              $products_query_raw = "SELECT p.products_id,
+                                            p.products_model,
+                                            p.products_quantity,
+                                            pd.products_name,
+                                            p2c.categories_id 
+                                       FROM " . TABLE_PRODUCTS . " p
+                                       JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                            ON pd.products_id = p.products_id  
+                                               AND pd.language_id = '" . $_SESSION['languages_id'] . "' 
+                                       JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+                                            ON p2c.products_id = p.products_id
+                                               AND p2c.categories_id != '0' 
+                                   GROUP BY p.products_id  
+                                   ORDER BY products_quantity ASC";
+              $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $products_query_raw, $products_query_numrows, 'p.products_id');
+              $products_query = xtc_db_query($products_query_raw);
+              while ($products = xtc_db_fetch_array($products_query)) {
+                $rows++;
+                $rows = str_pad($rows, strlen($page_max_display_results), '0', STR_PAD_LEFT);
+                echo '<tr class="dataTableRow brd-t" onmouseover="this.className=\'dataTableRowOver brd-t\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow brd-t\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_STOCK_WARNING . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($products['categories_id']), 'NONSSL') . '\'">
+                        <td class="dataTableContent">' . $rows . '.</td>
+                        <td class="dataTableContent">' .  $products['products_model'] . '</td>
+                        <td class="dataTableContent"><b>' . $products['products_name'] . '</b></td>
+                        <td class="dataTableContent txta-c">';
+                if ($products['products_quantity'] <='0') {
+                  echo '<span class="col-red"><b>'.$products['products_quantity'].'</b></span>';
+                } else {
+                  echo $products['products_quantity'];
+                }
+                echo '  </td>
+                      </tr>';
+
+                $products_attributes_query = xtc_db_query("SELECT
+                                                               pov.products_options_values_name,
+                                                               pa.attributes_model,
+                                                               pa.attributes_stock
+                                                           FROM
+                                                               " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
+                                                           WHERE
+                                                               pa.products_id = '".$products['products_id'] . "' AND pov.products_options_values_id = pa.options_values_id AND pov.language_id = '" . $_SESSION['languages_id'] . "' ORDER BY pa.attributes_stock");
               
-          while ($products_attributes_values = xtc_db_fetch_array($products_attributes_query)) {
-            echo '<tr class="dataTableRowSub" onmouseover="this.className=\'dataTableRowSubOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRowSub\'">
-                    <td class="dataTableContentSub">&nbsp;</td>
-                    <td class="dataTableContentSub">' .  $products_attributes_values['attributes_model'] . '</td>
-                    <td class="dataTableContentSub">&nbsp;&nbsp;&nbsp;&nbsp;-' . $products_attributes_values['products_options_values_name'] . '</td>
-                    <td class="dataTableContentSub txta-c">';
-            if ($products_attributes_values['attributes_stock'] <= '0') {
-              echo '<span class="col-red"><b>' . $products_attributes_values['attributes_stock'] . '</b></span>';
-            } else {
-              echo $products_attributes_values['attributes_stock'];
-            }
-            echo '  </td>
-                  </tr>';
-          }
-        }
-      ?>
-      </table>             
+                while ($products_attributes_values = xtc_db_fetch_array($products_attributes_query)) {
+                  echo '<tr class="dataTableRowSub" onmouseover="this.className=\'dataTableRowSubOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRowSub\'">
+                          <td class="dataTableContentSub">&nbsp;</td>
+                          <td class="dataTableContentSub">' .  $products_attributes_values['attributes_model'] . '</td>
+                          <td class="dataTableContentSub">&nbsp;&nbsp;&nbsp;&nbsp;-' . $products_attributes_values['products_options_values_name'] . '</td>
+                          <td class="dataTableContentSub txta-c">';
+                  if ($products_attributes_values['attributes_stock'] <= '0') {
+                    echo '<span class="col-red"><b>' . $products_attributes_values['attributes_stock'] . '</b></span>';
+                  } else {
+                    echo $products_attributes_values['attributes_stock'];
+                  }
+                  echo '  </td>
+                        </tr>';
+                }
+              }
+            ?>
+            </table>
+      
+
+
+          </td>
+        </tr>
+      </table>
+      
+      
+      
+      
+      
       <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
       <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
       <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>

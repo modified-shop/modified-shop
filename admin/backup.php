@@ -190,7 +190,6 @@
               <span class="smallText"> [<?php echo VERSION; ?>]</span>
             <br /></div>
             <div class="main pdg2 flt-l">Tools</div>
-            <div class="clear main mrg5">
             <table class="tableCenter">
               <tr>
                 <td class="boxCenterLeft">
