@@ -306,6 +306,7 @@ vertical-align: middle !important;
 border-top: 1px solid #aaa !important;
 }
 .brd-none {
+background:#f7f7f7 !important;
 border: none !important;
 }
 .dataTableContent {
