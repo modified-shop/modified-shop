@@ -54,7 +54,7 @@ if (($_GET['coID'] != 7) || (isset($_GET['action']) && $_GET['action'] == 'succe
   require (DIR_WS_INCLUDES.'header.php');
 }
 
-$smarty->assign('CONTENT_HEADING', $shop_content_data['content_heading']);
+$smarty->assign('CONTENT_HEADING', (($shop_content_data['content_heading'] != '') ? $shop_content_data['content_heading'] : $shop_content_data['content_title']));
 
 if ($_GET['coID'] == 7) {
   include (DIR_WS_INCLUDES.'contact_us.php');
