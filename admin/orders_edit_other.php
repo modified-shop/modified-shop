@@ -35,7 +35,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       <td class="dataTableHeadingContent">&nbsp;</td>
     </tr>
     <?php
-      $lang_query = xtc_db_query("select languages_id, name, directory from " . TABLE_LANGUAGES . " ");
+      $lang_query = xtc_db_query("SELECT * FROM " . TABLE_LANGUAGES):
       while($lang = xtc_db_fetch_array($lang_query)) {
         ?>
         <tr class="dataTableRow">
@@ -68,7 +68,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       <td class="dataTableHeadingContent">&nbsp;</td>
     </tr>
     <?php
-      $curr_query = xtc_db_query("select currencies_id, title, code, value from " . TABLE_CURRENCIES . " ");
+      $curr_query = xtc_db_query("SELECT * FROM " . TABLE_CURRENCIES);
       while($curr = xtc_db_fetch_array($curr_query)) {
         ?>
         <tr class="dataTableRow">
