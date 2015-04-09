@@ -35,7 +35,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     $view = '&view=thumbnail';
 
     $editor = '&editor='. $wysiwig_type;
-    $language = '?language='. $_SESSION['language_code'];
+    $language = '&language='. $_SESSION['language_code'];
 
     //Einrückung für Code
     $codetab = '            ';  
