@@ -214,7 +214,7 @@ require (DIR_WS_INCLUDES.'head.php');
               }
               closedir($dir);
             }
-            echo '<div class="mrg5">'.xtc_draw_pull_down_menu('select_file',$files,'').'</div>';
+            echo '<div class="mrg5">'.xtc_draw_pull_down_menu('select_file', array_merge(array(array('id'=>'', 'text' => TEXT_SELECT)), $files),'').'</div>';
             echo '<div class="mrg5"><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_IMPORT . '"/></div>';
             ?>
             </form>
