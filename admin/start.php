@@ -182,7 +182,7 @@ require (DIR_WS_INCLUDES.'head.php');
       }
       ?>
       <!-- body_text //-->
-      <td class="boxCenter" style="border:0;">
+      <td class="boxCenter" style="border:0;background:#fff;">
         <div class="admin_container cf">
           <div class="admincol_left">
           <?php
