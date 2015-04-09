@@ -268,7 +268,7 @@
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
         <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
         <div class="main pdg2 flt-l">Tools</div>
-        <div class="clear div_box mrg5">
+        <div class="clear div_box brd-none pdg2">
         <div class="main important_info"><?php echo TEXT_NEWSLETTER_INFO; ?></div>
 
         <?php

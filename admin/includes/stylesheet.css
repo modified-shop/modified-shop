@@ -305,6 +305,9 @@ vertical-align: middle !important;
 .brd-t {
 border-top: 1px solid #aaa !important;
 }
+.brd-none {
+border: none !important;
+}
 .dataTableContent {
 font-family: Verdana, Arial, sans-serif; 
 font-size: 10px !important; 

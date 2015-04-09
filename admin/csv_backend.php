@@ -80,12 +80,14 @@ require (DIR_WS_INCLUDES.'head.php');
       <!-- body_text //-->
       <td class="boxCenter">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>
-        <div class="pageHeading">CSV Import/Export<br /></div>
-        <div class="main pdg2 flt-l">Tools</div>
-        <div class="clear div_box mrg5">       
-          <div class="clear mrg5 txta-r">
-            <a class="button" href="#" onclick="toggleBox('config');"><?php echo CSV_SETUP; ?></a>
-          </div>
+        <div class="flt-l">
+        	<div class="pageHeading">CSV Import/Export<br></div>
+          <div class="main pdg2 flt-l">Tools</div>
+        </div>
+        <div class="main pdg2 flt-l" style="margin-left:20px;">
+          <a class="button" href="#" onclick="toggleBox('config');"><?php echo CSV_SETUP; ?></a>
+        </div>
+        <div class="clear div_box brd-none">
           <div id="config" class="longDescription">
           <?php echo xtc_draw_form('configuration', FILENAME_CSV_BACKEND, 'gID=20&action=save'); ?>
           <table class="tableConfig">
