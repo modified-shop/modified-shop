@@ -93,7 +93,7 @@ Shipping costs must be changed manually!<br />
 In this case, shipping costs have to be entered gross or net depending on the customer group!<br />
 ');
 
-define('TEXT_CUSTOMER_GROUP_INFO', ' <span class="important_info">When you change the customer group, all invoice items are newly save!</span>');
+define('TEXT_CUSTOMER_GROUP_INFO', ' When you change the customer group, all invoice items are newly save!');
 
 define('TEXT_ORDER_TITLE', 'Title:');
 define('TEXT_ORDER_VALUE', 'Value:');
