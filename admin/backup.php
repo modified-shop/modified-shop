@@ -184,10 +184,13 @@
     }
     ?>
     <!-- body_text //--> 
-        <td class="boxCenter">         
-            <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?>
+        <td class="boxCenter">
+            <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_backup.png'); ?></div>
+            <div class="pageHeading pdg2 mrg5"><?php echo HEADING_TITLE; ?>
               <span class="smallText"> [<?php echo VERSION; ?>]</span>
-            </div>
+            <br /></div>
+            <div class="main pdg2 flt-l">Tools</div>
+            <div class="clear main mrg5">
             <table class="tableCenter">
               <tr>
                 <td class="boxCenterLeft">
