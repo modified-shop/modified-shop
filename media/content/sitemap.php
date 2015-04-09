@@ -65,11 +65,11 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_i
   if (sizeof($module_content) >= 1) {
     $module_smarty->assign('module_content',$module_content);
 
-    if($_SESSION['language'] == "german") {
+    if ($_SESSION['language'] == 'german') {
        $fehler = array(404 => 'Fehler 404: Die gesuchte Seite wurde nicht gefunden!',
        401 => "Fehler 401: Authentifizierungsfehler.",
        400 => "Fehler 400: Die Anforderung war syntaktisch falsch.",
-       403 => "Fehler 403: Der Server verweigert die Ausführung.",
+       403 => "Fehler 403: Der Server verweigert die Ausf&uuml;hrung.",
        500 => "Fehler 500: Beim Server gab es einen internen Fehler.");
     } else {
        $fehler = array(404 => 'Error 404: Not Found!',
