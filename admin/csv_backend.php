@@ -80,7 +80,7 @@ require (DIR_WS_INCLUDES.'head.php');
       <!-- body_text //-->
       <td class="boxCenter">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>
-        <div class="pageHeading">CSV Import/Export</div>
+        <div class="pageHeading">CSV Import/Export<br /></div>
         <div class="main pdg2 flt-l">Tools</div> 
         <div class="clear div_box mrg5">       
           <div class="clear mrg5 txta-r">

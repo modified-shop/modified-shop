@@ -40,9 +40,8 @@ require (DIR_WS_INCLUDES.'head.php');
       <!-- body_text //-->
       <td class="boxCenter">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>
-        <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>
+        <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
         <div class="main pdg2 flt-l">Tools</div>
-                  
         <div class="clear main mrg5">
           <?php
             $i ='';

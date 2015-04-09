@@ -91,10 +91,8 @@ require (DIR_WS_INCLUDES.'head.php');
         <!-- body_text //--> 
         <td class="boxCenter">
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
-          <div class="pageHeading pdg2 flt-l">
-            <?php echo HEADING_TITLE; ?>       
-            <div class="main pdg2"><?php echo HTTP_CATALOG_SERVER; ?></div>
-          </div>
+          <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
+          <div class="main pdg2 flt-l"><?php echo HTTP_CATALOG_SERVER; ?></div>
           <div class="clear pdg2"></div>
           <table class="tableCenter mrg5" style="width:900px">          
             <tr>
