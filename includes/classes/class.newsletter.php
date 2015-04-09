@@ -31,8 +31,6 @@ class newsletter {
 
 
   function RemoveFromList($key, $mail) {
-    require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
-
     if (!xtc_not_null($key)) {
       $this->message = TEXT_EMAIL_ACTIVE_ERROR;
       $this->message_id = 5;
@@ -45,22 +43,16 @@ class newsletter {
                                            AND mail_key = '".xtc_db_input($key)."'
                                        ");
       if (xtc_db_num_rows($check_mail_query) > 0) {
-        $check_mail = xtc_db_fetch_array($check_mail_query);
-        if (!xtc_validate_password($mail, $key, $check_mail['customers_id'])) {
-          $this->message = TEXT_EMAIL_DEL_ERROR;
-          $this->message_id = 2;
-        } else {
-          // extern Mailer
-          $this->_externmailer($mail, 'unsubscribe');
-          $del_query = xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS."
-                                           WHERE customers_email_address ='".xtc_db_input($mail)."'
-                                             AND mail_key = '".xtc_db_input($key)."'
-                                    ");
-          $this->message = TEXT_EMAIL_DEL;
-          $this->message_id = 3;
-        }
+        // extern Mailer
+        $this->_externmailer($mail, 'unsubscribe');
+        $del_query = xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS."
+                                         WHERE customers_email_address ='".xtc_db_input($mail)."'
+                                           AND mail_key = '".xtc_db_input($key)."'
+                                  ");
+        $this->message = TEXT_EMAIL_DEL;
+        $this->message_id = 3;
       } else {
-        $this->message = TEXT_EMAIL_NOT_EXIST;
+        $this->message = TEXT_EMAIL_DEL_ERROR;
         $this->message_id = 1;
       }
     }
