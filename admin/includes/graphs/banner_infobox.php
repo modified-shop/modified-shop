@@ -31,18 +31,18 @@
   $graph->SetIsInline(1);
   $graph->SetPrintImage(0);
 
-  $graph->draw_vert_ticks = 0;
   $graph->SetSkipBottomTick(1);
-  $graph->SetDrawXDataLabels(0);
-  $graph->SetDrawYGrid(0);
+  $graph->SetDrawYGrid(1);
+  $graph->SetPrecisionY(0);
   $graph->SetPlotType('bars');
-  $graph->SetDrawDataLabels(1);
-  $graph->SetLabelScalePosition(1);
-  $graph->SetMarginsPixels(15,15,15,30);
 
+  $graph->SetPlotBorderType('left');
   $graph->SetTitleFontSize('4');
   $graph->SetTitle('3 Day Statistics');
 
+  $graph->SetBackgroundColor('white');
+
+  $graph->SetVertTickPosition('plotleft');
   $graph->SetDataValues($stats);
   $graph->SetDataColors(array('blue','red'),array('blue', 'red'));
 
