@@ -35,7 +35,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       <td class="dataTableHeadingContent">&nbsp;</td>
     </tr>
     <?php
-      $lang_query = xtc_db_query("SELECT * FROM " . TABLE_LANGUAGES):
+      $lang_query = xtc_db_query("SELECT * FROM " . TABLE_LANGUAGES);
       while($lang = xtc_db_fetch_array($lang_query)) {
         ?>
         <tr class="dataTableRow">
