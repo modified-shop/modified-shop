@@ -130,7 +130,7 @@ require (DIR_WS_INCLUDES.'head.php');
       ?>
       <!-- body_text //-->
       <td class="boxCenter">
-        <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>          
+        <div class="pageHeading pdg2 mrg5"><?php echo HEADING_TITLE; ?></div>          
         <?php
         if ($action == 'new' || $action == 'edit') {
           $form_action = 'insert';
