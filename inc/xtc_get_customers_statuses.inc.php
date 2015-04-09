@@ -48,9 +48,6 @@
                                           'csa_ot_discount_flag' => $customers_statuses['customers_status_ot_discount_flag'],
                                           'csa_ot_discount' => $customers_statuses['customers_status_ot_discount'],
                                           'csa_graduated_prices' => $customers_statuses['customers_status_graduated_prices'],
-                                          'csa_cod_permission' => $customers_statuses['customers_status_cod_permission'],
-                                          'csa_cc_permission' => $customers_statuses['customers_status_cc_permission'],
-                                          'csa_bt_permission' => $customers_statuses['customers_status_bt_permission'],
                                           );
     }
     return $customers_statuses_array;
