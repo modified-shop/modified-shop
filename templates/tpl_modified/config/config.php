@@ -31,8 +31,8 @@
   define('TPL_POPUP_PRINT_ORDER_SIZE', '');
   
   // listing
-  define('PRODUCT_LIST_ROW', 'true'); // 'true' or 'false'
-  define('PRODUCT_INFO_ROW', 'false'); // 'true' or 'false'
+  define('PRODUCT_LIST_BOX', 'true'); // 'true' or 'false'
+  define('PRODUCT_INFO_BOX', 'false'); // 'true' or 'false'
   
   // template output
   define('TEMPLATE_ENGINE', 'smarty_3'); // smarty_3 or smarty_2
