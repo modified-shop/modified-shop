@@ -56,21 +56,20 @@ require (DIR_WS_INCLUDES.'head.php');
               <br />
               <img src="images/shipcloud/shipcloud_191x38.png" /><br />
               <br />
-              <font color="#d52d53"><strong>„ahead of the pack“ - mit shipcloud immer ein Paket vorab</strong></font><br />
+              <font color="#d52d53"><strong>&bdquo;ahead of the pack&ldquo; - mit shipcloud immer ein Paket voraus</strong></font><br />
               <br />
-              Mit shipcloud beginnt die neue Generation des Paketversands: über den cloud-basierten Service können Online-Händler einfach und unkompliziert mit allen wesentlichen Paketdienstleistern zusammenarbeiten. Unabhängig von der Zahl der zu versendenden Pakete können sich Händler für den jeweils günstigsten Tarif entscheiden. Das gewährleistet Unabhängigkeit gegenüber den einzelnen Versendern, spart Zeit und Geld und ermöglicht es Ihnen, sich wieder auf Ihr Kerngeschäft zu fokussieren.<br />
+              Mit shipcloud beginnt die neue Generation des Paketversands: &uuml;ber den cloud-basierten Service k&ouml;nnen Online-H&auml;ndler einfach und unkompliziert mit allen wesentlichen Paketdienstleistern zusammenarbeiten. Unabh&auml;ngig von der Zahl der zu versendenden Pakete k&ouml;nnen sich H&auml;ndler f&uuml;r den jeweils g&uuml;nstigsten Tarif entscheiden. Das gew&auml;hrleistet Unabh&auml;ngigkeit gegen&uuml;ber den einzelnen Versendern, spart Zeit und Geld und erm&ouml;glicht es Ihnen, sich wieder auf Ihr Kerngesch&auml;ft zu fokussieren.<br />
               <br />
               <img src="images/shipcloud/Ideenkurier_Grafik_No1.jpg" />
               <img src="images/shipcloud/Ideenkurier_Grafik_No2.jpg" /><br />
               <br />
-              Mit dem modified-PlugIn „shipcloud" können Sie aus dem modified-Backend heraus Versandetiketten erzeugen. Es werden alle relevanten Paketdienste unterstützt: DHL, UPS, DPD, Hermes, GLS, ILOXX, FedEx und Liefery. Sie brauchen nur einen shipcloud-Account, und können sofort mit dem Paket Ihrer Wahl zu günstigen Konditionen verschicken und verfolgen.<br />
+              Mit dem modified-PlugIn &bdquo;shipcloud" k&ouml;nnen Sie aus dem modified-Backend heraus Versandetiketten erzeugen. Es werden alle relevanten Paketdienste unterst&uuml;tzt: DHL, UPS, DPD, Hermes, GLS, ILOXX, FedEx und Liefery. Sie brauchen nur einen shipcloud-Account, und k&ouml;nnen sofort mit dem Paket Ihrer Wahl zu g&uuml;nstigen Konditionen verschicken und verfolgen.<br />
               <br />
-              Sollten Sie bereits Verträge mit einem oder mehreren Paketdiensten haben, können Sie diese in shipcloud verwenden und mit ihren eigenen Account-Daten Versandlabels erstellen.<br />
+              Sollten Sie bereits Vertr&auml;ge mit einem oder mehreren Paketdiensten haben, k&ouml;nnen Sie diese in shipcloud verwenden und mit ihren eigenen Account-Daten Versandlabels erstellen.<br />
               <br />
               <font color="#91c24f">
               <ul>
-                <li style="list-style-type: circle !important;"><strong>Weitere Informationen zu shipcloud finden Sie hier: <a href="http://..." target="_blank"><font style="font-size:12px; color:#56a5cf;"><u><strong>Klick mich!</strong></u></font></a></strong></li>
-                <li style="list-style-type: circle !important;"><strong>Informationen zum PlugIn finden Sie hier: <a href="http://..." target="_blank"><font style="font-size:12px; color:#56a5cf;"><u><strong>Klick mich!</strong></u></font></a></strong></li>
+                <li style="list-style-type: circle !important;"><strong>Weitere Informationen zu shipcloud finden Sie hier: <a href="http://www.shipcloud.io/de/lp/modified" target="_blank"><font style="font-size:12px; color:#56a5cf;"><u><strong>Klick mich!</strong></u></font></a></strong></li>
               </ul>
               </font>
               <br />
@@ -82,22 +81,22 @@ require (DIR_WS_INCLUDES.'head.php');
               </ul>
               </font>
               <br />
-              <font color="#d52d53"><strong>Features / Funktionalitäten</strong></font>
+              <font color="#d52d53"><strong>Features / Funktionalit&auml;ten</strong></font>
               <br /><br />
               <font color="#91c24f">
               <ul>
-                <li style="list-style-type: circle !important;">Erstellung von Versandetiketten für die Paketdienste:<br />DHL, UPS, DPD, Hermes, GLS, ILOXX, FedEx und Liefery</li>
+                <li style="list-style-type: circle !important;">Erstellung von Versandetiketten f&uuml;r die Paketdienste:<br />DHL, UPS, DPD, Hermes, GLS, ILOXX, FedEx und Liefery</li>
                 <li style="list-style-type: circle !important;">Es ist nur ein shipcloud-Account notwendig, alle Paketdienste in einem Account!</li>
-                <li style="list-style-type: circle !important;">Direkte Erstellung der Labels aus dem modified-Backend heraus, über die shipcloud-API, kein Hantieren mit CSV-Dateien.</li>
+                <li style="list-style-type: circle !important;">Direkte Erstellung der Labels aus dem modified-Backend heraus, &uuml;ber die shipcloud-API, kein Hantieren mit CSV-Dateien.</li>
                 <li style="list-style-type: circle !important;">Automatische Hinterlegung der Trackingcodes in den Bestelldetails.</li>
-                <li style="list-style-type: circle !important;">Automatische Änderung des Bestellstatus nach der Etiketten-Erstellung möglich, schicken Sie z.B. eine E-Mail mit entsprechendem Trackingcode an Ihre Kunden.</li>
-                <li style="list-style-type: circle !important;">Automatische Berechnung des Versandgewichts (pauschales Versandgewicht ebenfalls möglich).</li>
-                <li style="list-style-type: circle !important;">Automatische Berechnung der Packstück-Anzahl.</li>
-                <li style="list-style-type: circle !important;">Stapelverarbeitung – Erstellen Sie beliebig viele Etiketten gleichzeitig.</li>
-                <li style="list-style-type: circle !important;">Sendungsverfolgung direkt aus den Bestelldetails möglich.</li>
-                <li style="list-style-type: circle !important;">Porto-/ Versandkosten werden in der Etikettenübersicht angezeigt.</li>
+                <li style="list-style-type: circle !important;">Automatische &Auml;nderung des Bestellstatus nach der Etiketten-Erstellung m&ouml;glich, schicken Sie z.B. eine E-Mail mit entsprechendem Trackingcode an Ihre Kunden.</li>
+                <li style="list-style-type: circle !important;">Automatische Berechnung des Versandgewichts (pauschales Versandgewicht ebenfalls m&ouml;glich).</li>
+                <li style="list-style-type: circle !important;">Automatische Berechnung der Packst&uuml;ck-Anzahl.</li>
+                <li style="list-style-type: circle !important;">Stapelverarbeitung &ndash; Erstellen Sie beliebig viele Etiketten gleichzeitig.</li>
+                <li style="list-style-type: circle !important;">Sendungsverfolgung direkt aus den Bestelldetails m&ouml;glich.</li>
+                <li style="list-style-type: circle !important;">Porto-/ Versandkosten werden in der Etiketten&uuml;bersicht angezeigt.</li>
                 <li style="list-style-type: circle !important;">Ihr eigenes Shop-Logo auf den Versandetiketten.</li>
-                <li style="list-style-type: circle !important;">Multi- / Subshop-Fähigkeit – Je Shop können abweichende Daten hinterlegt werden (z.B. der sichtbarer Shopname auf dem Label).</li>
+                <li style="list-style-type: circle !important;">Multi- / Subshop-F&auml;higkeit &ndash; Je Shop k&ouml;nnen abweichende Daten hinterlegt werden (z.B. der sichtbarer Shopname auf dem Label).</li>
               </ul>
               </font>
             </td>
