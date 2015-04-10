@@ -257,6 +257,9 @@
                                                               AND sort_order >= 0
                                                          ORDER BY sort_order"
                                                          );
+                      if ($_GET['gID'] == '111125' && xtc_db_num_rows($configuration_query) < 1) {
+                        echo TEXT_PAYPAL_NOT_INSTALLED;
+                      }
                       while ($configuration = xtc_db_fetch_array($configuration_query)) {
                         $configuration['configuration_value'] = stripslashes($configuration['configuration_value']); //Web28 - 2012-08-09 - fix slashes
                         if ($_GET['gID'] == 6) {

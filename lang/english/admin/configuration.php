@@ -919,4 +919,6 @@ define('GUEST_ACCOUNT_EDIT_DESC', 'enable guest accounts to see and edit avvount
 
 define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail signature');
 define('EMAIL_SIGNATURE_ID_DESC', 'Select the content to be used for the signature in shop E-Mails.');
+
+define('TEXT_PAYPAL_NOT_INSTALLED', '<div class="important_info">PayPal not installed. This can be done <a href="'.xtc_href_link(FILENAME_MODULES, 'set=payment&module=paypal').'">here</a>.</div>');
 ?>
