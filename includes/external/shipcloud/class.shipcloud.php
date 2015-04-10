@@ -240,7 +240,7 @@ class shipcloud {
     
     $headers = array('Accept: application/json',
                      'Content-Type: application/json',
-                     'Affiliate-ID: modified-org'
+                     'Affiliate-ID: plugin.modified.zW7tF8ek'
                      );
 
     $ch = curl_init();
