@@ -63,7 +63,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <img src="images/shipcloud/Ideenkurier_Grafik_No1.jpg" />
               <img src="images/shipcloud/Ideenkurier_Grafik_No2.jpg" /><br />
               <br />
-              Mit dem modified-PlugIn &bdquo;shipcloud" k&ouml;nnen Sie aus dem modified-Backend heraus Versandetiketten erzeugen. Es werden alle relevanten Paketdienste unterst&uuml;tzt: DHL, UPS, DPD, Hermes, GLS, ILOXX, FedEx und Liefery. Sie brauchen nur einen shipcloud-Account, und k&ouml;nnen sofort mit dem Paket Ihrer Wahl zu g&uuml;nstigen Konditionen verschicken und verfolgen.<br />
+              Mit dem PlugIn &bdquo;shipcloud&ldquo; k&ouml;nnen Sie aus dem Backend Ihrer modified eCommerce Shopsoftware heraus Versandetiketten erzeugen. Es werden alle relevanten Paketdienste unterst&uuml;tzt: DHL, UPS, DPD, Hermes, GLS, ILOXX, FedEx und Liefery. Sie brauchen nur einen shipcloud-Account, und k&ouml;nnen sofort mit dem Paket Ihrer Wahl zu g&uuml;nstigen Konditionen verschicken und verfolgen.<br />
               <br />
               Sollten Sie bereits Vertr&auml;ge mit einem oder mehreren Paketdiensten haben, k&ouml;nnen Sie diese in shipcloud verwenden und mit ihren eigenen Account-Daten Versandlabels erstellen.<br />
               <br />
@@ -87,7 +87,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <ul>
                 <li style="list-style-type: circle !important;">Erstellung von Versandetiketten f&uuml;r die Paketdienste:<br />DHL, UPS, DPD, Hermes, GLS, ILOXX, FedEx und Liefery</li>
                 <li style="list-style-type: circle !important;">Es ist nur ein shipcloud-Account notwendig, alle Paketdienste in einem Account!</li>
-                <li style="list-style-type: circle !important;">Direkte Erstellung der Labels aus dem modified-Backend heraus, &uuml;ber die shipcloud-API, kein Hantieren mit CSV-Dateien.</li>
+                <li style="list-style-type: circle !important;">Direkte Erstellung der Labels aus dem Backend der modified eCommerce Shopsoftware heraus, &uuml;ber die shipcloud-API, kein Hantieren mit CSV-Dateien.</li>
                 <li style="list-style-type: circle !important;">Automatische Hinterlegung der Trackingcodes in den Bestelldetails.</li>
                 <li style="list-style-type: circle !important;">Automatische &Auml;nderung des Bestellstatus nach der Etiketten-Erstellung m&ouml;glich, schicken Sie z.B. eine E-Mail mit entsprechendem Trackingcode an Ihre Kunden.</li>
                 <li style="list-style-type: circle !important;">Automatische Berechnung des Versandgewichts (pauschales Versandgewicht ebenfalls m&ouml;glich).</li>
