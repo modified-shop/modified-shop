@@ -892,7 +892,7 @@ define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Show noimage.gif');
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no image assigned');
 
 define('MODULE_SMALL_BUSINESS_TITLE', 'Small Business');
-define('MODULE_SMALL_BUSINESS_DESC', 'If the store will be switched to small business according to § 19 UStG.<br/><b>Important:</b>On Module-> Summary The module ot_tax must be disabled or uninstalled. In addition to the individual customer groups the prices incl. VAT must be set to No');
+define('MODULE_SMALL_BUSINESS_DESC', 'Shall the store be switched to small business according to &sect; 19 UStG.<br/><b>Important:</b> Under "Module" -> "Order Total" the module "ot_tax" must be disabled or uninstalled. In addition you have to set "Prices incl. Tax" to "No" in the particular customer groups.');
 
 define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Compression');
 define('COMPRESS_HTML_OUTPUT_DESC', 'Compress HTML Output from the Template?');
