@@ -90,6 +90,7 @@ define('FILENAME_CSV_BACKEND','csv_backend.php');
 define('FILENAME_CLEVERREACH','cleverreach.php');
 define('FILENAME_SUPERMAILER','supermailer.php');
 define('FILENAME_LOGS', 'logs.php');
+define('FILENAME_SHIPCLOUD', 'shipcloud.php');
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/filenames/','php') as $file) require ($file);
