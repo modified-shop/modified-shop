@@ -553,5 +553,9 @@ UPDATE configuration SET configuration_value = 'False', configuration_group_id =
 UPDATE configuration SET configuration_value = 'False', configuration_group_id = '6' WHERE configuration_key = 'SESSION_CHECK_IP_ADDRESS';
 UPDATE configuration SET configuration_value = 'False', configuration_group_id = '6' WHERE configuration_key = 'SESSION_RECREATE';
 
+#Tomcraft - 2015-04-09 - add shipcloud
+ALTER TABLE admin_access ADD shipcloud INT(1) NOT NULL DEFAULT 0 AFTER logs;
+UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 # Keep an empty line at the end of this file for the db_updater to work properly
