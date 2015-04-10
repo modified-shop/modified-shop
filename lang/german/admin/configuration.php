@@ -916,4 +916,6 @@ define('GUEST_ACCOUNT_EDIT_DESC', 'D&uuml;rfen G&auml;ste ihre Accountdetails se
 
 define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail Signatur');
 define('EMAIL_SIGNATURE_ID_DESC', 'W&auml;hlen sie den Content aus, der als Signatur in den Shop E-Mails verwendet werden soll.');
+
+define('TEXT_PAYPAL_NOT_INSTALLED', '<div class="important_info">PayPal wurde noch nicht installiert. Dies kann <a href="'.xtc_href_link(FILENAME_MODULES, 'set=payment&module=paypal').'">hier</a> gemacht werden.</div>');
 ?>
