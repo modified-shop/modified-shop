@@ -47,6 +47,31 @@
     define($configuration['cfgKey'], $configuration['cfgValue']);
   }
 
+  if (isset($_POST['action']) && ($_POST['action'] == 'get_states')) {
+      $check_query = xtc_db_query("select count(*) as total from " . TABLE_ZONES . " where zone_country_id = '" . (int)$_POST['countryid'] . "'");
+      $check = xtc_db_fetch_array($check_query);
+      $entry_state_has_zones = ($check['total'] > 0);
+      
+      $zone_name = isset($_POST['zone']) ? $_POST['zone'] : '';
+      $zone_name =  $character_set == 'latin1' ? utf8_decode($zone_name) : $zone_name;
+
+      if ($check['total'] > 0)
+      {
+        $zones_array = array();
+        $zones_query = xtc_db_query("select zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$_POST['countryid'] . "' order by zone_name");
+        while ($zones_values = xtc_db_fetch_array($zones_query)) {
+          $zones_array[] = array('id' => ($zones_values['zone_name']), 'text' => ($zones_values['zone_name']));
+        }
+        $t_output =  xtc_draw_pull_down_menu('STATE', $zones_array, (isset($_POST['zone']) ? $zone_name : ''), 'class="select_states"' );
+      }
+      else
+      {
+        $t_output =  xtc_draw_input_field('STATE', (isset($_POST['zone']) && !isset($_POST['type']) ? $zone_name : ''));
+      }
+      $json_output = $t_output;
+      echo $json_output;
+      EXIT;
+  }
   $messageStack = new messageStack();
   $process = false;
 
@@ -512,7 +537,7 @@
                        </tr>
                        <tr>
                          <td><strong><?php echo TEXT_EMAIL; ?></strong></td>
-                         <td><?php echo xtc_draw_input_field_installer('EMAIL_ADRESS'); ?>*<strong><?php echo TEXT_EMAIL_LONG; ?></strong></td>
+                         <td><?php echo xtc_draw_input_field_installer('EMAIL_ADRESS'); ?> * <?php echo TEXT_EMAIL_LONG; ?></td>
                        </tr>
                        <tr>
                          <td><strong><?php echo TEXT_STREET; ?></strong></td>
@@ -526,38 +551,15 @@
                          <td><strong><?php echo TEXT_CITY; ?></strong></td>
                          <td><?php echo xtc_draw_input_field_installer('CITY'); ?>*</td>
                        </tr>
-                       <?php // BOF - Tomcraft - 2009-10-14 - removed option to select state as is is not needed in germany ?>
-                       <!--
-                         <tr>
-                           <td><strong><?php //echo TEXT_STATE; ?></strong></td>
-                         <td>
-                         <?php
-                       /*
-                       if ($process == true) {
-                       if ($entry_state_has_zones == true) {
-                               $zones_array = array();
-                               $zones_query = xtc_db_query("select zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' order by zone_name");
-                               while ($zones_values = xtc_db_fetch_array($zones_query)) {
-                                 $zones_array[] = array('id' => $zones_values['zone_name'], 'text' => $zones_values['zone_name']);
-                               }
-                               echo xtc_draw_pull_down_menu('STATE', $zones_array);
-                             } else {
-                               echo xtc_draw_input_field('STATE');
-                             }
-                           } else {
-                             echo xtc_draw_input_field('STATE');
-                           }
-                       */
-                         ?>
-                         *</td>
-                       </tr>
-                       //-->
-                       <?php // EOF - Tomcraft - 2009-10-14 - removed option to select state as is is not needed in germany ?>
-                       <tr>
+                        <tr>
                          <td><strong><?php echo TEXT_COUNTRY; ?></strong></td>
-                         <?php // BOF - Tomcraft - 2009-10-14 - changed default country to germany ?>
-                         <td><?php echo xtc_get_country_list('COUNTRY',81); ?>&nbsp;*<strong><?php echo TEXT_COUNTRY_LONG; ?></strong></td>
-                         <?php // EOF - Tomcraft - 2009-10-14 - changed default country to germany ?>
+                         <td><?php echo xtc_get_country_list('COUNTRY',(isset($_POST['COUNTRY']) && $_POST['COUNTRY'] > 0 ? $_POST['COUNTRY'] : 81)); ?>&nbsp; * <?php echo TEXT_COUNTRY_LONG; ?></td>
+                       </tr>
+                       <tr>
+                          <td><strong><?php echo TEXT_STATE; ?></strong></td>
+                          <td id="states_container">
+                            <?php echo xtc_draw_input_field_installer('STATE'); ?>
+                          </td>
                        </tr>
                        <tr>
                          <td><strong><?php echo TEXT_TEL; ?></strong></td>
@@ -585,15 +587,15 @@
                      <table width="100%" border="0">
                        <tr>
                          <td width="26%"><strong><?php echo  TEXT_STORE; ?></strong></td>
-                         <td width="74%"><?php echo xtc_draw_input_field_installer('STORE_NAME'); ?>*<strong><?php echo  TEXT_STORE_LONG; ?></strong></td>
+                         <td width="74%"><?php echo xtc_draw_input_field_installer('STORE_NAME'); ?> * <?php echo  TEXT_STORE_LONG; ?></td>
                        </tr>
                        <tr>
                          <td><strong><?php echo  TEXT_COMPANY; ?></strong></td>
-                         <td><?php echo xtc_draw_input_field_installer('COMPANY'); ?>*</td>
+                         <td><?php echo xtc_draw_input_field_installer('COMPANY'); ?> *</td>
                        </tr>
                        <tr>
                          <td><strong><?php echo  TEXT_EMAIL_FROM; ?></strong></td>
-                         <td><?php echo xtc_draw_input_field_installer('EMAIL_ADRESS_FROM'); ?>*<strong><?php echo  TEXT_EMAIL_FROM_LONG; ?></strong></td>
+                         <td><?php echo xtc_draw_input_field_installer('EMAIL_ADRESS_FROM'); ?> * <?php echo  TEXT_EMAIL_FROM_LONG; ?></td>
                        </tr>
                      </table>
                    </div>
@@ -628,4 +630,32 @@
     <br />
     <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?></div>
   </body>
+  <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      create_states($('select[name="COUNTRY"]').val());
+      
+      $('select[name="COUNTRY"]').change(function() {
+        create_states($(this).val());
+      });
+    });
+    
+    function create_states(val) {
+        var type = '';
+        var zone = '&zone=' + $('[name="STATE"]').val();
+        if ($('select[name="STATE"]').length) {
+          type = '&type=select';
+        }
+        $('#states_container').html('<img src="images/loading.gif">');
+        jQuery.ajax({
+          data:     'action=get_states&countryid=' + val + type + zone ,
+          url:      'install_step6.php',
+          type:     "POST",
+          async:    true,
+          success:  function(t_states) {
+            $('#states_container').html(t_states);
+          }
+        });
+    }
+  </script>
 </html>
