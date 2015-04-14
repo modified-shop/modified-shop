@@ -108,6 +108,10 @@
   if (isset($_POST['char']) && $_POST['char'] != '') {
     $char = $_POST['char'];
   }
+  if (defined('DB_SERVER_CHARSET') && DB_SERVER_CHARSET != '') {
+    $char = DB_SERVER_CHARSET;
+  }
+  
   switch ($char) {
     case 'utf8':
       define('INSTALL_CHARSET', 'utf8');
