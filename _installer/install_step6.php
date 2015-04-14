@@ -85,8 +85,8 @@
     $street_address = xtc_db_prepare_input($_POST['STREET_ADRESS']);
     $postcode = xtc_db_prepare_input($_POST['POST_CODE']);
     $city = xtc_db_prepare_input($_POST['CITY']);
-    $zone_id = xtc_db_prepare_input($_POST['zone_id']);
-    $state = xtc_db_prepare_input($_POST['STATE']);
+    //$zone_id = xtc_db_prepare_input($_POST['zone_id']);
+    $state = (isset($_POST['STATE']) ? xtc_db_prepare_input($_POST['STATE']) : '');
     $country = xtc_db_prepare_input($_POST['COUNTRY']);
     $telephone = xtc_db_prepare_input($_POST['TELEPHONE']);
     $password = xtc_db_prepare_input($_POST['PASSWORD']);
@@ -141,33 +141,18 @@
       $messageStack->add('install_step6', '<img src="images/icons/error.png" />&nbsp;'.ENTRY_COUNTRY_ERROR);
     }
 
-    // BOF - Tomcraft - 2009-10-14 - removed option to select state as is is not needed in germany
-    /*
-    if (ACCOUNT_STATE == 'true') {
-      $zone_id = 0;
-      $check_query = xtc_db_query("select count(*) as total from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "'");
-      $check = xtc_db_fetch_array($check_query);
-      $entry_state_has_zones = ($check['total'] > 0);
-      if ($entry_state_has_zones == true) {
-        $zone_query = xtc_db_query("select distinct zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' and (zone_name like '" . xtc_db_input($state) . "%' or zone_code like '%" . xtc_db_input($state) . "%')");
-        if (xtc_db_num_rows($zone_query) > 0) {
-          $zone = xtc_db_fetch_array($zone_query);
-          $zone_id = $zone['zone_id'];
-        } else {
-          $error = true;
-
-          $messageStack->add('install_step6', ENTRY_STATE_ERROR_SELECT);
-        }
-      } else {
-        if (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
-          $error = true;
-
-          $messageStack->add('install_step6', ENTRY_STATE_ERROR);
-        }
-      }
+    $zone_id = 0;
+    $check_query = xtc_db_query("select count(*) as total from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "'");
+    $check = xtc_db_fetch_array($check_query);
+    $entry_state_has_zones = ($check['total'] > 0);
+    if ($entry_state_has_zones == true) {
+      $zone_query = xtc_db_query("select distinct zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' and (zone_name like '" . xtc_db_input($state) . "%' or zone_code like '%" . xtc_db_input($state) . "%')");
+      if (xtc_db_num_rows($zone_query) > 0) {
+        $zone = xtc_db_fetch_array($zone_query);
+        $zone_id = $zone['zone_id'];
+      } 
     }
-    */
-    // EOF - Tomcraft - 2009-10-14 - removed option to select state as is is not needed in germany
+    
     if (strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
       $error = true;
       $messageStack->add('install_step6', '<img src="images/icons/error.png" />&nbsp;'.ENTRY_TELEPHONE_NUMBER_ERROR);
