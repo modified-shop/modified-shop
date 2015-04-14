@@ -207,7 +207,7 @@ if ($messageStack->size('download') > 0)
 
 $smarty->assign('dl', (isset($dl) ? $dl : array()));
 $smarty->assign('language', $_SESSION['language']);
-$smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 $smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/downloads.html');

@@ -76,8 +76,8 @@
       $smarty->compile_dir=DIR_FS_CATALOG.'templates_c';
       $smarty->config_dir=DIR_FS_CATALOG.'lang';
 
-      $smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
-      $smarty->assign('logo_path',HTTP_SERVER  . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+      $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG'templates/'.CURRENT_TEMPLATE.'/');
+      $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 
       $smarty->assign('AMMOUNT', $currencies->format($_POST['amount']));
       $smarty->assign('MESSAGE', $_POST['message']);
@@ -122,8 +122,8 @@
       $smarty->compile_dir=DIR_FS_CATALOG.'templates_c';
       $smarty->config_dir=DIR_FS_CATALOG.'lang';
 
-      $smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
-      $smarty->assign('logo_path',HTTP_SERVER  . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+      $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+      $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
       $smarty->assign('AMMOUNT', $currencies->format($_POST['amount']));
       $smarty->assign('MESSAGE', stripslashes($_POST['message'])); //web28 2011-07-07 - Fix html email
       $smarty->assign('GIFT_ID', $id1);

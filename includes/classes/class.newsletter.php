@@ -228,7 +228,7 @@ class newsletter {
 
     // assign language to template for caching
     $smarty->assign('language', $_SESSION['language']);
-    $smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+    $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
     $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 
     // assign vars

@@ -70,7 +70,7 @@
           ) 
       {
         $smarty->assign('language', $_SESSION['language']);
-        $smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');    
+        $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');    
         $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
         $smarty->assign('NAME', $_POST['name']);
         $smarty->assign('EMAIL', $_POST['email']);

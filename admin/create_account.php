@@ -320,10 +320,7 @@
         $smarty->template_dir = DIR_FS_CATALOG.'templates';
         $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
         $smarty->config_dir = DIR_FS_CATALOG.'lang';
-        //BOF - GTB - 2010-08-03 - Security Fix - Base
-        $smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-        //$smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
-        //EOF - GTB - 2010-08-03 - Security Fix - Base
+        $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
         $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
         $smarty->assign('NAME', $customers_lastname.' '.$customers_firstname);
         $smarty->assign('EMAIL', $customers_email_address);
