@@ -14,7 +14,7 @@
   //header( 'Status: 404 Not Found' );
 
   $module_smarty = new Smarty;
-  $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+  $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
   $module_smarty->assign('language', $_SESSION['language']);
   $module_smarty->assign('ERROR', $error);

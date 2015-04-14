@@ -99,7 +99,7 @@ if ($send_order) {
   $smarty->assign('downloads_content_html', $module_html);
   $smarty->assign('downloads_content_txt', $module_txt);
 } else {
-  $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+  $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
   $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/downloads.html');
   $smarty->assign('downloads_content', $module);
 }

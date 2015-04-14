@@ -62,7 +62,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
   // assign language to template for caching
   $smarty->assign('language', $order->info['language']);
-  $smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
+  $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
   $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
   $smarty->assign('oID', $order->info['order_id']);
 

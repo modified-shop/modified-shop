@@ -31,7 +31,7 @@
 
 $module_smarty = new Smarty;
 
-$module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 if(defined('MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS') && MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS=='True' && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'klarna_partPayment') === false){
     include_once(DIR_WS_INCLUDES.'modules/payment/klarna/display_klarna_cart.php');
 }

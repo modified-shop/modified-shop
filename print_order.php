@@ -25,7 +25,7 @@ $smarty = new Smarty;
 if (DIR_WS_BASE == '') {
   $smarty->assign('base_href', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
 }
-$smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 $oID = (int) $_GET['oID'];
 

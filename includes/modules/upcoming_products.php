@@ -19,7 +19,7 @@
 if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
 
   $module_smarty = new Smarty;
-  $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+  $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
   // include needed functions
   require_once (DIR_FS_INC.'xtc_date_short.inc.php');

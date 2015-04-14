@@ -74,7 +74,7 @@ if (xtc_db_num_rows($content_query, true) > 0) {
   }
 
   $module_smarty->assign('language', $_SESSION['language']);
-  $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+  $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
   $module_smarty->assign('module_content', $module_content);
   $module_smarty->caching = 0;
   $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/products_media.html');

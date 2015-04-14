@@ -27,7 +27,7 @@
 defined('CATEGORIES_IMAGE_SHOW_NO_IMAGE') OR define('CATEGORIES_IMAGE_SHOW_NO_IMAGE', 'true');
 
 $default_smarty = new smarty;
-$default_smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
+$default_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 $default_smarty->assign('session', xtc_session_id());
 
 // define defaults
