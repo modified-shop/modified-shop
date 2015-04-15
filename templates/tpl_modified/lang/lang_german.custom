@@ -1,4 +1,8 @@
 zoomtext = 'F&uuml;r eine gr&ouml;&szlig;ere Ansicht klicken Sie auf das Vorschaubild'
+products_desc = 'Produktbeschreibung'
+products_fsk18_check = 'Dieser Artikel kann erst nach erfolgter Altersverifikation gekauft werden.'
+products_manufacturer_model = 'HAN:'
+
 first = '&laquo; Erster'
 back = '&laquo; vorheriger'
 overview = '&Uuml;bersicht'
