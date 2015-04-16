@@ -52,7 +52,7 @@
   define('DIR_FS_LOG', DIR_FS_CATALOG . 'log/');
 
   // external
-  define('DIR_WS_EXTERNAL', DIR_WS_CATALOG . 'includes/external/');
+  define('DIR_WS_EXTERNAL', 'includes/external/');
   define('DIR_FS_EXTERNAL', DIR_FS_CATALOG . 'includes/external/');
 
 ?>
