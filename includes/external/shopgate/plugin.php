@@ -3312,18 +3312,22 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				}
 				// BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 				if (isset($_SESSION['paypal_express_new_customer']) && $_SESSION['paypal_express_new_customer'] == 'true' && isset($_SESSION['ACCOUNT_PASSWORD']) && $_SESSION['ACCOUNT_PASSWORD'] == 'true') {
+          require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
 					require_once (DIR_FS_INC.'xtc_create_password.inc.php');
 					require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 					$password_encrypted =  xtc_RandomString(ENTRY_PASSWORD_MIN_LENGTH * 2);
 					$password = xtc_encrypt_password($password_encrypted);
+    
+          $vlcode = xtc_random_charcode(32);
+          $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$check_customer['customers_id'].'&key='.$vlcode, 'SSL');
 
 					if (!defined('PROJECT_MAJOR_VERSION')) {
 						xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "' where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
+					  $smarty->assign('NEW_PASSWORD', $password_encrypted);
 					} else {
-						xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "', password_request_time = now() where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
+						xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "', password_request_key = '".xtc_db_input($vlcode)."', password_request_time = now() where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
+					  $smarty->assign('NEW_PASSWORD', $link);
 					}
-
-					$smarty->assign('NEW_PASSWORD', $password_encrypted);
 				}
 				// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 				//BOF - web28 - 2010-03-20 - Send Order by Admin
