@@ -209,6 +209,7 @@
           break;
 
       case 'statusconfirm' :
+        $error = false;
         $check_status_query = xtc_db_query("SELECT customers_firstname,
                                                    customers_lastname,
                                                    customers_email_address,
@@ -224,23 +225,39 @@
           if ($_POST['status'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
             $sql_add_data_array['account_type'] = '0';
           }
-          xtc_db_perform(TABLE_CUSTOMERS, array_merge($sql_data_array, $sql_add_data_array), 'update', "customers_id = '".$customers_id."'"); 
-
-          // update customers status in newsletters_recipients
-          xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_id = '".$customers_id."'"); 
-                    
-          // create insert for admin access table if customers status is set to 0
-          if ($_POST['status'] == 0) {
-            xtc_db_query("INSERT INTO  ".TABLE_ADMIN_ACCESS." (customers_id,start) VALUES ('".$customers_id."','1')");
-          } else {
-            xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$customers_id."'");
+          
+          // check existing account
+          if ($sql_add_data_array['account_type'] == '0') {
+            $check_existing_customer_query = xtc_db_query("SELECT customers_id
+                                                             FROM ".TABLE_CUSTOMERS."
+                                                            WHERE customers_email_address = '".xtc_db_input($check_status['customers_email_address'])."'
+                                                              AND account_type = '0'
+                                                              AND customers_id != '".$customers_id."'");
+            if (xtc_db_num_rows($check_existing_customer_query) > 0) {
+              $error = true;
+              $messageStack->add_session(WARNING_CUSTOMER_ALREADY_EXISTS, 'warning');
+            }
           }
-          $sql_data_array = array('customers_id' => $customers_id,
-                                  'new_value' => (int)$_POST['status'],
-                                  'old_value' => $check_status['customers_status'],
-                                  'date_added' => 'now()',
-                                  'customer_notified' => '0');
-          xtc_db_perform(TABLE_CUSTOMERS_STATUS_HISTORY, $sql_data_array);          
+          
+          if ($error === false) {
+            xtc_db_perform(TABLE_CUSTOMERS, array_merge($sql_data_array, $sql_add_data_array), 'update', "customers_id = '".$customers_id."'"); 
+
+            // update customers status in newsletters_recipients
+            xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_id = '".$customers_id."'"); 
+                    
+            // create insert for admin access table if customers status is set to 0
+            if ($_POST['status'] == 0) {
+              xtc_db_query("INSERT INTO  ".TABLE_ADMIN_ACCESS." (customers_id,start) VALUES ('".$customers_id."','1')");
+            } else {
+              xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$customers_id."'");
+            }
+            $sql_data_array = array('customers_id' => $customers_id,
+                                    'new_value' => (int)$_POST['status'],
+                                    'old_value' => $check_status['customers_status'],
+                                    'date_added' => 'now()',
+                                    'customer_notified' => '0');
+            xtc_db_perform(TABLE_CUSTOMERS_STATUS_HISTORY, $sql_data_array);  
+          }        
         }
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID', 'action')).'cID='.$customers_id));
         break;
