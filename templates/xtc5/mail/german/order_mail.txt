@@ -16,8 +16,9 @@ vielen Dank für Ihre Bestellung.
 
 {$PAYMENT_INFO_TXT}
 
-{if isset($NEW_PASSWORD) && $NEW_PASSWORD != ''}{*Paypal Express*}
-        Ihr Account Passwort: {$NEW_PASSWORD}
+{if isset($NEW_PASSWORD) && $NEW_PASSWORD != ''}
+Ihr Account wurde mit einem Passwort geschŸtzt.
+Sie kšnnen das Passwort unter folgendem Link Šndern: {$NEW_PASSWORD}
 {/if}
 
 {if $COMMENTS}

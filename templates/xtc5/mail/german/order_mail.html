@@ -45,13 +45,11 @@
         {$COMMENTS}<br />
         {/if}
         <br />
-        {*BOF - web28 - 2011-02-01 - Paypal Express*}
         {if $NEW_PASSWORD}
           <br /><br />
-          <strong>Ihr Account Passwort:</strong><br />
-          {$NEW_PASSWORD}<br /><br />
+          <b>Ihr Account wurde mit einem Passwort gesch&uuml;tzt.</b><br />
+          Sie k&ouml;nnen das Passwort unter folgendem Link &auml;ndern: <a href="{$NEW_PASSWORD}">{$NEW_PASSWORD}</a><br /><br />
         {/if}
-        {*EOF - web28 - 2011-02-01 - Paypal Express*}
         </font>
       </p>
     </td>
