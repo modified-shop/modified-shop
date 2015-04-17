@@ -71,7 +71,7 @@ class eustandardtransfer {
   }
 
   function confirmation() {
-    $confirmation = array ('title' => $this->title.': '.$this->check(), 
+    $confirmation = array ('title' => $this->title.': ', 
                            'fields' => array (array ('title' => '', 
                                                      'field' => $this->info)
                                               )

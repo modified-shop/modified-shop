@@ -73,9 +73,15 @@ class moneyorder {
 		return false;
 	}
 
-	function confirmation() {
-		return array ('title' => MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION);
-	}
+  function confirmation() {
+    $confirmation = array ('title' => $this->title.': ', 
+                           'fields' => array (array ('title' => '', 
+                                                     'field' => MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION)
+                                              )
+                           );
+
+    return $confirmation;
+  }
 
 	function process_button() {
 		return false;
