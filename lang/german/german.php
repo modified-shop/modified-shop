@@ -403,7 +403,7 @@ define('TEXT_EMAIL_SUBJECT','Ihre Newsletter-Anmeldung');
 
 define('TEXT_CUSTOMER_GUEST',' Gast');
 
-define('TEXT_LINK_MAIL_SENDED','Ihre Anfrage nach einem neuen Passwort muss von Ihnen erst best&auml;tigt werden.<br />Deshalb wurde Ihnen vom System eine E-Mail mit einem Best&auml;tigungslink geschickt. Bitte klicken Sie nach Erhalt der E-Mail auf den mitgeschickten Link, um eine weitere E-Mail mit Ihrem neuen Anmelde-Passwort zu erhalten. Andernfalls wird Ihnen das neue Passwort nicht zugestellt oder eingerichtet!');
+define('TEXT_LINK_MAIL_SENDED','Ihre Anfrage nach einem neuen Passwort muss von Ihnen erst best&auml;tigt werden.<br />Deshalb wurde Ihnen vom System eine E-Mail mit einem Best&auml;tigungslink geschickt. Bitte klicken Sie nach Erhalt der E-Mail auf den mitgeschickten Link. Andernfalls k&ouml;nnen Sie kein neues Passwort vergeben! <br/><br/>Der Best&auml;tigungslink ist %s Minuten g&uuml;ltig.');
 define('TEXT_PASSWORD_MAIL_SENDED','Eine E-Mail mit einem neuen Anmelde-Passwort wurde Ihnen soeben zugestellt.<br />Bitte &auml;ndern Sie nach Ihrer n&auml;chsten Anmeldung Ihr Passwort wie gew&uuml;nscht.');
 define('TEXT_CODE_ERROR','Bitte geben Sie Ihre E-Mail-Adresse und den Sicherheitscode erneut ein. <br />Achten Sie dabei auf Tippfehler!');
 define('TEXT_EMAIL_ERROR','Bitte geben Sie Ihre E-Mail-Adresse und den Sicherheitscode erneut ein. <br />Achten Sie dabei auf Tippfehler!');

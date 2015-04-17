@@ -403,7 +403,7 @@ define('TEXT_EMAIL_SUBJECT','Your newsletter account');
 
 define('TEXT_CUSTOMER_GUEST','Guest');
 
-define('TEXT_LINK_MAIL_SENDED','Your new password request must be confirmed.<br />An e-mail with a confirmation link has been send out. Click the link in order to complete recieve a new password!');
+define('TEXT_LINK_MAIL_SENDED','Your new password request must be confirmed.<br />An e-mail with a confirmation link has been send out. Click the link in order to complete your request.<br/><br/>The confirmation link is %s minutes valid.');
 define('TEXT_PASSWORD_MAIL_SENDED','You will receive an e-mail with your new password within minutes.<br />Please change your password after your first login.');
 define('TEXT_CODE_ERROR','The security code you entered was not correct.<br />Please try again.');
 define('TEXT_EMAIL_ERROR','The e-mail address is not registered in our store.<br />Please try again.');
