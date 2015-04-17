@@ -142,10 +142,10 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
                 $count++;
               }
               $max_staffel = MIN_GROUP_PRICE_STAFFEL;
-              if ($count >= $max_staffel) {
-                $max_staffel = $count+1;
-                xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . (int)$max_staffel . "', last_modified = NOW() where configuration_key='" . 'MIN_GROUP_PRICE_STAFFEL' . "'");
-              }
+              //if ($count >= $max_staffel) {
+                //$max_staffel = $count+1;
+                //xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . (int)$max_staffel . "', last_modified = NOW() where configuration_key='" . 'MIN_GROUP_PRICE_STAFFEL' . "'");
+              //}
               for ($is=$count; $is<$max_staffel; $is++) {
               ?>
               <tr>
