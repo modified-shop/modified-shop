@@ -156,7 +156,7 @@ define('BOX_SALES_REPORT','Umsatzstatistik');
 define('BOX_MODULE_EXPORT','Export Module');
 define('BOX_MODULE_SYSTEM','System Module');
 define('BOX_HEADING_GV_ADMIN', 'Gutscheine/Coupons');
-define('BOX_GV_ADMIN_QUEUE', 'Gutschein Queue');
+define('BOX_GV_ADMIN_QUEUE', 'Gutschein Warteschlange');
 define('BOX_GV_ADMIN_MAIL', 'Gutschein E-Mail');
 define('BOX_GV_ADMIN_SENT', 'Gutscheine versandt');
 define('BOX_COUPON_ADMIN','Coupon Admin');
