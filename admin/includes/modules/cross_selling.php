@@ -14,6 +14,10 @@
    --------------------------------------------------------------*/
 
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+
+  $confirm_save_entry = ' onclick="ButtonClicked(this);"';
+  $confirm_submit = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onsubmit="return confirmSubmit(\'\',\''. SAVE_ENTRY .'\',this)"' : '';
+
   // select article data
   $article_query = "SELECT products_name
                       FROM ".TABLE_PRODUCTS_DESCRIPTION."
@@ -137,7 +141,7 @@
       <?php
       // search results
       if ($_GET['search']) {
-        echo xtc_draw_form('product_search', FILENAME_CATEGORIES, '', 'GET').PHP_EOL;
+        echo xtc_draw_form('product_search', FILENAME_CATEGORIES, '', 'GET', $confirm_submit).PHP_EOL;
         echo xtc_draw_hidden_field('action', 'edit_crossselling').PHP_EOL;
         echo xtc_draw_hidden_field('special', 'add_entries').PHP_EOL;
         echo xtc_draw_hidden_field('current_product_id', $_GET['current_product_id']).PHP_EOL;
@@ -264,7 +268,7 @@
             ?>
           </table>
           <div class="mrg5">
-            <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" onclick="return confirm('<?php echo SAVE_ENTRY; ?>')">
+            <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
           </div>
         </form>
         <?php
