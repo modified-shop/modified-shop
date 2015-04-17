@@ -153,49 +153,15 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
       }
 
       if ($error === false) {
-        // login customer
-        $check_country_query = xtc_db_query("SELECT entry_country_id, 
-                                                    entry_zone_id 
-                                               FROM ".TABLE_ADDRESS_BOOK." 
-                                              WHERE customers_id = '".(int) $check_customer['customers_id']."' 
-                                                AND address_book_id = '".$check_customer['customers_default_address_id']."'");
-        $check_country = xtc_db_fetch_array($check_country_query);
-
-        $_SESSION['customer_gender'] = $check_customer['customers_gender'];
-        $_SESSION['customer_first_name'] = $check_customer['customers_firstname'];
-        $_SESSION['customer_last_name'] = $check_customer['customers_lastname'];
-        $_SESSION['customer_email_address'] = $check_customer['customers_email_address'];
-        $_SESSION['customer_id'] = $check_customer['customers_id'];
-        $_SESSION['customer_vat_id'] = $check_customer['customers_vat_id'];
-        $_SESSION['customer_default_address_id'] = $check_customer['customers_default_address_id'];
-        $_SESSION['customer_country_id'] = $check_country['entry_country_id'];
-        $_SESSION['customer_zone_id'] = $check_country['entry_zone_id'];
-
         $sql_data_array = array('customers_password' => xtc_encrypt_password($password_new),
                                 'password_request_key' => '',
                                 'password_request_time' => '',
                                 'customers_last_modified' => 'now()',
                                 );
-        xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $_SESSION['customer_id']."'");
+        xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $check_customer['customers_id']."'");
         
-        xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." 
-                         SET customers_info_date_of_last_logon = now(), 
-                             customers_info_number_of_logons = customers_info_number_of_logons+1 
-                       WHERE customers_info_id = '".(int) $_SESSION['customer_id']."'");
-        xtc_write_user_info((int) $_SESSION['customer_id']);
-  
-        // restore cart contents
-        $_SESSION['cart']->restore_contents();
-  
-        if (isset($econda) && is_object($econda)) {
-          $econda->_loginUser();			
-        }
-        
-        // message
-        $messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');
-        
-        // redirect
-        xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+        // redirect to login
+        xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'info_message=SUCCESS_PASSWORD_UPDATED', 'SSL'));
       }
     }
   }
