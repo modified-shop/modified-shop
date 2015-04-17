@@ -140,11 +140,6 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 			if (isset($econda) && is_object($econda)) {
 			  $econda->_loginUser();			
       }
-
-      if (strtotime($check_customer['password_request_time']) > 0) {
-        $_SESSION['customer_password_change'] = true;
-        xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_PASSWORD, 'info_message=need_change_pwd', 'SSL'), 'SSL');
-      }
       
       // define pages allowed to redirect
       $redirect_array = array(FILENAME_ACCOUNT_HISTORY_INFO, 
