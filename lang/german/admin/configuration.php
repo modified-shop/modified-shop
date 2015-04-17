@@ -918,4 +918,13 @@ define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail Signatur');
 define('EMAIL_SIGNATURE_ID_DESC', 'W&auml;hlen sie den Content aus, der als Signatur in den Shop E-Mails verwendet werden soll.');
 
 define('TEXT_PAYPAL_NOT_INSTALLED', '<div class="important_info">PayPal wurde noch nicht installiert. Dies kann <a href="'.xtc_href_link(FILENAME_MODULES, 'set=payment&module=paypal').'">hier</a> gemacht werden.</div>');
+
+define('POLICY_MIN_LOWER_CHARS_TITLE', 'Passwort Kleinbuchstaben');
+define('POLICY_MIN_LOWER_CHARS_DESC', 'Wie viele Kleinbuchstaben soll das Passwort mindestens haben ?');
+define('POLICY_MIN_UPPER_CHARS_TITLE', 'Passwort Grossbuchstaben');
+define('POLICY_MIN_UPPER_CHARS_DESC', 'Wie viele Grossbuchstaben soll das Passwort mindestens haben ?');
+define('POLICY_MIN_NUMERIC_CHARS_TITLE', 'Passwort Zahlen');
+define('POLICY_MIN_NUMERIC_CHARS_DESC', 'Wie viele Zahlen soll das Passwort mindestens haben ?');
+define('POLICY_MIN_SPECIAL_CHARS_TITLE', 'Passwort Sonderzeichen');
+define('POLICY_MIN_SPECIAL_CHARS_DESC', 'Wie viele Sonderzeichen soll das Passwort mindestens haben ?');
 ?>

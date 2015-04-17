@@ -921,4 +921,13 @@ define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail signature');
 define('EMAIL_SIGNATURE_ID_DESC', 'Select the content to be used for the signature in shop E-Mails.');
 
 define('TEXT_PAYPAL_NOT_INSTALLED', '<div class="important_info">PayPal not installed. This can be done <a href="'.xtc_href_link(FILENAME_MODULES, 'set=payment&module=paypal').'">here</a>.</div>');
+
+define('POLICY_MIN_LOWER_CHARS_TITLE', 'Password lower case');
+define('POLICY_MIN_LOWER_CHARS_DESC', 'How many lower case signs should to the password at least have ?');
+define('POLICY_MIN_UPPER_CHARS_TITLE', 'Password upper case');
+define('POLICY_MIN_UPPER_CHARS_DESC', 'How many upper case signs should to the password at least have ?');
+define('POLICY_MIN_NUMERIC_CHARS_TITLE', 'Password Numbers');
+define('POLICY_MIN_NUMERIC_CHARS_DESC', 'How many numeric signs should to the password at least have ?');
+define('POLICY_MIN_SPECIAL_CHARS_TITLE', 'Password special chars');
+define('POLICY_MIN_SPECIAL_CHARS_DESC', 'How many special chars signs should to the password at least have ?');
 ?>

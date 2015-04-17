@@ -13,10 +13,10 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-define('POLICY_MIN_LOWER_CHARS', 1);
-define('POLICY_MIN_UPPER_CHARS', 1);
-define('POLICY_MIN_NUMERIC_CHARS', 1);
-define('POLICY_MIN_SPECIAL_CHARS', 1);
+defined('POLICY_MIN_LOWER_CHARS') or define('POLICY_MIN_LOWER_CHARS', 1);
+defined('POLICY_MIN_UPPER_CHARS') or define('POLICY_MIN_UPPER_CHARS', 1);
+defined('POLICY_MIN_NUMERIC_CHARS') or define('POLICY_MIN_NUMERIC_CHARS', 1);
+defined('POLICY_MIN_SPECIAL_CHARS') or define('POLICY_MIN_SPECIAL_CHARS', 1);
 
 class password_policy 
 {
