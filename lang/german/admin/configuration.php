@@ -927,4 +927,7 @@ define('POLICY_MIN_NUMERIC_CHARS_TITLE', 'Passwort Zahlen');
 define('POLICY_MIN_NUMERIC_CHARS_DESC', 'Wie viele Zahlen soll das Passwort mindestens haben ?');
 define('POLICY_MIN_SPECIAL_CHARS_TITLE', 'Passwort Sonderzeichen');
 define('POLICY_MIN_SPECIAL_CHARS_DESC', 'Wie viele Sonderzeichen soll das Passwort mindestens haben ?');
+
+define('SHOW_SHIPPING_EXCL_TITLE', 'Versandkosten zzgl.');
+define('SHOW_SHIPPING_EXCL_DESC', 'Anzeige von zzgl. oder inkl. Versandkosten');
 ?>

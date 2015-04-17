@@ -85,7 +85,7 @@ class main {
     $link_class = defined('TPL_POPUP_SHIPPING_LINK_CLASS') ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_SHIPPING_LINK_CLASS;
     
     if (SHOW_SHIPPING == 'true') {
-      return ' '.SHIPPING_EXCL.' <a rel="nofollow" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.SHIPPING_INFOS.$link_parameters, $request_type).'" title="Information" class="'.$link_class.'">'.SHIPPING_COSTS.'</a>';
+      return ' '.((SHOW_SHIPPING_EXCL == 'false') ? SHIPPING_INCL : SHIPPING_EXCL).' <a rel="nofollow" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.SHIPPING_INFOS.$link_parameters, $request_type).'" title="Information" class="'.$link_class.'">'.SHIPPING_COSTS.'</a>';
     }
   }
 

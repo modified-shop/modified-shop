@@ -930,4 +930,7 @@ define('POLICY_MIN_NUMERIC_CHARS_TITLE', 'Password Numbers');
 define('POLICY_MIN_NUMERIC_CHARS_DESC', 'How many numeric signs should to the password at least have ?');
 define('POLICY_MIN_SPECIAL_CHARS_TITLE', 'Password special chars');
 define('POLICY_MIN_SPECIAL_CHARS_DESC', 'How many special chars signs should to the password at least have ?');
+
+define('SHOW_SHIPPING_EXCL_TITLE', 'Shippingcost excl.');
+define('SHOW_SHIPPING_EXCL_DESC', 'Show excl. or incl. shippingcost');
 ?>

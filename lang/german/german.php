@@ -469,6 +469,7 @@ define('TAX_INFO_INCL','inkl. %s MwSt.');
 define('TAX_INFO_EXCL','exkl. %s MwSt.');
 define('TAX_INFO_ADD','zzgl. %s MwSt.');
 define('SHIPPING_EXCL','zzgl.');
+define('SHIPPING_INCL','inkl.');
 define('SHIPPING_COSTS','Versandkosten');
 
 define('SHIPPING_TIME','Lieferzeit: ');

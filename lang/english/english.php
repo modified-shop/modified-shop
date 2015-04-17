@@ -469,6 +469,7 @@ define('TAX_INFO_INCL','%s VAT incl.');
 define('TAX_INFO_EXCL','%s VAT excl.');
 define('TAX_INFO_ADD','%s VAT plus.');
 define('SHIPPING_EXCL','excl.');
+define('SHIPPING_INCL','incl.');
 define('SHIPPING_COSTS','Shipping costs'); 
 
 define('SHIPPING_TIME','Shipping time: ');
