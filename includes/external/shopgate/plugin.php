@@ -20,7 +20,7 @@
 *
 *  @author Shopgate GmbH <interfaces@shopgate.com>
 */
-define('SHOPGATE_PLUGIN_VERSION', '2.9.10');
+define('SHOPGATE_PLUGIN_VERSION', '2.9.12');
 require_once(dirname(__FILE__) . '/Model/ShopgateModelLoader.php');
 require_once(dirname(__FILE__) . '/helper/ShopgatePluginInitHelper.php');
 /**
@@ -397,34 +397,35 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				$oldPrice = $this->formatPriceNumber( $oldPrice * ( 1 + ( $tax_rate / 100 ) ) );
 			}
 			
-			$itemArr['item_number'] = $item["products_id"];
-			$itemArr['item_number_public'] = $item['products_model'];
-			$itemArr['manufacturer'] = $item["manufacturers_name"];
-			$itemArr['item_name'] = trim( preg_replace('/<[^>]+>/',' ', $item["products_name"]) );
-			$itemArr['description'] =  $itemModel->getDescriptionToProduct($item, $this->config->getExportDescriptionType());
-			$itemArr['unit_amount'] = $this->formatPriceNumber($price);
-			$itemArr['currency'] = $this->currency["code"];
-			$itemArr['is_available'] = $item["products_status"];
-			$itemArr['available_text'] = $this->_getAvailableText($item);
-			$itemArr['url_deeplink'] = $deeplink;
-			$itemArr['urls_images'] = $images;
-			$itemArr['categories'] = $categories;
-			$itemArr['category_numbers'] = implode("||", $category_numbers);
-			$itemArr['use_stock'] = (STOCK_ALLOW_CHECKOUT == 'true' || STOCK_CHECK != 'true') ? 0 : 1;
-			$itemArr['stock_quantity'] = $item['products_quantity'];
-			$itemArr['weight'] = $item["products_weight"]*1000;
-			$itemArr['tags'] = trim($item["products_keywords"]);
-			$itemArr['tax_percent'] = $tax_rate;
-			$itemArr['shipping_costs_per_order'] = 0;
-			$itemArr['additional_shipping_costs_per_unit'] = 0;
-			$itemArr['ean'] = preg_replace("/\s+/i",'',$item["products_ean"]);
-			$itemArr['last_update'] = $item["products_last_modified"];
-			$itemArr['block_pricing'] =  $this->_getPackeges($item, $tax_rate);
-			$itemArr['age_rating'] = $item["products_fsk18"] == 1 ? '18' : '';
-			$itemArr['related_shop_item_numbers'] = $this->_getRelatedShopItems($item["products_id"]);
-			$itemArr['basic_price'] = $this->_getProductVPE($item, $price);
-			$itemArr['is_highlight'] = $item["products_startpage"];
-			$itemArr['highlight_order_index'] = $item["products_startpage_sort"];
+			$itemArr['item_number']							= $item["products_id"];
+			$itemArr['item_number_public']					= $item['products_model'];
+			$itemArr['manufacturer']						= $item["manufacturers_name"];
+			$itemArr['item_name']							= trim( preg_replace('/<[^>]+>/',' ', $item["products_name"]) );
+			$itemArr['description']							= $itemModel->getDescriptionToProduct($item, $this->config->getExportDescriptionType());
+			$itemArr['unit_amount']							= $this->formatPriceNumber($price);
+			$itemArr['currency']							= $this->currency["code"];
+			$itemArr['is_available']						= $item["products_status"];
+			$itemArr['available_text']						= $this->_getAvailableText($item);
+			$itemArr['url_deeplink']						= $deeplink;
+			$itemArr['urls_images']							= $images;
+			$itemArr['categories']							= $categories;
+			$itemArr['category_numbers']					= implode("||", $category_numbers);
+			$itemArr['use_stock']							= (STOCK_ALLOW_CHECKOUT == 'true' || STOCK_CHECK != 'true') ? 0 : 1;
+			$itemArr['active_status']						= (STOCK_ALLOW_CHECKOUT == 'false' && STOCK_CHECK == 'true') ? "active" : "stock";
+			$itemArr['stock_quantity']						= $item['products_quantity'];
+			$itemArr['weight']								= $item["products_weight"]*1000;
+			$itemArr['tags']								= trim($item["products_keywords"]);
+			$itemArr['tax_percent']							= $tax_rate;
+			$itemArr['shipping_costs_per_order']			= 0;
+			$itemArr['additional_shipping_costs_per_unit']	= 0;
+			$itemArr['ean']									= preg_replace("/\s+/i",'',$item["products_ean"]);
+			$itemArr['last_update']							= $item["products_last_modified"];
+			$itemArr['block_pricing']						=  $this->_getPackeges($item, $tax_rate);
+			$itemArr['age_rating']							= $item["products_fsk18"]					== 1 ? '18' : '';
+			$itemArr['related_shop_item_numbers']			= $this->_getRelatedShopItems($item["products_id"]);
+			$itemArr['basic_price']							= $this->_getProductVPE($item, $price);
+			$itemArr['is_highlight']						= $item["products_startpage"];
+			$itemArr['highlight_order_index']				= $item["products_startpage_sort"];
 			
 			if($this->config->getReverseItemsSortOrder()){
 				$itemArr['sort_order'] = $item["products_sort"] + $addToOrderIndex;// $addToOrderIndex to make positive sort_order
@@ -1440,7 +1441,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		return $shopInfo;
 	}
-
+	
 	/**
 	 * return an array with all valid shipping methods to an order
 	 * @param ShopgateCart $sgShoppingcart
@@ -1448,176 +1449,190 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	 * @return array of ShopgateShippingMethod
 	 */
 	private function getShipping(ShopgateCart $sgShoppingcart, ShopgateCouponModel $couponModel) {
+		$this->log("Start getting the shop system's shipping methods.", ShopgateLogger::LOGTYPE_DEBUG);
 		$resultShippingMethods = array();
-
-		if (defined('MODULE_SHIPPING_INSTALLED') && MODULE_SHIPPING_INSTALLED != "") {
-
-			/* INCLUDES BOF */
-			global $total_count,$shipping_weight,$total_weight, $shipping_num_boxes;
-
-			$total_count  = count($sgShoppingcart->getItems());
-			$total_weight = $couponModel->getProductsWeight($sgShoppingcart->getItems());
-			$shipping_num_boxes = 1;
-
-			include_once(rtrim(DIR_WS_CLASSES,"/") ."/shopping_cart.php"  );
-			global $cart;
-			$cart = new shoppingCart();
-
-			foreach($sgShoppingcart->getItems() as $product){
-				$options = $product->getOptions();
-				$sgOptions = array();
-
-				foreach($options as $option){
-					$sgOptions[$option->getOptionNumber()] = $option->getValueNumber();
-				}
-				$cart->add_cart($product->getItemNumber(),$product->getQuantity(),$sgOptions);
+		
+		if (!defined('MODULE_SHIPPING_INSTALLED') || MODULE_SHIPPING_INSTALLED == "") {
+			return $resultShippingMethods;
+		}
+		
+		/* include globals */
+		global 	$total_count, $shipping_weight, $total_weight,
+				  $shipping_num_boxes, $cart, $order, $sendto, $billto, $ot_shipping;;
+		
+		$neededFilesFromShopSystem = array(
+			"/shopping_cart.php",
+			"/order.php",
+			"/order_total/ot_shipping.php",
+			"/shipping.php"
+		);
+		
+		foreach ($neededFilesFromShopSystem as $file) {
+			if(file_exists(rtrim(DIR_WS_CLASSES, "/") . $file)){
+				include_once(rtrim(DIR_WS_CLASSES, "/") . $file);
+			}
+			if(file_exists(rtrim(DIR_WS_MODULES, "/") . $file)){
+				include_once(rtrim(DIR_WS_MODULES, "/") . $file);
+			}
+		}
+		
+		$total_count 		= count($sgShoppingcart->getItems());
+		$total_weight 		= $couponModel->getProductsWeight($sgShoppingcart->getItems());
+		$shipping_num_boxes = 1;
+		$cart 				= new shoppingCart();
+		
+		foreach($sgShoppingcart->getItems() as $product){
+			$options 	= $product->getOptions();
+			$sgOptions 	= array();
+			$itemNumber	= !is_null($product->getParentItemNumber())
+				? $product->getParentItemNumber()
+				: $product->getItemNumber()
+			;
+			
+			foreach($options as $option){
+				$sgOptions[$option->getOptionNumber()] = $option->getValueNumber();
 			}
 			
-			if(is_array($_SESSION)){
-				$_SESSION['cart'] = $cart;
-			}
+			$cart->add_cart($itemNumber, $product->getQuantity(), $sgOptions);
+		}
+		
+		if(is_array($_SESSION)){
+			$_SESSION['cart'] = $cart;
+		}
+		
+		$sgDeliverAddress = $sgShoppingcart->getDeliveryAddress();
+		if (!empty($sgDeliverAddress)){
+			$country 	= $couponModel->getCountryByIso2Name($sgDeliverAddress->getCountry());
+			$zone 		= $couponModel->getZoneByCountryId($country["countries_id"]);
+			$postcode 	= $sgDeliverAddress->getZipcode();
+			$sendto 	= array(
+				"firstname" 			=> $sgDeliverAddress->getFirstName(),
+				"lastname" 				=> $sgDeliverAddress->getLastName(),
+				"company" 				=> $sgDeliverAddress->getCompany(),
+				"street_address" 		=> $sgDeliverAddress->getStreet1(),
+				"suburb" 				=> "",
+				"postcode" 				=> $postcode,
+				"city" 					=> $sgDeliverAddress->getCity(),
+				"zone_id" 				=> $zone["zone_id"],
+				"zone_name" 			=> $zone["zone_name"],
+				"country_id" 			=> $country["countries_id"],
+				"country_iso_code_2" 	=> $country["countries_iso_code_2"],
+				"country_iso_code_3" 	=> $country["countries_iso_code_3"],
+				"address_format_id" 	=> "",
+			);
+		}
+		
+		$sgInvoiceAddress = $sgShoppingcart->getInvoiceAddress();
+		if (empty($sgInvoiceAddress)){
+			$billto = $sendto;
+		}else{
+			$country 	= $couponModel->getCountryByIso2Name($sgInvoiceAddress->getCountry());
+			$zone 		= $couponModel->getZoneByCountryId($country["countries_id"]);
+			$postcode 	= $sgInvoiceAddress->getZipcode();
+			$billto 	=  array(
+				"firstname" 			=> $sgInvoiceAddress->getFirstName(),
+				"lastname" 				=> $sgInvoiceAddress->getLastName(),
+				"company" 				=> $sgInvoiceAddress->getCompany(),
+				"street_address" 		=> $sgInvoiceAddress->getStreet1(),
+				"suburb" 				=> "",
+				"postcode" 				=> $postcode,
+				"city" 					=> $sgInvoiceAddress->getCity(),
+				"zone_id" 				=> $zone["zone_id"],
+				"zone_name" 			=> $zone["zone_name"],
+				"country_id" 			=> $country["countries_id"],
+				"country_iso_code_2" 	=> $country["countries_iso_code_2"],
+				"country_iso_code_3" 	=> $country["countries_iso_code_3"],
+				"address_format_id" 	=> "",
+			);
+		}
+		
+		$order 										= new order();
+		$order->cart();
+		$order->delivery['country']['iso_code_2'] 	= $country["countries_iso_code_2"];
+		$order->delivery['country']['id'] 			= $country["countries_id"];
+		$order->delivery['country']['zone_id'] 		= $zone["zone_id"];
+		$_SESSION['delivery_zone'] 					= $country["countries_iso_code_2"];
+		$ot_shipping 								= new ot_shipping();
+		$ot_shipping->process();
+		
+		$shipping_modules = new shipping;
+		
+		if(defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true')){
+			$pass = false;
 			
-			include_once(rtrim(DIR_WS_CLASSES,"/") ."/order.php"  );
-			global $order,$sendto,$billto;
-
-			$sgDeliverAddress = $sgShoppingcart->getDeliveryAddress();
-
-			if (!empty($sgDeliverAddress)){
-				$country = $couponModel->getCountryByIso2Name($sgDeliverAddress->getCountry());
-				$zone = $couponModel->getZoneByCountryId($country["countries_id"]);
-				$postcode = $sgDeliverAddress->getZipcode();
-				$sendto =  array(
-					"firstname" => $sgDeliverAddress->getFirstName(),
-					"lastname" => $sgDeliverAddress->getLastName(),
-					"company" => $sgDeliverAddress->getCompany(),
-					"street_address" => $sgDeliverAddress->getStreet1(),
-					"suburb" => "",
-					"postcode" => $postcode,
-					"city" => $sgDeliverAddress->getCity(),
-					"zone_id" => $zone["zone_id"],
-					"zone_name" => $zone["zone_name"],
-					"country_id" => $country["countries_id"],
-					"country_iso_code_2" => $country["countries_iso_code_2"],
-					"country_iso_code_3" => $country["countries_iso_code_3"],
-					"address_format_id" => "",
-				);
-			}
-
-			$sgInvoiceAddress = $sgShoppingcart->getInvoiceAddress();
-
-			if (empty($sgInvoiceAddress)){
-				$billto = $sendto;
-			}else{
-				$country = $couponModel->getCountryByIso2Name($sgInvoiceAddress->getCountry());
-				$zone = $couponModel->getZoneByCountryId($country["countries_id"]);
-				$postcode = $sgInvoiceAddress->getZipcode();
-				$billto =  array(
-					"firstname" => $sgInvoiceAddress->getFirstName(),
-					"lastname" => $sgInvoiceAddress->getLastName(),
-					"company" => $sgInvoiceAddress->getCompany(),
-					"street_address" => $sgInvoiceAddress->getStreet1(),
-					"suburb" => "",
-					"postcode" => $postcode,
-					"city" => $sgInvoiceAddress->getCity(),
-					"zone_id" => $zone["zone_id"],
-					"zone_name" => $zone["zone_name"],
-					"country_id" => $country["countries_id"],
-					"country_iso_code_2" => $country["countries_iso_code_2"],
-					"country_iso_code_3" => $country["countries_iso_code_3"],
-					"address_format_id" => "",
-				);
-			}
-			$order = new order();
-			$order->cart();
-			$order->delivery['country']['iso_code_2'] 	= $country["countries_iso_code_2"];
-			$order->delivery['country']['id'] 	= $country["countries_id"];
-			$order->delivery['country']['zone_id'] 	= $zone["zone_id"];
-			$_SESSION['delivery_zone'] 				= $country["countries_iso_code_2"];
-
-			include_once(rtrim(DIR_WS_MODULES,"/") ."/order_total/ot_shipping.php"  );
-			global $ot_shipping;
-			$ot_shipping = new ot_shipping();
-			$ot_shipping->process();
-
-			require(DIR_WS_CLASSES . 'shipping.php');
-			$shipping_modules = new shipping;
-			/* INCLUDES EOF */
-
-			if ( defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') ) {
-				$pass = false;
-
-				switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
-					case 'national':
-						if ($order->delivery['country_id'] == STORE_COUNTRY) {
-							$pass = true;
-						}
-						break;
-					case 'international':
-						if ($order->delivery['country_id'] != STORE_COUNTRY) {
-							$pass = true;
-						}
-						break;
-					case 'both':
+			switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
+				case 'national':
+					if ($order->delivery['country_id'] == STORE_COUNTRY){
 						$pass = true;
-						break;
-				}
-
-				$free_shipping = false;
-				if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
-					$free_shipping = true;
-					include(DIR_WS_LANGUAGES . $this->language . '/modules/order_total/ot_shipping.php');
-				}
-			} else {
-				$free_shipping = false;
+					}
+					break;
+				case 'international':
+					if ($order->delivery['country_id'] != STORE_COUNTRY) {
+						$pass = true;
+					}
+					break;
+				case 'both':
+					$pass = true;
+					break;
 			}
-
-			// if shipping is free all other shipping methods will be ignored
-			if($free_shipping){
-				$sgShippingMethod = new ShopgateShippingMethod();
-				$sgShippingMethod->setDescription("Total amount over " .MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER . " is free");
-				$sgShippingMethod->setTitle("Free Shipping");
-				$sgShippingMethod->setAmount(0);
-				return array($sgShippingMethod);
+			
+			$free_shipping = false;
+			if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
+				$free_shipping = true;
+				include(DIR_WS_LANGUAGES . $this->language . '/modules/order_total/ot_shipping.php');
 			}
-
-			$quotes = $shipping_modules->quote();
-
-			foreach($quotes AS $shippindModule){
-
-				//we dont support usps as shopgate plugin shipping method
-				//also on error continue
-				if(strpos($shippindModule['module'], "United States Postal Service") !== false || !empty($shippindModule['error'])){
+		} else {
+			$free_shipping = false;
+		}
+		
+		//if shipping is free all other shipping methods will be ignored
+		if($free_shipping){
+			$sgShippingMethod = new ShopgateShippingMethod();
+			$sgShippingMethod->setDescription("Total amount over "
+				. MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER . " is free");
+			$sgShippingMethod->setTitle("Free Shipping");
+			$sgShippingMethod->setAmount(0);
+			return array($sgShippingMethod);
+		}
+		
+		$quotes = $shipping_modules->quote();
+		$unsupportedModules = array("United States Postal Service");
+		foreach($quotes AS $shippindModule){
+			//we dont support usps as shopgate plugin shipping method, also on error continue
+			foreach($unsupportedModules AS $moduleName){
+				if(strpos($shippindModule['module'], $moduleName) !== false || !empty($shippindModule['error'])){
 					continue;
 				}
-
-				$sgShippingMethod = new ShopgateShippingMethod();
-				$sgShippingMethod->setId($shippindModule["id"]);
-				$sgShippingMethod->setTitle($shippindModule["module"]);
-				$sgShippingMethod->setTaxPercent($shippindModule["tax"]);
-
-				if(isset($shippindModule["tax"]) && !empty($shippindModule["tax"])){
-					$sgShippingMethod->setTaxClass($couponModel->getTaxClassByValue($shippindModule["tax"]));
-				}
-
-				if(!empty($shippindModule["methods"]) && is_array($shippindModule["methods"])){
-					foreach($shippindModule["methods"] as $method){
-
-						$tmp_shipping = $sgShippingMethod;
-						$cost = $method["cost"];
-
-						if(isset($shippindModule["tax"]) && !empty($shippindModule["tax"])){
-							$costWithTax = $this->formatPriceNumber($cost * (1 + ($shippindModule["tax"]/100)),2);
-							$tmp_shipping->setAmountWithTax($costWithTax);
-							$tmp_shipping->setAmount($cost);
-						}else{
-							$tmp_shipping->setAmountWithTax($cost);
-						}
-
-						$resultShippingMethods[] = $tmp_shipping;
+			}
+			
+			$sgShippingMethod = new ShopgateShippingMethod();
+			$sgShippingMethod->setId($shippindModule["id"]);
+			$sgShippingMethod->setTitle($shippindModule["module"]);
+			$sgShippingMethod->setTaxPercent($shippindModule["tax"]);
+			
+			if(isset($shippindModule["tax"]) && !empty($shippindModule["tax"])){
+				$sgShippingMethod->setTaxClass($couponModel->getTaxClassByValue($shippindModule["tax"]));
+			}
+			
+			if(!empty($shippindModule["methods"]) && is_array($shippindModule["methods"])){
+				foreach($shippindModule["methods"] as $method){
+					
+					$tmp_shipping 	= $sgShippingMethod;
+					$cost 			= $method["cost"];
+					
+					if(isset($shippindModule["tax"]) && !empty($shippindModule["tax"])){
+						$costWithTax = $this->formatPriceNumber($cost * (1 + ($shippindModule["tax"]/100)),2);
+						$tmp_shipping->setAmountWithTax($costWithTax);
+						$tmp_shipping->setAmount($cost);
+					}else{
+						$tmp_shipping->setAmountWithTax($cost);
 					}
+					
+					$resultShippingMethods[] = $tmp_shipping;
 				}
 			}
 		}
+		
 		return $resultShippingMethods;
 	}
 	
@@ -1765,7 +1780,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$this->log("execute _getVariations() ...", ShopgateLogger::LOGTYPE_DEBUG);
 		
 		$sg_prod_var = array();
-		$query = xtc_db_query($itemModel->getAttributesToProductQuery($productId));
+		$query = xtc_db_query($itemModel->getAttributesToProductQuery($productId, $this->config->getExportOptionAsInputField()));
 
 		//		$options = array_pad(array(), 5, "");
 		$options = array();
@@ -1952,7 +1967,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	 */
 	private function _getInputFields(ShopgateItemModel $itemModel ,$productId){
 		$this->log("execute _getInputFields() ...", ShopgateLogger::LOGTYPE_DEBUG);
-		$query = xtc_db_query($itemModel->getAttributesInputFieldsToProductsQuery($productId));
+		$query = xtc_db_query($itemModel->getAttributesInputFieldsToProductsQuery($productId, $this->config->getExportOptionAsInputField()));
 		$i = 0;
 		$old = '';
 		while($inputFields = xtc_db_fetch_array($query)) {
@@ -1978,10 +1993,11 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			$i++;
 			
 			//			$sg_product_var["has_input_fields"] = 1;
+			$sg_product_var["input_field_".$i."_number"] = $inputField[0]['products_options_id'];
 			$sg_product_var["input_field_".$i."_type"] = 'text';
 			$sg_product_var["input_field_".$i."_label"] = strip_tags($inputField[0]["products_options_name"]);
-			$sg_product_var["input_field_".$i."_add_amount"] = ($inputField["options_values_price"] != 0)
-				? "=>".$inputField["price_prefix"].round($inputField["options_values_price"], 2)
+			$sg_product_var["input_field_".$i."_add_amount"] = ($inputField[0]["options_values_price"] != 0)
+				? $inputField[0]["price_prefix"].round($inputField[0]["options_values_price"], 2)
 				: "";
 			// keine Angabe möglich
 			$sg_product_var["input_field_".$i."_infotext"] = '';
@@ -2038,7 +2054,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		return $categories;
 	}
-
+	
 	/**
 	 * Exportiere alle Produktbilder
 	 * @param ShopgateItemModel $itemModel
@@ -2047,7 +2063,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	 */
 	private function _getProductsImages($itemModel, $product) {
 		$this->log("execute _getProductImages() ...", ShopgateLogger::LOGTYPE_DEBUG);
-		$images = $itemModel->generateImageUrls($product["products_id"]);
+		$images = $itemModel->generateImageUrls($product);
 		return implode("||", $images);
 	}
 
@@ -2776,32 +2792,28 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 					}
 				}
 			}
-			$textFields = $orderItem->getInputs();
-			if(!empty($textFields)){
-				foreach($textFields as $textField){
-					$query = "SELECT 
-								po.products_options_name AS 'products_options',
-								pa.options_values_price AS 'options_values_price',
-								pa.price_prefix,
-								po.products_options_id AS 'orders_products_options_id',
-								pov.products_options_values_id AS 'orders_products_options_values_id'
-								FROM products_attributes as pa
-								JOIN products_options AS po ON po.products_options_id = pa.options_id AND po.language_id = {$this->languageId}
-								JOIN products_options_values_to_products_options AS povtpo ON povtpo.products_options_id = po.products_options_id 
-								JOIN products_options_values AS pov ON povtpo.products_options_values_id = pov.products_options_values_id AND pa.options_values_id = pov.products_options_values_id AND pov.language_id = {$this->languageId}
-								WHERE pa.products_id = {$item_number}  AND pov.products_options_values_name = 'TEXTFELD'";
-					$result = xtc_db_query($query);
-					$data   = xtc_db_fetch_array($result);
+			$inputFields = $orderItem->getInputs();
+			if(!empty($inputFields)){
+				foreach($inputFields as $inputField){
+					$price = ($inputField->getAdditionalAmountWithTax() < 0)
+							? ($inputField->getAdditionalAmountWithTax() * -1)
+							:  $inputField->getAdditionalAmountWithTax()
+					;
+					$pricePrefix = ($inputField->getAdditionalAmountWithTax() < 0)
+							? '-'
+							: '+'
+					;
+					
+					$data = array();
 					$data["orders_id"] = $dbOrderId;
 					$data["orders_products_id"] = $productsOrderId;
-					$data["products_options_values"] = $textField->getUserInput();
-					$productAttributeData = array();
-					foreach($data as $fieldName => $value) {
-						if(!empty($tblAttributeFields[$fieldName])) {
-							$productAttributeData[$fieldName] = $value;
-						}
-					}
-					xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $productAttributeData);
+					$data["products_options_values"] = $inputField->getUserInput();
+					$data["products_options"] = $inputField->getLabel();
+					$data["products_options_values"] = $inputField->getUserInput();
+					$data["options_values_price"] = $price;
+					$data["price_prefix"] = $pricePrefix;
+					
+					xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $data);
 				}
 			}
 		}
@@ -3312,22 +3324,18 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				}
 				// BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 				if (isset($_SESSION['paypal_express_new_customer']) && $_SESSION['paypal_express_new_customer'] == 'true' && isset($_SESSION['ACCOUNT_PASSWORD']) && $_SESSION['ACCOUNT_PASSWORD'] == 'true') {
-          require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
 					require_once (DIR_FS_INC.'xtc_create_password.inc.php');
 					require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 					$password_encrypted =  xtc_RandomString(ENTRY_PASSWORD_MIN_LENGTH * 2);
 					$password = xtc_encrypt_password($password_encrypted);
-    
-          $vlcode = xtc_random_charcode(32);
-          $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$check_customer['customers_id'].'&key='.$vlcode, 'SSL');
 
 					if (!defined('PROJECT_MAJOR_VERSION')) {
 						xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "' where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
-					  $smarty->assign('NEW_PASSWORD', $password_encrypted);
 					} else {
-						xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "', password_request_key = '".xtc_db_input($vlcode)."', password_request_time = now() where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
-					  $smarty->assign('NEW_PASSWORD', $link);
+						xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "', password_request_time = now() where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
 					}
+
+					$smarty->assign('NEW_PASSWORD', $password_encrypted);
 				}
 				// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 				//BOF - web28 - 2010-03-20 - Send Order by Admin

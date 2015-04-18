@@ -148,12 +148,6 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 			WHERE p.products_status = 1
 			";
 		
-		// sp.specials_quantity > 0 deleted, to handle the check in the loop
-		
-		if(STOCK_CHECK == "true" && STOCK_ALLOW_CHECKOUT == 'false') {
-			$qry .= " AND p.products_quantity > 0 ";
-		}
-		
 		// Code for enabling to download specific products (for debugging purposes only, at this time)
 		if(!empty($_REQUEST['item_numbers']) && is_array($_REQUEST['item_numbers'])) {
 			$qry .= " AND p.products_id IN ('".implode("', '", $_REQUEST['item_numbers'])."') ";
@@ -377,21 +371,29 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 	/**
 	 * @param $productId
 	 * @param $type
+	 * @param string $optionsAsInputFields Comma-separated list of option IDs that should be exported as input fields
 	 *
 	 * @return string|void
 	 */
-	private function getAttributeQuery($productId, $type){
+	private function getAttributeQuery($productId, $type, $optionsAsInputFields = ''){
+		$optionsAsInputFields = trim($optionsAsInputFields, ',');
+		$optionsAsInputFields = (!empty($optionsAsInputFields))
+				? 'AND ({$condition} ('.$optionsAsInputFields.'))'
+				: ''
+		;
 		
 		switch($type){
 			case self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_TEXT_FIELD:
-					$query = "AND pov.products_options_values_name = 'TEXTFELD' ORDER BY po.products_options_id, pa.sortorder";
-				break;
+				$optionsAsInputFields = str_replace('{$condition}', 'pov.products_options_values_name = \'TEXTFELD\' OR pa.options_id IN', $optionsAsInputFields);
+				$query = $optionsAsInputFields." ORDER BY po.products_options_id, pa.sortorder";
+			break;
 			
 			case self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_OTHER:
-					$query = "AND pov.products_options_values_name != 'TEXTFELD' ORDER BY po.products_options_id, pa.sortorder ASC";
-				break;
+				$optionsAsInputFields = str_replace('{$condition}', 'pov.products_options_values_name != \'TEXTFELD\' AND pa.options_id NOT IN', $optionsAsInputFields);
+				$query = $optionsAsInputFields." ORDER BY po.products_options_id, pa.sortorder ASC";
+			break;
 			
-				default: return; break;
+			default: return; break;
 		}
 		
 		return "SELECT
@@ -414,22 +416,24 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 	
 	/**
 	 * @param $productId
+	 * @param string $optionsAsInputFields Comma-separated list of option IDs that should be exported as input fields
 	 *
 	 * @return string|void
 	 */
-	public function getAttributesToProductQuery($productId)
+	public function getAttributesToProductQuery($productId, $optionsAsInputFields = '')
 	{
-		return $this->getAttributeQuery($productId, self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_OTHER);
+		return $this->getAttributeQuery($productId, self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_OTHER, $optionsAsInputFields);
 	}
 	
 	/**
 	 * @param $productId
+	 * @param string $optionsAsInputFields Comma-separated list of option IDs that should be exported as input fields
 	 *
 	 * @return string|void
 	 */
-	public function getAttributesInputFieldsToProductsQuery($productId)
+	public function getAttributesInputFieldsToProductsQuery($productId, $optionsAsInputFields = '')
 	{
-		return $this->getAttributeQuery($productId, self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_TEXT_FIELD);
+		return $this->getAttributeQuery($productId, self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_TEXT_FIELD, $optionsAsInputFields);
 	}
 	
 	/**
@@ -474,11 +478,11 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 	}
 	
 	/**
-	 * @param $productId
+	 * @param $product
 	 *
 	 * @return array
 	 */
-	public function generateImageUrls($productId)
+	public function generateImageUrls($product)
 	{
 		$images = array();
 		if(!empty($product['products_image'])){
@@ -489,7 +493,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 			}
 		}
 		
-		$query = xtc_db_query($this->getImagesToProductQuery($productId));
+		$query = xtc_db_query($this->getImagesToProductQuery($product["products_id"]));
 		while($image = xtc_db_fetch_array($query)) {
 			if(file_exists($this->getLocalMainImagePath().$image['image_name'])){
 				$images[] = $this->getMainImageUrl().$image['image_name'];

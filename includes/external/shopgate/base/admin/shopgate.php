@@ -701,7 +701,23 @@ if (defined('PROJECT_MAJOR_VERSION')) {
 											</tr>
 										</table>
 									</td>
-								</tr>								
+								</tr>
+								<tr>
+									<td class="shopgate_setting" align="right">
+										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD; ?></b></td>
+												<td class="<?php echo $tableClass; ?> shopgate_input">
+													<div>
+														<textarea type="text" name="_shopgate_config[export_option_as_input_field]"><?php echo $shopgateConfig["export_option_as_input_field"] ?></textarea>
+													</div>
+							
+													<?php echo SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD_DESCRIPTION; ?>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
 								<tr>
 									<td class="shopgate_setting" align="right">
 										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">

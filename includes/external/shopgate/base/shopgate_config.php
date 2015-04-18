@@ -58,6 +58,7 @@ class ShopgateConfigModified extends ShopgateConfig
 	protected $export_new_products_category_id;
 	protected $export_special_products_category;
 	protected $export_special_products_category_id;
+	protected $export_option_as_input_field;
 	
 	public function startup()
 	{
@@ -128,6 +129,7 @@ class ShopgateConfigModified extends ShopgateConfig
 		$this->export_new_products_category_id     = 999;
 		$this->export_special_products_category    = 0;
 		$this->export_special_products_category_id = 1000;
+		$this->export_option_as_input_field        = '';
 	}
 	
 	protected function validateCustom(array $fieldList = array())
@@ -303,6 +305,14 @@ class ShopgateConfigModified extends ShopgateConfig
 	}
 	
 	/**
+	 * @return string
+	 */
+	public function getExportOptionAsInputField()
+	{
+		return $this->export_option_as_input_field;
+	}
+	
+	/**
 	 * @param $value
 	 */
 	public function setRedirectLanguages($value)
@@ -454,5 +464,13 @@ class ShopgateConfigModified extends ShopgateConfig
 	public function setExportSpecialProductsCategoryId($value)
 	{
 		$this->export_special_products_category_id = $value;
+	}
+	
+	/**
+	 * @param string $value
+	 */
+	public function setExportOptionAsInputField($value)
+	{
+		$this->export_option_as_input_field = $value;
 	}
 }
