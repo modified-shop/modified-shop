@@ -1,5 +1,13 @@
 '''Deutsch'''
 
+'''Version 2.9.12'''
+* Produkte mit einem Lagerbestand von 0 werden nun exportiert
+* Fehler beim Export von Produktbildern behoben
+* neue Plugin-Einstellung zum Export bestimmter Produktoptionen als Eingabefelder hinzugefügt
+
+'''Version 2.9.11'''
+* Fehler bei dem Auslesen der Versandmethoden behoben
+
 '''Version 2.9.10'''
 * Fehler beim Import von Bestellungen in sehr alten Shopsystemversionen behoben
 * Fehler beim Initialisieren des Plugins behoben
@@ -325,6 +333,15 @@
 
 
 '''English'''
+
+'''Version 2.9.12'''
+* products with of quantity of zero will be exported now
+* fixed a bug in exporting product images
+* added new plugin configuration setting to allow exporting certain product options as input fields
+
+'''Version 2.9.11'''
+* fixed a bug in getting the valid shipping methods
+* bug in generating in product images fixed
 
 '''Version 2.9.10'''
 * fixed a bug in importing orders for very old versions of the shopping cart
