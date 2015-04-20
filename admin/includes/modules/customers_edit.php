@@ -451,7 +451,7 @@
                     echo $cInfo->customers_telephone.xtc_draw_hidden_field('customers_telephone', $cInfo->customers_telephone);
                   }
                 } else {
-                  echo xtc_draw_input_field('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"', true);
+                  echo xtc_draw_input_field('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"', (ACCOUNT_TELEPHONE_OPTIONAL == 'false'));
                 }
               ?>
               </td>

@@ -933,4 +933,8 @@ define('POLICY_MIN_SPECIAL_CHARS_DESC', 'How many special chars signs should to 
 
 define('SHOW_SHIPPING_EXCL_TITLE', 'Shippingcost excl.');
 define('SHOW_SHIPPING_EXCL_DESC', 'Show excl. or incl. shippingcost');
+
+define('ACCOUNT_TELEPHONE_OPTIONAL_TITLE', 'Telephone number optional');
+define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Telephone number only optional on registration ?');
+
 ?>
