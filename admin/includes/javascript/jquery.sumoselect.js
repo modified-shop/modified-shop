@@ -1,7 +1,7 @@
 ﻿/*!
- * jquery.sumoselect - v1.2.4
+ * jquery.sumoselect - v1.2.5
  * http://hemantnegi.github.io/jquery.sumoselect
- * 2015-03-12 //add autoWidth, minWidth, addWidth, maxAddWidth, consoleLog, fix element is disabled  by web28, www.rpa-com.de
+ * 2015-04-20 //add autoWidth, minWidth, addWidth, maxAddWidth, consoleLog, fix element is disabled  by web28, www.rpa-com.de
  *
  * Copyright 2014 Hemant Negi
  * Email : hemant.frnz@gmail.com
@@ -61,8 +61,8 @@
                     var elmtagName = O.E.prop('tagName').toLowerCase();
                     
                     if (settings.consoleLog) console.log('Name: ' + elmName + '|'+ O.E.outerWidth() + '|' + parseInt(O.E.outerWidth()) + '|' + elmtagName );
-                    if (settings.consoleLog) console.log($('.'+elmName).outerWidth());
-                    if (settings.consoleLog) console.log($('.'+elmName).width());
+                    if (settings.consoleLog) console.log('outerWidth: ' + $('.'+elmName).outerWidth());
+                    if (settings.consoleLog) console.log('width: ' + $('.'+elmName).width());
                     
                     //Fallback if .SumoSelect not exists
                     if (! O.E.closest(".SumoSelect").length ) {
@@ -71,21 +71,22 @@
                     }
                     if (settings.autoWidth && elmtagName == 'select') {
                       var selWidth = parseInt(O.E.outerWidth());
-                      if (settings.consoleLog) console.log('cloneWidth' + elmName + '|' + O.E.width());
+                      if (settings.consoleLog) console.log('cloneWidth: ' + elmName + '|' + O.E.width());
                       //Fix element is disabled
-                      if (O.E.width() < 1) { //Fix for opera use width()
+                      //if (O.E.width() < 1) { //Fix for opera use width()
                         var clone = O.E.clone();
                         clone.css("visibility","hidden");
                         $('body').append(clone);
-                        selWidth = parseInt(clone.outerWidth());
+                        var cloneWidth = parseInt(clone.outerWidth());
                         clone.remove();
-                        if (settings.consoleLog) console.log('cloneWidth' + selWidth);
-                      }
+                        if (settings.consoleLog) console.log('cloneWidth: ' + cloneWidth);
+                      //}
+                      if (cloneWidth > selWidth) selWidth = cloneWidth; 
                       if (settings.addWidth > 0 && selWidth < settings.maxAddWidth) selWidth += settings.addWidth;
                       if (settings.minWidth > 0 && selWidth < settings.minWidth) selWidth = 60;
                       $('.'+elmName).width(selWidth);
                     }
-                    if (settings.consoleLog) console.log($('.'+elmName).innerWidth());
+                    if (settings.consoleLog) console.log('innerWidth: ' + $('.'+elmName).innerWidth());
 
                     O.select = O.E.parent();
                     O.caption = $('<span></span>');
