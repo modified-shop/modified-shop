@@ -938,7 +938,7 @@ define('ACCOUNT_TELEPHONE_OPTIONAL_TITLE', 'Telephone number optional');
 define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Telephone number only optional on registration ?');
 
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Analytics Universal');
-define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Use Google Analytics Universal Code ?<br/><br/><b>Attention:</b>After switching to Universal it is not possible to go back to the old one!');
+define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Use Google Analytics Universal Code ?<br/><br/><b>Attention:</b> After switching to Universal it is not possible to go back to the old one!');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Shop-URL');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Shop-URL, only needed für Universal (example.com oder www.example.com).');
 define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Analytics LinkID');
@@ -946,5 +946,5 @@ define('TRACKING_GOOGLE_LINKID_DESC' , 'You can see separate information on mult
 define('TRACKING_GOOGLE_DISPLAY_TITLE' , 'Google Analytics Displayfeature');
 define('TRACKING_GOOGLE_DISPLAY_DESC' , 'The areas to demographics and interests included an overview and new reports about the performance by age, gender and interest categories.');
 define('TRACKING_GOOGLE_ECOMMERCE_TITLE' , 'Google Analytics ECommerce');
-define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Set up an e-commerce tracking to find out what visitors buy from your website or app. In addition, you receive the following information: <br><strong>Products:</strong> Purchased products and the quantities and the revenues from these products<br><strong>Transactions:</strong> information about sales, tax, shipping costs and quantities for each transaction<br><strong >time to Purchase:</strong> number of days and visits, starting from the current campaign until the completion of the transaction');
+define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Set up an e-commerce tracking to find out what visitors buy from your website or app. In addition, you receive the following information:<br><br><strong>Products:</strong> Purchased products and the quantities and the revenues from these products<br><strong>Transactions:</strong> information about sales, tax, shipping costs and quantities for each transaction<br><strong >time to Purchase:</strong> number of days and visits, starting from the current campaign until the completion of the transaction');
 ?>
