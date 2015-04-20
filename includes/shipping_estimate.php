@@ -88,13 +88,13 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
     //ot_subtotal_no_tax nur anzeigen wenn notwendig
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1 || $ot_subtotal_no_tax_value == $ot_total_value) {
       unset($order_total_array[$ot_subtotal_no_tax]);
-      $order_total_array = array_merge($order_total_array);
     }
     //ot_total nur anzeigen wenn unterschiedlich
     if ($ot_subtotal_value == $ot_total_value) {
       unset($order_total_array[$ot_total_key]);
-      $order_total_array = array_merge($order_total_array);
     }
+    //Array Indexe neu erstellen
+    $order_total_array = array_merge($order_total_array);
   }
   $module_smarty->assign('TOTAL_BLOCK_ARRAY', $order_total_array);
   $total_block = $order_total_modules->output();
