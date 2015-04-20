@@ -6,5 +6,5 @@
   {piwik url=$smarty.const.TRACKING_PIWIK_LOCAL_PATH id=$smarty.const.TRACKING_PIWIK_ID goal=$smarty.const.TRACKING_PIWIK_GOAL}
 {/if}
 {if $smarty.const.TRACKING_GOOGLEANALYTICS_ACTIVE == 'true'}
-  {googleanalytics account=$smarty.const.TRACKING_GOOGLEANALYTICS_ID trackorders=true}
+  {googleanalytics account=$smarty.const.TRACKING_GOOGLEANALYTICS_ID}
 {/if}
