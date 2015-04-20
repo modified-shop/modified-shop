@@ -930,4 +930,8 @@ define('POLICY_MIN_SPECIAL_CHARS_DESC', 'Wie viele Sonderzeichen soll das Passwo
 
 define('SHOW_SHIPPING_EXCL_TITLE', 'Versandkosten zzgl.');
 define('SHOW_SHIPPING_EXCL_DESC', 'Anzeige von zzgl. oder inkl. Versandkosten');
+
+define('ACCOUNT_TELEPHONE_OPTIONAL_TITLE', 'Telefonnummer optional');
+define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Soll die Telefonnummer nur optional abgefragt werden ?');
+
 ?>

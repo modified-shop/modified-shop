@@ -480,7 +480,7 @@
           }
         }
 
-        if (strlen($customers_telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
+        if (ACCOUNT_TELEPHONE_OPTIONAL == 'false' && strlen($customers_telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
           $error = true;
           $entry_telephone_error = true;
         } else {
