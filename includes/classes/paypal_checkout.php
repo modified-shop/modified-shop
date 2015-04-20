@@ -1097,7 +1097,9 @@ if (defined('PAYPAL_API_VERSION')) {
         return false;
       }
       $ack = strtoupper($_SESSION['reshash']["ACK"]);
-      if($ack=="SUCCESS"  || $ack=="SUCCESSWITHWARNING") {
+      if ($ack=="SUCCESS") {
+        $o_status = PAYPAL_ORDER_STATUS_SUCCESS_ID;
+      } elseif ($ack=="SUCCESSWITHWARNING") {
         $o_status = PAYPAL_ORDER_STATUS_PENDING_ID;
       } else {
         $o_status = PAYPAL_ORDER_STATUS_REJECTED_ID;
