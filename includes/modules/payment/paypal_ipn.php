@@ -103,10 +103,14 @@ class paypal_ipn {
   function success() {
     $confirmation = array();
     if (isset($_SESSION['paypal_link']) && MODULE_PAYMENT_PAYPAL_IPN_USE_CHECKOUT == 'true') {
-      $confirmation = array ('title' => $this->title.': ', 
-                             'field' => $_SESSION['paypal_link']
-                             );
-      unset ($_SESSION['paypal_link']);
+      $confirmation = array(
+        array ('title' => $this->title.': ', 
+               'fields' => array(array('title' => '',
+                                       'field' => $_SESSION['paypal_link']
+                                       )
+                                 )
+               )
+      );
     }
     
     return $confirmation;

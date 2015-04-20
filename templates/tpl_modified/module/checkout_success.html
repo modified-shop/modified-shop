@@ -31,16 +31,20 @@
 {/if}
 
 {if count($PAYMENT_INFO) > 0}
-<div class="highlightbox plainleft">
-  <table class="paymentinfotable">
-    {foreach name=aussen item=data from=$PAYMENT_INFO}
-      <tr>
-        <td>{$data.title|stripslashes}</td>
-        <td>{if $data.field}{$data.field|stripslashes}{else}&nbsp;{/if}</td>
-      </tr>      
-    {/foreach}
-  </table>
+<div class="highlightbox">
+  {foreach name=aussen item=data from=$PAYMENT_INFO}
+    <h4>{$data.title|stripslashes}</h4>
+    <table class="paymentinfotable">
+      {foreach name=aussen item=info from=$data.fields}
+        <tr>
+          {if $info.title != ''}<td>{$info.title|stripslashes}</td>{/if}
+          <td>{if $info.field}{$info.field|stripslashes}{else}&nbsp;{/if}</td>
+        </tr>      
+      {/foreach}
+    </table>
+  {/foreach}
 </div>
+<br class="clearfix" />
 {/if}
 
 <div class="button_left"">{$FORM_ACTION_PRINT}{$BUTTON_PRINT}{$FORM_END}</div>

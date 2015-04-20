@@ -99,10 +99,15 @@ class eustandardtransfer {
 
   function success() {
     $confirmation = array();
-    if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'true') {
-      $confirmation = array ('title' => $this->title.': ', 
-                             'field' => $this->description
-                             );
+    if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
+      $confirmation = array(
+        array ('title' => $this->title.': ', 
+               'fields' => array(array('title' => '',
+                                       'field' => $this->description
+                                       )
+                                 )
+               )
+      );
     }
     
     return $confirmation;

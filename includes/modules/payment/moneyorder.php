@@ -85,10 +85,15 @@ class moneyorder {
 
   function success() {
     $confirmation = array();
-    if (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'true') {
-      $confirmation = array ('title' => $this->title.': ', 
-                             'field' => $this->description
-                             );
+    if (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') {
+      $confirmation = array(
+        array ('title' => $this->title.': ', 
+               'fields' => array(array('title' => '',
+                                       'field' => $this->description
+                                       )
+                                 )
+               )
+      );
     }
     
     return $confirmation;
