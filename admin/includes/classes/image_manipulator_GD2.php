@@ -20,7 +20,7 @@ class image_manipulation
 	
 	function image_manipulation($resource_file, $max_width, $max_height, $destination_file="", $compression=IMAGE_QUALITY, $transform="")
 		{
-		$this->a = $resource_file;	// image to be thumbnailed
+		$this->a = $this->correctImageOrientation($resource_file);	// image to be thumbnailed
 		$this->c = $transform;
 		$this->d = $destination_file;	// thumbnail saved to
 		$this->e = $compression;	// compression ration for jpeg thumbnails
@@ -327,5 +327,37 @@ class image_manipulation
 			imagedestroy($this->t);
 			}
 		}
+
+    function correctImageOrientation($resource_file) {
+      if (function_exists('exif_read_data')) {
+        $exif = exif_read_data($resource_file);
+        if($exif && isset($exif['Orientation'])) {
+          $orientation = $exif['Orientation'];
+          if($orientation != 1){
+            $img = imagecreatefromjpeg($resource_file);
+            $deg = 0;
+            switch ($orientation) {
+              case 3:
+                $deg = 180;
+                break;
+              case 6:
+                $deg = 270;
+                break;
+              case 8:
+                $deg = 90;
+                break;
+            }
+            if ($deg) {
+              $img = imagerotate($img, $deg, 0);        
+            }
+            imagejpeg($img, $resource_file, 100);
+            imagedestroy($img);
+          }
+        }
+      }
+            
+      return $resource_file;     
+    }
+
 	}
 ?>
