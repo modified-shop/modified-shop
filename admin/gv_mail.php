@@ -76,7 +76,7 @@
       $smarty->compile_dir=DIR_FS_CATALOG.'templates_c';
       $smarty->config_dir=DIR_FS_CATALOG.'lang';
 
-      $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG'templates/'.CURRENT_TEMPLATE.'/');
+      $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
       $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 
       $smarty->assign('AMMOUNT', $currencies->format($_POST['amount']));
