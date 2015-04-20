@@ -37,7 +37,7 @@
       $charset = strtoupper($_SESSION['language_charset']);
     }
   
-    //$newstring grunds‰tzlich VOR html_entity_decode und preg_replace nach utf-8 konvertieren
+    //$newstring grundsätzlich VOR html_entity_decode und preg_replace nach utf-8 konvertieren
     if ($charset != "UTF-8") {
       if (!$check_iconv) {
         $newstring = mb_convert_encoding($string, 'UTF-8', $charset);
@@ -52,7 +52,7 @@
     //-- HTML entfernen
     $newstring  = strip_tags($newstring);
   
-    //-- Schr‰gstriche entfernen
+    //-- Schrägstriche entfernen
     if ($urlencode) {
       $newstring  = preg_replace("/\//","-",$newstring);
     } else {
@@ -65,7 +65,7 @@
     //--Restliche HTML-Codierungen entfernen
     $newstring  = html_entity_decode($newstring, ENT_NOQUOTES , "UTF-8");
   
-    //--Restliche Kaufm‰nnische Und entfernen
+    //--Restliche Kaufmännische Und entfernen
     $newstring  = preg_replace("'&'","-",$newstring);
 
     //-- String URL-codieren
@@ -79,10 +79,10 @@
     //-- Doppelte Bindestriche entfernen
     $newstring  = preg_replace("/(-){2,}/","-",$newstring);
 
-    //-- Mˆgliches rechtstehendes Minuszeichen entfernen - wichtig f¸r Minus Trennzeichen
+    //-- Mögliches rechtstehendes Minuszeichen entfernen - wichtig f¸r Minus Trennzeichen
     $newstring = rtrim($newstring,"-");
     
-    //string wieder auf $charset zur¸ckkonvertieren, es sollten sich aber keine Sonderzeichen mehr im String befinden
+    //string wieder auf $charset zurückkonvertieren, es sollten sich aber keine Sonderzeichen mehr im String befinden
     if ($charset != "UTF-8") {
       if (!$check_iconv) {
         $newstring = mb_convert_encoding($newstring, $charset, 'UTF-8');
