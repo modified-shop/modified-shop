@@ -31,4 +31,6 @@
   define('MODULE_PAYMENT_MONEYORDER_ZONE_DESC' , 'If a zone is selected, only enable this payment method for that zone.');
   define('MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID_TITLE' , 'Set Order Status');
   define('MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID_DESC' , 'Set the status of orders made with this payment module to this value');
+  define('MODULE_PAYMENT_MONEYORDER_SUCCESS_TITLE' , 'Display Bankdata');
+  define('MODULE_PAYMENT_MONEYORDER_SUCCESS_DESC' , 'Display bank data on checkout success ?');
 ?>

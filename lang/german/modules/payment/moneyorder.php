@@ -31,4 +31,6 @@
   define('MODULE_PAYMENT_MONEYORDER_ZONE_DESC' , 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.');
   define('MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID_TITLE' , 'Bestellstatus festlegen');
   define('MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID_DESC' , 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen');
+  define('MODULE_PAYMENT_MONEYORDER_SUCCESS_TITLE' , 'Bankdaten anzeigen');
+  define('MODULE_PAYMENT_MONEYORDER_SUCCESS_DESC' , 'Sollen auf der Erfolgsseite die Bankdaten angezeigt werden?');
 ?>

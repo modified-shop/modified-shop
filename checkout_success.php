@@ -49,7 +49,8 @@ if (!isset ($_SESSION['customer_id'])) {
 }
 
 $orders_query = xtc_db_query("SELECT orders_id,
-                                     orders_status
+                                     orders_status,
+                                     payment_class
                                 FROM ".TABLE_ORDERS."
                                WHERE customers_id = '".$_SESSION['customer_id']."'
                                  AND unix_timestamp(date_purchased) > '".(time() - SESSION_LIFE_CUSTOMERS)."'
@@ -65,17 +66,10 @@ if (xtc_db_num_rows($orders_query) < 1) {
   $order_status = $orders['orders_status'];
 }
 
-$breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_SUCCESS);
-$breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_SUCCESS);
-
-require (DIR_WS_INCLUDES.'header.php');
-
-## PayPal Bezahl-Link
-if (isset($_SESSION['paypal_link']) && MODULE_PAYMENT_PAYPAL_IPN_USE_CHECKOUT == 'True') {
-	$smarty->assign('PAYPAL_LINK',$_SESSION['paypal_link']);
-    unset ($_SESSION['paypal_link']);
-}
-## PayPal Bezahl-Link
+// load the selected payment module
+require_once (DIR_WS_CLASSES . 'payment.php');
+$payment_modules = new payment($orders['payment_class']);
+$smarty->assign('PAYMENT_INFO', $payment_modules->success());
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('order', xtc_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=update', 'SSL')).xtc_draw_hidden_field('account_type', $_SESSION['account_type']));
 $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
@@ -92,6 +86,11 @@ if ($gv_result = xtc_db_fetch_array($gv_query)) {
 		$smarty->assign('GV_SEND_LINK', xtc_href_link(FILENAME_GV_SEND));
 	}
 }
+
+$breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_SUCCESS);
+$breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_SUCCESS);
+
+require (DIR_WS_INCLUDES.'header.php');
 
 // Downloads
 if (DOWNLOAD_ENABLED == 'true') {

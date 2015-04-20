@@ -34,19 +34,19 @@
     var $modules, $selected_module;
 
     // class constructor
-    function payment($module = '') {
+    function __construct($module = '') {
       global $PHP_SELF,$order;
 
       if (defined('MODULE_PAYMENT_INSTALLED') && xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
 
-        // BOF - Tomcraft - 2011-02-01 - Paypal Express Modul
+        ## Paypal Express Modul
         if(isset($_SESSION['paypal_express_checkout']) && $_SESSION['paypal_express_checkout'] == true){
           $this->modules = explode(';', $_SESSION['paypal_express_payment_modules'] );
         } else {
           $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
           $this->modules = str_replace('paypalexpress.php', '', $this->modules);
         }
-        // EOF - Tomcraft - 2011-02-01 - Paypal Express Modul
+        ## Paypal Express Modul
 
         $include_modules = array();
 
@@ -239,7 +239,8 @@
     // GV Code End
 
     function pre_confirmation_check() {
-    global $credit_covers, $payment_modules;
+      global $credit_covers, $payment_modules;
+      
       if (is_array($this->modules)) {
         if (isset($GLOBALS[$this->selected_module]) && is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
           if ($credit_covers) {
@@ -292,7 +293,19 @@
         }
       }
     }
-// BOF - web28 - 2010-05-07 - PayPal API Modul
+
+    function success() {
+      if (is_array($this->modules)) {
+        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled)) {
+          if (method_exists($GLOBALS[$this->selected_module], 'success')) {
+            return $GLOBALS[$this->selected_module]->success();
+          } else {
+            return array();          
+          }
+        }
+      }
+    }
+
 		// PayPal Express Giropay
     function giropay_process() {
       if (is_array($this->modules)) {
@@ -301,7 +314,7 @@
         }
       }
     }
-// EOF - web28 - 2010-05-07 - PayPal API Modul
+
     function get_error() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
@@ -310,34 +323,30 @@
       }
     }
 
-//BOF - Dokuman - 2009-10-02 - added entries for new moneybookers payment module version 2.4
-  function iframeAction() {
+    function iframeAction() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
           return $GLOBALS[$this->selected_module]->iframeAction();
         }
       }
     }
-//EOF - Dokuman - 2009-10-02 - added entries for new moneybookers payment module version 2.4
 
-//BOF  - web28 - 2010-03-27 PayPal IPN Bezahl-Link
-  function create_paypal_link() {
+    function create_paypal_link() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
           return $GLOBALS[$this->selected_module]->create_paypal_link();
         }
       }
     }
-//EOF  - web28 - 2010-03-27 PayPal IPN Bezahl-Link
 
-// - vr - 2014-01-25 - general purpose access function for class properties
-  function info() {
+    function info() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
-          if (method_exists($GLOBALS[$this->selected_module], 'info'))
+          if (method_exists($GLOBALS[$this->selected_module], 'info')) {
             return $GLOBALS[$this->selected_module]->info();
-          else
+          } else {
             return array();          
+          }
         }
       }
     }

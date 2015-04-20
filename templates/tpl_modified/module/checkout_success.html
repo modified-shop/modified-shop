@@ -29,13 +29,19 @@
 {if $GV_SEND_LINK}
 <p>{#gv_has_vouchera#} {$GV_SEND_LINK} {#gv_has_voucherb#}</p>
 {/if}
-{if $MODULE_sofort_vorkasse}
-<p>{$MODULE_sofort_vorkasse}</p>
-{/if}
-{if $PAYPAL_LINK}
-<p><div style="background: #f2f2f2; color: #ffffff; padding:5px; border: 2px solid #496686">{$PAYPAL_LINK}</div></p>
-{/if}
 
+{if count($PAYMENT_INFO) > 0}
+<div class="highlightbox plainleft">
+  <table class="paymentinfotable">
+    {foreach name=aussen item=data from=$PAYMENT_INFO}
+      <tr>
+        <td>{$data.title|stripslashes}</td>
+        <td>{if $data.field}{$data.field|stripslashes}{else}&nbsp;{/if}</td>
+      </tr>      
+    {/foreach}
+  </table>
+</div>
+{/if}
 
 <div class="button_left"">{$FORM_ACTION_PRINT}{$BUTTON_PRINT}{$FORM_END}</div>
 <div class="button_right"">{$FORM_ACTION}{$BUTTON_CONTINUE}{$FORM_END}</div>

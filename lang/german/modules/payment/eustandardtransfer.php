@@ -61,4 +61,6 @@
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID_TITLE' , 'Bestellstatus festlegen');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID_DESC' , 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen');
 
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS_TITLE' , 'Bankdaten anzeigen');
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS_DESC' , 'Sollen auf der Erfolgsseite die Bankdaten angezeigt werden?');
 ?>

@@ -100,6 +100,18 @@ class paypal_ipn {
     }
 	}
 /**************************************************************/
+  function success() {
+    $confirmation = array();
+    if (isset($_SESSION['paypal_link']) && MODULE_PAYMENT_PAYPAL_IPN_USE_CHECKOUT == 'true') {
+      $confirmation = array ('title' => $this->title.': ', 
+                             'field' => $_SESSION['paypal_link']
+                             );
+      unset ($_SESSION['paypal_link']);
+    }
+    
+    return $confirmation;
+  }
+/**************************************************************/
 	function output_error() {
 		return false;
 	}

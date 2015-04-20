@@ -76,10 +76,21 @@ class moneyorder {
   function confirmation() {
     $confirmation = array ('title' => $this->title.': ', 
                            'fields' => array (array ('title' => '', 
-                                                     'field' => MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION)
+                                                     'field' => $this->info)
                                               )
                            );
 
+    return $confirmation;
+  }
+
+  function success() {
+    $confirmation = array();
+    if (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'true') {
+      $confirmation = array ('title' => $this->title.': ', 
+                             'field' => $this->description
+                             );
+    }
+    
     return $confirmation;
   }
 
@@ -113,12 +124,13 @@ class moneyorder {
 	}
 
 	function install() {
-		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MONEYORDER_STATUS', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
-		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MONEYORDER_ALLOWED', '',   '6', '0', now())");
-		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MONEYORDER_PAYTO', '', '6', '1', now());");
-		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MONEYORDER_SORT_ORDER', '0', '6', '0', now())");
-		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_PAYMENT_MONEYORDER_ZONE', '0',  '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
-		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID', '0', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MONEYORDER_STATUS', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
+		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MONEYORDER_ALLOWED', '',   '6', '0', now())");
+		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MONEYORDER_PAYTO', '', '6', '1', now());");
+		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MONEYORDER_SORT_ORDER', '0', '6', '0', now())");
+		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_PAYMENT_MONEYORDER_ZONE', '0',  '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
+		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID', '0', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MONEYORDER_SUCCESS', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
 	}
 
 	function remove() {
@@ -126,7 +138,14 @@ class moneyorder {
 	}
 
 	function keys() {
-		return array ('MODULE_PAYMENT_MONEYORDER_STATUS', 'MODULE_PAYMENT_MONEYORDER_ALLOWED', 'MODULE_PAYMENT_MONEYORDER_ZONE', 'MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID', 'MODULE_PAYMENT_MONEYORDER_SORT_ORDER', 'MODULE_PAYMENT_MONEYORDER_PAYTO');
+		return array ('MODULE_PAYMENT_MONEYORDER_STATUS', 
+		              'MODULE_PAYMENT_MONEYORDER_ALLOWED', 
+		              'MODULE_PAYMENT_MONEYORDER_ZONE', 
+		              'MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID', 
+		              'MODULE_PAYMENT_MONEYORDER_SORT_ORDER', 
+		              'MODULE_PAYMENT_MONEYORDER_PAYTO',
+		              'MODULE_PAYMENT_MONEYORDER_SUCCESS',
+		              );
 	}
 }
 ?>

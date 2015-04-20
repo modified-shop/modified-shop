@@ -97,6 +97,17 @@ class eustandardtransfer {
     }
   }
 
+  function success() {
+    $confirmation = array();
+    if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'true') {
+      $confirmation = array ('title' => $this->title.': ', 
+                             'field' => $this->description
+                             );
+    }
+    
+    return $confirmation;
+  }
+
   function output_error() {
     return false;
   }
@@ -121,6 +132,7 @@ class eustandardtransfer {
     xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER', '0',  '6', '0', now())");
 		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE', '0',  '6', '2', 'xtc_cfg_pull_down_zone_classes(', 'xtc_get_zone_class_title', now())");
 		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID', '0','6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS', 'True', '6', '3', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
   }
 
   function remove() {
@@ -139,7 +151,8 @@ class eustandardtransfer {
                    'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM', 
                    'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN', 
                    'MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC',
-                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER');
+                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER',
+                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS');
 
     return $keys;
   }
