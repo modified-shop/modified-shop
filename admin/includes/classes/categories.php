@@ -521,25 +521,9 @@ class categories {
       $products_id = $new_pid_query_values['Auto_increment'];
     }
 
-    //are we asked to delete some pics?
-    if ($products_data['del_pic'] != '') {
-      $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
-                                         FROM ".TABLE_PRODUCTS."
-                                        WHERE products_image = '".xtc_db_input($products_data['del_pic'])."'");
-      $dup_check = xtc_db_fetch_array($dup_check_query);
-      if ($dup_check['total'] < 2) {
-        @xtc_del_image_file($products_data['del_pic']);
-      }
-      xtc_db_query("UPDATE ".TABLE_PRODUCTS."
-                       SET products_image = NULL
-                     WHERE products_id    = '".(int)$products_id."'");
-    }
-
     //upload products image
     if ($products_image_name = $this->uploadImage($products_id,$products_data)) {
       $sql_data_array['products_image'] = xtc_db_prepare_input($products_image_name);  
-    } else {
-      //todo rename image      
     }
 
     //MO_PICS
@@ -1120,6 +1104,20 @@ class categories {
     $accepted_products_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
     $accepted_products_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
     
+    //are we asked to delete some pics?
+    if (isset($products_data['del_pic']) && $products_data['del_pic'] != '') {
+      $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
+                                         FROM ".TABLE_PRODUCTS."
+                                        WHERE products_image = '".xtc_db_input($products_data['del_pic'])."'");
+      $dup_check = xtc_db_fetch_array($dup_check_query);
+      if ($dup_check['total'] < 2) {
+        @xtc_del_image_file($products_data['del_pic']);
+      }
+      xtc_db_query("UPDATE ".TABLE_PRODUCTS."
+                       SET products_image = NULL
+                     WHERE products_id    = '".(int)$products_id."'");
+    }
+
     if ($products_image = xtc_try_upload('products_image', DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_products_image_files_extensions, $accepted_products_image_files_mime_types)) {
       $pname_arr = explode('.', $products_image->filename);
       $nsuffix = array_pop($pname_arr);
@@ -1158,7 +1156,7 @@ class categories {
     $accepted_mo_pics_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
     
     //are we asked to delete some pics?
-    if ($products_data['del_mo_pic'] != '') {
+    if (isset($products_data['del_mo_pic']) && count($products_data['del_mo_pic']) > 0) {
       foreach ($products_data['del_mo_pic'] as $dummy => $val) {
         $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                            FROM ".TABLE_PRODUCTS_IMAGES."
@@ -1201,8 +1199,6 @@ class categories {
         require (DIR_WS_INCLUDES.'product_popup_images.php');
         //set file rights
         $this->set_products_images_file_rights($products_image_name);
-      } else {        
-        //todo rename image
       }
     } 
   } 
