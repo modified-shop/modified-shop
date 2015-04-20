@@ -38,14 +38,7 @@ define('MAN_DIVIDER',SEO_SEPARATOR.'.'.SEO_SEPARATOR);           //Hersteller ':
 define('PAG_DIVIDER',SEO_SEPARATOR);                             //Seitennummer ':'
 //EOF - web28 - 2010-08-18 -- Definition für die Trennzeichen
 
-include (DIR_FS_INC . 'search_replace_utf-8.php');
-
-global $char_search, $char_replace, $check_iconv;
-$char_search = array(); 
-$char_replace = array(); 
-list($char_search, $char_replace) = shopstat_getRegExps();
-
-$check_iconv = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "test");
+include_once (DIR_FS_INC . 'seo_url_href_mask.php');
 
 if(!function_exists('language')) {
   include_once (DIR_WS_CLASSES.'language.php');
@@ -272,73 +265,13 @@ function shopstat_hrefManulink($content_name, $content_id, $pager=false) {
  * FUNCTION shopstat_hrefSmallmask
  */
 function shopstat_hrefSmallmask($string, $urlencode = false) {
-  global $char_search, $char_replace, $check_iconv;
-
-  $newstring = $string;
-  
-  $charset = strtoupper($_SESSION['language_charset']);
-
-  //$newstring grundsätzlich VOR html_entity_decode und preg_replace nach utf-8 konvertieren
-  if ($charset != "UTF-8") {
-    if (!$check_iconv) {
-      $newstring = mb_convert_encoding($string, 'UTF-8', $charset);
-    } else {
-      $newstring = iconv($charset, "UTF-8", $newstring);
-    }
-  }
-
-  //-- <br> neutralisieren -  DokuMan - 2010-08-13 - optimize shopstat_getRegExps
-  $newstring  = preg_replace("/<br(\s+)?\/?>/i","-",$newstring);
-
-  //-- HTML entfernen
-  $newstring  = strip_tags($newstring);
-  
-  //-- Schrägstriche entfernen
-  if ($urlencode) {
-    $newstring  = preg_replace("/\//","-",$newstring);
-  } else {
-    $newstring  = preg_replace("/\s\/\s/","-",$newstring);
-  }
-
-  //-- Definierte Zeichen entfernen
-  $newstring  = preg_replace($char_search, $char_replace, $newstring);
-  
-  //--Restliche HTML-Codierungen entfernen
-  $newstring  = html_entity_decode($newstring, ENT_NOQUOTES , "UTF-8");
-  
-  //--Restliche Kaufmännische Und entfernen
-  $newstring  = preg_replace("'&'","-",$newstring);
-
-  //-- String URL-codieren
-  if ($urlencode) { 
-    $newstring  = urlencode($newstring);
-  }
-
-  //-- Doppelte Bindestriche entfernen
-  $newstring  = preg_replace("/(-){2,}/","-",$newstring);
-
-  //-- Mögliches rechtstehendes Minuszeichen entfernen - wichtig für Minus Trennzeichen
-  $newstring = rtrim($newstring,"-");
-  
-  //Alles entfernen ausser Buchstaben, Zahlen, Slash, Unterstrich, Minus
-  $newstring = preg_replace("/[^a-zA-Z0-9\/_-]/", '', $newstring);
-  
-  //string wieder auf $charset zurückkonvertieren, es sollten sich aber keine Sonderzeichen mehr im String befinden
-  if ($charset != "UTF-8") {
-    if (!$check_iconv) {
-      $newstring = mb_convert_encoding($newstring, $charset, 'UTF-8');
-    } else {
-      $newstring = iconv("UTF-8", $charset.'//TRANSLIT', $newstring);
-    }  
-  }
-  //if($_REQUEST['test']){print $newstring."<hr>";}
-  return($newstring);
+  return seo_url_href_mask($string, $urlencode);
 }
 
 /*
  * FUNCTION shopstat_hrefMask
  */
-function shopstat_hrefMask($string) { 
+function shopstat_hrefMask($string) {
   return shopstat_hrefSmallmask($string, true);  
 }
 ?>
