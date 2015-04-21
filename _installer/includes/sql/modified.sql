@@ -906,7 +906,7 @@ CREATE TABLE products (
   group_permission_3 TINYINT(1) NOT NULL,
   group_permission_4 TINYINT(1) NOT NULL,
   products_sort INT(4) NOT NULL DEFAULT 0,
-  products_image VARCHAR(64),
+  products_image VARCHAR(254) NOT NULL,
   products_price DECIMAL(15,4) NOT NULL,
   products_discount_allowed DECIMAL(4,2) DEFAULT 0.00 NOT NULL,
   products_date_added DATETIME NOT NULL,

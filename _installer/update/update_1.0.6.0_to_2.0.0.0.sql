@@ -558,4 +558,7 @@ ALTER TABLE admin_access ADD shipcloud INT(1) NOT NULL DEFAULT 0 AFTER logs;
 UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 'groups' LIMIT 1;
 
+#GTB - 2015-04-21 - update products image
+ALTER TABLE products MODIFY products_image VARCHAR(254) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
