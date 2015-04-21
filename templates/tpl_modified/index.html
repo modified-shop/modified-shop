@@ -59,8 +59,9 @@
   {elseif isset($fullcontent) && $fullcontent == true}
     <div id="col_full" class="cf">
       <div id="content_navbar">
-        <ul class="contentnavigation"> 
-          <li class="first"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}">{#link_contact#}</a></li>
+        <ul class="contentnavigation">
+          <li class="first"><a href="{$index}">{#link_index#}</a></li>
+          <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}">{#link_contact#}</a></li>
           <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}">{#link_imprint#}</a></li>
           <li class="last"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
           <li class="cart">{if isset($box_CART)}{$box_CART}{/if}</li>
