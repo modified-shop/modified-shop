@@ -102,6 +102,7 @@ class eustandardtransfer {
     if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
       $confirmation = array(
         array ('title' => $this->title.': ', 
+               'class' => $this->code,
                'fields' => array(array('title' => '',
                                        'field' => $this->description
                                        )

@@ -31,7 +31,7 @@
 {/if}
 
 {if count($PAYMENT_INFO) > 0}
-<div class="highlightbox">
+<div class="highlightbox {$PAYMENT_INFO.0.class}">
   {foreach name=aussen item=data from=$PAYMENT_INFO}
     <h4>{$data.title|stripslashes}</h4>
     <table class="paymentinfotable">

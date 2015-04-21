@@ -105,6 +105,7 @@ class paypal_ipn {
     if (isset($_SESSION['paypal_link']) && MODULE_PAYMENT_PAYPAL_IPN_USE_CHECKOUT == 'True') {
       $confirmation = array(
         array ('title' => $this->title.': ', 
+               'class' => $this->code,
                'fields' => array(array('title' => '',
                                        'field' => $_SESSION['paypal_link']
                                        )

@@ -88,6 +88,7 @@ class moneyorder {
     if (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') {
       $confirmation = array(
         array ('title' => $this->title.': ', 
+               'class' => $this->code,
                'fields' => array(array('title' => '',
                                        'field' => $this->description
                                        )
