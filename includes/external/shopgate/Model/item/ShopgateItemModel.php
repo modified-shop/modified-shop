@@ -297,7 +297,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 		$fsk_lock = '';
 		$_SESSION['languages_id'] = $this->languageId;
 		//logic taken from file products_new.php in dir /
-		$date_new_products = date("Y.m.d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
+		$date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
 		$days = " and p.products_date_added > '".$date_new_products."' ";
 		
 		return "select distinct

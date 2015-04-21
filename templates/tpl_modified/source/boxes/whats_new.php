@@ -29,7 +29,7 @@ $cache_id = '';
 
 $days = '';
 if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
-  $days = "AND p.products_date_added > '".date("Y.m.d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")))."'";
+  $days = "AND p.products_date_added > '".date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")))."'";
 }
 
 $current_prd =  (isset($_GET['products_id']) && (int)$_GET['products_id'] > 0) ? 'AND p.products_id != ' . (int)$_GET['products_id'] : '';

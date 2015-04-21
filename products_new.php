@@ -38,7 +38,7 @@ require (DIR_WS_INCLUDES.'header.php');
 
 $days = '';
 if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
-	$date_new_products = date("Y.m.d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
+	$date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
 	$days = " AND p.products_date_added > '".$date_new_products."' ";
 }
 
