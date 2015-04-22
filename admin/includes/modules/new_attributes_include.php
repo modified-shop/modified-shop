@@ -49,6 +49,13 @@
   //Anzahl Spalten
   $colspan = 9;
 
+  $noStylingClass = '';
+  $noStyling = '';
+  if (!defined('NEW_ATTRIBUTES_STYLING') || (defined('NEW_ATTRIBUTES_STYLING') && NEW_ATTRIBUTES_STYLING != 'true')) {
+    $noStylingClass = ' class="noStyling" ';
+    $noStyling = ' noStyling';
+  }
+
 ?>
   <script type="text/javascript">
   <!--
@@ -126,7 +133,7 @@ if ($_POST['cpath'] != '') {
       // Print the Option Name
       $output = '';
       $output .= '<tr id="oid-' . $current_product_option_id . '" class="dataTableHeadingRow">'. PHP_EOL;
-      $output .= '<td class="dataTableHeadingContent" style="width:150px">'.xtc_draw_checkbox_field('set_'.$current_product_option_id, $current_product_option_id, false, '', 'class="select_all"').'&nbsp;&nbsp;<strong>' . $current_product_option_name . '</strong></td>'. PHP_EOL;
+      $output .= '<td class="dataTableHeadingContent" style="width:150px">'.xtc_draw_checkbox_field('set_'.$current_product_option_id, $current_product_option_id, false, '', 'class="select_all'.$noStyling.'"').'&nbsp;&nbsp;<strong>' . $current_product_option_name . '</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="width:95px"><strong>'.SORT_ORDER.'</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_MODEL.'</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_EAN.'</strong></td>'. PHP_EOL;
@@ -187,7 +194,7 @@ if ($_POST['cpath'] != '') {
           $output .= '<tr class="' . $rowClass . '">'. PHP_EOL;
           //1st col
           $output .= '<td class="main nobr">'. PHP_EOL;
-          $output .= xtc_draw_checkbox_field('optionValues[]', $current_value_id, $checked, '', 'class="cbx_optval cb check_'.$current_product_option_id.'"').'&nbsp;&nbsp;' . $current_value_name . '&nbsp;&nbsp;'. PHP_EOL;
+          $output .= xtc_draw_checkbox_field('optionValues[]', $current_value_id, $checked, '', 'class="cbx_optval cb check_'.$current_product_option_id.$noStyling.'"').'&nbsp;&nbsp;' . $current_value_name . '&nbsp;&nbsp;'. PHP_EOL;
           $output .= '</td>'. PHP_EOL;
           
           $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_sortorder" value="' . (isset($attr_array['sortorder'])?$attr_array['sortorder']:'') . '" size="8"></td>'. PHP_EOL;
@@ -197,13 +204,13 @@ if ($_POST['cpath'] != '') {
                     
           //Weight
           $output .= '<td class="main nobr">'. PHP_EOL;
-          $output .= xtc_draw_pull_down_menu($current_value_id . '_weight_prefix', $prefix_array, (isset($attr_array['weight_prefix'])?$attr_array['weight_prefix']:''), $disable). PHP_EOL;
+          $output .= xtc_draw_pull_down_menu($current_value_id . '_weight_prefix', $prefix_array, (isset($attr_array['weight_prefix'])?$attr_array['weight_prefix']:''), $noStylingClass . $disable). PHP_EOL;
           $output .= '<input'.$disable.'type="text" name="' . $current_value_id . '_weight" value="' . (isset($attr_array['options_values_weight']) ? $attr_array['options_values_weight'] : '') . '" size="10">'. PHP_EOL;
           $output .= '</td>'. PHP_EOL;
               
           ///Price
           $output .= '<td class="main nobr">'. PHP_EOL;
-          $output .= xtc_draw_pull_down_menu($current_value_id . '_prefix', $prefix_array, (isset($attr_array['price_prefix'])?$attr_array['price_prefix']:''), $disable). PHP_EOL;
+          $output .= xtc_draw_pull_down_menu($current_value_id . '_prefix', $prefix_array, (isset($attr_array['price_prefix'])?$attr_array['price_prefix']:''), $noStylingClass . $disable). PHP_EOL;
           $output .= '<input'.$disable.'type="text" name="' . $current_value_id . '_price" value="' . $attribute_value_price_calculate . '" size="10">'. $attribute_value_price_calculate_netto. PHP_EOL;
           $output .= '</td>'. PHP_EOL;
           $output .= '</tr>'. PHP_EOL;
@@ -213,7 +220,7 @@ if ($_POST['cpath'] != '') {
             $output .= '<tr class="downloads oid-'.$current_product_option_id.'">'. PHP_EOL;
            // $output .= '<td colspan="2">File: <input type="file" name="' . $current_value_id . "_download_file"></td>';
             $output .= '<td class="main">&nbsp;</td>';
-            $output .= '<td class="main" colspan="'.(int)($colspan - 1) .'" style="white-space: nowrap; background: #ccc; padding: 4px;">'.xtc_draw_pull_down_menu($current_value_id . '_download_file', xtc_getDownloads(), (isset($attr_dl_array['products_attributes_filename'])?$attr_dl_array['products_attributes_filename']:''), $disable). PHP_EOL;
+            $output .= '<td class="main" colspan="'.(int)($colspan - 1) .'" style="white-space: nowrap; background: #ccc; padding: 4px;">'.xtc_draw_pull_down_menu($current_value_id . '_download_file', xtc_getDownloads(), (isset($attr_dl_array['products_attributes_filename'])?$attr_dl_array['products_attributes_filename']:''), $noStylingClass . $disable). PHP_EOL;
             $output .= '&nbsp;&nbsp;&nbsp;'.DL_COUNT.' <input'.$disable.'type="text" name="' . $current_value_id . '_download_count" value="' . (isset($attr_dl_array['products_attributes_maxcount'])?$attr_dl_array['products_attributes_maxcount']:'') . '" size="6">'. PHP_EOL;
             $output .= '&nbsp;&nbsp;&nbsp;'.DL_EXPIRE.' <input'.$disable.'type="text" name="' . $current_value_id . '_download_expire" value="' . (isset($attr_dl_array['products_attributes_maxdays'])?$attr_dl_array['products_attributes_maxdays']:'') . '" size="6"></td>'. PHP_EOL;
             $output .= '</tr>'. PHP_EOL;
