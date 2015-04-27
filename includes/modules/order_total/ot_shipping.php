@@ -101,6 +101,27 @@
       }
     }
 
+    function quote() {
+      global $xtPrice, $free_shipping_value_over;
+      
+      $this->quotes = array(
+        'id' => 'free',
+        'module' => FREE_SHIPPING_TITLE
+      );
+
+      $this->quotes['methods'] = array(array(
+        'id'    => 'free',
+        'title' => sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)),
+        'cost'  => 0
+      ));
+
+      if(xtc_not_null($this->icon)) {
+        $this->quotes['icon'] = xtc_image($this->icon, FREE_SHIPPING_TITLE);
+      }
+
+      return array($this->quotes);
+    }
+
     function check() {
       if (!isset($this->_check)) {
         $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_ORDER_TOTAL_SHIPPING_STATUS'");
