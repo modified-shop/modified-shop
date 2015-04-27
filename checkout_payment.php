@@ -33,9 +33,7 @@
 include ('includes/application_top.php');
 
 // pre-selection the first payment option
-if (!defined('CHECK_FIRST_PAYMENT_MODUL')) {
-  define ('CHECK_FIRST_PAYMENT_MODUL', false); //true, false - default false
-}
+defined('CHECK_FIRST_PAYMENT_MODUL') or define('CHECK_FIRST_PAYMENT_MODUL', 'false'); // default: 'false'
 
 // create smarty elements
 $smarty = new Smarty;
@@ -150,7 +148,7 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
       $selection[$i]['module_cost'] = $GLOBALS['ot_payment']->get_module_cost($selection[$i]);
     }
     $selection[$i]['radio_buttons'] = $radio_buttons;
-    if ((isset($_SESSION['payment']) && $selection[$i]['id'] == $_SESSION['payment']) || (!isset($_SESSION['payment']) && $i == 0 && CHECK_FIRST_PAYMENT_MODUL)) { // pre-selection the first payment option
+    if ((isset($_SESSION['payment']) && $selection[$i]['id'] == $_SESSION['payment']) || (!isset($_SESSION['payment']) && $i == 0 && CHECK_FIRST_PAYMENT_MODUL == 'true')) { // pre-selection the first payment option
       $selection[$i]['checked'] = 1;
     } else {
       $selection[$i]['checked'] = 0;

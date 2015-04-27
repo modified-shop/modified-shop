@@ -24,14 +24,13 @@
 include('includes/application_top.php');
 
 // pre-selection the cheapest shipping option
-if (!defined('CHECK_CHEAPEST_SHIPPING_MODUL')) {
-  define ('CHECK_CHEAPEST_SHIPPING_MODUL', true); // default: false
-}
+defined('CHECK_CHEAPEST_SHIPPING_MODUL') or define('CHECK_CHEAPEST_SHIPPING_MODUL', 'false'); // default: 'false'
+
+// show selfpickup on free shipping
+defined('SHOW_SELFPICKUP_FREE') or define('SHOW_SELFPICKUP_FREE', 'false'); // default: 'false'
 
 // pre-selection the first payment option
-if (!defined('CHECK_FIRST_PAYMENT_MODUL')) {
-  define ('CHECK_FIRST_PAYMENT_MODUL', false); //true, false - default false
-}
+defined('CHECK_FIRST_PAYMENT_MODUL') or define('CHECK_FIRST_PAYMENT_MODUL', 'false'); // default: 'false'
 
 // create smarty elements
 $smarty = new Smarty;
@@ -225,7 +224,7 @@ $quotes = $shipping_modules->quote();
 // if the modules status was changed when none were available, to save on implementing
 // a javascript force-selection method, also automatically select the cheapest shipping
 // method if more than one module is now enabled
-if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL) || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() > 1))) {
+if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL == 'true') || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() > 1))) {
 	$_SESSION['shipping'] = $shipping_modules->cheapest();
 }
 
@@ -240,6 +239,13 @@ $smarty->assign('ADDRESS_SHIPPING_LABEL', xtc_address_label($_SESSION['customer_
 $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 $smarty->assign('FORM_END', '</form>');
 $smarty->assign('ADDRESS_PAYMENT_LABEL', xtc_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'));
+
+if (SHOW_SELFPICKUP_FREE == 'true') {
+  if ($free_shipping == true) {
+    $free_shipping = false;
+    $quotes = array_merge($ot_shipping->quote(), $shipping_modules->quote('selfpickup', 'selfpickup'));
+  }                    
+}
 
 $module_smarty = new Smarty;
 $shipping_block = '';
@@ -349,7 +355,7 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
       $selection[$i]['module_cost'] = $GLOBALS['ot_payment']->get_module_cost($selection[$i]);
     }
     $selection[$i]['radio_buttons'] = $radio_buttons;
-    if ((isset($_SESSION['payment']) && $selection[$i]['id'] == $_SESSION['payment']) || (!isset($_SESSION['payment']) && $i == 0 && CHECK_FIRST_PAYMENT_MODUL)) { // pre-selection the first payment option
+    if ((isset($_SESSION['payment']) && $selection[$i]['id'] == $_SESSION['payment']) || (!isset($_SESSION['payment']) && $i == 0 && CHECK_FIRST_PAYMENT_MODUL == 'true')) { // pre-selection the first payment option
       $selection[$i]['checked'] = 1;
     } else {
       $selection[$i]['checked'] = 0;

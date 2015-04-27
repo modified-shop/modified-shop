@@ -29,9 +29,10 @@
 include ('includes/application_top.php');
 
 // pre-selection the cheapest shipping option
-if (!defined('CHECK_CHEAPEST_SHIPPING_MODUL')) {
-  define ('CHECK_CHEAPEST_SHIPPING_MODUL', false); // default: false
-}
+defined('CHECK_CHEAPEST_SHIPPING_MODUL') or define('CHECK_CHEAPEST_SHIPPING_MODUL', 'false'); // default: 'false'
+
+// show selfpickup on free shipping
+defined('SHOW_SELFPICKUP_FREE') or define('SHOW_SELFPICKUP_FREE', 'false'); // default: 'false'
 
 // create smarty elements
 $smarty = new Smarty;
@@ -157,7 +158,7 @@ $quotes = $shipping_modules->quote();
 // if the modules status was changed when none were available, to save on implementing
 // a javascript force-selection method, also automatically select the cheapest shipping
 // method if more than one module is now enabled
-if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL) || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() > 1))) { //web28 - 2012-04-27 - pre-selection the cheapest shipping option
+if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL == 'true') || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() > 1))) { //web28 - 2012-04-27 - pre-selection the cheapest shipping option
 	$_SESSION['shipping'] = $shipping_modules->cheapest();
 }
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_SHIPPING, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
@@ -170,6 +171,13 @@ $smarty->assign('ADDRESS_LABEL', xtc_address_label($_SESSION['customer_id'], $_S
 $smarty->assign('BUTTON_ADDRESS', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL').'">'.xtc_image_button('button_change_address.gif', IMAGE_BUTTON_CHANGE_ADDRESS).'</a>');
 $smarty->assign('BUTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));// 'BUTON_CONTINUE' to remain compatible to standard templates
 $smarty->assign('FORM_END', '</form>');
+
+if (SHOW_SELFPICKUP_FREE == 'true') {
+  if ($free_shipping == true) {
+    $free_shipping = false;
+    $quotes = array_merge($ot_shipping->quote(), $shipping_modules->quote('selfpickup', 'selfpickup'));
+  }                    
+}
 
 $module_smarty = new Smarty;
 $shipping_block = '';
