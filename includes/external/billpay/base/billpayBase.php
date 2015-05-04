@@ -1026,7 +1026,7 @@ HEREDOC;
                                                     $orderSubTotalGross += $totalGrossValue;
                                             }
                                             else {
-                                                $orderSubTotalGross = $_SESSION['cart']->total;
+                                                $orderSubTotalGross = $_SESSION['cart']->show_total();
                                             }
                                             break;
                                         case 'ot_tax':

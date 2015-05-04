@@ -153,7 +153,7 @@
         }
         $_SESSION['cc_amount_min_order'] = $xtPrice->xtcCalculateCurr($gv_result['coupon_minimum_order']);
         $_SESSION['cc_amount_info'] = $coupon_amount;
-        if ($_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->total) {
+        if ($_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->show_total()) {
           $_SESSION['cc_id'] = $gv_result['coupon_id'];
         }
         $_SESSION['cc_post'] = true;

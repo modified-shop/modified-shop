@@ -860,7 +860,7 @@ class KlarnaUtils
         $shippingCost = $this->_getShippingCost();
 
         if ($order == null) {
-            return $shippingCost + ($_SESSION['cart']->total);
+            return $shippingCost + ($_SESSION['cart']->show_total());
         }
 
         $totalSum = 0;
