@@ -205,7 +205,7 @@ class ot_payment {
     $this->amounts['total'] = 0;
 
     //$order_total = $order->info['total'];  //FEHLER  $order->info['total'] enthält auf der Seite checkout_payment die Versandkosten OHNE Steuer warum auch immer
-    $order_total = $_SESSION['cart']->total;
+    $order_total = $_SESSION['cart']->show_total();
 
     // Check if gift voucher is in cart and adjust total
     $products = $_SESSION['cart']->get_products();
