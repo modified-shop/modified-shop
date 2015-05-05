@@ -202,6 +202,7 @@
   
   $payment_array = array(array('id' => 0, 'text' => REPORT_ALL));
   $payments = explode(';', MODULE_PAYMENT_INSTALLED);
+  $payments = array_filter($payments); //fix for empty array
   for ($i=0, $n=count($payments); $i<$n; $i++){
     require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i]);
     $payment_id = substr($payments[$i], 0, strrpos($payments[$i], '.'));
