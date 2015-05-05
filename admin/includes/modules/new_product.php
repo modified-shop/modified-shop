@@ -131,8 +131,8 @@
           </tr>
           <tr>
             <td>
-              <span class="main"><?php echo TEXT_PRODUCTS_VPE_VISIBLE. '&nbsp;' . xtc_draw_pull_down_menu('products_vpe_status', 'checkbox', (isset($pInfo->products_vpe_status) && $pInfo->products_vpe_status==1 ? true : false));?></span>
-              <div class="flt-r" style="margin-top:5px">
+              <span class="main"><div class="flt-l" style="margin-top:8px"><?php echo TEXT_PRODUCTS_VPE_VISIBLE. '</div>&nbsp;' . xtc_draw_pull_down_menu('products_vpe_status', 'checkbox', (isset($pInfo->products_vpe_status) && $pInfo->products_vpe_status==1 ? true : false));?></span>
+              <div class="flt-r" style="margin-top:8px">
               <span class="main"><?php echo TEXT_PRODUCTS_VPE_VALUE; ?></span>
               </div>                
             </td>
