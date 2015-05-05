@@ -39,3 +39,7 @@ td.dataTableConfig.col-middle .SumoSelect {width:100%; }
 .SumoSelect > .optWrapper > .options > li.optGroup { padding-left: 5px; text-decoration: underline; }
 
 .select_f12 { font-size:12px; }
+
+p.SlectBox{
+overflow:hidden;
+}

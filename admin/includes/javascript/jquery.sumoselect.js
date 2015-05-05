@@ -1,7 +1,7 @@
 ﻿/*!
- * jquery.sumoselect - v1.2.5
+ * jquery.sumoselect - v1.2.6
  * http://hemantnegi.github.io/jquery.sumoselect
- * 2015-04-20 //add autoWidth, minWidth, addWidth, maxAddWidth, consoleLog, fix element is disabled  by web28, www.rpa-com.de
+ * 2015-05-05 //add autoWidth, minWidth, addWidth, maxAddWidth, consoleLog, fix element is disabled  by web28, www.rpa-com.de
  *
  * Copyright 2014 Hemant Negi
  * Email : hemant.frnz@gmail.com
@@ -71,13 +71,16 @@
                     }
                     if (settings.autoWidth && elmtagName == 'select') {
                       var selWidth = parseInt(O.E.outerWidth());
-                      if (settings.consoleLog) console.log('cloneWidth: ' + elmName + '|' + O.E.width());
+                      if (settings.consoleLog) console.log('selWidth: ' + elmName + '|' + O.E.width());
                       //Fix element is disabled
                       //if (O.E.width() < 1) { //Fix for opera use width()
                         var clone = O.E.clone();
                         clone.css("visibility","hidden");
                         $('body').append(clone);
                         var cloneWidth = parseInt(clone.outerWidth());
+                        clone.css("width","auto");
+                        var cloneWidthReal = parseInt(clone.outerWidth());
+                        if (settings.consoleLog) console.log('cloneWidthReal: ' + cloneWidthReal);
                         clone.remove();
                         if (settings.consoleLog) console.log('cloneWidth: ' + cloneWidth);
                       //}
@@ -115,6 +118,11 @@
 
                     //## Creating the list...
                     O.optDiv = $('<div class="optWrapper">');
+                    
+                    // set width 
+                    if (cloneWidthReal > cloneWidth) {
+                      O.optDiv.css("width",cloneWidthReal - 20);
+                    }
 
                     //barnch for floating list in low res devices.
                     O.floatingList();
