@@ -15,7 +15,7 @@
   if (isset($_GET['action']) && $_GET['action']=='easybill') {
   
     $easybill = new easybill($oID);
-    //$easybill->order($oID);
+
     $easybill->setCustomer();
     
     if ($easybill->checkOrder()) {    

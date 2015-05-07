@@ -15,8 +15,8 @@
       require_once(DIR_FS_EXTERNAL.'easybill/classes/class.easybill.php');
           
       //easyBill initial
-      $easybill = new easybill();
-      $easybill->order($insert_id);
+      $easybill = new easybill($insert_id);
+
       $easybill->setCustomer();
       
       // set Invoice ID

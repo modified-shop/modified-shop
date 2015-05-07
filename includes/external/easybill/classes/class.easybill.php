@@ -17,11 +17,13 @@
 
     var $error = array();
     var $connection = false;
-
-    // multilanguage
-    include_once (DIR_FS_EXTERNAL.'easybill/lang/'.$this->info['language'].'/easybill.php');
-
+    var $search = false;
+    
+    
     protected function makeConnection () {
+
+      // multilanguage
+      include_once (DIR_FS_EXTERNAL.'easybill/lang/'.$this->info['language'].'/easybill.php');
     
       @ini_set('soap.wsdl_cache_enabled', '0');
       $this->client = new SoapClient("https://soap.easybill.de/soap.easybill.php?wsdl", array('trace' => 1, 
@@ -63,13 +65,13 @@
         $this->billing['country_iso_2'] = $this->getCountryIso($this->billing['billing_country']);
       }
   
-      $customer->firstName      = utf8_encode($this->billing['firstname']);
-      $customer->lastName       = utf8_encode($this->billing['lastname']);
-      $customer->street         = utf8_encode($this->billing['street_address']);
-      $customer->zipCode        = utf8_encode($this->billing['postcode']);
-      $customer->city           = utf8_encode($this->billing['city']);
-      $customer->country        = utf8_encode($this->billing['country_iso_2']);
-      $customer->companyName    = utf8_encode($this->billing['company']);
+      $customer->firstName      = utf8_encode((($this->billing['firstname'] != '') ? $this->billing['firstname'] : $this->customer['firstname']));
+      $customer->lastName       = utf8_encode((($this->billing['lastname'] != '') ? $this->billing['lastname'] : $this->customer['lastname']));
+      $customer->street         = utf8_encode((($this->billing['street_address'] != '') ? $this->billing['street_address'] : $this->customer['street_address']));
+      $customer->zipCode        = utf8_encode((($this->billing['postcode'] != '') ? $this->billing['postcode'] : $this->customer['postcode']));
+      $customer->city           = utf8_encode((($this->billing['city'] != '') ? $this->billing['city'] : $this->customer['city']));
+      $customer->country        = utf8_encode((($this->billing['country_iso_2'] != '') ? $this->billing['country_iso_2'] : $this->customer['country_iso_2']));
+      $customer->companyName    = utf8_encode((($this->billing['company'] != '') ? $this->billing['company'] : $this->customer['company']));
       $customer->phone_1        = utf8_encode($this->customer['telephone']);
       $customer->email          = utf8_encode($this->customer['email_address']);
       $customer->customerNumber = utf8_encode($this->customer['datev_id']);
@@ -111,16 +113,16 @@
  		}     
  
 		
-		protected function getNewCustomerDatevId($search='') {
+		protected function getNewCustomerDatevId() {
 		
-			$error='';	
-			if ($search=='') {
+			$error = false;	
+			if ($this->search === false) {
 				$datev_query = xtc_db_query("SELECT MAX(customers_datev_id) AS last_datev_id FROM ".TABLE_EASYBILL_DATEV);
 				$datev = xtc_db_fetch_array($datev_query);
 				if ($datev['last_datev_id']>0) {
-					$search = ($datev['last_datev_id']+1);
+					$this->search = ($datev['last_datev_id']+1);
 				} else {
-					$search = '10000';
+					$this->search = '10000';
 				}
 			}
 
@@ -130,19 +132,20 @@
       
       //SOAP Call
       try {
-        $this->client->getCustomerByCustomerNumber($search);
+        $this->client->getCustomerByCustomerNumber($this->search);
       }		
       catch(SoapFault $e) {
         $error=$e;
       } 
-  		  		
-  		if (xtc_not_null($error)) {
-				$this->customer['datev_id'] = $search;
+		  		
+  		if ($error !== false) {
+				$this->customer['datev_id'] = $this->search;
 				$sql_data_array = array('customers_datev_id' => $this->customer['datev_id'],
 				                        'customers_id' => $this->customer['id']);
 				xtc_db_perform(TABLE_EASYBILL_DATEV, $sql_data_array);                     
 			} else {
-				$this->getNewCustomerDatevId($search+1);
+			  $this->search ++;
+				$this->getNewCustomerDatevId();
 			}
 		}
 		
@@ -227,7 +230,8 @@
       }
 
       $this->setCustomersTaxRate();
-
+      $this->info['tax'] = false;
+      
       if (!is_object($document)) {
         $document = new stdClass();
       }
@@ -273,8 +277,11 @@
       for ($t=0, $n=sizeof($this->totals); $t<$n; $t++) {
         switch ($this->totals[$t]['class']) {
           
-          case 'ot_subtotal':
           case 'ot_tax':
+            $this->info['tax'] = true;
+            break;
+
+          case 'ot_subtotal':
           case 'ot_subtotal_no_tax':
           case 'ot_total':
             // muss nicht übergeben werden
@@ -294,12 +301,11 @@
             {
             	$positions[$i]->singlePriceNetto  = floatval($this->totals[$t]['value']*100);
             }        
-						// BOC - Hack for wolf-online-shop.de - delete Shipping if cost = 0
-							if ($positions[$i]->singlePriceNetto == 0) {
-								unset($positions[$i]);
-								$i--;
-							}
-						// EOC - Hack for wolf-online-shop.de - delete Shipping if cost = 0   
+						// delete Shipping if cost = 0
+            if ($positions[$i]->singlePriceNetto == 0) {
+              unset($positions[$i]);
+              $i--;
+            }
             $i++;
             break;
   
@@ -361,6 +367,26 @@
       }
         
       $document->documentPosition = $positions;
+
+      // set Tax Options for document
+      if (!isset($this->customer['allow_tax'])) {
+        require_once (DIR_FS_INC.'xtc_get_customers_country.inc.php');
+        require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
+
+        $country_id = xtc_get_customers_country($this->customer['id']);
+
+        if (xtc_get_geo_zone_code($country_id) == xtc_get_geo_zone_code(STORE_COUNTRY)) {
+          if ($this->info['tax'] !== true) {
+            if (xtc_not_null($this->customer['vat_id'])) {
+              $document->taxOptions = 'IG';
+            } else {
+              $document->taxOptions = 'sStfr';
+            }
+          }
+        } else {
+          $document->taxOptions = 'AL';
+        }
+      }
       
       // Text before Positions
       $textPrefix = EASYBILL_PAYMENT_HEADING . $this->getPaymentMethod();
@@ -424,12 +450,12 @@
                                             entry_zone_id 
                                        FROM ".TABLE_ADDRESS_BOOK." 
                                       WHERE customers_id = '".(int) $this->customer['id']."' 
-                                        AND entry_firstname = '".xtc_db_input($this->billing['firstname'])."'
-                                        AND entry_lastname = '".xtc_db_input($this->billing['lastname'])."'
-                                        AND entry_street_address = '".xtc_db_input($this->billing['street_address'])."'
-                                        AND entry_postcode = '".xtc_db_input($this->billing['postcode'])."'
-                                        AND entry_company = '".xtc_db_input($this->billing['company'])."'
-                                        AND entry_city = '".xtc_db_input($this->billing['city'])."'                                      
+                                        AND entry_firstname = '".xtc_db_input($this->customer['firstName'])."'
+                                        AND entry_lastname = '".xtc_db_input($this->customer['lastName'])."'
+                                        AND entry_street_address = '".xtc_db_input($this->customer['street'])."'
+                                        AND entry_postcode = '".xtc_db_input($this->customer['zipCode'])."'
+                                        AND entry_company = '".xtc_db_input($this->customer['companyName'])."'
+                                        AND entry_city = '".xtc_db_input($this->customer['city'])."'                                      
                                     ");
 			$country = xtc_db_fetch_array($country_query);
 			$this->customer['country_id'] = $country['entry_country_id'];
