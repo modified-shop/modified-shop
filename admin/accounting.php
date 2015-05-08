@@ -199,11 +199,14 @@ require (DIR_WS_INCLUDES.'head.php');
                 
                 $params = '';
                 $checked = false;
+                $params = '';
+                $checked = false;
+                $hidden_field = '';
                 if ($admin_access[$field['Field']] == '1') {
                   $checked = true;
                   if ($_GET['cID'] == '1') {
                     $params = ' disabled="disabled"';
-                    echo xtc_draw_hidden_field('access[]', $field['Field']);
+                    $hidden_field =  xtc_draw_hidden_field('access[]', $field['Field']).PHP_EOL;
                   }
                 }
 
@@ -228,7 +231,7 @@ require (DIR_WS_INCLUDES.'head.php');
               
                 echo '<td class="dataTableContent" style="width:18px; background:'.$color.';"></td>
                       <td class="dataTableContent" style="width:200px;">'.$field['Field'].'</td>
-                      <td class="dataTableContent" colspan="2">'.xtc_draw_checkbox_field('access[]', $field['Field'], $checked, '', $params).'</td>
+                      <td class="dataTableContent" colspan="2">'. PHP_EOL .$hidden_field.xtc_draw_checkbox_field('access[]', $field['Field'], $checked, '', $params). PHP_EOL .'</td>
                     </tr>';
               }
             }
