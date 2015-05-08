@@ -111,7 +111,7 @@
         <table class="tableInput border0">
           <tr>
             <td style="width:260px"><span class="main"><?php echo TEXT_PRODUCTS_STATUS; ?></span></td>
-            <td><span class="main"><?php echo draw_on_off_selection('products_status', $product_status_array, $pInfo->products_status, 'style="width: 155px"'); ?></span></td>
+            <td><span class="main"><?php echo draw_on_off_selection('products_status', $product_status_array, ($pInfo->products_status == '0' ? false : true), 'style="width: 155px"'); ?></span></td>
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?> <small><?php echo TEXT_PRODUCTS_DATE_FORMAT; ?></small></span></td>
