@@ -72,16 +72,7 @@ if ($product->isProduct() && $_SESSION['customers_status']['customers_status_wri
     
     if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_reviews.html', $cache_id) || !$cache) {
     
-      $products_image = '';
-      if ($reviews['products_image'] != '') {
-        $products_image = DIR_WS_THUMBNAIL_IMAGES . $reviews['products_image'];
-        if (!file_exists($products_image)) {
-          $products_image = '';
-          if (PRODUCT_IMAGE_SHOW_NO_IMAGE == 'true') {
-            $products_image = DIR_WS_THUMBNAIL_IMAGES . 'noimage.gif';
-          }
-        }
-      }
+      $products_image = $product->productImage($reviews['products_image'], 'thumbnail');
       
       $review_image = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']));
       $review_image_microtag = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"');

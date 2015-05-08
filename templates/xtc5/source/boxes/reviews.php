@@ -81,10 +81,7 @@
       $reviews = encode_htmlspecialchars($reviews['reviews_text']);
       $reviews = xtc_break_string($reviews, 15, '-<br />');
 
-      $review_image = DIR_WS_THUMBNAIL_IMAGES . $random_product['products_image'];
-      if(!file_exists($review_image)) {
-        $review_image = DIR_WS_THUMBNAIL_IMAGES.'noimage.gif';
-      }
+      $review_image = $product->productImage($random_product['products_image'], 'thumbnail');
       $products_image = xtc_image($review_image, $random_product['products_name'], '', '', 'class="productboximage"');
       $review_image = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $random_product['reviews_rating'] . '.gif' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $random_product['reviews_rating']),'','','itemprop="rating"');
 
