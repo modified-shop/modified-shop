@@ -122,7 +122,7 @@
         $queryEndTime = array_sum(explode(" ",microtime())); 
         $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');
         if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
-          error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'QUERY CACHED ' . $query . "\n", 3, DIR_FS_LOG.'mod_sql_' .date('Y-m-d') .'.log');
+          xtc_db_slow_query_log($processTime, $query, 'QUERY');
         }
       }
 
@@ -145,6 +145,18 @@
     }
 
     return $result;
+  }
+
+
+  function xtc_db_slow_query_log($processTime, $query, $type) {
+    $backtrace = debug_backtrace();
+    
+    error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' ' . $type . ' [' . $processTime . 's] ' . $query . "\n", 3, DIR_FS_LOG.'mod_sql_'.strtolower($type).'_'. date('Y-m-d') .'.log');
+    $err = 0;
+    for ($i=0, $n=count($backtrace); $i<$n; $i++) {
+      error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'] . "\n", 3, DIR_FS_LOG.'mod_sql_'.strtolower($type).'_'. date('Y-m-d') .'.log');
+      $err ++;
+    }
   }
 
 ?>
