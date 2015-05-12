@@ -234,6 +234,10 @@ if (xtc_not_null($action)) {
 
     // BOF - Tomcraft - 2011-02-01 - Paypal Express Modul
     case 'paypal_express_checkout':
+      if (!is_object($product)) {
+        require_once(DIR_WS_CLASSES.'product.php');
+        $product = new product();
+      }
       $o_paypal->paypal_express_auth_call();
       xtc_redirect($o_paypal->payPalURL);
       break;
