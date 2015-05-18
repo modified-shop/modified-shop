@@ -561,4 +561,7 @@ UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 'groups' LIMIT 1;
 #GTB - 2015-04-21 - update products image
 ALTER TABLE products MODIFY products_image VARCHAR(254) NOT NULL;
 
+#GTB - 2015-05-18 - change customers_basket_date_added
+ALTER TABLE customers_basket MODIFY customers_basket_date_added DATETIME;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
