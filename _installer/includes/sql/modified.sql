@@ -475,7 +475,7 @@ CREATE TABLE customers_basket (
   products_id TINYTEXT NOT NULL,
   customers_basket_quantity INT(2) NOT NULL,
   final_price DECIMAL(15,4) NOT NULL,
-  customers_basket_date_added CHAR(8),
+  customers_basket_date_added DATETIME,
   PRIMARY KEY (customers_basket_id),
   KEY idx_customers_id (customers_id)
 ) ENGINE=MyISAM;

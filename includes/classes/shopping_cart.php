@@ -32,9 +32,6 @@
 // include needed functions
 require_once (DIR_FS_INC.'xtc_create_random_value.inc.php');
 require_once (DIR_FS_INC.'xtc_get_prid.inc.php');
-require_once (DIR_FS_INC.'xtc_draw_form.inc.php');
-require_once (DIR_FS_INC.'xtc_draw_input_field.inc.php');
-require_once (DIR_FS_INC.'xtc_image_submit.inc.php');
 require_once (DIR_FS_INC.'xtc_get_tax_description.inc.php');
 
 class shoppingCart {
@@ -70,7 +67,7 @@ class shoppingCart {
             $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                     'products_id' => $products_id,
                                     'customers_basket_quantity' => $qty,
-                                    'customers_basket_date_added' => date('Ymd')
+                                    'customers_basket_date_added' => 'now()'
                                    );
             xtc_db_perform(TABLE_CUSTOMERS_BASKET, $sql_data_array);
 
@@ -182,7 +179,7 @@ class shoppingCart {
         $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                 'products_id' => $products_id,
                                 'customers_basket_quantity' => $qty,
-                                'customers_basket_date_added' => date('Ymd')
+                                'customers_basket_date_added' => 'now()'
                                );
         xtc_db_perform(TABLE_CUSTOMERS_BASKET, $sql_data_array);
       }
@@ -247,7 +244,8 @@ class shoppingCart {
     // update database
     if (isset($_SESSION['customer_id'])){
       xtc_db_query("UPDATE ".TABLE_CUSTOMERS_BASKET."
-                       SET customers_basket_quantity = '".(int)$quantity."'
+                       SET customers_basket_quantity = '".(int)$quantity."',
+                           customers_basket_date_added' = now()
                      WHERE customers_id = '".(int)$_SESSION['customer_id']."'
                        AND products_id = '".xtc_db_input($products_id)."'");
     }
