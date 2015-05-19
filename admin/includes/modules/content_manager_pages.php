@@ -46,7 +46,7 @@ if (!$action) {
                                        FROM ".TABLE_CONTENT_MANAGER."
                                       WHERE languages_id='".(int)$_SESSION['languages_id']."'
                                         AND parent_id = '0'
-                                   ORDER BY content_group, sort_order");
+                                   ORDER BY content_group, sort_order, content_id");
       while ($content_data = xtc_db_fetch_array($content_query)) {
         $file_flag_query = xtc_db_query("SELECT file_flag_name 
                                          FROM ".TABLE_CM_FILE_FLAGS." 
@@ -57,7 +57,7 @@ if (!$action) {
           <td class="dataTableContent txta-c"><?php echo $content_data['content_id']; ?></td>
           <td class="dataTableContent">
           <?php
-            echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$content_data['content_group']).'">' . $icon_edit . '</a>';
+            echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$content_data['content_group']).'&coIndex='.$content_data['content_group_index'].'">' . $icon_edit . '</a>';
             echo '&nbsp;'.$content_data['content_title'];
             echo (($content_data['content_delete'] == '0') ? ' <span class="col-red">*</span>' : '');
           ?>
@@ -72,10 +72,10 @@ if (!$action) {
           <td class="dataTableContent txta-r nobr">
           <?php
             if ($content_data['content_delete'] == '1') {
-              echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$content_data['content_group']).'" onclick="return confirm(\''.CONFIRM_DELETE.'\')">'.$icon_delete.'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
+              echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$content_data['content_group']).'&coIndex='.$content_data['content_group_index'].'" onclick="return confirm(\''.CONFIRM_DELETE.'\')">'.$icon_delete.'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
             }
-            echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$content_data['content_group']).'">'.$icon_edit.'  '.TEXT_EDIT.'</a>&nbsp;&nbsp;';
-            echo '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$content_data['content_group']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=640,height=600\')">'.$icon_preview.'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
+            echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$content_data['content_group']).'&coIndex='.$content_data['content_group_index'].'">'.$icon_edit.'  '.TEXT_EDIT.'</a>&nbsp;&nbsp;';
+            echo '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$content_data['content_group']).'&coIndex='.$content_data['content_group_index'].'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=640,height=600\')">'.$icon_preview.'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
           ?>
           </td>
         </tr> 
@@ -84,7 +84,7 @@ if (!$action) {
                                              FROM ".TABLE_CONTENT_MANAGER."
                                             WHERE languages_id='".(int)$_SESSION['languages_id']."'
                                               AND parent_id = '".$content_data['content_id']."'
-                                         ORDER BY content_group, sort_order");
+                                         ORDER BY content_group, sort_order, content_id");
         while ($sub_content_data = xtc_db_fetch_array($sub_content_query)) {
           $file_flag_query = xtc_db_query("SELECT file_flag_name 
                                            FROM ".TABLE_CM_FILE_FLAGS." 
@@ -95,7 +95,7 @@ if (!$action) {
             <td class="dataTableContent txta-c"><?php echo $sub_content_data['content_id']; ?></td>
             <td class="dataTableContent">&nbsp;&nbsp;--
             <?php
-              echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$sub_content_data['content_group']).'">' . $icon_edit . '</a>';
+              echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'">' . $icon_edit . '</a>';
               echo '&nbsp;'.$sub_content_data['content_title'];
               echo (($sub_content_data['content_delete'] == '0') ? ' <span class="col-red">*</span>' : '');
             ?>
@@ -110,10 +110,10 @@ if (!$action) {
             <td class="dataTableContent txta-r nobr">
             <?php
               if ($sub_content_data['content_delete'] == '1') {
-                echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$sub_content_data['content_group']).'" onclick="return confirm(\''.CONFIRM_DELETE.'\')">'.$icon_delete.'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
+                echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'" onclick="return confirm(\''.CONFIRM_DELETE.'\')">'.$icon_delete.'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
               }
-              echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$sub_content_data['content_group']).'">'.$icon_edit.'  '.TEXT_EDIT.'</a>&nbsp;&nbsp;';
-              echo '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$sub_content_data['content_group']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')">'.$icon_preview.'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
+              echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'">'.$icon_edit.'  '.TEXT_EDIT.'</a>&nbsp;&nbsp;';
+              echo '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')">'.$icon_preview.'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
             ?>
             </td>
           </tr>
@@ -137,7 +137,10 @@ if (!$action) {
     $content_query = xtc_db_query("SELECT *
                                      FROM ".TABLE_CONTENT_MANAGER."
                                     WHERE content_group='".$g_coID."'
-                                      AND languages_id = '".$languages[$i]['id']."'");
+                                      AND content_group_index ='". $coIndex ."'
+                                      AND languages_id = '".$languages[$i]['id']."'
+                                      ORDER BY content_id
+                                  ");
     $z=0;
     if (xtc_db_num_rows($content_query) > 0) {
       while ($cont = xtc_db_fetch_array($content_query)) {
@@ -173,7 +176,9 @@ if (!$action) {
                                        WHERE parent_id = '0'
                                              ".$query_string."
                                          AND content_group != '".$g_coID."'
-                                         AND languages_id = '".(int)$_SESSION['languages_id']."'");
+                                         AND languages_id = '".(int)$_SESSION['languages_id']."'
+                                         ORDER BY content_id
+                                         ");
   $content_data_array = array(array('id' => '', 'text' => '---'));   
   while ($content_data = xtc_db_fetch_array($content_data_query)) {
     $content_data_array[] = array('id' => $content_data['content_id'],
@@ -213,6 +218,7 @@ if (!$action) {
       echo xtc_draw_form('edit_content', FILENAME_CONTENT_MANAGER, 'action=edit&id=insert', 'post', 'enctype="multipart/form-data"');
     }
     echo xtc_draw_hidden_field('content_count', $content_count);
+    echo xtc_draw_hidden_field('content_group_index', $coIndex);
     ?>
     <div style="padding:5px;clear:both;">
       <table class="tableConfig borderall" style="width:99%">
@@ -301,10 +307,18 @@ if (!$action) {
     $csstab = '<style type="text/css">' .  '#tab_lang_0' . '{display: block;' . $csstabstyle . '}';
     $csstab_nojs = '<style type="text/css">';    
     $cnt = 0;
+    $hidden_coIndex = '';
+    
     for ($i=0; $i<$content_count; $i++) {
       for ($l=0; $l<$languages_count; $l++) {
         $tabtmp = "\'tab_lang_$cnt\'," ;
-        $langtabs.= '<li onclick="showTab('. $tabtmp. $counter.')" style="cursor: pointer;" id="tabselect_' . $cnt .'">' .xtc_image(DIR_WS_LANGUAGES . $languages[$l]['directory'] .'/admin/images/'. $languages[$l]['image'], $languages[$l]['name']) . ' ' . $languages[$l]['name'].(($counter > $languages_count) ? ' ('. ($i + 1) .')' : '').'</li>';
+        $coIndex = ($coIndex > 0) ? ' ('. $coIndex .')' : '';
+        //FIX wenn es bei gleicher languages_id mehrere gleiche content_group gibt
+        if ($counter > $languages_count && $i > 0) {
+           $coIndex = ' ('. $i .')';
+           $hidden_coIndex .= xtc_draw_hidden_field('content_new_group_index['.$i.']['.$languages[$l]['id'].']', $i). PHP_EOL;
+        }
+        $langtabs.= '<li onclick="showTab('. $tabtmp. $counter.')" style="cursor: pointer;" id="tabselect_' . $cnt .'">' .xtc_image(DIR_WS_LANGUAGES . $languages[$l]['directory'] .'/admin/images/'. $languages[$l]['image'], $languages[$l]['name']) . ' ' . $languages[$l]['name'].$coIndex.'</li>';
         if($cnt > 0) $csstab .= '#tab_lang_' . $cnt .'{display: none;' . $csstabstyle . '}';
         $csstab_nojs .= '#tab_lang_' . $cnt .'{display: block;' . $csstabstyle . '}';
         $cnt ++;
@@ -313,6 +327,10 @@ if (!$action) {
     $csstab .= '</style>';
     $csstab_nojs .= '</style>';
     $langtabs.= '</ul></div>';
+    if ($hidden_coIndex) {
+      echo $hidden_coIndex;
+      echo '<div class="main important_info">'.TEXT_CONTENT_DOUBLE_GROUP_INDEX.'</div>'. PHP_EOL;
+    }
     ?>
     <?php if (USE_ADMIN_LANG_TABS != 'false') { ?>
     <script type="text/javascript">

@@ -323,6 +323,7 @@ CREATE TABLE content_manager (
   content_meta_keywords TEXT,
   content_meta_robots VARCHAR(32) NOT NULL,
   content_active INT(1) NOT NULL DEFAULT '1',
+  content_group_index int(4) NOT NULL DEFAULT '0'
   PRIMARY KEY (content_id),
   KEY idx_content_group (content_group)
 ) ENGINE=MyISAM;

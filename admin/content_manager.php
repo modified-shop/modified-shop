@@ -32,25 +32,26 @@
   $special = (isset($_GET['special']) ? $_GET['special'] : '');
   $id = (isset($_GET['id']) ? $_GET['id'] : '');
   $g_coID = (isset($_GET['coID']) ? (int)$_GET['coID'] : '');
+  $coIndex = (isset($_GET['coIndex']) ? (int)$_GET['coIndex'] : 0);
   $languages = xtc_get_languages();
 
 
   if ($special == 'delete') {
-    xtc_db_query("DELETE FROM ".TABLE_CONTENT_MANAGER." where content_group='".$g_coID."'");
+    xtc_db_query("DELETE FROM ".TABLE_CONTENT_MANAGER." WHERE content_group='".$g_coID."' AND content_group_index='".$coIndex."'");
     xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER,$setparam));
   }
 
   if ($special == 'delete_product') {
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_CONTENT." where content_id='".$g_coID."'");
     if (isset($_GET['cPath'])) {
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'last_action', 'action', 'coID')) . 'action='.$_GET['last_action']));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'last_action', 'action', 'coID', 'coIndex')) . 'action='.$_GET['last_action']));
     } else {
       xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER,'pID='.(int)$_GET['pID'].$setparam));
     }
   }
   
   if (empty($action) && isset($_GET['cPath'])) {
-    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'last_action', 'action', 'coID')) . 'action='.$_GET['last_action']));
+    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'last_action', 'action', 'coID', 'coIndex')) . 'action='.$_GET['last_action']));
   }
 
   if ($id == 'update' || $id == 'insert') {    
@@ -69,7 +70,8 @@
                                       FROM ".TABLE_CONTENT_MANAGER." c1
                                       JOIN ".TABLE_CONTENT_MANAGER." c2
                                            ON c1.content_group = c2.content_group
-                                     WHERE c1.content_id = '".(int)$parent_id."'");
+                                     WHERE c1.content_id = '".(int)$parent_id."'
+                                     ");
       $parent_id = array();
       while ($parent = xtc_db_fetch_array($parent_query)) {
         $parent_id[$parent['languages_id']] = $parent['content_id'];
@@ -138,6 +140,37 @@
                                        'content_file' => $content_file_name
                                        );
         
+          // check content_group_index 
+          $add_and = '';          
+          if ($id == 'update' && $content_id[$i][$languages[$l]['id']] > 0) {
+            $add_and = " AND content_id != '" . $content_id[$i][$languages[$l]['id']] ."'";
+          }          
+          $dbQuery = xtc_db_query(
+             "SELECT MAX(content_group_index)
+               FROM ".TABLE_CONTENT_MANAGER."
+               WHERE languages_id ='" . $sql_data_lang_array['languages_id'] . "'
+                     ".$add_and."
+                 AND content_group ='" . $sql_data_array['content_group'] . "'
+               ");
+               
+          //check change content_group
+          $change_content_group = $coID != $content_group ? true : false;    
+          $dbData = xtc_db_fetch_row($dbQuery);
+          if (!is_null($dbData[0])) { 
+            $sql_data_array['content_group_index'] = $dbData[0] + 1;
+            if ($id == 'update' && !  $change_content_group) {
+              $sql_data_array['content_group_index'] = $content_group_index;
+            }
+            $content_group_index = $sql_data_array['content_group_index'];
+          } else {
+            $sql_data_array['content_group_index'] = $change_content_group ? 0 : $content_group_index;
+          }
+          
+          //FIX wenn es bei gleicher languages_id mehrere gleiche content_group gibt
+          if (isset($content_new_group_index[$i][$languages[$l]['id']])) {
+            $sql_data_array['content_group_index'] = (int)$content_new_group_index[$i][$languages[$l]['id']];
+          }
+          
           if ($id == 'update' && $content_id[$i][$languages[$l]['id']] > 0) {
             xtc_db_perform(TABLE_CONTENT_MANAGER, array_merge($sql_data_array, $sql_data_lang_array), 'update', "content_id = '".$content_id[$i][$languages[$l]['id']]."'");
           } else {
@@ -148,7 +181,7 @@
     } // end for $content_count
 
     if (isset($page_update)) {
-      $setparam = 'action=edit&coID='.$content_group;
+      $setparam = 'action=edit&coID='.$content_group.'&coIndex='.$sql_data_array['content_group_index'];
     }
     if ($error === true) {
       $setparam = 'action=edit&coID='.(($g_coID != '') ? $g_coID : $content_group);
