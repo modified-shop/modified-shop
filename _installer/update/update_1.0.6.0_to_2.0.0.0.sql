@@ -564,4 +564,7 @@ ALTER TABLE products MODIFY products_image VARCHAR(254) NOT NULL;
 #GTB - 2015-05-18 - change customers_basket_date_added
 ALTER TABLE customers_basket MODIFY customers_basket_date_added DATETIME;
 
+#web28 - 2015-05-19 - add content_group_index
+ALTER TABLE content_manager ADD content_group_index int(4) NOT NULL DEFAULT '0';
+
 # Keep an empty line at the end of this file for the db_updater to work properly

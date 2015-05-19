@@ -82,5 +82,7 @@
  define('TABLE_HEADING_STATUS_ACTIVE', 'Status');
  define('TEXT_STATUS_ACTIVE', 'Status active:'); 	 
  define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Enable content?');
-
+ 
+ define('TEXT_CONTENT_DOUBLE_GROUP_INDEX', 'Duplicate Content Group Index! Please save. The problem is thus automatically corrected!');
+ 
  ?>
