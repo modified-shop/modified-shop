@@ -80,7 +80,7 @@ if ($product->isProduct() && $_SESSION['customers_status']['customers_status_wri
       // include needed functions
       require_once(DIR_FS_INC . 'xtc_break_string.inc.php');
       $box_smarty->assign('REVIEWS_LINK', xtc_href_link(FILENAME_REVIEWS));
-      $box_smarty->assign('PRODUCTS_IMAGE', xtc_image($products_image, $reviews['products_name'], '', '', 'class="productboximage"'));
+      $box_smarty->assign('PRODUCTS_IMAGE', $products_image;
       $box_smarty->assign('PRODUCTS_NAME', $reviews['products_name']);
       $box_smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $reviews['products_id'] . '&reviews_id=' . $reviews['reviews_id']));
       $box_smarty->assign('REVIEWS', xtc_break_string(encode_htmlspecialchars($reviews['reviews_text']), 15, '-<br />'));
