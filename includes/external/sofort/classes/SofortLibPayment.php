@@ -265,7 +265,7 @@ class SofortLibPayment {
 
     // amount
     $amount = round($order->info['total'], $xtPrice->get_decimal_places(''));
-    if ($this->tmpOrders === false) {
+    //if ($this->tmpOrders === false) {
       if (!class_exists('order_total')) {
         require(DIR_WS_CLASSES.'order_total.php');
       }
@@ -283,7 +283,7 @@ class SofortLibPayment {
           }
         }
       }
-    }
+    //}
     $this->data['amount'] = number_format($amount, 2, '.', '');
 
     // reason 1
