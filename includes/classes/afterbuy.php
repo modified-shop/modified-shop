@@ -71,7 +71,7 @@ class xtc_afterbuy_functions {
 		$customer['strasse'] = preg_replace("/ /", "%20", $oData['billing_street_address']); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
 		$customer['plz'] = $oData['billing_postcode'];
 		$customer['ort'] = preg_replace("/ /", "%20", $oData['billing_city']); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
-		$customer['tel'] = $oData['billing_telephone'];
+		$customer['tel'] = $oData['customers_telephone'];
 		$customer['fax'] = "";
 		$customer['mail'] = $oData['customers_email_address'];
 		$customer['land'] = $oData['billing_country_iso_code_2'];
