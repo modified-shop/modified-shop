@@ -84,8 +84,8 @@
   $shipping_statuses = xtc_get_shipping_status();
   $languages = xtc_get_languages();
 
-  $product_status_array = array(array('id'=>0,'text'=>TEXT_PRODUCT_NOT_AVAILABLE),
-                                array('id'=>1,'text'=>TEXT_PRODUCT_AVAILABLE)
+  $product_status_array = array(array('id'=>1,'text'=>TEXT_PRODUCT_AVAILABLE),
+                                array('id'=>0,'text'=>TEXT_PRODUCT_NOT_AVAILABLE),
                                );
 
   //if ($pInfo->products_startpage == '1') { $startpage_checked = true; } else { $startpage_checked = false; }

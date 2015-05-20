@@ -78,8 +78,8 @@
   $order_array_desc = array(array('id' => 'ASC','text'=>TEXT_SORT_ASC),
                             array('id' => 'DESC','text'=>TEXT_SORT_DESC));
 
-  $category_status_array = array(array('id' => '0','text'=>TEXT_PRODUCT_NOT_AVAILABLE),
-                                 array('id' => '1','text'=>TEXT_PRODUCT_AVAILABLE)
+  $category_status_array = array(array('id' => '1','text'=>TEXT_PRODUCT_AVAILABLE),
+                                 array('id' => '0','text'=>TEXT_PRODUCT_NOT_AVAILABLE),
                                  );
 
   $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';    
