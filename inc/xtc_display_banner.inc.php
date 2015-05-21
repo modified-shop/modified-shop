@@ -15,7 +15,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
     
-// Display a banner from the specified group or banner id ($identifier)
+  // Display a banner from the specified group or banner id ($identifier)
   function xtc_display_banner($action, $identifier) {
     if ($action == 'dynamic') {
       $banners_query = xtc_db_query("SELECT count(*) as count 
@@ -41,7 +41,40 @@
           $banner = xtc_db_fetch_array($banner_query);
         }
       }
+    } elseif ($action == 'slider') {
+      if (is_array($identifier)) {
+        $banner_content = $identifier;
+      } else {
+        $banner_query = xtc_db_query("SELECT *
+                                        FROM " . TABLE_BANNERS . " 
+                                       WHERE status = '1' 
+                                         AND banners_image != ''
+                                         AND banners_group = '" . xtc_db_input($identifier) . "'");
+        if (xtc_db_num_rows($banner_query) > 0) {
+          $banner_content = array();
+          while ($banner = xtc_db_fetch_array($banner_query)) {
+            $banner_content[] = $banner;
+          }
+        }
+      }
+      
+      if (count($banner_content) > 0) {
+        $shop_url = xtc_get_top_level_domain(HTTP_SERVER);
+  
+        $banner_array = array();
+        foreach ($banner_content as $banner) {
+          $banner_url = xtc_get_top_level_domain($banner['banners_url']);
+          $banner_array[] = array('IMAGE' => '<a href="' . xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '"' . (($shop_url['new'] != $banner_url['new']) ? ' onclick="window.open(this.href); return false;"' : '') . '>' . xtc_image(DIR_WS_IMAGES.'banner/' . $banner['banners_image'], $banner['banners_title']) . '</a>',
+                                  'TEXT' => $banner['banners_html_text'],
+                                  'TITLE' => $banner['banners_title']
+                                  );
+          xtc_update_banner_display_count($banner['banners_id']);
+        }
+        
+        return $banner_array;
+      }
     }
+
     
     if (xtc_not_null($banner['banners_html_text'])) {
       $banner_string = $banner['banners_html_text'];
@@ -57,4 +90,4 @@
 
     return $banner_string;
   }
- ?>
+?>
