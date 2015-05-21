@@ -15,7 +15,7 @@ class BillpayOrder
         if ($order) {
             return $order->info['total'];
         }
-        if (!empty($_SESSION['cart']) && !empty($_SESSION['cart']->show_total())) {
+        if (isset($_SESSION['cart']) && is_object($_SESSION['cart'])) {
             return $_SESSION['cart']->show_total();
         }
         return 0;
