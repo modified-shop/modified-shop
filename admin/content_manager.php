@@ -32,7 +32,7 @@
   $special = (isset($_GET['special']) ? $_GET['special'] : '');
   $id = (isset($_GET['id']) ? $_GET['id'] : '');
   $g_coID = (isset($_GET['coID']) ? (int)$_GET['coID'] : '');
-  $coIndex = (isset($_GET['coIndex']) ? (int)$_GET['coIndex'] : 0);
+  $coIndex = (isset($_GET['coIndex']) ? (int)$_GET['coIndex'] : '');
   $languages = xtc_get_languages();
 
 
@@ -154,7 +154,7 @@
                ");
                
           //check change content_group
-          $change_content_group = $coID != $content_group ? true : false;    
+          $change_content_group = (isset($coID) && $coID != $content_group) ? true : false;    
           $dbData = xtc_db_fetch_row($dbQuery);
           if (!is_null($dbData[0])) { 
             $sql_data_array['content_group_index'] = $dbData[0] + 1;

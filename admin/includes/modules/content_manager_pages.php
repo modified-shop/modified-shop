@@ -213,12 +213,14 @@ if (!$action) {
     <div class="pageHeading"><?php echo HEADING_CONTENT; ?><br /></div>
     <?php
     if ($action != 'new') {
-      echo xtc_draw_form('edit_content', FILENAME_CONTENT_MANAGER, 'action=edit&id=update&coID='.$g_coID, 'post', 'enctype="multipart/form-data"').xtc_draw_hidden_field('coID',$g_coID);
+      echo xtc_draw_form('edit_content', FILENAME_CONTENT_MANAGER, 'action=edit&id=update&coID='.$g_coID, 'post', 'enctype="multipart/form-data"'). PHP_EOL;
+      echo xtc_draw_hidden_field('coID',$g_coID). PHP_EOL;
+      echo xtc_draw_hidden_field('content_group_index', $coIndex). PHP_EOL;
     } else {
-      echo xtc_draw_form('edit_content', FILENAME_CONTENT_MANAGER, 'action=edit&id=insert', 'post', 'enctype="multipart/form-data"');
+      echo xtc_draw_form('edit_content', FILENAME_CONTENT_MANAGER, 'action=edit&id=insert', 'post', 'enctype="multipart/form-data"'). PHP_EOL;
     }
-    echo xtc_draw_hidden_field('content_count', $content_count);
-    echo xtc_draw_hidden_field('content_group_index', $coIndex);
+    echo xtc_draw_hidden_field('content_count', $content_count). PHP_EOL;
+
     ?>
     <div style="padding:5px;clear:both;">
       <table class="tableConfig borderall" style="width:99%">
@@ -312,7 +314,7 @@ if (!$action) {
     for ($i=0; $i<$content_count; $i++) {
       for ($l=0; $l<$languages_count; $l++) {
         $tabtmp = "\'tab_lang_$cnt\'," ;
-        $coIndex = ($coIndex > 0) ? ' ('. $coIndex .')' : '';
+        $coIndex = '';
         //FIX wenn es bei gleicher languages_id mehrere gleiche content_group gibt
         if ($counter > $languages_count && $i > 0) {
            $coIndex = ' ('. $i .')';
