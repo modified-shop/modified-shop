@@ -36,6 +36,13 @@
       slideWidth: 109,
       slideMargin: 18
     });
+    $('.bxcarousel_slider').bxSlider({
+      adaptiveHeight: false,
+      mode: 'fade',
+      auto: true,
+      speed: 2000,
+      pause: 6000
+    });
     $(document).bind('cbox_complete', function(){
       if($('#cboxTitle').height() > 20){
         $("#cboxTitle").hide();
