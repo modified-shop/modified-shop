@@ -51,6 +51,15 @@
           <li class="cart">{if isset($box_CART)}{$box_CART}{/if}</li>
         </ul>
       </div>
+      {if isset($SLIDER)}
+        <div class="content_banner cf">
+          <ul class="bxcarousel_slider">
+          {foreach name=outer item=slider from=$SLIDER}
+            <li>{$slider.IMAGE}</li>
+          {/foreach}
+          </ul>
+        </div>
+      {/if}
       {if isset($BANNER)}<div class="content_banner cf">{$BANNER}</div>{/if}
       {if isset($main_content)}{$main_content}{/if}
       {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
