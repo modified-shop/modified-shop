@@ -3028,6 +3028,9 @@ ul.bxcarousel_bestseller li .carousel_box .cb_title {
 ul.bxcarousel_bestseller li .carousel_box a:hover {
   text-decoration:none;
 }
+ul.bxcarousel_slider img {
+  position: relative !important;
+}
 /* END carousel Bestseller box */
 
 
