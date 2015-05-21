@@ -1121,7 +1121,7 @@ class categories {
     if ($products_image = xtc_try_upload('products_image', DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_products_image_files_extensions, $accepted_products_image_files_mime_types)) {
       $pname_arr = explode('.', $products_image->filename);
       $nsuffix = array_pop($pname_arr);
-      $products_image_name = $products_image_name_process = $products_id.'_0.'.$nsuffix;      
+      $products_image_name = $products_image_name_process = $this->image_name($products_id, 0, $nsuffix, $products_data);
       $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                         FROM ".TABLE_PRODUCTS."
                                        WHERE products_image = '".xtc_db_input($products_data['products_previous_image_0'])."'");
@@ -1140,9 +1140,10 @@ class categories {
         copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.$products_image->filename, DIR_FS_CATALOG_ORIGINAL_IMAGES.$products_image_name);
       }
 
-      require (DIR_WS_INCLUDES.'product_thumbnail_images.php');
-      require (DIR_WS_INCLUDES.'product_info_images.php');
-      require (DIR_WS_INCLUDES.'product_popup_images.php');
+      //image processing
+      $this->image_process($products_image_name, $products_image_name_process);
+
+      //set file rights
       $this->set_products_images_file_rights($products_image_name);
       
       return $products_image_name;
@@ -1173,7 +1174,7 @@ class categories {
       if ($pIMG = xtc_try_upload('mo_pics_'.$img, DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_mo_pics_image_files_extensions, $accepted_mo_pics_image_files_mime_types)) {
         $pname_arr = explode('.', $pIMG->filename);
         $nsuffix = array_pop($pname_arr);
-        $products_image_name = $products_image_name_process = $products_id.'_'. ($img +1).'.'.$nsuffix;
+        $products_image_name = $products_image_name_process = $this->image_name($products_id, ($img +1), $nsuffix, $products_data);
         $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                            FROM ".TABLE_PRODUCTS_IMAGES."
                                           WHERE image_name = '".xtc_db_input($products_data['products_previous_image_'. ($img +1)])."'");
@@ -1194,9 +1195,8 @@ class categories {
           xtc_db_perform(TABLE_PRODUCTS_IMAGES, $mo_img, 'update', "mage_name = '".xtc_db_input($products_data['products_previous_image_'. ($img +1)])."'");
         } 
         //image processing
-        require (DIR_WS_INCLUDES.'product_thumbnail_images.php');
-        require (DIR_WS_INCLUDES.'product_info_images.php');
-        require (DIR_WS_INCLUDES.'product_popup_images.php');
+        $this->image_process($products_image_name, $products_image_name_process);
+
         //set file rights
         $this->set_products_images_file_rights($products_image_name);
       }
@@ -1204,13 +1204,25 @@ class categories {
   } 
 
 
-  function priceCheck($price,$products_tax_rate) {
-      if (PRICE_IS_BRUTTO == 'true' && $price) {
-          $price = round(($price / ($products_tax_rate + 100) * 100), PRICE_PRECISION);
-      } else {
-          $price = xtc_round($price, PRICE_PRECISION);
-      }
-      return $price;
+  function image_process($products_image_name, $products_image_name_process) {
+    require(DIR_WS_INCLUDES . 'product_thumbnail_images.php');
+    require(DIR_WS_INCLUDES . 'product_info_images.php');
+    require(DIR_WS_INCLUDES . 'product_popup_images.php');
+  }
+  
+  
+  function image_name($products_id, $counter, $suffix, $products_data) {
+    return $products_id.'_'.$counter.'.'.$suffix;
+  }
+  
+  
+  function priceCheck($price, $products_tax_rate) {
+    if (PRICE_IS_BRUTTO == 'true' && $price) {
+      $price = round(($price / ($products_tax_rate + 100) * 100), PRICE_PRECISION);
+    } else {
+      $price = xtc_round($price, PRICE_PRECISION);
+    }
+    return $price;
   }
 
 

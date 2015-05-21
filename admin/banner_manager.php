@@ -39,9 +39,8 @@
         if (isset($_POST['banners_id'])) $banners_id = xtc_db_prepare_input($_POST['banners_id']);
         $banners_title = xtc_db_prepare_input($_POST['banners_title']);
         $banners_url = xtc_db_prepare_input($_POST['banners_url']);
-        //$new_banners_group = xtc_db_prepare_input($_POST['new_banners_group']);
-        //$banners_group = (empty($new_banners_group)) ? xtc_db_prepare_input($_POST['banners_group']) : $new_banners_group;
-        $banners_group = xtc_db_prepare_input($_POST['banners_group']);
+        $new_banners_group = xtc_db_prepare_input(strtolower($_POST['new_banners_group']));
+        $banners_group = ((empty($new_banners_group)) ? xtc_db_prepare_input($_POST['banners_group']) : $new_banners_group);
         $html_text = xtc_db_prepare_input($_POST['html_text']);
         $banners_image_exist = xtc_db_prepare_input($_POST['banners_image_exist']);
         
@@ -202,6 +201,7 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
           <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
           <div class="main pdg2 flt-l">Tools</div>
+          <div style="clear:both;"></div>
           <?php
           if ($action == 'new') {
             $form_action = 'insert';
@@ -223,13 +223,21 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
             } else {
               $bInfo = new objectInfo(array());
             }
-            /*
-            $groups_array = array();
-            $groups_query = xtc_db_query("select distinct banners_group from " . TABLE_BANNERS . " order by banners_group");
+
+            $groups_array = array(
+              array('id' => 'banner', 'text' => 'BANNER'),
+              array('id' => 'slider', 'text' => 'SLIDER'),
+            );              
+
+            $groups_query = xtc_db_query("SELECT DISTINCT banners_group 
+                                                     FROM " . TABLE_BANNERS . " 
+                                                    WHERE banners_group != 'banner'
+                                                      AND banners_group != 'slider'
+                                                 ORDER BY banners_group");
             while ($groups = xtc_db_fetch_array($groups_query)) {
-              $groups_array[] = array('id' => $groups['banners_group'], 'text' => $groups['banners_group']);
+              $groups_array[] = array('id' => $groups['banners_group'], 'text' => strtoupper($groups['banners_group']));
             }
-            */
+            
             echo xtc_draw_form('new_banner', FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action, 'post', 'enctype="multipart/form-data"'); 
               if ($form_action == 'update') {
                 echo xtc_draw_hidden_field('banners_id', $bID); 
@@ -253,15 +261,14 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
                   <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('banners_url', $bInfo->banners_url, 'style="width:380px;"'); ?></td>
                   <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_URL_NOTE; ?></td>
                 </tr>
-                <?php /*
                 <tr>
-                  <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_GROUP; ?></td>
+                  <td class="dataTableConfig col-left" rowspan="2"><?php echo TEXT_BANNERS_NEW_GROUP; ?></td>
                   <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group); ?></td>
-                  <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_NEW_GROUP; ?></td>
+                  <td class="dataTableConfig col-right" rowspan="2"><?php echo TEXT_BANNERS_NEW_GROUP_NOTE; ?></td>
                 </tr> 
-                */ 
-                echo xtc_draw_hidden_field('banners_group', 'banner');
-                ?>                     
+                <tr>
+                  <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('new_banners_group'); ?></td>
+                </tr> 
                 <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_IMAGE; ?></td>
                   <td class="dataTableConfig col-middle">
@@ -304,7 +311,6 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
                 <?php echo TEXT_BANNERS_BANNER_NOTE . '<br />' . TEXT_BANNERS_INSERT_NOTE . '<br />' . TEXT_BANNERS_EXPIRCY_NOTE . '<br />' . TEXT_BANNERS_SCHEDULE_NOTE; ?>
               </div>          
             </form>
-          </td>
           <?php              
           } else {
             ?>
