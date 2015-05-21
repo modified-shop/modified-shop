@@ -17,16 +17,24 @@
    
   // Construct a category path
   function xtc_get_category_path($cID) {
-    $cPath = '';
+    static $cPath_cache;
     
-    $categories = array();
-    xtc_get_parent_categories($categories, $cID);
-
-    $categories = array_reverse($categories);
+    if (!is_array($cPath_cache)) {
+      $cPath_cache = array();
+    }
     
-    $categories[] = $cID;
-    $cPath = implode('_', $categories);
+    if (!isset($cPath_cache[$cID])) {       
+      $categories = array();
+      xtc_get_parent_categories($categories, $cID);
 
-    return $cPath;
+      $categories = array_reverse($categories);
+    
+      $categories[] = $cID;
+      $cPath = implode('_', $categories);
+    
+      $cPath_cache[$cID] = $cPath;
+    }
+    
+    return $cPath_cache[$cID];
   }
 ?>
