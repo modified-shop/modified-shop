@@ -43,6 +43,10 @@ if ($session_started == false) {
 	xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE));
 }
 
+if (!isset($_SESSION['customers_login_tries'])) {
+  $_SESSION['customers_login_tries'] = 0;
+}
+
 $error = false;
 $info_message = ''; 
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
@@ -67,12 +71,22 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	                                         AND account_type = '0'");
 	if (!xtc_db_num_rows($check_customer_query)) {
 		$messageStack->add('login', TEXT_LOGIN_ERROR);
+		// captcha		
+		if ($_SESSION['customers_login_tries'] >= LOGIN_NUM) {
+		  if (strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) {
+        $messageStack->add('login', TEXT_WRONG_CODE);
+		  }
+		  $_SESSION['bruteforce_captcha'] = true;
+		  unset($_SESSION['vvcode']);		
+		}
+  	$_SESSION['customers_login_tries'] ++;
 	} else {
 		$check_customer = xtc_db_fetch_array($check_customer_query);
 		
 		// Captcha
-		if ($check_customer['customers_login_tries'] >= LOGIN_NUM 
-		    && (time() - strtotime($check_customer['customers_login_time'])) < LOGIN_TIME) 
+		if (($check_customer['customers_login_tries'] >= LOGIN_NUM 
+		    && (time() - strtotime($check_customer['customers_login_time'])) < LOGIN_TIME)
+		    || $_SESSION['bruteforce_captcha'] === true)
 		{
 		  if (strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) {
         $messageStack->add('login', TEXT_WRONG_CODE);
@@ -94,11 +108,14 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 			                     customers_login_time = now() 
 			               WHERE customers_email_address = '".xtc_db_input($email_address)."'");
       // Captcha
-      if ($check_customer['customers_login_tries'] >= LOGIN_NUM 
-          && (time() - strtotime($check_customer['customers_login_time'])) < LOGIN_TIME) 
+      if (($check_customer['customers_login_tries'] >= LOGIN_NUM 
+          && (time() - strtotime($check_customer['customers_login_time'])) < LOGIN_TIME)
+          || $_SESSION['customers_login_tries'] >= LOGIN_NUM)
       {
         $_SESSION['bruteforce_captcha'] = true;
       }
+      $_SESSION['customers_login_tries'] ++;
+      
 		} elseif ($error === false) {		
 			if (SESSION_RECREATE == 'True') {
 				xtc_session_recreate();
@@ -106,6 +123,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
       
       // reset Login tries
       unset($_SESSION['bruteforce_captcha']);
+      unset($_SESSION['customers_login_tries']);
       xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
                        SET customers_login_tries = '0', 
                            customers_login_time = now() 
@@ -188,7 +206,7 @@ $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));
 $smarty->assign('LINK_LOST_PASSWORD', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, '', 'SSL'));
 $smarty->assign('FORM_END', '</form>');
 
-if (isset($_SESSION['bruteforce_captcha'])) {
+if (isset($_SESSION['bruteforce_captcha'])|| $_SESSION['customers_login_tries'] >= LOGIN_NUM) {
   $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL').'" alt="Captcha" />');
   $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
 }
