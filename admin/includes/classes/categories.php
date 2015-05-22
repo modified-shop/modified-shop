@@ -446,6 +446,26 @@ class categories {
     
     $products_data['products_price'] = $this->priceCheck($products_data['products_price'],$products_tax_rate);
 
+    // calculate attributes
+    if ($products_data['products_tax_class_id'] != $products_data['products_tax_class_id_old']) {
+      $products_tax_rate_old = xtc_get_tax_rate($products_data['products_tax_class_id_old']);
+      
+      $attributes_query = xtc_db_query("SELECT *
+                                          FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+                                         WHERE products_id = '".$products_id."'
+                                           AND options_values_price > 0");
+      if (xtc_db_num_rows($attributes_query) > 0) {
+        while ($attributes = xtc_db_fetch_array($attributes_query)) {
+          $attributes['options_values_price'] = $attributes['options_values_price'] * (1 + ($products_tax_rate_old / 100));
+          
+          $attr_netto_price = $this->priceCheck($attributes['options_values_price'], $products_tax_rate);
+          xtc_db_query("UPDATE ".TABLE_PRODUCTS_ATTRIBUTES." 
+                           SET options_values_price = '".xtc_db_input($attr_netto_price)."' 
+                         WHERE products_attributes_id = '".$attributes['products_attributes_id']."'");
+        }
+      }
+    }
+
     $customers_statuses_array = xtc_get_customers_statuses();
     $permission = array ();
     for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
