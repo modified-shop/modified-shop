@@ -86,7 +86,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 		// Captcha
 		if (($check_customer['customers_login_tries'] >= LOGIN_NUM 
 		    && (time() - strtotime($check_customer['customers_login_time'])) < LOGIN_TIME)
-		    || $_SESSION['bruteforce_captcha'] === true)
+		    || $_SESSION['customers_login_tries'] >= LOGIN_NUM)
 		{
 		  if (strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) {
         $messageStack->add('login', TEXT_WRONG_CODE);
