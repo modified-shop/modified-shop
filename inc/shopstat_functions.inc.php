@@ -250,7 +250,7 @@ function shopstat_getCategoriesName($categories_id, $language = '') {
                                     WHERE categories_id = '" . (int)$categories_id . "' 
                                       AND language_id = '" . (int)$language . "'");
     $categories = xtc_db_fetch_array($categories_query, true);
-    $categories_name_cache[$categories_id][$language] = $categories['categories_name']
+    $categories_name_cache[$categories_id][$language] = $categories['categories_name'];
   }
   
   return $categories_name_cache[$categories_id][$language];
