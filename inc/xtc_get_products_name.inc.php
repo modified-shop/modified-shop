@@ -16,18 +16,25 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_get_products_name($product_id, $language_id = '') {
-
+    static $products_name_cache;
+    
+    if (!is_array($products_name_cache)) {
+      $products_name_cache = array();
+    }
+    
     if (empty($language_id) || $language_id == 0) {
       $language_id = $_SESSION['languages_id'];
     }
     
-    $product_query = "SELECT products_name 
-                        FROM " . TABLE_PRODUCTS_DESCRIPTION . " 
-                       WHERE products_id = '" . (int)$product_id . "' 
-                         AND language_id = '" . (int)$language_id . "'";
-    $product_query  = xtDBquery($product_query);
-    $product = xtc_db_fetch_array($product_query,true);
-
-    return $product['products_name'];
+    if (!isset($products_name_cache[$product_id][$language_id])) {  
+      $product_query = xtDBquery("SELECT products_name 
+                                    FROM " . TABLE_PRODUCTS_DESCRIPTION . " 
+                                   WHERE products_id = '" . (int)$product_id . "' 
+                                     AND language_id = '" . (int)$language_id . "'");
+      $product = xtc_db_fetch_array($product_query, true);
+      $products_name_cache[$product_id][$language_id] = $product['products_name'];
+    }
+    
+    return $products_name_cache[$product_id][$language_id];
   }
  ?>
