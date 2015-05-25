@@ -46,9 +46,10 @@ if(!function_exists('language')) {
 
 function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_session_id=true, $search_engine_safe=true, $mode='user') {
   global $languages_id;
-  $link = "";
-  $maname = "";
-  if($mode == 'admin') {
+  
+  $link = $maname = '';
+  
+  if ($mode == 'admin') {
     require_once(DIR_FS_INC . 'xtc_parse_category_path.inc.php');
     require_once(DIR_FS_INC . 'xtc_get_product_path.inc.php');
     require_once(DIR_FS_INC . 'xtc_get_parent_categories.inc.php');
@@ -64,12 +65,13 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
 
   //BOF - web28 - 2010-08-18 -- Die Parameter aufspalten
   $pararray = array();
-  foreach(explode("&",$parameters) as $pair) {
-    $values = explode("=",$pair);
-    if(!empty($values[0])) {
+  foreach(explode('&', $parameters) as $pair) {
+    $values = explode('=', $pair);
+    if (!empty($values[0])) {
       $pararray[$values[0]] = $values[1];
     }
   }
+  
   $cPath      = (isset($pararray['cPath']))?$pararray['cPath']:false;
   $prodid     = (isset($pararray['products_id']))?$pararray['products_id']:false;
   $content    = (isset($pararray['content']))?$pararray['content']:false;
@@ -82,9 +84,9 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
   $action     = (isset($pararray['action']))?$pararray['action']:'';
 
   //EOF - web28 - 2010-08-18 -- Die Parameter aufspalten
-  $go     = true;
+  $go = true;
   //-- Nur bei der index.php und product_info.php
-  if ($page != "index.php" && $page != "product_info.php" && $page != "shop_content.php") {
+  if ($page != 'index.php' && $page != 'product_info.php' && $page != 'shop_content.php') {
     $go = false;
   } elseif (strlen($sort)>0) {
     //-- Unter diesen Bedingungen werden die URLs nicht umgewandelt
@@ -102,15 +104,15 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
   }
 
   //BOF web28 - 2010-08-18 -- Falls eine Sprache übergeben wurde, wird diese als 'Linksprache' definiert
-  if (strlen($lang)>0) {
+  if (strlen($lang) > 0) {
     $seolng  = new language;
     $lang_id = $seolng->catalog_languages[$lang]['id'];
   } else {
-    $lang_id    = $languages_id;
+    $lang_id = $languages_id;
   }
   //EOF- web28 - 2010-08-18 -- Falls eine Sprache übergeben wurde, wird diese als 'Linksprache' definiert
 
-  if ($go && (xtc_not_null($maid) || xtc_not_null($cPath) || xtc_not_null($prodid) || xtc_not_null($coid))) {
+  if ($go === true && (xtc_not_null($maid) || xtc_not_null($cPath) || xtc_not_null($prodid) || xtc_not_null($coid))) {
     if ($connection == 'SSL') {
       if (ENABLE_SSL == true) {
         $link = HTTPS_SERVER . DIR_WS_CATALOG;
@@ -130,21 +132,20 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
         $current_category_id = xtc_get_product_path($prodid);
       }
 
-      // -------------------------------------------------
-      if (!$prodid) {
-        $category['categories_name'] = shopstat_getRealPath($cPath,'/',$lang_id);
+      $category = array('categories_name' => '');
+      if ($prodid === false) {
+        $category['categories_name'] = shopstat_getRealPath($cPath, '/', $lang_id);
         $link .= shopstat_hrefCatlink($category['categories_name'], $cPath, $pager);
       } else {
-        $category['categories_name'] = '';
         if (ADD_CAT_NAMES_TO_PRODUCT_LINK) {
-          $category['categories_name'] = shopstat_getRealPath(xtc_get_product_path($prodid),'/',$lang_id);
+          $category['categories_name'] = shopstat_getRealPath(xtc_get_product_path($prodid), '/', $lang_id);
         }
-        $link .= shopstat_hrefLink($category['categories_name'], xtc_get_products_name($prodid,$lang_id), $prodid);
+        $link .= shopstat_hrefLink($category['categories_name'], xtc_get_products_name($prodid, $lang_id), $prodid);
       }
-    } elseif(xtc_not_null($coid)) {
+    } elseif (xtc_not_null($coid)) {
       $content = shopstat_getContentName($coid, $lang_id);
       $link .= shopstat_hrefContlink($content, $coid);
-    } elseif(xtc_not_null($maid)) {
+    } elseif (xtc_not_null($maid)) {
       $manufacturers = xtc_get_manufacturers();      
       $maname = $manufacturers[$maid]['text'];        
       $link .= shopstat_hrefManulink($maname, $maid, $pager);
@@ -158,7 +159,8 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
       $link .= $separator.'language='. $lang;
     }
   }
-  return($link);
+  
+  return $link;
 }
 
 /******************************************************
@@ -167,35 +169,60 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
  * Get the 'breadcrumb'-path
  */
 function shopstat_getRealPath($cPath, $delimiter = '/', $language = '') {
-  if(empty($cPath)) {
+  static $realpath_cache;
+
+  if (!is_array($realpath_cache)) {
+    $realpath_cache = array();
+  }
+  
+  if (empty($cPath)) {
     return;
   }
-  if(empty($language)){
+  
+  if (empty($language)){
     $language = $_SESSION['languages_id'];
   }
 
-  $path       = explode("_",$cPath);
-  $categories = array();
+  if (!isset($realpath_cache[$cPath][$language])) {  
+    $path       = explode("_",$cPath);
+    $categories = array();
 
-  foreach($path as $key => $value) {
-    $categories[$key] = shopstat_getCategoriesName($value, $language);
+    foreach($path as $key => $value) {
+      $categories[$key] = shopstat_getCategoriesName($value, $language);
+    }
+
+    $realpath = implode($delimiter, $categories);
+    $realpath_cache[$cPath][$language] = $realpath;
   }
-
-  $realpath = implode($delimiter,$categories);
-  return($realpath);
+  
+  return $realpath_cache[$cPath][$language];
 }
 
 function shopstat_getContentName($coid, $language = '') {
-  if(empty($coid)) {
+  static $content_title_cache;
+  
+  if (!is_array($content_title_cache)) {
+    $content_title_cache = array();
+  }
+  
+  if (empty($coid)) {
     return;
   }
-  if(empty($language)) {
+  
+  if (empty($language)) {
     $language = $_SESSION['languages_id'];
   }
-  $content_query  = "SELECT content_title FROM ".TABLE_CONTENT_MANAGER." WHERE languages_id='".(int)$language."' AND content_group = ".(int)$coid;
-  $content_query  = xtDBquery($content_query);
-  $content_data   = xtc_db_fetch_array($content_query, true);
-  return($content_data['content_title']);
+  
+  if (!isset($content_title_cache[$coid][$language])) {  
+    $content_query = xtDBquery("SELECT content_title 
+                                  FROM ".TABLE_CONTENT_MANAGER." 
+                                 WHERE languages_id='".(int)$language."' 
+                                   AND content_group = ".(int)$coid);
+    $content_data = xtc_db_fetch_array($content_query, true);
+    $content_title_cache[$coid][$language] = $content_data['content_title'];
+  }
+  
+  return $content_title_cache[$coid][$language];
 }
 
 /*
@@ -203,16 +230,30 @@ function shopstat_getContentName($coid, $language = '') {
  * Get the Category-Name from a give CID
  */
 function shopstat_getCategoriesName($categories_id, $language = '') {
-  if(empty($categories_id)) {
+  static $categories_name_cache;
+
+  if (!is_array($categories_name_cache)) {
+    $categories_name_cache = array();
+  }
+
+  if (empty($categories_id)) {
     return;
   }
-  if(empty($language)) {
+  
+  if (empty($language)) {
     $language = $_SESSION['languages_id'];
   }
-  $categories_query = "SELECT categories_name FROM " . TABLE_CATEGORIES_DESCRIPTION . " WHERE categories_id = '" . (int)$categories_id . "' and language_id = '" . (int)$language . "'";
-  $categories_query   = xtDBquery($categories_query);
-  $categories         = xtc_db_fetch_array($categories_query,true);
-  return $categories['categories_name'];
+  
+  if (!isset($categories_name_cache[$categories_id][$language])) { 
+    $categories_query = xtDBquery("SELECT categories_name 
+                                     FROM " . TABLE_CATEGORIES_DESCRIPTION . " 
+                                    WHERE categories_id = '" . (int)$categories_id . "' 
+                                      AND language_id = '" . (int)$language . "'");
+    $categories = xtc_db_fetch_array($categories_query, true);
+    $categories_name_cache[$categories_id][$language] = $categories['categories_name']
+  }
+  
+  return $categories_name_cache[$categories_id][$language];
 }
 
 /*
@@ -224,7 +265,8 @@ function shopstat_hrefLink($cat_desc, $product_name, $product_id) {
     $link .= shopstat_hrefSmallmask($cat_desc)."/";
   }
   $link .= shopstat_hrefMask($product_name).ART_DIVIDER.$product_id.".html";
-  return($link);
+  
+  return $link;
 }
 
 /*
@@ -237,7 +279,8 @@ function shopstat_hrefCatlink($category_name, $category_id, $pager=false) {
   } else {
     $link .= ".html";
   }
-  return($link);
+
+  return $link;
 }
 
 /*
@@ -245,7 +288,8 @@ function shopstat_hrefCatlink($category_name, $category_id, $pager=false) {
  */
 function shopstat_hrefContlink($content_name, $content_id) {
   $link = shopstat_hrefMask($content_name). CNT_DIVIDER.$content_id.".html";
-  return($link);
+
+  return $link;
 }
 
 /*
@@ -253,12 +297,13 @@ function shopstat_hrefContlink($content_name, $content_id) {
  */
 function shopstat_hrefManulink($content_name, $content_id, $pager=false) {
   $link = shopstat_hrefMask($content_name).MAN_DIVIDER.$content_id;
-  if($pager && $pager != 1) {
+  if ($pager && $pager != 1) {
     $link .= PAG_DIVIDER.$pager.".html";
   } else {
     $link .= ".html";
   }
-  return($link);
+
+  return $link;
 }
 
 /*
