@@ -28,6 +28,31 @@ switch ($_GET['action']) {
 		if (xtc_db_num_rows($banner_query)) {
 			$banner = xtc_db_fetch_array($banner_query);
 			xtc_update_banner_click_count($_GET['goto']);
+      
+      // remove session id
+      if (strrpos($banner['banners_url'], session_name()) !== false) {
+        $banner['banners_url'] = substr($banner['banners_url'], 0, strrpos($banner['banners_url'], session_name()));
+      }
+      $banner['banners_url'] = rtrim($banner['banners_url'], '&?');
+            
+      // Add the session ID when SID is defined
+      $banner_url = xtc_get_top_level_domain($banner['banners_url']);
+      $shop_url = xtc_get_top_level_domain(HTTP_SERVER);
+      
+      if ((!isset($truncate_session_id) || $truncate_session_id === false)
+          && (SESSION_FORCE_COOKIE_USE == 'False' && !$cookie)
+          && $shop_url['new'] == $banner_url['new']
+         )
+      {
+        $separator = ((strpos($banner['banners_url'], '?') === false) ? '?' : '&');
+        if (defined('SID')
+            && constant('SID') != '')
+        {
+          $banner['banners_url'] .= $separator . session_name() . '=' . session_id();
+        } elseif ($http_domain != $https_domain) {
+          $banner['banners_url'] .= $separator . session_name() . '=' . session_id();
+        }
+      }
 
 			xtc_redirect('http://'.str_replace(array('http://', 'https://'), '', $banner['banners_url']));
 		} else {
