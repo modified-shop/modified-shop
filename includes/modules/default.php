@@ -50,18 +50,21 @@ $category_depth = 'top';
 if (isset ($cPath) && xtc_not_null($cPath)) {
   $categories_products_query = "SELECT p2c.products_id
                                   FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                  LEFT JOIN ".TABLE_PRODUCTS." p
-                                   ON p2c.products_id = p.products_id
-                                  WHERE p2c.categories_id = ".(int)$current_category_id."
-                                  AND p.products_status = 1".
-                                  PRODUCTS_CONDITIONS_P;
+                             LEFT JOIN ".TABLE_PRODUCTS." p
+                                       ON p2c.products_id = p.products_id
+                                          AND p2c.categories_id = ".(int)$current_category_id."
+                                WHERE p.products_status = '1'
+                                      ".PRODUCTS_CONDITIONS_P;
   $categories_products_result = xtDBquery($categories_products_query);
   if (xtc_db_num_rows($categories_products_result, true) > 0) {
     $category_depth = 'products'; // display products
   } else {
-    $category_parent_query = "SELECT parent_id FROM ".TABLE_CATEGORIES." WHERE parent_id = ".(int)$current_category_id." AND categories_status = 1 ".CATEGORIES_CONDITIONS;
+    $category_parent_query = "SELECT parent_id 
+                                FROM ".TABLE_CATEGORIES." 
+                               WHERE parent_id = ".(int)$current_category_id." 
+                                 AND categories_status = '1'
+                                     ".CATEGORIES_CONDITIONS;
     $category_parent_result = xtDBquery($category_parent_query);
-    $category_parent = xtc_db_fetch_array($category_parent_result, true);
     if (xtc_db_num_rows($category_parent_result, true) > 0) {
       $category_depth = 'nested'; // navigate through the categories
     } else {
@@ -76,40 +79,39 @@ if (isset ($cPath) && xtc_not_null($cPath)) {
  */
 if ($category_depth == 'nested') {
 
-  $category_query = "-- /includes/modules/default.php
-                     SELECT c.categories_image,
+  $category_query = "SELECT c.categories_image,
                             c.categories_template,
                             cd.categories_name,
                             cd.categories_heading_title,
                             cd.categories_description
-                          FROM ".TABLE_CATEGORIES." c
-                          JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                       FROM ".TABLE_CATEGORIES." c
+                       JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
                             ON cd.categories_id = c.categories_id
+                               AND cd.language_id = '".(int) $_SESSION['languages_id']."'
                                AND trim(cd.categories_name) != ''
-                          WHERE c.categories_id = '".$current_category_id."'
-                            " . CATEGORIES_CONDITIONS_C . "
-                            AND cd.language_id = '".(int) $_SESSION['languages_id']."'";
+                      WHERE c.categories_status = '1'
+                        AND c.categories_id = '".$current_category_id."'
+                            ".CATEGORIES_CONDITIONS_C;
   $category_query = xtDBquery($category_query);
   $category = xtc_db_fetch_array($category_query, true);
 
   if (MAX_DISPLAY_CATEGORIES_PER_ROW > 0) {
     // check to see if there are deeper categories within the current category
-    $categories_query = "-- /includes/modules/default.php
-                         SELECT c.categories_id,
+    $categories_query = "SELECT c.categories_id,
                                 c.categories_image,
                                 c.parent_id,
                                 cd.categories_name,
                                 cd.categories_heading_title,
                                 cd.categories_description
-                              FROM ".TABLE_CATEGORIES." c
-                              JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                           FROM ".TABLE_CATEGORIES." c
+                           JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
                                 ON cd.categories_id = c.categories_id
+                                   AND cd.language_id = '".(int) $_SESSION['languages_id']."'
                                    AND trim(cd.categories_name) != ''
-                              WHERE c.categories_status = '1'
-                                " . CATEGORIES_CONDITIONS_C . "
-                                AND c.parent_id = '".$current_category_id."'
-                                AND cd.language_id = '".(int) $_SESSION['languages_id']."'
-                              ORDER BY sort_order, cd.categories_name";
+                          WHERE c.categories_status = '1'
+                            AND c.parent_id = '".$current_category_id."'
+                                ".CATEGORIES_CONDITIONS_C."
+                       ORDER BY c.sort_order, cd.categories_name";
     $categories_query = xtDBquery($categories_query);
     $categories_content = array();
     while ($categories = xtc_db_fetch_array($categories_query, true)) {
@@ -195,16 +197,19 @@ if ($category_depth == 'nested') {
   } else {
     $categories_id = $current_category_id;
   }
-  $sorting_query = xtDBquery("-- /includes/modules/default.php
-                              SELECT products_sorting,
+  $sorting_query = xtDBquery("SELECT products_sorting,
                                      products_sorting2
                                 FROM ".TABLE_CATEGORIES."
                                WHERE categories_id='".$categories_id ."'");
   $sorting_data = xtc_db_fetch_array($sorting_query,true);
-  if (empty($sorting_data['products_sorting'])) { //Fallback für products_sorting auf products_name
+  
+  //Fallback for products_sorting to products_name
+  if (empty($sorting_data['products_sorting'])) { 
     $sorting_data['products_sorting'] = 'pd.products_name';
   }
-  if (empty($sorting_data['products_sorting2'])) { //Fallback für products_sorting2 auf ascending
+  
+  //Fallback for products_sorting2 to ascending
+  if (empty($sorting_data['products_sorting2'])) { 
     $sorting_data['products_sorting2'] = 'ASC';
   }
   $sorting = ' ORDER BY '.$sorting_data['products_sorting'].' '.$sorting_data['products_sorting2'].' ';
@@ -212,31 +217,36 @@ if ($category_depth == 'nested') {
   if (isset($_GET['manufacturers_id'])) {
     // show the products of a specified manufacturer
     $select .= "m.manufacturers_name, ";
-    $from   .= "LEFT JOIN ".TABLE_MANUFACTURERS." m on p.manufacturers_id = m.manufacturers_id ";
-    $where  .= " AND m.manufacturers_id = '".(int) $_GET['manufacturers_id']."' ";
+    $from   .= "JOIN ".TABLE_MANUFACTURERS." m 
+                     ON p.manufacturers_id = m.manufacturers_id
+                        AND m.manufacturers_id = '".(int) $_GET['manufacturers_id']."' ";
+
+    // We are asked to show only a specific category
     if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
-      // We are asked to show only a specific category
-      $from   .= "JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c on p2c.products_id = pd.products_id ";
-      $where  .= "AND p2c.categories_id = '".(int)$_GET['filter_id']."' ";
+      $from   .= "JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                       ON p2c.products_id = pd.products_id 
+                          AND p2c.categories_id = '".(int)$_GET['filter_id']."' ";
     } else {
       // We show them all
     }
   } else {
     // show the products in a given categorie
-    $from   .= "JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c on p2c.products_id = pd.products_id ";
-    $where  .= "AND p2c.categories_id = '".$current_category_id."' ";
+    $from   .= "JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                     ON p2c.products_id = pd.products_id
+                        AND p2c.categories_id = '".$current_category_id."' ";
+    
+    // We are asked to show only specific manufacturer                    
     if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
-      // We are asked to show only specific catgeory
       $select .= "m.manufacturers_name, ";
-      $from   .= "LEFT JOIN ".TABLE_MANUFACTURERS." m on p.manufacturers_id = m.manufacturers_id ";
-      $where  .= "AND m.manufacturers_id = '".(int)$_GET['filter_id']."' ";
+      $from   .= "JOIN ".TABLE_MANUFACTURERS." m 
+                       ON p.manufacturers_id = m.manufacturers_id
+                          AND m.manufacturers_id = '".(int)$_GET['filter_id']."' ";
     } else {
       // We show them all
     }
   }
     
-  $listing_sql = "-- /includes/modules/default.php
-                  SELECT ".$select."
+  $listing_sql = "SELECT ".$select."
                          ".ADD_SELECT_DEFAULT."
                          p.products_id,
                          p.products_ean,
@@ -258,9 +268,9 @@ if ($category_depth == 'nested') {
                          pd.products_short_description
                     FROM ".TABLE_PRODUCTS." p
                     JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                      ON p.products_id = pd.products_id 
-                         AND trim(pd.products_name) != '' 
-                         AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                         ON p.products_id = pd.products_id 
+                            AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                            AND trim(pd.products_name) != '' 
                          ".$from."
                    WHERE p.products_status = '1'
                          ".PRODUCTS_CONDITIONS_P."
@@ -270,39 +280,42 @@ if ($category_depth == 'nested') {
     // optional Product List Filter
   if (PRODUCT_LIST_FILTER == 'true') {
     if (isset($_GET['manufacturers_id'])) {
-      $filterlist_sql = "-- /includes/modules/default.php
-                         SELECT distinct c.categories_id as id,
+      $filterlist_sql = "SELECT DISTINCT c.categories_id as id,
                                          cd.categories_name as name
-                                       FROM ".TABLE_PRODUCTS." p
-                                       JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c ON p2c.products_id = p.products_id
-                                       JOIN ".TABLE_CATEGORIES." c ON (c.categories_id = p2c.categories_id ".CATEGORIES_CONDITIONS_C.")
-                                       JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd ON cd.categories_id = p2c.categories_id
-                                       WHERE p.products_status = '1'
-                                         AND cd.language_id = '".(int) $_SESSION['languages_id']."'
-                                         AND p.manufacturers_id = '".(int) $_GET['manufacturers_id']."'
+                                    FROM ".TABLE_PRODUCTS." p
+                                    JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                                         ON p2c.products_id = p.products_id
+                                    JOIN ".TABLE_CATEGORIES." c 
+                                         ON c.categories_id = p2c.categories_id 
+                                            ".CATEGORIES_CONDITIONS_C."
+                                    JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                         ON cd.categories_id = p2c.categories_id
+                                            AND cd.language_id = '".(int) $_SESSION['languages_id']."'
+                                   WHERE p.products_status = '1'
+                                     AND p.manufacturers_id = '".(int) $_GET['manufacturers_id']."'
                                          ".PRODUCTS_CONDITIONS_P."
-                                         ORDER BY cd.categories_name";
+                                ORDER BY cd.categories_name";
     } else {
-      $filterlist_sql = "-- /includes/modules/default.php
-                         SELECT distinct m.manufacturers_id as id,
+      $filterlist_sql = "SELECT DISTINCT m.manufacturers_id as id,
                                          m.manufacturers_name as name
-                                       FROM ".TABLE_PRODUCTS." p
-                                       JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c on p2c.products_id = p.products_id
-                                       JOIN ".TABLE_MANUFACTURERS." m on m.manufacturers_id = p.manufacturers_id
-                                       WHERE p.products_status = '1'
+                                    FROM ".TABLE_PRODUCTS." p
+                                    JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                                         ON p2c.products_id = p.products_id
+                                            AND p2c.categories_id = '".$current_category_id."'
+                                    JOIN ".TABLE_MANUFACTURERS." m on m.manufacturers_id = p.manufacturers_id
+                                   WHERE p.products_status = '1'
                                          ".PRODUCTS_CONDITIONS_P."
-                                         AND p2c.categories_id = '".$current_category_id."'
-                                         ORDER BY m.manufacturers_name";
+                                ORDER BY m.manufacturers_name";
     }
     $filterlist_query = xtDBquery($filterlist_sql);
     if (xtc_db_num_rows($filterlist_query, true) > 1) {
       $manufacturer_dropdown = xtc_draw_form('filter', DIR_WS_CATALOG . FILENAME_DEFAULT, 'get');
       if (isset($_GET['manufacturers_id'])) {
         $manufacturer_dropdown .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']).PHP_EOL;
-        $options = array (array ('id' => '', 'text' => TEXT_ALL_CATEGORIES)); // DokuMan - 2012-03-27 - added missing "id" for xtc_draw_pull_down_menu
+        $options = array (array ('id' => '', 'text' => TEXT_ALL_CATEGORIES));
       } else {
         $manufacturer_dropdown .= xtc_draw_hidden_field('cat', $current_category_id).PHP_EOL;
-        $options = array (array ('id' => '', 'text' => TEXT_ALL_MANUFACTURERS)); // DokuMan - 2012-03-27 - added missing "id" for xtc_draw_pull_down_menu
+        $options = array (array ('id' => '', 'text' => TEXT_ALL_MANUFACTURERS));
       }
       if (isset($_GET['sort']) && !empty($_GET['sort'])) {
         $manufacturer_dropdown .= xtc_draw_hidden_field('sort', $_GET['sort']).PHP_EOL;
