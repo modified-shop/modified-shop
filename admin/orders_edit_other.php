@@ -89,7 +89,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       </td>
     </tr>
   </table>
-<form>
+</form>
 <br />
 <!-- Währungen Ende //-->
 
@@ -113,7 +113,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   }
   if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $order->info['payment_class'] .'.php')) {
     require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $order->info['payment_class'] .'.php');
-    $order_payment_text = constant('MODULE_PAYMENT_'.strtoupper($order_payment).'_TEXT_TITLE');
+    $order_payment_text = constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_class']).'_TEXT_TITLE');
   }
   ?>
   <table class="tableBoxCenter collapse">
@@ -124,7 +124,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     </tr>
     <tr class="dataTableRow">
       <td class="dataTableContent"><?php echo TEXT_ACTUAL . $order_payment_text;?></td>
-      <td class="dataTableContent"><?php echo xtc_draw_pull_down_menu('payment', $payment_array, $order_payment);?></td> 
+      <td class="dataTableContent"><?php echo xtc_draw_pull_down_menu('payment', $payment_array, $order->info['payment_class']);?></td> 
       <td class="dataTableContent"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';?></td>       
     </tr>
   </table>
