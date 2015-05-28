@@ -98,30 +98,31 @@ if (DOWNLOAD_ENABLED == 'true') {
 }
 
 //delete Guests from Database
-if ($_SESSION['account_type'] == '1' && DELETE_GUEST_ACCOUNT == 'true') {
-   xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".$_SESSION['customer_id']."'");
-   xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".$_SESSION['customer_id']."'");
-   xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".$_SESSION['customer_id']."'");
-   xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".$_SESSION['customer_id']."'");
-   
-   xtc_session_destroy();
-   
-   unset ($_SESSION['customer_id']);
-   unset ($_SESSION['customer_default_address_id']);
-   unset ($_SESSION['customer_first_name']);
-   unset ($_SESSION['customer_country_id']);
-   unset ($_SESSION['customer_zone_id']);
-   unset ($_SESSION['comments']);
-   unset ($_SESSION['user_info']);
-   unset ($_SESSION['customers_status']);
-   unset ($_SESSION['selected_box']);
-   unset ($_SESSION['navigation']);
-   unset ($_SESSION['shipping']);
-   unset ($_SESSION['payment']);
-   unset ($_SESSION['ccard']);
-   unset ($_SESSION['gv_id']);
-   unset ($_SESSION['cc_id']);
-   require (DIR_WS_INCLUDES.'write_customers_status.php');
+if ($_SESSION['account_type'] == '1') {
+  if (DELETE_GUEST_ACCOUNT == 'true') {
+    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".$_SESSION['customer_id']."'");
+    xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".$_SESSION['customer_id']."'");
+    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".$_SESSION['customer_id']."'");
+    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".$_SESSION['customer_id']."'");
+  } 
+  xtc_session_destroy();
+
+  unset ($_SESSION['customer_id']);
+  unset ($_SESSION['customer_default_address_id']);
+  unset ($_SESSION['customer_first_name']);
+  unset ($_SESSION['customer_country_id']);
+  unset ($_SESSION['customer_zone_id']);
+  unset ($_SESSION['comments']);
+  unset ($_SESSION['user_info']);
+  unset ($_SESSION['customers_status']);
+  unset ($_SESSION['selected_box']);
+  unset ($_SESSION['navigation']);
+  unset ($_SESSION['shipping']);
+  unset ($_SESSION['payment']);
+  unset ($_SESSION['ccard']);
+  unset ($_SESSION['gv_id']);
+  unset ($_SESSION['cc_id']);
+  require (DIR_WS_INCLUDES.'write_customers_status.php');
 }
 
 ## BILLSAFE payment module
