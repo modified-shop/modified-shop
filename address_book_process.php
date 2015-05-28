@@ -134,13 +134,8 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
 			$sql_data_array['entry_suburb'] = $suburb;
 		}
 		if (ACCOUNT_STATE == 'true') {
-			if ($zone_id > 0) {
-				$sql_data_array['entry_zone_id'] = (int) $zone_id;
-				$sql_data_array['entry_state'] = $state;
-			} else {
-				$sql_data_array['entry_zone_id'] = '0';
-				$sql_data_array['entry_state'] = $state;
-			}
+      $sql_data_array['entry_zone_id'] = (int)$zone_id;
+      $sql_data_array['entry_state'] = $state;
 		}
 
 		if ($_POST['action'] == 'update') {

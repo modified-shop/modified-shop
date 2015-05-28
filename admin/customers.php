@@ -560,13 +560,8 @@
             $sql_data_array['entry_suburb'] = $entry_suburb;
           }
           if (ACCOUNT_STATE == 'true') {
-            if ($entry_zone_id > 0) {
-              $sql_data_array['entry_zone_id'] = $entry_zone_id;
-              $sql_data_array['entry_state'] = $entry_state;
-            } else {
-              $sql_data_array['entry_zone_id'] = '0';
-              $sql_data_array['entry_state'] = $entry_state;
-            }
+            $sql_data_array['entry_zone_id'] = (int)$entry_zone_id;
+            $sql_data_array['entry_state'] = $entry_state;
           }
           if ($address_book_id == 0) {
             $sql_data_array['address_date_added'] = 'now()';

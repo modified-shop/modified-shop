@@ -290,12 +290,8 @@
       if (ACCOUNT_SUBURB == 'true')
         $sql_data_array['entry_suburb'] = $entry_suburb;
       if (ACCOUNT_STATE == 'true') {
-        $sql_data_array['entry_zone_id'] = '0';
+        $sql_data_array['entry_zone_id'] = (int)$entry_zone_id;
         $sql_data_array['entry_state'] = $entry_state;
-        if ($zone_id > 0) {
-          $sql_data_array['entry_zone_id'] = $entry_zone_id;
-          $sql_data_array['entry_state'] = $entry_state;
-        }
       }
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
       $address_id = xtc_db_insert_id();

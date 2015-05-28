@@ -221,8 +221,8 @@
     $field = '<select name="' . $name . '"';
     if (!is_array($values) && $values == 'checkbox') {
       $values = array(
+          array('id'=> 1,'text'=> CFG_TXT_YES),
           array('id'=> 0,'text'=> CFG_TXT_NO),
-          array('id'=> 1,'text'=> CFG_TXT_YES)
       );
     }
     $params  = preg_replace("'\s+=\s+'",'=',$params);
