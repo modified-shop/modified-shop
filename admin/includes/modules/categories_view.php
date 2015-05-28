@@ -142,7 +142,20 @@
         <div class="main pdg2"><?php echo HEADING_TITLE; ?></div>
 
       </div>
-      <div class="smallText pdg2 flt-l" style="margin-left:80px;">
+      <?php
+      if (CAT_VIEW_DROPDOWN) {
+      ?>
+        <div class="smallText pdg2 flt-r">
+         <?php
+            echo xtc_draw_form('goto', FILENAME_CATEGORIES, '', 'get');
+            echo HEADING_TITLE_GOTO . ' ' . xtc_draw_pull_down_menu('cPath', xtc_get_category_tree(), $current_category_id, 'onchange="this.form.submit();"');
+          ?>
+          </form>
+        </div>
+      <?php
+      }
+      ?> 
+      <div class="smallText pdg2 flt-r" style="margin-left:80px;">
         <?php
         echo xtc_draw_form('forminactive', FILENAME_CATEGORIES, '', 'get');
         if (isset($_GET['cPath'])) {
@@ -153,19 +166,6 @@
         ?>
         </form>
       </div>
-      <?php
-      if (CAT_VIEW_DROPDOWN) {
-      ?>
-        <div class="smallText pdg2 flt-l">
-         <?php
-            echo xtc_draw_form('goto', FILENAME_CATEGORIES, '', 'get');
-            echo HEADING_TITLE_GOTO . ' ' . xtc_draw_pull_down_menu('cPath', xtc_get_category_tree(), $current_category_id, 'onchange="this.form.submit();"');
-          ?>
-          </form>
-        </div>
-      <?php
-      }
-      ?> 
 
       <?php
         //multi-actions form STARTS
@@ -912,8 +912,8 @@
                   //Single Element Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                   $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id . '&action=edit_category') . '">' . BUTTON_EDIT . '</a>');
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '_' . $cInfo->categories_id . '&action=new_category') . '">' . BUTTON_NEW_CATEGORIES . '</a>
-                                                                      <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '_' . $cInfo->categories_id . '&action=new_product') . '">' . BUTTON_NEW_PRODUCTS . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '_' . $cInfo->categories_id . '&action=new_category') . '">' . BUTTON_NEW_CATEGORIES . '&nbsp;' . TEXT_IN .'<br />' . $cInfo->categories_name .'</a>
+                                                                      <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '_' . $cInfo->categories_id . '&action=new_product') . '">' . BUTTON_NEW_PRODUCTS . '&nbsp;' . TEXT_IN .'<br />' . $cInfo->categories_name . '</a>');
                   //Insert new Element Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
                   if (!xtc_not_null($search)) {
