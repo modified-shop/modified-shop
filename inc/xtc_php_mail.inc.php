@@ -119,7 +119,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $txt_signatur = '';
   }
 
-  require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
+  require_once (DIR_FS_EXTERNAL.'phpmailer/PHPMailerAutoload.php');
 
   $mail = new PHPMailer();
   $mail->PluginDir = DIR_FS_EXTERNAL.'phpmailer/';
