@@ -248,8 +248,8 @@ class main {
    * @param string $text, $class
    * @return string
    */
-  function getProductPopupLink($pID,$text,$class='',$add_params='') {
-    global $request_type, $product;
+  function getProductPopupLink($pID, $text, $class = '', $add_params = '') {
+    global $request_type;
     if (!defined('POPUP_PRODUCT_LINK_PARAMETERS')) {
       define('POPUP_PRODUCT_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=450&width=750');
     }
@@ -261,6 +261,7 @@ class main {
     if ($class == 'image') {
       require_once (DIR_FS_INC . 'xtc_get_products_image.inc.php');
       $products_image = xtc_get_products_image($pID);
+      $product = new product($pID);
       $products_image = $product->productImage($products_image, 'thumbnail');      
       return '<a target="_blank" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$link_parameters, $request_type).'" class="'.$link_class.'">'.'<img class="'.$class.'" alt="" src="'.$products_image.'" />'.'</a>';
     }
