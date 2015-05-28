@@ -127,8 +127,9 @@ if (!$action) {
 <?php
 } else {
 
-  $content_status_array = array(array('id'=>0,'text'=>CFG_TXT_NO),
-                                array('id'=>1,'text'=>CFG_TXT_YES)
+  $content_status_array = array(
+                                array('id'=>1,'text'=>CFG_TXT_YES),
+                                array('id'=>0,'text'=>CFG_TXT_NO),
                                );
   
   // content array

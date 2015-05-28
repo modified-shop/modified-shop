@@ -305,7 +305,7 @@
     $string = '<span class="cfg_select_option">';
     if (!is_array($select_array) && $select_array == 'checkbox') {
       $select_array = array(
-          array('id'=> 1,'text'=> CFG_TXT_YES),
+         array('id'=> 1,'text'=> CFG_TXT_YES),
           array('id'=> 0,'text'=> CFG_TXT_NO),
       );
     }
