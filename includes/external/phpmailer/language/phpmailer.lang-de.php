@@ -1,8 +1,8 @@
 <?php
 /**
-* PHPMailer language file: refer to English translation for definitive list
-* German Version
-*/
+ * German PHPMailer language file: refer to English translation for definitive list
+ * @package PHPMailer
+ */
 
 $PHPMAILER_LANG['authenticate']         = 'SMTP Fehler: Authentifizierung fehlgeschlagen.';
 $PHPMAILER_LANG['connect_host']         = 'SMTP Fehler: Konnte keine Verbindung zum SMTP-Host herstellen.';
@@ -22,3 +22,4 @@ $PHPMAILER_LANG['signing']              = 'Fehler beim Signieren: ';
 $PHPMAILER_LANG['smtp_connect_failed']  = 'Verbindung zu SMTP Server fehlgeschlagen.';
 $PHPMAILER_LANG['smtp_error']           = 'Fehler vom SMTP Server: ';
 $PHPMAILER_LANG['variable_set']         = 'Kann Variable nicht setzen oder zurücksetzen: ';
+//$PHPMAILER_LANG['extension_missing']    = 'Extension missing: ';
