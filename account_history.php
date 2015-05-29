@@ -30,6 +30,7 @@ require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
 require_once (DIR_FS_INC.'get_tracking_link.inc.php');
+require_once (DIR_FS_INC.'get_order_total.inc.php');
 
 if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -80,20 +81,11 @@ if (xtc_count_customer_orders() > 0) {
                                      WHERE orders_id = '".$history['orders_id']."'");
     $products = xtc_db_fetch_array($products_query);
     
-    // get order_total
-    $orders_total_query = xtc_db_query("SELECT value
-                                          FROM ".TABLE_ORDERS_TOTAL."
-                                         WHERE class IN ('ot_total', 'ot_subtotal_no_tax', 'ot_subtotal')
-                                           AND orders_id = '".$history['orders_id']."'
-                                      ORDER BY sort_order DESC
-                                         LIMIT 1");
-    $orders_total = xtc_db_fetch_array($orders_total_query);
-
     $module_content[] = array ('ORDER_ID' => $history['orders_id'],
                                'ORDER_STATUS' => $history['orders_status_name'],
                                'ORDER_DATE' => xtc_date_long($history['date_purchased']),
                                'ORDER_PRODUCTS' => $products['count'],
-                               'ORDER_TOTAL' => xtc_format_price_order($orders_total['value'], 1, $history['currency'], 1),
+                               'ORDER_TOTAL' => xtc_format_price_order(get_order_total($history['orders_id']), 1, $history['currency'], 1),
                                'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, xtc_get_all_get_params().'order_id='.$history['orders_id'],'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
                                'ORDER_TRACKING' => get_tracking_link($history['orders_id'], $_SESSION['language_code'])
                                );

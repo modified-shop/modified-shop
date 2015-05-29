@@ -31,6 +31,7 @@ require_once (DIR_FS_INC.'xtc_validate_vatid_status.inc.php');
 require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
 require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
 require_once (DIR_FS_INC.'get_tracking_link.inc.php');
+require_once (DIR_FS_INC.'get_order_total.inc.php');
 
 /* magnalister v1.0.1 */
 if (function_exists('magnaExecute')) magnaExecute('magnaSubmitOrderStatus', array(), array('order_details.php'));
@@ -57,21 +58,6 @@ function get_shipping_name($shipping_class) {
     $shipping_method = constant(strtoupper('MODULE_SHIPPING_'.$shipping_class.'_TEXT_TITLE'));
   }
   return $shipping_method;
-}
-
-function get_order_total($orders_id) {
-  $total = '0';
-  $orders_total_query = xtc_db_query("SELECT value
-                                        FROM orders_total
-                                       WHERE class IN ('ot_total', 'ot_subtotal_no_tax', 'ot_subtotal')
-                                         AND orders_id = '".$orders_id."'
-                                    ORDER BY sort_order DESC
-                                       LIMIT 1");
-  if (xtc_db_num_rows($orders_total_query) > 0) {                                    
-    $orders_total = xtc_db_fetch_array($orders_total_query);
-    $total = $orders_total['value'];
-  }
-  return $total;
 }
 
 // initiate template engine for mail

@@ -21,6 +21,9 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
+
+require_once (DIR_FS_INC.'get_order_total.inc.php');
+
 function smarty_function_piwik($params, &$smarty) {
   global $PHP_SELF;
   
@@ -75,11 +78,7 @@ function smarty_function_piwik($params, &$smarty) {
 function getOrderDetailsPiwik($goal) {
   global $last_order; // from checkout_success.php
 
-  $query = xtc_db_query("-- function.piwik.php
-    SELECT value
-    FROM " . TABLE_ORDERS_TOTAL . "
-    WHERE orders_id = '" . $last_order . "' AND class='ot_total'");
-  $orders_total = xtc_db_fetch_array($query);
+  $total = get_order_total($last_order);
 
-  return "_paq.push(['trackGoal', '" . $goal . "', '" . $orders_total['value'] . "' ]);\n";
+  return "_paq.push(['trackGoal', '" . $goal . "', '" . $total . "' ]);\n";
 }
