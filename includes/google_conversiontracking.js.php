@@ -13,7 +13,7 @@
 
 <?php
 global $last_order; // from checkout_success.php
-$total_query = xtc_db_query("-- function.googleanalytics_universal.php
+$total_query = xtc_db_query("-- google_conversiontracking.js.php
                        SELECT value
                          FROM " . TABLE_ORDERS_TOTAL . "
                         WHERE orders_id = '" . (int)$last_order . "' 
