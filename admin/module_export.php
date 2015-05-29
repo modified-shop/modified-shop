@@ -230,7 +230,14 @@
     reset($params_array);
     $params = array();
     while(list($key, $value) = each($params_array)) {
-      $params[] = $key .'='. $value;
+      if (is_array($value)) {
+        reset($value);
+        while(list($key2, $value2) = each($value)) {
+          $params[] = $key.'_'.strtolower($key2) .'='. $value2;
+        }
+      } else {
+        $params[] = $key .'='. $value;
+      }
     }
     $params_string = implode('&', $params);
     return $params_string;
