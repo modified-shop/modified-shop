@@ -23,6 +23,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+require_once (DIR_FS_INC.'get_order_total.inc.php');
+
 function smarty_function_googleanalytics($params, &$smarty) {
   global $PHP_SELF;
   
@@ -106,7 +108,9 @@ function smarty_function_googleanalytics($params, &$smarty) {
  */
 function getOrderDetailsAnalytics() {
   global $last_order; // from checkout_success.php
-
+  
+  $total = get_order_total($last_order);
+  
   $shipping_query = xtc_db_query("-- function.googleanalytics.php
                          SELECT value
                            FROM " . TABLE_ORDERS_TOTAL . "
@@ -120,13 +124,6 @@ function getOrderDetailsAnalytics() {
                           WHERE orders_id = '" . (int)$last_order . "' 
                             AND class='ot_tax'");
   $tax = xtc_db_fetch_array($tax_query);
-
-  $total_query = xtc_db_query("-- function.googleanalytics.php
-                         SELECT value
-                           FROM " . TABLE_ORDERS_TOTAL . "
-                          WHERE orders_id = '" . (int)$last_order . "' 
-                            AND class='ot_total'");
-  $total = xtc_db_fetch_array($total_query);
 
   $location_query = xtc_db_query("-- function.googleanalytics.php
                          SELECT customers_city,
@@ -152,7 +149,7 @@ function getOrderDetailsAnalytics() {
   $addTrans = sprintf("_gaq.push(['_addTrans','%s','%s','%s','%s','%s','%s','%s','%s']);\n",
     $last_order,
     STORE_NAME,
-    $total['value'],
+    $total,
     $tax["value"],
     $shipping['value'],
     $location['customers_city'],
@@ -214,6 +211,8 @@ function getOrderDetailsAnalytics() {
 function getOrderDetailsAnalyticsUniversal() {
   global $last_order; // from checkout_success.php
 
+  $total = get_order_total($last_order);
+  
   $shipping_query = xtc_db_query("-- function.googleanalytics_universal.php
                          SELECT value
                            FROM " . TABLE_ORDERS_TOTAL . "
@@ -227,13 +226,6 @@ function getOrderDetailsAnalyticsUniversal() {
                           WHERE orders_id = '" . (int)$last_order . "' 
                             AND class='ot_tax'");
   $tax = xtc_db_fetch_array($tax_query);
-
-  $total_query = xtc_db_query("-- function.googleanalytics_universal.php
-                         SELECT value
-                           FROM " . TABLE_ORDERS_TOTAL . "
-                          WHERE orders_id = '" . (int)$last_order . "' 
-                            AND class='ot_total'");
-  $total = xtc_db_fetch_array($total_query);
 
   $currency_query = xtc_db_query("-- function.googleanalytics_universal.php
                          SELECT currency
@@ -255,7 +247,7 @@ function getOrderDetailsAnalyticsUniversal() {
   $addTrans = sprintf("ga('ecommerce:addTransaction', {'id': '%s', 'affiliation': '%s', 'revenue': '%s', 'shipping': '%s', 'tax': '%s', 'currency': '%s'});\n",
     $last_order,
     STORE_NAME,
-    $total['value'],
+    $total,
     $shipping['value'],
     $tax["value"],
     $currency['currency']

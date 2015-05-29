@@ -12,6 +12,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+require_once (DIR_FS_INC.'get_order_total.inc.php');
+
 function smarty_function_googlecertificate($params, &$smarty) {
   global $PHP_SELF;
   
@@ -72,7 +74,9 @@ function smarty_function_googlecertificate($params, &$smarty) {
  * @return string language in ISO 639-1
  */
 function buildPageLanguageCertificate() {
-  $language_query = xtDBquery("SELECT countries_iso_code_2 FROM ".TABLE_COUNTRIES." WHERE countries_id = '".((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)."'");
+  $language_query = xtDBquery("SELECT countries_iso_code_2 
+                                 FROM ".TABLE_COUNTRIES." 
+                                WHERE countries_id = '".((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)."'");
   $language = xtc_db_fetch_array($language_query, true);
   
   return strtolower($_SESSION['language_code']) . '_' . strtoupper($language['countries_iso_code_2']);
@@ -87,32 +91,31 @@ function buildPageLanguageCertificate() {
 function getOrderDetailsCertificate($subaccount) {
   global $last_order, $request_type; // from checkout_success.php
 
+  $total = get_order_total($last_order);
+
   $query = xtc_db_query("-- function.googlecertificate.php
     SELECT value
       FROM " . TABLE_ORDERS_TOTAL . "
-     WHERE orders_id = '" . $last_order . "' AND class='ot_shipping'");
+     WHERE orders_id = '" . $last_order . "' 
+       AND class='ot_shipping'");
   $orders_total_shipping = xtc_db_fetch_array($query);
 
   $query = xtc_db_query("-- function.googlecertificate.php
     SELECT value
       FROM " . TABLE_ORDERS_TOTAL . "
-     WHERE orders_id = '" . $last_order . "' AND class='ot_tax'");
+     WHERE orders_id = '" . $last_order . "' 
+       AND class='ot_tax'");
   $orders_total_tax = xtc_db_fetch_array($query);
   
   $discount = 0;
   $query = xtc_db_query("-- function.googlecertificate.php
     SELECT value
       FROM " . TABLE_ORDERS_TOTAL . "
-     WHERE orders_id = '" . $last_order . "' AND class IN ('ot_discount', 'ot_coupon', 'ot_payment')");
+     WHERE orders_id = '" . $last_order . "' 
+       AND class IN ('ot_discount', 'ot_coupon', 'ot_payment')");
   while ($orders_total_discount = xtc_db_fetch_array($query)) {
     $discount += $orders_total_discount['value'];
   }
-
-  $query = xtc_db_query("-- function.googlecertificate.php
-    SELECT value
-      FROM " . TABLE_ORDERS_TOTAL . "
-     WHERE orders_id = '" . $last_order . "' AND class='ot_total'");
-  $orders_total = xtc_db_fetch_array($query);
 
   $query = xtc_db_query("-- function.googlecertificate.php
     SELECT delivery_country_iso_code_2, 
@@ -146,7 +149,7 @@ function getOrderDetailsCertificate($subaccount) {
     <span id="gts-o-email">'.$orders['customers_email_address'].'</span>
     <span id="gts-o-country">'.strtoupper($orders['delivery_country_iso_code_2']).'</span>
     <span id="gts-o-currency">'.$orders['currency'].'</span>
-    <span id="gts-o-total">'.number_format($orders_total['value'], 2).'</span>
+    <span id="gts-o-total">'.number_format($total, 2).'</span>
     <span id="gts-o-discounts">'.number_format($discount, 2).'</span>
     <span id="gts-o-shipping-total">'.number_format($orders_total_shipping['value'], 2).'</span>
     <span id="gts-o-tax-total">'.number_format($orders_total_tax["value"], 2).'</span>

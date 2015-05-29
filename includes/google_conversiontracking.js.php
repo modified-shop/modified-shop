@@ -12,13 +12,8 @@
 ?>
 
 <?php
-global $last_order; // from checkout_success.php
-$total_query = xtc_db_query("-- google_conversiontracking.js.php
-                       SELECT value
-                         FROM " . TABLE_ORDERS_TOTAL . "
-                        WHERE orders_id = '" . (int)$last_order . "' 
-                          AND class='ot_total'");
-$total = xtc_db_fetch_array($total_query);
+require_once (DIR_FS_INC.'get_order_total.inc.php');
+$total = get_order_total($last_order);
 ?>
 
 <!-- Google Code for Purchase Conversion Page -->
@@ -29,7 +24,7 @@ var google_conversion_language = "<?php echo GOOGLE_LANG; ?>";
 var google_conversion_format = "2";
 var google_conversion_color = "ffffff";
 var google_conversion_label = "<?php echo GOOGLE_CONVERSION_LABEL; ?>";
-var google_conversion_value = "<?php echo $total['value']; ?>";
+var google_conversion_value = "<?php echo $total; ?>";
 var google_remarketing_only = false;
 /* ]]> */
 </script>

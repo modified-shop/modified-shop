@@ -32,6 +32,8 @@ require_once (DIR_FS_INC.'xtc_get_product_path.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_name.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_image.inc.php');
 require_once (DIR_FS_INC.'get_tracking_link.inc.php');
+require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
+require_once (DIR_FS_INC.'get_order_total.inc.php');
 
 if (!isset ($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -74,12 +76,9 @@ if (xtc_count_customer_orders() > 0) {
                                        o.delivery_country,
                                        o.billing_name,
                                        o.billing_country,
-                                       ot.text as order_total,
+                                       o.currency,
                                        s.orders_status_name
 	                                FROM ".TABLE_ORDERS." o
-	                                JOIN ".TABLE_ORDERS_TOTAL." ot
-	                                     ON o.orders_id = ot.orders_id
-	                                        AND ot.class = 'ot_total'
 	                                JOIN ".TABLE_ORDERS_STATUS." s
 	                                     ON o.orders_status = s.orders_status_id
 	                                        AND s.language_id = '".(int) $_SESSION['languages_id']."'
@@ -98,7 +97,7 @@ if (xtc_count_customer_orders() > 0) {
 		$order_content[] = array ('ORDER_ID' => $orders['orders_id'], 
 		                          'ORDER_DATE' => xtc_date_short($orders['date_purchased']), 
 		                          'ORDER_STATUS' => $orders['orders_status_name'], 
-		                          'ORDER_TOTAL' => $orders['order_total'], 
+		                          'ORDER_TOTAL' => xtc_format_price_order(get_order_total($orders['orders_id']), 1, $orders['currency'], 1), 
 		                          'ORDER_LINK' => xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL'), 
 		                          'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
 		                          'TRACKING' => get_tracking_link($orders['orders_id'], $_SESSION['language_code'])
