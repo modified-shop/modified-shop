@@ -168,9 +168,9 @@ class ot_payment {
               if ($values[$j]['fee'] != 0 && count($this->amounts) > 0) {
                 foreach($this->amounts as $key2 => $value2) {
                   if (strpos($key, $key2 . '%')) {
-                    if ($god_amount > 0) {
+                    //if ($god_amount > 0) { //web28 fix tax reduction
                       $god_amount += $values[$j]['fee'] * $value2 / $this->amounts['total'] * $key2 / 100 / (100 + $key2) * 100;
-                    }
+                    //}
                   }
                 }
               }
@@ -204,9 +204,13 @@ class ot_payment {
   
     $this->amounts['total'] = 0;
 
-    //$order_total = $order->info['total'];  //FEHLER  $order->info['total'] enthält auf der Seite checkout_payment die Versandkosten OHNE Steuer warum auch immer
-    $order_total = $_SESSION['cart']->show_total();
-
+    $order_total = $order->info['total'];
+    //FIX $order->info['total'] enthält auf der Seite checkout_payment die Versandkosten OHNE Steuer warum auch immer
+    $shipping_cost = $this->get_shipping_cost();
+    $shipping_tax = $shipping_cost - $order->info['shipping_cost'];
+    $order_total += $shipping_tax;
+    
+    if ($this->include_shipping == 'false') $order_total -= $shipping_cost;
     // Check if gift voucher is in cart and adjust total
     $products = $_SESSION['cart']->get_products();
     for ($i=0; $i<sizeof($products); $i++) {
@@ -230,12 +234,10 @@ class ot_payment {
         $this->amounts['total'] += $gv_result['products_price'] * $qty;
       }
     }
-    //if ($this->include_shipping == 'false') $order_total -= $order->info['shipping_cost'];
-    if ($this->include_shipping != 'false') {
-      $order_total += $this->get_shipping_cost();
-    }
+    
     if ($this->include_tax == 'false') {
-      $order_total -= $order->info['tax'];
+      $order_total -= $order->info['tax']; //Steuer nur von Artikeln
+      $order_total -= $shipping_tax; //Steuer von Versandmodul
     }
     $this->amount = $order_total;
   }
