@@ -11,6 +11,8 @@
    based on:
    - Andreas Zimmermann / IT eSolutions http://www.it-esolutions.de
      Copyright (c) 2004 IT eSolutions
+   - v. 1.9 (c) by rpa-com.de
+    FIX: falsche Steuerberechnung
    - v. 1.8 (c) by rpa-com.de
      FIX: falsche Anzeige von Rabatt/Zuschlag in checkout_payment.php
    - v. 1.7 (c) by rpa-com.de
@@ -101,16 +103,14 @@ class ot_payment {
     if ($payment == '' && isset($_SESSION['payment'])) {
       $payment = $_SESSION['payment'];
     }
-
+    
+    //Steuerkorrektur für Berechnung ohne Versandkosten
     if ($this->include_shipping == 'false') {
-      $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
-      $shipping_tax = 0;
-      if (array_key_exists($module, $GLOBALS) && is_object($GLOBALS[$module])) {
-        $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-      }
+      $shipping_modul = explode('_',$order->info['shipping_class']);
+      $shipping_tax_class = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul[0]).'_TAX_CLASS');
+      $shipping_tax = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] && !$_SESSION['customers_status']['customers_status_add_tax_ot']) {
-        //$tod_shipping = $order->info['shipping_cost'] / (100 + $shipping_tax) * $shipping_tax;
-        $tod_shipping = $order->info['shipping_cost'] * ($shipping_tax / 100 + 1) - $order->info['shipping_cost'];  //web28 - Fix shipping tax
+        $tod_shipping = $order->info['shipping_cost'] / (100 + $shipping_tax) * $shipping_tax;
       } else {
         $tod_shipping = $order->info['shipping_cost'] / 100 * $shipping_tax;
       }
@@ -155,31 +155,22 @@ class ot_payment {
           if ($payment == $table[$i]) $do = true;
         }
         if ($do) {
+          $values[$j]['discount'] = $this->get_discount($this->amount, $values[$j]['percent']) + $values[$j]['fee'];
           // Calculate tax reduction if necessary
-          if($this->calculate_tax == 'true') {
+          if ($this->calculate_tax == 'true') {
+            //Reduzierung/Aufschlag Faktor berechnen
+            $discount = ($this->amount - $values[$j]['discount']) / $this->amount;
             // Calculate tax group deductions
             reset($order->info['tax_groups']);
             while (list($key, $value) = each($order->info['tax_groups'])) {
-              if (strpos($key, $shipping_tax . '%')) {
-                $god_amount = $this->get_discount(($value - $tod_shipping), $values[$j]['percent']);
-              } else {
-                $god_amount = $this->get_discount($value, $values[$j]['percent']);
-              }
-              if ($values[$j]['fee'] != 0 && count($this->amounts) > 0) {
-                foreach($this->amounts as $key2 => $value2) {
-                  if (strpos($key, $key2 . '%')) {
-                    //if ($god_amount > 0) { //web28 fix tax reduction
-                      $god_amount += $values[$j]['fee'] * $value2 / $this->amounts['total'] * $key2 / 100 / (100 + $key2) * 100;
-                    //}
-                  }
-                }
-              }
-              $order->info['tax_groups'][$key] -= $god_amount;
+              //Steuerantei der Versandkosten wenn notwendig entfernen 
+              $value -= (strpos($key, $shipping_tax . '%') ? $tod_shipping : 0 );
+              $god_amount = $value * $discount  - $value;
+              $order->info['tax_groups'][$key] += $god_amount; //Steuergruppe korrigieren
               $tod_amount += $god_amount; //hier wird die Steuer aufaddiert
             }
             // Calculate main tax reduction
-            //$tod_amount = $this->get_discount(($order->info['tax'] - $tod_shipping), $values[$j]['percent']); // FIX web28 - falsche Steuerkorrektur
-            $order->info['tax'] -= $tod_amount;
+            $order->info['tax'] += $tod_amount;
           }
           $values[$j]['discount'] = $this->get_discount($this->amount, $values[$j]['percent']) + $values[$j]['fee'];
         }
