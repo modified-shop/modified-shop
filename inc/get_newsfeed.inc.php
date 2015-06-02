@@ -15,7 +15,6 @@
   function get_newsfeed() {
     // newsfeed
     if (NEWSFEED_LAST_UPDATE < (time()-86400)) {
-      xtc_db_query("TRUNCATE newsfeed");
       $feed = get_external_content('http://www.modified-shop.org/feed/', 2);    
       if ($feed && class_exists('SimpleXmlElement')) {
         $rss = new SimpleXmlElement($feed, LIBXML_NOCDATA);
