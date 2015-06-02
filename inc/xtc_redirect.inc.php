@@ -36,7 +36,10 @@
 
     // save SESSION before redirect
     session_write_close();
-    xtc_db_close();
+
+    if (function_exists('xtc_db_close')) {
+      xtc_db_close();
+    }
     
     header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url)));
     exit();
