@@ -107,7 +107,7 @@ define('ENTRY_GENDER_ERROR', 'Please select your salutation.');
 define('ENTRY_GENDER_TEXT', '*');
 define('ENTRY_FIRST_NAME_ERROR', 'Your first name must consist of at least  ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' characters.');
 define('ENTRY_FIRST_NAME_TEXT', '*');
-define('ENTRY_LAST_NAME_ERROR', 'Your e-mail address must consist of at least ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.');
+define('ENTRY_LAST_NAME_ERROR', 'Your last name must consist of at least ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.');
 define('ENTRY_LAST_NAME_TEXT', '*');
 define('ENTRY_DATE_OF_BIRTH_ERROR', 'Your date of birth needs to be entered in the following form DD/MM/YYYY (e.g. 05/21/1970) '); //Dokuman - 2009-06-03 - correct english date format
 define('ENTRY_DATE_OF_BIRTH_TEXT', '* (e.g. 05/21/1970)'); //Dokuman - 2009-06-03 - correct english date format
