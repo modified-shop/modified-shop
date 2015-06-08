@@ -115,7 +115,7 @@
     }
     
     // include needed class
-    require_once (DIR_FS_EXTERNAL . '/phpfastcache/phpfastcache.php');
+    require_once (DIR_FS_EXTERNAL . 'phpfastcache/phpfastcache.php');
 
     $cache = phpFastCache();
     
