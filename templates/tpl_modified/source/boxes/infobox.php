@@ -24,7 +24,7 @@
 include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
 // set cache id
-$cache_id = $_SESSION['language'] . $_SESSION['customers_status']['customers_status'];
+$cache_id = md5($_SESSION['language'] . $_SESSION['customers_status']['customers_status']);
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_infobox.html', $cache_id) || !$cache) {
 

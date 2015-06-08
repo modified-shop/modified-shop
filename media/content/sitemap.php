@@ -35,7 +35,7 @@ if (!CacheCheck()) {
 // include needed function
 require_once(DIR_FS_INC . 'xtc_count_products_in_category.inc.php');
 
-$cache_id = $_SESSION['language'].$_SESSION['customers_status']['customers_status'].((isset($_REQUEST['error'])) ? $_REQUEST['error'] : '');
+$cache_id = md5($_SESSION['language'].$_SESSION['customers_status']['customers_status'].((isset($_REQUEST['error'])) ? $_REQUEST['error'] : ''));
 
 if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_id) || !$cache) {
 

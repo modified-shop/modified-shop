@@ -265,7 +265,7 @@ if (!is_object($product) || !$product->isProduct()) {
     $info_smarty->caching = 1;
     $info_smarty->cache_lifetime = CACHE_LIFETIME;
     $info_smarty->cache_modified_check = CACHE_CHECK;
-    $cache_id = $product->data['products_id'].$_SESSION['language'].$_SESSION['customers_status']['customers_status_name'].$_SESSION['currency'];
+    $cache_id = md5($product->data['products_id'].$_SESSION['language'].$_SESSION['customers_status']['customers_status_name'].$_SESSION['currency']);
     $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template'], $cache_id);
   }
   $smarty->assign('main_content', $product_info);
