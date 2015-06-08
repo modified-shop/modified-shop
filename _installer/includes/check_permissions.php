@@ -11,23 +11,16 @@
    --------------------------------------------------------------*/
 define('CHMOD_WRITEABLE', 0775);
 
-  function scanDirectories($rootDir, $allData=array()) {
-    $invisibleFileNames = array(".", "..", ".svn");
-    if (file_exists($rootDir)) {
-      $dirContent = scandir($rootDir);
-      foreach($dirContent as $key => $content) {
-        $path = $rootDir.'/'.$content;
-        if (!in_array($content, $invisibleFileNames)) {
-          if (is_file($path) && is_readable($path)) {
-            $allData['files'][] = str_replace(DIR_FS_CATALOG, '', $path);
-          } elseif (is_dir($path) && is_readable($path)) {
-            $allData['dirs'][] = str_replace(DIR_FS_CATALOG, '', $path);
-            $allData = scanDirectories($path, $allData);
+  function scanDirectories($dir, $allData=array()) {
+      foreach (glob($dir.'/*') as $file) {
+          if (is_dir($file)) {
+              $allData['dirs'][] = str_replace(DIR_FS_CATALOG, '', $file);
+              $allData = scanDirectories2($file, $allData);
+          } else {
+              $allData['files'][] = str_replace(DIR_FS_CATALOG, '', $file);
           }
-        }
       }
-    }
-    return $allData;
+      return $allData;
   }
 
   function is_make_writeable($filename) {
