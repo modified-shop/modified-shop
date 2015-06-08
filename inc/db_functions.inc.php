@@ -109,25 +109,34 @@
 
   function xtc_db_queryCached($query, $link='db_link') {
     global $$link;
-
+    
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
       $queryStartTime = array_sum(explode(" ",microtime()));
     }
+    
+    // include needed class
+    require_once (DIR_FS_EXTERNAL . '/phpfastcache/phpfastcache.php');
 
-    // get HASH ID for filename
-    $id = md5($query);
+    $cache = phpFastCache();
+    
+    $id = md5(strtolower(preg_replace("'[\r\n\s]+'", '', $query)));
+    
+    // get cache
+    $records = $cache->get($id);
 
-    // cache File Name
-    $file = SQL_CACHEDIR . $id . '.mod.cache';
+    if ($records == null) {
+      $result = xtc_db_query($query, $link);
 
-    // file life time
-    $expire = DB_CACHE_EXPIRE;
-
-    if (file_exists($file) && filemtime($file) > (time() - $expire)) {
-
-      // get cached resulst
-      $result = unserialize(base64_decode(file_get_contents($file)));
-
+      // fetch data into array
+      $records = array('query' => array());
+      
+      while ($record = xtc_db_fetch_array($result)) {
+          $records['query'][] = $record;
+      }
+      
+      // set cache  
+      $cache->set($id, $records , DB_CACHE_EXPIRE);
+    } else {
       if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
         $queryEndTime = array_sum(explode(" ",microtime())); 
         $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');
@@ -135,26 +144,9 @@
           xtc_db_slow_query_log($processTime, $query, 'QUERY');
         }
       }
-
-    } else {
-
-      if (file_exists($file)) @unlink($file);
-
-      // get result from DB and create new file
-      $result = xtc_db_query($query, $link);
-
-      // fetch data into array
-      $records = array();
-      while ($record = xtc_db_fetch_array($result)) {
-        $records[] = $record;
-      }
-      
-      // safe result into file.
-      file_put_contents($file, base64_encode(serialize($records)));
-      $result = $records;
     }
-
-    return $result;
+    
+    return $records['query'];
   }
 
 

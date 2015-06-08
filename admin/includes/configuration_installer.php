@@ -119,6 +119,7 @@ $values_group_update = array();
                            );
 
 //configuration_group_id 11 --- "Cache Optionen"
+  $values[] = "(NULL, 'DB_CACHE_TYPE', 'files', '11', '7', NULL, NOW(), NULL, 'xtc_cfg_pull_down_cache_type(\'DB_CACHE_TYPE\',');";
 
 //configuration_group_id 12 --- "Email Optionen"
   $values[] = "(NULL, 'SMTP_SECURE', 'none', 12, 8, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'none\', \'ssl\', \'tls\'),');";

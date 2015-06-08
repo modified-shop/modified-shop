@@ -945,7 +945,9 @@ define('TRACKING_GOOGLE_DISPLAY_DESC' , 'Die Bereiche zu demografischen Merkmale
 define('TRACKING_GOOGLE_ECOMMERCE_TITLE' , 'Google Universal Analytics E-Commerce');
 define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Setzen Sie E-Commerce-Tracking ein, um herauszufinden, was Besucher &uuml;ber Ihre Website oder App kaufen. Zudem erhalten Sie folgende Informationen:<br><br><strong>Produkte:</strong> Gekaufte Produkte sowie die Mengen und die mit diesen Produkten erzielten Ums&auml;tze<br><strong>Transaktionen:</strong> Informationen zu Umsatz, Steuern, Versandkosten und Mengen f&uuml;r jede Transaktion<br><strong>Zeit bis zum Kauf:</strong> Anzahl von Tagen und Besuchen, beginnend von der aktuellen Kampagne bis zum Abschluss der Transaktion. Funktioniert nur f&uuml;r Google Universal Analytics.');
 
-
 define('NEW_ATTRIBUTES_STYLING_TITLE', 'Attribut Verwaltung Styling');
 define('NEW_ATTRIBUTES_STYLING_DESC', 'In der Attribut Verwaltung das Styling bei den Checkboxen/Dropdowns aktivieren? Bei sehr vielen Attributen und Performanceproblemen auf Nein/false setzen.');
+
+define('DB_CACHE_TYPE_TITLE', 'Cache Engine');
+define('DB_CACHE_TYPE_DESC', 'W&auml;hlen sie eine der verfügbaren Engines zum Cachen');
 ?>

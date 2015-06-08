@@ -950,4 +950,7 @@ define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Set up an E-Commerce tracking to find
 
 define('NEW_ATTRIBUTES_STYLING_TITLE', 'Attribute Manager Styling');
 define('NEW_ATTRIBUTES_STYLING_DESC', 'Enable styling of the checkboxes/dropdowns in the attribute manager? Set it to "No" if you experience problems with a huge number of attributes and performance problems.');
+
+define('DB_CACHE_TYPE_TITLE', 'Cache Engine');
+define('DB_CACHE_TYPE_DESC', 'Choose an available Engine for caching');
 ?>
