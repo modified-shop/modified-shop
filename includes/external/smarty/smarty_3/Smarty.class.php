@@ -30,8 +30,8 @@
 /**
  * define smarty plugindir in template
  */
-define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/smarty');
-define('MY_SHOP_PLUGINS', DIR_FS_EXTERNAL.'smarty/plugins');
+define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/smarty/');
+define('MY_SHOP_PLUGINS', DIR_FS_EXTERNAL.'smarty/plugins/');
 
 /**
  * define shorthand directory separator constant
@@ -102,6 +102,7 @@ include_once SMARTY_SYSPLUGINS_DIR . 'smarty_internal_resource_file.php';
 include_once SMARTY_SYSPLUGINS_DIR . 'smarty_cacheresource.php';
 include_once SMARTY_SYSPLUGINS_DIR . 'smarty_internal_cacheresource_file.php';
 include_once SMARTY_SYSPLUGINS_DIR . 'smarty_compatibility.php';
+include_once SMARTY_SYSPLUGINS_DIR . 'smarty_cacheresource_phpfastcache.php';
 
 /**
  * This is the main Smarty class
@@ -518,7 +519,7 @@ class Smarty extends Smarty_Compatibility
      *
      * @var string
      */
-    public $caching_type = 'file';
+    public $caching_type = 'phpfastcache';
     /**
      * internal config properties
      *
@@ -699,7 +700,8 @@ class Smarty extends Smarty_Compatibility
              ->setConfigDir(DIR_FS_CATALOG . 'lang' . DS)
              ->addConfigDir(DIR_FS_CATALOG . 'templates' . DS . CURRENT_TEMPLATE . DS . 'lang' . DS)
              ->addPluginsDir(MY_TEMPLATE_PLUGINS)
-             ->addPluginsDir(MY_SHOP_PLUGINS);
+             ->addPluginsDir(MY_SHOP_PLUGINS)
+             ->registerCacheResource('phpfastcache', new Smarty_CacheResource_Phpfastcache());
 
         $this->debug_tpl = 'file:' . dirname(__FILE__) . '/debug.tpl';
         if (isset($_SERVER['SCRIPT_NAME'])) {
