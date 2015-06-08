@@ -20,7 +20,7 @@
 include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
 // set cache id
-$cache_id = $_SESSION['language'].$_SESSION['customers_status']['customers_status_id'].(isset($coPath) ? $coPath : '0');
+$cache_id = md5($_SESSION['language'].$_SESSION['customers_status']['customers_status_id'].(isset($coPath) ? $coPath : '0'));
 
 
 if (!$cache) {

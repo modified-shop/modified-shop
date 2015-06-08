@@ -83,7 +83,7 @@ if ($_GET['coID'] == 7) {
     $smarty->caching = 1;
     $smarty->cache_lifetime = CACHE_LIFETIME;
     $smarty->cache_modified_check = CACHE_CHECK;
-    $cache_id = $_SESSION['language'].$_SESSION['customers_status']['customers_status'].$shop_content_data['content_id'].((isset($_REQUEST['error'])) ? $_REQUEST['error'] : '');
+    $cache_id = md5($_SESSION['language'].$_SESSION['customers_status']['customers_status'].$shop_content_data['content_id'].((isset($_REQUEST['error'])) ? $_REQUEST['error'] : ''));
     $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/content.html', $cache_id);
   }
 }

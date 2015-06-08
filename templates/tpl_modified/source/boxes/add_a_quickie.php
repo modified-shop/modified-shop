@@ -23,7 +23,7 @@
 include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
 // set cache id
-$cache_id = $_SESSION['language'];
+$cache_id = md5($_SESSION['language']);
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_add_a_quickie.html', $cache_id) || !$cache) {
   $box_smarty->assign('FORM_ACTION',xtc_draw_form('quick_add', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array ('action')) . 'action=add_a_quickie', $request_type)));

@@ -123,7 +123,7 @@ if (sizeof($module_content) >= 1) {
     $module_smarty->caching = 1;
     $module_smarty->cache_lifetime = CACHE_LIFETIME;
     $module_smarty->cache_modified_check = CACHE_CHECK;
-    $cache_id = (isset($new_products_category_id) ? $new_products_category_id : '0').$_SESSION['language'].$_SESSION['customers_status']['customers_status_name'].$_SESSION['currency'];
+    $cache_id = md5((isset($new_products_category_id) ? $new_products_category_id : '0').$_SESSION['language'].$_SESSION['customers_status']['customers_status_name'].$_SESSION['currency']);
     if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) {
       $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/new_products_default.html', $cache_id);
     } else {

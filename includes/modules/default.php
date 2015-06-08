@@ -356,7 +356,7 @@ if ($category_depth == 'nested') {
     $default_smarty->caching = 1;
     $default_smarty->cache_lifetime = CACHE_LIFETIME;
     $default_smarty->cache_modified_check = CACHE_CHECK;
-    $cache_id = $_SESSION['language'].$_SESSION['currency'].((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : '');
+    $cache_id = md5($_SESSION['language'].$_SESSION['currency'].((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : ''));
     $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/main_content.html', $cache_id);
   }
   $smarty->assign('main_content', $main_content);
