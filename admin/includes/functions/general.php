@@ -2209,8 +2209,9 @@
   /**
    * xtc_cfg_select_content()
    *
-   * @param string $configuration
-   * @param string $key
+   * @param string $cfg_key
+   * @param string $cfg_value
+   * @param string $name
    * @return pulldown
    */
   function xtc_cfg_select_content($cfg_key, $cfg_value, $name = '%s') {
@@ -2256,10 +2257,11 @@
   /**
    * xtc_cfg_pull_down_cache_type()
    *
-   * @param mixed $country_id
-   * @return
+   * @param string $cfg_key
+   * @param string $cfg_value
+   * @return pulldown
    */
-  function xtc_cfg_pull_down_cache_type($cache_type) {
+  function xtc_cfg_pull_down_cache_type($cfg_key, $cfg_value) {
     $cache_array = array();
     
     if(is_writeable(SQL_CACHEDIR)) {
@@ -2284,7 +2286,7 @@
       $cache_array[] = array('id' => 'sqlite', 'text' => 'SQLITE');
     }
 
-    return xtc_draw_pull_down_menu('configuration_value', $cache_array, $cache_type);
+    return xtc_draw_pull_down_menu($cfg_key, $cache_array, $cfg_value);
   }
 
 
