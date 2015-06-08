@@ -15,7 +15,7 @@ define('CHMOD_WRITEABLE', 0775);
       foreach (glob($dir.'/*') as $file) {
           if (is_dir($file)) {
               $allData['dirs'][] = str_replace(DIR_FS_CATALOG, '', $file);
-              $allData = scanDirectories2($file, $allData);
+              $allData = scanDirectories($file, $allData);
           } else {
               $allData['files'][] = str_replace(DIR_FS_CATALOG, '', $file);
           }
