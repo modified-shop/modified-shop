@@ -39,8 +39,7 @@ $truncate_session_id = false;
 if (SESSION_FORCE_COOKIE_USE == 'True') {
   xtc_setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? $current_domain : ''));
   if (isset($_COOKIE['cookie_test'])) {
-    xtc_session_start();
-    $session_started = true;
+    $session_started = xtc_session_start();
   }
 } elseif (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
   $truncate_session_id = true;
@@ -53,8 +52,7 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
     exit();
   }
 } else {
-  xtc_session_start();
-  $session_started = true;
+  $session_started = xtc_session_start();
 }
 
 // check for Cookie usage
