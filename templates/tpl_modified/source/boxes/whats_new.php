@@ -58,7 +58,7 @@ $whats_new_query = xtc_db_query("SELECT DISTINCT p.products_id,
                                                  " . PRODUCTS_CONDITIONS_P . "
                                                  " . $current_prd . "
                                                  " . $days . "                                           
-                                        ORDER BY RAND()
+                                        ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
                                            LIMIT 1");
 
 if (xtc_db_num_rows($whats_new_query) > 0) {
