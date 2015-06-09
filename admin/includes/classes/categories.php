@@ -551,7 +551,11 @@ class categories {
     $this->saveSpecialsData($products_data);
 
     // calculate attributes
-    if ($products_data['products_tax_class_id'] != $products_data['products_tax_class_id_old']) {
+    if (isset($products_data['products_attributes_recalculate']) 
+        && $products_data['products_attributes_recalculate'] == 1 
+        && $products_data['products_tax_class_id'] != $products_data['products_tax_class_id_old']
+        ) 
+    {
       $products_tax_rate_old = xtc_get_tax_rate($products_data['products_tax_class_id_old']);
       
       $attributes_query = xtc_db_query("SELECT *

@@ -240,4 +240,6 @@ define('ERROR_QTY_SAVE_CHANGED', 'While editing the article, the inventory has b
 define('TEXT_NO_MOVE_POSSIBLE', 'Not possible to move product.');
 
 define('TEXT_IN', 'in:');
+
+define('TEXT_PRODUCTS_ATTRIBUTES_RECALCULATE', 'Reclaculate attribute on changing tax rate');
 ?>
