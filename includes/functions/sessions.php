@@ -23,7 +23,7 @@
   @ini_set('session.cookie_httponly', true);
 
   if (STORE_SESSIONS == 'mysql') {  
-    if (!$SESS_LIFE = get_cfg_var('session.gc_maxlifetime')) {
+    if (!$SESS_LIFE = xtc_get_cfg_var('session.gc_maxlifetime')) {
       $SESS_LIFE = 1440;
     }
     if (defined('SESSION_LIFE_CUSTOMERS')) {
@@ -219,4 +219,15 @@
     }
     return false;
   }
+
+  function xtc_get_cfg_var($ini_option){
+    try {
+      $ini_option_value = get_cfg_var($ini_option);
+    } catch (Exception $e) {
+      $ini_option_value = ini_get($ini_option);
+      trigger_error($e->getMessage(), E_WARNING);
+    }       
+    return $ini_option_value;
+  }
+        
 ?>
