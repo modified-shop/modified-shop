@@ -118,6 +118,9 @@ ErrorDocument 500 /sitemap.html?error=500
   ##-- set the following line like e.g.: RewriteBase /shop/
   RewriteBase /
 
+  ##-- permit access to dotfiles (.htaccess, .svn, .git, etc.)
+  #RedirectMatch 403 /\..*$
+
   ##-- Use canonical URLs
   ##-- redirect to www-domain, when www is missing and no subdomain given and not using an ssl-proxy
   ##-- HostEurope
