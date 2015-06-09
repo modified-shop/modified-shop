@@ -153,7 +153,7 @@
   }
 
 
-  function xtc_db_fetch_array(&$db_query, $cq=false, $result_type=MYSQL_ASSOC) {
+  function xtc_db_fetch_array(&$db_query, $cq=false, $result_type=MYSQLI_ASSOC) {
     
     if ($db_query === false) {
       return false;
