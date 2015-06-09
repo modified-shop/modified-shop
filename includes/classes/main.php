@@ -315,22 +315,21 @@ class main {
    * @return array
    */
   function getAttributes($products_id, $option_id, $value_id, $add_select= '',$left_join='') {
-    $attributes = xtc_db_query("-- shopping_cart.php
-                                  SELECT $add_select
-                                         popt.products_options_name,
-                                         poval.products_options_values_name,
-                                         pa.*
-                                    FROM ".TABLE_PRODUCTS_OPTIONS." popt
-                               LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                                      ON popt.products_options_id = pa.options_id
-                               LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." poval
-                                      ON pa.options_values_id = poval.products_options_values_id
-                                         $left_join
-                                   WHERE pa.products_id = ".(int)$products_id."
-                                     AND pa.options_id = ".(int)$option_id."
-                                     AND pa.options_values_id = ".(int)$value_id."
-                                     AND popt.language_id = ".(int) $_SESSION['languages_id']."
-                                     AND poval.language_id = ".(int) $_SESSION['languages_id']);
+    $attributes = xtc_db_query("SELECT ".$add_select."
+                                       popt.products_options_name,
+                                       poval.products_options_values_name,
+                                       pa.*
+                                  FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                  JOIN ".TABLE_PRODUCTS_OPTIONS." popt
+                                       ON popt.products_options_id = pa.options_id
+                                          AND popt.language_id = '".(int) $_SESSION['languages_id']."'
+                                  JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." poval
+                                       ON poval.products_options_values_id = pa.options_values_id
+                                          AND poval.language_id = '".(int) $_SESSION['languages_id']."'
+                                       ".$left_join."
+                                 WHERE pa.products_id = '".(int)$products_id."'
+                                   AND pa.options_id = '".(int)$option_id."'
+                                   AND pa.options_values_id = '".(int)$value_id."'");
     return xtc_db_fetch_array($attributes);  
   }
 }
