@@ -63,7 +63,7 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
                                        WHERE p.products_status = '1'
                                              ".PRODUCTS_CONDITIONS_P."
                                              ".$days."
-                                    ORDER BY RAND()
+                                    ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
                                        LIMIT ".MAX_DISPLAY_NEW_PRODUCTS;
     }
 } else {

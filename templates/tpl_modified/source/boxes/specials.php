@@ -42,7 +42,7 @@ $specials_query = xtc_db_query("SELECT p.products_id,
                                           AND s.status = '1'
                                  WHERE p.products_status = '1'
                                        ".PRODUCTS_CONDITIONS_P."                                             
-                              ORDER BY RAND()
+                              ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
                                  LIMIT 1");
 
 if (xtc_db_num_rows($specials_query) > 0) {
