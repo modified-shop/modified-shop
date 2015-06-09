@@ -72,3 +72,18 @@ if ($_GET['action'] == 'new_product') {
   echo '</div>';
 }
 ?>
+
+<script type="text/javascript">
+//disable empty upload fields - fix ticket #459
+$(function() {
+    $('#new_product').submit(function( event ) {
+        var images = $("[name='products_image'],[name^='mo_pics_']");
+        images.each(function() {
+            $(this).prop( "disabled", false );
+            if ($(this).val() == '') {
+                $(this).prop( "disabled", true );
+            }
+        });
+    });
+});
+</script>
