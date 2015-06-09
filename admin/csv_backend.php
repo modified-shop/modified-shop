@@ -19,8 +19,6 @@
   require(DIR_WS_CLASSES . 'import.php');
   require_once(DIR_FS_INC . 'xtc_format_filesize.inc.php');
 
-  define('FILENAME_CSV_BACKEND','csv_backend.php');
-
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   switch ($action) {
