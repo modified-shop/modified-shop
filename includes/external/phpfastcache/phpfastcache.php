@@ -16,7 +16,7 @@
   // setup
   phpFastCache::$config = array(
 
-    'storage'       => DB_CACHE_TYPE, // auto, files, sqlite, apc, cookie, memcache, memcached, predis, redis, wincache, xcache
+    'storage'       => (defined('DB_CACHE_TYPE') ? DB_CACHE_TYPE : 'auto'), // auto, files, sqlite, apc, cookie, memcache, memcached, predis, redis, wincache, xcache
     'default_chmod' => 0777, // For security, please use 0666 for module and 0644 for cgi.
 
     // create .htaccess to protect cache folder
