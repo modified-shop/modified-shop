@@ -56,7 +56,8 @@
        ) 
     {
       if (defined('SID')
-          && constant('SID') != '')
+          && constant('SID') != ''
+          && session_id() != '')
       {
         $link .= $separator . session_name() . '=' . session_id();
       } elseif ( 
