@@ -108,7 +108,6 @@ class shoppingCart {
     if (xtc_db_num_rows($products_query) > 0) {
       while ($products = xtc_db_fetch_array($products_query)) {
         if ($this->check_products_status_permission($products['products_id']) === true) {
-          $_SESSION['old_customers_basket'] = true;
           $this->contents[$products['products_id']] = array ('qty' => (int)$products['customers_basket_quantity']);
           // attributes
           $attributes_query = xtc_db_query("SELECT products_options_id,
@@ -117,8 +116,16 @@ class shoppingCart {
                                              WHERE customers_id = '".(int)$_SESSION['customer_id']."'
                                                AND products_id = '".xtc_db_input($products['products_id'])."'
                                           ORDER BY customers_basket_attributes_id");
-          while ($attributes = xtc_db_fetch_array($attributes_query)) {
-            $this->contents[$products['products_id']]['attributes'][$attributes['products_options_id']] = $attributes['products_options_value_id'];
+          if (xtc_db_num_rows($attributes_query) > 0) {
+            while ($attributes = xtc_db_fetch_array($attributes_query)) {
+              $this->contents[$products['products_id']]['attributes'][$attributes['products_options_id']] = $attributes['products_options_value_id'];
+            }
+            if ($this->attributes_count($products['products_id']) != count($this->contents[$products['products_id']]['attributes'])) {
+              $this->remove($products['products_id']);
+            }
+          }
+          if ($this->get_quantity($products['products_id']) > 0) {
+            $_SESSION['old_customers_basket'] = true;
           }
         } else {
           // no permission
@@ -166,6 +173,11 @@ class shoppingCart {
     global $new_products_id_in_cart;
 
     $products_id = xtc_get_uprid($products_id, $attributes);
+
+    if (is_array($attributes) && $this->attributes_count($products_id) != count($attributes)) {
+      return false;
+    }
+    
     if ($notify == true) {
       $_SESSION['new_products_id_in_cart'] = $products_id;
     }
@@ -550,8 +562,12 @@ class shoppingCart {
                                                   AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                          WHERE p.products_id='".xtc_get_prid($products_id)."'");
 
-        if ($products = xtc_db_fetch_array($products_query)) {          
+        if (xtc_db_num_rows($products_query) > 0) {
+          $products = xtc_db_fetch_array($products_query);
+                 
           if ($this->check_products_status_permission($products_id) === false) {
+            $this->remove($products_id);
+          } elseif (isset($this->contents[$products_id]['attributes']) && $this->attributes_count($products_id) != count($this->contents[$products_id]['attributes'])) {
             $this->remove($products_id);
           } else {
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
@@ -820,6 +836,23 @@ class shoppingCart {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Query for attributes count
+   *
+   * @param integer $products_id
+   * @return integer
+   */
+  function attributes_count($products_id) {
+    $products_attributes_query = xtDBquery("SELECT options_id
+                                              FROM ".TABLE_PRODUCTS_OPTIONS." popt
+                                              JOIN ".TABLE_PRODUCTS_ATTRIBUTES." patrib
+                                                   ON patrib.options_id = popt.products_options_id
+                                                      AND popt.language_id = '".(int) $_SESSION['languages_id']."'
+                                             WHERE patrib.products_id = '".(int)$products_id."'
+                                          GROUP BY patrib.options_id");
+    return xtc_db_num_rows($products_attributes_query, true);
   }
 }
 ?>
