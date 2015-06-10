@@ -39,8 +39,7 @@
     }
 
     function _sess_read($key) {
-      $value_query = xtc_db_query("-- includes/functions/sessions.php
-                                   SELECT value
+      $value_query = xtc_db_query("SELECT value
                                      FROM " . TABLE_SESSIONS . "
                                     WHERE sesskey = '" . xtc_db_input($key) . "'
                                       AND expiry > '" . time() . "'");
@@ -49,7 +48,9 @@
       if (isset($value['value']) && $value['value']!='') {
         return base64_decode($value['value']);
       }
-      return '';
+      
+      // prevent wrong session id
+      xtc_session_recreate();
     }
 
     function _sess_write($key, $val) {
@@ -64,7 +65,7 @@
       $value = base64_encode($val);
 
       return xtc_db_query("REPLACE INTO " . TABLE_SESSIONS . " (sesskey, expiry, value, flag)
-                                 VALUES ('". xtc_db_input($key) ."', '".$expiry."', '".$value."', '".$flag."')");
+                                 VALUES ('". xtc_db_input($key) ."', '".(int)$expiry."', '".xtc_db_input($value)."', '".xtc_db_input($flag)."')");
     }
 
     function _sess_destroy($key) {
