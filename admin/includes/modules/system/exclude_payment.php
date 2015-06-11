@@ -102,6 +102,7 @@ class exclude_payment {
   function keys() {
     $keys = array('MODULE_EXCLUDE_PAYMENT_STATUS',
                   'MODULE_EXCLUDE_PAYMENT_NUMBER',
+                  'MODULE_EXCLUDE_PAYMENT_SORT_ORDER',
                   );
     $keys = array_merge($keys, $this->keys_exclude_payment($this->num_exclude_payment));
 
