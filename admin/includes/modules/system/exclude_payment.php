@@ -57,7 +57,6 @@ class exclude_payment {
   function install() {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_EXCLUDE_PAYMENT_STATUS', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_EXCLUDE_PAYMENT_NUMBER', '1', '6', '0', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_EXCLUDE_PAYMENT_SORT_ORDER', '0', '6', '0', now())");
   }
 
   function install_exclude_payment($number_of_exclude_payment) {
@@ -102,7 +101,6 @@ class exclude_payment {
   function keys() {
     $keys = array('MODULE_EXCLUDE_PAYMENT_STATUS',
                   'MODULE_EXCLUDE_PAYMENT_NUMBER',
-                  'MODULE_EXCLUDE_PAYMENT_SORT_ORDER',
                   );
     $keys = array_merge($keys, $this->keys_exclude_payment($this->num_exclude_payment));
 
