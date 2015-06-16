@@ -24,7 +24,6 @@ class janolaw_content {
   var $user_id;
   var $shop_id;
   var $format;
-  var $pdf;
   
   
   function janolaw_content() {
@@ -32,7 +31,6 @@ class janolaw_content {
     $this->shop_id = MODULE_JANOLAW_SHOP_ID;
     $this->enabled = $this->get_status();
     $this->format = strtolower(MODULE_JANOLAW_FORMAT);
-    $this->pdf = ((MODULE_JANOLAW_PDF == 'True') ? true : false);
 
     if($this->enabled) {
       if (((MODULE_JANOLAW_LAST_UPDATED + MODULE_JANOLAW_UPDATE_INTERVAL) <= time()) || defined('RUN_MODE_ADMIN')) {
@@ -42,7 +40,7 @@ class janolaw_content {
         $this->get_page_content('legaldetails', MODULE_JANOLAW_TYPE_LEGALDETAILS);
         $this->get_page_content('revocation', MODULE_JANOLAW_TYPE_REVOCATION);
         $this->get_page_content('model-withdrawal-form', MODULE_JANOLAW_TYPE_WITHDRAWL);
-              
+                
         xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input(time()) . "', last_modified = NOW() where configuration_key='MODULE_JANOLAW_LAST_UPDATED'");
       }
     }    
@@ -89,12 +87,14 @@ class janolaw_content {
           
           // save pdf
           $content_pdf = '';
-          if ($this->pdf === true) {
+          $pdf_name = str_replace('model-withdrawal-form', 'withdrawal', $name);
+                    
+          if (constant('MODULE_JANOLAW_PDF_'.strtoupper($pdf_name)) == 'True') {
             $content_pdf = get_external_content($url.$name.'.pdf', '3', false);
             if (strpos($content_pdf, '404 Not Found') !== false) {
               $content_pdf = '';
             } else {
-              $filename = 'media/content/'. $value['directory'] . '_' . $name . '.pdf';
+              $filename = 'media/content/'. $value['directory'] . '_' . $pdf_name . '.pdf';
               $fp = @fopen(DIR_FS_CATALOG.$filename, 'w+');
               if (is_resource($fp)) {
                 fwrite($fp, $content_pdf);
@@ -109,7 +109,7 @@ class janolaw_content {
           // save data
           if (strtolower(MODULE_JANOLAW_TYPE) == 'database') {
             // convert content
-            $content = decode_utf8($content);
+            $content = utf8_decode($content);
 
             // update data in table
             $sql_data_array = array('content_text' => $content,
