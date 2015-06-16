@@ -13,9 +13,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-// http://www.janolaw.de/agb-service/shops/<USER-ID>/<SHOP-ID>/<LÄNDERCODE>/<DATEI- NAME>>/<DATEI-FORMAT>
-// http://www.janolaw.de/agb-service/shops/100284901/761296/de/terms_include.html
-
 require_once (DIR_FS_INC.'get_external_content.inc.php');
 
 class janolaw_content {
