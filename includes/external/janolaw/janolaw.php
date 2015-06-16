@@ -121,7 +121,7 @@ class janolaw_content {
           // save data
           if (strtolower(MODULE_JANOLAW_TYPE) == 'database') {
             // convert content
-            $content = utf8_decode($content);
+            $content = decode_utf8($content);
 
             // update data in table
             $sql_data_array = array('content_text' => $content,
