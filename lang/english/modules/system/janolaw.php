@@ -21,15 +21,28 @@ define('MODULE_JANOLAW_TEXT_TITLE', 'janolaw Terms Hosting-Service');
 define('MODULE_JANOLAW_TEXT_DESCRIPTION', '<a href="http://www.janolaw.de/internetrecht/agb/agb-hosting-service/modified/index.html?partnerid=8764#menu" target="_blank"><img src="images/janolaw/janolaw_185x35.png" border=0></a><br /><br />Germany\'s big legal rights portal janolaw offers customized solutions to your legal issues - from the lawyer hotline to individual contracts with attorney warranty. With the AGB hosting service for Internet stores, you can adjust the legal core documents Terms, Conditions, Disclaimer and Privacy Statement tailored to your store and update it continually through the janolaw team. More protection is not possible.<br /><br /><a href="http://www.janolaw.de/internetrecht/agb/agb-hosting-service/modified/index.html?partnerid=8764#menu" target="_blank"><strong><u>Click here for the offer<u></strong></a>');
 define('MODULE_JANOLAW_USER_ID_TITLE', '<hr noshade>User-ID');
 define('MODULE_JANOLAW_USER_ID_DESC', 'Your User-ID');
-define('MODULE_JANOLAW_SHOP_ID_TITLE', '<hr noshade>Shop-ID');
+define('MODULE_JANOLAW_SHOP_ID_TITLE', 'Shop-ID');
 define('MODULE_JANOLAW_SHOP_ID_DESC', 'Your Shop-ID');
 define('MODULE_JANOLAW_STATUS_DESC', 'Enable Module?');
 define('MODULE_JANOLAW_STATUS_TITLE', 'Status');
-define('MODULE_JANOLAW_TYPE_TITLE', 'Save as');
+define('MODULE_JANOLAW_TYPE_TITLE', '<hr noshade>Save as');
 define('MODULE_JANOLAW_TYPE_DESC', 'Store in a file or in the database?');
 define('MODULE_JANOLAW_FORMAT_TITLE', 'Format Type');
 define('MODULE_JANOLAW_FORMAT_DESC', 'Save as text or HTML');
-define('MODULE_JANOLAW_UPDATE_INTERVAL_TITLE', 'Update Interval');
+define('MODULE_JANOLAW_UPDATE_INTERVAL_TITLE', '<hr noshade>Update Interval');
 define('MODULE_JANOLAW_UPDATE_INTERVAL_DESC', 'How often should the data be updated?');
+define('MODULE_JANOLAW_PDF_TITLE', 'Additional PDF');
+define('MODULE_JANOLAW_PDF_DESC', 'Save additional PDF?');
+
+define('MODULE_JANOLAW_TYPE_DATASECURITY_TITLE', '<hr noshade>Legal text Privacy Notice');
+define('MODULE_JANOLAW_TYPE_DATASECURITY_DESC', 'Please specify content of this legal text to be inserted');
+define('MODULE_JANOLAW_TYPE_TERMS_TITLE', 'Legal text Conditions of Use');
+define('MODULE_JANOLAW_TYPE_TERMS_DESC', 'Please specify content of this legal text to be inserted');
+define('MODULE_JANOLAW_TYPE_LEGALDETAILS_TITLE', 'Legal text Imprint');
+define('MODULE_JANOLAW_TYPE_LEGALDETAILS_DESC', 'Please specify content of this legal text to be inserted');
+define('MODULE_JANOLAW_TYPE_REVOCATION_TITLE', 'Legal text Right of revocation');
+define('MODULE_JANOLAW_TYPE_REVOCATION_DESC', 'Please specify content of this legal text to be inserted');
+define('MODULE_JANOLAW_TYPE_WITHDRAWL_TITLE', 'Legal text Revocation form');
+define('MODULE_JANOLAW_TYPE_WITHDRAWL_DESC', 'Please specify content of this legal text to be inserted');
 
 ?>
