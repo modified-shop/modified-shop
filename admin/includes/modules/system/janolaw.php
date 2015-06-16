@@ -33,8 +33,29 @@ class janolaw {
    }
 
   function process($file) {
-    require_once(DIR_FS_EXTERNAL.'janolaw/janolaw.php');
-    $janolaw = new janolaw_content();
+    global $messageStack;
+    
+    $error = false;
+    $check_array = array(MODULE_JANOLAW_TYPE_DATASECURITY,
+                         MODULE_JANOLAW_TYPE_TERMS,
+                         MODULE_JANOLAW_TYPE_LEGALDETAILS,
+                         MODULE_JANOLAW_TYPE_REVOCATION,
+                         MODULE_JANOLAW_TYPE_WITHDRAWAL
+                         );
+    $check = array_count_values($check_array);
+    foreach ($check as $key => $value) {
+      if ($key != '' && $value > 1) {
+        $error = true;
+        break;
+      }
+    }
+    
+    if ($error === true) {
+      $messageStack->add_session(MODULE_JANOLAW_ERROR, 'warning');
+    } else {    
+      require_once(DIR_FS_EXTERNAL.'janolaw/janolaw.php');
+      $janolaw = new janolaw_content();
+    }
   }
 
   function display() {
@@ -68,13 +89,24 @@ class janolaw {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_FORMAT', 'HTML',  '6', '5', 'xtc_cfg_select_option(array(\'HTML\', \'TXT\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_UPDATE_INTERVAL', '86400',  '6', '6', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_LAST_UPDATED', '',  '6', '7', '', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_PDF', 'True',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_PDF_DATASECURITY', 'False',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_PDF_TERMS', 'True',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_PDF_LEGALDETAILS', 'False',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_PDF_REVOCATION', 'True',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_PDF_WITHDRAWAL', 'True',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_MAIL_DATASECURITY', 'False',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_MAIL_TERMS', 'False',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_MAIL_LEGALDETAILS', 'False',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_MAIL_REVOCATION', 'True',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_MAIL_WITHDRAWAL', 'True',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
 
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_DATASECURITY', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_TERMS', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_LEGALDETAILS', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_REVOCATION', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_WITHDRAWL', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_WITHDRAWAL', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
   }
 
   function remove() {
@@ -89,12 +121,26 @@ class janolaw {
                  'MODULE_JANOLAW_SHOP_ID',
                  'MODULE_JANOLAW_TYPE',
                  'MODULE_JANOLAW_FORMAT',
-                 'MODULE_JANOLAW_PDF',
+
                  'MODULE_JANOLAW_TYPE_DATASECURITY',
+                 'MODULE_JANOLAW_PDF_DATASECURITY',
+                 'MODULE_JANOLAW_MAIL_DATASECURITY',
+
                  'MODULE_JANOLAW_TYPE_TERMS',
+                 'MODULE_JANOLAW_PDF_TERMS',
+                 'MODULE_JANOLAW_MAIL_TERMS',
+
                  'MODULE_JANOLAW_TYPE_LEGALDETAILS',
+                 'MODULE_JANOLAW_PDF_LEGALDETAILS',
+                 'MODULE_JANOLAW_MAIL_LEGALDETAILS',
+
                  'MODULE_JANOLAW_TYPE_REVOCATION',
-                 'MODULE_JANOLAW_TYPE_WITHDRAWL',                 
+                 'MODULE_JANOLAW_PDF_REVOCATION',
+                 'MODULE_JANOLAW_MAIL_REVOCATION',
+
+                 'MODULE_JANOLAW_TYPE_WITHDRAWAL',                 
+                 'MODULE_JANOLAW_PDF_WITHDRAWAL',                 
+                 'MODULE_JANOLAW_MAIL_WITHDRAWAL',                 
                  );
   }
 }

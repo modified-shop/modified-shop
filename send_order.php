@@ -177,6 +177,9 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     require_once(DIR_FS_EXTERNAL.'payone/modules/send_order.php');
   }
 
+  ## Janolaw
+  require_once(DIR_FS_EXTERNAL.'janolaw/send_order.php');
+
   $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.html');
   $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.txt');
   
