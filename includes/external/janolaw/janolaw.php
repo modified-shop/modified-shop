@@ -31,7 +31,7 @@ class janolaw_content {
     $this->shop_id = MODULE_JANOLAW_SHOP_ID;
     $this->enabled = $this->get_status();
     $this->format = strtolower(MODULE_JANOLAW_FORMAT);
-
+    
     if($this->enabled) {
       if (((MODULE_JANOLAW_LAST_UPDATED + MODULE_JANOLAW_UPDATE_INTERVAL) <= time()) || defined('RUN_MODE_ADMIN')) {
         
@@ -52,6 +52,18 @@ class janolaw_content {
       return false;
     }
     return true;
+  }
+  
+  
+  function get_language($lang) {
+    $avail_lang_array = array('de', 'gb', 'fr');
+    
+    $lang = str_replace('en', 'gb', $lang);
+    if (!in_array($lang, $avail_lang_array)) {
+      $lang = 'gb'; // default
+    }
+    
+    return $lang;
   }
 
 
@@ -79,7 +91,7 @@ class janolaw_content {
         $url = 'http://www.janolaw.de/agb-service/shops/'.
                $this->user_id .'/'.
                $this->shop_id .'/'.
-               str_replace('en', 'gb', $key) .'/';
+               $this->get_language($key) .'/';
 
         $content = get_external_content($url.$name.$mode.$this->format, '3', false);
         
@@ -117,7 +129,7 @@ class janolaw_content {
             xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group='" . (int)$coID . "' and languages_id='".$value['id']."'");
           } else {
             // write content to file
-            $filename = $key . '_' . $name . '.' . $this->format;
+            $filename = $value['directory'] . '_' . $name . '.' . $this->format;
             $file = DIR_FS_CATALOG . 'media/content/'. $filename;
             $fp = @fopen($file, 'w+');
             if (is_resource($fp)) {
