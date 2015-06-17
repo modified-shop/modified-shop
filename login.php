@@ -51,18 +51,19 @@ $info_message = '';
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	$email_address = xtc_db_prepare_input($_POST['email_address']);
 	$password = xtc_db_prepare_input($_POST['password']);
+
 	$vvcode = xtc_db_prepare_input($_POST['vvcode']);
+	$captcha = xtc_db_prepare_input($_SESSION['vvcode']);
+  unset($_SESSION['vvcode']);		
 
   // captcha
-  $error = false;	
+  $captcha_error = false;	
   if ($_SESSION['customers_login_tries'] >= LOGIN_NUM) {
-    if (strtoupper($vvcode) != $_SESSION['vvcode']) {
-      $messageStack->add('login', TEXT_WRONG_CODE);
-      $error = true;
+    if (strtoupper($vvcode) != $captcha) {
+      $captcha_error = true;
     }
   }
-  unset($_SESSION['vvcode']);		
-  
+    
   // increment login tries
   $_SESSION['customers_login_tries'] ++;
 
@@ -83,11 +84,11 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	                                       WHERE customers_email_address = '".xtc_db_input($email_address)."' 
 	                                         AND account_type = '0'");
 
-	if (!xtc_db_num_rows($check_customer_query)) {
+	if (xtc_db_num_rows($check_customer_query) < 1) {
 		$messageStack->add('login', TEXT_LOGIN_ERROR);
 	} else {
 		$check_customer = xtc_db_fetch_array($check_customer_query);
-    
+        
     // update login tries
     xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
                      SET customers_login_tries = customers_login_tries+1, 
@@ -98,10 +99,16 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 		  $_SESSION['customers_login_tries'] = $check_customer['customers_login_tries'] + 1;
 		}
 		
+		if ($_SESSION['customers_login_tries'] >= LOGIN_NUM && (time() - strtotime($check_customer['customers_login_time'])) < LOGIN_TIME) {
+      if (strtoupper($vvcode) != $captcha) {
+        $captcha_error = true;
+      }
+		}
+		
 		// Check that password is good
 		if (xtc_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id']) !== true) {
 			$messageStack->add('login', TEXT_LOGIN_ERROR);      
-		} elseif ($error === false && $_SESSION['customers_login_tries'] >= LOGIN_NUM) {		
+		} elseif ($captcha_error === false) {		
 			if (SESSION_RECREATE == 'True') {
 				xtc_session_recreate();
 			}
@@ -163,6 +170,10 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
       } 
 		}
 	}
+}
+
+if ($captcha_error === true) {	
+  $messageStack->add('login', TEXT_WRONG_CODE);
 }
 
 // include boxes
