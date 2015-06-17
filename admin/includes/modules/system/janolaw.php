@@ -19,7 +19,6 @@
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-// include needed functions
 class janolaw {
   var $code, $title, $description, $enabled;
 
@@ -34,13 +33,16 @@ class janolaw {
 
   function process($file) {
     global $messageStack;
+
+    // include needed class
+    require_once(DIR_FS_EXTERNAL.'janolaw/janolaw.php');
     
     $error = false;
-    $check_array = array(MODULE_JANOLAW_TYPE_DATASECURITY,
-                         MODULE_JANOLAW_TYPE_TERMS,
-                         MODULE_JANOLAW_TYPE_LEGALDETAILS,
-                         MODULE_JANOLAW_TYPE_REVOCATION,
-                         MODULE_JANOLAW_TYPE_WITHDRAWAL
+    $check_array = array(janolaw_content::get_configuration('MODULE_JANOLAW_TYPE_DATASECURITY'),
+                         janolaw_content::get_configuration('MODULE_JANOLAW_TYPE_TERMS'),
+                         janolaw_content::get_configuration('MODULE_JANOLAW_TYPE_LEGALDETAILS'),
+                         janolaw_content::get_configuration('MODULE_JANOLAW_TYPE_REVOCATION'),
+                         janolaw_content::get_configuration('MODULE_JANOLAW_TYPE_WITHDRAWAL')
                          );
     $check = array_count_values($check_array);
     foreach ($check as $key => $value) {
@@ -53,7 +55,6 @@ class janolaw {
     if ($error === true) {
       $messageStack->add_session(MODULE_JANOLAW_ERROR, 'warning');
     } else {    
-      require_once(DIR_FS_EXTERNAL.'janolaw/janolaw.php');
       $janolaw = new janolaw_content();
     }
   }
