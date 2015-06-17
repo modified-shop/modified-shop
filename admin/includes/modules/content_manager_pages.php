@@ -113,7 +113,7 @@ if (!$action) {
                 echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'" onclick="return confirm(\''.CONFIRM_DELETE.'\')">'.$icon_delete.'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
               }
               echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'">'.$icon_edit.'  '.TEXT_EDIT.'</a>&nbsp;&nbsp;';
-              echo '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')">'.$icon_preview.'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
+              echo '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$sub_content_data['content_group']).'&preview=true&coIndex='.$sub_content_data['content_group_index'].'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')">'.$icon_preview.'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
             ?>
             </td>
           </tr>
