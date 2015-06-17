@@ -199,7 +199,7 @@ CREATE TABLE module_backup (
   configuration_value text NOT NULL,
   last_modified datetime DEFAULT NULL,
   PRIMARY KEY (configuration_id),
-  KEY idx_configuration_key (configuration_key)
+  UNIQUE idx_configuration_key (configuration_key)
 ) ENGINE=MyISAM;
 
 #Tomcraft - 2013-08-21 - Added hidden stock feature
