@@ -257,7 +257,7 @@ class shoppingCart {
     if (isset($_SESSION['customer_id'])){
       xtc_db_query("UPDATE ".TABLE_CUSTOMERS_BASKET."
                        SET customers_basket_quantity = '".(int)$quantity."',
-                           customers_basket_date_added' = now()
+                           customers_basket_date_added = now()
                      WHERE customers_id = '".(int)$_SESSION['customer_id']."'
                        AND products_id = '".xtc_db_input($products_id)."'");
     }
