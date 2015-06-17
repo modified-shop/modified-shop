@@ -497,7 +497,8 @@
         $check_email = xtc_db_query("SELECT customers_email_address
                                       FROM ".TABLE_CUSTOMERS."
                                      WHERE customers_email_address = '".xtc_db_input($customers_email_address)."'
-                                       AND customers_id <> '".$customers_id."'");
+                                       AND account_type = '0'
+                                       AND customers_id != '".$customers_id."'");
         if (xtc_db_num_rows($check_email)) {
           $error = true;
           $entry_email_address_exists = true;
