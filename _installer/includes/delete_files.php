@@ -69,6 +69,8 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/includes/classes/phpmailer.lang-de.php', // neu
                      'admin/includes/classes/phpmailer.lang-en.php', // neu                     
                      'admin/includes/configure.org.php',
+                     'admin/includes/functions/languages.php', // neu
+                     'admin/includes/functions/validations.php', // neu
                      'admin/includes/modules/carp/carp.php',
                      'admin/includes/modules/carp/carpconf.php',
                      'admin/includes/modules/carp/carpinc.php',
@@ -123,6 +125,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'images/icons/sofortueberweisung_icon.gif', // neu
                      'inc/search_replace_iso-8859-1.php', // neu
                      'inc/search_replace_iso-8859-15.php', // neu
+                     'inc/tld.txt', // neu
                      'inc/xtc_convert_linefeeds.inc.php', // neu
                      'inc/xtc_delete_file.inc.php', // neu
                      'inc/xtc_db_connect_installer.inc.php',
