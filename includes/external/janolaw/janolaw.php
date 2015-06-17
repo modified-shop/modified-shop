@@ -13,9 +13,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-// http://www.janolaw.de/agb-service/shops/<USER-ID>/<SHOP-ID>/<LÄNDERCODE>/<DATEI- NAME>>/<DATEI-FORMAT>
-// http://www.janolaw.de/agb-service/shops/100284901/761296/de/terms_include.html
-
 require_once (DIR_FS_INC.'get_external_content.inc.php');
 
 class janolaw_content {
@@ -27,19 +24,19 @@ class janolaw_content {
   
   
   function janolaw_content() {
-    $this->user_id = MODULE_JANOLAW_USER_ID;
-    $this->shop_id = MODULE_JANOLAW_SHOP_ID;
+    $this->user_id = $this->get_configuration('MODULE_JANOLAW_USER_ID');
+    $this->shop_id = $this->get_configuration('MODULE_JANOLAW_SHOP_ID');
     $this->enabled = $this->get_status();
-    $this->format = strtolower(MODULE_JANOLAW_FORMAT);
+    $this->format = strtolower($this->get_configuration('MODULE_JANOLAW_FORMAT'));
     
     if($this->enabled) {
       if (((MODULE_JANOLAW_LAST_UPDATED + MODULE_JANOLAW_UPDATE_INTERVAL) <= time()) || defined('RUN_MODE_ADMIN')) {
         
-        $this->get_page_content('datasecurity', MODULE_JANOLAW_TYPE_DATASECURITY);
-        $this->get_page_content('terms', MODULE_JANOLAW_TYPE_TERMS);
-        $this->get_page_content('legaldetails', MODULE_JANOLAW_TYPE_LEGALDETAILS);
-        $this->get_page_content('revocation', MODULE_JANOLAW_TYPE_REVOCATION);
-        $this->get_page_content('model-withdrawal-form', MODULE_JANOLAW_TYPE_WITHDRAWL);
+        $this->get_page_content('datasecurity', $this->get_configuration('MODULE_JANOLAW_TYPE_DATASECURITY'));
+        $this->get_page_content('terms', $this->get_configuration('MODULE_JANOLAW_TYPE_TERMS'));
+        $this->get_page_content('legaldetails', $this->get_configuration('MODULE_JANOLAW_TYPE_LEGALDETAILS'));
+        $this->get_page_content('revocation', $this->get_configuration('MODULE_JANOLAW_TYPE_REVOCATION'));
+        $this->get_page_content('model-withdrawal-form', $this->get_configuration('MODULE_JANOLAW_TYPE_WITHDRAWL'));
                 
         xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input(time()) . "', last_modified = NOW() where configuration_key='MODULE_JANOLAW_LAST_UPDATED'");
       }
@@ -48,10 +45,20 @@ class janolaw_content {
 
 
   function get_status() {
-    if(!defined('MODULE_JANOLAW_STATUS') || MODULE_JANOLAW_STATUS == 'False') {
+    if(!defined('MODULE_JANOLAW_STATUS') || $this->get_configuration('MODULE_JANOLAW_STATUS') == 'False') {
       return false;
     }
     return true;
+  }
+  
+  
+  function get_configuration($key) {
+    $configuration_query = xtc_db_query("SELECT configuration_value
+                                           FROM ".TABLE_CONFIGURATION."
+                                          WHERE configuration_key = '".$key."'");
+    $configuration = xtc_db_fetch_array($configuration_query);
+    
+    return $configuration['configuration_value'];
   }
   
   
@@ -101,7 +108,7 @@ class janolaw_content {
           $content_pdf = '';
           $pdf_name = str_replace('model-withdrawal-form', 'withdrawal', $name);
                     
-          if (constant('MODULE_JANOLAW_PDF_'.strtoupper($pdf_name)) == 'True') {
+          if ($this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($pdf_name)) == 'True') {
             $content_pdf = get_external_content($url.$name.'.pdf', '3', false);
             if (strpos($content_pdf, '404 Not Found') !== false) {
               $content_pdf = '';
@@ -119,7 +126,7 @@ class janolaw_content {
           }
                     
           // save data
-          if (strtolower(MODULE_JANOLAW_TYPE) == 'database') {
+          if (strtolower($this->get_configuration('MODULE_JANOLAW_TYPE')) == 'database') {
             // convert content
             $content = decode_utf8($content);
 
