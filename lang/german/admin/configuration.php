@@ -950,4 +950,27 @@ define('NEW_ATTRIBUTES_STYLING_DESC', 'In der Attribut Verwaltung das Styling be
 
 define('DB_CACHE_TYPE_TITLE', 'Cache Engine');
 define('DB_CACHE_TYPE_DESC', 'W&auml;hlen sie eine der verfügbaren Engines zum Cachen');
+
+define('META_PRODUCTS_KEYWORDS_LENGTH_TITLE', 'L&auml;nge der Zusatz-Begriffe f&uuml;r Suche');
+define('META_PRODUCTS_KEYWORDS_LENGTH_DESC', 'Maximum L&auml;nge der Zusatz-Begriffe f&uuml;r Suche (in Buchstaben)');
+define('META_KEYWORDS_LENGTH_TITLE', 'L&auml;nge Meta-Keywords');
+define('META_KEYWORDS_LENGTH_DESC', 'Maximum L&auml;nge der Keywords (in Buchstaben)');
+define('META_TITLE_LENGTH_TITLE', 'L&auml;nge Meta-Title');
+define('META_TITLE_LENGTH_DESC', 'Maximum L&auml;nge des Titles (in Buchstaben)');
+define('META_CAT_SHOP_TITLE_TITLE', 'Shop-Titel Kategorien');
+define('META_CAT_SHOP_TITLE_DESC', 'Shop-Titel bei Kategorien anh&auml;ngen?');
+define('META_PROD_SHOP_TITLE_TITLE', 'Shop-Titel Produkte');
+define('META_PROD_SHOP_TITLE_DESC', 'Shop-Titel bei Produkten anh&auml;ngen?');
+define('META_CONTENT_SHOP_TITLE_TITLE', 'Shop-Titel Contents');
+define('META_CONTENT_SHOP_TITLE_DESC', 'Shop-Titel bei Contents anh&auml;ngen?');
+define('META_SPECIALS_SHOP_TITLE_TITLE', 'Shop-Titel Sonderangebote');
+define('META_SPECIALS_SHOP_TITLE_DESC', 'Shop-Titel bei Sonderangeboten anh&auml;ngen?');
+define('META_NEWS_SHOP_TITLE_TITLE', 'Shop-Titel Neue Produkte');
+define('META_NEWS_SHOP_TITLE_DESC', 'Shop-Titel bei neuen Produkten anh&auml;ngen?');
+define('META_SEARCH_SHOP_TITLE_TITLE', 'Shop-Titel Suche');
+define('META_SEARCH_SHOP_TITLE_DESC', 'Shop-Titel bei Ergebnissen der Shopsuche anh&auml;ngen?');
+define('META_OTHER_SHOP_TITLE_TITLE', 'Shop-Titel &uuml;brige Seiten');
+define('META_OTHER_SHOP_TITLE_DESC', 'Shop-Titel bei allen anderen Seiten anh&auml;ngen?');
+define('META_GOOGLE_VERIFICATION_KEY_TITLE', 'Google Verification Key');
+define('META_GOOGLE_VERIFICATION_KEY_DESC', '<meta name="verifiy-v1">');
 ?>
