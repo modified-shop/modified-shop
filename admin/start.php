@@ -472,7 +472,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <div class="admin_headline"><a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><?php echo RSS_FEED_TITLE; ?></a></div>
             <div class="admin_contentbox">
               <?php
-              $news_query = xtc_db_query("SELECT * FROM newsfeed");
+              $news_query = xtc_db_query("SELECT * FROM newsfeed ORDER BY news_date DESC");
               if (xtc_db_num_rows($news_query) > 0) {
                 $i = 0;
                 while ($news = xtc_db_fetch_array($news_query)) {
