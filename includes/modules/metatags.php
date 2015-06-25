@@ -65,13 +65,13 @@
 // ---------------------------------------------------------------------------------------
   $addPagination        =   true;   // Seiten-Nummern anzeigen, ja/nein?
 // ---------------------------------------------------------------------------------------
-  $addCatShopTitle      =   true;   // Shop-Titel bei Kategorien anhängen, ja/nein?
-  $addProdShopTitle     =   true;   // Shop-Titel bei Produkten anhängen, ja/nein?
-  $addContentShopTitle  =   true;   // Shop-Titel bei Contentseiten anhängen, ja/nein?
-  $addSpecialsShopTitle =   true;   // Shop-Titel bei Angeboten anhängen, ja/nein?
-  $addNewsShopTitle     =   true;   // Shop-Titel bei Neuen Artikeln anhängen, ja/nein?
-  $addSearchShopTitle   =   true;   // Shop-Titel bei Suchergebnissen anhängen, ja/nein?
-  $addOthersShopTitle   =   true;   // Shop-Titel bei sonstigen Seiten anhängen, ja/nein?
+  $addCatShopTitle      =   ((META_CAT_SHOP_TITLE == 'true') ? true : false);;   // Shop-Titel bei Kategorien anhängen, ja/nein?
+  $addProdShopTitle     =   ((META_PROD_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei Produkten anhängen, ja/nein?
+  $addContentShopTitle  =   ((META_CONTENT_SHOP_TITLE == 'true') ? true : false);;   // Shop-Titel bei Contentseiten anhängen, ja/nein?
+  $addSpecialsShopTitle =   ((META_SPECIALS_SHOP_TITLE == 'true') ? true : false);;   // Shop-Titel bei Angeboten anhängen, ja/nein?
+  $addNewsShopTitle     =   ((META_NEWS_SHOP_TITLE == 'true') ? true : false);;   // Shop-Titel bei Neuen Artikeln anhängen, ja/nein?
+  $addSearchShopTitle   =   ((META_SEARCH_SHOP_TITLE == 'true') ? true : false);;   // Shop-Titel bei Suchergebnissen anhängen, ja/nein?
+  $addOthersShopTitle   =   ((META_OTHERS_SHOP_TITLE == 'true') ? true : false);;   // Shop-Titel bei sonstigen Seiten anhängen, ja/nein?
 // ---------------------------------------------------------------------------------------
   $noIndexUnimportant   =   true;  // "unwichtige" Seiten mit noindex versehen
 // ---------------------------------------------------------------------------------------
@@ -600,6 +600,9 @@ if (META_REPLY_TO != 'xx@xx.com' && TEMPLATE_HTML_ENGINE == 'xhtml') {
 }
 if (META_REVISIT_AFTER != '0') {
   echo '<meta name="revisit-after" content="'. META_REVISIT_AFTER .'" />'."\n";
+}
+if (META_GOOGLE_VERIFICATION_KEY != '') {
+  echo '<meta name="verifiy-v1" content="'. META_GOOGLE_VERIFICATION_KEY .'" /> '."\n";
 }
 if(isset($canonical_url)) {
   echo '<link rel="canonical" href="'.$canonical_url.'" />'."\n";

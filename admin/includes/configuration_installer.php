@@ -237,10 +237,20 @@ $values_group_update = array();
 //configuration_group_id 16 --- "Metatags Suchmaschinen"
   $values[] = "(NULL, 'DISPLAY_BREADCRUMB_OPTION', 'name', '16', '15', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'name\', \'model\'),');";
   $values[] = "(NULL, 'META_MAX_KEYWORD_LENGTH', '18', '16', '1', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'META_DESCRIPTION_LENGTH', '150', '16', '2', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'META_DESCRIPTION_LENGTH', '156', '16', '2', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'META_PRODUCTS_KEYWORDS_LENGTH', '255', '16', '3', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'META_KEYWORDS_LENGTH', '180', '16', '4', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'META_TITLE_LENGTH', '55', '16', '5', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'META_STOP_WORDS', '".utf8_decode('versandkosten,zzgl,mwst,lieferzeit,aber,alle,alles,als,auch,auf,aus,bei,beim,beinahe,bin,bis,ist,dabei,dadurch,daher,dank,darum,danach,das,daß,dass,dein,deine,dem,den,der,des,dessen,dadurch,deshalb,die,dies,diese,dieser,diesen,diesem,dieses,doch,dort,durch,eher,ein,eine,einem,einen,einer,eines,einige,einigen,einiges,eigene,eigenes,eigener,endlich,euer,eure,etwas,fast,findet,für,gab,gibt,geben,hatte,hatten,hattest,hattet,heute,hier,hinter,ich,ihr,ihre,ihn,ihm,im,immer,in,ist,ja,jede,jedem,jeden,jeder,jedes,jener,jenes,jetzt,kann,kannst,kein,können,könnt,machen,man,mein,meine,mehr,mit,muß,mußt,musst,müssen,müßt,nach,nachdem,neben,nein,nicht,nichts,noch,nun,nur,oder,statt,anstatt,seid,sein,seine,seiner,sich,sicher,sie,sind,soll,sollen,sollst,sollt,sonst,soweit,sowie,und,uns,unser,unsere,unserem,unseren,unter,vom,von,vor,wann,warum,was,war,weiter,weitere,wenn,wer,werde,widmen,widmet,viel,viele,vieles,weil,werden,werdet,weshalb,wie,wieder,wieso,wir,wird,wirst,wohl,woher,wohin,wurde,zum,zur,über')."', '16', '16', NULL, NOW(), NULL, 'xtc_cfg_textarea(');";
   $values[] = "(NULL, 'META_GO_WORDS', '".utf8_decode('tracht,dirndl,kleid,mode,modern,bluse,trachten,hose,leder,schmuck,t-shirt,t-shirts,schuh,schuhe')."', '16', '17', NULL, NOW(), NULL, 'xtc_cfg_textarea(');";
-
+  $values[] = "(NULL, 'META_CAT_SHOP_TITLE', 'false', '16', '16', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'META_PROD_SHOP_TITLE', 'false', '16', '17', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'META_CONTENT_SHOP_TITLE', 'false', '16', '18', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'META_SPECIALS_SHOP_TITLE', 'false', '16', '19', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'META_NEWS_SHOP_TITLE', 'false', '16', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'META_SEARCH_SHOP_TITLE', 'false', '16', '21', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'META_OTHER_SHOP_TITLE', 'false', '16', '22', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'META_GOOGLE_VERIFICATION_KEY', '', '16', '23', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 17 --- "Zusatzmodule"
   $values_group[] = "(17,'Additional Modules','Additional Modules',17,1);";

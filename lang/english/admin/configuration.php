@@ -953,4 +953,27 @@ define('NEW_ATTRIBUTES_STYLING_DESC', 'Enable styling of the checkboxes/dropdown
 
 define('DB_CACHE_TYPE_TITLE', 'Cache Engine');
 define('DB_CACHE_TYPE_DESC', 'Choose an available Engine for caching');
+
+define('META_PRODUCTS_KEYWORDS_LENGTH_TITLE', 'Length of extra words for Search');
+define('META_PRODUCTS_KEYWORDS_LENGTH_DESC', 'Maximum Length of extra words for Search (Letters)');
+define('META_KEYWORDS_LENGTH_TITLE', 'Length Meta-Keywords');
+define('META_KEYWORDS_LENGTH_DESC', 'Maximum Length of Keywords (Letters)');
+define('META_TITLE_LENGTH_TITLE', 'Length Meta-Title');
+define('META_TITLE_LENGTH_DESC', 'Maximum Length of Title (Letters)');
+define('META_CAT_SHOP_TITLE_TITLE', 'Shop-Title Categories');
+define('META_CAT_SHOP_TITLE_DESC', 'Add Shop-Title to Categories?');
+define('META_PROD_SHOP_TITLE_TITLE', 'Shop-Title Products');
+define('META_PROD_SHOP_TITLE_DESC', 'Add Shop-Title to Products?');
+define('META_CONTENT_SHOP_TITLE_TITLE', 'Shop-Title Contents');
+define('META_CONTENT_SHOP_TITLE_DESC', 'Add Shop-Title to Contents?');
+define('META_SPECIALS_SHOP_TITLE_TITLE', 'Shop-Title Specials');
+define('META_SPECIALS_SHOP_TITLE_DESC', 'Add Shop-Title to Specials?');
+define('META_NEWS_SHOP_TITLE_TITLE', 'Shop-Title New Products');
+define('META_NEWS_SHOP_TITLE_DESC', 'Add Shop-Title to New Products?');
+define('META_SEARCH_SHOP_TITLE_TITLE', 'Shop-Title Search');
+define('META_SEARCH_SHOP_TITLE_DESC', 'Add Shop-Title to search results?');
+define('META_OTHER_SHOP_TITLE_TITLE', 'Shop-Title other pages');
+define('META_OTHER_SHOP_TITLE_DESC', 'Add Shop-Title all other pages?');
+define('META_GOOGLE_VERIFICATION_KEY_TITLE', 'Google Verification Key');
+define('META_GOOGLE_VERIFICATION_KEY_DESC', '<meta name="verifiy-v1">');
 ?>
