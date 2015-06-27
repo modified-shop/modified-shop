@@ -976,4 +976,15 @@ define('META_OTHER_SHOP_TITLE_TITLE', 'Shop-Title other pages');
 define('META_OTHER_SHOP_TITLE_DESC', 'Add Shop-Title all other pages?');
 define('META_GOOGLE_VERIFICATION_KEY_TITLE', 'Google Verification Key');
 define('META_GOOGLE_VERIFICATION_KEY_DESC', '<meta name="verifiy-v1">');
+
+define('GOOGLE_CONVERSION_TITLE','Google Conversion Tracking');
+define('GOOGLE_CONVERSION_DESC','Track conversion keywords on orders');
+define('GOOGLE_CONVERSION_ID_TITLE','Conversion ID');
+define('GOOGLE_CONVERSION_ID_DESC','Your Google conversion ID');
+
+
+define('TRACKING_FACEBOOK_ACTIVE_TITLE', 'Activate Facebook Conversion-Tracking');
+define('TRACKING_FACEBOOK_ACTIVE_DESC', 'By activating this option, all purchases will be submitted to Facebook for later evaluation. Before using this option, you need to register at <a href="https://www.facebook.com" target="_blank"><b>Facebook</b></a> and create a new account.');
+define('TRACKING_FACEBOOK_ID_TITLE', 'Facebook Conversion ID');
+define('TRACKING_FACEBOOK_ID_DESC', 'Your Facebook conversion ID');
 ?>
