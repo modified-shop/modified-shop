@@ -30,7 +30,7 @@ function smarty_function_facebook($params, &$smarty) {
   $query = xtc_db_query("-- function.facebook.php
     SELECT DISTINCT ot.value,
                      o.currency
-               FROM " . TABLE_ORDERS . " o,
+               FROM " . TABLE_ORDERS . " o
           LEFT JOIN (" . TABLE_ORDERS_TOTAL . " ot, " . TABLE_ORDERS . ")
                  ON (o.orders_id = ot.orders_id)
               WHERE o.orders_id = '" . $last_order . "' AND ot.class='ot_total'");
@@ -42,8 +42,7 @@ function smarty_function_facebook($params, &$smarty) {
     return false;
   }
 
-  $beginCode = '<!-- Facebook Conversion Code for Kaufbestätigungen - Aktionslicht -->
-<script>(function() {
+  $beginCode = '<script>(function() {
   var _fbq = window._fbq || (window._fbq = []);
   if (!_fbq.loaded) {
     var fbds = document.createElement(\'script\');
