@@ -284,7 +284,7 @@ $values_group_update = array();
 //configuration_group_id 23 --- "Econda Tracking"
   $values_group[] = "(23,'Econda Tracking','Econda Tracking System',23,1);";
 
-//configuration_group_id 24 --- "google analytics & piwik tracking"
+//configuration_group_id 24 --- "google analytics, piwik & facebook tracking"
   $values_group[] = "(24,'PIWIK &amp; Google Analytics Tracking','Settings for PIWIK &amp; Google Analytics Tracking',24,1);";
 
   $values[] = "(NULL, 'TRACKING_COUNT_ADMIN_ACTIVE', 'false', 24, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
@@ -300,6 +300,9 @@ $values_group_update = array();
   $values[] = "(NULL, 'TRACKING_PIWIK_LOCAL_PATH','www.domain.de/piwik', 24, 5, NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'TRACKING_PIWIK_ID','1', 24, 6, NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'TRACKING_PIWIK_GOAL','1', 24, 7, NULL, NOW(), NULL, NULL);";
+
+  $values[] = "(NULL, 'TRACKING_FACEBOOK_ACTIVE', 'false', 24, 8, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'TRACKING_FACEBOOK_ID','', 24, 9, NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 25 --- "captcha"
   $values_group[] = "(25,'Captcha','Captcha Configuration',25,1);";
