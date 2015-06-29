@@ -25,9 +25,9 @@ function smarty_function_facebook($params, &$smarty) {
   global $last_order; // from checkout_success.php
 
   $query = xtc_db_query("-- function.facebook.php
-    SELECT currency
-               FROM " . TABLE_ORDERS . "
-              WHERE orders_id = '" . $last_order . "'");
+                         SELECT currency
+                           FROM " . TABLE_ORDERS . "
+                          WHERE orders_id = '" . $last_order . "'");
   $orders = xtc_db_fetch_array($query);
   
   $id = isset($params['id']) ? (int)$params['id'] : false;
