@@ -17,30 +17,26 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
+
+require_once (DIR_FS_INC.'get_order_total.inc.php');
+
 function smarty_function_facebook($params, &$smarty) {
   global $PHP_SELF;
   global $last_order; // from checkout_success.php
 
-  /*
   $query = xtc_db_query("-- function.facebook.php
-    SELECT value
-    FROM " . TABLE_ORDERS_TOTAL . "
-    WHERE orders_id = '" . $last_order . "' AND class='ot_total'");
-  */
-  $query = xtc_db_query("-- function.facebook.php
-    SELECT DISTINCT ot.value,
-                     o.currency
-               FROM " . TABLE_ORDERS . " o
-          LEFT JOIN (" . TABLE_ORDERS_TOTAL . " ot, " . TABLE_ORDERS . ")
-                 ON (o.orders_id = ot.orders_id)
-              WHERE o.orders_id = '" . $last_order . "' AND ot.class='ot_total'");
-  $orders_total = xtc_db_fetch_array($query);
+    SELECT currency
+               FROM " . TABLE_ORDERS . "
+              WHERE orders_id = '" . $last_order . "'");
+  $orders = xtc_db_fetch_array($query);
   
   $id = isset($params['id']) ? (int)$params['id'] : false;
 
   if (!$id) {
     return false;
   }
+
+  $total = get_order_total($last_order);
 
   $beginCode = '<script>(function() {
   var _fbq = window._fbq || (window._fbq = []);
@@ -56,9 +52,9 @@ function smarty_function_facebook($params, &$smarty) {
   ';
 
   $endCode = 'window._fbq = window._fbq || [];
-window._fbq.push([\'track\', \''.$id.'\', {\'value\':\''.$orders_total['value'].'\',\'currency\':\''.$orders_total['currency'].'\'}]);
+window._fbq.push([\'track\', \''.$id.'\', {\'value\':\''.$total.'\',\'currency\':\''.$orders['currency'].'\'}]);
 </script>
-<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev='.$id.'&amp;cd[value]='.$orders_total['value'].'&amp;cd[currency]='.$orders_total['currency'].'&amp;noscript=1" /></noscript>
+<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev='.$id.'&amp;cd[value]='.$total.'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1" /></noscript>
   ';
 
   if ((strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false)) {
