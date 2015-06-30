@@ -43,6 +43,15 @@ if ($session_started == false) {
 	xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE));
 }
 
+$account_options = ACCOUNT_OPTIONS;
+$products = $_SESSION['cart']->get_products();
+for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
+  if (preg_match('/^GIFT/', addslashes($products[$i]['model']))) {
+    $account_options = 'account';
+    break;
+  }
+}
+
 if (!isset($_SESSION['customers_login_tries'])) {
   $_SESSION['customers_login_tries'] = 0;
 }
@@ -191,7 +200,7 @@ if ($messageStack->size('login') > 0) {
 	$smarty->assign('info_message', $messageStack->output('login'));
 }
 
-$smarty->assign('account_option', ACCOUNT_OPTIONS);
+$smarty->assign('account_option', $account_options);
 $smarty->assign('BUTTON_NEW_ACCOUNT', '<a href="'.xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 $smarty->assign('BUTTON_LOGIN', xtc_image_submit('button_login.gif', IMAGE_BUTTON_LOGIN));
 $smarty->assign('BUTTON_GUEST', '<a href="'.xtc_href_link(FILENAME_CREATE_GUEST_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
