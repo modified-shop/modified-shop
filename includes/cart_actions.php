@@ -42,7 +42,7 @@ if (xtc_not_null($action)) {
     $wishlist = true;
   }
 
-  $parameters = array ('action', 'pid', 'info_message_3', 'wishlist', 'prd_id');
+  $parameters = array ('action', 'pid', 'info_message_3', 'wishlist', 'prd_id', 'info_message');
   if (DISPLAY_CART == 'true') {
     $goto = FILENAME_SHOPPING_CART;
     array_push($parameters, 'products_id', 'cPath');
