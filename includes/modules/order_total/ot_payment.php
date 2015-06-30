@@ -277,12 +277,15 @@ class ot_payment {
     global $order, $PHP_SELF;
     
     $shipping_cost = $order->info['shipping_cost'];
-    //Steuer auf der Seite checkout_payment hinzurechnen
-    if (basename($PHP_SELF) == 'checkout_payment.php') {
-      $shipping_modul = explode('_',$order->info['shipping_class']);
-      $shipping_tax_class = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul[0]).'_TAX_CLASS');
-      $shipping_tax_rate = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-      $shipping_cost = $order->info['shipping_cost'] * (1.0 + ($shipping_tax_rate / 100));
+    
+    if ($shipping_cost > 0) {
+      //Steuer auf der Seite checkout_payment hinzurechnen
+      if (basename($PHP_SELF) == 'checkout_payment.php') {
+        $shipping_modul = explode('_',$order->info['shipping_class']);
+        $shipping_tax_class = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul[0]).'_TAX_CLASS');
+        $shipping_tax_rate = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        $shipping_cost = $order->info['shipping_cost'] * (1.0 + ($shipping_tax_rate / 100));
+      }
     }
     return $shipping_cost;
   }
