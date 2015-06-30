@@ -159,80 +159,71 @@
     </div>
 
     <div style="clear:both;"></div>
-    <div class="pdg2">
+    <div style="padding:5px;clear:both;">
       <?php
       include('includes/lang_tabs.php');
-      for ($i=0; $i<sizeof($languages); $i++) {
+      for ($i = 0; $i < sizeof($languages); $i++) {
         echo ('<div id="tab_lang_' . $i . '">');
-        $lng_image = '<div style="float:left;margin-right:5px;">'.xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']).'</div>';
+        $lng_image = xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name']);
         $categories_desc_fields = $catfunc->get_categories_desc_fields($cInfo->categories_id, $languages[$i]['id']);
         ?>
-        <table class="tableInput border0" style="border-spacing:0;">
-          <tr>
-            <td class="main bg_notice" style="width:190px;padding-top:10px;font-weight:bold;"><?php echo $lng_image.TEXT_EDIT_CATEGORIES_NAME; ?></td>
-            <td class="main bg_notice" style="padding-top:10px;"><?php echo xtc_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', (isset($categories_name[$languages[$i]['id']]) ? stripslashes($categories_name[$languages[$i]['id']]) : $categories_desc_fields['categories_name']), 'style="width:99%" maxlength="255"'); ?></td>
-          </tr>
-          <tr>
-            <td class="main"><?php echo $lng_image.TEXT_EDIT_CATEGORIES_HEADING_TITLE; ?></td>
-            <td class="main"><?php echo xtc_draw_input_field('categories_heading_title[' . $languages[$i]['id'] . ']', (isset($categories_name[$languages[$i]['id']]) ? stripslashes($categories_name[$languages[$i]['id']]) : $categories_desc_fields['categories_heading_title']), 'style="width:99%" maxlength="255"'); ?></td>
-          </tr>
-          <tr>
-            <td class="main" style="font-weight:bold;"><?php  echo $lng_image.TEXT_EDIT_CATEGORIES_DESCRIPTION; ?></td>
-            <td class="main">&nbsp;</td>
-          </tr>
-          <tr>
-            <td class="main" colspan="2"><?php echo xtc_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100', '25', (isset($categories_description[$languages[$i]['id']]) ? stripslashes($categories_description[$languages[$i]['id']]) : $categories_desc_fields['categories_description']), 'style="width:99%"'); ?></td>
-          </tr>
-          <tr>
-            <td class="main"><?php  echo $lng_image.TEXT_META_TITLE .'<br /> (max. ' . META_TITLE_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?></td>
-            <td class="main"><?php echo xtc_draw_input_field('categories_meta_title[' . $languages[$i]['id'] . ']',(isset($categories_meta_title[$languages[$i]['id']]) ? stripslashes($categories_meta_title[$languages[$i]['id']]) : $categories_desc_fields['categories_meta_title']), 'style="width:99%" maxlength="' . META_TITLE_LENGTH . '"'); ?></td>
-          </tr>
-          <tr>
-            <td class="main"><?php  echo $lng_image.TEXT_META_DESCRIPTION .'<br /> (max. ' . META_DESCRIPTION_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?></td>
-            <td class="main"><?php echo xtc_draw_input_field('categories_meta_description[' . $languages[$i]['id'] . ']', (isset($categories_meta_description[$languages[$i]['id']]) ? stripslashes($categories_meta_description[$languages[$i]['id']]) : $categories_desc_fields['categories_meta_description']),'style="width:99%" maxlength="' . META_DESCRIPTION_LENGTH . '"'); ?></td>
-          </tr>
-          <tr>
-            <td class="main"><?php  echo $lng_image.TEXT_META_KEYWORDS .'<br /> (max. ' . META_KEYWORDS_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?></td>
-            <td class="main"><?php echo xtc_draw_input_field('categories_meta_keywords[' . $languages[$i]['id'] . ']',(isset($categories_meta_keywords[$languages[$i]['id']]) ? stripslashes($categories_meta_keywords[$languages[$i]['id']]) : $categories_desc_fields['categories_meta_keywords']),'style="width:99%" maxlength="' . META_KEYWORDS_LENGTH . '"'); ?></td>
-          </tr>
-        </table>
+        <div class="bg_notice" style="height:5px;"></div>
+        <div class="main bg_notice" style="padding:3px; line-height:20px;">
+          <?php echo $lng_image ?>&nbsp;<b><?php echo TEXT_EDIT_CATEGORIES_NAME; ?>&nbsp;</b><?php echo xtc_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', (isset($categories_name[$languages[$i]['id']]) ? stripslashes($categories_name[$languages[$i]['id']]) : $categories_desc_fields['categories_name']), 'style="width:80%" maxlength="255"'); ?>
+        </div>
+        <div class="main" style="padding: 3px; line-height:20px;">
+          <?php echo $lng_image ?>&nbsp;<b><?php echo TEXT_EDIT_CATEGORIES_HEADING_TITLE; ?>&nbsp;</b><?php echo xtc_draw_input_field('categories_heading_title[' . $languages[$i]['id'] . ']', (isset($categories_name[$languages[$i]['id']]) ? stripslashes($categories_name[$languages[$i]['id']]) : $categories_desc_fields['categories_heading_title']), 'style="width:80%" maxlength="255"'); ?>
+        </div>
+        <div class="main" style="padding: 3px; line-height:20px;">
+          <b><?php echo $lng_image . '&nbsp;' . TEXT_EDIT_CATEGORIES_DESCRIPTION; ?></b><br />
+          <?php echo xtc_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', 'soft', '100', '25', (isset($categories_description[$languages[$i]['id']]) ? stripslashes($categories_description[$languages[$i]['id']]) : $categories_desc_fields['categories_description'])); ?>
+        </div>
+        <div class="main" style="vertical-align:top; padding: 3px; line-height:20px;">
+          <?php echo $lng_image . '&nbsp;' . TEXT_META_TITLE .' (max. ' . META_TITLE_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?> <br/>
+          <?php echo xtc_draw_input_field('categories_meta_title[' . $languages[$i]['id'] . ']',(isset($categories_meta_title[$languages[$i]['id']]) ? stripslashes($categories_meta_title[$languages[$i]['id']]) : $categories_desc_fields['categories_meta_title']), 'style="width:100%" maxlength="' . META_TITLE_LENGTH . '"'); ?><br/>
+          <?php echo $lng_image . '&nbsp;' . TEXT_META_DESCRIPTION .' (max. ' . META_DESCRIPTION_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?> <br/>
+          <?php echo xtc_draw_input_field('categories_meta_description[' . $languages[$i]['id'] . ']', (isset($categories_meta_description[$languages[$i]['id']]) ? stripslashes($categories_meta_description[$languages[$i]['id']]) : $categories_desc_fields['categories_meta_description']),'style="width:100%" maxlength="' . META_DESCRIPTION_LENGTH . '"'); ?><br/>
+          <?php echo $lng_image . '&nbsp;' . TEXT_META_KEYWORDS .' (max. ' . META_KEYWORDS_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?> <br/>
+          <?php echo xtc_draw_input_field('categories_meta_keywords[' . $languages[$i]['id'] . ']',(isset($categories_meta_keywords[$languages[$i]['id']]) ? stripslashes($categories_meta_keywords[$languages[$i]['id']]) : $categories_desc_fields['categories_meta_keywords']),'style="width:100%" maxlength="' . META_KEYWORDS_LENGTH . '"'); ?>
+        </div>
       </div>
       <?php } ?>
     </div>
 
     <div style="clear:both;"></div>
-    <div class="main div_header"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></div>
-      <?php
-        echo '<div class="div_box">';
-        // display images fields:  
-        $rowspan = ' rowspan="'. 3 .'"';
-        ?>
-        <table class="tableConfig borderall">
-          <tr>
-            <td class="dataTableConfig col-left"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
-            <td class="dataTableConfig col-middle"><?php echo $cInfo->categories_image; ?></td>
-            <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($cInfo->categories_image) { ?><img src="<?php echo DIR_WS_CATALOG.'images/categories/'.$cInfo->categories_image; ?>" /><?php } ?></td>
-          </tr>
-          <tr>
-            <td class="dataTableConfig col-left"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
-            <td class="dataTableConfig col-middle"><?php echo xtc_draw_file_field('categories_image', false, 'class="imgupload"') . xtc_draw_hidden_field('categories_previous_image', $cInfo->categories_image); ?></td>
-          </tr>
-          <tr>
-            <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
-            <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('del_cat_pic', 'yes'); ?></td>
-          </tr>
-        </table>
+    <div style="padding:5px;">
+      <div class="main div_header"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></div>
         <?php
-        echo '</div>';
-      ?>
+          echo '<div class="div_box">';
+          // display images fields:  
+          $rowspan = ' rowspan="'. 3 .'"';
+          ?>
+          <table class="tableConfig borderall">
+            <tr>
+              <td class="dataTableConfig col-left"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
+              <td class="dataTableConfig col-middle"><?php echo $cInfo->categories_image; ?></td>
+              <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($cInfo->categories_image) { ?><img src="<?php echo DIR_WS_CATALOG.'images/categories/'.$cInfo->categories_image; ?>" /><?php } ?></td>
+            </tr>
+            <tr>
+              <td class="dataTableConfig col-left"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
+              <td class="dataTableConfig col-middle"><?php echo xtc_draw_file_field('categories_image', false, 'class="imgupload"') . xtc_draw_hidden_field('categories_previous_image', $cInfo->categories_image); ?></td>
+            </tr>
+            <tr>
+              <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
+              <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('del_cat_pic', 'yes'); ?></td>
+            </tr>
+          </table>
+          <?php
+          echo '</div>';
+        ?>
 
-    <div class="main" style="margin:20px 5px;text-align:right;">
-      <?php echo xtc_draw_hidden_field('categories_date_added', (($cInfo->date_added) ? $cInfo->date_added : date('Y-m-d'))) . xtc_draw_hidden_field('parent_id', $cInfo->parent_id); ?>
-      <?php echo xtc_draw_hidden_field('categories_id', $cInfo->categories_id); ?>
-      <input type="submit" class="button" name="cat_save" value="<?php echo BUTTON_SAVE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
-      <input type="submit" class="button" name="cat_update" value="<?php echo BUTTON_UPDATE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
-      <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['action']) && $_GET['action']=='edit_category') ? '&cID=' . (int)$_GET['cID'] : '') . ((isset($_GET['page']) && $_GET['page']>'1') ? '&page=' . (int)$_GET['page'] : '')); ?>"><?php echo BUTTON_CANCEL ; ?></a>
+      <div class="main" style="margin-top:10px;text-align:right;">
+        <?php echo xtc_draw_hidden_field('categories_date_added', (($cInfo->date_added) ? $cInfo->date_added : date('Y-m-d'))) . xtc_draw_hidden_field('parent_id', $cInfo->parent_id); ?>
+        <?php echo xtc_draw_hidden_field('categories_id', $cInfo->categories_id); ?>
+        <input type="submit" class="button" name="cat_save" value="<?php echo BUTTON_SAVE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
+        <input type="submit" class="button" name="cat_update" value="<?php echo BUTTON_UPDATE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
+        <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['action']) && $_GET['action']=='edit_category') ? '&cID=' . (int)$_GET['cID'] : '') . ((isset($_GET['page']) && $_GET['page']>'1') ? '&page=' . (int)$_GET['page'] : '')); ?>"><?php echo BUTTON_CANCEL ; ?></a>
+      </div>
     </div>
-
   </div>
 </form>
