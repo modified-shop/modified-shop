@@ -7,6 +7,7 @@
   <p>{#text_empty_wishlist#}</p>
   <div class="button_right">{$BUTTON_CONTINUE}</div>
 {elseif isset($module_content)}
+  {if isset($wishlist_cart)}<br/>{/if}
   <div class="headline_big">{#heading_wishlist#}</div>
   <div class="listingcontainer cf">
   {foreach name=aussen item=module_data from=$module_content}
