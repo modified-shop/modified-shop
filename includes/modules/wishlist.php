@@ -21,7 +21,7 @@ if ($_SESSION['wishlist']->count_contents() > 0) {
   $module_smarty->assign('module_content', get_wishlist_content());
 }
 
-$module_smarty->assign('cart', true);
+$module_smarty->assign('wishlist_cart', true);
 $module_smarty->assign('language', $_SESSION['language']);
 
 $module_smarty->caching = 0;
