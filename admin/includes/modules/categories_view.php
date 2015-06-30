@@ -148,7 +148,7 @@
         <div class="smallText pdg2 flt-r">
          <?php
             echo xtc_draw_form('goto', FILENAME_CATEGORIES, '', 'get');
-            echo HEADING_TITLE_GOTO . ' ' . xtc_draw_pull_down_menu('cPath', xtc_get_category_tree(), $current_category_id, 'onchange="this.form.submit();"');
+            echo '<span style="display:inline-block;line-height:30px;vertical-align:top;">' . HEADING_TITLE_GOTO . '</span> ' . xtc_draw_pull_down_menu('cPath', xtc_get_category_tree(), $current_category_id, 'onchange="this.form.submit();"');
           ?>
           </form>
         </div>

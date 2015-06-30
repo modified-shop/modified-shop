@@ -255,7 +255,7 @@ if (!$action) {
         { ?>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_PARENT; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('parent_id', $content_data_array, $default_content['parent_id']); ?><?php echo check_content_childs($default_content['content_id'], 0) ? '' : xtc_draw_checkbox_field('parent_check', 'yes', (($default_content['parent_id'] > 0) ? true : false)).' '.TEXT_PARENT_DESCRIPTION; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('parent_id', $content_data_array, $default_content['parent_id']); ?><span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;"><?php echo check_content_childs($default_content['content_id'], 0) ? '' : xtc_draw_checkbox_field('parent_check', 'yes', (($default_content['parent_id'] > 0) ? true : false)).' '.TEXT_PARENT_DESCRIPTION; ?></span></td>
           </tr>
         <?php } ?>
         <tr>
