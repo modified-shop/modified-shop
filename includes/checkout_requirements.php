@@ -43,6 +43,15 @@ if ($_SESSION['customers_status']['customers_status_show_price'] != '1') {
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT,'','NONSSL'));
 }
 
+if ($_SESSION['customers_status']['customers_status'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+  $products = $_SESSION['cart']->get_products();
+  for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
+    if (preg_match('/^GIFT/', addslashes($products[$i]['model']))) {
+      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message=guest_voucher_not_allowed', 'SSL'));
+    }
+  }
+}
+
 // Stock Check
 // muss auf jeder Checkout-Seite geladen werden, damit gleichzeitige Bestellungen
 // nicht zu minus Bestaenden fuehren !!!

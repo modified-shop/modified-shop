@@ -556,6 +556,7 @@ define('TEXT_TO_WISHLIST', 'Add to wishlist');
 define('IMAGE_BUTTON_TO_WISHLIST', 'Add to wishlist');
 
 define('GUEST_REDEEM_NOT_ALLOWED', 'Guests can not redeem any vouchers.');
+define('GUEST_VOUCHER_NOT_ALLOWED', 'Vouchers can not be purchased as a guest.');
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);

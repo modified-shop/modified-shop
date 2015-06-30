@@ -556,6 +556,7 @@ define('TEXT_TO_WISHLIST', 'Auf den Merkzettel');
 define('IMAGE_BUTTON_TO_WISHLIST', 'Auf den Merkzettel');
 
 define('GUEST_REDEEM_NOT_ALLOWED', 'G&auml;ste k&ouml;nnen keine Gutscheine einl&ouml;sen.');
+define('GUEST_VOUCHER_NOT_ALLOWED', 'Gutscheine k&ouml;nnen nicht als Gast gekauft werden.');
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
