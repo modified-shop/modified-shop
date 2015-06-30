@@ -417,7 +417,7 @@ class product {
     
     // check for gift
     if (preg_match('/^GIFT/', addslashes($array['products_model']))
-        && $_SESSION['customers_status']['customers_status'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+        && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
         && isset($_SESSION['customer_id']))
     {
       $buy_now = '';
