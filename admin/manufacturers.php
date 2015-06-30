@@ -258,7 +258,7 @@ if (USE_WYSIWYG == 'true') {
                   <tr>
                     <td class="dataTableConfig col-left"><?php echo TEXT_MANUFACTURERS_IMAGE; ?></td>
                     <td class="dataTableConfig col-middle"><?php echo $manufact['manufacturers_image']; ?></td>
-                    <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($manufact['manufacturers_image']) { ?><img src="<?php echo DIR_FS_CATALOG_IMAGES . 'manufacturers/'.$manufact['manufacturers_image']; ?>" /><?php } ?></td>
+                    <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($manufact['manufacturers_image']) { ?><img src="<?php echo DIR_WS_CATALOG_IMAGES . $manufact['manufacturers_image']; ?>" /><?php } ?></td>
                   </tr>
                   <tr>
                     <td class="dataTableConfig col-left"><?php echo TEXT_MANUFACTURERS_IMAGE; ?></td>
