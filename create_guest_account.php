@@ -33,7 +33,6 @@ $products = $_SESSION['cart']->get_products();
 for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
   if (preg_match('/^GIFT/', addslashes($products[$i]['model']))) {
     xtc_redirect(xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
-    break;
   }
 }
 
