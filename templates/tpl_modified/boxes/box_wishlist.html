@@ -15,7 +15,7 @@
     <div class="mini"><strong>{#text_full_wishlist#}</strong></div>
     <ul class="tc_list">
     {foreach name=aussen item=products_data from=$products}
-      <li><a href="{$products_data.PRODUCTS_LINK}">{$products_data.PRODUCTS_QTY}&nbsp;x&nbsp;{$products_data.PRODUCTS_NAME|truncate:40:"...":true}</a><span class="tc_delete">{$products_data.PRODUCTS_BUTTON_DELETE}</span></li>
+      <li><a href="{$products_data.PRODUCTS_LINK}">{$products_data.PRODUCTS_QTY}&nbsp;x&nbsp;{$products_data.PRODUCTS_NAME|truncate:40:"...":true}</a><span class="tc_delete">{$products_data.PRODUCTS_BUTTON_DELETE_CART}</span></li>
     {/foreach}
     </ul>
     <div class="toogle_cart_links">

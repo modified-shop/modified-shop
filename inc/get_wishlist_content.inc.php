@@ -23,6 +23,7 @@
 
     for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
       $del_button = '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'box', 'prd_id')).'action=remove_product&wishlist=true&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . xtc_image_button('wishlist_del.gif', IMAGE_BUTTON_DELETE) . '</a>';
+      $cart_del_button = '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'box', 'prd_id')).'action=remove_product&whishlist=true&box=cart&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . xtc_image_button('cart_del.gif', IMAGE_BUTTON_DELETE) . '</a>';
 
        //get $shipping_status_name, $shipping_status_image
       $shipping_status_name = $shipping_status_image = $shipping_status_link = '';
@@ -36,6 +37,7 @@
                               'PRODUCTS_NAME' => $products[$i]['name'],
                               'PRODUCTS_IMAGE' => $product->productImage(xtc_get_products_image(xtc_get_prid($products[$i]['id'])), 'thumbnail'),
                               'PRODUCTS_BUTTON_DELETE' => $del_button,
+                              'PRODUCTS_BUTTON_DELETE_CART' => $cart_del_button,
                               'PRODUCTS_VPE' => $products[$i]['vpe'],
                               'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
                               'PRODUCTS_SHIPPING_NAME' => $shipping_status_name,
