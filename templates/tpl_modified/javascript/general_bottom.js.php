@@ -59,21 +59,41 @@
     title = title || 'Information';
     jAlert(message, title);
   }
-  $(function() {
-    $('#toggle_cart').click(function() {
-      $('.toggle_cart').slideToggle('slow');
-      return false;
-    });
-    $("html").not('.toggle_cart').bind('click',function(e) {
-      $('.toggle_cart').slideUp('slow');
-    });
-    <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_cart'])) {
-      unset($_SESSION['new_products_id_in_cart']); ?>
-      $('.toggle_cart').slideToggle('slow');
-      timer = setTimeout(function(){$('.toggle_cart').slideUp('slow');}, 3000);
-      $('.toggle_cart').mouseover(function() {clearTimeout(timer);});
-    <?php } ?>
- });     
+  <?php if (!strstr($PHP_SELF, FILENAME_SHOPPING_CART)) { ?>
+    $(function() {
+      $('#toggle_cart').click(function() {
+        $('.toggle_cart').slideToggle('slow');
+        $('.toggle_wishlist').slideUp('slow');
+        return false;
+      });
+      $("html").not('.toggle_cart').bind('click',function(e) {
+        $('.toggle_cart').slideUp('slow');
+      });
+      <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_cart'])) {
+        unset($_SESSION['new_products_id_in_cart']); ?>
+        $('.toggle_cart').slideToggle('slow');
+        timer = setTimeout(function(){$('.toggle_cart').slideUp('slow');}, 3000);
+        $('.toggle_cart').mouseover(function() {clearTimeout(timer);});
+      <?php } ?>
+    });     
+
+    $(function() {
+      $('#toggle_wishlist').click(function() {
+        $('.toggle_wishlist').slideToggle('slow');
+        $('.toggle_cart').slideUp('slow');
+        return false;
+      });
+      $("html").not('.toggle_wishlist').bind('click',function(e) {
+        $('.toggle_wishlist').slideUp('slow');
+      });
+      <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_wishlist'])) {
+        unset($_SESSION['new_products_id_in_wishlist']); ?>
+        $('.toggle_wishlist').slideToggle('slow');
+        timer = setTimeout(function(){$('.toggle_wishlist').slideUp('slow');}, 3000);
+        $('.toggle_wishlist').mouseover(function() {clearTimeout(timer);});
+      <?php } ?>
+    });     
+  <?php } ?>
 </script>
 <?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { ?>
 <script type="text/javascript">

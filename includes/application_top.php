@@ -294,6 +294,11 @@ if (!isset($_SESSION['cart']) || !is_object($_SESSION['cart'])) {
   $_SESSION['cart'] = new shoppingCart();
 }
 
+// create the wishlist
+if (!isset($_SESSION['wishlist']) || !is_object($_SESSION['wishlist'])) {
+  $_SESSION['wishlist'] = new shoppingCart('wishlist');
+}
+
 // PayPal Express
 if (defined('PAYPAL_API_VERSION')) {
   require_once (DIR_WS_CLASSES . 'paypal_checkout.php');

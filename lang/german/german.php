@@ -551,6 +551,10 @@ define('TAX_INFO_SMALL_BUSINESS_FOOTER', 'Aufgrund des Kleinunternehmerstatus ge
 define('NEED_CHANGE_PWD', 'Bitte &auml;ndern sie ihr Passwort.');
 define('TEXT_REQUEST_NOT_VALID', 'Der Link ist abgelaufen. Bitte fordern sie ein neues Passwort an.');
 
+define('NAVBAR_TITLE_WISHLIST', 'Merkzettel');
+define('TEXT_TO_WISHLIST', 'Auf den Merkzettel');
+define('IMAGE_BUTTON_TO_WISHLIST', 'Auf den Merkzettel');
+
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
 ?>

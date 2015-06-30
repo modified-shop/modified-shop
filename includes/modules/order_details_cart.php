@@ -99,6 +99,7 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
                                 'PRODUCTS_WEIGHT' => $products[$i]['final_weight'], //$products[$i]['final_weight']  is quantity * products_weight including attributes_weight
                                 'PRODUCTS_SINGLE_WEIGHT' => $products[$i]['weight'], //$products[$i]['final_weight']  single products_weight including attributes_weight
                                 'PRODUCTS_SHORT_DESCRIPTION' => xtc_get_short_description($products[$i]['id']), 
+                                'BUTTON_WISHLIST' => $product->getCartToWishlistLink($products[$i]['id'], $products[$i]['name']), 
                                 'ATTRIBUTES' => '');
 
   //products attributes

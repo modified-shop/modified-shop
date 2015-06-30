@@ -123,6 +123,10 @@ if (!is_object($product) || !$product->isProduct()) {
     $info_smarty->assign('ADD_QTY', xtc_draw_input_field('products_qty', '1', ($hide_qty ? '' : 'size="3"'), ($hide_qty ? 'hidden' : 'text')).' '.$add_pid_to_qty);
     $info_smarty->assign('ADD_CART_BUTTON', xtc_image_submit('button_in_cart.gif', IMAGE_BUTTON_IN_CART));
   }
+  
+  // wishlist
+  $info_smarty->assign('ADD_CART_BUTTON_WISHLIST', xtc_image_submit('button_in_wishlist.gif', IMAGE_BUTTON_TO_WISHLIST, 'name="wishlist"'));
+  $info_smarty->assign('ADD_CART_BUTTON_WISHLIST_TEXT', xtc_draw_input_field('wishlist', IMAGE_BUTTON_TO_WISHLIST, 'class="wishlist_submit_link"', 'submit'));
 
   // form tags
   $info_smarty->assign('FORM_ACTION', xtc_draw_form('cart_quantity', xtc_href_link(FILENAME_PRODUCT_INFO, xtc_get_all_get_params(array ('action')).'action=add_product')));

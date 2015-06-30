@@ -48,7 +48,8 @@
           <li class="first"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}">{#link_contact#}</a></li>
           <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}">{#link_imprint#}</a></li>
           <li class="last"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
-          <li class="cart">{if isset($box_CART)}{$box_CART}{/if}</li>
+          {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
+          {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
         </ul>
       </div>
       {if isset($SLIDER)}
@@ -73,7 +74,8 @@
           <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}">{#link_contact#}</a></li>
           <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}">{#link_imprint#}</a></li>
           <li class="last"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
-          <li class="cart">{if isset($box_CART)}{$box_CART}{/if}</li>
+          {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
+          {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
         </ul>
       </div>
       <div id="breadcrumb">{if isset($navtrail)}<span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:"<a href":"<span itemscope itemtype=\"http://data-vocabulary.org/Breadcrumb\"><a itemprop=\"url\" href"|replace:"Navigation\">":"Navigation\"><span itemprop=\"title\">"|replace:"</a>":"</span></a></span>"}{/if}</div>
@@ -104,7 +106,8 @@
           <li class="first"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}">{#link_contact#}</a></li>
           <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}">{#link_imprint#}</a></li>
           <li class="last"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
-          <li class="cart">{if isset($box_CART)}{$box_CART}{/if}</li>
+          {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
+          {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
         </ul>
       </div>
       <div id="breadcrumb">{if isset($navtrail)}<span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:"<a href":"<span itemscope itemtype=\"http://data-vocabulary.org/Breadcrumb\"><a itemprop=\"url\" href"|replace:"Navigation\">":"Navigation\"><span itemprop=\"title\">"|replace:"</a>":"</span></a></span>"}{/if}</div>

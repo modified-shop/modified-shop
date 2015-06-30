@@ -551,6 +551,10 @@ define('TAX_INFO_SMALL_BUSINESS_FOOTER', 'Due to the small business status accor
 define('NEED_CHANGE_PWD', 'Please change your Password.');
 define('TEXT_REQUEST_NOT_VALID', 'This Link is not valid. Please make a new Password request.');
 
+define('NAVBAR_TITLE_WISHLIST', 'Wishlist');
+define('TEXT_TO_WISHLIST', 'Add to wishlist');
+define('IMAGE_BUTTON_TO_WISHLIST', 'Add to wishlist');
+
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
 ?>

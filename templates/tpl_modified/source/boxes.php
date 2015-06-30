@@ -43,6 +43,7 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
                      FILENAME_LOGIN,
                      FILENAME_CONTENT,
                      FILENAME_REVIEWS,
+                     FILENAME_WISHLIST,
                      );
 
 // -----------------------------------------------------------------------------------------
@@ -68,6 +69,7 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
   require_once(DIR_FS_BOXES . 'infobox.php');
   require_once(DIR_FS_BOXES . 'loginbox.php');
   require_once(DIR_FS_BOXES . 'newsletter.php');
+  require_once(DIR_FS_BOXES . 'wishlist.php');
 // -----------------------------------------------------------------------------------------
 //	only if show price
 // -----------------------------------------------------------------------------------------

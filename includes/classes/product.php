@@ -508,5 +508,29 @@ class product {
     
     return (($name != '') ? DIR_WS_BASE.$path.$name : '');
   }
+
+  /**
+   * getWishlistToCartButton
+   *
+   * @param integer $id
+   * @param string $name
+   * @return string
+   */
+  function getWishlistToCartButton($id, $name) {
+    global $PHP_SELF;
+    return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=wishlist_cart&BUYproducts_id='.$id, 'NONSSL').'">'.xtc_image_button('button_buy_now.gif', TEXT_BUY.$name.TEXT_NOW).'</a>';
+  }
+  
+  /**
+   * getCartToWishlistLink
+   *
+   * @param integer $id
+   * @param string $name
+   * @return string
+   */
+  function getCartToWishlistLink($id, $name) {
+    global $PHP_SELF;
+    return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=cart_wishlist&BUYproducts_id='.$id, 'NONSSL').'">'.TEXT_TO_WISHLIST.'</a>';
+  }
 }
 ?>

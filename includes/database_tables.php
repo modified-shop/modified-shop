@@ -109,6 +109,10 @@
   define('TABLE_CARRIERS', 'carriers');
   define('TABLE_ORDERS_TRACKING', 'orders_tracking');
   
+  // wishlist
+  define('TABLE_CUSTOMERS_WISHLIST', 'customers_wishlist');
+  define('TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES', 'customers_wishlist_attributes');
+
   require_once(DIR_FS_INC.'auto_include.inc.php');
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/database_tables/','php') as $file) require ($file);
 ?>
