@@ -67,10 +67,10 @@ if ($_SESSION['cart']->count_contents() > 0) {
       if ($_SESSION['any_out_of_stock'] == 1) {
         if (STOCK_ALLOW_CHECKOUT == 'true') {
           $_SESSION['allow_checkout'] = 'true';
-          $smarty->assign('info_message', OUT_OF_STOCK_CAN_CHECKOUT);
+          $messageStack->add('shopping_cart', OUT_OF_STOCK_CAN_CHECKOUT);
         } else {
           $_SESSION['allow_checkout'] = 'false';
-          $smarty->assign('info_message', OUT_OF_STOCK_CANT_CHECKOUT);
+          $messageStack->add('shopping_cart', OUT_OF_STOCK_CANT_CHECKOUT);
         }
       } else {
         $_SESSION['allow_checkout'] = 'true';
@@ -86,7 +86,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
     
   // cart buttons
   if (isset($_SESSION['paypal_warten'])) {
-    $smarty->assign('info_message', $_SESSION['paypal_warten']);
+    $messageStack->add('shopping_cart', $_SESSION['paypal_warten']);
   } else {
     if (isset($o_paypal) && is_object($o_paypal)) {
       $smarty->assign('BUTTON_PAYPAL', $o_paypal->build_express_checkout_button());
@@ -112,7 +112,7 @@ if(!isset($_SESSION['paypal_warten'])) {
 
 // info message cart
 if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
-  $smarty->assign('info_message', get_message('info_message'));
+  $messageStack->add('shopping_cart', get_message('info_message'));
 }
 if (isset($_GET['info_message_3'])) {
   $smarty->assign('info_message_3', get_message('info_message_3'));
@@ -123,8 +123,13 @@ if (isset($_GET['coupon_message']) && xtc_not_null($_GET['coupon_message'])) {
 }
 // coupon min order info
 if (isset($cc_amount_min_order_info)) {
-  $smarty->assign('info_message', $cc_amount_min_order_info);
+  $messageStack->add('shopping_cart', $cc_amount_min_order_info);
 }
+
+if ($messageStack->size('shopping_cart') > 0) {
+  $smarty->assign('info_message', $messageStack->output('shopping_cart'));
+}
+
 // continue shopping link
 if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  && strpos($_SERVER['HTTP_REFERER'],'in_cart') === false && strpos($_SERVER['HTTP_REFERER'], 'checkout_') === false) {
   $_SESSION['continue_link'] = $_SERVER['HTTP_REFERER'];
