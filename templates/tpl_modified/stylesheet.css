@@ -1006,6 +1006,7 @@ a.show_all .arrow {
 .box_text {
   font-size:12px;
   line-height:16px;
+  word-wrap: break-word;
 }
 .box_reviews_image {
   padding: 10px 0px 0px 0px;
