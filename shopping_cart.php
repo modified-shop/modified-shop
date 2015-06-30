@@ -130,6 +130,10 @@ if ($messageStack->size('shopping_cart') > 0) {
   $smarty->assign('info_message', $messageStack->output('shopping_cart'));
 }
 
+// unset
+unset($_SESSION['new_products_id_in_cart']);
+unset($_SESSION['new_products_id_in_wishlist']);
+
 // continue shopping link
 if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  && strpos($_SERVER['HTTP_REFERER'],'in_cart') === false && strpos($_SERVER['HTTP_REFERER'], 'checkout_') === false) {
   $_SESSION['continue_link'] = $_SERVER['HTTP_REFERER'];
