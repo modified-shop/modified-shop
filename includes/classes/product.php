@@ -414,7 +414,15 @@ class product {
         && ($_SESSION['customers_status']['customers_fsk18'] != '1' || (isset($array['products_fsk18']) && $array['products_fsk18'] == '0')) ) {
       $buy_now = $this->getBuyNowButton($array['products_id'], $array['products_name']);
     }
-
+    
+    // check for gift
+    if (preg_match('/^GIFT/', addslashes($array['products_model']))
+        && $_SESSION['customers_status']['customers_status'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST)
+    {
+      $buy_now = '';
+      $array['products_gift_forbidden'] = 'true';
+    }
+    
     //create products link
     $products_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name']));
 
