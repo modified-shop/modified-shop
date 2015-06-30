@@ -281,7 +281,7 @@ class newsletter {
                                 'RG' => MODULE_SUPERMAILER_GROUP);
     
       if ($type == 'subscribe') {
-        $txt_mail_add_arr['Name'] = $newsletter['customers_firstname'] . $newsletter['customers_lastname'];
+        $txt_mail_add_arr['Name'] = $newsletter['customers_firstname'] . ' ' . $newsletter['customers_lastname'];
       }
     
       $txt_mail = '';
