@@ -37,6 +37,7 @@ if ($product->getAttributesCount() > 0) {
                                                    ON patrib.options_id = popt.products_options_id
                                                       AND patrib.products_id='".$product->data['products_id']."'
                                              WHERE popt.language_id = '".(int) $_SESSION['languages_id']."'
+                                               AND trim(popt.products_options_name) != ''
                                           ORDER BY popt.products_options_sortorder, popt.products_options_id"
                                           );
 
@@ -60,6 +61,7 @@ if ($product->getAttributesCount() > 0) {
                                            JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov
                                                 ON pa.options_values_id = pov.products_options_values_id
                                                    AND pov.language_id = '".(int) $_SESSION['languages_id']."'
+                                                   AND trim(pov.products_options_values_name) != ''
                                           WHERE pa.products_id = '".$product->data['products_id']."'
                                             AND pa.options_id = '".$products_options_name['products_options_id']."'                                            
                                        ORDER BY pa.sortorder, pa.options_values_id
