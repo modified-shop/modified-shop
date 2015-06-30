@@ -387,18 +387,20 @@ class ot_coupon {
     $shipping_module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
     $shipping_cost = $order->info['shipping_cost'];
     
-    //Steuergruppe feststellen und setzen
-    $shipping_tax_rate_description = xtc_get_tax_description($GLOBALS[$shipping_module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-    $tax_index = $this->set_tax_group_index($shipping_tax_rate_description);
+    if ($shipping_cost > 0) {
+      //Steuergruppe feststellen und setzen
+      $shipping_tax_class = constant('MODULE_SHIPPING_'.strtoupper($shipping_module).'_TAX_CLASS');
+      $shipping_tax_rate_description = xtc_get_tax_description($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+      $tax_index = $this->set_tax_group_index($shipping_tax_rate_description);
 
-    //BRUTTO PREISE - Steuer bei Versandkosten hinzufügen
-    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') {
-      $shipping_tax_rate = xtc_get_tax_rate($GLOBALS[$shipping_module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-      $shipping_tax = $order->info['shipping_cost'] * ($shipping_tax_rate / 100 +1) - $order->info['shipping_cost'];
-      $shipping_cost = $order->info['shipping_cost'] + $shipping_tax;
-      $shipping_cost = $xtPrice->xtcFormat($shipping_cost, false); //RUNDEN
+      //BRUTTO PREISE - Steuer bei Versandkosten hinzufügen
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') {
+        $shipping_tax_rate = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        $shipping_tax = $order->info['shipping_cost'] * ($shipping_tax_rate / 100 +1) - $order->info['shipping_cost'];
+        $shipping_cost = $order->info['shipping_cost'] + $shipping_tax;
+        $shipping_cost = $xtPrice->xtcFormat($shipping_cost, false); //RUNDEN
+      }
     }
-
     return $shipping_cost;
   }
 
