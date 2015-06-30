@@ -126,7 +126,8 @@ if (!is_object($product) || !$product->isProduct()) {
 
     // check for gift
     if (preg_match('/^GIFT/', addslashes($product->data['products_model']))
-        && $_SESSION['customers_status']['customers_status'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST)
+        && $_SESSION['customers_status']['customers_status'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+        && isset($_SESSION['customer_id']))
     {
       $info_smarty->clear_assign('ADD_QTY');
       $info_smarty->clear_assign('ADD_CART_BUTTON');      
