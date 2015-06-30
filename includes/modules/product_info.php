@@ -118,11 +118,20 @@ if (!is_object($product) || !$product->isProduct()) {
   // check if customer is allowed to add to cart
   if ($_SESSION['customers_status']['customers_status_show_price'] != '0'
       && (($_SESSION['customers_status']['customers_fsk18'] == '1' && $product->data['products_fsk18'] == '0')
-      || $_SESSION['customers_status']['customers_fsk18'] != '1')) {
+      || $_SESSION['customers_status']['customers_fsk18'] != '1')) 
+  {
     $add_pid_to_qty = xtc_draw_hidden_field('products_id', $product->data['products_id']);
     $info_smarty->assign('ADD_QTY', xtc_draw_input_field('products_qty', '1', ($hide_qty ? '' : 'size="3"'), ($hide_qty ? 'hidden' : 'text')).' '.$add_pid_to_qty);
     $info_smarty->assign('ADD_CART_BUTTON', xtc_image_submit('button_in_cart.gif', IMAGE_BUTTON_IN_CART));
 
+    // check for gift
+    if (preg_match('/^GIFT/', addslashes($product->data['products_model']))
+        && $_SESSION['customers_status']['customers_status'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST)
+    {
+      $info_smarty->clear_assign('ADD_QTY');
+      $info_smarty->clear_assign('ADD_CART_BUTTON');      
+    }
+    
     // wishlist
     $info_smarty->assign('ADD_CART_BUTTON_WISHLIST', xtc_image_submit('button_in_wishlist.gif', IMAGE_BUTTON_TO_WISHLIST, 'name="wishlist"'));
     $info_smarty->assign('ADD_CART_BUTTON_WISHLIST_TEXT', xtc_draw_input_field('wishlist', IMAGE_BUTTON_TO_WISHLIST, 'class="wishlist_submit_link"', 'submit'));
