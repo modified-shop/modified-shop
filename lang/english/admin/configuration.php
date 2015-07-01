@@ -976,6 +976,8 @@ define('META_OTHER_SHOP_TITLE_TITLE', 'Shop-Title other pages');
 define('META_OTHER_SHOP_TITLE_DESC', 'Add Shop-Title all other pages?');
 define('META_GOOGLE_VERIFICATION_KEY_TITLE', 'Google Verification Key');
 define('META_GOOGLE_VERIFICATION_KEY_DESC', '<meta name="verifiy-v1">');
+define('META_BING_VERIFICATION_KEY_TITLE', 'Bing Verification Key');
+define('META_BING_VERIFICATION_KEY_DESC', '<meta name="msvalidate.01">');
 
 define('GOOGLE_CONVERSION_TITLE','Google Conversion Tracking');
 define('GOOGLE_CONVERSION_DESC','Track conversion keywords on orders');

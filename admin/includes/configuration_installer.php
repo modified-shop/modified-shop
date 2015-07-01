@@ -251,6 +251,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'META_SEARCH_SHOP_TITLE', 'false', '16', '23', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'META_OTHER_SHOP_TITLE', 'false', '16', '24', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'META_GOOGLE_VERIFICATION_KEY', '', '16', '25', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'META_BINGE_VERIFICATION_KEY', '', '16', '26', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 17 --- "Zusatzmodule"
   $values_group[] = "(17,'Additional Modules','Additional Modules',17,1);";
