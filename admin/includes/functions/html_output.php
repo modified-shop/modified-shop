@@ -107,7 +107,7 @@
       $form .= '<input type="hidden" name="'.xtc_session_name().'" value="'.xtc_session_id().'">';
     }
     // secure form with a random token
-    if (isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName']) && strtolower($method) == 'post') {
+    if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName']) && strtolower($method) == 'post') {
       $form .= '<input type="hidden" name="'.$_SESSION['CSRFName'].'" value="'.$_SESSION['CSRFToken'].'">';
     }
 
