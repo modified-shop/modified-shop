@@ -344,7 +344,7 @@ define('USE_CACHE_TITLE' , 'Cache benutzen');
 define('USE_CACHE_DESC' , 'Die Cache Features verwenden');
 
 define('DB_CACHE_TITLE','DB Cache');
-define('DB_CACHE_DESC','SELECT Abfragen k&ouml;nnen von xt:Commerce gecached werden, um die Datenbankabfragen zu verringern, und die Geschwindigkeit zu erh&ouml;hen');
+define('DB_CACHE_DESC','Datenbank-Abfragen k&ouml;nnen vom Shop gecached werden, um die Datenbank-Last zu verringern und die Geschwindigkeit zu erh&ouml;hen');
 
 define('DB_CACHE_EXPIRE_TITLE','DB Cache Lebenszeit');
 define('DB_CACHE_EXPIRE_DESC','Zeit in Sekunden, bevor Cache Datein mit Daten aus der Datenbank automatisch &Uuml;berschrieben werden.');

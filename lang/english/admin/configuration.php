@@ -344,8 +344,8 @@ define('STORE_DB_TRANSACTIONS_DESC' , 'Store the database queries in the page pa
 define('USE_CACHE_TITLE' , 'Use Cache');
 define('USE_CACHE_DESC' , 'Use caching features');
 
-define('DB_CACHE_TITLE','Database Caching');
-define('DB_CACHE_DESC','Cache SELECT query results in files to gain more speed for slow databases.');
+define('DB_CACHE_TITLE','DB Cache');
+define('DB_CACHE_DESC','Cache database query results to gain more speed for slow databases.');
 
 define('DB_CACHE_EXPIRE_TITLE','DB Cache lifetime');
 define('DB_CACHE_EXPIRE_DESC','Time in seconds to rebuild cached result.');
