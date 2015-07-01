@@ -24,10 +24,6 @@ include(DIR_FS_BOXES_INC . 'smarty_default.php');
 $cache_id = md5($_SESSION['language']);
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_search.html', $cache_id) || !$cache) {
-  
-  // include needed functions
-  require_once (DIR_FS_INC . 'xtc_image_submit.inc.php');
-
   $filename = FILENAME_ADVANCED_SEARCH_RESULT;
   if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True') {
     $filename = FILENAME_FINDOLOGIC;

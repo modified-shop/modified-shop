@@ -18,8 +18,6 @@
    ---------------------------------------------------------------------------------------*/
 
   if (!isset($_SESSION['customer_id'])) {
-    require_once (DIR_FS_INC.'xtc_image_submit.inc.php');
-    require_once (DIR_FS_INC.'xtc_draw_password_field.inc.php');
     $box_smarty = new smarty;
     $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
     $box_smarty->assign('FORM_ACTION', xtc_draw_form('loginbox', xtc_href_link(FILENAME_LOGIN, 'action=process', 'SSL'), 'post', 'class="box-login"'));

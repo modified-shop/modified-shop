@@ -21,8 +21,6 @@
   $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/' . CURRENT_TEMPLATE . '/');
   $box_content = '';
 
-  require_once (DIR_FS_INC . 'xtc_image_submit.inc.php');
-
   $filename = FILENAME_ADVANCED_SEARCH_RESULT;
   if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True') {
     $filename = FILENAME_FINDOLOGIC;
