@@ -242,7 +242,7 @@
     if ($required) {
       $field .= TEXT_FIELD_REQUIRED;
     }
-    if ($addwrap) {
+    if ($addwrap && NEW_SELECT_CHECKBOX == 'true') {
       $name = str_replace(array('[',']'),array('_',''),$name); //fix for name is array:  example[...]
       $field = '<div class="SumoSelect '. strtolower($name) .'">' . $field . '</div>';
     }
