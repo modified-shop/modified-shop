@@ -437,7 +437,7 @@
 
                      if ($action == 'iplog') {
                       if (isset ($_GET['cID'])) {
-                        $contents[] = array ('text' => '<br /><b>IPLOG :');
+                        $contents[] = array ('text' => '<br /><b>IPLOG:');
                         $customers_id = xtc_db_prepare_input($_GET['cID']);
                         $customers_log_info_array = xtc_get_user_info($customers_id);
                         if (xtc_db_num_rows($customers_log_info_array)) {
