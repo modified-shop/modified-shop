@@ -52,7 +52,7 @@
   
   // default detail no detail
   $srDefaultDetail = 0;
-  // default view (daily)
+  // default view (monthly)
   $srDefaultView = 2;
   // default export
   $srDefaultExp = 0;
