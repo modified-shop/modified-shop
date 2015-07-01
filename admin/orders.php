@@ -197,7 +197,7 @@ switch ($action) {
     require_once(DIR_FS_INC.'xtc_href_link_from_admin.inc.php');
     include (DIR_FS_CATALOG .'send_order.php');
     break;
-  case 'update_order' :
+  case 'update_order':
     $status = (int) $_POST['status'];
     $comments = xtc_db_prepare_input($_POST['comments']);
     $order_updated = false;
@@ -330,7 +330,7 @@ switch ($action) {
   case 'resendordermail':
     break;
 
-  case 'deleteconfirm' :
+  case 'deleteconfirm':
     xtc_remove_order($oID, xtc_db_prepare_input($_POST['restock']));
     // Paypal Express Modul
     if(isset($_POST['paypaldelete'])) {
@@ -349,7 +349,7 @@ switch ($action) {
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action'))));
     break;
 
-  case 'stornoconfirm' :
+  case 'stornoconfirm':
     xtc_reverse_order($oID, xtc_db_prepare_input($_POST['restock']), xtc_db_prepare_input($_POST['status']));
     // Paypal Express Modul
     if(isset($_POST['paypaldelete'])) {
@@ -368,7 +368,7 @@ switch ($action) {
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action'))));
     break;
 
-  case 'afterbuy_send' :
+  case 'afterbuy_send':
     require_once (DIR_FS_CATALOG.'includes/classes/afterbuy.php');
     $aBUY = new xtc_afterbuy_functions($oID);
     if ($aBUY->order_send()) {
@@ -382,7 +382,7 @@ switch ($action) {
 		xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
 		break;
 
-	case 'inserttracking' :
+	case 'inserttracking':
 		$oID = (int)$_GET['oID'];
 		$carrier_id = xtc_db_prepare_input($_POST['carrier_id']);
 		$parcel_id = xtc_db_prepare_input($_POST['parcel_id']);
@@ -399,13 +399,22 @@ switch ($action) {
 		xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));              
 		break;
 		
-	case 'deletetracking' :
+	case 'deletetracking':
 		$tracking_id = (int)$_GET['tID'];
 		xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
 
 	  if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
 	    $messageStack->add_session(TEXT_DELETE_LABEL, 'warning');
 	  }    
+    xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
+		break;
+
+	case 'downloads':
+	  $sql_data_array = array('download_count' => (int)$_POST['download_count'],
+	                          'download_maxdays' => floor((strtotime('+'.(int)$_POST['download_maxdays'].' day') - (int)$_POST['date_purchased']) / 86400)
+	                          );
+	  xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array, 'update', "orders_products_download_id = '".(int)$_POST['orders_products_download_id']."'");
+
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
 		break;
 }

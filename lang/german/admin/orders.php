@@ -158,4 +158,10 @@ define('TEXT_DELETE_LABEL', 'Shipcloud Paketscheine k&ouml;nnen nicht gel&ouml;s
 define('TEXT_LABEL_CREATED', 'Paketschein erfolgreich erstellt.');
 define('TEXT_CARRIER_ERROR', 'Paketdienstleister nicht erlaubt.');
 define('TEXT_CARRIER_PLACEHOLDER', 'Beschreibung (optional)');
+
+define('TEXT_DOWNLOADS', 'Downloads');
+define('TABLE_HEADING_FILENAME', 'Dateiname');
+define('TABLE_HEADING_EXPIRES', 'Ablaufdatum');
+define('TABLE_HEADING_DOWNLOADS', 'Anzahl Downloads');
+define('TABLE_HEADING_DAYS', 'Anzahl Tage');
 ?>
