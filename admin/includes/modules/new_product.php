@@ -304,7 +304,7 @@
     }
     ?>
 
-    <div style="padding:5px;">
+    <div>
        <!-- BOF Product images //-->
       <div class="main div_header"><?php echo HEADING_PRODUCT_IMAGES; ?></div>
         <?php
