@@ -419,15 +419,15 @@
                         $reviews_query = xtc_db_query("SELECT COUNT(*) as number_of_reviews FROM ".TABLE_REVIEWS." WHERE customers_id = '".(int)$cInfo->customers_id."'");
                         $reviews = xtc_db_fetch_array($reviews_query);
 
-                        $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_CREATED.' '.xtc_date_short($info['date_account_created']));
-                        $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_LAST_MODIFIED.' '.xtc_date_short($info['date_account_last_modified']));
-                        $contents[] = array ('text' => '<br />'.TEXT_INFO_DATE_LAST_LOGON.' '.xtc_date_short($info['date_last_logon']));
+                        $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_CREATED.' '.xtc_datetime_short($info['date_account_created']));
+                        $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_LAST_MODIFIED.' '.xtc_datetime_short($info['date_account_last_modified']));
+                        $contents[] = array ('text' => '<br />'.TEXT_INFO_DATE_LAST_LOGON.' '.xtc_datetime_short($info['date_last_logon']));
                         $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_LOGONS.' '.$info['number_of_logons']);
                         $contents[] = array ('text' => '<br />'.TEXT_INFO_COUNTRY.' '.$country['countries_name']);
                         $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_REVIEWS.' '.$reviews['number_of_reviews']);
                       } else {
-                        $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_CREATED.' '.xtc_date_short($cInfo->date_account_created));
-                        $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_LAST_MODIFIED.' '.xtc_date_short($cInfo->date_account_last_modified));
+                        $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_CREATED.' '.xtc_datetime_short($cInfo->date_account_created));
+                        $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_LAST_MODIFIED.' '.xtc_datetime_short($cInfo->date_account_last_modified));
                         $contents[] = array ('text' => '<br />'.TEXT_INFO_DATE_LAST_LOGON.' '.xtc_datetime_short($cInfo->date_last_logon));
                         $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_LOGONS.' '.$cInfo->number_of_logons);
                         $contents[] = array ('text' => '<br />'.TEXT_INFO_COUNTRY.' '.$cInfo->countries_name);
@@ -442,7 +442,7 @@
                         $customers_log_info_array = xtc_get_user_info($customers_id);
                         if (xtc_db_num_rows($customers_log_info_array)) {
                           while ($customers_log_info = xtc_db_fetch_array($customers_log_info_array)) {
-                            $contents[] = array ('text' => '<tr>'."\n".'<td class="smallText">'.$customers_log_info['customers_ip_date'].' '.$customers_log_info['customers_ip'].' '.$customers_log_info['customers_advertiser']);
+                            $contents[] = array ('text' => '<tr>'."\n".'<td class="smallText">'.xtc_datetime_short($customers_log_info['customers_ip_date']).' '.$customers_log_info['customers_ip'].' '.$customers_log_info['customers_advertiser']);
                           }
                         }
                       }
