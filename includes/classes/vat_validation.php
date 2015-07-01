@@ -183,9 +183,15 @@ class vat_validation {
       }
     }
     
+    // fix for Greece
+    $search_array = array('gr');
+    $replace_array = array('el');
+    $country = str_replace($search_array, $replace_array, $country);
+    
+    $country_iso_code = strtoupper($country);
+    
     if ($this->live_check == 'true') {
-      $country_iso_code = strtoupper($country);
-
+      
       //Check VAT for EU countries only
       switch ($country_iso_code) {
         case 'AT':
@@ -223,6 +229,15 @@ class vat_validation {
           break;
       }
     } else {
+      switch ($country_iso_code) {
+        case 'BE':
+          // fix for old vat_id
+          if (strlen($vatNumber) == 9) {
+            $vatNumber = str_pad($vatNumber, 10, '0', STR_PAD_LEFT);
+          }
+          break;
+      }
+      $vat_id = $country_iso_code . $vatNumber;
       $t_result = $this->validate_vatid_offline($country, $vat_id);
     }
 
