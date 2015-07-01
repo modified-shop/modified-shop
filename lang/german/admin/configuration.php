@@ -980,4 +980,9 @@ define('TRACKING_FACEBOOK_ACTIVE_TITLE', 'Facebook Conversion-Tracking aktiviere
 define('TRACKING_FACEBOOK_ACTIVE_DESC', 'Wird diese Option aktiviert, so werden alle Käufe an Facebook &uuml;bermittelt und k&ouml;nnen sp&auml;ter ausgewertet werden. Dazu ist vorher die Anlage eines Kontos bei <a href="https://www.facebook.com" target="_blank"><b>Facebook</b></a> erforderlich.');
 define('TRACKING_FACEBOOK_ID_TITLE', 'Facebook Conversion ID');
 define('TRACKING_FACEBOOK_ID_DESC', 'Ihre Facebook Conversion ID');
+
+define('NEW_SELECT_CHECKBOX_TITLE', 'Adminbereich Styling');
+define('NEW_SELECT_CHECKBOX_DESC', 'Im Adminbereich das Styling bei den Checkboxen/Dropdowns aktivieren?');
+define('CSRF_TOKEN_SYSTEM_TITLE', 'Admin Token System');
+define('CSRF_TOKEN_SYSTEM_DESC', 'Soll das Token System in Admin verwendet werden?<br/><b>Achtung:</b> das Token System wurde zur Erh&ouml;hung der Sicherheit eingef&uuml;hrt.');
 ?>

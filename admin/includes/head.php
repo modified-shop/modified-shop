@@ -33,9 +33,10 @@
   <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css">
   <link rel="stylesheet" type="text/css" href="includes/css/jquery.alerts.css" />
+  <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
   <link rel="stylesheet" type="text/css" href="includes/css/sumoselect.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/fm.checkator.jquery.css" />
-
+  <?php } ?>
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
     echo '<link rel="stylesheet" type="text/css" href="includes/css/topmenu.css" />'. PHP_EOL;
@@ -52,7 +53,7 @@
   
   <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>  
   <script type="text/javascript" src="includes/javascript/jquery.sumoselect.min.js"></script>
-  
+  <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
   <script type="text/javascript" src="includes/javascript/fm.checkator.jquery.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
@@ -60,7 +61,7 @@
       $('.fmChkBox').not('.noStyling').checkator();
     });
   </script>
-    
+  <?php } ?>
   <script type="text/javascript" src="includes/javascript/jquery.alerts.min.js"></script>
   <script type="text/javascript">
   /* <![CDATA[ */

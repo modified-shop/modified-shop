@@ -245,7 +245,9 @@ require(DIR_WS_CLASSES . 'message_stack.php');
 $messageStack = new messageStack();
 
 // verfiy CSRF Token
-require_once(DIR_FS_INC . 'csrf_token.inc.php');
+if (CSRF_TOKEN_SYSTEM == 'true') {
+  require_once(DIR_FS_INC . 'csrf_token.inc.php');
+}
 
 // split-page-results
 require(DIR_WS_CLASSES . 'split_page_results.php');
