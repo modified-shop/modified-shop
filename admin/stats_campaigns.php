@@ -28,6 +28,9 @@ $currencies = new currencies();
 require (DIR_WS_CLASSES.'campaigns.php');
 $campaign = new campaigns($_GET);
 
+// default view (monthly)
+$srDefaultView = 2;
+
 $orders_statuses = array();
 $orders_status_array = array();
 $orders_status_query = xtc_db_query("SELECT orders_status_id,
@@ -49,11 +52,11 @@ while ($campaign_data = xtc_db_fetch_array($campaign_query)) {
 }
 
 // report views (1: yearly 2: monthly 3: weekly 4: daily)
-if (($_GET['report']) && (xtc_not_null($_GET['report']))) {
-	$srView = $_GET['report'];
+if (isset($_GET['report']) && (xtc_not_null($_GET['report'])) ) {
+  $srView = $_GET['report'];
 }
 if ($srView < 1 || $srView > 4) {
-	$srView = $srDefaultView;
+  $srView = $srDefaultView;
 }
 
 // check start and end Date
