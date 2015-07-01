@@ -133,6 +133,7 @@ $total = $xtPrice->xtcFormat($order->info['total'], false);
 if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_covers']) && $_SESSION['credit_covers'] == 1 && $total > 0)) {
   if (isset($_GET['payment_error']) && is_object(${ $_GET['payment_error'] }) && ($error = ${$_GET['payment_error']}->get_error())) {
     $smarty->assign('error',  encode_htmlspecialchars($error['error']));
+    $_SESSION['payment'] = $_GET['payment_error'];
   }
   ### Paypal Express Modul
   if(isset($_SESSION['reshash']['FORMATED_ERRORS'])) {
@@ -157,7 +158,8 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
     if (sizeof($selection) > 1) {
       $selection[$i]['selection'] = xtc_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['checked']), 'id="rd-'.($i+1).'"'); // pre-selection the first payment option
     } else {
-      $selection[$i]['selection'] = xtc_draw_hidden_field('payment', $selection[$i]['id']);
+      //$selection[$i]['selection'] = xtc_draw_hidden_field('payment', $selection[$i]['id']);
+      $selection[$i]['selection'] = xtc_draw_radio_field('payment', $selection[$i]['id'], 1, 'id="rd-'.($i+1).'"');
     }
 
     if (!isset($selection[$i]['error'])) {
