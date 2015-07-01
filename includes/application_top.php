@@ -130,6 +130,7 @@ require_once (DIR_FS_INC.'xtc_draw_selection_field.inc.php');
 require_once (DIR_FS_INC.'xtc_draw_separator.inc.php');
 require_once (DIR_FS_INC.'xtc_draw_textarea_field.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
+require_once (DIR_FS_INC.'xtc_image_submit.inc.php');
 
 require_once (DIR_FS_INC.'xtc_not_null.inc.php');
 require_once (DIR_FS_INC.'xtc_update_whos_online.inc.php');
