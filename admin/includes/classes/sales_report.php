@@ -186,7 +186,7 @@
       $filterString = "";
       if (strpos($this->statusFilter, ',') !== false) {
         $status_array = explode(',', $this->statusFilter);
-        $filterString .= " AND (o.orders_status = ". implode(' OR o.orders_status = ', $status_array) . ") ";
+        $filterString .= " AND o.orders_status IN (". implode("', '", $status_array) . ") ";
       } elseif ($this->statusFilter > 0) {
         $filterString .= " AND o.orders_status = " . $this->statusFilter . " ";
       }

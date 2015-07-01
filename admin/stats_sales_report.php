@@ -106,7 +106,7 @@
   if (isset($_GET['payment']) && (xtc_not_null($_GET['payment'])) ) {
     $srPayment = $_GET['payment'];
   } else {
-    $srPayment = 0;
+    $srPayment = '0';
   }
 
   // sort
