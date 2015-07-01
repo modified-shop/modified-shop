@@ -286,6 +286,53 @@
         </table>
         <!-- EOC ORDER BLOCK -->
 
+        <!-- BOC DOWNLOAD BLOCK -->
+        <?php
+        $downloads_query = xtc_db_query("SELECT op.products_name, 
+                                                opd.orders_products_download_id, 
+                                                opd.orders_products_filename, 
+                                                opd.download_count,
+                                                opd.orders_products_id,
+                                                if(opd.download_maxdays = 0, current_date, date(o.date_purchased)) + interval opd.download_maxdays + 1 day - interval 1 second download_expiry 
+                                           FROM ".TABLE_ORDERS." o
+                                           JOIN ".TABLE_ORDERS_PRODUCTS." op 
+                                                on op.orders_id = o.orders_id
+                                           JOIN ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd 
+                                                on opd.orders_products_id = op.orders_products_id
+                                          WHERE o.orders_id = '".$order->info['orders_id']."'
+                                            AND opd.orders_products_filename != ''
+                                            AND o.customers_id = '".$order->customer['id']."'");
+
+        if (xtc_db_num_rows($downloads_query) > 0) {
+          ?>
+          <div class="heading"><?php echo TEXT_DOWNLOADS; ?></div>
+          <table cellspacing="0" cellpadding="2" class="table">
+            <tr class="dataTableHeadingRow">
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_EXPIRES; ?></td>
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_DOWNLOADS; ?></td>
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_DAYS; ?></td>
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ACTION; ?></td>
+            </tr>
+            <?php
+            while ($downloads = xtc_db_fetch_array($downloads_query)) {
+              echo '<tr class="dataTableRow">' . xtc_draw_form('downloads', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=downloads').xtc_draw_hidden_field('orders_products_download_id', $downloads['orders_products_download_id']).xtc_draw_hidden_field('date_purchased', strtotime($order->info['date_purchased'])).PHP_EOL;
+              echo '  <td class="dataTableContent">'.$downloads['products_name'].'</td>'.PHP_EOL;
+              echo '  <td class="dataTableContent">'.$downloads['orders_products_filename'].'</td>'.PHP_EOL;
+              echo '  <td class="dataTableContent"><span'.(($downloads['download_expiry'] < $order->info['date_purchased']) ? ' class="col-red"' : '').'">'.xtc_datetime_short($downloads['download_expiry']).'</span></td>'.PHP_EOL;
+              echo '  <td class="dataTableContent">'.xtc_draw_input_field('download_count', $downloads['download_count'], 'style="width:30px;"').'</td>'.PHP_EOL;
+              echo '  <td class="dataTableContent">'.xtc_draw_input_field('download_maxdays', '', 'style="width:30px;"').'</td>'.PHP_EOL;
+              echo '  <td class="dataTableContent"><input type="submit" class="button" onclick="this.blur();" value="'.BUTTON_UPDATE.'"/></td>'.PHP_EOL;
+              echo '</form></tr>';
+            }
+            ?>
+          </table>
+          <?php
+        }
+        ?>
+        <!-- EOC DOWNLOAD BLOCK -->
+
         <?php
           /* magnalister v1.0.0 */
           if (function_exists('magnaExecute')) echo magnaExecute('magnaRenderOrderDetails', array('oID' => $oID), array('order_details.php'));

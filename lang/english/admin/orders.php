@@ -160,4 +160,10 @@ define('TEXT_DELETE_LABEL', 'Shipcloud Label could not get deleted.');
 define('TEXT_LABEL_CREATED', 'Label created.');
 define('TEXT_CARRIER_ERROR', 'Carrier not permitted.');
 define('TEXT_CARRIER_PLACEHOLDER', 'description (optional)');
+
+define('TEXT_DOWNLOADS', 'Downloads');
+define('TABLE_HEADING_FILENAME', 'Filename');
+define('TABLE_HEADING_EXPIRES', 'Expires date');
+define('TABLE_HEADING_DOWNLOADS', 'Number Downloads');
+define('TABLE_HEADING_DAYS', 'Number days');
 ?>
