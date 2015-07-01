@@ -69,10 +69,13 @@
       $this->statusFilter = $statusFilter;
       $this->paymentFilter = $payment;     
       // get date of first sale
+      /*
       $firstQuery = xtc_db_query("SELECT UNIX_TIMESTAMP(min(date_purchased)) as first FROM " . TABLE_ORDERS);
       $first = xtc_db_fetch_array($firstQuery);
       $this->globalStartDate = mktime(0, 0, 0, date("m", $first['first']), date("d", $first['first']), date("Y", $first['first']));
-            
+      */
+      $this->globalStartDate = $startDate;
+      
       $statusQuery = xtc_db_query("SELECT * FROM ".TABLE_ORDERS_STATUS." WHERE language_id='".$_SESSION['languages_id']." ORDER BY sort_order'");
       $i = 0;
       while ($outResp = xtc_db_fetch_array($statusQuery)) {
@@ -91,13 +94,15 @@
       if ($this->startDate > mktime(0, 0, 0, date("m"), date("d"), date("Y"))) {
         $this->startDate = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
       }
-
+      /*
       if ($endDate > mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"))) {
         // set endDate to tomorrow
         $this->endDate = mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"));
       } else {
         $this->endDate = $endDate;
       }
+      */
+      $this->endDate = $endDate;
       if ($this->endDate < $this->startDate + 24 * 60 * 60) {
         $this->endDate = $this->startDate + 24 * 60 * 60;
       }
