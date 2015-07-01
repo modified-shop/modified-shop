@@ -320,7 +320,7 @@
               echo '<tr class="dataTableRow">' . xtc_draw_form('downloads', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=downloads').xtc_draw_hidden_field('orders_products_download_id', $downloads['orders_products_download_id']).xtc_draw_hidden_field('date_purchased', strtotime($order->info['date_purchased'])).PHP_EOL;
               echo '  <td class="dataTableContent">'.$downloads['products_name'].'</td>'.PHP_EOL;
               echo '  <td class="dataTableContent">'.$downloads['orders_products_filename'].'</td>'.PHP_EOL;
-              echo '  <td class="dataTableContent"><span'.(($downloads['download_expiry'] < $order->info['date_purchased']) ? ' class="col-red"' : '').'">'.xtc_datetime_short($downloads['download_expiry']).'</span></td>'.PHP_EOL;
+              echo '  <td class="dataTableContent"><span class="'.(($downloads['download_expiry'] < $order->info['date_purchased']) ? 'col-red' : 'col-green').'">'.xtc_datetime_short($downloads['download_expiry']).'</span></td>'.PHP_EOL;
               echo '  <td class="dataTableContent">'.xtc_draw_input_field('download_count', $downloads['download_count'], 'style="width:30px;"').'</td>'.PHP_EOL;
               echo '  <td class="dataTableContent">'.xtc_draw_input_field('download_maxdays', '', 'style="width:30px;"').'</td>'.PHP_EOL;
               echo '  <td class="dataTableContent"><input type="submit" class="button" onclick="this.blur();" value="'.BUTTON_UPDATE.'"/></td>'.PHP_EOL;
