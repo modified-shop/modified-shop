@@ -23,7 +23,8 @@
 
     // build array with wishlist content and count quantity  
     if (strpos($PHP_SELF, FILENAME_LOGOFF) === false) {
-      $products_in_wishlist = get_wishlist_content();
+      $wishlist_content_array = get_wishlist_content();
+      $products_in_wishlist = $wishlist_content_array['DATA'];
     }
   }
   

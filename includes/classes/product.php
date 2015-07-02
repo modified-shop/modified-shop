@@ -525,9 +525,9 @@ class product {
    * @param string $name
    * @return string
    */
-  function getWishlistToCartButton($id, $name) {
+  function getWishlistToCartButton($id, $name, $cart = false) {
     global $PHP_SELF;
-    return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=wishlist_cart&BUYproducts_id='.$id, 'NONSSL').'">'.xtc_image_button('button_buy_now.gif', TEXT_BUY.$name.TEXT_NOW).'</a>';
+    return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=wishlist_cart&BUYproducts_id='.$id, 'NONSSL').'">'.xtc_image_button((($cart == true) ? 'button_in_cart.gif' : 'button_buy_now.gif'), TEXT_BUY.$name.TEXT_NOW).'</a>';
   }
   
   /**

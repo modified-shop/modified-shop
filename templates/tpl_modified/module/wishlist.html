@@ -10,7 +10,7 @@
   {if isset($wishlist_cart)}<br/>{/if}
   <div class="headline_big">{#heading_wishlist#}</div>
   <div class="listingcontainer cf">
-  {if $PRODUCT_LIST_BOX == true}
+  {if $PRODUCT_LIST_BOX == false}
     {foreach name=aussen item=module_data from=$module_content}
     <div class="listingbox">
       <div class="lb_inner">
@@ -65,7 +65,7 @@
             </div>
             {if $module_data.PRODUCTS_VPE}<div class="lr_vpe">{$module_data.PRODUCTS_VPE}</div>{/if}
             <div class="lr_tax">{$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK}</div>
-            <div class="lr_buttons">{$module_data.PRODUCTS_BUTTON_BUY_NOW}{$module_data.PRODUCTS_BUTTON_DELETE}</div>
+            <div class="lr_buttons">{$module_data.PRODUCTS_BUTTON_BUY_NOW_CART}{$module_data.PRODUCTS_BUTTON_DELETE}</div>
           </div>
         </div>
       </div>

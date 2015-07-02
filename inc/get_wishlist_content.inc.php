@@ -47,6 +47,7 @@
                               'PRODUCTS_TAX_INFO' => $main->getTaxInfo($products[$i]['tax']),
                               'PRODUCTS_PRICE' => $xtPrice->xtcFormat($products[$i]['price'], true, 0, false, 0, 0, 0),
                               'PRODUCTS_BUTTON_BUY_NOW' => $product->getWishlistToCartButton($products[$i]['id'], $products[$i]['name']),
+                              'PRODUCTS_BUTTON_BUY_NOW_CART' => $product->getWishlistToCartButton($products[$i]['id'], $products[$i]['name'], true),
                               'PRODUCTS_QTY' => $products[$i]['quantity'],
                               'ATTRIBUTES' => ''
                               );
