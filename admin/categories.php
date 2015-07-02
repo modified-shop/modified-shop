@@ -122,16 +122,27 @@ if (xtc_not_null($action)) {
       break;
       //EOB setsflag
     case 'update_category' :
-      $catfunc->insert_category($_POST, '', 'update');
+      $categories_id = $catfunc->insert_category($_POST, '', 'update');
+      //redirect by update button
+      if (isset($_POST['cat_update'])) {
+        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'cID')).'action=edit_category&cID='.$categories_id));
+      }     
       break;
     case 'insert_category' :
-      $catfunc->insert_category($_POST, $current_category_id);
+      $categories_id = $catfunc->insert_category($_POST, $current_category_id);
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&cID='.$categories_id)); 
       break;
     case 'update_product' :
-      $catfunc->insert_product($_POST, '', 'update');
+      $result = $catfunc->insert_product($_POST, '', 'update');
+      //redirect by update button
+      if(isset($_POST['prod_update']) || $result['error'] === true) {
+        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'pID')).'action=new_product&pID='.$result['products_id']));
+      }
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($current_category_id).'&pID='.$result['products_id'].$this->page_parameter));
       break;
     case 'insert_product' :
-      $catfunc->insert_product($_POST, $current_category_id);
+      $result = $catfunc->insert_product($_POST, $current_category_id);
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($current_category_id).'&pID='.$result['products_id'].$this->page_parameter));
       break;
     case 'edit_crossselling' :
       $catfunc->edit_cross_sell($_GET);

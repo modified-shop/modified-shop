@@ -207,13 +207,8 @@ class categories {
                        SET categories_image = ''
                      WHERE categories_id = '".(int) $categories_id."'");
     }
-
-    //redirect by update button
-    if (isset($categories_data['cat_update'])) {
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action')).'action=edit_category'));
-    } elseif ($action == 'insert') {
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&cID='.$categories_id)); 
-    }
+    
+    return $categories_id;
   }
 
 
@@ -695,12 +690,10 @@ class categories {
         xtc_db_perform(TABLE_PRODUCTS_DESCRIPTION, $sql_data_array, 'update', "products_id = '".(int)$products_id."' and language_id = '".$language_id."'");
       }
     }
-
-    //redirect by update button
-    if(isset($products_data['prod_update']) || $error === true) {
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&action=new_product&pID='.$products_id.$this->page_parameter));
-    }
-    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($dest_categories_id).'&pID='.$products_id.$this->page_parameter));
+    
+    return array('error' => $error,
+                 'products_id' => $products_id
+                 );
   }
 
 
