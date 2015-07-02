@@ -57,6 +57,7 @@
               </ul>
             </div>
             {/if}
+            {if $module_data.PRODUCTS_SHORT_DESCRIPTION}<div class="lr_desc">{$module_data.PRODUCTS_SHORT_DESCRIPTION}</div>{/if}
             <div class="lr_shipping">{if $module_data.PRODUCTS_SHIPPING_NAME}{#text_shippingtime#} {if $module_data.PRODUCTS_SHIPPING_IMAGE}<span class="lr_shipping_image"><img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" /></span>{/if}{$module_data.PRODUCTS_SHIPPING_NAME_LINK}{else}&nbsp;{/if}</div>
           </div>
           <div class="lr_price_box">

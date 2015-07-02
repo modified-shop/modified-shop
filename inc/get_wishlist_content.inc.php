@@ -49,6 +49,8 @@
                               'PRODUCTS_BUTTON_BUY_NOW' => $product->getWishlistToCartButton($products[$i]['id'], $products[$i]['name']),
                               'PRODUCTS_BUTTON_BUY_NOW_CART' => $product->getWishlistToCartButton($products[$i]['id'], $products[$i]['name'], true),
                               'PRODUCTS_QTY' => $products[$i]['quantity'],
+                              'PRODUCTS_SHORT_DESCRIPTION' => $products[$i]['short_description'],
+                              'PRODUCTS_DESCRIPTION' => $products[$i]['description'],
                               'ATTRIBUTES' => ''
                               );
 
