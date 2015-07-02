@@ -156,7 +156,7 @@ class KlarnaConstant
      *
      * @return boolean
      */
-    public function isActivated($option, $country)
+    public static function isActivated($option, $country)
     {
         $_activated = self::getActivated($option);
 
@@ -171,7 +171,7 @@ class KlarnaConstant
      *
      * @return array
      */
-    public function pcURI()
+    public static function pcURI()
     {
         return array(
             'user' => DB_SERVER_USERNAME,
@@ -189,7 +189,7 @@ class KlarnaConstant
      *
      * @return array
      */
-    public function getActivated($option)
+    public static function getActivated($option)
     {
         switch (strtolower($option)) {
         case KiTT::PART:
@@ -217,7 +217,7 @@ class KlarnaConstant
      *
      * @return true if logged in as admin
      */
-    public function isAdmin()
+    public static function isAdmin()
     {
         return (defined('DIR_WS_ADMIN'));
     }
@@ -241,7 +241,7 @@ class KlarnaConstant
     *
     * @return boolean  true if the specified payment option is enabled
     */
-    public function isEnabled($option)
+    public static function isEnabled($option)
     {
         switch ($option) {
         case KiTT::PART:
