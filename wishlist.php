@@ -27,7 +27,9 @@ require (DIR_WS_INCLUDES.'header.php');
 
 $module_data = array ();
 if ($_SESSION['wishlist']->count_contents() > 0) {
-  $smarty->assign('module_content', get_wishlist_content());
+  $wishlist_content_array = get_wishlist_content();
+  $smarty->assign('PRODUCT_LIST_BOX', $wishlist_content_array['ATTRIBUTES']);
+  $smarty->assign('module_content', $wishlist_content_array['DATA']);
 } else {
   $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 }

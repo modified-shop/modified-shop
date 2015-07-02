@@ -17,6 +17,7 @@
     global $main, $xtPrice, $product, $PHP_SELF;
     
     $module_data = array();
+    $attributes_exists = false;
     
     // build array with wishlist content and count quantity  
     $products = $_SESSION['wishlist']->get_products();
@@ -47,9 +48,29 @@
                               'PRODUCTS_PRICE' => $xtPrice->xtcFormat($products[$i]['price'], true, 0, false, 0, 0, 0),
                               'PRODUCTS_BUTTON_BUY_NOW' => $product->getWishlistToCartButton($products[$i]['id'], $products[$i]['name']),
                               'PRODUCTS_QTY' => $products[$i]['quantity'],
+                              'ATTRIBUTES' => ''
                               );
+
+      //products attributes
+      if (isset ($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
+        $attributes_exists = true;
+        $subindex = 0;
+        reset($products[$i]['attributes']);
+        while (list ($option, $value) = each($products[$i]['attributes'])) {
+          $attributes = $main->getAttributes($products[$i]['id'], $option, $value);
+          $module_data[$i]['ATTRIBUTES'][$subindex] = array('ID' => $attributes['products_attributes_id'],
+                                                            'MODEL' => $attributes['attributes_model'],
+                                                            'EAN' => $attributes['attributes_ean'],
+                                                            'NAME' => $attributes['products_options_name'],
+                                                            'VALUE_NAME' => $attributes['products_options_values_name']
+                                                            );
+          $subindex++;
+        }
+      }
     }
     
-    return $module_data;
+    return array('DATA' => $module_data,
+                 'ATTRIBUTES' => $attributes_exists
+                 );
   }
 ?>

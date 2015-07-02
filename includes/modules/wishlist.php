@@ -18,7 +18,9 @@ $module_smarty = new Smarty;
 
 $module_data = array ();
 if ($_SESSION['wishlist']->count_contents() > 0) {
-  $module_smarty->assign('module_content', get_wishlist_content());
+  $wishlist_content_array = get_wishlist_content();
+  $module_smarty->assign('PRODUCT_LIST_BOX', $wishlist_content_array['ATTRIBUTES']);
+  $module_smarty->assign('module_content', $wishlist_content_array['DATA']);
 }
 
 $module_smarty->assign('wishlist_cart', true);
