@@ -226,10 +226,9 @@
           
     <div class="main" style="margin:20px 5px;float:right;">
       <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
-      &nbsp;&nbsp;
-      <input type="submit" class="button" name="prod_update" value="<?php echo BUTTON_UPDATE; ?>" <?php echo $confirm_save_entry;?>>
       <?php
       if (isset($_GET['pID']) && $_GET['pID'] > 0) {
+        echo '&nbsp;&nbsp;<input type="submit" class="button" name="prod_update" value="'.BUTTON_UPDATE.'" '.$confirm_save_entry.'/>';
         if (is_file('includes/modules/products_attributes_iframe.php')) {
           include_once("includes/modules/products_attributes_iframe.php");
         }
@@ -316,18 +315,15 @@
       <!-- BOF Save //-->
       <div style="text-align:right; margin-top:10px;">
         <?php
-        if($form_action == 'insert_product'){
+        if ($form_action == 'insert_product') {
           echo xtc_draw_hidden_field('products_date_added', (($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d')));
         } else {
           echo xtc_draw_hidden_field('products_last_modified', (($pInfo->products_last_modified) ? $pInfo->products_last_modified : date('Y-m-d')));
         }
         echo xtc_draw_hidden_field('products_id', $pInfo->products_id);
-        ?>
-        <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
-        &nbsp;&nbsp;
-        <input type="submit" class="button" name="prod_update" value="<?php echo BUTTON_UPDATE; ?>" <?php echo $confirm_save_entry;?>>
-        <?php
+        echo '<input type="submit" class="button" value="'.BUTTON_SAVE.'" '.$confirm_save_entry.'/>';
         if (isset($_GET['pID']) && $_GET['pID'] > 0) {
+          echo '&nbsp;&nbsp;<input type="submit" class="button" name="prod_update" value="'.BUTTON_UPDATE.'" '.$confirm_save_entry.'/>';
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_catalog_href_link('product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
         }
         echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : '')) . '">' . BUTTON_CANCEL . '</a>';

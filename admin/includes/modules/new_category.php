@@ -154,7 +154,11 @@
       <?php echo xtc_draw_hidden_field('categories_date_added', (($cInfo->date_added) ? $cInfo->date_added : date('Y-m-d'))) . xtc_draw_hidden_field('parent_id', $cInfo->parent_id); ?>
       <?php echo xtc_draw_hidden_field('categories_id', $cInfo->categories_id); ?>
       <input type="submit" class="button" name="cat_save" value="<?php echo BUTTON_SAVE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
-      <input type="submit" class="button" name="cat_update" value="<?php echo BUTTON_UPDATE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
+      <?php
+      if (isset($_GET['cID']) && $_GET['cID'] > 0) {
+        echo '<input type="submit" class="button" name="cat_update" value="'.BUTTON_UPDATE.'" style="cursor:pointer" '.$confirm_save_entry.'/>&nbsp;&nbsp';
+      }
+      ?>
       <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['action']) && $_GET['action']=='edit_category') ? '&cID=' . (int)$_GET['cID'] : '') . ((isset($_GET['page']) && $_GET['page']>'1') ? '&page=' . (int)$_GET['page'] : '')); ?>"><?php echo BUTTON_CANCEL ; ?></a>
     </div>
 
@@ -221,7 +225,11 @@
         <?php echo xtc_draw_hidden_field('categories_date_added', (($cInfo->date_added) ? $cInfo->date_added : date('Y-m-d'))) . xtc_draw_hidden_field('parent_id', $cInfo->parent_id); ?>
         <?php echo xtc_draw_hidden_field('categories_id', $cInfo->categories_id); ?>
         <input type="submit" class="button" name="cat_save" value="<?php echo BUTTON_SAVE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
-        <input type="submit" class="button" name="cat_update" value="<?php echo BUTTON_UPDATE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
+        <?php
+        if (isset($_GET['cID']) && $_GET['cID'] > 0) {
+          echo '<input type="submit" class="button" name="cat_update" value="'.BUTTON_UPDATE.'" style="cursor:pointer" '.$confirm_save_entry.'/>&nbsp;&nbsp';
+        }
+        ?>
         <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['action']) && $_GET['action']=='edit_category') ? '&cID=' . (int)$_GET['cID'] : '') . ((isset($_GET['page']) && $_GET['page']>'1') ? '&page=' . (int)$_GET['page'] : '')); ?>"><?php echo BUTTON_CANCEL ; ?></a>
       </div>
     </div>
