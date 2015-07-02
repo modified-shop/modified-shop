@@ -44,12 +44,23 @@ if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
   require_once (DIR_WS_INCLUDES.'error_reporting.php');
 }
 
-/*
- * turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
- */
+// turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
+// security inputfilter for GET/POST/COOKIE
+require_once (DIR_FS_INC.'html_encoding.php');
+require (DIR_WS_CLASSES.'class.inputfilter.php');
+$InputFilter = new InputFilter();
+
+$_GET = $InputFilter->process($_GET);
+$_POST = $InputFilter->process($_POST);
+$_REQUEST = $InputFilter->process($_REQUEST);
+$_GET = $InputFilter->safeSQL($_GET);
+$_POST = $InputFilter->safeSQL($_POST);
+$_REQUEST = $InputFilter->safeSQL($_REQUEST);
+
+// auto include
 require_once (DIR_FS_INC . 'auto_include.inc.php');
   
 // define the project version
@@ -77,16 +88,12 @@ require(DIR_WS_INCLUDES . 'filenames.php');
 // include the list of project database tables
 require(DIR_WS_INCLUDES . 'database_tables.php');
 
-
 // Store DB-Querys in a Log File
 define('STORE_DB_TRANSACTIONS', 'false');
 
 // Database
 require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
 require_once (DIR_FS_INC.'db_functions.inc.php');
-
-// include used functions
-require_once(DIR_FS_INC . 'html_encoding.php');
 
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
@@ -107,17 +114,6 @@ if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib'
     ini_set('zlib.output_compression_level', GZIP_LEVEL);
   }
 }
-
-// security inputfilter for GET/POST/COOKIE
-require (DIR_WS_CLASSES.'class.inputfilter.php');
-$InputFilter = new InputFilter();
-
-$_GET = $InputFilter->process($_GET);
-$_POST = $InputFilter->process($_POST);
-$_REQUEST = $InputFilter->process($_REQUEST);
-$_GET = $InputFilter->safeSQL($_GET);
-$_POST = $InputFilter->safeSQL($_POST);
-$_REQUEST = $InputFilter->safeSQL($_REQUEST);
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_export_end/','php') as $file) require ($file);
 

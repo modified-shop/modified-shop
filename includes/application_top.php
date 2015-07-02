@@ -76,6 +76,19 @@ if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
+// security inputfilter for GET/POST/COOKIE
+require_once (DIR_FS_INC.'html_encoding.php');
+require (DIR_WS_CLASSES.'class.inputfilter.php');
+$InputFilter = new InputFilter();
+
+$_GET = $InputFilter->process($_GET);
+$_POST = $InputFilter->process($_POST);
+$_REQUEST = $InputFilter->process($_REQUEST);
+$_GET = $InputFilter->safeSQL($_GET);
+$_POST = $InputFilter->safeSQL($_POST);
+$_REQUEST = $InputFilter->safeSQL($_REQUEST);
+
+// auto include
 require_once (DIR_FS_INC . 'auto_include.inc.php');
 
 // include the list of project filenames
@@ -167,7 +180,6 @@ require_once (DIR_FS_INC.'xtc_cleanName.inc.php');
 require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
-require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
 require_once (DIR_FS_INC.'xtc_backup_restore_configuration.php');
 require_once (DIR_FS_INC.'xtc_hide_session_id.inc.php');
 require_once (DIR_FS_INC.'get_messages.inc.php');
@@ -205,18 +217,6 @@ if ((!isset($gzip_off) || !$gzip_off) && (GZIP_COMPRESSION == 'true') && ($ext_z
     ini_set('zlib.output_compression_level', GZIP_LEVEL);
   }
 }
-
-// security inputfilter for GET/POST/COOKIE
-require (DIR_WS_CLASSES.'class.inputfilter.php');
-$InputFilter = new InputFilter();
-
-$_GET = $InputFilter->process($_GET);
-$_POST = $InputFilter->process($_POST);
-$_REQUEST = $InputFilter->process($_REQUEST);
-$_GET = $InputFilter->safeSQL($_GET);
-$_POST = $InputFilter->safeSQL($_POST);
-$_REQUEST = $InputFilter->safeSQL($_REQUEST);
-
 
 // set the top level domains
 $http_domain_arr = xtc_get_top_level_domain(HTTP_SERVER);

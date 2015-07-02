@@ -80,6 +80,14 @@ if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
+// security inputfilter for GET/POST/COOKIE
+require (DIR_FS_CATALOG.DIR_WS_CLASSES.'inputfilter.php');
+$inputfilter = new Inputfilter();
+$_GET = $inputfilter->validate($_GET);
+$_POST = $inputfilter->validate($_POST);
+$_REQUEST = $inputfilter->validate($_REQUEST);
+
+// auto include
 require_once (DIR_FS_INC . 'auto_include.inc.php');
 
 // solve compatibility issues
@@ -158,13 +166,6 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/application_top_begin/','php') as $file) require ($file);
 
 define('FILENAME_IMAGEMANIPULATOR',IMAGE_MANIPULATOR);
-
-// security inputfilter for GET/POST/COOKIE
-require (DIR_FS_CATALOG.DIR_WS_CLASSES.'inputfilter.php');
-$inputfilter = new Inputfilter();
-$_GET = $inputfilter->validate($_GET);
-$_POST = $inputfilter->validate($_POST);
-$_REQUEST = $inputfilter->validate($_REQUEST);
 
 // initialize the logger class
 require(DIR_WS_CLASSES . 'logger.php');

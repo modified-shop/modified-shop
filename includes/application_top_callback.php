@@ -48,6 +48,19 @@ if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
+// security inputfilter for GET/POST/COOKIE
+require_once (DIR_FS_INC.'html_encoding.php');
+require (DIR_WS_CLASSES.'class.inputfilter.php');
+$InputFilter = new InputFilter();
+
+$_GET = $InputFilter->process($_GET);
+$_POST = $InputFilter->process($_POST);
+$_REQUEST = $InputFilter->process($_REQUEST);
+$_GET = $InputFilter->safeSQL($_GET);
+$_POST = $InputFilter->safeSQL($_POST);
+$_REQUEST = $InputFilter->safeSQL($_REQUEST);
+
+// auto include
 require_once (DIR_FS_INC . 'auto_include.inc.php');
 
 // define the project version
@@ -136,7 +149,6 @@ require_once (DIR_FS_INC.'xtc_add_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_cleanName.inc.php');
 require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
-require_once (DIR_FS_INC.'html_encoding.php');
 
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
@@ -157,17 +169,6 @@ if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib'
     ini_set('zlib.output_compression_level', GZIP_LEVEL);
   }
 }
-
-// security inputfilter for GET/POST/COOKIE
-require (DIR_WS_CLASSES.'class.inputfilter.php');
-$InputFilter = new InputFilter();
-
-$_GET = $InputFilter->process($_GET);
-$_POST = $InputFilter->process($_POST);
-$_REQUEST = $InputFilter->process($_REQUEST);
-$_GET = $InputFilter->safeSQL($_GET);
-$_POST = $InputFilter->safeSQL($_POST);
-$_REQUEST = $InputFilter->safeSQL($_REQUEST);
 
 // Paypal API Modul
 require (DIR_WS_FUNCTIONS.'sessions.php');
