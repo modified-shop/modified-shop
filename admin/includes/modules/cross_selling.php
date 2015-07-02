@@ -52,8 +52,10 @@
     return $parent_data['parent_id'];
   }
   ?>
-    <div class="pageHeading pdg2"><?php echo CROSS_SELLING.' : '.$article_data['products_name']; ?></div>
-    <div class="mrg5">
+    <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
+    <div class="pageHeading"><?php echo CROSS_SELLING_1; ?></div>
+    <div class="main pdg2 flt-l"><?php echo CROSS_SELLING_2 . ' "' . $article_data['products_name'] . '"'; ?></div>
+    <div class="clear mrg5">
       <a class="button" onClick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES,'cPath='.$_GET['cpath'].'&pID='.$_GET['current_product_id']); ?>"><?php echo BUTTON_BACK; ?></a>
     </div>
 
