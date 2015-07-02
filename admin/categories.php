@@ -127,7 +127,7 @@ if (xtc_not_null($action)) {
       if (isset($_POST['cat_update'])) {
         xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'cID')).'action=edit_category&cID='.$categories_id));
       }     
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&cID='.$categories_id)); 
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'cID')).'cID='.$categories_id)); 
       break;
     case 'insert_category' :
       $categories_id = $catfunc->insert_category($_POST, $current_category_id);
@@ -147,7 +147,6 @@ if (xtc_not_null($action)) {
       break;
     case 'edit_crossselling' :
       $catfunc->edit_cross_sell($_GET);
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'ids'))));
       break;
     // BOF - Tomcraft - 2009-11-28 - Included xs:booster
     case 'multi_action':
