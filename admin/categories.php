@@ -127,6 +127,7 @@ if (xtc_not_null($action)) {
       if (isset($_POST['cat_update'])) {
         xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'cID')).'action=edit_category&cID='.$categories_id));
       }     
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&cID='.$categories_id)); 
       break;
     case 'insert_category' :
       $categories_id = $catfunc->insert_category($_POST, $current_category_id);
@@ -138,14 +139,15 @@ if (xtc_not_null($action)) {
       if(isset($_POST['prod_update']) || $result['error'] === true) {
         xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'pID')).'action=new_product&pID='.$result['products_id']));
       }
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($current_category_id).'&pID='.$result['products_id'].$this->page_parameter));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($current_category_id).'&pID='.$result['products_id'].$catfunc->page_parameter));
       break;
     case 'insert_product' :
       $result = $catfunc->insert_product($_POST, $current_category_id);
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($current_category_id).'&pID='.$result['products_id'].$this->page_parameter));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($current_category_id).'&pID='.$result['products_id'].$catfunc->page_parameter));
       break;
     case 'edit_crossselling' :
       $catfunc->edit_cross_sell($_GET);
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'ids'))));
       break;
     // BOF - Tomcraft - 2009-11-28 - Included xs:booster
     case 'multi_action':
