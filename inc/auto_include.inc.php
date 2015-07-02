@@ -12,10 +12,15 @@
 
 function auto_include($dir, $ext = 'php', $expr = '*') 
 {
-		$files = glob("{$dir}/$expr.".$ext);
-		$files = ((is_array($files)) ? $files : array());
-    if (function_exists('debugMessage')) {
-        debugMessage('auto_include',$files);
-    }
-    return $files;
+  $files = glob("{$dir}/$expr.".$ext);
+  $files = ((is_array($files)) ? $files : array());
+  
+  // sort files
+  natcasesort($files);
+  
+  if (function_exists('debugMessage')) {
+    debugMessage('auto_include',$files);
+  }
+  
+  return $files;
 }
