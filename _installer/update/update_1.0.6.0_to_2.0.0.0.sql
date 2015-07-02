@@ -589,4 +589,7 @@ CREATE TABLE customers_wishlist_attributes (
   KEY idx_customers_id (customers_id)
 ) ENGINE=MyISAM;
 
+#Tomcraft - 2015-07-02 - not needed anymore!
+DELETE FROM `configuration` WHERE `configuration_key` = 'USE_CONTACT_EMAIL_ADDRESS';
+
 # Keep an empty line at the end of this file for the db_updater to work properly

@@ -664,8 +664,8 @@ define('USE_ADMIN_THUMBS_IN_LIST_STYLE_DESC', 'Hier k&ouml;nnen einfache CSS Sty
 // EOF - Hendrik - 2010-08-11 - Thumbnails in admin products list
 
 // BOF - Tomcraft - 2009-11-05 - Advanced contact form
-define('USE_CONTACT_EMAIL_ADDRESS_TITLE' , 'Kontaktformular - Sendeoption');
-define('USE_CONTACT_EMAIL_ADDRESS_DESC' , 'Kontakt-E-Mail-Adresse des Shops zum Versenden des Kontaktformulars verwenden (wichtig f&uuml;r einige Provider z.B Hosteurope)');
+//define('USE_CONTACT_EMAIL_ADDRESS_TITLE' , 'Kontaktformular - Sendeoption'); // not needed anymore!
+//define('USE_CONTACT_EMAIL_ADDRESS_DESC' , 'Kontakt-E-Mail-Adresse des Shops zum Versenden des Kontaktformulars verwenden (wichtig f&uuml;r einige Provider z.B Hosteurope)'); // not needed anymore!
 // EOF - Tomcraft - 2009-11-05 - Advanced contact form
 
 // BOF - Dokuman - 2010-02-04 - delete cache files in admin section

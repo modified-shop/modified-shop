@@ -665,8 +665,8 @@ define('USE_ADMIN_THUMBS_IN_LIST_STYLE_DESC', 'Here, simple CSS style informatio
 // EOF - Hendrik - 2010-08-11 - Thumbnails in admin products list
 
 // BOF - Tomcraft - 2009-11-05 - Advanced contact form
-define('USE_CONTACT_EMAIL_ADDRESS_TITLE' , 'Contact Us - sending option');
-define('USE_CONTACT_EMAIL_ADDRESS_DESC' , 'Use "Contact Us" e-mail address for sending contact form (important for some Hosters like Hosteurope)');
+//define('USE_CONTACT_EMAIL_ADDRESS_TITLE' , 'Contact Us - sending option'); // not needed anymore!
+//define('USE_CONTACT_EMAIL_ADDRESS_DESC' , 'Use "Contact Us" e-mail address for sending contact form (important for some Hosters like Hosteurope)'); // not needed anymore!
 // EOF - Tomcraft - 2009-11-05 - Advanced contact form
 
 // BOF - Dokuman - 2010-02-04 - delete cache files in admin section
