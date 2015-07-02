@@ -37,3 +37,4 @@
   // Put CSS-Inline-Definitions here, these CSS-files will be loaded at the TOP of every page
 ?>
 <link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.$css_file; ?>" type="text/css" media="screen" />
+<link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/jquery.toggle.css" type="text/css" media="screen" />

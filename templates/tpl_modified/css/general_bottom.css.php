@@ -16,7 +16,6 @@
    // This CSS file get includes at the BOTTOM of every template page in shop
    // you can add your template specific css scripts here
 ?>
-<link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/jquery.toggle.css" type="text/css" media="screen" />
 <link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/jquery.colorbox.css" type="text/css" media="screen" />
 <link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/jquery.alerts.css" type="text/css" media="screen" />
 <link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/jquery.bxslider.css" type="text/css" media="screen" />
