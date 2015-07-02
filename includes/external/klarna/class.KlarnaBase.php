@@ -118,12 +118,13 @@ class KlarnaBase
         $this->_utils = new KlarnaUtils($country);
 
         $this->_locale = KiTT::locale($country, $lang, $currency);
-
+        
+        $css = '';
         if (KlarnaConstant::isAdmin()
             && (!array_key_exists('action', $_GET)
             || !in_array($_GET['action'], array('install', 'remove', 'removeconfirm')))
         ) {
-            echo "<link href='" . KlarnaUtils::getStaticPath() .
+            $css = "<link href='" . KlarnaUtils::getStaticPath() .
             "images.css' type='text/css' rel='stylesheet'/>";
             $this->_checkForLatestVersion();
             $this->description = $this->_buildDescription();
@@ -131,7 +132,7 @@ class KlarnaBase
 
         //Set the title for the payment method. This will be displayed on the
         //confirmation page and the backend order view.
-        $this->title = $this->_title();
+        $this->title = $this->_title() . $css;
 
         $merchantID = KlarnaConstant::merchantID($option, $country);
         $secret = KlarnaConstant::secret($option, $country);
