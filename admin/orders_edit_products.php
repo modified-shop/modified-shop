@@ -36,6 +36,9 @@ if( defined('USE_ADMIN_THUMBS_IN_LIST_STYLE')) {
   $admin_thumbs_size = 'style="max-width: 40px; max-height: 40px;"';
 }
 
+// include needed functions
+require_once (DIR_FS_INC.'xtc_has_product_attributes.inc.php');
+
 require_once (DIR_WS_CLASSES.'currencies.php');
 $currencies = new currencies();
 
@@ -94,21 +97,25 @@ $currencies = new currencies();
         </form>
       </td>
     </tr>
-    <tr class="dataTableRow">
-      <td class="dataTableContent" colspan="8">&nbsp;</td>
-      <td class="dataTableContent">
-        <?php
-        echo xtc_draw_form('select_options', FILENAME_ORDERS_EDIT, '', 'GET');
-          echo xtc_draw_hidden_field('edit_action', 'options');
-          echo xtc_draw_hidden_field('pID', $order->products[$i]['id']);
-          echo xtc_draw_hidden_field('oID', $_GET['oID']);
-          echo xtc_draw_hidden_field('opID', $order->products[$i]['opid']);
-          echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_PRODUCT_OPTIONS . '"/>';
-          ?>
-        </form>
-      </td>
-    </tr>
     <?php
+    if (xtc_has_product_attributes($order->products[$i]['id']) === true) {
+      ?>
+        <tr class="dataTableRow">
+          <td class="dataTableContent" colspan="8">&nbsp;</td>
+          <td class="dataTableContent">
+            <?php
+            echo xtc_draw_form('select_options', FILENAME_ORDERS_EDIT, '', 'GET');
+              echo xtc_draw_hidden_field('edit_action', 'options');
+              echo xtc_draw_hidden_field('pID', $order->products[$i]['id']);
+              echo xtc_draw_hidden_field('oID', $_GET['oID']);
+              echo xtc_draw_hidden_field('opID', $order->products[$i]['opid']);
+              echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_PRODUCT_OPTIONS . '"/>';
+              ?>
+            </form>
+          </td>
+        </tr>
+      <?php
+    }
   }
   ?>
 </table>
