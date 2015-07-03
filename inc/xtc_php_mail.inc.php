@@ -76,29 +76,33 @@ function xtc_php_mail($from_email_address, $from_email_name,
   if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.html')) {
     $shop_content_data = $main->getContentData(EMAIL_SIGNATURE_ID, $lang_data['languages_id'], ((isset($customers_status)) ? $customers_status : DEFAULT_CUSTOMERS_STATUS_ID_GUEST));    
     $mailsmarty->assign('SIGNATURE_HTML', $shop_content_data['content_text']);
-    $html_signatur = '<br />' .$mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.html'); 
+    $html_signatur = $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.html'); 
   }
   if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.txt')) {
     $shop_content_data = $main->getContentData(EMAIL_SIGNATURE_ID, $lang_data['languages_id'], ((isset($customers_status)) ? $customers_status : DEFAULT_CUSTOMERS_STATUS_ID_GUEST));
     $mailsmarty->assign('SIGNATURE_TXT', $shop_content_data['content_text']);
-    $txt_signatur = "\n" . $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.txt'); 
+    $txt_signatur = $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.txt'); 
   }
 
   $html_widerruf = '';
   $txt_widerruf = '';
   if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/widerruf.html')) {
-    $html_widerruf = '<br />' . $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/widerruf.html'); 
+    $html_widerruf = $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/widerruf.html'); 
   }
   if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/widerruf.txt')) {
-    $txt_widerruf = "\n" . $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/widerruf.txt'); 
+    $txt_widerruf = $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/widerruf.txt'); 
   }  
 
   //Platzhalter [WIDERRUF] durch Widerruf Text ersetzen
   if (strpos($message_body_html,'[WIDERRUF]') !== false) {
     $message_body_html = str_replace('[WIDERRUF]', $html_widerruf, $message_body_html);
+  } elseif ($html_widerruf != '') {
+    $html_widerruf = '<br />'.$html_widerruf;
   }
   if (strpos($message_body_plain,'[WIDERRUF]') !== false) {
     $message_body_plain = str_replace('[WIDERRUF]', $txt_widerruf, $message_body_plain);
+  } elseif ($txt_widerruf != '') {
+    $txt_widerruf = "\n".$txt_widerruf;  
   }
 
   //Platzhalter [NOSIGNATUR] falls keine Signatir notwendig (zB Newsletter)
@@ -113,10 +117,14 @@ function xtc_php_mail($from_email_address, $from_email_name,
   if (strpos($message_body_html,'[SIGNATUR]') !== false) {
     $message_body_html = str_replace('[SIGNATUR]', $html_signatur, $message_body_html);
     $html_signatur = '';
+  } elseif ($html_signatur != '') {
+    $html_signatur = '<br />'.$html_signatur;
   }
   if (strpos($message_body_plain,'[SIGNATUR]') !== false) {
     $message_body_plain = str_replace('[SIGNATUR]', $txt_signatur, $message_body_plain);
     $txt_signatur = '';
+  } elseif ($txt_signatur != '') {
+    $txt_signatur = "\n".$txt_signatur;  
   }
 
   require_once (DIR_FS_EXTERNAL.'phpmailer/PHPMailerAutoload.php');
