@@ -165,7 +165,7 @@ class campaigns {
 	function getCampaigns() {
 
 		$campaign = array ();
-		$campaign_query = "SELECT * FROM ".TABLE_CAMPAIGNS;
+		$campaign_query = "SELECT * FROM ".TABLE_CAMPAIGNS." ORDER BY campaigns_name";
 		$campaign_query = xtc_db_query($campaign_query);
 		while ($campaign_data = xtc_db_fetch_array($campaign_query)) {
 			$campaign[] = array ('id' => $campaign_data['campaigns_refID'], 'text' => $campaign_data['campaigns_name']);
