@@ -20,7 +20,7 @@
   if (COMPRESS_STYLESHEET == 'true') {
     $css_plain_ts = filemtime($css_plain);
     $css_min_ts = is_writeable($css_min) ? filemtime($css_min) : false;
-    if ($css_min_ts && ( $css_plain_ts > $css_min_ts ) ) {
+    if ($css_min_ts && ($css_plain_ts > $css_min_ts)) {
       require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
       if (($css_content = file_get_contents($css_plain)) !== false) {
         $compactor = new Compactor(array('strip_php_comments' => true));
