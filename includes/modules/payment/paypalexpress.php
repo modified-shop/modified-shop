@@ -126,7 +126,7 @@ class paypalexpress {
     }
 
     if(isset($_SESSION['reshash']['REDIRECTREQUIRED'])  && strtoupper($_SESSION['reshash']['REDIRECTREQUIRED']) == "TRUE") {
-      $payment_modules->giropay_process();
+      $this->giropay_process();
     } else {
       unset($_SESSION['payment']);
       unset($_SESSION['nvpReqArray']);
