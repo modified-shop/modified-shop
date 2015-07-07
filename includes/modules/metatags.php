@@ -153,6 +153,7 @@
 //   Seitennummerierung im Title (Kategorien, Sonderangebote, Neue Artikel etc. ) / Cannonical Tag Page Parameter
 // ---------------------------------------------------------------------------------------
   $Page = $page_param = '';
+  if(isset($_GET['page']) && $_GET['page'] < 0) $_GET['page'] = 1;
   if(isset($_GET['page']) && $_GET['page'] > 1 && $addPagination) {
     // PREVNEXT_TITLE_PAGE_NO ist "Seite %d" aus der deutschen bzw. "page %d" aus der englischen Sprachdatei ...
     $Page = trim(str_replace('%d','',PREVNEXT_TITLE_PAGE_NO)).' '.(int)$_GET['page'];
@@ -607,7 +608,37 @@ if (META_GOOGLE_VERIFICATION_KEY != '') {
 if (META_BING_VERIFICATION_KEY != '') {
   echo '<meta name="msvalidate.01" content="'. META_BING_VERIFICATION_KEY .'" />'."\n";
 }
-if(isset($canonical_url)) {
+if (!isset($lng) || (isset($lng) && !is_object($lng))) {
+  require_once(DIR_WS_CLASSES . 'language.php');
+  $lng = new language;
+}
+if (count($lng->catalog_languages) > 1 && (!isset($_GET['page']) || $_GET['page'] == 1)) {
+  echo '<link rel="alternate" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($_SESSION['language_code'] != DEFAULT_LANGUAGE) ? 'language='.DEFAULT_LANGUAGE : ''), $request_type, false).'" hreflang="x-default" />'."\n";
+  reset($lng->catalog_languages);
+  $canonical_flag = true;
+  while (list($key, $value) = each($lng->catalog_languages)) {
+    echo '<link rel="alternate" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($_SESSION['language_code'] != $value['code']) ? 'language='.$key : ''), $request_type, false).'" hreflang="'.$value['code'].'" />'."\n";
+  }
+  $canonical_flag = false;  
+} elseif (isset($canonical_url)) {
   echo '<link rel="canonical" href="'.$canonical_url.'" />'."\n";
+}
+if ($addPagination) {
+  $split_obj = array('listing_split', 'specials_split', 'products_new_split');
+  foreach ($split_obj as $object) {
+    if (is_object(${$object})) {
+      $number_of_pages = ${$object}->number_of_pages;
+      break;
+    }
+  }
+  if ($number_of_pages > 1) {
+    $page = ((isset($_GET['page']) && $_GET['page'] > 0) ? (int)$_GET['page'] : 1);
+    if ($page > 1 && $number_of_pages >= $page) {
+      echo '<link rel="prev" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($page > 2) ? 'page='.($page - 1) : ''), $request_type, false).'" />'."\n";
+    }
+    if ($page >= 1 && $number_of_pages > 1 && $number_of_pages > $page) {
+      echo '<link rel="next" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).'page='.($page + 1), $request_type, false).'" />'."\n";
+    }
+  }
 }
 ?>
