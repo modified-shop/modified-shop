@@ -81,6 +81,7 @@ class ShopgateConfigModified extends ShopgateConfig
 		$this->enable_clear_cache             = 1;
 		$this->enable_get_settings            = 1;
 		$this->enable_check_cart              = 1;
+        $this->enable_check_stock             = 1;
 		$this->enable_register_customer       = 1;
 		$this->shop_is_active                 = 1;
 		$this->encoding                       = 'ISO-8859-15';

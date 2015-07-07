@@ -1,5 +1,20 @@
 '''Deutsch'''
 
+'''Version 2.9.16'''
+* Produktoptionen werden nicht mehr gleichzeitig als Textfelder exportiert
+* Die Versandart wird nun auch in der Bestellungsansicht angezeigt
+
+'''Version 2.9.15'''
+* User_Groups werden jetzt ausgegeben von checkCart, getCustomer und getSettings
+
+'''Version 2.9.14'''
+* Shopsystem-Version wurde u.U. nicht richtig erkannt
+* Funktion check_cart implementiert
+
+'''Version 2.9.13'''
+* Funktion check_stock implementiert
+* Kodierungsproblem beim Anlegen von Benutzern behoben
+
 '''Version 2.9.12'''
 * Produkte mit einem Lagerbestand von 0 werden nun exportiert
 * Fehler beim Export von Produktbildern behoben
@@ -333,6 +348,21 @@
 
 
 '''English'''
+
+'''Version 2.9.16'''
+* product options won't be exported simultaneously as text field
+* the shipping method is now displayed in the order detail view
+
+'''Version 2.9.15'''
+* User_Groups are now returned by checkCart, getCustomer and getSettings
+
+'''Version 2.9.14'''
+* version of the shopping system was not recognized correctly under certain circumstances
+* implemented function check_cart
+
+'''Version 2.9.13'''
+* implemented function check_stock
+* fixed encoding issue on creating new user accounts
 
 '''Version 2.9.12'''
 * products with of quantity of zero will be exported now

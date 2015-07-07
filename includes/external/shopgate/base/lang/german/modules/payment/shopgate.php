@@ -25,6 +25,11 @@ define('MODULE_PAYMENT_SHOPGATE_TEXT_TITLE', 'Shopgate');
 define('MODULE_PAYMENT_SHOPGATE_TEXT_DESCRIPTION', 'Shopgate - Mobile Shopping.');
 define('MODULE_PAYMENT_SHOPGATE_TEXT_INFO','Bestellungen sind bereits bei Shopgate bezahlt.');
 
+define('MODULE_PAYMENT_SHOPGATE_ORDER_LINE_TEXT_SHIPPING','Versand');
+define('MODULE_PAYMENT_SHOPGATE_ORDER_LINE_TEXT_SUBTOTAL','Zwischensumme');
+define('MODULE_PAYMENT_SHOPGATE_ORDER_LINE_TEXT_PAYMENTFEE','Zahlungsartkosten');
+define('MODULE_PAYMENT_SHOPGATE_ORDER_LINE_TEXT_TOTAL','Summe');
+
 define('MODULE_PAYMENT_SHOPGATE_TEXT_EMAIL_FOOTER', '');
 define('MODULE_PAYMENT_SHOPGATE_STATUS_TITLE' , 'Shopgate-Zahlungsmodul aktiviert:');
 

@@ -109,8 +109,21 @@ class ShopgateCouponModel {
 		return $taxResult["title"];
 	}
 
-	public function getProductIdFromCartItem(ShopgateOrderItem $product){
-		return is_null($product->getParentItemNumber()) ? $product->getItemNumber() : $product->getParentItemNumber();
+    /**
+     * @param ShopgateOrderItem $sgOrderItem
+     * @return string
+     */
+	public function getProductIdFromCartItem(ShopgateOrderItem $sgOrderItem) {
+        $parentId = $sgOrderItem->getParentItemNumber();
+        if (empty($parentId)) {
+            $id = $sgOrderItem->getItemNumber();
+            if (strpos($id, "_") !== false) {
+                $productIdArr = explode('_', $id);
+                return $productIdArr[0];
+            }
+            return $id;
+        }
+        return $parentId;
 	}
 
 	/**

@@ -194,7 +194,134 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 			$addToOrderIndex += abs($minOrder);
 		}
 	}
-	
+
+    /**
+     * @param $productId
+     * @return array|bool|mixed
+     */
+    public function getProductById($productId)
+    {
+        $productQuery    = "select p.products_tax_class_id,
+                                      	p.products_id,
+                                      	pd.products_name,
+                                      	p.products_price,
+                                      	sp.specials_quantity,
+                                      	sp.specials_new_products_price,
+                                      	sp.expires_date
+										from products p
+											LEFT JOIN products_description pd ON p.products_id = pd.products_id AND pd.language_id = {$this->languageId}
+                                            LEFT JOIN specials sp ON  (sp.products_id = p.products_id AND sp.status = 1 AND (sp.expires_date > now() OR sp.expires_date = '0000-00-00 00:00:00' OR sp.expires_date IS NULL))
+										where p.products_id = {$productId}";
+        $dbProductResult = xtc_db_query($productQuery);
+        $dbProduct       = xtc_db_fetch_array($dbProductResult);
+        return $dbProduct;
+    }
+
+
+    /**
+     * @param ShopgateOrderItem $sgOrderItem
+     * @return string
+     */
+    public function getProductIdFromOrderItem(ShopgateOrderItem $sgOrderItem) {
+        $parentId = $sgOrderItem->getParentItemNumber();
+        if (empty($parentId)) {
+            $id = $sgOrderItem->getItemNumber();
+            if (strpos($id, "_") !== false) {
+                $productIdArr = explode('_', $id);
+                return $productIdArr[0];
+            }
+            return $id;
+        }
+        return $parentId;
+    }
+
+    /**
+     * @param ShopgateOrderItem $item
+     * @return array
+     */
+    public function getAttributesToProduct(ShopgateOrderItem $item)
+    {
+        $attributes   = $item->getAttributes();
+        $dbAttributes = array();
+        foreach ($attributes as $attribute) {
+
+            $query  = "SELECT
+					po.products_options_name AS `name`,
+					pov.products_options_values_name AS `value`
+					FROM products AS p
+					LEFT JOIN products_attributes AS pa ON p.products_id = pa.products_id
+					LEFT JOIN products_options AS po ON (pa.options_id = po.products_options_id AND po.language_id = 1)
+					LEFT JOIN products_options_values AS pov ON (pa.options_values_id = pov.products_options_values_id AND po.language_id = pov.language_id)
+					WHERE pa.products_id = {$this->getProductIdFromOrderItem(
+				$item
+			)} AND po.products_options_name = '{$attribute->getName(
+			)}' AND pov.products_options_values_name = '{$attribute->getValue(
+			)}'";
+            $result = ShopgateWrapper::db_query($query);
+
+            while ($dbProductAttributes =
+                ShopgateWrapper::db_fetch_array($result)) {
+                $sgAttribute = new ShopgateOrderItemAttribute();
+                $sgAttribute->setName($dbProductAttributes["option_name"]);
+                $sgAttribute->setValue($dbProductAttributes["value"]);
+                $dbAttributes[] = $sgAttribute;
+            }
+        }
+        return $dbAttributes;
+    }
+
+    /**
+     * @param $productId
+     * @param $attributeIds
+     * @param $taxRate
+     * @return array
+     */
+    public function getOptionsToProduct($productId, $attributeIds, $taxRate)
+    {
+        $resultAttributes = array();
+        foreach ($attributeIds as $attributeId) {
+            $query = "SELECT
+						o.products_options_id AS `options_id`,
+						ov.products_options_values_id AS `values_id`,
+						ov.products_options_values_name AS `values_name`,
+						pa.price_prefix AS `prefix`,
+						pa.options_values_price AS `price`,
+						o.products_options_name AS `name`
+					FROM products AS p
+						LEFT JOIN products_attributes 		AS pa ON p.products_id = pa.products_id
+						LEFT JOIN products_options 			AS o  ON o.products_options_id = pa.options_id AND o.language_id = {$this->languageId}
+						LEFT JOIN products_options_values 	AS ov ON (ov.products_options_values_id = pa.options_values_id AND o.language_id = ov.language_id)
+					WHERE 	p.products_id 						= {$productId} AND
+							pa.products_attributes_id 			= {$attributeId["products_attributes_id"]} AND
+							o.products_options_id 				= {$attributeId["options_id"]} AND
+							ov.products_options_values_id 	= {$attributeId["options_values_id"]}";
+
+            $result       = xtc_db_query($query);
+            $optionResult = xtc_db_fetch_array($result);
+            $sgOption     = new ShopgateOrderItemOption();
+            $sgOption->setName($this->stringToUtf8($optionResult["name"]));
+            $sgOption->setOptionNumber($optionResult["options_id"]);
+            $sgOption->setValue(
+                $this->stringToUtf8($optionResult["values_name"])
+            );
+            $sgOption->setValueNumber($optionResult["values_id"]);
+
+            if (!empty($optionResult["prefix"])) {
+                $price =
+                    ($optionResult["prefix"] == "-") ? ($optionResult["price"]
+                        * (-1)) : $optionResult["price"];
+            } else {
+                $price = $optionResult["price"];
+            }
+
+            $sgOption->setAdditionalAmountWithTax(
+                $price * (1 + ($taxRate / 100))
+            );
+            $resultAttributes[] = $sgOption;
+        }
+        return $resultAttributes;
+    }
+
 	/**
 	 * @return mixed
 	 */
@@ -384,7 +511,9 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 		
 		switch($type){
 			case self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_TEXT_FIELD:
-				$optionsAsInputFields = str_replace('{$condition}', 'pov.products_options_values_name = \'TEXTFELD\' OR pa.options_id IN', $optionsAsInputFields);
+				$optionsAsInputFields = empty($optionsAsInputFields) 
+					? ' AND pov.products_options_values_name = \'TEXTFELD\' '
+					: str_replace('{$condition}', 'pov.products_options_values_name = \'TEXTFELD\' OR pa.options_id IN', $optionsAsInputFields);
 				$query = $optionsAsInputFields." ORDER BY po.products_options_id, pa.sortorder";
 			break;
 			
@@ -575,7 +704,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 	 * @param float $discountPercent
 	 * @return float
 	 */
-	private function getDiscountPrice($price, $discountPercent) {
+	public function getDiscountPrice($price, $discountPercent) {
 		$discountedPrice = $price * (1-$discountPercent/100);
 		return $discountedPrice;
 	}
@@ -603,7 +732,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 		
 		return floatval($specialOffer["personal_offer"]);
 	}
-	
+
+
 	/**
 	 * @param $item
 	 * @param $descriptionType
@@ -613,8 +743,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 	public function getDescriptionToProduct($item, $descriptionType)
 	{
 		// create the description, based on the settings
-		$desc = $this->stringHelper->removeTagsFromString($item["products_description"]);
-		$shortDesc = $this->stringHelper->removeTagsFromString($item["products_short_description"]);
+        $desc = $this->stringHelper->removeTagsFromString($item["products_description"]);
+        $shortDesc = $this->stringHelper->removeTagsFromString($item["products_short_description"]);
 		$description = '';
 		switch($descriptionType) {
 			case SHOPGATE_SETTING_EXPORT_DESCRIPTION:
