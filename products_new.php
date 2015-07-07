@@ -32,10 +32,6 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 
-$breadcrumb->add(NAVBAR_TITLE_PRODUCTS_NEW, xtc_href_link(FILENAME_PRODUCTS_NEW));
-
-require (DIR_WS_INCLUDES.'header.php');
-
 $days = '';
 if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
 	$date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
@@ -135,6 +131,10 @@ if (($products_new_split->number_of_rows > 0)) {
 
 	$smarty->assign('NO_NEW_PRODUCTS', TEXT_NO_NEW_PRODUCTS);
 }
+
+$breadcrumb->add(NAVBAR_TITLE_PRODUCTS_NEW, xtc_href_link(FILENAME_PRODUCTS_NEW));
+
+require (DIR_WS_INCLUDES.'header.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;
