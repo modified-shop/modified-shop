@@ -515,7 +515,7 @@ switch(basename($PHP_SELF)) {
   case FILENAME_SPECIALS :
 
     $meta_title = metaTitle($breadcrumbTitle,$Page,($addSpecialsShopTitle)?ML_TITLE:'');
-    $canonical_url = xtc_href_link(FILENAME_SPECIALS, ltrim($page_param,'&'),$request_type,false);
+    $canonical_url = xtc_href_link(FILENAME_SPECIALS,'',$request_type,false);
     break;
 // ---------------------------------------------------------------------------------------
 //  Title für Neue Artikel
@@ -523,7 +523,7 @@ switch(basename($PHP_SELF)) {
   case FILENAME_PRODUCTS_NEW :
 
     $meta_title = metaTitle($breadcrumbTitle,$Page,($addNewsShopTitle)?ML_TITLE:'');
-    $canonical_url = xtc_href_link(FILENAME_PRODUCTS_NEW, ltrim($page_param,'&'),$request_type,false);
+    $canonical_url = xtc_href_link(FILENAME_PRODUCTS_NEW,'',$request_type,false);
     break;
 // ---------------------------------------------------------------------------------------
 //  Title für sonstige Seiten
