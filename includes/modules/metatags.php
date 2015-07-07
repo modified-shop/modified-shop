@@ -407,9 +407,9 @@ switch(basename($PHP_SELF)) {
     //-- Canonical-URL
     //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
     if (xtc_not_null($cPath)) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath.$page_param,$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath,$request_type,false);
     } elseif (xtc_not_null($manu_id)) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.$manu_id.$page_param,$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.$manu_id,$request_type,false);
     } elseif ($startpage) {
       $canonical_url = xtc_href_link(FILENAME_DEFAULT, '', $request_type,false);
     }
