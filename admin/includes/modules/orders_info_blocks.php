@@ -383,7 +383,7 @@
                 echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]).'&nbsp;';
                 echo xtc_draw_pull_down_menu('service', $service_array, $service_array[0]).'&nbsp;';
                 echo xtc_draw_pull_down_menu('parcel', $parcel_array, $parcel_array[0]).'&nbsp;';
-                echo xtc_draw_input_field('description', '' , 'style="width:350px;" placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"'); 
+                echo xtc_draw_input_field('description', '' , 'style="width:350px;vertical-align:top;" placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"');
                 echo '</td>';
               } else {
                 echo '<td class="smallText" align="center">'.xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]).'</td>';
