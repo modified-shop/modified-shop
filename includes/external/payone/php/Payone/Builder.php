@@ -334,6 +334,10 @@ class Payone_Builder {
                             $filterMaskValue->setConfig('percent', $options['percent']);
                             $serviceApplyFilters->addFilter($filterMaskValue);
                             break;
+                        case Payone_Protocol_Filter_MaskAllValue::FILTER_KEY :
+                            $filterMaskAllValue = new Payone_Protocol_Filter_MaskAllValue();
+                            $serviceApplyFilters->addFilter($filterMaskAllValue);
+                            break;
                     }
                 }
             }
