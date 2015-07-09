@@ -7,6 +7,7 @@ p.message {
 	background: rgb(240, 230, 140);
 	border: 1px solid rgb(255, 0, 0);
 	padding: 1em;
+	margin: 5px;
 }
 
 dl.adminform {
@@ -76,20 +77,24 @@ dl.adminform input[type="radio"] {
 
 
 .payone_config h3 {
-  margin:1px 0px 1px 0px;
-  background: #ddd;
-	padding: 7px;
-	cursor: pointer;
-  font-size:14px;
-  color:#555;
-  line-height:20px;
+  background: #CCC none repeat scroll 0px 0px;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 14px;
+  padding: 12px 5px;
+  border-top: 1px solid #AAA;
+  border-bottom: 1px solid #AAA;
+  color: #AF417E;
+  cursor: pointer;
+  margin: 5px;
 }
 .payone_config h3:hover {
-  background:#eee;
-  color:#333;
+  background: #EEE none repeat scroll 0% 0%;
+  color: #AF417E;
 }
 .payone_config h3.active {
-  background: #ddd;
+  margin-bottom: 0px !important;
+  background: #DDD none repeat scroll 0% 0%;
   color: #6D2551;
 }
 
