@@ -14,20 +14,10 @@
  *
  * @category        Payone
  * @package         Payone_Enum
- * @copyright       Copyright (c) 2012 <info@noovias.com> - www.noovias.com
- * @author          Matthias Walter <info@noovias.com>
+ * @copyright       Copyright (c) 2015
+ * @author          Ronny Schröder
  * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
- * @link            http://www.noovias.com
  */
-class Payone_Enum_ClearingType
-{
-    const DEBITPAYMENT = 'elv';
-    const CREDITCARD = 'cc';
-    const ADVANCEPAYMENT = 'vor';
-    const INVOICE = 'rec';
-    const ONLINEBANKTRANSFER = 'sb';
-    const CASHONDELIVERY = 'cod';
-    const WALLET = 'wlt';
-    const FINANCING = 'fnc';
-    const CASH = 'csh';
+class Payone_Api_Enum_CashType {
+    const BARZAHLEN = 'BZN';
 }

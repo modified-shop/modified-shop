@@ -34,27 +34,8 @@
 
 
 abstract class Payone_SessionStatus_Response_Abstract
-    implements Payone_SessionStatus_Response_Interface, Payone_Protocol_Filter_Filterable
+    implements Payone_SessionStatus_Response_Interface
 {
-    /**
-     * @param string $key
-     * @return null|mixed
-     */
-    public function getValue($key)
-    {
-        return $this->get($key);
-    }
-
-    /**
-     * @param string $key
-     * @param string $name
-     * @return boolean|null
-     */
-    public function setValue($key, $name)
-    {
-        return $this->set($key, $name);
-    }
-
     /**
      * @param $name
      * @return null|mixed
@@ -80,5 +61,7 @@ abstract class Payone_SessionStatus_Response_Abstract
         }
         return null;
     }
+
+
 
 }

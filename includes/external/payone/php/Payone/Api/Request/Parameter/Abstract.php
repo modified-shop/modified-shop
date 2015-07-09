@@ -31,7 +31,7 @@
  * @link            http://www.noovias.com
  */
 abstract class Payone_Api_Request_Parameter_Abstract
-    implements Payone_Api_Request_Parameter_Interface, Payone_Protocol_Filter_Filterable
+    implements Payone_Api_Request_Parameter_Interface
 {
     /**
      * @param array $data

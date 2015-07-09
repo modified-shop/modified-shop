@@ -181,6 +181,7 @@ define('TEXT_CARDTYPE', 'Kartentyp:');
 define('TEXT_CARDNO', 'Kartennummer:');
 define('TEXT_CARDEXPIRES', 'G&uuml;ltig bis (Monat / Jahr):');
 define('TEXT_CARDCHECKNUM', 'Pr&uuml;fziffer:');
+define('TEXT_CHECK_DATA', 'Bitte &uuml;berpr&uuml;fen Sie Ihre Angaben.');
 
 // orders status
 define('ORDERS_STATUS_CONFIGURATION', 'Konfiguration der Bestellstatus');

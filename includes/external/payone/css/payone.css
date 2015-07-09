@@ -134,16 +134,19 @@ input.yesbutton:hover {
 }
 
 .payone_cc_container .errormessage {
-  border:solid #DCA7A7 1px;
-  padding:10px;
-  font-size:13px !important;
-  line-height:17px;
-  color:#A94442;
-  background-color:#F2DEDE ;
-  margin-bottom:8px !important;
-  text-align:left;
+    border: 0px;
+    padding: 0px 10px;
+    font-size: 13px !important;
+    line-height: 30px;
+    color: #A94442;
+    background-color: #F2DEDE;
+    margin-bottom: 8px !important;
+    text-align: left;
 }
 
+iframe, span.inputIframe {
+  float:left;
+}
 /* Ende Kreditkartenformular checkout_confirmation */
 
 
