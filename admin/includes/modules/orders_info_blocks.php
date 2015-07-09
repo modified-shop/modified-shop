@@ -95,12 +95,8 @@
           <tr>
             <td>
               <table border="0" cellspacing="0" cellpadding="2">
-                <?php
-                // invoice number and date
-                echo add_table_infos_ibillnr($order);
-                ?>
                 <tr>
-                  <td class="main"><b><?php echo ENTRY_LANGUAGE; ?></b></td>
+                  <td class="main" style="width:140px;"><b><?php echo ENTRY_LANGUAGE; ?></b></td>
                   <td class="main"><?php echo $lang_img = xtc_image(DIR_WS_LANGUAGES . $order->info['language'].'/admin/images/'.$lang_array['image'], $order->info['language']) .'&nbsp;&nbsp;'. $order->info['language']; ?></td>
                 </tr>
                 <tr>
@@ -108,11 +104,14 @@
                   <td class="main"><?php echo get_payment_name($order->info['payment_method']) . ' ('.$order->info['payment_method'].')'; ?></td>
                 </tr>
                 <?php
+
+                ## invoice number and date
+                echo add_table_infos_ibillnr($order);
                 
-                /* easyBill */
+                ## easyBill
                 include (DIR_FS_EXTERNAL.'easybill/admin/easybill.info.php');
 
-                // Paypal Express Modul
+                ## Paypal Express Modul
                 if ($order->info['payment_method']=='paypal_directpayment' or $order->info['payment_method']=='paypal' or $order->info['payment_method']=='paypalexpress') {
                   require('../includes/classes/paypal_checkout.php');
                   require('includes/classes/class.paypal.php');
@@ -120,21 +119,20 @@
                   $paypal->admin_notification($oID);
                 }
 
-              // Banktransfer - START
-              $banktransfer_query = xtc_db_query("-- /admin/orders.php
-                                                   SELECT banktransfer_owner,
-                                                         banktransfer_number,
-                                                         banktransfer_bankname,
-                                                         banktransfer_blz,
-                                                         banktransfer_iban,
-                                                         banktransfer_bic,
-                                                         banktransfer_status,
-                                                         banktransfer_prz,
-                                                         banktransfer_fax,
-                                                         banktransfer_owner_email
-                                                    FROM ".TABLE_BANKTRANSFER."
-                                                   WHERE orders_id = ".$oID);
-              $banktransfer = xtc_db_fetch_array($banktransfer_query);
+                ## Banktransfer
+                $banktransfer_query = xtc_db_query("SELECT banktransfer_owner,
+                                                           banktransfer_number,
+                                                           banktransfer_bankname,
+                                                           banktransfer_blz,
+                                                           banktransfer_iban,
+                                                           banktransfer_bic,
+                                                           banktransfer_status,
+                                                           banktransfer_prz,
+                                                           banktransfer_fax,
+                                                           banktransfer_owner_email
+                                                      FROM ".TABLE_BANKTRANSFER."
+                                                     WHERE orders_id = ".$oID);
+                $banktransfer = xtc_db_fetch_array($banktransfer_query);
                 if ($banktransfer['banktransfer_bankname'] || $banktransfer['banktransfer_blz'] || $banktransfer['banktransfer_number'] || $banktransfer['banktransfer_iban'] ) {
                   ?>
                   <tr>
@@ -168,7 +166,6 @@
                     <td class="main"><?php echo TEXT_BANK_OWNER_EMAIL; ?></td>
                     <td class="main"><?php echo $banktransfer['banktransfer_owner_email']; ?></td>
                   </tr>
-                                   
                   <?php  if ($banktransfer['banktransfer_status'] == 0) { ?>
                   <tr>
                     <td class="main"><?php echo TEXT_BANK_STATUS; ?></td>
@@ -201,9 +198,8 @@
                   </tr>
                 <?php
                 }
-                // Banktransfer - END
 
-                // Moneybookers
+                ## Moneybookers
                 if ($order->info['payment_method'] == 'amoneybookers') {
                   if (file_exists(DIR_FS_CATALOG.DIR_WS_MODULES.'payment/'.$order->info['payment_method'].'.php')) {
                     include(DIR_FS_CATALOG.DIR_WS_MODULES.'payment/'.$order->info['payment_method'].'.php');
@@ -216,7 +212,7 @@
 
                 ## Payone
                 include (DIR_FS_EXTERNAL.'payone/modules/orders_payone.php'); 
-
+                
                 ?>
               </table>
             </td>
@@ -468,11 +464,13 @@
           </tr>
           <tr>
             <td class="main"><b><?php echo ENTRY_STATUS; ?></b> <?php echo xtc_draw_pull_down_menu('status', $orders_statuses, $order->info['orders_status']); ?></td>
-          </tr><?php
+          </tr>
+          <?php
             /* magnalister v2.0.0 */
             if (function_exists('magnaExecute')) magnaExecute('magnaRenderOrderStatusSync', array(), array('order_details.php'));
             /* END magnalister */
-        ?><tr>
+          ?>
+          <tr>
             <td>
               <table border="0" cellspacing="0" cellpadding="2">
                 <tr>
