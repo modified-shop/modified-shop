@@ -259,6 +259,9 @@ require(DIR_WS_CLASSES . 'object_info.php');
 // file uploading class
 require(DIR_WS_CLASSES . 'upload.php');
 
+// add_select
+require (DIR_FS_CATALOG.DIR_WS_INCLUDES.'define_add_select.php');
+
 // calculate category path
 $cPath = isset($_GET['cPath']) ? $_GET['cPath'] : '';
 if (strlen($cPath) > 0) {
