@@ -43,3 +43,4 @@ td.dataTableConfig.col-middle .SumoSelect {width:100%; }
 p.SlectBox{
 overflow:hidden;
 }
+.page {display:inline-block;line-height:30px;vertical-align:middle;}
