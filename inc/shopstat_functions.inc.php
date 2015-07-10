@@ -82,6 +82,7 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
   $sort       = (isset($pararray['sort']))?$pararray['sort']:'';
   $filter_id  = (isset($pararray['filter_id']))?$pararray['filter_id']:'';
   $action     = (isset($pararray['action']))?$pararray['action']:'';
+  $show       = (isset($pararray['show']))?$pararray['show']:'';
 
   //EOF - web28 - 2010-08-18 -- Die Parameter aufspalten
   $go = true;
@@ -100,6 +101,9 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
     $go = false;
   } elseif (strpos($prodid,'{') !== false) {
     //-- Produkt mit Attributen
+    $go = false;
+  } elseif (strlen($show)>0) {
+    //-- Andere Aktion
     $go = false;
   }
 
