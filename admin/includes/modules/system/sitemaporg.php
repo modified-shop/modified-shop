@@ -244,12 +244,12 @@ class sitemaporg {
   }
 
   function keys() {
-    return array('MODULE_SITEMAPORG_STATUS',
-                 'MODULE_SITEMAPORG_FILE',
+    return array('MODULE_SITEMAPORG_FILE',
                  'MODULE_SITEMAPORG_STATUS',
                  'MODULE_SITEMAPORG_ROOT',
                  'MODULE_SITEMAPORG_GZIP',
-                 'MODULE_SITEMAPORG_EXPORT');
+                 'MODULE_SITEMAPORG_EXPORT',
+                 'MODULE_SITEMAPORG_YAHOO');
   }
   
 }
