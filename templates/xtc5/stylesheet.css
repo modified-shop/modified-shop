@@ -552,7 +552,7 @@ h2.boxcartheader a {
 /* Dokuman - 2009-06-06 - Fix new products display in firefox - picture size is 120px by default */
 /*.productPreviewImage { width:100px; display:block } */
 .productPreviewImage {
-  width:120px;
+  /*width:120px;*/
   display:block;
   vertical-align:top;
   padding:3px 15px 0 0;
@@ -1248,7 +1248,7 @@ dd {
   width:125px;
 }
 td.productPreviewContent {
-  width:400px;
+  /*width:400px;*/
   text-align:left;
 }
 /* Tomcraft - 2009-09-22 - FIX DER AUFZÄHLUNGEN IM CONTENT */
