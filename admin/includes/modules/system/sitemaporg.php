@@ -236,7 +236,6 @@ class sitemaporg {
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_ROOT', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_GZIP', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_EXPORT', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
-    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_YAHOO', 'YahooDemo',  '6', '1', '', now())");
   }
 
   function remove() {
@@ -245,7 +244,6 @@ class sitemaporg {
 
   function keys() {
     return array('MODULE_SITEMAPORG_FILE',
-                 'MODULE_SITEMAPORG_STATUS',
                  'MODULE_SITEMAPORG_ROOT',
                  'MODULE_SITEMAPORG_GZIP',
                  'MODULE_SITEMAPORG_EXPORT',
