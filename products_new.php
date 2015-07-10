@@ -100,7 +100,8 @@ if (($products_new_split->number_of_rows > 0)) {
 	$new_products_query = "SELECT DISTINCT p.*,
                                          pd.products_name,
                                          pd.products_short_description,
-                                         m.manufacturers_name
+                                         m.manufacturers_name,
+                                         IFNULL(s.specials_new_products_price, p.products_price) AS price
                                     FROM ".TABLE_PRODUCTS." p
                                LEFT JOIN ".TABLE_MANUFACTURERS." m
                                          ON p.manufacturers_id = m.manufacturers_id
@@ -112,6 +113,8 @@ if (($products_new_split->number_of_rows > 0)) {
                                     JOIN ".TABLE_CATEGORIES." c
                                          ON c.categories_id = p2c.categories_id
                                             AND c.categories_status=1
+                               LEFT JOIN ".TABLE_SPECIALS." s
+                                           ON p.products_id = s.products_id
                                    WHERE p.products_status = '1'
                                          ".PRODUCTS_CONDITIONS_P."
                                          ".$where."
