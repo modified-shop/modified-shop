@@ -32,16 +32,24 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 
+$max_display_results = (isset($_SESSION['filter_set']) ? (int)$_SESSION['filter_set'] : MAX_DISPLAY_PRODUCTS_NEW);
+
 $days = '';
 if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
 	$date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
 	$days = " AND p.products_date_added > '".$date_new_products."' ";
 }
 
+$where = '';
+if (isset($_GET['filter_id']) && $_GET['filter_id'] != '') {
+  $where = " AND p.manufacturers_id = '".(int)$_GET['filter_id']."' ";
+}
+
 $products_new_query_raw = "SELECT DISTINCT p.*,
                                            pd.products_name,
                                            pd.products_short_description,
-                                           m.manufacturers_name
+                                           m.manufacturers_name,
+                                           IFNULL(s.specials_new_products_price, p.products_price) AS price
                                       FROM ".TABLE_PRODUCTS." p 
                                  LEFT JOIN ".TABLE_MANUFACTURERS." m
                                            ON p.manufacturers_id = m.manufacturers_id
@@ -54,12 +62,15 @@ $products_new_query_raw = "SELECT DISTINCT p.*,
                                       JOIN ".TABLE_CATEGORIES." c
                                            ON c.categories_id = p2c.categories_id
                                               AND c.categories_status=1
+                                 LEFT JOIN ".TABLE_SPECIALS." s
+                                           ON p.products_id = s.products_id
                                      WHERE p.products_status = '1'
                                            ".PRODUCTS_CONDITIONS_P."
                                            ".$days."
-                                  ORDER BY p.products_date_added DESC";
+                                           ".$where."
+                                           ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_date_added DESC');
 
-$products_new_split = new splitPageResults($products_new_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_PRODUCTS_NEW, 'p.products_id');
+$products_new_split = new splitPageResults($products_new_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, 'p.products_id');
 
 $module_content = array();
 if (($products_new_split->number_of_rows > 0)) {
@@ -103,9 +114,10 @@ if (($products_new_split->number_of_rows > 0)) {
                                             AND c.categories_status=1
                                    WHERE p.products_status = '1'
                                          ".PRODUCTS_CONDITIONS_P."
+                                         ".$where."
                                 ORDER BY p.products_date_added DESC";
 
-  $products_new_split = new splitPageResults($new_products_query, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_PRODUCTS_NEW, 'p.products_id');
+  $products_new_split = new splitPageResults($new_products_query, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, 'p.products_id');
 
   if (($products_new_split->number_of_rows > 0)) {
     if (USE_PAGINATION_LIST == 'false') {
@@ -135,6 +147,8 @@ if (($products_new_split->number_of_rows > 0)) {
 $breadcrumb->add(NAVBAR_TITLE_PRODUCTS_NEW, xtc_href_link(FILENAME_PRODUCTS_NEW));
 
 require (DIR_WS_INCLUDES.'header.php');
+
+include (DIR_WS_MODULES.'listing_filter.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;

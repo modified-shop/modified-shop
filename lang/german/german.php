@@ -558,6 +558,19 @@ define('IMAGE_BUTTON_TO_WISHLIST', 'Auf den Merkzettel');
 define('GUEST_REDEEM_NOT_ALLOWED', 'G&auml;ste k&ouml;nnen keine Gutscheine einl&ouml;sen.');
 define('GUEST_VOUCHER_NOT_ALLOWED', 'Gutscheine k&ouml;nnen nicht als Gast gekauft werden.');
 
+define('TEXT_FILTER_SETTING_DEFAULT', 'Artikel pro Seite');
+define('TEXT_FILTER_SETTING', '%s Artikel pro Seite');
+define('TEXT_FILTER_SETTING_ALL', 'Alle Artikel anzeigen');
+
+define('TEXT_FILTER_SORTING_DEFAULT', 'Sortieren nach ...');
+define('TEXT_FILTER_SORTING_ABC_ASC', 'A bis Z');
+define('TEXT_FILTER_SORTING_ABC_DESC', 'Z bis A');
+define('TEXT_FILTER_SORTING_PRICE_ASC', 'Preis aufsteigend');
+define('TEXT_FILTER_SORTING_PRICE_DESC', 'Preis absteigend');
+define('TEXT_FILTER_SORTING_DATE_DESC', 'Neueste Produkte zuerst');
+define('TEXT_FILTER_SORTING_DATE_ASC', '&Auml;lteste Produkte zuerst');
+define('TEXT_FILTER_SORTING_ORDER_DESC', 'Am meisten verkauft');
+
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
 ?>

@@ -158,7 +158,8 @@ if ($errorno) {
                                  p.products_vpe_value,
                                  pd.products_name,
                                  pd.products_short_description,
-                                 pd.products_description ";
+                                 pd.products_description,
+                                 IFNULL(s.specials_new_products_price, p.products_price) AS price ";
 
   $from_str  = "FROM ".TABLE_PRODUCTS." AS p 
            LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON (p.products_id = pd.products_id AND trim(pd.products_name) != '' AND pd.language_id = '".$_SESSION['languages_id']."') ";
@@ -238,7 +239,7 @@ if ($errorno) {
         break;
       }
     }
-    $where_str .= " ) GROUP BY p.products_id ORDER BY p.products_id ";
+    $where_str .= " ) GROUP BY p.products_id ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_id ASC');
   }
 
   // glue together

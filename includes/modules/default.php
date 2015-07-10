@@ -226,8 +226,6 @@ if ($category_depth == 'nested') {
       $from   .= "JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                        ON p2c.products_id = pd.products_id 
                           AND p2c.categories_id = '".(int)$_GET['filter_id']."' ";
-    } else {
-      // We show them all
     }
   } else {
     // show the products in a given categorie
@@ -241,8 +239,6 @@ if ($category_depth == 'nested') {
       $from   .= "JOIN ".TABLE_MANUFACTURERS." m 
                        ON p.manufacturers_id = m.manufacturers_id
                           AND m.manufacturers_id = '".(int)$_GET['filter_id']."' ";
-    } else {
-      // We show them all
     }
   }
     
@@ -265,73 +261,22 @@ if ($category_depth == 'nested') {
                          p.products_vpe_value,
                          pd.products_name,
                          pd.products_description,
-                         pd.products_short_description
+                         pd.products_short_description,
+                         IFNULL(s.specials_new_products_price, p.products_price) AS price
                     FROM ".TABLE_PRODUCTS." p
                     JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                          ON p.products_id = pd.products_id 
                             AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                             AND trim(pd.products_name) != '' 
                          ".$from."
+               LEFT JOIN ".TABLE_SPECIALS." s
+                         ON p.products_id = s.products_id 
                    WHERE p.products_status = '1'
                          ".PRODUCTS_CONDITIONS_P."
                          ".$where."
-                         ".$sorting;
-
-    // optional Product List Filter
-  if (PRODUCT_LIST_FILTER == 'true') {
-    if (isset($_GET['manufacturers_id'])) {
-      $filterlist_sql = "SELECT DISTINCT c.categories_id as id,
-                                         cd.categories_name as name
-                                    FROM ".TABLE_PRODUCTS." p
-                                    JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                                         ON p2c.products_id = p.products_id
-                                    JOIN ".TABLE_CATEGORIES." c 
-                                         ON c.categories_id = p2c.categories_id 
-                                            ".CATEGORIES_CONDITIONS_C."
-                                    JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
-                                         ON cd.categories_id = p2c.categories_id
-                                            AND cd.language_id = '".(int) $_SESSION['languages_id']."'
-                                   WHERE p.products_status = '1'
-                                     AND p.manufacturers_id = '".(int) $_GET['manufacturers_id']."'
-                                         ".PRODUCTS_CONDITIONS_P."
-                                ORDER BY cd.categories_name";
-    } else {
-      $filterlist_sql = "SELECT DISTINCT m.manufacturers_id as id,
-                                         m.manufacturers_name as name
-                                    FROM ".TABLE_PRODUCTS." p
-                                    JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                                         ON p2c.products_id = p.products_id
-                                            AND p2c.categories_id = '".$current_category_id."'
-                                    JOIN ".TABLE_MANUFACTURERS." m on m.manufacturers_id = p.manufacturers_id
-                                   WHERE p.products_status = '1'
-                                         ".PRODUCTS_CONDITIONS_P."
-                                ORDER BY m.manufacturers_name";
-    }
-    $filterlist_query = xtDBquery($filterlist_sql);
-    if (xtc_db_num_rows($filterlist_query, true) > 1) {
-      $manufacturer_dropdown = xtc_draw_form('filter', DIR_WS_CATALOG . FILENAME_DEFAULT, 'get');
-      if (isset($_GET['manufacturers_id'])) {
-        $manufacturer_dropdown .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']).PHP_EOL;
-        $options = array (array ('id' => '', 'text' => TEXT_ALL_CATEGORIES));
-      } else {
-        $manufacturer_dropdown .= xtc_draw_hidden_field('cat', $current_category_id).PHP_EOL;
-        $options = array (array ('id' => '', 'text' => TEXT_ALL_MANUFACTURERS));
-      }
-      if (isset($_GET['sort']) && !empty($_GET['sort'])) {
-        $manufacturer_dropdown .= xtc_draw_hidden_field('sort', $_GET['sort']).PHP_EOL;
-      }
-      while ($filterlist = xtc_db_fetch_array($filterlist_query, true)) {
-        $options[] = array ('id' => $filterlist['id'], 'text' => $filterlist['name']);
-      }
-      $manufacturer_dropdown .= xtc_draw_pull_down_menu('filter_id', $options, isset($_GET['filter_id']) ? (int)$_GET['filter_id'] : '', 'onchange="this.form.submit()"').PHP_EOL;
-      $manufacturer_dropdown .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_submit" /></noscript>'.PHP_EOL;
-      $manufacturer_dropdown .= xtc_hide_session_id() .PHP_EOL; //Session ID nur anhängen, wenn Cookies deaktiviert sind
-      $manufacturer_dropdown .= '</form>'.PHP_EOL;
-    }
-  }
+                         ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting);
 
   include (DIR_WS_MODULES.FILENAME_PRODUCT_LISTING);
-
 
 /**
   * default content page

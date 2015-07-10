@@ -29,9 +29,9 @@ $result = true;
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 
-$max_display_results = MAX_DISPLAY_SEARCH_RESULTS;
+$max_display_results = (isset($_SESSION['filter_set']) ? (int)$_SESSION['filter_set'] : MAX_DISPLAY_SEARCH_RESULTS);;
 if (strpos($PHP_SELF, FILENAME_ADVANCED_SEARCH_RESULT) !== false && defined('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS') && MAX_DISPLAY_ADVANCED_SEARCH_RESULTS != '') {
-  $max_display_results = MAX_DISPLAY_ADVANCED_SEARCH_RESULTS;
+  $max_display_results = (isset($_SESSION['filter_set']) ? (int)$_SESSION['filter_set'] : MAX_DISPLAY_ADVANCED_SEARCH_RESULTS);
   $module_smarty->assign('SEARCH_RESULT', true);
 }
 
@@ -163,7 +163,10 @@ if ($result != false) {
     $category['listing_template'] = $files[0];
   }
 
+  include (DIR_WS_MODULES.'listing_filter.php');
+  
   $module_smarty->assign('MANUFACTURER_DROPDOWN', (isset($manufacturer_dropdown) ? $manufacturer_dropdown : ''));
+  
   $module_smarty->assign('language', $_SESSION['language']);
   $module_smarty->assign('module_content', $module_content);
   // support for own manufacturers template

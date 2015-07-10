@@ -1,0 +1,9 @@
+<div class="filter_bar cf">
+  {if isset($FILTER_MANUFACTURER)}<div class="manufacturer_filter">{$FILTER_MANUFACTURER}</div>{/if}
+  {if isset($FILTER_SORT)}<div class="products_sort">{$FILTER_SORT}</div>{/if}
+  {if isset($FILTER_SET)}<div class="products_count">{$FILTER_SET}</div>{/if}
+  <div class="list_switcher cf">
+    <a rel="nofollow" class="view_list{if $smarty.const.PRODUCT_LIST_BOX != 'true'} active{/if}" href="{$LINK_DISPLAY_LIST}" title="Listenansicht">&nbsp;</a>
+    <a rel="nofollow" class="view_box{if $smarty.const.PRODUCT_LIST_BOX == 'true'} active{/if}" href="{$LINK_DISPLAY_BOX}" title="Boxansicht">&nbsp;</a>
+  </div>
+</div>

@@ -3,6 +3,7 @@
 {config_load file="lang_`$language`.custom"}
 <h1>{#heading_text#}</h1>
 {if $NO_NEW_PRODUCTS}<div class="infomessage">{$NO_NEW_PRODUCTS}</div>{/if}
+{$LISTING_FILTER}
 {$PAGINATION}
 <div class="listingcontainer cf">
   {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/product_listing_include.html"}

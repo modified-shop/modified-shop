@@ -23,14 +23,20 @@ $smarty = new Smarty;
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
-$breadcrumb->add(NAVBAR_TITLE_SPECIALS, xtc_href_link(FILENAME_SPECIALS));
+$max_display_results = (isset($_SESSION['filter_set']) ? (int)$_SESSION['filter_set'] : MAX_DISPLAY_SPECIAL_PRODUCTS);
+
+$where = '';
+if (isset($_GET['filter_id']) && $_GET['filter_id'] != '') {
+  $where = " AND p.manufacturers_id = '".(int)$_GET['filter_id']."' ";
+}
 
 $specials_query_raw = "SELECT p.*,
                               pd.products_name,
                               pd.products_short_description,
                               m.manufacturers_name,
                               s.expires_date,
-                              s.specials_new_products_price
+                              s.specials_new_products_price,
+                              s.specials_new_products_price AS price
                          FROM ".TABLE_PRODUCTS." p
                     LEFT JOIN ".TABLE_MANUFACTURERS." m
                               ON p.manufacturers_id = m.manufacturers_id
@@ -43,15 +49,14 @@ $specials_query_raw = "SELECT p.*,
                                  AND s.status = '1'
                         WHERE p.products_status = '1'
                               ".PRODUCTS_CONDITIONS_P."
-                     ORDER BY s.specials_date_added DESC";
+                              ".$where."
+                              ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY s.specials_date_added DESC');
 
-$specials_split = new splitPageResults($specials_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_SPECIAL_PRODUCTS);
+$specials_split = new splitPageResults($specials_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results);
 
 if ($specials_split->number_of_rows==0) {
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
 }
-
-require (DIR_WS_INCLUDES.'header.php');
 
 $module_content = array();
 if (($specials_split->number_of_rows > 0)) {
@@ -76,6 +81,12 @@ if (($specials_split->number_of_rows > 0)) {
     $module_content[] = $product->buildDataArray($specials);
   }
 }
+
+$breadcrumb->add(NAVBAR_TITLE_SPECIALS, xtc_href_link(FILENAME_SPECIALS));
+
+require (DIR_WS_INCLUDES.'header.php');
+
+include (DIR_WS_MODULES.'listing_filter.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('module_content', $module_content);
