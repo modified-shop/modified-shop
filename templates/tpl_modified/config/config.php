@@ -30,8 +30,7 @@
   define('TPL_POPUP_PRODUCT_PRINT_SIZE', '');
   define('TPL_POPUP_PRINT_ORDER_SIZE', '');
   
-  // listing
-  define('PRODUCT_LIST_BOX', 'true'); // 'true' or 'false'
+  define('PRODUCT_LIST_BOX', ((isset($_SESSION['listbox'])) ? $_SESSION['listbox'] : 'true')); // 'true' or 'false'
   define('PRODUCT_INFO_BOX', 'false'); // 'true' or 'false'
   
   // template output
