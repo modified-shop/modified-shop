@@ -115,7 +115,7 @@ if (($products_new_split->number_of_rows > 0)) {
                                    WHERE p.products_status = '1'
                                          ".PRODUCTS_CONDITIONS_P."
                                          ".$where."
-                                ORDER BY p.products_date_added DESC";
+                                         ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_date_added DESC');
 
   $products_new_split = new splitPageResults($new_products_query, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, 'p.products_id');
 
