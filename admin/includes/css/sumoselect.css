@@ -8,7 +8,7 @@ td.dataTableConfig.col-middle .SumoSelect {width:100%; }
 .SumoSelect > .optWrapper > .options > li label, .SumoSelect > .CaptionCont { user-select: none; -o-user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; }
 .SumoSelect { display: inline-block; position: relative; }
 .SumoSelect > .CaptionCont { position: relative;min-height: 20px; background-color: #fafafa;border-color: #c6c6c6 #dadada #eaeaea;-webkit-border-radius: 2px;-moz-border-radius: 2px;border-radius: 2px;border-style: solid;border-width: 1px;}
-.SumoSelect > .CaptionCont > span { display: block; padding-right: 22px; white-space: nowrap; line-height:20px;}
+.SumoSelect > .CaptionCont > span { display: block; padding-right: 22px; white-space: nowrap; line-height:20px; overflow:hidden;}
 /*placeholder style*/
 .SumoSelect > .CaptionCont > span.placeholder { color: #ccc; font-style: italic; }
 .SumoSelect > .CaptionCont > label { position: absolute; top: 0px; right: 0px; bottom: 0px; width: 22px; background-color: #c8c8c8; }
@@ -40,8 +40,4 @@ td.dataTableConfig.col-middle .SumoSelect {width:100%; }
 
 .select_f12 { font-size:12px; }
 
-p.SlectBox{
-overflow:hidden;
-}
-.page {display:inline-block;line-height:30px;vertical-align:middle;}
-.pageTop {display:inline-block;line-height:30px;vertical-align:top;}
+.page {vertical-align:middle;}
