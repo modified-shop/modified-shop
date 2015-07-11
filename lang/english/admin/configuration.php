@@ -993,4 +993,14 @@ define('NEW_SELECT_CHECKBOX_TITLE', 'Admin Styling');
 define('NEW_SELECT_CHECKBOX_DESC', 'Use Styling for Checkboxes/Dropdowns?');
 define('CSRF_TOKEN_SYSTEM_TITLE', 'Admin Token System');
 define('CSRF_TOKEN_SYSTEM_DESC', 'Use Token System in admin area?<br/><b>Attention:</b> the Token System is used to secure the admin area.');
+
+define('DISPLAY_FILTER_INDEX_TITLE', 'Filter display per page - Products');
+define('DISPLAY_FILTER_INDEX_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 3,12,27,all');
+define('DISPLAY_FILTER_SPECIALS_TITLE', 'Filter display per page - Specials');
+define('DISPLAY_FILTER_SPECIALS_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 3,12,27,all');
+define('DISPLAY_FILTER_PRODUCTS_NEW_TITLE', 'Filter display per page - New Products');
+define('DISPLAY_FILTER_PRODUCTS_NEW_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 3,12,27,all');
+define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_TITLE', 'Filter display per page - Search results');
+define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 3,12,27,all');
+
 ?>
