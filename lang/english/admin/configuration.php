@@ -1001,6 +1001,6 @@ define('DISPLAY_FILTER_SPECIALS_DESC', 'Please enter comma separated values for 
 define('DISPLAY_FILTER_PRODUCTS_NEW_TITLE', 'Filter display per page - New Products');
 define('DISPLAY_FILTER_PRODUCTS_NEW_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 3,12,27,all');
 define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_TITLE', 'Filter display per page - Search results');
-define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 3,12,27,all');
+define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 4,12,32,all');
 
 ?>
