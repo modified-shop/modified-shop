@@ -2778,6 +2778,29 @@ body.popupprint {
 ul.printinfolist {
   margin-left:15px;
 }
+.moimages {
+  float:left;
+  width:126px;
+  height:126px;
+  border: 1px solid #ddd;
+  padding:2px;
+  margin: 0px 10px 10px 0px;
+  position:relative;
+}
+.moimages:nth-child(5n+1) {
+  margin-right:0px;
+}
+.moimages img {
+  position:absolute;
+  margin: auto;
+	top:0px;
+	bottom:0px;
+	left:0px;
+	right:0px;
+  background-color: #FFFFFF;
+  max-height:126px;
+  max-width:126px;
+}
 /* admin print-order */
 .printwrap_admin {
   padding-top:40px;
