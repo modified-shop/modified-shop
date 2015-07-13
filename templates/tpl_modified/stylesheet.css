@@ -2564,6 +2564,15 @@ ul.pd_iconlist li.wishlist .wishlist_submit_link:hover {
   text-align:left;    
   padding:1px 3px;
 }
+.gp_vpe {
+  display: block;
+  background:#fff;
+  font-size: 10px;
+  font-weight: normal;
+  text-align: left;
+  padding: 1px 3px;
+  border-top: 1px solid #DDD;
+}
 /* END graduated prices */
 
 
