@@ -586,7 +586,7 @@ class categories {
       if ($group_data[$col]['STATUS_ID'] != '') {
         $personal_price = xtc_db_prepare_input($products_data['products_price_'.$group_data[$col]['STATUS_ID']]);
         if ($personal_price == '' || $personal_price == '0.0000') {
-          $personal_price = '0.00';
+          $personal_price = $products_data['products_price'];
         } else {
           $personal_price = $this->priceCheck($personal_price,$products_tax_rate);
           //$personal_price = xtc_round($personal_price, PRICE_PRECISION);

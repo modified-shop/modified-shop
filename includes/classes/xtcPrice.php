@@ -336,8 +336,7 @@ class xtcPrice {
    */
   function xtcGetOptionPrice($pID, $option, $value) {
     $price = $discount = $attributes_weight = 0;
-    $attribute_price_query = xtDBquery("-- xtcGetOptionPrice
-                                        SELECT p.products_discount_allowed,
+    $attribute_price_query = xtDBquery("SELECT p.products_discount_allowed,
                                                p.products_tax_class_id,
                                                pa.options_values_price,
                                                pa.price_prefix,
@@ -556,11 +555,29 @@ class xtcPrice {
     }
     if ($tax_class != 0) {
       $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '0') ? '' : $this->TAX[$tax_class];
-      $price        = $this->xtcAddTax($price, $products_tax);
+      $price = $this->xtcAddTax($price, $products_tax);
     }
     $decimal_places = ($decimal_places > 0) ? $decimal_places : $this->currencies[$this->actualCurr]['decimal_places'];
     $from = $this->checkAttributes($pID);
     if ($format) {
+      $sQuery = xtDBquery("SELECT max(po.quantity) AS qty,
+                                  p.products_tax_class_id
+                             FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . " po
+                             JOIN " . TABLE_PRODUCTS . " p
+                                  ON po.products_id = p.products_id
+                            WHERE po.products_id='" . $pID . "'");
+      $sQuery = xtc_db_fetch_array($sQuery, true);
+      if (($this->cStatus['customers_status_graduated_prices'] == '1') && ($sQuery['qty'] > 1)) {
+        $from = ' ' . FROM . ' ';
+        $price = $this->xtcGetGraduatedPrice($pID, $sQuery['qty']);
+        if ($curr) {
+          $price = $this->xtcCalculateCurr($price);
+        }
+        if ($sQuery['products_tax_class_id'] != 0) {
+          $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '0') ? '' : $this->TAX[$sQuery['products_tax_class_id']];
+          $price = $this->xtcAddTax($price, $products_tax);
+        }
+      }       
       $Pprice = number_format(floatval($price), $decimal_places, $this->currencies[$this->actualCurr]['decimal_point'], $this->currencies[$this->actualCurr]['thousands_point']);
       $Pprice = $this->currencies[$this->actualCurr]['symbol_left'] . ' ' . $Pprice . ' ' . $this->currencies[$this->actualCurr]['symbol_right'];
       if ($vpeStatus == 0) {
@@ -635,11 +652,11 @@ class xtcPrice {
    */
   function xtcFormatSpecial($pID, $sPrice, $pPrice, $format, $vpeStatus = 0) {
     if ($format) {      
-      if (!isset($pPrice) || $pPrice == 0)
+      if (!isset($pPrice) || $pPrice == 0) {
         $discount = 0;
-      else
+      } else {
         $discount = ($pPrice - $sPrice) / $pPrice * 100;
-        
+      }
       $old_price = $this->xtcFormat($pPrice, $format);
       $special_price = $this->xtcFormat($sPrice, $format);
       $save_percent = round($discount);
