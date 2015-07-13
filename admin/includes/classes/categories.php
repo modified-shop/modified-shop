@@ -589,7 +589,6 @@ class categories {
           $personal_price = '0.00';
         } else {
           $personal_price = $this->priceCheck($personal_price,$products_tax_rate);
-          //$personal_price = xtc_round($personal_price, PRICE_PRECISION);
         }
         // first delete all 
         xtc_db_query("DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID']." WHERE products_id = '".$products_id."'");
@@ -602,7 +601,7 @@ class categories {
         xtc_db_perform(TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID'], $insert_array);
 
         for ($is=0, $ns=sizeof($products_data['products_staffel'][$group_data[$col]['STATUS_ID']]); $is<$ns; $is++) {
-          if ($products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['quantity'] > 0) {
+          if ($products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['quantity'] > 1) {
             $staffelpreis = $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['personal_offer'];
             $staffelpreis = $this->priceCheck($staffelpreis,$products_tax_rate);
             $insert_array = array ('personal_offer' => $staffelpreis,
