@@ -845,8 +845,8 @@ define('CSV_CAT_DEPTH_DESC','How deep shall the category tree go? (e.g. with def
 //EOC added constants for category depth, noRiddle
 //EOC added text constants for group id 20, noRiddle
 
-define('MIN_GROUP_PRICE_STAFFEL_TITLE', 'Graduated Price');
-define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Minimum Graduated Price to show.');
+define('MIN_GROUP_PRICE_STAFFEL_TITLE', 'Additional Graduated Price');
+define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Additional Graduated Price to show.');
 
 define('MODULE_CAPTCHA_ACTIVE_TITLE', 'Activate Captcha');
 define('MODULE_CAPTCHA_ACTIVE_DESC', 'For which shop sections shall the Captcha be activated?');

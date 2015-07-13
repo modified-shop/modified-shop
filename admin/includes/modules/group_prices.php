@@ -121,30 +121,32 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
               </tr>
               <?php
               $count = 0;
-              while ($staffel_values = xtc_db_fetch_array($staffel_query)) {
-                ?>
-                <tr class="dataTableRow">
-                  <td class="dataTableContent"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][quantity]', $staffel_values['quantity'], 'style="width:50px;"'); ?></td>            
-                  <td class="dataTableContent">
-                    <?php
-                    if (PRICE_IS_BRUTTO == 'true') {
-                      $products_price = xtc_round($staffel_values['personal_offer'] * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
-                    } else {
-                      $products_price = xtc_round($staffel_values['personal_offer'], PRICE_PRECISION);
-                    }
-                    echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][personal_offer]', $products_price, 'style="width: 135px"');
-                    if (PRICE_IS_BRUTTO == 'true') {
-                      echo '&nbsp;<span style="white-space: nowrap;">'.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($staffel_values['personal_offer'], false).'</strong></span>';
-                    }
-                    echo xtc_draw_hidden_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][price_id]', $staffel_values['price_id']);
-                    ?>
-                  </td>
-                  <td class="dataTableContent txta-c"><?php echo xtc_draw_checkbox_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][delete]'); ?></td>
-                </tr>          
-                <?php
-                $count++;
+              if (xtc_db_num_rows($staffel_query) > 0) {
+                while ($staffel_values = xtc_db_fetch_array($staffel_query)) {
+                  ?>
+                  <tr class="dataTableRow">
+                    <td class="dataTableContent"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][quantity]', $staffel_values['quantity'], 'style="width:50px;"'); ?></td>            
+                    <td class="dataTableContent">
+                      <?php
+                      if (PRICE_IS_BRUTTO == 'true') {
+                        $products_price = xtc_round($staffel_values['personal_offer'] * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
+                      } else {
+                        $products_price = xtc_round($staffel_values['personal_offer'], PRICE_PRECISION);
+                      }
+                      echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][personal_offer]', $products_price, 'style="width: 135px"');
+                      if (PRICE_IS_BRUTTO == 'true') {
+                        echo '&nbsp;<span style="white-space: nowrap;">'.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($staffel_values['personal_offer'], false).'</strong></span>';
+                      }
+                      echo xtc_draw_hidden_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][price_id]', $staffel_values['price_id']);
+                      ?>
+                    </td>
+                    <td class="dataTableContent txta-c"><?php echo xtc_draw_checkbox_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][delete]'); ?></td>
+                  </tr>          
+                  <?php
+                  $count++;
+                }
               }
-              $max_staffel = MIN_GROUP_PRICE_STAFFEL;
+              $max_staffel = MIN_GROUP_PRICE_STAFFEL + $count;
               //if ($count >= $max_staffel) {
                 //$max_staffel = $count+1;
                 //xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . (int)$max_staffel . "', last_modified = NOW() where configuration_key='" . 'MIN_GROUP_PRICE_STAFFEL' . "'");
