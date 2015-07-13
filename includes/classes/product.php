@@ -310,44 +310,47 @@ class product {
   function getGraduated() {
     global $xtPrice;
 
-    $discount = $xtPrice->xtcCheckDiscount($this->pID);
-    $staffel_query = xtDBquery("SELECT quantity,
-                                       personal_offer
-                                  FROM ".TABLE_PERSONAL_OFFERS_BY.(int) $_SESSION['customers_status']['customers_status_id']."
-                                 WHERE products_id = '".$this->pID."'
-                              ORDER BY quantity ASC");
-    $staffel = array ();
-    while ($staffel_values = xtc_db_fetch_array($staffel_query, true)) {
-      $staffel[] = array('stk' => $staffel_values['quantity'],
-                         'price' => $staffel_values['personal_offer']
-                         );
-    }
     $staffel_data = array ();
-    for ($i=0, $n=sizeof($staffel); $i<$n; $i++) {
-      $to_quantity = '';
-      if ($staffel[$i]['stk'] == 1 || (array_key_exists($i +1, $staffel) && $staffel[$i +1]['stk'] != '')){ 
-        $quantity = $staffel[$i]['stk'];
-        if (array_key_exists($i + 1, $staffel) && $staffel[$i +1]['stk'] != '' && $staffel[$i +1]['stk'] != $staffel[$i]['stk'] + 1) {
-          $quantity .= ' - '. ($staffel[$i +1]['stk'] - 1);
-          $to_quantity = $staffel[$i +1]['stk'] - 1;
+    
+    if (!$xtPrice->xtcCheckSpecial($this->pID)) {
+      $discount = $xtPrice->xtcCheckDiscount($this->pID);
+      $staffel_query = xtDBquery("SELECT quantity,
+                                         personal_offer
+                                    FROM ".TABLE_PERSONAL_OFFERS_BY.(int) $_SESSION['customers_status']['customers_status_id']."
+                                   WHERE products_id = '".$this->pID."'
+                                ORDER BY quantity ASC");
+      $staffel = array ();
+      while ($staffel_values = xtc_db_fetch_array($staffel_query, true)) {
+        $staffel[] = array('stk' => $staffel_values['quantity'],
+                           'price' => $staffel_values['personal_offer']
+                           );
+      }
+      for ($i=0, $n=sizeof($staffel); $i<$n; $i++) {
+        $to_quantity = '';
+        if ($staffel[$i]['stk'] == 1 || (array_key_exists($i +1, $staffel) && $staffel[$i +1]['stk'] != '')){ 
+          $quantity = $staffel[$i]['stk'];
+          if (array_key_exists($i + 1, $staffel) && $staffel[$i +1]['stk'] != '' && $staffel[$i +1]['stk'] != $staffel[$i]['stk'] + 1) {
+            $quantity .= ' - '. ($staffel[$i +1]['stk'] - 1);
+            $to_quantity = $staffel[$i +1]['stk'] - 1;
+          }
+        } else {
+          $quantity = GRADUATED_PRICE_MAX_VALUE.' '.$staffel[$i]['stk'];
         }
-      } else {
-        $quantity = GRADUATED_PRICE_MAX_VALUE.' '.$staffel[$i]['stk'];
+        $vpe = '';
+        if (isset($this->data) && $this->data['products_vpe_status'] == 1 && $this->data['products_vpe_value'] != 0.0 && $staffel[$i]['price'] > 0) {
+          $vpe = $staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount;
+          $vpe = $vpe * (1 / $this->data['products_vpe_value']);
+          $vpe = BASICPRICE_VPE_TEXT.$xtPrice->xtcFormat($vpe, true, $this->data['products_tax_class_id']).TXT_PER.xtc_get_vpe_name($this->data['products_vpe']);
+        }
+        $staffel_data[$i] = array('QUANTITY' => $quantity,
+                                  'PLAIN_QUANTITY' => $staffel[$i]['stk'],
+                                  'FROM_QUANTITY' => GRADUATED_PRICE_MAX_VALUE,
+                                  'TO_QUANTITY' => $to_quantity,
+                                  'VPE' => $vpe,
+                                  'PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, true, $this->data['products_tax_class_id']),
+                                  'PLAIN_PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $this->data['products_tax_class_id'])
+                                  );
       }
-      $vpe = '';
-      if (isset($this->data) && $this->data['products_vpe_status'] == 1 && $this->data['products_vpe_value'] != 0.0 && $staffel[$i]['price'] > 0) {
-        $vpe = $staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount;
-        $vpe = $vpe * (1 / $this->data['products_vpe_value']);
-        $vpe = BASICPRICE_VPE_TEXT.$xtPrice->xtcFormat($vpe, true, $this->data['products_tax_class_id']).TXT_PER.xtc_get_vpe_name($this->data['products_vpe']);
-      }
-      $staffel_data[$i] = array('QUANTITY' => $quantity,
-                                'PLAIN_QUANTITY' => $staffel[$i]['stk'],
-                                'FROM_QUANTITY' => GRADUATED_PRICE_MAX_VALUE,
-                                'TO_QUANTITY' => $to_quantity,
-                                'VPE' => $vpe,
-                                'PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, true, $this->data['products_tax_class_id']),
-                                'PLAIN_PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $this->data['products_tax_class_id'])
-                                );
     }
     return $staffel_data;
   }
