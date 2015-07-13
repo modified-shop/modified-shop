@@ -842,8 +842,8 @@ define('CSV_CAT_DEPTH_TITLE','Kategorietiefe');
 define('CSV_CAT_DEPTH_DESC','Wie tief soll der Kategoriebaum gehen? (z.B. bei Default-Einstellung 4: Hauptkategorie und drei Unterkategorien)<br />Diese Einstellung ist wichtig um die in der CSV angelegten Kategorien auch korrekt importiert zu bekommen. Das gleiche gilt f&uuml;r den Export.<br /><span style="color:#c00;">Mehr als 4 kann zu Performance-Einbu&szlig;en f&uuml;hren und ist evtl. nicht kundenfreundlich!');
 //EOC added text constants for group id 20, noRiddle
 
-define('MIN_GROUP_PRICE_STAFFEL_TITLE', 'Anzahl Staffelpreise');
-define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Mindestanzahl der Staffelpreise die angezeigt werden');
+define('MIN_GROUP_PRICE_STAFFEL_TITLE', 'Zus&auml;tzliche Anzahl Staffelpreise');
+define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Zus&auml;tzliche Anzahl der Staffelpreise die angezeigt werden');
 
 define('MODULE_CAPTCHA_ACTIVE_TITLE', 'Captcha aktivieren');
 define('MODULE_CAPTCHA_ACTIVE_DESC', 'F&uuml;r welche Shopsektionen soll das Captcha aktiviert werden?');
