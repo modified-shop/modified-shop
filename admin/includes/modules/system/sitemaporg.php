@@ -239,7 +239,7 @@ class sitemaporg {
   }
 
   function remove() {
-    xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+    xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key LIKE 'MODULE_SITEMAPORG_%'");
   }
 
   function keys() {
