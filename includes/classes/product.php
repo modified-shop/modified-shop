@@ -318,7 +318,6 @@ class product {
                                          personal_offer
                                     FROM ".TABLE_PERSONAL_OFFERS_BY.(int) $_SESSION['customers_status']['customers_status_id']."
                                    WHERE products_id = '".$this->pID."'
-                                     AND quantity > 1
                                 ORDER BY quantity ASC");
       $staffel = array ();
       while ($staffel_values = xtc_db_fetch_array($staffel_query, true)) {
@@ -328,7 +327,10 @@ class product {
       }
       for ($i=0, $n=sizeof($staffel); $i<$n; $i++) {
         $to_quantity = '';
-        if ($staffel[$i]['stk'] == 1 || (array_key_exists($i +1, $staffel) && $staffel[$i +1]['stk'] != '')){ 
+        if ($staffel[$i]['stk'] == 1 || (array_key_exists($i +1, $staffel) && $staffel[$i +1]['stk'] != '')) { 
+          if ($staffel[$i]['stk'] == 1 && $staffel[$i]['price'] == '0.0000') {
+            $staffel[$i]['price'] = $this->data['products_price'];
+          }
           $quantity = $staffel[$i]['stk'];
           if (array_key_exists($i + 1, $staffel) && $staffel[$i +1]['stk'] != '' && $staffel[$i +1]['stk'] != $staffel[$i]['stk'] + 1) {
             $quantity .= ' - '. ($staffel[$i +1]['stk'] - 1);

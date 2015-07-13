@@ -266,8 +266,8 @@ class xtcPrice {
    * @param Double $qty quantity
    * @return Double graduated price
    */
-  function xtcGetGraduatedPrice($pID, $qty) {
-    if (defined('GRADUATED_ASSIGN') && GRADUATED_ASSIGN == 'true') {
+  function xtcGetGraduatedPrice($pID, $qty, $graduated = true) {
+    if (defined('GRADUATED_ASSIGN') && GRADUATED_ASSIGN == 'true' && $graduated === true) {
       $actual_content_qty = xtc_get_qty($pID);
       $qty = $actual_content_qty > $qty ? $actual_content_qty : $qty;
     }
@@ -282,15 +282,18 @@ class xtcPrice {
                                            AND quantity <= '" . $qty . "'");
     if (xtc_db_num_rows($graduated_price_query, true) > 0) {
       $graduated_price_data  = xtc_db_fetch_array($graduated_price_query, true);
-      $graduated_price_query = xtDBquery("SELECT personal_offer
-                                            FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . "
-                                           WHERE products_id = '" . $pID . "'
-                                             AND quantity = '" . $graduated_price_data['qty'] . "'");
-      $graduated_price_data  = xtc_db_fetch_array($graduated_price_query, true);
-      $sPrice = $graduated_price_data['personal_offer'];
 
-      if ($sPrice != 0.00) {
-        return $sPrice;
+      if ($graduated_price_data['qty'] > 0) {
+        $graduated_price_query = xtDBquery("SELECT personal_offer
+                                              FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . "
+                                             WHERE products_id = '" . $pID . "'
+                                               AND quantity = '" . $graduated_price_data['qty'] . "'");
+        $graduated_price_data  = xtc_db_fetch_array($graduated_price_query, true);
+        $sPrice = $graduated_price_data['personal_offer'];
+
+        if ($sPrice != 0.00) {
+          return $sPrice;
+        }
       }
     } else {
       return;
@@ -305,25 +308,7 @@ class xtcPrice {
    * @return Double group price
    */
   function xtcGetGroupPrice($pID, $qty) {
-    $graduated_price_query = xtDBquery("SELECT max(quantity) AS qty
-                                          FROM ".TABLE_PERSONAL_OFFERS_BY.$this->actualGroup."
-                                         WHERE products_id = '".$pID."'
-                                           AND quantity <= '".$qty."'");
-    if (xtc_db_num_rows($graduated_price_query, true) > 0) {
-      $graduated_price_data = xtc_db_fetch_array($graduated_price_query, true);
-      $graduated_price_query = xtDBquery("SELECT personal_offer
-                                            FROM ".TABLE_PERSONAL_OFFERS_BY.$this->actualGroup."
-                                           WHERE products_id = '".$pID."'
-                                             AND quantity = '".$graduated_price_data['qty']."'");
-      $graduated_price_data = xtc_db_fetch_array($graduated_price_query, true);
-      $sPrice = $graduated_price_data['personal_offer'];
-
-      if ($sPrice != 0.00) {
-        return $sPrice;
-      }
-    } else {
-      return;
-    }
+    return xtcGetGraduatedPrice($pID, $qty, false);
   }
 
   /**
