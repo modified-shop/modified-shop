@@ -318,6 +318,7 @@ class product {
                                          personal_offer
                                     FROM ".TABLE_PERSONAL_OFFERS_BY.(int) $_SESSION['customers_status']['customers_status_id']."
                                    WHERE products_id = '".$this->pID."'
+                                     AND quantity > 1
                                 ORDER BY quantity ASC");
       $staffel = array ();
       while ($staffel_values = xtc_db_fetch_array($staffel_query, true)) {
@@ -456,7 +457,7 @@ class product {
     foreach((array)$array as $key => $entry) {                  
       $productData[strtoupper($key)] = $entry;
     }
-        
+    
     $productDataAdds = array (
         'PRODUCTS_PRICE' => $products_price['formated'],
         'PRICE_ALLOWED' => (($_SESSION['customers_status']['customers_status_show_price'] != '0') ? 'true' : 'false'),
