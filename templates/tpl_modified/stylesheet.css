@@ -2543,6 +2543,9 @@ ul.pd_iconlist li.wishlist .wishlist_submit_link:hover {
   border: solid #ddd;
   border-width: 1px 0px 1px 1px;
 }
+.gp_box.vpe {
+  width:118px;
+}
 .gp_box.last {
   border-right: 1px solid #ddd;
 }
