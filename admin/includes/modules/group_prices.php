@@ -30,15 +30,18 @@ $xtPrice = new xtcPrice(DEFAULT_CURRENCY, $_SESSION['customers_status']['custome
 $group_array = array();
 $group_query = xtc_db_query("SELECT customers_status_image,
                                     customers_status_id,
-                                    customers_status_name
+                                    customers_status_name,
+                                    customers_status_graduated_prices
                                FROM ".TABLE_CUSTOMERS_STATUS."
                               WHERE language_id = '".$_SESSION['languages_id']."'
                               AND customers_status_id != '0'");
 while ($group_values = xtc_db_fetch_array($group_query)) {
   // load data into array
   $group_array[] = array ('STATUS_NAME' => $group_values['customers_status_name'],
-                           'STATUS_IMAGE' => $group_values['customers_status_image'],
-                           'STATUS_ID' => $group_values['customers_status_id']);
+                          'STATUS_IMAGE' => $group_values['customers_status_image'],
+                          'STATUS_ID' => $group_values['customers_status_id'],
+                          'STATUS_GRADUATED' => $group_values['customers_status_graduated_prices'],
+                          );
 }
 
 $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
@@ -96,7 +99,7 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
       </td>
       <td style="border-top: 1px solid #cccccc;vertical-align:top;line-height:30px;" class="main">
         <?php
-          echo TXT_STAFFELPREIS;
+          echo '<span'.(($group_data['STATUS_GRADUATED'] != '1') ? ' class="colorRed"' : '').'>'.TXT_STAFFELPREIS.'</span>';
 
           // ok, lets check if there is already a staffelpreis
           $staffel_query = xtc_db_query("SELECT price_id,
