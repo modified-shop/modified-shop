@@ -526,7 +526,7 @@ class PayoneModified {
 			'solution_name' => PROJECT_VERSION,
 			'solution_version' => $db_version_check,
 			'integrator_name' => 'Modified',
-			'integrator_version' => '1.00',
+			'integrator_version' => '1.01',
 		);
 		if ($request !== null) {
 			$params['request'] = $request;
