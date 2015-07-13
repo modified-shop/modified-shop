@@ -308,7 +308,7 @@ class xtcPrice {
    * @return Double group price
    */
   function xtcGetGroupPrice($pID, $qty) {
-    return xtcGetGraduatedPrice($pID, $qty, false);
+    return $this->xtcGetGraduatedPrice($pID, $qty, false);
   }
 
   /**
