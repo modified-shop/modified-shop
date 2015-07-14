@@ -14,6 +14,7 @@
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_ORDER_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+  $customers_statuses_array = xtc_get_customers_statuses();
 ?>
  
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
@@ -29,7 +30,14 @@
         <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
           <?php echo xtc_draw_form('status', FILENAME_ORDERS, '', 'get'); ?>
           <?php echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)),array(array('id' => '0', 'text' => TEXT_VALIDATING)), $orders_statuses),(isset($_GET['status']) && xtc_not_null($_GET['status']) ? (int)$_GET['status'] : ''),'onchange="this.form.submit();"'); ?>
+         <?php echo xtc_draw_hidden_field('cgroup', $_GET['cgroup'])?>
           </form>        
+        </div>
+        <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
+          <?php echo xtc_draw_form('cgroup', FILENAME_ORDERS, '', 'get'); ?>
+          <?php echo ENTRY_CUSTOMERS_STATUS . ' ' . xtc_draw_pull_down_menu('cgroup',xtc_array_merge(array (array ('id' => '', 'text' => TXT_ALL)), $customers_statuses_array), isset($_GET['cgroup']) ? $_GET['cgroup'] : '', 'onChange="this.form.submit();"'); ?>
+          <?php echo xtc_draw_hidden_field('status', $_GET['status'])?>
+          </form>
         </div>
         <div class="clear"></div>    
      
@@ -52,6 +60,7 @@
                 </tr>
                 <?php
                 $sort = " ORDER BY o.date_purchased DESC";
+                $cgroup = isset($_GET['cgroup']) && $_GET['cgroup'] != '' ? " AND o.customers_status = '" . (int)$_GET['cgroup'] ."'": ''; 
                 if (isset($_GET['cID'])) {
                   $cID = (int) $_GET['cID'];
                   $orders_query_raw = "-- /admin/orders.php
@@ -64,14 +73,14 @@
                                                        AND s.orders_status_id = '1'))
                                                    AND s.language_id = '".(int)$_SESSION['languages_id']."')
                                         WHERE o.customers_id = '".xtc_db_input($cID)."'
-                                               ".$sort;
+                                               ".$cgroup.$sort;
 
                 } elseif (isset($_GET['status']) && $_GET['status']=='0') {
                     $orders_query_raw = "-- /admin/orders.php
                                          SELECT ".$order_select_fields."
                                            FROM ".TABLE_ORDERS." o
                                            WHERE o.orders_status = '0'
-                                                 ".$sort;
+                                                 ".$cgroup.$sort;
 
                 } elseif (isset($_GET['status']) && xtc_not_null($_GET['status'])) { //web28 - 2012-04-14  - FIX xtc_not_null($_GET['status'])
                     $status = xtc_db_prepare_input($_GET['status']);
@@ -83,7 +92,7 @@
                                                 ON (o.orders_status = s.orders_status_id
                                                     AND s.orders_status_id = '".xtc_db_input($status)."')
                                           WHERE s.language_id = '".(int)$_SESSION['languages_id']."'
-                                                ".$sort;
+                                                ".$cgroup.$sort;
 
                 } elseif ($action == 'search' && $oID) {
                      // ADMIN SEARCH BAR $orders_query_raw moved it to the top
@@ -95,12 +104,13 @@
                                         LEFT JOIN ".TABLE_ORDERS_STATUS." s
                                                ON (o.orders_status = s.orders_status_id
                                                     AND s.orders_status_id = '".xtc_db_input($status)."')
-                                            WHERE o.customers_name LIKE '%".xtc_db_input($customer)."%'
+                                            WHERE (o.customers_name LIKE '%".xtc_db_input($customer)."%'
                                                OR o.customers_firstname LIKE '%".xtc_db_input($customer)."%'
                                                OR o.customers_lastname LIKE '%".xtc_db_input($customer)."%'
-                                               OR o.customers_company LIKE '%".xtc_db_input($customer)."%'                       
-                                         ".$sort;
+                                               OR o.customers_company LIKE '%".xtc_db_input($customer)."%')                       
+                                         ".$cgroup.$sort;
                 } else {
+                      $cgroup = str_replace('AND','WHERE',$cgroup);
                       $orders_query_raw = "-- /admin/orders.php
                                            SELECT ".$order_select_fields.",
                                                   s.orders_status_name
@@ -111,7 +121,7 @@
                                                         AND s.orders_status_id = '1'))
                                                     AND s.language_id = '".(int)$_SESSION['languages_id']."'
                                                    )
-                                                  ".$sort;
+                                                  ".$cgroup.$sort;
                 }
                 $orders_split = new splitPageResults($_GET['page'], $page_max_display_results, $orders_query_raw, $orders_query_numrows);
                 $orders_query = xtc_db_query($orders_query_raw);
