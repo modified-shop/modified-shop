@@ -61,7 +61,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
 
   
   // manufacturers
-  if (isset($_GET['manufacturers_id'])) {
+  if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
     $filterlist_sql = "SELECT DISTINCT c.categories_id as id,
                                        cd.categories_name as name
                                   FROM ".TABLE_PRODUCTS." p
@@ -113,12 +113,21 @@ if (PRODUCT_LIST_FILTER == 'true') {
                                        ".$days."
                                        ".PRODUCTS_CONDITIONS_P."
                               ORDER BY m.manufacturers_name";
+  } elseif (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT) {
+    $filterlist_sql = "SELECT DISTINCT m.manufacturers_id as id,
+                                       m.manufacturers_name as name
+                                  FROM ".TABLE_PRODUCTS." p
+                                  JOIN ".TABLE_MANUFACTURERS." m on m.manufacturers_id = p.manufacturers_id
+                                 WHERE p.products_status = '1'
+                                   AND p.products_id IN ('".implode("', '", $products_search_array)."')
+                                       ".PRODUCTS_CONDITIONS_P."
+                              ORDER BY m.manufacturers_name";
   }
   
   $filterlist_query = xtDBquery($filterlist_sql);
   if (xtc_db_num_rows($filterlist_query, true) > 1) {
     $manufacturer_dropdown = xtc_draw_form('filter', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'show', 'cat'))), 'get');
-    if (isset($_GET['manufacturers_id'])) {
+    if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
       $manufacturer_dropdown .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']).PHP_EOL;
       $options = array (array ('id' => '', 'text' => TEXT_ALL_CATEGORIES));
     } else {
@@ -127,6 +136,9 @@ if (PRODUCT_LIST_FILTER == 'true') {
     }
     if (isset($_GET['sort']) && !empty($_GET['sort'])) {
       $manufacturer_dropdown .= xtc_draw_hidden_field('sort', $_GET['sort']).PHP_EOL;
+    }
+    if (isset($_GET['keywords']) && !empty($_GET['keywords'])) {
+      $manufacturer_dropdown .= xtc_draw_hidden_field('keywords', $_GET['keywords']).PHP_EOL;
     }
     while ($filterlist = xtc_db_fetch_array($filterlist_query, true)) {
       $options[] = array ('id' => $filterlist['id'], 'text' => $filterlist['name']);
