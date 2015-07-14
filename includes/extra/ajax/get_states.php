@@ -19,7 +19,7 @@ function get_states() {
   $country_id = (int)$_GET['country'];
 
   $query = xtc_db_query("
-      SELECT zone_name
+      SELECT zone_id,zone_name
         FROM ".TABLE_ZONES."
        WHERE zone_country_id = '".$country_id."'
     ORDER BY zone_name");
@@ -27,10 +27,11 @@ function get_states() {
   $zones = array ();
   if (xtc_db_num_rows($query)) {
     while ($zones_values = xtc_db_fetch_array($query)) {
-      $zones[] = (
-        DB_SERVER_CHARSET == 'utf8'
+      $zones[] = array(
+        'id' => $zones_values['zone_id'],
+        'name' => (DB_SERVER_CHARSET == 'utf8'
         ? $zones_values['zone_name']
-        : iconv("ISO-8859-1", "UTF-8", $zones_values['zone_name'])
+        : iconv("ISO-8859-1", "UTF-8", $zones_values['zone_name']))
       );
     }
   }

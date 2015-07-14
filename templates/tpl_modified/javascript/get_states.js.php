@@ -34,6 +34,7 @@ if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) {
 <script type="text/javascript">
 /* <![CDATA[ */
 var req_states = [<?php echo $countries['ids']; ?>];
+var state = '';
 function load_state() {
   var selection = $("select[name='country']").val();
   if ($.inArray(parseInt(selection), req_states) == -1) {
@@ -48,12 +49,14 @@ function load_state() {
     if (data != '' && data != undefined) { 
       $("[name='state']").replaceWith('<select name="state"></select>');
       var stateSelect = $("[name='state']");
-      $.each(data, function(id, text) {
+      $.each(data, function(id, arr) {
+        //console.log('id:' + id + '|text:' + arr.name);
         $("<option />", {
-          "value"   : text,
-          "text"    : text
+          "value"   : arr.id,
+          "text"    : arr.name
         }).appendTo(stateSelect);
       });
+      $("[name='state']").val(state);
 <?php if (ENTRY_STATE_MIN_LENGTH > 0) { ?>
     } else {
       $("[name='state']").replaceWith('<input type="text" name="state"></input>');
@@ -67,6 +70,12 @@ function load_state() {
 }
 $(function() {
   if ($("[name=state]").length) {
+    if ($("[name=state_zone_id]").length) {
+      state = $("[name='state_zone_id']").val();
+    } else {
+      state = $("[name='state']").val();
+    }
+    //console.log('state: ' + state);
     $("select[name='country']").change(function() { load_state(); });
     if ($('div.errormessage').length == 0 && $("select[type=state] option:selected").length == 0) {
       load_state();
