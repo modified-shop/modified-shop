@@ -134,8 +134,8 @@ if (!is_object($product) || !$product->isProduct()) {
     }
     
     // wishlist
-    $info_smarty->assign('ADD_CART_BUTTON_WISHLIST', xtc_image_submit('button_in_wishlist.gif', IMAGE_BUTTON_TO_WISHLIST, 'name="wishlist_button"'));
-    $info_smarty->assign('ADD_CART_BUTTON_WISHLIST_TEXT', xtc_draw_input_field('wishlist_button', IMAGE_BUTTON_TO_WISHLIST, 'class="wishlist_submit_link"', 'submit'));
+    $info_smarty->assign('ADD_CART_BUTTON_WISHLIST', xtc_image_submit('button_in_wishlist.gif', IMAGE_BUTTON_TO_WISHLIST, 'name="wishlist"'));
+    $info_smarty->assign('ADD_CART_BUTTON_WISHLIST_TEXT', '<input type="submit" value="submit" style="display:none;" />'.xtc_draw_input_field('wishlist', IMAGE_BUTTON_TO_WISHLIST, 'class="wishlist_submit_link"', 'submit'));
   }
   
   // form tags

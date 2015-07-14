@@ -38,7 +38,7 @@ if (xtc_not_null($action)) {
   }
     
   $wishlist = false;
-  if ((isset($_POST['wishlist_button_x']) && isset($_POST['wishlist_button_y'])) || isset($_GET['wishlist']) || isset($_POST['wishlist_button'])) {
+  if ((isset($_POST['wishlist_x']) && isset($_POST['wishlist_y'])) || isset($_GET['wishlist']) || isset($_POST['wishlist'])) {
     $wishlist = true;
   }
 
