@@ -65,6 +65,10 @@ if (PRODUCT_LIST_FILTER == 'true') {
     $filterlist_sql = "SELECT DISTINCT c.categories_id as id,
                                        cd.categories_name as name
                                   FROM ".TABLE_PRODUCTS." p
+                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                       ON p.products_id = pd.products_id
+                                          AND pd.language_id = '".$_SESSION['languages_id']."'
+                                          AND trim(pd.products_name) != ''
                                   JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                                        ON p2c.products_id = p.products_id
                                   JOIN ".TABLE_CATEGORIES." c 
@@ -77,10 +81,14 @@ if (PRODUCT_LIST_FILTER == 'true') {
                                    AND p.manufacturers_id = '".(int) $_GET['manufacturers_id']."'
                                        ".PRODUCTS_CONDITIONS_P."
                               ORDER BY cd.categories_name";
-  } elseif ($current_category_id > 0) {
+  } elseif (isset($current_category_id) && $current_category_id > 0) {
     $filterlist_sql = "SELECT DISTINCT m.manufacturers_id as id,
                                        m.manufacturers_name as name
                                   FROM ".TABLE_PRODUCTS." p
+                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                       ON p.products_id = pd.products_id
+                                          AND pd.language_id = '".$_SESSION['languages_id']."'
+                                          AND trim(pd.products_name) != ''
                                   JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                                        ON p2c.products_id = p.products_id
                                           AND p2c.categories_id = '".$current_category_id."'
@@ -92,6 +100,10 @@ if (PRODUCT_LIST_FILTER == 'true') {
     $filterlist_sql = "SELECT DISTINCT m.manufacturers_id as id,
                                        m.manufacturers_name as name
                                   FROM ".TABLE_PRODUCTS." p
+                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                       ON p.products_id = pd.products_id
+                                          AND pd.language_id = '".$_SESSION['languages_id']."'
+                                          AND trim(pd.products_name) != ''
                                   JOIN ".TABLE_SPECIALS." s 
                                        ON p.products_id = s.products_id
                                           AND s.status = '1'
@@ -108,6 +120,10 @@ if (PRODUCT_LIST_FILTER == 'true') {
     $filterlist_sql = "SELECT DISTINCT m.manufacturers_id as id,
                                        m.manufacturers_name as name
                                   FROM ".TABLE_PRODUCTS." p
+                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                       ON p.products_id = pd.products_id
+                                          AND pd.language_id = '".$_SESSION['languages_id']."'
+                                          AND trim(pd.products_name) != ''
                                   JOIN ".TABLE_MANUFACTURERS." m on m.manufacturers_id = p.manufacturers_id
                                  WHERE p.products_status = '1'
                                        ".$days."
@@ -117,6 +133,10 @@ if (PRODUCT_LIST_FILTER == 'true') {
     $filterlist_sql = "SELECT DISTINCT m.manufacturers_id as id,
                                        m.manufacturers_name as name
                                   FROM ".TABLE_PRODUCTS." p
+                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                       ON p.products_id = pd.products_id
+                                          AND pd.language_id = '".$_SESSION['languages_id']."'
+                                          AND trim(pd.products_name) != ''
                                   JOIN ".TABLE_MANUFACTURERS." m on m.manufacturers_id = p.manufacturers_id
                                  WHERE p.products_status = '1'
                                    AND p.products_id IN ('".implode("', '", $products_search_array)."')
