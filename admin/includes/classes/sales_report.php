@@ -60,7 +60,7 @@
         $status, 
         $outlet;
 
-    function sales_report($mode, $startDate = 0, $endDate = 0, $sort = 0, $statusFilter = 0, $filter = 0,$payment = 0) {
+    function sales_report($mode, $startDate = 0, $endDate = 0, $sort = 0, $statusFilter = 0, $filter = 0,$payment = 0,$cgroup = '') {
       // startDate and endDate have to be a unix timestamp. Use mktime !
       // if set then both have to be valid startDate and endDate
       $this->mode = $mode;
@@ -68,6 +68,8 @@
 
       $this->statusFilter = $statusFilter;
       $this->paymentFilter = $payment;     
+      $this->cgroupFilter = $cgroup;
+
       // get date of first sale
       /*
       $firstQuery = xtc_db_query("SELECT UNIX_TIMESTAMP(min(date_purchased)) as first FROM " . TABLE_ORDERS);
@@ -84,7 +86,7 @@
       }
       $this->status = $status;
 
-      
+
       if ($startDate == 0  or $startDate < $this->globalStartDate) {
         // set startDate to globalStartDate
         $this->startDate = $this->globalStartDate;
@@ -193,6 +195,10 @@
       
       if (!is_numeric($this->paymentFilter)) {
       	$filterString .= " AND o.payment_method ='" . xtc_db_prepare_input($this->paymentFilter) . "' ";
+      }
+       
+      if ($this->cgroupFilter != '') {
+         $filterString .= " AND o.customers_status ='" . (int)$this->cgroupFilter . "' ";
       }
        
       $rqOrders = xtc_db_query($this->queryOrderCnt . " WHERE o.date_purchased >= '" . xtc_db_input(date("Y-m-d H:i:s", $sd)) . "' AND o.date_purchased < '" . xtc_db_input(date("Y-m-d H:i:s", $ed)) . "'" . $filterString);

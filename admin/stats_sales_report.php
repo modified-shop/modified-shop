@@ -66,6 +66,7 @@
   $srPayment = 0;
   $srSort = 0;
   $srFilter = 0;
+  $srCgroup = '';
 
   // report views (1: yearly 2: monthly 3: weekly 4: daily)
   if (isset($_GET['report']) && (xtc_not_null($_GET['report'])) ) {
@@ -101,7 +102,10 @@
 
   // order status
   $srStatus = (isset($_GET['status']) && preg_match("/^[0-9\,]+$/", $_GET['status'])) ? $_GET['status'] : 0;
-
+  
+  // customers status/group
+  $srCgroup = (isset($_GET['cgroup']) && preg_match("/^[0-9\,]+$/", $_GET['cgroup'])) ? $_GET['cgroup'] : '';
+  
    // paymenttype
   if (isset($_GET['payment']) && (xtc_not_null($_GET['payment'])) ) {
     $srPayment = $_GET['payment'];
@@ -171,7 +175,7 @@
   }
   
   require(DIR_WS_CLASSES . 'sales_report.php');
-  $sr = new sales_report($srView, $startDate, $endDate, $srSort, $srStatus, $srFilter, $srPayment);
+  $sr = new sales_report($srView, $startDate, $endDate, $srSort, $srStatus, $srFilter, $srPayment, $srCgroup);
   $startDate = $sr->startDate;
   $endDate = $sr->endDate;
   
@@ -204,10 +208,15 @@
   $payments = explode(';', MODULE_PAYMENT_INSTALLED);
   $payments = array_filter($payments); //fix for empty array
   for ($i=0, $n=count($payments); $i<$n; $i++){
-    require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i]);
-    $payment_id = substr($payments[$i], 0, strrpos($payments[$i], '.'));
-    $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payment_id).'_TEXT_TITLE');
-    $payment_array[] = array('id' => $payment_id, 'text' => $payment_text);
+    if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i])) {
+      include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i]);
+      $payment_id = substr($payments[$i], 0, strrpos($payments[$i], '.'));
+      $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payment_id).'_TEXT_TITLE');
+      $payment_array[] = array('id' => $payment_id, 'text' => $payment_text);
+    } else {
+      $payment_id = substr($payments[$i], 0, strrpos($payments[$i], '.'));
+      $payment_array[] = array('id' => $payment_id, 'text' => $payment_id);
+    }
   }
 
   $status_array = array(array('id' => 0, 'text' => REPORT_ALL),
@@ -230,7 +239,7 @@
                         array('id' => 2, 'text' => DET_DETAIL_ONLY)
                        );
 
-
+  $customers_statuses_array = array_merge(array (array ('id' => '', 'text' => TXT_ALL)), xtc_get_customers_statuses());
 
   if ($srExp < 2) {
     // not for csv export
@@ -308,10 +317,16 @@
                                     ?>
                                   </td>
                                   <td rowspan="2" class="menuBoxHeading txta-l">
-                                    <?php 
+                                    <?php
+                                      echo '<div class="flt-l">';                                    
                                       echo REPORT_STATUS_FILTER.'<br/>'; 
                                       echo xtc_draw_pull_down_menu('status', $status_array, $srStatus);
-                                      echo '<br/>';
+                                      echo '</div>';
+                                      echo '<div class="flt-l">'; 
+                                      echo ENTRY_CUSTOMERS_STATUS.'<br/>'; 
+                                      echo xtc_draw_pull_down_menu('cgroup', $customers_statuses_array, $srCgroup);
+                                      echo '</div>';
+                                      echo '<div style="clear:both"></div>';
                                       echo REPORT_PAYMENT_FILTER.'<br/>'; 
                                       echo xtc_draw_pull_down_menu('payment', $payment_array, $srPayment);
                                     ?>
