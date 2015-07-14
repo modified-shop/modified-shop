@@ -44,6 +44,8 @@ $manufacturers_id  = $_GET['manufacturers_id'] = isset($_GET['manufacturers_id']
 $categories_id = $_GET['categories_id'] = isset($_GET['categories_id']) && xtc_not_null($_GET['categories_id']) ? (int)$_GET['categories_id'] : false;
 $_GET['inc_subcat'] = isset($_GET['inc_subcat']) && xtc_not_null($_GET['inc_subcat']) ? (int)$_GET['inc_subcat'] : null;
 
+$search_params = md5($_GET['keywords'].$_GET['pfrom'].$_GET['pto'].$_GET['manufacturers_id'].$_GET['categories_id'].$_GET['inc_subcat']);
+
 // reset error
 $errorno = 0;
 
@@ -160,7 +162,11 @@ if ($errorno) {
                                  pd.products_short_description,
                                  pd.products_description,
                                  IFNULL(s.specials_new_products_price, p.products_price) AS price ";
-
+  
+  if (PRODUCT_LIST_FILTER == 'true') { 
+    $select_str = "SELECT distinct p.products_id ";
+  }
+  
   $from_str  = "FROM ".TABLE_PRODUCTS." AS p 
            LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON (p.products_id = pd.products_id AND trim(pd.products_name) != '' AND pd.language_id = '".$_SESSION['languages_id']."') ";
   $from_str .= $subcat_join;
@@ -239,12 +245,66 @@ if ($errorno) {
         break;
       }
     }
-    $where_str .= " ) GROUP BY p.products_id ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_id ASC');
+    if (PRODUCT_LIST_FILTER == 'true') { 
+      $where_str .= " ) GROUP BY p.products_id";
+    } else {
+      $where_str .= " ) GROUP BY p.products_id ORDER BY p.products_id ASC";
+    }
   }
 
   // glue together
   $listing_sql = $select_str.$from_str.$where_str;
-
+  
+  if (PRODUCT_LIST_FILTER == 'true') { 
+    $products_search_array = array();
+    if (!isset($_SESSION['search_params']) || $_SESSION['search_params'] != $search_params) {
+      $result_query = xtDBquery($listing_sql);
+      while ($result = xtc_db_fetch_array($result_query, true)) {
+        $products_search_array[] = $result['products_id'];
+      }
+      $_SESSION['search_pids_array'] = $products_search_array;
+    } else {
+      $products_search_array = $_SESSION['search_pids_array'];
+    }
+    $_SESSION['search_params'] = $search_params;
+    
+    $join = '';                 
+    if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
+      $join = "JOIN ".TABLE_MANUFACTURERS." m 
+                    ON p.manufacturers_id = m.manufacturers_id
+                       AND m.manufacturers_id = '".(int)$_GET['filter_id']."' ";
+    }
+  
+    $listing_sql = "SELECT ".ADD_SELECT_SEARCH."
+                           p.products_id,
+                           p.products_ean,
+                           p.products_quantity,
+                           p.products_shippingtime,
+                           p.products_model,
+                           p.products_image,
+                           p.products_price,
+                           p.products_weight,
+                           p.products_tax_class_id,
+                           p.products_fsk18,
+                           p.products_vpe,
+                           p.products_vpe_status,
+                           p.products_vpe_value,
+                           pd.products_name,
+                           pd.products_short_description,
+                           pd.products_description,
+                           IFNULL(s.specials_new_products_price, p.products_price) AS price
+                      FROM ".TABLE_PRODUCTS." p
+                      JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                           ON p.products_id = pd.products_id
+                              AND pd.language_id = '".$_SESSION['languages_id']."'
+                LEFT JOIN ".TABLE_SPECIALS." s 
+                          ON p.products_id = s.products_id
+                             AND s.status = '1'
+                          ".$join."
+                    WHERE p.products_id IN ('".implode("', '", $products_search_array)."')
+                          ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_id ASC');
+  }
+  
   $_GET['keywords'] = urlencode($keywords);
   require (DIR_WS_MODULES.FILENAME_PRODUCT_LISTING);
   require (DIR_WS_INCLUDES.'header.php');
