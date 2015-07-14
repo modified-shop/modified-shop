@@ -361,7 +361,7 @@
                       $customers_history_query = xtc_db_query("SELECT new_value, old_value, date_added, customer_notified FROM ".TABLE_CUSTOMERS_STATUS_HISTORY." WHERE customers_id = '".xtc_db_input($_GET['cID'])."' ORDER BY customers_status_history_id desc");
                       $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_STATUS_CUSTOMER.'</b>');
                       $contents = array ('form' => xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=statusconfirm'));
-                      $contents[] = array ('text' => '<br />'.xtc_draw_pull_down_menu('status', $customers_statuses_array, $cInfo->customers_status));
+                      $contents[] = array ('text' => '<br />'.xtc_draw_pull_down_menu('customers_status', $customers_statuses_array, $cInfo->customers_status));
                       $contents[] = array ('text' => '<table nowrap border="0" cellspacing="0" cellpadding="0"><tr><td style="border-bottom: 1px solid; border-color: #000000;" nowrap class="smallText" align="center"><b>'.TABLE_HEADING_NEW_VALUE.' </b></td><td style="border-bottom: 1px solid; border-color: #000000;" nowrap class="smallText" align="center"><b>'.TABLE_HEADING_DATE_ADDED.'</b></td></tr>');
 
                       if (xtc_db_num_rows($customers_history_query)) {
@@ -435,7 +435,7 @@
                       }
                     }
 
-                     if ($action == 'iplog') {
+                    if ($action == 'iplog') {
                       if (isset ($_GET['cID'])) {
                         $contents[] = array ('text' => '<br /><b>IPLOG:');
                         $customers_id = xtc_db_prepare_input($_GET['cID']);

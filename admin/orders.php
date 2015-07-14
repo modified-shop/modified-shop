@@ -350,7 +350,7 @@ switch ($action) {
     break;
 
   case 'stornoconfirm':
-    xtc_reverse_order($oID, xtc_db_prepare_input($_POST['restock']), xtc_db_prepare_input($_POST['status']));
+    xtc_reverse_order($oID, xtc_db_prepare_input($_POST['restock']), xtc_db_prepare_input($_POST['status_storno']));
     // Paypal Express Modul
     if(isset($_POST['paypaldelete'])) {
         if(!defined('TABLE_PAYPAL'))define('TABLE_PAYPAL', 'paypal');
