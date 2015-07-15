@@ -10,7 +10,7 @@
  * Released under the GNU General Public License
  */
 
-include 'includes/' . (isset($_REQUEST['speed']) ? (file_exists('includes/local/configure.php') ? 'local/configure.php' : 'configure.php') : 'application_top.php');
+include_once('includes/' . (isset($_REQUEST['speed']) ? (file_exists('includes/local/configure.php') ? 'local/configure.php' : 'configure.php') : 'application_top.php'));
 
 // extension
 $ajax_ext = preg_replace("/[^a-z0-9\\.\\_]/i", "", $_REQUEST['ext']);
@@ -20,7 +20,7 @@ $ajax_ext_file = DIR_WS_INCLUDES . 'extra/ajax/' . $ajax_ext . '.php';
 $ajax_rt = (isset($_REQUEST['type']) ?  preg_replace("/[^h-x]/i", "", $_REQUEST['type']) : 'json');
 
 // return error if file not exist or include it
-(!file_exists($ajax_ext_file) ? die('extension does not exist!') : include $ajax_ext_file);
+(!file_exists($ajax_ext_file) ? die('extension does not exist!') : include_once($ajax_ext_file));
 
 // execute extension in ajax module dir
 $response = (function_exists($ajax_ext) ? $ajax_ext() : (is_object($ajax_ext) ? new $ajax_ext : die("function/object does not exist")));
