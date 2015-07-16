@@ -97,9 +97,9 @@
         $error = true;
       } else {
         $shipping = -1;
-        $chp_cost_eco = @constant('MODULE_SHIPPING_CHP_COST_ECO_' . $j);
-        $chp_cost_pri = @constant('MODULE_SHIPPING_CHP_COST_PRI_' . $j);
-        $chp_cost_urg = @constant('MODULE_SHIPPING_CHP_COST_URG_' . $j);
+        $chp_cost_eco = @constant('MODULE_SHIPPING_CHP_COST_ECO_' . $dest_zone);
+        $chp_cost_pri = @constant('MODULE_SHIPPING_CHP_COST_PRI_' . $dest_zone);
+        $chp_cost_urg = @constant('MODULE_SHIPPING_CHP_COST_URG_' . $dest_zone);
 
         $methods = array();
 

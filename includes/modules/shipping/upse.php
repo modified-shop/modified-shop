@@ -92,7 +92,7 @@
         $error = true;
       } else {
         $shipping = -1;
-        $upse_cost = constant('MODULE_SHIPPING_UPSE_COST_' . $i);
+        $upse_cost = constant('MODULE_SHIPPING_UPSE_COST_' . $dest_zone);
 
         $upse_table = preg_split("/[:,]/" , $upse_cost); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
         for ($i=0; $i<sizeof($upse_table); $i+=2) {

@@ -97,7 +97,7 @@
         }
       } else {
         $shipping = -1;
-        $ap_cost = constant('MODULE_SHIPPING_AP_COST_' . $i);
+        $ap_cost = constant('MODULE_SHIPPING_AP_COST_' . $dest_zone);
 
         $ap_table = preg_split("/[:,]/" , $ap_cost);
         for ($i=0; $i<sizeof($ap_table); $i+=2) {

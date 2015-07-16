@@ -102,7 +102,7 @@ function quote($method = '') {
 		} elseif (($dest_zone > 1) && ((round($_SESSION['cart']->show_total())) >= MODULE_SHIPPING_UPS_FREEAMOUNT)) {
 			$lowship = true;
 			$shipping = -1;
-			$ups_cost = constant('MODULE_SHIPPING_UPS_COST_' . $i);
+			$ups_cost = constant('MODULE_SHIPPING_UPS_COST_' . $dest_zone);
 			$ups_table = preg_split("/[:,]/" , $ups_cost); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
 			for ($i=0; $i<sizeof($ups_table); $i+=2) {
 				if ($shipping_weight <= $ups_table[$i]) {
@@ -112,7 +112,7 @@ function quote($method = '') {
 				}
 			}
 			$i = 1;
-			$ups_cost = constant('MODULE_SHIPPING_UPS_COST_' . $i);
+			$ups_cost = constant('MODULE_SHIPPING_UPS_COST_' . $dest_zone);
 			$ups_table = preg_split("/[:,]/" , $ups_cost); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
 			for ($i=0; $i<sizeof($ups_table); $i+=2) {
 				if ($shipping_weight <= $ups_table[$i]) {
@@ -123,7 +123,7 @@ function quote($method = '') {
 			$shipping = $shipping - $diff;
 		} else {
 			$shipping = -1;
-			$ups_cost = constant('MODULE_SHIPPING_UPS_COST_' . $i);
+			$ups_cost = constant('MODULE_SHIPPING_UPS_COST_' . $dest_zone);
 			$ups_table = preg_split("/[:,]/" , $ups_cost); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
 			for ($i=0; $i<sizeof($ups_table); $i+=2) {
 				if ($shipping_weight <= $ups_table[$i]) {
