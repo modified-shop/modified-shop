@@ -45,27 +45,28 @@
   {if $step2 != 'true'}
   <br />
   <div class="highlightbox">
-    <div id="horizontalTab">
-      <ul class="resp-tabs-list nonjs-fallback">
-        {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
+    {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
+      <div id="horizontalTab">
+        <ul class="resp-tabs-list nonjs-fallback">
+          <li>{#title_comments_short#}</li>
           <li>{#title_agb#}</li>
-        {/if}
-        <li>{#title_comments_short#}</li>
-      </ul>
-      <div class="resp-tabs-container">
-        {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
-        <div>
-          <noscript><h4 class="nonjs-h4">{#title_agb#}</h4></noscript>
-          <div class="checkoutagb">{$AGB}</div>
-          <div class="checkoutconditions">
-          {$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}
+        </ul>
+        <div class="resp-tabs-container">
+          <noscript><h4 class="nonjs-h4">{#title_comments_short#}</h4></noscript>
+          <div class="checkoutcomment">{$COMMENTS}</div>
+          <div>
+            <noscript><h4 class="nonjs-h4">{#title_agb#}</h4></noscript>
+            <div class="checkoutagb">{$AGB}</div>
           </div>
         </div>
-        {/if}
-        <noscript><h4 class="nonjs-h4">{#title_comments_short#}</h4></noscript>
-        <div class="checkoutcomment">{$COMMENTS}</div>
       </div>
-    </div>
+      <div class="checkoutconditions">
+        {$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}
+      </div>
+    {else}
+      <h4 class="checkout">{#title_comments_short#}</h4>
+      <div class="checkoutcomment">{$COMMENTS}</div>
+    {/if}
   </div>
   {/if}
 

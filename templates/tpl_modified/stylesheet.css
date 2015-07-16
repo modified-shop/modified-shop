@@ -1385,7 +1385,7 @@ ol#address_block li .address {
   padding:5px 0px 0px 22px;
 }
 .checkoutcomment textarea {
-  height:160px;  
+  height:142px;
 }
 div.agbframe {
   background-color:#fff;
@@ -1407,11 +1407,13 @@ div.agbframe {
   margin-bottom:10px;
 }
 .checkoutconditions {
+  padding: 10px 10px 0px 10px;
   font-size:12px;
 }
 .checkoutconditions input#conditions {
   position:relative;
   bottom:-2px;
+  margin-right:4px;
 }
 table.paymentmoduledata {
   font-size:12px;
