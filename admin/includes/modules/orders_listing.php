@@ -20,7 +20,6 @@
   $payment_array = array();
   $dbQuery = xtc_db_query("SELECT payment_class FROM ".TABLE_ORDERS." GROUP BY payment_class ORDER BY payment_class");
   while ($payments = xtc_db_fetch_array($dbQuery)) {
-    echo $payments['payment_class'];
     $payment_text = $payments['payment_class'];
     if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments['payment_class'].'.php')) {
       include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments['payment_class'].'.php');
