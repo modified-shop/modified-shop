@@ -14,7 +14,28 @@
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_ORDER_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+  
   $customers_statuses_array = xtc_get_customers_statuses();
+  
+  $payment_array = array();
+  $dbQuery = xtc_db_query("SELECT payment_class FROM ".TABLE_ORDERS." GROUP BY payment_class ORDER BY payment_class");
+  while ($payments = xtc_db_fetch_array($dbQuery)) {
+    echo $payments['payment_class'];
+    $payment_text = $payments['payment_class'];
+    if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments['payment_class'].'.php')) {
+      include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments['payment_class'].'.php');
+      $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payments['payment_class']).'_TEXT_TITLE');
+    } 
+    $payment_array[] = array('id' => $payments['payment_class'], 'text' => $payment_text);
+  }
+  
+  if (!function_exists('xtc_draw_hidden_filter_field')) {
+    function xtc_draw_hidden_filter_field($name, $value = '') {
+      if ($value != '') {
+        return xtc_draw_hidden_field($name, $value);
+      }
+    }
+  }
 ?>
  
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
@@ -30,16 +51,25 @@
         <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
           <?php echo xtc_draw_form('status', FILENAME_ORDERS, '', 'get'); ?>
           <?php echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)),array(array('id' => '0', 'text' => TEXT_VALIDATING)), $orders_statuses),(isset($_GET['status']) && xtc_not_null($_GET['status']) ? (int)$_GET['status'] : ''),'onchange="this.form.submit();"'); ?>
-         <?php echo xtc_draw_hidden_field('cgroup', $_GET['cgroup'])?>
+          <?php echo xtc_draw_hidden_filter_field('cgroup', $_GET['cgroup'])?>
+          <?php echo xtc_draw_hidden_filter_field('payment', $_GET['payment'])?>
           </form>        
+        </div>
+        <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
+          <?php echo xtc_draw_form('payment', FILENAME_ORDERS, '', 'get'); ?>
+          <?php echo TEXT_INFO_PAYMENT_METHOD . ' ' . xtc_draw_pull_down_menu('payment',xtc_array_merge(array (array ('id' => '', 'text' => TXT_ALL)), $payment_array), isset($_GET['payment']) ? $_GET['payment'] : '', 'onChange="this.form.submit();"'); ?>
+          <?php echo xtc_draw_hidden_filter_field('status', $_GET['status'])?>
+          <?php echo xtc_draw_hidden_filter_field('cgroup', $_GET['cgroup'])?>
+          </form>
         </div>
         <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
           <?php echo xtc_draw_form('cgroup', FILENAME_ORDERS, '', 'get'); ?>
           <?php echo ENTRY_CUSTOMERS_STATUS . ' ' . xtc_draw_pull_down_menu('cgroup',xtc_array_merge(array (array ('id' => '', 'text' => TXT_ALL)), $customers_statuses_array), isset($_GET['cgroup']) ? $_GET['cgroup'] : '', 'onChange="this.form.submit();"'); ?>
-          <?php echo xtc_draw_hidden_field('status', $_GET['status'])?>
+          <?php echo xtc_draw_hidden_filter_field('status', $_GET['status'])?>
+          <?php echo xtc_draw_hidden_filter_field('payment', $_GET['payment'])?>
           </form>
         </div>
-        <div class="clear"></div>    
+        <div class="clear"></div>      
      
         <table class="tableCenter">      
           <tr>
@@ -52,6 +82,7 @@
                   <td class="dataTableHeadingContent" align="right" style="width:120px"><?php echo TEXT_SHIPPING_TO; ?></td>
                   <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ORDER_TOTAL; ?></td>
                   <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_DATE_PURCHASED; ?></td>
+                  <td class="dataTableHeadingContent" align="center"><?php echo str_replace(':','',TEXT_INFO_PAYMENT_METHOD); ?></td>
                   <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_STATUS; ?></td>
                   <?php if (AFTERBUY_ACTIVATED=='true') { ?>
                   <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_AFTERBUY; ?></td>
@@ -60,7 +91,8 @@
                 </tr>
                 <?php
                 $sort = " ORDER BY o.date_purchased DESC";
-                $cgroup = isset($_GET['cgroup']) && $_GET['cgroup'] != '' ? " AND o.customers_status = '" . (int)$_GET['cgroup'] ."'": ''; 
+                $filter = isset($_GET['cgroup']) && $_GET['cgroup'] != '' ? " AND o.customers_status = '" . (int)$_GET['cgroup'] ."'": '';
+                $filter .=  isset($_GET['payment']) && $_GET['payment'] != '' ? " AND o.payment_class = '" . $_GET['payment'] ."'": '';               
                 if (isset($_GET['cID'])) {
                   $cID = (int) $_GET['cID'];
                   $orders_query_raw = "-- /admin/orders.php
@@ -73,14 +105,14 @@
                                                        AND s.orders_status_id = '1'))
                                                    AND s.language_id = '".(int)$_SESSION['languages_id']."')
                                         WHERE o.customers_id = '".xtc_db_input($cID)."'
-                                               ".$cgroup.$sort;
+                                               ".$filter.$sort;
 
                 } elseif (isset($_GET['status']) && $_GET['status']=='0') {
                     $orders_query_raw = "-- /admin/orders.php
                                          SELECT ".$order_select_fields."
                                            FROM ".TABLE_ORDERS." o
                                            WHERE o.orders_status = '0'
-                                                 ".$cgroup.$sort;
+                                                 ".$filter.$sort;
 
                 } elseif (isset($_GET['status']) && xtc_not_null($_GET['status'])) { //web28 - 2012-04-14  - FIX xtc_not_null($_GET['status'])
                     $status = xtc_db_prepare_input($_GET['status']);
@@ -92,7 +124,7 @@
                                                 ON (o.orders_status = s.orders_status_id
                                                     AND s.orders_status_id = '".xtc_db_input($status)."')
                                           WHERE s.language_id = '".(int)$_SESSION['languages_id']."'
-                                                ".$cgroup.$sort;
+                                                ".$filter.$sort;
 
                 } elseif ($action == 'search' && $oID) {
                      // ADMIN SEARCH BAR $orders_query_raw moved it to the top
@@ -108,9 +140,9 @@
                                                OR o.customers_firstname LIKE '%".xtc_db_input($customer)."%'
                                                OR o.customers_lastname LIKE '%".xtc_db_input($customer)."%'
                                                OR o.customers_company LIKE '%".xtc_db_input($customer)."%')                       
-                                         ".$cgroup.$sort;
+                                         ".$filter.$sort;
                 } else {
-                      $cgroup = str_replace('AND','WHERE',$cgroup);
+                      $filter = strpos($filter,' AND') !== false ? substr_replace($filter,' WHERE',0,strlen(' AND')) : ''; //replace ONLY FIRST occurrence of a string within a string
                       $orders_query_raw = "-- /admin/orders.php
                                            SELECT ".$order_select_fields.",
                                                   s.orders_status_name
@@ -121,7 +153,7 @@
                                                         AND s.orders_status_id = '1'))
                                                     AND s.language_id = '".(int)$_SESSION['languages_id']."'
                                                    )
-                                                  ".$cgroup.$sort;
+                                                  ".$filter.$sort;
                 }
                 $orders_split = new splitPageResults($_GET['page'], $page_max_display_results, $orders_query_raw, $orders_query_numrows);
                 $orders_query = xtc_db_query($orders_query_raw);
@@ -153,6 +185,7 @@
                   <td class="dataTableContent" align="right"><?php echo $orders['delivery_country']; ?>&nbsp;</td>
                   <td class="dataTableContent" align="right"><?php echo format_price(get_order_total($orders['orders_id']), 1, $orders['currency'], 0, 0); ?></td>
                   <td class="dataTableContent" align="center"><?php echo xtc_datetime_short($orders['date_purchased']); ?></td>
+                  <td class="dataTableContent" align="center"><?php echo get_payment_name($orders['payment_method']); ?></td>
                   <td class="dataTableContent" align="right"><?php if($orders['orders_status']!='0') { echo $orders['orders_status_name']; }else{ echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';}?></td>
                   <?php if (AFTERBUY_ACTIVATED=='true') { ?>
                   <td class="dataTableContent" align="right"><?php  echo ($orders['afterbuy_success'] == 1) ? $orders['afterbuy_id'] : 'TRANSMISSION_ERROR'; ?></td>
