@@ -1,25 +1,26 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-$Id: inputfilter.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
-modified eCommerce Shopsoftware
-http://www.modified-shop.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-Copyright (c) 2009 - 2013 [www.modified-shop.org]
-
-Released under the GNU General Public License
----------------------------------------------------------------------------------------*/
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License 
+   ---------------------------------------------------------------------------------------*/
 
 class Inputfilter {
-    private $params=false;
+    private $params = false;
+    
     public function __construct()
     {
-        $this->params=array();
+        $this->params = array();
     }
 
     public function validate($source)
     {
-        $this->params=$source;
+        $this->params = $source;
         $this->inputValidate();
         
         return $this->params;
@@ -53,9 +54,17 @@ class Inputfilter {
 
     public function validatePrice($value)
     {
-        return str_replace(',', '.', preg_replace('/[^0-9,.%]/','',$value));
-    }
+        if (is_array($value)) {
+            foreach ($value as $k => $v) {
+                $value[$k] = $this->validatePrice($v);
+            }
+        } else {
+            $value = str_replace(',', '.', preg_replace('/[^0-9,.%]/','',$value));
+        }
 
+        return $value;
+    }
+    
     private function inputValidate()
     {
         if (is_array($this->params)) {
@@ -121,7 +130,10 @@ class Inputfilter {
                           substr($key, -6) == '_price' ||
                           substr($key, -7) == '_weight' ||
                           substr($key, 0, 14) == 'products_price' ||
-                          substr($key, 0, 14) == 'specials_price') {
+                          substr($key, 0, 14) == 'specials_price' ||
+                          substr($key, 0, 16) == 'products_staffel'
+                          ) 
+                      {
                         $this->params[$key] = $this->validatePrice($value);
                       }
                     }
