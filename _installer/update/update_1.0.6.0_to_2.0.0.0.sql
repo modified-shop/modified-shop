@@ -592,4 +592,60 @@ CREATE TABLE customers_wishlist_attributes (
 #Tomcraft - 2015-07-02 - not needed anymore!
 DELETE FROM `configuration` WHERE `configuration_key` = 'USE_CONTACT_EMAIL_ADDRESS';
 
+#Tomcraft - 2015-07-21 - Revised spanish country codes, thx to webald
+# Spain
+DELETE FROM zones WHERE zone_country_id = '195';
+INSERT INTO zones VALUES (130,195,'ES-C','A Coruña');
+INSERT INTO zones VALUES (131,195,'ES-VI','Álava');
+INSERT INTO zones VALUES (132,195,'ES-AB','Albacete');
+INSERT INTO zones VALUES (133,195,'ES-A','Alicante');
+INSERT INTO zones VALUES (134,195,'ES-AL','Almería');
+INSERT INTO zones VALUES (135,195,'ES-O','Asturias');
+INSERT INTO zones VALUES (136,195,'ES-AV','Ávila');
+INSERT INTO zones VALUES (137,195,'ES-BA','Badajoz');
+INSERT INTO zones VALUES (138,195,'ES-PM','Balears');
+INSERT INTO zones VALUES (139,195,'ES-B','Barcelona');
+INSERT INTO zones VALUES (140,195,'ES-BU','Burgos');
+INSERT INTO zones VALUES (141,195,'ES-CC','Cáceres');
+INSERT INTO zones VALUES (142,195,'ES-CA','Cádiz');
+INSERT INTO zones VALUES (143,195,'ES-S','Cantabria');
+INSERT INTO zones VALUES (144,195,'ES-CS','Castellón');
+INSERT INTO zones VALUES (145,195,'ES-CE','Ceuta');
+INSERT INTO zones VALUES (146,195,'ES-CR','Ciudad Real');
+INSERT INTO zones VALUES (147,195,'ES-CO','Córdoba');
+INSERT INTO zones VALUES (148,195,'ES-CU','Cuenca');
+INSERT INTO zones VALUES (149,195,'ES-GI','Girona');
+INSERT INTO zones VALUES (150,195,'ES-GR','Granada');
+INSERT INTO zones VALUES (151,195,'ES-GU','Guadalajara');
+INSERT INTO zones VALUES (152,195,'ES-SS','Guipúzcoa');
+INSERT INTO zones VALUES (153,195,'ES-H','Huelva');
+INSERT INTO zones VALUES (154,195,'ES-HU','Huesca');
+INSERT INTO zones VALUES (155,195,'ES-J','Jaén');
+INSERT INTO zones VALUES (156,195,'ES-LO','La Rioja');
+INSERT INTO zones VALUES (157,195,'ES-GC','Las Palmas');
+INSERT INTO zones VALUES (158,195,'ES-LE','León');
+INSERT INTO zones VALUES (159,195,'ES-L','Lleida');
+INSERT INTO zones VALUES (160,195,'ES-LU','Lugo');
+INSERT INTO zones VALUES (161,195,'ES-M','Madrid');
+INSERT INTO zones VALUES (162,195,'ES-MA','Malaga');
+INSERT INTO zones VALUES (163,195,'ES-ML','Melilla');
+INSERT INTO zones VALUES (164,195,'ES-MU','Murcia');
+INSERT INTO zones VALUES (165,195,'ES-NA','Navarra');
+INSERT INTO zones VALUES (166,195,'ES-OR','Ourense');
+INSERT INTO zones VALUES (167,195,'ES-P','Palencia');
+INSERT INTO zones VALUES (168,195,'ES-PO','Pontevedra');
+INSERT INTO zones VALUES (169,195,'ES-SA','Salamanca');
+INSERT INTO zones VALUES (170,195,'ES-TF','Santa Cruz de Tenerife');
+INSERT INTO zones VALUES (171,195,'ES-SG','Segovia');
+INSERT INTO zones VALUES (172,195,'ES-SE','Sevilla');
+INSERT INTO zones VALUES (173,195,'ES-SO','Soria');
+INSERT INTO zones VALUES (174,195,'ES-T','Tarragona');
+INSERT INTO zones VALUES (175,195,'ES-TE','Teruel');
+INSERT INTO zones VALUES (176,195,'ES-TO','Toledo');
+INSERT INTO zones VALUES (177,195,'ES-V','Valencia');
+INSERT INTO zones VALUES (178,195,'ES-VA','Valladolid');
+INSERT INTO zones VALUES (179,195,'ES-BI','Vizcaya');
+INSERT INTO zones VALUES (180,195,'ES-ZA','Zamora');
+INSERT INTO zones VALUES (181,195,'ES-Z','Zaragoza');
+
 # Keep an empty line at the end of this file for the db_updater to work properly
