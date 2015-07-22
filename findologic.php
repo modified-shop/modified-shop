@@ -101,7 +101,7 @@
   
       $module = '<div style="clear:both;"></div>'.$module;
     } else {
-      $error = TEXT_PRODUCT_NOT_FOUND;
+      $site_error = TEXT_PRODUCT_NOT_FOUND;
       include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
     }
 
