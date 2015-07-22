@@ -39,4 +39,25 @@ class ShopgateWrapper{
 			return xtc_db_prepare_input($input);
 		}
 	}
+
+	/**
+	 * @param $db_query
+	 * @return mixed
+	 */
+	public static function db_fetch_array($db_query)
+	{
+		return xtc_db_fetch_array($db_query);
+
+	}
+
+	/**
+	 * @param $query
+	 * @param string $link
+	 * @return mixed
+	 */
+	public static function db_query($query, $link = 'db_link')
+	{
+		return xtc_db_query($query, $link);
+
+	}
 }
