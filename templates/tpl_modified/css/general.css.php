@@ -14,7 +14,7 @@
    ---------------------------------------------------------------------------------------*/
 
   if ($_SESSION['customers_status']['customers_status'] == '0') {
-    echo '<link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/adminbar.css" type="text/css" media="screen" />';
+    echo '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/css/adminbar.css" type="text/css" media="screen" />';
   }
 
   $css_plain = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/stylesheet.css';
