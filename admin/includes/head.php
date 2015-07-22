@@ -60,7 +60,40 @@
       $('.SlectBox').not('.noStyling').SumoSelect({ autoWidth: true, placeholder: '-'});
       $('.fmChkBox').not('.noStyling').checkator();
     });
-  </script>
+    //hellwanger: try Autocomplete
+    $(function(){
+    	var sumoTimeoutID = window.setTimeout(function(){}, 500);
+        $('.SumoSelect').bind('change.autocompleteChange', function(event, ui){
+      	   $(".SumoSelect").unbind('click.autocompleteClick');
+        });
+        $('.SumoSelect').bind('click.autocompleteClick', function(event, ui){
+           var sumoSelect = $(this);
+           var word = '';
+           $("body").keyup('autoCompleteKey', function(keyEvent){
+           		var select = sumoSelect.find('select');
+				var childs = select.children();
+				var key = keyEvent.keyCode;
+				var character = String.fromCharCode(key);
+				clearTimeout(sumoTimeoutID);
+				word += character;
+				sumoTimeoutID = window.setTimeout(function(){
+					childs.each(function(index, value){
+						var value = $(this).html();
+						value = value.substring(0,word.length);
+						var selectedIndex = select.val();
+						if(value.toLowerCase() == word.toLowerCase()){
+							select.SumoSelect().sumo.selectItem(index);
+						}else{
+							select.SumoSelect().sumo.unSelectItem(index);
+						}
+					});
+					word = '';
+				},500);
+				var tmpString = '';
+  			});
+  		});
+    });    
+   </script>
   <?php } ?>
   <script type="text/javascript" src="includes/javascript/jquery.alerts.min.js"></script>
   <script type="text/javascript">
