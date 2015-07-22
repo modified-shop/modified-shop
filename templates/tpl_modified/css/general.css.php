@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: general.css.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -12,6 +12,10 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
+
+  if ($_SESSION['customers_status']['customers_status'] == '0') {
+    echo '<link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/adminbar.css" type="text/css" media="screen" />';
+  }
 
   $css_plain = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/stylesheet.css';
   $css_min = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/stylesheet.min.css';
