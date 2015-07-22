@@ -38,9 +38,25 @@ if (isset($_GET['products_id']) && $_GET['products_id']!='') {
   $product = new product((int)$_GET['products_id']);
 }
 if (!is_object($product) || !$product->isProduct()) {
+  // create smarty elements
+  $smarty = new Smarty;
+
+  // include boxes
+  require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
   // product not found in database
-  $error = TEXT_PRODUCT_NOT_FOUND;
+  $site_error = TEXT_PRODUCT_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
+
+  require (DIR_WS_INCLUDES.'header.php');
+
+  $smarty->assign('language', $_SESSION['language']);
+  $smarty->caching = 0;
+  if (!defined('RM'))
+    $smarty->load_filter('output', 'note');
+  $smarty->display(CURRENT_TEMPLATE.'/index.html');
+
+  include ('includes/application_bottom.php');
 } else {
   
   // Get manufacturer name etc. for the product page
