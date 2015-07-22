@@ -77,13 +77,15 @@
 				clearTimeout(sumoTimeoutID);
 				word += character;
 				sumoTimeoutID = window.setTimeout(function(){
+					var foundMatch = false;
 					childs.each(function(index, value){
 						var value = $(this).html();
 						value = value.substring(0,word.length);
 						var selectedIndex = select.val();
-						if(value.toLowerCase() == word.toLowerCase()){
+						if((!foundMatch) && (value.toLowerCase() == word.toLowerCase())){
 							select.SumoSelect().sumo.selectItem(index);
-						}else{
+							foundMatch = true;
+  						}else{
 							select.SumoSelect().sumo.unSelectItem(index);
 						}
 					});
