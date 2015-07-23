@@ -178,7 +178,7 @@ if (!class_exists('billpayBase')) {
          * @return array
          * @static
          */
-        function GetPaymentMethods() {
+        static function GetPaymentMethods() {
             return array(
                 'billpay', 'billpaydebit', 'billpaytransactioncredit', 'billpaypaylater'
             );
