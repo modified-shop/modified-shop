@@ -12,7 +12,7 @@ class BillpayDB {
      * @return mixed
      * @static
      */
-    function DBFetchValue($query)
+    static function DBFetchValue($query)
     {
         $arr = xtc_db_fetch_array(xtc_db_query($query));
         if (!is_array($arr)) return null;
@@ -25,7 +25,7 @@ class BillpayDB {
      * @return array|bool|mixed
      * @static
      */
-    function DBFetchRow($query)
+    static function DBFetchRow($query)
     {
         $arr = xtc_db_fetch_array(xtc_db_query($query));
         return $arr;
@@ -36,7 +36,7 @@ class BillpayDB {
      * @param   string  $query
      * @return  array
      */
-    function DBFetchArray($query)
+    static function DBFetchArray($query)
     {
         $return = array();
         $res = xtc_db_query($query);

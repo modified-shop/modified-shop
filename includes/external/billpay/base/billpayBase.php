@@ -151,7 +151,7 @@ if (!class_exists('billpayBase')) {
          * @return mixed
          * @static
          */
-        function PaymentInstance($paymentMethod)
+        static function PaymentInstance($paymentMethod)
         {
             $lowerPaymentMethod = strtoupper($paymentMethod);
             switch ($lowerPaymentMethod)
