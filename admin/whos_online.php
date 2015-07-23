@@ -18,8 +18,11 @@
 
   require('includes/application_top.php');
   
-  // include needed functions
-  //require(DIR_FS_INC. 'xtc_get_products.inc.php');
+  // include needed classes
+  require (DIR_FS_CATALOG.DIR_WS_CLASSES.'main.php');
+  require (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
+  
+  $main = new main();
   
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_WHOS_ONLINE_RESULTS';
@@ -160,6 +163,9 @@
               }
             }
             $user_session = unserialize_session_data($session_data);
+            
+            $xtPrice = new xtcPrice($user_session['currency'], $user_session['customers_status']['customers_status_id']);
+            
             if (isset($user_session) && $user_session != '') {
               if (is_array($user_session['cart']->contents)) {  
                 $products = $user_session['cart']->get_products();
