@@ -219,7 +219,7 @@
 
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
       $queryEndTime = array_sum(explode(" ",microtime())); 
-      $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');
+      $processTime = number_format(round($queryEndTime - $queryStartTime, 5), 5, '.', '');
 
       if (function_exists('mod_sql_explain') && function_exists('mod_output_sql_explain')) {
         $explain_query_raw = preg_replace("'[\r\n\s]+'", ' ', $query);
