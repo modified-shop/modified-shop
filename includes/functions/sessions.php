@@ -74,11 +74,12 @@
 
     function _sess_gc($maxlifetime) {
       if (DELETE_GUEST_ACCOUNT == 'true') {
-        $session_query = xtc_db_query("SELECT sesskey
+        $session_query = xtc_db_query("SELECT sesskey,
+                                              value
                                          FROM " . TABLE_SESSIONS . "
                                         WHERE expiry < '" . time() . "'");
         while ($session = xtc_db_fetch_array($session_query)) {
-          $customers = unserialize_session_data(_sess_read($session['sesskey']));
+          $customers = unserialize_session_data(base64_decode($session['value']));
           if (is_array($customers) && isset($customers['customer_id']) && isset($customers['account_type']) && $customers['account_type'] != '0') {
             xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$customers['customer_id']."'");
             xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$customers['customer_id']."'");
@@ -86,9 +87,9 @@
             xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$customers['customer_id']."'");
           }
         }                                       
-      } else {
-        xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < '" . time() . "'");
       }
+      xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < '" . time() . "'");
+      
       return true;
     }
 
