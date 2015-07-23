@@ -259,6 +259,9 @@ require(DIR_WS_CLASSES . 'object_info.php');
 // file uploading class
 require(DIR_WS_CLASSES . 'upload.php');
 
+// content, product, category - sql group_check/fsk_lock
+require (DIR_FS_CATALOG.DIR_WS_INCLUDES.'define_conditions.php');
+
 // add_select
 require (DIR_FS_CATALOG.DIR_WS_INCLUDES.'define_add_select.php');
 
