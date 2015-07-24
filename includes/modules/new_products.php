@@ -25,6 +25,7 @@ $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) {
+    $module_smarty->assign('STARTPAGE', 'true');
 
     $new_products_query = "SELECT * 
                              FROM ".TABLE_PRODUCTS." p

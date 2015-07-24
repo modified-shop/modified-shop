@@ -1,4 +1,4 @@
-{if $smarty.const.PRODUCT_LIST_BOX == 'true'}
+{if (!isset($STARTPAGE) && $smarty.const.PRODUCT_LIST_BOX == 'true') || ($STARTPAGE == 'true' && $smarty.const.PRODUCT_LIST_BOX_STARTPAGE == 'true')}
   {* BOXANSICHT *}
   {foreach name=aussen item=module_data from=$module_content}
   <div class="listingbox">
