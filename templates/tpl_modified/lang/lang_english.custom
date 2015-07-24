@@ -3,6 +3,7 @@ products_desc = 'Products description'
 products_fsk18_check = 'This article can be purchased only after age verification.'
 products_manufacturer_model = 'MPN:'
 products_tags = 'Features'
+heading_products_tags = 'Product Features'
 
 first = '&laquo; first'
 back = '&laquo; back'

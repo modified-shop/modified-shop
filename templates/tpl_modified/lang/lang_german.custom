@@ -3,6 +3,7 @@ products_desc = 'Produktbeschreibung'
 products_fsk18_check = 'Dieser Artikel kann erst nach erfolgter Altersverifikation gekauft werden.'
 products_manufacturer_model = 'HAN:'
 products_tags = 'Eigenschaften'
+heading_products_tags = 'Produkteigenschaften'
 
 first = '&laquo; Erster'
 back = '&laquo; vorheriger'
