@@ -90,4 +90,6 @@ define('BUTTON_DELETE_LOGS', 'Logfiles l&ouml;schen');
 // BOF - web28 - 2011-07-13 - New Button
 define('BUTTON_VIEW_PRODUCT', 'Artikel ansehen');
 //EOF - web28 - 2011-07-13 - New Button
+
+define('BUTTON_VALUES', 'Werte');
 ?>
