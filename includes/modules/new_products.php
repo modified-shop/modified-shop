@@ -38,6 +38,7 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
                             WHERE p.products_startpage = '1'
                               AND p.products_status = '1'
                                   ".PRODUCTS_CONDITIONS_P."
+                         GROUP BY p.products_id
                          ORDER BY p.products_startpage_sort ASC
                             LIMIT ".MAX_DISPLAY_NEW_PRODUCTS;
 
@@ -48,24 +49,25 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
         $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
         $days = " AND p.products_date_added > '".$date_new_products."' ";
       }
-      $new_products_query = "SELECT DISTINCT *
-                                        FROM ".TABLE_PRODUCTS." p 
-                                   LEFT JOIN ".TABLE_MANUFACTURERS." m
-                                             ON p.manufacturers_id = m.manufacturers_id
-                                        JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                                             ON p.products_id = pd.products_id
-                                                AND trim(pd.products_name) != ''
-                                                AND pd.language_id = '".$_SESSION['languages_id']."'
-                                        JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                                             ON p.products_id = p2c.products_id
-                                        JOIN ".TABLE_CATEGORIES." c
-                                             ON c.categories_id = p2c.categories_id
-                                                AND c.categories_status = '1'
-                                       WHERE p.products_status = '1'
-                                             ".PRODUCTS_CONDITIONS_P."
-                                             ".$days."
-                                    ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
-                                       LIMIT ".MAX_DISPLAY_NEW_PRODUCTS;
+      $new_products_query = "SELECT *
+                               FROM ".TABLE_PRODUCTS." p 
+                          LEFT JOIN ".TABLE_MANUFACTURERS." m
+                                    ON p.manufacturers_id = m.manufacturers_id
+                               JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                    ON p.products_id = pd.products_id
+                                       AND trim(pd.products_name) != ''
+                                       AND pd.language_id = '".$_SESSION['languages_id']."'
+                               JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                                    ON p.products_id = p2c.products_id
+                               JOIN ".TABLE_CATEGORIES." c
+                                    ON c.categories_id = p2c.categories_id
+                                       AND c.categories_status = '1'
+                              WHERE p.products_status = '1'
+                                    ".PRODUCTS_CONDITIONS_P."
+                                    ".$days."
+                           GROUP BY p.products_id
+                           ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
+                              LIMIT ".MAX_DISPLAY_NEW_PRODUCTS;
     }
 } else {
   
@@ -91,22 +93,17 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
                             AND c.parent_id = '".$new_products_category_id."'
                                 ".PRODUCTS_CONDITIONS_P."
                                 ".$days."
+                       GROUP BY p.products_id
                        ORDER BY p.products_date_added DESC
                           LIMIT ".MAX_DISPLAY_NEW_PRODUCTS;
 }
 $row = 0;
 $module_content = array ();
 
-//Produkte mit gleicher ID nicht doppelt anzeigen 
-$pid_array = array();
 $new_products_query = xtDBquery($new_products_query);
 while ($new_products = xtc_db_fetch_array($new_products_query, true)) {
-  if (!in_array($new_products['products_id'],$pid_array)) {
-    $module_content[] = $product->buildDataArray($new_products);
-  }
-  $pid_array[] = $new_products['products_id'];
+  $module_content[] = $product->buildDataArray($new_products);
 }
-unset($pid_array);
 
 if (sizeof($module_content) >= 1) {
   $module_smarty->assign('language', $_SESSION['language']);
