@@ -124,5 +124,5 @@ define('ERROR_NO_COUPON_AMOUNT', 'FEHLER: Kein Couponwert');
 
 define('COUPON_DATE_START_TT', 'Beginnt um 00:00:00 Uhr');
 define('COUPON_DATE_END_TT', 'Endet um Mitternacht (23:59:59 Uhr)');
-define('ERROR_COUPON_DATE', 'FEHLER: Das Enddatum ist neuer als das Startdatum');
+define('ERROR_COUPON_DATE', 'FEHLER: Das Enddatum ist &auml;lter als das Startdatum');
 ?>
