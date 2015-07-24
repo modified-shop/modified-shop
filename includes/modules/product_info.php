@@ -236,6 +236,7 @@ if (!is_object($product) || !$product->isProduct()) {
   if ($_SESSION['customers_status']['customers_status_graduated_prices'] == 1) {
     include (DIR_WS_MODULES.FILENAME_GRADUATED_PRICE);
   }
+  include (DIR_WS_MODULES.'product_tags.php');
   include (DIR_WS_MODULES.'product_attributes.php');
   include (DIR_WS_MODULES.'product_reviews.php');
   include (DIR_WS_MODULES.FILENAME_PRODUCTS_MEDIA);
