@@ -118,7 +118,7 @@ define('COUPON_NO_RESTRICT', '\nG&uuml;ltig f&uuml;r alle Artikel');;
 //EOF - web28 - 2011-04-13 - ADD Coupon message infos
 
 //BOF - web28 - 2011-07-05 - ADD error message
-define('ERROR_NO_COUPON_NAME', 'FEHLER: Kein Couponname');
+define('ERROR_NO_COUPON_NAME', 'FEHLER: Kein Couponname ');
 define('ERROR_NO_COUPON_AMOUNT', 'FEHLER: Kein Couponwert');
 //EOF - web28 - 2011-07-05 - ADD error message
 

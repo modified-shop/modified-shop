@@ -120,11 +120,11 @@ define('COUPON_NO_RESTRICT', '\nValid for all products');;
 //EOF - web28 - 2011-04-13 - ADD Coupon message infos
 
 //BOF - web28 - 2011-07-05 - ADD error message
-define('ERROR_NO_COUPON_NAME', 'ERROR: No Coupon Name');
+define('ERROR_NO_COUPON_NAME', 'ERROR: No Coupon Name ');
 define('ERROR_NO_COUPON_AMOUNT', 'ERROR: No Coupon Amount');
 //EOF - web28 - 2011-07-05 - ADD error message
 
 define('COUPON_DATE_START_TT', 'Starting at 00:00:00');
 define('COUPON_DATE_END_TT', 'Ending at midnight (23:59:59)');
-define('ERROR_COUPON_DATE', 'ERROR: Expiredate is older than startdate');
+define('ERROR_COUPON_DATE', 'ERROR: Expiry date is older than start date');
 ?>
