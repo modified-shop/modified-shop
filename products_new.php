@@ -59,6 +59,7 @@ if (isset($_GET['filter']) && is_array($_GET['filter'])) {
   }
 }
 
+$daysfound = true;
 $products_new_query_raw = "SELECT DISTINCT p.*,
                                            pd.products_name,
                                            pd.products_short_description,
@@ -111,7 +112,7 @@ if (($products_new_split->number_of_rows > 0)) {
 	}
 	
 } else {
-
+  $daysfound = false;
 	$new_products_query = "SELECT DISTINCT p.*,
                                          pd.products_name,
                                          pd.products_short_description,

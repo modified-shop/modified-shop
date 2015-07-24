@@ -175,7 +175,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
                        AND s.status = '1' ";
   } elseif (basename($PHP_SELF) == FILENAME_PRODUCTS_NEW) {
     $days = '';
-    if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
+    if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0' && $daysfound == true) {
       $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
       $where = " AND p.products_date_added > '".$date_new_products."' ";
     }
