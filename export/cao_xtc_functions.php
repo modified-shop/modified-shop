@@ -1189,7 +1189,7 @@ function UpdateTables ()
 
   for ($i=1;$i<=13;$i++)
   {
-    echo '<b>SQL:</b> ' . $sql[$i] . '<br>';;
+    echo '<b>SQL:</b> ' . $sql[$i] . '<br>';
 
     if (@xtc_db_query($sql[$i], $$link))
     {

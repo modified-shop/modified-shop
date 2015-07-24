@@ -65,13 +65,13 @@
 // ---------------------------------------------------------------------------------------
   $addPagination        =   true;   // Seiten-Nummern anzeigen, ja/nein?
 // ---------------------------------------------------------------------------------------
-  $addCatShopTitle      =   ((META_CAT_SHOP_TITLE == 'true') ? true : false);;   // Shop-Titel bei Kategorien anhängen, ja/nein?
+  $addCatShopTitle      =   ((META_CAT_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei Kategorien anhängen, ja/nein?
   $addProdShopTitle     =   ((META_PROD_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei Produkten anhängen, ja/nein?
-  $addContentShopTitle  =   ((META_CONTENT_SHOP_TITLE == 'true') ? true : false);;   // Shop-Titel bei Contentseiten anhängen, ja/nein?
-  $addSpecialsShopTitle =   ((META_SPECIALS_SHOP_TITLE == 'true') ? true : false);;   // Shop-Titel bei Angeboten anhängen, ja/nein?
-  $addNewsShopTitle     =   ((META_NEWS_SHOP_TITLE == 'true') ? true : false);;   // Shop-Titel bei Neuen Artikeln anhängen, ja/nein?
-  $addSearchShopTitle   =   ((META_SEARCH_SHOP_TITLE == 'true') ? true : false);;   // Shop-Titel bei Suchergebnissen anhängen, ja/nein?
-  $addOthersShopTitle   =   ((META_OTHERS_SHOP_TITLE == 'true') ? true : false);;   // Shop-Titel bei sonstigen Seiten anhängen, ja/nein?
+  $addContentShopTitle  =   ((META_CONTENT_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei Contentseiten anhängen, ja/nein?
+  $addSpecialsShopTitle =   ((META_SPECIALS_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei Angeboten anhängen, ja/nein?
+  $addNewsShopTitle     =   ((META_NEWS_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei Neuen Artikeln anhängen, ja/nein?
+  $addSearchShopTitle   =   ((META_SEARCH_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei Suchergebnissen anhängen, ja/nein?
+  $addOthersShopTitle   =   ((META_OTHERS_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei sonstigen Seiten anhängen, ja/nein?
 // ---------------------------------------------------------------------------------------
   $noIndexUnimportant   =   true;  // "unwichtige" Seiten mit noindex versehen
 // ---------------------------------------------------------------------------------------
@@ -556,11 +556,11 @@ switch(basename($PHP_SELF)) {
 // ---------------------------------------------------------------------------------------
 
 if (TEMPLATE_HTML_ENGINE == 'xhtml') {
-  echo '<meta http-equiv="Content-Type" content="text/html; charset='.$_SESSION['language_charset'].'" />'."\n";;
-  echo '<meta http-equiv="Content-Style-Type" content="text/css" />'."\n";;
+  echo '<meta http-equiv="Content-Type" content="text/html; charset='.$_SESSION['language_charset'].'" />'."\n";
+  echo '<meta http-equiv="Content-Style-Type" content="text/css" />'."\n";
   echo '<meta http-equiv="cache-control" content="no-cache" />'."\n";
 } else {
-  echo '<meta charset="'.$_SESSION['language_charset'].'" />'."\n";;
+  echo '<meta charset="'.$_SESSION['language_charset'].'" />'."\n";
 }
 /******** SHOPGATE **********/
 if(isset($shopgateJsHeader)) echo $shopgateJsHeader;

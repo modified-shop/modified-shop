@@ -937,7 +937,7 @@ class categories {
                                       AND categories_id != '0'");
       $check = xtc_db_fetch_array($check_query);
       if ($check['total'] >= '1') {
-        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id = '".$products_id."' and categories_id = '0'");;
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id = '".$products_id."' and categories_id = '0'");
       }
     }
   }

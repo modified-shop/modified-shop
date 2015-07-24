@@ -821,7 +821,7 @@ function strip_tags_attributes($string, $allowtags = '', $allowattributes = '') 
     }
     array_walk($allowattributes, create_function('&$a', '$a = trim($a);'));
     if (is_array($allowattributes)) {
-        $allowattributes = "(?<!".implode(")(?<!",$allowattributes).")";;
+        $allowattributes = "(?<!".implode(")(?<!",$allowattributes).")";
     }
 	$string = preg_replace_callback("/<(\/?[a-zA-Z0-9]*)([^>]*)>/i", create_function(
 	    '$matches',

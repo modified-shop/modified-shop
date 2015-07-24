@@ -1,6 +1,6 @@
 <?php
 include("klarna.php");
-include("klarna_settings.php");;
+include("klarna_settings.php");
 
 $rno = $_POST["rno"];
 $amount = $_POST["amount"];

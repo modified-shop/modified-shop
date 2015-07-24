@@ -1485,7 +1485,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		/* include globals */
 		global 	$total_count, $shipping_weight, $total_weight,
-				  $shipping_num_boxes, $cart, $order, $sendto, $billto, $ot_shipping;;
+				  $shipping_num_boxes, $cart, $order, $sendto, $billto, $ot_shipping;
 
 		$neededFilesFromShopSystem = array(
 			"/shopping_cart.php",

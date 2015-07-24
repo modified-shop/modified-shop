@@ -116,7 +116,7 @@ define('COUPON_FREE_SHIPPING', 'Free Shipping');
 define('COUPON_LINK_TEXT', '\n\nDetails');
 define('COUPON_CATEGORIES_RESTRICT', '\nValid for these categories');
 define('COUPON_PRODUCTS_RESTRICT', '\nValid for these products');
-define('COUPON_NO_RESTRICT', '\nValid for all products');; 
+define('COUPON_NO_RESTRICT', '\nValid for all products');
 //EOF - web28 - 2011-04-13 - ADD Coupon message infos
 
 //BOF - web28 - 2011-07-05 - ADD error message

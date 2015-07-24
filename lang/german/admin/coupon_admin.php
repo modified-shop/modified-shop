@@ -114,7 +114,7 @@ define('COUPON_FREE_SHIPPING', 'Versandkostenfrei');
 define('COUPON_LINK_TEXT', '\n\nDetails');
 define('COUPON_CATEGORIES_RESTRICT', '\nG&uuml;ltig f&uuml;r diese Kategorien');
 define('COUPON_PRODUCTS_RESTRICT', '\nG&uuml;ltig f&uuml;r diese Artikel');
-define('COUPON_NO_RESTRICT', '\nG&uuml;ltig f&uuml;r alle Artikel');;
+define('COUPON_NO_RESTRICT', '\nG&uuml;ltig f&uuml;r alle Artikel');
 //EOF - web28 - 2011-04-13 - ADD Coupon message infos
 
 //BOF - web28 - 2011-07-05 - ADD error message

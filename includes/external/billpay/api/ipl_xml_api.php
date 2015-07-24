@@ -379,7 +379,7 @@ function ipl_core_parse_result($responseData, $requestData, $redirects = 0) {
 			}
 			else {
 				while(!feof($socket)) {
-					$buffer = fgets($socket);;
+					$buffer = fgets($socket);
 					if ($buffer === false || strlen($buffer) === 0) {
         				break;
         			}

@@ -23,7 +23,7 @@ class SofortLibPayment {
 		$this->description = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION');
 		$this->sort_order = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER');
 		$this->enabled = ((constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
-		$this->info = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO');;
+		$this->info = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO');
 		$this->tmpStatus = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TMP_STATUS_ID');
     $this->logging = ((constant('MODULE_PAYMENT_'.strtoupper($this->code).'_LOGGING') == 'True') ? true : false);
 
