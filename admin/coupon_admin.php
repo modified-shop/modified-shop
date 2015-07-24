@@ -190,6 +190,10 @@
         $update_errors = 1;
         $messageStack->add(ERROR_NO_COUPON_AMOUNT, 'error');
       }
+      if (strtotime($_POST['coupon_startdate']) > strtotime($_POST['coupon_finishdate'])) {
+        $update_errors = 1;
+        $messageStack->add(ERROR_COUPON_DATE, 'error');      
+      }
       if (!$_POST['coupon_code']) {
         $coupon_code = create_coupon_code();
       } else {
@@ -201,14 +205,14 @@
         $messageStack->add(ERROR_COUPON_EXISTS, 'error');
       }
       if ($update_errors != 0) {
-        $_GET['action'] = 'new';
+        $_GET['action'] = $_GET['oldaction'];
       } else {
         $_GET['action'] = 'update_preview';
       }
       break;
     case 'update_confirm':
       if ( $_POST['back_x'] || $_POST['back_y'] || $_POST['back'] ) {
-        $_GET['action'] = 'new';
+        $_GET['action'] = $_GET['oldaction'];
       } else {
         $coupon_type = "F";
         if (substr($_POST['coupon_amount'], -1) == '%') $coupon_type='P';
@@ -378,7 +382,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
           $contents[] = array('text' => '<b>' . TEXT_REDEMPTIONS . '</b>');
           $contents[] = array('text' => TEXT_REDEMPTIONS_TOTAL . '=' . $cc_query_numrows);
           $contents[] = array('text' => TEXT_REDEMPTIONS_CUSTOMER . '=' . xtc_db_num_rows($count_customers));
-          $contents[] = array('text' => '<a class="button" href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('page','cpage','action','uid','oldaction')) . 'page='.$_GET['cpage']) . '">' . BUTTON_BACK . '</a>');
+          $contents[] = array('text' => '<a class="button" href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action','uid','oldaction'))) . '">' . BUTTON_BACK . '</a>');
           ?>
           <td class="boxRight">
           <?php
@@ -509,7 +513,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
         </table>
         <br/>
         <div class="smallText mrg5">
-          <?php echo '<a class="button" href="' . xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cpage', 'action','oldaction'))) .'">'. BUTTON_CANCEL . '</a>'; ?>
+          <?php echo '<a class="button" href="' . xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('action','oldaction'))) .'">'. BUTTON_CANCEL . '</a>'; ?>
           <?php echo '<input type="submit" class="button flt-r" value="' . BUTTON_SEND_EMAIL . '"/>'; ?>
         </div>
       </form>
@@ -525,7 +529,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
         <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
       </div>
       <div class="clear"></div>      
-      <?php echo xtc_draw_form('coupon', 'coupon_admin.php', xtc_get_all_get_params(array('action','oldaction','uid','cid')) . 'action=update_confirm&oldaction=' . $_GET['oldaction'] . '&cid=' . (int)$_GET['cid']); ?>
+      <?php echo xtc_draw_form('coupon', FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action','uid')) . 'action=update_confirm'); ?>
       <?php // BOF - web28 - 2011-03-11 - new table design ?>
       <table class="tableConfirm borderall collapse">
         <?php
@@ -677,7 +681,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
     }
     // coupon_startdate, coupon_finishdate
     if (!$coupon_startdate) {
-      $coupon_startdate = date('Y-m-d');;
+      $coupon_startdate = date('Y-m-d');
     } 
     if (!$coupon_finishdate) {
       $coupon_finishdate = date('Y-m-d');
@@ -710,7 +714,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
       </div>
       <div class="clear"></div>
       <?php
-      echo xtc_draw_form('coupon', 'coupon_admin.php', xtc_get_all_get_params(array('action', 'oldaction', 'cid', 'page', 'cpage')) . 'action=update&oldaction='.$_GET['action'] . '&cid=' . (int)$_GET['cid'].'&page=' . (int)$_GET['cpage'],'post', 'enctype="multipart/form-data"');
+      echo xtc_draw_form('coupon', FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action', 'oldaction', 'cid')) . 'action=update&oldaction='.$_GET['action'] . ((isset($_GET['cid']) && $_GET['cid'] > 0) ? '&cid=' . (int)$_GET['cid'] : ''), 'post', 'enctype="multipart/form-data"');
       ?>
         <table class="tableConfig">
           <tr>
@@ -776,7 +780,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
         </table>
         <div class="mrg5">
         <?php echo '<input type="submit" class="button" value="' . BUTTON_PREVIEW . '"/>'; ?>
-        <?php echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cpage', 'page', 'action','oldaction')) . 'page='.$_GET['cpage']) .'">'. BUTTON_CANCEL . '</a>'; ?>
+        <?php echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('action','oldaction'))) .'">'. BUTTON_CANCEL . '</a>'; ?>
         </div>
         </form>
       </tr>
@@ -944,7 +948,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                                  '<a class="button" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')).'action=voucheredit&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_EDIT.'</a>' .
                                  $change_coupon_status .
                                  '<a class="button" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')). 'action=voucherdelete&cid='.$cInfo->coupon_id.$coupon_status,'NONSSL').'">'.BUTTON_DELETE.'</a>' .
-                                 '<a class="button" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('page','cid', 'action', 'oldaction')). 'action=voucherreport&cid='.$cInfo->coupon_id.'&cpage='.$_GET['page'],'NONSSL').'">'.BUTTON_REPORT.'</a></div>'
+                                 '<a class="button" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')). 'action=voucherreport&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_REPORT.'</a></div>'
                                  );
                   }
                 }

@@ -43,7 +43,7 @@
                                        restrict_to_products,
                                        restrict_to_categories
                                   FROM " . TABLE_COUPONS . "
-                                 WHERE coupon_code = '".xtc_db_input($_POST['gv_redeem_code'])."'
+                                 WHERE coupon_code = '".xtc_db_input(trim($_POST['gv_redeem_code']))."'
                                    AND coupon_active = 'Y'");
       $gv_result = xtc_db_fetch_array($gv_query);
 
@@ -116,7 +116,7 @@
         }
         
         // expired
-        if (strtotime($gv_result['coupon_expire_date']) > time()) {
+        if (strtotime($gv_result['coupon_expire_date']) < time()) {
           xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'coupon_message='.strtolower('ERROR_INVALID_FINISDATE_COUPON'), 'NONSSL'));
         }
 
