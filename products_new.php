@@ -45,6 +45,20 @@ if (isset($_GET['filter_id']) && $_GET['filter_id'] != '') {
   $where = " AND p.manufacturers_id = '".(int)$_GET['filter_id']."' ";
 }
 
+$filter_join = '';
+if (isset($_GET['filter']) && is_array($_GET['filter'])) {
+  $fi = 1;
+  foreach ($_GET['filter'] as $options_id => $values_id) {
+    if ($values_id != '') {
+      $filter_join .= "JOIN ".TABLE_PRODUCTS_TAGS." pt".$fi." 
+                            ON pt".$fi.".products_id = p.products_id
+                               AND pt".$fi.".options_id = '".$options_id."'
+                               AND pt".$fi.".values_id = '".$values_id."' ";
+      $fi ++;
+    }
+  }
+}
+
 $products_new_query_raw = "SELECT DISTINCT p.*,
                                            pd.products_name,
                                            pd.products_short_description,
@@ -64,6 +78,7 @@ $products_new_query_raw = "SELECT DISTINCT p.*,
                                               AND c.categories_status=1
                                  LEFT JOIN ".TABLE_SPECIALS." s
                                            ON p.products_id = s.products_id
+                                           ".$filter_join."
                                      WHERE p.products_status = '1'
                                            ".PRODUCTS_CONDITIONS_P."
                                            ".$days."
@@ -114,7 +129,8 @@ if (($products_new_split->number_of_rows > 0)) {
                                          ON c.categories_id = p2c.categories_id
                                             AND c.categories_status=1
                                LEFT JOIN ".TABLE_SPECIALS." s
-                                           ON p.products_id = s.products_id
+                                         ON p.products_id = s.products_id
+                                         ".$filter_join."
                                    WHERE p.products_status = '1'
                                          ".PRODUCTS_CONDITIONS_P."
                                          ".$where."
