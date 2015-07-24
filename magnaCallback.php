@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnaCallback.php 4990 2014-12-17 13:26:48Z derpapst $
+ * $Id: magnaCallback.php 5449 2015-04-08 11:36:36Z tim.neumann $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -474,12 +474,13 @@ function magnaInstalled($woDBCheck = false) {
 	if (defined('DB_SERVER_CHARSET')) {
 		MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
 	} elseif (SHOPSYSTEM == 'gambio' && MagnaDB::gi()->tableExists('version_history')) {
-		$sVersion = MagnaDB::gi()->fetchOne('
-			    SELECT version
-			      FROM version_history
-			  ORDER BY installation_date DESC
-			     LIMIT 1
-			');
+		$sVersion = MagnaDB::gi()->fetchOne("
+			SELECT version
+			  FROM version_history
+			  WHERE type IN ('service_pack', 'master_update')
+		   ORDER BY installation_date DESC
+			  LIMIT 1
+		");
 		if (version_compare($sVersion, '2.1', '>=')) {
 			MagnaDB::gi()->setCharset('utf8');
 		}
@@ -731,12 +732,13 @@ function magnaCallbackRun() {
 	if (defined('DB_SERVER_CHARSET')) {
 		MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
 	} elseif (SHOPSYSTEM == 'gambio' && MagnaDB::gi()->tableExists('version_history')) {
-		$sVersion = MagnaDB::gi()->fetchOne('
-			    SELECT version
-			      FROM version_history
-			  ORDER BY installation_date DESC
-			     LIMIT 1
-			');
+		$sVersion = MagnaDB::gi()->fetchOne("
+			SELECT version
+			  FROM version_history
+			  WHERE type IN ('service_pack', 'master_update')
+		   ORDER BY installation_date DESC
+			  LIMIT 1
+		");
 		if (version_compare($sVersion, '2.1', '>=')) {
 			MagnaDB::gi()->setCharset('utf8');
 		}

@@ -113,17 +113,19 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 			? $this->config['ShippingMethodFBA']
 			: $this->config['ShippingMethod'];
 	}
+
+	private function getMarketplaceTitle() {
+		return $this->marketplaceTitle.(
+		($this->o['orderInfo']['FulfillmentChannel'] == 'AFN')
+			? 'FBA'
+			: ''
+		);
+	}
 	
 	protected function generateOrderComment() {
-		$finalMPTitle = $this->marketplaceTitle.(
-			($this->o['orderInfo']['FulfillmentChannel'] == 'AFN')
-				? 'FBA'
-				: ''
-		);
-		
 		$comment = str_replace('GiftMessageText', ML_AMAZON_LABEL_GIFT_MESSAGE, $this->o['order']['comments']);
 		$comment = trim(
-			sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $finalMPTitle)."\n".
+			sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $this->getMarketplaceTitle())."\n".
 			'AmazonOrderID: '.$this->getMarketplaceOrderID()."\n\n".
 			$comment
 		);
@@ -131,15 +133,9 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 	}
 	
 	protected function generateOrdersStatusComment() {
-		$finalMPTitle = $this->marketplaceTitle.(
-			($this->o['orderInfo']['FulfillmentChannel'] == 'AFN')
-				? 'FBA'
-				: ''
-		);
-		
 		$comment = str_replace('GiftMessageText', ML_AMAZON_LABEL_GIFT_MESSAGE, $this->o['orderStatus']['comments']);
 		$comment = trim(
-			sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP, $finalMPTitle)."\n".
+			sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP, $this->getMarketplaceTitle())."\n".
 			'AmazonOrderID: '.$this->getMarketplaceOrderID()."\n\n".
 			$comment
 		);

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: meinpaketFunctions.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: meinpaketFunctions.php 5452 2015-04-09 10:04:14Z MaW $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -21,6 +21,7 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once(DIR_MAGNALISTER_MODULES.'generic/genericFunctions.php');
+$_Marketplace = 'meinpaket';
 
 function magnaMeinpaketProcessCheckinResult($result, $mpID) {
 	$fieldnames = array('UPLOADERRORS', 'CHECKINERRORS');
@@ -55,7 +56,8 @@ function magnaMeinpaketUpdateItems($mpID, $data) {
 }
 
 function updateMeinpaketInventoryByEdit($mpID, $updateData) {
-	if (in_array(getDBConfigValue('meinpaket.stocksync.tomarketplace', $mpID), array('no', 'auto'))) {
+	global $_Marketplace;
+	if (in_array(getDBConfigValue($_Marketplace.'.stocksync.tomarketplace', $mpID), array('no', 'auto'))) {
 		return;
 	}
 	$updateItem = genericInventoryUpdateByEdit($mpID, $updateData);	
@@ -63,8 +65,8 @@ function updateMeinpaketInventoryByEdit($mpID, $updateData) {
 		return false;
 	}
 	/* Beschreibung kann zz. nur aktualisiert werden fuer den Standard-Fall und einen weiteren Quasi-Standard-Fall. */
-	$longdescField = getDBConfigValue('meinpaket.checkin.longdesc.field', $mpID, '');
-	$shortdescField = getDBConfigValue('meinpaket.checkin.shortdesc.field', $mpID, '');
+	$longdescField = getDBConfigValue($_Marketplace.'.checkin.longdesc.field', $mpID, '');
+	$shortdescField = getDBConfigValue($_Marketplace.'.checkin.shortdesc.field', $mpID, '');
 	if (($longdescField == '') && ($shortdescField == '')) { // Standard
 		$updateItem['ShortDescription'] = $updateItem['Description'];
 	} else if (($longdescField == 'products_description') && ($shortdescField == 'products_short_description')) {
@@ -79,7 +81,8 @@ function updateMeinpaketInventoryByEdit($mpID, $updateData) {
 }
 
 function updateMeinpaketInventoryByOrder($mpID, $boughtItems, $subRelQuant = true) {
-	if (in_array(getDBConfigValue('meinpaket.stocksync.tomarketplace', $mpID), array('no', 'auto'))) {
+	global $_Marketplace;
+	if (in_array(getDBConfigValue($_Marketplace.'.stocksync.tomarketplace', $mpID), array('no', 'auto'))) {
 		return;
 	}
 	$data = genericInventoryUpdateByOrder($mpID, $boughtItems, $subRelQuant);

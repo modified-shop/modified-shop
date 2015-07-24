@@ -38,7 +38,8 @@ class MagnaCompatCatMatch extends MagnaCompatibleBase {
 			REPLACE INTO '.TABLE_MAGNA_COMPAT_CATEGORYMATCHING.'
 				SELECT DISTINCT ms.mpID, p.products_id, p.products_model, 
 				       \''.MagnaDB::gi()->escape($_POST['mpCategory']).'\' AS mp_category_id,
-				       \''.MagnaDB::gi()->escape(isset($_POST['storeCategory']) ? $_POST['storeCategory'] : '').'\' AS store_category_id
+				       \''.MagnaDB::gi()->escape(isset($_POST['storeCategory']) ? $_POST['storeCategory'] : '').'\' AS store_category_id,
+				       \''.date('Y-m-d H:i:s').'\' AS PreparedTs
 				  FROM '.TABLE_MAGNA_SELECTION.' ms, '.TABLE_PRODUCTS.' p
 				 WHERE ms.mpID=\''.$this->mpID.'\' AND
 				       ms.selectionname=\''.$this->prepareSettings['selectionName'].'\' AND
@@ -155,7 +156,6 @@ class MagnaCompatCatMatch extends MagnaCompatibleBase {
 		}
 	}
 
-        
 	protected function processProductList() {
 		if (($sClass = $this->loadResource('catmatch', 'CategoryMatchingProductList')) === false) {
 			if ($this->isAjax) {
@@ -168,19 +168,19 @@ class MagnaCompatCatMatch extends MagnaCompatibleBase {
 		$o = new $sClass();
 		echo $o;
 	}
-        
+
 	public function process() {
-                        $this->saveMatching();
-                        $this->deleteMatching();
-                        if (isset($_POST['prepare']) || (isset($_GET['where']) && ($_GET['where'] == 'catMatchView'))) {
-                                    $this->processMatching();
-                        } else {
-                                    if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true) {
-                                                $this->processProductList();
-                                    } else {
-                                                $this->processSelection();
-                                    }
-                        }
-            }
+		$this->saveMatching();
+		$this->deleteMatching();
+		if (isset($_POST['prepare']) || (isset($_GET['where']) && ($_GET['where'] == 'catMatchView'))) {
+			$this->processMatching();
+		} else {
+			if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true) {
+				$this->processProductList();
+			} else {
+				$this->processSelection();
+			}
+		}
+	}
 
 }

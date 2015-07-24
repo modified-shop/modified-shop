@@ -246,7 +246,7 @@ class HoodInventoryView {
 					SELECT '' AS SKU, v.products_id,
 					       CONCAT('|', v.options_id, ',', v.options_values_id, '|') AS variation_attributes,
 					       CAST(v.attributes_stock AS SIGNED) ShopQuantity,
-					       (p.products_price + (v.options_values_price * IF(v.price_prefix='+', 1, -1))) AS ShopPrice,
+					       IF (price_prefix='=', v.options_values_price, (p.products_price + (v.options_values_price * IF(v.price_prefix='+', 1, -1)))) AS ShopPrice,
 					       pd.products_name ShopTitle
 					  FROM ".TABLE_PRODUCTS_ATTRIBUTES." v, " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
 					 WHERE products_attributes_id = ".$aId."

@@ -146,6 +146,19 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 		} else {
 			$descCol = 'categories_name';
 		}
+		
+		/* {Hook} "MagnaCompatibleCheckinSubmit_GenerateShopCategoryPath": Enables you to specify a different column to pull the category description from.<br>
+		   Variables that can be used: 
+		   <ul><li>$descCol: The name of the description column in the table categories_description. Override this variable in your contrib.<br>
+		           <b>Notice:</b> If the column does not exist database errors will occur!</li>
+		       <li>$this->mpID: The ID of the marketplace.</li>
+		       <li>$this->marketplace: The name of the marketplace.</li>
+		   </ul>
+		 */
+		if (($hp = magnaContribVerify('MagnaCompatibleCheckinSubmit_GenerateShopCategoryPath', 1)) !== false) {
+			require($hp);
+		}
+		
 		if ($from == 'product') {
 			$categoriesQuery = MagnaDB::gi()->query('
 				SELECT categories_id AS code

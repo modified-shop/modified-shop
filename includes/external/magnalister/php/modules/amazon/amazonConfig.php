@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: amazonConfig.php 4595 2014-09-15 10:57:13Z tim.neumann $
+ * $Id: amazonConfig.php 5452 2015-04-09 10:04:14Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -168,12 +168,16 @@ if (array_key_exists('conf', $_POST)) {
 	$nMerchant = trim($_POST['conf']['amazon.merchantid']);
 	$nMarketplace = trim($_POST['conf']['amazon.marketplaceid']);
 	$nSite = $_POST['conf']['amazon.site'];
+	$sToken = trim($_POST['conf']['amazon.mwstoken']);
 
 	if (!empty($nUser) && (getDBConfigValue('amazon.password', $_MagnaSession['mpID']) == '__saved__') && empty($nPass)) {
 		$nPass = '__saved__';
 	}
+	if (!empty($nUser) && (getDBConfigValue('amazon.mwstoken', $_MagnaSession['mpID']) == '__saved__') && empty($sToken)) {
+		$sToken = '__saved__';
+	}
 
-	if (!empty($nUser) && !empty($nPass)) {
+	if (!empty($nUser) && !empty($nPass) && !empty($sToken)) {
 		if ((strpos($nPass, '&#9679;') === false) && (strpos($nPass, '&#8226;') === false)) {
 			/*               Windows                                  Mac                */
 			setDBConfigValue('amazon.authed', $_MagnaSession['mpID'], array (
@@ -187,6 +191,7 @@ if (array_key_exists('conf', $_POST)) {
 					'PASSWORD' => $nPass,
 					'MERCHANTID' => $nMerchant,
 					'MARKETPLACE' => $nMarketplace,
+					'MWSToken' => $sToken,
 					'SITE' => $nSite
 				));
 				$boxes .= '
@@ -305,5 +310,6 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 	}
 
 	echo $cG->renderConfigForm();
+	echo $cG->exchangeRateAlert();
 	include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_bottom.php');
 }

@@ -148,9 +148,11 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		$aData['submit']['Quantity'] = $aData['quantity'];
 
 		//Price
-		$aData['submit']['Price'] = $this->simpleprice
-			->setFinalPriceFromDB($iPID, $this->_magnasession['mpID'])
-			->roundPrice()->getPrice();
+		if (isset($aData['price']) && !empty($aData['price'])) {
+			$aData['submit']['Price'] = $aData['price'];
+		} else {
+			$aData['submit']['Price'] = $aProduct['Price'];
+		}
 
 		//BasePrice
 		if (!empty($aProduct['BasePrice'])) {

@@ -90,13 +90,19 @@ class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		
 		$variations = array();
 		foreach ($variationTheme as $v) {
+			if ($v['vPricePrefix'] == '=') {
+				$fCalcPrice = $this->calcVariationPrice(0.00, $v['vPrice'], $tax);
+			} else {
+				$fCalcPrice = $this->calcVariationPrice(
+					$data['price'],
+					$v['vPrice'] * (($v['vPricePrefix'] == '+') ? 1 : -1),
+					$tax
+				);
+			}
+
 			$vi = array (
 				'SKU' => magnaAID2SKU($v['aID']),
-				'Price' => $this->calcVariationPrice(
-					$data['price'],
-					$v['vPrice'] * (($v['vPricePrefix'] == '+') ? 1 : -1), 
-					$tax
-				),
+				'Price' => $fCalcPrice,
 				'Currency' => $this->settings['currency'],
 				'ItemTax' => $data['submit']['ItemTax'],
 				'Quantity' => ($this->quantityLumb === false)

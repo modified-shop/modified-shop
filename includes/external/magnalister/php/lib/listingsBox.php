@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: listingsBox.php 3912 2014-05-27 01:06:56Z derpapst $
+ * $Id: listingsBox.php 5754 2015-06-18 13:10:40Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -57,8 +57,8 @@ function generateListingsBox() {
 	
 	if (($magnaConfig['maranon']['Tariff'] == $magnaConfig['maranon']['WishTariff']) && ($magnaConfig['maranon']['CancellationDate'] == '0000-00-00')) {
 		$tarif = sprintf(ML_RATE_CONTINUE, $currentRate, $contractends);
-	} else if (($magnaConfig['maranon']['WishTariff'] != $magnaConfig['maranon']['Tariff']) && ($magnaConfig['maranon']['CancellationDate'] == '0000-00-00')) {
-		$tarif = sprintf(ML_RATE_SWITCH, $currentRate, ($contractends === 0) ? date('t.m.Y') : $contractends, constant('ML_RATE_'.strtoupper($magnaConfig['maranon']['WishTariff'])));
+	} else if (($magnaConfig['maranon']['WishTariff'] != $magnaConfig['maranon']['Tariff']) && ($magnaConfig['maranon']['CancellationDate'] == '0000-00-00') && ($magnaConfig['maranon']['TariffChangeDate'] != '0000-00-00')) {
+		$tarif = sprintf(ML_RATE_SWITCH, $currentRate, ($contractends === 0) ? date('d.m.Y', strtotime($magnaConfig['maranon']['TariffChangeDate'])) : $contractends, constant('ML_RATE_'.strtoupper($magnaConfig['maranon']['WishTariff'])));
 	} else {
 		$tarif = sprintf(ML_RATE_END, $currentRate, $contractends);
 	}

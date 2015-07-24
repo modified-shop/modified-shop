@@ -33,7 +33,7 @@ class MeinpaketSyncInventory extends MagnaCompatibleSyncInventory {
 	
 	protected function initMLProduct() {
 		parent::initMLProduct();
-		MLProduct::gi()->setLanguage(getDBConfigValue('meinpaket.lang', $this->mpID, 1))
+		MLProduct::gi()->setLanguage(getDBConfigValue($this->marketplace.'.lang', $this->mpID, 1))
 			->setPriceConfig(MeinpaketHelper::loadPriceSettings($this->mpID))
 			->setQuantityConfig(MeinpaketHelper::loadQuantitySettings($this->mpID))
 		;

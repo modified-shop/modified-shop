@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: autosyncInventory.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: autosyncInventory.php 5357 2015-03-13 14:16:33Z Soprex $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -67,10 +67,10 @@ function magnaAutosyncInventories() {
 			
 			$funcName = false;
 			$className = false;
-			
+
 			$funcFile = DIR_MAGNALISTER_MODULES.$marketplace.'/'.$marketplace.'Functions.php';
 			$classFile = DIR_MAGNALISTER_MODULES.strtolower($marketplace).'/crons/'.ucfirst($marketplace).'SyncInventory.php';
-
+	
 			if (file_exists($classFile)) {
 				require_once($classFile);
 				$className = ucfirst($marketplace).'SyncInventory';

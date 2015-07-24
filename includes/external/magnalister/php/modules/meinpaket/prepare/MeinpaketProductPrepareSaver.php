@@ -53,9 +53,9 @@ class MeinpaketProductPrepareSaver {
 			'StoreCategory' => '',
 			'VariationConfiguration' => '',
 			'ShippingDetails' => array (
-				'ShippingCost' => getDBConfigValue('meinpaket.prepare.shippingdetails.shippingcost', $this->mpId, ''),
-				'ShippingCostFixed' => getDBConfigValue(array('meinpaket.prepare.shippingdetails.shippingcostfixed', 'val'), $this->mpId, false),
-				'ShippingType' => getDBConfigValue('meinpaket.prepare.shippingdetails.shippingtype', $this->mpId, ''),
+				'ShippingCost' => getDBConfigValue($this->marketplace.'.prepare.shippingdetails.shippingcost', $this->mpId, ''),
+				'ShippingCostFixed' => getDBConfigValue(array($this->marketplace.'.prepare.shippingdetails.shippingcostfixed', 'val'), $this->mpId, false),
+				'ShippingType' => getDBConfigValue($this->marketplace.'.prepare.shippingdetails.shippingtype', $this->mpId, ''),
 			),
 		);
 	}

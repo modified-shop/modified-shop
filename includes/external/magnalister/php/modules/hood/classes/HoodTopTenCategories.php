@@ -57,6 +57,7 @@ class HoodTopTenCategories extends TopTen {
 				//*/
 			}
 		}
+		asort($aTopTenCatIds);
 		return $aTopTenCatIds;
 	}
 	

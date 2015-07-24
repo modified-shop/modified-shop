@@ -10,7 +10,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.css 4897 2014-11-20 00:18:14Z miguel.heredia $
+ * $Id: magnalister.css 5794 2015-06-30 16:36:54Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -350,16 +350,71 @@ div#globalButtonBox {
 	margin-right: 25px;
 	text-align: right;
 }
-table#magnafooter {
+
+div#magnafooter {
 	margin: 19px 0 0;
 	border: none;
-	line-height: 18px;
-}
-table#magnafooter td {
-	position: relative;
+	line-height: 15px;
+	border-collapse: collapse;
+	background: #f6f6f6;
+	color: #333;
 	padding: 8px;
 }
-table#magnafooter div.debug {
+div#magnafooter,
+body.magna div#magnafooter table td a {
+	font-family: Arial, sans-serif;
+}
+div#magnafooter table {
+	margin-bottom: 0px;
+	border: none;
+}
+div#magnafooter table td {
+	position: relative;
+}
+div#magnafooter table td.ml-td-center {
+	white-space: nowrap;
+	width: 1px;
+}
+div#magnafooter table td.ml-td-left,
+div#magnafooter table td.ml-td-right {
+	width: 50%;
+}
+div#magnafooter table td.ml-td-left {
+	text-align: left;
+	padding-left: 27px;
+}
+div#magnafooter table td.ml-td-right {
+	text-align: right;
+	padding-right: 27px;
+}
+div#magnafooter table td a {
+	text-decoration: underline;
+}
+
+div#magnafooter table div.copyleft {
+	font-size: 9px;
+	color: #555;
+	position: relative;
+	bottom: 2px;
+}
+div#magnafooter table span.build,
+div#magnafooter table span.build a,
+div#magnafooter table span.customerinfo {
+	font-weight: normal;
+	color: #8d8d8f;
+	font-size: 10px;
+}
+div#magnafooter table span.customerinfo {
+	right: auto;
+	left: 0;
+}
+div#magnafooter table span.version-text,
+div#magnafooter table span.version {
+	font-size: 11.5px;
+	position: relative;
+	top: 2px;
+}
+div#magnafooter table div.debug {
 	display: none;
 	text-align: left;
 	border: 2px solid #4a4a4a;
@@ -369,26 +424,21 @@ table#magnafooter div.debug {
 	padding: 5px;
 	position: absolute;
 	background: #f4f4f4;
-	margin-top: -124px;
+	margin-top: -130px;
+	margin-left: -30px;
 	-moz-box-shadow: 0 0 30px -4px #000000;
 	-webkit-box-shadow: 0 0 30px -4px #000000;
 	box-shadow: 0 0 30px -4px #000000;
 	z-index: 1;
 	line-height: 1em;
 }
-table#magnafooter:hover div.debug {
+div#magnafooter table:hover div.debug {
 	display: block;
 }
-body.ielt8 table#magnafooter div.debug {
+body.ielt8 div#magnafooter table div.debug {
 	left: 0;
 	width: 180px;
 	margin-top: -154px;
-}
-table#magnafooter div.copyleft {
-	font-size: 9px;
-	color: #555;
-	position: relative;
-	bottom: 2px;
 }
 body.magna div#content .ml-button,
 body.magna .ui-dialog .ml-button {
@@ -523,6 +573,7 @@ body.magna .gfxbutton:active {
 	background-color: #ccc;
 	outline: none;
 }
+
 body.magna .gfxbutton.small {
 	background-position: -1px -1px;
 	width: 16px;
@@ -589,6 +640,9 @@ body.magna .gfxbutton.border:active {
 	-moz-box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
 	-webkit-box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
 	box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+body.magna .gfxbutton.border.inactive {
+    opacity: 0.4;
 }
 body.magna .gfxbutton.visiblebg {
 	background-color: rgba(0, 0, 0, 0.05);
@@ -1192,6 +1246,7 @@ form.config table.conftbl tr.conf td.input label {
 }
 form.config table.conftbl tr.conf td span {
 	margin-right: 1em;
+    line-height: 21px;
 }
 form.config table.conftbl tr.conf td label.savedPassword {
 	padding: 0;
@@ -2485,32 +2540,7 @@ textarea.debugBox {
 	box-sizing: border-box;
 	margin-bottom: 1em;
 }
-table#magnafooter td div.bold {
-	position: relative;
-	color: #333334;
-}
-table#magnafooter span.build,
-table#magnafooter span.customerinfo {
-	font-weight: normal;
-	color: #8d8d8f;
-	position: absolute;
-	right: 0;
-	display: inline;
-	padding: 9px 27px;
-}
-table#magnafooter span.build {
-	font-size: 9.6px;
-}
-table#magnafooter span.customerinfo {
-	right: auto;
-	left: 0;
-}
-table#magnafooter span.version-text,
-table#magnafooter span.version {
-	 font-size: 11.5px;
-	 position: relative;
-	 top: 2px;
-}
+
 
 /* Dialogs v2 */
 div.dialog2 {
@@ -2730,6 +2760,18 @@ body.magna.jqueryui .ui-widget {
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;
 	padding: 8px 26px 23px;
+}
+body.magna.jqueryui .ui-slider {
+	border: 1px solid #a6c9e2;
+	padding: 0;
+}
+body.magna.jqueryui .ui-slider a {
+	top: -2px;
+}
+body.magna.jqueryui .ui-slider.ui-corner-all {
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 body.magna.jqueryui .ui-widget a {
 	font-family: sans-serif !important;

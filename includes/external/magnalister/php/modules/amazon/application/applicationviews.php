@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: applicationviews.php 4633 2014-09-23 08:19:58Z miguel.heredia $
+ * $Id: applicationviews.php 5096 2015-01-30 12:58:08Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -36,7 +36,7 @@ function renderFlat($data, $prefix = '') {
 
 function renderAmazonTopTen($sField, $aConfig = array()) {
 	global $_MagnaSession;
-	require_once DIR_MAGNALISTER . DIRECTORY_SEPARATOR . 'php' . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR . 'amazon' . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'amazonTopTen.php';
+	require_once (DIR_MAGNALISTER_MODULES.DIRECTORY_SEPARATOR.'amazon'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'amazonTopTen.php');
 	$oTopTen = new amazonTopTen();
 	$oTopTen->setMarketPlaceId($_MagnaSession['mpID']);
 	$aTopTen = $oTopTen->getTopTenCategories($sField, $aConfig);
@@ -150,13 +150,7 @@ function convertAttrArrayToHTML($data, $usrData = array()) {
 		$def['desc'] = isset($def['desc']) ? $def['desc'] : '';
 
 		switch ($def['type']) {
-			case 'text':
-			{
-				$html = '<input type="text" value="' . $usrValue . '" name="Attributes[' . $key . ']">' . "\n";
-				break;
-			}
-			case 'select':
-			{
+			case 'select': {
 				$html = '<select name="Attributes[' . $key . ']" class="fullWidth">' . "\n";
 				foreach ($def['values'] as $vk => $vv) {
 					$vv = fixHTMLUTF8Entities($vv);
@@ -165,6 +159,11 @@ function convertAttrArrayToHTML($data, $usrData = array()) {
 					$html .= '    <option value="' . $vk . '"' . ($selected ? 'selected="selected"' : '') . '>' . $vv . '</option>' . "\n";
 				}
 				$html .= '</select><br/>' . "\n";
+				break;
+			}
+			default: {
+				$html = '<input type="text" value="' . $usrValue . '" name="Attributes[' . $key . ']">' . "\n";
+				break;
 			}
 		}
 		$def['html'] = $html;
@@ -511,23 +510,30 @@ function renderGenericApplication($data) {
 			</tr>
 			<tr class="odd">
 				<th>' . ML_GENERIC_SHIPPING_TIME . '</th>
-				<td class="input"><select class="fullwidth" name="LeadtimeToShip">';
+				<td class="input">
+					<select class="fullWidth" name="LeadtimeToShip">';
 	$usrValue = $data['LeadtimeToShip'];
 	foreach ($opts as $vk => $vv) {
-		$html .= '    <option value="' . $vk . '"' . (($vk == $usrValue) ? 'selected="selected"' : '') . '>' . $vv . '</option>' . "\n";
+		$html .= '
+						<option value="' . $vk . '"' . (($vk == $usrValue) ? 'selected="selected"' : '') . '>' . $vv . '</option>' . "\n";
 	}
-	$html .= '"</select></td>
+	$html .= '"
+					</select>
+				</td>
 				<td class="info">&nbsp;</td>
 			</tr>';
 //    if(!empty($tmpData) && array_key_exists('ConditionType', $tmpData)){
-	$html .= '<tr class="odd ArtikelConditions" style="display: ' . (($conditionStatus) ? 'table-row' : 'none') . ';">
+	$html .= '
+			<tr class="odd ArtikelConditions" style="display: ' . (($conditionStatus) ? 'table-row' : 'none') . ';">
 				<th>' . ML_GENERIC_CONDITION . '</th>
-				<td class="input"><select id="condition_type" name="ConditionType">' . (($conditionStatus) ? $conditionHtml : '') . '</select></td>
-				</tr>
-				<tr class="odd ArtikelConditions" style="display:' . (($conditionStatus) ? 'table-row' : 'none') . ';">
+				<td class="input"><select class="fullWidth" id="condition_type" name="ConditionType">' . (($conditionStatus) ? $conditionHtml : '') . '</select></td>
+				<td class="info"></td>
+			</tr>
+			<tr class="odd ArtikelConditions" style="display:' . (($conditionStatus) ? 'table-row' : 'none') . ';">
 				<th>' . ML_GENERIC_CONDITION_NOTE . '</th>
-				<td class="input"><textarea id="condition_note" name="ConditionNote">' . (($conditionStatus) ? $data['ConditionNote'] : '') . '</textarea></td>
-				</tr>';
+				<td class="input"><textarea class="fullWidth" rows="10" id="condition_note" name="ConditionNote">' . (($conditionStatus) ? $data['ConditionNote'] : '') . '</textarea></td>
+				<td class="info"></td>
+			</tr>';
 //    }
 	$html .= '
 			<tr class="spacer">

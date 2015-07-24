@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: InventoryView.php 4961 2014-12-09 14:10:12Z tim.neumann $
+ * $Id: InventoryView.php 5357 2015-03-13 14:16:33Z Soprex $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -355,7 +355,7 @@ $(document).ready(function() {
 			''
 		);
 		$right = '<table class="right"><tbody>
-			'.(in_array(getDBConfigValue('meinpaket.stocksync.tomarketplace', $this->magnasession['mpID']), array('abs', 'auto'))
+			'.(in_array(getDBConfigValue($this->magnasession['currentPlatform'].'.stocksync.tomarketplace', $this->magnasession['mpID']), array('abs', 'auto'))
 				? '<tr><td><input type="submit" class="ml-button fullWidth smallmargin" name="refreshStock" value="'.ML_BUTTON_REFRESH_STOCK.'"/></td></tr>'
 				: ''
 			).'

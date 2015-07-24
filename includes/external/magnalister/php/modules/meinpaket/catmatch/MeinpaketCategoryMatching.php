@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketCategoryMatching.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: MeinpaketCategoryMatching.php 5357 2015-03-13 14:16:33Z Soprex $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -63,7 +63,7 @@ div.catVisual {
 						<input class="fullWidth ml-button smallmargin" type="button" value="W&auml;hlen" id="selectMPCategory"/>
 					</td>
 				</tr>
-				<tr><td colspan="2">&nbsp;</td></tr>'.(!getDBConfigValue(array('meinpaket.catmatch.mpshopcats', 'val'), $this->mpID, false) ? ('
+				<tr><td colspan="2">&nbsp;</td></tr>'.(!getDBConfigValue(array($this->marketplace.'.catmatch.mpshopcats', 'val'), $this->mpID, false) ? ('
 				<tr><td colspan="2">'.ML_MEINPAKET_CATEGORYMATCHING_ASSIGN_SHOP_CAT.'</td></tr>
 				<tr>
 					<td><div class="catVisual" id="storeCategoryVisual">'.$primaryCategoryName.'</div></td>

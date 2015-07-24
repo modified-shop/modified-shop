@@ -169,15 +169,17 @@ class BepadoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		}
 
 		// ShippingTime
-		if (isset($aPropertiesRow['ShippingTime'])) {
-			$aData['submit']['ShippingTime'] = $aPropertiesRow['ShippingTime'];
-		} else if (getDBConfigValue(array($this->marketplace.'.leadtimetoshipmatching.prefer', 'val'), $this->mpID, false)) {
+		if (getDBConfigValue(array($this->marketplace.'.leadtimetoshipmatching.prefer', 'val'), $this->mpID, false)) {
 			$aData['submit']['ShippingTime'] = getDBConfigValue(
 				array($this->marketplace.'.leadtimetoshipmatching.values', $aProduct['ShippingTimeId']),
 				$this->mpID,
 				getDBConfigValue($this->marketplace.'.checkin.leadtimetoship', $this->mpID, 0)
 			);
-		} else {
+		}
+		if (!isset($aData['submit']['ShippingTime']) || empty($aData['submit']['ShippingTime'])) {
+			$aData['submit']['ShippingTime'] = $aPropertiesRow['ShippingTime'];
+		}
+		if (empty($aData['submit']['ShippingTime'])) {
 			$aData['submit']['ShippingTime'] = getDBConfigValue($this->marketplace.'.checkin.leadtimetoship', $this->mpID, 0);
 		}
 		

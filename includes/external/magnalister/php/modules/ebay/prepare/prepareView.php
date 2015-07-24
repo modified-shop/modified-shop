@@ -133,6 +133,8 @@ function renderSinglePrepareView($data) {
 							<dd>'.ML_EBAY_SHORTDESCRIPTION_FROM_SHOP.'</dd>
 						<dt style="font-weight:bold; color:black">#DESCRIPTION#</dt>
 							<dd>'.ML_EBAY_DESCRIPTION_FROM_SHOP.'</dd>
+						<dt style="font-weight:bold; color:black">#WEIGHT#</dt>
+							<dd>'.ML_EBAY_WEIGHT_FROM_SHOP.'</dd>
 						<dt style="font-weight:bold; color:black">#PICTURE1#</dt>
 							<dd>'.ML_EBAY_FIRST_PIC.'</dd>
 						<dt style="font-weight:bold; color:black">#PICTURE2# etc.</dt>
@@ -530,6 +532,7 @@ function renderMultiPrepareView($data) {
     	SELECT SQL_CALC_FOUND_ROWS DISTINCT PrivateListing
           FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
          WHERE products_id IN ('.$products_id_list.')
+		   AND mpID = '.$_MagnaSession['mpID'].'
     ');
     if (1 == (int)MagnaDB::gi()->foundRows()) {
         if ('1' == $privateListingSet[0]['PrivateListing']) {
@@ -552,6 +555,7 @@ function renderMultiPrepareView($data) {
     	SELECT SQL_CALC_FOUND_ROWS DISTINCT BestOfferEnabled
           FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
          WHERE products_id IN ('.$products_id_list.')
+		   AND mpID = '.$_MagnaSession['mpID'].'
     ');
     if (1 == (int)MagnaDB::gi()->foundRows()) {
         if ('1' == $bestOfferEnabledSet[0]['BestOfferEnabled']) {
@@ -566,6 +570,7 @@ function renderMultiPrepareView($data) {
     	SELECT SQL_CALC_FOUND_ROWS DISTINCT StartTime
           FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
          WHERE products_id IN ('.$products_id_list.')
+		   AND mpID = '.$_MagnaSession['mpID'].'
     ');
     if (1 == (int)MagnaDB::gi()->foundRows()) {
     	$StartTime = $StartTimeSet[0]['StartTime'];
@@ -591,6 +596,7 @@ function renderMultiPrepareView($data) {
     	SELECT SQL_CALC_FOUND_ROWS DISTINCT HitCounter
           FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
          WHERE products_id IN ('.$products_id_list.')
+		   AND mpID = '.$_MagnaSession['mpID'].'
     ');
     if (1 == (int)MagnaDB::gi()->foundRows()) {
         $defaultHitCounter = $hitcounterSet[0]['HitCounter'];
@@ -635,6 +641,7 @@ function renderMultiPrepareView($data) {
 						  FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
 						 WHERE products_id IN ('.$products_id_list.')
 							   AND Subtitle <> \'\'
+							   AND mpID = '.$_MagnaSession['mpID'].'
 					') == count($data)
 				) {
 					$html .= ' checked="checked" ';
@@ -1081,7 +1088,8 @@ $(document).ready(function() {
 		if (cID != '') {
 			generateEbayCategoryPath(cID, $('#PrimaryCategoryVisual'));
 			getEBayCategoryAttributes(cID, 1, $('#PrimaryPreselectedValues').val());
-			VariationsEnabled(cID,$('#noteVariationsEnabled'));
+			VariationsEnabled(cID, $('#noteVariationsEnabled'));
+			GetConditionValues(cID, $('#ebay_Condition'), <?php if(isset($defaultConditionID)) echo $defaultConditionID; else echo '1000'; ?>);
 			return true;
 		} else {
 			$('#attr_1').css({'display':'none'});
@@ -1107,7 +1115,9 @@ $(document).ready(function() {
 			$('#PrimaryCategory').val(cID);
 			generateEbayCategoryPath(cID, $('#PrimaryCategoryVisual'));
 			getEBayCategoryAttributes(cID, 1, $('#PrimaryPreselectedValues').val());
-			VariationsEnabled(cID,$('#noteVariationsEnabled'));
+			VariationsEnabled(cID, $('#noteVariationsEnabled'));
+			GetConditionValues(cID, $('#ebay_Condition'), <?php if(isset($defaultConditionID)) echo $defaultConditionID; else echo '1000'; ?>);
+			return true;
 		}, 'eBay');
 	});
 	$('#selectSecondaryCategory').click(function() {
@@ -1172,6 +1182,13 @@ function renderPrepareView($data) {
 	 * Check ob einer oder mehrere Artikel
 	 */
 	$prepareView = (1 == count($data)) ? 'single' : 'multiple';
+
+	if (empty($data)) {
+		return '<p class="errorBox">
+		<span class="error bold larger">'.ML_ERROR_LABEL.':</span>
+		'.ML_EBAY_ERROR_NO_SUITABLE_ITEMS_CHECK_LANGUAGE.'
+		</p>';
+	}
 	
 	
 	ob_start();

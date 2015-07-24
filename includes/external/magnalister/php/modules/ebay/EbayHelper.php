@@ -107,4 +107,77 @@ class EbayHelper extends MagnaCompatibleHelper {
 		}
 		return self::$priceConfigs[$mpId][$priceType]['active'] ? self::$priceConfigs[$mpId][$priceType] : array();
 	}
+
+	/*
+	 * return array - matched details (brand, mpn, ean)
+	 */
+	public static function getProductListingDetailsFromProduct($iProductId, $iLang) {
+		global $_MagnaSession;
+
+		if (getDBConfigValue('ebay.listingdetails.sync', $_MagnaSession['mpID'], false) == 'false') {
+			return array();
+		}
+
+		MLProduct::gi()->setLanguage($iLang);
+
+		// match manufacturer part number
+		$aManufacturerPartNumber = getDBConfigValue('ebay.listingdetails.mpn.dbmatching.table', $_MagnaSession['mpID'], false);
+		if (is_array($aManufacturerPartNumber) && !empty($aManufacturerPartNumber['column']) && !empty($aManufacturerPartNumber['table'])) {
+			$sPidAlias = getDBConfigValue('ebay.listingdetails.mpn.dbmatching.alias', $_MagnaSession['mpID']);
+			if (empty($sPidAlias)) {
+				$sPidAlias = 'products_id';
+			}
+			MLProduct::gi()->setDbMatching('ManufacturerPartNumber', array (
+				'Table'  => $aManufacturerPartNumber['table'],
+				'Column' => $aManufacturerPartNumber['column'],
+				'Alias'  => $sPidAlias,
+			));
+		}
+
+		// match ean
+		$aEAN = getDBConfigValue('ebay.listingdetails.ean.dbmatching.table', $_MagnaSession['mpID'], false);
+		if (is_array($aEAN) && !empty($aEAN['column']) && !empty($aEAN['table'])) {
+			$sPidAlias = getDBConfigValue('ebay.listingdetails.ean.dbmatching.alias', $_MagnaSession['mpID']);
+			if (empty($sPidAlias)) {
+				$sPidAlias = 'products_id';
+			}
+			MLProduct::gi()->setDbMatching('EAN', array (
+				'Table'  => $aEAN['table'],
+				'Column' => $aEAN['column'],
+				'Alias'  => $sPidAlias,
+			));
+		}
+
+		// get product
+		$aProduct = MLProduct::gi()->getProductById($iProductId);
+
+		// set listing details
+		$aListingDetails = array(
+			'Brand' => $aProduct['Manufacturer'],
+			'MPN' => $aProduct['ManufacturerPartNumber'],
+			'EAN' => $aProduct['EAN'],
+		);
+
+		// if brand is empty try to get it from config
+		$sAlternativeBrand = getDBConfigValue('ebay.listingdetails.manufacturerfallback', $_MagnaSession['mpID'], false);
+		if (   empty($aListingDetails['Brand'])
+			&& $sAlternativeBrand !== false
+		) {
+			$aListingDetails['Brand'] = $sAlternativeBrand;
+		}
+
+		/* {Hook} "EbayHelper_getProductListingDetailsFromProduct": Is called before the data of the product in <code>$aListingDetails</code> will return.
+			Useful to manipulate some of the data.
+			Variables that can be used:
+			<ul>
+				<li>$aListingDetails: The data of a product for the preparation</li>
+				<li>$_MagnaSession: magna session data (marketplace, mpID etc.)</li>
+			</ul>
+		*/
+		if (($hp = magnaContribVerify('EbayHelper_getProductListingDetailsFromProduct', 1)) !== false) {
+			require($hp);
+		}
+
+		return $aListingDetails;
+	}
 }

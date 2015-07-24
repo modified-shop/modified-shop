@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: configuration.php 4835 2014-11-11 19:02:20Z MaW $
+ * $Id: configuration.php 5000 2014-12-20 11:05:38Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -124,39 +124,39 @@ global $forceConfigView;
 if (($forceConfigView !== false) && !isset($comercialText)) {
 	echo $forceConfigView;
 	$q = MagnaDB::gi()->query('
-		SELECT products_model, COUNT(products_model) as cnt
-		  FROM '.TABLE_PRODUCTS.' 
-		 WHERE products_model <> \'\'
-      GROUP BY products_model
-        HAVING cnt > 1'
+	    SELECT products_model, COUNT(products_model) as cnt
+	      FROM '.TABLE_PRODUCTS.' 
+	     WHERE products_model <> \'\'
+	  GROUP BY products_model
+	    HAVING cnt > 1'
 	);
 	$dblProdModel = array();
 	while ($row = MagnaDB::gi()->fetchNext($q)) {
 		$dblProdModel[] = MagnaDB::gi()->escape($row['products_model']);
 	}
 	$evilProducts = MagnaDB::gi()->fetchArray('
-		SELECT p.products_id, p.products_model, pd.products_name
-		  FROM '.TABLE_PRODUCTS.' p
+	    SELECT p.products_id, p.products_model, pd.products_name
+	      FROM '.TABLE_PRODUCTS.' p
 	 LEFT JOIN '.TABLE_PRODUCTS_DESCRIPTION.' pd ON p.products_id=pd.products_id AND pd.language_id = \''.$_SESSION['languages_id'].'\'
-		 WHERE products_model=\'\' OR products_model IS NULL '.((!empty($dblProdModel))
-		 	? 'OR products_model IN (\''.implode('\', \'', $dblProdModel).'\')'
-		 	: ''
-		 ).'
-      ORDER BY p.products_model ASC, pd.products_name ASC
+	     WHERE products_model=\'\' OR products_model IS NULL '.((!empty($dblProdModel))
+	         ? 'OR products_model IN (\''.implode('\', \'', $dblProdModel).'\')'
+	         : ''
+	     ).'
+	  ORDER BY p.products_model ASC, pd.products_name ASC
 	');
 	if (!empty($evilProducts)) {
 		$traitorTable = '
-		    <table class="datagrid">
-		    	<thead><tr>
-		    		<th>'.str_replace(' ', '&nbsp;', ML_LABEL_PRODUCT_ID).'</th>
-		    		<th>'.ML_LABEL_ARTICLE_NUMBER.'</th>
-		    		<th>'.ML_LABEL_PRODUCTS_WITH_INVALID_MODELNR.'</th>
-		    		<th>'.ML_LABEL_EDIT.'</th>
-		    	</tr></thead>
-		    	<tbody>';
-		    $oddEven = true;
-			foreach ($evilProducts as $item) {
-				$traitorTable .= '
+			<table class="datagrid">
+				<thead><tr>
+					<th>'.str_replace(' ', '&nbsp;', ML_LABEL_PRODUCT_ID).'</th>
+					<th>'.ML_LABEL_ARTICLE_NUMBER.'</th>
+					<th>'.ML_LABEL_PRODUCTS_WITH_INVALID_MODELNR.'</th>
+					<th>'.ML_LABEL_EDIT.'</th>
+				</tr></thead>
+				<tbody>';
+		$oddEven = true;
+		foreach ($evilProducts as $item) {
+			$traitorTable .= '
 					<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 						<td style="width: 1px;">'.$item['products_id'].'</td>
 						<td style="width: 1px;">'.(empty($item['products_model']) ? '<i class="grey">'.ML_LABEL_NOT_SET.'</i>' : $item['products_model']).'</td>
@@ -165,7 +165,7 @@ if (($forceConfigView !== false) && !isset($comercialText)) {
 							<a class="gfxbutton edit" title="'.ML_LABEL_EDIT.'" target="_blank" href="categories.php?pID='.$item['products_id'].'&action=new_product">&nbsp;</a>
 						</td>
 					</tr>';
-			}
+		}
 		$traitorTable .= '
 				</tbody>
 			</table>';
@@ -248,25 +248,25 @@ echo '<div id="switchSKU" class="dialog2" title="'.ML_TEXT_CONFIRM_SKU_CHANGE_TI
 ?>
 <script type="text/javascript">/*<![CDATA[*/
 $(document).ready(function() {
-    $('input[name="conf[general.keytype]"]').change(function (e) {
-        $('#switchSKU').dialog({
-            modal: true,
-            width: '600px',
-            buttons: {
-                "<?php echo ML_BUTTON_LABEL_ABORT; ?>": function() {
-                    if ($('input[name="conf[general.keytype]"]')[1].checked) {
-                        $('input[name="conf[general.keytype]"]')[0].checked = true;
-                    } else {
-                        $('input[name="conf[general.keytype]"]')[1].checked = true;                
-                    }
-                    $(this).dialog("close");
-                },
-                "<?php echo ML_BUTTON_LABEL_OK; ?>": function() { 
-                    $(this).dialog("close");    
-                }
-            }
-        });
-    });
+	$('input[name="conf[general.keytype]"]').change(function (e) {
+		$('#switchSKU').dialog({
+			modal: true,
+			width: '600px',
+			buttons: {
+				"<?php echo ML_BUTTON_LABEL_ABORT; ?>": function() {
+					if ($('input[name="conf[general.keytype]"]')[1].checked) {
+						$('input[name="conf[general.keytype]"]')[0].checked = true;
+					} else {
+						$('input[name="conf[general.keytype]"]')[1].checked = true;
+					}
+					$(this).dialog("close");
+				},
+				"<?php echo ML_BUTTON_LABEL_OK; ?>": function() {
+					$(this).dialog("close");
+				}
+			}
+		});
+	});
 });
 /*]]>*/</script>
 
@@ -276,25 +276,25 @@ echo '<div id="switchOptions" class="dialog2" title="'.ML_TEXT_CONFIRM_OPTIONS_C
 ?>
 <script type="text/javascript">/*<![CDATA[*/
 $(document).ready(function() {
-    $('input[name="conf[general.options]"]').change(function (e) {
-        $('#switchOptions').dialog({
-            modal: true,
-            width: '600px',
-            buttons: {
-                "<?php echo ML_BUTTON_LABEL_ABORT; ?>": function() {
-                    if ($('input[name="conf[general.options]"]')[1].checked) {
-                        $('input[name="conf[general.options]"]')[0].checked = true;
-                    } else {
-                        $('input[name="conf[general.options]"]')[1].checked = true;                
-                    }
-                    $(this).dialog("close");
-                },
-                "<?php echo ML_BUTTON_LABEL_OK; ?>": function() { 
-                    $(this).dialog("close");    
-                }
-            }
-        });
-    });
+	$('input[name="conf[general.options]"]').change(function (e) {
+		$('#switchOptions').dialog({
+			modal: true,
+			width: '600px',
+			buttons: {
+				"<?php echo ML_BUTTON_LABEL_ABORT; ?>": function() {
+					if ($('input[name="conf[general.options]"]')[1].checked) {
+						$('input[name="conf[general.options]"]')[0].checked = true;
+					} else {
+						$('input[name="conf[general.options]"]')[1].checked = true;
+					}
+					$(this).dialog("close");
+				},
+				"<?php echo ML_BUTTON_LABEL_OK; ?>": function() {
+					$(this).dialog("close");
+				}
+			}
+		});
+	});
 });
 /*]]>*/</script>
 <?php endif; ?>
