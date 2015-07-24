@@ -172,11 +172,11 @@
               }
               //$products = xtc_get_products($user_session);
               for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-                $contents[] = array('text' => $products[$i]['quantity'] . ' x ' . $products[$i]['name']);
+                $contents[] = array('align' => 'right','text' => $products[$i]['quantity'] . ' x ' . $products[$i]['name']);
               }
               if (sizeof($products) > 0) {
                 $contents[] = array('text' => xtc_draw_separator('pixel_black.gif', '100%', '1'));
-                $contents[] = array('align' => 'right', 'text'  => TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $user_session['cart']->total . ' ' . $user_session['currency']);
+                $contents[] = array('align' => 'right', 'text'  => '<span style="nobr">'.TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $xtPrice->xtcFormat($user_session['cart']->total , true). '</span>');
               } else {
                 $contents[] = array('text' => TEXT_EMPTY_CART);
               }
@@ -186,7 +186,7 @@
             }
           }
           if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-              echo '            <td class="boxRight">' . "\n";
+              echo '            <td class="boxRight" style="min-width:120px">' . "\n";
               $box = new box;
               echo $box->infoBox($heading, $contents);
               echo '            </td>' . "\n";
