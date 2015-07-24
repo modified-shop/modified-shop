@@ -16,7 +16,7 @@
    --------------------------------------------------------------*/
 
 define('HEADING_TITLE', 'Artikeleigenschaften');
-define('HEADING_TITLE_DETAIL', 'Artikeleigenschaften - Details');
+define('HEADING_TITLE_DETAIL', 'Artikeleigenschaften - Werte');
 
 define('TABLE_HEADING_ACTION', 'Aktion');
 define('TABLE_HEADING_STATUS', 'Details');
@@ -42,14 +42,14 @@ define('TEXT_INFO_VALUE_CONTENT', 'Content:');
 define('TEXT_INFO_VALUE_SORT', 'Sortierung:');
 define('TEXT_INFO_DELETE_VALUE_IMAGE', 'Bild l&ouml;schen?');
 
-define('TEXT_INFO_HEADING_NEW_VALUE', 'Neue Eigenschaft');
-define('TEXT_INFO_NEW_VALUE_INTRO', 'Bitte geben Sie die neue Eigenschaft mit allen relevanten Daten ein');
-define('TEXT_INFO_HEADING_EDIT_VALUE', 'Eigenschaft bearbeiten');
+define('TEXT_INFO_HEADING_NEW_VALUE', 'Neuer Wert');
+define('TEXT_INFO_NEW_VALUE_INTRO', 'Bitte geben Sie den neuen Wert mit allen relevanten Daten ein');
+define('TEXT_INFO_HEADING_EDIT_VALUE', 'Wert bearbeiten');
 define('TEXT_INFO_EDIT_VALUE_INTRO', 'Bitte f&uuml;hren Sie alle notwendigen &Auml;nderungen durch.');
-define('TEXT_INFO_HEADING_DELETE_VALUE', 'Eigenschaft l&ouml;schen');
-define('TEXT_INFO_DELETE_VALUE_INTRO', 'Sind Sie sicher, dass Sie diese Eigenschaft l&ouml;schen wollen?');
+define('TEXT_INFO_HEADING_DELETE_VALUE', 'Wert l&ouml;schen');
+define('TEXT_INFO_DELETE_VALUE_INTRO', 'Sind Sie sicher, dass Sie diesen Wert l&ouml;schen wollen?');
 
-define('TEXT_DISPLAY_NUMBER_OF_VALUES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Eigenschaften)');
+define('TEXT_DISPLAY_NUMBER_OF_VALUES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Werten)');
 
 
 define('TEXT_INFO_OPTION_NAME', 'Name:');
@@ -69,9 +69,9 @@ define('TEXT_DISPLAY_NUMBER_OF_OPTIONS', 'Angezeigt werden <b>%d</b> bis <b>%d</
 
 define('TEXT_INFO_HEADING_IMPORT', 'Importieren');
 define('TEXT_INFO_ATTRIBUTES_OPTION', 'Artikelmerkmale als Eigenschaften importieren?');
-define('TEXT_INFO_ATTRIBUTES_VALUE', 'Optionswerte als Eigenschaftswerte importieren?');
+define('TEXT_INFO_ATTRIBUTES_VALUE', 'Optionswerte als Eigenschaften-Werte importieren?');
 define('TEXT_INFO_ATTRIBUTES', 'Attribute - Zuordnungen als Eigenschaften bei den Artikeln &uuml;bernehmen?');
-define('TEXT_INFO_ATTRIBUTES_DELETE', 'Attribute - Zuordnungen entfernen von gel&ouml;schten Attribute?');
+define('TEXT_INFO_ATTRIBUTES_DELETE', 'Attribute - Zuordnungen entfernen von gel&ouml;schten Attributen?');
 define('TEXT_INFO_IMPORT_WAIT', 'Bitte warten...');
 define('TEXT_INFO_IMPORT_FINISHED', 'Import abgeschlossen.');
 

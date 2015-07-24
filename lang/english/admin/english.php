@@ -182,6 +182,7 @@ define('BOX_SUPERMAILER', 'SuperMailer');
 define('BOX_OFFLINE', 'Shop offline');
 define('BOX_LOGS', 'Logfiles');
 define('BOX_SHIPCLOUD', 'shipcloud');
+define('BOX_PRODUCTS_TAGS', 'Product features');
 
 define('TXT_GROUPS','<b>Groups</b>:');
 define('TXT_SYSTEM','System');

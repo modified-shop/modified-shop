@@ -649,6 +649,10 @@ INSERT INTO zones VALUES (180,195,'ES-ZA','Zamora');
 INSERT INTO zones VALUES (181,195,'ES-Z','Zaragoza');
 
 #GTB - 2015-06-30 - add products_tags
+ALTER TABLE admin_access ADD products_tags INT(1) NOT NULL DEFAULT 0 AFTER listcategories;
+UPDATE admin_access SET products_tags = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET products_tags = 3 WHERE customers_id = 'groups' LIMIT 1;
+
 DROP TABLE IF EXISTS products_tags;
 CREATE TABLE products_tags (
   products_id int(11) NOT NULL,
