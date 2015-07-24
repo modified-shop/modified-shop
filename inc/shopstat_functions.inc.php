@@ -63,14 +63,8 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
   //-- XTC
   (!isset($languages_id)) ? $languages_id = $_SESSION['languages_id'] : false;
 
-  //BOF - web28 - 2010-08-18 -- Die Parameter aufspalten
-  $pararray = array();
-  foreach(explode('&', $parameters) as $pair) {
-    $values = explode('=', $pair);
-    if (!empty($values[0])) {
-      $pararray[$values[0]] = $values[1];
-    }
-  }
+  //Die Parameter aufspalten
+  parse_str($parameters, $pararray);
   
   $cPath      = (isset($pararray['cPath']))?$pararray['cPath']:false;
   $prodid     = (isset($pararray['products_id']))?$pararray['products_id']:false;
@@ -84,27 +78,25 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
   $action     = (isset($pararray['action']))?$pararray['action']:'';
   $show       = (isset($pararray['show']))?$pararray['show']:'';
 
-  //EOF - web28 - 2010-08-18 -- Die Parameter aufspalten
   $go = true;
   //-- Nur bei der index.php und product_info.php
   if ($page != 'index.php' && $page != 'product_info.php' && $page != 'shop_content.php') {
     $go = false;
-  } elseif (strlen($sort)>0) {
+  } elseif ($sort != '') {
     //-- Unter diesen Bedingungen werden die URLs nicht umgewandelt
     //-- Sortieren
     $go = false;
-  } elseif (strlen($filter_id)>0) {
+  } elseif ($filter_id != '') {
     //-- Sortieren der Herstellerprodukte
-    $go = false;
-  } elseif (strlen($action)>0) {
+    //$go = false;
+  } elseif ($action != '') {
     //-- Andere Aktion
     $go = false;
   } elseif (strpos($prodid,'{') !== false) {
     //-- Produkt mit Attributen
     $go = false;
-  } elseif (strlen($show)>0) {
-    //-- Andere Aktion
-    $go = false;
+  } elseif ($show != '') {
+    //$go = false;
   }
 
   //BOF web28 - 2010-08-18 -- Falls eine Sprache übergeben wurde, wird diese als 'Linksprache' definiert
@@ -161,6 +153,18 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
     //web28 - 2010-08-18 -- Parameter für die Sprachumschaltung
     if (strlen($lang)>0 && $lang_id != $languages_id) {
       $link .= $separator.'language='. $lang;
+    }
+
+    // unset not needed params
+    unset($pararray['language']);
+    unset($pararray['cPath']);
+    unset($pararray['products_id']);
+    unset($pararray['coID']);
+    unset($pararray['page']);
+    
+    if (count($pararray) > 0) {
+      $link .= $separator.http_build_query($pararray, '', '&');
+      $separator  = '&';
     }
   }
   

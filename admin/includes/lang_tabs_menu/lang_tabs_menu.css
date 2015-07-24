@@ -22,6 +22,7 @@
 	float: left;
 	border-top: 1px solid #aaaaaa;
 	border-right: 1px solid #aaaaaa;
+  border-bottom: 1px solid #aaaaaa;
 	color: #aaaaaa;		
 }
 * html .tablangmenu {
@@ -43,4 +44,11 @@
 .tablangmenu ul li img {
   vertical-align: middle;
   margin-top: -2px;
+}
+
+.ultabs {
+  border-left: 1px solid rgb(170, 170, 170);
+  display: block;
+  height: 68px;
+  margin-left: -1px !important;
 }

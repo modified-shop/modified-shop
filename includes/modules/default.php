@@ -241,7 +241,21 @@ if ($category_depth == 'nested') {
                           AND m.manufacturers_id = '".(int)$_GET['filter_id']."' ";
     }
   }
-    
+  
+  // filter
+  if (isset($_GET['filter']) && is_array($_GET['filter'])) {
+    $fi = 1;
+    foreach ($_GET['filter'] as $options_id => $values_id) {
+      if ($values_id != '') {
+        $from .= "JOIN ".TABLE_PRODUCTS_TAGS." pt".$fi." 
+                       ON pt".$fi.".products_id = p.products_id
+                          AND pt".$fi.".options_id = '".$options_id."'
+                          AND pt".$fi.".values_id = '".$values_id."' ";
+        $fi ++;
+      }
+    }
+  }
+     
   $listing_sql = "SELECT ".$select."
                          ".ADD_SELECT_DEFAULT."
                          p.products_id,

@@ -112,6 +112,11 @@
   // wishlist
   define('TABLE_CUSTOMERS_WISHLIST', 'customers_wishlist');
   define('TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES', 'customers_wishlist_attributes');
+  
+  // products tags
+  define('TABLE_PRODUCTS_TAGS', 'products_tags');
+  define('TABLE_PRODUCTS_TAGS_VALUES', 'products_tags_values');
+  define('TABLE_PRODUCTS_TAGS_OPTIONS', 'products_tags_options');
 
   require_once(DIR_FS_INC.'auto_include.inc.php');
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/database_tables/','php') as $file) require ($file);

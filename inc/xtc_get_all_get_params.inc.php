@@ -18,12 +18,27 @@
   function xtc_get_all_get_params($exclude_array = '') {
 
     if (!is_array($exclude_array)) $exclude_array = array();
+    
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
       reset($_GET);
-      while (list($key, $value) = each($_GET)) {
-        if ( (strlen($value) > 0) && ($key != xtc_session_name()) && (strtolower($key) != 'xtcsid') && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
-          $get_url .= rawurlencode(stripslashes($key)) . '=' . rawurlencode(stripslashes($value)) . '&';
+      while (list($key, $value) = each($_GET)) {        
+        if ((strlen($value) > 0 || is_array($value)) 
+            && ($key != xtc_session_name()) 
+            && (strtolower($key) != 'xtcsid') 
+            && ($key != 'error') 
+            && (!in_array($key, $exclude_array)) 
+            && ($key != 'x') 
+            && ($key != 'y')
+            ) 
+        {
+          if (!is_array($value)) {
+            $get_url .= rawurlencode(stripslashes($key)) . '=' . rawurlencode(stripslashes($value)) . '&';
+          } else {
+            foreach ($value as $k => $v) {
+              $get_url .= rawurlencode(stripslashes($key.'['.$k.']')) . '=' . rawurlencode(stripslashes($v)) . '&';
+            }
+          }
         }
       }
     }
