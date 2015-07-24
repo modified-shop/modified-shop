@@ -100,7 +100,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
                    ON p.products_id = s.products_id
                       AND s.status = '1' ";
   } elseif (basename($PHP_SELF) == FILENAME_PRODUCTS_NEW) {
-    if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
+    if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0' && $daysfound == true) {
       $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
       $where = " AND p.products_date_added > '".$date_new_products."' ";
     }
@@ -157,27 +157,24 @@ if (PRODUCT_LIST_FILTER == 'true') {
 
   // filter
   $join = '';  
+  $where = '';
   $filterlist_sql = '';
   if (isset($_GET['filter_id']) && $_GET['filter_id'] > 0) {
-    $where = " AND p.manufacturers_id = '".(int)$_GET['filter_id']."' ";
-    if (isset($current_category_id) && $current_category_id > 0) {
-      $join .= " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                      ON p2c.products_id = p.products_id
-                         AND p2c.categories_id = '".$current_category_id."' ";
-    }
-  } elseif (isset($current_category_id) && $current_category_id > 0) {
+    $where .= " AND p.manufacturers_id = '".(int)$_GET['filter_id']."' ";
+  }
+  if (isset($current_category_id) && $current_category_id > 0) {
     $join .= " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                     ON p2c.products_id = p.products_id
                        AND p2c.categories_id = '".$current_category_id."' ";
-  } elseif (basename($PHP_SELF) == FILENAME_SPECIALS) {
+  }
+  if (basename($PHP_SELF) == FILENAME_SPECIALS) {
     $join .= " JOIN ".TABLE_SPECIALS." s 
                     ON p.products_id = s.products_id
                        AND s.status = '1' ";
   } elseif (basename($PHP_SELF) == FILENAME_PRODUCTS_NEW) {
-    $days = '';
     if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0' && $daysfound == true) {
       $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
-      $where = " AND p.products_date_added > '".$date_new_products."' ";
+      $where .= " AND p.products_date_added > '".$date_new_products."' ";
     }
   } elseif (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT) {
     $where .= " AND p.products_id IN ('".implode("', '", $products_search_array)."') ";
