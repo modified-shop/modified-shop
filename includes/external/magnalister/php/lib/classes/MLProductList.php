@@ -103,6 +103,11 @@ abstract class MLProductList {
 		$this->aUrl = &$_url;
 		$this->oPrice = new SimplePrice();
 		$this->oPrice->setCurrency($this->isAjax() ? DEFAULT_CURRENCY : getCurrencyFromMarketplace($this->aMagnaSession['mpID']));
+                if(getDBConfigValue(array($this->aMagnaSession['currentPlatform'].'.exchangerate', 'update'), $this->aMagnaSession['mpID'], false)){
+		    $success = false;
+		    $oSimplePrice = new SimplePrice(null,getCurrencyFromMarketplace($this->aMagnaSession['mpID']));
+		    $oSimplePrice->updateCurrencyByService($success);
+		}
 		$this->buildQuery();
 		$this->sModulePath = 'modules/'.(strpos(strtolower(get_class($this)), 'magnacompatible') !== false ? 'magnacompatible' : strtolower($this->aMagnaSession['currentPlatform']));
 		$this
@@ -357,7 +362,7 @@ abstract class MLProductList {
 			foreach ($this->getDependencies() as $oFilter) {
 				$sRequest = isset($aFilter[$oFilter->getIdent()]) ? $aFilter[$oFilter->getIdent()] : null;
 				if (!empty($sRequest)) {
-					$aUrl['filter['.$oFilter->getIdent().']'] = $sRequest;
+					$aUrl['filter['.$oFilter->getIdent().']'] = urlencode($sRequest);
 				}
 			}
 		}

@@ -57,6 +57,7 @@ class DawandaTopTenCategories extends TopTen {
 				');
 			}
 		}
+		asort($aTopTenCatIds);
 		return $aTopTenCatIds;
 
 	}

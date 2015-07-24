@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: DeletedView.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: DeletedView.php 5357 2015-03-13 14:16:33Z Soprex $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -53,7 +53,8 @@ class DeletedView {
 
 		/* Delete Log */
 		if (isset($_POST['action'])) {
-			$action = array_pop(array_keys($_POST['action']));
+			$keys = array_keys($_POST['action']);
+			$action = array_pop($keys);
 			switch ($action) {
 				case 'delete': {
 					if (!isset($_POST['delIDs']) || empty($_POST['delIDs'])) {
@@ -119,6 +120,7 @@ class DeletedView {
 				: 'csd.products_id=p.products_id'
 			).'
 			LEFT JOIN '.TABLE_PRODUCTS_DESCRIPTION.' pd ON p.products_id=pd.products_id AND pd.language_id = \''.$_SESSION['languages_id'].'\'
+				WHERE csd.mpID = ' . $_MagnaSession['mpID'] . '
 			 ORDER BY `'.$this->sort['order'].'` '.$this->sort['type'].'
 			 LIMIT '.$this->offset.','.$this->settings['itemLimit'].'
 		');

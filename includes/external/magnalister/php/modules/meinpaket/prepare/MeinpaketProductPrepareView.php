@@ -158,6 +158,7 @@ $(document).ready(function() {
 			  FROM '.TABLE_MAGNA_MEINPAKET_VARIANTMATCHING.'
 			 WHERE MpId = '.$this->mpId.'
 			       AND MpIdentifier <> ""
+				   AND IsValid = 1
 		');
 		
 		$html = '

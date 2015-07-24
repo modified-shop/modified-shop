@@ -73,8 +73,6 @@ class DawandaConfigure extends MagnaCompatibleConfigure {
 		}
 		
 		mlGetOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);
-		mlGetOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
-		
 		parent::loadChoiseValues();
 	}
 
@@ -105,6 +103,8 @@ class DawandaConfigure extends MagnaCompatibleConfigure {
 
 	protected function finalizeForm() {
 		parent::finalizeForm();
+		// DaWanda doesn't provide cancel funcionality
+		unset($this->form['orderSyncState']['fields']['cancelstatus']);
 		if (!$this->isAuthed) {
 			$this->form = array (
 				'login' => $this->form['login']

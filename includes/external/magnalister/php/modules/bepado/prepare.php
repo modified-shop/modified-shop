@@ -85,7 +85,7 @@ class BepadoPrepare extends MagnaCompatibleBase {
 				foreach ($aErrors['ERRORS'] as $aError) {
 					echo '
 						<div class="dawanda errorBox">
-							<span class="error">' . sprintf(ML_BEPADO_LABEL_ERROR, $aError['ERRORCODE']) . '</span>:
+							<span class="error">' . sprintf(ML_MAGNACOMPAT_LABEL_ERROR, ML_BEPADO_LABEL, $aError['ERRORCODE']) . '</span>:
 							'.fixHTMLUTF8Entities($aError['ERRORMESSAGE']).'
 						</div>';
 				}

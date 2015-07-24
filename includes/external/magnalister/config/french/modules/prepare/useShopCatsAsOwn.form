@@ -1,0 +1,1 @@
+{"prepare":{"fields":{"useShopCats":{"label":"Own categories","key":"_#_platform_#_.catmatch.ownshopcats","type":"checkbox","values":{"val":"Kategorien dieses Shops als eigene _#_platformName_#_-Kategorien verwenden"},"default":{"val":true}}}}}

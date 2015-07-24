@@ -160,6 +160,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 			SELECT `'.$tableSettings['Table']['column'].'` 
 			  FROM `'.$tableSettings['Table']['table'].'` 
 			 WHERE `'.$tableSettings['Alias'].'` = "'.MagnaDB::gi()->escape($where).'"
+			       AND `'.$tableSettings['Table']['column'].'` <> \'\'
 		');
 	}
 	

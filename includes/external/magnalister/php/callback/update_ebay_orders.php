@@ -18,127 +18,18 @@
  * -----------------------------------------------------------------------------
  */
 
-
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-/* Zahlungsarten eBay:
--AmEx
-CashInPerson
--CashOnPickup
--CCAccepted
--COD
-CODPrePayDelivery # reserved for future use
-CustomCode        # reserved for future use
--Diners           # CC 
--Discover         # CC
--ELV              # Lastschrift 
-Escrow            # reserved for future use 
--IntegratedMerchantCreditCard # CC
-LoanCheck
--MOCC             # Money order/cashiers check 
--Moneybookers
--MoneyXferAccepted# Direct transfer of money
--MoneyXferAcceptedInCheckout
-None
-Other
-OtherOnlinePayments
-PaisaPayAccepted  # India only
-PaisaPayEscrow    # India only
-PaisaPayEscrowEMI # India only
-Paymate           # US only
-PaymentSeeDescription
--PayOnPickup
--PayPal
--PersonalCheck
-PostalTransfer    # reserved for future use
-PrePayDelivery    # reserved for future use
-ProPay            # US only
-StandardPayment
--VisaMC
-*/
-function getPaymentClassForEbayPaymentMethod($paymentMethod) {
-	$PaymentModules = explode(';', MODULE_PAYMENT_INSTALLED);
-    $class = 'ebay';
-
-    if (  ('MOCC' == $paymentMethod) || ('PersonalCheck' == $paymentMethod)
-        ||('MoneyXferAccepted' == $paymentMethod)
-        ||('MoneyXferAcceptedInCheckout' == $paymentMethod)) {
-        # money order / Zahlungsanweisung / Vorkasse
-        if (in_array('heidelpaypp.php', $PaymentModules))
-            $class = 'heidelpaypp';
-        else if (in_array('moneyorder.php', $PaymentModules))
-            $class = 'moneyorder';
-        else if (in_array('uos_vorkasse_modul.php', $PaymentModules))
-            $class = 'uos_vorkasse_modul';
-        
-    } else if ('Moneybookers' == $paymentMethod) {
-        # Moneybookers
-        if (in_array('monebookers.php', $PaymentModules))
-            $class = 'monebookers';
-
-    } else if ('COD' == $paymentMethod) {
-        # Nachnahme
-        if (in_array('cod.php', $PaymentModules))
-            $class = 'cod';
-        
-    } else if (  ('AmEx' == $paymentMethod) 
-               ||('CCAccepted' == $paymentMethod)
-               ||('Diners' == $paymentMethod)
-               ||('Discover' == $paymentMethod)
-               ||('IntegratedMerchantCreditCard' == $paymentMethod)
-               ||('VisaMC' == $paymentMethod)) {
-        # Kreditkarte
-        if (in_array('cc.php', $PaymentModules))
-            $class = 'cc';
-        else if (in_array('heidelpaycc.php', $PaymentModules))
-            $class = 'heidelpaycc';
-        else if (in_array('moneybookers_cc.php', $PaymentModules))
-            $class = 'moneybookers_cc';
-        else if (in_array('uos_kreditkarte_modul.php', $PaymentModules))
-            $class = 'uos_kreditkarte_modul';
-
-    } else if ('ELV' == $paymentMethod) {
-        # Lastschrift
-        # if (in_array('banktransfer.php', $PaymentModules))
-        #     $class = 'banktransfer';
-        # if (in_array('heidelpaydd.php', $PaymentModules))
-        #     $class = 'heidelpaydd';
-        # if (in_array('ipaymentelv.php', $PaymentModules))
-        #     $class = 'ipaymentelv';
-        if (in_array('moneybookers_elv.php', $PaymentModules))
-            $class = 'moneybookers_elv';
-        else if (in_array('uos_lastschrift_de_modul.php', $PaymentModules))
-            $class = 'uos_lastschrift_de_modul';
-
-    } else if ('PayPal' == $paymentMethod) {
-        # PayPal
-        if (in_array('paypal.php', $PaymentModules))
-            $class = 'paypal';
-        else if (in_array('paypalng.php', $PaymentModules))
-            $class = 'paypalng';
-        else if (in_array('paypalexpress.php', $PaymentModules))
-            $class = 'paypalexpress';
-        
-    } else if (  (stripos($paymentMethod, 'Rechnung') !== false)
-	           ||('PayUponInvoice' == $paymentMethod)) {
-        # Auf Rechnung
-        if (in_array('invoice.php', $PaymentModules))
-            $class = 'invoice';
-
-    } else if (  ('CashOnPickup' == $paymentMethod)
-               ||('PayOnPickup'  == $paymentMethod)) {
-        # Barzahlung
-        if (in_array('cash.php', $PaymentModules))
-            $class = 'cash';
-    }
-
-    return $class;
-}
-
+# getPaymentClassForEbayPaymentMethod: in ebayFunctions.php ausgelagert
 
 /* eBay Bestellungen updaten (Versandadresse und Zahlart) */ 
 function magnaUpdateEbayOrders($mpID) {
 	global $magnaConfig, $_magnaLanguage, $_modules;
+
+	if (getDBConfigValue($mp.'.order.importonlypaid', $mpID, false) === 'true') {
+		# no order update if importonlypaid
+		return;
+	}
 
 	$mp = 'ebay';
 
@@ -263,181 +154,243 @@ function magnaUpdateEbayOrders($mpID) {
                      LIMIT 1
                 ');
             }
-			$updateableStatusArray = array_diff($updateableStatusArray, array($paidStatus));
-            if ($verbose) echo print_m($updateableStatusArray,'$updateableStatusArray');
-        } else {
-			# wenn kein Status-Update, sollten trotzdem Adressen upgedatet werden.
-			# dazu miss CheckoutStatus weg, um DB-Fehler zu vermeiden
-			foreach ($orders as &$row) {
-				unset($row['order']['CheckoutStatus']);
-			}
-		}
-
+			$updateablePaymentStatusArray = array_diff($updateableStatusArray, array($paidStatus));
+            if ($verbose) echo print_m($updateablePaymentStatusArray,'$updateablePaymentStatusArray');
 	
-        $processedOrderIDs = array();
-        $changedDataKeys = array();
-		foreach ($orders as $row) {
-		# Bestelldaten durchgehen.
-            $order = $row['order'];
-			# eBay-OrderID == ItemID-TransactionID
-			if ($verbose) echo "\n== Processing ".$order['orders_id'].". ==\n";
-			/* {Hook} "UpdateeBayOrders_PreOrderUpdate": Is called before the eBay order in <code>$order</code> is updated.
-				Variables that can be used:
-				<ul><li>$order: The order that is going to be imported. The order is an 
-				        associative array representing the structures of the order and customer related shop tables.</li>
-				    <li>$mpID: The ID of the marketplace.</li>
-				    <li>$MagnaDB: Instance of the magnalister database class. USE THIS for accessing the database during the
-				        order import. DO NOT USE the shop functions for database access or MagnaDB::gi()!</li>
-				</ul>
-			*/
-			if (($hp = magnaContribVerify('UpdateeBayOrders_PreOrderUpdate', 1)) !== false) {
-				require($hp);
-			}
-            # einfach nur TABLE_ORDERS updaten. Vorher schauen
-            # dass man keine Felder dabei hat die nicht drin sind.
-            # Und die payment method zuordnen.
-            if (!MagnaDB::gi()->recordExists(TABLE_ORDERS, array (
-            	'orders_id' => $order['orders_id']
-            ))) {
-            	$processedOrderIDs[] = $order['orders_id'];
-            	if ($verbose) echo $order['orders_id'].". not found\n";
-            	continue;
-            }
-            
-            if (isset($order['delivery_country_iso_code_2'])) {
-                $shippingCountry = magnaGetCountryFromISOCode($order['delivery_country_iso_code_2']);
-                $order['delivery_country'] = $shippingCountry['countries_name'];
-            }
-            if (!MagnaDB::gi()->columnExistsInTable('delivery_country_iso_code_2', TABLE_ORDERS)) {
-                unset($order['delivery_country_iso_code_2']);
-            }
-            if (!MagnaDB::gi()->columnExistsInTable('delivery_firstname', TABLE_ORDERS)) {
-                unset($order['delivery_firstname']);
-                unset($order['delivery_lastname']);
-            }
-            if ($paymentMethod == 'matching') {
-            	$order['payment_method'] = getPaymentClassForEbayPaymentMethod($order['PaymentMethod']);
-            } else {
-            	$order['payment_method'] = $paymentMethod;
-            }
-            if (MagnaDB::gi()->columnExistsInTable('payment_class', TABLE_ORDERS)) {
-                $order['payment_class'] = $order['payment_method'];
-            }
-			if (!array_key_exists('PaymentInstruction', $order)) {
-				$order['PaymentInstruction'] = ML_EBAY_ORDER_PAID;
-			} else {
-				$order['PaymentInstruction'] = ML_EBAY_PUI_MSG_TO_BUYER.$order['PaymentInstruction'];
-			}
-            unset ($order['PaymentMethod']);
-            if ($updateOrdersStatus && in_array($order['orders_id'], $paidOrders)) {
-                # Status aendern aktiv, Bestellung bei eBay bezahlt
-                # und hat im Shop einen Status der geaendert werden darf 
-                if (in_array(
-	                MagnaDB::gi()->fetchOne('
-	                	SELECT orders_status
-	                	  FROM '.TABLE_ORDERS.'
-	                	 WHERE orders_id = '.$order['orders_id']
-	                ),
-	                $updateableStatusArray
-                )) {
-                	$order['orders_status'] = $paidStatus;
-                    $MagnaDB->insert(TABLE_ORDERS_STATUS_HISTORY, array (
-                        'orders_id' => $order['orders_id'],
-                        'orders_status_id' => $paidStatus,
-                        'date_added' => date('Y-m-d H:i:s'),
-                        'customer_notified' => '0',
-                        'comments' => $order['PaymentInstruction']
-                    ));
+	        $processedOrderIDs = array();
+	        $changedDataKeys = array();
+			foreach ($orders as $nr => &$row) {
+			# Bestelldaten durchgehen.
+	            $order = $row['order'];
+				# eBay-OrderID == ItemID-TransactionID
+				if ($verbose) echo "\n== Processing ".$order['orders_id'].". ($nr) ==\n";
+				/* {Hook} "UpdateeBayOrders_PreOrderUpdate": Is called before the eBay order in <code>$order</code> is updated.
+					Variables that can be used:
+					<ul><li>$order: The order that is going to be imported. The order is an 
+					        associative array representing the structures of the order and customer related shop tables.</li>
+					    <li>$mpID: The ID of the marketplace.</li>
+					    <li>$MagnaDB: Instance of the magnalister database class. USE THIS for accessing the database during the
+					        order import. DO NOT USE the shop functions for database access or MagnaDB::gi()!</li>
+					</ul>
+				*/
+				if (($hp = magnaContribVerify('UpdateeBayOrders_PreOrderUpdate', 1)) !== false) {
+					require($hp);
 				}
-            } else if (ML_EBAY_ORDER_PAID != $order['PaymentInstruction']) {
-				list($oldStatus,$oldPaymentMethod) = MagnaDB::gi()->fetchRow('SELECT orders_status, payment_method FROM '.TABLE_ORDERS.' WHERE orders_id = '.$order['orders_id']);
-				$PaymentInstructionAlreadyInserted = (boolean)MagnaDB::gi()->fetchOne('SELECT COUNT(*)
-					FROM '.TABLE_ORDERS.'
-				   WHERE orders_id = '.$order['orders_id'].'
-					 AND comments LIKE \''.ML_EBAY_PUI_MSG_TO_BUYER.'%\'');
-				# Keine Status-Aenderung, aber PaymentInstruction uebermittelt
-				# (bei PayUponInvoice, nur wenn wir die payment_method updaten
-				#  - ggf. gibt es für beide Zahlarten kein match, daher
-				#    Zusatzbedingung 'PaymentInstruction noch nicht eingetragen'
-				if (    ($order['payment_method'] != $oldPaymentMethod)
-				     || (!$PaymentInstructionAlreadyInserted)
-				   ) {
-                    $MagnaDB->insert(TABLE_ORDERS_STATUS_HISTORY, array (
-                        'orders_id' => $order['orders_id'],
-                        'orders_status_id' => $oldStatus,
-                        'date_added' => date('Y-m-d H:i:s'),
-                        'customer_notified' => '0',
-                        'comments' => $order['PaymentInstruction']
-                     ));
+	            # einfach nur TABLE_ORDERS updaten. Vorher schauen
+	            # dass man keine Felder dabei hat die nicht drin sind.
+	            # Und die payment method zuordnen.
+	            if (!MagnaDB::gi()->recordExists(TABLE_ORDERS, array (
+	            	'orders_id' => $order['orders_id']
+	            ))) {
+	            	$processedOrderIDs[] = $order['orders_id'];
+	            	if ($verbose) echo $order['orders_id'].". not found\n";
+					unset($order);
+					unset($orders[$nr]);
+	            	continue;
+	            }
+	
+				$current_orders_status = MagnaDB::gi()->fetchOne('
+					SELECT orders_status
+					  FROM '.TABLE_ORDERS.'
+					 WHERE orders_id = '.$order['orders_id']
+				);
+	
+				if (!in_array($current_orders_status, $updateableStatusArray)) {
+					$processedOrderIDs[] = $order['orders_id'];
+					if ($verbose) echo $order['orders_id'].". found but not updateable\n";
+					unset($current_orders_status);
+					unset($order);
+					unset($orders[$nr]);
+					continue;
 				}
-            }
-            $currentOrderID = $order['orders_id'];
-            unset($order['orders_id']);
-            # keine leeren Werte, damit man nichts plattmacht
-            foreach ($order as $key=>$val) {
-                if (empty($val)) unset($order[$key]);
-            }
-
-			# ShippingService
-			if (array_key_exists('OrderTotal', $order)) {
-				if (array_key_exists('Shipping', $order['OrderTotal']))
-					$orderTotalShipping = $order['OrderTotal']['Shipping'];
-				unset($order['OrderTotal']);
-				# Fallunterscheidung:
-				# - Einzel-Bestellung: OrderTotal muss neu berechnet werden, wenn unterschiedlich
-				# - Mehrfach-Bestellung:
-				#	- Wenn neue Kosten groesser, berechne neu,
-				#	- Sonst nicht (genauer waere: schaue ob neue Kosten die hoechsten ersetzen,
-				# 					wir haben aber die Daten hier nicht)
-				$isSingleOrder = (1 == MagnaDB::gi()->fetchOne('
-					SELECT COUNT(*) FROM '.TABLE_ORDERS_PRODUCTS.'
-            	 	WHERE orders_id = '.$currentOrderID.'
-					'));
-				if ($isSingleOrder) {
-					if ($verbose) echo "\nisSingleOrder($currentOrderID) == true\n";
-					$mfot = new MagnaRecalcOrdersTotal();
-					$ordersTotal = $mfot->recalcExistingOrder($currentOrderID, $orderTotalShipping['value'], (get_class($MagnaDB) != 'MagnaTestDB'));
+	            
+	            if (isset($order['delivery_country_iso_code_2'])) {
+	                $shippingCountry = magnaGetCountryFromISOCode($order['delivery_country_iso_code_2']);
+	                $order['delivery_country'] = $shippingCountry['countries_name'];
+	            }
+	            if (!MagnaDB::gi()->columnExistsInTable('delivery_country_iso_code_2', TABLE_ORDERS)) {
+	                unset($order['delivery_country_iso_code_2']);
+	            }
+	            if (!MagnaDB::gi()->columnExistsInTable('delivery_firstname', TABLE_ORDERS)) {
+	                unset($order['delivery_firstname']);
+	                unset($order['delivery_lastname']);
+	            }
+	            if ($paymentMethod == 'matching') {
+	            	$order['payment_method'] = getPaymentClassForEbayPaymentMethod($order['PaymentMethod']);
+	            } else {
+	            	$order['payment_method'] = $paymentMethod;
+	            }
+	            if (MagnaDB::gi()->columnExistsInTable('payment_class', TABLE_ORDERS)) {
+	                $order['payment_class'] = $order['payment_method'];
+	            }
+				if (!array_key_exists('PaymentInstruction', $order)) {
+					$order['PaymentInstruction'] = ML_EBAY_ORDER_PAID;
 				} else {
-					if ($verbose) echo "\nisSingleOrder($currentOrderID) == false\n";
-					$oldShippingCost = (float)MagnaDB::gi()->fetchOne('
-						SELECT value FROM '.TABLE_ORDERS_TOTAL.'
-						WHERE orders_id = '.$currentOrderID.'
-						 AND class = \'ot_shipping\'
-						ORDER BY value DESC
-						LIMIT 1');
-					if ($orderTotalShipping['value'] > $oldShippingCost) {
-					if ($verbose) echo "\n$currentOrderID: newShippingCost ==".$orderTotalShipping['value']." > oldShippingCost == $oldShippingCost\n";
+					$order['PaymentInstruction'] = ML_EBAY_PUI_MSG_TO_BUYER.$order['PaymentInstruction'];
+				}
+	            unset ($order['PaymentMethod']);
+	            if ($updateOrdersStatus && in_array($order['orders_id'], $paidOrders)) {
+	                # Status aendern aktiv, Bestellung bei eBay bezahlt
+	                # und hat im Shop einen Status der geaendert werden darf 
+	                if (in_array($current_orders_status, $updateablePaymentStatusArray)) {
+	                	$order['orders_status'] = $paidStatus;
+	                    $MagnaDB->insert(TABLE_ORDERS_STATUS_HISTORY, array (
+	                        'orders_id' => $order['orders_id'],
+	                        'orders_status_id' => $paidStatus,
+	                        'date_added' => date('Y-m-d H:i:s'),
+	                        'customer_notified' => '0',
+	                        'comments' => $order['PaymentInstruction']
+	                    ));
+					}
+	            } else if (ML_EBAY_ORDER_PAID != $order['PaymentInstruction']) {
+					list($oldStatus,$oldPaymentMethod) = MagnaDB::gi()->fetchRow('SELECT orders_status, payment_method FROM '.TABLE_ORDERS.' WHERE orders_id = '.$order['orders_id']);
+					$PaymentInstructionAlreadyInserted = (boolean)MagnaDB::gi()->fetchOne('SELECT COUNT(*)
+						FROM '.TABLE_ORDERS.'
+					   WHERE orders_id = '.$order['orders_id'].'
+						 AND comments LIKE \''.ML_EBAY_PUI_MSG_TO_BUYER.'%\'');
+						# Keine Status-Aenderung, aber PaymentInstruction uebermittelt
+						# (bei PayUponInvoice, nur wenn wir die payment_method updaten
+						#  - ggf. gibt es für beide Zahlarten kein match, daher
+						#    Zusatzbedingung 'PaymentInstruction noch nicht eingetragen'
+						if (    ($order['payment_method'] != $oldPaymentMethod)
+						     || (!$PaymentInstructionAlreadyInserted)
+						   ) {
+	                    $MagnaDB->insert(TABLE_ORDERS_STATUS_HISTORY, array (
+	                        'orders_id' => $order['orders_id'],
+	                        'orders_status_id' => $oldStatus,
+	                        'date_added' => date('Y-m-d H:i:s'),
+	                        'customer_notified' => '0',
+	                        'comments' => $order['PaymentInstruction']
+	                     ));
+					}
+	            }
+	            $currentOrderID = $order['orders_id'];
+	            unset($order['orders_id']);
+	            # keine leeren Werte, damit man nichts plattmacht
+	            foreach ($order as $key=>$val) {
+	                if (empty($val)) unset($order[$key]);
+	            }
+	
+			# ShippingService
+				if (array_key_exists('OrderTotal', $order)) {
+					if (array_key_exists('Shipping', $order['OrderTotal']))
+						$orderTotalShipping = $order['OrderTotal']['Shipping'];
+					unset($order['OrderTotal']);
+					# Fallunterscheidung:
+					# - Einzel-Bestellung: OrderTotal muss neu berechnet werden, wenn unterschiedlich
+					# - Mehrfach-Bestellung:
+					#	- Wenn neue Kosten groesser, berechne neu,
+					#	- Sonst nicht (genauer waere: schaue ob neue Kosten die hoechsten ersetzen,
+					# 					wir haben aber die Daten hier nicht)
+					$itemCount = (int)MagnaDB::gi()->fetchOne('
+						SELECT COUNT(*) FROM '.TABLE_ORDERS_PRODUCTS.'
+	            	 	WHERE orders_id = '.$currentOrderID.'
+						');
+					$isSingleOrder = (1 == $itemCount);
+					if ($isSingleOrder) {
+						if ($verbose) echo "\nisSingleOrder($currentOrderID) == true\n";
 						$mfot = new MagnaRecalcOrdersTotal();
 						$ordersTotal = $mfot->recalcExistingOrder($currentOrderID, $orderTotalShipping['value'], (get_class($MagnaDB) != 'MagnaTestDB'));
+					} else {
+						if ($verbose) echo "\nisSingleOrder($currentOrderID) == false\n";
+						$oldShippingCost = (float)MagnaDB::gi()->fetchOne('
+							SELECT value FROM '.TABLE_ORDERS_TOTAL.'
+							WHERE orders_id = '.$currentOrderID.'
+							 AND class = \'ot_shipping\'
+							ORDER BY value DESC
+							LIMIT 1');
+						if ($orderTotalShipping['value'] > $oldShippingCost) {
+							# checken ob wir nicht bei maxCostPerOrder liegen
+							$internaldata = MagnaDB::gi()->fetchOne('
+								SELECT internaldata FROM '.TABLE_MAGNA_ORDERS.'
+								 WHERE orders_id = '.$currentOrderID.'
+							');
+							if (false != $internaldata) {
+								$internaldataArray = unserialize($internaldata);
+								$minAmountForDiscount = (array_key_exists('minAmountForDiscount', $internaldataArray))
+									? $internaldataArray['minAmountForDiscount']
+									: 0;
+								$minItemCountForDiscount = (array_key_exists('minItemCountForDiscount', $internaldataArray))
+									? $internaldataArray['minItemCountForDiscount']
+									: 2;
+								if ($minAmountForDiscount > 0) {
+									$totalPriceWOShipping = (float)MagnaDB::gi()->fetchOne('
+										SELECT SUM(final_price)
+										  FROM '.TABLE_ORDERS_PRODUCTS.'
+										 WHERE orders_id = '.$currentOrderID.'
+									');
+								}
+								if (    (array_key_exists('maxCostPerOrder',$internaldataArray))
+								     && ($orderTotalShipping['value'] > $internaldataArray['maxCostPerOrder'])
+								     && ((!$minAmountForDiscount) || $totalPriceWOShipping >= $minAmountForDiscount)
+								     && ($itemCount >= $minItemCountForDiscount)
+								) {
+									$doUpdateShipping = false;
+								} else {
+									$doUpdateShipping = true;
+								}
+								# checken ob addCost nicht negativ ist - dann auch nicht erhöhen
+								if (   (array_key_exists('addCost', $internaldataArray))
+								    && ($internaldataArray['addCost'] < 0)) {
+									$doUpdateShipping = false;
+								}
+								unset($internaldata);
+								unset($internaldataArray);
+								unset($minAmountForDiscount);
+								if (isset($totalPriceWOShipping)) unset($totalPriceWOShipping);
+							} else {
+								$doUpdateShipping = true;
+							}
+							if ($verbose) {
+								echo "\n$currentOrderID: newShippingCost ==".$orderTotalShipping['value']." > oldShippingCost == $oldShippingCost\n";
+								echo "according to promotional rules, doUpdateShipping = ";var_dump($doUpdateShipping);echo "\n";
+							}
+							if ($doUpdateShipping) {
+								$mfot = new MagnaRecalcOrdersTotal();
+								$ordersTotal = $mfot->recalcExistingOrder($currentOrderID, $orderTotalShipping['value'], (get_class($MagnaDB) != 'MagnaTestDB'));
+							}
+							unset($doUpdateShipping);
+						}
 					}
+					unset($itemCount);
+					if (isset($ordersTotal)) unset($ordersTotal);
 				}
-				if (isset($ordersTotal)) unset($ordersTotal);
+	
+				
+	            ## Werte aus der Tabelle holen fuer die Info-mail was sich geaendert hat
+				## Mail noch zu bauen
+				$order = array_filter_keys($order, MagnaDB::gi()->getTableColumns(TABLE_ORDERS));
+	            $keys = implode(', ',array_keys($order));
+	            $oldValues = MagnaDB::gi()->fetchRow(eecho('
+	            	SELECT '.$keys.' FROM '.TABLE_ORDERS.' 
+	            	 WHERE orders_id = '.$currentOrderID.'
+	           	', $verbose));
+	           	if ($verbose) echo print_m($oldValues, '$oldValues');
+	            $updatedValues = array_diff_assoc($order, $oldValues);
+	            $MagnaDB->update(TABLE_ORDERS, $order, array('orders_id' => $currentOrderID));
+	            $processedOrderIDs[] = $currentOrderID;
+	
+				/* {Hook} "UpdateeBayOrders_PostOrderUpdate": Is called after the eBay order in <code>$order</code> is updated.
+					Variables that can be used: Same as for UpdateeBayOrders_PreOrderUpdate.
+				*/
+				if (($hp = magnaContribVerify('UpdateeBayOrders_PostOrderUpdate', 1)) !== false) {
+					require($hp);
+				}
+	
+	            unset($currentOrderID);
+				unset($current_orders_status);
+				unset($order);
+				unset($orders[$nr]);
+	        } # foreach ($orders as $row)
+        } else {
+			# wenn kein Status-Update, nichts mehr updaten, nur Empfang bestaetigen
+        	$processedOrderIDs = array();
+			foreach ($orders as &$row) {
+				$processedOrderIDs[] = $row['order']['orders_id'];
 			}
-
-			
-            ## Werte aus der Tabelle holen fuer die Info-mail was sich geaendert hat
-			## Mail noch zu bauen
-			$order = array_filter_keys($order, MagnaDB::gi()->getTableColumns(TABLE_ORDERS));
-            $keys = implode(', ',array_keys($order));
-            $oldValues = MagnaDB::gi()->fetchRow(eecho('
-            	SELECT '.$keys.' FROM '.TABLE_ORDERS.' 
-            	 WHERE orders_id = '.$currentOrderID.'
-           	', $verbose));
-           	if ($verbose) echo print_m($oldValues, '$oldValues');
-            $updatedValues = array_diff_assoc($order, $oldValues);
-            $MagnaDB->update(TABLE_ORDERS, $order, array('orders_id' => $currentOrderID));
-            $processedOrderIDs[] = $currentOrderID;
-
-			/* {Hook} "UpdateeBayOrders_PostOrderUpdate": Is called after the eBay order in <code>$order</code> is updated.
-				Variables that can be used: Same as for UpdateeBayOrders_PreOrderUpdate.
-			*/
-			if (($hp = magnaContribVerify('UpdateeBayOrders_PostOrderUpdate', 1)) !== false) {
-				require($hp);
-			}
-
-            unset($currentOrderID);
-            unset($order);
-        }
+			$updateableStatusArray = array();
+			$updateablePaymentStatusArray = array();
+		}
 	
         # acknowledge the update to server
         $request = array(

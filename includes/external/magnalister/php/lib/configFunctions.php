@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: configFunctions.php 4799 2014-11-04 18:15:56Z derpapst $
+ * $Id: configFunctions.php 5709 2015-06-04 08:11:46Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -123,9 +123,14 @@ function mlGetPaymentModules(&$form) {
 	if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) ^ E_NOTICE);
 	foreach ($payments as $p) {
 		if (empty($p)) continue;
-		$m = DIR_FS_LANGUAGES.$lang.'/modules/payment/'.$p;
-		$payment = substr($p, 0, strrpos($p, '.'));
+		$payment = substr(basename($p), 0, strrpos($p, '.'));
 		$c = 'MODULE_PAYMENT_'.strtoupper($payment).'_TEXT_TITLE';
+		// Gambio 2.3 fix
+		if (mlGambio2_3_ModulesFix($payment, 'payment')) {
+			$m = DIR_FS_LANGUAGES.$lang.'/original_sections/modules/payment/'.$payment.'.lang.inc.php';
+		} else {
+			$m = DIR_FS_LANGUAGES.$lang.'/modules/payment/'.$p;
+		}
 		if (!defined($c) && file_exists($m) && is_file($m)) {
 			try {
 				require_once($m);
@@ -145,9 +150,14 @@ function mlGetShippingModules(&$form) {
 	if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) ^ E_NOTICE);
 	foreach ($shippings as $s) {
 		if (empty($s)) continue;
-		$m = DIR_FS_LANGUAGES.$lang.'/modules/shipping/'.$s;
-		$shipping = substr($s, 0, strrpos($s, '.'));
+		$shipping = substr(basename($s), 0, strrpos($s, '.'));
 		$c = 'MODULE_SHIPPING_'.strtoupper($shipping).'_TEXT_TITLE';
+		// Gambio 2.3 fix
+		if (mlGambio2_3_ModulesFix($shipping, 'shipping')) {
+			$m = DIR_FS_LANGUAGES.$lang.'/original_sections/modules/shipping/'.$shipping.'.lang.inc.php';
+		} else {
+			$m = DIR_FS_LANGUAGES.$lang.'/modules/shipping/'.$s;
+		}
 		if (!defined($c) && file_exists($m) && is_file($m)) {
 			try {
 				require_once($m);
@@ -205,8 +215,10 @@ function mlGetShippingStatus(&$form) {
 	');
 	
 	$form['values'] = array();
-	
-	foreach ($data as $elem) {
-		$form['values'][$elem['id']] =  fixHTMLUTF8Entities($elem['name']); 
+
+	if (!empty($data)) {
+		foreach ($data as $elem) {
+			$form['values'][$elem['id']] = fixHTMLUTF8Entities($elem['name']);
+		}
 	}
 }

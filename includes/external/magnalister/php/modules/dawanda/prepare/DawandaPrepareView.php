@@ -161,12 +161,12 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 		$aTopTenCatIds = $this->topTen->getTopTenCategories($sType, $sCMFunc);
 
 		if (!empty($aCategory) && !array_key_exists($aCategory['Id'], $aTopTenCatIds)) {
-			$opt .= '<option value="'.$aCategory['Id'].'" selected="selected">'.$aCategory['Name'].'</option>'."\n";
+			$opt .= '<option value="'.$aCategory['Id'].'" selected="selected">'.strip_tags($aCategory['Name']).'</option>'."\n";
 		}
 
 		foreach ($aTopTenCatIds as $sKey => $sValue) {
 			$blSelected = (!empty($aCategory['Id']) && ($aCategory['Id'] == $sKey));
-			$opt .= '<option value="'.$sKey.'"'.($blSelected ? ' selected="selected"' : '').'>'.$sValue.'</option>'."\n";
+			$opt .= '<option value="'.$sKey.'"'.($blSelected ? ' selected="selected"' : '').'>'.strip_tags($sValue).'</option>'."\n";
 		}
 
 		return $opt;
@@ -541,7 +541,7 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 				
 				$('#selectStoreCategory').click(function() {
 					mpCategorySelector.startCategorySelector(function(cID, categoryPath) {
-						generateCategoryPath($('#StoreCategory'), cID, categoryPath);
+						generateCategoryPath($('#StoreCategory'), categoryPath);
 					}, 'store');
 				});
 			});

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketCheckinSubmit.php 4984 2014-12-15 12:15:49Z tim.neumann $
+ * $Id: MeinpaketCheckinSubmit.php 5631 2015-05-14 15:40:52Z Soprex $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -42,8 +42,8 @@ class MeinpaketCheckinSubmit extends CheckinSubmit {
 		parent::__construct($settings);
 		
 		$this->settings['SyncInventory'] = array (
-			'Price' => getDBConfigValue('meinpaket.inventorysync.price', $this->mpID, '') == 'auto',
-			'Quantity' => getDBConfigValue('meinpaket.stocksync.tomarketplace', $this->mpID, '') == 'auto',
+			'Price' => getDBConfigValue($this->settings['marketplace'].'.inventorysync.price', $this->mpID, '') == 'auto',
+			'Quantity' => getDBConfigValue($this->settings['marketplace'].'.stocksync.tomarketplace', $this->mpID, '') == 'auto',
 		);
 	}
 	
@@ -174,9 +174,9 @@ class MeinpaketCheckinSubmit extends CheckinSubmit {
 		parent::setUpMLProduct();
 		
 		// Set a db matching (e.g. 'ManufacturerPartNumber')
-		$mfrmd = getDBConfigValue('meinpaket.checkin.manufacturerpartnumber.table', $this->mpID, false);
+		$mfrmd = getDBConfigValue($this->settings['marketplace'].'.checkin.manufacturerpartnumber.table', $this->mpID, false);
 		if (is_array($mfrmd) && !empty($mfrmd['column']) && !empty($mfrmd['table'])) {
-			$pIDAlias = getDBConfigValue('meinpaket.checkin.manufacturerpartnumber.alias', $this->mpID);
+			$pIDAlias = getDBConfigValue($this->settings['marketplace'].'.checkin.manufacturerpartnumber.alias', $this->mpID);
 			if (empty($pIDAlias)) {
 				$pIDAlias = 'products_id';
 			}
@@ -268,6 +268,7 @@ class MeinpaketCheckinSubmit extends CheckinSubmit {
 		if (empty($varConfig)) {
 			$this->addToErrorLog($data['submit']['SKU'], ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_EMPTY);
 			$this->markAsFailed($propertiesRow['products_id']);
+			$this->ajaxReply['ignoreErrors'] = true;
 			return false;
 		}
 		
@@ -351,6 +352,7 @@ $varConfig :: Array
 					));
 					$this->addToErrorLog($data['submit']['SKU'], $msg);
 					$this->markAsFailed($propertiesRow['products_id']);
+					$this->ajaxReply['ignoreErrors'] = true;
 					return false;
 				}
 				$matching = $varConfig[$vSet['NameId']];
@@ -368,7 +370,7 @@ $varConfig :: Array
 				? $vItem['MarketplaceSku']
 				: $vItem['MarketplaceId'];
 			
-			$vItem['ShippingTime'] = getDBConfigValue('meinpaket.checkin.leadtimetoship', $this->mpID, 3);
+			$vItem['ShippingTime'] = getDBConfigValue($this->settings['marketplace'].'.checkin.leadtimetoship', $this->mpID, 3);
 			
 			// if the reduced price is available here it has been enabled in the module configuration and should be used.
 			if (isset($vItem['PriceReduced'])) {
@@ -384,6 +386,7 @@ $varConfig :: Array
 		if (empty($data['submit']['Variations'])) {
 			$this->addToErrorLog($data['submit']['SKU'], ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_CANNOT_CALC_VARIATIONS);
 			$this->markAsFailed($propertiesRow['products_id']);
+			$this->ajaxReply['ignoreErrors'] = true;
 			return false;
 		}
 		
@@ -443,20 +446,20 @@ $varConfig :: Array
 		}
 		
 		if (
-			(!empty($data['submit']['EAN']) && !getDBConfigValue(array('meinpaket.checkin.ean', 'submit'), $this->mpID, true))
+			(!empty($data['submit']['EAN']) && !getDBConfigValue(array($this->settings['marketplace'].'.checkin.ean', 'submit'), $this->mpID, true))
 			|| empty($data['submit']['EAN'])
 		) {
 			unset($data['submit']['EAN']);
 		}
 		
-		$shortdescField = getDBConfigValue('meinpaket.checkin.shortdesc.field', $this->mpID, '');
+		$shortdescField = getDBConfigValue($this->settings['marketplace'].'.checkin.shortdesc.field', $this->mpID, '');
 		if (!empty($shortdescField) && array_key_exists($shortdescField, $product)) {
 			$data['submit']['ShortDescription'] = $product[$shortdescField];
 		} else {
 			$data['submit']['ShortDescription'] = $product['Description'];
 		}
 		
-		$longdescField = getDBConfigValue('meinpaket.checkin.longdesc.field', $this->mpID, '');
+		$longdescField = getDBConfigValue($this->settings['marketplace'].'.checkin.longdesc.field', $this->mpID, '');
 		if (!empty($longdescField) && array_key_exists($longdescField, $product)) {
 			$data['submit']['Description'] = $product[$longdescField];
 		} else {
@@ -474,17 +477,17 @@ $varConfig :: Array
 			$data['submit']['Description'] = $data['submit']['ShortDescription'];
 		}
 		
-		$taxMatch = getDBConfigValue('meinpaket.checkin.taxmatching', $this->mpID, array());
+		$taxMatch = getDBConfigValue($this->settings['marketplace'].'.checkin.taxmatching', $this->mpID, array());
 		if (is_array($taxMatch) && array_key_exists($product['TaxClass'], $taxMatch)) {
 			$data['submit']['ItemTax'] = $taxMatch[$product['TaxClass']];
 		} else {
 			$data['submit']['ItemTax'] = 'Standard';
 		}
 		
-		$data['submit']['ShippingTime'] = getDBConfigValue('meinpaket.checkin.leadtimetoship', $this->mpID, 3);
+		$data['submit']['ShippingTime'] = getDBConfigValue($this->settings['marketplace'].'.checkin.leadtimetoship', $this->mpID, 3);
 		$data['submit']['ShippingDetails'] = $propertiesRow['ShippingDetails'];
 		
-		$imageWSPath = getDBConfigValue('meinpaket.checkin.imagepath', $this->mpID, SHOP_URL_POPUP_IMAGES);
+		$imageWSPath = getDBConfigValue($this->settings['marketplace'].'.checkin.imagepath', $this->mpID, SHOP_URL_POPUP_IMAGES);
 		$images = array();
 		
 		if (!empty($product['Images'])) {
@@ -496,7 +499,7 @@ $varConfig :: Array
 		
 		$data['submit']['MarketplaceCategory'] = $propertiesRow['MarketplaceCategory'];
 		
-		if (getDBConfigValue(array('meinpaket.catmatch.mpshopcats', 'val'), $this->mpID, false)) {
+		if (getDBConfigValue(array($this->settings['marketplace'].'.catmatch.mpshopcats', 'val'), $this->mpID, false)) {
 			$cPath = $this->generateMPCategoryPath($pID, 'product', $this->settings['language']);
 			if (empty($cPath)) {
 				$data['submit']['MarketplaceShopCategory'] = '';
@@ -552,13 +555,24 @@ $varConfig :: Array
 	}
 
 	protected function postSubmit() {
+		if ((array_key_exists('CHECKINERRORS', $this->lastResponse)
+			&& is_array($this->lastResponse['CHECKINERRORS'])
+			&& !empty($this->lastResponse['CHECKINERRORS']))
+			|| 
+			(array_key_exists('UPLOADERRORS', $this->lastResponse)
+			&& is_array($this->lastResponse['UPLOADERRORS'])
+			&& !empty($this->lastResponse['UPLOADERRORS']))
+		) {
+			$this->ajaxReply['redirect'] = $this->generateRedirectURL('fail');
+		}
+		
 		MagnaConnector::gi()->resetTimeOut();
 	}
 
 	protected function generateRedirectURL($state) {
 		return toURL(array(
 			'mp' => $this->realUrl['mp'],
-			'mode' => 'listings',
+			'mode' => ($state == 'fail') ? 'errorlog' : 'listings',
 		), true);
 	}
 

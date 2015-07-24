@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: saveMatching.php 4658 2014-09-30 11:26:51Z markus.bauer $
+ * $Id: saveMatching.php 5727 2015-06-09 13:06:53Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -247,10 +247,10 @@ if (array_key_exists('action', $_GET) && ($_GET['action'] == 'multimatching') &&
 			$data['asin'] = $asin;
 			$data['item_condition'] = getDBConfigValue('amazon.itemCondition', $_MagnaSession['mpID']);
 			$data['will_ship_internationally'] = getDBConfigValue('amazon.internationalShipping', $_MagnaSession['mpID']);
-			
-			$data['category_id'] = $_POST['catID'][$asin];
-			$data['category_name'] = $_POST['catName'][$asin];
-			$data['lowestprice'] = $_POST['lowprice'][$asin];
+
+			$data['category_id'] = isset($_POST['catID'][$asin]) ? $_POST['catID'][$asin] : '';
+			$data['category_name'] = isset($_POST['catName'][$asin]) ? $_POST['catName'][$asin] : '';
+			$data['lowestprice'] = isset($_POST['lowprice'][$asin]) ? $_POST['lowprice'][$asin] : '0.0';
 			
 			if (defined('DEVELOPMENT_TEST')) {
 				$data['item_note'] = DEVELOPMENT_TEST;

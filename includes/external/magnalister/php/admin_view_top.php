@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: admin_view_top.php 4962 2014-12-09 16:21:54Z derpapst $
+ * $Id: admin_view_top.php 5794 2015-06-30 16:36:54Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -316,6 +316,10 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 					// prevent multiple clicks on the button.
 					var executed = false;
 					return function (e) {
+						if ($(e.target).data('disabled') == 'yes') {
+							$('<div title="<?php echo ML_LABEL_NOTE; ?>"><?php echo ML_POPUP_NOT_AVAILABLE; ?></div>').jDialog();
+							return;
+						}
 						if (executed) {
 							e.preventDefault();
 							return;
@@ -472,6 +476,17 @@ $globalButtons = array (
 		'link' => array('update' => 'true'),
 	),
 );
+
+if ($_MagnaSession['currentPlatform'] == 'ebay') {
+	$bSyncEnabled = (getDBConfigValue('ebay.listingdetails.sync', $_MagnaSession['mpID'], 'false') == 'true');
+	$globalButtons = array_merge(array(array(
+		'title' => ML_LABEL_SYNC_EBAY_LISTING_DETAILS,
+		'icon' => 'sync'.($bSyncEnabled ? '' : ' inactive'),
+		'link' => array('do' => 'SyncEbayListingDetails', 'MLDEBUG' => 'true'),
+		'disabled' => ($bSyncEnabled) ? 'no' : 'yes',
+	)), $globalButtons);
+}
+
 ?>
 					<table border="0" width="100%" cellspacing="0" cellpadding="2" style="padding: 0 10px;"><tbody>
 						<tr>
@@ -481,10 +496,10 @@ $globalButtons = array (
 								</a></h1>
 								<?php if (isset($_SESSION['magna_UPDATE_PATH']) && (strpos($_SESSION['magna_UPDATE_PATH'], 'debug') !== false)) { ?>
 									<span style="display: inline-block; padding-left: 3px; padding-top: 36px;"> :: Debug &#4314;(&#3232;&#30410;&#3232;&#4314;</span>
-								<?php } ?>								
+								<?php } ?>
 								<div id="globalButtonBox"><?php
 									foreach ($globalButtons as $blargh) {
-										echo '<span class="gfxbutton border '.$blargh['icon'].'" data-href="'.toURL($_url, $blargh['link']).'" title="'.$blargh['title'].'"></span> ';
+										echo '<span class="gfxbutton border '.$blargh['icon'].'" data-disabled="'.(isset($blargh['disabled']) ? $blargh['disabled'] : 'no').'" data-href="'.toURL($_url, $blargh['link']).'" title="'.$blargh['title'].'"></span> ';
 									}
 								?></div>
 								<div class="visualClear">&nbsp;</div>

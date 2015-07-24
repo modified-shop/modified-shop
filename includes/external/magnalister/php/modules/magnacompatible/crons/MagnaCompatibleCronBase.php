@@ -1,11 +1,11 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
@@ -25,75 +25,75 @@ abstract class MagnaCompatibleCronBase {
 	const DBGLV_LOW  = 1;
 	const DBGLV_MED  = 2;
 	const DBGLV_HIGH = 3;
-	
+
 	protected $mpID = 0;
 	protected $marketplace = '';
 	protected $marketplaceTitle = '';
 	protected $language = '';
-	
+
 	protected $specificResource = false;
-	
+
 	protected $resources = array();
-	
-	protected $config = array(); 
-	
+
+	protected $config = array();
+
 	protected $echoMarker = true;
-	
+
 	protected $_debug = false;
 	protected $_debugLevel = 0;
 	protected $_debugDryRun = false;
-	
+
 	public function __construct($mpID, $marketplace) {
 		global $_MagnaSession, $_magnaLanguage, $_modules;
 
 		$this->mpID = $mpID;
 		$this->marketplace = $marketplace;
 		$this->marketplaceTitle = $_modules[$marketplace]['title'];
-		
+
 		// $this->specificResource can be set by the inheriting class!
 		if ($this->specificResource === false) {
 			$this->specificResource = strtolower($this->marketplace);
 		}
-		
+
 		$this->resources = array (
 			'session' => &$_MagnaSession,
 		);
-		
+
 		$this->language = $_magnaLanguage;
-		
+
 		$this->determineDebugOptions();
-		
+
 		$this->initConfig();
-		
+
 		$this->loadDependencies();
 	}
-	
+
 	protected function out($str) {
 		echo $str;
 		flush();
 		#ob_flush();
 	}
-	
+
 	protected function log($str) {
 		if (!$this->_debug) return;
 		$this->out($str);
 	}
-	
+
 	protected function dataOut($aData) {
 		if (!$this->echoMarker) {
 			return;
 		}
 		$this->out("\n{#".base64_encode(json_encode($aData))."#}\n");
 	}
-	
+
 	protected function logAPIRequest($request) {
 		$this->log("\n\nAPI-Request: ".print_m(json_indent(json_encode($request))));
 	}
-	
+
 	protected function logAPIResponse($response) {
 		$this->log("\n\nAPI-Response: ".print_m(json_indent(json_encode($response))));
 	}
-	
+
 	protected function logAPIErrors($errors) {
 		$this->log("\n\nAPI-Errors: ".print_m(json_indent(json_encode($errors))));
 	}
@@ -132,7 +132,7 @@ abstract class MagnaCompatibleCronBase {
 				$rBackup = gzopen($sBackupFile, 'wb9');
 				gzwrite($rBackup, file_get_contents($sLogPath));
 				gzclose($rBackup);
-				chmod($sBackupFile, 0777);
+				@chmod($sBackupFile, 0666);
 				touch($sBackupFile, time());
 				unlink($sLogPath);
 			} else {
@@ -142,7 +142,7 @@ abstract class MagnaCompatibleCronBase {
 		$r = fopen($sLogPath, 'a+');
 		fwrite($r, date('Y-m-d H:i:s ').' '.$sType.':: '.MagnaCompatibleHelper::encodeData($mData)."\n");
 		fclose($r);
-		chmod($sLogPath, 0777);
+		@chmod($sLogPath, 0666);
 	}
 
 	protected function logException($e, $details = true) {
@@ -157,9 +157,9 @@ abstract class MagnaCompatibleCronBase {
 
 	protected function determineDebugOptions() {
 		$this->_debug = isset($_GET['MLDEBUG']) && ($_GET['MLDEBUG'] === 'true');
-		
+
 		if (!$this->_debug) return;
-		
+
 		$ref = new ReflectionClass($this);
 		$dbgLevels = $ref->getConstants();
 		$lvl = 'DBGLV_'.(isset($_GET['LEVEL']) ? strtoupper($_GET['LEVEL']) : 'NONE');
@@ -169,16 +169,16 @@ abstract class MagnaCompatibleCronBase {
 			$this->_debugLevel = $dbgLevels[$lvl];
 			$this->log('   DebugLevel: '.(isset($_GET['LEVEL']) ? $_GET['LEVEL'] : 'low').' ('.$this->_debugLevel.")\n");
 		}
-		
+
 		$this->_debugDryRun = isset($_GET['DRYRUN']) && ($_GET['DRYRUN'] === 'true');
 	}
-	
+
 	public function disableMarker($bl) {
 		$this->echoMarker = !$bl;
 	}
-	
+
 	abstract protected function getConfigKeys();
-	
+
 	protected function initConfig() {
 		$ckeys = $this->getConfigKeys();
 		foreach ($ckeys as $k => $o) {
@@ -199,7 +199,7 @@ abstract class MagnaCompatibleCronBase {
 			}
 		}
 	}
-	
+
 	protected function loadFile($file) {
 		if (file_exists($file)) {
 			require_once($file);
@@ -234,7 +234,7 @@ abstract class MagnaCompatibleCronBase {
 	}
 
 	abstract public function process();
-	
+
 	public static function isAssociativeArray($var) {
 		return is_array($var) && array_keys($var) !== range(0, sizeof($var) - 1);
 	}

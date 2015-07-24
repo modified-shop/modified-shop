@@ -93,6 +93,7 @@ class AmazonTopTen extends TopTen {
 		} catch (MagnaException $e) {
 			echo print_m($e->getErrorArray(), 'Error: '.$e->getMessage(), true);
 		}
+        asort($aOut);
 		return $aOut;
 	}
 

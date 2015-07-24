@@ -1,0 +1,1 @@
+{"login":{"headline":"_#_platformName_#_ Zugangsdaten","fields":[{"label":"DaWanda Mitgliedsname","key":"_#_platform_#_.mpusername","type":"text"},{"label":"DaWanda Password","key":"_#_platform_#_.mppassword","type":"password","settings":{"save":false}},{"label":"Access-Key","desc":"","key":"_#_platform_#_.apikey","type":"password","settings":{"save":false}}]}}

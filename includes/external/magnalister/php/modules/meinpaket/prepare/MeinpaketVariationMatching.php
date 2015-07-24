@@ -190,6 +190,7 @@ body.magna table#variationMatcher table.attrTable.matchingTable tr td.input {
 									<option value="t:new">Eigene Gruppe anlegen</option>
 								</select>
 								<div id="newCustomGroup" style="display:none">
+									<input id="isVariationValid" type="hidden" name="ml[match][IsValid]" value="true">
 									<input id="newGroupIdentifier" type="hidden" name="ml[match][MpIdentifier]">
 									&nbsp;&nbsp;
 									<input id="newCustomGroupIdentifier" type="text" name="ml[match][CustomIdentifier]" placeholder="Bezeichner">
@@ -390,10 +391,15 @@ body.magna table#variationMatcher table.attrTable.matchingTable tr td.input {
 				'MpIdentifier' => $matching['MpIdentifier'],
 				'CustomIdentifier' => $this->umlautkeyProtect($matching['CustomIdentifier']),
 				'ShopVariation' => json_encode($matching['ShopVariation']),
+				'IsValid' => $matching['IsValid'] === 'false' ? false : true,
 			), true);
 			//echo print_m($matching, '$matching');
 			
-			echo '<p class="successBox">'.ML_LABEL_SAVED_SUCCESSFULLY.'</p>';
+			if ($matching['IsValid'] === 'false') {
+				echo '<p class="errorBox">'.ML_MEINPAKET_VARMATCH_ALL_ATTRIBS_MUST_BE_DEFINED.'</p>';
+			} else {
+				echo '<p class="successBox">'.ML_LABEL_SAVED_SUCCESSFULLY.'</p>';
+			}
 		}
 		
 	}

@@ -116,6 +116,17 @@ class MagnaCompatMarketplace {
 			}
 			*/
 		}
+		
+		if (!MagnaDB::gi()->recordExists(TABLE_CURRENCIES, array (
+			'code' => getCurrencyFromMarketplace($this->mpID)
+		))) {
+			$this->resources['query']['mode'] = 'conf';
+			$this->resources['query']['messages'][] = '<p class="errorBox">'.sprintf(
+				ML_GENERIC_ERROR_CURRENCY_NOT_IN_SHOP,
+				getCurrencyFromMarketplace($this->mpID)
+			).'</p>';
+		}
+		
 		$this->prepareAvailablePages();
 		$this->determineView();
 		$this->loadPage();

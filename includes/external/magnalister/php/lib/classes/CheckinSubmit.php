@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: CheckinSubmit.php 4833 2014-11-10 22:39:32Z MaW $
+ * $Id: CheckinSubmit.php 5668 2015-05-26 13:01:31Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -32,6 +32,7 @@ abstract class CheckinSubmit {
 	protected $settings = array();
 	
 	protected $selection = array();
+	protected $variationCount = 0;
 	protected $badItems = array();
 	protected $disabledItems = array();
 	
@@ -50,6 +51,9 @@ abstract class CheckinSubmit {
 
 	protected $summaryAddText = ''; # extra Text, je nach Plattform (momentan belegt bei eBay und Hitmeister)
 
+	protected $deleteSelection = true;
+	protected $lastResponse = array();
+	
 	public function __construct($settings = array()) {
 		global $_MagnaSession, $_MagnaShopSession, $magnaConfig, $_magnaQuery, $_url;
 		
@@ -131,8 +135,8 @@ abstract class CheckinSubmit {
 			$this->selection[$row['pID']] = unserialize($row['data']);
 		}
 	}
-	
-	private function deleteSelection() {
+
+	protected function deleteSelection() {
 		foreach ($this->selection as $pID => &$data) {
 			$this->badItems[] = $pID;
 		}
@@ -241,7 +245,7 @@ abstract class CheckinSubmit {
 
 	protected function requirementsMet($product, $requirements, &$failed) {
 		if (!is_array($product) || empty($product) || !is_array($requirements) || empty($requirements)) {
-			$failed = true;
+			$failed = array();
 			return false;
 		}
 		$failed = array();
@@ -296,16 +300,16 @@ abstract class CheckinSubmit {
 			//$this->ajaxReply['result'] = $checkInResult;
 			
 			$this->processSubmitResult($checkInResult);
-			if (!array_key_exists('state',$this->submitSession)) { 
+			if (!array_key_exists('state', $this->submitSession)) {
 				$this->submitSession['state'] = array();
 			}
-			if (!array_key_exists('success',$this->submitSession['state'])) { 
+			if (!array_key_exists('success', $this->submitSession['state'])) {
 				$this->submitSession['state']['success'] = 0;
 			}
-			if (!array_key_exists('failed',$this->submitSession['state'])) { 
+			if (!array_key_exists('failed', $this->submitSession['state'])) {
 				$this->submitSession['state']['failed'] = 0;
 			}
-			$this->submitSession['state']['success'] += count($this->selection);
+			$this->submitSession['state']['success'] += count($this->selection) - $this->variationCount;
 			$this->submitSession['state']['failed']  += count($this->badItems);
 			
 			if (isset($this->submitSession['api'])) {
@@ -314,7 +318,7 @@ abstract class CheckinSubmit {
 			$retResponse = $checkInResult;
 
 		} catch (MagnaException $e) {
-			$this->submitSession['state']['failed']  += count($this->badItems) + count($this->selection);
+			$this->submitSession['state']['failed'] += count($this->badItems) + count($this->selection) - $this->variationCount;
 
 			$this->ajaxReply['exception'] = $e->getMessage();
 			$this->submitSession['api']['exception'] = $e->getErrorArray();
@@ -350,6 +354,10 @@ abstract class CheckinSubmit {
 		return false;
 	}
 
+	protected function afterPopulateSelectionWithData() {
+
+	}
+
 	public function submit($abort = false) {
 		if (isset($_SESSION['magna_deletedFilter'])) {
 			// Reset inventory infos. @see CheckinCategoryView
@@ -367,6 +375,7 @@ abstract class CheckinSubmit {
 		$this->submitSession['state']['submitted'] += count($this->selection);
 
 		$this->populateSelectionWithData();
+		$this->afterPopulateSelectionWithData();
 		$this->filterSelection();
 		
 		/* Wenn Artikel deaktiviert wurden (nicht fehlgeschlagen, z. B. Artikelanzahl == 0), 
@@ -381,7 +390,8 @@ abstract class CheckinSubmit {
 		if (!empty($this->selection)) {
 			MagnaConnector::gi()->setTimeOutInSeconds(600);
 			@set_time_limit(600);
-			$this->sendRequest($abort || isset($_GET['abort']));
+			$this->lastResponse = $this->sendRequest($abort || isset($_GET['abort']));
+			$this->afterSendRequest();
 			MagnaConnector::gi()->resetTimeOut();
 		} else {
 			$this->submitSession['state']['failed'] += count($this->badItems);
@@ -408,7 +418,9 @@ abstract class CheckinSubmit {
 
 		if (empty($this->submitSession['api']) || $this->ajaxReply['ignoreErrors']) {
 			if (!isset($this->ajaxReply['reprocessSelection']) || !$this->ajaxReply['reprocessSelection']) {
-				$this->deleteSelection();
+				if ($this->deleteSelection === true) {
+					$this->deleteSelection();
+				}
 			}
 			if ($this->submitSession['state']['submitted'] >= $this->submitSession['state']['total']) {
 				$this->ajaxReply['proceed'] = $this->submitSession['proceed'] = false;
@@ -507,5 +519,9 @@ $(document).ready(function() {
 		$html .= ob_get_contents();	
 		ob_end_clean();
 		return $html;
+	}
+		
+	protected function afterSendRequest() {
+		
 	}
 }

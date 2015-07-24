@@ -1,0 +1,1 @@
+{"login":{"headline":"_#_platformName_#_ Access Data","fields":[{"label":"Username","key":"_#_platform_#_.username","type":"text"},{"label":"Password","key":"_#_platform_#_.password","type":"password","settings":{"save":false}}]}}

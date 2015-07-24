@@ -199,16 +199,30 @@ function prepareMultiMarketplaces() {
 	}
 
 	foreach ($marketplaces as $mp) {
-		MagnaDB::gi()->query('
-			UPDATE `'.TABLE_MAGNA_CONFIG.'` SET `mpID`=\''.$mp['ID'].'\'
-			 WHERE mkey LIKE \''.$mp['Marketplace'].'.%\' AND `mpID`=0
-		');
+		$updated = (int)MagnaDB::gi()->fetchOne("
+			   SELECT mpID
+			     FROM `".TABLE_MAGNA_CONFIG."`
+			    WHERE mkey LIKE '".$mp['Marketplace'].".%'
+			          AND `mpID` = '".$mp['ID']."'
+			 ORDER BY mpID DESC
+			    LIMIT 1
+		") > 0;
+		if (!$updated) {
+			MagnaDB::gi()->query('
+				UPDATE `'.TABLE_MAGNA_CONFIG.'` SET `mpID`=\''.$mp['ID'].'\'
+				 WHERE mkey LIKE \''.$mp['Marketplace'].'.%\' AND `mpID`=0
+			');
+		}
 		if (MagnaDB::gi()->fetchRow('SELECT * FROM `'.$tbl.'` LIMIT 1') === false) {
 			continue;
 		}
 		foreach ($bleh as $tbl => $keyFix) {
-			if (MagnaDB::gi()->recordExists($tbl, array('mpID' => $mp['ID']))) continue;
-			if (! MagnaDB::gi()->columnExistsInTable('platform', $tbl)) continue;
+			if (MagnaDB::gi()->recordExists($tbl, array('mpID' => $mp['ID']))) {
+				continue;
+			}
+			if (!MagnaDB::gi()->columnExistsInTable('platform', $tbl)) {
+				continue;
+			}
 			MagnaDB::gi()->query('
 				UPDATE `'.$tbl.'` SET `mpID`=\''.$mp['ID'].'\'
 				 WHERE platform=\''.$mp['Marketplace'].'\'

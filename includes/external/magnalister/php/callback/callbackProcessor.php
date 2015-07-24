@@ -22,7 +22,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 if (!defined('MAGNA_ECHO_UPDATE') && isset($_GET['MLDEBUG']) && ($_GET['MLDEBUG'] == 'true')) {
 	define('MAGNA_ECHO_UPDATE', true);
-	header('Content-Type: text/plain; charset=utf-8');
+	magnaPreparePlainTextMode();
 }
 
 function magnaProcessCallbackRequest() {
@@ -63,9 +63,18 @@ function magnaProcessCallbackRequest() {
 		magnaAutosyncOrderStatus();
 	}
 
-	/* Build or refresh Variations table */
+	/* Sync ebay product properties */
+	if (in_array('SyncEbayListingDetails', $do)) {
+		$fname = 'magnaAutoEbaySyncListingDetails';
+		require_once(DIR_MAGNALISTER_CALLBACK.'autosyncEbayListingDetails.php');
+		if (function_exists('ml_debug_out') && file_exists(DIR_MAGNALISTER_CALLBACK.$fname.'.log')) {
+			rename(DIR_MAGNALISTER_CALLBACK.$fname.'.log', DIR_MAGNALISTER_CALLBACK.$fname.'_'.date('Ymd_His').'.log');
+		}
+		magnaAutoEbaySyncListingDetails();
+	}
 
-	if (in_array('updateVariationsTable',$do)) {
+	/* Build or refresh Variations table */
+	if (in_array('updateVariationsTable', $do)) {
 		require_once(DIR_MAGNALISTER_CALLBACK.'updateVariationsTable.php');
 	}
 }

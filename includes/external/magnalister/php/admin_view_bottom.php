@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: admin_view_bottom.php 4799 2014-11-04 18:15:56Z derpapst $
+ * $Id: admin_view_bottom.php 5211 2015-02-18 16:33:00Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -22,7 +22,13 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 global $_additionalDivs, $_updaterTime, $_executionTime;
 
 if (!isset($_MagnaSession)) {
-	global $_MagnaSession, $_MagnaShopSession, $_magnaQuery, $magnaConfig;
+	global $_MagnaSession, $_MagnaShopSession;
+}
+if (!isset($_magnaQuery)) {
+	global $_magnaQuery;
+}
+if (!isset($magnaConfig)) {
+	global $magnaConfig;
 }
 
 if (function_exists('magnaDumpSqlErrorlog')) {
@@ -42,10 +48,14 @@ if (MAGNA_DEBUG && MAGNA_DEBUG_TF && !MLBrowserDetect::gi()->is(array ('Browser'
 	echo '$_SESSION :: '.print_r($_SESSION, true);
 	echo '</textarea>';
 }
-?>
+
+echo '
 								</div>
-								<table id="magnafooter" class="magnaframe small center"><tbody><tr><td>
-<?php
+								<div id="magnafooter">
+									<table class="magnaframe small center"><tbody>
+										<tr>
+											<td rowspan="2" class="ml-td-left">';
+
 if (class_exists('MagnaDB') && class_exists('MagnaConnector')) {
 	$_executionTime = microtime(true) -  $_executionTime;
 	$memory = memory_usage();
@@ -61,15 +71,31 @@ if (class_exists('MagnaDB') && class_exists('MagnaConnector')) {
 		'.(MAGNA_DEBUG ? '</div>' : '-->');
 }
 echo '
-									<div class="bold">
-										<span class="customerinfo">'.ML_LABEL_CUSTOMERSID.': '.((isset($magnaConfig['maranon']['CustomerID'])) ? $magnaConfig['maranon']['CustomerID'] : ML_LABEL_UNKNOWN).' :: Shop ID: '.((isset($magnaConfig['maranon']['ShopID'])) ? $magnaConfig['maranon']['ShopID'] : ML_LABEL_UNKNOWN).'</span>
-										<span class="version-text">magnalister Version</span> <span class="version">'.LOCAL_CLIENT_VERSION.'</span>
-										<span class="build">Build: '.((defined('CLIENT_BUILD_VERSION')) ? CLIENT_BUILD_VERSION : ML_LABEL_UNKNOWN).' :: Current: '.((defined('CURRENT_BUILD_VERSION')) ? CURRENT_BUILD_VERSION : ML_LABEL_UNKNOWN).'</span>
-									</div>
-									<div class="copyleft">'.ML_LABEL_COPYLEFT.'</div>';
-?>
-								</td></tr></tbody></table>
-<?php
+												<span class="customerinfo">
+													'.ML_LABEL_CUSTOMERSID.': '.((isset($magnaConfig['maranon']['CustomerID'])) ? $magnaConfig['maranon']['CustomerID'] : ML_LABEL_UNKNOWN).' :: 
+													Shop ID: '.((isset($magnaConfig['maranon']['ShopID'])) ? $magnaConfig['maranon']['ShopID'] : ML_LABEL_UNKNOWN).'
+												</span>
+											</td>
+											<td class="ml-td-center">
+												<div class="bold">
+													<span class="version-text">magnalister Version</span> <span class="version">'.LOCAL_CLIENT_VERSION.'</span>
+												</div>
+											</td>
+											<td rowspan="2" class="ml-td-right">
+												<span class="build">
+													Build: '.((defined('CLIENT_BUILD_VERSION')) ? CLIENT_BUILD_VERSION : ML_LABEL_UNKNOWN).' :: 
+													<a href="'.toURL(array('module' => 'viewchangelog')).'" title="Changelog">Current: '.((defined('CURRENT_BUILD_VERSION')) ? CURRENT_BUILD_VERSION : ML_LABEL_UNKNOWN).'</a>
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<td class="ml-td-center">
+												<div class="copyleft">'.ML_LABEL_COPYLEFT.'</div>
+											</td>
+										</tr>
+									</tbody></table>
+								</div>';
+
 if (MAGNA_DEBUG && class_exists('MagnaConnector')) {
 	$tpR = MagnaConnector::gi()->getTimePerRequest();
 	if (!empty($tpR)) {

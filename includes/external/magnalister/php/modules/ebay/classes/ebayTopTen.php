@@ -62,6 +62,7 @@ class EbayTopTen extends TopTen {
 				MagnaDB::gi()->query("UPDATE ".TABLE_MAGNA_EBAY_PROPERTIES." SET ".$sType."=10 WHERE ".$sType." = '".$iCatId."'"); // no mpID
 			}
 		}
+        asort($aTopTenCatIds);
 		return $aTopTenCatIds;
 	}
 	

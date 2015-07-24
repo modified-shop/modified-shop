@@ -18,18 +18,24 @@
  * -----------------------------------------------------------------------------
  */
 require_once DIR_MAGNALISTER_INCLUDES.'lib/classes/ProductList/Dependency/MLProductListDependency.php';
+
 class MLProductListDependencyLastPreparedFilter extends MLProductListDependency {
 	
 	protected function getDefaultConfig() {
+		$mpId = $this->getMagnaSession('mpID');
+		$aPrepareTsData = MagnaDB::gi()->fetchArray("
+			  SELECT DISTINCT ".$this->getConfig('preparedtimestampfield')."
+			    FROM `".$this->getConfig('propertiestablename')."`
+			   WHERE ".$this->getConfig('preparedtimestampfield')." != '0000-00-00 00:00:00'
+			         AND mpID = '".$mpId."'
+			ORDER BY ".$this->getConfig('preparedtimestampfield')." DESC
+			   LIMIT 100", true
+		);
 		$aSelectValues = array('0' => ML_OPTION_FILTER_LASTPREPARED_ARTICLES_ALL);
-		foreach (MagnaDB::gi()->fetchArray("
-					SELECT DISTINCT ".$this->getConfig('preparedtimestampfield')."
-					FROM `".$this->getConfig('propertiestablename')."`
-					WHERE ".$this->getConfig('preparedtimestampfield')." != '0000-00-00 00:00:00'
-					ORDER BY ".$this->getConfig('preparedtimestampfield')." DESC
-					LIMIT 100", true
-		) as $sDateTime) {
-			$aSelectValues[$sDateTime] = date (ML_OPTION_FILTER_LASTPREPARED_DATE_FORMAT, strtotime($sDateTime));
+		if (!empty($aPrepareTsData)) {
+			foreach ($aPrepareTsData as $sDateTime) {
+				$aSelectValues[$sDateTime] = date (ML_OPTION_FILTER_LASTPREPARED_DATE_FORMAT, strtotime($sDateTime));
+			}
 		}
 		return array(
 			'selectValues' => $aSelectValues,

@@ -35,6 +35,8 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 	protected $boxes = '';
 	
 	protected $isAuthed = false;
+
+	protected $exchangeRateField = false; // for exchange rate alert: leave false for default
 	
 	public function __construct(&$params) {
 		global $_modules, $_lang;
@@ -63,7 +65,8 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 	protected function getFormFiles() {
 		return array (
 			'login', 'prepare', 'checkin', 
-			'price', 'inventorysync', 'orders'
+			'price', 'inventorysync', 'orders',
+			'setImagePath'
 		);
 	}
 	
@@ -293,6 +296,8 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 			$this->boxes .= '<p class="errorBox">'.ML_GENERIC_ERROR_TRACKING_CODE_MATCHING.'</p>';
 		}
 	}
+	
+	protected function loadChoiseValuesAfterProcessPOST() { }
 
 	public function process() {
 		$this->form = $this->loadConfigForm(
@@ -309,6 +314,7 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 		$cG = new MLConfigurator($this->form, $this->mpID, 'conf_magnacompat');
 		$cG->setRenderTabIdent(true);
 		$allCorrect = $cG->processPOST();
+		$this->loadChoiseValuesAfterProcessPOST();
 
 		if ($this->isAjax) {
 			echo $cG->processAjaxRequest();
@@ -326,6 +332,7 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 				}
 			}
 			echo $cG->renderConfigForm();
+			echo $cG->exchangeRateAlert($this->exchangeRateField);
 		}
 	}
 }

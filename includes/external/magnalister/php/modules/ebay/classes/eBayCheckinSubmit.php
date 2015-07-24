@@ -135,7 +135,6 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			return $this->appendAdditionalDataOld($pID, $product, $data);
 		}
 		$propertiesRow = $this->properties;
-		
 		$data['submit']['SKU'] = magnaPID2SKU($pID);
 		
 		$listingMasterType = ($propertiesRow['ListingType'] == 'Chinese') ? 'chinese' : 'fixed';
@@ -258,6 +257,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		
 		if (!empty($product['BasePrice']) && !empty($product['BasePrice']['Value'])) {
 			$formatted_vpe = $this->simpleprice->setPrice($data['submit']['Price'] * (1.0 / $product['BasePrice']['Value']))->format(). ' / '. $product['BasePrice']['Unit'];
+			$data['submit']['BasePrice'] = $product['BasePrice'];
 		} else {
 			$formatted_vpe = '';
 		}
@@ -292,6 +292,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				)
 			);
 		} else {
+			$fWeight = MagnaDB::gi()->fetchOne("SELECT products_weight FROM ".TABLE_PRODUCTS." WHERE products_id='".$pID."'");
 			$data['submit']['Description'] = stringToUTF8(
 				substitutePictures(
 					eBaySubstituteTemplate(
@@ -303,8 +304,9 @@ class eBayCheckinSubmit extends CheckinSubmit {
 							'#ARTNR#' => $product['ProductsModel'],
 							'#PID#' => $pID,
 							'#SKU#' => $data['submit']['SKU'],
-							'#SHORTDESCRIPTION#' => stringToUTF8($product['ShortDescription']),
-							'#DESCRIPTION#' => stringToUTF8($product['Description']),
+							'#SHORTDESCRIPTION#' => html_entity_decode(fixHTMLUTF8Entities($product['ShortDescription'])),
+							'#WEIGHT#' => ((float)$fWeight>0)?$fWeight:'',
+							'#DESCRIPTION#' => html_entity_decode(fixHTMLUTF8Entities($product['Description'])),
 							'#PICTURE1#' => $propertiesRow['PictureURL'],
 							'#PRICE#' => $this->simpleprice->setPrice($data['submit']['Price'])->formatWOCurrency(),
 							'#VPE#' => $formatted_vpe,
@@ -331,6 +333,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		}
 		
 		# EAN, wenn aktiviert (default false)
+		# compatibility for older revisions (removed from config ~ >5780)
 		if (
 			!empty($product['EAN'])
 			&& getDBConfigValue(array($this->_magnasession['currentPlatform'].'.useean', 'val'), $this->_magnasession['mpID'], false)
@@ -387,22 +390,24 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			}
 		}
 
-		# Payment instructions		
+		# Payment instructions
 		if ($value = getDBConfigValue('ebay.paymentinstructions', $this->_magnasession['mpID'], null)) {
 			$data['submit']['ShippingDetails']['PaymentInstructions'] = $value;
 		}
 		
 		# =GEWICHT beruecksichtigen
-		foreach ( $data['submit']['ShippingDetails']['ShippingServiceOptions'] as &$options) {
-			if ('=GEWICHT' == (string)$options['ShippingServiceCost']) {
-				if (    array_key_exists('Weight', $product)
-				     && array_key_exists('Value',  $product['Weight'])
-				     && ($product['Weight']['Value'] > 0)
-				) {
-					$options['ShippingServiceCost'] = $product['Weight']['Value'];
-					if(isset($options['FreeShipping'])) unset($options['FreeShipping']);
-				} else {
-					$options['ShippingServiceCost'] = 0;
+		if (isset($data['submit']['ShippingDetails']['ShippingServiceOptions']) && is_array($data['submit']['ShippingDetails']['ShippingServiceOptions'])) {
+			foreach ($data['submit']['ShippingDetails']['ShippingServiceOptions'] as &$options) {
+				if ('=GEWICHT' == (string)$options['ShippingServiceCost']) {
+					if (    array_key_exists('Weight', $product)
+						 && array_key_exists('Value',  $product['Weight'])
+						 && ($product['Weight']['Value'] > 0)
+					) {
+						$options['ShippingServiceCost'] = $product['Weight']['Value'];
+						if(isset($options['FreeShipping'])) unset($options['FreeShipping']);
+					} else {
+						$options['ShippingServiceCost'] = 0;
+					}
 				}
 			}
 		}
@@ -504,6 +509,8 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		$data['submit']['ShippingDetails']['UseRateTables'] = 'true';
 		//echo '<table><tr><td>$data[submit]</td><td>$product</td><td>$data</td><td>$propertiesRow (<em>'.$this->properties['ListingType'].'</em>)</td></tr><tr><td style="vertical-align:top">'.print_m($data['submit']).'</td><td style="vertical-align:top">'.print_m($product).'</td><td style="vertical-align:top">'.print_m($data).'</td><td style="vertical-align:top">'.print_m($propertiesRow).'</td></tr></table>';
 
+		$aListingDetails = EbayHelper::getProductListingDetailsFromProduct($pID, $this->settings['language']);
+		$data['submit'] = array_merge($data['submit'], $aListingDetails);
 	}
 	
 	protected function appendAdditionalDataOld($pID, $product, &$data) {
@@ -909,13 +916,19 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				foreach ($ebayItemErrors['ERRORS'] as $ebayError) {
 					#$html .= print_m($ebayError);
 					if (($ebayError['ERRORCLASS'] != 'RequestError') || ($ebayError['ERRORLEVEL'] != 'Error')) continue;
+					if (    array_key_exists('ORIGIN',$ebayError)
+					     && !empty($ebayError['ORIGIN'])         ) {
+						$sMsgHead = $ebayError['ORIGIN'].' '.ML_ERROR_LABEL.' '.$ebayError['ERRORCODE'].': ';
+					} else {
+						$sMsgHead = sprintf(ML_EBAY_LABEL_EBAYERROR, $ebayError['ERRORCODE']);
+					}
 					$html .= '
 					<div class="ebay errorBox">
 						<div class="itemident">
 							<span class="label">'.ML_LABEL_SKU.'</span>: '.$ebayItemErrors['DATA']['SKU'].', 
 							<span class="label">'.ML_LABEL_TITLE.'</span>: '.$ebayItemErrors['DATA']['ItemTitle'].'
 						</div>
-						<span class="error">'.sprintf(ML_EBAY_LABEL_EBAYERROR, $ebayError['ERRORCODE']).':</span> '.
+						<span class="error">'.$sMsgHead.':</span> '.
 						$ebayError['ERRORMESSAGE'].'
 					</div>';
 				}

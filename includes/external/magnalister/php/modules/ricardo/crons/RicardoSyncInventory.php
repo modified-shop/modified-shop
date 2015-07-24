@@ -1,0 +1,236 @@
+<?php
+/**
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
+ *
+ *                          m a g n a l i s t e r
+ *                                      boost your Online-Shop
+ *
+ * -----------------------------------------------------------------------------
+ * $Id$
+ *
+ * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ *     Released under the MIT License (Expat)
+ * -----------------------------------------------------------------------------
+ */
+
+defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+
+require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncInventory.php');
+
+class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
+	protected function identifySKU() {
+		if (!empty($this->cItem['MasterSKU'])) {
+			$this->cItem['pID'] = (int)magnaSKU2pID($this->cItem['MasterSKU'], true);
+		} else {
+			$this->cItem['pID'] = (int)magnaSKU2pID($this->cItem['SKU']);
+		}
+	}
+
+	protected function initMLProduct() {
+		parent::initMLProduct();
+		MLProduct::gi()->useMultiDimensionalVariations(true);
+		MLProduct::gi()->setOptions(array(
+			'sameVariationsToAttributes' => false,
+			'purgeVariations' => true,
+			'useGambioProperties' => (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties')
+		));
+	}
+
+	protected function updateItem() {	
+		$this->cItem['SKU'] = trim($this->cItem['SKU']);
+		if (empty($this->cItem['SKU'])) {
+			$this->log("\nItemID " . $this->cItem['ItemID'] . ' has an emtpy SKU.');
+			return;
+		}
+
+		@set_time_limit(180);
+		$this->identifySKU();
+
+		$title = isset($this->cItem['Title']) ? $this->cItem['Title'] : 'unknown';
+
+		if ((int)$this->cItem['pID'] <= 0) {
+			$this->log("\n" . $title . ' not found');
+			return;
+		} else {
+			$this->log("\n" . $title . ' found (pID: ' . $this->cItem['pID'] . ')');
+		}
+
+		// Get lang
+		$langs = getDBConfigValue($this->marketplace.'.lang', $this->mpID);
+
+		// Prepare product
+		MLProduct::gi()->setLanguage(reset($langs));
+		MLProduct::gi()->setPriceConfig(RicardoHelper::loadPriceSettings($this->mpID));
+		MLProduct::gi()->setQuantityConfig(RicardoHelper::loadQuantitySettings($this->mpID));
+
+		$product = MLProduct::gi()->getProductById($this->cItem['pID']);
+		arrayEntitiesToUTF8($product);
+
+		$bSyncStock = ($this->config['StockSync'] != 'no');
+		$bSyncPrice = ($this->config['PriceSync'] != 'no');
+		$data['Process'] = false;
+
+		$data = array();
+		// Copied from eBay. Is there any reason you don't use $this->cItem['SKU'] as SKU?
+		$data['SKU'] = magnaPID2SKU($product['ProductId']);
+
+		if ($bSyncStock) {
+			// Check Quantity variants or master. QuantityTotal is only set if product has variants
+			if ((isset($this->cItem['Variations']) && isset($product['Variations'])) && isset($product['QuantityTotal'])) {
+				$data['NewQuantity'] = $product['QuantityTotal'];
+			} else {
+				// If quantity is lower, update it
+				if (isset($this->cItem['Quantity']) && $product['Quantity'] < $this->cItem['Quantity']) {
+					$data['NewQuantity'] = $product['Quantity'];
+					$data['Process'] = true;
+				}
+			}
+		}
+
+		$productTax = SimplePrice::getTaxByPID($this->cItem['pID']);
+		$taxFromConfig = getDBConfigValue($this->marketplace . '.checkin.mwst', $this->mpID);
+		if ($bSyncPrice) {
+			// Check Price master
+			if (isset($this->cItem['Variations']) === false) {
+				$price = $product['Price']['Price'];
+
+				// If PriceReduced is set use this one
+				if (isset($product['PriceReduced']['Price'])) {
+					$price = $product['PriceReduced']['Price'];
+				}								
+				
+				if (isset($taxFromConfig) && $taxFromConfig !== '') {
+                    $price = $price * 100 / (100 + $productTax);
+                    $price = round($price * (($taxFromConfig + 100) / 100), 2);
+                }
+
+				// If price is lower, update it
+				if (isset($price) && (float)$price < (float)$this->cItem['Price']) {
+					$data['Price'] = $price;
+					$data['Process'] = true;
+				}
+			}
+		}
+
+		if (isset($this->cItem['Variations']) && isset($product['Variations'])) {
+			$data['Variations'] = array();
+			foreach ($product['Variations'] as $variantData) {
+				$variant = array(
+					'Process' => false
+				);
+				$variationSpecifics = array();
+				foreach ($variantData['Variation'] as $specific) {
+					$variationSpecifics[] = array(
+						'Name' => $specific['Name'],
+						'Value' => $specific['Value'],
+					);
+				}
+				$variant['SKU'] = (getDBConfigValue('general.keytype', '0') == 'artNr') ? $variantData['MarketplaceSku'] : $variantData['MarketplaceId'];
+				$cVariation = array();
+				foreach ($this->cItem['Variations'] as $cVariation){
+					if ($cVariation['SKU'] == $variant['SKU']) {
+						break;
+					}
+				}
+
+				if ($bSyncStock) {
+					if ((int)$variantData['Quantity'] < (int)$cVariation['Quantity']) {
+						$variant['Quantity'] = $variantData['Quantity'];
+						$variant['Process'] = true;
+					}
+				}
+
+				if ($bSyncPrice) {
+					$price = $variantData['Price']['Price'];
+
+					// If PriceReduced is set use this one
+					if (isset($variantData['PriceReduced']['Price'])) {
+						$price = $variantData['PriceReduced']['Price'];
+					}
+					
+					if (isset($taxFromConfig) && $taxFromConfig !== '') {
+						$price = $price * 100 / (100 + $productTax);
+						$price = round($price * (($taxFromConfig + 100) / 100), 2);
+					}
+
+					if ((float)$price < (float)$cVariation['Price']) {
+						$variant['Price'] = $price;
+						$variant['Process'] = true;
+					}
+				}
+
+				$variant['Variation'] = $variationSpecifics;
+				$data['Variations'][] = $variant;
+			}
+
+		}
+
+		if (isset($data['NewQuantity']) === true) {
+			$this->log(
+				"\n\tRicardo Quantity: " . $this->cItem['Quantity'] .
+				"\n\tShop Main Quantity: " . $data['NewQuantity']
+			);
+		}
+
+		if (isset($this->cItem['Price']) === true) {
+			$this->log(
+				"\n\tRicardo Price: " . $this->cItem['Price'] .
+				"\n\tShop Price: " . $data['Price']
+			);
+		}
+
+		// Log Variations
+		if (isset($this->cItem['Variations']) && isset($product['Variations'])) {
+			$this->log(
+				"\n\tVariations:"
+			);
+			foreach ($this->cItem['Variations'] as $ricardoVariation) {
+				foreach ($product['Variations'] as $aShopVariantData) {
+					if ($ricardoVariation['SKU'] == $aShopVariantData[((getDBConfigValue('general.keytype', '0') == 'artNr') ? 'MarketplaceSku' : 'MarketplaceId')]) {
+						$price = (isset($aShopVariantData['PriceReduced']['Price']) ? $aShopVariantData['PriceReduced']['Price'] : $aShopVariantData['Price']['Price']);
+						if (isset($taxFromConfig) && $taxFromConfig !== '') {
+							$price = $price * 100 / (100 + $productTax);
+							$price = round($price * (($taxFromConfig + 100) / 100), 2);
+						}
+						
+						$this->log(
+							"\n\t\tVariation SKU: " . $ricardoVariation['SKU'] .
+							"\n\t\tRicardo Quantity: " . $ricardoVariation['Quantity'] .
+							"\n\t\tShop Main Quantity: " . $aShopVariantData['Quantity'] .
+							"\n\t\tRicardo Price: " . $ricardoVariation['Price'] .
+							"\n\t\tShop Price: " . $price .
+							"\n"
+						);
+						break;
+					}
+				}
+			}
+		}
+
+		if (isset($this->cItem['Variations']) === true) {
+			// Variation product update
+			$variationsToUpdate = array();
+			foreach($data['Variations'] as $variation) {
+				if ($variation['Process'] === true) {
+					unset($variation['Process']);
+					unset($variation['Variation']);
+					$variation['ParentSKU'] = $data['SKU'];
+					$variationsToUpdate[] = $variation;
+				}
+			}
+
+			if (count($variationsToUpdate) > 0) {
+				$this->updateItems($variationsToUpdate);
+			}
+		} else if ($data['Process'] === true) {
+			// Simple product update
+			unset($data['Process']);
+			$this->updateItems(array($data));
+		}
+	}
+}

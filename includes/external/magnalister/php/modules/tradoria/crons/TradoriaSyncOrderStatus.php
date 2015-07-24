@@ -34,11 +34,11 @@ class TradoriaSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 		    [ERRORLEVEL] => FATAL
 		    [SUBSYSTEM] => Tradoria
 		    [APIACTION] => ConfirmShipment
-		    [ERRORMESSAGE] => Der Parameter "order_no" besitzt einen ungültigen Wert
+		    [ERRORMESSAGE] => Der Parameter "order_no" besitzt einen ungÃ¼ltigen Wert
 		    [DETAILS] => Array
 		        (
 		            [ErrorCode] => 41
-		            [ErrorMessage] => Der Parameter "order_no" besitzt einen ungültigen Wert
+		            [ErrorMessage] => Der Parameter "order_no" besitzt einen ungÃ¼ltigen Wert
 		            [MOrderID] => 281-508-10X
 		            [DateAdded] => 2013-07-21 09:50:00
 		        )
@@ -58,5 +58,12 @@ class TradoriaSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 				'additionaldata' => serialize($add)
 			)
 		);
+	}
+
+	protected function prepareSingleOrder($date) {
+		parent::prepareSingleOrder($date);
+
+		# Redmine Enhancement #834 !Hack!
+		$this->oOrder['__dirty'] = false;
 	}
 }

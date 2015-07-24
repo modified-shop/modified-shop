@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketSummaryView.php 3856 2014-05-12 15:56:27Z derpapst $
+ * $Id: MeinpaketSummaryView.php 5357 2015-03-13 14:16:33Z Soprex $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -37,8 +37,8 @@ class MeinpaketSummaryView extends SimpleSummaryView {
 	
 	protected function additionalInitialisation() {
 		$this->settings['SyncInventory'] = array (
-			'Price' => getDBConfigValue('meinpaket.inventorysync.price', $this->_magnasession['mpID'], '') == 'auto',
-			'Quantity' => getDBConfigValue('meinpaket.stocksync.tomarketplace', $this->_magnasession['mpID'], '') == 'auto',
+			'Price' => getDBConfigValue($this->marketplace.'.inventorysync.price', $this->_magnasession['mpID'], '') == 'auto',
+			'Quantity' => getDBConfigValue($this->marketplace.'.stocksync.tomarketplace', $this->_magnasession['mpID'], '') == 'auto',
 		);
 		
 		$pIDs = array();

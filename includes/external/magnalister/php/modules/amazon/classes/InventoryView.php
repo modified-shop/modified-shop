@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: InventoryView.php 4835 2014-11-11 19:02:20Z MaW $
+ * $Id: InventoryView.php 5845 2015-07-20 14:45:51Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -50,13 +50,21 @@ class InventoryView {
 
 	public function __construct($settings = array()) {
 		global $_MagnaShopSession, $_MagnaSession, $_url;
+		$this->magnaSession = &$_MagnaSession;
+
+		if (isset($_GET['itemsPerPage'])) {
+			$this->magnaSession[$this->magnaSession['mpID']]['InventoryView']['ItemLimit'] = (int)$_GET['itemsPerPage'];
+		}
+		if (!isset($this->magnaSession[$this->magnaSession['mpID']]['InventoryView']['ItemLimit'])
+			|| ($this->magnaSession[$this->magnaSession['mpID']]['InventoryView']['ItemLimit'] <= 0)
+		) {
+			$this->magnaSession[$this->magnaSession['mpID']]['InventoryView']['ItemLimit'] = 50;
+		}
 		
 		$this->settings = array_merge(array(
 			'maxTitleChars'	=> 35,
-			'itemLimit'		=> 50,
+			'itemLimit'		=> $this->magnaSession[$this->magnaSession['mpID']]['InventoryView']['ItemLimit'],
 		), $settings);
-
-		$this->magnaSession = &$_MagnaSession;
 		
 		$this->simpleprice = new SimplePrice();
 		$this->simpleprice->setCurrency(getCurrencyFromMarketplace($this->magnaSession['mpID']));
@@ -272,7 +280,7 @@ class InventoryView {
 				$item['Type'] = 'regular';
 				
 				$aID = magnaSKU2aID($item['SKU']);
-				$item['pID'] = magnaAmazonSKU2pID($item['SKU'], $item['ASIN']);
+				$item['pID'] = magnaSKU2pID($item['SKU']);
 				$item['aID'] = $aID;
 				
 				$variationTheme = false;
@@ -528,6 +536,16 @@ class InventoryView {
 			$currentPage = (int)$_GET['page'];
 		}
 
+		$itemsPerPageSelect = array(50, 100, 250, 500, 1000, 2500);
+		$chooser = '
+        		<select id="itemsPerPage" name="itemsPerPage" class="">'."\n";
+		foreach ($itemsPerPageSelect as $chc) {
+			$chcSelected = ($this->settings['itemLimit'] == $chc) ? 'selected' : '';
+			$chooser .= '<option value="'.$chc.'" '.$chcSelected.'>'.$chc.'</option>';
+		}
+		$chooser .= '
+        		</select>';
+
 		$offset = $currentPage * $this->settings['itemLimit'] - $this->settings['itemLimit'] + 1;
 		$limit = $offset + count($this->renderableData) - 1;
 		$html .= '<table class="listingInfo"><tbody><tr>
@@ -541,7 +559,7 @@ class InventoryView {
 						<span class="bold">'.ML_LABEL_CURRENT_PAGE.':&nbsp; '.$currentPage.'</span>
 					</td>
 					<td class="textright">
-						'.renderPagination($currentPage, $pages, $tmpURL).'
+						'.renderPagination($currentPage, $pages, $tmpURL).'&nbsp;'.$chooser.'
 					</td>
 				</tr></tbody></table>';
 		
@@ -574,6 +592,9 @@ $(document).ready(function() {
 	});
 	$('table.datagrid tbody tr td input[type="checkbox"]').click(function () {
 		this.checked = !this.checked;
+	});
+	$('#itemsPerPage').change(function() {
+		window.location.href = '<?php echo toURL($tmpURL, true);?>&itemsPerPage='+$(this).val();
 	});
 });
 /*]]>*/</script>

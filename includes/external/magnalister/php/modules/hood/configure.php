@@ -26,6 +26,8 @@ require_once(DIR_MAGNALISTER_MODULES.'hood/classes/HoodTopTenCategories.php');
 
 class HoodConfigure extends MagnaCompatibleConfigure {
 
+	protected $exchangeRateField = 'conf_hood.price.exchangerate_update';
+
 	protected function getAuthValuesFromPost() {
 		$nAPIKey = trim($_POST['conf'][$this->marketplace.'.apikey']);
 		$nMPUser = trim($_POST['conf'][$this->marketplace.'.mpusername']);
@@ -167,5 +169,4 @@ class HoodConfigure extends MagnaCompatibleConfigure {
 		}
 		
 	}
-	
 }

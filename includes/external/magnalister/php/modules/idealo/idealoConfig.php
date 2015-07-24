@@ -82,5 +82,6 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 } else {
 	include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_top.php');
 	echo $cG->renderConfigForm();
+	echo $cG->exchangeRateAlert();
 	include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_bottom.php');
 }

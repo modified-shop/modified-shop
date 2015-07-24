@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: amazonFunctions.php 4470 2014-08-29 12:10:17Z tim.neumann $
+ * $Id: amazonFunctions.php 5138 2015-02-06 15:13:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -597,9 +597,10 @@ function magnaAmazonFetchTrackingCode3rdParty($oID, $mpID) {
 		$cIDAlias = 'orders_id';
 	}
 	return (string)MagnaDB::gi()->fetchOne('
-		SELECT `'.$table['column'].'` 
-		  FROM `'.$table['table'].'` 
+		SELECT `'.$table['column'].'`
+		  FROM `'.$table['table'].'`
 		 WHERE `'.$cIDAlias.'`=\''.MagnaDB::gi()->escape($oID).'\'
+		       AND `'.$table['column'].'` <> \'\'
 	');
 }
 
@@ -625,9 +626,10 @@ function magnaAmazonFetchCarrier3rdParty($oID, $mpID) {
 		$cIDAlias = 'orders_id';
 	}
 	return (string)MagnaDB::gi()->fetchOne('
-		SELECT `'.$table['column'].'` 
-		  FROM `'.$table['table'].'` 
+		SELECT `'.$table['column'].'`
+		  FROM `'.$table['table'].'`
 		 WHERE `'.$cIDAlias.'`=\''.MagnaDB::gi()->escape($oID).'\'
+		       AND `'.$table['column'].'` <> \'\'
 	');
 }
 

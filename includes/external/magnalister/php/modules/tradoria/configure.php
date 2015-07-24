@@ -56,7 +56,6 @@ class TradoriaConfigure extends MagnaCompatibleConfigure {
 		$forms[] = 'orderStatus';
 		$forms[] = 'prepare/catMatch';
 		$forms[] = 'prepare/useShopCatsAsOwn';
-		$forms[] = 'setImagePath';
 		$forms[] = 'orderImportExtras';
 		$forms[] = 'promotionmail';
 		return $forms;
@@ -64,6 +63,11 @@ class TradoriaConfigure extends MagnaCompatibleConfigure {
 
 	protected function loadChoiseValues() {
 		parent::loadChoiseValues();
+		if($this->form['orderSyncState']){
+		    require_once(DIR_MAGNALISTER_MODULES.'tradoria/classes/TradoriaApiConfigValues.php');
+		    $this->form['orderSyncState']['fields']['carrier']['type'] = 'selection';
+		    $this->form['orderSyncState']['fields']['carrier']['values'] = TradoriaApiConfigValues::gi()->GetCarriers();
+		}
 		unset($this->form['checkin']['fields']['leadtimetoship']['values']['__calc__']);
 		if (isset($this->form['orderSyncState']['fields']['shippedstatus'])) {
 			mlGetOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);

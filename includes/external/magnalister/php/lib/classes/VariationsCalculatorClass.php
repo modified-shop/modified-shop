@@ -267,6 +267,7 @@ class VariationsCalculator {
 		$q = '
 			SELECT * FROM '.TABLE_PRODUCTS_VARIATIONS.'
 			 WHERE products_id='.(int)$pID.'
+			ORDER BY variation_id
 		';
 		if (!$purge) {
 			$p = $GLOBALS['SDB']->fetchArray($q);

@@ -46,7 +46,8 @@ var GenericCheckinSubmitAjaxController = (function (_super, $) {
 			'LabelError': 'Error',
 			'MessageUploadFinal': "{1} of {2} items submitted.",
 			'MessageUploadStatus': "{1} of {2} items submitted. {3} total.",
-			'MessageUploadFatalError': 'A fatal error occured during the aggregation of the required data.'
+			'MessageUploadFatalError': 'A fatal error occured during the aggregation of the required data.',
+			'MessageUploadNotSync': 'Not synchronized.'
 		};
 	}
 	
@@ -237,13 +238,19 @@ var GenericCheckinSubmitAjaxController = (function (_super, $) {
 	 * @private
 	 */
 	GenericCheckinSubmitAjaxController.prototype._finalise = function () {
+		var message = this.__('MessageUploadFinal');
 		if (!this._result.ignoreErrors) {
 			return;
 		}
+					
+		if (this._result.uploadNotSync) {
+		    message = this.__('MessageUploadFinal') + '<br><br>' + this.__('MessageUploadNotSync');
+		}
+		
 		this._dialog({
 			'title': this.__('TitleInformation'),
 			'message': strformat(
-				this.__('MessageUploadFinal'),
+				message,
 				this._result.state.success+'', this._result.state.total+''
 			),
 			'ok': function () {

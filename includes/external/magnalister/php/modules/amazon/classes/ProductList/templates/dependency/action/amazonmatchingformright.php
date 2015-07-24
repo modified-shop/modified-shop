@@ -26,6 +26,7 @@ $mmatch = $oObject->getConfig('matchall');
 	<input type="hidden" value="<?php echo $oObject->getConfig('selectionname'); ?>.'" name="selectionName"/>
 	<input type="hidden" value="_" id="actionType"/>
 	<input type="hidden" value="<?php echo date('Y-m-d H:i:s'); ?>" name="PreparedTS"/>
+	<input type="hidden" name="timestamp" value="<?php echo time(); ?>"/>
 	<table class="right">
 		<tbody>
 			<tr>				
