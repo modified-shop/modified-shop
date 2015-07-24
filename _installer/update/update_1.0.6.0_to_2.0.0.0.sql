@@ -648,4 +648,53 @@ INSERT INTO zones VALUES (179,195,'ES-BI','Vizcaya');
 INSERT INTO zones VALUES (180,195,'ES-ZA','Zamora');
 INSERT INTO zones VALUES (181,195,'ES-Z','Zaragoza');
 
+#GTB - 2015-06-30 - add products_tags
+DROP TABLE IF EXISTS products_tags;
+CREATE TABLE products_tags (
+  products_id int(11) NOT NULL,
+  options_id int(11) NOT NULL,
+  values_id int(11) NOT NULL,
+  products_options_id int(11) NOT NULL DEFAULT '0',
+  products_options_values_id int(11) NOT NULL DEFAULT '0',
+  KEY idx_products_id (products_id),
+  KEY idx_products_attributes_id (products_options_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS products_tags_options;
+CREATE TABLE products_tags_options (
+  options_id int(11) NOT NULL,
+  options_name varchar(128) COLLATE latin1_german1_ci NOT NULL,
+  options_description text COLLATE latin1_german1_ci NOT NULL,
+  options_content_group int(11) DEFAULT NULL,
+  sort_order int(11) NOT NULL DEFAULT '0',
+  languages_id int(11) NOT NULL,
+  status int(1) NOT NULL DEFAULT '1',
+  filter int(1) NOT NULL DEFAULT '1',
+  last_modified datetime DEFAULT NULL,
+  date_added datetime NOT NULL,
+  products_options_id int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (options_id,languages_id),
+  KEY idx_products_options_id (products_options_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS products_tags_values;
+CREATE TABLE products_tags_values (
+  values_id int(11) NOT NULL,
+  options_id int(11) NOT NULL,
+  values_name varchar(128) COLLATE latin1_german1_ci NOT NULL,
+  values_description text COLLATE latin1_german1_ci NOT NULL,
+  values_image varchar(128) COLLATE latin1_german1_ci NOT NULL,
+  values_content_group int(11) DEFAULT NULL,
+  sort_order int(11) NOT NULL DEFAULT '0',
+  languages_id int(11) NOT NULL,
+  status int(1) NOT NULL DEFAULT '1',
+  filter int(1) NOT NULL DEFAULT '1',
+  last_modified datetime DEFAULT NULL,
+  date_added datetime NOT NULL,
+  products_options_values_id int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (values_id,languages_id),
+  KEY idx_options_id (options_id),
+  KEY idx_products_options_values_id (products_options_values_id)
+) ENGINE=MyISAM;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

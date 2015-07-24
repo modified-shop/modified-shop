@@ -205,6 +205,9 @@
     require_once(DIR_FS_INC.'auto_include.inc.php');
     foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_product/','php') as $file) require ($file);
     
+    //products tags
+    include(DIR_WS_MODULES.'products_tags.php');
+
     //Price options
     include(DIR_WS_MODULES.'group_prices.php');
     

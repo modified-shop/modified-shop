@@ -44,8 +44,6 @@ $manufacturers_id  = $_GET['manufacturers_id'] = isset($_GET['manufacturers_id']
 $categories_id = $_GET['categories_id'] = isset($_GET['categories_id']) && xtc_not_null($_GET['categories_id']) ? (int)$_GET['categories_id'] : false;
 $_GET['inc_subcat'] = isset($_GET['inc_subcat']) && xtc_not_null($_GET['inc_subcat']) ? (int)$_GET['inc_subcat'] : null;
 
-$search_params = md5($_GET['keywords'].$_GET['pfrom'].$_GET['pto'].$_GET['manufacturers_id'].$_GET['categories_id'].$_GET['inc_subcat']);
-
 // reset error
 $errorno = 0;
 
@@ -257,22 +255,30 @@ if ($errorno) {
   
   if (PRODUCT_LIST_FILTER == 'true') { 
     $products_search_array = array();
-    if (!isset($_SESSION['search_params']) || $_SESSION['search_params'] != $search_params) {
-      $result_query = xtDBquery($listing_sql);
-      while ($result = xtc_db_fetch_array($result_query, true)) {
-        $products_search_array[] = $result['products_id'];
-      }
-      $_SESSION['search_pids_array'] = $products_search_array;
-    } else {
-      $products_search_array = $_SESSION['search_pids_array'];
+    $result_query = xtDBquery($listing_sql);
+    while ($result = xtc_db_fetch_array($result_query, true)) {
+      $products_search_array[] = $result['products_id'];
     }
-    $_SESSION['search_params'] = $search_params;
     
     $join = '';                 
     if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
-      $join = "JOIN ".TABLE_MANUFACTURERS." m 
-                    ON p.manufacturers_id = m.manufacturers_id
-                       AND m.manufacturers_id = '".(int)$_GET['filter_id']."' ";
+      $join = " JOIN ".TABLE_MANUFACTURERS." m 
+                     ON p.manufacturers_id = m.manufacturers_id
+                        AND m.manufacturers_id = '".(int)$_GET['filter_id']."' ";
+    }
+
+    $filter_join = '';
+    if (isset($_GET['filter']) && is_array($_GET['filter'])) {
+      $fi = 1;
+      foreach ($_GET['filter'] as $options_id => $values_id) {
+        if ($values_id != '') {
+          $filter_join .= " JOIN ".TABLE_PRODUCTS_TAGS." pt".$fi." 
+                                 ON pt".$fi.".products_id = p.products_id
+                                    AND pt".$fi.".options_id = '".$options_id."'
+                                    AND pt".$fi.".values_id = '".$values_id."' ";
+          $fi ++;
+        }
+      }
     }
   
     $listing_sql = "SELECT ".ADD_SELECT_SEARCH."
@@ -302,6 +308,7 @@ if ($errorno) {
                           ON p.products_id = s.products_id
                              AND s.status = '1'
                           ".$join."
+                          ".$filter_join."
                     WHERE p.products_id IN ('".implode("', '", $products_search_array)."')
                           ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_id ASC');
   }
