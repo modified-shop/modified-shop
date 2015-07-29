@@ -26,8 +26,8 @@ define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_MODULE_DIRECTORY', 'Module Directory:');
-define('TEXT_MODULE_FILE_MISSING', '<b>Sprachdatei "%s" fehlt, Modul "%s" wird nicht angezeigt!</b>');
-define('TABLE_HEADING_FILENAME','Modulname (for internal usage)');
+define('TEXT_MODULE_FILE_MISSING', '<b>Language file "%s" is missing, module "%s" will not be displayed!</b>');
+define('TABLE_HEADING_FILENAME','Module name (for internal usage)');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 define('TEXT_INFO_DELETE_PAYPAL', 'If you uninstall this module now, the PayPal transaction data are deleted!<br />If you want to receive these data, press now on abort and you deactivate the module (activate module = False) only.');
