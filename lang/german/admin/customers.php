@@ -68,4 +68,7 @@ define('TEXT_INFO_DELETE_DEFAULT', '<b>Dieser Adressbucheintrag kann nicht gel&o
 
 define('TABLE_HEADING_AMOUNT','Guthaben');
 define('WARNING_CUSTOMER_ALREADY_EXISTS', 'Kundengruppe kann nicht ge&auml;ndert werden. Diese E-Mail Adresse wird bereits für einen Kundenaccount verwendet.');
+
+define('TEXT_SORT_ASC','aufsteigend');
+define('TEXT_SORT_DESC','absteigend');
 ?>
