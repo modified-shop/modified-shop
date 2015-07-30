@@ -34,17 +34,17 @@
     } else {
       $params .= ' style="border:0;"';
     }
-    $image = '<img src="' . $src . '" alt="' . $alt . '"';
-    if ($alt) {
-      $image .= ' title="' . $alt . '"';
+    $image = '<img src="' . $src . '"';
+    if ($alt != '') {
+      $image .= ' alt="' . $alt . '" title="' . $alt . '"';
     }
-    if ($width) {
+    if ($width != '') {
       $image .= ' width="' . $width . '"';
     }
-    if ($height) {
+    if ($height != '') {
       $image .= ' height="' . $height . '"';
     }
-    if ($params) {
+    if ($params != '') {
       $image .= ' ' . $params;
     }
     $image .= '>';
