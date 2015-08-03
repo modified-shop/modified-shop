@@ -54,7 +54,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     $customConfig['allowedContent'] = "allowedContent: false,";
     
     //Buttons entfernen
-    $customConfig['removeButtons'] = "removeButtons: 'PageBreak',";
+    $customConfig['removeButtons'] = "removeButtons: 'PageBreak,Save',";
     
     //Upload Tab entfernen
     //$customConfig['removeDialogTabs'] = "removeDialogTabs: 'image:Link;link:Link',";
