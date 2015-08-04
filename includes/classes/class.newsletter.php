@@ -21,6 +21,9 @@
 
 define('NL_REG_MAIL_ADMIN', false);
 
+// include needed function
+require_once (DIR_FS_INC.'ip_clearing.inc.php');
+
 class newsletter {
   var $message, $message_id;
 
@@ -79,7 +82,10 @@ class newsletter {
           $this->message = TEXT_EMAIL_ACTIVE_ERROR;
           $this->message_id = 5;
         } else {
-          $sql_data_array = array('mail_status' => '1');
+          $sql_data_array = array('mail_status' => '1'
+                                  'date_confirmed' => 'now()',
+                                  'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
+                                  );
           xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($email)."'");
           // extern Mailer
           $this->_externmailer($email, 'subscribe');
@@ -116,7 +122,8 @@ class newsletter {
         if ($check == 'inp') {
           // Check if email exists
           $check_mail_query = xtc_db_query("SELECT customers_email_address,
-                                                   mail_status from ".TABLE_NEWSLETTER_RECIPIENTS."
+                                                   mail_status 
+                                              FROM ".TABLE_NEWSLETTER_RECIPIENTS."
                                              WHERE customers_email_address = '".xtc_db_input($mail)."'
                                            ");
           if (xtc_db_num_rows($check_mail_query) > 0) {
@@ -131,7 +138,10 @@ class newsletter {
               if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
                 $this->sendRequestMail($mail);
               } else {
-                $sql_data_array = array('mail_status' => '1');
+                $sql_data_array = array('mail_status' => '1'
+                                        'date_confirmed' => 'now()',
+                                        'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
+                                        );
                 xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
                 // extern Mailer
                 $this->_externmailer($mail, 'subscribe');
@@ -172,7 +182,8 @@ class newsletter {
                                      'customers_lastname' => xtc_db_input($customers_lastname),
                                      'mail_status' => '0',
                                      'mail_key' => xtc_db_input($this->vlCode),
-                                     'date_added' => 'now()'
+                                     'date_added' => 'now()',
+                                     'ip_date_added' => ip_clearing($_SESSION['tracking']['ip'])
                                      );
             xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array);
 
@@ -182,7 +193,10 @@ class newsletter {
             if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
               $this->sendRequestMail($mail);
             } else {
-              $sql_data_array = array('mail_status' => '1');
+              $sql_data_array = array('mail_status' => '1'
+                                      'date_confirmed' => 'now()',
+                                      'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
+                                      );
               xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
               // extern Mailer
               $this->_externmailer($mail, 'subscribe');
@@ -346,7 +360,7 @@ class newsletter {
             xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
                                 WHERE customers_email_address = '".xtc_db_input($return->data['email'])."'");
           }        
-        } while ($return->data);
+        } while ($return->status == "SUCCESS");
       }
     }
   }
