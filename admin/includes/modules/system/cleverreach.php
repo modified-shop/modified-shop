@@ -21,7 +21,7 @@ class cleverreach {
      $this->title = MODULE_CLEVERREACH_TEXT_TITLE;
      $this->description = MODULE_CLEVERREACH_TEXT_DESCRIPTION;
      $this->sort_order = defined('MODULE_CLEVERREACH_SORT_ORDER') ? MODULE_CLEVERREACH_SORT_ORDER : 0;
-     $this->enabled = ((MODULE_CLEVERREACH_STATUS == 'True') ? true : false);
+     $this->enabled = ((MODULE_CLEVERREACH_STATUS == 'true') ? true : false);
    }
 
   function process($file) {
