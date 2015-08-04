@@ -191,15 +191,13 @@
       } else {
         $zone_id = 0;
         $entry_state_error = false;
-        $check_query = xtc_db_query("-- /admin/create_account.php
-                                     SELECT count(*) as total
+        $check_query = xtc_db_query("SELECT count(*) as total
                                        FROM ".TABLE_ZONES."
                                       WHERE zone_country_id = '".xtc_db_input($entry_country_id)."'");
         $check_value = xtc_db_fetch_array($check_query);
         $entry_state_has_zones = ($check_value['total'] > 0);
         if ($entry_state_has_zones == true) {
-          $zone_query = xtc_db_query("-- /admin/create_account.php
-                                      SELECT zone_id
+          $zone_query = xtc_db_query("SELECT zone_id
                                         FROM ".TABLE_ZONES."
                                        WHERE zone_country_id = '".xtc_db_input($entry_country_id)."'
                                          AND zone_name = '".xtc_db_input($entry_state)."'");
@@ -207,8 +205,7 @@
             $zone_values = xtc_db_fetch_array($zone_query);
             $entry_zone_id = $zone_values['zone_id'];
           } else {
-            $zone_query = xtc_db_query("-- /admin/create_account.php
-                                        SELECT zone_id
+            $zone_query = xtc_db_query("SELECT zone_id
                                           FROM ".TABLE_ZONES."
                                          WHERE zone_country_id = '".xtc_db_input($entry_country)."'
                                            AND zone_code = '".xtc_db_input($entry_state)."'");
@@ -235,8 +232,7 @@
     }
 
     $entry_email_address_exists = false;
-    $check_email = xtc_db_query("-- /admin/create_account.php
-                                 SELECT customers_email_address
+    $check_email = xtc_db_query("SELECT customers_email_address
                                    FROM ".TABLE_CUSTOMERS."
                                   WHERE customers_email_address = '".xtc_db_input($customers_email_address)."'
                                     AND customers_id <> '".xtc_db_input($customers_id)."'");
@@ -536,6 +532,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             $entry_state_str .= '&nbsp;'.ENTRY_STATE_ERROR;
                           }
                         }
+                        echo $entry_state_str;
                       ?>
                       </td>
                     </tr>
