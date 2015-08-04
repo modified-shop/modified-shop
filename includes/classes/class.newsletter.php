@@ -276,7 +276,7 @@ class newsletter {
                                        WHERE customers_email_address ='".xtc_db_input($mail)."'");
     $newsletter = xtc_db_fetch_array($newsletter_query);
     
-    if (defined('MODULE_SUPERMAILER_STATUS') && MODULE_SUPERMAILER_STATUS == 'true') {
+    if (defined('MODULE_SUPERMAILER_STATUS') && MODULE_SUPERMAILER_STATUS == 'True') {
       $txt_mail_std_arr = array('EMail' => $newsletter['customers_email_address'],
                                 'RG' => MODULE_SUPERMAILER_GROUP);
     
