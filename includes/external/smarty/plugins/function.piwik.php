@@ -118,9 +118,9 @@ function getProductsName() {
                                          " . TABLE_CATEGORIES_DESCRIPTION . " cd
                                    WHERE p.products_id = pd.products_id
                                      AND p2c.categories_id = cd.categories_id
-                                     AND p.products_id = " . (int)$_GET['products_id'] . "
-                                     AND pd.language_id ='" . (int)$_SESSION['languages_id'] . "'
-                                     AND cd.language_id ='". (int)$_SESSION['languages_id'] . "'"
+                                     AND p2c.products_id = '" . (int)$_GET['products_id'] . "'
+                                     AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                     AND cd.language_id = '". (int)$_SESSION['languages_id'] . "'"
                                 );
   $products = xtc_db_fetch_array($products_query);  
   return "        "."_paq.push(['setEcommerceView', '".(int)$products['products_id']."', '".encode_htmlspecialchars($products['products_name'])."', '".encode_htmlspecialchars($products['categories_name'])."']);\n";
@@ -133,11 +133,11 @@ function getShoppingCartContents() {
     $return_string = '';
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $categories_query = xtc_db_query("SELECT cd.categories_name
-                                          FROM " . TABLE_CATEGORIES_DESCRIPTION ." cd,
-                                               ". TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+                                          FROM " . TABLE_CATEGORIES_DESCRIPTION . " cd,
+                                               " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
                                          WHERE cd.categories_id = p2c.categories_id
-                                           AND p2c.products_id = " . (int)$products[$i]['id'] . "
-                                           AND cd.language_id ='".(int)$_SESSION['languages_id']."'"
+                                           AND p2c.products_id = '" . (int)$products[$i]['id'] . "'
+                                           AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'"
                                       );
       $categories = xtc_db_fetch_array($categories_query);
       $return_string .= "        "."_paq.push(['addEcommerceItem', '".(int)$products[$i]['id']."', '".encode_htmlspecialchars($products[$i]['name'])."', '".encode_htmlspecialchars($categories['categories_name'])."', '".format_price($products[$i]['final_price'])."', '". (int)$products[$i]['quantity']."']);\n";
@@ -151,7 +151,7 @@ function getShoppingCartContents() {
 function getOrders () {
   $orders_query = xtc_db_query("SELECT orders_id
                                   FROM " . TABLE_ORDERS . "
-                                 WHERE customers_id = '".(int)$_SESSION['customer_id']."'
+                                 WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'
                               ORDER BY date_purchased DESC limit 1"
                               );
   if (xtc_db_num_rows($orders_query) == 1) {
