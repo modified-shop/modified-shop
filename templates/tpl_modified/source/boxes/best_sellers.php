@@ -58,65 +58,65 @@ if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/b
 	
 	$check_num = 0;
   if (isset($current_category_id) && $current_category_id > 0) {
-    $best_sellers_query = "SELECT DISTINCT ".$select."
-                                           p.products_id,
-                                           p.products_price,
-                                           p.products_tax_class_id,
-                                           p.products_image,
-                                           p.products_vpe,
-                                           p.products_vpe_status,
-                                           p.products_vpe_value,
-                                           pd.products_name
-                                      FROM ".TABLE_PRODUCTS." p
-                                           ".$join."
-                                      JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                                           ON p.products_id = pd.products_id
-                                              AND trim(pd.products_name) != ''
-                                              AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                                      JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                           ON p.products_id = p2c.products_id
-                                              ".$join_where."
-                                      JOIN ".TABLE_CATEGORIES." c
-                                           ON p2c.categories_id = c.categories_id
-                                              AND c.categories_status = 1
-                                              AND (c.categories_id = '" . (int)$current_category_id . "' 
-                                                   OR c.parent_id = '" . (int)$current_category_id . "')
-                                     WHERE p.products_status = 1
-                                       AND p.products_ordered > 0
-                                           ".PRODUCTS_CONDITIONS_P."
-                                  GROUP BY p.products_id
-                                  ORDER BY ".$order_by." DESC
-                                     LIMIT ".MAX_DISPLAY_BESTSELLERS;
+    $best_sellers_query = "SELECT ".$select."
+                                  p.products_id,
+                                  p.products_price,
+                                  p.products_tax_class_id,
+                                  p.products_image,
+                                  p.products_vpe,
+                                  p.products_vpe_status,
+                                  p.products_vpe_value,
+                                  pd.products_name
+                             FROM ".TABLE_PRODUCTS." p
+                                  ".$join."
+                             JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                  ON p.products_id = pd.products_id
+                                     AND trim(pd.products_name) != ''
+                                     AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                             JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                  ON p.products_id = p2c.products_id
+                                     ".$join_where."
+                             JOIN ".TABLE_CATEGORIES." c
+                                  ON p2c.categories_id = c.categories_id
+                                     AND c.categories_status = 1
+                                     AND (c.categories_id = '" . (int)$current_category_id . "' 
+                                          OR c.parent_id = '" . (int)$current_category_id . "')
+                            WHERE p.products_status = 1
+                              AND p.products_ordered > 0
+                                  ".PRODUCTS_CONDITIONS_P."
+                         GROUP BY p.products_id
+                         ORDER BY ".$order_by." DESC
+                            LIMIT ".MAX_DISPLAY_BESTSELLERS;
     $check_result = xtDBquery($best_sellers_query);
     $check_num = xtc_db_num_rows($check_result, true);
-    if ($check_num == 1) {
+    if ($check_num == 1 && count($products_id_array) > 0) {
       $check = xtc_db_fetch_array($check_result, true);
       $check_num = $check['ordered'];
     }
   }
   
   if ($check_num < 1) {
-    $best_sellers_query = "SELECT DISTINCT ".$select."
-                                           p.products_id,
-                                           p.products_image,
-                                           p.products_price,
-                                           p.products_vpe,
-                                           p.products_vpe_status,
-                                           p.products_vpe_value,
-                                           p.products_tax_class_id,
-                                           pd.products_name 
-                                      FROM ".TABLE_PRODUCTS." p
-                                           ".$join."
-                                      JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                                           ON p.products_id = pd.products_id
-                                              AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                                     WHERE p.products_status = 1
-                                       AND p.products_ordered > 0
-                                           ".$where."
-                                           ".PRODUCTS_CONDITIONS_P."
-                                  GROUP BY p.products_id
-                                  ORDER BY ".$order_by." DESC
-                                     LIMIT ".MAX_DISPLAY_BESTSELLERS;
+    $best_sellers_query = "SELECT ".$select."
+                                  p.products_id,
+                                  p.products_image,
+                                  p.products_price,
+                                  p.products_vpe,
+                                  p.products_vpe_status,
+                                  p.products_vpe_value,
+                                  p.products_tax_class_id,
+                                  pd.products_name 
+                             FROM ".TABLE_PRODUCTS." p
+                                  ".$join."
+                             JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                  ON p.products_id = pd.products_id
+                                     AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                            WHERE p.products_status = 1
+                              AND p.products_ordered > 0
+                                  ".$where."
+                                  ".PRODUCTS_CONDITIONS_P."
+                         GROUP BY p.products_id
+                         ORDER BY ".$order_by." DESC
+                            LIMIT ".MAX_DISPLAY_BESTSELLERS;
   }
 
   $best_sellers_query = xtDBquery($best_sellers_query);
