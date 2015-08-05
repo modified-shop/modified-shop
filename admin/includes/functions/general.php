@@ -1525,14 +1525,14 @@
    */
   function xtc_cfg_pull_down_order_statuses($order_status_id, $key = '') {
     $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
-    $statuses_array = array (array ('id' => DEFAULT_ORDERS_STATUS_ID, 'text' => TEXT_DEFAULT));
+    $statuses_array = array();
     $statuses_query = xtc_db_query("SELECT orders_status_id,
                                            orders_status_name
                                       FROM ".TABLE_ORDERS_STATUS."
                                      WHERE language_id = '".(int)$_SESSION['languages_id']."'
                                   ORDER BY sort_order");
     while ($statuses = xtc_db_fetch_array($statuses_query)) {
-      $statuses_array[] = array ('id' => $statuses['orders_status_id'], 'text' => $statuses['orders_status_name']);
+      $statuses_array[] = array ('id' => $statuses['orders_status_id'], 'text' => $statuses['orders_status_name'] . (($statuses['orders_status_id'] == DEFAULT_ORDERS_STATUS_ID) ? ' ('.TEXT_DEFAULT.')' : ''));
     }
     return xtc_draw_pull_down_menu($name, $statuses_array, $order_status_id);
   }
@@ -1545,16 +1545,18 @@
    * @return
    */
   function xtc_get_order_status_name($order_status_id, $language_id = '') {
-    if ($order_status_id < 1)
+    if ($order_status_id < 1) {
       return TEXT_DEFAULT;
-    if (!is_numeric($language_id))
+    }
+    if (!is_numeric($language_id)) {
       $language_id = $_SESSION['languages_id'];
+    }
     $status_query = xtc_db_query("SELECT orders_status_name
                                     FROM ".TABLE_ORDERS_STATUS."
                                    WHERE orders_status_id = '".(int)$order_status_id."'
                                      AND language_id = '".(int)$language_id."'");
     $status = xtc_db_fetch_array($status_query);
-    return $status['orders_status_name'];
+    return $status['orders_status_name'] . (($order_status_id == DEFAULT_ORDERS_STATUS_ID) ? ' ('.TEXT_DEFAULT.')' : '');
   }
 
   /**
