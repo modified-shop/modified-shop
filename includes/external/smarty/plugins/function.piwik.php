@@ -35,12 +35,8 @@ require_once (DIR_FS_INC.'xtc_get_prid.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_name.inc.php');
 require_once (DIR_FS_INC.'xtc_get_product_path.inc.php');
 
-include_once (DIR_WS_CLASSES.'language.php');
-$piwik_lang = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'char', ''));
-
-
 function smarty_function_piwik($params, &$smarty) {
-  global $PHP_SELF;
+  global $PHP_SELF, $piwik_language_id;
   
   $url = isset($params['url']) ? $params['url'] : false;
   $id = isset($params['id']) ? (int)$params['id'] : false;
@@ -49,6 +45,10 @@ function smarty_function_piwik($params, &$smarty) {
   if (!$url || !$id) {
     return false;
   }
+
+  include_once (DIR_WS_CLASSES.'language.php');
+  $piwik_lang = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'char', ''));
+  $piwik_language_id = $piwik_lang->language['id'];
 
   $url = str_replace(array('http://', 'https://'), '', $url);
   $url = trim($url, '/');
@@ -103,35 +103,35 @@ function smarty_function_piwik($params, &$smarty) {
 
 /* get category name */
 function getCategoryName() {
-  global $piwik_lang;
+  global $piwik_language_id;
 
   $cPath_array = explode('_', $_GET['cPath']);
   
   $categories_id = array_pop($cPath_array);
-  $categories_name = get_categories_name($categories_id, $piwik_lang->language['id']);
+  $categories_name = get_categories_name($categories_id, $piwik_language_id);
 
   return "        "."_paq.push(['setEcommerceView', productSku = false, productName = false, category = '".encode_htmlspecialchars($categories_name)."']);\n";
 }
 
 /* get products name */
 function getProductsName() {
-  global $piwik_lang;
+  global $piwik_language_id;
 
   $products_id = xtc_get_prid($_GET['products_id']);
-  $products_name = xtc_get_products_name($products_id, $piwik_lang->language['id']);
+  $products_name = xtc_get_products_name($products_id, $piwik_language_id);
 
-  $cPath = xtc_get_product_path($products[$i]['id']);
+  $cPath = xtc_get_product_path($products_id);
   $cPath_array = explode('_', $cPath);
   
   $categories_id = array_pop($cPath_array);
-  $categories_name = get_categories_name($categories_id, $piwik_lang->language['id']);
+  $categories_name = get_categories_name($categories_id, $piwik_language_id);
   
   return "        "."_paq.push(['setEcommerceView', '".$products_id."', '".encode_htmlspecialchars($products_name)."', '".encode_htmlspecialchars($categories_name)."']);\n";
 }
 
 /* get shopping cart contents */
 function getShoppingCartContents() {
-  global $piwik_lang;
+  global $piwik_language_id;
   
   $products = $_SESSION['cart']->get_products();
   if ($_SESSION['cart']->count_contents() > 0) {
@@ -141,7 +141,7 @@ function getShoppingCartContents() {
       $cPath_array = explode('_', $cPath);
       
       $categories_id = array_pop($cPath_array);
-      $categories_name = get_categories_name($categories_id, $piwik_lang->language['id']);
+      $categories_name = get_categories_name($categories_id, $piwik_language_id);
 
       $return_string .= "        "."_paq.push(['addEcommerceItem', '".(int)$products[$i]['id']."', '".encode_htmlspecialchars($products[$i]['name'])."', '".encode_htmlspecialchars($categories_name)."', '".format_price($products[$i]['final_price'])."', '". (int)$products[$i]['quantity']."']);\n";
     }
@@ -153,7 +153,7 @@ function getShoppingCartContents() {
 
 /* get orders */
 function getOrders () {
-  global $piwik_lang;
+  global $piwik_language_id;
   
   $orders_query = xtc_db_query("SELECT orders_id
                                   FROM " . TABLE_ORDERS . "
@@ -180,7 +180,7 @@ function getOrders () {
                                             FROM " . TABLE_ORDERS_PRODUCTS . " op
                                             JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
                                                  ON op.products_id = pd.products_id
-                                                    AND pd.language_id = '".$piwik_lang->language['id']."'
+                                                    AND pd.language_id = '".$piwik_language_id."'
                                            WHERE op.orders_id = '" . (int)$order['orders_id'] . "'"
                                         );
     while ($order_products = xtc_db_fetch_array($order_products_query)) {
@@ -188,7 +188,7 @@ function getOrders () {
       $cPath_array = explode('_', $cPath);
       
       $categories_id = array_pop($cPath_array);
-      $categories_name = get_categories_name($categories_id, $piwik_lang->language['id']);
+      $categories_name = get_categories_name($categories_id, $piwik_language_id);
 
       $return_string .= "        "."_paq.push(['addEcommerceItem', '".(int)$order_products['products_id']."', '".encode_htmlspecialchars($order_products['products_name'])."', '".encode_htmlspecialchars($categories_name)."', '".format_price($order_products['final_price'])."', '".(int)$order_products['products_quantity']."']);\n";
     }
