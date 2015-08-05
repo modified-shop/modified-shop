@@ -78,7 +78,7 @@
           {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
         </ul>
       </div>
-      <div id="breadcrumb">{if isset($navtrail)}<span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:"<a href":"<span itemscope itemtype=\"http://data-vocabulary.org/Breadcrumb\"><a itemprop=\"url\" href"|replace:"Navigation\">":"Navigation\"><span itemprop=\"title\">"|replace:"</a>":"</span></a></span>"}{/if}</div>
+      {if isset($navtrail)}<div id="breadcrumb"><span class="breadcrumb_info">{#text_here#}</span>{$navtrail}</div>{/if}
       {if isset($main_content)}{$main_content}{/if}
       {if $bestseller}
         {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
@@ -110,7 +110,7 @@
           {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
         </ul>
       </div>
-      <div id="breadcrumb">{if isset($navtrail)}<span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:"<a href":"<span itemscope itemtype=\"http://data-vocabulary.org/Breadcrumb\"><a itemprop=\"url\" href"|replace:"Navigation\">":"Navigation\"><span itemprop=\"title\">"|replace:"</a>":"</span></a></span>"}{/if}</div>
+      {if isset($navtrail)}<div id="breadcrumb"><span class="breadcrumb_info">{#text_here#}</span>{$navtrail}</div>{/if}
       {if isset($main_content)}{$main_content}{/if}
       {if $bestseller}{if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}{/if}
     </div>
