@@ -85,7 +85,7 @@ define('AC_PSTATUS_FULLNAMEKNOWN', 'First name and surname are known');
 define('AC_PSTATUS_LASTNAMEKNOWN', 'Surname is known');
 define('AC_PSTATUS_NAMEUNKNOWN', 'First name and surname unknown');
 define('AC_PSTATUS_NAMEADDRAMBIGUITY', 'Ambiguity in name to address');
-define('AC_PSTATUS_UNDELIVERABLE', 'no deliverable (any more)');
+define('AC_PSTATUS_UNDELIVERABLE', 'not deliverable (any more)');
 define('AC_PSTATUS_DEAD', 'Person deceased');
 define('AC_PSTATUS_POSTALERROR', 'Wrong postal address');
  
