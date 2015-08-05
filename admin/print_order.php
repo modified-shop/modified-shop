@@ -71,7 +71,7 @@
 
     $smarty->assign('PAYMENT_METHOD',$payment_method);
   }
-  $smarty->assign('COMMENTS', $order->info['comments']);
+  $smarty->assign('COMMENTS', nl2br($order->info['comments']));
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));
   $smarty->assign('INVOICE_NUMBER', isset($order->info['ibn_billnr']) && $order->info['ibn_billnr'] != '' ? $order->info['ibn_billnr'] :  $order->info['order_id']);
   $smarty->assign('INVOICE_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));

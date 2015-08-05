@@ -61,7 +61,7 @@
     $payment_method=constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
     $smarty->assign('PAYMENT_METHOD',$payment_method);
   }
-  $smarty->assign('COMMENTS', $order->info['comments']);
+  $smarty->assign('COMMENTS', nl2br($order->info['comments']));
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));
 
   // dont allow cache
