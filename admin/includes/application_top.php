@@ -196,8 +196,6 @@ $current_domain = $http_domain;
 // set the top level domains - old
 $current_domain_old = $http_domain_arr['old'];
 
-@ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
-
 // set the session name and save path
 // set the session cookie parameters
 // set the session ID if it exists

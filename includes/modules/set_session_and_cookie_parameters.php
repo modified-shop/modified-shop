@@ -10,6 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+@ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
+
 // set the session name and save path
 xtc_session_name('MODsid');
 if (STORE_SESSIONS != 'mysql') {
