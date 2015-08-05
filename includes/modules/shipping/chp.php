@@ -123,7 +123,7 @@
           if ($shipping_eco != 0) {
             $methods[] = array('id' => 'ECO',
                                'title' => 'Economy',
-                               'cost' => (MODULE_SHIPPING_CHP_HANDLING + $shipping_cost_1) * $shipping_num_boxes);
+                               'cost' => $shipping_cost_1 * $shipping_num_boxes);
           }
         }
 
@@ -147,7 +147,7 @@
           if ($shipping_pri != 0) {
             $methods[] = array('id' => 'PRI',
                                'title' => 'Priority',
-                               'cost' => (MODULE_SHIPPING_CHP_HANDLING + $shipping_cost_2) * $shipping_num_boxes);
+                               'cost' => $shipping_cost_2 * $shipping_num_boxes);
           }
         }  
 
@@ -171,7 +171,7 @@
           if ($shipping_urg != 0) {
             $methods[] = array('id' => 'URG',
                                'title' => 'Urgent',
-                               'cost' => (MODULE_SHIPPING_CHP_HANDLING + $shipping_cost_3) * $shipping_num_boxes);
+                               'cost' => $shipping_cost_3 * $shipping_num_boxes);
           }
         }
       }
