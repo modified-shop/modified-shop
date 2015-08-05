@@ -109,18 +109,19 @@ function getCategoryName() {
 
 /* get products name */
 function getProductsName() {
-  $products_query = xtc_db_query("SELECT p.products_id,
-                                         pd.products_name,
-                                         cd.categories_name
-                                    FROM " . TABLE_PRODUCTS . " p,
-                                         " . TABLE_PRODUCTS_DESCRIPTION . " pd,
-                                         " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c,
-                                         " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                   WHERE p.products_id = pd.products_id
-                                     AND p2c.categories_id = cd.categories_id
-                                     AND p2c.products_id = '" . (int)$_GET['products_id'] . "'
-                                     AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                     AND cd.language_id = '". (int)$_SESSION['languages_id'] . "'"
+  $products_query = xtc_db_query("SELECT p.products_id, 
+                                         pd.products_name, 
+                                         cd.categories_name 
+                                    FROM ".TABLE_PRODUCTS." p 
+                               LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                         ON pd.products_id = p.products_id 
+                                            AND pd.language_id = '".(int)$_SESSION['languages_id']."' 
+                               LEFT JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                                         ON p2c.products_id = p.products_id 
+                               LEFT JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                         ON cd.categories_id = p2c.categories_id 
+                                            AND cd.language_id = '".(int)$_SESSION['languages_id']."' 
+                                   WHERE p.products_id = '".(int)$_GET['products_id']."'"
                                 );
   $products = xtc_db_fetch_array($products_query);  
   return "        "."_paq.push(['setEcommerceView', '".(int)$products['products_id']."', '".encode_htmlspecialchars($products['products_name'])."', '".encode_htmlspecialchars($products['categories_name'])."']);\n";
