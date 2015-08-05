@@ -203,6 +203,7 @@ table td {
 }
 #breadcrumb span.current {
   font-weight:bold;
+  cursor:default;
 }
 /* TOPMENU AS LIST */
 #topmenuwrap {
