@@ -51,7 +51,7 @@
         if (isset($this->_trail[$i]['link']) && xtc_not_null($this->_trail[$i]['link'])) {
           $trail_string .= '<a itemprop="item" href="' . $this->_trail[$i]['link'] . '" class="headerNavigation"><span itemprop="name">' . $this->_trail[$i]['title'] . '</span></a>';
         } else {
-          $trail_string .= '<span itemprop="item"><span itemprop="name">'.$this->_trail[$i]['title'].'</span></span>';
+          $trail_string .= '<span itemprop="item"><span class="current" itemprop="name">'.$this->_trail[$i]['title'].'</span></span>';
         }
         $trail_string .= '<meta itemprop="position" content="'.($i+1).'" />';
 

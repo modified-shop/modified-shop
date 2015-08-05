@@ -191,7 +191,7 @@ table td {
   background:#fff url(img/bg_breadcrumb.gif) repeat-x;
   font-size:11px;
 }
-#breadcrumb a, #breadcrumb a:link, #breadcrumb a:visited, #breadcrumb a:hover, #breadcrumb a:active {
+#breadcrumb a, #breadcrumb a:link, #breadcrumb a:visited, #breadcrumb a:hover, #breadcrumb a:active, #breadcrumb span.current {
   line-height:23px;
   text-decoration:none;
   outline:none;
@@ -200,6 +200,9 @@ table td {
   color:#333;
   margin:0;
   padding:0;
+}
+#breadcrumb span.current {
+  font-weight:bold;
 }
 /* TOPMENU AS LIST */
 #topmenuwrap {

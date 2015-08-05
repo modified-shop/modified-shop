@@ -838,6 +838,9 @@ div.hr_15 {
   text-decoration:none;
   color:#222;
 }
+#breadcrumb span.current {
+  font-weight:bold;
+}
 /* 10. END breadcrumbs */
 
 
