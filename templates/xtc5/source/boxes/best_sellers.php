@@ -49,13 +49,13 @@ if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/b
     $join_where = $select = $join = $where = '';
     $order_by = "p.products_ordered";
     $products_id_array = array();
-    if (MAX_DISPLAY_BESTSELLERS_DAY != '0') {
+    if (MAX_DISPLAY_BESTSELLERS_DAYS != '0') {
       $orders_query = "SELECT op.products_id,
                               op.products_quantity 
                          FROM ".TABLE_ORDERS_PRODUCTS." op
                          JOIN ".TABLE_ORDERS." o
                               ON o.orders_id = op.orders_id
-                                 AND o.date_purchased > '".date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_BESTSELLERS_DAY, date("Y")))."'
+                                 AND o.date_purchased > '".date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_BESTSELLERS_DAYS, date("Y")))."'
                      GROUP BY op.products_id
                      ORDER BY op.orders_id DESC";
       $orders_query = xtc_db_query($orders_query);
