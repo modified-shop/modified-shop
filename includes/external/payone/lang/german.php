@@ -184,7 +184,7 @@ define('TEXT_CARDCHECKNUM', 'Pr&uuml;fziffer:');
 define('TEXT_CHECK_DATA', 'Bitte &uuml;berpr&uuml;fen Sie Ihre Angaben.');
 
 // orders status
-define('ORDERS_STATUS_CONFIGURATION', 'Konfiguration der Bestellstatus');
+define('ORDERS_STATUS_CONFIGURATION', 'Konfiguration der Bestellstati');
 define('ORDERS_STATUS_TMP', 'tempor&auml;rer Status');
 define('ORDERS_STATUS_PENDING', 'Zahlungseingang unsicher/erwartet');
 define('ORDERS_STATUS_PAID', 'Zahlung erfolgreich');

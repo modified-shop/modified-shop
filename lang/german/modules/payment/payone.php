@@ -18,9 +18,9 @@
 	Released under the GNU General Public License
 	---------------------------------------------------------------------------------------*/
 
-define('MODULE_PAYMENT_PAYONE_TEXT_TITLE', 'PayOne');
-define('MODULE_PAYMENT_PAYONE_TEXT_DESCRIPTION', 'PayOne lorem ipsum');
-define('MODULE_PAYMENT_PAYONE_TEXT_INFO', 'PayOne ...');
+//define('MODULE_PAYMENT_PAYONE_TEXT_TITLE', 'PayOne');
+//define('MODULE_PAYMENT_PAYONE_TEXT_DESCRIPTION', 'PayOne lorem ipsum');
+//define('MODULE_PAYMENT_PAYONE_TEXT_INFO', 'PayOne ...');
 define('MODULE_PAYMENT_PAYONE_STATUS_TITLE', 'Modul aktivieren');
 define('MODULE_PAYMENT_PAYONE_STATUS_DESC', 'M&ouml;chten Sie Zahlungen &uuml;ber dieses Modul akzeptieren?');
 define('MODULE_PAYMENT_PAYONE_ALLOWED_TITLE', 'Erlaubte Zonen');
