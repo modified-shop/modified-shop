@@ -150,6 +150,8 @@ define('MAX_DISPLAY_PRODUCTS_NEW_TITLE' , 'New Products Listing');
 define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum number of new products to display in new products page');
 define('MAX_DISPLAY_BESTSELLERS_TITLE' , 'Best Sellers');
 define('MAX_DISPLAY_BESTSELLERS_DESC' , 'Maximum number of best sellers to display');
+define('MAX_DISPLAY_BESTSELLERS_DAYS_TITLE' , 'Maximum Age (days) for Best Sellers');
+define('MAX_DISPLAY_BESTSELLERS_DAYS_DESC' , 'Maximum age (in days) for products to be displayed as "Best Sellers"');
 define('MAX_DISPLAY_ALSO_PURCHASED_TITLE' , 'Also Purchased');
 define('MAX_DISPLAY_ALSO_PURCHASED_DESC' , 'Maximum number of products to display in the "This Customer Also Purchased" box');
 define('MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX_TITLE' , 'Customer Order History Box');
