@@ -537,6 +537,7 @@ define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Your credit is not suff
 define('_SHIPPING_FREE','Free Shipping');
 
 define('TEXT_CONTENT_NOT_FOUND', 'Page not found!');
+define('TEXT_SITE_NOT_FOUND', 'Page not found!');
 
 // error message for exceeded product quantity, noRiddle
 define('MAX_PROD_QTY_EXCEEDED', 'The maximum allowed number of ' .MAX_PRODUCTS_QTY. ' for <span style="font-style:italic;">"%s"</span> has been exceeded. The number was automatically reduced to the permitted quantity.');

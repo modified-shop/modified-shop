@@ -27,67 +27,74 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 
-$shop_content_query = xtc_db_query("SELECT content_id, 
-                                           content_title, 
-                                           content_heading, 
-                                           content_text, 
-                                           content_file,
-                                           parent_id
-                                      FROM ".TABLE_CONTENT_MANAGER."
-                                     WHERE content_group='".(int) $_GET['coID']."'
-                                           ".CONTENT_CONDITIONS."
-                                       AND content_active = '1'
-                                       AND trim(content_title) != ''
-                                       AND languages_id=".$_SESSION['languages_id']);
-
-if ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {
-  // sub content
-  include (DIR_WS_MODULES.'sub_content_listing.php');
-
-  $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT,'coID='.(int) $_GET['coID']));
-} else {
+if ($language_not_found === true) {
   $site_error = TEXT_CONTENT_NOT_FOUND;
-  $shop_content_data['content_heading'] = TEXT_CONTENT_NOT_FOUND;
-}
-
-if (($_GET['coID'] != 7) || (isset($_GET['action']) && $_GET['action'] == 'success')) {
+  include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   require (DIR_WS_INCLUDES.'header.php');
-}
 
-$smarty->assign('CONTENT_HEADING', (($shop_content_data['content_heading'] != '') ? $shop_content_data['content_heading'] : $shop_content_data['content_title']));
-
-if ($_GET['coID'] == 7) {
-  include (DIR_WS_INCLUDES.'contact_us.php');
 } else {
-  $content_body = $shop_content_data['content_text'];
-  if ($shop_content_data['content_file'] != '') {
-    ob_start();
-    if (strpos($shop_content_data['content_file'], '.txt'))
-      echo '<pre>';
-    include (DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file']);
-    if (strpos($shop_content_data['content_file'], '.txt'))
-      echo '</pre>';
-    $smarty->assign('file', ob_get_contents());
-    ob_end_clean();
-  }
-  $smarty->assign('CONTENT_BODY', $content_body);
 
-  $smarty->assign('BUTTON_CONTINUE', '<a href="javascript:history.back(1)">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
-  $smarty->assign('language', $_SESSION['language']);
+  $shop_content_query = xtc_db_query("SELECT content_id, 
+                                             content_title, 
+                                             content_heading, 
+                                             content_text, 
+                                             content_file,
+                                             parent_id
+                                        FROM ".TABLE_CONTENT_MANAGER."
+                                       WHERE content_group='".(int) $_GET['coID']."'
+                                             ".CONTENT_CONDITIONS."
+                                         AND content_active = '1'
+                                         AND trim(content_title) != ''
+                                         AND languages_id=".$_SESSION['languages_id']);
 
-  // set cache ID
-   if (!CacheCheck()) {
-    $smarty->caching = 0;
-    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/content.html');
+  if ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {
+    // sub content
+    include (DIR_WS_MODULES.'sub_content_listing.php');
+
+    $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT,'coID='.(int) $_GET['coID']));
   } else {
-    $smarty->caching = 1;
-    $smarty->cache_lifetime = CACHE_LIFETIME;
-    $smarty->cache_modified_check = CACHE_CHECK;
-    $cache_id = md5($_SESSION['language'].$_SESSION['customers_status']['customers_status'].$shop_content_data['content_id'].((isset($_REQUEST['error'])) ? $_REQUEST['error'] : ''));
-    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/content.html', $cache_id);
+    $site_error = TEXT_CONTENT_NOT_FOUND;
+    $shop_content_data['content_heading'] = TEXT_CONTENT_NOT_FOUND;
+  }
+
+  if (($_GET['coID'] != 7) || (isset($_GET['action']) && $_GET['action'] == 'success')) {
+    require (DIR_WS_INCLUDES.'header.php');
+  }
+
+  $smarty->assign('CONTENT_HEADING', (($shop_content_data['content_heading'] != '') ? $shop_content_data['content_heading'] : $shop_content_data['content_title']));
+
+  if ($_GET['coID'] == 7) {
+    include (DIR_WS_INCLUDES.'contact_us.php');
+  } else {
+    $content_body = $shop_content_data['content_text'];
+    if ($shop_content_data['content_file'] != '') {
+      ob_start();
+      if (strpos($shop_content_data['content_file'], '.txt'))
+        echo '<pre>';
+      include (DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file']);
+      if (strpos($shop_content_data['content_file'], '.txt'))
+        echo '</pre>';
+      $smarty->assign('file', ob_get_contents());
+      ob_end_clean();
+    }
+    $smarty->assign('CONTENT_BODY', $content_body);
+
+    $smarty->assign('BUTTON_CONTINUE', '<a href="javascript:history.back(1)">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+    $smarty->assign('language', $_SESSION['language']);
+
+    // set cache ID
+     if (!CacheCheck()) {
+      $smarty->caching = 0;
+      $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/content.html');
+    } else {
+      $smarty->caching = 1;
+      $smarty->cache_lifetime = CACHE_LIFETIME;
+      $smarty->cache_modified_check = CACHE_CHECK;
+      $cache_id = md5($_SESSION['language'].$_SESSION['customers_status']['customers_status'].$shop_content_data['content_id'].((isset($_REQUEST['error'])) ? $_REQUEST['error'] : ''));
+      $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/content.html', $cache_id);
+    }
   }
 }
-
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;

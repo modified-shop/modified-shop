@@ -37,7 +37,7 @@ if (isset($_GET['pID']) && $_GET['pID']!='') {
 if (isset($_GET['products_id']) && $_GET['products_id']!='') {
   $product = new product((int)$_GET['products_id']);
 }
-if (!is_object($product) || !$product->isProduct()) {
+if (!is_object($product) || !$product->isProduct() || $language_not_found === true) {
   // create smarty elements
   $smarty = new Smarty;
 

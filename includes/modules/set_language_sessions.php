@@ -10,6 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
    
+$language_not_found = false;
+
 if (!isset($_SESSION['language']) || isset($_GET['language']) || (isset($_SESSION['language']) && !isset($_SESSION['language_charset']))) {
   include (DIR_WS_CLASSES.'language.php');
   if (isset($_GET['language'])) {
@@ -27,6 +29,11 @@ if (!isset($_SESSION['language']) || isset($_GET['language']) || (isset($_SESSIO
   $_SESSION['languages_id'] = $lng->language['id'];
   $_SESSION['language_charset'] = $lng->language['language_charset'];
   $_SESSION['language_code'] = $lng->language['code'];
+
+  if (!isset($lng->catalog_languages[$_GET['language']])) {
+    $_GET['language'] = DEFAULT_LANGUAGE;
+    $language_not_found = true;
+  }
 }
 
 // set default charset
