@@ -43,7 +43,7 @@ define('TEXT_BACKUP_DIRECTORY', 'Backup Directory:');
 define('TEXT_LAST_RESTORATION', 'Last Restoration:');
 define('TEXT_FORGET', '(<u>forget</u>)');
 
-define('ERROR_BACKUP_DIRECTORY_DOES_NOT_EXIST', 'Error: Backup directory does not exist. Please set this in configure.php.');
+define('ERROR_BACKUP_DIRECTORY_DOES_NOT_EXIST', 'Error: Backup directory does not exist.');
 define('ERROR_BACKUP_DIRECTORY_NOT_WRITEABLE', 'Error: Backup directory is not writeable.');
 define('ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE', 'Error: Download link not acceptable.');
 
