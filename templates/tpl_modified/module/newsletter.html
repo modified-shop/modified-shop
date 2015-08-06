@@ -2,7 +2,7 @@
 {config_load file="lang_`$language`.custom"}
 <h1>{#heading_title#}</h1>
 {if $info_message != ''}<div class="errormessage">{$info_message}</div>{/if}
-{if isset($activated)}
+{if !isset($activated)}
   {$FORM_ACTION}
   <div class="twoColums">
     <div class="highlightbox">

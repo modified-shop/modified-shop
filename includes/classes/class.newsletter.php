@@ -82,7 +82,7 @@ class newsletter {
           $this->message = TEXT_EMAIL_ACTIVE_ERROR;
           $this->message_id = 5;
         } else {
-          $sql_data_array = array('mail_status' => '1'
+          $sql_data_array = array('mail_status' => '1',
                                   'date_confirmed' => 'now()',
                                   'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
                                   );
@@ -138,7 +138,7 @@ class newsletter {
               if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
                 $this->sendRequestMail($mail);
               } else {
-                $sql_data_array = array('mail_status' => '1'
+                $sql_data_array = array('mail_status' => '1',
                                         'date_confirmed' => 'now()',
                                         'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
                                         );
@@ -193,7 +193,7 @@ class newsletter {
             if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
               $this->sendRequestMail($mail);
             } else {
-              $sql_data_array = array('mail_status' => '1'
+              $sql_data_array = array('mail_status' => '1',
                                       'date_confirmed' => 'now()',
                                       'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
                                       );
