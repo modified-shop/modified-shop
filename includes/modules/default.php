@@ -77,7 +77,6 @@ if ($language_not_found === true) {
   if ($category_depth != 'top') {
     $site_error = CATEGORIE_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
-    require (DIR_WS_INCLUDES.'header.php');
     return;
   } else {
     header("HTTP/1.0 410 Gone"); 
