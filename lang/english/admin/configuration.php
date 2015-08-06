@@ -1007,4 +1007,7 @@ define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_DESC', 'Please enter comma separat
 
 define('USE_BROWSER_LANGUAGE_TITLE' , 'Switch to browser language');
 define('USE_BROWSER_LANGUAGE_DESC' , 'Automatically switch language to customers browser language.');
+
+define('WYSIWYG_TEMPLATE_TITLE' , 'WYSIWYG Editor Template');
+define('WYSIWYG_TEMPLATE_DESC' , 'Choose the template for the WYSIWYG Editor.');
 ?>
