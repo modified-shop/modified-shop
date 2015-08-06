@@ -37,7 +37,7 @@ require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');  // for specials
 
-if (!is_object($product) || !$product->isProduct()) {
+if (!is_object($product) || !$product->isProduct() || $language_not_found === true) {
 
   // product not found in database
   $site_error = TEXT_PRODUCT_NOT_FOUND;
