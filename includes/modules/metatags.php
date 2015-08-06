@@ -313,7 +313,7 @@ switch(basename($PHP_SELF)) {
       //-- Canonical-URL
       //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
       $canonical_flag = true;
-      $canonical_url = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'], $request_type, false);
+      $canonical_url = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'], 'NONSSL', false);
       $canonical_flag = false;
     }
     break;
@@ -407,11 +407,11 @@ switch(basename($PHP_SELF)) {
     //-- Canonical-URL
     //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
     if (xtc_not_null($cPath)) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath,$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath,'NONSSL',false);
     } elseif (xtc_not_null($manu_id)) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.$manu_id,$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.$manu_id,'NONSSL',false);
     } elseif ($startpage) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, '', $request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL',false);
     }
     break;
 // ---------------------------------------------------------------------------------------
@@ -474,7 +474,7 @@ switch(basename($PHP_SELF)) {
     //-- Canonical-URL
     //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
     if(isset($_GET['coID'])){
-      $canonical_url = xtc_href_link(FILENAME_CONTENT, 'coID='.$_GET['coID'],$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_CONTENT, 'coID='.$_GET['coID'],'NONSSL',false);
     }
     break;
 // ---------------------------------------------------------------------------------------
@@ -515,7 +515,7 @@ switch(basename($PHP_SELF)) {
   case FILENAME_SPECIALS :
 
     $meta_title = metaTitle($breadcrumbTitle,$Page,($addSpecialsShopTitle)?ML_TITLE:'');
-    $canonical_url = xtc_href_link(FILENAME_SPECIALS,'',$request_type,false);
+    $canonical_url = xtc_href_link(FILENAME_SPECIALS,'','NONSSL',false);
     break;
 // ---------------------------------------------------------------------------------------
 //  Title für Neue Artikel
@@ -523,7 +523,7 @@ switch(basename($PHP_SELF)) {
   case FILENAME_PRODUCTS_NEW :
 
     $meta_title = metaTitle($breadcrumbTitle,$Page,($addNewsShopTitle)?ML_TITLE:'');
-    $canonical_url = xtc_href_link(FILENAME_PRODUCTS_NEW,'',$request_type,false);
+    $canonical_url = xtc_href_link(FILENAME_PRODUCTS_NEW,'','NONSSL',false);
     break;
 // ---------------------------------------------------------------------------------------
 //  Title für sonstige Seiten
@@ -614,10 +614,10 @@ if (!isset($lng) || (isset($lng) && !is_object($lng))) {
 }
 if (count($lng->catalog_languages) > 1 && (!isset($_GET['page']) || $_GET['page'] == 1)) {
   $canonical_flag = true;
-  echo '<link rel="alternate" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($_SESSION['language_code'] != DEFAULT_LANGUAGE) ? 'language='.DEFAULT_LANGUAGE : ''), $request_type, false).'" hreflang="x-default" />'."\n";
+  echo '<link rel="alternate" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($_SESSION['language_code'] != DEFAULT_LANGUAGE) ? 'language='.DEFAULT_LANGUAGE : ''), 'NONSSL', false).'" hreflang="x-default" />'."\n";
   reset($lng->catalog_languages);
   while (list($key, $value) = each($lng->catalog_languages)) {
-    echo '<link rel="alternate" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($_SESSION['language_code'] != $value['code']) ? 'language='.$key : ''), $request_type, false).'" hreflang="'.$value['code'].'" />'."\n";
+    echo '<link rel="alternate" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($_SESSION['language_code'] != $value['code']) ? 'language='.$key : ''), 'NONSSL', false).'" hreflang="'.$value['code'].'" />'."\n";
   }
   $canonical_flag = false;  
 } elseif (isset($canonical_url)) {
@@ -634,10 +634,10 @@ if ($addPagination) {
   if ($number_of_pages > 1) {
     $page = ((isset($_GET['page']) && $_GET['page'] > 0) ? (int)$_GET['page'] : 1);
     if ($page > 1 && $number_of_pages >= $page) {
-      echo '<link rel="prev" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($page > 2) ? 'page='.($page - 1) : ''), $request_type, false).'" />'."\n";
+      echo '<link rel="prev" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($page > 2) ? 'page='.($page - 1) : ''), 'NONSSL', false).'" />'."\n";
     }
     if ($page >= 1 && $number_of_pages > 1 && $number_of_pages > $page) {
-      echo '<link rel="next" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).'page='.($page + 1), $request_type, false).'" />'."\n";
+      echo '<link rel="next" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).'page='.($page + 1), 'NONSSL', false).'" />'."\n";
     }
   }
 }
