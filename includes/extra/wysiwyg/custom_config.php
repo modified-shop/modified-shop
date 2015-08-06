@@ -11,7 +11,7 @@ Alle $customConfig Einstellungen in der inc/xtc_wysiwig.inc.php können hier
 //$customConfig['customConfig'] = "customConfig : '../ckeditor/custom/ckeditor_config.js',";
 
 //skin  - muss für jede CKEditor Version separat aktualisiert werden
-$customConfig['skin'] = "skin: 'moonocolor',";
+$customConfig['skin'] = "skin: '".(defined('WYSIWYG_TEMPLATE') ? WYSIWYG_TEMPLATE : moonocolor)."',";
 
 //extraPlugins
 //$customConfig['extraPlugins'] = "extraPlugins: '',";

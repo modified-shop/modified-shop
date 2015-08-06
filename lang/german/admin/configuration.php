@@ -999,4 +999,7 @@ define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_DESC', 'Bitte geben sie die m&ouml
 
 define('USE_BROWSER_LANGUAGE_TITLE' , 'Auf die Browsersprache automatisch umstellen');
 define('USE_BROWSER_LANGUAGE_DESC' , 'Automatisch die Sprache auf die Browsersprache des Kunden umstellen.');
+
+define('WYSIWYG_TEMPLATE_TITLE' , 'WYSIWYG-Editor Template');
+define('WYSIWYG_TEMPLATE_DESC' , 'Wählen Sie das WYSIWYG-Editor Template.');
 ?>
