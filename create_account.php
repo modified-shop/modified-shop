@@ -27,9 +27,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-defined('DISPLAY_PRIVACY_CHECK') or define('DISPLAY_PRIVACY_CHECK', 'true');
-
 include ('includes/application_top.php');
+
+defined('DISPLAY_PRIVACY_CHECK') or define('DISPLAY_PRIVACY_CHECK', 'true');
 
 if (isset($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
