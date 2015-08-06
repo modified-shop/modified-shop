@@ -1017,4 +1017,7 @@ define('WYSIWYG_TEMPLATE_DESC' , 'Choose the template for the WYSIWYG Editor.');
 
 define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'Preselect cheapest shipping module');
 define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Shall the cheapest shipping module for the customer be preselected in checkout?');
+
+define('DISPLAY_PRIVACY_CHECK_TITLE', 'Show privacy checkbox');
+define('DISPLAY_PRIVACY_CHECK_DESC', 'Shall the privacy checkbox be displayed during account creation? (Obligation for B2C businesses)');
 ?>

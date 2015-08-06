@@ -17,7 +17,7 @@
    Guest account idea by Ingo T. <xIngox@web.de>
    ---------------------------------------------------------------------------------------*/
 
-define('DISPLAY_PRIVACY_CHECK','true');
+defined('DISPLAY_PRIVACY_CHECK') or define('DISPLAY_PRIVACY_CHECK', 'true');
 
 include ('includes/application_top.php');
 

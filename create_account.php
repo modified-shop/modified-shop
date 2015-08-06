@@ -27,7 +27,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('DISPLAY_PRIVACY_CHECK','true');
+defined('DISPLAY_PRIVACY_CHECK') or define('DISPLAY_PRIVACY_CHECK', 'true');
 
 include ('includes/application_top.php');
 
