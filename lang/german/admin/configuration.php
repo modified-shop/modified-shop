@@ -1001,5 +1001,5 @@ define('USE_BROWSER_LANGUAGE_TITLE' , 'Auf die Browsersprache automatisch umstel
 define('USE_BROWSER_LANGUAGE_DESC' , 'Automatisch die Sprache auf die Browsersprache des Kunden umstellen.');
 
 define('WYSIWYG_TEMPLATE_TITLE' , 'WYSIWYG-Editor Template');
-define('WYSIWYG_TEMPLATE_DESC' , 'Wählen Sie das WYSIWYG-Editor Template.');
+define('WYSIWYG_TEMPLATE_DESC' , 'W&auml;hlen Sie das WYSIWYG-Editor Template.');
 ?>
