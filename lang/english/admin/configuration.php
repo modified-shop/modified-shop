@@ -890,8 +890,12 @@ define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Amount of products in search
 define('MAX_DISPLAY_PRODUCTS_HISTORY_TITLE' , 'Maximum History');
 define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum visited products in account history');
 
-define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Show noimage.gif');
-define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no image assigned');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Product noimage.gif');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no product image assigned');
+define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_TITLE', 'Category noimage.gif');
+define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no category image assigned');
+define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_TITLE', 'Manufacturer noimage.gif');
+define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no manufacturer image assigned');
 
 define('MODULE_SMALL_BUSINESS_TITLE', 'Small Business');
 define('MODULE_SMALL_BUSINESS_DESC', 'Shall the store be switched to small business according to &sect; 19 UStG.<br/><b>Important:</b> Under "Modules" -> "Order Total" the module "ot_tax" must be disabled or uninstalled. In addition you have to set "Prices incl. Tax" to "No" in the particular customer groups.');

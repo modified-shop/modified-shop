@@ -889,6 +889,10 @@ define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum Anzahl an Artikel die zule
 
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Anzeige noimage.gif');
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Artikelbild angegeben wurde');
+define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_TITLE', 'Kategorie noimage.gif');
+define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Kategoriebild angegeben wurde');
+define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_TITLE', 'Hersteller noimage.gif');
+define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Herstellerbild angegeben wurde');
 
 define('MODULE_SMALL_BUSINESS_TITLE', 'Kleinunternehmer');
 define('MODULE_SMALL_BUSINESS_DESC', 'Soll der Shop umgestellt werden auf Kleinunternehmer nach &sect; 19 UStG.?<br /><b>Wichtig:</b> Unter "Module" -> "Zusammenfassung" muss das Modul "ot_tax" deaktiviert oder deinstalliert werden. Zudem muss in den einzelnen Kundengruppen "Preise inkl. MwSt." auf "Nein" gesetzt werden.');
