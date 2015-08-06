@@ -17,9 +17,9 @@
    Guest account idea by Ingo T. <xIngox@web.de>
    ---------------------------------------------------------------------------------------*/
 
-defined('DISPLAY_PRIVACY_CHECK') or define('DISPLAY_PRIVACY_CHECK', 'true');
-
 include ('includes/application_top.php');
+
+defined('DISPLAY_PRIVACY_CHECK') or define('DISPLAY_PRIVACY_CHECK', 'true');
 
 // redirect to create_account if creation of guest accounts is not enabled
 if (ACCOUNT_OPTIONS == 'account') {
