@@ -220,7 +220,17 @@
       $queryEndTime = array_sum(explode(" ",microtime())); 
       $processTime = number_format(round($queryEndTime - $queryStartTime, 5), 5, '.', '');
 
-      if (function_exists('mod_sql_explain') && function_exists('mod_output_sql_explain')) {
+      if (isset($_GET['query_analyzer']) && $_GET['query_analyzer'] == 'on') {
+        $_SESSION['query_analyzer'] = true;
+      }
+      if (isset($_GET['query_analyzer']) && $_GET['query_analyzer'] == 'off') {
+        $_SESSION['query_analyzer'] = false;
+      }
+      if (isset($_SESSION['query_analyzer'])
+          && $_SESSION['query_analyzer'] === true 
+          && function_exists('mod_sql_explain') 
+          && function_exists('mod_output_sql_explain')) 
+      {
         $explain_query_raw = preg_replace("'[\r\n\s]+'", ' ', $query);
       
         if (substr(strtolower($explain_query_raw), 0, 6) == 'select') {
