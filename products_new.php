@@ -181,8 +181,8 @@ if ($language_not_found === true) {
   $smarty->caching = 0;
   $smarty->assign('module_content', $module_content);
   $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/new_products_overview.html');
+  $smarty->assign('main_content', $main_content);
 }
-$smarty->assign('main_content', $main_content);
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;

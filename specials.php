@@ -113,8 +113,10 @@ if ($language_not_found === true) {
   $smarty->assign('language', $_SESSION['language']);
   $smarty->assign('module_content', $module_content);
   $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/specials.html');
+  $smarty->assign('main_content', $main_content);
 }
-$smarty->assign('main_content', $main_content);
+
+$smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
