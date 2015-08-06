@@ -965,6 +965,15 @@ a.show_all .arrow {
   font-size: 16px;
   color:#434343;
 }
+.box_price .no_price {
+  font-family: "arimoregular",sans-serif;
+  font-size:10px;
+  line-height:14px;
+  font-weight:normal;
+  display:block;
+  padding:0px 0 0 0;
+  color:#666;
+}
 .box_price .new_price {
   display:block;
   font-size:16px;
@@ -1581,6 +1590,15 @@ a.color_more:hover {
   height:22px;
   color:#434343;
 }
+.lb_price .no_price {
+  font-family: "arimoregular",sans-serif;
+  font-size:10px;
+  line-height:14px;
+  font-weight:normal;
+  display:block;
+  padding:6px 0 0 0;
+  color:#999;
+}
 .lb_price .new_price {
   display:block;
   font-size:16px;
@@ -1751,6 +1769,15 @@ a.color_more:hover {
   text-align:right;
   padding: 10px 0 0 0;
   color:#434343;
+}
+.lr_price .no_price {
+  font-family: "arimoregular",sans-serif;
+  font-size:10px;
+  line-height:14px;
+  font-weight:normal;
+  display:block;
+  padding:0 0 0 20px;
+  color:#999;
 }
 .lr_price .standard_price {
   display:block;
@@ -2394,6 +2421,15 @@ table.total_table tr td {
   font-family: 'fjallaoneregular', sans-serif;
   text-align:right;
   padding: 0px 0 0 0;
+}
+.pd_price .no_price {
+  font-family: "arimoregular",sans-serif;
+  font-size:10px;
+  line-height:14px;
+  font-weight:normal;
+  display:block;
+  padding:4px 0 4px 0;
+  color:#999;
 }
 .pd_price .standard_price {
   display:block;
