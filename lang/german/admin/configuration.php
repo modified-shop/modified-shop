@@ -887,7 +887,7 @@ define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Anzahl der Artikel in den Su
 define('MAX_DISPLAY_PRODUCTS_HISTORY_TITLE' , 'Anzahl der History');
 define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum Anzahl an Artikel die zuletzt besucht wurden im Account anzeigen');
 
-define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Anzeige noimage.gif');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Artikel noimage.gif');
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Artikelbild angegeben wurde');
 define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_TITLE', 'Kategorie noimage.gif');
 define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Kategoriebild angegeben wurde');
