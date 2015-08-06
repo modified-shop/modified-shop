@@ -997,4 +997,6 @@ define('DISPLAY_FILTER_PRODUCTS_NEW_DESC', 'Bitte geben sie die m&ouml;glichen W
 define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_TITLE', 'Filter Anzeige pro Seite - Suchergebnisse');
 define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_DESC', 'Bitte geben sie die m&ouml;glichen Werte f&uuml;r die Auswahl separiert durch ein Komma ein. F&uuml;r alle Artikel geben sie all ein.<br/>Bsp.: 4,12,32,all');
 
+define('USE_BROWSER_LANGUAGE_TITLE' , 'Auf die Browsersprache automatisch umstellen');
+define('USE_BROWSER_LANGUAGE_DESC' , 'Automatisch die Sprache auf die Browsersprache des Kunden umstellen.');
 ?>

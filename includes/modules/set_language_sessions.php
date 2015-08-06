@@ -19,8 +19,9 @@ if (!isset($_SESSION['language']) || isset($_GET['language']) || (isset($_SESSIO
     $lng = new language(xtc_input_validation($_SESSION['language'], 'char', ''));
   } else {
     $lng = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'char', ''));
-    // disable browser language
-    //$lng->get_browser_language();
+    if (USE_BROWSER_LANGUAGE == 'true') {
+      $lng->get_browser_language();
+    }
   }
   $_SESSION['language'] = $lng->language['directory'];
   $_SESSION['languages_id'] = $lng->language['id'];

@@ -1005,4 +1005,6 @@ define('DISPLAY_FILTER_PRODUCTS_NEW_DESC', 'Please enter comma separated values 
 define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_TITLE', 'Filter display per page - Search results');
 define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 4,12,32,all');
 
+define('USE_BROWSER_LANGUAGE_TITLE' , 'Switch to browser language');
+define('USE_BROWSER_LANGUAGE_DESC' , 'Automatically switch language to customers browser language.');
 ?>
