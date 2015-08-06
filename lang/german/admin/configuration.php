@@ -1012,4 +1012,7 @@ define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Soll im Checkout dem Kunden das ko
 
 define('DISPLAY_PRIVACY_CHECK_TITLE', 'Privatsph&auml;re Checkbox anzeigen');
 define('DISPLAY_PRIVACY_CHECK_DESC', 'Soll w&auml;hrend der Konto-Erstellung die Privatsph&auml;re-Checkbox angezeigt werden? (Bei B2C-Gesch&auml;ften Pflicht!)');
+
+define('SHOW_SELFPICKUP_FREE_TITLE', 'Versandmodul "Selbstabholung" bei "versandkostenfrei"');
+define('SHOW_SELFPICKUP_FREE_DESC', 'Soll das Versandmodul "Selbstabholung (selfpickup)" bei Erreichen des im Modul "Versandkosten (ot_shiping)" eingestellten Betrages f&uuml;r "versandkostenfrei" angezeigt werden?<br /><strong>Achtung:</strong> Funktioniert nicht mit dem Versandmodul "Versandkostenfrei (freeamount!)"!');
 ?>
