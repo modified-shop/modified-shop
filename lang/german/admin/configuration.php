@@ -1009,4 +1009,7 @@ define('WYSIWYG_TEMPLATE_DESC' , 'W&auml;hlen Sie das WYSIWYG-Editor Template.')
 
 define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'G&uuml;nstiges Versandmodul vorausw&auml;hlen');
 define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Soll im Checkout dem Kunden das kosteng&uuml;nstigste Versandmodul vorausgew&auml;hlt werden?');
+
+define('DISPLAY_PRIVACY_CHECK_TITLE', 'Privatsph&auml;re Checkbox anzeigen');
+define('DISPLAY_PRIVACY_CHECK_DESC', 'Soll w&auml;hrend der Konto-Erstellung die Privatsph&auml;re-Checkbox angezeigt werden? (Bei B2C-Gesch&auml;ften Pflicht!)');
 ?>
