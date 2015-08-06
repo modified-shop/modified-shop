@@ -378,7 +378,10 @@ class xtcPrice {
     if ($vpeStatus == 1)
       return array(
         'formated' => NOT_ALLOWED_TO_SEE_PRICES,
-        'plain' => 0
+        'not_allowed' => NOT_ALLOWED_TO_SEE_PRICES,
+        'plain' => 0,
+        'from' =>  '',
+        'flag' => 'NotAllowed'
       );
     return NOT_ALLOWED_TO_SEE_PRICES;
   }

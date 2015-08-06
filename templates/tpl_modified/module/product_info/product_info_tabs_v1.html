@@ -63,9 +63,10 @@
           {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/price_info.html"}
         {/foreach}
         </div>
-        {if $PRODUCTS_VPE}<div class="pd_vpe">{$PRODUCTS_VPE}</div>{/if}
-        <div class="pd_tax">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</div>
-
+        {if $PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
+          {if $PRODUCTS_VPE}<div class="pd_vpe">{$PRODUCTS_VPE}</div>{/if}
+          <div class="pd_tax">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</div>
+        {/if}
         {if isset($MODULE_graduated_price) && $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
         {if isset($MODULE_product_options) && $MODULE_product_options != ''}{if $MODULE_product_options_template == 'multi_options_1.html' || $MODULE_product_options_template == 'product_options_dropdown.html'}
           {$MODULE_product_options}

@@ -70,13 +70,13 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
   require_once(DIR_FS_BOXES . 'infobox.php');
   require_once(DIR_FS_BOXES . 'loginbox.php');
   require_once(DIR_FS_BOXES . 'newsletter.php');
-  require_once(DIR_FS_BOXES . 'wishlist.php');
 // -----------------------------------------------------------------------------------------
 //	only if show price
 // -----------------------------------------------------------------------------------------
   if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
     require_once(DIR_FS_BOXES . 'add_a_quickie.php');
     require_once(DIR_FS_BOXES . 'shopping_cart.php');
+    require_once(DIR_FS_BOXES . 'wishlist.php');
   }
 // -----------------------------------------------------------------------------------------
 //	hide in search

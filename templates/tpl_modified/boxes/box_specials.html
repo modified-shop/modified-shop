@@ -15,7 +15,9 @@
       {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/price_box.html"}
     {/foreach}
   </div>
-  {if $box_content.PRODUCTS_VPE}<div class="box_vpe">{$box_content.PRODUCTS_VPE}</div>{/if}
-  <div class="box_tax">{$box_content.PRODUCTS_TAX_INFO}{$box_content.PRODUCTS_SHIPPING_LINK}</div>
-  {if $box_content.PRODUCTS_EXPIRES!=0}{#text_expires_date#} {$box_content.PRODUCTS_EXPIRES|date_format:"%x"}{/if}
+  {if $box_content.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
+    {if $box_content.PRODUCTS_VPE}<div class="box_vpe">{$box_content.PRODUCTS_VPE}</div>{/if}
+    <div class="box_tax">{$box_content.PRODUCTS_TAX_INFO}{$box_content.PRODUCTS_SHIPPING_LINK}</div>
+    {if $box_content.PRODUCTS_EXPIRES!=0}{#text_expires_date#} {$box_content.PRODUCTS_EXPIRES|date_format:"%x"}{/if}
+  {/if}
 </div>

@@ -35,6 +35,8 @@
                 <meta itemprop="price" content="{$price_data.PRODUCTS_PRICE_PLAIN}" />
                 {* ENDE Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis *}
               {/if}
+            {elseif $price_data.PRODUCTS_PRICE_FLAG == 'NotAllowed'}
+              <span class="no_price">{$price_data.PRODUCTS_PRICE_NOT_ALLOWED}</span>
             {else}
               {* START Produkt Standardpreis mit Ausgabe ab Preis *}
               <span class="standard_price">
