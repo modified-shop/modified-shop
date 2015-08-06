@@ -993,13 +993,13 @@ define('CSRF_TOKEN_SYSTEM_TITLE', 'Admin Token System');
 define('CSRF_TOKEN_SYSTEM_DESC', 'Soll das Token System in Admin verwendet werden?<br/><b>Achtung:</b> das Token System wurde zur Erh&ouml;hung der Sicherheit eingef&uuml;hrt.');
 
 define('DISPLAY_FILTER_INDEX_TITLE', 'Filter Anzeige pro Seite - Artikel');
-define('DISPLAY_FILTER_INDEX_DESC', 'Bitte geben sie die m&ouml;glichen Werte f&uuml;r die Auswahl separiert durch ein Komma ein. F&uuml;r alle Artikel geben sie all ein.<br/>Bsp.: 3,12,27,all');
+define('DISPLAY_FILTER_INDEX_DESC', 'Bitte geben Sie die m&ouml;glichen Werte f&uuml;r die Auswahl separiert durch ein Komma ein. F&uuml;r alle Artikel geben Sie all ein.<br/>Bsp.: 3,12,27,all');
 define('DISPLAY_FILTER_SPECIALS_TITLE', 'Filter Anzeige pro Seite - Sonderangebote');
-define('DISPLAY_FILTER_SPECIALS_DESC', 'Bitte geben sie die m&ouml;glichen Werte f&uuml;r die Auswahl separiert durch ein Komma ein. F&uuml;r alle Artikel geben sie all ein.<br/>Bsp.: 3,12,27,all');
+define('DISPLAY_FILTER_SPECIALS_DESC', 'Bitte geben Sie die m&ouml;glichen Werte f&uuml;r die Auswahl separiert durch ein Komma ein. F&uuml;r alle Artikel geben Sie all ein.<br/>Bsp.: 3,12,27,all');
 define('DISPLAY_FILTER_PRODUCTS_NEW_TITLE', 'Filter Anzeige pro Seite - Neue Artikel');
-define('DISPLAY_FILTER_PRODUCTS_NEW_DESC', 'Bitte geben sie die m&ouml;glichen Werte f&uuml;r die Auswahl separiert durch ein Komma ein. F&uuml;r alle Artikel geben sie all ein.<br/>Bsp.: 3,12,27,all');
+define('DISPLAY_FILTER_PRODUCTS_NEW_DESC', 'Bitte geben Sie die m&ouml;glichen Werte f&uuml;r die Auswahl separiert durch ein Komma ein. F&uuml;r alle Artikel geben Sie all ein.<br/>Bsp.: 3,12,27,all');
 define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_TITLE', 'Filter Anzeige pro Seite - Suchergebnisse');
-define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_DESC', 'Bitte geben sie die m&ouml;glichen Werte f&uuml;r die Auswahl separiert durch ein Komma ein. F&uuml;r alle Artikel geben sie all ein.<br/>Bsp.: 4,12,32,all');
+define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_DESC', 'Bitte geben Sie die m&ouml;glichen Werte f&uuml;r die Auswahl separiert durch ein Komma ein. F&uuml;r alle Artikel geben Sie all ein.<br/>Bsp.: 4,12,32,all');
 
 define('USE_BROWSER_LANGUAGE_TITLE' , 'Auf die Browsersprache automatisch umstellen');
 define('USE_BROWSER_LANGUAGE_DESC' , 'Automatisch die Sprache auf die Browsersprache des Kunden umstellen.');
