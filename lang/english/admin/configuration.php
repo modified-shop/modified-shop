@@ -1022,5 +1022,5 @@ define('DISPLAY_PRIVACY_CHECK_TITLE', 'Show privacy checkbox');
 define('DISPLAY_PRIVACY_CHECK_DESC', 'Shall the privacy checkbox be displayed during account creation? (Obligation for B2C businesses)');
 
 define('SHOW_SELFPICKUP_FREE_TITLE', 'Shipping module "Self Pickup" on "free shipping"');
-define('SHOW_SELFPICKUP_FREE_DESC', 'Shall the shipping module "Self Pickup (selfpickup)" be displayed upon reaching the amount for "free shipping" in module "Shipping (ot_shipping)"?<br /><strong>Attention:</strong> Doesn\'t work with shipping module "Free Shipping (freeamount)"!');
+define('SHOW_SELFPICKUP_FREE_DESC', 'Shall the shipping module "Self Pickup (selfpickup)" be displayed upon reaching the amount for "free shipping" in module "Shipping (ot_shipping)"?');
 ?>
