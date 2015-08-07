@@ -1012,8 +1012,8 @@ define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_DESC', 'Please enter comma separat
 define('USE_BROWSER_LANGUAGE_TITLE' , 'Switch to browser language');
 define('USE_BROWSER_LANGUAGE_DESC' , 'Automatically switch language to customers browser language.');
 
-define('WYSIWYG_TEMPLATE_TITLE' , 'WYSIWYG Editor Template');
-define('WYSIWYG_TEMPLATE_DESC' , 'Choose the template for the WYSIWYG Editor.');
+define('WYSIWYG_SKIN_TITLE' , 'WYSIWYG Editor Skin');
+define('WYSIWYG_SKIN_DESC' , 'Choose the skin for the WYSIWYG Editor.');
 
 define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'Preselect cheapest shipping module');
 define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Shall the cheapest shipping module for the customer be preselected in checkout?');

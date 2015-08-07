@@ -1004,8 +1004,8 @@ define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_DESC', 'Bitte geben Sie die m&ouml
 define('USE_BROWSER_LANGUAGE_TITLE' , 'Auf die Browsersprache automatisch umstellen');
 define('USE_BROWSER_LANGUAGE_DESC' , 'Automatisch die Sprache auf die Browsersprache des Kunden umstellen.');
 
-define('WYSIWYG_TEMPLATE_TITLE' , 'WYSIWYG-Editor Template');
-define('WYSIWYG_TEMPLATE_DESC' , 'W&auml;hlen Sie das WYSIWYG-Editor Template.');
+define('WYSIWYG_SKIN_TITLE' , 'WYSIWYG-Editor Skin');
+define('WYSIWYG_SKIN_DESC' , 'W&auml;hlen Sie das WYSIWYG-Editor Skin.');
 
 define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'G&uuml;nstiges Versandmodul vorausw&auml;hlen');
 define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Soll im Checkout dem Kunden das kosteng&uuml;nstigste Versandmodul vorausgew&auml;hlt werden?');
