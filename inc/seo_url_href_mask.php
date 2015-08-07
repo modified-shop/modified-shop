@@ -68,13 +68,13 @@
     //--Restliche Kaufmännische Und entfernen
     $newstring  = preg_replace("'&'","-",$newstring);
 
+    //Alles entfernen ausser Buchstaben, Zahlen, Slash, Unterstrich, Minus
+    $newstring = preg_replace("/[^a-zA-Z0-9\/_-]/", '-', $newstring);
+
     //-- String URL-codieren
     if ($urlencode) { 
       $newstring  = urlencode($newstring);
     }
-
-    //Alles entfernen ausser Buchstaben, Zahlen, Slash, Unterstrich, Minus
-    $newstring = preg_replace("/[^a-zA-Z0-9\/_-]/", '-', $newstring);
 
     //-- Doppelte Bindestriche entfernen
     $newstring  = preg_replace("/(-){2,}/","-",$newstring);
