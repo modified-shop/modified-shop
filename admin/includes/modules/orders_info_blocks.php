@@ -457,7 +457,7 @@
             <td class="main"><b><?php echo TABLE_HEADING_COMMENTS; ?></b></td>
           </tr>
           <tr>
-            <td class="main"><?php echo xtc_draw_textarea_field('comments', 'soft', '60', '8', $order->info['comments']); ?></td>
+            <td class="main"><?php echo xtc_draw_textarea_field('comments', 'soft', '60', '8', ''); ?></td>
           </tr>
           <tr>
             <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
