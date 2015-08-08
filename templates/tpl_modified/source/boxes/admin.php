@@ -121,9 +121,7 @@ if ($admin_access['categories'] == '1') {
 // content manager
 if ($admin_access['content_manager'] == '1') {
   if (isset($_GET['coID'])) {
-    $content_query = xtc_db_query("SELECT content_id FROM ".TABLE_CONTENT_MANAGER." WHERE content_group='".(int)$_GET['coID']."' AND languages_id='".(int)$_SESSION['languages_id']."'");
-    $content_data = xtc_db_fetch_array($content_query);
-    $box_smarty->assign('EDIT_CONTENT', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'content_manager.php', 'action=edit&coID='.$content_data['content_id']));
+    $box_smarty->assign('EDIT_CONTENT', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'content_manager.php', 'action=edit&coID='.(int)$_GET['coID']));
   }
   $box_smarty->assign('CONTENT_MANAGER', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'content_manager.php','', 'NONSSL'));
 }
