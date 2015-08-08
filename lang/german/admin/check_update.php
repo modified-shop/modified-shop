@@ -19,6 +19,7 @@
 define('HEADING_TITLE', 'Software Aktualisierung');
 define('HEADING_SUBTITLE', 'Update Check');
 
+define('TEXT_DB_VERSION','Datenbank Version:');
 define('TEXT_INFO_UPDATE_RECOMENDED', 'Es ist eine neue Version verf&uuml;gbar.');
 define('TEXT_INFO_UPDATE_NOT_POSSIBLE', 'Leider konnte keine &Uuml;berpr&uuml;fung gemacht werden. Bitte besuchen sie unsere <a target="_blank" href="http://www.modified-shop.org"><b>Webseite</b></a>.');
 define('TEXT_INFO_UPDATE', 'Ihre Version ist aktuell.');
@@ -32,4 +33,5 @@ define('TEXT_INFO_THANKS', 'Wir danken allen Programmieren und Entwicklern, die 
 define('TEXT_INFO_DISCLAIMER', 'Dieses Programm wurde ver&ouml;ffentlicht, in der Hoffnung hilfreich zu sein. Wir geben jedoch keinerlei Garantie auf die fehlerfreie Implementierung.');
 define('TEXT_INFO_DONATIONS', 'Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.');
 define('TEXT_INFO_DONATIONS_IMG_ALT', 'Unterst&uuml;tzen Sie dieses Projekt mit Ihrer Spende');
+define('BUTTON_DONATE', '<a href="http://www.modified-shop.org/spenden"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0"></a>');
 ?>
