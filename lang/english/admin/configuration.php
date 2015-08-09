@@ -1015,8 +1015,8 @@ define('USE_BROWSER_LANGUAGE_DESC' , 'Automatically switch language to customers
 define('WYSIWYG_SKIN_TITLE' , 'WYSIWYG Editor Skin');
 define('WYSIWYG_SKIN_DESC' , 'Choose the skin for the WYSIWYG Editor.');
 
-define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'Preselect cheapest shipping module');
-define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Shall the cheapest shipping module for the customer be preselected in checkout?');
+define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'Preselect cheapest shipping method');
+define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Shall the cheapest shipping method be preselected in checkout for the customer?');
 
 define('DISPLAY_PRIVACY_CHECK_TITLE', 'Show privacy checkbox');
 define('DISPLAY_PRIVACY_CHECK_DESC', 'Shall the privacy checkbox be displayed during account creation? (Obligation for B2C businesses)');
