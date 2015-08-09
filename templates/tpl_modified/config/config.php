@@ -57,6 +57,5 @@
   */
   
   // set base
-  $ssl_proxy = ((isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? '/' . $_SERVER['HTTP_HOST'] : '');
-  define('DIR_WS_BASE', $ssl_proxy . preg_replace('/\\' . DIRECTORY_SEPARATOR . '\/|\/\//', '/', dirname($PHP_SELF) . '/'));
+  define('DIR_WS_BASE', xtc_href_link('', '', $request_type, false));
 ?>
