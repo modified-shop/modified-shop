@@ -2545,10 +2545,10 @@ ul.pd_iconlist li.print {
   background: transparent url(img/icon_pd_iconlist_print.png) no-repeat 8px 6px;
 }  
 ul.pd_iconlist li.vote {
-  background: transparent url(img/icon_pd_iconlist_vote.png) no-repeat 8px 6px;
+  background: transparent url(img/icon_pd_iconlist_vote.png) no-repeat 8px 5px;
 }
 ul.pd_iconlist li.wishlist {
-  background: transparent url(img/icon_pd_iconlist_wishlist.png) no-repeat 8px 6px;
+  background: transparent url(img/icon_pd_iconlist_wishlist.png) no-repeat 8px 5px;
   cursor:pointer;
   border-bottom:1px solid #eee;
 }
