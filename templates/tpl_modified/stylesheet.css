@@ -2561,6 +2561,8 @@ ul.pd_iconlist li.wishlist .wishlist_submit_link {
   font-size:12px;
   padding:6px 0px;
   cursor:pointer;
+  width:100%;
+  text-align:left;
 }
 ul.pd_iconlist li.wishlist .wishlist_submit_link:hover {
   color:#6D2551;
