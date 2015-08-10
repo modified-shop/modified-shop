@@ -2491,10 +2491,10 @@ table.total_table tr td {
 }
 .pd_tax {
   text-align:right;
-  padding: 0 0 0 0;
+  padding: 3px 0 3px 0;
   font-size:10px;
   color:#999;
-  line-height:18px;
+  line-height:12px;
 }
 .pd_tax a {
   color:#999;
@@ -2511,6 +2511,9 @@ table.total_table tr td {
   font-size:9px;
   line-height:12px;
   color:#666;
+}
+.pd_fsk_padding {
+  padding-left:50px;
 }
 .xtb_booster_redirect_message {
   padding:10px;
