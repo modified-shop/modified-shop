@@ -58,9 +58,26 @@
   <br />
   <div class="highlightbox plainright">
     <h4>{#title_viewed_products#}</h4>
-    <ul>
+    <ul class="historylist">
     {foreach name=history_products item=prod_history_data from=$products_history}
-      <li><a class="black" href="{$prod_history_data.PRODUCTS_LINK}">{$prod_history_data.PRODUCTS_NAME} / {$prod_history_data.PRODUCTS_PRICE}</a></li>
+      <li class="{if $smarty.foreach.history_products.first}first {/if}cf">
+        <span class="hl_image cf">
+        {if $prod_history_data.PRODUCTS_IMAGE != ''}
+          <a href="{$prod_history_data.PRODUCTS_LINK}"><img src="{$prod_history_data.PRODUCTS_IMAGE}" alt="{$prod_history_data.PRODUCTS_NAME|onlytext}" /></a>
+        {else}
+          &nbsp;
+        {/if}
+        </span>
+        <span class="hl_text">
+          <span class="hl_text_entry"><a href="{$prod_history_data.PRODUCTS_LINK}">{$prod_history_data.PRODUCTS_NAME}</a></span>
+          <span class="hl_text_entry"><strong>{#text_goto_cat#}</strong> <a href="{$prod_history_data.CAT_URL}">{$prod_history_data.CATEGORIES_NAME}</a></span>
+        </span>
+        <span class="hl_price">
+          {foreach name=inner item=price_data from=$prod_history_data.PRODUCTS_PRICE_ARRAY}
+            {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/price_box.html"}
+          {/foreach}
+        </span>
+      </li>
     {/foreach}
     </ul>
   </div>

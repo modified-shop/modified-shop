@@ -53,7 +53,8 @@
     41. Janolaw.de (BASIC Template for AGB Hosting Content)
     42. Sitemap 
     43. Product_reviews_info
-    44. Miscellaneous
+    44. Last viewed in account
+    45. Miscellaneous
    ---------------------------------------------------------------------------------------*/
 
 /* 1. START fonts */
@@ -3413,8 +3414,78 @@ ul.bxcarousel_slider img {
 /* END product_reviews_info */
 
 
+/* 44. START Last viewed in account */
+ul.historylist {
+  list-style-type:none !important;
+  margin-left: 0px !important;
+}
+ul.historylist li {
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0px;
+}
+ul.historylist li.first {
+  padding: 0px 0px 15px 0px;
+}
+.hl_image {
+  float:left;
+  width: 60px;
+  height:60px;
+  overflow:hidden;
+  padding: 2px;
+  border: 1px solid #ddd;
+  position:relative;
+  display:block;
+  margin: 0px 20px 0px 0px;
+}
+.hl_image img {
+  max-width: 60px;
+  max-height:60px;
+  position:absolute;
+  margin: auto;
+  left:0px;
+  right:0px;
+  top:0px;
+  bottom:0px;
+}
+.hl_text {
+  float:left;
+  display:block;
+  width:290px;
+}
+.hl_text_entry {
+  display:block;
+  padding: 0px 0px 8px 0px;
+}
+.hl_price {
+  display:block;
+  float:right;
+  width:80px;
+  text-align:right;
+  font-weight:bold;
+}
+.hl_price .no_price {
+  font-size:9px;
+  line-height:11px;
+  font-weight:normal;
+  display:block;
+  padding:0px 0 0 0;
+  color:#666;
+}
+.hl_price .special_price {
+  display:block;
+  font-size:13px;
+  line-height:19px;
+  color:#bc0000;
+}
+.hl_price .small_price {
+  font-size:9px;
+  font-weight:normal;
+  line-height:11px;
+}
+/* END Last viewed in account */
 
-/* 44. START miscellaneous */
+
+/* 45. START miscellaneous */
 
 /* START No Javascript Styles for Tabs */  
 /* Moved in general.css.php as inline-style */
