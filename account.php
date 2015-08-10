@@ -52,17 +52,26 @@ $also_purchased_history = array();
 
 $max = isset($_SESSION['tracking']['products_history']) ? count($_SESSION['tracking']['products_history']) : 0;
 for ($i=0; $i<$max; $i++) {
-	$product_history_query = xtDBquery("SELECT * 
+	$product_history_query = xtDBquery("SELECT p.*,
+	                                           pd.*,
+	                                           cd.categories_name 
 	                                      FROM ".TABLE_PRODUCTS." p
 	                                      JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
 	                                           ON p.products_id=pd.products_id
 	                                              AND pd.language_id='".(int) $_SESSION['languages_id']."'
+	                                      JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+	                                           ON p.products_id = p2c.products_id
+	                                      JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
+	                                           ON cd.categories_id = p2c.categories_id
+	                                              AND cd.language_id = '".$_SESSION['languages_id']."'
 	                                     WHERE p.products_status = '1'
-	                                       AND p.products_id = '".$_SESSION['tracking']['products_history'][$i]."'"
-	                                           .PRODUCTS_CONDITIONS_P);
+	                                       AND p.products_id = '".$_SESSION['tracking']['products_history'][$i]."'
+	                                  GROUP BY p.products_id
+	                                           ".PRODUCTS_CONDITIONS_P);
   if (xtc_db_num_rows($product_history_query, true) > 0) {
 	  $history_product = xtc_db_fetch_array($product_history_query, true);
 		$history_product['cat_url'] = xtc_href_link(FILENAME_DEFAULT, 'cPath='.xtc_get_product_path($history_product['products_id']));
+		$history_product['categories_name'] = $history_product['categories_name'];
 		
 		$products_history[] = $product->buildDataArray($history_product);
 	}
