@@ -33,4 +33,7 @@
   define('TEMPLATE_ENGINE', 'smarty_2'); // smarty_3 or smarty_2
   define('TEMPLATE_HTML_ENGINE', 'xhtml'); // html5 or xhtml
   
+  
+  // set base
+  define('DIR_WS_BASE', xtc_href_link('', '', $request_type, false));
 ?>
