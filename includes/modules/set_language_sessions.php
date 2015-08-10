@@ -30,7 +30,7 @@ if (!isset($_SESSION['language']) || isset($_GET['language']) || (isset($_SESSIO
   $_SESSION['language_charset'] = $lng->language['language_charset'];
   $_SESSION['language_code'] = $lng->language['code'];
 
-  if (!isset($lng->catalog_languages[$_GET['language']])) {
+  if (isset($_GET['language']) && !isset($lng->catalog_languages[$_GET['language']])) {
     $_GET['language'] = DEFAULT_LANGUAGE;
     $language_not_found = true;
   }
