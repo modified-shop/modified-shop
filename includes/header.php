@@ -53,7 +53,7 @@ defined('TEMPLATE_HTML_ENGINE') or define('TEMPLATE_HTML_ENGINE', 'xhtml');
 <html<?php echo ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ' lang="'.$_SESSION['language_code'].'"'); ?>>
 <head>
 <?php include(DIR_WS_MODULES.FILENAME_METATAGS); ?>
-<?php include(DIR_WS_MODULES.'favicon.php'); ?>
+<?php include(DIR_WS_MODULES.'favicons.php'); ?>
 <?php
 /*
   The following copyright announcement is in compliance
