@@ -112,6 +112,18 @@ if ($_POST['cpath'] != '') {
 <?php
 
   require(DIR_WS_MODULES . 'new_attributes_functions.php');
+  
+  // BOF VPE_MOD
+  $attr_get_vpe = xtc_db_query("SELECT products_vpe_id, 
+                                       products_vpe_name 
+                                  FROM products_vpe 
+                                 WHERE language_id = '" . $_SESSION['languages_id'] . "'
+                              ");
+  $attr_vpe_data = array(array('id' => 0, 'text' => ''));
+  while($attr_vpe = xtc_db_fetch_array($attr_get_vpe)) {
+    $attr_vpe_data[] = array('id' => $attr_vpe['products_vpe_id'], 'text' => $attr_vpe['products_vpe_name']);
+  }
+  // EOF VPE_MOD
 
   // Lets get all of the possible options
   // NEW SORT SELECTION
@@ -138,6 +150,7 @@ if ($_POST['cpath'] != '') {
       $output .= '<td class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_MODEL.'</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_EAN.'</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="width:100px"><strong>'.ATTR_STOCK.'</strong></td>'. PHP_EOL;
+      $output .= '<td class="dataTableHeadingContent" style="width:180px"><strong>'.ATTR_VPE.'</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="min-width:135px;"><strong>'.ATTR_WEIGHT.'&nbsp;&nbsp;&nbsp;</strong></td>'. PHP_EOL;
       $output .= '<td class="dataTableHeadingContent" style="min-width:135px;"><strong>'.ATTR_PRICE.'&nbsp;&nbsp;&nbsp;</strong></td>'. PHP_EOL;
       $output .= '</tr>'. PHP_EOL;
@@ -202,6 +215,11 @@ if ($_POST['cpath'] != '') {
           $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_ean" value="' . (isset($attr_array['attributes_ean'])?$attr_array['attributes_ean']:'') . '" size="15"></td>'. PHP_EOL;
           $output .= '<td class="main nobr"><input'.$disable.'type="text" name="' . $current_value_id . '_stock" value="' . (isset($attr_array['attributes_stock'])?$attr_array['attributes_stock']:'') . '" size="10"></td>'. PHP_EOL;
                     
+          //VPE
+          $output .= '<td class="main nobr" align="left"><input'.$disable.'type="text" name="' . $current_value_id . '_vpe_value" value="' . (isset($attr_array['attributes_vpe_value'])? (double)$attr_array['attributes_vpe_value']:'') . '" size="10"> '. PHP_EOL;
+          $output .=  xtc_draw_pull_down_menu($current_value_id . '_vpe_id',$attr_vpe_data,(isset($attr_array['attributes_vpe_id'])?$attr_array['attributes_vpe_id']:''), $disable). PHP_EOL;
+          $output .=  '</td>'. PHP_EOL;
+          
           //Weight
           $output .= '<td class="main nobr">'. PHP_EOL;
           $output .= xtc_draw_pull_down_menu($current_value_id . '_weight_prefix', $prefix_array, (isset($attr_array['weight_prefix'])?$attr_array['weight_prefix']:''), $noStylingClass . $disable). PHP_EOL;

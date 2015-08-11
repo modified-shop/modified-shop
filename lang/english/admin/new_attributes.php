@@ -36,4 +36,6 @@
   define('ATTR_EAN', 'EAN No.');
   
   define('ATTR_SAVE_ACTIVE', 'Save Unfold Attributes');
+  
+  define('ATTR_VPE','Packing unit');
 ?>

@@ -35,4 +35,6 @@
 
   define('ATTR_EAN', 'EAN-Nr.');
   define('ATTR_SAVE_ACTIVE', 'Aufgeklappte Attribute speichern');
+  
+  define('ATTR_VPE','VPE');
 ?>
