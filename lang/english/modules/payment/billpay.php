@@ -88,7 +88,7 @@ define('JS_BILLPAY_NAME', '* Please provide name of the holder of selected bank 
 define('JS_BILLPAY_PHONE', '* Please provide your telephone number.\n\n');
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_EULA', '* Please accept EULA to continue.');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_BOD', 'You have entered an incorrect date of birth!');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB', 'You have entered an incorrect date of birth!');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT', 'Internal error, please pick different payment method.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_SHORT', 'Internal error, please pick different payment method.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_CREATED_COMMENT', 'Invoice has been created.');
@@ -139,8 +139,6 @@ define('MODULE_PAYMENT_BILLPAY_B2B_HOLDER_NAME_EMPTY', 'Please provide holder\'s
 define('MODULE_PAYMENT_BILLPAY_B2B_REGISTER_NUMBER_EMPTY', 'Please provide register number');
 define('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_EMPTY', 'Please provide Tax-ID');
 
-// TODO: translate, but leave "ag:", "eg:" - i.e. "ag:Joint-stock company"
-define('MODULE_PAYMENT_BILLPAY_B2B_LEGALFORM_VALUES', 'ag:AG (Aktiengesellschaft)|eg:eG (eingetragene Genossenschaft)|ek:EK (eingetragener Kaufmann)|ev:e.V. (eingetragener Verein)|freelancer:Freiberufler/Kleingewerbetreibender/Handelsvertreter|gbr:GbR/BGB (Gesellschaft b&uuml;rgerlichen Rechts)|gmbh:GmbH (Gesellschaft mit beschr&auml;nkter Haftung)|gmbh_ig:GmbH in Gr&uuml;ndung|gmbh_co_kg:GmbH & Co. KG|kg:KG (Kommanditgesellschaft)|ltd:Limited|ltd_co_kg:Limited & Co. KG|ohg:OHG (offene Handelsgesellschaft)|public_inst:&Ouml;ffentliche Einrichtung|misc_capital:Sonstige Kapitalgesellschaft|misc:Sonstige Personengesellschaft|foundation:Stiftung|ug:UG (Unternehmensgesellschaft haftungsbeschr&auml;nkt)');
 define('MODULE_PAYMENT_BILLPAY_B2B_REGISTER_NUMBER_TEXT', 'Register number');
 define('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_TEXT', 'Tax-ID');
 define('MODULE_PAYMENT_BILLPAY_B2B_HOLDER_NAME_TEXT', 'Holder name');
@@ -223,16 +221,6 @@ define('MODULE_PAYMENT_BILLPAY_STATUS_ERROR_DESC', 'BillPay - Due to an error, t
 define('MODULE_PAYMENT_BILLPAY_SALUTATION_MALE', MODULE_PAYMENT_BILLPAY_TEXT_MR);
 define('MODULE_PAYMENT_BILLPAY_SALUTATION_FEMALE', MODULE_PAYMENT_BILLPAY_TEXT_MRS);
 
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK', 'I accept <a href="https://www.billpay.de/kunden/agb" target="_blank">AGB</a> and <a href="https://www.billpay.de/kunden/agb#datenschutz" target="_blank">Privacy Policy</a> of BillPay GmbH.');
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_CH', 'I accept <a href="https://www.billpay.de/kunden/agb-ch" target="_blank">AGB</a> and <a href="https://www.billpay.de/kunden/agb-ch#datenschutz" target="_blank">Privacy Policy</a> of BillPay GmbH.');
-
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_SEPA',    "I agree to provide necessary for processing of the payment, identity and credit check data for <a href='https://www.billpay.de/endkunden' target='_blank'>BillPay GmbH</a> and agree with <a href='%s' target='_blank'>Privacy Policy</a> of BillPay.<br/><br/>I give BillPay permission to issue SEPA Direct Debit (<a href='#' class='bpy-btn-details'>details</a>) to collect overdue payments to my financial institution.");
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_SEPA_AT', "I agree to provide necessary for processing of the payment, identity and credit check data for <a href='https://www.billpay.de/endkunden' target='_blank'>BillPay GmbH</a> and agree with <a href='%s' target='_blank'>Privacy Policy</a> of BillPay.<br/><br/>I give BillPay and <a href='https://www.privatbank1891.com/' target='_blank'>net-m privatbank 1891 AG</a> permission to issue SEPA Direct Debit (<a href='#' class='bpy-btn-details'>details</a>) to collect overdue payments to my financial institution.");
-
-# TODO: translate
-define('MODULE_PAYMENT_BILLPAY_TEXT_SEPA_INFORMATION',    "Die Gl&auml;ubiger-Identifikationsnummer von BillPay ist DE19ZZZ00000237180. Die Mandatsreferenznummer wird mir zu einem sp&auml;teren Zeitpunkt per Email zusammen mit einer Vorlage f&uuml;r ein schriftliches Mandat mitgeteilt. Ich werde zus&auml;tzlich dieses schriftliche Mandat unterschreiben und an BillPay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die f&auml;llige Forderung auch bei einer R&uuml;cklastschrift bestehen bleibt. For more information visit <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
-define('MODULE_PAYMENT_BILLPAY_TEXT_SEPA_INFORMATION_AT', "Die Gl&auml;ubiger-Identifikationsnummer von BillPay ist DE19ZZZ00000237180, die Gl&auml;ubiger-Identifikationsnummer der net-m privatbank AG ist DE62ZZZ00000009232. Die Mandatsreferenznummer wird mir zu einem späteren Zeitpunkt per Email zusammen mit einer Vorlage f&uuml;r ein schriftliches Mandat mitgeteilt. Ich werde zus&auml;tzlich dieses schriftliche Mandat unterschreiben und an BillPay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die f&auml;llige Forderung auch bei einer R&uuml;cklastschrift bestehen bleibt. For more information visit <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
-
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO',              'Please transfer the total amount with BillPay transaction number (%1$s) within the payment deadline of %2$02s.%3$02s.%4$04s to the following account:');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_NO_DUEDATE',   'Please transfer the total amount with BillPay transaction number (%1$s) within the payment deadline written on invoice to the following account:');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO1', 'Sie haben sich f&uuml;r den Kauf auf Rechnung mit BillPay entschieden. Bitte &uuml;berweisen Sie den Gesamtbetrag bis zum ');
@@ -243,3 +231,14 @@ define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_MAIL', '<br/>Bitte &uuml;berwei
 define('MODULE_PAYMENT_BILLPAY_TEXT_FEE_INFO1', 'F&uuml;r diese Bestellung per Rechnung wird eine Geb&uuml;hr von ');
 define('MODULE_PAYMENT_BILLPAY_TEXT_FEE_INFO2', ' erhoben');
 
+// Plugin 1.7
+define('MODULE_PAYMENT_BILLPAY_THANK_YOU_TEXT', 'Thank you for choosing BillPay Invoice when making your purchase.');
+define('MODULE_PAYMENT_BILLPAY_PAY_UNTIL_TEXT', 'Please transfer %1$s %2$s by %3$s, stating the reference, to the following account:');
+define('MODULE_PAYMENT_BILLPAY_PAY_UNTIL_TEXT_ADD_CH', 'Payments at the Post Office counter will incur additional charges. When making a payment via deposit slip, please transfer an additional %1$s %2$s.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_PAYEE', 'Payment recipient');
+define('MODULE_PAYMENT_BILLPAY_TEXT_PAYEE_CH', 'Zweigniederlassung Schweiz (Regensdorf)');
+define('MODULE_PAYMENT_BILLPAY_TEXT_IBAN_CH', 'Account number');
+define('MODULE_PAYMENT_BILLPAY_TEXT_BIC_CH', 'BC number');
+define('MODULE_PAYMENT_BILLPAY_TEXT_BANK', 'Bank');
+define('MODULE_PAYMENT_BILLPAY_TEXT_TOTAL_AMOUNT', 'Amount');
+define('MODULE_PAYMENT_BILLPAY_UPDATE_AVAILABLE', 'Version %2$s of the BillPay Payment Plugin is available (currently installed: %1$s). Click <a href="%3$s">here</a> to download.');

@@ -24,4 +24,3 @@
   define('MODULE_ORDER_TOTAL_BILLPAY_FEE_TAX_CLASS_DESC','W&auml;hlen Sie eine Steuerklasse.');
 
   define('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL', 'vom Rechnungsbetrag');
-?>

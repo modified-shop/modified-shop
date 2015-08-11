@@ -74,15 +74,20 @@ class BillpayPSS
 
     function loadConfiguration()
     {
-        $this->data['bpyConfigPayment']   = BillpayDB::DBFetchArray("SELECT * FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_PAYMENT_BILLPAY%'");
+        $table = TABLE_CONFIGURATION;
+        $this->data['bpyConfigPayment']   = BillpayDB::DBFetchArray("SELECT * FROM $table WHERE configuration_key LIKE 'MODULE_PAYMENT_BILLPAY%'");
         foreach ($this->data['bpyConfigPayment'] as $key => $val) {
             if (in_array($val['configuration_key'], array('MODULE_PAYMENT_BILLPAY_GS_SECURE'))) {
                 $this->data['bpyConfigPayment'][$key]['configuration_value'] = '*hidden*';
             }
         }
-        $this->data['bpyConfigOT']        = BillpayDB::DBFetchArray("SELECT * FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_ORDER_TOTAL_BILLPAY%'");
-        $this->data['bpyConfigOTPL']      = BillpayDB::DBFetchArray("SELECT * FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_ORDER_TOTAL_Z_PAYLATER_%'");
-        // TODO: display MODULE_PAYMENT_INSTALLED
+        $this->data['bpyConfigOT']        = BillpayDB::DBFetchArray("SELECT * FROM $table WHERE configuration_key LIKE 'MODULE_ORDER_TOTAL_BILLPAY%'");
+        $this->data['bpyConfigOTPL']      = BillpayDB::DBFetchArray("SELECT * FROM $table WHERE configuration_key LIKE 'MODULE_ORDER_TOTAL_Z_PAYLATER_%'");
+
+        // in some shop modifications, configuration_value has fixed length
+        if (false) {
+            $this->data['bpyConfigPaymentInstalled'] = BillpayDB::DBFetchValue("SELECT configuration_value FROM $table WHERE configuration_key LIKE 'MODULE_PAYMENT_INSTALLED'");
+        }
     }
 
     function loadLog()
@@ -186,6 +191,16 @@ class BillpayPSS
             }
             BillpayDB::DBFetchArray("ALTER TABLE orders AUTO_INCREMENT = ".(int)$_GET['newOrderId']);
         }
+        if (!empty($_GET['newOrderPrefix'])) {
+            if (!in_array($this->billpay->bp_merchant, array(4441))) {
+                die('Action allowed only on dev accounts.');
+            }
+            $orderPrefix = $_GET['newOrderPrefix'];
+            if (!preg_match('@^[a-zA-Z0-9\-\/]+$@', $orderPrefix)) {
+                die('Invalid order prefix');
+            }
+            file_put_contents('includes/external/billpay/base/debug.php', '<?php $this->orderPrefix = "' . $orderPrefix . '";');
+        }
     }
 
     function render()
@@ -194,6 +209,9 @@ class BillpayPSS
 
         /** @noinspection PhpIncludeInspection */
         include('includes/external/billpay/templates/plugin_status_screen.php');
+        if (false) {
+            print_r($data);
+        }
         exit();
     }
 

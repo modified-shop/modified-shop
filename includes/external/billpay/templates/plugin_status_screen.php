@@ -32,6 +32,9 @@
                         <?php foreach ($data['bpyConfigPayment'] as $row) { ?>
                             <tr><td><?php echo $row['configuration_key']; ?></td><td><?php echo $row['configuration_value']; ?></td></tr>
                         <?php } ?>
+                        <?php if (isset($data['bpyConfigPaymentInstalled'])): ?>
+                        <tr><td>MODULE_PAYMENT_INSTALLED</td><td><?= $data['bpyConfigPaymentInstalled'] ?></td></tr>
+                        <?php endif; ?>
                     </table>
                 </td>
                 <td>
@@ -72,10 +75,12 @@
                             if ($hook['isHooked']) {
                                 echo 'hooked.';
                             } elseif (!empty($hook['currentContent'])) {
+                                $currentContent = trim($hook['currentContent']);
+                                $linkText = empty($currentContent) ? 'write' : 'rewrite';
                                 echo 'Existing hook code: <br />';
-                                echo '<pre>'.$hook['currentContent'].'</pre>';
+                                echo '<pre>' . $currentContent . '</pre>';
                                 echo '<span style="color: red;">Warning: if existing code is not empty and you don\'t recognize it, don\'t rewrite it.</span><br />';
-                                echo '<a href="'.$data['currentUrl'].'&hookRewrite='.preg_replace("@/@", ",", $file)."@".$label.'">rewrite</a>';
+                                echo '<a href="' . $data['currentUrl'] . '&hookRewrite=' . preg_replace("@/@", ",", $file) . "@" . $label . '">' . $linkText . '</a>';
                             } elseif (!$hook['isHookPre']) {
                                 echo 'Pre hook not found.';
                             } elseif (!$hook['isHookPost']) {
@@ -127,7 +132,13 @@
                 <input type="hidden" name="auth" value="<?php echo $data['auth']; ?>">
                 <label for="newOrderId">Change orderId autoincrement</label>
                 <input id="newOrderId" name="newOrderId">
-                <input type="submit" value="OK">
+                <input type="submit" value="Set orderId">
+            </form>
+            <form method="GET" action="?">
+                <input type="hidden" name="auth" value="<?php echo $data['auth']; ?>">
+                <label for="newOrderPrefix">Change order prefix</label>
+                <input id="newOrderPrefix" name="newOrderPrefix">
+                <input type="submit" value="Set order prefix">
             </form>
         </div>
 

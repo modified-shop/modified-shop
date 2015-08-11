@@ -5,14 +5,17 @@
 // TODO: rework the same way as billpay_mail_gambio21.php
 require_once(DIR_FS_CATALOG . 'includes/modules/payment/billpay.php');
 $paymentMethod = strtoupper($order->info['payment_method']);
-if ($paymentMethod == constant('billpayBase_PAYMENT_METHOD_INVOICE')) {
-    //if(isset($_SESSION['billpay_transaction_id'])) {
+if ($paymentMethod == billpayBase::PAYMENT_METHOD_INVOICE) {
     $billpay = new billpay(strtoupper($order->info['payment_method']));
+    if (isset($insert_id)) {
+        $oID = $insert_id; // Gambio 2.0 does not have $oID, instead have $insert_id
+    }
 
-    if(isset($_SESSION['billpay_transaction_id'])) {
+    $transaction_id = BillPayBase::GetTransactionId();
+    if ($transaction_id) {
         $billpay_bank_data_query = "SELECT account_holder, account_number, bank_code, bank_name, invoice_reference ".
                                   "FROM billpay_bankdata ".
-                                  "WHERE tx_id = '".$_SESSION['billpay_transaction_id']."'";
+                                  "WHERE tx_id = '".$transaction_id."'";
     }else {
         $billpay_bank_data_query = "SELECT account_holder, account_number, bank_code, bank_name, invoice_reference ".
                                   "FROM billpay_bankdata ".
@@ -48,7 +51,7 @@ if ($paymentMethod == constant('billpayBase_PAYMENT_METHOD_INVOICE')) {
     $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $billpay_info_text));
 //	}
 }
-else if ($paymentMethod == constant('billpayBase_PAYMENT_METHOD_DEBIT')) {
+else if ($paymentMethod == billpayBase::PAYMENT_METHOD_DEBIT) {
     $billpay_info_text = '<br /><br />' . MODULE_PAYMENT_BILLPAYDEBIT_TEXT_INVOICE_INFO1;
     if(defined('EMAIL_USE_HTML') && EMAIL_USE_HTML == 'false') {
         $billpay_info_text = utf8_decode(html_entity_decode($billpay_info_text, ENT_COMPAT | ENT_HTML401, 'UTF-8'));
@@ -60,7 +63,7 @@ else if ($paymentMethod == constant('billpayBase_PAYMENT_METHOD_DEBIT')) {
     $smarty->assign('PAYMENT_INFO_HTML', $billpay_info_text);
     $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $billpay_info_text));
 }
-else if ($paymentMethod == constant('billpayBase_PAYMENT_METHOD_TRANSACTION_CREDIT')) {
+else if ($paymentMethod == billpayBase::PAYMENT_METHOD_TRANSACTION_CREDIT) {
     /** @var billpayBase $pm */
     $pm = billpayBase::PaymentInstance($paymentMethod);
     $payment_info = $pm->getPaymentInfo($insert_id);
@@ -68,7 +71,7 @@ else if ($paymentMethod == constant('billpayBase_PAYMENT_METHOD_TRANSACTION_CRED
     $smarty->assign('PAYMENT_INFO_HTML', $payment_info['html']);
     $smarty->assign('PAYMENT_INFO_TXT', $payment_info['text']);
 }
-else if ($paymentMethod == constant('billpayBase_PAYMENT_METHOD_PAY_LATER')) {
+else if ($paymentMethod == billpayBase::PAYMENT_METHOD_PAY_LATER) {
     $infoText = constant('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_INVOICE_INFO1');
     $smarty->assign('PAYMENT_INFO_HTML', $infoText);
     $smarty->assign('PAYMENT_INFO_TXT', $infoText);

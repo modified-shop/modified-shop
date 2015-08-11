@@ -88,7 +88,7 @@ define('JS_BILLPAYPAYLATER_NUMBER', JS_BILLPAY_NUMBER);
 define('JS_BILLPAYPAYLATER_NAME', JS_BILLPAY_NAME);
 
 define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_ERROR_EULA', MODULE_PAYMENT_BILLPAY_TEXT_ERROR_EULA);
-define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_ERROR_BOD' , MODULE_PAYMENT_BILLPAY_TEXT_ERROR_BOD);
+define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_ERROR_DOB' , MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB);
 define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_ERROR_DEFAULT', MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT);
 define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_ERROR_SHORT', MODULE_PAYMENT_BILLPAY_TEXT_ERROR_SHORT);
 define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_INVOICE_CREATED_COMMENT', MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_CREATED_COMMENT);
@@ -129,9 +129,6 @@ define('MODULE_PAYMENT_BILLPAYPAYLATER_ACTIVATE_ORDER', MODULE_PAYMENT_BILLPAY_A
 define('MODULE_PAYMENT_BILLPAYPAYLATER_ACTIVATE_ORDER_WARNING', MODULE_PAYMENT_BILLPAY_ACTIVATE_ORDER_WARNING);
 
 # only this payment
-#define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_TITLE', 'BillPay - PayLater');
-define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_DESCRIPTION', 'BillPay - PayLater');
-
 
 define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_INVOICE_INFO1', 'Vielen Dank, dass Sie sich f&uuml;r die Zahlung mit PayLater entschieden haben. Die f&auml;lligen Betr&auml;ge werden von dem bei der Bestellung angegebenen Konto abgebucht. Zus&auml;tzlich zu dieser Rechnung bekommen Sie von BillPay in K&uuml;rze einen Teilzahlungsplan mit detaillierten Informationen &uuml;ber Ihre Teilzahlung.');
 define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_INVOICE_INFO2', 'Bestellen Sie wurde ausgestellt von ');
@@ -143,15 +140,14 @@ define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_PROMO', 'Klicken Sie auf das Options
 
 // OT
 define('MODULE_PAYMENT_BILLPAY_OT_PAYLATER_FEE', 'Servicegeb&uuml;hr');
-define('MODULE_PAYMENT_BILLPAY_OT_PAYLATER_TOTAL',               'Gesamtsumme PayLater');
+define('MODULE_PAYMENT_BILLPAY_OT_PAYLATER_TOTAL', 'Gesamtsumme PayLater');
 
-// Visual Mode: RechnungPlus
-if ( defined("MODULE_PAYMENT_BILLPAYPAYLATER_VISUAL_MODE") && constant("MODULE_PAYMENT_BILLPAYPAYLATER_VISUAL_MODE") === "RechnungPlus") {
-    define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_TITLE', 'RechnungPlus (BillPay)');
-} else {
-    define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_TITLE', 'PayLater (BillPay)');
-}
 define('MODULE_PAYMENT_BILLPAYPAYLATER_VISUAL_MODE_TITLE' , 'Visual Mode');
 define('MODULE_PAYMENT_BILLPAYPAYLATER_VISUAL_MODE_DESC' , '');
-define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_TITLE_RECHNUNG_PLUS', 'RechnungPlus (BillPay)');
-define('MODULE_PAYMENT_BILLPAY_OT_PAYLATER_TOTAL_RECHNUNG_PLUS', 'Gesamtsumme RechnungPlus');
+
+// Plugin 1.7
+define('MODULE_PAYMENT_BILLPAYPAYLATER_THANK_YOU_TEXT', 'Vielen Dank, dass Sie sich beim Kauf der Ware f&uuml;r die BillPay PayLater - Teilzahlung entschieden haben.');
+define('MODULE_PAYMENT_BILLPAYPAYLATER_PAY_UNTIL_TEXT', 'Die f&auml;lligen Betr&auml;ge werden monatlich von dem bei der Bestellung angegebenen Konto abgebucht.');
+define('MODULE_PAYMENT_BILLPAYPAYLATER_EMAIL_TEXT', 'Zus&auml;tzlich zu der Rechnung erhalten Sie in K&uuml;rze einen Tailzahlungsplan mit detaillierten Informationen zu Ihren Teilzahlungen.');
+define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_TITLE', 'PayLater | Ratenkauf');
+define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_DESCRIPTION', 'PayLater | Ratenkauf');

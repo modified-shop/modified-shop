@@ -18,20 +18,28 @@ class Billpay_Base_Bankdata
      */
     var $_attributes = array();
 
-    function loadByOrdersId($ordersId)
+    public static function LoadByOrdersId($ordersId)
     {
-        $fieldData = $this->buildStatement('orders_id = ' . (int)$ordersId);
-        $this->setAttributes($fieldData);
-
-        return $this;
+        $ret = new Billpay_Base_Bankdata();
+        $fieldData = self::buildStatement('orders_id = ' . (int)$ordersId);
+        $ret->setAttributes($fieldData);
+        return $ret;
     }
 
-    function loadByApiReference($referenceId)
+    public static function LoadByTxId($tx_id)
     {
-        $fieldData = $this->buildStatement('api_reference_id = "' . mysql_real_escape_string($referenceId) . '"');
-        $this->setAttributes($fieldData);
+        $ret = new Billpay_Base_Bankdata();
+        $fieldData = self::buildStatement('tx_id = "' . mysql_real_escape_string($tx_id) . '"');
+        $ret->setAttributes($fieldData);
+        return $ret;
+    }
 
-        return $this;
+    public static function LoadByApiReference($referenceId)
+    {
+        $ret = new Billpay_Base_Bankdata();
+        $fieldData = self::buildStatement('api_reference_id = "' . mysql_real_escape_string($referenceId) . '"');
+        $ret->setAttributes($fieldData);
+        return $ret;
     }
 
     /**
@@ -50,23 +58,26 @@ class Billpay_Base_Bankdata
     /**
      * Method creates new row in Bankdata, saving basic fields from request.
      *
-     * @param $req
+     * @param ipl_preauthorize_request  $req
+     * @param float                     $order_total_gross
+     * @param string                    $transaction_id
      * @static
      */
-    function SaveRequest($req)
+    public static function SaveRequest($req, $order_total_gross, $transaction_id)
     {
         $query_proto = 'INSERT INTO billpay_bankdata
                            (tx_id, account_holder,
                             account_number, bank_code,
-                            bank_name, invoice_reference,
+                            bank_name,
+                            total_amount,
                             api_reference_id)
                     VALUES ("%s", "%s","%s",
                             "%s","%s", "%s",
                             "%s")';
         $query = sprintf($query_proto,
-            $this->_getTransactionId(), $req->get_account_holder(), $req->get_account_number(),
-            $req->get_bank_code(), $req->get_bank_name(), $req->get_invoice_reference(),
-            $this->_getTransactionId()
+            $transaction_id, $req->get_account_holder(), $req->get_account_number(),
+            $req->get_bank_code(), $req->get_bank_name(), $order_total_gross,
+            $transaction_id
             );
         xtc_db_query($query);
     }
@@ -78,29 +89,21 @@ class Billpay_Base_Bankdata
      * @param Array $newData
      * @static
      */
-    function UpdateByTxId($txId, $newData)
+    public static function UpdateByTxId($txId, $newData)
     {
         $sets = array();
         foreach ($newData as $key => $val) {
             $sets[] = $key . ' = "'.$val.'"';
         }
         $query_array_string = join(",\n", $sets);
-        $query_proto = 'UPDATE billpay_bankdata
-                        SET
-                            %s
-                        WHERE tx_id = "%s"
-                        LIMIT 1';
-        $query = sprintf($query_proto, $query_array_string, $txId);
+        $query = "UPDATE billpay_bankdata SET $query_array_string WHERE tx_id = '$txId' LIMIT 1";
         xtc_db_query($query);
     }
 
-    function buildStatement($condition)
+    public static function BuildStatement($condition)
     {
-        $qry = 'SELECT *
-                FROM ' . self::TABLE . '
-                WHERE ' . $condition . '
-                LIMIT 1';
-
+        $table = self::TABLE;
+        $qry = "SELECT * FROM $table WHERE $condition LIMIT 1";
         $resource = xtc_db_query($qry);
         $data = xtc_db_fetch_array($resource);
 
@@ -156,7 +159,7 @@ class Billpay_Base_Bankdata
      *
      * @return string
      */
-    function serializeDueDateArray($dueDateArray)
+    public static function serializeDueDateArray($dueDateArray)
     {
         $serializedDueDateList = '';
         foreach ($dueDateArray as $entry) {
@@ -222,7 +225,7 @@ class Billpay_Base_Bankdata
         return $this->getAttribute('invoice_reference');
     }
 
-    function getInvoiceDueData()
+    function getInvoiceDueDate()
     {
         return $this->getAttribute('invoice_due_date');
     }
@@ -245,6 +248,11 @@ class Billpay_Base_Bankdata
     function getRateTotalAmount()
     {
         return $this->getAttribute('rate_total_amount');
+    }
+
+    public function getTotalAmount()
+    {
+        return $this->getAttribute('total_amount');
     }
 
     /**

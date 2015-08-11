@@ -4,89 +4,89 @@ require_once(dirname(__FILE__).'/ipl_xml_request.php');
 
 /**
  * @author Jan Wehrs (jan.wehrs@billpay.de)
- * @copyright Copyright 2010 Billpay GmbH
+ * @copyright Copyright 2010 BillPay GmbH
  * @license commercial 
  */
 class ipl_edit_cart_content_request extends ipl_xml_request
 {
-    var $_totals       = array();
-    var $_article_data = array();
-    var $_invoice_list = array();
+    private $_totals       = array();
+    private $_article_data = array();
+    private $_invoice_list = array();
 
-	var $due_update;
-	var $number_of_rates;
+    private $due_update;
+    private $number_of_rates;
 
     // paylater specific
-    var $duration;
-    var $fee_percent;
-    var $fee_total;
-    var $pre_payment_amount;
-    var $total_amount;
-    var $effective_annual;
-    var $nominal_annual;
-    var $dues = array();
+    private $instalment_count;
+    private $duration;
+    private $fee_percent;
+    private $fee_total;
+    private $total_amount;
+    private $effective_annual;
+    private $nominal_annual;
+    private $dues = array();
 
     // prepayment
-    var $async_amount;
+    private $async_amount;
 
-	function get_due_update() {
+	public function get_due_update() {
 		return $this->due_update;
 	}
 	
-	function get_number_of_rates() {
+	public function get_number_of_rates() {
 		return $this->number_of_rates;
 	}
 
     // ------------------ paylater specific ------------------ //
 
-    function get_instalment_count()
+    public function get_instalment_count()
     {
         return $this->instalment_count;
     }
 
-    function get_duration()
+    public function get_duration()
     {
         return $this->duration;
     }
 
-    function get_fee_percent()
+    public function get_fee_percent()
     {
         return $this->fee_percent;
     }
 
-    function get_fee_total()
+    public function get_fee_total()
     {
         return $this->fee_total;
     }
 
-    function get_total_amount()
+    public function get_total_amount()
     {
         return $this->total_amount;
     }
 
-    function get_effective_annual()
+    public function get_effective_annual()
     {
         return $this->effective_annual;
     }
 
-    function get_nominal_annual()
+    public function get_nominal_annual()
     {
         return $this->nominal_annual;
     }
 
-    function get_dues()
+    public function get_dues()
     {
         return $this->dues;
     }
 
     // -------- pre payment specific ----- //
 
-    function get_prepayment_amount()
+    public function get_prepayment_amount()
     {
         return $this->async_amount;
     }
 
-	function add_article($articleid, $articlequantity, $articlename, $articledescription,
+	public function add_article($articleid, $articlequantity, $articlename, $articledescription,
 		$article_price, $article_price_gross, $invoice_number = "") {
 
             if ($articlequantity < 1) {
@@ -107,7 +107,7 @@ class ipl_edit_cart_content_request extends ipl_xml_request
             }
 	}
 
-    function add_invoice($rebate, $rebate_gross, $shipping_price, $shipping_price_gross,
+    public function add_invoice($rebate, $rebate_gross, $shipping_price, $shipping_price_gross,
                                 $cart_total_price, $cart_total_price_gross,
                                 $currency, $invoice_number){
         $invoice = array();
@@ -122,7 +122,7 @@ class ipl_edit_cart_content_request extends ipl_xml_request
         $this->_invoice_list[$invoice_number]   = $invoice;
     }
 
-	function set_total($rebate, $rebate_gross, $shipping_name, $shipping_price, 
+	public function set_total($rebate, $rebate_gross, $shipping_name, $shipping_price, 
 			$shipping_price_gross, $cart_total_price, $cart_total_price_gross, 
 			$currency, $reference) {
 		$this->_totals['shippingname'] 			= $shipping_name;
@@ -137,7 +137,7 @@ class ipl_edit_cart_content_request extends ipl_xml_request
 	}
 	
 
-	function _send() {
+	protected function _send() {
 		return ipl_core_send_edit_cart_content_request(
 			$this->_ipl_request_url,
             $this->getTraceData(),
@@ -148,13 +148,13 @@ class ipl_edit_cart_content_request extends ipl_xml_request
 		);
 	}
 	
-	function _process_response_xml($data) {
+	protected function _process_response_xml($data) {
 		foreach ($data as $key => $value) {
 			$this->$key = $value;
 		}
 	}
 	
-	function _process_error_response_xml($data) {
+	protected function _process_error_response_xml($data) {
 		if (isset($data['status'])) {
 			$this->status = $data['status'];
 		}

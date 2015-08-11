@@ -28,13 +28,15 @@ $callbackData = billpayBase::ParseCallback();
     'postdata'  =>  'Everything ok!',   # additional info text logged in the file
 );*/
 $orderId = (int)$callbackData['reference'];
-$paymentMethod = BillpayDB::DBFetchValue("SELECT payment_method FROM ".TABLE_ORDERS." WHERE orders_id = '".$orderId."'");
+$table = TABLE_ORDERS;
+$paymentMethod = BillpayDB::DBFetchValue("SELECT payment_method FROM $table WHERE orders_id = '$orderId'");
 
 /** @var billpayBase $billpay */
 $billpay = billpayBase::PaymentInstance($paymentMethod);
 
 if (!$billpay) {
-    header("HTTP/1.0 200 Incorrect post data");
+    $billpay->_logDebug('Received callback for non-existing order: ' . $orderId);
+    header("HTTP/1.0 400 Bad Request");
     exit();
 }
 $billpay->_logDebug('Received valid callback.');
@@ -45,5 +47,6 @@ if ($success) {
     header("HTTP/1.0 200 OK");
 } else {
     // shouldn't it be HTTP 400?
-    header("HTTP/1.0 200 Incorrect post data");
+    $billpay->_logDebug('Callback returned false.');
+    header("HTTP/1.0 400 Bad Request");
 }

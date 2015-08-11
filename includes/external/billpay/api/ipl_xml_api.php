@@ -2,7 +2,7 @@
 
 /**
  * @author Jan Wehrs (jan.wehrs@billpay.de)
- * @copyright Copyright 2010 Billpay GmbH
+ * @copyright Copyright 2010 BillPay GmbH
  * @license commercial
  */
 
@@ -161,7 +161,7 @@ function ipl_core_send_curl_request($requestUrl, $requestData) {
 	$httpCode = $info['http_code'];
 	if ($httpCode != 200) {
 		$ipl_core_error_code = 200;
-		$ipl_core_error_msg = 'Error connecting to Billpay server (HTTP status code: ' . $httpCode . ')';
+		$ipl_core_error_msg = 'Error connecting to BillPay server (HTTP status code: ' . $httpCode . ')';
 		return false;
 	}
 
@@ -218,7 +218,7 @@ function ipl_core_send_socket_request($requestUrl, $requestData, $basicAuthParam
 
 	if ($socket) {
     	fputs($socket, "POST $path HTTP/1.1\r\n");
-    	fputs($socket, "User-Agent: Billpay PHP core client\r\n");
+    	fputs($socket, "User-Agent: BillPay PHP core client\r\n");
     	fputs($socket, "Host: $host\r\n");
 		fputs($socket, "Accept: text/xml\r\n");
     	fputs($socket, "Content-type: text/xml; charset=" . IPL_CORE_HTTP_REQUEST_CHAR_SET . "\r\n");
@@ -1856,7 +1856,7 @@ function ipl_core_send_get_billpay_bank_data_request($requestUrlBase, $aTraceDat
 
     $sTraceDataXml    = ipl_core_build_closed_tag('trace', $aTraceData);
 	$defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
-	$getBillpayBankDataParamsXml = ipl_core_build_closed_tag("order_params", $order_params);
+	$getBillPayBankDataParamsXml = ipl_core_build_closed_tag("order_params", $order_params);
 
 	return ipl_core_generic_send_request(
         $requestUrlBase,
@@ -1865,7 +1865,7 @@ function ipl_core_send_get_billpay_bank_data_request($requestUrlBase, $aTraceDat
         array(
             $sTraceDataXml,
             $defaultParamsXml,
-            $getBillpayBankDataParamsXml,
+            $getBillPayBankDataParamsXml,
         ),
         'ipl_core_parse_get_billpay_bank_data_response'
     );

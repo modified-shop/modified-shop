@@ -4,108 +4,116 @@ require_once(dirname(__FILE__).'/ipl_xml_request.php');
 
 /**
  * @author Jan Wehrs (jan.wehrs@billpay.de)
- * @copyright Copyright 2010 Billpay GmbH
- * @license commercial 
+ * @copyright Copyright 2010 BillPay GmbH
+ * @license commercial
  */
 class ipl_preauthorize_request extends ipl_xml_request {
-	var $_customer_details 		= array();
-	var $_shippping_details 	= array();
-	var $_totals 				= array();
-	var $_bank_account 			= array();
-	var $_rate_request_data		= array();
+	private $_customer_details 		= array();
+	private $_shippping_details 	= array();
+	private $_totals 				= array();
+	private $_bank_account 			= array();
+	private $_rate_request_data 	= array();
 
-	var $_article_data 			= array();
-    var $_order_history_attr    = array();
-	var $_order_history_data 	= array();
-	var $_company_details		= array();
+	private $_article_data 			= array();
+    private $_order_history_attr    = array();
+	private $_order_history_data 	= array();
+	private $_company_details		= array();
 
-	var $_payment_info_params	= array();
-	var $_fraud_detection		= array();
+	private $_payment_info_params	= array();
+	private $_fraud_detection		= array();
 
-	var $_preauth_params         = array();
-	var $_async_capture_params   = array();
+	private $_preauth_params         = array();
+	private $_async_capture_params   = array();
+	
+	private $_payment_type;
 
-	var $_payment_type;
+	private $bptid;
 
-	var $bptid;
-
-	var $corrected_street;
-	var $corrected_street_no;
-	var $corrected_zip;
-	var $corrected_city;
-	var $corrected_country;
+	private $corrected_street;
+	private $corrected_street_no;
+	private $corrected_zip;
+	private $corrected_city;
+	private $corrected_country;
 
 	// parameters needed for auto-capture
-	var $account_holder;
-	var $account_number;
-	var $bank_code;
-	var $bank_name;
-	var $invoice_reference;
-	var $invoice_duedate;
-	var $activation_performed;
+	private $account_holder;
+	private $account_number;
+	private $bank_code;
+	private $bank_name;
+	private $invoice_reference;
+	private $invoice_duedate;
+	private $activation_performed;
 
-	var $_terms_accepted = false;
-	var $_capture_request_necessary = true;
-	var $_expected_days_till_shipping = 0;
+	private $_terms_accepted = false;
+	private $_capture_request_necessary = true;
+	private $_expected_days_till_shipping = 0;
 
-	var $standard_information_pdf;
-	var $email_attachment_pdf;
+	private $standard_information_pdf;
+	private $email_attachment_pdf;
 
-	var $payment_info_html;
-	var $payment_info_plain;
+	private $payment_info_html;
+	private $payment_info_plain;
 
     // rate payment specific
-    var $instalment_count;
-    var $duration;
-    var $fee_percent;
-    var $fee_total;
-    var $total_amount;
-    var $effective_annual;
-    var $nominal_annual;
-    var $base_amount;
-    var $cart_amount;
-    var $surcharge;
-    var $interest;
-    var $dues = array();
+    private $instalment_count;
+    private $duration;
+    private $fee_percent;
+    private $fee_total;
+    private $total_amount;
+    private $effective_annual;
+    private $nominal_annual;
+    private $base_amount;
+    private $cart_amount;
+    private $surcharge;
+    private $interest;
+    private $dues = array();
 
     // pre approved specific
-    var $async_amount;
-    var $rate_plan_url;
-    var $external_redirect_url;
-    var $campaign_type;
-    var $campaign_display_text;
-    var $campaign_display_image_url;
+    private $async_amount;
+    private $rate_plan_url;
+    private $external_redirect_url;
+    private $campaign_type;
+    private $campaign_display_text;
+    private $campaign_display_image_url;
 
 	// parameters needed for prescore
-	var $is_prescored = 0;
+	private $is_prescored = 0;
 
 	// ctr
-	function ipl_preauthorize_request($ipl_request_url, $payment_type) {
+	function __construct($ipl_request_url, $payment_type) {
 		$this->_payment_type = $payment_type;
-		parent::ipl_xml_request($ipl_request_url);
+		parent::__construct($ipl_request_url);
 	}
 
-    function setTraceShopType($sShopType)
+    public function setTraceShopType($sShopType)
     {
         $this->aTraceData['shop_type'] = $sShopType;
+
+        return $this;
     }
 
-    function setTraceShopVersion($sVersion)
+    public function setTraceShopVersion($sVersion)
     {
         $this->aTraceData['shop_version'] = $sVersion;
+
+        return $this;
     }
 
-    function setTraceShopDomain($sShopDomain)
+    public function setTraceShopDomain($sShopDomain)
     {
         $this->aTraceData['shop_domain'] = $sShopDomain;
+
+        return $this;
     }
 
-    function setTracePluginVersion($sVersion)
+    public function setTracePluginVersion($sVersion)
     {
         $this->aTraceData['plugin_version'] = $sVersion;
+
+        return $this;
     }
 
-    function getTraceData()
+    protected function getTraceData()
     {
         $aTraceData = parent::getTraceData();
 
@@ -122,136 +130,136 @@ class ipl_preauthorize_request extends ipl_xml_request {
         return $aTraceData;
     }
 
-	function get_terms_accepted() {
+	public function get_terms_accepted() {
 		return $this->_terms_accepted;
 	}
-	function set_terms_accepted($val) {
+	public function set_terms_accepted($val) {
 		$this->_terms_accepted = $val;
 	}
-	function set_expected_days_till_shipping($val) {
+	public function set_expected_days_till_shipping($val) {
 		$this->_expected_days_till_shipping = $val;
 	}
-	function set_capture_request_necessary($val) {
+	public function set_capture_request_necessary($val) {
 		$this->_capture_request_necessary = $val;
 	}
 
-	function get_expected_days_till_shipping() {
+	public function get_expected_days_till_shipping() {
 		return $this->_expected_days_till_shipping;
 	}
-	function get_capture_request_nesessary() {
+	public function get_capture_request_nesessary() {
 		return $this->_capture_request_necessary;
 	}
-	function get_payment_type() {
+	public function get_payment_type() {
 		return $this->_payment_type;
 	}
-	function get_status() {
+	public function get_status() {
 		return $this->status;
 	}
-	function get_bptid() {
+	public function get_bptid() {
 		return $this->bptid;
 	}
-	function get_corrected_street() {
+	public function get_corrected_street() {
 		return $this->corrected_street;
 	}
-	function get_corrected_street_no() {
+	public function get_corrected_street_no() {
 		return $this->corrected_street_no;
 	}
-	function get_corrected_zip() {
+	public function get_corrected_zip() {
 		return $this->corrected_zip;
 	}
-	function get_corrected_city() {
+	public function get_corrected_city() {
 		return $this->corrected_city;
 	}
-	function get_corrected_country() {
+	public function get_corrected_country() {
 		return $this->corrected_country;
 	}
-	function get_account_holder() {
+	public function get_account_holder() {
 		return $this->account_holder;
 	}
-	function get_account_number() {
+	public function get_account_number() {
 		return $this->account_number;
 	}
-	function get_bank_code() {
+	public function get_bank_code() {
 		return $this->bank_code;
 	}
-	function get_bank_name() {
+	public function get_bank_name() {
 		return $this->bank_name;
 	}
-	function get_invoice_reference() {
+	public function get_invoice_reference() {
 		return $this->invoice_reference;
 	}
-	function get_invoice_duedate() {
+	public function get_invoice_duedate() {
 		return $this->invoice_duedate;
 	}
-	function get_activation_performed() {
+	public function get_activation_performed() {
 	    return $this->activation_performed;
 	}
-	function get_standard_information_pdf() {
+	public function get_standard_information_pdf() {
 		return $this->standard_information_pdf;
 	}
-	function get_email_attachment_pdf() {
+	public function get_email_attachment_pdf() {
 		return $this->email_attachment_pdf;
 	}
-	function get_payment_info_html() {
+	public function get_payment_info_html() {
 		return $this->payment_info_html;
 	}
-	function get_payment_info_plain() {
+	public function get_payment_info_plain() {
 		return $this->payment_info_plain;
 	}
-    function get_async_amount() {
+    public function get_async_amount() {
         return $this->async_amount;
     }
-    function get_prepayment_amount() {
+    public function get_prepayment_amount() {
         return $this->async_amount;
     }
-    function get_external_redirect_url() {
+    public function get_external_redirect_url() {
         return $this->external_redirect_url;
     }
-    function get_rate_plan_url() {
+    public function get_rate_plan_url() {
         return $this->rate_plan_url;
     }
-    function get_campaign_type() {
+    public function get_campaign_type() {
         return $this->campaign_type;
     }
-    function get_campaign_display_text() {
+    public function get_campaign_display_text() {
         return $this->campaign_display_text;
     }
-    function get_campaign_display_image_url() {
+    public function get_campaign_display_image_url() {
         return $this->campaign_display_image_url;
     }
 
     // ------------------ paylater specific ------------------ //
-    function get_instalment_count()
+    public function get_instalment_count()
     {
         return $this->instalment_count;
     }
 
-    function get_duration()
+    public function get_duration()
     {
         return $this->duration;
     }
 
-    function get_fee_percent()
+    public function get_fee_percent()
     {
         return $this->fee_percent;
     }
 
-    function get_fee_total()
+    public function get_fee_total()
     {
         return $this->fee_total;
     }
 
-    function get_total_amount()
+    public function get_total_amount()
     {
         return $this->total_amount;
     }
 
-    function get_effective_annual()
+    public function get_effective_annual()
     {
         return $this->effective_annual;
     }
 
-    function get_nominal_annual()
+    public function get_nominal_annual()
     {
         return $this->nominal_annual;
     }
@@ -260,7 +268,7 @@ class ipl_preauthorize_request extends ipl_xml_request {
      * Returns base value of an order (base order + tax)
      * @return int
      */
-    function get_base_amount()
+    public function get_base_amount()
     {
         return (int)$this->base_amount;
     }
@@ -269,7 +277,7 @@ class ipl_preauthorize_request extends ipl_xml_request {
      * Returns cart value (base order + shipping fee + tax)
      * @return int
      */
-    function get_cart_amount()
+    public function get_cart_amount()
     {
         return (int)$this->cart_amount;
     }
@@ -278,7 +286,7 @@ class ipl_preauthorize_request extends ipl_xml_request {
      * Returns interest surcharge (how much TC/PL costs)
      * @return int
      */
-    function get_surcharge()
+    public function get_surcharge()
     {
         return (int)$this->surcharge;
     }
@@ -288,17 +296,17 @@ class ipl_preauthorize_request extends ipl_xml_request {
      * ie. 100 means 1% interest rate
      * @return int
      */
-    function get_interest()
+    public function get_interest()
     {
         return (int)$this->interest;
     }
 
-    function get_dues()
+    public function get_dues()
     {
         return $this->dues;
     }
 
-	function set_customer_details($customer_id, $customer_type, $salutation, $title,
+	public function set_customer_details($customer_id, $customer_type, $salutation, $title,
 		$first_name, $last_name, $street, $street_no, $address_addition, $zip,
 		$city, $country, $email, $phone, $cell_phone, $birthday, $language, $ip, $customerGroup) {
 
@@ -323,7 +331,7 @@ class ipl_preauthorize_request extends ipl_xml_request {
             $this->_customer_details['customerGroup']   = $customerGroup;
 	}
 
-	function set_shipping_details($use_billing_address, $salutation=null, $title=null, $first_name=null, $last_name=null, 
+	public function set_shipping_details($use_billing_address, $salutation=null, $title=null, $first_name=null, $last_name=null,
 		$street=null, $street_no=null, $address_addition=null, $zip=null, $city=null, $country=null, $phone=null, $cell_phone=null) {
 
 			$this->_shippping_details['useBillingAddress'] 	= $use_billing_address ? '1' : '0';
@@ -341,7 +349,7 @@ class ipl_preauthorize_request extends ipl_xml_request {
 			$this->_shippping_details['cellPhone'] 			= $cell_phone;
 	}
 
-	function add_article($articleid, $articlequantity, $articlename, $articledescription,
+	public function add_article($articleid, $articlequantity, $articlename, $articledescription,
 		$article_price, $article_price_gross) {
 			$article = array();
 			$article['articleid'] 			= $articleid;
@@ -354,14 +362,16 @@ class ipl_preauthorize_request extends ipl_xml_request {
 			$this->_article_data[] = $article;
 	}
 
-    function add_order_history_attributes($iMerchantCustomerLimit, $iRepeatCustomer) {
+    public function add_order_history_attributes($iMerchantCustomerLimit, $iRepeatCustomer) {
         $this->_order_history_attr = array(
             'merchant_customer_limit' => (int)$iMerchantCustomerLimit,
             'repeat_customer'         => (int)$iRepeatCustomer,
         );
+
+        return $this;
     }
 
-	function add_order_history($horderid, $hdate, $hamount, $hcurrency, $hpaymenttype, $hstatus) {
+	public function add_order_history($horderid, $hdate, $hamount, $hcurrency, $hpaymenttype, $hstatus) {
 		$histOrder = array();
 		$histOrder['horderid'] 		= $horderid;
 		$histOrder['hdate'] 		= $hdate;
@@ -373,7 +383,7 @@ class ipl_preauthorize_request extends ipl_xml_request {
 		$this->_order_history_data[] = $histOrder;
 	}
 
-	function set_total($rebate, $rebate_gross, $shipping_name, $shipping_price,
+	public function set_total($rebate, $rebate_gross, $shipping_name, $shipping_price,
 			$shipping_price_gross, $cart_total_price, $cart_total_price_gross,
 			$currency, $reference, $reference2 = "") {
 		$this->_totals['shippingname'] 			= $shipping_name;
@@ -388,13 +398,13 @@ class ipl_preauthorize_request extends ipl_xml_request {
 		$this->_totals['reference2']			= $reference2;
 	}
 
-	function set_bank_account($account_holder, $account_number, $sort_code) {
+	public function set_bank_account($account_holder, $account_number, $sort_code) {
 		$this->_bank_account['accountholder'] 	= $account_holder;
 		$this->_bank_account['accountnumber'] 	= $account_number;
 		$this->_bank_account['sortcode'] 		= $sort_code;
 	}
 
-	function set_company_details($name, $legalForm, $registerNumber, $holderName, $taxNumber) {
+	public function set_company_details($name, $legalForm, $registerNumber, $holderName, $taxNumber) {
 		$this->_company_details['name'] 			= $name;
 		$this->_company_details['legalForm'] 		= $legalForm;
 		$this->_company_details['registerNumber'] 	= $registerNumber;
@@ -410,7 +420,7 @@ class ipl_preauthorize_request extends ipl_xml_request {
      * @param int $total_amount
      * @param int $term             (optional) Set, if different than $rate_count.
      */
-    function set_rate_request($rate_count, $total_amount, $term = 0) {
+    public function set_rate_request($rate_count, $total_amount, $term = 0) {
         $this->_rate_request_data['ratecount']      = $rate_count;
         $this->_rate_request_data['totalamount']    = $total_amount;
         if ($term) {
@@ -418,16 +428,16 @@ class ipl_preauthorize_request extends ipl_xml_request {
         }
     }
 
-	function set_payment_info_params($showhtmlinfo, $showplaininfo) {
+	public function set_payment_info_params($showhtmlinfo, $showplaininfo) {
 		$this->_payment_info_params['htmlinfo']  = $showhtmlinfo ? "1" : "0";
 		$this->_payment_info_params['plaininfo'] = $showplaininfo ? "1" : "0";
 	}
 
-	function set_fraud_detection($session_id) {
+	public function set_fraud_detection($session_id) {
 		$this->_fraud_detection['session_id'] = $session_id;
 	}
 
-	function set_prescore_enable($is_prescored, $bptid) {
+	public function set_prescore_enable($is_prescored, $bptid) {
         if($is_prescored == true) {
     	    $this->is_prescored = 1;
     	    $this->bptid = $bptid;
@@ -439,12 +449,12 @@ class ipl_preauthorize_request extends ipl_xml_request {
 	    }
 	}
 	
-	function set_async_capture($redirect_url,$notify_url){
+	public function set_async_capture($redirect_url,$notify_url){
 		$this->_async_capture_params['redirect_url']= $redirect_url;
 		$this->_async_capture_params['notify_url'] 	= $notify_url;
 	}
 
-	function _send() {
+	protected function _send() {
 		$attributes = array();
 		$attributes['tcaccepted'] 					= $this->_terms_accepted;
 		$attributes['expecteddaystillshipping'] 	= $this->_expected_days_till_shipping;
@@ -452,7 +462,7 @@ class ipl_preauthorize_request extends ipl_xml_request {
 		$attributes['paymenttype']					= $this->_payment_type;
 
 		return ipl_core_send_preauthorize_request(
-			$this->_ipl_request_url, 
+			$this->_ipl_request_url,
 			$attributes,
             $this->getTraceData(),
 			$this->_default_params,
@@ -472,13 +482,13 @@ class ipl_preauthorize_request extends ipl_xml_request {
 		);
 	}
 
-	function _process_response_xml($data) {
+	protected function _process_response_xml($data) {
 		foreach ($data as $key => $value) {
 			$this->$key = $value;
 		}
 	}
 
-    function _process_error_response_xml($data) {
+    protected function _process_error_response_xml($data) {
         if (isset($data['status'])) {
             $this->status = $data['status'];
         }

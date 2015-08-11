@@ -9,12 +9,14 @@ function display_billpay_bankdata() {
 
     $paymentMethod = $order->info['payment_method'];
 
+    /** @noinspection PhpIncludeInspection */
     require_once(DIR_FS_CATALOG. 'includes/external/billpay/base/billpayBase.php');
     if (!in_array(strtolower($paymentMethod), billpayBase::GetPaymentMethods())) {
         return '';
     }
     /** @var BillpayBase $billpay */
     $billpay = billpayBase::PaymentInstance($paymentMethod);
-    return $billpay->onDisplayInvoice($orderId);
+    $invoiceData = $billpay->getPaymentInfo($orderId);
+    return '<br>'.$invoiceData['html'];
 }
 

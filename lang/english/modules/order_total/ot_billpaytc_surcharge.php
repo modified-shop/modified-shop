@@ -1,4 +1,5 @@
 <?php
+/** no longer used */
   define('MODULE_ORDER_TOTAL_BILLPAYTC_SURCHARGE_TITLE', 'Geb&uuml;hrenberechnung Ratenkauf (BillPay)');
   define('MODULE_ORDER_TOTAL_BILLPAYTC_SURCHARGE_DESCRIPTION', 'Berechnung der Geb&uuml;hr f&uuml;r Bestellungen mit der Zahlart Ratenkauf &uuml;ber BillPay');
 

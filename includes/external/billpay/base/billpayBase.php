@@ -4,85 +4,107 @@
 require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/BillpayDB.php');
 /** @noinspection PhpIncludeInspection */
 require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/BillpayOrder.php');
+/** @noinspection PhpIncludeInspection */
+require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/Bankdata.php');
 
 if (!class_exists('billpayBase')) {
-
-    // billpayBase constants - php4 way
-    define('billpayBase_VERSION', '1.6.1'); // replaced by grunt build script
-
-    define('billpayBase_PAYMENT_METHOD_INVOICE', 'BILLPAY');
-    define('billpayBase_PAYMENT_METHOD_DEBIT', 'BILLPAYDEBIT');
-    define('billpayBase_PAYMENT_METHOD_TRANSACTION_CREDIT', 'BILLPAYTRANSACTIONCREDIT');
-    define('billpayBase_PAYMENT_METHOD_PAY_LATER', 'BILLPAYPAYLATER');
-
-    define('billpayBase_STATE_PENDING', 'PENDING');
-    define('billpayBase_STATE_APPROVED', 'APPROVED');
-    define('billpayBase_STATE_COMPLETED', 'ACTIVATED');
-    define('billpayBase_STATE_ERROR', 'ERROR');
-    define('billpayBase_STATE_CANCELLED', 'CANCELLED');
-
-    define('billpayBase_MODE_TEST', 'Testmodus');
-
     /**
      * Class billpayBase
      */
     class billpayBase {
 
-        var $billpayStates;
+        const VERSION = '1.7.2'; // replaced by grunt build script
+        const PAYMENT_METHOD_INVOICE = 'BILLPAY';
+        const PAYMENT_METHOD_DEBIT = 'BILLPAYDEBIT';
+        const PAYMENT_METHOD_TRANSACTION_CREDIT = 'BILLPAYTRANSACTIONCREDIT';
+        const PAYMENT_METHOD_PAY_LATER = 'BILLPAYPAYLATER';
 
-        var $code, $title, $description, $enabled, $order;
-        var $eula_url, $testmode, $api_url, $_formDob, $_formGender, $_log;
-        var $_logPath, $enableLog, $debugLog, $_mode;
-        var $bp_merchant, $bp_portal, $bp_secure, $bp_public_api_key;
-        var $error;
-        var $token;
+        const SESSION_TRANSACTION_ID = 'billpay_transaction_id';
 
-        var $requiredModules 		= array('ot_total', 'ot_subtotal');
-        var $billpayShippingModules = array(
+        const STATE_PENDING   = 'PENDING';
+        const STATE_APPROVED  = 'APPROVED';
+        const STATE_COMPLETED = 'ACTIVATED';
+        const STATE_ERROR     = 'ERROR';
+        const STATE_CANCELLED = 'CANCELLED';
+
+        const MODE_TEST = 'Testmodus';
+        const MODE_LIVE = 'Livemodus';
+
+        private $billpayStates;
+
+        protected $_paymentIdentifier;
+        protected $ucPaymentName;
+
+        /** @var bool $enabled Needs to be public, because it is checked by shop. */
+        public $enabled;
+
+        /** @var string $title Defines name of a payment method. */
+        public $title;
+
+        /** @var string $code Internal name of the plugin. */
+        public $code;
+
+        // used by PSS
+        public $bp_merchant, $bp_portal, $bp_secure, $bp_public_api_key;
+
+        public  $description, $order;
+        private $testmode, $api_url, $_formDob, $_formGender;
+        private $_logPath, $enableLog, $_mode;
+        protected $token;
+        public $error;
+
+        private $requiredModules 		= array('ot_total', 'ot_subtotal');
+        private $billpayShippingModules = array(
             'ot_billpay_fee', 'ot_billpaydebit_fee', 'ot_billpaybusiness_fee',
             'ot_cod_fee', 'ot_loworderfee', 'ot_ps_fee', 'ot_shipping',
         );
-        var $billpayExcludeModules  = array('ot_subtotal', 'ot_subtotal_no_tax', 'ot_tax', 'ot_total');
 
         /**
          * used by modified-shop for temporary orders
          * @var string
          */
-        var $form_action_url = '';
+        private $form_action_url = '';
 
         /**
          * status which is used for temporary orders
          * @var int
          */
-        var $tmpStatus = 101;
+        private $tmpStatus = 101;
 
         /**
          * flag which indicates if a temporary order should be created
          * @var bool
          */
-        var $tmpOrders = false;
+        private $tmpOrders = false;
 
         /** @var bool $isTestMode Indicates if payment method works in test or production mode. */
-        var $isTestMode = false;
+        public $isTestMode = false;
 
         /** @var array $_defaultConfig Default payment method configuration used in installation */
-        var $_defaultConfig = array();
+        protected $_defaultConfig = array();
+
+        /** @var string $orderPrefix is used in CI to prepend prefix to order to ensure unique order ids */
+        private $orderPrefix = '';
+
+        /** @var bool $isUpdateChecking enables checking for new version of plugin on plugins page */
+        private $isUpdateChecking = true;
+
+        /** @var array $otModules contains list of PM specific OT modules */
+        protected $otModules = array();
 
         /**
-         * php 4 constructor
-         *
          * @param null|string $identifier
          */
-        function billpayBase($identifier = null) {
+        public function __construct($identifier = null) {
             if (empty($identifier) === false) {
                 $this->_paymentIdentifier = $identifier;
             }
             $this->billpayStates = array(
-                constant('billpayBase_STATE_PENDING'),
-                constant('billpayBase_STATE_APPROVED'),
-                constant('billpayBase_STATE_COMPLETED'),
-                constant('billpayBase_STATE_ERROR'),
-                constant('billpayBase_STATE_CANCELLED'),
+                billpayBase::STATE_PENDING,
+                billpayBase::STATE_APPROVED,
+                billpayBase::STATE_COMPLETED,
+                billpayBase::STATE_ERROR,
+                billpayBase::STATE_CANCELLED,
             );
 
             $this->code = strtolower($this->_paymentIdentifier);
@@ -111,7 +133,7 @@ if (!class_exists('billpayBase')) {
             $this->enableLog = defined('MODULE_PAYMENT_'.$this->_paymentIdentifier.'_LOGGING_ENABLE') ? constant('MODULE_PAYMENT_'.$this->_paymentIdentifier.'_LOGGING_ENABLE') : false;
 
             $this->testmode 	= defined('MODULE_PAYMENT_BILLPAY_GS_TESTMODE') ? constant('MODULE_PAYMENT_BILLPAY_GS_TESTMODE') : false;
-            if ($this->testmode == 'Testmodus') {
+            if ($this->testmode == billpayBase::MODE_TEST) {
                 $this->isTestMode = true;
                 $this->api_url = defined('MODULE_PAYMENT_BILLPAY_GS_TESTAPI_URL_BASE') ? constant('MODULE_PAYMENT_BILLPAY_GS_TESTAPI_URL_BASE') : '';
             }
@@ -141,6 +163,16 @@ if (!class_exists('billpayBase')) {
 
             // we just use the default checkout process url here
             $this->form_action_url = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
+
+            if ($this->isUpdateChecking) {
+                $this->injectUpdateChecker();
+            }
+
+            // used for debug purposes
+            if (file_exists(DIR_FS_CATALOG . 'includes/external/billpay/base/debug.php')) {
+                /** @noinspection PhpIncludeInspection */
+                include(DIR_FS_CATALOG . 'includes/external/billpay/base/debug.php');
+            }
         }
 
         ##### STATIC
@@ -151,22 +183,26 @@ if (!class_exists('billpayBase')) {
          * @return mixed
          * @static
          */
-        static function PaymentInstance($paymentMethod)
+        public static function PaymentInstance($paymentMethod)
         {
             $lowerPaymentMethod = strtoupper($paymentMethod);
             switch ($lowerPaymentMethod)
             {
-                case constant('billpayBase_PAYMENT_METHOD_INVOICE'):
+                case billpayBase::PAYMENT_METHOD_INVOICE:
+                    /** @noinspection PhpIncludeInspection */
                     require_once(DIR_FS_CATALOG.'includes/modules/payment/billpay.php');
                     return new billpay($paymentMethod);
                     break;
-                case constant('billpayBase_PAYMENT_METHOD_DEBIT'):
+                case billpayBase::PAYMENT_METHOD_DEBIT:
+                    /** @noinspection PhpIncludeInspection */
                     require_once(DIR_FS_CATALOG.'includes/modules/payment/billpaydebit.php');
                     return new billpaydebit($paymentMethod);
-                case constant('billpayBase_PAYMENT_METHOD_TRANSACTION_CREDIT'):
+                case billpayBase::PAYMENT_METHOD_TRANSACTION_CREDIT:
+                    /** @noinspection PhpIncludeInspection */
                     require_once(DIR_FS_CATALOG.'includes/modules/payment/billpaytransactioncredit.php');
                     return new billpaytransactioncredit($paymentMethod);
-                case constant('billpayBase_PAYMENT_METHOD_PAY_LATER'):
+                case billpayBase::PAYMENT_METHOD_PAY_LATER:
+                    /** @noinspection PhpIncludeInspection */
                     require_once(DIR_FS_CATALOG.'includes/modules/payment/billpaypaylater.php');
                     return new BillpayPayLater($paymentMethod);
             }
@@ -178,7 +214,7 @@ if (!class_exists('billpayBase')) {
          * @return array
          * @static
          */
-        static function GetPaymentMethods() {
+        public static function GetPaymentMethods() {
             return array(
                 'billpay', 'billpaydebit', 'billpaytransactioncredit', 'billpaypaylater'
             );
@@ -189,7 +225,7 @@ if (!class_exists('billpayBase')) {
          * @return array|bool
          * @static
          */
-        function ParseCallback()
+        public static function ParseCallback()
         {
             /*
             $example = <<<HEREDOC
@@ -231,6 +267,7 @@ if (!class_exists('billpayBase')) {
 HEREDOC;
             */
 
+            /** @noinspection PhpIncludeInspection */
             require_once(DIR_FS_CATALOG.'includes/external/billpay/api/ipl_xml_ws.php');
             $data = parse_async_capture();
             //$data = parse_async_capture($example);
@@ -246,7 +283,7 @@ HEREDOC;
          * @return int
          * @static
          */
-        function CurrencyToSmallerUnit($price_float) {
+        public static function CurrencyToSmallerUnit($price_float) {
             if ($price_float === NULL) {
                 return 0;
             }
@@ -260,7 +297,7 @@ HEREDOC;
          * @return string
          * @static
          */
-        function EnsureUTF8($value) {
+        public static function EnsureUTF8($value) {
             $trimmedValue = trim($value);
             if(defined('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE') && constant('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE') == 'local') {
                 return utf8_encode($trimmedValue);
@@ -276,7 +313,7 @@ HEREDOC;
          * @return string
          * @static
          */
-        function EnsureString($value) {
+        public static function EnsureString($value) {
             if(defined('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE') && constant('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE') == 'local') {
                 return utf8_decode($value);
             } else {
@@ -291,17 +328,19 @@ HEREDOC;
          * @return array
          * @static
          */
-        function GetOrderProducts($orderId)
+        public static function GetOrderProducts($orderId)
         {
             $ret = array();
-            $query = xtc_db_query("SELECT products_price, products_quantity, orders_products_id, products_name FROM ".TABLE_ORDERS_PRODUCTS." WHERE orders_id='".(int)$orderId."'");
-            while ($row = xtc_db_fetch_array($query)) {
+            $table = TABLE_ORDERS_PRODUCTS;
+            $orders_id = (int)$orderId;
+            $rows = BillpayDB::DBFetchArray("SELECT products_price, products_quantity, orders_products_id, products_name FROM $table WHERE orders_id='$orders_id'");
+            foreach ($rows as $row) {
                 array_push($ret, array(
-                        'price' =>  $row['products_price'],
-                        'qty'   =>  $row['products_quantity'],
-                        'opid'  =>  $row['orders_products_id'],
-                        'name'  =>  $row['products_name']
-                    ));
+                    'price' =>  $row['products_price'],
+                    'qty'   =>  $row['products_quantity'],
+                    'opid'  =>  $row['orders_products_id'],
+                    'name'  =>  $row['products_name']
+                ));
             }
             return $ret;
         }
@@ -312,8 +351,9 @@ HEREDOC;
          * @param $errorString string UTF8 encoded error
          * @static
          */
-        function DisplayErrorAndExit($errorString)
+        public static function DisplayErrorAndExit($errorString)
         {
+            /** @noinspection PhpIncludeInspection */
             include(DIR_FS_CATALOG . 'includes/external/billpay/templates/error_utf8.php');
             die($errorString);
         }
@@ -324,9 +364,11 @@ HEREDOC;
          * Message is hardly visible on page.
          * @param $errorString
          * @param $redirectUrl
+         * @static
          */
-        function QueueErrorAndRedirect($errorString, $redirectUrl)
+        public static function QueueErrorAndRedirect($errorString, $redirectUrl)
         {
+            /** @var $messageStack object */
             global $messageStack;
             $messageStack->add_session($errorString, 'error');
             xtc_redirect($redirectUrl);
@@ -336,8 +378,10 @@ HEREDOC;
 
         /**
          * BillPay callback function handling an order confirmation and Giropay confirmation
+         * @param $data Array
+         * @return bool
          */
-        function onBillpayCallback($data)
+        public function onBillpayCallback($data)
         {
             $dataCopy = $data;
             unset($dataCopy['xml']);
@@ -349,11 +393,10 @@ HEREDOC;
                 );
                 return false;
             }
-            require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/Bankdata.php');
-            $oBankData = new Billpay_Base_Bankdata();
+
             $orderId = (int)$data['reference'];
             $token   = $_GET['token'];
-            $oBankData->loadByOrdersId($orderId);
+            $oBankData = Billpay_Base_Bankdata::LoadByOrdersId($orderId);
             if (!$oBankData->isValidToken($token)) {
                 $this->_logError('Invalid token ('.$token.') for reference ('.$orderId.').');
                 return false;
@@ -371,13 +414,13 @@ HEREDOC;
             if ($data['status'] == 'DENIED') {
                 $orderId = (int)$data['reference'];
                 $this->_logDebug("Order ".$orderId." denied.");
-                $this->setOrderBillpayState(constant('billpayBase_STATE_CANCELLED'), $orderId);
-                return false;
+                $this->setOrderBillpayState(billpayBase::STATE_CANCELLED, $orderId);
+                return true; // deny is valid status
             }
 
             // approved!
             $orderId = (int)$data['reference'];
-            $this->setOrderBillpayState(constant('billpayBase_STATE_APPROVED'), $orderId);
+            $this->setOrderBillpayState(billpayBase::STATE_APPROVED, $orderId);
             $this->onOrderApproved($orderId, $data);
             // send mail?
 
@@ -390,15 +433,15 @@ HEREDOC;
          * @param $newStatus
          * @return bool
          */
-        function onOrderStatusChange($orderId, $newStatus)
+        public function onOrderStatusChange($orderId, $newStatus)
         {
             $this->_logDebug("Changing order's (".$orderId.") status to ".$newStatus);
             $result = true;
-            if ($newStatus == $this->getOrderStatusFromBillpayState(constant('billpayBase_STATE_COMPLETED')))
+            if ($newStatus == $this->getOrderStatusFromBillpayState(billpayBase::STATE_COMPLETED))
             {
                 $result = $this->reqInvoiceCreated($orderId);
             }
-            if ($newStatus == $this->getOrderStatusFromBillpayState(constant('billpayBase_STATE_CANCELLED')))
+            if ($newStatus == $this->getOrderStatusFromBillpayState(billpayBase::STATE_CANCELLED))
             {
                 $result = $this->reqCancel($orderId);
             }
@@ -416,7 +459,7 @@ HEREDOC;
          * @param $data
          * @abstract
          */
-        function onOrderApproved($orderId, $data)
+        public function onOrderApproved($orderId, $data)
         {
 
         }
@@ -427,33 +470,64 @@ HEREDOC;
          * @param ipl_edit_cart_content_request $req
          * @abstract
          */
-        function onOrderChanged($orderId, $req)
+        public function onOrderChanged($orderId, $req)
         {
 
         }
 
-        /**
-         * Event fired when admin is looking at user's invoice.
-         * Should display additional payment method's info.
-         * @param int $orderId
-         * @return string
-         * @abstract
-         */
-        function onDisplayInvoice($orderId)
+        public function getInvoiceTextData($bank_data, $currency)
         {
-           return '';
+            $return = array();
+            $return[] = $this->getThankYouText();
+            $return[] = $this->getPayUntilText($bank_data, $currency);
+            $return[] = $this->getPaymentDetails($bank_data, $currency);
+            $return[] = $this->getEmailText();
+            $return = array_filter($return);
+            return $return;
+        }
+
+
+        public function onDisplayInvoiceHtml($invoice_data)
+        {
+            $html = '';
+            foreach ($invoice_data as $row) {
+                if (!is_array($row)) {
+                    $html .= $row . "<br>";
+                    continue;
+                }
+                $html .= $this->renderPaymentDetailsHTML($row);
+            }
+            return $html;
+        }
+
+        private function onDisplayInvoiceText($invoice_data)
+        {
+            $text = '';
+            foreach ($invoice_data as $row) {
+                if (!is_array($row)) {
+                    $text .= $row . "\n";
+                    continue;
+                }
+                foreach ($row as $header => $value) {
+                    if (empty($value)) continue;
+                    if (empty($header)) {
+                        $text .= $value . "\n";
+                    }
+                    $text .= $header . ': ' . $value . "\n";
+                }
+            }
+            return $text;
         }
 
         /**
          * Event fired when admin prints a PDF.
          * Warning: this is not a standard shop function.
+         * Used by: Mastershop
          * @abstract
-         * @param $pdf
-         * @param $orderId
-         * @param $bankDataQuery
          * @return bool
          */
-        function onDisplayPdf($pdf, $orderId, $bankDataQuery)
+        // public function onDisplayPdf($pdf, $orderId, $bankDataQuery)
+        public function onDisplayPdf()
         {
             return true;
         }
@@ -461,47 +535,34 @@ HEREDOC;
         /**
          * Returns payment information strings added to the customer's e-mail.
          *
-         * @param null $orderId
+         * @param int $orderId
          * @return array
          * @abstract
          */
-        function getPaymentInfo($orderId = null)
+        public function getPaymentInfo($orderId)
         {
+            $currency = BillpayOrder::getCurrencyById($orderId);
+            $bank_data = Billpay_Base_Bankdata::LoadByOrdersId($orderId);
+            $data = $this->getInvoiceTextData($bank_data, $currency);
+            $html = $this->onDisplayInvoiceHtml($data);
+            $text = $this->onDisplayInvoiceText($data);
             return array(
-                'html'  =>  '',
-                'text'  =>  '',
+                'html'  =>  $html,
+                'text'  =>  $text,
             );
         }
 
         /**
          * Requires correct language files
          */
-        function requireLang()
+        public function requireLang()
         {
             $language = empty($_SESSION['language']) ? 'german' : $_SESSION['language'];
             $file = DIR_FS_CATALOG .'lang/'. $language . '/modules/payment/' . strtolower($this->_paymentIdentifier) . '.php';
             if (file_exists($file))
             {
+                /** @noinspection PhpIncludeInspection */
                 require_once($file);
-            }
-        }
-
-        function getCurrentLangIso2()
-        {
-            $language = empty($_SESSION['language']) ? 'german' : $_SESSION['language'];
-            switch ($language) {
-                case 'german':
-                    return 'de';
-                    break;
-                case 'english':
-                    return 'en';
-                    break;
-                case 'dutch':
-                case 'netherlands':
-                    return 'nl';
-                    break;
-                default:
-                    return 'de';
             }
         }
 
@@ -509,7 +570,7 @@ HEREDOC;
          * Checks if it should display current payment method and displays it.
          * @return array|false
          */
-        function selection() {
+        public function selection() {
             unset($_SESSION['gm_error_message']); // Gambio specific
             // STEP 1: Check if customer has been denied previously
             if (isset($_SESSION['billpay_hide_payment_method']) && $_SESSION['billpay_hide_payment_method']) {
@@ -540,6 +601,7 @@ HEREDOC;
             $staticLimit 	= $this->_getStaticLimit($config);
             $minValue 		= $this->_getMinValue($config);
             $orderTotal 	= $this->CurrencyToSmallerUnit(BillpayOrder::getTotal());
+            // $this->_logDebug($minValue.' < '.$orderTotal.' < '.$staticLimit);
             if ($orderTotal > $staticLimit) {
                 $this->_logError($this->_paymentIdentifier.' static limit exceeded (' . $orderTotal . ' > ' . $staticLimit . ')');
                 return false;
@@ -555,7 +617,7 @@ HEREDOC;
                 return false;
             }
 
-            return $this->_buildPaymentHtml();
+            return $this->renderUnifiedCheckout();
         }
 
         /**
@@ -564,12 +626,12 @@ HEREDOC;
          * @param string $infoText
          * @param int|null $status  New status. If not set, it preserves current status.
          */
-        function addHistoryEntry($oID, $infoText, $status = null) {
+        private function addHistoryEntry($oID, $infoText, $status = null) {
             if ($status === null) {
                 // get last status
-                $handle = xtc_db_query("SELECT orders_status FROM ".TABLE_ORDERS." WHERE orders_id='".(int)$oID."'");
-                $data = xtc_db_fetch_array($handle);
-                $status = $data['orders_status'];
+                $table = TABLE_ORDERS;
+                $orders_id = (int)$oID;
+                $status = BillpayDB::DBFetchValue("SELECT orders_status FROM $table WHERE orders_id='$orders_id'");
             }
 
             $modification_version = $this->getShopModification();
@@ -582,161 +644,165 @@ HEREDOC;
                 $infoText = html_entity_decode($infoText, null, 'ISO-8859-15');
             }
 
-            xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS_HISTORY." (orders_id, orders_status_id, date_added, comments) VALUES (".(int)$oID.", ".(int)$status.", now(), '".$infoText."')");
+            $table = TABLE_ORDERS_STATUS_HISTORY;
+            $orders_id = (int)$oID;
+            $orders_status_id = (int)$status;
+            $comments = $infoText;
+            BillpayDB::DBQuery("INSERT INTO $table (orders_id, orders_status_id, date_added, comments) VALUES ($orders_id, $orders_status_id, now(), '$comments')");
         }
 
-        /**
-         * Returns selection "object" with full payment form
-         * @return array
-         */
-        function _buildPaymentHtml() {
-            unset($_SESSION['gm_error_message']);
 
-            $input_fields = '';
-
-            // use span for one page checkout in order to avoid gui being displayed initially after payment selection
-            $holder_element = class_exists("xajax") ? 'span' : 'div';
-            $holder_element_height = class_exists("xajax") ? 'height:200px;' : '';
-
-            $config = $this->getModuleConfig();
-
-
-            $b2bselection = '';
-            if ($this->_is_b2b_allowed($config)) {
-                $customerCompany = BillpayOrder::getCustomerCompany();
-                if(isset($_SESSION['billpay_preselect']) && $_SESSION['billpay_preselect'] == 'b2c') {
-                    $preselect_b2b = 'none';
-                    $preselect_b2c = 'block';
-
-                } elseif (isset($_SESSION['billpay_preselect']) && $_SESSION['billpay_preselect'] == 'b2b'
-                          || (isset($_SESSION['customer_vat_id']) === true && $_SESSION['customer_vat_id'] != '')
-                          || (!empty($customerCompany))
-                ) {
-                    $preselect_b2b = 'block';
-                    $preselect_b2c = 'none';
-
-                } else {
-                    $preselect_b2b = 'none';
-                    $preselect_b2c = 'block';
-                }
-
-                if ($this->b2b_active == 'BOTH'
-                    && $this->_is_b2b_allowed($config)
-                    && $this->_is_b2c_allowed($config)
-                ) {
-                    $b2bselection = $this->_addB2BSelection();
-                    $input_fields .= '<' . $holder_element . ' id="b2b" style="' . $holder_element_height . 'display:' . $preselect_b2b . '">'
-                                  . $this->_addB2BInputFields() . '</' . $holder_element . '>'
-                                  . '<' . $holder_element . ' id="b2c" style="' . $holder_element_height . 'display:' . $preselect_b2c . '">'
-                                  . $this->_addB2CInputFields() . '</' . $holder_element . '>';
-
-                } elseif (in_array($this->b2b_active, array('B2B', 'BOTH')) && $this->_is_b2b_allowed($config)) {
-                    $input_fields .= '<div id="b2b" style="display:block" >' . $this->_addB2BInputFields();
-                    $input_fields .= '<input type="hidden" name="b2bflag" value="1" /></div>';
-                }
-                else if(in_array($this->b2b_active, array('B2C', 'BOTH')) && $this->_is_b2c_allowed($config)) {
-                    $input_fields .= '<div id="b2c" style="display:block">' . $this->_addB2CInputFields();
-                    $input_fields .= '<input type="hidden" name="b2bflag" value="0" /></div>';
-                }
-            }
-            else {
-                $input_fields .= '<div id="b2c" style="display:block">' . $this->_addB2CInputFields() . '</div>';
-            }
-
-            $billpay_js = $this->_displayPaymentJs();
-
-            $executeScript = '';
-            $onClickAction = 'onclick="show_billpay_details(\''.$this->_paymentIdentifier.'\');"';
-            if (isset($_GET['error_message']) && $_SESSION['payment'] == strtolower($this->_paymentIdentifier)) {
-                $executeScript = 'show_billpay_details(\''.$this->_paymentIdentifier.'\');';
-            }
-            // Check if OneStepCheckout is installed and activated
-            elseif (defined('FILENAME_CHECKOUT') && strstr($_SERVER['PHP_SELF'], FILENAME_CHECKOUT)) {
-                $executeScript = 'show_billpay_details(\''.$this->_paymentIdentifier.'\');';
-            }
-
-            $billpay_input = "";
-            if($this->_mode == 'sandbox') {
-                $billpay_input .= '<div style="margin-top:3px; margin-bottom:10px; border-style: solid;border-color:red; text-align:center; background-color:#ffd9b3;"><font color="red"><strong>'. MODULE_PAYMENT_BILLPAY_TEXT_SANDBOX .'</font> <br /> <a href="'. $this->_merchant_info .'" target="_blank">'.MODULE_PAYMENT_BILLPAY_UNLOCK_INFO.'</a></strong> </div>';
-            }
-            else if($this->_mode == 'check') {
-                $billpay_input .= '<div style="margin-top:3px; margin-bottom:10px; border-style: solid;border-color:red; text-align:center; background-color:#ffd9b3;"><font color="red"><strong>'. MODULE_PAYMENT_BILLPAY_TEXT_CHECK .'</font> <br /> <a href="'. $this->_merchant_info .'" target="_blank">'.MODULE_PAYMENT_BILLPAY_UNLOCK_INFO.'</a></strong> </div>';
-            }
-
-            $title_ext = $this->_buildFeeTitleExtension($this->_paymentIdentifier);
-
-            $selection = array('id' => $this->code,
-                'module' => $this->title . ($title_ext ? (' ' . $title_ext): ''));
-
-            if(isset($GLOBALS['ot_payment']) && method_exists($GLOBALS['ot_payment'], 'get_percent')) {
-                $selection['module_cost'] = $GLOBALS['ot_payment']->get_percent(strtolower($this->_paymentIdentifier));
-            }
-
-            $is_fee = false;
-            if(isset($fee) && $fee > 0) {
-                $is_fee = true;
-            }
-
-            $billpay_input .= $b2bselection;
-            $billpay_input .= $this->getPaymentForm($input_fields, $is_fee);
-
-            if (!empty($executeScript)) {
-                $billpay_js .= '<script>'.$executeScript.'</script>';
-            }
-            //$selection['fields'][] = array('title' => $billpay_input.$billpay_js);
-            $billpay_js .= $this->_injectJavascript();
-            $billpay_js .= $this->_injectCss();
-            $selection = $this->_extendSeoLayout($selection, $billpay_input.$billpay_js);
-
-            $sepaText = $this->getSepaText();
-
-            if (!isset($_SESSION['bp_fraud_tags_rendered'])) {
-                $hash = $this->getCustomerIdentifier();
-                $sepaText .= '<p style="margin: 0px; background:url(https://cdntm.billpay.de/fp/clear.png?org_id=ulk99l7b&session_id='.$hash.'&m=1)"></p><img src="https://cdntm.billpay.de/fp/clear.png?org_id=ulk99l7b&session_id='.$hash.'&m=2" alt="" ><script src="https://cdntm.billpay.de/fp/check.js?org_id=ulk99l7b&session_id='.$hash.'" type="text/javascript"></script><object type="application/x-shockwave-flash" data="https://cdntm.billpay.de/fp/fp.swf?org_id=ulk99l7b&session_id='.$hash.'" width="1" height="1" id="obj_id"><param name="movie" value="https://cdntm.billpay.de/fp/fp.swf?org_id=ulk99l7b&session_id='.$hash.'" /><div></div></object>';
-                $_SESSION['bp_fraud_tags_rendered'] = true;
-            }
-
-            // Attach html for Billpay logo
-            if ($this->_paymentIdentifier != constant('billpayBase_PAYMENT_METHOD_TRANSACTION_CREDIT')) {
-                $sepaText .= MODULE_PAYMENT_BILLPAY_TEXT_INFO;
-            }
-
-            $selection = $this->_extendSeoEula($selection, $sepaText, $onClickAction);
-            $selection = $this->rebuildSelection($selection);
-
-            return $selection;
-        }
-
-        /**
-         * Rebuilds selection array so it is rendered in divs.
-         * @param $selection
-         * @return mixed
-         */
-        function rebuildSelection($selection)
+        private function injectUnifiedCheckout()
         {
-            $selectionString = '';
-            foreach ($selection['fields'] as $field)
+            if (defined('billpayBase_injectUnifiedCheckout') && billpayBase_injectUnifiedCheckout != $this->_paymentIdentifier)
             {
-                $selectionString .= '<div class="bpyField">'.$field['title'].'</div>';
+                return '';
             }
-            $selection['fields'] = array(
-                array(
-                    'title' =>  '',
-                    'field' =>  '<div class="bpySelection">'.$selectionString.'</div>',
-                ),
-            );
-            return $selection;
+            define('billpayBase_injectUnifiedCheckout', $this->_paymentIdentifier);
+
+            $apiKey = $this->bp_public_api_key;
+            $userIdentifier = $this->getCustomerIdentifier();
+            $country3 = $this->_getCountryIso3Code();
+            $country2 = $this->_getCountryIso2Code();
+            $currency = BillpayOrder::GetCurrentCurrency();
+            $lang     = $this->_getLanguage();
+            $amount = $this->_getCartBaseAndShipping();
+            $baseAmount = $amount['baseAmount'];
+            $orderAmount= $amount['orderAmount'];
+            $customerFirstName = $_SESSION['customer_first_name'];
+            $customerLastName  = $_SESSION['customer_last_name'];
+            $customerDob    =   date('Y-m-d', $this->getDateOfBirth());
+            if ($customerDob === "1970-01-01") {
+                $customerDob = '';
+            }
+            $customerGender =   $this->getGender();
+            $customerPhone = $this->getPhone();
+            $isLive = ($this->isTestMode ? 'false' : 'true');
+
+            $billpayScript = <<<JAVASCRIPT
+<script type="text/javascript">
+(function(win, doc, requireSrc, mainSrc, objectName){
+    win['BillPayCheckout'] = objectName;
+    win[objectName] = win[objectName] || function() {
+        (win[objectName].queue = win[objectName].queue || []).push(arguments)
+    };
+
+    var script    = doc.getElementsByTagName('script')[0],
+        requireJs = doc.createElement('script');
+    requireJs.async = 1;
+    requireJs.src = requireSrc;
+    requireJs.setAttribute('data-main', mainSrc);
+
+    script.parentNode.insertBefore(requireJs, script)
+})(window, document, '//widgetcdn.billpay.de/checkout/1.x.x/require.js',
+                     '//widgetcdn.billpay.de/checkout/1.x.x/main.js', 'billpayCheckout');
+billpayCheckout('options', {
+    "checkout": {"form": "#checkout_payment"},
+    "validateOn": ".continue_button",
+    "shop": {
+        "apiKey": "$apiKey",
+        "live": $isLive
+    },
+    "order": {
+        "cartAmount": $baseAmount,
+        "orderAmount": $orderAmount,
+        "currency": "$currency"
+    },
+    "customer": {
+        "billing": {
+            "salutation": "$customerGender",
+            "firstName": "$customerFirstName",
+            "lastName": "$customerLastName",
+            "street": "",
+            "streetNo": "",
+            "zip": "",
+            "city": "",
+            "phoneNumber": "$customerPhone",
+            "countryIso2": "$country2",
+            "countryIso3": "$country3",
+            "dayOfBirth": "$customerDob"
+        },
+        "customerType": "",
+        "language": "$lang",
+        "identifier": "$userIdentifier"
+    },
+    "request": []
+});
+billpayCheckout('exec', function($) {
+    var current_payment = null;
+    var payment_methods = {
+        billpay: 'invoice',
+        billpaydebit: 'directDebit',
+        billpaytransactioncredit: 'transactionCredit',
+        billpaypaylater: 'paylater'
+    };
+    var show_payment = function(payment_name) {
+        if ($.inArray(payment_name, Object.keys(payment_methods)) === -1) {
+            return;
+        }
+        if (current_payment == payment_name) {
+            return;
+        }
+        $('.bpy-checkout-container').hide();
+        $('.bpy-checkout-container[bpy-pm="' + payment_methods[payment_name] + '"]').show();
+        billpayCheckout('run', {"container": '.bpy-checkout-container'});
+        current_payment = payment_name;
+    };
+    var selected_payment_name = $('input[name="payment"]:checked').val();
+    show_payment(selected_payment_name);
+    /**
+     * Shop -> class
+     * * Gambio: .payment_item
+     * * Xtc3: .moduleRow, .moduleRowSelected
+     * * Xtcmod: .paymentblock td
+     */
+    $('.payment_item, .moduleRow, .moduleRowSelected, .paymentblock td').on('click', function() {
+        var payment_name = $(this).find('input[name="payment"]').val();
+        show_payment(payment_name);
+    });
+});
+</script>
+JAVASCRIPT;
+            return $billpayScript;
         }
 
+        /**
+         * Renders Unified Checkout script injection, payment method configuration and instantiates PL.
+         */
+        private function renderUnifiedCheckout()
+        {
+            $html = '';
+            $html .= $this->injectUnifiedCheckout();
+            $ucPaymentName = $this->ucPaymentName;
+            $html .= '<div class="bpy bpy-checkout-container" bpy-pm="'.$ucPaymentName.'"></div>';
+            $title_ext = $this->_buildFeeTitleExtension($this->_paymentIdentifier);
+            return array(
+                'id'        =>  $this->code,
+                'module'    =>  $this->title.($title_ext ? (' '.$title_ext) : ''),
+                'fields'    =>  array(
+                    array(
+                        'title'     =>  '',
+                        'field'     =>  $html,
+                    ),
+                )
+            );
+        }
 
         /**
-         * Checks if merchant setted up additional fee for using selected payment
+         * Checks if merchant set up additional fee for using selected payment
          * @param $paymentIdentifier
          * @return bool|string
          */
-        function _buildFeeTitleExtension($paymentIdentifier) {
+        protected function _buildFeeTitleExtension($paymentIdentifier) {
 
             $fee_string = '';
+
+            // TODO: xtc3 does not include them for some reason
+            /** @noinspection PhpIncludeInspection */
+            require_once(DIR_FS_CATALOG . 'includes/modules/order_total/ot_billpay_fee.php');
+            /** @noinspection PhpIncludeInspection */
+            require_once(DIR_FS_CATALOG . 'includes/modules/order_total/ot_billpaybusiness_fee.php');
+
             if (class_exists('ot_'.$this->_getDataIdentifier('fee'))
                 && defined('MODULE_ORDER_TOTAL_'.$paymentIdentifier.'_FEE_STATUS')
                 && constant('MODULE_ORDER_TOTAL_'.$paymentIdentifier.'_FEE_STATUS') == 'true')
@@ -751,7 +817,7 @@ HEREDOC;
                     $fee_string .= MODULE_PAYMENT_BILLPAY_TEXT_ADD. $billpay_fee->display_formated();
                 }
             }
-            if ($paymentIdentifier == billpayBase_PAYMENT_METHOD_INVOICE) {
+            if ($paymentIdentifier == billpayBase::PAYMENT_METHOD_INVOICE) {
                 if (!empty($fee_string)) {
                     $fee_string = 'B2C: '.$fee_string;
                 }
@@ -779,9 +845,11 @@ HEREDOC;
          * Admin backend checks if payment module is enabled.
          * @return bool|int
          */
-        function check() {
-            $check_query = xtc_db_query('SELECT configuration_value FROM ' . TABLE_CONFIGURATION . ' WHERE configuration_key =' . "'MODULE_PAYMENT_".$this->_paymentIdentifier."_STATUS'");
-            return xtc_db_num_rows($check_query);
+        public function check() {
+            $table = TABLE_CONFIGURATION;
+            $config_key = 'MODULE_PAYMENT_' . $this->_paymentIdentifier . '_STATUS';
+            $query = "SELECT configuration_value from $table where configuration_key = '$config_key'";
+            return BillpayDB::DBCount($query);
         }
 
         /**
@@ -790,7 +858,7 @@ HEREDOC;
          * @param string $customerGroup
          * @return ipl_preauthorize_request
          */
-        function _set_customer_details($req, $customerGroup='p') {
+        protected function _set_customer_details($req, $customerGroup='p') {
             //added get customer phone for tc
             $phone = $this->getPhone();
 
@@ -798,7 +866,7 @@ HEREDOC;
             $req->set_customer_details(
                 billpayBase::EnsureUTF8($this->_getCustomerId()),
                 billpayBase::EnsureUTF8($this->_getCustomerGroup()),
-                billpayBase::EnsureUTF8($this->_getCustomerSalutation($this->_formGender)),
+                billpayBase::EnsureUTF8($this->_getCustomerSalutation()),
                 '', // title
                 billpayBase::EnsureUTF8($billing['firstName']),
                 billpayBase::EnsureUTF8($billing['lastName']),
@@ -825,7 +893,7 @@ HEREDOC;
          * @param ipl_preauthorize_request $req
          * @return ipl_preauthorize_request
          */
-        function _set_shipping_details($req) {
+        private function _set_shipping_details($req) {
             $delivery = BillpayOrder::getCustomerBilling();
             $phone = BillpayOrder::getCustomerPhone();
             if (empty($phone)) {
@@ -853,7 +921,7 @@ HEREDOC;
          * @param ipl_preauthorize_request $req
          * @return ipl_preauthorize_request mixed
          */
-        function _add_articles($req) {
+        private function _add_articles($req) {
             $products = BillpayOrder::getProducts();
             foreach ($products as $p) {
                 $req->add_article($p['id'], $p['qty'], $p['name'], '',
@@ -868,7 +936,7 @@ HEREDOC;
          * @param ipl_preauthorize_request $req
          * @return ipl_preauthorize_request
          */
-        function _add_order_totals($req) {
+        private function _add_order_totals($req) {
             $billpayTotals = $this->_getDataValue('order_totals');
 
             $req->set_total(
@@ -879,7 +947,7 @@ HEREDOC;
                 $this->CurrencyToSmallerUnit($billpayTotals['billpayShippingGross']),
                 $this->CurrencyToSmallerUnit($billpayTotals['orderTotalNet']),
                 $this->CurrencyToSmallerUnit($billpayTotals['orderTotalGross']),
-                $this->_getCurrency(), // currency
+                BillpayOrder::GetCurrentCurrency(), // currency
                 '' 	// reference
             );
 
@@ -891,9 +959,9 @@ HEREDOC;
          * @param ipl_preauthorize_request $req
          * @return ipl_preauthorize_request
          */
-        function _setTrace($req)
+        private function _setTrace($req)
         {
-            $req->setTracePluginVersion(constant('billpayBase_VERSION'));
+            $req->setTracePluginVersion(billpayBase::VERSION);
             $shop = $this->getShopModification();
             $req->setTraceShopType($shop['modification']);
             $req->setTraceShopVersion($shop['version']);
@@ -906,7 +974,7 @@ HEREDOC;
          * @param $isNetShippingPrice
          * @return array
          */
-        function _calculate_billpay_totals($order_total_modules, $order, $isNetShippingPrice) {
+        private function _calculate_billpay_totals($order_total_modules, $order, $isNetShippingPrice) {
             # TODO: check this function
             // Calculate and add totals
             $order_totals = $order_total_modules->modules;
@@ -1026,7 +1094,7 @@ HEREDOC;
                                                     $orderSubTotalGross += $totalGrossValue;
                                             }
                                             else {
-                                                $orderSubTotalGross = $_SESSION['cart']->show_total();
+                                                $orderSubTotalGross = $_SESSION['cart']->show_total;
                                             }
                                             break;
                                         case 'ot_tax':
@@ -1054,37 +1122,12 @@ HEREDOC;
             return $ret;
         }
 
-
-        /**
-         * Adds user ordering history to the preauth request
-         * @param ipl_preauthorize_request $req
-         * @return ipl_preauthorize_request mixed
-         */
-        function _add_order_history($req) {
-            $_OrderHistory = $this->_getOrderHistory($this->_getCustomerId());
-            foreach ($_OrderHistory as $historyPart) {
-                $history_amount = 0;
-                if (isset($historyPart['hamount']) && $historyPart['hamount'] >= 0) {
-                    $history_amount = $historyPart['hamount'];
-                }
-
-                $req->add_order_history($historyPart['hid'],
-                    $historyPart['hdate'],
-                    $history_amount,
-                    isset($historyPart['hcurrency']) ? $historyPart['hcurrency'] : 'EUR',
-                    $historyPart['hpaymenttype'],
-                    $historyPart['hstatus']
-                );
-            }
-            return $req;
-        }
-
         /**
          * Compares order's billing and delivery addresses. If the delivery address is different, sets it in request.
          * @param ipl_preauthorize_request $req
          * @return mixed
          */
-        function _addressCompare($req) {
+        private function _addressCompare($req) {
             $billing = BillpayOrder::getCustomerBilling();
             $delivery= BillpayOrder::getCustomerDelivery();
 
@@ -1106,10 +1149,12 @@ HEREDOC;
          * Redirects to a page with an error. If ajax, sets SESSION var.
          * @param string $err_msg
          */
-        function _error_redirect($err_msg) {
+        private function _error_redirect($err_msg) {
             $err_msg = billpayBase::EnsureString($err_msg);
             $_SESSION['gm_error_message'] = $err_msg;
             $this->_logDebug($err_msg);
+            unset($_SESSION['customer_gender']);
+            unset($_SESSION['customer_dob']);
 
             if ($_POST['xajax']) {
                 /** ajax one page checkout  */
@@ -1119,81 +1164,11 @@ HEREDOC;
             }
         }
 
-        /**
-         * Checks if B2B form was filled correctly.
-         * @param array $data_arr
-         * @return bool
-         */
-        function _validateB2BValues($data_arr) {
-            $companyName = $this->_getDataValue('company_name', $data_arr);
-            if (!$companyName) {
-                $companyName = BillpayOrder::getCustomerCompany();
-            }
-
-            $taxNumber =  $this->_getDataValue('tax_number', $data_arr);
-            if (!$taxNumber) {
-                $taxNumber = $_SESSION['customer_vat_id'];
-            }
-
-            $legalForm 		= $this->_getDataValue('legal_form', $data_arr);
-            $registerNumber = $this->_getDataValue('register_number', $data_arr);
-            $holderName		= $this->_getDataValue('holder_name', $data_arr);
-            $genderB2B		= $this->getGender();
-
-            $this->_setDataValue('company_name', $companyName);
-            $this->_setDataValue('tax_number', $taxNumber);
-            $this->_setDataValue('legal_form', $legalForm);
-            $this->_setDataValue('register_number', $registerNumber);
-            $this->_setDataValue('holder_name', $holderName);
-            $this->_setDataValue('gender', $genderB2B);
-
-            if (!isset($companyName) || $companyName == '') {
-                $this->_error_redirect(MODULE_PAYMENT_BILLPAY_B2B_COMPANY_FIELD_EMPTY);
-                return false;
-            }
-            if (!isset($legalForm) || $legalForm == '') {
-                $this->_error_redirect(MODULE_PAYMENT_BILLPAY_B2B_LEGAL_FORM_FIELD_EMPTY);
-                return false;
-            }
-
-            $customerGender = $this->getGender();
-            if(!$customerGender) {
-                if(!$this->_formGender || $this->_formGender == '') {
-                    $this->_error_redirect(MODULE_PAYMENT_BILLPAY_TEXT_ENTER_TITLE);
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /**
-         * Checks if B2c form was filled correctly.
-         * @param array $data_arr
-         * @return bool
-         */
-        function _validateB2CValues($data_arr) {
-            if ($this->getDateOfBirth() === null) {
-                $this->_error_redirect(MODULE_PAYMENT_BILLPAY_TEXT_ENTER_BIRTHDATE);
-                return false;
-            }
-
-            if ($this->getGender() === null) {
-                $this->_error_redirect(MODULE_PAYMENT_BILLPAY_TEXT_ENTER_GENDER);
-                return false;
-            }
-
-            if (isset($data_arr['payment']) && $data_arr['payment'] == strtolower($this->_paymentIdentifier)) {
-                $this->_checkBankValues($data_arr);
-            }
-
-            return true;
-        }
-
-        /**
+         /**
          * Validates gender, b2b/b2c fields and EULA
          * @param array $vars
          */
-        function pre_confirmation_check($vars = null) {
+        public function pre_confirmation_check($vars = null) {
             if (empty($vars))
             {
                 $vars = $_POST;
@@ -1209,8 +1184,12 @@ HEREDOC;
                 return;
             }
 
-            if ($this->getDateOfBirth() === null && !$this->isB2B($vars)) {
-                $this->_error_redirect(MODULE_PAYMENT_BILLPAY_TEXT_ENTER_BIRTHDATE);
+            if (!$this->isDobValid($this->getDateOfBirth()) && !$this->isB2B($vars)) {
+                if ($this->getDateOfBirth() === null) {
+                    $this->_error_redirect(MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB);
+                } else {
+                    $this->_error_redirect(MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB_UNDER);
+                }
                 return;
             }
 
@@ -1226,7 +1205,7 @@ HEREDOC;
          * If it returns array, it will show it's contents in "Payment information" box.
          * @return array
          */
-        function confirmation() {
+        public function confirmation() {
             #$confirmation = array(
             #    'title'     =>  'BillPay',
             #    'fields'    =>  array(
@@ -1241,7 +1220,7 @@ HEREDOC;
          * Prepares preauth request (with autocapture, one page checkout) and saves it in $_SESSION[billpay_preauth_req]
          * It executes on Checkout Confirmation page, before order confirmation.
          */
-        function process_button() {
+        public function process_button() {
             $order = $GLOBALS['order'];
             $order_total_modules = $GLOBALS['order_total_modules'];
 
@@ -1262,7 +1241,7 @@ HEREDOC;
          * Executes preauth
          * It executes after confirming an order.
          */
-        function before_process() {
+        public function before_process() {
             $this->_logError('START beforeProcess');
             $data = array();
             $success = $this->reqPreauthorizeCapture($data);
@@ -1277,27 +1256,20 @@ HEREDOC;
          *
          * It executes after before_process(). If BillPay denied, it won't be executed.
          */
-        function after_process() {
+        public function after_process() {
             global $insert_id; # newOrderId
 
-            // persist reference for payment information
-            $invoiceReference = $this->generateInvoiceReference($insert_id);
-
-            $qry = 'UPDATE billpay_bankdata
-                    SET orders_id = ' . $insert_id . ',
-                        invoice_reference = "' . $invoiceReference . '"
-                    WHERE tx_id= "' . $this->_getTransactionId().'"
-                    LIMIT 1';
-            xtc_db_query($qry);
+            $transaction_id = self::GetTransactionId();
+            $this->saveOrderId($transaction_id, $insert_id);
 
             $error = false;
 
-            if (!$this->_getTransactionId()) {
+            if (!$transaction_id) {
                 $error = 'Transaction ID not found in session';
             }
 
             if ($error) {
-                $this->setOrderBillpayState(constant('billpayBase_STATE_ERROR'), $insert_id);
+                $this->setOrderBillpayState(billpayBase::STATE_ERROR, $insert_id);
                 $this->_logError('Transaction ID not found in session', 'ERROR in after_process');
                 xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode(MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT), 'SSL'));
                 return false; # xtc_redirect exits
@@ -1306,9 +1278,11 @@ HEREDOC;
             $this->setOrderBillpayState($_SESSION['billpay_onAfterProcess']['orderState'], $insert_id);
 
             $productIds = $this->_prepareProductMapping($insert_id);
-            $this->reqUpdateOrder($this->_getTransactionId(), $insert_id, $productIds);
+            $this->reqUpdateOrder(self::GetTransactionId(), $insert_id, $productIds);
 
-            unset($_SESSION['billpay_transaction_id']);
+            $this->onDisplayThankYou($insert_id);
+
+            unset($_SESSION[self::SESSION_TRANSACTION_ID]);
             unset($_SESSION['billpay_total_amount']);
             unset($_SESSION['billpay_preselect']);
             unset($_SESSION['bp_rate_result']);
@@ -1318,11 +1292,13 @@ HEREDOC;
         }
 
 
-        function _prepareProductMapping($insert_id)
+        private function _prepareProductMapping($insert_id)
         {
             // create mapping for id update list
             $productIds = array();
-            $query = xtc_db_query("SELECT orders_products_id FROM ".TABLE_ORDERS_PRODUCTS." WHERE orders_id='".(int)$insert_id."' ORDER BY orders_products_id ASC");
+            $table = TABLE_ORDERS_PRODUCTS;
+            $orders_id = (int)$insert_id;
+            $query = xtc_db_query("SELECT orders_products_id FROM $table WHERE orders_id='$orders_id' ORDER BY orders_products_id ASC");
             $idMapping = array();
             foreach($_SESSION['cart']->contents as $tmpID => $data) {
                 if (isset($data['qty'])) {
@@ -1341,64 +1317,18 @@ HEREDOC;
             return $productIds;
         }
 
-
-        /**
-         * Returns array with last 10 customer's orders
-         * @param int $_customerId
-         * @return array
-         */
-        function _getOrderHistory($_customerId)
-        {
-            $_return = array();
-
-            if ($_customerId === null) {
-                return array();
-            }
-            $qry = 'SELECT o.`orders_id`, o.`date_purchased`, o.`payment_method`, o.`orders_status`, o.`currency`, ot.`value`
-                    FROM ' . TABLE_ORDERS . ' o
-                    JOIN ' . TABLE_ORDERS_TOTAL . ' ot ON (o.orders_id = ot.orders_id)
-                    WHERE ot.sort_order = 99
-                      AND o.`customers_id` = ' . (int)$_customerId . '
-                    ORDER BY date_purchased DESC
-                    LIMIT 10';
-            $_queryOrder = xtc_db_query($qry);
-            while (($_resultOrder = xtc_db_fetch_array($_queryOrder)) !== false) {
-                $_return[] = array(
-                    'hid'          => utf8_encode($_resultOrder['orders_id']),
-                    'hdate'        => utf8_encode($this->_formatDate('Ymd H:i:s', $_resultOrder['date_purchased'])),
-                    'hamount'      => $this->CurrencyToSmallerUnit($_resultOrder['value']),
-                    'hcurrency'    => utf8_encode($_resultOrder['currency']),
-                    'hpaymenttype' => utf8_encode($this->_getPaymentMethod($_resultOrder['payment_method'])),
-                    'hstatus'      => 0,
-                );
-            }
-            return $_return;
-        }
-
-
-        /**
-         * Invokes and returns selected ot_ module (order_total)
-         * @param string $classname
-         * @return mixed
-         */
-        function _createTotals($classname) {
-            global $xtPrice;
-            $ot = new $classname($xtPrice);
-            return $ot;
-        }
-
-
         /**
          * Saves log message to the log file (/includes/external/billpay/logs)
          * @param string $logMessage
          * @param string $logType
          * @return bool
          */
-        function _logError($logMessage, $logType = 'default') {
+        public function _logError($logMessage, $logType = 'default') {
             $_write = FALSE;
             if (is_array($logMessage)) {
                 $logMessage = print_r($logMessage, true);
             }
+            $logMessage = $this->filterLogMessage($logMessage);
             if ((!empty($this->_logPath)) ) {
                 $_data  = '------------------< '. strtoupper($logType) . ' ('.date('r').')' . ' >------------------';
                 $_data .= "\n\n" . $logMessage;
@@ -1425,9 +1355,33 @@ HEREDOC;
          * Logs debug information. It may be filtered from billpay.log.
          * @param string $message
          */
-        function _logDebug($message)
+        public function _logDebug($message)
         {
             $this->_logError($message, 'debug');
+        }
+
+        /**
+         * Filters long / sensitive fields in log messages
+         *
+         * @param  string $message
+         * @return string
+         */
+        private function filterLogMessage($message)
+        {
+            $filtered_tags = array('email_attachment', 'standard_information');
+            foreach ($filtered_tags as $tag) {
+                $message = preg_replace('@(<' . $tag . '><!\[CDATA\[).*(\]\]>)</' . $tag . '>@s', '$1--filtered--$2', $message);
+            }
+            $filtered_attributes = array(
+                'mid'   =>  '([0-9]+)',
+                'pid'   =>  '([0-9]+)',
+                'bpsecure'=>'([0-9a-zA-Z]+)',
+            );
+            foreach ($filtered_attributes as $attr => $regex) {
+                $message = preg_replace('@' . $attr . '="' . $regex . '"@', '' . $attr . '="--filtered--"', $message);
+            }
+
+            return $message;
         }
 
         /**
@@ -1435,7 +1389,7 @@ HEREDOC;
          * @param $moduleName
          * @return bool
          */
-        function isModuleInstalled($moduleName) {
+        private function isModuleInstalled($moduleName) {
             if(defined('MODULE_ORDER_TOTAL_INSTALLED')) {
                 $totalModules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
 
@@ -1457,7 +1411,7 @@ HEREDOC;
         /**
          * installs the payment method
          */
-        function install()
+        public function install()
         {
             $this->_logDebug('Starting payment method installation: '.$this->_paymentIdentifier);
             $state = 'install';
@@ -1466,16 +1420,16 @@ HEREDOC;
 
             // fetch next sort order
             switch ($this->_paymentIdentifier) {
-                case constant('billpayBase_PAYMENT_METHOD_INVOICE'):
+                case billpayBase::PAYMENT_METHOD_INVOICE:
                     $sortOrder = 3;
                     break;
-                case constant('billpayBase_PAYMENT_METHOD_DEBIT'):
+                case billpayBase::PAYMENT_METHOD_DEBIT:
                     $sortOrder = 4;
                     break;
-                case constant('billpayBase_PAYMENT_METHOD_TRANSACTION_CREDIT');
+                case billpayBase::PAYMENT_METHOD_TRANSACTION_CREDIT;
                     $sortOrder = 5;
                     break;
-                case constant('billpayBase_PAYMENT_METHOD_PAY_LATER'):
+                case billpayBase::PAYMENT_METHOD_PAY_LATER:
                     $sortOrder = 6;
                     break;
                 default:
@@ -1489,108 +1443,111 @@ HEREDOC;
                 $langFile = DIR_FS_LANGUAGES . 'german/modules/payment/' . strtolower($this->_paymentIdentifier) . '.php';
             }
             $this->_logDebug('Including lang file: '.$langFile);
+            /** @noinspection PhpIncludeInspection */
             require_once $langFile;
 
             // install new configuration
             $results = array();
+            $table = TABLE_CONFIGURATION;
             $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_STATUS";
-            $results[$configuration_key] = xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('".$configuration_key."', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+            $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('$configuration_key', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
             $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_LOGGING";
-            $results[$configuration_key] = xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', '', '6', '0', now())");
+            $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', '', '6', '0', now())");
             $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_LOGGING_ENABLE";
-            $results[$configuration_key] = xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('".$configuration_key."', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+            $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('$configuration_key', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
             $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_ID";
-            $results[$configuration_key] = xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', 'ShopID', '6', '0', now())");
+            $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', 'ShopID', '6', '0', now())");
             $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_SHIPPING_TAX";
-            $results[$configuration_key] = xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', '',  '6', '0', now())");
+            $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', '',  '6', '0', now())");
             $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_SORT_ORDER";
-            $results[$configuration_key] = xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', '".$sortOrder."', '6', '0', now())");
+            $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', '$sortOrder', '6', '0', now())");
             $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_ALLOWED";
-            $results[$configuration_key] = xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', 'DE',   '6', '0', now())");
+            $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', 'DE',   '6', '0', now())");
             $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_ORDER_STATUS";
-            $results[$configuration_key] = xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('".$configuration_key."', '0', '6', '0', 'xtc_get_order_status_name', 'xtc_cfg_pull_down_order_statuses(', now())");
+            $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('$configuration_key', '0', '6', '0', 'xtc_get_order_status_name', 'xtc_cfg_pull_down_order_statuses(', now())");
             $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_TABLE";
-            $results[$configuration_key] = xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', 'payment_billpay', '6', '0', now())");
+            $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', 'payment_billpay', '6', '0', now())");
             $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_MIN_AMOUNT";
-            $results[$configuration_key] = xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', '".$this->_getDefaultInstallConfig('MIN_AMOUNT')."', '6', '0', now())");
+            $min_amount = $this->_getDefaultInstallConfig('MIN_AMOUNT');
+            $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', '$min_amount', '6', '0', now())");
             $this->_logDebug("Setting local configuration keys:\n".print_r($results, true));
 
             //check if UTF8 setting is set globally = GS
             $configuration_key = 'MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE';
-            $check_status = xtc_db_query('SELECT count(*) AS number FROM ' . TABLE_CONFIGURATION . ' where configuration_key LIKE "'.$configuration_key.'"');
+            $check_status = xtc_db_query("SELECT count(*) AS number FROM $table where configuration_key LIKE '$configuration_key'");
             $rs_check_status = xtc_db_fetch_array($check_status);
             if($rs_check_status['number'] == 0 || $rs_check_status['number'] == '') {
                 $this->_logDebug("Setting global key: $configuration_key");
-                xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('".$configuration_key."', 'local', '6',  '0',\"xtc_cfg_select_option(array('local', 'UTF-8'), \", now())");
+                xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('$configuration_key', 'local', '6',  '0',\"xtc_cfg_select_option(array('local', 'UTF-8'), \", now())");
             }
 
             //check if login data is already set globally = GS
             $configuration_key = "MODULE_PAYMENT_BILLPAY_GS_MERCHANT_ID";
-            $check_status = xtc_db_query('SELECT count(*) AS number FROM ' . TABLE_CONFIGURATION . ' where configuration_key LIKE "'.$configuration_key.'"');
+            $check_status = xtc_db_query("SELECT count(*) AS number FROM $table where configuration_key LIKE '$configuration_key'");
             $rs_check_status = xtc_db_fetch_array($check_status);
             if($rs_check_status['number'] == 0 || $rs_check_status['number'] == '') {
                 $this->_logDebug("Setting global key: $configuration_key");
-                xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', '0', '6', '0', now())");
+                xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', '0', '6', '0', now())");
             }
 
             $configuration_key = "MODULE_PAYMENT_BILLPAY_GS_PORTAL_ID";
-            $check_status = xtc_db_query('SELECT count(*) AS number FROM ' . TABLE_CONFIGURATION . ' where configuration_key LIKE "'.$configuration_key.'"');
+            $check_status = xtc_db_query("SELECT count(*) AS number FROM $table where configuration_key LIKE '$configuration_key'");
             $rs_check_status = xtc_db_fetch_array($check_status);
             if($rs_check_status['number'] == 0 || $rs_check_status['number'] == '') {
                 $this->_logDebug("Setting global key: $configuration_key");
-                xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', '0', '6', '0', now())");
+                xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', '0', '6', '0', now())");
             }
 
             $configuration_key = "MODULE_PAYMENT_BILLPAY_GS_SECURE";
-            $check_status = xtc_db_query('SELECT count(*) AS number FROM ' . TABLE_CONFIGURATION . ' where configuration_key LIKE "'.$configuration_key.'"');
+            $check_status = xtc_db_query("SELECT count(*) AS number FROM $table where configuration_key LIKE '$configuration_key'");
             $rs_check_status = xtc_db_fetch_array($check_status);
             if($rs_check_status['number'] == 0 || $rs_check_status['number'] == '') {
                 $this->_logDebug("Setting global key: $configuration_key");
-                xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', '0', '6', '0', now())");
+                xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', '0', '6', '0', now())");
             }
 
             $configuration_key = "MODULE_PAYMENT_BILLPAY_GS_PUBLIC_API_KEY";
-            $check_status = xtc_db_query('SELECT count(*) AS number FROM ' . TABLE_CONFIGURATION . ' where configuration_key LIKE "'.$configuration_key.'"');
+            $check_status = xtc_db_query("SELECT count(*) AS number FROM $table where configuration_key LIKE '$configuration_key'");
             $rs_check_status = xtc_db_fetch_array($check_status);
             if($rs_check_status['number'] == 0 || $rs_check_status['number'] == '') {
                 $this->_logDebug("Setting global key: $configuration_key");
-                xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', '0', '6', '0', now())");
+                xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', '0', '6', '0', now())");
             }
 
             //check if TEST API / API URl is already set
             $configuration_key = "MODULE_PAYMENT_BILLPAY_GS_TESTAPI_URL_BASE";
-            $check_status = xtc_db_query('SELECT count(*) AS number FROM ' . TABLE_CONFIGURATION . ' where configuration_key LIKE "'.$configuration_key.'"');
+            $check_status = xtc_db_query("SELECT count(*) AS number FROM $table where configuration_key LIKE '$configuration_key'");
             $rs_check_status = xtc_db_fetch_array($check_status);
             if($rs_check_status['number'] == 0 || $rs_check_status['number'] == '') {
                 $this->_logDebug("Setting global key: $configuration_key");
-                xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', 'https://test-api.billpay.de/xml/offline', '6', '0', now())");
+                xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', 'https://test-api.billpay.de/xml/offline', '6', '0', now())");
             }
 
             $configuration_key = "MODULE_PAYMENT_BILLPAY_GS_API_URL_BASE";
-            $check_status = xtc_db_query('SELECT count(*) AS number FROM ' . TABLE_CONFIGURATION . ' where configuration_key LIKE "'.$configuration_key.'"');
+            $check_status = xtc_db_query("SELECT count(*) AS number FROM $table where configuration_key LIKE '$configuration_key'");
             $rs_check_status = xtc_db_fetch_array($check_status);
             if($rs_check_status['number'] == 0 || $rs_check_status['number'] == '') {
                 $this->_logDebug("Setting global key: $configuration_key");
-                xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', 'https://api.billpay.de/xml', '6', '0', now())");
+                xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', 'https://api.billpay.de/xml', '6', '0', now())");
             }
 
             //check if mode is already set
             $configuration_key = "MODULE_PAYMENT_BILLPAY_GS_TESTMODE";
-            $check_status = xtc_db_query('SELECT count(*) AS number FROM ' . TABLE_CONFIGURATION . ' where configuration_key LIKE "'.$configuration_key.'"');
+            $check_status = xtc_db_query("SELECT count(*) AS number FROM $table where configuration_key LIKE '$configuration_key'");
             $rs_check_status = xtc_db_fetch_array($check_status);
             if($rs_check_status['number'] == 0 || $rs_check_status['number'] == '') {
                 # You don't translate configuration values!
                 $this->_logDebug("Setting global key: $configuration_key");
-                xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('".$configuration_key."', 'Testmodus', '6', '0', 'xtc_cfg_select_option(array(\'Testmodus\', \'Livemodus\'), ', now())");
+                xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('$configuration_key', '".BillpayBase::MODE_TEST."', '6', '0', 'xtc_cfg_select_option(array(\'".BillpayBase::MODE_TEST."\', \'".BillpayBase::MODE_LIVE."\'), ', now())");
             }
 
             //check if HTTP_X_FORWARDED FOR is already installed
             $configuration_key = "MODULE_PAYMENT_BILLPAY_GS_HTTP_X";
-            $check_status = xtc_db_query('SELECT count(*) AS number FROM ' . TABLE_CONFIGURATION . ' where configuration_key LIKE "'.$configuration_key.'"');
+            $check_status = xtc_db_query("SELECT count(*) AS number FROM $table where configuration_key LIKE '$configuration_key'");
             $rs_check_status = xtc_db_fetch_array($check_status);
             if($rs_check_status['number'] == 0 || $rs_check_status['number'] == '') {
                 $this->_logDebug("Setting global key: $configuration_key");
-                xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('".$configuration_key."', 'False', '6', '0', 'xtc_cfg_select_option(array(\'False\', \'True\'), ', now())");
+                xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('$configuration_key', 'False', '6', '0', 'xtc_cfg_select_option(array(\'False\', \'True\'), ', now())");
             }
 
             $this->_logDebug("Executing payment specific installation code.");
@@ -1600,14 +1557,15 @@ HEREDOC;
             $this->_logDebug("Checking BillPay order states\n".print_r($this->billpayStates, true));
             foreach ($this->billpayStates as $stateId) {
                 $configuration_key = "MODULE_PAYMENT_BILLPAY_STATUS_".$stateId;
-                $configuration_value = BillpayDB::DBFetchValue("SELECT configuration_value FROM ".TABLE_CONFIGURATION." WHERE configuration_key = '".$configuration_key."' LIMIT 1");
+                $configuration_value = BillpayBase::GetConfig($configuration_key);
                 if (!empty($configuration_value)) {
                     continue;
                 }
 
                 // creating non existing order status
                 $this->_logDebug("Creating state #$stateId");
-                $nextId = BillpayDB::DBFetchValue('SELECT max(orders_status_id) + 1 AS nextId FROM ' . TABLE_ORDERS_STATUS);
+                $table = TABLE_ORDERS_STATUS;
+                $nextId = BillpayDB::DBFetchValue("SELECT max(orders_status_id) + 1 AS nextId FROM $table");
                 $textEn = 'BillPay '.$stateId;
                 $textDe = 'BillPay '.$stateId;
                 if (defined($configuration_key.'_TITLE_EN')) {
@@ -1617,9 +1575,12 @@ HEREDOC;
                     $textDe = constant($configuration_key.'_TITLE_DE');
                 }
                 $this->_logDebug("New state: $nextId, \nen:$textEn \nde:$textDe");
-                xtc_db_query('INSERT INTO ' . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) VALUES ('" . $nextId . "', '1', '" . $textEn. "')");
-                xtc_db_query('INSERT INTO ' . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) VALUES ('" . $nextId . "', '2', '" . $textDe . "')");
-                xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$configuration_key."', '" . $nextId . "', '6', '0', now())");
+                $table = TABLE_ORDERS_STATUS;
+                xtc_db_query("INSERT INTO $table (orders_status_id, language_id, orders_status_name) VALUES ('$nextId', '1', '$textEn')");
+                xtc_db_query("INSERT INTO $table (orders_status_id, language_id, orders_status_name) VALUES ('$nextId', '2', '$textDe')");
+
+                $table = TABLE_CONFIGURATION;
+                xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('$configuration_key', '$nextId', '6', '0', now())");
             }
 
             // billpay_bankdata table
@@ -1690,21 +1651,27 @@ HEREDOC;
                     "nominal_annual"     => "decimal(12,4) DEFAULT NULL",
                 );
                 foreach ($columns as $columnName => $columnType) {
-                    $check_query = xtc_db_query(
-                        'SELECT *
+                    $db = DB_DATABASE;
+                    $check_query = xtc_db_query("SELECT *
                          FROM information_schema.COLUMNS
-                         WHERE TABLE_SCHEMA = "' . DB_DATABASE . '"
-                           AND TABLE_NAME = "billpay_bankdata"
-                           AND COLUMN_NAME = "' . $columnName . '"'
+                         WHERE TABLE_SCHEMA = '$db'
+                           AND TABLE_NAME = 'billpay_bankdata'
+                           AND COLUMN_NAME = '$columnName' "
                     );
                     if (xtc_db_num_rows($check_query) == 0) {
                         // create tc columns if they do not exist yet
-                        xtc_db_query(
-                            'ALTER TABLE `billpay_bankdata`
-                               ADD `' . $columnName . '` ' . $columnType
-                        );
+                        xtc_db_query("ALTER TABLE `billpay_bankdata` ADD `$columnName` $columnType");
                     }
                 }
+            }
+
+            // Payment Method specific OTs
+            foreach ($this->otModules as $ot) {
+                /** @noinspection PhpIncludeInspection */
+                require_once(DIR_FS_CATALOG . 'includes/modules/order_total/'.$ot.'.php');
+                /** @var BillpayOT $otModule */
+                $otModule = new $ot();
+                $otModule->install();
             }
 
             $this->_logDebug('Installation successful.');
@@ -1712,15 +1679,25 @@ HEREDOC;
 
         /**
          * Removes configuration, except when $state == 'install'
-         * @param string $state
          */
-        function remove($state = NULL) {
+        public function remove() {
             $this->_logDebug('Removing payment method config.');
-            xtc_db_query('DELETE FROM ' . TABLE_CONFIGURATION . ' '.
-                            'WHERE configuration_key LIKE "MODULE_PAYMENT_'.$this->_paymentIdentifier.'\_%" '.
-                            'AND configuration_key NOT LIKE "MODULE_PAYMENT_BILLPAY_GS_%"'.
-                            'AND configuration_key NOT LIKE "MODULE_PAYMENT_BILLPAY_STATUS_%" ');
+            $table = TABLE_CONFIGURATION;
+            $config_key = 'MODULE_PAYMENT_'.$this->_paymentIdentifier.'_%';
+            xtc_db_query("DELETE FROM $table
+                            WHERE configuration_key LIKE '$config_key'
+                            AND configuration_key NOT LIKE 'MODULE_PAYMENT_BILLPAY_GS_%'
+                            AND configuration_key NOT LIKE 'MODULE_PAYMENT_BILLPAY_STATUS_%' ");
             // complete removal (GS, statuses) is disabled
+
+            // Payment Method specific OTs
+            foreach ($this->otModules as $ot) {
+                /** @noinspection PhpIncludeInspection */
+                require_once(DIR_FS_CATALOG . 'includes/modules/order_total/'.$ot.'.php');
+                /** @var BillpayOT $otModule */
+                $otModule = new $ot();
+                $otModule->remove();
+            }
         }
 
         /**
@@ -1728,7 +1705,7 @@ HEREDOC;
          *
          * @return array
          */
-        function keys()
+        public function keys()
         {
             // configuration options will be displayed
             // in the here defined order at "admin/payment methods"
@@ -1760,9 +1737,9 @@ HEREDOC;
         }
 
 
-        function getModuleConfig() {
-            $country = strtoupper($this->_getCountry(3));
-            $currency = strtoupper($this->_getCurrency());
+        protected function getModuleConfig() {
+            $country = strtoupper($this->_getCountryIso3Code());
+            $currency = strtoupper(BillpayOrder::GetCurrentCurrency());
             $language = strtoupper($this->_getLanguage());
 
             if (isset($_SESSION['billpay_module_config'][$country][$currency])) {
@@ -1791,11 +1768,12 @@ HEREDOC;
          * Sends preauthorize request and returns the data
          * @return bool
          */
-        function reqPreauthorizeCapture()
+        private function reqPreauthorizeCapture()
         {
+            /** @noinspection PhpIncludeInspection */
             require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/ipl_xml_api.php');
-            require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php4/ipl_preauthorize_request.php');
-            require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/Bankdata.php');
+            /** @noinspection PhpIncludeInspection */
+            require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php5/ipl_preauthorize_request.php');
 
             $req = new ipl_preauthorize_request($this->api_url, $this->_getPaymentType());
             $req->set_default_params($this->bp_merchant, $this->bp_portal, $this->bp_secure);
@@ -1813,15 +1791,8 @@ HEREDOC;
             $req->set_terms_accepted(true);
             $req->set_capture_request_necessary(false);
 
-            // fetch the order history for customers only (not guests)
-            if ($this->_getCustomerGroup() != 'g') {
-                // fetch & add history
-                $req = $this->_add_order_history($req);
-            }
-
             $this->token = ipl_create_random();
             $shopDomain = $this->_getShopDomain();
-            $this->_logDebug($shopDomain);
             if (strpos($shopDomain, "localhost") !== false) {
                 $this->_logError("Shop working on localhost, cannot receive callbacks: ".$shopDomain);
                 $shopDomain = "http://billpay.de/";
@@ -1852,25 +1823,28 @@ HEREDOC;
                 return false;
             }
 
-            $this->_setTransactionId(utf8_decode((string)$req->get_bptid()));
+            $transaction_id = utf8_decode((string)$req->get_bptid());
+            $this->_setTransactionId($transaction_id);
 
-            Billpay_Base_Bankdata::SaveRequest($req);
+            $billpayTotals = $this->_getDataValue('order_totals');
+            $orderTotalGross = $billpayTotals['orderTotalGross'];
+            Billpay_Base_Bankdata::SaveRequest($req, $orderTotalGross, $transaction_id);
             $this->onPreauthResponse($req);
             $_SESSION['billpay_onAfterProcess'] = array(
-                'orderState'           =>  constant('billpayBase_STATE_APPROVED'),
+                'orderState'           =>  billpayBase::STATE_APPROVED,
                 'campaignText'         =>  '',
                 'externalRedirect'     =>  '',
                 'campaignImg'          =>  '',
             );
             if ($req->get_status() == 'PRE_APPROVED') {
-                $_SESSION['billpay_onAfterProcess']['orderState'] = constant('billpayBase_STATE_PENDING');
+                $_SESSION['billpay_onAfterProcess']['orderState'] = billpayBase::STATE_PENDING;
                 $_SESSION['billpay_onAfterProcess']['externalRedirect'] = $req->get_external_redirect_url();
                 $_SESSION['billpay_onAfterProcess']['campaignText'] = $req->get_campaign_display_text();
                 $_SESSION['billpay_onAfterProcess']['campaignImg'] = $req->get_campaign_display_image_url();
                 $_SESSION['billpay_onAfterProcess']['rateLink'] = $req->get_rate_plan_url();
                 $this->form_action_url = 'checkout_billpay_giropay.php';
                 $this->tmpOrders = true;
-                $this->tmpStatus = $this->getOrderStatusFromBillpayState(constant('billpayBase_STATE_PENDING'));
+                $this->tmpStatus = $this->getOrderStatusFromBillpayState(billpayBase::STATE_PENDING);
             }
             unset($_SESSION['billpay_data_arr']);
             unset($_SESSION['billpay_fee_cost']);
@@ -1884,7 +1858,7 @@ HEREDOC;
          * @param array $data
          * @return array|bool|mixed
          */
-        function reqModuleConfig($data)
+        private function reqModuleConfig($data)
         {
             /**
              * $data = array(
@@ -1893,8 +1867,10 @@ HEREDOC;
              *      'language'  =>  'de',
              * )
              */
+            /** @noinspection PhpIncludeInspection */
             require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/ipl_xml_api.php');
-            require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php4/ipl_module_config_request.php');
+            /** @noinspection PhpIncludeInspection */
+            require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php5/ipl_module_config_request.php');
 
             $req = new ipl_module_config_request($this->api_url);
             $req->set_default_params($this->bp_merchant, $this->bp_portal, $this->bp_secure);
@@ -1921,19 +1897,20 @@ HEREDOC;
          * @param int $orderId
          * @return bool
          */
-        function reqInvoiceCreated($orderId)
+        private function reqInvoiceCreated($orderId)
         {
+            /** @noinspection PhpIncludeInspection */
             require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/ipl_xml_api.php');
-            require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php4/ipl_invoice_created_request.php');
+            /** @noinspection PhpIncludeInspection */
+            require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php5/ipl_invoice_created_request.php');
             $this->_logDebug("Activating order");
             $this->requireLang();
             $req = new ipl_invoice_created_request($this->api_url);
             $req->set_default_params($this->bp_merchant, $this->bp_portal, $this->bp_secure);
-
-            $total = BillpayDB::DBFetchValue('SELECT value FROM '. TABLE_ORDERS_TOTAL .' WHERE class = "ot_total" AND orders_id = '.(int)$orderId);
+            $total = BillpayOrder::getOTById($orderId, 'ot_total');
             $total = $this->CurrencyToSmallerUnit($total);
-            $currency = BillpayDB::DBFetchValue('SELECT currency FROM '.TABLE_ORDERS.' WHERE orders_id = '.(int)$orderId);
-            $req->set_invoice_params($total, $currency, $orderId);
+            $currency = BillpayOrder::getCurrencyById($orderId);
+            $req->set_invoice_params($total, $currency, $this->getRemoteOrderId($orderId));
             $internalError = $req->send();
             $_xmlReq 	= (string)utf8_decode($req->get_request_xml());
             $_xmlResp 	= (string)utf8_decode($req->get_response_xml());
@@ -1955,8 +1932,8 @@ HEREDOC;
                 $this->_logError($this->error, 'Invoice error occurred (invoiceCreated)');
                 return false;
             }
-            xtc_db_query('UPDATE billpay_bankdata SET invoice_due_date = "'.$dueDate.'" '.'WHERE orders_id = '.(int)$orderId);
-            $newStatus = $this->getOrderStatusFromBillpayState(constant('billpayBase_STATE_COMPLETED'));
+            BillpayDB::DBQuery('UPDATE billpay_bankdata SET invoice_due_date = "'.$dueDate.'" '.'WHERE orders_id = '.(int)$orderId);
+            $newStatus = $this->getOrderStatusFromBillpayState(billpayBase::STATE_COMPLETED);
             $this->addHistoryEntry($orderId, constant('MODULE_PAYMENT_'.strtoupper($this->_paymentIdentifier).'_TEXT_INVOICE_CREATED_COMMENT'), $newStatus);
             $this->onAfterInvoiceCreated($req, $orderId);
             return true;
@@ -1969,15 +1946,17 @@ HEREDOC;
          * @param $productIds
          * @return bool
          */
-        function reqUpdateOrder($transactionId, $orderId, $productIds)
+        private function reqUpdateOrder($transactionId, $orderId, $productIds)
         {
             # we update Billpay DB with orderId
+            /** @noinspection PhpIncludeInspection */
             require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/ipl_xml_api.php');
-            require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php4/ipl_update_order_request.php');
+            /** @noinspection PhpIncludeInspection */
+            require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php5/ipl_update_order_request.php');
 
             $req = new ipl_update_order_request($this->api_url);
             $req->set_default_params($this->bp_merchant, $this->bp_portal, $this->bp_secure);
-            $req->set_update_params($transactionId, $orderId);
+            $req->set_update_params($transactionId, $this->getRemoteOrderId($orderId));
 
             foreach ($productIds as $key => $val) {
                 $req->add_id_update($key, $val);
@@ -1996,7 +1975,7 @@ HEREDOC;
                 $this->_logError($req->get_merchant_error_message(), 'WARNING: Error sending update order request. Must use tx_id as api reference');
                 return false;
             }
-            xtc_db_query("UPDATE billpay_bankdata SET api_reference_id='" . $orderId . "' WHERE tx_id='".$transactionId."'");
+            BillpayDB::DBQuery("UPDATE billpay_bankdata SET api_reference_id='" . $orderId . "' WHERE tx_id='".$transactionId."'");
             return true;
         }
 
@@ -2005,18 +1984,21 @@ HEREDOC;
          * @param $orderId
          * @return bool
          */
-        function reqCancel($orderId)
+        public function reqCancel($orderId)
         {
+            /** @noinspection PhpIncludeInspection */
             require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/ipl_xml_api.php');
-            require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php4/ipl_cancel_request.php');
+            /** @noinspection PhpIncludeInspection */
+            require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php5/ipl_cancel_request.php');
             $this->requireLang();
             $this->_logDebug("Cancelling order.");
             $req = new ipl_cancel_request($this->api_url);
             $req->set_default_params($this->bp_merchant, $this->bp_portal, $this->bp_secure);
-            $orderCurrency = BillpayDB::DBFetchValue("SELECT currency FROM ".TABLE_ORDERS." WHERE orders_id = '".(int)$orderId."'");
-            $orderTotal = BillpayDB::DBFetchValue("SELECT value FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)$orderId."' AND class='ot_total'");
+
+            $orderCurrency = BillpayOrder::getCurrencyById($orderId);
+            $orderTotal = BillpayOrder::getOTById($orderId, 'ot_total');
             $orderTotal = billpayBase::CurrencyToSmallerUnit($orderTotal);
-            $req->set_cancel_params($orderId, $orderTotal, $orderCurrency);
+            $req->set_cancel_params($this->getRemoteOrderId($orderId), $orderTotal, $orderCurrency);
 
             $internalError = $req->send();
             if ($internalError) {
@@ -2033,7 +2015,7 @@ HEREDOC;
                 $this->_logError($req->get_merchant_error_message(), 'WARNING: Error sending cancel order request.');
                 return false;
             }
-            $newStatus = $this->getOrderStatusFromBillpayState(constant('billpayBase_STATE_CANCELLED'));
+            $newStatus = $this->getOrderStatusFromBillpayState(billpayBase::STATE_CANCELLED);
             $this->addHistoryEntry($orderId, constant('MODULE_PAYMENT_BILLPAY_TEXT_CANCEL_COMMENT'), $newStatus);
             return true;
         }
@@ -2044,10 +2026,12 @@ HEREDOC;
          * @param int $orderId
          * @return boolean
          */
-        function reqEditCartContent($orderId)
+        public function reqEditCartContent($orderId)
         {
+            /** @noinspection PhpIncludeInspection */
             require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/ipl_xml_api.php');
-            require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php4/ipl_edit_cart_content_request.php');
+            /** @noinspection PhpIncludeInspection */
+            require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php5/ipl_edit_cart_content_request.php');
 
             $req = new ipl_edit_cart_content_request($this->api_url);
             $req->set_default_params($this->bp_merchant, $this->bp_portal, $this->bp_secure);
@@ -2061,22 +2045,24 @@ HEREDOC;
                     continue;
                 }
                 $req->add_article(
-                    $product['opid'], $product['qty'],
+                    $product['opid'], round($product['qty'], 0),
                     $product['name'], '',
                     $price,
                     $price
                 );
             }
 
-            $rebate = BillpayDB::DBFetchValue("SELECT value FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)$orderId."'  AND class = 'ot_discount'");
+            $rebate = BillpayOrder::getOTById($orderId, 'ot_discount');
             $rebate = billpayBase::CurrencyToSmallerUnit($rebate) * -1;
-            $total = BillpayDB::DBFetchValue("SELECT value FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)$orderId."'  AND class = 'ot_total'");
+            $total = BillpayOrder::getOTById($orderId, 'ot_total');
             $total = billpayBase::CurrencyToSmallerUnit($total);
             $shipping = $total - $subtotal + $rebate;
-            $order = BillpayDB::DBFetchRow("SELECT shipping_method, currency FROM ".TABLE_ORDERS." WHERE orders_id = '".(int)$orderId."'");
+            $table = TABLE_ORDERS;
+            $orders_id = (int)$orderId;
+            $order = BillpayDB::DBFetchRow("SELECT shipping_method, currency FROM $table WHERE orders_id = '$orders_id'");
             $shipping_method = $order['shipping_method'];
             $currency = $order['currency'];
-            $req->set_total($rebate, $rebate, $shipping_method, $shipping, $shipping, $total, $total, $currency, $orderId);
+            $req->set_total($rebate, $rebate, $shipping_method, $shipping, $shipping, $total, $total, $currency, $this->getRemoteOrderId($orderId));
 
             $internalError = $req->send();
             if ($internalError) {
@@ -2106,15 +2092,15 @@ HEREDOC;
          * @param string    $message        (optional) Comment for order status change
          * @return bool
          */
-        function setOrderBillpayState($billpayStateId, $orderId, $message = '')
+        public function setOrderBillpayState($billpayStateId, $orderId, $message = '')
         {
             $this->requireLang();
             $messages = array(
-                constant('billpayBase_STATE_PENDING')     =>  constant('MODULE_PAYMENT_BILLPAY_STATUS_PENDING_DESC'),
-                constant('billpayBase_STATE_APPROVED')    =>  constant('MODULE_PAYMENT_BILLPAY_STATUS_APPROVED_DESC'),
-                constant('billpayBase_STATE_COMPLETED')   =>  constant('MODULE_PAYMENT_BILLPAY_STATUS_ACTIVATED_DESC'),
-                constant('billpayBase_STATE_CANCELLED')   =>  constant('MODULE_PAYMENT_BILLPAY_STATUS_CANCELLED_DESC'),
-                constant('billpayBase_STATE_ERROR')       =>  constant('MODULE_PAYMENT_BILLPAY_STATUS_ERROR_DESC')
+                billpayBase::STATE_PENDING     =>  constant('MODULE_PAYMENT_BILLPAY_STATUS_PENDING_DESC'),
+                billpayBase::STATE_APPROVED    =>  constant('MODULE_PAYMENT_BILLPAY_STATUS_APPROVED_DESC'),
+                billpayBase::STATE_COMPLETED   =>  constant('MODULE_PAYMENT_BILLPAY_STATUS_ACTIVATED_DESC'),
+                billpayBase::STATE_CANCELLED   =>  constant('MODULE_PAYMENT_BILLPAY_STATUS_CANCELLED_DESC'),
+                billpayBase::STATE_ERROR       =>  constant('MODULE_PAYMENT_BILLPAY_STATUS_ERROR_DESC')
             );
             $orderStatusId = $this->getOrderStatusFromBillpayState($billpayStateId);
             if (empty($message)) {
@@ -2130,13 +2116,13 @@ HEREDOC;
          * @param $message
          * @return bool
          */
-        function setOrderStatus($orderStatusId, $orderId, $message)
+        public function setOrderStatus($orderStatusId, $orderId, $message)
         {
             $qry = 'UPDATE ' . TABLE_ORDERS . '
                         SET orders_status = '.(int)$orderStatusId.'
                         WHERE orders_id = ' . (int)$orderId . '
                         LIMIT 1';
-            xtc_db_query($qry);
+            BillpayDB::DBQuery($qry);
             $this->addHistoryEntry($orderId, $message, $orderStatusId);
             return true;
         }
@@ -2146,67 +2132,41 @@ HEREDOC;
         /**
          * Returns maximum value of payment; BillPay won't handle transactions higher that it from this merchant.
          * @abstract
-         * @param $config
          * @return int
          */
-        function _getStaticLimit($config) {
+        // protected function _getStaticLimit($config) {
+        protected function _getStaticLimit() {
             return 0;
         }
 
         /**
          * Returns minimum value of payment; BillPay won't handle transactions lower than it from this merchant.
          * @abstract
-         * @param $config
          * @return int
          */
-        function _getMinValue($config) {
+        // protected function _getMinValue($config) {
+        protected function _getMinValue() {
             return 0;
         }
 
         /**
          * Checks if current method allows customers to use it.
          * @abstract
-         * @param $config
          * @return bool
          */
-        function _is_b2c_allowed($config) {
+        // protected function _is_b2c_allowed($config) {
+        protected function _is_b2c_allowed() {
             return true;
         }
 
         /**
          * Checks if current method allows businesses to use it.
          * @abstract
-         * @param $config
          * @return bool
          */
-        function _is_b2b_allowed($config) {
+        // protected function _is_b2b_allowed($config) {
+        protected function _is_b2b_allowed() {
             return false;
-        }
-
-        /**
-         * Add customers bank data to the preautho request. only for direct debit
-         * @abstract
-         */
-        function _addBankData($req, $vars) {
-            return $req;
-        }
-
-        /**
-         * Add tc-specific details to preauth request
-         * @abstract
-         */
-        function _addPreauthTcDetails($req, $numberRates, $ratePlanTotal) {
-            return $req;
-        }
-
-
-        /**
-         * Display input fields for customers bank data. Only for direct debit
-         * @abstract
-         * @return string
-         */
-        function _displaySepaBankData() {
-            return '';
         }
 
         /**
@@ -2214,7 +2174,7 @@ HEREDOC;
          * @abstract
          * @return int
          */
-        function _getPaymentType()
+        protected function _getPaymentType()
         {
             return 0;
         }
@@ -2225,8 +2185,9 @@ HEREDOC;
          * @param array $data
          * @return array
          */
-        function beforeValidate($data)
+        public function beforeValidate($data)
         {
+            // TODO: it's not used?
             return $data;
         }
 
@@ -2234,7 +2195,7 @@ HEREDOC;
          * Event executed during payment method installation.
          * @abstract
          */
-        function onInstall()
+        public function onInstall()
         {
 
         }
@@ -2245,7 +2206,7 @@ HEREDOC;
          * @return array
          * @abstract
          */
-        function onKeys($config_array)
+        public function onKeys($config_array)
         {
             return $config_array;
         }
@@ -2255,8 +2216,9 @@ HEREDOC;
          * step for temporary order
          * @return void
          */
-        function payment_action()
+        public function payment_action()
         {
+            // TODO: it's not used?
             $orderId = $_SESSION['tmp_oID'];
 
             // persist reference for payment information
@@ -2265,23 +2227,14 @@ HEREDOC;
             $qry = 'UPDATE billpay_bankdata
                     SET orders_id = ' . $orderId . ',
                         invoice_reference = "' . $invoiceReference . '"
-                    WHERE tx_id= "' . $this->_getTransactionId().'"
+                    WHERE tx_id= "' . self::GetTransactionId().'"
                     LIMIT 1';
-            xtc_db_query($qry);
+            BillpayDB::DBQuery($qry);
 
             $productIds = $this->_prepareProductMapping($orderId);
-            $this->reqUpdateOrder($this->_getTransactionId(), $orderId, $productIds);
+            $this->reqUpdateOrder(self::GetTransactionId(), $orderId, $productIds);
             xtc_redirect(xtc_href_link($this->form_action_url, '', 'SSL'));
         }
-
-        /**
-         * check if bank data values are not empty. only for direct debit and transaction credit
-         * @param array $vars
-         *
-         * @return void
-         */
-        function _checkBankValues($vars=array()) {}
-
 
         /**
          * Process payment method input data (form), before validation
@@ -2289,8 +2242,34 @@ HEREDOC;
          * @return bool
          * @abstract
          */
-        function onMethodInput($data)
+        public function onMethodInput($data)
         {
+            $this->setDateOfBirth(str_replace('.', '-', $data['billpay']['customer_day_of_birth']));
+            $this->setGender($data['billpay']['customer_salutation']);
+            $this->setPhone($data['billpay']['customer_phone_number']);
+
+            $this->_setDataValue('account_holder', $data['billpay']['account_holder']);
+            $this->_setDataValue('account_iban', $data['billpay']['customer_iban']);
+            $this->_setDataValue('account_bic', $data['billpay']['customer_bic']);
+
+            if ($this->isPhoneRequired()) {
+                if (!$this->getPhone()) {
+                    $this->error = MODULE_PAYMENT_BILLPAY_TEXT_ENTER_PHONE;
+                    return false;
+                }
+            }
+
+            if ($this->isDobRequired($data)) {
+                if (!$this->isDobValid($this->getDateOfBirth())) {
+                    if ($this->getDateOfBirth() === null) {
+                        $this->error = MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB;
+                    } else {
+                        $this->error = MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB_UNDER;
+                    }
+                    return false;
+                }
+            }
+
             return true;
         }
 
@@ -2300,7 +2279,7 @@ HEREDOC;
          * @return ipl_preauthorize_request
          * @abstract
          */
-        function onMethodOutput($req)
+        public function onMethodOutput($req)
         {
             return $req;
         }
@@ -2311,7 +2290,7 @@ HEREDOC;
          * @param int $orderId
          * @abstract
          */
-        function onAfterInvoiceCreated($req, $orderId) {
+        public function onAfterInvoiceCreated($req, $orderId) {
 
         }
 
@@ -2320,7 +2299,7 @@ HEREDOC;
          * @param $orderId
          * @abstract
          */
-        function onSaveEditOrderBefore($orderId)
+        public function onSaveEditOrderBefore($orderId)
         {
 
         }
@@ -2329,7 +2308,7 @@ HEREDOC;
          * Event fired after receiving preauthorize response
          * @param ipl_preauthorize_request $req
          */
-        function onPreauthResponse($req) {
+        public function onPreauthResponse($req) {
 
         }
 
@@ -2338,7 +2317,7 @@ HEREDOC;
          * @param $orderId
          * @return bool
          */
-        function onOrderDelete($orderId)
+        public function onOrderDelete($orderId)
         {
             return $this->reqCancel($orderId);
         }
@@ -2350,7 +2329,8 @@ HEREDOC;
          * @param $error
          *
          */
-        function _displayGMerror($error) {}
+        public function _displayGMerror($error) {}
+        // TODO: it's not used?
 
         ##### GETTERS / SETTERS
 
@@ -2359,24 +2339,23 @@ HEREDOC;
          * @param $billpayStateId
          * @return int
          */
-        function getOrderStatusFromBillpayState($billpayStateId)
+        public function getOrderStatusFromBillpayState($billpayStateId)
         {
             // support for ORDER_STATUS setting from old plugin versions
-            if ($billpayStateId === constant('billpayBase_STATE_APPROVED')) {
-                $approvedStatus = BillpayDB::DBFetchValue("SELECT configuration_value FROM ".TABLE_CONFIGURATION." WHERE configuration_key = 'MODULE_PAYMENT_".$this->_paymentIdentifier."_ORDER_STATUS' LIMIT 1");
+            if ($billpayStateId === billpayBase::STATE_APPROVED) {
+                $approvedStatus = BillpayBase::GetConfig('MODULE_PAYMENT_' . $this->_paymentIdentifier . '_ORDER_STATUS');
                 if ($approvedStatus) {
                     return $approvedStatus;
                 }
             }
-            $configuration_key = "MODULE_PAYMENT_BILLPAY_STATUS_".$billpayStateId;
-            $configuration_value = BillpayDB::DBFetchValue("SELECT configuration_value FROM ".TABLE_CONFIGURATION." WHERE configuration_key = '".$configuration_key."' LIMIT 1");
+            $configuration_value = BillpayBase::GetConfig("MODULE_PAYMENT_BILLPAY_STATUS_".$billpayStateId);
             if (!empty($configuration_value)) {
                 return $configuration_value;
             }
             $this->_logError('BillPay state '.$billpayStateId.' not found, plugin was not installed?');
 
             // Fallback
-            if ($billpayStateId === constant('billpayBase_STATE_APPROVED')) {
+            if ($billpayStateId === billpayBase::STATE_APPROVED) {
                 $this->_logError("ORDER_STATE not set, fallback to 1 (pending)");
                 return 1;
             }
@@ -2390,7 +2369,7 @@ HEREDOC;
          * @param $key
          * @return string
          */
-        function _getDefaultInstallConfig($key)
+        private function _getDefaultInstallConfig($key)
         {
             if (empty($this->_defaultConfig[$key])) return '';
             return $this->_defaultConfig[$key];
@@ -2400,7 +2379,7 @@ HEREDOC;
          * Returns type of connection to BillPay API
          * @return false|'Testmodus'
          */
-        function getMode() {
+        public function getMode() {
             return $this->testmode;
         }
 
@@ -2408,12 +2387,12 @@ HEREDOC;
          * Returns shop's URL i.e. "https://example.shopdomain.com/"
          * @return string
          */
-        function _getShopDomain() {
+        private function _getShopDomain() {
             return (ENABLE_SSL ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG;
         }
 
 
-        function currentCustomerGroupUsesTax() {
+        private function currentCustomerGroupUsesTax() {
             return $_SESSION['customers_status']['customers_status_show_price_tax'] == 1
             || $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1;
         }
@@ -2423,40 +2402,16 @@ HEREDOC;
          * Getter for requestTransactionId
          * @return string
          */
-        function _getTransactionId() {
-            return $_SESSION['billpay_transaction_id'];
+        public static function GetTransactionId() {
+            return $_SESSION[self::SESSION_TRANSACTION_ID];
         }
 
         /**
          * Setter for requestTransactionId
          * @param string $transId
          */
-        function _setTransactionId($transId) {
-            $_SESSION['billpay_transaction_id'] = $transId;
-        }
-
-        /**
-         * Returns lower case code of order's billing country
-         * @param int $len
-         * @return string
-         */
-        function _getCountry($len) {
-            $billing = BillpayOrder::getCustomerBilling();
-            if ($len == 3) {
-                return $billing['country3'];
-            }
-            if ($len == 2) {
-                return $billing['country2'];
-            }
-            return 'DEU';
-        }
-
-        /**
-         * Returns current order's currency. Or current session.
-         * @return string
-         */
-        function _getCurrency() {
-            return BillpayOrder::getCurrency();
+        private function _setTransactionId($transId) {
+            $_SESSION[self::SESSION_TRANSACTION_ID] = $transId;
         }
 
         /**
@@ -2468,7 +2423,7 @@ HEREDOC;
          *
          * @return mixed
          */
-        function _getPaymentStatus($req, $config = array())
+        private function _getPaymentStatus($req, $config = array())
         {
             if ($req->is_invoice_allowed() == true) {
                 $config['static_limit_invoice'] = $req->get_static_limit_invoice();
@@ -2486,8 +2441,8 @@ HEREDOC;
                 $config['min_value_transactioncredit']    = $req->get_hire_purchase_min_value();
                 $config['terms']                          = $req->get_terms();
             }
-            if (defined('MODULE_PAYMENT_'. billpayBase_PAYMENT_METHOD_PAY_LATER . '_STATUS')
-                && constant('MODULE_PAYMENT_' . billpayBase_PAYMENT_METHOD_PAY_LATER . '_STATUS'))
+            if (defined('MODULE_PAYMENT_'. billpayBase::PAYMENT_METHOD_PAY_LATER . '_STATUS')
+                && constant('MODULE_PAYMENT_' . billpayBase::PAYMENT_METHOD_PAY_LATER . '_STATUS'))
             {
                 $config['static_limit_paylater'] = 10000000000;
             }
@@ -2496,96 +2451,21 @@ HEREDOC;
         }
 
 
-        function _getLanguage() {
+        private function _getLanguage() {
             if (empty($_SESSION['language_code'])) {
                 return 'de';
             }
             return $_SESSION['language_code'];
         }
 
-        function getTermsOfServiceText() {
-            return MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK;
-        }
-
         /**
          * Returns unique ID of the client using hash, server url and session_id
          * @return string
          */
-        function getCustomerIdentifier() {
+        public function getCustomerIdentifier() {
+            /** @noinspection PhpIncludeInspection */
             require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/ipl_xml_api.php');
             return ipl_create_hash(session_id());
-        }
-
-        /**
-         * @return int
-         */
-        function _getPaymentBlockWidth() {
-            return 500;
-        }
-
-        /**
-         * @return int
-         */
-        function _getPaymentBlockHeight() {
-            return 148;
-        }
-
-
-
-
-        /**
-         * Identifies payment method of a historic order.
-         * @param array $_paymentMethod     Array containing historic order data
-         * @return int
-         */
-        function _getPaymentMethod($_paymentMethod = NULL) {
-            /*
-             0: Lastschrift					|		0: Bezahlt
-             1: Kreditkarte					|		1: Offen
-             2: Vorkasse	    			|		2: Mahnwesen
-             3: Nachnahme					|		3: Inkasso
-             4: Paypal						|		4: Ueberbezahlt
-             5: Sofortueberweisung/Giropay	|		5: Unterbezahlt
-             6: Rechnung		    		|		6: Geplatzt
-             7: Billpay (Rechnung)
-             100: Other
-             */
-            switch($_paymentMethod) {
-                case 'moneybookers_elv':
-                case 'micropayment_debit':
-                    return 0;
-                    break;
-                case 'cc':
-                case 'moneybookers_cc':
-                case 'micropayment_cc':
-                case 'worldpay':
-                    return 1;
-                    break;
-                case 'banktransfer':
-                case 'eustandardtransfer':
-                    return 2;
-                    break;
-                case 'cod':
-                    return 3;
-                    break;
-                case 'paypal':
-                case 'paypalexpress':
-                    return 4;
-                    break;
-                case 'pn_sofortueberweisung':
-                case 'moneybookers_sft':
-                case 'moneybookers_giropay':
-                case 'giropay':
-                    return 5;
-                    break;
-                case 'invoice':
-                    return 6;
-                    break;
-                case 'billpay':
-                    return 7;
-                    break;
-            }
-            return 100; # other
         }
 
         /**
@@ -2598,7 +2478,7 @@ HEREDOC;
          *
          * @return int
          */
-        function _getPrice($valuePrice, $valueTax, $calculateTax = true, $isGrossPrice = true)
+        private function _getPrice($valuePrice, $valueTax, $calculateTax = true, $isGrossPrice = true)
         {
             if ($valuePrice === null) {
                 return 0;
@@ -2626,7 +2506,7 @@ HEREDOC;
          * Returns customer IP
          * @return string
          */
-        function _getCustomerIp()
+        private function _getCustomerIp()
         {
             if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
                 $forwardedForArray = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
@@ -2643,23 +2523,17 @@ HEREDOC;
 
         /**
          * Returns customer's salutation
-         * @param null|string $customerGender
          * @return string|null
          */
-        function _getCustomerSalutation($customerGender = null)
+        private function _getCustomerSalutation()
         {
-            if (!$customerGender) {
-                $customerGender = $this->getGender();
-            }
-            if (!$customerGender) {
-                return null;
-            }
+            $customerGender = $this->getGender();
             switch ($customerGender) {
                 case 'm':
-                    return constant('MODULE_PAYMENT_'.$this->_paymentIdentifier.'_SALUTATION_MALE');
+                    return constant('MODULE_PAYMENT_BILLPAY_SALUTATION_MALE');
                     break;
                 case 'f':
-                    return constant('MODULE_PAYMENT_'.$this->_paymentIdentifier.'_SALUTATION_FEMALE');
+                    return constant('MODULE_PAYMENT_BILLPAY_SALUTATION_FEMALE');
                     break;
             }
             return null;
@@ -2669,7 +2543,7 @@ HEREDOC;
          * Returns customer id stored in session.
          * @return int|null
          */
-        function _getCustomerId()
+        private function _getCustomerId()
         {
             if (empty($_SESSION['customer_id']) === false) {
                 return (int)$_SESSION['customer_id'];
@@ -2681,7 +2555,7 @@ HEREDOC;
          * Returns current customer's group to populate preauth request
          * @return string
          */
-        function _getCustomerGroup()
+        private function _getCustomerGroup()
         {
             if (isset($_SESSION['customers_status']['customers_status_id'])) {
                 // default values
@@ -2704,166 +2578,13 @@ HEREDOC;
         }
 
         /**
-         * Reformats supplied date to another format
-         * @param string $dateFormat
-         * @param string $dateString
-         *
-         * @return null|string
-         */
-        function _formatDate($dateFormat, $dateString)
-        {
-            $_checkStamp = strtotime($dateString);
-            if ($_checkStamp !== false && $_checkStamp != -1) {
-                return date($dateFormat, $_checkStamp);
-            }
-            return null;
-        }
-
-        /**
-         * Returns HTML <select> for picking day
-         * @return string
-         */
-        function _getSelectDobDay() {
-            return $this->_genSelectDob('day', 1, 31, 'asc');
-        }
-
-        /**
-         * Returns HTML <select> for picking month
-         * @return string
-         */
-        function _getSelectDobMonth() {
-            return $this->_genSelectDob('month', 1, 12, 'asc');
-        }
-
-        /**
-         * Returns HTML <select> for picking year between _getMinYear and _getMaxYear
-         * @return string
-         */
-        function _getSelectDobYear() {
-            return $this->_genSelectDob('year', $this->_getMinYear(), $this->_getMaxYear(), 'asc');
-        }
-
-        /**
-         * Returns HTML <select> for picking gender
-         * @param string $clientType
-         * @return string
-         */
-        function _genSelectGender($clientType = 'b2c') {
-            $varSelectedMale = $varSelectedFemale = '';
-            $constTextMale = MODULE_PAYMENT_BILLPAY_TEXT_MR;
-            $constTextFemale = MODULE_PAYMENT_BILLPAY_TEXT_MRS;
-            $gender = $this->_getDataValue('gender');
-            $identGender = $this->_getDataIdentifier('gender');
-            switch ($gender) {
-                case 'm':
-                    $varSelectedMale = 'selected';
-                    break;
-                case 'f':
-                    $varSelectedFemale = 'selected';
-                    break;
-            }
-            $genderSelectHTML = <<<HEREDOC
-            <select name="$identGender">
-                <option value="">---</option>
-                <option value="m" $varSelectedMale>$constTextMale</option>
-                <option value="f" $varSelectedFemale>$constTextFemale</option>
-            </select>
-            <span class="inputRequirement">&nbsp;*&nbsp;</span>
-HEREDOC;
-            return $genderSelectHTML;
-        }
-
-
-        /**
-         * Returns HTML <select> for specified data
-         * @param $genName
-         * @param $genFrom
-         * @param $genTo
-         * @param $sortDirection
-         * @return string
-         */
-        function _genSelectDob($genName, $genFrom, $genTo, $sortDirection) {
-            $identifier = $this->_getDataIdentifier('dob_'.strtolower($genName));
-            $dobSelectHTML = '<select name="'.$identifier.'" style="width:60px">';
-
-            $value = $this->_getDataValue('dob_'.$genName);
-            if(isset($value) && $value > 0) {
-                $dobSelectHTML .= '<option value="'.$value.'">'.$value.'</option>';
-            }
-            $dobSelectHTML .= '<option value="00">---</option>';
-
-            if ($sortDirection == 'desc') {
-                for ($i = $genTo; $i >= $genFrom;) {
-                    $iMod = sprintf('%02d', (int)$i);
-                    $dobSelectHTML .= '<option value="' . $iMod . '">&nbsp;&nbsp;' . $iMod . '&nbsp;&nbsp;</option>';
-                    $i--;
-                }
-            }
-            else {
-                for ($i = $genFrom; $i <= $genTo;) {
-                    $iMod = sprintf('%02d', (int)$i);
-                    $dobSelectHTML .= '<option value="' . $iMod . '">&nbsp;&nbsp;' . $iMod . '&nbsp;&nbsp;</option>';
-                    $i++;
-                }
-            }
-
-            $dobSelectHTML .= '</select>';
-
-            return $dobSelectHTML;
-        }
-
-        function _getMinYear() {
-            return (int)date('Y') - 100;
-        }
-
-        function _getMaxYear() {
-            return (int)date('Y') - 15;
-        }
-
-        /**
-         * Returns formatted error message
-         * @param string $_code
-         * @param string $_msgMerchant
-         * @param string $_msgCustomer
-         * @return string
-         */
-        function _errorMessage($_code, $_msgMerchant, $_msgCustomer) {
-            $_errorTpl  =	'Code: ' 			. "\t\t" . '%s' . "\n";
-            $_errorTpl .=	'Merchant MSG: ' 	. "\t\t" . '%s' . "\n";
-            $_errorTpl .=	'Customer MSG: ' 	. "\t\t" . '%s'	. "\n";
-
-            $_errorMsg = sprintf(
-                $_errorTpl,
-                (string)utf8_decode($_code),
-                (string)utf8_decode($_msgMerchant),
-                (string)utf8_decode($_msgCustomer)
-            );
-
-            return $_errorMsg;
-        }
-
-        /**
          * Returns formatted invoice reference
          * @param $orderID
          * @return string
          */
-        function generateInvoiceReference($orderID) {
+        public function generateInvoiceReference($orderID) {
             return 'BP' . $orderID . '/' . $this->bp_merchant;
         }
-
-
-
-
-        /**
-         * Trims and (if option is set) utf8-encodes
-         * @param string $value
-         * @return string
-         * @deprecated
-         */
-        function _encodeValue($value) {
-            return billpayBase::EnsureUTF8($value);
-        }
-
 
         /**
          * Recoveres variable from data or session
@@ -2871,7 +2592,7 @@ HEREDOC;
          * @param array|null $data
          * @return null | string
          */
-        function _getDataValue($key, $data = null) {
+        protected function _getDataValue($key, $data = null) {
             if (is_null($data)) {
                 $data =& $_SESSION;
             }
@@ -2892,7 +2613,7 @@ HEREDOC;
          * @param string $key
          * @param mixed $value
          */
-        function _setDataValue($key, $value) {
+        protected function _setDataValue($key, $value) {
             $dataIdentifier = $this->_getDataIdentifier($key);
             $_SESSION[$dataIdentifier] = $value;
         }
@@ -2903,7 +2624,7 @@ HEREDOC;
          * @param bool $upper
          * @return string
          */
-        function _getDataIdentifier($key = '', $upper = false) {
+        private function _getDataIdentifier($key = '', $upper = false) {
             if ($key == '') {
                 $dataIdentifier = $this->_paymentIdentifier;
             }
@@ -2914,429 +2635,20 @@ HEREDOC;
             return $upper ? strtoupper($dataIdentifier) : strtolower($dataIdentifier);
         }
 
-
-
-
-        /**
-         * Returns JS used to validate fields.
-         * @return string
-         */
-        function javascript_validation() {
-            // check values
-            $js = '   if (payment_value == "' . $this->code . '") {' . "\n" .
-                '   if (document.getElementById("checkout_payment").elements["'.strtolower($this->_paymentIdentifier).'[dob][day]"].value == "00") {' . "\n" .
-                '   error_message = error_message + unescape("' . JS_BILLPAY_DOBDAY . '");' . "\n" .
-                '   error = 1;'."\n".'    }' . "\n" .
-                '   if (document.getElementById("checkout_payment").elements["'.strtolower($this->_paymentIdentifier).'[dob][month]"].value == "00") {' . "\n" .
-                '   error_message = error_message + unescape("' . JS_BILLPAY_DOBMONTH . '");' . "\n" .
-                '   error = 1;'."\n".'    }' . "\n" .
-                '   if (document.getElementById("checkout_payment").elements["'.strtolower($this->_paymentIdentifier).'[dob][year]"].value == "00") {' . "\n" .
-                '   error_message = error_message + unescape("' . JS_BILLPAY_DOBYEAR . '");' . "\n" .
-                '   error = 1;'."\n".'    }' . "\n" .
-                '   if (document.getElementById("checkout_payment").elements["'.strtolower($this->_paymentIdentifier).'_gender"].value == "") {' . "\n" .
-                '   error_message = error_message + unescape("' . JS_BILLPAY_GENDER . '");' . "\n" .
-                '   error = 1;'."\n".'    }' . "\n";
-
-            $js .= 	 '	if (!document.getElementById("checkout_payment").'.strtolower($this->_paymentIdentifier).'_eula.checked) {' . "\n" .
-                '	error_message = error_message + unescape("' . JS_BILLPAY_EULA . '");' . "\n" .
-                '	error = 1;' . "\n" .
-                '	}'  . "\n" .
-                '}' . "\n";
-            return $js;
-        }
-
-        /**
-         * Returns JS defined in payment method
-         * @return string
-         */
-        function _displayPaymentJs() {
-            $ret = '
-            <script type="text/javascript">
-            function show_billpay_details(method) {
-                var elem = document.getElementById(method);
-                if (elem) {
-                    elem.style.display = "block";
-                    if (elem.dataset.bpyLoad) {
-                        eval(elem.dataset.bpyLoad);
-                    }
-                }
-            }
-            </script>
-            ';
-            return $ret;
-        }
-
-        /**
-         * Returns <script> tag for billpay/templates/js/billpay.js
-         * Executes only once
-         * @return string
-         */
-        function _injectJavascript()
-        {
-            // CLARIFICATION:
-            //     There are two ways xtc3 will call selection()
-            //     1. (if more than 1 PM are available) Once per every payment method - we need to return our JS once.
-            //     2. (if only 1 PM is available)       Twice a single payment method - we need to return our JS both times.
-            //
-            if (defined('billpayBase_injectJavascript') && billpayBase_injectJavascript != $this->_paymentIdentifier)
-            {
-                return '';
-            }
-            define('billpayBase_injectJavascript', $this->_paymentIdentifier);
-            $billpayScript = <<<HEREDOC
-<script type="text/javascript">
-var loadPayLater = function() {
-    (function(d, script) {
-        script = d.createElement('script');
-        script.type = 'text/javascript';
-        script.async = true;
-        script.src = '//paylatercdn.billpay.de/js/require.min.js';
-        script.setAttribute('data-main', '//paylatercdn.billpay.de/js/release/1.x.x.js');
-        //script.setAttribute('data-main', '//paylatercdn.billpay.de/js/release/latest.js');
-        d.getElementsByTagName('head')[0].appendChild(script);
-    }(document));
-};
-loadPayLater();
-</script>
-HEREDOC;
-            return $billpayScript;
-        }
-
-        /**
-         * Returns <link type="text/css"> tag for billpay/templates/css/billpay.css
-         * Executes only once
-         * @return string
-         */
-        function _injectCss()
-        {
-            if (defined('billpayBase_injectCss') && billpayBase_injectJavascript != $this->_paymentIdentifier)
-            {
-                return '';
-            }
-            define('billpayBase_injectCss', $this->_paymentIdentifier);
-            return '<link type="text/css" rel="stylesheet" href="' . $this->_getShopDomain() . 'includes/external/billpay/templates/css/billpay.css"/>';
-        }
-
-        /**
-         * Returns HTML with B2B fields
-         * @return string
-         */
-        function _addB2BInputFields() {
-            $companyName 	= $this->_getDataValue('company_name') ? $this->_getDataValue('company_name') : BillpayOrder::getCustomerCompany();
-            $legalForm		= $this->_getDataValue('legal_form');
-            $registerNumber	= $this->_getDataValue('register_number');
-            $taxNumber		= $this->_getDataValue('tax_number') ? $this->_getDataValue('tax_number') : $_SESSION['customer_vat_id'];
-            $holderName		= $this->_getDataValue('holder_name');
-            $billing = BillpayOrder::getCustomerBilling();
-            $contactPerson	= $billing['firstName'] . ' ' . $billing['lastName'];
-
-            $salutation		= $this->_getCustomerSalutation($this->_getDataValue('gender'));
-            if ($salutation) {
-                $contactPerson = $salutation . ' ' . $contactPerson;
-            }
-
-            $incOptionList = '';
-            $legalFormList = explode("|", MODULE_PAYMENT_BILLPAY_B2B_LEGALFORM_VALUES);
-            foreach ($legalFormList as $l) {
-                $parts = explode(":", $l);
-                $key = trim($parts[0]);
-                $value = trim($parts[1]);
-                $incOptionList .= '<option value="'.$key.'" '.($key == $legalForm ? 'selected': '').'>'.$value.'</option>';
-            }
-            $incPhoneField = '';
-            if ($this->isPhoneRequired()) {
-                $_customerPhone = $this->getPermanentPhone();
-                if (empty($_customerPhone)) {
-                    $incPhoneField = '<tr><td>'.MODULE_PAYMENT_BILLPAY_TEXT_PHONE.'</td><td><input type="text" name="'.$this->_getDataIdentifier('phone').'" value="'.$this->getPhone().'" /><span class="inputRequirement">&nbsp;*&nbsp;</span></td></tr>';
-                }
-            }
-            $constCompanyNameText = constant('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_NAME_TEXT');
-            $constCompanyLegalFormText = constant('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_LEGAL_FORM_TEXT');
-            $constRegisterNumber = constant('MODULE_PAYMENT_BILLPAY_B2B_REGISTER_NUMBER_TEXT');
-            $constTaxNumber = constant('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_TEXT');
-            $constHolderName = constant('MODULE_PAYMENT_BILLPAY_B2B_HOLDER_NAME_TEXT');
-            $constContactPerson = constant('MODULE_PAYMENT_BILLPAY_B2B_CONTACT_PERSON_TEXT');
-            $identCompanyName = $this->_getDataIdentifier('company_name');
-            $identLegalForm   = $this->_getDataIdentifier('legal_form');
-            $identRegisterNumber = $this->_getDataIdentifier('register_number');
-            $identTaxNumber      = $this->_getDataIdentifier('tax_number');
-            $identHolderName     = $this->_getDataIdentifier('holder_name');
-            $incGenderField = $this->_add_gender_input_field('b2b');
-            $b2bdata = <<<HEREDOC
-                <table style="margin-bottom:15px">
-                    <tr>
-                        <td style="width: 180px">$constCompanyNameText</td>
-                        <td><input type="text" id="$identCompanyName" name="$identCompanyName" value="$companyName" style="width:170px" /><span class="inputRequirement">&nbsp;*&nbsp;</span></td>
-                    </tr>
-                    <tr>
-                        <td>$constCompanyLegalFormText</td>
-                        <td>
-                            <select id="$identLegalForm" name="$identLegalForm" style="width:250px">
-                                <option value="">---</option>
-                                $incOptionList
-                            </select>
-                            <span class="inputRequirement">&nbsp;*&nbsp;</span>
-                        </td>
-                    </tr>
-                    $incGenderField
-                    $incPhoneField
-                    <tr><td>$constRegisterNumber</td><td><input type="text" id="$identRegisterNumber" name="$identRegisterNumber" value="$registerNumber" style="width:110px" /></td></tr>
-                    <tr><td>$constTaxNumber</td><td><input type="text" id="$identTaxNumber" name="$identTaxNumber" value="$taxNumber" style="width:110px" /></td></tr>
-                    <tr><td>$constHolderName</td><td><input type="text" id="$identHolderName" name="$identHolderName" value="$holderName" style="width:170px" /></td></tr>
-                    <tr><td colspan="2" style="padding-top:10px; font-style:italic">$constContactPerson:&nbsp;$contactPerson</td></tr>
-                </table>
-HEREDOC;
-            return $b2bdata;
-        }
-
-        /**
-         * Returns HTML with B2C fields
-         * @return string
-         */
-        function _addB2CInputFields() {
-            $_customerDob = $this->getDateOfBirth();
-            $_customerGender = $this->getGender();
-
-
-            $guiVisible = false;
-            if (empty($_customerGender)) {
-                $guiVisible = true;
-            }
-
-            $genderSelectHTML = $this->_add_gender_input_field('b2c');
-
-            if ($this->isDobValid($_customerDob)) {
-                $birthdaySelectHTML = '<input type="hidden" maxlength="10" size="10" name="'.$this->_getDataIdentifier('dob').'" value="'.$_customerDob.'"/>';
-            } else {
-                $birthdaySelectHTML = '<tr><td>' . MODULE_PAYMENT_BILLPAY_TEXT_BIRTHDATE .'</td><td>'.$this->_getSelectDobDay() .'&nbsp;'.$this->_getSelectDobMonth() .'&nbsp;'.$this->_getSelectDobYear() . '<span class="inputRequirement">&nbsp;*&nbsp;</span></td>';
-                $guiVisible = true;
-            }
-
-            $phoneHTML = '';
-            if ($this->isPhoneRequired()) {
-                $_customerPhone = $this->getPermanentPhone();
-                if (empty($_customerPhone)) {
-                    $phoneHTML = '<tr><td style="width: 180px">'.MODULE_PAYMENT_BILLPAY_TEXT_PHONE.'</td><td><input type="text" name="'.$this->_getDataIdentifier('phone').'" value="'.$this->getPhone().'" /></td></tr>';
-                }
-            }
-
-            $margin = $guiVisible ? '10' : '0';
-            return '<table style="margin-bottom:'.$margin.'px">'.$genderSelectHTML.$birthdaySelectHTML.$phoneHTML.'</table>';
-        }
-
-        /**
-         * Returns HTML used to choose B2B or B2C during checkout
-         * @return string
-         */
-        function _addB2BSelection() {
-            $config = $this->getModuleConfig();
-            if (!$this->_is_b2b_allowed($config)) {
-                return '';
-            }
-            $company = BillpayOrder::getCustomerCompany();
-            if($_SESSION['billpay_preselect'] == 'b2c') {
-                $b2b_checked = '';
-                $b2c_checked = 'selected';
-            } else if(!empty($_SESSION['customer_vat_id']) ||
-                $_SESSION['customers_status']['customers_status_id'] == 3 ||
-                $_SESSION['billpay_preselect'] == 'b2b'	|| !empty($company)) {
-                $b2b_checked = 'selected';
-                $b2c_checked = '';
-            }
-            else {
-                $b2b_checked = '';
-                $b2c_checked = 'selected';
-            }
-
-            $titleChoose   = MODULE_PAYMENT_BILLPAY_B2B_CHOOSE_CLIENT_TEXT;
-            $titlePrivate  = MODULE_PAYMENT_BILLPAY_B2B_PRIVATE_CLIENT_TEXT;
-            $titleBusiness = MODULE_PAYMENT_BILLPAY_B2B_BUSINESS_CLIENT_TEXT;
-
-            $html = <<<HEREDOC
-            <script type="application/javascript">
-            var bpyChangeInvoiceCustomerType = function(el) {
-                var value = el.value;
-                if (value == "0") {
-                    document.getElementById('b2c').style.display='block';
-                    document.getElementById('b2b').style.display='none';
-                }
-                if (value == "1") {
-                    document.getElementById('b2c').style.display='none';
-                    document.getElementById('b2b').style.display='block';
-                }
-            }
-            </script>
-            <table>
-                <tr>
-                    <td style="width: 180px">
-                        <label for="bpyInvoiceCustomerType">$titleChoose:</label>
-                    </td>
-                    <td>
-                        <select id="bpyInvoiceCustomerType" name="b2bflag" onChange="bpyChangeInvoiceCustomerType(this)">
-                            <option value="0" $b2c_checked>$titlePrivate</option>
-                            <option value="1" $b2b_checked>$titleBusiness</option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
-HEREDOC;
-            return $html;
-        }
-
-        /**
-         * Returns HTML with gender field
-         * @param string $customerMode Either 'b2c' or 'b2b'
-         * @return string
-         */
-        function _add_gender_input_field($customerMode = 'b2c') {
-            $_customerGender = $this->getGender();
-            if ($_customerGender) {
-                return '<tr><td colspan="2"><input type="hidden" maxlength="10" size="10" name="'.$this->_getDataIdentifier('gender').'" value="'.$_customerGender.'" /></td><td>';
-            }
-            return '<tr><td>'.MODULE_PAYMENT_BILLPAY_TEXT_SALUTATION .'</td><td>' . $this->_genSelectGender($customerMode) . '</td></tr>';
-        }
-
-        /**
-         * Appends text to the selection "object"
-         * @param array $selection
-         * @param string $input
-         * @return array
-         */
-        function _extendSeoLayout($selection, $input) {
-            $selection['fields'][] = array('title' => $input);
-            return $selection;
-        }
-
-        /**
-         * Appends EULA checkbox to the selection "object"
-         * @param array $selection
-         * @param string $eulaText
-         * @param string $onClickAction
-         * @return array
-         */
-        function _extendSeoEula($selection, $eulaText, $onClickAction='') {
-            $idName = $this->_getDataIdentifier('eula');
-            $selection['fields'][] = array(
-                'title' => '<label for="'.$idName.'" class="bpy-terms-box-text"><input id="'.$idName.'" type="checkbox" name="'.$idName.'" '.$onClickAction.' style="display:block;float:left;">' . $eulaText.'</label>');
-            return $selection;
-        }
-
-        /**
-         * Returns SEPA and EULA text.
-         * @return string
-         */
-        function getSepaText()
-        {
-            return $this->_getSepaEulaText() . $this->getSepaAdditionalInformation();
-        }
-
-        /**
-         * Returns EULA text.
-         * @return string
-         */
-        function _getEulaText()
-        {
-            $eulaText = constant('MODULE_PAYMENT_' . $this->_paymentIdentifier . '_TEXT_EULA_CHECK');
-            $eulaText = sprintf($eulaText, $this->_buildTermsOfServiceUrl());
-            return $this->_buildEulaHTML($eulaText);
-        }
-
-        function _getSepaEulaText()
-        {
-            $baseIdentifier = 'MODULE_PAYMENT_' . $this->_paymentIdentifier . '_TEXT_EULA_CHECK_SEPA';
-            $eulaIdentifier = $this->_getCountrySpecificIdentifier($baseIdentifier);
-
-            // fallback
-            if (defined($eulaIdentifier) === false) {
-                return $this->_getEulaText();
-            }
-
-            $eulaText = constant($eulaIdentifier);
-
-            return $this->_buildEulaHTML($eulaText);
-        }
-
-        function getSepaAdditionalInformation()
-        {
-            $informationText = $this->_getSepaAdditionalInformationText();
-
-            if (strlen($informationText) == 0) {
-                return '';
-            }
-
-            return $this->_buildSepaAdditionalInformationHtml($informationText);
-        }
-
-        function _getSepaAdditionalInformationText()
-        {
-            $infoTextIdentifier = 'MODULE_PAYMENT_' . $this->_paymentIdentifier . '_TEXT_SEPA_INFORMATION';
-            $infoTextIdentifier = $this->_getCountrySpecificIdentifier($infoTextIdentifier);
-
-            if (defined($infoTextIdentifier) === false) {
-                return '';
-            }
-            $infoText = constant($infoTextIdentifier);
-
-            return $infoText;
-        }
-
-        function _buildSepaAdditionalInformationHtml($informationText)
-        {
-            $smarty = $GLOBALS['smarty'];
-            if (empty($smarty)) {
-                $smarty = new Smarty;
-                $smarty->caching = 0;
-            }
-            $smarty->assign('sepa_info_text', $informationText);
-
-            return $smarty->fetch('../includes/external/billpay/templates/additional_sepa_information.tpl');
-        }
-
-        function _buildEulaHTML($eulaText)
-        {
-            return $eulaText;
-        }
-
-        function _getCountrySpecificIdentifier($baseIdentifier)
-        {
-            $countryIso2Code = $this->_getCountryIso2Code();
-
-            if ($countryIso2Code != 'DE'
-                && defined($baseIdentifier . '_' . $countryIso2Code)
-            ) {
-                return $baseIdentifier . '_' . $countryIso2Code;
-            } else {
-                return $baseIdentifier;
-            }
-        }
-
         /**
          * Returns billing country code for current order.
          * @return string i.e. "DE"
          */
-        function _getCountryIso2Code()
+        protected function _getCountryIso2Code()
         {
             $billing = BillpayOrder::getCustomerBilling();
             return strtoupper($billing['country2']);
         }
 
-        /**
-         * Returns Payment Terms URL based on order's billing country
-         * @return string
-         */
-        function _buildTermsOfServiceUrl() {
-            $country = strtolower($this->_getCountryIso2Code());
-            $termsUrl = 'https://www.billpay.'.$country.'/kunden/agb';
-            return $termsUrl;
-        }
-
-        /**
-         * Displays HTML form for bank data.
-         * @return string
-         */
-        function displayBankData()
+        protected function _getCountryIso3Code()
         {
-            return $this->_displaySepaBankData();
+            $billing = BillpayOrder::getCustomerBilling();
+            return strtoupper($billing['country3']);
         }
 
 
@@ -3344,7 +2656,7 @@ HEREDOC;
          * Sets customer date of birth in form and database.
          * @param string $dob
          */
-        function setDateOfBirth($dob)
+        private function setDateOfBirth($dob)
         {
             if (preg_match('/(^|-)00-?/', $dob)) {
                 return;
@@ -3355,6 +2667,7 @@ HEREDOC;
             $dobTimestamp = strtotime($dob);
             if ($dobTimestamp !== false && $dobTimestamp !== -1) {
                 $this->_formDob = $dobTimestamp;
+                $_SESSION['customer_dob'] = $dobTimestamp;
                 $customerId = $this->_getCustomerId();
                 if ($customerId) {
                     // not updating customer's db
@@ -3367,13 +2680,18 @@ HEREDOC;
          * Returns customer date of birth from form or from database.
          * @return int|null Timestamp of date of birth
          */
-        function getDateOfBirth()
+        private function getDateOfBirth()
         {
             if (!empty($this->_formDob)) {
                 return $this->_formDob;
             }
+            if (!empty($_SESSION['customer_dob'])) {
+                return $_SESSION['customer_dob'];
+            }
             if (!empty($_SESSION['customer_id'])) {
-                $dob = BillpayDB::DBFetchValue("SELECT customers_dob FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+                $table = TABLE_CUSTOMERS;
+                $customers_id = (int)$_SESSION['customer_id'];
+                $dob = BillpayDB::DBFetchValue("SELECT customers_dob FROM $table WHERE customers_id = '$customers_id'");
                 if ($dob === "0000-00-00 00:00:00")
                 {
                     return null;
@@ -3388,13 +2706,12 @@ HEREDOC;
         }
 
         /**
-         * Checks if $vars (usually $_POST) contains B2B flag.
-         * @param $vars
+         * Checks if session contains B2B flag.
          * @return bool
          */
-        function isB2B($vars)
+        private function isB2B()
         {
-            return $vars['b2bflag'] == 1;
+            return $this->_getDataValue("b2b");
         }
 
         /**
@@ -3403,7 +2720,7 @@ HEREDOC;
          * @param   int     $dobTimestamp
          * @return  bool
          */
-        function isDobValid($dobTimestamp)
+        private function isDobValid($dobTimestamp)
         {
             if (empty($dobTimestamp)) {
                 return false;
@@ -3418,13 +2735,26 @@ HEREDOC;
          * Sets customer gender in form and database
          * @param string $gender either 'm' or 'f'
          */
-        function setGender($gender)
+        private function setGender($gender)
         {
+            // $gender = 'herr' | 'frau'
             if (!empty($gender)) {
+                $mapping = array(
+                    'herr'  =>  'm',
+                    'frau'  =>  'f',
+                    'm'     =>  'm',
+                    'f'     =>  'f',
+                );
+                if (!isset($mapping[$gender])) {
+                    $this->_logDebug('Gender mapping not found for "'.$gender.'".');
+                    return;
+                }
+                $gender = $mapping[$gender];
                 $this->_formGender = $gender;
+                $_SESSION['customer_gender'] = $gender;
                 $customerId = $this->_getCustomerId();
                 if ($customerId) {
-                    xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_gender ='".substr($gender, 0, 1)."' WHERE customers_id = '".(int)$customerId."'");
+                    //xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_gender ='".substr($gender, 0, 1)."' WHERE customers_id = '".(int)$customerId."'");
                 }
             }
         }
@@ -3433,7 +2763,7 @@ HEREDOC;
          * Returns customer gender from form or database.
          * @return string|null either 'm' of 'f'
          */
-        function getGender()
+        private function getGender()
         {
             if (!empty($this->_formGender)) {
                 return $this->_formGender;
@@ -3443,7 +2773,12 @@ HEREDOC;
             }
             $customerId = $this->_getCustomerId();
             if (!empty($customerId)) {
-                $gender = BillpayDB::DBFetchValue("SELECT customers_gender FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$customerId."'");
+                $table = TABLE_CUSTOMERS;
+                $customers_id = (int)$customerId;
+                $gender = BillpayDB::DBFetchValue("SELECT customers_gender FROM $table WHERE customers_id = '$customers_id'");
+                if (empty($gender)) {
+                    return null;
+                }
                 return $gender;
             }
             return null;
@@ -3453,7 +2788,7 @@ HEREDOC;
          * Sets EULA confirmation status
          * @param $isChecked
          */
-        function setEula($isChecked)
+        protected function setEula($isChecked)
         {
             $isChecked = (bool)$isChecked;
             $this->_setDataValue('eula', $isChecked);
@@ -3463,7 +2798,7 @@ HEREDOC;
          * Reads eula confirmation status
          * @return bool
          */
-        function getEula()
+        private function getEula()
         {
             return $this->_getDataValue('eula') ? true : false;
         }
@@ -3472,7 +2807,7 @@ HEREDOC;
          * Sets customer's phone number.
          * @param string $phone
          */
-        function setPhone($phone)
+        private function setPhone($phone)
         {
             if (strlen($phone) > 5)
             {
@@ -3484,7 +2819,7 @@ HEREDOC;
          * Returns customer's phone number
          * @return null|string
          */
-        function getPhone()
+        private function getPhone()
         {
             $phone = $this->_getDataValue('phone');
             if (empty($phone)) {
@@ -3497,14 +2832,14 @@ HEREDOC;
          * Returns only phone saved in database.
          * @return null
          */
-        function getPermanentPhone()
+        private function getPermanentPhone()
         {
             $phone = null;
             $customerId = $this->_getCustomerId();
             if (empty($customerId) === false) {
-                $qry = 'SELECT customers_telephone AS phone
-                        FROM ' . TABLE_CUSTOMERS . '
-                        WHERE customers_id = ' . (int)$customerId . ' LIMIT 1';
+                $table = TABLE_CUSTOMERS;
+                $customers_id = (int)$customerId;
+                $qry = "SELECT customers_telephone AS phone FROM $table WHERE customers_id = '$customers_id' LIMIT 1";
                 $phone = BillpayDB::DBFetchValue($qry);
                 if (empty($phone)) {
                     $phone = null;
@@ -3514,29 +2849,12 @@ HEREDOC;
         }
 
         /**
-         * Checks if current customer can use automatic SEPA debit.
-         *      Usually true, unless in Swiss
-         * @param string $country2 ISO 2 letter code ie "DE", "CH"
-         * @return bool
-         */
-        function canPayWithAutoSEPA($country2 = "")
-        {
-            if (!$country2) {
-                $country2 = $this->_getCountryIso2Code();
-            }
-            if ($country2 == "CH") {
-                return false;
-            }
-            return true;
-        }
-
-        /**
          * Saves manual SEPA payment information in order status.
          *      Used by invoice and swiss TC.
          * @param ipl_preauthorize_request $req
          * @param int $orderId
          */
-        function setManualSEPAPaymentInStatus($req, $orderId)
+        protected function setManualSEPAPaymentInStatus($req, $orderId)
         {
             $dueDate 			= $req->get_invoice_duedate();
             $dueDateFormatted 	= substr($dueDate,6,2).".".substr($dueDate,4,-2).".".substr($dueDate,0,-4);
@@ -3544,10 +2862,10 @@ HEREDOC;
             $infoText  = MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_HOLDER . ": " . $req->get_account_holder() . "\n";
             $infoText .= MODULE_PAYMENT_BILLPAY_TEXT_IBAN . ": " . $req->get_account_number() . "\n";
             $infoText .= MODULE_PAYMENT_BILLPAY_TEXT_BIC . ": " . $req->get_bank_code() . "\n";
-            $infoText .= MODULE_PAYMENT_BILLPAY_TEXT_BANK_NAME . ": " . $req->get_bank_name() . "\n";
+            $infoText .= MODULE_PAYMENT_BILLPAY_TEXT_BANK . ": " . $req->get_bank_name() . "\n";
             $infoText .= MODULE_PAYMENT_BILLPAY_TEXT_PURPOSE . ": " . $this->generateInvoiceReference($orderId) . "\n";
             $infoText .= MODULE_PAYMENT_BILLPAY_DUEDATE_TITLE . ": " . $dueDateFormatted;
-            $newStatus = $this->getOrderStatusFromBillpayState(constant('billpayBase_STATE_COMPLETED'));
+            $newStatus = $this->getOrderStatusFromBillpayState(billpayBase::STATE_COMPLETED);
             $this->addHistoryEntry($orderId, $infoText, $newStatus);
         }
 
@@ -3557,38 +2875,38 @@ HEREDOC;
          * @param $orderId
          * @return mixed
          */
-        function getOrderCountry2($orderId)
+        protected function getOrderCountry2($orderId)
         {
             return BillpayDB::DBFetchValue("SELECT billing_country_iso_code_2 FROM orders WHERE orders_id = '".(int)$orderId."'");
         }
 
         /**
-         * @param $input_fields
-         * @param $is_fee
-         * @return string
+         * This is configuration function
+         * @return bool
+         * @abstract
          */
-        function getPaymentForm($input_fields, $is_fee)
-        {
-            $payment_form = '<div id="' . $this->_paymentIdentifier . '" style="display: none;">';
-            $payment_form .= $input_fields;
-
-            if ($is_fee) {
-                $payment_form .= '<br /><br />' . constant(
-                        'MODULE_PAYMENT_' . $this->_paymentIdentifier . '_TEXT_FEE_INFO1'
-                    ) . // $billpay_fee->display_formated() .
-                    constant('MODULE_PAYMENT_' . $this->_paymentIdentifier . '_TEXT_FEE_INFO2');
-            }
-            $payment_form .= $this->displayBankData();
-            $payment_form .= '</div>';
-            return $payment_form; //span
-        }
-
-        function isPhoneRequired()
+        public function isPhoneRequired()
         {
             return false;
         }
 
-        function getShopModification()
+        /**
+         * This is configuration function.
+         * If invoice b2b -> false
+         * else -> true
+         * #param $data array $_POST onInput
+         * @return bool
+         */
+        public function isDobRequired()
+        {
+            return true;
+        }
+
+        /**
+         * Provides better way to recognize which shop modification is used by merchant.
+         * @return array
+         */
+        public function getShopModification()
         {
             $ret = array(
                 'modification'  =>  'xtc3',
@@ -3619,5 +2937,333 @@ HEREDOC;
             return $ret;
         }
 
+        /**
+         * Function appends additional prefix to order id to ensure unique order id.
+         * Function used by CI.
+         *
+         * @param $localOrderId
+         * @return string
+         */
+        private function getRemoteOrderId($localOrderId)
+        {
+            return $this->orderPrefix . $localOrderId;
+        }
+
+        /**
+         * Executed after order creation.
+         * Should display thankYou text.
+         * @param $order_id int
+         */
+        public function onDisplayThankYou($order_id)
+        {
+            $thankYou = $this->getPaymentInfo($order_id);
+            $thankYou = '<div class="bpy-thank-you">'.$thankYou['html'].'</div>';
+
+            // Gambio 2.1
+            $_SESSION['nc_checkout_success_info'] = $thankYou;
+        }
+
+        /**
+         * Returns cart total and shipping.
+         * @return array
+         */
+        private function _getCartBaseAndShipping()
+        {
+            $baseAmount = 0;
+            $cart = $_SESSION['cart'];
+            if ($cart)
+            {
+                $baseAmount = (float)$cart->total;
+            }
+            $shippingAmount = $this->_getTrueShipping();
+            $rebateAmount = $this->_getRebateAmount();
+            $ret = array(
+                'baseAmount'        => (string)$baseAmount - $rebateAmount,
+                'shippingAmount'    => (string)$shippingAmount,
+                'orderAmount'       => (string)($baseAmount + $shippingAmount - $rebateAmount),
+            );
+            return $ret;
+        }
+
+        /**
+         * While choosing payment, shipping is not calculated with tax. We are recalculating it now.
+         * @return float
+         */
+        private function _getTrueShipping()
+        {
+            $order = $GLOBALS['order'];
+            $xtPrice = $GLOBALS['xtPrice'];
+            list($shippingBase, ) = explode('_', $_SESSION['shipping']['id']);
+            $nettoShipping = $_SESSION['shipping']['cost'];
+            $currency_value = $xtPrice->currencies[$_SESSION['currency']]['value'];
+            if ($currency_value != 1) {
+                $nettoShipping = round($nettoShipping * $currency_value, 2);
+            }
+            $constTaxClass = 'MODULE_SHIPPING_'.strtoupper($shippingBase).'_TAX_CLASS';
+            if (!defined($constTaxClass)) {
+                return $nettoShipping;
+            }
+            $taxClass = constant($constTaxClass);
+            if (empty($taxClass))
+            {
+                return $nettoShipping;
+            }
+            $taxRate = xtc_get_tax_rate($taxClass, $order->delivery['country']['id'], $order->delivery['zone_id']);
+            if ($taxRate == 0)
+            {
+                return $nettoShipping;
+            }
+            $taxAmount = round(($nettoShipping / 100 * $taxRate), 2);
+            return $nettoShipping + $taxAmount;
+        }
+
+        /**
+         * Calculates RebateGross of current order
+         * @return mixed
+         */
+        private function _getRebateAmount()
+        {
+            global $order_total_modules;
+            $order = new stdClass();
+            $order->delivery = array();
+            $ots = $this->_calculate_billpay_totals($order_total_modules, $order, true);
+            return $ots['billpayRebateGross'];
+        }
+
+        /**
+         * Checks if IBAN is defined.
+         * @return bool
+         */
+        protected function requireIBAN() {
+            $required = array(
+                'account_holder'    =>  MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ERROR_NAME,
+                'account_iban'      =>  MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ERROR_NUMBER,
+            );
+            if (strtoupper(substr($this->_getDataValue('account_iban'), 0, 2)) === 'AT') {
+                $required['account_bic'] = MODULE_PAYMENT_BILLPAY_TEXT_ERROR_CODE;
+            }
+            foreach ($required as $field => $error)
+            {
+                $field_val = $this->_getDataValue($field);
+                if (empty($field_val))
+                {
+                    $this->error = $error;
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /**
+         * Returns thank you text for selected payment method.
+         * @return string
+         * @abstract
+         */
+        public function getThankYouText()
+        {
+            return '!!!Thank you text not implemented for this method!!!';
+        }
+
+        /**
+         * Returns "Pay Until" text for selected payment method and country.
+         * @return string
+         * @abstract
+         */
+        // public function getPayUntilText($bank_data, $currency)
+        public function getPayUntilText()
+        {
+            return '!!!Pay until text not implemented for this method!!!';
+        }
+
+        /**
+         * Returns HTML table of payment details for selected order.
+         * @param Billpay_Base_Bankdata  $bank_data
+         * @param string $currency
+         * @return string
+         */
+        public function getPaymentDetails($bank_data, $currency)
+        {
+            $data = $this->gatherPaymentDetails($bank_data, $currency);
+            return $this->renderPaymentDetails($data);
+        }
+
+        /**
+         * @param Billpay_Base_Bankdata $bank_data
+         * @param string $currency
+         * @return array
+         */
+        public function gatherPaymentDetails($bank_data, $currency)
+        {
+            $data = array(
+                'h_payee'          =>   MODULE_PAYMENT_BILLPAY_TEXT_PAYEE,
+                'h_account_holder' =>   MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_HOLDER,
+                'h_iban'           =>   MODULE_PAYMENT_BILLPAY_TEXT_IBAN,
+                'h_bic'            =>   MODULE_PAYMENT_BILLPAY_TEXT_BIC,
+                'h_bank'           =>   MODULE_PAYMENT_BILLPAY_TEXT_BANK,
+                'h_total_amount'   =>   MODULE_PAYMENT_BILLPAY_TEXT_TOTAL_AMOUNT,
+                'h_reference'      =>   MODULE_PAYMENT_BILLPAY_TEXT_PURPOSE,
+                'h_due_date'       =>   MODULE_PAYMENT_BILLPAY_DUEDATE_TITLE,
+            );
+
+            $dueDate = $bank_data->getInvoiceDueDate();
+            if (empty($dueDate)) {
+                $dueDateFormatted = '';
+            } else {
+                $dueDateFormatted = substr($dueDate,6,2).".".substr($dueDate,4,-2).".".substr($dueDate,0,-4);
+            }
+            $data['due_date'] = $dueDateFormatted;
+            $data['total_amount'] = $this->renderMoney($bank_data->getTotalAmount()).' '.$currency;
+            $data['account_holder'] = $bank_data->getAccountHolder();
+            $data['account_number'] = $bank_data->getAccountNumber();
+            $data['bank_code'] = $bank_data->getBankCode();
+            $data['bank_name'] = $bank_data->getBankName();
+            $data['invoice_reference'] = $bank_data->getInvoiceReference();
+            return $data;
+        }
+
+        /**
+         * Removing invoice data as specified here:
+         * https://wiki.billpay.wonga.com/display/itdev/%5B1.7%5D+Shop+Invoice+in+plugins
+         * @param $data
+         * @return $data
+         */
+        protected function removeAutoSEPADetails($data)
+        {
+            unset($data['h_reference']);
+            unset($data['h_due_date']);
+
+            unset($data['h_payee']);
+            unset($data['h_account_holder']);
+            unset($data['h_iban']);
+            unset($data['h_bic']);
+            unset($data['h_bank']);
+
+            return $data;
+        }
+
+
+        private function renderPaymentDetails($data)
+        {
+            $details = array(
+                $data['h_account_holder'] => $data['account_holder'],
+                $data['h_iban'] => $data['account_number'],
+                $data['h_bic'] => $data['bank_code'],
+                $data['h_bank'] => $data['bank_name'],
+                $data['h_total_amount'] => $data['total_amount'],
+                $data['h_reference'] => $data['invoice_reference'],
+                $data['h_due_date'] => $data['due_date'],
+            );
+            return $details;
+        }
+
+        public function renderPaymentDetailsHTML($details)
+        {
+            $results = array();
+            foreach ($details as $header => $value) {
+                if (empty($value)) continue;
+                if ($header === '!') {
+                    $results[] = <<<HEREDOC
+    <tr>
+        <td colspan=2 style="font-weight: bold; color: red;">{$value}</td>
+    </tr>
+HEREDOC;
+                    continue;
+                }
+                $header = !empty($header) ? $header.':' : '';
+                $results[] = <<<HEREDOC
+    <tr>
+        <th>{$header}</th>
+        <td>{$value}</td>
+    </tr>
+HEREDOC;
+            }
+            $results_string = join('', $results);
+            return <<<HEREDOC
+<table>
+{$results_string}
+</table>
+HEREDOC;
+        }
+
+        /**
+         * Returns email text displayed in the invoice.
+         * @return string
+         * @abstract
+         */
+        public function getEmailText()
+        {
+            return '!!!Email text not implemented for this method!!!';
+        }
+
+
+        public static function renderMoney($amount)
+        {
+            return number_format($amount, 2, ',', '');
+        }
+
+        public function isActivated($order_id)
+        {
+            $query = 'SELECT invoice_due_date FROM billpay_bankdata WHERE orders_id = '.(int)$order_id;
+            $bank_data = BillpayDB::DBFetchRowNonCached($query);
+            return !empty($bank_data['invoice_due_date']);
+        }
+
+        /**
+         * Injects update checker JS on payments plugin page.
+         */
+        private function injectUpdateChecker()
+        {
+            $update_checker_definition = 'BPY_UPDATE_CHECKER';
+            if (defined($update_checker_definition)) return;
+            if (!preg_match('/modules\.php\?set=payment$/', $_SERVER['REQUEST_URI'])) return;
+
+            define($update_checker_definition, true);
+            $shop_data = $this->getShopModification();
+            $shop_name = $shop_data['modification'];
+            $shop_version = $shop_data['version'];
+            $plugin_version = billpayBase::VERSION;
+            $update_message = MODULE_PAYMENT_BILLPAY_UPDATE_AVAILABLE;
+            $pds_base_url = '//pds.billpay.de';
+            $update_widget = <<<HEREDOC
+<div id="bpy_update_checker"></div>
+<script type="text/javascript">
+jQuery.getJSON("$pds_base_url/v1/plugin?shop_name=$shop_name&shop_version=$shop_version&min_version=$plugin_version", function(data) {
+  if (data.total_items < 1) return;
+  var plugin = data._embedded.plugin[0];
+  document.getElementById('bpy_update_checker').innerHTML =
+    '<div style="padding: 5px; background-color: rgb(0, 255, 0);">$update_message</div>'
+        .replace('%1s$', '$plugin_version')
+        .replace('%2s$', plugin.version)
+        .replace('%3s$', plugin._links.download.href);
+});
+</script>
+HEREDOC;
+            echo $update_widget;
+        }
+
+        public function saveOrderId($transaction_id, $order_id)
+        {
+            $order_id = (int)$order_id;
+            $invoiceReference = $this->generateInvoiceReference($order_id);
+
+            $query = 'UPDATE billpay_bankdata
+                    SET orders_id = ' . $order_id . ',
+                        invoice_reference = "' . $invoiceReference . '"
+                    WHERE tx_id= "' . $transaction_id.'"
+                    LIMIT 1';
+            BillpayDB::DBQuery($query);
+        }
+
+        public static function GetConfig($config_key)
+        {
+            $table = TABLE_CONFIGURATION;
+            return BillpayDB::DBFetchValue("SELECT configuration_value FROM $table WHERE configuration_key='$config_key' ");
+        }
+
+        /**
+         * Function required by XT:C 3
+         * @return string
+         */
+        public function javascript_validation() { return ''; }
     }
 }

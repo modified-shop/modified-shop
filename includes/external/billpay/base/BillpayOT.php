@@ -1,6 +1,8 @@
 <?php
 
+/** @noinspection PhpIncludeInspection */
 require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/BillpayDB.php');
+/** @noinspection PhpIncludeInspection */
 require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/billpayBase.php');
 
 define('BillpayOT_TYPE_FLAT', 'fest');
@@ -12,33 +14,36 @@ define('BillpayOT_TYPE_PERCENT', 'prozentual');
  */
 class BillpayOT
 {
+    /** @var string $_paymentIdentifier - billpayBase::PAYMENT_METHOD_* + _FEE */
+    protected $_paymentIdentifier;
+
     /** @var string $_paymentIdentifier - billpayBase::PAYMENT_METHOD_* */
-    var $_paymentIdentifier;
+    protected $paymentMethod;
 
     /** @var bool|null $_check - Cache for checking if module is enabled */
     var $_check = null;
 
     /** @var array $config */
-    var $config = array(
-        'FEE_STATUS'    =>  array(
+    protected $config = array(
+        'STATUS'    =>  array(
             'set_function'  =>  'xtc_cfg_select_option(array("true", "false"), ',
             'default'       =>  'true',
             'use_function'  =>  '',
         ),
-        'FEE_TYPE'    =>  array(
+        'TYPE'    =>  array(
             'set_function'  =>  'xtc_cfg_select_option(array("fest", "prozentual"), ',
             'default'       =>  'fest',
         ),
-        'FEE_SORT_ORDER'    =>  array(
+        'SORT_ORDER'    =>  array(
             'default'       =>  '90',
         ),
-        'FEE_PERCENT'    =>  array(
+        'PERCENT'    =>  array(
             'default'       =>  '',
         ),
-        'FEE_VALUE'    =>  array(
+        'VALUE'    =>  array(
             'default'       =>  '',
         ),
-        'FEE_TAX_CLASS'    =>  array(
+        'TAX_CLASS'    =>  array(
             'set_function'  =>  'xtc_cfg_pull_down_tax_classes(',
             'default'       =>  '0',
             'use_function'  =>  'xtc_get_tax_class_title',
@@ -55,6 +60,9 @@ class BillpayOT
     var $_configPrefix;
     var $output = array();
 
+    /** @var string $status_field defines key used to check if OT is enabled. */
+    protected $status_field;
+
     /**
      * Returns instance of order total class for selected paymentMethod
      * @param string $paymentMethod
@@ -66,55 +74,64 @@ class BillpayOT
         $lowerPaymentMethod = strtoupper($paymentMethod);
         switch ($lowerPaymentMethod)
         {
-            case constant('billpayBase_PAYMENT_METHOD_INVOICE'):
+            case billpayBase::PAYMENT_METHOD_INVOICE:
+                /** @noinspection PhpIncludeInspection */
                 require_once(DIR_FS_CATALOG.'includes/modules/order_total/ot_billpay_fee.php');
                 return new ot_billpay_fee($paymentMethod);
                 break;
-            case constant('billpayBase_PAYMENT_METHOD_DEBIT'):
+            case billpayBase::PAYMENT_METHOD_DEBIT:
+                /** @noinspection PhpIncludeInspection */
                 require_once(DIR_FS_CATALOG.'includes/modules/order_total/ot_billpaydebit_fee.php');
                 return new ot_billpaydebit_fee($paymentMethod);
-            case constant('billpayBase_PAYMENT_METHOD_TRANSACTION_CREDIT'):
-                require_once(DIR_FS_CATALOG.'includes/modules/order_total/billpaytc_surcharge.php');
+            case billpayBase::PAYMENT_METHOD_TRANSACTION_CREDIT:
+                /** @noinspection PhpIncludeInspection */
+                require_once(DIR_FS_CATALOG.'includes/modules/order_total/ot_billpaytc_surcharge.php');
                 return new ot_billpaytc_surcharge($paymentMethod);
-            case constant('billpayBase_PAYMENT_METHOD_PAY_LATER'):
-                require_once(DIR_FS_CATALOG.'includes/modules/order_total/ot_billpaypaylater_fee.php');
-                return new ot_billpaypaylater_fee($paymentMethod);
+            case billpayBase::PAYMENT_METHOD_PAY_LATER:
+                /** @noinspection PhpIncludeInspection */
+                require_once(DIR_FS_CATALOG.'includes/modules/order_total/ot_z_paylater_fee.php');
+                return new ot_z_paylater_fee($paymentMethod);
         }
         return null;
     }
 
-    function BillpayOT()
+    public function __construct()
     {
         $this->_configPrefix = "MODULE_ORDER_TOTAL_".$this->_paymentIdentifier."_";
-        $this->code = 'ot_'.strtolower($this->_paymentIdentifier).'_fee';
-        $this->title = defined($this->_configPrefix.'FEE_TITLE') ? constant($this->_configPrefix.'FEE_TITLE') : '';
-        $this->description = defined($this->_configPrefix.'FEE_DESCRIPTION') ? constant($this->_configPrefix.'FEE_DESCRIPTION') : '';
-        $this->type = defined($this->_configPrefix.'FEE_TYPE') ? constant($this->_configPrefix.'FEE_TYPE') : '';
-        $this->enabled = constant($this->_configPrefix."FEE_STATUS") === "true";
-        $this->sort_order = defined($this->_configPrefix.'FEE_SORT_ORDER') ? constant($this->_configPrefix.'FEE_SORT_ORDER') : '';
+        $this->status_field = $this->_configPrefix . 'STATUS';
+
+        $this->code = 'ot_'.strtolower($this->_paymentIdentifier);
+        $this->title = defined($this->_configPrefix.'TITLE') ? constant($this->_configPrefix.'TITLE') : '';
+        $this->description = defined($this->_configPrefix.'DESCRIPTION') ? constant($this->_configPrefix.'DESCRIPTION') : '';
+        $this->type = defined($this->_configPrefix.'TYPE') ? constant($this->_configPrefix.'TYPE') : '';
+        $this->sort_order = defined($this->_configPrefix.'SORT_ORDER') ? constant($this->_configPrefix.'SORT_ORDER') : '';
+
         $this->output = array();
+
+        $this->enabled = $this->check();
     }
 
     /**
      * Checks if customer is using this payment method.
      * @return bool
      */
-    function isPaymentMethod()
+    protected function isPaymentMethod()
     {
         $paymentMethod = $_SESSION['payment'];
         if (empty($paymentMethod))
         {
             $paymentMethod = $_POST['payment'];
         }
-        return (strtoupper($paymentMethod) === $this->_paymentIdentifier);
+        return (strtoupper($paymentMethod) === $this->paymentMethod);
     }
 
     /**
      * Calculates fee and tax and stores info in $this->output
      * @return bool
      */
-    function process()
+    public function process()
     {
+        /** @var $xtPrice object */
         global $order, $xtPrice;
 
         if (!$this->isPaymentMethod())
@@ -137,7 +154,7 @@ class BillpayOT
         if ($this->isTaxPayer())
         {
             $tax_value = $this->calculateTax();
-            $tax_description = xtc_get_tax_description(constant($this->_configPrefix.'FEE_TAX_CLASS'), $order->delivery['country']['id'], $order->delivery['zone_id']);
+            $tax_description = xtc_get_tax_description(constant($this->_configPrefix.'TAX_CLASS'), $order->delivery['country']['id'], $order->delivery['zone_id']);
             $order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"] += $this->calculateTax();
         }
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
@@ -155,7 +172,7 @@ class BillpayOT
         return true;
     }
 
-    function display() {
+    public function display() {
         $value = $this->calculateFee();
         if ($this->isTaxPayer()) {
             $value += $this->calculateTax();
@@ -164,26 +181,28 @@ class BillpayOT
         return $value;
     }
 
-    function display_formated()
+    public function display_formated()
     {
+        /** @var $xtPrice object */
         global $xtPrice, $order;
 
         if ($this->type === constant('BillpayOT_TYPE_PERCENT'))
         {
             return ' '
                 .$this->getFeeByCountry($order->billing['country']['iso_code_2'])
-                .'% '.constant($this->_configPrefix.'FEE_FROM_TOTAL');
+                .'% '.constant($this->_configPrefix.'FROM_TOTAL');
         }
         $value = $this->display();
         return $xtPrice->xtcFormat($value, true);
     }
 
-    function calculateTax($total = NULL) {
+    protected function calculateTax($total = NULL) {
         global $order;
 
+        /** @noinspection PhpIncludeInspection */
         require_once(DIR_FS_INC . 'xtc_calculate_tax.inc.php');
 
-        $billpay_tax = xtc_get_tax_rate(constant($this->_configPrefix.'FEE_TAX_CLASS'), $order->delivery['country']['id'], $order->delivery['zone_id']);
+        $billpay_tax = xtc_get_tax_rate(constant($this->_configPrefix.'TAX_CLASS'), $order->delivery['country']['id'], $order->delivery['zone_id']);
         $value = xtc_calculate_tax($this->calculateFee($total), $billpay_tax);
         $value = round($value, 2);
         return $value;
@@ -194,7 +213,7 @@ class BillpayOT
      * @param null $total   - (default: null) if null, gets totals from global $order
      * @return float|int
      */
-    function calculateFee($total = NULL)
+    private function calculateFee($total = NULL)
     {
         global $order;
 
@@ -217,9 +236,9 @@ class BillpayOT
      * @param string $country - iso_code_2
      * @return int
      */
-    function getFeeByCountry($country)
+    private function getFeeByCountry($country)
     {
-        $field = ($this->type === constant('BillpayOT_TYPE_PERCENT') ? "FEE_PERCENT" : "FEE_VALUE");
+        $field = ($this->type === constant('BillpayOT_TYPE_PERCENT') ? "PERCENT" : "VALUE");
         $arr = explode(";", constant($this->_configPrefix.$field));
         foreach($arr as $val)
         {
@@ -227,6 +246,7 @@ class BillpayOT
             if($element[0] == $country)
             {
                 $value = $element[1];
+                $value = str_replace(array(',', ' '), array('.', ''), $value);
                 return $value;
             }
         }
@@ -237,7 +257,7 @@ class BillpayOT
      * Returns if current customer should pay tax
      * @return bool
      */
-    function isTaxPayer()
+    private function isTaxPayer()
     {
         return ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
             || $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1);
@@ -247,11 +267,13 @@ class BillpayOT
      * Function checks if OT module is enabled
      * @return bool|null
      */
-    function check()
+    public function check()
     {
         if (!isset($this->_check)) {
-            $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_ORDER_TOTAL_".$this->_paymentIdentifier."_FEE_STATUS'");
-            $this->_check = xtc_db_num_rows($check_query);
+            $table = TABLE_CONFIGURATION;
+            $config_key = $this->status_field;
+            $query = "SELECT configuration_value from $table where configuration_key = '$config_key'";
+            $this->_check = BillpayDB::DBCount($query);
         }
         return $this->_check;
     }
@@ -260,7 +282,7 @@ class BillpayOT
      * List of configuration keys that can be changed in backend by admin.
      * @return array
      */
-    function keys()
+    public function keys()
     {
         $ret = array();
         $keys = array_keys($this->config);
@@ -274,24 +296,51 @@ class BillpayOT
     /**
      * Event called when admin installs module
      */
-    function install()
+    public function install()
     {
         $configs = $this->config;
         foreach ($configs as $config_key => $val)
         {
-            xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values "
-                ."('".$this->_configPrefix.$config_key."', '".(isset($val['default']) ? $val['default'] : '')."', '6', '0', '".
-                (isset($val['use_function']) ? $val['use_function'] : '')."', '".
-                (isset($val['set_function']) ? $val['set_function'] : '')."', now())");
+            $table = TABLE_CONFIGURATION;
+            $config_key = $this->_configPrefix.$config_key;
+            $default = (isset($val['default']) ? $val['default'] : '');
+            $use = (isset($val['use_function']) ? $val['use_function'] : '');
+            $set = (isset($val['set_function']) ? $val['set_function'] : '');
+            xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('$config_key', '$default', '6', '0', '$use', '$set', NOW())");
+        }
+        if (in_array($this->code, array('ot_billpaytc_surcharge', 'ot_z_paylater_fee', 'ot_z_paylater_total'))) {
+            $this->ensureEnabled();
         }
     }
 
     /**
      * Event called when admin uninstalls module
      */
-    function remove()
+    public function remove()
     {
-        xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+        $table = TABLE_CONFIGURATION;
+        $in = implode("', '", $this->keys());
+        xtc_db_query("DELETE FROM $table WHERE configuration_key IN ('$in')");
     }
 
+    /**
+     * Ensures that OT module is on enabled list.
+     * If we install the OT module with parent module (like PayLater), it does not get on the list automatically.
+     */
+    private function ensureEnabled()
+    {
+        $thisFile = $this->code . '.php';
+        $table = TABLE_CONFIGURATION;
+        $cv = BillpayDB::DBFetchValue("SELECT configuration_value FROM $table WHERE configuration_key = 'MODULE_ORDER_TOTAL_INSTALLED'");
+        if (strpos($cv, $thisFile) === false)
+        {
+            $newCv = $cv . ';'.$thisFile;
+            xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '".$newCv."', last_modified = now() where configuration_key = 'MODULE_ORDER_TOTAL_INSTALLED'");
+        }
+    }
+
+    protected function _getDataValue($key)
+    {
+        return $_SESSION[strtolower($this->paymentMethod.'_'.$key)];
+    }
 }

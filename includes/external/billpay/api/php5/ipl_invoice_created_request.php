@@ -4,107 +4,112 @@ require_once(dirname(__FILE__).'/ipl_xml_request.php');
 
 /**
  * @author Jan Wehrs (jan.wehrs@billpay.de)
- * @copyright Copyright 2010 Billpay GmbH
+ * @copyright Copyright 2010 BillPay GmbH
  * @license commercial
  */
 class ipl_invoice_created_request extends ipl_xml_request {
 
-	var $_invoice_params      = array();
-	var $_payment_info_params = array();
-	var $_article_data        = array();
+	private $_invoice_params      = array();
+	private $_payment_info_params = array();
+	private $_article_data        = array();
 
 	// bank account
-	var $account_holder;
-	var $account_number;
-	var $bank_code;
-	var $bank_name;
-	var $invoice_reference;
-	var $invoice_duedate;
-	var $activation_performed;
+	private $account_holder;
+	private $account_number;
+	private $bank_code;
+	private $bank_name;
+	private $invoice_reference;
+	private $invoice_duedate;
+	private $activation_performed;
 
-	var $payment_info_html;
-	var $payment_info_plain;
+	private $payment_info_html;
+	private $payment_info_plain;
 
     // rate payment specific
-    var $instalment_count;
-    var $duration;
-    var $fee_percent;
-    var $fee_total;
-    var $total_amount;
-    var $effective_annual;
-    var $nominal_annual;
-    var $base_amount;
-    var $cart_amount;
-    var $surcharge;
-    var $interest;
+    private $instalment_count;
+    private $duration;
+    private $fee_percent;
+    private $fee_total;
+    private $async_amount;
+    private $total_amount;
+    private $effective_annual;
+    private $nominal_annual;
+    private $base_amount;
+    private $cart_amount;
+    private $surcharge;
+    private $interest;
 
-    var $dues = array();
+	private $dues = array();
 
-	function get_account_holder() {
+	public function get_account_holder() {
         return $this->account_holder;
 	}
-	function get_account_number() {
+	public function get_account_number() {
 		return $this->account_number;
 	}
-	function get_bank_code() {
+	public function get_bank_code() {
 		return $this->bank_code;
 	}
-	function get_bank_name() {
+	public function get_bank_name() {
 		return $this->bank_name;
 	}
-	function get_invoice_reference() {
+	public function get_invoice_reference() {
 		return $this->invoice_reference;
 	}
-	function get_invoice_duedate() {
+	public function get_invoice_duedate() {
 		return $this->invoice_duedate;
 	}
-	function get_activation_performed() {
+	public function get_activation_performed() {
 		return $this->activation_performed;
 	}
-	function get_payment_info_html() {
+	public function get_payment_info_html() {
 		return $this->payment_info_html;
 	}
-	function get_payment_info_plain() {
+	public function get_payment_info_plain() {
 		return $this->payment_info_plain;
 	}
 
-	function get_dues() {
+	public function get_dues() {
 		return $this->dues;
 	}
 
     // ------------------ paylater specific ------------------ //
 
-    function get_instalment_count()
+    public function get_instalment_count()
     {
         return $this->instalment_count;
     }
 
-    function get_duration()
+    public function get_duration()
     {
         return $this->duration;
     }
 
-    function get_fee_percent()
+    public function get_fee_percent()
     {
         return $this->fee_percent;
     }
 
-    function get_fee_total()
+    public function get_fee_total()
     {
         return $this->fee_total;
     }
 
-    function get_total_amount()
+    public function get_prepayment_amount() {
+        return $this->async_amount;
+    }
+
+    public function get_total_amount()
     {
         return $this->total_amount;
     }
 
-    function get_effective_annual()
+    public function get_effective_annual()
     {
         return $this->effective_annual;
     }
 
-    function get_nominal_annual()
+    public function get_nominal_annual()
     {
         return $this->nominal_annual;
     }
@@ -113,7 +118,7 @@ class ipl_invoice_created_request extends ipl_xml_request {
      * Returns base value of an order (base order + tax)
      * @return int
      */
-    function get_base_amount()
+    public function get_base_amount()
     {
         return (int)$this->base_amount;
     }
@@ -122,7 +127,7 @@ class ipl_invoice_created_request extends ipl_xml_request {
      * Returns cart value (base order + shipping fee + tax)
      * @return int
      */
-    function get_cart_amount()
+    public function get_cart_amount()
     {
         return (int)$this->cart_amount;
     }
@@ -131,7 +136,7 @@ class ipl_invoice_created_request extends ipl_xml_request {
      * Returns interest surcharge (how much TC/PL costs)
      * @return int
      */
-    function get_surcharge()
+    public function get_surcharge()
     {
         return (int)$this->surcharge;
     }
@@ -141,12 +146,13 @@ class ipl_invoice_created_request extends ipl_xml_request {
      * ie. 100 means 1% interest rate
      * @return int
      */
-    function get_interest()
+    public function get_interest()
     {
         return (int)$this->interest;
     }
 
-	function set_invoice_params($carttotalgross, $currency, $reference,
+
+	public function set_invoice_params($carttotalgross, $currency, $reference,
 	            $delayindays = 0, $is_partial = 0, $invoice_number = 0,
 	            $rebate = 0, $rebate_gross = 0, $shipping_name = "", $shipping_price = 0,
 	            $shipping_price_gross = 0, $cart_total_price = 0) {
@@ -169,7 +175,7 @@ class ipl_invoice_created_request extends ipl_xml_request {
         }
 	}
 
-	function add_article($articleid, $articlequantity, $articlename, $articledescription,
+	public function add_article($articleid, $articlequantity, $articlename, $articledescription,
 	        $article_price, $article_price_gross) {
 	    $article = array();
 	    $article['articleid'] 			= $articleid;
@@ -182,12 +188,12 @@ class ipl_invoice_created_request extends ipl_xml_request {
 	    $this->_article_data[] = $article;
 	}
 
-	function set_payment_info_params($showhtmlinfo, $showplaininfo) {
+	public function set_payment_info_params($showhtmlinfo, $showplaininfo) {
 		$this->_payment_info_params['htmlinfo'] = $showhtmlinfo ? "1" : "0";
 		$this->_payment_info_params['plaininfo'] = $showplaininfo ? "1" : "0";
 	}
 
-	function _send() {
+	protected function _send() {
 		return ipl_core_send_invoice_request(
             $this->_ipl_request_url,
             $this->getTraceData(),
@@ -198,7 +204,7 @@ class ipl_invoice_created_request extends ipl_xml_request {
         );
 	}
 
-	function _process_response_xml($data) {
+	protected function _process_response_xml($data) {
 		foreach ($data as $key => $value) {
 			$this->$key = $value;
 		}
