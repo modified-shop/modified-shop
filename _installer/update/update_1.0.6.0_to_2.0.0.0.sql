@@ -702,7 +702,7 @@ CREATE TABLE products_tags_values (
 ) ENGINE=MyISAM;
 
 #WEB28 - 2015-08-11 - add attributes_vpe
-ALTER TABLE products_attributes ADD attributes_vpe_id int(11) NOT NULL;
-ALTER TABLE products_attributes ADD attributes_vpe_value decimal(15,4) NOT NULL;
+ALTER TABLE products_attributes ADD attributes_vpe_id int(11) NOT NULL AFTER attributes_ean;
+ALTER TABLE products_attributes ADD attributes_vpe_value decimal(15,4) NOT NULL AFTER attributes_vpe_id;
 
 # Keep an empty line at the end of this file for the db_updater to work properly
