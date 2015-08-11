@@ -3478,7 +3478,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				$smarty->assign('EMAIL', $order->customer['email_address']);
 				$smarty->assign('PHONE',$order->customer['telephone']);
 				/** BEGIN BILLPAY CHANGED **/
-				require_once(DIR_FS_CATALOG .	'includes/billpay/utils/billpay_mail.php');
+				require_once(DIR_FS_CATALOG .	'includes/external/billpay/utils/billpay_mail.php');
 				/** EOF BILLPAY CHANGED **/
 				//BOF  - web28 - 2010-03-27 PayPal Bezahl-Link
 				unset ($_SESSION['paypal_link']);
