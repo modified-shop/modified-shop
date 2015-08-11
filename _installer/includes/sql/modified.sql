@@ -971,6 +971,8 @@ CREATE TABLE products_attributes (
   weight_prefix CHAR(1) NOT NULL,
   sortorder INT(11) NULL,
   attributes_ean VARCHAR(64) NULL DEFAULT NULL,
+  attributes_vpe_id int(11) NOT NULL,
+  attributes_vpe_value decimal(15,4) NOT NULL,
   PRIMARY KEY (products_attributes_id),
   KEY idx_products_id (products_id),
   KEY idx_options (options_id, options_values_id)
