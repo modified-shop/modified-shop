@@ -22,8 +22,9 @@ $configFiles = array(
 );
 
 $writeableFiles = array(
-  DIR_FS_CATALOG.'magnaCallback.php',
   DIR_FS_ADMIN.'magnalister.php',
+  DIR_FS_CATALOG.'magnaCallback.php',
+  DIR_FS_CATALOG.'sitemap.xml',
 );
 
 $writeableJanolawFiles = array(
@@ -37,12 +38,16 @@ $writeableDirs = array(
   DIR_FS_ADMIN.'backups',
   DIR_FS_ADMIN.'images/graphs',
   DIR_FS_ADMIN.'images/icons',
-  DIR_FS_EXTERNAL.'magnalister',
   DIR_FS_CATALOG.'cache',
   DIR_FS_CATALOG.'export',
+  DIR_FS_CATALOG.'export/easybill',
+  DIR_FS_CATALOG.'export/idealo_realtime',
+  DIR_FS_EXTERNAL.'magnalister',
+  DIR_FS_EXTERNAL.'shopgate/shopgate_library/config',
   DIR_FS_CATALOG.'images',
   DIR_FS_CATALOG.'images/banner',
   DIR_FS_CATALOG.'images/categories',
+  DIR_FS_CATALOG.'images/content',
   DIR_FS_CATALOG.'images/product_images/info_images',
   DIR_FS_CATALOG.'images/product_images/original_images',
   DIR_FS_CATALOG.'images/product_images/popup_images',
@@ -54,6 +59,7 @@ $writeableDirs = array(
   DIR_FS_CATALOG.'media/content/',
   DIR_FS_CATALOG.'media/products',
   DIR_FS_CATALOG.'media/products/backup',
+  DIR_FS_CATALOG.'templates/tpl_modified',
   DIR_FS_CATALOG.'templates_c',
 );
 
