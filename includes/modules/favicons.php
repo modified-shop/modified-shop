@@ -10,7 +10,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-$ws_dir = 'templates/'.CURRENT_TEMPLATE.'/favicon/';
+$ws_dir = 'templates/'.CURRENT_TEMPLATE.'/favicons/';
 $fs_dir = DIR_FS_CATALOG.$ws_dir;
 
 if (is_dir($fs_dir)) {
@@ -79,7 +79,7 @@ if (is_dir($fs_dir)) {
     $browserconfig .= '</tile></msapplication></browserconfig>';
     $browserconfig_file_path = $fs_dir.'browserconfig.xml';
     $browserconfig_file = is_writeable($browserconfig_file_path) ? filemtime($browserconfig_file_path) : false;
-    if ($browserconfig_file && ($browserconfig_file < (time() - 3600) || filesize($browserconfig_file_path) == 0)) {
+    if ($browserconfig_file && ($browserconfig_file < (time() - 86400) || filesize($browserconfig_file_path) == 0)) {
       file_put_contents($browserconfig_file_path, $browserconfig, LOCK_EX);
     }
     echo '<meta name="msapplication-config" content="'.xtc_href_link($ws_dir.'browserconfig.xml','', $request_type, false).'" />'."\n";
@@ -108,7 +108,7 @@ if (is_dir($fs_dir)) {
     if (count($manifest_array['icons']) > 0) {
       $manifest_file_path = $fs_dir.'manifest.json';
       $manifest_file = is_writeable($manifest_file_path) ? filemtime($manifest_file_path) : false;
-      if ($manifest_file && ($manifest_file < (time() - 3600) || filesize($manifest_file_path) == 0)) {
+      if ($manifest_file && ($manifest_file < (time() - 86400) || filesize($manifest_file_path) == 0)) {
         file_put_contents($manifest_file_path, json_encode($manifest_array), LOCK_EX);
       }
       echo '<link rel="manifest" href="'.xtc_href_link($ws_dir.'manifest.json', '', $request_type, false).'" />'."\n";
@@ -118,6 +118,6 @@ if (is_dir($fs_dir)) {
   // application name
   echo '<meta name="application-name" content="'.encode_htmlspecialchars(TITLE).'" />'."\n";
 } else {
-  echo '<link rel="shortcut icon" type="image/x-icon" href="'.xtc_href_link('templates/'.CURRENT_TEMPLATE.'/favicon.ico','', $request_type, false).'" />';
+  echo '<link rel="shortcut icon" type="image/x-icon" href="'.xtc_href_link('templates/'.CURRENT_TEMPLATE.'/favicon.ico','', $request_type, false).'" />'."\n";
 }
 ?>
