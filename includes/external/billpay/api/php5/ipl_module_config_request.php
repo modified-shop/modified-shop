@@ -4,107 +4,107 @@ require_once(dirname(__FILE__).'/ipl_xml_request.php');
 
 /**
  * @author Jan Wehrs (jan.wehrs@billpay.de)
- * @copyright Copyright 2010 Billpay GmbH
+ * @copyright Copyright 2010 BillPay GmbH
  * @license commercial 
  */
 class ipl_module_config_request extends ipl_xml_request {
 	
-	var $invoicestatic 		   = 0;
-	var $invoicebusinessstatic = 0;
-	var $directdebitstatic 	   = 0;
-	var $hirepurchasestatic    = 0;
+	private $invoicestatic 		   = 0;
+	private $invoicebusinessstatic = 0;
+	private $directdebitstatic 	   = 0;
+	private $hirepurchasestatic    = 0;
 
-	var $invoicemin 		= 0;
-	var $invoicebusinessmin = 0;
-	var $directdebitmin 	= 0;
-	var $hirepurchasemin 	= 0;
+	private $invoicemin 		= 0;
+	private $invoicebusinessmin = 0;
+	private $directdebitmin 	= 0;
+	private $hirepurchasemin 	= 0;
 	
-	var $active 				= false;
-	var $invoiceallowed 		= false;
-    var $invoicebusinessallowed = false;
-    var $directdebitallowed 	= false;
-	var $hirepurchaseallowed 	= false;
+	private $active 				= false;
+	private $invoiceallowed 		= false;
+    private $invoicebusinessallowed = false;
+    private $directdebitallowed 	= false;
+	private $hirepurchaseallowed 	= false;
 	
-	var $terms = array();
+	private $terms = array();
 
-	var $_locale = array();
+	private $_locale = array();
 
-	function is_active() {
+	public function is_active() {
 		return $this->active;
 	}
-	function is_invoice_allowed() {
+	public function is_invoice_allowed() {
 		return $this->invoiceallowed;
 	}
-	function is_invoicebusiness_allowed() {
+	public function is_invoicebusiness_allowed() {
 		return $this->invoicebusinessallowed;
 	}
-	function is_direct_debit_allowed() {
+	public function is_direct_debit_allowed() {
 		return $this->directdebitallowed;	
 	}
-	function is_hire_purchase_allowed() {
+	public function is_hire_purchase_allowed() {
 		return $this->hirepurchaseallowed;
 	}
-	function get_invoice_min_value() {
+	public function get_invoice_min_value() {
 		return $this->invoicemin;
 	}
-	function get_invoicebusiness_min_value() {
+	public function get_invoicebusiness_min_value() {
 		return $this->invoicebusinessmin;
 	}
-	function get_direct_debit_min_value() {
+	public function get_direct_debit_min_value() {
 		return $this->directdebitmin;
 	}
-	function get_hire_purchase_min_value() {
+	public function get_hire_purchase_min_value() {
 		return $this->hirepurchasemin;
 	}
-	function get_static_limit_invoice() {
+	public function get_static_limit_invoice() {
 		return $this->invoicestatic;
 	}
-	function get_static_limit_invoicebusiness() {
+	public function get_static_limit_invoicebusiness() {
 		return $this->invoicebusinessstatic;
 	}
-	function get_static_limit_direct_debit() {
+	public function get_static_limit_direct_debit() {
 		return $this->directdebitstatic;
 	}
-	function get_static_limit_hire_purchase() {
+	public function get_static_limit_hire_purchase() {
 		return $this->hirepurchasestatic;
 	}
-	function get_terms() {
+	public function get_terms() {
 		return $this->terms;
 	}
 
     // --------------------------------- //
     // ---- PAYLATER STATIC OPTIONS ---- //
-    function is_paylater_allowed()
+    public function is_paylater_allowed()
     {
         return true;
     }
 
-    function is_paylaterbusiness_allowed()
+    public function is_paylaterbusiness_allowed()
     {
         return false;
     }
 
-    function get_paylater_min_value()
+    public function get_paylater_min_value()
     {
         return 0;
     }
 
-    function get_paylaterbusiness_min_value()
+    public function get_paylaterbusiness_min_value()
     {
         return 0;
     }
 
-    function get_static_limit_paylater()
+    public function get_static_limit_paylater()
     {
         return PHP_INT_MAX;
     }
 
-    function get_static_limit_paylaterbusiness()
+    public function get_static_limit_paylaterbusiness()
     {
         return 0;
     }
 
-    function get_config_data()
+    public function get_config_data()
     {
         return array(
             'is_active'                    => $this->is_active(),
@@ -131,19 +131,19 @@ class ipl_module_config_request extends ipl_xml_request {
         );
     }
 
-	function _process_response_xml($data) {
+	protected function _process_response_xml($data) {
 		foreach ($data as $key => $value) {
 			$this->$key = $value;
 		}
 	}
 
-	function set_locale($country, $currency, $language) {
+	public function set_locale($country, $currency, $language) {
 		$this->_locale['country'] = $country;
 		$this->_locale['currency'] = $currency;
 		$this->_locale['language'] = $language;
 	}
 
-	function _send() {
+	protected function _send() {
 		return ipl_core_send_module_config_request(
 			$this->_ipl_request_url,
             $this->getTraceData(),

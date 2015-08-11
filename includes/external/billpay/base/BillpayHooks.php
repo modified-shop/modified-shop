@@ -49,7 +49,7 @@ class BillpayHooks
     {
         $this->addHook('admin/print_order.php', 'invoiceRender',
             '$payment_method=constant(strtoupper(\'MODULE_PAYMENT_\'.$order->info[\'payment_method\'].\'_TEXT_TITLE\'));',
-                'require_once(DIR_FS_CATALOG . DIR_WS_INCLUDES . \'/billpay/utils/billpay_display_bankdata.php\');'
+                'require_once(DIR_FS_CATALOG . DIR_WS_INCLUDES . \'/external/billpay/utils/billpay_display_bankdata.php\');'
                 .'$payment_method .= display_billpay_bankdata();',
             '$smarty->assign(\'PAYMENT_METHOD\',$payment_method);'
         );
@@ -206,6 +206,21 @@ class BillpayHooks
                 'switch($order->info[\'payment_method\'])'
             );
         }
+
+        // order edit
+        $this->addHook('admin/orders_edit.php', 'orderEditValidation',
+            '$xtPrice = new xtcPrice($order->info[\'currency\'], $order->info[\'status\']);',
+            'require_once(DIR_FS_CATALOG . \'includes/external/billpay/base/BillpayOrderEdit.php\');'
+            .'$billpayOrderEdit = new BillpayOrderEdit();'
+            .'$billpayOrderEdit->onBeforeUpdate();',
+            '// Adressbearbeitung Anfang'
+        );
+        $this->addHook('admin/orders_edit.php', 'orderEditSync',
+            'des Zwischenspeichers Ende',
+            '$billpayOrderEdit->onAfterUpdate();',
+            'xtc_redirect(xtc_href_link(FILENAME_ORDERS, \'action=edit&oID=\' . (int)$_POST[\'oID\']));'
+        );
+
         return $this->hookData;
     }
 

@@ -1,24 +1,31 @@
 <?php
+require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/BillpayOT.php');
+require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/billpayBase.php');
 
-class ot_z_paylater_total {
-
-    function ot_z_paylater_total()
+class ot_z_paylater_total extends BillpayOT
+{
+    public function __construct()
     {
-        require_once(DIR_FS_CATALOG.'includes/external/billpay/base/billpayBase.php');
-        /** @var BillpayPayLater $billpay */
-        $billpay = billpayBase::PaymentInstance(constant('billpayBase_PAYMENT_METHOD_PAY_LATER'));
-        $billpay->requireLang();
         $this->_paymentIdentifier = 'Z_PAYLATER_TOTAL';
-        $this->code = "ot_z_paylater_total";
+        $this->paymentMethod = billpayBase::PAYMENT_METHOD_PAY_LATER;
+        $this->config = array(
+            'STATUS'    => $this->config['STATUS'],
+            'SORT_ORDER'=> $this->config['SORT_ORDER'],
+            'TAX_CLASS' => $this->config['TAX_CLASS'],
+        );
+        $this->config['SORT_ORDER']['default'] = 152;
+        parent::__construct();
+
+        /** @var BillpayPayLater $billpay */
+        $billpay = billpayBase::PaymentInstance(billpayBase::PAYMENT_METHOD_PAY_LATER);
+        $billpay->requireLang();
+
+        $this->code = 'ot_z_paylater_total';
         $this->title = constant('MODULE_PAYMENT_BILLPAY_OT_PAYLATER_TOTAL');
-        if ($billpay->getVisualMode() === $billpay->VISUAL_MODE_RECHNUNG_PLUS)
-        {
-            $this->title = constant('MODULE_PAYMENT_BILLPAY_OT_PAYLATER_TOTAL_RECHNUNG_PLUS');
-        }
         $this->description = "";
         $this->enabled = true;
-        $this->sort_order = 152;
         $this->output = array();
+
     }
 
     /**
@@ -28,60 +35,14 @@ class ot_z_paylater_total {
     function process()
     {
         global $xtPrice;
-        if ($_SESSION['payment'] !== "billpaypaylater") {
-            return false;
-        }
-        $value = $_SESSION['billpaypaylater_totalamount'];
-        if (empty($value)) {
-            return false;
-        }
+        if (!$this->isPaymentMethod()) return false;
+        $value = $_SESSION['billpaypaylater_totalamount'] * 0.01;
+        if (empty($value)) return false;
         $this->output[] = array(
             'title' =>  '<strong>'.$this->title.':</strong>',
             'text'  =>  '<strong>'.$xtPrice->xtcFormat($value, true).'</strong>',
             'value' =>  $value,
         );
         return true;
-    }
-
-    function check() {
-        if (!isset($this->_check)) {
-            $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_ORDER_TOTAL_".$this->_paymentIdentifier."_STATUS'");
-            $this->_check = xtc_db_num_rows($check_query);
-        }
-        return $this->_check;
-    }
-
-    function keys() {
-        return array(
-            'MODULE_ORDER_TOTAL_'.$this->_paymentIdentifier.'_STATUS',
-            'MODULE_ORDER_TOTAL_'.$this->_paymentIdentifier.'_SORT_ORDER',
-            'MODULE_ORDER_TOTAL_'.$this->_paymentIdentifier.'_TAX_CLASS',
-        );
-    }
-
-    function install() {
-        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_ORDER_TOTAL_".$this->_paymentIdentifier."_STATUS', 'true', '6', '0', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_".$this->_paymentIdentifier."_SORT_ORDER', '152', '6', '0', now())");
-        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_ORDER_TOTAL_".$this->_paymentIdentifier."_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
-        $this->ensureEnabled();
-    }
-
-    function remove() {
-        xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
-    }
-
-    /**
-     * Ensures that OT module is on enabled list.
-     * If we install the OT module with parent module (like PayLater), it does not get on the list automatically.
-     */
-    function ensureEnabled()
-    {
-        $thisFile = $this->code . '.php';
-        $cv = BillpayDB::DBFetchValue("SELECT configuration_value FROM ".TABLE_CONFIGURATION." WHERE configuration_key = 'MODULE_ORDER_TOTAL_INSTALLED'");
-        if (strpos($cv, $thisFile) === false)
-        {
-            $newCv = $cv . ';'.$thisFile;
-            xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '".$newCv."', last_modified = now() where configuration_key = 'MODULE_ORDER_TOTAL_INSTALLED'");
-        }
     }
 }

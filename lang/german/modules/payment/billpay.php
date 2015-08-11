@@ -40,10 +40,10 @@ define('MODULE_PAYMENT_BILLPAY_ZONE_TITLE' , 'Steuerzone');
 define('MODULE_PAYMENT_BILLPAY_ZONE_DESC' , '');
 
 define('MODULE_PAYMENT_BILLPAY_GS_API_URL_BASE_TITLE' , 'API url base');
-define('MODULE_PAYMENT_BILLPAY_GS_API_URL_BASE_DESC' , 'Diese Daten erhalten Sie von BillPay (Achtung! Die URLs f&uuml; das Test- bzw. das Livesystem unterscheiden sich!)');
+define('MODULE_PAYMENT_BILLPAY_GS_API_URL_BASE_DESC' , 'Diese Daten erhalten Sie von BillPay (Achtung! Die URLs f&uuml;r das Test- bzw. das Livesystem unterscheiden sich!)');
 
 define('MODULE_PAYMENT_BILLPAY_GS_TESTAPI_URL_BASE_TITLE' , 'Test-API url base');
-define('MODULE_PAYMENT_BILLPAY_GS_TESTAPI_URL_BASE_DESC' , 'Diese Daten erhalten Sie von BillPay (Achtung! Die URLs f&uuml; das Test- bzw. das Livesystem unterscheiden sich!)');
+define('MODULE_PAYMENT_BILLPAY_GS_TESTAPI_URL_BASE_DESC' , 'Diese Daten erhalten Sie von BillPay (Achtung! Die URLs f&uuml;r das Test- bzw. das Livesystem unterscheiden sich!)');
 
 define('MODULE_PAYMENT_BILLPAY_LOGGING_ENABLE_TITLE' , 'Logging aktiviert');
 define('MODULE_PAYMENT_BILLPAY_LOGGING_ENABLE_DESC' , 'Sollen Anfragen an die BillPay-Zahlungsschnittstelle in die Logdatei geschrieben werden?');
@@ -60,8 +60,7 @@ define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion 
 // Payment selection texts
 define('MODULE_PAYMENT_BILLPAY_TEXT_BIRTHDATE', 'Geburtsdatum');
 define('MODULE_PAYMENT_BILLPAY_TEXT_PHONE', 'Telefonnummer');
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK',    'Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufs und einer Identit&auml;ts und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href="https://www.billpay.de/endkunden" target="blank">BillPay GmbH</a> bin ich einverstanden. Es gelten die <a href="%s" target="_blank">Datenschutzbestimmungen</a> von BillPay.');
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_CH', 'Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufs und einer Identit&auml;ts und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href="https://www.billpay.de/endkunden" target="blank">BillPay GmbH</a> bin ich einverstanden. Es gelten die <a href="https://www.billpay.de/kunden/agb-ch#datenschutz" target="_blank">Datenschutzbestimmungen</a> von BillPay.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK',    'Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufs und einer Identit&auml;ts und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href="https://www.billpay.de/endkunden/" target="blank">BillPay GmbH</a> bin ich einverstanden. Es gelten die <a href="%s" target="_blank">Datenschutzbestimmungen</a> von BillPay.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_BIRTHDATE', 'Bitte geben Sie Ihr Geburtsdatum ein');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_GENDER', 'Bitte geben Sie Ihr Geschlecht ein');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_TITLE', 'Bitte geben Sie Ihre Anrede ein');
@@ -82,7 +81,13 @@ define('JS_BILLPAY_DOBMONTH', '* Bitte geben Sie Ihr Geburtsmonat.\n\n');
 define('JS_BILLPAY_DOBYEAR', '* Bitte geben Sie Ihr Geburtsjahr ein.\n\n');
 define('JS_BILLPAY_GENDER', '* Bitte geben Sie Ihr Geschlecht ein.\n\n');
 
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_NUMBER', '* Bitte geben Sie die IBAN ein.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_CODE', '* Bitte geben Sie die BIC ein.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_NAME', '* Bitte geben Sie den Namen des Kontoinhabers ein.');
+
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_EULA', '* Bitte akzeptieren Sie die BillPay AGB!');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB', '* Bitte geben Sie Ihr Geburtsdatum ein.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB_UNDER', 'Sie müssen über 18 Jahre alt zu BillPay nutzen.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT', 'Es ist ein interner Fehler aufgetreten. Bitte w&auml;len Sie eine andere Zahlart');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_SHORT', 'Es ist ein interner Fehler aufgetreten!');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_CREATED_COMMENT', 'Das Zahlungsziel der Bestellung wurde erfolgreich bei BillPay gestartet.');
@@ -150,7 +155,7 @@ define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_DESC', 'Ist Ihre Seite nutzt lokal
 
 
 define('MODULE_PAYMENT_BILLPAY_ACTIVATE_ORDER', 'Die Bestellung wurde noch nicht bei BillPay aktiviert. Bitte aktivieren Sie die Bestellung unmittelbar vor der Versendung, in dem Sie den entsprechenden Status setzen.');
-define('MODULE_PAYMENT_BILLPAY_ACTIVATE_ORDER_WARNING', "<strong style='color:red'>Achtung: Das Zahlungsziel wurde noch nicht bei BillPay gestartet!</strong><br/>");
+define('MODULE_PAYMENT_BILLPAY_ACTIVATE_ORDER_WARNING', "Achtung: Das Zahlungsziel wurde noch nicht bei BillPay gestartet!");
 
 define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ADDRESS', 'Anpassen der Adresse ist bei Bestellungen mit BillPay nicht erlaubt');
 define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_PRODUCT', 'Nachbestellen von Artikeln ist bei Bestellungen mit BillPay nicht erlaubt');
@@ -221,3 +226,16 @@ define('MODULE_PAYMENT_BILLPAY_SALUTATION_FEMALE', 'Frau');
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_SEPA_INFORMATION',    "Die Gl&auml;ubiger-Identifikationsnummer von BillPay ist DE19ZZZ00000237180. Die Mandatsreferenznummer wird mir zu einem sp&auml;teren Zeitpunkt per Email zusammen mit einer Vorlage f&uuml;r ein schriftliches Mandat mitgeteilt. Ich werde zus&auml;tzlich dieses schriftliche Mandat unterschreiben und an BillPay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die f&auml;llige Forderung auch bei einer R&uuml;cklastschrift bestehen bleibt. For more information visit <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
 define('MODULE_PAYMENT_BILLPAY_TEXT_SEPA_INFORMATION_AT', "Die Gl&auml;ubiger-Identifikationsnummer von BillPay ist DE19ZZZ00000237180, die Gl&auml;ubiger-Identifikationsnummer der net-m privatbank AG ist DE62ZZZ00000009232. Die Mandatsreferenznummer wird mir zu einem späteren Zeitpunkt per Email zusammen mit einer Vorlage f&uuml;r ein schriftliches Mandat mitgeteilt. Ich werde zus&auml;tzlich dieses schriftliche Mandat unterschreiben und an BillPay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die f&auml;llige Forderung auch bei einer R&uuml;cklastschrift bestehen bleibt. F&uuml;r weitere Informationen besuchen <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
+
+// Plugin 1.7
+define('MODULE_PAYMENT_BILLPAY_THANK_YOU_TEXT', 'Vielen Dank, dass Sie sich beim Kauf der Ware f&uuml;r die BillPay Rechnung entschieden haben.');
+define('MODULE_PAYMENT_BILLPAY_PAY_UNTIL_TEXT', 'Bitte &uuml;berweisen Sie den Betrag von %1$s %2$s bis zum %3$s unter Angabe des Verwendungszwecks auf folgendes Konto:');
+define('MODULE_PAYMENT_BILLPAY_PAY_UNTIL_TEXT_NO_DUE_DATE', 'Bitte &uuml;berweisen Sie den Betrag von %1$s %2$s innerhalb der Zahlungsfrist unter Angabe des Verwendungszwecks auf folgendes Konto.');
+define('MODULE_PAYMENT_BILLPAY_PAY_UNTIL_TEXT_ADD_CH', 'Bei Einzahlung am Postschalter entstehen zus&auml;tzliche Geb&uuml;hren. Bitte &uuml;berweisen Sie bei Einzahlung per Einzahlungsschein zus&auml;tzlich %1$s %2$s.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_PAYEE', 'Zahlungsempf&auml;nger');
+define('MODULE_PAYMENT_BILLPAY_TEXT_PAYEE_CH', 'Zweigniederlassung Schweiz (Regensdorf)');
+define('MODULE_PAYMENT_BILLPAY_TEXT_IBAN_CH', 'Kontonummer');
+define('MODULE_PAYMENT_BILLPAY_TEXT_BIC_CH', 'BC-Nummer');
+define('MODULE_PAYMENT_BILLPAY_TEXT_BANK', 'Kreditinstitut');
+define('MODULE_PAYMENT_BILLPAY_TEXT_TOTAL_AMOUNT', 'Betrag');
+define('MODULE_PAYMENT_BILLPAY_UPDATE_AVAILABLE', 'Version %2s$ des BillPay Zahlarten Plugins ist verfügbar (aktuell installiert: %1s$). Klicken Sie <a href="%3s$">hier</a> zum Download.');

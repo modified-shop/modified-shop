@@ -3,7 +3,9 @@
  * Event fired when admin changes customer's cart
  */
 
+/** @noinspection PhpIncludeInspection */
 require_once(DIR_FS_CATALOG. 'includes/external/billpay/base/billpayBase.php');
+/** @noinspection PhpIncludeInspection */
 require_once(DIR_FS_CATALOG. 'includes/external/billpay/base/BillpayDB.php');
 
 class BillpayOrderEdit {
@@ -29,7 +31,9 @@ class BillpayOrderEdit {
             $this->orderId = (int)$_POST['orders_id'];
         }
         $billpayMethods = billpayBase::GetPaymentMethods();
-        $this->paymentMethod = BillpayDB::DBFetchValue("SELECT payment_method FROM ".TABLE_ORDERS." WHERE orders_id = '".($this->orderId)."'");
+        $table = TABLE_ORDERS;
+        $orders_id = (int)$this->orderId;
+        $this->paymentMethod = BillpayDB::DBFetchValue("SELECT payment_method FROM $table WHERE orders_id = '$orders_id'");
         $this->isBillpay = in_array($this->paymentMethod, $billpayMethods);
         if (!$this->isBillpay) return;
         $this->billpay = billpayBase::PaymentInstance($this->paymentMethod);
@@ -39,6 +43,7 @@ class BillpayOrderEdit {
         global $order;
         if (!$this->isBillpay) return true;
 
+        /** @noinspection PhpIncludeInspection */
         require_once(DIR_FS_LANGUAGES.$_SESSION['language'].'/modules/payment/billpay.php');
 
         $actionsForbidden = array(
@@ -58,7 +63,6 @@ class BillpayOrderEdit {
             if (!in_array($class, array("ot_discount", "ot_shipping"))) {
                 billpayBase::DisplayErrorAndExit(constant('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_GENERAL'));
             }
-            // TODO: discounts should be negative
         }
 
         if ($this->action === "product_delete") {
@@ -98,7 +102,7 @@ class BillpayOrderEdit {
         }
 
         if ($this->action === "shipping_edit") {
-            $oldShippingValue = BillpayDB::DBFetchValue("select value from ".TABLE_ORDERS_TOTAL." where orders_id = '".(int)$_POST['oID']."' and class = 'ot_shipping'");
+            $oldShippingValue = BillpayOrder::getOTById($_POST['oID'], 'ot_shipping');
             $newShippingValue = $_POST['value'];
             $billpayDelta = $oldShippingValue - $newShippingValue;
 
@@ -114,7 +118,11 @@ class BillpayOrderEdit {
 
         if ($this->action === "product_option_edit")
         {
-            $query = xtc_db_query("SELECT options_values_price, price_prefix FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." WHERE orders_id='".(int)$_POST['oID']."' AND orders_products_attributes_id='".(int)$_POST['opAID']."'");
+            $table = TABLE_ORDERS_PRODUCTS_ATTRIBUTES;
+            $orders_id = (int)$_POST['oID'];
+            $attr_id = (int)$_POST['opAID'];
+
+            $query = xtc_db_query("SELECT options_values_price, price_prefix FROM $table WHERE orders_id='$orders_id' AND orders_products_attributes_id='$attr_id'");
             if (xtc_db_num_rows($query)) {
                 $data = xtc_db_fetch_array($query);
                 $isOptionPriceDifferent = ($data['options_values_price'] != $_POST['options_values_price']);
@@ -157,20 +165,23 @@ class BillpayOrderEdit {
             // send editCartContent request, even if something else was changed
             $success = $this->billpay->reqEditCartContent($this->orderId);
             if (!$success) {
-                $this->billpay->setOrderBillpayState(constant('billpayBase_STATE_ERROR'), $this->orderId, billpayBase::EnsureString($this->billpay->error));
+                $this->billpay->setOrderBillpayState(billpayBase::STATE_ERROR, $this->orderId, billpayBase::EnsureString($this->billpay->error));
             } else {
-                $currentOrderStatus = BillpayDB::DBFetchValue("SELECT orders_status FROM ".TABLE_ORDERS." WHERE orders_id = '".(int)$this->orderId."'");
-                if ($currentOrderStatus === $this->billpay->getOrderStatusFromBillpayState(constant('billpayBase_STATE_ERROR'))) {
+                $table = TABLE_ORDERS;
+                $orders_id = (int)$this->orderId;
+                $currentOrderStatus = BillpayDB::DBFetchValue("SELECT orders_status FROM $table WHERE orders_id = '$orders_id'");
+                if ($currentOrderStatus === $this->billpay->getOrderStatusFromBillpayState(billpayBase::STATE_ERROR)) {
                     // find last good status
                     $goodStatusesArr = array(
-                        $this->billpay->getOrderStatusFromBillpayState(constant('billpayBase_STATE_PENDING')),
-                        $this->billpay->getOrderStatusFromBillpayState(constant('billpayBase_STATE_APPROVED')),
-                        $this->billpay->getOrderStatusFromBillpayState(constant('billpayBase_STATE_COMPLETED')),
-                        $this->billpay->getOrderStatusFromBillpayState(constant('billpayBase_STATE_CANCELLED')),
+                        $this->billpay->getOrderStatusFromBillpayState(billpayBase::STATE_PENDING),
+                        $this->billpay->getOrderStatusFromBillpayState(billpayBase::STATE_APPROVED),
+                        $this->billpay->getOrderStatusFromBillpayState(billpayBase::STATE_COMPLETED),
+                        $this->billpay->getOrderStatusFromBillpayState(billpayBase::STATE_CANCELLED),
                     );
                     $goodStatuses = join(', ', $goodStatusesArr);
-                    $lastGoodStatus = BillpayDB::DBFetchValue("SELECT orders_status_id FROM ".TABLE_ORDERS_STATUS_HISTORY
-                        ." WHERE orders_id = '".(int)$this->orderId."' AND orders_status_id IN (".$goodStatuses.") ORDER BY date_added DESC LIMIT 1");
+                    $table = TABLE_ORDERS_STATUS_HISTORY;
+                    $orders_id = (int)$this->orderId;
+                    $lastGoodStatus = BillpayDB::DBFetchValue("SELECT orders_status_id FROM $table WHERE orders_id = '$orders_id' AND orders_status_id IN ($goodStatuses) ORDER BY date_added DESC LIMIT 1");
                 } else {
                     $lastGoodStatus = $currentOrderStatus;
                 }
@@ -192,11 +203,11 @@ class BillpayOrderEdit {
      */
     function _willOrderBeEmpty($orderId, $lastOrderProductId)
     {
-        $sql = "SELECT SUM(products_quantity) FROM ".TABLE_ORDERS_PRODUCTS." WHERE "
-                ."orders_id = ".(int)$orderId." "
-                ." AND orders_products_id != ".(int)$lastOrderProductId.";";
+        $table = TABLE_ORDERS_PRODUCTS;
+        $orders_id = (int)$orderId;
+        $orders_product_id = (int)$lastOrderProductId;
+        $sql = "SELECT SUM(products_quantity) FROM $table WHERE orders_id = $orders_id AND orders_products_id != $orders_product_id";
         $product_count = (int)BillpayDB::DBFetchValue($sql);
-        $this->billpay->_logDebug("ProductCount: ".$product_count);
         if ($product_count < 1) {
             return true;
         }
@@ -210,10 +221,11 @@ class BillpayOrderEdit {
      */
     function _isOrderCancelled($orderId)
     {
-        $sql = "SELECT orders_status FROM ".TABLE_ORDERS." WHERE orders_id='".(int)$orderId."'";
+        $table = TABLE_ORDERS;
+        $orders_id = (int)$orderId;
+        $sql = "SELECT orders_status FROM $table WHERE orders_id='$orders_id'";
         $currentStatus = (int)BillpayDB::DBFetchValue($sql);
-        $cancelledStatus = (int)$this->billpay->getOrderStatusFromBillpayState(constant('billpayBase_STATE_CANCELLED'));
-        $this->billpay->_logDebug("CurrentStatus: ".$currentStatus."; CancelledStatus: ".$cancelledStatus);
+        $cancelledStatus = (int)$this->billpay->getOrderStatusFromBillpayState(billpayBase::STATE_CANCELLED);
         if ($currentStatus === $cancelledStatus) {
             return true;
         }
@@ -228,7 +240,7 @@ class BillpayOrderEdit {
     {
         $success = $this->billpay->reqCancel($orderId);
         if ($success) {
-            $cancelledStatus = $this->billpay->getOrderStatusFromBillpayState(constant('billpayBase_STATE_CANCELLED'));
+            $cancelledStatus = $this->billpay->getOrderStatusFromBillpayState(billpayBase::STATE_CANCELLED);
             $qry = 'UPDATE ' . TABLE_ORDERS . '
                         SET orders_status = '.(int)$cancelledStatus.'
                         WHERE orders_id = ' . (int)$orderId . '

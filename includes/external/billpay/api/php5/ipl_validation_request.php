@@ -4,15 +4,15 @@ require_once(dirname(__FILE__).'/ipl_xml_request.php');
 
 /**
  * @author Jan Wehrs (jan.wehrs@billpay.de)
- * @copyright Copyright 2010 Billpay GmbH
+ * @copyright Copyright 2010 BillPay GmbH
  * @license commercial 
  */
 class ipl_validation_request extends ipl_xml_request {
 	
-	var $_customer_details = array();
-	var $_shippping_details = array();
+	private $_customer_details = array();
+	private $_shippping_details = array();
 	
-	function set_customer_details($customer_id, $customer_type, $salutation, $title, 
+	public function set_customer_details($customer_id, $customer_type, $salutation, $title, 
 		$first_name, $last_name, $street, $street_no, $address_addition, $zip,
 		$city, $country, $email, $phone, $cell_phone, $birthday, $language, $ip) {
 
@@ -37,7 +37,7 @@ class ipl_validation_request extends ipl_xml_request {
 	}
 	
 	
-	function set_shipping_details($use_billing_address, $salutation=null, $title=null, $first_name=null, $last_name=null, 
+	public function set_shipping_details($use_billing_address, $salutation=null, $title=null, $first_name=null, $last_name=null, 
 		$street=null, $street_no=null, $address_addition=null, $zip=null, $city=null, $country=null, $phone=null, $cell_phone=null) {
 			
 			$this->_shippping_details['useBillingAddress'] = $use_billing_address ? '1' : '0';
@@ -55,7 +55,7 @@ class ipl_validation_request extends ipl_xml_request {
 			$this->_shippping_details['cellPhone'] = $cell_phone;
 	}
 	
-	function _send() {
+	protected function _send() {
 		return ipl_core_send_validation_request(
             $this->_ipl_request_url,
             $this->getTraceData(),
@@ -65,7 +65,7 @@ class ipl_validation_request extends ipl_xml_request {
         );
 	}
 	
-	function _process_response_xml($data) {
+	protected function _process_response_xml($data) {
 		// Nothing to do here
 	}
 

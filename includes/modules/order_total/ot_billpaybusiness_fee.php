@@ -1,21 +1,21 @@
 <?php
-require_once('ot_billpay_fee.php');
+require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/BillpayOT.php');
+require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/billpayBase.php');
 
-class ot_billpaybusiness_fee extends ot_billpay_fee{
-    var $_paymentIdentifier = 'BILLPAYBUSINESS';
+class ot_billpaybusiness_fee extends BillpayOT {
 
-    function addFee()
-    {
-        if ($_SESSION['payment'] == 'billpay' || $_POST['payment'] == 'billpay')
-        {
-            if ($this->_checkFeeGroup(1)===2)
-            {
-                return $_SESSION['billpay_b2b'];
-            }
-            return $this->_checkFeeGroup(1);
+    public function __construct() {
+        $this->_paymentIdentifier = 'BILLPAYBUSINESS_FEE';
+        $this->paymentMethod = billpayBase::PAYMENT_METHOD_INVOICE;
+        $this->config['SORT_ORDER']['default'] = 92; // this needs to be unique in xtc3
+        parent::__construct();
+    }
 
-        }
-        return false;
+    protected function isPaymentMethod() {
+        $isInvoice = parent::isPaymentMethod();
+        if (!$isInvoice) return false;
+        $is_b2b = $this->_getDataValue("b2b");
+        return $is_b2b === true;
     }
 }
 

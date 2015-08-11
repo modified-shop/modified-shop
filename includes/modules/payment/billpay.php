@@ -3,19 +3,23 @@
 require_once DIR_FS_CATALOG . 'includes/external/billpay/base/billpayBase.php';
 
 class BillPay extends BillPayBase {
-    var $_paymentIdentifier;
 
-    function billpay($identifier = null)
-    {
-        $this->_paymentIdentifier = constant('billpayBase_PAYMENT_METHOD_INVOICE');
-        parent::billpayBase($identifier);
-    }
+    protected $_paymentIdentifier = billpayBase::PAYMENT_METHOD_INVOICE;
 
-    function _getPaymentType() {
+    protected $ucPaymentName = 'invoice';
+
+    protected function _getPaymentType() {
         return IPL_CORE_PAYMENT_TYPE_INVOICE;
     }
 
-    function _getStaticLimit($config) {
+    protected function _getMinValue($config) {
+        if (defined('MODULE_PAYMENT_BILLPAY_MIN_AMOUNT')) {
+            return MODULE_PAYMENT_BILLPAY_MIN_AMOUNT;
+        }
+        return 0;
+    }
+
+    protected function _getStaticLimit($config) {
         if ($this->b2b_active == 'BOTH') {
             return max($config['static_limit_invoice'], $config['static_limit_invoicebusiness']);
         }
@@ -28,22 +32,24 @@ class BillPay extends BillPayBase {
         }
     }
 
-    function _is_b2b_allowed($config) {
+    protected function _is_b2b_allowed($config) {
         return ($config['static_limit_invoicebusiness'] > 0);
     }
 
-    function _is_b2c_allowed($config) {
+    protected function _is_b2c_allowed($config) {
         return ($config['static_limit_invoice'] > 0);
     }
 
     /**
      * Event executed during payment method installation.
      */
-    function onInstall()
+    public function onInstall()
     {
         $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_B2BCONFIG";
         $this->_logDebug("Setting local key: $configuration_key");
-        xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('".$configuration_key."', 'B2C', '6', '0', 'xtc_cfg_select_option(array(\'B2C\', \'B2B\', \'BOTH\'), ', now())");
+        $table_config = TABLE_CONFIGURATION;
+        xtc_db_query("INSERT INTO $table_config (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added)
+          VALUES ('$configuration_key', 'B2C', '6', '0', 'xtc_cfg_select_option(array(\'B2C\', \'B2B\', \'BOTH\'), ', now())");
     }
 
     /**
@@ -51,7 +57,7 @@ class BillPay extends BillPayBase {
      * @param $config_array
      * @return array
      */
-    function onKeys($config_array)
+    public function onKeys($config_array)
     {
         if (defined('MODULE_PAYMENT_' . $this->_paymentIdentifier . '_B2BCONFIG')) {
             $config_array[] = 'MODULE_PAYMENT_' . $this->_paymentIdentifier . '_B2BCONFIG';
@@ -59,7 +65,7 @@ class BillPay extends BillPayBase {
         return $config_array;
     }
 
-    function _checkBuildFeeTitleExtension() {
+    private function _checkBuildFeeTitleExtension() {
         $config = $this->getModuleConfig();
 
         if ($this->b2b_active == 'BOTH' && $this->_is_b2b_allowed($config) && $this->_is_b2c_allowed($config)) {
@@ -75,22 +81,33 @@ class BillPay extends BillPayBase {
         return false;
     }
 
-    function getSepaText()
-    {
-        return $this->_getEulaText();
-    }
 
     /**
      * Process payment method input data (form), before validation
      */
-    function onMethodInput($data)
+    public function onMethodInput($data)
     {
-        $dob = $data['billpay_dob_year'].'-'.$data['billpay_dob_month'].'-'.$data['billpay_dob_day'];
-        $this->setDateOfBirth($dob);
-        $this->setGender($data['billpay_gender']);
-        $this->setPhone($data['billpay_phone']);
-        $this->_setDataValue('eula', (bool)$data['billpay_eula']);
+        // saving user data into session
+        $parent_result = parent::onMethodInput($data);
+        if (!$parent_result) {
+            return false;
+        }
 
+        $this->setEula($data['billpay']['invoice_toc'] === "true");
+
+        if ($data['billpay']['invoice_customer_group'] === "business") {
+            $this->_setDataValue("b2b", true);
+            $this->_setDataValue('company_name', $data['billpay']['company_name']);
+            $this->_setDataValue('legal_form', $data['billpay']['company_legal_form']);
+            $this->_setDataValue('register_number', $data['billpay']['company_register_number']);
+            $this->_setDataValue('holder_name', $data['billpay']['company_holder']);
+            $this->_setDataValue('tax_number', $data['billpay']['company_tax_number']);
+        } else {
+            $this->_setDataValue("b2b", false);
+        }
+
+        // B2B code
+        /*
         if ($data['b2bflag'] === "1")
         {
             $this->_setDataValue("b2b", true);
@@ -104,68 +121,10 @@ class BillPay extends BillPayBase {
         } else {
             $this->_setDataValue("b2b", false);
         }
-
-        if ($this->isPhoneRequired()) {
-            if (!$this->getPhone()) {
-                $this->error = MODULE_PAYMENT_BILLPAY_TEXT_ENTER_PHONE;
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Validates if B2B values are correct
-     * @return bool
-     */
-    function validateB2B()
-    {
-        $company_name = (string) $this->_getDataValue('company_name');
-        if (strlen($company_name) < 5)
-        {
-            $this->error = constant('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_FIELD_EMPTY');
-            return false;
-        }
-
-        $legal_form = (string) $this->_getDataValue('legal_form');
-        if (strlen($legal_form) < 2)
-        {
-            $this->error = constant('MODULE_PAYMENT_BILLPAY_B2B_LEGAL_FORM_FIELD_EMPTY');
-            return false;
-        }
-
-        /* as mentioned in billpay-api-documentation_v2_0_en.pdf, page 40, point 13.3
-         * depending on legal form and country, different fields are required.
-         * Also, "The client-side validation of the company data entered by the customer
-         * is not necessary before sending the preauthorize request"
-         */
-        /*
-        $holder_name = (string) $this->_getDataValue('holder_name');
-        if (strlen($holder_name) < 5)
-        {
-            $this->error = constant('MODULE_PAYMENT_BILLPAY_B2B_HOLDER_NAME_EMPTY');
-            return false;
-        }
-
-        $register_number = $this->_getDataValue('register_number');
-        if (empty($register_number))
-        {
-            $this->error = constant('MODULE_PAYMENT_BILLPAY_B2B_REGISTER_NUMBER_EMPTY');
-            return false;
-        }
         */
 
-        $tax_number = $this->_getDataValue('tax_number');
-        if (empty($tax_number))
-        {
-            $this->error = constant('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_EMPTY');
-            return false;
-        }
-
-        return true;
+        return $parent_result;
     }
-
 
     /**
      * Process payment method output data (res), before sending request
@@ -173,7 +132,7 @@ class BillPay extends BillPayBase {
      * @return ipl_preauthorize_request
      * @abstract
      */
-    function onMethodOutput($req)
+    public function onMethodOutput($req)
     {
         if ($this->_getDataValue("b2b"))
         {
@@ -194,49 +153,8 @@ class BillPay extends BillPayBase {
      * @param ipl_preauthorize_request $req
      * @param int $orderId
      */
-    function onAfterInvoiceCreated($req, $orderId) {
+    public function onAfterInvoiceCreated($req, $orderId) {
         $this->setManualSEPAPaymentInStatus($req, $orderId);
-    }
-
-    /**
-     * Event fired when admin is looking at user's invoice.
-     * Should display additional payment method's info.
-     * @param int $orderId
-     * @return string
-     */
-    function onDisplayInvoice($orderId)
-    {
-        $bank_data_query = xtc_db_query(' SELECT account_holder, account_number, bank_code, bank_name, invoice_reference, invoice_due_date '.
-            ' FROM billpay_bankdata WHERE orders_id = '.(int)$orderId);
-        if (!xtc_db_num_rows($bank_data_query)) {
-            return '';
-        }
-        else {
-            $bank_data = xtc_db_fetch_array($bank_data_query);
-            $dueDate 			= $bank_data['invoice_due_date'];
-            $dueDateFormatted 	= substr($dueDate,6,2).".".substr($dueDate,4,-2).".".substr($dueDate,0,-4);
-
-            $bank_data_string = sprintf(MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO, $bank_data['invoice_reference'], substr($dueDate,6,2), substr($dueDate,4,-2), substr($dueDate,0,-4));
-            $bank_data_string = '<br/><br/>'.$bank_data_string.'<br/>';
-
-            $bank_data_string .= '<br/>';
-            $bank_data_string .= '<strong>'.MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_HOLDER .':</strong>&nbsp;' . $bank_data['account_holder'].'<br/>';
-
-            $bank_data_string .= '<strong>'.MODULE_PAYMENT_BILLPAY_TEXT_IBAN .':</strong>&nbsp;' . $bank_data['account_number'].'<br/>';
-            $bank_data_string .= '<strong>'.MODULE_PAYMENT_BILLPAY_TEXT_BIC .':</strong>&nbsp;' . $bank_data['bank_code'].'<br/>';
-            $bank_data_string .= '<strong>'.MODULE_PAYMENT_BILLPAY_TEXT_BANK_NAME .':</strong>&nbsp;' . $bank_data['bank_name'].'<br/>';
-            $bank_data_string .= '<strong>'.MODULE_PAYMENT_BILLPAY_TEXT_PURPOSE .':</strong>&nbsp;' . $bank_data['invoice_reference'].'<br/>';
-
-            if ($dueDate) {
-                $bank_data_string .= '<strong>'.MODULE_PAYMENT_BILLPAY_DUEDATE_TITLE .':</strong>&nbsp;' . $dueDateFormatted . '<br/>';
-            }
-            else {
-                $bank_data_string .= MODULE_PAYMENT_BILLPAY_ACTIVATE_ORDER_WARNING;
-            }
-
-            return $bank_data_string;
-        }
-
     }
 
     /**
@@ -247,8 +165,9 @@ class BillPay extends BillPayBase {
      * @param $bankDataQuery
      * @return bool
      */
-    function onDisplayPdf($pdf, $orderId, $bankDataQuery)
+    public function onDisplayPdf($pdf, $orderId, $bankDataQuery)
     {
+        // TODO: change it, it does not display Plugin 1.7 info
         $dat = $bankDataQuery['invoice_due_date'];
         $year = substr($dat,0,-4);
         $mon = substr($dat,4,-2);
@@ -278,60 +197,129 @@ class BillPay extends BillPayBase {
         $pdf->SetLineWidth(0.1);
     }
 
-    function getPaymentInfo($orderId = null)
-    {
-        // TODO: this looks ugly
-        if(isset($_SESSION['billpay_transaction_id'])) {
-            $billpay_bank_data_query = "SELECT account_holder, account_number, bank_code, bank_name, invoice_reference ".
-                "FROM billpay_bankdata ".
-                "WHERE tx_id = '".$_SESSION['billpay_transaction_id']."'";
-        }else {
-            $billpay_bank_data_query = "SELECT account_holder, account_number, bank_code, bank_name, invoice_reference ".
-                "FROM billpay_bankdata ".
-                "WHERE api_reference_id = '".(int)$orderId."'";
-        }
-
-        $billpay_bank_data_result = xtc_db_query($billpay_bank_data_query);
-        $billpay_bank_data = xtc_db_fetch_array($billpay_bank_data_result);
-        //$billpay_info_text = MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_MAIL . '<br /><br />';
-
-        if(!$billpay_bank_data['api_reference']){
-            $invoiceReference = $this->generateInvoiceReference($orderId);
-        } else {
-            $invoiceReference = $billpay_bank_data['invoice_reference'];
-        }
-
-        //$invoiceReference = $billpay->generateInvoiceReference($insert_id);
-
-        $billpay_info_text = sprintf(MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_MAIL, $invoiceReference) . '<br /><br />';
-        $billpay_info_text .= MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_HOLDER .': '. $billpay_bank_data['account_holder'].'<br />';
-        $billpay_info_text .= MODULE_PAYMENT_BILLPAY_TEXT_IBAN .': '. $billpay_bank_data['account_number'].'<br />';
-        $billpay_info_text .= MODULE_PAYMENT_BILLPAY_TEXT_BIC .': '. $billpay_bank_data['bank_code'].'<br />';
-        $billpay_info_text .= MODULE_PAYMENT_BILLPAY_TEXT_BANK_NAME .': '. $billpay_bank_data['bank_name'].'<br />';
-        $billpay_info_text .= MODULE_PAYMENT_BILLPAY_TEXT_PURPOSE .': ' . $invoiceReference . '<br />';
-        if(defined('EMAIL_USE_HTML') && EMAIL_USE_HTML == 'false') {
-            $billpay_info_text = utf8_decode(html_entity_decode($billpay_info_text, ENT_COMPAT | ENT_HTML401, 'UTF-8'));
-        }
-        if(defined('MODULE_PAYMENT_BILLPAY_UTF8_ENCODE') &&
-            constant('MODULE_PAYMENT_BILLPAY_UTF8_ENCODE') == 'True') {
-            $billpay_info_text = utf8_encode($billpay_info_text);
-        }
-        return array(
-            'html'  =>  $billpay_info_text,
-            'text'  =>  str_replace("<br />", "\n", $billpay_info_text),
-        );
-    }
-
     /**
      * Returns true, if current cart's country requires phone number.
      * Only NLD requires it, check IPL-11283
      * @return bool
      */
-    function isPhoneRequired()
+    public function isPhoneRequired()
     {
-        $billing = BillpayOrder::getCustomerBilling();
-        $country2 = strtoupper($billing['country2']);
-        return $country2 == 'NL';
+        return $this->_getCountryIso2Code() == 'NL';
+    }
+
+    public function isDobRequired($data)
+    {
+        if ($data['billpay']['invoice_customer_group'] === "business") {
+            return false; // Invoice B2B does not require dob.
+        }
+        return true;
+    }
+
+    /**
+     * Renders thank you text visible on invoice and email confirmation.
+     * @return string
+     */
+    public function getThankYouText()
+    {
+        return MODULE_PAYMENT_BILLPAY_THANK_YOU_TEXT;
+    }
+
+    /**
+     * Renders pay until text visible on invoice and email order confirmation.
+     * @param $bank_data Billpay_Base_Bankdata
+     * @param $currency string
+     * @return string
+     */
+    public function getPayUntilText($bank_data, $currency)
+    {
+        $dueDate = $bank_data->getInvoiceDueDate();
+        $amount  = $bank_data->getTotalAmount();
+        $amountFormatted    = $this->renderMoney($amount);
+        if (empty($dueDate)) {
+            $return = sprintf(MODULE_PAYMENT_BILLPAY_PAY_UNTIL_TEXT_NO_DUE_DATE,
+                $amountFormatted, // amount
+                $currency         // currency
+            );
+        } else {
+            $dueDateFormatted = substr($dueDate,6,2).".".substr($dueDate,4,-2).".".substr($dueDate,0,-4);
+            $return = sprintf(MODULE_PAYMENT_BILLPAY_PAY_UNTIL_TEXT,
+                $amountFormatted, // amount
+                $currency,        // currency
+                $dueDateFormatted // date
+            );
+        }
+        if ($currency === 'CHF') {
+            $return .= ' '.sprintf(MODULE_PAYMENT_BILLPAY_PAY_UNTIL_TEXT_ADD_CH,
+                    '1,80',  // post fee - hardcoded
+                    'CHF'    // currency
+                );
+        }
+        return $return;
+    }
+
+    /**
+     * Gathers order's  payment data.
+     * If Swiss, gathers additional data.
+     * @param $bank_data
+     * @param $currency
+     * @return array
+     */
+    public function gatherPaymentDetails($bank_data, $currency)
+    {
+        $data = parent::gatherPaymentDetails($bank_data, $currency);
+        if ($data['currency'] === 'CHF') {
+            $data['h_iban_ch'] = MODULE_PAYMENT_BILLPAY_TEXT_IBAN_CH;
+            $data['h_bic_ch']  = MODULE_PAYMENT_BILLPAY_TEXT_BIC_CH;
+            $data['h_bank_ch'] = MODULE_PAYMENT_BILLPAY_TEXT_BANK_NAME;
+            $data['payee_ch']  = MODULE_PAYMENT_BILLPAY_TEXT_PAYEE_CH;
+
+            // iban_ch, bic_ch is not used
+        }
+        return $data;
+    }
+
+    /**
+     * Renders invoice payment data.
+     * If Swiss, redirects to renderPaymentDetailsCHF
+     * @param array $data
+     * @return string
+     */
+    public function renderPaymentDetails($data)
+    {
+        if ($data['currency'] === 'CHF') {
+            $details = array(
+                $data['h_payee'] => $data['account_holder'],
+                ''  =>  $data['payee_ch'],
+                $data['h_bank_ch'] => $data['bank_name'],
+                $data['h_iban_ch'] => $data['iban_ch'],
+                $data['h_bic_ch'] => $data['bic_ch'],
+                $data['h_iban'] => $data['account_number'],
+                $data['h_bic'] => $data['bank_code'],
+                $data['h_total_amount'] => $data['total_amount'],
+                $data['h_reference'] => $data['invoice_reference'],
+                $data['h_due_date'] => $data['due_date'],
+            );
+        } else {
+            $details = array(
+                $data['h_payee'] => $data['account_holder'],
+                $data['h_iban'] => $data['account_number'],
+                $data['h_bic'] => $data['bank_code'],
+                $data['h_bank'] => $data['bank_name'],
+                $data['h_total_amount'] => $data['total_amount'],
+                $data['h_reference'] => $data['invoice_reference'],
+                $data['h_due_date'] => $data['due_date'],
+            );
+        }
+        return $details;
+    }
+
+    /**
+     * Renders additional email text visible on invoice and email order confirmation.
+     * @return string
+     */
+    public function getEmailText()
+    {
+        return ''; // no email text in invoice payment
     }
 
 }

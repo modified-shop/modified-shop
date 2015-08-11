@@ -18,8 +18,8 @@ require_once (DIR_FS_CATALOG . 'includes/external/billpay/base/billpayBase.php')
 $orderStatusId = BillpayDB::DBFetchValue("SELECT orders_status FROM ".TABLE_ORDERS." WHERE orders_id = '".$orderId."'");
 // TODO: we should use order's payment method, but currently only PayLater uses prepayment
 /** @var BillpayPayLater $billpay */
-$billpay = billpayBase::PaymentInstance(constant('billpayBase_PAYMENT_METHOD_PAY_LATER'));
-if ($orderStatusId === $billpay->getOrderStatusFromBillpayState(constant('billpayBase_STATE_APPROVED'))) {
+$billpay = billpayBase::PaymentInstance(billpayBase::PAYMENT_METHOD_PAY_LATER);
+if ($orderStatusId === $billpay->getOrderStatusFromBillpayState(billpayBase::STATE_APPROVED)) {
     // payment complete
     $redirectTarget = xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL');
     xtc_redirect($redirectTarget);

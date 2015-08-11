@@ -4,140 +4,140 @@ require_once(dirname(__FILE__) . '/ipl_xml_request.php');
 
 /**
  * @author    Jan Wehrs (jan.wehrs@billpay.de)
- * @copyright Copyright 2010 Billpay GmbH
+ * @copyright Copyright 2010 BillPay GmbH
  * @license   commercial
  */
 class ipl_prescore_request extends ipl_xml_request
 {
-    var $_capture_request_necessary;
+    private $_capture_request_necessary;
 
-    var $_customer_details = array();
-    var $_shippping_details = array();
-    var $_totals = array();
+    private $_customer_details = array();
+    private $_shippping_details = array();
+    private $_totals = array();
 
-    var $_article_data = array();
-    var $_order_history_attr = array();
-    var $_order_history_data = array();
-    var $_company_details = array();
+    private $_article_data = array();
+    private $_order_history_attr = array();
+    private $_order_history_data = array();
+    private $_company_details = array();
 
-    var $_payment_info_params = array();
-    var $_fraud_detection = array();
+    private $_payment_info_params = array();
+    private $_fraud_detection = array();
 
-    var $_payment_type;
+    private $_payment_type;
 
-    var $bptid;
+    private $bptid;
 
-    var $corrected_street;
-    var $corrected_street_no;
-    var $corrected_zip;
-    var $corrected_city;
-    var $corrected_country;
+    private $corrected_street;
+    private $corrected_street_no;
+    private $corrected_zip;
+    private $corrected_city;
+    private $corrected_country;
 
-    var $_expected_days_till_shipping = 0;
+    private $_expected_days_till_shipping = 0;
 
-    var $payment_info_html;
-    var $payment_info_plain;
+    private $payment_info_html;
+    private $payment_info_plain;
 
-    var $_payments_allowed = array();
-    var $_rate_info = array();
-    var $_payments_allowed_all = array();
+    private $_payments_allowed = array();
+    private $_rate_info = array();
+    private $_payments_allowed_all = array();
 
-    var $_terms = array();
+    private $_terms = array();
 
     // ctr
-    function ipl_prescore_request($ipl_request_url)
+    function __construct($ipl_request_url)
     {
         //$this->_payment_type = $payment_type;
-        parent::ipl_xml_request($ipl_request_url);
+        parent::__construct($ipl_request_url);
     }
 
-    function set_expected_days_till_shipping($val)
+    public function set_expected_days_till_shipping($val)
     {
         $this->_expected_days_till_shipping = $val;
     }
 
-    function set_capture_request_necessary($val)
+    public function set_capture_request_necessary($val)
     {
         $this->_capture_request_necessary = $val;
     }
 
-    function get_expected_days_till_shipping()
+    public function get_expected_days_till_shipping()
     {
         return $this->_expected_days_till_shipping;
     }
 
-    function get_payment_type()
+    public function get_payment_type()
     {
         return $this->_payment_type;
     }
 
-    function get_status()
+    public function get_status()
     {
         return $this->status;
     }
 
-    function get_bptid()
+    public function get_bptid()
     {
         return $this->bptid;
     }
 
-    function get_corrected_street()
+    public function get_corrected_street()
     {
         return $this->corrected_street;
     }
 
-    function get_corrected_street_no()
+    public function get_corrected_street_no()
     {
         return $this->corrected_street_no;
     }
 
-    function get_corrected_zip()
+    public function get_corrected_zip()
     {
         return $this->corrected_zip;
     }
 
-    function get_corrected_city()
+    public function get_corrected_city()
     {
         return $this->corrected_city;
     }
 
-    function get_corrected_country()
+    public function get_corrected_country()
     {
         return $this->corrected_country;
     }
 
-    function get_payment_info_html()
+    public function get_payment_info_html()
     {
         return $this->payment_info_html;
     }
 
-    function get_payment_info_plain()
+    public function get_payment_info_plain()
     {
         return $this->payment_info_plain;
     }
 
-    function get_payments_allowed_all()
+    public function get_payments_allowed_all()
     {
         return $this->_payments_allowed_all;
     }
 
-    function get_payments_allowed()
+    public function get_payments_allowed()
     {
         return $this->_payments_allowed;
     }
 
-    function get_rate_info()
+    public function get_rate_info()
     {
         return $this->_rate_info;
     }
 
-    function get_terms()
+    public function get_terms()
     {
         return $this->_terms;
     }
 
 
-    function set_customer_details(
+    public function set_customer_details(
         $customer_id, $customer_type, $salutation, $title,
         $first_name, $last_name, $street, $street_no, $address_addition, $zip,
         $city, $country, $email, $phone, $cell_phone, $birthday, $language, $ip, $customerGroup
@@ -165,7 +165,7 @@ class ipl_prescore_request extends ipl_xml_request
     }
 
 
-    function set_shipping_details(
+    public function set_shipping_details(
         $use_billing_address, $salutation = null, $title = null, $first_name = null, $last_name = null,
         $street = null, $street_no = null, $address_addition = null, $zip = null, $city = null, $country = null,
         $phone = null, $cell_phone = null
@@ -186,7 +186,7 @@ class ipl_prescore_request extends ipl_xml_request
         $this->_shippping_details['cellPhone']         = $cell_phone;
     }
 
-    function add_article(
+    public function add_article(
         $articleid, $articlequantity, $articlename, $articledescription,
         $article_price, $article_price_gross
     ) {
@@ -201,7 +201,7 @@ class ipl_prescore_request extends ipl_xml_request
         $this->_article_data[] = $article;
     }
 
-    function add_order_history_attributes($iMerchantCustomerLimit, $iRepeatCustomer)
+    public function add_order_history_attributes($iMerchantCustomerLimit, $iRepeatCustomer)
     {
         $this->_order_history_attr = array(
             'merchant_customer_limit' => (int)$iMerchantCustomerLimit,
@@ -211,7 +211,7 @@ class ipl_prescore_request extends ipl_xml_request
         return $this;
     }
 
-    function add_order_history($horderid, $hdate, $hamount, $hcurrency, $hpaymenttype, $hstatus)
+    public function add_order_history($horderid, $hdate, $hamount, $hcurrency, $hpaymenttype, $hstatus)
     {
         $histOrder                 = array();
         $histOrder['horderid']     = $horderid;
@@ -225,7 +225,7 @@ class ipl_prescore_request extends ipl_xml_request
     }
 
 
-    function set_total(
+    public function set_total(
         $rebate, $rebate_gross, $shipping_name, $shipping_price,
         $shipping_price_gross, $cart_total_price, $cart_total_price_gross,
         $currency
@@ -240,7 +240,7 @@ class ipl_prescore_request extends ipl_xml_request
         $this->_totals['currency']            = $currency;
     }
 
-    function set_company_details($name, $legalForm, $registerNumber, $holderName, $taxNumber)
+    public function set_company_details($name, $legalForm, $registerNumber, $holderName, $taxNumber)
     {
         $this->_company_details['name']           = $name;
         $this->_company_details['legalForm']      = $legalForm;
@@ -249,19 +249,19 @@ class ipl_prescore_request extends ipl_xml_request
         $this->_company_details['taxNumber']      = $taxNumber;
     }
 
-    function set_payment_info_params($showhtmlinfo, $showplaininfo)
+    public function set_payment_info_params($showhtmlinfo, $showplaininfo)
     {
         $this->_payment_info_params['htmlinfo']  = $showhtmlinfo ? "1" : "0";
         $this->_payment_info_params['plaininfo'] = $showplaininfo ? "1" : "0";
     }
 
-    function set_fraud_detection($session_id)
+    public function set_fraud_detection($session_id)
     {
         $this->_fraud_detection['session_id'] = $session_id;
     }
 
 
-    function _send()
+    protected function _send()
     {
         $attributes = array();
 
@@ -282,14 +282,14 @@ class ipl_prescore_request extends ipl_xml_request
         );
     }
 
-    function _process_response_xml($data)
+    protected function _process_response_xml($data)
     {
         foreach ($data as $key => $value) {
             $this->$key = $value;
         }
     }
 
-    function _process_error_response_xml($data)
+    protected function _process_error_response_xml($data)
     {
         if (isset($data['status'])) {
             $this->status = $data['status'];

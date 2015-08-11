@@ -9,7 +9,7 @@ require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/billpayBase.php');
 class BillpayOrder
 {
 
-    function getTotal()
+    public static function getTotal()
     {
         global $order;
         if ($order) {
@@ -21,7 +21,7 @@ class BillpayOrder
         return 0;
     }
 
-    function getCustomerCompany()
+    public static function getCustomerCompany()
     {
         global $order;
         if ($order) {
@@ -30,22 +30,24 @@ class BillpayOrder
         return '';
     }
 
-    function getCustomerBilling()
+    public static function getCustomerBilling()
     {
         global $order;
         if ($order) {
             return array(
                 'firstName' =>  billpayBase::EnsureUTF8($order->billing['firstname']),
                 'lastName'  =>  billpayBase::EnsureUTF8($order->billing['lastname']),
-                'address'   =>  billpayBase::EnsureUTF8($order->billing['street_address'] . (isset($order->billing['suburb']) ? ' '.$order->billing['suburb'] : '')),
+                'address'   =>  billpayBase::EnsureUTF8($order->billing['street_address']
+                    . (isset($order->billing['suburb']) ? ' '.$order->billing['suburb'] : '')),
                 'postCode'  =>  billpayBase::EnsureUTF8($order->billing['postcode']),
                 'city'      =>  billpayBase::EnsureUTF8($order->billing['city']),
                 'country2'  =>  billpayBase::EnsureUTF8($order->billing['country']['iso_code_2']),
                 'country3'  =>  billpayBase::EnsureUTF8($order->billing['country']['iso_code_3']),
             );
         }
-        $countries = BillpayDB::DBFetchRow("SELECT countries_iso_code_2, countries_iso_code_3 FROM ".TABLE_COUNTRIES." WHERE countries_id = "
-            .(int)$_SESSION['customer_country_id']);
+        $table = TABLE_COUNTRIES;
+        $country = (int)$_SESSION['customer_country_id'];
+        $countries = BillpayDB::DBFetchRow("SELECT countries_iso_code_2, countries_iso_code_3 FROM $table WHERE countries_id = $country");
         $ret = array(
             'firstName' =>  '',
             'lastName'  =>  '',
@@ -58,14 +60,15 @@ class BillpayOrder
         return $ret;
     }
 
-    function getCustomerDelivery()
+    public static function getCustomerDelivery()
     {
         global $order;
         if ($order) {
             return array(
                 'firstName' =>  billpayBase::EnsureUTF8($order->delivery['firstname']),
                 'lastName'  =>  billpayBase::EnsureUTF8($order->delivery['lastname']),
-                'address'   =>  billpayBase::EnsureUTF8($order->delivery['street_address'] . (isset($order->delivery['suburb']) ? ' '.$order->delivery['suburb'] : '')),
+                'address'   =>  billpayBase::EnsureUTF8($order->delivery['street_address']
+                    . (isset($order->delivery['suburb']) ? ' '.$order->delivery['suburb'] : '')),
                 'postCode'  =>  billpayBase::EnsureUTF8($order->delivery['postcode']),
                 'city'      =>  billpayBase::EnsureUTF8($order->delivery['city']),
                 'country2'  =>  billpayBase::EnsureUTF8($order->delivery['country']['iso_code_2']),
@@ -75,7 +78,7 @@ class BillpayOrder
         return array();
     }
 
-    function getProducts()
+    public static function getProducts()
     {
         global $order;
         $ret = array();
@@ -93,7 +96,7 @@ class BillpayOrder
         return $ret;
     }
 
-    function getCustomerPhone()
+    public static function getCustomerPhone()
     {
         global $order;
         if ($order) {
@@ -102,7 +105,7 @@ class BillpayOrder
         return '';
     }
 
-    function getCustomerEmail()
+    public static function getCustomerEmail()
     {
         global $order;
         if ($order) {
@@ -111,7 +114,7 @@ class BillpayOrder
         return '';
     }
 
-    function getCurrency()
+    public static function GetCurrentCurrency()
     {
         global $order;
 
@@ -123,6 +126,21 @@ class BillpayOrder
             return (string)$_SESSION['currency'];
         }
         return 'EUR';
+    }
+
+    public static function getCurrencyById($orderId)
+    {
+        $table = TABLE_ORDERS;
+        $orders_id = (int)$orderId;
+        return BillpayDB::DBFetchValue("SELECT currency FROM $table WHERE orders_id = $orders_id");
+    }
+
+    public static function getOTById($orderId, $ot)
+    {
+        $table = TABLE_ORDERS_TOTAL;
+        $orders_id = (int)$orderId;
+        $class = $ot;
+        return BillpayDB::DBFetchValue("SELECT value FROM $table WHERE orders_id = '$orders_id' AND class='$class'");
     }
 
 }

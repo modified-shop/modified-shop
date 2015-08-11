@@ -1,49 +1,51 @@
 <?php
 
+require_once(dirname(__FILE__).'/../ipl_xml_api.php');
+
 /**
  * @author Jan Wehrs (jan.wehrs@billpay.de)
- * @copyright Copyright 2010 Billpay GmbH
+ * @copyright Copyright 2010 BillPay GmbH
  * @license commercial 
  */
 class ipl_xml_request {
 
-    var $request_xml = '';
-    var $response_xml = '';
+	private $request_xml = '';
+	private $response_xml = '';
+	
+	protected $_ipl_request_url = '';
+	protected $_default_params 	= array();
+	protected $_status_info 	= array();
+    protected $_validation_errors = array();
 
-    var $_ipl_request_url   = '';
-    var $_default_params    = array();
-    var $_status_info       = array();
-    var $_validation_errors = array();
-
-    var $status;
+    public $status;
 
     /**
      * used for extended logging purpose
      * @var array
      */
-    var $aTraceData = array();
+    protected $aTraceData = array();
 
-	var $_username;
-	var $_password;
+	private $_username;
+	private $_password;
 	
 	
-	function has_error() {
+	public function has_error() {
 		return $this->_status_info['error_code'] > 0;
 	}
 	
-	function get_error_code() {
+	public function get_error_code() {
 		return $this->_status_info['error_code'];
 	}
 	
-	function get_customer_error_message() {
+	public function get_customer_error_message() {
 		return $this->_status_info['customer_message'];
 	}
 	
-	function get_merchant_error_message() {
+	public function get_merchant_error_message() {
 		return $this->_status_info['merchant_message'];
 	}
 
-    function has_validation_errors()
+    public function has_validation_errors()
     {
         return count($this->_validation_errors['customer']) > 0;
     }
@@ -52,7 +54,7 @@ class ipl_xml_request {
      * Returns an array of validation errors that can be visible to customer.
      * @return array
      */
-    function get_customer_validation_errors() {
+    public function get_customer_validation_errors() {
         return $this->_validation_errors['customer'];
     }
 
@@ -60,36 +62,38 @@ class ipl_xml_request {
      * Returns an array of validation errors that should be only visible to merchant.
      * @return array
      */
-    function get_merchant_validation_errors() {
+    public function get_merchant_validation_errors() {
         return $this->_validation_errors['merchant'];
     }
-	
-	function get_request_xml() {
+
+	public function get_request_xml() {
 		return $this->request_xml;
 	}
 	
-	function get_response_xml() {
+	public function get_response_xml() {
 		return $this->response_xml;
 	}
 	
-	function ipl_xml_request($ipl_request_url) {
+	function __construct($ipl_request_url) {
 		$this->_ipl_request_url	= $ipl_request_url;
 	}
 	
-	function set_default_params($mid, $pid, $bpsecure) {
+	public function set_default_params($mid, $pid, $bpsecure) {
 		$this->_default_params['mid'] = $mid;
 		$this->_default_params['pid'] = $pid;
 		$this->_default_params['bpsecure'] = $bpsecure;
 	}
 	
-	function set_basic_auth_params($username, $password) {
+	public function set_basic_auth_params($username, $password) {
 		$this->_username = $username;
 		$this->_password = $password;
 	}
 
-    function setTraceId($sTraceId)
+    public function setTraceId($sTraceId)
     {
         $this->aTraceData['trace_id'] = $sTraceId;
+
+        return $this;
     }
 
     /**
@@ -106,14 +110,16 @@ class ipl_xml_request {
      *
      * @param array $aTraceData
      *
-     * @return void
+     * @return ipl_xml_request
      */
-    function setTraceData($aTraceData)
+    public function setTraceData($aTraceData)
     {
         $this->aTraceData = array_merge($this->aTraceData, $aTraceData);
+
+        return $this;
     }
 
-    function getTraceData()
+    protected function getTraceData()
     {
         if (isset($this->aTraceData['trace_id']) === false
             && isset($_SESSION) === true
@@ -130,7 +136,7 @@ class ipl_xml_request {
      * @abstract
      * @return bool
      */
-    function _send() {
+    protected function _send() {
 		return false;
 	}
 
@@ -139,7 +145,7 @@ class ipl_xml_request {
      * @abstract
      * @param $data
      */
-    function _process_response_xml($data) {
+    protected function _process_response_xml($data) {
 	}
 	
     /**
@@ -147,7 +153,7 @@ class ipl_xml_request {
      * @abstract
      * @param $data
      */
-    function _process_error_response_xml($data) {
+    protected function _process_error_response_xml($data) {
 	}
 
 	function get_internal_error_msg() {
@@ -155,15 +161,21 @@ class ipl_xml_request {
 	}
 
     /**
-     * Sends the request.
-     * @return array|bool If false, no error. If array, there is error.
+     * @return bool If false, there is no error.
+     * @throws Exception
      */
-    function send() {
+    public function send() {
 		$res = $this->_send();
 
 		if (!$res || ipl_core_has_internal_error()) {
-			return array('error_code' => ipl_core_get_internal_error(),
-						'error_message' => ipl_core_get_internal_error_msg());
+			$errorMsg = ipl_core_get_internal_error_msg();
+			
+			if (!empty($errorMsg)) {
+				throw new Exception($errorMsg);
+			}
+			else {
+				throw new Exception('Internal error with unknown cause occurred.');
+			}
 		}
 
 		// Get status info data structure

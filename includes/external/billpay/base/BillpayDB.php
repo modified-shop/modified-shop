@@ -7,12 +7,22 @@
 class BillpayDB {
 
     /**
+     * Used to execute query we don't expect answer.
+     * @param $query
+     * @return bool|resource
+     */
+    public static function DBQuery($query)
+    {
+        return xtc_db_query($query);
+    }
+
+    /**
      * Returns single value from a DB query.
      * @param string $query
      * @return mixed
      * @static
      */
-    static function DBFetchValue($query)
+    public static function DBFetchValue($query)
     {
         $arr = xtc_db_fetch_array(xtc_db_query($query));
         if (!is_array($arr)) return null;
@@ -25,9 +35,20 @@ class BillpayDB {
      * @return array|bool|mixed
      * @static
      */
-    static function DBFetchRow($query)
+    public static function DBFetchRow($query)
     {
         $arr = xtc_db_fetch_array(xtc_db_query($query));
+        return $arr;
+    }
+
+    /**
+     * Executes query without caching results.
+     * @param $query
+     * @return array|bool|mixed
+     */
+    public static function DBFetchRowNonCached($query)
+    {
+        $arr = xtc_db_fetch_array(xtc_db_query($query, 'db_link', false));
         return $arr;
     }
 
@@ -36,7 +57,7 @@ class BillpayDB {
      * @param   string  $query
      * @return  array
      */
-    static function DBFetchArray($query)
+    public static function DBFetchArray($query)
     {
         $return = array();
         $res = xtc_db_query($query);
@@ -44,5 +65,10 @@ class BillpayDB {
             $return[] = $arr;
         }
         return $return;
+    }
+
+    public static function DBCount($query)
+    {
+        return xtc_db_num_rows(xtc_db_query($query));
     }
 }
