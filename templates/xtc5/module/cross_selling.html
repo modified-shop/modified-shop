@@ -14,7 +14,7 @@
   </tr>
   {foreach item=products_data from=$module_data.PRODUCTS}
     <tr>
-      <td class="productPreviewImage">{if $products_data.PRODUCTS_IMAGE != ''}<a href="{$products_data.PRODUCTS_LINK}"><img src="{$products_data.PRODUCTS_IMAGE}" alt="{$products_data.PRODUCTS_NAME}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
+      <td class="productPreviewImage">{if $products_data.PRODUCTS_IMAGE != ''}<a href="{$products_data.PRODUCTS_LINK}"><img src="{$products_data.PRODUCTS_IMAGE}" alt="{$products_data.PRODUCTS_NAME|onlytext}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
       <td class="productPreviewContent">
       <h2><a href="{$products_data.PRODUCTS_LINK}">{$products_data.PRODUCTS_NAME}</a></h2>
       <p>{$products_data.PRODUCTS_SHORT_DESCRIPTION}</p>
