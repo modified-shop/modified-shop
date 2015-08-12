@@ -330,6 +330,7 @@ text-align: left;
 
 .dataTableConfig a {
 font-size: 12px;
+font-weight: bold;
 text-decoration: underline;
 }
 
