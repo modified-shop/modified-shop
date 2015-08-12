@@ -73,6 +73,7 @@ if (xtc_count_customer_orders() > 0) {
     $smarty->assign('PAGINATION', $pagination);
   }
   
+  $row = 0;
   $history_query = xtc_db_query($history_split->sql_query);
   while ($history = xtc_db_fetch_array($history_query)) {
     // count products in order
@@ -81,14 +82,15 @@ if (xtc_count_customer_orders() > 0) {
                                      WHERE orders_id = '".$history['orders_id']."'");
     $products = xtc_db_fetch_array($products_query);
     
-    $module_content[] = array ('ORDER_ID' => $history['orders_id'],
-                               'ORDER_STATUS' => $history['orders_status_name'],
-                               'ORDER_DATE' => xtc_date_long($history['date_purchased']),
-                               'ORDER_PRODUCTS' => $products['count'],
-                               'ORDER_TOTAL' => xtc_format_price_order(get_order_total($history['orders_id']), 1, $history['currency'], 1),
-                               'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, xtc_get_all_get_params().'order_id='.$history['orders_id'],'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
-                               'ORDER_TRACKING' => get_tracking_link($history['orders_id'], $_SESSION['language_code'])
-                               );
+    $module_content[$row] = array ('ORDER_ID' => $history['orders_id'],
+                                   'ORDER_STATUS' => $history['orders_status_name'],
+                                   'ORDER_DATE' => xtc_date_long($history['date_purchased']),
+                                   'ORDER_PRODUCTS' => $products['count'],
+                                   'ORDER_TOTAL' => xtc_format_price_order(get_order_total($history['orders_id']), 1, $history['currency'], 1),
+                                   'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, xtc_get_all_get_params().'order_id='.$history['orders_id'],'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
+                                   'ORDER_TRACKING' => get_tracking_link($history['orders_id'], $_SESSION['language_code']),
+                                   'BUTTON_CART' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY, 'action=add_order&order_id='.$history['orders_id'], 'SSL').'">'.xtc_image_submit('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>',
+                                   );
   }
 }
 

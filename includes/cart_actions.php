@@ -296,7 +296,91 @@ if (xtc_not_null($action)) {
       }
       xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
       break;
-      
+ 
+    case 'add_order':
+      if (isset($_GET['order_id']) && is_numeric($_GET['order_id'])
+          && isset($_SESSION['customer_id'])) 
+      {
+        $orders_info_query = xtc_db_query("SELECT customers_id 
+                                             FROM ".TABLE_ORDERS." 
+                                            WHERE orders_id = '".(int)$_GET['order_id']."'
+                                              AND customers_id = '".(int)$_SESSION['customer_id']."'");
+        if (xtc_db_num_rows($orders_info_query) > 0) {
+          require_once (DIR_WS_CLASSES.'order.php');
+          $order = new order((int)$_GET['order_id']);        
+          $order_data_array = $order->getOrderData((int)$_GET['order_id']);
+          
+          if (is_array($order_data_array) && count($order_data_array) > 0) {
+            foreach ($order_data_array as $order_data) {
+              $attributes_array = array();
+              if (is_array($order_data['PRODUCTS_ATTRIBUTES_ARRAY'])) {
+                foreach ($order_data['PRODUCTS_ATTRIBUTES_ARRAY'] as $attributes_data) {
+                  $attributes_array[$attributes_data['option_id']] = $attributes_data['value_id'];
+                }
+              }
+
+              $products_id = $order_data['PRODUCTS_ID'];
+              $cart_quantity = (xtc_remove_non_numeric($products_id) + $cart_object->get_quantity(xtc_get_uprid($products_id, ((count($attributes_array) > 0) ? $attributes_array : ''))));
+              if ($cart_quantity > MAX_PRODUCTS_QTY) {            
+                $cart_quantity = MAX_PRODUCTS_QTY;
+                $_SESSION['err_max_prod'] = true;
+                $_GET['max_prod_id'] = (int)$products_id;
+              }
+              $cart_object->add_cart((int)$products_id, $cart_quantity, ((count($attributes_array) > 0) ? $attributes_array : ''));
+
+            }
+
+            xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message));
+          }
+        }
+      }    
+      xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params($parameters), $request_type));
+      break;
+         
+    case 'add_order_product':
+      if (isset($_GET['order_id']) && is_numeric($_GET['order_id'])
+          && isset($_GET['id']) && is_numeric($_GET['id'])
+          && isset($_SESSION['customer_id'])) 
+      {
+        $orders_info_query = xtc_db_query("SELECT o.customers_id,
+                                                  op.products_id,
+                                                  op.products_quantity,
+                                                  opa.orders_products_options_id,
+                                                  opa.orders_products_options_values_id
+                                             FROM ".TABLE_ORDERS." o
+                                             JOIN ".TABLE_ORDERS_PRODUCTS." op
+                                                  ON o.orders_id = op.orders_id
+                                                     AND op.orders_products_id = '".(int)$_GET['id']."'
+                                        LEFT JOIN ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa
+                                                  ON op.orders_products_id = opa.orders_products_id
+                                            WHERE o.orders_id = '".(int)$_GET['order_id']."'
+                                              AND o.customers_id = '".(int)$_SESSION['customer_id']."'");
+        if (xtc_db_num_rows($orders_info_query) > 0) {
+          $attributes_array = array();
+          while ($orders_info = xtc_db_fetch_array($orders_info_query)) {       
+            if ($orders_info['orders_products_options_id'] != '') {
+              $attributes_array[$orders_info['orders_products_options_id']] = $orders_info['orders_products_options_values_id'];
+            }
+            $products_id = $orders_info['products_id'];
+            $products_quantity = $orders_info['products_quantity'];
+          }      
+
+          if (isset($products_id)) {
+            $cart_quantity = (xtc_remove_non_numeric($products_id) + $cart_object->get_quantity(xtc_get_uprid($products_id, ((count($attributes_array) > 0) ? $attributes_array : ''))));
+            if ($cart_quantity > MAX_PRODUCTS_QTY) {            
+              $cart_quantity = MAX_PRODUCTS_QTY;
+              $_SESSION['err_max_prod'] = true;
+              $_GET['max_prod_id'] = (int)$products_id;
+            }
+            $cart_object->add_cart((int)$products_id, $cart_quantity, ((count($attributes_array) > 0) ? $attributes_array : ''));
+
+            xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params(array_merge(array('id'), $parameters)) . $info_message));
+          }
+        }
+      }
+      xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array_merge(array('id'), $parameters)), $request_type));
+      break;
+
   }
 }
 ?>

@@ -229,7 +229,7 @@
     }
 
     function getOrderData($oID) {
-      global $xtPrice;
+      global $xtPrice, $PHP_SELF;
 
       require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_short_description.inc.php');
@@ -291,6 +291,7 @@
         $order_data[$index]['PRODUCTS_SINGLE_PRICE'] = $xtPrice->xtcFormat($order_data_values['final_price']/$order_data_values['products_quantity'], true);
         $order_data[$index]['PRODUCTS_TAX'] = (($order_data_values['products_tax'] > 0.00) ? number_format($order_data_values['products_tax'], TAX_DECIMAL_PLACES) : 0);
         $order_data[$index]['PRODUCTS_QTY'] = $order_data_values['products_quantity'];
+        $order_data[$index]['BUTTON_CART'] = '<a href="'.xtc_href_link(basename($PHP_SELF), 'action=add_order_product&order_id='.(int)$oID.'&id='.$order_data_values['orders_products_id'], 'SSL').'">'.xtc_image_submit('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>';
 
         $index ++;
       }

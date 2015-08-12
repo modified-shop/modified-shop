@@ -94,7 +94,7 @@ if (xtc_count_customer_orders() > 0) {
 	                               WHERE o.customers_id = '".(int) $_SESSION['customer_id']."'
 	                            ORDER BY orders_id DESC
 	                               LIMIT 3");
-
+  $row = 0;
 	while ($orders = xtc_db_fetch_array($orders_query)) {
 		if (xtc_not_null($orders['delivery_name'])) {
 			$order_name = $orders['delivery_name'];
@@ -103,14 +103,15 @@ if (xtc_count_customer_orders() > 0) {
 			$order_name = $orders['billing_name'];
 			$order_country = $orders['billing_country'];
 		}
-		$order_content[] = array ('ORDER_ID' => $orders['orders_id'], 
-		                          'ORDER_DATE' => xtc_date_short($orders['date_purchased']), 
-		                          'ORDER_STATUS' => $orders['orders_status_name'], 
-		                          'ORDER_TOTAL' => xtc_format_price_order(get_order_total($orders['orders_id']), 1, $orders['currency'], 1), 
-		                          'ORDER_LINK' => xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL'), 
-		                          'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
-		                          'TRACKING' => get_tracking_link($orders['orders_id'], $_SESSION['language_code'])
-		                          );
+		$order_content[$row] = array ('ORDER_ID' => $orders['orders_id'], 
+                                  'ORDER_DATE' => xtc_date_short($orders['date_purchased']), 
+                                  'ORDER_STATUS' => $orders['orders_status_name'], 
+                                  'ORDER_TOTAL' => xtc_format_price_order(get_order_total($orders['orders_id']), 1, $orders['currency'], 1), 
+                                  'ORDER_LINK' => xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL'), 
+                                  'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
+                                  'TRACKING' => get_tracking_link($orders['orders_id'], $_SESSION['language_code']),
+                                  'BUTTON_CART' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_submit('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>',
+                                  );
 	}
 }
 $smarty->assign('order_content', $order_content);

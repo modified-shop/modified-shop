@@ -54,7 +54,8 @@
     42. Sitemap 
     43. Product_reviews_info
     44. Last viewed in account
-    45. Miscellaneous
+    45. Account cart and click buttons
+    46. Miscellaneous
    ---------------------------------------------------------------------------------------*/
 
 /* 1. START fonts */
@@ -3485,7 +3486,61 @@ ul.historylist li.first {
 /* END Last viewed in account */
 
 
-/* 45. START miscellaneous */
+/* 45. START account cart and click buttons */
+.account_row_payment,
+.account_row_shipping {
+  padding:3px 0px;
+}
+.account_row_payment span,
+.account_row_shipping span {
+  display:inline-block;
+  width:20px;
+  float:left;
+}
+ul.address_block {
+  margin: 15px 0px 0px 0px !important;
+  list-style-type:none !important;
+}
+ul.address_block li {
+  border-top: 1px dashed #ccc;
+  margin-top:10px;
+  padding-top: 10px;
+}
+ul.address_block li .address_check {
+  float:left;
+  display:inline-block;
+  width:20px;
+}
+ul.address_block li .address_head {
+  display:inline-block;
+  font-weight:bold;
+}
+ul.address_block li .address {
+  display:block;
+  padding:5px 0px 0px 20px;
+}
+.accountbutton_row {
+  margin: 5px 0px 5px 0px;
+}
+.accountbutton_history_row {
+  margin: 5px 0px 0px 0px;
+}
+.accountbutton_historyinfo_row {
+  margin: 10px 0px 0px 0px;
+}
+.account_actions_right {
+  float:right;
+  display:inline-block;
+}
+.accounthistory_actions {
+  text-align:center;
+  display:inline-block;
+  padding-top:4px;
+}
+/* END account cart and click buttons */
+
+
+/* 46. START miscellaneous */
 
 /* START No Javascript Styles for Tabs */  
 /* Moved in general.css.php as inline-style */
