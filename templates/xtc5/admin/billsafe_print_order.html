@@ -10,28 +10,28 @@
   <tr> 
     <td><table width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr> 
-          <td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_customer}<br>
-            <br>
-            {if $csID}<strong>{#csID#}</strong>{$csID}<br>{/if}
-            <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br>
-            <strong>{#order#}</strong> {$oID}<br>
-            <strong>{#date#}</strong> {$DATE}<br>
+          <td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_customer}<br />
+            <br />
+            {if $csID}<strong>{#csID#}</strong>{$csID}<br />{/if}
+            <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br />
+            <strong>{#order#}</strong> {$oID}<br />
+            <strong>{#date#}</strong> {$DATE}<br />
             </font></td>
-          <td width="1"><img src="{$logo_path}logo.gif"></td>
+          <td width="1"><img src="{$logo_path}logo.gif" /></td>
         </tr>
       </table>
-      <br>
+      <br />
       <table style="border-top:1px solid; border-bottom:1px solid;" width="100%" border="0">
         <tr bgcolor="#f1f1f1"> 
           <td width="50%"> 
             <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>
               {#shipping_address#}
-            </strong><br>
+            </strong><br />
           </font></p></td>
           <td> 
             <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>
               {if $address_label_payment}{#payment_address#}{/if}
-            </strong><br>
+            </strong><br />
           </font> </p></td>
         </tr>
         <tr>
