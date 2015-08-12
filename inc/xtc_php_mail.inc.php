@@ -22,7 +22,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
                       $email_subject, $message_body_html, $message_body_plain
                      )
 {
-  global $mail_error, $order, $main;
+  global $order, $main;
 
   // include needed function
   require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
