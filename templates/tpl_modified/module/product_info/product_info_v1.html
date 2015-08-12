@@ -47,7 +47,7 @@
 
         {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<div class="pd_inforow"><strong>{#products_manufacturer_model#}</strong> {$PRODUCTS_MANUFACTURERS_MODEL}</div>{/if}
         {if $MANUFACTURER != ''}<div class="pd_inforow"><strong>{#manufacturer#}</strong> <span itemprop="brand">{$MANUFACTURER}</span></div>{/if}
-        {if $MANUFACTURER_LINK != ''}<div class="pd_inforow"><strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a></div>{/if}
+        {if $MANUFACTURER_LINK != ''}<div class="pd_inforow"><strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a></div>{/if}
         {if $PRODUCTS_URL != ''}<div class="pd_inforow">{$PRODUCTS_URL}</div>{/if}
 
         <ul class="pd_iconlist">
@@ -102,7 +102,7 @@
       {/if}{/if}      
     </div>  
     <br class="clearfix" />
-    {if $MANUFACTURER_IMAGE != ''}<div class="pd_manu_image"><a title="{$MANUFACTURER}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER}" /></a></div>{/if}
+    {if $MANUFACTURER_IMAGE != ''}<div class="pd_manu_image"><a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" /></a></div>{/if}
   </div>
   {$FORM_END}
 

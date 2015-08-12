@@ -7,7 +7,7 @@
     </div>
     <div class="box_line" style="margin-bottom:10px;"></div>
       {if $IMAGE}
-        <div class="box_image"><img src="{$IMAGE}" alt="{$NAME}" /></div>
+        <div class="box_image"><img src="{$IMAGE}" alt="{$NAME|onlytext}" /></div>
         <div class="box_line abstand"></div>
       {/if}
       {if $URL}{$URL} &raquo;<br />{/if}
