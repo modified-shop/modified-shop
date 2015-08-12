@@ -3,7 +3,7 @@
 <div class="boxbody">
   {foreach name=aussen item=box_data from=$box_content}
     <dl>
-      <dt><a href="{$box_data.PRODUCTS_LINK}">{if $box_data.PRODUCTS_IMAGE}<img src="{$box_data.PRODUCTS_IMAGE}" alt="" title="" />{/if}</a></dt>
+      <dt><a href="{$box_data.PRODUCTS_LINK}" title="{$box_data.PRODUCTS_NAME}">{if $box_data.PRODUCTS_IMAGE}<img src="{$box_data.PRODUCTS_IMAGE}" alt="{$box_data.PRODUCTS_NAME}" title="{$box_data.PRODUCTS_NAME}" />{/if}</a></dt>
       <dd>
         <h3>{$box_data.COUNT}. <a href="{$box_data.PRODUCTS_LINK}">{textformat wrap=18 wrap_cut=true}{$box_data.PRODUCTS_NAME}{/textformat}</a></h3>
         <p>
