@@ -329,7 +329,8 @@ text-align: left;
 }
 
 .dataTableConfig a {
-font-size: 12px; 
+font-size: 12px;
+text-decoration: underline;
 }
 
 td.categories_view_data {
@@ -957,6 +958,11 @@ padding:5px;
 background: #F2DEDE; 
 margin-bottom:2px;
 clear:both;
+}
+.important_info a {
+font-size: 12px;
+font-weight: bold;
+text-decoration: underline;
 }
 .border0{
 border:0;
