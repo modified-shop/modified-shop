@@ -3,9 +3,9 @@
 {config_load file="lang_`$language`.custom"}
 <div id="wishlist_short"{if $empty == 'false'} style="cursor:pointer"{/if}>
   {if $empty == 'false'}
-  <a {if $deny_cart neq 'true'}id="toggle_wishlist"{/if} href="{$LINK_WISHLIST}">{#heading_wishlist#} &raquo;<span class="cart_content"><strong>{$PRODUCTS}</strong> {#text_article#}</span></a>
+  <a {if $deny_cart neq 'true'}id="toggle_wishlist"{/if} href="{$LINK_WISHLIST}">{#heading_wishlist#} &raquo;<span class="cart_content"><span class="bold_font">{$PRODUCTS}</span> {#text_article#}</span></a>
   {else}
-  <a {if $deny_cart neq 'true'}id="toggle_wishlist"{/if} href="{$LINK_WISHLIST}">{#heading_wishlist#} &raquo;<span class="cart_content"><strong>0</strong> {#text_article#}</span></a>
+  <a {if $deny_cart neq 'true'}id="toggle_wishlist"{/if} href="{$LINK_WISHLIST}">{#heading_wishlist#} &raquo;<span class="cart_content"><span class="bold_font">0</span> {#text_article#}</span></a>
   {/if}
 </div>
 

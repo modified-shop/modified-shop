@@ -760,6 +760,9 @@ ul.contentnavigation li.wishlist a:hover {
   color:#6d2551;
   text-decoration:none;
 }
+ul.contentnavigation li .bold_font {
+  font-weight: bold;
+}
 .cart_content {
   padding: 0px 0px 0px 20px;
 }
