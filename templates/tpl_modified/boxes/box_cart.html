@@ -2,9 +2,9 @@
 {config_load file="lang_`$language`.custom"}
 <div id="cart_short"{if $empty == 'false'} style="cursor:pointer"{/if}>
   {if $empty == 'false'}
-  <a {if $deny_cart neq 'true'}id="toggle_cart"{/if} href="{$LINK_CART}">{#heading_cart#} &raquo;<span class="cart_content"><strong>{$PRODUCTS}</strong> {#text_article#}{* &nbsp;&bull;&nbsp; {#text_total#}:<strong>{$TOTAL}</strong>*}</span></a>
+  <a {if $deny_cart neq 'true'}id="toggle_cart"{/if} href="{$LINK_CART}">{#heading_cart#} &raquo;<span class="cart_content"><span class="bold_font">{$PRODUCTS}</span> {#text_article#}{* &nbsp;&bull;&nbsp;{#text_total#}:<strong>{$TOTAL}</strong>*}</span></a>
   {else}
-  <a {if $deny_cart neq 'true'}id="toggle_cart"{/if} href="{$LINK_CART}">{#heading_cart#} &raquo;<span class="cart_content"><strong>0</strong> {#text_article#}{* &nbsp;&bull;&nbsp; {#text_total#}: <strong>0,00 {$smarty.session.currency}</strong>*}</span></a>
+  <a {if $deny_cart neq 'true'}id="toggle_cart"{/if} href="{$LINK_CART}">{#heading_cart#} &raquo;<span class="cart_content"><span class="bold_font">0</span> {#text_article#}{* &nbsp;&bull;&nbsp;{#text_total#}: <strong>0,00 {$smarty.session.currency}</strong>*}</span></a>
   {/if}
 </div>
 
