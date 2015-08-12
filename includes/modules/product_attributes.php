@@ -27,7 +27,7 @@ if ($product->getAttributesCount() > 0) {
   $module_smarty = new Smarty;
 
   $module_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-
+  
   $products_options_name_query = xtDBquery("SELECT distinct
                                                    popt.products_options_id,
                                                    popt.products_options_name,
@@ -44,6 +44,10 @@ if ($product->getAttributesCount() > 0) {
   $row = 0;
 
   $products_options_data = array ();
+  
+  require_once(DIR_FS_INC.'auto_include.inc.php');
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_begin/','php') as $file) require ($file);
+  
   while ($products_options_name = xtc_db_fetch_array($products_options_name_query,true)) {
     $selected = 0;
     $products_options_array = array ();
@@ -114,14 +118,10 @@ if ($product->getAttributesCount() > 0) {
         //if PRICE for option is 0 we don't need to display it
         if ($price == 0) {
           unset ($products_options_data[$row]['DATA'][$col]['PRICE']);
-          //BOF - Tomcraft - 2012-09-14 - Partly revoked r2356 to have FULL_PRICE and PLAIN_PRICE available in options template file for the first option, if the options price is 0
-          /*
-          unset ($products_options_data[$row]['DATA'][$col]['FULL_PRICE']);
-          unset ($products_options_data[$row]['DATA'][$col]['PLAIN_PRICE']);
-          */
-          //EOF - Tomcraft - 2012-09-14 - Partly revoked r2356 to have FULL_PRICE and PLAIN_PRICE available in options template file for the first option, if the options price is 0
           unset ($products_options_data[$row]['DATA'][$col]['PREFIX']);
         }
+        
+        foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_data/','php') as $file) require ($file);
 
       }
       $col ++;
@@ -146,6 +146,8 @@ if ($product->getAttributesCount() > 0) {
 
   $module_smarty->assign('language', $_SESSION['language']);
   $module_smarty->assign('options', $products_options_data);
+  
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_end/','php') as $file) require ($file);
 
   $module_smarty->caching = 0;
   $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_options/'.$product->data['options_template']);
