@@ -92,6 +92,7 @@ if (xtc_count_customer_orders() > 0) {
                                    'BUTTON_CART' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY, 'action=add_order&order_id='.$history['orders_id'], 'SSL').'">'.xtc_image_submit('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>',
                                    'ORDER_LINK' => xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$history['orders_id'], 'SSL'),
                                    );
+    $row ++;
   }
 }
 
