@@ -522,7 +522,7 @@ define('SHOW_IP_LOG_TITLE','IP-Log on Checkout?');
 define('SHOW_IP_LOG_DESC','Show Text "Your IP will be saved", in checkout?');
 
 define('ACTIVATE_GIFT_SYSTEM_TITLE','Activate Gift Voucher System');
-define('ACTIVATE_GIFT_SYSTEM_DESC','Activate gift voucher system<br/><br/><b>Attention: </b>You have to install the Modules ot_coupon and ot_gv <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal').'"><b>here</span></b></a>.');
+define('ACTIVATE_GIFT_SYSTEM_DESC','Activate gift voucher system<br/><br/><b>Attention: </b>You have to install the Modules ot_coupon and ot_gv <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal').'"><b>here</b></a>.');
 
 define('ACTIVATE_SHIPPING_STATUS_TITLE','Display Shipping Status');
 define('ACTIVATE_SHIPPING_STATUS_DESC','Show shipping status? (Different dispatch times can be specified for individual products. If enabled, a new item <b>Delivery Status</b> is displayed on product input)');
@@ -898,7 +898,7 @@ define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_TITLE', 'Manufacturer noimage.gif');
 define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no manufacturer image assigned');
 
 define('MODULE_SMALL_BUSINESS_TITLE', 'Small Business');
-define('MODULE_SMALL_BUSINESS_DESC', 'Shall the store be switched to small business according to &sect; 19 UStG.<br/><b>Important:</b> Under "Modules" -> "Order Total" the module "ot_tax" must be disabled or uninstalled. In addition you have to set "Prices incl. Tax" to "No" in the particular customer groups.');
+define('MODULE_SMALL_BUSINESS_DESC', 'Shall the store be switched to small business according to &sect; 19 UStG.<br/><b>Important:</b> Under "Modules" -> "Order Total" the module "ot_tax" must be disabled or uninstalled <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal').'"><b>here</b></a>. In addition you have to set "Prices incl. Tax" to "No" in the particular <a href="'.xtc_href_link(FILENAME_CUSTOMERS_STATUS, '').'"><b>customer groups</b></a>.');
 
 define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Compression');
 define('COMPRESS_HTML_OUTPUT_DESC', 'Compress HTML Output from the Template?');
