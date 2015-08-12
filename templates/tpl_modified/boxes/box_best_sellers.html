@@ -8,8 +8,8 @@
   {foreach name=aussen item=box_data from=$box_content}
   <li>
     <div class="carousel_box">
-      <a href="{$box_data.PRODUCTS_LINK}">
-        <span class="cb_image">{if $box_data.PRODUCTS_IMAGE}<img src="{$box_data.PRODUCTS_IMAGE}" alt="" title="" />{/if}</span>
+      <a href="{$box_data.PRODUCTS_LINK}" title="{$box_data.PRODUCTS_NAME}">
+        <span class="cb_image">{if $box_data.PRODUCTS_IMAGE}<img src="{$box_data.PRODUCTS_IMAGE}" alt="{$box_data.PRODUCTS_NAME}" title="{$box_data.PRODUCTS_NAME}" />{/if}</span>
         <span class="cb_title">{$box_data.PRODUCTS_NAME|mb_substr:"0":"18":"UTF-8"}</span>
       </a>
     </div>
