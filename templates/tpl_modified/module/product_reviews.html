@@ -8,7 +8,7 @@
     <div class="rb_autor"><strong>{#text_author#}</strong> {$module_data.AUTHOR}</div>
     <div class="rb_rating"><strong>{#text_rating#}</strong> {$module_data.RATING|replace:".gif":".png"}</div>
     <br class="clearfix" />
-    <div class="rb_image">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}"></a>{/if}</div>
+    <div class="rb_image">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>{/if}</div>
     <div class="rb_rezension_small">
       <p><strong>{#text_text#}</strong></p>
       <p>{$module_data.TEXT_PLAIN|onlytext}</p>
