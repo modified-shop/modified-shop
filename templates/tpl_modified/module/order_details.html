@@ -12,7 +12,7 @@
   {foreach name=aussen item=module_data from=$module_content} 
   <tr class="mainrow {cycle values="m_row1,m_row2"}">
     <td class="ord_table_center ord_width60 ord_quantity">{$module_data.PRODUCTS_QTY}</td>
-    <td class="ord_table_left ord_width90"><img class="cartimage" src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME}" /></td>
+    <td class="ord_table_left ord_width90"><img class="cartimage" src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></td>
     <td class="ord_table_left toppad">
       <a class="ord_prdoducts_name" href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a>
       {if $module_data.ATTRIBUTES != ''} 
