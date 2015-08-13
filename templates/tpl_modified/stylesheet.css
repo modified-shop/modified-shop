@@ -184,12 +184,28 @@ a.black {
   line-height:28px;
 }
 .paypal_button {
-  margin:0px 10px 0px 0px;
+  margin:0px 5px 0px 0px;
   display:inline-block;
 }
 .paypal_button img {
   height:32px;
 }
+.paypal_button2 {
+  margin:10px 0px 0px 0px;
+  display:inline-block;
+}
+.paypal_button2 img {
+  height:32px;
+}
+.express_button {
+  margin:0px 5px 0px 0px;
+  display:inline-block;
+}
+.paypal_button img {
+  height:32px;
+}
+
+
 .text_left {
   float:left;
   width: 48%;
@@ -1707,7 +1723,7 @@ a.color_more:hover {
   min-height:160px;
   position:relative;
 }
-.lr_image {
+ÿ r_??age {
   float:left;
   text-align: center;
   width: 21.4765%;
