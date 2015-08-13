@@ -38,6 +38,7 @@
         $module_directory_include = DIR_WS_CATALOG.DIR_WS_MODULES . 'shipping/';
         $module_key = 'MODULE_SHIPPING_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
+        $check_language_file = true;
         break;
       case 'ordertotal':
         $module_type = 'order_total';
@@ -45,6 +46,7 @@
         $module_directory_include = DIR_WS_CATALOG.DIR_WS_MODULES . 'order_total/';
         $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
+        $check_language_file = true;
         break;
       case 'payment':
       default:
@@ -56,6 +58,7 @@
         if (isset($_GET['error'])) {
           $messageStack->add($_GET['error'], 'error');
         }
+        $check_language_file = true;
         break;
     }
   }
@@ -111,10 +114,10 @@
       $module_info = array('code' => $module->code,
                            'title' => $module->title,
                            'description' => $module->description,
-                           'extended_description' => $module->extended_description,
+                           'extended_description' => isset($module->extended_description) ? $module->extended_description : '',
                            'status' => $module->check());
       $module_info['properties'] = isset($module->properties) ? $module->properties : array();
-      $module_keys = $module->keys();
+      $module_keys = method_exists($module,'keys') ? $module->keys() : array();
       $keys_extra = array();
       for ($j = 0, $k = sizeof($module_keys); $j < $k; $j++) {
         $key_value_query = xtc_db_query("SELECT configuration_key,
@@ -188,25 +191,23 @@ if (xtc_not_null($action) && !$box) {
                     if (!is_dir($module_directory . $file)) {
                       if (substr($file, strrpos($file, '.')) == $file_extension) {
                         //BOF - DokuMan - 2011-07-19 - sorting of modules (credits to GTB)
-                        if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
+                        if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
                           include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
-                          include_once($module_directory . $file);
-                          $class = substr($file, 0, strrpos($file, '.'));
-                          if (xtc_class_exists($class)) {
-                            $module = new $class();
-                          }
-                        } else {
+                        } elseif ($check_language_file) {
                           $messageStack->add_session(sprintf(TEXT_MODULE_FILE_MISSING, $_SESSION['language'], $file), 'warning');
+                        }
+                        include_once($module_directory . $file);
+                        $class = substr($file, 0, strpos($file, '.'));
+                        if (xtc_class_exists($class)) {
+                          $module = new $class();
                         }
                         if ($module instanceof $class && $module->check() > 0) { //DokuMan - 2013-08-23 - added instanceof for fixing fatal error on PHP5.5
                           if (!is_numeric($module->sort_order)) {
-
                             $module->sort_order = 0;
                           }
                           if (!array_key_exists(($module->sort_order*100), $directory_array[0])) {
                             $directory_array[0][($module->sort_order*100)] = $file;
                           } else {
-
                             // search for next free index in array
                             $index = ($module->sort_order*100);
                             while (1==1) {
@@ -233,7 +234,7 @@ if (xtc_not_null($action) && !$box) {
                     }
                     $directory_array[0] = array_values($directory_array[0]);
                   }
-                  if (is_array($directory_array[1])) {
+                  if (isset($directory_array[1]) && is_array($directory_array[1])) {
                     sort($directory_array[1]);
                   }
                   //EOF - DokuMan - 2011-07-19 - sorting of modules (credits to GTB)
@@ -244,87 +245,87 @@ if (xtc_not_null($action) && !$box) {
                 foreach ($directory_array as $directory_array) { //foreach-loop start - DokuMan - 2011-07-19 - sorting of modules (credits to GTB)
                   for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
                     $file = $directory_array[$i];
-                    if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
+                    if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
                       include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
-                      include_once($module_directory . $file);
-                      $class = substr($file, 0, strrpos($file, '.'));
-                      if (xtc_class_exists($class)) {
-                        $module = new $class();
-                        if ($module->check() > 0) {
-                          // BOF - DokuMan - 2011-05-10 revise fix for sorting of modules
-                          if (($module->sort_order > 0) && !isset($installed_modules[$module->sort_order])) {
-                            $installed_modules[$module->sort_order] = $file;
-                          } else {
-                            $installed_modules[] = $file;
-                          }
-                          // EOF - DokuMan - 2011-05-10 revise fix for sorting of modules
-                        }
-                        if ((!$module_class || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
-                          $module_info = get_module_info($module);
-                          $mInfo = new objectInfo($module_info);                          
-                        }
-                        if ($module->check() > 0 && !$installed) {
-                          $installed = true;
-                          ?>
-                          <tr class="dataTableHeadingRow sub">
-                            <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
-                          </tr>
-                          <?php
-                        } elseif ($module->check() < 1 && !$deinstalled && $installed) {
-                          $deinstalled = true;
-                          ?>
-                          <tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>
-                          <tr class="dataTableHeadingRow">
-                            <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
-                            <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
-                            <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
-                            <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
-                            <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
-                          </tr>
-                          <tr class="dataTableHeadingRow sub">
-                            <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
-                          </tr>
-                          <?php
-                        }
-                        if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) {
-                          if ($module->check() > 0) {
-                            $tr_attribute = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit') . '\'"';
-                          } else {
-                            $tr_attribute = 'class="dataTableRowSelected"';
-                          }
+                    }
+                    include_once($module_directory . $file);
+                    $class = substr($file, 0, strpos($file, '.'));
+                    if (xtc_class_exists($class)) {
+                      $module = new $class();
+                      if ($module->check() > 0) {
+                        // BOF - DokuMan - 2011-05-10 revise fix for sorting of modules
+                        if (($module->sort_order > 0) && !isset($installed_modules[$module->sort_order])) {
+                          $installed_modules[$module->sort_order] = $file;
                         } else {
-                          $tr_attribute = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '\'"';
+                          $installed_modules[] = $file;
                         }
-                        
+                        // EOF - DokuMan - 2011-05-10 revise fix for sorting of modules
+                      }
+                      if ((!$module_class || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
+                        $module_info = get_module_info($module);
+                        $mInfo = new objectInfo($module_info);                          
+                      }
+                      if ($module->check() > 0 && !$installed) {
+                        $installed = true;
                         ?>
-                          <tr <?php echo $tr_attribute;?>>
-                            <td class="dataTableContent">
-                              <?php
-                                echo $module->title;
-                                if (isset($module->icons_available)) {
-                                  echo '<br />'.$module->icons_available;
+                        <tr class="dataTableHeadingRow sub">
+                          <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
+                        </tr>
+                        <?php
+                      } elseif ($module->check() < 1 && !$deinstalled && $installed) {
+                        $deinstalled = true;
+                        ?>
+                        <tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>
+                        <tr class="dataTableHeadingRow">
+                          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
+                          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
+                          <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
+                          <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
+                          <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                        </tr>
+                        <tr class="dataTableHeadingRow sub">
+                          <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
+                        </tr>
+                        <?php
+                      }
+                      if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) {
+                        if ($module->check() > 0) {
+                          $tr_attribute = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit') . '\'"';
+                        } else {
+                          $tr_attribute = 'class="dataTableRowSelected"';
+                        }
+                      } else {
+                        $tr_attribute = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '\'"';
+                      }
+                      
+                      ?>
+                        <tr <?php echo $tr_attribute;?>>
+                          <td class="dataTableContent">
+                            <?php
+                              echo $module->title;
+                              if (isset($module->icons_available)) {
+                                echo '<br />'.$module->icons_available;
+                              }
+                            ?>
+                          </td>
+                          <td class="dataTableContent"><?php echo str_replace('.php','',$file); ?></td>
+                          <td class="dataTableContent txta-r">
+                          <?php if (isset($module->sort_order) && is_numeric($module->sort_order)) echo $module->sort_order; ?>&nbsp;</td>
+                          <td class="dataTableContent txta-c">
+                            <?php
+                              if ($module->check() > 0) {
+                                if (isset($module->enabled) && $module->enabled) {
+                                  echo xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', ICON_ARROW_RIGHT);
+                                } else {
+                                  echo xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', ICON_ARROW_RIGHT);
                                 }
-                              ?>
-                            </td>
-                            <td class="dataTableContent"><?php echo str_replace('.php','',$file); ?></td>
-                            <td class="dataTableContent txta-r">
-                            <?php if (isset($module->sort_order) && is_numeric($module->sort_order)) echo $module->sort_order; ?>&nbsp;</td>
-                            <td class="dataTableContent txta-c">
-                              <?php
-                                if ($module->check() > 0) {
-                                  if (isset($module->enabled) && $module->enabled) {
-                                    echo xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', ICON_ARROW_RIGHT);
-                                  } else {
-                                    echo xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', ICON_ARROW_RIGHT);
-                                  }
-                                }
-                              ?>
-                              &nbsp;
-                            </td>
-                            <td class="dataTableContent txta-r"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
-                          </tr>
-                          <?php
-                          }
+                              }
+                            ?>
+                            &nbsp;
+                          </td>
+                          <td class="dataTableContent txta-r"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                        </tr>
+                        <?php
                         }
                       }
                     } //foreach-loop end - DokuMan - 2011-07-19 - sorting of modules (credits to GTB)
