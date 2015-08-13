@@ -61,7 +61,7 @@
   $metaMinLength   =  5;     // Mindestlänge eines Keywords
   $metaMaxLength   =  18;    // Maximallänge eines Keywords
   $metaMaxKeywords =  15;    // Maximall Anzahl der Keywords
-  $metaDesLength   =  150;   // maximale Länge der "description" (in Buchstaben)
+  $metaDesLength   =  156;   // maximale Länge der "description" (in Buchstaben)
 // ---------------------------------------------------------------------------------------
   $addPagination        =   true;   // Seiten-Nummern anzeigen, ja/nein?
 // ---------------------------------------------------------------------------------------
@@ -201,10 +201,12 @@
   function prepareWordArray($Text) {
     //$Text = str_replace(array('&nbsp;','\t','\r','\n','\b'),' ',strip_tags($Text));
     $Text = str_replace(array('&nbsp;','\t','\r','\n','\b'),' ',preg_replace("/<[^>]*>/",' ',$Text)); // <-- Besser bei Zeilenumbrüchen
-    $Text = htmlentities(metaNoEntities(strtolower($Text)), ENT_QUOTES, strtoupper($_SESSION['language_charset']));
+    $Text = htmlentities(metaNoEntities($Text), ENT_QUOTES, $_SESSION['language_charset']);    
     $Text = preg_replace("/\s\-|\-\s/",' ',$Text); // <-- Gegen Trenn- und Gedankenstriche
-    $Text = preg_replace("/(&[^aoucizens][^;]*;)/",' ',$Text);
+    //$Text = preg_replace("/(&[^aoucizens][^;]*;)/",' ',$Text);
+    $Text = strtolower($Text);
     $Text = preg_replace("/[^0-9a-z|\-|&|;]/",' ',$Text); // <-- Bindestriche drin lassen
+    $Text = str_replace('& ', '&', $Text);    
     $Text = trim(preg_replace("/\s\s+/",' ',$Text));
     return $Text;
   }
@@ -229,7 +231,7 @@
   function cleanKeyWords($KeyWords) {
     global $metaStopWords;
     $KeyWords   =   WordArray($KeyWords);
-    $StopWords   =  WordArray($metaStopWords);
+    $StopWords  =   WordArray($metaStopWords);
     $KeyWords   =   array_diff($KeyWords,$StopWords);
     $KeyWords   =   array_filter($KeyWords,"filterKeyWordArray");
     return $KeyWords;
