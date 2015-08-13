@@ -28,7 +28,7 @@ if (!defined('SHOW_ALWAYS_LANG_DROPDOWN')) {
   define('SHOW_ALWAYS_LANG_DROPDOWN', true); // true: Zeigt immer das Länderauswahlfeld an - false: Zeigt Länderauswahlfeld nur bei nicht eingeloggten Kunden
 }
 if (!defined('DOWNLOAD_SHOW_LANG_DROPDOWN')) {
-  define('DOWNLOAD_SHOW_LANG_DROPDOWN', 'false'); // true: Zeigt das LŠnderauswahlfeld bei Download-Artikeln an
+  define('DOWNLOAD_SHOW_LANG_DROPDOWN', 'false'); // true: Zeigt das Länderauswahlfeld bei Download-Artikeln an
 }
 require_once (DIR_WS_CLASSES.'order.php');
 require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
