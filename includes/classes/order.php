@@ -234,7 +234,8 @@
       require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_short_description.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_products_image.inc.php');
-
+      require_once(DIR_FS_INC . 'xtc_image_submit.inc.php');
+      
       $order_lang_query = xtc_db_query("SELECT languages_id
                                     FROM ".TABLE_LANGUAGES."
                                    WHERE directory = '".$this->info['language']."'");
