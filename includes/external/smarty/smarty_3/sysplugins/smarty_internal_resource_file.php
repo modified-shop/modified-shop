@@ -62,7 +62,10 @@ class Smarty_Internal_Resource_File extends Smarty_Resource
     public function getContent(Smarty_Template_Source $source)
     {
         if ($source->timestamp) {
-            return file_get_contents($source->filepath);
+          if (strpos($source->filepath, '.txt') !== false) {
+            return encode_utf8(file_get_contents($source->filepath));
+          }
+          return file_get_contents($source->filepath);
         }
         if ($source instanceof Smarty_Config_Source) {
             throw new SmartyException("Unable to read config {$source->type} '{$source->name}'");
