@@ -6,6 +6,7 @@
         <tr> 
           <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_customer}<br />
             <br />
+            {if $SHIPPING_METHOD}<strong>Shippingmethod:</strong> {$SHIPPING_METHOD}<br />{/if}
             {if $PAYMENT_METHOD}<strong>Paymentmethod:</strong> {$PAYMENT_METHOD}<br />{/if}
             <strong>Order No.:</strong> {$oID}<br />
             <strong>Orderdate:</strong> {$DATE}<br />
@@ -18,19 +19,29 @@
       </table>
       <br /> 
       <table style="border-top:1px solid; border-bottom:1px solid;" width="100%" border="0">
-        <tr bgcolor="#f1f1f1"> 
-          <td width="50%"> 
-            <p><font size="2"><strong><font face="Verdana, Arial, Helvetica, sans-serif">Shippingaddress<br /></font></strong></font></p>
+        <tr bgcolor="#f1f1f1">
+          {if $address_label_payment!=$address_label_shipping}
+          <td>
+            <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Shippingaddress</strong></font></p>
           </td>
+          {/if}
           {if $address_label_payment}
-          <td> 
-            <p><font size="2"><strong><font face="Verdana, Arial, Helvetica, sans-serif">Paymentaddress<br /> </font> </strong></font></p>
+          <td {if $address_label_payment!=$address_label_shipping}width="50%"{else}width="100%"{/if}>
+            <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>{if $address_label_payment!=$address_label_shipping}Paymentadress{else}Payment-/Shippingaddress{/if}</strong></font></p>
           </td>
           {/if}
         </tr>
-        <tr> 
-          <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_shipping}</font></td>
-          {if $address_label_payment}<td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_payment}</font></td>{/if}
+        <tr>
+          {if $address_label_payment!=$address_label_shipping}
+          <td>
+            <font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_shipping}</font>
+          </td>
+          {/if}
+          {if $address_label_payment}
+          <td>
+            <font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_payment}</font>
+          </td>
+          {/if}
         </tr>
       </table>
       <p><font size="2" face="Verdana, Arial, Helvetica, sans-serif">
@@ -86,7 +97,7 @@
             {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />Shipping time: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}
             {if $order_values.PRODUCTS_ATTRIBUTES neq ''}<br /><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>{/if}
             </font>
-            </td>
+          </td>
           <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_MODEL}<br />
             <em>{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</em></font></td>
           <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="right"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_SINGLE_PRICE}</font></div></td>
