@@ -521,6 +521,7 @@ define('GRADUATED_PRICE_MAX_VALUE', 'ab');
 
 //web28 - 2010-08-20 - VERSANDKOSTEN WARENKORB
 define('_SHIPPING_TO', 'Versand nach ');
+define('_SHIPPING_FREE','Versandkostenfrei');
 
 // BOF - DokuMan - 2011-09-20 - E-Mail SQL errors
 define('ERROR_SQL_DB_QUERY','Es tut uns leid, aber es ist ein Datenbankfehler aufgetreten.');

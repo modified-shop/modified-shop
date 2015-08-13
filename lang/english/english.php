@@ -522,6 +522,7 @@ define('GRADUATED_PRICE_MAX_VALUE', 'from');
 
 //web28 - 2010-08-20 - VERSANDKOSTEN WARENKORB
 define('_SHIPPING_TO', 'shipping to ');
+define('_SHIPPING_FREE','Free Shipping');
 
 // BOF - DokuMan - 2011-09-20 - E-Mail SQL errors
 define('ERROR_SQL_DB_QUERY','We are sorry, but an database error has occurred somewhere on this page!');
