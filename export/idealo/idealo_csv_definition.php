@@ -72,7 +72,7 @@ if(@file_get_contents($_csv_version_location_idealo) !== false){
    
 define('NEW_IDEALO_CSV_VERSION_TEXT', $_csv_new_idealo_version_text);
 define('MODULE_IDEALO_CSV_TEXT_DESCRIPTION', 'CSV - Idealo');
-define('MODULE_IDEALO_CSV_TEXT_TITLE',  '<img src="//cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_small.png"/> - CSV');
+define('MODULE_IDEALO_CSV_TEXT_TITLE',  xtc_image(DIR_WS_CATALOG.'export/idealo/logo_blue_small.png').' - CSV');
 
 define('MODULE_IDEALO_CSV_FILE_TITLE' , '<hr noshade>User');
 define('MODULE_IDEALO_CSV_FILE_DESC' , 'Geben Sie an, unter welchen Namen die Datei gescheichert werden soll. z.B. idealo.csv' );
