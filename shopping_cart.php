@@ -142,6 +142,19 @@ if(!empty($_SESSION['continue_link'])) {
 }
 $smarty->assign('BUTTON_CONTINUE_SHOPPING', xtc_image_button('button_continue_shopping.gif', IMAGE_BUTTON_CONTINUE_SHOPPING));
 
+if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+  if (isset($_SESSION['customer_id']) && $_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+    $express_query = xtc_db_query("SELECT *
+                                     FROM ".TABLE_CUSTOMERS_CHECKOUT." 
+                                    WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    if (xtc_db_num_rows($express_query) > 0) {
+      $smarty->assign('BUTTON_CHECKOUT_EXPRESS', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_SHIPPING, 'express=on', 'SSL').'">'.xtc_image_button('button_checkout_express.gif', IMAGE_BUTTON_CHECKOUT).'</a>');
+    } else {
+      $smarty->assign('ACTIVATE_EXPRESS_LINK', xtc_href_link(FILENAME_ACCOUNT_CHECKOUT_EXPRESS, 'cart=true', 'SSL'));
+    }
+  }
+}
+
 $smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$template_cart);
 $smarty->assign('main_content', $main_content);

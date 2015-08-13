@@ -8,6 +8,7 @@
     <h4><a href="{$order_data.ORDER_LINK}">{#text_oid#}{$order_data.ORDER_ID}</a></h4>
     <p class="cf">
       <span class="account_actions_right">
+        {if isset($order_data.BUTTON_CART_EXPRESS)}{$order_data.BUTTON_CART_EXPRESS}{/if}
         {$order_data.BUTTON_CART}
       </span>
       <strong><a href="{$order_data.ORDER_LINK}">{$order_data.ORDER_DATE}</a> / {#order_nr#}{$order_data.ORDER_ID}</strong><br />

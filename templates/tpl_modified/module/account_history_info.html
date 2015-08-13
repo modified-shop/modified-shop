@@ -2,17 +2,11 @@
 {config_load file="$language/lang_$language.conf" section="print_order"}
 {config_load file="$language/lang_$language.conf" section="product_info"}
 {config_load file="lang_`$language`.custom"}
-<h1>{#heading_history_info#}</h1>
-
-<div class="button_left">{$BUTTON_BACK}</div>
-<div class="button_right">{$BUTTON_PRINT_LAYER}</div>
-<br class="clearfix" />
-<br />
+<h1 class="cf">{#text_oid#}{$ORDER_NUMBER} - {$ORDER_STATUS}
+  <span class="headline_right">{#text_date#} {$ORDER_DATE}</span>
+</h1>
 
 <div class="highlightbox">
-  <h1>{#text_oid#}{$ORDER_NUMBER} ({$ORDER_STATUS})</h1>
-  <p>{#text_date#} {$ORDER_DATE}</p>
-
   <div class="twoColums">
     <div class="highlightbox plainleft">
       <h4>{#text_shipping_address#}</h4>
@@ -109,6 +103,7 @@
       </td>
       <td class="ord_table_right ord_width120">
         <span class="accounthistory_actions">
+          {if isset($order_values.BUTTON_CART_EXPRESS)}{$order_values.BUTTON_CART_EXPRESS}{/if}
           {$order_values.BUTTON_CART}
         </span>
       </td>
@@ -151,9 +146,11 @@
 <p>{#text_print#}</p>
 {/if}
 
-<div class="button_left">{$BUTTON_BACK}</div>
-<div class="button_right">
-  {$BUTTON_CART}
+<div class="button_left">
+  {$BUTTON_BACK}
   {$BUTTON_PRINT_LAYER}
 </div>
-
+<div class="button_right">
+  {if isset($BUTTON_CART_EXPRESS)}{$BUTTON_CART_EXPRESS}{/if}
+  {$BUTTON_CART}
+</div>

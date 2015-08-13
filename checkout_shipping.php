@@ -47,6 +47,20 @@ require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
+//express checkout
+if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+  if (isset($_GET['express']) && $_GET['express'] == 'on') {
+    $express_query = xtc_db_query("SELECT checkout_shipping,
+                                        checkout_shipping_address
+                                   FROM ".TABLE_CUSTOMERS_CHECKOUT." 
+                                  WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    $express = xtc_db_fetch_array($express_query);
+    if ($express['checkout_shipping_address'] != '') {
+      $_SESSION['sendto'] = $express['checkout_shipping_address'];
+    }
+  }
+}
+
 // if no shipping destination address was selected, use the customers own address as default
 if (!isset($_SESSION['sendto'])) {
 	$_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
@@ -93,7 +107,7 @@ $_SESSION['cartID'] = $_SESSION['cart']->cartID;
 if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) { // GV Code added
 	$_SESSION['shipping'] = false;
 	$_SESSION['sendto'] = false;
-	xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+	xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, xtc_get_all_get_params(), 'SSL'));
 }
 
 $total_weight = $_SESSION['cart']->show_weight();
@@ -111,6 +125,24 @@ require_once (DIR_WS_MODULES.'order_total/ot_shipping.php');
 include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
 $ot_shipping = new ot_shipping;
 $ot_shipping->process();
+
+//express checkout
+if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+  if (isset($_GET['express']) && $_GET['express'] == 'on') {
+    if ($express['checkout_shipping'] != '') {
+      if ($free_shipping === false && $express['checkout_shipping'] == 'free_free') {
+        unset($express['checkout_shipping']);
+      } elseif ($free_shipping === false && $express['checkout_shipping'] == 'cheapest_cheapest') {
+        // get all available shipping quotes
+        $quotes = $shipping_modules->quote();
+        $cheapest = $shipping_modules->cheapest();
+        $express['checkout_shipping'] = $cheapest['id'];
+      }
+      $_POST['action'] = 'process';
+      $_POST['shipping'] = (($free_shipping === true) ? 'free_free' : $express['checkout_shipping']);
+    }
+  }
+}
 
 // process the selected shipping method
 if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
@@ -136,7 +168,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                 'title' => (($free_shipping == true) ? $quote[0]['methods'][0]['title'] : $quote[0]['module'].(($quote[0]['methods'][0]['title'] != '') ? ' ('.$quote[0]['methods'][0]['title'].')' : '')), 
                 'cost' => $quote[0]['methods'][0]['cost']
               );
-						xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+						xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, xtc_get_all_get_params(), 'SSL'));
 					}
 				}
 			} else {
@@ -166,7 +198,7 @@ $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_SHIPPING, xtc_href_link(FILENAME_CHECKO
 
 require (DIR_WS_INCLUDES.'header.php');
 
-$smarty->assign('FORM_ACTION', xtc_draw_form('checkout_address', xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'post', 'onSubmit="return check_form();"').xtc_draw_hidden_field('action', 'process'));
+$smarty->assign('FORM_ACTION', xtc_draw_form('checkout_address', xtc_href_link(FILENAME_CHECKOUT_SHIPPING, xtc_get_all_get_params(), 'SSL'), 'post', 'onSubmit="return check_form();"').xtc_draw_hidden_field('action', 'process'));
 $smarty->assign('ADDRESS_LABEL', xtc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br />'));
 $smarty->assign('BUTTON_ADDRESS', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL').'">'.xtc_image_button('button_change_address.gif', IMAGE_BUTTON_CHANGE_ADDRESS).'</a>');
 $smarty->assign('BUTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));// 'BUTON_CONTINUE' to remain compatible to standard templates

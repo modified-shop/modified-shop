@@ -164,7 +164,7 @@ class main {
    * @param string $text, $ssl
    * @return string
    */
-  function getContentLink($coID,$text,$ssl='NONSSL') {
+  function getContentLink($coID, $text, $ssl = 'NONSSL', $class_more = true) {
     if (!defined('POPUP_CONTENT_LINK_PARAMETERS')) {
       define('POPUP_CONTENT_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
     }
@@ -173,7 +173,7 @@ class main {
     }
     $link_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS;
     $link_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS;
-    return '<a target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.$link_parameters, $ssl).'" title="Information" class="color_more '.$link_class.'">'.$text.'</a>';
+    return '<a target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.$link_parameters, $ssl).'" title="Information" class="'.(($class_more === true) ? 'color_more ' : '').$link_class.'">'.$text.'</a>';
   }
   
   /**

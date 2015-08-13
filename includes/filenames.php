@@ -92,6 +92,7 @@ define('FILENAME_PAYPAL_CHECKOUT', 'paypal_checkout.php');
 define('FILENAME_PAYPAL', 'paypal.php');
 define('FILENAME_FINDOLOGIC', 'findologic.php');
 define('FILENAME_WISHLIST', 'wishlist.php');
+define('FILENAME_ACCOUNT_CHECKOUT_EXPRESS', 'account_checkout_express.php');
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/filenames/','php') as $file) require ($file);

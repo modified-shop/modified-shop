@@ -160,7 +160,14 @@ a.black {
 .twoColums.stickyright {
   float:right;
 }      
-
+.twoColums_small {
+  float:left;
+  width:47%;
+  margin: 0 6% 0px 0;
+}
+.twoColums_small.last {
+  margin: 0 0 0 0;
+}
 .button_left {
   float:left;
   width: 48%;
@@ -336,6 +343,10 @@ h1 {
 }
 h1.checkout {
   margin:30px 0 15px 0;
+}
+.headline_right {
+  font-size:14px;
+  float:right;
 }
 .headline_big {
   font-family: 'fjallaoneregular', sans-serif;
@@ -2283,6 +2294,20 @@ table.total_table tr td {
   line-height:16px;
   margin: 0px 0px 4px 0px;
 }
+.express_info_cart {
+  display:block;
+  text-align:right;
+  line-height:12px;
+  font-size:10px;
+  padding:2px 2px 0 0;
+}
+.express_info_cart a {
+  color:#555;
+}
+.express_info_cart a:hover {
+  color:#555;
+  text-decoration:underline;
+}
 /* END products_table for order_details, account_history_info, checkout_confirmation */
 
 
@@ -2555,6 +2580,9 @@ ul.pd_iconlist li.print {
 ul.pd_iconlist li.vote {
   background: transparent url(img/icon_pd_iconlist_vote.png) no-repeat 8px 5px;
 }
+ul.pd_iconlist li.express {
+  background: transparent url(img/icon_pd_iconlist_express.png) no-repeat 7px 6px;
+}
 ul.pd_iconlist li.wishlist {
   background: transparent url(img/icon_pd_iconlist_wishlist.png) no-repeat 8px 5px;
   cursor:pointer;
@@ -2670,6 +2698,20 @@ ul.pd_iconlist li.wishlist .wishlist_submit_link:hover {
   text-align:right;
   max-width:175px;
   display:inline-block;
+}
+.express_info {
+  display:block;
+  text-align:right;
+  line-height:12px;
+  font-size:10px;
+  padding:4px 2px 0 0;
+}
+.express_info a {
+  color:#555;
+}
+.express_info a:hover {
+  color:#555;
+  text-decoration:underline;
 }
 /* END addtobasket */
 

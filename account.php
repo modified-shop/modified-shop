@@ -112,6 +112,11 @@ if (xtc_count_customer_orders() > 0) {
                                   'TRACKING' => get_tracking_link($orders['orders_id'], $_SESSION['language_code']),
                                   'BUTTON_CART' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_submit('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>',
                                   );
+
+	  if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+	    $order_content[$row]['BUTTON_CART_EXPRESS'] = '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&express=on&order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_submit('small_express.gif', IMAGE_BUTTON_IN_CART).'</a>';
+	  }
+
 	  $row ++;
 	}
 }
@@ -128,6 +133,9 @@ if (isset($_SESSION['customer_id']) && $_SESSION['customer_id'] != '1') {
 }
 if (!isset ($_SESSION['customer_id'])) {
 	$smarty->assign('LINK_LOGIN', xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+}
+if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+  $smarty->assign('LINK_EXPRESS', xtc_href_link(FILENAME_ACCOUNT_CHECKOUT_EXPRESS, '', 'SSL'));
 }
 
 $smarty->assign('language', $_SESSION['language']);

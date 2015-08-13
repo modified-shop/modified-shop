@@ -27,6 +27,19 @@
       {$TEXT_AGB_CHECKOUT}
     {/if}  
   </div>
+  {if isset($EXPRESS)}
+  <div class="highlightbox plainright">
+    <h4>{#heading_checkout_express#}</h4>
+    {if isset($success_message)}
+      <div class="infomessage">{$success_message}</div>
+    {else}
+      {$FORM_ACTION}
+      <span style="float:right;margin-left:20px;">{$BUTTON_SUBMIT}</span>
+      {#text_express_checkout_information#} {if isset($EXPRESS_LINK)}{$EXPRESS_LINK}{/if}
+      {$FORM_END}
+    {/if}
+  </div>
+  {/if}
 </div>
 <br class="clearfix" />  
 

@@ -572,6 +572,17 @@ define('TEXT_FILTER_SORTING_DATE_DESC', 'Neueste Produkte zuerst');
 define('TEXT_FILTER_SORTING_DATE_ASC', '&Auml;lteste Produkte zuerst');
 define('TEXT_FILTER_SORTING_ORDER_DESC', 'Am meisten verkauft');
 
+define('NAVBAR_TITLE_ACCOUNT_CHECKOUT_EXPRESS_EDIT', 'Einstellungen f&uuml;r Mein Schnellkauf');
+define('SUCCESS_CHECKOUT_EXPRESS_UPDATED', 'Die Einstellungen fŸr Mein Schnellkauf wurden gespeichert.');
+define('TEXT_ERROR_CHECKOUT_EXPRESS_SHIPPING_ADDRESS', 'Bitte w&auml;hlen sie eine Versandadresse');
+define('TEXT_ERROR_CHECKOUT_EXPRESS_SHIPPING_MODULE', 'Bitte w&auml;hlen sie eine Versandart');
+define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_ADDRESS', 'Bitte w&auml;hlen sie eine Rechnungsadresse');
+define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_MODULE', 'Bitte w&auml;hlen sie eine Zahlart');
+define('TEXT_CHECKOUT_EXPRESS_INFO_LINK', 'Mein Schnellkauf');
+define('TEXT_CHECKOUT_EXPRESS_INFO_LINK_MORE', 'Mehr Informationen zu Mein Schnellkauf &raquo;');
+define('TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST', 'Immer g&uuml;nstigste Versandard w&auml;hlen');
+
+
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
 ?>

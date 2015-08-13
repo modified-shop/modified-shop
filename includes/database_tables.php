@@ -117,7 +117,10 @@
   define('TABLE_PRODUCTS_TAGS', 'products_tags');
   define('TABLE_PRODUCTS_TAGS_VALUES', 'products_tags_values');
   define('TABLE_PRODUCTS_TAGS_OPTIONS', 'products_tags_options');
-
+  
+  // express checkout
+  define('TABLE_CUSTOMERS_CHECKOUT', 'customers_checkout');
+  
   require_once(DIR_FS_INC.'auto_include.inc.php');
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/database_tables/','php') as $file) require ($file);
 ?>

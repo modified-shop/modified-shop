@@ -261,6 +261,8 @@
           $attrib_model = xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id);
           $attributes_array[] = array('option' => $attributes_data_values['products_options'],
                                       'value' => $attributes_data_values['products_options_values'],
+                                      'option_id' => $attributes_data_values['orders_products_options_id'],
+                                      'value_id' => $attributes_data_values['orders_products_options_values_id'],
                                       'model' => $attrib_model
                                       );
           $attributes_data .= '<br />'.$attributes_data_values['products_options'].':'.$attributes_data_values['products_options_values'];
@@ -292,6 +294,10 @@
         $order_data[$index]['PRODUCTS_TAX'] = (($order_data_values['products_tax'] > 0.00) ? number_format($order_data_values['products_tax'], TAX_DECIMAL_PLACES) : 0);
         $order_data[$index]['PRODUCTS_QTY'] = $order_data_values['products_quantity'];
         $order_data[$index]['BUTTON_CART'] = '<a href="'.xtc_href_link(basename($PHP_SELF), 'action=add_order_product&order_id='.(int)$oID.'&id='.$order_data_values['orders_products_id'], 'SSL').'">'.xtc_image_submit('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>';
+
+        if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+          $order_data[$index]['BUTTON_CART_EXPRESS'] = '<a href="'.xtc_href_link(basename($PHP_SELF), 'action=add_order_product&express=on&order_id='.(int)$oID.'&id='.$order_data_values['orders_products_id'], 'SSL').'">'.xtc_image_submit('small_express.gif', IMAGE_BUTTON_IN_CART).'</a>';
+        }
 
         $index ++;
       }

@@ -42,6 +42,13 @@ if (xtc_not_null($action)) {
     $wishlist = true;
   }
 
+  $co_express = false;
+  if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+    if ((isset($_POST['express_x']) && isset($_POST['express_y'])) || isset($_GET['express'])) {
+      $co_express = true;
+    }
+  }
+  
   $parameters = array ('action', 'pid', 'info_message_3', 'wishlist', 'prd_id', 'info_message');
   if (DISPLAY_CART == 'true') {
     $goto = FILENAME_SHOPPING_CART;
@@ -130,7 +137,11 @@ if (xtc_not_null($action)) {
         }
         $cart_object->add_cart((int)$_POST['products_id'], $cart_quantity, isset($_POST['id'])?$_POST['id']:'');
       }
-      xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . 'products_id=' . (int)$_POST['products_id'] . $info_message));
+      if ($co_express === true) {
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, 'express=on', 'SSL'));
+      } else {
+        xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . 'products_id=' . (int)$_POST['products_id'] . $info_message));
+      }
       break;
 
     case 'check_gift':
@@ -320,7 +331,7 @@ if (xtc_not_null($action)) {
               }
 
               $products_id = $order_data['PRODUCTS_ID'];
-              $cart_quantity = (xtc_remove_non_numeric($products_id) + $cart_object->get_quantity(xtc_get_uprid($products_id, ((count($attributes_array) > 0) ? $attributes_array : ''))));
+              $cart_quantity = (xtc_remove_non_numeric($order_data['PRODUCTS_QTY']) + $cart_object->get_quantity(xtc_get_uprid($products_id, ((count($attributes_array) > 0) ? $attributes_array : ''))));
               if ($cart_quantity > MAX_PRODUCTS_QTY) {            
                 $cart_quantity = MAX_PRODUCTS_QTY;
                 $_SESSION['err_max_prod'] = true;
@@ -329,8 +340,12 @@ if (xtc_not_null($action)) {
               $cart_object->add_cart((int)$products_id, $cart_quantity, ((count($attributes_array) > 0) ? $attributes_array : ''));
 
             }
-
-            xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message));
+ 
+            if ($co_express === true) {
+              xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, 'express=on', 'SSL'));
+            } else {
+              xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message));
+            }
           }
         }
       }    
@@ -366,7 +381,7 @@ if (xtc_not_null($action)) {
           }      
 
           if (isset($products_id)) {
-            $cart_quantity = (xtc_remove_non_numeric($products_id) + $cart_object->get_quantity(xtc_get_uprid($products_id, ((count($attributes_array) > 0) ? $attributes_array : ''))));
+            $cart_quantity = (xtc_remove_non_numeric($products_quantity) + $cart_object->get_quantity(xtc_get_uprid($products_id, ((count($attributes_array) > 0) ? $attributes_array : ''))));
             if ($cart_quantity > MAX_PRODUCTS_QTY) {            
               $cart_quantity = MAX_PRODUCTS_QTY;
               $_SESSION['err_max_prod'] = true;
@@ -374,7 +389,11 @@ if (xtc_not_null($action)) {
             }
             $cart_object->add_cart((int)$products_id, $cart_quantity, ((count($attributes_array) > 0) ? $attributes_array : ''));
 
-            xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params(array_merge(array('id'), $parameters)) . $info_message));
+            if ($co_express === true) {
+              xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, 'express=on', 'SSL'));
+            } else {
+              xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params(array_merge(array('id'), $parameters)) . $info_message));
+            }
           }
         }
       }

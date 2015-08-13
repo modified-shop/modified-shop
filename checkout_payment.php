@@ -55,6 +55,20 @@ if (isset($_SESSION['cot_gv']) && isset($_SESSION['payment'])) {
 }
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
+//express checkout
+if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+  if (isset($_GET['express']) && $_GET['express'] == 'on') {
+    $express_query = xtc_db_query("SELECT checkout_payment,
+                                        checkout_payment_address
+                                   FROM ".TABLE_CUSTOMERS_CHECKOUT." 
+                                  WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    $express = xtc_db_fetch_array($express_query);
+    if ($express['checkout_payment_address'] != '') {
+      $_SESSION['billto'] = $express['checkout_payment_address'];
+    }
+  }
+}
+
 // if no billing destination address was selected, use the customers own address as default
 if (!isset($_SESSION['billto'])) {
   $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
@@ -131,19 +145,34 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
 
 $total = $xtPrice->xtcFormat($order->info['total'], false);
 if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_covers']) && $_SESSION['credit_covers'] == 1 && $total > 0)) {
+  
+  $error = false;
   if (isset($_GET['payment_error']) && is_object(${ $_GET['payment_error'] }) && ($error = ${$_GET['payment_error']}->get_error())) {
     $smarty->assign('error',  encode_htmlspecialchars($error['error']));
     $_SESSION['payment'] = $_GET['payment_error'];
+    $error = true;
   }
   ### Paypal Express Modul
   if(isset($_SESSION['reshash']['FORMATED_ERRORS'])) {
     $smarty->assign('error', $_SESSION['reshash']['FORMATED_ERRORS']);
+    $error = true;
   }
   ### Paypal Express Modul
 
   $radio_buttons = 0;
   $selection = $payment_modules->selection();
   for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
+
+    //express checkout
+    if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+      if ($credit_amount == 0 && isset($_GET['express']) && $_GET['express'] == 'on' && $error === false) {
+        if ($express['checkout_payment'] != '' && $selection[$i]['id'] == $express['checkout_payment']) {
+          $_SESSION['payment'] = $express['checkout_payment'];
+          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions')).'conditions=on', 'SSL'));
+        }
+      }
+    }
+    
     //ot_payment Anzeige Zahlungsrabatt bei Zahlungsauswahl
     if (isset($GLOBALS['ot_payment']) && !isset($selection[$i]['module_cost'])) {
       $selection[$i]['module_cost'] = $GLOBALS['ot_payment']->get_module_cost($selection[$i]);

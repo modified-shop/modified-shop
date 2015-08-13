@@ -20,6 +20,9 @@
     <ul>
       <li><a class="black" href="{$LINK_EDIT}"><strong>{#text_edit#}</strong></a></li>
       <li><a class="black" href="{$LINK_ADDRESS}"><strong>{#text_address#}</strong></a></li>
+      {if isset($LINK_EXPRESS)}
+        <li><a class="black" href="{$LINK_EXPRESS}"><strong>{#text_express_checkout#}</strong></a></li>
+      {/if}
       <li><a class="black" href="{$LINK_PASSWORD}"><strong>{#text_password#}</strong></a></li>
       {if $LINK_DELETE}
       <li><a class="black" href="{$LINK_DELETE}"><strong>{#text_delete#}</strong></a></li>
@@ -34,6 +37,7 @@
 		{foreach name=aussen item=order_data from=$order_content}
     	<p class="cf">
       <span class="account_actions_right">
+        {if isset($order_data.BUTTON_CART_EXPRESS)}{$order_data.BUTTON_CART_EXPRESS}{/if}
         {$order_data.BUTTON_CART}
       </span>
       <strong><a href="{$order_data.ORDER_LINK}">{$order_data.ORDER_DATE}</a> / {#order_nr#}{$order_data.ORDER_ID}</strong><br />

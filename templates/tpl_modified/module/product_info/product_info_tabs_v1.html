@@ -46,6 +46,7 @@
         <ul class="pd_iconlist">
           <li class="print">{$PRODUCTS_PRINT_LAYER}</li>
           <li class="vote">{$PRODUCTS_WRITE_REVIEW}</li>
+          {if isset($EXPRESS_LINK)}<li class="express">{$EXPRESS_LINK}</li>{/if}
           {if $ADD_CART_BUTTON_WISHLIST_TEXT}<li class="wishlist">{$ADD_CART_BUTTON_WISHLIST_TEXT}</li>{/if}
         </ul>
         {if isset($KLARNA_PPBOX)}{$KLARNA_PPBOX}{/if}
@@ -76,8 +77,17 @@
         <div class="addtobasket">
           <span class="addtobasket_input">{$ADD_QTY}</span>
           <span class="addtobasket_button">{$ADD_CART_BUTTON}</span>
+          {if isset($ADD_CART_BUTTON_EXPRESS)}
+            <br class="clearfix" />
+            <span class="addtobasket_button">{$ADD_CART_BUTTON_EXPRESS}</span>
+          {elseif $ACTIVATE_EXPRESS_LINK}
+            <br class="clearfix" />
+            <span class="express_info"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></span>
+          {/if}
+          {*
           <br class="clearfix" />
           <span class="addtobasket_button">{$ADD_CART_BUTTON_WISHLIST}</span>
+          *}
         </div>
         {/if}
       

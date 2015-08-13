@@ -174,6 +174,38 @@ $smarty->assign('CHECKOUT_FORM', xtc_draw_form('checkout_confirmation', $form_ac
 $smarty->assign('MODULE_BUTTONS', (is_array($payment_modules->modules) ? $payment_modules->process_button() : ''));
 $smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER, (($_SESSION['payment'] == 'payone_cc') ? 'onclick="return payoneCheck();"' : '')) . '</form>' . "\n");
 
+//express checkout
+if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+  if (isset($_POST['express'])) {
+    $check_query = xtc_db_query("SELECT *
+                                   FROM ".TABLE_CUSTOMERS_CHECKOUT." 
+                                  WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
+
+    $sql_data_array = array('customers_id' => (int)$_SESSION['customer_id'],
+                            'checkout_shipping_address' => $_SESSION['sendto'],
+                            'checkout_payment' => $_SESSION['payment'],
+                            'checkout_payment_address' => $_SESSION['billto'],
+                            );
+    if (isset($_SESSION['shipping']['id'])) {
+      $sql_data_array['checkout_shipping'] = $_SESSION['shipping']['id'];
+    }
+    if (xtc_db_num_rows($check_query) < 1) {
+      xtc_db_perform(TABLE_CUSTOMERS_CHECKOUT, $sql_data_array);  
+    } else {
+      unset($sql_data_array['customers_id']);
+      xtc_db_perform(TABLE_CUSTOMERS_CHECKOUT, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."'");
+    }                        
+    $smarty->assign('success_message', SUCCESS_CHECKOUT_EXPRESS_UPDATED);
+  }
+  $smarty->assign('FORM_ACTION', xtc_draw_form('customers_express', xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=on', 'SSL'), 'post', 'name="customers_express"').xtc_draw_hidden_field('express', 'on'));
+  $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_save.gif', IMAGE_BUTTON_UPDATE));
+  if (MODULE_CHECKOUT_EXPRESS_CONTENT != '') {
+    $smarty->assign('EXPRESS_LINK', $main->getContentLink(MODULE_CHECKOUT_EXPRESS_CONTENT, TEXT_CHECKOUT_EXPRESS_INFO_LINK_MORE, 'SSL', false));
+  }
+  $smarty->assign('FORM_END', '</form>');
+  $smarty->assign('EXPRESS', true);
+}
+
 //check if display conditions on checkout page is true
 if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
   //revocation  

@@ -124,6 +124,22 @@ if (!is_object($product) || !$product->isProduct() || $language_not_found === tr
     $info_smarty->assign('ADD_QTY', xtc_draw_input_field('products_qty', '1', ($hide_qty ? '' : 'size="3"'), ($hide_qty ? 'hidden' : 'text')).' '.$add_pid_to_qty);
     $info_smarty->assign('ADD_CART_BUTTON', xtc_image_submit('button_in_cart.gif', IMAGE_BUTTON_IN_CART));
 
+    if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+      if (isset($_SESSION['customer_id']) && $_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+        $express_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_CUSTOMERS_CHECKOUT." 
+                                        WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+        if (xtc_db_num_rows($express_query) > 0) {
+          $info_smarty->assign('ADD_CART_BUTTON_EXPRESS', xtc_image_submit('button_checkout_express.gif', IMAGE_BUTTON_IN_CART, 'name="express"'));
+        } else {
+          $info_smarty->assign('ACTIVATE_EXPRESS_LINK', xtc_href_link(FILENAME_ACCOUNT_CHECKOUT_EXPRESS, 'products_id='.$product->data['products_id'], 'SSL'));
+        }
+      }
+      if (MODULE_CHECKOUT_EXPRESS_CONTENT != '') {
+        $info_smarty->assign('EXPRESS_LINK', $main->getContentLink(MODULE_CHECKOUT_EXPRESS_CONTENT, TEXT_CHECKOUT_EXPRESS_INFO_LINK, 'NONSSL', false));
+      }
+    }
+
     // check for gift
     if (preg_match('/^GIFT/', addslashes($product->data['products_model']))
         && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
