@@ -1725,6 +1725,9 @@ class Smarty
                 $contents .= fread($fd, 8192);
             }
             fclose($fd);
+            if (strpos($filename, '.txt') !== false) {
+              $contents = encode_utf8($contents);
+            }
             return $contents;
         } else {
             return false;
