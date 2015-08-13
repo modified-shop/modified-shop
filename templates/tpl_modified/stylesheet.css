@@ -3539,7 +3539,7 @@ ul.historylist li.first {
 .account_row_payment span,
 .account_row_shipping span {
   display:inline-block;
-  width:20px;
+  width:23px;
   float:left;
 }
 ul.address_block {

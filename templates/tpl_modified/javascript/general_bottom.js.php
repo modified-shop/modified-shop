@@ -59,7 +59,7 @@
     title = title || 'Information';
     jAlert(message, title);
   }
-  <?php if (!strstr($PHP_SELF, FILENAME_SHOPPING_CART)) { ?>
+  <?php if (!strstr($PHP_SELF, FILENAME_SHOPPING_CART) && !strstr($PHP_SELF, 'checkout')) { ?>
     $(function() {
       $('#toggle_cart').click(function() {
         $('.toggle_cart').slideToggle('slow');
@@ -93,7 +93,10 @@
         $('.toggle_wishlist').mouseover(function() {clearTimeout(timer);});
       <?php } ?>
     });     
-  <?php } ?>
+  <?php } else {
+    unset($_SESSION['new_products_id_in_cart']);
+    unset($_SESSION['new_products_id_in_wishlist']);
+  } ?>
 </script>
 <?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { ?>
 <script type="text/javascript">
