@@ -160,7 +160,7 @@ class it_recht_kanzlei {
           }
           // verify that file is a pdf
           if ($this->check_if_pdf_file($file_pdf_target_temp) !== true) {
-            @unlink($file_pdf_target);
+            @unlink($file_pdf_target_temp);
             $this->return_error('7');
           }
           // verify md5-hash, delete file if hash is not equal
