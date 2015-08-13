@@ -705,4 +705,9 @@ CREATE TABLE products_tags_values (
 ALTER TABLE products_attributes ADD attributes_vpe_id int(11) NOT NULL AFTER attributes_ean;
 ALTER TABLE products_attributes ADD attributes_vpe_value decimal(15,4) NOT NULL AFTER attributes_vpe_id;
 
+#Tomcraft - 2015-08-13 - update meta configuration values
+UPDATE TABLE configuration SET configuration_value = 5 WHERE configuration_key = META_MIN_KEYWORD_LENGTH;
+UPDATE TABLE configuration SET configuration_value = 15 WHERE configuration_key = META_KEYWORDS_NUMBER;
+UPDATE TABLE configuration SET configuration_value = 156 WHERE configuration_key META_DESCRIPTION_LENGTH;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
