@@ -827,9 +827,9 @@ define('META_MAX_KEYWORD_LENGTH_DESC', 'Maximum L&auml;nge der automatisch erzeu
 define('META_DESCRIPTION_LENGTH_TITLE', 'L&auml;nge Meta-Description');
 define('META_DESCRIPTION_LENGTH_DESC', 'Maximum L&auml;nge der Beschreibung (in Buchstaben)');
 define('META_STOP_WORDS_TITLE', 'Stop Words');
-define('META_STOP_WORDS_DESC', 'Bitte geben sie hier Keywords an, die nicht verwendet werden sollen.');
+define('META_STOP_WORDS_DESC', 'Bitte geben sie hier Keywords an, die nicht verwendet werden sollen.<br /><strong>Achtung:</strong> Nur ein Wort pro Zeile!');
 define('META_GO_WORDS_TITLE', 'Go Words');
-define('META_GO_WORDS_DESC', 'Bitte geben sie Keywords ein, die explizit erlaubt sind.');
+define('META_GO_WORDS_DESC', 'Bitte geben sie Keywords ein, die explizit erlaubt sind.<br /><strong>Achtung:</strong> Nur ein Wort pro Zeile!');
 
 //BOC added text constants for group id 20, noRiddle
 define('CSV_CATEGORY_DEFAULT_TITLE','Kategorie f&uuml;r den Import');

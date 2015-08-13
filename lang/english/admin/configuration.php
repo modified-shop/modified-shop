@@ -828,9 +828,9 @@ define('META_MAX_KEYWORD_LENGTH_DESC', 'Maximum Length automatic generated Meta-
 define('META_DESCRIPTION_LENGTH_TITLE', 'Length Meta-Description');
 define('META_DESCRIPTION_LENGTH_DESC', 'Maximum Length of description (Letters)');
 define('META_STOP_WORDS_TITLE', 'Stop Words');
-define('META_STOP_WORDS_DESC', 'Keywords that are not allowed');
+define('META_STOP_WORDS_DESC', 'Keywords that are not allowed.<br /><strong>Attention:</strong> Only one word per line!');
 define('META_GO_WORDS_TITLE', 'Go Words');
-define('META_GO_WORDS_DESC', 'Keywords that are allowed');
+define('META_GO_WORDS_DESC', 'Keywords that are allowed.<br /><strong>Attention:</strong> Only one word per line!');
 
 //BOC added text constants for group id 20, noRiddle
 define('CSV_CATEGORY_DEFAULT_TITLE','Category for Import');
