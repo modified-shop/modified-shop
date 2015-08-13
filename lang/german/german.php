@@ -573,7 +573,7 @@ define('TEXT_FILTER_SORTING_DATE_ASC', '&Auml;lteste Produkte zuerst');
 define('TEXT_FILTER_SORTING_ORDER_DESC', 'Am meisten verkauft');
 
 define('NAVBAR_TITLE_ACCOUNT_CHECKOUT_EXPRESS_EDIT', 'Einstellungen f&uuml;r Mein Schnellkauf');
-define('SUCCESS_CHECKOUT_EXPRESS_UPDATED', 'Die Einstellungen für Mein Schnellkauf wurden gespeichert.');
+define('SUCCESS_CHECKOUT_EXPRESS_UPDATED', 'Die Einstellungen f&uuml;r Mein Schnellkauf wurden gespeichert.');
 define('TEXT_ERROR_CHECKOUT_EXPRESS_SHIPPING_ADDRESS', 'Bitte w&auml;hlen sie eine Versandadresse');
 define('TEXT_ERROR_CHECKOUT_EXPRESS_SHIPPING_MODULE', 'Bitte w&auml;hlen sie eine Versandart');
 define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_ADDRESS', 'Bitte w&auml;hlen sie eine Rechnungsadresse');
