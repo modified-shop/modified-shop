@@ -81,23 +81,13 @@
         <tr>
           {if $address_label_payment!=$address_label_shipping}
           <td valign="top">
-            <font size="1" face="Tahoma, Verdana, sans-serif"><strong>Lieferadresse</strong></font>
-          </td>
-          {/if}
-          {if $address_label_payment}
-          <td valign="top" {if $address_label_payment!=$address_label_shipping}width="50%"{else}width="100%"{/if}>
-            <font size="1" face="Tahoma, Verdana, sans-serif"><strong>{if $address_label_payment!=$address_label_shipping}Rechnungsadresse{else}Rechnungs-/Lieferadresse{/if}</strong></font>
-          </td>
-          {/if}
-        </tr>
-        <tr>
-          {if $address_label_payment!=$address_label_shipping}
-          <td valign="top">
+            <font size="1" face="Tahoma, Verdana, sans-serif"><b>Lieferadresse</b></font><br />
             <font size="2" face="Tahoma, Verdana, sans-serif">{$address_label_shipping}</font>
           </td>
           {/if}
           {if $address_label_payment}
-          <td valign="top">
+          <td valign="top" {if $address_label_payment!=$address_label_shipping}width="50%"{else}width="100%"{/if}>
+            <font size="1" face="Tahoma, Verdana, sans-serif"><b>{if $address_label_payment!=$address_label_shipping}Rechnungsadresse{else}Rechnungs-/Lieferadresse{/if}</b></font><br />
             <font size="2" face="Tahoma, Verdana, sans-serif">{$address_label_payment}</font>
           </td>
           {/if}
