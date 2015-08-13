@@ -13,3 +13,10 @@ Disallow: /pub/
 Disallow: /shopstat/
 Disallow: /templates/
 Disallow: /templates_c/
+Allow: /templates/*/*.css
+Allow: /templates/*/*.js
+Allow: /templates/*/*.ico
+Allow: /templates/*/*.gif
+Allow: /templates/*/*.jpg
+Allow: /templates/*/*.jpeg
+Allow: /templates/*/*.png
