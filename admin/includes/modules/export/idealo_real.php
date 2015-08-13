@@ -111,7 +111,7 @@ class idealo_real{
       $this->CAT=array();
       $this->PARENT=array();
       $this->productsPrice = 0;
-      $this->description = '<center><a href="http://www.idealo.de" target="_blank"><img src="//cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png"/></a></center>';
+      $this->description = '<center><a href="http://www.idealo.de" target="_blank">'.xtc_image(DIR_WS_CATALOG.'export/idealo_realtime/logo_blue_big.png').'</a></center>';
       $this->country_array = array();
     }
 
@@ -313,7 +313,7 @@ class idealo_real{
 		 			<form action="javascript:history.back()">
 		 				<br><br>
 		 				<div id="logo">
-							<a href="http://www.idealo.de" target="_blank"><img src="//cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png" alt="Price Comparison" class="logo noborder"/></a>
+							<a href="http://www.idealo.de" target="_blank">'.xtc_image(DIR_WS_CATALOG.'export/idealo_realtime/logo_blue_big.png', 'Price Comparison', '', '', 'class="logo noborder"').'</a>
 						</div>
 									
 						<br><br>
@@ -581,7 +581,7 @@ class idealo_real{
 		 			<form name="close" onSubmit= "window.close();>
 		 				<br><br>
 		 				<div id="logo">
-							<a href="http://www.idealo.de" target="_blank"><img src="//cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png" alt="Price Comparison" class="logo noborder"/></a>
+							<a href="http://www.idealo.de" target="_blank">'.xtc_image(DIR_WS_CATALOG.'export/idealo_realtime/logo_blue_big.png', 'Price Comparison', '', '', 'class="logo noborder"').'</a>
 						</div><br><br>';
 						
 			$html .= IDEALO_QUESTION_AFTER_EMAIL_SEND_01 . $baseUrl . IDEALO_QUESTION_AFTER_EMAIL_SEND_02 . '<br><br>';
@@ -706,7 +706,7 @@ class idealo_real{
 		 			<form name="exportReady" action="" method="post">
 		 				<br><br>
 		 				<div id="logo">
-							<a href="http://www.idealo.de" target="_blank"><img src="//cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png" alt="Price Comparison" class="logo noborder"/></a>
+							<a href="http://www.idealo.de" target="_blank">'.xtc_image(DIR_WS_CATALOG.'export/idealo_realtime/logo_blue_big.png', 'Price Comparison', '', '', 'class="logo noborder"').'</a>
 						</div><br><br>';
 		$html .= IDEALO_TESTMODE_ACTIVE;
 									
