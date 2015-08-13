@@ -612,7 +612,7 @@ if (!isset($lng) || (isset($lng) && !is_object($lng))) {
   require_once(DIR_WS_CLASSES . 'language.php');
   $lng = new language;
 }
-if (count($lng->catalog_languages) > 1 && (!isset($_GET['page']) || $_GET['page'] == 1)) {
+if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && count($lng->catalog_languages) > 1 && (!isset($_GET['page']) || $_GET['page'] == 1)) {
   $canonical_flag = true;
   echo '<link rel="alternate" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($_SESSION['language_code'] != DEFAULT_LANGUAGE) ? 'language='.DEFAULT_LANGUAGE : ''), 'NONSSL', false).'" hreflang="x-default" />'."\n";
   reset($lng->catalog_languages);
