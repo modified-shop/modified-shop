@@ -39,11 +39,16 @@ function encode_htmlspecialchars ($string, $flags = ENT_COMPAT, $encoding = '')
 /**
  * encode_utf8
  */
-function encode_utf8($string) {
+function encode_utf8($in_str) {
   if (strtolower($_SESSION['language_charset']) == 'utf-8') {
-    return utf8_encode($string);
+    $cur_encoding = mb_detect_encoding($in_str) ;
+    if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
+      return $in_str;
+    } else {
+      return mb_convert_encoding($in_str,"UTF-8",$cur_encoding);
+    }
   } else {
-    return $string;
+    return $in_str;
   }
 }
 
