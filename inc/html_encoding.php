@@ -41,11 +41,11 @@ function encode_htmlspecialchars ($string, $flags = ENT_COMPAT, $encoding = '')
  */
 function encode_utf8($in_str) {
   if (strtolower($_SESSION['language_charset']) == 'utf-8') {
-    $cur_encoding = mb_detect_encoding($in_str) ;
+    $cur_encoding = mb_detect_encoding($in_str);
     if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
       return $in_str;
     } else {
-      return mb_convert_encoding($in_str,"UTF-8",$cur_encoding);
+      return mb_convert_encoding($in_str,"UTF-8","ISO-8859-15");
     }
   } else {
     return $in_str;
