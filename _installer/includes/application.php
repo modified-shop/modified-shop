@@ -36,6 +36,9 @@
   if (!defined('DB_SERVER_CHARSET')) {
      define('DB_SERVER_CHARSET',$character_set);
   }
+  
+  // set default charset
+  @ini_set('default_charset', $charset);
 
   if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
     date_default_timezone_set('Europe/Berlin');

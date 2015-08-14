@@ -26,3 +26,6 @@ if (!isset($_SESSION['language']) || isset($_GET['language']) || (isset($_SESSIO
   $_SESSION['language_charset'] = $lng->language['language_charset'];
   $_SESSION['language_code'] = $lng->language['code'];
 }
+
+// set default charset
+@ini_set('default_charset', $_SESSION['language_charset']);
