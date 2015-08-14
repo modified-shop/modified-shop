@@ -199,3 +199,18 @@ if ($_POST['cpath'] != '') {
     </td>
   </tr>
 </form>
+
+<script src="includes/javascript/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function()
+{
+    $('input[name="optionValues[]"]').each(function(){ en_disabled($(this)); });
+    $('input[type=checkbox]').click(function(){ en_disabled($(this)); });
+});
+function en_disabled(obj)
+{
+    obj.closest('tr').find('input[type=text], select').not('input[type=checkbox]').attr('disabled', !obj.is(':checked'));
+    //download fields
+    obj.closest('tr').next('tr').not('[class^=attributes]').find('input[type=text], select').attr('disabled', !obj.is(':checked'));
+}
+</script>
