@@ -209,7 +209,7 @@
                   </tr>
                 </table>
                 <?php // BOF - web28 - 2010.12.13 - NEW db-upgrade ?>
-                  <?php if ($error_flag==false) { ?>
+                  <?php if ($error_flag==false || $continue==true) { ?>
                   <input type="hidden" name="action" value="process" />
                   <table width="95%" border="0" cellpadding="0" cellspacing="0">
                     <tr>

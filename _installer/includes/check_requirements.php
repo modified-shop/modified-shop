@@ -24,6 +24,7 @@
     if(version_compare(phpversion(), PHP_VERSION_MAX, ">")){
       $error_flag = true;
       $php_flag = true;
+      $continue = true;
       $message .= '<strong>'.sprintf(TEXT_ERROR_PHP_MAX,PHP_VERSION_MAX) . phpversion() . '</strong>.';
     }
   } else {
