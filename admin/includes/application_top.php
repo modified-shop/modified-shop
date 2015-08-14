@@ -301,6 +301,9 @@ if (!isset($_SESSION['language']) || isset($_GET['language'])) {
   $_SESSION['language_code'] = $lng->language['code']; //web28 - 2010-09-05 - add $_SESSION['language_code']
 }
 
+// set default charset
+@ini_set('default_charset', $_SESSION['language_charset']);
+
 // include the language translations
 require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$_SESSION['language'] . '.php');
 require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/buttons.php');
