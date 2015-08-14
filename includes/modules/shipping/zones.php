@@ -56,6 +56,9 @@
 
         if ($check_zones_rows_query != $this->num_zones) {
           $this->install_zones($check_zones_rows_query);
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION." 
+                           SET configuration_value = '".(int)$check_zones_rows_query."' 
+                         WHERE configuration_key = 'MODULE_SHIPPING_".strtoupper($this->code)."_NUMBER_ZONES'");
         }
       }
     }
