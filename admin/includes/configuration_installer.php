@@ -448,6 +448,7 @@ function insert_into_config_table($values)
     $result_cfg = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . trim($cfg_key) . "' LIMIT 1");
     if (xtc_db_num_rows($result_cfg) == 0) {
       $insert_into = "INSERT INTO ".TABLE_CONFIGURATION." (configuration_id ,configuration_key ,configuration_value ,configuration_group_id ,sort_order ,last_modified ,date_added ,use_function ,set_function) VALUES ";
+      $value = encode_utf8($value);
       if( xtc_db_query($insert_into.$value)){
         $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION.' '.$value, 'success');
         $install = true;
@@ -493,7 +494,7 @@ function update_config_table($values)
       
       $result_cfg = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . $cfg_key ."' ". trim($check)." LIMIT 1");
       if (xtc_db_num_rows($result_cfg) != 0) {
-        $update = "UPDATE ".TABLE_CONFIGURATION." SET ".$cfg_values." , last_modified = NOW() WHERE configuration_key = '" . $cfg_key . "'";
+        $update = "UPDATE ".TABLE_CONFIGURATION." SET ".encode_utf8($cfg_values)." , last_modified = NOW() WHERE configuration_key = '" . $cfg_key . "'";
 
         if( xtc_db_query($update)){
           $messageStack->add_session('OK: '.$update, 'success');
