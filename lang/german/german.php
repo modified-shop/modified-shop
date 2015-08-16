@@ -22,9 +22,6 @@
  * 
  */
  
-define('TITLE', STORE_NAME);
-define('HEADER_TITLE_TOP', 'Startseite');    
-define('HEADER_TITLE_CATALOG', 'Katalog');
 define('HTML_PARAMS','dir="ltr" xml:lang="de" xmlns="http://www.w3.org/1999/xhtml"');
 @setlocale(LC_TIME, 'de_DE.UTF-8' ,'de_DE@euro', 'de_DE', 'de-DE', 'de', 'ge', 'de_DE.ISO_8859-1', 'German','de_DE.ISO_8859-15');
 
@@ -41,6 +38,13 @@ function xtc_date_raw($date, $reverse = false) {
     return substr($date, 6, 4) . substr($date, 3, 2) . substr($date, 0, 2);
   }
 }
+
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
+
+define('TITLE', STORE_NAME);
+define('HEADER_TITLE_TOP', 'Startseite');    
+define('HEADER_TITLE_CATALOG', 'Katalog');
 
 // if USE_DEFAULT_LANGUAGE_CURRENCY is true, use the following currency when changing language, 
 // instead of staying with the applications default currency
@@ -581,8 +585,4 @@ define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_MODULE', 'Bitte w&auml;hlen sie eine
 define('TEXT_CHECKOUT_EXPRESS_INFO_LINK', 'Mein Schnellkauf');
 define('TEXT_CHECKOUT_EXPRESS_INFO_LINK_MORE', 'Mehr Informationen zu Mein Schnellkauf &raquo;');
 define('TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST', 'Immer g&uuml;nstigste Versandard w&auml;hlen');
-
-
-require_once(DIR_FS_INC.'auto_include.inc.php');
-foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
 ?>

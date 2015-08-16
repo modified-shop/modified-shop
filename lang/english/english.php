@@ -21,10 +21,7 @@
  *  DATE / TIME
  *
  */
-
-define('TITLE', STORE_NAME);
-define('HEADER_TITLE_TOP', 'Main page');
-define('HEADER_TITLE_CATALOG', 'Catalogue');
+ 
 define('HTML_PARAMS','dir="ltr" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"');
 @setlocale(LC_TIME, 'en_GB.UTF-8', 'en_GB@euro', 'en_GB', 'en-GB', 'en', 'en_GB.ISO_8859-1', 'English','en_GB.ISO_8859-15');
 
@@ -41,6 +38,13 @@ function xtc_date_raw($date, $reverse = false) {
     return substr($date, 6, 4) . substr($date, 3, 2) . substr($date, 0, 2);
   }
 }
+
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
+
+define('TITLE', STORE_NAME);
+define('HEADER_TITLE_TOP', 'Main page');
+define('HEADER_TITLE_CATALOG', 'Catalogue');
 
 // if USE_DEFAULT_LANGUAGE_CURRENCY is true, use the following currency when changing language, 
 // instead of staying with the applications default currency
@@ -581,7 +585,4 @@ define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_MODULE', 'Please select a payment me
 define('TEXT_CHECKOUT_EXPRESS_INFO_LINK', 'My quick purchase');
 define('TEXT_CHECKOUT_EXPRESS_INFO_LINK_MORE', 'More Informationen for my quick purchase &raquo;');
 define('TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST', 'Select always the cheapest shipping method');
-
-require_once(DIR_FS_INC.'auto_include.inc.php');
-foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
 ?>

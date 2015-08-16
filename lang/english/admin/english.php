@@ -33,7 +33,6 @@ define('DATE_FORMAT', 'd/m/Y');  // this is used for strftime()
 define('PHP_DATE_TIME_FORMAT', 'd/m/Y H:i:s'); // this is used for date()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
 
-////
 // Return date in raw format
 // $date should be in format mm/dd/yyyy
 // raw date is in format YYYYMMDD, or DDMMYYYY
@@ -45,9 +44,11 @@ function xtc_date_raw($date, $reverse = false) {
   }
 }
 
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_FS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);
+
 // Global entries for the <html> tag
 define('HTML_PARAMS','dir="ltr" lang="en"');
-
 
 // page title
 define('TITLE', defined('PROJECT_VERSION') ? PROJECT_VERSION : 'undefined');
@@ -572,7 +573,4 @@ define('CSRF_TOKEN_MANIPULATION', 'CSRFToken manipulation (Due to security aspec
 define('CSRF_TOKEN_NOT_DEFINED', 'CSRFToken not defined (Due to security aspects it is not allowed to work in the admin area in different browser tabs anymore.)');
 
 define('TEXT_ACCOUNTING_INFO','The main admin [1] cannot be deprived of the access rights.');
-
-require_once(DIR_FS_INC.'auto_include.inc.php');
-foreach(auto_include(DIR_FS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);
 ?>
