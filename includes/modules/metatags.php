@@ -117,7 +117,7 @@
 // ---------------------------------------------------------------------------------------
 
   // Wenn wir auf der Startseite sind, Metas aus der index-Seite holen
-  if(  basename($PHP_SELF)==FILENAME_DEFAULT &&
+  if(basename($PHP_SELF)==FILENAME_DEFAULT &&
     empty($_GET['cat']) &&
     empty($_GET['cPath']) &&
     empty($_GET['manufacturers_id'])
@@ -565,8 +565,13 @@ if (TEMPLATE_HTML_ENGINE == 'xhtml') {
 } else {
   echo '<meta charset="'.$_SESSION['language_charset'].'" />'."\n";
 }
+if (TEMPLATE_RESPONSIVE == 'true') {
+  echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />'."\n";
+}
 /******** SHOPGATE **********/
-if(isset($shopgateJsHeader)) echo $shopgateJsHeader;
+if (isset($shopgateJsHeader)) {
+  echo $shopgateJsHeader;
+}
 /******** SHOPGATE **********/ 
 if (metaClean($meta_title) != '') {
   echo '<title>'. metaClean($meta_title) .'</title>'."\n";
@@ -574,7 +579,6 @@ if (metaClean($meta_title) != '') {
 if ($_SESSION['language_code'] != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
   echo '<meta http-equiv="content-language" content="'. $_SESSION['language_code'] .'" />'."\n";
 }
-
 if (metaClean($meta_keyw) != '') {
   echo '<meta name="keywords" content="'. metaClean($meta_keyw) .'" />'."\n";
 }

@@ -37,6 +37,7 @@
   // template output
   define('TEMPLATE_ENGINE', 'smarty_3'); // smarty_3 or smarty_2
   define('TEMPLATE_HTML_ENGINE', 'html5'); // html5 or xhtml
+  define('TEMPLATE_RESPONSIVE', 'false'); // true or false
 
   // categories
   defined('SPECIALS_CATEGORIES') or define('SPECIALS_CATEGORIES', true);
