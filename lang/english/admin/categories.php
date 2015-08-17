@@ -243,4 +243,6 @@ define('TEXT_NO_MOVE_POSSIBLE', 'Not possible to move product.');
 define('TEXT_IN', 'in:');
 
 define('TEXT_PRODUCTS_ATTRIBUTES_RECALCULATE', 'Reclaculate attribute on changing tax rate');
+
+define('HEADING_TITLE_CAT_BREADCRUMB', ' in &quot;%s&quot;');
 ?>

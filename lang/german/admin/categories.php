@@ -243,4 +243,6 @@ define('TEXT_NO_MOVE_POSSIBLE', 'Artikel kann nicht verschoben werden.');
 define('TEXT_IN', 'in:');
 
 define('TEXT_PRODUCTS_ATTRIBUTES_RECALCULATE', 'Attribute beim &Auml;ndern des Steuersatzes neu berechnen');
+
+define('HEADING_TITLE_CAT_BREADCRUMB', ' in &quot;%s&quot;');
 ?>

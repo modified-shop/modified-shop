@@ -105,7 +105,7 @@
   ?>
   <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
   <div class="pageHeading"><?php echo $pInfo->products_name; ?><br /></div>
-  <div class="main pdg2 flt-l"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($current_category_id)); ?></div>
+  <div class="main pdg2 flt-l"><?php echo sprintf($text_new_or_edit,$breadcrumb_html); ?></div>
     <div class="clear div_box mrg5">
       <div style="float:left; width:57%; vertical-align:top">
         <table class="tableInput border0">
