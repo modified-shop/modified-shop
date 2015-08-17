@@ -1682,3 +1682,14 @@ input[type=checkbox].noStyling {
 .dispnone{
 display:none!important;
 }
+
+.breadcrumb a, .breadcrumb a:link, .breadcrumb a:visited, .breadcrumb a:hover, .breadcrumb a:active {
+  font-size:12px;
+  text-decoration:none;
+  outline:none;
+  font-weight:normal;
+  cursor:pointer;
+  color:#000;
+  margin:0;
+  padding:0;
+}
