@@ -360,7 +360,5 @@ xtc_count_cart();
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_end/','php') as $file) require ($file);
 
 //compatibility for modified eCommerce Shopsoftware 1.06 files
-if (!defined('DIR_WS_BASE')) {
-  define('DIR_WS_BASE', '');
-}
+defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
 ?>
