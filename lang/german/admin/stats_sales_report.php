@@ -20,7 +20,7 @@ define('REPORT_DATE_FORMAT', 'd. m. Y');
 
 define('HEADING_TITLE', 'Verkaufs Report');
 
-define('REPORT_SALES_STATISTICS', 'Umsatzstatistik');
+define('REPORT_SALES_STATISTICS', 'Umsatzstatistik Filter');
 define('REPORT_TYPE_YEARLY', 'J&auml;hrlich');
 define('REPORT_TYPE_MONTHLY', 'Monatlich');
 define('REPORT_TYPE_WEEKLY', 'W&ouml;chentlich');

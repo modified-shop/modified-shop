@@ -20,7 +20,7 @@ define('REPORT_DATE_FORMAT', 'm. d. Y');
 
 define('HEADING_TITLE', 'Sales Report');
 
-define('REPORT_SALES_STATISTICS', 'sales statistics');
+define('REPORT_SALES_STATISTICS', 'Sales Report Filter');
 define('REPORT_TYPE_YEARLY', 'Yearly');
 define('REPORT_TYPE_MONTHLY', 'Monthly');
 define('REPORT_TYPE_WEEKLY', 'Weekly');
