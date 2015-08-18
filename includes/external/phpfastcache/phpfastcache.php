@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   // wrapper to load right version
-  require_once (DIR_FS_EXTERNAL . '/phpfastcache/3.0.0/phpfastcache.php');
+  require_once (DIR_FS_EXTERNAL . 'phpfastcache/3.0.0/phpfastcache.php');
 
   // setup
   phpFastCache::$config = array(
