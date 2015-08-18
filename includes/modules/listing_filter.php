@@ -91,6 +91,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
               JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
                    ON cd.categories_id = p2c.categories_id
                       AND cd.language_id = '".(int) $_SESSION['languages_id']."' ";
+    $where = " AND manufacturers_id = '".(int)$_GET['manufacturers_id']."' ";
   } elseif (isset($current_category_id) && $current_category_id > 0) {
     $join = " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                    ON p2c.products_id = p.products_id
