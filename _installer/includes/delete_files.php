@@ -1,6 +1,9 @@
 <?php
 $unlink_file = array('_installer/images/icons/error.gif', // neu
                      '_installer/banktransfer_blz.sql', // neu
+                     '_installer/bugfixes_106beta.sql', // neu
+                     '_installer/bugfixes_106r4356.sql', // neu
+                     '_installer/bugfixes_106r4642.sql', // neu
                      '_installer/change_language_id.sql', // neu
                      '_installer/db_upgrade.php', // neu
                      '_installer/images/button_administration_tool.gif', // neu
@@ -29,8 +32,10 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      '_installer/update_1.0.5.0_to_1.0.6.0.sql', // neu
                      '_installer/update_1.0.6.0_to_2.0.0.0.sql', // neu
                      '_installer/update_xtc3.0.4sp2.1_to_1.00.sql', // neu
+                     '_installer/update_xtc3.0.4sp2.1_to_1.0.1.0.sql', // neu
                      '_installer/version106r8', // neu
                      '_installer/version106r9', // neu
+                     '_installer/version.php', // neu
                      '_unterverzeichnis_.htaccess',
                      'admin/billsafe_orders_2hp.php',
                      'admin/blacklist.php', // neu
@@ -67,10 +72,11 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/images/top_support.gif', // neu
                      'admin/includes/classes/sessions.php', // neu
                      'admin/includes/classes/phpmailer.lang-de.php', // neu
-                     'admin/includes/classes/phpmailer.lang-en.php', // neu                     
+                     'admin/includes/classes/phpmailer.lang-en.php', // neu
                      'admin/includes/configure.org.php',
                      'admin/includes/functions/languages.php', // neu
                      'admin/includes/functions/validations.php', // neu
+                     'admin/includes/haendlerbund/css/ui_custom.css', // neu
                      'admin/includes/modules/carp/carp.php',
                      'admin/includes/modules/carp/carpconf.php',
                      'admin/includes/modules/carp/carpinc.php',
@@ -78,6 +84,9 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/includes/modules/easybill.action.php',
                      'admin/includes/modules/easybill.button.php',
                      'admin/includes/modules/easybill.info.php',
+                     'admin/includes/modules/export/easybill.php', // neu
+                     'admin/includes/modules/export/easymarketing.php', // neu
+                     'admin/includes/modules/export/it_recht_kanzlei.php', // neu
                      'admin/includes/modules/export/froogle.php', // neu
                      'admin/includes/modules/export/googlebase.php', // neu
                      'admin/includes/modules/export/image_processing_step.php', // neu
@@ -161,6 +170,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'includes/classes/cc_validation.php',
                      'includes/configure.org.php',
                      'includes/external/shopgate/shopgate_library/vendors/mobile_redirect.class.php', // neu
+                     'includes/masterpayment/logs/.htaccess', // neu
                      'includes/modules/reviews.php',
                      'includes/modules/module.easybill.php',
                      'includes/modules/order_total/ot_sofort.php', // neu
@@ -256,12 +266,21 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'templates/xtc5/buttons/german/sofortueberweisung_.gif', // neu
                      'templates/xtc5/buttons/german/sofortueberweisung_block.gif', // neu
                      'templates/xtc5/buttons/german/sofortueberweisung_info.gif', // neu
-                     'templates/xtc5/buttons/german/sofortueberweisung_paynow.gif', // neu                     
+                     'templates/xtc5/buttons/german/sofortueberweisung_paynow.gif', // neu
                      'templates/xtc5/css/no_javascript.css',
-                     'templates/xtc5/mail/german/widerruf.txt',
-                     'templates/xtc5/mail/german/widerruf.html',
+                     'templates/xtc5/javascript/jquery.js', // neu
+                     'templates/xtc5/mail/english/change_password_mail.html', // neu
+                     'templates/xtc5/mail/english/change_password_mail.txt', // neu
+                     'templates/xtc5/mail/english/password_verification_mail.html', // neu
+                     'templates/xtc5/mail/english/password_verification_mail.txt', // neu
                      'templates/xtc5/mail/english/widerruf.txt',
                      'templates/xtc5/mail/english/widerruf.html',
+                     'templates/xtc5/mail/german/change_password_mail.html', // neu
+                     'templates/xtc5/mail/german/change_password_mail.txt', // neu
+                     'templates/xtc5/mail/german/password_verification_mail.html', // neu
+                     'templates/xtc5/mail/german/password_verification_mail.txt', // neu
+                     'templates/xtc5/mail/german/widerruf.txt',
+                     'templates/xtc5/mail/german/widerruf.html',
                      'templates/xtc5/module/account_newsletter.html', // neu
                      'templates/xtc5/module/google_sitemap.html', // neu
                      'templates/xtc5/module/sofort_vorkasse.html', // neu
@@ -269,6 +288,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'templates/xtc5/smarty/function.googleanalytics.php',
                      'templates/xtc5/smarty/function.piwik.php',
                      'templates/xtc5/smarty/function.onlytext.php',
+                     'templates/xtc5/source/inc/gunnart_productRedirect.inc.php', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/account_newsletter.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/google_sitemap.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/sofort_vorkasse.html', // neu
