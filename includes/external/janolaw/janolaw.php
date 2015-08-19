@@ -86,6 +86,27 @@ class janolaw_content {
       $mode = '_include.';
     }
 
+    $document_name = array(
+      'DE' => array('legaldetails' => 'Impressum',
+                    'terms' => 'AGB',
+                    'revocation' => 'Widerrufsbelehrung',
+                    'datasecurity' => 'Datenschutzerklaerung',
+                    'model-withdrawal-form' => 'Muster-Widerrufsformular',
+                    ),
+      'GB' => array('legaldetails' => 'Imprint',
+                    'terms' => 'General-Terms-and-Conditions',
+                    'revocation' => 'Instructions-on-withdrawal',
+                    'datasecurity' => 'Data-privacy-policy',
+                    'model-withdrawal-form' => 'Model-withdrawal-form',
+                    ),
+      'FR' => array('legaldetails' => 'Mentions-legales',
+                    'terms' => 'Conditions-Generales-de-Vente',
+                    'revocation' => 'Informations-standardisees-sur-la-retractation',
+                    'datasecurity' => 'Declaration-quant-a-la-protection-des-donnees',
+                    'model-withdrawal-form' => 'Modele-de-formulaire-de-retractation',
+                    ),
+    );
+
     if (!isset($lng) || (isset($lng) && !is_object($lng))) {
       require_once(DIR_WS_CLASSES . 'language.php');
       $lng = new language;
@@ -101,19 +122,19 @@ class janolaw_content {
                $this->get_language($key) .'/';
 
         $content = get_external_content($url.$name.$mode.$this->format, '3', false);
-        
+ 
         if (strpos($content, '404 Not Found') === false) {
           
           // save pdf
           $content_pdf = '';
-          $pdf_name = str_replace('model-withdrawal-form', 'withdrawal', $name);
+          $module_name = str_replace('model-withdrawal-form', 'withdrawal', $name);
                     
-          if ($this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($pdf_name)) == 'True') {
+          if ($this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True') {
             $content_pdf = get_external_content($url.$name.'.pdf', '3', false);
             if (strpos($content_pdf, '404 Not Found') !== false) {
               $content_pdf = '';
             } else {
-              $filename = 'media/content/'. $value['directory'] . '_' . $pdf_name . '.pdf';
+              $filename = 'media/content/'. $document_name[strtoupper($key)][$name] . '.pdf';
               $fp = @fopen(DIR_FS_CATALOG.$filename, 'w+');
               if (is_resource($fp)) {
                 fwrite($fp, $content_pdf);
@@ -136,7 +157,7 @@ class janolaw_content {
             xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group='" . (int)$coID . "' and languages_id='".$value['id']."'");
           } else {
             // write content to file
-            $filename = $value['directory'] . '_' . $name . '.' . $this->format;
+            $filename = $document_name[strtoupper($key)][$name] . '.' . $this->format;
             $file = DIR_FS_CATALOG . 'media/content/'. $filename;
             $fp = @fopen($file, 'w+');
             if (is_resource($fp)) {

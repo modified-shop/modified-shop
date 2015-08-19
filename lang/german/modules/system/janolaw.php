@@ -38,34 +38,34 @@ define('MODULE_JANOLAW_TYPE_DATASECURITY_DESC', 'Bitte geben Sie an, in welcher 
 define('MODULE_JANOLAW_PDF_DATASECURITY_TITLE', 'Zus&auml;tzlich als PDF speichern');
 define('MODULE_JANOLAW_PDF_DATASECURITY_DESC', 'Sollen die Daten zus&auml;tzlich als PDF gespeichert werden?');
 define('MODULE_JANOLAW_MAIL_DATASECURITY_TITLE', 'PDF als E-Mail Anhang');
-define('MODULE_JANOLAW_MAIL_DATASECURITY_DESC', 'Soll das PDF als Anhang zur Auftragsbest&auml;tigung mitgeschickt werden?');
+define('MODULE_JANOLAW_MAIL_DATASECURITY_DESC', 'Soll das PDF als Anhang zur Auftragsbest&auml;tigung mitgeschickt werden?<br/><b>Wichtig:</b> Das Dokument muss als PDF gespeichert werden!');
 
 define('MODULE_JANOLAW_TYPE_TERMS_TITLE', '<hr noshade>Rechtstext AGB');
 define('MODULE_JANOLAW_TYPE_TERMS_DESC', 'Bitte geben Sie an, in welcher Seite dieser Rechtstext automatisch eingef&uuml;gt werden soll.');
 define('MODULE_JANOLAW_PDF_TERMS_TITLE', 'Zus&auml;tzlich als PDF speichern');
 define('MODULE_JANOLAW_PDF_TERMS_DESC', 'Sollen die Daten zus&auml;tzlich als PDF gespeichert werden?');
 define('MODULE_JANOLAW_MAIL_TERMS_TITLE', 'PDF als E-Mail Anhang');
-define('MODULE_JANOLAW_MAIL_TERMS_DESC', 'Soll das PDF als Anhang zur Auftragsbest&auml;tigung mitgeschickt werden?');
+define('MODULE_JANOLAW_MAIL_TERMS_DESC', 'Soll das PDF als Anhang zur Auftragsbest&auml;tigung mitgeschickt werden?<br/><b>Wichtig:</b> Das Dokument muss als PDF gespeichert werden!');
 
 define('MODULE_JANOLAW_TYPE_LEGALDETAILS_TITLE', '<hr noshade>Rechtstext Impressum');
 define('MODULE_JANOLAW_TYPE_LEGALDETAILS_DESC', 'Bitte geben Sie an, in welcher Seite dieser Rechtstext automatisch eingef&uuml;gt werden soll.');
 define('MODULE_JANOLAW_PDF_LEGALDETAILS_TITLE', 'Zus&auml;tzlich als PDF speichern');
 define('MODULE_JANOLAW_PDF_LEGALDETAILS_DESC', 'Sollen die Daten zus&auml;tzlich als PDF gespeichert werden?');
 define('MODULE_JANOLAW_MAIL_LEGALDETAILS_TITLE', 'PDF als E-Mail Anhang');
-define('MODULE_JANOLAW_MAIL_LEGALDETAILS_DESC', 'Soll das PDF als Anhang zur Auftragsbest&auml;tigung mitgeschickt werden?');
+define('MODULE_JANOLAW_MAIL_LEGALDETAILS_DESC', 'Soll das PDF als Anhang zur Auftragsbest&auml;tigung mitgeschickt werden?<br/><b>Wichtig:</b> Das Dokument muss als PDF gespeichert werden!');
 
 define('MODULE_JANOLAW_TYPE_REVOCATION_TITLE', '<hr noshade>Rechtstext Widerruf');
 define('MODULE_JANOLAW_TYPE_REVOCATION_DESC', 'Bitte geben Sie an, in welcher Seite dieser Rechtstext automatisch eingef&uuml;gt werden soll.');
 define('MODULE_JANOLAW_PDF_REVOCATION_TITLE', 'Zus&auml;tzlich als PDF speichern');
 define('MODULE_JANOLAW_PDF_REVOCATION_DESC', 'Sollen die Daten zus&auml;tzlich als PDF gespeichert werden?');
 define('MODULE_JANOLAW_MAIL_REVOCATION_TITLE', 'PDF als E-Mail Anhang');
-define('MODULE_JANOLAW_MAIL_REVOCATION_DESC', 'Soll das PDF als Anhang zur Auftragsbest&auml;tigung mitgeschickt werden?');
+define('MODULE_JANOLAW_MAIL_REVOCATION_DESC', 'Soll das PDF als Anhang zur Auftragsbest&auml;tigung mitgeschickt werden?<br/><b>Wichtig:</b> Das Dokument muss als PDF gespeichert werden!');
 
 define('MODULE_JANOLAW_TYPE_WITHDRAWAL_TITLE', '<hr noshade>Rechtstext Widerrufsformular');
-define('MODULE_JANOLAW_TYPE_WITHDRAWAL_DESC', 'Bitte geben Sie an, in welcher Seite dieser Rechtstext automatisch eingef&uuml;gt werden soll.');
+define('MODULE_JANOLAW_TYPE_WITHDRAWAL_DESC', 'Bitte geben Sie an, in welcher Seite dieser Rechtstext automatisch eingef&uuml;gt werden soll.<br/><br/><b>Wichtig:</b> das funktioniert erst ab Version 3. Die Umstellung kann bei Janolaw veranlasst werden.');
 define('MODULE_JANOLAW_PDF_WITHDRAWAL_TITLE', 'Zus&auml;tzlich als PDF speichern');
 define('MODULE_JANOLAW_PDF_WITHDRAWAL_DESC', 'Sollen die Daten zus&auml;tzlich als PDF gespeichert werden?');
 define('MODULE_JANOLAW_MAIL_WITHDRAWAL_TITLE', 'PDF als E-Mail Anhang');
-define('MODULE_JANOLAW_MAIL_WITHDRAWAL_DESC', 'Soll das PDF als Anhang zur Auftragsbest&auml;tigung mitgeschickt werden?');
+define('MODULE_JANOLAW_MAIL_WITHDRAWAL_DESC', 'Soll das PDF als Anhang zur Auftragsbest&auml;tigung mitgeschickt werden?<br/><b>Wichtig:</b> Das Dokument muss als PDF gespeichert werden!');
 
 ?>

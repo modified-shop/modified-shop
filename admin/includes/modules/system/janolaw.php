@@ -84,8 +84,8 @@ class janolaw {
 
   function install() {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_STATUS', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_SHOP_ID', '12345',  '6', '2', '', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_USER_ID', '12345',  '6', '3', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_SHOP_ID', '',  '6', '2', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_USER_ID', '',  '6', '3', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_TYPE', 'Database',  '6', '4', 'xtc_cfg_select_option(array(\'File\', \'Database\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_FORMAT', 'HTML',  '6', '5', 'xtc_cfg_select_option(array(\'HTML\', \'TXT\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_UPDATE_INTERVAL', '86400',  '6', '6', '', now())");
@@ -111,6 +111,26 @@ class janolaw {
   }
 
   function remove() {
+    $database_table = 'content_file';
+    if (MODULE_JANOLAW_TYPE == 'database') {
+      $database_table = 'content_text';
+    }
+    xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                     SET ".$database_table." = ''
+                   WHERE content_group = '".MODULE_JANOLAW_TYPE_DATASECURITY."'");
+    xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                     SET ".$database_table." = ''
+                   WHERE content_group = '".MODULE_JANOLAW_TYPE_TERMS."'");
+    xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                     SET ".$database_table." = ''
+                   WHERE content_group = '".MODULE_JANOLAW_TYPE_LEGALDETAILS."'");
+    xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                     SET ".$database_table." = ''
+                   WHERE content_group = '".MODULE_JANOLAW_TYPE_REVOCATION."'");
+    xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER."
+                     SET ".$database_table." = ''
+                   WHERE content_group = '".MODULE_JANOLAW_TYPE_WITHDRAWAL."'");
+
     xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_JANOLAW_UPDATE_INTERVAL'");
     xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_JANOLAW_LAST_UPDATED'");
