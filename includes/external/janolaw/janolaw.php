@@ -28,8 +28,29 @@ class janolaw_content {
     $this->shop_id = $this->get_configuration('MODULE_JANOLAW_SHOP_ID');
     $this->enabled = $this->get_status();
     $this->format = strtolower($this->get_configuration('MODULE_JANOLAW_FORMAT'));
+
+    $this->document_name = array(
+      'DE' => array('legaldetails' => 'Impressum',
+                    'terms' => 'AGB',
+                    'revocation' => 'Widerrufsbelehrung',
+                    'datasecurity' => 'Datenschutzerklaerung',
+                    'withdrawal' => 'Muster-Widerrufsformular',
+                    ),
+      'GB' => array('legaldetails' => 'Imprint',
+                    'terms' => 'General-Terms-and-Conditions',
+                    'revocation' => 'Instructions-on-withdrawal',
+                    'datasecurity' => 'Data-privacy-policy',
+                    'withdrawal' => 'Model-withdrawal-form',
+                    ),
+      'FR' => array('legaldetails' => 'Mentions-legales',
+                    'terms' => 'Conditions-Generales-de-Vente',
+                    'revocation' => 'Informations-standardisees-sur-la-retractation',
+                    'datasecurity' => 'Declaration-quant-a-la-protection-des-donnees',
+                    'withdrawal' => 'Modele-de-formulaire-de-retractation',
+                    ),
+    );
     
-    if($this->enabled) {
+    if ($this->enabled === true) {
       if (((MODULE_JANOLAW_LAST_UPDATED + MODULE_JANOLAW_UPDATE_INTERVAL) <= time()) || defined('RUN_MODE_ADMIN')) {
         
         $this->get_page_content('datasecurity', $this->get_configuration('MODULE_JANOLAW_TYPE_DATASECURITY'));
@@ -45,7 +66,7 @@ class janolaw_content {
 
 
   function get_status() {
-    if(!defined('MODULE_JANOLAW_STATUS') || $this->get_configuration('MODULE_JANOLAW_STATUS') == 'False') {
+    if (!defined('MODULE_JANOLAW_STATUS') || $this->get_configuration('MODULE_JANOLAW_STATUS') == 'False') {
       return false;
     }
     return true;
@@ -86,27 +107,6 @@ class janolaw_content {
       $mode = '_include.';
     }
 
-    $document_name = array(
-      'DE' => array('legaldetails' => 'Impressum',
-                    'terms' => 'AGB',
-                    'revocation' => 'Widerrufsbelehrung',
-                    'datasecurity' => 'Datenschutzerklaerung',
-                    'model-withdrawal-form' => 'Muster-Widerrufsformular',
-                    ),
-      'GB' => array('legaldetails' => 'Imprint',
-                    'terms' => 'General-Terms-and-Conditions',
-                    'revocation' => 'Instructions-on-withdrawal',
-                    'datasecurity' => 'Data-privacy-policy',
-                    'model-withdrawal-form' => 'Model-withdrawal-form',
-                    ),
-      'FR' => array('legaldetails' => 'Mentions-legales',
-                    'terms' => 'Conditions-Generales-de-Vente',
-                    'revocation' => 'Informations-standardisees-sur-la-retractation',
-                    'datasecurity' => 'Declaration-quant-a-la-protection-des-donnees',
-                    'model-withdrawal-form' => 'Modele-de-formulaire-de-retractation',
-                    ),
-    );
-
     if (!isset($lng) || (isset($lng) && !is_object($lng))) {
       require_once(DIR_WS_CLASSES . 'language.php');
       $lng = new language;
@@ -136,7 +136,7 @@ class janolaw_content {
             if (strpos($content_pdf, '404 Not Found') !== false) {
               $content_pdf = '';
             } else {
-              $filename = 'media/content/'. $document_name[strtoupper($language)][$name] . '.pdf';
+              $filename = 'media/content/'. $this->document_name[strtoupper($language)][$name] . '.pdf';
               $fp = @fopen(DIR_FS_CATALOG.$filename, 'w+');
               if (is_resource($fp)) {
                 fwrite($fp, $content_pdf);
@@ -159,7 +159,7 @@ class janolaw_content {
             xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group='" . (int)$coID . "' and languages_id='".$value['id']."'");
           } else {
             // write content to file
-            $filename = $document_name[strtoupper($language)][$name] . '.' . $this->format;
+            $filename = $this->document_name[strtoupper($language)][$name] . '.' . $this->format;
             $file = DIR_FS_CATALOG . 'media/content/'. $filename;
             $fp = @fopen($file, 'w+');
             if (is_resource($fp)) {
