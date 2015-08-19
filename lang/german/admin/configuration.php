@@ -1018,4 +1018,7 @@ define('SHOW_SELFPICKUP_FREE_DESC', 'Soll das Versandmodul "Selbstabholung (self
 
 define('CHECK_FIRST_PAYMENT_MODUL_TITLE', 'Erste Zahlungsoption vorausw&auml;hlen');
 define('CHECK_FIRST_PAYMENT_MODUL_DESC', 'Soll im Checkout die erste Zahlungsoption f&uuml;r den Kunden vorausgew&auml;hlt werden?');
+
+define('ATTRIBUTES_VALID_CHECK_TITLE', 'Attribute validieren');
+define('ATTRIBUTES_VALID_CHECK_DESC', 'Sollen Artikel mit Attribute validiert werden?<br/><b>Hinweis:</b> Bei Erweiterungen die im Nachhinein Attribute erweitern, wie zB Textfeld muss dieser Check deaktiviert werden.');
 ?>

@@ -130,7 +130,7 @@ class shoppingCart {
             while ($attributes = xtc_db_fetch_array($attributes_query)) {
               $this->contents[$products['products_id']]['attributes'][$attributes['products_options_id']] = $attributes['products_options_value_id'];
             }
-            if ($this->attributes_count($products['products_id']) != count($this->contents[$products['products_id']]['attributes'])) {
+            if (ATTRIBUTES_VALID_CHECK == 'true' && $this->attributes_count($products['products_id']) != count($this->contents[$products['products_id']]['attributes'])) {
               $this->remove($products['products_id']);
             }
           }
@@ -184,7 +184,11 @@ class shoppingCart {
 
     $products_id = xtc_get_uprid($products_id, $attributes);
 
-    if (is_array($attributes) && $this->attributes_count($products_id) != count($attributes)) {
+    if (ATTRIBUTES_VALID_CHECK == 'true' 
+        && is_array($attributes) 
+        && $this->attributes_count($products_id) != count($attributes)
+        ) 
+    {
       return false;
     }
     
@@ -577,7 +581,11 @@ class shoppingCart {
                  
           if ($this->check_products_status_permission($products_id) === false) {
             $this->remove($products_id);
-          } elseif (isset($this->contents[$products_id]['attributes']) && $this->attributes_count($products_id) != count($this->contents[$products_id]['attributes'])) {
+          } elseif (ATTRIBUTES_VALID_CHECK == 'true' 
+                    && isset($this->contents[$products_id]['attributes']) 
+                    && $this->attributes_count($products_id) != count($this->contents[$products_id]['attributes'])
+                    ) 
+          {
             $this->remove($products_id);
           } else {
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1

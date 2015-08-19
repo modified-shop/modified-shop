@@ -1026,4 +1026,7 @@ define('SHOW_SELFPICKUP_FREE_DESC', 'Shall the shipping module "Self Pickup (sel
 
 define('CHECK_FIRST_PAYMENT_MODUL_TITLE', 'Preselect first payment method');
 define('CHECK_FIRST_PAYMENT_MODUL_DESC', 'Shall the first payment method be preselected in checkout for the customer?');
+
+define('ATTRIBUTES_VALID_CHECK_TITLE', 'Attribute validation');
+define('ATTRIBUTES_VALID_CHECK_DESC', 'Validate products with attributes?<br/><b>Note:</b> For extensions that expand the attributes such as text box, this check must be disabled.');
 ?>
