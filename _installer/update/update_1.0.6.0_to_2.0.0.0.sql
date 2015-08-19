@@ -713,4 +713,7 @@ UPDATE TABLE configuration SET configuration_value = 156 WHERE configuration_key
 #Tomcraft - 2015-08-19 - Removed France, Metropolitan
 DELETE FROM countries WHERE countries_iso_code_3 = 'FXX';
 
+#Tomcraft -2015-08-19 - Fixed zone name for "Terres australes et Antartiques françaises" as the field was only 32 characters before!
+UPDATE zones SET zone_name = 'Terres australes et Antartiques françaises' WHERE zone_code = '984 (TOM)';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
