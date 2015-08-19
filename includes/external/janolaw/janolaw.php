@@ -115,11 +115,13 @@ class janolaw_content {
     if (count($lng->catalog_languages) > 0) {
       reset($lng->catalog_languages);
       while (list($key, $value) = each($lng->catalog_languages)) {
-
+        
+        $language = $this->get_language($key);
+        
         $url = 'http://www.janolaw.de/agb-service/shops/'.
                $this->user_id .'/'.
                $this->shop_id .'/'.
-               $this->get_language($key) .'/';
+               $language .'/';
 
         $content = get_external_content($url.$name.$mode.$this->format, '3', false);
  
@@ -134,7 +136,7 @@ class janolaw_content {
             if (strpos($content_pdf, '404 Not Found') !== false) {
               $content_pdf = '';
             } else {
-              $filename = 'media/content/'. $document_name[strtoupper($key)][$name] . '.pdf';
+              $filename = 'media/content/'. $document_name[strtoupper($language)][$name] . '.pdf';
               $fp = @fopen(DIR_FS_CATALOG.$filename, 'w+');
               if (is_resource($fp)) {
                 fwrite($fp, $content_pdf);
@@ -157,7 +159,7 @@ class janolaw_content {
             xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group='" . (int)$coID . "' and languages_id='".$value['id']."'");
           } else {
             // write content to file
-            $filename = $document_name[strtoupper($key)][$name] . '.' . $this->format;
+            $filename = $document_name[strtoupper($language)][$name] . '.' . $this->format;
             $file = DIR_FS_CATALOG . 'media/content/'. $filename;
             $fp = @fopen($file, 'w+');
             if (is_resource($fp)) {
