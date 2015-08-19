@@ -11,6 +11,10 @@
    ---------------------------------------------------------------------------------------*/
 
 if (defined('MODULE_JANOLAW_STATUS') && MODULE_JANOLAW_STATUS == 'True') {
+  
+  require_once(DIR_FS_EXTERNAL.'janolaw/janolaw.php');
+  $janolaw = new janolaw();
+  
   $check_array = array('datasecurity' => MODULE_JANOLAW_PDF_DATASECURITY,
                        'terms' => MODULE_JANOLAW_PDF_TERMS,
                        'legaldetails' => MODULE_JANOLAW_PDF_LEGALDETAILS,
@@ -19,7 +23,9 @@ if (defined('MODULE_JANOLAW_STATUS') && MODULE_JANOLAW_STATUS == 'True') {
                        );
   foreach ($check_array as $key => $value) {
     if ($value == 'True') {
-      $filename = DIR_FS_CATALOG.'media/content/'.$order->info['language'].'_'.$key.'.pdf';    
+      $language = $janolaw->get_language($_SESSION['language_code']);
+      
+      $filename = DIR_FS_CATALOG.'media/content/'. $janolaw->document_name[strtoupper($language)][$key] . '.pdf';
       if (is_file($filename)) {
         if ($email_attachments != '') {
           $email_attachments .= ',';
