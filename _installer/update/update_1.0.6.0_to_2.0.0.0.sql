@@ -710,4 +710,7 @@ UPDATE TABLE configuration SET configuration_value = 5 WHERE configuration_key =
 UPDATE TABLE configuration SET configuration_value = 15 WHERE configuration_key = META_KEYWORDS_NUMBER;
 UPDATE TABLE configuration SET configuration_value = 156 WHERE configuration_key META_DESCRIPTION_LENGTH;
 
+#Tomcraft - 2015-08-19 - Removed France, Metropolitan
+DELETE FROM countries WHERE countries_iso_code_3 = 'FXX';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
