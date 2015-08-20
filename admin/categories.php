@@ -334,19 +334,23 @@ require_once (DIR_FS_CATALOG.'includes/classes/breadcrumb.php');
 $breadcrumb = new breadcrumb;
 $breadcrumb->add(TEXT_TOP, xtc_href_link(FILENAME_CATEGORIES, (isset($_GET['page']) ? 'page='.(int)$_GET['page'] : '')));
 if (isset ($cPath_array)) {
+  $cPathLinkParam = array();
   for ($i = 0, $n = sizeof($cPath_array); $i < $n; $i ++) {
-    $categories_query = xtDBquery("-- /includes/application_top.php
-                                   SELECT cd.categories_name
-                                     FROM ".TABLE_CATEGORIES_DESCRIPTION." cd,
-                                          ".TABLE_CATEGORIES." c
-                                    WHERE cd.categories_id = '".$cPath_array[$i]."'
-                                      AND c.categories_id = cd.categories_id
-                                      AND cd.language_id = '".(int) $_SESSION['languages_id']."'");
-    if (xtc_db_num_rows($categories_query,true) > 0) {
-      $categories = xtc_db_fetch_array($categories_query,true);
-      $breadcrumb->add($categories['categories_name'], xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$cPath_array[$i] . (isset($_GET['page']) ? '&page='.(int)$_GET['page'] : '')));
-    } else {
-      break;
+    if ($cPath_array[$i]) {
+      $cPathLinkParam[] = $cPath_array[$i];
+      $categories_query = xtDBquery("-- /includes/application_top.php
+                                     SELECT cd.categories_name
+                                       FROM ".TABLE_CATEGORIES_DESCRIPTION." cd,
+                                            ".TABLE_CATEGORIES." c
+                                      WHERE cd.categories_id = '".$cPath_array[$i]."'
+                                        AND c.categories_id = cd.categories_id
+                                        AND cd.language_id = '".(int) $_SESSION['languages_id']."'");
+      if (xtc_db_num_rows($categories_query,true) > 0) {
+        $categories = xtc_db_fetch_array($categories_query,true);
+        $breadcrumb->add($categories['categories_name'], xtc_href_link(FILENAME_CATEGORIES, 'cPath='.implode('_',$cPathLinkParam) . (isset($_GET['page']) ? '&page='.(int)$_GET['page'] : '')));
+      } else {
+        break;
+      }
     }
   }
 }
