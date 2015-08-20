@@ -102,6 +102,7 @@ class janolaw {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_MAIL_LEGALDETAILS', 'False',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_MAIL_REVOCATION', 'False',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_MAIL_WITHDRAWAL', 'False',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_WITHDRAWAL_COMBINE', 'False',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
 
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_DATASECURITY', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_TERMS', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
@@ -159,7 +160,8 @@ class janolaw {
                  'MODULE_JANOLAW_PDF_REVOCATION',
                  'MODULE_JANOLAW_MAIL_REVOCATION',
 
-                 'MODULE_JANOLAW_TYPE_WITHDRAWAL',                 
+                 'MODULE_JANOLAW_TYPE_WITHDRAWAL', 
+                 'MODULE_JANOLAW_WITHDRAWAL_COMBINE',                 
                  'MODULE_JANOLAW_PDF_WITHDRAWAL',                 
                  'MODULE_JANOLAW_MAIL_WITHDRAWAL',                 
                  );

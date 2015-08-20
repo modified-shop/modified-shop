@@ -56,10 +56,10 @@ class janolaw_content {
         $this->get_page_content('datasecurity', $this->get_configuration('MODULE_JANOLAW_TYPE_DATASECURITY'));
         $this->get_page_content('terms', $this->get_configuration('MODULE_JANOLAW_TYPE_TERMS'));
         $this->get_page_content('legaldetails', $this->get_configuration('MODULE_JANOLAW_TYPE_LEGALDETAILS'));
-        $this->get_page_content('revocation', $this->get_configuration('MODULE_JANOLAW_TYPE_REVOCATION'));
         $this->get_page_content('model-withdrawal-form', $this->get_configuration('MODULE_JANOLAW_TYPE_WITHDRAWL'));
+        $this->get_page_content('revocation', $this->get_configuration('MODULE_JANOLAW_TYPE_REVOCATION'));
                 
-        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input(time()) . "', last_modified = NOW() where configuration_key='MODULE_JANOLAW_LAST_UPDATED'");
+        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='".xtc_db_input(time())."', last_modified = NOW() where configuration_key='MODULE_JANOLAW_LAST_UPDATED'");
       }
     }    
   }
@@ -97,11 +97,7 @@ class janolaw_content {
 
   function get_page_content($name, $coID = '') {
     global $lng;
-    
-    if ($coID == '') {
-      return;
-    }
-    
+        
     $mode = '.';
     if ($this->format == 'html') {
       $mode = '_include.';
@@ -130,46 +126,69 @@ class janolaw_content {
           // save pdf
           $content_pdf = '';
           $module_name = str_replace('model-withdrawal-form', 'withdrawal', $name);
-                    
-          if ($this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True') {
+
+          if ($module_name == 'withdrawal' && $this->get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
+            $this->withdrawal_content[$key] = $content;
+          }
+          if ($module_name == 'revocation' && $this->get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
+            $content .= '<br /><br />'.$this->withdrawal_content[$key];
+          }  
+          if ($this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True'
+              || $this->get_configuration('MODULE_JANOLAW_MAIL_'.strtoupper($module_name)) == 'True'
+              ) 
+          {
             $content_pdf = get_external_content($url.$name.'.pdf', '3', false);
             if (strpos($content_pdf, '404 Not Found') !== false) {
               $content_pdf = '';
             } else {
-              $filename = 'media/content/'. $this->document_name[strtoupper($language)][$name] . '.pdf';
+              $filename = 'media/content/'. $this->document_name[strtoupper($language)][$module_name] . '.pdf';
               $fp = @fopen(DIR_FS_CATALOG.$filename, 'w+');
               if (is_resource($fp)) {
                 fwrite($fp, $content_pdf);
                 fclose($fp);
-                if ($this->format == 'html') {
-                  $content .= '<br /><br /><a href="'.DIR_WS_CATALOG.$filename.'" target="_blank">PDF download</a>';            
-                }            
+                if ($module_name == 'withdrawal' && $this->get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
+                  $this->withdrawal_link[$key] = DIR_WS_CATALOG.$filename;
+                }
+                if ($this->format == 'html' && $this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True') {
+                  if ($module_name == 'revocation' 
+                      && $this->get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True' 
+                      && isset($this->withdrawal_link[$key])
+                      ) 
+                  {
+                    $content .= '<br /><br /><a href="'.DIR_WS_CATALOG.$filename.'" target="_blank">1. PDF download</a>';
+                    $content .= '<br /><a href="'.$this->withdrawal_link[$key].'" target="_blank">2. PDF download</a>';
+                  } else {
+                    $content .= '<br /><br /><a href="'.DIR_WS_CATALOG.$filename.'" target="_blank">PDF download</a>';            
+                  }
+                }
               }
             }
           }
                     
           // save data
-          if (strtolower($this->get_configuration('MODULE_JANOLAW_TYPE')) == 'database') {
-            // convert content
-            $content = decode_utf8($content);
+          if ($coID != '') {
+            if (strtolower($this->get_configuration('MODULE_JANOLAW_TYPE')) == 'database') {
+              // convert content
+              $content = decode_utf8($content);
 
-            // update data in table
-            $sql_data_array = array('content_text' => $content,
-                                    'content_file' => '');
-            xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group='" . (int)$coID . "' and languages_id='".$value['id']."'");
-          } else {
-            // write content to file
-            $filename = $this->document_name[strtoupper($language)][$name] . '.' . $this->format;
-            $file = DIR_FS_CATALOG . 'media/content/'. $filename;
-            $fp = @fopen($file, 'w+');
-            if (is_resource($fp)) {
-              fwrite($fp, $content);
-              fclose($fp);
-      
               // update data in table
-              $sql_data_array = array('content_file' => $filename,
-                                      'content_text' => '');
-              xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group='" . (int)$coID . "' and languages_id='".$value['id']."'");
+              $sql_data_array = array('content_text' => $content,
+                                      'content_file' => '');
+              xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group='".(int)$coID."' and languages_id='".$value['id']."'");
+            } else {
+              // write content to file
+              $filename = $this->document_name[strtoupper($language)][$name] . '.' . $this->format;
+              $file = DIR_FS_CATALOG . 'media/content/'. $filename;
+              $fp = @fopen($file, 'w+');
+              if (is_resource($fp)) {
+                fwrite($fp, $content);
+                fclose($fp);
+      
+                // update data in table
+                $sql_data_array = array('content_file' => $filename,
+                                        'content_text' => '');
+                xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group='".(int)$coID."' and languages_id='".$value['id']."'");
+              }
             }
           }
         }
