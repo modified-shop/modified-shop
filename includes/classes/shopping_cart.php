@@ -856,14 +856,12 @@ class shoppingCart {
    */
   function create_products_attributes_array($products_id) {
     $dataArray = array();
-    $db_query = xtDBquery(
-      "SELECT options_id,
-              options_values_id
-        FROM ".TABLE_PRODUCTS_ATTRIBUTES." patrib
-       WHERE patrib.products_id = '".(int)$products_id."'
-    ");
+    $db_query = xtDBquery("SELECT options_id,
+                                  options_values_id
+                             FROM ".TABLE_PRODUCTS_ATTRIBUTES." 
+                            WHERE products_id = '".(int)$products_id."'");
     while($data = xtc_db_fetch_array($db_query, true)) {
-    $dataArray[$data['options_id']][] = $data['options_values_id'];
+      $dataArray[$data['options_id']][] = $data['options_values_id'];
     }
     return $dataArray;
   }
@@ -876,6 +874,10 @@ class shoppingCart {
    */
   function validate_attributes($products_id, $attributes, $flag = '') {
     static $products_attributes_array;
+    
+    if (!is_array($products_attributes_array)) {
+      $products_attributes_array = array();
+    }
     if (is_array($attributes) && count($attributes)) {
       $pID = (int)$products_id;
       if (!isset($products_attributes_array[$pID])) {
