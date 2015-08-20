@@ -13,13 +13,13 @@
 if (defined('MODULE_JANOLAW_STATUS') && MODULE_JANOLAW_STATUS == 'True') {
   
   require_once(DIR_FS_EXTERNAL.'janolaw/janolaw.php');
-  $janolaw = new janolaw();
+  $janolaw = new janolaw_content();
   
-  $check_array = array('datasecurity' => MODULE_JANOLAW_PDF_DATASECURITY,
-                       'terms' => MODULE_JANOLAW_PDF_TERMS,
-                       'legaldetails' => MODULE_JANOLAW_PDF_LEGALDETAILS,
-                       'revocation' => MODULE_JANOLAW_PDF_REVOCATION,
-                       'withdrawal' => MODULE_JANOLAW_PDF_WITHDRAWAL
+  $check_array = array('datasecurity' => MODULE_JANOLAW_MAIL_DATASECURITY,
+                       'terms' => MODULE_JANOLAW_MAIL_TERMS,
+                       'legaldetails' => MODULE_JANOLAW_MAIL_LEGALDETAILS,
+                       'revocation' => MODULE_JANOLAW_MAIL_REVOCATION,
+                       'withdrawal' => MODULE_JANOLAW_MAIL_WITHDRAWAL
                        );
   foreach ($check_array as $key => $value) {
     if ($value == 'True') {
