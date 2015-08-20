@@ -336,52 +336,6 @@
             $_POST['attributes_value'] = '0';
           }
         } elseif (isset($_POST['attributes']) && $_POST['attributes'] == '1') {
-/*
-echo "SELECT pa.options_values_id as products_options_values_id,
-                                                   pa.options_id as products_options_id,
-                                                   pa.products_id,
-                                                   pto.options_id,
-                                                   pto.products_options_id,
-                                                   ptv.values_id
-                                              FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                                              JOIN ".TABLE_PRODUCTS_TAGS_OPTIONS." pto
-                                                   ON pto.products_options_id = pa.options_id
-                                                      AND pto.languages_id = '".$_SESSION['languages_id']."'
-                                              JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv
-                                                   ON ptv.products_options_values_id = pa.options_values_id
-                                                      AND ptv.languages_id = '".$_SESSION['languages_id']."'
-                                             WHERE NOT EXISTS (SELECT 1
-                                                                 FROM ".TABLE_PRODUCTS_TAGS." pt
-                                                                WHERE pt.options_id = pto.options_id
-                                                                  AND pt.values_id = ptv.values_id
-                                                                  AND pt.products_id = pa.products_id)
-                                             LIMIT ".IMPORT_LIMIT;
-                                             exit();
-                                             
-          $attributes_query = xtc_db_query("SELECT pa.options_values_id as products_options_values_id,
-                                                   pa.options_id as products_options_id
-                                                   pa.products_id,
-                                                   pto.options_id,
-                                                   pto.products_options_id,
-                                                   ptv.values_id
-                                              FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                                              JOIN ".TABLE_PRODUCTS_TAGS_OPTIONS." pto
-                                                   ON pto.products_options_id = pa.options_id
-                                                      AND pto.languages_id = '".$_SESSION['languages_id']."'
-                                              JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv
-                                                   ON ptv.products_options_values_id = pa.options_values_id
-                                                      AND ptv.languages_id = '".$_SESSION['languages_id']."'
-                                             WHERE pto.options_id NOT IN (SELECT pt.options_id
-                                                                            FROM ".TABLE_PRODUCTS_TAGS." pt
-                                                                           WHERE pt.options_id = pto.options_id)
-                                                OR ptv.values_id NOT IN (SELECT pt.values_id
-                                                                           FROM ".TABLE_PRODUCTS_TAGS." pt
-                                                                          WHERE pt.values_id = ptv.values_id)
-                                                OR pa.products_id NOT IN (SELECT pt.products_id
-                                                                           FROM ".TABLE_PRODUCTS_TAGS." pt
-                                                                          WHERE pt.products_id = pa.products_id)
-                                             LIMIT ".IMPORT_LIMIT);
-*/
           $attributes_query = xtc_db_query("SELECT pa.options_values_id as products_options_values_id,
                                                    pa.options_id as products_options_id,
                                                    pa.products_id,
