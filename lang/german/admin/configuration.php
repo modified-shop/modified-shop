@@ -1020,5 +1020,5 @@ define('CHECK_FIRST_PAYMENT_MODUL_TITLE', 'Erste Zahlungsoption vorausw&auml;hle
 define('CHECK_FIRST_PAYMENT_MODUL_DESC', 'Soll im Checkout die erste Zahlungsoption f&uuml;r den Kunden vorausgew&auml;hlt werden?');
 
 define('ATTRIBUTES_VALID_CHECK_TITLE', 'Attribute validieren');
-define('ATTRIBUTES_VALID_CHECK_DESC', 'Pr&uuml;ft Artikel im Warenkorb des Kunden auf nicht mehr g&uuml;ltige Attribute. (Kann vorkommen, wenn der Kunde sich nach l&auml;ngerer Zeit wieder in den Shop einloggt und einen aus einem fr&uuml;heren Besuch im Warenkorb verbliebenen Artikel kaufen m&ouml;chte.)<br/><b>Hinweis:</b> Bei Erweiterungen, die im Nachhinein Attribute erweitern, wie z.B. Textfeld, muss dieser Check deaktiviert werden.');
+define('ATTRIBUTES_VALID_CHECK_DESC', 'Pr&uuml;ft Artikel im Warenkorb des Kunden auf nicht mehr g&uuml;ltige Attribute.<br/>(Das kann vorkommen, wenn sich ein Kunde nach l&auml;ngerer Zeit wieder in den Shop einloggt und einen aus einem fr&uuml;heren Besuch im Warenkorb verbliebenen Artikel kaufen m&ouml;chte.)<br/><b>Hinweis:</b> Bei Erweiterungen, die im Nachhinein Attribute erweitern, wie z.B. Textfeld, muss dieser Check deaktiviert werden.');
 ?>

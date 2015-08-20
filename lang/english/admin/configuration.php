@@ -1028,5 +1028,5 @@ define('CHECK_FIRST_PAYMENT_MODUL_TITLE', 'Preselect first payment method');
 define('CHECK_FIRST_PAYMENT_MODUL_DESC', 'Shall the first payment method be preselected in checkout for the customer?');
 
 define('ATTRIBUTES_VALID_CHECK_TITLE', 'Attribute validation');
-define('ATTRIBUTES_VALID_CHECK_DESC', 'Checks products in customers cart for attributes, that are no longer valid. (Can occur, if a customer revisits the shop after a long time and purchases a product from a previous visit that remained in the cart.)<br/><b>Note:</b> For extensions that expand the attributes such as text field, this check must be disabled.');
+define('ATTRIBUTES_VALID_CHECK_DESC', 'Checks products in customers cart for attributes, that are no longer valid.<br/>(This can occur, if a customer revisits the shop after a long time and purchases a product from a previous visit that remained in the cart.)<br/><b>Note:</b> For extensions that expand the attributes such as text field, this check must be disabled.');
 ?>
