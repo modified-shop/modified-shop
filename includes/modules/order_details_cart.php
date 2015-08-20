@@ -36,7 +36,6 @@ if(defined('MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS') && MODULE_PAYMENT_KLARNA_
     include_once(DIR_WS_INCLUDES.'modules/payment/klarna/display_klarna_cart.php');
 }
 
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_products_stock.inc.php');
 require_once (DIR_FS_INC.'xtc_remove_non_numeric.inc.php');
@@ -50,7 +49,7 @@ $any_out_of_stock = '';
 $mark_stock = '';
 $hidden_options = '';
 
-$products = $_SESSION['cart']->get_products(); //set in includes/classes/shopping_cart.php function get_products
+$products = $_SESSION['cart']->get_products();
 for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
 
   if (STOCK_CHECK == 'true') {
@@ -72,14 +71,8 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
     $image = $product->productImage($products[$i]['image'],'thumbnail');
   }
 
-  //show 'delete button' in shopping cart
-  $del_button = '<a href="'
-          . xtc_href_link(FILENAME_SHOPPING_CART, 'action=remove_product&prd_id=' . $products[$i]['id'], 'NONSSL') // web28 - 2010-09-20 - change SSL -> NONSSL
-          . '">' . xtc_image_button('cart_del.gif', IMAGE_BUTTON_DELETE) . '</a>';
-  //show 'delete link' in shopping cart
-  $del_link = '<a href="'
-          . xtc_href_link(FILENAME_SHOPPING_CART, 'action=remove_product&prd_id=' . $products[$i]['id'], 'NONSSL') // web28 - 2010-09-20 - change SSL -> NONSSL
-          . '">' . IMAGE_BUTTON_DELETE . '</a>';
+  $del_button = '<a href="' . xtc_href_link(FILENAME_SHOPPING_CART, 'action=remove_product&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . xtc_image_button('cart_del.gif', IMAGE_BUTTON_DELETE) . '</a>';
+  $del_link = '<a href="' . xtc_href_link(FILENAME_SHOPPING_CART, 'action=remove_product&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . IMAGE_BUTTON_DELETE . '</a>';
 
   $module_content[$i] = array(
     'PRODUCTS_NAME' => $products[$i]['name'].$mark_stock,
@@ -164,7 +157,6 @@ if ($_SESSION['customers_status']['customers_status_show_price'] == '1' && MODUL
   $module_smarty->assign('UST_CONTENT', $_SESSION['cart']->show_tax());
 }
 
-// VERSANDKOSTEN IM WARENKORB
 include DIR_FS_CATALOG.'/includes/shipping_estimate.php';
 
 $module_smarty->assign('TOTAL_CONTENT', $total_content);
