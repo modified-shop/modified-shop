@@ -81,26 +81,28 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
           . xtc_href_link(FILENAME_SHOPPING_CART, 'action=remove_product&prd_id=' . $products[$i]['id'], 'NONSSL') // web28 - 2010-09-20 - change SSL -> NONSSL
           . '">' . IMAGE_BUTTON_DELETE . '</a>';
 
-  $module_content[$i] = array ( 'PRODUCTS_NAME' => $products[$i]['name'].$mark_stock,
-                                'PRODUCTS_QTY' => xtc_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="2"').
-                                                  xtc_draw_hidden_field('products_id[]', $products[$i]['id']).
-                                                  xtc_draw_hidden_field('old_qty[]', $products[$i]['quantity']),
-                                'PRODUCTS_MODEL' => $products[$i]['model'],
-                                'PRODUCTS_SHIPPING_TIME'=>$products[$i]['shipping_time'],
-                                'PRODUCTS_TAX' => number_format($products[$i]['tax'], TAX_DECIMAL_PLACES), 
-                                'PRODUCTS_IMAGE' => $image, 
-                                'IMAGE_ALT' => $products[$i]['name'],
-                                'BOX_DELETE' => xtc_draw_checkbox_field('cart_delete[]', $products[$i]['id']), 
-                                'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])), 
-                                'BUTTON_DELETE' => $del_button,
-                                'LINK_DELETE' => $del_link,                  
-                                'PRODUCTS_PRICE' => $xtPrice->xtcFormat($products[$i]['final_price'], true), // $products[$i]['final_price'] is quantity * plain price including attributes_price
-                                'PRODUCTS_SINGLE_PRICE' =>$xtPrice->xtcFormat($products[$i]['price'], true), // $products[$i]['price'] is single plain price including attributes_price
-                                'PRODUCTS_WEIGHT' => $products[$i]['final_weight'], //$products[$i]['final_weight']  is quantity * products_weight including attributes_weight
-                                'PRODUCTS_SINGLE_WEIGHT' => $products[$i]['weight'], //$products[$i]['final_weight']  single products_weight including attributes_weight
-                                'PRODUCTS_SHORT_DESCRIPTION' => xtc_get_short_description($products[$i]['id']), 
-                                'BUTTON_WISHLIST' => $product->getCartToWishlistLink($products[$i]['id'], $products[$i]['name']), 
-                                'ATTRIBUTES' => '');
+  $module_content[$i] = array(
+    'PRODUCTS_NAME' => $products[$i]['name'].$mark_stock,
+    'PRODUCTS_QTY' => xtc_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="2"').
+                      xtc_draw_hidden_field('products_id[]', $products[$i]['id']).
+                      xtc_draw_hidden_field('old_qty[]', $products[$i]['quantity']),
+    'PRODUCTS_MODEL' => $products[$i]['model'],
+    'PRODUCTS_SHIPPING_TIME' => $products[$i]['shipping_time'],
+    'PRODUCTS_TAX' => number_format($products[$i]['tax'], TAX_DECIMAL_PLACES), 
+    'PRODUCTS_IMAGE' => $image, 
+    'IMAGE_ALT' => $products[$i]['name'],
+    'BOX_DELETE' => xtc_draw_checkbox_field('cart_delete[]', $products[$i]['id']), 
+    'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])), 
+    'BUTTON_DELETE' => $del_button,
+    'LINK_DELETE' => $del_link,                  
+    'PRODUCTS_PRICE' => $xtPrice->xtcFormat($products[$i]['final_price'], true), // $products[$i]['final_price'] is quantity * plain price including attributes_price
+    'PRODUCTS_SINGLE_PRICE' => $xtPrice->xtcFormat($products[$i]['price'], true), // $products[$i]['price'] is single plain price including attributes_price
+    'PRODUCTS_WEIGHT' => $products[$i]['final_weight'], //$products[$i]['final_weight']  is quantity * products_weight including attributes_weight
+    'PRODUCTS_SINGLE_WEIGHT' => $products[$i]['weight'], //$products[$i]['final_weight']  single products_weight including attributes_weight
+    'PRODUCTS_SHORT_DESCRIPTION' => xtc_get_short_description($products[$i]['id']), 
+    'BUTTON_WISHLIST' => $product->getCartToWishlistLink($products[$i]['id'], $products[$i]['name']), 
+    'ATTRIBUTES' => '',
+  );
 
   //products attributes
   if (isset ($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
@@ -119,12 +121,14 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
         }
       }
 
-      $module_content[$i]['ATTRIBUTES'][$subindex] = array ( 'ID' => $attributes['products_attributes_id'],
-                                                             'MODEL' => $attributes['attributes_model'],
-                                                             'EAN' => $attributes['attributes_ean'],
-                                                             'NAME' => $attributes['products_options_name'],
-                                                             'VALUE_NAME' => $attributes['products_options_values_name'].$attribute_stock_check
-                                                           );
+      $module_content[$i]['ATTRIBUTES'][$subindex] = array(
+        'ID' => $attributes['products_attributes_id'],
+        'MODEL' => $attributes['attributes_model'],
+        'EAN' => $attributes['attributes_ean'],
+        'NAME' => $attributes['products_options_name'],
+        'VALUE_NAME' => $attributes['products_options_values_name'].$attribute_stock_check
+      );
+      
       $subindex++;
     }
   }
