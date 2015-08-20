@@ -416,9 +416,13 @@ class product {
 
     //create buy now button
     $buy_now = '';
+    $wishlist_now = '';
+    $wishlist_now_link = '';
     if ($_SESSION['customers_status']['customers_status_show_price'] != '0' && defined('SHOW_BUTTON_BUY_NOW') && SHOW_BUTTON_BUY_NOW != 'false'
         && ($_SESSION['customers_status']['customers_fsk18'] != '1' || (isset($array['products_fsk18']) && $array['products_fsk18'] == '0')) ) {
       $buy_now = $this->getBuyNowButton($array['products_id'], $array['products_name']);
+      $wishlist_now = $this->getWishlistNowButton($array['products_id'], $array['products_name']);
+      $wishlist_now_link = $this->getWishlistNowButton($array['products_id'], $array['products_name'], true);
     }
     
     // check for gift
@@ -461,26 +465,28 @@ class product {
     }
     
     $productDataAdds = array (
-        'PRODUCTS_PRICE' => $products_price['formated'],
-        'PRICE_ALLOWED' => (($_SESSION['customers_status']['customers_status_show_price'] != '0') ? 'true' : 'false'),
-        'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
-        'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
-        'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
-        'PRODUCTS_VPE_NAME' => $main->vpe_name,
-        'PRODUCTS_IMAGE' => $products_image,
-        'PRODUCTS_IMAGE_SIZE' => $img_attr,
-        'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']),
-        'PRODUCTS_LINK' => $products_link,
-        'PRODUCTS_TAX_INFO' => $main->getTaxInfo($tax_rate),
-        'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
-        'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
-        'PRODUCTS_SHIPPING_NAME' => $shipping_status_name,
-        'PRODUCTS_SHIPPING_IMAGE' => $shipping_status_image,
-        'PRODUCTS_SHIPPING_NAME_LINK' => $shipping_status_link,
-        'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0,
-        'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '',
-        'PRODUCTS_BUTTON_DETAILS' => '<a href="'.$products_link.'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>'
-      );
+      'PRODUCTS_PRICE' => $products_price['formated'],
+      'PRICE_ALLOWED' => (($_SESSION['customers_status']['customers_status_show_price'] != '0') ? 'true' : 'false'),
+      'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
+      'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
+      'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
+      'PRODUCTS_VPE_NAME' => $main->vpe_name,
+      'PRODUCTS_IMAGE' => $products_image,
+      'PRODUCTS_IMAGE_SIZE' => $img_attr,
+      'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']),
+      'PRODUCTS_LINK' => $products_link,
+      'PRODUCTS_TAX_INFO' => $main->getTaxInfo($tax_rate),
+      'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
+      'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
+      'PRODUCTS_SHIPPING_NAME' => $shipping_status_name,
+      'PRODUCTS_SHIPPING_IMAGE' => $shipping_status_image,
+      'PRODUCTS_SHIPPING_NAME_LINK' => $shipping_status_link,
+      'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0,
+      'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '',
+      'PRODUCTS_BUTTON_DETAILS' => '<a href="'.$products_link.'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>',
+      'PRODUCTS_BUTTON_WHISHLIST_NOW' => $wishlist_now,
+      'PRODUCTS_LINK_WHISHLIST_NOW' => $wishlist_now_link,
+    );
 
     $productData = array_merge($productData,$productDataAdds);                     
 
@@ -522,6 +528,25 @@ class product {
     }
     
     return (($name != '') ? DIR_WS_BASE.$path.$name : '');
+  }
+
+  /**
+   * getWishlistNowButton
+   *
+   * @param integer $id
+   * @param string $name
+   * @param boolean $plain
+   * @return string
+   */
+  function getWishlistNowButton($id, $name, $plain = false) {
+    global $PHP_SELF;
+    
+    $link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=buy_now&wishlist=true&BUYproducts_id='.$id, 'NONSSL');
+    if ($plain === false) {
+      $link = '<a href="'.$link.'">'.xtc_image_submit('button_in_wishlist.gif', $name.' '.TEXT_TO_WISHLIST).'</a>';
+    }
+    
+    return $link;
   }
 
   /**
