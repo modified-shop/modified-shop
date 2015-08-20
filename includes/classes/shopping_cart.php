@@ -130,8 +130,8 @@ class shoppingCart {
             while ($attributes = xtc_db_fetch_array($attributes_query)) {
               $this->contents[$products['products_id']]['attributes'][$attributes['products_options_id']] = $attributes['products_options_value_id'];
             }
-            if (ATTRIBUTES_VALID_CHECK == 'true' && $this->attributes_count($products['products_id']) != count($this->contents[$products['products_id']]['attributes'])) {
-              $this->remove($products['products_id']);
+            if (ATTRIBUTES_VALID_CHECK == 'true' && !$this->validate_attributes($products['products_id'],$this->contents[$products['products_id']]['attributes'], 'restore_contents')) {
+              $this->remove($products['products_id']); //TODO info message
             }
           }
           if ($this->get_quantity($products['products_id']) > 0) {
@@ -184,12 +184,8 @@ class shoppingCart {
 
     $products_id = xtc_get_uprid($products_id, $attributes);
 
-    if (ATTRIBUTES_VALID_CHECK == 'true' 
-        && is_array($attributes) 
-        && $this->attributes_count($products_id) != count($attributes)
-        ) 
-    {
-      return false;
+    if (ATTRIBUTES_VALID_CHECK == 'true' && !$this->validate_attributes($products_id,$attributes,'add_cart')) {
+      return false; //TODO info message
     }
     
     if ($notify == true) {
@@ -581,12 +577,8 @@ class shoppingCart {
                  
           if ($this->check_products_status_permission($products_id) === false) {
             $this->remove($products_id);
-          } elseif (ATTRIBUTES_VALID_CHECK == 'true' 
-                    && isset($this->contents[$products_id]['attributes']) 
-                    && $this->attributes_count($products_id) != count($this->contents[$products_id]['attributes'])
-                    ) 
-          {
-            $this->remove($products_id);
+          } elseif (ATTRIBUTES_VALID_CHECK == 'true' && !$this->validate_attributes($products_id,$this->contents[$products_id]['attributes'],'get_products')) {
+            $this->remove($products_id); //TODO info message
           } else {
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
                 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
@@ -857,20 +849,45 @@ class shoppingCart {
   }
 
   /**
-   * Query for attributes count
+   * create_products_attributes_array
    *
    * @param integer $products_id
-   * @return integer
+   * @return array
    */
-  function attributes_count($products_id) {
-    $products_attributes_query = xtDBquery("SELECT options_id
-                                              FROM ".TABLE_PRODUCTS_OPTIONS." popt
-                                              JOIN ".TABLE_PRODUCTS_ATTRIBUTES." patrib
-                                                   ON patrib.options_id = popt.products_options_id
-                                                      AND popt.language_id = '".(int) $_SESSION['languages_id']."'
-                                             WHERE patrib.products_id = '".(int)$products_id."'
-                                          GROUP BY patrib.options_id");
-    return xtc_db_num_rows($products_attributes_query, true);
+  function create_products_attributes_array($products_id) {
+    $dataArray = array();
+    $db_query = xtDBquery(
+      "SELECT options_id,
+              options_values_id
+        FROM ".TABLE_PRODUCTS_ATTRIBUTES." patrib
+       WHERE patrib.products_id = '".(int)$products_id."'
+    ");
+    while($data = xtc_db_fetch_array($db_query, true)) {
+    $dataArray[$data['options_id']][] = $data['options_values_id'];
+    }
+    return $dataArray;
+  }
+
+  /**
+   * Query for validate_attributes
+   *
+   * @param integer $products_id
+   * @return boolean
+   */
+  function validate_attributes($products_id, $attributes, $flag = '') {
+    static $products_attributes_array;
+    if (is_array($attributes) && count($attributes)) {
+      $pID = (int)$products_id;
+      if (!isset($products_attributes_array[$pID])) {
+        $products_attributes_array[$pID] = $this->create_products_attributes_array($pID);
+      }
+      foreach($attributes as $option => $value) {
+        if (!in_array($value,$products_attributes_array[$pID][$option])) {
+           return false;
+        }
+      }
+    }
+    return true;
   }
 }
 ?>
