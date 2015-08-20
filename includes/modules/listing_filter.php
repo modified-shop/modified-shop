@@ -160,8 +160,11 @@ if (PRODUCT_LIST_FILTER == 'true') {
   $join = '';  
   $where = '';
   $filterlist_sql = '';
-  if (isset($_GET['filter_id']) && $_GET['filter_id'] > 0) {
-    $where .= " AND p.manufacturers_id = '".(int)$_GET['filter_id']."' ";
+  if ((isset($_GET['filter_id']) && $_GET['filter_id'] > 0)
+      || (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0)
+      )
+  {
+    $where .= " AND p.manufacturers_id = '".(int)((isset($_GET['filter_id'])) ? $_GET['filter_id'] : $_GET['manufacturers_id'])."' ";
   }
   if (isset($current_category_id) && $current_category_id > 0) {
     $join .= " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
