@@ -484,8 +484,8 @@ class product {
       'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0,
       'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '',
       'PRODUCTS_BUTTON_DETAILS' => '<a href="'.$products_link.'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>',
-      'PRODUCTS_BUTTON_WHISHLIST_NOW' => $wishlist_now,
-      'PRODUCTS_LINK_WHISHLIST_NOW' => $wishlist_now_link,
+      'PRODUCTS_BUTTON_WISHLIST_NOW' => $wishlist_now,
+      'PRODUCTS_LINK_WISHLIST_NOW' => $wishlist_now_link,
     );
 
     $productData = array_merge($productData,$productDataAdds);                     
