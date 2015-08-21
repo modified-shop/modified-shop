@@ -284,6 +284,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'templates/xtc5/module/account_newsletter.html', // neu
                      'templates/xtc5/module/google_sitemap.html', // neu
                      'templates/xtc5/module/sofort_vorkasse.html', // neu
+                     'templates/xtc5/module/wpcallback.html', // neu
                      'templates/xtc5/smarty/function.facebook_badge.php',
                      'templates/xtc5/smarty/function.googleanalytics.php',
                      'templates/xtc5/smarty/function.piwik.php',
@@ -292,6 +293,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/account_newsletter.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/google_sitemap.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/sofort_vorkasse.html', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/module/wpcallback.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/smarty/function.facebook_badge.php',
                      'templates/'.CURRENT_TEMPLATE.'/smarty/function.googleanalytics.php',
                      'templates/'.CURRENT_TEMPLATE.'/smarty/function.piwik.php',
