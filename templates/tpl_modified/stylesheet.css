@@ -3726,6 +3726,29 @@ ul.resp-tabs-list{
 .tags_values_icon a:hover {
   text-decoration:none;
 }
+.tags_icons_tooltip {
+  position:relative;
+  display:block;
+}
+.tags_icons_tooltip img {
+  vertical-align:-3px;
+}
+.tags_icons_tooltip .tags_icons_tooltip_hover {
+  position:absolute;
+  bottom:24px;
+  left:-95px;
+  width:200px;
+  background:#eee;
+  border: 1px solid #ddd;
+  display:none;
+  font-size:12px;
+  line-height:16px;
+  font-weight:normal;
+  padding:10px;
+}
+.tags_icons_tooltip:hover .tags_icons_tooltip_hover {
+  display:block;
+}
 .tags_values_text_row {
   font-size:12px;
   line-height:20px;
