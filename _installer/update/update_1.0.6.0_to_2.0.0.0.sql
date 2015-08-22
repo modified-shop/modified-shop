@@ -14,9 +14,9 @@ UPDATE database_version SET version = 'MOD_2.0.0.0';
 UPDATE countries SET address_format_id = 5 WHERE countries_id = 124;
 
 #Tomcraft -2015-03-05 - Drop obsolete tables from old GLS shipping module
-DROP TABLE gls_country_to_postal;
-DROP TABLE gls_postal_to_weight;
-DROP TABLE gls_weight;
+DROP TABLE IF EXISTS gls_country_to_postal;
+DROP TABLE IF EXISTS gls_postal_to_weight;
+DROP TABLE IF EXISTS gls_weight;
 
 ### Subsequent bugfixes for update_xtc3.0.4sp2.1_to_1.0.1.0.sql
 ALTER TABLE campaigns DROP INDEX IDX_CAMPAIGNS_NAME;
