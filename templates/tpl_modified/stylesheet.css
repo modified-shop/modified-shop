@@ -3672,7 +3672,8 @@ ul.resp-tabs-list{
   box-sizing: border-box;
 }
 .tags_row .tags_options img {
-    vertical-align: -3px;
+  vertical-align: -3px;
+  padding-left:4px;
 }
 .tags_options_tooltip {
   position:relative;
