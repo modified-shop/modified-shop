@@ -3671,6 +3671,9 @@ ul.resp-tabs-list{
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+.tags_row .tags_options img {
+    vertical-align: -3px;
+}
 .tags_options_tooltip {
   position:relative;
 }
@@ -3712,7 +3715,6 @@ ul.resp-tabs-list{
   float:left;
   display:inline-block;
   height:20px;
-  overflow:hidden;
   width:auto;
   margin:0 10px 5px 0;
 }
