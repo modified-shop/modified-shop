@@ -21,6 +21,8 @@ $unlink_dir = array('_installer/buttons', // neu
                     'includes/nusoap', // neu
                     'includes/shopgate', // neu
                     'shopstat',
+                    'sseq-filter', // neu
+                    'sseq-lib', // neu
                     'callback/sofort/library', // neu
                     'callback/sofort/ressources', // neu
                     'xtc_installer', // neu

@@ -244,6 +244,11 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'sofortueberweisung_abort.php', // neu
                      'sofortueberweisung_checkout_success.php', // neu
                      'sofortueberweisung_tracking.php', // neu
+                     'sseq-filter/.htaccess', // neu
+                     'sseq-lib/.htaccess', // neu
+                     'sseq-lib/seq_dump/.htaccess', // neu
+                     'sseq-lib/seq_lib/.htaccess', // neu
+                     'sseq-lib/seq_log/.htaccess', // neu
                      'templates/xtc5/buttons/english/button_arrow_left.gif', // neu
                      'templates/xtc5/buttons/english/button_arrow_right.gif', // neu
                      'templates/xtc5/buttons/english/button_ask_a_question.gif', // neu
@@ -269,6 +274,8 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'templates/xtc5/buttons/german/sofortueberweisung_paynow.gif', // neu
                      'templates/xtc5/css/no_javascript.css',
                      'templates/xtc5/javascript/jquery.js', // neu
+                     'templates/xtc5/javascript/macFFBgHack.png', // neu
+                     'templates/xtc5/javascript/thickbox.css', // neu
                      'templates/xtc5/mail/english/change_password_mail.html', // neu
                      'templates/xtc5/mail/english/change_password_mail.txt', // neu
                      'templates/xtc5/mail/english/password_verification_mail.html', // neu
@@ -290,6 +297,20 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'templates/xtc5/smarty/function.piwik.php',
                      'templates/xtc5/smarty/function.onlytext.php',
                      'templates/xtc5/source/inc/gunnart_productRedirect.inc.php', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/javascript/macFFBgHack.png', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/javascript/thickbox.css', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/mail/english/change_password_mail.html', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/mail/english/change_password_mail.txt', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/mail/english/password_verification_mail.html', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/mail/english/password_verification_mail.txt', // neu
+                     //'templates/'.CURRENT_TEMPLATE.'/mail/english/widerruf.txt',
+                     //'templates/'.CURRENT_TEMPLATE.'/mail/english/widerruf.html',
+                     'templates/'.CURRENT_TEMPLATE.'/mail/german/change_password_mail.html', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/mail/german/change_password_mail.txt', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/mail/german/password_verification_mail.html', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/mail/german/password_verification_mail.txt', // neu
+                     //'templates/'.CURRENT_TEMPLATE.'/mail/german/widerruf.txt',
+                     //'templates/'.CURRENT_TEMPLATE.'/mail/german/widerruf.html',
                      'templates/'.CURRENT_TEMPLATE.'/module/account_newsletter.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/google_sitemap.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/sofort_vorkasse.html', // neu
