@@ -203,7 +203,6 @@
           $this->products[$index][str_replace('products_', '', $key)] = $val;
         }
 
-        $subindex = 0;
         $attributes_query = xtc_db_query("SELECT *,
                                                  products_options as `option`,
                                                  products_options_values as value,
@@ -214,6 +213,7 @@
                                              AND orders_products_id = '" . $orders_products['orders_products_id'] . "'
                                         ORDER BY orders_products_attributes_id"); //ADD - web28 - 2010-06-11 - order by orders_products_attributes_id
         if (xtc_db_num_rows($attributes_query)) {
+          $subindex = 0;
           while ($attributes = xtc_db_fetch_array($attributes_query)) {
             // build attributes array dynamically
             $this->products[$index]['attributes'][$subindex] = $attributes;
@@ -258,9 +258,10 @@
         $attributes_model = '';
         $attributes_array = array();
         $attributes_query = xtc_db_query($attributes_query);
+        $subindex = 0;
         while ($attributes_data_values = xtc_db_fetch_array($attributes_query)) {
           $attrib_model = xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id);
-          $attributes_array[] = array('option' => $attributes_data_values['products_options'],
+          $attributes_array[$subindex] = array('option' => $attributes_data_values['products_options'],
                                       'value' => $attributes_data_values['products_options_values'],
                                       'option_id' => $attributes_data_values['orders_products_options_id'],
                                       'value_id' => $attributes_data_values['orders_products_options_values_id'],
@@ -268,6 +269,7 @@
                                       );
           $attributes_data .= '<br />'.$attributes_data_values['products_options'].':'.$attributes_data_values['products_options_values'];
           $attributes_model .= '<br />'.$attrib_model;
+          $subindex++;
         }
 
         $short_description = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? xtc_get_short_description($order_data_values['products_id'],$order_lang_id) : '';
