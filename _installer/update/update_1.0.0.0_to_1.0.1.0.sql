@@ -12,7 +12,7 @@
 
 CREATE TABLE IF NOT EXISTS database_version (
   version VARCHAR(32) NOT NULL
-) ENGINE=myisam DEFAULT CHARSET=latin1 COLLATE latin1_german1_ci;
+) ENGINE=MyISAM;
 
 # Set database Version to minimum Version 1.0.1.0 (1.0.0.0 not allowed)
 DELETE FROM database_version;
