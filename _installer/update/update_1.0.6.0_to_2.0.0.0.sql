@@ -667,8 +667,8 @@ CREATE TABLE products_tags (
 DROP TABLE IF EXISTS products_tags_options;
 CREATE TABLE products_tags_options (
   options_id int(11) NOT NULL,
-  options_name varchar(128) COLLATE latin1_german1_ci NOT NULL,
-  options_description text COLLATE latin1_german1_ci NOT NULL,
+  options_name varchar(128) NOT NULL,
+  options_description text NOT NULL,
   options_content_group int(11) DEFAULT NULL,
   sort_order int(11) NOT NULL DEFAULT '0',
   languages_id int(11) NOT NULL,
@@ -685,9 +685,9 @@ DROP TABLE IF EXISTS products_tags_values;
 CREATE TABLE products_tags_values (
   values_id int(11) NOT NULL,
   options_id int(11) NOT NULL,
-  values_name varchar(128) COLLATE latin1_german1_ci NOT NULL,
-  values_description text COLLATE latin1_german1_ci NOT NULL,
-  values_image varchar(128) COLLATE latin1_german1_ci NOT NULL,
+  values_name varchar(128) NOT NULL,
+  values_description text NOT NULL,
+  values_image varchar(128) NOT NULL,
   values_content_group int(11) DEFAULT NULL,
   sort_order int(11) NOT NULL DEFAULT '0',
   languages_id int(11) NOT NULL,
