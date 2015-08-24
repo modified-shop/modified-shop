@@ -97,6 +97,7 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
     'ATTRIBUTES' => '',
   );
 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/order_details_cart_content/','php') as $file) require ($file);
   //products attributes
   if (isset ($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
     $subindex = 0;
@@ -122,6 +123,8 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
         'VALUE_NAME' => $attributes['products_options_values_name'].$attribute_stock_check
       );
       
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/order_details_cart_attributes/','php') as $file) require ($file);
+    
       $subindex++;
     }
   }
@@ -150,6 +153,7 @@ if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
   $total_content .= NOT_ALLOWED_TO_SEE_PRICES.'<br />';
 }
 
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/order_details_cart_total/','php') as $file) require ($file);
 if (SHOW_SHIPPING == 'true') {
   $module_smarty->assign('SHIPPING_INFO', $main->getShippingLink()); //web28 -2012-09-29 - use main function
 }
