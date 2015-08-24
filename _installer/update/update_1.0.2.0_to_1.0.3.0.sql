@@ -20,7 +20,7 @@ UPDATE zones SET zone_code = 'SH' WHERE zone_id = 93;
 UPDATE zones SET zone_code = 'TH' WHERE zone_id = 94;
 
 #Tomcraft - 2009-10-01 - changed configuration_group_id
-UPDATE configuration SET configuration_group_id = 1 WHERE configuration_id = 17;
+UPDATE configuration SET configuration_group_id = 1 WHERE configuration_key = 'DEFAULT_CUSTOMERS_STATUS_ID';
 
 #Dokuman - 2009-10-02 - added entries for new moneybookers payment module version 2.4
 INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('_PAYMENT_MONEYBOOKERS_EMAILID', '',  31, 1, NULL, '', NULL, NULL);
