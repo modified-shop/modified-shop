@@ -288,6 +288,7 @@ if (!is_object($product) || !$product->isProduct() || $language_not_found === tr
 
   $info_smarty->assign('language', $_SESSION['language']);
 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_info_end/','php') as $file) require ($file);
   // set cache ID
   if (!CacheCheck()) {
     $info_smarty->caching = 0;
