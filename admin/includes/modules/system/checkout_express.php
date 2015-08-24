@@ -52,9 +52,9 @@ class checkout_express
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_CHECKOUT_EXPRESS_CONTENT', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
         xtc_db_query("CREATE TABLE ".TABLE_CUSTOMERS_CHECKOUT." (
                                      customers_id int(11) NOT NULL,
-                                     checkout_shipping VARCHAR(128) COLLATE latin1_german1_ci NOT NULL,
+                                     checkout_shipping VARCHAR(128) NOT NULL,
                                      checkout_shipping_address INT(11) NOT NULL,
-                                     checkout_payment VARCHAR(128) COLLATE latin1_german1_ci NOT NULL,
+                                     checkout_payment VARCHAR(128)NOT NULL,
                                      checkout_payment_address INT(11) NOT NULL,
                                      PRIMARY KEY (customers_id)
                                    ) ENGINE=MYISAM");
