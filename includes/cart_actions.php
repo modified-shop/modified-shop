@@ -96,6 +96,7 @@ if (xtc_not_null($action)) {
 
     // customer wants to update the product quantity in their shopping cart
     case 'update_product':
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/update_product_prepare_post/','php') as $file) require ($file);
       // VERSANDKOSTEN IM WARENKORB
       if (isset($_POST['country'])) {
         $_SESSION['country'] = xtc_remove_non_numeric($_POST['country']);
@@ -128,6 +129,7 @@ if (xtc_not_null($action)) {
 
     // customer adds a product from the products page
     case 'add_product':
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/add_product_prepare_post/','php') as $file) require ($file);
       if (isset ($_POST['products_id']) && is_numeric($_POST['products_id'])) {
         $cart_quantity = (xtc_remove_non_numeric($_POST['products_qty']) + $cart_object->get_quantity(xtc_get_uprid($_POST['products_id'], isset($_POST['id'])?$_POST['id']:'')));
         if ($cart_quantity > MAX_PRODUCTS_QTY) {            
