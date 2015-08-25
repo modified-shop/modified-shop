@@ -58,7 +58,7 @@
     $(document).ready(function () {
       $('.SlectBox').not('.noStyling').SumoSelect({ autoWidth: true, placeholder: '-'});
     });
-    //hellwanger & web28: try Autocomplete
+    //hellwanger & web28: try SumoSelect Autocomplete
     $(function(){
     	  var sumoTimeoutID = window.setTimeout(function(){}, 500);
         $('.SumoSelect').attr('tabindex', -1); //Important for keyup event, in HTML5, the tabindex attribute can be used on any HTML element
