@@ -13,7 +13,7 @@ input[type=radio   ].ChkBox:not(old):not([disabled]) + em{
   padding-left : 28px;
   background   : url('images/checks.png') no-repeat 0 0;
   line-height  : 24px;
-  margin-right : -14px;
+  margin-right : -12px;
 }
 
 
