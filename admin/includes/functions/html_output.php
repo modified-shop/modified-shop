@@ -173,10 +173,15 @@
     if ( ($checked == true) || (isset($GLOBALS[$name]) && ($GLOBALS[$name] == 'on')) || ($value && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $value)) || ($value && ($value == $compare)) ) {
       $selection .= ' checked="checked"';
     }
-    $parameters = (strpos($parameters,'class="') !== false ? str_replace('class="', 'class="fmChkBox ',$parameters) : $parameters . ' class="fmChkBox"');
+    $addtag = '';
+    if (strpos($parameters,'noStyling') === false) {
+      $addtag = '<em>&nbsp;</em>';
+      $parameters  = preg_replace("'\s+=\s+'",'=',$parameters);
+      $parameters = (strpos($parameters,'class="') !== false ? str_replace('class="', 'class="ChkBox ',$parameters) : $parameters . ' class="ChkBox"');
+    }
     if (xtc_not_null($parameters)) $selection .= ' ' . $parameters;
     
-    $selection .= '>';
+    $selection .= '>'.$addtag;
     return $selection;
   }
 
@@ -225,8 +230,10 @@
           array('id'=> 1,'text'=> CFG_TXT_YES)
       );
     }
-    $params  = preg_replace("'\s+=\s+'",'=',$params);
-    $params = (strpos($params,'class="') !== false ? str_replace('class="', 'class="SlectBox ',$params) : $params . ' class="SlectBox"');
+    if (strpos($params,'noStyling') === false) {
+      $params  = preg_replace("'\s+=\s+'",'=',$params);
+      $params = (strpos($params,'class="') !== false ? str_replace('class="', 'class="SlectBox ',$params) : $params . ' class="SlectBox"');
+    }
     if ($params) $field .= ' ' . $params;
     $field .= '>';
     if (is_array($values)) {
@@ -242,7 +249,7 @@
     if ($required) {
       $field .= TEXT_FIELD_REQUIRED;
     }
-    if ($addwrap && NEW_SELECT_CHECKBOX == 'true') {
+    if ($addwrap && NEW_SELECT_CHECKBOX == 'true' && strpos($params,'noStyling') === false) {
       $name = str_replace(array('[',']'),array('_',''),$name); //fix for name is array:  example[...]
       $field = '<div class="SumoSelect '. strtolower($name) .'">' . $field . '</div>';
     }

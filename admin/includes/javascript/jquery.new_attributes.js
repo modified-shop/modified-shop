@@ -1,7 +1,7 @@
 /*-----------------------
-  jquery.attribute.js Vers. 1.20
+  jquery.attribute.js Vers. 1.30
   (c) 2013 by noRiddle - www.revilonetz.de
-  (c) 2013-14 by web28 - www.rpa-com.de
+  (c) 2013-15 by web28 - www.rpa-com.de
 -------------------------*/
 
 var debug = false;
@@ -9,10 +9,9 @@ var debug = false;
 var flag  = true;
 
 $(document).ready(function($) {
-    var table = $("#attributes");
-    //find all inputs/selects and set it to disabled
-    table.find('input[type=text],input[type="checkbox"], select').attr("disabled", true);
-    //table.find('input[type=text], select').attr("disabled", true);
+    $(".attributes").each(function() {
+       $(this).find('input[type=text],input[type="checkbox"], select').attr("disabled", true);
+    });
     
     $('.cbx_optval').click(function(){
         en_disabled($(this));
@@ -20,9 +19,10 @@ $(document).ready(function($) {
     
     $('.select_all').click(function()
     {
-        if (debug) console.log("select_all: ", $(this).attr('name') + ' ' + $(this).is(':checked'));
+        if (debug) console.log("select_all: "+ $(this).attr('name') +  ' ' + $(this).val() + ' ' + $(this).is(':checked'));
         flag  = false;
-        var checkboxes = $(this).closest('tr').nextUntil('.dataTableHeadingRow').find('.cbx_optval');
+        var tableBody = $('#attrtable-'+ $(this).val()).find("tbody");
+        var checkboxes = tableBody.find('.cbx_optval');
         var check = $(this).is(':checked');
         checkboxes.each(function() {
             $(this).attr("checked", check);
@@ -44,10 +44,10 @@ $(document).ready(function($) {
     
     var get_options_id = $('input[type="hidden"][name="get_options_id"]').attr('value');
     if (get_options_id != null) {
-         if (debug) console.log('options_ids: ',get_options_id);
+         if (debug) console.log('options_ids: '+ get_options_id);
          var optionsArray = get_options_id.split(',');
          $.each(optionsArray, function(index, value) {
-              if (debug) console.log('',index + ': ' + value);
+              if (debug) console.log(index + ': ' + value);
               unfold(value);
          });
     }
@@ -62,7 +62,7 @@ $(document).ready(function($) {
 function unfold(oid)
 {
     var elemID = '#'+oid;
-    if (debug) console.log('oid: ',oid);
+    if (debug) console.log('oid: '+ oid);
     var rows_oid = $('.'+oid);
     var input_types = $('input[type=text],select');
     var input_fields = rows_oid.find(input_types);
@@ -74,7 +74,7 @@ function unfold(oid)
         rows_oid.toggle();
         if ($(elemID).hasClass("att-red")) {
             $(elemID).removeClass('att-red').addClass('att-green');
-            if (debug) console.log('className close: ',$(elemID).attr('class'));
+            if (debug) console.log('className close: '+ $(elemID).attr('class'));
             cbx_selall.attr('disabled',true);
             cbx_selall.hide();
             $('input[type="hidden"][value="' + oid + '"]').remove();
@@ -83,7 +83,7 @@ function unfold(oid)
             //rows_oid.show();
         } else {
             $(elemID).removeClass('att-green').addClass('att-red');
-            if (debug) console.log('className open: ',$(elemID).attr('class'));
+            if (debug) console.log('className open: '+ $(elemID).attr('class'));
             cbx_selall.attr('disabled',false);
             cbx_selall.show();
             $('form[name="SUBMIT_ATTRIBUTES"]').append('<input type="hidden" name="options_id[]" value="' + oid + '" />');

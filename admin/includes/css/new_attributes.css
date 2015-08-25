@@ -28,7 +28,7 @@ height: 20px;
   bottom: 1px;
 }
 
-#attributes .attributes-odd, #attributes .attributes-even, #attributes .downloads{
+.attributes .attributes-odd, .attributes .attributes-even, .attributes .downloads{
 display:none;
 }
 

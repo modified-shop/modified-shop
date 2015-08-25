@@ -35,7 +35,7 @@
   <link rel="stylesheet" type="text/css" href="includes/css/jquery.alerts.css" />
   <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
   <link rel="stylesheet" type="text/css" href="includes/css/sumoselect.css" />
-  <link rel="stylesheet" type="text/css" href="includes/css/fm.checkator.jquery.css" />
+  <link rel="stylesheet" type="text/css" href="includes/css/checks.css" />
   <?php } ?>
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
@@ -54,11 +54,9 @@
   <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>  
   <script type="text/javascript" src="includes/javascript/jquery.sumoselect.min.js"></script>
   <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
-  <script type="text/javascript" src="includes/javascript/fm.checkator.jquery.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
       $('.SlectBox').not('.noStyling').SumoSelect({ autoWidth: true, placeholder: '-'});
-      $('.fmChkBox').not('.noStyling').checkator();
     });
     //hellwanger: try Autocomplete
     $(function(){
