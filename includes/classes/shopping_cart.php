@@ -878,6 +878,8 @@ class shoppingCart {
     if (!is_array($products_attributes_array)) {
       $products_attributes_array = array();
     }
+
+    $check = true;
     if (is_array($attributes) && count($attributes)) {
       $pID = (int)$products_id;
       if (!isset($products_attributes_array[$pID])) {
@@ -885,11 +887,12 @@ class shoppingCart {
       }
       foreach($attributes as $option => $value) {
         if (!in_array($value,$products_attributes_array[$pID][$option])) {
-           return false;
+          $check = false;
+          break;
         }
       }
     }
-    return true;
+    return $check;
   }
 }
 ?>
