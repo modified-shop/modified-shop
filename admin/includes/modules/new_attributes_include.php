@@ -47,7 +47,7 @@
   );
 
   //Anzahl Spalten
-  $colspan = 9;
+  $colspan = 8;
 
   $noStylingClass = '';
   $noStyling = '';
@@ -108,7 +108,7 @@ if ($_POST['cpath'] != '') {
    ?>
 </div>
 
-<table id="attributes" class="collapse">
+<div id="attributes">
 <?php
 
   require(DIR_WS_MODULES . 'new_attributes_functions.php');
@@ -143,17 +143,22 @@ if ($_POST['cpath'] != '') {
       $current_product_option_name = $line['products_options_name'];
       $current_product_option_id = $line['products_options_id'];
       // Print the Option Name
-      $output = '';
+      $output = '<div style="margin-bottom:20px;clear:both;">';
+      $output .= '<table id="attrtable-'.$current_product_option_id.'" class="attributes collapse">'. PHP_EOL;
+      $output .= '<thead>'. PHP_EOL;
       $output .= '<tr id="oid-' . $current_product_option_id . '" class="dataTableHeadingRow">'. PHP_EOL;
-      $output .= '<td class="dataTableHeadingContent" style="width:150px">'.xtc_draw_checkbox_field('set_'.$current_product_option_id, $current_product_option_id, false, '', 'class="select_all'.$noStyling.'"').'&nbsp;&nbsp;<strong>' . $current_product_option_name . '</strong></td>'. PHP_EOL;
-      $output .= '<td class="dataTableHeadingContent" style="width:95px"><strong>'.SORT_ORDER.'</strong></td>'. PHP_EOL;
-      $output .= '<td class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_MODEL.'</strong></td>'. PHP_EOL;
-      $output .= '<td class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_EAN.'</strong></td>'. PHP_EOL;
-      $output .= '<td class="dataTableHeadingContent" style="width:100px"><strong>'.ATTR_STOCK.'</strong></td>'. PHP_EOL;
-      $output .= '<td class="dataTableHeadingContent" style="width:180px"><strong>'.ATTR_VPE.'</strong></td>'. PHP_EOL;
-      $output .= '<td class="dataTableHeadingContent" style="min-width:135px;"><strong>'.ATTR_WEIGHT.'&nbsp;&nbsp;&nbsp;</strong></td>'. PHP_EOL;
-      $output .= '<td class="dataTableHeadingContent" style="min-width:135px;"><strong>'.ATTR_PRICE.'&nbsp;&nbsp;&nbsp;</strong></td>'. PHP_EOL;
+      $output .= '<th class="dataTableHeadingContent txta-l nobr" style="width:150px;">'.xtc_draw_checkbox_field('set_'.$current_product_option_id, $current_product_option_id, false, '', 'class="select_all'.$noStyling.'"').'&nbsp;&nbsp;<strong style="padding-right:10px;">' . $current_product_option_name . '</strong></th>'. PHP_EOL;
+      $output .= '<th class="dataTableHeadingContent" style="width:95px"><strong>'.SORT_ORDER.'</strong></th>'. PHP_EOL;
+      $output .= '<th class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_MODEL.'</strong></th>'. PHP_EOL;
+      $output .= '<th class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_EAN.'</strong></th>'. PHP_EOL;
+      $output .= '<th class="dataTableHeadingContent" style="width:100px"><strong>'.ATTR_STOCK.'</strong></th>'. PHP_EOL;
+      $output .= '<th class="dataTableHeadingContent" style="width:180px"><strong>'.ATTR_VPE.'</strong></th>'. PHP_EOL;
+      $output .= '<th class="dataTableHeadingContent" style="min-width:135px;"><strong>'.ATTR_WEIGHT.'&nbsp;&nbsp;&nbsp;</strong></th>'. PHP_EOL;
+      $output .= '<th class="dataTableHeadingContent" style="min-width:135px;"><strong>'.ATTR_PRICE.'&nbsp;&nbsp;&nbsp;</strong></th>'. PHP_EOL;
       $output .= '</tr>'. PHP_EOL;
+      $output .= '</thead>'. PHP_EOL;
+      
+      $output .= '<tbody>'. PHP_EOL;
 
       // Find all of the Current Option's Available Values
       //$values_order_by = 'products_options_values_id';
@@ -217,7 +222,7 @@ if ($_POST['cpath'] != '') {
                     
           //VPE
           $output .= '<td class="main nobr" align="left"><input'.$disable.'type="text" name="' . $current_value_id . '_vpe_value" value="' . (isset($attr_array['attributes_vpe_value'])? (double)$attr_array['attributes_vpe_value']:'') . '" size="10"> '. PHP_EOL;
-          $output .=  xtc_draw_pull_down_menu($current_value_id . '_vpe_id',$attr_vpe_data,(isset($attr_array['attributes_vpe_id'])?$attr_array['attributes_vpe_id']:''), $disable). PHP_EOL;
+          $output .=  xtc_draw_pull_down_menu($current_value_id . '_vpe_id',$attr_vpe_data,(isset($attr_array['attributes_vpe_id'])?$attr_array['attributes_vpe_id']:''), $noStylingClass . $disable). PHP_EOL;
           $output .=  '</td>'. PHP_EOL;
           
           //Weight
@@ -255,12 +260,14 @@ if ($_POST['cpath'] != '') {
       if ($isChecked) {
         $output = str_replace('dataTableHeadingContent','dataTableHeadingContent attr-chk',$output);
       }
+      $output .= '</tbody>'. PHP_EOL;
+      $output .= '</table></div>'. PHP_EOL;
       echo $output;
     }
   }
 ?>
   
-</table>
+</div>
 
 <div class="main" style="margin:10px 0;">
     <a class="button button_save" style="display:none;"><?php echo ATTR_SAVE_ACTIVE;?></a>

@@ -1693,3 +1693,7 @@ display:none!important;
   margin:0;
   padding:0;
 }
+
+table.attributes tbody{
+border: 1px solid #ccc;
+}
