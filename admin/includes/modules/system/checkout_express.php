@@ -54,7 +54,7 @@ class checkout_express
                                      customers_id int(11) NOT NULL,
                                      checkout_shipping VARCHAR(128) NOT NULL,
                                      checkout_shipping_address INT(11) NOT NULL,
-                                     checkout_payment VARCHAR(128)NOT NULL,
+                                     checkout_payment VARCHAR(128) NOT NULL,
                                      checkout_payment_address INT(11) NOT NULL,
                                      PRIMARY KEY (customers_id)
                                    ) ENGINE=MYISAM");
