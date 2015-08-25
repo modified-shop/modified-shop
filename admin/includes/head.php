@@ -58,41 +58,45 @@
     $(document).ready(function () {
       $('.SlectBox').not('.noStyling').SumoSelect({ autoWidth: true, placeholder: '-'});
     });
-    //hellwanger: try Autocomplete
+    //hellwanger & web28: try Autocomplete
     $(function(){
-    	var sumoTimeoutID = window.setTimeout(function(){}, 500);
-        $('.SumoSelect').bind('change.autocompleteChange', function(event, ui){
-      	   $(".SumoSelect").unbind('click.autocompleteClick');
+    	  var sumoTimeoutID = window.setTimeout(function(){}, 500);
+        $('.SumoSelect').attr('tabindex', -1); //Important for keyup event, in HTML5, the tabindex attribute can be used on any HTML element
+        $('.SumoSelect').click(function() {
+            var word = '';
+            var sumoSelect = $(this);
+            sumoSelect.bind('keyup', function(keyEvent){
+                var select = sumoSelect.find('select');
+                var childs = select.children();
+                
+                var key = keyEvent.keyCode;
+                var character = String.fromCharCode(key);
+                //console.log('character:' + character);
+                
+                clearTimeout(sumoTimeoutID);
+                word += character;
+                
+                //console.log('word:' + word);
+                
+                sumoTimeoutID = window.setTimeout(function(){
+                    var foundMatch = false;
+                    childs.each(function(index, value){
+                      var value = $(this).html();
+                      value = value.substring(0,word.length);
+                      var selectedIndex = select.val();
+                      if((!foundMatch) && (value.toLowerCase() == word.toLowerCase())){
+                        select.SumoSelect().sumo.selectItem(index);
+                        foundMatch = true;
+                        }else{
+                        select.SumoSelect().sumo.unSelectItem(index);
+                      }
+                    });
+                    word = '';
+                 },500);
+                 var tmpString = '';
+            });
         });
-        $('.SumoSelect').bind('click.autocompleteClick', function(event, ui){
-           var sumoSelect = $(this);
-           var word = '';
-           $("body").keyup('autoCompleteKey', function(keyEvent){
-           		var select = sumoSelect.find('select');
-				var childs = select.children();
-				var key = keyEvent.keyCode;
-				var character = String.fromCharCode(key);
-				clearTimeout(sumoTimeoutID);
-				word += character;
-				sumoTimeoutID = window.setTimeout(function(){
-					var foundMatch = false;
-					childs.each(function(index, value){
-						var value = $(this).html();
-						value = value.substring(0,word.length);
-						var selectedIndex = select.val();
-						if((!foundMatch) && (value.toLowerCase() == word.toLowerCase())){
-							select.SumoSelect().sumo.selectItem(index);
-							foundMatch = true;
-  						}else{
-							select.SumoSelect().sumo.unSelectItem(index);
-						}
-					});
-					word = '';
-				},500);
-				var tmpString = '';
-  			});
-  		});
-    });    
+    }); 
    </script>
   <?php } ?>
   <script type="text/javascript" src="includes/javascript/jquery.alerts.min.js"></script>
