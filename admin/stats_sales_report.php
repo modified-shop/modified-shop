@@ -219,8 +219,10 @@
     }
   }
 
-  $status_array = array(array('id' => 0, 'text' => REPORT_ALL),
-                        array('id' => ORDER_STATUSES_FOR_SALES_STATISTICS, 'text' => REPORT_SALES_STATISTICS));
+  $status_array = array(array('id' => 0, 'text' => REPORT_ALL));
+  if (strpos(ORDER_STATUSES_FOR_SALES_STATISTICS, ',') !== false) {
+    $status_array[] = array('id' => ORDER_STATUSES_FOR_SALES_STATISTICS, 'text' => REPORT_SALES_STATISTICS);
+  }
   foreach ($sr->status as $value) {
     $status_array[] = array('id' => $value["orders_status_id"], 'text' => $value["orders_status_name"]);
   }
