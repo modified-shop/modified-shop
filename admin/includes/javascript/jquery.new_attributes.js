@@ -67,7 +67,7 @@ function unfold(oid)
     var input_types = $('input[type=text],select');
     var input_fields = rows_oid.find(input_types);
     var checkboxes = rows_oid.find('.cbx_optval');
-    var cbx_selall = $(elemID).find('input.select_all,.checkator_holder');
+    var cbx_selall = $(elemID).find('input.select_all');
 
     if (flag) {
         //Ein/Ausklappen
