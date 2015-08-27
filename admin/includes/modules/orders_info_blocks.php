@@ -250,10 +250,11 @@
             echo '            <td class="dataTableContent" valign="top">';
             echo ($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : '<br />';
             // attribute models
+            $attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
             if (isset($order->products[$i]['attributes']) && sizeof($order->products[$i]['attributes']) > 0) {
               for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j ++) {
                 $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'],$lang); //web28 Fix attribute model  language problem
-                echo !empty($model) ? $model.'<br />' : '<br />';
+                echo (!empty($model) ? $attr_model_delimiter . $model : '<br />');
               }
             }
             echo '&nbsp;</td>'.PHP_EOL;

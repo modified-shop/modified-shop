@@ -259,6 +259,7 @@
         $attributes_array = array();
         $attributes_query = xtc_db_query($attributes_query);
         $subindex = 0;
+        $attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
         while ($attributes_data_values = xtc_db_fetch_array($attributes_query)) {
           $attrib_model = xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id);
           $attributes_array[$subindex] = array('option' => $attributes_data_values['products_options'],
@@ -268,7 +269,7 @@
                                       'model' => $attrib_model
                                       );
           $attributes_data .= '<br />'.$attributes_data_values['products_options'].':'.$attributes_data_values['products_options_values'];
-          $attributes_model .= '<br />'.$attrib_model;
+          $attributes_model .= $attr_model_delimiter.$attrib_model;
           $subindex++;
         }
 
