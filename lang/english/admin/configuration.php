@@ -1033,6 +1033,6 @@ define('ATTRIBUTES_VALID_CHECK_DESC', 'Checks products in customers cart for att
 define('ATTRIBUTE_MODEL_DELIMITER_TITLE', 'Product-/Attribute-No. delimiter');
 define('ATTRIBUTE_MODEL_DELIMITER_DESC', 'Delimiter between product number &amp; attribute product number');
 
-define('SHOW_PAYMENT_INFORMATION_TITLE', 'Show payment informations?');
-define('SHOW_PAYMENT_INFORMATION_DESC', 'Shall the payment informations be shown in the last step of the checkout?');
+define('SHOW_PAYMENT_INFO_TITLE', 'Show payment informations?');
+define('SHOW_PAYMENT_INFO_DESC', 'Shall the payment informations be shown in the last step of the checkout?');
 ?>
