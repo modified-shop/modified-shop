@@ -1029,4 +1029,7 @@ define('CHECK_FIRST_PAYMENT_MODUL_DESC', 'Shall the first payment method be pres
 
 define('ATTRIBUTES_VALID_CHECK_TITLE', 'Attribute validation');
 define('ATTRIBUTES_VALID_CHECK_DESC', 'Checks products in customers cart for attributes, that are no longer valid.<br/>(This can occur, if a customer revisits the shop after a long time and purchases a product from a previous visit that remained in the cart.)<br/><b>Note:</b> For extensions that expand the attributes such as text field, this check must be disabled.');
+
+define('ATTRIBUTE_MODEL_DELIMITER_TITLE', 'Product-/Attribute-No. delimiter');
+define('ATTRIBUTE_MODEL_DELIMITER_DESC', 'Delimiter between product number &amp; attribute product number');
 ?>
