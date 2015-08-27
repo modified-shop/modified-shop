@@ -1025,6 +1025,6 @@ define('ATTRIBUTES_VALID_CHECK_DESC', 'Pr&uuml;ft Artikel im Warenkorb des Kunde
 define('ATTRIBUTE_MODEL_DELIMITER_TITLE', 'Artikel-/Attribut-Nr.-Trennzeichen');
 define('ATTRIBUTE_MODEL_DELIMITER_DESC', 'Trennzeichen zwischen Artikelnummer &amp; Attribut-Artikelnummer');
 
-define('SHOW_PAYMENT_INFO_TITLE', 'Zahlungsinformationen anzeigen?');
-define('SHOW_PAYMENT_INFO_DESC', 'Sollen im letzten Schritt der Bestellung bereits die Zahlungsinformationen gezeigt werden?');
+define('SHOW_PAYMENT_INFORMATION_TITLE', 'Zahlungsinformationen anzeigen?');
+define('SHOW_PAYMENT_INFORMATION_DESC', 'Sollen im letzten Schritt der Bestellung bereits die Zahlungsinformationen gezeigt werden?');
 ?>
