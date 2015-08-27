@@ -174,7 +174,7 @@
       $selection .= ' checked="checked"';
     }
     $addtag = '';
-    if (strpos($parameters,'noStyling') === false) {
+    if (NEW_SELECT_CHECKBOX == 'true' && strpos($parameters,'noStyling') === false) {
       $addtag = '<em>&nbsp;</em>';
       $parameters  = preg_replace("'\s+=\s+'",'=',$parameters);
       $parameters = (strpos($parameters,'class="') !== false ? str_replace('class="', 'class="ChkBox ',$parameters) : $parameters . ' class="ChkBox"');
@@ -230,28 +230,39 @@
           array('id'=> 1,'text'=> CFG_TXT_YES)
       );
     }
-    if (strpos($params,'noStyling') === false) {
+    if ($addwrap && NEW_SELECT_CHECKBOX == 'true' && strpos($params,'noStyling') === false) {
       $params  = preg_replace("'\s+=\s+'",'=',$params);
       $params = (strpos($params,'class="') !== false ? str_replace('class="', 'class="SlectBox ',$params) : $params . ' class="SlectBox"');
+      $params .= ' style="visibility: hidden;"';
     }
     if ($params) $field .= ' ' . $params;
-    $field .= '>';
+    $field .= '>' . PHP_EOL;
+    $li = '';
+    $selText = '';
     if (is_array($values)) {
       foreach ($values as $key=>$val) {
         $field .= '<option value="' .$val['id'] . '"';
+        $li .= '<li data-val="' .$val['id'] . '"';
         if ( ((strlen($val['id']) > 0) && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $val['id'])) || ($default == $val['id']) ) {
           $field .= ' selected="selected"';
+          $li .= ' class="selected"';
+          $selText = $val['text'];
         }
-        $field .= '>' . $val['text'] . '</option>';
+        $field .= '>' . $val['text'] . '</option>' . PHP_EOL;
+        $li .= '>'. PHP_EOL .'<label>' . $val['text'] . '</label>'. PHP_EOL . '</li>' . PHP_EOL;
       }
     }
-    $field .= '</select>';
+    $field .= '</select>'. PHP_EOL;
     if ($required) {
       $field .= TEXT_FIELD_REQUIRED;
     }
     if ($addwrap && NEW_SELECT_CHECKBOX == 'true' && strpos($params,'noStyling') === false) {
       $name = str_replace(array('[',']'),array('_',''),$name); //fix for name is array:  example[...]
-      $field = '<div class="SumoSelect '. strtolower($name) .'">' . $field . '</div>';
+      $add = '<p class="CaptionCont SlectBox">'. PHP_EOL;
+      $add .= '<span>'.$selText.'</span>'. PHP_EOL;
+      $add .= '<label><i></i></label></p>'. PHP_EOL;
+      $add .= '<div class="optWrapper">'. PHP_EOL . '<ul class="options">' . PHP_EOL . $li . PHP_EOL . '</ul>' . PHP_EOL . '</div>'. PHP_EOL;
+      $field = '<div class="SumoSelect '. strtolower($name) .'" tabindex="-1">' . $field . $add . '</div>';
     }
     return $field;
   }

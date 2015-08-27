@@ -34,7 +34,7 @@
   <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css">
   <link rel="stylesheet" type="text/css" href="includes/css/jquery.alerts.css" />
   <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
-  <link rel="stylesheet" type="text/css" href="includes/css/sumoselect.css" />
+  <link rel="stylesheet" type="text/css" href="includes/css/sumoselect_mod.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/checks.css" />
   <?php } ?>
   <?php 
@@ -52,51 +52,12 @@
   <!--[if lt IE 9]><script src="includes/javascript/html5.js"></script><![endif]-->
   
   <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>  
-  <script type="text/javascript" src="includes/javascript/jquery.sumoselect.min.js"></script>
   <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
+  <script type="text/javascript" src="includes/javascript/jquery.sumoselect_mod.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
-      $('.SlectBox').not('.noStyling').SumoSelect({ autoWidth: true, placeholder: '-'});
+      $('.SlectBox').not('.noStyling').SumoSelect({ autocomplete: true, placeholder: '-'});
     });
-    //hellwanger & web28: try SumoSelect Autocomplete
-    $(function(){
-    	  var sumoTimeoutID = window.setTimeout(function(){}, 500);
-        $('.SumoSelect').attr('tabindex', -1); //Important for keyup event, in HTML5, the tabindex attribute can be used on any HTML element
-        $('.SumoSelect').click(function() {
-            var word = '';
-            var sumoSelect = $(this);
-            sumoSelect.bind('keyup', function(keyEvent){
-                var select = sumoSelect.find('select');
-                var childs = select.children();
-                
-                var key = keyEvent.keyCode;
-                var character = String.fromCharCode(key);
-                //console.log('character:' + character);
-                
-                clearTimeout(sumoTimeoutID);
-                word += character;
-                
-                //console.log('word:' + word);
-                
-                sumoTimeoutID = window.setTimeout(function(){
-                    var foundMatch = false;
-                    childs.each(function(index, value){
-                      var value = $(this).html();
-                      value = value.substring(0,word.length);
-                      var selectedIndex = select.val();
-                      if((!foundMatch) && (value.toLowerCase() == word.toLowerCase())){
-                        select.SumoSelect().sumo.selectItem(index);
-                        foundMatch = true;
-                        }else{
-                        select.SumoSelect().sumo.unSelectItem(index);
-                      }
-                    });
-                    word = '';
-                 },500);
-                 var tmpString = '';
-            });
-        });
-    }); 
    </script>
   <?php } ?>
   <script type="text/javascript" src="includes/javascript/jquery.alerts.min.js"></script>
