@@ -23,10 +23,11 @@ td.dataTableConfig.col-middle .SumoSelect {width:100%; }
 .SumoSelect > .optWrapper > .options > li:first-child { border-radius: 3px 3px 0px 0px; }
 .SumoSelect > .optWrapper > .options > li:last-child { border-bottom: none; border-radius: 0px 0px 3px 3px; }
 .SumoSelect > .optWrapper > .options > li:hover { background-color: #e9e9e9;color:#af417e; }
+.SumoSelect > .optWrapper > .options > li.sel{background-color: #a1c0e4;}
 .SumoSelect > .optWrapper > .options > li label { text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: block; }
 .SumoSelect > .optWrapper > .options > li span { display: none; }
-.SumoSelect > .optWrapper > .options > li.selected {background-color: #ddd;color:#6d2551;}
-.SumoSelect > .optWrapper > .options > li.selected:hover { background-color: #e9e9e9;color:#af417e; }
+.SumoSelect# > .optWrapper > .options > li.selected {background-color: #ddd;color:#6d2551;}
+.SumoSelect# > .optWrapper > .options > li.selected:hover { background-color: #e9e9e9;color:#af417e; }
 /*Floating styles*/
 .SumoSelect > .optWrapper.isFloating { position: fixed; top: 0px; left: 0px; right: 0px; width: 90%; bottom: 0px; margin: auto; max-height: 90%; }
 /*Hover*/
