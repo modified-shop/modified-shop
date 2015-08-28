@@ -24,7 +24,11 @@ class moneyorder {
 
 		$this->code = 'moneyorder';
 		$this->title = MODULE_PAYMENT_MONEYORDER_TEXT_TITLE;
-		$this->description = MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION;
+		if (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') {
+		  $this->description = MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION;
+		} else {
+		  $this->description = MODULE_PAYMENT_MONEYORDER_TEXT_INFO;
+		}
 		$this->sort_order = MODULE_PAYMENT_MONEYORDER_SORT_ORDER;
 		$this->enabled = ((MODULE_PAYMENT_MONEYORDER_STATUS == 'True') ? true : false);
 		$this->info = MODULE_PAYMENT_MONEYORDER_TEXT_INFO;
@@ -85,7 +89,7 @@ class moneyorder {
 
   function success() {
     $confirmation = array();
-    if (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') {
+    //if (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') {
       $confirmation = array(
         array ('title' => $this->title.': ', 
                'class' => $this->code,
@@ -95,7 +99,7 @@ class moneyorder {
                                  )
                )
       );
-    }
+    //}
     
     return $confirmation;
   }
