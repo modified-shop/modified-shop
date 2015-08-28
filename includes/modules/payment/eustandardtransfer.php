@@ -22,7 +22,11 @@ class eustandardtransfer {
   function eustandardtransfer() {
     $this->code = 'eustandardtransfer';
     $this->title = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE;
-    $this->description = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION;
+    if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
+      $this->description = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION;
+    } else {
+      $this->description = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO;
+    }
     $this->sort_order = MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER;
     $this->info = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO;
     $this->enabled = ((MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS == 'True') ? true : false);
@@ -99,7 +103,7 @@ class eustandardtransfer {
 
   function success() {
     $confirmation = array();
-    if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
+    //if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
       $confirmation = array(
         array ('title' => $this->title.': ', 
                'class' => $this->code,
@@ -109,7 +113,7 @@ class eustandardtransfer {
                                  )
                )
       );
-    }
+    //}
     
     return $confirmation;
   }

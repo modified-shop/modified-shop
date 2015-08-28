@@ -27,7 +27,11 @@
           '<br />BIC/SWIFT: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC : '') .
           '<br /><br />Die Ware wird erst ausgeliefert, wenn der Betrag auf unserem Konto eingegangen ist.<br />');
 
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO','Bitte &uuml;berweisen Sie den f&auml;lligen Rechnungsbetrag auf unser Konto. Die Kontodaten erhalten Sie nach Bestellannahme per E-Mail');
+  if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
+    define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO','Bitte &uuml;berweisen Sie den f&auml;lligen Rechnungsbetrag auf unser Konto. Die Kontodaten erhalten Sie im letzten Schritt der Bestellung.');
+  } else {
+    define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO','Bitte &uuml;berweisen Sie den f&auml;lligen Rechnungsbetrag auf unser Konto. Die Kontodaten erhalten Sie nach Bestellannahme per E-Mail.');
+  }
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS_TITLE','EU-Standard Bank Transfer Modul aktivieren');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS_DESC','M&ouml;chten Sie &Uuml;berweisungen akzeptieren?');
 
