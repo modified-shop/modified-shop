@@ -1,7 +1,7 @@
 ﻿/*!
  * jquery.sumoselect - v2.1.0
  * http://hemantnegi.github.io/jquery.sumoselect
- * 2015-08-25 //modified createElems, add autocomplete by web28, www.rpa-com.de
+ * 2015-08-28 //modified createElems, add autoSelect by web28, www.rpa-com.de
  *
  * Copyright 2015 Hemant Negi
  * Email : hemant.frnz@gmail.com
@@ -11,7 +11,6 @@
 (function ($) {
   
     'namespace sumo';
-    var sumoTimeoutID = window.setTimeout(function(){}, 500);
     $.fn.SumoSelect = function (options) {
 
         // var is_visible_default = false;
@@ -32,7 +31,9 @@
             selectAll: false,             // to display select all button in multiselect mode.|| also select all will not be available on mobile devices.
             selectAlltext: 'Select All',   // the text to display for select all.
             consoleLog: false,
-            autocomplete: false
+            autoSelect: true,
+            timeout: 500,
+            word: '',
 
         }, options);
 
@@ -61,49 +62,19 @@
                     O.CaptionCont = O.select.children('.CaptionCont');
                     O.caption = O.CaptionCont.children('span');
                     O.optDiv = O.select.children('.optWrapper');
-                    O.onOptClick(O.optDiv.find('li')); //click event for li entrys 
+                   
+                    //branch for floating list in low res devices.
+                    O.floatingList();    
+                    
+                    if (settings.selectAll) O.selAll();
+                    
+                    //click event for li entrys
+                    O.onOptClick(O.optDiv.find('li')); 
+                    
                     if (O.is_multi) O.multiSelelect();
+                    
                     O.basicEvents();
                     O.selAllState();
-                    if (settings.autocomplete) {O.autoComplete(O.select)};
-                },
-                
-                //## autocomplete
-                autoComplete: function (O) {
-                    O.click(function() {
-                      var word = '';
-                      var sumoSelect = $(this);
-                      sumoSelect.bind('keyup', function(keyEvent){
-                          var select = sumoSelect.find('select');
-                          var childs = select.children();
-                          
-                          var key = keyEvent.keyCode;
-                          var character = String.fromCharCode(key);
-                          //console.log('character:' + character);
-                          
-                          clearTimeout(sumoTimeoutID);
-                          word += character;
-                          
-                          //console.log('word:' + word);
-                          
-                          sumoTimeoutID = window.setTimeout(function(){
-                              var foundMatch = false;
-                              childs.each(function(index, value){
-                                var value = $(this).html();
-                                value = value.substring(0,word.length);
-                                var selectedIndex = select.val();
-                                if((!foundMatch) && (value.toLowerCase() == word.toLowerCase())){
-                                  select.SumoSelect().sumo.selectItem(index);
-                                  foundMatch = true;
-                                  }else{
-                                  select.SumoSelect().sumo.unSelectItem(index);
-                                }
-                              });
-                              word = '';
-                           },500);
-                           var tmpString = '';
-                      });
-                  });
                 },
                 
                 createElems_ORG: function () {
@@ -161,7 +132,7 @@
                     O.selAllState();
                 },
 
-                                //## Creates a LI element from a given option and binds events to it
+                //## Creates a LI element from a given option and binds events to it
                 //## Adds it to UL at a given index (Last by default)
                 createLi: function (opt,i) {
                     var O = this;
@@ -352,6 +323,41 @@
                     else
                         O.setOnOpen();
                 },
+                
+                autoSelect: function(e) {
+                    var O = this, c;
+                    var key = e.which;
+                    var character = e.key; //important für # ä ö ü
+                    if (settings.consoleLog) console.log('character:'+ character);
+                    if (!character) return;
+                    var select = O.select.find('select');
+                    var label = O.optDiv.find('ul li label');
+                    settings.word += character;
+                    if (settings.consoleLog) console.log('word:'+ settings.word);
+                    setTimeout(function(){
+                        var foundMatch = false;
+                        label.each(function(index, value){
+                            var value = $(this).html();
+                            value = value.replace(/&nbsp;/g,'');
+                            value = $.trim(value);
+                            if (settings.consoleLog) console.log('value:'+value+'|');
+                            value = value.substring(0,settings.word.length);
+                            if (settings.consoleLog) console.log('value:'+value);
+                            if (value) {
+                                if((!foundMatch) && (value.toLowerCase() == settings.word.toLowerCase())){
+                                    O.selectItem(index);
+                                    $(this).closest('li').addClass('sel');
+                                    foundMatch = true;
+                                }else{
+                                    $(this).closest('li').removeClass('sel');
+                                    O.unSelectItem(index);
+                                }
+                            }  
+                        });
+                        settings.word = '';
+                     },settings.timeout);
+            
+                },
 
                 basicEvents: function () {
                     var O = this;
@@ -369,34 +375,40 @@
                     if (O.is_multi && settings.okCancelInMulti)
                          O._cnbtn();
                     })*/
-                        O.select.on('keydown', function (e) {
-                            switch (e.which) {
-                                case 38: // up
-                                    O.nav(true);
-                                    break;
+                    
+            
+                    O.select.on('keydown', function (e) {
+                        switch (e.which) {
+                            case 38: // up
+                                O.nav(true);
+                                break;
 
-                                case 40: // down
-                                    O.nav(false);
-                                    break;
+                            case 40: // down
+                                O.nav(false);
+                                break;
 
-                                case 32: // space
-                                case 13: // enter
-                                    if (O.is_opened)
-                                        O.optDiv.find('ul li.sel').trigger('click');
-                                    else
-                                        O.setOnOpen();
-                                    break;
-								case 9:	 //tab
-                                case 27: // esc
-                                     if (O.is_multi && settings.okCancelInMulti)O._cnbtn();
-                                    O.hideOpts();
-                                    return;
+                            case 32: // space
+                            case 13: // enter
+                                if (O.is_opened)
+                                    O.optDiv.find('ul li.sel').trigger('click');
+                                else
+                                    O.setOnOpen();
+                                break;
+                            case 9:	 //tab
+                            case 27: // esc
+                                if (O.is_multi && settings.okCancelInMulti)
+                                    O._cnbtn();
+                                O.hideOpts();
+                                return;
 
-                                default:
-                                    return; // exit this handler for other keys
-                            }
-                            e.preventDefault(); // prevent the default action (scroll / move caret)
-                        });
+                            default:
+                                if (settings.autoSelect) { 
+                                    O.autoSelect(e);
+                                }
+                                return; // exit this handler for other keys
+                        }
+                        e.preventDefault(); // prevent the default action (scroll / move caret)
+                    });
 
                     $(window).on('resize.sumo', function () {
                         O.floatingList();
@@ -493,7 +505,7 @@
                 setNativeMobile: function () {
                     var O = this;
                     O.E.addClass('SelectClass')//.css('height', O.select.outerHeight());
-					O.mob = true;
+					          O.mob = true;
                     O.E.change(function () {
                         O.setText();
                     });
@@ -567,7 +579,7 @@
                         if (O.E.find('option')[$(this).index()].disabled) return;
                         O.E.find('option')[$(this).index()].selected = c;
                         if (!O.mob)
-							O.optDiv.find('ul.options li').eq($(this).index()).toggleClass('selected', c);
+							          O.optDiv.find('ul.options li').eq($(this).index()).toggleClass('selected', c);
                         O.setText();
                     });
                     if(!O.mob && settings.selectAll)O.selAll.removeClass('partial').toggleClass('selected',c);

@@ -53,10 +53,10 @@
   
   <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>  
   <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
-  <script type="text/javascript" src="includes/javascript/jquery.sumoselect_mod.min.js"></script>
+  <script type="text/javascript" src="includes/javascript/jquery.sumoselect_mod.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
-      $('.SlectBox').not('.noStyling').SumoSelect({ autocomplete: true, placeholder: '-'});
+      $('.SlectBox').not('.noStyling').SumoSelect({placeholder: '-'});
     });
    </script>
   <?php } ?>

@@ -163,7 +163,7 @@
     $field = xtc_draw_input_field($name, '', $parameters, $required, 'file');
     return $field;
   }
-
+  
   // Output a selection field - alias function for xtc_draw_checkbox_field() and xtc_draw_radio_field()
   function xtc_draw_selection_field($name, $type, $value = '', $checked = false, $compare = '', $parameters = '') {
     $selection = '<input type="' . $type . '" name="' . $name . '"';
@@ -245,7 +245,7 @@
         $li .= '<li data-val="' .$val['id'] . '"';
         if ( ((strlen($val['id']) > 0) && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $val['id'])) || ($default == $val['id']) ) {
           $field .= ' selected="selected"';
-          $li .= ' class="selected"';
+          //$li .= ' class="selected"';
           $selText = $val['text'];
         }
         $field .= '>' . $val['text'] . '</option>' . PHP_EOL;
@@ -262,7 +262,7 @@
       $add .= '<span>'.$selText.'</span>'. PHP_EOL;
       $add .= '<label><i></i></label></p>'. PHP_EOL;
       $add .= '<div class="optWrapper">'. PHP_EOL . '<ul class="options">' . PHP_EOL . $li . PHP_EOL . '</ul>' . PHP_EOL . '</div>'. PHP_EOL;
-      $field = '<div class="SumoSelect '. strtolower($name) .'" tabindex="-1">' . $field . $add . '</div>';
+      $field = '<div class="SumoSelect '. strtolower($name) .'" tabindex="0">' . $field . $add . '</div>';
     }
     return $field;
   }
