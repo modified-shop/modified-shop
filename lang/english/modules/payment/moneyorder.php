@@ -18,7 +18,11 @@
   define('MODULE_PAYMENT_MONEYORDER_TEXT_TITLE', 'Check/Money Order');
   define('MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION', 'Make payable to:&nbsp;' . (defined('MODULE_PAYMENT_MONEYORDER_PAYTO') ? MODULE_PAYMENT_MONEYORDER_PAYTO : '') . '<br />Send to:<br /><br />' . nl2br(STORE_NAME_ADDRESS) . '<br /><br />' . 'Your order will not ship until we receive payment!');
   define('MODULE_PAYMENT_MONEYORDER_TEXT_EMAIL_FOOTER', "Make payable to: ". (defined('MODULE_PAYMENT_MONEYORDER_PAYTO') ? MODULE_PAYMENT_MONEYORDER_PAYTO : '') . "\n\nSend to:\n" . STORE_NAME_ADDRESS . "\n\n" . 'Your order will not ship until we receive payment');
-  define('MODULE_PAYMENT_MONEYORDER_TEXT_INFO','We ship your order after receipt of payment.');
+  if (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') {
+    define('MODULE_PAYMENT_MONEYORDER_TEXT_INFO','We ship your order after receipt of payment. You will receive the account data in the last step of the checkout.');
+  } else {
+    define('MODULE_PAYMENT_MONEYORDER_TEXT_INFO','We ship your order after receipt of payment. You will receive the account data by e-mail when your order has been confirmed.');
+  }
   define('MODULE_PAYMENT_MONEYORDER_STATUS_TITLE' , 'Enable Check/Money Order Module');
   define('MODULE_PAYMENT_MONEYORDER_STATUS_DESC' , 'Do you want to accept Check/Money Order payments?');
   define('MODULE_PAYMENT_MONEYORDER_ALLOWED_TITLE' , 'Allowed zones');
