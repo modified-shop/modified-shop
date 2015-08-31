@@ -24,14 +24,11 @@ class moneyorder {
 
 		$this->code = 'moneyorder';
 		$this->title = MODULE_PAYMENT_MONEYORDER_TEXT_TITLE;
-		if (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') {
-		  $this->description = MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION;
-		} else {
-		  $this->description = MODULE_PAYMENT_MONEYORDER_TEXT_INFO;
-		}
+		$this->description = MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION;
 		$this->sort_order = MODULE_PAYMENT_MONEYORDER_SORT_ORDER;
 		$this->enabled = ((MODULE_PAYMENT_MONEYORDER_STATUS == 'True') ? true : false);
 		$this->info = MODULE_PAYMENT_MONEYORDER_TEXT_INFO;
+    $this->info_success = (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True' $this->description ? : $this->info);
 		if ((int) MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID > 0) {
 			$this->order_status = MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID;
 		}
@@ -80,7 +77,7 @@ class moneyorder {
   function confirmation() {
     $confirmation = array ('title' => $this->title.': ', 
                            'fields' => array (array ('title' => '', 
-                                                     'field' => $this->info)
+                                                     'field' => MODULE_SHIPPING_TABLE_ZONE)
                                               )
                            );
 
@@ -89,18 +86,15 @@ class moneyorder {
 
   function success() {
     $confirmation = array();
-    //if (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') {
-      $confirmation = array(
-        array ('title' => $this->title.': ', 
-               'class' => $this->code,
-               'fields' => array(array('title' => '',
-                                       'field' => $this->description
-                                       )
-                                 )
-               )
-      );
-    //}
-    
+    $confirmation = array(
+      array ('title' => $this->title.': ', 
+             'class' => $this->code,
+             'fields' => array(array('title' => '',
+                                     'field' => $this->info_success
+                                     )
+                               )
+             )
+    );
     return $confirmation;
   }
 
