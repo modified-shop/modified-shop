@@ -1,7 +1,7 @@
 ﻿/*!
  * jquery.sumoselect - v2.1.0
  * http://hemantnegi.github.io/jquery.sumoselect
- * 2015-08-28 //modified createElems, add autoSelect by web28, www.rpa-com.de
+ * 2015-08-31 //modified createElems, add autoSelect, add showSelectItem  by web28, www.rpa-com.de
  *
  * Copyright 2015 Hemant Negi
  * Email : hemant.frnz@gmail.com
@@ -292,11 +292,25 @@
                     O.optDiv.removeClass('open').find('ul li.sel').removeClass('sel');
                     $(document).off('click.sumo');
                 },
+                showSelectItem: function() {
+                    var O = this;
+                    var sel = O.optDiv.find('ul li.sel');
+                    // setting sel item to visible view.
+                    var ul = O.optDiv.find('ul'),
+                        st = ul.scrollTop(),
+                        t = sel.position().top + st;                            
+                    if(t >= st + ul.height()-sel.outerHeight())
+                        ul.scrollTop(t - ul.height() + sel.outerHeight());
+                    if(t<st)
+                        ul.scrollTop(t);
+                  
+                }, 
                 setOnOpen: function () {
                     var O = this;
                     var li = O.optDiv.find('ul li').eq(O.E[0].selectedIndex);
                     li.addClass('sel');
                     O.showOpts();
+                    O.showSelectItem();
                 },
                 nav: function (up) {
                     var O = this, c;
@@ -363,7 +377,8 @@
                     var O = this;
                     O.CaptionCont.click(function (evt) {
                         O.E.trigger('click');
-                        if (O.is_opened) O.hideOpts(); else O.showOpts();
+                        //if (O.is_opened) O.hideOpts(); else O.showOpts();
+                        if (O.is_opened) O.hideOpts(); else O.setOnOpen();
                         evt.stopPropagation();
                     });
 
