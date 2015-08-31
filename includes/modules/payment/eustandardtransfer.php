@@ -22,13 +22,10 @@ class eustandardtransfer {
   function eustandardtransfer() {
     $this->code = 'eustandardtransfer';
     $this->title = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE;
-    if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
-      $this->description = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION;
-    } else {
-      $this->description = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO;
-    }
+    $this->description = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION;
     $this->sort_order = MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER;
     $this->info = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO;
+    $this->info_success = (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True' $this->description ? : $this->info);
     $this->enabled = ((MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS == 'True') ? true : false);
 
 		if ((int) MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID > 0) {
@@ -42,9 +39,9 @@ class eustandardtransfer {
 	function update_status() {
 		global $order;
 
-		if (($this->enabled == true) && ((int) MODULE_PAYMENT_MONEYORDER_ZONE > 0)) {
+		if (($this->enabled == true) && ((int) MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE > 0)) {
 			$check_flag = false;
-			$check_query = xtc_db_query("select zone_id from ".TABLE_ZONES_TO_GEO_ZONES." where geo_zone_id = '".MODULE_PAYMENT_MONEYORDER_ZONE."' and zone_country_id = '".$order->billing['country']['id']."' order by zone_id");
+			$check_query = xtc_db_query("select zone_id from ".TABLE_ZONES_TO_GEO_ZONES." where geo_zone_id = '".MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE."' and zone_country_id = '".$order->billing['country']['id']."' order by zone_id");
 			while ($check = xtc_db_fetch_array($check_query)) {
 				if ($check['zone_id'] < 1) {
 					$check_flag = true;
@@ -103,18 +100,15 @@ class eustandardtransfer {
 
   function success() {
     $confirmation = array();
-    //if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
-      $confirmation = array(
-        array ('title' => $this->title.': ', 
-               'class' => $this->code,
-               'fields' => array(array('title' => '',
-                                       'field' => $this->description
-                                       )
-                                 )
-               )
-      );
-    //}
-    
+    $confirmation = array(
+      array ('title' => $this->title.': ', 
+             'class' => $this->code,
+             'fields' => array(array('title' => '',
+                                     'field' => $this->info_success
+                                     )
+                               )
+             )
+    );
     return $confirmation;
   }
 
