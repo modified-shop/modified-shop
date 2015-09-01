@@ -452,10 +452,10 @@ function insert_into_config_table($values)
       $insert_into = "INSERT INTO ".TABLE_CONFIGURATION." (configuration_id ,configuration_key ,configuration_value ,configuration_group_id ,sort_order ,last_modified ,date_added ,use_function ,set_function) VALUES ";
       $value = encode_utf8($value);
       if( xtc_db_query($insert_into.$value)){
-        $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION.' '.$value, 'success');
+        $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION.' '.encode_htmlentities($value), 'success');
         $install = true;
       } else {
-        $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION.' '.$value, 'error');
+        $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION.' '.encode_htmlentities($value), 'error');
       }
     }
   }
@@ -499,10 +499,10 @@ function update_config_table($values)
         $update = "UPDATE ".TABLE_CONFIGURATION." SET ".$cfg_values." , last_modified = NOW() WHERE configuration_key = '" . $cfg_key . "'";
 
         if( xtc_db_query($update)){
-          $messageStack->add_session('OK: '.$update, 'success');
+          $messageStack->add_session('OK: '.encode_htmlentities($update), 'success');
           $install = true;
         } else {
-          $messageStack->add_session('ERROR: '.$update, 'error');
+          $messageStack->add_session('ERROR: '.encode_htmlentities($update), 'error');
         }
       }
     }
@@ -528,10 +528,10 @@ function insert_into_config_group_table($values_group)
     if (xtc_db_num_rows($result_cfg_query) == 0) {
       $insert_into = "INSERT INTO ".TABLE_CONFIGURATION_GROUP ." VALUES ";
       if (xtc_db_query($insert_into.$value)) {
-        $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION_GROUP.' '.$value, 'success');
+        $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION_GROUP.' '.encode_htmlentities($value), 'success');
         $install = true;
       } else {
-        $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION_GROUP.' '.$value, 'error');
+        $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION_GROUP.' '.encode_htmlentities($value), 'error');
       }
     }
   }
@@ -558,10 +558,10 @@ function update_config_group_table($values_group)
     if (xtc_db_num_rows($result_cfg_query) != 0) {      
       $update = "UPDATE ".TABLE_CONFIGURATION_GROUP." SET ".$cfg_values." WHERE configuration_group_id = '" . $cfg_id . "'";
       if (xtc_db_query($update)) {
-        $messageStack->add_session('OK: '.$update, 'success');
+        $messageStack->add_session('OK: '.encode_htmlentities($update), 'success');
         $install = true;
       } else {
-        $messageStack->add_session('ERROR: '.$update, 'error');
+        $messageStack->add_session('ERROR: '.encode_htmlentities($update), 'error');
       }
     }
   }
