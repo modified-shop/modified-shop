@@ -54,7 +54,7 @@ require (DIR_WS_INCLUDES.'head.php');
           <tr style="background-color: #FFFFFF;">
             <td colspan="2" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; padding: 0px 10px 11px 10px; text-align: justify">
               <br />
-              <font color="#2B7AC4"><strong>Schnittstellenmodul der IT-Recht Kanzlei M&uuml;nchen: Entspannter e-Commerce.</strong></font><br />
+              <font color="#EE7812"><strong>Schnittstellenmodul der IT-Recht Kanzlei M&uuml;nchen: Entspannter e-Commerce.</strong></font><br /><br />
               <img src="images/it_recht_kanzlei/it_recht_kanzlei.png" /><img src="images/it_recht_kanzlei/pruefzeichen-partner3.png" align="right" />
               <br />
               <br />

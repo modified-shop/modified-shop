@@ -18,7 +18,7 @@
 
 class it_recht_kanzlei {
   
-  var $modulversion = '1.0';
+  var $modulversion = '1.4';
   var $api_action_flag, 
       $api_version_flag, 
       $api_username_flag, 
@@ -101,6 +101,7 @@ class it_recht_kanzlei {
       if ($xml->rechtstext_language == '') {
         $this->return_error('9');
       } else {
+        require_once(DIR_WS_CLASSES.'language.php');
         $lng = new language($xml->rechtstext_language);
         $languages_id = $lng->language['id'];
         if ($lng->language['code'] != $xml->rechtstext_language) {
@@ -164,7 +165,7 @@ class it_recht_kanzlei {
           }
           // verify that file is a pdf
           if ($this->check_if_pdf_file($file_pdf_target_temp) !== true) {
-            @unlink($file_pdf_target);
+            @unlink($file_pdf_target_temp);
             $this->return_error('7');
           }
           // verify md5-hash, delete file if hash is not equal
@@ -209,15 +210,32 @@ class it_recht_kanzlei {
       }
       
       if ($content_group != '') {
-        $sql_data_array = array('content_text' => utf8_decode($xml->rechtstext_html.$pdf_file_text));
-        xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
-        if (xtc_db_affected_rows() < 1) {
-          $this->return_error('99');
+        $check_query = xtc_db_query("SELECT content_text 
+                                       FROM ".TABLE_CONTENT_MANAGER." 
+                                      WHERE content_group = '".$content_group."' 
+                                        AND languages_id = '".$languages_id."' 
+                                      LIMIT 1");
+        $check = xtc_db_fetch_array($check_query);
+        if ($check['content_text'] == $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text)) {
+          $this->return_success();
+        } else {
+          $sql_data_array = array('content_text' => $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text));
+          xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
+          if (xtc_db_affected_rows() < 1) {
+            $check_content_query = xtc_db_query("SELECT content_text 
+                                                   FROM ".TABLE_CONTENT_MANAGER." 
+                                                  WHERE content_group = '".$content_group."' 
+                                                    AND languages_id = '".$languages_id."'");
+            $check_content = xtc_db_fetch_array($check_content_query);
+            if ($check_content['content_text'] != $sql_data_array['content_text']) {
+              $this->return_error('99');
+            }
+          }
         }
       } else {
         $this->return_error('99');
-      }
-      
+      }  
+          
       $this->return_success();
     } else {
       $this->return_error('99');
@@ -269,6 +287,20 @@ class it_recht_kanzlei {
         $this->shopversion = $row['version'];
       }
     }
+  }
+
+  function charset_decode_utf_8($string) {
+    if (!preg_match("/[\200-\237]/", $string) && !preg_match("/[\241-\377]/", $string)) {
+      return $string;
+    }
+
+    // decode three byte unicode characters
+    $string = preg_replace("/([\340-\357])([\200-\277])([\200-\277])/e", "'&#'.((ord('\\1')-224)*4096 + (ord('\\2')-128)*64 + (ord('\\3')-128)).';'", $string);
+
+    // decode two byte unicode characters
+    $string = preg_replace("/([\300-\337])([\200-\277])/e", "'&#'.((ord('\\1')-192)*64+(ord('\\2')-128)).';'", $string);
+
+    return decode_htmlentities($string);
   }
     
   // return error and end script
