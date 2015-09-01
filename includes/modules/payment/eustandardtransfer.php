@@ -26,7 +26,7 @@ class eustandardtransfer {
     $this->description = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION;
     $this->sort_order = MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER;
     $this->info = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO;
-    $this->info_success = (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True' $this->description ? : $this->info);
+    $this->info_success = (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True' ? $this->description : $this->info);
     $this->enabled = ((MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS == 'True') ? true : false);
 
 		if ((int) MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID > 0) {
