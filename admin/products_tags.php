@@ -677,7 +677,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                       $contents[] = array('text' => xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']) . '&nbsp;' . xtc_draw_textarea_field('options_description[' . $languages[$i]['id'] . ']', '', '45', '5', xtc_get_options_detail($oInfo->options_id, $languages[$i]['id'], 'options_description')));
                     }
-                    $contents[] = array('text' => '<br />' . TEXT_INFO_OPTION_CONTENT . '<br />' . xtc_cfg_select_content('options_content_group', $vInfo->options_content_group));
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_OPTION_CONTENT . '<br />' . xtc_cfg_select_content('options_content_group', $oInfo->options_content_group));
                     $contents[] = array('text' => '<br />' . TEXT_INFO_OPTION_SORT . '<br />' . xtc_draw_input_field('sort_order', $oInfo->sort_order));
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->options_id) . '">' . BUTTON_CANCEL . '</a>');
                     break;
