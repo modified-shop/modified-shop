@@ -100,7 +100,6 @@ class eustandardtransfer {
   }
 
   function success() {
-    $confirmation = array();
     $confirmation = array(
       array ('title' => $this->title.': ', 
              'class' => $this->code,
