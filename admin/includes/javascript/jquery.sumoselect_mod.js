@@ -32,7 +32,7 @@
             selectAlltext: 'Select All',   // the text to display for select all.
             consoleLog: false,
             autoSelect: true,
-            timeout: 500,
+            timeout: 900,
             word: '',
 
         }, options);
@@ -296,14 +296,15 @@
                     var O = this;
                     var sel = O.optDiv.find('ul li.sel');
                     // setting sel item to visible view.
-                    var ul = O.optDiv.find('ul'),
-                        st = ul.scrollTop(),
-                        t = sel.position().top + st;                            
-                    if(t >= st + ul.height()-sel.outerHeight())
-                        ul.scrollTop(t - ul.height() + sel.outerHeight());
-                    if(t<st)
-                        ul.scrollTop(t);
-                  
+                   if (sel.position()) {
+                      var ul = O.optDiv.find('ul'),
+                          st = ul.scrollTop(),
+                          t = sel.position().top + st;                            
+                      if(t >= st + ul.height()-sel.outerHeight())
+                          ul.scrollTop(t - ul.height() + sel.outerHeight());
+                      if(t<st)
+                          ul.scrollTop(t);
+                    }
                 }, 
                 setOnOpen: function () {
                     var O = this;
@@ -347,29 +348,31 @@
                     var select = O.select.find('select');
                     var label = O.optDiv.find('ul li label');
                     settings.word += character;
-                    if (settings.consoleLog) console.log('word:'+ settings.word);
+                    if (settings.consoleLog) console.log('settings.word:'+ settings.word);
+                    var foundMatch = false;
+                    label.each(function(index, value){
+                        var value = $(this).html();
+                        value = value.replace(/&nbsp;/g,'');
+                        value = $.trim(value);
+                        if (settings.consoleLog) console.log('value:'+value+'|');
+                        value = value.substring(0,settings.word.length);
+                        if (settings.consoleLog) console.log('value:'+value);
+                        if (value) {
+                            if((!foundMatch) && (value.toLowerCase() == settings.word.toLowerCase())){
+                                O.selectItem(index);
+                                $(this).closest('li').addClass('sel');
+                                foundMatch = true;
+                            }else{
+                                $(this).closest('li').removeClass('sel');
+                                O.unSelectItem(index);
+                            }
+                        }  
+                    });
+                    O.showSelectItem();
+                    //timeout for multisigns
                     setTimeout(function(){
-                        var foundMatch = false;
-                        label.each(function(index, value){
-                            var value = $(this).html();
-                            value = value.replace(/&nbsp;/g,'');
-                            value = $.trim(value);
-                            if (settings.consoleLog) console.log('value:'+value+'|');
-                            value = value.substring(0,settings.word.length);
-                            if (settings.consoleLog) console.log('value:'+value);
-                            if (value) {
-                                if((!foundMatch) && (value.toLowerCase() == settings.word.toLowerCase())){
-                                    O.selectItem(index);
-                                    $(this).closest('li').addClass('sel');
-                                    foundMatch = true;
-                                }else{
-                                    $(this).closest('li').removeClass('sel');
-                                    O.unSelectItem(index);
-                                }
-                            }  
-                        });
-                        settings.word = '';
-                     },settings.timeout);
+                       settings.word = '';
+                    },settings.timeout);
             
                 },
 
