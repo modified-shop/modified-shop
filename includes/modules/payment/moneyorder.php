@@ -28,7 +28,7 @@ class moneyorder {
 		$this->sort_order = MODULE_PAYMENT_MONEYORDER_SORT_ORDER;
 		$this->enabled = ((MODULE_PAYMENT_MONEYORDER_STATUS == 'True') ? true : false);
 		$this->info = MODULE_PAYMENT_MONEYORDER_TEXT_INFO;
-    $this->info_success = (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True' $this->description ? : $this->info);
+    $this->info_success = (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True' ? $this->description : $this->info);
 		if ((int) MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID > 0) {
 			$this->order_status = MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID;
 		}
