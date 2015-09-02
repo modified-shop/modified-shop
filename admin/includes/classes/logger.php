@@ -41,7 +41,9 @@
 
       $this->timer_total = number_format(($time_end[1] + $time_end[0] - ($time_start[1] + $time_start[0])), 3);
 
-      $this->write($_SERVER['REQUEST_URI'], $this->timer_total . 's');
+      if ($this->timer_total >= STORE_PAGE_PARSE_TIME_THRESHOLD) {
+        $this->write($_SERVER['REQUEST_URI'], $this->timer_total . 's');
+      }
 
       if ($display == 'true') {
         return $this->timer_display();
