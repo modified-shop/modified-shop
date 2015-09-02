@@ -137,9 +137,11 @@ if ($_POST['cpath'] != '') {
   $matches = xtc_db_num_rows($result);
   
   $products_tax_rate = xtc_get_tax_rate(xtc_get_tax_class_id($_POST['current_product_id']));
+  $countOptions = $countValues = 0;
 
   if ($matches) {
     while ($line = xtc_db_fetch_array($result)) {
+      $countOptions++;
       $current_product_option_name = $line['products_options_name'];
       $current_product_option_id = $line['products_options_id'];
       // Print the Option Name
@@ -147,7 +149,7 @@ if ($_POST['cpath'] != '') {
       $output .= '<table id="attrtable-'.$current_product_option_id.'" class="attributes collapse">'. PHP_EOL;
       $output .= '<thead>'. PHP_EOL;
       $output .= '<tr id="oid-' . $current_product_option_id . '" class="dataTableHeadingRow">'. PHP_EOL;
-      $output .= '<th class="dataTableHeadingContent txta-l nobr" style="width:150px;">'.xtc_draw_checkbox_field('set_'.$current_product_option_id, $current_product_option_id, false, '', 'class="select_all'.$noStyling.'"').'&nbsp;&nbsp;<strong style="padding-right:10px;">' . $current_product_option_name . '</strong></th>'. PHP_EOL;
+      $output .= '<th class="dataTableHeadingContent txta-l nobr" style="width:150px;">'.xtc_draw_checkbox_field('set_'.$current_product_option_id, $current_product_option_id, false, '', 'class="select_all'.$noStyling.'"' .' disabled="disabled"').'&nbsp;&nbsp;<strong style="padding-right:10px;">' . $current_product_option_name . '</strong></th>'. PHP_EOL;
       $output .= '<th class="dataTableHeadingContent" style="width:95px"><strong>'.SORT_ORDER.'</strong></th>'. PHP_EOL;
       $output .= '<th class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_MODEL.'</strong></th>'. PHP_EOL;
       $output .= '<th class="dataTableHeadingContent" style="width:135px"><strong>'.ATTR_EAN.'</strong></th>'. PHP_EOL;
@@ -183,6 +185,7 @@ if ($_POST['cpath'] != '') {
       if ($matches2) {
         $i = 0;
         while ($line = xtc_db_fetch_array($query2)) {
+          $countValues++;
           $i++;
           $rowClass = rowClass($i) . ' oid-'.$current_product_option_id;
           $current_value_id = $line['products_options_values_id'];
@@ -265,6 +268,8 @@ if ($_POST['cpath'] != '') {
       echo $output;
     }
   }
+  
+  echo '<div class="pdg2"><small>Options: ' . $countOptions . ' | Values: ' . $countValues . '</small></div>';
 ?>
   
 </div>
