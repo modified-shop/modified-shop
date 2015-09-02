@@ -75,8 +75,10 @@ if (!function_exists('dynamicsAdds')){ // Menüpunkte dynamisch ergänzen
                   $LinkSub = $LinkSubEnd = '';
                   foreach ($key as $key2) {
                     if (isset($key2['has_subs']) ) {
-                      $LinkSub = '<li><a href="#" class="menuBoxContentLinkSub"> -' . $key2['boxname'] . '</a><ul>';
-                      $LinkSubEnd = '</ul></li>';
+                      if (isset($admin_access[$key2['admin_access_name']]) && $admin_access[$key2['admin_access_name']] == '1') {
+                        $LinkSub = '<li><a href="#" class="menuBoxContentLinkSub"> -' . $key2['boxname'] . '</a><ul>';
+                        $LinkSubEnd = '</ul></li>';
+                      }
                     } else {
                       $html.= subMenue($key2['admin_access_name'],
                                    $key2['filename'],
