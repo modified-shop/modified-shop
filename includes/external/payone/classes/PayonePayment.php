@@ -322,9 +322,6 @@ class PayonePayment {
 	}
 
 	function process_button() {
-		$order = $GLOBALS['order'];
-		$pb = '';
-		return $pb;
 	}
 	
 	function payment_action() {
@@ -459,8 +456,7 @@ class PayonePayment {
       $check = xtc_db_fetch_array($check_query);
       if ($_SESSION['customer_id'] == $check['customers_id']) {
         require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-        require_once(DIR_FS_INC.'xtc_restock_order.inc.php');
-        xtc_remove_order((int)$order_id, true);
+        xtc_remove_order((int)$order_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
       }
     }
   }
@@ -564,7 +560,7 @@ class PayonePayment {
 			'key' => $this->global_config['key'],
 			'clearingtype' => $clearingtype,
 			'reference' => $insert_id,
-			'amount' => round($order->info['total'], 2),
+			'amount' => round(((isset($order->info['pp_total'])) ? $order->info['pp_total'] : $order->info['total']), 2),
 			'currency' => $order->info['currency'],
 			'personal_data' => $this->personal_data,
 			'delivery_data' => $this->delivery_data,

@@ -46,16 +46,13 @@ class Payone_Api_Service_ProtocolRequest
     public function protocol(Payone_Api_Request_Interface $request,
                              Payone_Api_Response_Interface $response = null)
     {
-        // @todo hs: This Service can not work without a service apply filters.
-        $this->getServiceApplyFilters()->apply($request);
-        $this->getServiceApplyFilters()->apply($response);
+        $request->setApplyFilters($this->getServiceApplyFilters());
+        $response->setApplyFilters($this->getServiceApplyFilters());
+        $requestAsString = $request->__toString();
+        $responseAsString = $response->__toString();
 
 
         foreach ($this->loggers as $key => $logger) {
-            /** @var $logger Payone_Protocol_Logger_Interface */
-            $requestAsString = $request->__toString();
-            $responseAsString = $response->__toString();
-
             $logger->log($requestAsString);
             $logger->log($responseAsString);
         }
@@ -72,10 +69,6 @@ class Payone_Api_Service_ProtocolRequest
      */
     public function protocolException(Exception $e, Payone_Api_Request_Interface $request = null)
     {
-        if ($request !== null) {
-            $this->getServiceApplyFilters()->apply($request);
-        }
-
         foreach ($this->loggers as $key => $logger) {
             /** @var $logger Payone_Protocol_Logger_Interface */
             $logger->log(get_class($e) . ' ' . $e->getMessage(), Payone_Protocol_Logger_Interface::LEVEL_ERROR);

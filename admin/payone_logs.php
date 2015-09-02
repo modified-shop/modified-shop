@@ -26,10 +26,6 @@ require_once (DIR_FS_EXTERNAL.'payone/lang/'.$_SESSION['language'].'.php');
 require_once (DIR_FS_EXTERNAL.'payone/classes/PayoneModified.php');
 $payone = new PayoneModified();
 
-if ($payone->checkConfig() === false) {
-  xtc_redirect(xtc_href_link('payone_config.php'));
-}
-
 // check start and end Date
 $startDate = "";
 $startDateG = 0;
@@ -108,6 +104,20 @@ if(isset($_GET['event_id'])) {
 	$event_data = $payone->getLogData($mode, $event_id);
 }
 
+$day_array = array();
+for ($i = 1; $i < 32; $i++) {
+  $day_array[] = array('id' => $i, 'text' => $i);
+}
+
+$month_array = array();
+for ($i = 1; $i < 13; $i++) {
+  $month_array[] = array('id' => $i, 'text' => utf8_decode(strftime("%B", mktime(0, 0, 0, $i, 1)))); // Funktion decode_utf8 erst ab Shopversion 2.00 vorhanden
+}
+
+$year_array = array();
+for ($i = 10; $i >= 0; $i--) {
+  $year_array[] = array('id' => date("Y") - $i, 'text' => date("Y") - $i);
+}
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
@@ -213,106 +223,41 @@ require (DIR_WS_INCLUDES.'head.php');
 								<p class="message"><?php echo $msg; ?></p>
 								<?php } ?>
 
-                <?php echo xtc_draw_form('log', basename($PHP_SELF), '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                <?php echo xtc_draw_form('log', basename($PHP_SELF), '', 'get'); ?>
                   <table style="border: 1px solid #cccccc; width:100%; padding:5px; background:#f1f1f1;">
                     <tr>
                       <td class="menuBoxHeading">
-                        <?php echo START_DATE;?>
-                        <select name="startD" size="1">
-                          <?php                                  
+                        <?php 
+                          $day = $month = $year = 1;
                           if ($startDate) {
-                            $j = date("j", $startDate);                                    
-                          } else {
-                            $j = 1;
+                            $day = date("j", $startDate);
+                            $month = date("n", $startDate);
+                            $year = date("Y") - date("Y", $startDate);                                  
                           }
-                          for ($i = 1; $i < 32; $i++) {
-                            ?>
-                            <option value="<?php echo $i; ?>"<?php if ($j == $i) echo " selected"; ?>><?php echo $i; ?></option>
-                            <?php
-                          }
-                          ?>
-                        </select>
-                        <select name="startM" size="1">
-                          <?php
-                          if ($startDate) {
-                            $m = date("n", $startDate);
-                          } else {
-                            $m = 1;
-                          }
-                          for ($i = 1; $i < 13; $i++) {
-                            ?>
-                            <option value="<?php echo $i; ?>"<?php if ($m == $i) echo " selected"; ?>><?php echo strftime("%B", mktime(0, 0, 0, $i, 1)); ?></option>
-                            <?php
-                          }
-                          ?>
-                        </select>
-                        <select name="startY" size="1">
-                          <?php
-                          if ($startDate) {
-                            $y = date("Y") - date("Y", $startDate);
-                          } else {
-                            $y = 0;
-                          }
-                          for ($i = 10; $i >= 0; $i--) {
-                            ?>
-                            <option value="<?php echo date("Y") - $i; ?>"<?php if ($y == $i) echo " selected"; ?>><?php echo date("Y") - $i; ?></option>
-                            <?php
-                          }
-                          ?>
-                        </select>
+                          echo START_DATE;
+                          echo xtc_draw_pull_down_menu('startD', $day_array, $day);
+                          echo xtc_draw_pull_down_menu('startM', $month_array, $month);
+                          echo xtc_draw_pull_down_menu('startY', $year_array, $year);
+                        ?>
                       </td>
                       <td class="menuBoxHeading">
-                        <?php echo END_DATE; ?>
-                        <select name="endD" size="1">
-                          <?php
-                          echo $endDate;
-                        
+                        <?php 
+                          $day = date("j");
+                          $month = date("n");
+                          $year = 0;
                           if ($endDate) {
-                            $j = date("j", $endDate - (60 * 60 * 24));
-                          } else {
-                            $j = date("j");
+                            $day = date("j", $endDate - (60 * 60 * 24));
+                            $month = date("n", $endDate - 60* 60 * 24);
+                            $year = date("Y") - date("Y", $endDate - 60* 60 * 24);
                           }
-                          for ($i = 1; $i < 32; $i++) {
-                            ?>
-                            <option value="<?php echo $i; ?>"<?php if ($j == $i) echo " selected"; ?>><?php echo $i; ?></option>
-                            <?php
-                          }
-                          ?>
-                        </select>
-                        <select name="endM" size="1">
-                          <?php
-                          if ($endDate) {
-                            $m = date("n", $endDate - 60* 60 * 24);
-                          } else {
-                            $m = date("n");
-                          }
-                          for ($i = 1; $i < 13; $i++) {
-                            ?>
-                            <option value="<?php echo $i; ?>"<?php if ($m == $i) echo " selected"; ?>><?php echo strftime("%B", mktime(0, 0, 0, $i, 1)); ?></option>
-                            <?php
-                          }
-                          ?>
-                        </select>
-                        <select name="endY" size="1">
-                          <?php
-                          if ($endDate) {
-                            $y = date("Y") - date("Y", $endDate - 60* 60 * 24);
-                          } else {
-                            $y = 0;
-                          }
-                          for ($i = 10; $i >= 0; $i--) {
-                            ?>
-                            <option value="<?php echo date("Y") - $i; ?>"<?php if ($y == $i) echo " selected"; ?>><?php echo date("Y") - $i; ?></option>
-                            <?php
-                          }
-                          ?>
-                        </select>
+                          echo END_DATE;
+                          echo xtc_draw_pull_down_menu('endD', $day_array, $day);
+                          echo xtc_draw_pull_down_menu('endM', $month_array, $month);
+                          echo xtc_draw_pull_down_menu('endY', $year_array, $year);
+                        ?>
                       </td>
                       <td class="menuBoxHeading">
-                        <select name="mode">
-                          <option value="api" <?php echo $_GET['mode'] == 'api' ? 'selected="selected"' : '' ?>><?php echo API; ?></option>
-                          <option value="transactions" <?php echo $_GET['mode'] == 'transactions' ? 'selected="selected"' : '' ?>><?php echo TRANSACTIONS; ?></option>
-                        </select>
+                        <?php echo xtc_draw_pull_down_menu('mode', array(array('id' => 'api', 'text' => API), array('id' => 'transactions', 'text' => TRANSACTIONS)), $_GET['mode']); ?>
                       </td>
                       <td class="menuBoxHeading">
                       <?php
@@ -321,12 +266,14 @@ require (DIR_WS_INCLUDES.'head.php');
                       ?>
                       </td>
                       <td class="menuBoxHeading">
-                        <?php echo PAGE; ?>
-                        <select name="page" id="pageselect">
-                          <?php for($pageno = 1; $pageno <= $total_pages; $pageno++) { ?>
-                            <option value="<?php echo $pageno; ?>" <?php echo (($pageno == $page) ? 'selected="selected"' : ''); ?>><?php echo $pageno ?></option>
-                          <?php } ?>
-                        </select>
+                        <?php
+                        echo PAGE;
+                        $page_array = array();
+                        for ($pageno = 1; $pageno <= $total_pages; $pageno++) {
+                          $page_array[] = array('id' => $pageno, 'text' => $pageno);
+                        } 
+                        echo xtc_draw_pull_down_menu('page', $page_array, $page);
+                        ?>
                       </td>
                     </tr>
                   </table>  

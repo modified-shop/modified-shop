@@ -28,24 +28,11 @@ class Payone_Protocol_Factory
     {
         $serviceAF = new Payone_Protocol_Service_ApplyFilters();
 
-        $config = $this->buildConfigFilter();
-
         $filters = $this->buildFiltersDefault();
 
-        $serviceAF->setConfig($config);
         $serviceAF->setFilters($filters);
 
         return $serviceAF;
-    }
-
-    /**
-     * @return Payone_Protocol_Config_Filter
-     */
-    protected function buildConfigFilter()
-    {
-        $config = new Payone_Protocol_Config_Filter();
-
-        return $config;
     }
 
     /**
@@ -53,24 +40,14 @@ class Payone_Protocol_Factory
      */
     protected function buildFiltersDefault()
     {
+        $filters = array();
         $filterMaskValue = new Payone_Protocol_Filter_MaskValue();
         $filterMaskValue->setConfigPercent(50); // @todo hs: This default value should be defined somewhere else, configuration?.
-        $filters = array(0 => $filterMaskValue);
+        array_push($filters, $filterMaskValue);
+
+        $filterMaskAllValue = new Payone_Protocol_Filter_MaskAllValue();
+        array_push($filters, $filterMaskAllValue);
 
         return $filters;
-    }
-
-    /**
-     * @return Payone_Protocol_Logger_Log4php
-     */
-    public function buildLoggerDefault()
-    {
-        $config = array(
-            'filename' => 'payone.log'
-        );
-
-        $logger = new Payone_Protocol_Logger_Log4php($config);
-
-        return $logger;
     }
 }

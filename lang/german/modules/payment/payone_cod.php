@@ -21,7 +21,7 @@
 require_once (dirname(__FILE__).'/payone.php');
 
 define('MODULE_PAYMENT_PAYONE_COD_TEXT_TITLE', 'Nachnahme');
-define('MODULE_PAYMENT_PAYONE_COD_TEXT_DESCRIPTION', 'Zahlung per Nachnahme über PayOne');
+define('MODULE_PAYMENT_PAYONE_COD_TEXT_DESCRIPTION', 'Zahlung per Nachnahme &uuml;ber PayOne');
 define('MODULE_PAYMENT_PAYONE_COD_TEXT_INFO', 'Nachnahme-Zahlung');
 define('MODULE_PAYMENT_PAYONE_COD_STATUS_TITLE', MODULE_PAYMENT_PAYONE_STATUS_TITLE);
 define('MODULE_PAYMENT_PAYONE_COD_STATUS_DESC', MODULE_PAYMENT_PAYONE_STATUS_DESC);

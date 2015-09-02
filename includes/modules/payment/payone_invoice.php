@@ -17,7 +17,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-require_once (DIR_FS_EXTERNAL.'/payone/classes/PayonePayment.php');
+require_once (DIR_FS_EXTERNAL.'payone/classes/PayonePayment.php');
 
 class payone_invoice extends PayonePayment {
 	var $payone_genre = 'accountbased';

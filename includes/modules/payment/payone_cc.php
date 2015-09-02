@@ -17,7 +17,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-require_once (DIR_FS_EXTERNAL.'/payone/classes/PayonePayment.php');
+require_once (DIR_FS_EXTERNAL.'payone/classes/PayonePayment.php');
 
 class payone_cc extends PayonePayment {
 	var $payone_genre = 'creditcard';
@@ -27,7 +27,7 @@ class payone_cc extends PayonePayment {
 		parent::PayonePayment();
 		
 		$this->tmpOrders = '';
-		$this->form_action_url = $this->payone->getFormActionURL();
+		$this->form_action_url = xtc_href_link(FILENAME_CHECKOUT_PROCESS, 'payone_cc=true', 'SSL');		
 	}
 
 	function selection() {
@@ -35,63 +35,24 @@ class payone_cc extends PayonePayment {
 
 		return $selection;
 	}
-
-  function before_process() {
-		if (isset($_GET['pseudocardpan'])) {
-			$_SESSION[$this->code]['pseudocardpan'] = $_GET['pseudocardpan'];
-		}
-		if (isset($_GET['truncatedcardpan'])) {
-			$_SESSION[$this->code]['truncatedcardpan'] = $_GET['truncatedcardpan'];
-		}
-  }
   
 	function _paymentDataFormProcess($active_genre_identifier) {
 	  $payment_smarty = new Smarty();
 	  $payment_smarty->template_dir = DIR_FS_EXTERNAL.'payone/templates/';
-
-		$error = parent::get_error();
-		if ($error != '') {
-		  $payment_smarty->assign('error', $error['error']);
-		}
 	  	  
 		$genre_config = $this->config[$active_genre_identifier];
     $payment_smarty->assign('genre_specific', $genre_config['genre_specific']);
 
     $standard_parameters = parent::_standard_parameters('creditcardcheck');
-		$standard_parameters['responsetype'] = 'REDIRECT';
+		$standard_parameters['responsetype'] = 'JSON';
 		$standard_parameters['storecarddata'] = 'yes';
 		$standard_parameters['encoding'] = 'UTF-8';
-		$standard_parameters['successurl'] = ((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PROCESS.'?'.xtc_session_name().'='.xtc_session_id();
-		$standard_parameters['errorurl'] = ((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_CONFIRMATION.'?'.xtc_session_name().'='.xtc_session_id().'&conditions=true&payment_error='.$this->code;
 		$standard_parameters['hash'] = $this->payone->computeHash($standard_parameters, $this->global_config['key']);
+    $payment_smarty->assign('parameters', $standard_parameters);
     
-    // not in hash but needed as hidden field
-		$cctypes = $this->payone->getTypesForGenre($active_genre_identifier);		
-		for ($i=0, $n=count($cctypes); $i<$n; $i++) {
-		  if ($cctypes[$i]['typekey'] == $_SESSION[$this->code]['cardtype']) {
-		    $standard_parameters['cardtype'] = $cctypes[$i]['shorttype'];
-		    break;
-		  }
-		}
-
-		$ccexpires_years = array();
-		for($y = 0, $base = date('y'); $y < 10; $y++) {
-			$ccexpires_years[] = $base + $y;
-		}
-    $payment_smarty->assign('ccexpires_years', $ccexpires_years);
-
-		$ccexpires_months = array();
-		for($m = 1; $m <= 12; $m++) {
-			$ccexpires_months[] = sprintf('%02d', $m);
-		}
-    $payment_smarty->assign('ccexpires_months', $ccexpires_months);
-    
-    $hidden = array();
-		foreach($standard_parameters as $key => $value) {
-			$hidden[] = xtc_draw_hidden_field($key, $value);
-		}
-    $payment_smarty->assign('hidden', implode("\n", $hidden)."\n");
-    
+		$cctypes = $this->payone->getTypesForGenre($active_genre_identifier);		   
+    $payment_smarty->assign('cctypes', $cctypes);
+        
     $payment_smarty->assign('payonecss', DIR_WS_EXTERNAL.'payone/css/payone.css');
     $payment_smarty->caching = 0;
     $module_form = $payment_smarty->fetch('checkout_payone_cc_form.html');
@@ -99,46 +60,12 @@ class payone_cc extends PayonePayment {
 		return $module_form;
 	}
 
-	function _paymentDataForm($active_genre_identifier) {
-	  $payment_smarty = new Smarty();
-    $payment_smarty->template_dir = DIR_FS_EXTERNAL.'payone/templates/';
-    
-		$genre_config = $this->config[$active_genre_identifier];
-    $payment_smarty->assign('genre_config', $genre_config['types']);
-    $payment_smarty->assign('code', $this->code);
-    
-    $payment_smarty->assign('payonecss', DIR_WS_EXTERNAL.'payone/css/payone.css');
-    $payment_smarty->caching = 0;
-    $module_form = $payment_smarty->fetch('checkout_payone_type_selection.html');
-		
-		$return = array(
-			array('title' => '', 
-			      'field' => $module_form),
-		);
-		return $return;
-	}
-
 	function pre_confirmation_check() {
 		parent::pre_confirmation_check();
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      $_SESSION[$this->code]['cardtype'] = $_POST[$this->code.'_type'];
-    }
 	}
 
 	function confirmation() {
-    $genre_identifier = $this->_getActiveGenreIdentifier();
-		$cctypes = $this->payone->getTypesForGenre($genre_identifier);		
-		for ($i=0, $n=count($cctypes); $i<$n; $i++) {
-		  if ($cctypes[$i]['typekey'] == $_SESSION[$this->code]['cardtype']) {
-		    $type = $cctypes[$i]['typename'];
-		  }
-		}
-
-    $confirmation = array('title' => constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE'),
-                          'fields' => array(array('title' => '',
-                                                  'field' => constant($type),
-                                            )));
-		return $confirmation;
+		parent::confirmation();
 	}
 	
 	function process_button() {
@@ -149,9 +76,22 @@ class payone_cc extends PayonePayment {
 		
     return $this->_paymentDataFormProcess($active_genre);
 	}	
+  
+  function before_process() {
+		if (isset($_POST['pseudocardpan'])) {
+			$_SESSION[$this->code]['pseudocardpan'] = $_POST['pseudocardpan'];
+		}
+		if (isset($_POST['truncatedcardpan'])) {
+			$_SESSION[$this->code]['truncatedcardpan'] = $_POST['truncatedcardpan'];
+		}
+		
+		if (isset($_GET['payone_cc']) && $_GET['payone_cc'] == 'true') {
+		  $this->tmpOrders = $this->config['orders_status']['tmp'];
+		}
+  }
 
-	function after_process() {
-	  global $order, $insert_id;
+  function payment_action() {
+	  global $order, $insert_id, $tmp;
     
     if (!isset($insert_id) || $insert_id == '') {
 		  $insert_id = $_SESSION['tmp_oID'];
@@ -183,7 +123,13 @@ class payone_cc extends PayonePayment {
     
       parent::_build_service_authentification('cc');
       parent::_parse_response_payone_api();
-    }
+ 
+      $tmp = false;
+    } 
+  }
+  
+	function after_process() {
+	  global $order, $insert_id;
      
 		parent::after_process();
 		unset($_SESSION[$this->code]);

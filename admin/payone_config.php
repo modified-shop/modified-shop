@@ -401,7 +401,9 @@ function formpartPaymentGenreSpecific($topkey, $config) {
 
 
 function getActiveCountries() {
-	$query = "SELECT * FROM `countries` WHERE `status` = 1";
+	$query = "SELECT * 
+	            FROM ".TABLE_COUNTRIES." 
+	           WHERE status = '1'";
 	$result = xtc_db_query($query);
 	$countries = array();
 	while($row = xtc_db_fetch_array($result)) {
@@ -411,7 +413,10 @@ function getActiveCountries() {
 }
 
 function getOrdersStatus($include_hidden = false) {
-	$query = "SELECT * FROM `orders_status` WHERE language_id = ".(int)$_SESSION['languages_id']." ORDER BY orders_status_id ASC";
+	$query = "SELECT * 
+	            FROM ".TABLE_ORDERS_STATUS." 
+	           WHERE language_id = ".(int)$_SESSION['languages_id']." 
+	        ORDER BY sort_order ASC";
 	$result = xtc_db_query($query);
 	$status = array();
 	if ($include_hidden == true) {

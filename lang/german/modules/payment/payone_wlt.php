@@ -21,7 +21,7 @@
 require_once (dirname(__FILE__).'/payone.php');
 
 define('MODULE_PAYMENT_PAYONE_WLT_TEXT_TITLE', 'PayPal');
-define('MODULE_PAYMENT_PAYONE_WLT_TEXT_DESCRIPTION', 'Zahlung per e-Wallet über PayOne');
+define('MODULE_PAYMENT_PAYONE_WLT_TEXT_DESCRIPTION', 'Zahlung per e-Wallet &uuml;ber PayOne');
 define('MODULE_PAYMENT_PAYONE_WLT_TEXT_INFO', 'Zahlung per e-Wallet (PayPal)');
 define('MODULE_PAYMENT_PAYONE_WLT_STATUS_TITLE', MODULE_PAYMENT_PAYONE_STATUS_TITLE);
 define('MODULE_PAYMENT_PAYONE_WLT_STATUS_DESC', MODULE_PAYMENT_PAYONE_STATUS_DESC);
