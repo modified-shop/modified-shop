@@ -56,7 +56,7 @@
   <script type="text/javascript" src="includes/javascript/jquery.sumoselect_mod.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
-      $('.SlectBox').not('.noStyling').SumoSelect({placeholder: '-'});
+      $('.SlectBox').not('.noStyling').SumoSelect({ createElems: 'mod', placeholder: '-'});
     });
    </script>
   <?php } ?>
