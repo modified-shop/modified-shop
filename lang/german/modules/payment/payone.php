@@ -18,9 +18,9 @@
 	Released under the GNU General Public License
 	---------------------------------------------------------------------------------------*/
 
-define('MODULE_PAYMENT_PAYONE_TEXT_TITLE', 'PayOne');
-define('MODULE_PAYMENT_PAYONE_TEXT_DESCRIPTION', 'PayOne lorem ipsum');
-define('MODULE_PAYMENT_PAYONE_TEXT_INFO', 'PayOne ...');
+//define('MODULE_PAYMENT_PAYONE_TEXT_TITLE', 'PayOne');
+//define('MODULE_PAYMENT_PAYONE_TEXT_DESCRIPTION', 'PayOne lorem ipsum');
+//define('MODULE_PAYMENT_PAYONE_TEXT_INFO', 'PayOne ...');
 define('MODULE_PAYMENT_PAYONE_STATUS_TITLE', 'Modul aktivieren');
 define('MODULE_PAYMENT_PAYONE_STATUS_DESC', 'M&ouml;chten Sie Zahlungen &uuml;ber dieses Modul akzeptieren?');
 define('MODULE_PAYMENT_PAYONE_ALLOWED_TITLE', 'Erlaubte Zonen');
@@ -33,4 +33,4 @@ define('MODULE_PAYMENT_PAYONE_ORDER_STATUS_ID_TITLE', 'Bestellstatus festlegen')
 define('MODULE_PAYMENT_PAYONE_ORDER_STATUS_ID_DESC', 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen');
 define('MODULE_PAYMENT_PAYONE_SORT_ORDER_TITLE', 'Anzeigereihenfolge');
 define('MODULE_PAYMENT_PAYONE_SORT_ORDER_DESC', 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt.');
-define('MODULE_PAYMENT_PAYONE_LP', '<br /><br /><a target="_blank" href="http://www.payone.de/plattform-integration/extensions/modified-shop/"><strong>Jetzt PAYONE Konto hier erstellen.</strong></a>');
+define('MODULE_PAYMENT_PAYONE_LP', '<br/><br/><a target="_blank" href="http://www.payone.de/plattform-integration/extensions/modified-shop/"><strong>Jetzt PAYONE Konto hier erstellen.</strong></a>');

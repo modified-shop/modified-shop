@@ -149,7 +149,7 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
 	<tr>
 	  <td colspan="2" style="width:840px;">
       <style type="text/css">
-        p.message { padding: 1ex 1em; margin: 5px 1px; border: 2px solid red; background-color: #ffa; }
+        p.message { padding: 1ex 1em; margin: 5px 1px; color: #A94442; border: 1px solid #DCA7A7; background-color: #F2DEDE; }
         div.p1_box { background: #E2E2E2; float: left; padding: 1ex; margin: 1px; min-height: 125px; min-width:48.4%; width:48.4%; }
         .p1_box_full {width:98.3% !important;}
         div.p1_boxheading { font-size: 1.2em; font-weight: bold; background: #CCCCCC; padding: .2ex .5ex;}
@@ -186,6 +186,13 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
               foreach($payone_messages as $msg) {
                 echo '<p class="message">'.$msg.'</p>';
               }
+              ?>
+              <script type="text/javascript">
+                $('div#payone').toggleClass('payone_active');
+                $('.payone_data').toggleClass('payone_active');
+                $('.payone_data').show();
+              </script>
+              <?php
             } 
             ?>
             

@@ -318,8 +318,8 @@ class PayoneModified {
 		foreach($flatconfig as $path => $value) {
 			xtc_db_query("INSERT INTO `payone_config` SET `path` = '".xtc_db_input($path)."', `value` = '".xtc_db_input($value)."'");
 		}
-
-		$this->adjustSortOrders();
+    
+		//$this->adjustSortOrders();
 	}
 
 	public function adjustSortOrders() {
@@ -526,7 +526,7 @@ class PayoneModified {
 			'solution_name' => PROJECT_VERSION,
 			'solution_version' => $db_version_check,
 			'integrator_name' => 'Modified',
-			'integrator_version' => '1.00',
+			'integrator_version' => '1.01',
 		);
 		if ($request !== null) {
 			$params['request'] = $request;

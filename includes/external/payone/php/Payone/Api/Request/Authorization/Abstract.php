@@ -102,8 +102,12 @@ abstract class Payone_Api_Request_Authorization_Abstract
      * @var string 
      */
     protected $workorderid = null;
-
-
+    
+    
+    protected $customer_is_present = 'yes';
+    
+    protected $recurrence = null;
+    
     /**
      * @param int $aid
      */
@@ -309,6 +313,22 @@ abstract class Payone_Api_Request_Authorization_Abstract
      */
     function setWorkorderId($workorderid) {
         $this->workorderid = $workorderid;
+    }
+    
+    function getCustomerIsPresent() {
+        return $this->customer_is_present;
+    }
+
+    function getRecurrence() {
+        return $this->recurrence;
+    }
+
+    function setCustomerIsPresent($customer_is_present) {
+        $this->customer_is_present = $customer_is_present;
+    }
+
+    function setRecurrence($recurrence) {
+        $this->recurrence = $recurrence;
     }
 
 }

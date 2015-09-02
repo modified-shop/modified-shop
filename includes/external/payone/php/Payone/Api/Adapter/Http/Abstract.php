@@ -37,7 +37,12 @@ abstract class Payone_Api_Adapter_Http_Abstract
      * @todo refactor to use some kind of config
      * @todo use timeout from config and fallback to default
      */
-    const DEFAULT_TIMEOUT = 45;
+    const DEFAULT_TIMEOUT   = 45;
+
+    const SDK_VERSION_KEY   = 'sdk_version';
+    const SDK_TYPE_KEY      = 'sdk_type';
+    const SDK_VERSION       = '2.0.0';
+    const SDK_TYPE          = 'php';
 
     /**
      * @var string
@@ -63,6 +68,9 @@ abstract class Payone_Api_Adapter_Http_Abstract
         $this->setParams($params);
 
         $this->validate();
+
+        $this->params[self::SDK_TYPE_KEY]    = self::SDK_TYPE;
+        $this->params[self::SDK_VERSION_KEY] = self::SDK_VERSION;
 
         $responseRaw = $this->doRequest();
 

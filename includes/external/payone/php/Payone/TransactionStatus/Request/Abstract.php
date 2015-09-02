@@ -34,8 +34,14 @@
 
 
 abstract class Payone_TransactionStatus_Request_Abstract
-    implements Payone_TransactionStatus_Request_Interface, Payone_Protocol_Filter_Filterable
+    implements Payone_TransactionStatus_Request_Interface
 {
+
+    /**
+     * @var Payone_Protocol_Service_ApplyFilters
+     */
+    private $applyFilters = NULL;
+
     function __construct(array $params = array())
     {
         if (count($params) > 0) {
@@ -56,12 +62,14 @@ abstract class Payone_TransactionStatus_Request_Abstract
      */
     public function __toString()
     {
-        $stringArray = array();
-        foreach ($this->toArray() as $key => $value) {
-            $stringArray[] = $key . '=' . $value;
+        if($this->applyFilters) {
+            $result = $this->applyFilters->apply($this->toArray());
+        } else {
+            $protocolFactory     = new Payone_Protocol_Factory();
+            $defaultApplyFilters = $protocolFactory->buildServiceApplyFilters();
+            $result = $defaultApplyFilters->apply($this->toArray());
         }
 
-        $result = implode('|', $stringArray);
         return $result;
     }
 
@@ -76,7 +84,7 @@ abstract class Payone_TransactionStatus_Request_Abstract
             if ($data === null) {
                 continue;
             }
-            else {
+            elseif ($data instanceof Payone_Protocol_Service_ApplyFilters == false) {
                 $result[$key] = $data;
             }
         }
@@ -84,25 +92,6 @@ abstract class Payone_TransactionStatus_Request_Abstract
         ksort($result);
 
         return $result;
-    }
-
-    /**
-     * @param string $key
-     * @return null|mixed
-     */
-    public function getValue($key)
-    {
-        return $this->get($key);
-    }
-
-    /**
-     * @param string $key
-     * @param string $name
-     * @return boolean|null
-     */
-    public function setValue($key, $name)
-    {
-        return $this->set($key, $name);
     }
 
     /**
@@ -129,5 +118,13 @@ abstract class Payone_TransactionStatus_Request_Abstract
             return true;
         }
         return null;
+    }
+
+    /**
+     * @param Payone_Protocol_Service_ApplyFilters $applyFilters
+     */
+    public function setApplyFilters(Payone_Protocol_Service_ApplyFilters $applyFilters)
+    {
+        $this->applyFilters = $applyFilters;
     }
 }

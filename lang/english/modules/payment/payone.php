@@ -18,19 +18,19 @@
 	Released under the GNU General Public License
 	---------------------------------------------------------------------------------------*/
 
-define('MODULE_PAYMENT_PAYONE_TEXT_TITLE', 'PayOne');
-define('MODULE_PAYMENT_PAYONE_TEXT_DESCRIPTION', 'PayOne lorem ipsum');
-define('MODULE_PAYMENT_PAYONE_TEXT_INFO', 'PayOne ...');
-define('MODULE_PAYMENT_PAYONE_STATUS_TITLE', 'Modul aktivieren');
-define('MODULE_PAYMENT_PAYONE_STATUS_DESC', 'M&ouml;chten Sie Zahlungen &uuml;ber dieses Modul akzeptieren?');
-define('MODULE_PAYMENT_PAYONE_ALLOWED_TITLE', 'Erlaubte Zonen');
-define('MODULE_PAYMENT_PAYONE_ALLOWED_DESC', 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))');
-define('MODULE_PAYMENT_PAYONE_ZONE_TITLE', 'Zahlungszone');
-define('MODULE_PAYMENT_PAYONE_ZONE_DESC', 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.');
-define('MODULE_PAYMENT_PAYONE_TMPORDER_STATUS_ID_TITLE', 'Tempor&auml;ren Bestellstatus festlegen');
-define('MODULE_PAYMENT_PAYONE_TMPORDER_STATUS_ID_DESC', 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen (w&auml;hrend des laufenden Zahlungsvorgangs)');
-define('MODULE_PAYMENT_PAYONE_ORDER_STATUS_ID_TITLE', 'Bestellstatus festlegen');
-define('MODULE_PAYMENT_PAYONE_ORDER_STATUS_ID_DESC', 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen');
-define('MODULE_PAYMENT_PAYONE_SORT_ORDER_TITLE', 'Anzeigereihenfolge');
-define('MODULE_PAYMENT_PAYONE_SORT_ORDER_DESC', 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt.');
-define('MODULE_PAYMENT_PAYONE_LP', '<br /><br /><a target="_blank" href="http://www.payone.de/plattform-integration/extensions/modified-shop/"><strong>Jetzt PAYONE Konto hier erstellen.</strong></a>');
+//define('MODULE_PAYMENT_PAYONE_TEXT_TITLE', 'PayOne');
+//define('MODULE_PAYMENT_PAYONE_TEXT_DESCRIPTION', 'PayOne lorem ipsum');
+//define('MODULE_PAYMENT_PAYONE_TEXT_INFO', 'PayOne ...');
+define('MODULE_PAYMENT_PAYONE_STATUS_TITLE', 'Enable Module');
+define('MODULE_PAYMENT_PAYONE_STATUS_DESC', 'Do you want to accept payments through this module?');
+define('MODULE_PAYMENT_PAYONE_ALLOWED_TITLE', 'Allowed zones');
+define('MODULE_PAYMENT_PAYONE_ALLOWED_DESC', 'Please enter the zones <b>separately</b> which should be allowed to use this module (e.g. AT,DE (leave empty if you want to allow all zones))');
+define('MODULE_PAYMENT_PAYONE_ZONE_TITLE', 'Payment zone');
+define('MODULE_PAYMENT_PAYONE_ZONE_DESC', 'If a zone is choosen, the payment method will be valid for this zone only.');
+define('MODULE_PAYMENT_PAYONE_TMPORDER_STATUS_ID_TITLE', 'Temporary Order Status');
+define('MODULE_PAYMENT_PAYONE_TMPORDER_STATUS_ID_DESC', 'Order for not yet completed transactions');
+define('MODULE_PAYMENT_PAYONE_ORDER_STATUS_ID_TITLE', 'Set Order Status');
+define('MODULE_PAYMENT_PAYONE_ORDER_STATUS_ID_DESC', 'Set the status of orders made with this payment module to this value');
+define('MODULE_PAYMENT_PAYONE_SORT_ORDER_TITLE', 'Sort order');
+define('MODULE_PAYMENT_PAYONE_SORT_ORDER_DESC', 'Sort order of display. Lowest is displayed first.');
+define('MODULE_PAYMENT_PAYONE_LP', '<br/><br/><a target="_blank" href="http://www.payone.de/plattform-integration/extensions/modified-shop/"><strong>Create PAYONE account here now.</strong></a>');

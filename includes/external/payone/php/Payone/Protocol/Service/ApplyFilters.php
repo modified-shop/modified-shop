@@ -32,87 +32,65 @@
  */
 class Payone_Protocol_Service_ApplyFilters
 {
-    const CONFIG_FILTER_KEY = 'filter_key';
-    const CONFIG_FILTER_CONFIG = 'config';
-
-    /**
-     * @var Payone_Protocol_Config_Filter
-     */
-    protected $config = null;
-
     /**
      * @var Payone_Protocol_Filter_Interface[]
      */
     protected $filters = array();
 
-    /**
-     * @param null|Payone_Protocol_Config_Filter $config
-     */
-    public function __construct(Payone_Protocol_Config_Filter $config = null)
-    {
-        if ($config !== null) {
-            $this->setConfig($config);
-        }
-    }
+    protected $filters_config = array(
+        Payone_Protocol_Filter_MaskAllValue::FILTER_KEY => array(
+            'bankaccount',
+            'iban',
+            'cardpan',
+            'cardcvc2',
+            'cardexpiredate',
+            'key'
+        ),
+        Payone_Protocol_Filter_MaskValue::FILTER_KEY => array(
+            'bankaccountholder',
+            'cardholder',
+            'firstname',
+            'lastname',
+            'company',
+            'street',
+            'streetname',
+            'streetnumber',
+            'addressaddition',
+            'email',
+            'telephonenumber',
+            'birthday',
+            'shipping_firstname',
+            'shipping_lastname',
+            'shipping_company',
+            'shipping_street',
+            'shipping_addressaddition',
+        ),
+    );
 
     /**
-     * @param Payone_Protocol_Filter_Filterable $object
-     * @return bool
-     * @throws Payone_Protocol_Exception_FilterNotFound|Payone_Protocol_Exception_InvalidConfig
+     * @param array $objectArray
+     * @return string
      */
-    public function apply(Payone_Protocol_Filter_Filterable $object)
+    public function apply(array $objectArray)
     {
-        $class = get_class($object);
+        $stringArray = array();
 
-        if ($this->getConfig() === null) {
-            throw new Payone_Protocol_Exception_InvalidConfig();
-        }
+        foreach ($objectArray as $key => $value) {
 
-        $filtersForClass = $this->getConfig()->getFiltersByClass($class);
+            if($value instanceof Payone_Api_Response_Parameter_Interface){
+                $stringArray[] = $this->apply($value->toArray());
+            } elseif ($value !== null) {
+                $filter = $this->getFilterConfig($key);
 
-        // No Filters found for this Class
-        if (!is_array($filtersForClass)) {
-            return false;
-        }
-
-        foreach ($filtersForClass as $key => $filterConfig)
-        {
-            $config = null;
-            $filterKey = '';
-
-            // Init
-            if (is_array($filterConfig) and array_key_exists(self::CONFIG_FILTER_KEY, $filterConfig)) {
-                $filterKey = $filterConfig[self::CONFIG_FILTER_KEY];
-                if (array_key_exists(self::CONFIG_FILTER_CONFIG, $filterConfig)) {
-                    $config = $filterConfig[self::CONFIG_FILTER_CONFIG];
+                if ($filter != null) {
+                    $value = $filter->filterValue($value);
                 }
             }
-            else {
-                $filterKey = $filterConfig;
-            }
 
-            // Fetch Filter
-            $filter = $this->getFilter($filterKey);
-            /**
-             * @var Payone_Protocol_Filter_Interface|null $filter
-             */
-            if (!($filter instanceof Payone_Protocol_Filter_Interface)) {
-                throw new Payone_Protocol_Exception_FilterNotFound($filterKey);
-            }
-
-            if (is_array($config)) {
-                $filter->initConfig($config);
-            }
-
-            // Filter Value
-            $objectValue = $object->getValue($key);
-            if ($objectValue !== null) {
-                $filteredValue = $filter->filterValue($objectValue);
-                $object->setValue($key, $filteredValue);
-            }
+            $stringArray[] = $key . '=' . $value;
         }
 
-        return true;
+        return implode('|', $stringArray);
     }
 
     /**
@@ -137,22 +115,6 @@ class Payone_Protocol_Service_ApplyFilters
     }
 
     /**
-     * @param \Payone_Protocol_Config_Filter $config
-     */
-    public function setConfig(Payone_Protocol_Config_Filter $config)
-    {
-        $this->config = $config;
-    }
-
-    /**
-     * @return \Payone_Protocol_Config_Filter
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
      * @param Payone_Protocol_Filter_Interface[] $filters
      */
     public function setFilters(array $filters)
@@ -174,12 +136,27 @@ class Payone_Protocol_Service_ApplyFilters
 
     /**
      * @param $key
-     * @return null|Payone_Protocol_Filter_Interface
+     * @return Payone_Protocol_Filter_Interface
      */
     public function getFilter($key)
     {
         if (array_key_exists($key, $this->filters)) {
             return $this->filters[$key];
+        }
+        // if the requested filter was not found return Payone_Protocol_Filter_MaskAllValue
+        return new Payone_Protocol_Filter_MaskAllValue();
+    }
+
+    /**
+     * @param $key
+     * @return null|Payone_Protocol_Filter_Interface
+     */
+    public function getFilterConfig($key)
+    {
+        foreach($this->filters_config as $filter => $config) {
+            if(in_array($key, $config)) {
+                return $this->getFilter($filter);
+            }
         }
         return null;
     }

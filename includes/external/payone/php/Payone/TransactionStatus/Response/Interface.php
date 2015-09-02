@@ -30,7 +30,7 @@
  * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
  * @link            http://www.noovias.com
  */
-interface Payone_TransactionStatus_Response_Interface
+interface Payone_TransactionStatus_Response_Interface extends Payone_Protocol_Filter_Filterable
 {
     public function __toString();
 }

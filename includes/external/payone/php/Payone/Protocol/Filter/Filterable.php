@@ -33,16 +33,7 @@
 interface Payone_Protocol_Filter_Filterable
 {
     /**
-     * @abstract
-     * @param string $key
+     * @param Payone_Protocol_Service_ApplyFilters $applyFilters
      */
-    public function getValue($key);
-
-    /**
-     * @abstract
-     * @param string $key
-     * @param string $name
-     */
-    public function setValue($key, $name);
-
+    public function setApplyFilters(Payone_Protocol_Service_ApplyFilters $applyFilters);
 }

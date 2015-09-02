@@ -38,8 +38,8 @@ class Payone_SessionStatus_Mapper_Request
         $request = new Payone_SessionStatus_Request();
 
         // @todo currently simple mapping, could be more complex
-        $this->mapDefaultParameters($data, &$request);
-        $this->mapStatusItems($data, &$request);
+        $this->mapDefaultParameters($data, $request);
+        $this->mapStatusItems($data, $request);
 
         return $request;
     }

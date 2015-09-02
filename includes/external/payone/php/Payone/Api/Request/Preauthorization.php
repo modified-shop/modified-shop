@@ -33,5 +33,25 @@
 class Payone_Api_Request_Preauthorization extends Payone_Api_Request_Authorization_Abstract
 {
     protected $request = Payone_Api_Enum_RequestType::PREAUTHORIZATION;
+    protected $api_version = null;
+    protected $cashtype = null;
+    
+    function getApiVersion() {
+        return $this->api_version;
+    }
+
+    function getCashtype() {
+        return $this->cashtype;
+    }
+
+    function setApiVersion($api_version) {
+        $this->api_version = $api_version;
+    }
+
+    function setCashtype($cashtype) {
+        $this->cashtype = $cashtype;
+    }
+
+
 
 }

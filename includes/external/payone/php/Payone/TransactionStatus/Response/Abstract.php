@@ -34,26 +34,13 @@
 
 
 abstract class Payone_TransactionStatus_Response_Abstract
-    implements Payone_TransactionStatus_Response_Interface, Payone_Protocol_Filter_Filterable
+    implements Payone_TransactionStatus_Response_Interface
 {
-    /**
-     * @param string $key
-     * @return null|mixed
-     */
-    public function getValue($key)
-    {
-        return $this->get($key);
-    }
 
     /**
-     * @param string $key
-     * @param string $name
-     * @return boolean|null
+     * @var Payone_Protocol_Service_ApplyFilters
      */
-    public function setValue($key, $name)
-    {
-        return $this->set($key, $name);
-    }
+    private $applyFilters = NULL;
 
     /**
      * @param $name
@@ -79,6 +66,14 @@ abstract class Payone_TransactionStatus_Response_Abstract
             return true;
         }
         return null;
+    }
+
+    /**
+     * @param Payone_Protocol_Service_ApplyFilters $applyFilters
+     */
+    public function setApplyFilters(Payone_Protocol_Service_ApplyFilters $applyFilters)
+    {
+        $this->applyFilters = $applyFilters;
     }
 
 }

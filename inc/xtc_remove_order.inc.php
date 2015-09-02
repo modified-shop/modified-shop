@@ -10,6 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  require_once(DIR_FS_INC.'xtc_restock_order.inc.php');
+
   function xtc_remove_order($order_id, $restock = false) {
     if ($restock == 'on') {
       xtc_restock_order($order_id);

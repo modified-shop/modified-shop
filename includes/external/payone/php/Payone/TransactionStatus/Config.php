@@ -43,18 +43,14 @@ class Payone_TransactionStatus_Config extends Payone_Config_Abstract
                 ),
                 'protocol' => array(
                     'filter' => array(
-                        'mask_value' => array(
+                        Payone_Protocol_Filter_MaskValue::FILTER_KEY => array(
                             'enabled' => 1,
                             'percent' => 100
+                        ),
+                        Payone_Protocol_Filter_MaskAllValue::FILTER_KEY => array(
+                            'enabled' => 1
                         )
                     ),
-//                    'loggers' => array(
-//                        'Payone_Protocol_Logger_Log4php' => array(
-//                            'filename' => 'payone_transactionstatus.log',
-//                            'max_file_size' => '1MB',
-//                            'max_file_count' => 20
-//                        )
-//                    ),
                 ),
             )
         );
