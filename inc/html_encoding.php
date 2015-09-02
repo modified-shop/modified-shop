@@ -77,11 +77,14 @@ function decode_htmlspecialchars ($string, $flags = ENT_COMPAT, $encoding = '')
 /**
  * decode_utf8
  */
-function decode_utf8($string) {
-  if (strtolower($_SESSION['language_charset']) == 'utf-8') {
-    return $string;
-  } else {
-    return utf8_decode($string);
+function decode_utf8($in_str) {
+  if (strtolower($_SESSION['language_charset']) != 'utf-8') {
+    $cur_encoding = mb_detect_encoding($in_str);
+    if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
+      return mb_convert_encoding($in_str,"ISO-8859-15","UTF-8");
+    } else {
+      return $in_str;
+    }
   }
 }
 
