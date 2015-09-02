@@ -1,7 +1,7 @@
 ﻿/*!
  * jquery.sumoselect - v2.1.0
  * http://hemantnegi.github.io/jquery.sumoselect
- * 2015-08-31 //modified createElems, add autoSelect, add showSelectItem  by web28, www.rpa-com.de
+ * 2015-09-02 by web28, www.rpa-com.de --- modified init, add createElemsMod, add autoSelect, add showSelectItem, add settings:consoleLog,autoSelect,createElems,timeout,word 
  *
  * Copyright 2015 Hemant Negi
  * Email : hemant.frnz@gmail.com
@@ -32,6 +32,7 @@
             selectAlltext: 'Select All',   // the text to display for select all.
             consoleLog: false,
             autoSelect: true,
+            createElems: '',
             timeout: 900,
             word: '',
 
@@ -56,7 +57,7 @@
                 mob:false, // if to open device default select
                 Pstate: [],
 
-                createElems: function () {
+                createElemsMod: function () {
                     var O = this;
                     O.select = O.E.parent();
                     O.CaptionCont = O.select.children('.CaptionCont');
@@ -77,7 +78,7 @@
                     O.selAllState();
                 },
                 
-                createElems_ORG: function () {
+                createElems: function () {
                     var O = this;
                     O.E.wrap('<div class="SumoSelect" tabindex="0">');
                     O.select = O.E.parent();
@@ -342,7 +343,7 @@
                 autoSelect: function(e) {
                     var O = this, c;
                     var key = e.which;
-                    var character = e.key; //important für # ä ö ü
+                    var character = e.key; //important for # ä ö ü
                     if (settings.consoleLog) console.log('character:'+ character);
                     if (!character) return;
                     var select = O.select.find('select');
@@ -687,7 +688,11 @@
 
                 init: function () {
                     var O = this;
-                    O.createElems();
+                    if (settings.createElems == 'mod') {
+                      O.createElemsMod();
+                    } else {
+                      O.createElems();
+                    }
                     O.setText();
                     return O
                 }
