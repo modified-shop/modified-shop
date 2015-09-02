@@ -93,6 +93,11 @@ $specials_query = xtc_db_query("SELECT count(*) as specials_count FROM " . TABLE
 $specials = xtc_db_fetch_array($specials_query);
 
 // turnover
+$where = '';
+if (ORDER_STATUSES_FOR_SALES_STATISTICS != '') {
+  $status_array = explode(',', ORDER_STATUSES_FOR_SALES_STATISTICS);
+  $where = " AND o.orders_status IN ('".implode("','", $status_array)."') ";
+}
 $turnover_query = xtc_db_query("SELECT round(coalesce(sum(if(date(o.date_purchased) = current_date, ot.value/o.currency_value, null)), 0), 2) today,
                                        round(coalesce(sum(if(date(o.date_purchased) = current_date - interval 1 day, ot.value/o.currency_value, null)), 0), 2) yesterday,
                                        round(coalesce(sum(if(extract(year_month from o.date_purchased) = extract(year_month from current_date), ot.value/o.currency_value, null)), 0), 2) this_month,
@@ -106,7 +111,8 @@ $turnover_query = xtc_db_query("SELECT round(coalesce(sum(if(date(o.date_purchas
                                   FROM " . TABLE_ORDERS . " o
                                   JOIN " . TABLE_ORDERS_TOTAL . " ot 
                                        ON ot.orders_id = o.orders_id
-                                 WHERE ot.class = 'ot_total'");
+                                 WHERE ot.class = 'ot_total'
+                                       ".$where);
 $turnover = xtc_db_fetch_array($turnover_query);  
 
 require (DIR_WS_INCLUDES.'head.php');
