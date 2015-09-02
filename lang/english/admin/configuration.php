@@ -818,7 +818,7 @@ define('USE_PAGINATION_LIST_TITLE', 'Pagination List');
 define('USE_PAGINATION_LIST_DESC', 'Use a HTML list (ul / li Tag) for Pagination.');
 
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Sales Report Filter');
-define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Choose the order statuses which shall be considered in the sales report when choosing "Sales Report Filter" in the status dropdown.<br />(To show only the real sales volume, choose the order status for completed orders.)');
+define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Choose the order statuses which shall be considered on the admin startpage and in the sales report when choosing "Sales Report Filter" in the status dropdown.<br />(To show only the real sales volume, choose the order status for completed orders.)<br /><b>Note:</b> For the "Sales Report Filter" to be displayed in the status dropdown, you have to choose at least two statuses. Otherwise you can directly choose the desired status in the dropdown.');
 
 define('SAVE_IP_LOG_TITLE', 'Save IP Address');
 define('SAVE_IP_LOG_DESC', 'Save the IP Address to database?<br/>With Option xxx the IP will be anonymous.');

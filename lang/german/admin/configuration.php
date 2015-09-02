@@ -817,7 +817,7 @@ define('USE_PAGINATION_LIST_TITLE', 'Pagination Liste');
 define('USE_PAGINATION_LIST_DESC', 'Verwende eine HTML Liste (ul / li Tag) f&uuml;r die Pagination / Seitenschaltung.');
 
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Umsatzstatistik Filter');
-define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Hier die Bestellstati ausw&auml;hlen, die f&uuml;r die Umsatzstatistik im Status-Dowpdown bei Verwendung des Status "Umsatzstatistik Filter" ber&uuml;cksichtig werden sollen.<br />(Um nur anzuzeigen was effektiv an Umsatz gemacht wurde, den Status w&auml;hlen, der bei abgeschlossener Bestellung verwendet wird.)');
+define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Hier die Bestellstati ausw&auml;hlen, die f&uuml;r die Umsatzstatistik auf der Admin-Startseite und im Status-Dowpdown bei Verwendung des Status "Umsatzstatistik Filter" ber&uuml;cksichtig werden sollen.<br />(Um nur anzuzeigen was effektiv an Umsatz gemacht wurde, den Status w&auml;hlen, der bei abgeschlossener Bestellung verwendet wird.)<br /><b>Hinweis:</b> Damit der Filter "Umsatzstatistik Filter" im Umsatzstatistik-Dropdown angezeigt wird, sind mindestens zwei Stati zu w&auml;hlen. Ansonsten kann &uuml;ber das Dropdown der gew&uuml;nschte Status direkt ausgew&auml;hlt werden.');
 
 define('SAVE_IP_LOG_TITLE', 'IP-Adresse speichern');
 define('SAVE_IP_LOG_DESC', 'Soll die IP-Adresse in der Datenbank gespeichert werden?<br/>Bei der Option xxx werden die letzten Stellen der IP anonymisiert.');
