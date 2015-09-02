@@ -77,6 +77,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/includes/functions/languages.php', // neu
                      'admin/includes/functions/validations.php', // neu
                      'admin/includes/haendlerbund/css/ui_custom.css', // neu
+                     'admin/includes/haendlerbund/jquery-1.4.4.js', // neu
                      'admin/includes/modules/carp/carp.php',
                      'admin/includes/modules/carp/carpconf.php',
                      'admin/includes/modules/carp/carpinc.php',
