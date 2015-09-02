@@ -1024,4 +1024,7 @@ define('ATTRIBUTES_VALID_CHECK_DESC', 'Pr&uuml;ft Artikel im Warenkorb des Kunde
 
 define('ATTRIBUTE_MODEL_DELIMITER_TITLE', 'Artikel-/Attribut-Nr.-Trennzeichen');
 define('ATTRIBUTE_MODEL_DELIMITER_DESC', 'Trennzeichen zwischen Artikelnummer &amp; Attribut-Artikelnummer');
+
+define('STORE_PAGE_PARSE_TIME_THRESHOLD_TITLE' , 'Schwellwert f&uuml;r das Speichern der Berechnungszeit des Seitenaufbaus');
+define('STORE_PAGE_PARSE_TIME_THRESHOLD_DESC' , 'Legt den Schwellwert in Sekunden fest, ab dem ein Eintrag f&uuml;r die Berechnungszeit des Seitenaufbaus geschrieben werden soll.');
 ?>

@@ -121,6 +121,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'ATTRIBUTES_VALID_CHECK', 'true', '9', '22', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
 
 //configuration_group_id 10 --- "Logging Optionen"
+  $values[] = "(NULL, 'STORE_PAGE_PARSE_TIME_THRESHOLD', '1.0', '10', '2', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'STORE_DB_SLOW_QUERY', 'false', '10', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'STORE_DB_SLOW_QUERY_TIME', '1.0', '10', '7', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'DISPLAY_ERROR_REPORTING', 'none', '10', '8', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'none\', \'admin\', \'all\'),');";

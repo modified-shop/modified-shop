@@ -1032,4 +1032,7 @@ define('ATTRIBUTES_VALID_CHECK_DESC', 'Checks products in customers cart for att
 
 define('ATTRIBUTE_MODEL_DELIMITER_TITLE', 'Product-/Attribute-No. delimiter');
 define('ATTRIBUTE_MODEL_DELIMITER_DESC', 'Delimiter between product number &amp; attribute product number');
+
+define('STORE_PAGE_PARSE_TIME_THRESHOLD_TITLE' , 'Threshold for storing the page parse time');
+define('STORE_PAGE_PARSE_TIME_THRESHOLD_DESC' , 'Determines the threshold in seconds for storing the page parse time.');
 ?>
