@@ -56,9 +56,6 @@
 
         if ($check_zones_rows_query != $this->num_zones) {
           $this->install_zones($check_zones_rows_query);
-          xtc_db_query("UPDATE ".TABLE_CONFIGURATION." 
-                           SET configuration_value = '".(int)$check_zones_rows_query."' 
-                         WHERE configuration_key = 'MODULE_SHIPPING_".strtoupper($this->code)."_NUMBER_ZONES'");
         }
       }
     }
@@ -148,6 +145,16 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_SORT_ORDER', '0', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_NUMBER_ZONES', '5', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_ZONES_DISPLAY', 'True', '6', '7', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+
+      $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_".strtoupper($this->code)."_COUNTRIES_%'");
+      $check_zones_rows_query = xtc_db_num_rows($check_zones_query);
+
+      if ($check_zones_rows_query != 0) {
+        $this->install_zones($check_zones_rows_query);
+        xtc_db_query("UPDATE ".TABLE_CONFIGURATION." 
+                         SET configuration_value = '".(int)$check_zones_rows_query."' 
+                       WHERE configuration_key = 'MODULE_SHIPPING_".strtoupper($this->code)."_NUMBER_ZONES'");
+      }
     }
 
     function install_zones($number_of_zones) {
@@ -160,9 +167,9 @@
         for ($i = (($number_of_zones==0) ? 1 : $number_of_zones); $i <= $this->num_zones; $i ++) {
           $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_ZONES_COUNTRIES_".$i."'");
           if (xtc_db_num_rows($check_zones_query) < 1) {
-            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_ZONES_COUNTRIES_".$i."', '', '6', '0', 'xtc_cfg_textarea(', now())");
-            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_COST_".$i."', '', '6', '0', now())");
-            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_HANDLING_".$i."', '0', '6', '0', now())");
+            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_ZONES_COUNTRIES_".$i."', '', '6', '0', 'xtc_cfg_textarea(', now())");
+            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_COST_".$i."', '', '6', '0', now())");
+            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_HANDLING_".$i."', '0', '6', '0', now())");
           }
         }      
       } else {
