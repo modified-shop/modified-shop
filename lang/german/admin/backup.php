@@ -61,4 +61,7 @@ define('TEXT_INFO_NO_INFORMATION', 'Kein Informationen vorhanden');
 //UTF-8 convert
 define('TEXT_CONVERT_TO_UTF', 'Datenbank auf UTF-8 konvertieren');
 define('TEXT_IMPORT_UTF', 'UTF-8 Datenbank wiederherstellen');
+
+//TEXT_REMOVE_COLLATE
+define('TEXT_REMOVE_COLLATE', "<b>Ohne Zeichenkodierung 'COLLATE' und 'DEFAULT CHARSET'</b><br> - Die Angaben zur Zeichenkodierung werden nicht eingef&uuml;gt. Sinnvoll bei Migration auf eine andere DB-Zeichenkodierung.");
 ?>
