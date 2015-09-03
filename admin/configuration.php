@@ -76,19 +76,19 @@
             }
             if ($_POST[$configuration['configuration_key']] != $configuration['configuration_value']) {
               //value_limits min
-              if (isset($value_limits[$configuration['configuration_key']]['min']) && preg_match ("/^([0-9]+)$/", $_POST[$configuration['configuration_key']]) &&  (int)$_POST[$configuration['configuration_key']] < $value_limits[$configuration['configuration_key']]['min']) {
+              if (isset($value_limits[$configuration['configuration_key']]['min']) && preg_match ("/^([0-9\.]+)$/", $_POST[$configuration['configuration_key']]) &&  (int)$_POST[$configuration['configuration_key']] < $value_limits[$configuration['configuration_key']]['min']) {
                 $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
                 $messageStack->add_session(sprintf(CONFIG_MIN_VALUE_WARNING,$configuration_key_title,$_POST[$configuration['configuration_key']],$value_limits[$configuration['configuration_key']]['min'] ), 'warning');
                 $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
               }
               //value_limits max
-              if (isset($value_limits[$configuration['configuration_key']]['max']) && preg_match ("/^([0-9]+)$/", $_POST[$configuration['configuration_key']]) &&  (int)$_POST[$configuration['configuration_key']] > $value_limits[$configuration['configuration_key']]['max']) {
+              if (isset($value_limits[$configuration['configuration_key']]['max']) && preg_match ("/^([0-9\.]+)$/", $_POST[$configuration['configuration_key']]) &&  (int)$_POST[$configuration['configuration_key']] > $value_limits[$configuration['configuration_key']]['max']) {
                 $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
                 $messageStack->add_session(sprintf(CONFIG_MAX_VALUE_WARNING,$configuration_key_title,$_POST[$configuration['configuration_key']],$value_limits[$configuration['configuration_key']]['max'] ), 'warning');
                 $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
               }
               //check numeric input
-              if (!preg_match ("/^([0-9]+)$/", $_POST[$configuration['configuration_key']]) && (isset($value_limits[$configuration['configuration_key']]['min']) || isset($value_limits[$configuration['configuration_key']]['max']))) {
+              if (!preg_match ("/^([0-9\.]+)$/", $_POST[$configuration['configuration_key']]) && (isset($value_limits[$configuration['configuration_key']]['min']) || isset($value_limits[$configuration['configuration_key']]['max']))) {
                 $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
                 $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
                 $messageStack->add_session(sprintf(CONFIG_INT_VALUE_ERROR,$configuration_key_title,$_POST[$configuration['configuration_key']],''), 'error');
