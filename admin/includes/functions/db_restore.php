@@ -223,6 +223,12 @@ function get_sqlbefehl()
 							{
 								$restore['anzahl_zeilen']=$config['minspeed'];
 								$sqlparser_status=100;
+								if ($config['ignore_enable_keys'] &&
+								    strrpos($zeile, 'ENABLE KEYS ') !== false)
+								{
+                    $sqlparser_status=100;
+								    $complete_sql = '';
+								}
 							}
 						}
 						
@@ -357,25 +363,23 @@ function del_inline_comments($sql)
 // extrahiert auf einfache Art den Tabellennamen aus dem "Create",Drop"-Befehl
 function get_tablename($t)
 {
-	// alle Schluesselbegriffe entfernen, bis der Tabellenname am Anfang steht
-	$t=substr($t,0,150); // verkuerzen, um Speicher zu sparen - wir brauchenhier nur den Tabellennamen
-	//BOF  FIX FOR PHP4
-	$t= strtoupper($t);
-	$t=str_replace('DROP TABLE','',$t);
-	$t=str_replace('DROP VIEW','',$t);
-	$t=str_replace('CREATE TABLE','',$t);
-	$t=str_replace('INSERT INTO','',$t);
-	$t=str_replace('REPLACE INTO','',$t);
-	$t=str_replace('IF NOT EXISTS','',$t);
-	$t=str_replace('IF EXISTS','',$t);
+  $t=trim($t);
+  // alle Schluesselbegriffe entfernen, bis der Tabellenname am Anfang steht
+	$t=substr($t,0,150); // verkuerzen, um Speicher zu sparen - wir brauchen hier nur den Tabellennamen
+	$t=str_ireplace('DROP TABLE','',$t);
+	$t=str_ireplace('DROP VIEW','',$t);
+	$t=str_ireplace('CREATE TABLE','',$t);
+	$t=str_ireplace('INSERT INTO','',$t);
+	$t=str_ireplace('REPLACE INTO','',$t);
+	$t=str_ireplace('IF NOT EXISTS','',$t);
+	$t=str_ireplace('IF EXISTS','',$t);
 	if (substr(strtoupper($t),0,16)=='CREATE ALGORITHM')
 	{
 		$pos=strpos($t,'DEFINER VIEW ');
 		$t=substr($t,$pos,strlen($t)-$pos);
 	}
-	$t=str_replace(';',' ;',$t); // tricky -> insert space as delimiter
-	$t=trim(strtolower($t));
-	//EOF  FIX FOR PHP4
+	$t=str_ireplace(';',' ;',$t); // tricky -> insert space as delimiter
+	$t=trim($t);
 	
 	// jetzt einfach nach dem ersten Leerzeichen suchen
 	$delimiter=substr($t,0,1);

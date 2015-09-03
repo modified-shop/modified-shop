@@ -90,7 +90,7 @@
     //echo '<pre>'.print_r($data,1).'</pre>';
     $newdata = array();
     foreach($data as $keys) {
-      $newdata[] = $keys['name'] . ' ['.$keys['rows'].']';
+      $newdata[] = $keys['name'] . ($keys['rows'] != '' ? ' ['.$keys['rows'].']' : '');
     }
     return implode('<br>',$newdata);
   }
@@ -329,7 +329,7 @@
                       if (!$check_utf8) {
                         $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('utf8-convert', 'yes', false) . ' ' . TEXT_IMPORT_UTF);
                       }
-                      $contents[] = array('align' => 'center', 'text' => '<br /><a class="button" onclick="this.blur();" href="' . xtc_href_link(RS_FILENAME, 'file=' . $buInfo->file . '&action=restorenow') . '">' . BUTTON_RESTORE . '</a>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file) . '">' . BUTTON_CANCEL . '</a>');
+                      $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_RESTORE . '"/>&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file) . '">' . BUTTON_CANCEL . '</a>');
                       break;
 
                     case 'restorelocal':

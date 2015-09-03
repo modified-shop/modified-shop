@@ -95,6 +95,7 @@
   }
 
   // include the language translations
+  require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$_SESSION['language'] . '.php');
   require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/buttons.php');
   if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.'backup_db.php')) {
     include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'. 'backup_db.php');
@@ -254,6 +255,9 @@ if(is_file(DIR_WS_INCLUDES.'head.php')) {
 <script type="text/javascript">
   //Check if jQuery is loaded
   !window.jQuery && document.write('<script src="includes/javascript/jquery-1.8.3.min.js" type="text/javascript"><\/script>');
+  $(document).ready(function() {
+    document.title = "<?php echo HEADING_TITLE; ?>";
+  });
 </script>
 </head>
   <body>
