@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * Shopgate GmbH
 *
 * URHEBERRECHTSHINWEIS
@@ -20,14 +20,15 @@
 *
 *  @author Shopgate GmbH <interfaces@shopgate.com>
 */
-##### XTC3 | XTCM BOF #####
-//
-//
-##### XTC3 | XTCM BOF #####
 
 define('MODULE_PAYMENT_SHOPGATE_TEXT_TITLE', 'Shopgate');
 define('MODULE_PAYMENT_SHOPGATE_TEXT_DESCRIPTION', 'Shopgate - Mobile Shopping.');
 define('MODULE_PAYMENT_SHOPGATE_TEXT_INFO','Orders are already paid at Shopgate.');
+
+define('MODULE_PAYMENT_SHOPGATE_ORDER_LINE_TEXT_SHIPPING','Shipping');
+define('MODULE_PAYMENT_SHOPGATE_ORDER_LINE_TEXT_SUBTOTAL','Subtotal');
+define('MODULE_PAYMENT_SHOPGATE_ORDER_LINE_TEXT_PAYMENTFEE','Payment Fees');
+define('MODULE_PAYMENT_SHOPGATE_ORDER_LINE_TEXT_TOTAL','Total');
 
 define('MODULE_PAYMENT_SHOPGATE_TEXT_EMAIL_FOOTER', "");
 define('MODULE_PAYMENT_SHOPGATE_STATUS_TITLE' , 'Shopgate payment module activated:');
@@ -37,8 +38,8 @@ define('MODULE_PAYMENT_SHOPGATE_ALLOWED_TITLE' , '');
 define('MODULE_PAYMENT_SHOPGATE_ALLOWED_DESC' , '');
 define('MODULE_PAYMENT_SHOPGATE_PAYTO_TITLE' , '');
 define('MODULE_PAYMENT_SHOPGATE_PAYTO_DESC' , '');
-define('MODULE_PAYMENT_SHOPGATE_SORT_ORDER_TITLE' , '');
-define('MODULE_PAYMENT_SHOPGATE_SORT_ORDER_DESC' , '');
+define('MODULE_PAYMENT_SHOPGATE_SORT_ORDER_TITLE' , 'Sort order of display');
+define('MODULE_PAYMENT_SHOPGATE_SORT_ORDER_DESC' , 'Sort order of display. Lowest is displayed first.');
 define('MODULE_PAYMENT_SHOPGATE_ZONE_TITLE' , '');
 define('MODULE_PAYMENT_SHOPGATE_ZONE_DESC' , '');
 define('MODULE_PAYMENT_SHOPGATE_ORDER_STATUS_ID_TITLE' , 'Status');
@@ -50,3 +51,6 @@ define('MODULE_PAYMENT_SHOPGATE_ERROR_SAVING_CONFIG',
 		'Please check the permissions (777) for the folder '.
 		'&quot;/shopgate_library/config&quot; of the Shopgate plugin.'
 );
+
+define("MODULE_PAYMENT_SHOPGATE_LABEL_NEW_PRODUCTS","New products");
+define("MODULE_PAYMENT_SHOPGATE_LABEL_SPECIAL_PRODUCTS","Special products");

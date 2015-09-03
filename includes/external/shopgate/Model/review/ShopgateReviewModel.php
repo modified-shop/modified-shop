@@ -20,6 +20,44 @@
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
-require_once 'includes/application_top.php';
-include_once DIR_FS_CATALOG
-	. 'includes/external/shopgate/base/admin/shopgate.php';
+
+class ShopgateReviewModel extends Shopgate_Model_Catalog_Review{
+	
+	
+	/**
+	 * @var int $languageId
+	 */
+	private $languageId;
+	
+	/**
+	 * @param mixed $languageId
+	 */
+	public function setLanguageId($languageId)
+	{
+		$this->languageId = $languageId;
+	}
+	
+	/**
+	 * @param null $limit
+	 * @param null $offset
+	 *
+	 * @return string
+	 */
+	public function getReviewQuery($limit = null, $offset = null)
+	{
+		return 
+			"SELECT
+				r.reviews_id,
+				r.products_id,
+				r.customers_name,
+				r.reviews_rating,
+				r.date_added,
+				rd.reviews_text
+			FROM
+			" . TABLE_REVIEWS . " as r
+			INNER JOIN
+			" . TABLE_REVIEWS_DESCRIPTION . " as rd ON r.reviews_id = rd.reviews_id
+			WHERE rd.languages_id = '".$this->languageId."'
+			ORDER BY r.products_id ASC" . (!empty($limit) && !empty($offset) ? " LIMIT $offset,$limit" : "");
+	}
+}

@@ -156,11 +156,6 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	 * @var boolean determines if for a specific case the mobile redirect should be suppressed
 	 */
 	protected $suppressRedirect;
-	
-	/**
-	 * @var array[string, mixed]
-	 */
-	protected $queryParameters;
 
 	/**
 	 * Instantiates the Shopgate mobile redirector.
@@ -194,9 +189,6 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		$this->linkTagTemplatePath = dirname(__FILE__).'/../assets/link_tag.html';
 		$this->cookieLife = gmdate('D, d-M-Y H:i:s T', time());
 		$this->buttonDescription = 'Mobile Webseite aktivieren';
-		
-		$varName = '_'.'GET';
-		$this->queryParameters = ${$varName};
 	}
 
 	####################
@@ -294,7 +286,7 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 
 	public function isRedirectAllowed() {
 		// if GET parameter is set create cookie and do not redirect
-		if (!empty($this->queryParameters['shopgate_redirect'])) {
+		if (!empty($_GET['shopgate_redirect'])) {
 			setcookie(ShopgateMobileRedirectInterface::COOKIE_NAME, 1, time() + 604800, '/'); // expires after 7 days
 			return false;
 		}
@@ -436,6 +428,7 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		
 		if($redirectCode == 'default') {
 			$additionalParameters .= '_shopgate.is_default_redirect_disabled = '.((!$this->enableDefaultRedirect) ? 'true' : 'false').';';
+			$linkTag = '';
 		}
 		
 		if($this->suppressRedirect) {
@@ -637,8 +630,8 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	 * @return string $url
 	 */
 	protected function processQueryString($url) {
-		$queryDataKeys = array_intersect($this->config->getRedirectableGetParams(), array_keys($this->queryParameters));
-		$queryData = array_intersect_key($this->queryParameters, array_flip($queryDataKeys));
+		$queryDataKeys = array_intersect($this->config->getRedirectableGetParams(), array_keys($_GET));
+		$queryData = array_intersect_key($_GET, array_flip($queryDataKeys));
 		
 		$connector = preg_match('/\?/', $url) ? "&" : "?";
 		

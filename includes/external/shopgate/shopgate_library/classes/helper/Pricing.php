@@ -20,6 +20,21 @@
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
-require_once 'includes/application_top.php';
-include_once DIR_FS_CATALOG
-	. 'includes/external/shopgate/base/admin/shopgate.php';
+
+class Shopgate_Helper_Pricing {
+
+	/**
+	 * Rounds and formats a price.
+	 *
+	 * @param float $price The price of an item.
+	 * @param int $digits The number of digits after the decimal separator.
+	 * @param string $decimalPoint The decimal separator.
+	 * @param string $thousandPoints The thousands separator.
+	 * @return float|string
+	 */
+	public function formatPriceNumber($price, $digits = 2, $decimalPoint = ".", $thousandPoints = "") {
+		$price = round($price, $digits);
+		$price = number_format($price, $digits, $decimalPoint, $thousandPoints);
+		return $price;
+	}
+}

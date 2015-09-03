@@ -26,29 +26,29 @@
  * @class Shopgate_Model_Catalog_Price
  * @see http://developer.shopgate.com/file_formats/xml/products
  *
- *  @method         setType(string $value)
- *  @method string  getType()
+ *  @method                                      setType(string $value)
+ *  @method string                               getType()
  *
- *  @method         setPrice(float $value)
- *  @method float   getPrice()
+ *  @method                                      setPrice(float $value)
+ *  @method float                                getPrice()
  *
- *  @method         setCost(float $value)
- *  @method float   getCost()
+ *  @method                                      setCost(float $value)
+ *  @method float                                getCost()
  *
- *  @method         setSalePrice(float $value)
- *  @method float   getSalePrice()
+ *  @method                                      setSalePrice(float $value)
+ *  @method float                                getSalePrice()
  *
- *  @method         setMsrp(float $value)
- *  @method float   getMsrp()
+ *  @method                                      setMsrp(float $value)
+ *  @method float                                getMsrp()
  *
- *  @method         setTierPricesGroup(array $value)
- *  @method array   getTierPricesGroup()
+ *  @method                                      setTierPricesGroup(array $value)
+ *  @method Shopgate_Model_Catalog_TierPrice[]   getTierPricesGroup()
  *
- *  @method         setMinimumOrderAmount(int $value)
- *  @method int     getMinimumOrderAmount()
+ *  @method                                      setMinimumOrderAmount(int $value)
+ *  @method int                                  getMinimumOrderAmount()
  *
- *  @method         setBasePrice(string $value)
- *  @method string  getBasePrice()
+ *  @method                                      setBasePrice(string $value)
+ *  @method string                               getBasePrice()
  *
  */
 class Shopgate_Model_Catalog_Price extends Shopgate_Model_AbstractExport {
@@ -90,7 +90,7 @@ class Shopgate_Model_Catalog_Price extends Shopgate_Model_AbstractExport {
 	public function asXml(Shopgate_Model_XmlResultObject $itemNode) {
 		/**
 		 * @var Shopgate_Model_XmlResultObject $tierPricesNode
-		 * @var Shopgate_Model_Customer_Group  $customerGroupItem
+		 * @var Shopgate_Model_Catalog_TierPrice  $customerGroupItem
 		 */
 		$pricesNode = $itemNode->addChild('prices');
 		$pricesNode->addAttribute('type', $this->getType());

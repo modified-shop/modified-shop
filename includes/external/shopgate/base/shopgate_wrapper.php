@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Shopgate GmbH
  *
@@ -20,6 +21,43 @@
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
-require_once 'includes/application_top.php';
-include_once DIR_FS_CATALOG
-	. 'includes/external/shopgate/base/admin/shopgate.php';
+
+class ShopgateWrapper{
+
+	/**
+	 * Wraps for example: xtc_db_prepare_input
+	 *
+	 * @param string $input
+	 *
+	 * @return string
+	 */
+	public static function db_prepare_input($input)
+	{
+		if (defined('PROJECT_MAJOR_VERSION')) {
+			return xtc_db_input($input);
+		} else {
+			return xtc_db_prepare_input($input);
+		}
+	}
+
+	/**
+	 * @param $db_query
+	 * @return mixed
+	 */
+	public static function db_fetch_array($db_query)
+	{
+		return xtc_db_fetch_array($db_query);
+
+	}
+
+	/**
+	 * @param $query
+	 * @param string $link
+	 * @return mixed
+	 */
+	public static function db_query($query, $link = 'db_link')
+	{
+		return xtc_db_query($query, $link);
+
+	}
+}

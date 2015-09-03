@@ -49,7 +49,7 @@ class ShopgateCouponModel {
 	 * @return array
 	 */
 	public function getZoneByCountryId($zoneCountryId) {
-		$query = "select * from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_FLAT_ZONE . "' and zone_country_id = '" . $zoneCountryId . "' order by zone_id";
+		$query = "select * from " . TABLE_ZONES_TO_GEO_ZONES . " where zone_country_id = '" . $zoneCountryId . "' order by zone_id";
 		$result = xtc_db_query($query);
 		$CountryResult = xtc_db_fetch_array($result);
 		return $CountryResult;
@@ -109,8 +109,21 @@ class ShopgateCouponModel {
 		return $taxResult["title"];
 	}
 
-	public function getProductIdFromCartItem(ShopgateOrderItem $product){
-		return is_null($product->getParentItemNumber()) ? $product->getItemNumber() : $product->getParentItemNumber();
+    /**
+     * @param ShopgateOrderItem $sgOrderItem
+     * @return string
+     */
+	public function getProductIdFromCartItem(ShopgateOrderItem $sgOrderItem) {
+        $parentId = $sgOrderItem->getParentItemNumber();
+        if (empty($parentId)) {
+            $id = $sgOrderItem->getItemNumber();
+            if (strpos($id, "_") !== false) {
+                $productIdArr = explode('_', $id);
+                return $productIdArr[0];
+            }
+            return $id;
+        }
+        return $parentId;
 	}
 
 	/**

@@ -1,33 +1,28 @@
 <?php
-/*
-* Shopgate GmbH
-*
-* URHEBERRECHTSHINWEIS
-*
-* Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
-* zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
-* Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
-* öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
-* schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
-*
-* COPYRIGHT NOTICE
-*
-* This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
-* for the purpose of facilitating communication between the IT system of the customer and the IT system
-* of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
-* transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
-* of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
-*
-*  @author Shopgate GmbH <interfaces@shopgate.com>
-*/
+/**
+ * Shopgate GmbH
+ *
+ * URHEBERRECHTSHINWEIS
+ *
+ * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+ * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+ * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+ * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+ * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+ *
+ * COPYRIGHT NOTICE
+ *
+ * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+ * for the purpose of facilitating communication between the IT system of the customer and the IT system
+ * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+ * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+ * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+ *
+ *  @author Shopgate GmbH <interfaces@shopgate.com>
+ */
 require_once 'includes/application_top.php';
-
-
-
-##### XTCM BOF #####
 require(DIR_FS_CATALOG.'/includes/external/shopgate/shopgate_library/shopgate.php');
 require(DIR_FS_CATALOG.'/includes/external/shopgate/base/shopgate_config.php');
-##### XTCM EOF #####
 
 $encodings = array('UTF-8', 'ISO-8859-1', 'ISO-8859-15');
 $error = array();
@@ -47,33 +42,6 @@ if(!empty($sg_language)) {
 	}
 }
 
-##### XTC3 | XTCM BOF #####
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-//
-//
-//
-//
-//
-//
-##### XTC3 | XTCM EOF #####
-
 // determine redirect_languages for global configuration
 if (($sg_language === null) && !isset($_POST['_shopgate_config']['redirect_languages'])) {
 	$_POST['_shopgate_config']['redirect_languages'] = array();
@@ -82,14 +50,11 @@ if (($sg_language === null) && !isset($_POST['_shopgate_config']['redirect_langu
 // load configuration
 if (isset($_GET['action']) && ($_GET["action"] === "save")) {
 	try {
-##### XTCM BOF #####
 		$shopgateConfig = new ShopgateConfigModified();
-##### XTCM EOF #####
-		
 		// check if some settings are selected, keep default if not
 		$sgEmptySettings = array(
 			'language', 'currency', 'country', 'tax_zone_id', 'customer_price_group', 'customer_status_id',
-			'order_status_open', 'order_status_shipping_blocked', 'order_status_shipped', 'order_status_cancled'
+			'order_status_open', 'order_status_shipping_blocked', 'order_status_shipped', 'order_status_canceled'
 		);
 		foreach ($sgEmptySettings as $sgEmptySetting) {
 			if ($_POST['_shopgate_config'][$sgEmptySetting] == '-') {
@@ -110,22 +75,20 @@ if (isset($_GET['action']) && ($_GET["action"] === "save")) {
 		switch ($e->getCode()) {
 			case ShopgateLibraryException::CONFIG_READ_WRITE_ERROR:
 				$shopgate_message .= SHOPGATE_CONFIG_ERROR_READ_WRITE;
-			break;
+				break;
 			case ShopgateLibraryException::CONFIG_INVALID_VALUE:
 				$shopgate_message .= SHOPGATE_CONFIG_ERROR_INVALID_VALUE.$e->getAdditionalInformation();
 				foreach (explode(',', $e->getAdditionalInformation()) as $errorField) {
 					$error[$errorField] = true;
 				}
-			break;
+				break;
 		}
 		$shopgateConfig = $_POST['_shopgate_config']; // keep submitted form data
 	}
 } else {
 	try {
 		$shopgate_message = '';
-##### XTCM BOF #####
 		$shopgateConfig = new ShopgateConfigModified();
-##### XTCM EOF #####
 		
 		if ($sg_language !== null) {
 			$sgUseGlobalConfig = $shopgateConfig->checkUseGlobalFor($sg_language);
@@ -168,9 +131,9 @@ if($_GET["sg_option"] === "config") {
 		SELECT
 			orders_status_id,
 			".(($sg_language === null)
-					? "CONCAT(orders_status_name, ' (', code, ')') AS orders_status_name"
-					: 'orders_status_name'
-			).",
+			? "CONCAT(orders_status_name, ' (', code, ')') AS orders_status_name"
+			: 'orders_status_name'
+		).",
 			code
 		FROM orders_status os
 		INNER JOIN languages l ON l.languages_id = os.language_id
@@ -188,9 +151,9 @@ if($_GET["sg_option"] === "config") {
 		SELECT
 			s.customers_status_id,
 			".(($sg_language === null)
-					? "CONCAT(customers_status_name, ' (', code, ')') AS customers_status_name"
-					: 'customers_status_name'
-			)."
+			? "CONCAT(customers_status_name, ' (', code, ')') AS customers_status_name"
+			: 'customers_status_name'
+		)."
 		FROM `".TABLE_CUSTOMERS_STATUS."` s
 		INNER JOIN `".TABLE_LANGUAGES."` l ON s.language_id = l.languages_id
 		WHERE
@@ -272,36 +235,12 @@ if($_GET["sg_option"] === "config") {
 			$sgInstalledShippingModules[$shippingModule] = constant('MODULE_SHIPPING_'.strtoupper($shippingModule).'_TEXT_TITLE');
 		}
 	}
-	
-##### XTC3 | XTCM BOF #####
-//
-//
-//
-//
-//
-//
 }
 
-//
-//
-//
-//
-//
-//
-//
-##### XTC3 | XTCM EOF #####
-
-##### XTCM BOF #####
-//
-//
-//
-//
-//
-##### XTCM BOF #####
 if (defined('RUN_MODE_ADMIN')) {
 	require (DIR_WS_INCLUDES.'head.php');
 } else {
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+	echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
 <html '.HTML_PARAMS.'>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset='.$_SESSION['language_charset'].'">
@@ -310,178 +249,155 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 	<link rel="stylesheet" type="text/css" href="includes/stylesheet.css" />'."\n";
 }
 ?>
-	<script type="text/javascript" src="includes/general.js"></script>
-	<script type="text/javascript">
-		<!--
-		function sgDisplayLanguageSelection(sg_button) {
-			document.getElementById('shopgate_language_selection').setAttribute('style', 'display: block;');
-			sg_button.setAttribute('style', 'display: none;');
-		}
-		
-		function sgLoadLanguage(sg_option) {
-			var sg_language = document.getElementById("sg_language").options[document.getElementById("sg_language").selectedIndex].value;
-			window.location = '<?php echo FILENAME_SHOPGATE ?>?sg_option='+sg_option+((sg_language.length > 0) ? '&sg_language='+sg_language : '');
-		}
-
-		function sgToggleSettings(sg_checkbox) {
-			document.getElementById("sg_settings").setAttribute('style', (sg_checkbox.checked ? 'display: none;' : 'display: table;'));
-		}
-		// -->
-	</script>
-	<style type="text/css">
-		.shopgate_iframe {
-			width: 1000px;
-			min-height: 600px;
-			height: 100%;
-			border: 0;
-		}
-		
-		table.shopgate_setting {
-<?php ##### XTC3 | XTCM BOF ##### ?>
-<?php // ?>
-<?php ##### XTC3 | XTCM EOF ##### ?>
-		}
-		
-		td.shopgate_setting {
-			width: 1050px;
-		}
-		
-		tr.shopgate_even {
-<?php ##### XTC3 | XTCM BOF ##### ?>
-<?php // ?>
-<?php ##### XTC3 | XTCM EOF ##### ?>
-		}
-		
-		tr.shopgate_uneven {
-<?php ##### XTC3 | XTCM BOF ##### ?>
-<?php // ?>
-<?php ##### XTC3 | XTCM EOF ##### ?>
-		}
-		
-		td.shopgate_input div {
-<?php ##### XTCM BOF ##### ?>
-			background: #f9f0f1;
-			border: 1px solid #cccccc;
-<?php ##### XTCM EOF ##### ?>
-			margin-bottom: 10px;
-			padding: 2px;
-		}
-		
-		td.shopgate_input.error div input, td.shopgate_input.error div select {
-			border-color: red;
-		}
-		
-		div.shopgate_language_selection {
-			font-size: 11pt;
-<?php ##### XTCM | GambioGX BOF ##### ?>
-			background: #f9f0f1;
-<?php ##### XTCM | GambioGX EOF ##### ?>
-			padding: 12px;
-			margin-top: 8px;
-			margin-bottom: 8px;
-			border: 1px dashed #aaaaaa;
-			width: 1023px;
-		}
-		
-		div.shopgate_red_message {
-			background: #ffd6d9;
-			width; 100%;
-			padding: 10px;
-		}
-		
-		div.shopgate_blue_message {
-			background: #d6e9ff;
-			width; 100%;
-			padding: 10px;
-		}
-		
-		div.shopgate_language_selection div {
-			font-size: 8pt;
-			margin-bottom: 8px;
-		}
-		
-		div.sg_submit {
-			margin-top: 16px;
-		}
-		
-		div.sg_submit input {
-			padding: 2px;
-		}
-	</style>
+<script type="text/javascript" src="includes/general.js"></script>
+<script type="text/javascript">
+	<!--
+	function sgDisplayLanguageSelection(sg_button) {
+		document.getElementById('shopgate_language_selection').setAttribute('style', 'display: block;');
+		sg_button.setAttribute('style', 'display: none;');
+	}
+	
+	function sgLoadLanguage(sg_option) {
+		var sg_language = document.getElementById("sg_language").options[document.getElementById("sg_language").selectedIndex].value;
+		window.location = '<?php echo FILENAME_SHOPGATE ?>?sg_option='+sg_option+((sg_language.length > 0) ? '&sg_language='+sg_language : '');
+	}
+	
+	function sgToggleSettings(sg_checkbox) {
+		document.getElementById("sg_settings").setAttribute('style', (sg_checkbox.checked ? 'display: none;' : 'display: table;'));
+	}
+	// -->
+</script>
+<style type="text/css">
+	.shopgate_iframe {
+		width: 100%;
+		min-height: 600px;
+		height: 100%;
+		border: 0;
+	}
+	
+	td.shopgate_setting {
+		width: 1050px;
+	}
+	
+	td.shopgate_input div {
+		background: #f9f0f1;
+		border: 1px solid #cccccc;
+		margin-bottom: 10px;
+		padding: 2px;
+	}
+	
+	td.shopgate_input.error div input, td.shopgate_input.error div select {
+		border-color: red;
+	}
+	
+	div.shopgate_language_selection {
+		font-size: 11pt;
+		background: #f9f0f1;
+		padding: 12px;
+		margin-top: 8px;
+		margin-bottom: 8px;
+		border: 1px dashed #aaaaaa;
+		width: 1023px;
+	}
+	
+	div.shopgate_red_message {
+		background: #ffd6d9;
+		width; 100%;
+		padding: 10px;
+	}
+	
+	div.shopgate_blue_message {
+		background: #d6e9ff;
+		width; 100%;
+		padding: 10px;
+	}
+	
+	div.shopgate_language_selection div {
+		font-size: 8pt;
+		margin-bottom: 8px;
+	}
+	
+	div.sg_submit {
+		margin-top: 16px;
+	}
+	
+	div.sg_submit input {
+		padding: 2px;
+	}
+	#shopgate_image_wiki{
+		text-align: center;
+		background-color: white;
+		padding-top: 50px;
+		padding-bottom: 50px;
+	}
+	#shopgate_image_wiki img{
+		width: 500px;
+	}
+	
+	#shopgate_image_settings{
+		background-color: white;
+		padding: 20px;
+	}
+	
+	#shopgate_image_settings img{
+		width: 200px;
+	}
+</style>
 </head>
+<?php $tableClass = 'dataTableContent'; ?>
 <?php
-##### XTC3 | XTCM BOF #####
-	$tableClass = 'dataTableContent';
-##### XTC3 | XTCM EOF #####
+if (defined('PROJECT_MAJOR_VERSION')) {
+    require(DIR_FS_CATALOG . 'includes/external/shopgate/base/admin/templates/shopgate_header_v2.php');
+} else {
+    require(DIR_FS_CATALOG . 'includes/external/shopgate/base/admin/templates/shopgate_header_v1.php');
+}
 ?>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
-
-	<!-- header //-->
-	<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-	<!-- header_eof //-->
-
-	<!-- body //-->
-	<table border="0" width="100%" cellspacing="2" cellpadding="2">
-		<tr>
-			<td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-				<table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1"
-					cellpadding="1" class="columnLeft">
-					<!-- left_navigation //-->
-					<?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-					<!-- left_navigation_eof //-->
-				</table>
-			</td>
-			<!-- body_text //-->
-			<td class="boxCenter" width="100%" valign="top" style="height: 100%;">
-				<table border="0" width="100%" cellspacing="0" cellpadding="2" style="height:100%;">
-					<tr>
-						<td>
-<?php ##### XTC3 | XTCM BOF ##### ?>
-							<div class="pageHeading">
-<?php ##### XTC3 | XTCM EOF ##### ?>
-								<?php echo SHOPGATE_CONFIG_TITLE; ?>
-							</div>
-						</td>
-					</tr>
-					<tr style="height: 100%;">
-						<td class="main" style="height: 100%; vertical-align: top;">
-							<?php if(!empty($shopgate_message)):?>
+						<?php if(!empty($shopgate_message)):?>
 							<div class="shopgate_red_message">
 								<strong style="color: red;"><?php echo SHOPGATE_CONFIG_ERROR; ?></strong>
 								<?php echo htmlentities($shopgate_message , ENT_COMPAT, "UTF-8") ?>
 							</div>
-							<?php endif; ?>
-<?php if ($_GET["sg_option"] === "info"): ?>
+						<?php endif; ?>
+						<?php if ($_GET["sg_option"] === "info"): ?>
 							<iframe src="<?php echo SHOPGATE_LINK_HOME; ?>" class="shopgate_iframe"></iframe>
-<?php elseif($_GET["sg_option"] === "help"): ?>
-							<iframe src="<?php echo SHOPGATE_CONFIG_WIKI_LINK; ?>" class="shopgate_iframe"></iframe>
-<?php elseif($_GET["sg_option"] === "register"): ?>
-							<iframe src="<?php echo SHOPGATE_LINK_REGISTER; ?>" class="shopgate_iframe"></iframe>
-<?php elseif($_GET["sg_option"] === "config"): ?>
+						<?php elseif($_GET["sg_option"] === "help"): ?>
+							<div id="shopgate_image_wiki">
+								<a target="_blank" href="<?php echo SHOPGATE_LINK_WIKI; ?>">
+									<img src="../includes/external/shopgate/base/admin/includes/img/shopgate_manual_logo.jpg" alt="Shopgate Wiki"/>
+								</a>
+							</div>
+						<?php elseif($_GET["sg_option"] === "config"): ?>
 							<?php echo xtc_draw_form('shopgate', FILENAME_SHOPGATE, 'sg_option=config&action=save'.(($sg_language === null) ? '' : '&sg_language='.$sg_language)); ?>
 							<?php if (count($sgLanguages) > 1): ?>
-							<?php if ($sg_language === null): ?>
-							<?php if (!empty($shopgate_info)): ?>
-							<div class="shopgate_blue_message"><strong style="color: blue;">Info:</strong> <?php echo $shopgate_info; ?></div>
-							<br />
-							<?php endif; ?>
-							<button onclick="sgDisplayLanguageSelection(this); return false;" id="sg_multiple_shops_button"><?php echo SHOPGATE_CONFIG_MULTIPLE_SHOPS_BUTTON ?></button>
+								</br>
+								<div id="shopgate_image_settings">
+									<a target="_blank" href="<?php echo SHOPGATE_LINK_WIKI; ?>">
+										<img src="../includes/external/shopgate/base/admin/includes/img/shopgate_manual_logo.jpg" alt="Shopgate Wiki"/>
+									</a>
+								</div>
+								</br>							<?php if ($sg_language === null): ?>
+								<?php if (!empty($shopgate_info)): ?>
+									
+									<div class="shopgate_blue_message"><strong style="color: blue;">Info:</strong> <?php echo $shopgate_info; ?></div>
+									<br />
+								<?php endif; ?>
+								<button onclick="sgDisplayLanguageSelection(this); return false;" id="sg_multiple_shops_button"><?php echo SHOPGATE_CONFIG_MULTIPLE_SHOPS_BUTTON ?></button>
 							<?php endif ?>
 							<div class="shopgate_language_selection" id="shopgate_language_selection" style="display: <?php echo ($sg_language !== null) ? 'block' : 'none' ?>">
 								<div><?php echo SHOPGATE_CONFIG_LANGUAGE_SELECTION; ?></div>
 								<select onchange="sgLoadLanguage('<?php echo $_GET["sg_option"] ?>')" id="sg_language">
 									<option value=""><?php echo SHOPGATE_CONFIG_GLOBAL_CONFIGURATION; ?></option>
 									<?php foreach ($sgLanguages as $sgLanguage): ?>
-									<option value="<?php echo $sgLanguage['code']; ?>"<?php if ($sgLanguage['code'] == $sg_language) echo ' selected="selected"'; ?>>
-										- <?php echo $sgLanguage['name']; ?>
-									</option>
-									<?php endforeach; ?>
+								<option value="<?php echo $sgLanguage['code']; ?>"<?php if ($sgLanguage['code'] == $sg_language) echo ' selected="selected"'; ?>>
+									- <?php echo $sgLanguage['name']; ?>
+								</option>
+							<?php endforeach; ?>
 								</select>
 							</div>
 							<?php if ($sg_language !== null): ?>
-							<input type="hidden" name="sg_global_switch" value="0" />
-							<input type="checkbox" name="sg_global_switch" value="1" onclick="sgToggleSettings(this)" id="sg_global_switch" <?php if (!empty($sgUseGlobalConfig)) echo 'checked="checked"' ?> />
-							<label for="sg_global_switch"><?php echo SHOPGATE_CONFIG_USE_GLOBAL_CONFIG; ?></label>
+								<input type="hidden" name="sg_global_switch" value="0" />
+								<input type="checkbox" name="sg_global_switch" value="1" onclick="sgToggleSettings(this)" id="sg_global_switch" <?php if (!empty($sgUseGlobalConfig)) echo 'checked="checked"' ?> />
+								<label for="sg_global_switch"><?php echo SHOPGATE_CONFIG_USE_GLOBAL_CONFIG; ?></label>
 							<?php endif; ?>
 							<?php endif; ?>
 							<table id="sg_settings" <?php if (!empty($sgUseGlobalConfig)) echo 'style="display: none;' ?>>
@@ -495,7 +411,6 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 												<td class="<?php echo $tableClass; ?> shopgate_input<?php echo empty($error['customer_number']) ? '' : ' error' ?>">
 													<div><input type="text" name="_shopgate_config[customer_number]" value="<?php echo $shopgateConfig["customer_number"]?>" /></div>
 													<?php echo SHOPGATE_CONFIG_CUSTOMER_NUMBER_DESCRIPTION; ?>
-													[<a	href="http://www.shopgate.com/merchant/" target="_blank">LINK</a>]
 												</td>
 											</tr>
 										</table>
@@ -509,7 +424,6 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 												<td class="<?php echo $tableClass; ?> shopgate_input<?php echo empty($error['shop_number']) ? '' : ' error' ?>">
 													<div><input type="text" name="_shopgate_config[shop_number]" value="<?php echo $shopgateConfig["shop_number"]?>" /></div>
 													<?php echo SHOPGATE_CONFIG_SHOP_NUMBER_DESCRIPTION; ?>
-													[<a	href="http://www.shopgate.com/merchant/" target="_blank">LINK</a>]
 												</td>
 											</tr>
 										</table>
@@ -523,7 +437,6 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 												<td class="<?php echo $tableClass; ?> shopgate_input<?php echo empty($error['apikey']) ? '' : ' error' ?>">
 													<div><input type="text" name="_shopgate_config[apikey]" value="<?php echo $shopgateConfig["apikey"]?>" /></div>
 													<?php echo SHOPGATE_CONFIG_APIKEY_DESCRIPTION; ?>
-													[<a	href="http://www.shopgate.com/merchant/" target="_blank">LINK</a>]
 												</td>
 											</tr>
 										</table>
@@ -540,7 +453,6 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 												<td class="<?php echo $tableClass; ?> shopgate_input<?php echo empty($error['alias']) ? '' : ' error' ?>">
 													<div><input type="text" name="_shopgate_config[alias]" value="<?php echo $shopgateConfig["alias"]?>" /></div>
 													<?php echo SHOPGATE_CONFIG_ALIAS_DESCRIPTION; ?>
-													[<a	href="http://www.shopgate.com/merchant/" target="_blank">LINK</a>]
 												</td>
 											</tr>
 										</table>
@@ -554,7 +466,6 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 												<td class="<?php echo $tableClass; ?> shopgate_input<?php echo empty($error['cname']) ? '' : ' error' ?>">
 													<div><input type="text" name="_shopgate_config[cname]" value="<?php echo $shopgateConfig["cname"]?>" /></div>
 													<?php echo SHOPGATE_CONFIG_CNAME_DESCRIPTION; ?>
-													[<a	href="http://www.shopgate.com/merchant/" target="_blank">LINK</a>]
 												</td>
 											</tr>
 										</table>
@@ -570,8 +481,8 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 													<div>
 														<select multiple="multiple" name="_shopgate_config[redirect_languages][]">
 															<?php foreach ($sgLanguages as $sgLanguageCode => $sgLanguage): ?>
-															<?php $sgSelected = (in_array($sgLanguageCode, $shopgateConfig['redirect_languages'])) ? 'selected="selected"' : ''; ?>
-															<option value="<?php echo $sgLanguageCode; ?>" <?php echo $sgSelected; ?>><?php echo $sgLanguage['name'] ?></option>
+																<?php $sgSelected = (in_array($sgLanguageCode, $shopgateConfig['redirect_languages'])) ? 'selected="selected"' : ''; ?>
+																<option value="<?php echo $sgLanguageCode; ?>" <?php echo $sgSelected; ?>><?php echo $sgLanguage['name'] ?></option>
 															<?php endforeach; ?>
 														</select>
 													</div>
@@ -581,25 +492,7 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 										</table>
 									</td>
 								</tr>
-								<?php endif; ?>
-								<tr>
-									<td class="shopgate_setting" align="right">
-										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
-											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
-												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_DEFAULT_REDIRECT; ?></b></td>
-												<td class="<?php echo $tableClass; ?> shopgate_input<?php echo empty($error['redirect_languages']) ? '' : ' error' ?>">
-													<div>
-														<input type="radio" <?php echo  $shopgateConfig["enable_default_redirect"] ? 'checked=""' : ''?> value="1" name="_shopgate_config[enable_default_redirect]">
-														<?php echo SHOPGATE_CONFIG_ENABLE_DEFAULT_REDIRECT_ON; ?><br>
-														<input type="radio" <?php echo !$shopgateConfig["enable_default_redirect"] ? 'checked=""' : ''?> value="0" name="_shopgate_config[enable_default_redirect]">
-														<?php echo SHOPGATE_CONFIG_ENABLE_DEFAULT_REDIRECT_OFF; ?><br>
-													</div>
-													<?php echo SHOPGATE_CONFIG_DEFAULT_REDIRECT_DESCRIPTION; ?>
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
+							<?php endif; ?>
 								<tr><td colspan="2">&nbsp;</td></tr>
 								<tr><td colspan="2">&nbsp;</td></tr>
 								<tr><th colspan="2" style="text-align: left;"><?php echo SHOPGATE_CONFIG_EXPORT_SETTINGS; ?></th></tr>
@@ -613,11 +506,11 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 													<div>
 														<select name="_shopgate_config[language]">
 															<?php if (!in_array($shopgateConfig['language'], array_keys($sgLanguages))): ?>
-															<option value="-"></option>
+																<option value="-"></option>
 															<?php endif; ?>
 															<?php foreach ($sgLanguages as $sgLanguageCode => $sgLanguage): ?>
-															<?php $sgSelected = ($sgLanguageCode == $shopgateConfig['language']) ? 'selected="selected"' : ''; ?>
-															<option value="<?php echo $sgLanguageCode; ?>" <?php echo $sgSelected; ?>><?php echo $sgLanguage['name']; ?></option>
+																<?php $sgSelected = ($sgLanguageCode == $shopgateConfig['language']) ? 'selected="selected"' : ''; ?>
+																<option value="<?php echo $sgLanguageCode; ?>" <?php echo $sgSelected; ?>><?php echo $sgLanguage['name']; ?></option>
 															<?php endforeach; ?>
 														</select>
 													</div>
@@ -627,7 +520,7 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 										</table>
 									</td>
 								</tr>
-								<?php endif; ?>
+							<?php endif; ?>
 								<tr>
 									<td class="shopgate_setting" align="right">
 										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
@@ -808,7 +701,23 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 											</tr>
 										</table>
 									</td>
-								</tr>								
+								</tr>
+								<tr>
+									<td class="shopgate_setting" align="right">
+										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD; ?></b></td>
+												<td class="<?php echo $tableClass; ?> shopgate_input">
+													<div>
+														<textarea type="text" name="_shopgate_config[export_option_as_input_field]"><?php echo $shopgateConfig["export_option_as_input_field"] ?></textarea>
+													</div>
+							
+													<?php echo SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD_DESCRIPTION; ?>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
 								<tr>
 									<td class="shopgate_setting" align="right">
 										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
@@ -832,32 +741,6 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 										</table>
 									</td>
 								</tr>
-<?php ##### XTC3 | XTCM BOF ##### ?>
-<?php
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-?>
-<?php ##### XTC3 | XTCM EOF ##### ?>
 								<tr><td colspan="2">&nbsp;</td></tr>
 								<tr><td colspan="2">&nbsp;</td></tr>
 								<tr><th colspan="2" style="text-align: left;"><?php echo SHOPGATE_CONFIG_ORDER_IMPORT_SETTINGS; ?></th></tr>
@@ -1011,17 +894,17 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED; ?></b></td>
 												<td class="<?php echo $tableClass; ?> shopgate_input">
 													<div>
-														<select name="_shopgate_config[order_status_cancled]">
-															<?php if (!in_array($shopgateConfig['order_status_cancled'], array_keys($sgOrderStates)) && $shopgateConfig['customer_price_group'] != '-1'): ?>
+														<select name="_shopgate_config[order_status_canceled]">
+															<?php if (!in_array($shopgateConfig['order_status_canceled'], array_keys($sgOrderStates)) && $shopgateConfig['customer_price_group'] != '-1'): ?>
 															<option value="-"></option>
 															<?php endif; ?>
 															<option value="-1"><?php echo SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED_NOT_SET; ?></option>
 															<?php foreach($sgOrderStates as $sgOrderState): ?>
 															<?php $selected = (
-																	($shopgateConfig['order_status_cancled'] == $sgOrderState['orders_status_id']) &&
+																	($shopgateConfig['order_status_canceled'] == $sgOrderState['orders_status_id']) &&
 																	($shopgateConfig['language'] == $sgOrderState['code']))
 																	? 'selected="selected"'
-																	: ($shopgateConfig['order_status_cancled'] == $sgOrderState['orders_status_id'])
+																	: ($shopgateConfig['order_status_canceled'] == $sgOrderState['orders_status_id'])
 																		? 'selected="selected"'
 																		: '';
 															?>
@@ -1109,16 +992,14 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 							</table>
 							<div class="sg_submit"><input type="submit" value="<?php echo SHOPGATE_CONFIG_SAVE; ?>" onclick="this.blur();" class="button"></div>
 							</form>
-<?php elseif ($_GET["sg_option"] === "merchant"): ?>
-							<iframe src="<?php echo SHOPGATE_LINK_LOGIN; ?>" style="width: 1000px; min-height: 600px; height: 100%; border: 0;"></iframe>
-<?php endif; ?>
-						</td>
-					</tr>
-				</table>
-			</td>
-			<!-- body_text_eof //-->
-		</tr>
-	</table>
+				<?php endif; ?>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<!-- body_text_eof //-->
+	</tr>
+</table>
 	<!-- body_eof //-->
 
 	<!-- footer //-->

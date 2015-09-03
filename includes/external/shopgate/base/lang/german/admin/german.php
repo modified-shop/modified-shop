@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * Shopgate GmbH
 *
 * URHEBERRECHTSHINWEIS
@@ -24,36 +24,20 @@
 
 ### Plugin ###
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING', 'Encoding des Shopsystems');
-##### XTCM BOF #####
-define('SHOPGATE_CONFIG_EXTENDED_ENCODING_DESCRIPTION',
-	'W&auml;hlen Sie das Encoding Ihres Shopsystems. &Uuml;blicherweise ist f&uuml;r Versionen vor 1.06 "ISO-8859-15" zu w&auml;hlen.'
-);
-define('SHOPGATE_CONFIG_WIKI_LINK', 'https://wiki.shopgate.com/Modified/de');
-##### XTCM EOF #####
-
-##### XTC3 | XTCM BOF #####
-//
-//
-//
-//
-//
-//
-
-//
-##### XTC3 | XTCM EOF #####
+define('SHOPGATE_CONFIG_EXTENDED_ENCODING_DESCRIPTION', 'W&auml;hlen Sie das Encoding Ihres Shopsystems. &Uuml;blicherweise ist f&uuml;r Versionen vor 1.06 "ISO-8859-15" zu w&auml;hlen.');
+define('SHOPGATE_CONFIG_WIKI_LINK', 'http://wiki.shopgate.com/Modified/de');
 
 ### Menu ###
 define('BOX_SHOPGATE', 'Shopgate');
 define('BOX_SHOPGATE_INFO', 'Was ist Shopgate');
 define('BOX_SHOPGATE_HELP', 'Installationshilfe');
-define('BOX_SHOPGATE_REGISTER', 'Registrierung');
 define('BOX_SHOPGATE_CONFIG', 'Einstellungen');
-define('BOX_SHOPGATE_MERCHANT', 'Shopgate-Login');
 
 ### Links ###
 define('SHOPGATE_LINK_HOME', 'https://www.shopgate.com/?partner=30051');
 define('SHOPGATE_LINK_REGISTER', 'https://www.shopgate.com/welcome/shop_register?partner=30051');
 define('SHOPGATE_LINK_LOGIN', 'https://www.shopgate.com/users/login/0/2?partner=30051');
+define('SHOPGATE_LINK_WIKI', 'http://support.shopgate.com/hc/en-us/articles/202911763');
 
 ### Konfiguration ###
 define('SHOPGATE_CONFIG_TITLE', 'SHOPGATE');
@@ -102,13 +86,6 @@ define('SHOPGATE_CONFIG_REDIRECT_LANGUAGES', 'Weitergeleitete Sprachen');
 define('SHOPGATE_CONFIG_REDIRECT_LANGUAGES_DESCRIPTION',
 		'W&auml;hlen Sie die Sprachen aus, die auf diesen Shopgate-Shop weitergeleitet werden sollen. Es muss mindestens '.
 		'eine Sprache ausgew&auml;hlt werden. Halten Sie STRG gedr&uuml;ckt, um mehrere Eintr&auml;ge zu w&auml;hlen.'
-);
-
-define('SHOPGATE_CONFIG_DEFAULT_REDIRECT', 'Sammel-Weiterleitung');
-define('SHOPGATE_CONFIG_ENABLE_DEFAULT_REDIRECT_ON', 'Ja');
-define('SHOPGATE_CONFIG_ENABLE_DEFAULT_REDIRECT_OFF', 'Nein');
-define('SHOPGATE_CONFIG_DEFAULT_REDIRECT_DESCRIPTION',
-		'Aktivieren/deaktivieren Sie diese Funktion, um von allen anderen Seiten Ihres Shop-Systems (außer Startseite, Kategorie-Seite und Produkt-Seite) auf die mobile Version Ihres Shops weiterzuleiten.'
 );
 
 ### Export ###
@@ -161,9 +138,10 @@ define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_ON', 'Ja');
 define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_OFF', 'Nein');
 define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_MAX_ID', 'Aktuell h&ouml;chste Kategorie Id ihres Shopsystems');
 
-##### XTC3 | XTCM BOF #####
+define('SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD', 'Export von Produkoptionen als Eingabefelder');
+define('SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD_DESCRIPTION', 'Die IDs der Produktoptionen (siehe "Artikelmerkmale"), die als Eingabefelder exportiert werden müssen. Beispiel: 1,2,3');
+
 define('SHOPGATE_PLUGIN_FIELD_AVAILABLE_TEXT_AVAILABLE_ON_DATE', 'Verf&uuml;gbar ab dem #DATE#');
-##### XTC3 | XTCM EOF #####
 
 ### Bestellungsimport ###
 define('SHOPGATE_CONFIG_ORDER_IMPORT_SETTINGS', 'Bestellungsimport');
