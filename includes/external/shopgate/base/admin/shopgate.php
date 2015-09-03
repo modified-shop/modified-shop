@@ -54,7 +54,7 @@ if (isset($_GET['action']) && ($_GET["action"] === "save")) {
 		// check if some settings are selected, keep default if not
 		$sgEmptySettings = array(
 			'language', 'currency', 'country', 'tax_zone_id', 'customer_price_group', 'customer_status_id',
-			'order_status_open', 'order_status_shipping_blocked', 'order_status_shipped', 'order_status_cancled'
+			'order_status_open', 'order_status_shipping_blocked', 'order_status_shipped', 'order_status_canceled'
 		);
 		foreach ($sgEmptySettings as $sgEmptySetting) {
 			if ($_POST['_shopgate_config'][$sgEmptySetting] == '-') {
@@ -894,17 +894,17 @@ if (defined('PROJECT_MAJOR_VERSION')) {
 												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED; ?></b></td>
 												<td class="<?php echo $tableClass; ?> shopgate_input">
 													<div>
-														<select name="_shopgate_config[order_status_cancled]">
-															<?php if (!in_array($shopgateConfig['order_status_cancled'], array_keys($sgOrderStates)) && $shopgateConfig['customer_price_group'] != '-1'): ?>
+														<select name="_shopgate_config[order_status_canceled]">
+															<?php if (!in_array($shopgateConfig['order_status_canceled'], array_keys($sgOrderStates)) && $shopgateConfig['customer_price_group'] != '-1'): ?>
 															<option value="-"></option>
 															<?php endif; ?>
 															<option value="-1"><?php echo SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED_NOT_SET; ?></option>
 															<?php foreach($sgOrderStates as $sgOrderState): ?>
 															<?php $selected = (
-																	($shopgateConfig['order_status_cancled'] == $sgOrderState['orders_status_id']) &&
+																	($shopgateConfig['order_status_canceled'] == $sgOrderState['orders_status_id']) &&
 																	($shopgateConfig['language'] == $sgOrderState['code']))
 																	? 'selected="selected"'
-																	: ($shopgateConfig['order_status_cancled'] == $sgOrderState['orders_status_id'])
+																	: ($shopgateConfig['order_status_canceled'] == $sgOrderState['orders_status_id'])
 																		? 'selected="selected"'
 																		: '';
 															?>

@@ -44,7 +44,7 @@ class ShopgateConfigModified extends ShopgateConfig
 	protected $order_status_open;
 	protected $order_status_shipped;
 	protected $order_status_shipping_blocked;
-	protected $order_status_cancled;
+	protected $order_status_canceled;
 	
 	protected $reverse_categories_sort_order;
 	protected $reverse_items_sort_order;
@@ -115,7 +115,7 @@ class ShopgateConfigModified extends ShopgateConfig
 		$this->order_status_shipped          = 3;
 		$this->order_status_shipping_blocked = 1;
 		
-		$this->order_status_cancled = 0;
+		$this->order_status_canceled = 0;
 		
 		$this->reverse_categories_sort_order = false;
 		$this->reverse_items_sort_order      = false;
@@ -219,9 +219,9 @@ class ShopgateConfigModified extends ShopgateConfig
 	/**
 	 * @return mixed
 	 */
-	public function getOrderStatusCancled()
+	public function getOrderStatusCanceled()
 	{
-		return $this->order_status_cancled;
+		return $this->order_status_canceled;
 	}
 	
 	
@@ -382,9 +382,9 @@ class ShopgateConfigModified extends ShopgateConfig
 	/**
 	 * @param $value
 	 */
-	public function setOrderStatusCancled($value)
+	public function setOrderStatusCanceled($value)
 	{
-		$this->order_status_cancled = $value;
+		$this->order_status_canceled = $value;
 	}
 	
 	/**

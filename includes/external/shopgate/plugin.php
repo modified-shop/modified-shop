@@ -21,7 +21,7 @@
  *  @author Shopgate GmbH <interfaces@shopgate.com>
  */
 
-define('SHOPGATE_PLUGIN_VERSION', '2.9.17');
+define('SHOPGATE_PLUGIN_VERSION', '2.9.18');
 require_once(dirname(__FILE__) . '/Model/ShopgateModelLoader.php');
 require_once(dirname(__FILE__) . '/helper/ShopgatePluginInitHelper.php');
 /**
@@ -976,14 +976,15 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$this->log('db: save', ShopgateLogger::LOGTYPE_DEBUG);
 
 		$ordersShopgateOrder = array(
-			"orders_id" => $dbOrderId,
-			"shopgate_order_number" => $order->getOrderNumber(),
-			"is_paid" => $order->getIsPaid(),
-			"is_shipping_blocked" => $order->getIsShippingBlocked(),
-			"payment_infos" => $this->jsonEncode($paymentInfosUtf8, true),
-			"is_sent_to_shopgate" => 0,
-			"modified" => "now()",
-			"created" => "now()",
+			"orders_id"                          => $dbOrderId,
+			"shopgate_order_number"              => $order->getOrderNumber(),
+			"is_paid"                            => $order->getIsPaid(),
+			"is_shipping_blocked"                => $order->getIsShippingBlocked(),
+			"payment_infos"                      => $this->jsonEncode($paymentInfosUtf8),
+			"is_sent_to_shopgate"                => 0,
+			"is_cancellation_sent_to_shopgate"   => 0,
+			"modified"                           => "now()",
+			"created"                            => "now()",
 		);
 		xtc_db_perform(TABLE_SHOPGATE_ORDERS, $ordersShopgateOrder);
 
@@ -1844,8 +1845,51 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	public function cron($jobname, $params, &$message, &$errorcount) {
 		switch ($jobname) {
 			case 'set_shipping_completed': $this->cronSetOrdersShippingCompleted($message, $errorcount); break;
+			case 'cancel_orders':          $this->cronCancelOrders($message, $errorcount); break;
 			default: throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_CRON_UNSUPPORTED_JOB, 'Job name: "'.$jobname.'"', true);
 		}
+	}
+
+	/**
+	 * @param string $message
+	 * @param int $errorCount
+	 */
+	protected function cronCancelOrders(&$message, &$errorCount) {
+		$query = "SELECT `sgo`.`orders_id`, `sgo`.`shopgate_order_number`" .
+			" FROM `" . TABLE_SHOPGATE_ORDERS . "` sgo" .
+			" INNER JOIN `" . TABLE_ORDERS . "` xto ON (`xto`.`orders_id` = `sgo`.`orders_id`) " .
+			" INNER JOIN `" . TABLE_LANGUAGES . "` xtl ON (`xtl`.`directory` = `xto`.`language`) " .
+			" WHERE `sgo`.`is_cancellation_sent_to_shopgate` = 0" .
+			" AND `xto`.`orders_status` = " . xtc_db_input($this->config->getOrderStatusCanceled()) .
+			" AND `xtl`.`code` = '" . xtc_db_input($this->config->getLanguage()) . "';";
+
+		$result = xtc_db_query($query);
+		while ($shopgateOrder = xtc_db_fetch_array($result)) {
+			try {
+				$this->sendOrderCancellation($shopgateOrder['shopgate_order_number'], $this->merchantApi);
+				$message .= "full cancellation sent for shopgate order: {$shopgateOrder['shopgate_order_number']}\n";
+			} catch (Exception $e) {
+				$errorCount++;
+				$message .= "Shopgate order number {$shopgateOrder['shopgate_order_number']} error: {$e->getMessage()}\n";
+			}
+		}
+	}
+
+	/**
+	 * @param int $shopgateOrderNumber
+	 * @param ShopgateMerchantApiInterface $merchantApi
+	 * @throws ShopgateMerchantApiException
+	 */
+	protected function sendOrderCancellation($shopgateOrderNumber, ShopgateMerchantApiInterface $merchantApi) {
+		try {
+			$merchantApi->cancelOrder($shopgateOrderNumber, true);
+		} catch (ShopgateMerchantApiException $e) {
+			if ($e->getCode() != ShopgateMerchantApiException::ORDER_ALREADY_CANCELLED) {
+				throw $e;
+			}
+		}
+		$updateQuery = 'UPDATE `' . TABLE_SHOPGATE_ORDERS . "` SET `is_cancellation_sent_to_shopgate` = 1 WHERE `shopgate_order_number` = {$shopgateOrderNumber}";
+		xtc_db_query($updateQuery);
 	}
 
 	/**
@@ -3939,6 +3983,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			return;
 		}
 
+		/** @var ShopgateConfigModified[] $configurations */
 		$configurations = array();
 		$merchantApis = array();
 		while ($shopgateOrder = xtc_db_fetch_array($result)) {
@@ -3946,9 +3991,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 			if (empty($merchantApis[$language])) {
 				try {
-##### XTCM BOF #####
 					$config = new ShopgateConfigModified();
-##### XTCM EOF #####
 					$config->loadByLanguage($language);
 					$builder = new ShopgateBuilder($config);
 					$merchantApis[$language] = &$builder->buildMerchantApi();
@@ -3958,11 +4001,12 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				}
 			}
 
-			if ($status != $configurations[$language]->getOrderStatusShipped()) {
-				return;
+			if ($status == $configurations[$language]->getOrderStatusShipped()) {
+				$this->setOrderShippingCompleted($shopgateOrder['shopgate_order_number'], $shopgateOrder['orders_id'], $merchantApis[$language], $configurations[$language]);
 			}
-
-			$this->setOrderShippingCompleted($shopgateOrder['shopgate_order_number'], $shopgateOrder['orders_id'], $merchantApis[$language], $configurations[$language]);
+			if ($status == $configurations[$language]->getOrderStatusCanceled()) {
+				$this->sendOrderCancellation($shopgateOrder['shopgate_order_number'], $merchantApis[$language]);
+			}
 		}
 	}
 
@@ -3999,7 +4043,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		return $stock_values['products_status'];
 	}
-
+	
 	/**
 	 * Exports orders from the shop system's database to Shopgate.
 	 *

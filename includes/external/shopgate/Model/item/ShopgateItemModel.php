@@ -48,7 +48,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 	private $exportLimit = null;
 	
 	/**
-	 * @var Shopgate_Helper_String $stringHelper 
+	 * @var Shopgate_Helper_String $stringHelper
 	 */
 	private $stringHelper;
 	
@@ -374,7 +374,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 		if(empty($depth)) {
 			$depth = 1;
 		} elseif($depth > $circularDepthStop) {// disallow circular category connections (detect by a maximum depth)
-			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR,
 				'error on loading sub-categories: Categories-Depth exceedes a value of '.$circularDepthStop.
 				'. Check if there is a circular connection (referenced categories ids: '.$parentId.'=>', true
 			);
@@ -447,14 +447,14 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 							left join ".TABLE_PRODUCTS_DESCRIPTION." pd
 									on p.products_id = pd.products_id,
 									".TABLE_CATEGORIES." c,
-									".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+									".TABLE_PRODUCTS_TO_CATEGORIES." p2c
 							where pd.language_id = '".(int) $_SESSION['languages_id']."'
 							and c.categories_status=1
 							and p.products_id = p2c.products_id
 							and c.categories_id = p2c.categories_id
 							and products_status = '1'
 								".$group_check."
-								".$fsk_lock."                                    
+								".$fsk_lock."
 								".$days."
 							order by p.products_date_added DESC ";
 	}
@@ -467,7 +467,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 		$fsk_lock = '';
 		$_SESSION['languages_id'] = $this->languageId;
 		//logic taken from file specials.php in dir /
-		return    "select distinct 
+		return    "select distinct
 								pd.products_name,
 								p.products_price,
 								p.products_id,
@@ -479,7 +479,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 								p.products_vpe,
 								p.products_fsk18,
 								s.expires_date,
-								s.specials_new_products_price 
+								s.specials_new_products_price
 								from
 								".TABLE_PRODUCTS." p
 								left join ".TABLE_PRODUCTS_DESCRIPTION." pd
@@ -511,7 +511,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 		
 		switch($type){
 			case self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_TEXT_FIELD:
-				$optionsAsInputFields = empty($optionsAsInputFields) 
+				$optionsAsInputFields = empty($optionsAsInputFields)
 					? ' AND pov.products_options_values_name = \'TEXTFELD\' '
 					: str_replace('{$condition}', 'pov.products_options_values_name = \'TEXTFELD\' OR pa.options_id IN', $optionsAsInputFields);
 				$query = $optionsAsInputFields." ORDER BY po.products_options_id, pa.sortorder";
@@ -540,7 +540,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product{
 			FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
 			INNER JOIN ".TABLE_PRODUCTS_OPTIONS." po ON (pa.options_id = po.products_options_id AND po.language_id = {$this->languageId})
 			INNER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov ON (pa.options_values_id = pov.products_options_values_id AND pov.language_id = {$this->languageId})
-			WHERE pa.products_id = '".$productId."' " . $query; 
+			WHERE pa.products_id = '".$productId."' " . $query;
 	}
 	
 	/**
