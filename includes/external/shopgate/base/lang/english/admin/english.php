@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * Shopgate GmbH
 *
 * URHEBERRECHTSHINWEIS
@@ -24,40 +24,20 @@
 
 ### Plugin ###
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING', 'Shop system encoding');
-##### XTCM BOF #####
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING_DESCRIPTION', 'Choose the encoding of your shop system. This is usually "ISO-8859-15" for versions before 1.06.');
-//define('SHOPGATE_CONFIG_WIKI_LINK', 'http://wiki.shopgate.com/Modified/de');
-//define('SHOPGATE_CONFIG_WIKI_LINK', 'https://support.shopgate.com/hc/en-us/articles/202911763-Connecting-to-modified-eCommerce');
-define('SHOPGATE_CONFIG_WIKI_LINK', 'http://wiki.shopgate.com/Modified_new/de');
-##### XTCM EOF #####
-
-##### XTC3 | XTCM BOF #####
-//
-//
-//
-//
-//
-//
-
-//
-//
-
-//
-//
-##### XTC3 | XTCM EOF #####
+define('SHOPGATE_CONFIG_WIKI_LINK', 'http://wiki.shopgate.com/Modified/de');
 
 ### Menu ###
 define('BOX_SHOPGATE', 'Shopgate');
 define('BOX_SHOPGATE_INFO', 'What is Shopgate');
 define('BOX_SHOPGATE_HELP', 'Installation aid');
-define('BOX_SHOPGATE_REGISTER', 'Registration');
 define('BOX_SHOPGATE_CONFIG', 'Settings');
-define('BOX_SHOPGATE_MERCHANT', 'Shopgate login');
 
 ### Links ###
-define('SHOPGATE_LINK_HOME', 'https://www.shopgate.com');
-define('SHOPGATE_LINK_REGISTER', 'https://www.shopgate.com/welcome/shop_register');
-define('SHOPGATE_LINK_LOGIN', 'https://www.shopgate.com/users/login/0/2');
+define('SHOPGATE_LINK_HOME', 'https://www.shopgate.com/?partner=30051');
+define('SHOPGATE_LINK_REGISTER', 'https://www.shopgate.com/welcome/shop_register?partner=30051');
+define('SHOPGATE_LINK_LOGIN', 'https://www.shopgate.com/users/login/0/2?partner=30051');
+define('SHOPGATE_LINK_WIKI', 'http://support.shopgate.com/hc/en-us/articles/202911763');
 
 ### Configuration ###
 define('SHOPGATE_CONFIG_TITLE', 'SHOPGATE');
@@ -107,13 +87,6 @@ define('SHOPGATE_CONFIG_REDIRECT_LANGUAGES_DESCRIPTION',
 		'Choose the languages that should be redirected to this Shopgate shop. At least one language must be selected. Hold CTRL to select multiple entries.'
 );
 
-define('SHOPGATE_CONFIG_DEFAULT_REDIRECT', 'Accumulative forwarding');
-define('SHOPGATE_CONFIG_ENABLE_DEFAULT_REDIRECT_ON', 'Yes');
-define('SHOPGATE_CONFIG_ENABLE_DEFAULT_REDIRECT_OFF', 'No');
-define('SHOPGATE_CONFIG_DEFAULT_REDIRECT_DESCRIPTION',
-		'Activate/deactivate this function to forward all other of your shop system\'s pages (excluding home page, category pages and product pages) to the mobile version of your shop.'
-);
-
 ### Export ###
 define('SHOPGATE_CONFIG_EXPORT_SETTINGS', 'Exporting Categories and Products');
 
@@ -158,14 +131,15 @@ define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_ON', 'Yes');
 define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_OFF', 'No');
 define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_MAX_ID', 'Currently highest categorie-Id in the shopsystem');
 
+define('SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD', 'Product options to be exported as input fields');
+define('SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD_DESCRIPTION', 'Add the option IDs (see "Product Options") that should be exported as input fields. Example: 1,2,3');
+
 define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY', 'Export the "Special" category');
 define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_DESCRIPTION', 'This shopsystem allows you to show all special products in an virtual category. With this option it is possible to export the new products in an real category. Therefore you can use the input field to change the category id.');
 define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_ON', 'Yes');
 define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_OFF', 'No');
 define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_MAX_ID', 'Currently highest categorie-Id in the shopsystem');
-##### XTC3 | XTCM BOF #####
 define('SHOPGATE_PLUGIN_FIELD_AVAILABLE_TEXT_AVAILABLE_ON_DATE', 'Available on #DATE#');
-##### XTC3 | XTCM EOF #####
 
 ### Orders Import ###
 define('SHOPGATE_CONFIG_ORDER_IMPORT_SETTINGS', 'Importing Orders');
