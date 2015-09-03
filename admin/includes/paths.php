@@ -42,9 +42,6 @@
   define('DIR_FS_INC', DIR_FS_CATALOG . 'inc/');
   define('DIR_WS_FILEMANAGER', DIR_WS_MODULES . 'fckeditor/editor/filemanager/browser/default/');
 
-  //compatibility for modified eCommerce Shopsoftware 1.06 files
-  define('DIR_WS_BASE', '');
-
   // SQL caching dir
   define('SQL_CACHEDIR', DIR_FS_CATALOG . 'cache/');
 
