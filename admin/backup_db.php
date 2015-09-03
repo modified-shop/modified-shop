@@ -114,11 +114,26 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
     unset($data);
   }
 
+  function remove_collate($table,$data) {
+    $table_status = xtc_db_query("SHOW TABLE STATUS WHERE Name='".$table."'");
+    $table_status = xtc_db_fetch_array($table_status);
+    //echo '<pre>' .print_r($table_status,1) .'</pre>';
+    $collation = $table_status['Collation'];
+    $data = str_replace(' COLLATE '.$collation,'',$data);
+    $data = str_replace(' COLLATE='.$collation,'',$data);
+    $collation = explode('_',$collation);
+    $data = str_replace(' DEFAULT CHARSET='.$collation[0],'',$data);
+    //echo '<pre>' .$data .'</pre>'; EXIT;
+    return $data;
+  }
   function GetTableInfo($table) {
     //BOF NEW TABLE  STRUCTURE  - LIKE MYSQLDUMPER -  functions_dump.php line 133
     $data = "DROP TABLE IF EXISTS `$table`;\n";
     $res = xtc_db_query('SHOW CREATE TABLE `'.$table.'`');
     $row = @xtc_db_fetch_row($res);
+    if (isset($_SESSION['dump']['remove_collate']) && $_SESSION['dump']['remove_collate'] == 'yes') {
+      $row[1] = remove_collate($table,$row[1]);
+    }
     $data .= $row[1].';'."\n\n";
 
     if (isset($_SESSION['dump']['utf8-convert']) && $_SESSION['dump']['utf8-convert'] == 'yes') {
@@ -278,6 +293,9 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
       $dump['file'] .= '.sql';
     }
 
+    if ($_POST['remove_collate'] == 'yes') {
+      $dump['remove_collate']  = 'yes';
+    }
     if ($_POST['complete_inserts'] == 'yes') {
       $dump['complete_inserts']  = 'yes';
     }
