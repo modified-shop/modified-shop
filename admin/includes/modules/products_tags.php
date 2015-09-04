@@ -19,7 +19,9 @@
   }
   
   if (isset($_POST['current_product_id']) && $_POST['current_product_id'] > 0 && isset($_POST['action']) && $_POST['action'] == 'change') {
-    xtc_save_products_tags($_POST);
+    require_once (DIR_WS_CLASSES.'categories.php');
+    $catfunc = new categories();
+    $catfunc->save_products_tags($_POST,$_POST['current_product_id']);
   }
  
   $options_query = xtc_db_query("SELECT *
@@ -146,24 +148,5 @@
                                      AND options_id = '".$options_id."'
                                      AND values_id = '".$values_id."'");
       return xtc_db_num_rows($tags_query);
-  }
-  
-  function xtc_save_products_tags($products_data)
-  {
-      $products_id = (int)$products_data['current_product_id'];
-      xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TAGS." WHERE products_id = '".$products_id."'");    
-      if (isset($products_data['product_tags']) && is_array($products_data['product_tags'])) {
-        foreach ($products_data['product_tags'] as $options_id => $value) {
-          foreach ($value as $values_id => $subvalue) {
-            if ($subvalue == 'on') {
-              $sql_data_array = array('products_id' => $products_id,
-                                      'options_id' => (int)$options_id,
-                                      'values_id' => (int)$values_id);
-              xtc_db_perform(TABLE_PRODUCTS_TAGS, $sql_data_array);                    
-            }
-          }
-        }
-      }
-      
   }
 ?>
