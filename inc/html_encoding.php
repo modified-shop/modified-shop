@@ -85,6 +85,8 @@ function decode_utf8($in_str) {
     } else {
       return $in_str;
     }
+  } else {
+    return $in_str;
   }
 }
 
