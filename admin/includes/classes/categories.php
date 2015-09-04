@@ -574,19 +574,7 @@ class categories {
 
     // products tags
     if (isset($products_id) && $products_id > 0) {
-      xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TAGS." WHERE products_id = '".$products_id."'");    
-      if (isset($products_data['product_tags']) && is_array($products_data['product_tags'])) {
-        foreach ($products_data['product_tags'] as $options_id => $value) {
-          foreach ($value as $values_id => $subvalue) {
-            if ($subvalue == 'on') {
-              $sql_data_array = array('products_id' => $products_id,
-                                      'options_id' => $options_id,
-                                      'values_id' => $values_id);
-              xtc_db_perform(TABLE_PRODUCTS_TAGS, $sql_data_array);                    
-            }
-          }
-        }
-      }
+      $this->save_products_tags($products_data,$products_id);
     }
 
     $languages = xtc_get_languages();
@@ -1301,6 +1289,24 @@ class categories {
     if(isset($products_data['specials_delete'])) {
       xtc_db_query("DELETE FROM " . TABLE_SPECIALS . " WHERE specials_id = '" . xtc_db_input($products_data['specials_id']) . "'");
     }
+  }
+  
+  function save_products_tags($products_data,$products_id)
+  {
+      xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TAGS." WHERE products_id = '".(int)$products_id."'");    
+      if (isset($products_data['product_tags']) && is_array($products_data['product_tags'])) {
+        foreach ($products_data['product_tags'] as $options_id => $value) {
+          foreach ($value as $values_id => $subvalue) {
+            if ($subvalue == 'on') {
+              $sql_data_array = array('products_id' => (int)$products_id,
+                                      'options_id' => (int)$options_id,
+                                      'values_id' => (int)$values_id);
+              xtc_db_perform(TABLE_PRODUCTS_TAGS, $sql_data_array);                    
+            }
+          }
+        }
+      }
+      
   }
   
 }
