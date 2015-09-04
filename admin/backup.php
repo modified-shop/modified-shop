@@ -325,6 +325,7 @@
                       break;
                     case 'restore':
                       $heading[] = array('text' => $info_heading);
+                      $contents = array('form' => xtc_draw_form('restore', RS_FILENAME, 'action=restorenow&file=' . $buInfo->file));
                       //$heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
                       $contents[] = array('text' => xtc_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
                       if (!$check_utf8) {
