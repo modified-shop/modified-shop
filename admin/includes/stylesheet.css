@@ -176,6 +176,14 @@ text-decoration: underline;
 background-color: #FFFF33; 
 outline: none; 
 }
+a.bbc_link {
+color: #af417e;
+font-weight: inherit;
+text-decoration: inherit;
+}
+a.bbc_link:hover {
+text-decoration: underline;
+}
 
 /* menu box */
 .menuBoxHeading { 
