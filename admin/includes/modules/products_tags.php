@@ -67,12 +67,13 @@
         <input type="hidden" name="current_product_id" value="<?php echo $_POST['current_product_id']; ?>">
 
       <?php
-    }
+    } else {
     ?>
       <script type="text/javascript" src="includes/lang_tabs_menu/tag_tabs_menu.js"></script>
       <div style="padding:5px;margin-top:10px;clear:both;">
       <div class="main div_header"><b><?php echo TEXT_PRODUCTS_TAGS; ?></b></div>
     <?php
+    }
       $langtabs = '<div class="tablangmenu"><ul class="ultabs">';
       $csstabstyle = 'border: 1px solid #aaaaaa; padding: 4px; width: 99%; margin-top: -1px; margin-bottom: 10px; float: left;background: #F3F3F3;';
       $csstab = '<style type="text/css">' .  '#tab_tag_0' . '{display: block;' . $csstabstyle . '}';
