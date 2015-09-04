@@ -166,7 +166,7 @@ if ($action == 'product_edit') {
       && $xtPrice->get_content_type_product((int)$_POST['products_id']) == 'virtual'
       ) 
   {
-    $product['products_tax_class_id'] = xtc_get_tax_class($products['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
+    $product['products_tax_class_id'] = xtc_get_tax_class($product['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
   }
 
   $tax_rate = xtc_get_tax_rate($product['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
@@ -313,7 +313,7 @@ if ($action == 'product_ins') {
       && $xtPrice->get_content_type_product((int)$_POST['products_id']) == 'virtual'
       ) 
   {
-    $product['products_tax_class_id'] = xtc_get_tax_class($products['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
+    $product['products_tax_class_id'] = xtc_get_tax_class($product['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
   }
 
   $tax_rate = xtc_get_tax_rate($product['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
