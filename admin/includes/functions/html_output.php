@@ -233,7 +233,7 @@
     if ($addwrap && NEW_SELECT_CHECKBOX == 'true' && strpos($params,'noStyling') === false) {
       $params  = preg_replace("'\s+=\s+'",'=',$params);
       $params = (strpos($params,'class="') !== false ? str_replace('class="', 'class="SlectBox ',$params) : $params . ' class="SlectBox"');
-      $params .= ' style="visibility: hidden;"';
+      $params = (strpos($params,'style="') !== false ? str_replace('style="', 'style="visibility: hidden; ',$params) : $params . ' style="visibility: hidden;"');
     }
     if ($params) $field .= ' ' . $params;
     $field .= '>' . PHP_EOL;
