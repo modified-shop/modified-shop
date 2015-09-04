@@ -206,7 +206,9 @@
     foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_product/','php') as $file) require ($file);
     
     //products tags
-    include(DIR_WS_MODULES.'products_tags.php');
+    if (!is_file('includes/modules/products_tags_iframe.php')) {
+      include(DIR_WS_MODULES.'products_tags.php');
+    }
 
     //Price options
     include(DIR_WS_MODULES.'group_prices.php');
@@ -232,6 +234,12 @@
       <?php
       if (isset($_GET['pID']) && $_GET['pID'] > 0) {
         echo '&nbsp;&nbsp;<input type="submit" class="button" name="prod_update" value="'.BUTTON_UPDATE.'" '.$confirm_save_entry.'/>';
+        if (is_file('includes/modules/products_tags_iframe.php')) {
+          include_once("includes/modules/products_tags_iframe.php");
+          if (function_exists('tags_iframe_link')) {
+            echo '&nbsp;&nbsp;'.tags_iframe_link($_GET['pID']);
+          } 
+        }
         if (is_file('includes/modules/products_attributes_iframe.php')) {
           include_once("includes/modules/products_attributes_iframe.php");
         }

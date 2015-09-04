@@ -14,6 +14,11 @@
   
   require('includes/application_top.php');
 
+	if (isset($_GET['iframe'])) {
+	  require(DIR_WS_MODULES.'products_tags.php');
+    exit;    
+	}
+
   //display per page
   $cfg_max_display_options_key = 'MAX_DISPLAY_NUMBER_OF_OPTIONS';
   $page_max_display_options_results = xtc_cfg_save_max_display_results($cfg_max_display_options_key);

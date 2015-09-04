@@ -245,4 +245,6 @@ define('TEXT_IN', 'in:');
 define('TEXT_PRODUCTS_ATTRIBUTES_RECALCULATE', 'Reclaculate attribute on changing tax rate');
 
 define('HEADING_TITLE_CAT_BREADCRUMB', ' in &quot;%s&quot;');
+
+define('TEXT_PRODUCTS_TAGS', 'Product features');
 ?>

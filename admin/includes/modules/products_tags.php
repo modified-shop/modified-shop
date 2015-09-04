@@ -9,11 +9,19 @@
    -----------------------------------------------------------------------------------------
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-?>
-
-<div style="padding:5px">
-
-  <?php  
+   
+  $iframe = (isset($_GET['iframe']) ? '&iframe=1' : '');
+  $_GET['current_product_id'] = (isset($_GET['pID']) ? (int)$_GET['pID'] : (int)$_GET['current_product_id']); //new_product or iframe
+  $current_product_id = (isset($_GET['current_product_id']) ? '&current_product_id='.(int)$_GET['current_product_id'] : '');
+  
+  if (isset($_GET['iframe']) && !isset($_POST['action'])) {
+    $_POST = $_GET;
+  }
+  
+  if (isset($_POST['current_product_id']) && $_POST['current_product_id'] > 0 && isset($_POST['action']) && $_POST['action'] == 'change') {
+    xtc_save_products_tags($_POST);
+  }
+ 
   $options_query = xtc_db_query("SELECT *
                                    FROM " . TABLE_PRODUCTS_TAGS_OPTIONS . "
                                   WHERE languages_id = '".$_SESSION['languages_id']."'
@@ -32,7 +40,7 @@
       if (xtc_db_num_rows($values_query) > 0) {        
         $module_values_content = array();
         while ($values = xtc_db_fetch_array($values_query)) {
-          $module_values_content[] = array('checkbox' => xtc_draw_checkbox_field('product_tags['.$options['options_id'].']['.$values['values_id'].']', 'on', ((xtc_get_tags_status((int)$_GET['pID'], $options['options_id'], $values['values_id']) == 1) ? true : false)),
+          $module_values_content[] = array('checkbox' => xtc_draw_checkbox_field('product_tags['.$options['options_id'].']['.$values['values_id'].']', 'on', ((xtc_get_tags_status((int)$_GET['current_product_id'], $options['options_id'], $values['values_id']) == 1) ? true : false)),
                                            'title' => (($values['values_name'] != '') ? $values['values_name'] : $values['values_description'])
                                            );
         }                        
@@ -44,11 +52,27 @@
   }
   
   if (count($module_content) > 0) {
-    ?>
-    <script type="text/javascript" src="includes/lang_tabs_menu/tag_tabs_menu.js"></script>
-    <br/>
-    <div style="padding:5px;clear:both;">
+    if (isset($_GET['iframe'])) {
+      require (DIR_WS_INCLUDES.'head.php');
+
+      ?>
+      <link rel="stylesheet" type="text/css" href="includes/lang_tabs_menu/lang_tabs_menu.css">      
+      <script type="text/javascript" src="includes/lang_tabs_menu/tag_tabs_menu.js"></script>
+      </head>
+      <br/>
+      <div style="padding:5px;clear:both;">
+        <?php 
+        echo xtc_draw_form('submit_products_tags', 'products_tags.php' . str_replace('&','?',$iframe).$current_product_id, '', 'post', 'id="submit_products_tags"') .PHP_EOL; ?>
+        <input type="hidden" name="action" value="change">
+        <input type="hidden" name="current_product_id" value="<?php echo $_POST['current_product_id']; ?>">
+
       <?php
+    }
+    ?>
+      <script type="text/javascript" src="includes/lang_tabs_menu/tag_tabs_menu.js"></script>
+      <div style="padding:5px;margin-top:10px;clear:both;">
+      <div class="main div_header"><b><?php echo TEXT_PRODUCTS_TAGS; ?></b></div>
+    <?php
       $langtabs = '<div class="tablangmenu"><ul class="ultabs">';
       $csstabstyle = 'border: 1px solid #aaaaaa; padding: 4px; width: 99%; margin-top: -1px; margin-bottom: 10px; float: left;background: #F3F3F3;';
       $csstab = '<style type="text/css">' .  '#tab_tag_0' . '{display: block;' . $csstabstyle . '}';
@@ -77,6 +101,7 @@
         <?php echo ($csstab_nojs);?>
       </noscript>
       <?php
+      
       for ($i = 0, $n = sizeof($module_content); $i < $n; $i++) {
         echo ('<div id="tab_tag_' . $i . '">');
         ?>
@@ -92,17 +117,52 @@
         echo ('</div>');
       }
       ?>
+      <div style="clear:both;"></div>
+    <?php  
+    if (isset($_GET['iframe'])) {
+    ?>
+      <div class="main" style="margin:10px 0;">
+          <?php
+          echo xtc_button(BUTTON_SAVE,'submit','name="button_submit"');
+          ?>
+      </div>
+      </form>
     </div>
     <div style="clear:both;"></div>
-    <?php
+    <!-- footer_eof //-->
+    </body>
+    </html>
+    <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+  <?php
+    } //iframe
+  } //module_content
+  
+  function xtc_get_tags_status($products_id, $options_id, $values_id) 
+  {
+      $tags_query = xtc_db_query("SELECT *
+                                    FROM ".TABLE_PRODUCTS_TAGS."
+                                   WHERE products_id = '".$products_id."'
+                                     AND options_id = '".$options_id."'
+                                     AND values_id = '".$values_id."'");
+      return xtc_db_num_rows($tags_query);
   }
   
-  function xtc_get_tags_status($products_id, $options_id, $values_id) {
-    $tags_query = xtc_db_query("SELECT *
-                                  FROM ".TABLE_PRODUCTS_TAGS."
-                                 WHERE products_id = '".$products_id."'
-                                   AND options_id = '".$options_id."'
-                                   AND values_id = '".$values_id."'");
-    return xtc_db_num_rows($tags_query);
+  function xtc_save_products_tags($products_data)
+  {
+      $products_id = (int)$products_data['current_product_id'];
+      xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TAGS." WHERE products_id = '".$products_id."'");    
+      if (isset($products_data['product_tags']) && is_array($products_data['product_tags'])) {
+        foreach ($products_data['product_tags'] as $options_id => $value) {
+          foreach ($value as $values_id => $subvalue) {
+            if ($subvalue == 'on') {
+              $sql_data_array = array('products_id' => $products_id,
+                                      'options_id' => (int)$options_id,
+                                      'values_id' => (int)$values_id);
+              xtc_db_perform(TABLE_PRODUCTS_TAGS, $sql_data_array);                    
+            }
+          }
+        }
+      }
+      
   }
 ?>
