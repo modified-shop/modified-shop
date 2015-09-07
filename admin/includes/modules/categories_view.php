@@ -948,7 +948,7 @@
                   $contents[] = array('align' => 'center', 
                                       'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=new_product') . '">' . BUTTON_EDIT . '</a>'
                                                  . (function_exists('attributes_iframe_link') ? attributes_iframe_link($pInfo->products_id) :
-                                                 '<a href="'.xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'action=edit&current_product_id='.$pInfo->products_id.'&cpath='.$cPath.'&page='.(int)$_GET['page']).'"> class="button">' . BUTTON_EDIT_ATTRIBUTES . '</a>'                                                 
+                                                 '<a href="'.xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'action=edit&current_product_id='.$pInfo->products_id.'&cpath='.$cPath.'&page='.(int)$_GET['page']).'" class="button">' . BUTTON_EDIT_ATTRIBUTES . '</a>'                                                 
                                                  ));
                   $contents[] = array('align' => 'center', 
                                       'text' =>  '<a class="button" href="'.xtc_href_link(FILENAME_CATEGORIES, 'action=edit_crossselling&current_product_id='.$pInfo->products_id.'&cpath='.$cPath).'">' . BUTTON_EDIT_CROSS_SELLING . '</a>
@@ -958,7 +958,7 @@
                   // BOC Included xs:booster                  
                   if (defined('MODULE_XTBOOSTER_STATUS') && MODULE_XTBOOSTER_STATUS=='True') {
                     $contents[] = array('align' => 'center', 
-                                        'text' =>  '<a href="'.xtc_href_link(FILENAME_XTBOOSTER, 'action=edit_xtbooster&xtb_module=add&current_product_id='.$pInfo->products_id.'&cpath='.$cPath).'"> class="button">' . BUTTON_EDIT_XTBOOSTER . '</a>'
+                                        'text' =>  '<a href="'.xtc_href_link(FILENAME_XTBOOSTER, 'action=edit_xtbooster&xtb_module=add&current_product_id='.$pInfo->products_id.'&cpath='.$cPath).'" class="button">' . BUTTON_EDIT_XTBOOSTER . '</a>'
                                                    );
                   }
                   // EOC Included xs:booster                  
