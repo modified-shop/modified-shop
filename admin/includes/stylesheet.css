@@ -1706,3 +1706,9 @@ display:none!important;
 table.attributes tbody{
 border: 1px solid #ccc;
 }
+
+.optFlag{
+padding: 3px 5px;
+color: #fff;
+background-color: #6E9C25;
+}
