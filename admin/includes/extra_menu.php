@@ -59,7 +59,7 @@ if (!function_exists('subMenue')){ // zweite ebene
 // dynamics Adds();
 if (!function_exists('dynamicsAdds')){ // Menüpunkte dynamisch ergänzen
     function dynamicsAdds($box){
-        global $add_contents;
+        global $add_contents, $admin_access;
 
         ## magnalister
         if (!is_array($add_contents) || count($add_contents) < 1) {
