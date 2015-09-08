@@ -260,7 +260,7 @@ define('WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT', 'Warnung: Das Verzeichnis f&uu
 define('SUCCESS_ACCOUNT_UPDATED', 'Ihr Konto wurde erfolgreich aktualisiert.');
 define('SUCCESS_PASSWORD_UPDATED', 'Ihr Passwort wurde erfolgreich ge&auml;ndert!');
 define('ERROR_CURRENT_PASSWORD_NOT_MATCHING', 'Das eingegebene Passwort stimmt nicht mit dem gespeicherten Passwort &uuml;berein. Bitte versuchen Sie es noch einmal.');
-define('TEXT_MAXIMUM_ENTRIES', 'Hinweis: Ihnen stehen %s Adressbucheintr&auml;ge zur Verf&uuml;gung!');
+define('TEXT_MAXIMUM_ENTRIES', '<strong>Hinweis:</strong> Ihnen stehen %s Adressbucheintr&auml;ge zur Verf&uuml;gung!');
 define('SUCCESS_ADDRESS_BOOK_ENTRY_DELETED', 'Der ausgew&auml;hlte Eintrag wurde erfolgreich gel&ouml;scht.');
 define('SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED', 'Ihr Adressbuch wurde erfolgreich aktualisiert!');
 define('WARNING_PRIMARY_ADDRESS_DELETION', 'Die Standardadresse kann nicht gel&ouml;scht werden. Bitte erst eine andere Standardadresse w&auml;hlen. Danach kann der Eintrag gel&ouml;scht werden.');
@@ -307,8 +307,8 @@ define('JS_PRICE_FROM_MUST_BE_NUM', '* \"Preis ab\" muss eine Zahl sein\n\n');
 define('JS_PRICE_TO_MUST_BE_NUM', '* \"Preis bis\" muss eine Zahl sein\n\n');
 define('JS_PRICE_TO_LESS_THAN_PRICE_FROM', '* Preis bis muss gr&ouml;&szlig;er oder gleich Preis ab sein.\n');
 define('JS_INVALID_KEYWORDS', '* Suchbegriff unzul&auml;ssig\n');
-define('TEXT_LOGIN_ERROR', '<span class="color_error_message"><b>FEHLER:</b></span> Keine &Uuml;bereinstimmung der eingegebenen \'E-Mail-Adresse\' und/oder dem \'Passwort\'.');
-define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<span class="color_error_message"><b>ACHTUNG:</b></span> Die eingegebene E-Mail-Adresse ist nicht registriert. Bitte versuchen Sie es noch einmal.');
+define('TEXT_LOGIN_ERROR', '<b>FEHLER:</b> Keine &Uuml;bereinstimmung der eingegebenen \'E-Mail-Adresse\' und/oder dem \'Passwort\'.');
+//define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<span class="color_error_message"><b>ACHTUNG:</b></span> Die eingegebene E-Mail-Adresse ist nicht registriert. Bitte versuchen Sie es noch einmal.'); // Not used anymore as we do not give a hint that an e-mail address is or is not in the database!
 define('TEXT_PASSWORD_SENT', 'Ein neues Passwort wurde per E-Mail verschickt.');
 define('TEXT_PRODUCT_NOT_FOUND', 'Artikel wurde nicht gefunden!');
 define('TEXT_MORE_INFORMATION', 'F&uuml;r weitere Informationen besuchen Sie bitte die <a href="%s" onclick="window.open(this.href); return false;">Homepage</a> zu diesem Artikel.');
@@ -395,14 +395,14 @@ define('NAVBAR_TITLE_DOWNLOAD', 'Downloads');
 define('TEXT_NEWSLETTER','Sie m&ouml;chten immer auf dem Laufenden bleiben?<br />Kein Problem, tragen Sie sich in unseren Newsletter ein und Sie sind immer auf dem neuesten Stand.');
 define('TEXT_EMAIL_INPUT','Ihre E-Mail-Adresse wurde in unser System eingetragen.<br />Gleichzeitig wurde Ihnen vom System eine E-Mail mit einem Aktivierungslink geschickt. Bitte klicken Sie nach dem Erhalt der E-Mail auf den Link, um Ihre Eintragung zu best&auml;tigen. Ansonsten bekommen Sie keinen Newsletter von uns zugestellt!');
 
-define('TEXT_WRONG_CODE','<span class="color_error_message">Ihr eingegebener Sicherheitscode stimmte nicht mit dem angezeigten Code &uuml;berein. Bitte versuchen Sie es erneut.</span>');
-define('TEXT_EMAIL_EXIST_NO_NEWSLETTER','<span class="color_error_message">Diese E-Mail-Adresse existiert bereits in unserer Datenbank, ist aber noch nicht f&uuml;r den Empfang des Newsletters freigeschaltet!</span>');
-define('TEXT_EMAIL_EXIST_NEWSLETTER','<span class="color_error_message">Diese E-Mail-Adresse existiert bereits in unserer Datenbank und ist f&uuml;r den Newsletterempfang bereits freigeschaltet!</span>');
-define('TEXT_EMAIL_NOT_EXIST','<span class="color_error_message">Diese E-Mail-Adresse existiert nicht in unserer Datenbank!</span>');
+define('TEXT_WRONG_CODE','Ihr eingegebener Sicherheitscode stimmte nicht mit dem angezeigten Code &uuml;berein. Bitte versuchen Sie es erneut.');
+define('TEXT_EMAIL_EXIST_NO_NEWSLETTER','Diese E-Mail-Adresse existiert bereits in unserer Datenbank, ist aber noch nicht f&uuml;r den Empfang des Newsletters freigeschaltet!');
+define('TEXT_EMAIL_EXIST_NEWSLETTER','Diese E-Mail-Adresse existiert bereits in unserer Datenbank und ist f&uuml;r den Newsletterempfang bereits freigeschaltet!');
+define('TEXT_EMAIL_NOT_EXIST','Diese E-Mail-Adresse existiert nicht in unserer Datenbank!');
 define('TEXT_EMAIL_DEL','Ihre E-Mail-Adresse wurde aus unserer Newsletterdatenbank gel&ouml;scht.');
-define('TEXT_EMAIL_DEL_ERROR','<span class="color_error_message">Es ist ein Fehler aufgetreten, Ihre E-Mail-Adresse wurde nicht gel&ouml;scht!</span>');
+define('TEXT_EMAIL_DEL_ERROR','Es ist ein Fehler aufgetreten, Ihre E-Mail-Adresse wurde nicht gel&ouml;scht!');
 define('TEXT_EMAIL_ACTIVE','Ihre E-Mail-Adresse wurde erfolgreich f&uuml;r den Newsletterempfang freigeschaltet!');
-define('TEXT_EMAIL_ACTIVE_ERROR','<span class="color_error_message">Es ist ein Fehler aufgetreten, Ihre E-Mail-Adresse wurde nicht freigeschaltet!</span>');
+define('TEXT_EMAIL_ACTIVE_ERROR','Es ist ein Fehler aufgetreten, Ihre E-Mail-Adresse wurde nicht freigeschaltet!');
 define('TEXT_EMAIL_SUBJECT','Ihre Newsletter-Anmeldung');
 
 define('TEXT_CUSTOMER_GUEST',' Gast');

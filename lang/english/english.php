@@ -260,7 +260,7 @@ define('WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT', 'Warning: Directory for articl
 define('SUCCESS_ACCOUNT_UPDATED', 'Your account has been updated successfully.');
 define('SUCCESS_PASSWORD_UPDATED', 'Your password has been changed successfully!');
 define('ERROR_CURRENT_PASSWORD_NOT_MATCHING', 'The entered password does not match with the stored password. Please try again.');
-define('TEXT_MAXIMUM_ENTRIES', '<span class="color_error_message"><strong>Reference:</strong></span> You are able to choose out of %s entries in you address book!');
+define('TEXT_MAXIMUM_ENTRIES', '<strong>Reference:</strong> You are able to choose out of %s entries in your address book!');
 define('SUCCESS_ADDRESS_BOOK_ENTRY_DELETED', 'The selected entry has been deleted successfully.');
 define('SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED', 'Your address book has been updated sucessfully!');
 define('WARNING_PRIMARY_ADDRESS_DELETION', 'The standard postal address can not be deleted. Please create another address and define it as standard postal address first. Then this entry can be deleted.');
@@ -307,8 +307,8 @@ define('JS_PRICE_FROM_MUST_BE_NUM', '* Price over, must be a number\n');
 define('JS_PRICE_TO_MUST_BE_NUM', '* Price up to, must be a number\n');
 define('JS_PRICE_TO_LESS_THAN_PRICE_FROM', '* Price up to must be larger or same size as Price over.\n');
 define('JS_INVALID_KEYWORDS', '* Invalid search key\n');
-define('TEXT_LOGIN_ERROR', '<span class="color_error_message"><strong>ERROR:</strong></span> The entered \'e-mail address\' and/or the \'password\' do not match.');
-define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<span class="color_error_message"><strong>WARNING:</strong></span> The e-mail address entered is not registered. Please try again.');
+define('TEXT_LOGIN_ERROR', '<strong>ERROR:</strong> The entered \'e-mail address\' and/or the \'password\' do not match.');
+//define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<span class="color_error_message"><strong>WARNING:</strong></span> The e-mail address entered is not registered. Please try again.'); // Not used anymore as we do not give a hint that an e-mail address is or is not in the database!
 define('TEXT_PASSWORD_SENT', 'A new password was sent by e-mail.');
 define('TEXT_PRODUCT_NOT_FOUND', 'Product not found!');
 define('TEXT_MORE_INFORMATION', 'For further information, please visit the <a href="%s" onclick="window.open(this.href); return false;">homepage</a> of this product.');
@@ -395,14 +395,14 @@ define('NAVBAR_TITLE_DOWNLOAD', 'Downloads');
 define('TEXT_NEWSLETTER','You want to stay up to date?<br />No problem, receive our newsletter for the latest updates.');
 define('TEXT_EMAIL_INPUT','Your e-mail address has been registered in our system.<br />An e-mail with a confirmation link has been sent out. Click the link to complete registration!');
 
-define('TEXT_WRONG_CODE','<span class="color_error_message">The security code you entered was not correct. Please try again. <br />The form is not case sensitive.</span>');
-define('TEXT_EMAIL_EXIST_NO_NEWSLETTER','<span class="color_error_message">This e-mail address is registered but not yet activated!</span>');
-define('TEXT_EMAIL_EXIST_NEWSLETTER','<span class="color_error_message">This e-mail address is already registered for the newsletter!</span>');
-define('TEXT_EMAIL_NOT_EXIST','<span class="color_error_message">This e-mail address is not registered for newsletters!</span>');
+define('TEXT_WRONG_CODE','The security code you entered was not correct. Please try again. <br />The form is not case sensitive.');
+define('TEXT_EMAIL_EXIST_NO_NEWSLETTER','This e-mail address is registered but not yet activated!');
+define('TEXT_EMAIL_EXIST_NEWSLETTER','This e-mail address is already registered for the newsletter!');
+define('TEXT_EMAIL_NOT_EXIST','This e-mail address is not registered for newsletters!');
 define('TEXT_EMAIL_DEL','Your e-mail address was deleted successfully from our newsletter-database.');
-define('TEXT_EMAIL_DEL_ERROR','<span class="color_error_message">An Error occured, your e-mail address has not been removed from our database!</span>');
+define('TEXT_EMAIL_DEL_ERROR','An Error occured, your e-mail address has not been removed from our database!');
 define('TEXT_EMAIL_ACTIVE','Your e-mail address has successfully been registered for the newsletter!');
-define('TEXT_EMAIL_ACTIVE_ERROR','<span class="color_error_message">An error occured, your e-mail address has not been registered for the newsletter!</span>');
+define('TEXT_EMAIL_ACTIVE_ERROR','An error occured, your e-mail address has not been registered for the newsletter!');
 define('TEXT_EMAIL_SUBJECT','Your newsletter account');
 
 define('TEXT_CUSTOMER_GUEST','Guest');
