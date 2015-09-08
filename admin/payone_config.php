@@ -416,7 +416,7 @@ function getOrdersStatus($include_hidden = false) {
 	$query = "SELECT * 
 	            FROM ".TABLE_ORDERS_STATUS." 
 	           WHERE language_id = ".(int)$_SESSION['languages_id']." 
-	        ORDER BY sort_order ASC";
+	        ORDER BY orders_status_id ASC";
 	$result = xtc_db_query($query);
 	$status = array();
 	if ($include_hidden == true) {
