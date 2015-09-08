@@ -28,6 +28,13 @@
   require(DIR_FS_CATALOG.DIR_WS_CLASSES . 'xtcPrice.php');
   $xtPrice = new xtcPrice(DEFAULT_CURRENCY,$_SESSION['customers_status']['customers_status_id']);
 
+  $noStylingClass = '';
+  $noStyling = '';
+  if (!defined('NEW_ATTRIBUTES_STYLING') || (defined('NEW_ATTRIBUTES_STYLING') && NEW_ATTRIBUTES_STYLING != 'true')) {
+    $noStylingClass = ' class="noStyling" ';
+    $noStyling = ' noStyling';
+  }
+
   //NEW SORT SELECTION
   if (isset($_GET['option_order_by']) && $_GET['option_order_by']) {
     $option_order_by = $_GET['option_order_by'];
@@ -39,7 +46,7 @@
   $options[] = (array ('id' => 'products_options_sortorder', 'text' => TEXT_SORTORDER));
   $options[] = (array ('id' => 'products_options_id', 'text' => TEXT_OPTION_ID));
   $options[] = (array ('id' => 'products_options_name', 'text' => TEXT_OPTION_NAME));
-  $options_dropdown_order = xtc_draw_pull_down_menu('selected', $options, $option_order_by, 'onchange="go_option()" ') ."\n";
+  $options_dropdown_order = xtc_draw_pull_down_menu('selected', $options, $option_order_by, $noStylingClass.'onchange="go_option()" ') ."\n";
 
   $prefix_array = array(
     array('id' => '+', 'text' => '&nbsp;+&nbsp;'),
@@ -48,13 +55,6 @@
 
   //Anzahl Spalten
   $colspan = 8;
-
-  $noStylingClass = '';
-  $noStyling = '';
-  if (!defined('NEW_ATTRIBUTES_STYLING') || (defined('NEW_ATTRIBUTES_STYLING') && NEW_ATTRIBUTES_STYLING != 'true')) {
-    $noStylingClass = ' class="noStyling" ';
-    $noStyling = ' noStyling';
-  }
 
 ?>
   <script type="text/javascript">
@@ -181,6 +181,7 @@ if ($_POST['cpath'] != '') {
       $matches2 = xtc_db_num_rows($query2);
       
       $isChecked = false;
+
 
       if ($matches2) {
         $i = 0;
