@@ -25,7 +25,7 @@ define('NL_REG_MAIL_ADMIN', false);
 require_once (DIR_FS_INC.'ip_clearing.inc.php');
 
 class newsletter {
-  var $message, $message_id;
+  var $message, $message_class;
 
 
   function newsletter() {
@@ -36,7 +36,7 @@ class newsletter {
   function RemoveFromList($key, $mail) {
     if (!xtc_not_null($key)) {
       $this->message = TEXT_EMAIL_ACTIVE_ERROR;
-      $this->message_id = 5;
+      $this->message_class = 'error';
     } else {
       $check_mail_query = xtc_db_query("SELECT customers_email_address,
                                                customers_id,
@@ -53,10 +53,10 @@ class newsletter {
                                            AND mail_key = '".xtc_db_input($key)."'
                                   ");
         $this->message = TEXT_EMAIL_DEL;
-        $this->message_id = 3;
+        $this->message_class = 'info';
       } else {
         $this->message = TEXT_EMAIL_DEL_ERROR;
-        $this->message_id = 1;
+        $this->message_class = 'error';
       }
     }
   }
@@ -65,7 +65,7 @@ class newsletter {
   function ActivateAddress($key, $email) {
     if (!xtc_not_null($key)) {
       $this->message = TEXT_EMAIL_ACTIVE_ERROR;
-      $this->message_id = 5;
+      $this->message_class = 'error';
     } else {
       $check_mail_query = xtc_db_query("SELECT mail_key,
                                                mail_status
@@ -77,10 +77,10 @@ class newsletter {
         $check_mail = xtc_db_fetch_array($check_mail_query);
         if($check_mail['mail_status'] == '1') {
           $this->message = TEXT_EMAIL_EXIST_NEWSLETTER;
-          $this->message_id = 9;
+          $this->message_class = 'error';
         } elseif ($check_mail['mail_key'] != $_GET['key']) {
           $this->message = TEXT_EMAIL_ACTIVE_ERROR;
-          $this->message_id = 5;
+          $this->message_class = 'error';
         } else {
           $sql_data_array = array('mail_status' => '1',
                                   'date_confirmed' => 'now()',
@@ -90,11 +90,11 @@ class newsletter {
           // extern Mailer
           $this->_externmailer($email, 'subscribe');
           $this->message = TEXT_EMAIL_ACTIVE;
-          $this->message_id = 6;
+          $this->message_class = 'info';
         }
       } else {
         $this->message = TEXT_EMAIL_NOT_EXIST;
-        $this->message_id = 4;
+        $this->message_class = 'error';
       }
     }
   }
@@ -133,7 +133,7 @@ class newsletter {
             if ($check_mail['mail_status'] == '0') {
 
               $this->message = TEXT_EMAIL_EXIST_NO_NEWSLETTER;
-              $this->message_id = 8;
+              $this->message_class = 'error';
 
               if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
                 $this->sendRequestMail($mail);
@@ -146,12 +146,12 @@ class newsletter {
                 // extern Mailer
                 $this->_externmailer($mail, 'subscribe');
                 $this->message = TEXT_EMAIL_ACTIVE;
-                $this->message_id = 6;
+                $this->message_class = 'info';
               }
 
             } else {
               $this->message = TEXT_EMAIL_EXIST_NEWSLETTER;
-              $this->message_id = 9;
+              $this->message_class = 'error';
             }
           } else {
             $check_customer_mail_query = xtc_db_query("SELECT customers_id,
@@ -188,7 +188,7 @@ class newsletter {
             xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array);
 
             $this->message = TEXT_EMAIL_INPUT;
-            $this->message_id = 7;
+            $this->message_class = 'info';
 
             if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
               $this->sendRequestMail($mail);
@@ -201,7 +201,7 @@ class newsletter {
               // extern Mailer
               $this->_externmailer($mail, 'subscribe');
               $this->message = TEXT_EMAIL_ACTIVE;
-              $this->message_id = 6;
+              $this->message_class = 'info';
             }
           }
         }
@@ -219,16 +219,16 @@ class newsletter {
                                              WHERE customers_email_address ='".xtc_db_input($mail)."'
                                       ");
             $this->message = TEXT_EMAIL_DEL;
+            $this->message_class = 'info';
           } else {
-            $this->message_id = 12;
             $this->message = TEXT_EMAIL_NOT_EXIST;
-            $this->message_id = 11;
+            $this->message_class = 'error';
           }
         }
 
       } else {
         $this->message = TEXT_WRONG_CODE;
-        $this->message_id = 10;
+        $this->message_class = 'error';
       }
     }
     unset($_SESSION['vvcode']);
