@@ -82,7 +82,7 @@ if (in_array('newsletter', $use_captcha) && (!isset($_SESSION['customer_id']) ||
 $smarty->assign('text_newsletter', TEXT_NEWSLETTER);
 $smarty->assign('info_message', $info_message);
 if ($newsletter->message_class != '') {
-	$smarty->assign('message_class', $newsletter->message_class);
+  $smarty->assign('message_class', $newsletter->message_class);
 }
 $smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_NEWSLETTER, 'action=process', 'SSL')));
 $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ((isset($_GET['email']) && xtc_db_input($_GET['email'])!='') ? xtc_db_input($_GET['email']):((isset($_POST['email']) && xtc_db_input($_POST['email']))?xtc_db_input($_POST['email']):''))));
