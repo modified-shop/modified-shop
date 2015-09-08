@@ -87,8 +87,9 @@ define('TEXT_INFO_HEADING_DELETE_CUSTOMERS_STATUS', 'Delete Customer Group');
 define('TEXT_INFO_HEADING_EDIT_CUSTOMERS_STATUS','Edit Group Data');
 define('TEXT_INFO_HEADING_NEW_CUSTOMERS_STATUS', 'New Customer Group');
 
-define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Default Customers Group for Price</strong>');
-define('ENTRY_CUSTOMERS_STATUS_BASE', 'This is used for the Article Price.');
+define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Base customers group for product prices</strong>');
+define('ENTRY_CUSTOMERS_STATUS_BASE', 'Apply customers group prices from the following customer group. If selection = Admin, no prices are applied to the new customer group.');
+define('ENTRY_CUSTOMERS_STATUS_BASE_EDIT', 'Apply customers group prices from the following customer group. If selection = Admin, no prices are applied to the customer group.<br /><span class="col-red"><strong>CAUTION:</strong></span> Hereby you overwrite all existing customer group prices for the customer group!');
 
 define('TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION', '<strong>Adopt customer group permissions</strong>');
 define('ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION', 'Adopt visibility rights for categories, products and content pages of the following customer group:');

@@ -88,7 +88,8 @@ define('TEXT_INFO_HEADING_EDIT_CUSTOMERS_STATUS','Gruppendaten bearbeiten');
 define('TEXT_INFO_HEADING_NEW_CUSTOMERS_STATUS', 'Neue Kundengruppe');
 
 define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Basis Kundengruppe f&uuml;r Artikelpreise</strong>');
-define('ENTRY_CUSTOMERS_STATUS_BASE', 'wird als Grundlage f&uuml;r die Preise der neuen Kundengruppe gew&auml;hlt. Wenn Auswahl = Admin werden keine Preise f&uuml;r die neue Kundengruppe angelegt.');
+define('ENTRY_CUSTOMERS_STATUS_BASE', 'Die Kundengruppen-Preise der folgenden Kundengruppe &uuml;bernehmen. Wenn Auswahl = Admin, werden keine Preise f&uuml;r die neue Kundengruppe &uuml;bernommen.');
+define('ENTRY_CUSTOMERS_STATUS_BASE_EDIT', 'Die Kundengruppen-Preise der folgenden Kundengruppe &uuml;bernehmen. Wenn Auswahl = Admin werden, keine Preise f&uuml;r die Kundengruppe &uuml;bernommen.<br /><span class="col-red"><strong>ACHTUNG:</strong></span> Hiermit werden alle bereits vorhandenen Kundengruppen-Preise der Kundengruppe &uuml;berschrieben!');
 
 define('TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION', '<strong>Sichtbarkeitsrechte von einer anderen Kundengruppe &uuml;bernehmen</strong>');
 define('ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION', 'Die Kategorie-, Artikel- und Content-Sichtbarkeitsrechte von folgender Kundengruppe &uuml;bernehmen:');
