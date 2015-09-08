@@ -401,7 +401,7 @@ define('TEXT_EMAIL_EXIST_NEWSLETTER','<span class="color_error_message">This e-m
 define('TEXT_EMAIL_NOT_EXIST','<span class="color_error_message">This e-mail address is not registered for newsletters!</span>');
 define('TEXT_EMAIL_DEL','Your e-mail address was deleted successfully from our newsletter-database.');
 define('TEXT_EMAIL_DEL_ERROR','<span class="color_error_message">An Error occured, your e-mail address has not been removed from our database!</span>');
-define('TEXT_EMAIL_ACTIVE','<span class="color_error_message">Your e-mail address has successfully been registered for the newsletter!</span>');
+define('TEXT_EMAIL_ACTIVE','Your e-mail address has successfully been registered for the newsletter!');
 define('TEXT_EMAIL_ACTIVE_ERROR','<span class="color_error_message">An error occured, your e-mail address has not been registered for the newsletter!</span>');
 define('TEXT_EMAIL_SUBJECT','Your newsletter account');
 

@@ -401,7 +401,7 @@ define('TEXT_EMAIL_EXIST_NEWSLETTER','<span class="color_error_message">Diese E-
 define('TEXT_EMAIL_NOT_EXIST','<span class="color_error_message">Diese E-Mail-Adresse existiert nicht in unserer Datenbank!</span>');
 define('TEXT_EMAIL_DEL','Ihre E-Mail-Adresse wurde aus unserer Newsletterdatenbank gel&ouml;scht.');
 define('TEXT_EMAIL_DEL_ERROR','<span class="color_error_message">Es ist ein Fehler aufgetreten, Ihre E-Mail-Adresse wurde nicht gel&ouml;scht!</span>');
-define('TEXT_EMAIL_ACTIVE','<span class="color_error_message">Ihre E-Mail-Adresse wurde erfolgreich f&uuml;r den Newsletterempfang freigeschaltet!</span>');
+define('TEXT_EMAIL_ACTIVE','Ihre E-Mail-Adresse wurde erfolgreich f&uuml;r den Newsletterempfang freigeschaltet!');
 define('TEXT_EMAIL_ACTIVE_ERROR','<span class="color_error_message">Es ist ein Fehler aufgetreten, Ihre E-Mail-Adresse wurde nicht freigeschaltet!</span>');
 define('TEXT_EMAIL_SUBJECT','Ihre Newsletter-Anmeldung');
 
