@@ -129,9 +129,9 @@ require (DIR_WS_INCLUDES.'head.php');
         the_active_block.toggleClass('active');
         
         if (the_active_block.hasClass('active')) {
-          the_block.show();
+          the_block.slideDown(300);
         } else {
-          the_block.hide();
+          the_block.slideUp(300);
         }          
       });
     });
