@@ -20,7 +20,7 @@ function show_tag_content(id) {
   $('[id^=tab_tag_]').hide();
   //console.log('id:'+ id);
   $('#'+id).show();
-  set_width(id);
+  set_elm_width(id);
 }
 
 $(document).ready(function($) {
