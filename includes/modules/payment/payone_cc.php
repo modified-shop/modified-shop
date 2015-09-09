@@ -48,10 +48,100 @@ class payone_cc extends PayonePayment {
 		$standard_parameters['storecarddata'] = 'yes';
 		$standard_parameters['encoding'] = 'UTF-8';
 		$standard_parameters['hash'] = $this->payone->computeHash($standard_parameters, $this->global_config['key']);
-    $payment_smarty->assign('parameters', $standard_parameters);
     
-		$cctypes = $this->payone->getTypesForGenre($active_genre_identifier);		   
-    $payment_smarty->assign('cctypes', $cctypes);
+    $cctypes_short = array();
+		$cctypes = $this->payone->getTypesForGenre($active_genre_identifier);
+		foreach ($cctypes as $data) {
+		  $cctypes_short[] = $data['shorttype'];		
+		}
+
+    $cc_javascript = '
+    <script type="text/javascript">
+      var request, config;
+  
+      config = {
+        fields: {
+          cardtype: {
+            selector: "cardtype",
+            cardtypes: ["'.implode('","', $cctypes_short).'"]
+          },
+          cardpan: {
+            selector: "cardpan",
+            type: "text"
+          },
+          cardcvc2: {
+            selector: "cardcvc2",
+            type: "password",
+            size: "4",
+            maxlength: "4"
+          },
+          cardexpiremonth: {
+            selector: "cardexpiremonth", 
+            type: "select",
+            size: "2",
+            maxlength: "2",
+            iframe: {
+              width: "50px"
+            }
+          },
+          cardexpireyear: {
+            selector: "cardexpireyear", 
+            type: "select",
+            iframe: {
+              width: "80px"
+            }
+          }
+        },
+        defaultStyle: {
+          input: "font-size: 13px;background-color: #FAFAFA;border-color: #C6C6C6 #DADADA #EAEAEA;color: #999;border-style: solid;border-width: 1px;vertical-align: middle;padding: 6px 5px;border-radius: 2px;box-sizing: border-box;width: 100%;height: 32px;",
+          select: "font-size: 13px;background-color: #FAFAFA;border-color: #C6C6C6 #DADADA #EAEAEA;color: #999;border-style: solid;border-width: 1px;vertical-align: middle;padding: 6px 4px 6px 2px;border-radius: 2px;box-sizing: border-box;width: 100%;",
+          iframe: {
+            height: "32px",
+            width: "100%"
+          }
+        },
+        error: "errorOutput",
+        language: Payone.ClientApi.Language.'.$standard_parameters['language'].'
+      };
+  
+      request = {
+        request: \''.$standard_parameters['request'].'\',
+        responsetype: \''.$standard_parameters['responsetype'].'\',
+        mode: \''.$standard_parameters['mode'].'\',
+        mid: \''.$standard_parameters['mid'].'\',
+        aid: \''.$standard_parameters['aid'].'\',
+        portalid: \''.$standard_parameters['portalid'].'\',
+        encoding: \''.$standard_parameters['encoding'].'\',
+        storecarddata: \''.$standard_parameters['storecarddata'].'\',
+        hash: \''.$standard_parameters['hash'].'\'
+      };
+
+    var iframes = new Payone.ClientApi.HostedIFrames(config, request); 
+
+    document.getElementById(\'cardtype\').onchange = function () {
+      iframes.setCardType(this.value);
+    };
+
+    function payoneCheck() { 
+      if (iframes.isComplete()) {
+        iframes.creditCardCheck(\'checkCallback\');
+      } else {
+        document.getElementById(\'errorOutput\').innerHTML = \''.TEXT_CHECK_DATA.'\';
+      }
+      return false;
+    }
+
+    function checkCallback(response) { 
+      if (response.status === "VALID") {
+        document.getElementById("pseudocardpan").value = response.pseudocardpan; 
+        document.getElementById("truncatedcardpan").value = response.truncatedcardpan;
+        document.checkout_confirmation.submit();
+      }
+      return false;
+    }
+    </script>';
+
+    $payment_smarty->assign('cc_javascript', $cc_javascript);
         
     $payment_smarty->assign('payonecss', DIR_WS_EXTERNAL.'payone/css/payone.css');
     $payment_smarty->caching = 0;
