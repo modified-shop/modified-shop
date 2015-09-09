@@ -25,7 +25,9 @@ class PayoneModified {
 	protected $_client_api_url;
 	protected $_frontend_url;
 	protected $_server_api_url;
-
+  
+  public $integrator_version = '1.02';
+  
 	public function __construct() {
 		$this->_client_api_url = 'https://secure.pay1.de/client-api/';
 		$this->_frontend_url = 'https://secure.pay1.de/frontend/';
@@ -526,7 +528,7 @@ class PayoneModified {
 			'solution_name' => PROJECT_VERSION,
 			'solution_version' => $db_version_check,
 			'integrator_name' => 'Modified',
-			'integrator_version' => '1.01',
+			'integrator_version' => $this->integrator_version,
 		);
 		if ($request !== null) {
 			$params['request'] = $request;

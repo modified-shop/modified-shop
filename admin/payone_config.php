@@ -461,9 +461,9 @@ require (DIR_WS_INCLUDES.'head.php');
           the_active_block.toggleClass('active');
           
           if (the_active_block.hasClass('active')) {
-            the_block.show();
+            the_block.slideDown(300);
           } else {
-            the_block.hide();
+            the_block.slideUp(300);
           }          
         });
 
@@ -476,9 +476,9 @@ require (DIR_WS_INCLUDES.'head.php');
           the_active_block.toggleClass('active');
           
           if (the_active_block.hasClass('active')) {
-            the_block.show();
+            the_block.slideDown(300);
           } else {
-            the_block.hide();
+            the_block.slideUp(300);
           }          
         });
       });
@@ -511,7 +511,7 @@ require (DIR_WS_INCLUDES.'head.php');
 										<td rowspan="2" width="40px"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></td>
 									</tr>
 									<tr>
-										<td class="pageHeading" style="padding: 4px 0;" valign="top"><?php echo PAYONE_CONFIG_TITLE; ?></td>
+										<td class="pageHeading" style="padding: 4px 0;" valign="top"><?php echo PAYONE_CONFIG_TITLE; ?><span style="float:right;font-size:12px;padding-right:5px;">v<?php echo $payone->integrator_version; ?></span></td>
 									</tr>
 								</table>
 							</td>
