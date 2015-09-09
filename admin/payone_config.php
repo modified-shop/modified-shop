@@ -456,7 +456,7 @@ require (DIR_WS_INCLUDES.'head.php');
           var the_block = $(this).next('.subblock');
           var the_active_block = $(this);
           
-          $('h3 + .subblock').not(the_block).hide();
+          $('h3 + .subblock').not(the_block).slideUp(300);
           $('h3').not(the_active_block).removeClass('active');
           the_active_block.toggleClass('active');
           

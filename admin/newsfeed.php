@@ -33,7 +33,7 @@ require (DIR_WS_INCLUDES.'head.php');
         var the_block = $(this).next('.blogentry');
         var the_active_block = $(this);
         
-        $('.blog_title + .blogentry').not(the_block).hide();
+        $('.blog_title + .blogentry').not(the_block).slideUp(300);
         $('.blog_title').not(the_active_block).removeClass('active');
         the_active_block.toggleClass('active');
         
