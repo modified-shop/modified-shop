@@ -158,6 +158,7 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
     // unset not needed params
     unset($pararray['language']);
     unset($pararray['cPath']);
+    unset($pararray['manufacturers_id']);
     unset($pararray['products_id']);
     unset($pararray['coID']);
     unset($pararray['page']);
