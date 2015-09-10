@@ -292,7 +292,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   ?>
                   <tr <?php echo $tr_attributes;?>>
                     <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_id'];?></td>
-                    <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_image'] != '' ? xtc_image(DIR_WS_ICONS . $customers_status['customers_status_image'] , IMAGE_ICON_INFO) : '&nbsp;'?></td>
+                    <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_image'] != '' ? xtc_image(DIR_WS_CATALOG.DIR_WS_ICONS . $customers_status['customers_status_image'] , IMAGE_ICON_INFO) : '&nbsp;'?></td>
                     <td class="dataTableContent txta-c"><?php echo xtc_get_status_users($customers_status['customers_status_id']);?></td>
                     <td class="dataTableContent"><?php echo $customers_status['customers_status_name'] . ($customers_status['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID ? ' (' . TEXT_DEFAULT . ')' : '') . ($customers_status['customers_status_public'] == '1' ? ' ,public ' : '');?></td>
                     <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_show_price'] == '1' ? ($customers_status['customers_status_show_price_tax'] == '1' ? TAX_YES : TAX_NO) : '---' ;?></td>
