@@ -73,7 +73,7 @@ function product_redirect($actual_products_id) {
       && strpos($_SERVER['QUERY_STRING'], 'action') === false
      ) 
   {
-    if (SEARCH_ENGINE_FRIENDLY_URLS != 'true') {
+    if (SEARCH_ENGINE_FRIENDLY_URLS != 'true' || defined('SUMA_URL_MODUL')) {
       $products_link_cat_id = 0;
       return xtc_get_product_path($actual_products_id);
     }
