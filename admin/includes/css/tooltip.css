@@ -24,6 +24,7 @@ background: #FFFFCC; /*#4B4B4E;*/
 /*left: 110%; 
 top: 0;*/
 bottom: 20px;
+line-height:16px;
 }
 .tooltip span{
 vertical-align: middle;
