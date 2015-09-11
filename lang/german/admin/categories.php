@@ -247,4 +247,6 @@ define('TEXT_PRODUCTS_ATTRIBUTES_RECALCULATE', 'Attribute beim &Auml;ndern des S
 define('HEADING_TITLE_CAT_BREADCRUMB', ' in &quot;%s&quot;');
 
 define('TEXT_PRODUCTS_TAGS', 'Artikeleigenschaften');
+
+define('TEXT_GRADUATED_PRICES_GROUP_INFO', 'Die Kundengruppe hat derzeit keine Berechtigungen Staffelpreise zu sehen. Dies kann in den Kundengruppen-Einstellungen jederzeit ge&auml;ndert werden.');
 ?>
