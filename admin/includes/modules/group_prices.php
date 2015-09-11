@@ -111,7 +111,7 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
                                             AND quantity != '1'
                                        ORDER BY quantity ASC");
           ?> 
-          <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/<?php echo ((xtc_db_num_rows($staffel_query) > 0) ? 'arrow_down_green.gif' : 'arrow_down.gif'); ?>" height="16" width="16" onclick="javascript:toggleBox('staffel_<?php echo $group_data['STATUS_ID']; ?>');" style="vertical-align: middle;"><?php echo '<span'.(($group_data['STATUS_GRADUATED'] != '1') ? draw_tooltip(TEXT_GRADUATED_PRICES_GROUP_INFO) : '').'</span>'; ?>
+          <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/<?php echo ((xtc_db_num_rows($staffel_query) > 0) ? 'arrow_down_green.gif' : 'arrow_down.gif'); ?>" height="16" width="16" onclick="javascript:toggleBox('staffel_<?php echo $group_data['STATUS_ID']; ?>');" style="vertical-align: middle;"><?php echo (($group_data['STATUS_GRADUATED'] != '1') ? draw_tooltip(TEXT_GRADUATED_PRICES_GROUP_INFO) : ''); ?>
           <div id="staffel_<?php echo $group_data['STATUS_ID']; ?>" class="longDescription">
             <table class="tableConfig borderall">
               <tr class="dataTableHeadingRow lh14">
