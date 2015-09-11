@@ -15,7 +15,7 @@
   function get_newsfeed() {
     // newsfeed
     if (NEWSFEED_LAST_UPDATE < (time()-86400)) {
-      $feed = get_external_content('http://www.modified-shop.org/feed/', 2);    
+      $feed = get_external_content('http://www.modified-shop.org/feed/?v=2.00', 2);    
       if ($feed && class_exists('SimpleXmlElement')) {
         $rss = new SimpleXmlElement($feed, LIBXML_NOCDATA);
         $rss->addAttribute('encoding', 'UTF-8');
