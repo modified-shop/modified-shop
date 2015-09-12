@@ -31,6 +31,7 @@
   <script type="text/javascript">
     function iframeBox_show(pID,title,filename,params) {
         if ($('.iframeBox_wrap').not(':visible') ) {
+            params = params || '';
             $('.iframeBox').show();
             $('.iframeBox_wrap').show();
             $('.iframeBox_iframe').html( 
