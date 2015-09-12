@@ -80,7 +80,7 @@
       <div class="clear"></div>
       <div class="div_box mrg5">
         <div class="customers-groups">
-          <div class="flt-l"><?php if ($customers_statuses_id_array[$cInfo->customers_status]['csa_image'] != '') { echo xtc_image(DIR_WS_ICONS . $customers_statuses_id_array[$cInfo->customers_status]['csa_image'], ''); } ?></div>
+          <div class="flt-l"><?php if ($customers_statuses_id_array[$cInfo->customers_status]['csa_image'] != '') { echo xtc_image(DIR_WS_CATALOG.DIR_WS_ICONS . $customers_statuses_id_array[$cInfo->customers_status]['csa_image'], ''); } ?></div>
           <div class="main" style="margin:12px 0;"><b><?php echo HEADING_TITLE_STATUS  .':</b> ' . $customers_statuses_id_array[$cInfo->customers_status]['text'] ; ?></div>
         </div>
         <div class="clear"></div>
