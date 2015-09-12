@@ -900,7 +900,7 @@ define('MODULE_SMALL_BUSINESS_DESC', 'Soll der Shop umgestellt werden auf Kleinu
 define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Komprimierung');
 define('COMPRESS_HTML_OUTPUT_DESC', 'Soll der HTML Output vom Template komprimiert ausgeliefert werden?');
 define('COMPRESS_STYLESHEET_TITLE', 'CSS Komprimierung');
-define('COMPRESS_STYLESHEET_DESC', 'Soll ein komprimiertes Stylesheet ausgeliefert werden?<br/><b>Achtung:</b> Das funktioniert nur mit dem Template tpl_modified!');
+define('COMPRESS_STYLESHEET_DESC', 'Soll ein komprimiertes Stylesheet ausgeliefert werden?<br/><b>Achtung:</b> Das funktioniert nur mit dem Template tpl_modified &amp; xtc5!');
 
 define('USE_ATTRIBUTES_IFRAME_TITLE', 'Attribute editieren in iframe');
 define('USE_ATTRIBUTES_IFRAME_DESC', '&Ouml;ffnet die Attribut Verwaltung in der Kategorie/Artikelansicht in einem iframe');

@@ -13,16 +13,27 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-   // Put CSS-Definitions here, these CSS-files will be loaded at the TOP of every page
-?>
-<link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/stylesheet.css" type="text/css" />
-<link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/thickbox.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/jquery.alerts.css" type="text/css" media="screen" />
+  $css_plain = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/stylesheet.css';
+  $css_min = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/stylesheet.min.css';
 
-<?php // BOF - web28 - 2010-07-09 - TABS/ACCORDION in product_info
-if (strpos($PHP_SELF, FILENAME_PRODUCT_INFO) !== false) {
+  $css_file = '/stylesheet.css';
+  if (COMPRESS_STYLESHEET == 'true') {
+    $css_plain_ts = filemtime($css_plain);
+    $css_min_ts = is_writeable($css_min) ? filemtime($css_min) : false;
+    if ($css_min_ts && ($css_plain_ts > $css_min_ts || filesize($css_min) == 0)) {
+      require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
+      if (($css_content = file_get_contents($css_plain)) !== false) {
+        $compactor = new Compactor(array('strip_php_comments' => true));
+        $css_content = $compactor->squeeze($css_content);
+        if (file_put_contents($css_min, $css_content, LOCK_EX) !== false) {
+          $css_file = '/stylesheet.min.css?v='.$css_min_ts;
+        }
+      }
+    } elseif ($css_min_ts) {
+      $css_file = '/stylesheet.min.css?v='.$css_min_ts;
+    }
+  }
+
+  // Put CSS-Inline-Definitions here, these CSS-files will be loaded at the TOP of every page
 ?>
-<link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/jquery-ui.css" type="text/css" media="screen" />
-<?php
-} // EOF - web28 - 2010-07-09 - TABS/ACCORDION in product_info
-?>
+<link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.$css_file; ?>" type="text/css" media="screen" />

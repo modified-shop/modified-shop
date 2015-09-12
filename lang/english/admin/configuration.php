@@ -903,7 +903,7 @@ define('MODULE_SMALL_BUSINESS_DESC', 'Shall the store be switched to small busin
 define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Compression');
 define('COMPRESS_HTML_OUTPUT_DESC', 'Compress HTML Output from the Template?');
 define('COMPRESS_STYLESHEET_TITLE', 'CSS Compression');
-define('COMPRESS_STYLESHEET_DESC', 'Compress Stylesheet?<br/><b>Attention:</b> This only works with the tpl_modified Template!');
+define('COMPRESS_STYLESHEET_DESC', 'Compress Stylesheet?<br/><b>Attention:</b> This only works with the tpl_modified &amp; xtc5 Template!');
 
 define('USE_ATTRIBUTES_IFRAME_TITLE', 'Edit Attributes in iframe');
 define('USE_ATTRIBUTES_IFRAME_DESC', 'Open Attribute Manager in the Category / Product view in an iframe');
