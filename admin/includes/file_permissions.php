@@ -60,6 +60,7 @@ $writeableDirs = array(
   DIR_FS_CATALOG.'media/products',
   DIR_FS_CATALOG.'media/products/backup',
   DIR_FS_CATALOG.'templates/tpl_modified',
+  DIR_FS_CATALOG.'templates/xtc5',
   DIR_FS_CATALOG.'templates_c',
 );
 
