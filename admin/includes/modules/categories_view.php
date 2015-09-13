@@ -161,7 +161,7 @@
         if (isset($_GET['cPath'])) {
           echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
         }
-        echo '<label for="search_inactive">'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .'</label>';
+        echo '<span style="display:inline-block;line-height:30px;vertical-align:top;">'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .'</span>';
         echo '<div style="display:inline;margin:0px 10px 0px 5px;">' . draw_on_off_selection('search_inactive', 'checkbox', $search_inactive, 'style="vertical-align:middle;" onclick="this.form.submit();"') . '</div>';
         ?>
         </form>
