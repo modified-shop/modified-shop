@@ -154,7 +154,7 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
     if (ACCOUNT_STATE == 'true') {
       if ($zone_id > 0) {
         $sql_data_array['entry_zone_id'] = (int) $zone_id;
-        $sql_data_array['entry_state'] = '';
+        $sql_data_array['entry_state'] = $state;
       } else {
         $sql_data_array['entry_zone_id'] = '0';
         $sql_data_array['entry_state'] = $state;
