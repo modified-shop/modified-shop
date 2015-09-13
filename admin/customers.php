@@ -543,7 +543,7 @@
         if (ACCOUNT_STATE == 'true') {
           if ($entry_zone_id > 0) {
             $sql_data_array['entry_zone_id'] = $entry_zone_id;
-            $sql_data_array['entry_state'] = '';
+            $sql_data_array['entry_state'] = $entry_state;
           } else {
             $sql_data_array['entry_zone_id'] = '0';
             $sql_data_array['entry_state'] = $entry_state;
