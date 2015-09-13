@@ -306,7 +306,7 @@
    * @return string
    */
   function draw_tooltip($text) {
-    $output = '<span class="tooltip"><span>'.xtc_image(DIR_WS_ICONS.'tooltip_icon.png').'<em>'.$text.'</em></span></span>'. PHP_EOL; 
+    $output = '<span class="tooltip">'.xtc_image(DIR_WS_ICONS.'tooltip_icon.png').'<em>'.$text.'</em></span>'. PHP_EOL; 
     return $output;
   }
   
