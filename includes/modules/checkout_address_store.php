@@ -133,7 +133,7 @@
       if (ACCOUNT_STATE == 'true') {
         if ($zone_id > 0) {
           $sql_data_array['entry_zone_id'] = $zone_id;
-          $sql_data_array['entry_state'] = '';
+          $sql_data_array['entry_state'] = $state;
         } else {
           $sql_data_array['entry_zone_id'] = '0';
           $sql_data_array['entry_state'] = $state;
