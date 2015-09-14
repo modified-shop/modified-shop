@@ -199,7 +199,7 @@ if (is_array($payment_modules->modules)) {
   $payment_button .= $payment_modules->process_button();
 }
 $smarty->assign('MODULE_BUTTONS', $payment_button);
-$smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER) . '</form>' . "\n");
+$smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER, (($_SESSION['payment'] == 'payone_cc') ? 'onclick="return payoneCheck();"' : '')) . '</form>' . "\n");
 
 //check if display conditions on checkout page is true
 if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
