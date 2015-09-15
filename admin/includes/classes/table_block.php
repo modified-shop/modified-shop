@@ -25,7 +25,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     public $table_row_parameters = '';
     public $table_data_parameters = '';
     
-    public function tableBlock($contents) {
+    public function __construct($contents) {
       $tableBox_string = '';
 
       $form_set = false;

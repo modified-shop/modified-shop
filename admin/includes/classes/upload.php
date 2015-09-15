@@ -19,7 +19,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   class upload {
     var $file, $filename, $destination, $permissions, $extensions, $mime_types, $tmp_filename;
 
-    function upload($file = '', $destination = '', $permissions = '644', $extensions = '', $mime_types='') {
+    function __construct($file = '', $destination = '', $permissions = '644', $extensions = '', $mime_types='') {
 
       $this->set_file($file);
       $this->set_destination($destination);
