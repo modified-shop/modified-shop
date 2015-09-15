@@ -22,7 +22,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 class janolaw {
   var $code, $title, $description, $enabled;
 
-  function janolaw() {
+  function __construct() {
     global $order;
 
      $this->code = 'janolaw';

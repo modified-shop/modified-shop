@@ -17,7 +17,7 @@ if (!class_exists('invoice_number')) {
     {
         var $code, $title, $description, $enabled;
 
-        function invoice_number() 
+        function __construct() 
         {
             $this->code = 'invoice_number';
             $this->properties['process_key'] = true;

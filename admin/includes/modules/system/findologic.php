@@ -23,7 +23,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 class findologic {
   var $code, $title, $description, $enabled;
 
-  function findologic() {
+  function __construct() {
      $this->code = 'findologic';
      $this->title = MODULE_FINDOLOGIC_TEXT_TITLE;
      $this->description = MODULE_FINDOLOGIC_TEXT_DESCRIPTION;

@@ -16,7 +16,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 class cleverreach {
   var $code, $title, $description, $enabled;
 
-  function cleverreach() {
+  function __construct() {
      $this->code = 'cleverreach';
      $this->title = MODULE_CLEVERREACH_TEXT_TITLE;
      $this->description = MODULE_CLEVERREACH_TEXT_DESCRIPTION;

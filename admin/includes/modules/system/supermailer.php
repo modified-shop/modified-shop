@@ -16,7 +16,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 class supermailer {
   var $code, $title, $description, $enabled;
 
-  function supermailer() {
+  function __construct() {
      $this->code = 'supermailer';
      $this->title = MODULE_SUPERMAILER_TEXT_TITLE;
      $this->description = MODULE_SUPERMAILER_TEXT_DESCRIPTION;

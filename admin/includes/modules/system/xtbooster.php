@@ -11,7 +11,7 @@ class xtbooster
 {
 	var $code, $title, $description, $enabled;
 
-    function xtbooster() {
+    function __construct() {
 		$this->code = 'xtbooster';
 		$this->title = MODULE_XTBOOSTER_TEXT_TITLE;
 		$this->description = MODULE_XTBOOSTER_TEXT_DESCRIPTION;

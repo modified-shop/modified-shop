@@ -32,7 +32,7 @@ require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
 class sitemaporg {
   var $code, $title, $description, $enabled;
 
-  function sitemaporg() {
+  function __construct() {
     global $order;
 
     $this->code = 'sitemaporg';
