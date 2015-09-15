@@ -39,7 +39,7 @@ class moneybookers_mae extends fcnt_moneybookers {
 	var $images='maestro.gif';
 
 	// class constructor
-	function moneybookers_mae() {
+	function __construct() {
 		global $order, $language;
 
 		$this->_setAllowed('ES,GB,AT');

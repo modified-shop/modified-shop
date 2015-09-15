@@ -39,7 +39,7 @@ class moneybookers_cgb extends fcnt_moneybookers {
 	var $images='cartebleue.gif';
 
 	// class constructor
-	function moneybookers_cgb() {
+	function __construct() {
 		global $order, $language;
 
 		$this->_setAllowed('FR');

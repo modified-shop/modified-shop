@@ -15,7 +15,7 @@ class mcp_creditcard extends micropayment_method
     var $code = 'mcp_creditcard';
     var $url = '/creditcard/event';
 
-    function mcp_creditcard()
+    function __construct()
     {
         global $order, $language;
         $this->title        = MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE;

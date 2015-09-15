@@ -39,7 +39,7 @@ class moneybookers_ideal extends fcnt_moneybookers {
 	var $images='ideal.gif';
 
 	// class constructor
-	function moneybookers_ideal() {
+	function __construct() {
 		global $order, $language;
 
 		$this->_setAllowed('NL');

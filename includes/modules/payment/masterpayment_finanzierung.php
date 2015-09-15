@@ -24,7 +24,7 @@ require_once(DIR_FS_CATALOG . 'includes/external/masterpayment/MasterpaymentActi
   class masterpayment_finanzierung extends MasterpaymentActions {
     var $code, $title, $description, $enabled;
 
-    function masterpayment_finanzierung() {
+    function __construct() {
       global $order;
 
       $this->code		 	= 'masterpayment_finanzierung';

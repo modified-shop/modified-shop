@@ -19,7 +19,7 @@
 class cash {
 	var $code, $title, $description, $enabled;
 
-	function cash() {
+	function __construct() {
 		global $order;
 
 		$this->code = 'cash';

@@ -14,7 +14,7 @@ class mcp_prepay extends micropayment_method
     var $code = 'mcp_prepay';
     var $url = '/prepay/event';
 
-    function mcp_prepay()
+    function __construct()
     {
         global $order, $language;
         $this->title       = MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE;

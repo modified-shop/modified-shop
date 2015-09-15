@@ -19,7 +19,7 @@
 class invoice {
 	var $code, $title, $description, $enabled;
 
-	function invoice() {
+	function __construct() {
 		global $order;
 
 		$this->code = 'invoice';

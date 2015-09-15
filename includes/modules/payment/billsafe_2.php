@@ -45,7 +45,7 @@ class billsafe_2 {
   var $info;
   var $response;
 
-  function billsafe_2() {
+  function __construct() {
     global $order;
     require (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
     $this->code = 'billsafe_2';

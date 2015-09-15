@@ -39,7 +39,7 @@ class moneybookers_csi extends fcnt_moneybookers {
 	var $images='cartasi.gif';
 
 	// class constructor
-	function moneybookers_csi() {
+	function __construct() {
 		global $order, $language;
 
 		$this->_setAllowed('IT');

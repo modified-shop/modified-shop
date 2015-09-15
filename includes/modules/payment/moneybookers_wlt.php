@@ -39,7 +39,7 @@ class moneybookers_wlt extends fcnt_moneybookers {
 	var $images='by_ewallet_90x45.gif';
 
 	// class constructor
-	function moneybookers_wlt() {
+	function __construct() {
 		global $order, $language;
 
 		$this->_setCode('wlt','WLT');

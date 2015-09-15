@@ -39,7 +39,7 @@ class moneybookers_sft extends fcnt_moneybookers {
 	var $images='sofort.gif';
 
 	// class constructor
-	function moneybookers_sft() {
+	function __construct() {
 		global $order, $language;
 
 		$this->_setAllowed('DE');

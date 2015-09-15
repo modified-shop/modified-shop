@@ -39,7 +39,7 @@ class moneybookers_elv extends fcnt_moneybookers {
 	var $images='ec.gif';
 
 	// class constructor
-	function moneybookers_elv() {
+	function __construct() {
 		global $order, $language;
 
 		$this->_setAllowed('DE');

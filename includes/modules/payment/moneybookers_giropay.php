@@ -39,7 +39,7 @@ class moneybookers_giropay extends fcnt_moneybookers {
 	var $images='giropay.gif';
 
 	// class constructor
-	function moneybookers_giropay() {
+	function __construct() {
 		global $order, $language;
 
 		$this->_setAllowed('DE');

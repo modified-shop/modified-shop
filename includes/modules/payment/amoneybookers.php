@@ -31,7 +31,7 @@ class amoneybookers {
 	var $mbLanguages, $mbCurrencies, $aCurrencies, $defCurr, $defLang;
 
 	// class constructor
-	function amoneybookers() {
+	function __construct() {
 		global $order, $language;
 
 		$this->code = 'amoneybookers';

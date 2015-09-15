@@ -39,7 +39,7 @@ class moneybookers_netpay extends fcnt_moneybookers {
 	var $images='eps.gif';
 
 	// class constructor
-	function moneybookers_netpay() {
+	function __construct() {
 		global $order, $language;
 
 		$this->_setAllowed('AT');
