@@ -1,3 +1,9 @@
+<?php
+
+defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+
+?>
+
 <style>
     .iframeBox {
         display:none; background:#ccc; position:fixed; width:100%; height:100%; top:0px; left:0px; z-index:9000; opacity:0.8; filter:alpha(opacity=80); /* For IE8 and earlier */
