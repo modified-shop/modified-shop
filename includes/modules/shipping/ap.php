@@ -24,7 +24,7 @@
   class ap {
     var $code, $title, $description, $icon, $enabled, $num_ap;
 
-    function ap() {
+    function __construct() {
       global $order;
 
       $this->code = 'ap';

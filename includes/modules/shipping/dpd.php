@@ -35,7 +35,7 @@
     var $code, $title, $description, $enabled, $icon;
 
     // class constructor
-    function dpd() {
+    function __construct() {
       global $order;
 
       $this->code = 'dpd';

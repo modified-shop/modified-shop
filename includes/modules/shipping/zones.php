@@ -20,7 +20,7 @@
   class zones {
     var $code, $title, $description, $enabled, $num_zones;
 
-    function zones() {
+    function __construct() {
       global $order;
 
       $this->code = 'zones';

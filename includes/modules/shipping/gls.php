@@ -28,7 +28,7 @@
   class gls {
     var $code, $title, $description, $icon, $enabled, $num_gls;
 
-    function gls() {
+    function __construct() {
       global $order;
 
       $this->code = 'gls';

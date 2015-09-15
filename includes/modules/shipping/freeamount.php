@@ -19,7 +19,7 @@
   class freeamount {
     var $code, $title, $description, $icon, $enabled, $num_freeamount;
 
-    function freeamount() {
+    function __construct() {
       global $order;
 
       $this->code = 'freeamount';

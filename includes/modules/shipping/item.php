@@ -20,7 +20,7 @@
     var $code, $title, $description, $icon, $enabled, $num_item;
 
 
-    function item() {
+    function __construct() {
       global $order;
 
       $this->code = 'item';

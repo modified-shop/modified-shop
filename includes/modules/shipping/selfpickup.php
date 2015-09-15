@@ -25,7 +25,7 @@ class selfpickup
 {
     var $code, $title, $description, $icon, $enabled;
 
-    function selfpickup()
+    function __construct()
     {
         $this->code        = 'selfpickup';
         $this->title       = MODULE_SHIPPING_SELFPICKUP_TEXT_TITLE;

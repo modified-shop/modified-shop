@@ -26,7 +26,7 @@
     var $code, $title, $description, $icon, $enabled, $num_fedexeu, $types;
 
 
-    function fedexeu() {
+    function __construct() {
       global $order;
 
       $this->code = 'fedexeu';

@@ -31,7 +31,7 @@
     var $code, $title, $description, $icon, $enabled, $num_ups;
 
 
-    function ups() {
+    function __construct() {
       global $order;
 
       $this->code = 'ups';

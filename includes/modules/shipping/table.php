@@ -20,7 +20,7 @@
   class table {
     var $code, $title, $description, $icon, $enabled, $num_table;
 
-    function table() {
+    function __construct() {
       global $order;
 
       $this->code = 'table';
