@@ -71,7 +71,7 @@
   $addSpecialsShopTitle =   ((META_SPECIALS_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei Angeboten anhängen, ja/nein?
   $addNewsShopTitle     =   ((META_NEWS_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei Neuen Artikeln anhängen, ja/nein?
   $addSearchShopTitle   =   ((META_SEARCH_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei Suchergebnissen anhängen, ja/nein?
-  $addOthersShopTitle   =   ((META_OTHERS_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei sonstigen Seiten anhängen, ja/nein?
+  $addOthersShopTitle   =   ((META_OTHER_SHOP_TITLE == 'true') ? true : false);   // Shop-Titel bei sonstigen Seiten anhängen, ja/nein?
 // ---------------------------------------------------------------------------------------
   $noIndexUnimportant   =   true;  // "unwichtige" Seiten mit noindex versehen
 // ---------------------------------------------------------------------------------------
