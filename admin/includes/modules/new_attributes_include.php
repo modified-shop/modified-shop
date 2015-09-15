@@ -38,7 +38,7 @@
   //NEW SORT SELECTION
   if (isset($_GET['option_order_by']) && $_GET['option_order_by']) {
     $option_order_by = $_GET['option_order_by'];
-    $_POST['current_product_id'] = $_GET['current_product_id'];
+    $_POST['current_product_id'] = (int)$_GET['current_product_id'];
   } else {
     $option_order_by = 'products_options_sortorder,products_options_id';
   }
@@ -61,7 +61,7 @@
   <!--
   function go_option() {
     if (document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value != "none") {
-      location = "<?php echo xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'option_page=' . (isset($_GET['option_page']) ? $_GET['option_page'] : 1)).'&current_product_id='. $_POST['current_product_id'].$iframe; ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
+      location = "<?php echo xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'option_page=' . (isset($_GET['option_page']) ? (int)$_GET['option_page'] : 1)).'&current_product_id='. (int)$_POST['current_product_id'].$iframe; ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
     }
   }
   //-->
@@ -79,7 +79,7 @@
     </div>
 
 <?php echo xtc_draw_form('SUBMIT_ATTRIBUTES', FILENAME_NEW_ATTRIBUTES . str_replace('&','?',$iframe), '', 'post', 'id="SUBMIT_ATTRIBUTES" enctype="multipart/form-data"'); ?>
-<input type="hidden" name="current_product_id" value="<?php echo $_POST['current_product_id']; ?>">
+<input type="hidden" name="current_product_id" value="<?php echo (int)$_POST['current_product_id']; ?>">
 <input type="hidden" name="action" value="change">
 <?php
 //BOF - web28 - 2010-12-14 - NEW edit products attributes
@@ -87,7 +87,7 @@ echo '<input type="hidden" name="products_options_id" value="' . (isset($product
 echo '<input type="hidden" name="option_order_by" value="' . $option_order_by . '">';
 $_POST['cpath'] = isset($_GET['cpath']) ? $_GET['cpath'] : (isset($_POST['cpath']) ? $_POST['cpath']: '') ;
 if ($_POST['cpath'] != '') {
-  $param ='cPath='. $_POST['cpath'] . '&current_product_id='. $_POST['current_product_id'] . $oldaction.$oldpage ;
+  $param ='cPath='. $_POST['cpath'] . '&current_product_id='. (int)$_POST['current_product_id'] . $oldaction.$oldpage ;
   echo '<input type="hidden" name="cpath" value="' . $_POST['cpath'] . '">';
   echo '<input type="hidden" name="oldaction" value="' . str_replace('&oldaction=','',$oldaction) . '">';
   echo '<input type="hidden" name="page" value="' . str_replace('&page=','',$oldpage) . '">';
@@ -117,7 +117,7 @@ if ($_POST['cpath'] != '') {
   $attr_get_vpe = xtc_db_query("SELECT products_vpe_id, 
                                        products_vpe_name 
                                   FROM products_vpe 
-                                 WHERE language_id = '" . $_SESSION['languages_id'] . "'
+                                 WHERE language_id = '" . (int)$_SESSION['languages_id'] . "'
                               ");
   $attr_vpe_data = array(array('id' => 0, 'text' => ''));
   while($attr_vpe = xtc_db_fetch_array($attr_get_vpe)) {
@@ -173,8 +173,8 @@ if ($_POST['cpath'] != '') {
                FROM ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." a 
           LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." b 
                     ON a.products_options_values_id = b.products_options_values_id
-              WHERE a.products_options_id = '" . $current_product_option_id . "' 
-                AND b.language_id = '" . $_SESSION['languages_id'] . "'
+              WHERE a.products_options_id = '" . (int)$current_product_option_id . "' 
+                AND b.language_id = '" . (int)$_SESSION['languages_id'] . "'
            ORDER BY " . $values_order_by . " " . $sortv
         );
         
