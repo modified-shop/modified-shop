@@ -29,7 +29,7 @@
    ---------------------------------------------------------------------------------------*/
 
 
-  class ot_ps_fee {
+  class __construct {
     var $title, $output;
 
     function ot_ps_fee() {

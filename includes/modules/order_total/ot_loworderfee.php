@@ -19,7 +19,7 @@
   class ot_loworderfee {
     var $title, $output;
 
-    function ot_loworderfee() {
+    function __construct() {
     	global $xtPrice;
       $this->code = 'ot_loworderfee';
       $this->title = MODULE_ORDER_TOTAL_LOWORDERFEE_TITLE;

@@ -21,7 +21,7 @@
 
     var $title, $output;
 
-    function ot_subtotal_no_tax() {
+    function __construct() {
     	global $xtPrice;
       $this->code = 'ot_subtotal_no_tax';
       $this->title = MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_TITLE;
