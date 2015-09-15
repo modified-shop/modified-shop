@@ -633,7 +633,7 @@ if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && count($lng->catalog_languages) > 1 
 if ($addPagination) {
   $split_obj = array('listing_split', 'specials_split', 'products_new_split');
   foreach ($split_obj as $object) {
-    if (is_object(${$object})) {
+    if (isset(${$object}) && is_object(${$object})) {
       $number_of_pages = ${$object}->number_of_pages;
       break;
     }
