@@ -102,7 +102,6 @@ class billsafe_2 {
     if (strtoupper($currency) != 'EUR') {
       $display = null;
       return $display;
-      break;
     }
     $order_total = $order->info['total'];
     $min_order = MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER;
