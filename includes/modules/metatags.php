@@ -631,6 +631,7 @@ if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && count($lng->catalog_languages) > 1 
   echo '<link rel="canonical" href="'.$canonical_url.'" />'."\n";
 }
 if ($addPagination) {
+  $number_of_pages = 0;
   $split_obj = array('listing_split', 'specials_split', 'products_new_split');
   foreach ($split_obj as $object) {
     if (isset(${$object}) && is_object(${$object})) {
