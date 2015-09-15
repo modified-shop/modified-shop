@@ -104,11 +104,12 @@ define('PROJECT_VERSION', 'modified eCommerce Shopsoftware');
 define('TAX_DECIMAL_PLACES', 0);
 
 // set the type of request (secure or not)
-if (file_exists('includes/request_type.php')) {
-  include ('includes/request_type.php');
+if (file_exists(DIR_WS_INCLUDES.'request_type.php')) {
+  include (DIR_WS_INCLUDES.'request_type.php');
 } else {
   $request_type = 'NONSSL';
 }
+
 // Base/PHP_SELF/SSL-PROXY
 require_once(DIR_FS_INC . 'set_php_self.inc.php');
 $PHP_SELF = set_php_self();
