@@ -15,7 +15,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 class easybill {
   var $code, $title, $description, $enabled;
 
-  function easybill() {
+  function __construct() {
 
     $this->code = 'easybill';
     $this->title = MODULE_EASYBILL_TEXT_TITLE;

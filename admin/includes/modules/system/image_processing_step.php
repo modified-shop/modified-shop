@@ -27,7 +27,7 @@ if ( !class_exists( "image_processing_step" ) ) {
   class image_processing_step {
     var $code, $title, $description, $enabled;
 
-    function image_processing_step() {
+    function __construct() {
       global $current_page;
       $this->code = 'image_processing_step';
       $this->title = MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE;

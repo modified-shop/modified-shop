@@ -15,7 +15,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 class shipcloud {
   var $code, $title, $description, $enabled;
 
-  function shipcloud() {
+  function __construct() {
     global $order;
 
      $this->code = 'shipcloud';

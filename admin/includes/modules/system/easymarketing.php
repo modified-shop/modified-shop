@@ -16,7 +16,7 @@ class easymarketing {
   var $code, $title, $description, $enabled;
 
 
-  function easymarketing() {
+  function __construct() {
     global $order;
 
     $this->code = 'easymarketing';

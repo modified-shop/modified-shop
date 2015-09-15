@@ -24,7 +24,7 @@ class easybillcsv {
 
 	var $code, $title, $description, $enabled, $sort_order;
 
-	function easybillcsv() {
+	function __construct() {
 
     $this->code = 'easybillcsv';
     $this->title = MODULE_EASYBILL_CSV_TEXT_TITLE;
