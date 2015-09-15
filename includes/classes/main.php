@@ -20,7 +20,7 @@ class main {
   /**
    * class constructor function
    */
-  function main () {
+  function __construct() {
     $this->SHIPPING = array();
 
     // prefetch shipping status

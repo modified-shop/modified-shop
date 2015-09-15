@@ -50,7 +50,7 @@ if (defined('PAYPAL_API_VERSION')) {
         $ppAPIec,
         $payPalURL;
   /*************************************************************/
-    function paypal_checkout() {
+    function __construct() {
       // Stand: 27.03.2010
       if(PAYPAL_MODE=='sandbox'){
         $this->API_UserName    = PAYPAL_API_SANDBOX_USER;

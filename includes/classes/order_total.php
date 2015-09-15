@@ -31,7 +31,7 @@ class order_total {
   var $modules;
   
   // class constructor
-  function order_total() {
+  function __construct() {
     if (defined('MODULE_ORDER_TOTAL_INSTALLED') && xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       $this->modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
       $modules = $this->modules;

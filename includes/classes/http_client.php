@@ -55,7 +55,7 @@
  * Note: when host and port are defined, the connection is immediate
  * @seeAlso connect
  **/
-    function httpClient($host = '', $port = '') {
+    function __construct($host = '', $port = '') {
       if (xtc_not_null($host)) {
         $this->connect($host, $port);
       }

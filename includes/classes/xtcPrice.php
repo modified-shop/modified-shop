@@ -37,7 +37,7 @@ class xtcPrice {
    * @param Integer $cGroup
    * @return xtcPrice
    */
-  function xtcPrice($currency, $cGroup) {
+  function __construct($currency, $cGroup) {
 
     $this->currencies = array();
     $this->cStatus = array();

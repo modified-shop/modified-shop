@@ -25,7 +25,7 @@ define ('VAT_LIVE_CHECK_URL', 'http://ec.europa.eu/taxation_customs/vies/checkVa
 class vat_validation {
   var $vat_info, $vat_errors;
 
-  function vat_validation($vat_id = '', $customers_id = '', $customers_status = '', $country_id = '', $guest = false) {
+  function __construct($vat_id = '', $customers_id = '', $customers_status = '', $country_id = '', $guest = false) {
 
     $vat_id = str_replace(' ', '', $vat_id);
     $this->vat_info = array ();

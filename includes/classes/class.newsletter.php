@@ -28,7 +28,7 @@ class newsletter {
   var $message, $message_class;
 
 
-  function newsletter() {
+  function __construct() {
     $this->auto = false;
   }
 
