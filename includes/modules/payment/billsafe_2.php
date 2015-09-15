@@ -109,7 +109,6 @@ class billsafe_2 {
     if (($order_total < $min_order) || ($order_total > $max_order)) {
       $display = null;
       return $display;
-      break;
     }
     require_once (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
     $bs = new Billsafe_Sdk(DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
