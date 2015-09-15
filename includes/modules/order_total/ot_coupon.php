@@ -41,7 +41,7 @@ class ot_coupon {
 
 ///////////////////////////////////////////////////////////////////////
 
-  function ot_coupon() {
+  function __construct() {
     global $xtPrice;
 
     $this->code = 'ot_coupon';

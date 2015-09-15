@@ -31,7 +31,7 @@
 class ot_payment {
   var $title, $output;
 
-  function ot_payment() {
+  function __construct() {
     $this->code = 'ot_payment';
     $this->num_payment = defined('MODULE_ORDER_TOTAL_PAYMENT_NUMBER')?MODULE_ORDER_TOTAL_PAYMENT_NUMBER:'';
     $this->title = defined('MODULE_ORDER_TOTAL_PAYMENT_TITLE')?MODULE_ORDER_TOTAL_PAYMENT_TITLE:'';

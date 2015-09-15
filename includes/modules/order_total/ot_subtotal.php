@@ -18,7 +18,7 @@
   class ot_subtotal {
     var $title, $output;
 
-    function ot_subtotal() {
+    function __construct() {
     	global $xtPrice;
       $this->code = 'ot_subtotal';
       $this->title = MODULE_ORDER_TOTAL_SUBTOTAL_TITLE;

@@ -34,7 +34,7 @@
 class ot_billsafe {
   var $title, $output;
 
-  function ot_billsafe() {
+  function __construct() {
     $this->code = 'ot_billsafe';
     $this->title = MODULE_ORDER_TOTAL_BILLSAFE_TITLE;
     $this->description = MODULE_ORDER_TOTAL_BILLSAFE_DESCRIPTION;
