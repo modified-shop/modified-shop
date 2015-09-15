@@ -21,7 +21,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
     xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(), $request_type));
   }
   
-  if ((!in_array($_SESSION['filter_set'], $filter_vars_array)) && isset($filter_vars_array[$_SESSION['filter_set_id']])) {
+  if (isset($_SESSION['filter_set']) && !in_array($_SESSION['filter_set'], $filter_vars_array) && isset($filter_vars_array[$_SESSION['filter_set_id']])) {
     $_SESSION['filter_set'] = $filter_vars_array[$_SESSION['filter_set_id']];
   }
   
