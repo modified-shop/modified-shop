@@ -454,7 +454,7 @@ class product {
     }
 
     // exclude some variables
-    if ($array['products_date_available'] < date('Y-m-d H:i:s')) {
+    if (isset($array['products_date_available']) && $array['products_date_available'] < date('Y-m-d H:i:s')) {
       unset($array['products_date_available']);
     }
 
