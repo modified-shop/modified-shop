@@ -21,7 +21,7 @@
     var $timer_start, $timer_stop, $timer_total;
 
     // class constructor
-    function logger() {
+    function __construct() {
       $this->timer_start();
     }
 

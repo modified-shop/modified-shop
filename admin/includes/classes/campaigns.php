@@ -22,7 +22,7 @@
 
 class campaigns {
 
-	function campaigns(& $get_array) {
+	function __construct(& $get_array) {
 		global $currencies;
 
     $required = array('startD', 'startM', 'startY', 'endD', 'endM', 'endY', 'status', 'campaign', 'report');

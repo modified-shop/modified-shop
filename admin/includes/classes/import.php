@@ -39,7 +39,7 @@ class xtcImport {
   **
   *****************************************************************************/
 
-    function xtcImport($filename) {
+    function __construct($filename) {
         $this->seperator = CSV_SEPERATOR;
         $this->TextSign = CSV_TEXTSIGN;
         if (trim(CSV_TEXTSIGN) == '') {
@@ -775,7 +775,7 @@ class xtcExport {
     **
     *****************************************************************************/
 
-    function xtcExport($filename) {
+    function __construct($filename) {
         $this->catDepth = defined(CSV_CAT_DEPTH) ? CSV_CAT_DEPTH : 4;
         $this->languages = $this->get_lang();
         $this->filename = $filename;

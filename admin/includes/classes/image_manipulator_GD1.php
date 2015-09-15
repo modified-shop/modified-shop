@@ -18,7 +18,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 class image_manipulation
 	{
 	
-	function image_manipulation($resource_file, $max_width, $max_height, $destination_file="", $compression=80, $transform="")
+	function __construct($resource_file, $max_width, $max_height, $destination_file="", $compression=80, $transform="")
 		{
 		$this->a = $this->correctImageOrientation($resource_file);	// image to be thumbnailed
 		$this->c = $transform;

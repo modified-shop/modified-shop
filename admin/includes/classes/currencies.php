@@ -22,7 +22,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     var $currencies;
 
     // class constructor
-    function currencies() {
+    function __construct() {
       $this->currencies = array();
       $currencies_query = xtc_db_query("select code, title, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, value from " . TABLE_CURRENCIES);
       while ($currencies = xtc_db_fetch_array($currencies_query)) {
