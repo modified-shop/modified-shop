@@ -26,9 +26,9 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
     $query = "SELECT *
                 FROM ".TABLE_PRODUCTS_ATTRIBUTES."
-               WHERE options_values_id = '" . $current_value_id . "'
-                 AND products_id = ' " . $current_pid . "'
-                 AND options_id = '" . $current_product_option_id . "'";
+               WHERE options_values_id = '" . (int)$current_value_id . "'
+                 AND products_id = '" . (int)$current_pid . "'
+                 AND options_id = '" . (int)$current_product_option_id . "'";
     $result = xtc_db_query($query);
     $isFound = xtc_db_num_rows($result);
 
