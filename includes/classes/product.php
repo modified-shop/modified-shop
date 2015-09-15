@@ -24,7 +24,7 @@ class product {
    * @param integer $pID
    * @return product
    */
-  function product($pID = 0) {
+  function __construct($pID = 0) {
     global $xtPrice;
 
     $this->pID = (int)$pID;
