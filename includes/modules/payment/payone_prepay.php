@@ -24,7 +24,7 @@ class payone_prepay extends PayonePayment {
 
 	function __construct() {
 		$this->code = 'payone_prepay';
-		parent::PayonePayment();
+		parent::__construct();
 		$this->form_action_url = '';
 	}
 

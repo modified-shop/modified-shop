@@ -24,7 +24,7 @@ class payone_wlt extends PayonePayment {
 
 	function __construct() {
 		$this->code = 'payone_wlt';
-		parent::PayonePayment();
+		parent::__construct();
 		$this->form_action_url = '';
 	}
 

@@ -26,7 +26,7 @@ class payone_installment extends PayonePayment {
 	  global $order;
 	  
 		$this->code = 'payone_installment';
-		parent::PayonePayment();
+		parent::__construct();
 		$this->form_action_url = '';
 
 		$this->installmenttypes = array(
