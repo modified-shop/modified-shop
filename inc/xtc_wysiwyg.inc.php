@@ -77,8 +77,8 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
       { name: 'styles' },
       { name: 'colors' },
       { name: 'tools' },
-      { name: 'others' },
-      /*{ name: 'about' }*/
+      { name: 'others' }/*,
+      { name: 'about' }*/
     ],";
     
     //Sprache aus Session
