@@ -43,11 +43,11 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       
       $this->table_row_parameters = 'class="infoBoxHeading"';
       $this->table_data_parameters = 'class="infoBoxHeading"';
-      $this->heading = $this->tableBlock($heading);
+      $this->heading = $this->createBlock($heading);
 
       $this->table_row_parameters = 'class="infoBoxContent"';
       $this->table_data_parameters = 'class="infoBoxContent"';
-      $this->contents = $this->tableBlock($contents);
+      $this->contents = $this->createBlock($contents);
 
       return $this->heading . $this->contents;
     }
@@ -60,10 +60,10 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       } else {
         $heading[0]['text'] = '&nbsp;' . $heading[0]['text'] . '&nbsp;';
       }
-      $this->heading = $this->tableBlock($heading);
+      $this->heading = $this->createBlock($heading);
 
       $this->table_data_parameters = 'class="menuBoxContent"';
-      $this->contents = $this->tableBlock($contents);
+      $this->contents = $this->createBlock($contents);
 
       return $this->heading . $this->contents;
     }
