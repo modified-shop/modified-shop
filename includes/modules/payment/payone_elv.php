@@ -24,7 +24,7 @@ class payone_elv extends PayonePayment {
 
 	function __construct() {
 		$this->code = 'payone_elv';
-		parent::PayonePayment();
+		parent::__construct();
 		$this->form_action_url = '';
 	}
 

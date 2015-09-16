@@ -14,6 +14,7 @@ $filter_smarty = new Smarty;
 $filter_smarty->caching = false;
 $filter_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
+$module_filter = '';
 $filter_set_dropdown = '';
 $filter_sort_dropdown = '';
 $manufacturer_dropdown = '';
@@ -254,20 +255,20 @@ if (PRODUCT_LIST_FILTER == 'true') {
       
     }
   }
-}
 
-$filter_smarty->assign('language', $_SESSION['language']);
-$filter_smarty->assign('FILTER_MANUFACTURER', $manufacturer_dropdown);
-$filter_smarty->assign('FILTER_SORT', $filter_sort_dropdown);
-$filter_smarty->assign('FILTER_SET', $filter_set_dropdown);
-$filter_smarty->assign('FILTER_TAG', $filter_dropdown);
-$filter_smarty->assign('LINK_DISPLAY_LIST', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=list', 'NONSSL'));
-$filter_smarty->assign('LINK_DISPLAY_BOX', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=box', 'NONSSL'));
-$filter_smarty->assign('LINK_FILTER_RESET', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('filter', 'show', 'filter_id')), 'NONSSL'));
+  $filter_smarty->assign('language', $_SESSION['language']);
+  $filter_smarty->assign('FILTER_MANUFACTURER', $manufacturer_dropdown);
+  $filter_smarty->assign('FILTER_SORT', $filter_sort_dropdown);
+  $filter_smarty->assign('FILTER_SET', $filter_set_dropdown);
+  $filter_smarty->assign('FILTER_TAG', $filter_dropdown);
+  $filter_smarty->assign('LINK_DISPLAY_LIST', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=list', 'NONSSL'));
+  $filter_smarty->assign('LINK_DISPLAY_BOX', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=box', 'NONSSL'));
+  $filter_smarty->assign('LINK_FILTER_RESET', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('filter', 'show', 'filter_id')), 'NONSSL'));
 
-$filter_smarty->caching = 0;
-if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/listing_filter.html')) {
-  $module_filter = $filter_smarty->fetch(CURRENT_TEMPLATE.'/module/listing_filter.html');
+  $filter_smarty->caching = 0;
+  if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/listing_filter.html')) {
+    $module_filter = $filter_smarty->fetch(CURRENT_TEMPLATE.'/module/listing_filter.html');
+  }
 }
 
 if (is_object($smarty)) {

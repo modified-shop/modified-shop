@@ -24,7 +24,7 @@ class payone_cc extends PayonePayment {
 
 	function __construct() {
 		$this->code = 'payone_cc';		
-		parent::PayonePayment();
+		parent::__construct();
 		
 		$this->tmpOrders = '';
 		$this->form_action_url = xtc_href_link(FILENAME_CHECKOUT_PROCESS, 'payone_cc=true', 'SSL');		

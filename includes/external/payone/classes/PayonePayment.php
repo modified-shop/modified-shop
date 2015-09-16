@@ -30,7 +30,7 @@ class PayonePayment {
 	var $global_config;
 	var $pg_config;
 	
-	function PayonePayment() {
+	function __construct() {
 		global $order;
 
 		$this->payone = new PayoneModified();

@@ -24,7 +24,7 @@ class payone_otrans extends PayonePayment {
 
 	function __construct() {
 		$this->code = 'payone_otrans';
-		parent::PayonePayment();
+		parent::__construct();
 
 		$this->form_action_url = '';
 		$this->banktransfertypes = array(
