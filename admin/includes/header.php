@@ -215,6 +215,14 @@
 </div>
 <div class="fixed-header-height<?php echo ((USE_ADMIN_FIXED_SEARCH == 'true') ? ' active' : ''); ?>">&nbsp;</div>
 
+<noscript>
+    <div class="fixed_messageStack">
+        <div class="error_message">
+            <?php echo JAVASCRIPT_DISABLED_INFO;?>
+        </div>
+    </div>
+</noscript>
+
 <?php
   if ($messageStack->size > 0) {
     echo '<div class="fixed_messageStack">'.$messageStack->output().'</div>';

@@ -573,4 +573,6 @@ define('CSRF_TOKEN_MANIPULATION', 'CSRFToken Manipulation (Aus Sicherheits-Aspek
 define('CSRF_TOKEN_NOT_DEFINED', 'CSRFToken nicht definiert (Aus Sicherheits-Aspekten ist es nicht mehr erlaubt im Adminbereich in verschiedenen Tabs zu arbeiten.)');
 
 define('TEXT_ACCOUNTING_INFO','Dem Hauptadmin [1] k&ouml;nnen die Zugriffsrechte nicht entzogen werden!');
+
+define('JAVASCRIPT_DISABLED_INFO', 'JavaScript ist in Ihrem Browser deaktiviert. Aktivieren Sie JavaScript, um alle Funktionen dieser Webseite nutzen und alle Inhalte sehen zu k&ouml;nnen.');
 ?>
