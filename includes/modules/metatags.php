@@ -121,7 +121,7 @@
 // ---------------------------------------------------------------------------------------
 
   // Wenn wir auf der Startseite sind, Metas aus der index-Seite holen
-  if(  basename($PHP_SELF)==FILENAME_DEFAULT &&
+  if(basename($PHP_SELF)==FILENAME_DEFAULT &&
     empty($_GET['cat']) &&
     empty($_GET['cPath']) &&
     empty($_GET['manufacturers_id'])
@@ -134,14 +134,12 @@
   }
 
   // Dadadadatenbank
-  $ml_meta_query = xtDBquery("
-    select  content_meta_title,
-            content_meta_description,
-            content_meta_keywords
-    from   ".TABLE_CONTENT_MANAGER."
-    where   ".$ml_meta_where."
-    and   languages_id = '".(int)$_SESSION['languages_id']."'
-  ");
+  $ml_meta_query = xtDBquery("SELECT content_meta_title,
+                                     content_meta_description,
+                                     content_meta_keywords
+                                FROM ".TABLE_CONTENT_MANAGER."
+                               WHERE ".$ml_meta_where."
+                                 AND languages_id = '".(int)$_SESSION['languages_id']."'");
   $ml_meta = xtc_db_fetch_array($ml_meta_query,true);
 
 // ---------------------------------------------------------------------------------------
@@ -159,6 +157,7 @@
 //   Seitennummerierung im Title (Kategorien, Sonderangebote, Neue Artikel etc. ) / Cannonical Tag Page Parameter
 // ---------------------------------------------------------------------------------------
   $Page = $page_param = '';
+  if(isset($_GET['page']) && $_GET['page'] < 0) $_GET['page'] = 1;
   if(isset($_GET['page']) && $_GET['page'] > 1 && $addPagination) {
     // PREVNEXT_TITLE_PAGE_NO ist "Seite %d" aus der deutschen bzw. "page %d" aus der englischen Sprachdatei ...
     $Page = trim(str_replace('%d','',PREVNEXT_TITLE_PAGE_NO)).' '.(int)$_GET['page'];
@@ -171,43 +170,23 @@
 // ---------------------------------------------------------------------------------------
 //  Aufräumen: Umlaute und Sonderzeichen wandeln.
 // ---------------------------------------------------------------------------------------
-  function metaNoEntities($Text){
-    if (version_compare(PHP_VERSION, '5.3.4', '<')) {
-      $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
-    } else {
-      $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES,strtoupper($_SESSION['language_charset']));
-    }
-    $translation_table = array_flip($translation_table);
-    $Return= strtr($Text,$translation_table);
-    return preg_replace( '/&#(\d+);/me',"chr('\\1')",$Return);
-  }
-  function metaHtmlEntities($Text) {
-    //BOF web28 2011-12-02 UFT-8
-    if($_SESSION['language_charset'] == 'utf-8') {
-      return $Text;
-    }
-    //EOF web28 2011-12-02 UFT-8
-    if (version_compare(PHP_VERSION, '5.3.4', '<')) {
-      $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
-    } else {
-      $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES,strtoupper($_SESSION['language_charset']));
-    }
-    $translation_table[chr(38)] = '&';
-    return preg_replace("/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/","&amp;",strtr($Text,$translation_table));
-  }
+  function metaNoEntities($Text){ 
+    return decode_htmlentities($Text);  
+  }  
 // ---------------------------------------------------------------------------------------
 //  Array basteln: Text aufbereiten -> Array erzeugen -> Array unique ...
 // ---------------------------------------------------------------------------------------
   function prepareWordArray($Text) {
     //$Text = str_replace(array('&nbsp;','\t','\r','\n','\b'),' ',strip_tags($Text));
     $Text = str_replace(array('&nbsp;','\t','\r','\n','\b'),' ',preg_replace("/<[^>]*>/",' ',$Text)); // <-- Besser bei Zeilenumbrüchen
-    $Text = htmlentities(metaNoEntities($Text), ENT_QUOTES, $_SESSION['language_charset']);    
+    $Text = encode_htmlentities(metaNoEntities($Text), ENT_QUOTES, $_SESSION['language_charset']);    
     $Text = preg_replace("/\s\-|\-\s/",' ',$Text); // <-- Gegen Trenn- und Gedankenstriche
     //$Text = preg_replace("/(&[^aoucizens][^;]*;)/",' ',$Text);
     $Text = strtolower($Text);
     $Text = preg_replace("/[^0-9a-z|\-|&|;]/",' ',$Text); // <-- Bindestriche drin lassen
     $Text = str_replace('& ', '&', $Text);    
     $Text = trim(preg_replace("/\s\s+/",' ',$Text));
+    
     return $Text;
   }
   function makeWordArray($Text) {
@@ -283,7 +262,8 @@
         $Text = substr($Text,0,$Length).$Abk;
       }
     }
-    return htmlspecialchars($Text, ENT_QUOTES, strtoupper($_SESSION['language_charset']));
+    $Text = encode_htmlspecialchars($Text, ENT_QUOTES, $_SESSION['language_charset']);
+    return str_replace('&amp;','&',$Text); 
   }
 // ---------------------------------------------------------------------------------------
 //  metaTitle und metaKeyWords, Rückgabe bzw. Formatierung
@@ -339,7 +319,9 @@ switch(basename($PHP_SELF)) {
 
       //-- Canonical-URL
       //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
-      $canonical_url = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'],$request_type,false);
+      $canonical_flag = true;
+      $canonical_url = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'], 'NONSSL', false);
+      $canonical_flag = false;
     }
     break;
 // ---------------------------------------------------------------------------------------
@@ -350,17 +332,15 @@ switch(basename($PHP_SELF)) {
     $startpage = true;
     // Sind wir in einer Kategorie?
     if(!empty($current_category_id)) {
-      $categories_meta_query = xtDBquery("
-        select  categories_meta_keywords,
-                categories_meta_description,
-                categories_meta_title,
-                categories_name,
-                categories_description
-        from   ".TABLE_CATEGORIES_DESCRIPTION."
-        where   categories_id='".(int)$current_category_id."'
-        and   language_id='".(int)$_SESSION['languages_id']."'
-      ");
-      $categories_meta = xtc_db_fetch_array($categories_meta_query,true);
+      $categories_meta_query = xtDBquery("SELECT categories_meta_keywords,
+                                                 categories_meta_description,
+                                                 categories_meta_title,
+                                                 categories_name,
+                                                 categories_description
+                                            FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                           WHERE categories_id='".(int)$current_category_id."'
+                                             AND language_id='".(int)$_SESSION['languages_id']."'");
+      $categories_meta = xtc_db_fetch_array($categories_meta_query, true);
       $startpage = false;
     }
 
@@ -382,12 +362,11 @@ switch(basename($PHP_SELF)) {
 
     // ggf. Herstellernamen herausfinden ...
     if($manu_id) {
-      $manu_name_query = xtDBquery("
-        select   manufacturers_name
-        from   ".TABLE_MANUFACTURERS."
-        where   manufacturers_id ='".(int)$manu_id."'
-      ");
-      $manu_name = xtc_db_fetch_array($manu_name_query,true);
+      $manu_name_query = xtDBquery("SELECT m.manufacturers_name,
+                                      FROM ".TABLE_MANUFACTURERS."
+                                     WHERE   manufacturers_id ='".(int)$manu_id."'");
+      $manu_name = xtc_db_fetch_array($manu_name_query, true);
+
       is_array($manu_name) ? $manu_name = implode('',$manu_name) :  $manu_name = '';
       $metaGoWords .= ','.$manu_name; // <-- zu GoWords hinzufügen
     }
@@ -420,11 +399,11 @@ switch(basename($PHP_SELF)) {
     //-- Canonical-URL
     //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
     if (xtc_not_null($cPath)) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath.$page_param,$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath,'NONSSL',false);
     } elseif (xtc_not_null($manu_id)) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.$manu_id.$page_param,$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.$manu_id,'NONSSL',false);
     } elseif ($startpage) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, '', $request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL',false);
     }
     break;
 // ---------------------------------------------------------------------------------------
@@ -436,21 +415,19 @@ switch(basename($PHP_SELF)) {
     if(in_array(intval($_GET['coID']),$content_noIndex)) {
       $meta_robots = 'noindex, follow, noodp';
     }
-    $contents_meta_query = xtDBquery("
-      select  content_meta_title,
-              content_meta_description,
-              content_meta_keywords,
-              content_title,
-              content_heading,
-              content_text,
-              content_file
-      from   ".TABLE_CONTENT_MANAGER."
-      where   content_group = '".(int)$_GET['coID']."'
-      and   languages_id = '".(int)$_SESSION['languages_id']."'
-    ");
-    $contents_meta = xtc_db_fetch_array($contents_meta_query,true);
+    $contents_meta_query = xtDBquery("SELECT content_meta_title,
+                                             content_meta_description,
+                                             content_meta_keywords,
+                                             content_title,
+                                             content_heading,
+                                             content_text,
+                                             content_file
+                                        FROM ".TABLE_CONTENT_MANAGER."
+                                       WHERE content_group = '".(int)$_GET['coID']."'
+                                         AND languages_id = '".(int)$_SESSION['languages_id']."'");
 
-    if(count($contents_meta) > 0) {
+    if(xtc_db_num_rows($contents_meta_query, true) > 0) {
+      $contents_meta = xtc_db_fetch_array($contents_meta_query,true);
 
       // NEU! Eingebundene Dateien auslesen
       if($contents_meta['content_file']) {
@@ -487,7 +464,7 @@ switch(basename($PHP_SELF)) {
     //-- Canonical-URL
     //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
     if(isset($_GET['coID'])){
-      $canonical_url = xtc_href_link(FILENAME_CONTENT, 'coID='.$_GET['coID'],$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_CONTENT, 'coID='.$_GET['coID'],'NONSSL',false);
     }
     break;
 // ---------------------------------------------------------------------------------------
@@ -497,10 +474,9 @@ switch(basename($PHP_SELF)) {
 
     // ggf. Herstellernamen herausfinden ...
     if(!empty($_GET['manufacturers_id'])) {
-      $manu_name_query = xtDBquery("
-        select   manufacturers_name
-        from   ".TABLE_MANUFACTURERS."
-        where   manufacturers_id ='".(int)$_GET['manufacturers_id']."'
+      $manu_name_query = xtDBquery("SELECT manufacturers_name
+                                      FROM ".TABLE_MANUFACTURERS."
+                                     WHERE manufacturers_id = '".(int)$_GET['manufacturers_id']."'
       ");
       $manu_name = xtc_db_fetch_array($manu_name_query,true);
       is_array($manu_name) ? $manu_name = implode('',$manu_name) :  $manu_name = '';
@@ -508,12 +484,10 @@ switch(basename($PHP_SELF)) {
     }
     // ggf. Kategorien-Namen herausfinden ...
     if(!empty($_GET['categories_id'])) {
-      $cat_name_query = xtDBquery("
-        select   categories_name
-        from   ".TABLE_CATEGORIES_DESCRIPTION."
-        where   categories_id='".(int)$_GET['categories_id']."'
-        and   language_id='".(int)$_SESSION['languages_id']."'
-      ");
+      $cat_name_query = xtDBquery("SELECT categories_name
+                                     FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                    WHERE categories_id='".(int)$_GET['categories_id']."'
+                                      AND language_id='".(int)$_SESSION['languages_id']."'");
       $cat_name = xtc_db_fetch_array($cat_name_query,true);
       is_array($cat_name) ? $cat_name = implode('',$cat_name) :  $cat_name = '';
     }
@@ -531,7 +505,7 @@ switch(basename($PHP_SELF)) {
   case FILENAME_SPECIALS :
 
     $meta_title = metaTitle($breadcrumbTitle,$Page,($addSpecialsShopTitle)?ML_TITLE:'');
-    $canonical_url = xtc_href_link(FILENAME_SPECIALS, ltrim($page_param,'&'),$request_type,false);
+    $canonical_url = xtc_href_link(FILENAME_SPECIALS,'','NONSSL',false);
     break;
 // ---------------------------------------------------------------------------------------
 //  Title für Neue Artikel
@@ -539,7 +513,7 @@ switch(basename($PHP_SELF)) {
   case FILENAME_PRODUCTS_NEW :
 
     $meta_title = metaTitle($breadcrumbTitle,$Page,($addNewsShopTitle)?ML_TITLE:'');
-    $canonical_url = xtc_href_link(FILENAME_PRODUCTS_NEW, ltrim($page_param,'&'),$request_type,false);
+    $canonical_url = xtc_href_link(FILENAME_PRODUCTS_NEW,'','NONSSL',false);
     break;
 // ---------------------------------------------------------------------------------------
 //  Title für sonstige Seiten
@@ -549,7 +523,6 @@ switch(basename($PHP_SELF)) {
     $meta_title = metaTitle($breadcrumbTitle,$Page,($addOthersShopTitle)?ML_TITLE:''); //DokuMan - 2010-12-13 - added meta pagination
     break;
 // ---------------------------------------------------------------------------------------
-
 
 }
 // Ende Switch
@@ -571,23 +544,7 @@ switch(basename($PHP_SELF)) {
     $meta_title   = ML_TITLE;
   }
 // ---------------------------------------------------------------------------------------
-/* BOF - h-h-h - 2011-08-22 - show only defined Meta Tags
-?>
-<title><?php echo metaClean($meta_title);?></title>
-<meta http-equiv="content-language" content="<?php echo $_SESSION['language_code']; ?>" />
-<meta http-equiv="cache-control" content="no-cache" />
-<meta name="keywords" content="<?php echo metaClean($meta_keyw); ?>" />
-<meta name="description" content="<?php echo metaClean($meta_descr,$metaDesLength); ?>" />
-<meta name="robots" content="<?php echo $meta_robots; ?>" />
-<meta name="language" content="<?php echo $_SESSION['language_code']; ?>" />
-<meta name="author" content="<?php echo metaClean(META_AUTHOR); ?>" />
-<meta name="publisher" content="<?php echo metaClean(META_PUBLISHER); ?>" />
-<meta name="company" content="<?php echo metaClean(META_COMPANY); ?>" />
-<meta name="page-topic" content="<?php echo metaClean(META_TOPIC); ?>" />
-<meta name="reply-to" content="<?php echo META_REPLY_TO; ?>" />
-<meta name="distribution" content="global" />
-<meta name="revisit-after" content="<?php echo META_REVISIT_AFTER; ?>" />
-*/
+
 if (metaClean($meta_title) != '') {
   echo '<title>'. metaClean($meta_title) .'</title>'."\n";
 }
@@ -626,8 +583,38 @@ if (META_REPLY_TO != 'xx@xx.com') {
 if (META_REVISIT_AFTER != '0') {
   echo '<meta name="revisit-after" content="'. META_REVISIT_AFTER .'" />'."\n";
 }
-if(isset($canonical_url)) {
+if (!isset($lng) || (isset($lng) && !is_object($lng))) {
+  require_once(DIR_WS_CLASSES . 'language.php');
+  $lng = new language;
+}
+if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && count($lng->catalog_languages) > 1 && (!isset($_GET['page']) || $_GET['page'] == 1)) {
+  $canonical_flag = true;
+  echo '<link rel="alternate" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($_SESSION['language_code'] != DEFAULT_LANGUAGE) ? 'language='.DEFAULT_LANGUAGE : ''), 'NONSSL', false).'" hreflang="x-default" />'."\n";
+  reset($lng->catalog_languages);
+  while (list($key, $value) = each($lng->catalog_languages)) {
+    echo '<link rel="alternate" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($_SESSION['language_code'] != $value['code']) ? 'language='.$key : ''), 'NONSSL', false).'" hreflang="'.$value['code'].'" />'."\n";
+  }
+  $canonical_flag = false;  
+} elseif (isset($canonical_url)) {
   echo '<link rel="canonical" href="'.$canonical_url.'" />'."\n";
 }
-// EOF - h-h-h - 2011-08-22 - show only defined Meta Tags
+if ($addPagination) {
+  $number_of_pages = 0;
+  $split_obj = array('listing_split', 'specials_split', 'products_new_split');
+  foreach ($split_obj as $object) {
+    if (isset(${$object}) && is_object(${$object})) {
+      $number_of_pages = ${$object}->number_of_pages;
+      break;
+    }
+  }
+  if ($number_of_pages > 1) {
+    $page = ((isset($_GET['page']) && $_GET['page'] > 0) ? (int)$_GET['page'] : 1);
+    if ($page > 1 && $number_of_pages >= $page) {
+      echo '<link rel="prev" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($page > 2) ? 'page='.($page - 1) : ''), 'NONSSL', false).'" />'."\n";
+    }
+    if ($page >= 1 && $number_of_pages > 1 && $number_of_pages > $page) {
+      echo '<link rel="next" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).'page='.($page + 1), 'NONSSL', false).'" />'."\n";
+    }
+  }
+}
 ?>
