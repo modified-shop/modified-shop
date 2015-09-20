@@ -69,8 +69,8 @@
         $valid_address = false;
       }     
       
-      //web28 - 2011-07-28 - new $regex see http://www.regular-expressions.info/email.html      
-      $regex = "/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)$/i";
+      //web28 - 2014-02-28 - new $regex see http://www.regular-expressions.info/email.html      
+      $regex = "/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[a-z]{2,15})$/i";
       $valid_address = preg_match($regex, $email);      
     }
     
