@@ -1185,19 +1185,19 @@ function UpdateTables ()
 
   $link = 'db_link';
 
-  global $$link, $logger;
+  global ${$link}, $logger;
 
   for ($i=1;$i<=13;$i++)
   {
     echo '<b>SQL:</b> ' . $sql[$i] . '<br>';
 
-    if (@xtc_db_query($sql[$i], $$link))
+    if (@xtc_db_query($sql[$i], ${$link}))
     {
       echo '<b>Ergebnis : OK</b>';
     }
      else
     {
-      $error = ((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? @xtc_db_error($query, mysqli_errno($$link), mysqli_error($$link)) : @xtc_db_error($query, mysql_errno($$link), mysql_error($$link)));
+      $error = ((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? @xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link})) : @xtc_db_error($query, mysql_errno(${$link}), mysql_error(${$link})));
       $pos=strpos($error,'Duplicate column name');
 
       if ($pos===false)

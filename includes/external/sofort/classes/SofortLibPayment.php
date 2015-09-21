@@ -432,27 +432,27 @@ class SofortLibPayment {
           if (is_file(DIR_FS_LANGUAGES.$languages['directory'].'/modules/payment/sofort_payment.php')) {
             include(DIR_FS_LANGUAGES.$languages['directory'].'/modules/payment/sofort_payment.php');
           }
-          if ($$statusname != '') {
+          if (${$statusname} != '') {
             $check_query = xtc_db_query("SELECT orders_status_id
                                            FROM " . TABLE_ORDERS_STATUS . "
-                                          WHERE orders_status_name = '" .$$statusname. "'
+                                          WHERE orders_status_name = '" .${$statusname}. "'
                                             AND language_id = '".$languages['languages_id']."'
                                           LIMIT 1");
             $status = xtc_db_fetch_array($check_query);
-            if(xtc_db_num_rows($check_query) < 1 || ($$statusid && $status['orders_status_id'] != $$statusid)) {
-              if (!$$statusid) {
+            if(xtc_db_num_rows($check_query) < 1 || (${$statusid} && $status['orders_status_id'] != ${$statusid})) {
+              if (!${$statusid}) {
                 $status_query = xtc_db_query("SELECT max(orders_status_id) as status_id FROM " . TABLE_ORDERS_STATUS);
                 $status = xtc_db_fetch_array($status_query);
-                $$statusid = $status['status_id']+1;
+                ${$statusid} = $status['status_id']+1;
               }
               $check_query = xtc_db_query("SELECT orders_status_id
                                              FROM " . TABLE_ORDERS_STATUS . "
-                                            WHERE orders_status_id = '".$$statusid ."'
+                                            WHERE orders_status_id = '".${$statusid} ."'
                                               AND language_id='".$languages['languages_id']."'");
               if(xtc_db_num_rows($check_query)<1) {
                 // insert status
-                $sql_data_array = array('orders_status_name' => $$statusname,
-                                        'orders_status_id' => $$statusid,
+                $sql_data_array = array('orders_status_name' => ${$statusname},
+                                        'orders_status_id' => ${$statusid},
                                         'language_id' => $languages['languages_id']
                                         );
                 xtc_db_perform(TABLE_ORDERS_STATUS, $sql_data_array);
@@ -460,18 +460,18 @@ class SofortLibPayment {
                 // update status
                 if ($statusid != '') {
                   xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
-                                   SET configuration_value = '" . $$statusid . "',
+                                   SET configuration_value = '" . ${$statusid} . "',
                                        last_modified = NOW()
                                  WHERE configuration_key = '" . $statusid . "'");
                 }
               }
             } else {
-              $$statusid = $status['orders_status_id'];
+              ${$statusid} = $status['orders_status_id'];
 
               // update status
                if ($statusid != '') {
                 xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
-                                 SET configuration_value = '" . $$statusid . "',
+                                 SET configuration_value = '" . ${$statusid} . "',
                                      last_modified = NOW()
                                WHERE configuration_key = '" . $statusid . "'");
               }

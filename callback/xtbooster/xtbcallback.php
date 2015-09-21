@@ -22,8 +22,8 @@ function xsb_db_affected_rows() {
 
 function xsb_session_register($var) {
 	if (!isset($_SESSION[$var])) {
-		if (isset($$var)) {
-			$_SESSION[$var] = $$var;
+		if (isset(${$var})) {
+			$_SESSION[$var] = ${$var};
 		} else {
 			$_SESSION[$var] = null;
 		}

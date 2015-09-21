@@ -152,7 +152,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 			$_SESSION['shipping'] = $_POST['shipping'];#sec
 
 			list ($module, $method) = explode('_', $_SESSION['shipping']);
-			if ((isset($$module) && is_object($$module) ) || ($_SESSION['shipping'] == 'free_free')) {
+			if ((isset(${$module}) && is_object(${$module}) ) || ($_SESSION['shipping'] == 'free_free')) {
 				if ($_SESSION['shipping'] == 'free_free') {
 					$quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
 					$quote[0]['methods'][0]['cost'] = '0';

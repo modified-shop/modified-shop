@@ -346,7 +346,7 @@
 
     function before_process() {
       global $order, $order_totals, $payment, $currencies;
-      global $$payment;
+      global ${$payment};
 
       $order_id = substr($_SESSION['cart_Worldpay_Junior_ID'], strpos($_SESSION['cart_Worldpay_Junior_ID'], '-')+1);
 
@@ -357,7 +357,7 @@
         if ($check['orders_status'] == MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID) {
           $hash_result = false;
 
-          if (isset($$_GET['hash']) && !empty($$_GET['hash']) && ($$_GET['hash'] == md5(xtc_session_name() . $_SESSION['customer_id'] . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD))) {
+          if (isset(${$_GET['hash']}) && !empty(${$_GET['hash']}) && (${$_GET['hash']} == md5(xtc_session_name() . $_SESSION['customer_id'] . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD))) {
             $hash_result = true;
           }
 
@@ -519,10 +519,10 @@
                       EMAIL_SEPARATOR . "\n" .
                       xtc_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
 
-      if (is_object($$payment)) {
+      if (is_object(${$payment})) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
                         EMAIL_SEPARATOR . "\n";
-        $payment_class = $$payment;
+        $payment_class = ${$payment};
         $email_order .= $payment_class->title . "\n\n";
         if ($payment_class->email_footer) {
           $email_order .= $payment_class->email_footer . "\n\n";

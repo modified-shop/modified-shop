@@ -27,7 +27,7 @@
       $accepted_file_upload_files_extensions = array("txt","csv","tsv");
       $accepted_file_upload_files_mime_types = array("text/plain","text/comma-separated-values","text/tab-separated-values");
       if ($upload_file = &xtc_try_upload('file_upload',DIR_FS_CATALOG.'import/','644',$accepted_file_upload_files_extensions,$accepted_file_upload_files_mime_types)) {
-        $$upload_file_name=$upload_file->filename;
+        ${$upload_file_name} = $upload_file->filename;
       }
     break;
 

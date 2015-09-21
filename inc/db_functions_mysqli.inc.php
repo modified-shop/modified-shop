@@ -17,9 +17,9 @@
 
 
   function xtc_db_close($link='db_link') {
-    global $$link;
+    global ${$link};
 
-    return mysqli_close($$link);
+    return mysqli_close(${$link});
   }
 
 
@@ -34,16 +34,16 @@
 
 
   function xtc_db_get_client_info($link='db_link') {
-    global $$link;
+    global ${$link};
 
-    return mysqli_get_client_info($$link);
+    return mysqli_get_client_info(${$link});
   }
 
 
   function xtc_db_get_server_info($link='db_link') {
-    global $$link;
+    global ${$link};
 
-    return mysqli_get_server_info($$link);
+    return mysqli_get_server_info(${$link});
   }
 
 
@@ -53,24 +53,24 @@
 
 
   function xtc_db_affected_rows($link='db_link') {
-    global $$link;
+    global ${$link};
 
-    return mysqli_affected_rows($$link);
+    return mysqli_affected_rows(${$link});
   }
 
 
   function xtc_db_insert_id($link='db_link') {
-    global $$link;
+    global ${$link};
 
-    return mysqli_insert_id($$link);
+    return mysqli_insert_id(${$link});
   }
 
 
   function xtc_db_set_charset($charset, $link='db_link') {
-    global $$link;
+    global ${$link};
     
     if (function_exists('mysqli_set_charset')) { //requires MySQL 5.0.7 or later
-      mysqli_set_charset($$link, $charset);
+      mysqli_set_charset(${$link}, $charset);
     } else {
       xtc_db_query('SET NAMES '.$charset);
     }  
@@ -78,7 +78,7 @@
 
 
   function xtc_db_connect($server=DB_SERVER, $username=DB_SERVER_USERNAME, $password=DB_SERVER_PASSWORD, $database=DB_DATABASE, $link='db_link') {
-    global $$link;
+    global ${$link};
 
     if (!function_exists('mysqli_connect')) {
       die ('Call to undefined function: mysqli_connect(). Please install the MySQL Connector for PHP');
@@ -86,14 +86,14 @@
 
     $socket = explode(':', $server);
     if (USE_PCONNECT == 'true') {
-      $$link = @mysqli_connect('p:'.$socket[0], $username, $password, NULL, ((isset($socket[2])) ? $socket[2] : NULL), ((isset($socket[1])) ? $socket[1] : NULL));
+      ${$link} = @mysqli_connect('p:'.$socket[0], $username, $password, NULL, ((isset($socket[2])) ? $socket[2] : NULL), ((isset($socket[1])) ? $socket[1] : NULL));
     } else {
-      $$link = @mysqli_connect($socket[0], $username, $password, NULL, ((isset($socket[2])) ? $socket[2] : NULL), ((isset($socket[1])) ? $socket[1] : NULL));
+      ${$link} = @mysqli_connect($socket[0], $username, $password, NULL, ((isset($socket[2])) ? $socket[2] : NULL), ((isset($socket[1])) ? $socket[1] : NULL));
     }
 
-    if ($$link) {
-      if (!@mysqli_select_db($$link, $database)) {
-        xtc_db_error('', mysqli_errno($$link), mysqli_error($$link));
+    if (${$link}) {
+      if (!@mysqli_select_db(${$link}, $database)) {
+        xtc_db_error('', mysqli_errno(${$link}), mysqli_error(${$link}));
         return false;
       }
     } else {
@@ -111,7 +111,7 @@
     }
     xtc_db_set_charset(DB_SERVER_CHARSET);
 
-    return $$link;
+    return ${$link};
   }
 
 
@@ -200,7 +200,7 @@
 
 
   function xtc_db_query($query, $link='db_link') {
-    global $$link;
+    global ${$link};
 
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
       $queryStartTime = array_sum(explode(" ",microtime()));
@@ -215,7 +215,7 @@
       str_replace('insert into', 'REPLACE INTO', $query);
     }
     
-    $result = mysqli_query($$link, $query) or xtc_db_error($query, mysqli_errno($$link), mysqli_error($$link));
+    $result = mysqli_query(${$link}, $query) or xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link}));
 
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
       $queryEndTime = array_sum(explode(" ",microtime())); 
@@ -236,7 +236,7 @@
       
         if (substr(strtolower($explain_query_raw), 0, 6) == 'select') {
           $explain_log_array = array();
-          $explain_query = mysqli_query($$link, 'EXPLAIN ' . $explain_query_raw) or xtc_db_error($explain_query_raw, mysqli_errno($$link), mysqli_error($$link));
+          $explain_query = mysqli_query(${$link}, 'EXPLAIN ' . $explain_query_raw) or xtc_db_error($explain_query_raw, mysqli_errno(${$link}), mysqli_error(${$link}));
           while ($explain = xtc_db_fetch_array($explain_query)) {
             $explain_array = mod_sql_explain($explain);
             $explain_log_array = array_merge($explain_log_array, $explain_array);
@@ -248,7 +248,7 @@
       if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
         xtc_db_slow_query_log($processTime, $query, 'QUERY');
       }
-      $result_error = mysqli_error($$link);
+      $result_error = mysqli_error(${$link});
       if ($result_error) {
         xtc_db_slow_query_log($processTime, $result_error, 'ERROR');
       }
@@ -259,10 +259,10 @@
 
 
   function xtc_db_input($string, $link='db_link') {
-    global $$link;
+    global ${$link};
 
     if (function_exists('mysqli_real_escape_string')) {
-      return mysqli_real_escape_string($$link, $string);
+      return mysqli_real_escape_string(${$link}, $string);
     }
 
     return addslashes($string);

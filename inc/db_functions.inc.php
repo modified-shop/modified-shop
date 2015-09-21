@@ -36,7 +36,7 @@
   
 
   function xtc_db_perform($table, $data, $action='insert', $parameters='', $link='db_link') {
-    global $$link;
+    global ${$link};
     
     if (!is_array($data) || count($data) < 1) {
       return false;
@@ -96,7 +96,7 @@
 
 
   function xtDBquery($query, $link='db_link') {
-    global $$link;
+    global ${$link};
 
     if (defined('DB_CACHE') && DB_CACHE == 'true') {
       $result = xtc_db_queryCached($query, $link);
@@ -108,7 +108,7 @@
 
 
   function xtc_db_queryCached($query, $link='db_link') {
-    global $$link;
+    global ${$link};
     
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
       $queryStartTime = array_sum(explode(" ",microtime()));

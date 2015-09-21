@@ -17,71 +17,71 @@
    ---------------------------------------------------------------------------------------*/
 
   function xtc_db_query_installer($query, $type, $link = 'db_link') {
-    global $$link;
+    global ${$link};
     if (!$type) echo 'TYPE ERROR: xtc_db_query_installer<br>';
     switch ($type) {
       case 'mysql':
-        return mysql_query($query, $$link);
+        return mysql_query($query, ${$link});
         break;
       case 'mysqli':
-        return mysqli_query($$link, $query);
+        return mysqli_query(${$link}, $query);
         break;
     }        
   }
 
   function xtc_db_error_installer($type, $link = 'db_link') {
-    global $$link;
+    global ${$link};
     
     switch ($type) {
       case 'mysql':
         return mysql_error();
         break;
       case 'mysqli':
-        return mysqli_error($$link);
+        return mysqli_error(${$link});
         break;
     }        
   }
   
   function xtc_db_get_server_info($type, $link = 'db_link') {
-    global $$link;
+    global ${$link};
     
     switch ($type) {
       case 'mysql':
         return mysql_get_server_info();
         break;
       case 'mysqli':
-        return mysqli_get_server_info($$link);
+        return mysqli_get_server_info(${$link});
         break;
     }        
   }
 
   function xtc_db_get_client_info($type, $link = 'db_link') {
-    global $$link;
+    global ${$link};
     
     switch ($type) {
       case 'mysql':
         return mysql_get_client_info();
         break;
       case 'mysqli':
-        return mysqli_get_client_info($$link);
+        return mysqli_get_client_info(${$link});
         break;
     }        
   }
 
   function xtc_db_input_installer($string, $type, $link = 'db_link') {
-    global $$link;
+    global ${$link};
 
     switch ($type) {
       case 'mysql':
         if (function_exists('mysql_real_escape_string')) {
-          return mysql_real_escape_string($string, $$link);
+          return mysql_real_escape_string($string, ${$link});
         } elseif (function_exists('mysql_escape_string')) {
           return mysql_escape_string($string);
         }
         break;
       case 'mysqli':
         if (function_exists('mysqli_real_escape_string')) {
-          return mysqli_real_escape_string($$link, $string);
+          return mysqli_real_escape_string(${$link}, $string);
         }
         break;
     }        

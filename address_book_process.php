@@ -47,7 +47,7 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
 
   // prepare variables
   foreach ($_POST as $key => $value) {
-    $$key = xtc_db_prepare_input($value);
+    ${$key} = xtc_db_prepare_input($value);
   }
 
 	$error = false;
