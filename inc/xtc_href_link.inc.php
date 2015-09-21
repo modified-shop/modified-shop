@@ -51,8 +51,9 @@
 
     // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ( (!isset($truncate_session_id) || $truncate_session_id === false) # no session if useragent is a known Spider
-        && $add_session_id == true && $session_started == true
-        && (SESSION_FORCE_COOKIE_USE == 'False' && ($admin || !$cookie))
+        && $add_session_id === true 
+        && $session_started === true
+        && (SESSION_FORCE_COOKIE_USE == 'False' && ($admin === true || $cookie === false))
        ) 
     {
       if (defined('SID')

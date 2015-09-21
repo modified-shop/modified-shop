@@ -66,7 +66,7 @@ if (isset($_COOKIE[xtc_session_name()])) {
     xtc_setcookie(xtc_session_name(), $_COOKIE[xtc_session_name()], (time() - 3600), '/', (xtc_not_null($current_domain_old) ? '.'.$current_domain_old : ''));
   }
 
-  if (HTTP_SERVER == HTTPS_SERVER) {
+  if ($http_domain == $https_domain || ENABLE_SSL === false) {
     $cookie = true;
   }
 }
