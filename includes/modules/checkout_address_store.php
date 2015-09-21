@@ -12,7 +12,7 @@
 
     // prepare variables
     foreach ($_POST as $key => $value) {
-      $$key = xtc_db_prepare_input($value);
+      ${$key} = xtc_db_prepare_input($value);
     }
 
     $process = true;

@@ -195,7 +195,7 @@
           $res = xtc_db_query($sql_command);
           if ($res===false) {
             // Bei MySQL-Fehlern sofort abbrechen und Info ausgeben
-            $meldung=((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? @xtc_db_error($query, mysqli_errno($$link), mysqli_error($$link)) : @xtc_db_error($query, mysql_errno($$link), mysql_error($$link)));
+            $meldung=((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? @xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link})) : @xtc_db_error($query, mysql_errno(${$link}), mysql_error(${$link})));
             if ($meldung!='')
               die($sql_command.' -> '.$meldung);
           }

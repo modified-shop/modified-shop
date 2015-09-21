@@ -117,7 +117,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
 
   // prepare variables
   foreach ($_GET as $key => $value) {
-    $$key = xtc_db_prepare_input($value);
+    ${$key} = xtc_db_prepare_input($value);
   }
   
   $check_customer_query = xtc_db_query("SELECT *
@@ -136,7 +136,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
     if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
       // prepare variables
       foreach ($_POST as $key => $value) {
-        $$key = xtc_db_prepare_input($value);
+        ${$key} = xtc_db_prepare_input($value);
       }
 
       $error = false;

@@ -186,7 +186,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 			$_SESSION['shipping'] = $_POST['shipping'];
 
 			list ($module, $method) = explode('_', $_SESSION['shipping']);
-			if ((isset($$module) && is_object($$module) ) || ($_SESSION['shipping'] == 'free_free')) {
+			if ((isset(${$module}) && is_object(${$module}) ) || ($_SESSION['shipping'] == 'free_free')) {
 				if ($_SESSION['shipping'] == 'free_free') {
 					$quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
 					$quote[0]['methods'][0]['cost'] = '0';
@@ -438,8 +438,8 @@ if (is_array($payment_modules->modules) && ($confirmation = $payment_modules->co
   $smarty->assign('PAYMENT_INFORMATION', (isset($confirmation['fields']) ? $confirmation['fields'] : ''));
 }
 
-if (isset($$_SESSION['payment']->form_action_url) && (!isset($$_SESSION['payment']->tmpOrders) || !$$_SESSION['payment']->tmpOrders)) {
-  $form_action_url = $$_SESSION['payment']->form_action_url;
+if (isset(${$_SESSION['payment']}->form_action_url) && (!isset(${$_SESSION['payment']}->tmpOrders) || !${$_SESSION['payment']}->tmpOrders)) {
+  $form_action_url = ${$_SESSION['payment']}->form_action_url;
 } else {
   $form_action_url = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
 }

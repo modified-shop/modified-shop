@@ -47,7 +47,7 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
   //BOC compatility functions
   if (!function_exists('xtc_db_get_client_info')) {
     function xtc_db_get_client_info($link='db_link') {
-      global $$link;
+      global ${$link};
 
       return mysql_get_client_info();
     }
@@ -79,10 +79,10 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
   
   if (!function_exists('xtc_db_set_charset')) {
     function xtc_db_set_charset($charset, $link='db_link') {
-      global $$link;
+      global ${$link};
     
       if (function_exists('mysql_set_charset')) {
-        mysql_set_charset($charset, $$link);
+        mysql_set_charset($charset, ${$link});
       } else {
         xtc_db_query('SET NAMES '.$charset);
       }  

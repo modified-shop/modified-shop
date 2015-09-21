@@ -17,14 +17,14 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_db_select_db($database, $type, $link = 'db_link') {
-    global $$link;
+    global ${$link};
     if (!$type) echo 'TYPE ERROR: xtc_db_select_db<br>';
     switch ($type) {
       case 'mysql':
         return mysql_select_db($database);
         break;
       case 'mysqli':
-        return mysqli_select_db($$link, $database);
+        return mysqli_select_db(${$link}, $database);
         break;
     }        
   }

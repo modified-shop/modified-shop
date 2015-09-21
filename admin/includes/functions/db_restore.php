@@ -566,7 +566,7 @@ function set_admin_access() {
   //BOC compatility functions
   if (!function_exists('xtc_db_get_client_info')) {
     function xtc_db_get_client_info($link='db_link') {
-      global $$link;
+      global ${$link};
 
       return mysql_get_client_info();
     }

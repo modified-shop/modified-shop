@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
   function xtc_db_connect_installer($server, $username, $password, $type, $link = 'db_link') {
-    global $$link, $db_error;
+    global ${$link}, $db_error;
     
     if (!$type) echo 'TYPE ERROR: xtc_db_select_db<br>';
     
@@ -30,7 +30,7 @@
     
     switch ($type) {
       case 'mysql':
-        $$link = @mysql_connect($server, $username, $password) or $db_error = mysql_error();
+        ${$link} = @mysql_connect($server, $username, $password) or $db_error = mysql_error();
 
         //vr - 2010-01-01 - Disable "STRICT" mode for MySQL 5!
         if(version_compare(@mysql_get_server_info(), '5.0.0', '>=')) {
@@ -57,10 +57,10 @@
         }
         
         $socket = explode(':', $server);
-        $$link = @mysqli_connect($socket[0], $username, $password, NULL, ((isset($socket[2])) ? $socket[2] : NULL), ((isset($socket[1])) ? $socket[1] : NULL)) or $db_error = mysqli_connect_error();
+        ${$link} = @mysqli_connect($socket[0], $username, $password, NULL, ((isset($socket[2])) ? $socket[2] : NULL), ((isset($socket[1])) ? $socket[1] : NULL)) or $db_error = mysqli_connect_error();
 
-        if(version_compare(@mysqli_get_server_info($$link), '5.0.0', '>=')) {
-          @mysqli_query($$link, "SET SESSION sql_mode=''");
+        if(version_compare(@mysqli_get_server_info(${$link}), '5.0.0', '>=')) {
+          @mysqli_query(${$link}, "SET SESSION sql_mode=''");
         }
 
         // set charset defined in configure.php
@@ -69,14 +69,14 @@
         }
         
         if(function_exists('mysqli_set_charset')) { //requires MySQL 5.0.6 or later
-          mysqli_set_charset($$link, DB_SERVER_CHARSET);
+          mysqli_set_charset(${$link}, DB_SERVER_CHARSET);
         } else {
           $collation = DB_SERVER_CHARSET == 'utf8' ? 'utf8_general_ci' : 'latin1_german1_ci';      
-          mysqli_query($$link, 'SET NAMES '.DB_SERVER_CHARSET. ' COLLATE '. $collation );
+          mysqli_query(${$link}, 'SET NAMES '.DB_SERVER_CHARSET. ' COLLATE '. $collation );
         }    
         break;
     }
     
-    return $$link;
+    return ${$link};
   }
  ?>

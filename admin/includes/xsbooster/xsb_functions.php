@@ -139,9 +139,9 @@ function utf8_substr($str, $start) {
 // DB-Query mit retry falls 'MySQL Server has gone away'
 function xsb_db_query($query, $link = 'db_link')
 {
-    global $$link, $logger;
+    global ${$link}, $logger;
 
-	if ($$link == null) {
+	if (${$link} == null) {
 		// Moeglicherweise adodb
 		return xtc_db_query($query);
 	}
@@ -152,7 +152,7 @@ function xsb_db_query($query, $link = 'db_link')
     }
 
     do {
-    $result = mysql_query($query, $$link);
+    $result = mysql_query($query, ${$link});
     } while (2006 == mysql_errno());
 
     if(0 != mysql_errno()) { xtc_db_error($query, mysql_errno(), mysql_error()); }

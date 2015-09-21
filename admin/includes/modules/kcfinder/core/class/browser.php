@@ -863,7 +863,7 @@ class browser extends uploader {
             $_ = $data;
             foreach (array_keys($data) as $key)
                 if (preg_match('/^[a-z\d_]+$/i', $key))
-                    $eval .= "\$$key=\$_['$key'];";
+                    $eval .= "\${$key}=\$_['$key'];";
             $eval .= "unset(\$_);require \"tpl/tpl_$template.php\";";
             eval($eval);
             return ob_get_clean();
