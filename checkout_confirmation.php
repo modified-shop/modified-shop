@@ -193,7 +193,7 @@ if (isset ($$_SESSION['payment']->form_action_url) && (!isset($$_SESSION['paymen
 } else {
   $form_action_url = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
 }
-$smarty->assign('CHECKOUT_FORM', xtc_draw_form('checkout_confirmation', $form_action_url, 'post'));
+$smarty->assign('CHECKOUT_FORM', xtc_draw_form('checkout_confirmation', $form_action_url, 'post', 'name="checkout_confirmation"'));
 $payment_button = '';
 if (is_array($payment_modules->modules)) {
   $payment_button .= $payment_modules->process_button();
