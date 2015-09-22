@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Shopgate GmbH
  *
@@ -20,6 +21,6 @@
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
-class ShopgateItemXmlModel extends ShopgateItemModel{
-
+class ShopgateItemXmlModel extends ShopgateItemModel
+{
 }

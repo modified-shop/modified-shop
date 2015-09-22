@@ -25,6 +25,8 @@ class ShopgateCustomer extends ShopgateContainer {
 	const MALE = "m";
 	const FEMALE = "f";
 	
+	protected $registration_date;
+	
 	protected $customer_id;
 	protected $customer_number;
 	protected $customer_token;
@@ -48,6 +50,7 @@ class ShopgateCustomer extends ShopgateContainer {
 	
 	protected $newsletter_subscription;
 	
+	/** @var ShopgateAddress[] */
 	protected $addresses;
 	
 	/**
@@ -69,6 +72,13 @@ class ShopgateCustomer extends ShopgateContainer {
 	##########
 	# Setter #
 	##########
+	
+	/**
+	 * @param string $value
+	 */
+	public function setRegistrationDate($value) {
+		$this->registration_date = $value;
+	}
 	
 	/**
 	 * @param string $value
@@ -248,6 +258,13 @@ class ShopgateCustomer extends ShopgateContainer {
 	##########
 	# Getter #
 	##########
+	
+	/**
+	 * @return string
+	 */
+	public function getRegistrationDate() {
+		return $this->registration_date;
+	}
 	
 	/**
 	 * @return string

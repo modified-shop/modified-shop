@@ -1,25 +1,25 @@
 <?php
 /**
-* Shopgate GmbH
-*
-* URHEBERRECHTSHINWEIS
-*
-* Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
-* zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
-* Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
-* öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
-* schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
-*
-* COPYRIGHT NOTICE
-*
-* This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
-* for the purpose of facilitating communication between the IT system of the customer and the IT system
-* of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
-* transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
-* of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
-*
-*  @author Shopgate GmbH <interfaces@shopgate.com>
-*/
+ * Shopgate GmbH
+ *
+ * URHEBERRECHTSHINWEIS
+ *
+ * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+ * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+ * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+ * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+ * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+ *
+ * COPYRIGHT NOTICE
+ *
+ * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+ * for the purpose of facilitating communication between the IT system of the customer and the IT system
+ * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+ * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+ * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+ *
+ * @author Shopgate GmbH <interfaces@shopgate.com>
+ */
 
 
 ### Plugin ###
@@ -52,10 +52,13 @@ define('SHOPGATE_CONFIG_SAVE', 'Speichern');
 define('SHOPGATE_CONFIG_GLOBAL_CONFIGURATION', 'Globale Konfiguration');
 define('SHOPGATE_CONFIG_USE_GLOBAL_CONFIG', 'F&uuml;r diese Sprache die globale Konfiguration nutzen.');
 define('SHOPGATE_CONFIG_MULTIPLE_SHOPS_BUTTON', 'Mehrere Shopgate-Marktpl&auml;tze einrichten');
-define('SHOPGATE_CONFIG_LANGUAGE_SELECTION',
-		'Bei Shopgate ben&ouml;tigen Sie pro Marktplatz einen Shop, der auf eine Sprache und eine W&auml;hrung festgelegt ist. Hier haben Sie die M&ouml;glichkeit, Ihre konfigurierten '.
-		'Sprachen mit Ihren Shopgate-Shops auf unterschiedlichen Marktpl&auml;tzen zu verbinden. W&auml;hlen Sie eine Sprache und tragen Sie die Zugangsdaten zu Ihrem Shopgate-Shop auf '.
-		'dem entsprechenden Marktplatz ein. Wenn Sie f&uuml;r eine Sprache keinen eigenen Shop bei Shopgate haben, wird daf&uuml;r die "Globale Konfiguration" genutzt.'
+define(
+'SHOPGATE_CONFIG_LANGUAGE_SELECTION',
+    'Bei Shopgate ben&ouml;tigen Sie pro Marktplatz einen Shop, der auf eine Sprache und eine W&auml;hrung festgelegt ist. Hier haben Sie die M&ouml;glichkeit, Ihre konfigurierten '
+    .
+    'Sprachen mit Ihren Shopgate-Shops auf unterschiedlichen Marktpl&auml;tzen zu verbinden. W&auml;hlen Sie eine Sprache und tragen Sie die Zugangsdaten zu Ihrem Shopgate-Shop auf '
+    .
+    'dem entsprechenden Marktplatz ein. Wenn Sie f&uuml;r eine Sprache keinen eigenen Shop bei Shopgate haben, wird daf&uuml;r die "Globale Konfiguration" genutzt.'
 );
 
 ### Verbindungseinstellungen ###
@@ -77,15 +80,18 @@ define('SHOPGATE_CONFIG_ALIAS', 'Shop-Alias');
 define('SHOPGATE_CONFIG_ALIAS_DESCRIPTION', 'Tragen Sie hier den Alias Ihres Shops ein. Sie finden diese im Tab &quot;Integration&quot; Ihres Shops.');
 
 define('SHOPGATE_CONFIG_CNAME', 'Eigene URL zur mobilen Webseite (mit http://)');
-define('SHOPGATE_CONFIG_CNAME_DESCRIPTION',
-		'Tragen Sie hier eine eigene (per CNAME definierte) URL zur mobilen Webseite Ihres Shops ein. Sie finden die URL im Tab &quot;Integration&quot; Ihres Shops, '.
-		'nachdem Sie diese Option unter &quot;Einstellungen&quot; &equals;&gt; &quot;Mobile Webseite / Webapp&quot; aktiviert haben.'
+define(
+'SHOPGATE_CONFIG_CNAME_DESCRIPTION',
+    'Tragen Sie hier eine eigene (per CNAME definierte) URL zur mobilen Webseite Ihres Shops ein. Sie finden die URL im Tab &quot;Integration&quot; Ihres Shops, '
+    .
+    'nachdem Sie diese Option unter &quot;Einstellungen&quot; &equals;&gt; &quot;Mobile Webseite / Webapp&quot; aktiviert haben.'
 );
 
 define('SHOPGATE_CONFIG_REDIRECT_LANGUAGES', 'Weitergeleitete Sprachen');
-define('SHOPGATE_CONFIG_REDIRECT_LANGUAGES_DESCRIPTION',
-		'W&auml;hlen Sie die Sprachen aus, die auf diesen Shopgate-Shop weitergeleitet werden sollen. Es muss mindestens '.
-		'eine Sprache ausgew&auml;hlt werden. Halten Sie STRG gedr&uuml;ckt, um mehrere Eintr&auml;ge zu w&auml;hlen.'
+define(
+'SHOPGATE_CONFIG_REDIRECT_LANGUAGES_DESCRIPTION',
+    'W&auml;hlen Sie die Sprachen aus, die auf diesen Shopgate-Shop weitergeleitet werden sollen. Es muss mindestens ' .
+    'eine Sprache ausgew&auml;hlt werden. Halten Sie STRG gedr&uuml;ckt, um mehrere Eintr&auml;ge zu w&auml;hlen.'
 );
 
 ### Export ###
@@ -106,14 +112,18 @@ define('SHOPGATE_CONFIG_EXTENDED_TAX_ZONE_DESCRIPTION', 'Geben Sie die Steuerzon
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER', 'Kategorie-Reihenfolge umkehren');
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER_ON', 'Ja');
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER_OFF', 'Nein');
-define('SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER_DESCRIPTION',
-		'W&auml;hlen Sie hier "Ja" aus, wenn die Sortierung Ihrer Kategorien in Ihrem mobilen Shop genau falsch herum ist.');
+define(
+'SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER_DESCRIPTION',
+'W&auml;hlen Sie hier "Ja" aus, wenn die Sortierung Ihrer Kategorien in Ihrem mobilen Shop genau falsch herum ist.'
+);
 
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER', 'Produkt-Reihenfolge umkehren');
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_ON', 'Ja');
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_OFF', 'Nein');
-define('SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_DESCRIPTION',
-		'W&auml;hlen Sie hier "Ja" aus, wenn die Sortierung Ihrer Produkte in Ihrem mobilen Shop genau falsch herum ist.');
+define(
+'SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_DESCRIPTION',
+'W&auml;hlen Sie hier "Ja" aus, wenn die Sortierung Ihrer Produkte in Ihrem mobilen Shop genau falsch herum ist.'
+);
 
 define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION', 'Produktbeschreibung');
 define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESC_ONLY', 'Nur Beschreibung');
@@ -154,13 +164,15 @@ define('SHOPGATE_CONFIG_EXTENDED_SHIPPING_DESCRIPTION', 'W&auml;hlen Sie die Ver
 define('SHOPGATE_CONFIG_EXTENDED_SHIPPING_NO_SELECTION', '-- keine Auswahl --');
 
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_APPROVED', 'Versand nicht blockiert');
-define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_APPROVED_DESCRIPTION',
-		'W&auml;hlen Sie den Status f&uuml;r Bestellungen, deren Versand bei Shopgate nicht blockiert ist.'
+define(
+'SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_APPROVED_DESCRIPTION',
+'W&auml;hlen Sie den Status f&uuml;r Bestellungen, deren Versand bei Shopgate nicht blockiert ist.'
 );
 
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_BLOCKED', 'Versand blockiert');
-define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_BLOCKED_DESCRIPTION',
-		'W&auml;hlen Sie den Status f&uuml;r Bestellungen, deren Versand bei Shopgate blockiert ist.'
+define(
+'SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_BLOCKED_DESCRIPTION',
+'W&auml;hlen Sie den Status f&uuml;r Bestellungen, deren Versand bei Shopgate blockiert ist.'
 );
 
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SENT', 'Versendet');

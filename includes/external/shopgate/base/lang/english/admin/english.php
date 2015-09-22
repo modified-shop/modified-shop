@@ -1,25 +1,25 @@
 <?php
 /**
-* Shopgate GmbH
-*
-* URHEBERRECHTSHINWEIS
-*
-* Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
-* zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
-* Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
-* öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
-* schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
-*
-* COPYRIGHT NOTICE
-*
-* This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
-* for the purpose of facilitating communication between the IT system of the customer and the IT system
-* of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
-* transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
-* of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
-*
-*  @author Shopgate GmbH <interfaces@shopgate.com>
-*/
+ * Shopgate GmbH
+ *
+ * URHEBERRECHTSHINWEIS
+ *
+ * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+ * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+ * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+ * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+ * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+ *
+ * COPYRIGHT NOTICE
+ *
+ * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+ * for the purpose of facilitating communication between the IT system of the customer and the IT system
+ * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+ * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+ * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+ *
+ * @author Shopgate GmbH <interfaces@shopgate.com>
+ */
 
 
 ### Plugin ###
@@ -52,10 +52,13 @@ define('SHOPGATE_CONFIG_SAVE', 'Save');
 define('SHOPGATE_CONFIG_GLOBAL_CONFIGURATION', 'Global configuration');
 define('SHOPGATE_CONFIG_USE_GLOBAL_CONFIG', 'Use the global configuration for this language.');
 define('SHOPGATE_CONFIG_MULTIPLE_SHOPS_BUTTON', 'Setup multiple Shopgate marketplaces');
-define('SHOPGATE_CONFIG_LANGUAGE_SELECTION',
-		'At Shopgate you need a shop for each marketplace restricted to one language and currency. Here you can map the configured languages to your Shopgate shops on different '.
-		'marketplaces. Choose a language and enter the credentials of your Shopgate shop at the corresponding marketplace. If you do not have a Shopgate shop for a certain language '.
-		'the global configuration will be used for this one.'
+define(
+'SHOPGATE_CONFIG_LANGUAGE_SELECTION',
+    'At Shopgate you need a shop for each marketplace restricted to one language and currency. Here you can map the configured languages to your Shopgate shops on different '
+    .
+    'marketplaces. Choose a language and enter the credentials of your Shopgate shop at the corresponding marketplace. If you do not have a Shopgate shop for a certain language '
+    .
+    'the global configuration will be used for this one.'
 );
 
 ### Connection Settings ###
@@ -77,14 +80,17 @@ define('SHOPGATE_CONFIG_ALIAS', 'Shop alias');
 define('SHOPGATE_CONFIG_ALIAS_DESCRIPTION', 'You can find the alias at the &quot;Integration&quot; section of your shop.');
 
 define('SHOPGATE_CONFIG_CNAME', 'Custom URL to mobile webpage (CNAME) incl. http://');
-define('SHOPGATE_CONFIG_CNAME_DESCRIPTION',
-		'Enter a custom URL (defined by CNAME) for your mobile website. You can find the URL at the &quot;Integration&quot; section of your shop '.
-		'after you activated this option in the &quot;Settings&quot; &equals;&gt; &quot;Mobile website / webapp&quot; section.'
+define(
+'SHOPGATE_CONFIG_CNAME_DESCRIPTION',
+    'Enter a custom URL (defined by CNAME) for your mobile website. You can find the URL at the &quot;Integration&quot; section of your shop '
+    .
+    'after you activated this option in the &quot;Settings&quot; &equals;&gt; &quot;Mobile website / webapp&quot; section.'
 );
 
 define('SHOPGATE_CONFIG_REDIRECT_LANGUAGES', 'Redirected languages');
-define('SHOPGATE_CONFIG_REDIRECT_LANGUAGES_DESCRIPTION',
-		'Choose the languages that should be redirected to this Shopgate shop. At least one language must be selected. Hold CTRL to select multiple entries.'
+define(
+'SHOPGATE_CONFIG_REDIRECT_LANGUAGES_DESCRIPTION',
+'Choose the languages that should be redirected to this Shopgate shop. At least one language must be selected. Hold CTRL to select multiple entries.'
 );
 
 ### Export ###
@@ -105,14 +111,18 @@ define('SHOPGATE_CONFIG_EXTENDED_TAX_ZONE_DESCRIPTION', 'Choose the valid tax zo
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER', 'Reverse category sort order');
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER_ON', 'Yes');
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER_OFF', 'No');
-define('SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER_DESCRIPTION',
-		'Choose "Yes" if the sort order of the categories in your mobile shop appears upside down.');
+define(
+'SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER_DESCRIPTION',
+'Choose "Yes" if the sort order of the categories in your mobile shop appears upside down.'
+);
 
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER', 'Reverse products sort order');
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_ON', 'Yes');
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_OFF', 'No');
-define('SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_DESCRIPTION',
-		'Choose "Yes" if the sort order of the products in your mobile shop appears upside down.');
+define(
+'SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_DESCRIPTION',
+'Choose "Yes" if the sort order of the products in your mobile shop appears upside down.'
+);
 
 define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION', 'Products description');
 define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESC_ONLY', 'Description only');
