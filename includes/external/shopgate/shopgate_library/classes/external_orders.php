@@ -25,6 +25,8 @@ class ShopgateExternalOrder extends ShopgateContainer {
 	protected $order_number;
 	protected $external_order_number;
 	protected $external_order_id;
+	protected $status_name;
+	protected $status_color;
 
 	protected $created_time;
 	
@@ -73,6 +75,20 @@ class ShopgateExternalOrder extends ShopgateContainer {
 	 */
 	public function setExternalOrderId($value) {
 		$this->external_order_id = $value;
+	}
+	
+	/**
+	 * @param string $value
+	 */
+	public function setStatusName($value) {
+		$this->status_name = $value;
+	}
+	
+	/**
+	 * @param string $value
+	 */
+	public function setStatusColor($value) {
+		$this->status_color = $value;
 	}
 	
 	/**
@@ -361,6 +377,20 @@ class ShopgateExternalOrder extends ShopgateContainer {
 	 */
 	public function getExternalOrderId() {
 		return $this->external_order_id;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getStatusName() {
+		return $this->status_name;
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getStatusColor() {
+		return $this->status_color;
 	}
 
 	/**

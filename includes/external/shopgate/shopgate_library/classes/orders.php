@@ -25,18 +25,27 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 
 	const SHOPGATE   = "SHOPGATE";
 	
+	// Prepayment
 	const PREPAY     = "PREPAY";
 	const PAYONE_PRP = "PAYONE_PRP";
 	const SG_PREPAY  = "SG_PREPAY";
 
+	// Debit
 	const DEBIT      = "DEBIT";
 	const PAYMRW_DBT = "PAYMRW_DBT";
 	const PAYONE_DBT = "PAYONE_DBT";
 	
+	// Cash On Delivery
 	const COD        = "COD";
 	const COLL_STORE = "COLL_STORE";
 
+	// Installment
+	const ACCRD_INS  = "ACCRD_INS";
+	const PAYOL_INS  = "PAYOL_INS";
+
+	// Invoice
 	const INVOICE    = "INVOICE";
+	const ACCRD_INV  = "ACCRD_INV";
 	const KLARNA_INV = "KLARNA_INV";
 	const BILLSAFE   = "BILLSAFE";
 	const MSTPAY_INV = "MSTPAY_INV";
@@ -44,7 +53,10 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	const PAYONE_INV = "PAYONE_INV";
 	const SG_INVOICE = "SG_INVOICE";
 	const WCARD_INV  = "WCARD_INV";
+	const PAYONE_KLV = "PAYONE_KLV";
+	const PAYOL_INV  = "PAYOL_INV";
 
+	// Paypal
 	const PAYPAL     = "PAYPAL";
 	const CMPTOP_PP  = "CMPTOP_PP";
 	const MASTPAY_PP = "MASTPAY_PP";
@@ -54,6 +66,7 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	const SIX_PP     = "SIX_PP";
 	const WCARD_PP   = "WCARD_PP";
 	
+	// Credit Card
 	const CC         = "CC";
 	const AUTHN_CC   = "AUTHN_CC";
 	const BCLEPDQ_CC = "BCLEPDQ_CC";
@@ -61,6 +74,7 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	const BRAINTR_CC = "BRAINTR_CC";
 	const CHASE_CC   = "CHASE_CC";
 	const CMPTOP_CC  = "CMPTOP_CC";
+	const CONCAR_CC  = "CONCAR_CC";
 	const CRDSTRM_CC = "CRDSTRM_CC";
 	const CREDITCARD = "CREDITCARD";
 	const CYBRSRC_CC = "CYBRSRC_CC";
@@ -76,6 +90,7 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	const GAMEDAY_CC = "GAMEDAY_CC";
 	const GARANTI_CC = "GARANTI_CC";
 	const GESTPAY_CC = "GESTPAY_CC";
+	const HDLPAY_CC  = "HDLPAY_CC";
 	const HIPAY      = "HIPAY";
 	const HITRUST_CC = "HITRUST_CC";
 	const INSPIRE_CC = "INSPIRE_CC";
@@ -95,12 +110,14 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	const NOCHEX_CC  = "NOCHEX_CC";
 	const OGONE_CC   = "OGONE_CC";
 	const OPTIMAL_CC = "OPTIMAL_CC";
+	const PAY4ONE_CC = "PAY4ONE_CC";
 	const PAYBOX_CC  = "PAYBOX_CC";
 	const PAYEXPR_CC = "PAYEXPR_CC";
 	const PAYFAST_CC = "PAYFAST_CC";
 	const PAYFLOW_CC = "PAYFLOW_CC";
 	const PAYJUNC_CC = "PAYJUNC_CC";
 	const PAYONE_CC  = "PAYONE_CC";
+	const PAYZEN_CC  = "PAYZEN_CC";
 	const PLUGNPL_CC = "PLUGNPL_CC";
 	const PP_WSPP_CC = "PP_WSPP_CC";
 	const PSIGATE_CC = "PSIGATE_CC";
@@ -126,10 +143,12 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	const VALITOR_CC = "VALITOR_CC";
 	const VERIFI_CC  = "VERIFI_CC";
 	const VIAKLIX_CC = "VIAKLIX_CC";
+	const WCARDS_CC  = "WCARDS_CC";
 	const WIRECRD_CC = "WIRECRD_CC";
 	const WLDPDIR_CC = "WLDPDIR_CC";
 	const WLDPOFF_CC = "WLDPOFF_CC";
 
+	// ClickandBuy
 	const CNB        = "CNB";
 	const SG_CNB     = "SG_CNB";
 
@@ -141,12 +160,22 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	const REDIRECTCC = "REDIRECTCC";
 	const WORLDLINE  = "WORLDLINE";
 
+	// SOFORT Überweisung
 	const SUE        = "SUE";
+	const HDLPAY_SUE = "HDLPAY_SUE";
 	const MSTPAY_SUE = "MSTPAY_SUE";
+	const PAYONE_SUE = "PAYONE_SUE";
 	const SG_SUE     = "SG_SUE";
+	const SKRILL_SUE = "SKRILL_SUE";
 	const WCARD_SUE  = "WCARD_SUE";
 
+	// Giropay
+	const PAYONE_GP  = "PAYONE_GP";
+	
+	// iDEAL
+	const PAYONE_IDL = "PAYONE_IDL";
 	const SIX_IDEAL  = "SIX_IDEAL";
+	const SKRILL_IDL = "SKRILL_IDL";
     
     const AMAZON_PAYMENT = "MWS";
 
@@ -960,7 +989,7 @@ class ShopgateOrder extends ShopgateCartBase {
 	 * @see http://www.php.net/manual/de/function.date.php
 	 * @see http://en.wikipedia.org/wiki/ISO_8601
 	 *
-	 * @param string format
+	 * @param string $format
 	 *
 	 * @return string
 	 */
@@ -1006,7 +1035,7 @@ class ShopgateOrder extends ShopgateCartBase {
 	 * @see http://www.php.net/manual/de/function.date.php
 	 * @see http://en.wikipedia.org/wiki/ISO_8601
 	 *
-	 * @param string format
+	 * @param string $format
 	 *
 	 * @return string
 	 */
@@ -2088,7 +2117,7 @@ class ShopgateShopgateCoupon extends ShopgateCoupon {
 	protected $error_text;
 
 	public function accept(ShopgateContainerVisitor $v) {
-		$v->visitCoupon($this);
+		$v->visitShopgateCoupon($this);
 	}
 
 	##########
@@ -2764,7 +2793,7 @@ class ShopgateCartCustomerGroup extends ShopgateContainer {
 	##########
 	
 	/**
-	 * @param string $value
+	 * @return string
 	 */
 	public function getId() {
 		return $this->id;

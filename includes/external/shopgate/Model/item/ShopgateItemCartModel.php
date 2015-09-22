@@ -21,45 +21,56 @@
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
-class ShopgateWrapper
+class ShopgateItemCartModel
 {
-    
     /**
-     * Wraps for example: xtc_db_prepare_input
-     *
-     * @param string $input
+     * if the current order item (product) is an child product the item number is
+     * generated in the schema <productId>_<attributeId>
+     * 
+     * this function returns the id, the product has in the shop system
+     * 
+     * @param ShopgateOrderItem $sgOrderItem
      *
      * @return string
      */
-    public static function db_prepare_input($input)
+    public function getProductIdFromCartItem(ShopgateOrderItem $sgOrderItem)
     {
-        if (defined('PROJECT_MAJOR_VERSION')) {
-            return xtc_db_input($input);
-        } else {
-            return xtc_db_prepare_input($input);
+        $parentId = $sgOrderItem->getParentItemNumber();
+        if (empty($parentId)) {
+            $id = $sgOrderItem->getItemNumber();
+            if (strpos($id, "_") !== false) {
+                $productIdArr = explode('_', $id);
+                
+                return $productIdArr[0];
+            }
+            
+            return $id;
         }
+        
+        return $parentId;
     }
     
     /**
-     * @param $db_query
+     * get the weight to an product from the database
+     * 
+     * @param $products
      *
      * @return mixed
      */
-    public static function db_fetch_array($db_query)
+    public function getProductsWeight($products)
     {
-        return xtc_db_fetch_array($db_query);
+        $tmpArr = array();
         
-    }
-    
-    /**
-     * @param        $query
-     * @param string $link
-     *
-     * @return mixed
-     */
-    public static function db_query($query, $link = 'db_link')
-    {
-        return xtc_db_query($query, $link);
+        foreach ($products as $product) {
+            $tmpArr[] = $this->getProductIdFromCartItem($product);
+        }
         
+        $query         =
+            "SELECT SUM(p.products_weight) AS weight FROM " . TABLE_PRODUCTS . " AS p WHERE p.products_id IN ("
+            . implode(',', $tmpArr) . ")";
+        $result        = xtc_db_query($query);
+        $CountryResult = xtc_db_fetch_array($result);
+        
+        return $CountryResult["weight"];
     }
 }

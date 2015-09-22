@@ -15,5 +15,5 @@ Order deny,allow
 Deny from all
 Options -Indexes
 <Files shopgate_manual_logo.jpg>
-	Allow from all
+    Allow from all
 </Files>
