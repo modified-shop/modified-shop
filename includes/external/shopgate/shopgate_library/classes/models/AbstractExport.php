@@ -22,8 +22,7 @@
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 abstract class Shopgate_Model_AbstractExport extends Shopgate_Model_Abstract {
-	public static $allowedEncodings = array(SHOPGATE_LIBRARY_ENCODING, 'ASCII', 'CP1252', 'ISO-8859-15', 'UTF-16LE', 'ISO-8859-1');
-	
+
 	/** @var stdClass $item */
 	protected $item;
 
@@ -46,6 +45,8 @@ abstract class Shopgate_Model_AbstractExport extends Shopgate_Model_Abstract {
 	 * @var array
 	 */
 	protected $fireMethods = array();
+	
+	const SET_EMPTY = '(empty)';
 
 	/** set the data by key or array
 	 *
@@ -58,14 +59,14 @@ abstract class Shopgate_Model_AbstractExport extends Shopgate_Model_Abstract {
 		if (is_array($key)) {
 			foreach ($key as $key => $value) {
 				if (!is_array($value) && !is_object($value)) {
-					$value = $this->stripInvalidUnicodeSequences($this->stringToUtf8($value, self::$allowedEncodings));
+					$value = $this->stripInvalidUnicodeSequences($this->stringToUtf8($value, ShopgateObject::$sourceEncodings));
 				}
 				$this->$key = $value;
 			}
 		} else {
 			if (!is_array($value) && !is_object($value)) {
 				if (!is_null($value)) {
-					$value = $this->stripInvalidUnicodeSequences($this->stringToUtf8($value, self::$allowedEncodings));
+					$value = $this->stripInvalidUnicodeSequences($this->stringToUtf8($value, ShopgateObject::$sourceEncodings));
 				}
 			}
 			$this->$key = $value;
@@ -118,6 +119,7 @@ abstract class Shopgate_Model_AbstractExport extends Shopgate_Model_Abstract {
 	 */
 	public function generateData() {
 		foreach ($this->fireMethods as $method) {
+			$this->log("Calling function \"{$method}\": Actual memory usage before method: " . $this->getMemoryUsageString(), ShopgateLogger::LOGTYPE_DEBUG);
 			$this->{$method}();
 		}
 

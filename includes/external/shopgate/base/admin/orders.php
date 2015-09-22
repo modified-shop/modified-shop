@@ -21,7 +21,7 @@
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 include_once DIR_FS_CATALOG
-	. 'includes/external/shopgate/shopgate_library/shopgate.php';
+    . 'includes/external/shopgate/shopgate_library/shopgate.php';
 include_once DIR_FS_CATALOG . 'includes/external/shopgate/plugin.php';
 
 /**
@@ -34,11 +34,11 @@ include_once DIR_FS_CATALOG . 'includes/external/shopgate/plugin.php';
  */
 function setShopgateOrderStatus($orderId, $status)
 {
-	if (empty($orderId)) {
-		return;
-	}
-	
-	setShopgateOrderlistStatus(array($orderId), $status);
+    if (empty($orderId)) {
+        return;
+    }
+    
+    setShopgateOrderlistStatus(array($orderId), $status);
 }
 
 /**
@@ -49,10 +49,10 @@ function setShopgateOrderStatus($orderId, $status)
  */
 function setShopgateOrderlistStatus($orderIds, $status)
 {
-	if (empty($orderIds) || !is_array($orderIds)) {
-		return;
-	}
-	
-	$plugin = new ShopgateModifiedPlugin();
-	$plugin->updateOrdersStatus($orderIds, $status);
+    if (empty($orderIds) || !is_array($orderIds)) {
+        return;
+    }
+    
+    $plugin = new ShopgateModifiedPlugin();
+    $plugin->updateOrdersStatus($orderIds, $status);
 }

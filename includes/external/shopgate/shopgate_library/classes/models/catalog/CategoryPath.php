@@ -77,18 +77,10 @@ class Shopgate_Model_Catalog_CategoryPath extends Shopgate_Model_AbstractExport 
 	 * @return Shopgate_Model_XmlResultObject
 	 */
 	public function asXml(Shopgate_Model_XmlResultObject $itemNode) {
-		/**
-		 * @var Shopgate_Model_XmlResultObject $categoryPathNode
-		 * @var Shopgate_Model_XmlResultObject $itemsNode
-		 * @var Shopgate_Model_Abstract        $item
-		 */
+		/** @var Shopgate_Model_XmlResultObject $categoryPathNode */
 		$categoryPathNode = $itemNode->addChild('category');
 		$categoryPathNode->addAttribute('uid', $this->getUid());
-		$categoryPathNode->addAttribute('sort_order', $this->getSortOrder());
-		$itemsNode = $categoryPathNode->addChild('paths');
-		foreach ($this->getItems() as $item) {
-			$itemsNode->addChildWithCDATA('path', $item->getData('path'))->addAttribute('level', $item->getData('level'));
-		}
+		$categoryPathNode->addAttribute('sort_order', (int)$this->getSortOrder());
 
 		return $itemNode;
 	}
@@ -100,7 +92,7 @@ class Shopgate_Model_Catalog_CategoryPath extends Shopgate_Model_AbstractExport 
 		$categoryPathResult = new Shopgate_Model_Abstract();
 
 		$categoryPathResult->setData('uid', $this->getUid());
-		$categoryPathResult->setData('sort_order', $this->getSortOrder());
+		$categoryPathResult->setData('sort_order', (int)$this->getSortOrder());
 
 		$itemsData = array();
 
