@@ -74,9 +74,9 @@ class Shopgate_Model_Catalog_Stock extends Shopgate_Model_AbstractExport {
 		 * @var Shopgate_Model_XmlResultObject $stockNode
 		 */
 		$stockNode = $itemNode->addChild('stock');
-		$stockNode->addChild('is_saleable', $this->getIsSaleable());
-		$stockNode->addChild('backorders', $this->getBackorders());
-		$stockNode->addChild('use_stock', $this->getUseStock());
+		$stockNode->addChild('is_saleable', (int)$this->getIsSaleable());
+		$stockNode->addChild('backorders', (int)$this->getBackorders());
+		$stockNode->addChild('use_stock', (int)$this->getUseStock());
 		$stockNode->addChild('stock_quantity', $this->getStockQuantity());
 		$stockNode->addChild('minimum_order_quantity', $this->getMinimumOrderQuantity());
 		$stockNode->addChild('maximum_order_quantity', $this->getMaximumOrderQuantity());
@@ -91,9 +91,9 @@ class Shopgate_Model_Catalog_Stock extends Shopgate_Model_AbstractExport {
 	public function asArray() {
 		$stockResult = new Shopgate_Model_Abstract();
 
-		$stockResult->setData('is_saleable', $this->getIsSaleable());
+		$stockResult->setData('is_saleable', (int)$this->getIsSaleable());
 		$stockResult->setData('backorders', $this->getBackorders());
-		$stockResult->setData('use_stock', $this->getUseStock());
+		$stockResult->setData('use_stock', (int)$this->getUseStock());
 		$stockResult->setData('stock_quantity', $this->getStockQuantity());
 		$stockResult->setData('minimum_order_quantity', $this->getMinimumOrderQuantity());
 		$stockResult->setData('maximum_order_quantity', $this->getMaximumOrderQuantity());

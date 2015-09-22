@@ -9,16 +9,16 @@
     <tr>
         <?php //left_navigation
         if (USE_ADMIN_TOP_MENU == 'false') {
-            echo '<td class="columnLeft2">'.PHP_EOL;
-            echo '<!-- left_navigation //-->'.PHP_EOL;
+            echo '<td class="columnLeft2">' . PHP_EOL;
+            echo '<!-- left_navigation //-->' . PHP_EOL;
             require_once(DIR_WS_INCLUDES . 'column_left.php');
-            echo '<!-- left_navigation eof //-->'.PHP_EOL;
-            echo '</td>'.PHP_EOL;
+            echo '<!-- left_navigation eof //-->' . PHP_EOL;
+            echo '</td>' . PHP_EOL;
         }
         ?>
         <!-- body_text //-->
         <td class="boxCenter">
-            <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_modules.png'); ?></div>
+            <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS . 'heading/icon_modules.png'); ?></div>
             <div class="pageHeading pdg2">Shopgate</div>
             <div class="main">Modules</div>
             <table class="tableCenter">
