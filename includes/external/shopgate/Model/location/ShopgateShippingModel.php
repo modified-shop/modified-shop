@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Shopgate GmbH
  *
@@ -20,4 +21,29 @@
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
-include_once DIR_FS_CATALOG . 'includes/external/shopgate/base/lang/english/modules/payment/shopgate.php';
+class ShopgateShippingModel
+{
+    /**
+     * read the shipping configuration from the database to an specific shipping class
+     *
+     * @param $className
+     *
+     * @return array
+     */
+    public function getShippingConfigurationValuesByClassName($className)
+    {
+        $query =
+            "SELECT c.configuration_key, c.configuration_value 
+             FROM " . TABLE_CONFIGURATION . " AS c 
+             WHERE configuration_key LIKE \"MODULE_SHIPPING_" . strtoupper($className) . "%\" ;";
+        
+        $result         = xtc_db_query($query);
+        $shippingConfig = array();
+        
+        while ($config = xtc_db_fetch_array($result)) {
+            $shippingConfig[$config["configuration_key"]] = $config["configuration_value"];
+        }
+        
+        return $shippingConfig;
+    }
+}

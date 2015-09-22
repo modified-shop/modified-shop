@@ -29,6 +29,12 @@ class Shopgate_Model_XmlResultObject extends SimpleXMLElement {
 	const DEFAULT_MAIN_NODE = '<items></items>';
 
 	/**
+	 * finds all characters that are not allowed in XML
+	 * @see http://www.w3.org/TR/REC-xml/#charsets
+	 */
+	const PATTERN_INVALID_CHARS = '/[^\x{09}\x{0A}\x{0D}\x{20}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u';
+
+	/**
 	 * Adds a child with $value inside CDATA
 	 *
 	 * @param      $name
@@ -37,17 +43,44 @@ class Shopgate_Model_XmlResultObject extends SimpleXMLElement {
 	 * @return SimpleXMLElement
 	 */
 	public function addChildWithCDATA($name, $value = null) {
+		$forceEmpty = false;
+		if ($value === Shopgate_Model_AbstractExport::SET_EMPTY) {
+			$forceEmpty = true;
+			$value = '';
+		}
 		$new_child = $this->addChild($name);
 
 		if ($new_child !== null) {
 			$node = dom_import_simplexml($new_child);
 			$no = $node->ownerDocument;
 			if ($value != '') {
+				$value = preg_replace(self::PATTERN_INVALID_CHARS, '', $value);
 				$node->appendChild($no->createCDATASection($value));
 			}
 		}
 
+		if ($forceEmpty) {
+			$new_child->addAttribute('forceEmpty', '1');
+		}
 		return $new_child;
+	}
+
+	/**
+	 * @param string $name
+	 * @param mixed $value
+	 * @param string $namespace
+	 * @return null|SimpleXMLElement
+	 */
+	public function addChild($name, $value = null, $namespace = null) {
+		if (!empty($value)) {
+			$value = preg_replace(self::PATTERN_INVALID_CHARS, '', $value);
+		}
+		if ($value !== Shopgate_Model_AbstractExport::SET_EMPTY) {
+			return parent::addChild($name, $value, $namespace);
+		}
+		$child = parent::addChild($name, '', $namespace);
+		$child->addAttribute('forceEmpty', '1');
+		return $child;
 	}
 
 	/**

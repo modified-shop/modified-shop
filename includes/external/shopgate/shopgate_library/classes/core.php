@@ -24,7 +24,7 @@
 ###################################################################################
 # define constants
 ###################################################################################
-define('SHOPGATE_LIBRARY_VERSION', '2.9.10');
+define('SHOPGATE_LIBRARY_VERSION', '2.9.24');
 define('SHOPGATE_LIBRARY_ENCODING' , 'UTF-8');
 define('SHOPGATE_BASE_DIR', realpath(dirname(__FILE__).'/../'));
 
@@ -361,10 +361,10 @@ class ShopgateLibraryException extends Exception {
 	 * @param string $additionalInformation More detailed information on what exactly went wrong.
 	 * @param bool $appendAdditionalInformationToMessage Set true to output the additional information to the response. Set false to log it silently.
 	 * @param bool $writeLog true to create a log entry in the error log, false otherwise.
+	 * @param Exception $previous
 	 */
-	public function __construct($code, $additionalInformation = null, $appendAdditionalInformationToMessage = false, $writeLog = true) {
+	public function __construct($code, $additionalInformation = null, $appendAdditionalInformationToMessage = false, $writeLog = true, Exception $previous = null) {
 		// Set code and message
-		$logMessage = self::buildLogMessageFor($code, $additionalInformation);
 		if (isset(self::$errorMessages[$code])) {
 			$message = self::$errorMessages[$code];
 		} else {
@@ -379,14 +379,6 @@ class ShopgateLibraryException extends Exception {
 		// Save additional information
 		$this->additionalInformation = $additionalInformation;
 
-		// Log the error
-		if (empty($writeLog)) {
-			$message .= ' (logging disabled for this message)';
-		} else {
-			if (ShopgateLogger::getInstance()->log($code.' - '.$logMessage) === false) {
-				$message .= ' (unable to log)';
-			}
-		}
 
 		// in case of multiple errors the message should not have any other text attached to it
 		if ($code == self::MULTIPLE_ERRORS) {
@@ -394,7 +386,22 @@ class ShopgateLibraryException extends Exception {
 		}
 
 		// Call default Exception class constructor
-		parent::__construct($message, $code);
+		if (method_exists($this, 'getPrevious')) {
+			// The "previous" argument was introduced 5.3
+			parent::__construct($message, $code, $previous);
+		} else {
+			parent::__construct($message, $code);
+		}
+		
+		// Log the error
+		$logMessage = $this->buildLogMessage($additionalInformation);
+		if (empty($writeLog)) {
+			$this->message .= ' (logging disabled for this message)';
+		} else {
+			if (ShopgateLogger::getInstance()->log($code.' - '.$logMessage) === false) {
+				$this->message .= ' (unable to log)';
+			}
+		}
 	}
 	
 	/**
@@ -431,6 +438,7 @@ class ShopgateLibraryException extends Exception {
 	 * @param int $code One of the constants defined in ShopgateLibraryException.
 	 * @param string $additionalInformation More detailed information on what exactly went wrong.
 	 * @return string
+	 * @deprecated
 	 */
 	public static function buildLogMessageFor($code, $additionalInformation) {
 		$logMessage = self::getMessageFor($code);
@@ -454,6 +462,44 @@ class ShopgateLibraryException extends Exception {
 			$logMessage .= $class.$function.'()'.$file.':'.$line."\n\t";
 		}
 
+		return $logMessage;
+	}
+	
+	/**
+	 * Builds the message that would be logged if a ShopgateLibraryException was thrown with the same parameters and returns it.
+	 *
+	 * This is a convenience method for cases where logging is desired but the script should not abort. By using this function an empty
+	 * try-catch-statement can be avoided. Just pass the returned string to ShopgateLogger::log().
+	 *
+	 * @param string $additionalInformation More detailed information on what exactly went wrong.
+	 * @return string
+	 */
+	public function buildLogMessage($additionalInformation) {
+		$logMessage = self::getMessageFor($this->getCode());
+		
+		// Set additional information
+		if (!empty($additionalInformation)) {
+			$logMessage .= ' - Additional information: "'.$additionalInformation.'"';
+		}
+		
+		$logMessage .= "\n";
+		
+		// Add tracing information to the message
+		if (method_exists($this, 'getPrevious') && $this->getPrevious()) {
+			$trace = $this->getPrevious()->getTraceAsString();
+		} else {
+			$trace = $this->getTraceAsString();
+		}
+		$lines = explode("\n", $trace);
+		$i     = 0;
+		foreach ($lines as $line) {
+			$i++;
+			if ($i > 20) {
+				$logMessage .= "\t(...)";
+				break;
+			}
+			$logMessage .= "\t$line\n";
+		}
 		return $logMessage;
 	}
 }
@@ -948,13 +994,21 @@ class ShopgateBuilder {
 				break;
 			default:
 				// undefined auth service
-				trigger_error('Invalid SMA-Auth-Service defined - this should not happen with valid plugin code', E_USER_ERROR);
-				break;
+				return trigger_error('Invalid SMA-Auth-Service defined - this should not happen with valid plugin code', E_USER_ERROR);
 		}
 		// -> PluginAPI auth service (currently the plugin API supports only one auth service)
 		$spaAuthService = new ShopgateAuthenticationServiceShopgate($this->config->getCustomerNumber(), $this->config->getApikey());
 		$pluginApi = new ShopgatePluginApi($this->config, $spaAuthService, $merchantApi, $plugin);
-		
+
+		if ($this->config->getExportConvertEncoding()) {
+			array_splice(ShopgateObject::$sourceEncodings, 1, 0, $this->config->getEncoding());
+			ShopgateObject::$sourceEncodings = array_unique(ShopgateObject::$sourceEncodings);
+		}
+
+		if ($this->config->getForceSourceEncoding()) {
+			ShopgateObject::$sourceEncodings = array($this->config->getEncoding());
+		}
+
 		// instantiate export file buffer
 		if (!empty($_REQUEST['action']) && (($_REQUEST['action'] == 'get_items')
 				|| ($_REQUEST['action'] == 'get_categories') || ($_REQUEST['action'] == 'get_reviews'))) {
@@ -963,11 +1017,6 @@ class ShopgateBuilder {
 					'get_categories' => 'Shopgate_Model_Catalog_Category',
 					'get_reviews' => 'Shopgate_Model_Review'
 			);
-			
-			if ($this->config->getExportConvertEncoding()) {
-				array_splice(Shopgate_Model_AbstractExport::$allowedEncodings, 1, 0, $this->config->getEncoding());
-				Shopgate_Model_AbstractExport::$allowedEncodings = array_unique(Shopgate_Model_AbstractExport::$allowedEncodings);
-			}
 
 			$format = (!empty($_REQUEST['response_type'])) ? $_REQUEST['response_type'] : '';
 			switch ($format) {
@@ -975,17 +1024,17 @@ class ShopgateBuilder {
 					/* @var $xmlModel Shopgate_Model_AbstractExport */
 					$xmlModel = new $xmlModelNames[$_REQUEST['action']]();
 					$xmlNode = new Shopgate_Model_XmlResultObject($xmlModel->getItemNodeIdentifier());
-					$fileBuffer = new ShopgateFileBufferXml($xmlModel, $xmlNode, $this->config->getExportBufferCapacity(), $this->config->getExportConvertEncoding(), $this->config->getEncoding());
+					$fileBuffer = new ShopgateFileBufferXml($xmlModel, $xmlNode, $this->config->getExportBufferCapacity(), $this->config->getExportConvertEncoding(), ShopgateObject::$sourceEncodings);
 				break;
 				
 				case 'json':
-					$fileBuffer = new ShopgateFileBufferJson($this->config->getExportBufferCapacity(), $this->config->getExportConvertEncoding(), $this->config->getEncoding());
+					$fileBuffer = new ShopgateFileBufferJson($this->config->getExportBufferCapacity(), $this->config->getExportConvertEncoding(), ShopgateObject::$sourceEncodings);
 				break;
 			}
 		} else if (!empty($_REQUEST['action']) && (($_REQUEST['action'] == 'get_items_csv') || ($_REQUEST['action'] == 'get_categories_csv') || ($_REQUEST['action'] == 'get_reviews_csv'))) {
-			$fileBuffer = new ShopgateFileBufferCsv($this->config->getExportBufferCapacity(), $this->config->getExportConvertEncoding(), $this->config->getEncoding());
+			$fileBuffer = new ShopgateFileBufferCsv($this->config->getExportBufferCapacity(), $this->config->getExportConvertEncoding(), ShopgateObject::$sourceEncodings);
 		} else {
-			$fileBuffer = new ShopgateFileBufferCsv($this->config->getExportBufferCapacity(), $this->config->getExportConvertEncoding(), $this->config->getEncoding());
+			$fileBuffer = new ShopgateFileBufferCsv($this->config->getExportBufferCapacity(), $this->config->getExportConvertEncoding(), ShopgateObject::$sourceEncodings);
 		}
 		
 		// inject apis into plugin
@@ -1048,6 +1097,9 @@ class ShopgateBuilder {
  * @author Shopgate GmbH, 35510 Butzbach, DE
  */
 abstract class ShopgateObject {
+
+	public static $sourceEncodings = array(SHOPGATE_LIBRARY_ENCODING, 'ASCII', 'CP1252', 'ISO-8859-15', 'UTF-16LE', 'ISO-8859-1');
+
 	/**
 	 * @var array cache already camelized strings
 	 */
@@ -1073,7 +1125,7 @@ abstract class ShopgateObject {
 
 	/**
 	 * Save the already instantiated Helper Object to guarantee the only one instance is allocated
-	 * 
+	 *
 	 * @var array of Shopgate_Helper_DataStructure|Shopgate_Helper_Pricing|Shopgate_Helper_String
 	 */
 	private $helperClassInstances = array(
@@ -1325,21 +1377,40 @@ abstract class ShopgateObject {
 	 * @param int $memoryLimit in MB
 	 */
 	public function setExportMemoryLimit($memoryLimit) {
-		if(!empty($memoryLimit) && is_int($memoryLimit)){
-			@ini_set('memory_limit', "{$memoryLimit}M");
-		}
+		$limit = ($memoryLimit >= 0)
+				? $memoryLimit.'M'
+				: (string) $memoryLimit
+		;
+		
+		@ini_set('memory_limit', $limit);
 	}
 
 	/**
 	 * @param int $timeLimit in seconds
 	 */
 	public function setExportTimeLimit($timeLimit) {
+		@set_time_limit($timeLimit);
+		@ini_set('max_execution_time', $timeLimit);
+	}
 
-		if(!empty($timeLimit) && (is_int($timeLimit)||is_float($timeLimit))){
-			@set_time_limit($timeLimit);
-			@ini_set('max_execution_time', $timeLimit);
+	/**
+	 * Gets the used memory and real used memory and returns it as a string
+	 *
+	 * @return string
+	 */
+	protected function getMemoryUsageString() {
+		switch(strtoupper(trim(ShopgateLogger::getInstance()->getMemoryAnalyserLoggingSizeUnit()))) {
+			case 'GB':
+				return (memory_get_usage()/(1024*1024*1024)) . " GB (real usage ".(memory_get_usage(true)/(1024*1024*1024))." GB)";
+			case 'MB':
+				return (memory_get_usage()/(1024*1024)) . " MB (real usage ".(memory_get_usage(true)/(1024*1024))." MB)";
+			case 'KB':
+				return (memory_get_usage()/1024) . " KB (real usage ".(memory_get_usage(true)/1024)." KB)";
+			default:
+				return memory_get_usage() . " Bytes (real usage ".memory_get_usage(true)." Bytes)";
 		}
 	}
+
 }
 
 /**
@@ -1734,9 +1805,9 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	}
 
 	/**
-	 * @param Shopgate_Model_Review $review
+	 * @param Shopgate_Model_Catalog_Review $review
 	 */
-	protected final function addReviewModel(Shopgate_Model_Review $review) {
+	protected final function addReviewModel(Shopgate_Model_Catalog_Review $review) {
 		$this->addModel($review);
 	}
 
@@ -1832,7 +1903,6 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	
 	/**
 	 *
-	 * @param boolean tax classes will be used
 	 * @see http://wiki.shopgate.com/CSV_File_Items/
 	 */
 	protected function useTaxClasses(){
@@ -2018,7 +2088,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	protected function removeTagsFromString($string, $removeTags = array(), $additionalAllowedTags = array())
 	{
 		$helper = $this->getHelper(self::HELPER_STRING);
-		return $helper->removeTagsFromString($string, $removeTags, $additionalAllowedTags);	
+		return $helper->removeTagsFromString($string, $removeTags, $additionalAllowedTags);
 	}
 
 	/**
@@ -2096,7 +2166,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 				} catch (Exception $e) {
 					$msg = "An unknown exception has been thrown in loader method \"{$method}\". Memory usage "
 						 . $this->getMemoryUsageString()." Exception '".get_class($e)."': [Code: {$e->getCode()}] {$e->getMessage()}";
-					throw new ShopgateLibraryException(ShopgateLibraryException::UNKNOWN_ERROR_CODE, $msg, true);
+					throw new ShopgateLibraryException(ShopgateLibraryException::UNKNOWN_ERROR_CODE, $msg, true, true, $e);
 				}
 
 				if ($result) {
@@ -2168,24 +2238,6 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 */
 	protected function getCreateReviewsCsvLoaders() {
 		return $this->getCreateCsvLoaders("review");
-	}
-
-	/**
-	 * Gets the used memory and real used memory and returns it as a string
-	 *
-	 * @return string
-	 */
-	protected function getMemoryUsageString() {
-		switch(strtoupper(trim(ShopgateLogger::getInstance()->getMemoryAnalyserLoggingSizeUnit()))) {
-			case 'GB':
-				return (memory_get_usage()/(1024*1024*1024)) . " GB (real usage ".(memory_get_usage(true)/(1024*1024*1024))." GB)";
-			case 'MB':
-				return (memory_get_usage()/(1024*1024)) . " MB (real usage ".(memory_get_usage(true)/(1024*1024))." MB)";
-			case 'KB':
-				return (memory_get_usage()/1024) . " KB (real usage ".(memory_get_usage(true)/1024)." KB)";
-			default:
-				return memory_get_usage() . " Bytes (real usage ".memory_get_usage(true)." Bytes)";
-		}
 	}
 	
 	#################################################################################
@@ -2366,8 +2418,8 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	
 	/**
 	 * Returns an array of certain settings of the shop. (Currently mainly tax settings.)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see http://developer.shopgate.com/plugin_api/system_information/get_settings
 	 *
 	 * @return array(
@@ -2397,8 +2449,17 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @see http://developer.shopgate.com/plugin_api/export/get_items_csv
 	 *
 	 * @throws ShopgateLibraryException
+	 *
+	 * @deprecated Use createItems().
 	 */
-	protected abstract function createItemsCsv();
+	protected function createItemsCsv(){
+		throw new ShopgateLibraryException(
+				ShopgateLibraryException::PLUGIN_API_DISABLED_ACTION,
+				'The requested action is not disabled but has not been implemented in this plugin.',
+				true,
+				false
+		);
+	}
 	
 	/**
 	 * Loads the Media file information to the products of the shop system's database and passes them to the buffer.
@@ -2423,9 +2484,18 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @see http://developer.shopgate.com/plugin_api/export/get_categories_csv
 	 *
 	 * @throws ShopgateLibraryException
+	 *
+	 * @deprecated Use createCategories().
 	 */
-	protected abstract function createCategoriesCsv();
-
+	protected function createCategoriesCsv() {
+		throw new ShopgateLibraryException(
+				ShopgateLibraryException::PLUGIN_API_DISABLED_ACTION,
+				'The requested action is not disabled but has not been implemented in this plugin.',
+				true,
+				false
+		);
+	}
+	
 	/**
 	 * Loads the product reviews of the shop system's database and passes them to the buffer.
 	 *
@@ -2436,9 +2506,18 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @see http://developer.shopgate.com/plugin_api/export/get_reviews_csv
 	 *
 	 * @throws ShopgateLibraryException
+	 *
+	 * @deprecated Use createReviews().
 	 */
-	protected abstract function createReviewsCsv();
-
+	protected function createReviewsCsv() {
+		throw new ShopgateLibraryException(
+				ShopgateLibraryException::PLUGIN_API_DISABLED_ACTION,
+				'The requested action is not disabled but has not been implemented in this plugin.',
+				true,
+				false
+		);
+	}
+	
 	/**
 	 * Exports orders from the shop system's database to Shopgate.
 	 *
@@ -2576,21 +2655,14 @@ abstract class ShopgateFileBuffer extends ShopgateObject implements ShopgateFile
 	 *
 	 * @param int $capacity
 	 * @param bool $convertEncoding true to enable automatic encoding conversion to utf-8
-	 * @param string $sourceEncoding
+	 * @param array $sourceEncodings
 	 */
-	public function __construct($capacity, $convertEncoding = true, $sourceEncoding = null) {
+	public function __construct($capacity, $convertEncoding = true, array $sourceEncodings = array()) {
 		$this->timeStart = time();
 		$this->buffer = array();
 		$this->capacity = $capacity;
 		$this->convertEncoding = $convertEncoding;
-		
-		$this->allowedEncodings = array(
-			SHOPGATE_LIBRARY_ENCODING, 'ASCII', 'CP1252', 'ISO-8859-15', 'UTF-16LE', 'ISO-8859-1'
-		);
-		
-		if (!empty($sourceEncoding)) {
-			array_splice($this->allowedEncodings, 1, 0, $sourceEncoding);
-		}
+		$this->allowedEncodings = $sourceEncodings;
 	}
 
 	public function setFile($filePath) {
@@ -2749,10 +2821,10 @@ class ShopgateFileBufferXml extends ShopgateFileBuffer {
 	 * @param Shopgate_Model_XmlResultObject $xmlNode
 	 * @param null|string $capacity
 	 * @param bool $convertEncoding
-	 * @param null $sourceEncoding
+	 * @param array $sourceEncodings
 	 */
-	public function __construct(Shopgate_Model_Abstract $xmlModel, Shopgate_Model_XmlResultObject $xmlNode, $capacity, $convertEncoding = true, $sourceEncoding = null) {
-		parent::__construct($capacity, $convertEncoding, $sourceEncoding);
+	public function __construct(Shopgate_Model_Abstract $xmlModel, Shopgate_Model_XmlResultObject $xmlNode, $capacity, $convertEncoding = true, array $sourceEncodings = array()) {
+		parent::__construct($capacity, $convertEncoding, $sourceEncodings);
 		
 		$this->xmlNode = $xmlNode;
 		$this->xmlModel = $xmlModel;

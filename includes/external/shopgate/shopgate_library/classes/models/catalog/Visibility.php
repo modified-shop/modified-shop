@@ -48,6 +48,7 @@ class Shopgate_Model_Catalog_Visibility extends Shopgate_Model_AbstractExport {
 	const DEFAULT_VISIBILITY_CATALOG = 'catalog';
 	const DEFAULT_VISIBILITY_SEARCH = 'search';
 	const DEFAULT_VISIBILITY_NOT_VISIBLE = "not_visible";
+	const DEFAULT_VISIBILITY_NOTHING = "nothing";
 
 	/**
 	 * @param Shopgate_Model_XmlResultObject $itemNode

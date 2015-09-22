@@ -1,4 +1,9 @@
 
+'''Version 2.9.19'''
+* uses Shopgate Library 2.9.24
+* implemented category XML export
+* implemented review XML export
+
 '''Version 2.9.18'''
 * removed german changelog
 * implemented cronjob function for transferring order cancellations back to Shopgate

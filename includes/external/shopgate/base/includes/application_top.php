@@ -21,5 +21,5 @@
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 if (!empty($_GET['shopgate_redirect'])) {
-	$_SESSION['shopgate_redirect'] = 1;
+    $_SESSION['shopgate_redirect'] = 1;
 }
