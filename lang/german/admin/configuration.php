@@ -814,7 +814,7 @@ define('EMAIL_WORD_WRAP_TITLE', 'WordWrap f&uuml;r Text-E-Mails');
 define('EMAIL_WORD_WRAP_DESC', 'Hier die Anzahl der Zeichen f&uuml;r eine Zeile in Text-E-Mails eingeben, bevor Text umgebrochen werden soll (nur ganze Zahlen).<br /><strong>Achtung:</strong> Eine Zeichenzahl &uuml;ber 76 kann dazu f&uuml;hren, dass die E-Mails des Shops durch SpamAssassin als SPAM eingestuft werden! Weitere Infos dazu <a href="http://wiki.apache.org/spamassassin/Rules/MIME_QP_LONG_LINE" target="_blank">hier</a>.');
 
 define('USE_PAGINATION_LIST_TITLE', 'Pagination Liste');
-define('USE_PAGINATION_LIST_DESC', 'Verwende eine HTML Liste (ul / li Tag) f&uuml;r die Pagination / Seitenschaltung.');
+define('USE_PAGINATION_LIST_DESC', 'Verwende eine HTML Liste (ul / li Tag) f&uuml;r die Pagination / Seitenschaltung.<br/><b>Achtung:</b> Das funktioniert nur mit einem f&uuml;r Shopversion 2.00 kompatiblem Template!');
 
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Umsatzstatistik Filter');
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Hier die Bestellstati ausw&auml;hlen, die f&uuml;r die Umsatzstatistik auf der Admin-Startseite und im Status-Dowpdown bei Verwendung des Status "Umsatzstatistik Filter" ber&uuml;cksichtig werden sollen.<br />(Um nur anzuzeigen was effektiv an Umsatz gemacht wurde, den Status w&auml;hlen, der bei abgeschlossener Bestellung verwendet wird.)<br /><b>Hinweis:</b> Damit der Filter "Umsatzstatistik Filter" im Umsatzstatistik-Dropdown angezeigt wird, sind mindestens zwei Stati zu w&auml;hlen. Ansonsten kann &uuml;ber das Dropdown der gew&uuml;nschte Status direkt ausgew&auml;hlt werden.');
@@ -900,7 +900,7 @@ define('MODULE_SMALL_BUSINESS_DESC', 'Soll der Shop umgestellt werden auf Kleinu
 define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Komprimierung');
 define('COMPRESS_HTML_OUTPUT_DESC', 'Soll der HTML Output vom Template komprimiert ausgeliefert werden?');
 define('COMPRESS_STYLESHEET_TITLE', 'CSS Komprimierung');
-define('COMPRESS_STYLESHEET_DESC', 'Soll ein komprimiertes Stylesheet ausgeliefert werden?<br/><b>Achtung:</b> Das funktioniert nur mit dem Template tpl_modified &amp; xtc5!');
+define('COMPRESS_STYLESHEET_DESC', 'Soll ein komprimiertes Stylesheet ausgeliefert werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem f&uuml;r Shopversion 2.00 kompatiblem Template!');
 
 define('USE_ATTRIBUTES_IFRAME_TITLE', 'Attribute editieren in iframe');
 define('USE_ATTRIBUTES_IFRAME_DESC', '&Ouml;ffnet die Attribut Verwaltung in der Kategorie/Artikelansicht in einem iframe');
