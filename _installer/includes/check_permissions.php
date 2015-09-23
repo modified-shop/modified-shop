@@ -79,7 +79,7 @@ define('CHMOD_WRITEABLE', 0775);
       'adirs' => array(
           'includes/external/magnalister',
           'includes/external/shopgate/shopgate_library/config',
-          'templates/tpl_modified'
+          'templates/tpl_modified',
           'templates/xtc5'
       ),
       'rdirs' => array(
