@@ -58,7 +58,7 @@ function log_exception(Exception $e)
                                          '<div style="height:1px; border-top:1px dotted #000; margin:10px 0px;"></div>';
 
             // write Logfile
-            if ($error_number != E_NOTICE && $error_number != E_STRICT && $error_number != E_WARNING) {
+            if ($error_number != E_NOTICE && $error_number != E_STRICT) {
                 error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' ' . $error_name . ' - ' . html_entity_decode($error_message) . ' in File: ' . $error_file . ' on Line: ' . $error_line . "\n", 3, DIR_FS_LOG.'mod_error_' .date('Y-m-d') .'.log');
                 $err = 0;
                 for ($i=0, $n=count($backtrace); $i<$n; $i++) {
