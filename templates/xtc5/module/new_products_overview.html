@@ -3,6 +3,7 @@
 {* BOF - Hetfield - 2009-08-11 - show error message if no new products exist *}
 {if $NO_NEW_PRODUCTS}<p>{$NO_NEW_PRODUCTS}</p>{/if}
 {* EOF - Hetfield - 2009-08-11 - show error message if no new products exist *}
+{$LISTING_FILTER}
 <table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
 {foreach name=aussen item=module_data from=$module_content}
   <tr>
