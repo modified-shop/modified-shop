@@ -95,6 +95,7 @@
 <div id="tabbed_product_info">
   <ul>
     {if $PRODUCTS_DESCRIPTION != ''}<li><a href="#tab_description">{#description#}</a></li>{/if}
+    {if $MODULE_product_tags != ''}<li><a href="#tab_products_tabs">{#products_tags#}</a></li>{/if}
     {if $more_images|@count > 0}<li><a href="#tab_more_images">{#more_images#}</a></li>{/if}
     {if $MODULE_products_media != ''}<li><a href="#tab_media">{#products_media#}</a></li>{/if}
     {if $MODULE_products_reviews != ''}<li><a href="#tab_reviews">{#products_reviews#}</a></li>{/if}
@@ -103,6 +104,7 @@
     {if $MODULE_products_category != ''}<li><a href="#tab_products_category">{#products_category#}</a></li>{/if}
   </ul>
   {if $PRODUCTS_DESCRIPTION != ''}<div id="tab_description">{$PRODUCTS_DESCRIPTION}</div>{/if}
+  {if $MODULE_product_tags != ''}<div id="tab_products_tags">{$MODULE_product_tags}</div>{/if}
   {if $more_images|@count > 0}
     <div id="tab_more_images">
       {* More Pictures *}
