@@ -47,6 +47,7 @@
     {if !strstr($smarty.server.PHP_SELF, 'checkout')}
       <div id="rightcol">
         {if isset($box_CART)}{$box_CART}{/if}
+        {if isset($box_WISHLIST)}{$box_WISHLIST}{/if}
         {if isset($box_LOGIN)}{$box_LOGIN}{/if}
         {if isset($box_ADMIN)}{$box_ADMIN}{/if}
         {if isset($box_NEWSLETTER)}{$box_NEWSLETTER}{/if}
