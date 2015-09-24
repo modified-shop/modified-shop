@@ -22,7 +22,9 @@
       {/foreach}
       </table>
     {/if}
-    <br />&laquo; {$module_data.BUTTON_WISHLIST}</td>
+    {if $module_data.ATTRIBUTES == ''}<br />{/if}
+    &laquo; {$module_data.BUTTON_WISHLIST}
+    </td>
     <td class="singleprice">{$module_data.PRODUCTS_SINGLE_PRICE}</td>
     <td class="totalprice">{$module_data.PRODUCTS_PRICE}</td>
     {* DokuMan - 2009-11-03 - use delete button instead of checkbox in template (commented out) *}
