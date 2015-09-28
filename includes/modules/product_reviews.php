@@ -19,21 +19,25 @@
   // create smarty elements
   $module_smarty = new Smarty;
   $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-
-  // include needed functions
-  require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
-  require_once (DIR_FS_INC.'xtc_date_short.inc.php');
-  
-  $button_preview = '';
-  if ($_SESSION['customers_status']['customers_status_write_reviews'] == 1) {
-    $button_preview = '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']).'">'.xtc_image_button('button_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW).'</a>';
-  }
-  
-  $module_smarty->assign('BUTTON_WRITE', $button_preview);
   $module_smarty->assign('language', $_SESSION['language']);
   $module_smarty->caching = 0;
+    
+  if (defined('MODULE_TS_TRUSTEDSHOPS_ID') && MODULE_TS_PRODUCT_STICKER_STATUS == '1') {
+    $module_smarty->assign('MODULE_TS_PRODUCT_STICKER', sprintf(MODULE_TS_PRODUCT_STICKER, MODULE_TS_TRUSTEDSHOPS_ID, $product->data['products_model']));
+  } else {
+    // include needed functions
+    require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
+    require_once (DIR_FS_INC.'xtc_date_short.inc.php');
   
-  $reviews_count = $product->getReviewsCount();
+    $button_preview = '';
+    if ($_SESSION['customers_status']['customers_status_write_reviews'] == 1) {
+      $button_preview = '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']).'">'.xtc_image_button('button_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW).'</a>';
+    }
+  
+    $module_smarty->assign('BUTTON_WRITE', $button_preview);
+  
+    $reviews_count = $product->getReviewsCount();
+  }
   
   $module = '';
   if (($_SESSION['customers_status']['customers_status_read_reviews'] == '1' && $reviews_count > 0) || $_SESSION['customers_status']['customers_status_write_reviews'] == 1) {    
