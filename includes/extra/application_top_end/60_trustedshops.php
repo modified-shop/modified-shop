@@ -11,7 +11,7 @@
    --------------------------------------------------------------*/
   
   
-  if (defined('MODULE_TRUSTED_SHOPS_STATUS') && MODULE_TRUSTED_SHOPS_STATUS == 'true') {
+  if (defined('MODULE_TRUSTEDSHOPS_STATUS') && MODULE_TRUSTEDSHOPS_STATUS == 'true') {
     // load configuration
     $trustedshops_query = xtc_db_query("SELECT *
                                           FROM ".TABLE_TRUSTEDSHOPS."
