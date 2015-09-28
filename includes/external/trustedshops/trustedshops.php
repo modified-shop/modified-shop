@@ -9,10 +9,12 @@
    --------------------------------------------------------------
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-  
-  $ts_link = 'http://www.trustedshops.de/shopbetreiber/integration/shopsoftware-integration/modified-ecommerce/?shop_id=%s&backend_language=%s&shopsw=MODIFIED&shopsw_version='.DB_VERSION.'&plugin_version=1.0&context=trustbadge&variant=&yOffset=?utm_source=Xtmodified&utm_medium=backend&utm_content=link1&utm_campaign=modultracking&a_aid=55cb437783a78';
-  $ts_link_product = 'http://www.trustedshops.de/shopbetreiber/integration/product-reviews/?utm_source=Xtmodified&utm_medium=backend&utm_content=link1&utm_campaign=modultracking&a_aid=55cb437783a78';
-  $ts_link_review = 'http://www.trustedshops.de/shopbetreiber/integration/kundenbewertungen-anzeigen/?utm_source=Xtmodified&utm_medium=backend&utm_content=link1&utm_campaign=modultracking&a_aid=55cb437783a78';
+
+  if (defined('RUN_MODE_ADMIN')) { 
+    $ts_link = 'http://www.trustedshops.de/shopbetreiber/integration/shopsoftware-integration/modified-ecommerce/?shop_id=%s&backend_language=%s&shopsw=MODIFIED&shopsw_version='.DB_VERSION.'&plugin_version=1.0&context=trustbadge&variant=&yOffset=?utm_source=Xtmodified&utm_medium=backend&utm_content=link1&utm_campaign=modultracking&a_aid=55cb437783a78';
+    $ts_link_product = 'http://www.trustedshops.de/shopbetreiber/integration/product-reviews/?utm_source=Xtmodified&utm_medium=backend&utm_content=link1&utm_campaign=modultracking&a_aid=55cb437783a78';
+    $ts_link_review = 'http://www.trustedshops.de/shopbetreiber/integration/kundenbewertungen-anzeigen/?utm_source=Xtmodified&utm_medium=backend&utm_content=link1&utm_campaign=modultracking&a_aid=55cb437783a78';
+  }
    
   $default_trustbadge_code = "
 <script type=\"text/javascript\">
