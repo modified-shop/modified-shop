@@ -49,10 +49,81 @@
         $("<div>"+$("#cboxTitle").html()+"</div>").css({color: $("#cboxTitle").css('color')}).insertAfter("#cboxPhoto");
         $.fn.colorbox.resize();
       }
-    });   
+    });
+
+    var option = $('#suggestions');
+    $(document).click(function(e){
+      var target = $(e.target);
+      if(!(target.is(option) || option.find(target).length)){
+        ac_closing();
+      }
+    });
   });
 </script>
 <script type="text/javascript">
+  var ac_pageSize = 4;
+  var ac_page = 1;
+  var ac_result = 0;
+  var ac_show_page = '<?php echo AC_SHOW_PAGE; ?>';
+  var ac_show_page_of = '<?php echo AC_SHOW_PAGE_OF; ?>';
+  
+  function ac_showPage(ac_page) {
+    ac_result = Math.ceil($("#autocomplete_main").children().length/ac_pageSize);
+    $('.autocomplete_content').hide();   
+    $('.autocomplete_content').each(function(n) {    
+      if (n >= (ac_pageSize * (ac_page - 1)) && n < (ac_pageSize * ac_page)) {
+        $(this).show();
+      }
+    });
+    $('#autocomplete_next').hide();
+    $('#autocomplete_prev').hide();
+    if (ac_page > 1) {
+      $('#autocomplete_prev').show();
+    }
+    if (ac_page < ac_result && ac_result > 1) {
+      $('#autocomplete_next').show();
+    }
+    $('#autocomplete_count').html(ac_show_page+ac_page+ac_show_page_of+ac_result);
+  }
+  function ac_prevPage() {
+    if (ac_page == 1) {
+      ac_page = ac_result;
+    } else {
+      ac_page--;
+    }
+    if (ac_page < 1) {
+      ac_page = 1;
+    }
+    ac_showPage(ac_page);
+  }
+  function ac_nextPage() {
+    if (ac_page == ac_result) {
+      ac_page = 1;
+    } else {
+      ac_page++;
+    }
+    ac_showPage(ac_page);
+  }
+	function ac_lookup(inputString) {
+		if(inputString.length == 0) {
+			$('#suggestions').hide();
+		} else {
+			$.post("<?php echo xtc_href_link('api/autocomplete/autocomplete.php'); ?>", {queryString: ""+inputString+""}, function(data) {
+				if(data.length > 0) {
+					$('#suggestions').slideDown();
+					$('#autoSuggestionsList').html(data);
+					ac_showPage(1);
+					$('#autocomplete_prev').click(ac_prevPage);
+          $('#autocomplete_next').click(ac_nextPage);
+				}
+			});
+		}
+	}
+	function ac_closing() {
+		setTimeout("$('#suggestions').slideUp();", 100);
+	}
+
+
   $.alerts.overlayOpacity = .2;
   $.alerts.overlayColor = '#000';
   function alert(message, title) {
@@ -64,6 +135,7 @@
       $('#toggle_cart').click(function() {
         $('.toggle_cart').slideToggle('slow');
         $('.toggle_wishlist').slideUp('slow');
+        ac_closing();
         return false;
       });
       $("html").not('.toggle_cart').bind('click',function(e) {
@@ -81,6 +153,7 @@
       $('#toggle_wishlist').click(function() {
         $('.toggle_wishlist').slideToggle('slow');
         $('.toggle_cart').slideUp('slow');
+        ac_closing();
         return false;
       });
       $("html").not('.toggle_wishlist').bind('click',function(e) {

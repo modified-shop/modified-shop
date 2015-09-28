@@ -585,4 +585,7 @@ define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_MODULE', 'Bitte w&auml;hlen sie eine
 define('TEXT_CHECKOUT_EXPRESS_INFO_LINK', 'Mein Schnellkauf');
 define('TEXT_CHECKOUT_EXPRESS_INFO_LINK_MORE', 'Mehr Informationen zu Mein Schnellkauf &raquo;');
 define('TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST', 'Immer g&uuml;nstigste Versandard w&auml;hlen');
+
+define('AC_SHOW_PAGE', 'Seite ');
+define('AC_SHOW_PAGE_OF', ' von ');
 ?>
