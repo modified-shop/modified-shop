@@ -57,10 +57,6 @@ if ($language_not_found === true) {
     $shop_content_data['content_heading'] = TEXT_CONTENT_NOT_FOUND;
   }
 
-  if (($_GET['coID'] != 7) || (isset($_GET['action']) && $_GET['action'] == 'success')) {
-    require (DIR_WS_INCLUDES.'header.php');
-  }
-
   $smarty->assign('CONTENT_HEADING', (($shop_content_data['content_heading'] != '') ? $shop_content_data['content_heading'] : $shop_content_data['content_title']));
 
   if ($_GET['coID'] == 7) {
@@ -93,6 +89,10 @@ if ($language_not_found === true) {
       $cache_id = md5($_SESSION['language'].$_SESSION['customers_status']['customers_status'].$shop_content_data['content_id'].((isset($_REQUEST['error'])) ? $_REQUEST['error'] : ''));
       $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/content.html', $cache_id);
     }
+  }
+
+  if (($_GET['coID'] != 7) || (isset($_GET['action']) && $_GET['action'] == 'success')) {
+    require (DIR_WS_INCLUDES.'header.php');
   }
 }
 $smarty->assign('language', $_SESSION['language']);
