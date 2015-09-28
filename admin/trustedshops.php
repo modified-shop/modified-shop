@@ -294,6 +294,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       echo xtc_draw_checkbox_field('snippets[]', 'home', (((isset($ts_snippets_array['snippets']['home'])) ? $ts_snippets_array['snippets']['home'] : false))).TEXT_SNIPPETS_INDEX;
                     ?>
                     </td>
+                    <td class="main" colspan="2"><span class="important_info"><?php echo TEXT_TRUSTEDSHOPS_SNIPPETS_INFO; ?></span></td>
                   </tr>
                   <tr>
                     <td class="main" colspan="4">
