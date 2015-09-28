@@ -722,4 +722,9 @@ DELETE FROM countries WHERE countries_iso_code_3 = 'FXX';
 #Tomcraft -2015-08-19 - Fixed zone name for "Terres australes et Antartiques françaises" as the field was only 32 characters before!
 UPDATE zones SET zone_name = 'Terres australes et Antartiques françaises' WHERE zone_code = '984 (TOM)';
 
+#GTB - 2015-09-28 - add Trusted Shops
+ALTER TABLE admin_access ADD trustedshops INT(1) NOT NULL DEFAULT 0 AFTER shipcloud;
+UPDATE admin_access SET trustedshops = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET trustedshops = 1 WHERE customers_id = 'groups' LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
