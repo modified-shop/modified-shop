@@ -111,6 +111,7 @@ echo mainMenue(BOX_HEADING_PARTNER_MODULES);
     if (isset($admin_access['cleverreach']) && $admin_access['cleverreach'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CLEVERREACH, '') . '" class="menuBoxContentLink"> -' . BOX_CLEVERREACH . '</a></li>';
     if (isset($admin_access['supermailer']) && $admin_access['supermailer'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SUPERMAILER, '') . '" class="menuBoxContentLink"> -' . BOX_SUPERMAILER . '</a></li>';
     if (isset($admin_access['shipcloud']) && $admin_access['shipcloud'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SHIPCLOUD, '') . '" class="menuBoxContentLink"> -' . BOX_SHIPCLOUD . '</a></li>';
+    if (isset($admin_access['trustedshops']) && $admin_access['trustedshops'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, '') . '" class="menuBoxContentLink"> -' . BOX_TRUSTEDSHOPS . '</a></li>';
     
     ## Magnalister
     if(defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS=='True') {

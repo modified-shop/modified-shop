@@ -121,6 +121,9 @@
   // express checkout
   define('TABLE_CUSTOMERS_CHECKOUT', 'customers_checkout');
   
+  // trusted shops
+  define('TABLE_TRUSTEDSHOPS', 'trustedshops');
+  
   require_once(DIR_FS_INC.'auto_include.inc.php');
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/database_tables/','php') as $file) require ($file);
 ?>
