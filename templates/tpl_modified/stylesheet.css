@@ -3876,5 +3876,104 @@ ul.resp-tabs-list{
   max-width:100%;
   height:auto;
 }
+/* END Bannermanager */
+
+/* START autocomplete */
+.suggestionsBox {
+  position:absolute;
+  right:0;
+  margin:0px;
+  width:300px;
+  background-color:#f1f1f1;
+  border:1px solid #ccc;
+  color:#333;
+  z-index:99999;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 10px 10px 3px 10px;
+}
+.suggestionList {
+  margin:0px;
+  padding:0px;
+  max-height:300px;
+  overflow:auto;
+  padding-right:5px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.suggestionList li {
+  border-bottom:1px solid #ddd;
+  background-color:#f1f1f1;
+  list-style:none;
+}
+.suggestionList li a.autocomplete {
+  display:inline-block;
+  padding:5px 0px;
+  text-decoration: none;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width:100%;
+}
+.suggestionList li a.autocomplete .autocomplete_image {
+  float:left;
+  display:block;
+  width:40px;
+  height:40px;
+  overflow:hidden;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  margin-right:5px;
+}
+.suggestionList li a.autocomplete .autocomplete_image img {
+  float:left;
+  width:100%;
+  height:auto;
+}
+.autocompletecloser {
+  cursor:pointer;
+}
+#autocomplete_pagination li {
+  float:left;
+  border: 0;
+}
+#autocomplete_pagination li:hover {
+  background-color:#f1f1f1;
+}
+#autocomplete_prev {
+  cursor:pointer;
+  padding:5px;
+  width:5%;
+  text-align:left;
+  font-size:15px;
+}
+#autocomplete_next {
+  cursor: pointer;
+  padding: 5px;
+  width: 5%;
+  float: right !important;
+  text-align: right;
+  font-size:15px;
+}
+#autocomplete_count {
+  padding: 5px;
+  width: 75%;
+  text-align: center;
+  position: absolute;
+  margin-left: 7%;
+  font-size:11px;
+  font-weight:bold;
+}
+.autocomplete_error {
+  padding:6px 0px 11px;
+  display:inline-block;
+  text-align:center;
+  width:100%;
+}
+/* END autocomplete */
 
 /* END miscellaneous */
