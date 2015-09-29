@@ -81,7 +81,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
   $where = '';
   $select = "m.manufacturers_id as id,
              m.manufacturers_name as name ";
-  if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
+  if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0 && basename($PHP_SELF) != FILENAME_ADVANCED_SEARCH_RESULT) {
     $select = "c.categories_id as id,
                cd.categories_name as name ";
     $join = " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
@@ -108,6 +108,25 @@ if (PRODUCT_LIST_FILTER == 'true') {
     }
   } elseif (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT) {
     $where = " AND p.products_id IN ('".implode("', '", $products_search_array)."') ";
+    $join = $subcat_join;
+    $where .= $subcat_where;
+    if ($pfrom_check != '' || $pto_check != '') {
+      $where .= $pfrom_check;
+      $where .= $pto_check;
+      $join .= " LEFT JOIN ".TABLE_SPECIALS." AS s 
+                           ON p.products_id = s.products_id 
+                              AND s.status = '1' ";
+    }
+    if ($NeedTax === true) {
+      if (!isset ($_SESSION['customer_country_id'])) {
+        $_SESSION['customer_country_id'] = STORE_COUNTRY;
+        $_SESSION['customer_zone_id'] = STORE_ZONE;
+      }
+      $join .= " LEFT OUTER JOIN ".TABLE_TAX_RATES." tr ON (p.products_tax_class_id = tr.tax_class_id) 
+                 LEFT OUTER JOIN ".TABLE_ZONES_TO_GEO_ZONES." gz ON (tr.tax_zone_id = gz.geo_zone_id) ";
+      $where .= " AND (gz.zone_country_id IS NULL OR gz.zone_country_id = '0' OR gz.zone_country_id = '".(int) $_SESSION['customer_country_id']."') 
+                  AND (gz.zone_id is null OR gz.zone_id = '0' OR gz.zone_id = '".(int) $_SESSION['customer_zone_id']."')";
+    }
   }
 
   $filterlist_sql = "SELECT DISTINCT ".$select."
@@ -124,20 +143,33 @@ if (PRODUCT_LIST_FILTER == 'true') {
                                      ".$where."
                                      ".PRODUCTS_CONDITIONS_P."
                             ORDER BY name";
-  
-  
+    
   $filterlist_query = xtDBquery($filterlist_sql);
   if (xtc_db_num_rows($filterlist_query, true) > 0) {
     $manufacturer_dropdown = xtc_draw_form('filter', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'show', 'cat'))), 'get');
     if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
-      $manufacturer_dropdown .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']).PHP_EOL;
-      $options = array (array ('id' => '', 'text' => TEXT_ALL_CATEGORIES));
+      if (basename($PHP_SELF) != FILENAME_ADVANCED_SEARCH_RESULT) {
+        $options = array (array ('id' => '', 'text' => TEXT_ALL_CATEGORIES));
+        if (SEARCH_ENGINE_FRIENDLY_URLS != 'true') {
+          $manufacturer_dropdown .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']).PHP_EOL;
+        }
+      } else {
+        $manufacturer_dropdown .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']).PHP_EOL;
+      }
     } else {
-      $manufacturer_dropdown .= xtc_draw_hidden_field('cat', $current_category_id).PHP_EOL;
       $options = array (array ('id' => '', 'text' => TEXT_ALL_MANUFACTURERS));
     }
-    if (isset($_GET['sort']) && !empty($_GET['sort'])) {
-      $manufacturer_dropdown .= xtc_draw_hidden_field('sort', $_GET['sort']).PHP_EOL;
+    if (isset($_GET['categories_id']) && !empty($_GET['categories_id'])) {
+      $manufacturer_dropdown .= xtc_draw_hidden_field('categories_id', (int)$_GET['categories_id']).PHP_EOL;
+    }
+    if (isset($_GET['inc_subcat']) && $_GET['inc_subcat'] == '1') {
+      $manufacturer_dropdown .= xtc_draw_hidden_field('inc_subcat', '1').PHP_EOL;
+    }
+    if (isset($_GET['pfrom']) && !empty($_GET['pfrom'])) {
+      $manufacturer_dropdown .= xtc_draw_hidden_field('pfrom', stripslashes($_GET['pfrom'])).PHP_EOL;
+    }
+    if (isset($_GET['pto']) && !empty($_GET['pto'])) {
+      $manufacturer_dropdown .= xtc_draw_hidden_field('pto', stripslashes($_GET['pto'])).PHP_EOL;
     }
     if (isset($_GET['keywords']) && !empty($_GET['keywords'])) {
       $manufacturer_dropdown .= xtc_draw_hidden_field('keywords', $_GET['keywords']).PHP_EOL;
@@ -152,7 +184,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
     }
     $manufacturer_dropdown .= xtc_draw_pull_down_menu('filter_id', $options, isset($_GET['filter_id']) ? (int)$_GET['filter_id'] : '', 'onchange="this.form.submit()"').PHP_EOL;
     $manufacturer_dropdown .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_submit" /></noscript>'.PHP_EOL;
-    $manufacturer_dropdown .= xtc_hide_session_id() .PHP_EOL; //Session ID nur anh‰ngen, wenn Cookies deaktiviert sind
+    $manufacturer_dropdown .= xtc_hide_session_id() .PHP_EOL;
     $manufacturer_dropdown .= '</form>'.PHP_EOL;
   }
 
@@ -165,7 +197,17 @@ if (PRODUCT_LIST_FILTER == 'true') {
       || (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0)
       )
   {
-    $where .= " AND p.manufacturers_id = '".(int)((isset($_GET['filter_id'])) ? $_GET['filter_id'] : $_GET['manufacturers_id'])."' ";
+    if ((isset($_GET['filter_id']) && $_GET['filter_id'] > 0)
+        && (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0)
+        )
+    {
+      $join .= " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                      ON p2c.products_id = p.products_id
+                         AND p2c.categories_id = '".(int)$_GET['filter_id']."' ";
+      $where .= " AND p.manufacturers_id = '".(int)$_GET['manufacturers_id']."' ";
+    } else {
+      $where .= " AND p.manufacturers_id = '".(int)((isset($_GET['filter_id']) && $_GET['filter_id'] > 0) ? $_GET['filter_id'] : $_GET['manufacturers_id'])."' ";
+    }
   }
   if (isset($current_category_id) && $current_category_id > 0) {
     $join .= " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
@@ -183,6 +225,25 @@ if (PRODUCT_LIST_FILTER == 'true') {
     }
   } elseif (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT) {
     $where .= " AND p.products_id IN ('".implode("', '", $products_search_array)."') ";
+    $join = $subcat_join;
+    $where .= $subcat_where;
+    if ($pfrom_check != '' || $pto_check != '') {
+      $where .= $pfrom_check;
+      $where .= $pto_check;
+      $join .= " LEFT JOIN ".TABLE_SPECIALS." s 
+                           ON p.products_id = s.products_id
+                              AND s.status = '1' ";
+    }
+    if ($NeedTax === true) {
+      if (!isset ($_SESSION['customer_country_id'])) {
+        $_SESSION['customer_country_id'] = STORE_COUNTRY;
+        $_SESSION['customer_zone_id'] = STORE_ZONE;
+      }
+      $join .= " LEFT OUTER JOIN ".TABLE_TAX_RATES." tr ON (p.products_tax_class_id = tr.tax_class_id) 
+                 LEFT OUTER JOIN ".TABLE_ZONES_TO_GEO_ZONES." gz ON (tr.tax_zone_id = gz.geo_zone_id) ";
+      $where .= " AND (gz.zone_country_id IS NULL OR gz.zone_country_id = '0' OR gz.zone_country_id = '".(int) $_SESSION['customer_country_id']."') 
+                  AND (gz.zone_id is null OR gz.zone_id = '0' OR gz.zone_id = '".(int) $_SESSION['customer_zone_id']."')";
+    }
   }
   
   $filterlist_sql = "SELECT DISTINCT pto.options_id,
@@ -228,12 +289,21 @@ if (PRODUCT_LIST_FILTER == 'true') {
             
       $filter_dropdown[$options_id] .= xtc_draw_form('filter', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'show', 'cat'))), 'get');
       if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
-        $filter_dropdown[$options_id] .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']).PHP_EOL;
-      } else {
-        $filter_dropdown[$options_id] .= xtc_draw_hidden_field('cat', $current_category_id).PHP_EOL;
+        if (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT || SEARCH_ENGINE_FRIENDLY_URLS != 'true') {
+          $filter_dropdown[$options_id] .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']).PHP_EOL;
+        }
       }
-      if (isset($_GET['sort']) && !empty($_GET['sort'])) {
-        $filter_dropdown[$options_id] .= xtc_draw_hidden_field('sort', $_GET['sort']).PHP_EOL;
+      if (isset($_GET['categories_id']) && !empty($_GET['categories_id'])) {
+        $filter_dropdown[$options_id] .= xtc_draw_hidden_field('categories_id', (int)$_GET['categories_id']).PHP_EOL;
+      }
+      if (isset($_GET['inc_subcat']) && $_GET['inc_subcat'] == '1') {
+        $filter_dropdown[$options_id] .= xtc_draw_hidden_field('inc_subcat', '1').PHP_EOL;
+      }
+      if (isset($_GET['pfrom']) && !empty($_GET['pfrom'])) {
+        $filter_dropdown[$options_id] .= xtc_draw_hidden_field('pfrom', stripslashes($_GET['pfrom'])).PHP_EOL;
+      }
+      if (isset($_GET['pto']) && !empty($_GET['pto'])) {
+        $filter_dropdown[$options_id] .= xtc_draw_hidden_field('pto', stripslashes($_GET['pto'])).PHP_EOL;
       }
       if (isset($_GET['keywords']) && !empty($_GET['keywords'])) {
         $filter_dropdown[$options_id] .= xtc_draw_hidden_field('keywords', $_GET['keywords']).PHP_EOL;
@@ -250,9 +320,8 @@ if (PRODUCT_LIST_FILTER == 'true') {
       }
       $filter_dropdown[$options_id] .= xtc_draw_pull_down_menu('filter['.$options_id.']', $options_array, isset($_GET['filter'][$options_id]) ? (int)$_GET['filter'][$options_id] : '', 'onchange="this.form.submit()"').PHP_EOL;
       $filter_dropdown[$options_id] .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_submit" /></noscript>'.PHP_EOL;
-      $filter_dropdown[$options_id] .= xtc_hide_session_id() .PHP_EOL; //Session ID nur anh‰ngen, wenn Cookies deaktiviert sind
+      $filter_dropdown[$options_id] .= xtc_hide_session_id() .PHP_EOL;
       $filter_dropdown[$options_id] .= '</form>'.PHP_EOL;
-      
     }
   }
 
