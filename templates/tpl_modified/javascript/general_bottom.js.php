@@ -121,6 +121,7 @@
 	}
 	function ac_closing() {
 		setTimeout("$('#suggestions').slideUp();", 100);
+		ac_page = 1;
 	}
 
 
