@@ -23,7 +23,7 @@
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
       reset($_GET);
       while (list($key, $value) = each($_GET)) {        
-        if ((strlen($value) > 0 || is_array($value)) 
+        if ((is_array($value) || (!is_array($value) && strlen($value) > 0))
             && ($key != xtc_session_name()) 
             && (strtolower($key) != 'xtcsid') 
             && ($key != 'error') 
