@@ -30,3 +30,5 @@ ab_edit_category = 'Edit category'
 
 info_reviews = 'Reviews:'
 info_review = 'Review:'
+
+heading_trustedshops = 'Trusted Shops'
