@@ -1072,7 +1072,7 @@ list-style-type:none;
 }
 /* COMMENTS ON CHECKOUT CONFIRMATION SITE */
 p.checkoutcomment textarea {
-width:100%;
+width:898px;
 }
 /* ORDER DETAILS ON CHECKOUT SITE */
 table.checkoutconfirmationorderdetails {
@@ -1279,7 +1279,7 @@ border-top:1px solid #ccc;
 }
 /* Hetfield - 2010-01-20 - Remove agb-textarea from checkout_payment */
 div.agbframe {
-width:100%;
+width:898px;
 height:200px;
 overflow:auto;
 padding:10px;

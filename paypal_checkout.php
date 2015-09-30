@@ -35,6 +35,10 @@ require_once(DIR_FS_INC . 'xtc_check_stock.inc.php');
 require_once(DIR_FS_INC . 'xtc_display_tax_value.inc.php');
 require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
 
+// BOF - Tomcraft - 2009-10-02 - Include "Single Price" in checkout_confirmation
+require (DIR_WS_LANGUAGES.$_SESSION['language'].'/checkout_confirmation.php');
+// EOF - Tomcraft - 2009-10-02 - Include "Single Price" in checkout_confirmation
+
 require(DIR_WS_CLASSES.'http_client.php');
 unset($_SESSION['tmp_oID']);
 
@@ -227,7 +231,9 @@ if(isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 }
 
-if($kein_versand==1)$_SESSION['shipping'] = false;
+if($kein_versand==1) {
+  $_SESSION['shipping'] = false;
+}
 // get all available shipping quotes
 $quotes = $shipping_modules->quote();
 // if no shipping method has been selected, automatically select the cheapest method.
@@ -273,9 +279,12 @@ $smarty->assign('ADDRESS_SHIPPING_LABEL', xtc_address_label($_SESSION['customer_
 $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 $smarty->assign('FORM_END', '</form>');
 $smarty->assign('ADDRESS_PAYMENT_LABEL', xtc_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'));
+$smarty->assign('PRODUCTS_EDIT', xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL')); // web28 - 2011-04-14 - change SSL -> NONSSL
 if(PAYPAL_EXPRESS_ADDRESS_CHANGE == 'true') {
   $smarty->assign('BUTTON_SHIPPING_ADDRESS', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL').'">'.xtc_image_button('button_change_address.gif', IMAGE_BUTTON_CHANGE_ADDRESS).'</a>');
+  $smarty->assign('SHIPPING_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
   $smarty->assign('BUTTON_PAYMENT_ADDRESS', '<a href="' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL') . '">' . xtc_image_button('button_change_address.gif', IMAGE_BUTTON_CHANGE_ADDRESS) . '</a>');
+  $smarty->assign('PAYMENT_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'));
 }
 $module_smarty = new Smarty;
 if(xtc_count_shipping_modules() > 0) {
@@ -404,8 +413,10 @@ for ($i=0; $i<$n; $i++) {
 }
 $smarty->assign('products_data', $temp_prods);
 
-if(MODULE_ORDER_TOTAL_INSTALLED) {
-  $smarty->assign('total_block', $order_total_modules->pp_output());
+if (MODULE_ORDER_TOTAL_INSTALLED) {
+  $order_total_modules->process();
+  $total_block = $order_total_modules->output();
+  $smarty->assign('TOTAL_BLOCK', $total_block);
 }
 
 if(isset($checkout_payment_modules->modules) && is_array($checkout_payment_modules->modules)) { //Dokuman - 2012-05-31 - fix paypal_checkout notices
@@ -477,37 +488,20 @@ if(DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
 }
 
 //check if display conditions on checkout page is true
-if(DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
-  if(GROUP_CHECK == 'true') {
-    $group_check = "and group_ids LIKE '%c_" . $_SESSION['customers_status']['customers_status_id'] . "_group%'";
-  }
-  $shop_content_query = "SELECT
-                        content_title,
-                        content_heading,
-                        content_text,
-                        content_file
-                        FROM " . TABLE_CONTENT_MANAGER . "
-                        WHERE content_group='" . REVOCATION_ID . "' " . $group_check . "
-                        AND languages_id='" . $_SESSION['languages_id'] . "'";
-  $shop_content_query = xtc_db_query($shop_content_query);
-  if($shop_content_query) {
-    $shop_content_data = xtc_db_fetch_array($shop_content_query);
-    if($shop_content_data['content_file'] != '') {
-      ob_start();
-      if(strpos($shop_content_data['content_file'], '.txt'))
-        echo '<pre>';
-      include(DIR_FS_CATALOG . 'media/content/' . $shop_content_data['content_file']);
-      if(strpos($shop_content_data['content_file'], '.txt'))
-        echo '</pre>';
-      $revocation = ob_get_contents();
-      ob_end_clean();
-    } else {
-      $revocation = $shop_content_data['content_text'];
-    }
-    $smarty->assign('REVOCATION', $revocation);
-    $smarty->assign('REVOCATION_TITLE', $shop_content_data['content_heading']);
-    $smarty->assign('REVOCATION_LINK', $main->getContentLink(REVOCATION_ID, MORE_INFO));
-  }
+if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
+  //revocation  
+  $shop_content_data = $main->getContentData(REVOCATION_ID);
+
+  $smarty->assign('REVOCATION', $shop_content_data['content_text']);
+  $smarty->assign('REVOCATION_TITLE', $shop_content_data['content_heading']);
+  $smarty->assign('REVOCATION_LINK', $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL'));
+
+  //agb
+  $shop_content_data = $main->getContentData(3);
+
+  $smarty->assign('AGB_TITLE', $shop_content_data['content_heading']);
+  $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
+  $smarty->assign('TEXT_AGB_CHECKOUT', sprintf(TEXT_AGB_CHECKOUT,$main->getContentLink(3, MORE_INFO,'SSL') , $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL')));
 }
 
 // August 2012 Zollkosten als Muster mit Group ID 15
