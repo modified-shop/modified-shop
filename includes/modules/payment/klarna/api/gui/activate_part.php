@@ -1,6 +1,6 @@
 <?php
 include("klarna.php");
-include("klarna_settings.php");;
+include("klarna_settings.php");
 
 $artnoList =
     array(mk_artno(intval($_GET["qty0"]), $_GET["artno0"]),

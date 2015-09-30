@@ -1,6 +1,6 @@
 <?php
 include("klarna.php");
-include("klarna_settings.php");;
+include("klarna_settings.php");
 
 $invno = $_POST["invno"];
 $status = email_invoice($eid, $invno, $secret, $result);
