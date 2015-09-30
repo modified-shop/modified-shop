@@ -233,12 +233,21 @@ if (xtc_not_null($action)) {
       xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
       break;
 
-    // BOF - Tomcraft - 2011-02-01 - Paypal Express Modul
+    ## - Paypal Express Modul
     case 'paypal_express_checkout':
-      $o_paypal->paypal_express_auth_call();
-      xtc_redirect($o_paypal->payPalURL);
+      if (defined('MODULE_PAYMENT_PAYPALEXPRESS_STATUS')
+          && MODULE_PAYMENT_PAYPALEXPRESS_STATUS == 'True')
+      {
+        if (!is_object($product)) {
+          require_once(DIR_WS_CLASSES.'product.php');
+          $product = new product();
+        }
+        $o_paypal->paypal_express_auth_call();
+        xtc_redirect($o_paypal->payPalURL);
+      }
       break;
-    // EOF - Tomcraft - 2011-02-01 - Paypal Express Modul
+    ## - Paypal Express Modul
+
   }
 }
 ?>
