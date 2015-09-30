@@ -61,30 +61,35 @@
     </table>
   {/if}
   <div style="clear:both"></div>
+
+  {if $SHIPPING_BLOCK}
+    <h2>{#title_shipping#}</h2>
+    <div class="checkoutInfoBoxesLarge">
+      {$FORM_SHIPPING_ACTION}
+        <p>{#text_shipping#}</p>
+        <p>{$SHIPPING_BLOCK}</p>
+        {$PAYMENT_HIDDEN}
+      {$FORM_END}
+    </div>
+  {/if}
+
+  {$CHECKOUT_FORM}
+  <h2>{#title_comments#}</h2>
+  <br />
+  <p class="checkoutcomment">{$COMMENTS}</p>
+
+  {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
+    <br />
+    <h2>{#title_agb#}</h2>
+    <br />
+    <p class="checkoutagb">{$AGB}</p>
+  {/if}
+
+  <br />
+  <h2>{#text_products#}</h2>
+  <p class="text">&nbsp;<a href="{$PRODUCTS_EDIT}">{#text_edit#}</a></p>
+  <div style="clear:both"></div>
 </div>
-
-{if $SHIPPING_BLOCK}
-  <h2>{#title_shipping#}</h2>
-  <div class="checkoutInfoBoxesLarge">
-    {$FORM_SHIPPING_ACTION}
-      <p>{#text_shipping#}</p>
-      <p>{$SHIPPING_BLOCK}</p>
-      {$PAYMENT_HIDDEN}
-    {$FORM_END}
-  </div>
-{/if}
-
-{$CHECKOUT_FORM}
-<h2>{#title_comments#}</h2>
-<p class="checkoutcomment">{$COMMENTS}</p>
-{if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
-  <h2>{#title_agb#}</h2>
-  <div class="checkoutagb">{$AGB}</div>
-{/if}
-
-<h2>{#text_products#}</h2>
-<p class="text">&nbsp;<a href="{$PRODUCTS_EDIT}">{#text_edit#}</a></p>
-<div style="clear:both"></div>
 <div class="highlightbox checkoutbox">
   {* BOC PRODUCTS TABLE *}
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
