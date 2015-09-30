@@ -54,6 +54,7 @@
     {/foreach}
   {/if}
 
+  {$CHECKOUT_FORM}
   <h2>{#title_comments#}</h2>
   <br />
   <p class="checkoutcomment">{$COMMENTS}</p>
@@ -128,5 +129,6 @@
     <div style="font-size:11px; border:0px solid red;padding:5px;margin-top:8px;">{#text_duty_info#}</div>
   {/if}
   <br />
-  <div style="text-align:right">{$CHECKOUT_FORM}{if $MODULE_BUTTONS!=''}&nbsp;{$MODULE_BUTTONS}{/if}&nbsp;{$CHECKOUT_BUTTON}</div>  
+  <div style="text-align:right">{if $MODULE_BUTTONS!=''}&nbsp;{$MODULE_BUTTONS}{/if}&nbsp;{$CHECKOUT_ZOLL}&nbsp;{$CHECKOUT_BUTTON}</div>  
 </div>
+{$FORM_END}
