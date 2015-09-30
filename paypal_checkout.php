@@ -239,7 +239,7 @@ $smarty->assign('ADDRESS_SHIPPING_LABEL', xtc_address_label($_SESSION['customer_
 $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 $smarty->assign('FORM_END', '</form>');
 $smarty->assign('ADDRESS_PAYMENT_LABEL', xtc_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'));
-
+$smarty->assign('PRODUCTS_EDIT', xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL')); // web28 - 2011-04-14 - change SSL -> NONSSL
 if (SHOW_SELFPICKUP_FREE == 'true') {
   if ($free_shipping == true) {
     $free_shipping = false;
