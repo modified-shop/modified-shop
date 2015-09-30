@@ -21,13 +21,14 @@
   $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
   $module_smarty->assign('language', $_SESSION['language']);
   $module_smarty->caching = 0;
+
+  // include needed functions
+  require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
+  require_once (DIR_FS_INC.'xtc_date_short.inc.php');
     
   if (defined('MODULE_TS_TRUSTEDSHOPS_ID') && MODULE_TS_PRODUCT_STICKER_STATUS == '1') {
     $module_smarty->assign('MODULE_TS_PRODUCT_STICKER', sprintf(MODULE_TS_PRODUCT_STICKER, MODULE_TS_TRUSTEDSHOPS_ID, $product->data['products_model']));
   } else {
-    // include needed functions
-    require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
-    require_once (DIR_FS_INC.'xtc_date_short.inc.php');
   
     $button_preview = '';
     if ($_SESSION['customers_status']['customers_status_write_reviews'] == 1) {
