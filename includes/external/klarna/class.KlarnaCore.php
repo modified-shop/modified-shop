@@ -52,6 +52,6 @@ KiTT_String::$platformEncoding = $_SESSION['language_charset'];
 
 class KlarnaCore {
     public static function getCurrentVersion() {
-        return '1.0.6';
+        return '1.0.7';
     }
 }

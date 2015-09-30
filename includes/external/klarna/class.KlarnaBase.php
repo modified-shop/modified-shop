@@ -118,12 +118,13 @@ class KlarnaBase
         $this->_utils = new KlarnaUtils($country);
 
         $this->_locale = KiTT::locale($country, $lang, $currency);
-
+        
+        $css = '';
         if (KlarnaConstant::isAdmin()
             && (!array_key_exists('action', $_GET)
-            || !in_array($_GET['action'], array('install', 'remove')))
+            || !in_array($_GET['action'], array('install', 'remove', 'removeconfirm')))
         ) {
-            echo "<link href='" . KlarnaUtils::getStaticPath() .
+            $css = "<link href='" . KlarnaUtils::getStaticPath() .
             "images.css' type='text/css' rel='stylesheet'/>";
             $this->_checkForLatestVersion();
             $this->description = $this->_buildDescription();
@@ -131,7 +132,7 @@ class KlarnaBase
 
         //Set the title for the payment method. This will be displayed on the
         //confirmation page and the backend order view.
-        $this->title = $this->_title();
+        $this->title = $this->_title() . $css;
 
         $merchantID = KlarnaConstant::merchantID($option, $country);
         $secret = KlarnaConstant::secret($option, $country);
@@ -247,6 +248,7 @@ class KlarnaBase
         }
 
         // Add CSS and Javascript just once.
+        $css = $script = '';
         if (!self::$_hasRun) {
             $templateLoader = KiTT::templateLoader($this->_locale);
             $cssLoader = $templateLoader->load('css.mustache');
@@ -263,7 +265,7 @@ class KlarnaBase
             );
 
             self::$_hasRun = true;
-            echo $jsLoader->render(
+            $script = $jsLoader->render(
                 array(
                     "scripts" => array(
                         EXTERNAL_KITT . "core/v1.0/js/klarna.min.js",
@@ -273,7 +275,7 @@ class KlarnaBase
                 )
             );
 
-            echo $cssLoader->render(array('styles' => $styles));
+            $css = $cssLoader->render(array('styles' => $styles));
         }
 
         KiTT::configuration()->set(
@@ -321,7 +323,7 @@ class KlarnaBase
             'module_cost' => $view->getExtra(),
             'fields' => array(
                 array(
-                    'title' => '',
+                    'title' => $script.$css,
                     'field' => $view->show()
                 )
             )
