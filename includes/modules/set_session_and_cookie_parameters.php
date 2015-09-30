@@ -28,11 +28,13 @@ if (function_exists('session_set_cookie_params')) {
 }
 
 // set the session ID if it exists
-if (isset ($_POST[xtc_session_name()])) {
+if (isset($_POST[xtc_session_name()])) {
   xtc_session_id($_POST[xtc_session_name()]);
 }
-elseif ($request_type == 'SSL' && isset ($_GET[xtc_session_name()])) {
-  xtc_session_id($_GET[xtc_session_name()]);
+elseif ($request_type == 'SSL' && isset($_GET[xtc_session_name()])) {
+  if (!isset($_COOKIE[xtc_session_name()]) || $_GET[xtc_session_name()] != $_COOKIE[xtc_session_name()]) {
+    xtc_session_id($_GET[xtc_session_name()]);
+  }
 }
 
 // start the session
