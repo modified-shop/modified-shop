@@ -290,41 +290,45 @@ if ($_GET['action']) {
 					}
 					unset ($_SESSION['copied']);
 				}
-				//copy multi_products
-				if (is_array($_POST['multi_products']) && (is_array($_POST['dest_cat_ids']) || xtc_not_null($_POST['dest_category_id']))) {
-					foreach ($_POST['multi_products'] AS $product_id) {
-						$product_id = xtc_db_prepare_input($product_id);
-						if (is_array($_POST['dest_cat_ids'])) {
-							foreach ($_POST['dest_cat_ids'] AS $dest_category_id) {
-								$dest_category_id = xtc_db_prepare_input($dest_category_id);
-								if ($_POST['copy_as'] == 'link') {
-									$catfunc->link_product($product_id, $dest_category_id);
-								} elseif ($_POST['copy_as'] == 'duplicate') {
-									$catfunc->duplicate_product($product_id, $dest_category_id);
-								} else {
-									$messageStack->add_session('Copy type not specified.', 'error');
-								}
-							}
-						} elseif (xtc_not_null($_POST['dest_category_id'])) {
-							$dest_category_id = xtc_db_prepare_input($_POST['dest_category_id']);
-							if ($_POST['copy_as'] == 'link') {
-								$catfunc->link_product($product_id, $dest_category_id);
-							} elseif ($_POST['copy_as'] == 'duplicate') {
-								$catfunc->duplicate_product($product_id, $dest_category_id);
-							} else {
-								$messageStack->add_session('Copy type not specified.', 'error');
-							}
-						}
-					}
-				}
-
+          //copy multi_products
+          if (is_array($_POST['multi_products']) && (is_array($_POST['dest_cat_ids']) || xtc_not_null($_POST['dest_category_id']))) {
+            foreach ($_POST['multi_products'] AS $product_id) {
+              $product_id = xtc_db_prepare_input($product_id);
+              if (is_array($_POST['dest_cat_ids'])) {
+                foreach ($_POST['dest_cat_ids'] AS $dest_category_id) {
+                  $dest_category_id = xtc_db_prepare_input($dest_category_id);
+                  if ($_POST['copy_as'] == 'link') {
+                    $catfunc->link_product($product_id, $dest_category_id);
+                    $pID = $product_id;
+                  } elseif ($_POST['copy_as'] == 'duplicate') {
+                    $catfunc->duplicate_product($product_id, $dest_category_id);
+                    $pID = $catfunc->dup_products_id;
+                  } else {
+                    $messageStack->add_session('Copy type not specified.', 'error');
+                  }
+                }
+              } elseif (xtc_not_null($_POST['dest_category_id'])) {
+                $dest_category_id = xtc_db_prepare_input($_POST['dest_category_id']);
+                if ($_POST['copy_as'] == 'link') {
+                  $catfunc->link_product($product_id, $dest_category_id);
+                  $pID = $product_id;
+                } elseif ($_POST['copy_as'] == 'duplicate') {
+                  $catfunc->duplicate_product($product_id, $dest_category_id);
+                  $pID = $catfunc->dup_products_id;
+                } else {
+                  $messageStack->add_session('Copy type not specified.', 'error');
+                }
+              }
+            }
+          }
+        //BOC - web28 - redirect to product input mask
         $action = is_array($_POST['multi_products']) && isset($_POST['link_to_product']) ? '&action=new_product' : '';
-        $pID = is_array($_POST['multi_products']) && isset($_POST['multi_products']) ? '&pID='. end($_POST['multi_products']) : '';
-				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$dest_category_id.$pID.$action.'&'.xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID'))));
-			}
-			// --- MULTI COPY ENDS ---
-
-			xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&'.xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID'))));
+        $pID = isset($pID) && $pID > 0 ? '&pID='. $pID : '';
+        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$dest_category_id.$pID.$action));
+        //EOC - web28 - redirect to product input mask
+        }
+        // --- MULTI COPY ENDS ---
+        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$_GET['cPath']));
 			break;
 			#EOB multi_action_confirm
 

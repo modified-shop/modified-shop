@@ -805,6 +805,7 @@ class categories {
 
     //get duplicate id
     $dup_products_id = xtc_db_insert_id();
+    $this->dup_products_id = $dup_products_id;
 
     //duplicate image if there is one
     if ($product['products_image'] != '') {
