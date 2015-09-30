@@ -1,7 +1,20 @@
 {config_load file="$language/lang_$language.conf" section="product_info"}
 {config_load file="$language/lang_$language.conf" section="checkout_confirmation"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
 {config_load file="$language/lang_$language.conf" section="checkout_paypal"}
 {config_load file="$language/lang_$language.conf" section="duty_info"} 
+
+<ul id="checkoutnavigation">
+    <li class="inactive"><span class="number">1.</span> <span class="title">{#title_shipping#}</span><br />
+        <span class="description">{#desc_shipping#}</span></li>
+    <li class="inactive"><span class="number">2.</span> <span class="title">{#title_payment#}</span><br />
+        <span class="description">{#desc_payment#}</span></li>
+    <li class="active"><span class="number">3.</span> <span class="title">{#title_confirmation#}</span><br />
+        <span class="description">{#desc_confirmation#}</span></li>
+    <li class="inactive"><span class="number">4.</span> <span class="title">{#title_success#}</span><br />
+        <span class="description">{#desc_success#}</span></li>
+</ul>
+<div style="clear:both"></div>
 
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
 <h1>{#heading_checkout#}</h1>
@@ -38,13 +51,13 @@
   <div style="clear:both"><br /></div>
 
   {if $SHIPPING_BLOCK}
-  <h1>{#title_shipping#}</h1>
-  <br>
-  {$FORM_SHIPPING_ACTION}
-  <p>{#text_shipping#}</p>
-  <p>{$SHIPPING_BLOCK}</p>
-  {$PAYMENT_HIDDEN}
-  {$FORM_END}
+    <h1>{#title_shipping#}</h1>
+    <br>
+    {$FORM_SHIPPING_ACTION}
+    <p>{#text_shipping#}</p>
+    <p>{$SHIPPING_BLOCK}</p>
+    {$PAYMENT_HIDDEN}
+    {$FORM_END}
   {/if}
 
   {if $PAYMENT_INFORMATION != ''}
@@ -59,22 +72,12 @@
   <br />
   <p class="checkoutcomment">{$COMMENTS}</p>
 
-  <h2>{#title_agb#}</h2>
-  <br />
-  <p class="checkoutagb">{$AGB}</p>
-  <table width="100%" border="0" cellspacing="0" cellpadding="4">
-    <tr>
-      <td>{$AGB_checkbox}</td>
-      <td width="100%"><strong>{#text_accept_agb#}</strong></td>
-    </tr>
-  </table>
-  <br />
-  <table width="100%" border="0" cellspacing="0" cellpadding="4">
-    <tr>
-      <td>{$ADR_checkbox}</td>
-      <td width="100%"><strong>{#text_accept_adr#}</strong></td>
-    </tr>
-  </table>
+  {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
+    <br />
+    <h2>{#title_agb#}</h2>
+    <br />
+    <p class="checkoutagb">{$AGB}</p>
+  {/if}
 
   <br />
   <h2>{#text_products#}</h2>
@@ -128,7 +131,16 @@
     <div class="hr"></div>
     <div style="font-size:11px; border:0px solid red;padding:5px;margin-top:8px;">{#text_duty_info#}</div>
   {/if}
+  <table width="100%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+      <td>{$ADR_checkbox}</td>
+      <td width="100%"><strong><label for="address">{#text_accept_adr#}</label></strong></td>
+    </tr>
+    <tr>
+      <td>{$AGB_checkbox}</td>
+      <td width="100%"><strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}</td>
+    </tr>
+  </table>
   <br />
   <div style="text-align:right">{if $MODULE_BUTTONS!=''}&nbsp;{$MODULE_BUTTONS}{/if}&nbsp;{$CHECKOUT_ZOLL}&nbsp;{$CHECKOUT_BUTTON}</div>  
 </div>
-{$FORM_END}
