@@ -16,6 +16,8 @@ require_once(DIR_FS_INC.'get_wishlist_content.inc.php');
 // create smarty
 $module_smarty = new Smarty;
 
+$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
 $module_data = array ();
 if ($_SESSION['wishlist']->count_contents() > 0) {
   $wishlist_content_array = get_wishlist_content();
