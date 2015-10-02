@@ -21,10 +21,8 @@
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 
-define('SHOPGATE_PLUGIN_VERSION', '2.9.19');
+define('SHOPGATE_PLUGIN_VERSION', '2.9.20');
 require_once(dirname(__FILE__) . '/Model/ShopgateModelLoader.php');
-//require_once(dirname(__FILE__) . '/Model/customer/ShopgateCustomerModel.php');
-//require_once(dirname(__FILE__) . '/Model/customer/ShopgateCustomerOrderModel.php');
 require_once(dirname(__FILE__) . '/helper/ShopgatePluginInitHelper.php');
 
 /**
@@ -66,7 +64,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
      *
      * @var array
      */
-    private $classWhiteList = array("category", "customer", "item", "review", "location", "shipping");
+    private $classWhiteList = array("category", "customer", "item", "review", "location", "shipping", "order", "customField");
     
     protected $modifiedVersion;
     
@@ -994,6 +992,17 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         
         $orderData["orders_date_finished"] = null;
         
+        /**
+         * Add custom variables to order database if columns exist, else print
+         * The objects are cloned as they are destructively manipulated
+         */
+        $customFieldObj = new ShopgateCustomFieldModel();
+        $comment        = '';
+        foreach (array(clone $delivery, clone $order, clone $invoice) as $object) {
+            $orderData = array_merge($orderData, $customFieldObj->prepareCustomFields($object));
+            $comment .= $customFieldObj->printShopgateCustomFields($object);
+        }
+        
         $this->log('db: save order', ShopgateLogger::LOGTYPE_DEBUG);
         
         // Speichere die Bestellung
@@ -1027,6 +1036,13 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         $this->log('method: _insertOrderTotal() ', ShopgateLogger::LOGTYPE_DEBUG);
         //todo return product infos for email
         $this->insertOrderTotal($order, $dbOrderId);
+        
+        /**
+         * Print custom variables in the comments
+         */
+        $orderModel = new ShopgateOrderModel();
+        $orderModel->setOrderId($dbOrderId);
+        $orderModel->saveHistory($orderData['orders_status'], $comment);
         
         $this->log('db: update order ', ShopgateLogger::LOGTYPE_DEBUG);
         
@@ -3063,20 +3079,10 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         }
         
         $comment = $this->stringFromUtf8($comment, $this->config->getEncoding());
-        
-        $histories = array(
-            array(
-                "orders_id"         => $dbOrderId,
-                "orders_status_id"  => $currentOrderStatus,
-                "date_added"        => date('Y-m-d H:i:s'),
-                "customer_notified" => false,
-                "comments"          => ShopgateWrapper::db_prepare_input($comment),
-            )
-        );
-        
-        foreach ($histories as $history) {
-            xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $history);
-        }
+    
+        $orderModel = new ShopgateOrderModel();
+        $orderModel->setOrderId($dbOrderId);
+        $orderModel->saveHistory($currentOrderStatus, $comment);
     }
     
     /**

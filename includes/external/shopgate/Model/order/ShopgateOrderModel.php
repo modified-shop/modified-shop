@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Shopgate GmbH
  *
@@ -21,60 +20,68 @@
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
-class ShopgateWrapper
+
+/**
+ * The purpose of this class is to handle all order related
+ * operations. All logic concerning data pulled from orders
+ * should be pulled in here.
+ */
+class ShopgateOrderModel
 {
+    /**
+     * @var int $_orderId
+     */
+    protected $_orderId;
     
     /**
-     * Wraps for example: xtc_db_prepare_input
+     * Simple getter
      *
-     * @param string $input
-     *
-     * @return string
+     * @return int|string|null
      */
-    public static function db_prepare_input($input)
+    public function getOrderId()
     {
-        if (defined('PROJECT_MAJOR_VERSION')) {
-            return xtc_db_input($input);
-        } else {
-            return xtc_db_prepare_input($input);
+        return $this->_orderId;
+    }
+    
+    /**
+     * Simple setter
+     *
+     * @param int|string $orderId
+     *
+     * @return int
+     */
+    public function setOrderId($orderId)
+    {
+        $this->_orderId = (int)$orderId;
+    }
+    
+    /**
+     * Save comment to order history
+     *
+     * @param string $status
+     * @param string $comment
+     *
+     * @return ShopgateOrderModel
+     * @throws Exception
+     */
+    public function saveHistory($status, $comment)
+    {
+        if (!$this->getOrderId()) {
+            $error = 'Could not retrieve the proper id for the order';
+            ShopgateLogger::getInstance()->log($error, ShopgateLogger::LOGTYPE_ERROR);
+            throw new ShopgateLibraryException($error);
         }
-    }
-    
-    /**
-     * @param string $db_query
-     *
-     * @return mixed
-     */
-    public static function db_fetch_array($db_query)
-    {
-        return xtc_db_fetch_array($db_query);
         
-    }
-    
-    /**
-     * @param        $query
-     * @param string $link
-     *
-     * @return mixed
-     */
-    public static function db_query($query, $link = 'db_link')
-    {
-        return xtc_db_query($query, $link);
-    }
-    
-    /**
-     * Checks if the column exists within the table
-     *
-     * @param $table
-     * @param $column
-     *
-     * @return bool
-     */
-    public static function db_column_exists($table, $column)
-    {
-        $query  = "SHOW COLUMNS FROM {$table} LIKE '{$column}';";
-        $result = xtc_db_query($query);
+        $history = array(
+            "orders_id"         => $this->getOrderId(),
+            "orders_status_id"  => $status,
+            "date_added"        => date('Y-m-d H:i:s'),
+            "customer_notified" => false,
+            "comments"          => ShopgateWrapper::db_prepare_input($comment),
+        );
         
-        return (bool)xtc_db_num_rows($result);
+        xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $history);
+        
+        return $this;
     }
 }
