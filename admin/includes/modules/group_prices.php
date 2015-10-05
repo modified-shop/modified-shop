@@ -33,7 +33,7 @@ $group_query = xtc_db_query("SELECT customers_status_image,
                                     customers_status_name,
                                     customers_status_graduated_prices
                                FROM ".TABLE_CUSTOMERS_STATUS."
-                              WHERE language_id = '".$_SESSION['languages_id']."'
+                              WHERE language_id = '".(int)$_SESSION['languages_id']."'
                               AND customers_status_id != '0'");
 while ($group_values = xtc_db_fetch_array($group_query)) {
   // load data into array

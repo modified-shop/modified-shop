@@ -22,7 +22,7 @@
   $article_query = "SELECT products_name
                       FROM ".TABLE_PRODUCTS_DESCRIPTION."
                      WHERE products_id='".(int) $_GET['current_product_id']."'
-                       AND language_id = '".$_SESSION['languages_id']."'";
+                       AND language_id = '".(int)$_SESSION['languages_id']."'";
   $article_data = xtc_db_fetch_array(xtc_db_query($article_query));
   $cross_sell_groups = xtc_get_cross_sell_groups();
 
@@ -34,7 +34,7 @@
       $cat_select = xtc_db_query("SELECT categories_name
                                     FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                    WHERE categories_id='".$catID."'
-                                     AND language_id='".$_SESSION['languages_id']."'");
+                                     AND language_id='".(int)$_SESSION['languages_id']."'");
       $cat_data = xtc_db_fetch_array($cat_select);
       $catID = getParent($catID);
       $cat[] = $cat_data['categories_name'];
@@ -88,7 +88,7 @@
                            WHERE cs.products_id = '".(int) $_GET['current_product_id']."'
                              AND cs.xsell_id = p.products_id
                              AND p.products_id = pd.products_id
-                             AND pd.language_id = '".$_SESSION['languages_id']."'
+                             AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                         ORDER BY cs.sort_order";
           $cross_query = xtc_db_query($cross_query);
           if (!xtc_db_num_rows($cross_query)) {

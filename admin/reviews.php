@@ -81,7 +81,7 @@ require (DIR_WS_INCLUDES.'head.php');
             $products_query = xtc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . $reviews['products_id'] . "'");
             $products = xtc_db_fetch_array($products_query);
 
-            $products_name_query = xtc_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . $reviews['products_id'] . "' and language_id = '" . $_SESSION['languages_id'] . "'");
+            $products_name_query = xtc_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . $reviews['products_id'] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
             $products_name = xtc_db_fetch_array($products_name_query);
 
             $rInfo_array = xtc_array_merge($reviews, $products, $products_name);
@@ -132,7 +132,7 @@ require (DIR_WS_INCLUDES.'head.php');
           $products_query = xtc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . $reviews['products_id'] . "'");
           $products = xtc_db_fetch_array($products_query);
 
-          $products_name_query = xtc_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . $reviews['products_id'] . "' and language_id = '" . $_SESSION['languages_id'] . "'");
+          $products_name_query = xtc_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . $reviews['products_id'] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
           $products_name = xtc_db_fetch_array($products_name_query);
 
           $rInfo_array = xtc_array_merge($reviews, $products, $products_name);
@@ -219,7 +219,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     $products_image_query = xtc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . $reviews['products_id'] . "'");
                     $products_image = xtc_db_fetch_array($products_image_query);
 
-                    $products_name_query = xtc_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . $reviews['products_id'] . "' and language_id = '" . $_SESSION['languages_id'] . "'");
+                    $products_name_query = xtc_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . $reviews['products_id'] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
                     $products_name = xtc_db_fetch_array($products_name_query);
 
                     $reviews_average_query = xtc_db_query("select (avg(reviews_rating) / 5 * 100) as average_rating from " . TABLE_REVIEWS . " where products_id = '" . $reviews['products_id'] . "'");

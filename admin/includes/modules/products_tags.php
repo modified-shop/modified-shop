@@ -26,7 +26,7 @@
  
   $options_query = xtc_db_query("SELECT *
                                    FROM " . TABLE_PRODUCTS_TAGS_OPTIONS . "
-                                  WHERE languages_id = '".$_SESSION['languages_id']."'
+                                  WHERE languages_id = '".(int)$_SESSION['languages_id']."'
                                     AND (filter = '1' OR status = '1')
                                ORDER BY sort_order, options_name, options_description");
   
@@ -42,7 +42,7 @@
       $values_query = xtc_db_query("SELECT *
                                       FROM " . TABLE_PRODUCTS_TAGS_VALUES . "
                                      WHERE options_id = '".$options['options_id']."'
-                                       AND languages_id = '".$_SESSION['languages_id']."'
+                                       AND languages_id = '".(int)$_SESSION['languages_id']."'
                                   ORDER BY sort_order, values_name, values_description");
 
       if (xtc_db_num_rows($values_query) > 0) {        

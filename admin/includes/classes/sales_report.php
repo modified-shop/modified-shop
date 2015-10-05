@@ -78,7 +78,7 @@
       */
       $this->globalStartDate = $startDate;
       
-      $statusQuery = xtc_db_query("SELECT * FROM ".TABLE_ORDERS_STATUS." WHERE language_id='".$_SESSION['languages_id']." ORDER BY sort_order'");
+      $statusQuery = xtc_db_query("SELECT * FROM ".TABLE_ORDERS_STATUS." WHERE language_id='".(int)$_SESSION['languages_id']." ORDER BY sort_order'");
       $i = 0;
       while ($outResp = xtc_db_fetch_array($statusQuery)) {
         $status[$i] = $outResp;

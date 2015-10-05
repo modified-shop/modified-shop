@@ -236,7 +236,7 @@
 ?>
 <?php
   if (USE_WYSIWYG=='true') {
-    $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".$_SESSION['languages_id']."'");
+    $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
     $data=xtc_db_fetch_array($query);
     if ($_GET['action']!='')
       echo xtc_wysiwyg('newsletter',$data['code']);
@@ -288,7 +288,7 @@
                                               customers_status_id,
                                               customers_status_image
                                          FROM ".TABLE_CUSTOMERS_STATUS."
-                                        WHERE language_id='".$_SESSION['languages_id']."'");
+                                        WHERE language_id='".(int)$_SESSION['languages_id']."'");
           $customer_group=array();
           while ($customer_group_data=xtc_db_fetch_array($customer_group_query)) {
 

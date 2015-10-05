@@ -114,7 +114,7 @@
         $order_total['ot_fee'] += $order_total['ot_payment'];
       }
 
-      $order_status_query = xtc_db_query("SELECT orders_status_name FROM " . TABLE_ORDERS_STATUS . " WHERE orders_status_id = '" . $order['orders_status'] . "' AND language_id = '" . $_SESSION['languages_id'] . "'");
+      $order_status_query = xtc_db_query("SELECT orders_status_name FROM " . TABLE_ORDERS_STATUS . " WHERE orders_status_id = '" . $order['orders_status'] . "' AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
       $order_status_array = xtc_db_fetch_array($order_status_query);
       $order_status = (!defined('RUN_MODE_ADMIN')) ? $order_status_array['orders_status_name'] : $order['orders_status'];
 

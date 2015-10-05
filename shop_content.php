@@ -45,7 +45,7 @@ if ($language_not_found === true) {
                                              ".CONTENT_CONDITIONS."
                                          AND content_active = '1'
                                          AND trim(content_title) != ''
-                                         AND languages_id=".$_SESSION['languages_id']);
+                                         AND languages_id=".(int)$_SESSION['languages_id']);
 
   if ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {
     // sub content

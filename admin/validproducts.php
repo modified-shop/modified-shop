@@ -48,7 +48,7 @@ require('includes/application_top.php');
    
   //BOF JUNG GESTALTEN.com - BUGFIX: #0000255 ungültige SQL-Abfrage (pd undefiniert)
   //$result = xtc_db_query("SELECT * FROM ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_DESCRIPTION." WHERE p.products_id = pd.products_id and pd.language_id = '" . $_SESSION['languages_id'] . "' ORDER BY pd.products_name"); 
-    $result = xtc_db_query("SELECT * FROM ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_DESCRIPTION." pd WHERE p.products_id = pd.products_id and pd.language_id = '" . $_SESSION['languages_id'] . "' ORDER BY pd.products_name");
+    $result = xtc_db_query("SELECT * FROM ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_DESCRIPTION." pd WHERE p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' ORDER BY pd.products_name");
   //EOF JUNG GESTALTEN.com - BUGFIX: #0000255 ungültige SQL-Abfrage (pd undefiniert)
    
     if ($row = xtc_db_fetch_array($result)) {

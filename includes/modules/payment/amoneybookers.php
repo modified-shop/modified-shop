@@ -208,7 +208,7 @@ class amoneybookers {
 	function payment_action() {
 		global $order, $xtPrice,$insert_id;
 
-		$result = xtc_db_query("SELECT code FROM languages WHERE languages_id = '" . $_SESSION['languages_id'] . "'");
+		$result = xtc_db_query("SELECT code FROM languages WHERE languages_id = '" . (int)$_SESSION['languages_id'] . "'");
 		list ($lang_code) = mysql_fetch_row($result);
 		$mbLanguage = strtoupper($lang_code);
 		if ($mbLanguage == "US") {

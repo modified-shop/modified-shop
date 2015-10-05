@@ -350,10 +350,10 @@
                                               FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
                                               JOIN ".TABLE_PRODUCTS_TAGS_OPTIONS." pto
                                                    ON pto.products_options_id = pa.options_id
-                                                      AND pto.languages_id = '".$_SESSION['languages_id']."'
+                                                      AND pto.languages_id = '".(int)$_SESSION['languages_id']."'
                                               JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv
                                                    ON ptv.products_options_values_id = pa.options_values_id
-                                                      AND ptv.languages_id = '".$_SESSION['languages_id']."'
+                                                      AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
                                              WHERE NOT EXISTS (SELECT 1
                                                                  FROM ".TABLE_PRODUCTS_TAGS." pt
                                                                 WHERE pt.options_id = pto.options_id
@@ -447,9 +447,9 @@ require (DIR_WS_INCLUDES.'head.php');
                                      FROM " . TABLE_PRODUCTS_TAGS_VALUES . " ptv
                                      JOIN " . TABLE_PRODUCTS_TAGS_OPTIONS . " pto
                                           ON pto.options_id = ptv.options_id
-                                             AND pto.languages_id = '".$_SESSION['languages_id']."'
+                                             AND pto.languages_id = '".(int)$_SESSION['languages_id']."'
                                     WHERE ptv.options_id = '".$_GET['oID']."'
-                                      AND ptv.languages_id = '".$_SESSION['languages_id']."'
+                                      AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
                                  ORDER BY ptv.sort_order, ptv.values_description";
               $values_split = new splitPageResults($_GET['spage'], $page_max_display_values_results, $values_query_raw, $values_query_numrows);
               $values_query = xtc_db_query($values_query_raw);
@@ -514,7 +514,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <?php
                 $options_query_raw = "SELECT *
                                         FROM " . TABLE_PRODUCTS_TAGS_OPTIONS . " 
-                                       WHERE languages_id = '".$_SESSION['languages_id']."'
+                                       WHERE languages_id = '".(int)$_SESSION['languages_id']."'
                                     ORDER BY sort_order, options_name";
                 $options_split = new splitPageResults($_GET['page'], $page_max_display_options_results, $options_query_raw, $options_query_numrows);
                 $options_query = xtc_db_query($options_query_raw);
@@ -523,7 +523,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     $num_options_query = xtc_db_query("SELECT count(*) as num_options 
                                                          FROM " . TABLE_PRODUCTS_TAGS_VALUES . " 
                                                         WHERE options_id = '" . $options['options_id'] . "' 
-                                                          AND languages_id = '".$_SESSION['languages_id']."'
+                                                          AND languages_id = '".(int)$_SESSION['languages_id']."'
                                                      GROUP BY options_id");
                     if (xtc_db_num_rows($num_options_query) > 0) {
                       $num_options = xtc_db_fetch_array($num_options_query);

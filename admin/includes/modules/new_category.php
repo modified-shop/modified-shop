@@ -35,7 +35,7 @@
                                     TABLE_CATEGORIES_DESCRIPTION . " cd
                                     where c.categories_id = cd.categories_id
                                     and c.categories_id = '" . (int)$_GET['cID'] . "'
-                                    AND cd.language_id = '".$_SESSION['languages_id']."'");
+                                    AND cd.language_id = '".(int)$_SESSION['languages_id']."'");
 
     $category = xtc_db_fetch_array($category_query);
 

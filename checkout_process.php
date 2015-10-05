@@ -142,7 +142,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'account_type' => $_SESSION['account_type'],
       'customers_ip' => ip_clearing($_SESSION['tracking']['ip']),
       'language' => $_SESSION['language'],
-      'languages_id' => $_SESSION['languages_id'],
+      'languages_id' => (int)$_SESSION['languages_id'],
       'comments' => $order->info['comments']
     );
   

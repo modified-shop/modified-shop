@@ -375,7 +375,7 @@ class easybillcsv {
 
 		$orders_status_params = 'multiple';
 		$orders_status = array();
-		$orders_status_query=xtc_db_query("SELECT * FROM orders_status WHERE language_id='".$_SESSION['languages_id']."'" );
+		$orders_status_query=xtc_db_query("SELECT * FROM orders_status WHERE language_id='".(int)$_SESSION['languages_id']."'" );
 		while ($orders_status_entry = xtc_db_fetch_array($orders_status_query)) {
 			$orders_status[] = array('id' => $orders_status_entry['orders_status_id'], 'text'=> $orders_status_entry['orders_status_name']);
 		}

@@ -81,7 +81,7 @@ if (!is_object($product) || !$product->isProduct() || $language_not_found === tr
         UPDATE ".TABLE_PRODUCTS_DESCRIPTION."
            SET products_viewed = products_viewed+1
          WHERE products_id = '".$product->data['products_id']."'
-           AND language_id = ".$_SESSION['languages_id']);
+           AND language_id = ".(int)$_SESSION['languages_id']);
   }
 
   // Get manufacturer name etc. for the product page

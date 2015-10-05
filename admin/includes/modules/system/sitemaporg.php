@@ -128,7 +128,7 @@ class sitemaporg {
                       LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION ." cd 
                                 ON c.categories_id = cd.categories_id
                           WHERE c.categories_status = '1'                      
-                            AND cd.language_id = ".$_SESSION['languages_id']." 
+                            AND cd.language_id = ".(int)$_SESSION['languages_id']." 
                                 ".$group_check."
                        ORDER BY c.sort_order ASC";
 
@@ -154,7 +154,7 @@ class sitemaporg {
                                         " . TABLE_PRODUCTS_DESCRIPTION . " pd
                                   WHERE p.products_status = 1 and
                                         p.products_id=pd.products_id and
-                                        pd.language_id=".$_SESSION['languages_id']."
+                                        pd.language_id=".(int)$_SESSION['languages_id']."
                                ORDER BY p.products_id");
 
     while ($products = xtc_db_fetch_array($export_query)) {

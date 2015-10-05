@@ -25,7 +25,7 @@ $coupon_query = xtc_db_query("SELECT *
                                 FROM ".TABLE_COUPONS." c
                                 JOIN ".TABLE_COUPONS_DESCRIPTION." cd
                                      ON c.coupon_id = cd.coupon_id
-                                        AND cd.language_id = '".$_SESSION['languages_id']."'
+                                        AND cd.language_id = '".(int)$_SESSION['languages_id']."'
                                WHERE c.coupon_id = '".(int)$_GET['cID']."'");
 $coupon = xtc_db_fetch_array($coupon_query);
 
@@ -61,7 +61,7 @@ $cat_ids = explode(",", $coupon['restrict_to_categories']);
 $categories_query = xtc_db_query("SELECT categories_name
                                     FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                    WHERE categories_id IN ('" . implode("', '", $cat_ids) . "')
-                                     AND language_id = '".$_SESSION['languages_id']."'
+                                     AND language_id = '".(int)$_SESSION['languages_id']."'
                                      AND trim(categories_name) != ''");
 if (xtc_db_num_rows($categories_query) > 0) {
   $cats = '';
@@ -77,7 +77,7 @@ $pr_ids = explode(",", $coupon['restrict_to_products']); // Hetfield - 2009-08-1
 $products_query = xtc_db_query("SELECT products_name
                                   FROM ".TABLE_PRODUCTS_DESCRIPTION."
                                  WHERE products_id IN ('" . implode("', '", $pr_ids) . "')
-                                   AND language_id = '".$_SESSION['languages_id']."'
+                                   AND language_id = '".(int)$_SESSION['languages_id']."'
                                    AND trim(products_name) != ''");
 if (xtc_db_num_rows($products_query) > 0) {
   $prods = '';

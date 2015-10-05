@@ -2221,7 +2221,7 @@
     $content_query = xtc_db_query("SELECT content_group, 
                                           content_title 
                                      FROM ".TABLE_CONTENT_MANAGER." 
-                                    WHERE languages_id = '".$_SESSION['languages_id']."'
+                                    WHERE languages_id = '".(int)$_SESSION['languages_id']."'
                                  GROUP BY content_group");
     while ($content = xtc_db_fetch_array($content_query)) {
       $content_array[] = array('id' => $content['content_group'], 'text' => $content['content_title'] . ' (coID: '.$content['content_group'].')');
@@ -2249,7 +2249,7 @@
   function xtc_cfg_display_content($content_group) {
     $content_query = xtc_db_query("SELECT content_title 
                                      FROM ".TABLE_CONTENT_MANAGER." 
-                                    WHERE languages_id = '".$_SESSION['languages_id']."' 
+                                    WHERE languages_id = '".(int)$_SESSION['languages_id']."' 
                                       AND content_group = '".$content_group."'
                                     LIMIT 1");
     $content = xtc_db_fetch_array($content_query);

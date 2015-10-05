@@ -48,13 +48,13 @@ $reviews_query_raw = "SELECT r.reviews_id,
                         FROM ".TABLE_REVIEWS." r
                         JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
                              ON r.reviews_id = rd.reviews_id
-                                AND rd.languages_id = '".$_SESSION['languages_id']."'
+                                AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
                         JOIN ".TABLE_PRODUCTS." p
                              ON p.products_id = r.products_id
                         JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                              ON p.products_id = pd.products_id
                                 AND trim(pd.products_name) != ''
-                                AND pd.language_id = '".$_SESSION['languages_id']."'
+                                AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                        WHERE p.products_status = '1'
                          AND r.products_id = '".(int) $_GET['products_id']."'
                              ".PRODUCTS_CONDITIONS_P."

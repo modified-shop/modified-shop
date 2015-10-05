@@ -45,7 +45,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_i
                                    FROM " . TABLE_CATEGORIES . " c
                               LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION ." cd 
                                         ON c.categories_id = cd.categories_id
-                                           AND cd.language_id = ".$_SESSION['languages_id']."
+                                           AND cd.language_id = ".(int)$_SESSION['languages_id']."
                                   WHERE c.categories_status = 1
                                     AND c.parent_id = '0'
                                     ".CATEGORIES_CONDITIONS_C."
@@ -114,7 +114,7 @@ function get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $cate
                                    FROM " . TABLE_CATEGORIES . " c
                                    JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
                                         ON c.categories_id = cd.categories_id
-                                           AND cd.language_id = ".$_SESSION['languages_id']."
+                                           AND cd.language_id = ".(int)$_SESSION['languages_id']."
                                   WHERE c.categories_status = 1
                                     ".CATEGORIES_CONDITIONS_C."
                                     AND c.categories_id = '".$parent_id."'
@@ -129,7 +129,7 @@ function get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $cate
                          FROM " . TABLE_CATEGORIES . " c
                          JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
                               ON c.categories_id = cd.categories_id
-                                 AND cd.language_id = ".$_SESSION['languages_id']."
+                                 AND cd.language_id = ".(int)$_SESSION['languages_id']."
                         WHERE c.parent_id = '".$parent_id."'
                           AND c.categories_status = '1'
                           ".CATEGORIES_CONDITIONS_C."

@@ -188,7 +188,7 @@ if ($_GET['action'] =='product_search') {
                                    pd.products_name                                         
                               FROM " . TABLE_PRODUCTS . " p
                               JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                                ON p.products_id = pd.products_id AND pd.language_id = '" . $_SESSION['languages_id'] . "'
+                                ON p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                          LEFT JOIN " . TABLE_SPECIALS . " s
                                 ON p.products_id = s.products_id AND s.status = 1                             
                              WHERE (pd.products_name LIKE ('%" . $_GET['search'] . "%') OR 

@@ -37,7 +37,7 @@ $orders_status_query = xtc_db_query("SELECT orders_status_id,
                                             orders_status_name,
                                             sort_order
                                        FROM ".TABLE_ORDERS_STATUS."
-                                      WHERE language_id = '".$_SESSION['languages_id']."'
+                                      WHERE language_id = '".(int)$_SESSION['languages_id']."'
                                    ORDER BY sort_order");
 while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
   $orders_statuses[] = array ('id' => $orders_status['orders_status_id'], 'text' => $orders_status['orders_status_name']);

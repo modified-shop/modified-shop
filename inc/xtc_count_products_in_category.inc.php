@@ -26,7 +26,7 @@
                                    FROM ".TABLE_PRODUCTS." p
                                    JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                         ON p.products_id = pd.products_id
-                                           AND pd.language_id = '".$_SESSION['languages_id']."' 
+                                           AND pd.language_id = '".(int)$_SESSION['languages_id']."' 
                                            AND trim(pd.products_name) != ''                      
                                    JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                                         ON p.products_id = p2c.products_id

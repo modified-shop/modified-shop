@@ -307,7 +307,7 @@
   require (DIR_WS_INCLUDES.'head.php');
 
   if (USE_WYSIWYG=='true') {
-    $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".$_SESSION['languages_id']."'");
+    $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
     $data=xtc_db_fetch_array($query);
     if ($action =='new_products_content' || $action =='edit_products_content') {
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {

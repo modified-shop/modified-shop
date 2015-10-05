@@ -40,7 +40,7 @@
       default:
         if (is_numeric($_POST['customers_email_address'])) {
           $mail_query = xtc_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_status = " . $_POST['customers_email_address']);
-          $sent_to_query = xtc_db_query("select customers_status_name from " . TABLE_CUSTOMERS_STATUS . " WHERE customers_status_id = '" . $_POST['customers_email_address'] . "' AND language_id='" . $_SESSION['languages_id'] . "'");
+          $sent_to_query = xtc_db_query("select customers_status_name from " . TABLE_CUSTOMERS_STATUS . " WHERE customers_status_id = '" . $_POST['customers_email_address'] . "' AND language_id='" . (int)$_SESSION['languages_id'] . "'");
           $sent_to = xtc_db_fetch_array($sent_to_query);
           $mail_sent_to = $sent_to['customers_status_name'];
         } else {
@@ -106,7 +106,7 @@
   require (DIR_WS_INCLUDES.'head.php');
 
   if (USE_WYSIWYG=='true' && ($_GET['action'] != 'preview' || $error== true)) {
-    $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".$_SESSION['languages_id']."'");
+    $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
     $data=xtc_db_fetch_array($query);
     echo xtc_wysiwyg('mail',$data['code']);
   } 
@@ -147,7 +147,7 @@
                 break;
               default:
                 if (is_numeric($_POST['customers_email_address'])) {
-                  $sent_to_query = xtc_db_query("select customers_status_name from " . TABLE_CUSTOMERS_STATUS . " WHERE customers_status_id = '" . $_POST['customers_email_address'] . "' AND language_id='" . $_SESSION['languages_id'] . "'");
+                  $sent_to_query = xtc_db_query("select customers_status_name from " . TABLE_CUSTOMERS_STATUS . " WHERE customers_status_id = '" . $_POST['customers_email_address'] . "' AND language_id='" . (int)$_SESSION['languages_id'] . "'");
                   $sent_to = xtc_db_fetch_array($sent_to_query);
                   $mail_sent_to = $sent_to['customers_status_name'];
                 } else {
@@ -198,7 +198,7 @@
             $customers[] = array('id' => '**D', 'text' => TEXT_NEWSLETTER_CUSTOMERS);
             // Customers Status 1.x
             //    $customers_statuses_array = xtc_get_customers_statuses();
-            $customers_statuses_array = xtc_db_query("select customers_status_id , customers_status_name from " . TABLE_CUSTOMERS_STATUS . " WHERE language_id='" . $_SESSION['languages_id'] . "' order by customers_status_name");
+            $customers_statuses_array = xtc_db_query("select customers_status_id , customers_status_name from " . TABLE_CUSTOMERS_STATUS . " WHERE language_id='" . (int)$_SESSION['languages_id'] . "' order by customers_status_name");
             while ($customers_statuses_value = xtc_db_fetch_array($customers_statuses_array)) {
               $customers[] = array('id' => $customers_statuses_value['customers_status_id'],
                                    'text' => $customers_statuses_value['customers_status_name']);
