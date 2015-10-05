@@ -370,7 +370,7 @@ require (DIR_WS_INCLUDES.'head.php');
 require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
 // Include WYSIWYG if is activated
 if (USE_WYSIWYG == 'true') {
-	$query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".$_SESSION['languages_id']."'");
+	$query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
 	$data = xtc_db_fetch_array($query);
 	// generate editor for categories EDIT
 	$languages = xtc_get_languages();

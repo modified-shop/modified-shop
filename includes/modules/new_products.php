@@ -56,7 +56,7 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
                                JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                     ON p.products_id = pd.products_id
                                        AND trim(pd.products_name) != ''
-                                       AND pd.language_id = '".$_SESSION['languages_id']."'
+                                       AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                                     ON p.products_id = p2c.products_id
                                JOIN ".TABLE_CATEGORIES." c

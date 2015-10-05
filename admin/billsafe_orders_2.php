@@ -584,7 +584,7 @@
 </td></tr></form></table>
 <br /><?php
   if (!empty($_SESSION['languages_id']) && $_SESSION['languages_id'] > 0) {
-    $language_id = $_SESSION['languages_id'];
+    $language_id = (int)$_SESSION['languages_id'];
   } else {
     $language_id = 1;
   }

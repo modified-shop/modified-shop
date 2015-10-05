@@ -112,7 +112,7 @@ switch ($_GET['action']) {
 				                 SET url_clicked = url_clicked+1, 
 				                     date_last_click = now() 
 				               WHERE manufacturers_id = '".(int) $_GET['manufacturers_id']."' 
-				                 AND languages_id = '".$_SESSION['languages_id']."'");
+				                 AND languages_id = '".(int)$_SESSION['languages_id']."'");
 			}
 
 			xtc_redirect('http://'.str_replace(array('http://', 'https://'), '', $manufacturer['manufacturers_url']));

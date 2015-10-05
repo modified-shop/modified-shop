@@ -38,7 +38,7 @@
                                           ".TABLE_PRODUCTS_DESCRIPTION." pd
                                     WHERE p.products_id = '".(int) $_GET['pID']."'
                                       AND p.products_id = pd.products_id
-                                      AND pd.language_id = '".$_SESSION['languages_id']."'");
+                                      AND pd.language_id = '".(int)$_SESSION['languages_id']."'");
     $product = xtc_db_fetch_array($product_query);
     $pInfo = new objectInfo($product);
   } elseif ($_POST) {
@@ -69,7 +69,7 @@
   }
 
   $vpe_array = array (array ('id' => '', 'text' => TEXT_NONE));
-  $vpe_query = xtc_db_query("SELECT products_vpe_id, products_vpe_name FROM ".TABLE_PRODUCTS_VPE." WHERE language_id='".$_SESSION['languages_id']."' ORDER BY products_vpe_name");
+  $vpe_query = xtc_db_query("SELECT products_vpe_id, products_vpe_name FROM ".TABLE_PRODUCTS_VPE." WHERE language_id='".(int)$_SESSION['languages_id']."' ORDER BY products_vpe_name");
   while ($vpe = xtc_db_fetch_array($vpe_query)) {
     $vpe_array[] = array ('id' => $vpe['products_vpe_id'], 'text' => $vpe['products_vpe_name']);
   }

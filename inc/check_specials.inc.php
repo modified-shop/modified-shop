@@ -16,7 +16,7 @@ function check_specials() {
                                              JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                                   ON p.products_id = pd.products_id
                                                      AND trim(pd.products_name) != ''
-                                                     AND pd.language_id = ".$_SESSION['languages_id']."
+                                                     AND pd.language_id = ".(int)$_SESSION['languages_id']."
                                              JOIN ".TABLE_SPECIALS." s
                                                   ON p.products_id = s.products_id
                                                      AND s.status = '1'

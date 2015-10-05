@@ -34,7 +34,7 @@ $dbQuery = xtc_db_query(
             ".TABLE_PRODUCTS_DESCRIPTION."  pd
       WHERE p.products_id != '0'
         AND p.products_id = pd.products_id
-        AND pd.language_id = '" . $_SESSION['languages_id'] . "'
+        AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
    ORDER BY pd.products_name ASC
    ");
 
@@ -54,7 +54,7 @@ $dbQuery = xtc_db_query(
       WHERE p.products_id != '0'
         AND p.products_id = pd.products_id
         AND pa.products_id = pd.products_id
-        AND pd.language_id = '" . $_SESSION['languages_id'] . "' 
+        AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' 
    GROUP BY pd.products_id 
    ORDER BY pd.products_name ASC
   ");

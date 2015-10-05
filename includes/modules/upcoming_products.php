@@ -30,7 +30,7 @@ if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
                                  FROM ".TABLE_PRODUCTS." p
                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                       ON p.products_id = pd.products_id
-                                         AND pd.language_id = ".$_SESSION['languages_id']."
+                                         AND pd.language_id = ".(int)$_SESSION['languages_id']."
                                          AND trim(pd.products_name) != ''
                                 WHERE to_days(products_date_available) >= to_days(now())
                                   AND p.products_status = '1'

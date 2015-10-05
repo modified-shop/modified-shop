@@ -28,11 +28,11 @@ $tags_query = xtDBquery("SELECT pto.options_id,
                            JOIN ".TABLE_PRODUCTS_TAGS_OPTIONS." pto
                                 ON pt.options_id = pto.options_id
                                    AND pto.status = '1'
-                                   AND pto.languages_id = '".$_SESSION['languages_id']."'
+                                   AND pto.languages_id = '".(int)$_SESSION['languages_id']."'
                            JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv
                                 ON ptv.values_id = pt.values_id
                                    AND ptv.status = '1'
-                                   AND ptv.languages_id = '".$_SESSION['languages_id']."'
+                                   AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
                           WHERE pt.products_id = '".$product->data['products_id']."'
                        ORDER BY pto.sort_order, ptv.sort_order");
 

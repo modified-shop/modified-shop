@@ -44,7 +44,7 @@ $reviews_query = xtc_db_query("SELECT r.*,
                                  FROM ".TABLE_REVIEWS." r
                                  JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
                                       ON r.reviews_id = rd.reviews_id
-                                         AND rd.languages_id = '".$_SESSION['languages_id']."'
+                                         AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
                                  JOIN ".TABLE_PRODUCTS." p 
                                       ON r.products_id = p.products_id
                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 

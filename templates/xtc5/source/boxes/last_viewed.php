@@ -46,10 +46,10 @@ if (isset ($_SESSION['tracking']['products_history'][0])) {
                                            and pd.products_id = '".(int)$_SESSION['tracking']['products_history'][$random_last_viewed]."'
                                            and p2c.products_id = '".(int)$_SESSION['tracking']['products_history'][$random_last_viewed]."'
                                            AND trim(pd.products_name) != ''
-                                           and pd.language_id = ".$_SESSION['languages_id']."
+                                           and pd.language_id = ".(int)$_SESSION['languages_id']."
                                            and cd.categories_id = p2c.categories_id
                                            ".PRODUCTS_CONDITIONS_P."
-                                           and cd.language_id = ".$_SESSION['languages_id'];
+                                           and cd.language_id = ".(int)$_SESSION['languages_id'];
 
   $random_query = xtDBquery($random_query);
   $random_product = xtc_db_fetch_array($random_query, true);

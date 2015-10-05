@@ -253,18 +253,18 @@ if (PRODUCT_LIST_FILTER == 'true') {
                                 FROM ".TABLE_PRODUCTS." p
                                 JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                      ON p.products_id = pd.products_id
-                                        AND pd.language_id = '".$_SESSION['languages_id']."'
+                                        AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                         AND trim(pd.products_name) != ''
                                 JOIN ".TABLE_PRODUCTS_TAGS." pt
                                      ON pt.products_id = p.products_id
                                 JOIN ".TABLE_PRODUCTS_TAGS_OPTIONS." pto
                                      ON pt.options_id = pto.options_id
-                                        AND pto.languages_id = '".$_SESSION['languages_id']."'
+                                        AND pto.languages_id = '".(int)$_SESSION['languages_id']."'
                                         AND pto.filter = '1'
                                 JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv
                                      ON pto.options_id = ptv.options_id
                                         AND pt.values_id = ptv.values_id
-                                        AND ptv.languages_id = '".$_SESSION['languages_id']."'
+                                        AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
                                         AND ptv.filter = '1'
                                      ".$join."
                                      ".$filter_join."

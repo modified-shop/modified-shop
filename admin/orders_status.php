@@ -166,7 +166,7 @@
               <?php
                 $orders_status_query_raw = "SELECT * 
                                               FROM " . TABLE_ORDERS_STATUS . " 
-                                             WHERE language_id = '" . $_SESSION['languages_id'] . "' 
+                                             WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
                                           ORDER BY sort_order";
                 $orders_status_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $orders_status_query_raw, $orders_status_query_numrows);
                 $orders_status_query = xtc_db_query($orders_status_query_raw);

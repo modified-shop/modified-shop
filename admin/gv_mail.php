@@ -173,7 +173,7 @@
   require (DIR_WS_INCLUDES.'head.php');
 
   if (USE_WYSIWYG=='true' && ($_GET['action'] != 'preview' || $error== true)) {
-    $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".$_SESSION['languages_id']."'");
+    $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
     $data=xtc_db_fetch_array($query);
     echo xtc_wysiwyg('gv_mail',$data['code']);
   } 

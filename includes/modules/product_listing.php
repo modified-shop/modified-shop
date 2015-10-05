@@ -64,7 +64,7 @@ if ($listing_split->number_of_rows > 0) {
                                         c.categories_image
                                    FROM ".TABLE_CATEGORIES." c
                                    JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
-                                     ON (c.categories_id = cd.categories_id AND cd.language_id = '".$_SESSION['languages_id']."')
+                                     ON (c.categories_id = cd.categories_id AND cd.language_id = '".(int)$_SESSION['languages_id']."')
                                   WHERE c.categories_id = '".$current_category_id."'
                                         ".CATEGORIES_CONDITIONS_C."
                                   LIMIT 1");

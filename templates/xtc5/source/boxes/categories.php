@@ -58,7 +58,7 @@
                                       AND c.parent_id = '0'
                                       ".CATEGORIES_CONDITIONS_C."
                                       AND c.categories_id = cd.categories_id
-                                      AND cd.language_id='".$_SESSION['languages_id']."'
+                                      AND cd.language_id='".(int)$_SESSION['languages_id']."'
                                       AND trim(cd.categories_name) != ''
                                     ORDER BY sort_order, cd.categories_name
                                     ");
@@ -101,7 +101,7 @@
                                           AND c.parent_id = '".$value."'
                                           ".CATEGORIES_CONDITIONS_C."
                                           AND c.categories_id = cd.categories_id
-                                          AND cd.language_id='".$_SESSION['languages_id']."'
+                                          AND cd.language_id='".(int)$_SESSION['languages_id']."'
                                           AND trim(cd.categories_name) != ''
                                         ORDER BY sort_order, cd.categories_name
                                         ");

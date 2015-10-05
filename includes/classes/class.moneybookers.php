@@ -105,7 +105,7 @@ class fcnt_moneybookers {
 	function iframeAction() {
 		global $order, $xtPrice;
 
-		$result = xtc_db_query("SELECT code FROM languages WHERE languages_id = '" . $_SESSION['languages_id'] . "'");
+		$result = xtc_db_query("SELECT code FROM languages WHERE languages_id = '" . (int)$_SESSION['languages_id'] . "'");
 
 		$mbLanguage = strtoupper($_SESSION['language_code']);
 

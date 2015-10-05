@@ -77,7 +77,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                        FROM " . TABLE_PRODUCTS . " p
                                        JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
                                             ON pd.products_id = p.products_id  
-                                               AND pd.language_id = '" . $_SESSION['languages_id'] . "' 
+                                               AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' 
                                        JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
                                             ON p2c.products_id = p.products_id
                                                AND p2c.categories_id != '0'  

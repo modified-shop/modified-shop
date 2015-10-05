@@ -16,7 +16,7 @@
     $trustedshops_query = xtc_db_query("SELECT *
                                           FROM ".TABLE_TRUSTEDSHOPS."
                                          WHERE status = '1'
-                                           AND languages_id = '".$_SESSION['languages_id']."'");
+                                           AND languages_id = '".(int)$_SESSION['languages_id']."'");
     if (xtc_db_num_rows($trustedshops_query) > 0) {
       $trustedshops = xtc_db_fetch_array($trustedshops_query);
       foreach ($trustedshops as $key => $value) {
@@ -56,7 +56,7 @@
             $insert_id = xtc_db_insert_id();
 
             $sql_data_array = array('reviews_id' => $insert_id,
-                                    'languages_id' => (int) $_SESSION['languages_id'],
+                                    'languages_id' => (int)$_SESSION['languages_id'],
                                     'reviews_text' => $reviews->comment
                                     );
             xtc_db_perform(TABLE_REVIEWS_DESCRIPTION, $sql_data_array);

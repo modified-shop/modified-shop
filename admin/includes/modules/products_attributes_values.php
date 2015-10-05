@@ -128,7 +128,7 @@ if ($_GET['action'] == 'delete_option_value') {
                                  products_options_values_name
                             FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                            WHERE products_options_values_id = '" . $_GET['value_id'] . "'
-                             AND language_id = '" . $_SESSION['languages_id'] . "'"
+                             AND language_id = '" . (int)$_SESSION['languages_id'] . "'"
                         );
   $values_values = xtc_db_fetch_array($values);
 ?>
@@ -146,8 +146,8 @@ $products = xtc_db_query("-- products_attributes.php
                                  " . TABLE_PRODUCTS_OPTIONS . " po,
                                  " . TABLE_PRODUCTS_DESCRIPTION . " pd
                            WHERE pd.products_id = p.products_id
-                             AND pd.language_id = '" . $_SESSION['languages_id'] . "'
-                             AND po.language_id = '" . $_SESSION['languages_id'] . "'
+                             AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                             AND po.language_id = '" . (int)$_SESSION['languages_id'] . "'
                              AND pa.products_id = p.products_id
                              AND pa.options_values_id='" . $_GET['value_id'] . "'
                              AND po.products_options_id = pa.options_id

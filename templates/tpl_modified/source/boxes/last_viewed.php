@@ -46,7 +46,7 @@ if (isset($_SESSION['tracking']['products_history']) && count($_SESSION['trackin
                             ON p.products_id = p2c.products_id
                        JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
                             ON cd.categories_id = p2c.categories_id
-                               AND cd.language_id = '".$_SESSION['languages_id']."'
+                               AND cd.language_id = '".(int)$_SESSION['languages_id']."'
                       WHERE p.products_status = '1'
                         AND p.products_id = '".(int)$_SESSION['tracking']['products_history'][$random_last_viewed]."'
                             ".PRODUCTS_CONDITIONS_P;

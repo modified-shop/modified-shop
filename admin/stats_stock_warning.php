@@ -76,7 +76,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                        FROM " . TABLE_PRODUCTS . " p
                                        JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
                                             ON pd.products_id = p.products_id  
-                                               AND pd.language_id = '" . $_SESSION['languages_id'] . "' 
+                                               AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' 
                                        JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
                                             ON p2c.products_id = p.products_id
                                                AND p2c.categories_id != '0' 
@@ -107,7 +107,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                                            FROM
                                                                " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
                                                            WHERE
-                                                               pa.products_id = '".$products['products_id'] . "' AND pov.products_options_values_id = pa.options_values_id AND pov.language_id = '" . $_SESSION['languages_id'] . "' ORDER BY pa.attributes_stock");
+                                                               pa.products_id = '".$products['products_id'] . "' AND pov.products_options_values_id = pa.options_values_id AND pov.language_id = '" . (int)$_SESSION['languages_id'] . "' ORDER BY pa.attributes_stock");
               
                 while ($products_attributes_values = xtc_db_fetch_array($products_attributes_query)) {
                   echo '<tr class="dataTableRowSub" onmouseover="this.className=\'dataTableRowSubOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRowSub\'">

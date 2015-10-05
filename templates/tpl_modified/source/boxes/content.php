@@ -40,7 +40,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_i
                                      content_title,
                                      content_group
                                 FROM ".TABLE_CONTENT_MANAGER."
-                               WHERE languages_id=".$_SESSION['languages_id']."
+                               WHERE languages_id=".(int)$_SESSION['languages_id']."
                                  AND file_flag='1'
                                      ".CONTENT_CONDITIONS."
                                  AND content_status='1'

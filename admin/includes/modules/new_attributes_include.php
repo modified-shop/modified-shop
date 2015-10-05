@@ -130,7 +130,7 @@ if ($_POST['cpath'] != '') {
   $query = "SELECT *
               FROM ".TABLE_PRODUCTS_OPTIONS."
              WHERE products_options_id LIKE '%'
-               AND language_id = '" . $_SESSION['languages_id'] . "'
+               AND language_id = '" . (int)$_SESSION['languages_id'] . "'
           ORDER BY ". $option_order_by;
 
   $result = xtc_db_query($query);

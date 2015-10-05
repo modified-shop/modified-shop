@@ -117,7 +117,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
-                $products_vpe_query_raw = "select products_vpe_id, products_vpe_name from " . TABLE_PRODUCTS_VPE . " where language_id = '" . $_SESSION['languages_id'] . "' order by products_vpe_id";
+                $products_vpe_query_raw = "select products_vpe_id, products_vpe_name from " . TABLE_PRODUCTS_VPE . " where language_id = '" . (int)$_SESSION['languages_id'] . "' order by products_vpe_id";
                 $products_vpe_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $products_vpe_query_raw, $products_vpe_query_numrows);
                 $products_vpe_query = xtc_db_query($products_vpe_query_raw);
                 while ($products_vpe = xtc_db_fetch_array($products_vpe_query)) {

@@ -48,7 +48,7 @@ if ($_GET['action'] != 'delete_product_option') {
   
   if (isset($_GET['searchoption'])) {
     $options = "-- products_attributes.php
-      SELECT * FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE language_id = '" . $_SESSION['languages_id'] . "' AND products_options_name LIKE '%" . $_GET['searchoption'] . "%' ORDER BY " . $option_order_by;
+      SELECT * FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' AND products_options_name LIKE '%" . $_GET['searchoption'] . "%' ORDER BY " . $option_order_by;
   } else {
     $options = "-- products_attributes.php
       SELECT * FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' ORDER BY " . $option_order_by;
