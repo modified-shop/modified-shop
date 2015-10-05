@@ -90,7 +90,7 @@ if (xtc_not_null($action)) {
 
     case 'remove_product':
       $prd_id = xtc_input_validation($_GET['prd_id'], 'products_id', '');
-      $cart_object -> remove($prd_id);
+      $cart_object->remove($prd_id);
       xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
       break;
 
