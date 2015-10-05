@@ -24,7 +24,7 @@
       if ($with_iso_codes == true) {
         $countries = xtc_db_query("SELECT countries_name, countries_iso_code_2, countries_iso_code_3 
                                      FROM " . TABLE_COUNTRIES . " 
-                                    WHERE countries_id = '" . $countries_id . "' 
+                                    WHERE countries_id = '" . (int)$countries_id . "' 
                                       AND status = '1'
                                           ".$no_france_fx."
                                  ORDER BY countries_name
@@ -36,7 +36,7 @@
       } else {
         $countries = xtc_db_query("SELECT countries_name 
                                      FROM " . TABLE_COUNTRIES . " 
-                                    WHERE countries_id = '" . $countries_id . "'
+                                    WHERE countries_id = '" . (int)$countries_id . "'
                                           ".$no_france_fx."                                    
                                       AND status = '1'
                                   ");
