@@ -361,7 +361,8 @@ class SofortLibPayment {
 	      break;
 	  }
 		$image = 'https://images.sofort.com/'.$code.((isset($this->ideal) && $this->ideal === true) ? '/ideal/' : '/su/').$image;
-		$image = xtc_image($image, constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT'));
+		$title = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT');
+		$image = '<img src="'.$image.'" '.(($title != '') ? 'alt="'.$title.'" title="'.$title.'"' : '').' />';
 		$description = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE');
 		$description = str_replace('{{image}}', $image, $description);
 		$description = str_replace('{{text}}', $text, $description);
