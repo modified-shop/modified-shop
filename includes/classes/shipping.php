@@ -16,7 +16,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  //web28 ignore shipping modules
   define ('IGNORE_CHEAPEST_MODULES', 'selfpickup');
 
   class shipping {
@@ -110,26 +109,19 @@
       if (is_array($this->modules)) {
         $rates = array();
 
-        $ignore_cheapest_array = explode(',',IGNORE_CHEAPEST_MODULES); //web28 ignore shipping modules
+        $ignore_cheapest_array = explode(',',IGNORE_CHEAPEST_MODULES);
 
         reset($this->modules);
         while (list(, $value) = each($this->modules)) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
             $quotes = $GLOBALS[$class]->quotes;
-           //BOF - Dokuman - 2009-10-02 - set undefined index
-            //$size = sizeof($quotes['methods']);
             $size = isset($quotes['methods']) && is_array($quotes['methods']) ? sizeof($quotes['methods']) : 0;
-            //BOF - Dokuman - 2009-10-02 - set undefined index
             for ($i=0; $i<$size; $i++) {
-              // BOF - Tomcraft - 2011-02-01 - Paypal Express Modul
-              //if(array_key_exists("cost",$quotes['methods'][$i])) {
-              if(array_key_exists("cost",$quotes['methods'][$i]) && !isset ($quotes['error'][$i]) && !in_array($quotes['id'],$ignore_cheapest_array)) { //web28 ignore shipping modules
-              // EOF - Tomcraft - 2011-02-01 - Paypal Express Modul
+              if(array_key_exists('cost', $quotes['methods'][$i]) && !in_array($quotes['id'], $ignore_cheapest_array)) {
                 $rates[] = array('id' => $quotes['id'] . '_' . $quotes['methods'][$i]['id'],
                                  'title' => $quotes['module'] . ' (' . $quotes['methods'][$i]['title'] . ')',
                                  'cost' => $quotes['methods'][$i]['cost']);
-                                // echo $quotes['methods'][$i]['cost'];
               }
             }
           }
