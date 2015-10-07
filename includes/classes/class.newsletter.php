@@ -175,13 +175,13 @@ class newsletter {
               $customers_lastname = '';
             }
 
-            $sql_data_array = array ('customers_email_address' => xtc_db_input($mail),
-                                     'customers_id' => xtc_db_input($customers_id),
-                                     'customers_status' => xtc_db_input($customers_status),
-                                     'customers_firstname' => xtc_db_input($customers_firstname),
-                                     'customers_lastname' => xtc_db_input($customers_lastname),
+            $sql_data_array = array ('customers_email_address' => $mail,
+                                     'customers_id' => $customers_id,
+                                     'customers_status' => $customers_status,
+                                     'customers_firstname' => $customers_firstname,
+                                     'customers_lastname' => $customers_lastname,
                                      'mail_status' => '0',
-                                     'mail_key' => xtc_db_input($this->vlCode),
+                                     'mail_key' => $this->vlCode,
                                      'date_added' => 'now()',
                                      'ip_date_added' => ip_clearing($_SESSION['tracking']['ip'])
                                      );
