@@ -135,7 +135,7 @@ class newsletter {
               $this->message = TEXT_EMAIL_EXIST_NO_NEWSLETTER;
               $this->message_class = 'error';
 
-              if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
+              if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == 'true') {
                 $this->sendRequestMail($mail);
               } else {
                 $sql_data_array = array('mail_status' => '1',
@@ -190,7 +190,7 @@ class newsletter {
             $this->message = TEXT_EMAIL_INPUT;
             $this->message_class = 'info';
 
-            if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
+            if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == 'true') {
               $this->sendRequestMail($mail);
             } else {
               $sql_data_array = array('mail_status' => '1',
