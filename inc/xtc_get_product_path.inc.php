@@ -40,7 +40,7 @@ function xtc_get_product_path($products_id) {
   $limit = (($canonical_flag === true || !isset($_SESSION['CatPath']) || !$products_link_cat_id) ? '' : " LIMIT 1");
   
   // set $category_check by $products_link_cat_id
-  $category_check = (($products_link_cat_id > 0) ? " AND p2c.categories_id = '".$products_link_cat_id."'" : '');
+  $category_check = (($products_link_cat_id > 0) ? " AND p2c.categories_id = '".(int)$products_link_cat_id."'" : '');
   
   // canonical
   $add_select = ((defined('PRODUCTS_CANONICAL_CAT_ID') && PRODUCTS_CANONICAL_CAT_ID === true) ? "p.products_canonical_cat_id," : '');
