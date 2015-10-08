@@ -65,7 +65,7 @@ for ($i=0; $i<$max; $i++) {
 	                                           ON cd.categories_id = p2c.categories_id
 	                                              AND cd.language_id = '".(int) $_SESSION['languages_id']."'
 	                                     WHERE p.products_status = '1'
-	                                       AND p.products_id = '".$_SESSION['tracking']['products_history'][$i]."'
+	                                       AND p.products_id = '".(int) $_SESSION['tracking']['products_history'][$i]."'
 	                                  GROUP BY p.products_id
 	                                           ".PRODUCTS_CONDITIONS_P);
   if (xtc_db_num_rows($product_history_query, true) > 0) {
