@@ -22,11 +22,10 @@ if (DIR_WS_CATALOG == '/') {
 // add category names or the manufacturer name to the breadcrumb trail
 if (isset ($cPath_array)) {
   for ($i = 0, $n = sizeof($cPath_array); $i < $n; $i ++) {
-    $categories_query = xtDBquery("-- /includes/application_top.php
-                                   SELECT cd.categories_name
+    $categories_query = xtDBquery("SELECT cd.categories_name
                                      FROM ".TABLE_CATEGORIES_DESCRIPTION." cd,
                                           ".TABLE_CATEGORIES." c
-                                    WHERE cd.categories_id = '".$cPath_array[$i]."'
+                                    WHERE cd.categories_id = '".(int)$cPath_array[$i]."'
                                       AND c.categories_id=cd.categories_id
                                       " . CATEGORIES_CONDITIONS_C . "
                                       AND cd.language_id='".(int) $_SESSION['languages_id']."'");
@@ -39,8 +38,7 @@ if (isset ($cPath_array)) {
   }
 } elseif (isset($_GET['manufacturers_id']) && xtc_not_null($_GET['manufacturers_id'])) { 
   $_GET['manufacturers_id'] = (int) $_GET['manufacturers_id'];
-  $manufacturers_query = xtDBquery("-- /includes/application_top.php
-                                    SELECT manufacturers_name 
+  $manufacturers_query = xtDBquery("SELECT manufacturers_name 
                                       FROM ".TABLE_MANUFACTURERS." 
                                      WHERE manufacturers_id = '".(int) $_GET['manufacturers_id']."'");
   $manufacturers = xtc_db_fetch_array($manufacturers_query, true);

@@ -81,7 +81,7 @@
     }
 
     if ($error == false) {
-      $sql_data_array = array ('customers_id' => $_SESSION['customer_id'],
+      $sql_data_array = array ('customers_id' => (int)$_SESSION['customer_id'],
                                'entry_firstname' => $firstname,
                                'entry_lastname' => $lastname,
                                'entry_street_address' => $street_address,

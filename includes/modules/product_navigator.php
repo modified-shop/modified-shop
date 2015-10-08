@@ -23,7 +23,7 @@ $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/'
 $sorting_query = xtDBquery("SELECT products_sorting,
                                    products_sorting2 
 							               FROM ".TABLE_CATEGORIES."
-                            WHERE  categories_id='".$current_category_id."'");
+                            WHERE  categories_id='".(int)$current_category_id."'");
 $sorting_data = xtc_db_fetch_array($sorting_query,true);
 
 if (!$sorting_data['products_sorting'])
@@ -36,7 +36,7 @@ $products_query = xtDBquery("SELECT
                               FROM ".TABLE_PRODUCTS_TO_CATEGORIES." pc,
                                    ".TABLE_PRODUCTS." p,
                                    ".TABLE_PRODUCTS_DESCRIPTION." pd
-                             WHERE categories_id='".$current_category_id."'
+                             WHERE categories_id='".(int)$current_category_id."'
                                AND p.products_id = pc.products_id
                                AND p.products_id = pd.products_id
                                AND trim(pd.products_name) != ''

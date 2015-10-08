@@ -26,7 +26,7 @@ require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
 // check if customer is allowed to send this order!
 $order_query_check = xtc_db_query("SELECT customers_id
                                      FROM ".TABLE_ORDERS."
-                                    WHERE orders_id='".$insert_id."'");
+                                    WHERE orders_id='".(int)$insert_id."'");
 $order_check = xtc_db_fetch_array($order_query_check);
 
 if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) { // Send Order by Admin

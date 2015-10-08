@@ -229,8 +229,8 @@ if ($errorno) {
         if ($values_id != '') {
           $filter_join .= " JOIN ".TABLE_PRODUCTS_TAGS." pt".$fi." 
                                  ON pt".$fi.".products_id = p.products_id
-                                    AND pt".$fi.".options_id = '".$options_id."'
-                                    AND pt".$fi.".values_id = '".$values_id."' ";
+                                    AND pt".$fi.".options_id = '".(int)$options_id."'
+                                    AND pt".$fi.".values_id = '".(int)$values_id."' ";
           $fi ++;
         }
       }

@@ -69,8 +69,8 @@ if (PRODUCT_LIST_FILTER == 'true') {
       if ($values_id != '') {
         $filter_join .= "JOIN ".TABLE_PRODUCTS_TAGS." pt".$fi." 
                               ON pt".$fi.".products_id = p.products_id
-                                 AND pt".$fi.".options_id = '".$options_id."'
-                                 AND pt".$fi.".values_id = '".$values_id."' ";
+                                 AND pt".$fi.".options_id = '".(int)$options_id."'
+                                 AND pt".$fi.".values_id = '".(int)$values_id."' ";
         $fi ++;
       }
     }
@@ -96,7 +96,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
   } elseif (isset($current_category_id) && $current_category_id > 0) {
     $join = " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                    ON p2c.products_id = p.products_id
-                      AND p2c.categories_id = '".$current_category_id."' ";
+                      AND p2c.categories_id = '".(int)$current_category_id."' ";
   } elseif (basename($PHP_SELF) == FILENAME_SPECIALS) {
     $join = " JOIN ".TABLE_SPECIALS." s 
                    ON p.products_id = s.products_id
@@ -133,7 +133,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
                                 FROM ".TABLE_PRODUCTS." p
                                 JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                      ON p.products_id = pd.products_id
-                                        AND pd.language_id = '".$_SESSION['languages_id']."'
+                                        AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                         AND trim(pd.products_name) != ''
                                 JOIN ".TABLE_MANUFACTURERS." m 
                                      ON m.manufacturers_id = p.manufacturers_id
@@ -212,7 +212,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
   if (isset($current_category_id) && $current_category_id > 0) {
     $join .= " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                     ON p2c.products_id = p.products_id
-                       AND p2c.categories_id = '".$current_category_id."' ";
+                       AND p2c.categories_id = '".(int)$current_category_id."' ";
   }
   if (basename($PHP_SELF) == FILENAME_SPECIALS) {
     $join .= " JOIN ".TABLE_SPECIALS." s 

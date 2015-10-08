@@ -279,12 +279,13 @@ if (xtc_not_null($action)) {
         $wishlist_content = $_SESSION['wishlist']->contents[$_GET['BUYproducts_id']];
         $attributes_array = ((isset($wishlist_content['attributes'])) ? $wishlist_content['attributes'] : '');
         $cart_quantity = (xtc_remove_non_numeric($wishlist_content['qty']) + $_SESSION['cart']->get_quantity(xtc_get_uprid($_GET['BUYproducts_id'], $attributes_array)));
+        $products_id = xtc_get_prid($_GET['BUYproducts_id']);
         if ($cart_quantity > MAX_PRODUCTS_QTY) {            
           $cart_quantity = MAX_PRODUCTS_QTY;
           $_SESSION['err_max_prod'] = true;
-          $_GET['max_prod_id'] = (int)$_POST['products_id'];
+          $_GET['max_prod_id'] = (int)$products_id;
         }
-        $_SESSION['cart']->add_cart(xtc_get_prid($_GET['BUYproducts_id']), $cart_quantity, $attributes_array);
+        $_SESSION['cart']->add_cart($products_id, $cart_quantity, $attributes_array);
 
         $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id', '');
         $_SESSION['wishlist']->remove($prd_id);
@@ -297,12 +298,13 @@ if (xtc_not_null($action)) {
         $wishlist_content = $_SESSION['cart']->contents[$_GET['BUYproducts_id']];
         $attributes_array = ((isset($wishlist_content['attributes'])) ? $wishlist_content['attributes'] : '');
         $cart_quantity = (xtc_remove_non_numeric($wishlist_content['qty']) + $_SESSION['wishlist']->get_quantity(xtc_get_uprid($_GET['BUYproducts_id'], $attributes_array)));
+        $products_id = xtc_get_prid($_GET['BUYproducts_id']);
         if ($cart_quantity > MAX_PRODUCTS_QTY) {            
           $cart_quantity = MAX_PRODUCTS_QTY;
           $_SESSION['err_max_prod'] = true;
-          $_GET['max_prod_id'] = (int)$_POST['products_id'];
+          $_GET['max_prod_id'] = (int)$products_id;
         }
-        $_SESSION['wishlist']->add_cart(xtc_get_prid($_GET['BUYproducts_id']), $cart_quantity, $attributes_array);
+        $_SESSION['wishlist']->add_cart($products_id, $cart_quantity, $attributes_array);
 
         $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id', '');
         $_SESSION['cart']->remove($prd_id);

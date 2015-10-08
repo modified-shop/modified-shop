@@ -101,7 +101,7 @@ if ($category_depth == 'nested') {
                                AND cd.language_id = '".(int) $_SESSION['languages_id']."'
                                AND trim(cd.categories_name) != ''
                       WHERE c.categories_status = '1'
-                        AND c.categories_id = '".$current_category_id."'
+                        AND c.categories_id = '".(int)$current_category_id."'
                             ".CATEGORIES_CONDITIONS_C;
   $category_query = xtDBquery($category_query);
   $category = xtc_db_fetch_array($category_query, true);
@@ -120,7 +120,7 @@ if ($category_depth == 'nested') {
                                    AND cd.language_id = '".(int) $_SESSION['languages_id']."'
                                    AND trim(cd.categories_name) != ''
                           WHERE c.categories_status = '1'
-                            AND c.parent_id = '".$current_category_id."'
+                            AND c.parent_id = '".(int)$current_category_id."'
                                 ".CATEGORIES_CONDITIONS_C."
                        ORDER BY c.sort_order, cd.categories_name";
     $categories_query = xtDBquery($categories_query);
@@ -206,12 +206,12 @@ if ($category_depth == 'nested') {
   if (isset($_GET['manufacturers_id']) && isset($_GET['filter_id'])) {
     $categories_id = (int)$_GET['filter_id'];
   } else {
-    $categories_id = $current_category_id;
+    $categories_id = (int)$current_category_id;
   }
   $sorting_query = xtDBquery("SELECT products_sorting,
                                      products_sorting2
                                 FROM ".TABLE_CATEGORIES."
-                               WHERE categories_id='".$categories_id ."'");
+                               WHERE categories_id='".(int)$categories_id ."'");
   $sorting_data = xtc_db_fetch_array($sorting_query,true);
   
   //Fallback for products_sorting to products_name
@@ -242,7 +242,7 @@ if ($category_depth == 'nested') {
     // show the products in a given categorie
     $from   .= "JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                      ON p2c.products_id = pd.products_id
-                        AND p2c.categories_id = '".$current_category_id."' ";
+                        AND p2c.categories_id = '".(int)$current_category_id."' ";
     
     // We are asked to show only specific manufacturer                    
     if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
@@ -260,8 +260,8 @@ if ($category_depth == 'nested') {
       if ($values_id != '') {
         $from .= "JOIN ".TABLE_PRODUCTS_TAGS." pt".$fi." 
                        ON pt".$fi.".products_id = p.products_id
-                          AND pt".$fi.".options_id = '".$options_id."'
-                          AND pt".$fi.".values_id = '".$values_id."' ";
+                          AND pt".$fi.".options_id = '".(int)$options_id."'
+                          AND pt".$fi.".values_id = '".(int)$values_id."' ";
         $fi ++;
       }
     }

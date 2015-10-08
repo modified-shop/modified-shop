@@ -36,7 +36,7 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
 }
 
 if (isset ($_SESSION['customer_id'])) {
-	$gv_query = xtc_db_query("select amount from ".TABLE_COUPON_GV_CUSTOMER." where customer_id = '".$_SESSION['customer_id']."'");
+	$gv_query = xtc_db_query("select amount from ".TABLE_COUPON_GV_CUSTOMER." where customer_id = '".(int)$_SESSION['customer_id']."'");
 	$gv_result = xtc_db_fetch_array($gv_query);
 	if ($gv_result['amount'] > 0) {
 		$gift_smarty->assign('GV_AMOUNT', $xtPrice->xtcFormat($gv_result['amount'], true, 0, true));
@@ -46,7 +46,7 @@ if (isset ($_SESSION['customer_id'])) {
 	}
 }
 if (isset ($_SESSION['gv_id'])) {
-	$gv_query = xtc_db_query("select coupon_amount from ".TABLE_COUPONS." where coupon_id = '".$_SESSION['gv_id']."'");
+	$gv_query = xtc_db_query("select coupon_amount from ".TABLE_COUPONS." where coupon_id = '".(int)$_SESSION['gv_id']."'");
 	$coupon = xtc_db_fetch_array($gv_query);
 	$gift_smarty->assign('COUPON_AMOUNT2', $xtPrice->xtcFormat($coupon['coupon_amount'], true, 0, true));
 }
