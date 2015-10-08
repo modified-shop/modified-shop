@@ -90,7 +90,7 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
                                 ON p2c.categories_id = c.categories_id
                           WHERE p.products_status = '1'
                             AND c.categories_status = '1'
-                            AND c.parent_id = '".$new_products_category_id."'
+                            AND c.parent_id = '".(int)$new_products_category_id."'
                                 ".PRODUCTS_CONDITIONS_P."
                                 ".$days."
                        GROUP BY p.products_id

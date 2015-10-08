@@ -36,7 +36,7 @@ if ($_SESSION['account_type'] == '1' && DELETE_GUEST_ACCOUNT == 'true') {
   xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
   xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
   xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$_SESSION['customer_id']."'");
-  xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".$_SESSION['customer_id']."'");
+  xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
 }
 
 xtc_session_destroy();

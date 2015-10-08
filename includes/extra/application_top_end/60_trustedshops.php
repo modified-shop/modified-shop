@@ -46,7 +46,7 @@
           if (xtc_db_num_rows($check_query) < 1) {
             $sql_data_array = array('products_id' => $product->data['products_id'],
                                     'customers_id' => 0,
-                                    'customers_name' => $reviews->reviewer->firstname . ' ' . $reviews->reviewer->lastname,
+                                    'customers_name' => xtc_db_prepare_input($reviews->reviewer->firstname . ' ' . $reviews->reviewer->lastname),
                                     'reviews_rating' => (int)$reviews->mark,
                                     'date_added' => date('Y-m-d H:i:s', strtotime($reviews->creationDate)),
                                     //'ts_uid' => $reviews->UID
@@ -57,7 +57,7 @@
 
             $sql_data_array = array('reviews_id' => $insert_id,
                                     'languages_id' => (int)$_SESSION['languages_id'],
-                                    'reviews_text' => $reviews->comment
+                                    'reviews_text' => xtc_db_prepare_input($reviews->comment)
                                     );
             xtc_db_perform(TABLE_REVIEWS_DESCRIPTION, $sql_data_array);
           } 

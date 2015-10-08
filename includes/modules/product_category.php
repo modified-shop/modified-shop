@@ -26,7 +26,7 @@ if (isset($current_category_id)) {
                                         AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                                 JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                      ON p.products_id = p2c.products_id
-                                        AND p2c.categories_id = '".$current_category_id."'
+                                        AND p2c.categories_id = '".(int)$current_category_id."'
                                WHERE p.products_status = '1'
                                  AND p.products_id != '".$product->data['products_id']."'
                                      ".PRODUCTS_CONDITIONS_P."

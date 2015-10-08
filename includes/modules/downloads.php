@@ -25,13 +25,19 @@ $module_smarty = new Smarty;
 
 if (!strstr($PHP_SELF, FILENAME_ACCOUNT_HISTORY_INFO)) {
 	// Get last order id for checkout_success
-	$orders_query = xtc_db_query("select orders_id, orders_status from ".TABLE_ORDERS." where customers_id = '".$_SESSION['customer_id']."' order by orders_id desc limit 1");
+	$orders_query = xtc_db_query("SELECT orders_id, 
+	                                     orders_status 
+	                                FROM ".TABLE_ORDERS." 
+	                               WHERE customers_id = '".(int)$_SESSION['customer_id']."' 
+	                            ORDER BY orders_id desc limit 1");
 	$orders = xtc_db_fetch_array($orders_query);
 	$last_order = $orders['orders_id'];
 	$order_status = $orders['orders_status'];
 } else {
 	$last_order = (int)$_GET['order_id'];
-	$orders_query = xtc_db_query("SELECT orders_status FROM ".TABLE_ORDERS." WHERE orders_id = '".$last_order."'");
+	$orders_query = xtc_db_query("SELECT orders_status 
+	                                FROM ".TABLE_ORDERS." 
+	                               WHERE orders_id = '".$last_order."'");
 	$orders = xtc_db_fetch_array($orders_query);
 	$order_status = $orders['orders_status'];
 }
@@ -43,7 +49,7 @@ if (!in_array($order_status, $allowed_status)) {
 }
 
 // Get all downloadable products in that order
-$downloads_query = xtc_db_query("select o.customers_id,
+$downloads_query = xtc_db_query("SELECT o.customers_id,
                                         o.customers_email_address,
                                         op.products_name, 
                                         opd.orders_products_download_id, 
@@ -51,14 +57,14 @@ $downloads_query = xtc_db_query("select o.customers_id,
                                         opd.download_count,
                                         opd.orders_products_id,
                                         if(opd.download_maxdays = 0, current_date, date(o.date_purchased)) + interval opd.download_maxdays + 1 day - interval 1 second download_expiry 
-                                   from ".TABLE_ORDERS." o
-                                   join ".TABLE_ORDERS_PRODUCTS." op 
-                                        on op.orders_id = o.orders_id
-                                   join ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd 
-                                        on opd.orders_products_id = op.orders_products_id
-                                  where o.customers_id = '".$_SESSION['customer_id']."' 
-                                    and o.orders_id = '".$last_order."'
-                                    and opd.orders_products_filename != ''");
+                                   FROM ".TABLE_ORDERS." o
+                                   JOIN ".TABLE_ORDERS_PRODUCTS." op 
+                                        ON op.orders_id = o.orders_id
+                                   JOIN ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd 
+                                        ON opd.orders_products_id = op.orders_products_id
+                                  WHERE o.customers_id = '".(int)$_SESSION['customer_id']."' 
+                                    AND o.orders_id = '".$last_order."'
+                                    AND opd.orders_products_filename != ''");
 
 if (xtc_db_num_rows($downloads_query) > 0) {
   $jj = 0;

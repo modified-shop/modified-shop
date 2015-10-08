@@ -58,7 +58,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'send') {
   }
   $gv_query = xtc_db_query("SELECT amount 
                               FROM ".TABLE_COUPON_GV_CUSTOMER." 
-                             WHERE customer_id = '".$_SESSION['customer_id']."'");
+                             WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
   $customer_amount = $gv_result['amount'];
   $gv_amount = trim(str_replace(",", ".", $_POST['amount']));  
@@ -76,7 +76,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
   $id1 = create_coupon_code(10);
   $gv_query = xtc_db_query("SELECT amount 
                               FROM ".TABLE_COUPON_GV_CUSTOMER." 
-                             WHERE customer_id='".$_SESSION['customer_id']."'");
+                             WHERE customer_id='".(int)$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
   $new_amount = $gv_result['amount'] - str_replace(",", ".", $_POST['amount']);
   $new_amount = str_replace(",", ".", $new_amount);
@@ -87,12 +87,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
   } else {
     xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER." 
                      SET amount = '".$new_amount."' 
-                   WHERE customer_id = '".$_SESSION['customer_id']."'");
+                   WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
     
     $gv_query = xtc_db_query("SELECT customers_firstname, 
                                      customers_lastname 
                                 FROM ".TABLE_CUSTOMERS." 
-                               WHERE customers_id = '".$_SESSION['customer_id']."'");
+                               WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     $gv_customer = xtc_db_fetch_array($gv_query);
     $sql_data_array = array('coupon_type' => 'G',
                             'coupon_code' => $id1,
@@ -162,7 +162,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'send' && !$error) {
   $gv_query = xtc_db_query("SELECT customers_firstname, 
                                    customers_lastname 
                               FROM ".TABLE_CUSTOMERS." 
-                             WHERE customers_id = '".$_SESSION['customer_id']."'");
+                             WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
   $send_name = $gv_result['customers_firstname'].' '.$gv_result['customers_lastname'];
   $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post'));

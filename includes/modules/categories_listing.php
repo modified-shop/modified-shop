@@ -26,7 +26,7 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
                                 ON c.categories_id = cd.categories_id
                                    AND trim(cd.categories_name) != ''
                           WHERE c.categories_status = '1'
-                            AND c.parent_id = '".$category_links[0]."'
+                            AND c.parent_id = '".(int)$category_links[0]."'
                             AND cd.language_id = '".(int) $_SESSION['languages_id']."'
                             " . CATEGORIES_CONDITIONS_C . "
                        ORDER BY sort_order, cd.categories_name";
@@ -43,7 +43,7 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
                                 ON c.categories_id = cd.categories_id
                                    AND trim(cd.categories_name) != ''
                           WHERE c.categories_status = '1'
-                            AND c.parent_id = '".$current_category_id."'
+                            AND c.parent_id = '".(int)$current_category_id."'
                             AND c.parent_id <> '0'
                             AND cd.language_id = '".(int) $_SESSION['languages_id']."'
                             " . CATEGORIES_CONDITIONS_C . "

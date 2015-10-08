@@ -185,7 +185,7 @@ class main {
   function getContentData($coID, $lang_id = '', $customers_status = '', $get_inactive = true) {
     $lang_id = !empty($lang_id) ? $lang_id : $_SESSION['languages_id'];
     $customers_status = $customers_status != '' ? $customers_status : $_SESSION['customers_status']['customers_status_id'];
-    $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . $customers_status . "_group%'" : '';
+    $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . (int)$customers_status . "_group%'" : '';
     $where = (($get_inactive === true) ? '' : " AND content_active = '1'");
     $content_data_query = xtDBquery("-- includes/classes/main.php
                                        SELECT content_id,
