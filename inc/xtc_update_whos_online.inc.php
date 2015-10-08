@@ -25,7 +25,7 @@
       $customer_query = xtc_db_query("SELECT customers_firstname,
                                              customers_lastname
                                         FROM " . TABLE_CUSTOMERS . "
-                                       WHERE customers_id = '" . $wo_customer_id . "'");
+                                       WHERE customers_id = '" . (int)$wo_customer_id . "'");
       $customer = xtc_db_fetch_array($customer_query);
 
       $wo_full_name = xtc_db_prepare_input($customer['customers_firstname'] . ' ' . $customer['customers_lastname']);
@@ -61,10 +61,10 @@
 
     $stored_customer_query = xtc_db_query("SELECT count(*) as count 
                                              FROM " . TABLE_WHOS_ONLINE . " 
-                                            WHERE session_id = '" . $wo_session_id . "'");
+                                            WHERE session_id = '" . xtc_db_input($wo_session_id) . "'");
     $stored_customer = xtc_db_fetch_array($stored_customer_query);
 
-    $sql_data_array = array('customer_id' => $wo_customer_id,
+    $sql_data_array = array('customer_id' => (int)$wo_customer_id,
                             'full_name' => xtc_db_prepare_input($wo_full_name),
                             'ip_address' => $wo_ip_address,
                             'time_last_click' => $current_time,

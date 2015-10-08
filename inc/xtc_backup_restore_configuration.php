@@ -18,7 +18,7 @@
     for ($i=0, $x=sizeof($configuration); $i<$x; $i++) {
       $backup_query = xtc_db_query("SELECT configuration_value 
                                       FROM ".TABLE_CONFIGURATION." 
-                                     WHERE configuration_key = '".$configuration[$i]."'"
+                                     WHERE configuration_key = '".xtc_db_input($configuration[$i])."'"
                                    );
       if (xtc_db_num_rows($backup_query) > 0) {
         $backup = xtc_db_fetch_array($backup_query);
@@ -55,7 +55,7 @@
       $configuration = array($configuration);
     }
     $configuration_key = substr($configuration[0], 0, strrpos($configuration[0], '_'));
-    xtc_db_query("DELETE FROM ".TABLE_MODULE_BACKUP." WHERE configuration_key LIKE '" . $configuration_key . "'");
+    xtc_db_query("DELETE FROM ".TABLE_MODULE_BACKUP." WHERE configuration_key LIKE '" . xtc_db_input($configuration_key) . "'");
   }
   
 ?>
