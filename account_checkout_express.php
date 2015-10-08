@@ -28,7 +28,7 @@ function get_address_iso_code($address_id) {
                                    FROM ".TABLE_COUNTRIES." co 
                                    JOIN ".TABLE_ADDRESS_BOOK." ab
                                         ON ab.entry_country_id = co.countries_id
-                                           AND ab.address_book_id = '".$address_id."'
+                                           AND ab.address_book_id = '".(int)$address_id."'
                                            AND ab.customers_id = '".(int)$_SESSION['customer_id']."'");
   $address = xtc_db_fetch_array($address_query);
   
