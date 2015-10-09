@@ -22,6 +22,19 @@
   // This funstion validates a plain text password with an encrpyted password
   function xtc_validate_password($plain, $encrypted, $customers_id) {
     if (xtc_not_null($plain) && xtc_not_null($encrypted)) {
+      
+      $check = xtc_validate_password_collation($plain, $encrypted, $customers_id);
+      if ($check === false) {
+        $plain = mb_convert_encoding($plain, 'ISO-8859-15', 'UTF-8');
+        $check = xtc_validate_password_collation($plain, $encrypted, $customers_id);
+      }
+      
+      return $check;
+    }
+  }
+
+  function xtc_validate_password_collation($plain, $encrypted, $customers_id) {
+    if (xtc_not_null($plain) && xtc_not_null($encrypted)) {
       // check for old passwords
       if (preg_match('#^[a-z0-9]{32}$#i', $encrypted)) {
         if ($encrypted != md5($plain)) {
