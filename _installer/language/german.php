@@ -229,8 +229,8 @@
   define('TEXT_FEMALE','Frau');
   define('TEXT_FIRSTNAME','Vorname:');
   define('TEXT_LASTNAME','Nachname:');
-  define('TEXT_EMAIL','E-Mail Adresse:');
-  define('TEXT_EMAIL_LONG','E-Mail Adresse, an die eine separate Mail bei Bestellungen gesendet werden soll.');
+  define('TEXT_EMAIL','E-Mail-Adresse:');
+  define('TEXT_EMAIL_LONG','E-Mail-Adresse, an die eine separate Mail bei Bestellungen gesendet werden soll.');
   define('TEXT_STREET','Stra&szlig;e:');
   define('TEXT_POSTCODE','PLZ:');
   define('TEXT_CITY','Stadt:');
@@ -243,7 +243,7 @@
   define('TEXT_STORE','Shop Name:');
   define('TEXT_STORE_LONG','Der Name des Shops.');
   define('TEXT_EMAIL_FROM','E-Mail von');
-  define('TEXT_EMAIL_FROM_LONG','Die E-Mail Adresse, die in den Bestellungen als From benutzt wird.');
+  define('TEXT_EMAIL_FROM_LONG','Die E-Mail-Adresse, die in den Bestellungen als From benutzt wird.');
   define('TITLE_ZONE_CONFIG','Zonen Konfiguration');
   define('TEXT_ZONE','automatisches Einstellen der Steuerzonen?');
   define('TITLE_ZONE_CONFIG_NOTE','*Hinweis: modified eCommerce Shopsoftware kann die Zonen automatisch aufsetzten, sofern Sich Ihr Shop in der EU befindet.');
@@ -255,8 +255,8 @@
   define('ENTRY_GENDER_ERROR','Bitte w&auml;hlen Sie eine Anrede aus');
   define('ENTRY_FIRST_NAME_ERROR','Vorname ist zu kurz');
   define('ENTRY_LAST_NAME_ERROR','Nachname ist zu kurz');
-  define('ENTRY_EMAIL_ADDRESS_ERROR','E-Mail Adresse ist zu kurz');
-  define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR','Bitte &uuml;berpr&uuml;fen Sie Ihre E-Mail Adresse');
+  define('ENTRY_EMAIL_ADDRESS_ERROR','E-Mail-Adresse ist zu kurz');
+  define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR','Bitte &uuml;berpr&uuml;fen Sie Ihre E-Mail-Adresse (Umlaute in E-Mail-Adressen werden derzeit nicht unterst&uuml;tzt.)');
   define('ENTRY_STREET_ADDRESS_ERROR','Stra&szlig;e ist zu kurz');
   define('ENTRY_POST_CODE_ERROR','Postleitzahl ist zu kurz');
   define('ENTRY_CITY_ERROR','Stadt ist zu kurz');

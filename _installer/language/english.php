@@ -254,7 +254,7 @@
   define('ENTRY_FIRST_NAME_ERROR','Firstname to short');
   define('ENTRY_LAST_NAME_ERROR','Lastname to short');
   define('ENTRY_EMAIL_ADDRESS_ERROR','Email to short');
-  define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR','Check Email Format');
+  define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR','Check Email Format (We currently don\'t support german umlauts in e-mail addresses.)');
   define('ENTRY_STREET_ADDRESS_ERROR','Street to short');
   define('ENTRY_POST_CODE_ERROR','Post Code to short');
   define('ENTRY_CITY_ERROR','City to short');
