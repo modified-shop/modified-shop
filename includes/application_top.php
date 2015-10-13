@@ -30,7 +30,7 @@
 
 // xss secure
 if (is_file('includes/xss_secure.php')) {
-  include ('includes/xss_secure.php');
+  include_once ('includes/xss_secure.php');
 }
 
 // start the timer for the page parse time log
@@ -78,7 +78,7 @@ if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') !=
 
 // security inputfilter for GET/POST/COOKIE
 require_once (DIR_FS_INC.'html_encoding.php');
-require (DIR_WS_CLASSES.'class.inputfilter.php');
+require_once (DIR_WS_CLASSES.'class.inputfilter.php');
 $InputFilter = new InputFilter();
 
 $_GET = $InputFilter->process($_GET);
@@ -92,10 +92,10 @@ $_REQUEST = $InputFilter->safeSQL($_REQUEST);
 require_once (DIR_FS_INC . 'auto_include.inc.php');
 
 // include the list of project filenames
-require (DIR_WS_INCLUDES.'filenames.php');
+require_once (DIR_WS_INCLUDES.'filenames.php');
 
 // Debug-Log-Class - thx to franky
-include_once(DIR_WS_CLASSES.'class.debug.php');
+include_once (DIR_WS_CLASSES.'class.debug.php');
 $log = new debug;
 
 // project version
@@ -105,17 +105,17 @@ define('TAX_DECIMAL_PLACES', 0);
 
 // set the type of request (secure or not)
 if (file_exists(DIR_WS_INCLUDES.'request_type.php')) {
-  include (DIR_WS_INCLUDES.'request_type.php');
+  include_once (DIR_WS_INCLUDES.'request_type.php');
 } else {
   $request_type = 'NONSSL';
 }
 
 // Base/PHP_SELF/SSL-PROXY
-require_once(DIR_FS_INC . 'set_php_self.inc.php');
+require_once (DIR_FS_INC . 'set_php_self.inc.php');
 $PHP_SELF = set_php_self();
 
 // list of project database tables
-require (DIR_WS_INCLUDES.'database_tables.php');
+require_once (DIR_WS_INCLUDES.'database_tables.php');
 
 // graduated prices model or products assigned ?
 define('GRADUATED_ASSIGN', 'true');
@@ -185,7 +185,7 @@ require_once (DIR_FS_INC.'xtc_backup_restore_configuration.php');
 require_once (DIR_FS_INC.'xtc_hide_session_id.inc.php');
 require_once (DIR_FS_INC.'get_messages.inc.php');
 
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file) require_once ($file);
 
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
@@ -196,7 +196,7 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
   defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
 }
 
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_begin/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_begin/','php') as $file) require_once ($file);
 
 // Set the length of the redeem code, the longer the more secure
 // Kommt eigentlich schon aus der Table configuration
@@ -232,16 +232,16 @@ $https_domain_old = $https_domain_arr['old'];
 $current_domain_old = (($request_type == 'NONSSL') ? $http_domain_old : $https_domain_old);
 
 // include shopping cart class
-require (DIR_WS_CLASSES.'shopping_cart.php');
+require_once (DIR_WS_CLASSES.'shopping_cart.php');
 
 // include navigation history class
-require (DIR_WS_CLASSES.'navigation_history.php');
+require_once (DIR_WS_CLASSES.'navigation_history.php');
 
 // some code to solve compatibility issues
-require (DIR_WS_FUNCTIONS.'compatibility.php');
+require_once (DIR_WS_FUNCTIONS.'compatibility.php');
 
 // define how the session functions will be used
-require (DIR_WS_FUNCTIONS.'sessions.php');
+require_once (DIR_WS_FUNCTIONS.'sessions.php');
 
 // set the session name and save path
 // set the session cookie parameters
@@ -250,33 +250,33 @@ require (DIR_WS_FUNCTIONS.'sessions.php');
 // Redirect search engines with session id to the same url without session id to prevent indexing session id urls
 // check for Cookie usage
 // check the Agent
-include (DIR_WS_MODULES.'set_session_and_cookie_parameters.php');
+include_once (DIR_WS_MODULES.'set_session_and_cookie_parameters.php');
 
 // user tracking
-include (DIR_WS_INCLUDES.'tracking.php');
+include_once (DIR_WS_INCLUDES.'tracking.php');
 
 // verify the ssl_session_id if the feature is enabled
 // verify the browser user agent if the feature is enabled
 // verify the IP address if the feature is enabled
-include (DIR_WS_MODULES.'verify_session.php');
+include_once (DIR_WS_MODULES.'verify_session.php');
 
 // set the language
-include (DIR_WS_MODULES.'set_language_sessions.php');
+include_once (DIR_WS_MODULES.'set_language_sessions.php');
 
 // language translations
-require (DIR_WS_LANGUAGES.$_SESSION['language'].'/'.$_SESSION['language'].'.php');
+require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/'.$_SESSION['language'].'.php');
 
 // currency
-include (DIR_WS_MODULES.'set_currency_session.php');
+include_once (DIR_WS_MODULES.'set_currency_session.php');
 
 // write customers status in session
-require (DIR_WS_INCLUDES.'write_customers_status.php');
+require_once (DIR_WS_INCLUDES.'write_customers_status.php');
 
 // content, product, category - sql group_check/fsk_lock
-require (DIR_WS_INCLUDES.'define_conditions.php');
+require_once (DIR_WS_INCLUDES.'define_conditions.php');
 
 // add_select
-require (DIR_WS_INCLUDES.'define_add_select.php');
+require_once (DIR_WS_INCLUDES.'define_add_select.php');
 
 // shippingcost shoppingcart
 if (strpos($PHP_SELF, FILENAME_SHOPPING_CART) === false) {
@@ -284,11 +284,11 @@ if (strpos($PHP_SELF, FILENAME_SHOPPING_CART) === false) {
 }
 
 // main class
-require (DIR_WS_CLASSES.'main.php');
+require_once (DIR_WS_CLASSES.'main.php');
 $main = new main();
 
 // price class
-require (DIR_WS_CLASSES.'xtcPrice.php');
+require_once (DIR_WS_CLASSES.'xtcPrice.php');
 $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
 
 // create the shopping cart & fix the cart if necesary
@@ -314,13 +314,13 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
   $econda = new econda();
 }
 
-require (DIR_WS_INCLUDES.FILENAME_CART_ACTIONS);
+require_once (DIR_WS_INCLUDES.FILENAME_CART_ACTIONS);
 
 // who's online functions
 xtc_update_whos_online();
 
 // split-page-results
-require (DIR_WS_CLASSES.'split_page_results.php');
+require_once (DIR_WS_CLASSES.'split_page_results.php');
 
 // auto activate and expire banners
 xtc_activate_banners();
@@ -330,18 +330,18 @@ xtc_expire_banners();
 xtc_expire_specials();
 
 // class product
-require (DIR_WS_CLASSES.'product.php');
+require_once (DIR_WS_CLASSES.'product.php');
 
 // set $actual_products_id,  $current_category_id, $cPath, $_GET['manufacturers_id']
-include (DIR_WS_MODULES.'set_ids_by_url_parameters.php');
+include_once (DIR_WS_MODULES.'set_ids_by_url_parameters.php');
 
 // breadcrumb class and start the breadcrumb trail
-require (DIR_WS_CLASSES.'breadcrumb.php');
+require_once (DIR_WS_CLASSES.'breadcrumb.php');
 $breadcrumb = new breadcrumb;
-include (DIR_WS_MODULES.'create_breadcrumb.php');
+include_once (DIR_WS_MODULES.'create_breadcrumb.php');
 
 // initialize the message stack for output messages
-require (DIR_WS_CLASSES.'message_stack.php');
+require_once (DIR_WS_CLASSES.'message_stack.php');
 $messageStack = new messageStack;
 
 // set which precautions should be checked
@@ -352,13 +352,13 @@ define('WARN_SESSION_AUTO_START', 'true');
 define('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE', 'true');
 
 // set account_type
-include (DIR_WS_MODULES.'set_account_type.php');
+include_once (DIR_WS_MODULES.'set_account_type.php');
 
 // modification for nre graduated system
 unset ($_SESSION['actual_content']);
 xtc_count_cart();
 
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_end/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_end/','php') as $file) require_once ($file);
 
 //compatibility for modified eCommerce Shopsoftware 1.06 files
 defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
