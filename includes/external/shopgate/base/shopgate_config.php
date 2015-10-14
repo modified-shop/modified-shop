@@ -75,6 +75,7 @@ class ShopgateConfigModified extends ShopgateConfig
         $this->enable_get_orders              = 1;
         $this->enable_get_customer            = 1;
         $this->enable_get_items_csv           = 1;
+        $this->enable_get_items               = 1;
         $this->enable_get_categories_csv      = 1;
         $this->enable_get_categories          = 1;
         $this->enable_get_reviews_csv         = 1;
