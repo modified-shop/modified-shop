@@ -1,3 +1,9 @@
+'''Version 2.9.21'''
+* helper loading logic changed
+* saving customer custom fields to DB
+* implement mobile redirect for search and brand
+* implemented product xml export
+
 '''Version 2.9.20'''
 * saving custom fields to DB or printing in order page history
 

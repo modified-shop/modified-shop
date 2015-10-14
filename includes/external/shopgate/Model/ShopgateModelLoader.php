@@ -30,10 +30,10 @@ class ShopgateModelLoader
     
     /**
      * allowed description parts of the file names
-     * 
+     *
      * @var array
      */
-    private $modelExtraTypes = array("xml", "cart", "order");
+    protected $modelExtraTypes = array("xml", "cart", "order");
     
     const SHOPGATE_MODEL_SUFFIX = "Model";
     const SHOPGATE_MODEL_PREFIX = "Shopgate";
@@ -44,12 +44,12 @@ class ShopgateModelLoader
     public function __construct($whiteList = array())
     {
         foreach ($whiteList as $className) {
-            $modelName = self::SHOPGATE_MODEL_PREFIX . ucfirst($className);
+            $modelName = $this::SHOPGATE_MODEL_PREFIX . ucfirst($className);
             foreach ($this->modelExtraTypes as $extraType) {
                 $this->classWhiteList[] = $modelName . ucfirst($extraType)
-                    . self::SHOPGATE_MODEL_SUFFIX;
+                    . $this::SHOPGATE_MODEL_SUFFIX;
             }
-            $this->classWhiteList[] = $modelName . self::SHOPGATE_MODEL_SUFFIX;
+            $this->classWhiteList[] = $modelName . $this::SHOPGATE_MODEL_SUFFIX;
         }
     }
     
@@ -68,7 +68,7 @@ class ShopgateModelLoader
      *  - the white list contains the file
      *  - the file has the .php extension
      *  - the file is not a '.' or a '..'
-     * 
+     *
      * @param string $file
      *
      * @return bool
@@ -87,7 +87,7 @@ class ShopgateModelLoader
      * check if the path is a valid file system path
      * - the path is not a '.' or a '..'
      * - the file is a dir as defined in the php function "is_dir"
-     * 
+     *
      * @param $path
      *
      * @return bool
@@ -101,7 +101,7 @@ class ShopgateModelLoader
     
     /**
      * uses the php function pathinfo to check if the file extension is a php file
-     * 
+     *
      * @param $file
      *
      * @return bool

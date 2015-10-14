@@ -100,4 +100,27 @@ class ShopgateCustomerModel
         
         return isset($result['customer_id']) ? $result['customer_id'] : false;
     }
+    
+    /**
+     * Determines whether the two addresses in array
+     * are equal to each other
+     *
+     * @param ShopgateAddress[] $shopgateAddresses
+     *
+     * @return bool
+     */
+    public function areAddressesEqual(array $shopgateAddresses)
+    {
+        if (count($shopgateAddresses) == 2) {
+            $whiteList =
+                array(
+                    'gender', 'first_name', 'last_name', 'street_1', 'street_2', 'zipcode', 'city', 'country',
+                    'custom_fields'
+                );
+            
+            return $shopgateAddresses[0]->compare($shopgateAddresses[0], $shopgateAddresses[1], $whiteList);
+        }
+        
+        return false;
+    }
 }

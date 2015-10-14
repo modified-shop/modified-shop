@@ -72,6 +72,10 @@ class ShopgateOrderModel
             throw new ShopgateLibraryException($error);
         }
         
+        if (empty($comment)) {
+            return $this;
+        }
+        
         $history = array(
             "orders_id"         => $this->getOrderId(),
             "orders_status_id"  => $status,
