@@ -36,15 +36,16 @@ class ShopgateCustomFieldModel
      * Removes custom fields from object that
      * will not be saved in the database.
      *
-     * @param ShopgateOrder|ShopgateAddress $object
+     * @param ShopgateOrder|ShopgateAddress|ShopgateCustomer $object
+     * @param string                                         $table
      *
      * @return array
      */
-    public function prepareCustomFields(&$object)
+    public function prepareCustomFields(&$object, $table = TABLE_ORDERS)
     {
         $orderData = $newFields = array();
         foreach ($object->getCustomFields() as $field) {
-            if (ShopgateWrapper::db_column_exists(TABLE_ORDERS, $field->getInternalFieldName())) {
+            if (ShopgateWrapper::db_column_exists($table, $field->getInternalFieldName())) {
                 $orderData[$field->getInternalFieldName()] = $field->getValue();
             } else {
                 array_push($newFields, $field);
@@ -76,7 +77,7 @@ class ShopgateCustomFieldModel
             $objectData[$field->getLabel()] = $field->getValue();
         }
         
-        return $this->printArray($objectData, $print);
+        return empty($objectData) ? "" : $this->printArray($objectData, $print);
     }
     
     /**
