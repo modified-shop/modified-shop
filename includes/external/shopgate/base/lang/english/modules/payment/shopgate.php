@@ -55,3 +55,4 @@ define(
 
 define("MODULE_PAYMENT_SHOPGATE_LABEL_NEW_PRODUCTS", "New products");
 define("MODULE_PAYMENT_SHOPGATE_LABEL_SPECIAL_PRODUCTS", "Special products");
+define('SHOPGATE_ORDER_CUSTOM_FIELD', 'Custom field(s) of this Shopgate order:');

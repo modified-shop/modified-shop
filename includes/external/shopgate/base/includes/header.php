@@ -25,19 +25,19 @@ $shopgateMobileHeader = '';
 $shopgateJsHeader     = '';
 
 if (MODULE_PAYMENT_SHOPGATE_STATUS == 'True') {
-    
+
     include_once DIR_FS_CATALOG
         . 'includes/external/shopgate/shopgate_library/shopgate.php';
     include_once DIR_FS_CATALOG
         . 'includes/external/shopgate/base/shopgate_config.php';
-    
-    
+
+
     try {
         $shopgateCurrentLanguage = isset($_SESSION['language_code'])
             ? strtolower($_SESSION['language_code']) : 'de';
         $shopgateHeaderConfig    = new ShopgateConfigModified();
         $shopgateHeaderConfig->loadByLanguage($shopgateCurrentLanguage);
-        
+
         if ($shopgateHeaderConfig->checkUseGlobalFor(
             $shopgateCurrentLanguage
         )
@@ -49,7 +49,7 @@ if (MODULE_PAYMENT_SHOPGATE_STATUS == 'True') {
         } else {
             $shopgateRedirectThisLanguage = true;
         }
-        
+
         if ($shopgateRedirectThisLanguage) {
             // SEO modules fix (for Commerce:SEO and others): if session variable was set,
             // SEO did a redirect and most likely cut off our GET parameter
@@ -58,11 +58,11 @@ if (MODULE_PAYMENT_SHOPGATE_STATUS == 'True') {
                 $_GET['shopgate_redirect'] = 1;
                 unset($_SESSION['shopgate_redirect']);
             }
-            
+
             // instantiate and set up redirect class
             $shopgateBuilder    = new ShopgateBuilder($shopgateHeaderConfig);
             $shopgateRedirector = $shopgateBuilder->buildRedirect();
-            
+
             if (($product instanceof product) && $product->isProduct
                 && !empty($product->pID)
             ) {
@@ -73,8 +73,27 @@ if (MODULE_PAYMENT_SHOPGATE_STATUS == 'True') {
                 $shopgateJsHeader = $shopgateRedirector->buildScriptCategory(
                     $current_category_id
                 );
-            } elseif (sgIsHomepage()) {
-                $shopgateJsHeader = $shopgateRedirector->buildScriptShop();
+            } elseif (shopgateIsHomepage()) {
+                if (isset($_GET['manufacturers_id']) && $brand = shopgateGetManufactureNameById($_GET['manufacturers_id'])) {
+                    $shopgateJsHeader = $shopgateRedirector->buildScriptBrand($brand);
+                } else {
+                    $shopgateJsHeader = $shopgateRedirector->buildScriptShop();
+                }
+            } elseif (!empty($search_keywords) && is_array($search_keywords)) {
+
+                $invalidSearchPattern = array(
+                    'and',
+                    'or',
+                    '(',
+                    ')'
+                );
+                foreach ($search_keywords as $key => $keyword) {
+                    if (in_array($keyword, $invalidSearchPattern)) {
+                        unset($search_keywords[$key]);
+                    }
+                }
+                $shopgateJsHeader = $shopgateRedirector->buildScriptSearch(implode(' ', $search_keywords));
+
             } else {
                 $shopgateJsHeader = $shopgateRedirector->buildScriptDefault();
             }
@@ -83,14 +102,32 @@ if (MODULE_PAYMENT_SHOPGATE_STATUS == 'True') {
     }
 }
 
-function sgIsHomepage()
+function shopgateIsHomepage()
 {
     $scriptName = explode('/', $_SERVER['SCRIPT_NAME']);
     $scriptName = end($scriptName);
-    
+
     if ($scriptName != 'index.php') {
         return false;
     }
-    
+
     return true;
+}
+
+/**
+ * @param int $id
+ *
+ * @return string
+ */
+function shopgateGetManufactureNameById($id)
+{
+    $manufacturers_query = xtDBquery(
+        "select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$id . "'"
+    );
+    $manufacturers       = xtc_db_fetch_array($manufacturers_query, true);
+    if (is_array($manufacturers) && count($manufacturers) == 1) {
+        return $manufacturers['manufacturers_name'];
+    }
+
+    return false;
 }
