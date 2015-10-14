@@ -111,7 +111,7 @@ define('BOX_CONFIGURATION_40', 'Popup Window Options');
 define('BOX_CONFIGURATION_1000', 'My Admin');
 
 define('BOX_MODULES', 'Payment-/Shipping-/Billing-Modules');
-define('BOX_PAYMENT', 'Payment Systems');
+define('BOX_PAYMENT', 'Payment Methods');
 define('BOX_SHIPPING', 'Shipping Methods');
 define('BOX_ORDER_TOTAL', 'Order Total');
 define('BOX_CATEGORIES', 'Categories/Products');
