@@ -1035,4 +1035,11 @@ define('ATTRIBUTE_MODEL_DELIMITER_DESC', 'Delimiter between product number &amp;
 
 define('STORE_PAGE_PARSE_TIME_THRESHOLD_TITLE' , 'Threshold for storing the page parse time');
 define('STORE_PAGE_PARSE_TIME_THRESHOLD_DESC' , 'Determines the threshold in seconds for storing the page parse time.');
+
+define('SEARCH_IN_FILTER_TITLE', 'Search in products features');
+define('SEARCH_IN_FILTER_DESC', 'Include products features when searching');
+define('SEARCH_AC_STATUS_TITLE','Autocomplete search');
+define('SEARCH_AC_STATUS_DESC','Activate for autocomplete search');
+define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete Suche Zeichenanzahl');
+define('SEARCH_AC_MIN_LENGTH_DESC', 'Ab welchen Zeichenanzahl sollen die ersten Suchergebnisse angezeigt werden?');
 ?>

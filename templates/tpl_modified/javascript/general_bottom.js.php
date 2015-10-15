@@ -50,7 +50,7 @@
         $.fn.colorbox.resize();
       }
     });
-
+    <?php if (SEARCH_AC_STATUS == 'true') { ?>
     var option = $('#suggestions');
     $(document).click(function(e){
       var target = $(e.target);
@@ -58,9 +58,11 @@
         ac_closing();
       }
     });
+    <?php } ?>
   });
 </script>
 <script type="text/javascript">
+  <?php if (SEARCH_AC_STATUS == 'true') { ?>
   var ac_pageSize = 4;
   var ac_page = 1;
   var ac_result = 0;
@@ -123,7 +125,7 @@
 		setTimeout("$('#suggestions').slideUp();", 100);
 		ac_page = 1;
 	}
-
+  <?php } ?>
 
   $.alerts.overlayOpacity = .2;
   $.alerts.overlayColor = '#000';

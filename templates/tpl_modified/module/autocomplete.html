@@ -1,3 +1,5 @@
+{config_load file="$language/lang_$language.conf" section="error_handler"}
+{config_load file="lang_`$language`.custom"}
 {if $error}
   <span class="autocomplete_error">{#text_search_again#}</span>
 {else}

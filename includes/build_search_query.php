@@ -44,6 +44,12 @@
       $where_str .= $ent_keyword ? "OR p.products_ean LIKE ('%".$ent_keyword."%') " : '';
       $where_str .= "OR p.products_manufacturers_model LIKE ('%".$keyword."%') ";
       $where_str .= $ent_keyword ? "OR p.products_manufacturers_model LIKE ('%".$ent_keyword."%') " : '';
+      if (SEARCH_IN_FILTER == 'true') {
+        $where_str .= "OR ptv.values_name LIKE ('%".$keyword."%') ";
+        $where_str .= $ent_keyword ? "OR ptv.values_name LIKE ('%".$ent_keyword."%') " : '';
+        $where_str .= "OR ptv.values_description LIKE ('%".$keyword."%') ";
+        $where_str .= $ent_keyword ? "OR ptv.values_description LIKE ('%".$ent_keyword."%') " : '';
+      }
       if (SEARCH_IN_ATTR == 'true') {
         $where_str .= "OR pa.attributes_model LIKE ('%".$keyword."%') ";
         $where_str .= ($ent_keyword) ? "OR pa.attributes_model LIKE ('%".$ent_keyword."%') " : '';

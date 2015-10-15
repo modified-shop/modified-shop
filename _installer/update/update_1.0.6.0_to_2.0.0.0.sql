@@ -666,8 +666,8 @@ CREATE TABLE products_tags (
   values_id int(11) NOT NULL,
   products_options_id int(11) NOT NULL DEFAULT '0',
   products_options_values_id int(11) NOT NULL DEFAULT '0',
-  KEY idx_products_id (products_id),
-  KEY idx_products_attributes_id (products_options_id)
+  KEY idx_products_options_values (products_id,options_id,values_id),
+  KEY idx_products_options_id (products_options_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_tags_options;

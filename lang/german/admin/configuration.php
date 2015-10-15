@@ -1027,4 +1027,11 @@ define('ATTRIBUTE_MODEL_DELIMITER_DESC', 'Trennzeichen zwischen Artikelnummer &a
 
 define('STORE_PAGE_PARSE_TIME_THRESHOLD_TITLE' , 'Schwellwert f&uuml;r das Speichern der Berechnungszeit des Seitenaufbaus');
 define('STORE_PAGE_PARSE_TIME_THRESHOLD_DESC' , 'Legt den Schwellwert in Sekunden fest, ab dem ein Eintrag f&uuml;r die Berechnungszeit des Seitenaufbaus geschrieben werden soll.');
+
+define('SEARCH_IN_FILTER_TITLE', 'Suche in Artikeleigenschaften');
+define('SEARCH_IN_FILTER_DESC', 'Aktivieren um die Suche in den Artikeleigenschaften zu erm&ouml;glichen');
+define('SEARCH_AC_STATUS_TITLE','Autocomplete Suche');
+define('SEARCH_AC_STATUS_DESC','Aktivieren um die Autocomplete Suche zu aktivieren');
+define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete number of characters');
+define('SEARCH_AC_MIN_LENGTH_DESC', 'Number of characters to display first search results');
 ?>
