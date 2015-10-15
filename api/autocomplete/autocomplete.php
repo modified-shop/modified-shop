@@ -13,7 +13,6 @@
   chdir('../../');
   include('includes/application_top.php');
 
-  defined('MIN_QUERY_STRING_LENGTH') OR define('MIN_QUERY_STRING_LENGTH', '1');
 
   // include needed functions
   require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
@@ -30,11 +29,16 @@
     // create $search_keywords array
     $keywordcheck = xtc_parse_search_string($queryString, $search_keywords);
         
-    if ($keywordcheck === true && strlen($queryString) > MIN_QUERY_STRING_LENGTH) {
+    if ($keywordcheck === true && strlen($queryString) > SEARCH_AC_MIN_LENGTH) {
       
       $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT OUTER JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) 
                                                 LEFT OUTER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) " : "";
       $from_str .= SEARCH_IN_MANU == 'true' ? " LEFT OUTER JOIN ".TABLE_MANUFACTURERS." AS m ON (p.manufacturers_id = m.manufacturers_id) " : "";
+
+      if (SEARCH_IN_FILTER == 'true') {
+        $from_str .= "LEFT JOIN ".TABLE_PRODUCTS_TAGS." pt ON (pt.products_id = p.products_id)
+                      LEFT JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv ON (ptv.options_id = pt.options_id AND ptv.values_id = pt.values_id AND ptv.status = '1' AND ptv.languages_id = '".(int)$_SESSION['languages_id']."') ";
+      }
 
       include(DIR_WS_INCLUDES.'build_search_query.php');
       
