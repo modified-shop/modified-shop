@@ -60,9 +60,31 @@ $process = false;
 if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $process = true;
   
+  $valid_params = array(
+    'gender',
+    'firstname',
+    'lastname',
+    'street_address',
+    'postcode',
+    'city',
+    'country',
+    'state',
+    'company',
+    'suburb',
+    'email_address',
+    'confirm_email_address',
+    'vat',
+    'password',
+    'confirmation',
+    'telephone',
+    'fax',
+    'newsletter',
+    'privacy',
+  );
+
   // prepare variables
   foreach ($_POST as $key => $value) {
-    if (!is_object(${$key})) {
+    if (!is_object(${$key}) && in_array($key , $valid_params)) {
       ${$key} = xtc_db_prepare_input($value);
     }
   }
@@ -221,7 +243,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                             'customers_email_address' => $email_address,
                             'customers_telephone' => $telephone,
                             'customers_fax' => $fax,
-                            'customers_newsletter' => $newsletter,
+                            'customers_newsletter' => (int)$newsletter,
                             'customers_password' => xtc_encrypt_password($password),
                             'customers_date_added' => 'now()',
                             'customers_last_modified' => 'now()',
@@ -244,7 +266,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                             'entry_street_address' => $street_address,
                             'entry_postcode' => $postcode,
                             'entry_city' => $city,
-                            'entry_country_id' => $country,
+                            'entry_country_id' => (int)$country,
                             'address_date_added' => 'now()',
                             'address_last_modified' => 'now()'
                             );

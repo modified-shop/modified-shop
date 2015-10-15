@@ -41,9 +41,22 @@ if ($_SESSION['customers_status']['customers_status'] == '0') {
 }
 
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
+
+  $valid_params = array(
+    'gender',
+    'firstname',
+    'lastname',
+    'dob',
+    'vat',
+    'email_address',
+    'confirm_email_address',
+    'telephone',
+    'fax',
+  );
+
   // prepare variables
   foreach ($_POST as $key => $value) {
-    if (!is_object(${$key})) {
+    if (!is_object(${$key}) && in_array($key , $valid_params)) {
       ${$key} = xtc_db_prepare_input($value);
     }
   }

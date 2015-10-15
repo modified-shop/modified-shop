@@ -10,9 +10,21 @@
      Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+    $valid_params = array(
+      'gender',
+      'firstname',
+      'lastname',
+      'street_address',
+      'postcode',
+      'city',
+      'country',
+      'company',
+      'suburb',
+    );
+
     // prepare variables
     foreach ($_POST as $key => $value) {
-      if (!is_object(${$key})) {
+      if (!is_object(${$key}) && in_array($key , $valid_params)) {
         ${$key} = xtc_db_prepare_input($value);
       }
     }
@@ -89,7 +101,7 @@
                                'entry_street_address' => $street_address,
                                'entry_postcode' => $postcode,
                                'entry_city' => $city,
-                               'entry_country_id' => $country);
+                               'entry_country_id' => (int)$country);
 
       if (ACCOUNT_GENDER == 'true') {
         $sql_data_array['entry_gender'] = $gender;

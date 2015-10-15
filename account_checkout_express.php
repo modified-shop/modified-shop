@@ -44,9 +44,17 @@ if (!defined('MODULE_CHECKOUT_EXPRESS_STATUS') || MODULE_CHECKOUT_EXPRESS_STATUS
 }
 
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
+
+  $valid_params = array(
+    'payment',
+    'payment_address',
+    'shipping',
+    'shipping_address',
+  );
+
   // prepare variables
   foreach ($_POST as $key => $value) {
-    if (!is_object(${$key})) {
+    if (!is_object(${$key}) && in_array($key , $valid_params)) {
       ${$key} = xtc_db_prepare_input($value);
     }
   }

@@ -45,9 +45,29 @@ $process = false;
 if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['action'] == 'update'))) {
 	$process = true;
 
+  $valid_params = array(
+    'gender',
+    'firstname',
+    'lastname',
+    'street_address',
+    'postcode',
+    'city',
+    'country',
+    'state',
+    'company',
+    'suburb',
+    'zone_id',
+    'country_id',
+    'vat',
+    'email_address',
+    'confirm_email_address',
+    'telephone',
+    'fax',
+  );
+
   // prepare variables
   foreach ($_POST as $key => $value) {
-    if (!is_object(${$key})) {
+    if (!is_object(${$key}) && in_array($key , $valid_params)) {
       ${$key} = xtc_db_prepare_input($value);
     }
   }
