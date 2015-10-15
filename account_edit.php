@@ -43,7 +43,9 @@ if ($_SESSION['customers_status']['customers_status'] == '0') {
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   // prepare variables
   foreach ($_POST as $key => $value) {
-    ${$key} = xtc_db_prepare_input($value);
+    if (!is_object(${$key})) {
+      ${$key} = xtc_db_prepare_input($value);
+    }
   }
 
 	$error = false;
