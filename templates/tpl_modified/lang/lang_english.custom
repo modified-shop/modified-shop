@@ -32,3 +32,5 @@ info_reviews = 'Reviews:'
 info_review = 'Review:'
 
 heading_trustedshops = 'Trusted Shops'
+
+text_search_again = 'Sorry, we could not find a product matching your search request'
