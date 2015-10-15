@@ -1032,6 +1032,6 @@ define('SEARCH_IN_FILTER_TITLE', 'Suche in Artikeleigenschaften');
 define('SEARCH_IN_FILTER_DESC', 'Aktivieren um die Suche in den Artikeleigenschaften zu erm&ouml;glichen');
 define('SEARCH_AC_STATUS_TITLE','Autocomplete Suche');
 define('SEARCH_AC_STATUS_DESC','Aktivieren um die Autocomplete Suche zu aktivieren');
-define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete number of characters');
-define('SEARCH_AC_MIN_LENGTH_DESC', 'Number of characters to display first search results');
+define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete Suche Zeichenanzahl');
+define('SEARCH_AC_MIN_LENGTH_DESC', 'Ab welchen Zeichenanzahl sollen die ersten Suchergebnisse angezeigt werden?');
 ?>
