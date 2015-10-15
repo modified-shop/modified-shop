@@ -192,7 +192,6 @@ switch ($action) {
     $smarty->config_dir = DIR_FS_CATALOG.'lang';
     $send_by_admin = true;
     $insert_id = $oID;
-    define('SEND_BY_ADMIN_PATH', DIR_FS_CATALOG);
     require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
     require_once(DIR_FS_INC.'xtc_href_link_from_admin.inc.php');
     include (DIR_FS_CATALOG .'send_order.php');
