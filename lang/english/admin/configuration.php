@@ -1040,6 +1040,6 @@ define('SEARCH_IN_FILTER_TITLE', 'Search in products features');
 define('SEARCH_IN_FILTER_DESC', 'Include products features when searching');
 define('SEARCH_AC_STATUS_TITLE','Autocomplete search');
 define('SEARCH_AC_STATUS_DESC','Activate for autocomplete search');
-define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete Suche Zeichenanzahl');
-define('SEARCH_AC_MIN_LENGTH_DESC', 'Ab welchen Zeichenanzahl sollen die ersten Suchergebnisse angezeigt werden?');
+define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete number of characters');
+define('SEARCH_AC_MIN_LENGTH_DESC', 'Number of characters to display first search results');
 ?>
