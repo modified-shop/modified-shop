@@ -43,7 +43,9 @@ class PayoneCreditRisk {
  
     $hidden = xtc_draw_hidden_field('p1crcheck', 'true').PHP_EOL;
     foreach ($_POST as $key => $value) {
-      $hidden .= xtc_draw_hidden_field($key, $value).PHP_EOL;
+      if (!is_object(${$key})) {
+        $hidden .= xtc_draw_hidden_field($key, $value).PHP_EOL;
+      }
     }
 		$this->set_content_data('form_action',  xtc_draw_form('p1crconfirm', xtc_href_link(basename($PHP_SELF), '', 'SSL')).$hidden);
     $this->set_content_data('payonecss', DIR_WS_EXTERNAL.'payone/css/payone.css');

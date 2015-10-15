@@ -58,7 +58,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
   // prepare variables
   foreach ($_POST as $key => $value) {
-    ${$key} = xtc_db_prepare_input($value);
+    if (!is_object(${$key})) {
+      ${$key} = xtc_db_prepare_input($value);
+    }
   }
 
   $error = false;
@@ -109,8 +111,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $error = true;
     $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
   } elseif ($email_address != $confirm_email_address) {
-       $error = true;
-       $messageStack->add('create_account', ENTRY_EMAIL_ERROR_NOT_MATCHING);
+     $error = true;
+     $messageStack->add('create_account', ENTRY_EMAIL_ERROR_NOT_MATCHING);
   } else {
     $check_email_query = xtc_db_query("SELECT count(*) as total
                                          FROM ".TABLE_CUSTOMERS."

@@ -56,10 +56,12 @@
 
   if ($id == 'update' || $id == 'insert') {    
     foreach ($_POST as $key => $value) {
-      if (is_array($value)) {
-        ${$key} = array_map('xtc_db_prepare_input', $value);
-      } else {
-        ${$key} = xtc_db_prepare_input($value);
+      if (!is_object(${$key})) {
+        if (is_array($value)) {
+          ${$key} = array_map('xtc_db_prepare_input', $value);
+        } else {
+          ${$key} = xtc_db_prepare_input($value);
+        }
       }
     }
 
