@@ -148,7 +148,6 @@ switch ($action) {
     $smarty->config_dir = DIR_FS_CATALOG.'lang';
     $send_by_admin = true;
     $insert_id = $oID;
-    define('SEND_BY_ADMIN_PATH', DIR_FS_CATALOG);
     require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
     require_once(DIR_FS_INC.'xtc_href_link_from_admin.inc.php'); //-web28 - 2011-01-20 - LINKFIX
     include (DIR_FS_CATALOG .'send_order.php');
@@ -767,7 +766,7 @@ require (DIR_WS_INCLUDES.'header.php');
       <table cellspacing="0" cellpadding="2" style="width:850px; margin-bottom:10px;">
         <tr>
           <td align="right">
-            <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=send&sta=0&stc=1&site=1'); ?>"><?php echo BUTTON_ORDER_CONFIRMATION; ?></a>
+            <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=send&site=1'); ?>"><?php echo BUTTON_ORDER_CONFIRMATION; ?></a>
             <?php
               if (ACTIVATE_GIFT_SYSTEM == 'true') {
                 echo '<a class="button" href="'.xtc_href_link(FILENAME_GV_MAIL, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$order->customer['ID']).'">'.BUTTON_SEND_COUPON.'</a>';
