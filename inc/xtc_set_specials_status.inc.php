@@ -17,6 +17,6 @@
    
 // Sets the status of a special product
   function xtc_set_specials_status($specials_id, $status) {
-    return xtc_db_query("update " . TABLE_SPECIALS . " set status = '" . $status . "', date_status_change = now() where specials_id = '" . $specials_id . "'");
+    return xtc_db_query("update " . TABLE_SPECIALS . " set status = '" . xtc_db_input((int)$status) . "', date_status_change = now() where specials_id = '" . xtc_db_input((int)$specials_id) . "'");
   }
  ?>

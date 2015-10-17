@@ -51,15 +51,15 @@ $order_query = xtc_db_query("SELECT
   currency,
   currency_value
   					FROM ".TABLE_ORDERS."
-  					WHERE orders_id='".$_GET['oID']."'");
+  					WHERE orders_id='".xtc_db_input((int)$_GET['oID'])."'");
   					
   $order_data= xtc_db_fetch_array($order_query);
   // get order status name	
  $order_status_query=xtc_db_query("SELECT
  				orders_status_name
  				FROM ".TABLE_ORDERS_STATUS."
- 				WHERE orders_status_id='".$order_data['orders_status']."'
- 				AND language_id='".$_SESSION['languages_id']."'");
+ 				WHERE orders_status_id='".xtc_db_input((int)$order_data['orders_status'])."'
+ 				AND language_id='".xtc_db_input((int)$_SESSION['languages_id'])."'");
  $order_status_data=xtc_db_fetch_array($order_status_query); 			
  $order_data['orders_status']=$order_status_data['orders_status_name'];
  // get language name for payment method

@@ -26,10 +26,10 @@
                                       cd.categories_name
                                       from " . TABLE_CATEGORIES . " c,
                                        " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                       where parent_id = '" . xtc_db_input($parent_id) . "'
+                                       where parent_id = '" . xtc_db_input((int)$parent_id) . "'
                                        and c.categories_id = cd.categories_id
                                        and c.categories_status != 0
-                                       and cd.language_id = '" . $_SESSION['languages_id'] . "'
+                                       and cd.language_id = '" . xtc_db_input((int)$_SESSION['languages_id']) . "'
                                        order by sort_order, cd.categories_name";
 
     $categories_query  = xtDBquery($categories_query);

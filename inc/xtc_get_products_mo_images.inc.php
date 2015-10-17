@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
    
 	function xtc_get_products_mo_images($products_id = '') {
-   	$mo_query = "select * from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . $products_id ."' ORDER BY image_nr";
+   	$mo_query = "select * from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . xtc_db_input((int)$products_id) ."' ORDER BY image_nr";
    	$products_mo_images_query = xtDBquery($mo_query);
    
    	$results = array();

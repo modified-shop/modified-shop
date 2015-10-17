@@ -22,7 +22,7 @@
 
 
   function xtc_findTitle($current_pid, $languageFilter) {
-    $query = "SELECT * FROM ".TABLE_PRODUCTS_DESCRIPTION."  where language_id = '" . $_SESSION['languages_id'] . "' AND products_id = '" . $current_pid . "'";
+    $query = "SELECT * FROM ".TABLE_PRODUCTS_DESCRIPTION."  where language_id = '" . xtc_db_input((int)$_SESSION['languages_id']) . "' AND products_id = '" . xtc_db_input((int)$current_pid) . "'";
 
     $result = xtc_db_query($query);
 

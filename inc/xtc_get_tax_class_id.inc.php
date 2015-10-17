@@ -15,7 +15,7 @@
     $tax_query = xtc_db_query("SELECT
                                products_tax_class_id
                                FROM ".TABLE_PRODUCTS."
-                               where products_id='".$products_id."'");
+                               where products_id='".xtc_db_input((int)$products_id)."'");
     $tax_query_data=xtc_db_fetch_array($tax_query);
 
     return $tax_query_data['products_tax_class_id'];

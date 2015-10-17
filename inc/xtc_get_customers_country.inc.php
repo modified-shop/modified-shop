@@ -16,10 +16,10 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_get_customers_country($customers_id) {
-    $customers_query = xtc_db_query("select customers_default_address_id from " . TABLE_CUSTOMERS . " where customers_id = '" . $customers_id . "'");
+    $customers_query = xtc_db_query("select customers_default_address_id from " . TABLE_CUSTOMERS . " where customers_id = '" . xtc_db_input((int)$customers_id) . "'");
     $customers = xtc_db_fetch_array($customers_query);
 
-    $address_book_query = xtc_db_query("select entry_country_id from " . TABLE_ADDRESS_BOOK . " where address_book_id = '" . $customers['customers_default_address_id'] . "'");
+    $address_book_query = xtc_db_query("select entry_country_id from " . TABLE_ADDRESS_BOOK . " where address_book_id = '" . xtc_db_input((int)$customers['customers_default_address_id']) . "'");
     $address_book = xtc_db_fetch_array($address_book_query);
     return $address_book['entry_country_id'];
     }

@@ -21,7 +21,7 @@ function xtc_check_categories_status($categories_id) {
 	                                   categories_status
 	                                   FROM ".TABLE_CATEGORIES."
 	                                   WHERE
-	                                   categories_id = '".(int) $categories_id."'";
+	                                   categories_id = '".xtc_db_input((int)$categories_id)."'";
 
 	$categorie_query = xtDBquery($categorie_query);
 
@@ -43,7 +43,7 @@ function xtc_get_categoriesstatus_for_product($product_id) {
 	$categorie_query = "SELECT
 	                                   categories_id
 	                                   FROM ".TABLE_PRODUCTS_TO_CATEGORIES."
-	                                   WHERE products_id='".$product_id."'";
+	                                   WHERE products_id='".xtc_db_input((int)$product_id)."'";
 
 	$categorie_query = xtDBquery($categorie_query);
 

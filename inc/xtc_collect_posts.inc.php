@@ -44,7 +44,7 @@
         $gv_result = xtc_db_fetch_array($gv_query);
 
         if (xtc_db_num_rows($gv_query) != 0) {
-          $redeem_query = xtc_db_query("select * from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $gv_result['coupon_id'] . "'");
+          $redeem_query = xtc_db_query("select * from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . xtc_db_input($gv_result['coupon_id']) . "'");
           if ( (xtc_db_num_rows($redeem_query) != 0) && ($gv_result['coupon_type'] == 'G') ) {
             xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message=' . urlencode(ERROR_NO_INVALID_REDEEM_GV), 'NONSSL')); // web28 - 2011-04-14 - change SSL -> NONSSL
           }
@@ -61,23 +61,23 @@
           // date
           // redemption flag
           // now update customer account with gv_amount
-          $gv_amount_query = xtc_db_query("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = '" . $_SESSION['customer_id'] . "'");
+          $gv_amount_query = xtc_db_query("select amount from " . TABLE_COUPON_GV_CUSTOMER . " where customer_id = '" . xtc_db_input((int)$_SESSION['customer_id']) . "'");
           $customer_gv = false;
           $total_gv_amount = $gv_amount;
           if ($gv_amount_result = xtc_db_fetch_array($gv_amount_query)) {
             $total_gv_amount = $gv_amount_result['amount'] + $gv_amount;
             $customer_gv = true;
           }
-          $gv_update = xtc_db_query("update " . TABLE_COUPONS . " set coupon_active = 'N' where coupon_id = '" . $gv_result['coupon_id'] . "'");
-          $gv_redeem = xtc_db_query("insert into  " . TABLE_COUPON_REDEEM_TRACK . " (coupon_id, customer_id, redeem_date, redeem_ip) values ('" . $gv_result['coupon_id'] . "', '" . $_SESSION['customer_id'] . "', now(),'" . $REMOTE_ADDR . "')");
+          $gv_update = xtc_db_query("update " . TABLE_COUPONS . " set coupon_active = 'N' where coupon_id = '" . xtc_db_input($gv_result['coupon_id']) . "'");
+          $gv_redeem = xtc_db_query("insert into  " . TABLE_COUPON_REDEEM_TRACK . " (coupon_id, customer_id, redeem_date, redeem_ip) values ('" . xtc_db_input($gv_result['coupon_id']) . "', '" . xtc_db_input((int)$_SESSION['customer_id']) . "', now(),'" . $REMOTE_ADDR . "')");
           if ($customer_gv) {
             // already has gv_amount so update
-            $gv_update = xtc_db_query("update " . TABLE_COUPON_GV_CUSTOMER . " set amount = '" . $total_gv_amount . "' where customer_id = '" . $_SESSION['customer_id'] . "'");
+            $gv_update = xtc_db_query("update " . TABLE_COUPON_GV_CUSTOMER . " set amount = '" . $total_gv_amount . "' where customer_id = '" . xtc_db_input((int)$_SESSION['customer_id']) . "'");
           } else {
             // no gv_amount so insert
-            $gv_insert = xtc_db_query("insert into " . TABLE_COUPON_GV_CUSTOMER . " (customer_id, amount) values ('" . $_SESSION['customer_id'] . "', '" . $total_gv_amount . "')");
+            $gv_insert = xtc_db_query("insert into " . TABLE_COUPON_GV_CUSTOMER . " (customer_id, amount) values ('" . xtc_db_input((int)$_SESSION['customer_id']) . "', '" . $total_gv_amount . "')");
           }
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info=1&info_message=' . urlencode(REDEEMED_AMOUNT. $xtPrice->xtcFormat($gv_amount,true,0,true)), 'NONSSL')); // web28 - 2011-04-13  New  class distinction  error / info // web28 - 2011-04-14 - change SSL -> NONSSL
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info=1info_message=' . urlencode(REDEEMED_AMOUNT. $xtPrice->xtcFormat($gv_amount,true,0,true)), 'NONSSL')); // web28 - 2011-04-13  New  class distinction  error / info // web28 - 2011-04-14 - change SSL -> NONSSL
 
 
       } else {
@@ -110,8 +110,8 @@
           xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message=' . urlencode(ERROR_INVALID_FINISDATE_COUPON), 'NONSSL')); // web28 - 2011-04-14 - change SSL -> NONSSL
         }
 
-        $coupon_count = xtc_db_query("select coupon_id from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $gv_result['coupon_id']."'");
-        $coupon_count_customer = xtc_db_query("select coupon_id from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $gv_result['coupon_id']."' and customer_id = '" . $_SESSION['customer_id'] . "'");
+        $coupon_count = xtc_db_query("select coupon_id from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . xtc_db_input($gv_result['coupon_id'])."'");
+        $coupon_count_customer = xtc_db_query("select coupon_id from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $gv_result['coupon_id']."' and customer_id = '" . xtc_db_input((int)$_SESSION['customer_id']) . "'");
 
         if (xtc_db_num_rows($coupon_count)>=$gv_result['uses_per_coupon'] && $gv_result['uses_per_coupon'] > 0) {
           xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message=' . urlencode(ERROR_INVALID_USES_COUPON . $gv_result['uses_per_coupon'] . TIMES ), 'NONSSL')); // web28 - 2011-04-14 - change SSL -> NONSSL
