@@ -21,7 +21,7 @@ function xtc_get_download($content_id) {
 					content_file,
 					content_read
 					FROM ".TABLE_PRODUCTS_CONTENT."
-					WHERE content_id='".$content_id."'");
+					WHERE content_id='".xtc_db_input((int)$content_id)."'");
 					
 	$content_data=xtc_db_fetch_array($content_query);
 	// update file counter
@@ -29,7 +29,7 @@ function xtc_get_download($content_id) {
 	xtc_db_query("UPDATE 
 			".TABLE_PRODUCTS_CONTENT." 
 			SET content_read='".($content_data['content_read']+1)."'
-			WHERE content_id='".$content_id."'");
+			WHERE content_id='".xtc_db_input((int)$content_id)."'");
 	
 	// original filename
 	$filename = DIR_FS_CATALOG.'media/products/'.$content_data['content_file'];

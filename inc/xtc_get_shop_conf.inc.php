@@ -28,7 +28,7 @@
 											FROM
 												shop_configuration
 											WHERE
-												configuration_key = '" . $key . "'
+												configuration_key = '" . xtc_db_input($key) . "'
 												LIMIT 1
 											");
 					if(xtc_db_num_rows($configuration_query) == 1){
@@ -49,7 +49,7 @@
 										FROM
 											shop_configuration
 										WHERE
-											configuration_key = '" . $configuration_key . "'
+											configuration_key = '" . xtc_db_input($configuration_key) . "'
 											LIMIT 1
 										");
 

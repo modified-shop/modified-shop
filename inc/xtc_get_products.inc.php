@@ -44,7 +44,7 @@ function xtc_get_products($session) {
   if (is_array($session['cart']->contents)) {     
   //EOF - Dokuman - 2009-11-30 - check for array in cart
       while (list($products_id, ) = each($session['cart']->contents)) {
-        $products_query = xtc_db_query("select p.products_id, pd.products_name,p.products_image, p.products_model, p.products_price, p.products_discount_allowed, p.products_weight, p.products_tax_class_id from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id='" . xtc_get_prid($products_id) . "' and pd.products_id = p.products_id and pd.language_id = '" . $_SESSION['languages_id'] . "'");
+        $products_query = xtc_db_query("select p.products_id, pd.products_name,p.products_image, p.products_model, p.products_price, p.products_discount_allowed, p.products_weight, p.products_tax_class_id from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id='" . xtc_db_input((int)xtc_get_prid($products_id)) . "' and pd.products_id = p.products_id and pd.language_id = '" . xtc_db_input((int)$_SESSION['languages_id']) . "'");
         if ($products = xtc_db_fetch_array($products_query)) {
           $prid = $products['products_id'];
 
@@ -83,7 +83,7 @@ function attributes_price($products_id,$session) {
   if (isset($session['contents'][$products_id]['attributes'])) {
     reset($session['contents'][$products_id]['attributes']);
     while (list($option, $value) = each($session['contents'][$products_id]['attributes'])) {
-      $attribute_price_query = xtc_db_query("select pd.products_tax_class_id, p.options_values_price, p.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " p, " . TABLE_PRODUCTS . " pd where p.products_id = '" . $products_id . "' and p.options_id = '" . $option . "' and pd.products_id = p.products_id and p.options_values_id = '" . $value . "'");
+      $attribute_price_query = xtc_db_query("select pd.products_tax_class_id, p.options_values_price, p.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " p, " . TABLE_PRODUCTS . " pd where p.products_id = '" . xtc_db_input((int)$products_id) . "' and p.options_id = '" . xtc_db_input((int)$option) . "' and pd.products_id = p.products_id and p.options_values_id = '" . xtc_db_input((int)$value) . "'");
       $attribute_price = xtc_db_fetch_array($attribute_price_query);
       if ($attribute_price['price_prefix'] == '+') {
         $attributes_price += $xtPrice->xtcFormat($attribute_price['options_values_price'],false,$attribute_price['products_tax_class_id']);

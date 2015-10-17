@@ -19,13 +19,13 @@
     $countries_array = array();
     if (xtc_not_null($countries_id)) {
       if ($with_iso_codes == true) {
-        $countries = xtc_db_query("select countries_name, countries_iso_code_2, countries_iso_code_3 from " . TABLE_COUNTRIES . " where countries_id = '" . (int)$countries_id . "' and status = '1' order by countries_name");
+        $countries = xtc_db_query("select countries_name, countries_iso_code_2, countries_iso_code_3 from " . TABLE_COUNTRIES . " where countries_id = '" . xtc_db_input((int)$countries_id) . "' and status = '1' order by countries_name");
         $countries_values = xtc_db_fetch_array($countries);
         $countries_array = array('countries_name' => $countries_values['countries_name'],
                                  'countries_iso_code_2' => $countries_values['countries_iso_code_2'],
                                  'countries_iso_code_3' => $countries_values['countries_iso_code_3']);
       } else {
-        $countries = xtc_db_query("select countries_name from " . TABLE_COUNTRIES . " where countries_id = '" . (int)$countries_id . "' and status = '1'");
+        $countries = xtc_db_query("select countries_name from " . TABLE_COUNTRIES . " where countries_id = '" . xtc_db_input((int)$countries_id) . "' and status = '1'");
         $countries_values = xtc_db_fetch_array($countries);
         $countries_array = array('countries_name' => $countries_values['countries_name']);
       }

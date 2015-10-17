@@ -17,6 +17,6 @@
 
   // Update the banner click statistics
   function xtc_update_banner_click_count($banner_id) {
-    xtc_db_query("update " . TABLE_BANNERS_HISTORY . " set banners_clicked = banners_clicked + 1 where banners_id = '" . $banner_id . "' and date_format(banners_history_date, '%Y%m%d') = date_format(now(), '%Y%m%d')");
+    xtc_db_query("update " . TABLE_BANNERS_HISTORY . " set banners_clicked = banners_clicked + 1 where banners_id = '" . xtc_db_input((int)$banner_id) . "' and date_format(banners_history_date, '%Y%m%d') = date_format(now(), '%Y%m%d')");
   }
 ?>

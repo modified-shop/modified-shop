@@ -18,7 +18,7 @@ function xtc_validate_vatid_status($customer_id) {
 
     $customer_status_query = xtc_db_query("SELECT customers_vat_id_status 
                                              FROM " . TABLE_CUSTOMERS . "
-                                            WHERE customers_id='" . $customer_id . "'");
+                                            WHERE customers_id='" . xtc_db_input((int)$customer_id) . "'");
     $customer_status_value = xtc_db_fetch_array($customer_status_query);
 
     // BOF - Dokuman - 2011-09-13 - display correct error code of VAT ID check

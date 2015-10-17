@@ -16,7 +16,7 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_get_geo_zone_code($country_id) {
-    $geo_zone_query = xtc_db_query("select geo_zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where zone_country_id = '" . $country_id . "'");
+    $geo_zone_query = xtc_db_query("select geo_zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where zone_country_id = '" . xtc_db_input((int)$country_id) . "'");
     $geo_zone = xtc_db_fetch_array($geo_zone_query);
     return $geo_zone['geo_zone_id'];
     }

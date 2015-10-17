@@ -21,7 +21,7 @@
     
     //BOF - Dokuman - 2009-09-02: do not count products when GROUP_CHECK disabled
 		if(GROUP_CHECK == 'true') {
-			$group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
+			$group_check = " AND p.group_permission_".xtc_db_input((int)$_SESSION['customers_status']['customers_status_id'])."=1 ";
 		}
     //EOF - Dokuman - 2009-09-02: do not count products when GROUP_CHECK disabled
 
@@ -29,13 +29,13 @@
     if ($include_inactive == true) {
     //BOF - Dokuman - 2009-09-02: do not count products when GROUP_CHECK disabled   
     //$products_query = "select count(*) as total from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_id = p2c.products_id and p2c.categories_id = '" . $category_id . "'";
-			$products_query = "select count(*) as total from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_id = p2c.products_id and p2c.categories_id = '" . $category_id . "'".$group_check;
+			$products_query = "select count(*) as total from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_id = p2c.products_id and p2c.categories_id = '" . xtc_db_input((int)$category_id) . "'".$group_check;
     //EOF - Dokuman - 2009-09-02: do not count products when GROUP_CHECK disabled         
 
     } else {
     //BOF - Dokuman - 2009-09-02: do not count products when GROUP_CHECK disabled     
     //$products_query = "select count(*) as total from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_id = p2c.products_id and p.products_status = '1' and p2c.categories_id = '" . $category_id . "'";
-      $products_query = "select count(*) as total from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_id = p2c.products_id and p.products_status = '1' and p2c.categories_id = '" . $category_id . "'".$group_check;   
+      $products_query = "select count(*) as total from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_id = p2c.products_id and p.products_status = '1' and p2c.categories_id = '" . xtc_db_input((int)$category_id) . "'".$group_check;   
     //EOF - Dokuman - 2009-09-02: do not count products when GROUP_CHECK disabled         
     }
 
@@ -46,10 +46,10 @@
 
     //BOF - Dokuman - 2009-09-02: do not count products when GROUP_CHECK disabled         
 		if(GROUP_CHECK == 'true') {
-			$group_check = " AND group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
+			$group_check = " AND group_permission_".xtc_db_input((int)$_SESSION['customers_status']['customers_status_id'])."=1 ";
 		}
     //$child_categories_query = "select categories_id from " . TABLE_CATEGORIES . " where parent_id = '" . $category_id . "'";
-    $child_categories_query = "select categories_id from " . TABLE_CATEGORIES . " where parent_id = '" . $category_id . "'".$group_check;
+    $child_categories_query = "select categories_id from " . TABLE_CATEGORIES . " where parent_id = '" . xtc_db_input((int)$category_id) . "'".$group_check;
     //EOF - Dokuman - 2009-09-02: do not count products when GROUP_CHECK disabled         
 
     $child_categories_query = xtDBquery($child_categories_query);

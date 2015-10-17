@@ -18,10 +18,10 @@
 // Display a banner from the specified group or banner id ($identifier)
   function xtc_display_banner($action, $identifier) {
     if ($action == 'dynamic') {
-      $banners_query = xtc_db_query("select count(*) as count from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . $identifier . "'");
+      $banners_query = xtc_db_query("select count(*) as count from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . xtc_db_input($identifier) . "'");
       $banners = xtc_db_fetch_array($banners_query);
       if ($banners['count'] > 0) {
-        $banner = xtc_random_select("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . $identifier . "'");
+        $banner = xtc_random_select("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . xtc_db_input($identifier) . "'");
       } else {
         return '<strong>XTC ERROR! (xtc_display_banner(' . $action . ', ' . $identifier . ') -> No banners with group \'' . $identifier . '\' found!</strong>';
       }
@@ -29,7 +29,7 @@
       if (is_array($identifier)) {
         $banner = $identifier;
       } else {
-        $banner_query = xtc_db_query("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_id = '" . $identifier . "'");
+        $banner_query = xtc_db_query("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_id = '" . xtc_db_input($identifier) . "'");
         if (xtc_db_num_rows($banner_query)) {
           $banner = xtc_db_fetch_array($banner_query);
         } else {

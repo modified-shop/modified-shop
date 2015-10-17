@@ -28,7 +28,7 @@
      if ($_SESSION['languages_id']=='') {
      $customers_statuses_query = xtc_db_query("select * from " . TABLE_CUSTOMERS_STATUS . " where language_id = '1' order by customers_status_id");
      } else {
-     $customers_statuses_query = xtc_db_query("select * from " . TABLE_CUSTOMERS_STATUS . " where language_id = '" . $_SESSION['languages_id'] . "' order by customers_status_id");
+     $customers_statuses_query = xtc_db_query("select * from " . TABLE_CUSTOMERS_STATUS . " where language_id = '" . xtc_db_input((int)$_SESSION['languages_id']) . "' order by customers_status_id");
      }
 
      $i=1;

@@ -24,7 +24,7 @@ $currencies_query = xtc_db_query("SELECT symbol_left,
           decimal_places,
           value
           FROM ". TABLE_CURRENCIES ." WHERE
-          code = '".$currency ."'");
+          code = '".xtc_db_input($currency)."'");
 $currencies_value=xtc_db_fetch_array($currencies_query);
 $currencies_data=array();
 $currencies_data=array(
@@ -42,7 +42,7 @@ $currencies_query = xtc_db_query("SELECT symbol_left,
           thousands_point,
           value
           FROM ". TABLE_CURRENCIES ." WHERE
-          code = '".$currency ."'");
+          code = '".xtc_db_input($currency)."'");
 $currencies_value=xtc_db_fetch_array($currencies_query);
 $price_string=number_format($price_string,$currencies_data['DECIMAL_PLACES'], $currencies_value['decimal_point'], $currencies_value['thousands_point']);
   if ($show_currencies == 1) {

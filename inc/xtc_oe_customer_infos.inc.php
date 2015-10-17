@@ -24,7 +24,7 @@
 
   function  xtc_oe_customer_infos($customers_id) {
 
-    $customer_query = xtc_db_query("select a.entry_country_id, a.entry_zone_id from " . TABLE_CUSTOMERS . " c, " . TABLE_ADDRESS_BOOK . " a where c.customers_id  = '" . $customers_id . "' and c.customers_id = a.customers_id and c.customers_default_address_id = a.address_book_id");
+    $customer_query = xtc_db_query("select a.entry_country_id, a.entry_zone_id from " . TABLE_CUSTOMERS . " c, " . TABLE_ADDRESS_BOOK . " a where c.customers_id  = '" . xtc_db_input((int)$customers_id) . "' and c.customers_id = a.customers_id and c.customers_default_address_id = a.address_book_id");
     $customer = xtc_db_fetch_array($customer_query);
 
 

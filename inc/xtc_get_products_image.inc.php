@@ -17,7 +17,7 @@
    
   function xtc_get_products_image($products_id = '') {
 
-    $product_query = "select products_image from " . TABLE_PRODUCTS . " where products_id = '" . $products_id . "'";
+    $product_query = "select products_image from " . TABLE_PRODUCTS . " where products_id = '" . xtc_db_input((int)$products_id) . "'";
     $product_query  = xtDBquery($product_query);
     $products_image = xtc_db_fetch_array($product_query,true);
 

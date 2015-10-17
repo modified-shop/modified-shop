@@ -61,7 +61,7 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
   }
 
   //-- XTC
-  (!isset($languages_id)) ? $languages_id = $_SESSION['languages_id'] : false;
+  (!isset($languages_id)) ? $languages_id = (int)$_SESSION['languages_id'] : false;
 
   //BOF - web28 - 2010-08-18 -- Die Parameter aufspalten
   $pararray = array();
@@ -80,6 +80,9 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
   $lang       = (isset($pararray['language']))?$pararray['language']:'';
   $sort       = (isset($pararray['sort']))?$pararray['sort']:'';
   $filter_id  = (isset($pararray['filter_id']))?$pararray['filter_id']:'';
+  $viewmode   = (isset($pararray['viewmode']))?$pararray['viewmode']:'';
+  $view_mode  = (isset($pararray['viewmode']))?$pararray['view_mode']:'';
+  $prllset    = (isset($pararray['prllset']))?$pararray['prllset']:'';
   $action     = (isset($pararray['action']))?$pararray['action']:'';
 
   //EOF - web28 - 2010-08-18 -- Die Parameter aufspalten
@@ -94,7 +97,13 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
   } elseif (strlen($filter_id)>0) {
     //-- Sortieren der Herstellerprodukte
     $go = false;
-  } elseif (strlen($action)>0) {
+  } elseif (strlen($view_mode)>0) {
+    $go = false;
+  } elseif (strlen($viewmode)>0) {
+    $go = false;
+  } elseif (strlen($prllset)>0) {
+    $go = false;
+  }  elseif (strlen($action)>0) {
     //-- Andere Aktion
     $go = false;
   }
@@ -174,7 +183,7 @@ function shopstat_getRealPath($cPath, $delimiter = '/', $language = '') {
     return;
   }
   if(empty($language)){
-    $language = $_SESSION['languages_id'];
+    $language = (int)$_SESSION['languages_id'];
   }
 
   $path       = explode("_",$cPath);

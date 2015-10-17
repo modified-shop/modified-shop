@@ -16,7 +16,7 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_has_category_subcategories($category_id) {
-    $child_category_query = "select count(*) as count from " . TABLE_CATEGORIES . " where parent_id = '" . $category_id . "'";
+    $child_category_query = "select count(*) as count from " . TABLE_CATEGORIES . " where parent_id = '" . xtc_db_input((int)$category_id) . "'";
     $child_category_query = xtDBquery($child_category_query);
     $child_category = xtc_db_fetch_array($child_category_query,true);
 
