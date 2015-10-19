@@ -22,7 +22,7 @@
 
   // The HTML href link wrapper function for frontend
   function xtc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session = false) {
-    return xtc_href_link($page, $parameters, $connection, $add_session, false, true, true);
+    return xtc_href_link($page, $parameters, $connection, $add_session, true, true, true);
   }
 
   // The HTML image wrapper function

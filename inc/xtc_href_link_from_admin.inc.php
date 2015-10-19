@@ -20,44 +20,7 @@
    (c) 2004 ShopStat.com - All Rights Reserved.
    ---------------------------------------------------------------------------------------*/
 
-  function xtc_href_link_from_admin($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = false, $search_engine_safe = true) {
-    global $request_type, $session_started, $http_domain, $https_domain;
-
-    $page = ($page == FILENAME_DEFAULT && !xtc_not_null($parameters) ? '' : $page);
-
-    $link = $connection == 'SSL' && ENABLE_SSL_CATALOG ? HTTPS_CATALOG_SERVER : HTTP_CATALOG_SERVER;
-    $link .= DIR_WS_CATALOG . $page;
-
-    $separator = '?';
-    if (xtc_not_null($parameters)) {
-      $link .= '?' . $parameters;
-      $separator = '&';
-    }
-
-    $link = rtrim($link, '&?'); // strip ?/& from the end of link
-
-    if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $search_engine_safe) {
-      require_once (DIR_FS_INC . 'seo_url_mod.php');
-      list($link, $separator) = seo_url_mod($link, $page, $parameters, $connection, $separator);
-    }
-
-    // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ($add_session_id == true && $session_started == true
-        && (SESSION_FORCE_COOKIE_USE == 'False')
-       ) 
-    {
-      if (defined('SID')
-          && constant('SID') != '')
-      {
-        $link .= $separator . session_name() . '=' . session_id();
-      } elseif ( 
-        ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) )
-          || ( ($request_type == 'SSL') && ($connection == 'NONSSL') )
-        ) && $http_domain != $https_domain) {
-        $link .= $separator . session_name() . '=' . session_id();
-      }
-    }
-
-    return $link;
+  function xtc_href_link_from_admin($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = false, $search_engine_safe = true) {    
+    return xtc_href_link($page, $parameters, $connection, $add_session, $search_engine_safe, true, true);
   }
 ?>
