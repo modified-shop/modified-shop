@@ -15,7 +15,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 class admin_log {
   var $code, $title, $description, $enabled;
 
-  function admin_log() {
+  function __construct() {
      $this->code = 'admin_log';
      $this->title = MODULE_ADMIN_LOG_TEXT_TITLE;
      $this->description = MODULE_ADMIN_LOG_TEXT_DESCRIPTION;
