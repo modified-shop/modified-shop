@@ -131,18 +131,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $error = true;
     $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
   } elseif ($email_address != $confirm_email_address) {
-     $error = true;
-     $messageStack->add('create_account', ENTRY_EMAIL_ERROR_NOT_MATCHING);
-  } else {
-    $check_email_query = xtc_db_query("SELECT count(*) as total
-                                         FROM ".TABLE_CUSTOMERS."
-                                        WHERE customers_email_address = '".xtc_db_input($email_address)."'
-                                          AND account_type = '0'");
-    $check_email = xtc_db_fetch_array($check_email_query);
-    if ($check_email['total'] > 0) {
-      $error = true;
-      $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
-    }
+    $error = true;
+    $messageStack->add('create_account', ENTRY_EMAIL_ERROR_NOT_MATCHING);
   }
 
   if (strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
