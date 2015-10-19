@@ -22,7 +22,7 @@ include(DIR_FS_BOXES_INC . 'smarty_default.php');
 // reset cache id
 $cache_id = '';
 
-if ($product->isProduct() && $_SESSION['customers_status']['customers_status_write_reviews'] == '1') {
+if ($product->isProduct() === true && $_SESSION['customers_status']['customers_status_write_reviews'] == '1') {
   
   // set cache id
   $cache_id = md5($_SESSION['language']);
@@ -36,7 +36,7 @@ if ($product->isProduct() && $_SESSION['customers_status']['customers_status_wri
 } elseif ($_SESSION['customers_status']['customers_status_read_reviews'] == 1) {
 
   $product_select = '';
-  if ($product->isProduct()) {
+  if ($product->isProduct() === true) {
     $product_select = "AND p.products_id = '" . $product->data['products_id'] . "'";
   }
 

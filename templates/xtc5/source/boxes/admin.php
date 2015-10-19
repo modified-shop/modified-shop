@@ -48,7 +48,7 @@
                                          AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
   $admin_status = xtc_db_fetch_array($admin_status_query);
   $admin_image = '<a href="'.xtc_href_link_admin(FILENAME_START,'').'">'.xtc_image_button('button_admin.gif', IMAGE_BUTTON_ADMIN).'</a>';
-  if ($product->isProduct()) {
+  if ($product->isProduct() === true) {
     $admin_link='<a href="'.xtc_href_link_admin(FILENAME_EDIT_PRODUCTS, 'cPath='.$cPath.'&pID='.$product->data['products_id']).'&action=new_product'.'">'.xtc_image_button('edit_product.gif', IMAGE_BUTTON_PRODUCT_EDIT).'</a>';
   } elseif (isset($_GET['coID'])) {
     $admin_link = '<a href="'.xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'content_manager.php', 'action=edit&coID='.(int)$_GET['coID']).'">'.xtc_image_button('edit_content.gif', IMAGE_BUTTON_CONTENT_EDIT).'</a>';

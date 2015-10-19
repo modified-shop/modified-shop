@@ -102,7 +102,7 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
 // -----------------------------------------------------------------------------------------
 //	product details
 // -----------------------------------------------------------------------------------------
-  if ($product->isProduct()) {
+  if ($product->isProduct() === true) {
     require_once(DIR_FS_BOXES . 'manufacturer_info.php');
   } else {
     require_once(DIR_FS_BOXES . 'best_sellers.php');

@@ -42,7 +42,7 @@ define('PRODUCTS_CANONICAL_CAT_ID', false);
 if (isset ($_GET['cPath']) && (!isset($product) || !is_object($product))) {
   $cPath = $_GET['cPath'] = xtc_input_validation($_GET['cPath'], 'cPath', '');
 } elseif (isset($product) && is_object($product) && !isset($_GET['manufacturers_id'])) {
-  if ($product->isProduct()) {
+  if ($product->isProduct() === true) {
     require_once (DIR_FS_INC.'product_redirect.inc.php');
     $cPath = product_redirect($actual_products_id);
   } else {

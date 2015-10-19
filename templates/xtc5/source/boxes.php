@@ -58,7 +58,7 @@
 // -----------------------------------------------------------------------------------------
 //	Produkt-Detailseiten
 // -----------------------------------------------------------------------------------------
-  if ($product->isProduct()) {
+  if ($product->isProduct() === true) {
     //Aktuelle Seite ist Produkt-Detailseite
     require_once(DIR_WS_BOXES . 'manufacturer_info.php');
   } else {

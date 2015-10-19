@@ -46,6 +46,6 @@ if (isset ($cPath_array)) {
 }
 
 // add the products model/name to the breadcrumb trail
-if ($product->isProduct()) {
+if ($product->isProduct() === true) {
   $breadcrumb->add($product->getBreadcrumbModel(), xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($product->data['products_id'], $product->data['products_name'])));
 }

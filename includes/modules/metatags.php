@@ -290,7 +290,7 @@ switch(basename($PHP_SELF)) {
 // ---------------------------------------------------------------------------------------
   case FILENAME_PRODUCT_INFO :
 
-    if($product->isProduct()) {
+    if($product->isProduct() === true) {
       // KeyWords ...
       if(!empty($product->data['products_meta_keywords'])) {
         $meta_keyw = $product->data['products_meta_keywords'];

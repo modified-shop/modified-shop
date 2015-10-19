@@ -51,13 +51,13 @@
                          AND trim(pd.products_name) != ''
                          AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
 
-    if ($product->isProduct()) {
+    if ($product->isProduct() === true) {
       $random_select .= " AND p.products_id = '" . $product->data['products_id'] . "'";
     }
     $random_select .= " ORDER BY r.reviews_id DESC LIMIT " . MAX_RANDOM_SELECT_REVIEWS;
     $random_product = xtc_random_select($random_select);
 
-    if ($product->isProduct()) {
+    if ($product->isProduct() === true) {
       // display product review box
       $random = false;
       // no write permission if in customer group set to off

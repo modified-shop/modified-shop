@@ -33,7 +33,7 @@ $smarty = new Smarty;
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($_SESSION['customers_status']['customers_status_write_reviews'] == 0) {
-  if (is_object($product) && $product->isProduct()) {
+  if (is_object($product) && $product->isProduct() === true) {
     xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'review_prod_id=' .(int)$product->data['products_id'], 'SSL'));
   } else {
     xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
@@ -43,7 +43,7 @@ if ($_SESSION['customers_status']['customers_status_write_reviews'] == 0) {
 $review = '';
 $rating = '';
 if (isset ($_GET['action']) && $_GET['action'] == 'process') {
-  if (is_object($product) && $product->isProduct()) { // We got to the process but it is an illegal product, don't write
+  if (is_object($product) && $product->isProduct() === true) { // We got to the process but it is an illegal product, don't write
     
     $review = xtc_db_prepare_input($_POST['review']);
     $rating = xtc_db_prepare_input($_POST['rating']);
@@ -100,7 +100,7 @@ $breadcrumb->add(NAVBAR_TITLE_REVIEWS_WRITE, xtc_href_link(FILENAME_PRODUCT_REVI
 
 require (DIR_WS_INCLUDES.'header.php');
 
-if (!$product->isProduct()) {
+if ($product->isProduct() === false) {
   $smarty->assign('error', ERROR_INVALID_PRODUCT);
   $smarty->assign('no_product', true);
 } else {

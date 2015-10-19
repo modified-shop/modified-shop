@@ -91,7 +91,7 @@ if (isset($_SESSION['login_success']) && $_SESSION['login_success']) {
 $current_page = join('',preg_grep("/.+\.php$/", preg_split("/\?|\//", $_SERVER['PHP_SELF'])));
 switch ($current_page) {
 	case FILENAME_PRODUCT_INFO:
-		if (is_object($product) && $product->isProduct()) {
+		if (is_object($product) && $product->isProduct() === true) {
 			$item = product_to_EMOSItem($product->data['products_id'],$_SESSION['languages_id'], 1);
 			$emos->addDetailView($item);
 		}
