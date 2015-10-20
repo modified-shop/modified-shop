@@ -391,6 +391,7 @@ $values_group_update = array();
                            );
 
   //configuration_group_id 111125 --- "Paypal"
+  $values_group[] = "(111125,'PayPal','PayPal',111125,1);";
   if (defined('MODULE_PAYMENT_PAYPAL_STATUS') || defined('MODULE_PAYMENT_PAYPALEXPRESS_STATUS')) {
     $values[] = "(NULL, 'PAYPAL_BRANDNAME', '', '111125', '26', NULL, NOW(), NULL, NULL);";
   }
