@@ -1794,7 +1794,7 @@ INSERT INTO configuration_group VALUES (25,'Captcha','Captcha Configuration',25,
 INSERT INTO configuration_group VALUES (31,'Moneybookers','Moneybookers System',31,1);
 INSERT INTO configuration_group VALUES (40,'Popup Window Configuration','Popup Window Parameters',40,1);
 INSERT INTO configuration_group VALUES (1000,'Adminarea Options','Adminarea Configuration', 1000,1);
-INSERT INTO configuration_group VALUES (111125,'PayPal','PayPal',111125,1)
+INSERT INTO configuration_group VALUES (111125,'PayPal','PayPal',111125,1);
 
 # content manager - english
 INSERT INTO content_manager VALUES (1, 0, 0, '', 1, 'Shipping & Returns', 'Shipping & Returns', 'Put here your Shipping &amp; Returns information.', 0, 1, '', 1, 1, 0, '', '', '', '', '1', 0);
