@@ -539,10 +539,19 @@
         $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); //$products[$i]['final_price'] is quantity * plain price including attributes_price
 
         if (count($products_attributes) > 0) {
+          if($this->products[$index]['model'] == ''){//no-model in orders_products problem
+		    $check_attributes_model = true;
+		    $attributes_model = array();
+	      }else{
+		    $check_attributes_model = false;
+	      }
           $subindex = 0;
           reset($products_attributes);
           while (list($option, $value) = each($products_attributes)) {
             $attributes = $main->getAttributes($products[$i]['id'],$option,$value);
+            if(($check_attributes_model) && ($attributes['attributes_model'] != '')){//no-model in orders_products problem
+              $attributes_model[] = $attributes['attributes_model'];
+            }
             $this->products[$index]['attributes'][$subindex] = array(
                 'option' => $attributes['products_options_name'],
                 'value' => $attributes['products_options_values_name'],
@@ -560,6 +569,10 @@
             }
 
             $subindex++;
+          }
+          if($check_attributes_model && (count($attributes_model) > 0)){//no-model in orders_products problem
+          	$attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
+          	$this->products[$index]['model'] = implode($attr_model_delimiter, $attributes_model);
           }
         }
 
