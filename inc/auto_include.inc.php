@@ -12,6 +12,7 @@
 
 function auto_include($dir, $ext = 'php', $expr = '*') 
 {
+  $dir = rtrim($dir,'/');
   $files = glob("{$dir}/$expr.".$ext);
   $files = ((is_array($files)) ? $files : array());
   
