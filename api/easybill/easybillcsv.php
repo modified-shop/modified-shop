@@ -25,7 +25,7 @@
 
     define('_VALID_XTC', true);
     
-    include(DIR_FS_CATALOG.'admin/includes/modules/system/easybillcsv.php');
+    include(DIR_FS_CATALOG.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/modules/system/easybillcsv.php');
     $module = new easybillcsv();
 
     $module->export = 'no';
