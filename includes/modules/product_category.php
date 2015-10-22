@@ -30,6 +30,7 @@ if (isset($current_category_id)) {
                                WHERE p.products_status = '1'
                                  AND p.products_id != '".$product->data['products_id']."'
                                      ".PRODUCTS_CONDITIONS_P."
+                            GROUP BY p.products_id
                             ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
                                LIMIT ".MAX_DISPLAY_PRODUCTS_CATEGORY;
 
