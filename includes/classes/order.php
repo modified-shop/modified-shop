@@ -114,7 +114,10 @@
         $order_total['ot_fee'] += $order_total['ot_payment'];
       }
 
-      $order_status_query = xtc_db_query("SELECT orders_status_name FROM " . TABLE_ORDERS_STATUS . " WHERE orders_status_id = '" . $order['orders_status'] . "' AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
+      $order_status_query = xtc_db_query("SELECT orders_status_name 
+                                            FROM " . TABLE_ORDERS_STATUS . " 
+                                           WHERE orders_status_id = '" . $order['orders_status'] . "' 
+                                             AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
       $order_status_array = xtc_db_fetch_array($order_status_query);
       $order_status = (!defined('RUN_MODE_ADMIN')) ? $order_status_array['orders_status_name'] : $order['orders_status'];
 
@@ -539,17 +542,16 @@
         $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); //$products[$i]['final_price'] is quantity * plain price including attributes_price
 
         if (count($products_attributes) > 0) {
-          if($this->products[$index]['model'] == ''){//no-model in orders_products problem
-		    $check_attributes_model = true;
-		    $attributes_model = array();
-	      }else{
-		    $check_attributes_model = false;
-	      }
+          $attributes_model = array();
+          $check_attributes_model = false;
+          if ($this->products[$index]['model'] == '') {
+            $check_attributes_model = true;
+  	      }
           $subindex = 0;
           reset($products_attributes);
           while (list($option, $value) = each($products_attributes)) {
             $attributes = $main->getAttributes($products[$i]['id'],$option,$value);
-            if(($check_attributes_model) && ($attributes['attributes_model'] != '')){//no-model in orders_products problem
+            if ($check_attributes_model === true && $attributes['attributes_model'] != '') {
               $attributes_model[] = $attributes['attributes_model'];
             }
             $this->products[$index]['attributes'][$subindex] = array(
@@ -570,7 +572,7 @@
 
             $subindex++;
           }
-          if($check_attributes_model && (count($attributes_model) > 0)){//no-model in orders_products problem
+          if($check_attributes_model === true && count($attributes_model) > 0) {
           	$attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
           	$this->products[$index]['model'] = implode($attr_model_delimiter, $attributes_model);
           }
