@@ -262,10 +262,10 @@ class easybillcsv {
         $filename = 'easybill_' . time() . '.csv';
       }
       $fp = fopen(DIR_FS_DOCUMENT_ROOT.'export/'.$filename, "w+");
-      fputs($fp, utf8_encode('#! exported-by: modified-shop.org' . "\n"));
-      fputs($fp, utf8_encode(implode(';', $filecontent_header) . "\n"));
+      fputs($fp, encode_utf8('#! exported-by: modified-shop.org' . "\n"));
+      fputs($fp, encode_utf8(implode(';', $filecontent_header) . "\n"));
       for ($w=0, $n=sizeof($easybill_export); $w<$n; $w++) {
-        fputs($fp, '"' . utf8_encode(implode('";"', $this->convert($easybill_export[$w])) . '"' . "\n"));
+        fputs($fp, '"' . encode_utf8(implode('";"', $this->convert($easybill_export[$w])) . '"' . "\n"));
       }
       fclose($fp);
 
@@ -292,7 +292,7 @@ class easybillcsv {
         $string[$key] = $this->convert($value);
       }
     } else {
-      $string = html_entity_decode($string);
+      $string = decode_htmlentities($string);
       $string = str_replace('"', '""', $string);
     }
     return $string;
