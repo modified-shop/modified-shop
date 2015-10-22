@@ -18,6 +18,10 @@
 
   require('includes/application_top.php');
 
+  //include special language file
+  if (isset($_GET['gID']) && is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/configuration_'.(int)$_GET['gID'].'.php')) {
+    include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/configuration_'.(int)$_GET['gID'].'.php');
+  }
   //install new configurations
   if (file_exists(DIR_WS_INCLUDES.'configuration_installer.php')) {
     include(DIR_WS_INCLUDES.'configuration_installer.php');
