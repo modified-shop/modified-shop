@@ -164,9 +164,10 @@
             }
             $user_session = unserialize_session_data($session_data);
             
-            $xtPrice = new xtcPrice($user_session['currency'], $user_session['customers_status']['customers_status_id']);
-            
-            if (isset($user_session) && $user_session != '') {
+            if (isset($user_session) && $user_session != 'ENCRYPTED' && ($user_session != '' || is_array($user_session))) {
+              
+              $xtPrice = new xtcPrice($user_session['currency'], $user_session['customers_status']['customers_status_id']);
+              
               if (is_array($user_session['cart']->contents)) {  
                 $products = $user_session['cart']->get_products();
               }
@@ -180,9 +181,9 @@
               } else {
                 $contents[] = array('text' => TEXT_EMPTY_CART);
               }
-              if ($user_session == 'ENCRYPTED') {
-                $contents[] = array('text' => TEXT_SESSION_IS_ENCRYPTED);
-              }
+            }
+            if ($user_session == 'ENCRYPTED') {
+              $contents[] = array('text' => TEXT_SESSION_IS_ENCRYPTED);
             }
           }
           if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
