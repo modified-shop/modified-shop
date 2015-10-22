@@ -29,11 +29,11 @@ class sofort_sofortueberweisung_gateway extends SofortLibPayment {
   function __construct() {
     $this->SofortPayment();
 
-      // logger
+    // logger
     $this->logger = new FileLogger();
-    $this->logger->setLogfilePath(DIR_FS_LOG.'sofort.log');
-    $this->logger->setErrorLogfilePath(DIR_FS_LOG.'sofort_error.log');
-    $this->logger->setWarningsLogfilePath(DIR_FS_LOG.'sofort_warning.log');
+    $this->logger->setLogfilePath(DIR_FS_LOG.'sofort_'.date('Y-m-d').'.log');
+    $this->logger->setErrorLogfilePath(DIR_FS_LOG.'sofort_error_'.date('Y-m-d').'.log');
+    $this->logger->setWarningsLogfilePath(DIR_FS_LOG.'sofort_warning_'.date('Y-m-d').'.log');
 	}
 
 

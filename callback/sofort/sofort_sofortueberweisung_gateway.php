@@ -31,21 +31,15 @@ require_once(DIR_FS_EXTERNAL.'sofort/core/fileLogger.php');
 
 // logger
 $logger = new FileLogger();
-$logger->setLogfilePath(DIR_FS_LOG.'sofort.log');
-$logger->setErrorLogfilePath(DIR_FS_LOG.'sofort_error.log');
-$logger->setWarningsLogfilePath(DIR_FS_LOG.'sofort_warning.log');
+$logger->setLogfilePath(DIR_FS_LOG.'sofort_'.date('Y-m-d').'.log');
+$logger->setErrorLogfilePath(DIR_FS_LOG.'sofort_error_'.date('Y-m-d').'.log');
+$logger->setWarningsLogfilePath(DIR_FS_LOG.'sofort_warning_'.date('Y-m-d').'.log');
 
 // get transaction
 $SofortLibNotification = new SofortLibNotification();
 $tID = $SofortLibNotification->getNotification(get_external_content('php://input', 3, false));
 
 if (xtc_not_null($tID)) {
-
-  // write callback to log
-  $file = 'sofort_gateway_'.date('Y-m-d').'.log';
-  $fp = fopen(DIR_FS_LOG . $file, "a");
-  fwrite($fp, $_SERVER['REQUEST_URI']."\n");
-  fwrite($fp, print_r($SofortLibNotification, true));
 
   $orders_query = xtc_db_query("SELECT order_id
                                   FROM sofort_sofortueberweisung_gateway
@@ -65,8 +59,6 @@ if (xtc_not_null($tID)) {
     $SofortLibTransactionData->addTransaction($tID);
     $SofortLibTransactionData->sendRequest();
 
-    fwrite($fp, print_r($SofortLibNotification, true));
-
     if ($SofortLibTransactionData->isError() === false) {
 
       $tID = $SofortLibTransactionData->getTransaction();
@@ -76,8 +68,6 @@ if (xtc_not_null($tID)) {
       // order id
       $orders = xtc_db_fetch_array($orders_query);
       $order = new order($orders['order_id']);
-
-      fwrite($fp, print_r($order, true));
 
       include_once (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
 
@@ -120,15 +110,10 @@ if (xtc_not_null($tID)) {
                               'comments_sent' => '0'
                               );
 
-      fwrite($fp, print_r($sql_data_array, true));
-      fwrite($fp, 'SUCCESS'."\n");
-      fclose($fp);
-
       xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
     }
 
   } else {
-    fwrite($fp, 'order is missing'."\n");
 
     // order is missing
     header("HTTP/1.0 404 Not Found");
@@ -152,7 +137,6 @@ if (xtc_not_null($tID)) {
       xtc_redirect($SofortLibTransactionData->getUserVariable(0).'&nonexistorder=true');
     }
     */
-    fclose($fp);
   }
 } else {
   die('Direct access to this location is not allowed.');

@@ -254,7 +254,7 @@ class SofortLibPayment {
 
 
   function _payment_data() {
-    global $order, $xtPrice, $insert_id;
+    global $xtPrice, $insert_id;
 
     // gateway
     $this->data['success_url'] = ((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PROCESS.'?'.xtc_session_name().'='.xtc_session_id();
@@ -264,8 +264,9 @@ class SofortLibPayment {
     $this->data['currency'] = $_SESSION['currency'];
 
     // amount
-    $amount = round($order->info['total'], $xtPrice->get_decimal_places(''));
-    //if ($this->tmpOrders === false) {
+    if ($this->tmpOrders === false) {
+      global $order;
+      
       if (!class_exists('order_total')) {
         require(DIR_WS_CLASSES.'order_total.php');
       }
@@ -283,13 +284,16 @@ class SofortLibPayment {
           }
         }
       }
-    //}
+    } else {
+      $order = new order((int)$insert_id);
+      $amount = round($order->info['pp_total'], $xtPrice->get_decimal_places(''));
+    }
     $this->data['amount'] = number_format($amount, 2, '.', '');
 
     // reason 1
     $this->data['reason_1'] = str_replace(array('{{order_id}}',
-                                          '{{customer_id}}'
-                                          ),
+                                                '{{customer_id}}'
+                                                ),
                                           array($insert_id,
                                                 $_SESSION['customer_id']
                                                 ),
@@ -297,12 +301,12 @@ class SofortLibPayment {
 
     // reason 2
     $this->data['reason_2'] = str_replace(array('{{order_id}}',
-                                          '{{customer_id}}',
-                                          '{{order_date}}',
-                                          '{{customer_name}}',
-                                          '{{customer_company}}',
-                                          '{{customer_email}}'
-                                          ),
+                                                '{{customer_id}}',
+                                                '{{order_date}}',
+                                                '{{customer_name}}',
+                                                '{{customer_company}}',
+                                                '{{customer_email}}'
+                                                ),
                                           array($insert_id,
                                                 $_SESSION['customer_id'],
                                                 strftime(DATE_FORMAT_SHORT),
