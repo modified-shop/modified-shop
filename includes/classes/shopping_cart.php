@@ -565,7 +565,8 @@ class shoppingCart {
                                                p.products_discount_allowed,
                                                p.products_weight,
                                                p.products_tax_class_id,
-                                               p.products_status
+                                               p.products_status,
+                                               p.products_quantity as products_stock
                                           FROM ".TABLE_PRODUCTS." p
                                           JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                                ON pd.products_id = p.products_id
