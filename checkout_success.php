@@ -74,12 +74,6 @@ $orders = xtc_db_fetch_array($orders_query);
 $last_order = $orders['orders_id'];
 $order_status = $orders['orders_status'];
 
-//BOF - GTB - 2012-10-10 - include Vorkasse by Sofort
-if (isset($_GET['vorkasse']) && $_GET['vorkasse']=='sofort') {
-  include (DIR_WS_MODULES.'sofort_vorkasse.php');
-}
-//EOF - GTB - 2012-10-10 - include Vorkasse by Sofort
-
 //BOF  - web28 - 2010-03-27 PayPal Bezahl-Link
 if (isset($_SESSION['paypal_link']) && MODULE_PAYMENT_PAYPAL_IPN_USE_CHECKOUT == 'True') {
 	$smarty->assign('PAYPAL_LINK',$_SESSION['paypal_link']);
