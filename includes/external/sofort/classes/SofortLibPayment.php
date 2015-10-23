@@ -21,37 +21,39 @@ class SofortLibPayment {
 		$this->version = $this->get_version();
 		$this->title = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE');
 		$this->description = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION');
-		$this->sort_order = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER');
-		$this->enabled = ((constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
-		$this->info = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO');
-		$this->tmpStatus = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TMP_STATUS_ID');
-    $this->logging = ((constant('MODULE_PAYMENT_'.strtoupper($this->code).'_LOGGING') == 'True') ? true : false);
+		if ($this->check() > 0) {
+      $this->sort_order = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER');
+      $this->enabled = ((constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
+      $this->info = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO');
+      $this->tmpStatus = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TMP_STATUS_ID');
+      $this->logging = ((constant('MODULE_PAYMENT_'.strtoupper($this->code).'_LOGGING') == 'True') ? true : false);
 
-		$this->ks_status = false;
-		if(defined('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_STATUS') == 'True') {
-			$this->title = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_TEXT_TITLE');
-			$this->ks_status = true;
-		}
+      $this->ks_status = false;
+      if(defined('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_STATUS') == 'True') {
+        $this->title = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_TEXT_TITLE');
+        $this->ks_status = true;
+      }
 
-		if ((int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID') > 0) {
-			$this->order_status = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID');
-		}
+      if ((int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID') > 0) {
+        $this->order_status = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID');
+      }
 
-		$this->tmpOrders = false;
-		if(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TMP_ORDER') == 'True') {
-      $this->tmpOrders = true;
-      $this->form_action_url = '';
-		}
+      $this->tmpOrders = false;
+      if(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TMP_ORDER') == 'True') {
+        $this->tmpOrders = true;
+        $this->form_action_url = '';
+      }
 
-		if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
-			$this->update_status();
-    }
+      if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
+        $this->update_status();
+      }
 
-    if (defined('RUN_MODE_ADMIN') && $this->enabled === true) {
-      $this->description .= constant('MODULE_PAYMENT_'.strtoupper($this->code).'_DESCRIPTION_INSTALL').'<a class="button btnbox" style="text-align:center;" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&moduleaction=status') . '">' . 'Status '.BUTTON_MODULE_INSTALL . '</a>';
-	    if (isset($_GET['moduleaction']) && $_GET['moduleaction'] == 'status') {
-	      $this->status_install();
-	    }
+      if (defined('RUN_MODE_ADMIN') && $this->enabled === true) {
+        $this->description .= constant('MODULE_PAYMENT_'.strtoupper($this->code).'_DESCRIPTION_INSTALL').'<a class="button btnbox" style="text-align:center;" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&moduleaction=status') . '">' . 'Status '.BUTTON_MODULE_INSTALL . '</a>';
+        if (isset($_GET['moduleaction']) && $_GET['moduleaction'] == 'status') {
+          $this->status_install();
+        }
+      }
 	  }
 	}
 
