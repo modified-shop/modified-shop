@@ -38,6 +38,10 @@ class SofortLibPayment {
         $this->order_status = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ORDER_STATUS_ID');
       }
 
+      if ($this->tmpStatus < 0) {
+        $this->tmpStatus = DEFAULT_ORDERS_STATUS_ID;
+      }
+
       $this->tmpOrders = false;
       if(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TMP_ORDER') == 'True') {
         $this->tmpOrders = true;
