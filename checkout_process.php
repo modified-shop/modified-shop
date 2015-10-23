@@ -256,7 +256,7 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
   $customer_notification = (SEND_EMAILS == 'true') ? '1' : '0';
 
   $sql_data_array = array ('orders_id' => $insert_id,
-                           'orders_status_id' => $order->info['order_status'],
+                           'orders_status_id' => $tmp_status,
                            'date_added' => 'now()',
                            'customer_notified' => $customer_notification,
                            'comments' => $order->info['comments']);
