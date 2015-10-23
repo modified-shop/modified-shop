@@ -87,10 +87,12 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
     }
     //ot_subtotal_no_tax nur anzeigen wenn notwendig
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1 || $ot_subtotal_no_tax_value == $ot_total_value) {
-      unset($order_total_array[$ot_subtotal_no_tax]);
+      if (isset($order_total_array[$ot_subtotal_no_tax])) {
+        unset($order_total_array[$ot_subtotal_no_tax]);
+      }
     }
     //ot_total nur anzeigen wenn unterschiedlich
-    if ($ot_subtotal_value == $ot_total_value) {
+    if ( $ot_subtotal_value == $ot_total_value && isset($order_total_array[$ot_total_key]) ) {
       unset($order_total_array[$ot_total_key]);
     }
     //Array Indexe neu erstellen
