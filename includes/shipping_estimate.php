@@ -82,13 +82,13 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
        }
        if ($entry['code'] == 'ot_subtotal_no_tax') {
          $ot_subtotal_no_tax_value = $entry['value'];
-         $ot_subtotal_no_tax = $key;
+         $ot_subtotal_no_tax_key = $key;
        }
     }
     //ot_subtotal_no_tax nur anzeigen wenn notwendig
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1 || $ot_subtotal_no_tax_value == $ot_total_value) {
-      if (isset($order_total_array[$ot_subtotal_no_tax])) {
-        unset($order_total_array[$ot_subtotal_no_tax]);
+      if (isset($ot_subtotal_no_tax_key) && isset($order_total_array[$ot_subtotal_no_tax_key])) {
+        unset($order_total_array[$ot_subtotal_no_tax_key]);
       }
     }
     //ot_total nur anzeigen wenn unterschiedlich
