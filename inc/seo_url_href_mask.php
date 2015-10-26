@@ -43,16 +43,16 @@
     }
 
     //-- <br> neutralisieren -  DokuMan - 2010-08-13 - optimize shopstat_getRegExps
-    $newstring  = preg_replace("/<br(\s+)?\/?>/i","-",$newstring);
+    $newstring  = preg_replace("/<br(\s+)?\/?>/i", "-", $newstring);
 
     //-- HTML entfernen
     $newstring  = strip_tags($newstring);
   
     //-- Schrägstriche entfernen
     if ($urlencode) {
-      $newstring  = preg_replace("/\//","-",$newstring);
+      $newstring  = preg_replace("/\//", "-", $newstring);
     } else {
-      $newstring  = preg_replace("/\s\/\s/","-",$newstring);
+      $newstring  = preg_replace("/\s\/\s/", "-", $newstring);
     }
 
     //-- Definierte Zeichen entfernen
@@ -62,7 +62,7 @@
     $newstring  = html_entity_decode($newstring, ENT_NOQUOTES , "UTF-8");
   
     //--Restliche Kaufmännische Und entfernen
-    $newstring  = preg_replace("'&'","-",$newstring);
+    $newstring  = preg_replace("'&'", "-", $newstring);
 
     //Alles entfernen ausser Buchstaben, Zahlen, Slash, Unterstrich, Minus
     $newstring = preg_replace("/[^a-zA-Z0-9\/_-]/", '-', $newstring);
@@ -73,10 +73,10 @@
     }
 
     //-- Doppelte Bindestriche entfernen
-    $newstring  = preg_replace("/(-){2,}/","-",$newstring);
+    $newstring  = preg_replace("/(-){2,}/", "-", $newstring);
 
     //-- Mögliches rechtstehendes Minuszeichen entfernen - wichtig f¸r Minus Trennzeichen
-    $newstring = rtrim($newstring,"-");
+    $newstring = rtrim($newstring, "-");
     
     //string wieder auf $charset zurückkonvertieren, es sollten sich aber keine Sonderzeichen mehr im String befinden
     if ($charset != "UTF-8") {
