@@ -379,7 +379,7 @@ class SofortLibSofortueberweisungClassic extends SofortLibMultipay {
 	 * @return string
 	 */
 	public function getUserVariable($i = 0) {
-		return $this->params['user_variable_'.$i];
+		return $this->_parameters['user_variable_'.$i];
 	}
 
 }
