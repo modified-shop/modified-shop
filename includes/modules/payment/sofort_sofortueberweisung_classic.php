@@ -86,7 +86,8 @@ class sofort_sofortueberweisung_classic extends SofortLibPayment {
       if ($order_status_id < 0) {
         $order_status_id = $this->_get_orders_status($insert_id);
       }
-      $this->update_sofort_status($insert_id, $order_status_id, '', true);
+      $comments = 'TransactionID: ' . $_SESSION['sofort'][$this->code]['tID'];
+      $this->update_sofort_status($insert_id, $order_status_id, $comments, true);
     }
 
     // redirected to $paymentUrl
