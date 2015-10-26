@@ -26,11 +26,7 @@
     if (!is_array($char_search) || !is_array($char_replace)) {
       list($char_search, $char_replace) = shopstat_getRegExps();
     }
-    
-    if ($check_iconv = '') {
-      $check_iconv = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "test");
-    }
-    
+        
     $newstring = $string;
   
     if ($charset == '') {
