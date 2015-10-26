@@ -156,7 +156,9 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 			$_SESSION['cart']->restore_contents();
 
 			// restore wishlist contents
-			$_SESSION['wishlist']->restore_contents();
+			if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+			  $_SESSION['wishlist']->restore_contents();
+			}
 			
 			if (isset($econda) && is_object($econda)) {
 			  $econda->_loginUser();			

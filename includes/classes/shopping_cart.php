@@ -43,9 +43,11 @@ class shoppingCart {
     $this->table_basket = TABLE_CUSTOMERS_BASKET;
     $this->table_basket_attributes = TABLE_CUSTOMERS_BASKET_ATTRIBUTES;
     
-    if ($this->type == 'wishlist') {
-      $this->table_basket = TABLE_CUSTOMERS_WISHLIST;
-      $this->table_basket_attributes = TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES;
+    if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+      if ($this->type == 'wishlist') {
+        $this->table_basket = TABLE_CUSTOMERS_WISHLIST;
+        $this->table_basket_attributes = TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES;
+      }
     }
 
     $this->reset();

@@ -40,5 +40,8 @@
 {if $MODULE_gift_cart != ''}<div id="col_left">{/if}
   {$MODULE_gift_cart}
 {if $MODULE_gift_cart != ''}</div>{/if}
-<br class="clearfix" />
-{$MODULE_wishlist}
+
+{if $MODULE_wishlist}
+  <br class="clearfix" />
+  {$MODULE_wishlist}
+{/if}

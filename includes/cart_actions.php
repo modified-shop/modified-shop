@@ -38,8 +38,10 @@ if (xtc_not_null($action)) {
   }
     
   $wishlist = false;
-  if ((isset($_POST['wishlist_x']) && isset($_POST['wishlist_y'])) || isset($_GET['wishlist']) || isset($_POST['wishlist'])) {
-    $wishlist = true;
+  if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+    if ((isset($_POST['wishlist_x']) && isset($_POST['wishlist_y'])) || isset($_GET['wishlist']) || isset($_POST['wishlist'])) {
+      $wishlist = true;
+    }
   }
 
   $co_express = false;
@@ -76,9 +78,11 @@ if (xtc_not_null($action)) {
   if (!is_object($_SESSION['cart'])) {
     $_SESSION['cart'] = new shoppingCart();
   }
-
-  if (!is_object($_SESSION['wishlist'])) {
-    $_SESSION['wishlist'] = new shoppingCart('wishlist');
+  
+  if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+    if (!is_object($_SESSION['wishlist'])) {
+      $_SESSION['wishlist'] = new shoppingCart('wishlist');
+    }
   }
   
   $cart_object = $_SESSION['cart'];
@@ -275,41 +279,45 @@ if (xtc_not_null($action)) {
     ## - Paypal Express Modul
 
     case 'wishlist_cart':
-      if ($_SESSION['wishlist']->in_cart($_GET['BUYproducts_id'])) {
-        $wishlist_content = $_SESSION['wishlist']->contents[$_GET['BUYproducts_id']];
-        $attributes_array = ((isset($wishlist_content['attributes'])) ? $wishlist_content['attributes'] : '');
-        $cart_quantity = (xtc_remove_non_numeric($wishlist_content['qty']) + $_SESSION['cart']->get_quantity(xtc_get_uprid($_GET['BUYproducts_id'], $attributes_array)));
-        $products_id = xtc_get_prid($_GET['BUYproducts_id']);
-        if ($cart_quantity > MAX_PRODUCTS_QTY) {            
-          $cart_quantity = MAX_PRODUCTS_QTY;
-          $_SESSION['err_max_prod'] = true;
-          $_GET['max_prod_id'] = (int)$products_id;
-        }
-        $_SESSION['cart']->add_cart($products_id, $cart_quantity, $attributes_array);
+      if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+        if ($_SESSION['wishlist']->in_cart($_GET['BUYproducts_id'])) {
+          $wishlist_content = $_SESSION['wishlist']->contents[$_GET['BUYproducts_id']];
+          $attributes_array = ((isset($wishlist_content['attributes'])) ? $wishlist_content['attributes'] : '');
+          $cart_quantity = (xtc_remove_non_numeric($wishlist_content['qty']) + $_SESSION['cart']->get_quantity(xtc_get_uprid($_GET['BUYproducts_id'], $attributes_array)));
+          $products_id = xtc_get_prid($_GET['BUYproducts_id']);
+          if ($cart_quantity > MAX_PRODUCTS_QTY) {            
+            $cart_quantity = MAX_PRODUCTS_QTY;
+            $_SESSION['err_max_prod'] = true;
+            $_GET['max_prod_id'] = (int)$products_id;
+          }
+          $_SESSION['cart']->add_cart($products_id, $cart_quantity, $attributes_array);
 
-        $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id', '');
-        $_SESSION['wishlist']->remove($prd_id);
+          $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id', '');
+          $_SESSION['wishlist']->remove($prd_id);
+        }
+        xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
       }
-      xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
       break;
 
     case 'cart_wishlist':
-      if ($_SESSION['cart']->in_cart($_GET['BUYproducts_id'])) {
-        $wishlist_content = $_SESSION['cart']->contents[$_GET['BUYproducts_id']];
-        $attributes_array = ((isset($wishlist_content['attributes'])) ? $wishlist_content['attributes'] : '');
-        $cart_quantity = (xtc_remove_non_numeric($wishlist_content['qty']) + $_SESSION['wishlist']->get_quantity(xtc_get_uprid($_GET['BUYproducts_id'], $attributes_array)));
-        $products_id = xtc_get_prid($_GET['BUYproducts_id']);
-        if ($cart_quantity > MAX_PRODUCTS_QTY) {            
-          $cart_quantity = MAX_PRODUCTS_QTY;
-          $_SESSION['err_max_prod'] = true;
-          $_GET['max_prod_id'] = (int)$products_id;
-        }
-        $_SESSION['wishlist']->add_cart($products_id, $cart_quantity, $attributes_array);
+      if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+        if ($_SESSION['cart']->in_cart($_GET['BUYproducts_id'])) {
+          $wishlist_content = $_SESSION['cart']->contents[$_GET['BUYproducts_id']];
+          $attributes_array = ((isset($wishlist_content['attributes'])) ? $wishlist_content['attributes'] : '');
+          $cart_quantity = (xtc_remove_non_numeric($wishlist_content['qty']) + $_SESSION['wishlist']->get_quantity(xtc_get_uprid($_GET['BUYproducts_id'], $attributes_array)));
+          $products_id = xtc_get_prid($_GET['BUYproducts_id']);
+          if ($cart_quantity > MAX_PRODUCTS_QTY) {            
+            $cart_quantity = MAX_PRODUCTS_QTY;
+            $_SESSION['err_max_prod'] = true;
+            $_GET['max_prod_id'] = (int)$products_id;
+          }
+          $_SESSION['wishlist']->add_cart($products_id, $cart_quantity, $attributes_array);
 
-        $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id', '');
-        $_SESSION['cart']->remove($prd_id);
+          $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id', '');
+          $_SESSION['cart']->remove($prd_id);
+        }
+        xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
       }
-      xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
       break;
  
     case 'add_order':

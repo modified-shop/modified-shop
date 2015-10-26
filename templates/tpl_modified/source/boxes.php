@@ -84,7 +84,9 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
   if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
     require_once(DIR_FS_BOXES . 'add_a_quickie.php');
     require_once(DIR_FS_BOXES . 'shopping_cart.php');
-    require_once(DIR_FS_BOXES . 'wishlist.php');
+    if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+      require_once(DIR_FS_BOXES . 'wishlist.php');
+    }
   }
 // -----------------------------------------------------------------------------------------
 //	hide in search

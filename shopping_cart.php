@@ -44,7 +44,9 @@ if(!isset($_SESSION['paypal_warten'])) {
   if (ACTIVATE_GIFT_SYSTEM == 'true') {
     include (DIR_WS_MODULES.'gift_cart.php');
   }
-  include (DIR_WS_MODULES.'wishlist.php');
+  if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+    include (DIR_WS_MODULES.'wishlist.php');
+  }
 }
 
 ### PayPal Express - error

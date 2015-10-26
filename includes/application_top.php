@@ -297,8 +297,10 @@ if (!isset($_SESSION['cart']) || !is_object($_SESSION['cart'])) {
 }
 
 // create the wishlist
-if (!isset($_SESSION['wishlist']) || !is_object($_SESSION['wishlist'])) {
-  $_SESSION['wishlist'] = new shoppingCart('wishlist');
+if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+  if (!isset($_SESSION['wishlist']) || !is_object($_SESSION['wishlist'])) {
+    $_SESSION['wishlist'] = new shoppingCart('wishlist');
+  }
 }
 
 // PayPal Express

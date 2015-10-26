@@ -421,8 +421,10 @@ class product {
     if ($_SESSION['customers_status']['customers_status_show_price'] != '0' && defined('SHOW_BUTTON_BUY_NOW') && SHOW_BUTTON_BUY_NOW != 'false'
         && ($_SESSION['customers_status']['customers_fsk18'] != '1' || (isset($array['products_fsk18']) && $array['products_fsk18'] == '0')) ) {
       $buy_now = $this->getBuyNowButton($array['products_id'], $array['products_name']);
-      $wishlist_now = $this->getWishlistNowButton($array['products_id'], $array['products_name']);
-      $wishlist_now_link = $this->getWishlistNowButton($array['products_id'], $array['products_name'], true);
+      if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+        $wishlist_now = $this->getWishlistNowButton($array['products_id'], $array['products_name']);
+        $wishlist_now_link = $this->getWishlistNowButton($array['products_id'], $array['products_name'], true);
+      }
     }
     
     // check for gift
@@ -541,12 +543,14 @@ class product {
   function getWishlistNowButton($id, $name, $plain = false) {
     global $PHP_SELF;
     
-    $link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=buy_now&wishlist=true&BUYproducts_id='.$id, 'NONSSL');
-    if ($plain === false) {
-      $link = '<a href="'.$link.'">'.xtc_image_submit('button_in_wishlist.gif', $name.' '.TEXT_TO_WISHLIST).'</a>';
-    }
+    if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+      $link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=buy_now&wishlist=true&BUYproducts_id='.$id, 'NONSSL');
+      if ($plain === false) {
+        $link = '<a href="'.$link.'">'.xtc_image_submit('button_in_wishlist.gif', $name.' '.TEXT_TO_WISHLIST).'</a>';
+      }
     
-    return $link;
+      return $link;
+    }
   }
 
   /**
@@ -558,7 +562,10 @@ class product {
    */
   function getWishlistToCartButton($id, $name, $cart = false) {
     global $PHP_SELF;
-    return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=wishlist_cart&BUYproducts_id='.$id, 'NONSSL').'">'.xtc_image_button((($cart == true) ? 'button_in_cart.gif' : 'button_buy_now.gif'), TEXT_BUY.$name.TEXT_NOW).'</a>';
+    
+    if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+      return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=wishlist_cart&BUYproducts_id='.$id, 'NONSSL').'">'.xtc_image_button((($cart == true) ? 'button_in_cart.gif' : 'button_buy_now.gif'), TEXT_BUY.$name.TEXT_NOW).'</a>';
+    }
   }
   
   /**
@@ -570,7 +577,10 @@ class product {
    */
   function getCartToWishlistLink($id, $name) {
     global $PHP_SELF;
-    return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=cart_wishlist&BUYproducts_id='.$id, 'NONSSL').'">'.TEXT_TO_WISHLIST.'</a>';
+    
+    if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+      return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=cart_wishlist&BUYproducts_id='.$id, 'NONSSL').'">'.TEXT_TO_WISHLIST.'</a>';
+    }
   }
 }
 ?>
