@@ -323,7 +323,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
     // load data into array
     $module_content = array('MAIL_NAME' => $name,
-                            'MAIL_REPLY_ADDRESS' => parse_multi_language_value(EMAIL_SUPPORT_REPLY_ADDRESS),
+                            'MAIL_REPLY_ADDRESS' => parse_multi_language_value(EMAIL_SUPPORT_REPLY_ADDRESS, $_SESSION['language_code']),
                             'MAIL_GENDER' => get_customers_gender($gender));
 
     // assign data to smarty
