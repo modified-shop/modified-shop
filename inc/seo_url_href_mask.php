@@ -33,7 +33,7 @@
       $charset = strtoupper($_SESSION['language_charset']);
     }
   
-    //$newstring grundsätzlich VOR html_entity_decode und preg_replace nach utf-8 konvertieren
+    //-- convert to utf-8
     if ($charset != "UTF-8") {
       if (!$check_iconv) {
         $newstring = mb_convert_encoding($string, 'UTF-8', $charset);
@@ -42,43 +42,43 @@
       }
     }
 
-    //-- <br> neutralisieren -  DokuMan - 2010-08-13 - optimize shopstat_getRegExps
+    //-- <br> remove
     $newstring  = preg_replace("/<br(\s+)?\/?>/i", "-", $newstring);
 
-    //-- HTML entfernen
+    //-- HTML remove
     $newstring  = strip_tags($newstring);
   
-    //-- Schrägstriche entfernen
+    //-- / remove
     if ($urlencode) {
       $newstring  = preg_replace("/\//", "-", $newstring);
     } else {
       $newstring  = preg_replace("/\s\/\s/", "-", $newstring);
     }
 
-    //-- Definierte Zeichen entfernen
+    //-- signs remove
     $newstring  = preg_replace($char_search, $char_replace, $newstring);
   
-    //--Restliche HTML-Codierungen entfernen
+    //-- HTML remove
     $newstring  = html_entity_decode($newstring, ENT_NOQUOTES , "UTF-8");
   
-    //--Restliche Kaufmännische Und entfernen
+    //-- & remove
     $newstring  = preg_replace("'&'", "-", $newstring);
 
-    //Alles entfernen ausser Buchstaben, Zahlen, Slash, Unterstrich, Minus
+    //-- invalid signs remove
     $newstring = preg_replace("/[^a-zA-Z0-9\/_-]/", '-', $newstring);
 
-    //-- String URL-codieren
+    //-- URL encode
     if ($urlencode) { 
       $newstring  = urlencode($newstring);
     }
 
-    //-- Doppelte Bindestriche entfernen
+    //-- double - remove
     $newstring  = preg_replace("/(-){2,}/", "-", $newstring);
 
-    //-- Mögliches rechtstehendes Minuszeichen entfernen - wichtig f¸r Minus Trennzeichen
+    //-- remove last -
     $newstring = rtrim($newstring, "-");
     
-    //string wieder auf $charset zurückkonvertieren, es sollten sich aber keine Sonderzeichen mehr im String befinden
+    //-- convert to $charset
     if ($charset != "UTF-8") {
       if (!$check_iconv) {
         $newstring = mb_convert_encoding($newstring, $charset, 'UTF-8');
@@ -86,8 +86,7 @@
         $newstring = iconv("UTF-8", $charset.'//TRANSLIT', $newstring);
       }  
     }
-    //if($_REQUEST['test']){print $newstring."<hr>";}
+
     return($newstring);
   }
-
-  ?>
+?>
