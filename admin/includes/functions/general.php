@@ -1295,16 +1295,16 @@
    * @return
    */
   function xtc_del_image_file($image) {
-    if (file_exists(DIR_FS_CATALOG_POPUP_IMAGES.$image)) {
+    if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$image)) {
       @ unlink(DIR_FS_CATALOG_POPUP_IMAGES.$image);
     }
-    if (file_exists(DIR_FS_CATALOG_ORIGINAL_IMAGES.$image)) {
+    if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$image)) {
       @ unlink(DIR_FS_CATALOG_ORIGINAL_IMAGES.$image);
     }
-    if (file_exists(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image)) {
+    if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image)) {
       @ unlink(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image);
     }
-    if (file_exists(DIR_FS_CATALOG_INFO_IMAGES.$image)) {
+    if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$image)) {
       @ unlink(DIR_FS_CATALOG_INFO_IMAGES.$image);
     }
   }

@@ -194,7 +194,9 @@ class categories {
       $cname_arr = explode('.', $categories_image->filename);
       $cnsuffix = array_pop($cname_arr);
       $categories_image_name = $categories_id.'.'.$cnsuffix;
-      @ unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image_name);
+      if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image_name)) {
+        @ unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image_name);
+      }
       rename(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image->filename, DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image_name);
       xtc_db_query("UPDATE ".TABLE_CATEGORIES."
                        SET categories_image = '".xtc_db_input($categories_image_name)."'
@@ -202,7 +204,9 @@ class categories {
     }
 
     if (isset($categories_data['del_cat_pic']) && $categories_data['del_cat_pic'] == 'yes') {
-      @ unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_data['categories_previous_image']);
+      if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_data['categories_previous_image'])) {
+        @ unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_data['categories_previous_image']);
+      }
       xtc_db_query("UPDATE ".TABLE_CATEGORIES."
                        SET categories_image = ''
                      WHERE categories_id = '".(int) $categories_id."'");
@@ -342,7 +346,9 @@ class categories {
                                                    AND products_id != '".(int)$product_id."'");
        $duplicate_content = xtc_db_fetch_array($duplicate_content_query);
        if ($duplicate_content['total'] == 0) {
-         @unlink(DIR_FS_DOCUMENT_ROOT.'media/products/'.$product_content['content_file']);
+         if (is_file(DIR_FS_DOCUMENT_ROOT.'media/products/'.$product_content['content_file'])) {
+           @unlink(DIR_FS_DOCUMENT_ROOT.'media/products/'.$product_content['content_file']);
+         }
        }
        //delete DB-Entry
        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_CONTENT." WHERE products_id = '".(int)$product_id."' AND (content_file = '".xtc_db_input($product_content['content_file'])."' OR content_file = '')");
