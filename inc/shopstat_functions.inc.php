@@ -162,6 +162,8 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
     unset($pararray['products_id']);
     unset($pararray['coID']);
     unset($pararray['page']);
+    unset($pararray['content']);
+    unset($pararray['product']);
     
     if (count($pararray) > 0) {
       $link .= $separator.http_build_query($pararray, '', '&');
