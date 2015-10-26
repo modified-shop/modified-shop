@@ -573,28 +573,6 @@ ALTER TABLE customers_basket MODIFY customers_basket_date_added DATETIME;
 #web28 - 2015-05-19 - add content_group_index
 ALTER TABLE content_manager ADD content_group_index int(4) NOT NULL DEFAULT '0';
 
-#GTB - 2015-06-30 - add wishlist
-CREATE TABLE customers_wishlist (
-  customers_basket_id INT NOT NULL AUTO_INCREMENT,
-  customers_id INT NOT NULL,
-  products_id TINYTEXT NOT NULL,
-  customers_basket_quantity INT(2) NOT NULL,
-  final_price DECIMAL(15,4) NOT NULL,
-  customers_basket_date_added DATETIME,
-  PRIMARY KEY (customers_basket_id),
-  KEY idx_customers_id (customers_id)
-) ENGINE=MyISAM;
-
-CREATE TABLE customers_wishlist_attributes (
-  customers_basket_attributes_id INT NOT NULL AUTO_INCREMENT,
-  customers_id INT NOT NULL,
-  products_id TINYTEXT NOT NULL,
-  products_options_id INT NOT NULL,
-  products_options_value_id INT NOT NULL,
-  PRIMARY KEY (customers_basket_attributes_id),
-  KEY idx_customers_id (customers_id)
-) ENGINE=MyISAM;
-
 #Tomcraft - 2015-07-02 - not needed anymore!
 DELETE FROM `configuration` WHERE `configuration_key` = 'USE_CONTACT_EMAIL_ADDRESS';
 

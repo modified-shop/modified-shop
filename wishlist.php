@@ -12,6 +12,10 @@
 
 include ('includes/application_top.php');
 
+if (!defined('MODULE_WISHLIST_SYSTEM_STATUS') || MODULE_WISHLIST_SYSTEM_STATUS == 'false') {
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
+}
+
 // include needed functions
 require_once(DIR_FS_INC.'get_wishlist_content.inc.php');
 

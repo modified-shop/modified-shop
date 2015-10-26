@@ -568,29 +568,6 @@ CREATE TABLE customers_status_history (
   PRIMARY KEY (customers_status_history_id)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS customers_wishlist;
-CREATE TABLE customers_wishlist (
-  customers_basket_id INT NOT NULL AUTO_INCREMENT,
-  customers_id INT NOT NULL,
-  products_id TINYTEXT NOT NULL,
-  customers_basket_quantity INT(2) NOT NULL,
-  final_price DECIMAL(15,4) NOT NULL,
-  customers_basket_date_added DATETIME,
-  PRIMARY KEY (customers_basket_id),
-  KEY idx_customers_id (customers_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS customers_wishlist_attributes;
-CREATE TABLE customers_wishlist_attributes (
-  customers_basket_attributes_id INT NOT NULL AUTO_INCREMENT,
-  customers_id INT NOT NULL,
-  products_id TINYTEXT NOT NULL,
-  products_options_id INT NOT NULL,
-  products_options_value_id INT NOT NULL,
-  PRIMARY KEY (customers_basket_attributes_id),
-  KEY idx_customers_id (customers_id)
-) ENGINE=MyISAM;
-
 DROP TABLE IF EXISTS database_version;
 CREATE TABLE database_version (
   version VARCHAR(32) NOT NULL
