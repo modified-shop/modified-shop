@@ -63,7 +63,7 @@ if ($language_not_found === true) {
     include (DIR_WS_INCLUDES.'contact_us.php');
   } else {
     $content_body = $shop_content_data['content_text'];
-    if ($shop_content_data['content_file'] != '') {
+    if ($shop_content_data['content_file'] != '' && is_file(DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file'])) {
       ob_start();
       if (strpos($shop_content_data['content_file'], '.txt'))
         echo '<pre>';
