@@ -111,8 +111,10 @@ class newsletter {
 
     if ($check != 'inp' && $check != 'del') {
       $this->message = ERROR_MAIL;
+      $this->message_class = 'error';
     } elseif (xtc_validate_email($mail) == false) {
       $this->message = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+      $this->message_class = 'error';
     } else {
 
       $this->generateCode();

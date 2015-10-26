@@ -52,6 +52,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
     $info_message = $newsletter->message;
   } else {
     $info_message = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+    $newsletter->message_class = 'error';
   }
 }
 
