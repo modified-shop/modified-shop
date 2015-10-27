@@ -21,7 +21,7 @@
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 
-define('SHOPGATE_PLUGIN_VERSION', '2.9.21');
+define('SHOPGATE_PLUGIN_VERSION', '2.9.22');
 require_once(dirname(__FILE__) . '/Model/ShopgateModelLoader.php');
 require_once(dirname(__FILE__) . '/helper/ShopgateHelperLoader.php');
 

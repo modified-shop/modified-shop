@@ -281,12 +281,15 @@ class ShopgateItemXmlModel extends ShopgateItemModel
         $categories   = $this->getProductCategoryNumbers($this->item);
         $categoryData = array();
         foreach ($categories as $category) {
+            $category = explode('=>', $category);
             $catModel = new Shopgate_Model_Catalog_CategoryPath();
-            $catModel->setUid($category['category_id']);
-            $catModel->setSortOrder($category['sort_order']);
+            $catModel->setUid($category[0]);
+            if (isset($category[1])) {
+                $catModel->setSortOrder($category[1]);
+            }
             $categoryData[] = $catModel;
         }
-        
+
         parent::setCategoryPaths($categoryData);
     }
     

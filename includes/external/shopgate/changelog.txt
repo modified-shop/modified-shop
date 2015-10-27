@@ -1,3 +1,6 @@
+'''Version 2.9.22'''
+* fixed categories in xml product export 
+
 '''Version 2.9.21'''
 * helper loading logic changed
 * saving customer custom fields to DB
