@@ -30,7 +30,7 @@
       $this->icon = '';
       $this->tax_class = MODULE_SHIPPING_ITEM_TAX_CLASS;
       $this->enabled = ((MODULE_SHIPPING_ITEM_STATUS == 'True') ? true : false);
-      $this->num_item = defined('MODULE_SHIPPING_ITEM_NUMBER_ZONES')?MODULE_SHIPPING_ITEM_NUMBER_ZONES:'';
+      $this->num_item = defined('MODULE_SHIPPING_ITEM_NUMBER_ZONES') ? MODULE_SHIPPING_ITEM_NUMBER_ZONES : '1';
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_ITEM_ZONE > 0) && is_object($order) ) {
         $check_flag = false;
@@ -51,6 +51,28 @@
       }
 
       if ($this->check() > 0) {      
+        //update compatibility
+        if (!defined('MODULE_SHIPPING_ITEM_NUMBER_ZONES')) {
+          xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ITEM_NUMBER_ZONES', '1', '6', '0', now())");
+          if (defined('MODULE_SHIPPING_ITEM_COST')) {
+            if (!defined('MODULE_SHIPPING_ITEM_COUNTRIES_1')) {
+              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_ITEM_COUNTRIES_1', ". MODULE_SHIPPING_ITEM_ALLOWED .", '6', '0', 'xtc_cfg_textarea(', now())");
+            }
+            if (!defined('MODULE_SHIPPING_ITEM_COST_1')) {
+              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ITEM_COST_1', ". MODULE_SHIPPING_ITEM_COST .", '6', '0', now())");
+            }
+            if (!defined('MODULE_SHIPPING_ITEM_HANDLING_1')) {
+              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ITEM_HANDLING_1', ". MODULE_SHIPPING_ITEM_HANDLING .", '6', '0', now())");
+            }
+          }
+        }
+        if (!defined('MODULE_SHIPPING_ITEM_ZONE')) {
+          xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_ITEM_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
+        }
+        if (!defined('MODULE_SHIPPING_ITEM_DISPLAY')) {
+          xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_ITEM_DISPLAY', 'True', '6', '7', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+        }
+        
         $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_ITEM_COUNTRIES_%'");
         $check_zones_rows_query = xtc_db_num_rows($check_zones_query);
 
