@@ -105,7 +105,7 @@ class ot_payment {
     }
     
     //Steuerkorrektur für Berechnung ohne Versandkosten
-    if ($this->include_shipping == 'false') {
+    if ($this->include_shipping == 'false' && $order->info['shipping_class']) {
       $shipping_modul = explode('_',$order->info['shipping_class']);
       $shipping_tax_class = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul[0]).'_TAX_CLASS');
       $shipping_tax = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
