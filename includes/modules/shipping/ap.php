@@ -34,7 +34,7 @@
       $this->icon = DIR_WS_ICONS . 'shipping_ap.gif';
       $this->tax_class = MODULE_SHIPPING_AP_TAX_CLASS;
       $this->enabled = ((MODULE_SHIPPING_AP_STATUS == 'True') ? true : false);
-      $this->num_ap = defined('MODULE_SHIPPING_AP_NUMBER_ZONES')?MODULE_SHIPPING_AP_NUMBER_ZONES:'';
+      $this->num_ap = defined('MODULE_SHIPPING_AP_NUMBER_ZONES') ? MODULE_SHIPPING_AP_NUMBER_ZONES : '';
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_AP_ZONE > 0) && is_object($order) ) {
         $check_flag = false;
@@ -56,10 +56,20 @@
 
       if ($this->check() > 0) {      
         $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_AP_COUNTRIES_%'");
-        $check_zones_rows_query = xtc_db_num_rows($check_zones_query);
+        $check_zones_rows = xtc_db_num_rows($check_zones_query);
 
-        if ($check_zones_rows_query != $this->num_ap) {
-          $this->install_zones($check_zones_rows_query);
+        //update compatibility
+        if (!defined('MODULE_SHIPPING_AP_NUMBER_ZONES')) {
+          $this->num_dp = $check_zones_rows;
+          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_NUMBER_ZONES', '". (int)$this->num_dp ."', '6', '0', now())");
+        }
+
+        if ($check_zones_rows != $this->num_dp) {
+          $this->install_zones($check_zones_rows);
+        }
+        //update compatibility
+        if (!defined('MODULE_SHIPPING_AP_DISPLAY')) {
+          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_AP_DISPLAY', 'True', '6', '7', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
         }
       }
     }
@@ -147,7 +157,7 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_SORT_ORDER', '0', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_AP_ALLOWED', '', '6', '0', 'xtc_cfg_textarea(', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_AP_DISPLAY', 'True', '6', '7', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_NUMBER_ZONES', '1', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_NUMBER_ZONES', '8', '6', '0', now())");
 
       $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_".strtoupper($this->code)."_COUNTRIES_%'");
       $check_zones_rows_query = xtc_db_num_rows($check_zones_query);
