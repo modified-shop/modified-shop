@@ -56,7 +56,7 @@
 
         //update compatibility
         if (!defined('MODULE_SHIPPING_ZONES_NUMBER_ZONES')) {
-          $this->num_dp = $check_zones_rows;
+          $this->num_zones = $check_zones_rows;
           xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_NUMBER_ZONES', '". (int)$this->num_dp ."', '6', '0', now())");
         }
 

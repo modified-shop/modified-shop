@@ -37,7 +37,7 @@
       $this->icon = DIR_WS_ICONS . 'shipping_dp.gif';
       $this->tax_class = MODULE_SHIPPING_DP_TAX_CLASS;
       $this->enabled = ((MODULE_SHIPPING_DP_STATUS == 'True') ? true : false);
-      $this->num_dp = defined('MODULE_SHIPPING_DP_NUMBER_ZONES') ? MODULE_SHIPPING_DP_NUMBER_ZONES : '';
+      $this->num_zones = defined('MODULE_SHIPPING_DP_NUMBER_ZONES') ? MODULE_SHIPPING_DP_NUMBER_ZONES : '';
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_DP_ZONE > 0) && is_object($order) ) {
         $check_flag = false;
@@ -63,11 +63,11 @@
         
         //update compatibility
         if (!defined('MODULE_SHIPPING_DP_NUMBER_ZONES')) {
-          $this->num_dp = $check_zones_rows;
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_NUMBER_ZONES', '". (int)$this->num_dp ."', '6', '0', now())");
+          $this->num_zones = $check_zones_rows;
+          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_NUMBER_ZONES', '". (int)$this->num_zones ."', '6', '0', now())");
         }
 
-        if ($check_zones_rows != $this->num_dp) {
+        if ($check_zones_rows != $this->num_zones) {
           $this->install_zones($check_zones_rows);
         }
         //update compatibility
@@ -84,7 +84,7 @@
       $dest_zone = 0;
       $error = false;
 
-      for ($i=1; $i<=$this->num_dp; $i++) {
+      for ($i=1; $i<=$this->num_zones; $i++) {
         $countries_table = constant('MODULE_SHIPPING_DP_COUNTRIES_' . $i);
         $countries_table  = preg_replace("'[\r\n\s]+'",'',$countries_table);
         $country_zones = explode(",", $countries_table);
@@ -185,8 +185,8 @@
       xtc_backup_configuration($this->keys_zones($number_of_zones));
 
       // add new zone
-      if ($number_of_zones <= $this->num_dp) {
-        for ($i = (($number_of_zones==0) ? 1 : $number_of_zones); $i <= $this->num_dp; $i ++) {
+      if ($number_of_zones <= $this->num_zones) {
+        for ($i = (($number_of_zones==0) ? 1 : $number_of_zones); $i <= $this->num_zones; $i ++) {
           $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_DP_COUNTRIES_".$i."'");
           if (xtc_db_num_rows($check_zones_query) < 1) {
             xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_DP_COUNTRIES_".$i."', '', '6', '0', 'xtc_cfg_textarea(', now())");
@@ -195,14 +195,14 @@
         }      
       } else {
         // remove zone
-        for ($i = $number_of_zones; $i >= $this->num_dp; $i --) {
+        for ($i = $number_of_zones; $i >= $this->num_zones; $i --) {
           xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_DP_COUNTRIES_".$i."'");
           xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_DP_COST_".$i."'");      
         }
       }
 
       // set standard values
-      for ($i = 1; $i <= $this->num_dp; $i ++) {
+      for ($i = 1; $i <= $this->num_zones; $i ++) {
         if ($i == 1) {
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'DE' WHERE configuration_key = 'MODULE_SHIPPING_DP_COUNTRIES_1'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '10:6.90,20:11.90,31.5:13.90' WHERE  configuration_key = 'MODULE_SHIPPING_DP_COST_1'");
@@ -226,7 +226,7 @@
       }
       
       // restore old values
-      xtc_restore_configuration($this->keys_zones($this->num_dp));
+      xtc_restore_configuration($this->keys_zones($this->num_zones));
     }
 
     function remove() {
@@ -252,7 +252,7 @@
                     'MODULE_SHIPPING_DP_NUMBER_ZONES',
                     'MODULE_SHIPPING_DP_DISPLAY'
                    );
-      $keys = array_merge($keys, $this->keys_zones($this->num_dp));
+      $keys = array_merge($keys, $this->keys_zones($this->num_zones));
 
       return $keys;
     }
