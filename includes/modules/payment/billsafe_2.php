@@ -618,7 +618,7 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
         }
       }
       $comments = MODULE_PAYMENT_BILLSAFE_2_STATUS_TEXT.': '.$this->response->status.'; '.MODULE_PAYMENT_BILLSAFE_2_TRANSACTIONID.': '.$this->response->transactionId;
-      xtc_db_query ('INSERT INTO orders_status_history (orders_status_history_id, orders_id, orders_status_id, date_added, customer_notified, comments) VALUES (NULL, "'.xtc_db_input($insert_id).'", "1", "'.date('Y-m-d H:i:s').'", "0", "'.xtc_db_input($comments).'")');
+      xtc_db_query ('INSERT INTO orders_status_history (orders_id, orders_status_id, date_added, customer_notified, comments) VALUES ("'.xtc_db_input($insert_id).'", "1", "'.date('Y-m-d H:i:s').'", "0", "'.xtc_db_input($comments).'")');
       $params = array('transactionId' => xtc_db_input($this->response->transactionId), 'orderNumber' => xtc_db_input($insert_id));
       $response = $bs->callMethod('setOrderNumber', $params);
       if ($response->ack === 'OK') {
