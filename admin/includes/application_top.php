@@ -153,6 +153,7 @@ define('CURRENCY_SERVER_BACKUP', 'xe');
 xtc_db_connect() or die('Unable to connect to database server!');
 
 // set application wide parameters
+define('DB_CACHE', 'false');
 $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION . '');
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
   if ($configuration['cfgKey'] != 'STORE_DB_TRANSACTIONS') {
