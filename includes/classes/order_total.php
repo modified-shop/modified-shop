@@ -311,7 +311,12 @@ class order_total {
         if ($GLOBALS[$class]->enabled) {
           $size = sizeof($GLOBALS[$class]->output);
           for ($i = 0; $i < $size; $i ++) {
-            $arr_output[] = array('title'=>$GLOBALS[$class]->output[$i]['title'], 'text'=>$GLOBALS[$class]->output[$i]['text']);
+            $arr_output[] = array(
+              'title' => $GLOBALS[$class]->output[$i]['title'], 
+              'text' => $GLOBALS[$class]->output[$i]['text'],
+              'value' => $GLOBALS[$class]->output[$i]['value'],
+              'class' => $class,
+            );
           }
         }
       }
