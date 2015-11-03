@@ -64,7 +64,7 @@
         $banner_array = array();
         foreach ($banner_content as $banner) {
           $banner_url = xtc_get_top_level_domain($banner['banners_url']);
-          $banner_array[] = array('IMAGE' => '<a href="' . xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '"' . (($shop_url['new'] != $banner_url['new']) ? ' onclick="window.open(this.href); return false;"' : '') . '>' . xtc_image(DIR_WS_IMAGES.'banner/' . $banner['banners_image'], $banner['banners_title']) . '</a>',
+          $banner_array[] = array('IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a href="' . xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '"' . (($shop_url['new'] != $banner_url['new']) ? ' onclick="window.open(this.href); return false;"' : '') . '>' . xtc_image(DIR_WS_IMAGES.'banner/' . $banner['banners_image'], $banner['banners_title']) . '</a>' : xtc_image(DIR_WS_IMAGES.'banner/' . $banner['banners_image'], $banner['banners_title'])),
                                   'TEXT' => $banner['banners_html_text'],
                                   'TITLE' => $banner['banners_title']
                                   );
