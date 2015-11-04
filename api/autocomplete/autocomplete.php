@@ -68,6 +68,7 @@
       } else {
         $module_smarty->assign('error', 'true');
       }
+      $module_smarty->caching = 0;
       $module_smarty->display(CURRENT_TEMPLATE.'/module/autocomplete.html');
     }
   }

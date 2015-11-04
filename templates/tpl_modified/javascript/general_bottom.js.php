@@ -77,13 +77,13 @@
         $(this).show();
       }
     });
-    $('#autocomplete_next').hide();
-    $('#autocomplete_prev').hide();
+    $('#autocomplete_next').css('visibility', 'hidden');
+    $('#autocomplete_prev').css('visibility', 'hidden');
     if (ac_page > 1) {
-      $('#autocomplete_prev').show();
+      $('#autocomplete_prev').css('visibility', 'visible');
     }
     if (ac_page < ac_result && ac_result > 1) {
-      $('#autocomplete_next').show();
+      $('#autocomplete_next').css('visibility', 'visible');
     }
     $('#autocomplete_count').html(ac_show_page+ac_page+ac_show_page_of+ac_result);
   }
