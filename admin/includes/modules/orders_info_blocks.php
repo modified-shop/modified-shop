@@ -15,12 +15,29 @@
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
       <div class="pageHeading pdg2"><?php echo TABLE_HEADING_ORDERS_ID.': ' . $oID . ' - ' . xtc_datetime_short($order->info['date_purchased']); ?></div>
       <div class="main pdg2"><?php echo HEADING_TITLE; ?></div>
-      <div class="clear" style="margin-left: 5px;">     
-        <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')));?>"><?php echo BUTTON_BACK; ?></a>
-        <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS_EDIT, 'oID='.$oID.'&cID=' . $order->customer['ID']);?>"><?php echo BUTTON_EDIT ?></a>        
-      </div>
 
       <div class="div_box mrg5">
+        <div class="clear" style="padding-bottom: 5px; display: inline-block; width: 100%;">
+          <div class="flt-l" style="margin-left: 5px;">     
+            <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')));?>"><?php echo BUTTON_BACK; ?></a>
+            <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS_EDIT, 'oID='.$oID.'&cID=' . $order->customer['ID']);?>"><?php echo BUTTON_EDIT ?></a>        
+          </div>
+          <div class="flt-r">
+            <?php
+              $prev_query = xtc_db_query("SELECT orders_id FROM ".TABLE_ORDERS." WHERE orders_id < '".(int)$oID."' ORDER BY orders_id DESC LIMIT 1");
+              if (xtc_db_num_rows($prev_query) == 1) {
+                $prev = xtc_db_fetch_array($prev_query);  
+                echo '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('oID')).'oID='.$prev['orders_id']).'">&laquo;</a>';
+              }
+              $next_query = xtc_db_query("SELECT orders_id FROM ".TABLE_ORDERS." WHERE orders_id > '".(int)$oID."' ORDER BY orders_id ASC LIMIT 1");
+              if (xtc_db_num_rows($next_query) == 1) {
+                $next = xtc_db_fetch_array($next_query);  
+                echo '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('oID')).'oID='.$next['orders_id']).'">&raquo;</a>';
+              }
+            ?>
+          </div>
+        </div>
+
         <!-- BOC CUSTOMERS INFO BLOCK -->
         <table cellspacing="0" cellpadding="2" class="table">
           <tr>
