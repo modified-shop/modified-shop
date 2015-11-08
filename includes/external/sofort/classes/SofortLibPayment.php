@@ -337,6 +337,7 @@ class SofortLibPayment {
         // delete canceled order
         $this->_remove_order((int)$_SESSION['sofort'][$this->code]['oID']);
 				unset($_SESSION['sofort'][$this->code]);
+				unset($_SESSION['tmp_oID']);
 			}
 		}
   }
