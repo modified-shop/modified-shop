@@ -114,7 +114,7 @@ if (xtc_not_null($action)) {
         $_POST['products_id'][$i] = xtc_input_validation($_POST['products_id'][$i], 'products_id', '');
           
         if ($cart_quantity == 0) $cart_object->remove($_POST['products_id'][$i]);
-		  
+      
         if (in_array($_POST['products_id'][$i], (isset($_POST['cart_delete']) && is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array ()))) {
           $cart_object->remove($_POST['products_id'][$i]);
         } else {
