@@ -37,9 +37,9 @@
     $products_count += $products['total'];
   
     // check sub categories		
-    $child_categories_query = xtDBquery("SELECT categories_id 
-                                           FROM ".TABLE_CATEGORIES." 
-                                          WHERE parent_id = '".(int)$category_id."'
+    $child_categories_query = xtDBquery("SELECT c.categories_id
+                                           FROM ".TABLE_CATEGORIES." c
+                                          WHERE c.parent_id = '".(int)$category_id."'
                                                 ".CATEGORIES_CONDITIONS_C);
     if (xtc_db_num_rows($child_categories_query, true)) {
       while ($child_categories = xtc_db_fetch_array($child_categories_query, true)) {
