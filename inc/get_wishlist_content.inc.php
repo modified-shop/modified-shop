@@ -34,7 +34,7 @@
         $shipping_status_link = $main->getShippingStatusName($products[$i]['shippingtime'], true);      
       }
   
-      $module_data[] = array ('PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])),
+      $module_data[$i] = array ('PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])),
                               'PRODUCTS_NAME' => $products[$i]['name'],
                               'PRODUCTS_IMAGE' => $product->productImage(xtc_get_products_image(xtc_get_prid($products[$i]['id'])), 'thumbnail'),
                               'PRODUCTS_BUTTON_DELETE' => $del_button,
@@ -54,6 +54,8 @@
                               'ATTRIBUTES' => ''
                               );
 
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/wishlist_content/','php') as $file) require ($file);
+      
       //products attributes
       if (isset ($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
         $attributes_exists = true;
@@ -67,6 +69,8 @@
                                                             'NAME' => $attributes['products_options_name'],
                                                             'VALUE_NAME' => $attributes['products_options_values_name']
                                                             );
+          foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/wishlist_content_attributes/','php') as $file) require ($file);
+          
           $subindex++;
         }
       }

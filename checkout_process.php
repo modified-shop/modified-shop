@@ -253,6 +253,8 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       );
     $add_data_array = array('products_order_description' => $order->products[$i]['order_description']);
     $sql_data_array = array_merge($sql_data_array, $add_data_array);
+    
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/checkout/checkout_process_products/','php') as $file) require ($file);
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
     $order_products_id = xtc_db_insert_id();
 
@@ -336,6 +338,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         if (isset($order->products[$i]['attributes'][$j]['value_id']))
           $sql_data_array['orders_products_options_values_id'] = $order->products[$i]['attributes'][$j]['value_id'];
 
+        foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/checkout/checkout_process_attributes/','php') as $file) require ($file);
         xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
         // update attributes download
@@ -360,6 +363,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
                 'download_count' => $attributes_dl_array['products_attributes_maxcount'],
                 'download_key' => md5($insert_id.$order_products_id.$_SESSION['customer_id'].$order->customer['email_address'].$attributes_dl_array['products_attributes_filename'])
               );
+            foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/checkout/checkout_process_download/','php') as $file) require ($file);
             xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
           }
         }
