@@ -21,7 +21,7 @@
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 
-define('SHOPGATE_PLUGIN_VERSION', '2.9.22');
+define('SHOPGATE_PLUGIN_VERSION', '2.9.23');
 require_once(dirname(__FILE__) . '/Model/ShopgateModelLoader.php');
 require_once(dirname(__FILE__) . '/helper/ShopgateHelperLoader.php');
 
@@ -187,9 +187,9 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         
         
         /** @var ShopgateAddress[] $addresses */
-        $addressList   = $customer->getAddresses();
-        $customerModel = new ShopgateCustomerModel();
-        $defaultAddr   = true;
+        $addressList    = $customer->getAddresses();
+        $customerModel  = new ShopgateCustomerModel($this->config, $this->languageId);
+        $defaultAddress = true;
         
         if ($customerModel->areAddressesEqual($addressList)) {
             array_pop($addressList);
@@ -226,12 +226,12 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
                 array_merge($addressData, $customField->prepareCustomFields(clone $address, TABLE_ADDRESS_BOOK));
             
             xtc_db_perform(TABLE_ADDRESS_BOOK, $addressData);
-            if ($defaultAddr) {
+            if ($defaultAddress) {
                 $addressId = xtc_db_insert_id();
                 $query     = "UPDATE " . TABLE_CUSTOMERS
                     . " as c SET customers_default_address_id = {$addressId} WHERE c.customers_id={$userId}";
                 xtc_db_query($query);
-                $defaultAddr = false;
+                $defaultAddress = false;
             }
         }
     }
@@ -314,10 +314,10 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         $customerGroupDiscountAttributes = false;
         $itemModel->getDiscountToCustomerGroups($customerGroupMaxPriceDiscount, $customerGroupDiscountAttributes);
         
-        $categoryReducementMap = array();
-        $maxCatDepth           = $this->config->getMaximumCategoryExportDepth();
+        $categoryReducedMap = array();
+        $maxCatDepth        = $this->config->getMaximumCategoryExportDepth();
         if (!empty($maxCatDepth)) {
-            $categoryReducementMap = $itemModel->getCategoryReducementMap($maxCatDepth);
+            $categoryReducedMap = $itemModel->getCategoryReducementMap($maxCatDepth);
         }
         
         $maxOrder = $minOrder = $addToOrderIndex = 0;
@@ -352,21 +352,21 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
             $price    = $item["products_price"];// Calculate the price
             $oldPrice = '';
             $itemModel->calculateProductPrice(
-                $item, $tax_rate, $customerGroupMaxPriceDiscount, $customerGroupMaxPriceDiscount, $price, $oldPrice
+                $item, $tax_rate, $customerGroupMaxPriceDiscount, $price, $oldPrice
             );
             
             $itemModel->setReverseItemSortOrder($this->config->getReverseItemsSortOrder());
             $category_numbers = $itemModel->getProductCategoryNumbers($item);
             // check if there is a category replacement map to reduce categories depth
-            if (!empty($categoryReducementMap)) {
+            if (!empty($categoryReducedMap)) {
                 foreach ($category_numbers as &$categoryNumber) {
                     // can possibly contain a split symbol "=>"
                     if (strpos($categoryNumber, '=>') !== false) {
                         $catNumberParts    = explode('=>', $categoryNumber);
-                        $catNumberParts[0] = $categoryReducementMap[$catNumberParts[0]];
+                        $catNumberParts[0] = $categoryReducedMap[$catNumberParts[0]];
                         $categoryNumber    = implode('=>', $catNumberParts);
                     } else {
-                        $categoryNumber = $categoryReducementMap[$categoryNumber];
+                        $categoryNumber = $categoryReducedMap[$categoryNumber];
                     }
                 }
             }
@@ -1402,6 +1402,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
     
     public function getSettings()
     {
+        $customerModel                 = new ShopgateCustomerModel($this->config, $this->languageId);
         $taxes                         = array();
         $taxes['product_tax_classes']  = $this->getTaxClasses();
         $taxes['customer_tax_classes'] =
@@ -1444,10 +1445,10 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
             );
         }
         
-        $customergroups = $this->getCustomerGroups();
+        $customerGroups = $customerModel->getCustomerGroups();
         
         return array(
-            'customer_groups' => $customergroups,
+            'customer_groups' => $customerGroups,
             'tax'             => array(
                 'product_tax_classes'  => $this->getTaxClasses(),
                 'customer_tax_classes' => array('id' => 1, 'key' => 'default', 'is_default' => 1),
@@ -1612,6 +1613,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         $this->buildCategoriesTree(0, $maxOrder, 'xml', $limit, $offset, $uids);
         
         if ($this->config->getExportNewProductsCategory()) {
+            /** @var mixed[] $row */
             $row                    = $this->buildDefaultCategoryRow();
             $row['parent_id']       = '';
             $row['category_number'] =
@@ -1626,7 +1628,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
     public function getOrders(
         $customerToken, $customerLanguage, $limit = 10, $offset = 0, $orderDateFrom = '', $sortOrder = 'created_desc'
     ) {
-        $orderModel = new ShopgateCustomerOrderModel($this->config);
+        $orderModel = new ShopgateCustomerOrderModel($this->config, $this->languageId);
         
         return $orderModel->getOrders($customerToken, $customerLanguage, $limit, $offset, $orderDateFrom, $sortOrder);
     }
@@ -1638,7 +1640,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
     
     protected function createItems($limit = null, $offset = null, array $uids = array())
     {
-        $itemXmlModel = new ShopgateItemXmlModel($this->config);
+        $customerModel = new ShopgateCustomerModel($this->config, $this->languageId);
+        $itemXmlModel  = new ShopgateItemXmlModel($this->config);
         $itemXmlModel->setLanguageId($this->languageId);
         $itemXmlModel->setDefaultCustomerPriceGroup($this->config->getCustomerPriceGroup());
         $itemXmlModel->setExportLimit($limit);
@@ -1651,7 +1654,22 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         $itemXmlModel->setReverseItemSortOrder($this->config->getReverseItemsSortOrder());
         
         $itemXmlModel->setLog(ShopgateLogger::getInstance());
+        $_SESSION['languages_id'] = $this->languageId;
+        $_SESSION['country']      = $this->countryId;
+        $xtPricesByCustomerGroups = array();
+        foreach ($customerModel->getCustomerGroups() as $customerGroup) {
+            // In modified will be checked if the customer group id is empty on price calculation.
+            // In this case the default group id will be set. This causes that one group will be exported twice.
+            // This causes issues.(Group with id zero is admin group.) 
+            if ($customerGroup['id'] == 0) {
+                continue;
+            }
+            $xtPricesByCustomerGroups[$customerGroup['id']]                                             =
+                new xtcPrice($this->currency['code'], $customerGroup['id']);
+            $xtPricesByCustomerGroups[$customerGroup['id']]->cStatus['customers_status_show_price_tax'] = 1;
+        }
         
+        $itemXmlModel->setXtPricesByCustomerGroups($xtPricesByCustomerGroups);
         $result = ShopgateWrapper::db_query($itemXmlModel->getProductQuery($uids));
         
         while ($item = ShopgateWrapper::db_fetch_array($result)) {
@@ -1711,7 +1729,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
      */
     private function getCustomerToken($customerData)
     {
-        $customerModel = new ShopgateCustomerModel();
+        $customerModel = new ShopgateCustomerModel($this->config, $this->languageId);
         if (!$customerModel->hasCustomerToken($customerData["customers_id"])) {
             return $customerModel->insertToken(
                 $customerData["customers_id"], $customerData["customers_email_address"]
@@ -1822,34 +1840,6 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         
         return $taxRates;
     }
-    
-    /**
-     * return an array with all customer groups
-     *
-     * @return array
-     */
-    private function getCustomerGroups()
-    {
-        
-        $customerGroups = array();
-        
-        $query  = "SELECT 
-                        cs.customers_status_name AS name,
-                        cs.customers_status_id AS id,
-                        0 AS 'is_default'
-                    FROM customers_status AS cs
-                    WHERE cs.language_id = {$this->languageId}";
-        $result = xtc_db_query($query);
-        while ($customerGroup = xtc_db_fetch_array($result)) {
-            if ($customerGroup['id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
-                $customerGroup['is_default'] = 1;
-            }
-            $customerGroups[] = $customerGroup;
-        }
-        
-        return $customerGroups;
-    }
-    
     
     /**
      * return an array with all valid shipping methods to an order
@@ -2313,7 +2303,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
                 "cheking if category is blacklisted ...",
                 ShopgateLogger::LOGTYPE_DEBUG
             );
-            
+            /** @var mixed[] $row */
             $row = $this->buildDefaultCategoryRow();
             
             $row["category_number"] = $item["categories_id"];
@@ -2751,12 +2741,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
     private function createGuestUser(ShopgateOrder $order)
     {
         //        $order = new ShopgateOrder();
-        $address = $order->getInvoiceAddress();
-        
-        $customerStatus = $this->config->getCustomersStatusId();
-        if ($customerStatus === -1) {
-            $customerStatus = DEFAULT_CUSTOMERS_STATUS_ID;
-        }
+        $address        = $order->getInvoiceAddress();
+        $customerStatus = DEFAULT_CUSTOMERS_STATUS_ID;
         
         $customer                                 = array();
         $customer["customers_vat_id_status"]      = 0;
