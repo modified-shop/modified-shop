@@ -162,7 +162,7 @@ if ($errorno) {
                                  IFNULL(s.specials_new_products_price, p.products_price) AS price ";
   
   if (PRODUCT_LIST_FILTER == 'true') { 
-    $select_str = "SELECT distinct p.products_id ";
+    $select_str = "SELECT DISTINCT p.products_id ";
   }
   
   $from_str  = "FROM ".TABLE_PRODUCTS." AS p 
@@ -190,7 +190,7 @@ if ($errorno) {
   }
 
   //where-string
-  $where_str = " WHERE p.products_status = '1'"  
+  $where_str = " WHERE p.products_status = '1' AND trim(pd.products_name) != '' "  
   .$subcat_where
   .$manu_check
   .PRODUCTS_CONDITIONS_P
