@@ -52,12 +52,17 @@ class ShopgateCustomerOrderModel
     /** @var string */
     private $language;
     
+    /** @var int|string */
+    private $languageId;
+    
     /**
      * @param ShopgateConfigModified $config
+     * @param int|string             $languageId
      */
-    public function __construct(ShopgateConfigModified $config)
+    public function __construct(ShopgateConfigModified $config, $languageId)
     {
         $this->config = $config;
+        $this->languageId = $languageId;
     }
     
     /**
@@ -85,7 +90,7 @@ class ShopgateCustomerOrderModel
                 break;
         }
         
-        $customerModel = new ShopgateCustomerModel();
+        $customerModel = new ShopgateCustomerModel($this->config, $this->languageId);
         $customerId    = $customerModel->getCustomerIdByToken($customerToken);
         
         if (empty($customerId)) {
