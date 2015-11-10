@@ -268,8 +268,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     /**
      * fill the referenced variables with the right data
      *
-     * @param $maxOrder maximum order index
-     * @param $minOrder minimum order index
+     * @param $maxOrder int maximum order index
+     * @param $minOrder int minimum order index
      * @param $addToOrderIndex
      */
     public function getProductOrderValues(&$maxOrder, &$minOrder, &$addToOrderIndex)
@@ -851,12 +851,11 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      * @param array  $item
      * @param string $tax_rate
      * @param string $customerGroupMaxPriceDiscount
-     * @param string $customerGroupMaxPriceDiscount
      * @param string $price
      * @param string $oldPrice
      */
     public function calculateProductPrice(
-        $item, $tax_rate, $customerGroupMaxPriceDiscount, $customerGroupMaxPriceDiscount, &$price, &$oldPrice
+        $item, $tax_rate, $customerGroupMaxPriceDiscount, &$price, &$oldPrice
     ) {
         // Special offers for a Customer group
         $pOffers = $this->getPersonalOffersPrice($item, $tax_rate);

@@ -53,7 +53,7 @@ if (isset($_GET['action']) && ($_GET["action"] === "save")) {
         $shopgateConfig = new ShopgateConfigModified();
         // check if some settings are selected, keep default if not
         $sgEmptySettings = array(
-            'language', 'currency', 'country', 'tax_zone_id', 'customer_price_group', 'customer_status_id',
+            'language', 'currency', 'country', 'tax_zone_id', 'customer_price_group', 
             'order_status_open', 'order_status_shipping_blocked', 'order_status_shipped', 'order_status_canceled'
         );
         foreach ($sgEmptySettings as $sgEmptySetting) {
@@ -151,34 +151,12 @@ if ($_GET["sg_option"] === "config") {
         $sgOrderStates[$row['orders_status_id']] = $row;
     }
     
-    // get customer groups
-    $qry = xtc_db_query(
-        "
-        SELECT
-            s.customers_status_id,
-            " . (($sg_language === null)
-            ? "CONCAT(customers_status_name, ' (', code, ')') AS customers_status_name"
-            : 'customers_status_name'
-        ) . "
-        FROM `" . TABLE_CUSTOMERS_STATUS . "` s
-        INNER JOIN `" . TABLE_LANGUAGES . "` l ON s.language_id = l.languages_id
-        WHERE
-            " . (($sg_language === null) ? '' : "LOWER(l.code) = '{$sg_language}' AND") . "
-             customers_status_id != '0'
-    "
-    );
-    
     $sgExportDescriptionTypes = array(
         SHOPGATE_SETTING_EXPORT_DESCRIPTION                  => SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESC_ONLY,
         SHOPGATE_SETTING_EXPORT_SHORTDESCRIPTION             => SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_SHORTDESC_ONLY,
         SHOPGATE_SETTING_EXPORT_DESCRIPTION_SHORTDESCRIPTION => SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESC_SHORTDESC,
         SHOPGATE_SETTING_EXPORT_SHORTDESCRIPTION_DESCRIPTION => SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_SHORTDESC_DESC,
     );
-    
-    $sgCustomerGroups = array();
-    while ($row = xtc_db_fetch_array($qry)) {
-        $sgCustomerGroups[$row['customers_status_id']] = $row;
-    }
     
     // get tax zones
     $qry = xtc_db_query(
@@ -679,32 +657,6 @@ if (defined('PROJECT_MAJOR_VERSION')) {
                                     <td class="shopgate_setting" align="right">
                                         <table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
                                             <tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
-                                                <td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP; ?></b></td>
-                                                <td class="<?php echo $tableClass; ?> shopgate_input">
-                                                    <div>
-                                                        <select name="_shopgate_config[customer_price_group]">
-                                                            <?php if (!in_array($shopgateConfig['customer_price_group'], array_keys($sgCustomerGroups)) && $shopgateConfig['customer_price_group'] != '0'): ?>
-                                                            <option value="-"></option>
-                                                            <?php endif; ?>
-                                                            <option value="0"><?php echo SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_OFF; ?></option>
-                                                            <?php foreach($sgCustomerGroups as $sgCustomerGroup): ?>
-                                                            <option value="<?php echo $sgCustomerGroup["customers_status_id"]?>"
-                                                                <?php echo $shopgateConfig["customer_price_group"]==$sgCustomerGroup["customers_status_id"]?'selected=""':''?>>
-                                                                <?php echo $sgCustomerGroup["customers_status_name"]?>
-                                                            </option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                    <?php echo SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_DESCRIPTION; ?>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="shopgate_setting" align="right">
-                                        <table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
-                                            <tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
                                                 <td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY; ?></b></td>
                                                 <td class="<?php echo $tableClass; ?> shopgate_input">
                                                     <div>
@@ -766,31 +718,6 @@ if (defined('PROJECT_MAJOR_VERSION')) {
                                 <tr><td colspan="2">&nbsp;</td></tr>
                                 <tr><td colspan="2">&nbsp;</td></tr>
                                 <tr><th colspan="2" style="text-align: left;"><?php echo SHOPGATE_CONFIG_ORDER_IMPORT_SETTINGS; ?></th></tr>
-                                <tr>
-                                    <td class="shopgate_setting" align="right">
-                                        <table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
-                                            <tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
-                                                <td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXTENDED_CUSTOMER_GROUP; ?></b></td>
-                                                <td class="<?php echo $tableClass; ?> shopgate_input">
-                                                    <div>
-                                                        <select name="_shopgate_config[customers_status_id]">
-                                                            <?php if (!in_array($shopgateConfig['customers_status_id'], array_keys($sgCustomerGroups))): ?>
-                                                            <option value="-"></option>
-                                                            <?php endif; ?>
-                                                            <?php foreach($sgCustomerGroups as $sgCustomerGroup): ?>
-                                                            <option value="<?php echo $sgCustomerGroup["customers_status_id"]?>"
-                                                                <?php echo $shopgateConfig["customers_status_id"]==$sgCustomerGroup["customers_status_id"]?'selected=""':''?>>
-                                                                <?php echo $sgCustomerGroup["customers_status_name"]?>
-                                                            </option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                    <?php echo SHOPGATE_CONFIG_EXTENDED_CUSTOMER_GROUP_DESCRIPTION; ?>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
                                 <tr>
                                     <td class="shopgate_setting" align="right">
                                         <table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
