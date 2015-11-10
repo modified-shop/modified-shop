@@ -36,11 +36,11 @@
           <meta itemprop="ratingCount" content="{$PRODUCTS_RATING_COUNT}" /> 
         </div>
         {/if}
-        {if $PRODUCTS_DISCOUNT != ''}<div class="pd_inforow"><strong>{#text_discount#}</strong> {$PRODUCTS_DISCOUNT}</div>{/if}  
+        {if isset($PRODUCTS_DISCOUNT) && $PRODUCTS_DISCOUNT != ''}<div class="pd_inforow"><strong>{#text_discount#}</strong> {$PRODUCTS_DISCOUNT}</div>{/if}  
         {if $PRODUCTS_EXPIRES}<div class="pd_inforow red">{#text_expires_date#} {$PRODUCTS_EXPIRES}</div>{/if}
         {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<div class="pd_inforow"><strong>{#products_manufacturer_model#}</strong> {$PRODUCTS_MANUFACTURERS_MODEL}</div>{/if}
-        {if $MANUFACTURER != ''}<div class="pd_inforow"><strong>{#manufacturer#}</strong> <span itemprop="brand">{$MANUFACTURER}</span></div>{/if}
-        {if $MANUFACTURER_LINK != ''}<div class="pd_inforow"><strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a></div>{/if}
+        {if isset($MANUFACTURER) && $MANUFACTURER != ''}<div class="pd_inforow"><strong>{#manufacturer#}</strong> <span itemprop="brand">{$MANUFACTURER}</span></div>{/if}
+        {if isset($MANUFACTURER_LINK) && $MANUFACTURER_LINK != ''}<div class="pd_inforow"><strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a></div>{/if}
         {if $PRODUCTS_URL != ''}<div class="pd_inforow">{$PRODUCTS_URL}</div>{/if}
 
         <ul class="pd_iconlist">
@@ -49,7 +49,7 @@
           {if isset($EXPRESS_LINK)}<li class="express">{$EXPRESS_LINK}</li>{/if}
           {if $ADD_CART_BUTTON_WISHLIST_TEXT}<li class="wishlist">{$ADD_CART_BUTTON_WISHLIST_TEXT}</li>{/if}
         </ul>
-        {if $KLARNA_PPBOX}{$KLARNA_PPBOX}{/if}
+        {if isset($KLARNA_PPBOX)}{$KLARNA_PPBOX}{/if}
       </div>
 
       <div class="pd_summarybox" itemprop="offers" itemscope itemtype="http://schema.org/Offer"> 
@@ -68,8 +68,8 @@
           {if $PRODUCTS_VPE}<div class="pd_vpe">{$PRODUCTS_VPE}</div>{/if}
           <div class="pd_tax{if $PRODUCTS_FSK18 == 'true'} pd_fsk_padding{/if}">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</div>
         {/if}
-        {if $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
-        {if $MODULE_product_options != ''}{if $MODULE_product_options_template == 'multi_options_1.html' || $MODULE_product_options_template == 'product_options_dropdown.html'}
+        {if isset($MODULE_graduated_price) && $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
+        {if isset($MODULE_product_options) && $MODULE_product_options != ''}{if $MODULE_product_options_template == 'multi_options_1.html' || $MODULE_product_options_template == 'product_options_dropdown.html'}
           {$MODULE_product_options}
         {/if}{/if}
       
@@ -95,19 +95,19 @@
       
         {if $ADD_CART_BUTTON == '' && $PRODUCTS_FSK18 == 'true'}<div class="pd_inforow_message">{#products_fsk18_check#}</div>{/if}
         {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<div class="pd_inforow_message">{#products_gift_forbidden#}</div>{/if}
-        {if $PRODUCTS_DATE_AVAILABLE != ''}<div class="pd_inforow_message">{$PRODUCTS_DATE_AVAILABLE}</div>{/if}
+        {if isset($PRODUCTS_DATE_AVAILABLE) && $PRODUCTS_DATE_AVAILABLE != ''}<div class="pd_inforow_message">{$PRODUCTS_DATE_AVAILABLE}</div>{/if}
 
       </div>
       <br class="clearfix" />
-      {if $XTB_REDIRECT_USER_TO == 'product'}
+      {if isset($XTB_REDIRECT_USER_TO) && $XTB_REDIRECT_USER_TO == 'product'}
         <div class="xtb_booster_redirect_message"><strong>Sie haben die eBay Auktion gewonnen!</strong><br />Bitte w&auml;hlen Sie nun noch die gew&uuml;nschten Produkteigenschaften und legen Sie den Artikel danach in den Warenkorb, um mit der Zahlung fortzufahren und das Produkt versandfertig zu machen!</div>
       {/if}
-      {if $MODULE_product_options != ''}{if $MODULE_product_options_template == 'product_options_selection.html' || $MODULE_product_options_template == 'table_listing.html'}
+      {if isset($MODULE_product_options) && $MODULE_product_options != ''}{if $MODULE_product_options_template == 'product_options_selection.html' || $MODULE_product_options_template == 'table_listing.html'}
         {$MODULE_product_options}
       {/if}{/if}      
     </div>  
     <br class="clearfix" />
-    {if $MANUFACTURER_IMAGE != ''}<div class="pd_manu_image"><a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" /></a></div>{/if}
+    {if isset($MANUFACTURER_IMAGE) && $MANUFACTURER_IMAGE != ''}<div class="pd_manu_image"><a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" /></a></div>{/if}
   </div>
   {$FORM_END}
 
@@ -116,11 +116,11 @@
       {if $PRODUCTS_DESCRIPTION != ''}<li>{#description#}</li>{/if}
       {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}<li>{#products_tags#}</li>{/if}
       {if $more_images|@count > 0}<li>{#more_images#}</li>{/if}
-      {if $MODULE_products_media != ''}<li>{#products_media#}</li>{/if}
-      {if $MODULE_products_reviews != ''}<li>{#products_reviews#}</li>{/if}
-      {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<li>{#cross_selling#}</li>{/if}
-      {if $MODULE_also_purchased != ''}<li>{#also_purchased#}</li>{/if}
-      {if $MODULE_products_category != ''}<li>{#products_category#}</li>{/if}
+      {if isset($MODULE_products_media) && $MODULE_products_media != ''}<li>{#products_media#}</li>{/if}
+      {if isset($MODULE_products_reviews) && $MODULE_products_reviews != ''}<li>{#products_reviews#}</li>{/if}
+      {if (isset($MODULE_cross_selling) && $MODULE_cross_selling != '') || (isset($MODULE_reverse_cross_selling) && $MODULE_reverse_cross_selling != '')}<li>{#cross_selling#}</li>{/if}
+      {if isset($MODULE_also_purchased) && $MODULE_also_purchased != ''}<li>{#also_purchased#}</li>{/if}
+      {if isset($MODULE_products_category) && $MODULE_products_category != ''}<li>{#products_category#}</li>{/if}
     </ul>
     <div class="resp-tabs-container">
       {if $PRODUCTS_DESCRIPTION != ''}<div class="pd_description"><h4 class="detailbox">{#products_desc#}</h4><div itemprop="description">{$PRODUCTS_DESCRIPTION}</div></div>{/if}
@@ -135,11 +135,11 @@
         {/foreach}
       </div>
       {/if}
-      {if $MODULE_products_media != ''}<div>{$MODULE_products_media}</div>{/if}
-      {if $MODULE_products_reviews != ''}<div>{$MODULE_products_reviews}</div>{/if}
-      {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<div>{$MODULE_cross_selling}{if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
-      {if $MODULE_also_purchased != ''}<div>{$MODULE_also_purchased}</div>{/if}
-      {if $MODULE_products_category != ''}<div>{$MODULE_products_category}</div>{/if}
+      {if isset($MODULE_products_media) && $MODULE_products_media != ''}<div>{$MODULE_products_media}</div>{/if}
+      {if isset($MODULE_products_reviews) && $MODULE_products_reviews != ''}<div>{$MODULE_products_reviews}</div>{/if}
+      {if isset($MODULE_cross_selling) && $MODULE_cross_selling != '' || (isset($MODULE_reverse_cross_selling) && $MODULE_reverse_cross_selling != '')}<div>{if isset($MODULE_cross_selling) && $MODULE_cross_selling != ''}{$MODULE_cross_selling}{/if}{if isset($MODULE_reverse_cross_selling) && $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
+      {if isset($MODULE_also_purchased) && $MODULE_also_purchased != ''}<div>{$MODULE_also_purchased}</div>{/if}
+      {if isset($MODULE_products_category) && $MODULE_products_category != ''}<div>{$MODULE_products_category}</div>{/if}
     </div>
   </div>
   {if $PRODUCTS_ADDED != ''}<p class="dateadded">{$PRODUCTS_ADDED}</p>{/if}
