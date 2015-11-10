@@ -42,7 +42,6 @@ class ShopgateConfigModified extends ShopgateConfig
     
     protected $tax_zone_id;
     
-    protected $customers_status_id;
     protected $customer_price_group;
     
     protected $order_status_open;
@@ -116,7 +115,6 @@ class ShopgateConfigModified extends ShopgateConfig
         
         $this->tax_zone_id = 5;
         
-        $this->customers_status_id  = 1;
         $this->customer_price_group = 0;
         
         $this->order_status_open             = 1;
@@ -182,14 +180,6 @@ class ShopgateConfigModified extends ShopgateConfig
     public function getTaxZoneId()
     {
         return $this->tax_zone_id;
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getCustomersStatusId()
-    {
-        return $this->customers_status_id;
     }
     
     /**
@@ -344,14 +334,6 @@ class ShopgateConfigModified extends ShopgateConfig
     public function setTaxZoneId($value)
     {
         $this->tax_zone_id = $value;
-    }
-    
-    /**
-     * @param $value
-     */
-    public function setCustomersStatusId($value)
-    {
-        $this->customers_status_id = $value;
     }
     
     /**

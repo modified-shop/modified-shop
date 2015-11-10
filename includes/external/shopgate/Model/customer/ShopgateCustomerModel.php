@@ -21,8 +21,57 @@
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
-class ShopgateCustomerModel
+class ShopgateCustomerModel extends ShopgateObject
 {
+    
+    /**
+     * @var ShopgateConfigModified $config
+     */
+    private $config;
+    
+    /**
+     * @var int
+     */
+    private $languageId;
+    
+    /**
+     * @param ShopgateConfigModified $config
+     * @param int                    $languageId
+     */
+    public function __construct(ShopgateConfigModified $config, $languageId)
+    {
+        $this->languageId = $languageId;
+        $this->config     = $config;
+    }
+    
+    /**
+     * return an array with all customer groups
+     *
+     * @return array
+     */
+    public function getCustomerGroups()
+    {
+        $customerGroups = array();
+        
+        $query  = "SELECT 
+                        cs.customers_status_name AS name,
+                        cs.customers_status_id AS id,
+                        0 AS 'is_default'
+                    FROM customers_status AS cs
+                    WHERE cs.language_id = {$this->languageId}";
+        $result = xtc_db_query($query);
+        while ($customerGroup = xtc_db_fetch_array($result)) {
+            foreach ($customerGroup AS &$cgrp) {
+                $this->stringToUtf8($cgrp, $this->config->getEncoding());
+            }
+            if ($customerGroup['id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+                $customerGroup['is_default'] = 1;
+            }
+            $customerGroups[] = $customerGroup;
+        }
+        
+        return $customerGroups;
+    }
     
     /**
      * get the customer's token from the database
@@ -49,7 +98,7 @@ class ShopgateCustomerModel
     /**
      * check if a customer already has a token
      *
-     * @param $internalCustomerId
+     * @param int $internalCustomerId
      *
      * @return bool
      */
@@ -61,8 +110,8 @@ class ShopgateCustomerModel
     /**
      * store a token to a customer in the database
      *
-     * @param $internalCustomerId
-     * @param $eMailAddress
+     * @param int $internalCustomerId
+     * @param string $eMailAddress
      *
      * @return string
      */
