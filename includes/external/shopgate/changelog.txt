@@ -1,3 +1,6 @@
+'''Version 2.9.23'''
+* implemented tier price support
+
 '''Version 2.9.22'''
 * fixed categories in xml product export 
 
