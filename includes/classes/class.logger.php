@@ -245,7 +245,6 @@ class LoggingManager
             }
             
             $parsedLoggingLevel = $this->getLoggingLevel($loggingLevel);
-            
             if (constant("LoggingManager::$parsedLoggingLevel") <= $this->loggingLevel) {
                 if ($this->splitLogging === true && $parsedLoggingLevel != 'DEFAULT_LEVEL') {
                   $func = strtolower($parsedLoggingLevel);
@@ -268,10 +267,12 @@ class LoggingManager
      */
     public function error($message, $error = 'ERROR')
     {
-        if ($this->loggerFileError != '' && is_file($this->loggerFileError)) {
-            $filesize = filesize($this->loggerFileError);            
-            if ($filesize >= $this->loggerThreshold) {
-                $this->LoggerRotate($this->loggerFileError);
+        if ($this->loggerFileError != '') {
+            if (is_file($this->loggerFileError)) {
+                $filesize = filesize($this->loggerFileError);            
+                if ($filesize >= $this->loggerThreshold) {
+                    $this->LoggerRotate($this->loggerFileError);
+                }
             }
             error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileError);
         } else {
@@ -286,10 +287,12 @@ class LoggingManager
      */
     public function warn($message, $error = 'WARNING')
     {
-        if ($this->loggerFileWarning != '' && is_file($this->loggerFileWarning)) {
-            $filesize = filesize($this->loggerFileWarning);            
-            if ($filesize >= $this->loggerThreshold) {
-                $this->LoggerRotate($this->loggerFileWarning);
+        if ($this->loggerFileWarning != '') {
+            if (is_file($this->loggerFileWarning)) {
+                $filesize = filesize($this->loggerFileWarning);            
+                if ($filesize >= $this->loggerThreshold) {
+                    $this->LoggerRotate($this->loggerFileWarning);
+                }
             }
             error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileWarning);
         } else {
@@ -304,10 +307,12 @@ class LoggingManager
      */
     public function info($message, $error = 'INFO')
     {
-        if ($this->loggerFileInfo != '' && is_file($this->loggerFileInfo)) {
-            $filesize = filesize($this->loggerFileInfo);            
-            if ($filesize >= $this->loggerThreshold) {
-                $this->LoggerRotate($this->loggerFileInfo);
+        if ($this->loggerFileInfo != '') {
+            if (is_file($this->loggerFileInfo)) {
+                $filesize = filesize($this->loggerFileInfo);            
+                if ($filesize >= $this->loggerThreshold) {
+                    $this->LoggerRotate($this->loggerFileInfo);
+                }
             }
             error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileInfo);
         } else {
@@ -322,10 +327,12 @@ class LoggingManager
      */
     private function fine($message, $error = 'FINE')
     {
-        if ($this->loggerFileFine != '' && is_file($this->loggerFileFine)) {
-            $filesize = filesize($this->loggerFileFine);            
-            if ($filesize >= $this->loggerThreshold) {
-                $this->LoggerRotate($this->loggerFileFine);
+        if ($this->loggerFileFine != '') {
+            if (is_file($this->loggerFileFine)) {
+                $filesize = filesize($this->loggerFileFine);            
+                if ($filesize >= $this->loggerThreshold) {
+                    $this->LoggerRotate($this->loggerFileFine);
+                }
             }
             error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileFine);
         } else {
@@ -340,10 +347,12 @@ class LoggingManager
      */
     public function debug($message, $error = 'DEBUG')
     {
-        if ($this->loggerFileDebug != '' && is_file($this->loggerFileDebug)) {
-            $filesize = filesize($this->loggerFileDebug);            
-            if ($filesize >= $this->loggerThreshold) {
-                $this->LoggerRotate($this->loggerFileDebug);
+        if ($this->loggerFileDebug != '') {
+            if (is_file($this->loggerFileDebug)) {
+                $filesize = filesize($this->loggerFileDebug);            
+                if ($filesize >= $this->loggerThreshold) {
+                    $this->LoggerRotate($this->loggerFileDebug);
+                }
             }
             error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileDebug);
         } else {
