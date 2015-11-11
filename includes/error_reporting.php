@@ -10,6 +10,23 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// include needed class
+require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
+
+$config = array(
+  'LogEnabled' => true,
+  'SplitLogging' => true,
+  'LogLevel' => 'INFO', // DEBUG, FINE, INFO, WARN, ERROR
+  'LogThreshold' => '2MB',
+  'FileName' => DIR_FS_LOG.'mod_error_' .date('Y-m-d') .'.log',
+  'FileName.debug' => DIR_FS_LOG.'mod_debug_' .date('Y-m-d') .'.log',
+  'FileName.fine' => DIR_FS_LOG.'mod_fine_' .date('Y-m-d') .'.log',
+  'FileName.info' => DIR_FS_LOG.'mod_info_' .date('Y-m-d') .'.log',
+  'FileName.warning' => DIR_FS_LOG.'mod_warning_' .date('Y-m-d') .'.log',
+  'FileName.error' => DIR_FS_LOG.'mod_error_' .date('Y-m-d') .'.log',
+);
+$LoggingManager = new LoggingManager($config);
+
 /**
  * Error handler, passes flow over the exception logger with new ErrorException.
  */
@@ -23,7 +40,7 @@ function log_error($num, $str, $file, $line, $context=null)
  */
 function log_exception(Exception $e)
 {
-    global $error_exceptions, $sql_error, $sql_query;
+    global $error_exceptions, $sql_error, $sql_query, $LoggingManager;
     
     if (strpos($e->getFile(), 'templates_c') !== false
         || strpos($e->getFile(), 'cache') !== false) return;
@@ -58,30 +75,15 @@ function log_exception(Exception $e)
             $error_exceptions[$index] .= '</table>' . PHP_EOL .
                                          '<div style="height:1px; border-top:1px dotted #000; margin:10px 0px;"></div>';
 
-            // write error Logfile
-            if ($error['number'] != E_NOTICE && $error['number'] != E_STRICT  && $error['number'] != E_DEPRECATED && $error['number'] != E_USER_NOTICE) {
-                write_error_logfile($backtrace,$error,'mod_error');
+            // write Logfile
+            $LoggingManager->log(html_entity_decode($error_message) . ' in File: ' . $error_file . ' on Line: ' . $error_line, $error_name);
+            $err = 0;
+            for ($i=0, $n=count($backtrace); $i<$n; $i++) {
+                if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error_file && basename($backtrace[$i]['file']) != 'error_reporting.php') {
+                    $LoggingManager->log('Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'], $error_name);
+                    $err ++;
+                }
             }
-            // write debug Logfile
-            if ($error['number'] == E_USER_NOTICE) {
-                write_error_logfile($backtrace,$error,'mod_debug');
-            }
-            // write deprecated Logfile
-            if ($error['number'] == E_DEPRECATED) {
-                //write_error_logfile($backtrace,$error,'mod_deprecated');
-            }
-            
-        }
-    }
-}
-
-function write_error_logfile($backtrace,$error,$filename) {
-    error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' ' . $error['name'] . ' - ' . html_entity_decode($error['message']) . ' in File: ' . $error['file'] . ' on Line: ' . $error['line'] . "\n", 3, DIR_FS_LOG. $filename . '_' .date('Y-m-d') .'.log');
-    $err = 0;
-    for ($i=0, $n=count($backtrace); $i<$n; $i++) {
-        if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error['file'] && basename($backtrace[$i]['file']) != 'error_reporting.php') {
-            error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'] . "\n", 3, DIR_FS_LOG. $filename . '_' .date('Y-m-d') .'.log');
-            $err ++;
         }
     }
 }
