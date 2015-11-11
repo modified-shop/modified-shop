@@ -582,7 +582,7 @@ class shoppingCart {
                  
           if ($this->check_products_status_permission($products_id) === false) {
             $this->remove($products_id);
-          } elseif (ATTRIBUTES_VALID_CHECK == 'true' && !$this->validate_attributes($products_id,$this->contents[$products_id]['attributes'],'get_products')) {
+          } elseif (ATTRIBUTES_VALID_CHECK == 'true' && isset($this->contents[$products_id]['attributes']) && !$this->validate_attributes($products_id, $this->contents[$products_id]['attributes'], 'get_products')) {
             $this->remove($products_id); //TODO info message
           } else {
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
