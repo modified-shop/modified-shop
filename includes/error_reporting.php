@@ -16,12 +16,12 @@ require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
 $config = array(
   'LogEnabled' => true,
   'SplitLogging' => true,
-  'LogLevel' => 'INFO', // DEBUG, FINE, INFO, WARN, ERROR
+  'LogLevel' => ((defined('LOGGING_LEVEL')) ? LOGGING_LEVEL : 'INFO'), // DEBUG, FINE, INFO, WARN, ERROR
   'LogThreshold' => '2MB',
   'FileName' => DIR_FS_LOG.'mod_error_' .date('Y-m-d') .'.log',
-  'FileName.debug' => DIR_FS_LOG.'mod_debug_' .date('Y-m-d') .'.log',
-  'FileName.fine' => DIR_FS_LOG.'mod_fine_' .date('Y-m-d') .'.log',
-  'FileName.info' => DIR_FS_LOG.'mod_info_' .date('Y-m-d') .'.log',
+  'FileName.debug' => DIR_FS_LOG.'mod_notice_' .date('Y-m-d') .'.log',
+  'FileName.fine' => DIR_FS_LOG.'mod_deprecated_' .date('Y-m-d') .'.log',
+  'FileName.info' => DIR_FS_LOG.'mod_strict_' .date('Y-m-d') .'.log',
   'FileName.warning' => DIR_FS_LOG.'mod_warning_' .date('Y-m-d') .'.log',
   'FileName.error' => DIR_FS_LOG.'mod_error_' .date('Y-m-d') .'.log',
 );

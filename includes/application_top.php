@@ -58,13 +58,17 @@ if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
 @ini_set('display_errors', true);
 if (is_file(DIR_FS_CATALOG.'export/_error_reporting.shop')) {
   error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
+  define('LOGGING_LEVEL', 'INFO');
 } elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.all')) {
   error_reporting(E_ALL); //exlude E_STRICT on PHP 5.4
+  define('LOGGING_LEVEL', 'FINE');
 } elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.dev')) {
   error_reporting(-1); // Development value
+  define('LOGGING_LEVEL', 'DEBUG');
 } else {
   @ini_set('display_errors', false);
   error_reporting(0);
+  define('LOGGING_LEVEL', 'WARN');
 }
 
 // new error handling
