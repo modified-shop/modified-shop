@@ -392,6 +392,7 @@ class LoggingManager
             case 'E_CORE_ERROR':
             case 'E_USER_ERROR':
             case 'E_RECOVERABLE_ERROR':
+            case 'UNDEFINED_ERROR':
                 return 'ERROR';
 
             case 'WARN':

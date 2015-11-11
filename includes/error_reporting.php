@@ -76,11 +76,11 @@ function log_exception(Exception $e)
                                          '<div style="height:1px; border-top:1px dotted #000; margin:10px 0px;"></div>';
 
             // write Logfile
-            $LoggingManager->log(html_entity_decode($error_message) . ' in File: ' . $error_file . ' on Line: ' . $error_line, $error_name);
+            $LoggingManager->log(html_entity_decode($error['message']) . ' in File: ' . $error['file'] . ' on Line: ' . $error['line'], $error['name']);
             $err = 0;
             for ($i=0, $n=count($backtrace); $i<$n; $i++) {
                 if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error_file && basename($backtrace[$i]['file']) != 'error_reporting.php') {
-                    $LoggingManager->log('Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'], $error_name);
+                    $LoggingManager->log('Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'], $error['name']);
                     $err ++;
                 }
             }
