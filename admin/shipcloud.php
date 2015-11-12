@@ -63,13 +63,13 @@ require (DIR_WS_INCLUDES.'head.php');
               <img src="images/shipcloud/Ideenkurier_Grafik_No1.jpg" />
               <img src="images/shipcloud/Ideenkurier_Grafik_No2.jpg" /><br />
               <br />
-              Mit dem PlugIn &bdquo;shipcloud&ldquo; k&ouml;nnen Sie aus dem Backend Ihrer modified eCommerce Shopsoftware heraus Versandetiketten erzeugen. Es werden alle relevanten Paketdienste unterst&uuml;tzt: DHL, UPS, DPD, Hermes, GLS, ILOXX, FedEx und Liefery. Sie brauchen nur einen shipcloud-Account, und k&ouml;nnen sofort mit dem Paket Ihrer Wahl zu g&uuml;nstigen Konditionen verschicken und verfolgen.<br />
+              Mit dem Modul &bdquo;shipcloud&ldquo; k&ouml;nnen Sie aus dem Backend Ihrer modified eCommerce Shopsoftware heraus Versandetiketten erzeugen. Es werden alle relevanten Paketdienste unterst&uuml;tzt: DHL, UPS, DPD, Hermes, GLS, ILOXX, FedEx und Liefery. Sie brauchen nur einen shipcloud-Account, und k&ouml;nnen sofort mit dem Paket Ihrer Wahl zu g&uuml;nstigen Konditionen verschicken und verfolgen.<br />
               <br />
               Sollten Sie bereits Vertr&auml;ge mit einem oder mehreren Paketdiensten haben, k&ouml;nnen Sie diese in shipcloud verwenden und mit ihren eigenen Account-Daten Versandlabels erstellen.<br />
               <br />
               <font color="#91c24f">
               <ul>
-                <li style="list-style-type: circle !important;"><strong>Weitere Informationen zu shipcloud finden Sie hier: <a href="http://www.shipcloud.io/de/lp/modified" target="_blank"><font style="font-size:12px; color:#56a5cf;"><u><strong>Klick mich!</strong></u></font></a></strong></li>
+                <li style="list-style-type: circle !important;"><strong>Weitere Informationen zu shipcloud finden Sie hier: <a href="https://www.shipcloud.io/de/lp/modified/?pc=modified" target="_blank"><font style="font-size:12px; color:#56a5cf;"><u><strong>Klick mich!</strong></u></font></a></strong></li>
               </ul>
               </font>
               <br />
@@ -77,7 +77,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <font color="#91c24f">
               <ul>
                 <li style="list-style-type: circle !important;">modified eCommerce Shopsoftware, Version 2.00</li>
-                <li style="list-style-type: circle !important;">shipcloud Account</li>
+                <li style="list-style-type: circle !important;"><a href="https://www.shipcloud.io/de/lp/modified/?pc=modified" target="_blank"><font style="font-size:12px; color:#56a5cf;"><u><strong>shipcloud Account</strong></u></font></a></li>
               </ul>
               </font>
               <br />
@@ -90,9 +90,11 @@ require (DIR_WS_INCLUDES.'head.php');
                 <li style="list-style-type: circle !important;">Direkte Erstellung der Labels aus dem Backend der modified eCommerce Shopsoftware heraus, &uuml;ber die shipcloud-API, kein Hantieren mit CSV-Dateien.</li>
                 <li style="list-style-type: circle !important;">Automatische Hinterlegung der Trackingcodes in den Bestelldetails.</li>
                 <li style="list-style-type: circle !important;">Automatische &Auml;nderung des Bestellstatus nach der Etiketten-Erstellung m&ouml;glich, schicken Sie z.B. eine E-Mail mit entsprechendem Trackingcode an Ihre Kunden.</li>
+                <?php /*
                 <li style="list-style-type: circle !important;">Automatische Berechnung des Versandgewichts (pauschales Versandgewicht ebenfalls m&ouml;glich).</li>
                 <li style="list-style-type: circle !important;">Automatische Berechnung der Packst&uuml;ck-Anzahl.</li>
                 <li style="list-style-type: circle !important;">Stapelverarbeitung &ndash; Erstellen Sie beliebig viele Etiketten gleichzeitig.</li>
+                */ ?>
                 <li style="list-style-type: circle !important;">Sendungsverfolgung direkt aus den Bestelldetails m&ouml;glich.</li>
                 <li style="list-style-type: circle !important;">Porto-/ Versandkosten werden in der Etiketten&uuml;bersicht angezeigt.</li>
                 <li style="list-style-type: circle !important;">Ihr eigenes Shop-Logo auf den Versandetiketten.</li>
