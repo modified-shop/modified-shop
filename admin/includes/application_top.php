@@ -195,10 +195,15 @@ if (file_exists(DIR_WS_INCLUDES . 'request_type.php')) {
 
 // set the top level domains
 $http_domain_arr = xtc_get_top_level_domain(HTTP_SERVER);
+$https_domain_arr = xtc_get_top_level_domain(HTTPS_SERVER);
 $http_domain = $http_domain_arr['new'];
-$current_domain = $http_domain;
+$https_domain = $https_domain_arr['new'];
+$current_domain = (($request_type == 'NONSSL') ? $http_domain : $https_domain);
+
 // set the top level domains - old
-$current_domain_old = $http_domain_arr['old'];
+$http_domain_old = $http_domain_arr['old'];
+$https_domain_old = $https_domain_arr['old'];
+$current_domain_old = (($request_type == 'NONSSL') ? $http_domain_old : $https_domain_old);
 
 // set the session name and save path
 // set the session cookie parameters
