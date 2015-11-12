@@ -102,35 +102,41 @@ DELETE FROM `configuration` WHERE `configuration_key` = 'SEARCH_HIGHLIGHT_STYLE'
 
 ### Subsequent updates for 1.06 rev 4642 to 1.06 rev 4642 SP1
 #Web28 - 2013-10-27 - added IBAN and BIC in banktransfer payment module
-ALTER TABLE banktransfer ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz;
-ALTER TABLE banktransfer ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban;
-ALTER TABLE banktransfer ADD banktransfer_owner_email VARCHAR(96) DEFAULT NULL;
+# Moved to update_1.0.6.0_to_1.0.6.1.sql
+#ALTER TABLE banktransfer ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz;
+#ALTER TABLE banktransfer ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban;
+#ALTER TABLE banktransfer ADD banktransfer_owner_email VARCHAR(96) DEFAULT NULL;
 
 ### Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2
 #Tomcraft - 2013-06-21 - Added Safeterms module
-ALTER TABLE admin_access ADD safeterms INT(1) NOT NULL DEFAULT 0 AFTER haendlerbund;
-UPDATE admin_access SET safeterms = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET safeterms = 1 WHERE customers_id = 'groups' LIMIT 1;
+# Moved to update_1.0.6.1_to_1.0.6.2.sql
+#ALTER TABLE admin_access ADD safeterms INT(1) NOT NULL DEFAULT 0 AFTER haendlerbund;
+#UPDATE admin_access SET safeterms = 1 WHERE customers_id = 1 LIMIT 1;
+#UPDATE admin_access SET safeterms = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #Tomcraft - 2013-08-29 - Added easymarketing
-ALTER TABLE admin_access ADD easymarketing INT(1) NOT NULL DEFAULT 0 AFTER safeterms;
-UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 'groups' LIMIT 1;
+# Moved to update_1.0.6.1_to_1.0.6.2.sql
+#ALTER TABLE admin_access ADD easymarketing INT(1) NOT NULL DEFAULT 0 AFTER safeterms;
+#UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 1 LIMIT 1;
+#UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #Tomcraft - 2014-04-08 - Added it_recht_kanzlei
-ALTER TABLE admin_access ADD it_recht_kanzlei INT(1) NOT NULL DEFAULT 0 AFTER easymarketing;
-UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 'groups' LIMIT 1;
+# Moved to update_1.0.6.1_to_1.0.6.2.sql
+#ALTER TABLE admin_access ADD it_recht_kanzlei INT(1) NOT NULL DEFAULT 0 AFTER easymarketing;
+#UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 1 LIMIT 1;
+#UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #GTB - 2014-07-01 - added payone
-ALTER TABLE admin_access ADD payone_config INT(1) NOT NULL DEFAULT 0 AFTER it_recht_kanzlei;
-UPDATE admin_access SET payone_config = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET payone_config = 1 WHERE customers_id = 'groups' LIMIT 1;
+# Moved to update_1.0.6.1_to_1.0.6.2.sql
+#ALTER TABLE admin_access ADD payone_config INT(1) NOT NULL DEFAULT 0 AFTER it_recht_kanzlei;
+#UPDATE admin_access SET payone_config = 1 WHERE customers_id = 1 LIMIT 1;
+#UPDATE admin_access SET payone_config = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #GTB - 2014-07-01 - added payone
-ALTER TABLE admin_access ADD payone_logs INT(1) NOT NULL DEFAULT 0 AFTER payone_config;
-UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 'groups' LIMIT 1;
+# Moved to update_1.0.6.1_to_1.0.6.2.sql
+#ALTER TABLE admin_access ADD payone_logs INT(1) NOT NULL DEFAULT 0 AFTER payone_config;
+#UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 1 LIMIT 1;
+#UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 ### Subsequent bugfixes for update_1.0.6.0_to_2.0.0.0.sql
 #ALTER TABLE admin_access DROP xajax; # Does not exist on updated databases! Only on newly installed shops since 1.05 SP1e
@@ -343,40 +349,44 @@ DELETE FROM configuration WHERE configuration_key = 'CC_OWNER_MIN_LENGTH';
 DELETE FROM configuration WHERE configuration_key = 'CC_NUMBER_MIN_LENGTH';
 
 #GTB - 2015-01-16 - add track & trace
-CREATE TABLE IF NOT EXISTS carriers (
-  carrier_id INT(11) NOT NULL AUTO_INCREMENT,
-  carrier_name VARCHAR(80) NOT NULL,
-  carrier_tracking_link VARCHAR(512) NOT NULL,
-  carrier_sort_order INT(11) NOT NULL,
-  carrier_date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  carrier_last_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (carrier_id)
-) ENGINE=MyISAM;
+# Moved to update_1.0.6.2_to_1.0.6.3.sql
+#CREATE TABLE IF NOT EXISTS carriers (
+#  carrier_id INT(11) NOT NULL AUTO_INCREMENT,
+#  carrier_name VARCHAR(80) NOT NULL,
+#  carrier_tracking_link VARCHAR(512) NOT NULL,
+#  carrier_sort_order INT(11) NOT NULL,
+#  carrier_date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+#  carrier_last_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+#  PRIMARY KEY (carrier_id)
+#) ENGINE=MyISAM;
 
-INSERT INTO carriers VALUES (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
-INSERT INTO carriers VALUES (2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2', '20', NOW(), '');
-INSERT INTO carriers VALUES (3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', '30', NOW(), '');
-INSERT INTO carriers VALUES (4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', '40', NOW(), '');
-INSERT INTO carriers VALUES (5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', '50', NOW(), '');
-INSERT INTO carriers VALUES (6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', '60', NOW(), '');
-INSERT INTO carriers VALUES (7, 'TNT', 'http://www.tnt.de/servlet/Tracking?cons=$1', '70', NOW(), '');
-INSERT INTO carriers VALUES (8, 'TRANS-O-FLEX', 'http://track.tof.de/trace/tracking.cgi?barcode=$1', '80', NOW(), '');
-INSERT INTO carriers VALUES (9, 'KUEHNE-NAGEL', 'https://knlogin.kuehne-nagel.com/apps/fls.do?subevent=search&knReference=$1', '90', NOW(), '');
-INSERT INTO carriers VALUES (10, 'ILOXX', 'http://www.iloxx.de/net/einzelversand/tracking.aspx?ix=$1', '100', NOW(), '');
-INSERT INTO carriers VALUES (11, 'LogoiX', 'http://www.logoix.com/cgi-bin/tnt.pl?q=$1', '110', NOW(), '');
+# Moved to update_1.0.6.2_to_1.0.6.3.sql
+#INSERT INTO carriers VALUES (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
+#INSERT INTO carriers VALUES (2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2', '20', NOW(), '');
+#INSERT INTO carriers VALUES (3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', '30', NOW(), '');
+#INSERT INTO carriers VALUES (4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', '40', NOW(), '');
+#INSERT INTO carriers VALUES (5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', '50', NOW(), '');
+#INSERT INTO carriers VALUES (6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', '60', NOW(), '');
+#INSERT INTO carriers VALUES (7, 'TNT', 'http://www.tnt.de/servlet/Tracking?cons=$1', '70', NOW(), '');
+#INSERT INTO carriers VALUES (8, 'TRANS-O-FLEX', 'http://track.tof.de/trace/tracking.cgi?barcode=$1', '80', NOW(), '');
+#INSERT INTO carriers VALUES (9, 'KUEHNE-NAGEL', 'https://knlogin.kuehne-nagel.com/apps/fls.do?subevent=search&knReference=$1', '90', NOW(), '');
+#INSERT INTO carriers VALUES (10, 'ILOXX', 'http://www.iloxx.de/net/einzelversand/tracking.aspx?ix=$1', '100', NOW(), '');
+#INSERT INTO carriers VALUES (11, 'LogoiX', 'http://www.logoix.com/cgi-bin/tnt.pl?q=$1', '110', NOW(), '');
 
-CREATE TABLE IF NOT EXISTS orders_tracking (
-  tracking_id INT(11) NOT NULL AUTO_INCREMENT,
-  orders_id INT(11) NOT NULL,
-  carrier_id INT(11) NOT NULL,
-  parcel_id VARCHAR(80) NOT NULL,
-  PRIMARY KEY (tracking_id),
-  KEY idx_orders_id (orders_id)
-) ENGINE=MyISAM;
+# Moved to update_1.0.6.2_to_1.0.6.3.sql
+#CREATE TABLE IF NOT EXISTS orders_tracking (
+#  tracking_id INT(11) NOT NULL AUTO_INCREMENT,
+#  orders_id INT(11) NOT NULL,
+#  carrier_id INT(11) NOT NULL,
+#  parcel_id VARCHAR(80) NOT NULL,
+#  PRIMARY KEY (tracking_id),
+#  KEY idx_orders_id (orders_id)
+#) ENGINE=MyISAM;
 
-ALTER TABLE admin_access ADD parcel_carriers INT(1) NOT NULL DEFAULT 0 AFTER protectedshops;
-UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 'groups' LIMIT 1;
+# Moved to update_1.0.6.2_to_1.0.6.3.sql
+#ALTER TABLE admin_access ADD parcel_carriers INT(1) NOT NULL DEFAULT 0 AFTER protectedshops;
+#UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 1 LIMIT 1;
+#UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #GTB - 2015-01-19 - change country
 ALTER TABLE orders MODIFY customers_country VARCHAR(64) NOT NULL;
@@ -560,9 +570,10 @@ UPDATE configuration SET configuration_value = 'False', configuration_group_id =
 UPDATE configuration SET configuration_value = 'False', configuration_group_id = '6' WHERE configuration_key = 'SESSION_RECREATE';
 
 #Tomcraft - 2015-04-09 - add shipcloud
-ALTER TABLE admin_access ADD shipcloud INT(1) NOT NULL DEFAULT 0 AFTER logs;
-UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 'groups' LIMIT 1;
+# Moved to update_1.0.6.2_to_1.0.6.3.sql
+#ALTER TABLE admin_access ADD shipcloud INT(1) NOT NULL DEFAULT 0 AFTER logs;
+#UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 1 LIMIT 1;
+#UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #GTB - 2015-04-21 - update products image
 ALTER TABLE products MODIFY products_image VARCHAR(254) NOT NULL;
