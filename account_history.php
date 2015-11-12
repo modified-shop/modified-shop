@@ -25,6 +25,7 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 require_once (DIR_FS_INC.'xtc_count_customer_orders.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
+require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 require_once (DIR_FS_INC.'xtc_get_all_get_params.inc.php');
 
 if (!isset ($_SESSION['customer_id']))
@@ -73,7 +74,9 @@ if (($orders_total = xtc_count_customer_orders()) > 0) {
                                'ORDER_TOTAL' => strip_tags($history['order_total']),
                                'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO,
 							   'page='.(empty($_GET['page']) ? "1" : (int)$_GET['page']) .'&order_id='.$history['orders_id'],
-							   'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>');
+							   'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
+                               'ORDER_TRACKING' => get_tracking_link($history['orders_id'], $_SESSION['language_code'])
+                               );
 
 	}
 }

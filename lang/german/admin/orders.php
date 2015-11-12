@@ -121,7 +121,7 @@ define('ENTRY_CUSTOMERS_VAT_ID','USt-IdNr.:');
 define('TEXT_VALIDATING','Nicht best&auml;tigt');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-define('TEXT_INFO_PAYPAL_DELETE', 'PayPal Transaktions Daten auch löschen.');
+define('TEXT_INFO_PAYPAL_DELETE', 'PayPal Transaktions Daten auch l?schen.');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
 // BOF - Tomcraft - 2010-04-22 - Added a missing language definition
@@ -129,7 +129,7 @@ define('TEXT_PRODUCTS', 'Artikel');
 // EOF - Tomcraft - 2010-04-22 - Added a missing language definition
 
 //BOF - web28 - 2010-03-20 - Send Order by Admin
-define('COMMENT_SEND_ORDER_BY_ADMIN' , 'Auftragsbestätigung gesendet'); //ACHTUNG hier  keine HTML-Entities verwenden
+define('COMMENT_SEND_ORDER_BY_ADMIN' , 'Auftragsbest?tigung gesendet'); //ACHTUNG hier  keine HTML-Entities verwenden
 define('BUTTON_ORDER_CONFIRMATION', 'Auftragsbest&auml;tigung senden');
 define('SUCCESS_ORDER_SEND', 'Auftragsbest&auml;tigung erfolgreich gesendet');
 //EOF - web28 - 2010-03-20 - Send Order by Admin
@@ -144,4 +144,15 @@ define('TABLE_HEADING_ORDERS_ID', 'Best.Nr.');
 define('TEXT_SHIPPING_TO', 'Versand nach');
 
 define('TABLE_HEADING_COMMENTS_SENT', 'Kommentar versandt');
+
+define('TABLE_HEADING_TRACK_TRACE', 'Track &amp; Trace:');
+define('TABLE_HEADING_CARRIER', 'Versandart');
+define('TABLE_HEADING_PARCEL_LINK', 'Trackinglink');
+
+define('DOWNLOAD_LABEL', 'Paketschein herunterladen');
+define('CREATE_LABEL', 'Paketschein erstellen');
+define('TEXT_DELETE_LABEL', 'Shipcloud Paketscheine k&ouml;nnen nicht gel&ouml;scht werden.');
+define('TEXT_LABEL_CREATED', 'Paketschein erfolgreich erstellt.');
+define('TEXT_CARRIER_ERROR', 'Paketdienstleister nicht erlaubt.');
+define('TEXT_CARRIER_PLACEHOLDER', 'Beschreibung (optional)');
 ?>

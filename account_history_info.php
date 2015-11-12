@@ -27,6 +27,7 @@ require_once (DIR_FS_INC.'xtc_get_all_get_params.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
 require_once (DIR_FS_INC.'xtc_display_tax_value.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
+require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 
 //security checks
 // BOC added query string order_id to login.php to be able to redirect to account_history_info after login for link in change_order_mail, noRiddle
@@ -99,6 +100,7 @@ $smarty->assign('HISTORY_BLOCK', $history_block);
 if (DOWNLOAD_ENABLED == 'true') include (DIR_WS_MODULES.'downloads.php');
 
 // Stuff
+$smarty->assign('ORDER_TRACKING', get_tracking_link($order->info['order_id'], $_SESSION['language_code']));
 $smarty->assign('ORDER_NUMBER', $order->info['order_id']); //DokuMan - 2011-08-31 - fix order_id assignment
 $smarty->assign('ORDER_DATE', xtc_date_long($order->info['date_purchased']));
 $smarty->assign('ORDER_STATUS', $order->info['orders_status']);

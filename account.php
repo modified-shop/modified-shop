@@ -29,7 +29,7 @@ require_once (DIR_FS_INC.'xtc_get_path.inc.php');
 require_once (DIR_FS_INC.'xtc_get_product_path.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_name.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_image.inc.php');
-
+require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 //BOF - DokuMan - 2010-03-02 - redirect not logged in users to login page instead
 if (!isset ($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -94,7 +94,7 @@ if (xtc_count_customer_orders() > 0) {
 			$order_name = $orders['billing_name'];
 			$order_country = $orders['billing_country'];
 		}
-		$order_content[] = array ('ORDER_ID' => $orders['orders_id'], 'ORDER_DATE' => xtc_date_short($orders['date_purchased']), 'ORDER_STATUS' => $orders['orders_status_name'], 'ORDER_TOTAL' => $orders['order_total'], 'ORDER_LINK' => xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL'), 'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>');
+		$order_content[] = array ('ORDER_ID' => $orders['orders_id'], 'ORDER_DATE' => xtc_date_short($orders['date_purchased']), 'ORDER_STATUS' => $orders['orders_status_name'], 'ORDER_TOTAL' => $orders['order_total'], 'ORDER_LINK' => xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL'), 'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>', 'TRACKING' => get_tracking_link($orders['orders_id'], $_SESSION['language_code']));
 	}
 
 }

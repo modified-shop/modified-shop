@@ -146,4 +146,15 @@ define('TEXT_SHIPPING_TO', 'Shipping to');
 define('TEXT_SHIPPING_LANG', 'Language');
 
 define('TABLE_HEADING_COMMENTS_SENT', 'Comment is sent');
+
+define('TABLE_HEADING_TRACK_TRACE', 'Track &amp; Trace:');
+define('TABLE_HEADING_CARRIER', 'Shipping');
+define('TABLE_HEADING_PARCEL_LINK', 'Trackinglink');
+
+define('DOWNLOAD_LABEL', 'Download Label');
+define('CREATE_LABEL', 'Create Label');
+define('TEXT_DELETE_LABEL', 'Shipcloud Label could not get deleted.');
+define('TEXT_LABEL_CREATED', 'Label created.');
+define('TEXT_CARRIER_ERROR', 'Carrier not permitted.');
+define('TEXT_CARRIER_PLACEHOLDER', 'description (optional)');
 ?>

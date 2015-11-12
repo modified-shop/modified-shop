@@ -101,6 +101,7 @@ echo ('<ul>');
   // EOF - Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['safeterms'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_SAFETERMS, '') . '" class="menuBoxContentLink"> -' . BOX_SAFETERMS . '</a></li>';
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['easymarketing'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_EASYMARKETING, '') . '" class="menuBoxContentLink"> -' . BOX_EASYMARKETING . '</a></li>';
+  if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['shipcloud'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_SHIPCLOUD, '') . '" class="menuBoxContentLink"> -' . BOX_SHIPCLOUD . '</a></li>';
 
   ## Payone
   include(DIR_FS_EXTERNAL.'payone/modules/column_left.php');
@@ -147,6 +148,7 @@ echo ('<ul>');
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['blz_update'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_BLZ_UPDATE) . '" class="menuBoxContentLink"> -' . BOX_BLZ_UPDATE . '</a></li>';
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['whos_online'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_WHOS_ONLINE) . '" class="menuBoxContentLink"> -' . BOX_WHOS_ONLINE . '</a></li>';
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['csv_backend'] == '1')) echo '<li><a href="' . xtc_href_link('csv_backend.php') . '" class="menuBoxContentLink"> -' . BOX_IMPORT . '</a></li>';
+  if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['parcel_carriers'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS) . '" class="menuBoxContentLink"> -' . BOX_PARCEL_CARRIERS . '</a></li>';
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && (isset($admin_access['paypal']) && $admin_access['paypal'] == '1')) echo '<li><a href="' . xtc_href_link('paypal.php') . '" class="menuBoxContentLink"> -' . BOX_PAYPAL . '</a></li>'; //Tomcraft - 2009-10-03 - Paypal Express Modul in admin access
 echo ('</ul>');
 echo ('</li>');
