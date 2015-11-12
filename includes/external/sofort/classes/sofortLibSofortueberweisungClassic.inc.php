@@ -212,7 +212,7 @@ class SofortLibSofortueberweisungClassic extends SofortLibMultipay {
 	 * @param string $successUrl url
 	 * @return SofortLibSofortueberweisungClassic $this
 	 */
-	public function setSuccessUrl($successUrl) {
+	public function setSuccessUrl($successUrl, $redirect = true) {
 		$this->_parameters['user_variable_2'] = $successUrl;
 
 		return $this;
@@ -242,7 +242,7 @@ class SofortLibSofortueberweisungClassic extends SofortLibMultipay {
 	 * @param string $notificationUrl url
 	 * @return SofortLibSofortueberweisungClassic $this
 	 */
-	public function setNotificationUrl($notificationUrl) {
+	public function setNotificationUrl($notificationUrl, $notifyOn = '') {
 		$this->_parameters['user_variable_4'] = $notificationUrl;
 
 		return $this;

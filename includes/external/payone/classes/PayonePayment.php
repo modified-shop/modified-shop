@@ -40,11 +40,11 @@ class PayonePayment {
 		$this->tmpStatus = $this->config['orders_status']['tmp'];
     
 		!empty($this->code) OR $this->code = 'payone';
-		$this->title = @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE'); 
-		$this->description = @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION').((defined('_VALID_XTC')) ? MODULE_PAYMENT_PAYONE_LP : ''); 
-		$this->sort_order = @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER');
-		$this->enabled = ((@constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
-		$this->info = @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO'); 
+		$this->title = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : ''); 
+		$this->description = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION').((defined('_VALID_XTC')) ? MODULE_PAYMENT_PAYONE_LP : '') : ''); 
+		$this->sort_order = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER') : 0);
+		$this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
+		$this->info = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO') : ''); 
 		$this->order_status = $this->config['orders_status']['paid'];
 
 		if (is_object($order)) {
@@ -86,11 +86,11 @@ class PayonePayment {
       $this->enabled = false;
     }
 		
-		if (($this->enabled == true) && ((int) @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE') > 0)) {
+		if (($this->enabled == true) && (defined('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE') && (int)constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE') > 0)) {
 			$check_flag = false;
 			$check_query = xtc_db_query("SELECT zone_id 
 			                               FROM ".TABLE_ZONES_TO_GEO_ZONES." 
-			                              WHERE geo_zone_id = '".@constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')."' 
+			                              WHERE geo_zone_id = '".constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')."' 
 			                                AND zone_country_id = '".$order->billing['country']['id']."' 
 			                           ORDER BY zone_id");
 			while ($check = xtc_db_fetch_array($check_query)) {
