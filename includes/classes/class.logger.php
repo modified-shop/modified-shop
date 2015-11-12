@@ -262,9 +262,9 @@ class LoggingManager
                   LoggingManager::$func($message, $loggingLevel);
                 } else {
                   if ($this->loggerFile != '') {
-                      error_log("[" . date('d-m-Y h:i:s') . "] $loggingLevel\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFile);
+                      error_log("[" . date('d-m-Y H:i:s') . "] $loggingLevel\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFile);
                   } else {
-                      error_log("[" . date('d-m-Y h:i:s') . "] $loggingLevel\t: " . $this->loggerName . ": $message\n");
+                      error_log("[" . date('d-m-Y H:i:s') . "] $loggingLevel\t: " . $this->loggerName . ": $message\n");
                   }
                 }
             }
@@ -285,9 +285,9 @@ class LoggingManager
                     $this->LoggerRotate($this->loggerFileError);
                 }
             }
-            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileError);
+            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileError);
         } else {
-            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
+            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
         }
     }
 
@@ -305,9 +305,9 @@ class LoggingManager
                     $this->LoggerRotate($this->loggerFileWarning);
                 }
             }
-            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileWarning);
+            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileWarning);
         } else {
-            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
+            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
         }
     }
 
@@ -325,9 +325,9 @@ class LoggingManager
                     $this->LoggerRotate($this->loggerFileInfo);
                 }
             }
-            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileInfo);
+            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileInfo);
         } else {
-            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
+            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
         }
     }
 
@@ -345,9 +345,9 @@ class LoggingManager
                     $this->LoggerRotate($this->loggerFileFine);
                 }
             }
-            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileFine);
+            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileFine);
         } else {
-            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
+            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
         }
     }
 
@@ -365,9 +365,9 @@ class LoggingManager
                     $this->LoggerRotate($this->loggerFileDebug);
                 }
             }
-            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileDebug);
+            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileDebug);
         } else {
-            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
+            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
         }
     }
 
@@ -385,9 +385,9 @@ class LoggingManager
                     $this->LoggerRotate($this->loggerFileCustom);
                 }
             }
-            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileCustom);
+            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileCustom);
         } else {
-            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
+            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
         }
     }
 
