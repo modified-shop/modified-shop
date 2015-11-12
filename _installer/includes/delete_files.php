@@ -30,7 +30,10 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      '_installer/update_1.0.3.0_to_1.0.4.0.sql', // neu
                      '_installer/update_1.0.4.0_to_1.0.5.0.sql', // neu
                      '_installer/update_1.0.5.0_to_1.0.6.0.sql', // neu
-                     '_installer/update_1.0.6.0_to_2.0.0.0.sql', // neu
+                     '_installer/update_1.0.6.0_to_1.0.6.1.sql', // neu
+                     '_installer/update_1.0.6.1_to_1.0.6.2.sql', // neu
+                     '_installer/update_1.0.6.2_to_1.0.6.3.sql', // neu
+                     '_installer/update_1.0.6.3_to_2.0.0.0.sql', // neu
                      '_installer/update_xtc3.0.4sp2.1_to_1.00.sql', // neu
                      '_installer/update_xtc3.0.4sp2.1_to_1.0.1.0.sql', // neu
                      '_installer/version106r8', // neu
