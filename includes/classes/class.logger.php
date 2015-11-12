@@ -104,15 +104,16 @@ class LoggingManager
             if (isset($config['FileName.debug'])) {
                 $this->setLoggerFileDebug($config['FileName.debug']);
             }
+            if (isset($config['FileName.custom'])) {
+                $this->setLoggerFileCustom($config['FileName.custom']);
+            }
             if (isset($config['LogThreshold']) && $config['LogThreshold'] > 0) {
                 $this->setLoggerThreshold($config['LogThreshold']);
             }
             if (isset($config['SplitLogging'])) {
                 $this->setLoggerSplitLogging($config['SplitLogging']);
             }
-            
-            
-            
+                        
             $this->loggingPath = dirname($this->loggerFile);            
             
             $loggingLevel = ((isset($config['LogLevel'])) ? strtoupper($config['LogLevel']) : '');
@@ -181,6 +182,16 @@ class LoggingManager
     }
 
     /**
+     * Sets Logger File Custom
+     *
+     * @param string $loggerFile
+     */
+    public function setLoggerFileCustom($loggerFile)
+    {
+        $this->loggerFileCustom = $loggerFile;
+    }
+
+    /**
      * Sets Logger Name. Generally defaulted to Logging Class
      *
      * @param string $loggerName
@@ -245,7 +256,7 @@ class LoggingManager
             }
             
             $parsedLoggingLevel = $this->getLoggingLevel($loggingLevel);
-            if (constant("LoggingManager::$parsedLoggingLevel") <= $this->loggingLevel) {
+            if ($parsedLoggingLevel == 'CUSTOM' || constant("LoggingManager::$parsedLoggingLevel") <= $this->loggingLevel) {
                 if ($this->splitLogging === true && $parsedLoggingLevel != 'DEFAULT_LEVEL') {
                   $func = strtolower($parsedLoggingLevel);
                   LoggingManager::$func($message, $loggingLevel);
@@ -361,6 +372,26 @@ class LoggingManager
     }
 
     /**
+     * Log Fine
+     *
+     * @param string $message
+     */
+    public function custom($message, $error = 'CUSTOM')
+    {
+        if ($this->loggerFileCustom != '') {
+            if (is_file($this->loggerFileCustom)) {
+                $filesize = filesize($this->loggerFileCustom);            
+                if ($filesize >= $this->loggerThreshold) {
+                    $this->LoggerRotate($this->loggerFileCustom);
+                }
+            }
+            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileCustom);
+        } else {
+            error_log("[" . date('d-m-Y h:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
+        }
+    }
+
+    /**
      * Rotate Logging File
      *
      */
@@ -421,8 +452,10 @@ class LoggingManager
 
             case 'DEBUG':
             case 'E_NOTICE':
-            case 'E_USER_NOTICE':
                 return 'DEBUG';
+
+            case 'E_USER_NOTICE':
+                return 'CUSTOM';
         }
         return 'DEFAULT_LEVEL';
     }

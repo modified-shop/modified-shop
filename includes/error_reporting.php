@@ -16,7 +16,7 @@ require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
 $config = array(
   'LogEnabled' => true,
   'SplitLogging' => true,
-  'LogLevel' => ((defined('LOGGING_LEVEL')) ? LOGGING_LEVEL : 'INFO'), // DEBUG, FINE, INFO, WARN, ERROR
+  'LogLevel' => ((defined('LOGGING_LEVEL')) ? LOGGING_LEVEL : 'INFO'), // DEBUG, FINE, INFO, WARN, ERROR, CUSTOM
   'LogThreshold' => '2MB',
   'FileName' => DIR_FS_LOG.'mod_error_' .date('Y-m-d') .'.log',
   'FileName.debug' => DIR_FS_LOG.'mod_notice_' .date('Y-m-d') .'.log',
@@ -24,6 +24,7 @@ $config = array(
   'FileName.info' => DIR_FS_LOG.'mod_strict_' .date('Y-m-d') .'.log',
   'FileName.warning' => DIR_FS_LOG.'mod_warning_' .date('Y-m-d') .'.log',
   'FileName.error' => DIR_FS_LOG.'mod_error_' .date('Y-m-d') .'.log',
+  'FileName.custom' => DIR_FS_LOG.'mod_custom_' .date('Y-m-d') .'.log',
 );
 $LoggingManager = new LoggingManager($config);
 
