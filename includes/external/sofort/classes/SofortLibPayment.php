@@ -19,17 +19,18 @@ class SofortLibPayment {
 
 		$this->code = get_class($this);
 		$this->version = $this->get_version();
-		$this->title = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE');
-		$this->description = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION');
+		$this->title = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '');
+		$this->description = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') : '');
+    $this->sort_order = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER') : 0);
+    $this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
+    $this->info = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO') : '');
+
 		if ($this->check() > 0) {
-      $this->sort_order = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER');
-      $this->enabled = ((constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
-      $this->info = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO');
       $this->tmpStatus = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TMP_STATUS_ID');
       $this->logging = ((constant('MODULE_PAYMENT_'.strtoupper($this->code).'_LOGGING') == 'True') ? true : false);
 
       $this->ks_status = false;
-      if(defined('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_STATUS') == 'True') {
+      if (defined('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_STATUS') == 'True') {
         $this->title = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_TEXT_TITLE');
         $this->ks_status = true;
       }
