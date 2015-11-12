@@ -75,7 +75,7 @@ class shipcloud {
 
 
   private function save_label($request) {    
-		$sql_data_array = array('orders_id' => $this->order->info['orders_id'],
+		$sql_data_array = array('orders_id' => $this->order->info['order_id'],
 		                        'carrier_id' => $this->carrier_id,
 		                        'parcel_id' => $request['carrier_tracking_no'],
 		                        'sc_label_url' => $request['label_url'],
