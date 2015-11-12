@@ -336,7 +336,7 @@ class LoggingManager
      *
      * @param string $message
      */
-    private function fine($message, $error = 'FINE')
+    public function fine($message, $error = 'FINE')
     {
         if ($this->loggerFileFine != '') {
             if (is_file($this->loggerFileFine)) {
@@ -423,7 +423,7 @@ class LoggingManager
      *
      * @param string $level
      */
-    function getLoggingLevel($level)
+    private function getLoggingLevel($level)
     {
         switch($level) {
             case 'ERROR':
