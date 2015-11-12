@@ -366,6 +366,7 @@
       return $customer;
     }
 
+
     function cart() {
       global $currencies,$xtPrice,$main;
 
@@ -530,9 +531,10 @@
         //direct products array mapping
         $this->products[$index] = $products[$i];
 
+
         //using short description  if order description is not defined or empty
-        $this->products[$index]['short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $products[$i]['short_description'] : '';
-        $this->products[$index]['order_description'] = !empty($products[$i]['order_description']) ? nl2br($products[$i]['order_description']) : $products[$i]['short_description'];
+        $short_description = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $products[$i]['short_description'] : '';
+        $this->products[$index]['order_description'] = !empty($products[$i]['order_description']) ? nl2br($products[$i]['order_description']) : $short_description;
         $this->products[$index]['image'] = !empty($products[$i]['image']) ? $main->getProductPopupLink($products[$i]['id'],$products[$i]['image'], 'image') : '&nbsp;';
         $this->products[$index]['link'] = $main->getProductPopupLink($products[$i]['id'],$products[$i]['name'], 'details');
         $this->products[$index]['tax'] = xtc_get_tax_rate($products[$i]['tax_class_id'], $tax_address['country_id'], $tax_address['zone_id']);
