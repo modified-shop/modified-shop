@@ -169,6 +169,7 @@ define('BOX_HAENDLERBUND','H&auml;ndlerbund AGB Service'); // Tomcraft - 2012-12
 define('BOX_SAFETERMS','Safeterms - AGB Service'); // Tomcraft - 2013-06-21 - Safeterms AGB interface
 define('BOX_EASYMARKETING','EASYMARKETING AG'); // Tomcraft - 2013-08-29 - Added easymarketing
 define('BOX_IT_RECHT_KANZLEI', 'IT Recht Kanzlei');
+define('BOX_SHIPCLOUD', 'shipcloud');
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');
@@ -501,3 +502,6 @@ define('CONFIG_MAX_VALUE_WARNING', '"%s" WARNUNG: Eingabe %s wurde ignoriert! [M
 define('CONFIG_MIN_VALUE_WARNING', '"%s" WARNUNG: Eingabe %s wurde ignoriert! [Minimum: %s]');
 
 define('WHOS_ONLINE_TIME_LAST_CLICK_INFO', 'Anzeigezeitraum in Sek.: %s. Nach dieser Zeit werden die Eintr&auml;ge gel&ouml;scht.');
+
+define('BOX_PARCEL_CARRIERS', 'Paketdienstleister');
+define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Paketdienstleister)');

@@ -26,7 +26,13 @@
 		<div class="highlightbox">
 		{foreach name=aussen item=order_data from=$order_content}
 			<p><strong><a href="{$order_data.ORDER_LINK}">{$order_data.ORDER_DATE}</a> / {#order_nr#}{$order_data.ORDER_ID}</strong><br />
-			{#order_total#}{$order_data.ORDER_TOTAL} / {#order_status#}{$order_data.ORDER_STATUS}<br /></p>
+      {#order_total#}{$order_data.ORDER_TOTAL} / {#order_status#}{$order_data.ORDER_STATUS}<br />
+			{if count($order_data.TRACKING) > 0}
+			  {foreach name=aussen item=tracking_data from=$order_data.TRACKING}
+			    {#label_tracking#} <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a><br />
+			  {/foreach}
+			{/if}
+      </p>
 			<div class="hr"></div>
 		{/foreach}
 		<a href="{$LINK_ALL}">{#text_all#}</a>

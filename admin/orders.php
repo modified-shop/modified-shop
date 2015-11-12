@@ -31,6 +31,7 @@ require_once (DIR_FS_INC.'xtc_add_tax.inc.php');
 require_once (DIR_FS_INC.'changedataout.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_vatid_status.inc.php');
 require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
+require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 
 //split page results
 if(!defined('MAX_DISPLAY_ORDER_RESULTS')) {
@@ -83,6 +84,16 @@ $order_select_fields = 'o.orders_id,
                         o.delivery_country_iso_code_2,
                         ot.text as order_total
                         ';
+
+// track & trace
+$carriers = array();
+$carriers_query = xtc_db_query("SELECT carrier_id, 
+                                       carrier_name 
+                                  FROM ".TABLE_CARRIERS." 
+                              ORDER BY carrier_sort_order ASC");
+while ($carrier = xtc_db_fetch_array($carriers_query)) {
+	$carriers[] = array('id' => $carrier['carrier_id'], 'text' => $carrier['carrier_name']);
+}
 
 //admin search bar
 if ($action == 'search' && $oID) {
@@ -209,6 +220,11 @@ switch ($action) {
         if ($check_status['customers_status'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
           $smarty->assign('ORDER_LINK', xtc_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL'));
         }
+        // track & trace
+        $tracking_array = get_tracking_link($oID, $lang_code);
+        $smarty->assign('PARCEL_COUNT', count($tracking_array));
+        $smarty->assign('PARCEL_ARRAY', $tracking_array);
+        
         $smarty->assign('ORDER_DATE', xtc_date_long($check_status['date_purchased']));
         $smarty->assign('NOTIFY_COMMENTS', nl2br($notify_comments));
         $smarty->assign('ORDER_STATUS', $orders_status_array[$status]);
@@ -308,6 +324,33 @@ switch ($action) {
 	case 'easybill':	
     include (DIR_WS_MODULES.'easybill.action.php');
 		xtc_redirect( xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
+		break;
+
+	case 'inserttracking':
+		$oID = (int)$_GET['oID'];
+		$carrier_id = xtc_db_prepare_input($_POST['carrier_id']);
+		$parcel_id = xtc_db_prepare_input($_POST['parcel_id']);
+		if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
+      require_once(DIR_FS_EXTERNAL.'shipcloud/class.shipcloud.php');
+      $shipcloud = new shipcloud($oID);
+      $shipcloud->create_label($_POST);
+		} else {
+      $sql_data_array = array('orders_id' => $oID,
+                              'carrier_id' => $carrier_id,
+                              'parcel_id' => $parcel_id);
+      xtc_db_perform(TABLE_ORDERS_TRACKING,$sql_data_array);
+		}
+		xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));              
+		break;
+		
+	case 'deletetracking':
+		$tracking_id = (int)$_GET['tID'];
+		xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
+
+	  if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
+	    $messageStack->add_session(TEXT_DELETE_LABEL, 'warning');
+	  }    
+    xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
 		break;
 }
 
@@ -663,6 +706,63 @@ require (DIR_WS_INCLUDES.'header.php');
         </tr>
       </table>
       <!-- EOC ORDER BLOCK -->
+
+      <!-- BOC ORDER TRACK & TRACE BLOCK -->
+      <div class="heading"><?php echo TABLE_HEADING_TRACK_TRACE; ?></div>
+      <?php echo xtc_draw_form('carriers', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=inserttracking'); ?>
+      <table cellspacing="0" cellpadding="5" class="table borderall">
+        <tr>
+          <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
+          <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_PARCEL_LINK; ?></strong></td>
+          <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
+        </tr>
+        <?php
+          $service_array = array(
+            array('id' => 'standard', 'text' => 'Standard'),
+            array('id' => 'one_day', 'text' => 'Express'),
+            array('id' => 'one_day_early', 'text' => 'Express 10:00'),
+            array('id' => 'returns', 'text' => 'Retour'),
+          );
+          $parcel_array = array();
+          $dim_array = explode(';', preg_replace("'[\r\n\s]+'", '', MODULE_SHIPCLOUD_PARCEL));
+          for ($p=0, $pn=count($dim_array); $p<$pn; $p++) {
+            if ($dim_array[$p] != '') {
+              $parcel_array[] = array('id' => $dim_array[$p], 'text' => str_replace(',', 'cm x ', $dim_array[$p] .'cm'));
+            }
+          }
+          $tracking_array = get_tracking_link($oID, $lang_code);
+          if (count($tracking_array) > 0) {
+            foreach($tracking_array as $tracking) {
+              echo '          <tr>'.PHP_EOL;
+              echo '            <td class="smallText" align="center">'.$tracking['carrier_name'].'</td>'.PHP_EOL;
+              echo '            <td class="smallText" align="left"><a href="'.$tracking['tracking_link'].'" target="_blank">'.$tracking['parcel_id'].'</a></td>'.PHP_EOL;
+              echo '            <td class="smallText" align="center">
+                                  <a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_DELETE).
+                                  ((isset($tracking['sc_label_url']) && $tracking['sc_label_url'] != '') ? '<a style="margin-left:10px;" target="_blank" href="'.$tracking['sc_label_url'].'">'.xtc_image(DIR_WS_ICONS.'icon_pdf.gif', DOWNLOAD_LABEL).'</a>' : '').'
+                                </td>'.PHP_EOL;
+              echo '          <tr>'.PHP_EOL;
+            }
+          }
+        ?>
+        <tr>
+          <?php
+            if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
+              echo '<td class="smallText" align="center" colspan="2">';
+              echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]).'&nbsp;';
+              echo xtc_draw_pull_down_menu('service', $service_array, $service_array[0]).'&nbsp;';
+              echo xtc_draw_pull_down_menu('parcel', $parcel_array, $parcel_array[0]).'&nbsp;';
+              echo xtc_draw_input_field('description', '' , 'style="width:250px;vertical-align:top;" placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"');
+              echo '</td>';
+            } else {
+              echo '<td class="smallText" align="center">'.xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]).'</td>';
+              echo '<td class="smallText" align="center">'.xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"').'</td>';
+            }
+          ?>
+          <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo ((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? CREATE_LABEL : BUTTON_INSERT); ?>"></td>
+        </tr>
+      </table>
+      </form>
+      <!-- EOC ORDER TRACK & TRACE BLOCK -->
 
       <!-- BOC ORDER HISTORY BLOCK -->
       <div class="heading"><?php echo TEXT_ORDER_HISTORY; ?></div>

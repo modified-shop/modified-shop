@@ -30,6 +30,14 @@
 	{/if}
 	<h2>{#title_history#}:</h2>
 	<p>{$HISTORY_BLOCK}</p>
+  {if count($ORDER_TRACKING) > 0}
+  <h2>{#label_tracking#}</h2>
+  <p>
+  {foreach name=aussen item=tracking_data from=$ORDER_TRACKING}
+    <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a><br />
+  {/foreach}
+  </p>
+  {/if}  
 	<h2>{#text_products#}</h2>
 	<table class="accounthistoryinfoorderdetails" width="100%" border="0" cellspacing="0" cellpadding="4">
 	<tr class="header">
