@@ -10,8 +10,7 @@
    Released under the GNU General Public License 
   --------------------------------------------------------------*/
 
-chdir('../../');
-require_once('includes/application_top_callback.php');
+require_once('../../includes/application_top_callback.php');
 
 // include needed classes
 require_once(DIR_WS_CLASSES.'order.php');
