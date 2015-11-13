@@ -17,8 +17,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-chdir('../../');
-include('includes/application_top_callback.php');
+include('../../includes/application_top_callback.php');
 
 require_once (DIR_FS_EXTERNAL.'payone/classes/PayoneModified.php');
 $payone = new PayoneModified();
