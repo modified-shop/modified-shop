@@ -8,11 +8,6 @@
 #  -----------------------------------------------------------------------------------------
 
 ### Subsequent updates for 1.06 rev 4642 SP2 to 1.06 rev 4642 SP3
-#Tomcraft - 2015-04-09 - add shipcloud
-ALTER TABLE admin_access ADD shipcloud INT(1) NOT NULL DEFAULT 0 AFTER logs;
-UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 'groups' LIMIT 1;
-
 #GTB - 2015-01-16 - add track & trace
 CREATE TABLE IF NOT EXISTS carriers (
   carrier_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -45,8 +40,13 @@ CREATE TABLE IF NOT EXISTS orders_tracking (
   KEY idx_orders_id (orders_id)
 ) ENGINE=MyISAM;
 
-ALTER TABLE admin_access ADD parcel_carriers INT(1) NOT NULL DEFAULT 0 AFTER protectedshops;
+ALTER TABLE admin_access ADD parcel_carriers INT(1) NOT NULL DEFAULT 0 AFTER payone_logs;
 UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 'groups' LIMIT 1;
+
+#Tomcraft - 2015-04-09 - add shipcloud
+ALTER TABLE admin_access ADD shipcloud INT(1) NOT NULL DEFAULT 0 AFTER parcel_carriers;
+UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 # Keep an empty line at the end of this file for the db_updater to work properly
