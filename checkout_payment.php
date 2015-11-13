@@ -138,7 +138,6 @@ $smarty->assign('BUTTON_ADDRESS', '<a href="' . xtc_href_link(FILENAME_CHECKOUT_
 $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 $smarty->assign('FORM_END', '</form>');
 
-require (DIR_WS_INCLUDES . 'header.php');
 $module_smarty = new Smarty;
 $order_total = $xtPrice->xtcFormat($order->info['total'],false); //web28 2012-04-27 - rounded $order_total
 if ($order_total > 0) {
@@ -191,6 +190,9 @@ unset($_SESSION['nvpReqArray']);
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
   $smarty->assign('module_gift', $order_total_modules->credit_selection());
 }
+
+// move header for Javascript form check
+require (DIR_WS_INCLUDES . 'header.php');
 
 $module_smarty->caching = 0;
 $payment_block = $module_smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_payment_block.html');
