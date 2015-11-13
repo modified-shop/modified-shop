@@ -95,6 +95,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/includes/modules/export/googlebase.php', // neu
                      'admin/includes/modules/export/image_processing_step.php', // neu
                      'admin/includes/modules/export/janolaw.php', // neu
+                     'admin/includes/modules/export/shipcloud.php', // neu
                      'admin/includes/modules/export/tag_cloud.php', // neu
                      'admin/includes/modules/export/xtbooster.php', // neu
                      'admin/includes/modules/export/xtbooster.php', // neu
