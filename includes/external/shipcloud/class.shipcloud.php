@@ -43,7 +43,7 @@ class shipcloud {
     
     $this->carrier = $this->check_carrier();
     
-    if ($carrier !== false) {
+    if ($this->carrier !== false) {
       $request_array = array(
         'carrier'               => $this->carrier,
         'to'                    => $this->receiver_data(),
