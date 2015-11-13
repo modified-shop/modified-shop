@@ -156,7 +156,7 @@ define('DOWNLOAD_LABEL', 'Paketschein herunterladen');
 define('CREATE_LABEL', 'Paketschein erstellen');
 define('TEXT_DELETE_LABEL', 'Shipcloud Paketscheine k&ouml;nnen nicht gel&ouml;scht werden.');
 define('TEXT_LABEL_CREATED', 'Paketschein erfolgreich erstellt.');
-define('TEXT_CARRIER_ERROR', 'Paketdienstleister nicht erlaubt.');
+define('TEXT_CARRIER_ERROR', 'Paketdienstleister nicht in Ihrem shipcloud Account freigeschaltet oder ung&uuml;ltiger API-Key.');
 define('TEXT_CARRIER_PLACEHOLDER', 'Beschreibung (optional)');
 
 define('TEXT_DOWNLOADS', 'Downloads');
