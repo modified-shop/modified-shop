@@ -11,12 +11,12 @@
    ---------------------------------------------------------------------------------------*/
 
 if (defined('_VALID_XTC')) {
-  define('MODULE_SHIPCLOUD_TEXT_TITLE', 'Shipcloud - die neue Generation des Paketversandes');
+  define('MODULE_SHIPCLOUD_TEXT_TITLE', 'shipcloud - die neue Generation des Paketversandes');
   define('MODULE_SHIPCLOUD_TEXT_DESCRIPTION', 'Bequem Paketscheine aus dem Shop heraus drucken.');
   define('MODULE_SHIPCLOUD_STATUS_TITLE', 'Status');
   define('MODULE_SHIPCLOUD_STATUS_DESC', 'Modul aktivieren');
   define('MODULE_SHIPCLOUD_API_TITLE', '<hr noshade>API');
-  define('MODULE_SHIPCLOUD_API_DESC', 'API Key von Shipcloud');
+  define('MODULE_SHIPCLOUD_API_DESC', 'API Key von shipcloud');
   define('MODULE_SHIPCLOUD_PARCEL_TITLE', '<hr noshade>Paketgr&ouml;ssen');
   define('MODULE_SHIPCLOUD_PARCEL_DESC', 'Bitte geben Sie die Paketgr&ouml;ssen in cm folgendermassen ein: L&auml;nge,Breite,H&ouml;he;<br/>Meherer Paketmasse k&ouml;nnen mit Semikolon (;) getrennt angegeben werden. zB: 20,40,30;15,20,20;');
   define('MODULE_SHIPCLOUD_COMPANY_TITLE', '<hr noshade>Kundendetails<br/>');
@@ -38,10 +38,10 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_EMAIL_TITLE', '<hr noshade>E-Mail Benachrichtigung');
   define('MODULE_SHIPCLOUD_EMAIL_DESC', 'Soll der Kunde per E-Mail benachrichtigt werden?');
   define('MODULE_SHIPCLOUD_EMAIL_TYPE_TITLE', '<hr noshade>Benachrichtigung');
-  define('MODULE_SHIPCLOUD_EMAIL_TYPE_DESC', 'Soll der Kunde vom Shop oder von Shipcloud benachrichtigt werden ?<br><Hinweis:</b>F&uuml;r eine Benachrichtigung vom Shop muss ein Webhook auf diese URL: '.xtc_catalog_href_link('callback/shipcloud/callback.php', '', 'SSL', false).' in Shipcloud erstelt werden.');
+  define('MODULE_SHIPCLOUD_EMAIL_TYPE_DESC', 'Soll der Kunde vom Shop oder von shipcloud benachrichtigt werden ?<br><Hinweis:</b>F&uuml;r eine Benachrichtigung vom Shop muss ein Webhook auf diese URL: '.xtc_catalog_href_link('callback/shipcloud/callback.php', '', 'SSL', false).' in shipcloud erstelt werden.');
 }
 
-define('SHIPMENT.TRACKING.SHIPCLOUD_LABEL_CREATED', 'Paketschein bei Shipcloud erstellt');
+define('SHIPMENT.TRACKING.SHIPCLOUD_LABEL_CREATED', 'Paketschein bei shipcloud erstellt');
 define('SHIPMENT.TRACKING.LABEL_CREATED', 'Paketschein erstellt');
 define('SHIPMENT.TRACKING.PICKED_UP', 'Paket durch Zusteller abgeholt');
 define('SHIPMENT.TRACKING.TRANSIT', 'Paket ist auf dem Weg');
@@ -91,7 +91,7 @@ class shipcloud {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_STATUS', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_API', '',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_EMAIL', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");    
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_EMAIL_TYPE', 'Shop',  '6', '1', 'xtc_cfg_select_option(array(\'Shop\', \'Shipcloud\'), ', now())");    
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_EMAIL_TYPE', 'Shop',  '6', '1', 'xtc_cfg_select_option(array(\'Shop\', \'shipcloud\'), ', now())");    
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_LOG', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");    
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_COMPANY', '',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_FIRSTNAME', '',  '6', '1', '', now())");
