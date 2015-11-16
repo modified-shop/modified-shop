@@ -84,6 +84,7 @@
     ?>
       <div style="padding:5px;margin-top:10px;clear:both;">
       <div class="main div_header>"><b class="<?php echo $optFlag;?>"><?php echo TEXT_PRODUCTS_TAGS; ?></b></div>
+      <input type="hidden" name="products_tags_save" value="1">
     <?php
     }
     ?>
