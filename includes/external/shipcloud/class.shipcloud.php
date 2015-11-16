@@ -47,12 +47,16 @@ class shipcloud {
       $request_array = array(
         'carrier'               => $this->carrier,
         'to'                    => $this->receiver_data(),
-        'from'                  => $this->sender_data(),
         'package'               => $this->package_data(),
         'reference_number'      => $this->order->info['orders_id'],
         'create_shipping_label' => 'true',
         'service'               => $params['service'],
       );
+      
+      $sender_data = $this->sender_data();
+      if ($sender_data != '') {
+        $request_array['from'] = $sender_data;
+      }
       
       if (MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'Shipcloud') {
         $request_array['notification_email'] = $this->order->customer['email_address'];
@@ -127,22 +131,24 @@ class shipcloud {
 
 
   private function sender_data() {
-    $country = xtc_get_countries_with_iso_codes(STORE_COUNTRY);
-    $street_address = $this->parse_street_address(MODULE_SHIPCLOUD_ADDRESS);
+    if (MODULE_SHIPCLOUD_ADDRESS != '') {
+      $country = xtc_get_countries_with_iso_codes(STORE_COUNTRY);
+      $street_address = $this->parse_street_address(MODULE_SHIPCLOUD_ADDRESS);
         
-    $sender_data = array(
-      'first_name'  => MODULE_SHIPCLOUD_FIRSTNAME,
-      'last_name'   => MODULE_SHIPCLOUD_LASTNAME,
-      'company'     => ((strtolower($this->carrier) == 'dhl') ? substr(MODULE_SHIPCLOUD_COMPANY, 0, 30) : MODULE_SHIPCLOUD_COMPANY),
-      'street'      => $street_address['street_name'],
-      'street_no'   => $street_address['street_number'],
-      'zip_code'    => MODULE_SHIPCLOUD_POSTCODE,
-      'city'        => MODULE_SHIPCLOUD_CITY,
-      'country'     => $country['countries_iso_code_2'],
-      'phone'       => MODULE_SHIPCLOUD_TELEPHONE,
-    );
+      $sender_data = array(
+        'first_name'  => MODULE_SHIPCLOUD_FIRSTNAME,
+        'last_name'   => MODULE_SHIPCLOUD_LASTNAME,
+        'company'     => ((strtolower($this->carrier) == 'dhl') ? substr(MODULE_SHIPCLOUD_COMPANY, 0, 30) : MODULE_SHIPCLOUD_COMPANY),
+        'street'      => $street_address['street_name'],
+        'street_no'   => $street_address['street_number'],
+        'zip_code'    => MODULE_SHIPCLOUD_POSTCODE,
+        'city'        => MODULE_SHIPCLOUD_CITY,
+        'country'     => $country['countries_iso_code_2'],
+        'phone'       => MODULE_SHIPCLOUD_TELEPHONE,
+      );
     
-    return $sender_data;
+      return $sender_data;
+    }
   }
   
   
