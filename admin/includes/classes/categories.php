@@ -557,7 +557,7 @@ class categories {
     //specials
     $this->saveSpecialsData($products_data);
 
-    // calculate attributes
+    // calculate attribute_prices
     if (isset($products_data['products_attributes_recalculate']) 
         && $products_data['products_attributes_recalculate'] == 1 
         && $products_data['products_tax_class_id'] != $products_data['products_tax_class_id_old']
@@ -1301,6 +1301,26 @@ class categories {
         }
       }
       
+  }
+  
+  function calculate attribute_prices($products_data,$products_id) {
+    
+      $products_tax_rate_old = xtc_get_tax_rate($products_data['products_tax_class_id_old']);
+      
+      $attributes_query = xtc_db_query("SELECT *
+                                          FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+                                         WHERE products_id = '".$products_id."'
+                                           AND options_values_price > 0");
+      if (xtc_db_num_rows($attributes_query) > 0) {
+        while ($attributes = xtc_db_fetch_array($attributes_query)) {
+          $values_price_brutto = $attributes['options_values_price'] * (1 + ($products_tax_rate_old / 100));
+          
+          $values_price_netto = $this->priceCheck($values_price_brutto, $products_tax_rate);
+          xtc_db_query("UPDATE ".TABLE_PRODUCTS_ATTRIBUTES." 
+                           SET options_values_price = '".xtc_db_input($values_price_netto)."' 
+                         WHERE products_attributes_id = '".$attributes['products_attributes_id']."'");
+        }
+      }
   }
   
 }
