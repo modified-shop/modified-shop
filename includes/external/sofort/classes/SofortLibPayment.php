@@ -54,7 +54,7 @@ class SofortLibPayment {
       }
 
       if (defined('RUN_MODE_ADMIN') && $this->enabled === true) {
-        $this->description .= constant('MODULE_PAYMENT_'.strtoupper($this->code).'_DESCRIPTION_INSTALL').'<a class="button btnbox" style="text-align:center;" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&moduleaction=status') . '">' . 'Status '.BUTTON_MODULE_INSTALL . '</a>';
+        $this->description .= ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_DESCRIPTION_INSTALL')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_DESCRIPTION_INSTALL').'<a class="button btnbox" style="text-align:center;" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&moduleaction=status') . '">' . 'Status '.BUTTON_MODULE_INSTALL . '</a>' : '');
         if (isset($_GET['moduleaction']) && $_GET['moduleaction'] == 'status') {
           $this->status_install();
         }
