@@ -131,7 +131,15 @@ class shipcloud {
 
 
   private function sender_data() {
-    if (MODULE_SHIPCLOUD_ADDRESS != '') {
+    if (MODULE_SHIPCLOUD_FIRSTNAME != ''
+        && MODULE_SHIPCLOUD_LASTNAME != ''
+        && MODULE_SHIPCLOUD_COMPANY != ''
+        && MODULE_SHIPCLOUD_ADDRESS != ''
+        && MODULE_SHIPCLOUD_POSTCODE != ''
+        && MODULE_SHIPCLOUD_CITY != ''
+        && MODULE_SHIPCLOUD_TELEPHONE != ''
+        ) 
+    {
       $country = xtc_get_countries_with_iso_codes(STORE_COUNTRY);
       $street_address = $this->parse_street_address(MODULE_SHIPCLOUD_ADDRESS);
         
