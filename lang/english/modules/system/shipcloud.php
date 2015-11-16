@@ -11,12 +11,12 @@
    ---------------------------------------------------------------------------------------*/
 
 if (defined('_VALID_XTC')) {
-  define('MODULE_SHIPCLOUD_TEXT_TITLE', 'Shipcloud - the new generation of parcel shipment');
+  define('MODULE_SHIPCLOUD_TEXT_TITLE', 'shipcloud - the new generation of parcel shipment');
   define('MODULE_SHIPCLOUD_TEXT_DESCRIPTION', 'Print parcel labels directly out of the Shop.');
   define('MODULE_SHIPCLOUD_STATUS_TITLE', 'Status');
   define('MODULE_SHIPCLOUD_STATUS_DESC', 'Module activate?');
   define('MODULE_SHIPCLOUD_API_TITLE', '<hr noshade>API');
-  define('MODULE_SHIPCLOUD_API_DESC', 'API Key von Shipcloud');
+  define('MODULE_SHIPCLOUD_API_DESC', 'API Key von shipcloud');
   define('MODULE_SHIPCLOUD_PARCEL_TITLE', '<hr noshade>Packagesize');
   define('MODULE_SHIPCLOUD_PARCEL_DESC', 'Please define the Packagesize like this: length,width,height;<br/>You can define more sizes separated by semicolon (;). Exapmple: 20,40,30;15,20,20;');
   define('MODULE_SHIPCLOUD_COMPANY_TITLE', '<hr noshade>Customer details<br/>');
@@ -38,7 +38,7 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_EMAIL_TITLE', '<hr noshade>E-Mail notification');
   define('MODULE_SHIPCLOUD_EMAIL_DESC', 'Notify customer by E-Mail?');
   define('MODULE_SHIPCLOUD_EMAIL_TYPE_TITLE', '<hr noshade>Notification');
-  define('MODULE_SHIPCLOUD_EMAIL_TYPE_DESC', 'Should the customer be notifyed by the Shop or Shipcloud?<br><Note:</b>For a notification from the Shop must set a Webhook to this URL: '.xtc_catalog_href_link('callback/shipcloud/callback.php', '', 'SSL', false).' in Shipcloud.');
+  define('MODULE_SHIPCLOUD_EMAIL_TYPE_DESC', 'Should the customer be notifyed by the Shop or shipcloud?<br><Note:</b>For a notification from the Shop must set a Webhook to this URL: '.xtc_catalog_href_link('callback/shipcloud/callback.php', '', 'SSL', false).' in shipcloud.');
 }
 
 define('SHIPMENT.TRACKING.SHIPCLOUD_LABEL_CREATED', 'Shipment created at shipcloud');

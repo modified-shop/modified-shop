@@ -156,9 +156,9 @@ define('TEXT_INFO_REVERSE_INTRO', 'Are you sure you want to reverse this order?'
 
 define('DOWNLOAD_LABEL', 'Download Label');
 define('CREATE_LABEL', 'Create Label');
-define('TEXT_DELETE_LABEL', 'Shipcloud Label could not get deleted.');
+define('TEXT_DELETE_LABEL', 'shipcloud Labels can not be deleted.');
 define('TEXT_LABEL_CREATED', 'Label created.');
-define('TEXT_CARRIER_ERROR', 'Carrier not permitted in your shipcloud account or invalid API key.');
+define('TEXT_CARRIER_ERROR', 'Carrier not activated in your shipcloud account or invalid API key.');
 define('TEXT_CARRIER_PLACEHOLDER', 'description (optional)');
 
 define('TEXT_DOWNLOADS', 'Downloads');
