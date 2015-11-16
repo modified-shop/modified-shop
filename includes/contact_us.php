@@ -160,19 +160,14 @@
     	$fax = '';
     }
 
-    // BOF - Tomcraft - 2009-11-05 - Advanced contact form (product question)
     $products_info = '';
-    // BOF - web28 - 2010-07-14 -  false clamp fixing
-    //if (trim($_GET['products_name'] != '')) {$products_info= trim($_GET['products_name']);}
-    //if (trim($_GET['products_model'] != '')) {$products_info= trim($products_info . ' - ' . trim($_GET['products_model']));}
-    //if ($products_info != '') {$products_info = trim($_GET['question'])."\n" . $products_info . "\n"; }
-    if (!empty($_GET['products_name'])) {$products_info = trim($_GET['products_name']);}
-    if (!empty($_GET['products_model'])) {$products_info = trim($products_info . ' - ' . trim($_GET['products_model']));}
-    if (!empty($_GET['question'])) {$products_question = trim($_GET['question'])."\n";}
-    if ($products_info != '') {$products_info = $products_question . $products_info . "\n"; }
-    // EOF - web28 - 2010-07-14 -  false clamp fixing
+    if (isset($_GET['products_id']) && $_GET['products_id']  && isset($_GET['inq']) && $_GET['inq']) {
+      $product->product((int)$_GET['products_id']);
+      $products_info = defined('PRODUCT_INQUIRY') ? PRODUCT_INQUIRY . "\n" : '';
+      $products_info .= HEADER_ARTICLE . ': '. $product->data['products_name'] . "\n";  
+      $products_info .= ($product->data['products_model'] ? HEADER_MODEL . ': ' .$product->data['products_model'] : '') . "\n";
+    }
     if (!$error) $message_body = $products_info . "\n";
-    // EOF - Tomcraft - 2009-11-05 - Advanced contact form (product question)
 
     $smarty->assign('CONTACT_CONTENT', $contact_content);
     //BOF - Dokuman - 2009-12-23 - send contact form information with SSL
