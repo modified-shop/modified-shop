@@ -339,7 +339,7 @@ switch(basename($PHP_SELF)) {
 
       //-- Canonical-URL
       //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
-      $canonical_url = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'],$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'],'NONSSL',false);
     }
     break;
 // ---------------------------------------------------------------------------------------
@@ -420,11 +420,11 @@ switch(basename($PHP_SELF)) {
     //-- Canonical-URL
     //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
     if (xtc_not_null($cPath)) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath.$page_param,$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath,'NONSSL',false);
     } elseif (xtc_not_null($manu_id)) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.$manu_id.$page_param,$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.$manu_id,'NONSSL',false);
     } elseif ($startpage) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, '', $request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL',false);
     }
     break;
 // ---------------------------------------------------------------------------------------
@@ -487,7 +487,7 @@ switch(basename($PHP_SELF)) {
     //-- Canonical-URL
     //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
     if(isset($_GET['coID'])){
-      $canonical_url = xtc_href_link(FILENAME_CONTENT, 'coID='.$_GET['coID'],$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_CONTENT, 'coID='.$_GET['coID'],'NONSSL',false);
     }
     break;
 // ---------------------------------------------------------------------------------------
@@ -531,7 +531,7 @@ switch(basename($PHP_SELF)) {
   case FILENAME_SPECIALS :
 
     $meta_title = metaTitle($breadcrumbTitle,$Page,($addSpecialsShopTitle)?ML_TITLE:'');
-    $canonical_url = xtc_href_link(FILENAME_SPECIALS, ltrim($page_param,'&'),$request_type,false);
+    $canonical_url = xtc_href_link(FILENAME_SPECIALS, '','NONSSL',false);
     break;
 // ---------------------------------------------------------------------------------------
 //  Title für Neue Artikel
@@ -539,7 +539,7 @@ switch(basename($PHP_SELF)) {
   case FILENAME_PRODUCTS_NEW :
 
     $meta_title = metaTitle($breadcrumbTitle,$Page,($addNewsShopTitle)?ML_TITLE:'');
-    $canonical_url = xtc_href_link(FILENAME_PRODUCTS_NEW, ltrim($page_param,'&'),$request_type,false);
+    $canonical_url = xtc_href_link(FILENAME_PRODUCTS_NEW, '','NONSSL',false);
     break;
 // ---------------------------------------------------------------------------------------
 //  Title für sonstige Seiten
