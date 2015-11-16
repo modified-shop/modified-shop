@@ -18,6 +18,11 @@
 
 require ('includes/application_top.php');
 
+// redirect contact form to SSL if available
+if (ENABLE_SSL == true && $request_type == 'NONSSL' && !isset($_GET['action']) && $_GET['coID'] == '7') {
+  xtc_redirect(xtc_href_link(FILENAME_CONTENT, 'coID='.(int) $_GET['coID'], 'SSL'));
+}
+
 // create smarty elements
 $smarty = new Smarty;
 
