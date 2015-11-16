@@ -222,7 +222,9 @@ class shoppingCart {
     // xs:booster end
     // EOF - Tomcraft - 2009-11-28 - Included xs:booster
 
-    $this->contents[$products_id] = array ('qty' => (int)$quantity);
+    //$this->contents[$products_id] = array ('qty' => (int)$quantity);
+    $this->contents[$products_id]['qty'] = (int)$quantity; //don't reset $this->contents[$products_id] by update_quantity
+    
     // update database
     if (isset ($_SESSION['customer_id'])){
       xtc_db_query("update ".TABLE_CUSTOMERS_BASKET."
