@@ -37,7 +37,7 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_ACCOUNT_IBAN_DESC', 'IBAN:');
   define('MODULE_SHIPCLOUD_ACCOUNT_BIC_TITLE', '');
   define('MODULE_SHIPCLOUD_ACCOUNT_BIC_DESC', 'BIC:');
-  define('MODULE_SHIPCLOUD_BANK_NAME_TITLE', '<hr noshade>');
+  define('MODULE_SHIPCLOUD_BANK_NAME_TITLE', '<hr noshade>Bank details<br/>');
   define('MODULE_SHIPCLOUD_BANK_NAME_DESC', 'Bank:');
   define('MODULE_SHIPCLOUD_BANK_HOLDER_TITLE', '');
   define('MODULE_SHIPCLOUD_BANK_HOLDER_DESC', 'Holder:');
