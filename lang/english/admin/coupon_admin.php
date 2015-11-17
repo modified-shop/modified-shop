@@ -92,8 +92,8 @@ define('COUPON_DESC_HELP', 'A description of the coupon for the customer');
 define('COUPON_MIN_ORDER_HELP', 'The minimum order value before the coupon is valid');
 define('COUPON_USES_COUPON_HELP', 'The maximum number of times the coupon can be used, leave blank if you want no limit.');
 define('COUPON_USES_USER_HELP', 'Number of times a user can use the coupon, leave blank for no limit.');
-define('COUPON_PRODUCTS_HELP', 'A comma separated list of product_ids that this coupon can be used with. Leave blank for no restrictions.');
-define('COUPON_CATEGORIES_HELP', 'A comma separated list of cpaths that this coupon can be used with, leave blank for no restrictions.');
+define('COUPON_PRODUCTS_HELP', 'A comma separated list of Product IDs that this coupon can be used with. Leave blank for no restrictions.');
+define('COUPON_CATEGORIES_HELP', 'A comma separated list of Category IDs that this coupon can be used with, leave blank for no restrictions.');
 
 define('COUPON_ID', 'cID');
 define('BUTTON_DELETE_NO_CONFIRM', 'Delete without confirmation');
