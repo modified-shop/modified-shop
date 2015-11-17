@@ -68,7 +68,7 @@ class shipcloud {
         }
       }
       
-      if (MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'Shipcloud') {
+      if (MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'shipcloud') {
         $request_array['notification_email'] = $this->order->customer['email_address'];
       }
       
