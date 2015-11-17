@@ -58,6 +58,16 @@ class shipcloud {
         $request_array['from'] = $sender_data;
       }
       
+      if ($this->order->info['payment_method'] == 'cod') {
+        $bank_data = $this->bank_data();
+        if ($bank_data != '') {
+          $request_array['additional_services'] = array(
+            'name' => 'cash_on_delivery',
+            'properties' => $bank_data,
+          );
+        }
+      }
+      
       if (MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'shipcloud') {
         $request_array['notification_email'] = $this->order->customer['email_address'];
       }
@@ -156,6 +166,27 @@ class shipcloud {
       );
     
       return $sender_data;
+    }
+  }
+
+
+  private function bank_data() {
+    if (MODULE_SHIPCLOUD_BANK_HOLDER != ''
+        && MODULE_SHIPCLOUD_BANK_NAME != ''
+        && MODULE_SHIPCLOUD_ACCOUNT_IBAN != ''
+        && MODULE_SHIPCLOUD_ACCOUNT_BIC != ''
+        ) 
+    {        
+      $bank_data = array(
+        'amount' => $this->order->info['pp_total'],
+        'currency' => $this->order->info['currency'],
+        'bank_account_holder' => MODULE_SHIPCLOUD_BANK_HOLDER,
+        'bank_name'           => MODULE_SHIPCLOUD_BANK_NAME,
+        'bank_account_number' => MODULE_SHIPCLOUD_ACCOUNT_IBAN,
+        'bank_code'           => MODULE_SHIPCLOUD_ACCOUNT_BIC,
+      );
+    
+      return $bank_data;
     }
   }
   
