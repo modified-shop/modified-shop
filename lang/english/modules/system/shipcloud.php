@@ -33,6 +33,14 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_CITY_DESC', 'City:');
   define('MODULE_SHIPCLOUD_TELEPHONE_TITLE', '');
   define('MODULE_SHIPCLOUD_TELEPHONE_DESC', 'Telephone:');
+  define('MODULE_SHIPCLOUD_ACCOUNT_IBAN_TITLE', '');
+  define('MODULE_SHIPCLOUD_ACCOUNT_IBAN_DESC', 'IBAN:');
+  define('MODULE_SHIPCLOUD_ACCOUNT_BIC_TITLE', '');
+  define('MODULE_SHIPCLOUD_ACCOUNT_BIC_DESC', 'BIC:');
+  define('MODULE_SHIPCLOUD_BANK_NAME_TITLE', '<hr noshade>');
+  define('MODULE_SHIPCLOUD_BANK_NAME_DESC', 'Bank:');
+  define('MODULE_SHIPCLOUD_BANK_HOLDER_TITLE', '');
+  define('MODULE_SHIPCLOUD_BANK_HOLDER_DESC', 'Holder:');
   define('MODULE_SHIPCLOUD_LOG_TITLE', '<hr noshade>Log');
   define('MODULE_SHIPCLOUD_LOG_DESC', 'the log file is stored in the folder / log.');
   define('MODULE_SHIPCLOUD_EMAIL_TITLE', '<hr noshade>E-Mail notification');
