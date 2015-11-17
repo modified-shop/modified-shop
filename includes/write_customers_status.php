@@ -25,25 +25,25 @@
   
   // write customers status in session
   if (isset($_SESSION['customer_id'])) {
-    $customers_status_query = xtc_db_query("SELECT customers_status
+    $customer_status_query = xtc_db_query("SELECT customers_status
                                                 FROM " . TABLE_CUSTOMERS . "
                                                WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'");
 
-    if (xtc_db_num_rows($customers_status_query) == 1) {
-      $customers_status = xtc_db_fetch_array($customers_status_query);      
+    if (xtc_db_num_rows($customer_status_query) == 1) {
+      $customer_status = xtc_db_fetch_array($customer_status_query);      
 
-      if ($customers_status['customers_status'] == '0' && !defined('RUN_MODE_ADMIN')) {
+      if ($customer_status['customers_status'] == '0' && !defined('RUN_MODE_ADMIN')) {
         set_customers_status_by_id(DEFAULT_CUSTOMERS_STATUS_ID_ADMIN);
         
         // additional 
         $_SESSION['customers_status']['customers_status_id'] = DEFAULT_CUSTOMERS_STATUS_ID_ADMIN;
-        $_SESSION['customers_status']['customers_status'] = $customers_status['customers_status'];
+        $_SESSION['customers_status']['customers_status'] = $customer_status['customers_status'];
       } else {
-        set_customers_status_by_id($customers_status['customers_status']);
+        set_customers_status_by_id($customer_status['customers_status']);
         
         // additional 
-        $_SESSION['customers_status']['customers_status_id'] = $customers_status['customers_status'];
-        $_SESSION['customers_status']['customers_status'] = $customers_status['customers_status'];
+        $_SESSION['customers_status']['customers_status_id'] = $customer_status['customers_status'];
+        $_SESSION['customers_status']['customers_status'] = $customer_status['customers_status'];
       }
     } else {
       unset($_SESSION['customer_id']);
