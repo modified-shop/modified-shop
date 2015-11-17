@@ -339,9 +339,17 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
 // Redirect search engines with session id to the same url without session id to prevent indexing session id urls
 if ( $truncate_session_id == true ) {
   if (preg_match('/' . xtc_session_name() . '/i', $_SERVER['REQUEST_URI']) ){
-    $location = xtc_href_link(basename($_SERVER['SCRIPT_NAME']), xtc_get_all_get_params(array(xtc_session_name())), 'NONSSL', false);
+    $uri = preg_replace("/([^\?]*)(\?.*)/", "$1", $_SERVER['REQUEST_URI']);
+    $params = str_replace($uri,'',$_SERVER['REQUEST_URI']);
+    $params = ltrim($params,'?');
+    parse_str($params,$params);
+    $key = xtc_session_name();
+    if (isset($params[$key])) unset($params[$key]);
+    $params = http_build_query($params);
+    $location = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $uri . (xtc_not_null($params) ? '?' . $params : '');
     header("HTTP/1.0 301 Moved Permanently");
     header("Location: $location");
+    exit();
   }
 }
 
