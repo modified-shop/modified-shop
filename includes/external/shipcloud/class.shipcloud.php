@@ -58,7 +58,7 @@ class shipcloud {
         $request_array['from'] = $sender_data;
       }
       
-      if ($this-order->info['payment_method'] == 'cod') {
+      if ($this->order->info['payment_method'] == 'cod') {
         $bank_data = $this->bank_data();
         if ($bank_data != '') {
           $request_array['additional_services'] = array(
