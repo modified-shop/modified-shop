@@ -51,7 +51,7 @@ if (xtc_not_null($tID)) {
 
     // set Logging
     $SofortLibTransactionData->setLogger($logger);
-    if (MODULE_PAYMENT_SOFORT_SOFORTUEBERWEISUNG_LOGGING == 'True') {
+    if (MODULE_PAYMENT_SOFORT_SOFORTUEBERWEISUNG_GATEWAY_LOGGING == 'True') {
       $SofortLibTransactionData->setLogEnabled();
     }
 
