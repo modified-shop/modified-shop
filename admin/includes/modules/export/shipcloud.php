@@ -33,6 +33,14 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_CITY_DESC', 'Stadt:');
   define('MODULE_SHIPCLOUD_TELEPHONE_TITLE', '');
   define('MODULE_SHIPCLOUD_TELEPHONE_DESC', 'Telefon:');
+  define('MODULE_SHIPCLOUD_ACCOUNT_IBAN_TITLE', '');
+  define('MODULE_SHIPCLOUD_ACCOUNT_IBAN_DESC', 'IBAN:');
+  define('MODULE_SHIPCLOUD_ACCOUNT_BIC_TITLE', '');
+  define('MODULE_SHIPCLOUD_ACCOUNT_BIC_DESC', 'BIC:');
+  define('MODULE_SHIPCLOUD_BANK_NAME_TITLE', '<hr noshade>Bankdetails<br/>');
+  define('MODULE_SHIPCLOUD_BANK_NAME_DESC', 'Bank:');
+  define('MODULE_SHIPCLOUD_BANK_HOLDER_TITLE', '');
+  define('MODULE_SHIPCLOUD_BANK_HOLDER_DESC', 'Kontoinhaber:');
   define('MODULE_SHIPCLOUD_LOG_TITLE', '<hr noshade>Log');
   define('MODULE_SHIPCLOUD_LOG_DESC', 'die Logdatei wird im Ordner /log abgelegt.');
   define('MODULE_SHIPCLOUD_EMAIL_TITLE', '<hr noshade>E-Mail Benachrichtigung');
@@ -100,6 +108,10 @@ class shipcloud {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_POSTCODE', '',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_CITY', '',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_TELEPHONE', '',  '6', '1', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_BANK_HOLDER', '',  '6', '1', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_BANK_NAME', '',  '6', '1', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_ACCOUNT_IBAN', '',  '6', '1', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPCLOUD_ACCOUNT_BIC', '',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPCLOUD_PARCEL', '20,40,30;15,20,20;', '6', '1', 'xtc_cfg_textarea(', now())");
 
     $table_array = array(
@@ -131,6 +143,10 @@ class shipcloud {
                  'MODULE_SHIPCLOUD_POSTCODE',
                  'MODULE_SHIPCLOUD_CITY',
                  'MODULE_SHIPCLOUD_TELEPHONE',
+                 'MODULE_SHIPCLOUD_BANK_NAME',
+                 'MODULE_SHIPCLOUD_BANK_HOLDER',
+                 'MODULE_SHIPCLOUD_ACCOUNT_IBAN',
+                 'MODULE_SHIPCLOUD_ACCOUNT_BIC',
                  'MODULE_SHIPCLOUD_LOG',
                  );
   }
