@@ -49,4 +49,8 @@ ALTER TABLE admin_access ADD shipcloud INT(1) NOT NULL DEFAULT 0 AFTER parcel_ca
 UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 'groups' LIMIT 1;
 
+#Tomcraft - 2015-11-18 - change field to TEXT
+ALTER TABLE coupons MODIFY restrict_to_products TEXT DEFAULT NULL;
+ALTER TABLE coupons MODIFY restrict_to_categories TEXT DEFAULT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
