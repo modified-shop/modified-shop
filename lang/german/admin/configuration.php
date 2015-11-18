@@ -1007,7 +1007,7 @@ define('USE_BROWSER_LANGUAGE_DESC' , 'Automatisch die Sprache auf die Browserspr
 define('WYSIWYG_SKIN_TITLE' , 'WYSIWYG-Editor Skin');
 define('WYSIWYG_SKIN_DESC' , 'W&auml;hlen Sie das WYSIWYG-Editor Skin.');
 
-define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'G&uuml;nstige Versandart vorausw&auml;hlen');
+define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'G&uuml;nstigste Versandart vorausw&auml;hlen');
 define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Soll im Checkout die kosteng&uuml;nstigste Versandart f&uuml;r den Kunden vorausgew&auml;hlt werden?');
 
 define('DISPLAY_PRIVACY_CHECK_TITLE', 'Privatsph&auml;re Checkbox anzeigen');
