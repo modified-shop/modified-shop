@@ -26,7 +26,7 @@
 require_once (DIR_FS_INC.'get_order_total.inc.php');
 
 function smarty_function_googleanalytics($params, &$smarty) {
-  global $PHP_SELF;
+  global $PHP_SELF, $request_type;
   
   if (!isset($params['account'])) {
     return false;
