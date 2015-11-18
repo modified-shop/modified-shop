@@ -110,12 +110,12 @@
 
           // Check if table column exists 
           if (!get_table_columns(TABLE_PRODUCTS,'group_permission_' . $customers_status_id)) {
-            xtc_db_query("ALTER TABLE ".TABLE_PRODUCTS." ADD group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL AFTER '".$last_group."'");
+            xtc_db_query("ALTER TABLE ".TABLE_PRODUCTS." ADD group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL AFTER `".$last_group."`");
           }
 
           // Check if table column exists
           if (!get_table_columns(TABLE_CATEGORIES,'group_permission_' . $customers_status_id)) {
-            xtc_db_query("ALTER TABLE ".TABLE_CATEGORIES." ADD group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL AFTER '".$last_group."'");
+            xtc_db_query("ALTER TABLE ".TABLE_CATEGORIES." ADD group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL AFTER `".$last_group."`");
           }
         }
 
