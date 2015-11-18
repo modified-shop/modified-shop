@@ -563,7 +563,7 @@ class categories {
         && $products_data['products_tax_class_id'] != $products_data['products_tax_class_id_old']
         ) 
     {
-      $this->calculate attribute_prices($products_data,$products_id);
+      $this->calculate_attribute_prices($products_data,$products_id);
     }
 
     // products tags
@@ -1303,7 +1303,7 @@ class categories {
       
   }
   
-  function calculate attribute_prices($products_data,$products_id) {
+  function calculate_attribute_prices($products_data,$products_id) {
     
       $products_tax_rate_old = xtc_get_tax_rate($products_data['products_tax_class_id_old']);
       
