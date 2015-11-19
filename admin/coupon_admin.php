@@ -602,25 +602,25 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
           ?>
           <td class="dataTableConfig col-single-right"><?php echo $finish_date; ?>&nbsp;</td>
         </tr>
-        <?php
-        $languages = xtc_get_languages();
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-          $language_id = $languages[$i]['id'];
-          echo xtc_draw_hidden_field('coupon_name[' . $languages[$i]['id'] . ']', stripslashes($_POST['coupon_name'][$language_id]));
-          echo xtc_draw_hidden_field('coupon_desc[' . $languages[$i]['id'] . ']', stripslashes($_POST['coupon_desc'][$language_id]));
-        }
-        echo xtc_draw_hidden_field('coupon_amount', $_POST['coupon_amount']);
-        echo xtc_draw_hidden_field('coupon_min_order', $_POST['coupon_min_order']);
-        echo xtc_draw_hidden_field('coupon_free_ship', $_POST['coupon_free_ship']);
-        echo xtc_draw_hidden_field('coupon_code', $_POST['coupon_code']);
-        echo xtc_draw_hidden_field('coupon_uses_coupon', $_POST['coupon_uses_coupon']);
-        echo xtc_draw_hidden_field('coupon_uses_user', $_POST['coupon_uses_user']);
-        echo xtc_draw_hidden_field('coupon_products', $_POST['coupon_products']);
-        echo xtc_draw_hidden_field('coupon_categories', $_POST['coupon_categories']);
-        echo xtc_draw_hidden_field('coupon_startdate', $_POST['coupon_startdate']);
-        echo xtc_draw_hidden_field('coupon_finishdate', $_POST['coupon_finishdate']);
-        ?>
       </table>
+      <?php
+      $languages = xtc_get_languages();
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        $language_id = $languages[$i]['id'];
+        echo xtc_draw_hidden_field('coupon_name[' . $languages[$i]['id'] . ']', stripslashes($_POST['coupon_name'][$language_id])).PHP_EOL;
+        echo xtc_draw_hidden_field('coupon_desc[' . $languages[$i]['id'] . ']', stripslashes($_POST['coupon_desc'][$language_id])).PHP_EOL;
+      }
+      echo xtc_draw_hidden_field('coupon_amount', $_POST['coupon_amount']).PHP_EOL;
+      echo xtc_draw_hidden_field('coupon_min_order', $_POST['coupon_min_order']).PHP_EOL;
+      echo xtc_draw_hidden_field('coupon_free_ship', $_POST['coupon_free_ship']).PHP_EOL;
+      echo xtc_draw_hidden_field('coupon_code', $_POST['coupon_code']).PHP_EOL;
+      echo xtc_draw_hidden_field('coupon_uses_coupon', $_POST['coupon_uses_coupon']).PHP_EOL;
+      echo xtc_draw_hidden_field('coupon_uses_user', $_POST['coupon_uses_user']).PHP_EOL;
+      echo xtc_draw_hidden_field('coupon_products', $_POST['coupon_products']).PHP_EOL;
+      echo xtc_draw_hidden_field('coupon_categories', $_POST['coupon_categories']).PHP_EOL;
+      echo xtc_draw_hidden_field('coupon_startdate', $_POST['coupon_startdate']).PHP_EOL;
+      echo xtc_draw_hidden_field('coupon_finishdate', $_POST['coupon_finishdate']).PHP_EOL;
+      ?>
       <div class="mrg5">
       <?php echo '<input type="submit" class="button" value="' . BUTTON_CONFIRM . '"/>'; ?>
       <?php echo '<input type="submit" name="back" class="button" value="' . BUTTON_BACK . '"/>'; ?>
