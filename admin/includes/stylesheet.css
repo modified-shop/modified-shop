@@ -1712,3 +1712,13 @@ padding: 3px 5px;
 color: #fff;
 background-color: #6E9C25;
 }
+
+.valign_m{
+vertical-align: middle;
+}
+.valign_t{
+vertical-align: top;
+}
+.valign_b{
+vertical-align: bottom;
+}
