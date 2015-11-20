@@ -1771,6 +1771,7 @@ a.color_more:hover {
   font-size:13px;
   line-height:17px;
   border-bottom: 1px dotted #ddd;
+  padding: 5px 0px;
 }
 .lr_desc ul{
   margin: 8px 0px 8px 15px;
