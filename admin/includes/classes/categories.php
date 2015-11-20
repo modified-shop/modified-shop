@@ -31,6 +31,11 @@ defined('ADD_PRODUCTS_FIELDS') or require_once (DIR_WS_INCLUDES.'add_db_fields.p
 
 // holds functions for manipulating products & categories
 class categories {
+  //new module support
+  function __construct() {
+      require_once (DIR_WS_CLASSES.'categoriesModules.class.php');
+      $this->catmodules = new categoriesModules();
+  }
 
   // deletes an array of categories, with products
   // makes use of remove_category, remove_product
@@ -90,6 +95,8 @@ class categories {
     xtc_db_query("DELETE FROM ".TABLE_CATEGORIES_DESCRIPTION." WHERE categories_id = '".xtc_db_input($category_id)."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE categories_id = '".xtc_db_input($category_id)."'");
 
+    //new module support
+    $this->catmodules->remove_category($category_id);
   }
 
 
@@ -143,6 +150,9 @@ class categories {
     }
 
     $sql_data_array = array_merge($sql_data_array,$permission_array);
+    //new module support
+    $sql_data_array = $this->catmodules->insert_category_before($sql_data_array,$categories_data);//Return parameter must be in first place
+    
     if ($action == 'insert') {
       $insert_sql_data = array ('parent_id' => $dest_category_id, 'date_added' => 'now()');
       $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
@@ -157,6 +167,10 @@ class categories {
     if (isset($categories_data['set_groups_permissions']) && $categories_data['set_groups_permissions'] != 0) {
       xtc_set_groups($categories_id, $permission_array);
     }
+    
+    //new module support
+    $this->catmodules->insert_category_after($categories_data,$categories_id);
+    
     $languages = xtc_get_languages();
     foreach ($languages AS $lang) {
       if (isset($categories_data['name'])) $categories_name_array = $categories_data['name'];
@@ -172,6 +186,9 @@ class categories {
         $sql_data_array = array_merge($sql_data_array, $this->add_data_fields(ADD_CATEGORIES_DESCRIPTION_FIELDS,$categories_data,$lang['id']));
       }
 
+      //new module support
+      $sql_data_array = $this->catmodules->insert_category_desc($sql_data_array,$categories_data,$lang['id']);
+      
       if ($action == 'insert') {
         $insert_sql_data = array ('categories_id' => $categories_id, 'language_id' => $lang['id']);
         $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
@@ -261,6 +278,9 @@ class categories {
       //copy data (overrides)
       $sql_data_array = $ccopy_values;
 
+      //new module support
+      $sql_data_array = $this->catmodules->copy_category($sql_data_array,$src_category_id,$dest_category_id,$ctype);
+  
       //set new data
       unset($sql_data_array['categories_id']);
       $sql_data_array['parent_id'] = $dest_category_id;
@@ -313,6 +333,8 @@ class categories {
       //copy descriptions
       while ($cdcopy_values = xtc_db_fetch_array($cdcopy_query)) {
         $sql_data_array = $cdcopy_values;
+        //new module support
+        $sql_data_array = $this->catmodules->copy_category_desc($sql_data_array,$src_category_id,$dest_category_id,$ctype,$new_cat_id);
         //set new descriptions (overrides)
         $sql_data_array['categories_id'] = $new_cat_id;
         //write descriptions to DB
@@ -397,6 +419,8 @@ class categories {
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
     }
+    //new module support
+    $this->catmodules->remove_product($product_id);
 
     $customers_statuses_array = xtc_get_customers_statuses();
     for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
@@ -430,6 +454,8 @@ class categories {
     if ($product_categories['total'] == '0') {
       $this->remove_product($product_id);
     }
+    //new module support
+    $this->catmodules->remove_product($product_id,$product_categories);
   }
 
 
@@ -540,6 +566,9 @@ class categories {
       $sql_data_array['products_image'] = xtc_db_prepare_input($products_data['products_image']);
     }
 
+    //new module support
+    $sql_data_array = $this->catmodules->insert_product_before($sql_data_array,$products_data);
+    
     if ($action == 'insert') {
       $insert_sql_data = array ('products_date_added' => 'now()');
       $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
@@ -571,6 +600,9 @@ class categories {
       $this->save_products_tags($products_data,$products_id);
     }
 
+    //new module support 
+    $this->catmodules->insert_product_after($products_data,$products_id);
+    
     $languages = xtc_get_languages();
     // Here we go, lets write Group prices into db
     // start
@@ -676,6 +708,10 @@ class categories {
       if (trim(ADD_PRODUCTS_DESCRIPTION_FIELDS)) {
         $sql_data_array = array_merge($sql_data_array, $this->add_data_fields(ADD_PRODUCTS_DESCRIPTION_FIELDS,$products_data,$language_id));
       }
+      
+      //new module support
+      $sql_data_array = $this->catmodules->insert_product_desc($sql_data_array,$products_data,$language_id);
+   
       if ($action == 'insert') {
         $insert_sql_data = array ('products_id' => $products_id, 'language_id' => $language_id);
         $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
@@ -712,6 +748,10 @@ class categories {
     
     //copy data
     $sql_data_array = $product;
+    
+    //new module support
+    $sql_data_array = $this->catmodules->duplicate_product_before($sql_data_array,$src_products_id,$dest_categories_id);
+    
     //set new data (overrides)
     unset($sql_data_array['products_id']);
     $sql_data_array['products_date_added'] = 'now()';
@@ -747,6 +787,8 @@ class categories {
       unset ($dup_products_image_name);
     }
 
+    //new module support
+    $sql_data_array = $this->catmodules->duplicate_product_after($sql_data_array,$src_products_id,$dest_categories_id,$this->dup_products_id);
     //get description data
     $description_query = xtc_db_query("SELECT * 
                                          FROM ".TABLE_PRODUCTS_DESCRIPTION."
@@ -755,6 +797,8 @@ class categories {
     while ($description = xtc_db_fetch_array($description_query)) {
       //copy description data
       $sql_data_array = $description;
+      //new module support
+      $sql_data_array = $this->catmodules->duplicate_product_desc($sql_data_array,$src_products_id,$dest_categories_id,$this->dup_products_id);
       //set description data (overrides)
       $sql_data_array['products_id'] = $this->dup_products_id;
       $sql_data_array['products_viewed'] = 0;

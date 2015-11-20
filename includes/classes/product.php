@@ -27,6 +27,9 @@ class product {
   function __construct($pID = 0) {
     global $xtPrice;
 
+    require_once (DIR_WS_CLASSES.'productModules.class.php');
+    $this->productModules = new productModules();
+    
     $this->pID = (int)$pID;
     
     //set default select, using in function getAlsoPurchased, getCrossSells, getReverseCrossSells
@@ -499,6 +502,8 @@ class product {
     $productData['PRODUCTS_PRICE_ARRAY'][0]['PRICE_ALLOWED'] = $productData['PRICE_ALLOWED'];
 
     //echo '<pre>'.print_r($productData,true).'</pre>';
+    $productData = $this->productModules->buildDataArray($productData,$array,$image);
+    
     return $productData;
   }
 
@@ -522,14 +527,19 @@ class product {
         break;
     }
 
-    if ($name == '' || !is_file($path.$name)) {
-      $name = '';
+    $returnName = $name;
+    if ($returnName == '' || !is_file($path.$returnName)) {
+      $returnName = '';
       if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file($path.$this->standardImage)) {
-        $name = $this->standardImage;
+        $returnName = $this->standardImage;
       }
     }
     
-    return (($name != '') ? DIR_WS_BASE.$path.$name : '');
+    $returnName = ($returnName != '') ? DIR_WS_BASE.$path.$returnName : '';
+
+    $returnName = $this->productModules->productImage($returnName, $name, $type ,$path);
+    
+    return $returnName;
   }
 
   /**
