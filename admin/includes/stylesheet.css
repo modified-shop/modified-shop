@@ -1722,3 +1722,35 @@ vertical-align: top;
 .valign_b{
 vertical-align: bottom;
 }
+
+.submenu {
+margin:0px 0px 5px 3px;
+}
+
+.submenu a.submenutab:first-child {
+border-left: 1px solid #aaa;
+}
+.submenu a.submenutab {
+font-family: Verdana,Arial,Helvetica,sans-serif;
+font-size: 12px !important;
+font-weight: bold;
+line-height: 16px;
+border-right: 1px solid #aaaaaa;
+border-top: 1px solid #aaaaaa;
+border-bottom: 1px solid #aaaaaa;
+color: #aaaaaa;
+display: inline;
+float: left;
+padding: 8px 20px !important;
+position: relative;
+width: auto !important;
+}
+
+.submenu a.activ {
+background: none repeat scroll 0 0 #d0d0d0;
+color: #000000;
+}
+.submenu a.submenutab:hover {
+text-decoration:none;
+color:#af417e;
+}

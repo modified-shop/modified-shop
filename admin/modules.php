@@ -26,6 +26,8 @@
   $installed = false;
   $deinstalled = false;
 
+  $mTypeArr = array();
+
   $set = (isset($_GET['set']) ? strip_tags($_GET['set']) : '');
   $module_class = (isset($_GET['module']) ? strip_tags($_GET['module']) : '');
   $box = (isset($_GET['box']) ? true : false);
@@ -49,7 +51,6 @@
         $check_language_file = true;
         break;
       case 'payment':
-      default:
         $module_type = 'payment';
         $module_directory = DIR_FS_CATALOG_MODULES . 'payment/';
         $module_directory_include = DIR_WS_CATALOG.DIR_WS_MODULES . 'payment/';
@@ -59,6 +60,13 @@
           $messageStack->add($_GET['error'], 'error');
         }
         $check_language_file = true;
+        break;
+      default:
+        $check_language_file = false;
+        foreach(auto_include(DIR_FS_ADMIN.'includes/extra/submenu/modules','php') as $file) require ($file);
+        if (!defined('HEADING_TITLE')) {
+          define('HEADING_TITLE', BOX_MODULE_TYPE);
+        }
         break;
     }
   }
@@ -171,6 +179,12 @@ if (xtc_not_null($action) && !$box) {
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_modules.png'); ?></div>
         <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
         <div class="main">Modules</div>         
+        <div class="clear"></div>        
+        <?php
+        if (count($mTypeArr) && !$action) {
+          echo '<div class="submenu cf">'.implode(' ',$mTypeArr).'</div>';
+        }
+        ?>
         <table class="tableCenter">
           <tr>
             <?php if(!xtc_not_null($action) || $box) { ?>
@@ -201,25 +215,27 @@ if (xtc_not_null($action) && !$box) {
                         if (xtc_class_exists($class)) {
                           $module = new $class();
                         }
-                        if ($module instanceof $class && $module->check() > 0) { //DokuMan - 2013-08-23 - added instanceof for fixing fatal error on PHP5.5
-                          if (!is_numeric($module->sort_order)) {
-                            $module->sort_order = 0;
-                          }
-                          if (!array_key_exists(($module->sort_order*100), $directory_array[0])) {
-                            $directory_array[0][($module->sort_order*100)] = $file;
-                          } else {
-                            // search for next free index in array
-                            $index = ($module->sort_order*100);
-                            while (1==1) {
-                              if (!array_key_exists($index, $directory_array[0])) {
-                                $directory_array[0][$index] = $file;
-                                break;
-                              }
-                              $index++;
+                        if (method_exists($module,'check')) {
+                          if ($module instanceof $class && $module->check() > 0) { //DokuMan - 2013-08-23 - added instanceof for fixing fatal error on PHP5.5
+                            if (!is_numeric($module->sort_order)) {
+                              $module->sort_order = 0;
                             }
+                            if (!array_key_exists(($module->sort_order*100), $directory_array[0])) {
+                              $directory_array[0][($module->sort_order*100)] = $file;
+                            } else {
+                              // search for next free index in array
+                              $index = ($module->sort_order*100);
+                              while (1==1) {
+                                if (!array_key_exists($index, $directory_array[0])) {
+                                  $directory_array[0][$index] = $file;
+                                  break;
+                                }
+                                $index++;
+                              }
+                            }
+                          } else {
+                            $directory_array[1][] = $file;
                           }
-                        } else {
-                          $directory_array[1][] = $file;
                         }
                         unset($module);
                       //EOF - DokuMan - 2011-07-19 - sorting of modules (credits to GTB)

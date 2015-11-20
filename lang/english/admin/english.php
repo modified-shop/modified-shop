@@ -576,4 +576,6 @@ define('CSRF_TOKEN_NOT_DEFINED', 'CSRFToken not defined (Due to security aspects
 define('TEXT_ACCOUNTING_INFO','The main admin [1] cannot be deprived of the access rights.');
 
 define('JAVASCRIPT_DISABLED_INFO', 'JavaScript seem to be disabled in your browser. Enable JavaScript to be able to use all functions of this site and all site content');
+
+define('BOX_MODULE_TYPE', 'Class Extensions Modules');
 ?>
