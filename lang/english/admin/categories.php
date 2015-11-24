@@ -249,4 +249,6 @@ define('HEADING_TITLE_CAT_BREADCRUMB', ' in &quot;%s&quot;');
 define('TEXT_PRODUCTS_TAGS', 'Product features');
 
 define('TEXT_GRADUATED_PRICES_GROUP_INFO', 'The customer group currently has no permission to view graduated prices. This can be changed in the customers group settings at any time.');
+
+define('TEXT_NO_FILE', 'No template file existing!');
 ?>
