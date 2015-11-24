@@ -249,4 +249,6 @@ define('HEADING_TITLE_CAT_BREADCRUMB', ' in &quot;%s&quot;');
 define('TEXT_PRODUCTS_TAGS', 'Artikeleigenschaften');
 
 define('TEXT_GRADUATED_PRICES_GROUP_INFO', 'Die Kundengruppe hat derzeit keine Berechtigungen Staffelpreise zu sehen. Dies kann in den Kundengruppen-Einstellungen jederzeit ge&auml;ndert werden.');
+
+define('TEXT_NO_FILE', 'Keine Vorlagen-Datei vorhanden!');
 ?>
