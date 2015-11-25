@@ -63,7 +63,7 @@ class shipcloud {
         if ($bank_data != '') {
           $request_array['additional_services'] = array(
             'name' => 'cash_on_delivery',
-            'properties' => new stdClass($bank_data),
+            'properties' => array($bank_data),
           );
         }
       }
