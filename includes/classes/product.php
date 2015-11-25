@@ -27,7 +27,7 @@ class product {
   function __construct($pID = 0) {
     global $xtPrice;
 
-    require_once (DIR_WS_CLASSES.'productModules.class.php');
+    require_once (DIR_FS_CATALOG.'includes/classes/productModules.class.php');
     $this->productModules = new productModules();
     
     $this->pID = (int)$pID;

@@ -63,6 +63,7 @@
         break;
       default:
         $check_language_file = false;
+        $module_directory_include = '';
         foreach(auto_include(DIR_FS_ADMIN.'includes/extra/submenu/modules','php') as $file) require ($file);
         if (!defined('HEADING_TITLE')) {
           define('HEADING_TITLE', BOX_MODULE_TYPE);
@@ -89,8 +90,10 @@
         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($module_class);
         if (file_exists($module_directory . $class . $file_extension)) {
-          include($module_directory . $class . $file_extension);
-          $module = new $class();
+          include_once($module_directory . $class . $file_extension);
+          if (xtc_class_exists($class)) {
+            $module = new $class();
+          }
           if ($action == 'install') {
             $module->install();
           } elseif ($action == 'removeconfirm') {
@@ -347,14 +350,16 @@ if (xtc_not_null($action) && !$box) {
                     } //foreach-loop end - DokuMan - 2011-07-19 - sorting of modules (credits to GTB)
 
                     ksort($installed_modules);
-                    $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_key . "'");
-                    if (xtc_db_num_rows($check_query)) {
-                      $check = xtc_db_fetch_array($check_query);
-                      if ($check['configuration_value'] != implode(';', $installed_modules)) {
-                        xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $installed_modules) . "', last_modified = now() where configuration_key = '" . $module_key . "'");
+                    if ($module_key) {
+                      $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_key . "'");
+                      if (xtc_db_num_rows($check_query)) {
+                        $check = xtc_db_fetch_array($check_query);
+                        if ($check['configuration_value'] != implode(';', $installed_modules)) {
+                          xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $installed_modules) . "', last_modified = now() where configuration_key = '" . $module_key . "'");
+                        }
+                      } else {
+                        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ( '" . $module_key . "', '" . implode(';', $installed_modules) . "','6', '0', now())");
                       }
-                    } else {
-                      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ( '" . $module_key . "', '" . implode(';', $installed_modules) . "','6', '0', now())");
                     }
                     ?>
                   </table>

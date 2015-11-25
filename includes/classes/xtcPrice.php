@@ -39,6 +39,10 @@ class xtcPrice {
    */
   function __construct($currency, $cGroup) {
 
+    //new module support
+    require_once (DIR_FS_CATALOG.'includes/classes/xtcPriceModules.class.php');
+    $this->priceModules = new priceModules();
+    
     $this->currencies = array();
     $this->cStatus = array();
     $this->actualGroup = (int) $cGroup;
@@ -319,52 +323,70 @@ class xtcPrice {
    * @param Integer $value value id
    * @return Double option price
    */
-  function xtcGetOptionPrice($pID, $option, $value) {
+  function xtcGetOptionPrice($pID, $option, $value, $qty = 1) {
     $price = $discount = $attributes_weight = 0;
-    $attribute_price_query = xtDBquery("SELECT p.products_discount_allowed,
-                                               p.products_tax_class_id,
-                                               pa.options_values_price,
-                                               pa.price_prefix,
-                                               pa.options_values_weight,
-                                               pa.weight_prefix
-                                          FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                          JOIN " . TABLE_PRODUCTS . " p
-                                               ON p.products_id = pa.products_id
-                                         WHERE pa.products_id = '" . (int)$pID . "'
-                                           AND pa.options_id = '" . (int)$option . "'
-                                           AND pa.options_values_id = '" . (int)$value . "'");
     
-    if (xtc_db_num_rows($attribute_price_query, true) > 0) {
-      $attribute_price_data  = xtc_db_fetch_array($attribute_price_query, true);
+    $dataArr = array(
+        'weight' => 0,
+        'price' => 0,
+        'discount' => 0,
+        'qty' => $qty
+      );
+      
+    $attribute_query = xtDBquery(
+       "SELECT p.products_discount_allowed,
+               p.products_tax_class_id,
+               p.products_price,
+               p.products_weight,
+               pa.options_values_price,
+               pa.price_prefix,
+               pa.options_values_weight,
+               pa.weight_prefix
+          FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+          JOIN " . TABLE_PRODUCTS . " p
+               ON p.products_id = pa.products_id
+         WHERE pa.products_id = '" . (int)$pID . "'
+           AND pa.options_id = '" . (int)$option . "'
+           AND pa.options_values_id = '" . (int)$value . "'
+       ");
+    
+    if (xtc_db_num_rows($attribute_query, true) > 0) {
+      $attribute_data  = xtc_db_fetch_array($attribute_query, true);
       
       // calculate weight
-      $attributes_weight = $attribute_price_data['options_values_weight'];
-      if ($attribute_price_data['weight_prefix'] != '+') {
+      $attributes_weight = $attribute_data['options_values_weight'];
+      if ($attribute_data['weight_prefix'] != '+') {
         $attributes_weight *= -1;
       }
       
       // calculate discount
       if ($this->cStatus['customers_status_discount_attributes'] == '1' && $this->cStatus['customers_status_discount'] != 0.00) {
         $discount = $this->cStatus['customers_status_discount'];
-        if ($attribute_price_data['products_discount_allowed'] < $this->cStatus['customers_status_discount']) {
-          $discount = $attribute_price_data['products_discount_allowed'];
+        if ($attribute_data['products_discount_allowed'] < $this->cStatus['customers_status_discount']) {
+          $discount = $attribute_data['products_discount_allowed'];
         }
       }
       
       // calculate price and several currencies on product attributes
-      $CalculateCurr = (($attribute_price_data['products_tax_class_id'] == 0) ? true : false);
-      $price = $this->xtcFormat($attribute_price_data['options_values_price'], false, $attribute_price_data['products_tax_class_id'], $CalculateCurr);
-      if ($attribute_price_data['price_prefix'] == '+') {
+      $CalculateCurr = (($attribute_data['products_tax_class_id'] == 0) ? true : false);
+      $price = $this->xtcFormat($attribute_data['options_values_price'], false, $attribute_data['products_tax_class_id'], $CalculateCurr);
+      if ($attribute_data['price_prefix'] == '+') {
         $price = $price - ($price / 100 * $discount);
       } else {
         $price *= -1;
       }
-    }
     
-    return array(
-      'weight' => $attributes_weight,
-      'price' => $price
-    );
+      $dataArr = array(
+        'weight' => $attributes_weight,
+        'price' => $price,
+        'discount' => $discount,
+        'qty' => $qty
+      );
+      
+      //new module support
+      $dataArr = $this->priceModules->GetOptionPrice($dataArr,$attribute_data,$pID, $option, $value);
+    }
+    return $dataArr;
   }
   
   /**

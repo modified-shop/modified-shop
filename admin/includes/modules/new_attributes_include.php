@@ -22,6 +22,8 @@
    --------------------------------------------------------------*/
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+  define('ATTR_EQ_PREFIX', (defined('MODULE_PRICE_WEIGHT_PREFIX_STATUS') && MODULE_PRICE_WEIGHT_PREFIX_STATUS == 'true'  ? true : false));
+  
   // include needed functions
   require_once(DIR_FS_INC .'xtc_get_tax_rate.inc.php');
   require_once(DIR_FS_INC .'xtc_get_tax_class_id.inc.php');
@@ -52,6 +54,9 @@
     array('id' => '+', 'text' => '&nbsp;+&nbsp;'),
     array('id' => '-', 'text' => '&nbsp;-&nbsp;')
   );
+  if (ATTR_EQ_PREFIX === true) {
+    $prefix_array[] = array('id' => '=', 'text' => '&nbsp;=&nbsp;');
+  }
 
   //Anzahl Spalten
   $colspan = 8;
@@ -73,8 +78,8 @@
     <div class="main pdg2">
       <?php echo SORT_ORDER;
       echo xtc_draw_form('option_order_by', FILENAME_NEW_ATTRIBUTES, '', 'post');
+      echo $options_dropdown_order; 
       ?>
-      <?php echo $options_dropdown_order; ?>
       </form>
     </div>
 
