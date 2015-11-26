@@ -4,7 +4,7 @@ class categoriesModules {
     var $modules;
     function __construct()
     {
-        $module_directory = DIR_FS_ADMIN.'includes/extra/classes/categories';
+        $module_directory = DIR_FS_ADMIN.'includes/extra/classes/categories/';
         $this->modules = array();
         if (defined('MODULE_CATEGORIES_INSTALLED') && xtc_not_null(MODULE_CATEGORIES_INSTALLED)) {
           $modules = explode(';', MODULE_CATEGORIES_INSTALLED);
@@ -71,10 +71,28 @@ class categoriesModules {
         return $this->call_module_method($sql_data_array,$src_category_id,$dest_category_id,$ctype,$new_cat_id); //Return parameter must be in first place
     }
 
-    function remove_category($categories_id)
+    function remove_category($category_id)
     {
         $this->function_call = 'remove_category';
-        $this->call_module_method($categories_id);
+        $this->call_module_method($category_id);
+    }
+    
+    function delete_category_image($category_image)
+    {
+        $this->function_call = 'delete_category_image';
+        $this->call_module_method($category_image);
+    }
+    
+    function copy_category_image($src_pic, $dest_pic)
+    {
+        $this->function_call = 'copy_category_image';
+        $this->call_module_method($src_pic, $dest_pic);
+    }
+    
+    function categories_image_process($categories_image_name, $categories_image_name_process)
+    {
+        $this->function_call = 'categories_image_process';
+        $this->call_module_method($categories_image_name, $categories_image_name_process);
     }
 
     //----- PRODUCTS FUNCTIONS -----//
@@ -124,5 +142,11 @@ class categoriesModules {
     {
         $this->function_call = 'duplicate_product_desc';
         return $this->call_module_method($sql_data_array,$src_products_id,$dest_categories_id,$dup_products_id); //Return parameter must be in first place
+    }
+    
+    function image_name($image_name,$products_id, $counter, $suffix, $pname_arr, $srcID)
+    {
+        $this->function_call = 'image_name';
+        return $this->call_module_method($image_name,$products_id, $counter, $suffix, $pname_arr, $srcID); //Return parameter must be in first place
     }
 }

@@ -34,7 +34,7 @@ class categories {
   //new module support
   function __construct() {
       require_once (DIR_WS_CLASSES.'categoriesModules.class.php');
-      $this->catmodules = new categoriesModules();
+      $this->catModules = new categoriesModules();
   }
 
   // deletes an array of categories, with products
@@ -89,6 +89,7 @@ class categories {
       if (file_exists(DIR_FS_CATALOG_IMAGES.'categories/'.$category_image['categories_image'])) {
         @ unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$category_image['categories_image']);
       }
+      $this->catModules->delete_category_image($category_image['categories_image']);
     }
 
     xtc_db_query("DELETE FROM ".TABLE_CATEGORIES." WHERE categories_id = '".xtc_db_input($category_id)."'");
@@ -96,7 +97,7 @@ class categories {
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE categories_id = '".xtc_db_input($category_id)."'");
 
     //new module support
-    $this->catmodules->remove_category($category_id);
+    $this->catModules->remove_category($category_id);
   }
 
 
@@ -151,7 +152,7 @@ class categories {
 
     $sql_data_array = array_merge($sql_data_array,$permission_array);
     //new module support
-    $sql_data_array = $this->catmodules->insert_category_before($sql_data_array,$categories_data);//Return parameter must be in first place
+    $sql_data_array = $this->catModules->insert_category_before($sql_data_array,$categories_data);//Return parameter must be in first place
     
     if ($action == 'insert') {
       $insert_sql_data = array ('parent_id' => $dest_category_id, 'date_added' => 'now()');
@@ -169,7 +170,7 @@ class categories {
     }
     
     //new module support
-    $this->catmodules->insert_category_after($categories_data,$categories_id);
+    $this->catModules->insert_category_after($categories_data,$categories_id);
     
     $languages = xtc_get_languages();
     foreach ($languages AS $lang) {
@@ -187,7 +188,7 @@ class categories {
       }
 
       //new module support
-      $sql_data_array = $this->catmodules->insert_category_desc($sql_data_array,$categories_data,$lang['id']);
+      $sql_data_array = $this->catModules->insert_category_desc($sql_data_array,$categories_data,$lang['id']);
       
       if ($action == 'insert') {
         $insert_sql_data = array ('categories_id' => $categories_id, 'language_id' => $lang['id']);
@@ -207,10 +208,24 @@ class categories {
 
     $accepted_categories_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
     $accepted_categories_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
+    
+    //are we asked to delete some pics?
+    if (isset($categories_data['del_cat_pic']) && $categories_data['del_cat_pic'] == 'yes') {
+      if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_data['categories_previous_image'])) {
+        @ unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_data['categories_previous_image']);
+      }
+      
+      $this->catModules->delete_category_image($categories_data['categories_previous_image']);
+      
+      xtc_db_query("UPDATE ".TABLE_CATEGORIES."
+                       SET categories_image = ''
+                     WHERE categories_id = '".(int) $categories_id."'");
+    }
+    
     if ($categories_image = xtc_try_upload('categories_image', DIR_FS_CATALOG_IMAGES.'categories/', '777', $accepted_categories_image_files_extensions, $accepted_categories_image_files_mime_types)) {
       $cname_arr = explode('.', $categories_image->filename);
       $cnsuffix = array_pop($cname_arr);
-      $categories_image_name = $categories_id.'.'.$cnsuffix;
+      $categories_image_name = $categories_image_name_process = $this->image_name($categories_id, '', $cnsuffix, $cname_arr);
       if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image_name)) {
         @ unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image_name);
       }
@@ -218,17 +233,11 @@ class categories {
       xtc_db_query("UPDATE ".TABLE_CATEGORIES."
                        SET categories_image = '".xtc_db_input($categories_image_name)."'
                      WHERE categories_id = '".(int) $categories_id."'");
+                     
+      //categories image processing
+      $this->catModules->categories_image_process($categories_image_name, $categories_image_name_process);
     }
-
-    if (isset($categories_data['del_cat_pic']) && $categories_data['del_cat_pic'] == 'yes') {
-      if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_data['categories_previous_image'])) {
-        @ unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_data['categories_previous_image']);
-      }
-      xtc_db_query("UPDATE ".TABLE_CATEGORIES."
-                       SET categories_image = ''
-                     WHERE categories_id = '".(int) $categories_id."'");
-    }
-    
+   
     return $categories_id;
   }
 
@@ -279,7 +288,7 @@ class categories {
       $sql_data_array = $ccopy_values;
 
       //new module support
-      $sql_data_array = $this->catmodules->copy_category($sql_data_array,$src_category_id,$dest_category_id,$ctype);
+      $sql_data_array = $this->catModules->copy_category($sql_data_array,$src_category_id,$dest_category_id,$ctype);
   
       //set new data
       unset($sql_data_array['categories_id']);
@@ -315,9 +324,11 @@ class categories {
       if (is_file($src_pic)) {
         $get_suffix = explode('.', $ccopy_values['categories_image']);
         $suffix = array_pop($get_suffix);
-        $dest_pic = $new_cat_id.'.'.$suffix;
+        $dest_pic = $this->image_name($new_cat_id, '', $suffix, $get_suffix, $src_category_id);
         @copy($src_pic, DIR_FS_CATALOG_IMAGES.'categories/'.$dest_pic);
         @chmod(DIR_FS_CATALOG_IMAGES.'categories/'.$dest_pic, 0644);
+
+        $this->catModules->copy_category_image($src_pic,$dest_pic);
 
         //write to DB
         xtc_db_query("UPDATE ".TABLE_CATEGORIES." 
@@ -334,7 +345,7 @@ class categories {
       while ($cdcopy_values = xtc_db_fetch_array($cdcopy_query)) {
         $sql_data_array = $cdcopy_values;
         //new module support
-        $sql_data_array = $this->catmodules->copy_category_desc($sql_data_array,$src_category_id,$dest_category_id,$ctype,$new_cat_id);
+        $sql_data_array = $this->catModules->copy_category_desc($sql_data_array,$src_category_id,$dest_category_id,$ctype,$new_cat_id);
         //set new descriptions (overrides)
         $sql_data_array['categories_id'] = $new_cat_id;
         //write descriptions to DB
@@ -420,7 +431,7 @@ class categories {
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
     }
     //new module support
-    $this->catmodules->remove_product($product_id);
+    $this->catModules->remove_product($product_id);
 
     $customers_statuses_array = xtc_get_customers_statuses();
     for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
@@ -455,7 +466,7 @@ class categories {
       $this->remove_product($product_id);
     }
     //new module support
-    $this->catmodules->remove_product($product_id,$product_categories);
+    $this->catModules->remove_product($product_id,$product_categories);
   }
 
 
@@ -567,7 +578,7 @@ class categories {
     }
 
     //new module support
-    $sql_data_array = $this->catmodules->insert_product_before($sql_data_array,$products_data);
+    $sql_data_array = $this->catModules->insert_product_before($sql_data_array,$products_data);
     
     if ($action == 'insert') {
       $insert_sql_data = array ('products_date_added' => 'now()');
@@ -601,7 +612,7 @@ class categories {
     }
 
     //new module support 
-    $this->catmodules->insert_product_after($products_data,$products_id);
+    $this->catModules->insert_product_after($products_data,$products_id);
     
     $languages = xtc_get_languages();
     // Here we go, lets write Group prices into db
@@ -710,7 +721,7 @@ class categories {
       }
       
       //new module support
-      $sql_data_array = $this->catmodules->insert_product_desc($sql_data_array,$products_data,$language_id);
+      $sql_data_array = $this->catModules->insert_product_desc($sql_data_array,$products_data,$language_id);
    
       if ($action == 'insert') {
         $insert_sql_data = array ('products_id' => $products_id, 'language_id' => $language_id);
@@ -750,7 +761,7 @@ class categories {
     $sql_data_array = $product;
     
     //new module support
-    $sql_data_array = $this->catmodules->duplicate_product_before($sql_data_array,$src_products_id,$dest_categories_id);
+    $sql_data_array = $this->catModules->duplicate_product_before($sql_data_array,$src_products_id,$dest_categories_id);
     
     //set new data (overrides)
     unset($sql_data_array['products_id']);
@@ -771,7 +782,7 @@ class categories {
       //build new image_name for duplicate
       $pname_arr = explode('.', $product['products_image']);
       $nsuffix = array_pop($pname_arr);
-      $dup_products_image_name = $this->image_name($this->dup_products_id, 0, $nsuffix);
+      $dup_products_image_name = $this->image_name($this->dup_products_id, 0, $nsuffix, $pname_arr, $src_products_id);
 
       //write to DB
       xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
@@ -788,7 +799,7 @@ class categories {
     }
 
     //new module support
-    $sql_data_array = $this->catmodules->duplicate_product_after($sql_data_array,$src_products_id,$dest_categories_id,$this->dup_products_id);
+    $sql_data_array = $this->catModules->duplicate_product_after($sql_data_array,$src_products_id,$dest_categories_id,$this->dup_products_id);
     //get description data
     $description_query = xtc_db_query("SELECT * 
                                          FROM ".TABLE_PRODUCTS_DESCRIPTION."
@@ -798,7 +809,7 @@ class categories {
       //copy description data
       $sql_data_array = $description;
       //new module support
-      $sql_data_array = $this->catmodules->duplicate_product_desc($sql_data_array,$src_products_id,$dest_categories_id,$this->dup_products_id);
+      $sql_data_array = $this->catModules->duplicate_product_desc($sql_data_array,$src_products_id,$dest_categories_id,$this->dup_products_id);
       //set description data (overrides)
       $sql_data_array['products_id'] = $this->dup_products_id;
       $sql_data_array['products_viewed'] = 0;
@@ -817,7 +828,7 @@ class categories {
         //build new image_name for duplicate
         $pname_arr = explode('.', $mo_img['image_name']);
         $nsuffix = array_pop($pname_arr);
-        $dup_products_image_name = $this->image_name($this->dup_products_id, $mo_img['image_nr'], $nsuffix);
+        $dup_products_image_name = $this->image_name($this->dup_products_id, $mo_img['image_nr'], $nsuffix, $pname_arr, $src_products_id);
         //copy org images to duplicate
         @ copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$mo_img['image_name'], DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$dup_products_image_name);
         @ copy(DIR_FS_CATALOG_INFO_IMAGES.'/'.$mo_img['image_name'], DIR_FS_CATALOG_INFO_IMAGES.'/'.$dup_products_image_name);
@@ -1183,7 +1194,7 @@ class categories {
     if ($products_image = xtc_try_upload('products_image', DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_products_image_files_extensions, $accepted_products_image_files_mime_types)) {
       $pname_arr = explode('.', $products_image->filename);
       $nsuffix = array_pop($pname_arr);
-      $products_image_name = $products_image_name_process = $this->image_name($products_id, 0, $nsuffix);
+      $products_image_name = $products_image_name_process = $this->image_name($products_id, 0, $nsuffix, $pname_arr);
       $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                         FROM ".TABLE_PRODUCTS."
                                        WHERE products_image = '".xtc_db_input($products_data['products_previous_image_0'])."'");
@@ -1236,7 +1247,7 @@ class categories {
       if ($pIMG = xtc_try_upload('mo_pics_'.$img, DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_mo_pics_image_files_extensions, $accepted_mo_pics_image_files_mime_types)) {
         $pname_arr = explode('.', $pIMG->filename);
         $nsuffix = array_pop($pname_arr);
-        $products_image_name = $products_image_name_process = $this->image_name($products_id, ($img +1), $nsuffix);
+        $products_image_name = $products_image_name_process = $this->image_name($products_id, ($img +1), $nsuffix, $pname_arr);
         $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                            FROM ".TABLE_PRODUCTS_IMAGES."
                                           WHERE image_name = '".xtc_db_input($products_data['products_previous_image_'. ($img +1)])."'");
@@ -1273,8 +1284,12 @@ class categories {
   }
   
   
-  function image_name($products_id, $counter, $suffix) {
-    return $products_id.'_'.$counter.'.'.$suffix;
+  function image_name($products_id, $counter, $suffix, $pname_arr = array(), $srcID = false) {
+    $separator = ($counter != '' ? '_' : '');
+    $image_name = $products_id.$separator.$counter.'.'.$suffix;
+    //new module support
+    $image_name = $this->catModules->image_name($image_name,$products_id, $counter, $suffix, $pname_arr, $srcID);
+    return $image_name;
   }
   
   
