@@ -74,24 +74,54 @@
   xtc_db_connect() or die('Unable to connect to database server!');
 
   //Start Session
-  session_name('dbdump');
-  if(!isset($_SESSION)) {
-    session_start();
+  @ini_set('session.use_only_cookies', 1);
+  require(DIR_WS_FUNCTIONS . 'sessions.php');
+  xtc_session_name('MODsid');
+  $session_started = xtc_session_start();
+  // verfiy SECURE Token
+  if (is_array($_POST) && count($_POST) > 0) {
+    if (isset($_POST[$_SESSION['SECName']])) {
+      if ($_POST[$_SESSION['SECName']] != $_SESSION['SECToken']) {
+        trigger_error("SECToken manipulation.\n".print_r($_POST, true), E_USER_WARNING);
+        unset($_POST);
+        unset($_GET['action']);
+        unset($_GET['saction']);
+        die('Direct Access to this location is not allowed.');
+
+      }
+    } else {
+      trigger_error("SECToken not defined.\n".print_r($_POST, true), E_USER_WARNING);
+      //echo '<pre>SESSION:' .print_r($_SESSION,1). '</pre>';
+      //echo '<pre>SECName:' .$_SESSION['SECName']. '</pre>';
+      //echo '<pre>SECToken:' .$_SESSION['SECToken']. '</pre>';
+      //echo '<pre>POST:' .print_r($_POST,1). '</pre>';
+      unset($_POST);
+      unset($_GET['action']);
+      unset($_GET['saction']);
+      die('Direct Access to this location is not allowed.');
+    }
+  } else {
+    die('Direct Access to this location is not allowed.');
   }
-
+  
   // set the language
-  if (!isset($_SESSION['language']) || isset($_GET['language'])) {
-
-    include(DIR_WS_CLASSES . 'language.php');
-    $lng = new language($_GET['language']);
-
-    if (!isset($_GET['language']))
-      $lng->get_browser_language();
-
+  if (!isset($_SESSION['language']) || isset($_GET['language']) || (isset($_SESSION['language']) && !isset($_SESSION['language_charset']))) {
+    include (DIR_WS_CLASSES.'language.php');
+    if (isset($_GET['language'])) {
+      $_GET['language'] = xtc_input_validation($_GET['language'], 'char', '');
+      $lng = new language($_GET['language']);
+    } elseif (isset($_SESSION['language'])) {
+      $lng = new language(xtc_input_validation($_SESSION['language'], 'char', ''));
+    } else {
+      $lng = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'char', ''));
+      if (defined('USE_BROWSER_LANGUAGE') && USE_BROWSER_LANGUAGE == 'true') {
+        $lng->get_browser_language();
+      }
+    }
     $_SESSION['language'] = $lng->language['directory'];
     $_SESSION['languages_id'] = $lng->language['id'];
-    $_SESSION['language_code'] = $lng->language['code']; //web28 - 2010-09-05 - add $_SESSION['language_code']
     $_SESSION['language_charset'] = $lng->language['language_charset'];
+    $_SESSION['language_code'] = $lng->language['code'];
   }
 
   // include the language translations
@@ -113,6 +143,8 @@
   $button_back = '';
 
   //#### RESTORE ANFANG ########
+  $restore = array();
+  $restore['file'] = '';
   if (isset($_SESSION['restore'])) {
     $restore=$_SESSION['restore'];
   }
@@ -134,10 +166,12 @@
       @xtc_db_query("SET SESSION sql_mode=''");
     }
     //EOF Disable "STRICT" mode!
+    $_GET['file'] = isset($_GET['file']) ? basename($_GET['file']) : '';
+    $_GET['file'] = preg_replace('/[^0-9a-zA-Z._-]/','',$_GET['file']);
     $restore['file'] = DIR_FS_BACKUP . $_GET['file'];
 
     //Testen ob Backupdatei existiert, bei nein Abbruch
-    if (!file_exists($restore['file'])) {
+    if (!is_file($restore['file'])) {
       die('Direct Access to this location is not allowed.');
     }
 
@@ -148,7 +182,7 @@
     } else {
       $protdatei = $restore['file'] . '.log';
     }
-    if (RESTORE_TEST && file_exists($protdatei) ) {
+    if (RESTORE_TEST && is_file($protdatei) ) {
       unlink ($protdatei);
     }
     $extension = substr($_GET['file'], -3);
@@ -162,7 +196,7 @@
   }
 
   //Testen ob Backupdatei existiert, bei nein Abbruch
-  if (!file_exists($restore['file'])) {
+  if (!is_file($restore['file'])) {
     die('Direct Access to this location is not allowed.');
   }
 
@@ -222,7 +256,9 @@
     $json_output['fileEOF'] = $restore['fileEOF'] ? 1 : 0;
     $json_output['filesize'] = filesize($restore['file']);
     $json_output['offset'] = $restore['offset'];
-    $json_output[$_SESSION['CSRFName']] = $_SESSION['CSRFToken'];
+    if (isset($_SESSION['SECName']) && isset($_SESSION['SECToken'])) {
+      $json_output[$_SESSION['SECName']] = $_SESSION['SECToken'];
+    }
     
     //$restore['fileEOF'] = true;
     if ($restore['fileEOF'])  {
