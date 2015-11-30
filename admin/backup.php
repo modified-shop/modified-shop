@@ -331,6 +331,9 @@
                       if (!$check_utf8) {
                         $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('utf8-convert', 'yes', false) . ' ' . TEXT_IMPORT_UTF);
                       }
+                      $_SESSION['SECName'] = xtc_RandomString(6);
+                      $_SESSION['SECToken'] = xtc_RandomString(32);
+                      $contents[] = array('text' => '<input type="hidden" name="'.$_SESSION['SECName'].'" value="'.$_SESSION['SECToken'].'">');
                       $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_RESTORE . '"/>&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file) . '">' . BUTTON_CANCEL . '</a>');
                       break;
 
