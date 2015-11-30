@@ -274,8 +274,7 @@ class ot_coupon {
             if ($get_result['coupon_type'] != 'P') {
               $od_amount = $c_deduct;
             } else {
-              $od_amount = $amount * $xtPrice->xtcCalculateCurr($get_result['coupon_amount']) / 100; //FIX - web28 - 2012-04-24 - calculate currencies
-
+              $od_amount = $amount * $get_result['coupon_amount'] / 100; //Calculation of percentage
             }
           }
 
