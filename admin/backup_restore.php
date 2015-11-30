@@ -91,10 +91,6 @@
       }
     } else {
       trigger_error("SECToken not defined.\n".print_r($_POST, true), E_USER_WARNING);
-      //echo '<pre>SESSION:' .print_r($_SESSION,1). '</pre>';
-      //echo '<pre>SECName:' .$_SESSION['SECName']. '</pre>';
-      //echo '<pre>SECToken:' .$_SESSION['SECToken']. '</pre>';
-      //echo '<pre>POST:' .print_r($_POST,1). '</pre>';
       unset($_POST);
       unset($_GET['action']);
       unset($_GET['saction']);
