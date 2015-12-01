@@ -308,6 +308,7 @@
 
                     if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
                       echo '            <td width="25%" valign="top">' . "\n";
+                      $box = new box;
                       echo $box->infoBox($heading, $contents);
                       //BOF NEW MODULE PROCESSING
                       if ($_GET['action']=='module_processing_do') {
