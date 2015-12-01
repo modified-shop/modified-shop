@@ -234,7 +234,7 @@ class ot_payment {
   }
 
   function get_percent($payment, $type = 'percent') {
-    global $order, $xtPrice, $debug_mesages;
+    global $order, $xtPrice;
     $string = '';
     $allowed_zones = explode(',', MODULE_ORDER_TOTAL_PAYMENT_ALLOWED);
 
