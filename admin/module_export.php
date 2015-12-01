@@ -124,6 +124,7 @@
       case 'backupconfirm':
       case 'removeconfirm':
       case 'restoreconfirm':
+      case 'custom':
         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($module_class);
         if (file_exists($module_directory . $class . $file_extension)) {
@@ -145,6 +146,11 @@
             // reset backup values 
             xtc_restore_configuration($module->keys());
             $messageStack->add_session(MODULE_RESTORE_CONFIRM, 'success');
+          } elseif ($action == 'custom') {
+            // call custom method
+            if (method_exists($module,'custom') {
+              $module->custom(); 
+            }
           }
 
         }
