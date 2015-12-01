@@ -111,7 +111,7 @@
             $module->remove();
           } elseif ($action == 'custom') {
             // call custom method
-            if (method_exists($module,'custom') {
+            if (method_exists($module,'custom')) {
               $module->custom(); 
             }
           }
