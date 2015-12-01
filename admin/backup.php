@@ -331,6 +331,7 @@
                       if (!$check_utf8) {
                         $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('utf8-convert', 'yes', false) . ' ' . TEXT_IMPORT_UTF);
                       }
+                      require_once (DIR_FS_INC . 'xtc_create_password.inc.php'); // needed for xtc_RandomString
                       $_SESSION['SECName'] = xtc_RandomString(6);
                       $_SESSION['SECToken'] = xtc_RandomString(32);
                       $contents[] = array('text' => '<input type="hidden" name="'.$_SESSION['SECName'].'" value="'.$_SESSION['SECToken'].'">');

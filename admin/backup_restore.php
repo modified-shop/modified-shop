@@ -96,7 +96,7 @@
       unset($_GET['saction']);
       die('Direct Access to this location is not allowed.');
     }
-  } else {
+  } elseif (!isset($_SESSION['SECName']) || !isset($_SESSION['SECToken'])) {
     die('Direct Access to this location is not allowed.');
   }
   
