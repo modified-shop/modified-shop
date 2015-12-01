@@ -99,6 +99,7 @@
 
       case 'install':
       case 'remove':
+      case 'custom':
         $file_extension = substr(basename($_SERVER['SCRIPT_NAME']), strrpos(basename($_SERVER['SCRIPT_NAME']), '.'));
         $class = basename($_GET['module']);
         if (file_exists($module_directory . $class . $file_extension)) {
@@ -108,12 +109,18 @@
             $module->install();
           } elseif ($action == 'remove') {
             $module->remove();
+          } elseif ($action == 'custom') {
+            // call custom method
+            if (method_exists($module,'custom') {
+              $module->custom(); 
+            }
           }
         }
         xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class));
         break;
     }
   }
+
 
 
   require (DIR_WS_INCLUDES.'head.php');
