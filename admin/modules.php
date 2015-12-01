@@ -63,7 +63,6 @@
         break;
       case 'install':
       case 'remove':
-      case 'custom':
         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($_GET['module']);
         if (file_exists($module_directory . $class . $file_extension)) {
@@ -73,18 +72,12 @@
             $module->install();
           } elseif ($action == 'remove') {
             $module->remove();
-          } elseif ($action == 'custom') {
-            // call custom method
-            if (method_exists($module,'custom')) {
-              $module->custom(); 
-            }
           }
         }
         xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
         break;
     }
   }
-
 
 
 require (DIR_WS_INCLUDES.'head.php');
@@ -342,7 +335,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                     if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
                       echo '            <td width="25%" valign="top">' . "\n";
-                      echo $box->infoBox($heading, $contents);
+                      echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
                       echo '            </td>' . "\n";
                     }
                     ?>
