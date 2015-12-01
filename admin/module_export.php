@@ -428,7 +428,7 @@ if (xtc_not_null($action) && !$box) {
                     }
                     $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=save','post'));
+                    $contents = array('form' => (isset($mInfo->properties['form_edit']) ? $mInfo->properties['form_edit'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=save','post')));
                     $contents[] = array('text' => $keys);
                     // display module fields
                     $contents[] = $module->display();                          
@@ -436,7 +436,7 @@ if (xtc_not_null($action) && !$box) {
 
                 case 'restore':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=restoreconfirm'));
+                    $contents = array ('form' => (isset($mInfo->properties['form_restore']) ? $mInfo->properties['form_restore'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=restoreconfirm')));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_RESTORE);
                     if (isset($mInfo->properties['restore']) && count($mInfo->properties['restore']) > 0) {
                       foreach($mInfo->properties['restore'] as $key) {
@@ -447,7 +447,7 @@ if (xtc_not_null($action) && !$box) {
                     break;
                 case 'backup':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=backupconfirm'));
+                    $contents = array ('form' => (isset($mInfo->properties['form_backup']) ? $mInfo->properties['form_backup'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=backupconfirm')));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_BACKUP);
                     if (isset($mInfo->properties['backup']) && count($mInfo->properties['backup']) > 0) {
                       foreach($mInfo->properties['backup'] as $key) {
@@ -458,7 +458,7 @@ if (xtc_not_null($action) && !$box) {
                     break;
                 case 'remove':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=removeconfirm'));
+                    $contents = array ('form' => (isset($mInfo->properties['form_remove']) ? $mInfo->properties['form_remove'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=removeconfirm')));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_REMOVE);
                     if (isset($mInfo->properties['remove']) && count($mInfo->properties['remove']) > 0) {
                       foreach($mInfo->properties['remove'] as $key) {

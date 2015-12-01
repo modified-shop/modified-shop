@@ -1,29 +1,37 @@
 .process_inner_wrapper {
 width: 460px; 
 height: 20px; 
-background: #FFDEAD;
+background: #a3a3a3; /*#FFDEAD;*/
 display:block; 
 text-align: left;
--moz-border-radius: 4px; 
--webkit-border-radius: 4px; 
-border-radius: 4px; 
-box-shadow: 0 2px 5px #BBBBBB;
--moz-box-shadow: 0 2px 5px #BBBBBB; 
--webkit-box-shadow: 0 2px 5px #BBBBBB;
-margin: 0 auto;
-}
-
-#show_import_process {
-width: 0; 
-height: 20px; 
-background: #9DD308; 
+/*
 -moz-border-radius: 4px; 
 -webkit-border-radius: 4px; 
 border-radius: 4px;
+box-shadow: 0 2px 5px #BBBBBB;
+-moz-box-shadow: 0 2px 5px #BBBBBB; 
+-webkit-box-shadow: 0 2px 5px #BBBBBB;
+*/
+margin: 0 auto;
+}
+
+#show_image_process {
+width: 0; 
+height: 20px; 
+background: #6E9C25; /*#9DD308;*/ 
+/*
+-moz-border-radius: 4px; 
+-webkit-border-radius: 4px; 
+border-radius: 4px;
+*/
 }
 .ready_info{
 margin:10px; 
 font-family:Verdana; 
 font-size:15px; 
 text-align:center;
+}
+
+.ajax_responce, .ajax_ready_info, .ajax_btn_back{
+display: none;
 }

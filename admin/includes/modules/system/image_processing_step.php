@@ -16,7 +16,7 @@
    Contribution
    image_processing_step (step-by-step Variante B) by INSEH 2008-03-26
 
-   new javascript reload / only missing image/ max images  by web28 2011-03-17
+   new jquery image_processing / only missing image/ max images  by web28 2018-12-01
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -39,37 +39,30 @@ if ( !class_exists( "image_processing_step" ) ) {
       $this->files = array();
 
       //define used get parameters
-      $this->get_params = array('set' => $_GET['set'],
-                                'module'=> $this->code,
-                                'start'=> 0,
-                                'action' => 'module_processing_do'
-                                );
+      $this->get_params = array();
       //define used post parameters
-      $this->post_params = array('max_datasets','only_missing_images', 'lower_file_ext');
+      $this->post_params = array();
 
-      if (isset($_GET['count'])) {
-        $this->ready_text =  '<div class="ready_info">'. IMAGE_STEP_INFO . $_GET['count']. IMAGE_STEP_INFO_READY .'</div>';
-        $this->ready_text .= '<div class="process_inner_wrapper"><div id="show_import_process" style="width:100%;"></div></div>';
-      }
+      $this->properties['form_edit'] = xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=' . $this->code . '&action=custom','post', 'id="form_image_processing"');
     }
     
-    function get_images_files($offset,$limit) {
+    function get_images_files($filedir,$offset=1,$limit=1) {
       $ext_array = array('gif','jpg','jpeg','png'); //Gültige Dateiendungen
       $files = array();
       $this->data_volume = 0;
-      if ($dir = opendir(DIR_FS_CATALOG_ORIGINAL_IMAGES)) {
+      if ($dir = opendir($filedir)) {
         $max_files = 0;
         while  ($file = readdir($dir)) {
           $tmp = explode('.',$file);
           if(is_array($tmp)) {
             $ext = strtolower($tmp[count($tmp)-1]);
-            if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$file) && in_array($ext,$ext_array) ){
+            if (is_file($filedir.$file) && in_array($ext,$ext_array) ){
               if ($max_files >= $offset && $max_files < $limit) {
                 $files[$max_files]= array(
                                  'id' => $file,
                                  'text' =>$file);
               }
-              $this->data_volume += filesize(DIR_FS_CATALOG_ORIGINAL_IMAGES.$file);
+              $this->data_volume += filesize($filedir.$file);
               $max_files ++;
             }
           }
@@ -80,41 +73,37 @@ if ( !class_exists( "image_processing_step" ) ) {
       $this->files = $files;
     }
 
-    function process($file) {
-
+    function image_processing_do() {
+      
       include ('includes/classes/'.FILENAME_IMAGEMANIPULATOR);
 
-      $offset = (int)$_GET['start'];
-      $step = (int)$_GET['max_datasets'];
-      $count = isset($_GET['count']) ? (int)$_GET['count'] : 0;
+      $offset = (int)$_POST['start'];
+      $step = (int)$_POST['max_datasets'];
+      $count = isset($_POST['count']) ? (int)$_POST['count'] : 0;
       $limit = $offset + $step;
+      
+      $rData = array();
       
       @ini_set('memory_limit','256M');
       @xtc_set_time_limit(0);
       
-      $this->get_images_files($offset,$limit);
+      $this->get_images_files(DIR_FS_CATALOG_ORIGINAL_IMAGES,$offset,$limit);
       $files = $this->files;
 
       $ext_search = array('.GIF','.JPG','.JPEG','.PNG');
       $ext_replace = array('.gif','.jpg','.jpeg','.png');
-
-      for ($i=$offset; $i<$limit; $i++) {
+      
+      for ($i = $offset; $i < $limit; $i++) {
         if ($i >= $this->max_files) { // FERTIG
-          $get_params =
-            'set='. $this->get_params['set'].
-            '&action=ready'.
-            '&module='. $this->code.
-            '&count='. $count.
-            '&max_datasets='. (int)$_GET['max_datasets'].
-            '&only_missing_images='. (int)$_GET['only_missing_images'].
-            '&lower_file_ext='. (int)$_GET['lower_file_ext'];
-            
-          xtc_redirect(xtc_href_link($this->module_filename, $get_params)); //FERTIG
+          $rData['start'] = $limit;
+          $rData['count'] = $count;
+          return $rData;
+          //FERTIG
         }
         $products_image_name = $files[$i]['text'];
         $products_image_name_process = ($_GET['lower_file_ext'] == 1) ? str_replace($ext_search, $ext_replace ,$files[$i]['text']) : $files[$i]['text'];
 
-        if ($_GET['only_missing_images'] == 1) {
+        if ($_POST['only_missing_images'] == 1) {
           $flag = false;
           if (!is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$files[$i]['text'])) {
             require(DIR_WS_INCLUDES . 'product_thumbnail_images.php'); $flag = true;
@@ -135,41 +124,62 @@ if ( !class_exists( "image_processing_step" ) ) {
           $count += 1;
         }
       }
-      $this->get_params['start'] = $limit;
-      $this->get_params['count'] = $count;
-      reset($this->post_params);
-      while(list($key, $pparam) = each($this->post_params)) {
-        $this->get_params[$pparam] = $_GET[$pparam];
-      }
-      //Animierte Gif-Datei und Hinweistext
-      $info_wait = '<img src="images/loading.gif"> ';
-      $this->infotext = sprintf(MODULE_STEP_READY_STYLE_TEXT,$info_wait . IMAGE_STEP_INFO . (int)$count . ' / ' .(int)$this->max_files);
-      $percent = round($count *100/$this->max_files,1);
-      $this->infotext .= '<div class="process_inner_wrapper"><div id="show_import_process" style="width:'. $percent .'%;"></div></div>';
-      $this->recursive_call = '<script language="javascript" type="text/javascript">setTimeout("document.modul_continue.submit()", 3000);</script>';
+      $rData['start'] = $limit;
+      $rData['count'] = $count;
+      return $rData;
+    }
+    
+    function custom() {
+      $rData = $this->image_processing_do();
+      $json = array_merge($_POST,$rData);
+      echo json_encode($json);
+      exit();
+    }
+
+    function process($file) {
+      //do nothing
     }
 
     function display() {
 
       //Array für max. Bilder pro Seitenreload
-      $max_array = array (array ('id' => '5', 'text' => '5'));
+      $max_array = array (array ('id' => '1', 'text' => '1'));
+      $max_array[] = array ('id' => '5', 'text' => '5');
       $max_array[] = array ('id' => '10', 'text' => '10');
       $max_array[] = array ('id' => '15', 'text' => '15');
       $max_array[] = array ('id' => '20', 'text' => '20');
       $max_array[] = array ('id' => '50', 'text' => '50');
       
-      $this->get_images_files(1,1);
+      $this->get_images_files(DIR_FS_CATALOG_ORIGINAL_IMAGES,1,1);
+
+      require (DIR_WS_INCLUDES.'javascript/jquery.image_processing.js.php');
+      
+      $ajax_img = '<img src="images/loading.gif" class="ajax_loading"> ';
 
       return array('text' => xtc_draw_hidden_field('process','module_processing_do').
-                             xtc_draw_hidden_field('max_images1','5').
+                             xtc_draw_hidden_field('ajax_url',xtc_href_link($this->module_filename, 'set=' . $_GET['set'] . '&module='.$this->code). '&action=custom').
+                             xtc_draw_hidden_field('ajax','1').
+                             xtc_draw_hidden_field('total',$this->max_files).
+                             xtc_draw_hidden_field('start','0').
                              IMAGE_EXPORT_TYPE.'<br />'.
                              IMAGE_EXPORT.'<br />'.
                              '<br />' . sprintf(IMAGE_COUNT_INFO, basename(DIR_FS_CATALOG_ORIGINAL_IMAGES), $this->max_files) . '['.$this->formatBytes($this->data_volume).']'.'<br />'.
-                             '<br />' . xtc_draw_pull_down_menu('max_datasets', $max_array, isset($_GET['max_datasets']) ? (int)$_GET['max_datasets'] : '5'). ' ' . TEXT_MAX_IMAGES. '<br />'.
-                             '<br />' . xtc_draw_checkbox_field('only_missing_images', '1', isset($_GET['only_missing_images']) ? (int)$_GET['only_missing_images'] : false) . ' ' . TEXT_ONLY_MISSING_IMAGES. '<br />'.
-                             '<br />' . xtc_draw_checkbox_field('lower_file_ext', '1', isset($_GET['lower_file_ext']) ? (int)$_GET['lower_file_ext'] : false) . ' ' . TEXT_LOWER_FILE_EXT. '<br />'.
+                             '<br />' . xtc_draw_pull_down_menu('max_datasets', $max_array, '5'). ' ' . TEXT_MAX_IMAGES. '<br />'.
+                             '<br />' . xtc_draw_checkbox_field('only_missing_images', '1', false, '', 'class="only_missing_images"') . ' ' . TEXT_ONLY_MISSING_IMAGES. '<br />'.
+                             '<br />' . xtc_draw_checkbox_field('lower_file_ext', '1', false, '', 'class="lower_file_ext"') . ' ' . TEXT_LOWER_FILE_EXT. '<br />'.
                              '<br />' . xtc_button(BUTTON_START). '&nbsp;' .
-                             xtc_button_link(BUTTON_CANCEL, xtc_href_link($this->module_filename, 'set=' . $_GET['set'] . '&module='.$this->code))
+                             xtc_button_link(BUTTON_CANCEL, xtc_href_link($this->module_filename, 'set=' . $_GET['set'] . '&module='.$this->code)) .
+                             
+                             '<div class="ajax_responce" style="margin-bottom:15px;"><hr>'.
+                               sprintf(MODULE_STEP_READY_STYLE_TEXT,$ajax_img . IMAGE_STEP_INFO . '<span class="ajax_count"></span> / ' .(int)$this->max_files . '<span class="ajax_ready_info">' . IMAGE_STEP_INFO_READY .'<span>') . 
+                               '<div class="process_wrapper">
+                                <div class="process_inner_wrapper">
+                                  <div id="show_image_process" style="width:'. 0 .'%;"></div>
+                                </div>
+                               </div>
+                               <div class="ajax_btn_back">'.sprintf(MODULE_STEP_READY_STYLE_BACK,xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module='.$this->code))).'</div>
+                             </div>
+                             '
                    );
 
     }
