@@ -113,7 +113,7 @@
             $messageStack->add_session(MODULE_RESTORE_CONFIRM, 'success');            
           } elseif ($action == 'custom') {
             // call custom method
-            if (method_exists($module,'custom') {
+            if (method_exists($module,'custom')) {
               $module->custom(); 
             }
           }
