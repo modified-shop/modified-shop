@@ -502,7 +502,7 @@ input[type=text], input[type=password] {
 }
 
 <!--[if lte IE 8]>
-  input[type=password] { font-family: Verdana; }
+  input[type=password] { font-family: Verdana,Arial,Helvetica,sans-serif; }
 <![endif]-->
 
 input[type=radio], input[type=checkbox] {
