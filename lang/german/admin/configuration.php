@@ -719,10 +719,10 @@ define('WHOS_ONLINE_TIME_LAST_CLICK_TITLE', 'Wer ist Online - Anzeigezeitraum in
 define('WHOS_ONLINE_TIME_LAST_CLICK_DESC', 'Anzeigedauer der Online-Benutzer in der "Wer ist Online" Tabelle, nach dieser Zeit werden die Eintr&auml;ge gel&ouml;scht. (min. Wert: 900)');
 
 //sessions
-define('SESSION_LIFE_ADMIN_TITLE', 'Session Lebenszeit Admin: ');
-define('SESSION_LIFE_ADMIN_DESC', 'Zeitdauer in Sekunden nach der die Sessionzeit f&uuml;r Admins abl&auml;uft (wird ausgeloggt) - Standard 7200 ');
-define('SESSION_LIFE_CUSTOMERS_TITLE', 'Session Lebenszeit Kunden:');
-define('SESSION_LIFE_CUSTOMERS_DESC', 'Zeitdauer in Sekunden nach der die Sessionzeit f&uuml;r Kunden abl&auml;uft (wird ausgeloggt) - Standard 1440 ');
+define('SESSION_LIFE_ADMIN_TITLE', 'Session Lebenszeit Admin');
+define('SESSION_LIFE_ADMIN_DESC', 'Zeitdauer in Sekunden nach der die Sessionzeit f&uuml;r Admins abl&auml;uft (wird ausgeloggt) - Standard 7200<br />Der hier gesetzte Wert greift nur wenn das Session-Handling db-basiert ist (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />H&ouml;chstwert: 14400');
+define('SESSION_LIFE_CUSTOMERS_TITLE', 'Session Lebenszeit Kunden');
+define('SESSION_LIFE_CUSTOMERS_DESC', 'Zeitdauer in Sekunden nach der die Sessionzeit f&uuml;r Kunden abl&auml;uft (wird ausgeloggt) - Standard 1440<br />Der hier gesetzte Wert greift nur wenn das Session-Handling db-basiert ist (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />H&ouml;chstwert: 14400');
 
 //checkout confirmation options
 define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_TITLE','Bestellbest&auml;tigungsseite: Kurzbeschreibung');

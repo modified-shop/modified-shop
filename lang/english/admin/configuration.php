@@ -721,9 +721,9 @@ define ('WHOS_ONLINE_TIME_LAST_CLICK_DESC', 'Timing of online users in the "Who\
 
 //Sessions
 define ('SESSION_LIFE_ADMIN_TITLE', 'Session Lifetime Admin');
-define ('SESSION_LIFE_ADMIN_DESC', 'time in seconds after the expiry of the session time for Admins (logged out) - Default 7200');
+define ('SESSION_LIFE_ADMIN_DESC', 'Time in seconds before the session time for Admins expires (logging out) - Default 7200<br />The entered value is only applied if the session handling is db based (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />Maximum value: 14400');
 define ('SESSION_LIFE_CUSTOMERS_TITLE', 'Session lifetime customer');
-define ('SESSION_LIFE_CUSTOMERS_DESC', 'time in seconds after the expiry of the session time for customers (logging out) - Default 1440');
+define ('SESSION_LIFE_CUSTOMERS_DESC', 'Time in seconds before the session time for customers expires (logging out) - Default 1440<br />The entered value is only applied if the session handling is db based (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />Maximum value: 14400');
 
 //checkout confirmation options
 define ('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_TITLE', 'Order Confirmation page: Description');
