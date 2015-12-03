@@ -320,6 +320,10 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
   $econda = new econda();
 }
 
+// initialize the message stack for output messages
+require_once (DIR_WS_CLASSES.'message_stack.php');
+$messageStack = new messageStack;
+
 require_once (DIR_WS_INCLUDES.FILENAME_CART_ACTIONS);
 
 // who's online functions
@@ -345,10 +349,6 @@ include_once (DIR_WS_MODULES.'set_ids_by_url_parameters.php');
 require_once (DIR_WS_CLASSES.'breadcrumb.php');
 $breadcrumb = new breadcrumb;
 include_once (DIR_WS_MODULES.'create_breadcrumb.php');
-
-// initialize the message stack for output messages
-require_once (DIR_WS_CLASSES.'message_stack.php');
-$messageStack = new messageStack;
 
 // set which precautions should be checked
 define('WARN_INSTALL_EXISTENCE', 'true');
