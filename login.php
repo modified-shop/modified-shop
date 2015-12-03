@@ -56,7 +56,6 @@ if (!isset($_SESSION['customers_login_tries'])) {
   $_SESSION['customers_login_tries'] = 0;
 }
 
-$info_message = ''; 
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	$email_address = xtc_db_prepare_input($_POST['email_address']);
 	$password = xtc_db_prepare_input($_POST['password']);
@@ -173,9 +172,8 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
       if (isset($_SESSION['REFERER']) && xtc_not_null($_SESSION['REFERER']) && in_array($_SESSION['REFERER'], $redirect_array) && $_SESSION['old_customers_basket'] === false) {
         xtc_redirect(xtc_href_link($_SESSION['REFERER'], xtc_get_all_get_params(array('review_prod_id', 'action')).(isset($_GET['review_prod_id']) ? 'products_id=' .$_GET['review_prod_id'] : ''))); 
       } elseif ($_SESSION['cart']->count_contents() > 0) {
-        $info_message = '';
-        if ($_SESSION['old_customers_basket'] === true) {
-          unset($_SESSION['old_customers_basket']);
+        if ($_SESSION['old_customers_basket_cart'] === true) {
+          unset($_SESSION['old_customers_basket_cart']);
           $messageStack->add_session('info_message_3', TEXT_SAVED_BASKET);
         }
         xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART),'NONSSL'); 
