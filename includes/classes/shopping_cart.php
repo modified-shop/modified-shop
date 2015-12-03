@@ -110,7 +110,7 @@ class shoppingCart {
     }
 
     // restore saved content
-    $_SESSION['old_customers_basket'] = false;
+    $_SESSION['old_customers_basket_'.$this->type] = false;
     $products_query = xtc_db_query("SELECT products_id,
                                            customers_basket_quantity
                                       FROM ".$this->table_basket."
@@ -137,7 +137,7 @@ class shoppingCart {
             }
           }
           if ($this->get_quantity($products['products_id']) > 0) {
-            $_SESSION['old_customers_basket'] = true;
+            $_SESSION['old_customers_basket_'.$this->type] = true;
           }
         } else {
           // no permission
