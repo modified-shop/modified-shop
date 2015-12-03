@@ -47,7 +47,8 @@ if ($_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_ST
   $products = $_SESSION['cart']->get_products();
   for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
     if (preg_match('/^GIFT/', addslashes($products[$i]['model']))) {
-      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message=guest_voucher_not_allowed', 'SSL'));
+      $messageStack->add_session('shopping_cart', GUEST_VOUCHER_NOT_ALLOWED);
+      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
     }
   }
 }

@@ -176,7 +176,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
         xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $check_customer['customers_id']."'");
         
         // redirect to login
-        xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'info_message=SUCCESS_PASSWORD_UPDATED', 'SSL'));
+        $messageStack->add_session('login', SUCCESS_PASSWORD_UPDATED);
+        xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
       }
     }
   }

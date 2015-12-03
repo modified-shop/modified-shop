@@ -115,12 +115,12 @@ if(!isset($_SESSION['paypal_warten'])) {
 if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
   $messageStack->add('shopping_cart', get_message('info_message'));
 }
-if (isset($_GET['info_message_3'])) {
-  $smarty->assign('info_message_3', get_message('info_message_3'));
+if ($messageStack->size('info_message_3') > 0) {
+  $smarty->assign('info_message_3', $messageStack->output('info_message_3'));
 }
 // compatibility for old template
-if (isset($_GET['coupon_message']) && xtc_not_null($_GET['coupon_message'])) {
-  $smarty->assign('coupon_message', get_message('coupon_message'));
+if ($messageStack->size('coupon_message') > 0) {
+  $smarty->assign('coupon_message', $messageStack->output('coupon_message'));
 }
 // coupon min order info
 if (isset($cc_amount_min_order_info)) {

@@ -71,13 +71,12 @@ $cc_check = isset($_SESSION['cc_amount_min_order']) && $_SESSION['cc_amount_min_
 if (isset($_SESSION['cc_post']) && !$cc_check) {
   unset($_SESSION['cc_id']); 
   unset($_SESSION['cc_post']);   
-  $_GET['info'] = 0;
   unset($_GET['info_message']);
   $cc_amount_min_order_info = sprintf(ERROR_INVALID_MINIMUM_ORDER_COUPON,$xtPrice->xtcFormat($_SESSION['cc_amount_min_order'],true)).ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD;
 }
 
-if (isset($_GET['coupon_message']) && xtc_not_null($_GET['coupon_message'])) {
-  $gift_smarty->assign('coupon_message', get_message('coupon_message'));
+if ($messageStack->size('coupon_message') > 0) {
+  $gift_smarty->assign('coupon_message', $messageStack->output('coupon_message'));
 }
 $gift_smarty->assign('LINK_ACCOUNT', xtc_href_link(FILENAME_CREATE_ACCOUNT,'','SSL'));
 $gift_smarty->assign('FORM_ACTION', xtc_draw_form('gift_coupon', xtc_href_link(FILENAME_SHOPPING_CART, 'action=check_gift', $request_type)));

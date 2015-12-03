@@ -176,9 +176,9 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
         $info_message = '';
         if ($_SESSION['old_customers_basket'] === true) {
           unset($_SESSION['old_customers_basket']);
-          $info_message = 'info_message_3='.strtolower('TEXT_SAVED_BASKET');
+          $messageStack->add_session('info_message_3', TEXT_SAVED_BASKET);
         }
-        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, $info_message),'NONSSL'); 
+        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART),'NONSSL'); 
       } else {          
         xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');           
       } 
@@ -196,7 +196,9 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 $breadcrumb->add(NAVBAR_TITLE_LOGIN, xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 require (DIR_WS_INCLUDES.'header.php');
 
-$smarty->assign('info_message', (isset($_GET['info_message']) ? get_message('info_message') : $info_message));
+if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
+  $messageStack->add('login', get_message('info_message'));
+}
 
 if ($messageStack->size('login') > 0) {
 	$smarty->assign('info_message', $messageStack->output('login'));
