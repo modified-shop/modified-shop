@@ -147,27 +147,34 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
   } else if ($free_shipping_freeamount) {
     $shipping_content[] = array(
       'NAME' => $quote['module'] . ' - ' . $quote['methods'][0]['title'],
-      'VALUE' => $xtPrice->xtcFormat(0, true, 0, true)
+      'VALUE' => $xtPrice->xtcFormat(0, true, 0, true),
+      'QUOTE' => $quote
     );
   } else {
     if ($has_freeamount) {
       $module_smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER, true, 0, true)));
     }
     $i = 0;
-    foreach ($quotes AS $quote) {
+    foreach ($quotes as $quote) {
       if ($quote['id'] != 'freeamount') {
         //BOC web28 Error Fix
         if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {
           $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
-          $total += ((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0'));
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || $_SESSION['customers_status']['customers_status_add_tax_ot'] != 1) { 
+            $quotes['tax'] = 0;
+          }
+          $value = ((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0'));
+          $total += $value;
           $shipping_content[$i] = array(
             'NAME' => $quote['module'] . ' - ' . $quote['methods'][0]['title'],
-            'VALUE' => $xtPrice->xtcFormat(((isset($quote['tax']) && $quote['tax'] > 0 && ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1 or ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1))) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0')), true)
+            'VALUE' => $xtPrice->xtcFormat($value, true),
+            'QUOTE' => $quote
           );
         } else {
           $shipping_content[$i] = array(
             'NAME' => $quote['module'] . ' - ' . $quote['error'],
-            'VALUE' => ''
+            'VALUE' => '',
+            'QUOTE' => $quote
           );
         }
         //EOC web28 Error Fix
