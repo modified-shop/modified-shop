@@ -160,7 +160,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
         //BOC web28 Error Fix
         if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {
           $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || $_SESSION['customers_status']['customers_status_add_tax_ot'] != 1) { 
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quote['tax'])) { 
             $quote['tax'] = 0;
           }
           $value = ((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0'));
