@@ -6,9 +6,9 @@ $submenutabactiv = '';
 if ($set == 'product') {
   $submenutabactiv = ' activ';
   $module_type = 'product';
-  $module_directory = DIR_FS_CATALOG.'includes/extra/classes/product/';
-  $module_directory_include = DIR_FS_CATALOG.DIR_WS_MODULES . 'product/';
-  $module_key = 'MODULE_PRODUCT_INSTALLED';
+  $module_key = 'MODULE_'.strtoupper($module_type).'_INSTALLED';
+  $module_directory = DIR_FS_CATALOG.DIR_WS_MODULES .$module_type.'/';
+  $module_directory_include = DIR_FS_CATALOG.DIR_WS_MODULES .$module_type.'/';
   //define('HEADING_TITLE', 'Klassenerweiterungen "product"');
   $check_language_file = false;
 }

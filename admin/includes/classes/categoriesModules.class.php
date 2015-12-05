@@ -1,14 +1,16 @@
 <?php
 
+defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
 class categoriesModules {
     var $modules;
+    
     function __construct()
     {
-        $module_directory = DIR_FS_ADMIN.'includes/extra/classes/categories/';
+        $module_directory = DIR_FS_ADMIN.'includes/modules/categories/';
         $this->modules = array();
         if (defined('MODULE_CATEGORIES_INSTALLED') && xtc_not_null(MODULE_CATEGORIES_INSTALLED)) {
           $modules = explode(';', MODULE_CATEGORIES_INSTALLED);
-          //echo '<pre>'.print_r($modules,true).'</pre>';
           foreach($modules as $file) {
             if (is_file($module_directory . $file)) {
               include_once($module_directory . $file);
@@ -23,20 +25,16 @@ class categoriesModules {
     
     function call_module_method()
     {
-        $arg_list = func_get_args(); //Liefert die der aufrufenden Funktion übergebenen Argumente als Array. 
+        $arg_list = func_get_args();
         $function_call = $this->function_call;
-        //echo '<pre>'.print_r($arg_list,true).'</pre>';
-        //echo '<pre>'.$function_call.'</pre>';
         if (is_array($this->modules)) {
             reset($this->modules);
             foreach($this->modules as $class) {
-                //echo  '<pre>'.$class.'</pre>';
                 if (is_callable(array($GLOBALS[$class], $function_call))) {
                     $arg_list[0] = call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
                 }
             }
         }
-        //echo '<pre>'.print_r($arg_list[0],true).'</pre>';EXIT;
         return $arg_list[0];  //Returns only first parameter
     }
 
