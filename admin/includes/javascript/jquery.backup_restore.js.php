@@ -46,7 +46,7 @@ function JStoPHPResponse(data) {
     
     var data_ok = '<div><b>' + 'Tabellen wiederhergestellt: ' + (response.table_ready) + '</b></div>';
     if (response.actual_table != '') {
-      data_ok += '<div><b>' + '<br />Aktuell in Bearbeitung:: ' + response.actual_table + '</b></div>';
+      data_ok += '<div><b>' + '<br />Aktuell in Bearbeitung: ' + response.actual_table + '</b></div>';
     }
     data_ok += '<div><b>' + '<br />Seitenaufrufe: ' + response.aufruf + '</b></div>';
     data_ok += '<div><b>' + '<br />Scriptlaufzeit: ' +  response.time  + '</b></div>';
@@ -74,7 +74,8 @@ function JStoPHPResponse(data) {
       if (maxReloadsText != '') infoText = maxReloadsText;
       $('#info_text').html(infoText);
     
-      var button_back = '<a href="../login.php<?php echo SID ? '?'. SID : '';?>" class="button">Login</a>';
+      //var button_back = '<a href="../login.php<?php echo SID ? '?'. SID : '';?>" class="button">Login</a>';
+      var button_back = '<a href="backup.php<?php echo SID ? '?'. SID : '';?>" class="button">'+ '<?php echo BUTTON_BACK;?>' +'</a>';
       $('#button_back').html(button_back);
       
     }
