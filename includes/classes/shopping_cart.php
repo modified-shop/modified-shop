@@ -28,7 +28,7 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-
+   
 //new module support
 require_once (DIR_FS_CATALOG.'includes/classes/shopping_cartModules.class.php');
 $scModules = new shoppingCartModules();
@@ -497,10 +497,10 @@ class shoppingCart {
           while (list ($option, $value) = each($this->contents[$products_id]['attributes'])) {
             $values = $xtPrice->xtcGetOptionPrice($product['products_id'], $option, $value);
             //new module support       
-            $values['price'] = shoppingCartModules::calculate_option_price($values['price'], $value, $products_id, $qty);
+            $values['price'] = shoppingCartModules::calculate_option_price($values['price'], $option, $value, $products_id, $qty);
             $this->weight += $values['weight'] * $qty;
             $this->total += $values['price'] * $qty;
-            $attribute_price+=$values['price'];
+            //$attribute_price+=$values['price'];
           }
         }
 
@@ -571,7 +571,7 @@ class shoppingCart {
       while (list ($option, $value) = each($this->contents[$products_id]['attributes'])) {
         $values = $xtPrice->xtcGetOptionPrice($products_id, $option, $value);
         //new module support   
-        $values['price'] = shoppingCartModules::calculate_option_price($values['price'], $value, $products_id,$qty);
+        $values['price'] = shoppingCartModules::calculate_option_price($values['price'], $option, $value, $products_id, $qty);
         $attributes_price += $values['price'];
         $attributes_weight += $values['weight'];
       }
@@ -642,7 +642,7 @@ class shoppingCart {
             //new module support                                    
             $products_price = shoppingCartModules::calculate_product_price($products_price, $products, $this->contents);
         
-            $this->attributes_price($products_id);
+            $this->attributes_price($products_id,$this->contents[$products_id]['qty']);
             $products_data = array();
             foreach ($products as $key => $value) {
               $products_data[str_replace('products_', '', $key)] = $value;

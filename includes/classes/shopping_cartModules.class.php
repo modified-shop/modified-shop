@@ -100,10 +100,10 @@ class shoppingCartModules {
         return self::call_module_method($products_price, $product, $contents);
     }
     
-    public static function calculate_option_price($price, $value, $products_id, $qty)
+    public static function calculate_option_price($price, $option, $value, $products_id, $qty)
     {
         self::$function_call = 'calculate_option_price';
-        return self::call_module_method($price, $value, $products_id, $qty);
+        return self::call_module_method($price, $option, $value, $products_id, $qty);
     }
     
     public static function get_uprid_value($value,$option)
