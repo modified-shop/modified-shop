@@ -578,4 +578,6 @@ define('TEXT_ACCOUNTING_INFO','The main admin [1] cannot be deprived of the acce
 define('JAVASCRIPT_DISABLED_INFO', 'JavaScript seem to be disabled in your browser. Enable JavaScript to be able to use all functions of this site and all site content');
 
 define('BOX_MODULE_TYPE', 'Class Extensions Modules');
+
+define('MULTIPLE_INSTALLATION', '<span style="color:red">[Multiple Installation: %s]</span>');
 ?>

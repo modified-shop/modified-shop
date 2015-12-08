@@ -578,4 +578,6 @@ define('TEXT_ACCOUNTING_INFO','Dem Hauptadmin [1] k&ouml;nnen die Zugriffsrechte
 define('JAVASCRIPT_DISABLED_INFO', 'JavaScript ist in Ihrem Browser deaktiviert. Aktivieren Sie JavaScript, um alle Funktionen dieser Webseite nutzen und alle Inhalte sehen zu k&ouml;nnen.');
 
 define('BOX_MODULE_TYPE', 'Klassenerweiterungen Module');
+
+define('MULTIPLE_INSTALLATION', '<span style="color:red">[Mehrfachinstallation: %s]</span>');
 ?>
