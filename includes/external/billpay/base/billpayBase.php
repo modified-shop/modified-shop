@@ -13,7 +13,7 @@ if (!class_exists('billpayBase')) {
      */
     class billpayBase {
 
-        const VERSION = '1.7.2'; // replaced by grunt build script
+        const VERSION = '1.7.3'; // replaced by grunt build script
         const PAYMENT_METHOD_INVOICE = 'BILLPAY';
         const PAYMENT_METHOD_DEBIT = 'BILLPAYDEBIT';
         const PAYMENT_METHOD_TRANSACTION_CREDIT = 'BILLPAYTRANSACTIONCREDIT';
@@ -681,21 +681,9 @@ HEREDOC;
 
             $billpayScript = <<<JAVASCRIPT
 <script type="text/javascript">
-(function(win, doc, requireSrc, mainSrc, objectName){
-    win['BillPayCheckout'] = objectName;
-    win[objectName] = win[objectName] || function() {
-        (win[objectName].queue = win[objectName].queue || []).push(arguments)
-    };
+// live
+var bpyReq={},appPath="//widgetcdn.billpay.de/checkout/1.x.x/";!function(e,a,t,n){bpyReq={deps:["main"],baseUrl:t,skipDataMain:!0,callback:function(){}},e.BillPayCheckout=n,e[n]=e[n]||function(){(e[n].queue=e[n].queue||[]).push(arguments)};var c=a.createElement("script");c.src=t+"require.js",a.getElementsByTagName("head")[0].appendChild(c)}(window,document,appPath,"billpayCheckout");
 
-    var script    = doc.getElementsByTagName('script')[0],
-        requireJs = doc.createElement('script');
-    requireJs.async = 1;
-    requireJs.src = requireSrc;
-    requireJs.setAttribute('data-main', mainSrc);
-
-    script.parentNode.insertBefore(requireJs, script)
-})(window, document, '//widgetcdn.billpay.de/checkout/1.x.x/require.js',
-                     '//widgetcdn.billpay.de/checkout/1.x.x/main.js', 'billpayCheckout');
 billpayCheckout('options', {
     "checkout": {"form": "#checkout_payment"},
     "validateOn": ".continue_button",
@@ -896,11 +884,8 @@ JAVASCRIPT;
         private function _set_shipping_details($req) {
             $delivery = BillpayOrder::getCustomerBilling();
             $phone = BillpayOrder::getCustomerPhone();
-            if (empty($phone)) {
-                $phone = $_POST[strtolower($this->_paymentIdentifier) . "_phone"];
-            }
             $req->set_shipping_details(FALSE,
-                billpayBase::EnsureUTF8($this->_getCustomerSalutation($this->_getDataIdentifier('gender', $_POST))),
+                billpayBase::EnsureUTF8($this->_getCustomerSalutation($this->_getDataIdentifier('gender', $_POST))), // TODO: change into standard
                 '', // title
                 billpayBase::EnsureUTF8($delivery['firstName']),
                 billpayBase::EnsureUTF8($delivery['lastName']),

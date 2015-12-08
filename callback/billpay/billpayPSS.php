@@ -8,7 +8,7 @@
  * @param $_GET['pid']              ''          Portal ID
  * @param $_GET['bpsecure']         ''          Md5(bpsecure)
  */
-chdir('../../');
+chdir($_SERVER['DOCUMENT_ROOT']);
 /** @noinspection PhpIncludeInspection */
 include('includes/application_top.php');
 /** @noinspection PhpIncludeInspection */
@@ -55,7 +55,7 @@ class BillpayPSS
         if ($this->data['auth'] != $auth) {
             $this->billpay->_logError("Plugin Status Screen: Invalid authentication.");
 
-            if (false) {
+            if (true) {
                 $this->billpay->_logDebug("Should use: $auth\n");
             }
             die('Invalid authentication.');
