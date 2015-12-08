@@ -47,6 +47,11 @@
     var $info, $totals, $products, $customer, $delivery, $content_type;
 
     function __construct($order_id = '') {
+      
+      //new module support
+      require_once (DIR_FS_CATALOG.'includes/classes/orderModules.class.php');
+      $this->orderModules = new orderModules();
+      
       //global $xtPrice;
       $this->info = array();
       $this->totals = array();
@@ -220,6 +225,9 @@
           while ($attributes = xtc_db_fetch_array($attributes_query)) {
             // build attributes array dynamically
             $this->products[$index]['attributes'][$subindex] = $attributes;
+            
+            //new module support
+            $this->products[$index]['attributes'][$subindex] = $this->orderModules->add_attributes($this->products[$index]['attributes'][$subindex],$attributes);
             $subindex++;
           }
         }
@@ -572,8 +580,12 @@
               $this->products[$index]['attributes'][$subindex][str_replace('attributes_', '', $key)] = $val;
             }
 
+            //new module support
+            $this->products[$index]['attributes'][$subindex] = $this->orderModules->cart_attributes($this->products[$index]['attributes'][$subindex],$attributes,$products[$i]['id'],$value);
+  
             $subindex++;
           }
+          $this->products[$i]['attributes'] = array_merge($this->products[$i]['attributes']); //index correction needed in "for loops"
           if($check_attributes_model === true && count($attributes_model) > 0) {
           	$attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
           	$this->products[$index]['model'] = implode($attr_model_delimiter, $attributes_model);
