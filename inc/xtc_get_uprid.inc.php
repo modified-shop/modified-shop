@@ -27,6 +27,8 @@
 
         reset($params);
         while (list($option, $value) = each($params)) {
+          //new module support 
+          $value = (class_exists('shoppingCartModules') ? shoppingCartModules::get_uprid_value($value,$option) : $value);
           if (is_numeric($option) && is_numeric($value)) {
             $attributes_ids .= '{' . (int)$option . '}' . (int)$value;
           } else {
@@ -71,5 +73,4 @@
 
     return $uprid;
   }
-  
 ?>
