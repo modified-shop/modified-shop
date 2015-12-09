@@ -18,6 +18,7 @@
 // Return a product ID with attributes
 
   function xtc_get_uprid($prid, $params) {
+    global $scModules;
     if (is_numeric($prid)) {
       $uprid = $prid;
 
@@ -28,7 +29,7 @@
         reset($params);
         while (list($option, $value) = each($params)) {
           //new module support 
-          $value = (class_exists('shoppingCartModules') ? shoppingCartModules::get_uprid_value($value,$option) : $value);
+          $value = (class_exists('shoppingCartModules') ? $scModules->get_uprid_value($value,$option) : $value);
           if (is_numeric($option) && is_numeric($value)) {
             $attributes_ids .= '{' . (int)$option . '}' . (int)$value;
           } else {
