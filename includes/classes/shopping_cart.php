@@ -39,9 +39,11 @@ require_once (DIR_FS_INC.'xtc_get_prid.inc.php');
 require_once (DIR_FS_INC.'xtc_get_tax_description.inc.php');
 
 class shoppingCart {
-  var $contents, $total, $weight, $cartID, $content_type, $attr_price, $attr_weight, $type, $table_basket, $table_basket_attributes;
+  var $contents, $total, $weight, $cartID, $content_type, $attr_price, $attr_weight, $type, $table_basket, $table_basket_attributes, $shoppingCartModules;
   
   function __construct($type = 'cart') {
+    global $scModules;
+    $this->shoppingCartModules = new shoppingCartModules();
     
     $this->type = $type;
     
@@ -87,7 +89,7 @@ class shoppingCart {
                                     'customers_basket_date_added' => 'now()'
                                    );
             //new module support    
-            $sql_data_array = shoppingCartModules::restore_contents_products_db($sql_data_array,$products_id,$this->table_basket,$qty,$this->type);
+            $sql_data_array = $this->shoppingCartModules->restore_contents_products_db($sql_data_array,$products_id,$this->table_basket,$qty,$this->type);
             xtc_db_perform($this->table_basket, $sql_data_array);
 
             if (isset($this->contents[$products_id]['attributes'])) {
@@ -99,7 +101,7 @@ class shoppingCart {
                                         'products_options_value_id' => (int)$value
                                        );
                 //new module support    
-                $sql_data_array = shoppingCartModules::restore_contents_attributes_db($sql_data_array,$products_id,$value,$this->type);
+                $sql_data_array = $this->shoppingCartModules->restore_contents_attributes_db($sql_data_array,$products_id,$value,$this->type);
                 xtc_db_perform($this->table_basket_attributes, $sql_data_array);
               }
             }
@@ -132,7 +134,7 @@ class shoppingCart {
           $this->contents[$products['products_id']] = array ('qty' => (int)$products['customers_basket_quantity']);
             
           //new module support 
-          shoppingCartModules::restore_contents_products_session($products,$this->table_basket,$this->type);
+          $this->shoppingCartModules->restore_contents_products_session($products,$this->table_basket,$this->type);
             
           // attributes
           $attributes_query = xtc_db_query("SELECT products_options_id,
@@ -147,7 +149,7 @@ class shoppingCart {
             }
             
             //new module support 
-            shoppingCartModules::restore_contents_attributes_session($products,$this->table_basket_attributes,$this->type);
+            $this->shoppingCartModules->restore_contents_attributes_session($products,$this->table_basket_attributes,$this->type);
             
             if (ATTRIBUTES_VALID_CHECK == 'true' && !$this->validate_attributes($products['products_id'],$this->contents[$products['products_id']]['attributes'], 'restore_contents')) {
               $this->remove($products['products_id']); //TODO info message
@@ -216,7 +218,7 @@ class shoppingCart {
     } else {
       $this->contents[$products_id] = array ('qty' => (int)$qty);
       //new module support           
-      shoppingCartModules::add_cart_products_session($products_id,$this->type);
+      $this->shoppingCartModules->add_cart_products_session($products_id,$this->type);
       // insert into database
       if (isset($_SESSION['customer_id'])){
         $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
@@ -225,7 +227,7 @@ class shoppingCart {
                                 'customers_basket_date_added' => 'now()'
                                );
         //new module support 
-        $sql_data_array = shoppingCartModules::add_cart_products_db($sql_data_array);
+        $sql_data_array = $this->shoppingCartModules->add_cart_products_db($sql_data_array);
         xtc_db_perform($this->table_basket, $sql_data_array);
       }
 
@@ -235,7 +237,7 @@ class shoppingCart {
           $this->contents[$products_id]['attributes'][$option] = $value;
           
           //new module support           
-          shoppingCartModules::add_cart_attributes_session($value,$this->type);
+          $this->shoppingCartModules->add_cart_attributes_session($value,$this->type);
          
           // insert into database
           if (isset($_SESSION['customer_id'])) {
@@ -246,7 +248,7 @@ class shoppingCart {
                                    );
 
             //new module support 
-            $sql_data_array = shoppingCartModules::add_cart_attributes_db($sql_data_array);
+            $sql_data_array = $this->shoppingCartModules->add_cart_attributes_db($sql_data_array);
      
             xtc_db_perform($this->table_basket_attributes, $sql_data_array);
           }
@@ -392,7 +394,7 @@ class shoppingCart {
     unset($this->contents[$products_id]);
 
     //new module support 
-    shoppingCartModules::remove_custom_inputs_session($products_id);
+    $this->shoppingCartModules->remove_custom_inputs_session($products_id);
     
     // remove from database
     if (isset($_SESSION['customer_id'])) { 
@@ -485,7 +487,7 @@ class shoppingCart {
                                                 $product['products_tax_class_id'],
                                                 $product['products_price']);
         //new module support       
-        $products_price = shoppingCartModules::calculate_product_price($products_price, $product, $this->contents);
+        $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $product, $this->contents);
        
         $this->total += $products_price * $qty;
         $this->weight += ($qty * $product['products_weight']);
@@ -497,7 +499,7 @@ class shoppingCart {
           while (list ($option, $value) = each($this->contents[$products_id]['attributes'])) {
             $values = $xtPrice->xtcGetOptionPrice($product['products_id'], $option, $value);
             //new module support       
-            $values['price'] = shoppingCartModules::calculate_option_price($values['price'], $option, $value, $products_id, $qty);
+            $values['price'] = $this->shoppingCartModules->calculate_option_price($values['price'], $option, $value, $products_id, $qty);
             $this->weight += $values['weight'] * $qty;
             $this->total += $values['price'] * $qty;
             //$attribute_price+=$values['price'];
@@ -571,7 +573,7 @@ class shoppingCart {
       while (list ($option, $value) = each($this->contents[$products_id]['attributes'])) {
         $values = $xtPrice->xtcGetOptionPrice($products_id, $option, $value);
         //new module support   
-        $values['price'] = shoppingCartModules::calculate_option_price($values['price'], $option, $value, $products_id, $qty);
+        $values['price'] = $this->shoppingCartModules->calculate_option_price($values['price'], $option, $value, $products_id, $qty);
         $attributes_price += $values['price'];
         $attributes_weight += $values['weight'];
       }
@@ -640,7 +642,7 @@ class shoppingCart {
                                                     );
 
             //new module support                                    
-            $products_price = shoppingCartModules::calculate_product_price($products_price, $products, $this->contents);
+            $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $products, $this->contents);
         
             $this->attributes_price($products_id,$this->contents[$products_id]['qty']);
             $products_data = array();
