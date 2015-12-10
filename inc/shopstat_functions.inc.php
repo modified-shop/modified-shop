@@ -150,8 +150,9 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
     //-- Concat the lang-var
     //-- Check parameters and given language, just concat
     //-- if the language is different
-    //web28 - 2010-08-18 -- Parameter für die Sprachumschaltung
-    if (strlen($lang)>0 && $lang_id != $languages_id) {
+    //web28 - 2010-08-18 -- Parameter für die Sprachumschaltung und hreflang
+    //if (strlen($lang)>0 && $lang_id != $languages_id) {
+    if (strlen($lang) > 0) {
       $link .= $separator.'language='. $lang;
     }
 

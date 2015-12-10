@@ -615,18 +615,26 @@ if (META_GOOGLE_VERIFICATION_KEY != '') {
 if (META_BING_VERIFICATION_KEY != '') {
   echo '<meta name="msvalidate.01" content="'. META_BING_VERIFICATION_KEY .'" />'."\n";
 }
+$meta_alternate = array();
 if (!isset($lng) || (isset($lng) && !is_object($lng))) {
   require_once(DIR_WS_CLASSES . 'language.php');
   $lng = new language;
 }
 if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && count($lng->catalog_languages) > 1 && (!isset($_GET['page']) || $_GET['page'] == 1)) {
   $canonical_flag = true;
-  echo '<link rel="alternate" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($_SESSION['language_code'] != DEFAULT_LANGUAGE) ? 'language='.DEFAULT_LANGUAGE : ''), 'NONSSL', false).'" hreflang="x-default" />'."\n";
+  $x_default_lng = 'en'; //DEFAULT_LANGUAGE
+  $meta_alternate['x-default'] = '<link rel="alternate" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).'language='.$x_default_lng, 'NONSSL', false).'" hreflang="x-default" />';
   reset($lng->catalog_languages);
   while (list($key, $value) = each($lng->catalog_languages)) {
-    echo '<link rel="alternate" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).(($_SESSION['language_code'] != $value['code']) ? 'language='.$key : ''), 'NONSSL', false).'" hreflang="'.$value['code'].'" />'."\n";
+    $alternate_link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).'language='.$key, 'NONSSL', false);
+    if ($alternate_link) {
+      $meta_alternate[$value['code']] = '<link rel="alternate" href="'. $alternate_link .'" hreflang="'.$value['code'].'" />';
+    }
   }
   $canonical_flag = false;  
+}
+if (count($meta_alternate) > 2) {
+  echo implode("\n",$meta_alternate)."\n";
 } elseif (isset($canonical_url)) {
   echo '<link rel="canonical" href="'.$canonical_url.'" />'."\n";
 }
