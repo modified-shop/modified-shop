@@ -42,9 +42,8 @@ class shoppingCart {
   var $contents, $total, $weight, $cartID, $content_type, $attr_price, $attr_weight, $type, $table_basket, $table_basket_attributes, $shoppingCartModules;
   
   function __construct($type = 'cart') {
-    global $scModules;
+    //new module support
     $this->shoppingCartModules = new shoppingCartModules();
-    
     $this->type = $type;
     
     $this->table_basket = TABLE_CUSTOMERS_BASKET;
