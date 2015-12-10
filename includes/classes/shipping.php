@@ -25,8 +25,19 @@
     function __construct($module = '') {
       global $PHP_SELF,$order;
 
+      $this->modules = array();
+      
       if (defined('MODULE_SHIPPING_INSTALLED') && xtc_not_null(MODULE_SHIPPING_INSTALLED)) {
-        $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
+        $modules = explode(';', MODULE_SHIPPING_INSTALLED);
+        
+        foreach($modules as $file) {
+          $class = substr($file, 0, strrpos($value, '.'));
+          $module_status = (defined('MODULE_SHIPPING_'. strtoupper($class) .'_STATUS') && strtolower(constant('MODULE_SHIPPING_'. strtoupper($class) .'_STATUS')) == 'true') ? true : false;
+          if (is_file($module_directory . $file) && $module_status) {
+            $this->modules[] = $file;
+          }
+        }
+        unset($modules);
 
         $include_modules = array();
 

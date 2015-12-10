@@ -37,16 +37,27 @@
     function __construct($module = '') {
       global $PHP_SELF,$order;
 
+      $this->modules = array();
+      
       if (defined('MODULE_PAYMENT_INSTALLED') && xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
 
         ## Paypal Express Modul
         if(isset($_SESSION['paypal_express_checkout']) && $_SESSION['paypal_express_checkout'] == true){
-          $this->modules = explode(';', $_SESSION['paypal_express_payment_modules'] );
+          $modules = explode(';', $_SESSION['paypal_express_payment_modules'] );
         } else {
-          $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
-          $this->modules = str_replace('paypalexpress.php', '', $this->modules);
+          $modules = explode(';', MODULE_PAYMENT_INSTALLED);
+          $modules = str_replace('paypalexpress.php', '', $modules);
         }
         ## Paypal Express Modul
+        
+        foreach($modules as $file) {
+          $class = substr($file, 0, strrpos($value, '.'));
+          $module_status = (defined('MODULE_PAYMENT_'. strtoupper($class) .'_STATUS') && strtolower(constant('MODULE_PAYMENT_'. strtoupper($class) .'_STATUS')) == 'true') ? true : false;
+          if (is_file($module_directory . $file) && $module_status) {
+            $this->modules[] = $file;
+          }
+        }
+        unset($modules);
 
         $include_modules = array();
 

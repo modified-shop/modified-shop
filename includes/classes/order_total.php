@@ -30,21 +30,29 @@
 class order_total {
   var $modules;
   
-  // class constructor
   function __construct() {
+    
+    $this->modules = array();
+    
     if (defined('MODULE_ORDER_TOTAL_INSTALLED') && xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
-      $this->modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
-      $modules = $this->modules;
-      sort($modules); // cgoenner: we need to include the ot_coupon & ot_gv BEFORE ot_tax
-      reset($modules);
-      while (list (, $value) = each($modules)) {
+      $modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
+      
+      $modules = explode(';', MODULE_SHIPPING_INSTALLED);
+      foreach($modules as $file) {
+        $class = substr($file, 0, strrpos($value, '.'));
+        $module_status = (defined('MODULE_ORDER_TOTAL_'. strtoupper($class) .'_STATUS') && strtolower(constant('MODULE_ORDER_TOTAL_'. strtoupper($class) .'_STATUS')) == 'true') ? true : false;
+        if (is_file($module_directory . $file) && $module_status) {
+          $this->modules[] = $file;
+        }
+      }
+      unset($modules);
+      
+      while (list (, $value) = each($this->modules)) {
         include_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/'.$value);
         include_once(DIR_WS_MODULES.'order_total/'.$value);
-
         $class = substr($value, 0, strrpos($value, '.'));
         $GLOBALS[$class] = new $class ();
       }
-      unset($modules);
     }
   }
 
