@@ -10,9 +10,10 @@ class priceModules {
         $this->modules = array();
         if (defined('MODULE_'. strtoupper($module_type) .'_INSTALLED') && xtc_not_null(constant('MODULE_'. strtoupper($module_type) .'_INSTALLED'))) {
           foreach($modules as $file) {
-            if (is_file($module_directory . $file)) {
+            $class = substr($file, 0, strpos($file, '.'));
+            $module_status = (defined('MODULE_'. strtoupper($module_type) .'_'. strtoupper($class) .'_STATUS') && strtolower(constant('MODULE_'. strtoupper($module_type) .'_'. strtoupper($class) .'_STATUS')) == 'true') ? true : false;
+            if (is_file($module_directory . $file) && $module_status) {
               include_once($module_directory . $file);
-              $class = substr($file, 0, strpos($file, '.'));
               $GLOBALS[$class] = new $class();
               $this->modules[] = $class;
             }

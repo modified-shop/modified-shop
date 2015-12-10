@@ -7,14 +7,16 @@ class categoriesModules {
     
     function __construct()
     {
-        $module_directory = DIR_FS_ADMIN.'includes/modules/categories/';
+        $module_type = 'categories';
+        $module_directory = DIR_FS_ADMIN. 'includes/modules/'. $module_type .'/';
         $this->modules = array();
-        if (defined('MODULE_CATEGORIES_INSTALLED') && xtc_not_null(MODULE_CATEGORIES_INSTALLED)) {
-          $modules = explode(';', MODULE_CATEGORIES_INSTALLED);
+        if (defined('MODULE_'. strtoupper($module_type) .'_INSTALLED') && xtc_not_null(constant('MODULE_'. strtoupper($module_type) .'_INSTALLED'))) {
+          $modules = explode(';', constant('MODULE_'. strtoupper($module_type) .'_INSTALLED'));
           foreach($modules as $file) {
-            if (is_file($module_directory . $file)) {
+            $class = substr($file, 0, strpos($file, '.'));
+            $module_status = (defined('MODULE_'. strtoupper($module_type) .'_'. strtoupper($class) .'_STATUS') && strtolower(constant('MODULE_'. strtoupper($module_type) .'_'. strtoupper($class) .'_STATUS')) == 'true') ? true : false;
+            if (is_file($module_directory . $file) && $module_status) {
               include_once($module_directory . $file);
-              $class = substr($file, 0, strpos($file, '.'));
               $GLOBALS[$class] = new $class();
               $this->modules[] = $class;
             }
