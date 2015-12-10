@@ -7,10 +7,11 @@ class shoppingCartModules {
     
     function __construct()
     {
-        $module_directory = DIR_FS_CATALOG . 'includes/modules/shopping_cart/';
+        $module_type = 'shopping_cart';
+        $module_directory = DIR_FS_CATALOG . 'includes/modules/'. $module_type .'/';
         self::$modules = array();
-        if (defined('MODULE_SHOPPING_CART_INSTALLED') && xtc_not_null(MODULE_SHOPPING_CART_INSTALLED)) {
-          $modules = explode(';', MODULE_SHOPPING_CART_INSTALLED);
+        if (defined('MODULE_'. strtoupper($module_type) .'_INSTALLED') && xtc_not_null(constant('MODULE_'. strtoupper($module_type) .'_INSTALLED'))) {
+          $modules = explode(';', constant('MODULE_'. strtoupper($module_type) .'_INSTALLED'));
           foreach($modules as $file) {
             if (is_file($module_directory . $file)) {
               include_once($module_directory . $file);
