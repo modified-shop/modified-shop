@@ -23,6 +23,7 @@ define('TABLE_HEADING_GROUPS', 'Groups');
 define('TABLE_HEADING_STATISTICS', 'Displays / Clicks');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Action');
+define('TABLE_HEADING_LANGUAGE', 'Language');
 
 define('TEXT_BANNERS_TITLE', 'Banner Title:');
 define('TEXT_BANNERS_URL', 'Banner URL:');
@@ -76,6 +77,9 @@ define('ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST', 'Error: Graphs directory does no
 define('ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE', 'Error: Graphs directory is not writeable.');
 
 // BOF - Tomcraft - 2009-11-06 - Use variable TEXT_BANNERS_DATE_FORMAT
-define('TEXT_BANNERS_DATE_FORMAT', 'JJJJ-MM-TT');
+define('TEXT_BANNERS_DATE_FORMAT', 'YYYY-MM-DD');
 // EOF - Tomcraft - 2009-11-06 - Use variable TEXT_BANNERS_DATE_FORMAT
+
+define('TEXT_BANNERS_LANGUAGE', 'Language:');
+define('TEXT_BANNERS_LANGUAGE_NOTE', 'Select the language where the banner should be displayed?');
 ?>
