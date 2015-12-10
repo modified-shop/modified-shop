@@ -5,10 +5,10 @@ class priceModules {
     
     function __construct()
     {
-        $module_directory = DIR_FS_CATALOG . 'includes/modules/xtcPrice/';
+        $module_type = 'xtcPrice';
+        $module_directory = DIR_FS_CATALOG . 'includes/modules/'. $module_type .'/';
         $this->modules = array();
-        if (defined('MODULE_XTCPRICE_INSTALLED') && xtc_not_null(MODULE_XTCPRICE_INSTALLED)) {
-          $modules = explode(';', MODULE_XTCPRICE_INSTALLED);
+        if (defined('MODULE_'. strtoupper($module_type) .'_INSTALLED') && xtc_not_null(constant('MODULE_'. strtoupper($module_type) .'_INSTALLED'))) {
           foreach($modules as $file) {
             if (is_file($module_directory . $file)) {
               include_once($module_directory . $file);

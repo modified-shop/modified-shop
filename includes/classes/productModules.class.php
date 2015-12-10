@@ -5,10 +5,11 @@ class productModules {
     
     function __construct()
     {
-        $module_directory = DIR_FS_CATALOG . 'includes/modules/product/';
+        $module_type = 'product';
+        $module_directory = DIR_FS_CATALOG . 'includes/modules/'. $module_type .'/';
         $this->modules = array();
-        if (defined('MODULE_PRODUCT_INSTALLED') && xtc_not_null(MODULE_PRODUCT_INSTALLED)) {
-          $modules = explode(';', MODULE_PRODUCT_INSTALLED);
+        if (defined('MODULE_'. strtoupper($module_type) .'_INSTALLED') && xtc_not_null(constant('MODULE_'. strtoupper($module_type) .'_INSTALLED'))) {
+          $modules = explode(';', constant('MODULE_'. strtoupper($module_type) .'_INSTALLED'));
           foreach($modules as $file) {
             if (is_file($module_directory . $file)) {
               include_once($module_directory . $file);
