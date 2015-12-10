@@ -184,6 +184,7 @@ CREATE TABLE banners (
   banners_image VARCHAR(64) NOT NULL,
   banners_group VARCHAR(10) NOT NULL,
   banners_html_text TEXT,
+  languages_id INT(11) NOT NULL DEFAULT 0,
   expires_impressions INT(7) DEFAULT NULL,
   expires_date DATETIME DEFAULT NULL,
   date_scheduled DATETIME DEFAULT NULL,
@@ -1283,7 +1284,8 @@ INSERT INTO admin_access VALUES (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 INSERT INTO admin_access VALUES ('groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 # banner
-INSERT INTO `banners` VALUES (1, 'modified eCommerce Shopsoftware', 'http://www.modified-shop.org', 'banner_modified-ecommerce-shopsoftware.jpg', 'banner', '', NULL, NULL, NULL, NOW(), NULL, 1);
+INSERT INTO `banners` VALUES (1, 'modified eCommerce Shopsoftware', 'http://www.modified-shop.org', 'banner_modified-ecommerce-shopsoftware.jpg', 'banner', '', '1', NULL, NULL, NULL, NOW(), NULL, 1);
+INSERT INTO `banners` VALUES (2, 'modified eCommerce Shopsoftware', 'http://www.modified-shop.org', 'banner_modified-ecommerce-shopsoftware.jpg', 'banner', '', '2', NULL, NULL, NULL, NOW(), NULL, 1);
 
 # carriers
 INSERT INTO carriers VALUES (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');

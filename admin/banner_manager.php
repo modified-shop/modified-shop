@@ -21,7 +21,15 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   $banner_extension = xtc_banner_image_extension();
-
+  $languages = xtc_get_languages();
+  
+  $lang_array = array();
+  $lang_array_id = array();
+  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+    $lang_array[] = array('id' => $languages[$i]['id'], 'text' => $languages[$i]['name']);
+    $lang_array_id[$languages[$i]['id']] = $languages[$i]['name'];
+  }
+  
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'setflag':
@@ -39,6 +47,7 @@
         if (isset($_POST['banners_id'])) $banners_id = xtc_db_prepare_input($_POST['banners_id']);
         $banners_title = xtc_db_prepare_input($_POST['banners_title']);
         $banners_url = xtc_db_prepare_input($_POST['banners_url']);
+        $languages_id = xtc_db_prepare_input($_POST['languages_id']);
         $new_banners_group = xtc_db_prepare_input(strtolower($_POST['new_banners_group']));
         $banners_group = ((empty($new_banners_group)) ? xtc_db_prepare_input($_POST['banners_group']) : $new_banners_group);
         $html_text = xtc_db_prepare_input($_POST['html_text']);
@@ -78,6 +87,7 @@
         if ($banner_error === false) {          
           $sql_data_array = array('banners_title' => $banners_title,
                                   'banners_url' => $banners_url,
+                                  'languages_id' => (int)$languages_id,
                                   'banners_group' => $banners_group,
                                   'banners_image' => $banners_image_exist,
                                   'banners_html_text' => $html_text,
@@ -88,7 +98,7 @@
           if ($action == 'insert') {
             $insert_sql_data = array('date_added' => 'now()',
                                      'status' => '1');
-            $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+            $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
             xtc_db_perform(TABLE_BANNERS, $sql_data_array);
             $banners_id = xtc_db_insert_id();
             $messageStack->add_session(SUCCESS_BANNER_INSERTED, 'success');
@@ -262,6 +272,11 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
                   <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_URL_NOTE; ?></td>
                 </tr>
                 <tr>
+                  <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_LANGUAGE; ?></td>
+                  <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('languages_id', $lang_array, $bInfo->languages_id); ?></td>
+                  <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_LANGUAGE_NOTE; ?></td>
+                </tr> 
+                <tr>
                   <td class="dataTableConfig col-left" rowspan="2"><?php echo TEXT_BANNERS_NEW_GROUP; ?></td>
                   <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group); ?></td>
                   <td class="dataTableConfig col-right" rowspan="2"><?php echo TEXT_BANNERS_NEW_GROUP_NOTE; ?></td>
@@ -322,6 +337,7 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
                       <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_BANNERS; ?></td>
                       <?php /* <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_GROUPS; ?></td> */ ?>
                       <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_STATISTICS; ?></td>
+                      <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_LANGUAGE; ?></td>
                       <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_STATUS; ?></td>
                       <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                     </tr>
@@ -351,6 +367,7 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
                           <td class="dataTableContent"><?php echo $banners['banners_title']; ?></td>
                           <?php /* <td class="dataTableContent txta-r"><?php echo $banners['banners_group']; ?></td> */ ?>
                           <td class="dataTableContent txta-r"><?php echo $banners_shown . ' / ' . $banners_clicked; ?></td>
+                          <td class="dataTableContent txta-c"><?php echo $lang_array_id[$banners['languages_id']]; ?></td>
                           <td class="dataTableContent txta-r">
                             <?php                                      
                               if ($banners['status'] == '1') {

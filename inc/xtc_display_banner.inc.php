@@ -21,12 +21,14 @@
       $banners_query = xtc_db_query("SELECT count(*) as count 
                                        FROM " . TABLE_BANNERS . " 
                                       WHERE status = '1' 
+                                        AND languages_id = '" . (int)$_SESSION['languages_id'] . "'
                                         AND banners_group = '" . xtc_db_input($identifier) . "'");
       $banners = xtc_db_fetch_array($banners_query);
       if ($banners['count'] > 0) {
         $banner = xtc_random_select("SELECT *
                                        FROM " . TABLE_BANNERS . " 
                                       WHERE status = '1' 
+                                        AND languages_id = '" . (int)$_SESSION['languages_id'] . "'
                                         AND banners_group = '" . xtc_db_input($identifier) . "'");
       }
     } elseif ($action == 'static') {
@@ -36,6 +38,7 @@
         $banner_query = xtc_db_query("SELECT *
                                         FROM " . TABLE_BANNERS . " 
                                        WHERE status = '1' 
+                                         AND languages_id = '" . (int)$_SESSION['languages_id'] . "'
                                          AND banners_id = '" . (int)$identifier . "'");
         if (xtc_db_num_rows($banner_query)) {
           $banner = xtc_db_fetch_array($banner_query);
@@ -49,6 +52,7 @@
                                         FROM " . TABLE_BANNERS . " 
                                        WHERE status = '1' 
                                          AND banners_image != ''
+                                         AND languages_id = '" . (int)$_SESSION['languages_id'] . "'
                                          AND banners_group = '" . xtc_db_input($identifier) . "'");
         if (xtc_db_num_rows($banner_query) > 0) {
           $banner_content = array();

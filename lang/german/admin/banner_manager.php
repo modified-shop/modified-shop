@@ -23,6 +23,7 @@ define('TABLE_HEADING_GROUPS', 'Gruppe');
 define('TABLE_HEADING_STATISTICS', 'Anzeigen / Klicks');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Aktion');
+define('TABLE_HEADING_LANGUAGE', 'Sprache');
 
 define('TEXT_BANNERS_TITLE', 'Titel des Banners:'); 
 define('TEXT_BANNERS_URL', 'Banner-URL:'); 
@@ -78,4 +79,7 @@ define('ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE', 'Fehler: Das Verzeichnis \'graphs
 // BOF - Tomcraft - 2009-11-06 - Use variable TEXT_BANNERS_DATE_FORMAT
 define('TEXT_BANNERS_DATE_FORMAT', 'JJJJ-MM-TT');
 // EOF - Tomcraft - 2009-11-06 - Use variable TEXT_BANNERS_DATE_FORMAT
+
+define('TEXT_BANNERS_LANGUAGE', 'Sprache:');
+define('TEXT_BANNERS_LANGUAGE_NOTE', 'F&uuml;r welche Sprache soll der Banner angezeigt werden?');
 ?>

@@ -716,4 +716,8 @@ ALTER TABLE admin_access ADD trustedshops INT(1) NOT NULL DEFAULT 0 AFTER shipcl
 UPDATE admin_access SET trustedshops = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET trustedshops = 1 WHERE customers_id = 'groups' LIMIT 1;
 
+#GTB - 2015-12-10 - multilanguage banner
+ALTER TABLE banners ADD languages_id INT(11) NOT NULL DEFAULT 0 AFTER banners_html_text;
+UPDATE banners SET languages_id = (SELECT l.languages_id FROM languages l JOIN configuration c ON c.configuration_value = l.code AND c.configuration_key = 'DEFAULT_LANGUAGE');
+
 # Keep an empty line at the end of this file for the db_updater to work properly
