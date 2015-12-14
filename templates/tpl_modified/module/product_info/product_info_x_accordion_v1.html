@@ -69,9 +69,11 @@
           <div class="pd_tax{if $PRODUCTS_FSK18 == 'true'} pd_fsk_padding{/if}">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</div>
         {/if}
         {if isset($MODULE_graduated_price) && $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
-        {if isset($MODULE_product_options) && $MODULE_product_options != ''}{if $MODULE_product_options_template == 'multi_options_1.html' || $MODULE_product_options_template == 'product_options_dropdown.html'}
-          {$MODULE_product_options}
-        {/if}{/if}
+        {if isset($MODULE_product_options) && $MODULE_product_options != ''}
+          {if $MODULE_product_options_template == 'multi_options_1.html' || $MODULE_product_options_template|strpos:"dropdown" !== false}
+            {$MODULE_product_options}
+          {/if}
+        {/if}
       
         {if $ADD_CART_BUTTON != ''}
         <div class="addtobasket">
@@ -102,9 +104,11 @@
       {if isset($XTB_REDIRECT_USER_TO) && $XTB_REDIRECT_USER_TO == 'product'}
         <div class="xtb_booster_redirect_message"><strong>Sie haben die eBay Auktion gewonnen!</strong><br />Bitte w&auml;hlen Sie nun noch die gew&uuml;nschten Produkteigenschaften und legen Sie den Artikel danach in den Warenkorb, um mit der Zahlung fortzufahren und das Produkt versandfertig zu machen!</div>
       {/if}
-      {if isset($MODULE_product_options) && $MODULE_product_options != ''}{if $MODULE_product_options_template == 'product_options_selection.html' || $MODULE_product_options_template == 'table_listing.html'}
-        {$MODULE_product_options}
-      {/if}{/if}      
+      {if isset($MODULE_product_options) && $MODULE_product_options != ''}
+        {if $MODULE_product_options_template != 'multi_options_1.html' && $MODULE_product_options_template|strpos:"dropdown" === false}
+          {$MODULE_product_options}
+        {/if}
+      {/if}      
     </div>  
     <br class="clearfix" />
     {if isset($MANUFACTURER_IMAGE) && $MANUFACTURER_IMAGE != ''}<div class="pd_manu_image"><a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" /></a></div>{/if}
