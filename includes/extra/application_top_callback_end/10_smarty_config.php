@@ -8,9 +8,4 @@ if (isset($_GET['show'])) {
 if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/config/config.php')) {
   require(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/config/config.php');
 }
-// Smarty Template Engine 
-if (!defined('TEMPLATE_ENGINE')) {
-  define('TEMPLATE_ENGINE','smarty_2');
-}
-require (DIR_FS_EXTERNAL.'smarty/'.TEMPLATE_ENGINE.'/Smarty.class.php');
 ?>
