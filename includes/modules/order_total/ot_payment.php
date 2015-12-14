@@ -62,8 +62,13 @@ class ot_payment {
     // Rabattfelder
     if ($this->enabled) {
       for ($k=1; $k<=$this->num_payment; $k++) {
-        $this->percentage[$k] = constant('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $k);
-        $this->payment[$k] = constant('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $k);
+        if (defined('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $k)
+            && defined('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $k)
+            )
+        {
+          $this->percentage[$k] = constant('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $k);
+          $this->payment[$k] = constant('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $k);
+        }
       }
     }
   }
