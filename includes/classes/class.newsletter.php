@@ -134,14 +134,17 @@ class newsletter {
 
             if ($check_mail['mail_status'] == '0') {
 
-              $this->message = TEXT_EMAIL_EXIST_NO_NEWSLETTER;
-              $this->message_class = 'error';
+              $this->message = TEXT_EMAIL_INPUT;
+              $this->message_class = 'info';
 
               if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == 'true') {
+                $sql_data_array = array('mail_key' => $this->vlCode);
+                xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
                 $this->sendRequestMail($mail);
               } else {
                 $sql_data_array = array('mail_status' => '1',
                                         'date_confirmed' => 'now()',
+                                        'mail_key' => $this->vlCode,
                                         'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
                                         );
                 xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
