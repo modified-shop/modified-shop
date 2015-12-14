@@ -69,6 +69,10 @@ class xtcImport {
         $this->CatDefault = CSV_CATEGORY_DEFAULT;
         $this->FileSheme = array ();
         $this->Groups = xtc_get_customers_statuses();
+        //BOC new var to use in for loops, noRiddle
+        $this->count_groups = count($this->Groups);
+        $this->sizeof_languages = sizeof($this->languages);
+        //EOC new var to use in for loops, noRiddle
     }
 
     /*****************************************************************************
@@ -107,11 +111,11 @@ class xtcImport {
           'p_shipping' => '' // product shipping_time
         );
         // group prices
-        for ($i = 0; $i < count($this->Groups) - 1; $i ++) {
+        for ($i = 0; $i < $this->count_groups - 1; $i ++) {
             $file_layout = array_merge($file_layout, array ('p_priceNoTax.'.$this->Groups[$i +1]['id'] => ''));
         }
         // group permissions
-        for ($i = 0; $i < count($this->Groups); $i ++) {
+        for ($i = 0; $i < $this->count_groups; $i ++) {
             $file_layout = array_merge($file_layout, array ('p_groupAcc.'.$this->Groups[$i]['id'] => ''));
         }
         // product images
@@ -119,7 +123,7 @@ class xtcImport {
             $file_layout = array_merge($file_layout, array ('p_image.'.$i => ''));
         }
         // add lang fields
-        for ($i = 0; $i < sizeof($this->languages); $i ++) {
+        for ($i = 0; $i < $this->sizeof_languages; $i ++) {
             $file_layout = array_merge($file_layout, array ('p_name.'.$this->languages[$i]['code'] => '',
                                                             'p_desc.'.$this->languages[$i]['code'] => '',
                                                             'p_shortdesc.'.$this->languages[$i]['code'] => '',
@@ -433,7 +437,7 @@ class xtcImport {
         }
 
         // Insert group prices Qantity:Price::Quantity:Price
-        for ($i = 0; $i < count($this->Groups) - 1; $i ++) {
+        for ($i = 0; $i < $this->count_groups - 1; $i ++) {
             // seperate string ::
             if (isset ($dataArray['p_priceNoTax.'.$this->Groups[$i +1]['id']]) && $dataArray['p_priceNoTax.'.$this->Groups[$i +1]['id']] != '') {
 
@@ -443,7 +447,7 @@ class xtcImport {
                 xtc_db_query($truncate_query);
                 $prices = $dataArray['p_priceNoTax.'.$this->Groups[$i +1]['id']];
                 $prices = explode('::', $prices);
-                for ($ii = 0; $ii < count($prices); $ii ++) {
+                for ($ii = 0, $cp = count($prices); $ii < $cp; $ii ++) {
                     $values = explode(':', $prices[$ii]);
 
                     $group_array = array (
@@ -458,7 +462,7 @@ class xtcImport {
         }
 
         // Insert group permissions.
-        for ($i = 0; $i < count($this->Groups); $i ++) {
+        for ($i = 0; $i < $this->count_groups; $i ++) {
             if (isset ($dataArray['p_groupAcc.'.$this->Groups[$i]['id']])) {
                 $insert_array = array ('group_permission_'.$this->Groups[$i]['id'] => $dataArray['p_groupAcc.'.$this->Groups[$i]['id']]);
                 xtc_db_perform(TABLE_PRODUCTS, $insert_array, 'update', 'products_id = \''.$products_id.'\'');
@@ -485,7 +489,7 @@ class xtcImport {
 
         if ($touchCat) $this->insertCategory($dataArray, $mode, $products_id);
 
-        for ($i_insert = 0; $i_insert < sizeof($this->languages); $i_insert ++) {
+        for ($i_insert = 0; $i_insert < $this->sizeof_languages; $i_insert ++) {
             $prod_desc_array = array (
                 'products_id' => $products_id,
                 'language_id' => $this->languages[$i_insert]['id']
@@ -567,7 +571,7 @@ class xtcImport {
             $catTree = '';
             $parTree = '';
             $curr_ID = 0;
-            for ($i = 0; $i < count($cat); $i ++) {
+            for ($i = 0, $cc = count($cat); $i < $cc; $i ++) {
                 $catTree .= '[\''.xtc_db_input($cat[$i]).'\']';
                 $code = '$ID=$this->CatTree'.$catTree.'[\'ID\'];';
                 //debug
@@ -618,7 +622,7 @@ class xtcImport {
                         if ($this->debug) echo '<pre>FIRST $CAT_ID: '.$cat_id.'</pre><hr />';
 
                         $parent = $cat_id;
-                        for ($i_insert = 0; $i_insert < sizeof($this->languages); $i_insert ++) {
+                        for ($i_insert = 0; $i_insert < $this->sizeof_languages; $i_insert ++) {
                             $categorie_data = array (
                                 'language_id' => $this->languages[$i_insert]['id'],
                                 'categories_id' => $cat_id,
@@ -797,6 +801,10 @@ class xtcExport {
             $this->seperator = "\t";
 
         $this->Groups = xtc_get_customers_statuses();
+        //BOC new var to use in for loops, noRiddle
+        $this->count_groups = count($this->Groups);
+        $this->sizeof_languages = sizeof($this->languages);
+        //EOC new var to use in for loops, noRiddle
     }
 
     /*****************************************************************************
@@ -875,11 +883,11 @@ class xtcExport {
             $line .= $this->encode($heading);
         }
 
-        for ($i=1; $i<count($this->Groups); $i++) {
+        for ($i=1; $i < $this->count_groups; $i++) {
             $line .= $this->encode('p_priceNoTax.'.$this->Groups[$i]['id']);
         }
         if (GROUP_CHECK == 'true') {
-            for ($i=0; $i<count($this->Groups); $i++) {
+            for ($i=0; $i < $this->count_groups; $i++) {
                 $line .= $this->encode('p_groupAcc.'.$this->Groups[$i]['id']);
             }
         }
@@ -906,7 +914,7 @@ class xtcExport {
         $line .= $this->encode('p_image');
 
         // add lang fields
-        for ($i = 0; $i < sizeof($this->languages); $i ++) {
+        for ($i = 0; $i < $this->sizeof_languages; $i ++) {
             $line .= $this->encode('p_name.'.$this->languages[$i]['code']);
             $line .= $this->encode('p_desc.'.$this->languages[$i]['code']);
             $line .= $this->encode('p_shortdesc.'.$this->languages[$i]['code']);
@@ -943,7 +951,7 @@ class xtcExport {
             $line .= $this->encode($export_data['products_price']);
 
             // group prices  Qantity:Price::Quantity:Price
-            for ($i=1; $i<count($this->Groups); $i++) {
+            for ($i=1; $i < $this->count_groups; $i++) {
                 $price_query = "SELECT *
                                   FROM ".TABLE_PERSONAL_OFFERS_BY.$this->Groups[$i]['id']."
                                  WHERE products_id = '".$export_data['products_id']."'
@@ -968,7 +976,7 @@ class xtcExport {
 
             // group permissions
             if (GROUP_CHECK == 'true') {
-                for ($i=0; $i<count($this->Groups); $i++) {
+                for ($i=0; $i < $this->count_groups; $i++) {
                     $line .= $this->encode($export_data['group_permission_'.$this->Groups[$i]['id']]);
                 }
             }
@@ -1008,7 +1016,7 @@ class xtcExport {
 
             $line .= $this->encode($export_data['products_image']);
 
-            for ($i = 0; $i < sizeof($this->languages); $i ++) {
+            for ($i = 0; $i < $this->sizeof_languages; $i ++) {
                 $lang_query = xtc_db_query("SELECT *
                                               FROM ".TABLE_PRODUCTS_DESCRIPTION."
                                              WHERE language_id = '".$this->languages[$i]['id']."'
