@@ -36,10 +36,10 @@ class order_total {
     
     if (defined('MODULE_ORDER_TOTAL_INSTALLED') && xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       $modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
-      
-      $modules = explode(';', MODULE_SHIPPING_INSTALLED);
+      $module_directory = DIR_WS_MODULES . 'order_total/';
       foreach($modules as $file) {
-        $class = substr($file, 0, strrpos($value, '.'));
+        $class = substr($file, 0, strrpos($file, '.'));
+        $class = str_replace('ot_','',$class);
         $module_status = (defined('MODULE_ORDER_TOTAL_'. strtoupper($class) .'_STATUS') && strtolower(constant('MODULE_ORDER_TOTAL_'. strtoupper($class) .'_STATUS')) == 'true') ? true : false;
         if (is_file($module_directory . $file) && $module_status) {
           $this->modules[] = $file;
