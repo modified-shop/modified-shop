@@ -50,8 +50,9 @@
         }
         ## Paypal Express Modul
         
+        $module_directory = DIR_WS_MODULES . 'payment/';
         foreach($modules as $file) {
-          $class = substr($file, 0, strrpos($value, '.'));
+          $class = substr($file, 0, strrpos($file, '.'));
           $module_status = (defined('MODULE_PAYMENT_'. strtoupper($class) .'_STATUS') && strtolower(constant('MODULE_PAYMENT_'. strtoupper($class) .'_STATUS')) == 'true') ? true : false;
           if (is_file($module_directory . $file) && $module_status) {
             $this->modules[] = $file;
