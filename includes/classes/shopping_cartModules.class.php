@@ -75,7 +75,7 @@ class shoppingCartModules {
     public static function add_cart_products_db($sql_data_array)
     {
         self::$function_call = 'add_cart_products_db';
-        return self::call_module_method($products_id,$type);
+        return self::call_module_method($sql_data_array);
     }
     
     public static function add_cart_attributes_session($value,$type)
