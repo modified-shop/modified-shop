@@ -117,26 +117,16 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
     $module_smarty->clear_assign('SELECT_COUNTRY');
   }
 } else {
-  require (DIR_WS_CLASSES.'shipping.php');
+  require_once (DIR_WS_CLASSES.'shipping.php');
   $shipping = new shipping;
 
-  $free_shipping = $free_shipping_freeamount = $has_freeamount = false;
-  include (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
+  $free_shipping = false;
+  include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
   $ot_shipping = new ot_shipping;
   $ot_shipping->process();
 
   // load all enabled shipping modules
   $quotes = $shipping->quote();
-
-  foreach ($quotes as $quote) {
-    if ($quote['id'] == 'freeamount') {
-      $has_freeamount = true;
-      if (isset($quote['methods'])) {
-        $free_shipping_freeamount = true;
-        break;
-      }
-    }
-  }
 
   $shipping_content = array ();
   if ($free_shipping == true) {
@@ -144,19 +134,12 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
       'NAME' => FREE_SHIPPING_TITLE,
       'VALUE' => $xtPrice->xtcFormat(0, true, 0, true)
     );
-  } else if ($free_shipping_freeamount) {
-    $shipping_content[] = array(
-      'NAME' => $quote['module'] . ' - ' . $quote['methods'][0]['title'],
-      'VALUE' => $xtPrice->xtcFormat(0, true, 0, true),
-      'QUOTE' => $quote
-    );
   } else {
-    if ($has_freeamount) {
-      $module_smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER, true, 0, true)));
-    }
     $i = 0;
     foreach ($quotes as $quote) {
-      if ($quote['id'] != 'freeamount') {
+        if ($quote['id'] = 'freeamount') {
+          $module_smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER, true, 0, true)));
+        }
         //BOC web28 Error Fix
         if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {
           $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
@@ -179,7 +162,6 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
         }
         //EOC web28 Error Fix
         $i++;
-      }
     }
   }
 
