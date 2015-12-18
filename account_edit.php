@@ -123,8 +123,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
    		$error = true;    
    		$messageStack->add('create_account', ENTRY_EMAIL_ERROR_NOT_MATCHING);
 	}
-
-	if (strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
+  
+  if (ACCOUNT_TELEPHONE_OPTIONAL == 'false' && strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
 		$error = true;
 		$messageStack->add('account_edit', ENTRY_TELEPHONE_NUMBER_ERROR);
 	}
