@@ -284,7 +284,7 @@ switch ($action) {
                      );
                      
         //send copy to admin
-        if (defined('STATUS_EMAIL_SENT_COPY_TO_ADMIN') && STATUS_EMAIL_SENT_COPY_TO_ADMIN == 'True') {
+        if (defined('STATUS_EMAIL_SENT_COPY_TO_ADMIN') && STATUS_EMAIL_SENT_COPY_TO_ADMIN == 'true') {
           xtc_php_mail(EMAIL_BILLING_ADDRESS,
                        EMAIL_BILLING_NAME,
                        EMAIL_BILLING_ADDRESS,
