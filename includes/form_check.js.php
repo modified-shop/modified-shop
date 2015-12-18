@@ -152,9 +152,9 @@
   <?php if (ACCOUNT_STATE == 'true') echo '  check_input("state", ' . ENTRY_STATE_MIN_LENGTH . ', "' . xtc_js_lang(ENTRY_STATE_ERROR) . '");' . "\n"; ?>
 
     check_select("country", "", "<?php echo xtc_js_lang(ENTRY_COUNTRY_ERROR); ?>");
-
+  <?php if (ACCOUNT_TELEPHONE_OPTIONAL == 'false') { ?>
     check_input("telephone", <?php echo ENTRY_TELEPHONE_MIN_LENGTH; ?>, "<?php echo xtc_js_lang(ENTRY_TELEPHONE_NUMBER_ERROR); ?>");
-
+  <?php } ?>
     check_password("password", "confirmation", <?php echo ENTRY_PASSWORD_MIN_LENGTH; ?>, "<?php echo xtc_js_lang(ENTRY_PASSWORD_ERROR); ?>", "<?php echo xtc_js_lang(ENTRY_PASSWORD_ERROR_NOT_MATCHING); ?>");
     check_password_new("password_current", "password_new", "password_confirmation", <?php echo xtc_js_lang(ENTRY_PASSWORD_MIN_LENGTH); ?>, "<?php echo xtc_js_lang(ENTRY_PASSWORD_ERROR); ?>", "<?php echo xtc_js_lang(ENTRY_PASSWORD_NEW_ERROR); ?>", "<?php echo xtc_js_lang(ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING); ?>");
 
