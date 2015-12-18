@@ -12,11 +12,12 @@
 
 $current_page = basename($PHP_SELF);
 $checkout_position = array(
-  'paypal_checkout.php'       => 0,
-  'checkout_shipping.php'     => 1,
-  'checkout_payment.php'      => 2,
-  'checkout_confirmation.php' => 3,
-  'checkout_process.php'      => 4
+  'paypal_checkout.php'         => 0,
+  'checkout_shipping.php'       => 1,
+  'checkout_payment.php'        => 2,
+  'checkout_confirmation.php'   => 3,
+  'checkout_process.php'        => 4,
+  'checkout_payment_iframe.php' => 4,
 );
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -121,7 +122,7 @@ if ($checkout_position[$current_page] >= 3) {
   }
 }
 
-if ($current_page == 'checkout_process.php') {
+if ($checkout_position[$current_page] >= 4) {
   if (xtc_not_null(MODULE_PAYMENT_INSTALLED) && !isset($_SESSION['payment'])) {
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }

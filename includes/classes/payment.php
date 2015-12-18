@@ -338,7 +338,9 @@
     function iframeAction() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
-          return $GLOBALS[$this->selected_module]->iframeAction();
+          if (method_exists($GLOBALS[$this->selected_module], 'iframeAction')) {
+            return $GLOBALS[$this->selected_module]->iframeAction();
+          }
         }
       }
     }
@@ -346,7 +348,9 @@
     function create_paypal_link() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
-          return $GLOBALS[$this->selected_module]->create_paypal_link();
+          if (method_exists($GLOBALS[$this->selected_module], 'create_paypal_link')) {
+            return $GLOBALS[$this->selected_module]->create_paypal_link();
+          }
         }
       }
     }
