@@ -49,6 +49,11 @@ if ((DB_DATABASE == '' || !defined('DB_MYSQL_TYPE')) && is_dir('./_installer')) 
   exit();
 }
 
+// minimum requirement
+if (version_compare(PHP_VERSION, '5.3.0', '<=')) {
+  die('<h1>Minimum requirement PHP Version 5.3</h1>');
+}
+
 // default time zone
 if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
   date_default_timezone_set('Europe/Berlin');
