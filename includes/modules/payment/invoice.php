@@ -41,7 +41,7 @@ class invoice {
     global $order;
     
     //update compatibility
-    if (!defined('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID')) {
+    if (!defined('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID') && $this->enabled) {
       xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID', '0',  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
     }
 

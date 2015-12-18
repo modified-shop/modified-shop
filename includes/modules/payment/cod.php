@@ -37,7 +37,7 @@ class cod {
     $this->cost = '';
     
     //update compatibility
-    if (!defined('MODULE_PAYMENT_COD_LIMIT_ALLOWED')) {
+    if (!defined('MODULE_PAYMENT_COD_LIMIT_ALLOWED') && $this->enabled) {
       xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_COD_LIMIT_ALLOWED', '600', '6', '3', now())");
     }
     
