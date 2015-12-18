@@ -911,6 +911,9 @@ define('ADMIN_HEADER_X_FRAME_OPTIONS_DESC', 'Adminbereich mit dem Header "X-Fram
 define('SEND_MAIL_ACCOUNT_CREATED_TITLE', 'E-Mail bei Kontoerstellung');
 define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Soll eine E-Mail and den Kunden versendet werden, wenn ein neues Kundenkonto erstellt wird?');
 
+define('STATUS_EMAIL_SENT_COPY_TO_ADMIN_TITLE', 'E-Mail bei Status&auml;nderung');
+define('STATUS_EMAIL_SENT_COPY_TO_ADMIN_DESC', 'Soll eine E-Mail and den Admin versendet werden, wenn der Status einer Bestellung ge&auml;ndert wird?');
+
 define('STOCK_CHECK_SPECIALS_TITLE', '&Uuml;berpr&uuml;fen der Sonderangebote');
 define('STOCK_CHECK_SPECIALS_DESC', 'Pr&uuml;fen ob noch genug Sonderangebote zum Ausliefern der Bestellung verf&uuml;gbar sind.<br/><br/><b>ACHTUNG:</b> Sollten nicht gen&uuml;gend Sonderangebote zur Verf&uuml;gung stehen, kann die Bestellung erst nach einer Reduzierung der Menge abgeschlossen werden.');
 

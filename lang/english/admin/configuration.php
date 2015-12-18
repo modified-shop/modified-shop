@@ -914,6 +914,9 @@ define('ADMIN_HEADER_X_FRAME_OPTIONS_DESC', 'Protect Adminarea with Header "X-Fr
 define('SEND_MAIL_ACCOUNT_CREATED_TITLE', 'E-Mail upon Create Account');
 define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Send an E-Mail to customer upon account creation?');
 
+define('STATUS_EMAIL_SENT_COPY_TO_ADMIN_TITLE', 'E-Mail upon status change');
+define('STATUS_EMAIL_SENT_COPY_TO_ADMIN_DESC', 'Send an E-Mail to admin upon status change of order?');
+
 define('STOCK_CHECK_SPECIALS_TITLE', 'Check Specials Stock');
 define('STOCK_CHECK_SPECIALS_DESC', 'Check to see if sufficent specials stock is available<br/><br/><b>ATTENTION:</b> If there is insufficient specials stock, the order can only be processed after a reduction of the quantity.');
 
