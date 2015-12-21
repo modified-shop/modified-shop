@@ -43,12 +43,13 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_i
                                         c.categories_id, 
                                         cd.categories_name
                                    FROM " . TABLE_CATEGORIES . " c
-                              LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION ." cd 
+                                   JOIN " . TABLE_CATEGORIES_DESCRIPTION ." cd 
                                         ON c.categories_id = cd.categories_id
                                            AND cd.language_id = ".(int)$_SESSION['languages_id']."
+                                           AND trim(cd.categories_name) != ''
                                   WHERE c.categories_status = 1
                                     AND c.parent_id = '0'
-                                    ".CATEGORIES_CONDITIONS_C."
+                                        ".CATEGORIES_CONDITIONS_C."
                                ORDER BY c.sort_order, cd.categories_name");
 
   $module_content = array();
@@ -100,7 +101,7 @@ function get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $cate
   if ($parent_id == 0){ 
     $cPath = ''; 
   } else { 
-    $cPath .= $parent_id . '_'; #
+    $cPath .= $parent_id . '_';
   }
   if (!is_array($category_tree_array)) { 
     $category_tree_array = array(); 
@@ -115,8 +116,9 @@ function get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $cate
                                    JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
                                         ON c.categories_id = cd.categories_id
                                            AND cd.language_id = ".(int)$_SESSION['languages_id']."
+                                           AND trim(cd.categories_name) != ''
                                   WHERE c.categories_status = 1
-                                    ".CATEGORIES_CONDITIONS_C."
+                                        ".CATEGORIES_CONDITIONS_C."
                                     AND c.categories_id = '".$parent_id."'
                                   LIMIT 1");
     $category = xtc_db_fetch_array($category_query, true);
@@ -130,9 +132,10 @@ function get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $cate
                          JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
                               ON c.categories_id = cd.categories_id
                                  AND cd.language_id = ".(int)$_SESSION['languages_id']."
+                                 AND trim(cd.categories_name) != ''
                         WHERE c.parent_id = '".$parent_id."'
                           AND c.categories_status = '1'
-                          ".CATEGORIES_CONDITIONS_C."
+                              ".CATEGORIES_CONDITIONS_C."
                      ORDER BY c.sort_order, cd.categories_name";
   $categories_query = xtDBquery($categories_query);
   while ($categories = xtc_db_fetch_array($categories_query,true)) {
