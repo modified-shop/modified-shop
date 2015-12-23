@@ -21,6 +21,11 @@ class main {
    * class constructor function
    */
   function __construct() {
+    
+    //new module support
+    require_once (DIR_FS_CATALOG.'includes/classes/mainModules.class.php');
+    $this->mainModules = new mainModules();
+    
     $this->SHIPPING = array();
 
     // prefetch shipping status
@@ -142,6 +147,9 @@ class main {
       $tax_info = TAX_INFO_SMALL_BUSINESS;
     }
     
+    //new module support
+    $tax_info = $this->mainModules->getTaxInfo($tax_info,$tax_rate);
+    
     return $tax_info;
   }
 
@@ -151,10 +159,14 @@ class main {
    * @return string
    */
   function getShippingNotice() {
+    $shippingNotice = '';
     if (SHOW_SHIPPING == 'true') {
-      return ' '.SHIPPING_EXCL.'<a href="'.xtc_href_link(FILENAME_CONTENT, 'coID='.SHIPPING_INFOS).'">'.SHIPPING_COSTS.'</a>';
+      $shippingNotice = ' '.SHIPPING_EXCL.'<a href="'.xtc_href_link(FILENAME_CONTENT, 'coID='.SHIPPING_INFOS).'">'.SHIPPING_COSTS.'</a>';
     }
-    return;
+    //new module support
+    $shippingNotice = $this->mainModules->getShippingNotice($shippingNotice);
+    
+    return $shippingNotice;
   }
 
   /**
@@ -173,7 +185,13 @@ class main {
     }
     $link_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS;
     $link_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS;
-    return '<a target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.$link_parameters, $ssl).'" title="Information" class="'.(($class_more === true) ? 'color_more ' : '').$link_class.'">'.$text.'</a>';
+    
+    $contentLink = '<a target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.$link_parameters, $ssl).'" title="Information" class="'.(($class_more === true) ? 'color_more ' : '').$link_class.'">'.$text.'</a>';
+    
+    //new module support
+    $contentLink = $this->mainModules->getShippingNotice($contentLink, $coID, $text, $ssl, $class_more);
+    
+    return $contentLink;
   }
   
   /**
@@ -182,13 +200,14 @@ class main {
    * @param integer $coID
    * @return array
    */
-  function getContentData($coID, $lang_id = '', $customers_status = '', $get_inactive = true) {
+  function getContentData($coID, $lang_id = '', $customers_status = '', $get_inactive = true, $add_select= '') {
     $lang_id = !empty($lang_id) ? $lang_id : $_SESSION['languages_id'];
     $customers_status = $customers_status != '' ? $customers_status : $_SESSION['customers_status']['customers_status_id'];
     $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . (int)$customers_status . "_group%'" : '';
     $where = (($get_inactive === true) ? '' : " AND content_active = '1'");
     $content_data_query = xtDBquery("-- includes/classes/main.php
-                                       SELECT content_id,
+                                       SELECT ".$add_select."
+                                              content_id,
                                               content_title,
                                               content_heading,
                                               content_text,
@@ -216,6 +235,9 @@ class main {
       }
     }
     
+    //new module support
+    $content_data_array = $this->mainModules->getContentData($content_data_array, $coID, $lang_id, $customers_status, $get_inactive, $add_select);
+    
     return $content_data_array;    
   }
 
@@ -228,6 +250,7 @@ class main {
    */
   function getVPEtext($products, $price) {
     global $xtPrice, $product;
+    $vpeText = '';
     require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
     if (!is_array($products)) {
       $products = $product->data;
@@ -236,9 +259,13 @@ class main {
     if (isset($products['products_vpe_status']) && $products['products_vpe_status'] == 1 && $products['products_vpe_value'] != 0.0 && $price > 0) {
       $this->vpe_name = xtc_get_vpe_name($products['products_vpe']);
       //echo $this->vpe_name; //only for debugging
-      return $xtPrice->xtcFormat($price * (1 / $products['products_vpe_value']), true).TXT_PER.$this->vpe_name;
+      $vpeText = $xtPrice->xtcFormat($price * (1 / $products['products_vpe_value']), true).TXT_PER.$this->vpe_name;
     }
-    return;
+    
+    //new module support
+    $vpeText = $this->mainModules->getVPEtext($vpeText, $products, $price, $this->vpe_name);
+    
+    return $vpeText;
   }
 
   /**
@@ -250,6 +277,7 @@ class main {
    */
   function getProductPopupLink($pID, $text, $class = '', $add_params = '') {
     global $request_type;
+    $productPopupLink = '';
     if (!defined('POPUP_PRODUCT_LINK_PARAMETERS')) {
       define('POPUP_PRODUCT_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=450&width=750');
     }
@@ -263,9 +291,15 @@ class main {
       $products_image = xtc_get_products_image($pID);
       $product = new product($pID);
       $products_image = $product->productImage($products_image, 'thumbnail');      
-      return '<a target="_blank" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$link_parameters, $request_type).'" class="'.$link_class.'">'.'<img class="'.$class.'" alt="" src="'.$products_image.'" />'.'</a>';
+      $productPopupLink = '<a target="_blank" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$link_parameters, $request_type).'" class="'.$link_class.'">'.'<img class="'.$class.'" alt="" src="'.$products_image.'" />'.'</a>';
+    } else {
+      $productPopupLink = '<a target="_blank" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$link_parameters.$add_params, $request_type).'" class="'.$link_class.' '.$class.'">'.$text.'</a>';
     }
-    return '<a target="_blank" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$link_parameters.$add_params, $request_type).'" class="'.$link_class.' '.$class.'">'.$text.'</a>';
+    
+    //new module support
+    $productPopupLink = $this->mainModules->getProductPopupLink($productPopupLink, $pID, $text, $class, $add_params);
+    
+    return $productPopupLink;
   }
 
   /**
