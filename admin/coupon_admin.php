@@ -653,10 +653,8 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
     $coupon_uses_user = $coupon['uses_per_user'];
     $coupon_products = $coupon['restrict_to_products'];
     $coupon_categories = $coupon['restrict_to_categories'];
-    //BOF  web28 - 2010-03-11  FIX coupon_start_date, coupon_expire_date
-    $coupon_start_date = $coupon['coupon_start_date'];
-    $coupon_expire_date = $coupon['coupon_expire_date'];
-    //EOF  web28 - 2010-03-11  FIX coupon_start_date, coupon_expire_date
+    $coupon_startdate = date('Y-m-d', strtotime($coupon['coupon_start_date']));
+    $coupon_finishdate = date('Y-m-d', strtotime($coupon['coupon_expire_date']));
   case 'new':
     //BOF  web28 - 2010-07-04 FIX error handling
     if (isset($_POST['coupon_amount'])) $coupon_amount = xtc_db_prepare_input($_POST['coupon_amount']);
