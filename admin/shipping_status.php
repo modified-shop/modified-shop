@@ -222,7 +222,7 @@
                 }
                 $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_IMAGE . '<br />' . xtc_draw_file_field('shipping_status_image'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_NAME . $shipping_status_inputs_string);
-                $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPINS_STATUS_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', ''));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', ''));
                 $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $_GET['page']) . '">' . BUTTON_CANCEL . '</a>');
                 break;
