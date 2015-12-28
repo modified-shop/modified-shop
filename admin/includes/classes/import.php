@@ -489,7 +489,7 @@ class xtcImport {
 																									                                            cd.categories_name='".addslashes($cat[$i])."'
 																									                                            and cd.language_id='".$this->languages[0]['id']."'
 																									                                            and cd.categories_id=c.categories_id
-																									                                            and parent_id='".$parent."'");
+																									                                            and c.parent_id='".$parent."'");
 
 					if (!xtc_db_num_rows($cat_query)) { // insert categorie
 						$categorie_data = array ('parent_id' => $parent, 'categories_status' => 1, 'date_added' => 'now()', 'last_modified' => 'now()');
