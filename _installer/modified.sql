@@ -687,8 +687,8 @@ CREATE TABLE orders_products_attributes (
   orders_products_attributes_id INT NOT NULL AUTO_INCREMENT,
   orders_id INT NOT NULL,
   orders_products_id INT NOT NULL,
-  products_options VARCHAR(32) NOT NULL,
-  products_options_values VARCHAR(64) NOT NULL,
+  products_options VARCHAR(255) NOT NULL,
+  products_options_values VARCHAR(255) NOT NULL,
   options_values_price DECIMAL(15,4) NOT NULL,
   price_prefix CHAR(1) NOT NULL,
   orders_products_options_id INT(11) NOT NULL,
@@ -836,7 +836,7 @@ DROP TABLE IF EXISTS products_options;
 CREATE TABLE products_options (
   products_options_id INT NOT NULL DEFAULT 0,
   language_id TINYINT NOT NULL DEFAULT 1,
-  products_options_name VARCHAR(32) NOT NULL DEFAULT '',
+  products_options_name VARCHAR(255) NOT NULL DEFAULT '',
   products_options_sortorder INT(11) NOT NULL,
   PRIMARY KEY (products_options_id,language_id)
 ) ENGINE=MyISAM;
@@ -845,7 +845,7 @@ DROP TABLE IF EXISTS products_options_values;
 CREATE TABLE products_options_values (
   products_options_values_id INT NOT NULL DEFAULT 0,
   language_id TINYINT NOT NULL DEFAULT 1,
-  products_options_values_name VARCHAR(64) NOT NULL DEFAULT '',
+  products_options_values_name VARCHAR(255) NOT NULL DEFAULT '',
   PRIMARY KEY (products_options_values_id,language_id)
 ) ENGINE=MyISAM;
 
