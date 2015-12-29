@@ -135,12 +135,12 @@
                                                 WHERE coupon_id = '" . $gv_result['coupon_id']."' 
                                                   AND customer_id = '" . (int)$_SESSION['customer_id'] . "'");
         if (xtc_db_num_rows($coupon_count)>=$gv_result['uses_per_coupon'] && $gv_result['uses_per_coupon'] > 0) {
-          $messageStack->add_session('coupon_message', ERROR_INVALID_USES_COUPON);
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'add_info='.urlencode($gv_result['uses_per_coupon'] . TIMES ), 'NONSSL'));
+          $messageStack->add_session('coupon_message', ERROR_INVALID_USES_COUPON . $gv_result['uses_per_coupon'] . TIMES);
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'add_info='.urlencode(ERROR_INVALID_USES_COUPON . $gv_result['uses_per_coupon'] . TIMES ), 'NONSSL'));
         }
         if (xtc_db_num_rows($coupon_count_customer) >= $gv_result['uses_per_user'] && $gv_result['uses_per_user'] > 0) {
-          $messageStack->add_session('coupon_message', ERROR_INVALID_USES_USER_COUPON);
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'add_info='. urlencode($gv_result['uses_per_user'] . TIMES ), 'NONSSL'));
+          $messageStack->add_session('coupon_message', ERROR_INVALID_USES_USER_COUPON . $gv_result['uses_per_user'] . TIMES);
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'add_info='. urlencode(ERROR_INVALID_USES_USER_COUPON . $gv_result['uses_per_user'] . TIMES ), 'NONSSL'));
         }
         if ($gv_result['coupon_type'] == 'S') {
           $coupon_amount = TEXT_COUPON_HELP_FIXED; //$order->info['shipping_cost'];
