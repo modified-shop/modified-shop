@@ -53,4 +53,10 @@ UPDATE admin_access SET shipcloud = 1 WHERE customers_id = 'groups' LIMIT 1;
 ALTER TABLE coupons MODIFY restrict_to_products TEXT DEFAULT NULL;
 ALTER TABLE coupons MODIFY restrict_to_categories TEXT DEFAULT NULL;
 
+#Tomcraft - 2015-12-29 - change field length to 255
+ALTER TABLE `products_options` MODIFY `products_options_name` VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE `products_options_values` MODIFY `products_options_values_name` VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE `orders_products_attributes` MODIFY `products_options` VARCHAR(255) NOT NULL;
+ALTER TABLE `orders_products_attributes` MODIFY `products_options_values` VARCHAR(255) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
