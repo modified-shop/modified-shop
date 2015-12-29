@@ -430,7 +430,7 @@ define('REDEEMED_AMOUNT','Ihr Gutschein wurde erfolgreich auf Ihr Konto verbucht
 define('REDEEMED_COUPON','Ihr Coupon wurde erfolgreich eingebucht und wird bei Ihrer Bestellung automatisch eingel&ouml;st.');
 
 define('ERROR_INVALID_USES_USER_COUPON','Sie k&ouml;nnen den Coupon nur ');
-define('ERROR_INVALID_USES_COUPON','Dieser Coupon k&ouml;nnen Kunden nur ');
+define('ERROR_INVALID_USES_COUPON','Diesen Coupon k&ouml;nnen Kunden nur ');
 define('TIMES',' mal einl&ouml;sen.');
 define('ERROR_INVALID_STARTDATE_COUPON','Ihr Coupon ist noch nicht verf&uuml;gbar.');
 define('ERROR_INVALID_FINISDATE_COUPON','Ihr Coupon ist bereits abgelaufen.');
