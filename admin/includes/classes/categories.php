@@ -188,7 +188,7 @@ class categories {
       }
 
       //new module support
-      $sql_data_array = $this->catModules->insert_category_desc($sql_data_array,$categories_data,$lang['id']);
+      $sql_data_array = $this->catModules->insert_category_desc($sql_data_array,$categories_data,$categories_id,$lang['id']);
       
       if ($action == 'insert') {
         $insert_sql_data = array ('categories_id' => $categories_id, 'language_id' => $lang['id']);
@@ -721,7 +721,7 @@ class categories {
       }
       
       //new module support
-      $sql_data_array = $this->catModules->insert_product_desc($sql_data_array,$products_data,$language_id);
+      $sql_data_array = $this->catModules->insert_product_desc($sql_data_array,$products_data,$products_id,$language_id);
    
       if ($action == 'insert') {
         $insert_sql_data = array ('products_id' => $products_id, 'language_id' => $language_id);
