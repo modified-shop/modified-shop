@@ -212,7 +212,7 @@ class SofortLibIdeal extends SofortLibMultipay {
 	 * @param string $successUrl url
 	 * @return SofortLibIdeal $this
 	 */
-	public function setSuccessUrl($successUrl) {
+	public function setSuccessUrl($successUrl, $redirect = true) {
 		$this->_parameters['user_variable_3'] = $successUrl;
 
 		return $this;
@@ -242,7 +242,7 @@ class SofortLibIdeal extends SofortLibMultipay {
 	 * @param string $notificationUrl url
 	 * @return SofortLibIdeal $this
 	 */
-	public function setNotificationUrl($notificationUrl) {
+	public function setNotificationUrl($notificationUrl, $notifyOn = '') {
 		$this->_parameters['user_variable_5'] = $notificationUrl;
 
 		return $this;
@@ -366,7 +366,7 @@ class SofortLibIdeal extends SofortLibMultipay {
 	 * @return string
 	 */
 	public function getUserVariable($i = 0) {
-		return $this->params['user_variable_'.$i];
+		return $this->_parameters['user_variable_'.$i];
 	}
 
 }
