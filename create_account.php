@@ -80,6 +80,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     'fax',
     'newsletter',
     'privacy',
+    'dob',
   );
 
   // prepare variables
