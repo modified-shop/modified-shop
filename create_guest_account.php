@@ -74,6 +74,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     'telephone',
     'fax',
     'privacy',
+    'dob',
   );
 
   // prepare variables
