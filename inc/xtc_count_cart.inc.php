@@ -15,10 +15,12 @@
 
   // counts total ammount of a product ID in cart.
   function xtc_count_cart() {
-    $id_list = $_SESSION['cart']->get_product_id_array();    
+    $id_list = $_SESSION['cart']->get_product_id_list();    
+    $id_list_array = explode(',', $id_list);
+    $id_list_array = array_map('trim', $id_list_array);
     $actual_content = array ();
-    for ($i = 0, $n = sizeof($id_list); $i < $n; $i ++) {
-      $actual_content[] = array ('id' => $id_list[$i], 'qty' => $_SESSION['cart']->get_quantity($id_list[$i]));
+    for ($i = 0, $n = sizeof($id_list_array); $i < $n; $i ++) {
+      $actual_content[] = array ('id' => $id_list_array[$i], 'qty' => $_SESSION['cart']->get_quantity($id_list_array[$i]));
     }
     
     // merge product IDs
