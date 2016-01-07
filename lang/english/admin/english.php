@@ -580,4 +580,7 @@ define('JAVASCRIPT_DISABLED_INFO', 'JavaScript seem to be disabled in your brows
 define('BOX_MODULE_TYPE', 'Class Extensions Modules');
 
 define('MULTIPLE_INSTALLATION', '<span style="color:red">[Multiple Installation: %s]</span>');
+
+define('FILEUPLOAD_INPUT_TXT','No file');
+define('FILEUPLOAD_BTN_TXT','Search');
 ?>

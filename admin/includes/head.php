@@ -36,6 +36,7 @@
   <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
   <link rel="stylesheet" type="text/css" href="includes/css/sumoselect_mod.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/checks.css" />
+  <link rel="stylesheet" type="text/css" href="includes/css/fileinput.css" />
   <?php } ?>
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
@@ -57,6 +58,11 @@
   <script type="text/javascript">
     $(document).ready(function () {
       $('.SlectBox').not('.noStyling').SumoSelect({ createElems: 'mod', placeholder: '-'});
+      $('.disableInputField').val('');
+      $('.imgupload').change(function() {
+        var basename_val = $(this).val().split(/[\\/]/).pop();
+        $('#finput_'+ $(this).attr('id')).val(basename_val);
+      });
     });
    </script>
   <?php } ?>

@@ -160,7 +160,21 @@
 
   // Output a form filefield
   function xtc_draw_file_field($name, $required = false,$parameters = '') {
+    $parameters .= strpos($parameters,'id=') !== false ? '' : ' id='.$name;
     $field = xtc_draw_input_field($name, '', $parameters, $required, 'file');
+
+    if (NEW_SELECT_CHECKBOX == 'true' && strpos($parameters,'noStyling') === false) {
+      $input_txt = defined('FILEUPLOAD_INPUT_TXT') ? FILEUPLOAD_INPUT_TXT : 'No file';
+      $btn_txt = defined('FILEUPLOAD_BTN_TXT') ? FILEUPLOAD_BTN_TXT : 'Search';
+      $field = '
+      <div class="inputBtnSection">
+      <input id="finput_'.$name.'" class="disableInputField" placeholder="'.$input_txt.'" disabled="disabled" />
+      <label class="fileUpload">
+        '.$field.'
+        <span class="uploadBtn">'.$btn_txt.'</span>
+      </label>
+      </div>';
+    }
     return $field;
   }
   

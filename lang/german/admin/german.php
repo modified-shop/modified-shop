@@ -580,4 +580,7 @@ define('JAVASCRIPT_DISABLED_INFO', 'JavaScript ist in Ihrem Browser deaktiviert.
 define('BOX_MODULE_TYPE', 'Klassenerweiterungen Module');
 
 define('MULTIPLE_INSTALLATION', '<span style="color:red">[Mehrfachinstallation: %s]</span>');
+
+define('FILEUPLOAD_INPUT_TXT','Keine Datei');
+define('FILEUPLOAD_BTN_TXT','Durchsuchen');
 ?>
