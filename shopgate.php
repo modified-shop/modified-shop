@@ -20,6 +20,9 @@
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
+if (!defined('_VALID_XTC')) {
+    define('_VALID_XTC', true);
+}
 
 $shopgatePath = dirname(__FILE__) . '/includes/external/shopgate';
 date_default_timezone_set("Europe/Berlin");
