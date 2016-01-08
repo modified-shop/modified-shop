@@ -56,3 +56,8 @@ define(
 define("MODULE_PAYMENT_SHOPGATE_LABEL_NEW_PRODUCTS", "New products");
 define("MODULE_PAYMENT_SHOPGATE_LABEL_SPECIAL_PRODUCTS", "Special products");
 define('SHOPGATE_ORDER_CUSTOM_FIELD', 'Custom field(s) of this Shopgate order:');
+
+define("SHOPGATE_COUPON_ERROR_NEED_ACCOUNT", "You need do be logged in to use this coupon");
+define("SHOPGATE_COUPON_ERROR_RESTRICTED_PRODUCTS", "This coupon is restricted to special products");
+define("SHOPGATE_COUPON_ERROR_RESTRICTED_CATEGORIES", "This coupon is restricted to special categories");
+define("SHOPGATE_COUPON_ERROR_MINIMUM_ORDER_AMOUNT_NOT_REACHED", "This coupon has a minimum order amount which has not been reached");

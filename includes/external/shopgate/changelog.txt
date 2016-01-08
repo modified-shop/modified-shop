@@ -1,3 +1,17 @@
+'''Version 2.9.26'''
+* fixed a bug in the real-time synchronization of shipping methods
+* fixed tier prices
+* fixed bug with amount based coupons
+
+'''Version 2.9.25'''
+* fixed issue on initializing the module
+* fixed tax export
+
+'''Version 2.9.24'''
+* added configuration to define display names for payment methods on order import
+* implemented voucher support
+* restored compatibility with PHP 5.2
+
 '''Version 2.9.23'''
 * implemented tier price support
 
