@@ -29,79 +29,8 @@ class ShopgatePluginInitHelper
      */
     public function defineXtcValidationConstant()
     {
-        if (!defined('_VALID_XTC')) {
-            define('_VALID_XTC', true);
-        }
-        
         if (!defined('DIR_FS_LANGUAGES')) {
             define('DIR_FS_LANGUAGES', rtrim(DIR_FS_CATALOG, '/') . '/lang/');
-        }
-    }
-    
-    /**
-     * include files which contain functions from the shop system. These function are used by
-     * our plugin
-     */
-    public function includeNeededFiles()
-    {
-        // needs to be included before everything else because of the constant PROJECT_MAJOR_VERSION
-        
-        if (file_exists(DIR_FS_CATALOG . 'admin/includes/version.php')) {
-            require_once(DIR_FS_CATALOG . 'admin/includes/version.php');
-        }
-        
-        $requiredFiles = array(
-            'inc/xtc_validate_password.inc.php',
-            'inc/xtc_format_price_order.inc.php',
-            'includes/classes/xtcPrice.php'
-        );
-        
-        if (!defined('PROJECT_MAJOR_VERSION')) {
-            $requiredFiles[] = 'inc/xtc_db_prepare_input.inc.php';
-        } else {
-            $requiredFiles[] = 'inc/db_functions_mysql.inc.php';
-        }
-        
-        foreach ($requiredFiles as $file) {
-            if (file_exists(DIR_FS_CATALOG . $file)) {
-                require_once(DIR_FS_CATALOG . $file);
-            }
-        }
-    }
-    
-    /**
-     * load language files depending on the current language set in the shop system
-     *
-     * @param $language
-     */
-    public function includeShopgateLanguageFile($language)
-    {
-        $languageFile =
-            DIR_FS_CATALOG . 'includes/external/shopgate/base/lang/' . $language . '/modules/payment/shopgate.php';
-        if (file_exists($languageFile)) {
-            require_once($languageFile);
-        }
-    }
-    
-    /**
-     * include shopgate wrapper
-     */
-    public function includeShopgateWrapper()
-    {
-        $wrapperFile = DIR_FS_CATALOG . 'includes/external/shopgate/base/shopgate_wrapper.php';
-        if (file_exists($wrapperFile)) {
-            require_once($wrapperFile);
-        }
-    }
-    
-    /**
-     * include ShopgateConfig file
-     */
-    public function includeShopgateConfig()
-    {
-        $configFile = DIR_FS_CATALOG . 'includes/external/shopgate/base/shopgate_config.php';
-        if (file_exists($configFile)) {
-            require_once($configFile);
         }
     }
     

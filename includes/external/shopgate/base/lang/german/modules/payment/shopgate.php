@@ -56,3 +56,8 @@ define(
 define("MODULE_PAYMENT_SHOPGATE_LABEL_NEW_PRODUCTS", "Neue Produkte");
 define("MODULE_PAYMENT_SHOPGATE_LABEL_SPECIAL_PRODUCTS", "Spezial Produkte");
 define('SHOPGATE_ORDER_CUSTOM_FIELD', 'Benutzerdefinierte Eingabefelder zu einer Shopgate Bestellung:');
+
+define("SHOPGATE_COUPON_ERROR_NEED_ACCOUNT", "Um diesen Gutschein verwenden zu können, müssen Sie angemeldet sein.");
+define("SHOPGATE_COUPON_ERROR_RESTRICTED_PRODUCTS", "Dieser Gutschein ist auf bestimmte Produkte beschränkt");
+define("SHOPGATE_COUPON_ERROR_RESTRICTED_CATEGORIES", "Dieser Gutschein ist auf bestimmte Kategorien beschränkt");
+define("SHOPGATE_COUPON_ERROR_MINIMUM_ORDER_AMOUNT_NOT_REACHED", "Der Mindestbestellwert, um diesen Gutschein nutzen zu können, wurde nicht erreicht");
