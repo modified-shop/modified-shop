@@ -67,6 +67,7 @@ class ShopgateCustomerModel extends ShopgateObject
             if ($customerGroup['id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
                 $customerGroup['is_default'] = 1;
             }
+            $customerGroup['customer_tax_class_key'] = 'default';
             $customerGroups[] = $customerGroup;
         }
         
@@ -110,7 +111,7 @@ class ShopgateCustomerModel extends ShopgateObject
     /**
      * store a token to a customer in the database
      *
-     * @param int $internalCustomerId
+     * @param int    $internalCustomerId
      * @param string $eMailAddress
      *
      * @return string
@@ -171,5 +172,22 @@ class ShopgateCustomerModel extends ShopgateObject
         }
         
         return false;
+    }
+    
+    /**
+     * read information to an customer from the database by uid
+     *
+     * @param int $customerId
+     *
+     * @return array|string
+     */
+    public function getCustomerById($customerId)
+    {
+        if (empty($customerId)) {
+            return "";
+        }
+        $query = "SELECT * FROM `" . TABLE_CUSTOMERS . "` WHERE customers_id={$customerId}";
+        
+        return xtc_db_fetch_array(xtc_db_query($query));
     }
 }

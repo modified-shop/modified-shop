@@ -887,6 +887,24 @@ if (defined('PROJECT_MAJOR_VERSION')) {
                                         </table>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td class="shopgate_setting" align="right">
+                                        <table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+                                            <tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+                                                <td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_PAYMENT_NAME_MAPPING; ?></b></td>
+                                                <td class="<?php echo $tableClass; ?> shopgate_input">
+                                                    <div>
+                                                        <textarea type="text" name="_shopgate_config[payment_name_mapping]"><?php echo $shopgateConfig["payment_name_mapping"] ?></textarea>
+                                                    </div>
+                                                    <?php echo SHOPGATE_CONFIG_PAYMENT_NAME_MAPPING_DESCRIPTION; ?>
+                                                    <a target="_blank" href="<?php echo SHOPGATE_CONFIG_PAYMENT_NAME_MAPPING_LINK; ?>">
+                                                        <?php echo SHOPGATE_CONFIG_PAYMENT_NAME_MAPPING_LINK_DESCRIPTION; ?>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
                                 <tr><td colspan="2">&nbsp;</td></tr>
                                 <tr><td colspan="2">&nbsp;</td></tr>
                                 <tr><th colspan="2" style="text-align: left;"><?php echo SHOPGATE_CONFIG_SYSTEM_SETTINGS; ?></th></tr>

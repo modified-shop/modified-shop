@@ -84,7 +84,7 @@ class ShopgateItemXmlModel extends ShopgateItemModel
     
     public function setTaxPercent()
     {
-        $taxRate = (float)xtc_get_tax_rate($this->item['products_tax_class_id'], -1, $this->config->getTaxZoneId());
+        $taxRate = (float)xtc_get_tax_rate($this->item['products_tax_class_id'], $this->countryId, $this->config->getTaxZoneId());
         parent::setTaxPercent(!empty($taxRate) ? $taxRate : 0.0);
     }
     
@@ -166,9 +166,10 @@ class ShopgateItemXmlModel extends ShopgateItemModel
         $priceHelper = $this->getHelper(ShopgateObject::HELPER_PRICING);
         
         $xtPrice                                               =
-            new xtcPrice($this->config->getCurrency(), $this->config->getCustomerPriceGroup());
+            new xtcPrice($this->config->getCurrency(), DEFAULT_CUSTOMERS_STATUS_ID_GUEST);
         $xtPrice->cStatus['customers_status_graduated_prices'] = "0";
-        $price                                                 = $xtPrice->xtcGetPrice(
+
+        $salePrice = $xtPrice->xtcGetPrice(
             $this->item['products_id'],
             false,
             1,
@@ -179,34 +180,27 @@ class ShopgateItemXmlModel extends ShopgateItemModel
         
         if ($taxRate > 0) {
             $priceType = Shopgate_Model_Catalog_Price::DEFAULT_PRICE_TYPE_GROSS;
-            $oldPrice  = ($price < ($this->item['products_price'] * $this->exchangeRate) * (1 + ($taxRate / 100)))
-                ? ($this->item['products_price'] * $this->exchangeRate) * (1 + ($taxRate / 100))
-                : '';
+            $price     = ($this->item['products_price'] * $this->exchangeRate) * (1 + ($taxRate / 100));
         } else {
             $priceType = Shopgate_Model_Catalog_Price::DEFAULT_PRICE_TYPE_NET;
-            $oldPrice  = ($price < $this->item['products_price'])
-                ? ($this->item['products_price'] * $this->exchangeRate)
-                : '';
+            $price     = $this->item['products_price'] * $this->exchangeRate;
         }
         
         if ($this->getIsChild()) {
             $additionalPrice = $this->calculateVariationsAddAmount($xtPrice);
             $price += ($additionalPrice * $this->exchangeRate);
-            if ($oldPrice > 0) {
-                $oldPrice += $additionalPrice;
-            }
+            $salePrice = $salePrice + ($additionalPrice * $this->exchangeRate);
         }
-        
+
+        $priceModel->setPrice($priceHelper->formatPriceNumber($price));
+        $priceModel->setSalePrice($priceHelper->formatPriceNumber($salePrice));
         $priceModel->setType($priceType);
-        $priceModel->setSalePrice($priceHelper->formatPriceNumber($price));
         $priceModel->setBasePrice($this->getProductVPE($this->item, $price));
-        
-        if ($oldPrice) {
-            $priceModel->setPrice($priceHelper->formatPriceNumber($oldPrice));
+
+        if (!$this->getIsChild()) {
+            $this->addTierPricesTo($priceModel, $priceHelper);
         }
-        
-        $this->addTierPricesTo($priceModel, $priceHelper);
-        
+
         parent::setPrice($priceModel);
     }
     
@@ -634,7 +628,8 @@ class ShopgateItemXmlModel extends ShopgateItemModel
      * @throws ShopgateLibraryException
      */
     protected function addTierPricesTo(
-        Shopgate_Model_Catalog_Price $priceModel, Shopgate_Helper_Pricing $priceHelper) {
+        Shopgate_Model_Catalog_Price $priceModel, Shopgate_Helper_Pricing $priceHelper
+    ) {
         /**
          * @var int      $customerGroupId
          * @var xtcPrice $xtPrice
@@ -643,11 +638,11 @@ class ShopgateItemXmlModel extends ShopgateItemModel
             if ($xtPrice->cStatus['customers_status_show_price'] == '0') {
                 continue;
             }
-            
+
             $getDiscountsOnly = ($xtPrice->cStatus['customers_status_graduated_prices'] == '1')
                 ? ''
                 : ' AND `quantity` = 1 ';
-            
+
             $quantitiesQuery = xtc_db_query(
                 'SELECT `quantity` ' .
                 'FROM `personal_offers_by_customers_status_' . ((int)$customerGroupId) . '` ' .
@@ -656,8 +651,8 @@ class ShopgateItemXmlModel extends ShopgateItemModel
             );
             
             while ($quantity = xtc_db_fetch_array($quantitiesQuery)) {
-    
-                $addAmount      = $this->getIsChild() ? $this->calculateVariationsAddAmount($xtPrice) : 0;
+                
+                $addAmount      = $this->calculateVariationsAddAmount($xtPrice);
                 $graduatedPrice = $xtPrice->xtcGetPrice(
                     $this->item['products_id'],
                     false,
@@ -666,26 +661,39 @@ class ShopgateItemXmlModel extends ShopgateItemModel
                     $this->item['products_price'],
                     1
                 );
-    
-                if($this->getIsChild() && $addAmount > 0) {
-                    $graduatedPrice += $addAmount - 
+                
+                if ($addAmount > 0) {
+                    $graduatedPrice += $addAmount -
                         (($xtPrice->cStatus['customers_status_discount_attributes'])
                             ? ($addAmount * ($xtPrice->xtcCheckDiscount($this->item['products_id']) / 100))
                             : 0);
                 }
-    
-                $reduction = $priceModel->getSalePrice() - $graduatedPrice;
                 
+                $reduction = $priceModel->getSalePrice() - $graduatedPrice;
+
                 $tierPriceModel = new Shopgate_Model_Catalog_TierPrice();
                 $tierPriceModel->setFromQuantity($quantity['quantity']);
                 $tierPriceModel->setReduction($priceHelper->formatPriceNumber($reduction, 6));
                 $tierPriceModel->setReductionType(Shopgate_Model_Catalog_TierPrice::DEFAULT_TIER_PRICE_TYPE_FIXED);
                 $tierPriceModel->setAggregateChildren(true); // tier prices are always aggregated in
                 $tierPriceModel->setCustomerGroupUid($customerGroupId);
-                
+
                 if (round($reduction, 6) > 0) {
                     $priceModel->addTierPriceGroup($tierPriceModel);
                 }
+            }
+
+            if ($xtPrice->cStatus['customers_status_ot_discount'] > 0) {
+
+                $discount       = $priceModel->getSalePrice() - $xtPrice->xtcGetDC($priceModel->getSalePrice(), $xtPrice->cStatus['customers_status_ot_discount']);
+                $tierPriceModel = new Shopgate_Model_Catalog_TierPrice();
+                $tierPriceModel->setFromQuantity(1);
+                $tierPriceModel->setReduction($priceHelper->formatPriceNumber($discount, 6));
+                $tierPriceModel->setReductionType(Shopgate_Model_Catalog_TierPrice::DEFAULT_TIER_PRICE_TYPE_FIXED);
+                $tierPriceModel->setAggregateChildren(true); // tier prices are always aggregated in
+                $tierPriceModel->setCustomerGroupUid($customerGroupId);
+                $priceModel->addTierPriceGroup($tierPriceModel);
+
             }
         }
     }
