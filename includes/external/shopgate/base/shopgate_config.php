@@ -48,6 +48,7 @@ class ShopgateConfigModified extends ShopgateConfig
     protected $order_status_shipped;
     protected $order_status_shipping_blocked;
     protected $order_status_canceled;
+    protected $payment_name_mapping;
     
     protected $reverse_categories_sort_order;
     protected $reverse_items_sort_order;
@@ -137,6 +138,10 @@ class ShopgateConfigModified extends ShopgateConfig
         $this->export_special_products_category    = 0;
         $this->export_special_products_category_id = 1000;
         $this->export_option_as_input_field        = '';
+        $this->payment_name_mapping                = '';
+        $this->supported_fields_check_cart         = array(
+            'customer', 'external_coupons', 'items', 'shipping_methods'
+        );
     }
     
     protected function validateCustom(array $fieldList = array())
@@ -302,13 +307,21 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->export_special_products_category_id;
     }
-    
+
     /**
      * @return string
      */
     public function getExportOptionAsInputField()
     {
         return $this->export_option_as_input_field;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentNameMapping()
+    {
+        return $this->payment_name_mapping;
     }
     
     /**
@@ -463,5 +476,13 @@ class ShopgateConfigModified extends ShopgateConfig
     public function setExportOptionAsInputField($value)
     {
         $this->export_option_as_input_field = $value;
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setPaymentNameMapping($value)
+    {
+        $this->payment_name_mapping = $value;
     }
 }
