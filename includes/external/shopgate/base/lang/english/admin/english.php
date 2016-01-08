@@ -180,6 +180,11 @@ define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL_ON', 'Yes');
 define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL_OFF', 'No');
 define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL_DESCRIPTION', 'After an shopgate order has been successfully completed, an confirmation mail will be send to the customer.if the product(s) were downloadble the download link is included in this mail.');
 
+define('SHOPGATE_CONFIG_PAYMENT_NAME_MAPPING', 'Display names for payment methods');
+define('SHOPGATE_CONFIG_PAYMENT_NAME_MAPPING_DESCRIPTION', "Individual names for payment methods, which are used on order import. Defined by '=' and separated by ';'.<br/>(Example: PREPAY=Prepay;SHOPGATE=Handled by Shopgate)<br/>");
+define('SHOPGATE_CONFIG_PAYMENT_NAME_MAPPING_LINK', 'https://support.shopgate.com/hc/en-us/articles/202911763-Connecting-to-modified-eCommerce#4.4');
+define('SHOPGATE_CONFIG_PAYMENT_NAME_MAPPING_LINK_DESCRIPTION', "Link to the support page");
+
 ### System Settings ###
 define('SHOPGATE_CONFIG_SYSTEM_SETTINGS', 'System Settings');
 
