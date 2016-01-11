@@ -3,7 +3,7 @@
     display:inline-block;
     vertical-align:top;
     font-size:0;
-    font-family: Arial;
+    font-family: Verdana, Arial, sans-serif; 
 }
 .disableInputField{
     display:inline-block;
@@ -13,7 +13,7 @@
     font-size:12px;
     padding:0 3px;
     background-color: #FAFAFA;
-    font-family: Arial;
+    font-family: Verdana, Arial, sans-serif; 
 }
 
 .fileUpload {
