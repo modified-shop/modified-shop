@@ -128,6 +128,7 @@ if (xtc_not_null($action)) {
           unset($cart_quantity);
         }
       }
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/update_product_before_redirect/','php') as $file) require ($file);
       xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message, 'NONSSL'));
       break;
 
@@ -143,6 +144,7 @@ if (xtc_not_null($action)) {
         }
         $cart_object->add_cart((int)$_POST['products_id'], $cart_quantity, isset($_POST['id'])?$_POST['id']:'');
       }
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/add_product_before_redirect/','php') as $file) require ($file);
       if ($co_express === true) {
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, 'express=on', 'SSL'));
       } else {
