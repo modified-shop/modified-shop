@@ -100,16 +100,6 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
       <td style="border-top: 1px solid #cccccc;vertical-align:top;line-height:30px;" class="main">
         <?php
           echo '<span'.(($group_data['STATUS_GRADUATED'] != '1') ? ' class="colorRed"' : '').'>'.TXT_STAFFELPREIS.'</span>';
-
-          // ok, lets check if there is already a staffelpreis
-          $staffel_query = xtc_db_query("SELECT price_id,
-                                                products_id,
-                                                quantity,
-                                                personal_offer
-                                           FROM personal_offers_by_customers_status_".$group_data['STATUS_ID']."
-                                          WHERE products_id = '".$pInfo->products_id."'
-                                            AND quantity != '1'
-                                       ORDER BY quantity ASC");
           ?> 
           <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/<?php echo ((xtc_db_num_rows($staffel_query) > 0) ? 'arrow_down_green.gif' : 'arrow_down.gif'); ?>" height="16" width="16" onclick="javascript:toggleBox('staffel_<?php echo $group_data['STATUS_ID']; ?>');" style="vertical-align: middle;"><?php echo (($group_data['STATUS_GRADUATED'] != '1') ? draw_tooltip(TEXT_GRADUATED_PRICES_GROUP_INFO) : ''); ?>
           <div id="staffel_<?php echo $group_data['STATUS_ID']; ?>" class="longDescription">
@@ -121,29 +111,41 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
               </tr>
               <?php
               $count = 0;
-              if (xtc_db_num_rows($staffel_query) > 0) {
-                while ($staffel_values = xtc_db_fetch_array($staffel_query)) {
-                  ?>
-                  <tr class="dataTableRow">
-                    <td class="dataTableContent"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][quantity]', $staffel_values['quantity'], 'style="width:50px;"'); ?></td>            
-                    <td class="dataTableContent">
-                      <?php
-                      if (PRICE_IS_BRUTTO == 'true') {
-                        $products_price = xtc_round($staffel_values['personal_offer'] * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
-                      } else {
-                        $products_price = xtc_round($staffel_values['personal_offer'], PRICE_PRECISION);
-                      }
-                      echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][personal_offer]', $products_price, 'style="width: 135px"');
-                      if (PRICE_IS_BRUTTO == 'true') {
-                        echo '&nbsp;<span style="white-space: nowrap;">'.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($staffel_values['personal_offer'], false).'</strong></span>';
-                      }
-                      echo xtc_draw_hidden_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][price_id]', $staffel_values['price_id']);
-                      ?>
-                    </td>
-                    <td class="dataTableContent txta-c"><?php echo xtc_draw_checkbox_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][delete]'); ?></td>
-                  </tr>          
-                  <?php
-                  $count++;
+              if (isset($pInfo->products_id) && $pInfo->products_id > 0) {
+                // ok, lets check if there is already a staffelpreis
+                $staffel_query = xtc_db_query("SELECT price_id,
+                                                      products_id,
+                                                      quantity,
+                                                      personal_offer
+                                                 FROM personal_offers_by_customers_status_".$group_data['STATUS_ID']."
+                                                WHERE products_id = '".$pInfo->products_id."'
+                                                  AND quantity != '1'
+                                             ORDER BY quantity ASC");
+
+                if (xtc_db_num_rows($staffel_query) > 0) {
+                  while ($staffel_values = xtc_db_fetch_array($staffel_query)) {
+                    ?>
+                    <tr class="dataTableRow">
+                      <td class="dataTableContent"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][quantity]', $staffel_values['quantity'], 'style="width:50px;"'); ?></td>            
+                      <td class="dataTableContent">
+                        <?php
+                        if (PRICE_IS_BRUTTO == 'true') {
+                          $products_price = xtc_round($staffel_values['personal_offer'] * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
+                        } else {
+                          $products_price = xtc_round($staffel_values['personal_offer'], PRICE_PRECISION);
+                        }
+                        echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][personal_offer]', $products_price, 'style="width: 135px"');
+                        if (PRICE_IS_BRUTTO == 'true') {
+                          echo '&nbsp;<span style="white-space: nowrap;">'.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($staffel_values['personal_offer'], false).'</strong></span>';
+                        }
+                        echo xtc_draw_hidden_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][price_id]', $staffel_values['price_id']);
+                        ?>
+                      </td>
+                      <td class="dataTableContent txta-c"><?php echo xtc_draw_checkbox_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][delete]'); ?></td>
+                    </tr>          
+                    <?php
+                    $count++;
+                  }
                 }
               }
               $max_staffel = MIN_GROUP_PRICE_STAFFEL + $count;
