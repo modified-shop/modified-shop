@@ -158,7 +158,7 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
         div#payone { position:relative; cursor: pointer; background: #ccc url(../includes/external/payone/css/arrow_down.png) no-repeat 4px 7px; padding:8px 0 8px 30px; }
         .payone_logo {  position:absolute; top:8px; right:8px; width:133px; height: 15px; background: transparent url(../includes/external/payone/css/logo_payone.png) no-repeat 0px 0px;}
         .payone_active { background: #bbb url(../includes/external/payone/css/arrow_up.png) no-repeat 4px 7px !important; }
-        .payone_data { font-family: Verdana; font-size:10px !important; }
+        .payone_data { font-family: Verdana, Arial, sans-serif; font-size:10px !important; }
         div.p1_txstatus {  }
         div.p1_txstatus_received { background: transparent url(../includes/external/payone/css/arrow_down_small.png) no-repeat 380px 3px; margin: 0 0; cursor: pointer;  border-bottom: 1px dotted #999; padding:2px 0px; line-height:14px; }
         div.p1_txstatus_open { background: #55b5df url(../includes/external/payone/css/arrow_up_small.png) no-repeat 380px 3px !important; font-weight: bold; }

@@ -2,7 +2,7 @@ $(document).ready(function(){
     $('[maxlength]').each(function(){
         var maxLength = parseInt($(this).attr('maxlength'));
         if(maxLength > 0){
-            var countdownBox = $('<div style="font-size:11px; font-family:Verdana; color:#666;" />');
+            var countdownBox = $('<div style="font-size:11px; font-family:Verdana, Arial, sans-serif; color:#666;" />');
             $(this).after(countdownBox);
             $(this).keyup(function(){
                 var t = maxLength-$(this).val().length;

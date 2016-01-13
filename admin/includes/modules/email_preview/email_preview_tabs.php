@@ -17,7 +17,7 @@ function email_preview_tabs()
     $email_div .=
     '<style type="text/css">
     #tab_html,#tab_txt {
-    font-family: Verdana;
+    font-family: Verdana, Arial, sans-serif;
     font-size:13px;
     padding: 2px 5px;
     border: 1px solid #a3a3a3;
