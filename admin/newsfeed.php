@@ -47,7 +47,7 @@ require (DIR_WS_INCLUDES.'head.php');
   </script>
   <style type="text/css">
     body {
-      font-family:Verdana;
+      font-family:Verdana, Arial, sans-serif;
       font-size:12px;
     }
   </style>
