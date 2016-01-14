@@ -505,4 +505,6 @@ define ('WHOS_ONLINE_TIME_LAST_CLICK_INFO', 'Display period in seconds:% s After
 define('BOX_PARCEL_CARRIERS', 'Parcel carriers');
 define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> carriers)');
 
+define('CFG_TXT_PRICE', 'Price');
+
 define('CHECK_LABEL_PRICE', 'Check price');
