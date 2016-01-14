@@ -62,7 +62,11 @@ require (DIR_WS_INCLUDES.'head.php');
         <div class="main">Modules</div>      
         <?php
         	$carriers_query = xtc_db_query("SELECT *
-        																		FROM ".TABLE_CARRIERS);
+        																		FROM ".TABLE_CARRIERS."
+        																	 WHERE (LOWER(carrier_name) = 'dpd'
+        																	        OR LOWER(carrier_name) = 'fedex'
+        																	        OR LOWER(carrier_name) = 'hermes'
+        																	        OR LOWER(carrier_name) = 'ups')");
         	while ($carriers = xtc_db_fetch_array($carriers_query)) {
 						$shipcloud_query = xtc_db_query("SELECT * 
 																							FROM ".TABLE_ORDERS_TRACKING." 
