@@ -96,10 +96,10 @@ require (DIR_WS_INCLUDES.'head.php');
 								?>
 							</table>
 							<div style="clear:both;"></div>
-							<div class="txta-r">
+							<div class="txta-r pdg2" style="margin-bottom:10px;">
 								<?php echo xtc_draw_input_field('earliest', '', 'class="earliest" style="width: 155px" placeholder="'.TEXT_SC_EARLIEST.'"'); ?>
 								<?php echo xtc_draw_input_field('latest', '', 'class="latest" style="width: 155px" placeholder="sp&auml;testens"'); ?>
-								<input type="submit" class="button" name="update" value="<?php echo BUTTON_PICKUP; ?>">
+								<input type="submit" class="button" style="margin-top: -4px;" name="update" value="<?php echo BUTTON_PICKUP; ?>">
 							</div>
 							</form>
 						<?php
