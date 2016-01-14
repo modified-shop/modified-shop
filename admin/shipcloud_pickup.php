@@ -74,7 +74,7 @@ require (DIR_WS_INCLUDES.'head.php');
 							?>
 							<table class="tableCenter">
 								<tr class="dataTableHeadingRow">
-									<td class="dataTableHeadingContent txta-c" colspan="3"><?php echo $carriers['carrier_name']; ?></td>
+									<td class="dataTableHeadingContent txta-c" colspan="4"><?php echo $carriers['carrier_name']; ?></td>
 								</tr>
 								<tr class="dataTableHeadingRow">
  									<td class="dataTableHeadingContent"><?php echo xtc_draw_checkbox_field(strtolower($carriers['carrier_name']), '', '', '', 'onClick="selectAll(document.getElementsByName(\'sc_'.strtolower($carriers['carrier_name']).'[]\'), \''.strtolower($carriers['carrier_name']).'\');"').' '.TABLE_HEADING_EDIT; ?></td>
