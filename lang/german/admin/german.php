@@ -507,4 +507,6 @@ define('WHOS_ONLINE_TIME_LAST_CLICK_INFO', 'Anzeigezeitraum in Sek.: %s. Nach di
 define('BOX_PARCEL_CARRIERS', 'Paketdienstleister');
 define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Paketdienstleister)');
 
+define('CFG_TXT_PRICE', 'Preis');
+
 define('CHECK_LABEL_PRICE', 'Preis abfragen');
