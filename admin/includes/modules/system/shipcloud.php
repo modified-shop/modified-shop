@@ -64,6 +64,8 @@ class shipcloud {
     $table_array = array(
       array('column' => 'sc_label_url', 'default' => 'VARCHAR(512) NOT NULL'),
       array('column' => 'sc_id', 'default' => 'VARCHAR(256) NOT NULL'),
+      array('column' => 'sc_date_added', 'default' => 'DATETIME NOT NULL'),
+      array('column' => 'sc_date_pickup', 'default' => 'DATETIME NOT NULL'),
     );
     foreach ($table_array as $table) {
       $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS_TRACKING." LIKE '".xtc_db_input($table['column'])."'");
