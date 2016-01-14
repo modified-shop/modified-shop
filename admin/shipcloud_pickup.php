@@ -23,6 +23,7 @@ if (isset($_GET['action'])) {
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
+  <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>
 	<link type="text/css" href="includes/javascript/jQueryDateTimePicker/jquery.datetimepicker.css" rel="stylesheet" />
 	<script type="text/javascript" src="includes/javascript/jQueryDateTimePicker/jquery.datetimepicker.full.min.js"></script>
 	<script type="text/javascript">
