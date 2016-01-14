@@ -169,6 +169,7 @@ define('BOX_SAFETERMS','Safeterms - AGB Service'); // Tomcraft - 2013-06-21 - Sa
 define('BOX_EASYMARKETING','EASYMARKETING AG'); // Tomcraft - 2013-08-29 - Added easymarketing
 define('BOX_IT_RECHT_KANZLEI', 'IT Recht Kanzlei');
 define('BOX_SHIPCLOUD', 'shipcloud');
+define('BOX_SHIPCLOUD_PICKUP', 'shipcloud - pickup');
 
 define('TXT_GROUPS','<b>Groups</b>:');
 define('TXT_SYSTEM','System');
@@ -503,3 +504,5 @@ define ('WHOS_ONLINE_TIME_LAST_CLICK_INFO', 'Display period in seconds:% s After
 
 define('BOX_PARCEL_CARRIERS', 'Parcel carriers');
 define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> carriers)');
+
+define('CHECK_LABEL_PRICE', 'Check price');

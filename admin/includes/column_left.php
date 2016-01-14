@@ -102,6 +102,7 @@ echo ('<ul>');
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['safeterms'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_SAFETERMS, '') . '" class="menuBoxContentLink"> -' . BOX_SAFETERMS . '</a></li>';
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['easymarketing'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_EASYMARKETING, '') . '" class="menuBoxContentLink"> -' . BOX_EASYMARKETING . '</a></li>';
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['shipcloud'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_SHIPCLOUD, '') . '" class="menuBoxContentLink"> -' . BOX_SHIPCLOUD . '</a></li>';
+  if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['shipcloud_pickup'] == '1')) echo '<li><a href="' . xtc_href_link('shipcloud_pickup.php', '') . '" class="menuBoxContentLink"> -' . BOX_SHIPCLOUD_PICKUP . '</a></li>';
 
   ## Payone
   include(DIR_FS_EXTERNAL.'payone/modules/column_left.php');
