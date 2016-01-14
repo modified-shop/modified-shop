@@ -117,11 +117,25 @@ class shipcloud {
     $table_array = array(
       array('column' => 'sc_label_url', 'default' => 'VARCHAR(512) NOT NULL'),
       array('column' => 'sc_id', 'default' => 'VARCHAR(256) NOT NULL'),
+      array('column' => 'sc_date_added', 'default' => 'DATETIME NOT NULL'),
+      array('column' => 'sc_date_pickup', 'default' => 'DATETIME NOT NULL'),
     );
     foreach ($table_array as $table) {
       $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS_TRACKING." LIKE '".xtc_db_input($table['column'])."'");
       if (xtc_db_num_rows($check_query) < 1) {
         xtc_db_query("ALTER TABLE ".TABLE_ORDERS_TRACKING." ADD ".$table['column']." ".$table['default']."");
+      }
+    }
+
+    $admin_query = xtc_db_query("SELECT * 
+                                   FROM ".TABLE_ADMIN_ACCESS."
+                                  LIMIT 1");
+    $admin = xtc_db_fetch_array($admin_query);
+    if (!isset($admin['shipcloud_pickup'])) {
+      xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." ADD `shipcloud_pickup` INT(1) DEFAULT '0' NOT NULL");
+      xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET shipcloud_pickup = '1' WHERE customers_id = '1' LIMIT 1");        
+      if ($_SESSION['customer_id'] > 1) {
+        xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET shipcloud_pickup = '1' WHERE customers_id = '".$_SESSION['customer_id']."' LIMIT 1") ;
       }
     }
   }

@@ -21,12 +21,15 @@ require_once(DIR_WS_CLASSES.'order.php');
 class shipcloud {
   
   const SC_URL_LABEL = 'https://api.shipcloud.io/v1/shipments/';
+  const SC_URL_QUOTES = 'https://api.shipcloud.io/v1/shipment_quotes/';
+  const SC_URL_PICKUP = 'https://api.shipcloud.io/v1/pickup_requests/';
   const SC_URL_CARRIERS = 'api.shipcloud.io/v1/carriers/';
   
   
-  function __construct($oID) {
-    $this->order = new order($oID);
-
+  function __construct($oID = '') {
+    if ($oID != '') {
+      $this->order = new order($oID);
+    }
     $this->log = ((defined('MODULE_SHIPCLOUD_LOG') && MODULE_SHIPCLOUD_LOG == 'True') ? true : true);
     $this->debug = false;
   }
@@ -77,11 +80,36 @@ class shipcloud {
       $request_array = $this->encode_request($request_array);
       $this->logger($request_array);
       
-      $request = $this->do_request(json_encode($request_array));
-      if (is_array($request) && count($request) > 0) {
-        $messageStack->add_session(TEXT_LABEL_CREATED, 'success');
-        $this->logger($request);
-        $this->save_label($request);
+      if (!isset($params['quote'])) {
+        $request = $this->do_request(json_encode($request_array));
+        if (is_array($request) && count($request) > 0) {
+          $messageStack->add_session(TEXT_LABEL_CREATED, 'success');
+          $this->logger($request);
+          $this->save_label($request);
+        }
+      } else {
+        unset($request_array['reference_number']);
+        unset($request_array['create_shipping_label']);
+        
+        unset($request_array['to']['first_name']);
+        unset($request_array['to']['last_name']);
+        unset($request_array['to']['company']);
+        unset($request_array['to']['phone']);
+        unset($request_array['to']['state']);
+
+        unset($request_array['from']['first_name']);
+        unset($request_array['from']['last_name']);
+        unset($request_array['from']['company']);
+        unset($request_array['from']['phone']);
+        unset($request_array['from']['state']);
+
+        unset($request_array['package']['description']);
+        
+        $request = $this->do_request(json_encode($request_array), self::SC_URL_QUOTES);
+        if (is_array($request) && isset($request['shipment_quote'])) {
+          $messageStack->add_session(CFG_TXT_PRICE.': &euro; '.number_format($request['shipment_quote']['price'], 2, ',', '.'), 'success');
+          $this->logger($request);
+        }
       }
     } else {
       $messageStack->add_session(TEXT_CARRIER_ERROR, 'warning');
@@ -96,12 +124,13 @@ class shipcloud {
 		                        'parcel_id' => $request['carrier_tracking_no'],
 		                        'sc_label_url' => $request['label_url'],
 		                        'sc_id' => $request['id'],
+		                        'sc_date_added' => 'now()',
 		                        );
 		xtc_db_perform(TABLE_ORDERS_TRACKING,$sql_data_array);
   }
   
   
-  private function check_carrier() { 
+  public function check_carrier($check = true) { 
     $check_carrier_query = xtc_db_query("SELECT LOWER(carrier_name) as name 
                                             FROM ".TABLE_CARRIERS." 
                                            WHERE carrier_id = '".$this->carrier_id."'");
@@ -111,10 +140,14 @@ class shipcloud {
     $request = json_decode($request, true);
     
     if (is_array($request) && count($request) > 0) {
-      foreach($request as $carrier) {
-        if ($carrier['name'] == $check_carrier['name']) {
-          return $carrier['name'];
+      if ($check === true) {
+        foreach($request as $carrier) {
+          if ($carrier['name'] == $check_carrier['name']) {
+            return $carrier['name'];
+          }
         }
+      } else {
+        return $request;
       }
     }
     
@@ -269,6 +302,38 @@ class shipcloud {
   }
 
 
+  public function pickup($params) { 
+    global $messageStack;
+    
+    $request_array = array(
+      'carrier' => $params['carrier'],
+      'pickup_time' => array(
+        'earliest' => date('c', strtotime($params['earliest'])),
+        'latest' => date('c', strtotime($params['latest'])),
+      ),
+    );
+    
+    if (isset($params['sc_'.$params['carrier']])) {
+    	$request_array['shipments'] = array();
+    	foreach ($params['sc_'.$params['carrier']] as $sc_id) {
+    		$request_array['shipments'][] = array('id' =>$sc_id);
+    	}
+    }
+      
+    $request_array = $this->encode_request($request_array);
+    $this->logger($request_array);
+        
+    $request = $this->do_request(json_encode($request_array), self::SC_URL_PICKUP);
+        
+    if (is_array($request)) {
+    	for ($i = 0, $n=count($request['shipments']); $i<$n; $i++) {
+    		xtc_db_query("UPDATE ".TABLE_ORDERS_TRACKING." SET sc_date_pickup = NOW() WHERE sc_id = '".$request['shipments'][$i]['id']."'");
+    	}
+      //$messageStack->add_session('<pre>'.print_r($request, true).'</pre>', 'success');
+    }
+  }
+
+
   private function encode_request($array) {
     foreach ($array as $key => $value) {
       if (is_array($value)) {
@@ -282,8 +347,12 @@ class shipcloud {
   }
 
   
-  private function do_request($data) {
+  private function do_request($data, $url = '') {
     global $messageStack;
+    
+    if ($url == '') {
+      $url = self::SC_URL_LABEL;
+    }
     
     $headers = array('Accept: application/json',
                      'Content-Type: application/json',
@@ -293,7 +362,7 @@ class shipcloud {
     $ch = curl_init();
   
     // set options
-    curl_setopt($ch, CURLOPT_URL, self::SC_URL_LABEL);
+    curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_USERPWD, MODULE_SHIPCLOUD_API);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
