@@ -367,7 +367,7 @@ require (DIR_WS_INCLUDES.'head.php');
   <script type="text/javascript" src="includes/javascript/countdown.js"></script> 
 <?php
 //jQueryDatepicker
-require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
+require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
 // Include WYSIWYG if is activated
 if (USE_WYSIWYG == 'true') {
 	$query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
