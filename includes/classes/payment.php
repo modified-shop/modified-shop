@@ -43,10 +43,11 @@
 
         ## Paypal Express Modul
         if(isset($_SESSION['paypal_express_checkout']) && $_SESSION['paypal_express_checkout'] == true){
-          $modules = explode(';', $_SESSION['paypal_express_payment_modules'] );
+          $modules = explode(';', $_SESSION['paypal_express_payment_modules']);
         } else {
           $modules = explode(';', MODULE_PAYMENT_INSTALLED);
           $modules = str_replace('paypalexpress.php', '', $modules);
+          $modules = str_replace('paypalcart.php', '', $modules);
         }
         ## Paypal Express Modul
         
