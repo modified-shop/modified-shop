@@ -102,15 +102,9 @@ require (DIR_WS_INCLUDES.'head.php');
   <?php 
   if ( ($action == 'new') || ($action == 'edit') ) {
     //jQueryDatepicker
-    require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');  
-  ?>  
-  <script type="text/javascript">
-    $(function() {
-      $('#DatepickerSpecials').datepick();
-      $('#DatepickerSpecialsStart').datepick();
-    });
-  </script>
-  <?php } ?>
+    require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');  
+  }
+  ?>
 </head>
 <body>
     <!-- header //-->

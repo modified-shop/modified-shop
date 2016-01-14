@@ -187,7 +187,7 @@
 require (DIR_WS_INCLUDES.'head.php');
 
 //jQueryDatepicker
-require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
+require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
 ?>
 </head>
 <body>
@@ -253,13 +253,6 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
                 echo xtc_draw_hidden_field('banners_id', $bID); 
               }
               ?>
-              <script type="text/javascript">
-                /* set Datepicker for dateExpires (1) and dateScheduled (2) */
-                $(function() {
-                  $('#Datepicker1').datepick();
-                  $('#Datepicker2').datepick();
-                });
-              </script>              
               <table class="tableConfig">
                 <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_TITLE; ?></td>

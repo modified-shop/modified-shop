@@ -282,16 +282,9 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
  }
  ?>
   <script type="text/javascript" src="includes/general.js"></script>
-  <script type="text/javascript">
-    $(function() {
-      /* set Datepicker for coupon_startdate (1) and coupon_finishdate (2) */
-      $('#Datepicker1').datepick({dateFormat: 'yyyy-mm-dd'}); 
-      $('#Datepicker2').datepick({dateFormat: 'yyyy-mm-dd'}); 
-    });
-  </script>
 	<?php
 	//jQueryDatepicker
-	require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
+	require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
 	?>
 </head>
 <body>
