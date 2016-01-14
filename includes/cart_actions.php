@@ -280,6 +280,17 @@ if (xtc_not_null($action)) {
       break;
     ## - Paypal Express Modul
 
+    ## Paypal
+    case 'paypal_cart_checkout':
+      if (defined('MODULE_PAYMENT_PAYPALCART_STATUS')
+          && MODULE_PAYMENT_PAYPALCART_STATUS == 'True')
+      {
+        require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
+        $paypal_cart = new PayPalPayment('paypalcart');
+        $paypal_cart->payment_redirect(true);
+      }
+      break;
+
     case 'wishlist_cart':
       if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
         if ($_SESSION['wishlist']->in_cart($_GET['BUYproducts_id'])) {

@@ -143,6 +143,11 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
   $module_smarty->assign('module_gift', $credit_selection);  
 }
 
+## PayPal
+if (defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')) {
+  $hide_payment_ppp = explode(';', MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT);
+}
+
 $total = $xtPrice->xtcFormat($order->info['total'], false);
 if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_covers']) && $_SESSION['credit_covers'] == 1 && $total > 0)) {
   
@@ -162,6 +167,18 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
   $radio_buttons = 0;
   $selection = $payment_modules->selection();
   for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
+    
+    ## PayPal
+    if (defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')
+        && in_array($selection[$i]['id'], $hide_payment_ppp)
+        ) 
+    {
+      if (isset($_SESSION['payment']) && $selection[$i]['id'] == $_SESSION['payment']) {
+        $_SESSION['payment'] = 'paypalplus';
+      }
+      unset($selection[$i]);
+      continue;
+    }
 
     //express checkout
     if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {

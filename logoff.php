@@ -32,6 +32,10 @@ include ('includes/application_top.php');
 // create smarty elements
 $smarty = new Smarty;
 
+if ($messageStack->size('logoff') > 0) {
+  $smarty->assign('info_message', $messageStack->output('logoff'));
+}    
+
 if ($_SESSION['account_type'] == '1' && DELETE_GUEST_ACCOUNT == 'true') {
   xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
   xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");

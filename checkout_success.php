@@ -64,11 +64,12 @@ if (xtc_db_num_rows($orders_query) < 1) {
   $orders = xtc_db_fetch_array($orders_query);
   $last_order = $orders['orders_id'];
   $order_status = $orders['orders_status'];
+  $payment_class = $orders['payment_class'];
 }
 
 // load the selected payment module
 require_once (DIR_WS_CLASSES . 'payment.php');
-$payment_modules = new payment($orders['payment_class']);
+$payment_modules = new payment($payment_class);
 $smarty->assign('PAYMENT_INFO', $payment_modules->success());
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('order', xtc_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=update', 'SSL')).xtc_draw_hidden_field('account_type', $_SESSION['account_type']));

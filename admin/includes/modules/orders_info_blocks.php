@@ -128,6 +128,9 @@
                 ## easyBill
                 include (DIR_FS_EXTERNAL.'easybill/admin/easybill.info.php');
 
+                ## Paypal
+                include (DIR_FS_EXTERNAL.'paypal/modules/orders_paypal.php');
+
                 ## Paypal Express Modul
                 if ($order->info['payment_method']=='paypal_directpayment' or $order->info['payment_method']=='paypal' or $order->info['payment_method']=='paypalexpress') {
                   require('../includes/classes/paypal_checkout.php');

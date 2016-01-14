@@ -333,10 +333,10 @@ class order_total {
     return $arr_output;
   }
 
-  //BOF - web28 - 2011-02-01 -  PayPal Express
+  ## PayPal
   function pp_output() {
     return $this->output_array();   
   }
-  //EOF - web28 - 2011-02-01 -  PayPal Express
+
 }
 ?>

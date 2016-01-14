@@ -1,0 +1,10 @@
+{if $shipping_message != ''}<div class="errormessage">{$shipping_message}</div>{/if}
+{if $SHIPPING_BLOCK}
+  {$FORM_SHIPPING_ACTION}
+  {$SHIPPING_BLOCK}
+  {if $BUTTON_CONTINUE}
+    <br class="clearfix" />
+    <div class="button_right">{$BUTTON_CONTINUE}</div>
+  {/if}
+  {$FORM_END}
+{/if}

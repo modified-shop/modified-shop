@@ -583,4 +583,10 @@ define('MULTIPLE_INSTALLATION', '<span style="color:red">[Multiple Installation:
 
 define('FILEUPLOAD_INPUT_TXT','No file');
 define('FILEUPLOAD_BTN_TXT','Search');
+
+define('TEXT_PAYPAL_TAB_CONFIG', 'PayPal Configuration');
+define('TEXT_PAYPAL_TAB_PROFILE', 'PayPal Profile');
+define('TEXT_PAYPAL_TAB_WEBHOOK', 'PayPal Webhook');
+define('TEXT_PAYPAL_TAB_MODULE', 'PayPal Module');
+define('TEXT_PAYPAL_TAB_TRANSACTIONS', 'PayPal Transactions');
 ?>

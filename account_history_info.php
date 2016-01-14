@@ -85,6 +85,26 @@ if ($order->info['payment_method'] == 'paypal_ipn' && MODULE_PAYMENT_PAYPAL_IPN_
 }
 ## PayPal Bezahl-Link
 
+## PayPal
+if ($order->info['payment_method'] == 'paypallink'
+    || $order->info['payment_method'] == 'paypalpluslink'
+    ) 
+{
+  require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
+  $paypal = new PayPalPayment($order->info['payment_method']);
+  
+  if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_USE_ACCOUNT') == 1) {
+    $button = $paypal->create_paypal_link($order->info['order_id']);
+    if ($button != '') {
+      $smarty->assign('PAYPAL_LINK', sprintf(constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_SUCCESS'), $button));
+    }
+    
+    if ($messageStack->size($order->info['payment_method']) > 0) {
+      $smarty->assign('info_message', $messageStack->output($order->info['payment_method']));
+    }    
+  }
+}
+
 // Order History
 $history_block = '';
 $statuses_query = xtc_db_query("-- /account_history_info.php

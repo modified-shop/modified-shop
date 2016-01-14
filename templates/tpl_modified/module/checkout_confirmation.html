@@ -62,7 +62,7 @@
 {if $SHIPPING_METHOD}
 <div class="twoColums">
   <div class="highlightbox plainleft">
-    <h4 class="checkout">{#text_shipping_method#} <a class="midi" href="{$SHIPPING_EDIT}">{#text_edit#}</a></h4>
+    <h4 class="checkout">{#text_shipping_method#}{if isset($SHIPPING_EDIT)} <a class="midi" href="{$SHIPPING_EDIT}">{#text_edit#}</a>{/if}</h4>
     {$SHIPPING_METHOD}
   </div>
 </div>
@@ -70,7 +70,7 @@
 {if $PAYMENT_METHOD != ''}
 <div class="twoColums{if $SHIPPING_METHOD} last{/if}">
   <div class="highlightbox {if $SHIPPING_METHOD}plainright{else}plainleft{/if}">
-    <h4 class="checkout">{#text_payment_method#} <a class="midi" href="{$PAYMENT_EDIT}">{#text_edit#}</a></h4>
+    <h4 class="checkout">{#text_payment_method#}{if isset($PAYMENT_EDIT)} <a class="midi" href="{$PAYMENT_EDIT}">{#text_edit#}</a>{/if}</h4>
     {$PAYMENT_METHOD}
   </div>
 </div>
@@ -80,7 +80,7 @@
 {if $ORDER_COMMENTS != ''}
 <div class="twoColums">
   <div class="highlightbox plainleft">
-    <h4 class="checkout">{#text_comments#} <a class="midi" href="{$PAYMENT_EDIT}">{#text_edit#}</a></h4>
+    <h4 class="checkout">{#text_comments#}{if isset($PAYMENT_EDIT)} <a class="midi" href="{$PAYMENT_EDIT}">{#text_edit#}</a>{/if}</h4>
     {$ORDER_COMMENTS}  
   </div>
 </div>
