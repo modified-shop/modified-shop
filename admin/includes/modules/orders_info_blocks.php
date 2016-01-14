@@ -407,7 +407,20 @@
                 echo '<td class="smallText" align="center">'.xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"').'</td>';
               }
             ?>
-            <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo ((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? CREATE_LABEL : BUTTON_INSERT); ?>"></td>
+            <td class="smallText" align="center">
+              <?php
+              if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
+                ?>
+                <input class="button" style="display:block; width:155px; margin: 7px auto" type="submit" value="<?php echo CREATE_LABEL; ?>">
+                <input class="button" style="display:block; width:155px; margin: 7px auto" type="submit" name="quote" value="<?php echo CHECK_LABEL_PRICE; ?>">
+                <?php
+              } else {
+                ?>
+                <input class="button" type="submit" value="<?php echo BUTTON_INSERT; ?>">
+                <?php
+              }
+              ?>
+            </td>
           </tr>
         </table>
         </form>

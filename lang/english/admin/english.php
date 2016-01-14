@@ -183,6 +183,7 @@ define('BOX_SUPERMAILER', 'SuperMailer');
 define('BOX_OFFLINE', 'Shop offline');
 define('BOX_LOGS', 'Logfiles');
 define('BOX_SHIPCLOUD', 'shipcloud');
+define('BOX_SHIPCLOUD_PICKUP', 'shipcloud - pickup');
 define('BOX_PRODUCTS_TAGS', 'Product features');
 define('BOX_TRUSTEDSHOPS', 'Trusted Shops');
 
@@ -581,8 +582,10 @@ define('BOX_MODULE_TYPE', 'Class Extensions Modules');
 
 define('MULTIPLE_INSTALLATION', '<span style="color:red">[Multiple Installation: %s]</span>');
 
-define('FILEUPLOAD_INPUT_TXT','No file');
-define('FILEUPLOAD_BTN_TXT','Search');
+define('FILEUPLOAD_INPUT_TXT', 'No file');
+define('FILEUPLOAD_BTN_TXT', 'Search');
+
+define('CHECK_LABEL_PRICE', 'Check price');
 
 define('TEXT_PAYPAL_TAB_CONFIG', 'PayPal Configuration');
 define('TEXT_PAYPAL_TAB_PROFILE', 'PayPal Profile');
