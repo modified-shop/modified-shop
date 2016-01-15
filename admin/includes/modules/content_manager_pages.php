@@ -368,11 +368,11 @@ if (!$action) {
         <table class="tableConfig" style="margin-top:0;">
         <tr>
           <td class="dataTableConfig col-left" style="min-width:205px;border-top:0;border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_STATUS_ACTIVE; ?></td>
-          <td class="dataTableConfig col-single-right" style="border-top:0;"><?php echo draw_on_off_selection('content_active['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_active']) && $content_lang['content_active'] != '') ? $content_lang['content_active'] : 0)).' '.TEXT_STATUS_ACTIVE_DESCRIPTION ;?></td>
+          <td class="dataTableConfig col-single-right" style="border-top:0;"><?php echo draw_on_off_selection('content_active['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_active']) && $content_lang['content_active'] != '') ? $content_lang['content_active'] : 0)).'<span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;">'.TEXT_STATUS_ACTIVE_DESCRIPTION.'</span>' ;?></td>
         </tr>
         <tr>
           <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_STATUS; ?></td>
-          <td class="dataTableConfig col-single-right"><?php echo draw_on_off_selection('content_status['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_status']) && $content_lang['content_status'] != '') ? $content_lang['content_status'] : 0)).' '.TEXT_STATUS_DESCRIPTION ;?></td>
+          <td class="dataTableConfig col-single-right"><?php echo draw_on_off_selection('content_status['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_status']) && $content_lang['content_status'] != '') ? $content_lang['content_status'] : 0)).'<span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;">'.TEXT_STATUS_DESCRIPTION.'</span>' ;?></td>
         </tr>
           <tr>
             <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_TITLE; ?></td>
@@ -420,7 +420,7 @@ if (!$action) {
           </tr>
           <tr>
             <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_UPLOAD_FILE; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_file_field('file_upload_'.$i.'_'.$languages[$l]['id']).' '.TEXT_UPLOAD_FILE_LOCAL; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_file_field('file_upload_'.$i.'_'.$languages[$l]['id']).'<span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;">'.TEXT_UPLOAD_FILE_LOCAL.'</span>'; ?></td>
           </tr>
           <tr>
             <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_CHOOSE_FILE; ?></td>
