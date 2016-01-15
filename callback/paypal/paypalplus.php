@@ -53,6 +53,7 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
   "buttonLocation": "outside",
   "preselection": "paypal",
   "useraction": "continue",
+  "showLoadingIndicator": "true",
   "showPuiOnSandbox": "true"';
 	
 	if (count($module) > 0) {
