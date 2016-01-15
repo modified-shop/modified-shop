@@ -49,9 +49,9 @@
  define('TEXT_SELECT','-Bitte w&auml;hlen-');
  define('TEXT_HEADING','&Uuml;berschrift:');
  define('TEXT_CONTENT','Text:');
- define('TEXT_UPLOAD_FILE','Datei Hochladen:');
+ define('TEXT_UPLOAD_FILE','Datei hochladen:');
  define('TEXT_UPLOAD_FILE_LOCAL','(von Ihrem lokalen System)');
- define('TEXT_CHOOSE_FILE','Datei W&auml;hlen:');
+ define('TEXT_CHOOSE_FILE','Datei w&auml;hlen:');
  define('TEXT_CHOOSE_FILE_DESC','Sie k&ouml;nnen ebenfalls eine bereits verwendete Datei aus der Liste ausw&auml;hlen.');
  define('TEXT_NO_FILE','Auswahl L&ouml;schen');
  define('TEXT_CHOOSE_FILE_SERVER','(Falls Sie ihre Dateien selbst via FTP auf ihren Server gespeichert haben <i>(media/content)</i>, k&ouml;nnen Sie hier die Datei ausw&auml;hlen.');
