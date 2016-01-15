@@ -17,24 +17,29 @@
     $.datetimepicker.setLocale('<?php echo $_SESSION["language_code"]; ?>');    
     // banner manager, coupon admin
     $('#Datepicker1').datetimepicker({
+      dayOfWeekStart:1,
       timepicker:false, 
       format:'Y-m-d'
     });
     $('#Datepicker2').datetimepicker({
+      dayOfWeekStart:1,
       timepicker:false, 
       format:'Y-m-d'
     });    
     // specials
     $('#DatepickerSpecials').datetimepicker({
+      dayOfWeekStart:1,
       timepicker:false, 
       format:'Y-m-d'
     });
     $('#DatepickerSpecialsStart').datetimepicker({
+      dayOfWeekStart:1,
       timepicker:false, 
       format:'Y-m-d'
     });  
     // product
     $('#DatepickerProduct').datetimepicker({
+      dayOfWeekStart:1,
       timepicker:false, 
       format:'Y-m-d'
     });
