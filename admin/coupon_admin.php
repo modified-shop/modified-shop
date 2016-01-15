@@ -899,7 +899,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                     $amount = $currencies->format($amount);
                   }
                   if ($_GET['action'] == 'voucherdelete') {
-                    $contents[] = array('text'=> TEXT_CONFIRM_DELETE . '</br></br><div style="text-align:center;">' .
+                    $contents[] = array('text'=> TEXT_CONFIRM_DELETE . '<br /><br /><div style="text-align:center;">' .
                                         '<a class="button" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=confirmdelete&cid='.(int)$_GET['cid'],'NONSSL').'">'.BUTTON_CONFIRM.'</a>' .
                                         '<a class="button" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_CANCEL.'</a></div>'
                                        );

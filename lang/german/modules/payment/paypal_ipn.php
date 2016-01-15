@@ -52,7 +52,7 @@ define('MODULE_PAYMENT_PAYPAL_IPN_SBID_DESC', 'E-Mail-Adresse, die f&uuml;r den 
 
 //Paypal Seitengestaltung
 define('MODULE_PAYMENT_PAYPAL_IPN_IMAGE_TITLE','PayPal Shop-Logo');
-define('MODULE_PAYMENT_PAYPAL_IPN_IMAGE_DESC','Logo-Datei, die bei PayPal angezeigt werden soll.</ br>Achtung: Wird nur übertragen, wenn der Shop mit SSL arbeitet.</ br>Das Bild darf max. 750px breit und 90px hoch sein.</ br>Aufgerufen wird die Datei aus: '.DIR_WS_CATALOG.'lang/SPRACHE/modules/payment/images/');
+define('MODULE_PAYMENT_PAYPAL_IPN_IMAGE_DESC','Logo-Datei, die bei PayPal angezeigt werden soll.<br />Achtung: Wird nur übertragen, wenn der Shop mit SSL arbeitet.<br />Das Bild darf max. 750px breit und 90px hoch sein.<br />Aufgerufen wird die Datei aus: '.DIR_WS_CATALOG.'lang/SPRACHE/modules/payment/images/');
 define('MODULE_PAYMENT_PAYPAL_IPN_CO_BACK_TITLE','PayPal Shop-Logo Hintergrundfarbe');
 define('MODULE_PAYMENT_PAYPAL_IPN_CO_BACK_DESC','Hintergrundfarbe, die bei PayPal angezeigt werden soll. z.B. FEE8B9');
 define('MODULE_PAYMENT_PAYPAL_IPN_CO_BORD_TITLE', 'PayPal Shop-Logo Rahmenfarbe');

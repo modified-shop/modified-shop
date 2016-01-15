@@ -52,7 +52,7 @@ define('MODULE_PAYMENT_PAYPAL_IPN_SBID_DESC', 'E-Mail address to be used for tes
 
 //Paypal Seitengestaltung
 define('MODULE_PAYMENT_PAYPAL_IPN_IMAGE_TITLE','PayPal shop logo');
-define('MODULE_PAYMENT_PAYPAL_IPN_IMAGE_DESC','Logo file to be displayed at PayPal.</ br>Note: will be transferred ONLY when SSL is being used.</ br>Maximum values for logo file: 750px width and 90px height sein.</ br>File is being called from: '.DIR_WS_CATALOG.'lang/LANGUAGE/modules/payment/images/');
+define('MODULE_PAYMENT_PAYPAL_IPN_IMAGE_DESC','Logo file to be displayed at PayPal.<br />Note: will be transferred ONLY when SSL is being used.<br />Maximum values for logo file: 750px width and 90px height sein.<br />File is being called from: '.DIR_WS_CATALOG.'lang/LANGUAGE/modules/payment/images/');
 define('MODULE_PAYMENT_PAYPAL_IPN_CO_BACK_TITLE','PayPal shop logo background colour');
 define('MODULE_PAYMENT_PAYPAL_IPN_CO_BACK_DESC','Background colour for shop logo to be displayed at PayPal, e.g., FEE8B9');
 define('MODULE_PAYMENT_PAYPAL_IPN_CO_BORD_TITLE', 'PayPal shop logo frame colour');

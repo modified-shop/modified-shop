@@ -33,7 +33,7 @@ if (!$action) {
   <div class="borderTab">
   <?php
     $total_space_media_products = xtc_spaceUsed(DIR_FS_CATALOG.'media/products/'); // DokuMan - 2011-09-06 - sum up correct filesize avoiding global variable
-    echo '<div class="main clear">'.USED_SPACE.xtc_format_filesize($total_space_media_products).'</div></br>';
+    echo '<div class="main clear">'.USED_SPACE.xtc_format_filesize($total_space_media_products).'</div><br />';
   ?>
   <table class="tableCenter">
     <tr class="dataTableHeadingRow">

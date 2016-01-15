@@ -426,7 +426,7 @@ if (!$action) {
             <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_CHOOSE_FILE; ?></td>
             <td class="dataTableConfig col-single-right">
               <?php
-                echo TEXT_CHOOSE_FILE_SERVER.'</br>';
+                echo TEXT_CHOOSE_FILE_SERVER.'<br /><br />';
                 echo xtc_draw_pull_down_menu('select_file['.$i.']['.$languages[$l]['id'].']', array_merge(array(array('id' => 'default','text' => (($content_lang['content_file'] != '') ? TEXT_NO_FILE : TEXT_SELECT))), $files), $content_lang['content_file']);
                 if ($content_lang['content_file'] != '') {
                   echo ' '.TEXT_CURRENT_FILE.' <b>'.$content_lang['content_file'].'</b><br />';
