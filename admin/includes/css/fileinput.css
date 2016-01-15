@@ -34,7 +34,7 @@
     color:#fff;
 }
 
-.fileUpload input.imgupload {
+.fileUpload input.fileInput{
     position: absolute;
     top: 0;
     right: 0;

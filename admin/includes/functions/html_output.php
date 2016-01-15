@@ -166,6 +166,11 @@
     if (NEW_SELECT_CHECKBOX == 'true' && strpos($parameters,'noStyling') === false) {
       $input_txt = defined('FILEUPLOAD_INPUT_TXT') ? FILEUPLOAD_INPUT_TXT : 'No file';
       $btn_txt = defined('FILEUPLOAD_BTN_TXT') ? FILEUPLOAD_BTN_TXT : 'Search';
+      if (strpos($field,'class="') !== false) {
+          $field = str_replace('class="','class="fileInput ',$field);
+      } else {
+          $field = str_replace('type="file"','type="file" class="fileInput',$field); 
+      }
       $field = '
       <div class="inputBtnSection">
       <input id="finput_'.$name.'" class="disableInputField" placeholder="'.$input_txt.'" disabled="disabled" />

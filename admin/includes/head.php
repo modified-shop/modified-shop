@@ -59,7 +59,7 @@
     $(document).ready(function () {
       $('.SlectBox').not('.noStyling').SumoSelect({ createElems: 'mod', placeholder: '-'});
       $('.disableInputField').val('');
-      $('.imgupload').change(function() {
+      $('.fileInput').change(function() {
         var basename_val = $(this).val().split(/[\\/]/).pop();
         $('#finput_'+ $(this).attr('id')).val(basename_val);
       });
