@@ -42,7 +42,7 @@ define('MODULE_PAYMENT_PAYPAL_IPN_USE_CURL_DESC', 'cURL Anbindung oder normale W
 define('MODULE_PAYMENT_PAYPAL_IPN_USE_CHECKOUT_TITLE', 'PayPal Link Bestellung:');
 define('MODULE_PAYMENT_PAYPAL_IPN_USE_CHECKOUT_DESC', ' am Ende des Bestellvorganges anzeigen');
 define('MODULE_PAYMENT_PAYPAL_IPN_USE_EMAIL_TITLE', 'PayPal Link E-Mail:');
-define('MODULE_PAYMENT_PAYPAL_IPN_USE_EMAIL_DESC', 'in die Auftragsbest&auml;tigungs E-Mail einfügen');
+define('MODULE_PAYMENT_PAYPAL_IPN_USE_EMAIL_DESC', 'in die Auftragsbest&auml;tigungs E-Mail einf&uuml;gen');
 define('MODULE_PAYMENT_PAYPAL_IPN_USE_ACCOUNT_TITLE', 'PayPal Link Kundenkonto:');
 define('MODULE_PAYMENT_PAYPAL_IPN_USE_ACCOUNT_DESC', 'Im Kundenkonto bei der Bestellung anzeigen');
 define('MODULE_PAYMENT_PAYPAL_IPN_USE_SANDBOX_TITLE', 'Testbetrieb (Sandbox)');
@@ -52,7 +52,7 @@ define('MODULE_PAYMENT_PAYPAL_IPN_SBID_DESC', 'E-Mail-Adresse, die f&uuml;r den 
 
 //Paypal Seitengestaltung
 define('MODULE_PAYMENT_PAYPAL_IPN_IMAGE_TITLE','PayPal Shop-Logo');
-define('MODULE_PAYMENT_PAYPAL_IPN_IMAGE_DESC','Logo-Datei, die bei PayPal angezeigt werden soll.<br />Achtung: Wird nur übertragen, wenn der Shop mit SSL arbeitet.<br />Das Bild darf max. 750px breit und 90px hoch sein.<br />Aufgerufen wird die Datei aus: '.DIR_WS_CATALOG.'lang/SPRACHE/modules/payment/images/');
+define('MODULE_PAYMENT_PAYPAL_IPN_IMAGE_DESC','Logo-Datei, die bei PayPal angezeigt werden soll.<br />Achtung: Wird nur &uuml;bertragen, wenn der Shop mit SSL arbeitet.<br />Das Bild darf max. 750px breit und 90px hoch sein.<br />Aufgerufen wird die Datei aus: '.DIR_WS_CATALOG.'lang/SPRACHE/modules/payment/images/');
 define('MODULE_PAYMENT_PAYPAL_IPN_CO_BACK_TITLE','PayPal Shop-Logo Hintergrundfarbe');
 define('MODULE_PAYMENT_PAYPAL_IPN_CO_BACK_DESC','Hintergrundfarbe, die bei PayPal angezeigt werden soll. z.B. FEE8B9');
 define('MODULE_PAYMENT_PAYPAL_IPN_CO_BORD_TITLE', 'PayPal Shop-Logo Rahmenfarbe');
@@ -64,10 +64,10 @@ define('MODULE_PAYMENT_PAYPAL_IPN_CBT_DESC','Text, der auf der R&uuml;ckkehr-Sch
 
 //Weiterleitung URLs
 define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_TITLE', 'URL nach Zahlung');
-define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_DESC','Die URL, auf die nach Abschluss der Zahlung weitergeleitet wird, z. B. eine URL auf Ihrer Website zeigt "Vielen Dank für Ihre Zahlung". <br />'.HTTP_SERVER.DIR_WS_CATALOG);
-define('MODULE_PAYMENT_PAYPAL_IPN_NOTIFY_TITLE', 'URL für PayPal IPN Zahlungsinformationen');
-define('MODULE_PAYMENT_PAYPAL_IPN_NOTIFY_DESC','Die URL, auf die für die PayPal Zahlungsinformationen weitergeleitet wird (IPN POST MESSAGES).<br />'.HTTP_SERVER.DIR_WS_CATALOG);
-define('MODULE_PAYMENT_PAYPAL_IPN_CANCEL_TITLE', 'URL für PayPal Fehler');
+define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_DESC','Die URL, auf die nach Abschluss der Zahlung weitergeleitet wird, z. B. eine URL auf Ihrer Website zeigt "Vielen Dank f&uuml;r Ihre Zahlung". <br />'.HTTP_SERVER.DIR_WS_CATALOG);
+define('MODULE_PAYMENT_PAYPAL_IPN_NOTIFY_TITLE', 'URL f&uuml;r PayPal IPN Zahlungsinformationen');
+define('MODULE_PAYMENT_PAYPAL_IPN_NOTIFY_DESC','Die URL, auf die f&uuml;r die PayPal Zahlungsinformationen weitergeleitet wird (IPN POST MESSAGES).<br />'.HTTP_SERVER.DIR_WS_CATALOG);
+define('MODULE_PAYMENT_PAYPAL_IPN_CANCEL_TITLE', 'URL f&uuml;r PayPal Fehler');
 define('MODULE_PAYMENT_PAYPAL_IPN_CANCEL_DESC','Die URL, auf die bei PayPal-Fehlern weitergeleitet wird.<br />'.HTTP_SERVER.DIR_WS_CATALOG);
 
 //Emails
@@ -86,9 +86,9 @@ define('MODULE_PAYMENT_PAYPAL_IPN_TXT_EMAIL', "Jetzt mit PayPal bezahlen. Klicke
 define('MODULE_PAYMENT_PAYPAL_IPN_TXT_ORDER', " - Bestellnummer: ");
 
 //PayPal Variablen
-define('MODULE_PAYMENT_PAYPAL_IPN_VAR_CBT', "zurück zum Shop"); //cbt
+define('MODULE_PAYMENT_PAYPAL_IPN_VAR_CBT', "zur&uuml;ck zum Shop"); //cbt
 
-//Style Schaltfläche
+//Style Schaltfl&auml;che
 define('MODULE_PAYMENT_PAYPAL_IPN_STYLE_LINK', 'style="padding:5px; color:#555555; background: #f8f8f8; border: 1px solid #8c8c8c; text-decoration: none; cursor: pointer;"'); //web28 2010-06-23 define link color
 define('MODULE_PAYMENT_PAYPAL_IPN_STYLE_TOP', '<div style="margin-top:25px;">');
 define('MODULE_PAYMENT_PAYPAL_IPN_STYLE_LOGO', '<div style="margin-top: 5px; float: left;">' . MODULE_PAYMENT_PAYPAL_IPN_LOGO . '</div>');
@@ -99,29 +99,29 @@ define('MODULE_PAYMENT_PAYPAL_IPN_COMMENT_STATUS','Automatisch durch PayPal IPN-
 define('MODULE_PAYMENT_PAYPAL_IPN_SUBJECT_OK','PayPal-Zahlung erhalten und verbucht');
 define('MODULE_PAYMENT_PAYPAL_IPN_UNKNOWN','unbekannt');
 
-define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1','Die Zahlung konnte keiner Bestellung zugeordnet werden, da sie manuell ohne Bestellnummer und nicht über einen Zahlungs-Link vorgenommen wurde. ');
-define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1A','Bestellnummer "%s" wurde nicht in der Datenbank gefunden und ist ungültig. ');
-define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1B','Betrag in falscher Währung erhalten. ');
+define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1','Die Zahlung konnte keiner Bestellung zugeordnet werden, da sie manuell ohne Bestellnummer und nicht &uuml;ber einen Zahlungs-Link vorgenommen wurde. ');
+define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1A','Bestellnummer "%s" wurde nicht in der Datenbank gefunden und ist ung&uuml;ltig. ');
+define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1B','Betrag in falscher W&auml;hrung erhalten. ');
 define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1C','Zu niedrigen Betrag erhalten (Offener Restbetrag: ');
 define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1D','Zu hohen Betrag erhalten (Zuviel gezahlter Betrag: ');
 define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1E','Doppelte Zahlung erhalten. Diese Bestellung wurde bereits am %s per PayPal bezahlt. ');
-define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1F','Ungültiger Empfangsstatus. ');
-define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1G','Die Zahlung wurde noch nicht auf Ihrem PayPal-Konto verbucht (Status: Pending) und bedarf möglicherweise einer manuellen Akzeptanz. ');
-define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1H','Zahlung wurde an falschen Empfänger gesendet. ');
+define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1F','Ung&uuml;ltiger Empfangsstatus. ');
+define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1G','Die Zahlung wurde noch nicht auf Ihrem PayPal-Konto verbucht (Status: Pending) und bedarf m&ouml;glicherweise einer manuellen Akzeptanz. ');
+define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG1H','Zahlung wurde an falschen Empf&auml;nger gesendet. ');
 define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_SUB1','Problem mit erhaltener PayPal-Zahlung');
-define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_INFO1','Die Zahlung wurde ignoriert und der Bestellstatus der dazugehörigen Bestellung nicht geändert.');
+define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_INFO1','Die Zahlung wurde ignoriert und der Bestellstatus der dazugeh&ouml;rigen Bestellung nicht ge&auml;ndert.');
 
 define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG2','Zu hohen Betrag erhalten (zuviel gezahlter Betrag: ');
 define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_SUB2','Zu hohe PayPal-Zahlung erhalten');
 define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_INFO2','Die Zahlung wurde trotzdem als erhalten verbucht und der Bestellstatus dieser Bestellung auf %s gesetzt.');
 
-define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG3','WARNUNG! PayPal meldet INVALID für diese IPN-Zahlungsbestätigung');
-define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_SUB3','INVALID für PayPal-Zahlungsvorgang!');
+define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_MSG3','WARNUNG! PayPal meldet INVALID f&uuml;r diese IPN-Zahlungsbest&auml;tigung');
+define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_SUB3','INVALID f&uuml;r PayPal-Zahlungsvorgang!');
 
 //PAYPAL RETURN: paypal_ipn_return.php
 define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_HEADER','Vielen Dank');
-define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_TEXT1','Wir bedanken uns für Ihre PayPal-Zahlung in Höhe von');
-define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_TEXT2','für Ihre Bestellung vom');
+define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_TEXT1','Wir bedanken uns f&uuml;r Ihre PayPal-Zahlung in H&ouml;he von');
+define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_TEXT2','f&uuml;r Ihre Bestellung vom');
 
 define('MODULE_PAYMENT_PAYPAL_IPN_LP', '<br /><br /><a target="_blank" href="http://www.paypal.com/de/webapps/mpp/referral/paypal-business-account2?partner_id=EHALBVD4M2RQS"><strong>Jetzt PayPal Konto hier erstellen.</strong></a>');
 ?>
