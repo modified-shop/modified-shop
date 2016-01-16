@@ -4,10 +4,6 @@
       {if count($FILTER_TAG) < 1 && $FILTER_MANUFACTURER != ''}<div class="sort_bar_item">{$FILTER_MANUFACTURER}</div>{/if}
       <div class="sort_bar_item">{$FILTER_SORT}</div>
       <div class="sort_bar_item">{$FILTER_SET}</div>
-      <div class="sort_bar_item right cf">
-        <a rel="nofollow" class="view_list{if $smarty.const.PRODUCT_LIST_BOX != 'true'} active{/if}" href="{$LINK_DISPLAY_LIST}" title="Listenansicht">&nbsp;</a>
-        <a rel="nofollow" class="view_box{if $smarty.const.PRODUCT_LIST_BOX == 'true'} active{/if}" href="{$LINK_DISPLAY_BOX}" title="Boxansicht">&nbsp;</a>
-      </div>
     </div>
   </div>
   {if count($FILTER_TAG) > 0}
