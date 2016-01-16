@@ -1643,3 +1643,63 @@ ul.address_block li .address {
 }
 /* END account cart and click buttons */
 
+
+/* START filter manufacturer */
+.filter_bar {
+  background-color: #f2f2f2;
+  border: 1px solid #e6e6e6;
+  margin-bottom: 15px;
+  padding: 0px 5px;
+}
+
+.sort_bar {
+  margin: 0px 0 0 0;
+}
+.sort_bar_row {
+  margin: 0px -5px 0px -5px;
+}
+.sort_bar_item {
+  float:left;
+  width:25%;
+  padding:5px 5px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.sort_bar_item select {
+  width:100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.tags_bar {
+  margin: 5px 0 0 0;
+}
+.tags_bar_headline {
+  font-size:10px;
+  line-height:12px;
+  font-weight:bold;
+  padding: 0px 0px 0px 2px;
+}
+a.tags_bar_reset {
+  float:right;
+  font-size:10px;
+  line-height:12px;
+}
+.tags_bar_row {
+  margin: 0px -5px 0px -5px;
+}
+.tags_bar_item {
+  float:left;
+  width:25%;
+  padding:5px 5px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.tags_bar_item select {
+  width:100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
