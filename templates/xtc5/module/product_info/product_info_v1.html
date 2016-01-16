@@ -58,6 +58,9 @@
               <div class="hrlightgrey"></div>
               <div style="padding-top:5px;">{$PRODUCTS_URL}</div>
             {/if}
+            {if $EXPRESS_LINK}
+              <div class="hrlightgrey"></div>{$EXPRESS_LINK}
+            {/if}
             <br />
             {if $KLARNA_PPBOX}{$KLARNA_PPBOX}{/if}
             <div style="margin-top:10px"></div>
@@ -65,7 +68,7 @@
             {if $PRODUCTS_DATE_AVIABLE != ''}
               <p>{$PRODUCTS_DATE_AVIABLE}</p>
             {/if}
-            {if $ADD_CART_BUTTON_WISHLIST_TEXT}{$ADD_CART_BUTTON_WISHLIST_TEXT}{/if}
+            {* if $ADD_CART_BUTTON_WISHLIST_TEXT}{$ADD_CART_BUTTON_WISHLIST_TEXT}{/if *}
           </div>
           <div style="clear:both;"></div>
         </td>
@@ -84,14 +87,23 @@
           <td style="width:100%; padding-right:5px;">{$ADD_QTY}</td>
           <td>{$ADD_CART_BUTTON}</td>
         </tr>
-        {*
         {if $ADD_CART_BUTTON_WISHLIST}
         <tr>
           <td style="width:100%; padding-right:5px;">&nbsp;</td>
           <td>{$ADD_CART_BUTTON_WISHLIST}</td>
         </tr>
         {/if}
-        *}
+
+        {if isset($ADD_CART_BUTTON_EXPRESS)}
+          <tr>
+            <td style="width:100%; padding-right:5px;">&nbsp;</td>
+            <td>{$ADD_CART_BUTTON_EXPRESS}</td>
+          </tr>
+        {elseif $ACTIVATE_EXPRESS_LINK}
+          <tr>
+            <td colspan="2" style="text-align:right;"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></td>
+          </tr>
+        {/if}
       </table>
       {/if}
       {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<p>{#products_gift_forbidden#}</p>{/if}

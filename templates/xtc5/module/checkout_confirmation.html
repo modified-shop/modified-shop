@@ -27,6 +27,20 @@
   </div>
   {/if}
 
+  {if isset($EXPRESS)}
+  <div class="checkoutInfoBoxes red">
+    <p><strong>{#heading_checkout_express#}</strong></p>
+    {if isset($success_message)}
+      <div class="infomessage">{$success_message}</div>
+    {else}
+      {$FORM_ACTION}
+      <span style="float:right;margin-left:20px;">{$BUTTON_SUBMIT}</span>
+      {#text_express_checkout_information#} {if isset($EXPRESS_LINK)}{$EXPRESS_LINK}{/if}
+      {$FORM_END}
+    {/if}
+  </div>
+  {/if}
+
   <div style="clear:both"><br /></div>
 
   <div class="checkoutNavBoxes">
@@ -48,7 +62,7 @@
   {if $SHIPPING_METHOD}
     <div class="checkoutNav2Boxes">
       <h2>{#text_shipping_method#}</h2>
-      {if isset($SHIPPING_EDIT)}<div class="text">&nbsp;<a href="{$SHIPPING_EDIT}">{#text_edit#}</a></div>{/if}
+      <div class="text">&nbsp;<a href="{$SHIPPING_EDIT}">{#text_edit#}</a></div>
       <p style="clear:both;">{$SHIPPING_METHOD}</p>
     </div>
   {/if}
@@ -56,7 +70,7 @@
   {if $PAYMENT_METHOD != ''}
     <div class="checkoutNav2Boxes">
       <h2>{#text_payment_method#}</h2>
-      {if isset($PAYMENT_EDIT)}<div class="text">&nbsp;<a href="{$PAYMENT_EDIT}">{#text_edit#}</a></div>{/if}
+      <div class="text">&nbsp;<a href="{$PAYMENT_EDIT}">{#text_edit#}</a></div>
       <p style="clear:both;">{$PAYMENT_METHOD}</p>
     </div>
   {/if}
@@ -65,7 +79,7 @@
   {if $ORDER_COMMENTS != ''}
     <br />
     <h2>{#text_comments#}</h2>
-    {if isset($PAYMENT_EDIT)}<div class="text">&nbsp;<a href="{$PAYMENT_EDIT}">{#text_edit#}</a></div>{/if}
+    <div class="text">&nbsp;<a href="{$PAYMENT_EDIT}">{#text_edit#}</a></div>
     <div style="clear:both;padding: 0 5px;">{$ORDER_COMMENTS}</div>
   {/if}
 
