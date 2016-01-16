@@ -1,6 +1,5 @@
 {config_load file="$language/lang_$language.conf" section="reviews"}
-{config_load file="lang_`$language`.custom"}
-<h4 class="detailbox">{#heading_products_tags#}</h4>
+<h1>{#heading_products_tags#}</h1>
 <div class="tags_block cf">
   {foreach name=aussen item=module_data from=$module_content}
   <div class="tags_row {cycle values="tags_bg1,tags_bg2"} cf">
