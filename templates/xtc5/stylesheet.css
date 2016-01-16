@@ -33,6 +33,10 @@ body {
   color:#555;
   line-height:18px;
 }
+.cf:before, .cf:after { content: ""; display: table; }
+.cf:after { clear: both; }
+.cf { zoom: 1; }
+
 /* HEADINGS */
 h1 {
   color:#000;
@@ -1578,3 +1582,64 @@ a.color_more:hover {
 .color_edit_info {
   color:#009933;
 }
+
+/* Banner Manager */
+.banner_item img {
+  max-width:100%;
+  height:auto;
+}
+
+/* account cart and click buttons */
+.account_row_payment,
+.account_row_shipping {
+  padding:3px 0px;
+}
+.account_row_payment span,
+.account_row_shipping span {
+  display:inline-block;
+  width:23px;
+  float:left;
+}
+ul.address_block {
+  margin: 15px 0px 0px 0px !important;
+  list-style-type:none !important;
+}
+ul.address_block li {
+  border-top: 1px solid #4e4e4f;
+  margin-top:10px;
+  padding-top: 10px;
+}
+ul.address_block li .address_check {
+  float:left;
+  display:inline-block;
+  width:23px;
+  margin: 2px 0 0 0;
+}
+ul.address_block li .address_head {
+  display:inline-block;
+  font-weight:bold;
+}
+ul.address_block li .address {
+  display:block;
+  padding:5px 0px 0px 23px;
+}
+.accountbutton_row {
+  margin: 5px 0px 5px 0px;
+}
+.accountbutton_history_row {
+  margin: 5px 0px 0px 0px;
+}
+.accountbutton_historyinfo_row {
+  margin: 10px 0px 0px 0px;
+}
+.account_actions_right {
+  float:right;
+  display:inline-block;
+}
+.accounthistory_actions {
+  text-align:center;
+  display:inline-block;
+  padding-top:4px;
+}
+/* END account cart and click buttons */
+
