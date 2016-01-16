@@ -1853,3 +1853,31 @@ a.tags_bar_reset {
   padding-right:4px;
 }
 /* END tags */
+
+/* START Subcontent navigation in content */
+.subcontent {
+  float:right;
+  margin: 5px 0px 40px 40px;
+  background: #f2f2f2;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width:180px;
+}
+.subcontent p a:hover {
+  text-decoration:none;
+}
+.subcontent ul {
+  margin: 0px 0px 0px 15px;
+  list-style-type:square;
+}
+.subcontent ul li {
+
+}
+.subcontent ul li a {
+  display:block;
+  padding: 4px 0px;
+  border-bottom: 1px dotted #ccc;
+}
+.subcontent ul li a:hover {
+  text-decoration:none;
+}
