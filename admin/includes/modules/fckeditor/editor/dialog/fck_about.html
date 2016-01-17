@@ -32,6 +32,7 @@
 
 var oEditor = window.parent.InnerDialogLoaded() ;
 var FCKLang	= oEditor.FCKLang ;
+var FCKTools = oEditor.FCKTools ;
 
 window.parent.AddTab( 'About', FCKLang.DlgAboutAboutTab ) ;
 window.parent.AddTab( 'License', FCKLang.DlgAboutLicenseTab ) ;
@@ -79,8 +80,8 @@ window.onload = function()
 								border-left: #000000 1px solid; border-bottom: #000000 1px solid">
 								<span fcklang="DlgAboutVersion">version</span>
 								<br />
-								<b>2.6.8</b><br />
-								Build 25427</td>
+								<b>2.6.10</b><br />
+								Build 25429</td>
 						</tr>
 					</table>
 				</td>
@@ -141,9 +142,9 @@ window.onload = function()
 				<td>
 					<script type="text/javascript">
 <!--
-document.write( '<b>User Agent<\/b><br />' + window.navigator.userAgent + '<br /><br />' ) ;
-document.write( '<b>Browser<\/b><br />' + window.navigator.appName + ' ' + window.navigator.appVersion + '<br /><br />' ) ;
-document.write( '<b>Platform<\/b><br />' + window.navigator.platform + '<br /><br />' ) ;
+document.write( '<b>User Agent<\/b><br />' + FCKTools.HTMLEncode( window.navigator.userAgent ) + '<br /><br />' ) ;
+document.write( '<b>Browser<\/b><br />' + FCKTools.HTMLEncode( window.navigator.appName ) + ' ' + FCKTools.HTMLEncode( window.navigator.appVersion ) + '<br /><br />' ) ;
+document.write( '<b>Platform<\/b><br />' + FCKTools.HTMLEncode( window.navigator.platform ) + '<br /><br />' ) ;
 
 var sUserLang = '?' ;
 
@@ -152,7 +153,7 @@ if ( window.navigator.language )
 else if ( window.navigator.userLanguage )
 	sUserLang = window.navigator.userLanguage ;
 
-document.write( '<b>Language<\/b><br />' + sUserLang ) ;
+document.write( '<b>Language<\/b><br />' + FCKTools.HTMLEncode( sUserLang ) ) ;
 //-->
 					</script>
 				</td>
