@@ -1643,6 +1643,14 @@ ul.address_block li .address {
 }
 /* END account cart and click buttons */
 
+ul.attributes_list {
+  list-style-type:none;
+  margin: 7px 0px 0px 0px;
+}
+ul.attributes_list li {
+  font-size:12px;
+  line-height:20px;
+}
 
 /* START filter manufacturer */
 .filter_bar {
