@@ -1645,7 +1645,7 @@ ul.address_block li .address {
 
 ul.attributes_list {
   list-style-type:none;
-  margin: 7px 0px 0px 0px;
+  margin: 7px 0px 0px 0px !important;
 }
 ul.attributes_list li {
   font-size:12px;
