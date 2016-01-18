@@ -7,6 +7,9 @@
 #  Copyright (c) 2009 - 2013 [www.modified-shop.org]
 #  -----------------------------------------------------------------------------------------
 
+#Tomcraft - 2016-01-18 - changed database_version
+UPDATE database_version SET version = 'MOD_1.0.6.2';
+
 ### Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2
 #Tomcraft - 2013-06-21 - Added Safeterms module
 ALTER TABLE admin_access ADD safeterms INT(1) NOT NULL DEFAULT 0 AFTER haendlerbund;
