@@ -7,6 +7,9 @@
 #  Copyright (c) 2009 - 2013 [www.modified-shop.org]
 #  -----------------------------------------------------------------------------------------
 
+#Tomcraft - 2016-01-18 - changed database_version
+UPDATE database_version SET version = 'MOD_1.0.6.1';
+
 ### Subsequent updates for 1.06 rev 4642 to 1.06 rev 4642 SP1
 #Web28 - 2013-10-27 - added IBAN and BIC in banktransfer payment module
 ALTER TABLE banktransfer ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz;
