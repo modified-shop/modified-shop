@@ -52,3 +52,5 @@ Shippingaddress
 [SIGNATUR]
 
 {$REVOCATION_TXT}
+
+{$AGB_TXT}
