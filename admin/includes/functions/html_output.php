@@ -160,17 +160,17 @@
 
   // Output a form filefield
   function xtc_draw_file_field($name, $required = false,$parameters = '') {
+    $parameters  = preg_replace("'\s+=\s+'",'=',$parameters);
     $parameters .= strpos($parameters,'id=') !== false ? '' : ' id='.$name;
+    if (NEW_SELECT_CHECKBOX == 'true' && strpos($parameters,'noStyling') === false) {
+      $parameters = (strpos($parameters,'class="') !== false ? str_replace('class="', 'class="fileInput ',$parameters) : $parameters . ' class="fileInput"');
+    }
+      
     $field = xtc_draw_input_field($name, '', $parameters, $required, 'file');
 
     if (NEW_SELECT_CHECKBOX == 'true' && strpos($parameters,'noStyling') === false) {
       $input_txt = defined('FILEUPLOAD_INPUT_TXT') ? FILEUPLOAD_INPUT_TXT : 'No file';
       $btn_txt = defined('FILEUPLOAD_BTN_TXT') ? FILEUPLOAD_BTN_TXT : 'Search';
-      if (strpos($field,'class="') !== false) {
-          $field = str_replace('class="','class="fileInput ',$field);
-      } else {
-          $field = str_replace('type="file"','type="file" class="fileInput',$field); 
-      }
       $field = '
       <div class="inputBtnSection">
       <input id="finput_'.$name.'" class="disableInputField" placeholder="'.$input_txt.'" disabled="disabled" />
