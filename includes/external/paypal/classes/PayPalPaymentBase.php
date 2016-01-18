@@ -150,7 +150,9 @@ class PayPalPaymentBase extends PayPalCommon {
     }
     
     // include needed function
-    require_once(DIR_FS_INC.'xtc_date_short.inc.php');
+    if (!function_exists('xtc_date_short')) {
+      require_once(DIR_FS_INC.'xtc_date_short.inc.php');
+    }
 
     $payment = $this->get_order_details($orders_id);
     
