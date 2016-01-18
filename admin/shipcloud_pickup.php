@@ -90,7 +90,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     echo xtc_draw_form('pickup', basename($PHP_SELF), 'action=pickup');
                     echo xtc_draw_hidden_field('carrier', strtolower($carriers['carrier_name']));
                     ?>
-                    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                    <table width="100%" cellspacing="0" cellpadding="2" border="0">
                       <tr class="dataTableHeadingRow">
                         <td class="dataTableHeadingContent txta-c" colspan="4"><?php echo $carriers['carrier_name']; ?></td>
                       </tr>
