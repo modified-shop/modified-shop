@@ -59,4 +59,9 @@ ALTER TABLE `products_options_values` MODIFY `products_options_values_name` VARC
 ALTER TABLE `orders_products_attributes` MODIFY `products_options` VARCHAR(255) NOT NULL;
 ALTER TABLE `orders_products_attributes` MODIFY `products_options_values` VARCHAR(255) NOT NULL;
 
+#Tomcraft - 2014-08-20 - added protectedshops
+ALTER TABLE admin_access ADD protectedshops INT(1) NOT NULL DEFAULT 0 AFTER payone_logs;
+UPDATE admin_access SET protectedshops = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET protectedshops = 1 WHERE customers_id = 'groups' LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
