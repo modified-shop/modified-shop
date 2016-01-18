@@ -302,7 +302,7 @@ var $PRZ; //Enthält die Prüfziffer
        $Method16 = 0;
      }
      if ($Help == 1) {
-       if ($Checksum == substr($AccountNo,Checkpoint - 2,1)) {
+       if ($Checksum == substr($AccountNo,$Checkpoint - 2,1)) {
          $Method16 = 0;
        }
      }
@@ -1005,6 +1005,7 @@ var $PRZ; //Enthält die Prüfziffer
       $Gewicht = HexDec(substr($Significance,5,1));
 
       $PZ = -1;
+      $Help2 = $Rest + ($PZ * $Gewicht);
       while ($Help2 % 11 <>10) {  //franky_n
         $PZ++;
         $Help2 = $Rest + ($PZ * $Gewicht);
@@ -1061,6 +1062,7 @@ var $PRZ; //Enthält die Prüfziffer
 
       $Gewicht = HexDec(substr($Significance,5, 1));
       $PZ = -1;
+      $Help2 = $Rest + ($PZ * $Gewicht);
       while ($Help2 % 11 <> 10 or $PZ > 9) { //franky_n
         $PZ++;
         $Help2 = $Rest + ($PZ * $Gewicht);
@@ -1204,9 +1206,9 @@ var $PRZ; //Enthält die Prüfziffer
       case ($help01 == 91):
       case ($help01 == 99):
         // Variante 3: Methode 09 (Keine Berechnung).
-        $PResult = $this->Mark09($AccountNo);;
+        $PResult = $this->Mark09($AccountNo);
         break;
-      case ($help01 >= 01 && $help <= 31):
+      case ($help01 >= 01 && $help01 <= 31):
         // Variante 4: Dritte und vierte Stelle zwischen 01 und 12
         // -UND- siebte bis neunte Stelle kleiner 500.
         $help03 = substr($AccountNo,2,2);
@@ -1218,7 +1220,7 @@ var $PRZ; //Enthält die Prüfziffer
           }
         }
         // Ausnahme: Diese Kontonummer ist als richtig zu bewerten.
-        if ($AccountNo == 0185125434) {
+        if ((string)$AccountNo == '0185125434') {
           $PResult = 0;
         }
         break;
@@ -1818,9 +1820,9 @@ var $PRZ; //Enthält die Prüfziffer
         }
       }
       if ($D2 == 0) {
-        $P = $TAB1[$A5];
+        $P = $Tab1[$A5];
       } else {
-        $P = $TAB2[$A5];
+        $P = $Tab2[$A5];
       }
       if ($P == $AccountNoTemp[10]) {
         $Result = 0;
@@ -1918,7 +1920,7 @@ var $PRZ; //Enthält die Prüfziffer
         }
       }
     }
-    return $Help;;
+    return $Help;
   }  /* End of Mark91 */
 
   private function Mark92($AccountNo) {
@@ -2279,6 +2281,7 @@ var $PRZ; //Enthält die Prüfziffer
     // Variante 1 - Zwei führende Nullen
     if ((substr($AccountNo,0,2) == "00")And (substr($AccountNo,2,1) != "0")){
       $Significance = '1231231';
+	    $Step3 = 0;
       for ($Run = 0;$Run < strlen($Significance);$Run++) {
         $Step1 = (substr($AccountNo,$Run + 2,1) * substr($Significance,$Run,1));
         $Step2 = $Step1 + substr($Significance,$Run,1);
@@ -2300,6 +2303,7 @@ var $PRZ; //Enthält die Prüfziffer
     // Variante 2 - Drei führende Nullen
     } elseif ((substr($AccountNo,0,3) == "000")And (substr($AccountNo,3,1) != "0")){
       $Significance = '654321';
+	    $Step1 = 0;
       for ($Run = 0;$Run < strlen($Significance);$Run++) {
         $Step1 += (substr($AccountNo,$Run + 3,1) * substr($Significance,$Run,1));
       }
@@ -2854,6 +2858,7 @@ var $PRZ; //Enthält die Prüfziffer
 
 
 class IbanAccountCheck extends AccountCheck { 
+	private $ibanstructure = Array();
 
 /*
    -----------------------------------------------------------------------------------------
@@ -3866,5 +3871,4 @@ class IbanAccountCheck extends AccountCheck {
     
 }  /* End Class IbanAccountCheck */
 
- 
 ?>
