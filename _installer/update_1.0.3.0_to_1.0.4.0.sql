@@ -352,11 +352,9 @@ ALTER TABLE whos_online
 ADD http_referer varchar(255) NOT NULL DEFAULT '' AFTER last_page_url;
 
 # BOF - Tomcraft - 2010-06-09 - Added right of revocation
-UPDATE content_manager SET content_id = 117 WHERE content_id = 17;
-UPDATE content_manager SET content_group = 999 WHERE content_id = 117;
-UPDATE content_manager SET content_id = 118 WHERE content_id = 18;
-UPDATE content_manager SET content_group = 999 WHERE content_id = 118;
-INSERT INTO content_manager VALUES (17, 0, 0, '', 1, 'Right of revocation', 'Right of revocation', '<p><strong>Right of revocation<br /></strong><br />Add your right of revocation here.</p>', 0, 1, '', 1, 9, 0, '', '', '');
-INSERT INTO content_manager VALUES (18, 0, 0, '', 2, 'Widerrufsrecht', 'Widerrufsrecht', '<p><strong>Widerrufsrecht<br /></strong><br />F&uuml;gen Sie hier das Widerrufsrecht ein.</p>', 0, 1, '', 1, 9, 0, '', '', '');
-UPDATE configuration SET configuration_value = 9 WHERE configuration_key = 'REVOCATION_ID';
+INSERT INTO content_manager (content_id, categories_id, parent_id, group_ids, languages_id, content_title, content_heading, content_text, sort_order, file_flag, content_file, content_status, content_group, content_delete, content_meta_title, content_meta_description, content_meta_keywords)
+  SELECT MAX(content_id)+1, 0, 0, '', 1, 'Right of revocation', 'Right of revocation', '<p><strong>Right of revocation<br /></strong><br />Add your right of revocation here.</p>', 0, 1, '', 1, MAX(content_group)+1, 0, '', '', '' FROM content_manager;
+INSERT INTO content_manager (content_id, categories_id, parent_id, group_ids, languages_id, content_title, content_heading, content_text, sort_order, file_flag, content_file, content_status, content_group, content_delete, content_meta_title, content_meta_description, content_meta_keywords)
+  SELECT MAX(content_id)+1, 0, 0, '', 2, 'Widerrufsrecht', 'Widerrufsrecht', '<p><strong>Widerrufsrecht<br /></strong><br />F&uuml;gen Sie hier das Widerrufsrecht ein.</p>', 0, 1, '', 1, MAX(content_group), 0, '', '', '' FROM content_manager;
+UPDATE configuration SET configuration_value = (SELECT MAX(content_group) FROM content_manager) WHERE configuration_key = 'REVOCATION_ID';
 # EOF - Tomcraft - 2010-06-09 - Added right of revocation

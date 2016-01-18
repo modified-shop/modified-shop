@@ -20,7 +20,7 @@ UPDATE zones SET zone_code = 'SH' WHERE zone_id = 93;
 UPDATE zones SET zone_code = 'TH' WHERE zone_id = 94;
 
 #Tomcraft - 2009-10-01 - changed configuration_group_id
-UPDATE configuration SET configuration_group_id = 1 WHERE configuration_id = 17;
+UPDATE configuration SET configuration_group_id = 1 WHERE configuration_key = 'DEFAULT_CUSTOMERS_STATUS_ID';
 
 #Dokuman - 2009-10-02 - added entries for new moneybookers payment module version 2.4
 INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('_PAYMENT_MONEYBOOKERS_EMAILID', '',  31, 1, NULL, '', NULL, NULL);
@@ -37,7 +37,7 @@ CREATE TABLE gls_country_to_postal (
   gls_country char(2) NOT NULL default '',
   gls_postal_reference int(11) NOT NULL default '0',
   PRIMARY KEY  (gls_country)
-) TYPE=MyISAM DEFAULT CHARSET=latin1 COLLATE latin1_german1_ci;
+) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS gls_postal_to_weight;
 CREATE TABLE gls_postal_to_weight (
@@ -46,7 +46,7 @@ CREATE TABLE gls_postal_to_weight (
   gls_to_postal varchar(10) NOT NULL default '',
   gls_weight_ref char(3) NOT NULL default '',
   PRIMARY KEY  (gls_postal_reference,gls_from_postal)
-) TYPE=MyISAM DEFAULT CHARSET=latin1 COLLATE latin1_german1_ci;
+) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS gls_weight;
 CREATE TABLE gls_weight (
@@ -55,7 +55,7 @@ CREATE TABLE gls_weight (
   gls_free_shipping_over decimal(15,4) NOT NULL default '-1.0000',
   gls_shipping_subsidized decimal(15,4) NOT NULL default '-1.0000',
   PRIMARY KEY  (gls_weight_ref)
-) TYPE=MyISAM DEFAULT CHARSET=latin1 COLLATE latin1_german1_ci;
+) ENGINE=MyISAM;
 
 #Tomcraft - 2009-09-08 - changed database_version
 UPDATE database_version SET version = 'MOD_1.0.3.0';
