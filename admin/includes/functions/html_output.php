@@ -166,7 +166,7 @@
       $parameters = (strpos($parameters,'class="') !== false ? str_replace('class="', 'class="fileInput ',$parameters) : $parameters . ' class="fileInput"');
     }
       
-    $field = xtc_draw_input_field($name, '', $parameters, $required, 'file');
+    $field = xtc_draw_input_field($name, '', $parameters, false, 'file');
 
     if (NEW_SELECT_CHECKBOX == 'true' && strpos($parameters,'noStyling') === false) {
       $input_txt = defined('FILEUPLOAD_INPUT_TXT') ? FILEUPLOAD_INPUT_TXT : 'No file';
@@ -180,6 +180,8 @@
       </label>
       </div>';
     }
+    if ($required)
+      $field .= TEXT_FIELD_REQUIRED;
     return $field;
   }
   
