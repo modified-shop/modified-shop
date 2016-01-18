@@ -60,6 +60,8 @@ clear: both;
 padding:5px 2px;
 }
 .tableConfig{
+font-family: Verdana, Arial, sans-serif;
+font-size: 12px;
 width:100%;
 padding:2px;
 border-collapse: collapse;

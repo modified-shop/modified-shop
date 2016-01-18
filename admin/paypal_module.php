@@ -276,7 +276,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                 <?php
                                   for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                                     echo '<div style="float:left;margin-right:5px;">'.xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']).'</div>';
-                                    echo xtc_draw_textarea_field('config[description]['.strtoupper($module_name.'_'.$languages[$i]['code']).']', '', '55', '8', $paypal->get_config(strtoupper($module_name.'_'.$languages[$i]['code']))); 
+                                    echo xtc_draw_textarea_field('config[description]['.strtoupper($module_name.'_'.$languages[$i]['code']).']', '', '55', '8', $paypal->get_config(strtoupper($module_name.'_'.$languages[$i]['code'])), 'style="display:block;"'); 
                                   }
                                 ?>
                               </td>
