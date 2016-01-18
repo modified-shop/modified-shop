@@ -92,16 +92,16 @@ require (DIR_WS_INCLUDES.'head.php');
           </div>
           <?php
             $list = $paypal->list_webhooks();
-            $count = count($list);
+            $new = true;
             if (count($list) > 0) {
               foreach ($list as $data) {
                 if ($data['url'] == xtc_catalog_href_link('callback/paypal/webhook.php', '', 'SSL', false)) {
-                  $count = 0;
+                  $new = false;
                   break;
                 }
               }
             }
-            if (!isset($_GET['action']) && $count != 0) {
+            if (!isset($_GET['action']) && $new != false) {
               echo '<div class="pageHeading flt-l" style="margin: 3px 40px;"><a class="button" href="'.xtc_href_link(basename($PHP_SELF), 'action=new').'">'.BUTTON_INSERT.'</a></div>';
             }
             include_once(DIR_FS_EXTERNAL.'paypal/modules/admin_menu.php');
