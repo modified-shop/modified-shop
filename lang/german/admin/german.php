@@ -177,7 +177,7 @@ define('BOX_UPDATE','Versionscheck');
 define('BOX_EASYMARKETING','EASYMARKETING AG'); // Tomcraft - 2013-08-29 - Added easymarketing
 define('BOX_GV_CUSTOMERS','Kunden-Guthaben');
 define('BOX_IT_RECHT_KANZLEI', 'IT Recht Kanzlei');
-define('BOX_PROTECTEDSHOPS', 'Protected Shops');
+define('BOX_PROTECTEDSHOPS', 'Protected Shops - AGB Konfigurator');
 define('BOX_CLEVERREACH', 'CleverReach');
 define('BOX_SUPERMAILER', 'SuperMailer');
 define('BOX_OFFLINE', 'Shop offline');
