@@ -181,10 +181,14 @@ class main {
    * @param integer $coID
    * @return array
    */
-  function getContentData($coID) { 
-    $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . $_SESSION['customers_status']['customers_status_id'] . "_group%'" : '';
+  function getContentData($coID, $lang_id = '', $customers_status = '', $get_inactive = true, $add_select= '') {
+    $lang_id = !empty($lang_id) ? $lang_id : $_SESSION['languages_id'];
+    $customers_status = $customers_status != '' ? $customers_status : $_SESSION['customers_status']['customers_status_id'];
+    $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . (int)$customers_status . "_group%'" : '';
+    $where = (($get_inactive === true) ? '' : " AND content_active = '1'");
     $content_data_query = xtDBquery("-- includes/classes/main.php
-                                       SELECT content_id,
+                                       SELECT ".$add_select."
+                                              content_id,
                                               content_title,
                                               content_heading,
                                               content_text,
@@ -192,7 +196,9 @@ class main {
                                          FROM " . TABLE_CONTENT_MANAGER . "
                                         WHERE content_group='". (int)$coID ."'
                                               " . $group_check . "
-                                          AND languages_id='" . (int)$_SESSION['languages_id'] . "'
+                                              " . $where . "
+                                          AND trim(content_title) != ''
+                                          AND languages_id='" . (int)$lang_id . "'
                                         LIMIT 1
                                       ");
     $content_data_array = xtc_db_fetch_array($content_data_query,true);

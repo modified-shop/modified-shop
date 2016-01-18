@@ -207,16 +207,16 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->caching = 0;
 
   // revocation to email 
-  $shop_content_data = $main->getContentData(REVOCATION_ID);  
-  $revocation = $shop_content_data['content_text'];  
-  $smarty->assign('REVOCATION_HTML', $revocation);
-  $smarty->assign('REVOCATION_TXT', $revocation); //replace br, strip_tags, html_entity_decode are allready execute in xtc_php_mail  function
+  require_once (DIR_FS_INC . 'get_lang_id_by_directory.inc.php');
+  $lang_id = ((isset($order->info['languages_id']) && $order->info['languages_id'] != '0')  ? $order->info['languages_id'] : get_lang_id_by_directory($order->info['language']));
+  $shop_content_data = $main->getContentData(REVOCATION_ID, $lang_id, $order->info['status']);
+  $smarty->assign('REVOCATION_HTML', $shop_content_data['content_text']);
+  $smarty->assign('REVOCATION_TXT', $shop_content_data['content_text']);
 
   // agb to email 
-  $shop_content_data = $main->getContentData(3);  
-  $agb = $shop_content_data['content_text'];  
-  $smarty->assign('AGB_HTML', $agb);
-  $smarty->assign('AGB_TXT', $agb); //replace br, strip_tags, html_entity_decode are allready execute in xtc_php_mail  function
+  $shop_content_data = $main->getContentData(3, $lang_id, $order->info['status']);
+  $smarty->assign('AGB_HTML', $shop_content_data['content_text']);
+  $smarty->assign('AGB_TXT', $shop_content_data['content_text']);
 
   $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.html');
   $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.txt');
