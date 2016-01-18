@@ -7,6 +7,9 @@
 #  Copyright (c) 2009 - 2013 [www.modified-shop.org]
 #  -----------------------------------------------------------------------------------------
 
+#Tomcraft - 2016-01-18 - changed database_version
+UPDATE database_version SET version = 'MOD_1.0.6.3';
+
 ### Subsequent updates for 1.06 rev 4642 SP2 to 1.06 rev 4642 SP3
 #GTB - 2015-01-16 - add track & trace
 CREATE TABLE IF NOT EXISTS carriers (
