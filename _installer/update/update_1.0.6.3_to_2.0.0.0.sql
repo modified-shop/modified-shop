@@ -322,9 +322,10 @@ ALTER TABLE geo_zones ADD geo_zone_info INT(1) DEFAULT 0 AFTER geo_zone_descript
 ALTER TABLE currencies ADD status INT(1) NOT NULL DEFAULT 1;
 
 #Tomcraft - 2014-08-20 - added protectedshops
-ALTER TABLE admin_access ADD protectedshops INT(1) NOT NULL DEFAULT 0 AFTER payone_logs;
-UPDATE admin_access SET protectedshops = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET protectedshops = 1 WHERE customers_id = 'groups' LIMIT 1;
+# Moved to update_1.0.6.2_to_1.0.6.3.sql
+#ALTER TABLE admin_access ADD protectedshops INT(1) NOT NULL DEFAULT 0 AFTER payone_logs;
+#UPDATE admin_access SET protectedshops = 1 WHERE customers_id = 1 LIMIT 1;
+#UPDATE admin_access SET protectedshops = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #Tomcraft - 2014-08-21 - Croatia is now member of the EU
 UPDATE zones_to_geo_zones SET geo_zone_id = 5 WHERE association_id = 53;
