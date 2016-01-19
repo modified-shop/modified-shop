@@ -25,6 +25,10 @@
       <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br />
       <strong>{#order#}</strong> {$oID}<br />
       <strong>{#date#}</strong> {$DATE}
+      {if isset($INVOICE_NUMBER) && $INVOICE_NUMBER != '' }<br />
+        <strong>{#invoice_number#}</strong> {$INVOICE_NUMBER}<br />
+        <strong>{#invoice_date#}</strong> {$INVOICE_DATE}
+      {/if}
       {if $vatID}<br /><strong>{#vatID#}</strong> {$vatID}{/if}
     </div>
     <div class="print_big">{#invoice#}</div>
