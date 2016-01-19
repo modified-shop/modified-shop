@@ -249,10 +249,13 @@ class paypalcart extends PayPalPayment {
     }
     if ($shipping_found === false) {
       $module_smarty->assign('shipping_message', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
+      /*
       if (xtc_count_shipping_modules() == 1) {
         $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
       }
+      */
     }
+    $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
     $module_smarty->assign('FORM_END', '</form>');
     
     if ($no_shipping === false) {

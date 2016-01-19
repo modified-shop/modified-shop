@@ -18,16 +18,16 @@
         </div>
       </div>
     </div>
-    <div class="checkoutconditions">
+    <div class="checkoutconditions" style="padding: 10px 0px;">
       {if $conditions_message != ''}<div class="errormessage">{$conditions_message}</div>{/if}
-      {$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong>
-      {$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}
+      {if isset($ADR_checkbox)}{$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong>{if isset($AGB_checkbox)}<br/>{/if}{/if}
+      {if isset($AGB_checkbox)}{$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}{/if}
     </div>
   {else}
     <h4 class="checkout">{#title_comments_short#}</h4>
     <div class="checkoutcomment">{$COMMENTS}</div>
     <div class="checkoutconditions">
-      {$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong>
+      {if isset($ADR_checkbox)}{$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong>{/if}
     </div>
     {if $conditions_message != ''}<div class="errormessage">{$conditions_message}</div>{/if}
   {/if}

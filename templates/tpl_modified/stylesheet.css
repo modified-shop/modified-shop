@@ -1445,6 +1445,7 @@ div.agbframe {
   line-height:18px;
   height:120px;
   overflow:auto;
+  text-align: left;
 }
 .checkoutagb {
   margin-bottom:10px;
@@ -1452,6 +1453,8 @@ div.agbframe {
 .checkoutconditions {
   padding: 10px 10px 0px 10px;
   font-size:12px;
+  text-align: left;
+  line-height: 20px;
 }
 .checkoutconditions input#conditions {
   position:relative;
