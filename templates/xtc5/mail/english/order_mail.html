@@ -11,7 +11,8 @@
             <strong>Order No.:</strong> {$oID}<br />
             <strong>Orderdate:</strong> {$DATE}<br />
             {if $csID}<strong>Customer ID:</strong> {$csID}<br />{/if}
-            <strong>Your e-mail-address:</strong> {$EMAIL}<br />
+            <strong>Your e-mail-address:</strong> {$EMAIL}
+            {if $vatID}<br /><strong>Your VAT ID No.:</strong> {$vatID}{/if}
             </font>
           </td>
           <td width="2"><img src="{$logo_path}logo.gif" /></td>

@@ -57,6 +57,7 @@ $smarty->assign('address_label_customer', xtc_address_format($order->customer['f
 $smarty->assign('address_label_shipping', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
 $smarty->assign('address_label_payment', xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
 $smarty->assign('csID', $order->customer['csID']);
+$smarty->assign('vatID',$order->customer['vat_id']);
 
 $order_query = xtc_db_query('SELECT *, COUNT(articlenumber) AS quantity FROM billsafe_orders_details_2 WHERE ordernumber = "'.xtc_db_input($order_id).'" AND articletype = "goods" AND storno = 0 AND retoure = 0 GROUP BY articlenumber, articlename, articleprice;');
 $order_data = array();

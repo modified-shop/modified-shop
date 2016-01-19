@@ -11,7 +11,8 @@
             <strong>Bestellung Nr:</strong> {$oID}<br />
             <strong>Bestelldatum:</strong> {$DATE}<br />
             {if $csID}<strong>Kundennummer:</strong> {$csID}<br />{/if}
-            <strong>Ihre E-Mail-Adresse:</strong> {$EMAIL}<br />
+            <strong>Ihre E-Mail-Adresse:</strong> {$EMAIL}
+            {if $vatID}<br /><strong>Ihre USt-IdNr.:</strong> {$vatID}{/if}
             </font>
           </td>
           <td width="2"><img src="{$logo_path}logo.gif" /></td>

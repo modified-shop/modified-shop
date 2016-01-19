@@ -15,7 +15,8 @@
             {if $csID}<strong>{#csID#}</strong>{$csID}<br />{/if}
             <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br />
             <strong>{#order#}</strong> {$oID}<br />
-            <strong>{#date#}</strong> {$DATE}<br />
+            <strong>{#date#}</strong> {$DATE}
+            {if $vatID}<br /><strong>{#vatID#}</strong> {$vatID}{/if}
             </font></td>
           <td width="1"><img src="{$logo_path}logo.gif" /></td>
         </tr>
