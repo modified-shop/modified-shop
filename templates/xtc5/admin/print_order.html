@@ -30,11 +30,12 @@
                   {if $csID}<strong>{#csID#}</strong> {$csID}<br />{/if}
                   <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br />
                   <strong>{#order#}</strong> {$oID}<br />
-                  <strong>{#date#}</strong> {$DATE}<br />                  
+                  <strong>{#date#}</strong> {$DATE}
+                  {if $vatID}<br /><strong>{#vatID#}</strong> {$vatID}{/if}
                 </p>
                 <p class="large">{#invoice#}</p>
               </td>
-              <td width="1"><img src="{$logo_path}logo.gif" alt=""></td>
+              <td width="1"><img src="{$logo_path}logo.gif" alt="{$store_name}" /></td>
             </tr>
           </table>
           <br />
@@ -70,20 +71,21 @@
               <td class="border" width="150"><div align="right"><strong>{#head_single_price#}</strong></div></td>
               <td class="border" width="150"><div align="right"><strong>{#head_price#}</strong></div></td>
             </tr>
-          {foreach name=aussen item=order_values from=$order_data}
-            <tr>
-              <td width="20" class="border"><div align="center">{$order_values.PRODUCTS_QTY}</div></td>
-              <td width="20" class="border"><div align="center">x</div></td>
-              <td class="border"><strong>{$order_values.PRODUCTS_NAME}</strong>
-              {if ACTIVATE_SHIPPING_STATUS=='true'}
-                {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />{#text_shippingtime#} {$order_values.PRODUCTS_SHIPPING_TIME}
-                {/if}
-              {/if}<br /><em>{$order_values.PRODUCTS_ATTRIBUTES}</em></td>
-              <td class="border">{$order_values.PRODUCTS_MODEL}<em>{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</em></td>
-              <td width="150" class="border"><div align="right">{$order_values.PRODUCTS_SINGLE_PRICE}</div></td>
-              <td width="150" class="border"><div align="right">{$order_values.PRODUCTS_PRICE}</div></td>
-            </tr>
-          {/foreach}
+            {foreach name=aussen item=order_values from=$order_data}
+              <tr>
+                <td width="20" class="border"><div align="center">{$order_values.PRODUCTS_QTY}</div></td>
+                <td width="20" class="border"><div align="center">x</div></td>
+                <td class="border"><strong>{$order_values.PRODUCTS_NAME}</strong>
+                  {if ACTIVATE_SHIPPING_STATUS == 'true'}
+                    {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />{#text_shippingtime#} {$order_values.PRODUCTS_SHIPPING_TIME}
+                    {/if}
+                  {/if}<br /><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>
+                </td>
+                <td class="border">{$order_values.PRODUCTS_MODEL}<em>{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</em></td>
+                <td width="150" class="border"><div align="right">{$order_values.PRODUCTS_SINGLE_PRICE}</div></td>
+                <td width="150" class="border"><div align="right">{$order_values.PRODUCTS_PRICE}</div></td>
+              </tr>
+            {/foreach}
           </table>
         </td>
       </tr>
@@ -104,6 +106,7 @@
           </table>
         </td>
       </tr>
+      {if $COMMENTS}
       <tr>
         <td>
           <table style="border-bottom:1px solid;" width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -115,6 +118,7 @@
           </table>
         </td>
       </tr>
+      {/if}
     </table>
   </body>
 </html>

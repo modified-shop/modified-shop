@@ -57,6 +57,7 @@ $smarty->assign('address_label_customer', xtc_address_format($order->customer['f
 $smarty->assign('address_label_shipping', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
 $smarty->assign('address_label_payment', xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
 $smarty->assign('csID', $order->customer['csID']);
+$smarty->assign('vatID',$order->customer['vat_id']);
 
 $order_query = xtc_db_query('SELECT *, COUNT(articlenumber) AS quantity FROM billsafe_orders_details_2 WHERE ordernumber = "'.xtc_db_input($order_id).'" AND articletype = "goods" AND storno = 0 AND retoure = 0 GROUP BY articlenumber, articlename, articleprice;');
 $order_data = array();
@@ -163,6 +164,8 @@ if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'n
 }
 $smarty->assign('COMMENTS', $order->info['comments']);
 $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
+$smarty->assign('INVOICE_NUMBER', isset($order->info['ibn_billnr']) && $order->info['ibn_billnr'] != '' ? $order->info['ibn_billnr'] :  $order->info['order_id']);
+$smarty->assign('INVOICE_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));
 $smarty->assign('order_data', $order_data);
 $smarty->assign('order_total', $order_total);
 

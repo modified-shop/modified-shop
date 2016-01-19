@@ -42,6 +42,7 @@
   $smarty->assign('address_label_shipping',xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
   $smarty->assign('address_label_payment',xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
   $smarty->assign('csID',$order->customer['csID']);
+  $smarty->assign('vatID',$order->customer['vat_id']);
 
   // get products data
   include_once(DIR_FS_CATALOG.DIR_WS_CLASSES .'xtcPrice.php');

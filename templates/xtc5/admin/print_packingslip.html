@@ -27,14 +27,15 @@
                 <p class="normal">{$address_label_customer}</p>
                 <p>&nbsp;</p>
                 <p class="small">
-                {if $csID}<strong>{#csID#}</strong> {$csID}<br />{/if}
-                <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br />
-                <strong>{#order#}</strong> {$oID}<br />
-                <strong>{#date#}</strong> {$DATE}
+                  {if $csID}<strong>{#csID#}</strong> {$csID}<br />{/if}
+                  <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br />
+                  <strong>{#order#}</strong> {$oID}<br />
+                  <strong>{#date#}</strong> {$DATE}
+                  {if $vatID}<br /><strong>{#vatID#}</strong> {$vatID}{/if}
                 </p>
                 <p class="large">{#packingslip#}</p>
               </td>
-              <td width="1"><img src="{$logo_path}logo.gif" alt=""></td>
+              <td width="1"><img src="{$logo_path}logo.gif" alt="{$store_name}" /></td>
             </tr>
           </table>
           <br />
@@ -62,7 +63,7 @@
       </tr>
       <tr>
         <td>
-          <table style="border-bottom:1px solid;" class="small" width="100%" border="0" cellpadding="3" cellspacing="0" bgcolor="f1f1f1">
+          <table class="small" width="100%" border="0" cellpadding="3" cellspacing="0" bgcolor="f1f1f1">
             <tr>
               <td colspan="2" class="border"><div align="center"><strong>{#head_units#}</strong></div></td>
               <td class="border"><strong>{#head_products#}</strong></td>
@@ -70,15 +71,10 @@
             </tr>
             {foreach name=aussen item=order_values from=$order_data}
               <tr>
-                <td width="20" class="border">
-                  <div align="center">{$order_values.PRODUCTS_QTY}</div>
-                </td>
-                <td width="20" class="border">
-                  <div align="center">x</div>
-                </td>
-                <td class="border">
-                  <strong>{$order_values.PRODUCTS_NAME}</strong>
-                  {if ACTIVATE_SHIPPING_STATUS=='true'}
+                <td width="20" class="border"><div align="center">{$order_values.PRODUCTS_QTY}</div></td>
+                <td width="20" class="border"><div align="center">x</div></td>
+                <td class="border"><strong>{$order_values.PRODUCTS_NAME}</strong>
+                  {if ACTIVATE_SHIPPING_STATUS == 'true'}
                     {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />{#text_shippingtime#} {$order_values.PRODUCTS_SHIPPING_TIME}
                     {/if}
                   {/if}<br /><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>
@@ -89,9 +85,10 @@
           </table>
         </td>
       </tr>
+      {if $COMMENTS}
       <tr>
         <td>
-          <table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <table style="border-bottom:1px solid;" width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr>
               <td class="small">
                 <br /><br /><strong>{#comments#}</strong> {$COMMENTS}
@@ -100,6 +97,7 @@
           </table>
         </td>
       </tr>
+      {/if}
     </table>
   </body>
 </html>
