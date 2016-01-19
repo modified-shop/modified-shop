@@ -89,6 +89,16 @@
   <br class="clearfix" />
   {/if}
 
+  {if $COMMENTS}
+  <div class="hr_5"></div>
+
+  <br />
+  <div class="print_small">
+    <strong>{#comments#}</strong><br />
+    {$COMMENTS}
+  </div>
+  {/if}
+
   <br />
   {if $BillsafeType == 'invoice'}
   <div class="print_small">
