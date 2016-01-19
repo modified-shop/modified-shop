@@ -485,10 +485,7 @@ if (xtc_not_null($action) && !$box) {
                                                     );
                       $contents[] = array('text' => '<br />' . $mInfo->description);
                       if (isset($mInfo->extended_description) && $mInfo->extended_description != '') {
-                        if (($mInfo->code == "paypal" || $mInfo->code == "paypalexpress") && PAYPAL_API_USER == '') {
-                          // Special text in paypal and paypalexpress if API_USER not defined
-                          $contents[] = array('text' => '<br />' . $mInfo->extended_description);
-                        }
+                        $contents[] = array('text' => '<br />' . $mInfo->extended_description);
                       }
                       $contents[] = array('text' => '<br />' . $keys);
                     } else {

@@ -25,7 +25,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALCLASSIC_ZONE_DESC' => 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.',
   'MODULE_PAYMENT_PAYPALCLASSIC_LP' => '<br /><br /><a target="_blank" href="http://www.paypal.com/de/webapps/mpp/referral/paypal-business-account2?partner_id=EHALBVD4M2RQS"><strong>Jetzt PayPal Konto hier erstellen.</strong></a>',
 
-  'MODULE_PAYMENT_PAYPALCLASSIC_TEXT_EXTENDED_DESCRIPTION' => '<strong><font color="red">ACHTUNG:</font></strong> Bitte nehmen Sie noch die Einstellungen unter Erw. Konfiguration -> Partner -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=111125').'"><strong>PayPal</strong></a> vor!',
+  'MODULE_PAYMENT_PAYPALCLASSIC_TEXT_EXTENDED_DESCRIPTION' => '<strong><font color="red">ACHTUNG:</font></strong> Bitte nehmen Sie noch die Einstellungen unter Partner Module -> PayPal -> Module -> <a href="'.xtc_href_link('paypal_module.php').'"><strong>PayPal</strong></a> vor!',
 
   'MODULE_PAYMENT_PAYPALCLASSIC_TEXT_ERROR_HEADING' => 'Hinweis',
   'MODULE_PAYMENT_PAYPALCLASSIC_TEXT_ERROR_MESSAGE' => 'PayPal Zahlung wurde abgebrochen',
