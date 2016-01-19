@@ -6,6 +6,7 @@ Bestellnummer: {$oID}
 Datum: {$DATE}
 {if $csID}Kundennummer: {$csID}{/if}
 Ihre E-Mail-Adresse: {$EMAIL}
+{if $vatID}Ihre USt-IdNr.: {$vatID}{/if}
 ----------------------------------------------------------------------
 
 
