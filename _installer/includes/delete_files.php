@@ -73,6 +73,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/images/top_logout.gif', // neu
                      'admin/images/top_shop.gif', // neu
                      'admin/images/top_support.gif', // neu
+                     'admin/includes/classes/class.paypal.php', // neu
                      'admin/includes/classes/sessions.php', // neu
                      'admin/includes/classes/phpmailer.lang-de.php', // neu
                      'admin/includes/classes/phpmailer.lang-en.php', // neu
@@ -118,11 +119,18 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/includes/modules/magpierss/rss_parse.inc',
                      'admin/includes/modules/magpierss/rss_utils.inc',
                      'admin/includes/modules/magpierss/extlib/Snoopy.class.inc',
+                     'admin/includes/modules/paypal_capturetransaction.php', // neu
+                     'admin/includes/modules/paypal_listtransactions.php', // neu
+                     'admin/includes/modules/paypal_refundtransaction.php', // neu
+                     'admin/includes/modules/paypal_searchtransaction.php', // neu
+                     'admin/includes/modules/paypal_transactiondetail.php', // neu
                      'admin/includes/stylesheet_stocklist.css', // neu
                      'admin/includes/stylesheet_stocklist_print.css', // neu
+                     'admin/paypal.php', // neu
                      'admin/rss/index.html',
                      'admin/rss/xt-news.cache',
                      'admin/rss/xtc.cache',
+                     'callback/paypal/ipn.php', // neu
                      'callback/sofort/callback.php', // neu
                      'callback/sofort/helperFunctions.php', // neu
                      'callback/sofort/sofort.ini', // neu
@@ -169,6 +177,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'includes/classes/class.phpmailer.php', // neu
                      'includes/classes/class.smtp.php', // neu
                      'includes/classes/outputfilter.note.php', // neu
+                     'includes/classes/paypal_checkout.php', // neu
                      'includes/classes/phpmailer.lang-de.php', // neu
                      'includes/classes/phpmailer.lang-en.php', // neu
                      'includes/classes/sessions.php', // neu
@@ -185,6 +194,11 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'includes/modules/payment/cc.php',
                      'includes/modules/payment/iclear.php',
                      'includes/modules/payment/luupws.php', // neu
+                     'includes/modules/payment/paypal.php', // neu
+                     'includes/modules/payment/paypal_ipn.php', // neu
+                     'includes/modules/payment/paypalexpress.php', // neu
+                     'includes/modules/paypal_express_cart.php', // neu
+                     'includes/modules/paypal_express_error.php', // neu
                      'includes/modules/payment/pn_sofortueberweisung.php', // neu
                      'includes/modules/payment/sofort_lastschrift.php', // neu
                      'includes/modules/payment/sofort_sofortlastschrift.php', // neu
@@ -200,6 +214,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'includes/shopgate/.htaccess', // neu
                      'INFO.txt', // neu
                      'lang/english/admin/blacklist.php', // neu
+                     'lang/english/admin/paypal.php', // neu
                      'lang/english/checkout_confirmation.php', // neu
                      'lang/english/sofortueberweisung_abort.php', // neu
                      'lang/english/easybill.php',
@@ -209,6 +224,9 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'lang/english/modules/payment/cc.php',
                      'lang/english/modules/payment/iclear.php',
                      'lang/english/modules/payment/luupws.php', // neu
+                     'lang/english/modules/payment/paypal.php', // neu
+                     'lang/english/modules/payment/paypal_ipn.php', // neu
+                     'lang/english/modules/payment/paypalexpress.php', // neu
                      'lang/english/modules/payment/pn_sofortueberweisung.php', // neu
                      'lang/english/modules/payment/sofort_general.php', // neu
                      'lang/english/modules/payment/sofort_lastschrift.php', // neu
@@ -221,6 +239,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'lang/english/modules/payment/sofortueberweisungvorkasse.php', // neu
                      'lang/english/modules/payment/worldpay.php', // neu
                      'lang/german/admin/blacklist.php', // neu
+                     'lang/german/admin/paypal.php', // neu
                      'lang/german/checkout_confirmation.php', // neu
                      'lang/german/sofortueberweisung_abort.php', // neu
                      'lang/german/easybill.php',
@@ -230,6 +249,9 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'lang/german/modules/payment/cc.php',
                      'lang/german/modules/payment/iclear.php',
                      'lang/german/modules/payment/luupws.php', // neu
+                     'lang/german/modules/payment/paypal.php', // neu
+                     'lang/german/modules/payment/paypal_ipn.php', // neu
+                     'lang/german/modules/payment/paypalexpress.php', // neu
                      'lang/german/modules/payment/pn_sofortueberweisung.php', // neu
                      'lang/german/modules/payment/sofort_general.php', // neu
                      'lang/german/modules/payment/sofort_lastschrift.php', // neu
@@ -243,6 +265,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'lang/german/modules/payment/worldpay.php', // neu
                      'LICENSE', // neu
                      'media_content.php',
+                     'paypal_checkout.php', // neu
                      'popup_cvv.php',
                      'popup_image.php',
                      'shopstat/.htaccess',
@@ -296,7 +319,9 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'templates/xtc5/mail/german/widerruf.txt',
                      'templates/xtc5/mail/german/widerruf.html',
                      'templates/xtc5/module/account_newsletter.html', // neu
+                     'templates/xtc5/module/checkout_paypal.html', // neu
                      'templates/xtc5/module/google_sitemap.html', // neu
+                     'templates/xtc5/module/paypal_express_cart.html', // neu
                      'templates/xtc5/module/sofort_vorkasse.html', // neu
                      'templates/xtc5/module/wpcallback.html', // neu
                      'templates/xtc5/smarty/function.facebook_badge.php',
@@ -319,7 +344,9 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      //'templates/'.CURRENT_TEMPLATE.'/mail/german/widerruf.txt',
                      //'templates/'.CURRENT_TEMPLATE.'/mail/german/widerruf.html',
                      'templates/'.CURRENT_TEMPLATE.'/module/account_newsletter.html', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/module/checkout_paypal.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/google_sitemap.html', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/module/paypal_express_cart.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/sofort_vorkasse.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/wpcallback.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/smarty/function.facebook_badge.php',
