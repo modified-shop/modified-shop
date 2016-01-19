@@ -31,7 +31,7 @@ class PayPalPaymentBase extends PayPalCommon {
     $this->title = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '');
     $this->info = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO') : '');
     $this->description = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION').((defined('_VALID_XTC') && defined('MODULE_PAYMENT_'.strtoupper($this->code).'_LP')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_LP') : '') : '');
-    $this->extended_description = ((defined('MODULE_PAYMENT_PAYPAL_TEXT_EXTENDED_DESCRIPTION')) ? constant('MODULE_PAYMENT_PAYPAL_TEXT_EXTENDED_DESCRIPTION') : '');
+    $this->extended_description = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_EXTENDED_DESCRIPTION')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_EXTENDED_DESCRIPTION') : '');
     
     $this->sort_order = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER') : '');
     $this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
