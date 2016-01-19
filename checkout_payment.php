@@ -163,21 +163,25 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
     $error = true;
   }
   ### Paypal Express Modul
-
-  for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
-    if (defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')
-        && in_array($selection[$i]['id'], $hide_payment_ppp)
-        ) 
-    {
-      if (isset($_SESSION['payment']) && $selection[$i]['id'] == $_SESSION['payment']) {
-        $_SESSION['payment'] = 'paypalplus';
+  
+  ## PayPal
+  if (defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')
+      && defined('MODULE_PAYMENT_PAYPALPLUS_STATUS')
+      &&  MODULE_PAYMENT_PAYPALPLUS_STATUS == 'True'
+      )
+  {
+    for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
+      if (in_array($selection[$i]['id'], $hide_payment_ppp)) {
+        if (isset($_SESSION['payment']) && $selection[$i]['id'] == $_SESSION['payment']) {
+          $_SESSION['payment'] = 'paypalplus';
+        }
+        unset($selection[$i]);
+        continue;
       }
-      unset($selection[$i]);
-      $selection = array_values($selection);
-      continue;
     }
+    $selection = array_values($selection);
   }
-
+  
   $radio_buttons = 0;
   $selection = $payment_modules->selection();
   for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
