@@ -4074,8 +4074,6 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
                 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
                 if (isset($_SESSION['paypal_express_new_customer'])
                     && $_SESSION['paypal_express_new_customer'] == 'true'
-                    && isset($_SESSION['ACCOUNT_PASSWORD'])
-                    && $_SESSION['ACCOUNT_PASSWORD'] == 'true'
                 ) {
                     require_once(DIR_FS_INC . 'xtc_create_password.inc.php');
                     require_once(DIR_FS_INC . 'xtc_encrypt_password.inc.php');

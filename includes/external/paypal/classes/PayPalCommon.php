@@ -302,6 +302,7 @@ class PayPalCommon extends PayPalAuth {
                             'customers_password' => xtc_encrypt_password($password),
                             'customers_date_added' => 'now()',
                             'customers_last_modified' => 'now()',
+                            'password_request_time' => 'now()',
                             );
 
     if (ACCOUNT_GENDER == 'true') {
@@ -327,6 +328,9 @@ class PayPalCommon extends PayPalAuth {
                             'customers_info_number_of_logons' => '1',
                             'customers_info_date_account_created' => 'now()');
     xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
+    
+    // send password with order mail
+    $_SESSION['paypal_express_new_customer'] = 'true';
     
     // login
     $this->login_customer($customer);

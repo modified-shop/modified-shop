@@ -33,8 +33,8 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
   $order = new order($insert_id);
 
-  ## Paypal Express Modul
-  if (isset($_SESSION['paypal_express_new_customer']) && $_SESSION['paypal_express_new_customer'] == 'true' && isset($_SESSION['ACCOUNT_PASSWORD']) && $_SESSION['ACCOUNT_PASSWORD'] == 'true') {
+  ## PayPal
+  if (isset($_SESSION['paypal_express_new_customer']) && $_SESSION['paypal_express_new_customer'] == 'true') {
     require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
     
     $vlcode = xtc_random_charcode(32);
@@ -45,7 +45,6 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     
     $smarty->assign('NEW_PASSWORD', $link);
   }
-  ## Paypal Express Modul
 
   if (isset($send_by_admin)) {
     $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
@@ -107,23 +106,6 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   if(stripos($order->info['payment_method'], 'billpay') !== false) {
     require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_mail.php'); #BILLPAY payment module
   }
-
-  //BOF  - web28 - 2010-03-27 PayPal Bezahl-Link
-  unset ($_SESSION['paypal_link']);
-  if ($order->info['payment_method'] == 'paypal_ipn') {
-    if(isset($send_by_admin)) {
-      require (DIR_FS_CATALOG_MODULES.'payment/paypal_ipn.php');
-      include(DIR_FS_LANGUAGES.$order->info['language'].'/modules/payment/paypal_ipn.php');
-      $payment_modules = new paypal_ipn;
-    }
-    $order_id= $insert_id;
-    $paypal_link = array();
-    $payment_modules->create_paypal_link();
-    $smarty->assign('PAYMENT_INFO_HTML', $paypal_link['html']);
-    $smarty->assign('PAYMENT_INFO_TXT',  MODULE_PAYMENT_PAYPAL_IPN_TXT_EMAIL . $paypal_link['text']);
-    $_SESSION['paypal_link']= $paypal_link['checkout'];
-  }
-  //EOF  - web28 - 2010-03-27 PayPal Bezahl-Link
 
   // PAYMENT MODUL TEXTS
   $payment_method_array = array('eustandardtransfer','moneyorder');
