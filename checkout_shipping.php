@@ -78,15 +78,6 @@ if (!isset($_SESSION['sendto'])) {
 	}
 }
 
-### Paypal Express Modul
-if(isset($_SESSION['payment']) && $_SESSION['payment'] == 'paypalexpress') {
-  unset($_SESSION['payment']);
-  unset($_SESSION['nvpReqArray']);
-  unset($_SESSION['reshash']);
-  unset($_SESSION['paypal_express_checkout']);
-}
-### Paypal Express Modul
-
 require_once (DIR_WS_CLASSES.'order.php');
 $order = new order();
 

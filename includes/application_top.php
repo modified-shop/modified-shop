@@ -312,12 +312,6 @@ if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS ==
   }
 }
 
-// PayPal Express
-if (defined('PAYPAL_API_VERSION')) {
-  require_once (DIR_WS_CLASSES . 'paypal_checkout.php');
-  $o_paypal = new paypal_checkout();
-}
-
 // econda tracking
 if (TRACKING_ECONDA_ACTIVE == 'true') {
   require(DIR_FS_EXTERNAL . 'econda/class.econda.php');

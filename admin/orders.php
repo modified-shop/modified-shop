@@ -331,39 +331,11 @@ switch ($action) {
 
   case 'deleteconfirm':
     xtc_remove_order($oID, xtc_db_prepare_input($_POST['restock']));
-    // Paypal Express Modul
-    if(isset($_POST['paypaldelete'])) {
-        if(!defined('TABLE_PAYPAL'))define('TABLE_PAYPAL', 'paypal');
-        if(!defined('TABLE_PAYPAL_STATUS_HISTORY'))define('TABLE_PAYPAL_STATUS_HISTORY', 'paypal_status_history');
-      $query = xtc_db_query("SELECT *
-                               FROM " . TABLE_PAYPAL . "
-                              WHERE xtc_order_id = ".$oID
-                            );
-      while ($values = xtc_db_fetch_array($query)) {
-        xtc_db_query("DELETE FROM " . TABLE_PAYPAL_STATUS_HISTORY . " WHERE paypal_ipn_id = '".$values['paypal_ipn_id']."'");
-      }
-      xtc_db_query("DELETE FROM " . TABLE_PAYPAL . " WHERE xtc_order_id = '".$oID."'");
-    }
-
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action'))));
     break;
 
   case 'stornoconfirm':
     xtc_reverse_order($oID, xtc_db_prepare_input($_POST['restock']), xtc_db_prepare_input($_POST['status_storno']));
-    // Paypal Express Modul
-    if(isset($_POST['paypaldelete'])) {
-        if(!defined('TABLE_PAYPAL'))define('TABLE_PAYPAL', 'paypal');
-        if(!defined('TABLE_PAYPAL_STATUS_HISTORY'))define('TABLE_PAYPAL_STATUS_HISTORY', 'paypal_status_history');
-      $query = xtc_db_query("SELECT *
-                               FROM " . TABLE_PAYPAL . "
-                              WHERE xtc_order_id = ".$oID
-                            );
-      while ($values = xtc_db_fetch_array($query)) {
-        xtc_db_query("DELETE FROM " . TABLE_PAYPAL_STATUS_HISTORY . " WHERE paypal_ipn_id = '".$values['paypal_ipn_id']."'");
-      }
-      xtc_db_query("DELETE FROM " . TABLE_PAYPAL . " WHERE xtc_order_id = '".$oID."'");
-    }
-
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action'))));
     break;
 

@@ -39,86 +39,58 @@ $breadcrumb->add(NAVBAR_TITLE_SHOPPING_CART, xtc_href_link(FILENAME_SHOPPING_CAR
 
 require (DIR_WS_INCLUDES.'header.php');
 
-// show gift cart only if not paypal express
-if(!isset($_SESSION['paypal_warten'])) { 
-  if (ACTIVATE_GIFT_SYSTEM == 'true') {
-    include (DIR_WS_MODULES.'gift_cart.php');
-  }
-  if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
-    include (DIR_WS_MODULES.'wishlist.php');
-  }
+if (ACTIVATE_GIFT_SYSTEM == 'true') {
+  include (DIR_WS_MODULES.'gift_cart.php');
+}
+if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+  include (DIR_WS_MODULES.'wishlist.php');
 }
 
-### PayPal Express - error
-include (DIR_WS_MODULES.'paypal_express_error.php');
-
-$template_cart = 'shopping_cart.html';
 if ($_SESSION['cart']->count_contents() > 0) {
 
-  // shopping cart without PayPal Express
-  if (!isset($_SESSION['paypal_warten'])) {
-    $smarty->assign('FORM_ACTION', xtc_draw_form('cart_quantity', xtc_href_link(FILENAME_SHOPPING_CART, 'action=update_product', $request_type))); //GTB - 2010-11-26 - fix SSL/NONSSL to request
-    $smarty->assign('FORM_END', '</form>');
+  $smarty->assign('FORM_ACTION', xtc_draw_form('cart_quantity', xtc_href_link(FILENAME_SHOPPING_CART, 'action=update_product', $request_type))); //GTB - 2010-11-26 - fix SSL/NONSSL to request
+  $smarty->assign('FORM_END', '</form>');
 
-    $_SESSION['any_out_of_stock'] = 0;
-    require (DIR_WS_MODULES.'order_details_cart.php');
-    
-    $_SESSION['allow_checkout'] = 'true';
-    if (STOCK_CHECK == 'true') {
-      if ($_SESSION['any_out_of_stock'] == 1) {
-        if (STOCK_ALLOW_CHECKOUT == 'true') {
-          $_SESSION['allow_checkout'] = 'true';
-          $messageStack->add('shopping_cart', OUT_OF_STOCK_CAN_CHECKOUT);
-        } else {
-          $_SESSION['allow_checkout'] = 'false';
-          $messageStack->add('shopping_cart', OUT_OF_STOCK_CANT_CHECKOUT);
-        }
-      } else {
-        $_SESSION['allow_checkout'] = 'true';
-      }
-    }
-  } else {
-    ### PayPal Express - second call
-    require (DIR_WS_MODULES.'paypal_express_cart.php');
-  }
+  $_SESSION['any_out_of_stock'] = 0;
+  require (DIR_WS_MODULES.'order_details_cart.php');
   
+  $_SESSION['allow_checkout'] = 'true';
+  if (STOCK_CHECK == 'true') {
+    if ($_SESSION['any_out_of_stock'] == 1) {
+      if (STOCK_ALLOW_CHECKOUT == 'true') {
+        $_SESSION['allow_checkout'] = 'true';
+        $messageStack->add('shopping_cart', OUT_OF_STOCK_CAN_CHECKOUT);
+      } else {
+        $_SESSION['allow_checkout'] = 'false';
+        $messageStack->add('shopping_cart', OUT_OF_STOCK_CANT_CHECKOUT);
+      }
+    } else {
+      $_SESSION['allow_checkout'] = 'true';
+    }
+  }
+
   // cart requirements
   require (DIR_WS_INCLUDES.'cart_requirements.php');
     
   // cart buttons
-  if (isset($_SESSION['paypal_warten'])) {
-    $messageStack->add('shopping_cart', $_SESSION['paypal_warten']);
-  } else {
-    if (isset($o_paypal) && is_object($o_paypal)) {
-      $smarty->assign('BUTTON_PAYPAL', $o_paypal->build_express_checkout_button());
+  $smarty->assign('BUTTON_RELOAD', xtc_image_submit('button_update_cart.gif', IMAGE_BUTTON_UPDATE_CART));
+  $smarty->assign('BUTTON_CHECKOUT', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL').'">'.xtc_image_button('button_checkout.gif', IMAGE_BUTTON_CHECKOUT).'</a>');
+  
+  ## PayPal
+  require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
+  $paypal_cart = new PayPalPayment('paypalcart');
+  if ($paypal_cart->enabled === true) {
+    $smarty->assign('BUTTON_PAYPAL', $paypal_cart->checkout_button());
+    if (isset($_GET['payment_error'])) {
+      include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypalcart.php');
+      $error = $paypal_cart->get_error();
+      $smarty->assign('info_message',  $error['error']);
     }
-    require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
-    $paypal_cart = new PayPalPayment('paypalcart');
-    if ($paypal_cart->enabled === true) {
-      $smarty->assign('BUTTON_PAYPAL', $paypal_cart->checkout_button());
-      if (isset($_GET['payment_error'])) {
-        include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypalcart.php');
-        $error = $paypal_cart->get_error();
-        $smarty->assign('info_message',  $error['error']);
-      }
-    }
-    $smarty->assign('BUTTON_RELOAD', xtc_image_submit('button_update_cart.gif', IMAGE_BUTTON_UPDATE_CART));
-    $smarty->assign('BUTTON_CHECKOUT', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL').'">'.xtc_image_button('button_checkout.gif', IMAGE_BUTTON_CHECKOUT).'</a>');
   }
 } else {
   // empty cart
   $smarty->assign('cart_empty', true);
   $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
-}
-
-### PayPal Express 
-if(!isset($_SESSION['paypal_warten'])) {
-  unset($_SESSION['nvpReqArray']);
-  unset($_SESSION['reshash']['FORMATED_ERRORS']);
-  unset($_SESSION['reshash']);
-  unset($_SESSION['tmp_oID']);
-} else {
-  unset($_SESSION['paypal_warten']);
 }
 
 // info message cart
@@ -168,7 +140,7 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
 }
 
 $smarty->assign('language', $_SESSION['language']);
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$template_cart);
+$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/shopping_cart.html');
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM')) {

@@ -131,14 +131,6 @@
                 ## Paypal
                 include (DIR_FS_EXTERNAL.'paypal/modules/orders_paypal.php');
 
-                ## Paypal Express Modul
-                if ($order->info['payment_method']=='paypal_directpayment' or $order->info['payment_method']=='paypal' or $order->info['payment_method']=='paypalexpress') {
-                  require('../includes/classes/paypal_checkout.php');
-                  require('includes/classes/class.paypal.php');
-                  $paypal = new paypal_admin();
-                  $paypal->admin_notification($oID);
-                }
-
                 ## Banktransfer
                 $banktransfer_query = xtc_db_query("SELECT banktransfer_owner,
                                                            banktransfer_number,

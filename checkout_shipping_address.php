@@ -37,11 +37,6 @@ $link_checkout_shipping = FILENAME_CHECKOUT_SHIPPING;
 if (isset($_SESSION['paypal']['PayerID'])) {
   $params = xtc_get_all_get_params();
   $link_checkout_shipping = FILENAME_CHECKOUT_CONFIRMATION;
-} elseif (@is_array($_SESSION['nvpReqArray'])) {
-  $link_checkout_shipping = FILENAME_PAYPAL_CHECKOUT;
-  if(PAYPAL_EXPRESS_ADDRESS_CHANGE=='true'){
-    $_SESSION['pp_allow_address_change'] = 'true';
-  }
 }
 
 // if the customer is not logged on, redirect them to the login page

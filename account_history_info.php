@@ -74,17 +74,6 @@ if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'n
   $smarty->assign('PAYMENT_METHOD', constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_TITLE'));
 }
 
-## PayPal Bezahl-Link
-if ($order->info['payment_method'] == 'paypal_ipn' && MODULE_PAYMENT_PAYPAL_IPN_USE_ACCOUNT == 'True') {
-  $order_id = $order->info['order_id'];
-  $paypal_link = array();
-  require (DIR_WS_CLASSES.'payment.php');
-  $payment_modules = new payment('paypal_ipn');
-  $payment_modules->create_paypal_link();
-  $smarty->assign('PAYPAL_LINK', $paypal_link['html']);
-}
-## PayPal Bezahl-Link
-
 ## PayPal
 if ($order->info['payment_method'] == 'paypallink'
     || $order->info['payment_method'] == 'paypalpluslink'

@@ -225,12 +225,10 @@
               switch ($_GET['gID']) {
                 case '21': //Afterbuy                 
                 case '19': // Google Conversion-Tracking
-                case '111125': // Paypal Express Modul
-                case '31': // moneybookers payment module version 2.4 & paypal payment module                        
+                case '31': // moneybookers payment module version 2.4        
                   echo '<div class="configPartner cf">
                           <a class="configtab'.(($_GET['gID'] == '21') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=21', 'NONSSL').'">Afterbuy</a>
                           <a class="configtab'.(($_GET['gID'] == '19') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=19', 'NONSSL').'">Google Conversion</a>
-                          <a class="configtab'.(($_GET['gID'] == '111125') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=111125', 'NONSSL').'">PayPal</a>
                           <a class="configtab'.(($_GET['gID'] == '31') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=31', 'NONSSL').'">Moneybookers.com</a>
                         </div>';
 
@@ -261,9 +259,6 @@
                                                               AND sort_order >= 0
                                                          ORDER BY sort_order"
                                                          );
-                      if ($_GET['gID'] == '111125' && xtc_db_num_rows($configuration_query) < 1) {
-                        echo TEXT_PAYPAL_NOT_INSTALLED;
-                      }
                       while ($configuration = xtc_db_fetch_array($configuration_query)) {
                         $configuration['configuration_value'] = stripslashes($configuration['configuration_value']); //Web28 - 2012-08-09 - fix slashes
                         if ($_GET['gID'] == 6) {

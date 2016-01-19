@@ -41,15 +41,13 @@
       
       if (defined('MODULE_PAYMENT_INSTALLED') && xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
 
-        ## Paypal Express Modul
+        ## Paypal
         if(isset($_SESSION['paypal_express_checkout']) && $_SESSION['paypal_express_checkout'] == true){
           $modules = explode(';', $_SESSION['paypal_express_payment_modules']);
         } else {
           $modules = explode(';', MODULE_PAYMENT_INSTALLED);
-          $modules = str_replace('paypalexpress.php', '', $modules);
           $modules = str_replace('paypalcart.php', '', $modules);
         }
-        ## Paypal Express Modul
         
         $module_directory = DIR_WS_MODULES . 'payment/';
         foreach($modules as $file) {
@@ -315,15 +313,6 @@
           } else {
             return array();          
           }
-        }
-      }
-    }
-
-		// PayPal Express Giropay
-    function giropay_process() {
-      if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
-          return $GLOBALS[$this->selected_module]->giropay_process();
         }
       }
     }

@@ -33,8 +33,6 @@ $link_checkout_payment = FILENAME_CHECKOUT_PAYMENT;
 if (isset($_SESSION['paypal']['PayerID'])) {
   $params = xtc_get_all_get_params();
   $link_checkout_payment = FILENAME_CHECKOUT_CONFIRMATION;
-} elseif (isset($_SESSION['nvpReqArray']) && is_array($_SESSION['nvpReqArray'])) {
-  $link_checkout_payment = FILENAME_PAYPAL_CHECKOUT;
 }
 
 // if the customer is not logged on, redirect them to the login page

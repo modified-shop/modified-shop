@@ -147,14 +147,13 @@
       $this->info['total'] = strip_tags($order_total['ot_total_text']);
       $this->info['shipping_method'] = ((substr($order_total['ot_shipping_title'], -1) == ':') ? substr(strip_tags($order_total['ot_shipping_title']), 0, -1) : strip_tags($order_total['ot_shipping_title']));
 
-      #PayPal API Modul / Paypal Express Modul
+      ## PayPal
       $this->info['pp_total'] = $order_total['ot_total_value'];
       $this->info['pp_shipping'] = $order_total['ot_shipping_value'];
       $this->info['pp_tax'] = $order_total['ot_tax'];
       $this->info['pp_disc'] = $order_total['ot_discount'];
       $this->info['pp_gs'] = $order_total['ot_gv'];
       $this->info['pp_fee'] = $order_total['ot_fee'];
-      #Paypal Express Modul
 
       // build customer array dynamically
       foreach ($order as $key => $val) {
@@ -524,7 +523,7 @@
       }
 
       $index = 0;
-      $this->tax_discount = array (); #PayPal API Modul / Paypal Express Modul
+      $this->tax_discount = array ();
 
       $products = $_SESSION['cart']->get_products(); //set in includes/classes/shopping_cart.php function get_products
 
@@ -618,10 +617,7 @@
             $this->info['tax_groups'][$tax_index] = 0;
           }
           if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
-            # PayPal API Modul / Paypal Express Modul
-            // $this->info['tax'] += ($shown_price_tax/100) * ($products_tax);
             $this->tax_discount[$products[$i]['tax_class_id']]+=($shown_price_tax/100) * $products_tax;
-            # PayPal API Modul / Paypal Express Modul
             $this->info['tax_groups'][$tax_index] += ($shown_price_tax/100) * ($products_tax);
           } else {
             $this->info['tax'] += ($shown_price/100) * ($products_tax);
@@ -631,12 +627,9 @@
         $index++;
       }
 
-      # PayPal API Modul / Paypal Express Modul
       foreach ($this->tax_discount as $value) {
-        //$this->info['tax']+=round($value, $xtPrice->get_decimal_places($order->info['currency']));
-        $this->info['tax']+=round($value, $xtPrice->get_decimal_places('')); //web28: parameter in get_decimal_places isn't used
+        $this->info['tax'] += round($value, $xtPrice->get_decimal_places(''));
       }
-      # PayPal API Modul / Paypal Express Modul
 
       $this->info['total'] = $this->info['subtotal'] + $xtPrice->xtcFormat($this->info['shipping_cost'], false,0,true);
       if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {

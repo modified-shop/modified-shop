@@ -118,13 +118,6 @@ while ($check = xtc_db_fetch_array($query)) {
       break;
     }
   }
-
-  //BOF - DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
-  if (strpos($check['configuration_value'], 'paypal') !== false 
-  && defined('PAYPAL_API_USER') && PAYPAL_API_USER == '') {
-    $warnings[] = '<p>'.sprintf(TEXT_PAYPAL_CONFIG,xtc_href_link(FILENAME_CONFIGURATION, 'gID=111125')).'</p>';
-  }
-  //EOF - DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
 }
 
 /*******************************************************************************

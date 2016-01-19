@@ -377,13 +377,6 @@ if (xtc_not_null($action) && !$box) {
               $heading = array();
               $contents = array();
               switch ($action) {
-                case 'removepaypal':
-                    $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array ('form' => (isset($mInfo->properties['form_removepaypal']) ? $mInfo->properties['form_removepaypal'] : xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class . '&action=removeconfirm')));
-                    $contents[] = array ('text' => '<br />'.TEXT_INFO_DELETE_PAYPAL.'<br /><br />'.$mInfo->description);
-                    $contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('paypaldelete').' '.BUTTON_MODULE_REMOVE);
-                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_START .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a>');
-                    break;
                 case 'restore':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
                     $contents = array ('form' => (isset($mInfo->properties['form_restore']) ? $mInfo->properties['form_restore'] : xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class . '&action=restoreconfirm')));

@@ -174,7 +174,7 @@ class shoppingCart {
   function reset($reset_database = false) {
     $this->contents = array ();
     $this->total = 0;
-    $this->tax = 0; //Paypal Express Modul //DokuMan - 2010-12-08 - set tax to zero on reset
+    $this->tax = 0;
     $this->weight = 0;
     $this->content_type = false;
     $this->attr_price = 0; 
@@ -455,7 +455,7 @@ class shoppingCart {
     $this->total = 0;
     $this->weight = 0;
     $this->tax = array ();
-    $this->tax_discount = array (); //Tomcraft - 2011-02-01 - Paypal Express Modul
+    $this->tax_discount = array ();
     if (!is_array($this->contents)) {
       return 0;
     }
@@ -524,7 +524,7 @@ class shoppingCart {
 
           // price incl tax
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') {
-            if (!isset($this->tax[$product['products_tax_class_id']])) $this->tax[$product['products_tax_class_id']]['value'] = 0; //DokuMan - 2010-03-26 - set undefined variable
+            if (!isset($this->tax[$product['products_tax_class_id']])) $this->tax[$product['products_tax_class_id']]['value'] = 0; 
             if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
               $this->tax[$product['products_tax_class_id']]['value'] += ((($products_price_tax+$attribute_price_tax) / (100 + $products_tax)) * $products_tax)*$qty;
             } else {
@@ -534,27 +534,24 @@ class shoppingCart {
           }
           // excl tax + tax at checkout
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-            if (!isset($this->tax[$product['products_tax_class_id']])) $this->tax[$product['products_tax_class_id']]['value'] = 0; //Web28 - 2012-05-08 - set undefined variable
+            if (!isset($this->tax[$product['products_tax_class_id']])) $this->tax[$product['products_tax_class_id']]['value'] = 0; 
             if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
               $this->tax[$product['products_tax_class_id']]['value'] += (($products_price_tax+$attribute_price_tax) / 100) * ($products_tax)*$qty;
-              //$this->total+=(($products_price_tax+$attribute_price_tax) / 100) * ($products_tax)*$qty;  // Tomcraft - 2011-02-01 - Paypal Express Modul fuer Einzelrundung
               if (!isset($this->tax_discount[$product['products_tax_class_id']])) $this->tax_discount[$product['products_tax_class_id']] = 0;
-              $this->tax_discount[$product['products_tax_class_id']]+=(($products_price_tax+$attribute_price_tax) / 100) * ($products_tax)*$qty; // Tomcraft - 2011-02-01 - Paypal Express Modul fuer Einzelrundung
+              $this->tax_discount[$product['products_tax_class_id']]+=(($products_price_tax+$attribute_price_tax) / 100) * ($products_tax)*$qty; 
             } else {
               $this->tax[$product['products_tax_class_id']]['value'] += (($products_price+$attribute_price) / 100) * ($products_tax)*$qty;
-              $this->total+= (($products_price+$attribute_price) / 100) * ($products_tax)*$qty;
+              $this->total += (($products_price+$attribute_price) / 100) * ($products_tax)*$qty;
             }
             $this->tax[$product['products_tax_class_id']]['desc'] = TAX_NO_TAX.$products_tax_description;
           }
         }
       }
     }
-    // BOF - Tomcraft - 2011-02-01 - Paypal Express Modul // Aufaddieren und Runden der Gesamtsumme je Steuersatz
+
     foreach ($this->tax_discount as $value) {
-      //$this->total+=round($value, $xtPrice->get_decimal_places($order->info['currency']));
-      $this->total+=round($value, $xtPrice->get_decimal_places('')); //web28: parameter in get_decimal_places isn't used
+      $this->total += round($value, $xtPrice->get_decimal_places(''));
     }
-    // EOF - Tomcraft - 2011-02-01 - Paypal Express Modul  // Aufaddieren und Runden der Gesamtsumme je Steuersatz
   }
 
   /**
@@ -696,20 +693,19 @@ class shoppingCart {
     global $xtPrice;
     $this->calculate();
     $output = "";
-    $val=0;
-    $gval=0; // Paypal Express Modul
+    $val = 0;
+    $gval = 0;
     foreach ($this->tax as $key => $value) {
       if ($this->tax[$key]['value'] > 0 ) {
       $output .= $this->tax[$key]['desc'].": ".$xtPrice->xtcFormat($this->tax[$key]['value'], true)."<br />";
       $val = $this->tax[$key]['value'];
-      $gval+=$this->tax[$key]['value']; // Paypal Express Modul
+      $gval+=$this->tax[$key]['value'];
       }
     }
     if ($format) {
-    return $output;
+      return $output;
     } else {
-      //return $val; // Paypal Express Modul
-      return $gval; // Paypal Express Modul
+      return $gval; 
     }
   }
 

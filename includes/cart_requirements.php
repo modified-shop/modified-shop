@@ -10,10 +10,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
   
-  ### PayPal express
-  if(isset($_SESSION['reshash']['FORMATED_ERRORS'])) {
-    $smarty->assign('paypal_error', $_SESSION['reshash']['FORMATED_ERRORS']);
-  }
 
   // minimum/maximum order value
   if ($_SESSION['cart']->show_total() >= 0) {

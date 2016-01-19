@@ -88,8 +88,6 @@ define('FILENAME_PRINT_ORDER', 'print_order.php');
 define('FILENAME_ERROR_HANDLER', 'error_handler.php');
 define('FILENAME_CONTENT', 'shop_content.php');
 define('FILENAME_BANNER', 'banners.php');
-define('FILENAME_PAYPAL_CHECKOUT', 'paypal_checkout.php');
-define('FILENAME_PAYPAL', 'paypal.php');
 define('FILENAME_FINDOLOGIC', 'findologic.php');
 define('FILENAME_WISHLIST', 'wishlist.php');
 define('FILENAME_ACCOUNT_CHECKOUT_EXPRESS', 'account_checkout_express.php');

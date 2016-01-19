@@ -73,8 +73,6 @@ define('FILENAME_MODULE_EXPORT','module_export.php');
 define('FILENAME_PRODUCTS_VPE','products_vpe.php');
 define('FILENAME_CAMPAIGNS_REPORT','stats_campaigns.php');
 define('FILENAME_XSELL_GROUPS','cross_sell_groups.php');
-define('FILENAME_PAYPAL','paypal.php');
-define('FILENAME_PAYPAL_CHECKOUT', 'paypal_checkout.php');
 define('FILENAME_REMOVEOLDPICS', 'removeoldpics.php');
 define('FILENAME_SHOPGATE', 'shopgate.php');
 define('FILENAME_JANOLAW','janolaw.php');

@@ -93,13 +93,9 @@
   define('TABLE_ZONES_TO_GEO_ZONES', 'zones_to_geo_zones');
   
   ## External Modules
-  // PayPal
-  define('TABLE_PAYPAL', 'paypal');
-  define('TABLE_PAYPAL_STATUS_HISTORY', 'paypal_status_history');
   
-	/******** SHOPGATE **********/
+	// shopgate
 	define('TABLE_SHOPGATE_ORDERS', 'orders_shopgate_order');
-	/******** SHOPGATE **********/
 
   // easybill
   define('TABLE_EASYBILL_DATEV', 'easybill_datev');

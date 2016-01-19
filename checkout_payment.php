@@ -157,12 +157,6 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
     $_SESSION['payment'] = $_GET['payment_error'];
     $error = true;
   }
-  ### Paypal Express Modul
-  if(isset($_SESSION['reshash']['FORMATED_ERRORS'])) {
-    $smarty->assign('error', $_SESSION['reshash']['FORMATED_ERRORS']);
-    $error = true;
-  }
-  ### Paypal Express Modul
   
   ## PayPal
   if (defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')
@@ -230,11 +224,6 @@ elseif (!isset($_SESSION['cot_gv'])) {
   $order_total_modules->pre_confirmation_check();
   //$smarty->assign('GV_COVER', 'true');
 }
-
-### Paypal Express Modul
-unset($_SESSION['reshash']);
-unset($_SESSION['nvpReqArray']);
-### Paypal Express Modul
 
 // move header for Javascript form check
 require (DIR_WS_INCLUDES . 'header.php');
