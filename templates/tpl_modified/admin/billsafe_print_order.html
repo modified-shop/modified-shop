@@ -31,10 +31,12 @@
       {/if}
       {if $vatID}<br /><strong>{#vatID#}</strong> {$vatID}{/if}
     </div>
-    <div class="print_big">{#invoice#}</div>
   </div>
 
   <br class="clearfix">
+
+  <div class="print_big">{#invoice#}</div>
+
   <div class="hr_15"></div>
   <div class="printColumsLeft">
     <strong>{#shipping_address#}</strong><br />{$address_label_shipping}
@@ -45,7 +47,6 @@
   <br class="clearfix">
   <br />
   <div class="hr_5"></div>
-
   <table class="order_table">
     <tr class="headerrow">
       <td class="ord_table_left">{#head_units#}</td>
@@ -88,60 +89,58 @@
   <br class="clearfix" />
   {/if}
 
-<br />
-{if $BillsafeType == 'invoice'}
-<div class="print_small">
-  {$BillsafeText}<br /> 
-  {$BillsafeText2}<br /> 
   <br />
+  {if $BillsafeType == 'invoice'}
+  <div class="print_small">
+    {$BillsafeText}<br /> 
+    {$BillsafeText2}<br /> 
+    <br />
+    <table>
+      <tr>
+        <td>{$recipient}</td>
+        <td>{$recipientValue}</td>
+      </tr>
+      <tr>
+        <td>{$account}</td>
+        <td>{$accountValue}</td>
+      </tr>
+      <tr>
+        <td>{$bankcode}</td>
+        <td>{$bankcodeValue}</td>
+      </tr>
+      <tr>
+        <td>{$bank}</td>
+        <td>{$bankValue}</td>
+      </tr>
+      <tr>
+        <td>{$bic}</td>
+        <td>{$bicValue}</td>
+      </tr>
+      <tr>
+        <td>{$iban}</td>
+        <td>{$ibanValue}</td>
+      </tr>
+      <tr>
+        <td>{$amount}</td>
+        <td>{$amountValue}</td>
+      </tr>
+      <tr>
+        <td>{$reference}</td>
+        <td>{$referenceValue}</td>
+      </tr>
+      <tr>
+        <td>{$referenceUrl}</td>
+        <td>{$referenceUrlValue}</td>
+      </tr>
+    </table>
+  </div>
+  {elseif $BillsafeType == 'installment'}
+  <div class="print_small">
+    {$BillsafeText2}<br /> 
+  </div>
+  {/if}
 
-  <table>
-    <tr>
-      <td>{$recipient}</td>
-      <td>{$recipientValue}</td>
-    </tr>
-    <tr>
-      <td>{$account}</td>
-      <td>{$accountValue}</td>
-    </tr>
-    <tr>
-      <td>{$bankcode}</td>
-      <td>{$bankcodeValue}</td>
-    </tr>
-    <tr>
-      <td>{$bank}</td>
-      <td>{$bankValue}</td>
-    </tr>
-    <tr>
-      <td>{$bic}</td>
-      <td>{$bicValue}</td>
-    </tr>
-    <tr>
-      <td>{$iban}</td>
-      <td>{$ibanValue}</td>
-    </tr>
-    <tr>
-      <td>{$amount}</td>
-      <td>{$amountValue}</td>
-    </tr>
-    <tr>
-      <td>{$reference}</td>
-      <td>{$referenceValue}</td>
-    </tr>
-    <tr>
-      <td>{$referenceUrl}</td>
-      <td>{$referenceUrlValue}</td>
-    </tr>
-  </table>
 </div>
-{elseif $BillsafeType == 'installment'}
-<div class="print_small">
-  {$BillsafeText2}<br /> 
-</div>
-{/if}
 
-
-
-</div>
 </body>
 </html>
