@@ -27,8 +27,9 @@
       <strong>{#date#}</strong> {$DATE}
       {if isset($INVOICE_NUMBER) && $INVOICE_NUMBER != '' }<br />
         <strong>{#invoice_number#}</strong> {$INVOICE_NUMBER}<br />
-        <strong>{#invoice_date#}</strong> {$INVOICE_DATE}<br />
+        <strong>{#invoice_date#}</strong> {$INVOICE_DATE}
       {/if}
+      {if $vatID}<br /><strong>{#vatID#}</strong> {$vatID}{/if}
     </div>
   </div>
 
