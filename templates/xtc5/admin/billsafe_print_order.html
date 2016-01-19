@@ -72,14 +72,21 @@
               <td colspan="2" class="border"><div align="center"><strong>{#head_units#}</strong></div></td>
               <td class="border"><strong>{#head_products#}</strong></td>
               <td class="border"><strong>{#head_artnr#}</strong></td>
+              <td class="border" width="150"><div align="right"><strong>{#head_single_price#}</strong></div></td>
               <td class="border" width="150"><div align="right"><strong>{#head_price#}</strong></div></td>
             </tr>
             {foreach name=aussen item=order_values from=$order_data}
               <tr>
               <td width="20" class="border"><div align="center">{$order_values.PRODUCTS_QTY}</div></td>
               <td width="20" class="border"><div align="center">x</div></td>
-              <td class="border"><strong>{$order_values.PRODUCTS_NAME}</strong><em>{$order_values.PRODUCTS_ATTRIBUTES}</em></td>
+                <td class="border"><strong>{$order_values.PRODUCTS_NAME}</strong>
+                  {if ACTIVATE_SHIPPING_STATUS == 'true'}
+                    {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />{#text_shippingtime#} {$order_values.PRODUCTS_SHIPPING_TIME}
+                    {/if}
+                  {/if}<br /><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>
+                </td>
               <td class="border">{$order_values.PRODUCTS_MODEL}<em>{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</em></td>
+                <td width="150" class="border"><div align="right">{$order_values.PRODUCTS_SINGLE_PRICE}</div></td>
               <td width="150" class="border"><div align="right">{$order_values.PRODUCTS_PRICE}</div></td>
               </tr>
             {/foreach}
@@ -103,6 +110,19 @@
           </table>
         </td>
       </tr>
+      {if $COMMENTS}
+      <tr>
+        <td>
+          <table style="border-bottom:1px solid;" width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="small">
+                <br /><br /><strong>{#comments#}</strong> {$COMMENTS}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      {/if}
     </table>
     <br />
     {if $BillsafeType == 'invoice'}
