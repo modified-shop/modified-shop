@@ -13,7 +13,7 @@
 require_once (DIR_FS_INC.'get_order_total.inc.php');
 $total = get_order_total($last_order);
 ?>
-
+<div style="height:0px;overflow:hidden;">
 <!-- Google Code for Purchase Conversion Page -->
 <script type="text/javascript">
   /* <![CDATA[ */
@@ -32,3 +32,4 @@ $total = get_order_total($last_order);
     <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/<?php echo GOOGLE_CONVERSION_ID; ?>/?value=<?php echo $total; ?>&amp;label=<?php echo GOOGLE_CONVERSION_LABEL; ?>&amp;guid=ON&amp;script=0"/>
   </div>
 </noscript>
+</div>
