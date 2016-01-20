@@ -21,7 +21,7 @@
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 
-define('SHOPGATE_PLUGIN_VERSION', '2.9.26');
+define('SHOPGATE_PLUGIN_VERSION', '2.9.27');
 
 /**
  * Modified eCommerce Plugin for Shopgate
@@ -1924,11 +1924,12 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
     ) {
         $this->log("Start getting the shop system's shipping methods.", ShopgateLogger::LOGTYPE_DEBUG);
         $resultShippingMethods = array();
-        
-        if (!defined('MODULE_SHIPPING_INSTALLED') || MODULE_SHIPPING_INSTALLED == "") {
+        $sgDeliveryAddress = $sgShoppingCart->getDeliveryAddress();
+
+        if (empty($sgDeliveryAddress) || !defined('MODULE_SHIPPING_INSTALLED') || MODULE_SHIPPING_INSTALLED == "") {
             return $resultShippingMethods;
         }
-        
+
         /* include globals */
         global $total_count, $total_weight,
                $shipping_num_boxes, $cart, $order, $sendto, $billto, $ot_shipping;
@@ -1974,30 +1975,26 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         if (is_array($_SESSION)) {
             $_SESSION['cart'] = $cart;
         }
-    
-        $deliveryPostcode = '';
-        $sgDeliverAddress = $sgShoppingCart->getDeliveryAddress();
-        if (!empty($sgDeliverAddress)) {
-            $country          = $locationModel->getCountryByIso2Name($sgDeliverAddress->getCountry());
-            $zone             = $locationModel->getZoneByCountryId($country["countries_id"]);
-            $deliveryPostcode = $sgDeliverAddress->getZipcode();
-            $sendto           = array(
-                "firstname"          => $sgDeliverAddress->getFirstName(),
-                "lastname"           => $sgDeliverAddress->getLastName(),
-                "company"            => $sgDeliverAddress->getCompany(),
-                "street_address"     => $sgDeliverAddress->getStreet1(),
-                "suburb"             => "",
-                "postcode"           => $deliveryPostcode,
-                "city"               => $sgDeliverAddress->getCity(),
-                "zone_id"            => $zone["zone_id"],
-                "zone_name"          => $zone["zone_name"],
-                "country_id"         => $country["countries_id"],
-                "country_iso_code_2" => $country["countries_iso_code_2"],
-                "country_iso_code_3" => $country["countries_iso_code_3"],
-                "address_format_id"  => "",
-            );
-        }
-        
+
+        $country = $locationModel->getCountryByIso2Name($sgDeliveryAddress->getCountry());
+        $zone = $locationModel->getZoneByCountryId($country["countries_id"]);
+        $deliveryPostcode = $sgDeliveryAddress->getZipcode();
+        $sendto = array(
+            "firstname" => $sgDeliveryAddress->getFirstName(),
+            "lastname" => $sgDeliveryAddress->getLastName(),
+            "company" => $sgDeliveryAddress->getCompany(),
+            "street_address" => $sgDeliveryAddress->getStreet1(),
+            "suburb" => "",
+            "postcode" => $deliveryPostcode,
+            "city" => $sgDeliveryAddress->getCity(),
+            "zone_id" => $zone["zone_id"],
+            "zone_name" => $zone["zone_name"],
+            "country_id" => $country["countries_id"],
+            "country_iso_code_2" => $country["countries_iso_code_2"],
+            "country_iso_code_3" => $country["countries_iso_code_3"],
+            "address_format_id" => "",
+        );
+
         $sgInvoiceAddress = $sgShoppingCart->getInvoiceAddress();
         if (empty($sgInvoiceAddress)) {
             $billto = $sendto;

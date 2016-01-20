@@ -697,7 +697,7 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	}
 	
 	public function buildScriptSearch($searchQuery, $autoRedirect = true){
-		$this->searchQuery = $searchQuery;
+		$this->searchQuery = addslashes($searchQuery);
 		$this->redirectType = 'search';
 
 		$this->setAdditionalHttpHeaders();
