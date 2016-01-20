@@ -685,7 +685,7 @@ class ShopgateItemXmlModel extends ShopgateItemModel
 
             if ($xtPrice->cStatus['customers_status_ot_discount'] > 0) {
 
-                $discount       = $priceModel->getSalePrice() - $xtPrice->xtcGetDC($priceModel->getSalePrice(), $xtPrice->cStatus['customers_status_ot_discount']);
+                $discount       = $xtPrice->xtcGetDC($priceModel->getSalePrice(), $xtPrice->cStatus['customers_status_ot_discount']);
                 $tierPriceModel = new Shopgate_Model_Catalog_TierPrice();
                 $tierPriceModel->setFromQuantity(1);
                 $tierPriceModel->setReduction($priceHelper->formatPriceNumber($discount, 6));

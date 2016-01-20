@@ -498,7 +498,8 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	###################################################
 	### Initialization, loading, saving, validating ###
 	###################################################
-
+	
+	/** @noinspection PhpMissingParentConstructorInspection */
 	public final function __construct(array $data = array()) {
 		// parent constructor not called on purpose, because we need special
 		// initialization behaviour here (e.g. loading via array or file)
