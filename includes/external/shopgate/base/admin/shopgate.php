@@ -369,13 +369,13 @@ if (defined('PROJECT_MAJOR_VERSION')) {
                         <?php elseif($_GET["sg_option"] === "config"): ?>
                             <?php echo xtc_draw_form('shopgate', FILENAME_SHOPGATE, 'sg_option=config&action=save'.(($sg_language === null) ? '' : '&sg_language='.$sg_language)); ?>
                             <?php if (count($sgLanguages) > 1): ?>
-                                </br>
+                                <br />
                                 <div id="shopgate_image_settings">
                                     <a target="_blank" href="<?php echo SHOPGATE_LINK_WIKI; ?>">
                                         <img src="../includes/external/shopgate/base/admin/includes/img/shopgate_manual_logo.jpg" alt="Shopgate Wiki"/>
                                     </a>
                                 </div>
-                                </br>                            <?php if ($sg_language === null): ?>
+                                <br />                            <?php if ($sg_language === null): ?>
                                 <?php if (!empty($shopgate_info)): ?>
                                     
                                     <div class="shopgate_blue_message"><strong style="color: blue;">Info:</strong> <?php echo $shopgate_info; ?></div>

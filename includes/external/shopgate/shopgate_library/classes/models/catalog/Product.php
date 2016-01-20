@@ -326,18 +326,14 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport {
 		$itemNode->addAttribute('uid', $this->getUid());
 		$itemNode->addAttribute('last_update', $this->getLastUpdate());
 		$itemNode->addChildWithCDATA('name', $this->getName());
-		if ($this->getTaxPercent() !== null) {
-			$itemNode->addChild('tax_percent', $this->getTaxPercent());
-		}
-		if ($this->getTaxClass() !== null) {
-			$itemNode->addChild('tax_class', $this->getTaxClass());
-		}
+		$itemNode->addChild('tax_percent', $this->getTaxPercent(), null, false);
+		$itemNode->addChild('tax_class', $this->getTaxClass(), null, false);
 		$itemNode->addChild('currency', $this->getCurrency());
 		$itemNode->addChildWithCDATA('description', $this->getDescription());
 		$itemNode->addChildWithCDATA('deeplink', $this->getDeeplink());
 		$itemNode->addChild('promotion')->addAttribute('sort_order', $this->getPromotionSortOrder());
 		$itemNode->addChildWithCDATA('internal_order_info', $this->getInternalOrderInfo());
-		$itemNode->addChild('age_rating', $this->getAgeRating());
+		$itemNode->addChild('age_rating', $this->getAgeRating(), null, false);
 		$itemNode->addChild('weight', $this->getWeight())->addAttribute('unit', $this->getWeightUnit());
 	
 		/**
@@ -773,9 +769,13 @@ class Shopgate_Model_Catalog_Product extends Shopgate_Model_AbstractExport {
 					}
 				} elseif ($childValue instanceof Shopgate_Model_Abstract) {
 					/**
-					 * object
+					 * object - but we check only data array
 					 */
-					if($childValue == $parentItem->getData($childKey)) {
+					$parentAttribute = $parentItem->getData($childKey);
+					
+					if ($parentAttribute instanceof Shopgate_Model_Abstract
+						&& $childValue->getData() == $parentAttribute->getData()
+					) {
 						$childItem->setData($childKey, new Shopgate_Model_Catalog_XmlEmptyObject());
 					}
 				}

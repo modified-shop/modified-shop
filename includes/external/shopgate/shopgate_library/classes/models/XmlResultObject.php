@@ -33,16 +33,20 @@ class Shopgate_Model_XmlResultObject extends SimpleXMLElement {
 	 * @see http://www.w3.org/TR/REC-xml/#charsets
 	 */
 	const PATTERN_INVALID_CHARS = '/[^\x{09}\x{0A}\x{0D}\x{20}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u';
-
+	
 	/**
 	 * Adds a child with $value inside CDATA
 	 *
-	 * @param      $name
-	 * @param null $value
-	 *
+	 * @param string $name
+	 * @param mixed  $value
+	 * @param bool   $allowNull
+	 * 
 	 * @return SimpleXMLElement
 	 */
-	public function addChildWithCDATA($name, $value = null) {
+	public function addChildWithCDATA($name, $value = null, $allowNull = true) {
+		if (!$allowNull && $value === null) {
+			return null;
+		}
 		$forceEmpty = false;
 		if ($value === Shopgate_Model_AbstractExport::SET_EMPTY) {
 			$forceEmpty = true;
@@ -67,11 +71,16 @@ class Shopgate_Model_XmlResultObject extends SimpleXMLElement {
 
 	/**
 	 * @param string $name
-	 * @param mixed $value
+	 * @param mixed  $value
 	 * @param string $namespace
+	 * @param bool   $allowNull
+	 * 
 	 * @return null|SimpleXMLElement
 	 */
-	public function addChild($name, $value = null, $namespace = null) {
+	public function addChild($name, $value = null, $namespace = null, $allowNull = true) {
+		if (!$allowNull && $value === null) {
+			return null;
+		}
 		if (!empty($value)) {
 			$value = preg_replace(self::PATTERN_INVALID_CHARS, '', $value);
 		}
