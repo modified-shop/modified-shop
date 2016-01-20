@@ -1,3 +1,48 @@
+'''Version 2.9.36'''
+* added a fallback in case that json_encode returns false (failure)
+* added new constant ShopgateLibraryException::CART_ITEM_INVALID_PRODUCT_COMBINATION
+* added a fallback in case that json_encode or json_decode return false (failure)
+* added escaping to the mobile redirect of search queries
+
+'''Version 2.9.35'''
+* improved logging of Exception messages
+* deprecated methods now disable themselves when called but not implemented
+
+'''Version 2.9.34'''
+* the method ShopgatePlugin::redeemCoupons() is now deprecated and not abstract anymore
+
+'''Version 2.9.33'''
+* changed the initial value of the ShopgateDeliveryNote::$shipping_service_id entry to null
+* added payment method constant for Paypal Plus
+
+'''Version 2.9.32'''
+* amount_complete getter is now returning the correct field
+
+'''Version 2.9.31'''
+* added ShopgateShippingInfo::$amount_net and $amount_gross properties, getters and setters
+* ShopgateShippingInfo::$amount, getter and setter are now deprecated
+
+'''Version 2.9.30'''
+* amount_complete is now being set correctly for get_orders
+
+'''Version 2.9.29'''
+* added a constructor to the category export model, so it can be called without any harm
+
+'''Version 2.9.28'''
+* XML export: fixed a bug that lead to unwanted occurrences of 'xmlns=""' in the XML
+
+'''Version 2.9.27'''
+* XML export: omit empty sub nodes if they are defined as optional by the XSD
+
+'''Version 2.9.26'''
+* added constants for order item types
+* added external order items parameter: amount_items_gross; amount_items_net; amount_complete_net; amount_complete_gross
+
+'''Version 2.9.25'''
+* added and changed error messages for method checkCart and checkStock
+* added ShopgateOrderItem::$type property, getter and setter
+* fixed a bug in the comparison of objects leading to a "nesting level too deep" error
+
 '''Version 2.9.24'''
 * added constants for some payment methods
 
@@ -5,7 +50,7 @@
 * added sort order for options and option values
 
 '''Version 2.9.22'''
-* CSV exports: the methods ShopgatePlugin::createCategoriesCsv(), ::createItemsCsv() und ::createReviewsCsv() are now deprecated and not abstract anymore
+* CSV exports: the methods ShopgatePlugin::createCategoriesCsv(), ::createItemsCsv() and ::createReviewsCsv() are now deprecated and not abstract anymore
 * removed German changelog
 * ShopgateMerchantApi::cancelOrder(): changed default value of parameter "$cancelCompleteOrder" from false to true
 
