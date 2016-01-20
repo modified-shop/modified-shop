@@ -721,4 +721,10 @@ UPDATE admin_access SET trustedshops = 1 WHERE customers_id = 'groups' LIMIT 1;
 ALTER TABLE banners ADD languages_id INT(11) NOT NULL DEFAULT 0 AFTER banners_html_text;
 UPDATE banners SET languages_id = (SELECT l.languages_id FROM languages l JOIN configuration c ON c.configuration_value = l.code AND c.configuration_key = 'DEFAULT_LANGUAGE');
 
+#GTB - 2016-01-20 - added orders products ean/model
+ALTER TABLE orders_products ADD products_ean VARCHAR(128) AFTER products_model;
+ALTER TABLE orders_products ADD products_price_purchase_date DECIMAL(15,4) NOT NULL AFTER products_price;
+ALTER TABLE orders_products_attributes ADD attributes_model VARCHAR(64) AFTER products_options_values;
+ALTER TABLE orders_products_attributes ADD attributes_ean VARCHAR(128) AFTER attributes_model;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
