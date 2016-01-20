@@ -326,13 +326,13 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
         //update attributes
         $sql_data_array = array (
-            'orders_id' => $insert_id,
-            'orders_products_id' => $order_products_id,
-            'products_options' => $order->products[$i]['attributes'][$j]['option'],
-            'products_options_values' => $order->products[$i]['attributes'][$j]['value']
-            'attributes_model' => $order->products[$i]['attributes'][$j]['model']
-            'attributes_ean' => $order->products[$i]['attributes'][$j]['ean']
-          );
+          'orders_id' => $insert_id,
+          'orders_products_id' => $order_products_id,
+          'products_options' => $order->products[$i]['attributes'][$j]['option'],
+          'products_options_values' => $order->products[$i]['attributes'][$j]['value'],
+          'attributes_model' => $order->products[$i]['attributes'][$j]['model'],
+          'attributes_ean' => $order->products[$i]['attributes'][$j]['ean'],
+        );
         if (isset($order->products[$i]['attributes'][$j]['price'])) {
           $sql_data_array['options_values_price'] = $order->products[$i]['attributes'][$j]['price'];
         }
