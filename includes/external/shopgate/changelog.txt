@@ -1,3 +1,8 @@
+'''Version 2.9.27’’’
+* uses Shopgate Library 2.9.36
+* fixed reduction type fixed in tier prices
+* checkCart will only return shipping methods if a delivery address is given
+
 '''Version 2.9.26'''
 * fixed a bug in the real-time synchronization of shipping methods
 * fixed tier prices
