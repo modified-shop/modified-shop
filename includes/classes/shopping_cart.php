@@ -600,6 +600,7 @@ class shoppingCart {
                                                p.products_image,
                                                p.products_model,
                                                p.products_price,
+                                               p.products_ean,
                                                p.products_vpe,
                                                p.products_vpe_status,
                                                p.products_vpe_value,
@@ -607,6 +608,7 @@ class shoppingCart {
                                                p.products_weight,
                                                p.products_tax_class_id,
                                                p.products_status,
+                                               p.products_price as products_price_purchase_date,
                                                p.products_quantity as products_stock
                                           FROM ".TABLE_PRODUCTS." p
                                           JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd

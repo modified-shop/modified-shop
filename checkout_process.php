@@ -243,7 +243,9 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         'products_id' => xtc_get_prid($order->products[$i]['id']),
         'products_model' => $order->products[$i]['model'],
         'products_name' => $order->products[$i]['name'],
+        'products_ean' => $order->products[$i]['ean'],
         'products_shipping_time' => strip_tags($order->products[$i]['shipping_time']),
+        'products_price_purchase_date' => $order->products[$i]['price_purchase_date'],
         'products_price' => $order->products[$i]['price'],
         'final_price' => $order->products[$i]['final_price'],
         'products_tax' => $order->products[$i]['tax'],
@@ -328,15 +330,21 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
             'orders_products_id' => $order_products_id,
             'products_options' => $order->products[$i]['attributes'][$j]['option'],
             'products_options_values' => $order->products[$i]['attributes'][$j]['value']
+            'attributes_model' => $order->products[$i]['attributes'][$j]['model']
+            'attributes_ean' => $order->products[$i]['attributes'][$j]['ean']
           );
-        if (isset($order->products[$i]['attributes'][$j]['price']))
+        if (isset($order->products[$i]['attributes'][$j]['price'])) {
           $sql_data_array['options_values_price'] = $order->products[$i]['attributes'][$j]['price'];
-        if (isset($order->products[$i]['attributes'][$j]['prefix']))
+        }
+        if (isset($order->products[$i]['attributes'][$j]['prefix'])) {
           $sql_data_array['price_prefix'] = $order->products[$i]['attributes'][$j]['prefix'];
-        if (isset($order->products[$i]['attributes'][$j]['option_id']))
+        }
+        if (isset($order->products[$i]['attributes'][$j]['option_id'])) {
           $sql_data_array['orders_products_options_id'] = $order->products[$i]['attributes'][$j]['option_id'];
-        if (isset($order->products[$i]['attributes'][$j]['value_id']))
+        }
+        if (isset($order->products[$i]['attributes'][$j]['value_id'])) {
           $sql_data_array['orders_products_options_values_id'] = $order->products[$i]['attributes'][$j]['value_id'];
+        }
 
         foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_attributes/','php') as $file) require ($file);
         xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);

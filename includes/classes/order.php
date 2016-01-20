@@ -218,7 +218,7 @@
                                             FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
                                            WHERE orders_id = '" . $order_id . "'
                                              AND orders_products_id = '" . $orders_products['orders_products_id'] . "'
-                                        ORDER BY orders_products_attributes_id"); //ADD - web28 - 2010-06-11 - order by orders_products_attributes_id
+                                        ORDER BY orders_products_attributes_id");
         if (xtc_db_num_rows($attributes_query)) {
           $subindex = 0;
           while ($attributes = xtc_db_fetch_array($attributes_query)) {
@@ -271,14 +271,18 @@
         $subindex = 0;
         $attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
         while ($attributes_data_values = xtc_db_fetch_array($attributes_query)) {
-          $attrib_model = xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id);
-          $attributes_array[$subindex] = array('option' => $attributes_data_values['products_options'],
-                                      'value' => $attributes_data_values['products_options_values'],
-                                      'option_id' => $attributes_data_values['orders_products_options_id'],
-                                      'value_id' => $attributes_data_values['orders_products_options_values_id'],
-                                      'model' => $attrib_model
-                                      );
-          $attributes_data .= '<br />'.$attributes_data_values['products_options'].':'.$attributes_data_values['products_options_values'];
+          $attrib_model = $attributes_data_values['attributes_model'];
+          if ($attrib_model == '') {
+            $attrib_model = xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id);
+          }
+          $attributes_array[$subindex] = array(
+            'option' => $attributes_data_values['products_options'],
+            'value' => $attributes_data_values['products_options_values'],
+            'option_id' => $attributes_data_values['orders_products_options_id'],
+            'value_id' => $attributes_data_values['orders_products_options_values_id'],
+            'model' => $attrib_model,
+          );
+          $attributes_data .= '<br />'.$attributes_data_values['products_options'].': '.$attributes_data_values['products_options_values'];
           $attributes_model .= $attr_model_delimiter.$attrib_model;
           $subindex++;
         }
@@ -537,7 +541,6 @@
         }
         //direct products array mapping
         $this->products[$index] = $products[$i];
-
 
         //using short description  if order description is not defined or empty
         $short_description = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $products[$i]['short_description'] : '';
