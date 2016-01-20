@@ -220,18 +220,18 @@
 
         $_POST['coupon_amount'] = preg_replace('/[^0-9.]/', '', $_POST['coupon_amount']); //DokuMan - 2010-11-13 - allow numbers only
 
-        $sql_data_array = array('coupon_code' => xtc_db_prepare_input($_POST['coupon_code']),
-                                'coupon_amount' => xtc_db_prepare_input($_POST['coupon_amount']),
-                                'coupon_type' => xtc_db_prepare_input($coupon_type),
-                                'uses_per_coupon' => xtc_db_prepare_input((int)$_POST['coupon_uses_coupon']),
-                                'uses_per_user' => xtc_db_prepare_input((int)$_POST['coupon_uses_user']),
-                                'coupon_minimum_order' => xtc_db_prepare_input($_POST['coupon_min_order']),
-                                'restrict_to_products' => xtc_db_prepare_input($_POST['coupon_products']),
-                                'restrict_to_categories' => xtc_db_prepare_input($_POST['coupon_categories']),
-                                'coupon_start_date' => xtc_db_prepare_input(date('Y-m-d', strtotime($_POST['coupon_startdate'])).' 00:00:00'),
-                                'coupon_expire_date' => xtc_db_prepare_input(date('Y-m-d', strtotime($_POST['coupon_finishdate'])).' 23:59:59'),
-                                'date_created' => 'now()',
-                                'date_modified' => 'now()');
+        $sql_data_array = array(
+          'coupon_code' => xtc_db_prepare_input($_POST['coupon_code']),
+          'coupon_amount' => xtc_db_prepare_input($_POST['coupon_amount']),
+          'coupon_type' => xtc_db_prepare_input($coupon_type),
+          'uses_per_coupon' => xtc_db_prepare_input((int)$_POST['coupon_uses_coupon']),
+          'uses_per_user' => xtc_db_prepare_input((int)$_POST['coupon_uses_user']),
+          'coupon_minimum_order' => xtc_db_prepare_input($_POST['coupon_min_order']),
+          'restrict_to_products' => xtc_db_prepare_input($_POST['coupon_products']),
+          'restrict_to_categories' => xtc_db_prepare_input($_POST['coupon_categories']),
+          'coupon_start_date' => xtc_db_prepare_input(date('Y-m-d', strtotime($_POST['coupon_startdate'])).' 00:00:00'),
+          'coupon_expire_date' => xtc_db_prepare_input(date('Y-m-d', strtotime($_POST['coupon_finishdate'])).' 23:59:59'),
+        );
         $languages = xtc_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
           $language_id = $languages[$i]['id'];
@@ -241,6 +241,7 @@
         }
 
         if ($_GET['oldaction']=='voucheredit') {
+          $sql_data_array['date_modified'] = 'now()';
           xtc_db_perform(TABLE_COUPONS, $sql_data_array, 'update', "coupon_id='" . (int)$_GET['cid']."'");
           for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
@@ -257,6 +258,7 @@
             xtc_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_cdata_array, 'update', "coupon_id = '" . (int)$_GET['cid'] . "' AND language_id = '" . (int)$language_id . "'");
           }
         } else {
+          $sql_data_array['date_created'] = 'now()';
           $query = xtc_db_perform(TABLE_COUPONS, $sql_data_array);
           $insert_id = xtc_db_insert_id();
           $_GET['cid'] = $insert_id;
