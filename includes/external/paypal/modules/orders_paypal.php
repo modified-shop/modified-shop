@@ -48,6 +48,7 @@ if (isset($order) && is_object($order)) {
       <td colspan="2" style="width:990px;">
         <style type="text/css">
           p.message { padding: 1ex 1em; margin: 5px 1px; color: #A94442; border: 1px solid #DCA7A7; background-color: #F2DEDE; }
+          .info_message { font-family: Verdana, Arial, sans-serif; border:solid #b2dba1 1px; padding:10px; font-size:12px !important; line-height:18px; background-color:#d4ebcb; color:#3C763D; }
           div.pp_box { background: #E2E2E2; float: left; padding: 1ex; margin: 1px; min-height: 125px; min-width:48.4%; width:48.4%; }
           .pp_box_full {width:98.3% !important;}
           div.pp_boxheading { font-size: 1.2em; font-weight: bold; background: #CCCCCC; padding: .2ex .5ex;}
