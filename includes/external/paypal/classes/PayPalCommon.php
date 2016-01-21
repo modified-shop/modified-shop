@@ -89,7 +89,7 @@ class PayPalCommon extends PayPalAuth {
   }
 
 
-  function get_totals($totals) {
+  function get_totals($totals, $calc_total = false) {
         
     for ($i = 0, $n = sizeof($totals); $i < $n; $i ++) {
       switch(((isset($totals[$i]['code'])) ? $totals[$i]['code'] : $totals[$i]['class'])) {
@@ -129,6 +129,20 @@ class PayPalCommon extends PayPalAuth {
           $this->details->setHandlingFee($this->details->getHandlingFee() + $totals[$i]['value']);
           break;
       }
+    }
+
+    if ($calc_total === true) {
+      $total = 0;
+      $total += $this->details->getSubtotal();
+      $total += $this->details->getShipping();
+      $total += $this->details->getTax();
+      $total += $this->details->getHandlingFee();
+      $total += $this->details->getShippingDiscount();
+      $total += $this->details->getInsurance();
+      $total += $this->details->getGiftWrap();
+      $total += $this->details->getFee();
+  
+      $this->amount->setTotal($total);
     }
   }
 

@@ -178,27 +178,11 @@ class PayPalPayment extends PayPalPaymentBase {
         }
         $order_total_modules = new order_total();
         $order_totals = $order_total_modules->process();
-        $this->get_totals($order_totals);
+        $this->get_totals($order_totals, true);
       } else {
         $this->get_totals($order->totals);
       }
-      
-      if ($approval === true 
-          && isset($order->info['shipping_cost']) 
-          && $order->info['shipping_cost'] > 0
-          && $this->details->getShipping() != $order->info['shipping_cost']
-          ) 
-      {
-        $this->details->setShipping($this->details->getShipping() + $order->info['shipping_cost']);
-      }
-
-      if ($this->details->getShipping() != $this->get_shipping_cost() 
-          && $order_exists === false
-          ) 
-      {
-        $this->fix_totals($order_totals);
-      }
-            
+                  
       // set amount 
       $this->amount->setCurrency($order->info['currency'])
                    ->setDetails($this->details);
