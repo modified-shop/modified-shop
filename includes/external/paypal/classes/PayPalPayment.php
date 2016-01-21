@@ -192,12 +192,11 @@ class PayPalPayment extends PayPalPaymentBase {
         $this->details->setShipping($this->details->getShipping() + $order->info['shipping_cost']);
       }
 
-      if ($this->details->getShipping() != $this->get_shipping_cost()) {
-        if ($order_exists === false) {
-          $this->fix_totals($order_totals);
-        } else {
-          $this->fix_totals($order->totals);
-        }
+      if ($this->details->getShipping() != $this->get_shipping_cost() 
+          && $order_exists === false
+          ) 
+      {
+        $this->fix_totals($order_totals);
       }
             
       // set amount 
