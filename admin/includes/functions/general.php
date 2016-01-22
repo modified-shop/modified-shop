@@ -2448,7 +2448,7 @@
     }
     $date_selector .= '</select>';
     $date_selector .= '<select name="'.$prefix.'_year">';
-    for ($i = 2001; $i < 2019; $i ++) {
+    for ($i = date("Y"); $i < date("Y") + 4; $i ++) {
       $date_selector .= '<option value="'.$i.'"';
       if ($i == $year)
         $date_selector .= 'selected';
