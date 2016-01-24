@@ -23,8 +23,8 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX' => 'Client ID Sandbox:',
   'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO' => 'Create in your PayPal account a new app for that data',
 
-  'TEXT_PAYPAL_CONFIG_SECRET' => 'Secret Sandbox:',
-  'TEXT_PAYPAL_CONFIG_SECRET_INFO' => 'Create in your PayPal account a new app for that data',
+  'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX' => 'Secret Sandbox:',
+  'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX_INFO' => 'Create in your PayPal account a new app for that data',
 
   'TEXT_PAYPAL_CONFIG_MODE' => 'Mode:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
