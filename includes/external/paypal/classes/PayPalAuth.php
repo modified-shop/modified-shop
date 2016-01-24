@@ -35,7 +35,7 @@ class PayPalAuth {
     $apiContext = new ApiContext(
       new OAuthTokenCredential(
           $this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($this->get_config('PAYPAL_MODE'))),
-          $this->get_config('PAYPAL_SECRET_'.strtoupper($this->get_config('PAYPAL_MODE'))),
+          $this->get_config('PAYPAL_SECRET_'.strtoupper($this->get_config('PAYPAL_MODE')))
       )
     );
 
