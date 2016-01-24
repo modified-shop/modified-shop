@@ -14,10 +14,16 @@
 $lang_array = array(
   'TEXT_PAYPAL_CONFIG_HEADING_TITLE' => 'PayPal Configuration',
 
-  'TEXT_PAYPAL_CONFIG_CLIENT' => 'Client ID:',
-  'TEXT_PAYPAL_CONFIG_CLIENT_INFO' => 'Create in your PayPal account a new app for that data',
+  'TEXT_PAYPAL_CONFIG_CLIENT_LIVE' => 'Client ID Live:',
+  'TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO' => 'Create in your PayPal account a new app for that data',
 
-  'TEXT_PAYPAL_CONFIG_SECRET' => 'Secret:',
+  'TEXT_PAYPAL_CONFIG_SECRET_LIVE' => 'Secret Live:',
+  'TEXT_PAYPAL_CONFIG_SECRET_LIVE_INFO' => 'Create in your PayPal account a new app for that data',
+
+  'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX' => 'Client ID Sandbox:',
+  'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO' => 'Create in your PayPal account a new app for that data',
+
+  'TEXT_PAYPAL_CONFIG_SECRET' => 'Secret Sandbox:',
   'TEXT_PAYPAL_CONFIG_SECRET_INFO' => 'Create in your PayPal account a new app for that data',
 
   'TEXT_PAYPAL_CONFIG_MODE' => 'Mode:',

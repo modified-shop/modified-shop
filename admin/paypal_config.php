@@ -108,14 +108,24 @@ require (DIR_WS_INCLUDES.'head.php');
                 echo xtc_draw_form('config', basename($PHP_SELF), xtc_get_all_get_params(array('action')).'action=update');
               ?>
               <tr>
-                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CLIENT; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_CLIENT_ID]', $paypal->get_config('PAYPAL_CLIENT_ID'), 'style="width: 300px;"'); ?></td>
-                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_INFO; ?></td>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_LIVE; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_CLIENT_ID_LIVE]', $paypal->get_config('PAYPAL_CLIENT_ID_LIVE'), 'style="width: 300px;"'); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO; ?></td>
               </tr>
               <tr>
-                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_SECRET; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_SECRET]', $paypal->get_config('PAYPAL_SECRET'), 'style="width: 300px;"'); ?></td>
-                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_SECRET_INFO; ?></td>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_SECRET_LIVE; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_SECRET_LIVE]', $paypal->get_config('PAYPAL_SECRET_LIVE'), 'style="width: 300px;"'); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_SECRET_LIVE_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_CLIENT_ID_SANDBOX]', $paypal->get_config('PAYPAL_CLIENT_ID_SANDBOX'), 'style="width: 300px;"'); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_SECRET_SANDBOX; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_SECRET_SANDBOX]', $paypal->get_config('PAYPAL_SECRET_SANDBOX'), 'style="width: 300px;"'); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_SECRET_SANDBOX_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_MODE; ?></td>

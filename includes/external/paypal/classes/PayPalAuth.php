@@ -34,8 +34,8 @@ class PayPalAuth {
 
     $apiContext = new ApiContext(
       new OAuthTokenCredential(
-          $this->get_config('PAYPAL_CLIENT_ID'),
-          $this->get_config('PAYPAL_SECRET')
+          $this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($this->get_config('PAYPAL_MODE'))),
+          $this->get_config('PAYPAL_SECRET_'.strtoupper($this->get_config('PAYPAL_MODE'))),
       )
     );
 
@@ -43,11 +43,11 @@ class PayPalAuth {
       array(
         'mode' => $this->get_config('PAYPAL_MODE'),
         'log.LogEnabled' => (($this->get_config('PAYPAL_LOG_ENALBLED') == '1') ? true : false),
-        'log.FileName' => DIR_FS_LOG.'mod_paypal_' .date('Y-m-d') .'.log',
+        'log.FileName' => DIR_FS_LOG.'mod_paypal_'.$this->get_config('PAYPAL_MODE').'_'.date('Y-m-d') .'.log',
         'log.LogLevel' => $this->loglevel,
         'validation.level' => 'log',
         'cache.enabled' => ((is_writeable(SQL_CACHEDIR)) ? true : false),
-        'cache.FileName' => SQL_CACHEDIR.'pp_auth.cache'
+        'cache.FileName' => SQL_CACHEDIR.'pp_auth_'.$this->get_config('PAYPAL_MODE').'.cache'
       )
     );
     
