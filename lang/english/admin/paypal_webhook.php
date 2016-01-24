@@ -15,7 +15,7 @@ $lang_array = array(
   'TEXT_PAYPAL_WEBHOOK_HEADING_TITLE' => 'PayPal Webhooks',
 
   'TEXT_PAYPAL_WEBHOOK_STATUS_NOT_DEFINED' => 'not configured',
-  'TEXT_PAYPAL_WEBHOOK_INFO' => 'To use webhook , it is imperative that you have a valid SSL certificate.',
+  'TEXT_PAYPAL_WEBHOOK_INFO' => 'To use webhook, it is imperative that you have a valid SSL certificate.',
   
   'TABLE_HEADING_URL' => 'URL',
   'TABLE_HEADING_WEBHOOK' => 'Webhook',

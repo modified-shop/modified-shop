@@ -27,13 +27,13 @@ $lang_array = array(
   'TEXT_PAYPAL_STANDARD_PROFILE' => 'Standard Webprofile',
   
   'TEXT_PAYPAL_MODULE_LINK_SUCCESS' => 'Link at checkout',
-  'TEXT_PAYPAL_MODULE_LINK_SUCCESS_INFO' => 'Link is displayed in the checkout?',
+  'TEXT_PAYPAL_MODULE_LINK_SUCCESS_INFO' => 'Shall the payment link be displayed in the checkout?',
 
   'TEXT_PAYPAL_MODULE_LINK_ACCOUNT' => 'Link at account',
-  'TEXT_PAYPAL_MODULE_LINK_ACCOUNT_INFO' => 'Link is displayed in the account?',
+  'TEXT_PAYPAL_MODULE_LINK_ACCOUNT_INFO' => 'Shall the payment link be displayed in the account?',
 
   'TEXT_PAYPAL_MODULE_USE_TABS' => 'Accordion / Tabs',
-  'TEXT_PAYPAL_MODULE_USE_TABS_INFO' => 'Uses the template Accordion or tabs in the checkout?',
+  'TEXT_PAYPAL_MODULE_USE_TABS_INFO' => 'Does the template use accordion or tabs in the checkout?',
 );
 
 

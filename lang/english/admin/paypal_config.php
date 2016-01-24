@@ -15,22 +15,22 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_HEADING_TITLE' => 'PayPal Configuration',
 
   'TEXT_PAYPAL_CONFIG_CLIENT_LIVE' => 'Client ID Live:',
-  'TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO' => 'Create in your PayPal account a new app for that data',
+  'TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO' => 'Create a new app for that data in your PayPal account',
 
   'TEXT_PAYPAL_CONFIG_SECRET_LIVE' => 'Secret Live:',
-  'TEXT_PAYPAL_CONFIG_SECRET_LIVE_INFO' => 'Create in your PayPal account a new app for that data',
+  'TEXT_PAYPAL_CONFIG_SECRET_LIVE_INFO' => 'Create a new app for that data in your PayPal account',
 
   'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX' => 'Client ID Sandbox:',
-  'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO' => 'Create in your PayPal account a new app for that data',
+  'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO' => 'Create a new app for that data in your PayPal account',
 
   'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX' => 'Secret Sandbox:',
-  'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX_INFO' => 'Create in your PayPal account a new app for that data',
+  'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX_INFO' => 'Create a new app for that data in your PayPal account',
 
   'TEXT_PAYPAL_CONFIG_MODE' => 'Mode:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
   'TEXT_PAYPAL_CONFIG_TRANSACTION' => 'Transaction:',
-  'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'Chhose type of Transaction.<br/><br/><b>Note:</b> With PayPal Plus always a Sale is made.',
+  'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'Chose type of Transaction.<br/><br/><b>Note:</b> With PayPal Plus always a Sale is made.',
 
   'TEXT_PAYPAL_CONFIG_CAPTURE' => 'Capture manually:',
   'TEXT_PAYPAL_CONFIG_CAPTURE_INFO' => 'Manually capture PayPal payments?<br/><br/><b>Note:</b> Therefore it is necessary that the Transaction is set to Authorize.',
@@ -45,7 +45,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_STATE_REJECTED_INFO' => 'Status for rejected order',
 
   'TEXT_PAYPAL_CONFIG_STATE_PENDING' => 'Status pending:',
-  'TEXT_PAYPAL_CONFIG_STATE_PENDING_INFO' => 'Status after successful order, but it was not yet confirmed by PayPal',
+  'TEXT_PAYPAL_CONFIG_STATE_PENDING_INFO' => 'Status after successful order, that was not yet confirmed by PayPal',
 
   'TEXT_PAYPAL_CONFIG_STATE_CAPTURED' => 'Status captured:',
   'TEXT_PAYPAL_CONFIG_STATE_CAPTURED_INFO' => 'Status for captured order',
@@ -54,15 +54,15 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_STATE_REFUNDED_INFO' => 'Status for refunded order',
   
   'TEXT_PAYPAL_CONFIG_STATE_TEMP' => 'Status temp:',
-  'TEXT_PAYPAL_CONFIG_STATE_TEMP_INFO' => 'Status for temp order',
+  'TEXT_PAYPAL_CONFIG_STATE_TEMP_INFO' => 'Status for unconfirmed order',
 
   'TEXT_PAYPAL_CONFIG_LOG' => 'Log:',
-  'TEXT_PAYPAL_CONFIG_LOG_INFO' => 'write log?',
+  'TEXT_PAYPAL_CONFIG_LOG_INFO' => 'Shall a log be written?',
 
   'TEXT_PAYPAL_CONFIG_LOG_LEVEL' => 'Log Level:',
-  'TEXT_PAYPAL_CONFIG_LOG_LEVEL_INFO' => '<b>Note:</b> In live mode, only to level FINE is logged.',
+  'TEXT_PAYPAL_CONFIG_LOG_LEVEL_INFO' => '<b>Note:</b> In live mode, it is only logged up to level FINE.',
   
-  'BUTTON_PAYPAL_STATUS_INSTALL' => 'install orders status',
+  'BUTTON_PAYPAL_STATUS_INSTALL' => 'Install orders status',
 );
 
 

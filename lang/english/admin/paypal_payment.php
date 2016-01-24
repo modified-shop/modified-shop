@@ -16,10 +16,10 @@ $lang_array = array(
   
   'TABLE_HEADING_DATE' => 'Date',
   'TABLE_HEADING_NAME' => 'Customer name',
-  'TABLE_HEADING_EMAIL' => 'Customer E-Mail Adresse',
+  'TABLE_HEADING_EMAIL' => 'Customer E-Mail Address',
   'TABLE_HEADING_INTENT' => 'Intent',
   'TABLE_HEADING_STATUS' => 'Status',
-  'TABLE_HEADING_ID' => 'Transactions ID',
+  'TABLE_HEADING_ID' => 'Transaction ID',
   'TABLE_HEADING_TOTAL' => 'Amount',
   'TABLE_HEADING_ORDER' => 'Order ID',
 

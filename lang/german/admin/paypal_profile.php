@@ -24,7 +24,7 @@ $lang_array = array(
   'TEXT_PAYPAL_PROFILE_BRAND_INFO' => 'Dieser Name wird dem Kunden bei PayPal angezeigt',
   
   'TEXT_PAYPAL_PROFILE_LOGO' => 'Logo URL:',
-  'TEXT_PAYPAL_PROFILE_LOGO_INFO' => 'Vollst&auml;ndige URL<br/><br/><b>Hinweis:</b> damit das Logo angezeigt wird, muss die URL zwingend mit https:// angegeben werden',
+  'TEXT_PAYPAL_PROFILE_LOGO_INFO' => 'Vollst&auml;ndige URL<br/><br/><b>Hinweis:</b> Damit das Logo angezeigt wird, muss die URL zwingend mit https:// angegeben werden',
   
   'TEXT_PAYPAL_PROFILE_LOCALE' => 'Sprache:',
   'TEXT_PAYPAL_PROFILE_LOCALE_INFO' => '',

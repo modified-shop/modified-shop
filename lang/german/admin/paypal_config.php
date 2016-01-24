@@ -15,25 +15,25 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_HEADING_TITLE' => 'PayPal Konfiguration',
 
   'TEXT_PAYPAL_CONFIG_CLIENT_LIVE' => 'Client ID Live:',
-  'TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO' => 'Erstellen sie in ihrem PayPal Account eine neue App f&uuml;r diese Daten',
+  'TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO' => 'Erstellen Sie in ihrem PayPal Account eine neue App f&uuml;r diese Daten',
 
   'TEXT_PAYPAL_CONFIG_SECRET_LIVE' => 'Secret Live:',
-  'TEXT_PAYPAL_CONFIG_SECRET_LIVE_INFO' => 'Erstellen sie in ihrem PayPal Account eine neue App f&uuml;r diese Daten',
+  'TEXT_PAYPAL_CONFIG_SECRET_LIVE_INFO' => 'Erstellen Sie in ihrem PayPal Account eine neue App f&uuml;r diese Daten',
 
   'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX' => 'Client ID Sandbox:',
-  'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO' => 'Erstellen sie in ihrem PayPal Account eine neue App f&uuml;r diese Daten',
+  'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO' => 'Erstellen Sie in ihrem PayPal Account eine neue App f&uuml;r diese Daten',
 
   'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX' => 'Secret Sandbox:',
-  'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX_INFO' => 'Erstellen sie in ihrem PayPal Account eine neue App f&uuml;r diese Daten',
+  'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX_INFO' => 'Erstellen Sie in ihrem PayPal Account eine neue App f&uuml;r diese Daten',
 
   'TEXT_PAYPAL_CONFIG_MODE' => 'Modus:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
   'TEXT_PAYPAL_CONFIG_TRANSACTION' => 'Transaktion:',
-  'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'W&auml;hlen sie die Art der Transaktion.<br/><br/><b>Hinweis:</b> Bei PayPal Plus wird immer ein Sale gemacht.',
+  'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'W&auml;hlen Sie die Art der Transaktion.<br/><br/><b>Hinweis:</b> Bei PayPal Plus wird immer ein Sale gemacht.',
 
   'TEXT_PAYPAL_CONFIG_CAPTURE' => 'Manuell erfassen:',
-  'TEXT_PAYPAL_CONFIG_CAPTURE_INFO' => 'Wollen sie Zalungen bei PayPal manuell erfassen (Capture)?<br/><br/><b>Hinweis:</b> dazu ist es notwendig, dass die Transaktion auf Authorize gesetzt ist.',
+  'TEXT_PAYPAL_CONFIG_CAPTURE_INFO' => 'Wollen Sie Zalungen bei PayPal manuell erfassen (Capture)?<br/><br/><b>Hinweis:</b> dazu ist es notwendig, dass die Transaktion auf Authorize gesetzt ist.',
 
   'TEXT_PAYPAL_CONFIG_CART' => 'Warenkorb:',
   'TEXT_PAYPAL_CONFIG_CART_INFO' => 'Soll der Warenkorb zu PayPal &uuml;bertragen werden?',
