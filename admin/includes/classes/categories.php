@@ -85,25 +85,12 @@ class categories {
                                             WHERE categories_image = '".xtc_db_input($category_image['categories_image'])."'");
     $duplicate_image = xtc_db_fetch_array($duplicate_image_query);
 
-		/*
-		Old Image-Function
     if ($duplicate_image['total'] < 2) {
       if (file_exists(DIR_FS_CATALOG_IMAGES.'categories/'.$category_image['categories_image'])) {
         @ unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$category_image['categories_image']);
       }
       $this->catModules->delete_category_image($category_image['categories_image']);
-    }*/
-
-		/*New Image-Function*/
-		if ($duplicate_image ['total'] < 2) {
-			if (file_exists ( DIR_FS_ORIGINAL_CATEGORIES_IMAGES. $category_image ['categories_image'] )) {
-				@ unlink ( DIR_FS_ORIGINAL_CATEGORIES_IMAGES . $category_image ['categories_image'] );
-			}
-			if (file_exists ( DIR_FS_CATEGORIES_IMAGES. $category_image ['categories_image'] )) {
-				@ unlink ( DIR_FS_CATEGORIES_IMAGES . $category_image ['categories_image'] );
-			}
-      $this->catModules->delete_category_image($category_image['categories_image']);
-		}
+    }
 
     xtc_db_query("DELETE FROM ".TABLE_CATEGORIES." WHERE categories_id = '".xtc_db_input($category_id)."'");
     xtc_db_query("DELETE FROM ".TABLE_CATEGORIES_DESCRIPTION." WHERE categories_id = '".xtc_db_input($category_id)."'");
@@ -235,7 +222,6 @@ class categories {
                      WHERE categories_id = '".(int) $categories_id."'");
     }
     
-    /* Old Image-Function
     if ($categories_image = xtc_try_upload('categories_image', DIR_FS_CATALOG_IMAGES.'categories/', '777', $accepted_categories_image_files_extensions, $accepted_categories_image_files_mime_types)) {
       $cname_arr = explode('.', $categories_image->filename);
       $cnsuffix = array_pop($cname_arr);
@@ -250,7 +236,7 @@ class categories {
                      
       //categories image processing
       $this->catModules->categories_image_process($categories_image_name, $categories_image_name_process);
-    }*/
+    }
    
     return $categories_id;
   }
