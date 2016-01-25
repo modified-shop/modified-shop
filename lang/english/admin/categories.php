@@ -124,7 +124,7 @@ define('TEXT_PRODUCTS_MANUFACTURER', 'Products Manufacturer:');
 define('TEXT_PRODUCTS_MANUFACTURER_MODEL', 'Manufacturer model no.:');
 define('TEXT_PRODUCTS_NAME', 'Products Name:');
 define('TEXT_PRODUCTS_DESCRIPTION', 'Products Description:');
-define('TEXT_PRODUCTS_QUANTITY', 'Products Quantity:');
+define('TEXT_PRODUCTS_QUANTITY', 'Products Stock:');
 define('TEXT_PRODUCTS_MODEL', 'Products Model:');
 define('TEXT_PRODUCTS_IMAGE', 'Products Image:');
 define('TEXT_PRODUCTS_URL', 'Products URL:');
