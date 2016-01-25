@@ -76,8 +76,10 @@ require (DIR_WS_INCLUDES.'head.php');
               <?php
               $rows = (isset($_GET['page']) && $_GET['page'] > 1) ? $_GET['page']*$page_max_display_results-$page_max_display_results : 0;   
               $where = '';
+              $where_attr = '';
               if (isset($_GET['qty']) && $_GET['qty'] != '') {
-                $where = "WHERE (p.products_quantity <= '".(int)$_GET['qty']."' OR pa.attributes_stock <= '".(int)$_GET['qty']."')";
+                $where = " WHERE (p.products_quantity <= '".(int)$_GET['qty']."' OR pa.attributes_stock <= '".(int)$_GET['qty']."') ";
+                $where_attr = " AND pa.attributes_stock <= '".(int)$_GET['qty']."' ";
               }
               $products_query_raw = "SELECT p.products_id,
                                             p.products_model,
@@ -123,6 +125,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                                                   ON pov.products_options_values_id = pa.options_values_id
                                                                      AND pov.language_id = '" . (int)$_SESSION['languages_id'] . "'
                                                             WHERE pa.products_id = '".$products['products_id'] . "' 
+                                                                  ".$where_attr."
                                                          ORDER BY pa.attributes_stock");
               
                 while ($products_attributes_values = xtc_db_fetch_array($products_attributes_query)) {
