@@ -723,7 +723,7 @@ UPDATE banners SET languages_id = (SELECT l.languages_id FROM languages l JOIN c
 
 #GTB - 2016-01-20 - added orders products ean/model
 ALTER TABLE orders_products ADD products_ean VARCHAR(128) AFTER products_model;
-ALTER TABLE orders_products ADD products_price_purchase_date DECIMAL(15,4) NOT NULL AFTER products_price;
+ALTER TABLE orders_products ADD products_price_origin DECIMAL(15,4) NOT NULL AFTER products_price;
 ALTER TABLE orders_products_attributes ADD attributes_model VARCHAR(64) AFTER products_options_values;
 ALTER TABLE orders_products_attributes ADD attributes_ean VARCHAR(128) AFTER attributes_model;
 

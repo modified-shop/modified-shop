@@ -608,7 +608,7 @@ class shoppingCart {
                                                p.products_weight,
                                                p.products_tax_class_id,
                                                p.products_status,
-                                               p.products_price as products_price_purchase_date,
+                                               p.products_price as products_price_origin,
                                                p.products_quantity as products_stock
                                           FROM ".TABLE_PRODUCTS." p
                                           JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd

@@ -245,7 +245,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         'products_name' => $order->products[$i]['name'],
         'products_ean' => $order->products[$i]['ean'],
         'products_shipping_time' => strip_tags($order->products[$i]['shipping_time']),
-        'products_price_purchase_date' => $order->products[$i]['price_purchase_date'],
+        'products_price_origin' => $order->products[$i]['price_origin'],
         'products_price' => $order->products[$i]['price'],
         'final_price' => $order->products[$i]['final_price'],
         'products_tax' => $order->products[$i]['tax'],

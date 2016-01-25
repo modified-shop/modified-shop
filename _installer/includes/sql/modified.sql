@@ -784,7 +784,7 @@ CREATE TABLE orders_products (
   products_ean VARCHAR(128),
   products_name VARCHAR(255) NOT NULL,
   products_price DECIMAL(15,4) NOT NULL,
-  products_price_purchase_date DECIMAL(15,4) NOT NULL,
+  products_price_origin DECIMAL(15,4) NOT NULL,
   products_discount_made DECIMAL(4,2) DEFAULT NULL,
   products_shipping_time VARCHAR(255) DEFAULT NULL,
   final_price DECIMAL(15,4) NOT NULL,
