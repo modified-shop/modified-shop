@@ -109,7 +109,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <td class="dataTableContent">' .  $products['products_model'] . '</td>
                         <td class="dataTableContent"><b>' . $products['products_name'] . '</b></td>
                         <td class="dataTableContent txta-c">';
-                if ($products['products_quantity'] <='0') {
+                if ($products['products_quantity'] <= STOCK_REORDER_LEVEL) {
                   echo '<span class="col-red"><b>'.$products['products_quantity'].'</b></span>';
                 } else {
                   echo $products['products_quantity'];
