@@ -134,7 +134,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           <td class="dataTableContentSub">' .  $products_attributes_values['attributes_model'] . '</td>
                           <td class="dataTableContentSub">&nbsp;&nbsp;&nbsp;&nbsp;-' . $products_attributes_values['products_options_values_name'] . '</td>
                           <td class="dataTableContentSub txta-c">';
-                  if ($products_attributes_values['attributes_stock'] <= '0') {
+                  if ($products_attributes_values['attributes_stock'] <= STOCK_REORDER_LEVEL) {
                     echo '<span class="col-red"><b>' . $products_attributes_values['attributes_stock'] . '</b></span>';
                   } else {
                     echo $products_attributes_values['attributes_stock'];
