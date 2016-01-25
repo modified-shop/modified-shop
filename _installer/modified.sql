@@ -266,6 +266,17 @@ CREATE TABLE banners_history (
   PRIMARY KEY (banners_history_id)
 ) ENGINE=MyISAM;
 
+DROP TABLE IF EXISTS carriers;
+CREATE TABLE carriers (
+  carrier_id INT(11) NOT NULL AUTO_INCREMENT,
+  carrier_name VARCHAR(80) NOT NULL,
+  carrier_tracking_link VARCHAR(512) NOT NULL,
+  carrier_sort_order INT(11) NOT NULL,
+  carrier_date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  carrier_last_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (carrier_id)
+) ENGINE=MyISAM;
+
 DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
   categories_id INT NOT NULL AUTO_INCREMENT,
@@ -721,6 +732,16 @@ CREATE TABLE orders_total (
   sort_order INT NOT NULL,
   PRIMARY KEY (orders_total_id),
   KEY idx_orders_total_orders_id (orders_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS orders_tracking;
+CREATE TABLE orders_tracking (
+  tracking_id INT(11) NOT NULL AUTO_INCREMENT,
+  orders_id INT(11) NOT NULL,
+  carrier_id INT(11) NOT NULL,
+  parcel_id VARCHAR(80) NOT NULL,
+  PRIMARY KEY (tracking_id),
+  KEY idx_orders_id (orders_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS orders_recalculate;
@@ -1233,6 +1254,19 @@ INSERT INTO address_format VALUES (8, '$firstname $lastname$cr$streets$cr$city$c
 # Web28 - 2010-11-13 - add entry for listproducts
 INSERT INTO admin_access VALUES ( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 INSERT INTO admin_access VALUES ( 'groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+
+# carriers
+INSERT INTO carriers VALUES (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
+INSERT INTO carriers VALUES (2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2', '20', NOW(), '');
+INSERT INTO carriers VALUES (3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', '30', NOW(), '');
+INSERT INTO carriers VALUES (4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', '40', NOW(), '');
+INSERT INTO carriers VALUES (5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', '50', NOW(), '');
+INSERT INTO carriers VALUES (6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', '60', NOW(), '');
+INSERT INTO carriers VALUES (7, 'TNT', 'http://www.tnt.de/servlet/Tracking?cons=$1', '70', NOW(), '');
+INSERT INTO carriers VALUES (8, 'TRANS-O-FLEX', 'http://track.tof.de/trace/tracking.cgi?barcode=$1', '80', NOW(), '');
+INSERT INTO carriers VALUES (9, 'KUEHNE-NAGEL', 'https://knlogin.kuehne-nagel.com/apps/fls.do?subevent=search&knReference=$1', '90', NOW(), '');
+INSERT INTO carriers VALUES (10, 'ILOXX', 'http://www.iloxx.de/net/einzelversand/tracking.aspx?ix=$1', '100', NOW(), '');
+INSERT INTO carriers VALUES (11, 'LogoiX', 'http://www.logoix.com/cgi-bin/tnt.pl?q=$1', '110', NOW(), '');
 
 # configuration_group_id 1, My Shop
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'STORE_NAME', 'modified eCommerce Shopsoftware', 1, 1, NULL, NOW(), NULL, NULL);
