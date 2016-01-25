@@ -1285,10 +1285,10 @@ class categories {
   
   
   function image_name($products_id, $counter, $suffix, $pname_arr = array(), $srcID = false) {
-    $separator = ($counter != '' ? '_' : '');
+    $separator = (((string)$counter != '') ? '_' : '');
     $image_name = $products_id.$separator.$counter.'.'.$suffix;
     //new module support
-    $image_name = $this->catModules->image_name($image_name,$products_id, $counter, $suffix, $pname_arr, $srcID);
+    $image_name = $this->catModules->image_name($image_name, $products_id, $counter, $suffix, $pname_arr, $srcID);
     return $image_name;
   }
   
