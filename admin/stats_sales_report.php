@@ -372,7 +372,7 @@
                       ?>
                       <table class="tableCenter collapse">
                         <tr class="dataTableHeadingRow">
-                          <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_DATE; ?></td>
+                          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_DATE; ?></td>
                           <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ORDERS;?></td>
                           <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ITEMS; ?></td>
                           <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_REVENUE;?></td>
@@ -396,17 +396,17 @@
                             switch ($srView) {
                               case '3':
                                 ?>
-                                <td class="dataTableContent txta-r"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
+                                <td class="dataTableContent"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
                                 <?php
                                 break;
                               case '4':
                                 ?>
-                                <td class="dataTableContent txta-r"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)); ?></td>
+                                <td class="dataTableContent"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)); ?></td>
                                 <?php
                                 break;
                               default;
                                 ?>
-                                <td class="dataTableContent txta-r"><?php echo xtc_date_short(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
+                                <td class="dataTableContent"><?php echo xtc_date_short(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
                                <?php
                             }
                             ?>
