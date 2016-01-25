@@ -917,6 +917,9 @@ vertical-align: middle;
 .mrg5{
 margin:5px;
 }
+.mrg0{
+margin:0px;
+}
 .tableConfirm{
 width:600px;
 padding:2px;

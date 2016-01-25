@@ -303,43 +303,34 @@
                                         $month = date("n", $startDate);
                                         $year = date("Y", $startDate);                                  
                                       }
-                                      echo REPORT_START_DATE.'<br/>';
+                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_START_DATE.'</b></p>';
                                       echo xtc_draw_pull_down_menu('startD', $day_array, $day);
                                       echo xtc_draw_pull_down_menu('startM', $month_array, $month);
                                       echo xtc_draw_pull_down_menu('startY', $year_array, $year);
                                     ?>
                                   </td>
-                                  <td rowspan="2" class="menuBoxHeading txta-l">
+                                  <td class="menuBoxHeading txta-l">
                                     <?php 
-                                      echo REPORT_DETAIL.'<br/>'; 
+                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_DETAIL.'</b></p>'; 
                                       echo xtc_draw_pull_down_menu('detail', $detail_array, $srDetail);
-                                      echo '<br/>';
-                                      echo REPORT_MAX.'<br/>'; 
-                                      echo xtc_draw_pull_down_menu('max', $max_array, $srMax);
                                     ?>
                                   </td>
-                                  <td rowspan="2" class="menuBoxHeading txta-l">
+                                  <td class="menuBoxHeading txta-l">
                                     <?php
                                       echo '<div class="flt-l">';                                    
-                                      echo REPORT_STATUS_FILTER.'<br/>'; 
+                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_STATUS_FILTER.'</b></p>'; 
                                       echo xtc_draw_pull_down_menu('status', $status_array, $srStatus);
                                       echo '</div>';
                                       echo '<div class="flt-l">'; 
-                                      echo ENTRY_CUSTOMERS_STATUS.'<br/>'; 
+                                      echo '<p class="pdg2 mrg0"><b>'.ENTRY_CUSTOMERS_STATUS.'</b></p>'; 
                                       echo xtc_draw_pull_down_menu('cgroup', $customers_statuses_array, $srCgroup);
                                       echo '</div>';
-                                      echo '<div style="clear:both"></div>';
-                                      echo REPORT_PAYMENT_FILTER.'<br/>'; 
-                                      echo xtc_draw_pull_down_menu('payment', $payment_array, $srPayment);
                                     ?>
                                   </td>
-                                  <td rowspan="2" class="menuBoxHeading txta-l">
+                                  <td class="menuBoxHeading txta-l">
                                     <?php 
-                                      echo REPORT_EXP.'<br/>'; 
+                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_EXP.'</b></p>'; 
                                       echo xtc_draw_pull_down_menu('export', $exp_array, $srExp);
-                                      echo '<br/>';
-                                      echo REPORT_SORT.'<br/>'; 
-                                      echo xtc_draw_pull_down_menu('sort', $sort_array, $srSort);
                                     ?>
                                   </td>
                                 </tr>
@@ -354,10 +345,28 @@
                                         $month = date("n", $endDate - (60* 60 * 24));
                                         $year = date("Y", $endDate - (60* 60 * 24));
                                       }
-                                      echo REPORT_END_DATE.'<br/>';
+                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_END_DATE.'</b></p>';
                                       echo xtc_draw_pull_down_menu('endD', $day_array, $day);
                                       echo xtc_draw_pull_down_menu('endM', $month_array, $month);
                                       echo xtc_draw_pull_down_menu('endY', $year_array, $year);
+                                    ?>
+                                  </td>
+                                  <td class="menuBoxHeading txta-l">
+                                    <?php 
+                                      echo'<p class="pdg2 mrg0"><b>'. REPORT_MAX.'</b></p>'; 
+                                      echo xtc_draw_pull_down_menu('max', $max_array, $srMax);
+                                    ?>
+                                  </td>
+                                  <td class="menuBoxHeading txta-l">
+                                    <?php
+                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_PAYMENT_FILTER.'</b></p>'; 
+                                      echo xtc_draw_pull_down_menu('payment', $payment_array, $srPayment);
+                                    ?>
+                                  </td>
+                                  <td class="menuBoxHeading txta-l">
+                                    <?php 
+                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_SORT.'</b></p>'; 
+                                      echo xtc_draw_pull_down_menu('sort', $sort_array, $srSort);
                                     ?>
                                   </td>
                                 </tr>
