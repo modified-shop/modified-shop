@@ -16,10 +16,6 @@
 
 include ('includes/application_top.php');
 
-// include needed functions
-require_once (DIR_FS_INC.'xtc_get_order_data.inc.php');
-require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
-
 $smarty = new Smarty;
 
 if (DIR_WS_BASE == '') {

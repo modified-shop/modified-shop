@@ -41,7 +41,6 @@ require_once (DIR_FS_INC.'xtc_get_products_stock.inc.php');
 require_once (DIR_FS_INC.'xtc_remove_non_numeric.inc.php');
 require_once (DIR_FS_INC.'xtc_get_short_description.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price.inc.php');
-require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
 require_once (DIR_FS_INC.'check_stock_specials.inc.php');
 
 $module_content = array ();

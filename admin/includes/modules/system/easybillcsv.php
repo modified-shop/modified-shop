@@ -158,7 +158,10 @@ class easybillcsv {
           $attributes_total = 0;
           if ((isset ($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0)) {
             for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j++) {
-              $attributes_model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option']);
+              $attributes_model = $order->products[$i]['attributes'][$j]['attributes_model'];
+              if ($attributes_model == '') {
+                $attributes_model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option']);
+              }
               $attributes_value = trim($order->products[$i]['attributes'][$j]['value']);
               //$products_array attributes output adjustments (overrides)
               $products_array[$i]['attributes'][$j]['value'] = $attributes_value;

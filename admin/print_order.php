@@ -15,10 +15,6 @@
    ---------------------------------------------------------------------------------------*/
 
   require('includes/application_top.php');
-  // include needed functions
-  require_once(DIR_FS_INC .'xtc_get_attributes_model.inc.php');
-  require_once(DIR_FS_INC .'xtc_not_null.inc.php');
-  require_once(DIR_FS_INC .'xtc_format_price_order.inc.php');
 
   $smarty = new Smarty;
 

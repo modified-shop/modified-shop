@@ -20,9 +20,6 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) {
   die('Direct Access to this location is not allowed.');
 }
 
-require_once (DIR_FS_INC.'xtc_get_order_data.inc.php');
-require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
-
 // check if customer is allowed to send this order!
 $order_query_check = xtc_db_query("SELECT customers_id
                                      FROM ".TABLE_ORDERS."
