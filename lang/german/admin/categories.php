@@ -124,7 +124,7 @@ define('TEXT_PRODUCTS_MANUFACTURER', 'Artikelhersteller:');
 define('TEXT_PRODUCTS_MANUFACTURER_MODEL', 'Hersteller Art.Nr.(HAN):');
 define('TEXT_PRODUCTS_NAME', 'Artikelname:');
 define('TEXT_PRODUCTS_DESCRIPTION', 'Artikelbeschreibung:');
-define('TEXT_PRODUCTS_QUANTITY', 'Artikelanzahl:');
+define('TEXT_PRODUCTS_QUANTITY', 'Lagerbestand:');
 define('TEXT_PRODUCTS_MODEL', 'Artikel-Nr.:');
 define('TEXT_PRODUCTS_IMAGE', 'Artikelbild:');
 define('TEXT_PRODUCTS_URL', 'Herstellerlink:');
