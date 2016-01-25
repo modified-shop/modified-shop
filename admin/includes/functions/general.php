@@ -2291,6 +2291,31 @@
     return xtc_draw_pull_down_menu($cfg_key, $cache_array, $cfg_value);
   }
 
+  /**
+   * clear_dir()
+   *
+   * @param string $dir
+   * @param boolean $basefiles
+   */
+  function clear_dir($dir, $basefiles = false) {
+    if ($basefiles === true) {
+      $files = glob(rtrim($dir, '/').'/{,.}[!.,!..]*', GLOB_BRACE);
+    } else {
+      $files = glob(rtrim($dir, '/').'/*');
+    }
+    foreach ($files as $file) {
+      if(is_dir($file)) {
+        clear_dir($file, true);
+        rmdir($file);
+      } else {
+        if ($basefiles === false && basename($file) != 'index.html') {
+          unlink($file);
+        } elseif ($basefiles === true) {
+          unlink($file);
+        }
+      }
+    }
+  }
 
 
 

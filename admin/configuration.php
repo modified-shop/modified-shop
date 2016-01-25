@@ -117,7 +117,7 @@
           $handle = opendir(SQL_CACHEDIR);
           while (($file = readdir($handle)) !== false) {
             // Jump over files that are no sql-cache
-            if (strpos($file, 'sql_') !== 0) continue;
+            if (strpos($file, 'sql_') !== false) continue;
             @unlink(SQL_CACHEDIR.$file);
           }
         }
@@ -126,43 +126,19 @@
         break;
 
       case 'delcache':
-        $path = DIR_FS_CATALOG.'cache/';
-        if ($dir = opendir($path)) {
-          while (($file = readdir($dir)) !== false) {
-            if (is_file($path.$file) && $file != "index.html" && $file != ".htaccess") {
-              unlink($path.$file);
-            }
-          }
-          closedir($dir);
-        }
+        clear_dir(DIR_FS_CATALOG.'cache/');
         $messageStack->add_session(DELETE_CACHE_SUCCESSFUL, 'success');
         xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
         break;
 
       case 'deltempcache':
-        $path = DIR_FS_CATALOG.'templates_c/';
-        if ($dir = opendir($path)) {
-          while (($file = readdir($dir)) !== false) {
-            if (is_file($path.$file) && $file != "index.html" && $file != ".htaccess") {
-              unlink($path.$file);
-            }
-          }
-          closedir($dir);
-        }
+        clear_dir(DIR_FS_CATALOG.'templates_c/');
         $messageStack->add_session(DELETE_TEMP_CACHE_SUCCESSFUL, 'success');
         xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
         break;
 
       case 'dellog':
-        $path = DIR_FS_CATALOG.'log/';
-        if ($dir = opendir($path)) {
-          while (($file = readdir($dir)) !== false) {
-            if (is_file($path.$file) && $file != "index.html" && $file != ".htaccess") {
-              unlink($path.$file);
-            }
-          }
-          closedir($dir);
-        }
+        clear_dir(DIR_FS_CATALOG.'log/');
         $messageStack->add_session(DELETE_LOGS_SUCCESSFUL, 'success');
         xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
         break;
