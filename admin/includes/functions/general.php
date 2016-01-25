@@ -90,7 +90,7 @@
                                    FROM ".TABLE_PRODUCTS."
                                   WHERE products_id = '".(int)$products_id."'");
     $stock_values = xtc_db_fetch_array($stock_query);
-    if ($stock_values['products_quantity'] <= '0') {
+    if ($stock_values['products_quantity'] <= STOCK_REORDER_LEVEL) {
       $stock_flag = 'true';
       $stock_warn = '<li>'.TEXT_WARN_MAIN.'</li>';
       $attribute_stock_query = xtc_db_query("SELECT attributes_stock,
@@ -98,7 +98,7 @@
                                                FROM ".TABLE_PRODUCTS_ATTRIBUTES."
                                               WHERE products_id = '".(int)$products_id."'");
       while ($attribute_stock_values = xtc_db_fetch_array($attribute_stock_query)) {
-        if ($attribute_stock_values['attributes_stock'] <= '0') {
+        if ($attribute_stock_values['attributes_stock'] <= STOCK_REORDER_LEVEL) {
           $stock_flag = 'true';
           $which_attribute_query = xtDBquery("SELECT products_options_values_name
                                                 FROM ".TABLE_PRODUCTS_OPTIONS_VALUES."

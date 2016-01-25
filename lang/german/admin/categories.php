@@ -28,7 +28,7 @@ define('TABLE_HEADING_CATEGORIES_PRODUCTS', 'Kategorien / Artikel');
 define('TABLE_HEADING_ACTION', 'Aktion');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_STARTPAGE', 'TOP');
-define('TABLE_HEADING_STOCK','Lager Warnung');
+define('TABLE_HEADING_STOCK','Lagerbestand');
 define('TABLE_HEADING_SORT','Sort.');
 define('TABLE_HEADING_EDIT','Edit');
 // BOF - Tomcraft - 2010-04-07 - Added definition for products model
@@ -53,7 +53,7 @@ define('TEXT_PRODUCTS', 'Produkte:');
 define('TEXT_PRODUCTS_PRICE_INFO', 'Preis:');
 define('TEXT_PRODUCTS_TAX_CLASS', 'Steuerklasse:');
 define('TEXT_PRODUCTS_AVERAGE_RATING', 'Durchschn. Bewertung:');
-define('TEXT_PRODUCTS_QUANTITY_INFO', 'Anzahl:');
+define('TEXT_PRODUCTS_QUANTITY_INFO', 'Lagerbestand:');
 define('TEXT_PRODUCTS_DISCOUNT_ALLOWED_INFO', 'Maximal erlaubter Rabatt:');
 define('TEXT_DATE_ADDED', 'Hinzugef&uuml;gt am:');
 define('TEXT_DATE_AVAILABLE', 'Erscheinungsdatum:');

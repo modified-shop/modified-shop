@@ -620,7 +620,7 @@
                  if (STOCK_CHECK == 'true') { ?>
                    <td class="categories_view_data">
                      <?php echo check_stock($products['products_id']);
-                     echo '&nbsp;'.TXT_STK.$products['products_quantity']; //BOF - DokuMan - 2012-03-05 - added products quantity to list view
+                     echo '&nbsp;'.$products['products_quantity'];
                      ?>
                    </td>
                    <?php
