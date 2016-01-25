@@ -400,7 +400,7 @@
                         $last = sizeof($info) - 1;
                         if ($srExp < 2) {
                           ?>
-                          <tr class="dataTableRow"onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
+                          <tr class="dataTableRow" onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
                             <?php
                             switch ($srView) {
                               case '3':
