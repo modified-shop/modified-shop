@@ -21,7 +21,7 @@ if (is_object($order) && strpos($order->info['payment_method'], 'paypal') !== fa
       || $order->info['payment_method'] == 'paypalpluslink'
       ) 
   {
-    $payapl_payment_info = array(
+    $paypal_payment_info = array(
       array ('title' => $paypal->title.': ', 
              'class' => $paypal->code,
              'fields' => array(array('title' => '',
@@ -38,17 +38,17 @@ if (is_object($order) && strpos($order->info['payment_method'], 'paypal') !== fa
       $paypal_smarty->config_dir = DIR_FS_CATALOG.'lang';
     }
     $paypal_smarty->caching = 0;
-    $paypal_smarty->assign('PAYMENT_INFO', $payapl_payment_info);
+    $paypal_smarty->assign('PAYMENT_INFO', $paypal_payment_info);
     $paypal_smarty->assign('language', $_SESSION['language']);
-    $payment_info_content = $paypal_smarty->fetch(DIR_FS_EXTERNAL.'/paypal/templates/payment_info.html');
+    $payment_info_content = $paypal_smarty->fetch(DIR_FS_EXTERNAL.'paypal/templates/payment_info.html');
 
     $smarty->assign('PAYMENT_INFO_HTML', $payment_info_content);
     $smarty->assign('PAYMENT_INFO_TXT', sprintf(constant('MODULE_PAYMENT_'.strtoupper($paypal->code).'_TEXT_SUCCESS'), $paypal->create_paypal_link($order->info['order_id'], true)));
 
   } else {
-    $payapl_payment_info = $paypal->success($order->info['order_id']);
+    $paypal_payment_info = $paypal->success($order->info['order_id']);
   
-    if (is_array($payapl_payment_info)) {
+    if (is_array($paypal_payment_info)) {
       $paypal_smarty = new Smarty;
       if (defined('RUN_MODE_ADMIN')) {
         $paypal_smarty->template_dir = DIR_FS_CATALOG.'templates';
@@ -56,9 +56,9 @@ if (is_object($order) && strpos($order->info['payment_method'], 'paypal') !== fa
         $paypal_smarty->config_dir = DIR_FS_CATALOG.'lang';
       }
       $paypal_smarty->caching = 0;
-      $paypal_smarty->assign('PAYMENT_INFO', $payapl_payment_info);
+      $paypal_smarty->assign('PAYMENT_INFO', $paypal_payment_info);
       $paypal_smarty->assign('language', $_SESSION['language']);
-      $payment_info_content = $paypal_smarty->fetch(DIR_FS_EXTERNAL.'/paypal/templates/payment_info.html');
+      $payment_info_content = $paypal_smarty->fetch(DIR_FS_EXTERNAL.'paypal/templates/payment_info.html');
   
       $smarty->assign('PAYMENT_INFO_HTML', $payment_info_content);
       $smarty->assign('PAYMENT_INFO_TXT', $payment_info_content);
