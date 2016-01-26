@@ -427,7 +427,7 @@ class PayPalPayment extends PayPalPaymentBase {
             $this->login_customer($customer);
           } elseif (!isset($_SESSION['customer_id'])) {
             // redirect
-            xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+            xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
           }
           
           // sendto
@@ -435,7 +435,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
         } elseif (!isset($_SESSION['customer_id'])) {
           // redirect
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
         }
         
         // payer
@@ -444,11 +444,11 @@ class PayPalPayment extends PayPalPaymentBase {
         $_SESSION['paypal_express_payment_modules'] = 'paypalcart.php';
       } else {
         // redirect
-        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
       }
     } else {
       // redirect
-      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
   }
 
@@ -467,119 +467,103 @@ class PayPalPayment extends PayPalPaymentBase {
       try {
         // Get the payment Object by passing paymentId
         $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);       
-        $valid = true;
           
       } catch (Exception $ex) {
         $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-        $valid = false;    
-      }
-      
-      if ($valid === true) {
 
-        // payer
-        $_SESSION['paypal']['PayerID'] = $_GET['PayerID'];
-      
-        // PaymentExecution
-        $execution = new PaymentExecution();
-        $execution->setPayerId($_SESSION['paypal']['PayerID']);
-        
-        // profile
-        $profile_standard = $this->get_config('PAYPAL_STANDARD_PROFILE');
-        if ($profile_standard != '') {
-          if (count($this->get_profile($profile_standard)) > 0) {
-            $profile_id = $profile_standard;
-          }
-        }
-
-        $profile_payment = $this->get_config('PAYPAL_'.strtoupper($this->code.'_'.$_SESSION['language_code']).'_PROFILE');
-        if ($profile_payment != '') {
-          if (count($this->get_profile($profile_payment)) > 0) {
-            $profile_id = $profile_payment;
-          }
-        }
-        
-        if (isset($profile_id) && $profile_id != '') {
-          $profile = $this->get_profile($profile_id);
-        
-          if ($profile[0]['input_fields']['address_override'] == '0') {
-            // customer details    
-            $sql_data_array = $this->get_customer_data($payment);
-          
-            $sql_data_array['delivery']['delivery_country'] = $sql_data_array['delivery']['delivery_country']['title'];
-            unset($sql_data_array['delivery']['delivery_country_id']);
-            unset($sql_data_array['delivery']['delivery_zone_id']);
-                    
-            if (count($sql_data_array) > 0) {
-              xtc_db_perform(TABLE_ORDERS, $sql_data_array['delivery'], 'update', "orders_id = '".$insert_id."'");
-            }
-          }
-        }
-        
-        try {
-          // Execute the payment
-          $payment->execute($execution, $apiContext);
-          $success = true;
-          
-        } catch (Exception $ex) {
-          $this->LoggingManager->log(print_r($ex, true), 'DEBUG');          
-          $success = false;
-        }
-
-        if ($success === true) {
-          // capture
-          if (($this->transaction_type == 'order'
-              || $this->transaction_type == 'authorize'
-              ) && $this->get_config('PAYPAL_CAPTURE_MANUELL') == '0')
-          {
-            $this->capture_payment($payment);
-          }
-      
-          $sql_data_array = array(
-            'orders_id' => $insert_id,
-            'payment_id' => $_SESSION['paypal']['paymentId'],
-            'payer_id' => $_SESSION['paypal']['PayerID'],
-          );
-          xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
-        }
-        
-        if ($success === true) {
-          try {
-            // Get the payment Object by passing paymentId
-            $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
-            $valid = true;
-      
-          } catch (Exception $ex) {
-            $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-            $valid = false;
-          }
-          if ($valid === true) {
-            $status = $this->get_orders_status($payment);
-            if ($status['status_id'] < 0) {
-              $check_query = xtc_db_query("SELECT orders_status
-                                             FROM ".TABLE_ORDERS." 
-                                            WHERE orders_id = '".(int)$insert_id."'");
-              $check = xtc_db_fetch_array($check_query);
-              $status['status_id'] = $check['orders_status'];
-            }
-            $this->update_order($status['comment'], $status['status_id'], $insert_id);    
-          }
-        } else {
-          if ($this->order_status_pending < 0) {
-            $check_query = xtc_db_query("SELECT orders_status
-                                           FROM ".TABLE_ORDERS." 
-                                          WHERE orders_id = '".(int)$insert_id."'");
-            $check = xtc_db_fetch_array($check_query);
-            $this->order_status_pending = $check['orders_status'];
-          }
-          $this->update_order($_SESSION['paypal']['paymentId'], $this->order_status_pending, $insert_id);    
-        }
-      } else {
         // redirect
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'NONSSL'));      
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));      
       }
+      
+      // payer
+      $_SESSION['paypal']['PayerID'] = $_GET['PayerID'];
+    
+      // PaymentExecution
+      $execution = new PaymentExecution();
+      $execution->setPayerId($_SESSION['paypal']['PayerID']);
+      
+      // profile
+      $profile_standard = $this->get_config('PAYPAL_STANDARD_PROFILE');
+      if ($profile_standard != '') {
+        if (count($this->get_profile($profile_standard)) > 0) {
+          $profile_id = $profile_standard;
+        }
+      }
+
+      $profile_payment = $this->get_config('PAYPAL_'.strtoupper($this->code.'_'.$_SESSION['language_code']).'_PROFILE');
+      if ($profile_payment != '') {
+        if (count($this->get_profile($profile_payment)) > 0) {
+          $profile_id = $profile_payment;
+        }
+      }
+      
+      if (isset($profile_id) && $profile_id != '') {
+        $profile = $this->get_profile($profile_id);
+      
+        if ($profile[0]['input_fields']['address_override'] == '0') {
+          // customer details    
+          $sql_data_array = $this->get_customer_data($payment);
+        
+          $sql_data_array['delivery']['delivery_country'] = $sql_data_array['delivery']['delivery_country']['title'];
+          unset($sql_data_array['delivery']['delivery_country_id']);
+          unset($sql_data_array['delivery']['delivery_zone_id']);
+                  
+          if (count($sql_data_array) > 0) {
+            xtc_db_perform(TABLE_ORDERS, $sql_data_array['delivery'], 'update', "orders_id = '".$insert_id."'");
+          }
+        }
+      }
+      
+      try {
+        // Execute the payment
+        $payment->execute($execution, $apiContext);
+        
+      } catch (Exception $ex) {
+        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');          
+
+        $this->remove_order($insert_id);
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+      }
+
+      // capture
+      if (($this->transaction_type == 'order'
+          || $this->transaction_type == 'authorize'
+          ) && $this->get_config('PAYPAL_CAPTURE_MANUELL') == '0')
+      {
+        $this->capture_payment($payment);
+      }
+  
+      $sql_data_array = array(
+        'orders_id' => $insert_id,
+        'payment_id' => $_SESSION['paypal']['paymentId'],
+        'payer_id' => $_SESSION['paypal']['PayerID'],
+      );
+      xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
+
+      try {
+        // Get the payment Object by passing paymentId
+        $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
+  
+      } catch (Exception $ex) {
+        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+
+        $this->remove_order($insert_id);
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+      }
+
+      $status = $this->get_orders_status($payment);
+      if ($status['status_id'] < 0) {
+        $check_query = xtc_db_query("SELECT orders_status
+                                       FROM ".TABLE_ORDERS." 
+                                      WHERE orders_id = '".(int)$insert_id."'");
+        $check = xtc_db_fetch_array($check_query);
+        $status['status_id'] = $check['orders_status'];
+      }
+      $this->update_order($status['comment'], $status['status_id'], $insert_id);    
+
     } else {
       // redirect
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'NONSSL'));
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
   }
 
@@ -611,165 +595,156 @@ class PayPalPayment extends PayPalPaymentBase {
     try {
       // Get the payment Object by passing paymentId
       $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
-      $valid = true;
       
     } catch (Exception $ex) {
       $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-      $valid = false;
       
       $this->remove_order($insert_id);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
     
-    if ($valid === true) {
+    // set order
+    $order = new order($insert_id);
 
-      // set order
-      $order = new order($insert_id);
+    $patchRequest = new PatchRequest();
 
-      $patchRequest = new PatchRequest();
+    $payment_address = new Address();
+    $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
+                    ->setCity($this->encode_utf8($order->billing['city']))
+                    ->setState($this->encode_utf8($order->billing['state']))
+                    ->setPostalCode($this->encode_utf8($order->billing['postcode']))
+                    ->setCountryCode($this->encode_utf8(((isset($order->billing['country_iso_2'])) ? $order->billing['country_iso_2'] : $order->billing['country']['iso_code_2'])));
 
-      $payment_address = new Address();
-      $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
-                      ->setCity($this->encode_utf8($order->billing['city']))
-                      ->setState($this->encode_utf8($order->billing['state']))
-                      ->setPostalCode($this->encode_utf8($order->billing['postcode']))
-                      ->setCountryCode($this->encode_utf8(((isset($order->billing['country_iso_2'])) ? $order->billing['country_iso_2'] : $order->billing['country']['iso_code_2'])));
+    $patch_payment = new Patch();
+    $patch_payment->setOp('add')
+                  ->setPath('/potential_payer_info/billing_address')
+                  ->setValue($payment_address);
 
-      $patch_payment = new Patch();
-      $patch_payment->setOp('add')
-                    ->setPath('/potential_payer_info/billing_address')
-                    ->setValue($payment_address);
+    $patchRequest->setPatches(array($patch_payment));
 
-      $patchRequest->setPatches(array($patch_payment));
+    try {
+      // update payment
+      $payment->update($patchRequest, $apiContext);      
 
-      try {
-        // update payment
-        $payment->update($patchRequest, $apiContext);      
-
-      } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-      }
-
-      $patchRequest = new PatchRequest();
-
-      // set address
-      $shipping_address = new ShippingAddress();      
-
-      $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
-                       ->setLine1($this->encode_utf8($order->delivery['street_address']))
-                       ->setCity($this->encode_utf8($order->delivery['city']))
-                       ->setCountryCode($this->encode_utf8(((isset($order->delivery['country_iso_2'])) ? $order->delivery['country_iso_2'] : $order->delivery['country']['iso_code_2'])))
-                       ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
-                       ->setState($this->encode_utf8($order->delivery['state']));
-
-      $patch_shipping = new Patch();
-      $patch_shipping->setOp('add')
-                     ->setPath('/transactions/0/item_list/shipping_address')
-                     ->setValue($shipping_address);
-
-      $patchRequest->setPatches(array($patch_shipping));
-                
-      try {
-        // update payment
-        $payment->update($patchRequest, $apiContext);      
-
-      } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-      }
-
-      $patchRequest = new PatchRequest();
-      
-      // set details
-      $this->details = new Details(); 
-
-      // set amount 
-      $this->amount = new Amount(); 
-      
-      // set totals
-      $this->get_totals($order->totals);
-            
-      $this->amount->setCurrency($order->info['currency'])
-                   ->setDetails($this->details);
-      
-      $patch_amount = new Patch();
-      $patch_amount->setOp('replace')
-                   ->setPath('/transactions/0/amount')
-                   ->setValue($this->amount);
-
-      $patchRequest->setPatches(array($patch_amount));     
-          
-      try {
-        // update payment
-        $payment->update($patchRequest, $apiContext);      
-        $valid = true;
-      } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-        $valid = false;
-        if ($order_exists === false) {
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-        }
-
-        $this->remove_order($insert_id);
-        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
-      }
-      
-      if ($valid === true) {
-        $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
-
-        // PaymentExecution
-        $execution = new PaymentExecution();
-        $execution->setPayerId($_SESSION['paypal']['PayerID']);
-
-        try {
-          // Execute the payment
-          $payment->execute($execution, $apiContext);      
-          $success = true;
-
-        } catch (Exception $ex) {
-          $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-
-          $this->remove_order($insert_id);
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
-        }
-    
-        // capture
-        if (($this->transaction_type == 'order'
-            || $this->transaction_type == 'authorize'
-            ) && $this->get_config('PAYPAL_CAPTURE_MANUELL') == '0')
-        {
-          $this->capture_payment($payment);
-        }
-    
-        $sql_data_array = array(
-          'orders_id' => $insert_id,
-          'payment_id' => $_SESSION['paypal']['paymentId'],
-          'payer_id' => $_SESSION['paypal']['PayerID'],
-        );
-        xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
-    
-        try {
-          // Get the payment Object by passing paymentId
-          $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
-    
-        } catch (Exception $ex) {
-          $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-
-          $this->remove_order($insert_id);
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
-        }
-
-        $status = $this->get_orders_status($payment);
-        if ($status['status_id'] < 0) {
-          $check_query = xtc_db_query("SELECT orders_status
-                                         FROM ".TABLE_ORDERS." 
-                                        WHERE orders_id = '".(int)$insert_id."'");
-          $check = xtc_db_fetch_array($check_query);
-          $status['status_id'] = $check['orders_status'];
-        }
-        $this->update_order($status['comment'], $status['status_id'], $insert_id);    
-
-      }
+    } catch (Exception $ex) {
+      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
     }
+
+    $patchRequest = new PatchRequest();
+
+    // set address
+    $shipping_address = new ShippingAddress();      
+
+    $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
+                     ->setLine1($this->encode_utf8($order->delivery['street_address']))
+                     ->setCity($this->encode_utf8($order->delivery['city']))
+                     ->setCountryCode($this->encode_utf8(((isset($order->delivery['country_iso_2'])) ? $order->delivery['country_iso_2'] : $order->delivery['country']['iso_code_2'])))
+                     ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
+                     ->setState($this->encode_utf8($order->delivery['state']));
+
+    $patch_shipping = new Patch();
+    $patch_shipping->setOp('add')
+                   ->setPath('/transactions/0/item_list/shipping_address')
+                   ->setValue($shipping_address);
+
+    $patchRequest->setPatches(array($patch_shipping));
+              
+    try {
+      // update payment
+      $payment->update($patchRequest, $apiContext);      
+
+    } catch (Exception $ex) {
+      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+    }
+
+    $patchRequest = new PatchRequest();
+    
+    // set details
+    $this->details = new Details(); 
+
+    // set amount 
+    $this->amount = new Amount(); 
+    
+    // set totals
+    $this->get_totals($order->totals);
+          
+    $this->amount->setCurrency($order->info['currency'])
+                 ->setDetails($this->details);
+    
+    $patch_amount = new Patch();
+    $patch_amount->setOp('replace')
+                 ->setPath('/transactions/0/amount')
+                 ->setValue($this->amount);
+
+    $patchRequest->setPatches(array($patch_amount));     
+        
+    try {
+      // update payment
+      $payment->update($patchRequest, $apiContext);      
+
+    } catch (Exception $ex) {
+      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+
+      if ($order_exists === false) {
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+      }
+
+      $this->remove_order($insert_id);
+      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
+    }
+    
+    $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
+
+    // PaymentExecution
+    $execution = new PaymentExecution();
+    $execution->setPayerId($_SESSION['paypal']['PayerID']);
+
+    try {
+      // Execute the payment
+      $payment->execute($execution, $apiContext);      
+
+    } catch (Exception $ex) {
+      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+
+      $this->remove_order($insert_id);
+      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
+    }
+
+    // capture
+    if (($this->transaction_type == 'order'
+        || $this->transaction_type == 'authorize'
+        ) && $this->get_config('PAYPAL_CAPTURE_MANUELL') == '0')
+    {
+      $this->capture_payment($payment);
+    }
+
+    $sql_data_array = array(
+      'orders_id' => $insert_id,
+      'payment_id' => $_SESSION['paypal']['paymentId'],
+      'payer_id' => $_SESSION['paypal']['PayerID'],
+    );
+    xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
+
+    try {
+      // Get the payment Object by passing paymentId
+      $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
+
+    } catch (Exception $ex) {
+      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+
+      $this->remove_order($insert_id);
+      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
+    }
+
+    $status = $this->get_orders_status($payment);
+    if ($status['status_id'] < 0) {
+      $check_query = xtc_db_query("SELECT orders_status
+                                     FROM ".TABLE_ORDERS." 
+                                    WHERE orders_id = '".(int)$insert_id."'");
+      $check = xtc_db_fetch_array($check_query);
+      $status['status_id'] = $check['orders_status'];
+    }
+    $this->update_order($status['comment'], $status['status_id'], $insert_id);    
   }
   
   
