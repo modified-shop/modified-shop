@@ -30,8 +30,13 @@ if (is_object($order) && strpos($order->info['payment_method'], 'paypal') !== fa
                                )
              )
     );
-
+    
     $paypal_smarty = new Smarty;
+    if (defined('RUN_MODE_ADMIN')) {
+      $paypal_smarty->template_dir = DIR_FS_CATALOG.'templates';
+      $paypal_smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
+      $paypal_smarty->config_dir = DIR_FS_CATALOG.'lang';
+    }
     $paypal_smarty->caching = 0;
     $paypal_smarty->assign('PAYMENT_INFO', $payapl_payment_info);
     $paypal_smarty->assign('language', $_SESSION['language']);
@@ -45,6 +50,11 @@ if (is_object($order) && strpos($order->info['payment_method'], 'paypal') !== fa
   
     if (is_array($payapl_payment_info)) {
       $paypal_smarty = new Smarty;
+      if (defined('RUN_MODE_ADMIN')) {
+        $paypal_smarty->template_dir = DIR_FS_CATALOG.'templates';
+        $paypal_smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
+        $paypal_smarty->config_dir = DIR_FS_CATALOG.'lang';
+      }
       $paypal_smarty->caching = 0;
       $paypal_smarty->assign('PAYMENT_INFO', $payapl_payment_info);
       $paypal_smarty->assign('language', $_SESSION['language']);
