@@ -556,26 +556,7 @@ class categories {
       $messageStack->add_session(ERROR_QTY_SAVE_CHANGED, 'error');
     }
 
-    //echo print_r($sql_data_array); EXIT;
     $sql_data_array = array_merge($sql_data_array, $permission_array);
-    //get the next ai-value from table products if no products_id is set
-    if (!$products_id || $products_id == '') {
-      $new_pid_query = xtc_db_query("SHOW TABLE STATUS LIKE '".TABLE_PRODUCTS."'");
-      $new_pid_query_values = xtc_db_fetch_array($new_pid_query);
-      $products_id = $new_pid_query_values['Auto_increment'];
-    }
-
-    //upload products image
-    if ($products_image_name = $this->uploadImage($products_id,$products_data)) {
-      $sql_data_array['products_image'] = xtc_db_prepare_input($products_image_name);  
-    }
-
-    //MO_PICS
-    $this->uploadMoImages($products_id,$products_data,$action);
-
-    if (isset ($products_data['products_image']) && xtc_not_null($products_data['products_image']) && ($products_data['products_image'] != 'none')) {
-      $sql_data_array['products_image'] = xtc_db_prepare_input($products_data['products_image']);
-    }
 
     //new module support
     $sql_data_array = $this->catModules->insert_product_before($sql_data_array,$products_data);
@@ -591,8 +572,20 @@ class categories {
     } elseif ($action == 'update') {
       $update_sql_data = array ('products_last_modified' => 'now()');
       $sql_data_array = xtc_array_merge($sql_data_array, $update_sql_data);
-      xtc_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', 'products_id = \''.(int)$products_id.'\'');
+      xtc_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '".(int)$products_id."'");
     }
+    
+    //upload products image
+    if ($products_image_name = $this->uploadImage($products_id,$products_data)) {
+      if (xtc_not_null($products_data['products_image']) && $products_data['products_image'] != 'none') {
+        xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
+                         SET products_image = '".xtc_db_input($products_image_name)."' 
+                       WHERE products_id = '".(int)$products_id."'");  
+      }
+    }
+
+    //MO_PICS
+    $this->uploadMoImages($products_id,$products_data,$action);
 
     //specials
     $this->saveSpecialsData($products_data);
