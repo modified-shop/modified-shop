@@ -41,7 +41,11 @@ function log_error($num, $str, $file, $line, $context=null)
  */
 function log_exception(Exception $e)
 {
-    global $error_exceptions, $sql_error, $sql_query, $LoggingManager;
+    global $error_exceptions, $sql_error, $sql_query, $LoggingManager, $config;
+    
+    if (!is_object($LoggingManager)) {
+        $LoggingManager = new LoggingManager($config);
+    }
     
     if (strpos($e->getFile(), 'templates_c') !== false
         || strpos($e->getFile(), 'cache') !== false) return;
