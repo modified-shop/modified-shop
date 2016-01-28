@@ -158,6 +158,9 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
     $error = true;
   }
   
+  $radio_buttons = 0;
+  $selection = $payment_modules->selection();
+
   ## PayPal
   if (defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')
       && defined('MODULE_PAYMENT_PAYPALPLUS_STATUS')
@@ -176,8 +179,6 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
     $selection = array_values($selection);
   }
   
-  $radio_buttons = 0;
-  $selection = $payment_modules->selection();
   for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
     
     //express checkout
