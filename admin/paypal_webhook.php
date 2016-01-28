@@ -140,31 +140,34 @@ require (DIR_WS_INCLUDES.'head.php');
               } elseif (isset($_GET['action']) && $_GET['action'] == 'new') {
               
                 $list = $paypal->available_webhooks();
-              
-                echo xtc_draw_form('config', basename($PHP_SELF), xtc_get_all_get_params(array('action')).'action=insert');
-                for ($i=0, $t=count($list); $i<$t; $i++) {
+                
+                if (is_array($list) && count($list) > 0) {
+                  echo xtc_draw_form('config', basename($PHP_SELF), xtc_get_all_get_params(array('action')).'action=insert');
+                  for ($i=0, $t=count($list); $i<$t; $i++) {
+                    ?>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo $list[$i]['name']; ?></td>
+                      <td class="dataTableConfig col-middle">
+                        <?php 
+                          echo xtc_draw_checkbox_field('config[data]['.$i.'][name]', $list[$i]['name'], 'checked="checked"'); 
+                          echo xtc_draw_pull_down_menu('config[data]['.$i.'][orders_status]', $orders_statuses, '-1', 'style="width: 300px;"');
+                        ?>
+                      </td>
+                      <td class="dataTableConfig col-right"><?php echo $list[$i]['description']; ?></td>
+                    </tr>
+                    <?php
+                  }
                   ?>
                   <tr>
-                    <td class="dataTableConfig col-left"><?php echo $list[$i]['name']; ?></td>
-                    <td class="dataTableConfig col-middle">
-                      <?php 
-                        echo xtc_draw_checkbox_field('config[data]['.$i.'][name]', $list[$i]['name'], 'checked="checked"'); 
-                        echo xtc_draw_pull_down_menu('config[data]['.$i.'][orders_status]', $orders_statuses, '-1', 'style="width: 300px;"');
-                      ?>
+                    <td class="txta-r" colspan="3" style="border:none;">
+                      <a class="button" href="<?php echo xtc_href_link(basename($PHP_SELF)); ?>"><?php echo BUTTON_CANCEL; ?></a>
+                      <input type="submit" class="button" name="submit" value="<?php echo BUTTON_SAVE; ?>">
                     </td>
-                    <td class="dataTableConfig col-right"><?php echo $list[$i]['description']; ?></td>
                   </tr>
                   <?php
+                } else {
+                  echo '<div class="info_message">'.TEXT_PAYPAL_WEBHOOK_CREDENTIAL_INFO.'</div>';
                 }
-                ?>
-                <tr>
-                  <td class="txta-r" colspan="3" style="border:none;">
-                    <a class="button" href="<?php echo xtc_href_link(basename($PHP_SELF)); ?>"><?php echo BUTTON_CANCEL; ?></a>
-                    <input type="submit" class="button" name="submit" value="<?php echo BUTTON_SAVE; ?>">
-                  </td>
-                </tr>
-                <?php
-            
               } else {
                 if (count($list) > 0) {
                   for ($i=0, $n=count($list); $i<$n; $i++) {
