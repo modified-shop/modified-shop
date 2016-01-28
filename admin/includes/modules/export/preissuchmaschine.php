@@ -28,8 +28,8 @@ define('MODULE_PREISSUCHMASCHINE_FILE_TITLE' , '<hr noshade>Dateiname:');
 define('MODULE_PREISSUCHMASCHINE_FILE_DESC' , 'Das Modul legt diese generierte Preisliste/Produktdatenliste/Exportdatei bei der Speicherart \'Am Server Speichern\' automatisch im Unterverzeichnis Ihres Shops mit dem Namen \'export/\' (Das Verzeichnis ben&ouml;tigt folgende Rechte 0777) ab. Die Datei hat dort folgende Bezeichnung:');
 define('MODULE_PREISSUCHMASCHINE_STATUS_DESC','Modulstatus');
 define('MODULE_PREISSUCHMASCHINE_STATUS_TITLE','Status');
-define('MODULE_PREISSUCHMASCHINE_EXPORT_YES','Für Preissuchmaschine.de online ablegen und auf den lokalen PC herunterladen');
-define('MODULE_PREISSUCHMASCHINE_EXPORT_NO','Für Preissuchmaschine.de online ablegen');
+define('MODULE_PREISSUCHMASCHINE_EXPORT_YES','F&uuml;r Preissuchmaschine.de online ablegen und auf den lokalen PC herunterladen');
+define('MODULE_PREISSUCHMASCHINE_EXPORT_NO','F&uuml;r Preissuchmaschine.de online ablegen');
 define('MODULE_PREISSUCHMASCHINE_EXPORT_LINK','export/');
 
 define('MODULE_PREISSUCHMASCHINE_EXPORT','Bitte diesen Export-Prozess AUF <b>KEINEN</b> FALL unterbrechen. Dieser kann vor allem bei Shops mit gr&ouml;&szlig;eren Datenbest&auml;nden einige Minuten in Anspruch nehmen.');
@@ -41,9 +41,9 @@ define('MODULE_PREISSUCHMASCHINE_psmgoogle_YES','Aktivieren');
 
 define('MODULE_PREISSUCHMASCHINE_EXPORT_TYPE','<hr noshade><b>Speicherart / Produkte aktualisieren:</b>');
 define('MODULE_PREISSUCHMASCHINE_CAMPAIGNS','<hr noshade><b>Kampagnen:</b> (automatisch)');
-define('MODULE_PREISSUCHMASCHINE_CAMPAIGNS_LINK',HTTP_CATALOG_SERVER.DIR_WS_CATALOG."admin/stats_campaigns.php?report=2&startD=1&startM=".date("m")."&startY=".date("Y")."&status=0&campaign=psm&endD=".date("d")."&endM=".date("m")."&endY=".date("Y"));
+define('MODULE_PREISSUCHMASCHINE_CAMPAIGNS_LINK',HTTP_CATALOG_SERVER.DIR_WS_CATALOG."admin/stats_campaigns.php?report=2&amp;startD=1&amp;startM=".date("m")."&amp;startY=".date("Y")."&amp;status=0&amp;campaign=psm&amp;endD=".date("d")."&amp;endM=".date("m")."&amp;endY=".date("Y"));
 define('MODULE_PREISSUCHMASCHINE_CAMPAIGNS_DESC','Durch unsere automatische Kampagneneinrichtung k&ouml;nnen Sie jederzeit die von der <a href="campaigns.php"><i>Kampagne</i></a> Preissuchmaschine.de in Ihren Onlineshop weitergeleiteten Nutzer auswerten. Sie sollten &uuml;ber folgenden Link den durch uns generierten Warenkorbumsatz jederzeit nachvollziehen k&ouml;nnen:<br><br><a style="text-decoration:underline" href=\''.MODULE_PREISSUCHMASCHINE_CAMPAIGNS_LINK.'\'><i><b>Kampagnen-Report</b></i></a><br><br>');
-define('MODULE_PREISSUCHMASCHINE_EXPORT_LINK_SEND','Den vorangegangenen Link sollten Sie nun unter dem Punkt Preisliste/Produktdatenliste auf der Stammdatenerfassung der PreisSuchmaschine.de eintragen. Die Stammdatenerfassung kann man hier anfordern: <a style="text-decoration:underline" href=\'mailto:mitmachen@metashopper.de?SUBJECT=Anfrage - Interesse an einer eventuellen Onlinekooperation&BODY=' .  str_replace("<-SHOP->",HTTP_CATALOG_SERVER . DIR_WS_CATALOG,str_replace("<-LINK->",HTTP_CATALOG_SERVER . DIR_WS_CATALOG . MODULE_PREISSUCHMASCHINE_EXPORT_LINK . MODULE_PREISSUCHMASCHINE_FILE,MODULE_PREISSUCHMASCHINE_EMAIL)) .  '\'><br><br><i><b>zur Anfrage</b> </i></a>(sofern noch nicht erfolgt)');
+define('MODULE_PREISSUCHMASCHINE_EXPORT_LINK_SEND','Den vorangegangenen Link sollten Sie nun unter dem Punkt Preisliste/Produktdatenliste auf der Stammdatenerfassung der PreisSuchmaschine.de eintragen. Die Stammdatenerfassung kann man hier anfordern: <a style="text-decoration:underline" href=\'mailto:mitmachen@metashopper.de?SUBJECT=Anfrage - Interesse an einer eventuellen Onlinekooperation&amp;BODY=' .  str_replace("<-SHOP->",HTTP_CATALOG_SERVER . DIR_WS_CATALOG,str_replace("<-LINK->",HTTP_CATALOG_SERVER . DIR_WS_CATALOG . MODULE_PREISSUCHMASCHINE_EXPORT_LINK . MODULE_PREISSUCHMASCHINE_FILE,MODULE_PREISSUCHMASCHINE_EMAIL)) .  '\'><br><br><i><b>zur Anfrage</b> </i></a>(sofern noch nicht erfolgt)');
 
 
 $psmgoogle_input_query = xtc_db_query("select configuration_value from  " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PREISSUCHMASCHINE_PSMGOOGLEV' LIMIT 1");
