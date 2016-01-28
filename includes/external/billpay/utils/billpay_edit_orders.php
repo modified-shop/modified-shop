@@ -22,7 +22,7 @@ $paymentMethod = $order->info['payment_method'];
 if (in_array($paymentMethod, $billpayMethods)) {
     // $errorMessage = 'Error: File /admin/orders_edit.php requires manual update. Please check the installation documentation. If you have a question, please contact Billpay\'s support.';
     $errorMessage = 'Die BillPay Plugin Integration in Ihren Shop ist veraltet und muss angepasst werden. Bitte pr&uuml;fen Sie in der neuen Installationsanleitung, welche &Auml;nderungen Sie an'
-                    .' /admin/orders_edit.php '
+                    .' /'.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'orders_edit.php '
                     .'vornehmen m&uuml;ssen. Bei Fragen steht Ihnen unser <a href="mailto:support@billpay.de">H&auml;ndler Support</a> zur Verf&uuml;gung.';
     billpayBase::DisplayErrorAndExit($errorMessage);
 }
