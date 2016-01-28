@@ -85,8 +85,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         
         $this->zoneId = $this->config->getTaxZoneId();
         
-        if (file_exists(DIR_FS_CATALOG . "admin/includes/version.php")) {
-            $versionContent = file_get_contents(DIR_FS_CATALOG . "admin/includes/version.php");
+        if (file_exists(DIR_FS_CATALOG . (defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/') . "includes/version.php")) {
+            $versionContent = file_get_contents(DIR_FS_CATALOG . (defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/') . "includes/version.php");
             if (preg_match_all("/define\(\s*'([^']+)'\,\s*'([^']+)'\);/si", $versionContent, $resultVersion)) {
                 $resultVersion         = end($resultVersion);
                 $this->modifiedVersion = $this->getVersionNumber($resultVersion[0]);
@@ -229,8 +229,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
             'modifed eCommerce Version' => '-',
         );
         
-        if (file_exists('admin/includes/version.php')) {
-            $versionInfo = file_get_contents('admin/includes/version.php');
+        if (file_exists((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/version.php')) {
+            $versionInfo = file_get_contents((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/version.php');
             
             if (preg_match('/define\(\'PROJECT_VERSION\',(.+)\)/', $versionInfo, $match)) {
                 $return['modifed eCommerce Version'] = $match[1];
@@ -4600,8 +4600,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         require_once(dirname(__FILE__) . '/../../../inc/xtc_get_products_stock.inc.php');
         require_once(dirname(__FILE__) . '/../../../includes/classes/xtcPrice.php');
             
-        if (file_exists(dirname(__FILE__) . '/../../../admin/includes/version.php')) {
-            require_once(dirname(__FILE__) . '/../../../admin/includes/version.php');
+        if (file_exists(dirname(__FILE__) . '/../../../'.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/version.php')) {
+            require_once(dirname(__FILE__) . '/../../../'.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/version.php');
         }
     
         if (!defined('PROJECT_MAJOR_VERSION')) {

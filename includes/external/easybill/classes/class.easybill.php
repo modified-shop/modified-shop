@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   // Archivierung
-  define('EASYBILL_INVOICE_ARCHIV', DIR_FS_CATALOG.'admin/archives/invoice/');
+  define('EASYBILL_INVOICE_ARCHIV', DIR_FS_CATALOG.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'archives/invoice/');
 
   class easybill extends order {
 

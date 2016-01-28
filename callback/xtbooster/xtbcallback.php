@@ -64,7 +64,7 @@ if(isset($_GET['reverse']))
 		require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 		xtc_write_user_info((int) $_SESSION['customer_id']);
 
-		header("Location: ./admin/xtbooster.php?xtb_module=list&filter=1");
+		header("Location: ./".(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/')."xtbooster.php?xtb_module=list&filter=1");
 		exit;
 	}
 }

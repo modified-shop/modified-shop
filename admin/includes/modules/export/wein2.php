@@ -193,7 +193,7 @@
       fclose($fp);
 
       //ping wein.cc
-      $exporturl="http://".$_SERVER[HTTP_HOST].array_shift(explode('/admin/',$_SERVER[SCRIPT_NAME],2))."/export/".$file."\n";
+      $exporturl="http://".$_SERVER[HTTP_HOST].'/'.array_shift(explode((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/'),$_SERVER[SCRIPT_NAME],2))."/export/".$file."\n";
       file("http://api.wein.cc/updateping.php?exporturl=".urlencode($exporturl)."&version=".urlencode(MODULE_WEIN2_TEXT_TITLE));
 
       switch ($_POST['export']) {
