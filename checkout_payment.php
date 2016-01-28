@@ -158,13 +158,16 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
     $error = true;
   }
   
-  $radio_buttons = 0;
+  //get payment modules
   $selection = $payment_modules->selection();
 
   ## PayPal
   if (defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')
       && defined('MODULE_PAYMENT_PAYPALPLUS_STATUS')
       &&  MODULE_PAYMENT_PAYPALPLUS_STATUS == 'True'
+      && isset($GLOBALS['paypalplus'])
+      && is_object($GLOBALS['paypalplus'])
+      && $GLOBALS['paypalplus']->enabled === true
       )
   {
     for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
@@ -179,6 +182,7 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
     $selection = array_values($selection);
   }
   
+  $radio_buttons = 0;
   for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
     
     //express checkout
@@ -191,7 +195,7 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
       }
     }
     
-    //ot_payment Anzeige Zahlungsrabatt bei Zahlungsauswahl
+    //ot_payment 
     if (isset($GLOBALS['ot_payment']) && !isset($selection[$i]['module_cost'])) {
       $selection[$i]['module_cost'] = $GLOBALS['ot_payment']->get_module_cost($selection[$i]);
     }
