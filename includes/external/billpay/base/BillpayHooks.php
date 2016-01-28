@@ -86,30 +86,30 @@ class BillpayHooks
 
     function prepareXtcmod()
     {
-        $this->addHook('admin/print_order.php', 'invoiceRender',
+        $this->addHook((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'print_order.php', 'invoiceRender',
             '$payment_method=constant(strtoupper(\'MODULE_PAYMENT_\'.$order->info[\'payment_method\'].\'_TEXT_TITLE\'));',
                 'require_once(DIR_FS_CATALOG . DIR_WS_INCLUDES . \'/external/billpay/utils/billpay_display_bankdata.php\');'
                .'$payment_method .= display_billpay_bankdata();',
             '$smarty->assign(\'PAYMENT_METHOD\',$payment_method);'
         );
-        $this->addHook('admin/orders.php', 'statusChange',
+        $this->addHook((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'orders.php', 'statusChange',
             'if ($check_status[\'orders_status\'] != $status || $comments != \'\') {',
                 'require_once(DIR_FS_CATALOG . \'includes/external/billpay/utils/billpay_status_requests.php\');',
             'xtc_db_query("-- /admin/orders.php'
         );
-        $this->addHook('admin/orders.php', 'orderDelete',
+        $this->addHook((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'orders.php', 'orderDelete',
             '\'deleteconfirm\' :',
                 'require_once(DIR_FS_CATALOG . \'includes/external/billpay/utils/billpay_order_delete.php\');',
             'xtc_remove_order'
         );
-        $this->addHook('admin/orders_edit.php', 'orderEditValidation',
+        $this->addHook((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'orders_edit.php', 'orderEditValidation',
             'Funktionen und Klassen Ende',
                 'require_once(DIR_FS_CATALOG . \'includes/external/billpay/base/BillpayOrderEdit.php\');'
                .'$billpayOrderEdit = new BillpayOrderEdit();'
                .'$billpayOrderEdit->onBeforeUpdate();',
             '$action = (isset($_GET[\'action\']) ? $_GET[\'action\'] : \'\');'
         );
-        $this->addHook('admin/orders_edit.php', 'orderEditSync',
+        $this->addHook((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'orders_edit.php', 'orderEditSync',
             'des Zwischenspeichers Ende',
                 '$billpayOrderEdit->onAfterUpdate();',
             'xtc_redirect(xtc_href_link(FILENAME_ORDERS, \'action=edit&oID=\'.(int)$_POST[\'oID\']));'
