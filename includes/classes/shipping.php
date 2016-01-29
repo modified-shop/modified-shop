@@ -42,12 +42,13 @@
         $include_modules = array();
 
         if (xtc_not_null($module) 
-            && in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules) 
+            && in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.php', $this->modules) 
             ) 
         {
+          $class = substr($module['id'], 0, strpos($module['id'], '_'));
           $include_modules[] = array(
-            'class' => substr($module['id'], 0, strpos($module['id'], '_')), 
-            'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.php'
+            'class' => $class, 
+            'file' => $class.'.php'
           );
         } else {
           reset($this->modules);
