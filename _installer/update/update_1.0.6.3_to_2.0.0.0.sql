@@ -727,4 +727,10 @@ ALTER TABLE orders_products ADD products_price_origin DECIMAL(15,4) NOT NULL AFT
 ALTER TABLE orders_products_attributes ADD attributes_model VARCHAR(64) AFTER products_options_values;
 ALTER TABLE orders_products_attributes ADD attributes_ean VARCHAR(128) AFTER attributes_model;
 
+#Tomcraft - 2016-01-29 - Add missing province Bournemouth for updated shops due to an error in previous update sql file, see r9302
+DELETE FROM zones WHERE zone_code = 'BPL';
+DELETE FROM zones WHERE zone_code = 'BMH';
+INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BPL','Blackpool');
+INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BMH','Bournemouth');
+
 # Keep an empty line at the end of this file for the db_updater to work properly
