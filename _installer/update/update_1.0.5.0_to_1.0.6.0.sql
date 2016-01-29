@@ -15,9 +15,9 @@ UPDATE configuration SET configuration_value = '<span style="color:red">***</spa
 
 #DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 # 1 - Default, 2 - USA, 3 - Spain, 4 - Singapore, 5 - Germany , 6 - Ireland/Taiwan, 7 - China, 8 - UK/GB
-INSERT INTO address_format VALUES (6, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$country / $city');
-INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets, $city$cr$postcode $state$cr$country','$country / $city');
-INSERT INTO address_format VALUES (8, '$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country','$postcode / $country');
+INSERT INTO address_format (address_format_id, address_format, address_summary) VALUES (6, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$country / $city');
+INSERT INTO address_format (address_format_id, address_format, address_summary) VALUES (7, '$firstname $lastname$cr$streets, $city$cr$postcode $state$cr$country','$country / $city');
+INSERT INTO address_format (address_format_id, address_format, address_summary) VALUES (8, '$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country','$postcode / $country');
 
 UPDATE countries SET address_format_id = 6 WHERE countries_id = 206;
 UPDATE countries SET address_format_id = 6 WHERE countries_id = 103;
@@ -439,7 +439,7 @@ UPDATE configuration SET configuration_group_id = '1000', sort_order = '20', las
 UPDATE configuration SET configuration_group_id = '1000', sort_order = '21', last_modified = NOW() WHERE configuration_key = 'USE_ADMIN_LANG_TABS';
 
 #Web28 - 2012-09-28 - add image_manipulator_GD2_advanced.php (supports transparent png)
-UPDATE configuration SET set_function = 'xtc_cfg_select_option(array(\'image_manipulator_GD2.php\', \'image_manipulator_GD2_advanced.php\',\'image_manipulator_GD1.php\'),' WHERE configuration_key = 'IMAGE_MANIPULATOR';
+UPDATE configuration SET set_function = 'xtc_cfg_select_option(array(\'image_manipulator_GD2.php\', \'image_manipulator_GD2_advanced.php\', \'image_manipulator_GD1.php\'),' WHERE configuration_key = 'IMAGE_MANIPULATOR';
 
 # vr - 2012-10-26 - add index idx_customers_id
 ALTER TABLE orders
