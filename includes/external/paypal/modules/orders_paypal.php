@@ -18,7 +18,6 @@ if (isset($order) && is_object($order)) {
       || $order->info['payment_method'] == 'paypalpluslink'
       ) 
   {
-    echo '<script src="'.DIR_WS_EXTERNAL.'paypal/javascript/jquery.js" type="text/javascript"></script>';
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
     $paypal = new PayPalInfo($order->info['payment_method']);
     
