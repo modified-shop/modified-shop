@@ -24,9 +24,9 @@ require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'changedatain.inc.php');
 
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
-
 
 // if the customer is not logged on, redirect them to the login page
 if (!isset ($_SESSION['customer_id'])) {
@@ -36,7 +36,6 @@ if (!isset ($_SESSION['customer_id'])) {
 if ($_SESSION['customers_status']['customers_status_show_price'] != '1') {
 	xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', ''));
 }
-
 
 if ((xtc_not_null(MODULE_PAYMENT_INSTALLED)) && (!isset ($_SESSION['payment']))) {
 	xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -48,7 +47,7 @@ if (isset ($_SESSION['cart']->cartID) && isset ($_SESSION['cartID'])) {
 		xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 	}
 }
-require (DIR_WS_INCLUDES . 'header.php');
+
 // load selected payment module
 require (DIR_WS_CLASSES.'payment.php');
 
@@ -62,7 +61,6 @@ require (DIR_WS_CLASSES . 'order_total.php');
 require (DIR_WS_CLASSES.'order.php');
 $order = new order();
 
-
 $order_total_modules = new order_total();
 $order_total_modules->process();
 
@@ -72,19 +70,14 @@ if ($iframe_url =='') {
 	xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
 
+$breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+
+require (DIR_WS_INCLUDES . 'header.php');
+
 $smarty->assign('iframe_url', $iframe_url);
-
-/*
-echo '<pre>';
-print_r($_SESSION);
-echo '</pre>';
-*/
-$smarty->assign('language', $_SESSION['language']);
-$smarty->caching = 0;
-
 $main_content = '<iframe src="'.$iframe_url.'" width="100%" height="750" name="_top" frameborder="0"></iframe>';
 
-
+$smarty->caching = 0;
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
