@@ -47,7 +47,7 @@
         {
           $include_modules[] = array(
             'class' => substr($module['id'], 0, strpos($module['id'], '_')), 
-            'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.php')
+            'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.php'
           );
         } else {
           reset($this->modules);
