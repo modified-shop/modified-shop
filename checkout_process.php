@@ -430,9 +430,6 @@ if (!$tmp) {
   $order_totals = $order_total_modules->apply_credit();
   include ('send_order.php');
   
-  ### easyBill
-  include(DIR_FS_EXTERNAL.'easybill/modules/module.easybill.php');
-
   // load the after_process function from the payment modules
   $payment_modules->after_process();
 
@@ -449,19 +446,14 @@ if (!$tmp) {
   unset ($_SESSION['cc']);
   
   $last_order = $insert_id;
+  
   //GV Code Start
   if (isset($_SESSION['credit_covers'])) {
     unset ($_SESSION['credit_covers']);
   }
   $order_total_modules->clear_posts();
-  // GV Code End
 
-  ### xs:booster
-  if(isset($_SESSION['xtb0'])) {
-    define('XTB_CHECKOUT_PROCESS', __LINE__);
-    require_once (DIR_FS_CATALOG.'callback/xtbooster/xtbcallback.php');
-  }
-  ### xs:booster
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_end/','php') as $file) require ($file);
 
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
 }
