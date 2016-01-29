@@ -30,19 +30,6 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
   $order = new order($insert_id);
 
-  ## PayPal
-  if (isset($_SESSION['paypal_express_new_customer']) && $_SESSION['paypal_express_new_customer'] == 'true') {
-    require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
-    
-    $vlcode = xtc_random_charcode(32);
-    $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$check_customer['customers_id'].'&key='.$vlcode, 'SSL');
-
-    $sql_data_array = array('password_request_key' => $vlcode);
-    xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-    
-    $smarty->assign('NEW_PASSWORD', $link);
-  }
-
   if (isset($send_by_admin)) {
     $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
   }
@@ -100,10 +87,6 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->assign('PHONE',$order->customer['telephone']);
   $smarty->assign('vatID', $order->customer['vat_id']);
 
-  if(stripos($order->info['payment_method'], 'billpay') !== false) {
-    require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_mail.php'); #BILLPAY payment module
-  }
-
   // PAYMENT MODUL TEXTS
   $payment_method_array = array('eustandardtransfer','moneyorder');
   if (in_array($order->info['payment_method'],$payment_method_array)) {
@@ -118,11 +101,6 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", MODULE_PAYMENT_COD_TEXT_INFO));
   }
   
-  // banktransfer
-  if ($order->info['payment_method'] == 'banktransfer') {
-    include_once (DIR_WS_INCLUDES.'banktransfer_send_order.php');
-  }
-
   //allow duty-note in email
   if(!is_object($main)) {
     require_once(DIR_FS_CATALOG.'includes/classes/main.php');
@@ -132,6 +110,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
   //absolute image path
   $smarty->assign('img_path', HTTP_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/'. (defined('SHOW_IMAGES_IN_EMAIL_DIR')? SHOW_IMAGES_IN_EMAIL_DIR : 'thumbnail').'_images/');
+  
   // dont allow cache
   $smarty->caching = 0;
 
@@ -156,16 +135,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   //email attachments
   $email_attachments = defined('EMAIL_BILLING_ATTACHMENTS') ? EMAIL_BILLING_ATTACHMENTS : '';
 
-  ## PayOne
-  if (strpos($order->info['payment_method'], 'payone') !== false) {
-    require_once(DIR_FS_EXTERNAL.'payone/modules/send_order.php');
-  }
-
-  ## Janolaw
-  require_once(DIR_FS_EXTERNAL.'janolaw/send_order.php');
-
-  ## PayPal
-  require_once(DIR_FS_EXTERNAL.'paypal/modules/send_order.php');
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/send_order/','php') as $file) require ($file);
 
   $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.html');
   $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.txt');

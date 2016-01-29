@@ -10,17 +10,22 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+$paypal_payment_method = array(
+  'paypalplus',
+  'paypalclassic',
+  'paypalcart',
+  'paypallink',
+  'paypalpluslink',
+);
 
-// include needed classes
-require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
+if (is_object($order) && in_array($order->info['payment_method'], $paypal_payment_method)) {
 
-if (is_object($order) && strpos($order->info['payment_method'], 'paypal') !== false) {
+  // include needed classes
+  require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
+
   $paypal = new PayPalPayment($order->info['payment_method']);
   
-  if ($order->info['payment_method'] == 'paypallink'
-      || $order->info['payment_method'] == 'paypalpluslink'
-      ) 
-  {
+  if (strpos($order->info['payment_method'], 'link') !== false) {
     $paypal_payment_info = array(
       array ('title' => $paypal->title.': ', 
              'class' => $paypal->code,
@@ -65,5 +70,21 @@ if (is_object($order) && strpos($order->info['payment_method'], 'paypal') !== fa
     }
   }
   
+}
+
+if (isset($_SESSION['paypal_express_new_customer']) 
+    && $_SESSION['paypal_express_new_customer'] == 'true'
+    && !isset($send_by_admin)
+    ) 
+{
+  require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
+  
+  $vlcode = xtc_random_charcode(32);
+  $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$check_customer['customers_id'].'&key='.$vlcode, 'SSL');
+
+  $sql_data_array = array('password_request_key' => $vlcode);
+  xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . $check_customer['customers_id'] . "'");
+  
+  $smarty->assign('NEW_PASSWORD', $link);
 }
 ?>
