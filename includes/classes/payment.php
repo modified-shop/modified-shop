@@ -96,7 +96,7 @@
               || $order->content_type == 'mixed'
               )
           {
-            $unallowed_modules_string .= (($unallowed_modules_string != '') ? ',' : '').DOWNLOAD_UNALLOWED_PAYMENT
+            $unallowed_modules_string .= (($unallowed_modules_string != '') ? ',' : '').DOWNLOAD_UNALLOWED_PAYMENT;
           }
         }
 
