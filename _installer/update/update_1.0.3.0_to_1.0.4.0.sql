@@ -9,7 +9,7 @@ INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BDF','B
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','WBK','Berkshire');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BBD','Blackburn with Darwen');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BPL','Blackpool');
-INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BPL','Bournemouth');
+INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BMH','Bournemouth');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BNH','Brighton and Hove');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BST','Bristol');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BKM','Buckinghamshire');
