@@ -514,11 +514,6 @@
       // EOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
       $products = $_SESSION['cart']->get_products(); //set in includes/classes/shopping_cart-php function get_products
       for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-        $products_price=$xtPrice->xtcGetPrice($products[$i]['id'],
-                                        $format=false,
-                                        $products[$i]['quantity'],
-                                        $products[$i]['tax_class_id'],
-                                        '')+$xtPrice->xtcFormat($_SESSION['cart']->attributes_price($products[$i]['id']),false);
 
         //using short description  if order description is not defined or empty
         $products[$i]['short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $products[$i]['short_description'] : '';
@@ -533,10 +528,10 @@
                                         'tax_class_id'=> $products[$i]['tax_class_id'],
                                         'tax' => xtc_get_tax_rate($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']),
                                         'tax_description' => xtc_get_tax_description($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']),
-                                        'price' =>  $products_price,
-                                        'price_formated' => $xtPrice->xtcFormat($products_price,true),
-                                        'final_price' => $products_price*$products[$i]['quantity'],
-                                        'final_price_formated' => $xtPrice->xtcFormat($products_price*$products[$i]['quantity'],true),
+                                        'price' =>  $products[$i]['price'],
+                                        'price_formated' => $xtPrice->xtcFormat($products[$i]['price'],true),
+                                        'final_price' => $products[$i]['final_price'],
+                                        'final_price_formated' => $xtPrice->xtcFormat($products[$i]['final_price'],true),
                                         'vpe' => $products[$i]['vpe'],
                                         'shipping_time'=>$products[$i]['shipping_time'],
                                         'weight' => $products[$i]['weight'],
