@@ -529,6 +529,7 @@ define ('TEXT_INFO_MODULE_REMOVE', 'Do you want to uninstall the module?<br /><b
 define ('TEXT_INFO_MODULE_BACKUP', 'Do you want to backup the module settings?');
 define ('MODULE_BACKUP_CONFIRM', 'The module settings were backuped successfully!');
 define ('MODULE_RESTORE_CONFIRM', 'The module settings were restored successfully!');
+define ('MODULE_UPDATE_CONFIRM', 'The module settings were updated successfully!');
 
 /* magnalister v1.0.0 */
 define('BOX_HEADING_MAGNALISTER', 'magnalister');
