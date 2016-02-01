@@ -143,11 +143,6 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
   $module_smarty->assign('module_gift', $credit_selection);  
 }
 
-## PayPal
-if (defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')) {
-  $hide_payment_ppp = explode(';', MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT);
-}
-
 $total = $xtPrice->xtcFormat($order->info['total'], false);
 if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_covers']) && $_SESSION['credit_covers'] == 1 && $total > 0)) {
   
@@ -170,6 +165,7 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
       && $GLOBALS['paypalplus']->enabled === true
       )
   {
+    $hide_payment_ppp = explode(';', MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT);
     for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
       if (in_array($selection[$i]['id'], $hide_payment_ppp)) {
         if (isset($_SESSION['payment']) && $selection[$i]['id'] == $_SESSION['payment']) {
