@@ -98,10 +98,7 @@ class PayPalPayment extends PayPalPaymentBase {
     
     // set redirect
     $redirectUrls = new RedirectUrls(); 
-   
-    // set redirect
-    $redirectUrls = new RedirectUrls(); 
-
+    
     // set address
     $shipping_address = new ShippingAddress();      
 
@@ -157,6 +154,7 @@ class PayPalPayment extends PayPalPaymentBase {
       
       $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
                        ->setLine1($this->encode_utf8($order->delivery['street_address']))
+                       ->setLine2($this->encode_utf8($order->delivery['suburb']))
                        ->setCity($this->encode_utf8($order->delivery['city']))
                        ->setCountryCode($this->encode_utf8((($order_exists === false) ? $order->delivery['country']['iso_code_2'] : $order->delivery['country_iso_2'])))
                        ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
@@ -333,6 +331,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
       $payment_address = new Address();
       $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
+                      ->setLine2($this->encode_utf8($order->billing['suburb']))
                       ->setCity($this->encode_utf8($order->billing['city']))
                       ->setState($this->encode_utf8($order->billing['state']))
                       ->setPostalCode($this->encode_utf8($order->billing['postcode']))
@@ -360,6 +359,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
       $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
                        ->setLine1($this->encode_utf8($order->delivery['street_address']))
+                       ->setLine1($this->encode_utf8($order->delivery['suburb']))
                        ->setCity($this->encode_utf8($order->delivery['city']))
                        ->setCountryCode($this->encode_utf8($order->delivery['country']['iso_code_2']))
                        ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
@@ -440,8 +440,7 @@ class PayPalPayment extends PayPalPaymentBase {
         
         // payer
         $_SESSION['paypal']['PayerID'] = $_GET['PayerID'];
-        $_SESSION['paypal_express_checkout'] = true;
-        $_SESSION['paypal_express_payment_modules'] = 'paypalcart.php';
+        $_SESSION['paypal']['payment_modules'] = 'paypalcart.php';
       } else {
         // redirect
         xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
@@ -473,6 +472,26 @@ class PayPalPayment extends PayPalPaymentBase {
 
         // redirect
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));      
+      }
+
+      $patchRequest = new PatchRequest();
+        
+      $patch_amount = new Patch();
+      $patch_amount->setOp('replace')
+                   ->setPath('/transactions/0/invoice_number')
+                   ->setValue($insert_id);
+
+      $patchRequest->setPatches(array($patch_amount));     
+        
+      try {
+        // update payment
+        $payment->update($patchRequest, $apiContext);      
+
+        // Get the payment Object by passing paymentId
+        $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);       
+
+      } catch (Exception $ex) {
+        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
       }
       
       // payer
@@ -610,6 +629,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
     $payment_address = new Address();
     $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
+                    ->setLine2($this->encode_utf8($order->billing['suburb']))
                     ->setCity($this->encode_utf8($order->billing['city']))
                     ->setState($this->encode_utf8($order->billing['state']))
                     ->setPostalCode($this->encode_utf8($order->billing['postcode']))
@@ -637,6 +657,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
     $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
                      ->setLine1($this->encode_utf8($order->delivery['street_address']))
+                     ->setLine2($this->encode_utf8($order->delivery['suburb']))
                      ->setCity($this->encode_utf8($order->delivery['city']))
                      ->setCountryCode($this->encode_utf8(((isset($order->delivery['country_iso_2'])) ? $order->delivery['country_iso_2'] : $order->delivery['country']['iso_code_2'])))
                      ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
@@ -656,7 +677,24 @@ class PayPalPayment extends PayPalPaymentBase {
     } catch (Exception $ex) {
       $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
     }
+        
+    $patchRequest = new PatchRequest();
+        
+    $patch_amount = new Patch();
+    $patch_amount->setOp('replace')
+                 ->setPath('/transactions/0/invoice_number')
+                 ->setValue($insert_id);
 
+    $patchRequest->setPatches(array($patch_amount));     
+        
+    try {
+      // update payment
+      $payment->update($patchRequest, $apiContext);      
+
+    } catch (Exception $ex) {
+      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+    }
+    
     $patchRequest = new PatchRequest();
     
     // set details

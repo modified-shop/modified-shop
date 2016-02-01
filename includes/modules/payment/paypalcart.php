@@ -352,7 +352,6 @@ class paypalcart extends PayPalPayment {
   function after_process() {
     $this->complete_cart();
 		unset($_SESSION['paypal']);
-		unset($_SESSION['paypal_express_checkout']);
   }
 
 

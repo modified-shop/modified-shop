@@ -50,7 +50,6 @@ class paypalclassic extends PayPalPayment {
 	function after_process() {
 		$this->validate_payment_paypal();
 		unset($_SESSION['paypal']);
-		unset($_SESSION['paypal_express_checkout']);
 	}
 
 

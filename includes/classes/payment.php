@@ -41,11 +41,12 @@
       if (defined('MODULE_PAYMENT_INSTALLED') && xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
 
         ## Paypal
-        if(isset($_SESSION['paypal_express_checkout']) 
-           && $_SESSION['paypal_express_checkout'] === true
+        if (isset($_SESSION['paypal'])
+            && isset($_SESSION['paypal']['payment_modules'])
+            && $_SESSION['paypal']['payment_modules'] != ''
            )
         {
-          $modules = explode(';', $_SESSION['paypal_express_payment_modules']);
+          $modules = explode(';', $_SESSION['paypal']['payment_modules']);
         } else {
           $modules = explode(';', MODULE_PAYMENT_INSTALLED);
           $key = array_search('paypalcart.php', $modules);
