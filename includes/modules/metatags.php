@@ -106,7 +106,7 @@
 //  noindex, nofollow bei "unwichtigen" Seiten
 // ---------------------------------------------------------------------------------------
   $meta_robots = META_ROBOTS;
-  if($noIndexUnimportant && !in_array(basename($PHP_SELF),$pagesToShow)) {
+  if ($noIndexUnimportant && !in_array(basename($PHP_SELF),$pagesToShow)) {
     $meta_robots = 'noindex, nofollow, noodp';
   }
 // ---------------------------------------------------------------------------------------
@@ -117,7 +117,7 @@
 // ---------------------------------------------------------------------------------------
 
   // Wenn wir auf der Startseite sind, Metas aus der index-Seite holen
-  if(basename($PHP_SELF)==FILENAME_DEFAULT &&
+  if (basename($PHP_SELF)==FILENAME_DEFAULT &&
     empty($_GET['cat']) &&
     empty($_GET['cPath']) &&
     empty($_GET['manufacturers_id'])
@@ -153,8 +153,8 @@
 //   Seitennummerierung im Title (Kategorien, Sonderangebote, Neue Artikel etc. ) / Cannonical Tag Page Parameter
 // ---------------------------------------------------------------------------------------
   $Page = $page_param = '';
-  if(isset($_GET['page']) && $_GET['page'] < 0) $_GET['page'] = 1;
-  if(isset($_GET['page']) && $_GET['page'] > 1 && $addPagination) {
+  if (isset($_GET['page']) && $_GET['page'] < 0) $_GET['page'] = 1;
+  if (isset($_GET['page']) && $_GET['page'] > 1 && $addPagination) {
     // PREVNEXT_TITLE_PAGE_NO ist "Seite %d" aus der deutschen bzw. "page %d" aus der englischen Sprachdatei ...
     $Page = trim(str_replace('%d','',PREVNEXT_TITLE_PAGE_NO)).' '.(int)$_GET['page'];
     //Cannonical Tag Page Parameter
@@ -189,7 +189,7 @@
     $Text = func_get_args();
     $Words = array();
     foreach($Text as $Word) {
-      if((!empty($Word))&&(is_string($Word))) {
+      if ((!empty($Word))&&(is_string($Word))) {
         $Words = array_merge($Words,explode(' ',$Word));
       }
     }
@@ -218,12 +218,12 @@
   function filterKeyWordArray($KeyWord) {
     global $metaMinLength, $metaMaxLength, $metaGoWords;
     $GoWords = WordArray($metaGoWords);
-    if(!in_array($KeyWord,$GoWords)) {
+    if (!in_array($KeyWord,$GoWords)) {
       //$Length = strlen($KeyWord);
       $Length = strlen(preg_replace("/(&[^;]*;)/",'#',$KeyWord)); // <-- Mindest-Länge auch bei Umlauten berücksichtigen
-      if($Length < $metaMinLength) { // Mindest-Länge
+      if ($Length < $metaMinLength) { // Mindest-Länge
         return false;
-      } elseif($Length > $metaMaxLength) { // Maximal-Länge
+      } elseif ($Length > $metaMaxLength) { // Maximal-Länge
         return false;
       }
     }
@@ -251,8 +251,8 @@
     $Text = metaNoEntities($Text);
     $Text = str_replace(array('&nbsp;','\t','\r','\n','\b'),' ',$Text);
     $Text = trim(preg_replace("/\s\s+/",' ',$Text));
-    if($Length > 0) {
-      if(strlen($Text) > $Length) {
+    if ($Length > 0) {
+      if (strlen($Text) > $Length) {
         $Length -= strlen($Abk);
         $Text = preg_replace('/\s+?(\S+)?$/','',substr($Text,0,$Length+1));
         $Text = substr($Text,0,$Length).$Abk;
@@ -274,7 +274,7 @@
    //BOC - web28 - 2011-03-14 - add metaMaxKeywords
     global $metaMaxKeywords;
     $KeyWords = cleanKeyWords($Text);
-    if(count($KeyWords)  > $metaMaxKeywords) {
+    if (count($KeyWords)  > $metaMaxKeywords) {
       $KeyWords = array_slice($KeyWords, 0 ,$metaMaxKeywords);
     }
     //EOC - web28 - 2011-03-14 - add metaMaxKeywords
@@ -290,16 +290,16 @@ switch(basename($PHP_SELF)) {
 // ---------------------------------------------------------------------------------------
   case FILENAME_PRODUCT_INFO :
 
-    if($product->isProduct() === true) {
+    if ($product->isProduct() === true) {
       // KeyWords ...
-      if(!empty($product->data['products_meta_keywords'])) {
+      if (!empty($product->data['products_meta_keywords'])) {
         $meta_keyw = $product->data['products_meta_keywords'];
       } else {
         $meta_keyw = metaKeyWords($product->data['products_name'].' '.$product->data['products_description']);
       }
 
       // Description ...
-      if(!empty($product->data['products_meta_description'])) {
+      if (!empty($product->data['products_meta_description'])) {
         $meta_descr = $product->data['products_meta_description'];
         $metaDesLength = false;
       } else {
@@ -307,7 +307,7 @@ switch(basename($PHP_SELF)) {
       }
 
       // Title ...
-      if(!empty($product->data['products_meta_title'])) {
+      if (!empty($product->data['products_meta_title'])) {
         $meta_title = $product->data['products_meta_title'].(($addProdShopTitle)?' - '.ML_TITLE:'');
       } else {
         $meta_title = metaTitle($product->data['products_name'],isset($product->data['manufacturers_name'])?$product->data['manufacturers_name']:'',$Page,($addProdShopTitle)?ML_TITLE:'');
@@ -327,7 +327,7 @@ switch(basename($PHP_SELF)) {
 
     $startpage = true;
     // Sind wir in einer Kategorie?
-    if(!empty($current_category_id)) {
+    if (!empty($current_category_id)) {
       $categories_meta_query = xtDBquery("SELECT categories_meta_keywords,
                                                  categories_meta_description,
                                                  categories_meta_title,
@@ -343,21 +343,17 @@ switch(basename($PHP_SELF)) {
     $manu_id = $manu_name = false;
 
     // Nachsehen, ob ein Hersteller gewählt ist
-    if(!empty($_GET['manu'])) {
-      $manu_id = $_GET['manu'];
+    if (!empty($_GET['manufacturers_id'])) {
+      $manu_id = (int)$_GET['manufacturers_id'];
       $startpage = false;
     }
-    if(!empty($_GET['manufacturers_id'])) {
-      $manu_id = $_GET['manufacturers_id'];
-      $startpage = false;
-    }
-    if(!empty($_GET['filter_id']) && !$manu_id) {
-      $manu_id = $_GET['filter_id'];
+    if (!empty($_GET['filter_id']) && $manu_id === false) {
+      $manu_id = (int)$_GET['filter_id'];
       $startpage = false;
     }
 
     // ggf. Herstellernamen herausfinden ...
-    if($manu_id) {
+    if ($manu_id !== false) {
       $manu_name_query = xtDBquery("SELECT m.manufacturers_name,
                                            mi.manufacturers_meta_keywords,
                                            mi.manufacturers_meta_description,
@@ -369,7 +365,7 @@ switch(basename($PHP_SELF)) {
                                      WHERE m.manufacturers_id = '".(int)$manu_id."'");
       $manu_name = xtc_db_fetch_array($manu_name_query, true);
   
-      if(empty($current_category_id)) {      
+      if (empty($current_category_id)) {      
         $categories_meta['categories_meta_title'] = ((!empty($manu_name['manufacturers_meta_title'])) ? $manu_name['manufacturers_meta_title'] : $manu_name['manufacturers_name']);
         $categories_meta['categories_meta_keywords'] = ((!empty($manu_name['manufacturers_meta_keywords'])) ? $manu_name['manufacturers_meta_keywords'] : $manu_name['manufacturers_name']);
         ((!empty($manu_name['manufacturers_meta_description'])) ? $categories_meta['categories_meta_description'] = $manu_name['manufacturers_meta_description'] : false);
@@ -383,24 +379,24 @@ switch(basename($PHP_SELF)) {
     }
 
     // KeyWords ...
-    if(!empty($categories_meta['categories_meta_keywords'])) {
+    if (!empty($categories_meta['categories_meta_keywords'])) {
       $meta_keyw = $categories_meta['categories_meta_keywords']; // <-- 1:1 übernehmen!
     } else{
       $meta_keyw = metaKeyWords($categories_meta['categories_name'].' '.$manu_name.' '.$categories_meta['categories_description']);
     }
 
     // Description ...
-    if(!empty($categories_meta['categories_meta_description'])) {
+    if (!empty($categories_meta['categories_meta_description'])) {
       // ggf. Herstellername hinzufügen
       $meta_descr = $categories_meta['categories_meta_description'].(($manu_name)?' - '.$manu_name:'');
       $metaDesLength = false;
-    } elseif($categories_meta) {
+    } elseif ($categories_meta) {
       // ggf. Herstellername und Kategorientext hinzufügen
       $meta_descr = $categories_meta['categories_name'].(($manu_name)?' - '.$manu_name:'').(($categories_meta['categories_description'])?' - '.$categories_meta['categories_description']:'');
     }
 
     // Title ...
-    if(!empty($categories_meta['categories_meta_title'])) {
+    if (!empty($categories_meta['categories_meta_title'])) {
       // Meta-Titel, ggf. Herstellername, ggf. Seiten-Nummer, ggf. Shop-Titel
       $meta_title = $categories_meta['categories_meta_title'].(($manu_name)?' - '.$manu_name:'').(($Page)?' - '.$Page:'').(($addCatShopTitle)?' - '.ML_TITLE:'');
     } else{
@@ -412,7 +408,7 @@ switch(basename($PHP_SELF)) {
     if (xtc_not_null($cPath)) {
       $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath,'NONSSL',false);
     } elseif (xtc_not_null($manu_id)) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.$manu_id,'NONSSL',false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.(int)$manu_id,'NONSSL',false);
     } elseif ($startpage) {
       $canonical_url = xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL',false);
     }
@@ -434,13 +430,13 @@ switch(basename($PHP_SELF)) {
                                        WHERE content_group = '".(int)$_GET['coID']."'
                                          AND languages_id = '".(int)$_SESSION['languages_id']."'");
 
-    if(xtc_db_num_rows($contents_meta_query, true) > 0) {
+    if (xtc_db_num_rows($contents_meta_query, true) > 0) {
       $contents_meta = xtc_db_fetch_array($contents_meta_query,true);
 
       // NEU! Eingebundene Dateien auslesen
-      if($contents_meta['content_file']) {
+      if ($contents_meta['content_file']) {
         // Nur Text- oder HTML-Dateien!
-        if(preg_match("/\.(txt|htm|html)$/i", $contents_meta['content_file'])) {
+        if (preg_match("/\.(txt|htm|html)$/i", $contents_meta['content_file'])) {
           $contents_meta['content_text'] .= ' '.implode(' ', @file(DIR_FS_CATALOG.'media/content/'.$contents_meta['content_file']));
         }
       }
@@ -451,21 +447,21 @@ switch(basename($PHP_SELF)) {
       }
       
       // KeyWords ...
-      if(!empty($contents_meta['content_meta_keywords'])) {
+      if (!empty($contents_meta['content_meta_keywords'])) {
         $meta_keyw = $contents_meta['content_meta_keywords'];
       } else {
         $meta_keyw = metaKeyWords($contents_meta['content_title'].' '.$contents_meta['content_heading'].' '.$contents_meta['content_text']);
       }
 
       // Title ...
-      if(!empty($contents_meta['content_meta_title'])) {
+      if (!empty($contents_meta['content_meta_title'])) {
         $meta_title = $contents_meta['content_meta_title'].(($addContentShopTitle)?' - '.ML_TITLE:'');
       } else {
         $meta_title = metaTitle($contents_meta['content_title'],$contents_meta['content_heading'],($addContentShopTitle)?ML_TITLE:'');
       }
 
       // Description ...
-      if(!empty($contents_meta['content_meta_description'])) {
+      if (!empty($contents_meta['content_meta_description'])) {
         $meta_descr = $contents_meta['content_meta_description'];
         $metaDesLength = false;
       } else {
@@ -476,8 +472,8 @@ switch(basename($PHP_SELF)) {
 
     //-- Canonical-URL
     //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
-    if(isset($_GET['coID'])){
-      $canonical_url = xtc_href_link(FILENAME_CONTENT, 'coID='.$_GET['coID'],'NONSSL',false);
+    if (isset($_GET['coID'])){
+      $canonical_url = xtc_href_link(FILENAME_CONTENT, 'coID='.(int)$_GET['coID'],'NONSSL',false);
     }
     break;
 // ---------------------------------------------------------------------------------------
@@ -486,7 +482,7 @@ switch(basename($PHP_SELF)) {
   case FILENAME_ADVANCED_SEARCH_RESULT :
 
     // ggf. Herstellernamen herausfinden ...
-    if(!empty($_GET['manufacturers_id'])) {
+    if (!empty($_GET['manufacturers_id'])) {
       $manu_name_query = xtDBquery("SELECT manufacturers_name
                                       FROM ".TABLE_MANUFACTURERS."
                                      WHERE manufacturers_id = '".(int)$_GET['manufacturers_id']."'
@@ -496,7 +492,7 @@ switch(basename($PHP_SELF)) {
       $metaGoWords .= ','.$manu_name; // <-- zu GoWords hinzufügen
     }
     // ggf. Kategorien-Namen herausfinden ...
-    if(!empty($_GET['categories_id'])) {
+    if (!empty($_GET['categories_id'])) {
       $cat_name_query = xtDBquery("SELECT categories_name
                                      FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                     WHERE categories_id='".(int)$_GET['categories_id']."'
@@ -544,16 +540,16 @@ switch(basename($PHP_SELF)) {
 //  ... und wenn nix drin, dann Standard-Werte nehmen
 // ---------------------------------------------------------------------------------------
   // KeyWords ...
-  if(empty($meta_keyw)) {
+  if (empty($meta_keyw)) {
     $meta_keyw    = ML_META_KEYWORDS;
   }
   // Description ...
-  if(empty($meta_descr)) {
+  if (empty($meta_descr)) {
     $meta_descr   = ML_META_DESCRIPTION;
     $metaDesLength = false;
   }
   // Title ...
-  if(empty($meta_title)) {
+  if (empty($meta_title)) {
     $meta_title   = ML_TITLE;
   }
 // ---------------------------------------------------------------------------------------

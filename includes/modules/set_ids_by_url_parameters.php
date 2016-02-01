@@ -30,7 +30,9 @@ if (isset($_GET['cat'])) {
 }
 
 // manufacturer URLS
-if (isset($_GET['manu'])) {
+if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '') {
+  $_GET['manufacturers_id'] = (int)$_GET['manufacturers_id'];
+} elseif (isset($_GET['manu'])) {
   $site = explode('_', $_GET['manu']);
   $mID = $site[0];
   $mID = (int)str_replace('m', '', $mID);
@@ -60,6 +62,7 @@ if (!isset($product) || !is_object($product)) {
 
 // content URLS
 if (isset ($_GET['coID']) && function_exists('xtc_get_content_path')) {
+  $_GET['coID'] = (int) $_GET['coID'];
   $coPath_array = xtc_get_content_path($_GET['coID']);
   $coPath_array[sizeof($coPath_array)] = xtc_get_content_id($_GET['coID']);  
   $coPath = implode('_', $coPath_array);
@@ -74,4 +77,8 @@ if (xtc_not_null($cPath)) {
   $_SESSION['CatPath'] = $cPath;
 } else {
   $current_category_id = 0;
+}
+
+if (isset($_GET['page']) && $_GET['page'] != '') {
+  $_GET['page'] = (int)$_GET['page'];
 }
