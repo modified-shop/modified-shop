@@ -154,11 +154,14 @@ class PayPalPayment extends PayPalPaymentBase {
       
       $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
                        ->setLine1($this->encode_utf8($order->delivery['street_address']))
-                       ->setLine2($this->encode_utf8($order->delivery['suburb']))
                        ->setCity($this->encode_utf8($order->delivery['city']))
                        ->setCountryCode($this->encode_utf8((($order_exists === false) ? $order->delivery['country']['iso_code_2'] : $order->delivery['country_iso_2'])))
                        ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
                        ->setState($this->encode_utf8($order->delivery['state']));
+
+      if ($order->delivery['suburb'] != '') {
+        $shipping_address->setLine2($this->encode_utf8($order->delivery['suburb']));
+      }
       
       for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
         $item[$i] = new Item(); 
@@ -331,11 +334,14 @@ class PayPalPayment extends PayPalPaymentBase {
 
       $payment_address = new Address();
       $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
-                      ->setLine2($this->encode_utf8($order->billing['suburb']))
                       ->setCity($this->encode_utf8($order->billing['city']))
                       ->setState($this->encode_utf8($order->billing['state']))
                       ->setPostalCode($this->encode_utf8($order->billing['postcode']))
                       ->setCountryCode($this->encode_utf8($order->billing['country']['iso_code_2']));
+
+      if ($order->billing['suburb'] != '') {
+        $payment_address->setLine2($this->encode_utf8($order->billing['suburb']));
+      }
 
       $patch_payment = new Patch();
       $patch_payment->setOp('add')
@@ -359,11 +365,14 @@ class PayPalPayment extends PayPalPaymentBase {
 
       $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
                        ->setLine1($this->encode_utf8($order->delivery['street_address']))
-                       ->setLine1($this->encode_utf8($order->delivery['suburb']))
                        ->setCity($this->encode_utf8($order->delivery['city']))
                        ->setCountryCode($this->encode_utf8($order->delivery['country']['iso_code_2']))
                        ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
                        ->setState($this->encode_utf8($order->delivery['state']));
+
+      if ($order->delivery['suburb'] != '') {
+        $shipping_address->setLine2($this->encode_utf8($order->billdeliverying['suburb']));
+      }
 
       $patch_shipping = new Patch();
       $patch_shipping->setOp('add')
@@ -629,11 +638,14 @@ class PayPalPayment extends PayPalPaymentBase {
 
     $payment_address = new Address();
     $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
-                    ->setLine2($this->encode_utf8($order->billing['suburb']))
                     ->setCity($this->encode_utf8($order->billing['city']))
                     ->setState($this->encode_utf8($order->billing['state']))
                     ->setPostalCode($this->encode_utf8($order->billing['postcode']))
                     ->setCountryCode($this->encode_utf8(((isset($order->billing['country_iso_2'])) ? $order->billing['country_iso_2'] : $order->billing['country']['iso_code_2'])));
+
+    if ($order->billing['suburb'] != '') {
+      $payment_address->setLine2($this->encode_utf8($order->billing['suburb']));
+    }
 
     $patch_payment = new Patch();
     $patch_payment->setOp('add')
@@ -657,11 +669,14 @@ class PayPalPayment extends PayPalPaymentBase {
 
     $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
                      ->setLine1($this->encode_utf8($order->delivery['street_address']))
-                     ->setLine2($this->encode_utf8($order->delivery['suburb']))
                      ->setCity($this->encode_utf8($order->delivery['city']))
                      ->setCountryCode($this->encode_utf8(((isset($order->delivery['country_iso_2'])) ? $order->delivery['country_iso_2'] : $order->delivery['country']['iso_code_2'])))
                      ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
                      ->setState($this->encode_utf8($order->delivery['state']));
+
+    if ($order->delivery['suburb'] != '') {
+      $shipping_address->setLine2($this->encode_utf8($order->delivery['suburb']));
+    }
 
     $patch_shipping = new Patch();
     $patch_shipping->setOp('add')
