@@ -47,6 +47,7 @@ require_once (DIR_FS_INC . 'xtc_get_address_format_id.inc.php');
 
 unset ($_SESSION['tmp_oID']);
 unset ($_SESSION['transaction_id']); ### moneybookers payment module version 2.4
+unset ($_SESSION['paypal']);
 
 //if (isset($_SESSION['credit_covers'])) unset($_SESSION['credit_covers']);
 if (isset($_SESSION['cot_gv']) && isset($_SESSION['payment'])) {
@@ -59,9 +60,9 @@ require (DIR_WS_INCLUDES.'checkout_requirements.php');
 if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
   if (isset($_GET['express']) && $_GET['express'] == 'on') {
     $express_query = xtc_db_query("SELECT checkout_payment,
-                                        checkout_payment_address
-                                   FROM ".TABLE_CUSTOMERS_CHECKOUT." 
-                                  WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+                                          checkout_payment_address
+                                     FROM ".TABLE_CUSTOMERS_CHECKOUT." 
+                                    WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     $express = xtc_db_fetch_array($express_query);
     if ($express['checkout_payment_address'] != '') {
       $_SESSION['billto'] = $express['checkout_payment_address'];
