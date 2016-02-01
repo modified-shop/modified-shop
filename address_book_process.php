@@ -266,17 +266,17 @@ $breadcrumb->add(NAVBAR_TITLE_1_ADDRESS_BOOK_PROCESS, xtc_href_link(FILENAME_ACC
 $breadcrumb->add(NAVBAR_TITLE_2_ADDRESS_BOOK_PROCESS, xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
 
 if (isset ($_GET['edit']) && is_numeric($_GET['edit'])) {
-	$breadcrumb->add(NAVBAR_TITLE_MODIFY_ENTRY_ADDRESS_BOOK_PROCESS, xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'edit='.$_GET['edit'], 'SSL'));
+	$breadcrumb->add(NAVBAR_TITLE_MODIFY_ENTRY_ADDRESS_BOOK_PROCESS, xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'edit='.(int)$_GET['edit'], 'SSL'));
 }
 elseif (isset ($_GET['delete']) && is_numeric($_GET['delete'])) {
-	$breadcrumb->add(NAVBAR_TITLE_DELETE_ENTRY_ADDRESS_BOOK_PROCESS, xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete='.$_GET['delete'], 'SSL'));
+	$breadcrumb->add(NAVBAR_TITLE_DELETE_ENTRY_ADDRESS_BOOK_PROCESS, xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete='.(int)$_GET['delete'], 'SSL'));
 } else {
 	$breadcrumb->add(NAVBAR_TITLE_ADD_ENTRY_ADDRESS_BOOK_PROCESS, xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, '', 'SSL'));
 }
 
 require (DIR_WS_INCLUDES.'header.php');
 
-if (isset($_GET['delete']) == false) {
+if (!isset($_GET['delete'])) {
 	$action = xtc_draw_form('addressbook', xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, (isset ($_GET['edit']) ? 'edit='.$_GET['edit'] : ''), 'SSL'), 'post', 'onsubmit="return check_form(addressbook);"');
 }
 
@@ -287,10 +287,10 @@ if ($messageStack->size('addressbook') > 0) {
 
 if (isset ($_GET['delete'])) {
 	$smarty->assign('delete', '1');
-	$smarty->assign('ADDRESS', xtc_address_label($_SESSION['customer_id'], $_GET['delete'], true, ' ', '<br />'));
+	$smarty->assign('ADDRESS', xtc_address_label($_SESSION['customer_id'], (int)$_GET['delete'], true, ' ', '<br />'));
 
 	$smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
-	$smarty->assign('BUTTON_DELETE', '<a href="'.xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete='.$_GET['delete'].'&action=deleteconfirm', 'SSL').'">'.xtc_image_button('button_delete.gif', IMAGE_BUTTON_DELETE).'</a>');
+	$smarty->assign('BUTTON_DELETE', '<a href="'.xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete='.(int)$_GET['delete'].'&action=deleteconfirm', 'SSL').'">'.xtc_image_button('button_delete.gif', IMAGE_BUTTON_DELETE).'</a>');
 } else {
 
 	include (DIR_WS_MODULES.'address_book_details.php');
