@@ -54,7 +54,7 @@ $keywordcheck = xtc_parse_search_string($keywords, $search_keywords);
 if ($keywords && strlen($keywords) < 3 && strlen($keywords) > 0) {
   $errorno += 1;
 }
-if (!$keywords && !$pfrom && !$pto && isset($_GET['x'])) {
+if (!$keywords && !$pfrom && !$pto) {
   $errorno += 1;
 }
 if ($pfrom && !settype($pfrom, "float")) {
