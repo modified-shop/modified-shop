@@ -108,10 +108,10 @@ class shoppingCartModules {
         return self::call_module_method($price, $option, $value, $products_id, $qty);
     }
     
-    public static function get_uprid_value($value,$option)
+    public static function get_uprid($opt_val_array)
     {
-        self::$function_call = 'get_uprid_value';
-        return self::call_module_method($value,$option);
+        self::$function_call = 'get_uprid';
+        return self::call_module_method($opt_val_array);
     }
     
     
