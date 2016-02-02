@@ -260,8 +260,8 @@ class KlarnaBase
 
             $styles = array(
                 EXTERNAL_KITT . "res/v1.1/checkout.css?eid=" . $merchantID,
-                "includes/modules/payment/klarna/checkout/style.css",
-                "includes/external/klarna/template/css/xtcstyle.css"
+                DIR_WS_BASE."includes/modules/payment/klarna/checkout/style.css",
+                DIR_WS_BASE."includes/external/klarna/template/css/xtcstyle.css"
             );
 
             self::$_hasRun = true;
