@@ -245,6 +245,9 @@ class MySQLStorage extends PCStorage
 
         $this->connect();
         if (!is_array($this->pclasses) || count($this->pclasses) == 0) {
+            throw new Klarna_DatabaseException(
+                'no pclasses available!'
+            );
             return;
         }
 
