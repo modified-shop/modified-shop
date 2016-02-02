@@ -932,7 +932,7 @@ class shoppingCart {
         $products_attributes_array[$pID] = $this->create_products_attributes_array($pID);
       }
       foreach($attributes as $option => $value) {
-        if (!in_array($value,$products_attributes_array[$pID][$option])) {
+        if (!in_array($value,$products_attributes_array[$pID][(int)$option])) {
           $check = false;
           break;
         }
