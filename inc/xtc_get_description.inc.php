@@ -26,6 +26,7 @@
     $product_query  = xtDBquery($product_query);
     $product = xtc_db_fetch_array($product_query,true);
 
-    return preg_replace("/[^ ]*$/", '', substr(strip_tags($product['products_description']), 0, CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH)) . ' [...]';
+    //return preg_replace("/[^ ]*$/", '', substr(strip_tags($product['products_description']), 0, CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH)) . ' [...]';
+    return $product['products_description'];
   }
  ?>

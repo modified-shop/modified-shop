@@ -544,7 +544,7 @@
         $this->products[$index] = $products[$i];
 
         //using short description  if order description is not defined or empty
-        $short_description = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $products[$i]['short_description'] : '';
+        $short_description = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $products[$i]['short_description'] : $products[$i]['description'];
         $this->products[$index]['order_description'] = !empty($products[$i]['order_description']) ? nl2br($products[$i]['order_description']) : $short_description;
         $this->products[$index]['image'] = !empty($products[$i]['image']) ? $main->getProductPopupLink($products[$i]['id'],$products[$i]['image'], 'image') : '&nbsp;';
         $this->products[$index]['link'] = $main->getProductPopupLink($products[$i]['id'],$products[$i]['name'], 'details');
