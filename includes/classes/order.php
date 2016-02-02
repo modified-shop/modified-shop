@@ -243,6 +243,7 @@
 
       require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_short_description.inc.php');
+      require_once(DIR_FS_INC . 'xtc_get_description.inc.php');
       require_once(DIR_FS_INC . 'xtc_get_products_image.inc.php');
       require_once(DIR_FS_INC . 'xtc_image_submit.inc.php');
       
@@ -287,7 +288,7 @@
           $subindex++;
         }
 
-        $short_description = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? xtc_get_short_description($order_data_values['products_id'],$order_lang_id) : '';
+        $short_description = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? xtc_get_short_description($order_data_values['products_id'],$order_lang_id) : xtc_get_description($order_data_values['products_id'],$order_lang_id);
         //using short description  if order description is not defined or empty
         $order_description = '';
         if (array_key_exists('products_order_description',$order_data_values) && !empty($order_data_values['products_order_description'])) {
