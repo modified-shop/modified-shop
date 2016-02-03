@@ -253,9 +253,14 @@
       $order_lang_array = xtc_db_fetch_array($order_lang_query);
       $order_lang_id = $order_lang_array['languages_id'];
 
-      $order_query = "SELECT *
-                        FROM ".TABLE_ORDERS_PRODUCTS."
-                       WHERE orders_id='".(int) $oID."'";
+      $order_query = "SELECT op.*,
+                             pd.products_description,
+                             pd.products_short_description
+                        FROM ".TABLE_ORDERS_PRODUCTS." op
+                   LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                             ON op.products_id = pd.products_id
+                                AND pd.language_id = '".(int)$order_lang_id."'
+                       WHERE op.orders_id='".(int)$oID."'";
 
       $index = 0;
       $order_data = array ();
@@ -287,15 +292,7 @@
           $attributes_model .= $attr_model_delimiter.$attrib_model;
           $subindex++;
         }
-
-        $short_description = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? xtc_get_short_description($order_data_values['products_id'],$order_lang_id) : xtc_get_description($order_data_values['products_id'],$order_lang_id);
-        //using short description  if order description is not defined or empty
-        $order_description = '';
-        if (array_key_exists('products_order_description',$order_data_values) && !empty($order_data_values['products_order_description'])) {
-          $order_description = $order_data_values['products_order_description'];
-        }
-        $order_description = !empty($order_description) ? $order_description : $short_description;
-
+        
         // build order_data array dynamically
         foreach ($order_data_values as $key => $val) {
           $order_data[$index][strtoupper($key)] = $val;
@@ -303,8 +300,6 @@
 
         // additional data
         $order_data[$index]['PRODUCTS_IMAGE'] = xtc_get_products_image($order_data_values['products_id']);
-        $order_data[$index]['PRODUCTS_ORDER_DESCRIPTION'] = $order_description;
-        $order_data[$index]['PRODUCTS_SHORT_DESCRIPTION'] = $short_description;
         $order_data[$index]['PRODUCTS_ATTRIBUTES'] = $attributes_data;
         $order_data[$index]['PRODUCTS_ATTRIBUTES_ARRAY'] = $attributes_array;
         $order_data[$index]['PRODUCTS_ATTRIBUTES_MODEL'] = $attributes_model;
@@ -544,7 +539,10 @@
         $this->products[$index] = $products[$i];
 
         //using short description  if order description is not defined or empty
-        $short_description = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $products[$i]['short_description'] : $products[$i]['description'];
+        $short_description = '';
+        if (CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true') {
+          $short_description = (($products[$i]['short_description'] != '') ? $products[$i]['short_description'] : $products[$i]['description']);
+        }
         $this->products[$index]['order_description'] = !empty($products[$i]['order_description']) ? nl2br($products[$i]['order_description']) : $short_description;
         $this->products[$index]['image'] = !empty($products[$i]['image']) ? $main->getProductPopupLink($products[$i]['id'],$products[$i]['image'], 'image') : '&nbsp;';
         $this->products[$index]['link'] = $main->getProductPopupLink($products[$i]['id'],$products[$i]['name'], 'details');
