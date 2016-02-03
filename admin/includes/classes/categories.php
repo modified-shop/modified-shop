@@ -577,7 +577,7 @@ class categories {
     
     //upload products image
     if ($products_image_name = $this->uploadImage($products_id,$products_data)) {
-      if (xtc_not_null($products_data['products_image']) && $products_data['products_image'] != 'none') {
+      if (xtc_not_null($products_image_name) && $products_image_name != 'none') {
         xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
                          SET products_image = '".xtc_db_input($products_image_name)."' 
                        WHERE products_id = '".(int)$products_id."'");  
