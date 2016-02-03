@@ -148,7 +148,12 @@ $total = $xtPrice->xtcFormat($order->info['total'], false);
 if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_covers']) && $_SESSION['credit_covers'] == 1 && $total > 0)) {
   
   $error = false;
-  if (isset($_GET['payment_error']) && is_object(${ $_GET['payment_error'] }) && ($error = ${$_GET['payment_error']}->get_error())) {
+  if (isset($_GET['payment_error']) 
+      && is_object(${$_GET['payment_error']}) 
+      && method_exists(${$_GET['payment_error']}, 'get_error')
+      && ($error = ${$_GET['payment_error']}->get_error())
+      ) 
+  {
     $smarty->assign('error',  encode_htmlspecialchars($error['error']));
     $_SESSION['payment'] = $_GET['payment_error'];
     $error = true;
