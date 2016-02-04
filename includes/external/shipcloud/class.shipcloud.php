@@ -35,6 +35,17 @@ class shipcloud {
   }
   
   
+  public function delete_label($tracking_id) {
+    $sc_id_query = xtc_db_query("SELECT sc_id
+                                   FROM ".TABLE_ORDERS_TRACKING."
+                                  WHERE tracking_id = '".(int)$tracking_id."'");
+    if (xtc_db_num_rows($sc_id_query) == 1) {
+      $sc_id = xtc_db_fetch_array($sc_id_query);      
+      $this->do_request('', self::SC_URL_LABEL.$sc_id['sc_id'], 'DELETE');
+    }  
+  }
+  
+  
   public function create_label($params) {
     global $messageStack;
     
@@ -79,7 +90,7 @@ class shipcloud {
       
       $request_array = $this->encode_request($request_array);
       $this->logger($request_array);
-      
+            
       if (!isset($params['quote'])) {
         $request = $this->do_request(json_encode($request_array));
         if (is_array($request) && count($request) > 0) {
@@ -329,7 +340,6 @@ class shipcloud {
     	for ($i = 0, $n=count($request['shipments']); $i<$n; $i++) {
     		xtc_db_query("UPDATE ".TABLE_ORDERS_TRACKING." SET sc_date_pickup = NOW() WHERE sc_id = '".$request['shipments'][$i]['id']."'");
     	}
-      //$messageStack->add_session('<pre>'.print_r($request, true).'</pre>', 'success');
     }
   }
 
@@ -347,7 +357,7 @@ class shipcloud {
   }
 
   
-  private function do_request($data, $url = '') {
+  private function do_request($data, $url = '', $request = 'POST') {
     global $messageStack;
     
     if ($url == '') {
@@ -369,13 +379,18 @@ class shipcloud {
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $request);
+    if ($data != '') {
+      curl_setopt($ch, CURLOPT_POST, true);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    }
 
     $response = curl_exec($ch);
     
     if (curl_errno($ch)) {
       $this->logger(curl_errno($ch), curl_error($ch));
+    } elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '204' && $request == 'DELETE') {
+      $messageStack->add_session(TEXT_DELETE_SHIPMENT_SUCCESS, 'success');
     } elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) != '200') {
       $response = json_decode($response, true);
       if (isset($response['errors']) && is_array($response['errors'])) {
