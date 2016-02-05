@@ -2,7 +2,7 @@
 
 Sehr geehrter Kunde, 
 
-Es wurde ein Account für Sie eingerichtet, Sie können mit folgenden Daten in Unseren Shop einloggen.
+Es wurde ein Account für Sie eingerichtet, Sie können sich mit folgenden Daten in unseren Shop einloggen.
 
 {if $COMMENTS} Anmerkungen: {$COMMENTS}{/if}
 
