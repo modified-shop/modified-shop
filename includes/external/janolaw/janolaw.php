@@ -149,16 +149,21 @@ class janolaw_content {
                 if ($module_name == 'withdrawal' && $this->get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
                   $this->withdrawal_link[$key] = DIR_WS_CATALOG.$filename;
                 }
-                if ($this->format == 'html' && $this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True') {
+                if (($this->format == 'html' 
+                    && $this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True'
+                    ) || isset($this->withdrawal_link[$key]))
+                {
                   if ($module_name == 'revocation' 
                       && $this->get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True' 
                       && isset($this->withdrawal_link[$key])
                       ) 
                   {
-                    $content .= '<br /><br /><a href="'.DIR_WS_CATALOG.$filename.'" target="_blank">1. PDF download</a>';
-                    $content .= '<br /><a href="'.$this->withdrawal_link[$key].'" target="_blank">2. PDF download</a>';
+                    if ($this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True') {
+                      $content .= '<br /><br /><a href="'.DIR_WS_CATALOG.$filename.'" target="_blank">PDF - '.$this->document_name[strtoupper($language)][$module_name].'</a>';
+                    }
+                    $content .= '<br /><a href="'.$this->withdrawal_link[$key].'" target="_blank">PDF - '.$this->document_name[strtoupper($language)]['withdrawal'].'</a>';
                   } else {
-                    $content .= '<br /><br /><a href="'.DIR_WS_CATALOG.$filename.'" target="_blank">PDF download</a>';            
+                    $content .= '<br /><br /><a href="'.DIR_WS_CATALOG.$filename.'" target="_blank">PDF - '.$this->document_name[strtoupper($language)][$module_name].'</a>';            
                   }
                 }
               }
