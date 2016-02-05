@@ -110,11 +110,11 @@ if (xtc_count_customer_orders() > 0) {
                                   'ORDER_LINK' => xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL'), 
                                   'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
                                   'TRACKING' => get_tracking_link($orders['orders_id'], $_SESSION['language_code']),
-                                  'BUTTON_CART' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_submit('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>',
+                                  'BUTTON_CART' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>',
                                   );
 
 	  if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
-	    $order_content[$row]['BUTTON_CART_EXPRESS'] = '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&express=on&order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_submit('small_express.gif', IMAGE_BUTTON_IN_CART).'</a>';
+	    $order_content[$row]['BUTTON_CART_EXPRESS'] = '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&express=on&order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_express.gif', IMAGE_BUTTON_IN_CART).'</a>';
 	  }
 
 	  $row ++;
