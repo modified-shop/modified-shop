@@ -157,11 +157,11 @@ class janolaw {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_MAIL_WITHDRAWAL', 'False',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_JANOLAW_WITHDRAWAL_COMBINE', 'False',  '6', '8', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
 
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_DATASECURITY', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_TERMS', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_LEGALDETAILS', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_REVOCATION', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_WITHDRAWAL', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_DATASECURITY', '',  '6', '1', 'xtc_cfg_select_content_module_jl(', 'xtc_cfg_display_content_jl', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_TERMS', '',  '6', '1', 'xtc_cfg_select_content_module_jl(', 'xtc_cfg_display_content_jl', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_LEGALDETAILS', '',  '6', '1', 'xtc_cfg_select_content_module_jl(', 'xtc_cfg_display_content_jl', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_REVOCATION', '',  '6', '1', 'xtc_cfg_select_content_module_jl(', 'xtc_cfg_display_content_jl', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_WITHDRAWAL', '',  '6', '1', 'xtc_cfg_select_content_module_jl(', 'xtc_cfg_display_content_jl', now())");
   }
 
   function remove() {
@@ -220,4 +220,54 @@ class janolaw {
                  );
   }
 }
+
+// additional function
+/**
+ * xtc_cfg_select_content_jl()
+ *
+ * @param string $cfg_key
+ * @param string $cfg_value
+ * @param string $name
+ * @return pulldown
+ */
+function xtc_cfg_select_content_jl($cfg_key, $cfg_value, $name = '%s') {
+  $content_array = array(array('id' => '', 'text' => TEXT_SELECT));
+  $content_query = xtc_db_query("SELECT content_group, 
+                                        content_title 
+                                   FROM ".TABLE_CONTENT_MANAGER." 
+                                  WHERE languages_id = '".(int)$_SESSION['languages_id']."'
+                               GROUP BY content_group");
+  while ($content = xtc_db_fetch_array($content_query)) {
+    $content_array[] = array('id' => $content['content_group'], 'text' => $content['content_title'] . ' (coID: '.$content['content_group'].')');
+  }
+  return xtc_draw_pull_down_menu(sprintf($name, $cfg_key), $content_array, $cfg_value);
+}
+
+/**
+ * xtc_cfg_select_content_module_jl()
+ *
+ * @param string $configuration
+ * @param string $key
+ * @return pulldown
+ */
+function xtc_cfg_select_content_module_jl($cfg_value, $cfg_key) {
+  return xtc_cfg_select_content_jl($cfg_key, $cfg_value, 'configuration[%s]');
+}
+
+/**
+ * xtc_cfg_display_content_jl()
+ *
+ * @param string $content_group
+ * @return string
+ */
+function xtc_cfg_display_content_jl($content_group) {
+  $content_query = xtc_db_query("SELECT content_title 
+                                   FROM ".TABLE_CONTENT_MANAGER." 
+                                  WHERE languages_id = '".(int)$_SESSION['languages_id']."' 
+                                    AND content_group = '".$content_group."'
+                                  LIMIT 1");
+  $content = xtc_db_fetch_array($content_query);
+  return $content['content_title'];
+}
+
 ?>
