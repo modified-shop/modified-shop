@@ -118,7 +118,7 @@ if (DOWNLOAD_ENABLED == 'true') {
   include (DIR_WS_MODULES.'downloads.php');
 }
 
-$smarty->assign('BUTTON_CART', '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'action=add_order&order_id='.$order->info['order_id'], 'SSL').'">'.xtc_image_submit('button_in_cart.gif', IMAGE_BUTTON_IN_CART).'</a>');
+$smarty->assign('BUTTON_CART', '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'action=add_order&order_id='.$order->info['order_id'], 'SSL').'">'.xtc_image_button('button_in_cart.gif', IMAGE_BUTTON_IN_CART).'</a>');
 $smarty->assign('ORDER_TRACKING', get_tracking_link($order->info['order_id'], $_SESSION['language_code']));
 $smarty->assign('ORDER_NUMBER', $order->info['order_id']);
 $smarty->assign('ORDER_DATE', xtc_date_long($order->info['date_purchased']));
