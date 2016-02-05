@@ -23,7 +23,7 @@ class janolaw_content {
   var $format;
   
   
-  function janolaw_content() {
+  function __construct() {
     $this->user_id = $this->get_configuration('MODULE_JANOLAW_USER_ID');
     $this->shop_id = $this->get_configuration('MODULE_JANOLAW_SHOP_ID');
     $this->enabled = $this->get_status();
