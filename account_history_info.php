@@ -131,7 +131,7 @@ $smarty->assign('BUTTON_PRINT', xtc_image_button('button_print.gif', TEXT_PRINT,
 $smarty->assign('BUTTON_PRINT_LAYER', '<a class="iframe" target="_blank" rel="nofollow" href="'.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$_GET['order_id'], 'SSL'). '" title="'.TEXT_PRINT.'" />'. xtc_image_button('button_print.gif', TEXT_PRINT) .'</a>');
 
 if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
-  $smarty->assign('BUTTON_CART_EXPRESS', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&express=on&order_id='.$order->info['order_id'], 'SSL').'">'.xtc_image_submit('button_checkout_express.gif', IMAGE_BUTTON_IN_CART).'</a>');
+  $smarty->assign('BUTTON_CART_EXPRESS', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&express=on&order_id='.$order->info['order_id'], 'SSL').'">'.xtc_image_button('button_checkout_express.gif', IMAGE_BUTTON_IN_CART).'</a>');
 }
 
 $from_history = preg_match("/page=/i", xtc_get_all_get_params());
