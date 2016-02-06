@@ -6,6 +6,9 @@ if (isset($_GET['show'])) {
 
 // load Template config
 if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/config/config.php')) {
+  defined('SPECIALS_CATEGORIES') or define('SPECIALS_CATEGORIES', false);
+  defined('WHATSNEW_CATEGORIES') or define('WHATSNEW_CATEGORIES', false);
+
   require(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/config/config.php');
 }
 ?>
