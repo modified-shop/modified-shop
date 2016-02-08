@@ -216,9 +216,9 @@ class billsafe_2 {
   function confirmation() {
     $_SESSION['discount_value'] = $GLOBALS['ot_discount']->output[0]['value'];
     $_SESSION['discount_name'] = $GLOBALS['ot_discount']->output[0]['title'];
-    $_SESSION['voucher_value'] = $GLOBALS['ot_gv']->output[0]['value'] * (-1);
+    $_SESSION['voucher_value'] = ($GLOBALS['ot_gv']->output[0]['value'] < 0) ? $GLOBALS['ot_gv']->output[0]['value'] : $GLOBALS['ot_gv']->output[0]['value'] * (-1);
     $_SESSION['voucher_name'] = $GLOBALS['ot_gv']->output[0]['title'];
-    $_SESSION['coupon_value'] = $GLOBALS['ot_coupon']->output[0]['value'] * (-1);
+    $_SESSION['coupon_value'] = ($GLOBALS['ot_coupon']->output[0]['value'] < 0) ? $GLOBALS['ot_coupon']->output[0]['value'] : $GLOBALS['ot_coupon']->output[0]['value'] * (-1);
     $_SESSION['coupon_name'] = $GLOBALS['ot_coupon']->output[0]['title'];
     $_SESSION['schg_value'] = $GLOBALS['ot_billsafe']->output[0]['value'];
     $_SESSION['schg_name'] = $GLOBALS['ot_billsafe']->output[0]['title'];
