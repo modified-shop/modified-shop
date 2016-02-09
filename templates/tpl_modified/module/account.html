@@ -41,7 +41,8 @@
         {$order_data.BUTTON_CART}
       </span>
       <strong><a href="{$order_data.ORDER_LINK}">{$order_data.ORDER_DATE}</a> / {#order_nr#}{$order_data.ORDER_ID}</strong><br />
-			{#order_total#}{$order_data.ORDER_TOTAL} / {#order_status#}{$order_data.ORDER_STATUS}<br />
+			<strong>{#order_total#}</strong>{$order_data.ORDER_TOTAL}<br />
+			<strong>{#order_status#}</strong>{$order_data.ORDER_STATUS}<br />
 			{if count($order_data.TRACKING) > 0}
 			  {foreach name=aussen item=tracking_data from=$order_data.TRACKING}
 			    {#label_tracking#} <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a><br />
