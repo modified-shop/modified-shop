@@ -177,7 +177,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
         
         // redirect to login
         $messageStack->add_session('login', SUCCESS_PASSWORD_UPDATED);
-        xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+        xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'info=1', 'SSL'));
       }
     }
   }
