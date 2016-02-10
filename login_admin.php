@@ -26,6 +26,19 @@
   // further documentation, see also:
   // http://www.modified-shop.org/wiki/Login_in_den_Administrationsbereich_nach_%C3%84nderungen_nicht_mehr_m%C3%B6glich
 
+// Set the local configuration parameters - mainly for developers or the main-configure
+if (file_exists('includes/local/configure.php')) {
+  include('includes/local/configure.php');
+} else {
+  require('includes/configure.php');
+}
+
+// loading only necessary functions
+require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
+require_once(DIR_FS_INC . 'xtc_draw_password_field.inc.php');
+require_once(DIR_FS_INC . 'xtc_draw_input_field.inc.php');
+require_once(DIR_FS_INC . 'xtc_parse_input_field_data.inc.php');
+
 $error = false;
 
 //allowed repair options
@@ -62,14 +75,6 @@ if(isset($_GET['repair']) || isset($_GET['show_error'])) {
 
 if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
 
-  // loading only necessary functions
-  // Set the local configuration parameters - mainly for developers or the main-configure
-  if (file_exists('includes/local/configure.php')) {
-    include('includes/local/configure.php');
-  } else {
-    require('includes/configure.php');
-  }
-
   // list of project database tables
   require (DIR_WS_INCLUDES.'database_tables.php');
 
@@ -81,6 +86,7 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   require_once(DIR_FS_INC . 'xtc_db_fetch_array.inc.php');
   require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
   require_once(DIR_FS_INC . 'xtc_validate_password.inc.php');
+
   require_once(DIR_WS_CLASSES.'class.inputfilter.php');
 
   xtc_db_connect() or die('Unable to connect to database server!');
@@ -204,8 +210,8 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
     }
   }
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -350,29 +356,28 @@ table td {
 -->
 </style>
 </head>
-
 <body>
-<div id="layout_adminlogin" class="cf">
-  <a class="help_adminlogin" href="http://www.modified-shop.org/wiki/Login_in_den_Administrationsbereich_nach_%C3%84nderungen_nicht_mehr_m%C3%B6glich" target="_blank"><img src="images/icons/question.png" width="32" height="32" title="Eingabehilfe und Reparaturoptionen" /></a>
-  <form name="login" method="post" action="<?php echo $action; ?>">
-    <h1>Administrator-Login</h1>
-    <table>
-      <tr>
-        <td><span class="fieldtext">E-Mail</span><input type="text" name="email_address" maxlength="50" /></td>
-      </tr>  
-      <tr>
-        <td><span class="fieldtext">Passwort</span><input type="password" name="password" maxlength="30" /></td>
-      </tr>  
-    </table>  
-    <input type="submit" class="login" name="Submit" value="Anmelden" />
-    <?php
-    if (isset($_GET['repair']) && $_GET['repair']!='') {
-      echo '<input type="hidden" name="repair" value="'. $_GET['repair'] .'" />';
-    } elseif (isset($_GET['show_error']) && $_GET['show_error']!='') {
-      echo '<input type="hidden" name="show_error" value="'. $_GET['show_error'] .'" />';
-    }
-    ?>
-  </form>
-</div>
+  <div id="layout_adminlogin" class="cf">
+    <a class="help_adminlogin" href="http://www.modified-shop.org/wiki/Login_in_den_Administrationsbereich_nach_%C3%84nderungen_nicht_mehr_m%C3%B6glich" target="_blank"><img src="images/icons/question.png" width="32" height="32" title="Eingabehilfe und Reparaturoptionen" /></a>
+    <form name="login" method="post" action="<?php echo $action; ?>">
+      <h1>Administrator-Login</h1>
+      <table>
+        <tr>
+          <td><span class="fieldtext">E-Mail</span><input type="text" name="email_address" maxlength="50" /></td>
+        </tr>  
+        <tr>
+          <td><span class="fieldtext">Passwort</span><?php echo xtc_draw_password_field('password'); ?></td>
+        </tr>  
+      </table>  
+      <input type="submit" class="login" name="Submit" value="Anmelden" />
+      <?php
+      if (isset($_GET['repair']) && $_GET['repair']!='') {
+        echo '<input type="hidden" name="repair" value="'. $_GET['repair'] .'" />';
+      } elseif (isset($_GET['show_error']) && $_GET['show_error']!='') {
+        echo '<input type="hidden" name="show_error" value="'. $_GET['show_error'] .'" />';
+      }
+      ?>
+    </form>
+  </div>
 </body>
 </html>
