@@ -296,11 +296,6 @@ if (xtc_not_null($action) && !$box) {
                 <?php if(!xtc_not_null($action) || $box) { ?>
                     <td class="boxCenterLeft">
                       <table class="tableBoxCenter collapse">
-                        <tr class="dataTableHeadingRow">
-                          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
-                          <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
-                          <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
-                        </tr>
                         <?php
                         $directory_array = create_directory_array($module_directory,$file_extension);
                         $installed_modules = array();
@@ -331,18 +326,23 @@ if (xtc_not_null($action) && !$box) {
                                 <tr class="dataTableHeadingRow sub">
                                   <td colspan="3" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
                                 </tr>
-                                <?php
-                              } elseif ($module->check() < 1 && !$deinstalled && $installed) {
-                                $deinstalled = true;
-                                ?>
-                                <tr><td colspan="3" style="height:35px;">&nbsp;</td></tr>
                                 <tr class="dataTableHeadingRow">
                                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
                                   <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
                                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
                                 </tr>
+                                <?php
+                              } elseif ($module->check() < 1 && !$deinstalled && $installed) {
+                                $deinstalled = true;
+                                ?>
+                                <tr><td colspan="3" style="height:35px;">&nbsp;</td></tr>
                                 <tr class="dataTableHeadingRow sub">
                                   <td colspan="3" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
+                                </tr>
+                                <tr class="dataTableHeadingRow">
+                                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
+                                  <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
+                                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
                                 </tr>
                                 <?php
                               }
