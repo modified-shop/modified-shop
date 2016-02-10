@@ -180,6 +180,26 @@ require_once (DIR_WS_CLASSES . 'payment.php');
 $payment_modules = new payment;
 $selection = $payment_modules->selection();
 
+// disable some modules, because needed action on checkout_payment
+$disallowed_payment = array(
+  'banktransfer',
+  'billsafe_2',  
+  'paypalplus',
+  'payone_installment',
+  'payone_otrans',
+);
+for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
+  if (in_array($selection[$i]['id'], $disallowed_payment)
+      || strpos($selection[$i]['id'], 'billpay') !== false
+      || strpos($selection[$i]['id'], 'klarna') !== false
+      || strpos($selection[$i]['id'], 'masterpayment') !== false
+      ) 
+  {
+    unset($selection[$i]);
+  }
+}
+$selection = array_values($selection);
+
 $check_payment = false;
 $module_payment = array();
 foreach ($selection as $payment) {
