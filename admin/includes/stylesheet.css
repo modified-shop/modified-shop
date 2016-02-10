@@ -255,13 +255,16 @@ border-color: #000000;
 border-bottom: 1px solid #aaa;
 border-top: 1px solid #aaa;
 }
-.dataTableHeadingRow.sub td{
-background-color: #ddd;
+.dataTableHeadingRow.sub, .dataTableHeadingRow.sub td {
+font-size: 14px;
+font-weight: normal;
+background-color: #F7F7F7;
 border-bottom: 1px solid #aaa;
 border-color: #aaa #000000;
-border-top: 1px solid #aaa;
+border-top: 0px;
 border-right: 0;
 color: #000000;
+text-align: left;
 }
 .dataTableHeadingContent {
 font-family: Verdana, Arial, Helvetica, sans-serif;
