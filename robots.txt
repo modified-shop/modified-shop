@@ -1,22 +1,2 @@
 User-agent: *
-Disallow: /admin/
-Disallow: /cache/
-Disallow: /callback/
-Disallow: /download/
-Disallow: /export/
-Disallow: /import/
-Disallow: /inc/
-Disallow: /includes/
-Disallow: /lang/
-Disallow: /media/
-Disallow: /pub/
-Disallow: /shopstat/
-Disallow: /templates/
-Disallow: /templates_c/
-Allow: /templates/*/*.css
-Allow: /templates/*/*.js
-Allow: /templates/*/*.ico
-Allow: /templates/*/*.gif
-Allow: /templates/*/*.jpg
-Allow: /templates/*/*.jpeg
-Allow: /templates/*/*.png
+Disallow: 
