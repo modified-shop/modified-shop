@@ -79,6 +79,7 @@ require (DIR_WS_INCLUDES.'head.php');
             if (xtc_db_num_rows($news_query) > 0) {
               $i = 0;
               while ($news = xtc_db_fetch_array($news_query)) {
+                $news['news_text'] = str_replace('src="http://', 'src="https://', $news['news_text']);
                 ?>
                 <div class="blog_title<?php echo (($i == 0) ? ' active' : ''); ?>"><?php echo $news['news_title']; ?></div>                          
                 <div class="blogentry" <?php echo (($i != 0) ? ' style="display:none; margin-top:2px;"' : ''); ?>>
