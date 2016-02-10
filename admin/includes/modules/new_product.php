@@ -250,7 +250,7 @@
         if (isset($_GET['pID']) && $_GET['pID'] > 0) {
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('../product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
         }
-        echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . '&pID=' . $_GET['pID']) . '">' . BUTTON_CANCEL . '</a>';
+        echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID'] > 0) ? '&pID=' . $_GET['pID'] : '')) . '">' . BUTTON_CANCEL . '</a>';
         ?>
       </div>
       <!-- EOF - Tomcraft - 2009-11-02 - TOP SAVE AND CANCEL BUTTON //-->
@@ -382,7 +382,7 @@
           if (isset($_GET['pID']) && $_GET['pID'] > 0) {
             echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('../product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
           }
-          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . '&pID=' . $_GET['pID']) . '">' . BUTTON_CANCEL . '</a>';
+          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID'] > 0) ? '&pID=' . $_GET['pID'] : '')) . '">' . BUTTON_CANCEL . '</a>';
           ?>
         </div>
         <!-- EOF - Tomcraft - 2009-11-02 - Save //-->
