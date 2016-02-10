@@ -33,5 +33,6 @@ define('TABLE_HEADING_FILENAME','Module name (for internal usage)');
 define('TEXT_INFO_DELETE_PAYPAL', 'If you uninstall this module now, the PayPal transaction data are deleted!<br />If you want to receive these data, press now on abort and you deactivate the module (activate module = False) only.');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 define('TABLE_HEADING_MODULES_INSTALLED', 'Modules installed');
+define('TABLE_HEADING_MODULES_PREFERRED', 'Popular modules');
 define('TABLE_HEADING_MODULES_NOT_INSTALLED', 'Modules not installed');
 ?>
