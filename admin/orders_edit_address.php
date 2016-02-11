@@ -147,6 +147,22 @@ if ($_GET['edit_action']=='address') {
     </td>
   </tr>
   <?php } ?>
+  <?php if (ACCOUNT_STATE == 'true') { ?>
+  <tr class="dataTableRow">
+    <td class="dataTableContent">
+    <?php echo TEXT_STATE;?>
+    </td>
+    <td class="dataTableContent">
+    <?php echo xtc_draw_input_field('customers_state', $order->customer['state'], 'style="width: 200px"');?>
+    </td>
+    <td class="dataTableContent">
+    <?php echo xtc_draw_input_field('delivery_state', $order->delivery['state'], 'style="width: 200px"');?>
+    </td>
+    <td class="dataTableContent">
+    <?php echo xtc_draw_input_field('billing_state', $order->billing['state'], 'style="width: 200px"');?>
+    </td>
+  </tr>
+  <?php } ?>
   <tr class="dataTableRow">
     <td class="dataTableContent">
     <?php echo TEXT_ZIP;?>
