@@ -64,7 +64,11 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
 
 // load the selected payment module
 require_once (DIR_WS_CLASSES . 'payment.php');
-if (isset($_SESSION['credit_covers']) || (isset($_SESSION['cot_gv']) && !isset($_SESSION['payment']))) {
+if (isset($_SESSION['credit_covers']) 
+    || (isset($_SESSION['cot_gv']) && !isset($_SESSION['payment']))
+    || (isset($_SESSION['cot_gv']) && isset($_POST['credit_order_total']) && $_SESSION['cot_gv'] > $_POST['credit_order_total'])
+    ) 
+{
   $_SESSION['payment'] = 'no_payment'; // GV Code Start/End ICW added for CREDIT CLASS
 }
 
