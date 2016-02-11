@@ -35,10 +35,10 @@ class catCopyProductName {  //Important same name as filename
     }
     
     function keys() {
-        define($this->name.'_STATUS_TITLE', '');
-        define($this->name.'_STATUS_DESC', TABLE_HEADING_STATUS);
-        define($this->name.'_SORT_ORDER_TITLE', '');
-        define($this->name.'_SORT_ORDER_DESC', TABLE_HEADING_SORT_ORDER);
+        define($this->name.'_STATUS_TITLE', TEXT_DEFAULT_STATUS_TITLE);
+        define($this->name.'_STATUS_DESC', TEXT_DEFAULT_STATUS_DESC);
+        define($this->name.'_SORT_ORDER_TITLE', TEXT_DEFAULT_SORT_ORDER_TITLE);
+        define($this->name.'_SORT_ORDER_DESC', TEXT_DEFAULT_SORT_ORDER_DESC);
         
         return array(
             $this->name.'_STATUS', 
