@@ -50,10 +50,7 @@ function payone_get_order_details() {
         // attribute models
         if (isset($order->products[$i]['attributes']) && sizeof($order->products[$i]['attributes']) > 0) {
           for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j ++) {
-            $model = $order->products[$i]['attributes'][$j]['attributes_model'];
-            if ($model == '') {
-              $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
-            }          
+            $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'],$lang); //web28 Fix attribute model  language problem        
             echo !empty($model) ? $model.'<br />' : '<br />';
           }
         }
