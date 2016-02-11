@@ -146,7 +146,7 @@ function table_exists($table_name)
 function column_exists($table, $column)
 {
   $result = xtc_db_query("SELECT * FROM ".$table." LIMIT 1");
-  $result_array = xtc_db_fetch_array($result)) {
+  $result_array = xtc_db_fetch_array($result);
   if (isset($result_array[$column])) {
     return true;
   }
