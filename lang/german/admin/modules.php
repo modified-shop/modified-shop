@@ -35,4 +35,5 @@ define('TEXT_INFO_DELETE_PAYPAL', 'Wenn Sie dieses Modul jetzt deinstallieren we
 define('TABLE_HEADING_MODULES_INSTALLED', 'Folgende Module wurden installiert');
 define('TABLE_HEADING_MODULES_PREFERRED', 'Beliebte Module');
 define('TABLE_HEADING_MODULES_NOT_INSTALLED', 'Folgende Module sind noch verf&uuml;gbar');
+define('TEXT_MODULE_UPDATE_NEEDED', 'Folgenden Module wurden aktualisiert und ben&ouml;tigen ein Update der Datenbank. Dazu sichern sie bitte die Einstellungn und installieren sie diese Module neu.');
 ?>

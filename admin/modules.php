@@ -238,6 +238,28 @@
     }
   }
   
+  function check_update_needed($module_type) {
+    global $module_directory, $messageStack;
+    
+    $installed_array = explode(';', constant('MODULE_'.strtoupper($module_type).'_INSTALLED'));
+    $info = array();
+    foreach ($installed_array as $file) {
+      include_once($module_directory . $file);
+      $class = substr($file, 0, strpos($file, '.'));
+      if (xtc_class_exists($class)) {
+        $module = new $class();       
+        $key_array = $module->keys();     
+        foreach ($key_array as $key) {
+          if (!defined($key)) {
+            $info[] = $class;
+            break;
+          }
+        }
+      }
+    }
+    
+    return $info;
+  }
   
 require (DIR_WS_INCLUDES.'head.php');
 if (xtc_not_null($action) && !$box) {
@@ -279,6 +301,12 @@ if (xtc_not_null($action) && !$box) {
           <tr>
             <?php 
             if (!xtc_not_null($action) || $box) { 
+
+              $info = check_update_needed($module_type);
+              if (count($info) > 0) {
+                echo '<div class="error_message">'.TEXT_MODULE_UPDATE_NEEDED.'<br>'.implode('<br/>', $info).'</div>';
+              }
+              
               $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
               $directory_array = array();
               if ($dir = @dir($module_directory)) {
