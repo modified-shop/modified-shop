@@ -50,8 +50,8 @@ unset ($_SESSION['transaction_id']); ### moneybookers payment module version 2.4
 unset ($_SESSION['paypal']);
 
 //if (isset($_SESSION['credit_covers'])) unset($_SESSION['credit_covers']);
-if (isset($_SESSION['cot_gv']) && isset($_SESSION['payment'])) {
-  unset($_SESSION['payment']); 
+if (isset($_SESSION['cot_gv']) /*&& isset($_SESSION['payment'])*/) {
+  //unset($_SESSION['payment']); 
   unset($_SESSION['cot_gv']); //ADDED FOR CREDIT CLASS SYSTEM 
 }
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
@@ -109,7 +109,7 @@ if ($order->billing['country']['iso_code_2'] != '' && $order->delivery['country'
 
 // load all enabled payment modules
 require_once (DIR_WS_CLASSES . 'payment.php');
-$payment_modules = new payment;
+$payment_modules = new payment();
 
 $order_total = $order_total_modules->process();
 // redirect if Coupon matches ammount
