@@ -300,13 +300,13 @@ if (xtc_not_null($action) && !$box) {
                           if (!is_numeric($module->sort_order)) {
                             $module->sort_order = 0;
                           }
-                          if (!array_key_exists(($module->sort_order*100), $directory_array[0])) {
+                          if (!array_key_exists(($module->sort_order*100), $directory_array['installed'])) {
                             $directory_array['installed'][($module->sort_order*100)] = $file;
                           } else {
                             // search for next free index in array
                             $index = ($module->sort_order*100);
                             while (1==1) {
-                              if (!array_key_exists($index, $directory_array[0])) {
+                              if (!array_key_exists($index, $directory_array['installed'])) {
                                 $directory_array['installed'][$index] = $file;
                                 break;
                               }
