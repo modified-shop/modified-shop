@@ -232,7 +232,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           if ($startDate) {
                             $day = date("j", $startDate);
                             $month = date("n", $startDate);
-                            $year = date("Y") - date("Y", $startDate);                                  
+                            $year = date("Y", $startDate);                                  
                           }
                           echo START_DATE;
                           echo xtc_draw_pull_down_menu('startD', $day_array, $day);
@@ -247,8 +247,8 @@ require (DIR_WS_INCLUDES.'head.php');
                           $year = 0;
                           if ($endDate) {
                             $day = date("j", $endDate - (60 * 60 * 24));
-                            $month = date("n", $endDate - 60* 60 * 24);
-                            $year = date("Y") - date("Y", $endDate - 60* 60 * 24);
+                            $month = date("n", $endDate - (60* 60 * 24));
+                            $year = date("Y", $endDate - (60* 60 * 24));
                           }
                           echo END_DATE;
                           echo xtc_draw_pull_down_menu('endD', $day_array, $day);
