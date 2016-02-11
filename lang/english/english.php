@@ -588,4 +588,6 @@ define('TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST', 'Select always the cheapest shipp
 
 define('AC_SHOW_PAGE', 'Page ');
 define('AC_SHOW_PAGE_OF', ' from ');
+
+define('FREE_SHIPPING_INFO', 'Free Shipping minimum order: %s');
 ?>

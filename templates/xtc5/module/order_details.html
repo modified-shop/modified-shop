@@ -54,6 +54,7 @@
         {/foreach}
       {/if}
       {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
+      {if isset($FREE_SHIPPING_INFO)}{$FREE_SHIPPING_INFO}{/if}
       {*if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT} kg{/if*}
       {if $KLARNA_PPBOX}<br />{$KLARNA_PPBOX}{/if}
     </td>

@@ -588,4 +588,7 @@ define('TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST', 'Immer g&uuml;nstigste Versandard
 
 define('AC_SHOW_PAGE', 'Seite ');
 define('AC_SHOW_PAGE_OF', ' von ');
+
+define('FREE_SHIPPING_INFO', 'ab %s  Bestellwert versenden wir Ihre Bestellung versandkostenfrei');
+
 ?>
