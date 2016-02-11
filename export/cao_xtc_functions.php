@@ -1277,6 +1277,14 @@ function xtc_remove_product($product_id)
          //global $LangID, $customers_status_array;  //R Brym
          global $LangID, $customers_statuses_array;
 //EOF - Dokuman - 2009-11-04 - fix typo customers_status_array -> customers_statuses_array
+
+        // rewrite values to use resample classes
+        define('DIR_FS_CATALOG_ORIGINAL_IMAGES',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES);
+        define('DIR_FS_CATALOG_INFO_IMAGES',DIR_FS_CATALOG.DIR_WS_INFO_IMAGES);
+        define('DIR_FS_CATALOG_POPUP_IMAGES',DIR_FS_CATALOG.DIR_WS_POPUP_IMAGES);
+        define('DIR_FS_CATALOG_THUMBNAIL_IMAGES',DIR_FS_CATALOG.DIR_WS_THUMBNAIL_IMAGES);
+        define('DIR_FS_CATALOG_IMAGES',DIR_FS_CATALOG.DIR_WS_IMAGES);
+
         $product_image_query = xtc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . xtc_db_input($product_id) . "'");
         $product_image = xtc_db_fetch_array($product_image_query);
 
