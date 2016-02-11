@@ -33,7 +33,7 @@ class ot_shipping {
   }
 
   function process() {
-    global $order, $xtPrice, $free_shipping, $free_shipping_value_over;
+    global $order, $xtPrice, $free_shipping, $free_shipping_value_over, $pass;
 
     if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') {
       switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {

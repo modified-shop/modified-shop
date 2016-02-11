@@ -129,6 +129,13 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
   // load all enabled shipping modules
   $quotes = $shipping->quote();
 
+  if (SHOW_SELFPICKUP_FREE == 'true') {
+    if ($free_shipping == true) {
+      $free_shipping = false;
+      $quotes = array_merge($ot_shipping->quote(), $shipping->quote('selfpickup', 'selfpickup'));
+    }                    
+  }
+    
   $shipping_content = array ();
   if ($free_shipping == true) {
     $shipping_content[] = array(
@@ -136,33 +143,37 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
       'VALUE' => $xtPrice->xtcFormat(0, true, 0, true)
     );
   } else {
+    if (defined('MODULE_ORDER_TOTAL_SHIPPING_STATUS')
+        && MODULE_ORDER_TOTAL_SHIPPING_STATUS == 'true'
+        && MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true'
+        && $pass === true
+        )
+    {
+      $module_smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)));
+    }
+    
     $i = 0;
     foreach ($quotes as $quote) {
-        if ($quote['id'] = 'freeamount') {
-          $module_smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER, true, 0, true)));
+      if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {
+        $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quote['tax'])) { 
+          $quote['tax'] = 0;
         }
-        //BOC web28 Error Fix
-        if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {
-          $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quote['tax'])) { 
-            $quote['tax'] = 0;
-          }
-          $value = ((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0'));
-          $total += $value;
-          $shipping_content[$i] = array(
-            'NAME' => $quote['module'] . ' - ' . $quote['methods'][0]['title'],
-            'VALUE' => $xtPrice->xtcFormat($value, true),
-            'QUOTE' => $quote
-          );
-        } else {
-          $shipping_content[$i] = array(
-            'NAME' => $quote['module'] . ' - ' . $quote['error'],
-            'VALUE' => '',
-            'QUOTE' => $quote
-          );
-        }
-        //EOC web28 Error Fix
-        $i++;
+        $value = ((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0'));
+        $total += $value;
+        $shipping_content[$i] = array(
+          'NAME' => $quote['module'] . ' - ' . $quote['methods'][0]['title'],
+          'VALUE' => $xtPrice->xtcFormat($value, true),
+          'QUOTE' => $quote
+        );
+      } else {
+        $shipping_content[$i] = array(
+          'NAME' => $quote['module'] . ' - ' . $quote['error'],
+          'VALUE' => '',
+          'QUOTE' => $quote
+        );
+      }
+      $i++;
     }
   }
 
