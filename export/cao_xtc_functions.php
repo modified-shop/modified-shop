@@ -1284,31 +1284,61 @@ function xtc_remove_product($product_id)
         $duplicate_image = xtc_db_fetch_array($duplicate_image_query);
 
         if ($duplicate_image['total'] < 2) {
-          if (file_exists(DIR_FS_CATALOG_POPUP_IMAGES . $product_image['products_image'])) {
-            @unlink(DIR_FS_CATALOG_POPUP_IMAGES . $product_image['products_image']);
+          if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$product_image['products_image'])) {
+            @ unlink(DIR_FS_CATALOG_POPUP_IMAGES.$product_image['products_image']);
           }
-          // START CHANGES
-          $image_subdir = BIG_IMAGE_SUBDIR;
-          if (substr($image_subdir, -1) != '/') $image_subdir .= '/';
-          if (file_exists(DIR_FS_CATALOG_IMAGES . $image_subdir . $product_image['products_image'])) {
-            @unlink(DIR_FS_CATALOG_IMAGES . $image_subdir . $product_image['products_image']);
+          if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$product_image['products_image'])) {
+            @ unlink(DIR_FS_CATALOG_ORIGINAL_IMAGES.$product_image['products_image']);
           }
-          // END CHANGES
+          if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$product_image['products_image'])) {
+            @ unlink(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$product_image['products_image']);
+          }
+          if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$product_image['products_image'])) {
+            @ unlink(DIR_FS_CATALOG_INFO_IMAGES.$product_image['products_image']);
+          }
         }
 
-        xtc_db_query("delete from " . TABLE_SPECIALS . " where products_id = '" . xtc_db_input($product_id) . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS . " where products_id = '" . xtc_db_input($product_id) . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . xtc_db_input($product_id) . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . xtc_db_input($product_id) . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . xtc_db_input($product_id) . "'");
-        xtc_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where products_id = '" . xtc_db_input($product_id) . "'");
-        xtc_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where products_id = '" . xtc_db_input($product_id) . "'");
-
-        if (defined('TABLE_PRODUCTS_IMAGES'))
-          {
-            xtc_db_query("delete from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . xtc_db_input($product_id) . "'");
+        //delete more images
+        $mo_images_query = xtc_db_query("SELECT image_name 
+                                           FROM ".TABLE_PRODUCTS_IMAGES." 
+                                          WHERE products_id = '".(int)$product_id."'");
+        while ($mo_images_values = xtc_db_fetch_array($mo_images_query)) {
+          $duplicate_more_image_query = xtc_db_query("SELECT count(*) AS total 
+                                                        FROM ".TABLE_PRODUCTS_IMAGES." 
+                                                       WHERE image_name = '".xtc_db_input($mo_images_values['image_name'])."'");
+          $duplicate_more_image = xtc_db_fetch_array($duplicate_more_image_query);
+          if ($duplicate_more_image['total'] < 2) {
+            if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$mo_images_values['image_name'])) {
+              @ unlink(DIR_FS_CATALOG_POPUP_IMAGES.$mo_images_values['image_name']);
+            }
+            if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$mo_images_values['image_name'])) {
+              @ unlink(DIR_FS_CATALOG_ORIGINAL_IMAGES.$mo_images_values['image_name']);
+            }
+            if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$mo_images_values['image_name'])) {
+              @ unlink(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$mo_images_values['image_name']);
+            }
+            if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$mo_images_values['image_name'])) {
+              @ unlink(DIR_FS_CATALOG_INFO_IMAGES.$mo_images_values['image_name']);
+            }
           }
+        }
 
+        xtc_db_query("DELETE FROM ".TABLE_SPECIALS." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE xsell_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_IMAGES." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_DESCRIPTION." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_ATTRIBUTES." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
+        xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TAGS." WHERE products_id = '".(int)$product_id."'");
+
+        if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+          xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
+          xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
+        }
 
         // get statuses
         $customers_statuses_array = array(array());
