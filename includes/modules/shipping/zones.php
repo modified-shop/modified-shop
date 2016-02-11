@@ -30,7 +30,7 @@
       $this->icon = '';
       $this->tax_class = MODULE_SHIPPING_ZONES_TAX_CLASS;
       $this->enabled = ((MODULE_SHIPPING_ZONES_STATUS == 'True') ? true : false);
-      $this->num_zones = defined('MODULE_SHIPPING_ZONES_NUMBER_ZONES') ? MODULE_SHIPPING_ZONES_NUMBER_ZONES : '';
+      $this->num_zones = defined('MODULE_SHIPPING_ZONES_NUMBER_ZONES') ? MODULE_SHIPPING_ZONES_NUMBER_ZONES : '1';
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_ZONES_ZONE > 0) && is_object($order) ) {
         $check_flag = false;
@@ -60,7 +60,7 @@
           xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_NUMBER_ZONES', '". (int)$this->num_dp ."', '6', '0', now())");
         }
 
-        if ($check_zones_rows != $this->num_dp) {
+        if ($check_zones_rows != $this->num_zones) {
           $this->install_zones($check_zones_rows);
         }
         //update compatibility
