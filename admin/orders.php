@@ -326,9 +326,6 @@ switch ($action) {
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('action')).'action=edit'));
     break;
 
-  case 'resendordermail':
-    break;
-
   case 'deleteconfirm':
     xtc_remove_order($oID, xtc_db_prepare_input($_POST['restock']));
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action'))));
