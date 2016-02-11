@@ -799,6 +799,7 @@ class categories {
                                         WHERE products_id = '".$src_products_id."'");
 
     while ($description = xtc_db_fetch_array($description_query)) {
+      $description['products_name'] .= ' (copy)';
       //copy description data
       $sql_data_array = $description;
       //new module support
