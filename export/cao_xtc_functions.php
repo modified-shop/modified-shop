@@ -145,13 +145,12 @@ function table_exists($table_name)
 
 function column_exists($table, $column)
 {
-  $Table = xtc_db_query("show columns from $table LIKE '" . $column . "'");
-  if(xtc_db_fetch_row($Table) === false)
-  {
-    return(false);
-  } else {
-    return(true);
+  $result = xtc_db_query("SELECT * FROM ".$table." LIMIT 1");
+  $result_array = xtc_db_fetch_array($result)) {
+  if (isset($result_array[$column])) {
+    return true;
   }
+  return false;
 }
 
 //--------------------------------------------------------------
