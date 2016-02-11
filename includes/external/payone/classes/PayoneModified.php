@@ -352,7 +352,7 @@ class PayoneModified {
 		{
 			$merged = array();
 			foreach($old_config as $key => $value) {
-				if (empty($new_config[$key]) && !is_numeric($new_config[$key])) {
+				if (isset($new_config[$key]) && empty($new_config[$key]) && !is_numeric($new_config[$key])) {
 					if (array_key_exists($key, $new_config)) {
 						if (is_array($value)) {
 							$merged[$key] = array();
