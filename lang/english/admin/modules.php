@@ -35,5 +35,5 @@ define('TEXT_INFO_DELETE_PAYPAL', 'If you uninstall this module now, the PayPal 
 define('TABLE_HEADING_MODULES_INSTALLED', 'Modules installed');
 define('TABLE_HEADING_MODULES_PREFERRED', 'Popular modules');
 define('TABLE_HEADING_MODULES_NOT_INSTALLED', 'Modules not installed');
-define('TEXT_MODULE_UPDATE_NEEDED', 'Following modules have been updated and need to update the database. For this please save the settings and reinstall these modules.');
+define('TEXT_MODULE_UPDATE_NEEDED', 'The following modules have been updated and need to update the database. For this please save the settings and reinstall these modules.');
 ?>
