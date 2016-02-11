@@ -40,11 +40,6 @@ class invoice {
   function update_status() {
     global $order;
     
-    //update compatibility
-    if (!defined('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID') && $this->enabled) {
-      xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID', '0',  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
-    }
-
     $check_order_query = xtc_db_query("select count(*) as count from ".TABLE_ORDERS." where customers_id = '".(int) $_SESSION['customer_id']."' AND orders_status = '".(int)MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID."'");
     $order_check = xtc_db_fetch_array($check_order_query);
 

@@ -27,12 +27,7 @@ class moneyorder {
     $this->description = MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION;
     $this->sort_order = MODULE_PAYMENT_MONEYORDER_SORT_ORDER;
     $this->enabled = ((MODULE_PAYMENT_MONEYORDER_STATUS == 'True') ? true : false);
-    $this->info = MODULE_PAYMENT_MONEYORDER_TEXT_INFO;
-    
-    //update compatibility
-    if (!defined('MODULE_PAYMENT_MONEYORDER_SUCCESS') && $this->enabled) {
-      xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MONEYORDER_SUCCESS', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
-    }
+    $this->info = MODULE_PAYMENT_MONEYORDER_TEXT_INFO;    
     $this->info_success = (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True' ? $this->description : $this->info);
     
     if ((int) MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID > 0) {
