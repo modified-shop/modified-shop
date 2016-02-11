@@ -150,7 +150,7 @@ if ($_GET['edit_action']=='address') {
   <?php if (ACCOUNT_STATE == 'true') { ?>
   <tr class="dataTableRow">
     <td class="dataTableContent">
-    <?php echo TEXT_STATE;?>
+    <?php echo ENTRY_STATE;?>
     </td>
     <td class="dataTableContent">
     <?php echo xtc_draw_input_field('customers_state', $order->customer['state'], 'style="width: 200px"');?>
