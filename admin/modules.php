@@ -358,11 +358,11 @@ if (xtc_not_null($action) && !$box) {
                     </tr>
                     <?php
                     output_modules($directory_array['installed']);
+                    echo '<tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>'.PHP_EOL;
                   }
 
                   if (isset($directory_array['preferred']) && count($directory_array['preferred']) > 0) {
                     ?>
-                    <tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>
                     <tr class="dataTableHeadingRow sub">
                       <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_PREFERRED; ?></td>
                     </tr>
@@ -375,11 +375,11 @@ if (xtc_not_null($action) && !$box) {
                     </tr>
                     <?php
                     output_modules($directory_array['preferred']);
+                    echo '<tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>'.PHP_EOL;
                   }
 
                   if (isset($directory_array['uninstalled']) && count($directory_array['uninstalled']) > 0) {
                     ?>
-                    <tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>
                     <tr class="dataTableHeadingRow sub">
                       <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
                     </tr>
