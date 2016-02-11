@@ -190,6 +190,15 @@ unset($_SESSION['delivery_zone']);
 $module_smarty->assign('shipping_content', $shipping_content);
 $module_smarty->assign('COUNTRY', $order->delivery['country']['title']);
 
+if ($order->content_type == 'virtual' 
+    || $order->content_type == 'virtual_weight'
+    || $_SESSION['cart']->count_contents_virtual() == 0
+    ) 
+{
+  $module_smarty->clear_assign('shipping_content');
+  $module_smarty->clear_assign('COUNTRY');
+}
+
 if (count($shipping_content) <= 1) {
   $module_smarty->assign('total', $xtPrice->xtcFormat($total, true));
 }
