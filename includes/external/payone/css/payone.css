@@ -46,7 +46,7 @@ input.nobutton {
 	border:1px solid #101010;
 	display:inline-block;
 	color:#ffffff;
-	font-family:Verdana;
+	font-family:Verdana,Arial,Helvetica,sans-serif;
 	font-size:12px;
 	font-weight:normal;
 	font-style:normal;
@@ -88,7 +88,7 @@ input.yesbutton {
 	border:1px solid #420e2e;
 	display:inline-block;
 	color:#ffffff;
-	font-family:Verdana;
+	font-family:Verdana,Arial,Helvetica,sans-serif;
 	font-size:12px;
 	font-weight:normal;
 	font-style:normal;
