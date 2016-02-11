@@ -182,59 +182,40 @@
     }
 
     function javascript_validation() {
-      global $credit_amount, $credit_order_total;
-      
-      $payment_check = true;
-      if (isset($credit_amount)
-          && isset($credit_order_total)
-          && $credit_amount >= $credit_order_total
-          )
-      {
-        $payment_check = false;
-      }
-      
       $js = '';
       if (is_array($this->modules)) {
         $js = '<script type="text/javascript"><!-- ' . "\n" .
               'function check_form() {' . "\n" .
               '  var error = 0;' . "\n" .
-              '  var error_message = unescape("' . xtc_js_lang(JS_ERROR) . '");' . "\n";
-        if ($payment_check === true) {     
-          $js .= '  var payment_value = null;' . "\n" .
-                 '  if (document.getElementById("checkout_payment").payment) {' . "\n" .
-                 '    if (document.getElementById("checkout_payment").payment.length) {' . "\n" .
-                 '      for (var i=0; i<document.getElementById("checkout_payment").payment.length; i++) {' . "\n" .
-                 '        if (document.getElementById("checkout_payment").payment[i].checked) {' . "\n" .
-                 '          payment_value = document.getElementById("checkout_payment").payment[i].value;' . "\n" .
-                 '        }' . "\n" .
-                 '      }' . "\n" .
-                 '    } else if (document.getElementById("checkout_payment").payment.checked) {' . "\n" .
-                 '      payment_value = document.getElementById("checkout_payment").payment.value;' . "\n" .
-                 '    } else if (document.getElementById("checkout_payment").payment.value) {' . "\n" .
-                 '      payment_value = document.getElementById("checkout_payment").payment.value;' . "\n" .
-                 '    }' . "\n" .
-                 '  }' . "\n\n";
+              '  var error_message = unescape("' . xtc_js_lang(JS_ERROR) . '");' . "\n" .
+              '  var payment_value = null;' . "\n" .
+              '  if (document.getElementById("checkout_payment").payment) {' . "\n" .
+              '    if (document.getElementById("checkout_payment").payment.length) {' . "\n" .
+              '      for (var i=0; i<document.getElementById("checkout_payment").payment.length; i++) {' . "\n" .
+              '        if (document.getElementById("checkout_payment").payment[i].checked) {' . "\n" .
+              '          payment_value = document.getElementById("checkout_payment").payment[i].value;' . "\n" .
+              '        }' . "\n" .
+              '      }' . "\n" .
+              '    } else if (document.getElementById("checkout_payment").payment.checked) {' . "\n" .
+              '      payment_value = document.getElementById("checkout_payment").payment.value;' . "\n" .
+              '    } else if (document.getElementById("checkout_payment").payment.value) {' . "\n" .
+              '      payment_value = document.getElementById("checkout_payment").payment.value;' . "\n" .
+              '    }' . "\n" .
+              '  }' . "\n\n";
 
-          reset($this->modules);
-          while (list(, $value) = each($this->modules)) {
-            $class = substr($value, 0, strrpos($value, '.'));
-            if (isset($GLOBALS[$class]) 
-                && is_object($GLOBALS[$class]) 
-                && $GLOBALS[$class]->enabled
-                && method_exists($GLOBALS[$class], 'javascript_validation')
-                ) 
-            {
-              $js .= $GLOBALS[$class]->javascript_validation();
-            }
+        reset($this->modules);
+        while (list(, $value) = each($this->modules)) {
+          $class = substr($value, 0, strrpos($value, '.'));
+          if (isset($GLOBALS[$class]) 
+              && is_object($GLOBALS[$class]) 
+              && $GLOBALS[$class]->enabled
+              && method_exists($GLOBALS[$class], 'javascript_validation')
+              ) 
+          {
+            $js .= $GLOBALS[$class]->javascript_validation();
           }
         }
-        if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
-        $js .= "\n" . '  if (!document.getElementById("checkout_payment").conditions.checked) {' . "\n" .
-               '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_CONDITIONS_NOT_ACCEPTED) . '");' . "\n" .
-               '    error = 1;' . "\n" .
-               '  }' . "\n\n";
-        }
-        
+
         $js .= "\n" . '  if (document.getElementById("rd-cot_gv")) {' . "\n" .
                '    var gv_value = parseFloat(document.getElementById("rd-cot_gv").value);' . "\n" .
                '    var cot_value = 0;' . "\n" .
@@ -244,10 +225,19 @@
                '    if (document.getElementById("rd-cot_gv").checked) {' . "\n" .
                '      if (gv_value >= cot_value) {' . "\n" .
                '        payment_value = "use_gv";' . "\n" .
+               '        error = 0;' . "\n" .
+               '        error_message = unescape("' . xtc_js_lang(JS_ERROR) . '");' . "\n" .
                '      }' . "\n" .  
                '    }' . "\n" .       
                '  }' . "\n\n";
-        
+
+        if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
+          $js .= "\n" . '  if (!document.getElementById("checkout_payment").conditions.checked) {' . "\n" .
+                 '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_CONDITIONS_NOT_ACCEPTED) . '");' . "\n" .
+                 '    error = 1;' . "\n" .
+                 '  }' . "\n\n";
+        }
+                
         $js .= "\n" . '  if (document.getElementById("gccover")) {' . "\n" .
                '     payment_value = "gccover";' . "\n" .
                '  }' . "\n\n"; 
