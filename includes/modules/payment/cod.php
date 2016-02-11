@@ -34,13 +34,7 @@ class cod {
     $this->sort_order = MODULE_PAYMENT_COD_SORT_ORDER;
     $this->enabled = ((MODULE_PAYMENT_COD_STATUS == 'True') ? true : false);
     $this->info = MODULE_PAYMENT_COD_TEXT_INFO;
-    $this->cost = '';
-    
-    //update compatibility
-    if (!defined('MODULE_PAYMENT_COD_LIMIT_ALLOWED') && $this->enabled) {
-      xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_COD_LIMIT_ALLOWED', '600', '6', '3', now())");
-    }
-    
+    $this->cost = '';    
     $this->limit_subtotal = MODULE_PAYMENT_COD_LIMIT_ALLOWED; // for comparison to be able to limit order subtotal sum where cod allowed
 
     if ((int) MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) {
