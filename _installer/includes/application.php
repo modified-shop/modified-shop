@@ -17,11 +17,6 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
   
-  // minimum requirement
-  if (version_compare(PHP_VERSION, '5.3.0', '<=')) {
-    die('<h1>Minimum requirement PHP Version 5.3</h1>');
-  }
-
   // clear apc for installer
   if (function_exists('apc_clear_cache')) {
     apc_clear_cache();
