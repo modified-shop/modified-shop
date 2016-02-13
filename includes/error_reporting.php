@@ -18,13 +18,13 @@ $config = array(
   'SplitLogging' => true,
   'LogLevel' => ((defined('LOGGING_LEVEL')) ? LOGGING_LEVEL : 'INFO'), // DEBUG, FINE, INFO, WARN, ERROR, CUSTOM
   'LogThreshold' => '2MB',
-  'FileName' => DIR_FS_LOG.'mod_error_' .date('Y-m-d') .'.log',
-  'FileName.debug' => DIR_FS_LOG.'mod_notice_' .date('Y-m-d') .'.log',
-  'FileName.fine' => DIR_FS_LOG.'mod_deprecated_' .date('Y-m-d') .'.log',
-  'FileName.info' => DIR_FS_LOG.'mod_strict_' .date('Y-m-d') .'.log',
-  'FileName.warning' => DIR_FS_LOG.'mod_warning_' .date('Y-m-d') .'.log',
-  'FileName.error' => DIR_FS_LOG.'mod_error_' .date('Y-m-d') .'.log',
-  'FileName.custom' => DIR_FS_LOG.'mod_custom_' .date('Y-m-d') .'.log',
+  'FileName' => DIR_FS_LOG.'mod_error_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+  'FileName.debug' => DIR_FS_LOG.'mod_notice_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+  'FileName.fine' => DIR_FS_LOG.'mod_deprecated_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+  'FileName.info' => DIR_FS_LOG.'mod_strict_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+  'FileName.warning' => DIR_FS_LOG.'mod_warning_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+  'FileName.error' => DIR_FS_LOG.'mod_error_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+  'FileName.custom' => DIR_FS_LOG.'mod_custom_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
 );
 $LoggingManager = new LoggingManager($config);
 

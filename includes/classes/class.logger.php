@@ -217,15 +217,11 @@ class LoggingManager
      * @param string|int $treshold
      */
     private function parseTreshold($treshold) {
-        return preg_replace_callback('/^\s*(\d+)\s*(?:([kmgt]?)b?)?\s*$/i', function ($m) {
-            switch (strtolower($m[2])) {
-                case 't': $m[1] *= 1024;
-                case 'g': $m[1] *= 1024;
-                case 'm': $m[1] *= 1024;
-                case 'k': $m[1] *= 1024;
-            }
-            return $m[1];
-        }, $treshold);
+      preg_match('/(.+)(.{2})$/', $treshold, $matches);
+      list($treshold, $value, $unit) = $matches;
+      $treshold = (int) ($value * pow(1024, array_search(strtolower($unit), array(1 => 'kb','mb','gb','tb'))));
+
+      return $treshold;
     }
 
     /**
