@@ -147,23 +147,7 @@ if ($_GET['edit_action']=='address') {
     </td>
   </tr>
   <?php } ?>
-  <?php if (ACCOUNT_STATE == 'true') { ?>
-  <tr class="dataTableRow">
-    <td class="dataTableContent">
-    <?php echo ENTRY_STATE;?>
-    </td>
-    <td class="dataTableContent">
-    <?php echo xtc_draw_input_field('customers_state', $order->customer['state'], 'style="width: 200px"');?>
-    </td>
-    <td class="dataTableContent">
-    <?php echo xtc_draw_input_field('delivery_state', $order->delivery['state'], 'style="width: 200px"');?>
-    </td>
-    <td class="dataTableContent">
-    <?php echo xtc_draw_input_field('billing_state', $order->billing['state'], 'style="width: 200px"');?>
-    </td>
-  </tr>
-  <?php } ?>
-  <tr class="dataTableRow">
+    <tr class="dataTableRow">
     <td class="dataTableContent">
     <?php echo TEXT_ZIP;?>
     </td>
@@ -205,6 +189,22 @@ if ($_GET['edit_action']=='address') {
     <?php echo xtc_draw_pull_down_menu('billing_country_id', xtc_get_countries('',1), $billing_countries_id, 'style="width: 200px"');?>
     </span></td>
   </tr>
+  <?php if (ACCOUNT_STATE == 'true') { ?>
+  <tr class="dataTableRow">
+    <td class="dataTableContent">
+    <?php echo ENTRY_STATE;?>
+    </td>
+    <td class="dataTableContent">
+    <?php echo xtc_draw_input_field('customers_state', $order->customer['state'], 'style="width: 200px"');?>
+    </td>
+    <td class="dataTableContent">
+    <?php echo xtc_draw_input_field('delivery_state', $order->delivery['state'], 'style="width: 200px"');?>
+    </td>
+    <td class="dataTableContent">
+    <?php echo xtc_draw_input_field('billing_state', $order->billing['state'], 'style="width: 200px"');?>
+    </td>
+  </tr>
+  <?php } ?>
   <tr class="dataTableRow">
     <td class="dataTableContent" colspan="4" style="padding: 0px !important; border-bottom: 0px !important;"><br /><br /><div class="main important_info"><?php echo TEXT_CUSTOMER_GROUP_INFO;?></div></td>
   </tr>
