@@ -603,7 +603,7 @@ if (defined('PROJECT_MAJOR_VERSION')) {
                                                 <td class="<?php echo $tableClass; ?> shopgate_input">
                                                     <div>
                                                         <input type="radio" <?php echo  $shopgateConfig["reverse_categories_sort_order"]?'checked=""':''?> value="1" name="_shopgate_config[reverse_categories_sort_order]">
-                                                        <?php echo SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER_ON; ?><br>
+                                                        <?php echo SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER_ON; ?><br />
                                                         <input type="radio" <?php echo !$shopgateConfig["reverse_categories_sort_order"]?'checked=""':''?> value="0" name="_shopgate_config[reverse_categories_sort_order]">
                                                         <?php echo SHOPGATE_CONFIG_EXTENDED_REVERSE_CATEGORIES_SORT_ORDER_OFF; ?>
                                                     </div>
@@ -621,7 +621,7 @@ if (defined('PROJECT_MAJOR_VERSION')) {
                                                 <td class="<?php echo $tableClass; ?> shopgate_input">
                                                     <div>
                                                         <input type="radio" <?php echo  $shopgateConfig["reverse_items_sort_order"]?'checked=""':''?> value="1" name="_shopgate_config[reverse_items_sort_order]">
-                                                        <?php echo SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_ON; ?><br>
+                                                        <?php echo SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_ON; ?><br />
                                                         <input type="radio" <?php echo !$shopgateConfig["reverse_items_sort_order"]?'checked=""':''?> value="0" name="_shopgate_config[reverse_items_sort_order]">
                                                         <?php echo SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_OFF; ?>
                                                     </div>

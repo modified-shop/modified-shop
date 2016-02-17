@@ -316,15 +316,26 @@ class ShopgateItemXmlModel extends ShopgateItemModel
     
     public function setIdentifiers()
     {
+        $identifierData = array();
+
         if (!empty($this->item["products_ean"])) {
             $ean = preg_replace("/\s+/i", '', $this->item["products_ean"]);
             if (!empty($ean)) {
                 $identifier = new Shopgate_Model_Catalog_Identifier();
                 $identifier->setType("ean");
                 $identifier->setValue($ean);
-                parent::setIdentifiers(array($identifier));
+                $identifierData[] = $identifier;
             }
         }
+
+        if (!empty($this->item['products_model'])) {
+            $identifierModel = new Shopgate_Model_Catalog_Identifier();
+            $identifierModel->setType('sku');
+            $identifierModel->setValue($this->item['products_model']);
+            $identifierData[] = $identifierModel;
+        }
+
+        parent::setIdentifiers($identifierData);
     }
     
     public function setTags()
