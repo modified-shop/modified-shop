@@ -27,7 +27,7 @@ define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE'
   <table border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td valign="bottom">
-	      <a onclick="javascript:window.open(\'https://images.sofort.com/'.$_SESSION['language_code'].'/su/landing.php\',\'Kundeninformationen\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1020, height=900\');" style="float:left; width:auto;">{{image}}</a>
+	      <a onclick="javascript:window.open(\'https://images.sofort.com/de/su/landing.php\',\'Kundeninformationen\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1020, height=900\');" style="float:left; width:auto;">{{image}}</a>
 	    </td>
 	  </tr>
 	  <tr>

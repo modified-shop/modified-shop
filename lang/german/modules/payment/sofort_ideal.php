@@ -43,6 +43,6 @@ define('MODULE_PAYMENT_'.$sofort_code.'_SELECTBOX', 'Bitte wählen Sie Ihre Bank 
 define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE', 'iDeal Modul aktivieren');
 define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_DESC', 'M&ouml;chten Sie Zahlungen per iDeal akzeptieren?');
 
-include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/sofort_payment.php');
+include(DIR_FS_CATALOG.'lang/german/modules/payment/sofort_payment.php');
 
 ?>

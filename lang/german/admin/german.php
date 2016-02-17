@@ -45,7 +45,7 @@ function xtc_date_raw($date, $reverse = false) {
 }
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
-foreach(auto_include(DIR_FS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_LANGUAGES.'german/extra/admin/','php') as $file) require ($file);
 
 // Global entries for the <html> tag
 define('HTML_PARAMS','dir="ltr" lang="de"');
