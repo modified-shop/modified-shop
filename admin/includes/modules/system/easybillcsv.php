@@ -49,8 +49,8 @@ class easybillcsv {
 	}
 
 	function process($file) {
-	  global $messageStack;
-	  
+    global $xtPrice, $messageStack;
+	  	  
 	  if ($this->export == 'cron') {
 	    $url = HTTP_SERVER.DIR_WS_CATALOG.'api/easybill/easybillcsv.php?token='.MODULE_EASYBILL_CSV_CRON_TOKEN.'&customers_status='.implode(',', $_POST['customers_status']).'&orders_status='.implode(',', $_POST['orders_status']);
 	    xtc_db_query("UPDATE ". TABLE_CONFIGURATION ." SET configuration_value = '".$url."' WHERE configuration_key = 'MODULE_EASYBILL_CSV_CRON_URL'");
@@ -59,7 +59,7 @@ class easybillcsv {
 	  }
 	  
 		@xtc_set_time_limit(0);
-                                                   
+                                
 		$export_query = xtc_db_query("SELECT DISTINCT o.orders_id 
                                     FROM ".TABLE_ORDERS." o
                                     JOIN ".TABLE_ORDERS_STATUS_HISTORY." osh
@@ -128,7 +128,7 @@ class easybillcsv {
                                           'payment_date' => '',
                                           'currency' => $order->info['currency'],
                                           'order_shipping_price' => '',
-                                          'payment_type' => $this->get_payment_name($order->info['payment_class']),
+                                          'payment_type' => $this->get_payment_name($order->info['payment_class'], $order->info['language']),
                                           'customer_number' => xtc_not_null($order->customer['csID']) ? $order->customer['csID'] : $order->customer['id'],
                                           'email' => $order->customer['email_address'],
                                           'phone_number' => $order->customer['telephone'],
@@ -140,7 +140,7 @@ class easybillcsv {
                                           'city' => $order->customer['city'],
                                           'state' => $order->customer['state'],
                                           'country' => $order->customer['country'],
-                                          'vat_id' => $order->customer['customers_vat_id'],
+                                          'vat_id' => $order->customer['vat_id'],
                                           'tax_type' => '',
                                           'shipping_firstname' => $order->delivery['firstname'],
                                           'shipping_lastname' => $order->delivery['lastname'],
@@ -172,8 +172,9 @@ class easybillcsv {
               }
             }
           }
+
           if ($order->products[$i]['allow_tax'] == '1') {
-            $order->customer['allow_tax'] = '1';
+            $xtPrice->show_price_tax = '1';
           }
         
           $easybill_export_positions[$count][$i] =  array('sku' => $order->products[$i]['id'],
@@ -181,12 +182,12 @@ class easybillcsv {
                                                           'item_number' => (xtc_not_null($order->products[$i]['model']) ? $order->products[$i]['model'] : $order->products[$i]['id']) . $attributes_model,
                                                           'title' => $order->products[$i]['name'] . (xtc_not_null($attributes) ? ' |'.$attributes : ''),
                                                           'quantity' => $order->products[$i]['qty'],
-                                                          'item_price' => $order->products[$i]['price'],
+                                                          'item_price' => (($xtPrice->show_price_tax != '0') ? $order->products[$i]['price'] : $this->xtcAddTax($order->products[$i]['price'], $order->products[$i]['tax'])),
                                                           'vat_percent' => $order->products[$i]['tax'],
                                                           );
         } 
         
-        if ((!isset($order->customer['allow_tax']) || $order->customer['allow_tax'] != '1') && $order->delivery['country_iso_2'] != 'DE') {
+        if ($xtPrice->show_price_tax == '0' && $order->delivery['country_iso_2'] != 'DE') {
           $easybill_export[$count]['tax_type'] = $this->get_tax_type($order->delivery['country_iso_2']) ? 'intra-community-trade' : 'export';
         }
         
@@ -202,8 +203,8 @@ class easybillcsv {
    
             case 'ot_shipping':
               $shipping_tax = $this->getShippingTax($order->info['shipping_class'], $order->delivery['country_id'], $order->delivery['country']);  
-              //$easybill_export[$count]['order_shipping_price'] = ($order->customer['allow_tax'] == '1') ? $xtPrice->xtcRemoveTax($order->totals[$t]['value'], $shipping_tax) : $order->totals[$t]['value'];
-              $easybill_export[$count]['order_shipping_price'] = $order->totals[$t]['value'];
+              $easybill_export[$count]['order_shipping_price'] = (($xtPrice->show_price_tax != '0') ? $order->totals[$t]['value'] : $this->xtcAddTax($order->totals[$t]['value'], $shipping_tax));
+              //$easybill_export[$count]['order_shipping_price'] = $order->totals[$t]['value'];
               break;
 
             case 'ot_payment':
@@ -300,10 +301,19 @@ class easybillcsv {
     }
     return $string;
   }
-  
-  function get_payment_name($payment_method) {
-    if (file_exists(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$payment_method.'.php')){
-      include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$payment_method.'.php');
+
+  function xtcAddTax($nPrice, $tax) {
+    global $xtPrice;
+    
+    $bPrice = $xtPrice->xtcAddTax($nPrice, $tax);
+    $bPrice = round($bPrice, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+    
+    return $bPrice;
+  }
+    
+  function get_payment_name($payment_method, $language) {
+    if (file_exists(DIR_FS_CATALOG.'lang/'.$language.'/modules/payment/'.$payment_method.'.php')){
+      include(DIR_FS_CATALOG.'lang/'.$language.'/modules/payment/'.$payment_method.'.php');
       $payment_method = constant(strtoupper('MODULE_PAYMENT_'.$payment_method.'_TEXT_TITLE'));
     }
     return $payment_method;
@@ -373,10 +383,10 @@ class easybillcsv {
 
 	function display() {
 
-		$customers_status_params = 'multiple';
+		$customers_status_params = 'multiple noStyling="1" style="-moz-appearance: -moz-gtk-info-bar;"';
 		$customers_statuses_array = xtc_get_customers_statuses();
 
-		$orders_status_params = 'multiple';
+		$orders_status_params = 'multiple noStyling="1" style="-moz-appearance: -moz-gtk-info-bar;"';
 		$orders_status = array();
 		$orders_status_query=xtc_db_query("SELECT * FROM orders_status WHERE language_id='".(int)$_SESSION['languages_id']."'" );
 		while ($orders_status_entry = xtc_db_fetch_array($orders_status_query)) {
