@@ -308,7 +308,11 @@ if (xtc_not_null($action) && !$box) {
               }
               
               $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-              $directory_array = array();
+              $directory_array = array(
+                'installed' => array(),
+                'preferred' => array(),
+                'uninstalled' => array(),
+              );
               if ($dir = @dir($module_directory)) {
                 while ($file = $dir->read()) {
                   if (!is_dir($module_directory . $file)) {
@@ -351,17 +355,17 @@ if (xtc_not_null($action) && !$box) {
                     }
                   }
                 }
-                if (is_array($directory_array['installed'])) {
+                if (count($directory_array['installed']) > 0) {
                   ksort($directory_array['installed']);
                   foreach ($directory_array['installed'] as $key => $val){
                     $directory_array['installed'][$key] = $val;
                   }
                   $directory_array['installed'] = array_values($directory_array['installed']);
                 }
-                if (isset($directory_array['preferred']) && is_array($directory_array['preferred'])) {
+                if (count($directory_array['preferred']) > 0) {
                   sort($directory_array['preferred']);
                 }
-                if (isset($directory_array['uninstalled']) && is_array($directory_array['uninstalled'])) {
+                if (count($directory_array['uninstalled']) > 0) {
                   sort($directory_array['uninstalled']);
                 }
                 $dir->close();
@@ -372,7 +376,7 @@ if (xtc_not_null($action) && !$box) {
                   <?php
                   $installed_modules = array();
                 
-                  if (isset($directory_array['installed']) && count($directory_array['installed']) > 0) {
+                  if (count($directory_array['installed']) > 0) {
                     ?>
                     <tr class="dataTableHeadingRow sub">
                       <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
@@ -389,7 +393,7 @@ if (xtc_not_null($action) && !$box) {
                     echo '<tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>'.PHP_EOL;
                   }
 
-                  if (isset($directory_array['preferred']) && count($directory_array['preferred']) > 0) {
+                  if (count($directory_array['preferred']) > 0) {
                     ?>
                     <tr class="dataTableHeadingRow sub">
                       <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_PREFERRED; ?></td>
@@ -406,7 +410,7 @@ if (xtc_not_null($action) && !$box) {
                     echo '<tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>'.PHP_EOL;
                   }
 
-                  if (isset($directory_array['uninstalled']) && count($directory_array['uninstalled']) > 0) {
+                  if (count($directory_array['uninstalled']) > 0) {
                     ?>
                     <tr class="dataTableHeadingRow sub">
                       <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
