@@ -40,7 +40,7 @@ function xtc_date_raw($date, $reverse = false) {
 }
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
-foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
+foreach(auto_include(DIR_WS_LANGUAGES.'german/extra/','php') as $file) require ($file);
 
 define('TITLE', STORE_NAME);
 define('HEADER_TITLE_TOP', 'Startseite');    
