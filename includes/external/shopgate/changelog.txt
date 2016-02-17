@@ -1,3 +1,6 @@
+'''Version 2.9.28’’’
+* added export of article number (sku) to the xml item export
+
 '''Version 2.9.27’’’
 * uses Shopgate Library 2.9.36
 * fixed reduction type fixed in tier prices

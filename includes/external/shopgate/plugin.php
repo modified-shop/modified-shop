@@ -21,7 +21,7 @@
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 
-define('SHOPGATE_PLUGIN_VERSION', '2.9.27');
+define('SHOPGATE_PLUGIN_VERSION', '2.9.28');
 
 /**
  * Modified eCommerce Plugin for Shopgate
