@@ -167,22 +167,7 @@
    * @param mixed $url
    * @return
    */
-  function xtc_redirect($url) {
-    global $logger;
-
-    if (STORE_PAGE_PARSE_TIME == 'true') {
-      if (!is_object($logger))
-        $logger = new logger;
-      $logger->timer_stop();
-    }
-
-    // save SESSION before redirect
-    session_write_close();
-    xtc_db_close();
-
-    header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url)));
-    exit();
-  }
+  require_once(DIR_FS_INC . 'xtc_redirect.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_get_path()
