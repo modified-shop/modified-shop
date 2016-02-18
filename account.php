@@ -35,8 +35,16 @@ require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
 require_once (DIR_FS_INC.'get_order_total.inc.php');
 
-if (!isset ($_SESSION['customer_id'])) { 
+if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+}
+
+if (isset($_SESSION['customer_id']) 
+    && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+    && GUEST_ACCOUNT_EDIT != 'true'
+    )
+{ 
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
 }
 
 $breadcrumb->add(NAVBAR_TITLE_ACCOUNT, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
@@ -122,20 +130,23 @@ if (xtc_count_customer_orders() > 0) {
 }
 $smarty->assign('order_content', $order_content);
 
-$smarty->assign('LINK_ORDERS', xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
+if ((isset($_SESSION['customer_id']) && $_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST)) {
+  $smarty->assign('LINK_ORDERS', xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
+  if (isset($_SESSION['customer_id']) && $_SESSION['customer_id'] != '1') {
+    $smarty->assign('LINK_DELETE', xtc_href_link(FILENAME_ACCOUNT_DELETE, '', 'SSL'));
+  }
+  $smarty->assign('LINK_PASSWORD', xtc_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'));
+  if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+    $smarty->assign('LINK_EXPRESS', xtc_href_link(FILENAME_ACCOUNT_CHECKOUT_EXPRESS, '', 'SSL'));
+  }
+}
+
 $smarty->assign('LINK_NEWSLETTER', xtc_href_link(FILENAME_NEWSLETTER, '', 'SSL'));
 $smarty->assign('LINK_ALL', xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
 $smarty->assign('LINK_EDIT', xtc_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'));
 $smarty->assign('LINK_ADDRESS', xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
-$smarty->assign('LINK_PASSWORD', xtc_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'));
-if (isset($_SESSION['customer_id']) && $_SESSION['customer_id'] != '1') {
-  $smarty->assign('LINK_DELETE', xtc_href_link(FILENAME_ACCOUNT_DELETE, '', 'SSL'));
-}
 if (!isset ($_SESSION['customer_id'])) {
 	$smarty->assign('LINK_LOGIN', xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
-}
-if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
-  $smarty->assign('LINK_EXPRESS', xtc_href_link(FILENAME_ACCOUNT_CHECKOUT_EXPRESS, '', 'SSL'));
 }
 
 $smarty->assign('language', $_SESSION['language']);

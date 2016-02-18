@@ -189,7 +189,11 @@ if (isset($_SESSION['customer_id'])) {
 	$smarty->assign('create_account',xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
 }
 $smarty->assign('index',xtc_href_link(FILENAME_DEFAULT));
-if ($_SESSION['account_type'] == '0' || GUEST_ACCOUNT_EDIT == 'true') {
+if ((isset($_SESSION['customer_id']) 
+     && $_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+     ) || GUEST_ACCOUNT_EDIT == 'true'
+    ) 
+{
   $smarty->assign('account',xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 $smarty->assign('cart',xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));

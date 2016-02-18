@@ -32,8 +32,16 @@ require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
 require_once (DIR_FS_INC.'xtc_get_customers_country.inc.php');
 require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 
-if (!isset ($_SESSION['customer_id'])) {
-	xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+if (!isset($_SESSION['customer_id'])) { 
+  xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+}
+
+if (isset($_SESSION['customer_id']) 
+    && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+    && GUEST_ACCOUNT_EDIT != 'true'
+    )
+{ 
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
 }
 
 if ($_SESSION['customers_status']['customers_status'] == '0') {
