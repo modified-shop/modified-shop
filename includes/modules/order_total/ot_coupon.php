@@ -276,7 +276,7 @@ class ot_coupon {
           if ($coupon_array['coupon_type'] != 'P') {
             $od_amount = $c_deduct;
           } else {
-            $od_amount = $amount * $get_result['coupon_amount'] / 100; //Calculation of percentage
+            $od_amount = $amount * $coupon_array['coupon_amount'] / 100; //Calculation of percentage
           }
         }
 
