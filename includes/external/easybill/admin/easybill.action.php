@@ -12,7 +12,7 @@
 
   include (DIR_FS_EXTERNAL.'easybill/classes/class.easybill.php');
 
-  if (isset($_GET['action']) && $_GET['action']=='easybill') {
+  if (isset($_GET['subaction']) && $_GET['subaction'] == 'easybill') {
   
     $easybill = new easybill($oID);
 
