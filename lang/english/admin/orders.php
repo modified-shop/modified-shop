@@ -166,4 +166,6 @@ define('TABLE_HEADING_FILENAME', 'Filename');
 define('TABLE_HEADING_EXPIRES', 'Expires date');
 define('TABLE_HEADING_DOWNLOADS', 'Number Downloads');
 define('TABLE_HEADING_DAYS', 'Number days');
+
+define('ENTRY_SEND_TRACKING_INFO', 'Shipping information:');
 ?>

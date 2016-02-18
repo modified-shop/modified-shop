@@ -243,7 +243,7 @@ switch ($action) {
           $smarty->assign('ORDER_LINK', xtc_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL'));
         }
         // track & trace
-        $tracking_array = get_tracking_link($oID, $lang_code);
+        $tracking_array = get_tracking_link($oID, $lang_code, ((isset($_POST['tracking_id']) && is_array($_POST['tracking_id'])) ? $_POST['tracking_id'] : array()));
         $smarty->assign('PARCEL_COUNT', count($tracking_array));
         $smarty->assign('PARCEL_ARRAY', $tracking_array);
         

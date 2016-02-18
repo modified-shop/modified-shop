@@ -13,9 +13,13 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-  function get_tracking_link($orders_id, $lang_code) {
+  function get_tracking_link($orders_id, $lang_code, $tracking_id = array()) {
     if ($lang_code != 'de' && $lang_code != 'en') {
       $lang_code == DEFAULT_LANGUAGE;
+    }
+    $where = '';
+    if (count($tracking_id) > 0) {
+      $where = " AND ortr.tracking_id IN ('".implode("', '", $tracking_id)."')";
     }
     $parcel_link = array();
     $tracking_links_query = xtc_db_query("SELECT * 
@@ -23,6 +27,7 @@
                                             JOIN ".TABLE_CARRIERS." ca
                                                  ON ortr.carrier_id = ca.carrier_id
                                            WHERE ortr.orders_id = '".(int)$orders_id."'
+                                                 ".$where."
                                            ORDER BY ortr.tracking_id ASC");
     if (xtc_db_num_rows($tracking_links_query) > 0) {
       $i = 0;

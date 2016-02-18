@@ -393,6 +393,24 @@
             <td class="main"><b><?php echo ENTRY_STATUS; ?></b> <?php echo xtc_draw_pull_down_menu('status', $orders_statuses, $order->info['orders_status']); ?></td>
           </tr>
           <?php
+            if (count($tracking_array) > 0) {
+              ?>
+              <tr>
+                <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+              </tr>
+              <tr>
+                <td class="main"><b><?php echo ENTRY_SEND_TRACKING_INFO; ?></b></td>
+              </tr>
+              <?php
+              foreach($tracking_array as $tracking) {
+                echo '<tr><td class="main">'.xtc_draw_checkbox_field('tracking_id[]', $tracking['tracking_id'], false).' '.$tracking['parcel_id'].'</td></tr>';
+              }
+              ?>
+              <tr>
+                <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+              </tr>
+              <?php
+            }
             /* magnalister v2.0.0 */
             if (function_exists('magnaExecute')) magnaExecute('magnaRenderOrderStatusSync', array(), array('order_details.php'));
             /* END magnalister */
