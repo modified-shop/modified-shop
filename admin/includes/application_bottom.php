@@ -17,10 +17,12 @@
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
+  // page parse time
   if (STORE_PAGE_PARSE_TIME == 'true') {
-    if (!is_object($logger))
-      $logger = new logger;
-    echo $logger->timer_stop(DISPLAY_PAGE_PARSE_TIME);
+    $parse_time = number_format((microtime(true)-PAGE_PARSE_START_TIME), 3);
+    if ($parse_time >= STORE_PAGE_PARSE_TIME_THRESHOLD) {
+      error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $parse_time . 's] ' . getenv('REQUEST_URI') . "\n", 3, DIR_FS_LOG.'mod_parsetime_admin_'. date('Y-m-d') .'.log');
+    }
   }
   
   foreach(auto_include(DIR_FS_ADMIN.'includes/extra/application_bottom/','php') as $file) require ($file);
