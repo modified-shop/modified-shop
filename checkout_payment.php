@@ -169,6 +169,7 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
       && isset($GLOBALS['paypalplus'])
       && is_object($GLOBALS['paypalplus'])
       && $GLOBALS['paypalplus']->enabled === true
+      && (!isset($credit_selection) || count($credit_selection) < 1)
       )
   {
     $hide_payment_ppp = explode(';', MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT);

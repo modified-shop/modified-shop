@@ -27,13 +27,20 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
   $paypal = new PayPalPayment('paypalplus');
   
   $module = array();
-  for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
-    $module[] = array(
-      'redirectUrl' => $paypal->encode_utf8($paypal->link_encoding(xtc_href_link('callback/paypal/paypalplus_redirect.php', 'payment='.$selection[$i]['id'], 'SSL'))),
-      'methodName' => $paypal->encode_utf8(strip_tags($selection[$i]['module'])),
-      'description' => $paypal->encode_utf8($paypal->get_config(strtoupper($selection[$i]['id'].'_'.$_SESSION['language_code']))),
-    );
-	}
+  if (ACTIVATE_GIFT_SYSTEM == 'true') {
+    require_once (DIR_WS_CLASSES . 'order_total.php');
+    $order_total_modules = new order_total();
+    $credit_selection = $order_total_modules->credit_selection();
+  }
+  if (!isset($credit_selection) || count($credit_selection) < 1) {
+    for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
+      $module[] = array(
+        'redirectUrl' => $paypal->encode_utf8($paypal->link_encoding(xtc_href_link('callback/paypal/paypalplus_redirect.php', 'payment='.$selection[$i]['id'], 'SSL'))),
+        'methodName' => $paypal->encode_utf8(strip_tags($selection[$i]['module'])),
+        'description' => $paypal->encode_utf8($paypal->get_config(strtoupper($selection[$i]['id'].'_'.$_SESSION['language_code']))),
+      );
+    }
+  }
 
   $country_query = xtc_db_query("SELECT c.countries_iso_code_2
                                    FROM ".TABLE_COUNTRIES." c
