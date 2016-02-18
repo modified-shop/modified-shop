@@ -440,10 +440,6 @@
               </div>
             </td>
           </tr>
-          <?php
-            /* easyBill */
-            include (DIR_FS_EXTERNAL.'easybill/admin/easybill.button.php');
-          ?>
         </table>
         <!-- EOC BUTTONS BLOCK -->
       </div>
