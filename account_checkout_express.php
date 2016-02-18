@@ -35,7 +35,10 @@ function get_address_iso_code($address_id) {
   return $address['countries_iso_code_2'];
 }
 
-if (!isset ($_SESSION['customer_id'])) {
+if (!isset($_SESSION['customer_id']) 
+    || $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+    ) 
+{
 	xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 

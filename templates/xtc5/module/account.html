@@ -17,11 +17,13 @@
     <li><a href="{$LINK_EDIT}"><strong>{#text_edit#}</strong></a></li>
     <li><a href="{$LINK_ADDRESS}"><strong>{#text_address#}</strong></a></li>
     {if isset($LINK_EXPRESS)}
-    <li><a href="{$LINK_EXPRESS}"><strong>{#text_express_checkout#}</strong></a></li>
+      <li><a href="{$LINK_EXPRESS}"><strong>{#text_express_checkout#}</strong></a></li>
     {/if}
-    <li><a href="{$LINK_PASSWORD}"><strong>{#text_password#}</strong></a></li>
+    {if $LINK_PASSWORD}
+      <li><a class="black" href="{$LINK_PASSWORD}"><strong>{#text_password#}</strong></a></li>
+    {/if}
     {if $LINK_DELETE}
-    <li><a href="{$LINK_DELETE}"><strong>{#text_delete#}</strong></a></li>
+      <li><a href="{$LINK_DELETE}"><strong>{#text_delete#}</strong></a></li>
     {/if}
   </ul>
 </div>

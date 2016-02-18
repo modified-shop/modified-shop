@@ -30,7 +30,10 @@ require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
 
-if (!isset ($_SESSION['customer_id'])) {
+if (!isset($_SESSION['customer_id']) 
+    || $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+    ) 
+{
 	xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 

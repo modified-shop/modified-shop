@@ -29,8 +29,17 @@ require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'xtc_get_country_name.inc.php');
 require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
 
-if (!isset ($_SESSION['customer_id']))
-	xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+if (!isset($_SESSION['customer_id'])) { 
+  xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+}
+
+if (isset($_SESSION['customer_id']) 
+    && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+    && GUEST_ACCOUNT_EDIT != 'true'
+    )
+{ 
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
+}
 
 $breadcrumb->add(NAVBAR_TITLE_1_ADDRESS_BOOK, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_ADDRESS_BOOK, xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));

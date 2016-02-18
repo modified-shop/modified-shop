@@ -36,6 +36,14 @@ if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'order_id=' .(int)$_GET['order_id'], 'SSL')); 
 }
 
+if (isset($_SESSION['customer_id']) 
+    && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+    && GUEST_ACCOUNT_EDIT != 'true'
+    )
+{ 
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
+}
+
 if (!isset ($_GET['order_id']) || (isset ($_GET['order_id']) && !is_numeric($_GET['order_id']))) {
    xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
 }

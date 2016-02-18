@@ -10,9 +10,9 @@
         <li class="first"><a href="{$account}">{#link_account#}</a></li>
       {/if}
       {if isset($smarty.session.customer_id)}
-        <li><a href="{$logoff}">{#link_logoff#}</a></li>
+        <li{if !isset($account)} class="first"{/if}><a href="{$logoff}">{#link_logoff#}</a></li>
       {else}
-        <li><a href="{$create_account}">{#new_customer#}</a></li>
+        <li{if !isset($account)} class="first"{/if}><a href="{$create_account}">{#new_customer#}</a></li>
         <li><a href="{$login}">{#link_login#}</a></li>
       {/if}
     </ul>

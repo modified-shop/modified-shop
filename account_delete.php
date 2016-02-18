@@ -26,8 +26,11 @@ $smarty = new Smarty;
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
-if (!isset ($_SESSION['customer_id'])) {
-  xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+if (!isset($_SESSION['customer_id']) 
+    || $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+    ) 
+{
+	xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
 if ($_SESSION['customer_id'] == 1) {
