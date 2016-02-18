@@ -335,21 +335,7 @@ switch ($action) {
     xtc_reverse_order($oID, xtc_db_prepare_input($_POST['restock']), xtc_db_prepare_input($_POST['status_storno']));
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action'))));
     break;
-
-  case 'afterbuy_send':
-    require_once (DIR_FS_CATALOG.'includes/classes/afterbuy.php');
-    $aBUY = new xtc_afterbuy_functions($oID);
-    if ($aBUY->order_send()) {
-      $aBUY->process_order();
-    }
-    break;
     
-	/* easyBill */
-	case 'easybill':	
-    include (DIR_FS_EXTERNAL.'easybill/admin/easybill.action.php');
-		xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
-		break;
-
 	case 'inserttracking':
 		$oID = (int)$_GET['oID'];
 		$carrier_id = xtc_db_prepare_input($_POST['carrier_id']);
@@ -386,6 +372,10 @@ switch ($action) {
 
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
 		break;
+
+  case 'custom':
+    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_action/','php') as $file) require ($file);
+    break;
 }
 
   require (DIR_WS_INCLUDES.'head.php');

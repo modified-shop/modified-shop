@@ -232,7 +232,7 @@
                       }
                       ## BILLSAFE payment module
                       if (AFTERBUY_ACTIVATED == 'true') {
-                        $contents[] = array ('align' => 'center', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=afterbuy_send').'">'.BUTTON_AFTERBUY_SEND.'</a>');
+                        $contents[] = array ('align' => 'center', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=custom&subaction=afterbuy_send').'">'.BUTTON_AFTERBUY_SEND.'</a>');
                       }
                       $contents[] = array ('text' => '<br />'.TEXT_DATE_ORDER_CREATED.' '.xtc_date_short($oInfo->date_purchased));
                         if (xtc_not_null($oInfo->last_modified)) {

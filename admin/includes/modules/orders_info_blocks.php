@@ -124,7 +124,7 @@
                   ## invoice number and date
                   echo add_table_infos_ibillnr($order);
                 
-                  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/module/orders/orders_info_payment/','php') as $file) require ($file);
+                  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_info_payment/','php') as $file) require ($file);
                 ?>
               </table>
             </td>
@@ -246,7 +246,7 @@
         <!-- EOC DOWNLOAD BLOCK -->
 
         <?php
-          foreach(auto_include(DIR_FS_ADMIN.'includes/extra/module/orders/orders_info_blocks/','php') as $file) require ($file);
+          foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_info_blocks/','php') as $file) require ($file);
         ?>
 
         <!-- BOC ORDER TRACK & TRACE BLOCK -->
