@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 if (MODULE_EASYBILL_STATUS=='True') {
-  include_once (DIR_FS_EXTERNAL.'easybill/lang/'.$order->info['language'].'/easybill.php');
+  include_once (DIR_FS_EXTERNAL.'easybill/lang/'.$_SESSION['language'].'/easybill.php');
   $easybill_query = xtc_db_query("SELECT * 
                                     FROM ".TABLE_EASYBILL." 
                                    WHERE orders_id='".(int)$oID."'");
