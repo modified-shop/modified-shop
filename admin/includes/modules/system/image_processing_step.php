@@ -16,7 +16,8 @@
    Contribution
    image_processing_step (step-by-step Variante B) by INSEH 2008-03-26
 
-   new jquery image_processing / only missing image/ max images  by web28 2018-12-01
+   new jquery image_processing / only missing image/ max images  by web28 2015-12-01
+   fix only_missing_images/ support for logfile/ display image name  by web28 2016-02-20
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -37,6 +38,8 @@ if ( !class_exists( "image_processing_step" ) ) {
       $this->module_filename = $current_page;
       $this->properties = array();
       $this->files = array();
+
+      $this->logfile = DIR_FS_CATALOG.'log/image_processing.log';
 
       //define used get parameters
       $this->get_params = array();
@@ -82,6 +85,10 @@ if ( !class_exists( "image_processing_step" ) ) {
       $count = isset($_POST['count']) ? (int)$_POST['count'] : 0;
       $limit = $offset + $step;
       
+      if(is_file($this->logfile) && $offset == 0) {
+          @ unlink ($this->logfile);
+      }
+      
       $rData = array();
       
       @ini_set('memory_limit','256M');
@@ -103,6 +110,12 @@ if ( !class_exists( "image_processing_step" ) ) {
         $products_image_name = $files[$i]['text'];
         $products_image_name_process = ($_GET['lower_file_ext'] == 1) ? str_replace($ext_search, $ext_replace ,$files[$i]['text']) : $files[$i]['text'];
 
+        $rData['imgname'] = $products_image_name_process;
+        
+        if ($_POST['logging'] == 1) {
+          $handle = fopen($this->logfile, "a"); fwrite($handle, $products_image_name. '|read'."\n"); fclose($handle);
+        }
+
         if ($_POST['only_missing_images'] == 1) {
           $flag = false;
           if (!is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$files[$i]['text'])) {
@@ -116,14 +129,21 @@ if ( !class_exists( "image_processing_step" ) ) {
           }
           if ($flag) {
             $count += 1;
+            if ($_POST['logging'] == 1) {
+              $handle = fopen($this->logfile, "a"); fwrite($handle, $rData['imgname'].'|process'."\n"); fclose($handle);
+            }  
           }
         } else {
           require(DIR_WS_INCLUDES . 'product_thumbnail_images.php');
           require(DIR_WS_INCLUDES . 'product_info_images.php');
           require(DIR_WS_INCLUDES . 'product_popup_images.php');
           $count += 1;
+          if ($_POST['logging'] == 1) {
+            $handle = fopen($this->logfile, "a"); fwrite($handle, $rData['imgname'].'|process'."\n"); fclose($handle);
+          }
         }
       }
+
       $rData['start'] = $limit;
       $rData['count'] = $count;
       return $rData;
@@ -167,10 +187,12 @@ if ( !class_exists( "image_processing_step" ) ) {
                              '<br />' . xtc_draw_pull_down_menu('max_datasets', $max_array, '5'). ' ' . TEXT_MAX_IMAGES. '<br />'.
                              '<br />' . xtc_draw_checkbox_field('only_missing_images', '1', false, '', 'class="only_missing_images"') . ' ' . TEXT_ONLY_MISSING_IMAGES. '<br />'.
                              '<br />' . xtc_draw_checkbox_field('lower_file_ext', '1', false, '', 'class="lower_file_ext"') . ' ' . TEXT_LOWER_FILE_EXT. '<br />'.
+                             '<br />' . xtc_draw_checkbox_field('logging', '1', false, '', 'class="logfile"') . ' ' . TEXT_LOGFILE. '<br />'.
                              '<br />' . xtc_button(BUTTON_START). '&nbsp;' .
                              xtc_button_link(BUTTON_CANCEL, xtc_href_link($this->module_filename, 'set=' . $_GET['set'] . '&module='.$this->code)) .
                              
                              '<div class="ajax_responce" style="margin-bottom:15px;"><hr>'.
+                             '<div class="ajax_imgname"></div>'.
                                sprintf(MODULE_STEP_READY_STYLE_TEXT,$ajax_img . IMAGE_STEP_INFO . '<span class="ajax_count"></span> / ' .(int)$this->max_files . '<span class="ajax_ready_info">' . IMAGE_STEP_INFO_READY .'<span>') . 
                                '<div class="process_wrapper">
                                 <div class="process_inner_wrapper">

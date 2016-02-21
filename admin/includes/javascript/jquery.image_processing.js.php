@@ -29,6 +29,7 @@ jQuery(document).submit(function(e){
     if (form.is("#form_image_processing")) { // check if this is the form that you want
         e.preventDefault();
         $('.ajax_responce').show();
+        $('.ajax_imgname').show();
         $('.ajax_loading').show();
         $('.ajax_ready_info').hide();
         $('.ajax_btn_back').hide();
@@ -53,7 +54,8 @@ function ajaxCall(ajax_url, dataStr) {
       dataType: 'json',
       data : dataStr,
       error: function() {
-        alert('Error loading json data!');
+        //alert('Error loading json data!');
+        alert('Error!');
       },
       success: function(data) {
         JStoPHPResponse(data);
@@ -71,16 +73,18 @@ function JStoPHPResponse(data) {
     //$.each(response, function( key, value ) {
       //console.log('key: ' + key + ' | value: ' + value);
     //});
+$('.ajax_imgname').html(response.imgname);
     $('.ajax_count').html(response.count);
-    updateProgressBar(response.total,'image',response.count);
+    updateProgressBar(response.total,'image',response.start);
     //return;
-    if (response.count < response.total) {
+    if (response.start < response.total) {
        //new ajax call
        var dataStrNew = $.param(response) //jquery build http query string
        if (aip_debug) console.log('$.param:' + dataStrNew); 
        ajaxCall(response.ajax_url, dataStrNew);
     } else {
       //ready
+      $('.ajax_imgname').hide();
       $('.ajax_loading').hide();
       $('.ajax_ready_info').show();
       $('.ajax_btn_back').show();
@@ -90,6 +94,7 @@ function JStoPHPResponse(data) {
 
 function updateProgressBar(total,type,counter,imgname,laufzeit) {
   precent = (counter *100/total).toFixed(1); //+ '%';
+  if (precent > 100) precent = 100;
   $('#show_'+type+'_process').css('width',precent + '%');
   $('#'+ type + '_precents').html(precent + '%');
  

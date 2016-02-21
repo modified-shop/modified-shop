@@ -41,4 +41,6 @@ define('MODULE_STEP_READY_STYLE_BACK', MODULE_STEP_READY_STYLE_TEXT);
 define('TEXT_LOWER_FILE_EXT','Dateiendung in Kleinbuchstaben umwandeln Bsp.: <b> JPG -> jpg</b>');
 define('IMAGE_COUNT_INFO','Anzahl Bilder in %s: %s Stk. ');
 
+define('TEXT_LOGFILE','Logging aktivieren, n&uuml;tzlich zur Fehlersuche. Die Logdatei wird im Ordner /log im Hauptverzeichnis gespeichert.');
+
 ?>
