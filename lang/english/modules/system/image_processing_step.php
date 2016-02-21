@@ -41,6 +41,6 @@ define('MODULE_STEP_READY_STYLE_BACK', MODULE_STEP_READY_STYLE_TEXT);
 define('TEXT_LOWER_FILE_EXT','Convert file extension to lowercase. Example: <b> JPG -> jpg</b>');
 define('IMAGE_COUNT_INFO','Number of images in %s: %s pieces. ');
 
-define('TEXT_LOGFILE','Enable logging, useful for debugging. The log file is saved in the folder / log in the root directory');
+define('TEXT_LOGFILE','Enable logging, useful for debugging. The log file is saved in the folder /log in the root directory');
 
 ?>
