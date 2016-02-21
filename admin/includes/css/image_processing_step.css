@@ -35,3 +35,8 @@ text-align:center;
 .ajax_responce, .ajax_ready_info, .ajax_btn_back{
 display: none;
 }
+
+.ajax_imgname{
+display: none;
+text-align:center;
+}
