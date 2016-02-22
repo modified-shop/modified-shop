@@ -397,9 +397,7 @@
     }
 
     function correctImageOrientation($resource_file) {
-      $image_type = getimagesize($resource_file);
-      
-      if (function_exists('exif_read_data') && $image_type[2] == IMAGETYPE_JPEG) {
+      if (function_exists('exif_read_data') && function_exists('exif_imagetype') && exif_imagetype($resource_file) == IMAGETYPE_JPEG) {
         $exif = exif_read_data($resource_file);
         if($exif && isset($exif['Orientation'])) {
           $orientation = $exif['Orientation'];
