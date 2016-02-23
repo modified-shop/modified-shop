@@ -18,7 +18,7 @@
 
 class it_recht_kanzlei {
   
-  var $modulversion = '1.4';
+  var $modulversion = '1.5';
   var $api_action_flag, 
       $api_version_flag, 
       $api_username_flag, 
@@ -137,7 +137,7 @@ class it_recht_kanzlei {
         if (in_array($xml->rechtstext_type, $local_rechtstext_pdf_type)) {
           // Catch errors - element 'rechtstext_pdf_url' empty or URL invalid
           if ($xml->rechtstext_pdf_url == '' || $this->url_valid($xml->rechtstext_pdf_url) !== true) {
-            $this->return_error('7');
+            $this->return_error('71');
           }
           // Download pdf file
           $file_pdf_targetfilename = $xml->rechtstext_type .'.pdf';
@@ -149,24 +149,24 @@ class it_recht_kanzlei {
           
           $file_pdf = fopen($file_pdf_target_temp, 'w+');
           if ($file_pdf === false) { // catch errors
-            $this->return_error('7');
+            $this->return_error('72');
           }
           $retval = fwrite($file_pdf, get_external_content($xml->rechtstext_pdf_url, 5, false)); 
           if ($retval === false) { // catch errors
-            $this->return_error('7');
+            $this->return_error('73');
           }
           $retval = fclose($file_pdf);
           if ($retval === false) { // catch errors
-            $this->return_error('7');
+            $this->return_error('74');
           }
           // Catch errors - downloaded file was not properly saved
           if (!is_file($file_pdf_target_temp)) {
-            $this->return_error('7');
+            $this->return_error('75');
           }
           // verify that file is a pdf
           if ($this->check_if_pdf_file($file_pdf_target_temp) !== true) {
             @unlink($file_pdf_target_temp);
-            $this->return_error('7');
+            $this->return_error('76');
           }
           // verify md5-hash, delete file if hash is not equal
           if (md5_file($file_pdf_target_temp) != $xml->rechtstext_pdf_md5hash) {
