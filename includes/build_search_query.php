@@ -44,6 +44,18 @@
       $where_str .= $ent_keyword ? "OR p.products_ean LIKE ('%".$ent_keyword."%') " : '';
       $where_str .= "OR p.products_manufacturers_model LIKE ('%".$keyword."%') ";
       $where_str .= $ent_keyword ? "OR p.products_manufacturers_model LIKE ('%".$ent_keyword."%') " : '';
+      if (ADD_WHERE_SEARCH != '') {
+        $add_where = explode(',',ADD_WHERE_SEARCH);
+        if (count($add_where)) {
+          foreach($add_where as $entry) {
+            $entry = trim($entry);
+            if ($entry != '') {
+              $where_str .= "OR ". $entry ." LIKE ('%".$keyword."%') ";
+              $where_str .= $ent_keyword ? "OR ". $entry ." LIKE ('%".$ent_keyword."%') " : '';
+            }
+          }
+        }
+      }
       if (SEARCH_IN_FILTER == 'true') {
         $where_str .= "OR ptv.values_name LIKE ('%".$keyword."%') ";
         $where_str .= $ent_keyword ? "OR ptv.values_name LIKE ('%".$ent_keyword."%') " : '';
