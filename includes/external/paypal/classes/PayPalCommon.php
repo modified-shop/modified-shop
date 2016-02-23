@@ -93,6 +93,8 @@ class PayPalCommon extends PayPalAuth {
         
     for ($i = 0, $n = sizeof($totals); $i < $n; $i ++) {
       switch(((isset($totals[$i]['code'])) ? $totals[$i]['code'] : $totals[$i]['class'])) {
+        case 'ot_subtotal_no_tax':
+          break;
         case 'ot_subtotal':
           $this->details->setSubtotal($this->details->getSubtotal() + $totals[$i]['value']);
           break;
@@ -116,17 +118,17 @@ class PayPalCommon extends PayPalAuth {
         case 'ot_gv':
           $this->details->setShippingDiscount($this->details->getShippingDiscount() + (($totals[$i]['value'] < 0) ? $totals[$i]['value'] : $totals[$i]['value'] * (-1)));
           break;
-        case 'ot_payment':
+        case 'ot_ps_fee':
+        case 'ot_cod_fee':
+        case 'ot_loworderfee':
+          $this->details->setHandlingFee($this->details->getHandlingFee() + $totals[$i]['value']);
+          break;
+        default:
           if($order_totals[$i]['value'] < 0) {
             $this->details->setShippingDiscount($this->details->getShippingDiscount() + $totals[$i]['value']);
           } else {
             $this->details->setHandlingFee($this->details->getHandlingFee() + $totals[$i]['value']);
           }
-          break;
-        case 'ot_ps_fee':
-        case 'ot_cod_fee':
-        case 'ot_loworderfee':
-          $this->details->setHandlingFee($this->details->getHandlingFee() + $totals[$i]['value']);
           break;
       }
     }
