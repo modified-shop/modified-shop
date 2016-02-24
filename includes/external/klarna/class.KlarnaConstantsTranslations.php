@@ -120,7 +120,7 @@ class KlarnaConstantsTranslations
      */
     public function translateInvoiceFeeModule()
     {
-        $this->_code = 'MODULE_KLARNA_FEE_';
+        $this->_code = 'MODULE_ORDER_TOTAL_KLARNA_FEE_';
         foreach ($this->_invocefeeModuleMap as $key => $value) {
             define(
                 "{$this->_code}{$key}_TITLE",
