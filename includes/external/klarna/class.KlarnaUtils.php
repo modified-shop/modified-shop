@@ -328,7 +328,7 @@ class KlarnaUtils
     public function getInvoiceFee()
     {
         $country = strtoupper($this->_country);
-        if (MODULE_KLARNA_FEE_MODE == 'fixed') {
+        if (MODULE_ORDER_TOTAL_KLARNA_FEE_MODE == 'fixed') {
             if (defined("MODULE_ORDER_TOTAL_KLARNA_FEE_FIXED_{$country}")) {
                 return constant("MODULE_ORDER_TOTAL_KLARNA_FEE_FIXED_{$country}");
             }
