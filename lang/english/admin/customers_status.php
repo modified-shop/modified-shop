@@ -97,4 +97,8 @@ define('CUSTOMERS_GROUP_ADOPT_PERMISSIONS', 'Don\'t adopt any rights');
 
 define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', '<b>Show VAT at Total</b>');
 define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', 'Minimum Total');
+
+define('TABLE_HEADING_CUSTOMERS_SPECIALS', 'Specials');
+define('TEXT_INFO_CUSTOMERS_STATUS_SPECIALS_INTRO', '<strong>Specials</strong>');
+define('ENTRY_CUSTOMERS_STATUS_SPECIALS', 'Group allowed for specials?');
 ?>

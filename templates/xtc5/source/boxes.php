@@ -66,7 +66,9 @@
   } else {
     //Aktuelle Seite ist keine  Produkt-Detailseite
     require_once(DIR_WS_BOXES . 'best_sellers.php');
-    require_once(DIR_WS_BOXES . 'specials.php');
+    if ($_SESSION['customers_status']['customers_status_specials'] == '1') {
+      require_once(DIR_WS_BOXES . 'specials.php');
+    }
   }
 // -----------------------------------------------------------------------------------------
 //	Nur fuer eingeloggte Besucher

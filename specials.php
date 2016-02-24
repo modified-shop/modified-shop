@@ -76,7 +76,7 @@ if ($language_not_found === true) {
 
   $specials_split = new splitPageResults($specials_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results);
 
-  if ($specials_split->number_of_rows==0) {
+  if ($specials_split->number_of_rows == 0 || $_SESSION['customers_status']['customers_status_specials'] != '1') {
     xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
   }
 

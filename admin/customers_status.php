@@ -77,6 +77,7 @@
               'customers_fsk18_display' => xtc_db_prepare_input($_POST['customers_fsk18_display']),
               'customers_status_write_reviews' => xtc_db_prepare_input($_POST['customers_status_write_reviews']),
               'customers_status_read_reviews' => xtc_db_prepare_input($_POST['customers_status_read_reviews']),
+              'customers_status_specials' => xtc_db_prepare_input($_POST['customers_status_specials']),
               'customers_status_discount_attributes' => xtc_db_prepare_input($_POST['customers_status_discount_attributes']),
               'customers_status_show_tax_total' => xtc_db_prepare_input($_POST['customers_status_show_tax_total'])
             );
@@ -259,6 +260,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_TAX_PRICE; ?></td>
                   <td class="dataTableHeadingContent txta-c" colspan="2"><?php echo TABLE_HEADING_DISCOUNT; ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS_GRADUATED; ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS_SPECIALS; ?></td>
                   <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_CUSTOMERS_UNALLOW; ?></td>
                   <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_CUSTOMERS_UNALLOW_SHIPPING; ?></td>
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
@@ -275,6 +277,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 $customers_fsk18_display_array = array(array('id' => '0', 'text' => ENTRY_NO), array('id' => '1', 'text' => ENTRY_YES));
                 $customers_status_write_reviews_array = array(array('id' => '0', 'text' => ENTRY_NO), array('id' => '1', 'text' => ENTRY_YES));
                 $customers_status_read_reviews_array = array(array('id' => '0', 'text' => ENTRY_NO), array('id' => '1', 'text' => ENTRY_YES));
+                $customers_status_specials_array = array(array('id' => '0', 'text' => ENTRY_NO), array('id' => '1', 'text' => ENTRY_YES));
                 $customers_status_query_raw = "select * from " . TABLE_CUSTOMERS_STATUS . " where language_id = '" . (int)$_SESSION['languages_id'] . "' order by customers_status_id";
 
                 $customers_status_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $customers_status_query_raw, $customers_status_query_numrows);
@@ -299,6 +302,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_discount'];?> %</td>
                     <td class="dataTableContent txta-c"><?php echo ($customers_status['customers_status_ot_discount_flag'] == 0 ? '<span class="colorRed">' : '<span>' ).$customers_status['customers_status_ot_discount'];?> %</span></td>
                     <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_graduated_prices'] == 0 ? NO : YES;?></td>
+                    <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_specials'] == 0 ? NO : YES;?></td>
                     <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_payment_unallowed'];?></td>
                     <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_shipping_unallowed'];?></td>
                     <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($customers_status['customers_status_id'] == $cInfo->customers_status_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $customers_status['customers_status_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
@@ -352,6 +356,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_FSK18_DISPLAY_INTRO . '<br />' . ENTRY_CUSTOMERS_FSK18_DISPLAY . ' ' . xtc_draw_pull_down_menu('customers_fsk18_display', $customers_fsk18_display_array, $cInfo->customers_fsk18_display));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_WRITE_REVIEWS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_WRITE_REVIEWS . ' ' . xtc_draw_pull_down_menu('customers_status_write_reviews', $customers_status_write_reviews_array, $cInfo->customers_status_write_reviews));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_READ_REVIEWS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_READ_REVIEWS . ' ' . xtc_draw_pull_down_menu('customers_status_read_reviews', $customers_status_read_reviews_array, $cInfo->customers_status_read_reviews));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_SPECIALS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_SPECIALS . ' ' . xtc_draw_pull_down_menu('customers_status_specials', $customers_status_specials_array, $cInfo->customers_status_specials));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_BASE . '<br />' . ENTRY_CUSTOMERS_STATUS_BASE . '<br />' . xtc_draw_pull_down_menu('customers_base_status', xtc_get_customers_statuses()));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . xtc_draw_pull_down_menu('customers_group_adopt_permission', array_merge(array(array('id' => '', 'text' => CUSTOMERS_GROUP_ADOPT_PERMISSIONS)), xtc_get_customers_statuses())));
                   $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
@@ -388,6 +393,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_FSK18_DISPLAY_INTRO . '<br />' . ENTRY_CUSTOMERS_FSK18_DISPLAY . ' ' . xtc_draw_pull_down_menu('customers_fsk18_display', $customers_fsk18_display_array, $cInfo->customers_fsk18_display));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_WRITE_REVIEWS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_WRITE_REVIEWS . ' ' . xtc_draw_pull_down_menu('customers_status_write_reviews', $customers_status_write_reviews_array, $cInfo->customers_status_write_reviews));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_READ_REVIEWS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_READ_REVIEWS . ' ' . xtc_draw_pull_down_menu('customers_status_read_reviews', $customers_status_read_reviews_array, $cInfo->customers_status_read_reviews));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_SPECIALS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_SPECIALS . ' ' . xtc_draw_pull_down_menu('customers_status_specials', $customers_status_specials_array, $cInfo->customers_status_specials));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_BASE . '<br />' . ENTRY_CUSTOMERS_STATUS_BASE_EDIT . '<br />' . xtc_draw_pull_down_menu('customers_base_status', xtc_get_customers_statuses()));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . xtc_draw_pull_down_menu('customers_group_adopt_permission', array_merge(array(array('id' => '', 'text' => CUSTOMERS_GROUP_ADOPT_PERMISSIONS)), xtc_get_customers_statuses())));
                   if (DEFAULT_CUSTOMERS_STATUS_ID != $cInfo->customers_status_id)
