@@ -53,11 +53,9 @@
   $smarty->assign('tpl_path',HTTP_SERVER . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
 
   $smarty->assign('oID',$order->info['order_id']);
-  if ($order->info['payment_method']!='' && $order->info['payment_method']!='no_payment') {
-
+  if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {
     include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
-
-    $payment_method=constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
+    $payment_method = constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
 
     // mod: BILLPAY payment module
     if(stripos($order->info['payment_method'], 'billpay') !== false) {
@@ -65,7 +63,12 @@
       $payment_method .= display_billpay_bankdata();
     }
 
-    $smarty->assign('PAYMENT_METHOD',$payment_method);
+    if(strpos($order->info['payment_method'], 'paypalplus') !== false) {
+      require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
+      $paypal = new PayPalInfo($order->info['payment_method']);      
+      $smarty->assign('PAYMENT_INFO', $paypal->success($order->info['order_id']));
+    }
+    $smarty->assign('PAYMENT_METHOD', $payment_method);
   }
   $smarty->assign('COMMENTS', nl2br($order->info['comments']));
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));
