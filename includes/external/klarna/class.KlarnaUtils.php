@@ -329,13 +329,13 @@ class KlarnaUtils
     {
         $country = strtoupper($this->_country);
         if (MODULE_KLARNA_FEE_MODE == 'fixed') {
-            if (defined("MODULE_KLARNA_FEE_FIXED_{$country}")) {
-                return constant("MODULE_KLARNA_FEE_FIXED_{$country}");
+            if (defined("MODULE_ORDER_TOTAL_KLARNA_FEE_FIXED_{$country}")) {
+                return constant("MODULE_ORDER_TOTAL_KLARNA_FEE_FIXED_{$country}");
             }
             return 0;
         }
-        if (defined("MODULE_KLARNA_FEE_TABLE_{$country}")) {
-            $fee_table = constant("MODULE_KLARNA_FEE_TABLE_{$country}");
+        if (defined("MODULE_ORDER_TOTAL_KLARNA_FEE_TABLE_{$country}")) {
+            $fee_table = constant("MODULE_ORDER_TOTAL_KLARNA_FEE_TABLE_{$country}");
             $table = explode(",", $fee_table);
 
             $size = sizeof($table);
