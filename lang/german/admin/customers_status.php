@@ -98,7 +98,7 @@ define('CUSTOMERS_GROUP_ADOPT_PERMISSIONS', 'Keine Rechte &uuml;bernehmen');
 define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', '<b>MwSt. anzeigen ab Kaufbetrag</b>');
 define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', 'Mindest Kaufbetrag');
 
-define('TABLE_HEADING_CUSTOMERS_SPECIALS', 'Sonderangebot');
+define('TABLE_HEADING_CUSTOMERS_SPECIALS', 'Sonderangebote');
 define('TEXT_INFO_CUSTOMERS_STATUS_SPECIALS_INTRO', '<strong>Sonderangebote</strong>');
-define('ENTRY_CUSTOMERS_STATUS_SPECIALS', 'Kundengruppe bekommt Sonderangebote?');
+define('ENTRY_CUSTOMERS_STATUS_SPECIALS', 'Kundengruppe erlaubt Sonderangebote zu sehen?');
 ?>
