@@ -554,6 +554,7 @@ CREATE TABLE customers_status (
   customers_fsk18_display INT(1) NOT NULL DEFAULT 1,
   customers_status_write_reviews INT(1) NOT NULL DEFAULT 1,
   customers_status_read_reviews INT(1) NOT NULL DEFAULT 1,
+  customers_status_specials INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (customers_status_id, language_id),
   UNIQUE idx_customers_status_name (customers_status_name, language_id)
 ) ENGINE=MyISAM;

@@ -108,7 +108,7 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
     require_once(DIR_FS_BOXES . 'manufacturer_info.php');
   } else {
     require_once(DIR_FS_BOXES . 'best_sellers.php');
-    if (SPECIALS_CATEGORIES === false) {
+    if ($_SESSION['customers_status']['customers_status_specials'] == '1' && SPECIALS_CATEGORIES === false) {
       require_once(DIR_FS_BOXES . 'specials.php');
     }
   }

@@ -733,4 +733,7 @@ DELETE FROM zones WHERE zone_code = 'BMH';
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BPL','Blackpool');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BMH','Bournemouth');
 
+#GTB - 2016-02-24 - added customers_status_specials
+ALTER TABLE customers_status ADD customers_status_specials INT(1) NOT NULL DEFAULT 0;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

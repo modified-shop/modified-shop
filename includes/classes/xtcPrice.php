@@ -168,7 +168,7 @@ class xtcPrice {
     }
     
     // check specialprice
-    if ($sPrice = $this->xtcCheckSpecial($pID)) {
+    if ($this->cStatus['customers_status_specials'] == '1' && $sPrice = $this->xtcCheckSpecial($pID)) {
       return $this->xtcFormatSpecial($pID, $this->xtcAddTax($sPrice, $products_tax), $pPrice, $format, $vpeStatus);
     }
     
