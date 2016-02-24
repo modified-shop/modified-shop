@@ -209,6 +209,9 @@
         foreach ($orders_products as $key => $val) {
           $this->products[$index][str_replace('products_', '', $key)] = $val;
         }
+        
+        //new module support
+        $this->products[$index] = $this->orderModules->add_products($this->products[$index],$orders_products);
 
         $attributes_query = xtc_db_query("SELECT *,
                                                  products_options as `option`,
@@ -290,6 +293,10 @@
           );
           $attributes_data .= '<br />'.$attributes_data_values['products_options'].': '.$attributes_data_values['products_options_values'];
           $attributes_model .= $attr_model_delimiter.$attrib_model;
+          
+          //new module support
+          $attributes_array[$subindex] = $this->orderModules->order_data_attributes($attributes_array[$subindex],$attributes_data_values,$order_data_values,$oID,$order_lang_id);
+          
           $subindex++;
         }
         
@@ -312,6 +319,9 @@
         if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
           $order_data[$index]['BUTTON_CART_EXPRESS'] = '<a href="'.xtc_href_link(basename($PHP_SELF), 'action=add_order_product&express=on&order_id='.(int)$oID.'&id='.$order_data_values['orders_products_id'], 'SSL').'">'.xtc_image_button('small_express.gif', IMAGE_BUTTON_IN_CART).'</a>';
         }
+        
+        //new module support
+        $order_data[$index] = $this->orderModules->order_data($order_data[$index],$order_data_values,$oID,$order_lang_id);
 
         $index ++;
       }
@@ -551,13 +561,16 @@
         $this->products[$index]['tax_description'] = xtc_get_tax_description($products[$i]['tax_class_id'], $tax_address['country_id'], $tax_address['zone_id']);
         $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'],true); //$products[$i]['price'] is single plain price including attributes_price
         $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); //$products[$i]['final_price'] is quantity * plain price including attributes_price
+        
+        //new module support
+        $this->products[$index] = $this->orderModules->cart_products($this->products[$index],$products[$i]['id']);
 
         if (count($products_attributes) > 0) {
           $attributes_model = array();
           $check_attributes_model = false;
           if ($this->products[$index]['model'] == '') {
             $check_attributes_model = true;
-  	      }
+          }
           $subindex = 0;
           reset($products_attributes);
           while (list($option, $value) = each($products_attributes)) {

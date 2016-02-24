@@ -39,10 +39,34 @@ class orderModules {
     }
     
     //----- ORDER CUSTOM METHODS -----//
+    function add_products($products,$orders_products)
+    {
+        $this->function_call = 'add_products';
+        return $this->call_module_method($products,$orders_products); //Return parameter must be in first place
+    }
+    
     function add_attributes($products_attributes,$attributes)
     {
         $this->function_call = 'add_attributes';
-        return $this->call_module_method($products_attributes,$attributes); //Return parameter must be in first place
+        return $this->call_module_method($products_attributes,$attributes);
+    }
+    
+    function order_data($order_data,$order_data_values,$oID,$order_lang_id)
+    {
+        $this->function_call = 'order_data';
+        return $this->call_module_method($order_data,$order_data_values,$oID,$order_lang_id);
+    } 
+    
+    function order_data_attributes($attributes_array,$attributes_data_values,$order_data_values,$oID,$order_lang_id)
+    {
+        $this->function_call = 'order_data_attributes';
+        return $this->call_module_method($attributes_array,$attributes_data_values,$order_data_values,$oID,$order_lang_id);
+    }    
+    
+    function cart_products($products,$products_id)
+    {
+        $this->function_call = 'cart_products';
+        return $this->call_module_method($products,$products_id);
     }
 
     function cart_attributes($products_attributes,$attributes,$products_id,$value)
