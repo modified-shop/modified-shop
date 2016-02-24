@@ -285,9 +285,9 @@ class KlarnaBase
         $fee = $this->_utils->getInvoiceFee();
 
         if (KlarnaConstant::showPriceTax() === false
-            && MODULE_KLARNA_FEE_TAX_CLASS > 0
+            && MODULE_ORDER_TOTAL_KLARNA_FEE_TAX_CLASS > 0
         ) {
-            $feeRate = xtc_get_tax_rate(MODULE_KLARNA_FEE_TAX_CLASS);
+            $feeRate = xtc_get_tax_rate(MODULE_ORDER_TOTAL_KLARNA_FEE_TAX_CLASS);
             $fee = ($fee / ($feeRate / 100 + 1));
         }
 

@@ -73,9 +73,9 @@ class ot_klarna_fee
         );
         $this->description
             .= "<br />All invoice fees should be set in that countries currency";
-        $this->enabled = MODULE_KLARNA_FEE_STATUS;
-        $this->sort_order = MODULE_KLARNA_FEE_SORT_ORDER;
-        $this->tax_class = MODULE_KLARNA_FEE_TAX_CLASS;
+        $this->enabled = MODULE_ORDER_TOTAL_KLARNA_FEE_STATUS;
+        $this->sort_order = MODULE_ORDER_TOTAL_KLARNA_FEE_SORT_ORDER;
+        $this->tax_class = MODULE_ORDER_TOTAL_KLARNA_FEE_TAX_CLASS;
         $this->output = array();
     }
 
@@ -134,14 +134,14 @@ class ot_klarna_fee
 
         $fee = $this->_utils->getInvoiceFee();
 
-        if ($fee === 0 || MODULE_KLARNA_FEE_TAX_CLASS <= 0) {
+        if ($fee === 0 || MODULE_ORDER_TOTAL_KLARNA_FEE_TAX_CLASS <= 0) {
             return $fee;
         }
 
         $showTax = KlarnaConstant::showPriceTax();
 
         $feeTax = 0;
-        $rate = xtc_get_tax_rate(MODULE_KLARNA_FEE_TAX_CLASS);
+        $rate = xtc_get_tax_rate(MODULE_ORDER_TOTAL_KLARNA_FEE_TAX_CLASS);
         $feeExclTax = ($fee / ($rate / 100 + 1));
         $feeTax = ($fee - $feeExclTax);
 
@@ -153,7 +153,7 @@ class ot_klarna_fee
         }
 
         $tax_desc = xtc_get_tax_description(
-            MODULE_KLARNA_FEE_TAX_CLASS,
+            MODULE_ORDER_TOTAL_KLARNA_FEE_TAX_CLASS,
             $customer_country_id, $customer_zone_id
         );
 
@@ -173,7 +173,7 @@ class ot_klarna_fee
         if (!isset($this->check)) {
             $this->check = $this->_klarnaDB->query(
                 "SELECT configuration_value FROM " . TABLE_CONFIGURATION .
-                " where configuration_key = 'MODULE_KLARNA_FEE_STATUS'"
+                " where configuration_key = 'MODULE_ORDER_TOTAL_KLARNA_FEE_STATUS'"
             )->count();
         }
 
@@ -192,14 +192,14 @@ class ot_klarna_fee
             " (sort_order, configuration_key, configuration_value, ".
             "configuration_group_id, set_function, ".
             "date_added) ".
-            "VALUES ('0', 'MODULE_KLARNA_FEE_STATUS', 'true', '6', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())"
+            "VALUES ('0', 'MODULE_ORDER_TOTAL_KLARNA_FEE_STATUS', 'true', '6', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())"
         );
 
         $this->_klarnaDB->query(
             "INSERT INTO " . TABLE_CONFIGURATION .
             " (sort_order, configuration_key, configuration_value, ".
             "configuration_group_id, set_function, date_added) ".
-            "VALUES ('1', 'MODULE_KLARNA_FEE_MODE', 'fixed', '6', ".
+            "VALUES ('1', 'MODULE_ORDER_TOTAL_KLARNA_FEE_MODE', 'fixed', '6', ".
             "'xtc_cfg_select_option(array(\'fixed\', \'price\'), ', now())"
         );
 
@@ -208,12 +208,12 @@ class ot_klarna_fee
             $this->_klarnaDB->query(
                 "INSERT INTO " . TABLE_CONFIGURATION .
                 " (sort_order, configuration_key, configuration_value, configuration_group_id, date_added) ".
-                "VALUES ('2', 'MODULE_KLARNA_FEE_FIXED_{$country}', '20', '6', now())"
+                "VALUES ('2', 'MODULE_ORDER_TOTAL_KLARNA_FEE_FIXED_{$country}', '20', '6', now())"
             );
             $this->_klarnaDB->query(
                 "INSERT INTO " . TABLE_CONFIGURATION . " (sort_order, ".
                 "configuration_key, configuration_value, configuration_group_id, date_added) ".
-                "VALUES ('3', 'MODULE_KLARNA_FEE_TABLE_{$country}', '200:20,500:10,10000:5', '6', now())"
+                "VALUES ('3', 'MODULE_ORDER_TOTAL_KLARNA_FEE_TABLE_{$country}', '200:20,500:10,10000:5', '6', now())"
             );
         }
 
@@ -221,13 +221,13 @@ class ot_klarna_fee
             "INSERT INTO " . TABLE_CONFIGURATION . " (sort_order, ".
             "configuration_key, configuration_value, configuration_group_id, use_function, ".
             "set_function, date_added) ".
-            "VALUES ('4', 'MODULE_KLARNA_FEE_TAX_CLASS', '0', '6', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())"
+            "VALUES ('4', 'MODULE_ORDER_TOTAL_KLARNA_FEE_TAX_CLASS', '0', '6', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())"
         );
 
         $this->_klarnaDB->query(
             "INSERT INTO " . TABLE_CONFIGURATION . " (sort_order, ".
             "configuration_key, configuration_value, configuration_group_id, date_added) ".
-            "VALUES ('5', 'MODULE_KLARNA_FEE_SORT_ORDER', '0', '6', now())"
+            "VALUES ('5', 'MODULE_ORDER_TOTAL_KLARNA_FEE_SORT_ORDER', '0', '6', now())"
         );
     }
 
@@ -250,15 +250,15 @@ class ot_klarna_fee
     function keys()
     {
         $keys = array(
-            'MODULE_KLARNA_FEE_STATUS',
-            'MODULE_KLARNA_FEE_MODE',
+            'MODULE_ORDER_TOTAL_KLARNA_FEE_STATUS',
+            'MODULE_ORDER_TOTAL_KLARNA_FEE_MODE',
         );
         foreach (KiTT_CountryLogic::supportedCountries() as $country) {
-            $keys[] = "MODULE_KLARNA_FEE_FIXED_{$country}";
-            $keys[] = "MODULE_KLARNA_FEE_TABLE_{$country}";
+            $keys[] = "MODULE_ORDER_TOTAL_KLARNA_FEE_FIXED_{$country}";
+            $keys[] = "MODULE_ORDER_TOTAL_KLARNA_FEE_TABLE_{$country}";
         }
-        $keys[] = 'MODULE_KLARNA_FEE_TAX_CLASS';
-        $keys[] = 'MODULE_KLARNA_FEE_SORT_ORDER';
+        $keys[] = 'MODULE_ORDER_TOTAL_KLARNA_FEE_TAX_CLASS';
+        $keys[] = 'MODULE_ORDER_TOTAL_KLARNA_FEE_SORT_ORDER';
 
         return $keys;
     }
