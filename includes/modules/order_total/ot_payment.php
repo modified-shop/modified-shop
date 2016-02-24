@@ -274,6 +274,9 @@ class ot_payment {
   
   function get_module_cost($payment_modul) {
     if ($this->show_in_checkout_payment) {
+      // reset
+      $this->discount = array();
+      $this->amounts = array();
       return $this->get_percent($payment_modul['id'], $this->show_type);
     }
   }
