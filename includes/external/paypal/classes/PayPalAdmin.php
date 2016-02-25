@@ -128,16 +128,6 @@ class PayPalAdmin extends PayPalPayment {
       $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
       $valid = false;
     }
-
-    if ($config['status'] == '1') {
-      $sql_data_array = array(
-        array(
-          'config_key' => 'PAYPAL_STANDARD_PROFILE',
-          'config_value' => $config['id'],
-        ),
-      );
-      $this->save_config($sql_data_array);
-    }
   }
 
 
@@ -211,6 +201,18 @@ class PayPalAdmin extends PayPalPayment {
     } elseif ($config['id'] == $this->get_config('PAYPAL_STANDARD_PROFILE')) {
       $this->delete_config('PAYPAL_STANDARD_PROFILE');
     }
+
+    $sql_data_array = array(
+      array(
+        'config_key' => strtoupper($config['id']).'_TIME', 
+        'config_value' => time(),
+      ),
+      array(
+        'config_key' => strtoupper($config['id']).'_ADDRESS', 
+        'config_value' => $addess_override,
+      ),          
+    );
+    $this->save_config($sql_data_array);
   }
 
 

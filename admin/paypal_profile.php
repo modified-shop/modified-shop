@@ -160,11 +160,6 @@ require (DIR_WS_INCLUDES.'head.php');
                 echo xtc_draw_form('config', basename($PHP_SELF), xtc_get_all_get_params(array('action')).'action=insert');
                 ?>
                   <tr>
-                    <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_PROFILE_STATUS; ?></td>
-                    <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[status]', $status_array, false); ?></td>
-                    <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_PROFILE_STATUS_INFO; ?></td>
-                  </tr>
-                  <tr>
                     <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_PROFILE_NAME; ?></td>
                     <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[name]', '', 'style="width: 300px;"'); ?></td>
                     <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_PROFILE_NAME_INFO; ?></td>
