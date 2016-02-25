@@ -24,24 +24,27 @@ $cache_id = md5($_SESSION['language'] . $_SESSION['currency']);
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_currencies.html', $cache_id) || !$cache) {
 
+  $currencies_array = array();
   if (isset($xtPrice) && is_object($xtPrice)) {
     reset($xtPrice->currencies);
-    $currencies_array = array();
     while (list($key, $value) = each($xtPrice->currencies)) {
       $currencies_array[] = array('id' => $key, 'text' => $value['title']);
-    }
-
-    $hidden_get_variables = '';
-    reset($_GET);
-    while (list($key, $value) = each($_GET)) {
-      if (is_string($value) && $key != 'currency' && $key != xtc_session_name() && $key != 'x' && $key != 'y' ) {
-        $hidden_get_variables .= xtc_draw_hidden_field($key, $value);
-      }
     }
   }
 
   // dont show box if there's only 1 currency
   if (count($currencies_array) > 1 ) {
+
+    $hidden_get_variables = '';
+    if (isset($_GET) && count($_GET) > 0) {
+      reset($_GET);
+      while (list($key, $value) = each($_GET)) {
+        if (is_string($value) && $key != 'currency' && $key != xtc_session_name() && $key != 'x' && $key != 'y' ) {
+          $hidden_get_variables .= xtc_draw_hidden_field($key, $value);
+        }
+      }
+    }
+    
     $box_content = xtc_draw_form('currencies', xtc_href_link(basename($PHP_SELF), '', $request_type, false), 'get', 'class="box-currencies"')
                    . xtc_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"')
                    . $hidden_get_variables . xtc_hide_session_id()

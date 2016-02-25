@@ -22,18 +22,21 @@
     while (list($key, $value) = each($xtPrice->currencies)) {
       $currencies_array[] = array('id' => $key, 'text' => $value['title']);
     }
-
-    $hidden_get_variables = '';
-    reset($_GET);
-    while (list($key, $value) = each($_GET)) {
-      if ( is_string($value) && $key != 'currency' && $key != xtc_session_name() && $key != 'x' && $key != 'y' ) {
-        $hidden_get_variables .= xtc_draw_hidden_field($key, $value);
-      }
-    }
   }
 
   // dont show box if there's only 1 currency
   if (count($currencies_array) > 1 ) {
+  
+    $hidden_get_variables = '';
+    if (isset($_GET) && count($_GET) > 0) {
+      reset($_GET);
+      while (list($key, $value) = each($_GET)) {
+        if (is_string($value) && $key != 'currency' && $key != xtc_session_name() && $key != 'x' && $key != 'y' ) {
+          $hidden_get_variables .= xtc_draw_hidden_field($key, $value);
+        }
+      }
+    }
+
     // reset var
     $box_smarty = new smarty;
     $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
