@@ -211,23 +211,28 @@ class PayPalPayment extends PayPalPaymentBase {
     
     // profile
     $address_override = false;
-    $profile_standard = $this->get_config('PAYPAL_STANDARD_PROFILE');
-    if ($profile_standard != '') {
-      if (count($this->get_profile($profile_standard)) > 0) {
-        $profile_id = $profile_standard;
-      }
+    $profile_id = $this->get_config('PAYPAL_'.strtoupper($this->code.'_'.$_SESSION['language_code']).'_PROFILE');
+    if ($profile_id == '') {
+      $profile_id = $this->get_config('PAYPAL_STANDARD_PROFILE');
     }
-
-    $profile_payment = $this->get_config('PAYPAL_'.strtoupper($this->code.'_'.$_SESSION['language_code']).'_PROFILE');
-    if ($profile_payment != '') {
-      if (count($this->get_profile($profile_payment)) > 0) {
-        $profile_id = $profile_payment;
+    if ($profile_id != '') {
+      if ($this->get_config(strtoupper($profile_id).'_TIME') < (time() - (3600 * 24))) {
+        $profile = $this->get_profile($profile_id);
+        $sql_data_array = array(
+          array(
+            'config_key' => strtoupper($profile_id).'_TIME', 
+            'config_value' => time(),
+          ),
+          array(
+            'config_key' => strtoupper($profile_id).'_ADDRESS', 
+            'config_value' => $profile[0]['input_fields']['address_override'],
+          ),          
+        );
+        $this->save_config($sql_data_array);
+        $address_override = (($profile[0]['input_fields']['address_override'] == '0') ? true : false);
+      } else {
+        $address_override = (($this->get_config(strtoupper($profile_id).'_ADDRESS') == '0') ? true : false);
       }
-    }
-              
-    if (isset($profile_id) && $profile_id != '') {
-      $profile = $this->get_profile($profile_id);      
-      $address_override = (($profile[0]['input_fields']['address_override'] == '0') ? true : false);
     }
 
     if (($cart === false 
@@ -511,31 +516,26 @@ class PayPalPayment extends PayPalPaymentBase {
       $execution->setPayerId($_SESSION['paypal']['PayerID']);
       
       // profile
-      $profile_standard = $this->get_config('PAYPAL_STANDARD_PROFILE');
-      if ($profile_standard != '') {
-        if (count($this->get_profile($profile_standard)) > 0) {
-          $profile_id = $profile_standard;
-        }
+      $profile_id = $this->get_config('PAYPAL_'.strtoupper($this->code.'_'.$_SESSION['language_code']).'_PROFILE');
+      if ($profile_id == '') {
+        $profile_id = $this->get_config('PAYPAL_STANDARD_PROFILE');
       }
-
-      $profile_payment = $this->get_config('PAYPAL_'.strtoupper($this->code.'_'.$_SESSION['language_code']).'_PROFILE');
-      if ($profile_payment != '') {
-        if (count($this->get_profile($profile_payment)) > 0) {
-          $profile_id = $profile_payment;
+      if ($profile_id != '') {
+        $address_override = '0';
+        if ($this->get_config(strtoupper($profile_id).'_TIME') < (time() - (3600 * 24))) {
+          $profile = $this->get_profile($profile_id);
+          $address_override = $profile[0]['input_fields']['address_override'];
+        } else {
+          $address_override = $this->get_config(strtoupper($profile_id).'_ADDRESS');
         }
-      }
-      
-      if (isset($profile_id) && $profile_id != '') {
-        $profile = $this->get_profile($profile_id);
-      
-        if ($profile[0]['input_fields']['address_override'] == '0') {
+        if ($address_override == '0') {
           // customer details    
           $sql_data_array = $this->get_customer_data($payment);
-        
+      
           $sql_data_array['delivery']['delivery_country'] = $sql_data_array['delivery']['delivery_country']['title'];
           unset($sql_data_array['delivery']['delivery_country_id']);
           unset($sql_data_array['delivery']['delivery_zone_id']);
-                  
+                
           if (count($sql_data_array) > 0) {
             xtc_db_perform(TABLE_ORDERS, $sql_data_array['delivery'], 'update', "orders_id = '".$insert_id."'");
           }
