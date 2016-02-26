@@ -416,6 +416,12 @@
                define(ADMIN_SEARCH_IN_DESC, false); // true = search in description
                //build query
                $add_select = 's.specials_new_products_price,specials_quantity,expires_date,s.status as specials_status,'; 
+               
+               require_once(DIR_FS_INC.'auto_include.inc.php');
+               foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/categories_view/products_search/','php') as $file) require ($file);
+               
+               $add_select .= (defined('ADD_SELECT_PRODUCT') && ADD_SELECT_PRODUCT != '' ? ADD_SELECT_PRODUCT : '');
+               
                $select_str = "SELECT DISTINCT $add_select
                                               p.products_tax_class_id,
                                               p.products_id,
@@ -475,6 +481,18 @@
                          $where_str .= ($ent_keyword) ? "OR pd.products_name LIKE ('%".$ent_keyword."%') " : '';
                          $where_str .= "OR p.products_model LIKE ('%".$keyword."%') ";
                          $where_str .= ($ent_keyword) ? "OR p.products_model LIKE ('%".$ent_keyword."%') " : '';
+                         if (defined('ADD_WHERE_SEARCH') && ADD_WHERE_SEARCH != '') {
+                            $add_where = explode(',',ADD_WHERE_SEARCH);
+                            if (count($add_where)) {
+                              foreach($add_where as $entry) {
+                                $entry = trim($entry);
+                                if ($entry != '') {
+                                  $where_str .= "OR ". $entry ." LIKE ('%".$keyword."%') ";
+                                  $where_str .= $ent_keyword ? "OR ". $entry ." LIKE ('%".$ent_keyword."%') " : '';
+                                }
+                              }
+                            }
+                         }
                          if (ADMIN_SEARCH_IN_ATTR == 'true') {
                            $where_str .= "OR pa.attributes_model LIKE ('%".$keyword."%') ";
                            $where_str .= ($ent_keyword) ? "OR pa.attributes_model LIKE ('%".$ent_keyword."%') " : '';
