@@ -16,9 +16,9 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+  $currencies_array = array();
   if (isset($xtPrice) && is_object($xtPrice)) {
     reset($xtPrice->currencies);
-    $currencies_array = array();
     while (list($key, $value) = each($xtPrice->currencies)) {
       $currencies_array[] = array('id' => $key, 'text' => $value['title']);
     }
