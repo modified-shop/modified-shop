@@ -22,7 +22,7 @@
 
 <div id="layout_logo">
   <div id="logo"><a href="{$index}" title="{#link_index#} &bull; {$store_name}">&nbsp;</a></div>
-  <div id="search">{if isset($box_SEARCH)}{$box_SEARCH}{/if}</div>
+  {if isset($box_SEARCH)}<div id="search">{$box_SEARCH}</div>{/if}
 </div>
 {* ENDE layout_logo *}
 
