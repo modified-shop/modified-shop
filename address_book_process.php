@@ -147,6 +147,13 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
   }
 
 	if ($error == false) {
+    
+    // reset
+	  unset($_SESSION['shipping']);
+	  unset($_SESSION['sendto']);
+	  unset($_SESSION['payment']);
+	  unset($_SESSION['billto']);
+
 		$sql_data_array = array('entry_firstname' => $firstname, 
 		                        'entry_lastname' => $lastname, 
 		                        'entry_street_address' => $street_address, 
