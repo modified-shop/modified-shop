@@ -41,6 +41,13 @@ if (isset($_SESSION['customer_id'])
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
 }
 
+// clear session
+unset($_SESSION['sendto']);
+unset($_SESSION['billto']);
+unset($_SESSION['shipping']);
+unset($_SESSION['payment']);
+unset($_SESSION['delivery_zone']);
+
 if (isset ($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset ($_GET['delete']) && is_numeric($_GET['delete'])) {
 	xtc_db_query("delete from ".TABLE_ADDRESS_BOOK." where address_book_id = '".(int) $_GET['delete']."' and customers_id = '".(int) $_SESSION['customer_id']."'");
 
@@ -147,13 +154,6 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
   }
 
 	if ($error == false) {
-    
-    // reset
-	  unset($_SESSION['shipping']);
-	  unset($_SESSION['sendto']);
-	  unset($_SESSION['payment']);
-	  unset($_SESSION['billto']);
-
 		$sql_data_array = array('entry_firstname' => $firstname, 
 		                        'entry_lastname' => $lastname, 
 		                        'entry_street_address' => $street_address, 

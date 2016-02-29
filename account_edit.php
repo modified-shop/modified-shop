@@ -44,6 +44,13 @@ if (isset($_SESSION['customer_id'])
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
 }
 
+// clear session
+unset($_SESSION['sendto']);
+unset($_SESSION['billto']);
+unset($_SESSION['shipping']);
+unset($_SESSION['payment']);
+unset($_SESSION['delivery_zone']);
+
 if ($_SESSION['customers_status']['customers_status'] == '0') {
 	xtc_redirect(xtc_href_link_admin(FILENAME_CUSTOMERS, 'cID='.$_SESSION['customer_id'].'&action=edit', 'SSL'));
 }

@@ -37,6 +37,13 @@ if (!isset($_SESSION['customer_id'])
 	xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
+// clear session
+unset($_SESSION['sendto']);
+unset($_SESSION['billto']);
+unset($_SESSION['shipping']);
+unset($_SESSION['payment']);
+unset($_SESSION['delivery_zone']);
+
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 
   $valid_params = array(
