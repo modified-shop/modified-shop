@@ -39,6 +39,13 @@ if (!isset($_SESSION['customer_id']) && GUEST_ACCOUNT_EDIT != 'true') {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
+// clear session
+unset($_SESSION['sendto']);
+unset($_SESSION['billto']);
+unset($_SESSION['shipping']);
+unset($_SESSION['payment']);
+unset($_SESSION['delivery_zone']);
+
 $breadcrumb->add(NAVBAR_TITLE_ACCOUNT, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 require (DIR_WS_INCLUDES.'header.php');
 
