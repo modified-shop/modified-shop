@@ -27,7 +27,10 @@ $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/'
 if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) {
     $module_smarty->assign('STARTPAGE', 'true');
 
-    $new_products_query = "SELECT * 
+    $new_products_query = "SELECT p.*,
+                                  pd.products_name,
+                                  pd.products_short_description,
+                                  m.manufacturers_name
                              FROM ".TABLE_PRODUCTS." p
                         LEFT JOIN ".TABLE_MANUFACTURERS." m
                                   ON p.manufacturers_id = m.manufacturers_id
@@ -49,7 +52,10 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
         $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
         $days = " AND p.products_date_added > '".$date_new_products."' ";
       }
-      $new_products_query = "SELECT *
+      $new_products_query = "SELECT p.*,
+                                    pd.products_name,
+                                    pd.products_short_description,
+                                    m.manufacturers_name
                                FROM ".TABLE_PRODUCTS." p 
                           LEFT JOIN ".TABLE_MANUFACTURERS." m
                                     ON p.manufacturers_id = m.manufacturers_id
@@ -76,7 +82,10 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
     $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
     $days = " AND p.products_date_added > '".$date_new_products."' ";
   }
-  $new_products_query = "SELECT * 
+  $new_products_query = "SELECT p.*,
+                                pd.products_name,
+                                pd.products_short_description,
+                                m.manufacturers_name 
                            FROM ".TABLE_PRODUCTS." p
                       LEFT JOIN ".TABLE_MANUFACTURERS." m
                                 ON p.manufacturers_id = m.manufacturers_id
