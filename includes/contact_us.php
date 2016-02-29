@@ -166,10 +166,10 @@
 
     $products_info = '';
     if (isset($_GET['products_id']) && $_GET['products_id']  && isset($_GET['inq']) && $_GET['inq']) {
-      $product->product((int)$_GET['products_id']);
+      $product_inq = new product((int)$_GET['products_id']);
       $products_info = defined('PRODUCT_INQUIRY') ? PRODUCT_INQUIRY . "\n" : '';
-      $products_info .= HEADER_ARTICLE . ': '. $product->data['products_name'] . "\n";  
-      $products_info .= ($product->data['products_model'] ? HEADER_MODEL . ': ' .$product->data['products_model'] : '') . "\n";
+      $products_info .= HEADER_ARTICLE . ': '. $product_inq->data['products_name'] . "\n";  
+      $products_info .= ($product_inq->data['products_model'] ? HEADER_MODEL . ': ' .$product_inq->data['products_model'] : '') . "\n";
     }
     if (!$error) $message_body = $products_info . "\n";
 
