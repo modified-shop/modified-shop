@@ -129,6 +129,12 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
 	}
 
 	if ($error == false) {
+    // reset
+	  unset($_SESSION['shipping']);
+	  unset($_SESSION['sendto']);
+	  unset($_SESSION['payment']);
+	  unset($_SESSION['billto']);
+
 		$sql_data_array = array ('entry_firstname' => $firstname, 'entry_lastname' => $lastname, 'entry_street_address' => $street_address, 'entry_postcode' => $postcode, 'entry_city' => $city, 'entry_country_id' => (int) $country,'address_last_modified' => 'now()');
 
 		if (ACCOUNT_GENDER == 'true')
