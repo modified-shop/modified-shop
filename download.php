@@ -49,6 +49,9 @@ function readfile_chunked($file, $chunksize) {
 // init Smarty
 $smarty = new Smarty();
 
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 if (isset($_SESSION['customer_id'])) {
   $_SESSION['customer_id_download'] = $_SESSION['customer_id'];
 }
@@ -211,9 +214,6 @@ $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 $smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/downloads.html');
-
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_TITLE_DOWNLOAD, xtc_href_link(FILENAME_DOWNLOAD, '', 'SSL'));
 require (DIR_WS_INCLUDES.'header.php');
