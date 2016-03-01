@@ -88,6 +88,7 @@ class sitemaporg {
                        WHERE languages_id = '".(int)$_SESSION['languages_id']."'
                              ".$group_check." 
                          and content_status = '1' 
+                         and content_meta_robots NOT LIKE '%noindex%' 
                     order by sort_order";
 
     $content_query = xtDBquery($content_query);
