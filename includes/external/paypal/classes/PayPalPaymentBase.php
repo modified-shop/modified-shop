@@ -313,7 +313,7 @@ class PayPalPaymentBase extends PayPalCommon {
     if (xtc_db_num_rows($check_query) > 0) {
       $check = xtc_db_fetch_array($check_query);
       if ($_SESSION['customer_id'] == $check['customers_id']) {
-        require_once(DIR_FS_INC.'xtcremove_order.inc.php');
+        require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
         xtc_remove_order((int)$orders_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
       }
     }
