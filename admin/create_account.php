@@ -415,7 +415,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-single-right">
                       <?php
                         echo xtc_draw_input_field('customers_dob', xtc_date_short(isset($customers_dob)?$customers_dob:''), 'maxlength="10"');
-                        if ($error && $entry_date_of_birth_error) '&nbsp;'.ENTRY_DATE_OF_BIRTH_ERROR;
+                        if ($error && $entry_date_of_birth_error) echo '&nbsp;'.ENTRY_DATE_OF_BIRTH_ERROR;
                       ?>
                       </td>
                     </tr>
