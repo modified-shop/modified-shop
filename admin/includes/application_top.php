@@ -315,6 +315,11 @@ if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$current_pa
 
 // write customers status in session
 require(DIR_FS_CATALOG.DIR_WS_INCLUDES.'write_customers_status.php');
+
+// call from filemanager
+if (defined('_IS_FILEMANAGER')) return;
+
+// check permission
 if (file_exists($current_page) == false || $_SESSION['customers_status']['customers_status_id'] !== '0') {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN));
 }

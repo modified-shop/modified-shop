@@ -2,31 +2,29 @@
 /*-----------------------------------------------/
 $Id: xtc_access.php 3336 2012-07-27 11:38:05Z web28 $
 
-FCKEditor Filemanger xtc_access v.0.95 (c)2012 by web28 - www.rpa-com.de
+FCKEditor Filemanger secure_access v.1.00 (c)2014 by web28 - www.rpa-com.de
 /-----------------------------------------------*/
 
-require_once(DIR_FS_INC . 'xtc_db_connect.inc.php');
+// set the level of error reporting
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
 
-xtc_db_connect();// or die('Unable to connect to database server!');
+define('_IS_FILEMANAGER',true);
+
+$current_cwd = dirname(__FILE__);
+
+// AdminDir Shop
+$rootDir = '../../../../../../../';
+chdir($rootDir);
+require('includes/application_top.php'); // AdminDir Shop
+chdir($current_cwd);
 
 $Config['Enabled'] = false;
-
-$secure_id = preg_replace('/[^0-9a-zA-Z]/','',$_GET['sid']);
-
-if (!empty($secure_id)) {
-  $secure_id = mysql_real_escape_string($secure_id);
-  $secure_id = strip_tags($secure_id);
-  $result = mysql_query('SELECT flag
-                           FROM sessions s
-                          WHERE s.sesskey = "'. $secure_id .'"
-                          LIMIT 1
-                        ');
-  if(mysql_num_rows($result) > 0) {
-    $result_array = mysql_fetch_array($result);
-    if (isset($result_array['flag']) && $result_array['flag'] == 'admin') {
-      $Config['Enabled'] = true;
-    }
+if (isset($_SESSION) && $_SESSION['customers_status']['customers_status_id'] == '0') {
+  $access_permission_query = xtc_db_query("SELECT * FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$_SESSION['customer_id']."'");
+  $access_permission = xtc_db_fetch_array($access_permission_query);
+  if (!isset($access_permission['fck_wrapper']) || ($access_permission['fck_wrapper'] != '1')) {
+      die('Direct Access to this location is not allowed.');
   }
+  $Config['Enabled'] = true;
 }
-
 ?>
