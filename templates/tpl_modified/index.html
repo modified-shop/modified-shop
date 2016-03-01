@@ -123,10 +123,10 @@
 
 <div id="layout_footer">
   <div id="layout_footer_inner" class="cf">
-    <div class="footer_box first">{if isset($box_CONTENT)}{$box_CONTENT}{/if}</div>
-    <div class="footer_box">{if isset($box_INFORMATION)}{$box_INFORMATION}{/if}</div>
-    <div class="footer_box">{if isset($box_MISCELLANEOUS)}{$box_MISCELLANEOUS}{/if}</div>
-    <div class="footer_box">{if isset($box_NEWSLETTER)}{$box_NEWSLETTER}{/if}</div>
+    {if isset($box_CONTENT)}<div class="footer_box first">{$box_CONTENT}</div>{/if}
+    {if isset($box_INFORMATION)}<div class="footer_box">{$box_INFORMATION}</div>{/if}
+    {if isset($box_MISCELLANEOUS)}<div class="footer_box">{$box_MISCELLANEOUS}</div>{/if}
+    {if isset($box_NEWSLETTER)}<div class="footer_box">{$box_NEWSLETTER}</div>{/if}
   </div>
   <div class="mod_copyright">{$smarty.const.TITLE} &copy; {$smarty.now|date_format:"%Y"} | Template &copy; 2009-{$smarty.now|date_format:"%Y"} by <span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware</span></div>
 </div>
