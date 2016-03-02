@@ -183,7 +183,7 @@ class PayPalPayment extends PayPalPaymentBase {
       } else {
         $this->get_totals($order->totals);
       }
-                  
+             
       // set amount 
       $this->amount->setCurrency($order->info['currency'])
                    ->setDetails($this->details);
@@ -295,111 +295,104 @@ class PayPalPayment extends PayPalPaymentBase {
     try {
       // Get the payment Object by passing paymentId
       $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
-      $valid = true;
   
     } catch (Exception $ex) {
       $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-      $valid = false;
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
+    
+    $patchRequest = new PatchRequest();
+    
+    // set details
+    $this->details = new Details(); 
+
+    // set amount 
+    $this->amount = new Amount(); 
+    
+    // set totals      
+    $order_totals = $order_total_modules->output_array();
+    $this->get_totals($order_totals);
+          
+    $this->amount->setCurrency($_SESSION['currency'])
+                 ->setDetails($this->details);
+            
+    $patch_amount = new Patch();
+    $patch_amount->setOp('replace')
+                 ->setPath('/transactions/0/amount')
+                 ->setValue($this->amount);
+
+    // set ItemList
+    if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0') { 
+      $item = array();
+      $item[0] = new Item(); 
+      $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
+              ->setCurrency($_SESSION['currency']) 
+              ->setQuantity(1) 
+              ->setPrice($this->details->getSubtotal()); 
+    } else {
+      for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
+        $item[$i] = new Item(); 
+        $item[$i]->setName($this->encode_utf8($order->products[$i]['name']))
+                 ->setCurrency($order->info['currency']) 
+                 ->setQuantity($order->products[$i]['qty']) 
+                 ->setPrice($order->products[$i]['price'])
+                 ->setSku($order->products[$i]['model']); 
+      }  
+    }
+
+    $patch_items = new Patch();
+    $patch_items->setOp('replace')
+                ->setPath('/transactions/0/item_list/items')
+                ->setValue($item);
+             
+    // set payment address
+    $payment_address = new Address();
+    $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
+                    ->setCity($this->encode_utf8($order->billing['city']))
+                    ->setState($this->encode_utf8($order->billing['state']))
+                    ->setPostalCode($this->encode_utf8($order->billing['postcode']))
+                    ->setCountryCode($this->encode_utf8($order->billing['country']['iso_code_2']));
+
+    if ($order->billing['suburb'] != '') {
+      $payment_address->setLine2($this->encode_utf8($order->billing['suburb']));
+    }
+
+    $patch_payment = new Patch();
+    $patch_payment->setOp('add')
+                  ->setPath('/potential_payer_info/billing_address')
+                  ->setValue($payment_address);
 
     
-    if ($valid === true) {
+    // set shipping address
+    $shipping_address = new ShippingAddress();      
 
-      $patchRequest = new PatchRequest();
-      
-      // set details
-      $this->details = new Details(); 
+    $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
+                     ->setLine1($this->encode_utf8($order->delivery['street_address']))
+                     ->setCity($this->encode_utf8($order->delivery['city']))
+                     ->setCountryCode($this->encode_utf8($order->delivery['country']['iso_code_2']))
+                     ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
+                     ->setState($this->encode_utf8($order->delivery['state']));
 
-      // set amount 
-      $this->amount = new Amount(); 
-      
-      // set totals      
-      $order_totals = $order_total_modules->output_array();
-      $this->get_totals($order_totals);
-            
-      $this->amount->setCurrency($_SESSION['currency'])
-                   ->setDetails($this->details);
-              
-      $patch_amount = new Patch();
-      $patch_amount->setOp('replace')
-                   ->setPath('/transactions/0/amount')
-                   ->setValue($this->amount);
-
-      $patchRequest->setPatches(array($patch_amount));
-         
-      try {
-        // update payment
-        $payment->update($patchRequest, $apiContext);      
-
-      } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-      }
-      
-      $patchRequest = new PatchRequest();
-
-      $payment_address = new Address();
-      $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
-                      ->setCity($this->encode_utf8($order->billing['city']))
-                      ->setState($this->encode_utf8($order->billing['state']))
-                      ->setPostalCode($this->encode_utf8($order->billing['postcode']))
-                      ->setCountryCode($this->encode_utf8($order->billing['country']['iso_code_2']));
-
-      if ($order->billing['suburb'] != '') {
-        $payment_address->setLine2($this->encode_utf8($order->billing['suburb']));
-      }
-
-      $patch_payment = new Patch();
-      $patch_payment->setOp('add')
-                    ->setPath('/potential_payer_info/billing_address')
-                    ->setValue($payment_address);
-
-      $patchRequest->setPatches(array($patch_payment));
-
-      try {
-        // update payment
-        $payment->update($patchRequest, $apiContext);      
-
-      } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-      }
-
-      $patchRequest = new PatchRequest();
-
-      // set address
-      $shipping_address = new ShippingAddress();      
-
-      $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
-                       ->setLine1($this->encode_utf8($order->delivery['street_address']))
-                       ->setCity($this->encode_utf8($order->delivery['city']))
-                       ->setCountryCode($this->encode_utf8($order->delivery['country']['iso_code_2']))
-                       ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
-                       ->setState($this->encode_utf8($order->delivery['state']));
-
-      if ($order->delivery['suburb'] != '') {
-        $shipping_address->setLine2($this->encode_utf8($order->billdeliverying['suburb']));
-      }
-
-      $patch_shipping = new Patch();
-      $patch_shipping->setOp('add')
-                     ->setPath('/transactions/0/item_list/shipping_address')
-                     ->setValue($shipping_address);
-
-      $patchRequest->setPatches(array($patch_shipping));
-                
-      try {
-        // update payment
-        $payment->update($patchRequest, $apiContext);      
-        $valid = true;
-      } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-        $valid = false;
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-      }
-      
-      if ($valid === true) {
-        $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
-      }
+    if ($order->delivery['suburb'] != '') {
+      $shipping_address->setLine2($this->encode_utf8($order->billdeliverying['suburb']));
     }
+
+    $patch_shipping = new Patch();
+    $patch_shipping->setOp('add')
+                   ->setPath('/transactions/0/item_list/shipping_address')
+                   ->setValue($shipping_address);
+
+    $patchRequest->setPatches(array_merge(array($patch_amount), array($patch_items), array($patch_payment), array($patch_shipping)));
+                    
+    try {
+      // update payment
+      $payment->update($patchRequest, $apiContext);      
+    } catch (Exception $ex) {
+      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+    }
+    
+    $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
   }
     
   

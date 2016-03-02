@@ -111,20 +111,22 @@ class PayPalCommon extends PayPalAuth {
           {
             $this->details->setTax($this->details->getTax() + $totals[$i]['value']);
           }
-          break;            
+          break;
+        /*           
         case 'ot_discount':
         case 'ot_bonus_fee':
         case 'ot_coupon':
         case 'ot_gv':
-          $this->details->setShippingDiscount($this->details->getShippingDiscount() + (($totals[$i]['value'] < 0) ? $totals[$i]['value'] : $totals[$i]['value'] * (-1)));
+          $this->details->setShippingDiscount($this->details->getShippingDiscount() + (($totals[$i]['value'] > 0) ? $totals[$i]['value'] : $totals[$i]['value'] * (-1)));
           break;
         case 'ot_ps_fee':
         case 'ot_cod_fee':
         case 'ot_loworderfee':
           $this->details->setHandlingFee($this->details->getHandlingFee() + $totals[$i]['value']);
           break;
+        */
         default:
-          if($order_totals[$i]['value'] < 0) {
+          if($totals[$i]['value'] < 0) {
             $this->details->setShippingDiscount($this->details->getShippingDiscount() + $totals[$i]['value']);
           } else {
             $this->details->setHandlingFee($this->details->getHandlingFee() + $totals[$i]['value']);
