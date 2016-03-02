@@ -107,6 +107,7 @@ if ($messageStack->size('checkout_address') > 0) {
 
 if ($process == false) {
   $smarty->assign('ADDRESS_LABEL', xtc_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'));
+  $billto = $_SESSION['billto'];
   include(DIR_WS_MODULES.'checkout_address_layout.php');
 }
 

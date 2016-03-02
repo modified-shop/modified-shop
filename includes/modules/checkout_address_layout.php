@@ -28,8 +28,8 @@
                                       WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     while ($addresses = xtc_db_fetch_array($addresses_query)) {
       $format_id = xtc_get_address_format_id($addresses['country_id']);
-
-      $address_content .= sprintf('<li>%s<label for="field_addresses_%s"> %s %s</label><br /><span class="address">%s</span></li>', xtc_draw_radio_field('address',$addresses['address_book_id'], ($addresses['address_book_id'] == $_SESSION['sendto']), 'id="field_addresses_'.$addresses['address_book_id'].'"'), $addresses['address_book_id'], $addresses['firstname'], $addresses['lastname'], xtc_address_format($format_id, $addresses, true, ' ', ', ')); // Tomcraft - 2011-01-04 - make checkout process valid
+      $address_book_id = (isset($billto) && $billto ? $billto : $_SESSION['sendto']);
+      $address_content .= sprintf('<li>%s<label for="field_addresses_%s"> %s %s</label><br /><span class="address">%s</span></li>', xtc_draw_radio_field('address',$addresses['address_book_id'], ($addresses['address_book_id'] == $address_book_id), 'id="field_addresses_'.$addresses['address_book_id'].'"'), $addresses['address_book_id'], $addresses['firstname'], $addresses['lastname'], xtc_address_format($format_id, $addresses, true, ' ', ', ')); // Tomcraft - 2011-01-04 - make checkout process valid
       $radio_buttons ++;
     }
     $address_content .= '</ol>';
