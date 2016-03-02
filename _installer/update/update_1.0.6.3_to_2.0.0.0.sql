@@ -736,4 +736,7 @@ INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES ('222','BMH','B
 #GTB - 2016-02-24 - added customers_status_specials
 ALTER TABLE customers_status ADD customers_status_specials INT(1) NOT NULL DEFAULT 1 AFTER customers_status_read_reviews;
 
+#Tomcraft - 2016-03-01 - Remove PayPal Classic API Module
+DELETE FROM configuration_group WHERE configuration_group_id = 111125;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
