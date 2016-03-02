@@ -244,11 +244,7 @@ class PayPalPaymentBase extends PayPalCommon {
       $unallowed_modules = explode(',', $_SESSION['customers_status']['customers_status_payment_unallowed']);
       if (!in_array($this->code, $unallowed_modules)) {
         $image = ((strtoupper($_SESSION['language_code']) == 'DE') ? 'epaypal_de.gif' : 'epaypal_en.gif');
-        if (function_exists('css_button')) {
-          $image = css_button($image, '', 'id="paypalcartbutton"', false);
-        } else {
-          $image = '<img src="'.((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.DIR_WS_ICONS.$image.'" id="paypalcartbutton" />';
-        }
+        $image = xtc_image_button(DIR_WS_BASE.DIR_WS_ICONS.$image, '', 'id="paypalcartbutton"');
         $checkout_button = '<a href="'.xtc_href_link(basename($PHP_SELF), 'action=paypal_cart_checkout').'">'.$image.'</a>';
 
         return $checkout_button;
@@ -258,7 +254,7 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function create_paypal_link($orders_id = '', $cleanlink = false) {
-    global $last_order;
+    global $last_order, $PHP_SELF;
     
     if ($orders_id == '') {
       $orders_id = $last_order;
@@ -283,7 +279,11 @@ class PayPalPaymentBase extends PayPalCommon {
       }
       
       $image = ((strtoupper($_SESSION['language_code']) == 'DE') ? 'epaypal_de.gif' : 'epaypal_en.gif');
-      $image = '<img src="'.((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.DIR_WS_ICONS.$image.'" id="paypalcartbutton" />';
+      if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS) {
+        $image = xtc_image_button(DIR_WS_BASE.DIR_WS_ICONS.$image, '', 'id="paypalcartbutton"');
+      } else {
+        $image = '<img src="'.((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.DIR_WS_ICONS.$image.'" id="paypalcartbutton" />';
+      }
       $checkout_button = '<a href="'.$link.'">'.$image.'</a>';
 
       return $checkout_button;
