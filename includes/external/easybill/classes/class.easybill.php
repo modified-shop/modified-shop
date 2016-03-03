@@ -398,7 +398,11 @@
       $document->text = utf8_encode(constant(strtoupper('MODULE_EASYBILL_PAYMENT_TEXT_'.$this->info['payment_method'])));
       
       if ($this->info['payment_method'] == 'billpay') {
-        $document->text .= $this->getBankData();
+        $document->text .= EASYBILL_EOL.$this->getBankData();
+      }
+
+      if ($this->info['payment_method'] == 'paypalplus') {
+        $document->text .= EASYBILL_EOL.$this->getBankDataPayPal();
       }
       
       //SOAP Call
@@ -424,6 +428,26 @@
           $this->setPayment($this->document->document->documentID);
         }
       }
+    }
+
+
+    protected function getBankDataPayPal() {
+    
+      require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
+      $paypal = new PayPalInfo($order->info['payment_method']);      
+      $bankdata_array = $paypal->success($this->info['order_id']);
+      
+      $bank = '';
+      if (isset($bankdata_array[0]['fields'])) {
+        $bank .= $bankdata_array[0]['title'].EASYBILL_EOL.EASYBILL_EOL;
+
+        $bankdata = $bankdata_array[0]['fields'];        
+        for ($i=0, $n=count($bankdata); $i<$n; $i++) {
+          $bank .= $bankdata[$i]['title'].' '.$bankdata[$i]['field'].EASYBILL_EOL;
+        }
+      }
+     
+      return $bank; 
     }
 
 
