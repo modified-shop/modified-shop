@@ -50,8 +50,8 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     //UTF-8 bzw keine Umwandlung in entities
     $customConfig['entities'] = "entities: false,";
 
-    //CKEditor 4.1: Advanced Content Filter (ACF) - keine benutzerdefinierten Tags herausfiltern - Filter deaktivieren -> true
-    $customConfig['allowedContent'] = "allowedContent: false,";
+    //CKEditor 4.1: Advanced Content Filter (ACF) - keine benutzerdefinierten Tags herausfiltern - Filter aktivieren -> false
+    $customConfig['allowedContent'] = "allowedContent: true,";
     
     //Buttons entfernen
     $customConfig['removeButtons'] = "removeButtons: 'PageBreak,Save',";
