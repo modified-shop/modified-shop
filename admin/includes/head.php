@@ -32,7 +32,7 @@
   <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">  
   <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css">
-  <link rel="stylesheet" type="text/css" href="includes/css/jquery.alerts.css" />
+  <link rel="stylesheet" type="text/css" href="includes/css/jquery-confirm.css" />
   <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
   <link rel="stylesheet" type="text/css" href="includes/css/sumoselect_mod.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/checks.css" />
@@ -66,7 +66,7 @@
     });
    </script>
   <?php } ?>
-  <script type="text/javascript" src="includes/javascript/jquery.alerts.min.js"></script>
+  <script type="text/javascript" src="includes/javascript/jquery-confirm.js"></script>
   <script type="text/javascript">
   /* <![CDATA[ */
     var js_button_yes = '<?php echo YES;?>';
@@ -74,32 +74,54 @@
     var js_button_cancel = '<?php echo BUTTON_CANCEL;?>';
     var js_button_ok = '<?php echo BUTTON_REVIEW_APPROVE;?>';
     var js_submit;
-
-    $.alerts.okButton = js_button_ok;
-    $.alerts.overlayOpacity = .2;
-    $.alerts.overlayColor = '#000';
     
     function ButtonClicked(button) {
       js_submit = button ;
-    }    
+    } 
+    
     function alert(message, title) {
       title = title || 'Information';
-      jAlert(message, title);
-    }
+      $.alert({
+          title: title,
+          content: (message ? message : ' '),
+          confirmButton: js_button_ok,
+          columnClass: 'jalert-width',
+          animation: 'none',
+          confirm: function(){
+
+          }
+      });
+    }  
     //confirmSubmit
     function confirmSubmit(message, title, form) { 
-        title = title || 'Information';    
-        jConfirm(message, title, function(r) {
-          if (r) {      
-            var addElement = $("<input type='hidden'/>");
-            addElement.attr("name", js_submit.name).val(js_submit.value).appendTo(form);
-            form.submit();
-            addElement.remove();
-            r.preventDefault();
-          }   
-        }, js_button_yes, js_button_no);            
+        title = title || 'Information'; 
+        $.confirm({
+            title: title,
+            content: (message ? message : ' '),
+            confirmButton: js_button_yes,
+            cancelButton: js_button_no,
+            columnClass: 'jconfirm-width',
+            animation: 'none',
+            confirm: function () {
+                //console.log('form.submit: ' + form.name);
+                if (typeof js_submit !== 'undefined') {
+                    var addElement = $("<input type='hidden'/>");
+                    addElement.attr("name", js_submit.name).val(js_submit.value).appendTo(form);
+                }
+                form.submit();
+                if (typeof js_submit !== 'undefined') {
+                    addElement.remove();
+                }
+            },
+            cancel: function () {
+                var fimages = $("[name='products_image'],[name^='mo_pics_']");
+                if (fimages) {
+                    fimages.prop( "disabled", false );
+                }
+            }
+        });
         return false;
-    }    
+    } 
   /*]]>*/
   </script>
   <?php 
