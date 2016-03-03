@@ -128,7 +128,7 @@
           // create additional categories_description records
           if (isset($_POST['c_desc'])) {
             xtc_db_query("delete from " . TABLE_CATEGORIES_DESCRIPTION . " where language_id = '" . $lngID_to . "'");
-            $categories_query = xtc_db_query("select c.categories_id, cd.categories_name from " . TABLE_CATEGORIES . " c left join " . TABLE_CATEGORIES_DESCRIPTION . " cd on c.categories_id = cd.categories_id where cd.language_id = '" . $lngID_from . "'");
+            $categories_query = xtc_db_query("select c.categories_id, cd.categories_name, cd.categories_description from " . TABLE_CATEGORIES . " c left join " . TABLE_CATEGORIES_DESCRIPTION . " cd on c.categories_id = cd.categories_id where cd.language_id = '" . $lngID_from . "'");
             while ($categories = xtc_db_fetch_array($categories_query)) {
               $sql_data_array = $categories;
               $sql_data_array['language_id'] = $lngID_to;
@@ -138,7 +138,7 @@
           // create additional products_description records
           if (isset($_POST['p_desc'])) {
             xtc_db_query("delete from " . TABLE_PRODUCTS_DESCRIPTION . " where language_id = '" . $lngID_to . "'");
-            $products_query = xtc_db_query("select p.products_id, pd.products_name, pd.products_description, pd.products_url from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on p.products_id = pd.products_id where pd.language_id = '" . $lngID_from . "'");
+            $products_query = xtc_db_query("select p.products_id, pd.products_name, pd.products_description, pd.products_short_description, pd.products_order_description, pd.products_url from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on p.products_id = pd.products_id where pd.language_id = '" . $lngID_from . "'");
             while ($products = xtc_db_fetch_array($products_query)) {
               $sql_data_array = $products;
               $sql_data_array['language_id'] = $lngID_to;
@@ -357,8 +357,8 @@ input[type=checkbox], input[type=radio] {
                     while ($lng = xtc_db_fetch_array($lng_query)) {
                       $lng_array[] = array ('id' => $lng['languages_id'], 'text' => $lng['name']);
                     }
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('c_desc', '1', false) . ' ' . TABLE_CATEGORIES_DESCRIPTION .' <em>(categories_name)</em>'.'</div>'.PHP_EOL;
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_desc', '1', false) . ' ' . TABLE_PRODUCTS_DESCRIPTION . ' <em>(products_name, products_description, products_url)</em>'.'</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('c_desc', '1', false) . ' ' . TABLE_CATEGORIES_DESCRIPTION .' <em>(categories_name, categories_description)</em>'.'</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_desc', '1', false) . ' ' . TABLE_PRODUCTS_DESCRIPTION . ' <em>(products_name, products_description, products_short_description, products_order_description, products_url)</em>'.'</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_opt', '1', false) . ' ' . TABLE_PRODUCTS_OPTIONS . ' <em>(products_options_name)</em>'.'</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_opt_val', '1', false) . ' ' . TABLE_PRODUCTS_OPTIONS_VALUES . ' <em>(products_options_values_name)</em>'.'</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('m_info', '1', false) . ' ' . TABLE_MANUFACTURERS_INFO . ' <em>(manufacturers_url)</em>'.'</div>'.PHP_EOL;
