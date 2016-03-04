@@ -133,6 +133,11 @@ function popupImageWindow(url) {
 // require theme based javascript
 require('templates/'.CURRENT_TEMPLATE.'/javascript/general.js.php');
 
+## PayPal
+if (basename($PHP_SELF) == 'paypalpluslink.php') {
+  echo '<script src="https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js" type="text/javascript"></script>';
+}
+
 if (strstr($PHP_SELF, FILENAME_CHECKOUT_PAYMENT)) {
  echo $payment_modules->javascript_validation();
 }

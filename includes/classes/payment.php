@@ -40,11 +40,24 @@
       if (defined('MODULE_PAYMENT_INSTALLED') && xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
 
         // BOF - Tomcraft - 2011-02-01 - Paypal Express Modul
-        if(isset($_SESSION['paypal_express_checkout']) && $_SESSION['paypal_express_checkout'] == true){
+        if (isset($_SESSION['paypal'])
+            && isset($_SESSION['paypal']['payment_modules'])
+            && $_SESSION['paypal']['payment_modules'] != ''
+           )
+        {
+          $this->modules = explode(';', $_SESSION['paypal']['payment_modules']);
+        } elseif (isset($_SESSION['paypal_express_checkout']) && $_SESSION['paypal_express_checkout'] == true) {
           $this->modules = explode(';', $_SESSION['paypal_express_payment_modules'] );
         } else {
           $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
-          $this->modules = str_replace('paypalexpress.php', '', $this->modules);
+          $key = array_search('paypalexpress.php', $this->modules);
+          if ($key !== false) {
+            unset($this->modules[$key]);
+          }
+          $key = array_search('paypalcart.php', $this->modules);
+          if ($key !== false) {
+            unset($this->modules[$key]);
+          }
         }
         // EOF - Tomcraft - 2011-02-01 - Paypal Express Modul
 
@@ -275,6 +288,21 @@
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
           return $GLOBALS[$this->selected_module]->get_error();
+        }
+      }
+    }
+
+    function success() {
+      if (is_array($this->modules)) {
+        if (is_object($GLOBALS[$this->selected_module]) 
+            && $GLOBALS[$this->selected_module]->enabled
+            ) 
+        {
+          if (method_exists($GLOBALS[$this->selected_module], 'success')) {
+            return $GLOBALS[$this->selected_module]->success();
+          } else {
+            return array();          
+          }
         }
       }
     }

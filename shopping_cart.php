@@ -247,6 +247,17 @@ if ($_SESSION['cart']->show_total() > 0 ) {
     if (isset($o_paypal) && is_object($o_paypal)) {
       $smarty->assign('BUTTON_PAYPAL', $o_paypal->build_express_checkout_button());
     }
+    ## PayPal
+    require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
+    $paypal_cart = new PayPalPayment('paypalcart');
+    if ($paypal_cart->enabled === true) {
+      $smarty->assign('BUTTON_PAYPAL', $paypal_cart->checkout_button());
+      if (isset($_GET['payment_error'])) {
+        include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypalcart.php');
+        $error = $paypal_cart->get_error();
+        $smarty->assign('info_message',  $error['error']);
+      }
+    }
     $smarty->assign('BUTTON_RELOAD', xtc_image_submit('button_update_cart.gif', IMAGE_BUTTON_UPDATE_CART));
     $smarty->assign('BUTTON_CHECKOUT', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL').'">'.xtc_image_button('button_checkout.gif', IMAGE_BUTTON_CHECKOUT).'</a>');
   }

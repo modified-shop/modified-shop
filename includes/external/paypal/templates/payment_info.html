@@ -1,0 +1,14 @@
+{if count($PAYMENT_INFO) > 0}
+  {foreach name=aussen item=data from=$PAYMENT_INFO}
+    <h4>{$data.title|stripslashes}</h4>
+    <table>
+      {foreach name=aussen item=info from=$data.fields}
+        <tr>
+          {if $info.title != ''}<td>{$info.title|stripslashes}</td>{/if}
+          <td>{if $info.field}{$info.field|stripslashes}{else}&nbsp;{/if}</td>
+        </tr>      
+      {/foreach}
+    </table>
+  {/foreach}
+  <br class="clearfix" />
+{/if}

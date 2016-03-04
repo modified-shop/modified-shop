@@ -31,6 +31,10 @@ include ('includes/application_top.php');
 // create smarty elements
 $smarty = new Smarty;
 
+if ($messageStack->size('logoff') > 0) {
+  $smarty->assign('info_message', $messageStack->output('logoff'));
+}    
+
 //BOF - DokuMan - 2010-05-28 - delete Guests from Database when logging off, also see checkout_success.php
 if (($_SESSION['account_type'] == 1) && (DELETE_GUEST_ACCOUNT == 'true')) {
 	xtc_db_query("delete from ".TABLE_CUSTOMERS." where customers_id = '".$_SESSION['customer_id']."'");

@@ -67,6 +67,12 @@
     include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
     $payment_method=constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
     $smarty->assign('PAYMENT_METHOD',$payment_method);
+
+    if(strpos($order->info['payment_method'], 'paypalplus') !== false) {
+      require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
+      $paypal = new PayPalInfo($order->info['payment_method']);      
+      $smarty->assign('PAYMENT_INFO', $paypal->success($order->info['order_id']));
+    }
   }
   $smarty->assign('COMMENTS', $order->info['comments']);
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));

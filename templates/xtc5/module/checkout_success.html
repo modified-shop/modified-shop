@@ -19,8 +19,21 @@
 <p>{#gv_has_vouchera#} {$GV_SEND_LINK} {#gv_has_voucherb#}</p>
 {/if}
 {* BOF - web28 - 2010-03-27 PayPal Bezahl-Link *}
-{if $PAYPAL_LINK}
-<p><div style="background: #f2f2f2; color: #ffffff; padding:5px; border: 2px solid #496686">{$PAYPAL_LINK}</div></p>
+{if count($PAYMENT_INFO) > 0}
+<div class="highlightbox">
+  {foreach name=aussen item=data from=$PAYMENT_INFO}
+    <h4>{$data.title|stripslashes}</h4>
+    <table class="paymentinfotable $data.class">
+      {foreach name=aussen item=info from=$data.fields}
+        <tr>
+          {if $info.title != ''}<td>{$info.title|stripslashes}</td>{/if}
+          <td>{if $info.field}{$info.field|stripslashes}{else}&nbsp;{/if}</td>
+        </tr>      
+      {/foreach}
+    </table>
+  {/foreach}
+</div>
+<br class="clearfix" />
 {/if}
 {* EOF - web28 - 2010-03-27 PayPal Bezahl-Link *}
 {* BOF - GTB - 2010-09-15 - change Print Button to Form *}

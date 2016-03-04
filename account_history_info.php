@@ -66,16 +66,25 @@ if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'n
   $smarty->assign('PAYMENT_METHOD', constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_TITLE'));
 }
 
-//BOF  - web28 - 2010-03-27 PayPal Bezahl-Link
-if ($order->info['payment_method'] == 'paypal_ipn' && MODULE_PAYMENT_PAYPAL_IPN_USE_ACCOUNT == 'True') {
-  $order_id = $order->info['order_id'];
-  $paypal_link = array();
-  require (DIR_WS_CLASSES.'payment.php');
-  $payment_modules = new payment('paypal_ipn');
-  $payment_modules->create_paypal_link();
-  $smarty->assign('PAYPAL_LINK', $paypal_link['html']);
+## PayPal
+if ($order->info['payment_method'] == 'paypallink'
+    || $order->info['payment_method'] == 'paypalpluslink'
+    ) 
+{
+  require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
+  $paypal = new PayPalPayment($order->info['payment_method']);
+  
+  if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_USE_ACCOUNT') == 1) {
+    $button = $paypal->create_paypal_link($order->info['order_id']);
+    if ($button != '') {
+      $smarty->assign('PAYPAL_LINK', sprintf(constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_SUCCESS'), $button));
+    }
+    
+    if ($messageStack->size($order->info['payment_method']) > 0) {
+      $smarty->assign('info_message', $messageStack->output($order->info['payment_method']));
+    }    
+  }
 }
-//EOF  - web28 - 2010-03-27 PayPal Bezahl-Link
 
 // Order History
 $history_block = ''; //DokuMan - 2010-09-18 - set undefined variable

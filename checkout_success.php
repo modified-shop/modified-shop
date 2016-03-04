@@ -66,20 +66,20 @@ $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_SUCCESS);
 require (DIR_WS_INCLUDES.'header.php');
 
 $orders_query = xtc_db_query("select orders_id,
-                                     orders_status
+                                     orders_status,
+                                     payment_class
                               from ".TABLE_ORDERS."
                               where customers_id = '".$_SESSION['customer_id']."'
                               order by orders_id desc limit 1");
 $orders = xtc_db_fetch_array($orders_query);
 $last_order = $orders['orders_id'];
 $order_status = $orders['orders_status'];
+$payment_class = $orders['payment_class'];
 
-//BOF  - web28 - 2010-03-27 PayPal Bezahl-Link
-if (isset($_SESSION['paypal_link']) && MODULE_PAYMENT_PAYPAL_IPN_USE_CHECKOUT == 'True') {
-	$smarty->assign('PAYPAL_LINK',$_SESSION['paypal_link']);
-    unset ($_SESSION['paypal_link']);    	
-}    
-//EOF  - web28 - 2010-03-27 PayPal Bezahl-Link
+// load the selected payment module
+require_once (DIR_WS_CLASSES . 'payment.php');
+$payment_modules = new payment($payment_class);
+$smarty->assign('PAYMENT_INFO', $payment_modules->success());
 
 // BOF - GTB - 2011-04-12 - changes for Guest Account
 // $smarty->assign('FORM_ACTION', xtc_draw_form('order', xtc_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=update', 'SSL')));
