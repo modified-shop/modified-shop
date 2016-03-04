@@ -55,21 +55,6 @@ class paypalplus extends PayPalPayment {
         var s = document.getElementsByTagName(\'script\')[0];
         s . parentNode . insertBefore(pp, s);
       })();
-      $("[id*=rd]").click(function(e) {
-        if ($(\'input[name="payment"]:checked\', \'#checkout_payment\').val() == "'.$this->code.'") {
-          '.(($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_USE_TABS') == '1') ? '
-          $.get("'.xtc_href_link('callback/paypal/paypalplus.php', '', 'SSL').'", function(data) {
-            $("#ppp_result").html(data);
-          });
-          ' : '').'
-          '.((count($payments) > 0) ? '
-          $("#continueButton").removeAttr("onclick");
-          $("#continueButton").attr("onclick", "ppp.doContinue(); return false;");
-          ' : '').'
-        } else {
-          '.((count($payments) > 0) ? '$("#continueButton").removeAttr("onclick");' : '').'
-        }
-      });
       $(window).load(function() {
         '.((count($payments) > 0) ? '
         if ($(\'input[name="payment"]:checked\', \'#checkout_payment\').val() == "'.$this->code.'") {
@@ -80,6 +65,21 @@ class paypalplus extends PayPalPayment {
         $.get("'.xtc_href_link('callback/paypal/paypalplus.php', '', 'SSL').'", function(data) {
           $("#ppp_result").html(data);
         })
+        $("[id*=\"rd\"]").click(function(e) {
+          if ($(\'input[name="payment"]:checked\', \'#checkout_payment\').val() == "'.$this->code.'") {
+            '.(($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_USE_TABS') == '1') ? '
+            $.get("'.xtc_href_link('callback/paypal/paypalplus.php', '', 'SSL').'", function(data) {
+              $("#ppp_result").html(data);
+            });
+            ' : '').'
+            '.((count($payments) > 0) ? '
+            $("#continueButton").removeAttr("onclick");
+            $("#continueButton").attr("onclick", "ppp.doContinue(); return false;");
+            ' : '').'
+          } else {
+            '.((count($payments) > 0) ? '$("#continueButton").removeAttr("onclick");' : '').'
+          }
+        });
       });
     </script>';
     
