@@ -235,42 +235,44 @@ class paypalcart extends PayPalPayment {
       $module_smarty->caching = 0;
       $shipping_block = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_shipping_block.html');
     }
-
-    $module_smarty->assign('FORM_SHIPPING_ACTION', xtc_draw_form('checkout_shipping', xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(), 'SSL')).xtc_draw_hidden_field('action', 'process'));
-    
-    $shipping_found = false;
-    for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
-      for ($j = 0, $n2 = sizeof($quotes[$i]['methods']); $j < $n2; $j ++) {
-        if ($quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']) {
-          $shipping_found = true;
-          break;
-        }
-      }
-    }
-    if ($shipping_found === false) {
-      $module_smarty->assign('shipping_message', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
-      /*
-      if (xtc_count_shipping_modules() == 1) {
-        $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
-      }
-      */
-    }
-    $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
-    $module_smarty->assign('FORM_END', '</form>');
     
     if ($no_shipping === false) {
-      $module_smarty->assign('SHIPPING_BLOCK', $shipping_block);
-    }
-
-    if ($messageStack->size('shipping_message') > 0) {
-      $module_smarty->assign('shipping_message', $messageStack->output('shipping_message'));
-    }
-
-    $module_smarty->assign('language', $_SESSION['language']);
-    $module_smarty->caching = 0;
-    $shipping_method = $module_smarty->fetch(DIR_FS_EXTERNAL.'/paypal/templates/shipping_block.html');
+      $module_smarty->assign('FORM_SHIPPING_ACTION', xtc_draw_form('checkout_shipping', xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(), 'SSL')).xtc_draw_hidden_field('action', 'process'));
     
-    $smarty->assign('SHIPPING_METHOD', $shipping_method);
+      $shipping_found = false;
+      for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
+        for ($j = 0, $n2 = sizeof($quotes[$i]['methods']); $j < $n2; $j ++) {
+          if ($quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']) {
+            $shipping_found = true;
+            break;
+          }
+        }
+      }
+      if ($shipping_found === false) {
+        $module_smarty->assign('shipping_message', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
+        /*
+        if (xtc_count_shipping_modules() == 1) {
+          $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
+        }
+        */
+      }
+      $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
+      $module_smarty->assign('FORM_END', '</form>');
+    
+      if ($no_shipping === false) {
+        $module_smarty->assign('SHIPPING_BLOCK', $shipping_block);
+      }
+
+      if ($messageStack->size('shipping_message') > 0) {
+        $module_smarty->assign('shipping_message', $messageStack->output('shipping_message'));
+      }
+
+      $module_smarty->assign('language', $_SESSION['language']);
+      $module_smarty->caching = 0;
+      $shipping_method = $module_smarty->fetch(DIR_FS_EXTERNAL.'/paypal/templates/shipping_block.html');
+    
+      $smarty->assign('SHIPPING_METHOD', $shipping_method);
+    }
     $smarty->assign('SHIPPING_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, xtc_get_all_get_params(), 'SSL'));
     $smarty->assign('BILLING_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, xtc_get_all_get_params(), 'SSL'));
 
