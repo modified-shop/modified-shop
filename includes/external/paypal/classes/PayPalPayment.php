@@ -276,7 +276,8 @@ class PayPalPayment extends PayPalPaymentBase {
       
     } catch (Exception $ex) { 
       $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-
+      
+      unset($_SESSION['paypal']);
       if ($cart === true) {
         xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'SSL'));
       } elseif ($this->code != 'paypalplus') {
@@ -298,6 +299,8 @@ class PayPalPayment extends PayPalPaymentBase {
   
     } catch (Exception $ex) {
       $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      
+      unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
     
@@ -389,6 +392,8 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment->update($patchRequest, $apiContext);      
     } catch (Exception $ex) {
       $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      
+      unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
     
@@ -434,6 +439,7 @@ class PayPalPayment extends PayPalPaymentBase {
             $this->login_customer($customer);
           } elseif (!isset($_SESSION['customer_id'])) {
             // redirect
+            unset($_SESSION['paypal']);
             xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
           }
           
@@ -442,6 +448,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
         } elseif (!isset($_SESSION['customer_id'])) {
           // redirect
+          unset($_SESSION['paypal']);
           xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
         }
         
@@ -450,10 +457,12 @@ class PayPalPayment extends PayPalPaymentBase {
         $_SESSION['paypal']['payment_modules'] = 'paypalcart.php';
       } else {
         // redirect
+        unset($_SESSION['paypal']);
         xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
       }
     } else {
       // redirect
+      unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
   }
@@ -478,6 +487,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
 
         // redirect
+        unset($_SESSION['paypal']);
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));      
       }
 
@@ -543,6 +553,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $this->LoggingManager->log(print_r($ex, true), 'DEBUG');          
 
         $this->remove_order($insert_id);
+        unset($_SESSION['paypal']);
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
       }
 
@@ -569,6 +580,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
 
         $this->remove_order($insert_id);
+        unset($_SESSION['paypal']);
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
       }
 
@@ -584,6 +596,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
     } else {
       // redirect
+      unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
   }
@@ -621,6 +634,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
       
       $this->remove_order($insert_id);
+      unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
     
@@ -696,10 +710,12 @@ class PayPalPayment extends PayPalPaymentBase {
       $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
 
       if ($order_exists === false) {
+        unset($_SESSION['paypal']);
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
       }
 
       $this->remove_order($insert_id);
+      unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
     
@@ -717,6 +733,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
 
       $this->remove_order($insert_id);
+      unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
 
@@ -743,6 +760,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
 
       $this->remove_order($insert_id);
+      unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
 
