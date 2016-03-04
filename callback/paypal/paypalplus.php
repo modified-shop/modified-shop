@@ -32,12 +32,13 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
     $order_total_modules = new order_total();
     $credit_selection = $order_total_modules->credit_selection();
   }
-  if (!isset($credit_selection) || count($credit_selection) < 1) {
+  if (!isset($credit_selection) || !is_array($credit_selection) || count($credit_selection) < 1) {
     for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
+      $description = $paypal->get_config(strtoupper($selection[$i]['id'].'_'.$_SESSION['language_code']));
       $module[] = array(
         'redirectUrl' => $paypal->encode_utf8($paypal->link_encoding(xtc_href_link('callback/paypal/paypalplus_redirect.php', 'payment='.$selection[$i]['id'], 'SSL'))),
         'methodName' => $paypal->encode_utf8(strip_tags($selection[$i]['module'])),
-        'description' => $paypal->encode_utf8($paypal->get_config(strtoupper($selection[$i]['id'].'_'.$_SESSION['language_code']))),
+        'description' => $paypal->encode_utf8(($description != '') ? $description : $selection[$i]['description']),
       );
     }
   }
