@@ -1,4 +1,5 @@
 {config_load file="$language/lang_$language.conf" section="logoff"} 
 <h1>{#heading_logoff#}</h1>
+{if $info_message}<div class="{if isset($smarty.get.info) && $smarty.get.info == '1'}info{else}error{/if}message">{$info_message}</div>{/if}
 <p>{#text_logoff#}</p>
 <p>{$BUTTON_CONTINUE}</p>

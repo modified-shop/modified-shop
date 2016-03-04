@@ -511,3 +511,10 @@ define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Angezeigt werden <b>%d</b> bis <b>%d<
 define('CFG_TXT_PRICE', 'Preis');
 
 define('CHECK_LABEL_PRICE', 'Preis abfragen');
+
+define('TEXT_PAYPAL_TAB_CONFIG', 'PayPal Konfiguration');
+define('TEXT_PAYPAL_TAB_PROFILE', 'PayPal Profil');
+define('TEXT_PAYPAL_TAB_WEBHOOK', 'PayPal Webhook');
+define('TEXT_PAYPAL_TAB_MODULE', 'PayPal Module');
+define('TEXT_PAYPAL_TAB_TRANSACTIONS', 'PayPal Transaktionen');
+

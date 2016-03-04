@@ -1,0 +1,69 @@
+{config_load file="$language/lang_$language.conf" section="checkout_paypal"}
+{config_load file="$language/lang_$language.conf" section="checkout_payment"}
+
+{if $smarty.const.CURRENT_TEMPLATE == 'tpl_modified'}
+<div class="highlightbox">
+  {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
+    <div id="horizontalTab">
+      <ul class="resp-tabs-list nonjs-fallback">
+        <li>{#title_comments_short#}</li>
+        <li>{#title_agb#}</li>
+      </ul>
+      <div class="resp-tabs-container">
+        <noscript><h4 class="nonjs-h4">{#title_comments_short#}</h4></noscript>
+        <div class="checkoutcomment">{$COMMENTS}</div>
+        <div>
+          <noscript><h4 class="nonjs-h4">{#title_agb#}</h4></noscript>
+          <div class="checkoutagb">{$AGB}</div>
+        </div>
+      </div>
+    </div>
+    <div class="checkoutconditions" style="padding: 10px 0px;">
+      {if $conditions_message != ''}<div class="errormessage">{$conditions_message}</div>{/if}
+      {if isset($ADR_checkbox)}{$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong>{if isset($AGB_checkbox)}<br/>{/if}{/if}
+      {if isset($AGB_checkbox)}{$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}{/if}
+    </div>
+  {else}
+    <h4 class="checkout">{#title_comments_short#}</h4>
+    <div class="checkoutcomment">{$COMMENTS}</div>
+    <div class="checkoutconditions">
+      {if isset($ADR_checkbox)}{$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong>{/if}
+    </div>
+    {if $conditions_message != ''}<div class="errormessage">{$conditions_message}</div>{/if}
+  {/if}
+</div>
+<br class="clearfix" />
+{else}
+  {literal}
+  <style type="text/css">
+    p.checkoutcomment textarea { max-width: 98%; }
+    div.agbframe { text-align: left; max-width: 98%; }
+    .errormessage { text-align: left; }
+  </style>
+  {/literal}
+  
+  <h2 style="text-align:left;">{#title_comments#}</h2>
+  <p class="checkoutcomment">{$COMMENTS}</p>
+  <h2 style="text-align:left;">{#title_agb#}</h2>
+  <p class="checkoutagb" style="text-align:left;">{$AGB}</p>
+  <table width="100%" border="0" cellspacing="0" cellpadding="4">
+    {if $conditions_message != ''}
+      <tr>
+        <td colspan="2"><div class="errormessage">{$conditions_message}</div></td>
+      </tr>
+    {/if}
+    {if $AGB_checkbox}
+      <tr>
+        <td>{$AGB_checkbox}</td>
+        <td width="100%" style="text-align:left;"><strong><label for="conditions">{#text_accept_agb#}</label></strong></td>
+      </tr>
+    {/if}
+    {if $ADR_checkbox}
+      <tr>
+        <td>{$ADR_checkbox}</td>
+        <td width="100%" style="text-align:left;"><strong><label for="address">{#text_accept_adr#}</label></strong></td>
+      </tr>
+    {/if}
+  </table>
+
+{/if}

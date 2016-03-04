@@ -102,36 +102,13 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->assign('COMPANY', $order->customer['company']);
   $smarty->assign('STREET', $order->customer['street_address']);
   $smarty->assign('FIRSTNAME', $order->customer['firstname']);
-    $smarty->assign('LASTNAME', $order->customer['lastname']);
+  $smarty->assign('LASTNAME', $order->customer['lastname']);
   //EOF - web28 - 2010-08-20 - Erweiterung Variablen für Bestätigungsmail
 
   $smarty->assign('COMMENTS', $order->info['comments']);
   $smarty->assign('EMAIL', $order->customer['email_address']);
   $smarty->assign('PHONE',$order->customer['telephone']);
   $smarty->assign('vatID', $order->customer['vat_id']);
-
-  //BOF  - web28 - 2010-03-27 PayPal Bezahl-Link
-  unset ($_SESSION['paypal_link']);
-  if ($order->info['payment_method'] == 'paypal_ipn') {
-
-    //BOF - web28 - 2010-06-11 - Send Order  by Admin Paypal IPN
-    if(isset($send_by_admin)) { //DokuMan - 2010-09-18 - Undefined variable: send_by_admin
-      require (DIR_FS_CATALOG_MODULES.'payment/paypal_ipn.php');
-      include(DIR_FS_LANGUAGES.$order->info['language'].'/modules/payment/paypal_ipn.php');
-      $payment_modules = new paypal_ipn;
-    }
-    //EOF - web28 - 2010-06-11 - Send Order  by Admin Paypal IPN
-
-    $order_id= $insert_id;
-    $paypal_link = array();
-    $payment_modules->create_paypal_link();
-
-    $smarty->assign('PAYMENT_INFO_HTML', $paypal_link['html']);
-    $smarty->assign('PAYMENT_INFO_TXT',  MODULE_PAYMENT_PAYPAL_IPN_TXT_EMAIL . $paypal_link['text']);
-    $_SESSION['paypal_link']= $paypal_link['checkout'];
-
-  }
-  //EOF  - web28 - 2010-03-27 PayPal Bezahl-Link
 
   // PAYMENT MODUL TEXTS
   // EU Bank Transfer
@@ -219,9 +196,6 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->assign('AGB_HTML', $shop_content_data['content_text']);
   $smarty->assign('AGB_TXT', $shop_content_data['content_text']);
 
-  $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.html');
-  $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.txt');
-
   //email attachments
   $email_attachments = defined('EMAIL_BILLING_ATTACHMENTS') ? EMAIL_BILLING_ATTACHMENTS : '';
 
@@ -232,6 +206,12 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   
   ## Janolaw
   require_once(DIR_FS_EXTERNAL.'janolaw/send_order.php');
+
+  ## PayPal
+  require_once(DIR_FS_EXTERNAL.'paypal/modules/send_order.php');
+
+  $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.html');
+  $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.txt');
   
   // create subject
   $order_subject = str_replace('{$nr}', $insert_id, EMAIL_BILLING_SUBJECT_ORDER);

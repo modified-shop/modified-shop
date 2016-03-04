@@ -543,6 +543,9 @@ require (DIR_WS_INCLUDES.'header.php');
                 $paypal->admin_notification($oID);
               }
 
+              ## Paypal
+              include (DIR_FS_EXTERNAL.'paypal/modules/orders_paypal.php');
+
               // Banktransfer - START
               $banktransfer_query = xtc_db_query("-- /admin/orders.php
                                                    SELECT banktransfer_owner,

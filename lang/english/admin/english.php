@@ -509,3 +509,9 @@ define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Displaying <b>%d</b> to <b>%d</b> (of
 define('CFG_TXT_PRICE', 'Price');
 
 define('CHECK_LABEL_PRICE', 'Check price');
+
+define('TEXT_PAYPAL_TAB_CONFIG', 'PayPal Configuration');
+define('TEXT_PAYPAL_TAB_PROFILE', 'PayPal Profile');
+define('TEXT_PAYPAL_TAB_WEBHOOK', 'PayPal Webhook');
+define('TEXT_PAYPAL_TAB_MODULE', 'PayPal Module');
+define('TEXT_PAYPAL_TAB_TRANSACTIONS', 'PayPal Transactions');

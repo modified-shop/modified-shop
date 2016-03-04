@@ -224,8 +224,8 @@ class order_total {
 			sort($modules); // cgoenner: we need to include the ot_coupon & ot_gv BEFORE ot_tax
 			reset($modules);
 			while (list (, $value) = each($modules)) {
-				include (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/'.$value);
-				include (DIR_WS_MODULES.'order_total/'.$value);
+				include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/'.$value);
+				include_once (DIR_WS_MODULES.'order_total/'.$value);
 
 				$class = substr($value, 0, strrpos($value, '.'));
 				$GLOBALS[$class] = new $class ();
@@ -279,9 +279,8 @@ class order_total {
 		return $output_string;
 	}
 
-  //BOF - web28 - 2011-02-01 -  PayPal Express
-  function pp_output() {
-    $output_string = '';
+  function output_array() {
+    $arr_output = array();
     if (is_array($this->modules)) {
       reset($this->modules);
       while (list (, $value) = each($this->modules)) {
@@ -289,14 +288,23 @@ class order_total {
         if ($GLOBALS[$class]->enabled) {
           $size = sizeof($GLOBALS[$class]->output);
           for ($i = 0; $i < $size; $i ++) {
-            $output_string[] = array('title'=>$GLOBALS[$class]->output[$i]['title'], 'text'=>$GLOBALS[$class]->output[$i]['text']);
+            $arr_output[] = array(
+              'title' => $GLOBALS[$class]->output[$i]['title'], 
+              'text' => $GLOBALS[$class]->output[$i]['text'],
+              'value' => $GLOBALS[$class]->output[$i]['value'],
+              'class' => $class,
+            );
           }
         }
       }
     }
 
-    return $output_string;
+    return $arr_output;
   }
-  //EOF - web28 - 2011-02-01 -  PayPal Express
+
+  ## PayPal
+  function pp_output() {
+    return $this->output_array();   
+  }
 }
 ?>
