@@ -202,6 +202,7 @@ xtc_db_connect() or die('Unable to connect to database server!');
 // load configuration
 $configuration_query = xtc_db_query('SELECT configuration_key, configuration_value FROM '.TABLE_CONFIGURATION);
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
+  if (function_exists('extra_configuration')) extra_configuration();
   defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
 }
 

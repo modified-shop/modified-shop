@@ -251,5 +251,7 @@ if (defined('MODULE_PAYMENT_BILLSAFE_2_LAYER') && MODULE_PAYMENT_BILLSAFE_2_LAYE
          '--></script>' . PHP_EOL;
   }
 }
+
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header_body_extra/','php') as $file) require_once ($file);
 ## header_body_extra
 ?>
