@@ -68,7 +68,10 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
 	  echo '"onContinue": function() { 
 	          var payment = ppp.getPaymentMethod();
             if (payment.substring(0, 2) != "pp") {
-              ppp.doCheckout();
+              var check = check_form();
+              if (check == true) {
+                ppp.doCheckout();
+              }
             } else {
               setTimeout("document.checkout_payment.submit()", 10);
             }
