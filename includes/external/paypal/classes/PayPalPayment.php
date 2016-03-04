@@ -645,18 +645,6 @@ class PayPalPayment extends PayPalPaymentBase {
                   ->setPath('/potential_payer_info/billing_address')
                   ->setValue($payment_address);
 
-    $patchRequest->setPatches(array($patch_payment));
-
-    try {
-      // update payment
-      $payment->update($patchRequest, $apiContext);      
-
-    } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-    }
-
-    $patchRequest = new PatchRequest();
-
     // set address
     $shipping_address = new ShippingAddress();      
 
@@ -675,36 +663,12 @@ class PayPalPayment extends PayPalPaymentBase {
     $patch_shipping->setOp('add')
                    ->setPath('/transactions/0/item_list/shipping_address')
                    ->setValue($shipping_address);
-
-    $patchRequest->setPatches(array($patch_shipping));
-              
-    try {
-      // update payment
-      $payment->update($patchRequest, $apiContext);      
-
-    } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-    }
+            
+    $patch_invoice = new Patch();
+    $patch_invoice->setOp('replace')
+                  ->setPath('/transactions/0/invoice_number')
+                  ->setValue($insert_id);
         
-    $patchRequest = new PatchRequest();
-        
-    $patch_amount = new Patch();
-    $patch_amount->setOp('replace')
-                 ->setPath('/transactions/0/invoice_number')
-                 ->setValue($insert_id);
-
-    $patchRequest->setPatches(array($patch_amount));     
-        
-    try {
-      // update payment
-      $payment->update($patchRequest, $apiContext);      
-
-    } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-    }
-    
-    $patchRequest = new PatchRequest();
-    
     // set details
     $this->details = new Details(); 
 
@@ -722,7 +686,7 @@ class PayPalPayment extends PayPalPaymentBase {
                  ->setPath('/transactions/0/amount')
                  ->setValue($this->amount);
 
-    $patchRequest->setPatches(array($patch_amount));     
+    $patchRequest->setPatches(array_merge(array($patch_payment), array($patch_shipping), array($patch_invoice), array($patch_amount)));     
         
     try {
       // update payment
