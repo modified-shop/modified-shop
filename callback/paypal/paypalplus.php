@@ -66,14 +66,14 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
 	if (count($module) > 0) {
 	  echo ','."\n";
 	  echo '"onContinue": function() { 
-	          var payment = ppp.getPaymentMethod();
-            if (payment.substring(0, 2) != "pp") {
-              var check = check_form();
-              if (check == true) {
+            var check = check_form();
+            if (check == true) {
+              var payment = ppp.getPaymentMethod();
+              if (payment.substring(0, 2) != "pp") {
                 ppp.doCheckout();
+              } else {
+                setTimeout("document.checkout_payment.submit()", 10);
               }
-            } else {
-              setTimeout("document.checkout_payment.submit()", 10);
             }
 	        }, ';
 	  echo '  "thirdPartyPaymentMethods": '.json_encode($module)."\n";
