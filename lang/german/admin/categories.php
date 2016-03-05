@@ -251,4 +251,7 @@ define('TEXT_PRODUCTS_TAGS', 'Artikeleigenschaften');
 define('TEXT_GRADUATED_PRICES_GROUP_INFO', 'Die Kundengruppe hat derzeit keine Berechtigungen Staffelpreise zu sehen. Dies kann in den Kundengruppen-Einstellungen jederzeit ge&auml;ndert werden.');
 
 define('TEXT_NO_FILE', 'Keine Vorlagen-Datei vorhanden!');
+
+define('ERROR_COPY_METHOD_NOT_SPECIFIED', 'Kopiermethode nicht angegeben.');
+define('ERROR_COPY_METHOD_NOT_ALLOWED', 'Kopiermethode "Verlinken" nicht erlaubt bei Kategorien.');
 ?>
