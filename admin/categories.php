@@ -255,22 +255,22 @@ if (xtc_not_null($action)) {
               foreach ($_POST['dest_cat_ids'] AS $dest_category_id) {
                 if ($_POST['copy_as'] == 'link') {
                   //$catfunc->copy_category($category_id, $dest_category_id, 'link');
-                  $messageStack->add_session('Copy type not allowed on categories.', 'error');
+                  $messageStack->add_session(ERROR_COPY_METHOD_NOT_ALLOWED, 'error');
                 } elseif ($_POST['copy_as'] == 'duplicate') {
                   $catfunc->copy_category($category_id, $dest_category_id, 'duplicate');
                 } else {
-                  $messageStack->add_session('Copy type not specified.', 'error');
+                  $messageStack->add_session(ERROR_COPY_METHOD_NOT_SPECIFIED, 'error');
                 }
               }
             } elseif (xtc_not_null($_POST['dest_category_id'])) {
               $dest_category_id = xtc_db_prepare_input($_POST['dest_category_id']); // web28 - 2012-04-14 - BUGFIX $dest_category_id
               if ($_POST['copy_as'] == 'link') {
                 //$catfunc->copy_category($category_id, $dest_category_id, 'link');
-                $messageStack->add_session('Copy type not allowed on categories.', 'error');
+                $messageStack->add_session(ERROR_COPY_METHOD_NOT_ALLOWED, 'error');
               } elseif ($_POST['copy_as'] == 'duplicate') {
                 $catfunc->copy_category($category_id, $dest_category_id, 'duplicate');
               } else {
-                $messageStack->add_session('Copy type not specified.', 'error');
+                $messageStack->add_session(ERROR_COPY_METHOD_NOT_SPECIFIED, 'error');
               }
             }
           }
@@ -290,7 +290,7 @@ if (xtc_not_null($action)) {
                   $catfunc->duplicate_product($product_id, $dest_category_id);
                   $pID = $catfunc->dup_products_id;
                 } else {
-                  $messageStack->add_session('Copy type not specified.', 'error');
+                  $messageStack->add_session(ERROR_COPY_METHOD_NOT_SPECIFIED, 'error');
                 }
               }
             } elseif (xtc_not_null($_POST['dest_category_id'])) {
@@ -302,7 +302,7 @@ if (xtc_not_null($action)) {
                 $catfunc->duplicate_product($product_id, $dest_category_id);
                 $pID = $catfunc->dup_products_id;
               } else {
-                $messageStack->add_session('Copy type not specified.', 'error');
+                $messageStack->add_session(ERROR_COPY_METHOD_NOT_SPECIFIED, 'error');
               }
             }
           }

@@ -137,8 +137,8 @@ define('TEXT_DELETE', 'Delete');
 define('EMPTY_CATEGORY', 'Empty Category');
 
 define('TEXT_HOW_TO_COPY', 'Copy Method:');
-define('TEXT_COPY_AS_LINK', 'Link product');
-define('TEXT_COPY_AS_DUPLICATE', 'Duplicate product');
+define('TEXT_COPY_AS_LINK', 'Link');
+define('TEXT_COPY_AS_DUPLICATE', 'Duplicate');
 
 define('ERROR_CANNOT_LINK_TO_SAME_CATEGORY', 'Error: Can not link products in the same directory.');
 define('ERROR_CATALOG_IMAGE_DIRECTORY_NOT_WRITEABLE', 'Error: Catalog images directory is not writeable: ' . DIR_FS_CATALOG_IMAGES);
@@ -251,4 +251,7 @@ define('TEXT_PRODUCTS_TAGS', 'Product features');
 define('TEXT_GRADUATED_PRICES_GROUP_INFO', 'The customer group currently has no permission to view graduated prices. This can be changed in the customers group settings at any time.');
 
 define('TEXT_NO_FILE', 'No template file existing!');
+
+define('ERROR_COPY_METHOD_NOT_SPECIFIED', 'Copy Method not specified.');
+define('ERROR_COPY_METHOD_NOT_ALLOWED', 'Copy Method "Link" not allowed on categories.');
 ?>
