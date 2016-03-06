@@ -370,6 +370,7 @@
     }
 
     function parse_customers_data($customers_data, $customers_array) {
+      $customer = array();
       foreach ($customers_array as $key => $val) {
         if (is_array($val)) {
           $customer[$key] = $this->parse_customers_data($customers_data, $val);
@@ -379,13 +380,12 @@
           }
         }
       }
-
       return $customer;
     }
 
 
     function cart() {
-      global $currencies,$xtPrice,$main;
+      global $currencies, $xtPrice, $main;
 
       $this->content_type = $_SESSION['cart']->get_content_type();
 
@@ -648,7 +648,7 @@
 
       $this->info['total'] = $this->info['subtotal'] + $xtPrice->xtcFormat($this->info['shipping_cost'], false,0,true);
       if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
-        $this->info['total'] -= ($this->info['subtotal'] /100 * $_SESSION['customers_status']['customers_status_ot_discount']);
+        $this->info['total'] -= ($this->info['subtotal'] / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
       }
     }
   }
