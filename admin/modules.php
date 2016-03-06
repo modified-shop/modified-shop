@@ -80,7 +80,7 @@
       default:
         $check_language_file = false;
         $module_directory_include = '';
-        foreach(auto_include(DIR_FS_ADMIN.'includes/extra/submenu/modules','php') as $file) require ($file);
+        foreach(auto_include(DIR_FS_ADMIN.'includes/extra/submenu/modules/','php') as $file) require ($file);
         if (!defined('HEADING_TITLE')) {
           define('HEADING_TITLE', BOX_MODULE_TYPE);
         }
