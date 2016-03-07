@@ -159,7 +159,7 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
     defined($configuration['cfgKey']) OR define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
 }
 
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback_begin/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback/application_top_callback_begin/','php') as $file) require ($file);
 
 // if gzip_compression is enabled, start to buffer the output
 if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib')) && (PHP_VERSION >= '4') ) {
@@ -173,5 +173,5 @@ if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib'
 // Paypal API Modul
 require (DIR_WS_FUNCTIONS.'sessions.php');
 
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback_end/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback/application_top_callback_end/','php') as $file) require ($file);
 ?>

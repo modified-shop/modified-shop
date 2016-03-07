@@ -206,7 +206,7 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
   defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
 }
 
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_begin/','php') as $file) require_once ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top/application_top_begin/','php') as $file) require_once ($file);
 
 // Set the length of the redeem code, the longer the more secure
 // Kommt eigentlich schon aus der Table configuration
@@ -364,7 +364,7 @@ include_once (DIR_WS_MODULES.'set_account_type.php');
 unset ($_SESSION['actual_content']);
 xtc_count_cart();
 
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_end/','php') as $file) require_once ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top/application_top_end/','php') as $file) require_once ($file);
 
 //compatibility for modified eCommerce Shopsoftware 1.06 files
 defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
