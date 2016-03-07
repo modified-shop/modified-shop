@@ -210,23 +210,6 @@ if ($shop_is_offline) {
   exit();
 }
 
-// ECONDA TRACKING
-if (TRACKING_ECONDA_ACTIVE=='true') {
-  echo '<script type="text/javascript"><!--'.PHP_EOL.
-       '  var emos_kdnr="'. TRACKING_ECONDA_ID. '";'.PHP_EOL.
-       '//--></script>'.PHP_EOL.
-       '<a name="emos_sid" rel="'. xtc_session_id().'"></a>'.PHP_EOL.
-       '<a name="emos_name" title="siteid" rel="'. $_SESSION['languages_id'].'" rev=""></a>'.PHP_EOL;
-}
-
-// GOOGLE CONV. TRACKING
-if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS && GOOGLE_CONVERSION == 'true') {
-  require('includes/google_conversiontracking.js.php');
-}
-
-// BANNER SYSTEM
-include(DIR_WS_INCLUDES.FILENAME_BANNER);
-
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_body/','php') as $file) require_once ($file);
 ## header_body_extra
 ?>

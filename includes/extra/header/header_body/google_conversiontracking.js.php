@@ -5,13 +5,15 @@
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2009 - 2016 [www.modified-shop.org]
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-require_once (DIR_FS_INC.'get_order_total.inc.php');
-$total = get_order_total($last_order);
+// GOOGLE CONV. TRACKING
+if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS && GOOGLE_CONVERSION == 'true') {
+  require_once (DIR_FS_INC.'get_order_total.inc.php');
+  $total = get_order_total($last_order);
 ?>
 <div style="height:0px;overflow:hidden;">
 <!-- Google Code for Purchase Conversion Page -->
@@ -33,3 +35,6 @@ $total = get_order_total($last_order);
   </div>
 </noscript>
 </div>
+<?php
+}
+?>
