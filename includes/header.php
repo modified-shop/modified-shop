@@ -41,11 +41,7 @@ elseif (isset($site_error) && ($site_error === CATEGORIE_NOT_FOUND || $site_erro
   header("Status: 410 Gone"); // FAST CGI
 }
 
-/******** SHOPGATE **********/
-if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True' && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'shopgate') === false){
-  include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/includes/header.php');
-}
-/******** SHOPGATE **********/
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_begin/','php') as $file) require_once ($file);
 
 defined('TEMPLATE_RESPONSIVE') or define('TEMPLATE_RESPONSIVE', 'false');
 defined('TEMPLATE_HTML_ENGINE') or define('TEMPLATE_HTML_ENGINE', 'xhtml');
@@ -94,11 +90,6 @@ if (is_file('templates/'.CURRENT_TEMPLATE.'/css/general.css.php')) {
 // require theme based javascript
 require('templates/'.CURRENT_TEMPLATE.'/javascript/general.js.php');
 
-## paypal
-if (basename($PHP_SELF) == 'paypalpluslink.php') {
-  echo '<script src="https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js" type="text/javascript"></script>';
-}
-
 // require additional javascript
 switch(basename($PHP_SELF)) {
 
@@ -131,6 +122,8 @@ switch(basename($PHP_SELF)) {
     break;
 
 }
+
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_head/','php') as $file) require_once ($file);
 ?>
 </head>
 <body>
@@ -234,24 +227,6 @@ if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS && GOOGLE_CONVERSION == 'tr
 // BANNER SYSTEM
 include(DIR_WS_INCLUDES.FILENAME_BANNER);
 
-// BILLSAFE PAYMENT MODULE
-if (defined('MODULE_PAYMENT_BILLSAFE_2_LAYER') && MODULE_PAYMENT_BILLSAFE_2_LAYER == 'True') {
-  $bs_error = '';
-  if (basename($PHP_SELF) == 'checkout_payment.php') {
-    if (isset($_GET['payment_error'])) {
-      $bs_error = stripslashes(html_entity_decode('payment_error='.$_GET['payment_error'].'&error_message='.$_GET['error_message']));
-    }
-    echo '<script type="text/javascript"><!--' .
-         ' if (top.lpg) top.lpg.close("'.str_replace('&amp;', '&', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, $bs_error, 'SSL')).'");' .
-         '--></script>' . PHP_EOL;
-  }
-  if (basename($PHP_SELF) == 'checkout_success.php') {
-    echo '<script type="text/javascript"><!--' .
-         '  if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL').'");' .
-         '--></script>' . PHP_EOL;
-  }
-}
-
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header_body_extra/','php') as $file) require_once ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_body/','php') as $file) require_once ($file);
 ## header_body_extra
 ?>
