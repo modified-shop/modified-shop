@@ -38,7 +38,7 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
       $module[] = array(
         'redirectUrl' => $paypal->encode_utf8($paypal->link_encoding(xtc_href_link('callback/paypal/paypalplus_redirect.php', 'payment='.$selection[$i]['id'], 'SSL'))),
         'methodName' => $paypal->encode_utf8(strip_tags($selection[$i]['module'])),
-        'description' => $paypal->encode_utf8(($description != '') ? $description : $selection[$i]['description']),
+        'description' => $paypal->encode_utf8(($description != '') ? $description : strip_tags($selection[$i]['description'])),
       );
     }
   }
