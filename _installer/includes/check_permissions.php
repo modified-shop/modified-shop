@@ -98,7 +98,7 @@ define('CHMOD_WRITEABLE', 0775);
   if (isset($_POST['action']) && $_POST['action']=='ftp' && !empty($_POST['login'])) {
     $host = $_POST['host'];
     $port = $_POST['port'];
-    $path = $_POST['path'];
+    $path = trim($_POST['path'], '/');
     $user = $_POST['login'];
     $pass = $_POST['password'];
     
@@ -119,7 +119,7 @@ define('CHMOD_WRITEABLE', 0775);
       foreach ($files_to_check as $type => $files) {
         if ($type != 'rdirs') {
           foreach ($files as $file) {
-            if (!ftp_site($ftp, 'CHMOD '.CHMOD_WRITEABLE.' '.$path.$file)) {
+            if (ftp_chmod($ftp, CHMOD_WRITEABLE, '/'.$path.'/'.ltrim($file, '/')) === false) {
               if ($type == 'files') $error_flag = true;
               if ($type == 'dirs') $folder_flag = true;
               $ftp_message .= CHMOD_WAS_NOT_SUCCESSFUL.'<br />';
