@@ -1,5 +1,11 @@
 {config_load file="$language/lang_$language.conf" section="boxes"}
-{if $BOX_CONTENT != ''}
+{if isset($BOX_CONTENT) && count($BOX_CONTENT) > 0}
 <h2 class="boxheader">{#heading_order_history#}</h2>
-<div class="boxbody">{$BOX_CONTENT}</div>
+<div class="boxbody">
+  <ul class="orderhistory_list">
+  {foreach item=data from=$BOX_CONTENT}  
+    <li>{$data.PRODUCTS_LINK}<span class="cart_icon">{$data.ORDER_LINK}</span></li>
+  {/foreach}
+  </ul>
+</div>
 {/if}
