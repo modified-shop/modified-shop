@@ -63,6 +63,9 @@ if (xtc_not_null($action)) {
       }
       $parameters[] = 'BUYproducts_id';
     } else {
+      if ($goto != FILENAME_ACCOUNT_HISTORY_INFO) {
+        $parameters[] = 'order_id';
+      }
       array_push($parameters, 'products_id', 'BUYproducts_id', 'info');
     }
   }
