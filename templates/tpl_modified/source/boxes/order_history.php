@@ -29,7 +29,8 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_newsletter.html', $cach
 
     // retreive the last x products purchased
     $orders_query = xtc_db_query("SELECT DISTINCT p.products_id,
-                                                  pd.products_name
+                                                  pd.products_name,
+                                                  o.orders_products_id
                                              FROM " . TABLE_ORDERS . " o
                                              JOIN " . TABLE_ORDERS_PRODUCTS . " op
                                                   ON o.orders_id = op.orders_id
@@ -48,8 +49,8 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_newsletter.html', $cach
     if (xtc_db_num_rows($orders_query) > 0) {
       while ($orders = xtc_db_fetch_array($orders_query)) {
         $customer_orders_array[] = array(
-          'PRODUCTS_LINK' => '<a href="' . xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($orders['products_id'],$orders['products_name'])) . '">' . $orders['products_name'] . '</a>',
-          'ORDER_LINK' => '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $orders['products_id']) . '">' . xtc_image_button('templates/' . CURRENT_TEMPLATE . '/img/icon_cart.png' , ICON_CART) . '</a>',
+          'PRODUCTS_LINK' => '<a href="' . xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$orders['products_id']) . '">' . $orders['products_name'] . '</a>',
+          'ORDER_LINK' => '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')) . 'action=add_order_product&order_id='.$orders['products_id'].'&id='.$orders['orders_products_id']) . '">' . xtc_image_button('templates/' . CURRENT_TEMPLATE . '/img/icon_cart.png' , ICON_CART) . '</a>',
         );
       }
     }
