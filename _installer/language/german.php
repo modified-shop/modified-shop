@@ -68,7 +68,7 @@
   define('TEXT_DB_ERROR_1','Bitte klicken Sie auf <i>Back</i> um Ihre Datenbankeinstellungen zu &uuml;berpr&uuml;fen.');
   define('TEXT_DB_ERROR_2','Wenn Sie Hilfe zu Ihrer Datenbank ben&ouml;tigen, wenden Sie sich bitte an Ihren Provider.');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
-  define('TEXT_DB_UPGRADE','Nur Datenbank Update der bereits installierten modified eCommerce Shopsoftware durchf&uuml;hren!');
+  define('TEXT_DB_UPGRADE','Nur Datenbank-Update der bereits installierten modified eCommerce Shopsoftware durchf&uuml;hren!');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
   // BOF - vr - 2010-01-14 - check MySQL *server* version
   define('TEXT_DB_SERVER_VERSION_ERROR','Ihre MySQL-Version ist zu alt. Der Shop ben&ouml;tigt mindestens die Version: ');
@@ -113,7 +113,7 @@
   define('TITLE_SELECT_LANGUAGE','W&auml;hlen Sie eine Sprache aus:');
   define('TEXT_GERMAN','Deutsch');
   define('TEXT_ENGLISH','Englisch');
-  define('TITLE_UPGRADE','Updater ausführen:');
+  define('TITLE_UPGRADE','Updater ausf&uuml;hren:');
   define('TEXT_INFO_DONATIONS_IMG_ALT','Unterst&uuml;tzen Sie dieses Projekt mit Ihrer Spende');
   define('BUTTON_DONATE','<a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_WELCOME_INDEX','<b>Willkommen zur modified eCommerce Shopsoftware Installation</b><br /><br />Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP 5.3.0) und MySQL (ab MySQL 5.0.0) zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.<br /><br />' . BUTTON_DONATE);
