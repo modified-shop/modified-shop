@@ -68,7 +68,7 @@
   define('TEXT_DB_ERROR_1','Please click on the <i>Back</i> graphic to review your database server settings.');
   define('TEXT_DB_ERROR_2','If you require help with your database server settings, please consult your hosting company.');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
-  define('TEXT_DB_UPGRADE','Only perform database upgrade on already installed modified eCommerce Shopsoftware!');
+  define('TEXT_DB_UPGRADE','Only perform database update on already installed modified eCommerce Shopsoftware!');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
   // BOF - vr - 2010-01-14 - check MySQL *server* version
   define('TEXT_DB_SERVER_VERSION_ERROR','Your MySQL version is too old. The shop requires at least version: ');
@@ -113,7 +113,7 @@
   define('TITLE_SELECT_LANGUAGE','Select your language:');
   define('TEXT_GERMAN','German');
   define('TEXT_ENGLISH','English');
-  define('TITLE_UPGRADE','Database Update:');
+  define('TITLE_UPGRADE','Execute Updater:');
   define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
   define('BUTTON_DONATE','<a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_WELCOME_INDEX','<b>Welcome to the modified eCommerce Shopsoftware installation process</b><br /><br />The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP 5.3 and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
@@ -313,8 +313,8 @@
   define ('FTP_CHANGE_PERM_EXPLAIN', 'To set the file and directory permissions, you can either use your FTP program or enter your FTP information here to have set the required access permissions automatically.');
          // Depending on the server configuration, you can try it directly on PHP, for this please click <a href="index.php?action=fixperms"> here </ a>. <br />
          // If the voting rights it still is not always the only solution method via FTP right. ');
-  define ('LOGIN_NOT_POSSIBLE', 'Wrong FTP path, Host unreachable');
-  define ('CHMOD_WAS_NOT_SUCCESSFUL', 'Change the directory permissions was NOT successful');
+  define ('LOGIN_NOT_POSSIBLE', 'Incorrect FTP credentials, Host not reachable');
+  define ('CHMOD_WAS_NOT_SUCCESSFUL', 'Changing the directory permissions was NOT successful');
   define ('FTP_HOST', 'FTP host (automatically detected) ');
   define ('FTP_PORT', 'FTP port (default: 21)');
   define ('ftp_path', 'FTP path (usually / public_html or / htdocs, possibly sub-directory)');
