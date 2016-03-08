@@ -150,6 +150,9 @@
           break;
         case 'payment':
           $_SESSION['billto'] = xtc_db_insert_id();
+          if ($_SESSION['shipping'] === false) {
+            $_SESSION['sendto'] = $_SESSION['billto'];
+          }
           if (isset ($_SESSION['payment']) && !isset($_SESSION['paypal']['PayerID'])) {
             unset ($_SESSION['payment']);
           } 

@@ -64,6 +64,10 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
 
     $_SESSION['billto'] = (int)$_POST['address']; //DokuMan - 2010-12-17 - added xtc_db_prepare_input / franky_n - 2010-12-27 corrected to(int)
 
+    if ($_SESSION['shipping'] === false) {
+      $_SESSION['sendto'] = $_SESSION['billto'];
+    }
+
     $check_address_query = xtc_db_query("select count(*) as total from ".TABLE_ADDRESS_BOOK." where customers_id = '".(int)$_SESSION['customer_id']."' and address_book_id = '".(int)$_SESSION['billto']."'"); //DokuMan - 2010-12-17 - added int-typecasting
     $check_address = xtc_db_fetch_array($check_address_query);
 
@@ -81,6 +85,10 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
     // no addresses to select from - customer decided to keep the current assigned address
   } else {
     $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
+
+    if ($_SESSION['shipping'] === false) {
+      $_SESSION['sendto'] = $_SESSION['billto'];
+    }
 
     // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
     //xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));

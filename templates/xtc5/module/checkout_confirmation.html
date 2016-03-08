@@ -34,11 +34,13 @@
 
   <div style="clear:both"><br /></div>  
 
+  {if $DELIVERY_LABEL}
   <div class="checkoutNavBoxes">
     <h2>{#text_shipping_address#}</h2>
     <div class="text">&nbsp;<a href="{$SHIPPING_ADDRESS_EDIT}">{#text_edit#}</a></div>
     <div style="clear:both">{$DELIVERY_LABEL}<br /></div>
   </div>
+  {/if}
   
   {if $BILLING_LABEL}
   <div class="checkoutNavBoxes">
