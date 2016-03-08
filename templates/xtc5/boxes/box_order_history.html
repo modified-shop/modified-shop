@@ -2,10 +2,13 @@
 {if isset($BOX_CONTENT) && count($BOX_CONTENT) > 0}
 <h2 class="boxheader">{#heading_order_history#}</h2>
 <div class="boxbody">
-  <ul class="orderhistory_list">
+  <table border="0" width="100%" cellspacing="0" cellpadding="1">
   {foreach item=data from=$BOX_CONTENT}  
-    <li>{$data.PRODUCTS_LINK}<span class="cart_icon">{$data.ORDER_LINK}</span></li>
+    <tr>
+      <td class="infoBoxContents">{$data.PRODUCTS_LINK}</td>
+      <td class="infoBoxContents" align="right" valign="top">{$data.ORDER_LINK}</td>
+    </tr>
   {/foreach}
-  </ul>
+  </table>
 </div>
 {/if}
