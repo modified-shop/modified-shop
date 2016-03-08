@@ -54,7 +54,7 @@
 
 {if $BILLING_LABEL}
 <div class="twoColums last">
-  <div class="highlightbox plainright">
+  <div class="highlightbox {if $DELIVERY_LABEL}plainright{else}plainleft{/if}">
     <h4 class="checkout">{#text_payment_address#} <a class="midi" href="{$BILLING_ADDRESS_EDIT}">{#text_edit#}</a></h4>
     {$BILLING_LABEL}
   </div>
