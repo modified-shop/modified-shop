@@ -42,7 +42,6 @@ define('CHMOD_WRITEABLE', 0775);
 
   //new permission handling and auto change system
   $file_flag = false;
-  $ftp_message = '';
 
   $files_to_check = array(
       'files' => array(
@@ -95,7 +94,12 @@ define('CHMOD_WRITEABLE', 0775);
   unset($files_to_check['adirs']);
   
   // login as ftp user to change permissions of every file and directory
-  if (isset($_POST['action']) && $_POST['action']=='ftp' && !empty($_POST['login'])) {
+  if (isset($_POST['action']) && $_POST['action']=='ftp') {
+    $anonymous = false;
+    if (empty($_POST['login'])) {
+      $_POST['login'] = 'anonymous';
+      $anonymous = true;
+    }
     $host = $_POST['host'];
     $port = $_POST['port'];
     $path = trim($_POST['path'], '/');
@@ -104,9 +108,12 @@ define('CHMOD_WRITEABLE', 0775);
     
 
     $ftp = ftp_connect($host, $port);
-    if (!ftp_login($ftp, $user, $pass)) {
+    if (!ftp_login($ftp, $user, $pass) || !is_resource($ftp)) {
       $error_flag = true;
-      $ftp_message = LOGIN_NOT_POSSIBLE;
+      $messageStack->add('ftp_message', LOGIN_NOT_POSSIBLE);
+      if ($anonymous === true) {
+        $_POST['login'] = '';
+      }
     }
     
     if ($error_flag === false) {
@@ -122,7 +129,8 @@ define('CHMOD_WRITEABLE', 0775);
             if (ftp_chmod($ftp, CHMOD_WRITEABLE, '/'.$path.'/'.ltrim($file, '/')) === false) {
               if ($type == 'files') $error_flag = true;
               if ($type == 'dirs') $folder_flag = true;
-              $ftp_message .= CHMOD_WAS_NOT_SUCCESSFUL.'<br />';
+              $messageStack->add('ftp_message', CHMOD_WAS_NOT_SUCCESSFUL);
+              break 2;
             }
           }
         }

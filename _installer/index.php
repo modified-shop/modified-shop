@@ -147,11 +147,17 @@
               <tr>
                 <td>
                   <div id="permissions" class="popout">
-                      <?php if (!empty($ftp_message)) echo $ftp_message; ?>
                       <div class="left" >
                         <?php echo FTP_CHANGE_PERM_EXPLAIN; ?><br />
                       </div>
                       <div class="right">
+                        <?php
+                        if ($messageStack->size('ftp_message') > 0) {
+                          echo '<div style="background:#F2DEDE; color:#a94442; padding:10px; border:1px solid #DCA7A7" class="messageStackError">';
+                          echo $messageStack->output('ftp_message');
+                          echo '</div>';
+                        }
+                        ?>
                         <form name="ftp" action="index.php" method="post">
                         <?php echo $input_lang; ?>
                           <label for="host"><?php echo FTP_HOST; ?>:</label>
