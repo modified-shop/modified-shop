@@ -73,12 +73,16 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
 
   switch ($_GET['action']) {
   
+    case 'db_update':
+      include(DIR_FS_DOCUMENT_ROOT.'_installer/includes/update_action.php');
+      break;
+    
     case 'sql_update':
       foreach ($_POST['sql'] as $sql_update) {
         sql_update($sql_update);
       }    
       break;
-    
+
     case 'sql_manual':
       sql_update($_POST['sql_manual'], true);
       break;
@@ -175,6 +179,24 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
                       <?php } 
                       break;
 
+                    case 'db_update':
+                      if (!empty($success)) {
+                        ?>
+                        <tr>
+                          <td width="20%" valign="top">Erfolgreich ausgef&uuml;hrt:</td>
+                          <td><?php echo $success; ?></td>
+                        </tr>
+                        <?php 
+                      } else {
+                        echo '<form name="update" method="post">';
+                        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                          echo '<p style="text-align:center;">Datenbankstruktur Update beendet</p>';
+                        } else {
+                          echo '<p style="text-align:center;">Datenbankstruktur Update starten</p>';
+                        }
+                      }
+                      break;
+
                     case 'sql_update':
                       if (!empty($success)) {
                         ?>
@@ -219,6 +241,7 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
                     default:
                       echo '<form name="update" method="get">' .
                            '<input type="radio" name="action" value="unlink"> Alte Dateien und Verzeichnise l&ouml;schen<br>' .
+                           '<input type="radio" name="action" value="db_update"> Datenbankstruktur Update<br>' .
                            '<input type="radio" name="action" value="sql_update"> Datenbank Update<br>' .
                            '<input type="radio" name="action" value="sql_manual"> Manuelle SQL-Eingabe';
                     break;
@@ -256,6 +279,15 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
                   }
                   break;
           
+                case 'db_update':
+                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><img style="border: 0;" src="images/buttons/german/button_cancel.gif" /></a>';
+                  if (!$clean) {
+                    echo '<input type="hidden" name="update" value="true" />' .
+                         '<input style="float:right" type="image" src="images/buttons/german/button_execute.gif">' .
+                         '</form>';
+                  }
+                  break;
+
                 case 'sql_update':
                   echo '<a href="'.$_SERVER['PHP_SELF'].'"><img style="border: 0;" src="images/buttons/german/button_cancel.gif" /></a>';
                   if (!$clean) {

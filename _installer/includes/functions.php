@@ -152,4 +152,42 @@ function sql_update($file, $plain=false) {
     }
   }
 }
+
+function get_sql_create_data($table) {
+  static $sql_data;
+
+  if (!isset($sql_data) || $sql_data == '') {
+    $sql_data = file_get_contents(DIR_FS_CATALOG.'_installer/includes/sql/modified.sql');
+  }
+
+  preg_match("/CREATE TABLE([\s]+)".$table."(.*?)ENGINE/si", $sql_data, $sql_match);
+
+  $result = '';
+  if (isset($sql_match[2])) {
+    $result = "CREATE TABLE _mod_".$table.$sql_match[2];
+  }
+
+  return $result;
+}
+
+function array_diff_assoc_recursive($array1, $array2) {
+  $difference=array();
+
+  foreach ($array1 as $key => $value) {
+    if (is_array($value)) {
+      if (!isset($array2[$key]) || !is_array($array2[$key])) {
+        $difference[$key] = $value;
+      } else {
+        $new_diff = array_diff_assoc_recursive($value, $array2[$key]);
+        if (!empty($new_diff)) {
+          $difference[$key] = $new_diff;
+        }
+      }
+    } elseif (!array_key_exists($key,$array2) || $array2[$key] !== $value) {
+      $difference[$key] = $value;
+    }
+  }
+
+  return $difference;
+}
 ?>
