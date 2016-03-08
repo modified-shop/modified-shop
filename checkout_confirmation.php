@@ -124,7 +124,9 @@ if (SHOW_IP_LOG == 'true') {
 //allow duty-note in checkout_confirmation
 $smarty->assign('DELIVERY_DUTY_INFO', $main->getDeliveryDutyInfo($order->delivery['country']['iso_code_2']));
 
-$smarty->assign('DELIVERY_LABEL', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'));
+if ($_SESSION['shipping'] !== false) {
+  $smarty->assign('DELIVERY_LABEL', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'));
+}
 if (!isset($_SESSION['credit_covers']) || $_SESSION['credit_covers'] != '1') {
   $smarty->assign('BILLING_LABEL', xtc_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'));
 }

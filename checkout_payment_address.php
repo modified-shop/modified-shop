@@ -68,7 +68,11 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
     }
 
     $_SESSION['billto'] = (int)$_POST['address'];
-
+    
+    if ($_SESSION['shipping'] === false) {
+      $_SESSION['sendto'] = $_SESSION['billto'];
+    }
+    
     $check_address_query = xtc_db_query("SELECT count(*) AS total 
                                            FROM ".TABLE_ADDRESS_BOOK." 
                                           WHERE customers_id = '".(int)$_SESSION['customer_id']."' 
@@ -85,6 +89,10 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
     }
   } else {
     $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
+
+    if ($_SESSION['shipping'] === false) {
+      $_SESSION['sendto'] = $_SESSION['billto'];
+    }
     xtc_redirect(xtc_href_link($link_checkout_payment, $params, 'SSL'));
   }
 }
