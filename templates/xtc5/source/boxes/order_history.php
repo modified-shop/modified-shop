@@ -27,6 +27,7 @@
     // retreive the last x products purchased
     $orders_query = xtc_db_query("SELECT DISTINCT p.products_id,
                                                   pd.products_name,
+                                                  o.orders_id,
                                                   op.orders_products_id
                                              FROM " . TABLE_ORDERS . " o
                                              JOIN " . TABLE_ORDERS_PRODUCTS . " op
@@ -47,7 +48,7 @@
       while ($orders = xtc_db_fetch_array($orders_query)) {
         $customer_orders_array[] = array(
           'PRODUCTS_LINK' => '<a href="' . xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$orders['products_id']) . '">' . $orders['products_name'] . '</a>',
-          'ORDER_LINK' => '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')) . 'action=add_order_product&order_id='.$orders['products_id'].'&id='.$orders['orders_products_id']) . '">' . xtc_image_button('templates/' . CURRENT_TEMPLATE . '/img/icon_cart.png' , ICON_CART) . '</a>',
+          'ORDER_LINK' => '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')) . 'action=add_order_product&order_id='.$orders['orders_id'].'&id='.$orders['orders_products_id']) . '">' . xtc_image_button('templates/' . CURRENT_TEMPLATE . '/img/icon_cart.png' , ICON_CART) . '</a>',
         );
       }
     }
