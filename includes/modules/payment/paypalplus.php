@@ -30,9 +30,7 @@ class paypalplus extends PayPalPayment {
 
   function selection() {
     global $smarty;
-    
-    //unset($_SESSION['paypal']);
-    
+        
     $payments = get_third_party_payments();
     
     if (isset($_SESSION['payment'])) {
@@ -45,51 +43,55 @@ class paypalplus extends PayPalPayment {
       
     $_SESSION['paypal']['approval'] = $this->payment_redirect(false, true);
 
-    $description = '<div id="ppp_result"></div>
-    <script type="text/javascript">
-      (function() {
-        var pp = document . createElement(\'script\');
-        pp.type = \'text/javascript\';
-        pp.async = true;
-        pp.src = \'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js\';
-        var s = document.getElementsByTagName(\'script\')[0];
-        s . parentNode . insertBefore(pp, s);
-      })();
-      $(window).load(function() {
-        '.((count($payments) > 0) ? '
-        if ($(\'input[name="payment"]:checked\', \'#checkout_payment\').val() == "'.$this->code.'") {
-          $("#continueButton").attr("onclick", "ppp.doContinue(); return false;");
-        }
-        ' : '').'
-        $("#checkout_payment").attr("name", "checkout_payment");        
-        $.get("'.xtc_href_link('callback/paypal/paypalplus.php', '', 'SSL').'", function(data) {
-          $("#ppp_result").html(data);
-        })
-        $("[id*=\"rd\"]").click(function(e) {
+    if ($_SESSION['paypal']['approval'] == '') {
+      $GLOBALS['paypalplus']->enabled = false;
+    } else {
+      $description = '<div id="ppp_result"></div>
+      <script type="text/javascript">
+        (function() {
+          var pp = document . createElement(\'script\');
+          pp.type = \'text/javascript\';
+          pp.async = true;
+          pp.src = \'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js\';
+          var s = document.getElementsByTagName(\'script\')[0];
+          s . parentNode . insertBefore(pp, s);
+        })();
+        $(window).load(function() {
+          '.((count($payments) > 0) ? '
           if ($(\'input[name="payment"]:checked\', \'#checkout_payment\').val() == "'.$this->code.'") {
-            '.(($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_USE_TABS') == '1') ? '
-            $.get("'.xtc_href_link('callback/paypal/paypalplus.php', '', 'SSL').'", function(data) {
-              $("#ppp_result").html(data);
-            });
-            ' : '').'
-            '.((count($payments) > 0) ? '
-            $("#continueButton").removeAttr("onclick");
             $("#continueButton").attr("onclick", "ppp.doContinue(); return false;");
-            ' : '').'
-          } else {
-            '.((count($payments) > 0) ? '$("#continueButton").removeAttr("onclick");' : '').'
           }
+          ' : '').'
+          $("#checkout_payment").attr("name", "checkout_payment");        
+          $.get("'.xtc_href_link('callback/paypal/paypalplus.php', '', 'SSL').'", function(data) {
+            $("#ppp_result").html(data);
+          })
+          $("[id*=\"rd\"]").click(function(e) {
+            if ($(\'input[name="payment"]:checked\', \'#checkout_payment\').val() == "'.$this->code.'") {
+              '.(($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_USE_TABS') == '1') ? '
+              $.get("'.xtc_href_link('callback/paypal/paypalplus.php', '', 'SSL').'", function(data) {
+                $("#ppp_result").html(data);
+              });
+              ' : '').'
+              '.((count($payments) > 0) ? '
+              $("#continueButton").removeAttr("onclick");
+              $("#continueButton").attr("onclick", "ppp.doContinue(); return false;");
+              ' : '').'
+            } else {
+              '.((count($payments) > 0) ? '$("#continueButton").removeAttr("onclick");' : '').'
+            }
+          });
         });
-      });
-    </script>';
+      </script>';
     
-    $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE, 'id="continueButton"'));
+      $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE, 'id="continueButton"'));
     
-    return array(
-      'id' => $this->code, 
-      'module' => $this->title, 
-      'description' => $this->info . $description,
-    );
+      return array(
+        'id' => $this->code, 
+        'module' => $this->title, 
+        'description' => $this->info . $description,
+      );
+    }
   }
 
 
