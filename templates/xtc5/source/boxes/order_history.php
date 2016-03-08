@@ -27,7 +27,7 @@
     // retreive the last x products purchased
     $orders_query = xtc_db_query("SELECT DISTINCT p.products_id,
                                                   pd.products_name,
-                                                  o.orders_products_id
+                                                  op.orders_products_id
                                              FROM " . TABLE_ORDERS . " o
                                              JOIN " . TABLE_ORDERS_PRODUCTS . " op
                                                   ON o.orders_id = op.orders_id
