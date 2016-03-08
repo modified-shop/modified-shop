@@ -305,7 +305,7 @@
   define('SELECT_PRICE_ERROR2','Show Price -Default');
   define('SELECT_TAX_ERROR2','Show Tax -Default');
 
-  // install_fnished.php
+  // install_finished.php
   define('TEXT_SHOP_CONFIG_SUCCESS','The <strong>modified eCommerce Shopsoftware</strong> Shop configuration was successful.');
   define('TEXT_TEAM','Thank you for chosing the modified eCommerce Shopsoftware. Please visit the modified eCommerce Shopsoftware developer team at the <a href="http://www.modified-shop.org">modified eCommerce Shopsoftware support site</a>.<br /><br />If you like the modified eCommerce Shopsoftware, we would appreciate a small donation.<br />');
 
@@ -329,3 +329,20 @@
   define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Password must contain at least %s uppercase characters');
   define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Password must contain at least %s numbers');
   define('ENTRY_PASSWORD_ERROR_MIN_CHAR', 'Password must contain at least %s non-aplhanumeric characters');
+
+  // update.php
+  define('TITLE_DELETE_SUCCESS', 'Successfull deleted:');
+  define('TITLE_DELETE_FILES', 'The following files have to be deleted:');
+  define('TITLE_DELETE_MANUALLY', 'Please delete the following files and directories manually:');
+  define('TITLE_DELETE_DIRS', 'The following directories have to be deleted:');
+  define('TEXT_DELETE_SUCCESS', 'The files and directories have successfully been deleted.<br />Please make sure that also the &quot;update.php&quot; has been removed from the server.');
+  define('TITLE_PERFORM_SUCCESS', 'Successfull performed:');
+  define('TEXT_FINISHED_DB_STRUCTURE_UPDATE', 'Database structure update finished');
+  define('TEXT_START_DB_STRUCTURE_UPDATE', 'Start Database structure update');
+  define('TEXT_PERFORM_MANUAL_SQL_UPDATE', 'SQL statements have to be enclosed with a semicolon ( ; )!');
+  define('TITLE_PERFORM_DELETE_FILES_AND_DIRS', ' Delete old files and directories<br />');
+  define('TITLE_PERFORM_DB_STRUCTURE_UPDATE', ' Database structure update<br />');
+  define('TITLE_PERFORM_DB_UPDATE', ' Database update<br />');
+  define('TITLE_PERFORM_MANUAL_SQL_UPDATE', ' Manual SQL input');
+  define('TEXT_TABLE', 'Table ');
+  define('TEXT_OF', ' of ');

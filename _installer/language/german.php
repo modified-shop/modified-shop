@@ -307,7 +307,7 @@
   define('SELECT_PRICE_ERROR2','Show Price -Default');
   define('SELECT_TAX_ERROR2','Show Tax -Default');
 
-  // install_fnished.php
+  // install_finished.php
   define('TEXT_SHOP_CONFIG_SUCCESS','Die <strong>modified eCommerce Shopsoftware</strong> Konfiguration war erfolgreich');
   define('TEXT_TEAM','Vielen Dank, dass Sie sich f&uuml;r die modified eCommerce Shopsoftware entschieden haben. Besuchen Sie uns auf der <a href="http://www.modified-shop.org">modified eCommerce Shopsoftware Supportseite</a>.<br /><br />Alles Gute und viel Erfolg w&uuml;nscht Ihnen das gesamte modified eCommerce Shopsoftware Team.<br /><br />Wenn Sie uns unterst&uuml;tzen wollen, w&uuml;rden wir uns &uuml;ber eine kleine Spende freuen.<br />');
 
@@ -331,3 +331,21 @@
   define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Ihr Passwort muss mindestens %s Grossbuchstaben enthalten.');
   define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Ihr Passwort muss mindestens %s Zahl enthalten.');
   define('ENTRY_PASSWORD_ERROR_MIN_CHAR', 'Ihr Passwort muss mindestens %s Sonderzeichen enthalten.');
+
+  // update.php
+  define('TITLE_DELETE_SUCCESS', 'Erfolgreich gel&ouml;scht:');
+  define('TITLE_DELETE_FILES', 'Die folgenden Dateien m&uuml;ssen gel&ouml;scht werden:');
+  define('TITLE_DELETE_MANUALLY', 'Bitte folgenden Dateien und Verzeichnisse manuell l&ouml;schen:');
+  define('TITLE_DELETE_DIRS', 'Die folgenden Verzeichnisse m&uuml;ssen gel&ouml;scht werden:');
+  define('TEXT_DELETE_SUCCESS', 'Die Dateien und Verzeichnisse wurden erfolgreich gel&ouml;scht.<br />Bitte stellen Sie sicher, dass auch die Datei &quot;update.php&quot; vom Server entfernt wurde.');
+  define('TITLE_PERFORM_SUCCESS', 'Erfolgreich ausgef&uuml;hrt:');
+  define('TEXT_FINISHED_DB_STRUCTURE_UPDATE', 'Datenbankstruktur-Update beendet');
+  define('TEXT_START_DB_STRUCTURE_UPDATE', 'Datenbankstruktur-Update starten');
+  define('TEXT_PERFORM_MANUAL_SQL_UPDATE', 'SQL-Befehle m&uuml;ssen mit einem Semikolon ( ; ) abgeschlossen werden!');
+  define('TITLE_PERFORM_DELETE_FILES_AND_DIRS', ' Alte Dateien und Verzeichnise l&ouml;schen<br />');
+  define('TITLE_PERFORM_DB_STRUCTURE_UPDATE', ' Datenbankstruktur-Update<br />');
+  define('TITLE_PERFORM_DB_UPDATE', ' Datenbank-Update<br />');
+  define('TITLE_PERFORM_MANUAL_SQL_UPDATE', ' Manuelle SQL-Eingabe');
+  define('TEXT_TABLE', 'Tabelle ');
+  define('TEXT_OF', ' von ');
+  

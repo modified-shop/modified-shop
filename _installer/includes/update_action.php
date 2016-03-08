@@ -168,13 +168,13 @@
   // reset output
   $success = $error = '';
   
-  $success .= '<form action="'.basename($_SERVER['PHP_SELF']).'?action=db_update" method="post" name="update">';
+  $success .= '<form action="'.basename($_SERVER['PHP_SELF']).'?action=db_update&lg='.$lang.'" method="post" name="update">';
   $success .= '<input type="hidden" name="start" value="'.($start + $step).'">';
   $success .= '<input type="hidden" name="update" value="true" />';
   $success .= '</form>';
   
   if (count($modified_sql_array) > $start) {
-    $success .= 'Tabelle '.($start + $step).' von '.count($modified_sql_array);
+    $success .= TEXT_TABLE.($start + $step).TEXT_OF.count($modified_sql_array);
     $success .= '<script language="javascript" type="text/javascript">setTimeout("document.update.submit()", 500);</script>';
   } else {
     // drop table
