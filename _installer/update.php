@@ -66,6 +66,26 @@ if (is_file(DIR_FS_DOCUMENT_ROOT.'_installer/includes/delete_dirs.php')) {
   include(DIR_FS_DOCUMENT_ROOT.'_installer/includes/delete_dirs.php');
 }
 
+$lang = '';
+if (isset($_GET['lg']) && $_GET['lg'] != '') {
+  $lang = $_GET['lg'];
+}
+if (isset($_POST['lg']) && $_POST['lg'] != '') {
+  $lang = $_POST['lg'];
+}
+if ($lang == '' || ($lang != 'german' && $lang != 'english')) {
+  preg_match("/^([a-z]+)-?([^,;]*)/i", $_SERVER['HTTP_ACCEPT_LANGUAGE'], $browser_lang);
+  switch (strtolower($browser_lang[1])) {
+    case 'de':
+      $lang = 'german';
+      break;
+    default:
+      $lang = 'english';
+      break;
+  }
+}
+include(DIR_FS_DOCUMENT_ROOT.'_installer/language/'.$lang.'.php');
+
 $error='';
 $success='';
 $clean = false;
@@ -91,7 +111,7 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
       if (count($unlink_file) > 0) {
         foreach ($unlink_file as $unlink) {
           if (trim($unlink) != '' && is_file(DIR_FS_DOCUMENT_ROOT.$unlink)) {  
-            @unlink(DIR_FS_DOCUMENT_ROOT.$unlink) ? $success.=$unlink.'<br/>' : $error.=$unlink.'<br/>';
+            @unlink(DIR_FS_DOCUMENT_ROOT.$unlink) ? $success.=$unlink.'<br />' : $error.=$unlink.'<br />';
           }
         }
       }
@@ -111,8 +131,6 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
   }
 }
 
-  $lang = 'german';
-  include(DIR_FS_DOCUMENT_ROOT.'_installer/language/'.$lang.'.php');
   $charset = 'iso-8859-15';
   // set default charset
   @ini_set('default_charset', $charset);
@@ -124,7 +142,7 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
         <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td><img src="http://www.modified-shop.org/forum/Themes/modified/images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
-            <td style="vertical-align:top;"><a style="float:right;margin-top: 9px;" href="<?php echo dirname($_SERVER['PHP_SELF']); ?>"><img style="border: 0;" src="images/buttons/german/button_installer.gif"/></a></td>
+            <td style="vertical-align:top;"><a style="float:right;margin-top: 9px;" href="<?php echo dirname($_SERVER['PHP_SELF']).'/index.php?lg='.$lang; ?>"><img style="border: 0;" src="images/buttons/<?php echo $lang;?>/button_installer.gif" /></a></td>
           </tr>
         </table>
       </td>
@@ -151,30 +169,30 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
                       if (!empty($success)) {
                       ?>
                       <tr>
-                        <td valign="top">Erfolgreich gel&ouml;scht:</td>
+                        <td valign="top"><?php echo TITLE_DELETE_SUCCESS; ?></td>
                         <td><?php echo $success; ?></td>
                       </tr>
                       <?php } elseif ($clean === false && !$_POST) { ?>
                       <form name="update" method="post">
                       <tr>
-                        <td width="20%" valign="top">Diese Dateien m&uuml;ssen gel&ouml;scht werden:</td>
-                        <td><?php echo implode('<br/>', $unlink_file); ?></td>
+                        <td width="20%" valign="top"><?php echo TITLE_DELETE_FILES; ?></td>
+                        <td><?php echo implode('<br />', $unlink_file); ?></td>
                       </tr>
                       <?php }
                       if (!empty($error)) {
                       ?>
                       <tr>
-                        <td width="20%" valign="top">Bitte diese Dateien und Verzeichnisse manuell l&ouml;schen:</td>
+                        <td width="20%" valign="top"><?php echo TITLE_DELETE_MANUALLY; ?></td>
                         <td><?php echo $error; ?></td>
                       </tr>
                       <?php } elseif ($clean === false && !$_POST) { ?>
                       <tr>
-                        <td width="20%" valign="top">Diese Verzeichnisse m&uuml;ssen gel&ouml;scht werden:</td>
-                        <td><?php echo implode('<br/>', $unlink_dir); ?></td>
+                        <td width="20%" valign="top"><?php echo TITLE_DELETE_DIRS; ?></td>
+                        <td><?php echo implode('<br />', $unlink_dir); ?></td>
                       </tr>
                       <?php } elseif ($clean === true) { ?>
                       <tr>
-                        <td valign="top" colspan="2" align="center" bgcolor="#d4ebcb" style="border: 1px solid; border-color: #b2dba1; padding:10px; color: #3C763D;">Es wurden die Dateien und Verzeichnisse erfolgreich gel&ouml;scht.<br/>Bitte stellen Sie sicher, dass auch die Datei &quot;update.php&quot; vom Server entfernt wurde.</td>
+                        <td valign="top" colspan="2" align="center" bgcolor="#d4ebcb" style="border: 1px solid; border-color: #b2dba1; padding:10px; color: #3C763D;"><?php echo TEXT_DELETE_SUCCESS; ?></td>
                       </tr>
                       <?php } 
                       break;
@@ -183,16 +201,16 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
                       if (!empty($success)) {
                         ?>
                         <tr>
-                          <td width="20%" valign="top">Erfolgreich ausgef&uuml;hrt:</td>
+                          <td width="20%" valign="top"><?php echo TITLE_PERFORM_SUCCESS; ?></td>
                           <td><?php echo $success; ?></td>
                         </tr>
                         <?php 
                       } else {
                         echo '<form name="update" method="post">';
                         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                          echo '<p style="text-align:center;">Datenbankstruktur Update beendet</p>';
+                          echo '<p style="text-align:center;">'.TEXT_FINISHED_DB_STRUCTURE_UPDATE.'</p>';
                         } else {
-                          echo '<p style="text-align:center;">Datenbankstruktur Update starten</p>';
+                          echo '<p style="text-align:center;">'.TEXT_START_DB_STRUCTURE_UPDATE.'</p>';
                         }
                       }
                       break;
@@ -201,7 +219,7 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
                       if (!empty($success)) {
                         ?>
                         <tr>
-                          <td width="20%" valign="top">Erfolgreich ausgef&uuml;hrt:</td>
+                          <td width="20%" valign="top"><?php echo TITLE_PERFORM_SUCCESS; ?></td>
                           <td><?php echo $success; ?></td>
                         </tr>
                         <?php 
@@ -218,7 +236,7 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
                         sort($sql_files_array);              
                         if (count($sql_files_array) > 0) {
                           foreach ($sql_files_array as $sql_files) {
-                            echo '<input type="checkbox" name="sql[]" value="'.DIR_FS_DOCUMENT_ROOT.'_installer/update/'.$sql_files.'"> '.$sql_files.'<br>';
+                            echo '<input type="checkbox" name="sql[]" value="'.DIR_FS_DOCUMENT_ROOT.'_installer/update/'.$sql_files.'"> '.$sql_files.'<br />';
                           }
                         }
                       }
@@ -229,21 +247,22 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
                         unset($_POST['sql_manual']);
                         ?>
                         <tr>
-                          <td valign="top">Erfolgreich ausgef&uuml;hrt:</td>
+                          <td valign="top"><?php echo TITLE_PERFORM_SUCCESS; ?></td>
                           <td><?php echo $success; ?></td>
                         </tr>
                         <?php 
                       }
                       echo '<form name="update" method="post">';
-                      echo '<tr><td colspan="2"><div style="background:#F2DEDE; color:#A94442; padding:10px; border:1px solid #DCA7A7">SQL-Befehle m&uuml;ssen mit einem Semikolon ( ; ) abgeschlossen werden!</div><br/><textarea name="sql_manual" style="width:100%; height:300px;">'.(isset($_POST['sql_manual']) ? $_POST['sql_manual'] : '').'</textarea></td></tr>';
+                      echo '<tr><td colspan="2"><div style="background:#F2DEDE; color:#A94442; padding:10px; border:1px solid #DCA7A7">'.TEXT_PERFORM_MANUAL_SQL_UPDATE.'</div><br /><textarea name="sql_manual" style="width:100%; height:300px;">'.(isset($_POST['sql_manual']) ? $_POST['sql_manual'] : '').'</textarea></td></tr>';
                       break;
               
                     default:
                       echo '<form name="update" method="get">' .
-                           '<input type="radio" name="action" value="unlink"> Alte Dateien und Verzeichnise l&ouml;schen<br>' .
-                           '<input type="radio" name="action" value="db_update"> Datenbankstruktur Update<br>' .
-                           '<input type="radio" name="action" value="sql_update"> Datenbank Update<br>' .
-                           '<input type="radio" name="action" value="sql_manual"> Manuelle SQL-Eingabe';
+                           '<input type="hidden" name="lg" value="'.$lang.'" />' .
+                           '<input type="radio" name="action" value="unlink">' . TITLE_PERFORM_DELETE_FILES_AND_DIRS .
+                           '<input type="radio" name="action" value="db_update">' . TITLE_PERFORM_DB_STRUCTURE_UPDATE .
+                           '<input type="radio" name="action" value="sql_update">' . TITLE_PERFORM_DB_UPDATE .
+                           '<input type="radio" name="action" value="sql_manual">' . TITLE_PERFORM_MANUAL_SQL_UPDATE;
                     break;
                   }
                   ?>
@@ -271,41 +290,41 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
               <?php
               switch ($_GET['action']) {
                 case 'unlink':
-                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><img style="border: 0;" src="images/buttons/german/button_cancel.gif" /></a>';
+                  echo '<a href="'.$_SERVER['PHP_SELF'].'?lg='.$lang.'"><img style="border: 0;" src="images/buttons/'.$lang.'/button_cancel.gif" /></a>';
                   if ($clean === false && !$_POST) {
                     echo '<input type="hidden" name="update" value="true" />' .
-                         '<input style="float:right" type="image" src="images/buttons/german/button_execute.gif">' .
+                         '<input style="float:right" type="image" src="images/buttons/'.$lang.'/button_execute.gif">' .
                          '</form>';
                   }
                   break;
           
                 case 'db_update':
-                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><img style="border: 0;" src="images/buttons/german/button_cancel.gif" /></a>';
+                  echo '<a href="'.$_SERVER['PHP_SELF'].'?lg='.$lang.'"><img style="border: 0;" src="images/buttons/'.$lang.'/button_cancel.gif" /></a>';
                   if (!$clean) {
                     echo '<input type="hidden" name="update" value="true" />' .
-                         '<input style="float:right" type="image" src="images/buttons/german/button_execute.gif">' .
+                         '<input style="float:right" type="image" src="images/buttons/'.$lang.'/button_execute.gif">' .
                          '</form>';
                   }
                   break;
 
                 case 'sql_update':
-                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><img style="border: 0;" src="images/buttons/german/button_cancel.gif" /></a>';
+                  echo '<a href="'.$_SERVER['PHP_SELF'].'?lg='.$lang.'"><img style="border: 0;" src="images/buttons/'.$lang.'/button_cancel.gif" /></a>';
                   if (!$clean) {
                     echo '<input type="hidden" name="update" value="true" />' .
-                         '<input style="float:right" type="image" src="images/buttons/german/button_execute.gif">' .
+                         '<input style="float:right" type="image" src="images/buttons/'.$lang.'/button_execute.gif">' .
                          '</form>';
                   }
                   break;
 
                 case 'sql_manual':
-                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><img style="border: 0;" src="images/buttons/german/button_cancel.gif"/></a>';
+                  echo '<a href="'.$_SERVER['PHP_SELF'].'?lg='.$lang.'"><img style="border: 0;" src="images/buttons/'.$lang.'/button_cancel.gif" /></a>';
                   echo '<input type="hidden" name="update" value="true" />' .
-                       '<input style="float:right" type="image" src="images/buttons/german/button_execute.gif">' .
+                       '<input style="float:right" type="image" src="images/buttons/'.$lang.'/button_execute.gif">' .
                        '</form>';
                   break;
             
                 default:
-                  echo '<input type="image" src="images/buttons/german/button_continue.gif">' .
+                  echo '<input type="image" src="images/buttons/'.$lang.'/button_continue.gif">' .
                        '</form>';
         
                   break;
