@@ -43,12 +43,15 @@
 </div>
 <br class="clearfix" />  
 
+{if $DELIVERY_LABEL}
 <div class="twoColums">
   <div class="highlightbox plainleft">
     <h4>{#text_shipping_address#} <a class="midi" href="{$SHIPPING_ADDRESS_EDIT}">{#text_edit#}</a></h4>
     {$DELIVERY_LABEL} 
   </div>
 </div>
+{/if}
+
 {if $BILLING_LABEL}
 <div class="twoColums last">
   <div class="highlightbox plainright">
