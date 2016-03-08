@@ -50,7 +50,7 @@
     $upgrade = false;
   }
   if (isset($_POST['db_upgrade']) && ($_POST['db_upgrade'] == true)) {
-    xtc_redirect(xtc_href_link('update.php', 'action=sql_update', 'NONSSL'));
+    xtc_redirect(xtc_href_link('update.php', '', 'NONSSL'));
   }
   //EOF - web28 - 2010-12-13 - redirect to db_upgrade.php, if database is already set up (do an update instead of a new installation)
 
