@@ -44,19 +44,17 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_newsletter.html', $cach
                                          ORDER BY o.date_purchased DESC 
                                             LIMIT " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX);
 
-    $customer_orders_string = '';
+    $customer_orders_array = array();
     if (xtc_db_num_rows($orders_query) > 0) {
-      $customer_orders_string = '<ul class="orderhistory_list">';
       while ($orders = xtc_db_fetch_array($orders_query)) {
-        $customer_orders_string .= '<li>' .
-                                     '<a href="' . xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($orders['products_id'],$orders['products_name'])) . '">' . $orders['products_name'] . '</a>' .
-                                     '<span class="cart_icon"><a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $orders['products_id']) . '">' . xtc_image('templates/' . CURRENT_TEMPLATE . '/img/icon_cart.png' , ICON_CART,'','','') . '</a></span>' .
-                                   '</li>';
+        $customer_orders_array[] = array(
+          'PRODUCTS_LINK' => '<a href="' . xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($orders['products_id'],$orders['products_name'])) . '">' . $orders['products_name'] . '</a>',
+          'ORDER_LINK' => '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $orders['products_id']) . '">' . xtc_image_button('templates/' . CURRENT_TEMPLATE . '/img/icon_cart.png' , ICON_CART) . '</a>',
+        );
       }
-      $customer_orders_string .= '</ul>';
     }
 
-    $box_smarty->assign('BOX_CONTENT', $customer_orders_string);
+    $box_smarty->assign('BOX_CONTENT', $customer_orders_array);
   }
 }
 
