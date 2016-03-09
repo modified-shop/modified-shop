@@ -87,4 +87,4 @@ class modifiedshop {
 }
 
 // call checkAuth
-\kcfinder\cms\modifiedshop::checkAuth();
+modifiedshop::checkAuth();

@@ -50,7 +50,6 @@ function xtc_get_categoriesstatus_for_product($product_id) {
 		} else {
 			return 0;
 		}
-		echo $categorie_data['categories_id'];
 	}
 
 }

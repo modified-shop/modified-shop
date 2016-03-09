@@ -30,7 +30,7 @@
     $('.bxcarousel_bestseller').bxSlider({
       minSlides: 6,
       maxSlides: 8,
-      pager: ($(this).children('li').length > 1) ? true: false, //FIX for only one entry
+      pager: ($(this).children('li').length > 1), //FIX for only one entry
       slideWidth: 109,
       slideMargin: 18
     });

@@ -90,18 +90,12 @@
 
   // Output a form
   function xtc_draw_form($name, $action, $parameters = '', $method = 'post', $params = '') {
-    $form = '<form name="' . $name . '" action="';
-    if ($parameters) {
-      $form .= xtc_href_link($action, $parameters, 'NONSSL' , false);
-    } else {
-      $form .= xtc_href_link($action, '', 'NONSSL' , false);
-    }
-    $form .= '" method="' . $method . '"';
-    if ($params) {
-      $form .= ' ' . $params;
-    }
+    $form = '<form name="' . $name . '"';
+    $form .= ' action="'.xtc_href_link($action, $parameters, 'NONSSL' , false).'"';
+    $form .= ' method="' . $method . '"';
+    $form .= ($params ? ' ' . $params : '');
     $form .= '>';
-    
+
     // add session if is in url
     if (isset($_GET[xtc_session_name()]) && $_GET[xtc_session_name()] == xtc_session_id()) {
       $form .= '<input type="hidden" name="'.xtc_session_name().'" value="'.xtc_session_id().'">';
