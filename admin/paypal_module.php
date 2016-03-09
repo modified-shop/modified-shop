@@ -216,6 +216,16 @@ require (DIR_WS_INCLUDES.'head.php');
                     <?php
                   }
 
+                  if ($module->code == 'paypalcart') {
+                    ?>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_LINK_PRODUCT; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_PRODUCT]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_PRODUCT') == '1') ? true : false)); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_LINK_PRODUCT_INFO; ?></td>
+                    </tr>
+                    <?php
+                  }
+
                   $list = $paypal->list_profile();
                   $profile_array = array(array('id' => '', 'text' => TEXT_PAYPAL_NO_PROFILE));
                   

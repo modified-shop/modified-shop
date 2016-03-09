@@ -87,13 +87,6 @@
           <td style="width:100%; padding-right:5px;">{$ADD_QTY}</td>
           <td>{$ADD_CART_BUTTON}</td>
         </tr>
-        {if $ADD_CART_BUTTON_WISHLIST}
-        <tr>
-          <td style="width:100%; padding-right:5px;">&nbsp;</td>
-          <td>{$ADD_CART_BUTTON_WISHLIST}</td>
-        </tr>
-        {/if}
-
         {if isset($ADD_CART_BUTTON_EXPRESS)}
           <tr>
             <td style="width:100%; padding-right:5px;">&nbsp;</td>
@@ -104,6 +97,18 @@
             <td colspan="2" style="text-align:right;"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></td>
           </tr>
         {/if}
+        {if $ADD_CART_BUTTON_PAYPAL}
+          <tr>
+            <td style="width:100%; padding-right:5px;">&nbsp;</td>
+            <td>{$ADD_CART_BUTTON_PAYPAL}</td>
+          </tr>
+        {/if}
+        {*if $ADD_CART_BUTTON_WISHLIST}
+          <tr>
+            <td style="width:100%; padding-right:5px;">&nbsp;</td>
+            <td>{$ADD_CART_BUTTON_WISHLIST}</td>
+          </tr>
+        {/if*}
       </table>
       {/if}
       {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<p>{#products_gift_forbidden#}</p>{/if}

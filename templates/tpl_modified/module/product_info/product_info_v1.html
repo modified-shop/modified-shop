@@ -93,12 +93,14 @@
             <br class="clearfix" />
             <span class="express_info"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></span>
           {/if}
-          {*
-          {if $ADD_CART_BUTTON_WISHLIST}
-          <br class="clearfix" />
-          <span class="addtobasket_button">{$ADD_CART_BUTTON_WISHLIST}</span>
+          {if $ADD_CART_BUTTON_PAYPAL}
+            <br class="clearfix" />
+            <span class="addtobasket_button">{$ADD_CART_BUTTON_PAYPAL}</span>
           {/if}
-          *}
+          {*if $ADD_CART_BUTTON_WISHLIST}
+            <br class="clearfix" />
+            <span class="addtobasket_button">{$ADD_CART_BUTTON_WISHLIST}</span>
+          {/if*}
         </div>
         {/if}
       

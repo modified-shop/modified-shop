@@ -253,6 +253,19 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  function product_checkout_button() {    
+    if ($this->enabled === true) {
+      $unallowed_modules = explode(',', $_SESSION['customers_status']['customers_status_payment_unallowed']);
+      if (!in_array($this->code, $unallowed_modules)) {
+        $image = ((strtoupper($_SESSION['language_code']) == 'DE') ? 'epaypal_de.gif' : 'epaypal_en.gif');
+        $checkout_button = xtc_image_submit(DIR_WS_ICONS.$image, IMAGE_BUTTON_IN_CART, 'name="paypalcartexpress"');
+
+        return $checkout_button;
+      }
+    }
+  }
+
+
   function create_paypal_link($orders_id = '', $cleanlink = false) {
     global $last_order, $PHP_SELF;
     
