@@ -64,7 +64,7 @@
           xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_NUMBER_ZONES', '". (int)$this->num_zones ."', '6', '0', now())");
         }
 
-        if ($check_zones_rows != $this->num_dp) {
+        if ($check_zones_rows != $this->num_zones) {
           $this->install_zones($check_zones_rows);
         }
         //update compatibility
