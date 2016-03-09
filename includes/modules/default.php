@@ -34,7 +34,6 @@ $default_smarty->assign('session', xtc_session_id());
 $main_content = '';
 
 // include needed functions
-require_once (DIR_FS_INC.'xtc_customer_greeting.inc.php');
 require_once (DIR_FS_INC.'xtc_get_path.inc.php');
 require_once (DIR_FS_INC.'xtc_check_categories_status.inc.php');
 
@@ -42,7 +41,7 @@ require_once (DIR_FS_INC.'xtc_check_categories_status.inc.php');
 if (xtc_check_categories_status($current_category_id) >= 1) {
   $site_error = CATEGORIE_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
-  return;
+  return; // stop executing this included file
 }
 
 // the following cPath references come from application_top.php
@@ -313,9 +312,8 @@ if ($category_depth == 'nested') {
 
   $default_smarty->assign('title', $shop_content_data['content_heading']);
 
-  include (DIR_WS_INCLUDES.FILENAME_CENTER_MODULES);
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/center_modules/','php') as $file) require_once ($file);
 
-  $default_smarty->assign('text', str_replace('{$greeting}', xtc_customer_greeting(), $shop_content_data['content_text']));
   $default_smarty->assign('language', $_SESSION['language']);
 
   // set cache ID

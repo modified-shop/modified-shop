@@ -5,7 +5,7 @@
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2009 - 2016 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -31,13 +31,13 @@ if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                       ON p.products_id = pd.products_id
                                          AND pd.language_id = ".(int)$_SESSION['languages_id']."
-                                         AND trim(pd.products_name) != ''
+                                         AND pd.products_name <> ''
                                 WHERE to_days(products_date_available) >= to_days(now())
-                                  AND p.products_status = '1'
+                                  AND p.products_status = 1
                                       ".PRODUCTS_CONDITIONS_P."
                              ORDER BY ".EXPECTED_PRODUCTS_FIELD." ".EXPECTED_PRODUCTS_SORT."
                                 LIMIT ".MAX_DISPLAY_UPCOMING_PRODUCTS);
-                                
+
   if (xtc_db_num_rows($expected_query,true) > 0) {
     $module_content = array ();
     while ($expected = xtc_db_fetch_array($expected_query,true)) {

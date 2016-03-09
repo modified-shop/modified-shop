@@ -62,8 +62,6 @@ define('FILENAME_SHOPPING_CART', 'shopping_cart.php');
 define('FILENAME_START', DIR_ADMIN.'start.php');
 define('FILENAME_SPECIALS', 'specials.php');
 define('FILENAME_SSL_CHECK', 'ssl_check.php');
-define('FILENAME_UPCOMING_PRODUCTS', 'upcoming_products.php');
-define('FILENAME_CENTER_MODULES', 'center_modules.php');
 define('FILENAME_ORDERS', DIR_ADMIN.'orders.php');
 define('FILENAME_METATAGS', 'metatags.php');
 define('FILENAME_MINIMUM_ORDER', 'reviews.php');
