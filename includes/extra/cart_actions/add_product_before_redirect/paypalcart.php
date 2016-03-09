@@ -15,6 +15,10 @@
       && $_SESSION['cart']->show_total() > 0
       ) 
   {
+    // include needed functions
+    require_once (DIR_FS_INC.'xtc_get_products_stock.inc.php');
+    require_once (DIR_FS_INC.'check_stock_specials.inc.php');
+    
     $products = $_SESSION['cart']->get_products();
     for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
       if (STOCK_CHECK == 'true') {
