@@ -125,7 +125,6 @@
       case 'removeconfirm':
       case 'restoreconfirm':
       case 'custom':
-        $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($module_class);
         if (file_exists($module_directory . $class . $file_extension)) {
           include($module_directory . $class . $file_extension);
@@ -169,6 +168,7 @@
                            'extended_description' => isset($module->extended_description) ? $module->extended_description : '',
                            'status' => $module->check());
       $module_info['properties'] = isset($module->properties) ? $module->properties : array();
+      $module_info['keys_dispnone'] = isset($module->keys_dispnone) ? $module->keys_dispnone : array();
       $module_keys = $module->keys();
       $keys_extra = array();
       for ($j = 0, $k = sizeof($module_keys); $j < $k; $j++) {
@@ -415,6 +415,12 @@ if (xtc_not_null($action) && !$box) {
                       }
                     }
                     $keys = '';
+                    
+                    reset($mInfo->keys_dispnone);
+                    while (list($key, $value) = each($mInfo->keys_dispnone)) {
+                      unset($mInfo->keys[$value]);
+                    }
+                    
                     reset($mInfo->keys);
                     while (list($key, $value) = each($mInfo->keys)) {
                       $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
