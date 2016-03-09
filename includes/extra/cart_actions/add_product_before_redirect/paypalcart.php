@@ -10,8 +10,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  if (isset($_POST['paypalcartexpress_x']) 
-      && isset($_POST['paypalcartexpress_y'])
+  if (((isset($_POST['paypalcartexpress_x']) 
+        && isset($_POST['paypalcartexpress_y'])
+        ) || isset($_POST['paypalcartexpress'])
+      )
       && $_SESSION['cart']->show_total() > 0
       ) 
   {
