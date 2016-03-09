@@ -253,12 +253,14 @@
       include_once($module_directory . $file);
       $class = substr($file, 0, strpos($file, '.'));
       if (xtc_class_exists($class)) {
-        $module = new $class();       
-        $key_array = $module->keys();     
-        foreach ($key_array as $key) {
-          if (!defined($key)) {
-            $info[] = '<li>'.$class.'</li>';
-            break;
+        $module = new $class();
+        if ($module instanceof $class && $module->check() > 0) {     
+          $key_array = $module->keys();     
+          foreach ($key_array as $key) {
+            if (!defined($key)) {
+              $info[] = '<li>'.$class.'</li>';
+              break;
+            }
           }
         }
       }
