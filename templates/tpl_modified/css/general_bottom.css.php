@@ -19,3 +19,6 @@
 <link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/jquery.colorbox.css" type="text/css" media="screen" />
 <link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/jquery.alerts.css" type="text/css" media="screen" />
 <link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/jquery.bxslider.css" type="text/css" media="screen" />
+<!--[if lte IE 8]>
+<link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/ie8fix.css" type="text/css" media="screen" />
+<![endif]-->

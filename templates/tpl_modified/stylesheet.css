@@ -89,6 +89,17 @@
     font-weight: bold;
     font-style: normal;
 }
+/* START IE7 fix for font-weight:bold */
+@font-face {
+    font-family: 'arimobold';
+    src: url('css/fonts/arimo_bold.eot');
+    src: url('css/fonts/arimo_bold.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/arimo_bold.woff') format('woff'),
+         url('css/fonts/arimo_bold.ttf') format('truetype'),
+         url('css/fonts/arimo_bold.svg#arimobold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
 
 .fieldtext, .fieldtext_stern, ul.topnavigation li a, h2, h3, a.show_all .arrow, .box_title, 
 .janolaw-paragraph, #janolaw-paragraph, ul.contentmenu li.level1 a, ul.contentmenu li.level2 a, 
@@ -489,7 +500,6 @@ input[type=text], input[type=password] {
   height:32px;
   *behavior: url(templates/tpl_modified/css/boxsizing.htc);
 }
-
 input[type=radio], input[type=checkbox] {
   margin: 0 3px;
 }
