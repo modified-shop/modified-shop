@@ -136,7 +136,7 @@ define('TEXT_PRODUCT_LINKED_TO','Linked to:');
 define('TEXT_DELETE', 'Delete');
 define('EMPTY_CATEGORY', 'Empty Category');
 
-define('TEXT_HOW_TO_COPY', 'Copy Method:');
+define('TEXT_HOW_TO_COPY', 'Products Copy Method:');
 define('TEXT_COPY_AS_LINK', 'Link');
 define('TEXT_COPY_AS_DUPLICATE', 'Duplicate');
 

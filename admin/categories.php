@@ -254,8 +254,7 @@ if (xtc_not_null($action)) {
             if (is_array($_POST['dest_cat_ids'])) {
               foreach ($_POST['dest_cat_ids'] AS $dest_category_id) {
                 if ($_POST['copy_as'] == 'link') {
-                  //$catfunc->copy_category($category_id, $dest_category_id, 'link');
-                  $messageStack->add_session(ERROR_COPY_METHOD_NOT_ALLOWED, 'error');
+                  $catfunc->copy_category($category_id, $dest_category_id, 'link');
                 } elseif ($_POST['copy_as'] == 'duplicate') {
                   $catfunc->copy_category($category_id, $dest_category_id, 'duplicate');
                 } else {
