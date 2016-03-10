@@ -37,8 +37,6 @@ require_once (DIR_FS_INC.'xtc_recalculate_price.inc.php');
 
 $breadcrumb->add(NAVBAR_TITLE_SHOPPING_CART, xtc_href_link(FILENAME_SHOPPING_CART, '', $request_type));
 
-require (DIR_WS_INCLUDES.'header.php');
-
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
   include (DIR_WS_MODULES.'gift_cart.php');
 }
@@ -138,6 +136,8 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
     }
   }
 }
+
+require (DIR_WS_INCLUDES.'header.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/shopping_cart.html');
