@@ -154,6 +154,8 @@ define('TABLE_HEADING_PARCEL_LINK', 'Trackinglink');
 define('TEXT_INFO_HEADING_REVERSE_ORDER', 'Reverse order');
 define('TEXT_INFO_REVERSE_INTRO', 'Are you sure you want to reverse this order?');
 
+define('TABLE_HEADING_SHIPCLOUD', 'Shipcloud:');
+define('TABLE_HEADING_PARCEL_ID', 'Parcel ID');
 define('DOWNLOAD_LABEL', 'Download Label');
 define('CREATE_LABEL', 'Create Label');
 define('TEXT_DELETE_SHIPMENT_SUCCESS', 'shipcloud Label deleted.');

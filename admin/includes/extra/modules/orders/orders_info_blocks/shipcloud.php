@@ -31,7 +31,7 @@
             ?>
             <tr>
               <td class="smallText" align="center"><?php echo $tracking['carrier_name']; ?></td>
-              <td class="smallText" align="left"><a href="<?php echo $tracking['tracking_link']; ?>" target="_blank"><?php echo $tracking['parcel_id']; ?></a></td>
+              <td class="smallText" align="left"><?php echo $tracking['parcel_id']; ?></td>
               <td class="smallText" align="center">
                 <a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=deletetracking'); ?>"><?php echo xtc_image(DIR_WS_ICONS.'cross.gif', ICON_DELETE); ?></a>
                 <?php
@@ -54,7 +54,10 @@
           echo xtc_draw_input_field('description', '' , 'style="width:350px;vertical-align:top;" placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"');
           echo '</td>';
         ?>
-        <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo CREATE_LABEL; ?>"></td>
+        <td class="smallText" align="center">
+          <input class="button" style="display:block; width:155px; margin: 7px auto" type="submit" value="<?php echo CREATE_LABEL; ?>">
+          <input class="button" style="display:block; width:155px; margin: 7px auto" type="submit" name="quote" value="<?php echo CHECK_LABEL_PRICE; ?>">
+        </td>
       </tr>
     </table>
     </form>

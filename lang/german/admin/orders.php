@@ -152,6 +152,8 @@ define('TABLE_HEADING_PARCEL_LINK', 'Trackinglink');
 define('TEXT_INFO_HEADING_REVERSE_ORDER', 'Bestellung stornieren');
 define('TEXT_INFO_REVERSE_INTRO', 'Sind Sie sicher, das Sie diese Bestellung stornieren m&ouml;chten?');
 
+define('TABLE_HEADING_SHIPCLOUD', 'Shipcloud:');
+define('TABLE_HEADING_PARCEL_ID', 'Paketschein Nummer');
 define('DOWNLOAD_LABEL', 'Paketschein herunterladen');
 define('CREATE_LABEL', 'Paketschein erstellen');
 define('TEXT_DELETE_SHIPMENT_SUCCESS', 'shipcloud Paketschein gel&ouml;scht.');
