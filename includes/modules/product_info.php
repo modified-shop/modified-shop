@@ -261,19 +261,14 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   include (DIR_WS_MODULES.FILENAME_ALSO_PURCHASED_PRODUCTS);
   include (DIR_WS_MODULES.FILENAME_CROSS_SELLING);
 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_info_end/','php') as $file) require ($file);
+
   // get default product_info template
   if ($product->data['product_template'] == '' || $product->data['product_template'] == 'default') {
-    $files = array ();
-    if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/')) {
-      while ($file = readdir($dir)) {
-        if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/'.$file) && (substr($file, -5) == ".html") && ($file != "index.html") && (substr($file, 0, 1) !=".")) { 
-          $files[] = $file;
-        }
-      }
-      closedir($dir);
-    }
-    sort($files); 
-    $product->data['product_template'] = $files[0];
+    $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/','html'), function($file) {
+      return false === strpos($file, 'index.html');
+    });
+    $product->data['product_template'] = basename($files[0]);
   }
 
   // session products history
@@ -290,7 +285,6 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 
   $info_smarty->assign('language', $_SESSION['language']);
 
-  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_info_end/','php') as $file) require ($file);
   // set cache ID
   if (!CacheCheck()) {
     $info_smarty->caching = 0;
