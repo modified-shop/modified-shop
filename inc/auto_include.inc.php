@@ -10,13 +10,14 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-function auto_include($dir, $ext = 'php', $expr = '*') 
+function auto_include($dir, $ext = 'php', $expr = '*', $flags = 0)
 {
   $dir = rtrim($dir,'/');
-  $files = glob("{$dir}/$expr.".$ext);
-  $files = ((is_array($files)) ? $files : array());
-  
-  // sort files
+
+  $files = glob("{$dir}/$expr.".$ext, $flags);
+
+  $files = ((false !== $files) ? $files : array());
+
   natcasesort($files);
   
   if (function_exists('debugMessage')) {
