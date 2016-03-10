@@ -28,20 +28,22 @@
         $tracking_array = get_tracking_link($oID, $lang_code);
         if (count($tracking_array) > 0) {
           foreach($tracking_array as $tracking) {
-            ?>
-            <tr>
-              <td class="smallText" align="center"><?php echo $tracking['carrier_name']; ?></td>
-              <td class="smallText" align="left"><?php echo $tracking['parcel_id']; ?></td>
-              <td class="smallText" align="center">
-                <a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=deletetracking'); ?>"><?php echo xtc_image(DIR_WS_ICONS.'cross.gif', ICON_DELETE); ?></a>
-                <?php
-                if ($tracking['sc_label_url'] != '') {
-                  echo '<a style="margin-left:10px;" target="_blank" href="'.$tracking['sc_label_url'].'">'.xtc_image(DIR_WS_ICONS.'icon_pdf.gif', DOWNLOAD_LABEL).'</a>';
-                }
-                ?>
-              </td>
-            <tr>
-            <?php
+            if ($tracking['external'] == '1') {
+              ?>
+              <tr>
+                <td class="smallText" align="center"><?php echo $tracking['carrier_name']; ?></td>
+                <td class="smallText" align="left"><?php echo $tracking['parcel_id']; ?></td>
+                <td class="smallText" align="center">
+                  <a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=deletetracking'); ?>"><?php echo xtc_image(DIR_WS_ICONS.'cross.gif', ICON_DELETE); ?></a>
+                  <?php
+                  if ($tracking['sc_label_url'] != '') {
+                    echo '<a style="margin-left:10px;" target="_blank" href="'.$tracking['sc_label_url'].'">'.xtc_image(DIR_WS_ICONS.'icon_pdf.gif', DOWNLOAD_LABEL).'</a>';
+                  }
+                  ?>
+                </td>
+              <tr>
+              <?php
+            }
           }
         }
       ?>
