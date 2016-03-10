@@ -9,7 +9,7 @@
       <tr>
         <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
         <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_PARCEL_ID; ?></strong></td>
-        <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
+        <td class="smallText" align="center" style="width:155px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
       </tr>
       <?php
         $service_array = array(
