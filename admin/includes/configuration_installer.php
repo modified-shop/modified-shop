@@ -229,7 +229,11 @@ $values_group_update = array();
                            'configuration_key' => 'EMAIL_BILLING_ATTACHMENTS'
                            );
   $values_update[] = array (
-                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_password_field(', use_function = 'xtc_cfg_display_password'",
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_password_field('",
+                           'configuration_key' => 'SMTP_PASSWORD'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', use_function = 'xtc_cfg_display_password'",
                            'configuration_key' => 'SMTP_PASSWORD'
                            );
 
@@ -489,7 +493,8 @@ function update_config_table($values)
       //only update if values are different       
       $check = str_replace("),'","|#|", $cfg_values);
       $check = str_replace(array(", \'",",\'",",'"),"|##|", $check);     
-      $check = str_replace(array('use_function', 'set_function'), 'IFNULL(set_function', $check);
+      $check = str_replace('use_function', 'IFNULL(use_function', $check);
+      $check = str_replace('set_function', 'IFNULL(set_function', $check);
       $check = " AND (" . str_replace(array("=", ","),array("!=", " OR "),$check); 
       if (strpos($check, 'IFNULL') !== false) {
         $check .= '|###| TRUE)';
