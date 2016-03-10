@@ -340,26 +340,15 @@ switch ($action) {
 		$oID = (int)$_GET['oID'];
 		$carrier_id = xtc_db_prepare_input($_POST['carrier_id']);
 		$parcel_id = xtc_db_prepare_input($_POST['parcel_id']);
-		if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
-      require_once(DIR_FS_EXTERNAL.'shipcloud/class.shipcloud.php');
-      $shipcloud = new shipcloud($oID);
-      $shipcloud->create_label($_POST);
-		} else {
-      $sql_data_array = array('orders_id' => $oID,
-                              'carrier_id' => $carrier_id,
-                              'parcel_id' => $parcel_id);
-      xtc_db_perform(TABLE_ORDERS_TRACKING,$sql_data_array);
-		}
+    $sql_data_array = array('orders_id' => $oID,
+                            'carrier_id' => $carrier_id,
+                            'parcel_id' => $parcel_id);
+    xtc_db_perform(TABLE_ORDERS_TRACKING,$sql_data_array);
 		xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));              
 		break;
 		
 	case 'deletetracking':
 		$tracking_id = (int)$_GET['tID'];
-	  if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
-      require_once(DIR_FS_EXTERNAL.'shipcloud/class.shipcloud.php');
-      $shipcloud = new shipcloud($oID);
-      $shipcloud->delete_label($tracking_id);
-	  }    
 		xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
 		break;
