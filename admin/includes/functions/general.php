@@ -2311,7 +2311,26 @@
     }
   }
 
+  /**
+   * xtc_cfg_password_field()
+   *
+   * @param string $configuration
+   * @param string $key
+   * @return password input
+   */
+  function xtc_cfg_password_field($cfg_value, $cfg_key) {
+    return xtc_draw_password_field('configuration['.$cfg_key.']', $cfg_value);
+  }
 
+  /**
+   * xtc_cfg_display_password()
+   *
+   * @param string $configuration
+   * @return stars
+   */
+  function xtc_cfg_display_password($cfg_value) {
+    return '**********';
+  }
 
 
   /********************************************** NOT USED FUNCTIONS **********************************************/

@@ -304,11 +304,7 @@
                             $value_field = xtc_call_function($function, $parameters);
                           }
                         } else {
-                          if ( $configuration['configuration_key'] == 'SMTP_PASSWORD') {
-                            $value_field = xtc_draw_password_field($configuration['configuration_key'], $configuration['configuration_value']);
-                          } else {
-                            $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'],'style="width:380px;"');
-                          }
+                          $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'], 'style="width:380px;"');
                         }
                         if (strstr($value_field,'cfg_so_k')) {
                           $value_field=str_replace('cfg_so_k',strtolower($configuration['configuration_key']),$value_field);

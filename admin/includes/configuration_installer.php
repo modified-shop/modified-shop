@@ -228,6 +228,10 @@ $values_group_update = array();
                            'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_BILLING_ATTACHMENTS'",
                            'configuration_key' => 'EMAIL_BILLING_ATTACHMENTS'
                            );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_password_field(', use_function = 'xtc_cfg_display_password'",
+                           'configuration_key' => 'SMTP_PASSWORD'
+                           );
 
 //configuration_group_id 13 --- "Download Optionen"
   $values_update[] = array (
