@@ -259,61 +259,29 @@
             <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
           </tr>
           <?php
-            $service_array = array(
-              array('id' => 'standard', 'text' => 'Standard'),
-              array('id' => 'one_day', 'text' => 'Express'),
-              array('id' => 'one_day_early', 'text' => 'Express 10:00'),
-              array('id' => 'returns', 'text' => 'Retour'),
-            );
-            $parcel_array = array();
-            $dim_array = explode(';', preg_replace("'[\r\n\s]+'", '', MODULE_SHIPCLOUD_PARCEL));
-            for ($p=0, $pn=count($dim_array); $p<$pn; $p++) {
-              if ($dim_array[$p] != '') {
-                $parcel_array[] = array('id' => $dim_array[$p], 'text' => str_replace(',', 'cm x ', $dim_array[$p] .'cm'));
-              }
-            }
             $tracking_array = get_tracking_link($oID, $lang_code);
             if (count($tracking_array) > 0) {
               foreach($tracking_array as $tracking) {
-                echo '          <tr>'.PHP_EOL;
-                echo '            <td class="smallText" align="center">'.$tracking['carrier_name'].'</td>'.PHP_EOL;
-                echo '            <td class="smallText" align="left"><a href="'.$tracking['tracking_link'].'" target="_blank">'.$tracking['parcel_id'].'</a></td>'.PHP_EOL;
-                echo '            <td class="smallText" align="center">
-                                    <a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_DELETE).
-                                    ((isset($tracking['sc_label_url']) && $tracking['sc_label_url'] != '') ? '<a style="margin-left:10px;" target="_blank" href="'.$tracking['sc_label_url'].'">'.xtc_image(DIR_WS_ICONS.'icon_pdf.gif', DOWNLOAD_LABEL).'</a>' : '').'
-                                  </td>'.PHP_EOL;
-                echo '          <tr>'.PHP_EOL;
+                ?>
+                <tr>
+                  <td class="smallText" align="center"><?php echo $tracking['carrier_name']; ?></td>
+                  <td class="smallText" align="left"><a href="<?php echo $tracking['tracking_link']; ?>" target="_blank"><?php echo $tracking['parcel_id']; ?></a></td>
+                  <td class="smallText" align="center">
+                  <?php
+                    if (!isset($tracking['external']) || $tracking['external'] == '0') {
+                      echo '<a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_DELETE).'</a>'.PHP_EOL;
+                    }
+                  ?>
+                  </td>
+                <tr>
+                <?php
               }
             }
           ?>
           <tr>
-            <?php
-              if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
-                echo '<td class="smallText" align="center" colspan="2">';
-                echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]).'&nbsp;';
-                echo xtc_draw_pull_down_menu('service', $service_array, $service_array[0]).'&nbsp;';
-                echo xtc_draw_pull_down_menu('parcel', $parcel_array, $parcel_array[0]).'&nbsp;';
-                echo xtc_draw_input_field('description', '' , 'style="width:350px;vertical-align:top;" placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"');
-                echo '</td>';
-              } else {
-                echo '<td class="smallText" align="center">'.xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]).'</td>';
-                echo '<td class="smallText" align="center">'.xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"').'</td>';
-              }
-            ?>
-            <td class="smallText" align="center">
-              <?php
-              if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
-                ?>
-                <input class="button" style="display:block; width:155px; margin: 7px auto" type="submit" value="<?php echo CREATE_LABEL; ?>">
-                <input class="button" style="display:block; width:155px; margin: 7px auto" type="submit" name="quote" value="<?php echo CHECK_LABEL_PRICE; ?>">
-                <?php
-              } else {
-                ?>
-                <input class="button" type="submit" value="<?php echo BUTTON_INSERT; ?>">
-                <?php
-              }
-              ?>
-            </td>
+            <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); ?></td>
+            <td class="smallText" align="center"><?php echo xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
+            <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo BUTTON_INSERT; ?>"></td>
           </tr>
         </table>
         </form>

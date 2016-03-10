@@ -133,6 +133,7 @@ class shipcloud {
 		$sql_data_array = array('orders_id' => $this->order->info['order_id'],
 		                        'carrier_id' => $this->carrier_id,
 		                        'parcel_id' => $request['carrier_tracking_no'],
+		                        'external' => '1',
 		                        'sc_label_url' => $request['label_url'],
 		                        'sc_id' => $request['id'],
 		                        'sc_date_added' => 'now()',
