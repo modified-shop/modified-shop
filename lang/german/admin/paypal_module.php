@@ -32,6 +32,9 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_LINK_ACCOUNT' => 'Link im Account',
   'TEXT_PAYPAL_MODULE_LINK_ACCOUNT_INFO' => 'Soll der Zahllink im Account angezeigt werden?',
 
+  'TEXT_PAYPAL_MODULE_LINK_PRODUCT' => 'Button beim Artikel',
+  'TEXT_PAYPAL_MODULE_LINK_PRODUCT_INFO' => 'Soll der PayPal Button in den Artikel Infos angezeigt werden?',
+
   'TEXT_PAYPAL_MODULE_USE_TABS' => 'Accordion / Tabs',
   'TEXT_PAYPAL_MODULE_USE_TABS_INFO' => 'Verwendet das Template Accordion oder Tabs im Checkout?',
 );

@@ -253,6 +253,19 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  function product_checkout_button() {    
+    if ($this->enabled === true) {
+      $unallowed_modules = explode(',', $_SESSION['customers_status']['customers_status_payment_unallowed']);
+      if (!in_array($this->code, $unallowed_modules)) {
+        $image = ((strtoupper($_SESSION['language_code']) == 'DE') ? 'epaypal_de.gif' : 'epaypal_en.gif');
+        $checkout_button = '<input type="image" src="'.DIR_WS_BASE.DIR_WS_ICONS.$image.'" title="'.IMAGE_BUTTON_IN_CART.'" id="paypalcartexpress" name="paypalcartexpress" />';
+
+        return $checkout_button;
+      }
+    }
+  }
+
+
   function create_paypal_link($orders_id = '', $cleanlink = false) {
     global $last_order, $PHP_SELF;
     
@@ -388,6 +401,14 @@ class PayPalPaymentBase extends PayPalCommon {
 
 	function remove() {
 	
+	  $admin_access_array = array(
+	    'paypal_config',
+	    'paypal_module',
+	    'paypal_payment',
+	    'paypal_profile',
+	    'paypal_webhook',
+	  );
+
 		$check_query = xtc_db_query("SELECT configuration_key 
 		                               FROM ".TABLE_CONFIGURATION." 
 		                              WHERE configuration_key LIKE 'MODULE_PAYMENT_PAYPAL%_STATUS'");
@@ -395,6 +416,18 @@ class PayPalPaymentBase extends PayPalCommon {
 			xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_PAYMENT);
 			xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_CONFIG);
 			xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_IPN);
+
+
+	  
+      $admin_query = xtc_db_query("SELECT * 
+                                     FROM ".TABLE_ADMIN_ACCESS."
+                                    LIMIT 1");
+      $admin = xtc_db_fetch_array($admin_query);
+      foreach ($admin_access_array as $admin_access) {
+        if (isset($admin[$admin_access])) {
+          xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." DROP COLUMN `".$admin_access."`");
+        }
+      }
 		}
 
 		xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_PAYMENT_".strtoupper($this->code)."\_%'");
