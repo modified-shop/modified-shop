@@ -643,7 +643,8 @@ class PayPalPayment extends PayPalPaymentBase {
     
     // set order
     $order = new order($insert_id);
-
+    
+    $patches_array = array();
     $patchRequest = new PatchRequest();
 
     $payment_address = new Address();
@@ -661,6 +662,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $patch_payment->setOp('add')
                   ->setPath('/potential_payer_info/billing_address')
                   ->setValue($payment_address);
+    $patches_array[] = $patch_payment;
 
     // set address
     $shipping_address = new ShippingAddress();      
@@ -680,12 +682,14 @@ class PayPalPayment extends PayPalPaymentBase {
     $patch_shipping->setOp('add')
                    ->setPath('/transactions/0/item_list/shipping_address')
                    ->setValue($shipping_address);
-    
-    $patch_invoice = new Patch();
+    $patches_array[] = $patch_shipping;
+   
     if ($this->get_config('PAYPAL_CONFIG_TRANSFER_ORDER_ID') == '1') {
+      $patch_invoice = new Patch();
       $patch_invoice->setOp('replace')
                     ->setPath('/transactions/0/invoice_number')
                     ->setValue($insert_id);
+      $patches_array[] = $patch_invoice;
     }
        
     // set details
@@ -704,9 +708,10 @@ class PayPalPayment extends PayPalPaymentBase {
     $patch_amount->setOp('replace')
                  ->setPath('/transactions/0/amount')
                  ->setValue($this->amount);
-
-    $patchRequest->setPatches(array_merge(array($patch_payment), array($patch_shipping), array($patch_invoice), array($patch_amount)));     
-        
+    $patches_array[] = $patch_amount;
+    
+    $patchRequest->setPatches($patches_array);     
+    
     try {
       // update payment
       $payment->update($patchRequest, $apiContext);      
