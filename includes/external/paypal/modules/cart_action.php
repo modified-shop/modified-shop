@@ -19,7 +19,7 @@
   {
     // include needed functions
     require_once (DIR_FS_INC.'xtc_get_products_stock.inc.php');
-    require_once (DIR_FS_INC.'check_stock_specials.inc.php');
+    require_once (DIR_FS_INC.'xtc_check_stock.inc.php');
     
     $products = $_SESSION['cart']->get_products();
     for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
@@ -28,12 +28,6 @@
         if ($mark_stock) {
           $_SESSION['any_out_of_stock'] = 1;
         }
-      }
-      if (STOCK_CHECK_SPECIALS == 'true' && $xtPrice->xtcCheckSpecial($products[$i]['id'])) {
-        $mark_stock = check_stock_specials($products[$i]['id'], $products[$i]['quantity']);
-        if ($mark_stock) {
-          $_SESSION['any_out_of_stock'] = 1;
-        }  
       }
     }
     
