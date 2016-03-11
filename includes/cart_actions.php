@@ -117,6 +117,10 @@ if (xtc_not_null($action)) {
         }
         $_SESSION['cart']->add_cart((int)$_POST['products_id'], $cart_quantity, isset($_POST['id'])?$_POST['id']:''); //DokuMan - 2012-06-11 - added isset-check for $_POST['id']
       }
+
+      ## PayPal
+      include(DIR_FS_EXTERNAL.'paypal/modules/cart_action.php');
+      
       xtc_redirect(xtc_href_link($goto, 'products_id=' . (int)$_POST['products_id'] . '&' . xtc_get_all_get_params($parameters)));
       break;
 

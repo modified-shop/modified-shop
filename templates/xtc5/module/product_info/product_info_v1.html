@@ -45,6 +45,12 @@
     		<td style="width:100%; padding-right:5px;">{$ADD_QTY}</td>
     		<td>{$ADD_CART_BUTTON}</td>
   		</tr>
+      {if $ADD_CART_BUTTON_PAYPAL}
+        <tr>
+          <td style="width:100%; padding-right:5px;">&nbsp;</td>
+          <td>{$ADD_CART_BUTTON_PAYPAL}</td>
+        </tr>
+      {/if}
 	</table>
 	</div>
 	{if $PRODUCTS_DESCRIPTION !=''}<div>{$PRODUCTS_DESCRIPTION}</div>{/if}

@@ -223,6 +223,9 @@ if (!is_object($product) || !$product->isProduct()) {
     $info_smarty->assign('PRODUCTS_ADDED', sprintf(TEXT_DATE_ADDED, xtc_date_long($product->data['products_date_added'])));
   }
 
+  ## PayPal
+  include(DIR_FS_EXTERNAL.'paypal/modules/product_info.php');
+
   // get default product_info template
   if ($product->data['product_template'] == '' || $product->data['product_template'] == 'default') {
     $files = array ();

@@ -76,6 +76,18 @@
         }
         xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
         break;
+      case 'edit':
+        $class = basename($_GET['module']);
+        if ($class == 'paypalcart'
+            || $class == 'paypalclassic'
+            || $class == 'paypallink'
+            || $class == 'paypalplus'
+            || $class == 'paypalpluslink'
+            ) 
+        {
+          xtc_redirect(xtc_href_link('paypal_module.php', 'action=edit&module=' . $class));
+        }
+        break;
     }
   }
 
