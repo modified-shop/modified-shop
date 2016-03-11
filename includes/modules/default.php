@@ -162,18 +162,10 @@ if ($category_depth == 'nested') {
 
   // get default template
   if ($category['categories_template'] == '' || $category['categories_template'] == 'default') {
-    $files = array ();
-    $cl_dir = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/';
-    if ($dir = opendir($cl_dir)) {
-      while (($file = readdir($dir)) !== false) {
-        if (is_file($cl_dir.$file) && (substr($file, 0, 1) != '.') && (substr($file, -5) == '.html') && ($file != 'index.html')) {
-          $files[] = $file;
-        }
-      }
-      closedir($dir);
-    }
-    sort($files);
-    $category['categories_template'] = $files[0];
+    $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/','html'), function($file) {
+      return false === strpos($file, 'index.html');
+    });
+    $category['categories_template'] = basename($files[0]);
   }
 
   $max_per_row = MAX_DISPLAY_CATEGORIES_PER_ROW;

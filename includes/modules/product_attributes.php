@@ -131,17 +131,10 @@ if ($product->getAttributesCount() > 0) {
 
 
   if ($product->data['options_template'] == '' or $product->data['options_template'] == 'default') {
-    $files = array ();
-    if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/')) {
-      while (($file = readdir($dir)) !== false) {
-        if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-          $files[] = $file;
-        }
-      }
-      closedir($dir);
-    }
-    sort($files);
-    $product->data['options_template'] = $files[0];
+    $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/','html'), function($file) {
+      return false === strpos($file, 'index.html');
+    });
+    $product->data['options_template'] = basename($files[0]);
   }
 
   $module_smarty->assign('language', $_SESSION['language']);
