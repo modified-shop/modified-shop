@@ -18,8 +18,10 @@ defined('TABLE_PAYPAL_IPN') OR define('TABLE_PAYPAL_IPN', 'paypal_ipn');
 
 
 // include needed functions
-require_once(DIR_FS_INC.'xtc_get_zone_code.inc.php');
 include_once(DIR_FS_EXTERNAL.'paypal/functions/PayPalFunctions.php');
+if (!function_exists('xtc_get_zone_code')) {
+  require_once(DIR_FS_INC.'xtc_get_zone_code.inc.php');
+}
 
 
 // include needed classes
