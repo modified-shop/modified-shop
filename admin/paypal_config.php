@@ -133,6 +133,11 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_MODE_INFO; ?></td>
               </tr>
               <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_TRANSFER_ORDER_ID; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[PAYPAL_CONFIG_TRANSFER_ORDER_ID]', $status_array, $paypal->get_config('PAYPAL_CONFIG_TRANSFER_ORDER_ID')); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_TRANSFER_ORDER_ID_INFO; ?></td>
+              </tr>
+              <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_TRANSACTION; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('config[PAYPAL_TRANSACTION_TYPE]', $transaction_array, $paypal->get_config('PAYPAL_TRANSACTION_TYPE')); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_TRANSACTION_INFO; ?></td>
