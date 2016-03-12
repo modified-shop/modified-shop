@@ -18,8 +18,10 @@ defined('TABLE_PAYPAL_IPN') OR define('TABLE_PAYPAL_IPN', 'paypal_ipn');
 
 
 // include needed functions
-require_once(DIR_FS_INC.'xtc_get_zone_code.inc.php');
 include_once(DIR_FS_EXTERNAL.'paypal/functions/PayPalFunctions.php');
+if (!function_exists('xtc_get_zone_code')) {
+  require_once(DIR_FS_INC.'xtc_get_zone_code.inc.php');
+}
 
 
 // include needed classes
@@ -305,6 +307,7 @@ class PayPalPayment extends PayPalPaymentBase {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
     
+    $patches_array = array();
     $patchRequest = new PatchRequest();
     
     // set details
@@ -324,6 +327,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $patch_amount->setOp('replace')
                  ->setPath('/transactions/0/amount')
                  ->setValue($this->amount);
+    $patches_array[] = $patch_amount;
 
     // set ItemList
     if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0') { 
@@ -348,6 +352,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $patch_items->setOp('replace')
                 ->setPath('/transactions/0/item_list/items')
                 ->setValue($item);
+    $patches_array[] = $patch_items;
              
     // set payment address
     $payment_address = new Address();
@@ -365,6 +370,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $patch_payment->setOp('add')
                   ->setPath('/potential_payer_info/billing_address')
                   ->setValue($payment_address);
+    $patches_array[] = $patch_payment;
 
     
     // set shipping address
@@ -385,8 +391,9 @@ class PayPalPayment extends PayPalPaymentBase {
     $patch_shipping->setOp('add')
                    ->setPath('/transactions/0/item_list/shipping_address')
                    ->setValue($shipping_address);
+    $patches_array[] = $patch_shipping;
 
-    $patchRequest->setPatches(array_merge(array($patch_amount), array($patch_items), array($patch_payment), array($patch_shipping)));
+    $patchRequest->setPatches($patches_array);
                     
     try {
       // update payment
