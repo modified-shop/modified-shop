@@ -29,6 +29,9 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_MODE' => 'Modus:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
+  'TEXT_PAYPAL_CONFIG_TRANSFER_ORDER_ID' => 'Bestellnummer &uuml;bertragen:',
+  'TEXT_PAYPAL_CONFIG_TRANSFER_ORDER_ID_INFO' => 'Soll die Bestellnummer an PayPal &uuml;bertragen werden?<br/><br/><b>Hinweis:</b> wenn mehrere Shops mit der gleichen PayPal App betrieben werden, sollte die Funktion deaktiviert sein, da diese ID immer eindeutig sein muss.',
+
   'TEXT_PAYPAL_CONFIG_TRANSACTION' => 'Transaktion:',
   'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'W&auml;hlen Sie die Art der Transaktion.<br/><br/><b>Hinweis:</b> Bei PayPal Plus wird immer ein Sale gemacht.',
 

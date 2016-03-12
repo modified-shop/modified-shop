@@ -29,6 +29,9 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_MODE' => 'Mode:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
+  'TEXT_PAYPAL_CONFIG_TRANSFER_ORDER_ID' => 'Transfer order ID:',
+  'TEXT_PAYPAL_CONFIG_TRANSFER_ORDER_ID_INFO' => 'Transfer order ID to PayPal?<br/><br/><b>Note:</b> if you are using more Shops with the same PayPal App, disable this function.',
+
   'TEXT_PAYPAL_CONFIG_TRANSACTION' => 'Transaction:',
   'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'Chose type of Transaction.<br/><br/><b>Note:</b> With PayPal Plus always a Sale is made.',
 
