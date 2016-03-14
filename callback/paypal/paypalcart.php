@@ -15,6 +15,7 @@ include('includes/application_top.php');
 
 
 // include needed classes
+require_once(DIR_WS_CLASSES.'order.php');
 require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
 
 $paypal = new PayPalPayment('paypalcart');
@@ -26,6 +27,15 @@ if (!isset($_SESSION['customer_id'])) {
 
 // shipping
 $_SESSION['shipping'] = '';
+
+$order = new order();
+
+if ($order->content_type == 'virtual' 
+    || ($order->content_type == 'virtual_weight') 
+    || ($_SESSION['cart']->count_contents_virtual() == 0)) {
+	$_SESSION['shipping'] = false;
+	$_SESSION['sendto'] = false;
+}
 
 // payment
 $_SESSION['payment'] = 'paypalcart';
