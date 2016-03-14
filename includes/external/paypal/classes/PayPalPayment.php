@@ -610,7 +610,7 @@ class PayPalPayment extends PayPalPaymentBase {
   }
 
 
-  function complete_cart($order_exists = false) {    
+  function complete_cart($order_exists = true) {    
     global $insert_id;
 
     // check
