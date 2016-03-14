@@ -643,7 +643,7 @@ define('PAYPAL_EXPRESS_ADDRESS_CHANGE_DESC','Erlaubt das &Auml;ndern der von Pay
 define('PAYPAL_EXPRESS_ADDRESS_OVERRIDE_TITLE','Lieferadresse &uuml;berschreiben');
 define('PAYPAL_EXPRESS_ADDRESS_OVERRIDE_DESC','Erlaubt das &Auml;ndern der von PayPal &uuml;bermittelten Adressdaten (bestehendes Konto)');
 define('PAYPAL_INVOICE_TITLE','Shop-Pr&auml;fix f&uuml;r PayPal Rechnungs-Nr.');
-define('PAYPAL_INVOICE_DESC','Frei w&auml;hlbare Buchstabenfolge (Pr&auml;fix), die der Bestellnummer vorangestellt und f&uuml;r die Erzeugung der PayPal-Rechnungsnummer genutzt wird.<br />Dadurch k&ouml;nnen mehrere Shops mit nur einem PayPal Konto arbeiten. Konflikte bei gleichen Bestellnummern werden vermieden. Jede Bestellung erh&auml;lt eine eigene Rechnungs-Nummern in dem PayPal Konto.');
+define('PAYPAL_INVOICE_DESC','Frei w&auml;hlbare Buchstabenfolge (Pr&auml;fix), die der Bestellnummer vorangestellt und f&uuml;r die Erzeugung der PayPal-Rechnungsnummer genutzt wird.<br />Dadurch k&ouml;nnen mehrere Shops mit nur einem PayPal Konto arbeiten. Konflikte bei gleichen Bestellnummern werden vermieden. Jede Bestellung erh&auml;lt eine eigene Rechnungs-Nummer im PayPal Konto.');
 define('PAYPAL_BRANDNAME_TITLE','PayPal Shop-Name');
 define('PAYPAL_BRANDNAME_DESC','Tragen Sie hier den den Namen ein, der bei PayPal angezeigt werden soll.');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
