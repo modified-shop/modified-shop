@@ -10,40 +10,55 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
   
+  define('RSS_FEED_CACHEFILE', DIR_FS_CATALOG.'export/rss_cache.txt');
   
   function get_external_content($url, $timeout='3', $rss=true) {
     $data = '';
+    if (($rss && (!file_exists(RSS_FEED_CACHEFILE) || filemtime(RSS_FEED_CACHEFILE)<(time()-86400))) || !$rss) {
+      if (function_exists('curl_version') && is_array(curl_version())) {
+        $ch = curl_init();
+              curl_setopt($ch, CURLOPT_URL, $url);
+              curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+              curl_setopt($ch, CURLOPT_HEADER, FALSE);
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $data = curl_exec($ch);
+                curl_close($ch);
 
-    if (function_exists('curl_version') && is_array(curl_version())) {
-      $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-            curl_setopt($ch, CURLOPT_HEADER, FALSE);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-      $data = curl_exec($ch);
-              curl_close($ch);
+        if ($data && !check_valid_xml($data, $rss))
+          $data='';
+      }
+      if ($data=='' && function_exists('file_get_contents')) {
+        $opts = array('http' => array('method'=>"GET", 'header'=>"Content-Type: text/html; charset=UTF-8", 'timeout' => $timeout));
+        $context = stream_context_create($opts); 
+        $data = @file_get_contents($url, false, $context);
 
-      if ($data && !check_valid_xml($data, $rss))
-        $data='';
-    }
-    if ($data=='' && function_exists('file_get_contents')) {
-      $opts = array('http' => array('method'=>"GET", 'header'=>"Content-Type: text/html; charset=UTF-8", 'timeout' => $timeout));
-      $context = stream_context_create($opts); 
-      $data = @file_get_contents($url, false, $context);
+        if ($data && !check_valid_xml($data, $rss))
+          $data='';
+      }
+      if ($data=='' && function_exists('fopen')) {
+        ini_set('default_socket_timeout', $timeout);  
+        $fp = @fopen($url, 'r');
+        if (is_resource($fp)) {
+          $data = @stream_get_contents($fp);
+          fclose($fp);
+        }
 
-      if ($data && !check_valid_xml($data, $rss))
-        $data='';
-    }
-    if ($data=='' && function_exists('fopen')) {
-      ini_set('default_socket_timeout', $timeout);  
-      $fp = @fopen($url, 'r');
+        if ($data && !check_valid_xml($data, $rss))
+          $data='';
+      }
+      if ($rss && $data) {
+        $fp = @fopen(RSS_FEED_CACHEFILE, "w+");
+        if (is_resource($fp)) {
+          fputs($fp, $data);
+          fclose($fp);
+        }
+      }
+    } else {
+      $fp = @fopen(RSS_FEED_CACHEFILE, "rb");
       if (is_resource($fp)) {
-        $data = @stream_get_contents($fp);
+        $data = fread($fp, filesize(RSS_FEED_CACHEFILE));
         fclose($fp);
       }
-
-      if ($data && !check_valid_xml($data, $rss))
-        $data='';
     }
         
     return $data;
