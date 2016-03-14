@@ -29,8 +29,8 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_MODE' => 'Mode:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
-  'TEXT_PAYPAL_CONFIG_TRANSFER_ORDER_ID' => 'Transfer order ID:',
-  'TEXT_PAYPAL_CONFIG_TRANSFER_ORDER_ID_INFO' => 'Transfer order ID to PayPal?<br/><br/><b>Note:</b> if you are using more Shops with the same PayPal App, disable this function.',
+  'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX' => 'Prefix for order ID:',
+  'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX_INFO' => 'Letter(s) before the order ID as prefix to be set and as Invoice-No. of PayPal to be used. By different prefix several shops with one PayPal account can work, without which it comes with same order-numbers to same invoice-numbers in the PayPal account.',
 
   'TEXT_PAYPAL_CONFIG_TRANSACTION' => 'Transaction:',
   'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'Chose type of Transaction.<br/><br/><b>Note:</b> With PayPal Plus always a Sale is made.',

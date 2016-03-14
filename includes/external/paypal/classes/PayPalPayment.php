@@ -499,28 +499,26 @@ class PayPalPayment extends PayPalPaymentBase {
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));      
       }
       
-      if ($this->get_config('PAYPAL_CONFIG_TRANSFER_ORDER_ID') == '1') {
-        $patchRequest = new PatchRequest();
-        
-        $patch_invoice = new Patch();
-        $patch_invoice->setOp('replace')
-                      ->setPath('/transactions/0/invoice_number')
-                      ->setValue($insert_id);
-
-        $patchRequest->setPatches(array($patch_invoice));     
-        
-        try {
-          // update payment
-          $payment->update($patchRequest, $apiContext);      
-
-          // Get the payment Object by passing paymentId
-          $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);       
-
-        } catch (Exception $ex) {
-          $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
-        }
-      }
+      $patchRequest = new PatchRequest();
       
+      $patch_invoice = new Patch();
+      $patch_invoice->setOp('replace')
+                    ->setPath('/transactions/0/invoice_number')
+                    ->setValue($this->get_config('PAYPAL_CONFIG_INVOICE_PREFIX').$insert_id);
+
+      $patchRequest->setPatches(array($patch_invoice));     
+      
+      try {
+        // update payment
+        $payment->update($patchRequest, $apiContext);      
+
+        // Get the payment Object by passing paymentId
+        $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);       
+
+      } catch (Exception $ex) {
+        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      }
+    
       // payer
       $_SESSION['paypal']['PayerID'] = $_GET['PayerID'];
     
@@ -691,13 +689,11 @@ class PayPalPayment extends PayPalPaymentBase {
                    ->setValue($shipping_address);
     $patches_array[] = $patch_shipping;
    
-    if ($this->get_config('PAYPAL_CONFIG_TRANSFER_ORDER_ID') == '1') {
-      $patch_invoice = new Patch();
-      $patch_invoice->setOp('replace')
-                    ->setPath('/transactions/0/invoice_number')
-                    ->setValue($insert_id);
-      $patches_array[] = $patch_invoice;
-    }
+    $patch_invoice = new Patch();
+    $patch_invoice->setOp('replace')
+                  ->setPath('/transactions/0/invoice_number')
+                  ->setValue($this->get_config('PAYPAL_CONFIG_INVOICE_PREFIX').$insert_id);
+    $patches_array[] = $patch_invoice;
        
     // set details
     $this->details = new Details(); 
