@@ -261,6 +261,8 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   include (DIR_WS_MODULES.FILENAME_ALSO_PURCHASED_PRODUCTS);
   include (DIR_WS_MODULES.FILENAME_CROSS_SELLING);
 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_info_end/','php') as $file) require ($file);
+
   // get default product_info template
   if ($product->data['product_template'] == '' || $product->data['product_template'] == 'default') {
     $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/','html'), function($file) {
@@ -268,8 +270,6 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     });
     $product->data['product_template'] = basename($files[0]);
   }
-
-  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_info_end/','php') as $file) require ($file);
 
   // session products history
   if (!isset($_SESSION['tracking']['products_history'])) $_SESSION['tracking']['products_history'] = array();
