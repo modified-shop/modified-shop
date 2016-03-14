@@ -107,7 +107,7 @@ if (isset($order) && is_object($order)) {
                   <div class="pp_boxheading"><?php echo TEXT_PAYPAL_TRANSACTION; ?></div>
                   <dl class="pp_transaction">
                     <dt><?php echo TEXT_PAYPAL_TRANSACTION_ADDRESS; ?></dt>
-                    <dd><?php echo xtc_address_format($order->customer['address_format_id'], $admin_info_array['address'], 1, '', '<br />'); ?></dd>
+                    <dd><?php echo xtc_address_format($order->customer['format_id'], $admin_info_array['address'], 1, '', '<br />'); ?></dd>
                   </dl>
                   <dl class="pp_transaction">
                     <dt><?php echo TEXT_PAYPAL_TRANSACTION_METHOD; ?></dt>
