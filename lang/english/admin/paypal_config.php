@@ -30,7 +30,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX' => 'Prefix for order ID:',
-  'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX_INFO' => 'Letter(s) before the order ID as prefix to be set and as Invoice-No. of PayPal to be used. By different prefix several shops with one PayPal account can work, without which it comes with same order-numbers to same invoice-numbers in the PayPal account.',
+  'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX_INFO' => 'Arbitrary string of letters (prefix), which is placed in front of each order number and is used for generating the PayPal invoice number.<br />This allows multiple store operation with only one PayPal App. Conflicts regarding the order numbers are avoided. Each order has its own invoice numbers within the PayPal account.',
 
   'TEXT_PAYPAL_CONFIG_TRANSACTION' => 'Transaction:',
   'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'Chose type of Transaction.<br/><br/><b>Note:</b> With PayPal Plus always a Sale is made.',

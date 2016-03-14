@@ -30,7 +30,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX' => 'Bestellnummer Pr&auml;fix:',
-  'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX_INFO' => 'Zeichen die vor die Bestellnummer als Pr&auml;fix gesetzt werden und als Rechnungs-Nr. von PayPal benutzt werden.<br />Durch unterschiedliche Shop-Kenner k&ouml;nnen mehrere Shops mit einem PayPal Konto arbeiten, ohne dass es bei gleichen Order-Nummern zu gleichen Rechnungs-Nummern im PayPal Konto kommt.',
+  'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX_INFO' => 'Frei w&auml;hlbare Zeichenfolge (Pr&auml;fix), die der Bestellnummer vorangestellt und f&uuml;r die Erzeugung der PayPal-Rechnungsnummer genutzt wird.<br />Dadurch k&ouml;nnen mehrere Shops mit nur einer PayPal App arbeiten. Konflikte bei gleichen Bestellnummern werden vermieden. Jede Bestellung erh&auml;lt eine eigene Rechnungs-Nummer im PayPal Konto.',
 
   'TEXT_PAYPAL_CONFIG_TRANSACTION' => 'Transaktion:',
   'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'W&auml;hlen Sie die Art der Transaktion.<br/><br/><b>Hinweis:</b> Bei PayPal Plus wird immer ein Sale gemacht.',
