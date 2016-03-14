@@ -29,8 +29,8 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_MODE' => 'Modus:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
-  'TEXT_PAYPAL_CONFIG_TRANSFER_ORDER_ID' => 'Bestellnummer &uuml;bertragen:',
-  'TEXT_PAYPAL_CONFIG_TRANSFER_ORDER_ID_INFO' => 'Soll die Bestellnummer an PayPal &uuml;bertragen werden?<br/><br/><b>Hinweis:</b> wenn mehrere Shops mit der gleichen PayPal App betrieben werden, sollte die Funktion deaktiviert sein, da diese ID immer eindeutig sein muss.',
+  'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX' => 'Bestellnummer Pr&auml;fix:',
+  'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX_INFO' => 'Zeichen die vor die Bestellnummer als Pr&auml;fix gesetzt werden und als Rechnungs-Nr. von PayPal benutzt werden.<br />Durch unterschiedliche Shop-Kenner k&ouml;nnen mehrere Shops mit einem PayPal Konto arbeiten, ohne dass es bei gleichen Order-Nummern zu gleichen Rechnungs-Nummern im PayPal Konto kommt.',
 
   'TEXT_PAYPAL_CONFIG_TRANSACTION' => 'Transaktion:',
   'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'W&auml;hlen Sie die Art der Transaktion.<br/><br/><b>Hinweis:</b> Bei PayPal Plus wird immer ein Sale gemacht.',
