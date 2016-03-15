@@ -30,7 +30,7 @@ define('TEXT_MODULE_FILE_MISSING', '<b>Language file "%s" is missing, module "%s
 define('TABLE_HEADING_FILENAME','Module name (for internal usage)');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-define('TEXT_INFO_DELETE_PAYPAL', 'If you uninstall this module now, the PayPal transaction data are deleted!<br />If you want to receive these data, press now on abort and you deactivate the module (activate module = False) only.');
+define('TEXT_INFO_DELETE_PAYPAL', 'If you uninstall this module now, the PayPal transaction data are deleted!<br />If you want to receive these data, press on abort now and only deactivate the module. (Activate module = False)');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 define('TABLE_HEADING_MODULES_INSTALLED', 'Modules installed');
 define('TABLE_HEADING_MODULES_PREFERRED', 'Popular modules');
