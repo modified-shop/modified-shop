@@ -241,6 +241,9 @@
                               );
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);                                              
 
+      xtc_db_query("UPDATE " .TABLE_COUNTRIES . " SET status='0'");
+      xtc_db_query("UPDATE " .TABLE_COUNTRIES . " SET status='1' WHERE countries_id = ". (int)$country. "'");
+
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_address). "' WHERE configuration_key = 'STORE_OWNER_EMAIL_ADDRESS'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($store_name). "' WHERE configuration_key = 'STORE_NAME'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_from). "' WHERE configuration_key = 'EMAIL_FROM'");
