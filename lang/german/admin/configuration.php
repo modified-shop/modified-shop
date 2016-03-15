@@ -1043,5 +1043,5 @@ define('SEARCH_AC_MIN_LENGTH_DESC', 'Ab welchen Zeichenanzahl sollen die ersten 
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_TITLE', 'Anzeige Widerrufsrecht Downloads');
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_DESC', 'Soll eine Checkbox im Checkout angezeigt werden, mit welcher darauf hingewiesen wird, dass das Widerrufsrecht erlischt?');
 define('ORDER_STATUSES_DISPLAY_DEFAULT_TITLE', 'Anzeige Bestellungen');
-define('ORDER_STATUSES_DISPLAY_DEFAULT_DESC', 'Bestellungen mit welchem Bestellstatus sollen standardm&auml;&azlig;ig angezeigt werden?');
+define('ORDER_STATUSES_DISPLAY_DEFAULT_DESC', 'Bestellungen mit welchem Bestellstatus sollen standardm&auml;&szlig;ig angezeigt werden?');
 ?>
