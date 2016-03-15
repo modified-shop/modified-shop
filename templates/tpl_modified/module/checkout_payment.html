@@ -63,7 +63,7 @@
       <div class="checkoutconditions">
         {$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}
       </div>
-      {if $smarty.const.DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'}
+      {if isset(REVOCATION_checkbox)}
         <div class="checkoutconditions">
           {$REVOCATION_checkbox} <strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}
         </div>
@@ -71,7 +71,7 @@
     {else}
       <h4 class="checkout">{#title_comments_short#}</h4>
       <div class="checkoutcomment">{$COMMENTS}</div>
-      {if $smarty.const.DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'}
+      {if isset(REVOCATION_checkbox)}
         <div class="checkoutconditions">
           {$REVOCATION_checkbox} <strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}
         </div>

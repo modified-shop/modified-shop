@@ -97,8 +97,8 @@ $order = new order();
 require_once (DIR_WS_CLASSES . 'order_total.php'); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
 $order_total_modules = new order_total(); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
 
+$content_type = $_SESSION['cart']->get_content_type();
 $total_weight = $_SESSION['cart']->show_weight();
-
 $total_count = $_SESSION['cart']->count_contents_virtual(); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
 
 if ($order->billing['country']['iso_code_2'] != '' && $order->delivery['country']['iso_code_2'] == '') {
@@ -249,7 +249,12 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
   $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
   $smarty->assign('AGB_checkbox', '<input type="checkbox" value="conditions" name="conditions" id="conditions"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
 }
-if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true') {
+
+if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
+    && ($_SESSION['cart']->content_type == 'virtual'
+        || $_SESSION['cart']->content_type == 'mixed')
+    )
+{
   $shop_content_data = $main->getContentData(REVOCATION_ID);
   $smarty->assign('REVOCATION', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
   $smarty->assign('REVOCATION_LINK', $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL'));

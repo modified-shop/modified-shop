@@ -238,7 +238,11 @@
                  '  }' . "\n\n";
         }
 
-        if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true') {
+        if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
+            && ($_SESSION['cart']->content_type == 'virtual'
+                || $_SESSION['cart']->content_type == 'mixed')
+            )
+        {
           $js .= "\n" . '  if (!document.getElementById("checkout_payment").revocation.checked) {' . "\n" .
                  '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_REVOCATION_NOT_ACCEPTED) . '");' . "\n" .
                  '    error = 1;' . "\n" .
