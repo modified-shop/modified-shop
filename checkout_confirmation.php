@@ -61,7 +61,13 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($error), 'SSL', true, false));
   }
 }
-if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true') {
+
+$content_type = $_SESSION['cart']->get_content_type();
+if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
+    && ($_SESSION['cart']->content_type == 'virtual'
+        || $_SESSION['cart']->content_type == 'mixed')
+    )
+{
   if ((!isset($_POST['revocation']) || $_POST['revocation'] == false) && !isset($_GET['conditions'])) {
     $error = str_replace('\n', '<br />', ERROR_REVOCATION_NOT_ACCEPTED);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($error), 'SSL', true, false));
