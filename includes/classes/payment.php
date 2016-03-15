@@ -237,6 +237,13 @@
                  '    error = 1;' . "\n" .
                  '  }' . "\n\n";
         }
+
+        if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true') {
+          $js .= "\n" . '  if (!document.getElementById("checkout_payment").revocation.checked) {' . "\n" .
+                 '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_REVOCATION_NOT_ACCEPTED) . '");' . "\n" .
+                 '    error = 1;' . "\n" .
+                 '  }' . "\n\n";
+        }
                 
         $js .= "\n" . '  if (document.getElementById("gccover")) {' . "\n" .
                '     payment_value = "gccover";' . "\n" .

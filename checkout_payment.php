@@ -249,6 +249,12 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
   $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
   $smarty->assign('AGB_checkbox', '<input type="checkbox" value="conditions" name="conditions" id="conditions"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
 }
+if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true') {
+  $shop_content_data = $main->getContentData(REVOCATION_ID);
+  $smarty->assign('REVOCATION', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
+  $smarty->assign('REVOCATION_LINK', $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL'));
+  $smarty->assign('REVOCATION_checkbox', '<input type="checkbox" value="revocation" name="revocation" id="revocation"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
+}
 
 ### BILLSAFE payment module
 if ((isset($_GET['billsafe_close']) && $_GET['billsafe_close'] == 'true') 

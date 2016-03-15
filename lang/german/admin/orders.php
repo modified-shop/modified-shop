@@ -168,4 +168,6 @@ define('TABLE_HEADING_DOWNLOADS', 'Anzahl Downloads');
 define('TABLE_HEADING_DAYS', 'Anzahl Tage');
 
 define('ENTRY_SEND_TRACKING_INFO', 'Versandinformationen:');
+
+define('TEXT_ORDERS_STATUS_FILTER', 'Bestellstatus Filter');
 ?>

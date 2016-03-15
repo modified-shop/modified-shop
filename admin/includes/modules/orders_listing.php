@@ -49,7 +49,17 @@
         </div>
         <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
           <?php echo xtc_draw_form('status', FILENAME_ORDERS, '', 'get'); ?>
-          <?php echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)),array(array('id' => '0', 'text' => TEXT_VALIDATING)), $orders_statuses),(isset($_GET['status']) && xtc_not_null($_GET['status']) ? (int)$_GET['status'] : ''),'onchange="this.form.submit();"'); ?>
+          <?php
+            $orders_statuses_array = array();
+            if (defined('ORDER_STATUSES_DISPLAY_DEFAULT') && ORDER_STATUSES_DISPLAY_DEFAULT != '') {
+              $orders_statuses_array[] = array('id' => '-1', 'text' => TEXT_ALL_ORDERS);
+              $orders_statuses_array[] = array('id' => '', 'text' => TEXT_ORDERS_STATUS_FILTER);
+            } else {
+              $orders_statuses_array[] = array('id' => '', 'text' => TEXT_ALL_ORDERS);
+            }
+            $orders_statuses_array[] = array('id' => '0', 'text' => TEXT_VALIDATING);
+            echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', array_merge($orders_statuses_array, $orders_statuses),(isset($_GET['status']) && xtc_not_null($_GET['status']) ? (int)$_GET['status'] : ''),'onchange="this.form.submit();"'); 
+          ?>
           <?php echo xtc_draw_hidden_filter_field('cgroup', $_GET['cgroup'])?>
           <?php echo xtc_draw_hidden_filter_field('payment', $_GET['payment'])?>
           </form>        
@@ -113,7 +123,7 @@
                                            WHERE o.orders_status = '0'
                                                  ".$filter.$sort;
 
-                } elseif (isset($_GET['status']) && xtc_not_null($_GET['status'])) { //web28 - 2012-04-14  - FIX xtc_not_null($_GET['status'])
+                } elseif (isset($_GET['status']) && xtc_not_null($_GET['status']) && $_GET['status'] != '-1') {
                     $status = xtc_db_prepare_input($_GET['status']);
                     $orders_query_raw = "-- /admin/orders.php
                                          SELECT ".$order_select_fields.",
@@ -142,6 +152,11 @@
                                          ".$filter.$sort;
                 } else {
                       $filter = strpos($filter,' AND') !== false ? substr_replace($filter,' WHERE',0,strlen(' AND')) : ''; //replace ONLY FIRST occurrence of a string within a string
+                      $default_status = '';
+                      if (defined('ORDER_STATUSES_DISPLAY_DEFAULT') && ORDER_STATUSES_DISPLAY_DEFAULT != '' && (!isset($_GET['status']) || $_GET['status'] == '')) {
+                        $default_status_array = explode(',', ORDER_STATUSES_DISPLAY_DEFAULT);
+                        $default_status = ((strpos($filter, 'WHERE') !== false) ? " AND " : " WHERE ")."o.orders_status IN ('".implode("', '", $default_status_array)."') ";
+                      }
                       $orders_query_raw = "-- /admin/orders.php
                                            SELECT ".$order_select_fields.",
                                                   s.orders_status_name
@@ -152,7 +167,7 @@
                                                         AND s.orders_status_id = '1'))
                                                     AND s.language_id = '".(int)$_SESSION['languages_id']."'
                                                    )
-                                                  ".$filter.$sort;
+                                                  ".$filter.$default_status.$sort;                  
                 }
                 $orders_split = new splitPageResults($_GET['page'], $page_max_display_results, $orders_query_raw, $orders_query_numrows);
                 $orders_query = xtc_db_query($orders_query_raw);
