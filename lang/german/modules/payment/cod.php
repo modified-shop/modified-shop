@@ -32,5 +32,5 @@ define('MODULE_PAYMENT_COD_LIMIT_ALLOWED_TITLE', 'Maximalbetrag');
 define('MODULE_PAYMENT_COD_LIMIT_ALLOWED_DESC', 'Ab welchem Betrag soll Nachnahme nicht mehr erlaubt werden?<br />Der eingegebene Wert wird mit der Zwischensumme (subtotal) verglichen, welche gerundet wird.<br />Das bedeutet, da&szlig; der nur reine Warenwert, ohne Versandkosten und evtl. Zuschl&auml;ge ber&uuml;cksichtigt wird.');
 define('MODULE_PAYMENT_COD_DISPLAY_INFO_TITLE', 'Anzeige im Checkout');
 define('MODULE_PAYMENT_COD_DISPLAY_INFO_DESC', 'Soll ein Hinweis auf zus&auml;tzlich anfallende Kosten im Checkout angezeigt werden?');
-define('MODULE_PAYMENT_COD_DISPLAY_INFO_TEXT', 'Bitte beachten Sie, da&szlig; zus&auml;tzlich 2 Euro Zustellgeb&uuml;hr an den Zusteller vor Ort zu entrichten sind.');
+define('MODULE_PAYMENT_COD_DISPLAY_INFO_TEXT', 'Bitte beachten Sie, da&szlig; zus&auml;tzlich 2 Euro Zustellgeb&uuml;hr an den Zusteller vor Ort zu entrichten sind.<br/>');
 ?>
