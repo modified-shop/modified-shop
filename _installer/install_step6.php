@@ -242,7 +242,7 @@
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);                                              
 
       xtc_db_query("UPDATE " .TABLE_COUNTRIES . " SET status='0'");
-      xtc_db_query("UPDATE " .TABLE_COUNTRIES . " SET status='1' WHERE countries_id = ". (int)$country. "'");
+      xtc_db_query("UPDATE " .TABLE_COUNTRIES . " SET status='1' WHERE countries_id = ". (int)$country);
 
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_address). "' WHERE configuration_key = 'STORE_OWNER_EMAIL_ADDRESS'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($store_name). "' WHERE configuration_key = 'STORE_NAME'");
@@ -270,7 +270,7 @@
 
       if ($zone_setup == 'yes') {
         
-        // Steuersätze des jeweiligen Landes einstellen!
+        // Steuersï¿½tze des jeweiligen Landes einstellen!
         $tax_normal='';
         $tax_normal_text='';
         $tax_special='';
@@ -294,7 +294,7 @@
             $tax_special_text='UST 6%';
             break;
           case '57':
-            // Dänemark
+            // Dï¿½nemark
             $tax_normal='25.0000';
             $tax_normal_text='UST 25%';
             $tax_special='25.0000';
@@ -404,7 +404,7 @@
 
         // TODO - DUTY INFO
 
-        // Steuersätze / tax_rates
+        // Steuersï¿½tze / tax_rates
         xtc_db_query("TRUNCATE `tax_rates`");
         xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (3, 6, 1, 1, '0.0000', 'EU-AUS-UST 0%', NULL, now())");
         xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (4, 6, 2, 1, '0.0000', 'EU-AUS-UST 0%', NULL, now())");
@@ -422,7 +422,7 @@
           xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (2, 5, 2, 1, '".$tax_special."', '".$tax_special_text."', NULL, now())");
         }
 
-        // Steuersätze & Steuerzonen & Steuerklassen
+        // Steuersï¿½tze & Steuerzonen & Steuerklassen
         sql_update($sql_file);
       }
       
