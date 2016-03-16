@@ -960,7 +960,7 @@ define('NEW_ATTRIBUTES_STYLING_TITLE', 'Attribut Verwaltung Styling');
 define('NEW_ATTRIBUTES_STYLING_DESC', 'In der Attribut Verwaltung das Styling bei den Checkboxen/Dropdowns aktivieren? Bei sehr vielen Attributen und Performanceproblemen auf Nein/false setzen.');
 
 define('DB_CACHE_TYPE_TITLE', 'Cache Engine');
-define('DB_CACHE_TYPE_DESC', 'W&auml;hlen sie eine der verfügbaren Engines zum Cachen');
+define('DB_CACHE_TYPE_DESC', 'W&auml;hlen sie eine der verf&uuml;gbaren Engines zum Cachen');
 
 define('META_PRODUCTS_KEYWORDS_LENGTH_TITLE', 'L&auml;nge der Zusatz-Begriffe f&uuml;r Suche');
 define('META_PRODUCTS_KEYWORDS_LENGTH_DESC', 'Maximum L&auml;nge der Zusatz-Begriffe f&uuml;r Suche (in Buchstaben)');
@@ -988,7 +988,7 @@ define('META_BING_VERIFICATION_KEY_TITLE', 'Bing Verification Key');
 define('META_BING_VERIFICATION_KEY_DESC', '<meta name="msvalidate.01">');
 
 define('TRACKING_FACEBOOK_ACTIVE_TITLE', 'Facebook Conversion-Tracking aktivieren');
-define('TRACKING_FACEBOOK_ACTIVE_DESC', 'Wird diese Option aktiviert, so werden alle Käufe an Facebook &uuml;bermittelt und k&ouml;nnen sp&auml;ter ausgewertet werden. Dazu ist vorher die Anlage eines Kontos bei <a href="https://www.facebook.com" target="_blank"><b>Facebook</b></a> erforderlich.');
+define('TRACKING_FACEBOOK_ACTIVE_DESC', 'Wird diese Option aktiviert, so werden alle K&auml;ufe an Facebook &uuml;bermittelt und k&ouml;nnen sp&auml;ter ausgewertet werden. Dazu ist vorher die Anlage eines Kontos bei <a href="https://www.facebook.com" target="_blank"><b>Facebook</b></a> erforderlich.');
 define('TRACKING_FACEBOOK_ID_TITLE', 'Facebook Conversion ID');
 define('TRACKING_FACEBOOK_ID_DESC', 'Ihre Facebook Conversion ID');
 
