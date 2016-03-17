@@ -327,7 +327,7 @@ switch ($action) {
     break;
 
   case 'deleteconfirm':
-    xtc_remove_order($oID, xtc_db_prepare_input($_POST['restock']));
+    xtc_remove_order($oID, xtc_db_prepare_input($_POST['restock']), false);
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action'))));
     break;
 

@@ -12,9 +12,9 @@
 
   require_once(DIR_FS_INC.'xtc_restock_order.inc.php');
 
-  function xtc_remove_order($order_id, $restock = false) {
+  function xtc_remove_order($order_id, $restock = false, $activate = true) {
     if ($restock == 'on') {
-      xtc_restock_order($order_id);
+      xtc_restock_order($order_id, $activate);
     }
     xtc_db_query("DELETE FROM ".TABLE_ORDERS." WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS." WHERE orders_id = '".(int)$order_id."'");

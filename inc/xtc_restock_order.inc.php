@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  function xtc_restock_order($order_id) {
+  function xtc_restock_order($order_id, $activate = true) {
     $order_query = xtc_db_query("SELECT orders_products_id, 
                                         products_id, 
                                         products_quantity 
@@ -40,8 +40,13 @@
         }
       }
       if ($products_update === true) {
+        $set_sql = '';
+        if ($acivate === true) {
+          $set_sql = " products_status = '1', ";
+        }
         xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
-                         SET products_quantity = products_quantity + ".$order['products_quantity'].", 
+                         SET ".$set_sql."
+                             products_quantity = products_quantity + ".$order['products_quantity'].", 
                              products_ordered = products_ordered - ".$order['products_quantity']." 
                        WHERE products_id = '".$order['products_id']."'");
       }
