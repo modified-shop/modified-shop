@@ -168,7 +168,7 @@ class xtcPrice {
     }
     
     // check specialprice
-    if ($this->cStatus['customers_status_specials'] == '1' && $sPrice = $this->xtcCheckSpecial($pID)) {
+    if ($sPrice = $this->xtcCheckSpecial($pID)) {
       return $this->xtcFormatSpecial($pID, $this->xtcAddTax($sPrice, $products_tax), $pPrice, $format, $vpeStatus);
     }
     
@@ -415,16 +415,18 @@ class xtcPrice {
    * @return Double special offer
    */
   function xtcCheckSpecial($pID) {
-    $product_query = xtDBquery("SELECT specials_new_products_price
-                                  FROM ".TABLE_SPECIALS."
-                                 WHERE products_id = '".$pID."'
-                                   AND status = 1
-                                   AND (start_date IS NULL 
-                                        OR start_date <= NOW())
-                               ");
-    if (xtc_db_num_rows($product_query, true) > 0) {
-      $product = xtc_db_fetch_array($product_query, true);
-      return $product['specials_new_products_price'];
+    if ($this->cStatus['customers_status_specials'] == '1') {
+      $product_query = xtDBquery("SELECT specials_new_products_price
+                                    FROM ".TABLE_SPECIALS."
+                                   WHERE products_id = '".$pID."'
+                                     AND status = 1
+                                     AND (start_date IS NULL 
+                                          OR start_date <= NOW())
+                                 ");
+      if (xtc_db_num_rows($product_query, true) > 0) {
+        $product = xtc_db_fetch_array($product_query, true);
+        return $product['specials_new_products_price'];
+      }
     }
   }
   
