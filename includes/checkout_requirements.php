@@ -57,7 +57,13 @@ if ($_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_ST
 // Stock Check
 // muss auf jeder Checkout-Seite geladen werden, damit gleichzeitige Bestellungen
 // nicht zu minus Bestaenden fuehren !!!
-if ((STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true')) {
+if (STOCK_CHECK == 'true' 
+    && STOCK_ALLOW_CHECKOUT != 'true' 
+    && (!isset($_SESSION['tmp_oID']) 
+        || (isset($_SESSION['tmp_oID']) && !is_numeric($_SESSION['tmp_oID']))
+        )
+    )
+{
   $products = $_SESSION['cart']->get_products();
   for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
     if (xtc_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
@@ -81,7 +87,13 @@ if ((STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true')) {
 // Stock Check Specials
 // muss auf jeder Checkout-Seite geladen werden, damit gleichzeitige Bestellungen
 // nicht zu einem Ueberkaufen der Sonderangebote fuehrt !!!
-if (STOCK_CHECK_SPECIALS == 'true' && STOCK_ALLOW_CHECKOUT != 'true') {
+if (STOCK_CHECK_SPECIALS == 'true' 
+    && STOCK_ALLOW_CHECKOUT != 'true'
+    && (!isset($_SESSION['tmp_oID']) 
+        || (isset($_SESSION['tmp_oID']) && !is_numeric($_SESSION['tmp_oID']))
+        )
+    )
+{
   require_once (DIR_FS_INC.'check_stock_specials.inc.php');
   $products = $_SESSION['cart']->get_products();
   for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
