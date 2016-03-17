@@ -52,7 +52,7 @@ class sitemaporg {
   function xml_sitemap_entry($url, $lastmod = '', $products = '') {    
     $this->schema .= "\t<url>\n";
     $this->schema .= "\t\t<loc>" . $url . "</loc>\n";
-    if ($lastmod != '' && strtotime($lastmod) > 0) {
+    if ($lastmod != '' && (strtotime($lastmod) > 0 || strtotime($lastmod) === false)) {
       $this->schema .= "\t\t<lastmod>" . date('c', strtotime($lastmod)) . "</lastmod>\n";
     }
     if (is_array($products)) {      
