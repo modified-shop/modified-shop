@@ -186,6 +186,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
   for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
     // Stock Update - Joao Correia
+    $_SESSION['disable_products'] = array();
     if (STOCK_LIMITED == 'true') {
       if (DOWNLOAD_ENABLED == 'true') {
         $add_stock_query_raw = '';
@@ -226,9 +227,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
                        WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
         
         if (($stock_left < 1) && (STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS == 'true')) {
-          xtc_db_query("UPDATE ".TABLE_PRODUCTS."
-                           SET products_status = '0'
-                         WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
+          $_SESSION['disable_products'][] = xtc_get_prid($order->products[$i]['id']);
         }
       }
     }
@@ -426,6 +425,15 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 }
 
 if (!$tmp) {
+  // disable products
+  if (count($_SESSION['disable_products']) > 0) {
+    foreach ($_SESSION['disable_products'] as $products_id) {
+      xtc_db_query("UPDATE ".TABLE_PRODUCTS."
+                       SET products_status = '0'
+                     WHERE products_id = '".$products_id."'");
+    }
+  }
+  
   // NEW EMAIL configuration !
   $order_totals = $order_total_modules->apply_credit();
   include ('send_order.php');
