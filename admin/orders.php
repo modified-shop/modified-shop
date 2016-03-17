@@ -313,7 +313,7 @@ switch ($action) {
       $order_updated = true;
     }
     if ($order_updated) {
-        if(MODULE_PAYMENT_SHOPGATE_STATUS=='True'){
+        if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True'){
           /******* SHOPGATE **********/
           include_once DIR_FS_CATALOG.'includes/external/shopgate/base/admin/orders.php';
           setShopgateOrderStatus($oID, $status);
