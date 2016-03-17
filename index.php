@@ -25,7 +25,6 @@
 include ('includes/application_top.php');
 
 // create smarty elements
-
 $smarty = new Smarty;
 
 // include boxes
