@@ -45,6 +45,8 @@ require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php')
 require_once (DIR_FS_INC . 'xtc_address_label.inc.php');
 require_once (DIR_FS_INC . 'xtc_get_address_format_id.inc.php');
 
+require (DIR_WS_INCLUDES.'checkout_requirements.php');
+
 unset ($_SESSION['tmp_oID']);
 unset ($_SESSION['transaction_id']); ### moneybookers payment module version 2.4
 unset ($_SESSION['paypal']);
@@ -54,7 +56,6 @@ if (isset($_SESSION['cot_gv']) /*&& isset($_SESSION['payment'])*/) {
   //unset($_SESSION['payment']); 
   unset($_SESSION['cot_gv']); //ADDED FOR CREDIT CLASS SYSTEM 
 }
-require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 //express checkout
 if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
