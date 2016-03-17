@@ -5,10 +5,12 @@
   <h1 itemprop="name">{$PRODUCTS_NAME}</h1>
   <div id="product_details">
     <div class="pd_imagebox">
-      <div class="pd_big_image">
-        {if $PRODUCTS_IMAGE != ''}<a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img itemprop="image" src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a>{/if}
-      </div>
-      <div class="zoomtext">{#zoomtext#}</div>
+      {if $PRODUCTS_IMAGE != ''}
+        <div class="pd_big_image">
+          <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img itemprop="image" src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a>
+        </div>
+        <div class="zoomtext">{#zoomtext#}</div>
+      {/if}
     </div>
 
     <div class="pd_content">
