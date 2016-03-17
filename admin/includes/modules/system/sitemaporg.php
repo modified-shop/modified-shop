@@ -52,7 +52,7 @@ class sitemaporg {
   function xml_sitemap_entry($url, $lastmod = '', $products = '') {    
     $this->schema .= "\t<url>\n";
     $this->schema .= "\t\t<loc>" . $url . "</loc>\n";
-    if ($lastmod != '' && (strtotime($lastmod) > 0 || strtotime($lastmod) === false)) {
+    if ($lastmod != '' && (strtotime($lastmod) > 0 || strtotime($lastmod) !== false)) {
       $this->schema .= "\t\t<lastmod>" . date('c', strtotime($lastmod)) . "</lastmod>\n";
     }
     if (is_array($products)) {      
@@ -73,8 +73,9 @@ class sitemaporg {
   
   function xml_image_entry($link, $title) {
 		$this->schema .= "\t\t<image:image>\n";
-		$this->schema .= "\t\t\t<image:loc>".$link."</image:loc>\n";
-		$this->schema .= "\t\t\t<image:title><![CDATA[".$title."]]></image:title>\n";
+		$this->schema .= "\t\t\t<image:loc>".encode_utf8(decode_htmlentities($link))."</image:loc>\n";
+		$this->schema .= "\t\t\t<image:title><![CDATA[".encode_utf8(decode_htmlentities($title))."]]></image:title>\n";
+		$this->schema .= "\t\t\t<image:caption><![CDATA[".encode_utf8(decode_htmlentities($title))."]]></image:title>\n";
 		$this->schema .= "\t\t</image:image>\n";
   }
   
