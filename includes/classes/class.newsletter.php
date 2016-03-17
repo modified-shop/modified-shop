@@ -260,8 +260,6 @@ class newsletter {
     $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.html');
     $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.txt');
 
-    $email_subject = $mailer->subject;
-
     xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
                  EMAIL_SUPPORT_NAME,
                  xtc_db_input($mail),
