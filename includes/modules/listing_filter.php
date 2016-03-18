@@ -283,7 +283,11 @@ if (PRODUCT_LIST_FILTER == 'true') {
         
     foreach ($options as $options_id => $values) {
       
-      $options_array = array (array ('id' => '', 'text' => $values['NAME']));
+      if (isset($_GET['filter'][$options_id]) && $_GET['filter'][$options_id] != '') {
+        $options_array = array (array ('id' => '', 'text' => $values['NAME'] . TEXT_SHOW_ALL));
+      } else {
+        $options_array = array (array ('id' => '', 'text' => $values['NAME']));
+      }
       unset($values['NAME']);
       $options_array = array_merge($options_array, $values);
             

@@ -570,7 +570,7 @@ define('GUEST_VOUCHER_NOT_ALLOWED', 'Gutscheine k&ouml;nnen nicht als Gast gekau
 define('TEXT_FILTER_SETTING_DEFAULT', 'Artikel pro Seite');
 define('TEXT_FILTER_SETTING', '%s Artikel pro Seite');
 define('TEXT_FILTER_SETTING_ALL', 'Alle Artikel anzeigen');
-
+define('TEXT_SHOW_ALL', ' (alle anzeigen)');
 define('TEXT_FILTER_SORTING_DEFAULT', 'Sortieren nach ...');
 define('TEXT_FILTER_SORTING_ABC_ASC', 'A bis Z');
 define('TEXT_FILTER_SORTING_ABC_DESC', 'Z bis A');

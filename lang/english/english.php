@@ -570,7 +570,7 @@ define('GUEST_VOUCHER_NOT_ALLOWED', 'Vouchers can not be purchased as a guest.')
 define('TEXT_FILTER_SETTING_DEFAULT', 'Items per page');
 define('TEXT_FILTER_SETTING', '%s items per page');
 define('TEXT_FILTER_SETTING_ALL', 'Show all items');
-
+define('TEXT_SHOW_ALL', ' (show all)');
 define('TEXT_FILTER_SORTING_DEFAULT', 'Sort by ...');
 define('TEXT_FILTER_SORTING_ABC_ASC', 'A to Z');
 define('TEXT_FILTER_SORTING_ABC_DESC', 'Z to A');
