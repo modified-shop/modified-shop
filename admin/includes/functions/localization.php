@@ -14,30 +14,31 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-  function quote_oanda_currency($code, $base = DEFAULT_CURRENCY) {
-    $page = file('http://www.oanda.com/convert/fxdaily?value=1&redirected=1&exch=' . $code .  '&format=CSV&dest=Get+Table&sel_list=' . $base);
 
-    $match = array();
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-    preg_match('/(.+),(\w{3}),([0-9.]+),([0-9.]+)/i', implode('', $page), $match);
+  // include needed function
+  require_once(DIR_FS_INC.'get_external_content.inc.php');
 
-    if (sizeof($match) > 0) {
-      return $match[3];
+  function quote_yahooapis_currency($to, $from = DEFAULT_CURRENCY) {
+    $url = 'https://query.yahooapis.com/v1/public/yql?q=select%20Rate%20from%20yahoo.finance.xchange%20where%20pair%20%3D%20%22'.$from.$to.'%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys';
+    $currency = get_external_content($url, 3, false);
+    $currency = json_decode($currency, true);
+
+    if (isset($currency['query']['results']['rate']['Rate'])) {
+      return $currency['query']['results']['rate']['Rate'];
     } else {
       return false;
     }
   }
 
-  function quote_xe_currency($to, $from = DEFAULT_CURRENCY) {
-    $page = file('http://www.xe.net/ucc/convert.cgi?Amount=1&From=' . $from . '&To=' . $to);
-
-    $match = array();
-
-    preg_match('/[0-9.]+\s*' . $from . '\s*=\s*([0-9.]+)\s*' . $to . '/', implode('', $page), $match);
-
-    if (sizeof($match) > 0) {
-      return $match[1];
+  function quote_cryptonator_currency($to, $from = DEFAULT_CURRENCY) {
+    $url = 'https://www.cryptonator.com/api/ticker/'.$from.'-'.$to;
+    $currency = get_external_content(urldecode($url), 3, false);
+    $currency = json_decode($currency, true);
+    
+    if (isset($currency['ticker']['price'])) {
+      return $currency['ticker']['price'];
     } else {
       return false;
     }
