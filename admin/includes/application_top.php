@@ -145,9 +145,9 @@ require_once(DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
 define('BOX_WIDTH', 125);
 
 // Define how do we update currency exchange rates
-// Possible values are 'oanda' 'xe' or ''
-define('CURRENCY_SERVER_PRIMARY', 'oanda');
-define('CURRENCY_SERVER_BACKUP', 'xe');
+// Possible values are 'yahooapis' 'cryptonator' or ''
+define('CURRENCY_SERVER_PRIMARY', 'yahooapis');
+define('CURRENCY_SERVER_BACKUP', 'cryptonator');
 
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');

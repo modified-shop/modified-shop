@@ -24,7 +24,7 @@ define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_INFO_EDIT_INTRO', 'Please make any necessary changes');
 define('TEXT_INFO_CURRENCY_TITLE', 'Title:');
-define('TEXT_INFO_CURRENCY_CODE', 'Code:');
+define('TEXT_INFO_CURRENCY_CODE', 'Currency code ISO 4217:');
 define('TEXT_INFO_CURRENCY_SYMBOL_LEFT', 'Symbol Left:');
 define('TEXT_INFO_CURRENCY_SYMBOL_RIGHT', 'Symbol Right:');
 define('TEXT_INFO_CURRENCY_DECIMAL_POINT', 'Decimal Point:');
@@ -43,4 +43,5 @@ define('TEXT_INFO_CURRENCY_UPDATED', 'The exchange rate for %s (%s) was updated 
 
 define('ERROR_REMOVE_DEFAULT_CURRENCY', 'Error: The default currency can not be removed. Please set another currency as default, and try again.');
 define('ERROR_CURRENCY_INVALID', 'Error: The exchange rate for %s (%s) was not updated. Is it a valid currency code?');
+define('WARNING_PRIMARY_SERVER_FAILED', 'The primary service "%s" could not determine the exchange rate %s (%s) or is currently not available. It is retried on the secondary service');
 ?>

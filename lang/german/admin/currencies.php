@@ -24,7 +24,7 @@ define('TABLE_HEADING_ACTION', 'Aktion');
 
 define('TEXT_INFO_EDIT_INTRO', 'Bitte f&uuml;hren Sie alle notwendigen &Auml;nderungen durch');
 define('TEXT_INFO_CURRENCY_TITLE', 'Name:');
-define('TEXT_INFO_CURRENCY_CODE', 'K&uuml;rzel:');
+define('TEXT_INFO_CURRENCY_CODE', 'W&auml;hrungscode nach ISO 4217:');
 define('TEXT_INFO_CURRENCY_SYMBOL_LEFT', 'Symbol links:');
 define('TEXT_INFO_CURRENCY_SYMBOL_RIGHT', 'Symbol rechts:');
 define('TEXT_INFO_CURRENCY_DECIMAL_POINT', 'Dezimalkomma:');
@@ -43,4 +43,5 @@ define('TEXT_INFO_CURRENCY_UPDATED', 'Der Wechselkurs %s (%s) wurde erfolgreich 
 
 define('ERROR_REMOVE_DEFAULT_CURRENCY', 'Fehler: Die Standardw&auml;hrung darf nicht gel&ouml;scht werden. Bitte definieren Sie eine neue Standardw&auml;hrung und wiederholen Sie den Vorgang.');
 define('ERROR_CURRENCY_INVALID', 'Fehler: Der Wechselkurs f&uuml;r %s (%s) wurde nicht aktualisiert. Ist dies ein g&uuml;ltiges W&auml;hrungsk&uuml;rzel?');
+define('WARNING_PRIMARY_SERVER_FAILED', 'Der prim&auml;re Dienst "%s" konnte den Wechselkurs %s (%s) nicht ermitteln oder ist nicht verf&uuml;gbar. Es wird erneut &uuml;ber den sekund&auml;ren Dienst versucht.');
 ?>
