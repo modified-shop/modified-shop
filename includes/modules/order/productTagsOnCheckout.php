@@ -10,12 +10,12 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-class productTagsOnCechkout {  //Important same name as filename
+class productTagsOnCheckout {  //Important same name as filename
   
     //--- BEGIN DEFAULT CLASS METHODS ---//
     function __construct()
     {
-        $this->code = 'productTagsOnCechkout'; //Important same name as class name
+        $this->code = 'productTagsOnCheckout'; //Important same name as class name
         $this->title = 'ProductFeaturesOnCheckout';
         $this->description = 'Show product tags in checkout';        
         $this->name = 'MODULE_ORDER_'.strtoupper($this->code);
