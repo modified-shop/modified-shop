@@ -44,4 +44,5 @@ define('TEXT_INFO_CURRENCY_UPDATED', 'Der Wechselkurs %s (%s) wurde erfolgreich 
 
 define('ERROR_REMOVE_DEFAULT_CURRENCY', 'Fehler: Die Standardw&auml;hrung darf nicht gel&ouml;scht werden. Bitte definieren Sie eine neue Standardw&auml;hrung und wiederholen Sie den Vorgang.');
 define('ERROR_CURRENCY_INVALID', 'Fehler: Der Wechselkurs f&uuml;r %s (%s) wurde nicht aktualisiert. Ist dies ein g&uuml;ltiges W&auml;hrungsk&uuml;rzel?');
+define('WARNING_PRIMARY_SERVER_FAILED', 'Der Dienst "%s" konnte den Wechselkurs %s (%s) nicht ermitteln oder ist nicht verf&uuml;gbar.');
 ?>
