@@ -85,11 +85,11 @@
       case 'update':
         $currency_query = xtc_db_query("select currencies_id, code, title from " . TABLE_CURRENCIES);
         while ($currency = xtc_db_fetch_array($currency_query)) {
-          $quote_function = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency'; //default quote_oanda_currency() in localization.php
+          $quote_function = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency'; //default quote_yahooapis_currency() in localization.php
           $rate = $quote_function($currency['code']);
           if ( empty($rate) && (xtc_not_null(CURRENCY_SERVER_BACKUP) )) {
             $messageStack->add_session(sprintf(WARNING_PRIMARY_SERVER_FAILED, CURRENCY_SERVER_PRIMARY, $currency['title'], $currency['code']), 'warning');
-            $quote_function = 'quote_' . CURRENCY_SERVER_BACKUP . '_currency'; //default quote_xe_currency() in localization.php
+            $quote_function = 'quote_' . CURRENCY_SERVER_BACKUP . '_currency'; //default quote_cryptonator_currency() in localization.php
             $rate = $quote_function($currency['code']);
           }
           if (is_numeric($rate) && $rate > 0) {
