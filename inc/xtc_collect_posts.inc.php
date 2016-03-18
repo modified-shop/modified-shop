@@ -77,7 +77,7 @@
             // no gv_amount so insert
             $gv_insert = xtc_db_query("insert into " . TABLE_COUPON_GV_CUSTOMER . " (customer_id, amount) values ('" . xtc_db_input((int)$_SESSION['customer_id']) . "', '" . $total_gv_amount . "')");
           }
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info=1info_message=' . urlencode(REDEEMED_AMOUNT. $xtPrice->xtcFormat($gv_amount,true,0,true)), 'NONSSL')); // web28 - 2011-04-13  New  class distinction  error / info // web28 - 2011-04-14 - change SSL -> NONSSL
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info=1&info_message=' . urlencode(REDEEMED_AMOUNT. $xtPrice->xtcFormat($gv_amount,true,0,true)), 'NONSSL')); // web28 - 2011-04-13  New  class distinction  error / info // web28 - 2011-04-14 - change SSL -> NONSSL
 
 
       } else {
