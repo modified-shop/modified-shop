@@ -2314,12 +2314,23 @@
   /**
    * xtc_cfg_password_field()
    *
-   * @param string $configuration
+   * @param array $parameters
+   * @param string $name
+   * @return password input
+   */
+  function xtc_cfg_password_field($parameters, $name = '%s') {
+    return xtc_draw_password_field(sprintf($name, $parameters[1]), $parameters[0]);
+  }
+
+  /**
+   * xtc_cfg_password_field_module()
+   *
+   * @param string $value
    * @param string $key
    * @return password input
    */
-  function xtc_cfg_password_field($cfg_value, $cfg_key) {
-    return xtc_draw_password_field('configuration['.$cfg_key.']', $cfg_value);
+  function xtc_cfg_password_field_module($cfg_value, $cfg_key) {
+    return xtc_cfg_password_field(array($cfg_value, $cfg_key), 'configuration[%s]');
   }
 
   /**
