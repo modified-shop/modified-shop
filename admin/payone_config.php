@@ -158,6 +158,7 @@ function formpartPaymentGenreConfig($topkey, $config) {
 	?>
 	<h4><?php echo PAYMENT_GENRE . ' - ' . $config['name'] ?></h4>
   <fieldset class="paymentgenre subblock">
+  	<input type="hidden" name="config[<?php echo $topkey ?>][genre]" value="<?php echo $config['genre'] ?>" />
 		<legend>##payment_genre <?php echo $config['name'] ?></legend>
 		<dl class="adminform">
       <div class="dlrow cf"> 
