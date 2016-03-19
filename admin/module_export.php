@@ -499,7 +499,7 @@ if (xtc_not_null($action) && !$box) {
                           }
                           $keys .= '<br /><br />';
                         }
-                        $btn_edit = isset($mInfo->properties['btn_edit']) && trim($mInfo->properties['btn_edit']) != '' ? $mInfo->properties['btn_edit'] : BUTTON_START;
+                        $btn_edit = isset($mInfo->properties['btn_edit']) && trim($mInfo->properties['btn_edit']) != '' ? $mInfo->properties['btn_edit'] : (($set == 'system') ? BUTTON_EDIT : BUTTON_START);
                         $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                         $contents[] = array('align' => 'center', 'text' => (!isset($mInfo->properties['process_key']) || (isset($mInfo->properties['process_key']) && $mInfo->properties['process_key'] == 1)
                                                                              ? '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . $btn_edit . '</a>'
