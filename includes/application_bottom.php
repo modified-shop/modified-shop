@@ -42,7 +42,19 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
 if (defined('MODULE_EASYMARKETING_STATUS') && MODULE_EASYMARKETING_STATUS == 'True') {
   include(DIR_FS_CATALOG.'api/easymarketing/conversion_tracker.php');
 }
-## easymarketing - conversion tracking
+
+## janolaw
+if (defined('MODULE_JANOLAW_STATUS') && MODULE_JANOLAW_STATUS == 'True') {
+  require_once(DIR_FS_CATALOG.'includes/external/janolaw/janolaw.php');
+  $janolaw = new janolaw_content();
+}
+
+## protectedshops
+if (defined('MODULE_PROTECTEDSHOPS_STATUS') && MODULE_PROTECTEDSHOPS_STATUS == 'true') {
+  require_once(DIR_FS_CATALOG.'includes/external/protectedshops/protectedshops_update.php');
+  $protectedshops = new protectedshops_update();
+  $protectedshops->check_update();
+}
 
 // end of page
 echo '</body>';
