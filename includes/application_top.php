@@ -486,5 +486,18 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
   require(DIR_WS_INCLUDES . 'econda/emos.php');
 }
 
+## janolaw
+if (defined('MODULE_JANOLAW_STATUS') && MODULE_JANOLAW_STATUS == 'True') {
+  require_once(DIR_FS_CATALOG.'includes/external/janolaw/janolaw.php');
+  $janolaw = new janolaw_content();
+}
+
+## protectedshops
+if (defined('MODULE_PROTECTEDSHOPS_STATUS') && MODULE_PROTECTEDSHOPS_STATUS == 'true') {
+  require_once(DIR_FS_CATALOG.'includes/external/protectedshops/protectedshops_update.php');
+  $protectedshops = new protectedshops_update();
+  $protectedshops->check_update();
+}
+
 xtc_count_cart();
 ?>
