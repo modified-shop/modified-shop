@@ -250,7 +250,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $transaction = new Transaction(); 
     $transaction->setAmount($this->amount) 
                 ->setItemList($itemList) 
-                ->setDescription(STORE_NAME) 
+                ->setDescription($this->encode_utf8(STORE_NAME)) 
                 ->setInvoiceNumber(uniqid());
     
     // set payment
