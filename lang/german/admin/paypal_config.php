@@ -15,16 +15,16 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_HEADING_TITLE' => 'PayPal Konfiguration',
 
   'TEXT_PAYPAL_CONFIG_CLIENT_LIVE' => 'Client ID Live:',
-  'TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO' => 'Erstellen Sie in ihrem PayPal Account eine neue App f&uuml;r diese Daten',
+  'TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO' => 'Erstellen Sie in Ihrem PayPal Account eine neue App f&uuml;r diese Daten.',
 
   'TEXT_PAYPAL_CONFIG_SECRET_LIVE' => 'Secret Live:',
-  'TEXT_PAYPAL_CONFIG_SECRET_LIVE_INFO' => 'Erstellen Sie in ihrem PayPal Account eine neue App f&uuml;r diese Daten',
+  'TEXT_PAYPAL_CONFIG_SECRET_LIVE_INFO' => 'Erstellen Sie in Ihrem PayPal Account eine neue App f&uuml;r diese Daten.',
 
   'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX' => 'Client ID Sandbox:',
-  'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO' => 'Erstellen Sie in ihrem PayPal Account eine neue App f&uuml;r diese Daten',
+  'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO' => 'Erstellen Sie in Ihrem PayPal Account eine neue App f&uuml;r diese Daten.',
 
   'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX' => 'Secret Sandbox:',
-  'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX_INFO' => 'Erstellen Sie in ihrem PayPal Account eine neue App f&uuml;r diese Daten',
+  'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX_INFO' => 'Erstellen Sie in Ihrem PayPal Account eine neue App f&uuml;r diese Daten.',
 
   'TEXT_PAYPAL_CONFIG_MODE' => 'Modus:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
@@ -36,7 +36,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'W&auml;hlen Sie die Art der Transaktion.<br/><br/><b>Hinweis:</b> Bei PayPal Plus wird immer ein Sale gemacht.',
 
   'TEXT_PAYPAL_CONFIG_CAPTURE' => 'Manuell erfassen:',
-  'TEXT_PAYPAL_CONFIG_CAPTURE_INFO' => 'Wollen Sie Zalungen bei PayPal manuell erfassen (Capture)?<br/><br/><b>Hinweis:</b> dazu ist es notwendig, dass die Transaktion auf Authorize gesetzt ist.',
+  'TEXT_PAYPAL_CONFIG_CAPTURE_INFO' => 'Wollen Sie Zahlungen bei PayPal manuell erfassen (Capture)?<br/><br/><b>Hinweis:</b> Dazu ist es notwendig, dass die Transaktion auf Authorize gesetzt ist.',
 
   'TEXT_PAYPAL_CONFIG_CART' => 'Warenkorb:',
   'TEXT_PAYPAL_CONFIG_CART_INFO' => 'Soll der Warenkorb zu PayPal &uuml;bertragen werden?',
@@ -48,7 +48,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_STATE_REJECTED_INFO' => 'Status bei abgelehnter Bestellung',
 
   'TEXT_PAYPAL_CONFIG_STATE_PENDING' => 'Status Warten:',
-  'TEXT_PAYPAL_CONFIG_STATE_PENDING_INFO' => 'Status bei erfolgreicher Bestellung, die aber Seitens PayPal noch nicht best&auml;tigt wurde',
+  'TEXT_PAYPAL_CONFIG_STATE_PENDING_INFO' => 'Status bei erfolgreicher Bestellung, die aber seitens PayPal noch nicht best&auml;tigt wurde',
 
   'TEXT_PAYPAL_CONFIG_STATE_CAPTURED' => 'Status erfasst:',
   'TEXT_PAYPAL_CONFIG_STATE_CAPTURED_INFO' => 'Status ausgel&ouml;st durch ein Capture',
