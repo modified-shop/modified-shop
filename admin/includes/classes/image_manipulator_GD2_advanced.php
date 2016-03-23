@@ -43,7 +43,9 @@
           $transcol = imagecolortransparent($source);
           $dest = imagecreate($d_w, $d_h);
           imagepalettecopy($dest, $source);
-          imagefill($dest, 0, 0, $transcol);
+          if ($transcol != '-1') {
+            imagefill($dest, 0, 0, $transcol);
+          }
           imagecolortransparent($dest, $transcol);
           return imagecopyresized($dest, $source, $d_x, $d_y, $s_x, $s_y, $d_w, $d_h, $s_w, $s_h);
           break;
