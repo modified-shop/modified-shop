@@ -739,4 +739,8 @@ ALTER TABLE customers_status ADD customers_status_specials INT(1) NOT NULL DEFAU
 #Tomcraft - 2016-03-01 - Remove PayPal Classic API Module
 DELETE FROM configuration_group WHERE configuration_group_id = 111125;
 
+#GTB - 2016-03-23 - added date_added/last_modified
+ALTER TABLE content_manager ADD date_added DATETIME NOT NULL;
+ALTER TABLE content_manager ADD last_modified DATETIME NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

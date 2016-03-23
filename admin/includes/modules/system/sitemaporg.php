@@ -84,7 +84,9 @@ class sitemaporg {
                              categories_id,
                              parent_id,
                              content_title,
-                             content_group
+                             content_group,
+                             date_added,
+                             last_modified
                         FROM ".TABLE_CONTENT_MANAGER."
                        WHERE languages_id = '".(int)$_SESSION['languages_id']."'
                              ".$group_check." 
@@ -95,7 +97,8 @@ class sitemaporg {
     $content_query = xtDBquery($content_query);
     while ($content_data=xtc_db_fetch_array($content_query,true)) {
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('shop_content.php','coID='.$content_data['content_group'], 'NONSSL', false));
-      $this->xml_sitemap_entry($link);     
+      $date = ((!empty($content_data['last_modified']) && strtotime($content_data['last_modified']) > 1) ? $content_data['last_modified'] : $content_data['date_added']);
+      $this->xml_sitemap_entry($link, $date);     
     }
   }
 

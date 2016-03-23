@@ -174,8 +174,10 @@
           }
           
           if ($id == 'update' && $content_id[$i][$languages[$l]['id']] > 0) {
+            $sql_data_array['last_modified'] = 'now()';
             xtc_db_perform(TABLE_CONTENT_MANAGER, array_merge($sql_data_array, $sql_data_lang_array), 'update', "content_id = '".$content_id[$i][$languages[$l]['id']]."'");
           } else {
+            $sql_data_array['date_added'] = 'now()';
             xtc_db_perform(TABLE_CONTENT_MANAGER, array_merge($sql_data_array, $sql_data_lang_array));
           }
         } //error
