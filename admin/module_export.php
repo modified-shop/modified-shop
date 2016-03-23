@@ -169,7 +169,8 @@
                            'status' => $module->check());
       $module_info['properties'] = isset($module->properties) ? $module->properties : array();
       $module_info['keys_dispnone'] = isset($module->keys_dispnone) ? $module->keys_dispnone : array();
-      $module_keys = $module->keys();
+      $module_keys = method_exists($module,'keys') ? $module->keys() : array();
+
       $keys_extra = array();
       for ($j = 0, $k = sizeof($module_keys); $j < $k; $j++) {
         $key_value_query = xtc_db_query("SELECT configuration_key,
