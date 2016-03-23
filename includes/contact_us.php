@@ -134,25 +134,28 @@
     require (DIR_WS_INCLUDES.'header.php');
 
     if (isset ($_SESSION['customer_id']) && !$error) {
-      $customers_name = $_SESSION['customer_first_name'].' '.$_SESSION['customer_last_name'];
-      $c_query = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS." WHERE customers_id='".(int)$_SESSION['customer_id']."'");
+      $c_query = xtc_db_query("SELECT c.customers_email_address,
+                                      c.customers_telephone,
+                                      c.customers_fax,
+                                      ab.entry_company,
+                                      ab.entry_street_address,
+                                      ab.entry_city,
+                                      ab.entry_postcode
+                                 FROM ".TABLE_CUSTOMERS." c
+                                 JOIN ".TABLE_ADDRESS_BOOK." ab
+                                      ON ab.customers_id = c.customers_id
+                                         AND ab.address_book_id = c.customers_default_address_id
+                                WHERE c.customers_id = '".(int)$_SESSION['customer_id']."'");
       $c_data  = xtc_db_fetch_array($c_query);
-      $email_address = stripslashes($c_data['customers_email_address']);
-      $phone = stripslashes($c_data['customers_telephone']);
-      $fax = stripslashes($c_data['customers_fax']);
-      $address_query = xtc_db_query("select
-                        entry_company,
-                        entry_street_address,
-                        entry_city,
-                        entry_postcode
-                        from " . TABLE_ADDRESS_BOOK . "
-                        where customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                        and address_book_id = '" . (int)$_SESSION['customer_default_address_id'] . "'");
-      $address_data = xtc_db_fetch_array($address_query);
-      $company  = stripslashes($address_data['entry_company']);
-      $street   = stripslashes($address_data['entry_street_address']);
-      $postcode = stripslashes($address_data['entry_postcode']);
-      $city     = stripslashes($address_data['entry_city']);
+      $c_data = array_map('stripslashes', $c_data);
+      $customers_name = $_SESSION['customer_first_name'].' '.$_SESSION['customer_last_name'];
+      $email_address = $c_data['customers_email_address'];
+      $phone = $c_data['customers_telephone'];
+      $fax = $c_data['customers_fax'];
+      $company = $c_data['entry_company'];
+      $street = $c_data['entry_street_address'];
+      $postcode = $c_data['entry_postcode'];
+      $city = $c_data['entry_city'];
     } elseif (!$error) {
     	$customers_name = '';
     	$email_address = '';
