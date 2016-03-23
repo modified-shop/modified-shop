@@ -200,8 +200,58 @@ if ($result != false) {
     $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'], $cache_id);
   }
   $smarty->assign('main_content', $module);
+} elseif (isset($current_category_id) && $current_category_id > 0) {
+  $category_query = xtDBquery("SELECT c.categories_image,
+                                      c.categories_template,
+                                      cd.categories_name,
+                                      cd.categories_heading_title,
+                                      cd.categories_description
+                                 FROM ".TABLE_CATEGORIES." c
+                                 JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                      ON cd.categories_id = c.categories_id
+                                         AND cd.language_id = '".(int) $_SESSION['languages_id']."'
+                                         AND trim(cd.categories_name) != ''
+                                         AND trim(cd.categories_description) != ''
+                                WHERE c.categories_status = '1'
+                                  AND c.categories_id = '".(int)$current_category_id."'
+                                      ".CATEGORIES_CONDITIONS_C);
+  if (xtc_db_num_rows($category_query, true) > 0) {
+    $category = xtc_db_fetch_array($category_query, true);
+
+    $image = '';
+    if ($category['categories_image'] != '') {
+      $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
+      if (!file_exists(DIR_FS_CATALOG.$image)) {
+        if (CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') {
+          $image = DIR_WS_IMAGES.'categories/noimage.gif';
+        } else {
+          $image = '';
+        }
+      }
+    }
+
+    // get default template
+    if ($category['categories_template'] == '' || $category['categories_template'] == 'default') {
+      $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/','html'), function($file) {
+        return false === strpos($file, 'index.html');
+      });
+      $category['categories_template'] = basename($files[0]);
+    }
+
+    $module_smarty->assign('CATEGORIES_NAME', $category['categories_name']);
+    $module_smarty->assign('CATEGORIES_HEADING_TITLE', $category['categories_heading_title']);
+    $module_smarty->assign('CATEGORIES_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
+    $module_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
+    $module_smarty->assign('language', $_SESSION['language']);
+    $module_smarty->caching = 0;
+    $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$category['categories_template']);
+    $smarty->assign('main_content', $main_content);
+  } else {
+    $site_error = CATEGORIE_NOT_FOUND;
+    include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
+  }
 } else {
-  $site_error = TEXT_PRODUCT_NOT_FOUND;
+  $site_error = CATEGORIE_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 }
 ?>
