@@ -44,10 +44,10 @@ class image_manipulation
 			$this->k = $this->h[2];
 		
       //BOF -web28- 2011-03-27 - OPTION DO NOT ENLARGE SMALL PICTURES
-      //if(PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT == 'false'){
+      if(PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT == 'false'){
         if($this->i < $this->m) {$this->m = $this->i;}
         if($this->j < $this->n) {$this->n = $this->j;}
-      //}
+      }
       //EOF  -web28- 2011-03-27 - OPTION DO NOT ENLARGE SMALL PICTURES
 			
 			$this->o = ($this->i / $this->m);
