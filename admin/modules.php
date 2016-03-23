@@ -249,23 +249,24 @@
     
     $installed_array = explode(';', constant('MODULE_'.strtoupper($module_type).'_INSTALLED'));
     $info = array();
-    foreach ($installed_array as $file) {
-      include_once($module_directory . $file);
-      $class = substr($file, 0, strpos($file, '.'));
-      if (xtc_class_exists($class)) {
-        $module = new $class();
-        if ($module instanceof $class && $module->check() > 0) {     
-          $key_array = $module->keys();     
-          foreach ($key_array as $key) {
-            if (!defined($key)) {
-              $info[] = '<li>'.$class.'</li>';
-              break;
+    if (count($installed_array) > 0) {
+      foreach ($installed_array as $file) {
+        include_once($module_directory . $file);
+        $class = substr($file, 0, strpos($file, '.'));
+        if (xtc_class_exists($class)) {
+          $module = new $class();
+          if ($module instanceof $class && $module->check() > 0) {     
+            $key_array = $module->keys();     
+            foreach ($key_array as $key) {
+              if (!defined($key)) {
+                $info[] = '<li>'.$class.'</li>';
+                break;
+              }
             }
           }
         }
       }
     }
-    
     return $info;
   }
   
