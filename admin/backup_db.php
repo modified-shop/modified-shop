@@ -313,15 +313,16 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
         //echo '<pre>'.print_r($erg,1).'</pre>';
         $dump['tables'][$i] = $erg['Name'];
         // Get nr of records -> need to do it this way because of incorrect returns when using InnoDBs
-        $data_query = xtc_db_query(
-            "SELECT count(*) as `count_records` 
-               FROM `". $erg['Name'] ."`
-            ");
-        $data_array = xtc_db_fetch_array($data_query);
+        if ( ($erg['Name'] != TABLE_SESSIONS ) && ($erg['Name'] != TABLE_WHOS_ONLINE) ) {
+          $data_query = xtc_db_query(
+              "SELECT count(*) as `count_records` 
+                 FROM `". $erg['Name'] ."`
+              ");
+          $data_array = xtc_db_fetch_array($data_query);
         
-        $erg['Rows'] = $data_array['count_records'];
-		    $table_info .= '-- TABLE|'.$erg['Name'].'|'.$erg['Rows'].'|'.($erg['Data_length']+$erg['Index_length']).'|'.$erg['Update_time'].'|'.$erg['Engine']."\n";
-        
+          $erg['Rows'] = $data_array['count_records'];
+          $table_info .= '-- TABLE|'.$erg['Name'].'|'.$erg['Rows'].'|'.($erg['Data_length']+$erg['Index_length']).'|'.$erg['Update_time'].'|'.$erg['Engine']."\n";
+        }
       }
       $dump['nr'] = 0;
     } //else ERROR
