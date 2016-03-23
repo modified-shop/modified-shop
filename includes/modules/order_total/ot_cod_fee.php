@@ -33,7 +33,8 @@
     var $title, $output;
 
     function __construct() {
-    		global $xtPrice;
+    	global $xtPrice;
+      
       $this->code = 'ot_cod_fee';
       $this->title = MODULE_ORDER_TOTAL_COD_FEE_TITLE;
       $this->description = MODULE_ORDER_TOTAL_COD_FEE_DESCRIPTION;
@@ -63,16 +64,15 @@
           $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
           $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
           for ($i = 0; $i < count($cod_zones); $i++) {
-          if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
-                $cod_cost = $cod_zones[$i + 1];
-                $cod_country = true;
-                break;
-              } elseif ($cod_zones[$i] == '00') {
-                $cod_cost = $cod_zones[$i + 1];
-                $cod_country = true;
-                break;
-              } else {
-              }
+            if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
+              $cod_cost = $cod_zones[$i + 1];
+              $cod_country = true;
+              break;
+            } elseif ($cod_zones[$i] == '00') {
+              $cod_cost = $cod_zones[$i + 1];
+              $cod_country = true;
+              break;
+            }
             $i++;
           }
         } else {
@@ -80,32 +80,32 @@
         }
 
         if ($cod_country) {
-            $cod_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
-            $cod_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
-            
-            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-                $order->info['tax'] += xtc_add_tax($cod_cost, $cod_tax)-$cod_cost;
-                $order->info['tax_groups'][TAX_ADD_TAX . "$cod_tax_description"] += xtc_add_tax($cod_cost, $cod_tax)-$cod_cost;
-                $order->info['total'] += $cod_cost + (xtc_add_tax($cod_cost, $cod_tax)-$cod_cost);
-                $cod_cost_value= xtc_add_tax($cod_cost, $cod_tax);
-                $cod_cost= $xtPrice->xtcFormat($cod_cost_value,true);
-            }
-            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-                $order->info['tax'] += xtc_add_tax($cod_cost, $cod_tax)-$cod_cost;
-                $order->info['tax_groups'][TAX_NO_TAX . "$cod_tax_description"] += xtc_add_tax($cod_cost, $cod_tax)-$cod_cost;
-                $cod_cost_value=$cod_cost;
-                $cod_cost= $xtPrice->xtcFormat($cod_cost,true);
-                $order->info['subtotal'] += $cod_cost_value;
-                $order->info['total'] += $cod_cost_value;
-            }
-            if (!$cod_cost_value) {
-                $cod_cost_value=$cod_cost;
-                $cod_cost= $xtPrice->xtcFormat($cod_cost,true);
-                $order->info['total'] += $cod_cost_value;
-            }
-            $this->output[] = array('title' => $this->title . ':',
-                                    'text' => $cod_cost,
-                                    'value' => $cod_cost_value);
+          $cod_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
+          $cod_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
+          
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
+              $order->info['tax'] += xtc_add_tax($cod_cost, $cod_tax)-$cod_cost;
+              $order->info['tax_groups'][TAX_ADD_TAX . "$cod_tax_description"] += xtc_add_tax($cod_cost, $cod_tax)-$cod_cost;
+              $order->info['total'] += $cod_cost + (xtc_add_tax($cod_cost, $cod_tax)-$cod_cost);
+              $cod_cost_value= xtc_add_tax($cod_cost, $cod_tax);
+              $cod_cost= $xtPrice->xtcFormat($cod_cost_value,true);
+          }
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+              $order->info['tax'] += xtc_add_tax($cod_cost, $cod_tax)-$cod_cost;
+              $order->info['tax_groups'][TAX_NO_TAX . "$cod_tax_description"] += xtc_add_tax($cod_cost, $cod_tax)-$cod_cost;
+              $cod_cost_value = $cod_cost;
+              $cod_cost = $xtPrice->xtcFormat($cod_cost,true);
+              $order->info['subtotal'] += $cod_cost_value;
+              $order->info['total'] += $cod_cost_value;
+          }
+          if (!$cod_cost_value) {
+              $cod_cost_value = $cod_cost;
+              $cod_cost = $xtPrice->xtcFormat($cod_cost,true);
+              $order->info['total'] += $cod_cost_value;
+          }
+          $this->output[] = array('title' => $this->title . ':',
+                                  'text' => $cod_cost,
+                                  'value' => $cod_cost_value);
         } else {
 //Following code should be improved if we can't get the shipping modules disabled, who don't allow COD
 // as well as countries who do not have cod

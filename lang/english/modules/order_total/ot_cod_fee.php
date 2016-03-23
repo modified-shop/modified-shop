@@ -27,7 +27,7 @@
   define('MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS_TITLE','Taxclass');
   define('MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS_DESC','Choose a taxclass.');
 
-  function define_shipping_titles() {
+  function define_shipping_titles_cod() {
     $module_keys = str_replace('.php','',MODULE_SHIPPING_INSTALLED);
     $installed_shipping_modules = explode(';',$module_keys);
 
@@ -55,5 +55,5 @@
       }
     }
   }
-  define_shipping_titles();
+  define_shipping_titles_cod();
 ?>
