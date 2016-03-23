@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
 function get_message($msg, $info = 'add_info') {
-  $message  = encode_htmlspecialchars($_GET[$msg]); 
+  $message  = encode_htmlspecialchars(encode_utf8($_GET[$msg])); 
   $message .= isset($_GET[$info]) ? strip_tags($_GET[$info]) : '';
   return $message;
 }
