@@ -58,8 +58,8 @@ foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_bottom/','php') 
 // new error handling
 if (isset($error_exceptions) && is_array($error_exceptions) && count($error_exceptions) > 0) {
   if ((DISPLAY_ERROR_REPORTING == 'all') || (DISPLAY_ERROR_REPORTING == 'admin' && $_SESSION['customers_status']['customers_status'] == '0')) {
-    echo '<div style="width:1000px; margin:20px auto; font-family: Verdana,Arial,sans-serif; font-size: 10px;">' . PHP_EOL .
-           '<h2 style="color: rgb(190, 50, 50);">Exception Occured:</h2>' . PHP_EOL;
+    echo '<div style="max-width:1000px; margin:20px auto; font-family: Verdana,Arial,sans-serif; font-size: 10px;">' . PHP_EOL .
+           '<h2 style="color: #BE3232;">Exception Occured:</h2>' . PHP_EOL;
            echo implode(PHP_EOL, $error_exceptions);
     echo '</div>';
   }
