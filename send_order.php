@@ -201,36 +201,35 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
       $aBUY->process_order();
   }
 
-  if(isset($send_by_admin)) {
+  if (isset($send_by_admin)) {
     $customer_notified = '1';
     $orders_status_id = '1';
     //Comment out the next line for setting  the $orders_status_id= '1 '- Auskommentieren der nächste Zeile, um die $orders_status_id = '1' zu setzen
     $orders_status_id = ($order->info['orders_status']  < 1) ? '1' : $order->info['orders_status'];
 
     $sql_data_array = array(
-        'orders_status' => (int)$orders_status_id,
-        'last_modified' => 'now()'
-      );
-      
+      'orders_status' => (int)$orders_status_id,
+      'last_modified' => 'now()'
+    );     
     xtc_db_perform(TABLE_ORDERS,$sql_data_array,'update',"orders_id = '".(int)$insert_id."'");
     
     $sql_data_array = array(
-        'orders_id' => (int)$insert_id,
-        'orders_status_id' => (int)$orders_status_id,
-        'date_added' => 'now()',
-        'customer_notified ' => $customer_notified,
-        'comments ' => COMMENT_SEND_ORDER_BY_ADMIN
-      );
-    
+      'orders_id' => (int)$insert_id,
+      'orders_status_id' => (int)$orders_status_id,
+      'date_added' => 'now()',
+      'customer_notified' => $customer_notified,
+      'comments' => encode_utf8(COMMENT_SEND_ORDER_BY_ADMIN),
+    );  
     xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
     
     $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
 
     if (isset($_GET['site']) && $_GET['site'] == 1) {
       xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&action=edit'));
-    } else xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID']));
+    } else {
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID']));
+    }
   }
-
 } else {
   $smarty->assign('ERROR', 'You are not allowed to view this order!');
   $smarty->display(CURRENT_TEMPLATE.'/module/error_message.html');
