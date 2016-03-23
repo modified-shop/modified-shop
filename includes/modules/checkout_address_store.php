@@ -20,6 +20,7 @@
       'country',
       'company',
       'suburb',
+      'state',
     );
 
     // prepare variables
