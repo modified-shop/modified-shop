@@ -100,11 +100,15 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
     case 'sql_update':
       foreach ($_POST['sql'] as $sql_update) {
         sql_update($sql_update);
-      }    
+      }
+      clear_dir(DIR_FS_DOCUMENT_ROOT.'cache/');
+      clear_dir(DIR_FS_DOCUMENT_ROOT.'templates_c/');
       break;
 
     case 'sql_manual':
       sql_update($_POST['sql_manual'], true);
+      clear_dir(DIR_FS_DOCUMENT_ROOT.'cache/');
+      clear_dir(DIR_FS_DOCUMENT_ROOT.'templates_c/');
       break;
       
     case 'unlink':
@@ -122,6 +126,8 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
           }
         }
       }
+      clear_dir(DIR_FS_DOCUMENT_ROOT.'cache/');
+      clear_dir(DIR_FS_DOCUMENT_ROOT.'templates_c/');
       break;  
   
   }

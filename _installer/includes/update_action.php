@@ -182,5 +182,7 @@
       xtc_db_query("DROP TABLE IF EXISTS ".$table);
     }
     $success = '';
+    clear_dir(DIR_FS_DOCUMENT_ROOT.'cache/');
+    clear_dir(DIR_FS_DOCUMENT_ROOT.'templates_c/');
   }
 ?>
