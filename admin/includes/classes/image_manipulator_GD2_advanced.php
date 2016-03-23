@@ -388,6 +388,7 @@
 
             // Other images
             default:
+              imageinterlace($this->t, true);
               imagejpeg($this->t, $this->d, $this->e);
           }
           ob_end_clean();
