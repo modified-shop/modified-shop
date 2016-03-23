@@ -117,8 +117,8 @@ class InputFilter {
     if (strpos($source,"\u0000")!== false) {return '';}
     if (strpos($source,"\000")!== false) {return '';}
 
-    if (strtolower($source) == 'null') { return ''; }
-    if (strtolower($source) == 'now()') { return ''; }
+    if (strtolower(trim($source)) == 'null') { return ''; }
+    if (strtolower(trim($source)) == 'now()') { return ''; }
     
     return strip_tags($source);
 	}
