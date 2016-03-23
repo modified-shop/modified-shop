@@ -119,8 +119,8 @@ ErrorDocument 500 /sitemap.html?error=500
   ##-- set the following line like e.g.: RewriteBase /shop/
   RewriteBase /
 
-  ##-- permit access to dotfiles (.htaccess, .svn, .git, etc.)
-  #RedirectMatch 403 /\..*$
+  ##-- disallow access to dotfiles (.htaccess, .svn, .git, etc.)
+  #RedirectMatch 403 /\.
 
   ##-- Use canonical URLs
   ##-- redirect to https-domain (Do not uncomment if you only have a SSL-Proxy!)
