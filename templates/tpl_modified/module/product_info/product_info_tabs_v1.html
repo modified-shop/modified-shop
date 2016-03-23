@@ -55,7 +55,7 @@
           
       <div class="pd_summarybox" itemprop="offers" itemscope itemtype="http://schema.org/Offer"> 
         <meta itemprop="priceCurrency" content="{$smarty.session.currency}" />
-        {if $PRODUCTS_QUANTITY > 0}<meta itemprop="availability" content="http://schema.org/InStock" />{else}<meta itemprop="availability" content="http://schema.org/OutOfStock" />{/if}
+        {if $PRODUCTS_QUANTITY <= 0 && $smarty.const.STOCK_CHECK == 'true'}<meta itemprop="availability" content="http://schema.org/OutOfStock" />{else}<meta itemprop="availability" content="http://schema.org/InStock" />{/if}
         {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<meta itemprop="mpn" content="{$PRODUCTS_MANUFACTURERS_MODEL}" />{/if}
         <meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
       
