@@ -88,3 +88,5 @@ UPDATE `languages` SET `status` = '1' WHERE `status` = '0';
 
 #Dokuman - 2009-11-12 - corrected refferers_id-field from int(5) to varchar(32), see TABLE orders
 ALTER TABLE customers MODIFY refferers_id VARCHAR( 32 ) NOT NULL DEFAULT '0';
+
+# Keep an empty line at the end of this file for the db_updater to work properly

@@ -395,3 +395,5 @@ INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (73,'985 (TOM)'
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (73,'986 (TOM)','Wallis et Futuna');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (73,'987 (TOM)','Polynésie française');
 # EOF - web28 - 2010-07-07 - FIX special character
+
+# Keep an empty line at the end of this file for the db_updater to work properly

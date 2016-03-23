@@ -358,3 +358,5 @@ INSERT INTO content_manager (content_id, categories_id, parent_id, group_ids, la
   SELECT MAX(content_id)+1, 0, 0, '', 2, 'Widerrufsrecht', 'Widerrufsrecht', '<p><strong>Widerrufsrecht<br /></strong><br />F&uuml;gen Sie hier das Widerrufsrecht ein.</p>', 0, 1, '', 1, MAX(content_group), 0, '', '', '' FROM content_manager;
 UPDATE configuration SET configuration_value = (SELECT MAX(content_group) FROM content_manager) WHERE configuration_key = 'REVOCATION_ID';
 # EOF - Tomcraft - 2010-06-09 - Added right of revocation
+
+# Keep an empty line at the end of this file for the db_updater to work properly
