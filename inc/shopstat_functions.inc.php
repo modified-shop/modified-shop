@@ -13,20 +13,20 @@
 
 //-- Einstellungen für die Trennzeichen -   Doppelpunkt oder Minuszeichen
 //-- Bei Minuszeichen wird eine spezielle htaccess Datei benötigt
-define('SEO_SEPARATOR',':');
+defined('SEO_SEPARATOR') OR define('SEO_SEPARATOR',':');
 //define('SEO_SEPARATOR','-'); //.htaccess Datei entsprechend anpassen
 
 //Sonderzeichen
-define('SPECIAL_CHAR_FR', true);  //Französische Sonderzeichen
-define('SPECIAL_CHAR_ES', true);  //Spanische/Italienische/Portugisische Sonderzeichen (nur aktivieren wenn auch französiche Sonderzeichen aktiviert sind)
-define('SPECIAL_CHAR_PL', true);  //Polnische Sonderzeichen (nur aktivieren wenn auch französiche Sonderzeichen aktiviert sind)
-define('SPECIAL_CHAR_CZ', true);  //Tschechische Sonderzeichen (nur aktivieren wenn auch französiche und polnische Sonderzeichen aktiviert sind)
-define('SPECIAL_CHAR_MORE', true);  //Weitere Sonderzeichen
+defined('SPECIAL_CHAR_FR') OR define('SPECIAL_CHAR_FR', true);  //Französische Sonderzeichen
+defined('SPECIAL_CHAR_ES') OR define('SPECIAL_CHAR_ES', true);  //Spanische/Italienische/Portugisische Sonderzeichen (nur aktivieren wenn auch französiche Sonderzeichen aktiviert sind)
+defined('SPECIAL_CHAR_PL') OR define('SPECIAL_CHAR_PL', true);  //Polnische Sonderzeichen (nur aktivieren wenn auch französiche Sonderzeichen aktiviert sind)
+defined('SPECIAL_CHAR_CZ') OR define('SPECIAL_CHAR_CZ', true);  //Tschechische Sonderzeichen (nur aktivieren wenn auch französiche und polnische Sonderzeichen aktiviert sind)
+defined('SPECIAL_CHAR_MORE') OR define('SPECIAL_CHAR_MORE', true);  //Weitere Sonderzeichen
 
 //-- Kategorienamen in Artikellink hinzufügen - Standard true
 //-- false verbessert die Performance bei Shops mit sehr vielen Kategorien
 //-- false erzeugt eindeutige Artikellinks bei verlinkten Artikeln
-define('ADD_CAT_NAMES_TO_PRODUCT_LINK', true); // true false
+defined('ADD_CAT_NAMES_TO_PRODUCT_LINK') OR define('ADD_CAT_NAMES_TO_PRODUCT_LINK', true); // true false
 
 //#################################
 
