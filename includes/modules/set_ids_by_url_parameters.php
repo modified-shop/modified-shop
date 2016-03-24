@@ -35,7 +35,7 @@ if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '') {
   $_GET['manufacturers_id'] = (int)$_GET['manufacturers_id'];
   $_GET['manufacturers_id'] = manufacturer_redirect($_GET['manufacturers_id']);
 } elseif (isset($_GET['manu'])) {
-  require_once (DIR_FS_INC.'content_redirect.inc.php');
+  require_once (DIR_FS_INC.'manufacturer_redirect.inc.php');
   $site = explode('_', $_GET['manu']);
   $mID = $site[0];
   $mID = (int)str_replace('m', '', $mID);
