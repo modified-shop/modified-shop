@@ -40,7 +40,7 @@ if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '') {
 }
 
 // calculate category path
-define('PRODUCTS_CANONICAL_CAT_ID', false);
+defined('PRODUCTS_CANONICAL_CAT_ID') OR define('PRODUCTS_CANONICAL_CAT_ID', false);
 if (isset ($_GET['cPath']) && (!isset($product) || !is_object($product))) {
   $cPath = $_GET['cPath'] = xtc_input_validation($_GET['cPath'], 'cPath', '');
 } elseif (isset($product) && is_object($product) && !isset($_GET['manufacturers_id'])) {
