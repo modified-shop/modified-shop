@@ -18,7 +18,15 @@
 
   $module_smarty->assign('language', $_SESSION['language']);
   $module_smarty->assign('ERROR', $site_error);
-  $module_smarty->assign('BUTTON', '<a href="javascript:history.back(1)">'. xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+
+  $link = 'javascript:history.back(1)';
+  if (!isset($_SERVER['HTTP_REFERER']) 
+      || strpos($_SERVER['HTTP_REFERER'], HTTP_SERVER) === false
+      )
+  {
+    $link = xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL');
+  } 
+  $module_smarty->assign('BUTTON', '<a href="'.$link.'">'. xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
   $module_smarty->assign('language', $_SESSION['language']);
 
   // search field
