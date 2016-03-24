@@ -71,9 +71,10 @@ if (isset ($_GET['coID']) && function_exists('xtc_get_content_path')) {
 //set $current_category_id, $_SESSION['CatPath'], verify $cPath
 unset($_SESSION['CatPath']);
 if (xtc_not_null($cPath)) {
+  require_once (DIR_FS_INC.'category_redirect.inc.php');
   $cPath_array = xtc_parse_category_path($cPath);
   $current_category_id = end($cPath_array);
-  $cPath = xtc_get_category_path($current_category_id); //verify $cPath
+  $cPath = category_redirect(xtc_get_category_path($current_category_id)); //verify $cPath
   $_SESSION['CatPath'] = $cPath;
 } else {
   $current_category_id = 0;
