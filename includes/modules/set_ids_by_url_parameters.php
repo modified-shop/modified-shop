@@ -62,7 +62,9 @@ if (!isset($product) || !is_object($product)) {
 
 // content URLS
 if (isset ($_GET['coID']) && function_exists('xtc_get_content_path')) {
+  require_once (DIR_FS_INC.'content_redirect.inc.php');
   $_GET['coID'] = (int) $_GET['coID'];
+  $_GET['coID'] = content_redirect($_GET['coID']);
   $coPath_array = xtc_get_content_path($_GET['coID']);
   $coPath_array[sizeof($coPath_array)] = xtc_get_content_id($_GET['coID']);  
   $coPath = implode('_', $coPath_array);
