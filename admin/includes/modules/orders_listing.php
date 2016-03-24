@@ -181,12 +181,12 @@
                     $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID')).'oID='.$orders['orders_id']).'\'"';
                   }
                   $orders_link = xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders['orders_id'] . '&action=edit');
-                  $orders_image_preview = xtc_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW);
+                  $orders_image_preview = xtc_image(DIR_WS_ICONS . 'icon_edit.gif', ICON_EDIT);
                   $orders['customers_name'] = (isset($orders['customers_company']) && $orders['customers_company'] != '') ? $orders['customers_company'] : $orders['customers_name'];
                   if (isset($oInfo) && is_object($oInfo) && ($orders['orders_id'] == $oInfo->orders_id) ) {
-                    $orders_action_image = xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT);
+                    $orders_action_image = xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_EDIT);
                   } else {
-                    $orders_action_image = '<a href="' . xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('oID')) . 'oID=' . $orders['orders_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    $orders_action_image = '<a href="' . xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('oID')) . 'oID=' . $orders['orders_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>';
                   }
                   ?>
                 <tr <?php echo $tr_attributes;?>>
@@ -194,7 +194,7 @@
                     /* magnalister v1.0.0 */
                     if (function_exists('magnaExecute')) echo magnaExecute('magnaRenderOrderPlatformIcon', array('oID' => $orders['orders_id']), array('order_details.php'));
                     /* END magnalister */
-                  ?>><?php echo '<a href="' . $orders_link . '">' . $orders_image_preview . '</a>&nbsp;' . $orders['customers_name']; ?></td>
+                  ?>><?php echo $orders['customers_name']; ?></td>
                   <td class="dataTableContent" align="right"><?php echo $orders['orders_id']; ?></td>
                   <td class="dataTableContent" align="right"><?php echo $orders['delivery_country']; ?>&nbsp;</td>
                   <td class="dataTableContent" align="right"><?php echo format_price(get_order_total($orders['orders_id']), 1, $orders['currency'], 0, 0); ?></td>
@@ -204,7 +204,7 @@
                   <?php if (AFTERBUY_ACTIVATED=='true') { ?>
                   <td class="dataTableContent" align="right"><?php  echo ($orders['afterbuy_success'] == 1) ? $orders['afterbuy_id'] : 'TRANSMISSION_ERROR'; ?></td>
                   <?php } ?>
-                  <td class="dataTableContent" align="right"><?php echo $orders_action_image; ?>&nbsp;</td>
+                  <td class="dataTableContent" align="right"><?php echo '<a href="' . $orders_link . '">' . $orders_image_preview . '</a>&nbsp;&nbsp;'.$orders_action_image; ?>&nbsp;</td>
                 </tr>
                 <?php
                 }
