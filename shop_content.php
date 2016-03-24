@@ -80,7 +80,14 @@ if ($language_not_found === true) {
     }
     $smarty->assign('CONTENT_BODY', $content_body);
 
-    $smarty->assign('BUTTON_CONTINUE', '<a href="javascript:history.back(1)">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+    $link = 'javascript:history.back(1)';
+    if (!isset($_SERVER['HTTP_REFERER']) 
+        || strpos($_SERVER['HTTP_REFERER'], HTTP_SERVER) === false
+        )
+    {
+      $link = xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL');
+    } 
+    $smarty->assign('BUTTON_CONTINUE', '<a href="'.$link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
     $smarty->assign('language', $_SESSION['language']);
 
     // set cache ID
