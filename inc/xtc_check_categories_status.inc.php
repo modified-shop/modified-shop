@@ -1,5 +1,4 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
    $Id: xtc_check_categories_status.inc.php 1009 2005-07-11 16:19:29Z mz $
 
@@ -13,27 +12,27 @@
 
 function xtc_check_categories_status($categories_id) {
 
-	if (!$categories_id)
+	if (!$categories_id) {
 		return 0;
+  }
 
-	$categorie_query = "SELECT parent_id,
-                             categories_status
-                        FROM ".TABLE_CATEGORIES."
-	                     WHERE categories_id = '".(int)$categories_id."'";
-	                     
-	$categorie_query = xtDBquery($categorie_query);
-
+	$categorie_query = xtDBquery("SELECT parent_id,
+                                       categories_status
+                                  FROM ".TABLE_CATEGORIES."
+                                 WHERE categories_id = '".(int)$categories_id."'
+                                       ".CATEGORIES_CONDITIONS);
+	
 	$categorie_data = xtc_db_fetch_array($categorie_query, true);
 	if ($categorie_data['categories_status'] == 0) {
 		return 1;
 	} else {
 		if ($categorie_data['parent_id'] != 0) {
-			if (xtc_check_categories_status($categorie_data['parent_id']) >= 1)
+			if (xtc_check_categories_status($categorie_data['parent_id']) >= 1) {
 				return 1;
+			}
 		}
 		return 0;
 	}
-
 }
 
 function xtc_get_categoriesstatus_for_product($product_id) {
@@ -51,6 +50,5 @@ function xtc_get_categoriesstatus_for_product($product_id) {
 			return 0;
 		}
 	}
-
 }
 ?>
