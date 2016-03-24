@@ -594,4 +594,6 @@ define('AC_SHOW_PAGE', 'Page ');
 define('AC_SHOW_PAGE_OF', ' from ');
 
 define('FREE_SHIPPING_INFO', 'Free Shipping minimum order: %s');
+
+define('MANUFACTURER_NOT_FOUND', 'Manufacturer not found');
 ?>

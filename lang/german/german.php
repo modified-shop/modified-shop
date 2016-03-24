@@ -595,4 +595,5 @@ define('AC_SHOW_PAGE_OF', ' von ');
 
 define('FREE_SHIPPING_INFO', 'ab %s  Bestellwert versenden wir Ihre Bestellung versandkostenfrei');
 
+define('MANUFACTURER_NOT_FOUND', 'Hersteller nicht gefunden');
 ?>

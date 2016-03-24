@@ -250,6 +250,9 @@ if ($result != false) {
     $site_error = CATEGORIE_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   }
+} elseif (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
+  $site_error = MANUFACTURER_NOT_FOUND;
+  include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 } else {
   $site_error = CATEGORIE_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
