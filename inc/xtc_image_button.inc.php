@@ -19,7 +19,7 @@
   function xtc_image_button($image, $alt = '', $parameters = '', $useCssButton = true) {
 
     if (basename($image) == $image) {
-      $image = 'templates/'.CURRENT_TEMPLATE.'/buttons/' . $_SESSION['language'] . '/'. $image;
+      $image = DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/buttons/' . $_SESSION['language'] . '/'. $image;
     }
     
     if (function_exists('css_button') && $useCssButton) {
