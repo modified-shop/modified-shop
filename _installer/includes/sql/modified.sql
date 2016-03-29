@@ -1291,8 +1291,8 @@ INSERT INTO admin_access VALUES (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 INSERT INTO admin_access VALUES ('groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 # banner
-INSERT INTO `banners` VALUES (1, 'modified eCommerce Shopsoftware', 'http://www.modified-shop.org', 'banner_modified-ecommerce-shopsoftware.jpg', 'banner', '', '1', NULL, NULL, NULL, NOW(), NULL, 1);
-INSERT INTO `banners` VALUES (2, 'modified eCommerce Shopsoftware', 'http://www.modified-shop.org', 'banner_modified-ecommerce-shopsoftware.jpg', 'banner', '', '2', NULL, NULL, NULL, NOW(), NULL, 1);
+INSERT INTO `banners` VALUES (1, 'modified eCommerce Shopsoftware', 'http://www.modified-shop.org', 'banner_modified-ecommerce-shopsoftware_en.jpg', 'banner', '', '1', NULL, NULL, NULL, NOW(), NULL, 1);
+INSERT INTO `banners` VALUES (2, 'modified eCommerce Shopsoftware', 'http://www.modified-shop.org', 'banner_modified-ecommerce-shopsoftware_de.jpg', 'banner', '', '2', NULL, NULL, NULL, NOW(), NULL, 1);
 
 # carriers
 INSERT INTO carriers VALUES (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
