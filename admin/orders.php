@@ -217,7 +217,7 @@ switch ($action) {
         $smarty->assign('ORDER_NR', $order->info['order_id']);
         $smarty->assign('ORDER_ID', $oID);
         //send no order link to customers with guest account
-        if ($check_status['customers_status'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+        if ($order->customer['customers_status'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
           $smarty->assign('ORDER_LINK', xtc_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL'));
         }
         // track & trace
