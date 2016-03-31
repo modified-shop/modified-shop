@@ -121,7 +121,7 @@ define('TEXT_PRODUCT_AVAILABLE', 'Active');
 define('TEXT_PRODUCT_NOT_AVAILABLE', 'Deactivated');
 // EOF - Hetfield - 2010-01-28 - Changing product available in correctly names for status
 define('TEXT_PRODUCTS_MANUFACTURER', 'Products Manufacturer:');
-define('TEXT_PRODUCTS_MANUFACTURER_MODEL', 'Manufacturer model no.:');
+define('TEXT_PRODUCTS_MANUFACTURER_MODEL', 'Manufacturer model no. (MPN):');
 define('TEXT_PRODUCTS_NAME', 'Products Name:');
 define('TEXT_PRODUCTS_DESCRIPTION', 'Products Description:');
 define('TEXT_PRODUCTS_QUANTITY', 'Products Stock:');
