@@ -33,7 +33,7 @@
    define('TEXT_SORTORDER', 'Sorting');
 // EOF - Tomcraft - 2009-11-11 - NEW SORT SELECTION
 
-  define('ATTR_EAN', 'EAN No.');
+  define('ATTR_EAN', 'GTIN/EAN');
   
   define('ATTR_SAVE_ACTIVE', 'Save Unfold Attributes');
   

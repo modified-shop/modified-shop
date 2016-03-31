@@ -131,7 +131,7 @@ define('TEXT_PRODUCTS_URL', 'Products URL:');
 define('TEXT_PRODUCTS_URL_WITHOUT_HTTP', '<small>(without leading http://)</small>');
 define('TEXT_PRODUCTS_PRICE', 'Product price:');
 define('TEXT_PRODUCTS_WEIGHT', 'Product weight:');
-define('TEXT_PRODUCTS_EAN','Barcode/EAN');
+define('TEXT_PRODUCTS_EAN','GTIN/EAN');
 define('TEXT_PRODUCT_LINKED_TO','Linked to:');
 define('TEXT_DELETE', 'Delete');
 define('EMPTY_CATEGORY', 'Empty Category');

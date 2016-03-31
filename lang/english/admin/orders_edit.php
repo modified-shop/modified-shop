@@ -113,11 +113,11 @@ define('TEXT_MRS', 'Mrs');
 
 define('TEXT_SAVE_CUSTOMERS_DATA', 'Save Customers Data');
 
-define('TEXT_PRODUCTS_SEARCH_INFO', ' Products name or products model or EAN');
+define('TEXT_PRODUCTS_SEARCH_INFO', ' Products name or products model or GTIN/EAN');
 define('TEXT_PRODUCTS_STATUS', 'Status:');
 define('TEXT_PRODUCTS_IMAGE', 'Product images:');
 define('TEXT_PRODUCTS_QTY', 'Stock:');
-define('TEXT_PRODUCTS_EAN', 'EAN:');
+define('TEXT_PRODUCTS_EAN', 'GTIN/EAN:');
 define('TEXT_PRODUCTS_TAX_RATE', 'Tax:');
 define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Date available:');
 define('TEXT_IMAGE_NONEXISTENT', '---');
