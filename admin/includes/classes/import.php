@@ -186,6 +186,7 @@ class xtcImport {
 
 // BOF - Tomcraft - 2010-04-13 - Bugfix for PHP4 (Length cannot be NULL)
 		//while ($line = fgetcsv($fp, NULL, $this->seperator, $this->TextSign)) {
+		$i = 1;
 		while ($line = fgetcsv($fp, 20000, $this->seperator, $this->TextSign)) {
 // EOF - Tomcraft - 2010-04-13 - Bugfix for PHP4 (Length cannot be NULL)
 			foreach($mapping as $name => $key) {
@@ -213,6 +214,7 @@ class xtcImport {
 			} else {
 				$this->errorLog[] = '<b>ERROR:</b> no Modelnumber, line: '.$i.' dataset: '.$line_fetch['data'];
 			}
+			$i ++;
 		}
 		return array ($this->counter, $this->errorLog, $this->calcElapsedTime($this->time_start));
 	}
