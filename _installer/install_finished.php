@@ -93,6 +93,6 @@
       </tr>
     </table>
     <br />
-    <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?><br /><img src='http://images.modified-shop.org/modified106sp3.gif' border='0' alt='modified eCommerce Shopsoftware'></div>
+    <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?><br /><img src='http://images.modified-shop.org/modified106sp4.gif' border='0' alt='modified eCommerce Shopsoftware'></div>
   </body>
 </html>
