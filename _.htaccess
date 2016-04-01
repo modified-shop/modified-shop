@@ -121,11 +121,6 @@ ErrorDocument 500 /sitemap.html?error=500
 
   ##-- disallow access to dotfiles (.htaccess, .svn, .git, etc.)
   #RedirectMatch 403 /\.
-
-  ##-- Use canonical URLs
-  ##-- redirect to https-domain (Do not uncomment if you only have a SSL-Proxy!)
-  #RewriteCond %{HTTPS} off
-  #RewriteRule (.*) https://%{HTTP_HOST}/$1 [R=301,L]
   
   ##-- Use SSL-Proxy
   ##-- HostEurope
@@ -143,6 +138,11 @@ ErrorDocument 500 /sitemap.html?error=500
   #RewriteCond %{HTTP_HOST}                 !\.(.*)\. [NC]
   #RewriteCond %{HTTP_HOST}                 !^localhost [NC]
   #RewriteRule (.*)                         http://www.%{HTTP_HOST}/$1 [R=301,L]
+
+  ##-- Use canonical URLs
+  ##-- redirect to https-domain (Do not uncomment if you only have a SSL-Proxy!)
+  #RewriteCond %{HTTPS} off
+  #RewriteRule (.*) https://%{HTTP_HOST}/$1 [R=301,L]
 
   ##-- Sitemap
   RewriteRule ^sitemap(.*)\.html$ shop_content.php?coID=8 [QSA,L]
