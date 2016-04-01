@@ -1052,4 +1052,7 @@ define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_TITLE', 'Display right of withdra
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_DESC', 'Display a checkbox to inform the customer, that the right of withdrawal expires for downloads?');
 define('ORDER_STATUSES_DISPLAY_DEFAULT_TITLE', 'Display Orders');
 define('ORDER_STATUSES_DISPLAY_DEFAULT_DESC', 'Orders with which status will be shown by default?');
+
+define('INVOICE_INFOS_TITLE', 'Invoice data');
+define('INVOICE_INFOS_DESC', 'Choose a content site. The content will be displayed on invoices.');
 ?>
