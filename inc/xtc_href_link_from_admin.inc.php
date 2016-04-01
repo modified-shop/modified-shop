@@ -41,7 +41,7 @@
       $link = HTTP_SERVER . DIR_WS_CATALOG;
     } elseif ($connection == 'SSL') {
       //BOF - DokuMan - 2011-12-20 - fix ticket #88
-      if (defined('ENABLE_SSL_CATALOG') && ENABLE_SSL_CATALOG == true) {
+      if (defined('ENABLE_SSL_CATALOG') && ENABLE_SSL_CATALOG == 'true') {
         $link = (defined('HTTPS_CATALOG_SERVER') ? HTTPS_CATALOG_SERVER : HTTP_CATALOG_SERVER) . DIR_WS_CATALOG;
       //EOF - DokuMan - 2011-12-20 - fix ticket #88
       } else {
