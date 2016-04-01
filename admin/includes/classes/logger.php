@@ -51,7 +51,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     }
 
     function write($message, $type) {
-      error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $type . '] ' . $message . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
+      error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $type . '] ' . $message . "\n", 3, DIR_FS_LOG.basename(STORE_PAGE_PARSE_TIME_LOG));
     }
   }
 ?>
