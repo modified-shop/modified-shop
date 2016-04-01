@@ -2952,14 +2952,14 @@ ul.printinfolist {
   margin: 0px auto;
 }
 p.underline {
-  margin:3px 0px;
+  margin:105px 0px 3px 15px;
   font-size:10px;
   text-decoration:underline;
 }
 .printlogo_admin {
   padding:0px 0px;
   text-align:right;
-  margin:10px 0 20px 0;
+  margin:0px 0 20px 0;
 }
 .printlogo_admin img {
   max-width:336px;
@@ -2973,6 +2973,9 @@ p.underline {
   font-weight:bold;
   text-transform:uppercase;
   padding:30px 0 0 0;
+}
+.printwrap_admin table.order_table {
+  margin-top:10px;
 }
 /* END print content (popup print_product_info, popup print_order.html) */
 

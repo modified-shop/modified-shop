@@ -12,23 +12,24 @@
 <div class="printwrap_admin cf">
 
   <div class="printColumsLeft">
-    <p class="underline">{$store_name}</p>
-    {$address_label_customer}
-  </div>
-
-  <div class="printColumsRight">
-    <div class="printlogo_admin"><img src="{$tpl_path}img/logo.gif" alt="{$smarty.const.STORE_NAME}" /></div>
-    <div class="print_small">
+    <p class="underline">{$ADDRESS_SMALL}</p>
+    <div style="padding-left:15px;">{$address_label_customer}</div>
+    <div class="print_small" style="margin-top:50px;">
       {if $csID}<strong>{#csID#}</strong> {$csID}<br />{/if}
       <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br />
       <strong>{#order#}</strong> {$oID}<br />
       <strong>{#date#}</strong> {$DATE}
       {if $vatID}<br /><strong>{#vatID#}</strong> {$vatID}{/if}
     </div>
-    <div class="print_big">{#packingslip#}</div>
+  </div>
+
+  <div class="printColumsRight">
+    <div class="printlogo_admin"><img src="{$tpl_path}img/logo.gif" alt="{$smarty.const.STORE_NAME}" /></div>
+    <div class="print_small" style="font-size:11px; line-height:15px;">{$ADDRESS_LARGE}</div>
   </div>
 
   <br class="clearfix">
+  <div class="print_big">{#packingslip#}</div>
   <div class="hr_15"></div>
   <div class="printColumsLeft">
     <strong>{#shipping_address#}</strong><br />{$address_label_shipping}
@@ -38,7 +39,6 @@
   </div>
   <br class="clearfix">
   <br />
-  <div class="hr_5"></div>
 
   <table class="order_table">
     <tr class="headerrow">
@@ -55,13 +55,13 @@
           <ul class="attributes_list">
             {foreach key=a_data item=attrib_data from=$order_values.PRODUCTS_ATTRIBUTES_ARRAY}
             <li><strong>{$attrib_data.option}:</strong> {$attrib_data.value}</li>
-            {/foreach} 
+            {/foreach}
           </ul>
         {/if}
       </td>
       <td class="ord_table_right ord_width120">{$order_values.PRODUCTS_MODEL}</td>
     </tr>
-    {/foreach}    
+    {/foreach}
   </table>
   <div class="hr_5"></div>
 
