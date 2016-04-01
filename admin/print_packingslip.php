@@ -61,6 +61,13 @@
   $smarty->assign('COMMENTS', nl2br($order->info['comments']));
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));
 
+  require_once(DIR_FS_CATALOG.'includes/classes/main.php');
+  $main = new main();
+
+  $invoice_data = $main->getContentData(INVOICE_INFOS);
+  $smarty->assign('ADDRESS_SMALL', $invoice_data['content_heading']);
+  $smarty->assign('ADDRESS_LARGE', $invoice_data['content_text']);
+
   // dont allow cache
   $smarty->caching = false;
   $smarty->template_dir=DIR_FS_CATALOG.'templates';
