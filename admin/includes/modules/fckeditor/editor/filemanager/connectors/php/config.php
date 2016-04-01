@@ -31,9 +31,9 @@ global $Config ;
 
 // Modified for xt:Commerce v3.0.4 SP2.1 by Hetfield (www.merz-it-service.de) - Begin //
 if (file_exists('../../../../../../local/configure.php')) {
-    include('../../../../../../local/configure.php');
+    require_once('../../../../../../local/configure.php');
 } else {
-    require('../../../../../../configure.php');
+    require_once('../../../../../../configure.php');
 }
 //BOC web28 security fix
 $Config['Enabled'] = false ;
