@@ -1044,4 +1044,7 @@ define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_TITLE', 'Anzeige Widerrufsrecht D
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_DESC', 'Soll eine Checkbox im Checkout angezeigt werden, mit welcher darauf hingewiesen wird, dass das Widerrufsrecht erlischt?');
 define('ORDER_STATUSES_DISPLAY_DEFAULT_TITLE', 'Anzeige Bestellungen');
 define('ORDER_STATUSES_DISPLAY_DEFAULT_DESC', 'Bestellungen mit welchem Bestellstatus sollen standardm&auml;&szlig;ig angezeigt werden?');
+
+define('INVOICE_INFOS_TITLE', 'Rechnungsdaten');
+define('INVOICE_INFOS_DESC', 'W&auml;hlen sie eine Contentseite. Der Inhalt wird auf dem Rechnungsdruck angezeigt.');
 ?>

@@ -76,6 +76,13 @@
   $smarty->assign('INVOICE_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));
   $smarty->assign('DELIVERY_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));
 
+  require_once(DIR_FS_CATALOG.'includes/classes/main.php');
+  $main = new main();
+
+  $invoice_data = $main->getContentData(INVOICE_ID);
+  $smarty->assign('ADDRESS_SMALL', $invoice_data['content_heading']);
+  $smarty->assign('ADDRESS_LARGE', $invoice_data['content_text']);
+
   // dont allow cache
   $smarty->caching = false;
   $smarty->template_dir=DIR_FS_CATALOG.'templates';
