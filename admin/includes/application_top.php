@@ -30,7 +30,7 @@
    --------------------------------------------------------------*/
 
 // DB version, used for updates (_installer)
-define('DB_VERSION', 'MOD_1.0.6.3');
+define('DB_VERSION', 'MOD_1.0.6.4');
 //Run Mode
 define('RUN_MODE_ADMIN',true);
 

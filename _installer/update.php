@@ -125,7 +125,7 @@ $unlink_dir = array('admin/includes/javascript/images',
                     'shopstat');
 
 // set all update sql files to be executed and deleted afterwards
-$sql_update = array('_installer/update_1.0.6.2_to_1.0.6.3.sql');
+$sql_update = array('_installer/update_1.0.6.3_to_1.0.6.4.sql');
 
 $error='';
 $success='';
