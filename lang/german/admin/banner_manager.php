@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: banner_manager.php 5100 2013-07-17 13:25:47Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -23,12 +23,14 @@ define('TABLE_HEADING_GROUPS', 'Gruppe');
 define('TABLE_HEADING_STATISTICS', 'Anzeigen / Klicks');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Aktion');
+define('TABLE_HEADING_LANGUAGE', 'Sprache');
 
 define('TEXT_BANNERS_TITLE', 'Titel des Banners:'); 
 define('TEXT_BANNERS_URL', 'Banner-URL:'); 
 define('TEXT_BANNERS_URL_NOTE', 'URL-Ziel bei Klick auf den Banner.'); 
 define('TEXT_BANNERS_GROUP', 'Banner-Gruppe:'); 
 define('TEXT_BANNERS_NEW_GROUP', 'W&auml;hlen Sie im Dropdown-Feld die gew&uuml;nschte Banner-Gruppe aus (falls vorhanden) oder geben Sie unten eine neue Banner-Gruppe ein.'); 
+define('TEXT_BANNERS_NEW_GROUP_NOTE', 'Damit ein Banner im Template angezeigt wird, muss das Template erweitert werden.<br/>Beispiel: Banner Gruppe ist banner, dann kann im Template in der index.html mit {$BANNER} angezeigt werden'); 
 define('TEXT_BANNERS_IMAGE', 'Bild (Datei):'); 
 define('TEXT_BANNERS_IMAGE_LOCAL', 'W&auml;hlen Sie das gew&uuml;nschte Bild mit Klick auf "Durchsuchen" oder geben Sie unten die lokale Datei auf Ihrem Server im Pfad &quot;' . DIR_FS_CATALOG_IMAGES.'banner/&quot; an.<br /><strong>Erlaubte Dateitypen:</strong> jpg, jpeg, jpe, gif, png, bmp, tiff, tif, bmp, swf, cab'); 
 define('TEXT_BANNERS_IMAGE_TARGET', 'Bildziel (Speichern nach):'); 
@@ -77,4 +79,7 @@ define('ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE', 'Fehler: Das Verzeichnis \'graphs
 // BOF - Tomcraft - 2009-11-06 - Use variable TEXT_BANNERS_DATE_FORMAT
 define('TEXT_BANNERS_DATE_FORMAT', 'JJJJ-MM-TT');
 // EOF - Tomcraft - 2009-11-06 - Use variable TEXT_BANNERS_DATE_FORMAT
+
+define('TEXT_BANNERS_LANGUAGE', 'Sprache:');
+define('TEXT_BANNERS_LANGUAGE_NOTE', 'F&uuml;r welche Sprache soll der Banner angezeigt werden?');
 ?>

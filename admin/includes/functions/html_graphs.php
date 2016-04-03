@@ -1,32 +1,33 @@
 <?php
-  /* --------------------------------------------------------------
-   $Id$   
+/* --------------------------------------------------------------
+   $Id: html_graphs.php 950 2005-05-14 16:45:21Z mz $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(html_graphs.php,v 1.6 2002/11/25); www.oscommerce.com 
-   (c) 2003	nextcommerce (html_graphs.php,v 1.6 2003/08/18); www.nextcommerce.org
-   (c) 2006 XT-Commerce (html_graphs.php 950 2005-05-14)
+   (c) 2003	 nextcommerce (html_graphs.php,v 1.6 2003/08/18); www.nextcommerce.org
 
    Released under the GNU General Public License 
    
    HTML_Graphs (v1.5 1998/11/05 06:15:52) by Phil Davis, http://www.pobox.com/~pdavis/
    --------------------------------------------------------------*/
-  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   ////
   // calls routines to initialize defaults, set up table
   // print data, and close table.
   function html_graph($names, $values, $bars, $vals, $dvalues = 0, $dbars = 0) {
     // set the error level on entry and exit so as not to interfear with anyone elses error checking.
     $er = error_reporting(1);
+
     // set the values that the user didn't
     $vals = hv_graph_defaults($vals);
     $html_graph_string = start_graph($vals, $names);
+
     if ($vals['type'] == 0) {
       $html_graph_string .= horizontal_graph($names, $values, $bars, $vals);
     } elseif ($vals['type'] == 1) {
@@ -36,9 +37,12 @@
     } elseif ($vals['type'] == 3) {
       $html_graph_string .= double_vertical_graph($names, $values, $bars, $vals, $dvalues, $dbars);
     }
+
     $html_graph_string .= end_graph();
+
     // Set the error level back to where it was.
     error_reporting($er);  
+
     return $html_graph_string;
   }
 
@@ -78,9 +82,12 @@
   // prints out the table header and graph labels
   function start_graph($vals, $names) {
     $start_graph_string = '<table cellpadding="' . $vals['cellpadding'] . '" cellspacing="' . $vals['cellspacing'] . '" border="' . $vals['border'] . '"';
+
     if ($vals['width'] != 0) $start_graph_string .= ' width="' . $vals['width'] . '"';
     if ($vals['background']) $start_graph_string .= ' background="' . $vals['background'] . '"';
+
     $start_graph_string .= '>' . "\n";
+
     if ( ($vals['vlabel']) || ($vals['hlabel']) ) {
       if ( ($vals['type'] == 0) || ($vals['type'] == 2) ) {
         // horizontal chart
@@ -91,22 +98,25 @@
         $rowspan = 3;
         $colspan = sizeof($names) + 1; 
       }
+
       $start_graph_string .= '  <tr>' . "\n" .
                              '    <td align="center" valign="center"';
+
       // if a background was choosen don't print cell BGCOLOR
-      if (!$vals['background'])
-        $start_graph_string .= ' bgcolor="' . $vals['hbgcolor'] . '"';
+      if (!$vals['background']) $start_graph_string .= ' bgcolor="' . $vals['hbgcolor'] . '"';
+
       $start_graph_string .= ' colspan="' . $colspan . '"><font color="' . $vals['hfcolor'] . '" style="' . $vals['hfstyle'] . '"><strong>' . $vals['hlabel'] . '</strong></font></td>' . "\n" .
                              '  </tr>' . "\n" .
                              '  <tr>' . "\n" .
                              '    <td align="center" valign="center"';
 
       // if a background was choosen don't print cell BGCOLOR
-      if (!$vals['background'])
-        $start_graph_string .= ' bgcolor="' . $vals['vbgcolor'] . '"';
+      if (!$vals['background']) $start_graph_string .= ' bgcolor="' . $vals['vbgcolor'] . '"';
+
       $start_graph_string .=  ' rowspan="' . $rowspan . '"><font color="' . $vals['vfcolor'] . '" style="' . $vals['vfstyle'] . '"><strong>' . $vals['vlabel'] . '</strong></font></td>' . "\n" .
                               '  </tr>' . "\n";
     }
+
     return $start_graph_string;
   }
 
@@ -132,6 +142,7 @@
     if (!$vals['namefcolor']) $vals['namefcolor'] = '#000000';
     if (!$vals['valuefcolor']) $vals['valuefcolor'] = '#000000';
     if (!$vals['doublefcolor']) $vals['doublefcolor'] = '#886666';
+
     return $vals;
   }
 
@@ -143,14 +154,16 @@
       $horizontal_graph_string .= '  <tr>' . "\n" .
                                   '    <td align="right"';
       // if a background was choosen don't print cell BGCOLOR
-      if (!$vals['background'])
-        $horizontal_graph_string .= ' bgcolor="' . $vals['namebgcolor'] . '"';
+      if (!$vals['background']) $horizontal_graph_string .= ' bgcolor="' . $vals['namebgcolor'] . '"';
+
       $horizontal_graph_string .= '><font size="-1" color="' . $vals['namefcolor'] . '" style="' . $vals['namefstyle'] . '">' . $names[$i] . '</font></td>' . "\n" .
                                   '    <td'; 
+
       // if a background was choosen don't print cell BGCOLOR
-      if (!$vals['background'])
-        $horizontal_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
+      if (!$vals['background']) $horizontal_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
+
       $horizontal_graph_string .= '>';
+
       // decide if the value in bar is a color code or image.
       if (preg_match('/^#/', $bars[$i])) {  // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
         $horizontal_graph_string .= '<table cellpadding="0" cellspacing="0" bgcolor="' . $bars[$i] . '" width="' . ($values[$i] * $vals['scale']) . '">' . "\n" .
@@ -165,9 +178,11 @@
       if (!$vals['noshowvals']) {
         $horizontal_graph_string .= '<i><font size="-2" color="' . $vals['valuefcolor'] . '" style="' . $vals['valuefstyle'] . '">(' . $values[$i] . ')</font></i>';
       }
+
       $horizontal_graph_string .= '</td>' . "\n" .
                                   '  </tr>' . "\n";
     } // endfor
+
     return $horizontal_graph_string;
   }
 
@@ -175,16 +190,21 @@
   // prints out the actual data for the vertical chart
   function vertical_graph($names, $values, $bars, $vals) {
     $vertical_graph_string = '  <tr>' . "\n";
+
     for ($i = 0, $n = sizeof($values); $i < $n; $i++) {
       $vertical_graph_string .= '    <td align="center" valign="bottom"';
+
       // if a background was choosen don't print cell BGCOLOR
-      if (!$vals['background'])
-        $vertical_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
+      if (!$vals['background']) $vertical_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
+
       $vertical_graph_string .= '>';
+
       if (!$vals['noshowvals']) {
         $vertical_graph_string .= '<i><font size="-2" color="' . $vals['valuefcolor'] . '" style="' . $vals['valuefstyle'] . '">(' . $values[$i] . ')</font></i><br />';
       }
+
       $vertical_graph_string .= '<img src="' . $bars[$i] . '" width="5" height="';
+
       // values of zero are displayed wrong because a image height of zero 
       // gives a strange behavior in Netscape. For this reason the height 
       // is set at 1 pixel if the value is zero. - Jan Diepens
@@ -193,18 +213,24 @@
       } else {
         $vertical_graph_string .= '1';
       } 
+
       $vertical_graph_string .= '"></td>' . "\n";
     } // endfor
+
     $vertical_graph_string .= '  </tr>' . "\n" .
                               '  <tr>' . "\n";
+
     for ($i = 0, $n = sizeof($values); $i < $n; $i++) {
       $vertical_graph_string .= '    <td align="center" valign="top"';
+
       // if a background was choosen don't print cell BGCOLOR
-      if (!$vals['background'])
-        $vertical_graph_string .= ' bgcolor="' . $vals['namebgcolor'] . '"';
+      if (!$vals['background']) $vertical_graph_string .= ' bgcolor="' . $vals['namebgcolor'] . '"';
+
       $vertical_graph_string .= '><font size="-1" color="' . $vals['namefcolor'] . '" style="' . $vals['namefstyle'] . '">' . $names[$i] . '</font></td>' . "\n";
     } // endfor
+
     $vertical_graph_string .= '  </tr>' . "\n";
+
     return $vertical_graph_string;
   }
 
@@ -215,24 +241,29 @@
     for($i = 0, $n = sizeof($values); $i < $n; $i++) {
       $double_horizontal_graph_string .= '  <tr>' . "\n" .
                                         '    <td align="right"';
+
       // if a background was choosen don't print cell BGCOLOR
-      if (!$vals['background'])
-        $double_horizontal_graph_string .= ' bgcolor="' . $vals['namebgcolor'] . '"';
+      if (!$vals['background']) $double_horizontal_graph_string .= ' bgcolor="' . $vals['namebgcolor'] . '"';
+
       $double_horizontal_graph_string .= '><font size="-1" color="' . $vals['namefcolor'] . '" style="' . $vals['namefstyle'] . '">' . $names[$i] . '</font></td>' . "\n" .
                                          '    <td';
+
       // if a background was choosen don't print cell BGCOLOR
-      if (!$vals['background'])
-        $double_horizontal_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
+      if (!$vals['background']) $double_horizontal_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
+
       $double_horizontal_graph_string .= '><table align="left" cellpadding="0" cellspacing="0" width="' . ($dvalues[$i] * $vals['scale']) . '">' . "\n" .
                                          '      <tr>' . "\n" .
                                          '        <td';
+
       // set background to a color if it starts with # or an image otherwise.
       if (preg_match('/^#/', $dbars[$i])) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
         $double_horizontal_graph_string .= ' bgcolor="' . $dbars[$i] . '">';
       } else {
         $double_horizontal_graph_string .= ' background="' . $dbars[$i] . '">';
       }
+
       $double_horizontal_graph_string .= '<nowrap>';
+
       // decide if the value in bar is a color code or image.
       if (preg_match('/^#/', $bars[$i])) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
         $double_horizontal_graph_string .= '<table align="left" cellpadding="0" cellspacing="0" bgcolor="' . $bars[$i] . '" width="' . ($values[$i] * $vals['scale']) . '">' . "\n" .
@@ -243,18 +274,23 @@
       } else {
         $double_horizontal_graph_string .= '<img src="' . $bars[$i] . '" height="10" width="' . ($values[$i] * $vals['scale']) . '">';
       }          
+
       if (!$vals['noshowvals']) {
         $double_horizontal_graph_string .= '<i><font size="-3" color="' . $vals['valuefcolor'] . '" style="' . $vals['valuefstyle'] . '">(' . $values[$i] . ')</font></i>';
       }
+
       $double_horizontal_graph_string .= '</nowrap></td>' . "\n" .
                                          '        </tr>' . "\n" .
                                          '      </table>';
+
       if (!$vals['noshowvals']) {
         $double_horizontal_graph_string .= '<i><font size="-3" color="' . $vals['doublefcolor'] . '" style="' . $vals['valuefstyle'] . '">(' . $dvalues[$i] . ')</font></i>';
       }
+
       $double_horizontal_graph_string .= '</td>' . "\n" .
                                          '  </tr>' . "\n";
     } // endfor
+
     return $double_horizontal_graph_string;
   }
 
@@ -264,54 +300,70 @@
     $double_vertical_graph_string = '  <tr>' . "\n";
     for ($i = 0, $n = sizeof($values); $i < $n; $i++) {
       $double_vertical_graph_string .= '    <td align="center" valign="bottom"';
+
       // if a background was choosen don't print cell BGCOLOR
-      if (!$vals['background'])
-        $double_vertical_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
+      if (!$vals['background']) $double_vertical_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
+
       $double_vertical_graph_string .= '><table>' . "\n" .
                                        '      <tr>' . "\n" .
                                        '        <td align="center" valign="bottom"';
+
       // if a background was choosen don't print cell BGCOLOR
-      if (!$vals['background'])
-        $double_vertical_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
+      if (!$vals['background']) $double_vertical_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
+
       $double_vertical_graph_string .= '>';
+
       if (!$vals['noshowvals'] && $values[$i]) {
         $double_vertical_graph_string .= '<i><font size="-2" color="' . $vals['valuefcolor'] . '" style="' . $vals['valuefstyle'] . '">(' . $values[$i] . ')</font></i><br />';
       }
+
       $double_vertical_graph_string .= '<img src="' . $bars[$i] . '" width="10" height="';
+
       if ($values[$i] != 0) {
         $double_vertical_graph_string .= $values[$i] * $vals['scale'];
       } else {
         $double_vertical_graph_string .= '1';
       }
+
       $double_vertical_graph_string .= '"></td>' . "\n" .
                                        '        <td align="center" valign="bottom"';
+
       // if a background was choosen don't print cell BGCOLOR
-      if (!$vals['background'])
-        $double_vertical_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
+      if (!$vals['background']) $double_vertical_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
+
       $double_vertical_graph_string .= '>';
+
       if (!$vals['noshowvals'] && $dvalues[$i]) {
         $double_vertical_graph_string .= '<i><font size="-2" color="' . $vals['doublefcolor'] . '" style="' . $vals['valuefstyle'] . '">(' . $dvalues[$i] . ')</font></i><br />';
       }
+
       $double_vertical_graph_string .= '<img src="' . $dbars[$i] . '" width="10" height="';
+
       if ($dvalues[$i] != 0) {
         $double_vertical_graph_string .= $dvalues[$i] * $vals['scale'];
       } else {
         $double_vertical_graph_string .= '1';
       }
+
       $double_vertical_graph_string .= '"></td>' . "\n" .
                                        '      </tr>' . "\n" .
                                        '    </table></td>' . "\n";
     } // endfor
+
     $double_vertical_graph_string .= '  </tr>' . "\n" .
                                      '  <tr>' . "\n";
+
     for ($i = 0, $n = sizeof($values); $i < $n; $i++) {
       $double_vertical_graph_string .= '    <td align="center" valign="top"';
+
       // if a background was choosen don't print cell BGCOLOR
-      if (!$vals['background'])
-        $double_vertical_graph_string .= ' bgcolor="' . $vals['namebgcolor'] . '"';
+      if (!$vals['background']) $double_vertical_graph_string .= ' bgcolor="' . $vals['namebgcolor'] . '"';
+
       $double_vertical_graph_string .= '><font size="-1" color="' . $vals['namefcolor'] . '" style="' . $vals['namefstyle'] . '">' . $names[$i] . '</font></td>' . "\n";
     } // endfor
+
     $double_vertical_graph_string .= '  </tr>' . "\n";
+
     return $double_vertical_graph_string;
   }
 
@@ -325,33 +377,36 @@
       $dvalues[] = $banner_stats['dvalue'];
     }
     $largest = @max($values);
+
     $bars = array();
     $dbars = array();
     for ($i = 0, $n = sizeof($values); $i < $n; $i++) {
       $bars[$i] = DIR_WS_IMAGES . 'graph_hbar_blue.gif';
       $dbars[$i] = DIR_WS_IMAGES . 'graph_hbar_red.gif';
     }
+
     $graph_vals = @array('vlabel'=>TEXT_BANNERS_DATA,
-                         'hlabel'=>TEXT_BANNERS_LAST_3_DAYS,
-                         'type'=>'3',
-                         'cellpadding'=>'',
-                         'cellspacing'=>'1',
-                         'border'=>'',
-                         'width'=>'',
-                         'vfcolor'=>'#ffffff',
-                         'hfcolor'=>'#ffffff',
-                         'vbgcolor'=>'#81a2b6',
-                         'hbgcolor'=>'#81a2b6',
-                         'vfstyle'=>'Verdana, Arial, Helvetica',
-                         'hfstyle'=>'Verdana, Arial, Helvetica',
-                         'scale'=>100/$largest,
-                         'namebgcolor'=>'#f3f5fe',
-                         'valuebgcolor'=>'#f3f5fe',
-                         'namefcolor'=>'',
-                         'valuefcolor'=>'#0000d0',
-                         'namefstyle'=>'Verdana, Arial, Helvetica',
-                         'valuefstyle'=>'',
-                         'doublefcolor'=>'#ff7339');
+                        'hlabel'=>TEXT_BANNERS_LAST_3_DAYS,
+                        'type'=>'3',
+                        'cellpadding'=>'',
+                        'cellspacing'=>'1',
+                        'border'=>'',
+                        'width'=>'',
+                        'vfcolor'=>'#ffffff',
+                        'hfcolor'=>'#ffffff',
+                        'vbgcolor'=>'#81a2b6',
+                        'hbgcolor'=>'#81a2b6',
+                        'vfstyle'=>'Verdana, Arial, Helvetica',
+                        'hfstyle'=>'Verdana, Arial, Helvetica',
+                        'scale'=>100/$largest,
+                        'namebgcolor'=>'#f3f5fe',
+                        'valuebgcolor'=>'#f3f5fe',
+                        'namefcolor'=>'',
+                        'valuefcolor'=>'#0000d0',
+                        'namefstyle'=>'Verdana, Arial, Helvetica',
+                        'valuefstyle'=>'',
+                        'doublefcolor'=>'#ff7339');
+
     return html_graph($names, $values, $bars, $graph_vals, $dvalues, $dbars);
   }
 
@@ -359,40 +414,45 @@
   // draws a double vertical bar graph for the banner views vs clicks statistics
   function xtc_banner_graph_yearly($banner_id) {
     global $banner;
+
     $banner_stats_query = xtc_db_query("select year(banners_history_date) as year, sum(banners_shown) as value, sum(banners_clicked) as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' group by year(banners_history_date)");
     while ($banner_stats = xtc_db_fetch_array($banner_stats_query)) {
       $names[] = $banner_stats['year'];
       $values[] = (($banner_stats['value']) ? $banner_stats['value'] : '0');
       $dvalues[] = (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0');
     }
+
     $largest = @max($values);
+
     $bars = array();
     $dbars = array();
     for ($i = 0, $n = sizeof($values); $i < $n; $i++) {
       $bars[$i] = DIR_WS_IMAGES . 'graph_hbar_blue.gif';
       $dbars[$i] = DIR_WS_IMAGES . 'graph_hbar_red.gif';
     }
+
     $graph_vals = @array('vlabel'=>TEXT_BANNERS_DATA,
-                         'hlabel'=>sprintf(TEXT_BANNERS_YEARLY_STATISTICS, $banner['banners_title']),
-                         'type'=>'3',
-                         'cellpadding'=>'',
-                         'cellspacing'=>'1',
-                         'border'=>'',
-                         'width'=>'',
-                         'vfcolor'=>'#ffffff',
-                         'hfcolor'=>'#ffffff',
-                         'vbgcolor'=>'#81a2b6',
-                         'hbgcolor'=>'#81a2b6',
-                         'vfstyle'=>'Verdana, Arial, Helvetica',
-                         'hfstyle'=>'Verdana, Arial, Helvetica',
-                         'scale'=>100/$largest,
-                         'namebgcolor'=>'#f3f5fe',
-                         'valuebgcolor'=>'#f3f5fe',
-                         'namefcolor'=>'',
-                         'valuefcolor'=>'#0000d0',
-                         'namefstyle'=>'Verdana, Arial, Helvetica',
-                         'valuefstyle'=>'',
-                         'doublefcolor'=>'#ff7339');
+                        'hlabel'=>sprintf(TEXT_BANNERS_YEARLY_STATISTICS, $banner['banners_title']),
+                        'type'=>'3',
+                        'cellpadding'=>'',
+                        'cellspacing'=>'1',
+                        'border'=>'',
+                        'width'=>'',
+                        'vfcolor'=>'#ffffff',
+                        'hfcolor'=>'#ffffff',
+                        'vbgcolor'=>'#81a2b6',
+                        'hbgcolor'=>'#81a2b6',
+                        'vfstyle'=>'Verdana, Arial, Helvetica',
+                        'hfstyle'=>'Verdana, Arial, Helvetica',
+                        'scale'=>100/$largest,
+                        'namebgcolor'=>'#f3f5fe',
+                        'valuebgcolor'=>'#f3f5fe',
+                        'namefcolor'=>'',
+                        'valuefcolor'=>'#0000d0',
+                        'namefstyle'=>'Verdana, Arial, Helvetica',
+                        'valuefstyle'=>'',
+                        'doublefcolor'=>'#ff7339');
+
     return html_graph($names, $values, $bars, $graph_vals, $dvalues, $dbars);
   }
 
@@ -400,46 +460,53 @@
   // draws a double vertical bar graph for the banner views vs clicks statistics
   function xtc_banner_graph_monthly($banner_id) {
     global $banner;
+
     $year = (($_GET['year']) ? $_GET['year'] : date('Y'));
+
     for ($i=1; $i<13; $i++) {
-      $names[] = strftime('%b', mktime(0,0,0,$i));
+      $names[] = decode_utf8(strftime('%b', mktime(0,0,0,$i)));
       $values[] = '0';
       $dvalues[] = '0';
     }
+
     $banner_stats_query = xtc_db_query("select month(banners_history_date) as banner_month, sum(banners_shown) as value, sum(banners_clicked) as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' and year(banners_history_date) = '" . $year . "' group by month(banners_history_date)");
     while ($banner_stats = xtc_db_fetch_array($banner_stats_query)) {
-      $names[($banner_stats['banner_month']-1)] = strftime('%b', mktime(0,0,0,$banner_stats['banner_month']));
+      $names[($banner_stats['banner_month']-1)] = decode_utf8(strftime('%b', mktime(0,0,0,$banner_stats['banner_month'])));
       $values[($banner_stats['banner_month']-1)] = (($banner_stats['value']) ? $banner_stats['value'] : '0');
       $dvalues[($banner_stats['banner_month']-1)] = (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0');
     }
+
     $largest = @max($values);
+
     $bars = array();
     $dbars = array();
     for ($i = 0, $n = sizeof($values); $i < $n; $i++) {
       $bars[$i] = DIR_WS_IMAGES . 'graph_hbar_blue.gif';
       $dbars[$i] = DIR_WS_IMAGES . 'graph_hbar_red.gif';
     }
+
     $graph_vals = @array('vlabel'=>TEXT_BANNERS_DATA,
-                         'hlabel'=>sprintf(TEXT_BANNERS_MONTHLY_STATISTICS, $banner['banners_title'], date('Y')),
-                         'type'=>'3',
-                         'cellpadding'=>'',
-                         'cellspacing'=>'1',
-                         'border'=>'',
-                         'width'=>'',
-                         'vfcolor'=>'#ffffff',
-                         'hfcolor'=>'#ffffff',
-                         'vbgcolor'=>'#81a2b6',
-                         'hbgcolor'=>'#81a2b6',
-                         'vfstyle'=>'Verdana, Arial, Helvetica',
-                         'hfstyle'=>'Verdana, Arial, Helvetica',
-                         'scale'=>100/$largest,
-                         'namebgcolor'=>'#f3f5fe',
-                         'valuebgcolor'=>'#f3f5fe',
-                         'namefcolor'=>'',
-                         'valuefcolor'=>'#0000d0',
-                         'namefstyle'=>'Verdana, Arial, Helvetica',
-                         'valuefstyle'=>'',
-                         'doublefcolor'=>'#ff7339');
+                        'hlabel'=>sprintf(TEXT_BANNERS_MONTHLY_STATISTICS, $banner['banners_title'], date('Y')),
+                        'type'=>'3',
+                        'cellpadding'=>'',
+                        'cellspacing'=>'1',
+                        'border'=>'',
+                        'width'=>'',
+                        'vfcolor'=>'#ffffff',
+                        'hfcolor'=>'#ffffff',
+                        'vbgcolor'=>'#81a2b6',
+                        'hbgcolor'=>'#81a2b6',
+                        'vfstyle'=>'Verdana, Arial, Helvetica',
+                        'hfstyle'=>'Verdana, Arial, Helvetica',
+                        'scale'=>100/$largest,
+                        'namebgcolor'=>'#f3f5fe',
+                        'valuebgcolor'=>'#f3f5fe',
+                        'namefcolor'=>'',
+                        'valuefcolor'=>'#0000d0',
+                        'namefstyle'=>'Verdana, Arial, Helvetica',
+                        'valuefstyle'=>'',
+                        'doublefcolor'=>'#ff7339');
+
     return html_graph($names, $values, $bars, $graph_vals, $dvalues, $dbars);
   }
 
@@ -447,8 +514,10 @@
   // draws a double vertical bar graph for the banner views vs clicks statistics
   function xtc_banner_graph_daily($banner_id) {
     global $banner;
-    $year = (isset($_GET['year']) ? $_GET['year'] : date('Y'));
-    $month = (isset($_GET['month']) ? $_GET['month'] : date('n'));
+
+    $year = (($_GET['year']) ? $_GET['year'] : date('Y'));
+    $month = (($_GET['month']) ? $_GET['month'] : date('n'));
+
     $days = (date('t', mktime(0,0,0,$month))+1);
     $stats = array();
     for ($i=1; $i<$days; $i++) {
@@ -456,40 +525,45 @@
       $values[] = '0';
       $dvalues[] = '0';
     }
+
     $banner_stats_query = xtc_db_query("select dayofmonth(banners_history_date) as banner_day, banners_shown as value, banners_clicked as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' and month(banners_history_date) = '" . $month . "' and year(banners_history_date) = '" . $year . "'");
     while ($banner_stats = xtc_db_fetch_array($banner_stats_query)) {
       $names[($banner_stats['banner_day']-1)] = $banner_stats['banner_day'];
       $values[($banner_stats['banner_day']-1)] = (($banner_stats['value']) ? $banner_stats['value'] : '0');
       $dvalues[($banner_stats['banner_day']-1)] = (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0');
     }
+
     $largest = @max($values);
+
     $bars = array();
     $dbars = array();
     for ($i = 0, $n = sizeof($values); $i < $n; $i++) {
       $bars[$i] = DIR_WS_IMAGES . 'graph_hbar_blue.gif';
       $dbars[$i] = DIR_WS_IMAGES . 'graph_hbar_red.gif';
     }
+
     $graph_vals = @array('vlabel'=>TEXT_BANNERS_DATA,
-                         'hlabel'=>sprintf(TEXT_BANNERS_DAILY_STATISTICS, $banner['banners_title'], strftime('%B', mktime(0,0,0,$month)), $year),
-                         'type'=>'3',
-                         'cellpadding'=>'',
-                         'cellspacing'=>'1',
-                         'border'=>'',
-                         'width'=>'',
-                         'vfcolor'=>'#ffffff',
-                         'hfcolor'=>'#ffffff',
-                         'vbgcolor'=>'#81a2b6',
-                         'hbgcolor'=>'#81a2b6',
-                         'vfstyle'=>'Verdana, Arial, Helvetica',
-                         'hfstyle'=>'Verdana, Arial, Helvetica',
-                         'scale'=>100/$largest,
-                         'namebgcolor'=>'#f3f5fe',
-                         'valuebgcolor'=>'#f3f5fe',
-                         'namefcolor'=>'',
-                         'valuefcolor'=>'#0000d0',
-                         'namefstyle'=>'Verdana, Arial, Helvetica',
-                         'valuefstyle'=>'',
-                         'doublefcolor'=>'#ff7339');
+                        'hlabel'=>sprintf(TEXT_BANNERS_DAILY_STATISTICS, $banner['banners_title'], decode_utf8(strftime('%B', mktime(0,0,0,$month))), $year),
+                        'type'=>'3',
+                        'cellpadding'=>'',
+                        'cellspacing'=>'1',
+                        'border'=>'',
+                        'width'=>'',
+                        'vfcolor'=>'#ffffff',
+                        'hfcolor'=>'#ffffff',
+                        'vbgcolor'=>'#81a2b6',
+                        'hbgcolor'=>'#81a2b6',
+                        'vfstyle'=>'Verdana, Arial, Helvetica',
+                        'hfstyle'=>'Verdana, Arial, Helvetica',
+                        'scale'=>100/$largest,
+                        'namebgcolor'=>'#f3f5fe',
+                        'valuebgcolor'=>'#f3f5fe',
+                        'namefcolor'=>'',
+                        'valuefcolor'=>'#0000d0',
+                        'namefstyle'=>'Verdana, Arial, Helvetica',
+                        'valuefstyle'=>'',
+                        'doublefcolor'=>'#ff7339');
+
     return html_graph($names, $values, $bars, $graph_vals, $dvalues, $dbars);
   }
 ?>

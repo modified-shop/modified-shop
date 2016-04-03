@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$
+   $Id: sales_report.php 4824 2013-05-24 09:41:50Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -60,7 +60,7 @@
         $status, 
         $outlet;
 
-    function sales_report($mode, $startDate = 0, $endDate = 0, $sort = 0, $statusFilter = 0, $filter = 0,$payment = 0) {
+    function __construct($mode, $startDate = 0, $endDate = 0, $sort = 0, $statusFilter = 0, $filter = 0,$payment = 0,$cgroup = '') {
       // startDate and endDate have to be a unix timestamp. Use mktime !
       // if set then both have to be valid startDate and endDate
       $this->mode = $mode;
@@ -68,12 +68,17 @@
 
       $this->statusFilter = $statusFilter;
       $this->paymentFilter = $payment;     
+      $this->cgroupFilter = $cgroup;
+
       // get date of first sale
+      /*
       $firstQuery = xtc_db_query("SELECT UNIX_TIMESTAMP(min(date_purchased)) as first FROM " . TABLE_ORDERS);
       $first = xtc_db_fetch_array($firstQuery);
       $this->globalStartDate = mktime(0, 0, 0, date("m", $first['first']), date("d", $first['first']), date("Y", $first['first']));
-            
-      $statusQuery = xtc_db_query("SELECT * FROM ".TABLE_ORDERS_STATUS." WHERE language_id='".$_SESSION['languages_id']."'");
+      */
+      $this->globalStartDate = $startDate;
+      
+      $statusQuery = xtc_db_query("SELECT * FROM ".TABLE_ORDERS_STATUS." WHERE language_id='".(int)$_SESSION['languages_id']." ORDER BY sort_order'");
       $i = 0;
       while ($outResp = xtc_db_fetch_array($statusQuery)) {
         $status[$i] = $outResp;
@@ -81,7 +86,7 @@
       }
       $this->status = $status;
 
-      
+
       if ($startDate == 0  or $startDate < $this->globalStartDate) {
         // set startDate to globalStartDate
         $this->startDate = $this->globalStartDate;
@@ -91,13 +96,15 @@
       if ($this->startDate > mktime(0, 0, 0, date("m"), date("d"), date("Y"))) {
         $this->startDate = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
       }
-
+      /*
       if ($endDate > mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"))) {
         // set endDate to tomorrow
         $this->endDate = mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"));
       } else {
         $this->endDate = $endDate;
       }
+      */
+      $this->endDate = $endDate;
       if ($this->endDate < $this->startDate + 24 * 60 * 60) {
         $this->endDate = $this->startDate + 24 * 60 * 60;
       }
@@ -179,12 +186,19 @@
       }
 
       $filterString = "";
-      if ($this->statusFilter > 0) {
+      if (strpos($this->statusFilter, ',') !== false) {
+        $status_array = explode(',', $this->statusFilter);
+        $filterString .= " AND o.orders_status IN ('". implode("', '", $status_array) . "') ";
+      } elseif ($this->statusFilter > 0) {
         $filterString .= " AND o.orders_status = " . $this->statusFilter . " ";
       }
       
       if (!is_numeric($this->paymentFilter)) {
       	$filterString .= " AND o.payment_method ='" . xtc_db_prepare_input($this->paymentFilter) . "' ";
+      }
+       
+      if ($this->cgroupFilter != '') {
+         $filterString .= " AND o.customers_status ='" . (int)$this->cgroupFilter . "' ";
       }
        
       $rqOrders = xtc_db_query($this->queryOrderCnt . " WHERE o.date_purchased >= '" . xtc_db_input(date("Y-m-d H:i:s", $sd)) . "' AND o.date_purchased < '" . xtc_db_input(date("Y-m-d H:i:s", $ed)) . "'" . $filterString);

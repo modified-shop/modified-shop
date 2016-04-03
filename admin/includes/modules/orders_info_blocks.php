@@ -12,14 +12,31 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 ?>
  
-        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
-        <div class="pageHeading pdg2"><?php echo HEADING_TITLE . '<span style="font-size:13px"> - '.TABLE_HEADING_ORDERS_ID.': ' . $oID . ' - ' . $order->info['date_purchased'] ; ?></span></div>
-        <div class="main pdg2"><?php echo TABLE_HEADING_CUSTOMERS ?></div>
-        <div class="clear">     
-        <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')));?>"><?php echo BUTTON_BACK; ?></a>
-        <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS_EDIT, 'oID='.$oID.'&cID=' . $order->customer['ID']);?>"><?php echo BUTTON_EDIT ?></a>        
+      <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
+      <div class="pageHeading pdg2"><?php echo TABLE_HEADING_ORDERS_ID.': ' . $oID . ' - ' . xtc_datetime_short($order->info['date_purchased']); ?></div>
+      <div class="main pdg2"><?php echo HEADING_TITLE; ?></div>
+
+      <div class="div_box mrg5">
+        <div class="clear" style="padding-bottom: 5px; display: inline-block; width: 100%;">
+          <div class="flt-l" style="margin-left: 5px;">     
+            <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')));?>"><?php echo BUTTON_BACK; ?></a>
+            <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS_EDIT, 'oID='.$oID.'&cID=' . $order->customer['ID']);?>"><?php echo BUTTON_EDIT ?></a>        
+          </div>
+          <div class="flt-r">
+            <?php
+              $prev_query = xtc_db_query("SELECT orders_id FROM ".TABLE_ORDERS." WHERE orders_id < '".(int)$oID."' ORDER BY orders_id DESC LIMIT 1");
+              if (xtc_db_num_rows($prev_query) == 1) {
+                $prev = xtc_db_fetch_array($prev_query);  
+                echo '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('oID')).'oID='.$prev['orders_id']).'">' . PREVNEXT_BUTTON_PREV . '</a>';
+              }
+              $next_query = xtc_db_query("SELECT orders_id FROM ".TABLE_ORDERS." WHERE orders_id > '".(int)$oID."' ORDER BY orders_id ASC LIMIT 1");
+              if (xtc_db_num_rows($next_query) == 1) {
+                $next = xtc_db_fetch_array($next_query);  
+                echo '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('oID')).'oID='.$next['orders_id']).'">' . PREVNEXT_BUTTON_NEXT . '</a>';
+              }
+            ?>
+          </div>
         </div>
-        <br />
 
         <!-- BOC CUSTOMERS INFO BLOCK -->
         <table cellspacing="0" cellpadding="2" class="table">
@@ -28,8 +45,8 @@
               <table width="100%" border="0" cellspacing="0" cellpadding="2">
                 <?php if ($order->customer['csID']!='') { ?>
                 <tr>
-                  <td class="main" valign="top" bgcolor="#FFCC33"><b><?php echo ENTRY_CID; ?></b></td>
-                  <td class="main" bgcolor="#FFCC33"><?php echo $order->customer['csID']; ?></td>
+                  <td class="main bg_notice" valign="top"><b><?php echo ENTRY_CID; ?></b></td>
+                  <td class="main bg_notice"><?php echo $order->customer['csID']; ?></td>
                 </tr>
                 <?php } ?>
                 <tr>
@@ -64,20 +81,21 @@
                   <td class="main"><?php echo $order->customer['vat_id']; ?></td>
                 </tr>
                 <tr>
-                  <td class="main" valign="top" bgcolor="#FFCC33"><b><?php echo IP; ?></b></td>
-                  <td class="main" bgcolor="#FFCC33"><b><?php echo $order->customer['cIP']; ?></b></td>
+                  <td class="main bg_notice" valign="top"><b><?php echo IP; ?></b></td>
+                  <td class="main bg_notice"><b><?php echo $order->customer['cIP']; ?></b></td>
                 </tr>
               </table>
             </td>
               <?php
+              $address_add_class = '';
               if ($order->delivery['name'] != $order->customer['name'] ||
                   $order->delivery['postcode'] != $order->customer['postcode'] ||
                   $order->delivery['city'] != $order->customer['city'] ||
                   $order->delivery['street_address'] != $order->customer['street_address']) {
-                $address_bgcolor = ' bgcolor="#FFCC33"';
+                $address_add_class = ' bg_notice';
               }
               ?>
-            <td class="main" valign="top" style="border-right: 1px solid #a3a3a3;"<?php if (isset($address_bgcolor)) echo $address_bgcolor; ?>>
+            <td class="main<?php echo $address_add_class; ?>" valign="top" style="border-right: 1px solid #a3a3a3;">
               <b><?php echo ENTRY_SHIPPING_ADDRESS; ?></b><br />
                <?php echo xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'); ?>
             </td>
@@ -94,18 +112,8 @@
           <tr>
             <td>
               <table border="0" cellspacing="0" cellpadding="2">
-              <?php if( $order->info['ibn_billnr'] != '') { ?>
                 <tr>
-                  <td class="main"><b><?php echo ENTRY_INVOICE_NUMBER; ?></b></td>
-                  <td class="main"><?php echo $order->info['ibn_billnr']==''?NOT_ASSIGNED:$order->info['ibn_billnr']; ?></td>
-                </tr>
-                <tr>
-                  <td class="main"><b><?php echo ENTRY_INVOICE_DATE; ?></b></td>
-                  <td class="main"><?php echo $order->info['ibn_billdate']=='0000-00-00'?NOT_ASSIGNED:xtc_date_short($order->info['ibn_billdate']); ?></td>
-                </tr>
-              <?php } ?>
-                <tr>
-                  <td class="main"><b><?php echo ENTRY_LANGUAGE; ?></b></td>
+                  <td class="main" style="width:140px;"><b><?php echo ENTRY_LANGUAGE; ?></b></td>
                   <td class="main"><?php echo $lang_img = xtc_image(DIR_WS_LANGUAGES . $order->info['language'].'/admin/images/'.$lang_array['image'], $order->info['language']) .'&nbsp;&nbsp;'. $order->info['language']; ?></td>
                 </tr>
                 <tr>
@@ -113,150 +121,10 @@
                   <td class="main"><?php echo get_payment_name($order->info['payment_method']) . ' ('.$order->info['payment_method'].')'; ?></td>
                 </tr>
                 <?php
+                  ## invoice number and date
+                  echo add_table_infos_ibillnr($order);
                 
-                /* easyBill */
-                //include (DIR_WS_MODULES.'easybill.info.php');
-                
-                // CC - START
-                if ($order->info['cc_type'] || $order->info['cc_owner'] || $order->info['cc_number']) {
-                  ?>
-                  <tr>
-                    <td colspan="2"><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo ENTRY_CREDIT_CARD_TYPE; ?></td>
-                    <td class="main"><?php echo $order->info['cc_type']; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo ENTRY_CREDIT_CARD_OWNER; ?></td>
-                    <td class="main"><?php echo $order->info['cc_owner']; ?></td>
-                  </tr>
-                  <?php
-                  // BMC CC Mod Start
-                  if ($order->info['cc_number'] != '0000000000000000') {
-                    if (strtolower(CC_ENC) == 'true') {
-                      $cipher_data = $order->info['cc_number'];
-                      $order->info['cc_number'] = changedataout($cipher_data, CC_KEYCHAIN);
-                    }
-                  }
-                  // BMC CC Mod End
-                  ?>
-                  <tr>
-                    <td class="main"><?php echo ENTRY_CREDIT_CARD_NUMBER; ?></td>
-                    <td class="main"><?php echo $order->info['cc_number']; ?></td>
-                  </tr>
-                  <tr>
-                  <td class="main"><?php echo ENTRY_CREDIT_CARD_CVV; ?></td>
-                  <td class="main"><?php echo $order->info['cc_cvv']; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo ENTRY_CREDIT_CARD_EXPIRES; ?></td>
-                    <td class="main"><?php echo $order->info['cc_expires']; ?></td>
-                  </tr>
-                  <?php
-                }
-                // CC - END
-
-                // Paypal Express Modul
-                if ($order->info['payment_method']=='paypal_directpayment' or $order->info['payment_method']=='paypal' or $order->info['payment_method']=='paypalexpress') {
-                  require('../includes/classes/paypal_checkout.php');
-                  require('includes/classes/class.paypal.php');
-                  $paypal = new paypal_admin();
-                  $paypal->admin_notification($oID);
-                }
-
-              // Banktransfer - START
-              $banktransfer_query = xtc_db_query("-- /admin/orders.php
-                                                  SELECT banktransfer_owner,
-                                                         banktransfer_number,
-                                                         banktransfer_bankname,
-                                                         banktransfer_blz,
-                                                         banktransfer_iban,
-                                                         banktransfer_bic,
-                                                         banktransfer_status,
-                                                         banktransfer_prz,
-                                                         banktransfer_fax,
-                                                         banktransfer_owner_email
-                                                    FROM ".TABLE_BANKTRANSFER."
-                                                   WHERE orders_id = ".$oID);
-              $banktransfer = xtc_db_fetch_array($banktransfer_query);
-                if ($banktransfer['banktransfer_bankname'] || $banktransfer['banktransfer_blz'] || $banktransfer['banktransfer_number'] || $banktransfer['banktransfer_iban'] ) {
-                  ?>
-                  <tr>
-                    <td colspan="2"><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_OWNER; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_owner']; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_NUMBER; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_number']; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_BLZ; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_blz']; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_IBAN; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_iban']; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_BIC; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_bic']; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_NAME; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_bankname']; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_OWNER_EMAIL; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_owner_email']; ?></td>
-                  </tr>
-                  <?php  if ($banktransfer['banktransfer_status'] == 0) { ?>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_STATUS; ?></td>
-                    <td class="main"><?php echo "OK"; ?></td>
-                  </tr>
-                  <?php } else { ?>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_STATUS; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_status']; ?></td>
-                  </tr>
-                  <?php
-                  $bt_status = (int) $banktransfer['banktransfer_status'];
-                  $error_val = defined('TEXT_BANK_ERROR_'.$bt_status) ? constant('TEXT_BANK_ERROR_'.$bt_status) : '';
-                  ?>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_ERRORCODE; ?></td>
-                    <td class="main"><?php echo $error_val; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_PRZ; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_prz']; ?></td>
-                  </tr>
-                  <?php }
-                }
-                if ($banktransfer['banktransfer_fax']) {
-                ?>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_FAX; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_fax']; ?></td>
-                  </tr>
-                <?php
-                }
-                // Banktransfer - END
-
-                // Moneybookers
-                if ($order->info['payment_method'] == 'amoneybookers') {
-                  if (file_exists(DIR_FS_CATALOG.DIR_WS_MODULES.'payment/'.$order->info['payment_method'].'.php')) {
-                    include(DIR_FS_CATALOG.DIR_WS_MODULES.'payment/'.$order->info['payment_method'].'.php');
-                    include(DIR_FS_CATALOG.'lang/'.$order->info['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
-                    $class = $order->info['payment_method'];
-                    $payment = new $class();
-                    $payment->admin_order($oID);
-                  }
-                }
+                  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_info_payment/','php') as $file) require ($file);
                 ?>
               </table>
             </td>
@@ -294,10 +162,14 @@
             echo '            <td class="dataTableContent" valign="top">';
             echo ($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : '<br />';
             // attribute models
+            $attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
             if (isset($order->products[$i]['attributes']) && sizeof($order->products[$i]['attributes']) > 0) {
               for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j ++) {
-                $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'],$lang); //web28 Fix attribute model  language problem
-                echo !empty($model) ? $model.'<br />' : '<br />';
+                $model = $order->products[$i]['attributes'][$j]['attributes_model'];
+                if ($model == '') {
+                  $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
+                }
+                echo (!empty($model) ? $attr_model_delimiter . $model : '<br />');
               }
             }
             echo '&nbsp;</td>'.PHP_EOL;
@@ -326,185 +198,234 @@
         </table>
         <!-- EOC ORDER BLOCK -->
 
+        <!-- BOC DOWNLOAD BLOCK -->
         <?php
-          /* magnalister v1.0.0 */
-          if (function_exists('magnaExecute')) echo magnaExecute('magnaRenderOrderDetails', array('oID' => $oID), array('order_details.php'));
-          /* END magnalister */
+        $downloads_query = xtc_db_query("SELECT op.products_name, 
+                                                opd.orders_products_download_id, 
+                                                opd.orders_products_filename, 
+                                                opd.download_count,
+                                                opd.orders_products_id,
+                                                if(opd.download_maxdays = 0, current_date, date(o.date_purchased)) + interval opd.download_maxdays + 1 day - interval 1 second download_expiry 
+                                           FROM ".TABLE_ORDERS." o
+                                           JOIN ".TABLE_ORDERS_PRODUCTS." op 
+                                                on op.orders_id = o.orders_id
+                                           JOIN ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd 
+                                                on opd.orders_products_id = op.orders_products_id
+                                          WHERE o.orders_id = '".$order->info['orders_id']."'
+                                            AND opd.orders_products_filename != ''
+                                            AND o.customers_id = '".$order->customer['id']."'");
+
+        if (xtc_db_num_rows($downloads_query) > 0) {
+          ?>
+          <div class="heading"><?php echo TEXT_DOWNLOADS; ?></div>
+          <table cellspacing="0" cellpadding="2" class="table">
+            <tr class="dataTableHeadingRow">
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_EXPIRES; ?></td>
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_DOWNLOADS; ?></td>
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_DAYS; ?></td>
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ACTION; ?></td>
+            </tr>
+            <?php
+            while ($downloads = xtc_db_fetch_array($downloads_query)) {
+              echo '<tr class="dataTableRow">' . xtc_draw_form('downloads', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=downloads').xtc_draw_hidden_field('orders_products_download_id', $downloads['orders_products_download_id']).xtc_draw_hidden_field('date_purchased', strtotime($order->info['date_purchased'])).PHP_EOL;
+              echo '  <td class="dataTableContent">'.$downloads['products_name'].'</td>'.PHP_EOL;
+              echo '  <td class="dataTableContent">'.$downloads['orders_products_filename'].'</td>'.PHP_EOL;
+              echo '  <td class="dataTableContent"><span class="'.(($downloads['download_expiry'] < $order->info['date_purchased']) ? 'col-red' : 'col-green').'">'.xtc_datetime_short($downloads['download_expiry']).'</span></td>'.PHP_EOL;
+              echo '  <td class="dataTableContent">'.xtc_draw_input_field('download_count', $downloads['download_count'], 'style="width:30px;"').'</td>'.PHP_EOL;
+              echo '  <td class="dataTableContent">'.xtc_draw_input_field('download_maxdays', '', 'style="width:30px;"').'</td>'.PHP_EOL;
+              echo '  <td class="dataTableContent"><input type="submit" class="button" onclick="this.blur();" value="'.BUTTON_UPDATE.'"/></td>'.PHP_EOL;
+              echo '</form></tr>';
+            }
+            ?>
+          </table>
+          <?php
+        }
+        ?>
+        <!-- EOC DOWNLOAD BLOCK -->
+
+        <?php
+          foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_info_blocks/','php') as $file) require ($file);
         ?>
 
-        <!-- BOC ORDER PARCEL BLOCK -->
-          <div class="heading"><?php echo TABLE_HEADING_TRACKING; ?></div>
-          <table cellspacing="0" cellpadding="2" class="table">
-            <tr>
-              <td class="main">
-                <table border="1" cellspacing="0" cellpadding="5">
-                  <tr>
-                    <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
-                    <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_PARCEL_LINK; ?></strong></td>
-                    <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_REMOVE_LINK; ?></strong></td>
-                  </tr>
+        <!-- BOC ORDER TRACK & TRACE BLOCK -->
+        <div class="heading"><?php echo TABLE_HEADING_TRACK_TRACE; ?></div>
+        <?php echo xtc_draw_form('carriers', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=inserttracking'); ?>
+        <table cellspacing="0" cellpadding="5" class="table borderall">
+          <tr>
+            <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
+            <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_PARCEL_LINK; ?></strong></td>
+            <td class="smallText" align="center" style="width:155px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
+          </tr>
+          <?php
+            $tracking_array = get_tracking_link($oID, $lang_code);
+            if (count($tracking_array) > 0) {
+              foreach($tracking_array as $tracking) {
+                ?>
+                <tr>
+                  <td class="smallText" align="center"><?php echo $tracking['carrier_name']; ?></td>
+                  <td class="smallText" align="left"><a href="<?php echo $tracking['tracking_link']; ?>" target="_blank"><?php echo $tracking['parcel_id']; ?></a></td>
+                  <td class="smallText" align="center">
                   <?php
-                  $tracking_links_query = xtc_db_query("-- /admin/orders.php
-                                                       SELECT ortra.ortra_id,
-                                                              ortra.ortra_parcel_id,
-                                                              carriers.carrier_name,
-                                                              carriers.carrier_tracking_link
-                                                         FROM ".TABLE_ORDERS_TRACKING." ortra,
-                                                              ".TABLE_CARRIERS." carriers
-                                                        WHERE ortra_order_id = '".$oID."'
-                                                          AND ortra.ortra_carrier_id = carriers.carrier_id");
-                  if (xtc_db_num_rows($tracking_links_query)) {
-                    while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
-                      echo '          <tr>'.PHP_EOL.'            <td class="smallText" align="left">'.$tracking_link['carrier_name'].'</td>'.PHP_EOL.'            <td class="smallText" align="left">';
-                      echo '            <a href="'.str_replace('$1',$tracking_link['ortra_parcel_id'],$tracking_link['carrier_tracking_link']).'" target="_blank"><b>'.$tracking_link['ortra_parcel_id'].'</b></a></td>'.PHP_EOL.'            <td class="smallText" align="center">';
-                      echo '            <a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&trackingid='.$tracking_link['ortra_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS)."</td>".PHP_EOL;
-                      echo '          <tr>'.PHP_EOL;
+                    if (!isset($tracking['external']) || $tracking['external'] == '0') {
+                      echo '<a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_DELETE).'</a>'.PHP_EOL;
                     }
-                  }
                   ?>
-                  <tr><?php echo xtc_draw_form('carriers', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=inserttracking'); ?>
-                    <td class="smallText" align="center">
-                      <?php echo xtc_draw_pull_down_menu('carrierID', $carriers, $carriers[0]); ?>
-                    </td>
-                    <td class="smallText" align="center"><input name="parcel_number"></td>
-                    <td class="smallText" align="center"><input type="submit" value="<?php echo BUTTON_UPDATE; ?>"></td>
-                    </form>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        <!-- EOC ORDER PARCEL BLOCK -->
+                  </td>
+                <tr>
+                <?php
+              }
+            }
+          ?>
+          <tr>
+            <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); ?></td>
+            <td class="smallText" align="center"><?php echo xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
+            <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo BUTTON_INSERT; ?>"></td>
+          </tr>
+        </table>
+        </form>
+        <!-- EOC ORDER TRACK & TRACE BLOCK -->
 
         <!-- BOC ORDER HISTORY BLOCK -->
         <div class="heading"><?php echo TEXT_ORDER_HISTORY; ?></div>
-        <table cellspacing="0" cellpadding="2" class="table">
+        <table cellspacing="0" cellpadding="5" class="table borderall">
           <tr>
-            <td class="main">
-              <table border="1" width="100%" cellspacing="0" cellpadding="5">
-                <tr>
-                  <td class="smallText" align="center"><b><?php echo TABLE_HEADING_DATE_ADDED; ?></b></td>
-                  <td class="smallText" align="center"><b><?php echo TABLE_HEADING_CUSTOMER_NOTIFIED; ?></b></td>
-                  <td class="smallText" align="center"><b><?php echo TABLE_HEADING_STATUS; ?></b></td>
-                  <td class="smallText" align="center"><b><?php echo TABLE_HEADING_COMMENTS; ?></b></td>
-                  <td class="smallText" align="center"><b><?php echo TABLE_HEADING_COMMENTS_SENT; ?></b></td>
-                </tr>
-                <?php
-                $orders_history_query = xtc_db_query("-- /admin/orders.php
-                                                      SELECT orders_status_id,
-                                                             date_added,
-                                                             customer_notified,
-                                                             comments,
-                                                             comments_sent
-                                                        FROM ".TABLE_ORDERS_STATUS_HISTORY."
-                                                       WHERE orders_id = ".$oID."
-                                                    ORDER BY date_added");
-                $count = xtc_db_num_rows($orders_history_query);
-                if ($count) {
-                  while ($orders_history = xtc_db_fetch_array($orders_history_query)) {
-                    $count--;
-                    $class = ($count == 0) ? ' last_row' : '';
-                    echo '                <tr>'.PHP_EOL;
-                    echo '                  <td class="smallText'.$class.'" align="center">'.xtc_datetime_short($orders_history['date_added']).'</td>'.PHP_EOL;
-                    echo '                  <td class="smallText'.$class.'" align="center">';
-                    if ($orders_history['customer_notified'] == '1') {
-                      echo xtc_image(DIR_WS_ICONS.'tick.gif', ICON_TICK).'</td>'.PHP_EOL;
-                    } else {
-                      echo xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
-                    }
-                    echo '            <td class="smallText'. $class.'">';
-                    if($orders_history['orders_status_id']!='0') {
-                      echo $orders_status_array[$orders_history['orders_status_id']];
-                    }else{
-                      echo '<font color="#FF0000">'.TEXT_VALIDATING.'</font>';
-                    }
-                    echo '</td>'.PHP_EOL;
-                    echo '                  <td class="smallText'.$class.'">'.nl2br(xtc_db_output($orders_history['comments'])).'&nbsp;</td>'. PHP_EOL;                 
-                    echo '                  <td class="smallText'.$class.'" align="center">';
-                    if ($orders_history['comments_sent'] == '1') {
-                      echo xtc_image(DIR_WS_ICONS.'tick.gif', ICON_TICK).'</td>'.PHP_EOL;
-                    } else {
-                      echo xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
-                    }
-                    echo '</tr>'.PHP_EOL;
-                   }
+            <td class="smallText" align="center"><b><?php echo TABLE_HEADING_DATE_ADDED; ?></b></td>
+            <td class="smallText" align="center"><b><?php echo TABLE_HEADING_CUSTOMER_NOTIFIED; ?></b></td>
+            <td class="smallText" align="center"><b><?php echo TABLE_HEADING_STATUS; ?></b></td>
+            <td class="smallText" align="center"><b><?php echo TABLE_HEADING_COMMENTS; ?></b></td>
+            <td class="smallText" align="center"><b><?php echo TABLE_HEADING_COMMENTS_SENT; ?></b></td>
+          </tr>
+          <?php
+            $orders_history_query = xtc_db_query("-- /admin/orders.php
+                                                  SELECT orders_status_id,
+                                                         date_added,
+                                                         customer_notified,
+                                                         comments,
+                                                         comments_sent
+                                                    FROM ".TABLE_ORDERS_STATUS_HISTORY."
+                                                   WHERE orders_id = ".$oID."
+                                                ORDER BY date_added");
+            $count = xtc_db_num_rows($orders_history_query);
+            if ($count) {
+              while ($orders_history = xtc_db_fetch_array($orders_history_query)) {
+                $count--;
+                $class = ($count == 0) ? ' last_row' : '';
+                echo '                <tr>'.PHP_EOL;
+                echo '                  <td class="smallText'.$class.'" align="center">'.xtc_datetime_short($orders_history['date_added']).'</td>'.PHP_EOL;
+                echo '                  <td class="smallText'.$class.'" align="center">';
+                if ($orders_history['customer_notified'] == '1') {
+                  echo xtc_image(DIR_WS_ICONS.'tick.gif').'</td>'.PHP_EOL;
                 } else {
-                  echo '                <tr>'.PHP_EOL.'            <td class="smallText" colspan="5">'.TEXT_NO_ORDER_HISTORY.'</td>'.PHP_EOL.'                </tr>'.PHP_EOL;
+                  echo xtc_image(DIR_WS_ICONS.'cross.gif').'</td>'.PHP_EOL;
                 }
-                ?>
-              </table>
-            </td>
+                echo '            <td class="smallText'. $class.'">';
+                if($orders_history['orders_status_id']!='0') {
+                  echo $orders_status_array[$orders_history['orders_status_id']];
+                }else{
+                  echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';
+                }
+                echo '</td>'.PHP_EOL;
+                echo '                  <td class="smallText'.$class.'">'.nl2br(xtc_db_output($orders_history['comments'])).'&nbsp;</td>'. PHP_EOL;                 
+                echo '                  <td class="smallText'.$class.'" align="center">';
+                if ($orders_history['comments_sent'] == '1') {
+                  echo xtc_image(DIR_WS_ICONS.'tick.gif').'</td>'.PHP_EOL;
+                } else {
+                  echo xtc_image(DIR_WS_ICONS.'cross.gif').'</td>'.PHP_EOL;
+                }
+                echo '</tr>'.PHP_EOL;
+               }
+            } else {
+              echo '                <tr>'.PHP_EOL.'            <td class="smallText" colspan="5">'.TEXT_NO_ORDER_HISTORY.'</td>'.PHP_EOL.'                </tr>'.PHP_EOL;
+            }
+          ?>
           </tr>
         </table>
         <!-- EOC ORDER HISTORY BLOCK -->
 
         <!-- BOC ORDER STATUS BLOCK -->
         <div class="heading"><?php echo TEXT_ORDER_STATUS; ?></div>
+        <?php echo xtc_draw_form('status', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=update_order'); ?>
         <table cellspacing="0" cellpadding="2" class="table">
           <tr>
             <td class="main"><b><?php echo TABLE_HEADING_COMMENTS; ?></b></td>
           </tr>
           <tr>
-            <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
-          </tr>
-          <?php echo xtc_draw_form('status', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=update_order'); ?>
-          <tr>
-            <td class="main"><?php echo xtc_draw_textarea_field('comments', 'soft', '60', '5', $order->info['comments']); ?></td>
+            <td class="main"><?php echo xtc_draw_textarea_field('comments', 'soft', '60', '8', ''); ?></td>
           </tr>
           <tr>
             <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
             <td class="main"><b><?php echo ENTRY_STATUS; ?></b> <?php echo xtc_draw_pull_down_menu('status', $orders_statuses, $order->info['orders_status']); ?></td>
-          </tr><?php
+          </tr>
+          <?php
+            if (count($tracking_array) > 0) {
+              ?>
+              <tr>
+                <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+              </tr>
+              <tr>
+                <td class="main"><b><?php echo ENTRY_SEND_TRACKING_INFO; ?></b></td>
+              </tr>
+              <?php
+              foreach($tracking_array as $tracking) {
+                echo '<tr><td class="main">'.xtc_draw_checkbox_field('tracking_id[]', $tracking['tracking_id'], false).' '.$tracking['parcel_id'].'</td></tr>';
+              }
+              ?>
+              <tr>
+                <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+              </tr>
+              <?php
+            }
             /* magnalister v2.0.0 */
             if (function_exists('magnaExecute')) magnaExecute('magnaRenderOrderStatusSync', array(), array('order_details.php'));
             /* END magnalister */
-        ?><tr>
+          ?>
+          <tr>
             <td>
               <table border="0" cellspacing="0" cellpadding="2">
-              <tr>
-                <td class="main"><b><?php echo ENTRY_NOTIFY_CUSTOMER; ?></b></td>
-                <td class="main" style="width:40px;"><?php echo xtc_draw_checkbox_field('notify', '', true); ?></td>
-                <td class="main"><b><?php echo ENTRY_NOTIFY_COMMENTS; ?></b></td>
-                <td class="main" style="width:40px;"><?php echo xtc_draw_checkbox_field('notify_comments', '', true); ?></td>
-              </tr>
-            </table>
-            <div style="float:right; margin: 10px 0 0;"><input type="submit" class="button" name="update" value="<?php echo BUTTON_UPDATE; ?>"></div>
-            <?php
-            //BOF EMAIL PREVIEW
-            include('includes/modules/email_preview/email_preview_btn.php');
-            //EOF EMAIL PREVIEW
-            ?>
+                <tr>
+                  <td class="main"><b><?php echo ENTRY_NOTIFY_CUSTOMER; ?></b></td>
+                  <td class="main" style="width:40px;"><?php echo xtc_draw_checkbox_field('notify', '', true); ?></td>
+                  <td class="main"><b><?php echo ENTRY_NOTIFY_COMMENTS; ?></b></td>
+                  <td class="main" style="width:40px;"><?php echo xtc_draw_checkbox_field('notify_comments', '', true); ?></td>
+                </tr>
+              </table>
+              <div style="float:right; margin: 10px 0 0;"><input type="submit" class="button" name="update" value="<?php echo BUTTON_UPDATE; ?>"></div>
+              <?php
+              //BOF EMAIL PREVIEW
+              include('includes/modules/email_preview/email_preview_btn.php');
+              //EOF EMAIL PREVIEW
+              ?>
             </td>
           </tr>
-          </form>
         </table>
+        </form>
         <!-- EOC ORDER STATUS BLOCK -->
 
         <!-- BOC BUTTONS BLOCK -->
-        <table cellspacing="0" cellpadding="2" style="width:850px; margin-bottom:10px;">
+        <table class="table" style="margin-bottom:10px;border: none !important;">
           <tr>
-            <td align="right">
-              <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=send&site=1'); ?>"><?php echo BUTTON_ORDER_CONFIRMATION; ?></a>
-              <?php
-                if (ACTIVATE_GIFT_SYSTEM == 'true') {
-                  echo '              <a class="button" href="'.xtc_href_link(FILENAME_GV_MAIL, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$order->customer['ID']).'">'.BUTTON_SEND_COUPON.'</a>'.PHP_EOL;
+            <td>
+              <div class="flt-l"> 
+                <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page='.$_GET['page'].'&oID='.$oID); ?>"><?php echo BUTTON_BACK;?></a>
+              </div>
+              <div class="flt-r"> 
+                <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=send&site=1'); ?>"><?php echo BUTTON_ORDER_CONFIRMATION; ?></a>
+                <?php
+                  if (ACTIVATE_GIFT_SYSTEM == 'true') {
+                  echo '<a class="button" href="'.xtc_href_link(FILENAME_GV_MAIL, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$order->customer['ID']).'">'.BUTTON_SEND_COUPON.'</a>';
                 }
-                if ($order->info['ibn_billnr'] == '') {
-                  echo '              <a class="button" href="'.xtc_href_link(FILENAME_ORDERS, 'page='.$_GET['page'].'&oID='.$oID.'&action=edit&action2=set_ibillnr').'">'.BUTTON_BILL.'</a>';
-                }
-              ?>
-              <a class="button" href="Javascript:void()" onclick="window.open('<?php echo xtc_href_link(FILENAME_PRINT_ORDER,'oID='.$oID); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=800, height=750')"><?php echo BUTTON_INVOICE; ?></a>
-              <a class="button" href="Javascript:void()" onclick="window.open('<?php echo xtc_href_link(FILENAME_PRINT_PACKINGSLIP,'oID='.$oID); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=800, height=750')"><?php echo BUTTON_PACKINGSLIP; ?></a>
-              <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=deleteccinfo'); ?>"><?php echo BUTTON_REMOVE_CC_INFO;?></a>
-              <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page='.$_GET['page'].'&oID='.$oID); ?>"><?php echo BUTTON_BACK;?></a>
+                // invoice number and date
+                echo add_btn_ibillnr($order,$oID);
+                ?>
+                <a class="button" href="Javascript:void()" onclick="window.open('<?php echo xtc_href_link(FILENAME_PRINT_ORDER,'oID='.$oID); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=800, height=750')"><?php echo BUTTON_INVOICE; ?></a>
+                <a class="button" href="Javascript:void()" onclick="window.open('<?php echo xtc_href_link(FILENAME_PRINT_PACKINGSLIP,'oID='.$oID); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=800, height=750')"><?php echo BUTTON_PACKINGSLIP; ?></a>
+              </div>
             </td>
           </tr>
         </table>
-          <?php
-            /* easyBill */
-            //include (DIR_WS_MODULES.'easybill.button.php');
-          ?>
-        </table>
         <!-- EOC BUTTONS BLOCK -->
+      </div>

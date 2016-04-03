@@ -33,54 +33,132 @@
       return $string;
     }
   }
-
+  
 
   function xtc_db_perform($table, $data, $action='insert', $parameters='', $link='db_link') {
-    global $$link;
+    global ${$link};
+    
+    if (!is_array($data) || count($data) < 1) {
+      return false;
+    }
     
     reset($data);
 
     if ($action == 'insert') {
-      $query = 'insert into ' . $table . ' (';
+      $query = 'INSERT INTO ' . $table . ' (';
+      
+      $sub_query = array();
       while (list($columns, ) = each($data)) {
-        $query .= $columns . ', ';
+        $sub_query[] = $columns;
       }
-      $query = substr($query, 0, -2) . ') values (';
+      $query .= implode(', ', $sub_query) . ') VALUES (';
       reset($data);
+      
+      $sub_query = array();
       while (list(, $value) = each($data)) {
-         $value = (is_float($value) && defined('PHP4_3_10') && PHP4_3_10 === true) ? sprintf("%.F",$value) : (string)($value);
+        $value = (string)$value;
         switch ($value) {
           case 'now()':
-            $query .= 'now(), ';
+            $sub_query[] = 'now()';
             break;
           case 'null':
-            $query .= 'null, ';
+            $sub_query[] = 'null';
             break;
           default:
-            $query .= '\'' . xtc_db_input($value) . '\', ';
+            $sub_query[] = '\'' . xtc_db_input($value) . '\'';
             break;
         }
       }
-      $query = substr($query, 0, -2) . ')';
+      $query .= implode(', ', $sub_query) . ')';
     } elseif ($action == 'update') {
-      $query = 'update ' . $table . ' set ';
+      $query = 'UPDATE ' . $table . ' SET ';
+      
+      $sub_query = array();
       while (list($columns, $value) = each($data)) {
-         $value = (is_float($value) && defined('PHP4_3_10') && PHP4_3_10 === true) ? sprintf("%.F",$value) : (string)($value);
+        $value = (string)$value;
         switch ($value) {
           case 'now()':
-            $query .= $columns . ' = now(), ';
+            $sub_query[] = $columns . ' = now()';
             break;
           case 'null':
-            $query .= $columns . ' = null, ';
+            $sub_query[] = $columns . ' = null';
             break;
           default:
-            $query .= $columns . ' = \'' . xtc_db_input($value) . '\', ';
+            $sub_query[] = $columns . ' = \'' . xtc_db_input($value) . '\'';
             break;
         }
       }
-      $query = substr($query, 0, -2) . ' where ' . $parameters;
+      $query .= implode(', ', $sub_query) . ' WHERE ' . $parameters;
     }
 
     return xtc_db_query($query, $link);
   }
+
+
+  function xtDBquery($query, $link='db_link') {
+    global ${$link};
+
+    if (defined('DB_CACHE') && DB_CACHE == 'true') {
+      $result = xtc_db_queryCached($query, $link);
+    } else {
+      $result = xtc_db_query($query, $link);
+    }
+    return $result;
+  }
+
+
+  function xtc_db_queryCached($query, $link='db_link') {
+    global ${$link};
+    
+    if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
+      $queryStartTime = array_sum(explode(" ",microtime()));
+    }
+    
+    // include needed class
+    require_once (DIR_FS_EXTERNAL . 'phpfastcache/phpfastcache.php');
+
+    $cache = phpFastCache();
+    
+    $id = md5(strtolower(preg_replace("'[\r\n\s]+'", '', $query)));
+    
+    // get cache
+    $records = $cache->get($id);
+
+    if ($records == null) {
+      $result = xtc_db_query($query, $link);
+
+      // fetch data into array
+      $records = array('query' => array());
+      
+      while ($record = xtc_db_fetch_array($result)) {
+          $records['query'][] = $record;
+      }
+      
+      // set cache  
+      $cache->set($id, $records , DB_CACHE_EXPIRE);
+    } else {
+      if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
+        $queryEndTime = array_sum(explode(" ",microtime())); 
+        $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');
+        if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
+          xtc_db_slow_query_log($processTime, $query, 'QUERY');
+        }
+      }
+    }
+    
+    return $records['query'];
+  }
+
+
+  function xtc_db_slow_query_log($processTime, $query, $type) {
+    $backtrace = debug_backtrace();
+    
+    error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' ' . $type . ' [' . $processTime . 's] ' . $query . "\n", 3, DIR_FS_LOG.'mod_sql_'.strtolower($type).'_'. date('Y-m-d') .'.log');
+    $err = 0;
+    for ($i=0, $n=count($backtrace); $i<$n; $i++) {
+      error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'] . "\n", 3, DIR_FS_LOG.'mod_sql_'.strtolower($type).'_'. date('Y-m-d') .'.log');
+      $err ++;
+    }
+  }
+
 ?>

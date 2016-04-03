@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: orders_import.php 4631 2014-09-22 14:39:35Z tim.neumann $
+ * $Id: orders_import.php 5709 2015-06-04 08:11:46Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -74,30 +74,58 @@ function magnaInitOrderImport() {
 				}
 			}
 		}
+	} elseif (MagnaDB::gi()->tableExists('language_phrases_cache')) {
+		// Fix for Gambio 2.3.1.0.
+		$_gm_lang_defines = MagnaDB::gi()->fetchArray("
+			    SELECT lsc.phrase_name AS `define`, lsc.phrase_text AS `value`
+			      FROM `language_phrases_cache` lsc
+			     WHERE lsc.section_name LIKE 'ot\_%'
+			           AND lsc.language_id = " . (int)$_SESSION['languages_id'] . "
+			  GROUP BY lsc.phrase_name
+		");
+		if (!empty($_gm_lang_defines)) {
+			foreach ($_gm_lang_defines as $_gm_set) {
+				if (!defined($_gm_set['define'])) {
+					define($_gm_set['define'], $_gm_set['value']);
+				}
+			}
+		}
 	}
 	
 	if (!defined('MODULE_ORDER_TOTAL_SHIPPING_TITLE')) {
-		require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_shipping.php');
+		if (!mlGambio2_3_ModulesFix('ot_shipping', 'order_total', '_TITLE')) {
+			require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_shipping.php');
+		}
 	}
 	if (!defined('MODULE_ORDER_TOTAL_SUBTOTAL_TITLE')) {
-		require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_subtotal.php');
+		if (!mlGambio2_3_ModulesFix('ot_subtotal', 'order_total', '_TITLE')) {
+			require_once(DIR_MAGNA_LANGUAGES.$_magnaLanguage.'/modules/order_total/ot_subtotal.php');
+		}
 	}
 	if (!defined('MODULE_ORDER_TOTAL_TOTAL_TITLE')) {
-		require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_total.php');
+		if (!mlGambio2_3_ModulesFix('ot_total', 'order_total', '_TITLE')) {
+			require_once(DIR_MAGNA_LANGUAGES.$_magnaLanguage.'/modules/order_total/ot_total.php');
+		}
 	}
-	if (!defined('MODULE_ORDER_TOTAL_TOTAL_NETTO_TITLE') && file_exists(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_total_netto.php')) {
+	if (!defined('MODULE_ORDER_TOTAL_TOTAL_NETTO_TITLE')) {
 		# nur bei Gambio
-		require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_total_netto.php');
+		if (!mlGambio2_3_ModulesFix('ot_total_netto', 'order_total', '_TITLE') && file_exists(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_total_netto.php')) {
+			require_once(DIR_MAGNA_LANGUAGES.$_magnaLanguage.'/modules/order_total/ot_total_netto.php');
+		}
 	}
 	if (!defined('MODULE_ORDER_TOTAL_TAX_TITLE')) {
-		require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_tax.php');
+		if (!mlGambio2_3_ModulesFix('ot_tax', 'order_total', '_TITLE')) {
+			require_once(DIR_MAGNA_LANGUAGES.$_magnaLanguage.'/modules/order_total/ot_tax.php');
+		}
 	}
 	// Gambio specific "Kleinunternehmer Regelung"
 	if (defined('MODULE_ORDER_TOTAL_GM_TAX_FREE_STATUS')
 		&& (strtolower(MODULE_ORDER_TOTAL_GM_TAX_FREE_STATUS) == 'true') 
 	) {
-		if (!defined('MODULE_ORDER_TOTAL_GM_TAX_FREE_TEXT') && file_exists(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_gm_tax_free.php')) {
-			require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_gm_tax_free.php');
+		if (!defined('MODULE_ORDER_TOTAL_GM_TAX_FREE_TEXT')) {
+			if (!mlGambio2_3_ModulesFix('ot_gm_tax_free', 'order_total', '_TITLE') && file_exists(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_gm_tax_free.php')) {
+				require_once(DIR_MAGNA_LANGUAGES.$_magnaLanguage.'/modules/order_total/ot_gm_tax_free.php');
+			}
 		}
 		if (defined('MODULE_ORDER_TOTAL_GM_TAX_FREE_TEXT')) {
 			define('MAGNA_GAMBIO_PLUGIN_GM_TAX_FREE_STATUS', true);
@@ -110,28 +138,47 @@ function magnaInitOrderImport() {
 	
 	if (defined('MODULE_ORDER_TOTAL_COD_FEE_TITLE')) {
 		define('MAGNA_LABEL_ORDERS_COD_CHARGE', MODULE_ORDER_TOTAL_COD_FEE_TITLE.':');
-	} else if (file_exists(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_cod_fee.php')) {
-		require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_cod_fee.php');
-		define('MAGNA_LABEL_ORDERS_COD_CHARGE', MODULE_ORDER_TOTAL_COD_FEE_TITLE.':');
 	} else {
-		define('MAGNA_LABEL_ORDERS_COD_CHARGE', ML_LABEL_ORDER_TOTAL_COD_FEE.':');
+		if (mlGambio2_3_ModulesFix('ot_cod_fee', 'order_total', '_TITLE') && defined('MODULE_ORDER_TOTAL_COD_FEE_TITLE')) {
+			define('MAGNA_LABEL_ORDERS_COD_CHARGE', MODULE_ORDER_TOTAL_COD_FEE_TITLE.':');
+		} else {
+			if (file_exists(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_cod_fee.php')) {
+				require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_cod_fee.php');
+				define('MAGNA_LABEL_ORDERS_COD_CHARGE', MODULE_ORDER_TOTAL_COD_FEE_TITLE.':');
+			} else {
+				define('MAGNA_LABEL_ORDERS_COD_CHARGE', ML_LABEL_ORDER_TOTAL_COD_FEE.':');
+			}
+		}
 	}
 	if (defined('MODULE_ORDER_TOTAL_COUPON_TITLE')) {
 		define('MAGNA_LABEL_ORDERS_VOUCHER', MODULE_ORDER_TOTAL_COUPON_TITLE.':');
-	} else if (file_exists(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_coupon.php')) {
-		require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_coupon.php');
-		define('MAGNA_LABEL_ORDERS_VOUCHER', MODULE_ORDER_TOTAL_COUPON_TITLE.':');
 	} else {
-		define('MAGNA_LABEL_ORDERS_VOUCHER', ML_LABEL_ORDER_TOTAL_COUPON.':');
+		if (mlGambio2_3_ModulesFix('ot_coupon', 'order_total', '_TITLE') && defined('MODULE_ORDER_TOTAL_COUPON_TITLE')) {
+			define('MAGNA_LABEL_ORDERS_VOUCHER', MODULE_ORDER_TOTAL_COUPON_TITLE.':');
+		} else {
+			if (file_exists(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_coupon.php')) {
+				require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_coupon.php');
+				define('MAGNA_LABEL_ORDERS_VOUCHER', MODULE_ORDER_TOTAL_COUPON_TITLE.':');
+			} else {
+				define('MAGNA_LABEL_ORDERS_VOUCHER', ML_LABEL_ORDER_TOTAL_COUPON.':');
+			}
+		}
 	}
 	if (defined('MODULE_ORDER_TOTAL_DISCOUNT_TITLE')) {
 		define('MAGNA_LABEL_ORDERS_DISCOUNT', MODULE_ORDER_TOTAL_DISCOUNT_TITLE.':');
-	} else if (file_exists(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_discount.php')) {
-		require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_discount.php');
-		define('MAGNA_LABEL_ORDERS_DISCOUNT', MODULE_ORDER_TOTAL_DISCOUNT_TITLE.':');
 	} else {
-		define('MAGNA_LABEL_ORDERS_DISCOUNT', ML_LABEL_ORDER_TOTAL_DISCOUNT.':');
+		if (mlGambio2_3_ModulesFix('ot_discount', 'order_total', '_TITLE') && defined('MODULE_ORDER_TOTAL_DISCOUNT_TITLE')) {
+			define('MAGNA_LABEL_ORDERS_DISCOUNT', MODULE_ORDER_TOTAL_DISCOUNT_TITLE.':');
+		} else {
+			if (file_exists(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_discount.php')) {
+				require_once(DIR_MAGNA_LANGUAGES . $_magnaLanguage . '/modules/order_total/ot_discount.php');
+				define('MAGNA_LABEL_ORDERS_DISCOUNT', MODULE_ORDER_TOTAL_DISCOUNT_TITLE.':');
+			} else {
+				define('MAGNA_LABEL_ORDERS_DISCOUNT', ML_LABEL_ORDER_TOTAL_DISCOUNT.':');
+			}
+		}
 	}
+
 	define('MAGNA_LABEL_ORDERS_SUBTOTAL', MODULE_ORDER_TOTAL_SUBTOTAL_TITLE.':');
 	define('MAGNA_LABEL_ORDERS_TAX', MODULE_ORDER_TOTAL_TAX_TITLE.':');
 	define('MAGNA_LABEL_ORDERS_SHIPPING', MODULE_ORDER_TOTAL_SHIPPING_TITLE.':');
@@ -175,11 +222,7 @@ function magnaImportAllOrders() {
 		$modules = magnaGetInvolvedMarketplaces();
 
 		#ini_set('memory_limit', '512M');
-		MagnaConnector::gi()->setTimeOutInSeconds(
-			MAGNA_DEBUG && defined('MAGNALISTER_PLUGIN') && MAGNALISTER_PLUGIN 
-				? 1 
-				: 600
-		);
+		MagnaConnector::gi()->setTimeOutInSeconds(600);
 
 		$break = false;
 		foreach ($modules as $marketplace) {

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: banktransfer.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -22,7 +22,6 @@
    ---------------------------------------------------------------------------------------*/
 
   class banktransfer {
-
     var $code, $title, $description, $enabled;
 
     function __construct() {
@@ -49,17 +48,6 @@
     function update_status() {
       global $order;
 
-      if( MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING != '' ) {
-        $neg_shpmod_arr = explode(',',MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING);
-        foreach( $neg_shpmod_arr as $neg_shpmod ) {
-          $nd=$neg_shpmod.'_'.$neg_shpmod;
-          if( $_SESSION['shipping']['id']==$nd || $_SESSION['shipping']['id']==$neg_shpmod ) {
-            $this->enabled = false;
-            break;
-          }
-        }
-      }
-
       $check_order_query = xtc_db_query("select count(*) as count from " . TABLE_ORDERS . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
       $order_check = xtc_db_fetch_array($check_order_query);
 
@@ -70,7 +58,11 @@
         $check_flag = true;
         if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_BANKTRANSFER_ZONE > 0) ) {
           $check_flag = false;
-          $check_query = xtc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_BANKTRANSFER_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+          $check_query = xtc_db_query("SELECT zone_id 
+                                         FROM " . TABLE_ZONES_TO_GEO_ZONES . " 
+                                        WHERE geo_zone_id = '" . MODULE_PAYMENT_BANKTRANSFER_ZONE . "' 
+                                          AND zone_country_id = '" . $order->billing['country']['id'] . "' 
+                                     ORDER BY zone_id");
           while ($check = xtc_db_fetch_array($check_query)) {
             if ($check['zone_id'] < 1) {
               $check_flag = true;
@@ -92,11 +84,12 @@
             '  var banktransfer_blz = document.getElementById("checkout_payment").banktransfer_blz.value;' . "\n" .
             '  var banktransfer_number = document.getElementById("checkout_payment").banktransfer_number.value;' . "\n" .
             '  var banktransfer_owner = document.getElementById("checkout_payment").banktransfer_owner.value;' . "\n" .
+            '  var banktransfer_owner_email = document.getElementById("checkout_payment").banktransfer_owner_email.value;' . "\n" .
             '  if (document.getElementById("checkout_payment").banktransfer_fax) { ' . "\n" .
             '    var banktransfer_fax = document.getElementById("checkout_payment").banktransfer_fax.checked;' . "\n" .
             '  } else { var banktransfer_fax = false; } ' . "\n" .
             '  if (banktransfer_fax == false) {' . "\n" .
-            '    if (banktransfer_blz == "") {' . "\n" .
+            '    if (banktransfer_number.substr(0, 2) != "DE" && banktransfer_blz == "") {' . "\n" .
             '      error_message = error_message + "' . JS_BANK_BLZ . '";' . "\n" .
             '      error = 1;' . "\n" .
             '    }' . "\n" .
@@ -108,6 +101,10 @@
             '      error_message = error_message + "' . JS_BANK_OWNER . '";' . "\n" .
             '      error = 1;' . "\n" .
             '    }' . "\n" .
+            '    if (banktransfer_owner_email == "") {' . "\n" .
+            '      error_message = error_message + "' . JS_BANK_OWNER_EMAIL . '";' . "\n" .
+            '      error = 1;' . "\n" .
+            '    }' . "\n" .
             '  }' . "\n" .
             '}' . "\n";
       return $js;
@@ -115,24 +112,22 @@
 
     function selection() {
       global $order;
-
+            
       $selection = array('id' => $this->code,
                          'module' => $this->title,
                          'description'=>$this->info,
                          'fields' => array(array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_NOTE,
                                                  'field' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_INFO),
                                            array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER,
-                                                 'field' => isset($_GET['banktransfer_owner'])?xtc_draw_input_field('banktransfer_owner', $_GET['banktransfer_owner']):xtc_draw_input_field('banktransfer_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'])), //DokuMan - 2012-08-29 - preset banktransfer_owner with customer only if no value was entered
-                                           array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ,
-                                                 'field' => xtc_draw_input_field('banktransfer_blz', (isset($_GET['banktransfer_blz'])) ? $_GET['banktransfer_blz'] : '', 'size="8" maxlength="8"')),
-                                           array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NUMBER,
-                                                 'field' => xtc_draw_input_field('banktransfer_number', (isset($_GET['banktransfer_number'])) ? $_GET['banktransfer_number'] : '', 'size="16" maxlength="32"')),
+                                                 'field' => isset($_GET['banktransfer_owner'])? xtc_draw_input_field('banktransfer_owner', $_GET['banktransfer_owner'], 'size="40" maxlength="64"') : xtc_draw_input_field('banktransfer_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'], 'size="40" maxlength="64"')), //DokuMan - 2012-08-29 - preset banktransfer_owner with customer only if no value was entered
+                                           array('title' => ((MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY == 'False') ? MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NUMBER : MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_IBAN),
+                                                 'field' => xtc_draw_input_field('banktransfer_number', (isset($_GET['banktransfer_number'])) ? $_GET['banktransfer_number'] : ((isset($_SESSION['banktransfer_info']['banktransfer_number'])) ? $_SESSION['banktransfer_info']['banktransfer_number'] : ''), 'size="40" maxlength="40"')),
+                                           array('title' => ((MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY == 'False') ? MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ : MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BIC),
+                                                 'field' => xtc_draw_input_field('banktransfer_blz', (isset($_GET['banktransfer_blz'])) ? $_GET['banktransfer_blz'] : ((isset($_SESSION['banktransfer_info']['banktransfer_blz'])) ? $_SESSION['banktransfer_info']['banktransfer_blz'] : ''), 'size="40" maxlength="11"')),
                                            array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NAME,
-                                                 'field' => xtc_draw_input_field('banktransfer_bankname', (isset($_GET['banktransfer_bankname'])) ? $_GET['banktransfer_bankname'] : '')), //DokuMan - 2011-12-07 - preset banktransfer_bankname when user already entered a bank name
-                                           array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_IBAN,
-                                                 'field' => xtc_draw_input_field('banktransfer_iban', (isset($_GET['banktransfer_iban'])) ? $_GET['banktransfer_iban'] : '')), //DokuMan - 2012-11-26 - added IBAN and BIC
-                                           array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BIC,
-                                                 'field' => xtc_draw_input_field('banktransfer_bic', (isset($_GET['banktransfer_bic'])) ? $_GET['banktransfer_bic'] : '')), //DokuMan - 2012-11-26 - added IBAN and BIC
+                                                 'field' => xtc_draw_input_field('banktransfer_bankname', (isset($_GET['banktransfer_bankname'])) ? $_GET['banktransfer_bankname'] : ((isset($_SESSION['banktransfer_info']['banktransfer_bankname'])) ? $_SESSION['banktransfer_info']['banktransfer_bankname'] : ''), 'size="40" maxlength="64"')),
+                                           array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER_EMAIL,
+                                                 'field' => isset($_GET['banktransfer_owner_email'])? xtc_draw_input_field('banktransfer_owner_email', $_GET['banktransfer_owner_email'], 'size="40" maxlength="96"') : xtc_draw_input_field('banktransfer_owner_email', ((isset($_SESSION['banktransfer_info']['banktransfer_owner_email'])) ? $_SESSION['banktransfer_info']['banktransfer_owner_email'] : $order->customer['email_address']), 'size="40" maxlength="96"')),
                                            array('title' => '',
                                                  'field' => isset($_POST['recheckok']) ? xtc_draw_hidden_field('recheckok', $_POST['recheckok']) : '')
                                            ));
@@ -150,10 +145,53 @@
       if (@$_POST['banktransfer_fax'] == false && @$_POST['recheckok'] != 'true') {
         include(DIR_WS_CLASSES . 'banktransfer_validation.php');
 
-        $banktransfer_validation = new AccountCheck;
-        $banktransfer_result = $banktransfer_validation->CheckAccount($_POST['banktransfer_number'], $_POST['banktransfer_blz']);
-
-        if ($banktransfer_validation->Bankname != '') {
+        // iban / classic?
+        $number = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['banktransfer_number']);
+        if (ctype_digit($number) && MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY == 'False') {
+          // classic
+          $banktransfer_validation = new AccountCheck;
+          $banktransfer_result = $banktransfer_validation->CheckAccount($number, $_POST['banktransfer_blz']);
+          // some error codes <> 0/OK pass as OK 
+          if ($banktransfer_validation->account_acceptable($banktransfer_result))
+            $banktransfer_result = 0;
+        } else {
+          // iban
+          $banktransfer_validation = new IbanAccountCheck;
+          $banktransfer_result = $banktransfer_validation->IbanCheckAccount($number, $_POST['banktransfer_blz']);
+          // some error codes <> 0/OK pass as OK
+          if ($banktransfer_validation->account_acceptable($banktransfer_result))
+            $banktransfer_result = 0;
+          // owner email ?
+          if ($banktransfer_result == 0 && isset($_POST['banktransfer_owner_email'])) {
+            require_once (DIR_FS_INC . 'xtc_validate_email.inc.php');
+            if (!xtc_validate_email($_POST['banktransfer_owner_email']))
+              $banktransfer_result = 13;
+          }  
+          // iban country allowed in payment zone?
+          if ($banktransfer_result == 0 && ((int)MODULE_PAYMENT_BANKTRANSFER_ZONE > 0)) {
+            $check_query = xtc_db_query("SELECT DISTINCT z.geo_zone_id 
+                                                    FROM " . TABLE_ZONES_TO_GEO_ZONES . " z
+                                                    JOIN " . TABLE_COUNTRIES . " c on c.countries_id = z.zone_country_id
+                                                   WHERE z.geo_zone_id = " . MODULE_PAYMENT_BANKTRANSFER_ZONE . "
+                                                     AND c.countries_iso_code_2 = '" . $banktransfer_validation->IBAN_country . "'");
+            if (xtc_db_num_rows($check_query) == 0)
+              $banktransfer_result = 14;
+          }
+          
+          // map return codes. refine where necessary
+          // iban not ok
+          if (in_array($banktransfer_result, array(1000, 1010, 1020, 1030, 1040))) 
+            $banktransfer_result = 12;
+          // bic not ok
+          else if (in_array($banktransfer_result, array(1050, 1060, 1070, 1080))) 
+            $banktransfer_result = 11;
+          // classic check of bank details derived from iban, map to classic return codes
+          else if ($banktransfer_result > 2000) 
+            $banktransfer_result -= 2000;
+          
+        } 
+        
+        if (!empty($banktransfer_validation->Bankname)) {
           $this->banktransfer_bankname =  $banktransfer_validation->Bankname;
         } else {
           $this->banktransfer_bankname = xtc_db_prepare_input($_POST['banktransfer_bankname']);
@@ -199,6 +237,22 @@
             $error = MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_10;
             $recheckok = 'false';
             break;
+          case 11: // no bic entered
+            $error = MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_11;
+            $recheckok = 'false';
+            break;
+          case 12: // iban not o.k.
+            $error = MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_12;
+            $recheckok = 'false';
+            break;
+          case 13: // no account holder notification email entered
+            $error = MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_13;
+            $recheckok = 'false';
+            break;
+          case 14: // iban country not allowed in payment zone
+            $error = MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_14;
+            $recheckok = 'false';
+            break;
           case 128: // Internal error
             $error = 'Internal error, please check again to process your payment';
             $recheckok = 'true';
@@ -210,54 +264,62 @@
         }
 
         if ($banktransfer_result > 0 && $_POST['recheckok'] != 'true') {
-          $payment_error_return = 'payment_error=' . $this->code . '&error=' . urlencode($error) . '&banktransfer_owner=' . urlencode($_POST['banktransfer_owner']) . '&banktransfer_number=' . urlencode($_POST['banktransfer_number']) . '&banktransfer_blz=' . urlencode($_POST['banktransfer_blz']) . '&banktransfer_bankname=' . urlencode($_POST['banktransfer_bankname']) . '&recheckok=' . $recheckok;
+          $payment_error_return = 'payment_error=' . $this->code . '&error=' . urlencode($error) . '&banktransfer_owner=' . urlencode($_POST['banktransfer_owner']) . '&banktransfer_number=' . urlencode($_POST['banktransfer_number']) . '&banktransfer_blz=' . urlencode($_POST['banktransfer_blz']) . '&banktransfer_bankname=' . urlencode($_POST['banktransfer_bankname']) .'&banktransfer_owner_email=' . urlencode($_POST['banktransfer_owner_email']) .  '&recheckok=' . $recheckok;
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, $payment_error_return, 'SSL', true, false));
         }
+        
+        $this->iban_mode = ($banktransfer_validation->checkmode == 'iban');
         $this->banktransfer_owner = xtc_db_prepare_input($_POST['banktransfer_owner']);
-        $this->banktransfer_blz = xtc_db_prepare_input($_POST['banktransfer_blz']);
-        $this->banktransfer_number = xtc_db_prepare_input($_POST['banktransfer_number']);
-        $this->banktransfer_iban = xtc_db_prepare_input(strtoupper($_POST['banktransfer_iban'])); //DokuMan - 2012-11-26 - added IBAN and BIC
-        $this->banktransfer_bic = xtc_db_prepare_input(strtoupper($_POST['banktransfer_bic'])); //DokuMan - 2012-11-26 - added IBAN and BIC
+        $this->banktransfer_owner_email = xtc_db_prepare_input($_POST['banktransfer_owner_email']);
+        $this->banktransfer_iban = $banktransfer_validation->banktransfer_iban;
+        $this->banktransfer_bic = $banktransfer_validation->banktransfer_bic;
+        $this->banktransfer_number = $banktransfer_validation->banktransfer_number;
+        $this->banktransfer_blz = $banktransfer_validation->banktransfer_blz;
         $this->banktransfer_prz = $banktransfer_validation->PRZ;
         $this->banktransfer_status = $banktransfer_result;
       }
     }
 
     function confirmation() {
-      global $banktransfer_val, $banktransfer_owner, $banktransfer_bankname, $banktransfer_blz, $banktransfer_number, $checkout_form_action, $checkout_form_submit;
-
-      if (!$_POST['banktransfer_owner'] == '') {
+      // write data so session      
+      $_SESSION['banktransfer_info'] =  array('banktransfer_owner' => $this->banktransfer_owner,
+                                              'banktransfer_bankname' => $this->banktransfer_bankname,
+                                              'banktransfer_owner_email' => $this->banktransfer_owner_email,
+                                              'banktransfer_number' => (($this->iban_mode) ? $this->banktransfer_iban : $this->banktransfer_number),
+                                              'banktransfer_blz' => (($this->iban_mode) ? $this->banktransfer_bic : $this->banktransfer_blz),
+                                              );
+             
+      if ($_POST['banktransfer_owner'] != '') {
         $confirmation = array('title' => $this->title,
                               'fields' => array(array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER.'<br>'.
-                                                                  MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ.'<br>'.
-                                                                  MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NUMBER.'<br>'.
-                                                                  MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NAME.'<br>'.
-                                                                  MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_IBAN.'<br>'.
-                                                                  MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BIC.'<br>',
-                                                       'field' => $this->banktransfer_owner.'<br>'.
-                                                                  $this->banktransfer_blz.'<br>'.
-                                                                  $this->banktransfer_number.'<br>'.
-                                                                  $this->banktransfer_bankname.'<br>'.
-                                                                  $this->banktransfer_iban.'<br>'. //DokuMan - 2012-11-26 - added IBAN and BIC
-                                                                  $this->banktransfer_bic.'<br>') //DokuMan - 2012-11-26 - added IBAN and BIC
-                                                ));
+                                                                 (($this->iban_mode) ? MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_IBAN : MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NUMBER).'<br>'.
+                                                                 (($this->iban_mode) ? MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BIC : MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ).'<br>'.
+                                                                 MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NAME.'<br>'.
+                                                                 MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER_EMAIL.'<br>',
+                                                      'field' => $this->banktransfer_owner.'<br>'.
+                                                                 (($this->iban_mode) ? $this->banktransfer_iban : $this->banktransfer_number).'<br>'. 
+                                                                 (($this->iban_mode) ? $this->banktransfer_bic : $this->banktransfer_blz).'<br>'.
+                                                                 $this->banktransfer_bankname.'<br>'.
+                                                                 $this->banktransfer_owner_email.'<br>'
+                                                )));
       }
+      
       if (isset($_POST['banktransfer_fax']) && $_POST['banktransfer_fax'] == "on") {
         $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_FAX)));
         $this->banktransfer_fax = "on";
       }
+      
       return $confirmation;
     }
 
     function process_button() {
       global $_POST;
-
-      $process_button_string = xtc_draw_hidden_field('banktransfer_blz', $this->banktransfer_blz) .
+      
+      $process_button_string = xtc_draw_hidden_field('banktransfer_blz', ($this->iban_mode) ? $this->banktransfer_bic : $this->banktransfer_blz) .
                                xtc_draw_hidden_field('banktransfer_bankname', $this->banktransfer_bankname).
-                               xtc_draw_hidden_field('banktransfer_number', $this->banktransfer_number) .
-                               xtc_draw_hidden_field('banktransfer_iban', $this->banktransfer_iban) . //DokuMan - 2012-11-26 - added IBAN and BIC
-                               xtc_draw_hidden_field('banktransfer_bic', $this->banktransfer_bic) . //DokuMan - 2012-11-26 - added IBAN and BIC
+                               xtc_draw_hidden_field('banktransfer_number', ($this->iban_mode) ? $this->banktransfer_iban : $this->banktransfer_number) .
                                xtc_draw_hidden_field('banktransfer_owner', $this->banktransfer_owner) .
+                               xtc_draw_hidden_field('banktransfer_owner_email', $this->banktransfer_owner_email) .
                                xtc_draw_hidden_field('banktransfer_status', $this->banktransfer_status) .
                                xtc_draw_hidden_field('banktransfer_prz', $this->banktransfer_prz) .
                                (isset($_POST['banktransfer_fax'])? xtc_draw_hidden_field('banktransfer_fax', $this->banktransfer_fax):'');
@@ -274,27 +336,21 @@
     }
 
     function after_process() {
-      global $insert_id, $_POST, $banktransfer_val, $banktransfer_owner, $banktransfer_bankname, $banktransfer_blz, $banktransfer_number, $banktransfer_status, $banktransfer_prz, $banktransfer_fax, $checkout_form_action, $checkout_form_submit;
-      xtc_db_query("INSERT INTO ".TABLE_BANKTRANSFER."
-                   ( orders_id,
-                     banktransfer_owner,
-                     banktransfer_number,
-                     banktransfer_bankname,
-                     banktransfer_blz,
-                     banktransfer_iban,
-                     banktransfer_bic,
-                     banktransfer_status,
-                     banktransfer_prz)
-                   VALUES ('" . $insert_id . "',
-                           '" . $this->banktransfer_owner ."',
-                           '" . $this->banktransfer_number . "',
-                           '" . $this->banktransfer_bankname . "',
-                           '" . $this->banktransfer_blz . "',
-                           '" . $this->banktransfer_iban . "',
-                           '" . $this->banktransfer_bic . "',
-                           '" . $this->banktransfer_status ."',
-                           '" . $this->banktransfer_prz ."')"
-                  );
+      global $insert_id, $_POST;
+      
+      $sql_data_array = array('orders_id' => $insert_id,
+                              'banktransfer_owner' => $this->banktransfer_owner,
+                              'banktransfer_number' => $this->banktransfer_number,
+                              'banktransfer_bankname' => $this->banktransfer_bankname,
+                              'banktransfer_blz' => $this->banktransfer_blz,
+                              'banktransfer_status' => $this->banktransfer_status,
+                              'banktransfer_prz' => $this->banktransfer_prz,
+                              'banktransfer_iban' => $this->banktransfer_iban,
+                              'banktransfer_bic' => $this->banktransfer_bic,
+                              'banktransfer_owner_email' => $this->banktransfer_owner_email,
+                              );
+      xtc_db_perform(TABLE_BANKTRANSFER, $sql_data_array);
+
       if (isset($_POST['banktransfer_fax'])) {
         xtc_db_query("UPDATE banktransfer SET banktransfer_fax = '" . $this->banktransfer_fax ."' WHERE orders_id = '" . $insert_id . "'");
       }
@@ -303,7 +359,27 @@
         xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY." SET orders_status_id='".$this->order_status."' WHERE orders_id='".$insert_id."'");
       }
     }
-
+    
+    function info() {
+      global $order, $send_by_admin;
+      
+      if ($send_by_admin) {
+        $banktransfer_query = xtc_db_query("SELECT banktransfer_iban,
+                                                   banktransfer_bankname,
+                                                   banktransfer_owner_email
+                                              FROM ".TABLE_BANKTRANSFER."
+                                             WHERE orders_id = '".$order->info['order_id']."'");
+        if (xtc_db_num_rows($banktransfer_query) > 0) {
+          $banktransfer = xtc_db_fetch_array($banktransfer_query);
+          return $banktransfer;
+        }
+      }
+      
+      return array('banktransfer_iban' => $this->banktransfer_iban, 
+                   'banktransfer_bankname' => $this->banktransfer_bankname,
+                   'banktransfer_owner_email' => $this->banktransfer_owner_email);
+    }
+    
     function get_error() {
       if (isset($_GET['error'])) {
         $error = array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR,
@@ -330,10 +406,10 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ', 'false', '6', '0', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_URL_NOTE', 'fax.html', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER', '0', '6', '0', now())");
-
-      // BOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING', '', '6', '99', now())");
-      // EOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_CI', '', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX', '', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY', '1', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     }
 
     function remove() {
@@ -350,7 +426,11 @@
                     'MODULE_PAYMENT_BANKTRANSFER_FAX_CONFIRMATION',
                     'MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER',
                     'MODULE_PAYMENT_BANKTRANSFER_URL_NOTE',
-                    'MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING');
+                    'MODULE_PAYMENT_BANKTRANSFER_CI',
+                    'MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX',
+                    'MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY',
+                    'MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY',
+                    );
     }
   }
 ?>

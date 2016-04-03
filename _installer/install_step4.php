@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$
+   $Id: install_step4.php 3072 2012-06-18 15:01:13Z hhacker $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -19,37 +19,21 @@
   require('includes/application.php');
 
   // include Database functions for installer
-  require_once(DIR_FS_INC.'xtc_db_connect_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_select_db.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_query_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_test_create_db_permission.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_test_connection.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_install.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_connect_installer.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_select_db.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_query_installer.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_test_create_db_permission.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_test_connection.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_install.inc.php');
 
   require_once(DIR_FS_INC.'xtc_random_charcode.inc.php');
   require_once(DIR_FS_INC.'xtc_rand.inc.php');
 
   include('language/'.$lang.'.php');
 
+  require ('includes/header.php');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-    <title>modified eCommerce Shopsoftware Installer - STEP 4 / Webserver Configuration</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
-    <style type="text/css">
-      body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
-      table,td,div { font-family: Arial, sans-serif; font-size: 12px;}
-      h1 { font-size: 18px; margin: 0; padding: 0; margin-bottom: 10px; }
-      .proxy {font-family: Courier New, Courier, mono; font-size: 12px;}
-      .prov{width:120px; display:block; float:left; font-weight: bold;}
-      <!--
-        .messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10px; background-color: #; }
-      -->
-    </style>
-  </head>
-  <body>
-    <table width="800" style="border:30px solid #fff;" border="0" align="center" cellpadding="0" cellspacing="0">
+    <table width="803" style="border:10px solid #fff;" bgcolor="#ffffff" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td height="95" colspan="2" >
           <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -60,20 +44,30 @@
         </td>
       </tr>
       <tr>
-        <td align="center" valign="top">
-          <br />
+        <td align="left" valign="top">
           <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
               <td>
-                <img src="images/step4.gif" width="705" height="180" border="0"><br />
+                <ul id="navigation" class="cf">
+                  <li class="inactive"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_INDEX; ?></span><br /><span class="description"><?php echo NAV_DESC_INDEX; ?></span></li>
+                  <li class="inactive"><span class="number">1.</span> <span class="title"><?php echo NAV_TITLE_STEP1; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP1; ?></span></li>
+                  <li class="inactive"><span class="number">2.</span> <span class="title"><?php echo NAV_TITLE_STEP2; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP2; ?></span></li>
+                  <li class="inactive last"><span class="number">3.</span> <span class="title"><?php echo NAV_TITLE_STEP3; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP3; ?></span></li>
+                  <li class="active second_line"><span class="number">4.</span> <span class="title"><?php echo NAV_TITLE_STEP4; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP4; ?></span></li>
+                  <li class="inactive second_line"><span class="number">5.</span> <span class="title"><?php echo NAV_TITLE_STEP5; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP5; ?></span></li>
+                  <li class="inactive second_line"><span class="number">6.</span> <span class="title"><?php echo NAV_TITLE_STEP6; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP6; ?></span></li>
+                  <!--
+                  <li class="inactive second_line"><span class="number">7.</span> <span class="title"><?php echo NAV_TITLE_STEP7; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP7; ?></span></li>
+                  //-->
+                  <li class="inactive second_line last"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_FINISHED; ?></span><br /><span class="description"><?php echo NAV_DESC_FINISHED; ?></span></li>
+                </ul>
                 <br />
-                <br />
-                <div style="border:1px solid #ccc; background:#fff; padding:10px;"><?php echo TEXT_WELCOME_STEP4; ?></div>
+                <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;"><?php echo TEXT_WELCOME_STEP4; ?></div>
               </td>
             </tr>
           </table>
           <br />
-          <table width="95%" border="0" cellpadding="0" cellspacing="0">
+          <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
               <td>
                 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -83,15 +77,18 @@
                     </td>
                   </tr>
                 </table>
-                <div style="border:1px solid #ccc; background:#fff; padding:10px;">
+                <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
                 <?php
-                  if ( ( (file_exists(DIR_FS_CATALOG . 'includes/configure.php')) && (!is_writeable(DIR_FS_CATALOG . 'includes/configure.php')) ) || ( (file_exists(DIR_FS_CATALOG . 'admin/includes/configure.php')) && (!is_writeable(DIR_FS_CATALOG . 'admin/includes/configure.php')) ) || ( (file_exists(DIR_FS_CATALOG . 'admin/includes/local/configure.php')) && (!is_writeable(DIR_FS_CATALOG . 'admin/includes/local/configure.php')) ) || ( (file_exists(DIR_FS_CATALOG . 'includes/local/configure.php')) && (!is_writeable(DIR_FS_CATALOG . 'includes/local/configure.php')) )) {
+                  if ( ( (file_exists(DIR_FS_CATALOG . 'includes/configure.php')) && (!is_writeable(DIR_FS_CATALOG . 'includes/configure.php')) ) 
+                  //    || ( (file_exists(DIR_FS_CATALOG . 'admin/includes/configure.php')) && (!is_writeable(DIR_FS_CATALOG . 'admin/includes/configure.php')) ) 
+                  //    || ( (file_exists(DIR_FS_CATALOG . 'admin/includes/local/configure.php')) && (!is_writeable(DIR_FS_CATALOG . 'admin/includes/local/configure.php')) ) 
+                      || ( (file_exists(DIR_FS_CATALOG . 'includes/local/configure.php')) && (!is_writeable(DIR_FS_CATALOG . 'includes/local/configure.php')) )) {
                 ?>
                 <p>
-                  <img src="images/icons/error.gif" width="16" height="16">
-                  <strong><font color="#FF0000" size="2"><?php echo TITLE_STEP4_ERROR; ?></font></strong>
+                  <img src="images/icons/error.png" width="18" height="16">
+                  <strong><font color="#A94442" size="2"><?php echo TITLE_STEP4_ERROR; ?></font></strong>
                 </p>
-                  <div style="border:1px solid #ccc; background:#fff; padding:10px;"><?php echo TEXT_STEP4_ERROR; ?>
+                  <div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;"><?php echo TEXT_STEP4_ERROR; ?>
              <?php /*
                     <ul class="boxMe">
                       <li>cd <?php echo DIR_FS_CATALOG; ?>admin/includes/</li>
@@ -103,8 +100,8 @@
                     <ul class="boxMe">
                       <li>cd <?php echo DIR_FS_CATALOG; ?>includes/</li>
                       <li>touch configure.php</li>
-                      <li>chmod 707 configure.php</li>
-              <?php //<li>chmod 707 configure.org.php</li> - 2011-10-20 - h-h-h - Remove/comment out unneeded secondary configure ?>
+                      <li>chmod 777 configure.php</li>
+              <?php //<li>chmod 777 configure.org.php</li> - 2011-10-20 - h-h-h - Remove/comment out unneeded secondary configure ?>
                     </ul>
                   </div>
                   <p class="noteBox"><?php echo TEXT_STEP4_ERROR_1; ?></p>
@@ -114,9 +111,9 @@
                         echo draw_hidden_fields(); ?>
                     <table border="0" width="100%" cellspacing="0" cellpadding="0">
                       <tr>
-                        <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
+                        <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
                         <td align="center">
-                          <input type="image" src="buttons/<?php echo $lang;?>/button_retry.gif" border="0" alt="Retry">
+                          <input type="image" src="images/buttons/<?php echo $lang;?>/button_retry.gif" border="0" alt="Retry">
                         </td>
                       </tr>
                     </table>
@@ -139,7 +136,7 @@
                         <td style="border-top: 1px solid; border-color: #CFCFCF">
                           <b><?php echo TITLE_CHECK_CONFIGURATION; ?></b>
                           <?php //BOF - web28 - 2010.02.09 -  NEW INFO TEXT ?>
-                          <div style="color: #FC0000; padding:0px 0px 5px 0px"><b><?php echo TITLE_WEBSERVER_INFO; ?></b></div>
+                          <div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;"><b><?php echo TITLE_WEBSERVER_INFO; ?></b></div>
                           <?php //EOF - web28 - 2010.02.09 -  NEW INFO TEXT ?>
                         </td>
                         <td style="border-top: 1px solid; border-color: #CFCFCF">&nbsp;</td>
@@ -204,8 +201,8 @@
                   <table border="0" width="100%" cellspacing="0" cellpadding="0">
                     <tr>
                       <td align="right">
-                        <a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel" /></a>
-                        <input type="image" src="buttons/<?php echo $lang;?>/button_continue.gif">
+                        <a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel" /></a>
+                        <input type="image" src="images/buttons/<?php echo $lang;?>/button_continue.gif">
                       </td>
                     </tr>
                   </table>

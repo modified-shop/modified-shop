@@ -1,0 +1,63 @@
+{if $smarty.const.PRODUCT_INFO_BOX == 'true'}
+  {* BOXANSICHT *}
+  <div class="listingbox">
+    <div class="lb_inner">
+      <div class="lb_image">
+      {if $module_data.PRODUCTS_IMAGE != ''}
+        <a href="{$module_data.PRODUCTS_LINK}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
+        <noscript><a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
+      {else}
+        &nbsp;
+      {/if}
+      </div>
+      <div class="lb_title"><h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2></div>
+      <div class="lb_shipping">{if $module_data.PRODUCTS_SHIPPING_NAME}{#text_shippingtime#} {if $module_data.PRODUCTS_SHIPPING_IMAGE}<span class="lb_shipping_image"><img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" /></span>{/if}{$module_data.PRODUCTS_SHIPPING_NAME_LINK}{else}&nbsp;{/if}</div>
+      <div class="lb_price">
+        {foreach name=inner item=price_data from=$module_data.PRODUCTS_PRICE_ARRAY}
+          {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/price_box.html"}
+        {/foreach}
+        {if $module_data.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
+          {if $module_data.PRODUCTS_VPE}<div class="lb_vpe">{$module_data.PRODUCTS_VPE}</div>{/if}
+        {/if}
+      </div>
+      {if $module_data.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
+        <div class="lb_tax">{$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK}</div>
+        {if $module_data.PRODUCTS_BUTTON_BUY_NOW || ($module_data.PRODUCTS_FSK18 != '0' && $smarty.const.SHOW_BUTTON_BUY_NOW != 'false')}<div class="lb_buttons">{$module_data.PRODUCTS_BUTTON_DETAILS}{$module_data.PRODUCTS_BUTTON_BUY_NOW}</div>{/if}
+      {/if}
+    </div>
+  </div>
+
+{else}
+  {* ROWANSICHT *}
+  <div class="listingrow">
+    <div class="lr_inner cf">
+      <div class="lr_image">
+      {if $module_data.PRODUCTS_IMAGE != ''}
+        <a href="{$module_data.PRODUCTS_LINK}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
+        <noscript><a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
+      {else}
+        &nbsp;
+      {/if}      
+      </div>
+      <div class="lr_content cf">
+        <div class="lr_title"><h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2></div>
+        <div class="lr_desc_box">
+          {if $module_data.PRODUCTS_SHORT_DESCRIPTION}<div class="lr_desc">{$module_data.PRODUCTS_SHORT_DESCRIPTION}</div>{/if}
+          <div class="lr_shipping">{if $module_data.PRODUCTS_SHIPPING_NAME}{#text_shippingtime#} {if $module_data.PRODUCTS_SHIPPING_IMAGE}<span class="lr_shipping_image"><img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" /></span>{/if}{$module_data.PRODUCTS_SHIPPING_NAME_LINK}{else}&nbsp;{/if}</div>
+        </div>
+        <div class="lr_price_box">
+          <div class="lr_price">
+              {foreach name=inner item=price_data from=$module_data.PRODUCTS_PRICE_ARRAY}
+                {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/price_listing.html"}
+              {/foreach}
+          </div>
+          {if $module_data.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
+            {if $module_data.PRODUCTS_VPE}<div class="lr_vpe">{$module_data.PRODUCTS_VPE}</div>{/if}
+            <div class="lr_tax">{$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK}</div>
+            <div class="lr_buttons">{$module_data.PRODUCTS_BUTTON_DETAILS}{if $module_data.PRODUCTS_BUTTON_BUY_NOW}{$module_data.PRODUCTS_BUTTON_BUY_NOW}{/if}</div>
+          {/if}
+        </div>
+      </div>
+    </div>
+  </div>
+{/if}

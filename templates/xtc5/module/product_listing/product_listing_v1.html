@@ -1,15 +1,15 @@
 {config_load file="$language/lang_$language.conf" section="index"}
 <h1>{$LIST_TITLE}</h1>
-{if $CATEGORIES_IMAGE}<img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME}" class="imgLeft" /><br />{/if}
+{if $CATEGORIES_IMAGE}<img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" class="imgLeft" /><br />{/if}
 {if $CATEGORIES_DESCRIPTION}{$CATEGORIES_DESCRIPTION}<br />{/if}
 {if $CATEGORIES_LISTING}{$CATEGORIES_LISTING}<br />{/if}
-{if $MANUFACTURER_DROPDOWN}{$MANUFACTURER_DROPDOWN}<br />{/if}
-{$NAVIGATION}
+{$LISTING_FILTER}<br />
+{$PAGINATION}
 <div class="hrproductpreview"></div>
 <table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
   {foreach name=aussen item=module_data from=$module_content}
     <tr>
-      <td align="center" class="productPreviewImage">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|strip_tags:false}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
+      <td align="center" class="productPreviewImage">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
       <td class="productPreviewContent">
         <h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2>
         {if $module_data.PRODUCTS_SHORT_DESCRIPTION}<br />{$module_data.PRODUCTS_SHORT_DESCRIPTION}{/if}
@@ -19,9 +19,9 @@
           <p class="shippingtime">
             {#text_shippingtime#}
             {if $module_data.PRODUCTS_SHIPPING_IMAGE}
-              <img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME}" />
+              <img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" />
             {/if}
-            {$module_data.PRODUCTS_SHIPPING_NAME}
+            {$module_data.PRODUCTS_SHIPPING_NAME_LINK}
           </p>
         {/if}
         {*BOF NEW PRODUCTS_BUTTON_DETAILS*}

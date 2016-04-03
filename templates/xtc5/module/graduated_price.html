@@ -3,10 +3,10 @@
   <tr> 
     <td colspan="2" class="header">{#heading_text#}:</td>
   </tr>
-{foreach name=aussen item=module_data from=$module_content} 
-  <tr> 
-    <td>{$module_data.QUANTITY} {#unit#}</td>
-    <td>{#pieces#} {$module_data.PRICE}{if $module_data.VPE}<br />{$module_data.VPE}{/if}</td>
-  </tr>
-{/foreach}
+  {foreach name=aussen item=module_data from=$module_content} 
+    <tr> 
+      <td>{if $module_data.TO_QUANTITY == ''}{$module_data.FROM_QUANTITY} {/if}{$module_data.PLAIN_QUANTITY}{if $module_data.TO_QUANTITY != ''} - {$module_data.TO_QUANTITY}{/if} {#unit#}</td>
+      <td>{#pieces#} {$module_data.PRICE}{if $module_data.VPE}<br />{$module_data.VPE}{/if}</td>
+    </tr>
+  {/foreach}
 </table>

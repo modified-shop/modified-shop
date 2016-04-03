@@ -72,7 +72,7 @@
                   'old_qty'  => $old_quantity
                 );
             }
-          break
+          break;
         }
     }
 

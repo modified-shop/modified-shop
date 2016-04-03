@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: start.php 2585 2012-01-03 14:25:49Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -41,7 +41,7 @@ define('TODAY_VISITORS','Besucher von heute:');
 define('LAST_VISITORS','Letzte 100 Besucher:');
 define('ALL_LAST_VISITORS','Alle Besucher:');
 define('DATE_TIME','Datum / Uhrzeit:');
-define('IP_ADRESS','IP Adresse:');
+define('IP_ADRESS','IP-Adresse:');
 define('OPERATING_SYSTEM','Betriebssystem:');
 define('REFFERING_HOST','Referring Host:');
 define('ENTRY_PAGE','Einstiegsseite:');
@@ -109,7 +109,7 @@ define('TOTAL_TURNOVER', 'Umsatz gesamt');
 // main heading
 define('HEADING_TITLE', 'Willkommen im Adminbereich');
 // users online
-define('TABLE_CAPTION_USERS_ONLINE', 'User Online (die letzten %s Kunden)');
+define('TABLE_CAPTION_USERS_ONLINE', 'Online');
 define('TABLE_CAPTION_USERS_ONLINE_HINT', '***f&uuml;r Infos zu einem User - auf Namen des Users klicken***');
 define('TABLE_HEADING_USERS_ONLINE_SINCE', 'Online seit');
 define('TABLE_HEADING_USERS_ONLINE_NAME', 'Name');
@@ -117,7 +117,7 @@ define('TABLE_HEADING_USERS_ONLINE_LAST_CLICK', 'Letzter Klick');
 define('TABLE_HEADING_USERS_ONLINE_INFO', 'Infos');
 define('TABLE_CELL_USERS_ONLINE_INFO', 'mehr...');
 // new customers
-define('TABLE_CAPTION_NEW_CUSTOMERS', 'Neue Kunden');
+define('TABLE_CAPTION_NEW_CUSTOMERS', 'Kunden');
 define('TABLE_CAPTION_NEW_CUSTOMERS_COMMENT', '(die letzten 15)');
 define('TABLE_HEADING_NEW_CUSTOMERS_LASTNAME', 'Name');
 define('TABLE_HEADING_NEW_CUSTOMERS_FIRSTNAME', 'Vorname');
@@ -128,7 +128,7 @@ define('TABLE_CELL_NEW_CUSTOMERS_EDIT', 'bearbeiten...');
 define('TABLE_CELL_NEW_CUSTOMERS_DELETE', 'l&ouml;schen...');
 define('TABLE_CELL_NEW_CUSTOMERS_ORDERS', 'anzeigen...');
 // new orders
-define('TABLE_CAPTION_NEW_ORDERS', 'Neue Bestellungen');
+define('TABLE_CAPTION_NEW_ORDERS', 'Bestellungen');
 define('TABLE_CAPTION_NEW_ORDERS_COMMENT', '(die letzten 20)');
 define('TABLE_HEADING_NEW_ORDERS_ORDER_NUMBER', 'Bestellnummer');
 define('TABLE_HEADING_NEW_ORDERS_ORDER_DATE', 'Bestelldatum');
@@ -142,11 +142,12 @@ define('TABLE_CAPTION_BIRTHDAYS', 'Geburtstagsliste');
 define('TABLE_CELL_BIRTHDAYS_TODAY', 'Kunden, die heute Geburtstag haben');
 define('TABLE_CELL_BIRTHDAYS_THIS_MONTH', 'Kunden, die noch in diesem Monat Geburtstag haben');
 // EOF - vr 2010-04-01 -  Added missing definitions
+define('HEADING_CAPTION_STATISTIC', 'Statistik');
 // security check
 
 // DB version check
-define('ERROR_DB_VERSION_UPDATE', '<strong>WARNUNG:</strong> Ihre DB mu&szlig; aktualisiert werden, bitte den <a href="'.DIR_WS_CATALOG.'_installer/">Installer</a> ausf&uuml;hren:');
-define('ERROR_DB_VERSION_UPDATE_INFO', 'DB mu&szlig; von Release %s auf %s aktualisiert werden.');
+define('ERROR_DB_VERSION_UPDATE', '<strong>WARNUNG:</strong> Ihre DB muss aktualisiert werden, bitte den <a href="'.DIR_WS_CATALOG.'_installer/">Installer</a> ausf&uuml;hren:');
+define('ERROR_DB_VERSION_UPDATE_INFO', 'DB muss von Release %s auf %s aktualisiert werden.');
 
 // EMail check
 define('ERROR_EMAIL_CHECK', '<strong>WARNUNG:</strong> Folgende E-Mail-Adressen sind anscheinend fehlerhaft:');

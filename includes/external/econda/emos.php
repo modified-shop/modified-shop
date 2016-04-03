@@ -62,11 +62,8 @@ class EMOS{
 	* @param $scriptFileName If we want to have annother Filename than
 	*          emos2.js you can set it here
 	*/
-	// BOF - GTB - 2011-02-01 - move Econda to External
-  	//function EMOS($pathToFile="includes/econda/",$scriptFileName="emos32_xtc.js"){
-	function EMOS($pathToFile=DIR_WS_EXTERNAL."econda/",$scriptFileName="emos32_xtc.js"){
-	// EOF - GTB - 2011-02-01 - move Econda to External
-		$this->pathToFile = $pathToFile;
+	function EMOS($pathToFile="econda/", $scriptFileName="emos32_xtc.js"){
+		$this->pathToFile = DIR_WS_EXTERNAL.$pathToFile;
 		$this->scriptFileName = $scriptFileName;
 		$this->prepareInScript();
 

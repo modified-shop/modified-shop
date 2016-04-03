@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-  $Id$
+  $Id: class.debug.php 2172 2011-09-06 17:44:57Z dokuman $
 
   modified eCommerce Shopsoftware
   http://www.modified-shop.org

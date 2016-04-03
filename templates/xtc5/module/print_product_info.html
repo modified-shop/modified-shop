@@ -5,9 +5,8 @@
   <title>{$PRODUCTS_NAME} / {$PRODUCTS_MODEL}</title>
   <meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
   <meta name="robots" content="noindex, nofollow, noodp" />
-  {if $CanonicalLink}
-    <link href="{$CanonicalLink}" rel="canonical" />
-  {/if}
+  {if $CanonicalLink}<link href="{$CanonicalLink}" rel="canonical" />{/if}
+  {if $base_href}<base href="{$base_href}" />{/if}
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet.css" />
   <style type="text/css">
@@ -20,9 +19,9 @@
   <h1 style="margin-top:0px;">{$PRODUCTS_NAME}</h1>
   <div id="productinfowrap">
     {if $PRODUCTS_IMAGE != ''}
-      <div id="productinfoimages" style="width:{$smarty.const.PRODUCT_IMAGE_THUMBNAIL_WIDTH}px;"><img src="{$PRODUCTS_IMAGE}" alt="{$module_data.NAME}" border="0" />
+      <div id="productinfoimages" style="width:{$smarty.const.PRODUCT_IMAGE_THUMBNAIL_WIDTH}px;"><img src="{$PRODUCTS_IMAGE}" alt="{$module_data.NAME|onlytext}" border="0" />
       {foreach item=more_images_data from=$more_images}
-        <div class="hrlightgrey"></div><img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.NAME}" border="0" class="productimage"/>
+        <div class="hrlightgrey"></div><img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.NAME|onlytext}" border="0" class="productimage" />
       {/foreach}
     </div>
     {/if}
@@ -37,7 +36,7 @@
         </ul>    
       {/if}
       <h2>{#price#}</h2>
-      <p><strong>{$PRODUCTS_PRICE}</strong>, {$PRODUCTS_TAX_INFO}{$PRODUCTS_SHIPPING_LINK}</p>
+      <p><strong>{$PRODUCTS_PRICE}</strong>, {$PRODUCTS_TAX_INFO} {$PRODUCTS_SHIPPING_LINK}</p>
       {if $MODULE_graduated_price != ''}<div class="hrlightgrey"></div>{$MODULE_graduated_price}{/if}
       {if $PRODUCTS_DISCOUNT != ''}<div class="hrlightgrey"></div>{$PRODUCTS_DISCOUNT}{/if}
       {if $PRODUCTS_VPE} <p>{$PRODUCTS_VPE}</p>{/if}

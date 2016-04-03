@@ -1,17 +1,16 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: customers_status.php 1062 2005-07-21 19:57:29Z gwinger $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(customers.php,v 1.76 2003/05/04); www.oscommerce.com 
    (c) 2003	 nextcommerce (customers_status.php,v 1.12 2003/08/14); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -32,8 +31,8 @@ define('ENTRY_CUSTOMERS_STATUS_PUBLIC','&Ouml;ffentlich');
 define('ENTRY_CUSTOMERS_STATUS_SHIPPING_UNALLOWED','Geben Sie unerlaubte Versandarten ein');
 define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE','Preis');
 define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX','Preise inkl. MwSt.');
-define('ENTRY_CUSTOMERS_STATUS_WRITE_REVIEWS','Kundengruppe darf Produkte bewerten?');
-define('ENTRY_CUSTOMERS_STATUS_READ_REVIEWS','Kundengruppe darf Produktbewertungen lesen?');
+define('ENTRY_CUSTOMERS_STATUS_WRITE_REVIEWS','Kundengruppe darf Produktrezensionen schreiben?');
+define('ENTRY_CUSTOMERS_STATUS_READ_REVIEWS','Kundengruppe darf Produktrezensionen lesen?');
 define('ENTRY_GRADUATED_PRICES','Staffelpreise');
 define('ENTRY_NO','Nein');
 define('ENTRY_OT_XMEMBER', 'Kundenrabatt auf Gesamtbestellwert? :');
@@ -77,8 +76,8 @@ define('TEXT_INFO_CUSTOMERS_STATUS_PUBLIC_INTRO','<strong>Gruppe &Ouml;ffentlich
 define('TEXT_INFO_CUSTOMERS_STATUS_SHIPPING_UNALLOWED_INTRO','<strong>Nicht erlaubte Versandarten</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_INTRO','<strong>Preisanzeige im Shop</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_INTRO', '<strong>M&ouml;chten Sie die Preise inklusive oder exklusive Steuer anzeigen?</strong>');
-define('TEXT_INFO_CUSTOMERS_STATUS_WRITE_REVIEWS_INTRO','<strong>Produktbewertungen schreiben</strong>');
-define('TEXT_INFO_CUSTOMERS_STATUS_READ_REVIEWS_INTRO', '<strong>Produktbewertungen lesen</strong>');
+define('TEXT_INFO_CUSTOMERS_STATUS_WRITE_REVIEWS_INTRO','<strong>Produktrezensionen schreiben</strong>');
+define('TEXT_INFO_CUSTOMERS_STATUS_READ_REVIEWS_INTRO', '<strong>Produktrezensionen lesen</strong>');
 
 define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese Kundengruppe l&ouml;schen wollen?');
 define('TEXT_INFO_EDIT_INTRO', 'Bitte nehmen Sie alle n&ouml;tigen Einstellungen vor');
@@ -89,9 +88,17 @@ define('TEXT_INFO_HEADING_EDIT_CUSTOMERS_STATUS','Gruppendaten bearbeiten');
 define('TEXT_INFO_HEADING_NEW_CUSTOMERS_STATUS', 'Neue Kundengruppe');
 
 define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Basis Kundengruppe f&uuml;r Artikelpreise</strong>');
-define('ENTRY_CUSTOMERS_STATUS_BASE', 'wird als Grundlage f&uuml;r die Preise der neuen Kundengruppe gew&auml;hlt. Wenn Auswahl = Admin werden keine Preise f&uuml;r die neue Kundengruppe angelegt.');
+define('ENTRY_CUSTOMERS_STATUS_BASE', 'Die Kundengruppen-Preise der folgenden Kundengruppe &uuml;bernehmen. Wenn Auswahl = Admin, werden keine Preise f&uuml;r die neue Kundengruppe &uuml;bernommen.');
+define('ENTRY_CUSTOMERS_STATUS_BASE_EDIT', 'Die Kundengruppen-Preise der folgenden Kundengruppe &uuml;bernehmen. Wenn Auswahl = Admin werden, keine Preise f&uuml;r die Kundengruppe &uuml;bernommen.<br /><span class="col-red"><strong>ACHTUNG:</strong></span> Hiermit werden alle bereits vorhandenen Kundengruppen-Preise der Kundengruppe &uuml;berschrieben!');
 
 define('TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION', '<strong>Sichtbarkeitsrechte von einer anderen Kundengruppe &uuml;bernehmen</strong>');
 define('ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION', 'Die Kategorie-, Artikel- und Content-Sichtbarkeitsrechte von folgender Kundengruppe &uuml;bernehmen:');
 define('CUSTOMERS_GROUP_ADOPT_PERMISSIONS', 'Keine Rechte &uuml;bernehmen');
+
+define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', '<b>MwSt. anzeigen ab Kaufbetrag</b>');
+define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', 'Mindest Kaufbetrag');
+
+define('TABLE_HEADING_CUSTOMERS_SPECIALS', 'Sonderangebote');
+define('TEXT_INFO_CUSTOMERS_STATUS_SPECIALS_INTRO', '<strong>Sonderangebote</strong>');
+define('ENTRY_CUSTOMERS_STATUS_SPECIALS', 'Kundengruppe erlaubt Sonderangebote zu sehen?');
 ?>

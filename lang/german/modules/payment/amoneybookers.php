@@ -1,17 +1,19 @@
 <?php
+
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: amoneybookers.php 85 2007-01-14 15:19:44Z mzanier $
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   xt:Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2006 xt:Commerce
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(moneybookers.php,v 1.01 2003/01/20); www.oscommerce.com
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
+   Released under the GNU General Public License
+   -----------------------------------------------------------------------------------------
    Third Party contributions:
    Moneybookers v1.0                       Autor:    Gabor Mate  <gabor(at)jamaga.hu>
 
@@ -19,11 +21,8 @@
    ---------------------------------------------------------------------------------------*/
 
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_TITLE', 'Sicher bezahlen &uuml;ber Moneybookers');
-$_var = 'Moneybookers';
-if (_PAYMENT_MONEYBOOKERS_EMAILID=='') {
-  $_var.='<br /><br /><strong><font color="red">ACHTUNG:</font></strong> Bitte nehmen Sie zuerst die Einstellungen unter Erw. Konfiguration -> Partner -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=31').'">Moneybookers.com</a> vor!';
-}
-define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_DESCRIPTION', $_var);
+//define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_DESCRIPTION', 'Moneybookers<br /><br /><img src="images/icon_arrow_right.gif"> <b><a href="http://www.xt-commerce.com/index.php?option=com_content&task=view&id=76&lang=de" target="_blank">Hilfe zu Einstellungen</a></b>');
+define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_DESCRIPTION', 'Moneybookers');
 define('MODULE_PAYMENT_AMONEYBOOKERS_NOCURRENCY_ERROR', 'Es ist keine von Moneybookers akzeptierte W&auml;hrung installiert!');
 define('MODULE_PAYMENT_AMONEYBOOKERS_ERRORTEXT1', 'payment_error=');
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_INFO', '');
@@ -37,11 +36,10 @@ define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_INFO_3', '<b>100%-iger Datenschutz</b>
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_INFO_4', '<b>maximaler Komfort</b> -  Nachdem Sie einmalig bei Moneybookers registriert sind, reichen Ihre E-Mail-Adresse und Passwort f&uuml;r alle k&uuml;nftigen Zahlungen.');
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_INFO_5', '<b>hohe Akzeptanz</b> -  Mit Moneybookers k&ouml;nnen Sie in mehreren tausend Shops einkaufen.');
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_INFO_1', '<br /><br />Direkt und bequem zahlen mit...');
-//BOF - DokuMan - 2010-09-08 - already defined in english.php
-//define('MB_TEXT_MBDATE', 'Letzte Aktualisierung:');
-//define('MB_TEXT_MBTID', 'TR ID:');
-//define('MB_TEXT_MBERRTXT', 'Status:');
-//EOF - DokuMan - 2010-09-08 - already defined in english.php
+
+define('MB_TEXT_MBDATE', 'Letzte Aktualisierung:');
+define('MB_TEXT_MBTID', 'TR ID:');
+define('MB_TEXT_MBERRTXT', 'Status:');
 
 define('MODULE_PAYMENT_AMONEYBOOKERS_PROCESSED_STATUS_ID_TITLE', 'Bestellstatus - Processed');
 define('MODULE_PAYMENT_AMONEYBOOKERS_PROCESSED_STATUS_ID_DESC', '');
@@ -59,9 +57,9 @@ define('MODULE_PAYMENT_AMONEYBOOKERS_ICONS_TITLE', 'Icons');
 define('MODULE_PAYMENT_AMONEYBOOKERS_ICONS_DESC', '');
 
 define('MODULE_PAYMENT_AMONEYBOOKERS_STATUS_TITLE', 'Moneybookers aktivieren');
-define('MODULE_PAYMENT_AMONEYBOOKERS_STATUS_DESC', 'M&ouml;chten Sie Zahlungen per Moneybookers akzeptieren?');
-define('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID_TITLE', 'Moneybookers E-Mail Adresse');
-define('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID_DESC', 'E-Mail Adresse, die bei Moneybookers registriert ist. <br /><font color="#ff0000">* Erforderlich</font>');
+define('MODULE_PAYMENT_AMONEYBOOKERS_STATUS_DESC', 'M&ouml;chten Sie Zahlungen per Moneybookers akzeptieren?<br /><br /><img src="images/icon_arrow_right.gif"> <b><a href="http://www.xt-commerce.com/index.php?option=com_content&task=view&id=76&lang=de" target="_blank">Hilfe zu Einstellungen</a></b>');
+define('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID_TITLE', 'Moneybookers E-Mail-Adresse');
+define('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID_DESC', 'E-Mail-Adresse, die bei Moneybookers registriert ist. <br /><font color="#ff0000">* Erforderlich</font>');
 define('MODULE_PAYMENT_AMONEYBOOKERS_PWD_TITLE', 'Moneybookers Geheimwort');
 define('MODULE_PAYMENT_AMONEYBOOKERS_PWD_DESC', 'Geben Sie Ihr Moneybookers Geheimwort ein (dies ist nicht ihr Passwort!)');
 define('MODULE_PAYMENT_AMONEYBOOKERS_MERCHANTID_TITLE', 'H&auml;ndler ID ');
@@ -76,9 +74,4 @@ define('MODULE_PAYMENT_AMONEYBOOKERS_ZONE_TITLE', 'Zahlungszone');
 define('MODULE_PAYMENT_AMONEYBOOKERS_ZONE_DESC', 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.');
 define('MODULE_PAYMENT_AMONEYBOOKERS_ALLOWED_TITLE', 'Erlaubte Zonen');
 define('MODULE_PAYMENT_AMONEYBOOKERS_ALLOWED_DESC', 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))');
-
-// BOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
-define('MODULE_PAYMENT_AMONEYBOOKERS_NEG_SHIPPING_TITLE', 'Ausschlu&szlig; bei Versandmodulen');
-define('MODULE_PAYMENT_AMONEYBOOKERS_NEG_SHIPPING_DESC', 'Dieses Zahlungsmodul deaktivieren wenn Versandmodul gew&auml;hlt (Komma separierte Liste)');
-// EOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
 ?>

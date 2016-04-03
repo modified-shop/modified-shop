@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_validate_email.inc.php 2085 2011-08-03 15:25:38Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

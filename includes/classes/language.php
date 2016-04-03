@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: language.php 2800 2012-04-28 11:51:51Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -27,7 +27,7 @@ if ( !class_exists( "language" ) ) {
   class language {
     var $languages, $catalog_languages, $browser_languages, $language;
 
-    function language($lng = '') {
+    function __construct($lng = '') {
       $this->languages = array('ar' => array('ar([-_][[:alpha:]]{2})?|arabic', 'arabic', 'ar'),
                                'bg-win1251' => array('bg|bulgarian', 'bulgarian-win1251', 'bg'),
                                'bg-koi8r' => array('bg|bulgarian', 'bulgarian-koi8', 'bg'),
@@ -72,10 +72,10 @@ if ( !class_exists( "language" ) ) {
                                'zh' => array('zh|chinese simplified', 'chinese_gb', 'zh'));
 
       $this->catalog_languages = array();
-      $where = !defined('RUN_MODE_ADMIN') ? (($_SESSION['customers_status']['customers_status'] == '0') ? "WHERE status_admin = '1'" : "WHERE status = '1'") : '';
+      $where = !defined('RUN_MODE_ADMIN') ? ((isset($_SESSION['customers_status']['customers_status']) && $_SESSION['customers_status']['customers_status'] == '0') ? "WHERE status_admin = '1'" : "WHERE status = '1'") : '';
       $languages_query = xtc_db_query("SELECT * 
                                          FROM " . TABLE_LANGUAGES . " 
-                                              " . $where . "
+                                         ".$where." 
                                      ORDER BY sort_order"
                                      );
       while ($languages = xtc_db_fetch_array($languages_query)) {

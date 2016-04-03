@@ -11,9 +11,9 @@
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(general.php,v 1.225 2003/05/29); www.oscommerce.com 
    (c) 2003	 nextcommerce (xtc_get_products_name.inc.php,v 1.3 2003/08/13); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
+   (c) 2003 XT-Commerce
 
-   Released under the GNU General Public License
+   Released under the GNU General Public License 
    -----------------------------------------------------------------------------------------
    Third Party contribution:
 
@@ -28,9 +28,12 @@
 
     if (empty($language)) $language = $_SESSION['languages_id'];
 
-    $product_query = xtc_db_query("select products_options_values_name from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where products_options_values_id = '" . $products_options_values_id . "' and language_id = '" . $language . "'");
+    $product_query = xtc_db_query("SELECT products_options_values_name 
+                                     FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " 
+                                    WHERE products_options_values_id = '" . (int)$products_options_values_id . "' 
+                                      AND language_id = '" . (int)$language . "'");
     $product = xtc_db_fetch_array($product_query);
 
     return $product['products_options_values_name'];
   }
- ?>
+?>

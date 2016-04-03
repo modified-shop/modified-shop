@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$
+   $Id: zones.php 5157 2013-07-18 21:38:29Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,47 +16,47 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-  require('includes/application_top.php');
+require('includes/application_top.php');
 
-  //display per page
-  $cfg_max_display_results_key = 'MAX_DISPLAY_ZONES_RESULTS';
-  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+//display per page
+$cfg_max_display_results_key = 'MAX_DISPLAY_ZONES_RESULTS';
+$page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
-  $_GET['action'] = (isset($_GET['action']) ? $_GET['action'] : '');
-  
-  if ($_GET['action']) {
-    switch ($_GET['action']) {
-      case 'insert':
-        $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
-        $zone_code = xtc_db_prepare_input($_POST['zone_code']);
-        $zone_name = xtc_db_prepare_input($_POST['zone_name']);
+$_GET['action'] = (isset($_GET['action']) ? $_GET['action'] : '');
 
-        xtc_db_query("insert into " . TABLE_ZONES . " (zone_country_id, zone_code, zone_name) values ('" . (int)$zone_country_id . "', '" . xtc_db_input($zone_code) . "', '" . xtc_db_input($zone_name) . "')");
-        xtc_redirect(xtc_href_link(FILENAME_ZONES));
-        break;
-      case 'save':
-        $zone_id = xtc_db_prepare_input($_GET['cID']);
-        $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
-        $zone_code = xtc_db_prepare_input($_POST['zone_code']);
-        $zone_name = xtc_db_prepare_input($_POST['zone_name']);
+if ($_GET['action']) {
+  switch ($_GET['action']) {
+    case 'insert':
+      $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
+      $zone_code = xtc_db_prepare_input($_POST['zone_code']);
+      $zone_name = xtc_db_prepare_input($_POST['zone_name']);
 
-        xtc_db_query("update " . TABLE_ZONES . " set zone_country_id = '" . (int)$zone_country_id . "', zone_code = '" . xtc_db_input($zone_code) . "', zone_name = '" . xtc_db_input($zone_name) . "' where zone_id = '" . (int)$zone_id . "'");
-        xtc_redirect(xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $zone_id));
-        break;
-      case 'deleteconfirm':
-        $zone_id = xtc_db_prepare_input($_GET['cID']);
+      xtc_db_query("insert into " . TABLE_ZONES . " (zone_country_id, zone_code, zone_name) values ('" . (int)$zone_country_id . "', '" . xtc_db_input($zone_code) . "', '" . xtc_db_input($zone_name) . "')");
+      xtc_redirect(xtc_href_link(FILENAME_ZONES));
+      break;
+    case 'save':
+      $zone_id = xtc_db_prepare_input($_GET['cID']);
+      $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
+      $zone_code = xtc_db_prepare_input($_POST['zone_code']);
+      $zone_name = xtc_db_prepare_input($_POST['zone_name']);
 
-        xtc_db_query("delete from " . TABLE_ZONES . " where zone_id = '" . (int)$zone_id . "'");
-        xtc_redirect(xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page']));
-        break;
-    }
+      xtc_db_query("update " . TABLE_ZONES . " set zone_country_id = '" . (int)$zone_country_id . "', zone_code = '" . xtc_db_input($zone_code) . "', zone_name = '" . xtc_db_input($zone_name) . "' where zone_id = '" . (int)$zone_id . "'");
+      xtc_redirect(xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $zone_id));
+      break;
+    case 'deleteconfirm':
+      $zone_id = xtc_db_prepare_input($_GET['cID']);
+
+      xtc_db_query("delete from " . TABLE_ZONES . " where zone_id = '" . (int)$zone_id . "'");
+      xtc_redirect(xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page']));
+      break;
   }
-  
-  require (DIR_WS_INCLUDES.'head.php');
+}
+
+require (DIR_WS_INCLUDES.'head.php');
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
-<body onload="SetFocus();">
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -96,7 +96,7 @@
                       $cInfo = new objectInfo($zones);
                     }
 
-                    if (isset($cInfo) && (is_object($cInfo)) && ($zones['zone_id'] == $cInfo->zone_id) ) {
+                    if ( isset($cInfo) && (is_object($cInfo)) && ($zones['zone_id'] == $cInfo->zone_id) ) {
                       echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id . '&action=edit') . '\'">' . "\n";
                     } else {
                       echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $zones['zone_id']) . '\'">' . "\n";
@@ -118,8 +118,7 @@
             <?php
             if (!$_GET['action']) {
             ?>
-              <div class="clear"></div>  
-              <div class="pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&action=new') . '">' . BUTTON_NEW_ZONE . '</a>'; ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&action=new') . '">' . BUTTON_NEW_ZONE . '</a>'; ?></div>
             <?php
             }
             ?>

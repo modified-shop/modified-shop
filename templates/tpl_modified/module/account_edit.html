@@ -1,0 +1,63 @@
+{config_load file="$language/lang_$language.conf" section="account_edit"}
+{config_load file="lang_`$language`.custom"}
+<h1>{#heading_account#}</h1>
+{$FORM_ACTION}
+{if $error != ''}<div class="errormessage">{$error}</div>{/if}
+<div class="twoColums">
+  <div class="highlightbox">
+    <h4>{#title_personal#} <span class="pflicht">({#text_must#})</span></h4>
+    <table>
+      {if $csID}
+      <tr>
+        <td><span class="fieldtext">{#csID#}</span><span class="stern">{$csID}</span></td>
+      </tr>
+      {/if}
+      {if $gender == '1'}
+      <tr>
+        <td><span class="fieldtext">{#text_gender#}</span><span class="stern">{$INPUT_GENDER}</span></td>
+      </tr>
+      {/if}
+      <tr>
+        <td><span class="fieldtext">{#text_firstname#}</span><span class="stern">{$INPUT_FIRSTNAME}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_lastname#}</span><span class="stern">{$INPUT_LASTNAME}</span></td>
+      </tr>
+      {if $birthdate == '1'}
+      <tr>
+        <td><span class="fieldtext">{#text_birthdate#}</span><span class="stern">{$INPUT_DOB}</span></td>
+      </tr>
+      {/if}
+    </table>
+  </div>
+</div>
+
+<div class="twoColums last">
+  <div class="highlightbox">
+    <h4>{#title_contact#} <span class="pflicht">({#text_must#})</span></h4>
+    <table>
+      <tr>
+        <td><span class="fieldtext">{#text_email#}</span><span class="stern">{$INPUT_EMAIL}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_confirm_email#}</span><span class="stern">{$INPUT_CONFIRM_EMAIL}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_tel#}</span><span class="stern">{$INPUT_TEL}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_fax#}</span><span class="stern">{$INPUT_FAX}</span></td>
+      </tr>
+      {if $vat == '1'}
+      <tr>
+        <td><span class="fieldtext">{#text_ustid#}</span><span class="stern">{$INPUT_VAT|replace:"Nur":"<br />Nur"}</span></td>
+      </tr>
+      {/if}
+    </table>
+  </div>
+</div>
+
+<br class="clearfix" />
+<div class="button_left">{$BUTTON_BACK}</div>
+<div class="button_right">{$BUTTON_SUBMIT}</div>
+{$FORM_END}

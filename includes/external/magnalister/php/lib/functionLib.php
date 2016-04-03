@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: functionLib.php 4961 2014-12-09 14:10:12Z tim.neumann $
+ * $Id: functionLib.php 5338 2015-03-09 21:16:46Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -53,7 +53,7 @@ function print_m($arr, $label = '', $text = false) {
 			);
 		}
 	}
-	return ($text ? '': '<pre>') . (($label != "") ? $label." :: " : '') . $arr . ($text ? '': '</pre>');
+	return ($text ? '': '<pre style="text-align:left">') . (($label != "") ? $label." :: " : '') . $arr . ($text ? '': '</pre>');
 }
 
 function var_dump_pre($obj, $label = "", $text = false) {
@@ -78,7 +78,7 @@ function var_dump_pre($obj, $label = "", $text = false) {
 			);
 		}
 	}
-	return ($text ? '': '<pre>') . (($label != "") ? $label." :: " : '') . $dump . ($text ? '': '</pre>');
+	return ($text ? '': '<pre style="text-align:left">') . (($label != "") ? $label." :: " : '') . $dump . ($text ? '': '</pre>');
 }
 
 function var_export_pre($obj, $label = "", $text = false) {
@@ -101,7 +101,7 @@ function var_export_pre($obj, $label = "", $text = false) {
 			);
 		}
 	}
-	return ($text ? '': '<pre>') . (($label != "") ? $label." = " : '') . $arr . ($text ? '': '</pre>');
+	return ($text ? '': '<pre style="text-align:left">') . (($label != "") ? $label." = " : '') . $arr . ($text ? '': '</pre>');
 }
 
 function eempty($v) {
@@ -143,7 +143,7 @@ function test(&$var, $function) {
 	    } else {
 	        echo (
 	        	'Notice: Call to undefined function '.$function.'() called in '.__FUNCTION__.'.'.nl2br("\n")
-	        );	    	
+	        );
 	    }
     }
     return false;
@@ -821,7 +821,7 @@ function strip_tags_attributes($string, $allowtags = '', $allowattributes = '') 
     }
     array_walk($allowattributes, create_function('&$a', '$a = trim($a);'));
     if (is_array($allowattributes)) {
-        $allowattributes = "(?<!".implode(")(?<!",$allowattributes).")";;
+        $allowattributes = "(?<!".implode(")(?<!",$allowattributes).")";
     }
 	$string = preg_replace_callback("/<(\/?[a-zA-Z0-9]*)([^>]*)>/i", create_function(
 	    '$matches',
@@ -1209,7 +1209,9 @@ function getLanguageIsoForCountryIso($countryIso2) {
 	}
 	// TODO extend to France, Spain etc. in the future
 	// (at the moment, Austria is the main issue)
-	return 'en';
+
+	// if nothing fits, return default:
+	return magnaGetDefaultLanguageID();
 }
 
 function mlFloatalize($sFloat) {
@@ -1248,4 +1250,18 @@ function mlFloatalize($sFloat) {
 	}
 
 	return $sFloat;
+}
+
+function magnaPreparePlainTextMode() {
+	$iObLevel = ob_get_level();
+	$sOutHandler = ini_get('output_handler');
+	$iObLevel = empty($sOutHandler) ? $iObLevel : $iObLevel - 1;
+	for ($i = $iObLevel; $i!=0; $i--) {
+		ob_end_clean();
+	}
+
+	if (headers_sent() === false) {
+		header('Content-Encoding: none');
+		header('Content-Type: text/plain; charset="utf-8"');
+	}
 }

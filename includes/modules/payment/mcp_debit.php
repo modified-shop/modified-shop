@@ -14,7 +14,7 @@ class mcp_debit extends micropayment_method
     var $code = 'mcp_debit';
     var $url = '/lastschrift/event';
 
-    function mcp_debit()
+    function __construct()
     {
         global $order, $language;
         $this->title       = MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE;

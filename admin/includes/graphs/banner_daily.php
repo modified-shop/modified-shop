@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: banner_daily.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -45,7 +45,7 @@
 
   $graph->SetPlotBorderType('left');
   $graph->SetTitleFontSize('4');
-  $graph->SetTitle(sprintf(TEXT_BANNERS_DAILY_STATISTICS, $banner['banners_title'], strftime('%B', mktime(0,0,0,$month)), $year));
+  $graph->SetTitle(html_entity_decode(sprintf(TEXT_BANNERS_DAILY_STATISTICS, $banner['banners_title'], htmlentities(strftime('%B', mktime(0,0,0,$month))), $year), ENT_COMPAT, 'ISO-8859-15'));
 
   $graph->SetBackgroundColor('white');
 

@@ -1,0 +1,39 @@
+{config_load file="$language/lang_$language.conf" section="checkout_shipping_address"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+{config_load file="lang_`$language`.custom"}
+<ul id="checkoutnavigation" class="cf">
+  <li class="active"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></li>
+  <li class="inactive"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></li>
+  <li class="inactive"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></li>
+  <li class="inactive last"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></li>
+</ul>
+
+<h1 class="checkout">{#heading_address#}</h1>
+{if $error != ''}<div class="errormessage">{$error}</div>{/if}
+{$FORM_ACTION}
+<div class="twoColums">
+  <div class="highlightbox">
+    <h4>{#text_current_address_short#}<span class="mini">&nbsp;</span></h4>
+    <p>{$ADDRESS_LABEL}</p>
+  </div>
+  <br />
+  {if $BLOCK_ADDRESS}
+  <div class="highlightbox">
+    <h4>{#title_old_addresses#}</h4>
+    <p>{#text_old_addresses#}</p>
+    {$BLOCK_ADDRESS}
+  </div>
+  {/if}
+</div>
+
+<div class="twoColums last">
+  <div class="highlightbox">
+    {if $MODULE_new_address}
+    {$MODULE_new_address}
+    {/if}
+  </div>
+</div>
+<br class="clearfix" />
+<div class="button_left">{$BUTTON_BACK}</div>
+<div class="button_right">{$BUTTON_CONTINUE}</div>
+{$FORM_END}

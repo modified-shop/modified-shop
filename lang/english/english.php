@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: english.php 2721 2012-03-23 20:12:07Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -21,20 +21,16 @@
  *  DATE / TIME
  *
  */
-
-define('TITLE', STORE_NAME);
-define('HEADER_TITLE_TOP', 'Main page');
-define('HEADER_TITLE_CATALOG', 'Catalogue');
-define('HTML_PARAMS','xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr"');
+ 
+define('HTML_PARAMS','dir="ltr" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"');
 @setlocale(LC_TIME, 'en_GB.UTF-8', 'en_GB@euro', 'en_GB', 'en-GB', 'en', 'en_GB.ISO_8859-1', 'English','en_GB.ISO_8859-15');
 
-//BOF - Dokuman - 2009-06-03 - correct english date format
 define('DATE_FORMAT_SHORT', '%d/%m/%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'd/m/Y');  // this is used for strftime()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
 define('DOB_FORMAT_STRING', 'dd/mm/jjjj');
-
+ 
 function xtc_date_raw($date, $reverse = false) {
   if ($reverse) {
     return substr($date, 0, 2) . substr($date, 3, 2) . substr($date, 6, 4);
@@ -42,13 +38,17 @@ function xtc_date_raw($date, $reverse = false) {
     return substr($date, 6, 4) . substr($date, 3, 2) . substr($date, 0, 2);
   }
 }
-//EOF - Dokuman - 2009-06-03 - correct english date format
 
-// BOF - vr - 2009-12-11 - Added language dependent currency code
-// if USE_DEFAULT_LANGUAGE_CURRENCY is true, use the following currency when changing language,
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_WS_LANGUAGES.'english/extra/','php') as $file) require ($file);
+
+define('TITLE', STORE_NAME);
+define('HEADER_TITLE_TOP', 'Main page');
+define('HEADER_TITLE_CATALOG', 'Catalogue');
+
+// if USE_DEFAULT_LANGUAGE_CURRENCY is true, use the following currency when changing language, 
 // instead of staying with the applications default currency
 define('LANGUAGE_CURRENCY', 'EUR');
-// EOF - vr - 2009-12-11 - Added language dependent currency code
 
 define('MALE', 'Mr.');
 define('FEMALE', 'Ms./Mrs.');
@@ -73,8 +73,8 @@ define('BOX_MANUFACTURER_INFO_HOMEPAGE', '%s Homepage');
 define('BOX_MANUFACTURER_INFO_OTHER_PRODUCTS', 'More products');
 
 define('BOX_HEADING_ADD_PRODUCT_ID','Add to cart');
-
-define('BOX_LOGINBOX_STATUS','Customer group:');
+  
+define('BOX_LOGINBOX_STATUS','Customer group:');     
 define('BOX_LOGINBOX_DISCOUNT','Product discount');
 define('BOX_LOGINBOX_DISCOUNT_TEXT','Discount');
 define('BOX_LOGINBOX_DISCOUNT_OT','');
@@ -96,6 +96,9 @@ define('JS_ERROR_NO_PAYMENT_MODULE_SELECTED', '* Please choose a method of payme
 define('JS_ERROR_SUBMITTED', 'This page has already been confirmed. Please click OK and wait until the process has finished.');
 define('ERROR_NO_PAYMENT_MODULE_SELECTED', 'Please choose a method of payment for your order.');
 define('JS_ERROR_NO_SHIPPING_MODULE_SELECTED', '* Please choose a method of shipping for your order.\n');
+define('JS_ERROR_CONDITIONS_NOT_ACCEPTED', '* Unfortunately we cannot accept your order\nunless you accept our terms and conditions!\n\n');
+define('JS_ERROR_REVOCATION_NOT_ACCEPTED', '* Unfortunately we cannot accept your order\nunless you accept that the right of withdrawal expires for virtual products!\n\n');
+define('JS_REVIEW_AUTHOR', '* Please enter your name.\n\n');
 
 /*
  *
@@ -109,12 +112,12 @@ define('ENTRY_GENDER_ERROR', 'Please select your salutation.');
 define('ENTRY_GENDER_TEXT', '*');
 define('ENTRY_FIRST_NAME_ERROR', 'Your first name must consist of at least  ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' characters.');
 define('ENTRY_FIRST_NAME_TEXT', '*');
-define('ENTRY_LAST_NAME_ERROR', 'Your e-mail address must consist of at least ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.');
+define('ENTRY_LAST_NAME_ERROR', 'Your last name must consist of at least ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.');
 define('ENTRY_LAST_NAME_TEXT', '*');
-define('ENTRY_DATE_OF_BIRTH_ERROR', 'Your date of birth needs to be entered in the following form DD/MM/YYYY (e.g. 05/21/1970) '); //Dokuman - 2009-06-03 - correct english date format
-define('ENTRY_DATE_OF_BIRTH_TEXT', '* (e.g. 05/21/1970)'); //Dokuman - 2009-06-03 - correct english date format
+define('ENTRY_DATE_OF_BIRTH_ERROR', 'Your date of birth needs to be entered in the following form DD/MM/YYYY (e.g. 21/05/1970) '); //Dokuman - 2009-06-03 - correct english date format
+define('ENTRY_DATE_OF_BIRTH_TEXT', '* (e.g. 21/05/1970)'); //Dokuman - 2009-06-03 - correct english date format
 define('ENTRY_EMAIL_ADDRESS_ERROR', 'Your e-mail address must consist of at least  ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters.');
-define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'The e-mail address you entered is incorrect - please correct it');
+define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'The e-mail address you entered is incorrect - please correct it (We currently don\'t support german umlauts in e-mail addresses.)');
 define('ENTRY_EMAIL_ERROR_NOT_MATCHING', 'Your entered e-mail addresses do not match.'); // Hetfield - 2009-08-15 - confirm e-mail at registration
 define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', 'The e-mail address you entered already exists in our database - please correct it');
 define('ENTRY_EMAIL_ADDRESS_TEXT', '*');
@@ -135,6 +138,10 @@ define('ENTRY_TELEPHONE_NUMBER_TEXT', '*');
 define('ENTRY_FAX_NUMBER_TEXT', '');
 define('ENTRY_NEWSLETTER_TEXT', '');
 define('ENTRY_PASSWORD_ERROR', 'Your password must consist of at least ' . ENTRY_PASSWORD_MIN_LENGTH . ' characters.');
+define('ENTRY_PASSWORD_ERROR_MIN_LOWER', 'Password must contain at least %s lowercase characters');
+define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Password must contain at least %s uppercase characters');
+define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Password must contain at least %s numbers');
+define('ENTRY_PASSWORD_ERROR_MIN_CHAR', 'Password must contain at least %s non-aplhanumeric characters');
 define('ENTRY_PASSWORD_ERROR_NOT_MATCHING', 'Your passwords do not match.');
 define('ENTRY_PASSWORD_TEXT', '*');
 define('ENTRY_PASSWORD_CONFIRMATION_TEXT', '*');
@@ -175,8 +182,8 @@ define('PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE', 'Next %d pages');
  *
  */
 
-define('PREVNEXT_BUTTON_PREV', '[&lt;&lt;&nbsp;previous]');
-define('PREVNEXT_BUTTON_NEXT', '[next&nbsp;&gt;&gt;]');
+define('PREVNEXT_BUTTON_PREV', '&laquo;');
+define('PREVNEXT_BUTTON_NEXT', '&raquo;');
 
 /*
  *
@@ -199,12 +206,10 @@ define('IMAGE_BUTTON_UPDATE_CART', 'Update shopping cart');
 define('IMAGE_BUTTON_WRITE_REVIEW', 'Write evaluation');
 define('IMAGE_BUTTON_ADMIN', 'Admin');
 define('IMAGE_BUTTON_PRODUCT_EDIT', 'Edit product');
-define('IMAGE_BUTTON_CONTENT_EDIT', 'Edit content');
-// BOF - vr - 2010-02-20 removed double definition
-// define('IMAGE_BUTTON_LOGIN', 'Login');
-// EOF - vr - 2010-02-20 removed double definition
 define('IMAGE_BUTTON_SEND', 'Send'); //DokuMan - 2010-03-15 - Added button description for contact form
 define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Continue shopping'); //Hendrik - 2010-11-12 - used in default template ...shopping_cart.html
+define('IMAGE_BUTTON_CHECKOUT_STEP2', 'Continue to step 2');
+define('IMAGE_BUTTON_CHECKOUT_STEP3', 'Continue to step 3');
 
 define('SMALL_IMAGE_BUTTON_DELETE', 'Delete');
 define('SMALL_IMAGE_BUTTON_EDIT', 'Edit');
@@ -216,7 +221,7 @@ define('ICON_SUCCESS', 'Success');
 define('ICON_WARNING', 'Warning');
 define('ICON_ERROR', 'Error');
 
-define('TEXT_PRINT', 'print'); //DokuMan - 2009-05-26 - Added description for 'account_history_info.php'
+define('TEXT_PRINT', 'Print'); //DokuMan - 2009-05-26 - Added description for 'account_history_info.php'
 
 /*
  *
@@ -224,9 +229,9 @@ define('TEXT_PRINT', 'print'); //DokuMan - 2009-05-26 - Added description for 'a
  *
  */
 
-define('TEXT_GREETING_PERSONAL', 'Nice to see you again <span class="greetUser">%s!</span> Would you like to view our <a style="text-decoration:underline;" href="%s">new products</a> ?');
-define('TEXT_GREETING_PERSONAL_RELOGON', '<small>If you are not %s , please  <a style="text-decoration:underline;" href="%s">login</a>  with your account.</small>');
-define('TEXT_GREETING_GUEST', 'Welcome  <span class="greetUser">visitor!</span> Would you like to <a style="text-decoration:underline;" href="%s">login</a>? Or would you like to create a new <a style="text-decoration:underline;" href="%s">account</a> ?');
+define('TEXT_GREETING_PERSONAL', 'Nice to see you again <span class="greetUser">%s!</span> Would you like to view our <a href="%s">new products</a>?');
+define('TEXT_GREETING_PERSONAL_RELOGON', '<small>If you are not %s , please  <a href="%s">login</a>  with your account.</small>');
+define('TEXT_GREETING_GUEST', 'Welcome  <span class="greetUser">visitor!</span> Would you like to <a href="%s">login</a>? Or would you like to create a new <a href="%s">account</a>?');
 
 define('TEXT_SORT_PRODUCTS', 'Sorting of the items is ');
 define('TEXT_DESCENDINGLY', 'descending');
@@ -239,7 +244,7 @@ define('TEXT_REVIEW_WORD_COUNT', '%s words');
 define('TEXT_REVIEW_RATING', 'Review: %s [%s]');
 define('TEXT_REVIEW_DATE_ADDED', 'Date added: %s');
 define('TEXT_NO_REVIEWS', 'There are no reviews yet.');
-define('TEXT_NO_NEW_PRODUCTS', 'There are no new products for the last '.MAX_DISPLAY_NEW_PRODUCTS_DAYS.' days. Instead of that we will show you the 10 latest arrived products.'); // Tomcraft - 2009-08-11 - changed text for new products_new function
+define('TEXT_NO_NEW_PRODUCTS', 'There are no new products for the last '.MAX_DISPLAY_NEW_PRODUCTS_DAYS.' days. Instead of that we will show you the latest arrived products.'); 
 define('TEXT_UNKNOWN_TAX_RATE', 'Unknown tax rate');
 
 /*
@@ -248,8 +253,8 @@ define('TEXT_UNKNOWN_TAX_RATE', 'Unknown tax rate');
  *
  */
 
-define('WARNING_INSTALL_DIRECTORY_EXISTS', 'Warning: The installation directory is still available on: ' . dirname($_SERVER['SCRIPT_FILENAME']) . '/_installer. Please delete this directory for security reasons!');
-define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: The modified eCommerce Shopsoftware is able to write to the configuration directory: ' . dirname($_SERVER['SCRIPT_FILENAME']) . '/includes/configure.php. That represents a possible safety hazard - please correct the user access rights for this directory!');
+define('WARNING_INSTALL_DIRECTORY_EXISTS', 'Warning: The installation directory is still available on: %s. Please delete this directory for security reasons!');
+define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: The modified eCommerce Shopsoftware is able to write to the configuration directory: %s. That represents a possible safety hazard - please correct the user access rights for this directory!');
 define('WARNING_SESSION_DIRECTORY_NON_EXISTENT', 'Warning: Directory for sesssions doesn&acute;t exist: ' . xtc_session_save_path() . '. Sessions will not work until this directory has been created!');
 define('WARNING_SESSION_DIRECTORY_NOT_WRITEABLE', 'Warning: The modified eCommerce Shopsoftware is not able to write into the session directory: ' . xtc_session_save_path() . '. Sessions will not work until the user access rights for this directory have been changed!');
 define('WARNING_SESSION_AUTO_START', 'Warning: session.auto_start is activated (enabled) - Please deactivate (disable) this PHP feature in php.ini and restart your web server!');
@@ -258,7 +263,7 @@ define('WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT', 'Warning: Directory for articl
 define('SUCCESS_ACCOUNT_UPDATED', 'Your account has been updated successfully.');
 define('SUCCESS_PASSWORD_UPDATED', 'Your password has been changed successfully!');
 define('ERROR_CURRENT_PASSWORD_NOT_MATCHING', 'The entered password does not match with the stored password. Please try again.');
-define('TEXT_MAXIMUM_ENTRIES', '<font color="#ff0000"><strong>Reference:</strong></font> You are able to choose out of %s entries in you address book!');
+define('TEXT_MAXIMUM_ENTRIES', '<strong>Reference:</strong> You are able to choose out of %s entries in your address book!');
 define('SUCCESS_ADDRESS_BOOK_ENTRY_DELETED', 'The selected entry has been deleted successfully.');
 define('SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED', 'Your address book has been updated sucessfully!');
 define('WARNING_PRIMARY_ADDRESS_DELETION', 'The standard postal address can not be deleted. Please create another address and define it as standard postal address first. Then this entry can be deleted.');
@@ -270,12 +275,12 @@ define('ERROR_CHECKOUT_SHIPPING_NO_MODULE', 'No shipping method available.');
 //  conditions check
 
 define('ERROR_CONDITIONS_NOT_ACCEPTED', 'Please accept our terms and conditions to proceed with your order.');
+define('ERROR_REVOCATION_NOT_ACCEPTED', 'Please accept that the right of withdrawal expires for virtual products.');
 
 define('SUB_TITLE_OT_DISCOUNT','Discount:');
 
 define('TAX_ADD_TAX','incl. ');
 define('TAX_NO_TAX','plus ');
-define('TAX_SHORT_DISPLAY',' VAT '); //DokuMan - 2010-09-28 - display VAT description multilingually
 
 define('NOT_ALLOWED_TO_SEE_PRICES','You do not have the permission to see the prices ');
 define('NOT_ALLOWED_TO_SEE_PRICES_TEXT','You do not have the permission to see the prices, please create an account.');
@@ -306,13 +311,13 @@ define('JS_PRICE_FROM_MUST_BE_NUM', '* Price over, must be a number\n');
 define('JS_PRICE_TO_MUST_BE_NUM', '* Price up to, must be a number\n');
 define('JS_PRICE_TO_LESS_THAN_PRICE_FROM', '* Price up to must be larger or same size as Price over.\n');
 define('JS_INVALID_KEYWORDS', '* Invalid search key\n');
-define('TEXT_LOGIN_ERROR', '<font color="#ff0000"><strong>ERROR:</strong></font> The entered \'e-mail address\' and/or the \'password\' do not match.');
-define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<font color="#ff0000"><strong>WARNING:</strong></font> The e-mail address entered is not registered. Please try again.');
+define('TEXT_LOGIN_ERROR', '<strong>ERROR:</strong> The entered \'e-mail address\' and/or the \'password\' do not match.');
+//define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<span class="color_error_message"><strong>WARNING:</strong></span> The e-mail address entered is not registered. Please try again.'); // Not used anymore as we do not give a hint that an e-mail address is or is not in the database!
 define('TEXT_PASSWORD_SENT', 'A new password was sent by e-mail.');
 define('TEXT_PRODUCT_NOT_FOUND', 'Product not found!');
-define('TEXT_MORE_INFORMATION', 'For further information, please visit the <a style="text-decoration:underline;" href="%s" onclick="window.open(this.href); return false;">homepage</a> of this product.');
+define('TEXT_MORE_INFORMATION', 'For further information, please visit the <a href="%s" onclick="window.open(this.href); return false;">homepage</a> of this product.');
 define('TEXT_DATE_ADDED', 'This Product was added to our catalogue on %s.');
-define('TEXT_DATE_AVAILABLE', '<font color="#ff0000">This Product is expected to be on stock again on %s </font>');
+define('TEXT_DATE_AVAILABLE', '<span class="color_error_message">This Product is expected to be on stock again on %s </span>');
 define('SUB_TITLE_SUB_TOTAL', 'Sub-total:');
 
 define('OUT_OF_STOCK_CANT_CHECKOUT', 'The products marked with ' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . ' , are not available in the requested quantity.<br />Please decrease quantity for marked products. Thank you');
@@ -394,19 +399,19 @@ define('NAVBAR_TITLE_DOWNLOAD', 'Downloads');
 define('TEXT_NEWSLETTER','You want to stay up to date?<br />No problem, receive our newsletter for the latest updates.');
 define('TEXT_EMAIL_INPUT','Your e-mail address has been registered in our system.<br />An e-mail with a confirmation link has been sent out. Click the link to complete registration!');
 
-define('TEXT_WRONG_CODE','<font color="#ff0000">The security code you entered was not correct. Please try again. <br />The form is not case sensitive.</font>');
-define('TEXT_EMAIL_EXIST_NO_NEWSLETTER','<font color="#ff0000">This e-mail address is registered but not yet activated!</font>');
-define('TEXT_EMAIL_EXIST_NEWSLETTER','<font color="#ff0000">This e-mail address is already registered for the newsletter!</font>');
-define('TEXT_EMAIL_NOT_EXIST','<font color="#ff0000">This e-mail address is not registered for newsletters!</font>');
+define('TEXT_WRONG_CODE','The security code you entered was not correct. Please try again. <br />The form is not case sensitive.');
+define('TEXT_EMAIL_EXIST_NO_NEWSLETTER','This e-mail address is registered but not yet activated!');
+define('TEXT_EMAIL_EXIST_NEWSLETTER','This e-mail address is already registered for the newsletter!');
+define('TEXT_EMAIL_NOT_EXIST','This e-mail address is not registered for newsletters!');
 define('TEXT_EMAIL_DEL','Your e-mail address was deleted successfully from our newsletter-database.');
-define('TEXT_EMAIL_DEL_ERROR','<font color="#ff0000">An Error occured, your e-mail address has not been removed from our database!</font>');
-define('TEXT_EMAIL_ACTIVE','<font color="#ff0000">Your e-mail address has successfully been registered for the newsletter!</font>');
-define('TEXT_EMAIL_ACTIVE_ERROR','<font color="#ff0000">An error occured, your e-mail address has not been registered for the newsletter!</font>');
+define('TEXT_EMAIL_DEL_ERROR','An Error occured, your e-mail address has not been removed from our database!');
+define('TEXT_EMAIL_ACTIVE','Your e-mail address has successfully been registered for the newsletter!');
+define('TEXT_EMAIL_ACTIVE_ERROR','An error occured, your e-mail address has not been registered for the newsletter!');
 define('TEXT_EMAIL_SUBJECT','Your newsletter account');
 
 define('TEXT_CUSTOMER_GUEST','Guest');
 
-define('TEXT_LINK_MAIL_SENDED','Your new password request must be confirmed.<br />An e-mail with a confirmation link has been send out. Click the link in order to complete recieve a new password!');
+define('TEXT_LINK_MAIL_SENDED','Your new password request must be confirmed.<br />An e-mail with a confirmation link has been send out. Click the link in order to complete your request.<br/><br/>The confirmation link is %s minutes valid.');
 define('TEXT_PASSWORD_MAIL_SENDED','You will receive an e-mail with your new password within minutes.<br />Please change your password after your first login.');
 define('TEXT_CODE_ERROR','The security code you entered was not correct.<br />Please try again.');
 define('TEXT_EMAIL_ERROR','The e-mail address is not registered in our store.<br />Please try again.');
@@ -433,6 +438,8 @@ define('ERROR_INVALID_USES_COUPON','This coucher can only be redeemed ');
 define('TIMES',' times.');
 define('ERROR_INVALID_STARTDATE_COUPON','Your coupon is not available yet.');
 define('ERROR_INVALID_FINISDATE_COUPON','Your voucher is already expired.');
+define('ERROR_INVALID_MINIMUM_ORDER_COUPON', 'This coupon can be redeemed only with a minimum order value of %s!');
+define('ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD','<br/>You must enter the coupon code again when you reach the minimum order value!');
 define('PERSONAL_MESSAGE', '%s writes:');
 
 /*
@@ -452,7 +459,6 @@ define('TEXT_COUPON_HELP_DATE', '<br /><br />This voucher is valid from: %s to %
 define('TEXT_COUPON_HELP_RESTRICT', '<br /><br />Product / Category Restrictions');
 define('TEXT_COUPON_HELP_CATEGORIES', 'Category');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Product');
-
 define('ERROR_ENTRY_AMOUNT_CHECK', 'Invalid amount');
 define('ERROR_ENTRY_EMAIL_ADDRESS_CHECK', 'Invalid e-mail address');
 
@@ -471,7 +477,8 @@ define('TAX_INFO_INCL','%s VAT incl.');
 define('TAX_INFO_EXCL','%s VAT excl.');
 define('TAX_INFO_ADD','%s VAT plus.');
 define('SHIPPING_EXCL','excl.');
-define('SHIPPING_COSTS','Shipping costs');
+define('SHIPPING_INCL','incl.');
+define('SHIPPING_COSTS','Shipping costs'); 
 
 define('SHIPPING_TIME','Shipping time: ');
 define('MORE_INFO','[More]');
@@ -483,41 +490,26 @@ define('_MODULE_INVALID_SHIPPING_ZONE', 'Unfortunately we do not deliver to the 
 define('_MODULE_UNDEFINED_SHIPPING_RATE', 'Shipping costs cannot be calculated at the moment, please contact us.');
 
 define('NAVBAR_TITLE_1_ACCOUNT_DELETE', 'Your account');
-define('NAVBAR_TITLE_2_ACCOUNT_DELETE', 'Delete account');
+define('NAVBAR_TITLE_2_ACCOUNT_DELETE', 'Delete account');	
 
-//contact-form messages
+//contact-form error messages
 define('ERROR_EMAIL','<p><b>Your e-mail address:</b> None or invalid input!</p>');
 define('ERROR_VVCODE','<p><b>Security code:</b> No match, please enter your security code again!</p>');
 define('ERROR_MSG_BODY','<p><b>Your message:</b> No input!</p>');
-// BOF - DokuMan - 2010-09-06 - combined contact form messages in one language file
-define('EMAIL_COMPANY', 'Company: ');
-define('EMAIL_STREET', 'Street: ');
-define('EMAIL_POSTCODE', 'Postcode: ');
-define('EMAIL_CITY', 'City: ');
-define('EMAIL_PHONE', 'Telephone: ');
-define('EMAIL_FAX', 'Fax: ');
-define('EMAIL_SENT_BY', 'Sent by %s %s at %s to %s clock');
-define('EMAIL_NOTIFY', 'Attention, this e-mail can NOT be answered with -ANSWER THE SENDER-!');
-define('EMAIL_NAME', 'Name: ');
-define('EMAIL_EMAIL', 'E-mail: ');
-define('EMAIL_MESSAGE', 'Message: ');
-// EOF - DokuMan - 2010-09-06 - combined contact form messages in one language file
 
-// BOF - DokuMan - 2010-09-06 - combined checkout_confirmation messages in one language file
 //Table Header checkout_confirmation.php
 define('HEADER_QTY', 'Number');
-define('HEADER_ARTICLE', 'Item');
-define('HEADER_MODEL', 'Product model');
-define('HEADER_SINGLE', 'Single price');
+define('HEADER_ARTICLE', 'Item');    
+define('HEADER_SINGLE', 'Singleprice');
 define('HEADER_TOTAL','Total');
-// EOF - DokuMan - 2010-09-06 - combined checkout_confirmation messages in one language file
+define('HEADER_MODEL', 'Model');
 
 ### PayPal API Modul
 define('NAVBAR_TITLE_PAYPAL_CHECKOUT','PayPal-Checkout');
 define('PAYPAL_ERROR','PayPal abort');
 define('PAYPAL_NOT_AVIABLE','PayPal is not available.<br />Please select another payment method <br />or try again later.<br />');
 define('ERROR_ADDRESS_NOT_ACCEPTED', 'Please confirm your address so we can process your order.');
-define('PAYPAL_FEHLER','PayPal announced an error to the completion..<br />Your order is stored, is however not implemented.<br />Please enter a new order.<br />Thanks for your understanding.<br />');
+define('PAYPAL_FEHLER','PayPal reported an error while processing the payment.<br />Your order is stored, but cannot be processed.<br />Please enter a new order.<br />Thanks for your understanding.<br />');
 define('PAYPAL_WARTEN','PayPal reported an error while processing the payment.<br />Please login to PayPal and pay the order.<br />Below you see the stored order.<br /> Thanks for your understanding.<br />');
 define('PAYPAL_NEUBUTTON','Press the button again to pay the order.<br />Any other button will cancel.');
 define('PAYPAL_GS','Coupon');
@@ -541,14 +533,67 @@ define('DOWNLOAD_NOT_ALLOWED', '<h1>Forbidden</h1>This server could not verify t
 
 define('TEXT_INFO_DETAILS', ' Details');
 define('TEXT_SAVED_BASKET', 'Please check your shopping cart. There are products from a last visit.');
-define('TEXT_PRODUCTS_QTY_REDUCED', 'Maximum quantity for the last added / updated article reached. The quantity was reduced automatically.');
+//define('TEXT_PRODUCTS_QTY_REDUCED', 'Maximum quantity for the last added / updated article reached. The quantity was reduced automatically.'); // Now we use MAX_PROD_QTY_EXCEEDED
 
 define('ERROR_REVIEW_TEXT', 'The text must consist of at least ' . REVIEW_TEXT_MIN_LENGTH . ' characters.');
 define('ERROR_REVIEW_RATING', 'Enter your review.');
+define('ERROR_REVIEW_AUTHOR', 'Enter your name.');
+
+define('GV_NO_PAYMENT_INFO', '<div class="infomessage">You can pay the order with your credit completely. If you do not want to redeem your balance, clear the credit selection and select a payment method!</div>');
+define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Your credit is not sufficient to pay the order completely. Please select a payment method in addition!</div>');
 
 define('_SHIPPING_FREE','Free Shipping');
 
 define('TEXT_CONTENT_NOT_FOUND', 'Page not found!');
+define('TEXT_SITE_NOT_FOUND', 'Page not found!');
+
+// error message for exceeded product quantity, noRiddle
+define('MAX_PROD_QTY_EXCEEDED', 'The maximum allowed number of ' .MAX_PRODUCTS_QTY. ' for <span style="font-style:italic;">"%s"</span> has been exceeded. The number was automatically reduced to the permitted quantity.');
 
 define('IMAGE_BUTTON_CONTENT_EDIT', 'Edit content');
+define('PRINTVIEW_INFO', 'Print datasheet');
+define('PRODUCTS_REVIEW_LINK', 'Write review');
+
+define('TAX_INFO_SMALL_BUSINESS', 'Finalprice &sect; 19 UStG.');
+define('TAX_INFO_SMALL_BUSINESS_FOOTER', 'Due to the small business status according to &sect; 19 UStG., we charge no sales tax');
+
+define('NEED_CHANGE_PWD', 'Please change your Password.');
+define('TEXT_REQUEST_NOT_VALID', 'This Link is not valid. Please make a new Password request.');
+
+define('NAVBAR_TITLE_WISHLIST', 'Wishlist');
+define('TEXT_TO_WISHLIST', 'Add to wishlist');
+define('IMAGE_BUTTON_TO_WISHLIST', 'Add to wishlist');
+
+define('GUEST_REDEEM_NOT_ALLOWED', 'Guests can not redeem any vouchers.');
+define('GUEST_VOUCHER_NOT_ALLOWED', 'Vouchers can not be purchased as a guest.');
+
+define('TEXT_FILTER_SETTING_DEFAULT', 'Items per page');
+define('TEXT_FILTER_SETTING', '%s items per page');
+define('TEXT_FILTER_SETTING_ALL', 'Show all items');
+define('TEXT_SHOW_ALL', ' (show all)');
+define('TEXT_FILTER_SORTING_DEFAULT', 'Sort by ...');
+define('TEXT_FILTER_SORTING_ABC_ASC', 'A to Z');
+define('TEXT_FILTER_SORTING_ABC_DESC', 'Z to A');
+define('TEXT_FILTER_SORTING_PRICE_ASC', 'Price in ascending order');
+define('TEXT_FILTER_SORTING_PRICE_DESC', 'Price in descending order');
+define('TEXT_FILTER_SORTING_DATE_DESC', 'Newest products first');
+define('TEXT_FILTER_SORTING_DATE_ASC', 'Oldest products first');
+define('TEXT_FILTER_SORTING_ORDER_DESC', 'Most selling products');
+
+define('NAVBAR_TITLE_ACCOUNT_CHECKOUT_EXPRESS_EDIT', 'Settings for my quick purchase');
+define('SUCCESS_CHECKOUT_EXPRESS_UPDATED', 'The settings for My Quick purchase has been saved .');
+define('TEXT_ERROR_CHECKOUT_EXPRESS_SHIPPING_ADDRESS', 'Please select a shipping address');
+define('TEXT_ERROR_CHECKOUT_EXPRESS_SHIPPING_MODULE', 'Please select a shipping method');
+define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_ADDRESS', 'Please select a billing address');
+define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_MODULE', 'Please select a payment method');
+define('TEXT_CHECKOUT_EXPRESS_INFO_LINK', 'My quick purchase');
+define('TEXT_CHECKOUT_EXPRESS_INFO_LINK_MORE', 'More Informationen for my quick purchase &raquo;');
+define('TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST', 'Select always the cheapest shipping method');
+
+define('AC_SHOW_PAGE', 'Page ');
+define('AC_SHOW_PAGE_OF', ' from ');
+
+define('FREE_SHIPPING_INFO', 'Free Shipping minimum order: %s');
+
+define('MANUFACTURER_NOT_FOUND', 'Manufacturer not found');
 ?>

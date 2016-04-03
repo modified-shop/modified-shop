@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$
+   $Id: campaigns.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -62,7 +62,7 @@ require (DIR_WS_INCLUDES.'head.php');
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
-<body onload="SetFocus();">
+<body>
   <!-- header //-->
   <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
   <!-- header_eof //-->

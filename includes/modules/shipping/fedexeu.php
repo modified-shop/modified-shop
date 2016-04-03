@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: fedexeu.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -26,7 +26,7 @@
     var $code, $title, $description, $icon, $enabled, $num_fedexeu, $types;
 
 
-    function fedexeu() {
+    function __construct() {
       global $order;
 
       $this->code = 'fedexeu';
@@ -93,9 +93,9 @@
         $error = true;
       } else {
         $shipping = -1;
-        $fedexeu_cost_env = @constant('MODULE_SHIPPING_FEDEXEU_COST_ENV_' . $j);
-        $fedexeu_cost_pak = @constant('MODULE_SHIPPING_FEDEXEU_COST_PAK_' . $j);
-        $fedexeu_cost_box = @constant('MODULE_SHIPPING_FEDEXEU_COST_BOX_' . $j);
+        $fedexeu_cost_env = @constant('MODULE_SHIPPING_FEDEXEU_COST_ENV_' . $dest_zone);
+        $fedexeu_cost_pak = @constant('MODULE_SHIPPING_FEDEXEU_COST_PAK_' . $dest_zone);
+        $fedexeu_cost_box = @constant('MODULE_SHIPPING_FEDEXEU_COST_BOX_' . $dest_zone);
 
         $methods = array();
 

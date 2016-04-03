@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: worldpay_junior.php 4759 2013-05-10 14:00:56Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -43,19 +43,6 @@
     // class methods
     function update_status() {
       global $order;
-
-    // BOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
-    if( MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING != '' ) {
-      $neg_shpmod_arr = explode(',',MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING);
-      foreach( $neg_shpmod_arr as $neg_shpmod ) {
-        $nd=$neg_shpmod.'_'.$neg_shpmod;
-        if( $_SESSION['shipping']['id']==$nd || $_SESSION['shipping']['id']==$neg_shpmod ) {
-          $this->enabled = false;
-          break;
-        }
-      }
-    }
-    // EOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE > 0) ) {
         $check_flag = false;
@@ -359,7 +346,7 @@
 
     function before_process() {
       global $order, $order_totals, $payment, $currencies;
-      global $$payment;
+      global ${$payment};
 
       $order_id = substr($_SESSION['cart_Worldpay_Junior_ID'], strpos($_SESSION['cart_Worldpay_Junior_ID'], '-')+1);
 
@@ -370,7 +357,7 @@
         if ($check['orders_status'] == MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID) {
           $hash_result = false;
 
-          if (isset($$_GET['hash']) && !empty($$_GET['hash']) && ($$_GET['hash'] == md5(xtc_session_name() . $_SESSION['customer_id'] . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD))) {
+          if (isset(${$_GET['hash']}) && !empty(${$_GET['hash']}) && (${$_GET['hash']} == md5(xtc_session_name() . $_SESSION['customer_id'] . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD))) {
             $hash_result = true;
           }
 
@@ -532,10 +519,10 @@
                       EMAIL_SEPARATOR . "\n" .
                       xtc_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
 
-      if (is_object($$payment)) {
+      if (is_object(${$payment})) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
                         EMAIL_SEPARATOR . "\n";
-        $payment_class = $$payment;
+        $payment_class = ${$payment};
         $email_order .= $payment_class->title . "\n\n";
         if ($payment_class->email_footer) {
           $email_order .= $payment_class->email_footer . "\n\n";
@@ -623,9 +610,6 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID', '" . (int)$status_id . "', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID', '0', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
-      // BOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING', '', '6', '99', now())");
-      // EOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
     }
 
     function remove() {
@@ -644,7 +628,7 @@
                    'MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID',
                    'MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID',
                    'MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER',
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING' );  // Hendrik - 2010-08-11 - exlusion config for shipping modules
+                   );
     }
 
     // format prices without currency formatting

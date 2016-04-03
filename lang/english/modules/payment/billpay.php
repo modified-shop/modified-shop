@@ -1,201 +1,244 @@
 <?php
-/* -----------------------------------------------------------------------------------------
-   $Id$
-
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
-
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   -----------------------------------------------------------------------------------------
-   based on:
-   Copyright (c) 2012 Billpay GmbH
-
-   Released under the GNU General Public License
-   ---------------------------------------------------------------------------------------*/
 
 /* Default Messages */
-define('MODULE_PAYMENT_BILLPAY_TEXT_TITLE', 'Rechnung (Billpay)');
-define('MODULE_PAYMENT_BILLPAY_TEXT_DESCRIPTION', 'Rechnung (Billpay)');
+define('MODULE_PAYMENT_BILLPAY_TEXT_TITLE', 'BillPay - Invoice');
+define('MODULE_PAYMENT_BILLPAY_TEXT_DESCRIPTION', 'BillPay - Invoice');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_MESSAGE', 'BillPay Error Message');
-define('MODULE_PAYMENT_BILLPAY_TEXT_INFO', '<div style="margin-top:6px"><img src="https://www.billpay.de/wp-content/uploads/2011/04/LogoSmall_0.png" alt="Billpay Logo" title="Billpay Logo" /></div>');
+define('MODULE_PAYMENT_BILLPAY_TEXT_INFO', '<div style="margin-top:6px"><img src="https://www.billpay.de/wp-content/uploads/2011/04/LogoSmall_0.png" alt="BillPay Logo" title="BillPay Logo" /></div>');
 
-define('MODULE_PAYMENT_BILLPAY_ALLOWED_TITLE' , 'Erlaubte Zonen');
-define('MODULE_PAYMENT_BILLPAY_ALLOWED_DESC' , 'Geben Sie einzeln die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))');
+define('MODULE_PAYMENT_BILLPAY_ALLOWED_TITLE' , 'Allowed countries');
+define('MODULE_PAYMENT_BILLPAY_ALLOWED_DESC' , 'Enter countries (eg. AT, DE) allowed for use this payment method. If empty, all countries are allowed');
 
-define('MODULE_PAYMENT_BILLPAY_LOGGING_TITLE' , 'Absoluter Pfad zur Logdatei');
-define('MODULE_PAYMENT_BILLPAY_LOGGING_DESC' , 'Wenn kein Wert eingestellt ist, wird standardm&auml;ssig in das Verzeichnis includes/external/billpay/log geschrieben (Schreibrechte m&uuml;ssen verf&uuml;gbar sein).');
+define('MODULE_PAYMENT_BILLPAY_LOGGING_TITLE' , 'Absolute path for log-file');
+define('MODULE_PAYMENT_BILLPAY_LOGGING_DESC' , 'Payment module will write all communication with BillPay server to the file. If empty, it will use default path (/includes/external/billpay/logs).');
 
-define('MODULE_PAYMENT_BILLPAY_GS_MERCHANT_ID_TITLE' , 'Verk&auml;ufer ID');
-define('MODULE_PAYMENT_BILLPAY_GS_MERCHANT_ID_DESC' , 'Diese Daten erhalten Sie von Billpay');
+define('MODULE_PAYMENT_BILLPAY_DATA_PROVIDED_BY_BILLPAY' , 'Data provided by BillPay');
+define('MODULE_PAYMENT_BILLPAY_GS_MERCHANT_ID_TITLE' , 'Merchant ID');
+define('MODULE_PAYMENT_BILLPAY_GS_MERCHANT_ID_DESC' , MODULE_PAYMENT_BILLPAY_DATA_PROVIDED_BY_BILLPAY);
 
-define('MODULE_PAYMENT_BILLPAY_ORDER_STATUS_TITLE' , 'Bestellstatus festlegen');
-define('MODULE_PAYMENT_BILLPAY_ORDER_STATUS_DESC' , 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen');
+define('MODULE_PAYMENT_BILLPAY_ORDER_STATUS_TITLE' , 'Default order status');
+define('MODULE_PAYMENT_BILLPAY_ORDER_STATUS_DESC' , 'All orders made with this payment method and approved by BillPay, will be created with this status. (default setting: "BillPay pending")');
 
 define('MODULE_PAYMENT_BILLPAY_GS_PORTAL_ID_TITLE' , 'Portal ID');
-define('MODULE_PAYMENT_BILLPAY_GS_PORTAL_ID_DESC' , 'Diese Daten erhalten Sie von Billpay');
+define('MODULE_PAYMENT_BILLPAY_GS_PORTAL_ID_DESC' , MODULE_PAYMENT_BILLPAY_DATA_PROVIDED_BY_BILLPAY);
 
-define('MODULE_PAYMENT_BILLPAY_GS_SECURE_TITLE' , 'Security Key');
-define('MODULE_PAYMENT_BILLPAY_GS_SECURE_DESC' , 'Diese Daten erhalten Sie von Billpay');
+define('MODULE_PAYMENT_BILLPAY_GS_SECURE_TITLE' , 'API password');
+define('MODULE_PAYMENT_BILLPAY_GS_SECURE_DESC' , MODULE_PAYMENT_BILLPAY_DATA_PROVIDED_BY_BILLPAY);
 
-define('MODULE_PAYMENT_BILLPAY_SORT_ORDER_TITLE' , 'Anzeigereihenfolge');
-define('MODULE_PAYMENT_BILLPAY_SORT_ORDER_DESC' , 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt.');
+define('MODULE_PAYMENT_BILLPAY_GS_PUBLIC_API_KEY_TITLE', 'Public API Key');
+define('MODULE_PAYMENT_BILLPAY_GS_PUBLIC_API_KEY_DESC', MODULE_PAYMENT_BILLPAY_DATA_PROVIDED_BY_BILLPAY);
 
-define('MODULE_PAYMENT_BILLPAY_STATUS_TITLE' , 'Aktiviert');
-define('MODULE_PAYMENT_BILLPAY_STATUS_DESC' , 'M&ouml;chten Sie den Rechnungskauf mit Billpay erlauben?');
+define('MODULE_PAYMENT_BILLPAY_SORT_ORDER_TITLE' , 'Display order');
+define('MODULE_PAYMENT_BILLPAY_SORT_ORDER_DESC' , 'Order of display. Smallest number are displayed first.');
 
-define('MODULE_PAYMENT_BILLPAY_GS_TESTMODE_TITLE' , 'Transaktionsmodus');
-define('MODULE_PAYMENT_BILLPAY_GS_TESTMODE_DESC' , 'Im Testmodus werden detailierte Fehlermeldungen angezeigt. F&uuml;r den Produktivbetrieb muss der Livemodus aktiviert werden.');
+define('MODULE_PAYMENT_BILLPAY_STATUS_TITLE' , 'Enabled');
+define('MODULE_PAYMENT_BILLPAY_STATUS_DESC' , 'Do you want to enable this payment method?');
 
-define('MODULE_PAYMENT_BILLPAY_ZONE_TITLE' , 'Steuerzone');
+define('MODULE_PAYMENT_BILLPAY_GS_TESTMODE_TITLE' , 'Enable test-mode');
+define('MODULE_PAYMENT_BILLPAY_GS_TESTMODE_DESC' , 'In test-mode, detailed error messages are displayed. It should be deactivated in production environment.');
+
+define('MODULE_PAYMENT_BILLPAY_ZONE_TITLE' , 'Tax zone');
 define('MODULE_PAYMENT_BILLPAY_ZONE_DESC' , '');
 
 define('MODULE_PAYMENT_BILLPAY_GS_API_URL_BASE_TITLE' , 'API url base');
-define('MODULE_PAYMENT_BILLPAY_GS_API_URL_BASE_DESC' , 'Diese Daten erhalten Sie von Billpay (Achtung! Die URLs f&uuml; das Test- bzw. das Livesystem unterscheiden sich!)');
+define('MODULE_PAYMENT_BILLPAY_GS_API_URL_BASE_DESC' , 'Data provided by BillPay. Warning: URLs for live and test systems are different.');
 
 define('MODULE_PAYMENT_BILLPAY_GS_TESTAPI_URL_BASE_TITLE' , 'Test-API url base');
-define('MODULE_PAYMENT_BILLPAY_GS_TESTAPI_URL_BASE_DESC' , 'Diese Daten erhalten Sie von Billpay (Achtung! Die URLs f&uuml; das Test- bzw. das Livesystem unterscheiden sich!)');
+define('MODULE_PAYMENT_BILLPAY_GS_TESTAPI_URL_BASE_DESC' , 'Data provided by BillPay. Warning: URLs for live and test systems are different.');
 
-define('MODULE_PAYMENT_BILLPAY_LOGGING_ENABLE_TITLE' , 'Logging aktiviert');
-define('MODULE_PAYMENT_BILLPAY_LOGGING_ENABLE_DESC' , 'Sollen Anfragen an die Billpay-Zahlungsschnittstelle in die Logdatei geschrieben werden?');
+define('MODULE_PAYMENT_BILLPAY_LOGGING_ENABLE_TITLE' , 'Logging enabled');
+define('MODULE_PAYMENT_BILLPAY_LOGGING_ENABLE_DESC' , 'If enabled, all communication will be written to a log-file.');
 
-define('MODULE_PAYMENT_BILLPAY_MIN_AMOUNT_TITLE', 'Mindestbestellwert');
-define('MODULE_PAYMENT_BILLPAY_MIN_AMOUNT_DESC', 'Ab diesem Bestellwert wird die Zahlungsart eingeblendet.');
+define('MODULE_PAYMENT_BILLPAY_MIN_AMOUNT_TITLE', 'Minimum order value');
+define('MODULE_PAYMENT_BILLPAY_MIN_AMOUNT_DESC', 'For orders below this value, this payment method will be hidden.');
 
-define('MODULE_PAYMENT_BILLPAY_LOGPATH_TITLE', 'Logging Pfad');
+define('MODULE_PAYMENT_BILLPAY_LOGPATH_TITLE', 'Logging path');
 define('MODULE_PAYMENT_BILLPAY_LOGPATH_DESC', '');
 
-define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_TITLE', 'X_FORWARDED_FOR erlauben');
-define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
-
-if (defined('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_TITLE') === false) {
-    define('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_TITLE', 'SEPA Zahlungsverkehr aktivieren');
-    define('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_DESC', 'Diese Option muss ab 1.2.2014 auf "True" gestellt sein');
-}
+define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_TITLE', 'X_FORWARDED_FOR allow');
+define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_DESC', 'Activate this function if your shop is using Cloud System');
 
 // Payment selection texts
-define('MODULE_PAYMENT_BILLPAY_TEXT_BIRTHDATE', 'Geburtsdatum');
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK', 'Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufs und einer Identit&auml;ts und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href="https://www.billpay.de/endkunden" target="blank">Billpay GmbH</a> bin ich einverstanden. Es gelten die <a href="%s" target="_blank">Datenschutzbestimmungen</a> von Billpay.');
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_CH', '<label style="line-height:1.8em" for="billpay_eula">Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufs und einer Identit&auml;ts und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href="https://www.billpay.de/endkunden" target="blank">Billpay GmbH</a> bin ich einverstanden. Es gelten die <a href="https://www.billpay.de/kunden/agb-ch#datenschutz" target="_blank">Datenschutzbestimmungen</a> von Billpay.</label> <br />');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_BIRTHDATE', 'Bitte geben Sie Ihr Geburtsdatum ein');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_GENDER', 'Bitte geben Sie Ihr Geschlecht ein');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_TITLE', 'Bitte geben Sie Ihre Anrede ein');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_BIRTHDATE_AND_GENDER', 'Bitte geben Sie Ihr Geburtsdatum und Ihr Geschlecht ein');
+define('MODULE_PAYMENT_BILLPAY_TEXT_BIRTHDATE', 'Date of birth');
+
+
+define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_BIRTHDATE', 'Please set your date of birth in the account page.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_GENDER', 'Please set your gender in the account page.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_TITLE', 'Please enter your title');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_BIRTHDATE_AND_GENDER', 'Please set your date of birth and gender in the account page.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_PHONE', 'Please enter your phone number.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_NOTE', '');
 define('MODULE_PAYMENT_BILLPAY_TEXT_REQ', '');
-define('MODULE_PAYMENT_BILLPAY_TEXT_GENDER', 'Geschlecht');
-define('MODULE_PAYMENT_BILLPAY_TEXT_SALUTATION', 'Anrede');
-define('MODULE_PAYMENT_BILLPAY_TEXT_MALE', 'm&auml;nnlich');
-define('MODULE_PAYMENT_BILLPAY_TEXT_FEMALE', 'weiblich');
-define('MODULE_PAYMENT_BILLPAY_TEXT_MR', 'Herr');
-define('MODULE_PAYMENT_BILLPAY_TEXT_MRS', 'Frau');
+define('MODULE_PAYMENT_BILLPAY_TEXT_GENDER', 'Gender');
+define('MODULE_PAYMENT_BILLPAY_TEXT_SALUTATION', 'Salutation');
+define('MODULE_PAYMENT_BILLPAY_TEXT_MALE', 'male');
+define('MODULE_PAYMENT_BILLPAY_TEXT_FEMALE', 'female');
+define('MODULE_PAYMENT_BILLPAY_TEXT_MR', 'Mr');
+define('MODULE_PAYMENT_BILLPAY_TEXT_MRS', 'Mrs');
 
-define('JS_BILLPAY_EULA', '* Bitte best%E4tigen Sie die Billpay AGB!\n\n');
-define('JS_BILLPAY_DOBDAY', '* Bitte geben Sie Ihr Geburtstag ein.\n\n');
-define('JS_BILLPAY_DOBMONTH', '* Bitte geben Sie Ihr Geburtsmonat.\n\n');
-define('JS_BILLPAY_DOBYEAR', '* Bitte geben Sie Ihr Geburtsjahr ein.\n\n');
-define('JS_BILLPAY_GENDER', '* Bitte geben Sie Ihr Geschlecht ein.\n\n');
+define('JS_BILLPAY_EULA', '* Please accept EULA to continue.\n\n');
+define('JS_BILLPAY_DOBDAY', '* Please set your date of birth in the account page.\n\n');
+define('JS_BILLPAY_DOBMONTH', JS_BILLPAY_DOBDAY);
+define('JS_BILLPAY_DOBYEAR', JS_BILLPAY_DOBDAY);
+define('JS_BILLPAY_GENDER', '* Please set your gender in the account page.\n\n');
 
-define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_EULA', '* Bitte akzeptieren Sie die Billpay AGB!');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT', 'Es ist ein interner Fehler aufgetreten. Bitte w&auml;len Sie eine andere Zahlart');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_SHORT', 'Es ist ein interner Fehler aufgetreten!');
-define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_CREATED_COMMENT', 'Das Zahlungsziel der Bestellung wurde erfolgreich bei Billpay gestartet.');
-define('MODULE_PAYMENT_BILLPAY_TEXT_CANCEL_COMMENT', 'Die Bestellung wurde erfolgreich bei Billpay storniert');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DUEDATE', 'Das Zahlungsziel konnte nicht gestartet werden, weil das F%E4lligkeitsdatum leer ist!');
+define('JS_BILLPAY_CODE', '* Please provide bank account code.\n\n');
+define('JS_BILLPAY_NUMBER', '* Please provide bank account number.\n\n');
+define('JS_BILLPAY_NAME', '* Please provide name of the holder of selected bank account.\n\n');
+define('JS_BILLPAY_PHONE', '* Please provide your telephone number.\n\n');
 
-define('MODULE_PAYMENT_BILLPAY_TEXT_CREATE_INVOICE', 'Billpay Zahlungsziel jetzt aktivieren?');
-define('MODULE_PAYMENT_BILLPAY_TEXT_CANCEL_ORDER', 'Billpay Bestellung jetzt stornieren?');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_EULA', '* Please accept EULA to continue.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB', 'You have entered an incorrect date of birth!');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT', 'Internal error, please pick different payment method.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_SHORT', 'Internal error, please pick different payment method.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_CREATED_COMMENT', 'Invoice has been created.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_CANCEL_COMMENT', 'The order has been canceled by BillPay.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DUEDATE', 'Payment cannot be started because due date is empty.');
 
-define('MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_HOLDER', 'Kontoinhaber');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_NUMBER', 'Kontonummer');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_CODE', '* Please correct bank account code.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_NUMBER', '* Please correct bank account number.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_NAME', '* Please correct the name of the holder of selected bank account.');
+
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_PHONE', '* Please provide your telephone number.');
+
+define('MODULE_PAYMENT_BILLPAY_TEXT_CREATE_INVOICE', 'Create BillPay invoice now?');
+define('MODULE_PAYMENT_BILLPAY_TEXT_CANCEL_ORDER', 'Cancel BillPay payment now?');
+
+define('MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_HOLDER', 'Account holder');
 define('MODULE_PAYMENT_BILLPAY_TEXT_IBAN', 'IBAN');
-define('MODULE_PAYMENT_BILLPAY_TEXT_BANK_CODE', 'Bankleitzahl');
 define('MODULE_PAYMENT_BILLPAY_TEXT_BANK_NAME', 'Bank');
 define('MODULE_PAYMENT_BILLPAY_TEXT_BIC', 'BIC');
-define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_REFERENCE', 'Rechnungsnummer');
+define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_REFERENCE', 'Invoice number');
+define('MODULE_PAYMENT_BILLPAY_TEXT_PHONE', 'Phone number');
 
-define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO', 'Bitte &uuml;berweisen Sie den Gesamtbetrag unter Angabe der Billpay-Transaktionsnummer im Verwendungszweck (%1$s) innerhalb der Zahlungsfrist bis zum %2$02s.%3$02s.%4$04s auf das folgende Konto:');
-define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO1', 'Sie haben sich f&uuml;r den Kauf auf Rechnung mit Billpay entschieden. Bitte &uuml;berweisen Sie den Gesamtbetrag bis zum ');
+define('MODULE_PAYMENT_BILLPAY_TEXT_BANKDATA', 'Please provide your bank account details.');
+
+define('MODULE_PAYMENT_BILLPAY_DUEDATE_TITLE', 'Due date');
+
+define('MODULE_PAYMENT_BILLPAY_TEXT_PURPOSE', 'Usage');
+
+define('MODULE_PAYMENT_BILLPAY_TEXT_ADD', 'plus');
+define('MODULE_PAYMENT_BILLPAY_TEXT_FEE', 'Fee');
+
+define('MODULE_PAYMENT_BILLPAY_TEXT_SANDBOX', 'You are in a sandbox mode:');
+define('MODULE_PAYMENT_BILLPAY_TEXT_CHECK', 'You are in the acceptance mode:');
+define('MODULE_PAYMENT_BILLPAY_UNLOCK_INFO', 'Information from a live server');
+
+
+define('MODULE_PAYMENT_BILLPAY_B2BCONFIG_TITLE', 'Type of the customers');
+define('MODULE_PAYMENT_BILLPAY_B2BCONFIG_DESC', 'Do you want to offer payment method for private customers (B2C), business (B2B) or both (BOTH)?');
+define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_NAME_TEXT', 'Company name');
+define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_LEGAL_FORM_TEXT', 'Legal form');
+define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_LEGAL_FORM_SELECT_HTML', "");
+define('MODULE_PAYMENT_BILLPAY_B2B_CHOOSE_CLIENT_TEXT', 'Client type');
+define('MODULE_PAYMENT_BILLPAY_B2B_PRIVATE_CLIENT_TEXT', 'Private client');
+define('MODULE_PAYMENT_BILLPAY_B2B_BUSINESS_CLIENT_TEXT', 'Business client');
+define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_FIELD_EMPTY', 'Please enter company name');
+define('MODULE_PAYMENT_BILLPAY_B2B_LEGAL_FORM_FIELD_EMPTY', 'Please provide legal form');
+define('MODULE_PAYMENT_BILLPAY_B2B_HOLDER_NAME_EMPTY', 'Please provide holder\'s name');
+define('MODULE_PAYMENT_BILLPAY_B2B_REGISTER_NUMBER_EMPTY', 'Please provide register number');
+define('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_EMPTY', 'Please provide Tax-ID');
+
+define('MODULE_PAYMENT_BILLPAY_B2B_REGISTER_NUMBER_TEXT', 'Register number');
+define('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_TEXT', 'Tax-ID');
+define('MODULE_PAYMENT_BILLPAY_B2B_HOLDER_NAME_TEXT', 'Holder name');
+define('MODULE_PAYMENT_BILLPAY_B2B_CONTACT_PERSON_TEXT', 'Contact person');
+
+define('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL', 'of the invoice amount');
+
+define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_TITLE', 'Local encoding');
+define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_DESC', 'Does your site uses local encoding (other than utf-8)?');
+
+define('MODULE_PAYMENT_BILLPAY_ACTIVATE_ORDER', 'The order has not been activated by BillPay. Please activate the order immediately prior to dispatch in which you set the appropriate status.');
+define('MODULE_PAYMENT_BILLPAY_ACTIVATE_ORDER_WARNING', '<strong style="color:red">Warning: The payment has not yet been started by BillPay!</strong><br/>');
+
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ADDRESS', 'This address is not allowed on orders with BillPay.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_PRODUCT', 'This product is not allowed on orders with BillPay.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_PAYMENT', 'This payment is not allowed on orders with BillPay.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_CURRENCY', 'This currency is not allowed on orders with BillPay.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_GENERAL', 'You cannot do this for BillPay payment method.');
+
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_HIGHER_QUANTITY', 'You cannot order more products than in original order with BillPay');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_NEGATIVE_QUANTITY', 'You cannot order a negative quantity of products with BillPay.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_TAX', 'Adjusting the tax rate for order is not allowed.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_PRICE', 'Adjusting the price for order is not allowed.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ID', 'Adjusting the product id for order is not allowed.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ZERO_REDUCTION', 'Zero reduction for order is not allowed.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_NEGATIVE_REDUCTION', 'Negative reduction for order is not allowed.');
+
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_NEGATIVE_SHIPPING', 'Negative shipping for order is not allowed.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_INCREASED_SHIPPING', 'Increased shipping for order is not allowed.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ADDED_SHIPPING', 'Added shipping for order is not allowed.');
+
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_FORBIDDEN', 'This action is not allowed on orders with BillPay.');
+define('MODULE_PAYMENT_BILLPAY_PARTIAL_CANCEL_NOT_PROCESSED', 'Attention! The adaptation of orders without tax items are not automatically sent to BillPay due to an error in the shop software. Please adjustment the amount manually in BillPay Back Office (https://admin.billpay.de)!');
+define('MODULE_PAYMENT_BILLPAY_PARTIAL_CANCEL_ERROR_CUSTOMER_CARE', 'The adaptation of order with BillPay has failed. Please immediately contact our customer service (haendler@billpay.de)!');
+
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ADJUST_CHARGEABLE', 'Customizing a paid product option is not allowed.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ADD_CHARGEABLE', 'Customizing a paid product option is not allowed.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_REMOVE_CHARGEABLE', 'Customizing a paid product option is not allowed.');
+
+define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_CONTACT_BILLPAY', 'An error has occurred. Please contact BillPay customer service (haendler@billpay.de).');
+
+
+
+define('MODULE_PAYMENT_BILLPAY_HISTORY_INFO_PARTIAL_CANCEL', 'Partial cancellation successfully sent to BillPay.');
+define('MODULE_PAYMENT_BILLPAY_HISTORY_INFO_EDIT_CART_CONTENT', 'Edit cart content successfully sent to BillPay.');
+
+define('MODULE_PAYMENT_BILLPAY_TRANSACTION_MODE_TEST' , 'Test-mode');
+define('MODULE_PAYMENT_BILLPAY_TRANSACTION_MODE_LIVE' , 'Live-mode');
+
+
+// -- Order States
+// waiting for prepayment or decision
+define('MODULE_PAYMENT_BILLPAY_STATUS_PENDING_TITLE_EN' , 'BillPay pending');
+define('MODULE_PAYMENT_BILLPAY_STATUS_PENDING_TITLE_DE' , 'BillPay nicht abgeschlossen');
+
+// ready to activate
+define('MODULE_PAYMENT_BILLPAY_STATUS_APPROVED_TITLE_EN' , 'BillPay approved');
+define('MODULE_PAYMENT_BILLPAY_STATUS_APPROVED_TITLE_DE' , 'BillPay genehmigt');
+
+// invoice created
+define('MODULE_PAYMENT_BILLPAY_STATUS_ACTIVATED_TITLE_EN' , 'BillPay activated');
+define('MODULE_PAYMENT_BILLPAY_STATUS_ACTIVATED_TITLE_DE' , 'BillPay aktiviert');
+
+// order cancelled or timed out from pending
+define('MODULE_PAYMENT_BILLPAY_STATUS_CANCELLED_TITLE_EN' , 'BillPay cancelled');
+define('MODULE_PAYMENT_BILLPAY_STATUS_CANCELLED_TITLE_DE' , 'BillPay storniert');
+
+// error in order
+define('MODULE_PAYMENT_BILLPAY_STATUS_ERROR_TITLE_EN' , 'BillPay error!');
+define('MODULE_PAYMENT_BILLPAY_STATUS_ERROR_TITLE_DE' , 'BillPay Fehler!');
+// -- end of Order States
+
+
+define('MODULE_PAYMENT_BILLPAY_STATUS_PENDING_DESC', 'BillPay - waiting for approvement');
+define('MODULE_PAYMENT_BILLPAY_STATUS_APPROVED_DESC', 'BillPay - approved');
+define('MODULE_PAYMENT_BILLPAY_STATUS_ACTIVATED_DESC', 'BillPay - activated');
+define('MODULE_PAYMENT_BILLPAY_STATUS_CANCELLED_DESC', 'BillPay - cancelled');
+define('MODULE_PAYMENT_BILLPAY_STATUS_ERROR_DESC', 'BillPay - Due to an error, this order requires a manual correction. Please contact BillPay\'s support');
+
+define('MODULE_PAYMENT_BILLPAY_SALUTATION_MALE', MODULE_PAYMENT_BILLPAY_TEXT_MR);
+define('MODULE_PAYMENT_BILLPAY_SALUTATION_FEMALE', MODULE_PAYMENT_BILLPAY_TEXT_MRS);
+
+define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO',              'Please transfer the total amount with BillPay transaction number (%1$s) within the payment deadline of %2$02s.%3$02s.%4$04s to the following account:');
+define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_NO_DUEDATE',   'Please transfer the total amount with BillPay transaction number (%1$s) within the payment deadline written on invoice to the following account:');
+define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO1', 'Sie haben sich f&uuml;r den Kauf auf Rechnung mit BillPay entschieden. Bitte &uuml;berweisen Sie den Gesamtbetrag bis zum ');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO2', ' auf folgendes Konto: ');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO3', 'F&auml;lligkeitsdatum, das Sie mit der Rechnung erhalten');
-define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_MAIL', '<br/>Bitte &uuml;berweisen Sie den Gesamtbetrag unter Angabe der Billpay-Transaktionsnummer im Verwendungszweck (%s) bis zum F&auml;lligkeitsdatum, das Sie mit der Rechnung erhalten, auf das folgende Konto:');
+define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_MAIL', '<br/>Bitte &uuml;berweisen Sie den Gesamtbetrag unter Angabe der BillPay-Transaktionsnummer im Verwendungszweck (%s) bis zum F&auml;lligkeitsdatum, das Sie mit der Rechnung erhalten, auf das folgende Konto:');
 
-define('MODULE_PAYMENT_BILLPAY_DUEDATE_TITLE', 'Zahlungsziel');
-
-define('MODULE_PAYMENT_BILLPAY_TEXT_PURPOSE', 'Verwendungszweck');
-
-define('MODULE_PAYMENT_BILLPAY_TEXT_ADD', 'zzgl.');
-define('MODULE_PAYMENT_BILLPAY_TEXT_FEE', 'Geb&uuml;hr');
 define('MODULE_PAYMENT_BILLPAY_TEXT_FEE_INFO1', 'F&uuml;r diese Bestellung per Rechnung wird eine Geb&uuml;hr von ');
 define('MODULE_PAYMENT_BILLPAY_TEXT_FEE_INFO2', ' erhoben');
 
-define('MODULE_PAYMENT_BILLPAY_TEXT_SANDBOX', 'Sie befinden sich im Sandbox-Modus:');
-define('MODULE_PAYMENT_BILLPAY_TEXT_CHECK', 'Sie befinden sich im Abnahme-Modus:');
-define('MODULE_PAYMENT_BILLPAY_UNLOCK_INFO', 'Informationen zur Live-Schaltung');
-
-define('MODULE_PAYMENT_BILLPAY_B2BCONFIG_TITLE', 'Erlaubte Kundenarten');
-define('MODULE_PAYMENT_BILLPAY_B2BCONFIG_DESC', 'Wollen Sie die Zahlart f&uuml;r Privatkunden (B2C), Gesch&auml;ftskunden (B2B) oder f&uuml;r beide (BOTH) aktivieren?');
-define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_NAME_TEXT', 'Firmenname');
-define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_LEGAL_FORM_TEXT', 'Rechtsform');
-define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_LEGAL_FORM_SELECT_HTML', "");
-define('MODULE_PAYMENT_BILLPAY_B2B_LEGALFORM_VALUES', 'ag:AG (Aktiengesellschaft)|eg:eG (eingetragene Genossenschaft)|ek:EK (eingetragener Kaufmann)|ev:e.V. (eingetragener Verein)|freelancer:Freiberufler/Kleingewerbetreibender/Handelsvertreter|gbr:GbR/BGB (Gesellschaft b&uuml;rgerlichen Rechts)|gmbh:GmbH (Gesellschaft mit beschr&auml;nkter Haftung)|gmbh_ig:GmbH in Gr&uuml;ndung|gmbh_co_kg:GmbH & Co. KG|kg:KG (Kommanditgesellschaft)|ltd:Limited|ltd_co_kg:Limited & Co. KG|ohg:OHG (offene Handelsgesellschaft)|public_inst:&Ouml;ffentliche Einrichtung|misc_capital:Sonstige Kapitalgesellschaft|misc:Sonstige Personengesellschaft|foundation:Stiftung|ug:UG (Unternehmensgesellschaft haftungsbeschr&auml;nkt)');
-define('MODULE_PAYMENT_BILLPAY_B2B_REGISTER_NUMBER_TEXT', 'Handelsregisternummer');
-define('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_TEXT', 'Umsatzsteuer-ID');
-define('MODULE_PAYMENT_BILLPAY_B2B_HOLDER_NAME_TEXT', 'Name des Inhabers');
-define('MODULE_PAYMENT_BILLPAY_B2B_CONTACT_PERSON_TEXT', 'Kontaktperson');
-
-define('MODULE_PAYMENT_BILLPAY_B2B_PRIVATE_CLIENT_TEXT', 'Privatkunde');
-define('MODULE_PAYMENT_BILLPAY_B2B_BUSINESS_CLIENT_TEXT', 'Gesch&auml;ftskunde');
-define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_FIELD_EMPTY', 'Bitte geben Sie den Firmenname ein');
-define('MODULE_PAYMENT_BILLPAY_B2B_LEGAL_FORM_FIELD_EMPTY', 'Bitte geben Sie die Rechtsform der Firma ein');
-
-define('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL', 'vom Rechnungsbetrag');
-
-define('MODULE_PAYMENT_BILLPAY_UTF8_ENCODE_TITLE', 'UTF8-Kodierung aktivieren');
-define('MODULE_PAYMENT_BILLPAY_UTF8_ENCODE_DESC', 'Deaktivieren Sie diese Option, wenn Sie in Ihrem Online-Shop die UTF-8 Kodierung einsetzen.');
-
-define('MODULE_PAYMENT_BILLPAY_ACTIVATE_ORDER', 'Die Bestellung wurde noch nicht bei Billpay aktiviert. Bitte aktivieren Sie die Bestellung unmittelbar vor der Versendung, in dem Sie den entsprechenden Status setzen.');
-define('MODULE_PAYMENT_BILLPAY_ACTIVATE_ORDER_WARNING', "<strong style='color:red'>Achtung: Das Zahlungsziel wurde noch nicht bei Billpay gestartet!</strong><br/>");
-
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ADDRESS', 'Anpassen der Adresse ist bei Bestellungen mit Billpay nicht erlaubt');
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_PRODUCT', 'Nachbestellen von Artikeln ist bei Bestellungen mit Billpay nicht erlaubt');
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_PAYMENT', 'Anpassen der Zahlungsart ist bei Bestellungen mit Billpay nicht erlaubt');
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_CURRENCY', 'Anpassen der Waehrung ist bei Bestellungen mit Billpay nicht erlaubt');
-
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_NEGATIVE_QUANTITY', 'Bei Bestellungen mit Billpay darf Artikelmenge nicht negativ sein');
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_TAX', 'Anpassen des Steuersatzes bei Bestellungen mit Billpay ist nicht erlaubt');
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_PRICE', 'Anpassen des Produktpreises bei Bestellungen mit Billpay ist nicht erlaubt');
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ID', 'Anpassen der Produkt-ID bei Bestellungen mit Billpay ist nicht erlaubt');
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ZERO_REDUCTION', 'Bitte geben Sie eine zu stornierende Menge ein');
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_NEGATIVE_REDUCTION', 'Nachbestellen von Artikeln ist bei Bestellungen mit Billpay nicht erlaubt');
-
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_NEGATIVE_SHIPPING', 'Negative Lieferkosten bei Bestellungen mit Billpay nicht erlaubt');
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_INCREASED_SHIPPING', 'Erhoehung der Lieferkosten bei Bestellungen mit Billpay nicht erlaubt');
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ADDED_SHIPPING', 'Hinzufuegen von Lieferkosten bei Bestellungen mit Billpay nicht erlaubt');
-
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_FORBIDDEN', 'Aktion bei Bestellungen mit Billpay nicht erlaubt');
-define('MODULE_PAYMENT_BILLPAY_PARTIAL_CANCEL_NOT_PROCESSED', 'Achtung! Die Anpassung von Bestellungen ohne Artikelsteuer werden aufgrund eines Fehlers in der Shopsoftware nicht automatisch an Billpay gesendet. Bitte nehmen Sie die Betragsanpassung stattdessen manuell im Billpay-Backoffice (https://admin.billpay.de) vor!');
-define('MODULE_PAYMENT_BILLPAY_PARTIAL_CANCEL_ERROR_CUSTOMER_CARE', 'Die Anpassung der Bestellung bei Billpay ist fehlgeschlagen. Bitte wenden Sie sich umgehend an unseren Kundendienst (haendler@billpay.de)!');
-
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ADJUST_CHARGEABLE', 'Anpassen einer kostenpflichtigen Produktoption bei Bestellungen mit Billpay nicht erlaubt');
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_ADD_CHARGEABLE', 'Hinzufuegen einer kostenpflichtigen Produktoption bei Bestellungen mit Billpay nicht erlaubt');
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_REMOVE_CHARGEABLE', 'Enfernen einer kostenpflichtigen Produktoption bei Bestellungen mit Billpay nicht erlaubt');
-
-define('MODULE_PAYMENT_BILLPAY_HISTORY_ERROR_CONTACT_BILLPAY', 'Es ist ein Fehler aufgetreten! Bitte kontaktieren Sie Billpay.');
-
-define('MODULE_PAYMENT_BILLPAY_HISTORY_INFO_PARTIAL_CANCEL', 'Teilstornierung erfolgreich an Billpay gesendet');
-
-define('MODULE_PAYMENT_BILLPAY_TRANSACTION_MODE_TEST' , 'Testmodus');
-define('MODULE_PAYMENT_BILLPAY_TRANSACTION_MODE_LIVE' , 'Livemodus');
-
-define('MODULE_PAYMENT_BILLPAY_STATUS_ACTIVATED_TITLE' , 'Billpay aktiviert');
-define('MODULE_PAYMENT_BILLPAY_STATUS_CANCELLED_TITLE' , 'Billpay storniert');
-define('MODULE_PAYMENT_BILLPAY_STATUS_ERROR_TITLE' , 'Billpay Fehler!');
-
-define('MODULE_PAYMENT_BILLPAY_SALUTATION_MALE', 'Herr');
-define('MODULE_PAYMENT_BILLPAY_SALUTATION_FEMALE', 'Frau');
-
-// BOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
-define('MODULE_PAYMENT_BILLPAY_NEG_SHIPPING_TITLE', 'Ausschlu&szlig; bei Versandmodulen');
-define('MODULE_PAYMENT_BILLPAY_NEG_SHIPPING_DESC', 'Dieses Zahlungsmodul deaktivieren wenn Versandmodul gew&auml;hlt (Komma separierte Liste)');
-// EOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
-?>
+// Plugin 1.7
+define('MODULE_PAYMENT_BILLPAY_THANK_YOU_TEXT', 'Thank you for choosing BillPay Invoice when making your purchase.');
+define('MODULE_PAYMENT_BILLPAY_PAY_UNTIL_TEXT', 'Please transfer %1$s %2$s by %3$s, stating the reference, to the following account:');
+define('MODULE_PAYMENT_BILLPAY_PAY_UNTIL_TEXT_ADD_CH', 'Payments at the Post Office counter will incur additional charges. When making a payment via deposit slip, please transfer an additional %1$s %2$s.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_PAYEE', 'Payment recipient');
+define('MODULE_PAYMENT_BILLPAY_TEXT_PAYEE_CH', 'Zweigniederlassung Schweiz (Regensdorf)');
+define('MODULE_PAYMENT_BILLPAY_TEXT_IBAN_CH', 'Account number');
+define('MODULE_PAYMENT_BILLPAY_TEXT_BIC_CH', 'BC number');
+define('MODULE_PAYMENT_BILLPAY_TEXT_BANK', 'Bank');
+define('MODULE_PAYMENT_BILLPAY_TEXT_TOTAL_AMOUNT', 'Amount');
+define('MODULE_PAYMENT_BILLPAY_UPDATE_AVAILABLE', 'Version %2$s of the BillPay Payment Plugin is available (currently installed: %1$s). Click <a href="%3$s">here</a> to download.');

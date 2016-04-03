@@ -7,6 +7,7 @@ Order No.: {$oID}
 Date: {$DATE}
 {if $csID}Customer ID: {$csID}{/if}
 Your e-mail-address: {$EMAIL}
+{if $vatID}Your VAT ID No.: {$vatID}{/if}
 ----------------------------------------------------------------------
 
 
@@ -16,8 +17,9 @@ thank you for your order.
 
 {$PAYMENT_INFO_TXT}
 
-{if isset($NEW_PASSWORD) && $NEW_PASSWORD != ''}{*Paypal Express*}
-        Your Account Password: {$NEW_PASSWORD}
+{if isset($NEW_PASSWORD) && $NEW_PASSWORD != ''}
+Your Account was protected with a password.
+You can change your password with this link: {$NEW_PASSWORD}
 {/if}
 
 {if $COMMENTS}
@@ -41,15 +43,17 @@ Your ordered following products
 
 {$downloads_content_txt}
 
+{if $address_label_payment != $address_label_shipping}
+Shippingaddress 
+----------------------------------------------------------------------
+{$address_label_shipping}{/if}
+
 {if $address_label_payment}
 {if $address_label_payment != $address_label_shipping}Paymentadress{else}Payment-/Shippingaddress{/if}
 ----------------------------------------------------------------------
 {$address_label_payment}
 {/if}
-{if $address_label_payment != $address_label_shipping}
-Shippingaddress 
-----------------------------------------------------------------------
-{$address_label_shipping}{/if}
+
 {if $DELIVERY_DUTY_INFO != ''}
 
 ----------------------------------------------------------------------
@@ -59,3 +63,5 @@ Shippingaddress
 [SIGNATUR]
 
 {$REVOCATION_TXT}
+
+{$AGB_TXT}

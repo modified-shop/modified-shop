@@ -6,11 +6,20 @@ z-index:100;
 height:auto;
 width:100%;
 background-color:#fff;
+padding-top:42px;
 }
 .fixed-header-height{
 height:0;
 }
 .fixed_messageStack{
-margin-top:0; 
-margin-bottom:0;
+margin: 0 5px 6px;
+}
+.admin_spacer{
+height: 0px;
+}
+.fixed-header-height.active {
+height: 0px;
+}
+#fixed-header.active {
+height: 84px;
 }

@@ -18,9 +18,9 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-   
+
   function xtc_not_null($value) {
-    if ($value == '' || $value == "NULL" || (is_array($value) ? empty($value) : trim($value) == '')) {
+    if ($value == '' || $value == 'NULL' || (is_array($value) ? empty($value) : trim($value) == '')) {
       return false;
     }
     return true;

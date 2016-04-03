@@ -1,11 +1,11 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: content_manager.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on:
    (c) 2003	 nextcommerce (content_manager.php,v 1.8 2003/08/25); www.nextcommerce.org
@@ -16,7 +16,7 @@
  define('HEADING_TITLE','Content Manager');
  define('HEADING_CONTENT','Seiten Content');
  define('HEADING_PRODUCTS_CONTENT','Artikel Content');
- define('TABLE_HEADING_CONTENT_ID','Link ID');
+ define('TABLE_HEADING_CONTENT_ID','ID');
  define('TABLE_HEADING_CONTENT_TITLE','Titel');
  define('TABLE_HEADING_CONTENT_FILE','Datei');
  define('TABLE_HEADING_CONTENT_STATUS','In Box sichtbar');
@@ -28,7 +28,7 @@
  define('TABLE_HEADING_CONTENT_NAME','Name/Dateiname');
  define('TABLE_HEADING_CONTENT_LINK','Link');
  define('TABLE_HEADING_CONTENT_HITS','Hits');
- define('TABLE_HEADING_CONTENT_GROUP','Gruppe');
+ define('TABLE_HEADING_CONTENT_GROUP','coID');
  define('TABLE_HEADING_CONTENT_SORT','Reihenfolge');
  define('TEXT_YES','Ja');
  define('TEXT_NO','Nein');
@@ -36,21 +36,22 @@
  define('TEXT_DELETE','L&ouml;schen');
  define('TEXT_EDIT','Bearbeiten');
  define('TEXT_PREVIEW','Vorschau');
- define('CONFIRM_DELETE','Wollen Sie den Content wirklich l&ouml;schen ?');
- define('CONTENT_NOTE','Content markiert mit <font color="#ff0000">*</font> geh&ouml;rt zum System und kann nicht gel&ouml;scht werden!');
+ define('CONFIRM_DELETE','Wollen Sie den Content wirklich l&ouml;schen?');
+ define('CONTENT_NOTE','Content markiert mit <span class="col-red">*</span> geh&ouml;rt zum System und kann nicht gel&ouml;scht werden!');
 
  
  // edit
  define('TEXT_LANGUAGE','Sprache:');
  define('TEXT_STATUS','Sichtbar:');
- define('TEXT_STATUS_DESCRIPTION','Wenn ausgew&auml;hlt, wird ein Link in der Info Box angezeigt');
+ define('TEXT_STATUS_DESCRIPTION','Link in der Info Box angezeigen?');
  define('TEXT_TITLE','Titel:');
  define('TEXT_TITLE_FILE','Titel/Dateiname:');
+ define('TEXT_SELECT','-Bitte w&auml;hlen-');
  define('TEXT_HEADING','&Uuml;berschrift:');
  define('TEXT_CONTENT','Text:');
- define('TEXT_UPLOAD_FILE','Datei Hochladen:');
+ define('TEXT_UPLOAD_FILE','Datei hochladen:');
  define('TEXT_UPLOAD_FILE_LOCAL','(von Ihrem lokalen System)');
- define('TEXT_CHOOSE_FILE','Datei W&auml;hlen:');
+ define('TEXT_CHOOSE_FILE','Datei w&auml;hlen:');
  define('TEXT_CHOOSE_FILE_DESC','Sie k&ouml;nnen ebenfalls eine bereits verwendete Datei aus der Liste ausw&auml;hlen.');
  define('TEXT_NO_FILE','Auswahl L&ouml;schen');
  define('TEXT_CHOOSE_FILE_SERVER','(Falls Sie ihre Dateien selbst via FTP auf ihren Server gespeichert haben <i>(media/content)</i>, k&ouml;nnen Sie hier die Datei ausw&auml;hlen.');
@@ -61,21 +62,27 @@
  define('ERROR_COMMENT','Bitte geben Sie eine Dateibeschreibung ein!');
  define('TEXT_FILE_FLAG','Box:');
  define('TEXT_PARENT','Hauptdokument:');
- define('TEXT_PARENT_DESCRIPTION','Diesem Dokument zuweisen');
+ define('TEXT_PARENT_DESCRIPTION','Diesem Dokument als Unter-Content zuweisen');
  define('TEXT_PRODUCT','Artikel:');
  define('TEXT_LINK','Link:');
  define('TEXT_SORT_ORDER','Sortierung:');
- define('TEXT_GROUP','Sprachgruppe:');
+ define('TEXT_GROUP','coID:');
  define('TEXT_GROUP_DESC','Mit dieser ID verkn&uuml;pfen sie gleiche Themen unterschiedlicher Sprachen miteinander.');
  
- define('TEXT_CONTENT_DESCRIPTION','Mit diesem Content Manager haben Sie die M&ouml;glichkeit, jeden beliebige Dateityp einem Artikel hinzuzuf&uuml;gen.<br />Zb. Artikelbeschreibungen, Handb&uuml;cher, technische Datenbl&auml;tter, H&ouml;rproben, usw...<br />Diese Elemente werden In der Artikel-Detailansicht angezeigt.<br /><br />');
+ define('TEXT_CONTENT_DESCRIPTION','Mit diesem Content Manager haben Sie die M&ouml;glichkeit, jeden beliebige Dateityp einem Artikel hinzuzuf&uuml;gen.<br />Z.B. Artikelbeschreibungen, Handb&uuml;cher, technische Datenbl&auml;tter, H&ouml;rproben, usw...<br />Diese Elemente werden In der Artikel-Detailansicht angezeigt.<br /><br />');
  define('TEXT_FILENAME','Benutze Datei:');
  define('TEXT_FILE_DESC','Beschreibung:');
  define('USED_SPACE','Verwendeter Speicherplatz:');
  define('TABLE_HEADING_CONTENT_FILESIZE','Dateigr&ouml;&szlig;e');
- define('TEXT_CONTENT_NOINDEX','noindex');
- define('TEXT_CONTENT_NOFOLLOW','nofollow');
- define('TEXT_CONTENT_NOODP','noodp');
+ define('TEXT_CONTENT_NOINDEX','noindex (Der Suchroboter soll die Webseite nicht in den Index aufnehmen.)');
+ define('TEXT_CONTENT_NOFOLLOW','nofollow (Der Suchroboter darf die Webseite zwar aufnehmen, aber soll den Hyperlinks auf der Seite nicht folgen.)');
+ define('TEXT_CONTENT_NOODP','noodp (Die Suchmaschine soll auf der Ergebnisseite nicht die Beschreibungstexte aus DMOZ (ODP) verwenden.)');
  define('TEXT_CONTENT_META_ROBOTS','Meta Robots');
+ 
+ define('TABLE_HEADING_STATUS_ACTIVE', 'Status');
+ define('TEXT_STATUS_ACTIVE', 'Status aktiv:'); 	 
+ define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Content aktivieren?');
+  
+ define('TEXT_CONTENT_DOUBLE_GROUP_INDEX', 'Doppelter Content Gruppen Index! Bitte neu speichern. Das Problem wird damit automatisch behoben!');
  
  ?>

@@ -1,11 +1,11 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: campaigns.php 1059 2005-07-20 18:26:11Z gwinger $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)

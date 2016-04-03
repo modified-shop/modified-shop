@@ -1,17 +1,16 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: stats_sales_report.php 1311 2005-10-18 12:30:40Z mz $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(stats_sales_report.php,v 1.6 2002/03/30); www.oscommerce.com 
    (c) 2003	 nextcommerce (stats_sales_report.php,v 1.4 2003/08/14); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -21,6 +20,7 @@ define('REPORT_DATE_FORMAT', 'm. d. Y');
 
 define('HEADING_TITLE', 'Sales Report');
 
+define('REPORT_SALES_STATISTICS', 'Sales Report Filter');
 define('REPORT_TYPE_YEARLY', 'Yearly');
 define('REPORT_TYPE_MONTHLY', 'Monthly');
 define('REPORT_TYPE_WEEKLY', 'Weekly');
@@ -33,6 +33,7 @@ define('REPORT_ALL', 'all');
 define('REPORT_SORT', 'sort');
 define('REPORT_EXP', 'export');
 define('REPORT_SEND', 'send');
+
 define('EXP_NORMAL', 'normal');
 define('EXP_HTML', 'HTML only');
 define('EXP_CSV', 'CSV');

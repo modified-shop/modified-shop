@@ -522,7 +522,31 @@ function VariationsEnabled($cID) {
 	return false;
 }
 
+function GetConditionValues($cID) {
+	global $_MagnaSession;
+    if (empty($cID)) return false;
+	try {
+		$GetConditionValuesResult = MagnaConnector::gi()->submitRequest(array(
+			'ACTION' => 'GetConditionValues',
+			'DATA' => array ('CategoryID' => $cID,
+							 'Site' => getDBConfigValue('ebay.site', $_MagnaSession['mpID'])),
+		));
+	} catch (MagnaException $e) {
+		return false;
+	}
+	if (isset($GetConditionValuesResult['DATA']['ConditionValues'])
+		&& (is_array($GetConditionValuesResult['DATA']['ConditionValues']))
+	) {
+		return $GetConditionValuesResult['DATA']['ConditionValues'];
+	}
+	return false;
+}
+
 function substitutePictures($tmplStr, $pID, $imagePath) {
+	if (version_compare(PHP_VERSION, '5.2.0', '>=') && version_compare(PHP_VERSION, '5.3.6', '<=')) {
+		@ini_set('pcre.backtrack_limit', '10000000');
+		@ini_set('pcre.recursion_limit', '10000000');
+	}
 	$undo = ml_extractBase64($tmplStr);
 
 	$pics = MLProduct::gi()->getProductImagesByID($pID);
@@ -1227,3 +1251,120 @@ function magnalisterEbayGetPriceByType($iProductsId, $sPriceType = false) {
 
 	return MagnaDB::gi()->fetchOne($preparedPriceQuery);
 }
+
+/* Zahlungsarten eBay:
+-AmEx
+CashInPerson
+-CashOnPickup
+-CCAccepted
+-COD
+CODPrePayDelivery # reserved for future use
+CustomCode        # reserved for future use
+-Diners           # CC 
+-Discover         # CC
+-ELV              # Lastschrift 
+Escrow            # reserved for future use 
+-IntegratedMerchantCreditCard # CC
+LoanCheck
+-MOCC             # Money order/cashiers check 
+-Moneybookers
+-MoneyXferAccepted# Direct transfer of money
+-MoneyXferAcceptedInCheckout
+None
+Other
+OtherOnlinePayments
+PaisaPayAccepted  # India only
+PaisaPayEscrow    # India only
+PaisaPayEscrowEMI # India only
+Paymate           # US only
+PaymentSeeDescription
+-PayOnPickup
+-PayPal
+-PersonalCheck
+PostalTransfer    # reserved for future use
+PrePayDelivery    # reserved for future use
+ProPay            # US only
+StandardPayment
+-VisaMC
+*/
+function getPaymentClassForEbayPaymentMethod($paymentMethod) {
+	$PaymentModules = explode(';', MODULE_PAYMENT_INSTALLED);
+    $class = 'ebay';
+
+    if (  ('MOCC' == $paymentMethod) || ('PersonalCheck' == $paymentMethod)
+        ||('MoneyXferAccepted' == $paymentMethod)
+        ||('MoneyXferAcceptedInCheckout' == $paymentMethod)) {
+        # money order / Zahlungsanweisung / Vorkasse
+        if (in_array('heidelpaypp.php', $PaymentModules))
+            $class = 'heidelpaypp';
+        else if (in_array('moneyorder.php', $PaymentModules))
+            $class = 'moneyorder';
+        else if (in_array('uos_vorkasse_modul.php', $PaymentModules))
+            $class = 'uos_vorkasse_modul';
+        
+    } else if ('Moneybookers' == $paymentMethod) {
+        # Moneybookers
+        if (in_array('monebookers.php', $PaymentModules))
+            $class = 'monebookers';
+
+    } else if ('COD' == $paymentMethod) {
+        # Nachnahme
+        if (in_array('cod.php', $PaymentModules))
+            $class = 'cod';
+        
+    } else if (  ('AmEx' == $paymentMethod) 
+               ||('CCAccepted' == $paymentMethod)
+               ||('Diners' == $paymentMethod)
+               ||('Discover' == $paymentMethod)
+               ||('IntegratedMerchantCreditCard' == $paymentMethod)
+               ||('VisaMC' == $paymentMethod)) {
+        # Kreditkarte
+        if (in_array('cc.php', $PaymentModules))
+            $class = 'cc';
+        else if (in_array('heidelpaycc.php', $PaymentModules))
+            $class = 'heidelpaycc';
+        else if (in_array('moneybookers_cc.php', $PaymentModules))
+            $class = 'moneybookers_cc';
+        else if (in_array('uos_kreditkarte_modul.php', $PaymentModules))
+            $class = 'uos_kreditkarte_modul';
+
+    } else if ('ELV' == $paymentMethod) {
+        # Lastschrift
+        # if (in_array('banktransfer.php', $PaymentModules))
+        #     $class = 'banktransfer';
+        # if (in_array('heidelpaydd.php', $PaymentModules))
+        #     $class = 'heidelpaydd';
+        # if (in_array('ipaymentelv.php', $PaymentModules))
+        #     $class = 'ipaymentelv';
+        if (in_array('moneybookers_elv.php', $PaymentModules))
+            $class = 'moneybookers_elv';
+        else if (in_array('uos_lastschrift_de_modul.php', $PaymentModules))
+            $class = 'uos_lastschrift_de_modul';
+
+    } else if ('PayPal' == $paymentMethod) {
+        # PayPal
+        if (in_array('paypal.php', $PaymentModules))
+            $class = 'paypal';
+        else if (in_array('paypalng.php', $PaymentModules))
+            $class = 'paypalng';
+        else if (in_array('paypal_ipn.php', $PaymentModules))
+            $class = 'paypal_ipn';
+        else if (in_array('paypalexpress.php', $PaymentModules))
+            $class = 'paypalexpress';
+        
+    } else if (  (stripos($paymentMethod, 'Rechnung') !== false)
+	           ||('PayUponInvoice' == $paymentMethod)) {
+        # Auf Rechnung
+        if (in_array('invoice.php', $PaymentModules))
+            $class = 'invoice';
+
+    } else if (  ('CashOnPickup' == $paymentMethod)
+               ||('PayOnPickup'  == $paymentMethod)) {
+        # Barzahlung
+        if (in_array('cash.php', $PaymentModules))
+            $class = 'cash';
+    }
+
+    return $class;
+}
+

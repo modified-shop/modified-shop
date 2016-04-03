@@ -34,8 +34,8 @@ $strato = array();
     $document_root = str_replace($_SERVER["PHP_SELF"],'',$_SERVER["SCRIPT_FILENAME"]);
     $strato['document_root'] = $document_root;
     //Unterverzeichnis ermitteln
-    $subdir = str_replace(DIR_MODIFIED_INSTALLER.'/index.php','', $_SERVER["PHP_SELF"]);
-    $subdir = str_replace(DIR_MODIFIED_INSTALLER.'/debug.php','', $_SERVER["PHP_SELF"]);
+    $tmp = explode(DIR_MODIFIED_INSTALLER, $_SERVER["PHP_SELF"]);
+    $subdir = $tmp[0];
     $strato['subdir'] = $subdir;
     //Prüfen ob Domain im Pfad enthalten ist, wenn nein Pfad Stratopfad erzeugen: /home/strato/www/ersten zwei_buchstaben/www.wunschname.de/htdocs/
     if(stristr($document_root, $domain) === FALSE) {
@@ -45,7 +45,7 @@ $strato = array();
       $htdocs = str_replace($_SERVER["SCRIPT_NAME"],'',$_SERVER["SCRIPT_FILENAME"]);
       $htdocs = '/htdocs' . str_replace($_SERVER["DOCUMENT_ROOT"],'',$htdocs);      
       //MUSTER: /home/strato/www/wu/www.wunschname.de/htdocs/
-      $document_root = '/home/strato/www/'.$domain2. '/www.'.$domain.$htdocs;
+      $document_root = '/home/strato/www/'.$domain2. '/www.'.$domain.$htdocs.$subdir;
       $strato['document_root_fix1'] = $document_root;
     } else {
       $document_root .= $subdir;

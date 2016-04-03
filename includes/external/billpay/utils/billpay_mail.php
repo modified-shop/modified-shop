@@ -1,82 +1,78 @@
 <?php
-/* -----------------------------------------------------------------------------------------
-   $Id$
+/**
+ * @var $order order
+ */
+// TODO: rework the same way as billpay_mail_gambio21.php
+require_once(DIR_FS_CATALOG . 'includes/modules/payment/billpay.php');
+$paymentMethod = strtoupper($order->info['payment_method']);
+if ($paymentMethod == billpayBase::PAYMENT_METHOD_INVOICE) {
+    $billpay = new billpay(strtoupper($order->info['payment_method']));
+    if (isset($insert_id)) {
+        $oID = $insert_id; // Gambio 2.0 does not have $oID, instead have $insert_id
+    }
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+    $transaction_id = BillPayBase::GetTransactionId();
+    if ($transaction_id) {
+        $billpay_bank_data_query = "SELECT account_holder, account_number, bank_code, bank_name, invoice_reference ".
+                                  "FROM billpay_bankdata ".
+                                  "WHERE tx_id = '".$transaction_id."'";
+    }else {
+        $billpay_bank_data_query = "SELECT account_holder, account_number, bank_code, bank_name, invoice_reference ".
+                                  "FROM billpay_bankdata ".
+                                  "WHERE api_reference_id = '".(int)$oID."'";
+    }
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   -----------------------------------------------------------------------------------------
-   based on:
-   Copyright (c) 2012 Billpay GmbH
+    $billpay_bank_data_result = xtc_db_query($billpay_bank_data_query);
+    $billpay_bank_data = xtc_db_fetch_array($billpay_bank_data_result);
+    //$billpay_info_text = MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_MAIL . '<br /><br />';
 
-   Released under the GNU General Public License
-   ---------------------------------------------------------------------------------------*/
+    if(!$billpay_bank_data['api_reference']){
+        $invoiceReference = $billpay->generateInvoiceReference($insert_id);
+    } else {
+        $invoiceReference = $billpay_bank_data['invoice_reference'];
+    }
 
-	require_once(DIR_FS_CATALOG . 'includes/modules/payment/billpay.php');
-	$paymentMethod = $order->info['payment_method'];
-	if ($paymentMethod == 'billpay') {
-		//if(isset($_SESSION['billpay_transaction_id'])) {
-			$billpay = new billpay(strtoupper($order->info['payment_method']));
-			
-			if(isset($_SESSION['billpay_transaction_id'])) {
-				$billpay_bankdata_query = "SELECT account_holder, account_number, bank_code, bank_name, invoice_reference ".
-			    						  "FROM billpay_bankdata ".
-				                          "WHERE tx_id = '".$_SESSION['billpay_transaction_id']."'";
-			}else {
-				$billpay_bankdata_query = "SELECT account_holder, account_number, bank_code, bank_name, invoice_reference ".
-			    						  "FROM billpay_bankdata ".
-				                          "WHERE api_reference_id = '".$oID."'";
-			}
+    //$invoiceReference = $billpay->generateInvoiceReference($insert_id);
 
-			$billpay_bankdata_result = xtc_db_query($billpay_bankdata_query);
-			$billpay_bankdata = xtc_db_fetch_array($billpay_bankdata_result);
-			//$billpay_infotext = MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_MAIL . '<br /><br />';
+    $billpay_info_text = sprintf(MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_MAIL, $invoiceReference) . '<br /><br />';
+    $billpay_info_text .= MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_HOLDER .': '. $billpay_bank_data['account_holder'].'<br />';
+    $billpay_info_text .= MODULE_PAYMENT_BILLPAY_TEXT_IBAN .': '. $billpay_bank_data['account_number'].'<br />';
+    $billpay_info_text .= MODULE_PAYMENT_BILLPAY_TEXT_BIC .': '. $billpay_bank_data['bank_code'].'<br />';
+    $billpay_info_text .= MODULE_PAYMENT_BILLPAY_TEXT_BANK_NAME .': '. $billpay_bank_data['bank_name'].'<br />';
+    $billpay_info_text .= MODULE_PAYMENT_BILLPAY_TEXT_PURPOSE .': ' . $invoiceReference . '<br />';
+    if(defined('EMAIL_USE_HTML') && EMAIL_USE_HTML == 'false') {
+        $billpay_info_text = utf8_decode(html_entity_decode($billpay_info_text, ENT_COMPAT | ENT_HTML401, 'UTF-8'));
+    }
+    if(defined('MODULE_PAYMENT_BILLPAY_UTF8_ENCODE') &&
+        constant('MODULE_PAYMENT_BILLPAY_UTF8_ENCODE') == 'True') {
+        $billpay_info_text = utf8_encode($billpay_info_text);
+    }
+    $smarty->assign('PAYMENT_INFO_HTML', $billpay_info_text);
+    $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $billpay_info_text));
+//	}
+}
+else if ($paymentMethod == billpayBase::PAYMENT_METHOD_DEBIT) {
+    $billpay_info_text = '<br /><br />' . MODULE_PAYMENT_BILLPAYDEBIT_TEXT_INVOICE_INFO1;
+    if(defined('EMAIL_USE_HTML') && EMAIL_USE_HTML == 'false') {
+        $billpay_info_text = utf8_decode(html_entity_decode($billpay_info_text, ENT_COMPAT | ENT_HTML401, 'UTF-8'));
+    }
+    if(defined('MODULE_PAYMENT_BILLPAYDEBIT_UTF8_ENCODE') &&
+    constant('MODULE_PAYMENT_BILLPAYDEBIT_UTF8_ENCODE') == 'True') {
+        $billpay_info_text = utf8_encode($billpay_info_text);
+    }
+    $smarty->assign('PAYMENT_INFO_HTML', $billpay_info_text);
+    $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $billpay_info_text));
+}
+else if ($paymentMethod == billpayBase::PAYMENT_METHOD_TRANSACTION_CREDIT) {
+    /** @var billpayBase $pm */
+    $pm = billpayBase::PaymentInstance($paymentMethod);
+    $payment_info = $pm->getPaymentInfo($insert_id);
 
-			if(!$billpay_bankdata['api_reference']){
-				$invoiceReference = $billpay->generateInvoiceReference($insert_id);
-			} else {
-				$invoiceReference = $billpay_bankdata['invoice_reference'];
-			}
-			
-			//$invoiceReference = $billpay->generateInvoiceReference($insert_id);
-			
-			$billpay_infotext = sprintf(MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_MAIL, $invoiceReference) . '<br /><br />';
-			$billpay_infotext .= MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_HOLDER .': '. $billpay_bankdata['account_holder'].'<br />';
-			$billpay_infotext .= MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_NUMBER .': '. $billpay_bankdata['account_number'].'<br />';
-			$billpay_infotext .= MODULE_PAYMENT_BILLPAY_TEXT_BANK_CODE .': '. $billpay_bankdata['bank_code'].'<br />';
-			$billpay_infotext .= MODULE_PAYMENT_BILLPAY_TEXT_BANK_NAME .': '. $billpay_bankdata['bank_name'].'<br />';
-			$billpay_infotext .= MODULE_PAYMENT_BILLPAY_TEXT_PURPOSE .': ' . $invoiceReference . '<br />';
-			if(defined('EMAIL_USE_HTML') && EMAIL_USE_HTML == 'false') {
-				$billpay_infotext = utf8_encode(html_entity_decode($billpay_infotext));
-			}
-			if(defined('MODULE_PAYMENT_BILLPAY_UTF8_ENCODE') &&
-				constant('MODULE_PAYMENT_BILLPAY_UTF8_ENCODE') == 'True') {
-				$billpay_infotext = utf8_encode($billpay_infotext);
-			}
-			$smarty->assign('PAYMENT_INFO_HTML', $billpay_infotext);
-			$smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $billpay_infotext));
-	//	}
-	}
-	else if ($paymentMethod == 'billpaydebit') {
-		$billpay_infotext = '<br /><br />' . MODULE_PAYMENT_BILLPAYDEBIT_TEXT_INVOICE_INFO1;
-		if(defined('EMAIL_USE_HTML') && EMAIL_USE_HTML == 'false') {
-			$billpay_infotext = utf8_decode(html_entity_decode($billpay_infotext));
-		}
-		if(defined('MODULE_PAYMENT_BILLPAYDEBIT_UTF8_ENCODE') &&
-		constant('MODULE_PAYMENT_BILLPAYDEBIT_UTF8_ENCODE') == 'True') {
-			$billpay_infotext = utf8_encode($billpay_infotext);
-		}
-		$smarty->assign('PAYMENT_INFO_HTML', $billpay_infotext);
-		$smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $billpay_infotext));
-	}
-	else if ($paymentMethod == 'billpaytransactioncredit') {
-        require_once DIR_FS_CATALOG . 'includes/modules/payment/billpaytransactioncredit.php';
-		$x = new billpaytransactioncredit();
-		$rateDetailsHTML = $x->buildTCPaymentInfo($x->_getTransactionId(), $order, true, true);
-		$rateDetailsText = $x->buildTCPaymentInfo($x->_getTransactionId(), $order, false, true);
-
-		$smarty->assign('PAYMENT_INFO_HTML', $rateDetailsHTML);
-		$smarty->assign('PAYMENT_INFO_TXT', $rateDetailsText);
-	}
-?>
+    $smarty->assign('PAYMENT_INFO_HTML', $payment_info['html']);
+    $smarty->assign('PAYMENT_INFO_TXT', $payment_info['text']);
+}
+else if ($paymentMethod == billpayBase::PAYMENT_METHOD_PAY_LATER) {
+    $infoText = constant('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_INVOICE_INFO1');
+    $smarty->assign('PAYMENT_INFO_HTML', $infoText);
+    $smarty->assign('PAYMENT_INFO_TXT', $infoText);
+}

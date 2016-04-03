@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: DeletedView.php 4961 2014-12-09 14:10:12Z tim.neumann $
+ * $Id: DeletedView.php 5578 2015-05-05 22:27:23Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -145,6 +145,14 @@ class DeletedView {
 				$this->sort['order'] = 'DateAdded';
 				$this->sort['type']  = 'DESC';
 				break;
+			case 'datedeleted':
+				$this->sort['order'] = 'End';
+				$this->sort['type']  = 'ASC';
+				break;
+			case 'datedeleted-desc':
+				$this->sort['order'] = 'End';
+				$this->sort['type']  = 'DESC';
+				break;
 	        default:
 	            $this->sort['order'] = 'DateAdded';
 	            $this->sort['type']  = 'DESC';
@@ -242,7 +250,7 @@ class DeletedView {
 						: fixHTMLUTF8Entities($item['ItemTitle']);
 				$item['VariationAttributesText'] = fixHTMLUTF8Entities($item['VariationAttributesText']);
 				$item['DateAdded'] = strtotime($item['DateAdded']);
-				$item['DateEnd'] = ('1'==$item['GTC']?'&mdash;':strtotime($item['End']));
+				$item['DateEnd'] = ('1'==$item['GTC']?max(strtotime($item['End']), strtotime($item['LastSync'])):strtotime($item['End']));
 				$item['LastSync'] = strtotime($item['LastSync']);
 			}
 			unset($result);
@@ -361,7 +369,8 @@ class DeletedView {
 					<td>'.ML_LABEL_EBAY_ITEM_ID.'</td>
 					<td>'.ML_PRICE_SHOP_PRICE_EBAY.' '.$this->sortByType('price').'</td>
 					<td>'.ML_LAST_SYNC.'</td>
-					<td>'.ML_LABEL_EBAY_LISTINGTIME.' '.$this->sortByType('dateadded').'</td>
+					<td>'.ML_LABEL_EBAY_STARTTIME.' '.$this->sortByType('dateadded').'</td>
+					<td>'.ML_LABEL_EBAY_ENDTIME.' '.$this->sortByType('datedeleted').'</td>
 					<td>'.ML_LABEL_EBAY_DELETION_REASON.'</td>
 				</tr></thead>
 				<tbody>
@@ -378,10 +387,11 @@ class DeletedView {
 
             $renderedShopPrice = (0 != $item['ShopPrice'])?$this->simplePrice->setPriceAndCurrency($item['ShopPrice'], $item['Currency'])->format():'&mdash;';
             switch ($item['deletedBy']) {
-                case('Sync'):   $deletedBy = ML_SYNCHRONIZATION; break;
-                case('Button'): $deletedBy = ML_DELETION_BUTTON; break;
-                case('notML'):  $deletedBy = ML_NOT_BY_ML;       break;
-                default:        $deletedBy = '&mdash;';          break;
+                case('Sync'):    $deletedBy = ML_SYNCHRONIZATION; break;
+                case('Button'):  $deletedBy = ML_DELETION_BUTTON; break;
+                case('expired'): $deletedBy = ML_EXPIRED;         break;
+                case('notML'):   $deletedBy = ML_NOT_BY_ML;       break;
+                default:         $deletedBy = '&mdash;';          break;
             }
 			$html .= '
 				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
@@ -390,8 +400,9 @@ class DeletedView {
 					<td title="'.fixHTMLUTF8Entities($item['ItemTitle'], ENT_COMPAT).'">'.$item['ItemTitleShort'].'<br /><span class="small">'.$item['VariationAttributesText'].'</span></td>
 					<td><a href="'.$item['SiteUrl'].'?ViewItem&item='.$item['ItemID'].'" target="_blank">'.$item['ItemID'].'</a></td>
 					<td>'.$renderedShopPrice.' / '.$this->simplePrice->setPriceAndCurrency($item['Price'], $item['Currency'])->format().'</td>
-					<td>'.date("d.m.Y", $item['LastSync']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['LastSync']).'</span></td>
-					<td>'.date("d.m.Y", $item['DateAdded']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateAdded']).'</span><br />'.('&mdash;' == $item['DateEnd']? '&mdash;' : date("d.m.Y", $item['DateEnd']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateEnd']).'</span>').'</td>
+					<td>'.($item['LastSync'] > 0 ? date("d.m.Y", $item['LastSync']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['LastSync']) : '&mdash;').'</span></td>
+					<td>'.date("d.m.Y", $item['DateAdded']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateAdded']).'</span></td>
+					<td>'.date("d.m.Y", $item['DateEnd']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateEnd']).'</span></td>
 					<td>'.$deletedBy.'</td>';
 			$html .= '	
 				</tr>';

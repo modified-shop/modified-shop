@@ -15,32 +15,15 @@
     if (!is_array($configuration)) {
       $configuration = array($configuration);
     }
-    
     for ($i=0, $x=sizeof($configuration); $i<$x; $i++) {
-      $check_query = xtc_db_query("SELECT * FROM ".TABLE_MODULE_BACKUP." WHERE configuration_key = '".$configuration[$i]."'");
-      if (xtc_db_num_rows($check_query) > 0) {
-        $update = xtc_db_fetch_array($check_query);
-        xtc_db_query("UPDATE " . TABLE_MODULE_BACKUP . " 
-                         SET configuration_value='" . xtc_db_input($update['configuration_value']) . "', 
-                             last_modified = now() 
-                       WHERE configuration_key='" . $configuration[$i] . "'
-                     ");
-      } else {
-        $backup_query = xtc_db_query("SELECT * FROM ".TABLE_CONFIGURATION." 
-                                       WHERE configuration_key = '".$configuration[$i]."'
-                                    ");
-        if (xtc_db_num_rows($backup_query) > 0) {
-          $backup = xtc_db_fetch_array($backup_query);
-          unset($backup['configuration_id']);
-          unset($backup['configuration_group_id']);
-          unset($backup['sort_order']);
-          unset($backup['date_added']);
-          unset($backup['use_function']);
-          unset($backup['set_function']);         
-          $backup['configuration_key'] = $backup['configuration_key'];
-          $backup['last_modified'] = 'now()';
-          xtc_db_perform(TABLE_MODULE_BACKUP, $backup);
-        }
+      $backup_query = xtc_db_query("SELECT configuration_value 
+                                      FROM ".TABLE_CONFIGURATION." 
+                                     WHERE configuration_key = '".xtc_db_input($configuration[$i])."'"
+                                   );
+      if (xtc_db_num_rows($backup_query) > 0) {
+        $backup = xtc_db_fetch_array($backup_query);
+        xtc_db_query("REPLACE INTO " . TABLE_MODULE_BACKUP . " (configuration_key, configuration_value, last_modified)
+                            VALUES ('". xtc_db_input($configuration[$i]) ."', '".xtc_db_input($backup['configuration_value'])."', now())");                                 
       }
     }
   }
@@ -72,7 +55,7 @@
       $configuration = array($configuration);
     }
     $configuration_key = substr($configuration[0], 0, strrpos($configuration[0], '_'));
-    xtc_db_query("DELETE FROM ".TABLE_MODULE_BACKUP." WHERE configuration_key LIKE '" . $configuration_key . "'");
+    xtc_db_query("DELETE FROM ".TABLE_MODULE_BACKUP." WHERE configuration_key LIKE '" . xtc_db_input($configuration_key) . "'");
   }
   
 ?>

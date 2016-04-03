@@ -119,7 +119,9 @@ class MLProduct {
 	 *        If a product has only one variation (not dimension) it will be kept if this setting is true.
 	 *        Otherwise the variation will be merged with the master product and the variation attributes
 	 *        will be added to the master as regular attributes.
-	 *
+	 *      * sExtendFetchSingeVariationsQueryWhere (default: '')
+	 *        Implemented especially for Amazon because there we only want the most attributes with ean
+	 *        You can use is to specify the query more detailed
 	 * @return $this
 	 */
 	public function setOptions(array $options) {
@@ -139,6 +141,7 @@ class MLProduct {
 			'includeVariations' => true,
 			'sameVariationsToAttributes' => false,
 			'allowSingleVariations' => true,
+			'sExtendFetchSingeVariationsQueryWhere' => '',
 		);
 		return $this;
 	}
@@ -897,15 +900,16 @@ class MLProduct {
 		           '.(empty($this->allowedVariationDimensions)
 		               ? ''
 		               : 'AND pa.options_id IN ("'.implode('", "', $this->allowedVariationDimensions).'")'
-		           ).'
+		           ).
+		           $this->options['sExtendFetchSingeVariationsQueryWhere'].'
 		  GROUP BY pa.options_id
 		  ORDER BY rate DESC, pa.options_id ASC
 		', false));
 		
-		if ($pVID === false) {
+		if (empty($pVID)) {
 			return false;
 		}
-	
+		
 		$attributes = array();
 		if ($this->optionsTmp['sameVariationsToAttributes'] && (count($pVID) > 1)) {
 			foreach ($pVID as $pVSet) {
@@ -922,7 +926,6 @@ class MLProduct {
 				           AND pa.options_id IN ('".implode("','", $attributes)."')
 				", false));
 				$parent['Attributes'] = $this->translateProductsOptions($customAttributes);
-
 			}
 		}
 		
@@ -968,17 +971,31 @@ class MLProduct {
 			
 			unset($v['VariationNameId']);
 			unset($v['VariationValueId']);
-			
-			$vPriceSurcharge = $v['Price'] * (($v['PricePrefix'] == '+') ? 1 : -1);
-			$this->calcPriceVariation($v, $vPriceSurcharge, $parent['Prices'], $parent['TaxPercent']);
+
+			if ($v['PricePrefix'] == '=') {
+				$aPrices = $parent['Prices'];
+				foreach ($aPrices as &$aPrice) {
+					$aPrice['Price'] = 0.00;
+					$aPrice['Reduced'] = 0.00;
+				}
+				$this->calcPriceVariation($v, $v['Price'], $aPrices, $parent['TaxPercent']);
+			} else {
+				$vPriceSurcharge = $v['Price'] * (($v['PricePrefix'] == '+') ? 1 : -1);
+				$this->calcPriceVariation($v, $vPriceSurcharge, $parent['Prices'], $parent['TaxPercent']);
+			}
 			unset($v['PricePrefix']);
 			
 			$v['Quantity'] = $this->calcQuantity($v['Quantity']);
 			$quantity += $v['Quantity'];
 			
 			if (isset($v['WeightPrefix']) && !empty($v['WeightPrefix'])) {
-				$weight = (float)$v['Weight'] * ($v['WeightPrefix'] == '+') ? 1 : -1;
-				$bweight = isset($parent['Weight']['Value']) ? $parent['Weight']['Value'] : 0.0;
+				if ($v['WeightPrefix'] == '=') {
+					$weight = (float)$v['Weight'];
+					$bweight = 0.0;
+				} else {
+					$weight = (float)$v['Weight'] * ($v['WeightPrefix'] == '+') ? 1 : -1;
+					$bweight = isset($parent['Weight']['Value']) ? $parent['Weight']['Value'] : 0.0;
+				}
 				$v['Weight'] = array();
 				if (($bweight + $weight) > 0) {
 					$v['Weight']['Unit'] = isset($parent['Weight']['Unit']) ? $parent['Weight']['Unit'] : 'kg';
@@ -986,6 +1003,19 @@ class MLProduct {
 				}
 			}
 			unset($v['WeightPrefix']);
+
+			if (   isset($v['VpeUnit'])
+				&& isset($v['VpeValue'])
+				&& ($v['VpeUnit'] != 0)
+				&& ((float)$v['VpeValue'] > 0)
+			) {
+				$v['BasePrice'] = array (
+					'Unit' => $this->getVpeUnitById($v['VpeUnit']),
+					'Value' => $v['VpeValue']
+				);
+			}
+			unset($v['VpeUnit']);
+			unset($v['VpeValue']);
 		}
 		
 		$parent['QuantityTotal'] = $quantity;
@@ -1232,7 +1262,7 @@ class MLProduct {
 		/* {Hook} "MLProduct_getProductImagesByID": Enables you to fetch additional product images in a different
 		   method than using the products_images table.<br>
 		   Variables that can be used: <ul>
-		       <li>$pID: The ID of the product (Table <code>products.products_id</code>).</li>
+		       <li>$pId: The ID of the product (Table <code>products.products_id</code>).</li>
 		       <li>$images: Array that this function will return</li>
 		   </ul>
 		   Set $images array in this format:<br>
@@ -1468,6 +1498,11 @@ $images = array (
 					? $this->simpleprice->setCurrency($config['Currency'])->getSpecialOffer($product['ProductId'], $config['Group'])
 					: 0.0
 			);
+
+			if (($hp = magnaContribVerify('CustomizePrice', 1)) !== false) {
+				$product['Prices'][$name]['Price'] = $this->simpleprice->setCurrency($config['Currency'])->getCustomizedPrice($product['ProductId']);
+			}
+
 			// Make sure the group price is > 0
 			if (!((float)$product['Prices'][$name]['Price'] > 0)) {
 				$product['Prices'][$name]['Price'] = $price;
@@ -1521,7 +1556,7 @@ $images = array (
 	 * Builds the SELECT string for the product and offer query and stores them in class attributes.
 	 */
 	protected function buildSelectFields() {
-		$productsOffer = array ( // These fields are order specific and they exsist in every osC fork
+		$productsOffer = array ( // These fields are order specific and they exists in every osC fork
 			'ProductId' => 'products_id',
 			'ProductsModel' => 'products_model',
 			'MarketplaceId' => 'products_id',
@@ -1534,7 +1569,7 @@ $images = array (
 			'TaxClass' => 'products_tax_class_id',
 			'TaxPercent' => '',
 		);
-		$productFields = array ( // Some of these fiels don't exist in every osC fork.
+		$productFields = array ( // Some of these fields don't exist in every osC fork.
 			'EAN' => 'products_ean',
 			'ShippingTimeId' => 'products_shippingtime',
 			'ShippingTime' => '',
@@ -1553,7 +1588,7 @@ $images = array (
 			'VpeStatus' => 'products_vpe_status',
 			'ProductUrl' => '',
 		);
-		$descriptionFields = array ( // Some of these fiels don't exist in every osC fork.
+		$descriptionFields = array ( // Some of these fields don't exist in every osC fork.
 			'Title' => 'products_name',
 			'Description' => 'products_description',
 			'ShortDescription' => 'products_short_description',
@@ -1613,6 +1648,8 @@ $images = array (
 			'EAN' => array('attributes_ean', 'gm_ean'),
 			'Weight' => 'options_values_weight',
 			'WeightPrefix' => 'weight_prefix',
+			'VpeUnit' => 'products_vpe_id', // {Gambio GX >= 2.1 only}
+			'VpeValue' => 'gm_vpe_value', // {Gambio GX >= 2.1 only}
 		);
 		$attr = MagnaDB::gi()->fetchRow('SELECT * FROM '.TABLE_PRODUCTS_ATTRIBUTES.' LIMIT 1');
 		if (empty($attr)) {

@@ -1,27 +1,26 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: countries.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(countries.php,v 1.8 2002/01/19); www.oscommerce.com 
    (c) 2003	 nextcommerce (countries.php,v 1.4 2003/08/14); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
 define('HEADING_TITLE',	'Shop online/offline');
 define('HEADING_SUB_TITLE',	'Konfiguration');
-define('BOX_SHOP_OFFLINE', 'Shop online/offline - gilt für alle Sprachen');
-define('SETTINGS_OFFLINE', 'Shop offline <br /><font color="red">(Zugriff nur noch mit Admin-Daten über die URL <a href="'. HTTP_SERVER.DIR_WS_CATALOG.'login_admin.php" target="_blank"><font color="red">'. HTTP_SERVER.DIR_WS_CATALOG.'login_admin.php</font></a>)</font>');
+define('BOX_SHOP_OFFLINE', 'Shop online/offline - gilt f&uuml;r alle Sprachen');
+define('SETTINGS_OFFLINE', 'Shop offline <br /><span class="col-red">(Zugriff nur noch mit Admin-Daten &uuml;ber die URL <a href="'. HTTP_SERVER.DIR_WS_CATALOG.'login_admin.php" target="_blank"><span class="col-red">'. HTTP_SERVER.DIR_WS_CATALOG.'login_admin.php</span></a>)</span>');
 define('SETTINGS_OFFLINE_MSG', 'Offline Nachricht');
 
 define('SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS_TXT', '<b>Erlaubte Kundengruppen: </b><br />(f&uumlr diese Kundengruppen ist der Shop weiterhin sichtbar)');
-define('SHOP_OFFLINE_ALLOWED_CUSTOMERS_EMAILS_TXT', '<b>Erlaubte Emailadressen (kommagetrennt):</b> <br />(f&uumlr Kunden mit diesen Emailadressen ist der Shop weiterhin sichtbar)');
+define('SHOP_OFFLINE_ALLOWED_CUSTOMERS_EMAILS_TXT', '<b>Erlaubte E-Mail-Adressen (kommagetrennt):</b> <br />(f&uumlr Kunden mit diesen E-Mail-Adressen ist der Shop weiterhin sichtbar)');
 ?>

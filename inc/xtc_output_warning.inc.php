@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_output_warning.inc.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,15 +16,11 @@
    ---------------------------------------------------------------------------------------*/
 
   function xtc_output_warning($warning) {
-  // BOF - Dokuman - 2009-05-27 - display errors only to admins in DIV-Element
-  //  new errorBox(array(array('text' => '<table style="width: 100%;"><tr><td style="vertical-align: center; padding-left: 5px;">' . xtc_image(DIR_WS_ICONS . 'output_warning.gif', ICON_WARNING) . ' </td><td style="vertical-align: center; text-align: center;"> ' . $warning . '</td></tr></table>')));
+    $result = '';
 
-  $result = '';
-
-  if (isset($_SESSION['customers_status']['customers_status']) && $_SESSION['customers_status']['customers_status'] == '0' ) {
-    $result = '<div class="errormessage">' . xtc_image(DIR_WS_ICONS . 'output_warning.gif', ICON_WARNING) . $warning . '</div>';
-  }
-  echo $result;
-  // EOF - Dokuman - 2009-05-27 - display errors only to admins in DIV-Element
+    if (isset($_SESSION['customers_status']['customers_status']) && $_SESSION['customers_status']['customers_status'] == '0' ) {
+      $result = '<div class="errormessage shopsystem">' . xtc_image(DIR_WS_ICONS . 'output_warning.gif', ICON_WARNING) . $warning . '</div>';
+    }
+    echo $result;
   }
  ?>

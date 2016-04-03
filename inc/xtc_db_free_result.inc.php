@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: xtc_db_free_result.inc.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -15,8 +15,11 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-   
+
+  die('Deprecated File: '.basename(__FILE__).'. Use db_functions_mysql(i) instead.');
+/*   
   function xtc_db_free_result($db_query) {
     return mysql_free_result($db_query);
   }
+*/
  ?>

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: ini.php 4307 2013-01-14 07:38:50Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -40,7 +40,7 @@ $ini['merchantLicenseLive'] = '';
 //geändert Ben BillSAFE
 $ini['applicationSignature'] = '1406801e3073bc303cf0d3fff0fb85f7';
 //$ini['applicationSignature'] = '3acef6967aac4c3d460242fe3a2a8468';
-$ini['applicationVersion'] = 'modified-shop-1.0x_v2.8 2014-01-04';
+$ini['applicationVersion'] = 'modified-shop-2.00_v2.8 2014-01-04';
 //Set this to true if your data is utf-8 encoded.
 //Set this to false if your data is latin-1 encoded.
 //The encoding of the response object will be affected accordingly.

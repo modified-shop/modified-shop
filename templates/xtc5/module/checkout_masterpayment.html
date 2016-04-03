@@ -8,7 +8,6 @@
   <li class="active last"><span class="number">4.</span> <span class="title">{#title_success#}</span><br /><span class="description">{#desc_success#}</span></li>
 </ul>
 <div style="clear:both"></div>
-<br />
 
 <link type="text/css" rel="stylesheet" href="{$tpl_path}css/masterpayment.css" />
 
@@ -21,7 +20,7 @@
 	<iframe name="masterpayment_frame" class="masterpayment_frame" id="masterpayment_frame" allowtransparency="true" src="{$masterpayment_request_url}" scrolling="auto" width="100%" height="500" frameborder="0">   
     	<p>
                 
-    		<form name="masterpaymentForm" id="masterpaymentForm" action="{$masterpayment_request_url}" method="post">
+    		{$masterpayment_form_action}
                 
      			<input class="masterpayment_submit_button" type="submit" name="sent" value="&raquo; {$masterpayment_button_text}" />
                         

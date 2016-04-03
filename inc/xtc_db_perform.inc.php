@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_db_perform.inc.php 5470 2013-09-03 15:20:39Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,6 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  die('Deprecated File: '.basename(__FILE__).'. Use db_functions_mysql(i) instead.');
+/*
   function xtc_db_perform($table, $data, $action = 'insert', $parameters = '', $link = 'db_link') {
     global $$link;
     
@@ -64,4 +66,5 @@
 
     return xtc_db_query($query, $link);
   }
+*/
 ?>

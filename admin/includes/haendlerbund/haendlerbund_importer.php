@@ -188,7 +188,7 @@
 											<br />
 											Bitte konfigurieren Sie Ihr pers&ouml;nliches H&auml;ndlerbund Modul indem Sie die folgenden 2 Schritte durchlaufen. 
 
-											<form action="haendlerbund.php" method="post" class="mainForm" id="mainForm">
+											'.xtc_draw_form('mainForm', 'haendlerbund.php', '', 'post').'
 												<input type="hidden" name="config_save" value="1" />
 												<div class="widget">
 													<div class="wizard swMain">
@@ -232,7 +232,7 @@
 												<h5 class="title_hb">Rechtstexte importieren</h5>
 											</div>
 											<br />
-											<form action="" name="AGBimport" method="post">
+											'.xtc_draw_form('AGBimport', 'haendlerbund.php', '', 'post').'
 												<input type="hidden" name="agb_import" value="1" />
 												<div style="width:731px; height:300px; background-image:url(includes/haendlerbund/images/import_picture.jpg); background-position:top;">
 													<div style="padding:10px; padding-top:50px;">

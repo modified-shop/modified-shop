@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: xtc_count_products_in_category.inc.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -17,44 +17,36 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_count_products_in_category($category_id, $include_inactive = false) {
-    
     $products_count = 0;
-    
-    // fsk18 lock
-    $fsk_lock = $_SESSION['customers_status']['customers_fsk18_display'] == '0' ? " AND p.products_fsk18 != 1 " : ''; 
-    
-    // group check
-    $p_group_check = GROUP_CHECK == 'true' ? " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."= 1 " : '';    
-    
+
     // products status
     $products_status = $include_inactive ? '' : " AND p.products_status = '1' ";
 
     $products_query = xtDBquery("SELECT count(*) as total 
-                                   FROM " . TABLE_PRODUCTS . " p                               
+                                   FROM ".TABLE_PRODUCTS." p
+                                   JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                        ON p.products_id = pd.products_id
+                                           AND pd.language_id = '".(int)$_SESSION['languages_id']."' 
+                                           AND trim(pd.products_name) != ''                      
                                    JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                                        ON (p.products_id = p2c.products_id                                  
-                                            AND p2c.categories_id = '" . $category_id . "')
-                                        ". $products_status ."
-                                        ". $fsk_lock . "
-                                        ". $p_group_check); 
-
-    $products = xtc_db_fetch_array($products_query,true);
+                                        ON p.products_id = p2c.products_id
+                                           AND p2c.categories_id = '".(int)$category_id."'
+                                        ".$products_status."
+                                        ".PRODUCTS_CONDITIONS_P); 
+    $products = xtc_db_fetch_array($products_query, true);
     $products_count += $products['total'];
-
-    $c_group_check = GROUP_CHECK == 'true' ? " AND group_permission_".$_SESSION['customers_status']['customers_status_id']."= 1 " : '';
-		
-    $child_categories_query = "SELECT categories_id 
-                                 FROM " . TABLE_CATEGORIES . " 
-                                WHERE parent_id = '" . $category_id . "'
-                                      ".$c_group_check;
-
-    $child_categories_query = xtDBquery($child_categories_query);
-    if (xtc_db_num_rows($child_categories_query,true)) {
-      while ($child_categories = xtc_db_fetch_array($child_categories_query,true)) {
+  
+    // check sub categories		
+    $child_categories_query = xtDBquery("SELECT c.categories_id
+                                           FROM ".TABLE_CATEGORIES." c
+                                          WHERE c.parent_id = '".(int)$category_id."'
+                                                ".CATEGORIES_CONDITIONS_C);
+    if (xtc_db_num_rows($child_categories_query, true)) {
+      while ($child_categories = xtc_db_fetch_array($child_categories_query, true)) {
         $products_count += xtc_count_products_in_category($child_categories['categories_id'], $include_inactive);
       }
     }
 
     return $products_count;
   }
- ?>
+?>

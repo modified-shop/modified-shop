@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$
+   $Id: shop_offline.php 3512 2012-08-23 17:46:58Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -62,13 +62,17 @@
   //echo '<pre>'.print_r($customers_statuses_array,1).'</pre>';
   $customers_statuses_array = array_merge($customers_statuses_array);
  
+  $offline_status_array = array(
+      array('id' => 'checked','text'=> CFG_TXT_YES),
+      array('id' => '','text'=> CFG_TXT_NO)
+  );
+ 
   require (DIR_WS_INCLUDES.'head.php');
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
-<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>
 <?php 
 if (USE_WYSIWYG == 'true') {
-  $query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".$_SESSION['languages_id']."'");
+  $query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
   $data = xtc_db_fetch_array($query);
   $languages = xtc_get_languages();
   echo xtc_wysiwyg('shop_offline',$data['code']);
@@ -96,13 +100,17 @@ if (USE_WYSIWYG == 'true') {
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
         <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>       
         <div class="main pdg2 flt-l">Configuration</div>
-        <div class="clear dataTableHeadingContent"><?php echo BOX_SHOP_OFFLINE; ?></div>
-        <div valign="top" class="main pdg2">
+        <div valign="top" class="clear div_box mrg5">
+          <div class="important_info"><?php echo BOX_SHOP_OFFLINE; ?></div>
           <?php 
-            echo xtc_draw_form('offline', 'shop_offline.php', '', 'post', 'enctype="multipart/form-data"');
+            echo xtc_draw_form('offline', 'shop_offline.php', '', 'post', 'enctype="multipart/form-data"').PHP_EOL;
+            echo '<div style="margin: 10px 0 0">'.PHP_EOL;
+            echo SETTINGS_OFFLINE.PHP_EOL;
+            echo '<div style="margin: 10px 0 20px">'.PHP_EOL;
+            echo draw_on_off_selection('shop_offline', $offline_status_array, ((xtc_get_shop_conf('SHOP_OFFLINE') == 'checked') ? true : false)).PHP_EOL;
+            echo '</div>'.PHP_EOL;
+            echo '</div>'.PHP_EOL;
             ?>
-            <input type="checkbox" name="shop_offline" value="checked" <?php echo xtc_get_shop_conf('SHOP_OFFLINE'); ?>>
-            <?php echo SETTINGS_OFFLINE ?><br /><br />
             <?php echo SETTINGS_OFFLINE_MSG ?>:<br />
             <?php
               echo xtc_draw_textarea_field('offline_msg', 'soft', '150', '20', stripslashes(xtc_get_shop_conf('SHOP_OFFLINE_MSG')));
@@ -115,12 +123,11 @@ if (USE_WYSIWYG == 'true') {
                 <?php
                 $customers_groups = xtc_get_shop_conf('SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS');
                 for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
+                  $checked = false;
                   if (strstr($customers_groups,'c_'.$customers_statuses_array[$i]['id'].'_group')) {
-                    $checked='checked ';
-                  } else {
-                    $checked='';
+                    $checked = true;
                   }
-                  echo '<input type="checkbox" name="customers_groups[]" value="'.$customers_statuses_array[$i]['id'].'"'.$checked.'> '.$customers_statuses_array[$i]['text'].'<br />';
+                  echo xtc_draw_checkbox_field('customers_groups[]', $customers_statuses_array[$i]['id'], $checked).' '.$customers_statuses_array[$i]['text'].'<br />';
                   }
                 ?>
               </div>
@@ -140,8 +147,9 @@ if (USE_WYSIWYG == 'true') {
             </div>
             <div class="clear"></div>
             <br />
-            <br />
-            <?php echo '<input type="submit" name="go" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
+            <div class="txta-r">
+              <?php echo '<input type="submit" name="go" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
+            </div>
           </form>
         </div>                 
         </td>

@@ -10,27 +10,29 @@
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(ptebanktransfer.php,v 1.4.1 2003/09/25 19:57:14); www.oscommerce.com
-   (c) 2006 XT-Commerce (eustandardtransfer.php 998 2005-07-07)
+   (c) 2003 xtCommerce www.xt-commerce.com
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE', 'EU-Standard Bank&uuml;berweisung');
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION',
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE', 'EU-Standard Bank Transfer');
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION', 
           '<br />Die billigste und einfachste Zahlungsmethode innerhalb der EU ist die &Uuml;berweisung mittels IBAN und BIC.' .
-          '<br />Sobald der Betrag auf unserem Konto eingegangen ist, werden wir Ihre Bestellung versenden.<br />'.
-          '<br /><br />Bitte verwenden Sie folgende Daten f&uuml;r die &Uuml;berweisung des Gesamtbetrages:<br />' .
-          '<br />Name der Bank: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM .
-          '<br />Empf&auml;nger: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH .
-          '<br />Bankleitzahl: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM .
-          '<br />Kontonummer: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM .
-          '<br />IBAN: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN .
-          '<br />BIC/SWIFT: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC .
-//        '<br />Sort Code: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_SORTCODE .
-          '');
+					'<br />Bitte verwenden Sie folgende Daten f&uuml;r die &Uuml;berweisung des Gesamtbetrages:<br />' .
+          '<br />Name der Bank: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM : '') .
+          '<br />Empf&auml;nger: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH : '') .
+          '<br />Bankleitzahl: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM : '') .
+          '<br />Kontonummer: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM : '') .
+          '<br />IBAN: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN : '') .
+          '<br />BIC/SWIFT: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC : '') .
+          '<br /><br />Die Ware wird erst ausgeliefert, wenn der Betrag auf unserem Konto eingegangen ist.<br />');
 
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO','Bitte &uuml;berweisen Sie den f&auml;lligen Rechnungsbetrag auf unser Konto.<br />Die Kontodaten erhalten Sie im n&auml;chsten Bestellschritt und nach Bestellannahme per E-Mail');
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS_TITLE','Bank&uuml;berweisung erlauben');
+  if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
+    define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO','Bitte &uuml;berweisen Sie den f&auml;lligen Rechnungsbetrag auf unser Konto. Die Kontodaten erhalten Sie im letzten Schritt der Bestellung.');
+  } else {
+    define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO','Bitte &uuml;berweisen Sie den f&auml;lligen Rechnungsbetrag auf unser Konto. Die Kontodaten erhalten Sie nach Bestellannahme per E-Mail.');
+  }
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS_TITLE','EU-Standard Bank Transfer Modul aktivieren');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS_DESC','M&ouml;chten Sie &Uuml;berweisungen akzeptieren?');
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH_TITLE','Empf&auml;nger');
@@ -57,8 +59,12 @@
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ALLOWED_TITLE' , 'Erlaubte Zonen');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))');
 
-  // BOF - Hendrik - 2010-07-15 - exlusion config for shipping modules
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_NEG_SHIPPING_TITLE', 'Ausschlu&szlig; bei Versandmodulen');
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_NEG_SHIPPING_DESC', 'Dieses Zahlungsmodul deaktivieren wenn Versandmodul gew&auml;hlt (Komma separierte Liste)');
-  // EOF - Hendrik - 2010-07-15 - exlusion config for shipping modules
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE_TITLE' , 'Zahlungszone');
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE_DESC' , 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.');
+  
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID_TITLE' , 'Bestellstatus festlegen');
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID_DESC' , 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen');
+
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS_TITLE' , 'Bankdaten anzeigen');
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS_DESC' , 'Sollen auf der Erfolgsseite die Bankdaten angezeigt werden?');
 ?>

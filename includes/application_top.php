@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: application_top.php 3121 2012-06-23 19:29:57Z franky-n-xtcm $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,79 +28,84 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// xss secure
+if (is_file('includes/xss_secure.php')) {
+  include_once ('includes/xss_secure.php');
+}
+
 // start the timer for the page parse time log
 define('PAGE_PARSE_START_TIME', microtime(true));
 
-// xajax support
-define('XAJAX_SUPPORT','false'); // 'true');
-define('XAJAX_SUPPORT_TEST','false'); // 'true');
-
 // configuration parameters
 if (file_exists('includes/local/configure.php')) {
-  include ('includes/local/configure.php');
-  $dev_mode = 1;
+  include_once ('includes/local/configure.php');
 } else {
-  include ('includes/configure.php');
+  include_once ('includes/configure.php');
 }
 
 // call Installer
-if (DB_DATABASE == '' && is_dir('./_installer')) {
+if ((DB_DATABASE == '' || !defined('DB_MYSQL_TYPE')) && is_dir('./_installer')) {
   header("Location: ./_installer");
   exit();
 }
 
-/**
- * set the level of error reporting
- */
-@ini_set('display_errors', true);
-if (is_file(DIR_FS_CATALOG.'export/_error_reporting.shop')) {
-  error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
-} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.all')) {
-  error_reporting(E_ALL); //exlude E_STRICT on PHP 5.4
-} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.dev')) {
-  error_reporting(-1); // Development value
-} else {
-  @ini_set('display_errors', false);
-  error_reporting(0);
-}
-
-/**
- * new error handling
- */
-require_once (DIR_WS_INCLUDES.'error_reporting.php');
-
-/*
- * turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
- */
-if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
-if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
-
-require_once (DIR_FS_INC . 'auto_require.inc.php');
-
-// list of project filenames
-require (DIR_WS_INCLUDES.'filenames.php');
-
-// Debug-Log-Class - thx to franky
-include_once(DIR_WS_CLASSES.FILENAME_DEBUG);
-$log = new debug;
-
-// SSEQ-Lib integration - call SSEQ earlier
-// require_once (DIR_FS_EXTERNAL . 'sseq-lib/seq_lib.php');
-
-// solve compatibility issues
-require_once (DIR_WS_FUNCTIONS.FILENAME_COMPATIBILITY);
-if (version_compare(PHP_VERSION,"5.2","<")) {
-  require_once (DIR_FS_EXTERNAL . 'upgradephp/upgrade.php');
+// minimum requirement
+if (version_compare(PHP_VERSION, '5.3.0', '<=')) {
+  die('<h1>Minimum requirement PHP Version 5.3</h1>');
 }
 
 // default time zone
-if (version_compare(PHP_VERSION, '5.1.0', '>=')) { //Tomcraft - 2009-11-08 - FIX for 
+if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
   date_default_timezone_set('Europe/Berlin');
 }
 
-// for xtc_db_perform
-$php4_3_10 = (0 == version_compare(phpversion(), "4.3.10")); 
-define('PHP4_3_10', $php4_3_10);
+// set the level of error reporting
+@ini_set('display_errors', true);
+if (is_file(DIR_FS_CATALOG.'export/_error_reporting.shop')) {
+  error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
+  define('LOGGING_LEVEL', 'INFO');
+} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.all')) {
+  error_reporting(E_ALL); //exlude E_STRICT on PHP 5.4
+  define('LOGGING_LEVEL', 'FINE');
+} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.dev')) {
+  error_reporting(-1); // Development value
+  define('LOGGING_LEVEL', 'DEBUG');
+} else {
+  @ini_set('display_errors', false);
+  error_reporting(0);
+  define('LOGGING_LEVEL', 'WARN');
+}
+
+// new error handling
+if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
+  require_once (DIR_WS_INCLUDES.'error_reporting.php');
+}
+
+// turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
+if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
+if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
+
+// security inputfilter for GET/POST/COOKIE
+require_once (DIR_FS_INC.'html_encoding.php');
+require_once (DIR_WS_CLASSES.'class.inputfilter.php');
+$InputFilter = new InputFilter();
+
+$_GET = $InputFilter->process($_GET);
+$_POST = $InputFilter->process($_POST);
+$_REQUEST = $InputFilter->process($_REQUEST);
+$_GET = $InputFilter->safeSQL($_GET);
+$_POST = $InputFilter->safeSQL($_POST);
+$_REQUEST = $InputFilter->safeSQL($_REQUEST);
+
+// auto include
+require_once (DIR_FS_INC . 'auto_include.inc.php');
+
+// include the list of project filenames
+require_once (DIR_WS_INCLUDES.'filenames.php');
+
+// Debug-Log-Class - thx to franky
+include_once (DIR_WS_CLASSES.'class.debug.php');
+$log = new debug;
 
 // project version
 define('PROJECT_VERSION', 'modified eCommerce Shopsoftware');
@@ -108,14 +113,18 @@ define('PROJECT_VERSION', 'modified eCommerce Shopsoftware');
 define('TAX_DECIMAL_PLACES', 0);
 
 // set the type of request (secure or not)
-if (file_exists('includes/request_type.php')) {
-  include ('includes/request_type.php');
+if (file_exists(DIR_WS_INCLUDES.'request_type.php')) {
+  include_once (DIR_WS_INCLUDES.'request_type.php');
 } else {
   $request_type = 'NONSSL';
 }
 
+// Base/PHP_SELF/SSL-PROXY
+require_once (DIR_FS_INC . 'set_php_self.inc.php');
+$PHP_SELF = set_php_self();
+
 // list of project database tables
-require (DIR_WS_INCLUDES.'database_tables.php');
+require_once (DIR_WS_INCLUDES.'database_tables.php');
 
 // graduated prices model or products assigned ?
 define('GRADUATED_ASSIGN', 'true');
@@ -144,6 +153,7 @@ require_once (DIR_FS_INC.'xtc_draw_selection_field.inc.php');
 require_once (DIR_FS_INC.'xtc_draw_separator.inc.php');
 require_once (DIR_FS_INC.'xtc_draw_textarea_field.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
+require_once (DIR_FS_INC.'xtc_image_submit.inc.php');
 
 require_once (DIR_FS_INC.'xtc_not_null.inc.php');
 require_once (DIR_FS_INC.'xtc_update_whos_online.inc.php');
@@ -180,11 +190,11 @@ require_once (DIR_FS_INC.'xtc_cleanName.inc.php');
 require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
-require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
 require_once (DIR_FS_INC.'xtc_backup_restore_configuration.php');
 require_once (DIR_FS_INC.'xtc_hide_session_id.inc.php');
+require_once (DIR_FS_INC.'get_messages.inc.php');
 
-foreach(auto_require(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file) require_once ($file);
 
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
@@ -192,31 +202,16 @@ xtc_db_connect() or die('Unable to connect to database server!');
 // load configuration
 $configuration_query = xtc_db_query('SELECT configuration_key, configuration_value FROM '.TABLE_CONFIGURATION);
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
-  define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
+  if (function_exists('extra_configuration')) extra_configuration();
+  defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
 }
 
-foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_top_begin/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top/application_top_begin/','php') as $file) require_once ($file);
 
 // Set the length of the redeem code, the longer the more secure
 // Kommt eigentlich schon aus der Table configuration
 if(!defined('SECURITY_CODE_LENGTH')) {
   define('SECURITY_CODE_LENGTH', '10');
-}
-
-// PHPMailer
-require_once (DIR_WS_CLASSES.'class.phpmailer.php');
-
-
-
-
-// move to xtc_db_queryCached.inc.php
-function xtDBquery($query) {
-  if (defined('DB_CACHE') && DB_CACHE == 'true') {
-    $result = xtc_db_queryCached($query);
-  } else {
-    $result = xtc_db_query($query);
-  }
-  return $result;
 }
 
 function CacheCheck() {
@@ -234,33 +229,29 @@ if ((!isset($gzip_off) || !$gzip_off) && (GZIP_COMPRESSION == 'true') && ($ext_z
   }
 }
 
-// security inputfilter for GET/POST/COOKIE
-require (DIR_WS_CLASSES.FILENAME_INPUTFILTER);
-$InputFilter = new InputFilter();
-
-$_GET = $InputFilter->process($_GET);
-$_POST = $InputFilter->process($_POST);
-$_REQUEST = $InputFilter->process($_REQUEST);
-$_GET = $InputFilter->safeSQL($_GET);
-$_POST = $InputFilter->safeSQL($_POST);
-$_REQUEST = $InputFilter->safeSQL($_REQUEST);
-
-// SEQ-Lib integration
-function_exists('SEQ_SANITIZE') ? SEQ_SANITIZE (DIR_FS_EXTERNAL . 'sseq-filter/modified.txt', true) : '';
-
 // set the top level domains
-$http_domain = xtc_get_top_level_domain(HTTP_SERVER);
-$https_domain = xtc_get_top_level_domain(HTTPS_SERVER);
+$http_domain_arr = xtc_get_top_level_domain(HTTP_SERVER);
+$https_domain_arr = xtc_get_top_level_domain(HTTPS_SERVER);
+$http_domain = $http_domain_arr['new'];
+$https_domain = $https_domain_arr['new'];
 $current_domain = (($request_type == 'NONSSL') ? $http_domain : $https_domain);
 
+// set the top level domains - old
+$http_domain_old = $http_domain_arr['old'];
+$https_domain_old = $https_domain_arr['old'];
+$current_domain_old = (($request_type == 'NONSSL') ? $http_domain_old : $https_domain_old);
+
 // include shopping cart class
-require (DIR_WS_CLASSES.'shopping_cart.php');
+require_once (DIR_WS_CLASSES.'shopping_cart.php');
 
 // include navigation history class
-require (DIR_WS_CLASSES.'navigation_history.php');
+require_once (DIR_WS_CLASSES.'navigation_history.php');
+
+// some code to solve compatibility issues
+require_once (DIR_WS_FUNCTIONS.'compatibility.php');
 
 // define how the session functions will be used
-require (DIR_WS_FUNCTIONS.'sessions.php');
+require_once (DIR_WS_FUNCTIONS.'sessions.php');
 
 // set the session name and save path
 // set the session cookie parameters
@@ -269,50 +260,45 @@ require (DIR_WS_FUNCTIONS.'sessions.php');
 // Redirect search engines with session id to the same url without session id to prevent indexing session id urls
 // check for Cookie usage
 // check the Agent
-include (DIR_WS_MODULES.'set_session_and_cookie_parameters.php');
+include_once (DIR_WS_MODULES.'set_session_and_cookie_parameters.php');
 
 // user tracking
-include (DIR_WS_INCLUDES.'tracking.php');
-
-// SSEQ-Lib integration
-function_exists('SEQ_SECURE_SESSION') ? SEQ_SECURE_SESSION() : '';
+include_once (DIR_WS_INCLUDES.'tracking.php');
 
 // verify the ssl_session_id if the feature is enabled
 // verify the browser user agent if the feature is enabled
 // verify the IP address if the feature is enabled
-include (DIR_WS_MODULES.'verify_session.php');
-
+include_once (DIR_WS_MODULES.'verify_session.php');
 
 // set the language
-include (DIR_WS_MODULES.'set_language_sessions.php');
-
-
-// SSEQ-Lib integration
-function_exists('SEQ_SECURE_SESSION') ? SEQ_SECURE_SESSION() : '';
+include_once (DIR_WS_MODULES.'set_language_sessions.php');
 
 // language translations
-require (DIR_WS_LANGUAGES.$_SESSION['language'].'/'.$_SESSION['language'].'.php');
+require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/'.$_SESSION['language'].'.php');
 
 // currency
-include (DIR_WS_MODULES.'set_currency_session.php');
+include_once (DIR_WS_MODULES.'set_currency_session.php');
 
 // write customers status in session
-require (DIR_WS_INCLUDES.'write_customers_status.php');
+require_once (DIR_WS_INCLUDES.'write_customers_status.php');
 
 // content, product, category - sql group_check/fsk_lock
-require (DIR_WS_INCLUDES.'define_conditions.php');
+require_once (DIR_WS_INCLUDES.'define_conditions.php');
 
-//Versandkosten im Warenkorb 
+// add_select
+require_once (DIR_WS_INCLUDES.'define_add_select.php');
+
+// shippingcost shoppingcart
 if (strpos($PHP_SELF, FILENAME_SHOPPING_CART) === false) {
   unset($_SESSION['country']);
 }
 
 // main class
-require (DIR_WS_CLASSES.'main.php');
+require_once (DIR_WS_CLASSES.'main.php');
 $main = new main();
 
 // price class
-require (DIR_WS_CLASSES.'xtcPrice.php');
+require_once (DIR_WS_CLASSES.'xtcPrice.php');
 $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
 
 // create the shopping cart & fix the cart if necesary
@@ -320,10 +306,11 @@ if (!isset($_SESSION['cart']) || !is_object($_SESSION['cart'])) {
   $_SESSION['cart'] = new shoppingCart();
 }
 
-// PayPal Express
-if (defined('PAYPAL_API_VERSION')) {
-  require_once (DIR_WS_CLASSES . 'paypal_checkout.php');
-  $o_paypal = new paypal_checkout();
+// create the wishlist
+if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+  if (!isset($_SESSION['wishlist']) || !is_object($_SESSION['wishlist'])) {
+    $_SESSION['wishlist'] = new shoppingCart('wishlist');
+  }
 }
 
 // econda tracking
@@ -333,16 +320,17 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
   $econda = new econda();
 }
 
-require (DIR_WS_INCLUDES.FILENAME_CART_ACTIONS);
+// initialize the message stack for output messages
+require_once (DIR_WS_CLASSES.'message_stack.php');
+$messageStack = new messageStack;
+
+require_once (DIR_WS_INCLUDES.FILENAME_CART_ACTIONS);
 
 // who's online functions
 xtc_update_whos_online();
 
 // split-page-results
-require (DIR_WS_CLASSES.'split_page_results.php');
-
-// infobox
-require (DIR_WS_CLASSES.'boxes.php');
+require_once (DIR_WS_CLASSES.'split_page_results.php');
 
 // auto activate and expire banners
 xtc_activate_banners();
@@ -352,19 +340,15 @@ xtc_expire_banners();
 xtc_expire_specials();
 
 // class product
-require (DIR_WS_CLASSES.'product.php');
+require_once (DIR_WS_CLASSES.'product.php');
 
-// set $actual_products_id,  $current_category_id, $ cPath, $_GET['manufacturers_id']
-include (DIR_WS_MODULES.'set_ids_by_url_parameters.php');
+// set $actual_products_id,  $current_category_id, $cPath, $_GET['manufacturers_id']
+include_once (DIR_WS_MODULES.'set_ids_by_url_parameters.php');
 
 // breadcrumb class and start the breadcrumb trail
-require (DIR_WS_CLASSES.'breadcrumb.php');
+require_once (DIR_WS_CLASSES.'breadcrumb.php');
 $breadcrumb = new breadcrumb;
-include (DIR_WS_MODULES.'create_breadcrumb.php');
-
-// initialize the message stack for output messages
-require (DIR_WS_CLASSES.'message_stack.php');
-$messageStack = new messageStack;
+include_once (DIR_WS_MODULES.'create_breadcrumb.php');
 
 // set which precautions should be checked
 define('WARN_INSTALL_EXISTENCE', 'true');
@@ -374,11 +358,14 @@ define('WARN_SESSION_AUTO_START', 'true');
 define('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE', 'true');
 
 // set account_type
-include (DIR_WS_MODULES.'set_account_type.php');
+include_once (DIR_WS_MODULES.'set_account_type.php');
 
 // modification for nre graduated system
 unset ($_SESSION['actual_content']);
 xtc_count_cart();
 
-foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_top_end/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top/application_top_end/','php') as $file) require_once ($file);
+
+//compatibility for modified eCommerce Shopsoftware 1.06 files
+defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
 ?>

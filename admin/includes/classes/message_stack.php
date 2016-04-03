@@ -1,19 +1,18 @@
 <?php
-  /* --------------------------------------------------------------
-   $Id$
+/* --------------------------------------------------------------
+   $Id: message_stack.php 950 2005-05-14 16:45:21Z mz $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
-   based on:
+   based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(message_stack.php,v 1.5 2002/11/22); www.oscommerce.com
-   (c) 2003 nextcommerce (message_stack.php,v 1.6 2003/08/18); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
+   (c) 2002-2003 osCommerce(message_stack.php,v 1.5 2002/11/22); www.oscommerce.com 
+   (c) 2003	 nextcommerce (message_stack.php,v 1.6 2003/08/18); www.nextcommerce.org
 
-   Released under the GNU General Public License
+   Released under the GNU General Public License 
 
    Example usage:
 
@@ -21,13 +20,15 @@
    $messageStack->add('Error: Error 1', 'error');
    $messageStack->add('Error: Error 2', 'warning');
    if ($messageStack->size > 0) echo $messageStack->output();
-
+  
    --------------------------------------------------------------*/
+
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-  class messageStack extends tableBlock {
+
+  class messageStack {
     var $size = 0;
 
-    function messageStack() {
+    function __construct() {
       $this->errors = array();
       if (isset($_SESSION['messageToStack'])) {
         for ($i = 0, $n = sizeof($_SESSION['messageToStack']); $i < $n; $i++) {
@@ -39,14 +40,15 @@
 
     function add($message, $type = 'error') {
       if ($type == 'error') {
-        $this->errors[] = array('params' => 'class="messageStackError"', 'text' => xtc_image(DIR_WS_ICONS . 'error.gif', ICON_ERROR) . '&nbsp;' . $message);
+        $this->errors['error'][] = $message;
       } elseif ($type == 'warning') {
-        $this->errors[] = array('params' => 'class="messageStackWarning"', 'text' => xtc_image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;' . $message);
+        $this->errors['warning'][] = $message;
       } elseif ($type == 'success') {
-        $this->errors[] = array('params' => 'class="messageStackSuccess"', 'text' => xtc_image(DIR_WS_ICONS . 'success.gif', ICON_SUCCESS) . '&nbsp;' . $message);
+        $this->errors['success'][] = $message;
       } else {
-        $this->errors[] = array('params' => 'class="messageStackError"', 'text' => $message);
+        $this->errors['error'][] = $message;
       }
+      
       $this->size++;
     }
 
@@ -63,11 +65,15 @@
     }
 
     function output() {
-      //BOF - DokuMan - 2011-09-13 - fix Accessing static property messageStack::$table_data_parameters as non static
-      //$this->table_data_parameters = 'class="messageBox"';
-      self::$table_data_parameters = 'class="messageBox"';
-      //EOF - DokuMan - 2011-09-13 - fix Accessing static property messageStack::$table_data_parameters as non static
-      return $this->tableBlock($this->errors);
+      $output = '';
+      if ($this->size > 0) {
+        foreach ($this->errors as $key => $message) {
+          $output .= '<div class="'.$key.'_message">';
+          $output .= implode('<br/>', $message);
+          $output .= '</div>';   
+        }
+      }
+      return $output;
     }
   }
 ?>

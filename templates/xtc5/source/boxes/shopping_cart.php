@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: shopping_cart.php 3072 2012-06-18 15:01:13Z hhacker $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -38,10 +38,15 @@
       $products = $_SESSION['cart']->get_products();
       $sizeof_products = sizeof($products);
       for ($i = 0, $n = $sizeof_products; $i < $n; $i++) {
+        $del_button = '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'box', 'prd_id')).'action=remove_product&box=cart&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . xtc_image_button('cart_del.gif', IMAGE_BUTTON_DELETE) . '</a>';
+        $del_link = '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'box', 'prd_id')).'action=remove_product&box=cart&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . IMAGE_BUTTON_DELETE . '</a>';
+      
         $qty += $products[$i]['quantity'];
         $products_in_cart[] = array ('QTY' => $products[$i]['quantity'],
                                      'LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])),
-                                     'NAME' => $products[$i]['name']);
+                                     'NAME' => $products[$i]['name'],
+                                     'BUTTON_DELETE' => $del_button,
+                                     'LINK_DELETE' => $del_link);
       }
     }
 
@@ -69,7 +74,9 @@
       $box_smarty->assign('TOTAL', $xtPrice->xtcFormat($total, true));
     }
 
-    $box_smarty->assign('UST', $_SESSION['cart']->show_tax());
+    if (MODULE_SMALL_BUSINESS != 'true') {
+      $box_smarty->assign('UST', $_SESSION['cart']->show_tax());
+    }
     $box_smarty->assign('SHIPPING_INFO', SHOW_SHIPPING == 'true' ? $main->getShippingLink() : '');
 
   }
@@ -100,11 +107,14 @@
       $box_smarty->assign('COUPON_AMOUNT2', $xtPrice->xtcFormat($coupon['coupon_amount'], true, 0, true));
     }
     if (isset($_SESSION['cc_id'])) {
-      $box_smarty->assign('COUPON_HELP_LINK', '<a target="_blank" class="thickbox" title="Information" href="'.xtc_href_link(FILENAME_POPUP_COUPON_HELP, 'cID='.$_SESSION['cc_id']. '&KeepThis=true&TB_iframe=true&height=400&width=600', $request_type).'">Information</a>');
+      $clink_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS;
+      $clink_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS;
+      $box_smarty->assign('COUPON_HELP_LINK', '<a target="_blank" class="'.$clink_class.'" title="Information" href="'.xtc_href_link(FILENAME_POPUP_COUPON_HELP, 'cID='.$_SESSION['cc_id']. $clink_parameters, $request_type).'">Information</a>');
     }
   }
 
   $box_smarty->assign('LINK_CART', xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+  $box_smarty->assign('LINK_CHECKOUT', xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   $box_smarty->caching = 0;
   $box_smarty->assign('language', $_SESSION['language']);
   $box_shopping_cart = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_cart.html');

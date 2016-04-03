@@ -1,25 +1,26 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-$Id: inputfilter.php 3333 2012-07-27 10:47:56Z gtb-modified $
+   $Id$
 
-modified eCommerce Shopsoftware
-http://www.modified-shop.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-Copyright (c) 2009 - 2013 [www.modified-shop.org]
-
-Released under the GNU General Public License
----------------------------------------------------------------------------------------*/
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License 
+   ---------------------------------------------------------------------------------------*/
 
 class Inputfilter {
-    private $params=false;
+    private $params = false;
+    
     public function __construct()
     {
-        $this->params=array();
+        $this->params = array();
     }
 
     public function validate($source)
     {
-        $this->params=$source;
+        $this->params = $source;
         $this->inputValidate();
         
         return $this->params;
@@ -27,8 +28,8 @@ class Inputfilter {
 
     public function removeTags($value)
     {
-        return strip_tags ($value) == $value ? $value : '';
-        //return preg_replace ('/<[^>]*>/', ' ', $value) == $value ? $value : ''; //alternative zu stip_tags
+        return strip_tags($value) == $value ? $value : '';
+        //return preg_replace('/<[^>]*>/', ' ', $value) == $value ? $value : ''; //alternative zu stip_tags
     }
 
     public function validateCPath($value)
@@ -51,6 +52,19 @@ class Inputfilter {
         return preg_replace('/[^0-9a-zA-Z]/','',$value);
     }
 
+    public function validatePrice($value)
+    {
+        if (is_array($value)) {
+            foreach ($value as $k => $v) {
+                $value[$k] = $this->validatePrice($v);
+            }
+        } else {
+            $value = str_replace(',', '.', preg_replace('/[^0-9,.%]/','',$value));
+        }
+
+        return $value;
+    }
+    
     private function inputValidate()
     {
         if (is_array($this->params)) {
@@ -58,7 +72,7 @@ class Inputfilter {
                 switch($key) {
                   //remove tags
                   case 'search':
-                  case 'search_email':   
+                  case 'search_email':                      
                   case 'searchoption':
                   case 'search_optionsname':
                   case 'product_search':
@@ -82,6 +96,7 @@ class Inputfilter {
                   case 'mID':
                   case 'rID':
                   case 'sID':
+                  case 'bID':
                       $this->params[$key] = $this->validateNumeric($value);
                       break;
                   //0-9a-zA-Z _ -
@@ -96,6 +111,33 @@ class Inputfilter {
                   case 'MODsid':
                       $this->params[$key] = $this->validateSessionID($value);
                       break;
+                  default:
+                    //price
+                    if (defined('RUN_MODE_ADMIN')) {
+                      $keys = array('products_vpe_value',
+                                    'products_uvp',
+                                    'products_discount_allowed',
+                                    'customers_status_min_order',
+                                    'customers_status_max_order',
+                                    'customers_status_discount',
+                                    'customers_status_ot_discount',
+                                    'tax_rate',
+                                    'coupon_amount',
+                                    'coupon_min_order',
+                                    'NEW_SIGNUP_GIFT_VOUCHER_AMOUNT',
+                                    );
+                      if (in_array($key, $keys) ||
+                          substr($key, -6) == '_price' ||
+                          substr($key, -7) == '_weight' ||
+                          substr($key, 0, 14) == 'products_price' ||
+                          substr($key, 0, 14) == 'specials_price' ||
+                          substr($key, 0, 16) == 'products_staffel'
+                          ) 
+                      {
+                        $this->params[$key] = $this->validatePrice($value);
+                      }
+                    }
+                  break;
                 }
             }
         }

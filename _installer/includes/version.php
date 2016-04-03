@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: version.php 4493 2013-02-20 15:26:15Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -9,4 +9,4 @@
    --------------------------------------------------------------*/
 
 
-  define('INSTALLER_VERSION', 'Installer 106 rev12 utf8'); 
+  define('INSTALLER_VERSION', 'Installer 2.00'); 

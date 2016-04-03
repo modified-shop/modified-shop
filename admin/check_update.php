@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-  $Id: check_update.php 5018 2013-07-05 09:10:02Z GTB $
+  $Id$
 
   modified eCommerce Shopsoftware
   http://www.modified-shop.org
@@ -26,71 +26,75 @@ if (version_compare($new_version, PROJECT_VERSION, '>')) {
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-    <style type="text/css">
-      #credits {
-        margin: 5px;
-        padding: 0px 20px;
-        background-color: #F7F7F7;
-        font-family: Verdana, Arial, sans-serif;
-        font-size: 12px;
-      }
-      dl dd {
-        margin-left: 10px;
-      }
-      #contentHead dt {
-        float: right;
-      }
-      #contentHead dd {
-        margin-left: 80px;
-      }
-      #credits dl dt {
-        color: #D68000;
-        font-size: 12px;
-        font-weight: bold;
-      }
-      dl#person dt, dl#donate dt {
-        color: black;
-        font-weight: bold;
-        float: left;
-        font-size: 12px;
-      }
-
-      dl#person dd {
-        margin-left: 125px;
-        font-size: 12px;
-      }
-      dl#donate dd {
-        margin-left: 80px;
-        font-size: 12px;
-      }
-    </style>
-  </head>
-  <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
+  <style type="text/css">
+    #check_update {
+      margin: 5px;
+      padding: 0px 20px;
+      background-color: #F7F7F7;
+      font-family: Verdana, Arial, sans-serif;
+      font-size: 12px;
+      width: 980px;
+    }
+    dl dd {
+      margin-left: 10px;
+    }
+    #contentHead dt {
+      float: right;
+    }
+    #contentHead dd {
+      margin-left: 80px;
+    }
+    #check_update dl dt {
+      color: #D68000;
+      font-size: 12px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    dl#person dt, dl#donate dt {
+      color: black;
+      font-weight: bold;
+      float: left;
+      font-size: 12px;
+      margin:0;
+    }
+    dl#person dd {
+      margin-left: 125px;
+      font-size: 12px;
+    }
+    dl#donate dd {
+      margin-left: 80px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
 
     <!-- body //-->
-    <table border="0" width="100%" cellspacing="2" cellpadding="2">
+    <table class="tableBody">
       <tr>
-        <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-          <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-            <!-- left_navigation //-->
-            <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-            <!-- left_navigation_eof //-->
-          </table>
-        </td>
-        <td class="boxCenter" width="100%" valign="top">
-          <table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr><td>
-          <div id="credits">
+        <?php //left_navigation
+        if (USE_ADMIN_TOP_MENU == 'false') {
+          echo '<td class="columnLeft2">'.PHP_EOL;
+          echo '<!-- left_navigation //-->'.PHP_EOL;       
+          require_once(DIR_WS_INCLUDES . 'column_left.php');
+          echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+          echo '</td>'.PHP_EOL;      
+        }
+        ?>
+        <!-- body_text //-->
+        <td class="boxCenter">         
+          <div id="check_update">
             <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
             <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
             <span class="main"><?php echo HEADING_SUBTITLE; ?></span>
             <div class="clear"></div>
-            <font color="D68000" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><?php echo PROJECT_VERSION; ?></strong></font>
-            <br />
-            <br />
+            <dl>
+              <dt><?php echo PROJECT_VERSION; ?></dt>
+              <dt><?php echo TEXT_DB_VERSION.' "'.DB_VERSION.'"'; ?></dt>
+            </dl>
             <?php
             if ($update_recomended) {
               echo TEXT_INFO_UPDATE_RECOMENDED;
@@ -107,9 +111,9 @@ require (DIR_WS_INCLUDES.'head.php');
             <p><?php echo TEXT_INFO_THANKS; ?></p>
             <p><?php echo TEXT_INFO_DISCLAIMER; ?></p>
             <hr />
-            <table border="0" width="100%" cellspacing="0" cellpadding="0">
+            <table style="border:0; padding:8px; width:100%;">
               <tr>
-                <td width="50%" valign="top">
+                <td style="width:50%; vertical-align:top">
                   <dl>
                     <dt><?php echo TEXT_HEADING_DEVELOPERS; ?></dt>
                     <dd>
@@ -129,7 +133,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     </dd>
                   </dl>
                 </td>
-                <td width="50%" valign="top">
+                <td style="width:50%; vertical-align:top">
                   <dl>
                     <dt><?php echo TEXT_HEADING_SUPPORT; ?></dt>
                     <dd>
@@ -139,7 +143,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <dt>&nbsp;</dt><dd>&nbsp;</dd>
                         <dt>&nbsp;</dt>
                         <dd>
-                          <a href="http://www.modified-shop.org/spenden"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="<?php echo TEXT_INFO_DONATIONS_IMG_ALT; ?>" border="0"></a>
+                          <?php echo BUTTON_DONATE; ?>
                         </dd>
                       </dl>
                     </dd>
@@ -161,13 +165,11 @@ require (DIR_WS_INCLUDES.'head.php');
               </dd>
             </dl>
           </div>
-          </td></tr></table>
         </td>
         <!-- body_text_eof //-->
       </tr>
     </table>
     <!-- body_eof //-->
-
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->

@@ -446,8 +446,7 @@
 				return true;
 			});
 			if (!isValid) {
-				alert(self.i18n.allAttributsMustDefined);
-				return false;
+				self.elements.newCustomGroupContainer.find('input[name="ml[match][IsValid]"]').val('false');
 			}
 			return true;
 		}

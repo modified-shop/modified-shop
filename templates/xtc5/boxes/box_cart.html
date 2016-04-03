@@ -11,19 +11,23 @@
     {if $empty == 'false'}
       {* cart has content *}
       {foreach name=aussen item=products_data from=$products}
-        <p>{$products_data.QTY}&nbsp;x&nbsp;<a href="{$products_data.LINK}">{$products_data.NAME|truncate:20:"...":true}</a></p>
+        <p style="position:relative;">{$products_data.QTY}&nbsp;x&nbsp;<a href="{$products_data.LINK}">{$products_data.NAME|truncate:20:"...":true}</a><span style="height: 16px;position: absolute;right: -3px;top: 2px;width: 16px;">{$products_data.BUTTON_DELETE}</span></p>
       {/foreach}
       <div class="hr"></div>
       <p style="text-align:right">
         {if isset($DISCOUNT)}{#text_discount#} {$DISCOUNT}<br />{/if}
-        {$UST}
+        {if isset($UST)}{$UST}{/if}
         <strong>{#text_total#}:{$TOTAL}</strong><br />
         {if isset($SHIPPING_INFO)}{$SHIPPING_INFO}{/if}
       </p>
       <div class="hr"></div>
-      <p style="text-align:right;">
+      <p style="text-align:right;float:left;">
+        <a href="{$LINK_CHECKOUT}"><strong>{#heading_checkout#}&nbsp;&raquo;</strong></a>
+      </p>
+      <p style="text-align:right;float:right;">
         <a href="{$LINK_CART}"><strong>{#heading_cart#}&nbsp;&raquo;</strong></a>
       </p>
+      <div style="clear:both"></div>
     {else}
       {* cart has no content *}
       <p>{#text_empty_cart#}</p>

@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: security_check.php 3561 2012-08-29 18:11:38Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -118,18 +118,14 @@ while ($check = xtc_db_fetch_array($query)) {
       break;
     }
   }
-
-  //BOF - DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
-  if (strpos($check['configuration_value'], 'paypal') !== false 
-  && defined('PAYPAL_API_USER') && PAYPAL_API_USER == '') {
-    $warnings[] = '<p>'.sprintf(TEXT_PAYPAL_CONFIG,xtc_href_link(FILENAME_CONFIGURATION, 'gID=111125')).'</p>';
-  }
-  //EOF - DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
 }
 
 /*******************************************************************************
  ** Email adress check:
  ******************************************************************************/
+require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+$lang_check = xtc_get_languages();
+
 $check = array();
 $emails = array('STORE_OWNER_EMAIL_ADDRESS',
                 'EMAIL_BILLING_ADDRESS',
@@ -139,13 +135,16 @@ $emails = array('STORE_OWNER_EMAIL_ADDRESS',
 );
 foreach($emails as $name) {
   $email = constant($name);
-  if (empty($email) or !xtc_validate_email($email)){
-    include(DIR_FS_LANGUAGES .$_SESSION['language'] . '/admin/configuration.php');
-    $checks[] = sprintf(ERROR_EMAIL_CHECK_INFO,constant($name.'_TITLE'), $email);
+  for ($i=0, $n=count($lang_check); $i<$n; $i++) {
+    $email = parse_multi_language_value($email, $lang_check[$i]['code']);
+    if (empty($email) or !xtc_validate_email($email)){
+      include_once(DIR_FS_LANGUAGES .$_SESSION['language'] . '/admin/configuration.php');
+      $checks[] = sprintf(ERROR_EMAIL_CHECK_INFO,constant($name.'_TITLE'), $email);
+    }
   }
 }
-if (!empty($check)) {
-  $warnings[] = ERROR_EMAIL_CHECK.'<ul><li>'.implode('</li><li>', $check).'</li></ul>';
+if (!empty($checks)) {
+  $warnings[] = ERROR_EMAIL_CHECK.'<ul><li>'.implode('</li><li>', $checks).'</li></ul>';
 }
 
 /** ----------------------------------------------------------------------------
@@ -178,13 +177,30 @@ if (($registerGlobals == '1') || (strtolower($registerGlobals) == 'on')) {
 }
 
 /*******************************************************************************
+ ** duplicate configuration check:
+ ******************************************************************************/
+if (isset($duplicate_configuration) && count($duplicate_configuration) > 0) {
+  foreach ($duplicate_configuration as $key) {
+    $warnings[] = TEXT_DUPLUCATE_CONFIG_ERROR.$key.'<br/>';
+  }
+} 
+/*
+else {
+  $check_unique = xtc_db_query("SHOW INDEX FROM ".TABLE_CONFIGURATION." WHERE key_name = 'idx_configuration_key'");
+  if (xtc_db_num_rows($check_unique) < 1) {
+    xtc_db_query("ALTER TABLE ".TABLE_CONFIGURATION." ADD UNIQUE idx_configuration_key (configuration_key)");
+  }
+}
+*/
+
+/*******************************************************************************
  ** output warnings:
  ******************************************************************************/
 if (!empty($warnings)) {
 ?>
-<div id="security_info">
-  <div style="float: left; margin-right: 10px;"><?php echo xtc_image(DIR_WS_ICONS.'big_warning.gif', ICON_WARNING, 106, 93); ?></div>
-  <div style="float: left;"><?php echo implode('', $warnings) ?></div>
+<div id="security_info" style="margin:0 5px 6px">
+  <div style="float: left; width: 125px;"><?php echo xtc_image(DIR_WS_ICONS.'big_warning.png', ICON_WARNING, 106, 93); ?></div>
+  <div style="float: left; width: 85%;"><?php echo implode('', $warnings) ?></div>
   <div style="clear: both"></div>
 </div>
 <?php

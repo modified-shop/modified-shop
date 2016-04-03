@@ -6,31 +6,43 @@
         <tr> 
           <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_customer}<br />
             <br />
+            {if $SHIPPING_METHOD}<strong>Shippingmethod:</strong> {$SHIPPING_METHOD}<br />{/if}
             {if $PAYMENT_METHOD}<strong>Paymentmethod:</strong> {$PAYMENT_METHOD}<br />{/if}
             <strong>Order No.:</strong> {$oID}<br />
             <strong>Orderdate:</strong> {$DATE}<br />
             {if $csID}<strong>Customer ID:</strong> {$csID}<br />{/if}
-            <strong>Your e-mail-address:</strong> {$EMAIL}<br />
+            <strong>Your e-mail-address:</strong> {$EMAIL}
+            {if $vatID}<br /><strong>Your VAT ID No.:</strong> {$vatID}{/if}
             </font>
           </td>
-          <td width="2"><img src="{$logo_path}logo.gif"></td>
+          <td width="2"><img src="{$logo_path}logo.gif" /></td>
         </tr>
       </table>
       <br /> 
       <table style="border-top:1px solid; border-bottom:1px solid;" width="100%" border="0">
-        <tr bgcolor="#f1f1f1"> 
-          <td width="50%"> 
-            <p><font size="2"><strong><font face="Verdana, Arial, Helvetica, sans-serif">Shippingaddress<br /></font></strong></font></p>
+        <tr bgcolor="#f1f1f1">
+          {if $address_label_payment!=$address_label_shipping}
+          <td>
+            <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Shippingaddress</strong></font></p>
           </td>
+          {/if}
           {if $address_label_payment}
-          <td> 
-            <p><font size="2"><strong><font face="Verdana, Arial, Helvetica, sans-serif">Paymentaddress<br /> </font> </strong></font></p>
+          <td {if $address_label_payment!=$address_label_shipping}width="50%"{else}width="100%"{/if}>
+            <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>{if $address_label_payment!=$address_label_shipping}Paymentadress{else}Payment-/Shippingaddress{/if}</strong></font></p>
           </td>
           {/if}
         </tr>
-        <tr> 
-          <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_shipping}</font></td>
-          {if $address_label_payment}<td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_payment}</font></td>{/if}
+        <tr>
+          {if $address_label_payment!=$address_label_shipping}
+          <td>
+            <font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_shipping}</font>
+          </td>
+          {/if}
+          {if $address_label_payment}
+          <td>
+            <font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_payment}</font>
+          </td>
+          {/if}
         </tr>
       </table>
       <p><font size="2" face="Verdana, Arial, Helvetica, sans-serif">
@@ -42,13 +54,11 @@
         {$COMMENTS}<br />
         {/if}
         <br />
-        {*BOF - web28 - 2011-02-01 - Paypal Express*}
         {if $NEW_PASSWORD}
           <br /><br />
-          <strong>Your Account Password:</strong><br />
-          {$NEW_PASSWORD}<br /><br />
+          <b>Your Account was protected with a password.</b><br />
+          You can change your password with this link: <a href="{$NEW_PASSWORD}">{$NEW_PASSWORD}</a><br /><br />
         {/if}
-        {*EOF - web28 - 2011-02-01 - Paypal Express*}
       </p>
     </td>
   </tr>
@@ -77,7 +87,7 @@
           {if $smarty.const.SHOW_IMAGES_IN_EMAIL == 'true'}
           <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;">
             {if $order_values.PRODUCTS_IMAGE neq ''}              
-                <img src="{$img_path}{$order_values.PRODUCTS_IMAGE}" style="{$smarty.const.SHOW_IMAGES_IN_EMAIL_STYLE}">              
+                <img src="{$img_path}{$order_values.PRODUCTS_IMAGE}" style="{$smarty.const.SHOW_IMAGES_IN_EMAIL_STYLE}" />              
             {/if}
           </td>
           {/if}
@@ -88,7 +98,7 @@
             {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />Shipping time: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}
             {if $order_values.PRODUCTS_ATTRIBUTES neq ''}<br /><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>{/if}
             </font>
-            </td>
+          </td>
           <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_MODEL}<br />
             <em>{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</em></font></td>
           <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="right"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_SINGLE_PRICE}</font></div></td>
@@ -120,5 +130,11 @@
 {if $REVOCATION_HTML neq ''}
 <br />
 <font size="1" face="Arial, Helvetica, sans-serif">{$REVOCATION_HTML}</font>
+<br />
+{/if}
+
+{if $AGB_HTML neq ''}
+<br />
+<font size="1" face="Arial, Helvetica, sans-serif">{$AGB_HTML}</font>
 <br />
 {/if}

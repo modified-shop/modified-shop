@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: product.php 2696 2012-03-04 10:44:41Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -24,56 +24,62 @@ class product {
    * @param integer $pID
    * @return product
    */
-  function product($pID = 0) {
+  function __construct($pID = 0) {
+    global $xtPrice;
+
+    require_once (DIR_FS_CATALOG.'includes/classes/productModules.class.php');
+    $this->productModules = new productModules();
+    
     $this->pID = (int)$pID;
     
     //set default select, using in function getAlsoPurchased, getCrossSells, getReverseCrossSells
-    $this->default_select ='p.products_fsk18,
-                            p.products_id,
-                            p.products_price,
-                            p.products_tax_class_id,
-                            p.products_image,
-                            p.products_quantity,
-                            p.products_vpe,
-                            p.products_vpe_status,
-                            p.products_vpe_value,
-                            p.products_model,
-                            pd.products_name,
-                            pd.products_short_description';
+    $this->default_select = ADD_SELECT_PRODUCT .
+                            'p.products_fsk18,
+                             p.products_id,
+                             p.products_price,
+                             p.products_tax_class_id,
+                             p.products_image,
+                             p.products_quantity,
+                             p.products_shippingtime,
+                             p.products_vpe,
+                             p.products_vpe_status,
+                             p.products_vpe_value,
+                             p.products_model,
+                             pd.products_name,
+                             pd.products_short_description';
 
     // default products image
-    $this->useStandardImage=true;
-    $this->standardImage='noimage.gif';
+    $this->useStandardImage = PRODUCT_IMAGE_SHOW_NO_IMAGE;
+    $this->standardImage = 'noimage.gif';
 
     if ($pID == 0) {
       $this->isProduct = false;
       return;
     }
+    
     // query for Product
-    $group_check = "";
-    if (GROUP_CHECK == 'true') {
-      $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-    }
-
-    $fsk_lock = "";
-    if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-      $fsk_lock = ' AND p.products_fsk18!=1';
-    }
-
-    $product_query = "SELECT *
-                        FROM ".TABLE_PRODUCTS." AS p
-                        JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON p.products_status = '1'
-                         AND p.products_id = '".$this->pID."'
-                         AND pd.products_id = p.products_id ".$group_check.$fsk_lock."
-                         AND pd.language_id = '".(int)$_SESSION['languages_id']."'";
-
-    $product_query = xtDBquery($product_query);
-
+    $product_query = xtDBquery("SELECT *
+                                  FROM ".TABLE_PRODUCTS." AS p
+                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd 
+                                       ON p.products_status = '1'
+                                          AND p.products_id = '".$this->pID."'
+                                          AND pd.products_id = p.products_id
+                                          AND trim(pd.products_name) != ''
+                                          " . PRODUCTS_CONDITIONS_P . "
+                                          AND pd.language_id = '".(int)$_SESSION['languages_id']."'");
     if (!xtc_db_num_rows($product_query, true)) {
       $this->isProduct = false;
     } else {
       $this->isProduct = true;
       $this->data = xtc_db_fetch_array($product_query, true);
+
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
+          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+          && $xtPrice->get_content_type_product($this->data['products_id']) == 'virtual'
+          ) 
+      {
+        $this->data['products_tax_class_id'] = xtc_get_tax_class($this->data['products_tax_class_id']);
+      }
     }
   }
 
@@ -84,12 +90,11 @@ class product {
    */
   function getAttributesCount() {
     $products_attributes_query = xtDBquery("SELECT count(*) AS total
-                                              FROM ".TABLE_PRODUCTS_OPTIONS." popt,
-                                                   ".TABLE_PRODUCTS_ATTRIBUTES." patrib
-                                             WHERE patrib.products_id=".$this->pID."
-                                               AND patrib.options_id = popt.products_options_id
-                                               AND popt.language_id = ".(int) $_SESSION['languages_id']
-                                          );
+                                              FROM ".TABLE_PRODUCTS_OPTIONS." popt
+                                              JOIN ".TABLE_PRODUCTS_ATTRIBUTES." patrib
+                                                   ON patrib.options_id = popt.products_options_id
+                                                      AND popt.language_id = '".(int) $_SESSION['languages_id']."'
+                                             WHERE patrib.products_id = '".$this->pID."'");
     $products_attributes = xtc_db_fetch_array($products_attributes_query, true);
     return $products_attributes['total'];
   }
@@ -101,19 +106,34 @@ class product {
    */
   function getReviewsCount() {
     $reviews_query = xtDBquery("SELECT count(*) AS total
-                                  FROM ".TABLE_REVIEWS." r,
-                                       ".TABLE_REVIEWS_DESCRIPTION." rd
-                                 WHERE r.products_id = ".$this->pID."
-                                   AND r.reviews_id = rd.reviews_id
-                                   AND rd.languages_id = ".(int)$_SESSION['languages_id']."
-                                   AND rd.reviews_text !=''
-                              ");
+                                  FROM ".TABLE_REVIEWS." r
+                                  JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
+                                       ON r.reviews_id = rd.reviews_id
+                                          AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
+                                          AND rd.reviews_text != ''
+                                 WHERE r.products_id = '".$this->pID."'");
     $reviews = xtc_db_fetch_array($reviews_query, true);
     return $reviews['total'];
   }
 
+
   /**
    * getReviewsAverage
+   *
+   * @return string
+   */
+  function getReviewsAverage() {
+    $avg_reviews_query = xtc_db_query("SELECT avg(reviews_rating) AS avg_rating 
+                                         FROM ".TABLE_REVIEWS."
+                                        WHERE products_id='".$this->pID."'");
+    $avg_reviews = xtc_db_fetch_array($avg_reviews_query);
+
+    return round($avg_reviews['avg_rating'], 0);
+  } 
+
+
+  /**
+   * getReviews
    *
    * @return array
    */
@@ -125,20 +145,25 @@ class product {
                                        r.last_modified,
                                        r.reviews_read,
                                        rd.reviews_text
-                                  FROM ".TABLE_REVIEWS." r,
-                                       ".TABLE_REVIEWS_DESCRIPTION." rd
+                                  FROM ".TABLE_REVIEWS." r
+                                  JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
+                                       ON r.reviews_id = rd.reviews_id
+                                          AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
                                  WHERE r.products_id = '".$this->pID."'
-                                   AND r.reviews_id = rd.reviews_id
-                                   AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
-                              ORDER BY reviews_id DESC
-                              ");
+                              ORDER BY r.reviews_id DESC");
     $data_reviews = array ();
     if (xtc_db_num_rows($reviews_query, true)) {
       while ($reviews = xtc_db_fetch_array($reviews_query, true)) {
+        $img = 'templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif';
+        if (!is_file(DIR_FS_CATALOG.$img)) {
+          $img = 'templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.png';        
+        }
         $data_reviews[] = array (
             'AUTHOR' => $reviews['customers_name'],
             'DATE' => xtc_date_short($reviews['date_added']),
-            'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
+            'RATING' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])),
+            'RATING_MICROTAG' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
+            'RATING_VOTE' => $reviews['reviews_rating'],
             'TEXT' => nl2br($reviews['reviews_text'])
           );
         if (count($data_reviews) == PRODUCT_REVIEWS_VIEW) break;
@@ -164,44 +189,47 @@ class product {
    *
    * @return array
    */
-  function getAlsoPurchased() {
-    global $xtPrice;
+	function getAlsoPurchased() {
+		global $xtPrice;
 
-    $module_content = array ();
-
-
-    $fsk_lock = "";
-    if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-      $fsk_lock = ' AND p.products_fsk18!=1';
-    }
-    $group_check = "";
-    if (GROUP_CHECK == 'true') {
-      $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-    }
-
-    $orders_query = "SELECT ".$this->default_select."
-                       FROM ".TABLE_ORDERS_PRODUCTS." op1
-                       JOIN ".TABLE_ORDERS_PRODUCTS." op2 on op2.orders_id = op1.orders_id
-                       JOIN ".TABLE_ORDERS." o on o.orders_id = op2.orders_id
-                       JOIN ".TABLE_PRODUCTS." p on p.products_id = op2.products_id
-                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd on pd.products_id = op2.products_id
-                      WHERE op1.products_id = ".$this->pID."
-                        AND op2.products_id != ".$this->pID."
-                        AND p.products_status = 1
-                        AND trim(pd.products_name) != ''
-                        AND pd.language_id = ".(int) $_SESSION['languages_id']
-                            .$group_check
-                            .$fsk_lock."
-                   GROUP BY p.products_id
-                   ORDER BY o.date_purchased desc
-                      LIMIT ".MAX_DISPLAY_ALSO_PURCHASED;
-
+		$module_content = array ();
+    $products_id_array = array();
+    		
+    $row = 0;
+    $orders_query = "SELECT orders_id 
+                       FROM ".TABLE_ORDERS_PRODUCTS." 
+                      WHERE products_id = '".(int) $this->pID."'
+                   ORDER BY orders_id DESC";
     $orders_query = xtDBquery($orders_query);
     while ($orders = xtc_db_fetch_array($orders_query, true)) {
-      $module_content[] = $this->buildDataArray($orders);
+      $products_query = "SELECT ".$this->default_select."
+                           FROM ".TABLE_ORDERS_PRODUCTS." op
+                           JOIN ".TABLE_PRODUCTS." p 
+                                ON p.products_id = op.products_id
+                                   AND p.products_status = '1'
+                                   AND p.products_id != '".$this->pID."'
+                           JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                ON pd.products_id = p.products_id
+                                   AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                                   AND trim(pd.products_name) != ''
+                          WHERE op.orders_id = '".$orders['orders_id']."'
+                                " . PRODUCTS_CONDITIONS_P;
+      $products_query = xtDBquery($products_query);
+      while ($products = xtc_db_fetch_array($products_query, true)) {
+        if (!in_array($products['products_id'], $products_id_array)) {
+          $module_content[] = $this->buildDataArray($products);
+          $products_id_array[] = $products['products_id'];
+          $row ++;
+        }
+        if ($row >= MAX_DISPLAY_ALSO_PURCHASED) {
+          break 2;
+        }
+      }
     }
-    return $module_content;
-  }
+    unset($products_id_array);
+    
+		return $module_content;
+	}
 
   /**
    * Get Cross sells
@@ -211,44 +239,37 @@ class product {
   function getCrossSells() {
     global $xtPrice;
 
-    $cs_groups = "SELECT products_xsell_grp_name_id
-                    FROM ".TABLE_PRODUCTS_XSELL."
-                   WHERE products_id = '".$this->pID."'
-                GROUP BY products_xsell_grp_name_id";
-    $cs_groups = xtDBquery($cs_groups);
+    $cross_sells_query = xtDBquery("SELECT px.products_xsell_grp_name_id,
+                                           pxg.groupname
+                                      FROM ".TABLE_PRODUCTS_XSELL." px
+                                 LEFT JOIN ".TABLE_PRODUCTS_XSELL_GROUPS." pxg
+                                           ON px.products_xsell_grp_name_id = pxg.products_xsell_grp_name_id
+                                              AND pxg.language_id = '".(int)$_SESSION['languages_id']."'
+                                     WHERE px.products_id = '".(int)$this->pID."'
+                                  GROUP BY px.products_xsell_grp_name_id");
     $cross_sell_data = array ();
-    if (xtc_db_num_rows($cs_groups, true) > 0) {
-      while ($cross_sells = xtc_db_fetch_array($cs_groups, true)) {
-        $fsk_lock = '';
-        if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-          $fsk_lock = ' AND p.products_fsk18!=1';
+    if (xtc_db_num_rows($cross_sells_query, true) > 0) {
+      while ($cross_sells = xtc_db_fetch_array($cross_sells_query, true)) {
+        $xsell_query = xtDBquery("SELECT ".$this->default_select.",
+                                         xp.sort_order
+                                    FROM ".TABLE_PRODUCTS_XSELL." xp
+                                    JOIN ".TABLE_PRODUCTS." p
+                                         ON xp.xsell_id = p.products_id
+                                            AND p.products_status = '1'
+                                    JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                         ON p.products_id = pd.products_id
+                                            AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                            AND trim(pd.products_name) != ''
+                                   WHERE xp.products_id = '".$this->pID."'
+                                     AND xp.products_xsell_grp_name_id='".$cross_sells['products_xsell_grp_name_id']."'
+                                         ".PRODUCTS_CONDITIONS_P."
+                                ORDER BY xp.sort_order ASC");
+        if (xtc_db_num_rows($xsell_query, true) > 0) {
+          $cross_sell_data[$cross_sells['products_xsell_grp_name_id']] = array('GROUP' => $cross_sells['groupname'],
+                                                                               'PRODUCTS' => array()
+                                                                               );
         }
-        $group_check = "";
-        if (GROUP_CHECK == 'true') {
-          $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-        }
-        $cross_query = "SELECT ".$this->default_select.",
-                               xp.sort_order
-                          FROM ".TABLE_PRODUCTS_XSELL." xp,
-                               ".TABLE_PRODUCTS." p,
-                               ".TABLE_PRODUCTS_DESCRIPTION." pd
-                         WHERE xp.products_id = ".$this->pID."
-                           AND xp.xsell_id = p.products_id "
-                               .$fsk_lock
-                               .$group_check."
-                           AND p.products_id = pd.products_id
-                           AND xp.products_xsell_grp_name_id='".$cross_sells['products_xsell_grp_name_id']."'
-                           AND pd.language_id = ".(int)$_SESSION['languages_id']."
-                           AND trim(pd.products_name) != ''
-                           AND p.products_status = 1
-                      ORDER BY xp.sort_order asc";
-        $cross_query = xtDBquery($cross_query);
-        if (xtc_db_num_rows($cross_query, true) > 0)
-          $cross_sell_data[$cross_sells['products_xsell_grp_name_id']] = array (
-              'GROUP' => xtc_get_cross_sell_name($cross_sells['products_xsell_grp_name_id']),
-              'PRODUCTS' => array ()
-            );
-        while ($xsell = xtc_db_fetch_array($cross_query, true)) {
+        while ($xsell = xtc_db_fetch_array($xsell_query, true)) {
           $cross_sell_data[$cross_sells['products_xsell_grp_name_id']]['PRODUCTS'][] = $this->buildDataArray($xsell);
         }
       }
@@ -264,30 +285,19 @@ class product {
   function getReverseCrossSells() {
     global $xtPrice;
 
-    $fsk_lock = '';
-    if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-      $fsk_lock = ' AND p.products_fsk18!=1';
-    }
-    $group_check = '';
-    if (GROUP_CHECK == 'true') {
-      $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-    }
-
     $cross_query = xtDBquery("SELECT ".$this->default_select.",
                                      xp.sort_order
-                                FROM ".TABLE_PRODUCTS_XSELL." xp,
-                                     ".TABLE_PRODUCTS." p,
-                                     ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                FROM ".TABLE_PRODUCTS_XSELL." xp
+                                JOIN ".TABLE_PRODUCTS." p
+                                     ON xp.products_id = p.products_id
+                                        AND p.products_status = 1
+                                JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                     ON p.products_id = pd.products_id
+                                        AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                        AND trim(pd.products_name) != ''
                                WHERE xp.xsell_id = '".$this->pID."'
-                                 AND xp.products_id = p.products_id "
-                                     .$fsk_lock
-                                     .$group_check."
-                                 AND p.products_id = pd.products_id
-                                 AND pd.language_id = ".(int)$_SESSION['languages_id']."
-                                 AND trim(pd.products_name) != ''
-                                 AND p.products_status = 1
-                            ORDER BY xp.sort_order asc");
-
+                                     ".PRODUCTS_CONDITIONS_P."
+                            ORDER BY xp.sort_order ASC");
     $cross_sell_data = array();
     while ($xsell = xtc_db_fetch_array($cross_query, true)) {
       $cross_sell_data[] = $this->buildDataArray($xsell);
@@ -303,41 +313,50 @@ class product {
   function getGraduated() {
     global $xtPrice;
 
-    $discount = $xtPrice->xtcCheckDiscount($this->pID);
-    $staffel_query = xtDBquery("SELECT quantity,
-                                       personal_offer
-                                  FROM ".TABLE_PERSONAL_OFFERS_BY.(int) $_SESSION['customers_status']['customers_status_id']."
-                                 WHERE products_id = ".$this->pID."
-                              ORDER BY quantity ASC");
-    $staffel = array ();
-    while ($staffel_values = xtc_db_fetch_array($staffel_query, true)) {
-      $staffel[] = array (
-          'stk' => $staffel_values['quantity'],
-          'price' => $staffel_values['personal_offer']
-        );
-    }
     $staffel_data = array ();
-    for ($i = 0, $n = sizeof($staffel); $i < $n; $i ++) {
-      if ($staffel[$i]['stk'] == 1 || (array_key_exists($i +1, $staffel) && $staffel[$i +1]['stk'] != '')){ //DokuMan - 2010-10-13 - added array_key_exists()
-        $quantity = $staffel[$i]['stk'];
-        if (array_key_exists($i + 1, $staffel) && $staffel[$i +1]['stk'] != '' && $staffel[$i +1]['stk'] != $staffel[$i]['stk'] + 1) //DokuMan - 2010-10-13 - added array_key_exists()
-          $quantity .= ' - '. ($staffel[$i +1]['stk'] - 1);
-      } else {
-        $quantity = GRADUATED_PRICE_MAX_VALUE.' '.$staffel[$i]['stk'];
+    
+    if (!$xtPrice->xtcCheckSpecial($this->pID)) {
+      $discount = $xtPrice->xtcCheckDiscount($this->pID);
+      $staffel_query = xtDBquery("SELECT quantity,
+                                         personal_offer
+                                    FROM ".TABLE_PERSONAL_OFFERS_BY.(int) $_SESSION['customers_status']['customers_status_id']."
+                                   WHERE products_id = '".$this->pID."'
+                                ORDER BY quantity ASC");
+      $staffel = array ();
+      while ($staffel_values = xtc_db_fetch_array($staffel_query, true)) {
+        $staffel[] = array('stk' => $staffel_values['quantity'],
+                           'price' => $staffel_values['personal_offer']
+                           );
       }
-      $vpe = '';
-      if (isset($this->data) && $this->data['products_vpe_status'] == 1 && $this->data['products_vpe_value'] != 0.0 && $staffel[$i]['price'] > 0) {
-        $vpe = $staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount;
-        $vpe = $vpe * (1 / $this->data['products_vpe_value']);
-        $vpe = BASICPRICE_VPE_TEXT.$xtPrice->xtcFormat($vpe, true, $this->data['products_tax_class_id']).TXT_PER.xtc_get_vpe_name($this->data['products_vpe']);
+      for ($i=0, $n=sizeof($staffel); $i<$n; $i++) {
+        $to_quantity = '';
+        if ($staffel[$i]['stk'] == 1 || (array_key_exists($i +1, $staffel) && $staffel[$i +1]['stk'] != '')) { 
+          if ($staffel[$i]['stk'] == 1 && $staffel[$i]['price'] == '0.0000') {
+            $staffel[$i]['price'] = $this->data['products_price'];
+          }
+          $quantity = $staffel[$i]['stk'];
+          if (array_key_exists($i + 1, $staffel) && $staffel[$i +1]['stk'] != '' && $staffel[$i +1]['stk'] != $staffel[$i]['stk'] + 1) {
+            $quantity .= ' - '. ($staffel[$i +1]['stk'] - 1);
+            $to_quantity = $staffel[$i +1]['stk'] - 1;
+          }
+        } else {
+          $quantity = GRADUATED_PRICE_MAX_VALUE.' '.$staffel[$i]['stk'];
+        }
+        $vpe = '';
+        if (isset($this->data) && $this->data['products_vpe_status'] == 1 && $this->data['products_vpe_value'] != 0.0 && $staffel[$i]['price'] > 0) {
+          $vpe = $staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount;
+          $vpe = $vpe * (1 / $this->data['products_vpe_value']);
+          $vpe = $xtPrice->xtcFormat($vpe, true, $this->data['products_tax_class_id']).TXT_PER.xtc_get_vpe_name($this->data['products_vpe']);
+        }
+        $staffel_data[$i] = array('QUANTITY' => $quantity,
+                                  'PLAIN_QUANTITY' => $staffel[$i]['stk'],
+                                  'FROM_QUANTITY' => GRADUATED_PRICE_MAX_VALUE,
+                                  'TO_QUANTITY' => $to_quantity,
+                                  'VPE' => $vpe,
+                                  'PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, true, $this->data['products_tax_class_id']),
+                                  'PLAIN_PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $this->data['products_tax_class_id'])
+                                  );
       }
-      $staffel_data[$i] = array (
-          'QUANTITY' => $quantity,
-          'PLAIN_QUANTITY' => $staffel[$i]['stk'],
-          'VPE' => $vpe,
-          'PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, true, $this->data['products_tax_class_id']),
-          'PLAIN_PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $this->data['products_tax_class_id'])
-        );
     }
     return $staffel_data;
   }
@@ -360,7 +379,7 @@ class product {
    */
   function getBuyNowButton($id, $name) {
     global $PHP_SELF;
-    return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array ('action')).'action=buy_now&BUYproducts_id='.$id, 'NONSSL').'">'.xtc_image_button('button_buy_now.gif', TEXT_BUY.$name.TEXT_NOW).'</a>';
+    return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=buy_now&BUYproducts_id='.$id, 'NONSSL').'">'.xtc_image_button('button_buy_now.gif', TEXT_BUY.$name.TEXT_NOW).'</a>';
   }
 
   /**
@@ -381,8 +400,16 @@ class product {
    * @param array $array
    * @return array
    */
-  function buildDataArray(&$array,$image='thumbnail') {
+  function buildDataArray(&$array, $image='thumbnail') {
     global $xtPrice, $main;
+
+    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
+        && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+        && $xtPrice->get_content_type_product($array['products_id']) == 'virtual'
+        ) 
+    {
+      $array['products_tax_class_id'] = xtc_get_tax_class($array['products_tax_class_id']);
+    }
 
     //get tax rate
     $tax_rate = isset($xtPrice->TAX[$array['products_tax_class_id']]) ? $xtPrice->TAX[$array['products_tax_class_id']] : 0;
@@ -392,16 +419,35 @@ class product {
 
     //create buy now button
     $buy_now = '';
+    $wishlist_now = '';
+    $wishlist_now_link = '';
     if ($_SESSION['customers_status']['customers_status_show_price'] != '0' && defined('SHOW_BUTTON_BUY_NOW') && SHOW_BUTTON_BUY_NOW != 'false'
         && ($_SESSION['customers_status']['customers_fsk18'] != '1' || (isset($array['products_fsk18']) && $array['products_fsk18'] == '0')) ) {
       $buy_now = $this->getBuyNowButton($array['products_id'], $array['products_name']);
+      if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+        $wishlist_now = $this->getWishlistNowButton($array['products_id'], $array['products_name']);
+        $wishlist_now_link = $this->getWishlistNowButton($array['products_id'], $array['products_name'], true);
+      }
     }
+    
+    // check for gift
+    if (isset($array['products_model']) && preg_match('/^GIFT/', addslashes($array['products_model']))
+        && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+        && isset($_SESSION['customer_id']))
+    {
+      $buy_now = '';
+      $array['products_gift_forbidden'] = 'true';
+    }
+    
+    //create products link
+    $products_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name']));
 
     //get $shipping_status_name, $shipping_status_image
-    $shipping_status_name = $shipping_status_image = '';
+    $shipping_status_name = $shipping_status_image = $shipping_status_link = '';
     if (isset($array['products_shippingtime']) && ACTIVATE_SHIPPING_STATUS == 'true') {
       $shipping_status_name = $main->getShippingStatusName($array['products_shippingtime']);
       $shipping_status_image = $main->getShippingStatusImage($array['products_shippingtime']);
+      $shipping_status_link = $main->getShippingStatusName($array['products_shippingtime'], true);      
     }
     
     //get products image, imageinfo array
@@ -412,39 +458,52 @@ class product {
       list($width, $height, $type, $img_attr) = getimagesize($p_img);
     }
 
+    // exclude some variables
+    if (isset($array['products_date_available']) && $array['products_date_available'] < date('Y-m-d H:i:s')) {
+      unset($array['products_date_available']);
+    }
+
     //products data array
     $productData = array();
     foreach((array)$array as $key => $entry) {                  
       $productData[strtoupper($key)] = $entry;
     }
-
+    
     $productDataAdds = array (
-        'PRODUCTS_PRICE' => $products_price['formated'],
-        'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
-        'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
-        'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
-        'PRODUCTS_VPE_NAME' => $main->vpe_name,
-        'PRODUCTS_IMAGE' => $products_image,
-        'PRODUCTS_IMAGE_SIZE' => $img_attr,
-        'PRODUCTS_IMAGE_TITLE' => str_replace('"','',$array['products_name']),
-        'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])),
-        'PRODUCTS_TAX_INFO' => $main->getTaxInfo($tax_rate),
-        'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
-        'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
-        'PRODUCTS_SHIPPING_NAME'=>$shipping_status_name,
-        'PRODUCTS_SHIPPING_IMAGE'=>$shipping_status_image,
-        'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0,
-        'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '',
-        'PRODUCTS_BUTTON_DETAILS' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>'
-      );
+      'PRODUCTS_PRICE' => $products_price['formated'],
+      'PRICE_ALLOWED' => (($_SESSION['customers_status']['customers_status_show_price'] != '0') ? 'true' : 'false'),
+      'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
+      'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
+      'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
+      'PRODUCTS_VPE_NAME' => $main->vpe_name,
+      'PRODUCTS_IMAGE' => $products_image,
+      'PRODUCTS_IMAGE_SIZE' => $img_attr,
+      'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']),
+      'PRODUCTS_LINK' => $products_link,
+      'PRODUCTS_TAX_INFO' => $main->getTaxInfo($tax_rate),
+      'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
+      'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
+      'PRODUCTS_SHIPPING_NAME' => $shipping_status_name,
+      'PRODUCTS_SHIPPING_IMAGE' => $shipping_status_image,
+      'PRODUCTS_SHIPPING_NAME_LINK' => $shipping_status_link,
+      'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0,
+      'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '',
+      'PRODUCTS_BUTTON_DETAILS' => '<a href="'.$products_link.'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>',
+      'PRODUCTS_BUTTON_WISHLIST_NOW' => $wishlist_now,
+      'PRODUCTS_LINK_WISHLIST_NOW' => $wishlist_now_link,
+    );
 
     $productData = array_merge($productData,$productDataAdds);                     
 
     foreach((array)$products_price as $key => $entry) {                  
       $productData['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
+      $productData['PRODUCTS_PRICE_ARRAY'][0]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
     }
+    $productData['PRODUCTS_PRICE_ARRAY'][0]['PRICE_ALLOWED'] = $productData['PRICE_ALLOWED'];
 
     //echo '<pre>'.print_r($productData,true).'</pre>';
+    $productData = $this->productModules->buildDataArray($productData,$array,$image);
+    
     return $productData;
   }
 
@@ -468,18 +527,69 @@ class product {
         break;
     }
 
-    if (empty($name)) {
-      //if ($this->useStandardImage == 'true' && $this->standardImage != '') // comment in when "noimage.gif" should be displayed when there is no image defined in the database
-      //  return $path.$this->standardImage; // comment in when "noimage.gif" should be displayed when there is no image defined in the database
-      return $name; // comment out when "noimage.gif" should be displayed when there is no image defined in the database
-    } else {
-      // check if image exists
-      if (!file_exists($path.$name)) {
-        if ($this->useStandardImage == 'true' && $this->standardImage != '') {
-          $name = $this->standardImage;
-        }
+    $returnName = $name;
+    if ($returnName == '' || !is_file($path.$returnName)) {
+      $returnName = '';
+      if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file($path.$this->standardImage)) {
+        $returnName = $this->standardImage;
       }
-      return DIR_WS_BASE.$path.$name;
+    }
+    
+    $returnName = ($returnName != '') ? DIR_WS_BASE.$path.$returnName : '';
+
+    $returnName = $this->productModules->productImage($returnName, $name, $type ,$path);
+    
+    return $returnName;
+  }
+
+  /**
+   * getWishlistNowButton
+   *
+   * @param integer $id
+   * @param string $name
+   * @param boolean $plain
+   * @return string
+   */
+  function getWishlistNowButton($id, $name, $plain = false) {
+    global $PHP_SELF;
+    
+    if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+      $link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=buy_now&wishlist=true&BUYproducts_id='.$id, 'NONSSL');
+      if ($plain === false) {
+        $link = '<a href="'.$link.'">'.xtc_image_submit('button_in_wishlist.gif', $name.' '.TEXT_TO_WISHLIST).'</a>';
+      }
+    
+      return $link;
+    }
+  }
+
+  /**
+   * getWishlistToCartButton
+   *
+   * @param integer $id
+   * @param string $name
+   * @return string
+   */
+  function getWishlistToCartButton($id, $name, $cart = false) {
+    global $PHP_SELF;
+    
+    if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+      return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=wishlist_cart&BUYproducts_id='.$id, 'NONSSL').'">'.xtc_image_button((($cart == true) ? 'button_in_cart.gif' : 'button_buy_now.gif'), TEXT_BUY.$name.TEXT_NOW).'</a>';
+    }
+  }
+  
+  /**
+   * getCartToWishlistLink
+   *
+   * @param integer $id
+   * @param string $name
+   * @return string
+   */
+  function getCartToWishlistLink($id, $name) {
+    global $PHP_SELF;
+    
+    if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+      return '<a href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=cart_wishlist&BUYproducts_id='.$id, 'NONSSL').'">'.TEXT_TO_WISHLIST.'</a>';
     }
   }
 }

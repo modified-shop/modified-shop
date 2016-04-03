@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: categories.php 3392 2012-08-06 12:45:26Z web28 $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,7 +28,7 @@ define('TABLE_HEADING_CATEGORIES_PRODUCTS', 'Kategorien / Artikel');
 define('TABLE_HEADING_ACTION', 'Aktion');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_STARTPAGE', 'TOP');
-define('TABLE_HEADING_STOCK','Lager Warnung');
+define('TABLE_HEADING_STOCK','Lagerbestand');
 define('TABLE_HEADING_SORT','Sort.');
 define('TABLE_HEADING_EDIT','Edit');
 // BOF - Tomcraft - 2010-04-07 - Added definition for products model
@@ -44,7 +44,8 @@ define('TEXT_MARKED_ELEMENTS','Markierte Elemente');
 define('TEXT_INFORMATIONS','Informationen');
 define('TEXT_INSERT_ELEMENT','Neues Element');
 
-define('TEXT_WARN_MAIN','Haupt');
+define('TEXT_WARN','Bestandswarnung:');
+define('TEXT_WARN_MAIN','Hauptartikel');
 define('TEXT_NEW_PRODUCT', 'Neuer Artikel in &quot;%s&quot;');
 define('TEXT_EDIT_PRODUCT', 'Artikel bearbeiten in &quot;%s&quot;');
 define('TEXT_CATEGORIES', 'Kategorien:');
@@ -52,7 +53,7 @@ define('TEXT_PRODUCTS', 'Produkte:');
 define('TEXT_PRODUCTS_PRICE_INFO', 'Preis:');
 define('TEXT_PRODUCTS_TAX_CLASS', 'Steuerklasse:');
 define('TEXT_PRODUCTS_AVERAGE_RATING', 'Durchschn. Bewertung:');
-define('TEXT_PRODUCTS_QUANTITY_INFO', 'Anzahl:');
+define('TEXT_PRODUCTS_QUANTITY_INFO', 'Lagerbestand:');
 define('TEXT_PRODUCTS_DISCOUNT_ALLOWED_INFO', 'Maximal erlaubter Rabatt:');
 define('TEXT_DATE_ADDED', 'Hinzugef&uuml;gt am:');
 define('TEXT_DATE_AVAILABLE', 'Erscheinungsdatum:');
@@ -120,22 +121,22 @@ define('TEXT_PRODUCT_AVAILABLE', 'Aktiviert');
 define('TEXT_PRODUCT_NOT_AVAILABLE', 'Deaktiviert');
 // EOF - Hetfield - 2010-01-28 - Changing product available in correctly names for status
 define('TEXT_PRODUCTS_MANUFACTURER', 'Artikelhersteller:');
-define('TEXT_PRODUCTS_MANUFACTURER_MODEL', 'Hersteller Art.Nr.(HAN):');
+define('TEXT_PRODUCTS_MANUFACTURER_MODEL', 'Hersteller Art.-Nr. (HAN/MPN):');
 define('TEXT_PRODUCTS_NAME', 'Artikelname:');
 define('TEXT_PRODUCTS_DESCRIPTION', 'Artikelbeschreibung:');
-define('TEXT_PRODUCTS_QUANTITY', 'Artikelanzahl:');
+define('TEXT_PRODUCTS_QUANTITY', 'Lagerbestand:');
 define('TEXT_PRODUCTS_MODEL', 'Artikel-Nr.:');
 define('TEXT_PRODUCTS_IMAGE', 'Artikelbild:');
 define('TEXT_PRODUCTS_URL', 'Herstellerlink:');
 define('TEXT_PRODUCTS_URL_WITHOUT_HTTP', '<small>(ohne f&uuml;hrendes http://)</small>');
 define('TEXT_PRODUCTS_PRICE', 'Artikelpreis:');
 define('TEXT_PRODUCTS_WEIGHT', 'Artikelgewicht:');
-define('TEXT_PRODUCTS_EAN','Barcode/EAN');
+define('TEXT_PRODUCTS_EAN','GTIN/EAN');
 define('TEXT_PRODUCT_LINKED_TO','Verlinkt in:');
 define('TEXT_DELETE', 'L&ouml;schen');
 define('EMPTY_CATEGORY', 'Leere Kategorie');
 
-define('TEXT_HOW_TO_COPY', 'Kopiermethode:');
+define('TEXT_HOW_TO_COPY', 'Kopiermethode f&uuml;r Artikel:');
 define('TEXT_COPY_AS_LINK', 'Verlinken');
 define('TEXT_COPY_AS_DUPLICATE', 'Duplizieren');
 
@@ -188,7 +189,8 @@ define('TEXT_PRODUCTS_VPE','VPE');
 define('TEXT_PRODUCTS_VPE_VISIBLE','Anzeige VPE:');
 define('TEXT_PRODUCTS_VPE_VALUE',' Wert:');
 
-define('CROSS_SELLING','Cross Selling f&uuml;r Artikel');
+define('CROSS_SELLING_1','Cross Selling');
+define('CROSS_SELLING_2','f&uuml;r Artikel');
 define('CROSS_SELLING_SEARCH','Produktsuche:<br/><small><i>Artikelnr. eingeben</i></small>');
 define('BUTTON_EDIT_CROSS_SELLING','Cross Selling');
 define('HEADING_DEL','L&ouml;schen');
@@ -217,7 +219,6 @@ define('TEXT_ATTRIBUTE_COPY_INFO', 'Artikelattribute mitkopieren<br/ >Nur bei Ei
 
 define('TEXT_PRODUCTS_ORDER_DESCRIPTION','Bestellbeschreibung - Anzeige am Ende der Bestellung, in Bestellemail, Bestellausdruck');
 
-// web28 - redirect to product input mask
 define('TEXT_HOW_TO_LINK', '<b>Seitenaufruf nach dem Kopieren/Verlinken</b>');
 define('TEXT_HOW_TO_LINK_INFO', 'Artikeleingabemaske<br/ >(Bei mehreren Artikel zum Letzten in der Liste)');
 
@@ -231,4 +232,26 @@ define('TEXT_CONTENT_COPY_INFO', 'Artikel-Content mitkopieren<br/ >Nur bei Einze
 define('TEXT_LINKS_COPY', 'Artikel-Verlinkungen mitkopieren');
 define('TEXT_LINKS_COPY_INFO', 'Artikel-Verlinkungen mitkopieren<br/ >Nur bei Einzelkopie (1 Artikel) empfohlen');
 // EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
+
+define('TEXT_GRADUATED_PRICES_INFO', 'Die Anzahl der Eingabefelder f&uuml;r die Staffelpreise kann unter "<b>Konfiguration - Adminbereich Optionen - Anzahl Staffelpreise</b>" angepasst werden.');
+define('TEXT_CATEGORY_SETTINGS', 'Kategorie Einstellungen:');
+
+define('ERROR_QTY_SAVE_CHANGED', 'W&auml;hrend der Bearbeitung des Artikels wurde der Lagerbestand ver&auml;ndert und wurde nicht gespeichert.');
+
+define('TEXT_NO_MOVE_POSSIBLE', 'Artikel kann nicht verschoben werden.');
+
+define('TEXT_IN', 'in:');
+
+define('TEXT_PRODUCTS_ATTRIBUTES_RECALCULATE', 'Attribute beim &Auml;ndern des Steuersatzes neu berechnen');
+
+define('HEADING_TITLE_CAT_BREADCRUMB', ' in &quot;%s&quot;');
+
+define('TEXT_PRODUCTS_TAGS', 'Artikeleigenschaften');
+
+define('TEXT_GRADUATED_PRICES_GROUP_INFO', 'Die Kundengruppe hat derzeit keine Berechtigungen Staffelpreise zu sehen. Dies kann in den Kundengruppen-Einstellungen jederzeit ge&auml;ndert werden.');
+
+define('TEXT_NO_FILE', 'Keine Vorlagen-Datei vorhanden!');
+
+define('ERROR_COPY_METHOD_NOT_SPECIFIED', 'Kopiermethode nicht angegeben.');
+define('ERROR_COPY_METHOD_NOT_ALLOWED', 'Kopiermethode "Verlinken" nicht erlaubt bei Kategorien.');
 ?>

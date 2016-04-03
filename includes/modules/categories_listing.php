@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: categories_listing.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -12,11 +12,7 @@
 
 $categorie_smarty = new Smarty;
 $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLATE.'/');
-  
-  $group_check='';
-  if (GROUP_CHECK == 'true') {
-    $group_check = "and c.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-  }
+
   if (isset ($cPath) && preg_match('/_/', $cPath)) { 
     $category_links = array_reverse($cPath_array);
     $categories_query = "SELECT cd.categories_description,
@@ -26,11 +22,13 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
                                 c.categories_image,
                                 c.parent_id 
                            FROM ".TABLE_CATEGORIES." c
-                           JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd ON c.categories_id = cd.categories_id
+                           JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                ON c.categories_id = cd.categories_id
+                                   AND trim(cd.categories_name) != ''
                           WHERE c.categories_status = '1'
-                            AND c.parent_id = '".$category_links[0]."'
+                            AND c.parent_id = '".(int)$category_links[0]."'
                             AND cd.language_id = '".(int) $_SESSION['languages_id']."'
-                                ".$group_check."
+                            " . CATEGORIES_CONDITIONS_C . "
                        ORDER BY sort_order, cd.categories_name";
     $categories_query = xtDBquery($categories_query); 
   } else {
@@ -41,12 +39,14 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
                                 c.categories_image,
                                 c.parent_id
                            FROM ".TABLE_CATEGORIES." c
-                           JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd ON c.categories_id = cd.categories_id
+                           JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                ON c.categories_id = cd.categories_id
+                                   AND trim(cd.categories_name) != ''
                           WHERE c.categories_status = '1'
-                            AND c.parent_id = '".$current_category_id."'
+                            AND c.parent_id = '".(int)$current_category_id."'
                             AND c.parent_id <> '0'
                             AND cd.language_id = '".(int) $_SESSION['languages_id']."'
-                                ".$group_check."
+                            " . CATEGORIES_CONDITIONS_C . "
                          ORDER BY sort_order, cd.categories_name";
     $categories_query = xtDBquery($categories_query);
   }
@@ -60,14 +60,20 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
       $cPath_new = xtc_category_link($categories['categories_id'],$categories['categories_name']);
 
       $image = '';
-      if ($categories['categories_image'] != '') {
+       if ($categories['categories_image'] != '') {
         $image = DIR_WS_IMAGES.'categories/'.$categories['categories_image'];
+        if (!file_exists(DIR_FS_CATALOG.$image)) {
+          if (CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') {
+            $image = DIR_WS_IMAGES.'categories/noimage.gif';
+          } else {
+            $image = '';
+          }
+        }
       }
-      if(!file_exists($image)) $image = DIR_WS_IMAGES.'categories/noimage.gif';
       
       $categories_content[] = array ('CATEGORIES_NAME' => $categories['categories_name'], 
                                      'CATEGORIES_HEADING_TITLE' => $categories['categories_heading_title'],
-                                     'CATEGORIES_IMAGE' => DIR_WS_BASE . $image,
+                                     'CATEGORIES_IMAGE' => (($image != '') ? DIR_WS_BASE . $image : ''),
                                      'CATEGORIES_LINK' => xtc_href_link(FILENAME_DEFAULT, $cPath_new), 
                                      'CATEGORIES_DESCRIPTION' => $categories['categories_description']);
     }  

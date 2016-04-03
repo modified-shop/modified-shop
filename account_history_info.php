@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: account_history_info.php 3970 2012-11-16 12:30:38Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -17,34 +17,52 @@
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
+
 // create smarty elements
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 // include needed functions
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
 require_once (DIR_FS_INC.'xtc_display_tax_value.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
+require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 
 //security checks
-// BOC added query string order_id to login.php to be able to redirect to account_history_info after login for link in change_order_mail, noRiddle
-//if (!isset ($_SESSION['customer_id'])) { xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL')); }
-if (!isset ($_SESSION['customer_id'])) { xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'order_id=' .(int)$_GET['order_id'], 'SSL')); }
-// EOC added query string order_id to login.php, noRiddle
+if (!isset ($_SESSION['customer_id'])) { 
+  xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'order_id=' .(int)$_GET['order_id'], 'SSL')); 
+}
+
+if (isset($_SESSION['customer_id']) 
+    && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+    && GUEST_ACCOUNT_EDIT != 'true'
+    )
+{ 
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
+}
+
 if (!isset ($_GET['order_id']) || (isset ($_GET['order_id']) && !is_numeric($_GET['order_id']))) {
    xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
 }
-$customer_info_query = xtc_db_query("select customers_id from ".TABLE_ORDERS." where orders_id = '".(int)$_GET['order_id']."'");
+
+$customer_info_query = xtc_db_query("SELECT customers_id 
+                                       FROM ".TABLE_ORDERS." 
+                                      WHERE orders_id = '".(int)$_GET['order_id']."'");
 $customer_info = xtc_db_fetch_array($customer_info_query);
-if ($customer_info['customers_id'] != $_SESSION['customer_id']) { xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL')); }
+if ($customer_info['customers_id'] != $_SESSION['customer_id']) { 
+  xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL')); 
+}
+
+require (DIR_WS_CLASSES.'order.php');
+$order = new order((int)$_GET['order_id']);
 
 $breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_HISTORY_INFO, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_HISTORY_INFO, xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
 $breadcrumb->add(sprintf(NAVBAR_TITLE_3_ACCOUNT_HISTORY_INFO, (int)$_GET['order_id']), xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.(int)$_GET['order_id'], 'SSL'));
 
-require (DIR_WS_CLASSES.'order.php');
-$order = new order((int)$_GET['order_id']);
 require (DIR_WS_INCLUDES.'header.php');
 
 // Delivery Info
@@ -64,19 +82,28 @@ if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'n
   $smarty->assign('PAYMENT_METHOD', constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_TITLE'));
 }
 
-//BOF  - web28 - 2010-03-27 PayPal Bezahl-Link
-if ($order->info['payment_method'] == 'paypal_ipn' && MODULE_PAYMENT_PAYPAL_IPN_USE_ACCOUNT == 'True') {
-  $order_id = $order->info['order_id'];
-  $paypal_link = array();
-  require (DIR_WS_CLASSES.'payment.php');
-  $payment_modules = new payment('paypal_ipn');
-  $payment_modules->create_paypal_link();
-  $smarty->assign('PAYPAL_LINK', $paypal_link['html']);
+## PayPal
+if ($order->info['payment_method'] == 'paypallink'
+    || $order->info['payment_method'] == 'paypalpluslink'
+    ) 
+{
+  require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
+  $paypal = new PayPalPayment($order->info['payment_method']);
+  
+  if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_USE_ACCOUNT') == 1) {
+    $button = $paypal->create_paypal_link($order->info['order_id']);
+    if ($button != '') {
+      $smarty->assign('PAYPAL_LINK', sprintf(constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_SUCCESS'), $button));
+    }
+    
+    if ($messageStack->size($order->info['payment_method']) > 0) {
+      $smarty->assign('info_message', $messageStack->output($order->info['payment_method']));
+    }    
+  }
 }
-//EOF  - web28 - 2010-03-27 PayPal Bezahl-Link
 
 // Order History
-$history_block = ''; //DokuMan - 2010-09-18 - set undefined variable
+$history_block = '';
 $statuses_query = xtc_db_query("-- /account_history_info.php
                                 SELECT os.orders_status_name,
                                        osh.date_added,
@@ -90,50 +117,39 @@ $statuses_query = xtc_db_query("-- /account_history_info.php
                                   AND os.language_id = '".(int) $_SESSION['languages_id']."'
                                 ORDER BY osh.date_added");
 while ($statuses = xtc_db_fetch_array($statuses_query)) {
-  $history_block .= xtc_date_short($statuses['date_added']). '&nbsp;<strong>' .$statuses['orders_status_name']. '</strong>&nbsp;' . (empty ($statuses['comments']) || empty($statuses['comments_sent']) ? '&nbsp;' : nl2br(htmlspecialchars($statuses['comments']))) .'<br />';
+  $history_block .= xtc_date_short($statuses['date_added']). '&nbsp;<strong>' .$statuses['orders_status_name']. '</strong>&nbsp;' . (empty ($statuses['comments']) || empty($statuses['comments_sent']) ? '&nbsp;' : nl2br(encode_htmlspecialchars($statuses['comments']))) .'<br />';
 }
 $smarty->assign('HISTORY_BLOCK', $history_block);
 
-// BOF - DokuMan - 2012-11-15 - Track & Trace functionality (show tracking numbers in customer account)
-// Order Tracking
-$tracking_block = '';
-$tracking_links_query = xtc_db_query("-- /account_history_info.php
-                                     SELECT ortra.ortra_id,
-                                            ortra.ortra_parcel_id,
-                                            carriers.carrier_name,
-                                            carriers.carrier_tracking_link
-                                       FROM ".TABLE_ORDERS_TRACKING." ortra, 
-                                            ".TABLE_CARRIERS ." carriers
-                                      WHERE ortra_order_id = '".$order->info['order_id']."'
-                                        AND ortra.ortra_carrier_id = carriers.carrier_id");
-if (xtc_db_num_rows($tracking_links_query)) {
-  //$parcel_count = xtc_db_num_rows($tracking_links_query);
-  while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
-    $tracking_block .= $tracking_link['carrier_name'].': <a href="'.str_replace('$1',$tracking_link['ortra_parcel_id'],$tracking_link['carrier_tracking_link']).'" target="_blank">'.$tracking_link['ortra_parcel_id'].'</a><br />';
-  }
-}
-$smarty->assign('TRACKING_BLOCK', $tracking_block);
-// EOF - DokuMan - 2012-11-15 - Track & Trace functionality (show tracking numbers in customer account)
-
 // Download-Products
-if (DOWNLOAD_ENABLED == 'true') include (DIR_WS_MODULES.'downloads.php');
+if (DOWNLOAD_ENABLED == 'true') {
+  include (DIR_WS_MODULES.'downloads.php');
+}
 
-// Stuff
-$smarty->assign('ORDER_NUMBER', $order->info['order_id']); //DokuMan - 2011-08-31 - fix order_id assignment
-
+$smarty->assign('BUTTON_CART', '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'action=add_order&order_id='.$order->info['order_id'], 'SSL').'">'.xtc_image_button('button_in_cart.gif', IMAGE_BUTTON_IN_CART).'</a>');
+$smarty->assign('ORDER_TRACKING', get_tracking_link($order->info['order_id'], $_SESSION['language_code']));
+$smarty->assign('ORDER_NUMBER', $order->info['order_id']);
 $smarty->assign('ORDER_DATE', xtc_date_long($order->info['date_purchased']));
 $smarty->assign('ORDER_STATUS', $order->info['orders_status']);
 $smarty->assign('BILLING_LABEL', xtc_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'));
-$smarty->assign('PRODUCTS_EDIT', xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL')); // web28 - 2011-04-14 - change SSL -> NONSSL
+$smarty->assign('PRODUCTS_EDIT', xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
 $smarty->assign('SHIPPING_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
 $smarty->assign('BILLING_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'));
-$smarty->assign('BUTTON_PRINT', xtc_image_button('button_print.gif', TEXT_PRINT, 'style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$_GET['order_id']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,  '.POPUP_PRINT_ORDER_SIZE.'\')"'));
+$smarty->assign('BUTTON_PRINT', xtc_image_button('button_print.gif', TEXT_PRINT, 'style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$_GET['order_id'], 'SSL').'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,  '.(defined('TPL_POPUP_PRODUCT_PRINT_SIZE') ? TPL_POPUP_PRODUCT_PRINT_SIZE : POPUP_PRINT_ORDER_SIZE).'\')"'));
+$smarty->assign('BUTTON_PRINT_LAYER', '<a class="iframe" target="_blank" rel="nofollow" href="'.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$_GET['order_id'], 'SSL'). '" title="'.TEXT_PRINT.'" />'. xtc_image_button('button_print.gif', TEXT_PRINT) .'</a>');
 
-$from_history = preg_match("/page=/i", xtc_get_all_get_params()); // referer from account_history yes/no // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
-$back_to = $from_history ? FILENAME_ACCOUNT_HISTORY : FILENAME_ACCOUNT; // if from account_history => return to account_history
+if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+  $smarty->assign('BUTTON_CART_EXPRESS', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&express=on&order_id='.$order->info['order_id'], 'SSL').'">'.xtc_image_button('button_checkout_express.gif', IMAGE_BUTTON_IN_CART).'</a>');
+}
+
+$from_history = preg_match("/page=/i", xtc_get_all_get_params());
+$back_to = $from_history ? FILENAME_ACCOUNT_HISTORY : FILENAME_ACCOUNT;
 $smarty->assign('BUTTON_BACK','<a href="' . xtc_href_link($back_to,xtc_get_all_get_params(array ('order_id')), 'SSL') . '">' . xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK) . '</a>');
 $smarty->assign('language', $_SESSION['language']);
+
+$smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/account_history_info.html');
+
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))

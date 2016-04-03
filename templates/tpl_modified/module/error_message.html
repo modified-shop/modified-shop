@@ -1,0 +1,14 @@
+{config_load file="$language/lang_$language.conf" section="error_handler"}
+{config_load file="lang_`$language`.custom"}
+<h1>{$ERROR}</h1>
+<p>{#text_search_again#}<br />{#text_search_advanced1#} <a href="{$LINK_ADVANCED}">{#text_search_advanced2#}</a> {#text_search_advanced3#}</p>
+
+{$FORM_ACTION}
+<div class="highlightbox cf"> 
+  <span class="hb_box_text">{#text_search#}</span>    
+  <span class="hb_box_input">{$INPUT_SEARCH}</span>    
+  <span class="hb_box_button">{$BUTTON_SUBMIT}</span>    
+</div>
+{$FORM_END}
+<div class="button_left">{$BUTTON}</div>
+<br class="clearfix" />

@@ -39,14 +39,16 @@
       <td>{#text_company#}</td>
       <td width="59%">{$INPUT_COMPANY}</td>
     </tr>
-    <tr>
-      <td>{#text_sec_code#}</td>
-      <td>{$VVIMG}</td>
-    </tr>
-    <tr>
-      <td>{#text_inp_code#}*</td>
-      <td width="59%">{$INPUT_CODE}</td>
-    </tr>
+    {if $INPUT_CODE}
+      <tr>
+        <td>{#text_sec_code#}</td>
+        <td>{$VVIMG}</td>
+      </tr>
+      <tr>
+        <td>{#text_inp_code#}*</td>
+        <td width="59%">{$INPUT_CODE}</td>
+      </tr>
+    {/if}
     <tr>
       <td valign="top">{#text_message#}*</td>
       <td width="59%">{$INPUT_TEXT}</td>

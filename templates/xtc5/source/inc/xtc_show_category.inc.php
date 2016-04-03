@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_show_category.inc.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -75,20 +75,5 @@
       if ($level > 1) $categories_string .= close_ul_tags(1,$level);
       return;
     }
-  }
-
-  //Alle offenen UL LI Tags schlieﬂen
-  function close_ul_tags($level, $oldlevel) {
-    $count = 1;
-    $ul = '';
-    while($count <= $oldlevel - $level) { //f¸r jede Ebene die UL LI Tags schlieﬂen
-      $tab_end = '';
-      for ($i = 1; $i <= $oldlevel - $count; $i++) {
-        $tab_end .= "\t";
-      }      
-      $ul .=  $tab_end . "\t". '</ul>'. "\n". $tab_end . '</li>'. "\n";      
-      $count++;
-    }
-    return $ul;
   }
 ?>

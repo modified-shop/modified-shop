@@ -1,0 +1,86 @@
+{config_load file="$language/lang_$language.conf" section="checkout_payment"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+{config_load file="lang_`$language`.custom"}
+{literal}
+<noscript>
+<style type="text/css">
+  .nonjs-fallback {display:none !important;}
+  .nonjs-heading {margin:10px 0px 5px 0px; font-weight:bold;}
+  .nonjs-h4 {margin:10px 0px 10px 0px;}
+</style>
+</noscript>
+{/literal}
+
+<ul id="checkoutnavigation" class="cf">
+  <li class="inactive"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></li>
+  <li class="active"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></li>
+  <li class="inactive"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></li>
+  <li class="inactive last"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></li>
+</ul>
+
+<h1 class="checkout">{#heading_payment#}</h1>
+{if $error != ''}<div class="errormessage">{$error}</div>{/if}
+
+{$FORM_ACTION}
+<div class="twoColums">
+  <div class="highlightbox">
+    <h4 class="checkout">{#title_payment#}</h4>
+    <p>{#text_payment#}</p>
+    {if $GV_COVER != 'true'}
+      {$PAYMENT_BLOCK}{$module_gift}
+    {else}
+      <div class="infomessage" id="gccover"><b>{#text_gccover#}</b></div>
+    {/if}
+  </div>
+</div>
+
+<div class="twoColums last">
+  {if $step2 != 'true'}
+  <div class="highlightbox">
+    <h4 class="checkout">{#title_address#}</h4>
+    <p class="cf"><span class="checkout_button_right">{$BUTTON_ADDRESS}</span>{$ADDRESS_LABEL}</p>
+  </div>
+  {/if}
+
+  {if $step2 != 'true'}
+  <br />
+  <div class="highlightbox">
+    {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
+      <div id="horizontalTab">
+        <ul class="resp-tabs-list nonjs-fallback">
+          <li>{#title_comments_short#}</li>
+          <li>{#title_agb#}</li>
+        </ul>
+        <div class="resp-tabs-container">
+          <noscript><h4 class="nonjs-h4">{#title_comments_short#}</h4></noscript>
+          <div class="checkoutcomment">{$COMMENTS}</div>
+          <div>
+            <noscript><h4 class="nonjs-h4">{#title_agb#}</h4></noscript>
+            <div class="checkoutagb">{$AGB}</div>
+          </div>
+        </div>
+      </div>
+      <div class="checkoutconditions">
+        {$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}
+      </div>
+      {if isset($REVOCATION_checkbox)}
+        <div class="checkoutconditions">
+          {$REVOCATION_checkbox} <strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}
+        </div>
+      {/if}
+    {else}
+      <h4 class="checkout">{#title_comments_short#}</h4>
+      <div class="checkoutcomment">{$COMMENTS}</div>
+      {if isset($REVOCATION_checkbox)}
+        <div class="checkoutconditions">
+          {$REVOCATION_checkbox} <strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}
+        </div>
+      {/if}
+    {/if}
+  </div>
+  {/if}
+
+</div>
+<br class="clearfix" />
+<div class="button_right">{$BUTTON_CONTINUE}</div>
+{$FORM_END}

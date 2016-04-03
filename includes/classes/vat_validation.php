@@ -9,28 +9,38 @@
    --------------------------------------------------------------
    based on:
    (c) 2012 Gambio GmbH - vat_validation.php 2012-05-10 gm
-   (c) 2010 xtcModified - community made shopping  http://www.xtc-modified.org ($Id$)
    (c) 2005 xtc_validate_vatid_status.inc.php 899 2005-04-29
    (c) 2003 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id$)
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-require_once(DIR_FS_CATALOG . 'includes/classes/nusoap/lib/nusoap.php');
+// include needed functions
+include_once(DIR_FS_INC . 'xtc_get_countries.inc.php');
+
+require_once(DIR_FS_EXTERNAL . 'nusoap/nusoap.php');
 
 define ('VAT_LIVE_CHECK_URL', 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl');
 
 class vat_validation {
-  var $vat_info;
+  var $vat_info, $vat_errors;
 
-  function vat_validation($vat_id = '', $customers_id = '', $customers_status = '', $country_id = '', $guest = false) {
-    $vat_id = str_replace(' ', '', $vat_id); //Leerzeichen entfernen
+  function __construct($vat_id = '', $customers_id = '', $customers_status = '', $country_id = '', $guest = false) {
+
+    $vat_id = str_replace(' ', '', $vat_id);
     $this->vat_info = array ();
+    $this->vat_errors = array(
+      'INVALID_INPUT'       => '94',
+      'SERVICE_UNAVAILABLE' => '95',
+      'MS_UNAVAILABLE'      => '96',
+      'TIMEOUT'             => '97',
+      'SERVER_BUSY'         => '98',
+      );
     $this->live_check = ACCOUNT_COMPANY_VAT_LIVE_CHECK;
     if (xtc_not_null($vat_id)) {
       $this->getInfo($vat_id, $customers_id, $customers_status, $country_id, $guest);
     } else {
-      if ($guest) {
+      if ($guest === true) {
         $this->vat_info = array ('status' => DEFAULT_CUSTOMERS_STATUS_ID_GUEST);
       } else {
         $this->vat_info = array ('status' => DEFAULT_CUSTOMERS_STATUS_ID);
@@ -38,186 +48,108 @@ class vat_validation {
     }
   }
 
+
   function getInfo($vat_id = '', $customers_id = '', $customers_status = '', $country_id = '', $guest = false) {
+    
+    $customers_status_id = DEFAULT_CUSTOMERS_STATUS_ID;
+    $customers_vat_status_id = DEFAULT_CUSTOMERS_VAT_STATUS_ID;
+    $customers_vat_status_id_local = DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL;
 
-    if (!$guest) {
-      if ($vat_id) {
-        $validate_vatid = $this->validate_vatid($vat_id);
-
-        switch ($validate_vatid) {
-
-          case '0' :
-            if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
-              $error = true;
-            }
-            $status = DEFAULT_CUSTOMERS_STATUS_ID;
-            $vat_id_status = '0';
-            break;
-
-          case '1' :
-            if ($country_id == STORE_COUNTRY) {
-              if (ACCOUNT_COMPANY_VAT_GROUP == 'true') {
-                $status = DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL;
-              } else {
-                $status = DEFAULT_CUSTOMERS_STATUS_ID;
-              }
-            } else {
-              if (ACCOUNT_COMPANY_VAT_GROUP == 'true') {
-                $status = DEFAULT_CUSTOMERS_VAT_STATUS_ID;
-              } else {
-                $status = DEFAULT_CUSTOMERS_STATUS_ID;
-              }
-            }
-            $error = false;
-            $vat_id_status = '1';
-            break;
-
-          case '8' :
-            if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
-              $error = true;
-            }
-            $status = DEFAULT_CUSTOMERS_STATUS_ID;
-            $vat_id_status = '8';
-            break;
-
-          case '9' :
-            if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
-              $error = true;
-            }
-            $status = DEFAULT_CUSTOMERS_STATUS_ID;
-            $vat_id_status = '9';
-            break;
-
-          case '99' :
-          case '98' :
-          case '97' :
-          case '96' :
-          case '95' :
-          case '94' :
-            if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
+    if ($guest === true) {
+      $customers_status_id = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
+    }
+    
+    if ($vat_id != '') {
+      $validate_vatid = $this->validate_vatid($vat_id, $country_id);
+      switch ($validate_vatid) {
+        case '0' :
+          if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
             $error = true;
-            }
-            $status = DEFAULT_CUSTOMERS_STATUS_ID;
-            $vat_id_status = $validate_vatid;
-            break;
-
-          default :
-            $status = DEFAULT_CUSTOMERS_STATUS_ID;
-
-        }
-
-      } else {
-        if ($customers_status) {
-          $status = $customers_status;
-        } else {
-          $status = DEFAULT_CUSTOMERS_STATUS_ID;
-        }
-        $vat_id_status = '';
-        $error = false;
-      }
-
-    } else {
-      if ($vat_id) {
-        $validate_vatid = $this->validate_vatid($vat_id);
-
-        switch ($validate_vatid) {
-
-          case '0' :
-            if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
-              $error = true;
-            }
-            $status = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
-            $vat_id_status = '0';
-            break;
-
-          case '1' :
-            if ($country_id == STORE_COUNTRY) {
-              if (ACCOUNT_COMPANY_VAT_GROUP == 'true') {
-                $status = DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL;
-              } else {
-                $status = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
-              }
+          }
+          $status = $customers_status_id;
+          $vat_id_status = $validate_vatid;
+          break;
+        case '1' :
+          if ($country_id == STORE_COUNTRY) {
+            if (ACCOUNT_COMPANY_VAT_GROUP == 'true') {
+              $status = $customers_vat_status_id_local;
             } else {
-              if (ACCOUNT_COMPANY_VAT_GROUP == 'true') {
-                $status = DEFAULT_CUSTOMERS_VAT_STATUS_ID;
-              } else {
-                $status = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
-              }
+              $status = $customers_status_id;
             }
-            $error = false;
-            $vat_id_status = '1';
-            break;
-
-          case '8' :
-            if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
-              $error = true;
+          } else {
+            if (ACCOUNT_COMPANY_VAT_GROUP == 'true') {
+              $status = $customers_vat_status_id;
+            } else {
+              $status = $customers_status_id;
             }
-            $status = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
-            $vat_id_status = '8';
-
-            break;
-
-          case '9' :
-            if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
-              $error = true;
-            }
-            $status = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
-            $vat_id_status = '9';
-            break;
-
-          case '99' :
-          case '98' :
-          case '97' :
-          case '96' :
-          case '95' :
-          case '94' :
-            if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
+          }
+          $error = false;
+          $vat_id_status = $validate_vatid;
+          break;
+        case '8' :
+          if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
             $error = true;
-            }
-            $status = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
-            $vat_id_status = $validate_vatid;
-            break;
-
-          default :
-            $status = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
-
-        }
-
-      } else {
-        if ($customers_status) {
-          $status = $customers_status;
-        } else {
-          $status = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
-        }
-        $vat_id_status = '';
-        $error = false;
+          }
+          $status = $customers_status_id;
+          $vat_id_status = $validate_vatid;
+          break;
+        case '9' :
+          if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
+            $error = true;
+          }
+          $status = $customers_status_id;
+          $vat_id_status = $validate_vatid;
+          break;
+        case '99' :
+        case '98' :
+        case '97' :
+        case '96' :
+        case '95' :
+        case '94' :
+          if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
+            $error = true;
+          }
+          $status = $customers_status_id;
+          $vat_id_status = $validate_vatid;
+          break;
+        default :
+          $status = $customers_status_id;
+          break;
       }
     }
-
-    if ($customers_id) {
-      $customers_status_query = xtc_db_query("SELECT customers_status FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$customers_id."'");
+    
+    // check if is admin
+    if ($customers_id != '') {
+      $customers_status_query = xtc_db_query("SELECT customers_status 
+                                                FROM ".TABLE_CUSTOMERS." 
+                                               WHERE customers_id = '".(int)$customers_id."'");
       $customers_status_value = xtc_db_fetch_array($customers_status_query);
-
-      if ($customers_status_value['customers_status'] != 0) {
-        $status = $status;
-      } else {
-        $status = $customers_status_value['customers_status'];
+      if ($customers_status_value['customers_status'] == '0') {
+        $status = '0';
       }
     }
 
-    $this->vat_info = array ('status' => $status, 'vat_id_status' => $vat_id_status, 'error' => $error, 'validate' => $validate_vatid);
-
+    $this->vat_info = array ('status' => $status, 
+                             'vat_id_status' => $vat_id_status, 
+                             'error' => $error, 
+                             'validate' => $validate_vatid);
   }
 
 
-  //BOF - DokuMan - 2011-08-24 - check UstID live via SOAP at http://ec.europa.eu
-  function validate_vatid($vat_id) {
+  function validate_vatid($vat_id, $country_id) {
 
+    // remove special chars
     $remove = array (' ', '-', '/', '\\', '.', ':', ',');
+    $vat_id = trim(chop($vat_id));
+    $vat_id = str_replace($remove, '', $vat_id);
+    
+    $vatNumber = substr($vat_id, 2);
+    $country = strtolower(substr($vat_id, 0, 2));
+        
     // 0 = 'invalid'
     // 1 = 'valid'
     // 8 = 'unknown country'
-    // 9 => 'unknown algorithm'
+    // 9 = 'unknown algorithm'
     //94 = 'INVALID_INPUT'       => 'The provided CountryCode is invalid or the VAT number is empty',
     //95 = 'SERVICE_UNAVAILABLE' => 'The SOAP service is unavailable, try again later',
     //96 = 'MS_UNAVAILABLE'      => 'The Member State service is unavailable, try again later or with another Member State',
@@ -225,30 +157,43 @@ class vat_validation {
     //98 = 'SERVER_BUSY'         => 'The service cannot process your request. Try again later.'
     //99 = 'no PHP5 SOAP support'
     $results = array (0 => '0',
-              1 => '1',
-              8 => '8',
-              9 => '9',
-              94 => '94',
-              95 => '95',
-              96 => '96',
-              97 => '97',
-              98 => '98',
-              99 => '99');
-
-    // sonderzeichen entfernen
-    for ($i = 0; $i < count($remove); $i ++) {
-      $vat_id = str_replace($remove[$i], '', $vat_id);
-    } // end for($i = 0; $i < count($remove)); $i++)
-
-    // land bestimmen
-    $country = strtolower(substr($vat_id, 0, 2));
-
-    if($this->live_check == 'true') {
-      $country_iso_code = strtoupper($country);
-
+                      1 => '1',
+                      8 => '8',
+                      9 => '9',
+                      94 => '94',
+                      95 => '95',
+                      96 => '96',
+                      97 => '97',
+                      98 => '98',
+                      99 => '99');
+    
+    // check country 
+    $country_check = xtc_get_countriesList($country_id, true);
+    if ($country_check['countries_iso_code_2'] != strtoupper($country)) {
+      return $results[0];
+    }
+    
+    // check store vatid
+    if (STORE_OWNER_VAT_ID != '') {
+      $vat_id_store_owner = trim(chop(STORE_OWNER_VAT_ID));
+      $vat_id_store_owner = str_replace($remove, '', $vat_id_store_owner);
+      $vat_id_store_owner = substr($vat_id_store_owner, 2);
+      if ($vat_id_store_owner == $vatNumber) {
+        return $results[0];
+      }
+    }
+    
+    // fix for Greece
+    $search_array = array('gr');
+    $replace_array = array('el');
+    $country = str_replace($search_array, $replace_array, $country);
+    
+    $country_iso_code = strtoupper($country);
+    
+    if ($this->live_check == 'true') {
+      
       //Check VAT for EU countries only
       switch ($country_iso_code) {
-      // EU countries
         case 'AT':
         case 'BE':
         case 'BG':
@@ -257,13 +202,13 @@ class vat_validation {
         case 'DE':
         case 'DK':
         case 'EE':
-        case 'EL': //Griechenland
+        case 'EL':
         case 'ES':
         case 'FI':
         case 'FR':
         case 'GB':
         case 'HU':
-        case 'HR': //Kroatien
+        case 'HR':
         case 'IE':
         case 'IT':
         case 'LT':
@@ -277,82 +222,89 @@ class vat_validation {
         case 'SE':
         case 'SI':
         case 'SK':
-          $t_result = $this->checkVatID_EU($vat_id, $country_iso_code);
+          $t_result = $this->checkVatID_EU($vatNumber, $country_iso_code);
           break;
         default:
           $t_result = 8; //unknown country
+          break;
       }
     } else {
-      $vat_id = trim(chop($vat_id));
-      $t_result = $this->gm_validate_vatid($country, $vat_id);
+      switch ($country_iso_code) {
+        case 'BE':
+          // fix for old vat_id
+          if (strlen($vatNumber) == 9) {
+            $vatNumber = str_pad($vatNumber, 10, '0', STR_PAD_LEFT);
+          }
+          break;
+      }
+      $vat_id = $country_iso_code . $vatNumber;
+      $t_result = $this->validate_vatid_offline($country, $vat_id);
     }
 
     return $results[$t_result];
   }
+  
+  
+  function checkVatID_EU($vatNumber, $country_iso_code) {
 
-  function checkVatID_EU($vat_id, $country_id) {
+    $params = array('countryCode' => $country_iso_code, 
+                    'vatNumber' => $vatNumber);
 
-    // Leerzeichen und sonderzeichen entfernen
-    $remove = array (' ', '-', '/', '\\', '.', ':', ',');
-    $vat_id = trim(chop($vat_id));
-    $vat_id = str_replace($remove, '', $vat_id );
-    $vatNumber = substr($vat_id, 2); // alles ab 2 Stellen der VAT (ohne Land)
-
-    $coo_soap_client = new nusoap_client(VAT_LIVE_CHECK_URL, true);
-    $coo_soap_proxy = $coo_soap_client->getProxy();
+    $soap_client = new nusoap_client(VAT_LIVE_CHECK_URL, true);
+    $soap_proxy = $soap_client->getProxy();
 
     // check connection
-    if($coo_soap_client->getError() || !is_object($coo_soap_proxy))
-    {
-      $coo_ekomi_log = new FileLog('vat_validation_errors');
-      $coo_ekomi_log->write(date('Y-m-d H:i:s') . " connection to http://ec.europa.eu/ could not be established. " . print_r($coo_soap_client->getError(), true) . "\n");
+    if (!$soap_client->getError() && is_object($soap_proxy)) {
+      $result = $soap_proxy->checkVat($params);
+
+      if (is_array($result) && isset($result['valid']) && $result['valid'] == 'true') {
+        return 1; // VAT-ID is valid
+      } elseif (is_array($result) && isset($result['valid']) && $result['valid'] == 'false') {
+        return $this->_checkVatID_EU($vatNumber, $country_iso_code);
+        return 0; // VAT-ID is NOT valid
+      } elseif (is_array($result) && isset($result['faultstring'])) {
+        return $this->vat_errors[$result['faultstring']];
+      }      
     }
-    else
-    {
-      $params = array('countryCode' => $country_id, 'vatNumber' => $vatNumber);
 
-      $result = $coo_soap_proxy->checkVat($params);
+    return $this->_checkVatID_EU($vatNumber, $country_iso_code);
+  }
 
-      if(is_array($result) && isset($result['valid']) && $result['valid'] == 'true')
-      {
-        return 1; //valid VAT
-      }
-      elseif(is_array($result) && isset($result['valid']) && $result['valid'] == 'false')
-      {
-        return 0; //invalid VAT
-      }
-      elseif(is_array($result) && isset($result['faultstring']))
-      {
-        switch($result['faultstring'])
-        {
-          case 'INVALID_INPUT':
-            $t_error_code = '94';
-            break;
-          case 'SERVICE_UNAVAILABLE':
-            $t_error_code = '95';
-            break;
-          case 'MS_UNAVAILABLE':
-            $t_error_code = '96';
-            break;
-          case 'TIMEOUT':
-            $t_error_code = '97';
-            break;
-          case 'SERVER_BUSY':
-            $t_error_code = '98';
-            break;
+
+  function _checkVatID_EU($vatNumber, $country_iso_code) {
+
+    $params = array('countryCode' => $country_iso_code, 
+                    'vatNumber' => $vatNumber);
+
+    try {
+      $options = array('soap_version' => SOAP_1_1,
+                       'exceptions' => true,
+                       'trace' => 1,
+                       'cache_wsdl' => WSDL_CACHE_NONE,
+                       'user_agent' => 'Mozilla');
+      $client = new SoapClient(VAT_LIVE_CHECK_URL, $options);
+    } catch (Exception $e) {
+      trigger_error('SOAP-Fehler: (Fehlernummer: '. $e->faultcode .', Fehlermeldung: '. $e->faultstring .')', E_USER_ERROR);
+    }
+
+    if ($client) {
+      try {
+        $result = $client->checkVat($params);
+        if ($result->valid == true){
+          return 1;  // VAT-ID is valid
+        } else {
+          return 0;   // VAT-ID is NOT valid
         }
-
-        return $t_error_code;
+      } catch (SoapFault $e) {
+        return $this->vat_errors[$e->faultstring];
       }
-
-      return false;
     }
-
-  } // end checkVatID_EU
-  //EOF - DokuMan - 2011-08-24 - check UstID live via SOAP at http://ec.europa.eu
-
-
-  function gm_validate_vatid($country, $vat_id) {
+    
+    return false;
+  }
+  
+  
+  function validate_vatid_offline($country, $vat_id) {
     switch ($country) {
       default:
         return 8;
@@ -365,7 +317,7 @@ class vat_validation {
 
         $number = substr(str_replace($country, '', strtolower($vat_id)), 1);
 
-        if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($number) == 8 && is_numeric($number)) {
           return 1;
         } else {
           return 0;
@@ -380,7 +332,7 @@ class vat_validation {
 
         $number = str_replace($country, '', strtolower($vat_id));
 
-        if(strlen($number) == 10 && is_numeric($number)) {
+        if (strlen($number) == 10 && is_numeric($number)) {
           return 1;
         } else {
           return 0;
@@ -392,14 +344,14 @@ class vat_validation {
 
         $number = str_replace($country, '', strtolower($vat_id));
 
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
           }
-        } elseif(strlen($vat_id) == 12) {
-          if(strlen($number) == 10 && is_numeric($number)) {
+        } elseif (strlen($vat_id) == 12) {
+          if (strlen($number) == 10 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -419,7 +371,7 @@ class vat_validation {
 
         $number = str_replace($country, '', strtolower($vat_id));
 
-        if(strlen($number) == 9) {
+        if (strlen($number) == 9) {
           return 1;
         } else {
           return 0;
@@ -429,20 +381,20 @@ class vat_validation {
       // tschechische republik
       case 'cz' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
           }
-        } elseif(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        } elseif (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
           }
-        } elseif(strlen($vat_id) == 12) {
-          if(strlen($number) == 10 && is_numeric($number)) {
+        } elseif (strlen($vat_id) == 12) {
+          if (strlen($number) == 10 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -456,8 +408,8 @@ class vat_validation {
       // deutschland
       case 'de' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -471,8 +423,8 @@ class vat_validation {
       // dänemark
       case 'dk' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -485,8 +437,8 @@ class vat_validation {
       // estland
       case 'ee' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -499,8 +451,8 @@ class vat_validation {
       // griechenland
       case 'el' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -513,8 +465,8 @@ class vat_validation {
       // spanien
       case 'es' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9) {
             return 1;
           } else {
             return 0;
@@ -527,8 +479,8 @@ class vat_validation {
       // finnland
       case 'fi' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -541,8 +493,8 @@ class vat_validation {
       // frankreich
       case 'fr' :
         $number = substr(str_replace($country, '', strtolower($vat_id)),2);
-        if(strlen($vat_id) == 13) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 13) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -555,14 +507,14 @@ class vat_validation {
       // england
       case 'gb' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9) {
             return 1;
           } else {
             return 0;
           }
-        } elseif(strlen($vat_id) == 14) {
-          if(strlen($number) == 12) {
+        } elseif (strlen($vat_id) == 14) {
+          if (strlen($number) == 12) {
             return 1;
           } else {
             return 0;
@@ -575,8 +527,8 @@ class vat_validation {
       // ungarn
       case 'hu' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -589,8 +541,8 @@ class vat_validation {
       // irland
       case 'ie' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8) {
             return 1;
           } else {
             return 0;
@@ -603,8 +555,8 @@ class vat_validation {
       // italien
       case 'it' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 13) {
-          if(strlen($number) == 11 && is_numeric($number)) {
+        if (strlen($vat_id) == 13) {
+          if (strlen($number) == 11 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -617,14 +569,14 @@ class vat_validation {
       // litauen
       case 'lt' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
           }
-        } elseif(strlen($vat_id) == 14) {
-          if(strlen($number) == 12 && is_numeric($number)) {
+        } elseif (strlen($vat_id) == 14) {
+          if (strlen($number) == 12 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -637,8 +589,8 @@ class vat_validation {
       // luxemburg
       case 'lu' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -651,8 +603,8 @@ class vat_validation {
       // lettland
       case 'lv' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 13) {
-          if(strlen($number) == 11 && is_numeric($number)) {
+        if (strlen($vat_id) == 13) {
+          if (strlen($number) == 11 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -665,8 +617,8 @@ class vat_validation {
       // malta
       case 'mt' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -678,8 +630,8 @@ class vat_validation {
       // niederlande
       case 'nl' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 14) {
-          if(strlen($number) == 12) {
+        if (strlen($vat_id) == 14) {
+          if (strlen($number) == 12) {
             return 1;
           } else {
             return 0;
@@ -692,8 +644,8 @@ class vat_validation {
       // polen
       case 'pl' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 12) {
-          if(strlen($number) == 10 && is_numeric($number)) {
+        if (strlen($vat_id) == 12) {
+          if (strlen($number) == 10 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -706,8 +658,8 @@ class vat_validation {
       // portugal
       case 'pt' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 11) {
-          if(strlen($number) == 9 && is_numeric($number)) {
+        if (strlen($vat_id) == 11) {
+          if (strlen($number) == 9 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -721,8 +673,8 @@ class vat_validation {
       case 'ro' :
         $number = str_replace($country, '', strtolower($vat_id));
 
-        if(strlen($vat_id) > 1 && strlen($vat_id) < 11) {
-          if(is_numeric($number)) {
+        if (strlen($vat_id) > 1 && strlen($vat_id) < 11) {
+          if (is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -735,8 +687,8 @@ class vat_validation {
       // schweden
       case 'se' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 14) {
-          if(strlen($number) == 12 && is_numeric($number)) {
+        if (strlen($vat_id) == 14) {
+          if (strlen($number) == 12 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -749,8 +701,8 @@ class vat_validation {
       // slowenien
       case 'sl' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 10) {
-          if(strlen($number) == 8 && is_numeric($number)) {
+        if (strlen($vat_id) == 10) {
+          if (strlen($number) == 8 && is_numeric($number)) {
             return 1;
           } else {
             return 0;
@@ -763,8 +715,8 @@ class vat_validation {
       // slowenien
       case 'sk' :
         $number = str_replace($country, '', strtolower($vat_id));
-        if(strlen($vat_id) == 12) {
-          if(strlen($number) == 10 && is_numeric($number)) {
+        if (strlen($vat_id) == 12) {
+          if (strlen($number) == 10 && is_numeric($number)) {
             return 1;
           } else {
             return 0;

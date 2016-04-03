@@ -10,7 +10,7 @@
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(ptebanktransfer.php,v 1.4.1 2003/09/25 19:57:14); www.oscommerce.com
-   (c) 2006 XT-Commerce (eustandardtransfer.php 998 2005-07-07)
+   (c) 2003 xtCommerce www.xt-commerce.com
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -18,21 +18,23 @@
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE', 'EU-Standard Bank Transfer');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION', 
           '<br />The cheapest and most simple payment method within the EU is the EU-Standard Bank Transfer using IBAN and BIC.' .
-          '<br />As soon as we receive your payment in the bank account mentioned above, we will ship your order.<br />'.
-          '<br />Please use the details on the right to transfer your total order value.<br />' . 
-          '<br />Bank Name: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM .
-          '<br />Branch: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH .
-          '<br />Account Name: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM .
-          '<br />Account No.: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM .
-          '<br />IBAN:: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN .
-          '<br />BIC/SWIFT: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC .
-//        '<br />Sort Code: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_SORTCODE .
-          '');
+          '<br />Please use the following details to transfer your total order value:<br />' .
+          '<br />Bank Name: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM : '') .
+          '<br />Branch: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH : '') .
+          '<br />Account Name: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM : '') .
+          '<br />Account No.: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM : '') .
+          '<br />IBAN: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN : '') .
+          '<br />BIC/SWIFT: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC : '') .
+          '<br /><br />Your order will not be shipped until we receive your payment in the above account.<br />');
 
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO','Please transfer the invoice total amount to our bank account.<br />You will receive the account data in the next step and by e-mail when your order has been confirmed.');
+  if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
+    define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO','Please transfer the invoice total to our bank account. You will receive the account data in the last step of the checkout.');
+  } else {
+    define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO','Please transfer the invoice total to our bank account. You will receive the account data by e-mail when your order has been confirmed.');
+  }
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS_TITLE','Allow Bank Transfer Payment');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS_DESC','Do you want to accept bank transfer order payments?');
-
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO','');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH_TITLE','Branch Location');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH_DESC','The brach where you have your account.');
 
@@ -57,8 +59,12 @@
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ALLOWED_TITLE' , 'Allowed zones');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
 
-  // BOF - Hendrik - 2010-07-15 - exlusion config for shipping modules
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_NEG_SHIPPING_TITLE', 'Exclusion in case of shipping');
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_NEG_SHIPPING_DESC', 'deactivate this payment if one of these shippingtypes are selected (list separated by commas)');
-  // EOF - Hendrik - 2010-07-15 - exlusion config for shipping modules
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE_TITLE' , 'Payment Zone');
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE_DESC' , 'If a zone is selected, only enable this payment method for that zone.');
+  
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID_TITLE' , 'Set Order Status');
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID_DESC' , 'Set the status of orders made with this payment module to this value');
+
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS_TITLE' , 'Display bank data');
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS_DESC' , 'Display bank data on checkout success?');
 ?>

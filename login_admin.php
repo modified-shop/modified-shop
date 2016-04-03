@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: login_admin.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -25,6 +25,19 @@
 
   // further documentation, see also:
   // http://www.modified-shop.org/wiki/Login_in_den_Administrationsbereich_nach_%C3%84nderungen_nicht_mehr_m%C3%B6glich
+
+// Set the local configuration parameters - mainly for developers or the main-configure
+if (file_exists('includes/local/configure.php')) {
+  include('includes/local/configure.php');
+} else {
+  require('includes/configure.php');
+}
+
+// loading only necessary functions
+require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
+require_once(DIR_FS_INC . 'xtc_draw_password_field.inc.php');
+require_once(DIR_FS_INC . 'xtc_draw_input_field.inc.php');
+require_once(DIR_FS_INC . 'xtc_parse_input_field_data.inc.php');
 
 $error = false;
 
@@ -62,14 +75,6 @@ if(isset($_GET['repair']) || isset($_GET['show_error'])) {
 
 if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
 
-  // loading only necessary functions
-  // Set the local configuration parameters - mainly for developers or the main-configure
-  if (file_exists('includes/local/configure.php')) {
-    include('includes/local/configure.php');
-  } else {
-    require('includes/configure.php');
-  }
-
   // list of project database tables
   require (DIR_WS_INCLUDES.'database_tables.php');
 
@@ -81,7 +86,8 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   require_once(DIR_FS_INC . 'xtc_db_fetch_array.inc.php');
   require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
   require_once(DIR_FS_INC . 'xtc_validate_password.inc.php');
-  require_once(DIR_WS_CLASSES.FILENAME_INPUTFILTER);
+
+  require_once(DIR_WS_CLASSES.'class.inputfilter.php');
 
   xtc_db_connect() or die('Unable to connect to database server!');
 
@@ -101,7 +107,7 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   $check_customer = xtc_db_fetch_array($check_customer_query);
   if(!xtc_validate_password(xtc_db_input($_POST['password']),
                             $check_customer['customers_password'],
-                            $check_customer['customers_email_address'])) {
+                            $check_customer['customers_id'])) {
     die('Zugriff verweigert. E-Mail und/oder Passwort falsch!');
   } else {
     if (isset($_POST['repair']) && xtc_not_null($_POST['repair'])) {
@@ -204,134 +210,174 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
     }
   }
 }
+
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de" dir="ltr">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta charset="utf-8" />
 <title>Administator-Login</title>
-<meta http-equiv="content-language" content="de" />
-<meta http-equiv="cache-control" content="no-cache" />
-<meta name="robots" content="noindex, nofollow" />
+<meta name="robots" content="noindex, nofollow, noodp" />
+
 <style type="text/css">
-html {
-  height: 100%;
-  background: #fff;
-  background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ffffff));
-  background: -moz-linear-gradient(top,  #ededed,  #ffffff);
-  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#ffffff');
+<!--
+
+body {
+  font-family: Tahoma, sans-serif;
+  font-weight: normal;
+  font-size:13px;
+  background-color:#fff;
+  color:#555;
+  line-height:19px;
 }
-form {
-  background:#f0f0f0;
-  border:1px #fff solid;
-  width:300px;
-  height:190px;
-  margin:60px auto 0;
-  padding: 0 15px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,1.2);
-  -moz-box-shadow: 0 1px 2px rgba(0,0,0,1.2);
-  box-shadow: 0 1px 2px rgba(0,0,0,1.2);
+.clearfix, .clear, .clearer {
+  line-height:0px;
+  height:0px;
+  clear:both;   
 }
-form h1 {
-  font-size: 16px;
-  width: 300px;
-  margin: 12px auto 0;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-weight:500;
-  letter-spacing: 3px;
-  border-bottom: 2px dotted #AF417E;
-  text-indent: 10px;
+         
+.cf:before, .cf:after { content: ""; display: table; }
+.cf:after { clear: both; }
+.cf { zoom: 1; }
+
+h1 {
+  font-family: Tahoma, sans-serif;
+  color:#444;
+  font-weight:normal;
+  font-size:18px;
+  margin:20px 0 15px 0;
+  padding:0 0 5px;
+  border:#ddd solid;
+  border-width:0 0 1px 0;
 }
-form p {
-  width: 280px;
-  margin: 10px auto;
-}
-form i {
-  width: 80px;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  text-shadow: 0 1px 1px rgba(0,0,0,.3);
-  font-size: 13px;
-  letter-spacing: 3px;
+
+.fieldtext, .fieldtext_stern {
+  font-size:11px;
+  line-height:15px;
+  font-weight:bold;
+  padding: 0px 0px 2px 0px;
   display:block;
 }
-form a {
-  float:right;
-  margin: 10px;
-}
-form img {
-  border: none;
+
+input {
+  font-family: Tahoma, sans-serif;
+  font-size:13px;
 }
 input[type=text], input[type=password] {
-  width: 220px;
-  background: #dfdfdf;
-  letter-spacing:1px;
-  padding:2px 5px;
+  background-color:#fafafa;
+  border-color: #C6C6C6 #DADADA #EAEAEA;
+  color: #999999;
+  border-style: solid;
+  border-width: 1px;
+  vertical-align: middle;
+	padding: 6px 5px 6px 5px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width:100%;
+  height:32px;
 }
+input[type=text]:hover, input[type=password]:hover {
+    background-color:#FFFFFF;
+    border-color: #C6C6C6 #DADADA #EAEAEA;
+    color: #666666;
+}    
 input[type=text]:focus, input[type=password]:focus {
-  background: #f5f5f5;
+    background-color:#FFFFFF;
+    border-color: #659EC9 #70AEDD #A8CFEC;
+    color: #333333;
+    outline: 0 none;
 }
-.login {
+table {
+  width:100%;
+  border-spacing: 0;
+  border-collapse:collapse;
+}
+table td {
+  padding:4px 0px;
+}
+
+#layout_offline {
+  width:700px;
+  margin:40px auto;
+  padding:30px;
+  border: 1px solid #ddd;
+}
+#layout_adminlogin {
+  position:relative;
+  margin: 50px auto;
+  padding:15px;
+  background:#fff;
+  border:solid #eee 1px;
+  -webkit-box-shadow: 0px 0px 15px #3d3d3d; 
+  -moz-box-shadow: 0px 0px 15px #3d3d3d; 
+  box-shadow: 0px 0px 15px #3d3d3d;
+  width:400px;
+}
+#layout_adminlogin a.help_adminlogin {
+  position:absolute;
+  width:32px;
+  height:32px;
+  outline:none;
+  top:10px;
+  right:10px;  
+  display:block;
+}
+#layout_adminlogin .login {
+  float:right;
+  margin: 10px 0 0 0;
+  font-family: Tahoma, sans-serif;
   outline: none;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  float:right;
-  font: 14px/100% Arial, Helvetica, sans-serif;
-  padding: .1em 2em .15em;
-  text-shadow: 0 1px 1px rgba(0,0,0,.3);
-  -webkit-border-radius: .2em;
-  -moz-border-radius: .2em;
-  border-radius: .2em;
-  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
-  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
-  box-shadow: 0 1px 2px rgba(0,0,0,.2);
-  color: #606060;
-  border: solid 1px #b7b7b7;
-  background: #fff;
-  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ededed));
-  background: -moz-linear-gradient(top,  #fff,  #ededed);
-  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed');
+  font-size: 16px;
+  padding: 2px 20px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  color: #fff;
+  border: solid 1px #101010;
+  background: #3a3a3a;
+  background: -webkit-gradient(linear, left top, left bottom, from(#494949), to(#242424));
+  background: -moz-linear-gradient(top,  #494949,  #242424);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#494949', endColorstr='#242424');
 }
-.login:hover {
+#layout_adminlogin .login:hover {
   text-decoration: none;
-  background: #ededed;
-  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dcdcdc));
-  background: -moz-linear-gradient(top,  #fff,  #dcdcdc);
-  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dcdcdc');
+  background: #3a3a3a;
+  background: -webkit-gradient(linear, left top, left bottom, from(#242424), to(#494949));
+  background: -moz-linear-gradient(top,  #242424,  #494949);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#242424', endColorstr='#494949');
 }
-.login:active {
-  position: relative;
-  top: 1px;
-  color: #999;
-  background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#fff));
-  background: -moz-linear-gradient(top,  #ededed,  #fff);
-  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#ffffff');
-}
+-->
 </style>
 </head>
 <body>
-<form name="login" method="post" action="<?php echo $action; ?>">
-  <h1>Administrator-Login</h1>
-  <a href="http://www.modified-shop.org/wiki/Login_in_den_Administrationsbereich_nach_%C3%84nderungen_nicht_mehr_m%C3%B6glich" target="_blank"><img src="images/icons/question.png" width="32" height="32" title="Eingabehilfe und Repataturoptionen" /></a>
-  <p><i>E-Mail</i>
-    <input type="text" name="email_address" maxlength="50" />
-  </p>
-  <p><i>Passwort</i>
-    <input type="password" name="password" maxlength="30" />
-  </p>
-  <p>
-    <input type="submit" class="login" name="Submit" value="Anmelden" />
-    <?php
-    if (isset($_GET['repair']) && $_GET['repair']!='') {
-      echo '<input type="hidden" name="repair" value="'. $_GET['repair'] .'" />';
-    } elseif (isset($_GET['show_error']) && $_GET['show_error']!='') {
-      echo '<input type="hidden" name="show_error" value="'. $_GET['show_error'] .'" />';
-    }
-    ?>
-  </p>
-</form>
+  <div id="layout_adminlogin" class="cf">
+    <a class="help_adminlogin" href="http://www.modified-shop.org/wiki/Login_in_den_Administrationsbereich_nach_%C3%84nderungen_nicht_mehr_m%C3%B6glich" target="_blank"><img src="images/icons/question.png" width="32" height="32" title="Eingabehilfe und Reparaturoptionen" /></a>
+    <form name="login" method="post" action="<?php echo $action; ?>">
+      <h1>Administrator-Login</h1>
+      <table>
+        <tr>
+          <td><span class="fieldtext">E-Mail</span><input type="text" name="email_address" maxlength="50" /></td>
+        </tr>  
+        <tr>
+          <td><span class="fieldtext">Passwort</span><?php echo xtc_draw_password_field('password'); ?></td>
+        </tr>  
+      </table>  
+      <input type="submit" class="login" name="Submit" value="Anmelden" />
+      <?php
+      if (isset($_GET['repair']) && $_GET['repair']!='') {
+        echo '<input type="hidden" name="repair" value="'. $_GET['repair'] .'" />';
+      } elseif (isset($_GET['show_error']) && $_GET['show_error']!='') {
+        echo '<input type="hidden" name="show_error" value="'. $_GET['show_error'] .'" />';
+      }
+      ?>
+    </form>
+  </div>
 </body>
 </html>

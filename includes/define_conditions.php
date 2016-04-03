@@ -18,9 +18,10 @@ $customers_status_id = $_SESSION['customers_status']['customers_status_id'];
 ########################
 
 # group check
-$group_check = GROUP_CHECK == 'true' ? ' AND group_ids LIKE \'%c_'.$customers_status_id.'_group%\' ' : '';
-
-define('CONTENT_CONDITIONS', $group_check);
+$group_check = GROUP_CHECK == 'true' ? ' AND c1.group_ids LIKE \'%c_'.$customers_status_id.'_group%\' ' : '';
+$content_conditions_c1 = $group_check . (isset($content_conditions_c1) ? $content_conditions_c1 : '');
+define('CONTENT_CONDITIONS_C1', $content_conditions_c1);
+define('CONTENT_CONDITIONS', str_replace('c1.', '', $content_conditions_c1));
 
 
 # PRODUCTS
@@ -32,8 +33,9 @@ $fsk_lock = $_SESSION['customers_status']['customers_fsk18_display'] == '0' ? ' 
 # group check
 $p_group_check = GROUP_CHECK == 'true' ? ' AND p.group_permission_'.$customers_status_id.' = 1 ' : '';
 
-define('PRODUCTS_CONDITIONS_P', $fsk_lock . $p_group_check);
-define('PRODUCTS_CONDITIONS', str_replace('p.','', $fsk_lock . $p_group_check));
+$products_conditions_p = $fsk_lock . $p_group_check . (isset($products_conditions_p) ? $products_conditions_p : '');
+define('PRODUCTS_CONDITIONS_P', $products_conditions_p);
+define('PRODUCTS_CONDITIONS', str_replace('p.','', $products_conditions_p));
 
 
 # CATEGORIES
@@ -42,8 +44,9 @@ define('PRODUCTS_CONDITIONS', str_replace('p.','', $fsk_lock . $p_group_check));
 # group check
 $c_group_check = GROUP_CHECK == 'true' ? " AND c.group_permission_".$customers_status_id." = 1 " : "";
 
-define('CATEGORIES_CONDITIONS_C', $c_group_check);
-define('CATEGORIES_CONDITIONS', str_replace('c.','', $c_group_check));
+$categories_conditions_c = $c_group_check . (isset($categories_conditions_c) ? $categories_conditions_c : '');
+define('CATEGORIES_CONDITIONS_C', $categories_conditions_c);
+define('CATEGORIES_CONDITIONS', str_replace('c.','', $categories_conditions_c));
 
 
   

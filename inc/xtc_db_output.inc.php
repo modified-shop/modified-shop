@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: xtc_db_output.inc.php 5463 2013-09-03 13:52:45Z GTB $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -15,7 +15,9 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-   
+
+  die('Deprecated File: '.basename(__FILE__).'. Use db_functions_mysql(i) instead.');
+/*   
   //fix for conectors like facturama
   if (!function_exists('encode_htmlspecialchars')) {
     require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
@@ -24,4 +26,5 @@
   function xtc_db_output($string) {
     return encode_htmlspecialchars($string);
   }
+*/
  ?>

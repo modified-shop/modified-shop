@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: SimplePrice.php 4941 2014-12-02 23:01:18Z derpapst $
+ * $Id: SimplePrice.php 5645 2015-05-19 10:48:29Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -123,6 +123,33 @@ class SimplePrice {
 		           AND status=1
 		');
 	}
+
+	public function getCustomizedPrice($pID, $mpID = null) {
+		global $_MagnaSession;
+		if (!isset($mpID)) {
+			if (   is_array($_MagnaSession)
+			    && array_key_exists('mpID', $_MagnaSession)) {
+				$mpID = $_MagnaSession['mpID'];
+			} else {
+				$mpID = 0;
+			}
+		}
+		
+		$iPrice = false;
+		/* {Hook} "CustomizePrice": is called while the Prices are determined, within a method
+				getCustomizedPrice. The code should set $iPrice to the new value.
+				If it's not set, or set to false, the price won't be changed.
+			Variables that can be used:
+			<ul><li>$pID - product's ID</li>
+			    <li>$mpID - current marketplace ID</li>
+			    <li>&$iPrice - new price you will set by the contrib</li>
+			</ul>
+		*/
+		if (($hp = magnaContribVerify('CustomizePrice', 1)) !== false) {
+			require($hp);
+		}
+		return $iPrice;
+	}
 	
 	public static function loadPriceSettings($mpId, $extra = '') {
 		$mp = magnaGetMarketplaceByID($mpId);
@@ -165,6 +192,11 @@ class SimplePrice {
 			$pConfig = self::loadPriceSettings($mpID, $extra);
 		}
 		
+		if (($fCustomizedPrice = $this->getCustomizedPrice($pID, $mpID)) != false) {
+			$this->price = $fCustomizedPrice;
+			return $this;
+		}
+
 		if ($pConfig['UseSpecialOffer'] && (($price = $this->getSpecialOffer($pID)) > 0)) {
 			$this->price = $price;
 			$this->isSpecialPrice = true;
@@ -371,10 +403,18 @@ class SimplePrice {
 			if (!is_array($attr)) {
 				return $this;
 			}
-			$attr = array (
-				'Type' => 'calc',
-				'Price' => $attr['price'] * (($attr['prefix'] == '+') ? 1 : -1)
-			);
+			if ($attr['prefix'] == '=') {
+				$attr = array (
+					'Type' => 'fix',
+					'Price' => $attr['price'],
+				);
+			} else {
+				$attr = array (
+					'Type' => 'calc',
+					'Price' => $attr['price'] * (($attr['prefix'] == '+') ? 1 : -1)
+				);
+			}
+
 		}
 		
 		if ($attr['Price'] == 0) {

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_db_connect.inc.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,6 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  die('Deprecated File: '.basename(__FILE__).'. Use db_functions_mysql(i) instead.');
+/*
   include_once(DIR_FS_INC . 'xtc_db_error.inc.php');
 
   function xtc_db_connect($server = DB_SERVER, $username = DB_SERVER_USERNAME, $password = DB_SERVER_PASSWORD, $database = DB_DATABASE, $link = 'db_link') {
@@ -50,7 +52,7 @@
 
     // set charset defined in configure.php
     if(!defined('DB_SERVER_CHARSET')) {
-      define('DB_SERVER_CHARSET','utf8');
+      define('DB_SERVER_CHARSET','latin1');
     }
     if(function_exists('mysql_set_charset')) { //requires MySQL 5.0.7 or later
       mysql_set_charset(DB_SERVER_CHARSET);
@@ -60,4 +62,5 @@
 
     return $$link;
   }
+*/
 ?>

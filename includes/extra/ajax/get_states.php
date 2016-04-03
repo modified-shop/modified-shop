@@ -7,29 +7,38 @@
  *
  * Copyright (c) 2009 - 2013 [www.modified-shop.org]
  *
- *
- * Hacker Solutions - AJAX GET STATES
- * web: www.hackersolutions.com 
- * mail: support@hackersolutions.com
- * 
  * Released under the GNU General Public License
  */
-require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+
+if (isset($_REQUEST['speed'])) {
+  // auto include
+  require_once (DIR_FS_INC.'auto_include.inc.php');
+
+  require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+  require_once (DIR_WS_INCLUDES.'database_tables.php');
+}
 
 function get_states() {
 
   xtc_db_connect() or die('Unable to connect to database server!');
 
+  $country_id = (int)$_GET['country'];
+
   $query = xtc_db_query("
-      SELECT zone_name
-        FROM zones
-       WHERE zone_country_id = '".(int)$_GET['country']."'
+      SELECT zone_id,zone_name
+        FROM ".TABLE_ZONES."
+       WHERE zone_country_id = '".$country_id."'
     ORDER BY zone_name");
 
   $zones = array ();
   if (xtc_db_num_rows($query)) {
     while ($zones_values = xtc_db_fetch_array($query)) {
-      $zones[] = iconv("ISO-8859-1", "UTF-8", $zones_values['zone_name']);
+      $zones[] = array(
+        'id' => $zones_values['zone_id'],
+        'name' => (DB_SERVER_CHARSET == 'utf8'
+        ? $zones_values['zone_name']
+        : iconv("ISO-8859-1", "UTF-8", $zones_values['zone_name']))
+      );
     }
   }
 

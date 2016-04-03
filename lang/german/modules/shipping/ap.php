@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: ap.php 5118 2013-07-18 10:58:36Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -38,7 +38,7 @@ define('MODULE_SHIPPING_AP_ZONE_DESC' , 'Wenn Sie eine Zone ausw&auml;hlen, wird
 define('MODULE_SHIPPING_AP_SORT_ORDER_TITLE' , 'Reihenfolge der Anzeige');
 define('MODULE_SHIPPING_AP_SORT_ORDER_DESC' , 'Niedrigste wird zuerst angezeigt.');
 define('MODULE_SHIPPING_AP_ALLOWED_TITLE' , 'Einzelne Versandzonen');
-define('MODULE_SHIPPING_AP_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. zb AT,DE');
+define('MODULE_SHIPPING_AP_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. z.B. AT,DE');
 define('MODULE_SHIPPING_AP_NUMBER_ZONES_TITLE' , 'Anzahl der Zonen');
 define('MODULE_SHIPPING_AP_NUMBER_ZONES_DESC' , 'Anzahl der bereitgestellten Zonen');
 define('MODULE_SHIPPING_AP_DISPLAY_TITLE' , 'Anzeige aktivieren');

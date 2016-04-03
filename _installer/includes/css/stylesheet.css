@@ -1,0 +1,130 @@
+@font-face {
+    font-family: 'fjallaoneregular';
+    src: url('fonts/fjallaone.eot');
+    src: url('fonts/fjallaone.eot?#iefix') format('embedded-opentype'),
+         url('fonts/fjallaone.woff') format('woff'),
+         url('fonts/fjallaone.ttf') format('truetype'),
+         url('fonts/fjallaone.svg#fjalla_oneregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}    
+@font-face {
+    font-family: 'arimoregular';
+    src: url('fonts/arimo.eot');
+    src: url('fonts/arimo.eot?#iefix') format('embedded-opentype'),
+         url('fonts/arimo.woff') format('woff'),
+         url('fonts/arimo.ttf') format('truetype'),
+         url('fonts/arimo.svg#arimoregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'arimoregular';
+    src: url('fonts/arimo_bold.eot');
+    src: url('fonts/arimo_bold.eot?#iefix') format('embedded-opentype'),
+         url('fonts/arimo_bold.woff') format('woff'),
+         url('fonts/arimo_bold.ttf') format('truetype'),
+         url('fonts/arimo_bold.svg#arimobold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+/* START IE7 fix for font-weight:bold */
+@font-face {
+    font-family: 'arimobold';
+    src: url('fonts/arimo-bold-webfont.eot');
+    src: url('fonts/arimo-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/arimo-bold-webfont.woff') format('woff'),
+         url('fonts/arimo-bold-webfont.ttf') format('truetype'),
+         url('fonts/arimo-bold-webfont.svg#arimobold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+} 
+
+strong, b, h1, h2, h3 {
+   *font-family: 'arimobold', sans-serif;
+}
+/* END IE7 fix for font-weight:bold */ 
+
+body { color: #555; background: #eee; font-family: "arimoregular",sans-serif; font-size: 13px; font-weight: normal; line-height: 19px;}
+/*
+table,td,div { font-family: "arimoregular",sans-serif; font-size: 13px; line-height: 19px; }
+*/
+h1 { font-size: 18px; margin: 0; padding: 0; margin-bottom: 10px; }
+.proxy {font-family: "arimoregular",sans-serif; font-size: 13px;}
+.prov{width:120px; display:block; float:left; font-weight: bold;}
+.popout { border:1px solid #DCA7A7; margin:0; padding:10px; }
+.popout .left { float: left; width: 300px; padding: 0 10px; text-align: justify; }
+.popout .right { float: right; width: 300px; padding: 0 10px; }
+label { display: block; width: 290px; padding: 5px 0 2px 0; }
+.messageStackError p img { position: relative; top: 2px; }
+
+.cf:before, .cf:after { content: ""; display: table; }
+.cf:after { clear: both; }
+.cf { zoom: 1; }
+
+ul#navigation {
+  margin-top:15px;
+  margin:0;
+  padding:0;
+}
+ul#navigation li {
+  height:64px;
+  list-style-type:none;
+  float:left;
+  width:153px;
+  margin-right:9px;
+  margin-bottom:9px;
+  border:solid 1px;
+  padding:12px;
+}
+ul#navigation li.second_line {
+  margin-bottom:0px;
+}
+ul#navigation li.active {
+  background-color: #7B3C62;
+  border-color: #6D2551;
+  color: #FFFFFF;
+}
+ul#navigation li.active.last {
+  margin-right:0;
+}
+ul#navigation li.active .number {
+  font-family: 'fjallaoneregular', sans-serif;
+  font-size:18px;
+  line-height:22px;
+}
+ul#navigation li.active .title {
+  font-family: 'fjallaoneregular', sans-serif;
+  font-size:18px;
+  line-height:22px;
+}
+ul#navigation li.active .description {
+  display:block;
+  font-size:13px;
+  line-height:17px;
+  padding-top:5px;
+}
+ul#navigation li.inactive {
+  background-color: #F4F4F4;
+  border-color: #D0D0D0;
+  color: #ADADAD;
+}
+ul#navigation li.inactive.last{
+  margin-right:0;
+}
+ul#navigation li.inactive .number {
+  font-family: 'fjallaoneregular', sans-serif;
+  font-size:18px;
+  line-height:22px;
+}
+ul#navigation li.inactive .title {
+  font-family: 'fjallaoneregular', sans-serif;
+  font-size:18px;
+  line-height:22px;
+}
+ul#navigation li.inactive .description {
+  display:block;
+  font-size:13px;
+  line-height:17px;
+  padding-top:5px;
+}

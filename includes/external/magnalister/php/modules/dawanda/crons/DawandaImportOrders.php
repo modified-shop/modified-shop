@@ -84,6 +84,10 @@ class DawandaImportOrders extends MagnaCompatibleImportOrders {
 				$class = 'paypal';
 			else if (in_array('paypalng.php', $paymentModules))
 				$class = 'paypalng';
+			else if (in_array('paypal_ipn.php', $paymentModules))
+				$class = 'paypal_ipn';
+			else if (in_array('paypalexpress.php', $paymentModules))
+				$class = 'paypalexpress';
 		} else if ('Cash' == $paymentMethod) {
 			# Barzahlung
 			if (in_array('cash.php', $paymentModules))
@@ -102,6 +106,10 @@ class DawandaImportOrders extends MagnaCompatibleImportOrders {
 			# SofortUeberweisung
 			if (in_array('sofortueberweisung_direct.php', $paymentModules))
 				$class = 'sofortueberweisung_direct';
+			else if (in_array('pn_sofortueberweisung.php', $paymentModules))
+				$class = 'pn_sofortueberweisung';
+			else if (in_array('sofort_sofortueberweisung.php', $paymentModules))
+				$class = 'sofort_sofortueberweisung';
 		}
 	
 		return $class;

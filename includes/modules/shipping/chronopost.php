@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: chronopost.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -30,7 +30,7 @@
     /**
     * class constructor
     */
-    function chronopost() {
+    function __construct() {
       $this->code        = 'chronopost';
       $this->title       = MODULE_SHIPPING_CHRONOPOST_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_CHRONOPOST_TEXT_DESCRIPTION;

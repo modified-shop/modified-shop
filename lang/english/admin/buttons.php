@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: buttons.php 4892 2013-06-06 16:34:15Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -41,7 +41,6 @@ define('BUTTON_SEND_EMAIL', 'Send E-Mail');
 define('BUTTON_SEND_COUPON', 'Send Coupon');
 define('BUTTON_INVOICE', 'Invoice');
 define('BUTTON_PACKINGSLIP', 'Packing slip');
-define('BUTTON_REMOVE_CC_INFO', 'Remove CC Info');
 define('BUTTON_AFTERBUY_SEND', 'Afterbuy - send');
 define('BUTTON_NEW_NEWSLETTER', 'New Newsletter');
 define('BUTTON_RESET', 'Reset');
@@ -75,6 +74,7 @@ define('BUTTON_DETAILS', 'Details');
 define('BUTTON_NEW_TAX_CLASS', 'New Tax Class');
 define('BUTTON_NEW_TAX_RATE', 'New Tax Rate');
 define('BUTTON_SEND', 'Send');
+define('BUTTON_REVERSE', 'Reverse');
 
 // BOF - Tomcraft - 2009-11-28 - Included xs:booster
 define('BUTTON_EDIT_XTBOOSTER', 'eBay-Product');
@@ -84,20 +84,12 @@ define('BUTTON_XTBOOSTER_MULTI', 'eBay-Multi-Product');
 // BOF - Dokuman - 2010-02-04 - delete cache files in admin section
 define('BUTTON_DELETE_CACHE', 'Delete Cache');
 define('BUTTON_DELETE_TEMP_CACHE', 'Delete Templatecache');
+define('BUTTON_DELETE_LOGS', 'Delete Logfiles');
 // EOF - Dokuman - 2010-02-04 - delete cache files in admin section
 
-//BOF - DokuMan - 2010-08-12 - added possibility to reset admin statistics
-define('BUTTON_RESET_PRODUCTS_PURCHASED', 'Reset all positions');
-define('BUTTON_RESET_PRODUCTS_VIEWED', 'Reset all positions');
-//EOF - DokuMan - 2010-08-12 - added possibility to reset admin statistics
+// BOF - web28 - 2011-07-13 - New Button
+define('BUTTON_VIEW_PRODUCT', 'View Product');
+//EOF - web28 - 2011-07-13 - New Button
 
-// BOF - web28 - 2010-08-21 - add  button view products
-define('BUTTON_VIEW_PRODUCT','View Product');
-// EOF - web28 - 2010-08-21 - add  button view products
-
-//BOF - hendrik - 2011-05-14 - independent invoice number and date
-define('BUTTON_BILL', 'New invoice number');
-//EOF - hendrik - 2011-05-14 - independent invoice number and date
-
-define('BUTTON_NEW_CARRIER', 'New carrier'); //Dokuman - 2012-11-16 - Track & Trace functionality
+define('BUTTON_VALUES', 'Values');
 ?>

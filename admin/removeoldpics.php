@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: removeoldpics.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -76,63 +76,46 @@
 
   require (DIR_WS_INCLUDES.'head.php');
 ?>
-  </head>
-  <body>
-    <!-- header //-->
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-    <!-- header_eof //-->
-    <!-- body //-->
-    <table border="0" width="100%" cellspacing="2" cellpadding="2">
-      <tr>
-        <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-          <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-            <!-- left_navigation //-->
-            <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-            <!-- left_navigation_eof //-->
-          </table>
-        </td>
-        <!-- body_text //-->
-        <td class="boxCenter" width="100%" valign="top">
-          <table border="0" width="100%" cellspacing="0" cellpadding="2">
-            <tr>
-              <td width="100%">
-                <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></td>
-                    <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-                    <td class="pageHeading" align="right"><?php echo xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td class="main"><?php echo LINK_INFO_TEXT; ?>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="main">
-                      <a class="button" href="./removeoldpics.php?action=delete&path=original"><?php echo LINK_ORIGINAL; ?></a>&nbsp;|&nbsp;
-                      <a class="button" href="./removeoldpics.php?action=delete&path=info"><?php echo LINK_INFO; ?></a>&nbsp;|&nbsp;
-                      <a class="button" href="./removeoldpics.php?action=delete&path=thumbnail"><?php echo LINK_THUMBNAIL; ?></a>&nbsp;|&nbsp;
-                      <a class="button" href="./removeoldpics.php?action=delete&path=popup"><?php echo LINK_POPUP; ?></a>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </td>
-        <!-- body_text_eof //-->
-      </tr>
-    </table>
-    <!-- body_eof //-->
-    <!-- footer //-->
-    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-    <!-- footer_eof //-->
-    <br />
-  </body>
+</head>
+<body>
+  <!-- header //-->
+  <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+  <!-- header_eof //-->
+  <!-- body //-->
+  <table class="tableBody">
+    <tr>
+      <?php //left_navigation
+      if (USE_ADMIN_TOP_MENU == 'false') {
+        echo '<td class="columnLeft2">'.PHP_EOL;
+        echo '<!-- left_navigation //-->'.PHP_EOL;       
+        require_once(DIR_WS_INCLUDES . 'column_left.php');
+        echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+        echo '</td>'.PHP_EOL;      
+      }
+      ?>
+      <!-- body_text //-->
+      <td class="boxCenter">
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>
+        <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
+        <div class="main pdg2 flt-l">Tools</div>
+        <div class="clear main mrg5"><?php echo LINK_INFO_TEXT; ?></div>
+        <div class="main mrg5">
+        <?php
+          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=original').'">'.LINK_ORIGINAL.'</a>';
+          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=info').'">'.LINK_INFO.'</a>';
+          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=thumbnail').'">'.LINK_THUMBNAIL.'</a>';
+          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=popup').'">'.LINK_POPUP.'</a>';
+        ?>
+        </div>
+      </td>
+      <!-- body_text_eof //-->
+    </tr>
+  </table>
+  <!-- body_eof //-->
+  <!-- footer //-->
+  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+  <!-- footer_eof //-->
+  <br />
+</body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

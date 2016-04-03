@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_findTitle.inc.php 1313 2005-10-18 15:49:15Z mz $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -11,12 +11,13 @@
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(new_attributes); www.oscommerce.com
    (c) 2003     nextcommerce (new_attributes.php,v 1.13 2003/08/21); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
-
+   (c) 2003 XT-Commerce
+   
    Released under the GNU General Public License
    --------------------------------------------------------------
    Third Party contributions:
-   New Attribute Manager v4b                Autor: Mike G | mp3man@internetwork.net | http://downloads.ephing.com
+   New Attribute Manager v4b             
+   Autor: Mike G | mp3man@internetwork.net | http://downloads.ephing.com
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/

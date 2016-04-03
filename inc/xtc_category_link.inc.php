@@ -1,27 +1,18 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_category_link.inc.php 899 2005-04-29 02:40:57Z hhgag $
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   -----------------------------------------------------------------------------------------
-   based on:
-   (c) 2005 XT-Commerce
+   Copyright (c) 2005 XT-Commerce
+
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-function xtc_category_link($cID,$cName='') {
-//-- SHOPSTAT --//
-/*
-		$cName = xtc_cleanName($cName);
-		$link = 'cat=c'.$cID.'_'.$cName.'.html';
-		return $link;
-*/
+  function xtc_category_link($cID, $cName='') {
     require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
     return 'cPath='.xtc_get_category_path($cID);
-//-- SHOPSTAT --//
-}
+  }
 ?>

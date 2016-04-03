@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: categories.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -20,10 +20,8 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-  // reset var
+
   $box_smarty = new smarty;
-  $box_content = '';
-  //$rebuild = false; //DokuMan - 2010-02-28 - fix Smarty cache error on unlink
 
   $box_smarty->assign('language', $_SESSION['language']);
   // set cache ID
@@ -45,11 +43,11 @@
  
     // include needed functions
     require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/xtc_show_category.inc.php');
+    require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/close_ul_tags.inc.php');
     require_once (DIR_FS_INC.'xtc_has_category_subcategories.inc.php');
     require_once (DIR_FS_INC.'xtc_count_products_in_category.inc.php');
 
     $categories_string = '';
-    $group_check = GROUP_CHECK == 'true' ? "AND c.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 " : '';
 
     $categories_query = xtDBquery("SELECT c.categories_id,
                                           cd.categories_name,
@@ -58,9 +56,9 @@
                                           ".TABLE_CATEGORIES_DESCRIPTION." cd
                                     WHERE c.categories_status = '1'
                                       AND c.parent_id = '0'
-                                          ".$group_check."
+                                      ".CATEGORIES_CONDITIONS_C."
                                       AND c.categories_id = cd.categories_id
-                                      AND cd.language_id='".(int) $_SESSION['languages_id']."'
+                                      AND cd.language_id='".(int)$_SESSION['languages_id']."'
                                       AND trim(cd.categories_name) != ''
                                     ORDER BY sort_order, cd.categories_name
                                     ");
@@ -101,9 +99,9 @@
                                               ".TABLE_CATEGORIES_DESCRIPTION." cd
                                         WHERE c.categories_status = '1'
                                           AND c.parent_id = '".$value."'
-                                              ".$group_check."
+                                          ".CATEGORIES_CONDITIONS_C."
                                           AND c.categories_id = cd.categories_id
-                                          AND cd.language_id='".$_SESSION['languages_id']."'
+                                          AND cd.language_id='".(int)$_SESSION['languages_id']."'
                                           AND trim(cd.categories_name) != ''
                                         ORDER BY sort_order, cd.categories_name
                                         ");

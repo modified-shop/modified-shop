@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: order_total.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -30,21 +30,29 @@
 class order_total {
   var $modules;
   
-  // class constructor
-  function order_total() {
+  function __construct() {
+    
+    $this->modules = array();
+    
     if (defined('MODULE_ORDER_TOTAL_INSTALLED') && xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
-      $this->modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
-      $modules = $this->modules;
-      sort($modules); // cgoenner: we need to include the ot_coupon & ot_gv BEFORE ot_tax
-      reset($modules);
-      while (list (, $value) = each($modules)) {
+      $modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
+      $module_directory = DIR_WS_MODULES . 'order_total/';
+      foreach($modules as $file) {
+        $class = substr($file, 0, strrpos($file, '.'));
+        $class = str_replace('ot_','',$class);
+        $module_status = (defined('MODULE_ORDER_TOTAL_'. strtoupper($class) .'_STATUS') && strtolower(constant('MODULE_ORDER_TOTAL_'. strtoupper($class) .'_STATUS')) == 'true') ? true : false;
+        if (is_file($module_directory . $file) && $module_status) {
+          $this->modules[] = $file;
+        }
+      }
+      unset($modules);
+      
+      while (list (, $value) = each($this->modules)) {
         include_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/'.$value);
         include_once(DIR_WS_MODULES.'order_total/'.$value);
-
         $class = substr($value, 0, strrpos($value, '.'));
         $GLOBALS[$class] = new $class ();
       }
-      unset($modules);
     }
   }
 
@@ -63,10 +71,11 @@ class order_total {
   //
   function credit_selection() {
     $selection_string = '';
-    $close_string = '';
-    $credit_class_string = '';
+    //$close_string = '';
+    //$credit_class_string = '';
+    $output_array = array();
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-      // BOF - vr - 2010-03-03 fix gv display on checkout
+         // BOF - vr - 2010-03-03 fix gv display on checkout
       /*$header_string = '<tr>'."\n";
       $header_string .= '   <td><table border="0" width="100%" cellspacing="0" cellpadding="2">'."\n";
       $output1_string .= '      <tr>'."\n";
@@ -83,7 +92,7 @@ class order_total {
       $close_string .= '<td width="10">'.xtc_draw_separator('pixel_trans.gif', '10', '1').'</td>';
       $close_string .= '</tr></table></td></tr></table></td>';
       $close_string .= '<tr><td width="100%">'.xtc_draw_separator('pixel_trans.gif', '100%', '10').'</td></tr>';*/
-
+      /*
       $header_string  = '<tr><td>';
       $header_string .= '<table class="paymentblock" border="0" width="100%" cellspacing="0" cellpadding="6">';
       $header_string .= '<td width="90%" class="header">'.TABLE_HEADING_CREDIT.'</td>';
@@ -92,7 +101,7 @@ class order_total {
       $header_string .= '</td></tr>';
       $close_string .= '<tr><td width="100%">'.xtc_draw_separator('pixel_trans.gif', '100%', '10').'</td></tr>';
       // EOF - vr - 2010-03-03 fix gv display on checkout
-
+      */
       reset($this->modules);
       $output_string = '';
       while (list (, $value) = each($this->modules)) {
@@ -103,6 +112,13 @@ class order_total {
             $selection_string = $GLOBALS[$class]->credit_selection();
           }
           if (($use_credit_string != '') || ($selection_string != '')) {
+            $output_array[] = array ('id' => $GLOBALS[$class]->code,
+                                     'module' => $GLOBALS[$class]->title,
+                                     'description' => $GLOBALS[$class]->info,
+                                     'credit_amount' => method_exists($GLOBALS[$class], 'get_credit_amount') ? $GLOBALS[$class]->get_credit_amount() : '0',
+                                     'credit_order_total' => method_exists($GLOBALS[$class], 'get_order_total') ? $GLOBALS[$class]->get_order_total() : '0'
+                                     );
+            /*
             $output_string .= '<tr colspan="4"><td colspan="4" width="100%">'.xtc_draw_separator('pixel_trans.gif', '100%', '10').'</td></tr>';
             $output_string .= '<tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" >';
             $output_string .= '<td width="10">'.xtc_draw_separator('pixel_trans.gif', '10', '1').'</td>';
@@ -113,15 +129,23 @@ class order_total {
             $output_string .= '<td width="10">'.xtc_draw_separator('pixel_trans.gif', '10', '1').'</td>';
             $output_string .= '</tr>'."\n";
             $output_string .= $selection_string;
+            */
           }
         }
       }
+      if (count($output_array)>0) {
+        return $output_array;
+      }
+      /*
       if ($output_string != '') {
         $output_string = $header_string.$output_string;
         $output_string .= $close_string;
       }
+      */
     }
-    return $output_string;
+  
+    return $output_array;
+    //return $output_string;
   }
 
   //            if ($selection_string !='') {
@@ -157,9 +181,9 @@ class order_total {
       reset($this->modules);
       while (list (, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
-                if (($GLOBALS[$class]->enabled && isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class)) {
+        if (($GLOBALS[$class]->enabled && isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class)) {
           $post_var = 'c'.$GLOBALS[$class]->code;
-                    if (isset($_POST[$post_var]) && $_POST[$post_var]) {
+          if (isset($_POST[$post_var]) && $_POST[$post_var]) {
             $_SESSION[$post_var] = $_POST[$post_var];
           }
           $GLOBALS[$class]->collect_posts();
@@ -253,10 +277,10 @@ class order_total {
           for ($i = 0, $n = sizeof($GLOBALS[$class]->output); $i < $n; $i ++) {
             if (xtc_not_null($GLOBALS[$class]->output[$i]['title']) && xtc_not_null($GLOBALS[$class]->output[$i]['text'])) {
               $order_total_array[] = array (
-                'code' => $GLOBALS[$class]->code,
-                'title' => $GLOBALS[$class]->output[$i]['title'],
-                'text' => $GLOBALS[$class]->output[$i]['text'],
-                'value' => $GLOBALS[$class]->output[$i]['value'],
+                'code' => $GLOBALS[$class]->code, 
+                'title' => $GLOBALS[$class]->output[$i]['title'], 
+                'text' => $GLOBALS[$class]->output[$i]['text'], 
+                'value' => $GLOBALS[$class]->output[$i]['value'], 
                 'sort_order' => $GLOBALS[$class]->sort_order
                 );
             }
@@ -278,7 +302,7 @@ class order_total {
           $size = sizeof($GLOBALS[$class]->output);
           for ($i = 0; $i < $size; $i ++) {
             $output_string .= '              <tr>'."\n".'                <td align="right" class="main">'.$GLOBALS[$class]->output[$i]['title'].'</td>'."\n".'                <td align="right" class="main">'.$GLOBALS[$class]->output[$i]['text'].'</td>'."\n".'              </tr>';
-					}
+          }
         }
       }
     }
@@ -287,27 +311,32 @@ class order_total {
   }
 
   function output_array() {
-		$arr_output = array();
-		if (is_array($this->modules)) {
-			reset($this->modules);
-			while (list (, $value) = each($this->modules)) {
-				$class = substr($value, 0, strrpos($value, '.'));
-				if ($GLOBALS[$class]->enabled) {
-					$size = sizeof($GLOBALS[$class]->output);
-					for ($i = 0; $i < $size; $i ++) {
-						$arr_output[] = array('title'=>$GLOBALS[$class]->output[$i]['title'], 'text'=>$GLOBALS[$class]->output[$i]['text']);
-					}
-				}
-			}
-		}
+    $arr_output = array();
+    if (is_array($this->modules)) {
+      reset($this->modules);
+      while (list (, $value) = each($this->modules)) {
+        $class = substr($value, 0, strrpos($value, '.'));
+        if ($GLOBALS[$class]->enabled) {
+          $size = sizeof($GLOBALS[$class]->output);
+          for ($i = 0; $i < $size; $i ++) {
+            $arr_output[] = array(
+              'title' => $GLOBALS[$class]->output[$i]['title'], 
+              'text' => $GLOBALS[$class]->output[$i]['text'],
+              'value' => $GLOBALS[$class]->output[$i]['value'],
+              'class' => $class,
+            );
+          }
+        }
+      }
+    }
 
-		return $arr_output;
-	}
-
-  //BOF - web28 - 2011-02-01 -  PayPal Express
-  function pp_output() {
-    return output_array();   
+    return $arr_output;
   }
-  //EOF - web28 - 2011-02-01 -  PayPal Express
+
+  ## PayPal
+  function pp_output() {
+    return $this->output_array();   
+  }
+
 }
 ?>

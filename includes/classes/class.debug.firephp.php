@@ -1508,7 +1508,7 @@ class FirePHP {
      * @author      Brett Stimmerman <brettstimmerman[at]gmail[dot]com>
      * @author      Christoph Dorn <christoph@christophdorn.com>
      * @copyright   2005 Michal Migurski
-     * @version     CVS: $Id$
+     * @version     CVS: $Id: class.debug.firephp.php 2941 2012-05-29 14:50:07Z dokuman $
      * @license     http://www.opensource.org/licenses/bsd-license.php
      * @link        http://pear.php.net/pepr/pepr-proposal-show.php?id=198
      */

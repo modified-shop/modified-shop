@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: whos_online.php 3072 2012-06-18 15:01:13Z hhacker $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -21,7 +21,7 @@ define('HEADING_TITLE', 'Wer ist Online');
 define('TABLE_HEADING_ONLINE', 'Online');
 define('TABLE_HEADING_CUSTOMER_ID', 'ID');
 define('TABLE_HEADING_FULL_NAME', 'Name');
-define('TABLE_HEADING_IP_ADDRESS', 'IP Adresse');
+define('TABLE_HEADING_IP_ADDRESS', 'IP-Adresse');
 define('TABLE_HEADING_COUNTRY', 'Land');
 define('TABLE_HEADING_ENTRY_TIME', 'Startzeit');
 define('TABLE_HEADING_LAST_CLICK', 'Letzter Klick');

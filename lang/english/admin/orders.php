@@ -1,30 +1,31 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: orders.php 1185 2010-08-20 09:00:29Z web28 $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on:
+   based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce; www.oscommerce.com
-   (c) 2003 nextcommerce; www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
+   (c) 2002-2003 osCommerce; www.oscommerce.com 
+   (c) 2003      nextcommerce; www.nextcommerce.org
+   (c) 2006      xt:Commerce; www.xt-commerce.com
 
-   Released under the GNU General Public License
+   Released under the GNU General Public License 
    --------------------------------------------------------------*/
 define('TEXT_BANK', 'Bank Collection');
 define('TEXT_BANK_OWNER', 'Account Holder:');
 define('TEXT_BANK_NUMBER', 'Account Number:');
 define('TEXT_BANK_BLZ', 'Bank Code:');
 define('TEXT_BANK_NAME', 'Bank:');
-define('TEXT_BANK_IBAN', 'IBAN:'); //DokuMan - 2012-11-26 - added IBAN and BIC
-define('TEXT_BANK_BIC', 'BIC-Code:'); //DokuMan - 2012-11-26 - added IBAN and BIC
+define('TEXT_BANK_BIC', 'BIC:');
+define('TEXT_BANK_IBAN', 'IBAN:');
 define('TEXT_BANK_FAX', 'Collect Authorization will be approved via Fax');
 define('TEXT_BANK_STATUS', 'Verify Status:');
 define('TEXT_BANK_PRZ', 'Method of Verify:');
+define('TEXT_BANK_OWNER_EMAIL', 'E-Mail-Address Account Holder:');
 
 define('TEXT_BANK_ERROR_1', 'Accountnumber and Bank Code are not compatible!<br />Please try again!');
 define('TEXT_BANK_ERROR_2', 'Sorry, we are unable to proof this account number!');
@@ -41,15 +42,16 @@ define('HEADING_TITLE_STATUS', 'Status:');
 
 define('TABLE_HEADING_COMMENTS', 'Comments');
 define('TABLE_HEADING_CUSTOMERS', 'Customers');
-define('TABLE_HEADING_ORDERS_ID', 'Ord-ID');
 define('TABLE_HEADING_ORDER_TOTAL', 'Order Total');
 define('TABLE_HEADING_DATE_PURCHASED', 'Date Purchased');
+define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Action');
 define('TABLE_HEADING_QUANTITY', 'Qty.');
 define('TABLE_HEADING_PRODUCTS_MODEL', 'Model');
 define('TABLE_HEADING_PRODUCTS', 'Products');
 define('TABLE_HEADING_TAX', 'Tax');
 define('TABLE_HEADING_TOTAL', 'Total');
+define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_PRICE_EXCLUDING_TAX', 'Price (ex)');
 define('TABLE_HEADING_PRICE_INCLUDING_TAX', 'Price (inc)');
 define('TABLE_HEADING_TOTAL_EXCLUDING_TAX', 'Total (ex)');
@@ -62,7 +64,14 @@ define('TABLE_HEADING_DATE_ADDED', 'Date Added');
 
 define('ENTRY_CUSTOMER', 'Customer:');
 define('ENTRY_SOLD_TO', 'SOLD TO:');
+define('ENTRY_STREET_ADDRESS', 'Street Address:');
+define('ENTRY_SUBURB', 'Suburb:');
+define('ENTRY_CITY', 'City:');
+define('ENTRY_POST_CODE', 'Post Code:');
+define('ENTRY_STATE', 'State:');
+define('ENTRY_COUNTRY', 'Country:');
 define('ENTRY_TELEPHONE', 'Telephone:');
+define('ENTRY_EMAIL_ADDRESS', 'E-Mail Address:');
 define('ENTRY_DELIVERY_TO', 'Delivery To:');
 define('ENTRY_SHIP_TO', 'SHIP TO:');
 define('ENTRY_SHIPPING_ADDRESS', 'Shipping Address:');
@@ -90,6 +99,7 @@ define('TEXT_INFO_RESTOCK_PRODUCT_QUANTITY', 'Restock product quantity');
 define('TEXT_DATE_ORDER_CREATED', 'Date Created:');
 define('TEXT_DATE_ORDER_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_INFO_PAYMENT_METHOD', 'Payment Method:');
+define('TEXT_INFO_SHIPPING_METHOD', 'Shipping Method:');
 
 define('TEXT_ALL_ORDERS', 'All Orders');
 define('TEXT_NO_ORDER_HISTORY', 'No Order History Available');
@@ -99,7 +109,7 @@ define('EMAIL_TEXT_SUBJECT', 'Order Update');
 define('EMAIL_TEXT_ORDER_NUMBER', 'Order Number:');
 define('EMAIL_TEXT_INVOICE_URL', 'Detailed Invoice:');
 define('EMAIL_TEXT_DATE_ORDERED', 'Date Ordered:');
-define('EMAIL_TEXT_STATUS_UPDATE', 'Your order has been updated to the following status.' . "\n\n" . 'New status: %s' . "\n\n" . 'Please reply to this e-mail if you have any questions.' . "\n");
+define('EMAIL_TEXT_STATUS_UPDATE', 'Your order has been updated to the following status.' . "\n\n" . 'New status: %s' . "\n\n" . 'Please reply to this E-Mail if you have any questions.' . "\n");
 define('EMAIL_TEXT_COMMENTS_UPDATE', 'The comments for your order are' . "\n\n%s\n\n");
 
 define('ERROR_ORDER_DOES_NOT_EXIST', 'Error: Order does not exist.');
@@ -108,6 +118,7 @@ define('WARNING_ORDER_NOT_UPDATED', 'Warning: Nothing to change. The order was n
 
 define('TABLE_HEADING_DISCOUNT','Discount');
 define('ENTRY_CUSTOMERS_GROUP','Customers Group:');
+define('ENTRY_CUSTOMERS_VAT_ID','VAT Reg No:');
 define('TEXT_VALIDATING','Not validated');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
@@ -130,18 +141,35 @@ define('TEXT_ORDER', 'Order:');
 define('TEXT_ORDER_HISTORY', 'Order History:');
 define('TEXT_ORDER_STATUS', 'Order Status:');
 
-// DokuMan - 2012-01-05 - option to reverse an order instead of deleting it
-define('TEXT_INFO_REVERSE_ORDER', 'Reverse with order status: ');
-define('BUTTON_DELETE_OR_REVERSE','Delete/Reverse');
-
 define('TABLE_HEADING_ORDERS_ID', 'Ord-ID');
 define('TEXT_SHIPPING_TO', 'Shipping to');
-
-// DokuMan - 2012-08-28 - Track & Trace functionality
-define('TABLE_HEADING_TRACKING', 'Shipment tracking system:');
-define('TABLE_HEADING_CARRIER', 'Carrier');
-define('TABLE_HEADING_PARCEL_LINK', 'Tracking number');
-define('TABLE_HEADING_REMOVE_LINK', 'Add/delete number');
+define('TEXT_SHIPPING_LANG', 'Language');
 
 define('TABLE_HEADING_COMMENTS_SENT', 'Comment is sent');
+
+define('TABLE_HEADING_TRACK_TRACE', 'Track &amp; Trace:');
+define('TABLE_HEADING_CARRIER', 'Shipping');
+define('TABLE_HEADING_PARCEL_LINK', 'Trackinglink');
+
+define('TEXT_INFO_HEADING_REVERSE_ORDER', 'Reverse order');
+define('TEXT_INFO_REVERSE_INTRO', 'Are you sure you want to reverse this order?');
+
+define('TABLE_HEADING_SHIPCLOUD', 'Shipcloud:');
+define('TABLE_HEADING_PARCEL_ID', 'Parcel ID');
+define('DOWNLOAD_LABEL', 'Download Label');
+define('CREATE_LABEL', 'Create Label');
+define('TEXT_DELETE_SHIPMENT_SUCCESS', 'shipcloud Label deleted.');
+define('TEXT_LABEL_CREATED', 'Label created.');
+define('TEXT_CARRIER_ERROR', 'Carrier not activated in your shipcloud account or invalid API key.');
+define('TEXT_CARRIER_PLACEHOLDER', 'description (optional)');
+
+define('TEXT_DOWNLOADS', 'Downloads');
+define('TABLE_HEADING_FILENAME', 'Filename');
+define('TABLE_HEADING_EXPIRES', 'Expires date');
+define('TABLE_HEADING_DOWNLOADS', 'Number Downloads');
+define('TABLE_HEADING_DAYS', 'Number days');
+
+define('ENTRY_SEND_TRACKING_INFO', 'Shipping information:');
+
+define('TEXT_ORDERS_STATUS_FILTER', 'Orders status filter');
 ?>

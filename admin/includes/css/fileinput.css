@@ -1,0 +1,47 @@
+/*FILEUPLOAD*/
+.inputBtnSection{
+    display:inline-block;
+    vertical-align:top;
+    font-size:0;
+    font-family: Verdana, Arial, sans-serif; 
+}
+.disableInputField{
+    display:inline-block;
+    vertical-align:top;
+    height: 26px!important;
+    margin: 0;
+    font-size:12px;
+    padding:0 3px;
+    background-color: #FAFAFA;
+    font-family: Verdana, Arial, sans-serif; 
+}
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    border:solid 1px gray;
+    display:inline-block;
+    vertical-align:top;
+}
+.uploadBtn{
+    display:inline-block;
+    vertical-align:top;
+    background:rgba(0,0,0,0.5);
+    font-size:12px;
+    padding: 1px 10px 0;
+    height:25px;
+    line-height:22px;
+    color:#fff;
+}
+
+.fileUpload input.fileInput{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}

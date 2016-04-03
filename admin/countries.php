@@ -23,7 +23,7 @@
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_COUNTRIES_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
-  
+
   $_GET['cID'] = isset($_GET['cID']) ? (int)$_GET['cID'] : '';
   $_GET['page'] = isset($_GET['page']) ? (int)$_GET['page'] : '';
   
@@ -50,7 +50,7 @@
           'countries_iso_code_3' => xtc_db_prepare_input($_POST['countries_iso_code_3']), 
           'address_format_id' => xtc_db_prepare_input($_POST['address_format_id'])
         );
-        xtc_db_perfom(TABLE_COUNTRIES,$sql_data_array);
+        xtc_db_perform(TABLE_COUNTRIES,$sql_data_array);
         xtc_redirect(xtc_href_link(FILENAME_COUNTRIES));
         break;
       case 'save':       
@@ -96,7 +96,7 @@
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
-<body onload="SetFocus();">
+<body>
   <!-- header //-->
   <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
   <!-- header_eof //-->

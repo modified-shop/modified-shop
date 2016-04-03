@@ -161,7 +161,7 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				$vi['Price'] = $data['submit']['Price'];
 			} else {
 				$vi['Price'] = $this->simpleprice
-					->setPrice($basePrice + $vi['Price']) // add the variation price
+					->setPrice((($v['VPricePrefix'] == '=') ? 0.0 : $basePrice) + $vi['Price']) // add the variation price
 					->finalizePrice($pID, $this->_magnasession['mpID'], $this->priceConfig['Fixed']) // add tax and config values
 					->getPrice();
 			}

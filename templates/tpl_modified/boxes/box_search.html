@@ -1,0 +1,9 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{config_load file="lang_`$language`.custom"}
+{$FORM_ACTION}
+{$INPUT_SEARCH}{$BUTTON_SUBMIT}
+<br class="clearfix" />
+{$FORM_END}
+<div class="suggestionsBox" id="suggestions" style="display:none;">
+  <div class="suggestionList" id="autoSuggestionsList">&nbsp;</div>
+</div>

@@ -22,7 +22,7 @@
   $box_smarty = new smarty;
   $box_content = '';
 
-  $box_smarty->assign('tpl_path', 'templates/' . CURRENT_TEMPLATE . '/');
+  $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/' . CURRENT_TEMPLATE . '/');
 
   $box_smarty->assign('FORM_ACTION',xtc_draw_form('quick_add', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array ('action')) . 'action=add_a_quickie', $request_type)));
 

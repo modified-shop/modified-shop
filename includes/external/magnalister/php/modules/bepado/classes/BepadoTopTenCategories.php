@@ -57,6 +57,7 @@ class BepadoTopTenCategories extends TopTen {
 				');
 			}
 		}
+		asort($aTopTenCatIds);
 		return $aTopTenCatIds;
 
 	}

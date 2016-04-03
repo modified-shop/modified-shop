@@ -43,6 +43,7 @@
 * (c) 2003 www.websl.de, Karl Langmann                                                         *
 * (c) 2003 RV-Design Raphael Vullriede                                                         *
 * (c) 2004 XT-Commerce                                                                         *
+* (c) 2009 - 2013 modified eCommerce Shopsoftware - www.modified-shop.org                      *
 *                                                                                              *
 * Released under the GNU General Public License                                                *
 *                                                                                              *
@@ -102,7 +103,7 @@
 
 
 define('SET_TIME_LIMIT',1);   // use set_time_limit(0);
-define('CHARSET','utf-8');
+define('CHARSET','iso-8859-1');
 
 $version_nr    = '1.56';
 $version_datum = '2009.08.26';
@@ -117,6 +118,9 @@ define('USE_VPE',false);
 
 // Emails beim Kundenanlegen versenden ?
 define('SEND_ACCOUNT_MAIL',false);
+
+// Das Doppelkreuz entfernen um Fehlermeldung bzgl. des Logins darzustellen.
+#define('CAO_DEBUG_LOGIN', 'true');
 
 // Default-Sprache
 $LangID = 2;
@@ -153,15 +157,10 @@ $debug_login = (defined('CAO_DEBUG_LOGIN') && CAO_DEBUG_LOGIN == 'true' ? true :
 // Kundengruppen ID für Neukunden (default "neue Kunden einstellungen in XTC")
 define('STANDARD_GROUP',DEFAULT_CUSTOMERS_STATUS_ID);
 
-//KL02062005
-if (file_exists(DIR_FS_DOCUMENT_ROOT.DIR_WS_ADMIN.'includes/classes/image_manipulator.php'))
-{
-  // für XTC 2.x
-  include(DIR_FS_DOCUMENT_ROOT.DIR_WS_ADMIN.'includes/classes/image_manipulator.php');
-} else {
-  // für XTC ab 3.x
-  include(DIR_FS_DOCUMENT_ROOT.DIR_WS_ADMIN.'includes/classes/'.IMAGE_MANIPULATOR);
-} //KL02062005_ENDE
+include(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/classes/'.IMAGE_MANIPULATOR);
+
+// include needed function
+require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 
 if ((isset($_POST['user']))and(isset($_POST['password']))) {
    $user = $_POST['user'];
@@ -226,14 +225,7 @@ Aufruf des Scriptes mit <br><b><?php echo $PHP_SELF; ?>?user=<font color="red">A
       exit;
     }
 
-    //BOF - DokuMan - 2011-09-29 - implement new password check
-    //if (!( ($check_customer['customers_password'] == $password) or 
-    //         ($check_customer['customers_password'] == md5($password)) or
-    //        ($check_customer['customers_password'] == md5(substr($password,2,40)))
-    //   ))
-    if (!xtc_validate_password($password, $check_customer['customers_password'], $email_address))
-    //EOF - DokuMan - 2011-09-29 - implement new password check
-    {
+    if (!xtc_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id'])) {
       if (!$debug_login) exit;
       SendXMLHeader ();
       print_xml_status (108, $_POST['action'], 'WRONG PASSWORD', '', '', '');	  	

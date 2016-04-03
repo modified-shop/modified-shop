@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_db_query.inc.php 5463 2013-09-03 13:52:45Z GTB $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,6 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  die('Deprecated File: '.basename(__FILE__).'. Use db_functions_mysql(i) instead.');
+/*
   // include needed functions
   include_once(DIR_FS_INC . 'xtc_db_error.inc.php');
 
@@ -26,13 +28,6 @@
       $queryStartTime = array_sum(explode(" ",microtime()));
     }
     
-    // BOF - Dokuman - 2011-03-01 - get ready for UTF8
-    /*
-    mysql_query("SET names 'utf8'");
-    mysql_query("SET CHARACTER SET 'utf8'");
-    */
-    // EOF - Dokuman - 2011-03-01 - get ready for UTF8
-
     $result = mysql_query($query, $$link) or xtc_db_error($query, mysql_errno(), mysql_error());
 
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
@@ -50,4 +45,5 @@
 
     return $result;
   }
+*/
 ?>

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: application_bottom.php 3298 2012-07-26 09:41:18Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -12,14 +12,16 @@
    (c) 2002-2003 osCommerce(application_bottom.php,v 1.14 2003/02/10); www.oscommerce.com
    (c) 2003  nextcommerce (application_bottom.php,v 1.6 2003/08/13); www.nextcommerce.org
    (c) 2003 XT-Commerce
-   
-   Released under the GNU General Public License 
+
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
 // page parse time
 if (STORE_PAGE_PARSE_TIME == 'true') {
   $parse_time = number_format((microtime(true)-PAGE_PARSE_START_TIME), 3);
-  error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $parse_time . 's] ' . getenv('REQUEST_URI') . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
+  if ($parse_time >= STORE_PAGE_PARSE_TIME_THRESHOLD) {
+    error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $parse_time . 's] ' . getenv('REQUEST_URI') . "\n", 3, DIR_FS_LOG.'mod_parsetime_'. date('Y-m-d') .'.log');
+  }
 }
 if (DISPLAY_PAGE_PARSE_TIME == 'all') {
   $parse_time = number_format((microtime(true)-PAGE_PARSE_START_TIME), 3);
@@ -41,37 +43,27 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
   require_once (DIR_FS_EXTERNAL . 'econda/econda.php');
 }
 
-/******** Findologic **********/
-if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True' && MODULE_FINDOLOGIC_AUTOCOMPLETE == 'True') {
-  echo '
-  <script
-      type="text/javascript"
-      src="https://secure.findologic.com/autocomplete/require.js"
-      data-main="https://secure.findologic.com/autocomplete/' . strtoupper(md5(MODULE_FINDOLOGIC_SHOP_ID)) . '/autocomplete.js">
-  </script>
-  ';
+// require theme based css
+if (is_file('templates/'.CURRENT_TEMPLATE.'/css/general_bottom.css.php')) {
+  require('templates/'.CURRENT_TEMPLATE.'/css/general_bottom.css.php');
 }
-/******** Findologic **********/
 
-## easymarketing - conversion tracking
-if (defined('MODULE_EASYMARKETING_STATUS') && MODULE_EASYMARKETING_STATUS == 'True') {
-  include(DIR_FS_CATALOG.'api/easymarketing/conversion_tracker.php');
+// require theme based javascript
+if (is_file('templates/'.CURRENT_TEMPLATE.'/javascript/general_bottom.js.php')) {
+  require('templates/'.CURRENT_TEMPLATE.'/javascript/general_bottom.js.php');
 }
-## easymarketing - conversion tracking
 
-/**
- * new error handling
- */
-if (is_array($error_exceptions)) {
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_bottom/','php') as $file) require ($file);
+
+// new error handling
+if (isset($error_exceptions) && is_array($error_exceptions) && count($error_exceptions) > 0) {
   if ((DISPLAY_ERROR_REPORTING == 'all') || (DISPLAY_ERROR_REPORTING == 'admin' && $_SESSION['customers_status']['customers_status'] == '0')) {
-    echo '<div style="width:1000px; margin:20px auto; font-family: Verdana,Arial,sans-serif; font-size: 10px;">' . PHP_EOL .
-           '<h2 style="color: rgb(190, 50, 50);">Exception Occured:</h2>' . PHP_EOL;
+    echo '<div style="max-width:1000px; margin:20px auto; font-family: Verdana,Arial,sans-serif; font-size: 10px;">' . PHP_EOL .
+           '<h2 style="color: #BE3232;">Exception Occured:</h2>' . PHP_EOL;
            echo implode(PHP_EOL, $error_exceptions);
     echo '</div>';
   }
 }
-
-foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_bottom/','php') as $file) require ($file);
 
 // close MySQL connection
 session_write_close();

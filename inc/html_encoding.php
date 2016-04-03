@@ -1,6 +1,6 @@
 <?php
 /*--------------------------------------------------------------
-  $Id$
+  $Id: html_encoding.php 4252 2013-01-11 15:25:35Z web28 $
 
   modified eCommerce Shopsoftware - community made shopping
 
@@ -37,6 +37,22 @@ function encode_htmlspecialchars ($string, $flags = ENT_COMPAT, $encoding = '')
 }
 
 /**
+ * encode_utf8
+ */
+function encode_utf8($in_str) {
+  if (strtolower($_SESSION['language_charset']) == 'utf-8') {
+    $cur_encoding = mb_detect_encoding($in_str);
+    if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
+      return $in_str;
+    } else {
+      return mb_convert_encoding($in_str,"UTF-8","ISO-8859-15");
+    }
+  } else {
+    return $in_str;
+  }
+}
+
+/**
  * decode_htmlentities
  */
 function decode_htmlentities ($string, $flags = ENT_COMPAT, $encoding = '')
@@ -56,6 +72,22 @@ function decode_htmlspecialchars ($string, $flags = ENT_COMPAT, $encoding = '')
   $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
   $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;
   return htmlspecialchars_decode($string, $flags , $encoding);
+}
+
+/**
+ * decode_utf8
+ */
+function decode_utf8($in_str) {
+  if (strtolower($_SESSION['language_charset']) != 'utf-8') {
+    $cur_encoding = mb_detect_encoding($in_str);
+    if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
+      return mb_convert_encoding($in_str,"ISO-8859-15","UTF-8");
+    } else {
+      return $in_str;
+    }
+  } else {
+    return $in_str;
+  }
 }
 
 /**

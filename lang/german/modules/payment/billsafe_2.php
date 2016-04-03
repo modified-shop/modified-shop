@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: billsafe_2.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -149,9 +149,4 @@ define('MODULE_PAYMENT_BILLSAFE_2_INLINE_TITLE', 'Onsite Checkout');
 define('MODULE_PAYMENT_BILLSAFE_2_INLINE_DESC', 'M&ouml;chten Sie den Onsite Checkout f&uuml;r Zahlungen per BillSAFE aktivieren? <b>Hinweis: Funktioniert nicht zusammen mit dem Payment Layer! F&uuml;r diese Funktionalit&auml;t ist eine Zusatzvereinbarung mit BillSAFE erforderlich.</b>');
 define('MODULE_PAYMENT_BILLSAFE_2_DOB', 'Bitte geben Sie hier noch Ihr Geburtsdatum ein (z. B. 21.05.1970):');
 define('MODULE_PAYMENT_BILLSAFE_2_TC', '<b>Ich stimme den <a class="info" href="https://www.billsafe.de/privacy-policy/buyer" target="_blank">Datenschutzgrunds&auml;tzen</a> und der <a class="info" href="https://www.billsafe.de/privacy-policy/credit-check" target="_blank">Bonit&auml;tspr&uuml;fung</a> von <a class="info" href="https://www.billsafe.de/imprint" target="_blank">PayPal</a> zu. Es gelten die <a class="info" href="https://www.billsafe.de/resources/docs/pdf/Kaeufer_AGB.pdf" target="_blank">Allgemeinen Nutzungsbedingungen</a> f&uuml;r den Rechnungskauf.</b>');
-
-// BOF - Hendrik - 2010-07-15 - exlusion config for shipping modules
-define('MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING_TITLE', 'Ausschlu&szlig; bei Versandmodulen');
-define('MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING_DESC', 'Dieses Zahlungsmodul deaktivieren wenn Versandmodul gew&auml;hlt (Komma separierte Liste)');
-// EOF - Hendrik - 2010-07-15 - exlusion config for shipping modules
 ?>

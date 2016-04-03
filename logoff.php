@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: logoff.php 3072 2012-06-18 15:01:13Z hhacker $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,16 +28,20 @@
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
+
 // create smarty elements
 $smarty = new Smarty;
 
-//BOF - DokuMan - 2010-05-28 - delete Guests from Database when logging off, also see checkout_success.php
-if (($_SESSION['account_type'] == 1) && (DELETE_GUEST_ACCOUNT == 'true')) {
-  xtc_db_query("delete from ".TABLE_CUSTOMERS." where customers_id = '".$_SESSION['customer_id']."'");
-  xtc_db_query("delete from ".TABLE_ADDRESS_BOOK." where customers_id = '".$_SESSION['customer_id']."'");
-  xtc_db_query("delete from ".TABLE_CUSTOMERS_INFO." where customers_info_id = '".$_SESSION['customer_id']."'");
+if ($messageStack->size('logoff') > 0) {
+  $smarty->assign('info_message', $messageStack->output('logoff'));
+}    
+
+if ($_SESSION['account_type'] == '1' && DELETE_GUEST_ACCOUNT == 'true') {
+  xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+  xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+  xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$_SESSION['customer_id']."'");
+  xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
 }
-//EOF - DokuMan - 2010-05-28 - delete Guests from Database when logging off, also see checkout_success.php
 
 xtc_session_destroy();
 
@@ -54,11 +58,11 @@ unset ($_SESSION['navigation']);
 unset ($_SESSION['shipping']);
 unset ($_SESSION['payment']);
 unset ($_SESSION['ccard']);
-// GV Code Start
 unset ($_SESSION['gv_id']);
 unset ($_SESSION['cc_id']);
-// GV Code End
+
 $_SESSION['cart']->reset();
+
 // write customers status guest in session again
 require (DIR_WS_INCLUDES.'write_customers_status.php');
 

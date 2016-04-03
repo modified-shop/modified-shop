@@ -1,11 +1,11 @@
 <?php
-  /* --------------------------------------------------------------
-   $Id$   
+/* --------------------------------------------------------------
+   $Id: payment_module_info.php 950 2005-05-14 16:45:21Z mz $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -19,7 +19,7 @@
     var $payment_code, $keys;
 
     // class constructor
-    function paymentModuleInfo($pmInfo_array) {
+    function __construct($pmInfo_array) {
       $this->payment_code = $pmInfo_array['payment_code'];
 
       for ($i = 0, $n = sizeof($pmInfo_array) - 1; $i < $n; $i++) {

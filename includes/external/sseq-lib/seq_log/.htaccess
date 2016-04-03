@@ -1,4 +1,0 @@
-AuthUserFile .nofilerequired
-AuthName "No Access"
-AuthType Basic
-require valid-user

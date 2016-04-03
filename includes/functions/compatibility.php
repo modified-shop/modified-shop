@@ -1,17 +1,16 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: compatibility.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    -----------------------------------------------------------------------------------------
-   based on:
+   based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(compatibility.php,v 1.19 2003/04/09); www.oscommerce.com
-   (c) 2003 nextcommerce (compatibility.php,v 1.5 2003/08/13); www.nextcommerce.org
-   (c) 2006 XT-Commerce (compatibility.php 899 2005-04-29)
+   (c) 2002-2003 osCommerce(compatibility.php,v 1.19 2003/04/09); www.oscommerce.com 
+   (c) 2003	 nextcommerce (compatibility.php,v 1.5 2003/08/13); www.nextcommerce.org 
 
    Released under the GNU General Public License
    Modified by Marco Canini, <m.canini@libero.it>
@@ -20,25 +19,20 @@
    
   //PHP 5.4 compatibility - functions REMOVED as of PHP 5.4.0.
   if (!function_exists('session_register')) {
-      function session_register()
-      {
-          $args = func_get_args();
-          foreach($args as $key)
-          $_SESSION[$key] = $GLOBALS[$key];
+    function session_register() {
+      $args = func_get_args();
+      foreach($args as $key) {
+        $_SESSION[$key] = $GLOBALS[$key];
       }
-
-      function session_is_registered($key)
-      {
-          return isset($_SESSION[$key]);
-      }
-
-      function session_unregister($key)
-      {
-          unset($_SESSION[$key]);
-      }
+    }
+    function session_is_registered($key){
+      return isset($_SESSION[$key]);
+    }
+    function session_unregister($key){
+      unset($_SESSION[$key]);
+    }
   }
 
-  ////
   // Recursively handle magic_quotes_gpc turned off.
   // This is due to the possibility of have an array in
   // $HTTP_xxx_VARS
@@ -46,7 +40,6 @@
   function do_magic_quotes_gpc(&$ar) {
     if (!is_array($ar)) return false;
 
-    reset($ar); //DokuMan - 2011-05-09 - Reset compatibility array indexes when working through its elements
     while (list($key, $value) = each($ar)) {
       if (is_array($value)) {
         do_magic_quotes_gpc($value);
@@ -54,7 +47,6 @@
         $ar[$key] = addslashes($value);
       }
     }
-    reset($ar); //DokuMan - 2011-05-09 - Reset compatibility array indexes when working through its elements
   }
 
   // $HTTP_xxx_VARS are always set on php4
@@ -69,30 +61,124 @@
     do_magic_quotes_gpc($_COOKIE);
   }
 
-//BOF - DokuMan - 2010-01-06 set default timezone if none exists (PHP 5.3 throws an E_WARNING)
-  if ((strlen(ini_get('date.timezone')) < 1) && function_exists('date_default_timezone_set')) {
-    date_default_timezone_set(@date_default_timezone_get());
+  if (!function_exists('array_splice')) {
+    function array_splice(&$array, $maximum) {
+      if (sizeof($array) >= $maximum) {
+        for ($i=0; $i<$maximum; $i++) {
+          $new_array[$i] = $array[$i];
+        }
+        $array = $new_array;
+      }
+    }
   }
-//EOF - DokuMan - 2010-01-06 set default timezone if none exists (PHP 5.3 throws an E_WARNING)
 
-//BOF - DokuMan - 2011-01-06 - remove PHP3 compatiblity code
-//array_splice()
-//in_array()
-//array_reverse()
-//is_null()
-//constant()
-//is_numeric()
-//array_merge()
-//array_slice()
-//array_map()
-//str_repeat()
-//EOF - DokuMan - 2011-01-06 - remove PHP3 compatiblity code
+  if (!function_exists('in_array')) {
+    function in_array($lookup_value, $lookup_array) {
+      reset($lookup_array);
+      while (list($key, $value) = each($lookup_array)) {
+        if ($value == $lookup_value) return true;
+      }
 
-  //checkdnsrr on Windows plattforms available from PHP <= 5.3.0
+      return false;
+    }
+  }
+
+  if (!function_exists('array_reverse')) {
+    function array_reverse($array) {
+      for ($i=0, $n=sizeof($array); $i<$n; $i++) $array_reversed[$i] = $array[($n-$i-1)];
+
+      return $array_reversed;
+    }
+  }
+
+  if (!function_exists('constant')) {
+    function constant($constant) {
+      eval("\$temp=$constant;");
+
+      return $temp;
+    }
+  }
+
+  if (!function_exists('is_null')) {
+    function is_null($value) {
+      if (is_array($value)) {
+        if (sizeof($value) > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        if (($value != '') && ($value != 'NULL') && (strlen(trim($value)) > 0)) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    }
+  }
+
+  if (!function_exists('array_merge')) {
+    function array_merge($array1, $array2, $array3 = '') {
+      if (empty($array3) && !is_array($array3)) $array3 = array();
+      while (list($key, $val) = each($array1)) $array_merged[$key] = $val;
+      while (list($key, $val) = each($array2)) $array_merged[$key] = $val;
+      if (sizeof($array3) > 0) while (list($key, $val) = each($array3)) $array_merged[$key] = $val;
+
+      return (array) $array_merged;
+    }
+  }
+
+  if (!function_exists('is_numeric')) {
+    function is_numeric($param) {
+      return preg_match('/^[0-9]{1,50}.?[0-9]{0,50}$/', $param); // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
+    }
+  }
+
+  if (!function_exists('array_slice')) {
+    function array_slice($array, $offset, $length = 0) {
+      if ($offset < 0 ) {
+        $offset = sizeof($array) + $offset;
+      }
+      $length = ((!$length) ? sizeof($array) : (($length < 0) ? sizeof($array) - $length : $length + $offset));
+      for ($i = $offset; $i<$length; $i++) {
+        $tmp[] = $array[$i];
+      }
+
+      return $tmp;
+    }
+  }
+
+  if (!function_exists('array_map')) {
+    function array_map($callback, $array) {
+      if (is_array($array)) {
+        $_new_array = array();
+        reset($array);
+        while (list($key, $value) = each($array)) {
+          $_new_array[$key] = array_map($callback, $array[$key]);
+        }
+        return $_new_array;
+      } else {
+        return $callback($array);
+      }
+    }
+  }
+
+  if (!function_exists('str_repeat')) {
+    function str_repeat($string, $number) {
+      $repeat = '';
+
+      for ($i=0; $i<$number; $i++) {
+        $repeat .= $string;
+      }
+
+      return $repeat;
+    }
+  }
+
   if (!function_exists('checkdnsrr')) {
     function checkdnsrr($host, $type) {
       if(xtc_not_null($host) && xtc_not_null($type)) {
-        @exec("nslookup -type=" . escapeshellarg($type) . " " . escapeshellarg($host), $output); // DokuMan - 2011-01-06 - added escapeshellarg
+        @exec("nslookup -type=$type $host", $output);
         while(list($k, $line) = each($output)) {
           if(preg_match("/^$host/i", $line)) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
             return true;
@@ -103,42 +189,4 @@
     }
   }
 
-//BOF - DokuMan - 2011-05-25 - Clone implementation of wddx_deserialize
-  if (!function_exists('wddx_deserialize')) {
-    function wddx_deserialize($xmlpacket) {
-      if ($xmlpacket instanceof SimpleXMLElement) {
-          if (!empty($xmlpacket->struct)) {
-              $struct = array();
-              foreach ($xmlpacket->xpath("struct/var") as $var) {
-                if (!empty($var["name"])) {
-                  $key = (string) $var["name"];
-                  $struct[$key] = wddx_deserialize($var);
-                }
-              }
-              return $struct;
-          } else if (!empty($xmlpacket->array)) {
-              $array = array();
-              foreach ($xmlpacket->xpath("array/*") as $var) {
-                  array_push($array, wddx_deserialize($var));
-              }
-              return $array;
-          } else if (!empty($xmlpacket->string)) {
-              return (string) $xmlpacket->string;
-          } else if (!empty($xmlpacket->number)) {
-              return (int) $xmlpacket->number;
-          } else {
-              if (is_numeric((string) $xmlpacket)) {
-                  return (int) $xmlpacket;
-              } else {
-                  return (string) $xmlpacket;
-              }
-          }
-      } else {
-        $sxe = simplexml_load_string($xmlpacket);
-        $datanode = $sxe->xpath("/wddxPacket[@version='1.0']/data");
-        return wddx_deserialize($datanode[0]);
-      }
-    }
-  }
-//EOF - DokuMan - 2011-05-25 - Clone implementation of wddx_deserialize
 ?>

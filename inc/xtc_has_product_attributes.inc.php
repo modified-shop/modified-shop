@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_has_product_attributes.inc.php 1589 2010-12-24 14:10:13Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -19,7 +19,9 @@
 // Check if product has attributes
   function xtc_has_product_attributes($products_id) {
   
-    $attributes_query = "select count(*) as count from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$products_id . "'";
+    $attributes_query = "SELECT count(*) as count 
+                           FROM " . TABLE_PRODUCTS_ATTRIBUTES . " 
+                          WHERE products_id = '" . (int)$products_id . "'";
     $attributes_query = xtDBquery($attributes_query);
     $attributes = xtc_db_fetch_array($attributes_query,true);
 

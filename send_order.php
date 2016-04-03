@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: send_order.php 1510 2010-11-22 13:24:04Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -20,32 +20,15 @@ if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) {
   die('Direct Access to this location is not allowed.');
 }
 
-require_once (DIR_FS_INC.'xtc_get_order_data.inc.php');
-require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
-
 // check if customer is allowed to send this order!
 $order_query_check = xtc_db_query("SELECT customers_id
                                      FROM ".TABLE_ORDERS."
-                                    WHERE orders_id='".$insert_id."'");
+                                    WHERE orders_id='".(int)$insert_id."'");
 $order_check = xtc_db_fetch_array($order_query_check);
 
 if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) { // Send Order by Admin
 
   $order = new order($insert_id);
-
-// BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-  if (isset($_SESSION['paypal_express_new_customer']) && $_SESSION['paypal_express_new_customer'] == 'true' && isset($_SESSION['ACCOUNT_PASSWORD']) && $_SESSION['ACCOUNT_PASSWORD'] == 'true') {
-    require_once (DIR_FS_INC.'xtc_create_password.inc.php');
-    require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
-    $password_encrypted =  xtc_RandomString(10);
-    $password = xtc_encrypt_password($password_encrypted);
-    $sql_data_array = array(
-        'customers_password' => $password
-      );
-    xtc_db_perform(TABLE_CUSTOMERS,$sql_data_array,'update',"customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-    $smarty->assign('NEW_PASSWORD', $password_encrypted);
-  }
-// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
   if (isset($send_by_admin)) {
     $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
@@ -62,13 +45,13 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
   // assign language to template for caching
   $smarty->assign('language', $order->info['language']);
-  $smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
+  $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
   $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
   $smarty->assign('oID', $order->info['order_id']);
 
   //shipping method
-  if ($order->info['shipping_class'] != '' && $order->info['shipping_class'] != 'free_free') {
-    $shipping_class = explode('_', $order->info['shipping_class']);
+  $shipping_class = explode('_', $order->info['shipping_class']);
+  if ($order->info['shipping_class'] != '' && $shipping_class[0] != 'free') {
     include (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/shipping/'.$shipping_class[0].'.php');
     $shipping_method = constant(strtoupper('MODULE_SHIPPING_'.$shipping_class[0].'_TEXT_TITLE'));
   } else {
@@ -76,13 +59,16 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     $shipping_method = FREE_SHIPPING_TITLE;
   }
   $smarty->assign('SHIPPING_METHOD', $shipping_method);
+  $smarty->assign('SHIPPING_CLASS', $shipping_class[0]);
   
   //payment method
   if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {    
     include_once (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
     $payment_method = constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
+    $payment_class = $order->info['payment_class'];
   }
   $smarty->assign('PAYMENT_METHOD', $payment_method);
+  $smarty->assign('PAYMENT_CLASS', $payment_class);
   
   $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
   $smarty->assign('NAME', $order->customer['name']);
@@ -99,26 +85,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->assign('COMMENTS', $order->info['comments']);
   $smarty->assign('EMAIL', $order->customer['email_address']);
   $smarty->assign('PHONE',$order->customer['telephone']);
-
-  #todo: check installed
-  require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_mail.php'); #BILLPAY payment module
-
-  //BOF  - web28 - 2010-03-27 PayPal Bezahl-Link
-  unset ($_SESSION['paypal_link']);
-  if ($order->info['payment_method'] == 'paypal_ipn') {
-    if(isset($send_by_admin)) {
-      require (DIR_FS_CATALOG_MODULES.'payment/paypal_ipn.php');
-      include(DIR_FS_LANGUAGES.$order->info['language'].'/modules/payment/paypal_ipn.php');
-      $payment_modules = new paypal_ipn;
-    }
-    $order_id= $insert_id;
-    $paypal_link = array();
-    $payment_modules->create_paypal_link();
-    $smarty->assign('PAYMENT_INFO_HTML', $paypal_link['html']);
-    $smarty->assign('PAYMENT_INFO_TXT',  MODULE_PAYMENT_PAYPAL_IPN_TXT_EMAIL . $paypal_link['text']);
-    $_SESSION['paypal_link']= $paypal_link['checkout'];
-  }
-  //EOF  - web28 - 2010-03-27 PayPal Bezahl-Link
+  $smarty->assign('vatID', $order->customer['vat_id']);
 
   // PAYMENT MODUL TEXTS
   $payment_method_array = array('eustandardtransfer','moneyorder');
@@ -134,10 +101,6 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", MODULE_PAYMENT_COD_TEXT_INFO));
   }
   
-
-
-
-
   //allow duty-note in email
   if(!is_object($main)) {
     require_once(DIR_FS_CATALOG.'includes/classes/main.php');
@@ -147,15 +110,21 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
   //absolute image path
   $smarty->assign('img_path', HTTP_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/'. (defined('SHOW_IMAGES_IN_EMAIL_DIR')? SHOW_IMAGES_IN_EMAIL_DIR : 'thumbnail').'_images/');
+  
   // dont allow cache
   $smarty->caching = 0;
 
-  // revocation to email  
-  require_once(DIR_FS_INC.'get_lang_id_by_directory.inc.php');
-  $lang_id = isset($order->info['languages_id']) ? $order->info['languages_id'] : get_lang_id_by_directory($order->info['language']);
-  $shop_content_data = $main->getContentData(REVOCATION_ID,$lang_id,$order->info['status']);
+  // revocation to email 
+  require_once (DIR_FS_INC . 'get_lang_id_by_directory.inc.php');
+  $lang_id = ((isset($order->info['languages_id']) && $order->info['languages_id'] != '0')  ? $order->info['languages_id'] : get_lang_id_by_directory($order->info['language']));
+  $shop_content_data = $main->getContentData(REVOCATION_ID, $lang_id, $order->info['status']);
   $smarty->assign('REVOCATION_HTML', $shop_content_data['content_text']);
-  $smarty->assign('REVOCATION_TXT', $shop_content_data['content_text']); //replace br, strip_tags, html_entity_decode are allready execute in xtc_php_mail function
+  $smarty->assign('REVOCATION_TXT', $shop_content_data['content_text']);
+
+  // agb to email 
+  $shop_content_data = $main->getContentData(3, $lang_id, $order->info['status']);
+  $smarty->assign('AGB_HTML', $shop_content_data['content_text']);
+  $smarty->assign('AGB_TXT', $shop_content_data['content_text']);
 
   if (DOWNLOAD_ENABLED == 'true') {
     $send_order = true;
@@ -165,11 +134,8 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
   //email attachments
   $email_attachments = defined('EMAIL_BILLING_ATTACHMENTS') ? EMAIL_BILLING_ATTACHMENTS : '';
-  
-  ## PayOne
-  if (strpos($order->info['payment_method'], 'payone') !== false) {
-    require_once(DIR_FS_EXTERNAL.'payone/modules/send_order.php');
-  }
+
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/send_order/','php') as $file) require ($file);
 
   $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.html');
   $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.txt');
@@ -197,19 +163,35 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
   // send mail to customer
   if (SEND_EMAILS == 'true' || $send_by_admin) {
-  xtc_php_mail(EMAIL_BILLING_ADDRESS,
-               EMAIL_BILLING_NAME,
-               $order->customer['email_address'],
-               $order->customer['firstname'].' '.$order->customer['lastname'],
-               '',
-               EMAIL_BILLING_REPLY_ADDRESS,
-               EMAIL_BILLING_REPLY_ADDRESS_NAME,
-               $email_attachments,
-               '',
-               $order_subject,
-               $html_mail,
-               $txt_mail
-               );
+    xtc_php_mail(EMAIL_BILLING_ADDRESS,
+                 EMAIL_BILLING_NAME,
+                 $order->customer['email_address'],
+                 $order->customer['firstname'].' '.$order->customer['lastname'],
+                 '',
+                 EMAIL_BILLING_REPLY_ADDRESS,
+                 EMAIL_BILLING_REPLY_ADDRESS_NAME,
+                 $email_attachments,
+                 '',
+                 $order_subject,
+                 $html_mail,
+                 $txt_mail
+                 );
+                 
+    if (isset($sepa_html_mail)) {
+      xtc_php_mail(EMAIL_BILLING_ADDRESS,
+                   EMAIL_BILLING_NAME,
+                   $banktransfer_owner_email,
+                   '',
+                   '',
+                   EMAIL_BILLING_REPLY_ADDRESS,
+                   EMAIL_BILLING_REPLY_ADDRESS_NAME,
+                   '',
+                   '',
+                   EMAIL_BILLING_SUBJECT,
+                   $sepa_html_mail,
+                   $sepa_txt_mail
+                 );
+    }
   }
 
   if (AFTERBUY_ACTIVATED == 'true') {
@@ -219,36 +201,35 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
       $aBUY->process_order();
   }
 
-  if(isset($send_by_admin)) {
+  if (isset($send_by_admin)) {
     $customer_notified = '1';
     $orders_status_id = '1';
     //Comment out the next line for setting  the $orders_status_id= '1 '- Auskommentieren der nächste Zeile, um die $orders_status_id = '1' zu setzen
     $orders_status_id = ($order->info['orders_status']  < 1) ? '1' : $order->info['orders_status'];
 
     $sql_data_array = array(
-        'orders_status' => (int)$orders_status_id,
-        'last_modified' => 'now()'
-      );
-      
+      'orders_status' => (int)$orders_status_id,
+      'last_modified' => 'now()'
+    );     
     xtc_db_perform(TABLE_ORDERS,$sql_data_array,'update',"orders_id = '".(int)$insert_id."'");
     
     $sql_data_array = array(
-        'orders_id' => (int)$insert_id,
-        'orders_status_id' => (int)$orders_status_id,
-        'date_added' => 'now()',
-        'customer_notified ' => $customer_notified,
-        'comments ' => COMMENT_SEND_ORDER_BY_ADMIN
-      );
-    
+      'orders_id' => (int)$insert_id,
+      'orders_status_id' => (int)$orders_status_id,
+      'date_added' => 'now()',
+      'customer_notified' => $customer_notified,
+      'comments' => encode_utf8(COMMENT_SEND_ORDER_BY_ADMIN),
+    );  
     xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
-
+    
     $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
 
     if (isset($_GET['site']) && $_GET['site'] == 1) {
       xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&action=edit'));
-    } else xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID']));
+    } else {
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID']));
+    }
   }
-
 } else {
   $smarty->assign('ERROR', 'You are not allowed to view this order!');
   $smarty->display(CURRENT_TEMPLATE.'/module/error_message.html');

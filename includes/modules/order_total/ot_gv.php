@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: ot_gv.php 2099 2011-08-17 18:22:16Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -29,12 +29,13 @@
 class ot_gv {
   var $title, $output;
 
-  function ot_gv() {
+  function __construct() {
     global $xtPrice;
     $this->code = 'ot_gv';
     $this->title = MODULE_ORDER_TOTAL_GV_TITLE;
     $this->header = MODULE_ORDER_TOTAL_GV_HEADER;
     $this->description = MODULE_ORDER_TOTAL_GV_DESCRIPTION;
+    $this->info = MODULE_ORDER_TOTAL_GV_USER_PROMPT;
     $this->user_prompt = MODULE_ORDER_TOTAL_GV_USER_PROMPT;
     $this->enabled = MODULE_ORDER_TOTAL_GV_STATUS;
     $this->sort_order = MODULE_ORDER_TOTAL_GV_SORT_ORDER;
@@ -75,7 +76,7 @@ class ot_gv {
       if ($od_amount > 0) {
         $this->output[] = array (
             'title' => $this->title . ':', 
-            'text'  => '<b style="color:#ff0000">'.$xtPrice->xtcFormat($od_amount *(-1), true).'</b>', //2011-08-25 - web28 - fix negativ sign
+            'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($od_amount *(-1), true).'</b></span>', //2011-08-25 - web28 - fix negativ sign
             'value' => $xtPrice->xtcFormat($od_amount *(-1), false) //2011-08-25 - web28 - fix negativ sign
           );
       }
@@ -126,17 +127,19 @@ class ot_gv {
   } */
 
   function use_credit_amount() {
-    $output_string = ''.
+    //$output_string = ''.
 
     $_SESSION['cot_gv'] = false;
     if ($this->selection_test()) {
       //BOF - DokuMan - 2010-09-29 - remove layout formatting from checkbox
       //$output_string .= '    <td nowrap align="right" class="main">';
       //$output_string .= '<strong>'.$this->checkbox.'</strong>'.'</td>'."\n";
-      $output_string = $this->checkbox;
+      //$output_string = $this->checkbox;
+      return true;
       //EOF - DokuMan - 2010-09-29 - remove layout formatting from checkbox
     }
-    return $output_string;
+    return false;
+    //return $output_string;
   }
 
   function update_credit_account($i) {
@@ -170,6 +173,7 @@ class ot_gv {
   }
 
   function credit_selection() {
+    /*
     global $currencies;
     $selection_string = '';
     $gv_query = xtc_db_query("select coupon_id from ".TABLE_COUPONS." where coupon_type = 'G' and coupon_active='Y'");
@@ -184,12 +188,12 @@ class ot_gv {
       $selection_string .= '</tr>' . "\n";
     }
     */
-    return $selection_string;
+    //return $selection_string;
+    return false;
   }
 
   function apply_credit() {
     global $order, $coupon_no,$xtPrice;
-    $gv_payment_amount = ''; //undefined variable
     if (isset ($_SESSION['cot_gv']) && $_SESSION['cot_gv'] == true) {
       $gv_query = xtc_db_query("select amount from ".TABLE_COUPON_GV_CUSTOMER." where customer_id = '".$_SESSION['customer_id']."'");
       $gv_result = xtc_db_fetch_array($gv_query);
@@ -302,6 +306,17 @@ class ot_gv {
     if ($gv_result = xtc_db_fetch_array($gv_query)) {
       if ($gv_result['amount'] > 0) {
         return true;
+      }
+    }
+    return false;
+  }
+
+  function get_credit_amount() {
+    $gv_query = xtc_db_query("SELECT amount FROM ".TABLE_COUPON_GV_CUSTOMER." WHERE customer_id = '".$_SESSION['customer_id']."'");
+    if (xtc_db_num_rows($gv_query) > 0) {
+      $gv_result = xtc_db_fetch_array($gv_query);
+      if ($gv_result['amount'] > 0) {
+        return $gv_result['amount'];
       }
     }
     return false;

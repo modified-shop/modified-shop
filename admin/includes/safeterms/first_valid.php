@@ -57,7 +57,7 @@
 				<p style="margin-left:15px; margin-top:10px;">Shop-Name: <?php echo $response["SHOPNAME"]; ?></p>
 				<p style="margin-left:15px; margin-bottom:15px;">Shop-Adresse: <strong><?php echo $response["SHOPURL"]; ?></strong></p>
 				<p style="margin-left:15px; margin-bottom:5px;">Bitte w&auml;hlen Sie aus, f&uuml;r welche Sprachprofile die Rechtstexte importiert werden sollen:</p>
-				<form method="POST">
+				<?php echo xtc_draw_form('safeterms', FILENAME_SAFETERMS, '', 'post'); ?>
 				<p style="margin-left:25px; margin-bottom:20px;"><?php echo $languages; ?></p>
 			<p>Klicken Sie auf &quot;Rechtstexte einbinden&quot; um die Rechtstexte <strong>JETZT in Ihren Online Shop</strong> einzupflegen.</p>
 			<p style="margin-top:10px;margin-left:15px;"><strong>Hinweis: </strong><br /><small>Mit dem Klick auf &quot;Rechtstexte einbinden&quot; best&auml;tigen Sie, dass Sie die Rechtstexte in Ihrem Online-Shop nutzen d&uuml;rfen.</small></p>

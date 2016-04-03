@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: languages.php 5011 2013-07-04 15:22:37Z web28 $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -49,4 +49,5 @@ define('TEXT_LANGUAGE_TRANSFER_FROM', 'Von ');
 define('TEXT_LANGUAGE_TRANSFER_TO', ' nach ');
 define('TEXT_LANGUAGE_TRANSFER_OK', 'Transfer erfolgreich!');
 define('TEXT_LANGUAGE_TRANSFER_ERR', 'Bitte unterschiedliche Sprachen w&auml;hlen!');
+define('TEXT_LANGUAGE_TRANSFER_INFO2', '<strong>ACHTUNG:</strong> Beim Transfer werden die bestehenden Texte &uuml;berschrieben, daher bitte vorher unbedingt die Datenbank sichern!');
 ?>

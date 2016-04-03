@@ -153,7 +153,7 @@ class MagnaCompatibleInventoryView {
 	
 	protected function postDelete() { /* Nix :-) */ }
 	
-	private function initInventoryView() {
+	protected function initInventoryView() {
 		if (isset($_POST['SKUs']) && is_array($_POST['SKUs']) && isset($_POST['action'])
 			 //&& ($_SESSION['POST_TS'] != $_POST['timestamp']) // Re-Post Prevention
 		) {
@@ -220,7 +220,11 @@ class MagnaCompatibleInventoryView {
 			$this->offset = 0;
 		}
 	}
-	
+
+	protected function prepareInventoryItemData(&$item) {
+		
+	}
+
 	public function prepareInventoryData() {
 		global $magnaConfig;
 
@@ -232,6 +236,7 @@ class MagnaCompatibleInventoryView {
 					$item['Title'] = $item['ItemTitle'];
 					unset($item['ItemTitle']);
 				}
+				$this->prepareInventoryItemData($item);
 				$pID = magnaSKU2pID($item['SKU']);
 				if (is_array($this->settings['language'])) {
 					$iLanguageId = current($this->settings['language']);
@@ -247,8 +252,8 @@ class MagnaCompatibleInventoryView {
 				if (!empty($sTitle)) {
 					$item['Title'] = $sTitle;
 				}
-				$item['TitleShort'] = (strlen($item['Title']) > $this->settings['maxTitleChars'] + 2)
-						? (fixHTMLUTF8Entities(substr($item['Title'], 0, $this->settings['maxTitleChars'])).'&hellip;')
+				$item['TitleShort'] = (mb_strlen($item['Title'], 'UTF-8') > $this->settings['maxTitleChars'] + 2)
+						? (fixHTMLUTF8Entities(mb_substr($item['Title'], 0, $this->settings['maxTitleChars'], 'UTF-8')).'&hellip;')
 						: fixHTMLUTF8Entities($item['Title']);
 			}
 			unset($result);
@@ -329,7 +334,7 @@ class MagnaCompatibleInventoryView {
 		$fieldsDesc = $this->getFields();
 		foreach ($fieldsDesc as $fdesc) {
 			$html .= '
-					<td>'.$fdesc['Label'].(($fdesc['Sorter'] != null) ? ' '.$this->sortByType($fdesc['Sorter']) : '').'</td>';
+					<td>'.$fdesc['Label'].((isset($fdesc['Sorter']) && ($fdesc['Sorter'] != null)) ? ' '.$this->sortByType($fdesc['Sorter']) : '').'</td>';
 		}
 		$html .= '
 				</tr></thead>

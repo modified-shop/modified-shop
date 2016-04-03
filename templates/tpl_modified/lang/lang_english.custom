@@ -1,0 +1,36 @@
+zoomtext = 'For a larger view click on the thumbnail'
+products_desc = 'Products description'
+products_fsk18_check = 'This article can be purchased only after age verification.'
+products_manufacturer_model = 'MPN:'
+products_tags = 'Features'
+heading_products_tags = 'Product Features'
+
+first = '&laquo; first'
+back = '&laquo; back'
+overview = 'Overview'
+next = 'next &raquo;'
+last = 'last &raquo;'
+
+heading_miscellaneous = 'Payment methods'
+text_miscellaneous = 'Die Box kann unter tpl_modified/boxes/box__miscellaneous.html ver&auml;ndert werden. Die Sprachvariablen befinden sich in der Datei tpl_modified/lang/german/lang_german.custom.'
+
+ab_admin = 'Adminarea'
+ab_orders = 'Orders'
+ab_contentmanager = 'Content Manager'
+ab_customers = 'Customers'
+ab_category = 'Category/Products'
+ab_logoff = 'Logoff'
+ab_news = 'News'
+ab_offline = 'Shop Offline'
+
+ab_edit_content = 'Edit content'
+ab_edit_product = 'Edit product'
+ab_edit_attributes = 'Edit product attributes'
+ab_edit_category = 'Edit category'
+
+info_reviews = 'Reviews:'
+info_review = 'Review:'
+
+heading_trustedshops = 'Trusted Shops'
+
+text_search_again = 'Sorry, we could not find a product matching your search request'

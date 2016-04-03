@@ -116,6 +116,7 @@
 </div>
 <h2>{#title_password#}</h2>
 <div class="highlightbox">
+{#text_password_policy#|sprintf:$smarty.const.ENTRY_PASSWORD_MIN_LENGTH}
 <table width="100%" border="0" cellspacing="0" cellpadding="4">
   <tr>
     <td width="120">{#text_password#}</td>

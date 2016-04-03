@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: chronopost.php 5121 2013-07-18 11:38:19Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -41,7 +41,7 @@ define('MODULE_SHIPPING_CHRONOPOST_ZONE_DESC' , 'If a zone is selected, only ena
 define('MODULE_SHIPPING_CHRONOPOST_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_CHRONOPOST_SORT_ORDER_DESC' , 'Sort order of display.');
 define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_TITLE' , 'Einzelne Versandzonen');
-define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in die ein Versand m&ouml;glich sein soll. zb AT,DE');
+define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in die ein Versand m&ouml;glich sein soll. z.B. AT,DE');
 
 define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_1_TITLE' , 'Chronopost Zone 1 (pays)');
 define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_1_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (WORLD eintragen f&uuml;r den Rest der Welt.).');

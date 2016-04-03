@@ -1,0 +1,24 @@
+{config_load file="$language/lang_$language.conf" section="filter"}
+<div class="filter_bar cf">
+  <div class="sort_bar cf">
+    <div class="sort_bar_row cf">
+      {if count($FILTER_TAG) < 1 && $FILTER_MANUFACTURER != ''}<div class="sort_bar_item">{$FILTER_MANUFACTURER}</div>{/if}
+      <div class="sort_bar_item">{$FILTER_SORT}</div>
+      <div class="sort_bar_item">{$FILTER_SET}</div>
+    </div>
+  </div>
+  {if count($FILTER_TAG) > 0}
+  <div class="tags_bar">
+    <div class="tags_bar_headline cf">
+      {#text_filter_options#}
+      <a rel="nofollow" class="tags_bar_reset" href="{$LINK_FILTER_RESET}" title="Reset">{#text_filter_reset#}</a>
+    </div>
+    <div class="tags_bar_row cf">
+      {if $FILTER_MANUFACTURER != ''}<div class="tags_bar_item">{$FILTER_MANUFACTURER}</div>{/if}
+      {foreach name=aussen item=filter from=$FILTER_TAG}
+        <div class="tags_bar_item">{$filter}</div>
+      {/foreach}
+    </div>
+  </div>
+  {/if}
+</div>

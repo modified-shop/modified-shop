@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_get_tax_rate_from_desc.inc.php 2843 2012-05-06 14:30:10Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -41,7 +41,9 @@
     //remove tax info text
     $tax_desc = trim(str_replace(array(TAX_ADD_TAX,TAX_NO_TAX), '', $tax_desc));
     //get tax_rate from table tax_rates by tax_description
-    $tax_query = xtc_db_query("select tax_rate from " . TABLE_TAX_RATES . " where tax_description = '" . $tax_desc . "'");
+    $tax_query = xtc_db_query("SELECT tax_rate 
+                                 FROM " . TABLE_TAX_RATES . " 
+                                WHERE tax_description = '" . xtc_db_input($tax_desc) . "'");
     if (xtc_db_num_rows($tax_query) > 0) {
       $tax = xtc_db_fetch_array($tax_query);
       return $tax['tax_rate'];

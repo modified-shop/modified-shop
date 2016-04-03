@@ -7,17 +7,11 @@
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on:
-   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(configuration.php,v 1.40 2002/12/29); www.oscommerce.com
-   (c) 2003   nextcommerce (configuration.php,v 1.16 2003/08/19); www.nextcommerce.org
-   (c) 2003 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id$)
-   (c) 2008 Gambio OHG (gm_trusted_info.php 2008-08-10 gambio)
-
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
 require('includes/application_top.php');
+
 require (DIR_WS_INCLUDES.'head.php');
 ?>
   </head>

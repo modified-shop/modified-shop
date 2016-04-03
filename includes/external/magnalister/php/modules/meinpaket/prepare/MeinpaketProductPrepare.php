@@ -23,7 +23,6 @@ class MeinpaketProductPrepare {
 	protected $resources = array();
 	
 	protected $mpId = 0;
-	protected $marketplace = '';
 	
 	protected $isAjax = false;
 	
@@ -35,7 +34,6 @@ class MeinpaketProductPrepare {
 		$this->resources = &$resources;
 		
 		$this->mpId = $this->resources['session']['mpID'];
-		$this->marketplace = $this->resources['session']['currentPlatform'];
 		
 		$this->isAjax = isset($_GET['kind']) && ($_GET['kind'] == 'ajax');
 		
@@ -95,7 +93,7 @@ class MeinpaketProductPrepare {
 	}
 	
 	protected function execPreparationView() {
-		require_once(DIR_MAGNALISTER_MODULES.$this->marketplace.'/prepare/MeinpaketProductPrepareView.php');
+		require_once(DIR_MAGNALISTER_MODULES.'meinpaket/prepare/MeinpaketProductPrepareView.php');
 		
 		$cMDiag = new MeinpaketProductPrepareView($this->resources);
 		if ($this->isAjax) {
@@ -107,7 +105,7 @@ class MeinpaketProductPrepare {
 	}
 	
 	protected function execSelectionView() {
-                        require_once(DIR_MAGNALISTER_MODULES.$this->marketplace.'/prepare/MeinpaketPrepareCategoryView.php');
+                        require_once(DIR_MAGNALISTER_MODULES.'meinpaket/prepare/MeinpaketPrepareCategoryView.php');
                         $pV = new MeinpaketPrepareCategoryView(
                                 null,
                                 $this->prepareSettings,

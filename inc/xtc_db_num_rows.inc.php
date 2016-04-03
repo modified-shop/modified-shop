@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_db_num_rows.inc.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,6 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  die('Deprecated File: '.basename(__FILE__).'. Use db_functions_mysql(i) instead.');
+/*
   function xtc_db_num_rows($db_query,$cq=false) {
   
     //BOF - DokuMan - 2010-08-30 - if db_query not a valid result, return false
@@ -39,5 +41,6 @@
     if (!count($db_query)) return false;
      return count($db_query);
     */
-  }
+  //}
+*/
 ?>

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: freeamount.php 4855 2013-06-03 12:15:20Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -24,6 +24,7 @@
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_TITLE', 'Free Shipping');
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_DESCRIPTION', 'Free Shipping w/ Minimum Order Amount');
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_WAY', 'Free Shipping minimum order: %s');
+define('MODULE_SHIPPING_FREEAMOUNT_INVALID_ZONE', 'Unfortunately it is not possible to dispatch into this country');
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER', 'Sort Order');
 
 define('MODULE_SHIPPING_FREEAMOUNT_ALLOWED_TITLE' , 'Allowed Zones');

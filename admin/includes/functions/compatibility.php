@@ -1,30 +1,29 @@
 <?php
-  /* --------------------------------------------------------------
-   $Id$
+/* --------------------------------------------------------------
+   $Id: compatibility.php 950 2005-05-14 16:45:21Z mz $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
-   based on:
+   based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(compatibility.php,v 1.8 2003/04/09); www.oscommerce.com
-   (c) 2003 nextcommerce (compatibility.php,v 1.6 2003/08/18); www.nextcommerce.org
-   (c) 2006 XT-Commerce (compatibility.php 950 2005-05-14)
+   (c) 2002-2003 osCommerce(compatibility.php,v 1.8 2003/04/09); www.oscommerce.com 
+   (c) 2003	 nextcommerce (compatibility.php,v 1.6 2003/08/18); www.nextcommerce.org
 
-   Released under the GNU General Public License
+   Released under the GNU General Public License 
    --------------------------------------------------------------*/
+  
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-  ////
+
   // Recursively handle magic_quotes_gpc turned off.
   // This is due to the possibility of have an array in
   // $HTTP_xxx_VARS
   // Ie, products attributes
   function do_magic_quotes_gpc(&$ar) {
-    if (!is_array($ar)) return false;
+    if (!is_array($ar)) return;
 
-    reset($ar); //DokuMan - 2011-05-09 - Reset compatibility array indexes when working through its elements
     while (list($key, $value) = each($ar)) {
       if (is_array($value)) {
         do_magic_quotes_gpc($value);
@@ -32,16 +31,12 @@
         $ar[$key] = addslashes($value);
       }
     }
-    reset($ar); //DokuMan - 2011-05-09 - Reset compatibility array indexes when working through its elements
   }
 
   // $HTTP_xxx_VARS are always set on php4
-  if (!is_array($_GET))
-    $_GET = array();
-  if (!is_array($_POST))
-    $_POST = array();
-  if (!is_array($_COOKIE))
-    $_COOKIE = array();
+  if (!is_array($_GET)) $_GET = array();
+  if (!is_array($_POST)) $_POST = array();
+  if (!is_array($_COOKIE)) $_COOKIE = array();
 
   // handle magic_quotes_gpc turned off.
   if (!get_magic_quotes_gpc()) {
@@ -50,23 +45,38 @@
     do_magic_quotes_gpc($_COOKIE);
   }
 
-  //BOF - DokuMan - 2010-01-06 set default timezone if none exists (PHP 5.3 throws an E_WARNING)
-  if ((strlen(ini_get('date.timezone')) < 1) && function_exists('date_default_timezone_set')) {
-    date_default_timezone_set(@date_default_timezone_get());
+  if (!function_exists('is_numeric')) {
+    function is_numeric($param) {
+      return preg_match("/^[0-9]{1,50}.?[0-9]{0,50}$/", $param); // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
+    }
   }
-  //EOF - DokuMan - 2010-01-06 set default timezone if none exists (PHP 5.3 throws an E_WARNING)
 
-  //BOF - DokuMan - 2011-01-06 - remove PHP3 compatiblity code
-  //is_numeric()
-  //is_uploaded_file()
-  //move_uploaded_file()
-  //EOF - DokuMan - 2011-01-06 - remove PHP3 compatiblity code
+  if (!function_exists('is_uploaded_file')) {
+    function is_uploaded_file($filename) {
+      if (!$tmp_file = get_cfg_var('upload_tmp_dir')) {
+        $tmp_file = dirname(tempnam('', ''));
+      }
 
-  //checkdnsrr on Windows plattforms available from PHP <= 5.3.0
+      if (strchr($tmp_file, '/')) {
+        if (substr($tmp_file, -1) != '/') $tmp_file .= '/';
+      } elseif (strchr($tmp_file, '\\')) {
+        if (substr($tmp_file, -1) != '\\') $tmp_file .= '\\';
+      }
+
+      return file_exists($tmp_file . basename($filename));
+    }
+  }
+
+  if (!function_exists('move_uploaded_file')) {
+    function move_uploaded_file($file, $target) {
+      return copy($file, $target);
+    }
+  }
+
   if (!function_exists('checkdnsrr')) {
     function checkdnsrr($host, $type) {
       if(xtc_not_null($host) && xtc_not_null($type)) {
-        @exec("nslookup -type=" . escapeshellarg($type) . " " . escapeshellarg($host), $output); // DokuMan - 2011-01-06 - added escapeshellarg
+        @exec("nslookup -type=$type $host", $output);
         while(list($k, $line) = each($output)) {
           if(preg_match("/^$host/i", $line)) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
             return true;
@@ -77,42 +87,123 @@
     }
   }
 
-//BOF - DokuMan - 2011-05-25 - Clone implementation of wddx_deserialize
-  if (!function_exists('wddx_deserialize')) {
-    function wddx_deserialize($xmlpacket) {
-      if ($xmlpacket instanceof SimpleXMLElement) {
-          if (!empty($xmlpacket->struct)) {
-              $struct = array();
-              foreach ($xmlpacket->xpath("struct/var") as $var) {
-                if (!empty($var["name"])) {
-                  $key = (string) $var["name"];
-                  $struct[$key] = wddx_deserialize($var);
-                }
-              }
-              return $struct;
-          } else if (!empty($xmlpacket->array)) {
-              $array = array();
-              foreach ($xmlpacket->xpath("array/*") as $var) {
-                  array_push($array, wddx_deserialize($var));
-              }
-              return $array;
-          } else if (!empty($xmlpacket->string)) {
-              return (string) $xmlpacket->string;
-          } else if (!empty($xmlpacket->number)) {
-              return (int) $xmlpacket->number;
-          } else {
-              if (is_numeric((string) $xmlpacket)) {
-                  return (int) $xmlpacket;
-              } else {
-                  return (string) $xmlpacket;
-              }
-          }
-      } else {
-        $sxe = simplexml_load_string($xmlpacket);
-        $datanode = $sxe->xpath("/wddxPacket[@version='1.0']/data");
-        return wddx_deserialize($datanode[0]);
-      }
+  // Wrapper for class_exists() function
+  // This function is not available in all PHP versions so we test it before using it.
+  /**
+   * xtc_class_exists()
+  *
+   * @param mixed $class_name
+   * @return
+   */
+  function xtc_class_exists($class_name) {
+    if (function_exists('class_exists')) {
+      return class_exists($class_name);
+    } else {
+      return true;
     }
   }
-//EOF - DokuMan - 2011-05-25 - Clone implementation of wddx_deserialize
+
+  /**
+   * xtc_array_merge()
+   *
+   * @param mixed $array1
+   * @param mixed $array2
+   * @param string $array3
+   * @return
+   */
+  function xtc_array_merge($array1, $array2, $array3 = '') {
+      if (!is_array($array1)) {
+        $array1 = array ();
+      }
+      if (!is_array($array2)) {
+        $array2 = array ();
+      }
+      if (!is_array($array3)) {
+        $array3 = array ();
+      }
+    if (function_exists('array_merge')) {
+      $array_merged = array_merge($array1, $array2, $array3);
+    } else {
+      while (list ($key, $val) = each($array1))
+        $array_merged[$key] = $val;
+      while (list ($key, $val) = each($array2))
+        $array_merged[$key] = $val;
+      if (sizeof($array3) > 0)
+        while (list ($key, $val) = each($array3))
+          $array_merged[$key] = $val;
+    }
+    return (array) $array_merged;
+  }
+
+  function xtc_array_shift(& $array) {
+    if (function_exists('array_shift')) {
+      return array_shift($array);
+    } else {
+      $i = 0;
+      $shifted_array = array ();
+      reset($array);
+      while (list ($key, $value) = each($array)) {
+        if ($i > 0) {
+          $shifted_array[$key] = $value;
+        } else {
+          $return = $array[$key];
+        }
+        $i ++;
+      }
+      $array = $shifted_array;
+      return $return;
+    }
+  }
+
+  function xtc_array_reverse($array) {
+    if (function_exists('array_reverse')) {
+      return array_reverse($array);
+    } else {
+      $reversed_array = array ();
+      for ($i = sizeof($array) - 1; $i >= 0; $i --) {
+        $reversed_array[] = $array[$i];
+      }
+      return $reversed_array;
+    }
+  }
+
+  /**
+   * xtc_array_slice()
+   *
+   * @param mixed $array
+   * @param mixed $offset
+   * @param string $length
+   * @return
+   */
+  function xtc_array_slice($array, $offset, $length = '0') {
+    if (function_exists('array_slice')) {
+      return array_slice($array, $offset, $length);
+    } else {
+      $length = abs($length);
+      if ($length == 0) {
+        $high = sizeof($array);
+      } else {
+        $high = $offset + $length;
+      }
+      for ($i = $offset; $i < $high; $i ++) {
+        $new_array[$i - $offset] = $array[$i];
+      }
+      return $new_array;
+    }
+  }
+
+  /**
+   * xtc_constant()
+   *
+   * @param mixed $constant
+   * @return
+   */
+  function xtc_constant($constant) {
+    if (function_exists('constant')) {
+      $temp = constant($constant);
+    } else {
+      eval ("\$temp=$constant;");
+    }
+    return $temp;
+  }
 ?>

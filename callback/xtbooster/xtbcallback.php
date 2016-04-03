@@ -8,6 +8,7 @@
 ##
 
 @set_time_limit(0);
+chdir('../../');
 require_once 'includes/application_top.php';	# This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
 require (DIR_WS_CLASSES.'xtbooster.php');
 
@@ -21,8 +22,8 @@ function xsb_db_affected_rows() {
 
 function xsb_session_register($var) {
 	if (!isset($_SESSION[$var])) {
-		if (isset($$var)) {
-			$_SESSION[$var] = $$var;
+		if (isset(${$var})) {
+			$_SESSION[$var] = ${$var};
 		} else {
 			$_SESSION[$var] = null;
 		}
@@ -63,7 +64,7 @@ if(isset($_GET['reverse']))
 		require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 		xtc_write_user_info((int) $_SESSION['customer_id']);
 
-		header("Location: ./admin/xtbooster.php?xtb_module=list&filter=1");
+		header("Location: ./".(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/')."xtbooster.php?xtb_module=list&filter=1");
 		exit;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: order_history.php 5581 2013-09-08 21:26:38Z Tomcraft $
    
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -22,42 +22,38 @@
   if (isset($_SESSION['customer_id'])) {
 
     $box_smarty = new smarty;
-    $customer_orders_string = '';
+    $customer_orders_array = array();
 
     // retreive the last x products purchased
-    $orders_query = xtc_db_query("
-        SELECT DISTINCT op.products_id
-                   FROM " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_PRODUCTS . " p
-                  WHERE o.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                    AND o.orders_id = op.orders_id 
-                    AND op.products_id = p.products_id
-                    AND p.products_status = '1' 
-               GROUP BY products_id 
-               ORDER BY o.date_purchased DESC 
-                  LIMIT " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX);
-    if (xtc_db_num_rows($orders_query)) {
-      $product_ids = '';
+    $orders_query = xtc_db_query("SELECT DISTINCT p.products_id,
+                                                  pd.products_name,
+                                                  o.orders_id,
+                                                  op.orders_products_id
+                                             FROM " . TABLE_ORDERS . " o
+                                             JOIN " . TABLE_ORDERS_PRODUCTS . " op
+                                                  ON o.orders_id = op.orders_id
+                                             JOIN " . TABLE_PRODUCTS . " p
+                                                  ON op.products_id = p.products_id
+                                             JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                                  ON p.products_id = pd.products_id
+                                                     AND language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                            WHERE o.customers_id = '" . (int)$_SESSION['customer_id'] . "'
+                                              AND p.products_status = '1' 
+                                         GROUP BY p.products_id 
+                                         ORDER BY o.date_purchased DESC 
+                                            LIMIT " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX);
+
+    $customer_orders_array = array();
+    if (xtc_db_num_rows($orders_query) > 0) {
       while ($orders = xtc_db_fetch_array($orders_query)) {
-        $product_ids .= $orders['products_id'] . ',';
+        $customer_orders_array[] = array(
+          'PRODUCTS_LINK' => '<a href="' . xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$orders['products_id']) . '">' . $orders['products_name'] . '</a>',
+          'ORDER_LINK' => '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')) . 'action=add_order_product&order_id='.$orders['orders_id'].'&id='.$orders['orders_products_id']) . '">' . xtc_image_button('templates/' . CURRENT_TEMPLATE . '/img/icon_cart.png' , ICON_CART) . '</a>',
+        );
       }
-      $product_ids = substr($product_ids, 0, -1);
-      $customer_orders_string = '<table border="0" width="100%" cellspacing="0" cellpadding="1">';
-      $products_query = xtc_db_query("
-          SELECT products_id, products_name 
-            FROM " . TABLE_PRODUCTS_DESCRIPTION . "
-           WHERE products_id IN (" . $product_ids . ")
-             AND language_id = '" . (int)$_SESSION['languages_id'] . "'
-        ORDER BY products_name");
-      while ($products = xtc_db_fetch_array($products_query)) {
-        $customer_orders_string .= '  <tr>' .
-                                   '    <td class="infoBoxContents"><a href="' . xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products['products_id'],$products['products_name'])) . '">' . $products['products_name'] . '</a></td>' .
-                                   '    <td class="infoBoxContents" align="right" valign="top"><a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $products['products_id']) . '">' . xtc_image(DIR_WS_ICONS . 'cart.gif', ICON_CART) . '</a></td>' .
-                                   '  </tr>';
-      }
-      $customer_orders_string .= '</table>';
     }
 
-    $box_smarty->assign('BOX_CONTENT', $customer_orders_string);
+    $box_smarty->assign('BOX_CONTENT', $customer_orders_array);
 
     $box_smarty->caching = 0;
     $box_smarty->assign('language', $_SESSION['language']);

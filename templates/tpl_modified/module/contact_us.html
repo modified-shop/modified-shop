@@ -1,0 +1,70 @@
+{config_load file="$language/lang_$language.conf" section="newsletter"}
+{config_load file="$language/lang_$language.conf" section="contact_us"}
+{config_load file="lang_`$language`.custom"}
+<h1>{$CONTACT_HEADING}</h1>
+{if $error_message != ''}<div class="errormessage">{$error_message}</div>{/if}
+
+{if $success != '1'}
+  <div class="twoColums cf">
+    {$FORM_ACTION}
+    <div class="highlightbox">
+      <h4>{#text_data#} <span class="pflicht">({#text_hint#})</span></h4>
+      <table>
+        <tr>
+          <td><span class="fieldtext">{#text_name#}</span><span class="stern">{$INPUT_NAME}</span></td>
+        </tr>
+        <tr>
+          <td><span class="fieldtext">{#text_email#}</span><span class="stern">{$INPUT_EMAIL} <span class="inputRequirement">*</span></span></td>
+        </tr>
+        <tr>
+          <td><span class="fieldtext">{#text_phone#}</span><span class="stern">{$INPUT_PHONE}</span></td>
+        </tr>
+{*
+        <tr>
+          <td><span class="fieldtext">{#text_fax#}</span><span class="stern">{$INPUT_FAX}</span></td>
+        </tr>
+        <tr>
+          <td><span class="fieldtext">{#text_street#}</span><span class="stern">{$INPUT_STREET}</span></td>
+        </tr>
+        <tr>
+          <td><span class="fieldtext">{#text_postcode#}</span><span class="stern">{$INPUT_POSTCODE}</span></td>
+        </tr>
+        <tr>
+          <td><span class="fieldtext">{#text_city#}</span><span class="stern">{$INPUT_CITY}</span></td>
+        </tr>
+        <tr>
+          <td><span class="fieldtext">{#text_company#}</span><span class="stern">{$INPUT_COMPANY}</span></td>
+        </tr>
+*}
+        {if $INPUT_CODE}
+        <tr>
+          <td><span class="fieldtext">{#text_sec_code#}</span><span class="stern">{$VVIMG}</span></td>
+        </tr>
+        <tr>
+          <td><span class="fieldtext">{#text_inp_code#}</span><span class="stern">{$INPUT_CODE}<span class="inputRequirement"> *</span></span></td>
+        </tr>
+        {/if}
+        <tr>
+          <td><span class="fieldtext">{#text_message#}</span><span class="stern">{$INPUT_TEXT}<span class="inputRequirement_textarea"> *</span></span></td>
+        </tr>
+      </table>    
+    </div>
+    <div class="button_right">{$BUTTON_SUBMIT}</div>
+    {$FORM_END}
+  </div>
+
+  <div class="twoColums last">
+    <div class="highlightbox plainright">
+      <h4>{#text_contact_us#} <span class="pflicht">&nbsp;</span></h4>
+      {$CONTACT_CONTENT}
+    </div>
+  </div>
+{else}
+  <div class="twoColums last">
+    <div class="highlightbox plainleft cf">
+      <h4>{#text_thanks#} <span class="pflicht">&nbsp;</span></h4>
+      <p>{#text_success#}</p>
+      <div class="button_right">{$BUTTON_CONTINUE}</div>
+    </div>
+  </div>
+{/if}

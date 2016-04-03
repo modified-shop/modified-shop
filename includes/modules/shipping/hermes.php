@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: hermes.php 5134 2013-07-18 14:23:20Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -22,7 +22,7 @@
     var $code, $title, $description, $icon, $enabled;
 
 
-    function hermes() {
+    function __construct() {
       global $order, $shipping_weight;
 
       $this->code = 'hermes';

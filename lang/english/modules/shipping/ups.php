@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: ups.php 5121 2013-07-18 11:38:19Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

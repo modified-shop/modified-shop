@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: languages.php 5581 2013-09-08 21:26:38Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -25,7 +25,7 @@
   $count_lng = 0;
   reset($lng->catalog_languages);
   while (list($key, $value) = each($lng->catalog_languages)) {
-    $count_lng++;    
+    $count_lng++;
     $lng_link_txt = file_exists('lang/' .  $value['directory'] .'/' . $value['image']) ? xtc_image('lang/' .  $value['directory'] .'/' . $value['image'], $value['name']) : $value['name'];
     $languages_string .= ' <a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . $lng_link_txt . '</a> ';
   }

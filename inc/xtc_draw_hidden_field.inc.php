@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_draw_hidden_field.inc.php 4306 2013-01-14 07:08:36Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

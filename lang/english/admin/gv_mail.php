@@ -1,11 +1,11 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: gv_mail.php 899 2005-04-29 02:40:57Z hhgag $
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -30,15 +30,15 @@ define('HEADING_TITLE', 'Send Gift Voucher To Customers');
 define('TEXT_CUSTOMER', 'Customer:');
 define('TEXT_SUBJECT', 'Subject:');
 define('TEXT_FROM', 'From:');
-define('TEXT_TO', 'e-mail to:');
+define('TEXT_TO', 'E-Mail to:');
 define('TEXT_AMOUNT', 'Amount');
 define('TEXT_MESSAGE', 'Message:');
-define('TEXT_SINGLE_EMAIL', '<span class="smallText">Use this for sending single e-mails, otherwise use dropdown above</span>');
+define('TEXT_SINGLE_EMAIL', '<span class="smallText">Use this for sending single E-Mails, otherwise use dropdown above</span>');
 define('TEXT_SELECT_CUSTOMER', 'Select Customer');
 define('TEXT_ALL_CUSTOMERS', 'All Customers');
 define('TEXT_NEWSLETTER_CUSTOMERS', 'To All Newsletter Subscribers');
 
-define('NOTICE_EMAIL_SENT_TO', 'Notice: e-mail sent to: %s');
+define('NOTICE_EMAIL_SENT_TO', 'Notice: E-Mail sent to: %s');
 define('ERROR_NO_CUSTOMER_SELECTED', 'Error: No customer has been selected.');
 define('ERROR_NO_AMOUNT_SELECTED', 'Error: No amount has been selected.');
 
@@ -53,4 +53,5 @@ define ('TEXT_REDEEM_COUPON_MESSAGE_HEADER', 'You recently purchasd a Gift Vouch
 define ('TEXT_REDEEM_COUPON_MESSAGE_AMOUNT', "\n\n" . 'The value of the Gift Voucher was %s');
 define ('TEXT_REDEEM_COUPON_MESSAGE_BODY', "\n\n" . 'You can now visit our site, login and send the Gift Voucher amount to anyone you want.');
 define ('TEXT_REDEEM_COUPON_MESSAGE_FOOTER', "\n\n");
+
 ?>

@@ -18,23 +18,26 @@
  * -----------------------------------------------------------------------------
  */
 require_once DIR_MAGNALISTER_INCLUDES.'lib/classes/ProductList/Dependency/MLProductListDependencyLastPreparedFilter.php';
+
 class MLProductListDependencyAmazonLastPreparedFilter extends MLProductListDependency {
-	
 	protected function getDefaultConfig() {
+		$mpId = $this->getMagnaSession('mpID');
 		$aSelectValues = array('0' => ML_OPTION_FILTER_LASTPREPARED_ARTICLES_ALL);
 		$aPrepareTsData = MagnaDB::gi()->fetchArray(eecho("
 			(
 				SELECT DISTINCT PreparedTs
-				FROM `".TABLE_MAGNA_AMAZON_APPLY."`
-				WHERE PreparedTs != '0000-00-00 00:00:00'
+				  FROM `".TABLE_MAGNA_AMAZON_APPLY."`
+				 WHERE PreparedTs != '0000-00-00 00:00:00'
+				       AND mpID = '".$mpId."'
 			) UNION (
 				SELECT DISTINCT PreparedTs
-				FROM `".TABLE_MAGNA_AMAZON_PROPERTIES."`
-				WHERE PreparedTs != '0000-00-00 00:00:00'
+				  FROM `".TABLE_MAGNA_AMAZON_PROPERTIES."`
+				 WHERE PreparedTs != '0000-00-00 00:00:00'
+				       AND mpID = '".$mpId."'
 			)
 			ORDER BY PreparedTS DESC
-			LIMIT 100", false
-		), true);
+			   LIMIT 100
+		", false), true);
 		if (!empty($aPrepareTsData)) {
 			foreach ($aPrepareTsData as $sDateTime) {
 				$aSelectValues[$sDateTime] = date (ML_OPTION_FILTER_LASTPREPARED_DATE_FORMAT, strtotime($sDateTime));
@@ -65,14 +68,14 @@ class MLProductListDependencyAmazonLastPreparedFilter extends MLProductListDepen
 				'in' => MagnaDB::gi()->fetchArray("
 					(
 						SELECT DISTINCT ".$sKeyType."
-						FROM `".TABLE_MAGNA_AMAZON_APPLY."`
-						WHERE PreparedTs = '".MagnaDb::gi()->escape($this->getFilterRequest())."'
-						AND mpID = '".$this->getMagnaSession('mpID')."'
+						  FROM `".TABLE_MAGNA_AMAZON_APPLY."`
+						 WHERE PreparedTs = '".MagnaDb::gi()->escape($this->getFilterRequest())."'
+						       AND mpID = '".$this->getMagnaSession('mpID')."'
 					) UNION (
 						SELECT DISTINCT ".$sKeyType."
-						FROM `".TABLE_MAGNA_AMAZON_PROPERTIES."`
-						WHERE PreparedTs = '".MagnaDb::gi()->escape($this->getFilterRequest())."'
-						AND mpID = '".$this->getMagnaSession('mpID')."'
+						  FROM `".TABLE_MAGNA_AMAZON_PROPERTIES."`
+						 WHERE PreparedTs = '".MagnaDb::gi()->escape($this->getFilterRequest())."'
+						       AND mpID = '".$this->getMagnaSession('mpID')."'
 					)
 				", true),
 				'notIn' => null,

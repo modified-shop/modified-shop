@@ -25,15 +25,10 @@
 
       if(is_array($configuration_key)){
         foreach($configuration_key as $key){
-          $configuration_query = xtc_db_query("
-                      SELECT
-                        configuration_value
-                      FROM
-                        shop_configuration
-                      WHERE
-                        configuration_key = '" . $key . "'
-                        LIMIT 1
-                      ");
+          $configuration_query = xtc_db_query("SELECT configuration_value
+                                                 FROM shop_configuration
+                                                WHERE configuration_key = '" . xtc_db_input($key) . "'
+                                                LIMIT 1");
           if(xtc_db_num_rows($configuration_query) == 1){
             if($configuration_values == false) $configuration_values = array();
             $configuration_row = xtc_db_fetch_array($configuration_query);
@@ -46,16 +41,10 @@
         }
       }
       else{
-        $configuration_query = xtc_db_query("
-                    SELECT
-                      configuration_value
-                    FROM
-                      shop_configuration
-                    WHERE
-                      configuration_key = '" . $configuration_key . "'
-                      LIMIT 1
-                    ");
-
+        $configuration_query = xtc_db_query("SELECT configuration_value
+                                               FROM shop_configuration
+                                              WHERE configuration_key = '" . xtc_db_input($configuration_key) . "'
+                                              LIMIT 1");
         if(xtc_db_num_rows($configuration_query) == 1){
           if($configuration_values == false) $configuration_values = '';
           $configuration_row = xtc_db_fetch_array($configuration_query);
@@ -67,16 +56,10 @@
   }
   
   function get_shop_offline_status() {
-
-    $configuration_query = xtc_db_query("
-        SELECT
-          configuration_key,
-          configuration_value
-        FROM
-          shop_configuration
-        WHERE
-          configuration_key LIKE 'SHOP_OFFLINE%'
-        ");
+    $configuration_query = xtc_db_query("SELECT configuration_key,
+                                                configuration_value
+                                           FROM shop_configuration
+                                          WHERE configuration_key LIKE 'SHOP_OFFLINE%'");
     while ($config = xtc_db_fetch_array($configuration_query)) {
       $configuration[$config['configuration_key']] = stripslashes($config['configuration_value']);
     }
@@ -111,8 +94,8 @@
   
   function get_customer_email_by_id($cID) {
     $customers_status_query = xtc_db_query("SELECT customers_email_address 
-                                                FROM " . TABLE_CUSTOMERS . " 
-                                               WHERE customers_id = '" . (int)$cID . "'");
+                                              FROM " . TABLE_CUSTOMERS . " 
+                                             WHERE customers_id = '" . (int)$cID . "'");
     $customers_status_value = xtc_db_fetch_array($customers_status_query);
     return $customers_status_value['customers_email_address'];
   }

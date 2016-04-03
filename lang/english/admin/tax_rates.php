@@ -1,17 +1,16 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: tax_rates.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(tax_rates.php,v 1.9 2003/03/13); www.oscommerce.com 
    (c) 2003	 nextcommerce (tax_rates.php,v 1.4 2003/08/1); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -32,7 +31,7 @@ define('TEXT_INFO_CLASS_TITLE', 'Tax Class Title:');
 define('TEXT_INFO_COUNTRY_NAME', 'Country:');
 define('TEXT_INFO_ZONE_NAME', 'Zone:');
 define('TEXT_INFO_TAX_RATE', 'Tax Rate (%):');
-define('TEXT_INFO_TAX_RATE_PRIORITY', 'Tax rates at the same priority are added, others are compounded.<br /><br />Priority:');
+define('TEXT_INFO_TAX_RATE_PRIORITY', 'Tax rates at the same priority are added, others are compounded.<br/><br/><b>Attention:</b> For electronically supplied services, this must be set to 99.<br /><br />Priority:');
 define('TEXT_INFO_RATE_DESCRIPTION', 'Description:');
 define('TEXT_INFO_INSERT_INTRO', 'Please enter the new tax class with its related data');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this tax rate?');

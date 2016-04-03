@@ -1,11 +1,11 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: set_currency_session.php 5634 2013-09-10 12:31:13Z web28 $
 
-   Modified - community made shopping
+   modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 Modified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/

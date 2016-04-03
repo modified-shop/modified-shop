@@ -26,7 +26,7 @@ require_once(DIR_FS_CATALOG . 'includes/external/masterpayment/MasterpaymentActi
   class masterpayment_config extends MasterpaymentActions {
     var $code, $title, $description, $enabled;
 
-    function masterpayment_config() {
+    function __construct() {
       global $order;
 	  
 	  parent::__construct();

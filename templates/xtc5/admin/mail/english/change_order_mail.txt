@@ -6,16 +6,17 @@ The status of your order {if $ORDER_NR}No. {$ORDER_NR}{/if} {if $ORDER_DATE}from
 {if $ORDER_LINK}Link to order:
 {$ORDER_LINK} {/if}
 
-{if $NOTIFY_COMMENTS}Notes to your order:{$NOTIFY_COMMENTS}{/if}
+{if $NOTIFY_COMMENTS}Notes to your order:
+{$NOTIFY_COMMENTS}{/if}
 
 New status: {$ORDER_STATUS}
 
-{if $PARCEL_COUNT}
-Your shipment consists of {$PARCEL_COUNT} parcel(s).{/if}
-
-{if $PARCEL_LINK_TXT}
+{if $PARCEL_COUNT > 0}
+Your shipment consists of {$PARCEL_COUNT} parcel(s).
 You can inform yourself about the delivery status with a click on the following package number(s):
-{$PARCEL_LINK_TXT}{/if}
+{foreach name=aussen item=tracking_data from=$PARCEL_ARRAY}
+{$tracking_data.tracking_link}
+{/foreach}{/if}
 
 If you have any questions, please reply to this e-mail.
 

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * Shopgate GmbH
 *
 * URHEBERRECHTSHINWEIS
@@ -25,14 +25,9 @@
  * This file is only for compatibility to older versions.
  */
 date_default_timezone_set("Europe/Berlin");
-
 include_once dirname(__FILE__).'/shopgate_library/shopgate.php';
-
-// Change to a base directory to include all files from
-$dir = realpath(dirname(__FILE__)."/../");
-##### XTCM BOF #####
+$dir = realpath(dirname(__FILE__)."/../");// Change to a base directory to include all files from
 chdir( $dir );
-##### XTCM EOF #####
 
 // @chdir hack for warning: "open_basedir restriction in effect"
 if(@chdir( $dir ) === FALSE){
@@ -49,7 +44,5 @@ define("PRES_CLIENT_IP", @$_SERVER["SERVER_ADDR"]);
 include_once('includes/application_top.php');
 include_once dirname(__FILE__).'/plugin.php';
 
-##### XTCM BOF #####
 $ShopgateFramework = new ShopgateModifiedPlugin();
-##### XTCM EOF #####
 $ShopgateFramework->handleRequest($_REQUEST);

@@ -1,0 +1,39 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{config_load file="lang_`$language`.custom"}
+<div id="cart_short"{if $empty == 'false'} style="cursor:pointer"{/if}>
+  {if $empty == 'false'}
+  <a {if $deny_cart neq 'true'}id="toggle_cart"{/if} href="{$LINK_CART}">{#heading_cart#} &raquo;<span class="cart_content"><span class="bold_font">{$PRODUCTS}</span> {#text_article#}{* &nbsp;&bull;&nbsp;{#text_total#}:<strong>{$TOTAL}</strong>*}</span></a>
+  {else}
+  <a {if $deny_cart neq 'true'}id="toggle_cart"{/if} href="{$LINK_CART}">{#heading_cart#} &raquo;<span class="cart_content"><span class="bold_font">0</span> {#text_article#}{* &nbsp;&bull;&nbsp;{#text_total#}: <strong>0,00 {$smarty.session.currency}</strong>*}</span></a>
+  {/if}
+</div>
+
+<div class="toggle_cart">
+{if $deny_cart neq 'true'}
+  {if $ACTIVATE_GIFT == 'true'}
+    {if isset($GV_AMOUNT)}
+      <div class="giftmessage"><strong>{#voucher_balance#}</strong>&nbsp;{$GV_AMOUNT}</div>
+    {/if}
+  {/if}
+  {if $empty == 'false'}
+    <div class="mini"><strong>{#text_full_cart#}</strong></div>
+    <ul class="tc_list">
+    {foreach name=aussen item=products_data from=$products}
+      <li><a href="{$products_data.LINK}">{$products_data.QTY}&nbsp;x&nbsp;{$products_data.NAME|truncate:40:"...":true}</a><span class="tc_delete">{$products_data.BUTTON_DELETE}</span></li>
+    {/foreach}
+    </ul>
+    <div class="toogle_cart_links">
+      <a href="{$LINK_CHECKOUT}"><strong>{#heading_checkout#}&nbsp;&raquo;</strong></a>
+      <a href="{$LINK_CART}"><strong>{#heading_cart#}&nbsp;&raquo;</strong></a>
+    </div>    
+  {else}
+    <div class="mini"><strong>{#text_empty_cart#}</strong></div>
+    {*
+    <div class="toogle_cart_links">
+      <a href="{$LINK_CHECKOUT}"><strong>{#heading_checkout#}&nbsp;&raquo;</strong></a>
+      <a href="{$LINK_CART}"><strong>{#heading_cart#}&nbsp;&raquo;</strong></a>
+    </div>
+    *}
+  {/if}
+{/if}
+</div>

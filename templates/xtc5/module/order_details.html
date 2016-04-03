@@ -21,7 +21,10 @@
         </tr>
       {/foreach}
       </table>
-    {/if}</td>
+    {/if}
+    {if $module_data.ATTRIBUTES == ''}<br />{/if}
+    {if $module_data.BUTTON_WISHLIST != ''}&laquo; {$module_data.BUTTON_WISHLIST}{/if}
+    </td>
     <td class="singleprice">{$module_data.PRODUCTS_SINGLE_PRICE}</td>
     <td class="totalprice">{$module_data.PRODUCTS_PRICE}</td>
     {* DokuMan - 2009-11-03 - use delete button instead of checkbox in template (commented out) *}
@@ -40,14 +43,19 @@
     </td>
     *}
     <td colspan="4" class="subtotal">
-      {if $UST_CONTENT}{$UST_CONTENT}{else}<strong>{php}printf(TAX_INFO_EXCL, ''){/php}</strong><br />{/if}
-       <strong>{$TOTAL_CONTENT}</strong><br />
-      {if $SELECT_COUNTRY}{$SELECT_COUNTRY}<br />{/if}
-      {foreach name=aussen item=shipping_data from=$shipping_content}
-        {$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}<br />
-      {/foreach}
+      {if $smarty.const.MODULE_SMALL_BUSINESS != 'true'}
+        {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
+      {/if}
+      <strong>{$TOTAL_CONTENT}</strong><br />
+      {if sizeof($shipping_content) > 0}
+        {if $SELECT_COUNTRY}{$SELECT_COUNTRY}<br />{/if}
+        {foreach name=aussen item=shipping_data from=$shipping_content}
+          {$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}<br />
+        {/foreach}
+      {/if}
       {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
-      {if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT} kg{/if}
+      {if isset($FREE_SHIPPING_INFO)}{$FREE_SHIPPING_INFO}{/if}
+      {*if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT} kg{/if*}
       {if $KLARNA_PPBOX}<br />{$KLARNA_PPBOX}{/if}
     </td>
     <td class="subtotal">&nbsp;</td>

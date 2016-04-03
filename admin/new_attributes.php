@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$
+   $Id: new_attributes.php 3212 2012-07-14 09:41:44Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -30,11 +30,13 @@ require_once(DIR_FS_INC . 'xtc_format_filesize.inc.php');
 $oldaction = isset($_GET['oldaction']) ? '&oldaction='.$_GET['oldaction'] : (isset($_POST['oldaction']) ? '&oldaction='.$_POST['oldaction']: '');
 $oldpage = isset($_GET['page']) ? '&page='.$_GET['page'] : (isset($_POST['page']) ? '&page='.$_POST['page']: '') ;
 
+$iframe = (isset($_GET['iframe']) ? $iframe = '&iframe=1' : '');
+
 //nach Speichern zur Kontrolle neu laden
 if (isset($_POST['products_options_id']) && $_POST['action'] == 'change') {
    include(DIR_WS_MODULES.'new_attributes_change.php');
    $options_id = isset($_POST['options_id']) ? '&options_id='.implode(',',$_POST['options_id']) : '';
-   xtc_redirect(xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'cpath='. $_POST['cpath'].'&current_product_id='. $_POST['current_product_id'].'&option_order_by='.$_POST['option_order_by'].'&products_options_id=' .$_POST['products_options_id'].$oldaction.$oldpage.$options_id));
+   xtc_redirect(xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'cpath='. $_POST['cpath'].'&current_product_id='. $_POST['current_product_id'].'&option_order_by='.$_POST['option_order_by'].'&products_options_id=' .$_POST['products_options_id'].$oldaction.$oldpage.$options_id.$iframe));
 }
 
 //nach Abbrechen zurück zur Kategorie
@@ -56,13 +58,17 @@ require (DIR_WS_INCLUDES.'head.php');
 </head>
 <body>
   <!-- header //-->
-  <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+  <?php 
+	if (!isset($_GET['iframe'])) {
+	  require(DIR_WS_INCLUDES . 'header.php'); 
+	}
+	?>
   <!-- header_eof //-->
   <!-- body //-->
   <table class="tableBody">
     <tr>
       <?php //left_navigation
-      if (USE_ADMIN_TOP_MENU == 'false') {
+      if (USE_ADMIN_TOP_MENU == 'false' && !isset($_GET['iframe'])) {
         echo '<td class="columnLeft2">'.PHP_EOL;
         echo '<!-- left_navigation //-->'.PHP_EOL;       
         require_once(DIR_WS_INCLUDES . 'column_left.php');
@@ -121,7 +127,11 @@ require (DIR_WS_INCLUDES.'head.php');
   </table> 
   <!-- body_eof //-->
   <!-- footer //-->
-  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+  <?php 
+	if (!isset($_GET['iframe'])) {
+	  require(DIR_WS_INCLUDES . 'footer.php');
+  }		
+  ?>
   <!-- footer_eof //-->
 </body>
 </html>

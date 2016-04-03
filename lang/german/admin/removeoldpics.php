@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: removeoldpics.php 3503 2012-08-23 11:24:07Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

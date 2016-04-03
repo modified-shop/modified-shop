@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: checkout_confirmation.php 3252 2012-07-18 15:24:42Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -34,17 +34,13 @@ include ('includes/application_top.php');
 
 // create smarty elements
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
+
 // include needed functions
 require_once (DIR_FS_INC . 'xtc_calculate_tax.inc.php');
-require_once (DIR_FS_INC . 'xtc_check_stock.inc.php');
 require_once (DIR_FS_INC . 'xtc_display_tax_value.inc.php');
-require_once (DIR_FS_INC . 'xtc_get_products_image.inc.php');
-
-// BOF - DokuMan - 2010-09-16 - unset temporary order id when going back to confirmation to avoid order fraud
-unset($_SESSION['tmp_oID']);
-// EOF - DokuMan - 2010-09-16 - unset temporary order id when going back to confirmation to avoid order fraud
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
@@ -56,7 +52,7 @@ if ($_POST['comments_added'] != '')
   $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
 
 // check if display conditions on checkout page is true
-if (isset($_POST['cot_gv']))  $_SESSION['cot_gv'] = true;
+if (isset($_POST['cot_gv'])) $_SESSION['cot_gv'] = $_POST['cot_gv'];
 
 // if conditions are not accepted, redirect the customer to the payment method selection page
 if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
@@ -66,9 +62,25 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
   }
 }
 
+$content_type = $_SESSION['cart']->get_content_type();
+if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
+    && ($_SESSION['cart']->content_type == 'virtual'
+        || $_SESSION['cart']->content_type == 'mixed')
+    )
+{
+  if ((!isset($_POST['revocation']) || $_POST['revocation'] == false) && !isset($_GET['conditions'])) {
+    $error = str_replace('\n', '<br />', ERROR_REVOCATION_NOT_ACCEPTED);
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($error), 'SSL', true, false));
+  }
+}
+
 // load the selected payment module
 require_once (DIR_WS_CLASSES . 'payment.php');
-if (isset($_SESSION['credit_covers'])) {
+if (isset($_SESSION['credit_covers']) 
+    || (isset($_SESSION['cot_gv']) && !isset($_SESSION['payment']))
+    || (isset($_SESSION['cot_gv']) && isset($_POST['credit_order_total']) && $_SESSION['cot_gv'] > $_POST['credit_order_total'])
+    ) 
+{
   $_SESSION['payment'] = 'no_payment'; // GV Code Start/End ICW added for CREDIT CLASS
 }
 
@@ -79,8 +91,8 @@ if (!isset($_SESSION['payment'])) {
 $payment_modules = new payment($_SESSION['payment']);
 
 // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
-require (DIR_WS_CLASSES . 'order_total.php');
-require (DIR_WS_CLASSES . 'order.php');
+require_once (DIR_WS_CLASSES . 'order_total.php');
+require_once (DIR_WS_CLASSES . 'order.php');
 $order = new order();
 
 $payment_modules->update_status();
@@ -91,34 +103,30 @@ $order_total_modules->collect_posts();
 $order_total_modules->pre_confirmation_check();
 // GV Code End
 
-// BOF - tonne1 2012-04-22 - moved up so GLOBALS is complete for OT process
-// load the selected shipping module
-require (DIR_WS_CLASSES . 'shipping.php');
-$shipping_modules = new shipping($_SESSION['shipping']);
-// EOF - tonne1 2012-04-22 - moved up so GLOBALS is complete for OT process
-
-//BOF - DokuMan - 2011-05-09 - Process the Order Total Modules Earlier on the Checkout Confirmation Page
-$order_total_modules->process();
-//EOF - DokuMan - 2011-05-09 - Process the Order Total Modules Earlier on the Checkout Confirmation Page
-
 // GV Code line changed
-if ((is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && (!is_object($$_SESSION['payment'])) && (!isset($_SESSION['credit_covers']))) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false))) {
+if ((is_array($payment_modules->modules) 
+     && (sizeof($payment_modules->modules) > 1) 
+     && (!is_object(${$_SESSION['payment']})) 
+     && (!isset($_SESSION['credit_covers']))) 
+    || 
+    (is_object(${$_SESSION['payment']}) 
+     && (${$_SESSION['payment']}->enabled == false))
+    ||
+    (isset($_SESSION['cot_gv'])
+     && $_SESSION['cot_gv'] > 0
+     && $xtPrice->xtcFormat($order->info['total'], false) > $_SESSION['cot_gv']
+     && $_SESSION['payment'] == 'no_payment')
+  ) {
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
 }
 
 if (is_array($payment_modules->modules)) {
   $payment_modules->pre_confirmation_check();
 }
-// BOF - tonne1 2012-04-22 - moved up so GLOBALS is complete for OT process
+
 // load the selected shipping module
-// require (DIR_WS_CLASSES . 'shipping.php');
-// $shipping_modules = new shipping($_SESSION['shipping']);
-// EOF - tonne1 2012-04-22 - moved up so GLOBALS is complete for OT process
-
-$breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_CONFIRMATION, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-$breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_CONFIRMATION);
-
-require (DIR_WS_INCLUDES . 'header.php');
+require_once (DIR_WS_CLASSES . 'shipping.php');
+$shipping_modules = new shipping($_SESSION['shipping']);
 
 if (SHOW_IP_LOG == 'true') {
   $smarty->assign('IP_LOG', 'true');
@@ -128,7 +136,9 @@ if (SHOW_IP_LOG == 'true') {
 //allow duty-note in checkout_confirmation
 $smarty->assign('DELIVERY_DUTY_INFO', $main->getDeliveryDutyInfo($order->delivery['country']['iso_code_2']));
 
-$smarty->assign('DELIVERY_LABEL', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'));
+if ($_SESSION['shipping'] !== false) {
+  $smarty->assign('DELIVERY_LABEL', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'));
+}
 if (!isset($_SESSION['credit_covers']) || $_SESSION['credit_covers'] != '1') {
   $smarty->assign('BILLING_LABEL', xtc_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'));
 }
@@ -152,37 +162,67 @@ if ($order->info['payment_method'] != 'no_payment' && $order->info['payment_meth
   include_once (DIR_WS_LANGUAGES . '/' . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_method'] . '.php');
   $smarty->assign('PAYMENT_METHOD', constant('MODULE_PAYMENT_' . strtoupper($order->info['payment_method']) . '_TEXT_TITLE'));
 }
+if (isset($_SESSION['credit_covers']) && $order->info['payment_method'] == 'no_payment') {
+  include_once (DIR_WS_LANGUAGES . '/' . $_SESSION['language'] . '/modules/order_total/ot_gv.php');
+  $smarty->assign('PAYMENT_METHOD', constant('MODULE_ORDER_TOTAL_GV_TITLE'));
+}
 $smarty->assign('PAYMENT_EDIT', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 
 if (MODULE_ORDER_TOTAL_INSTALLED) {
-  //BOF - DokuMan - 2011-05-09 - Process the Order Total Modules Earlier on the Checkout Confirmation Page
-  //$order_total_modules->process();
-  //EOF - DokuMan - 2011-05-09 - Process the Order Total Modules Earlier on the Checkout Confirmation Page
+  $order_total_modules->process();
   $total_block = $order_total_modules->output();
   $smarty->assign('TOTAL_BLOCK', $total_block);
   $smarty->assign('TOTAL_BLOCK_ARRAY', $order_total_modules->output_array());
 }
 
-// create payment information
-if (is_array($payment_modules->modules) && ($confirmation = $payment_modules->confirmation())) {
-  $smarty->assign('PAYMENT_INFORMATION_TITLE', (isset($confirmation['title']) ? $confirmation['title'] : ''));
+if (is_array($payment_modules->modules) && ($confirmation = $payment_modules->confirmation())) { // $confirmation['title'];
   $smarty->assign('PAYMENT_INFORMATION', (isset($confirmation['fields']) ? $confirmation['fields'] : ''));
 }
 
-// create comments
 if (xtc_not_null($order->info['comments'])) {
   $smarty->assign('ORDER_COMMENTS', nl2br(encode_htmlspecialchars($order->info['comments'])) . xtc_draw_hidden_field('comments', $order->info['comments']));
 }
 
-// create form tag
-if (isset($$_SESSION['payment']->form_action_url) && (!isset($$_SESSION['payment']->tmpOrders) || !$$_SESSION['payment']->tmpOrders)) {
-  $form_action_url = $$_SESSION['payment']->form_action_url;
+if (isset(${$_SESSION['payment']}->form_action_url) && (!isset(${$_SESSION['payment']}->tmpOrders) || !${$_SESSION['payment']}->tmpOrders)) {
+  $form_action_url = ${$_SESSION['payment']}->form_action_url;
 } else {
   $form_action_url = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
 }
-$smarty->assign('CHECKOUT_FORM', xtc_draw_form('checkout_confirmation', $form_action_url, 'post'));
+$smarty->assign('CHECKOUT_FORM', xtc_draw_form('checkout_confirmation', $form_action_url, 'post', 'name="checkout_confirmation"'));
 $smarty->assign('MODULE_BUTTONS', (is_array($payment_modules->modules) ? $payment_modules->process_button() : ''));
-$smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER) . '</form>' . "\n");
+$smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER, (($_SESSION['payment'] == 'payone_cc') ? 'onclick="return payoneCheck();"' : '')) . '</form>' . "\n");
+
+//express checkout
+if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+  if (isset($_POST['express'])) {
+    $check_query = xtc_db_query("SELECT *
+                                   FROM ".TABLE_CUSTOMERS_CHECKOUT." 
+                                  WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
+
+    $sql_data_array = array('customers_id' => (int)$_SESSION['customer_id'],
+                            'checkout_shipping_address' => $_SESSION['sendto'],
+                            'checkout_payment' => $_SESSION['payment'],
+                            'checkout_payment_address' => $_SESSION['billto'],
+                            );
+    if (isset($_SESSION['shipping']['id'])) {
+      $sql_data_array['checkout_shipping'] = $_SESSION['shipping']['id'];
+    }
+    if (xtc_db_num_rows($check_query) < 1) {
+      xtc_db_perform(TABLE_CUSTOMERS_CHECKOUT, $sql_data_array);  
+    } else {
+      unset($sql_data_array['customers_id']);
+      xtc_db_perform(TABLE_CUSTOMERS_CHECKOUT, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."'");
+    }                        
+    $smarty->assign('success_message', SUCCESS_CHECKOUT_EXPRESS_UPDATED);
+  }
+  $smarty->assign('FORM_ACTION', xtc_draw_form('customers_express', xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=on', 'SSL'), 'post', 'name="customers_express"').xtc_draw_hidden_field('express', 'on'));
+  $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_save.gif', IMAGE_BUTTON_UPDATE));
+  if (MODULE_CHECKOUT_EXPRESS_CONTENT != '') {
+    $smarty->assign('EXPRESS_LINK', $main->getContentLink(MODULE_CHECKOUT_EXPRESS_CONTENT, MORE_INFO, 'SSL'));
+  }
+  $smarty->assign('FORM_END', '</form>');
+  $smarty->assign('EXPRESS', true);
+}
 
 //check if display conditions on checkout page is true
 if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
@@ -197,6 +237,11 @@ if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
   $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
   $smarty->assign('TEXT_AGB_CHECKOUT', sprintf(TEXT_AGB_CHECKOUT,$main->getContentLink(3, MORE_INFO,'SSL') , $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL')));
 }
+
+$breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_CONFIRMATION, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+$breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_CONFIRMATION);
+
+require (DIR_WS_INCLUDES . 'header.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_confirmation.html');

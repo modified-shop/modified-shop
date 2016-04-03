@@ -1,0 +1,107 @@
+{config_load file="$language/lang_$language.conf" section="create_account"}
+{config_load file="lang_`$language`.custom"}
+<h1>{#heading_create_account#}</h1>
+{$FORM_ACTION}
+{if $error != ''}<div class="errormessage">{$error}</div>{/if}
+<div class="twoColums">
+  <div class="highlightbox">
+    <h4>{#title_personal#} <span class="pflicht">({#text_must#})</span></h4>
+    <table>
+      {if $gender == '1'}
+      <tr>
+        <td><span class="fieldtext">{#text_gender#}</span><span class="stern">{$INPUT_GENDER}</span></td>
+      </tr>
+      {/if}
+      <tr>
+        <td><span class="fieldtext">{#text_firstname#}</span><span class="stern">{$INPUT_FIRSTNAME}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_lastname#}</span><span class="stern">{$INPUT_LASTNAME}</span></td>
+      </tr>
+      {if $birthdate == '1'}
+      <tr>
+        <td><span class="fieldtext">{#text_birthdate#}</span><span class="stern">{$INPUT_DOB}</span></td>
+      </tr>
+      {/if}
+      <tr>
+        <td><span class="fieldtext">{#text_email#}</span><span class="stern">{$INPUT_EMAIL}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_confirm_email#}</span><span class="stern">{$INPUT_CONFIRM_EMAIL}</span></td>
+      </tr>
+    </table>
+    {if $company == '1'}
+    <br />
+    <h4>{#title_company#}</h4>
+    <table>
+      <tr>
+        <td><span class="fieldtext">{#text_company#}</span><span class="stern">{$INPUT_COMPANY}</span></td>
+      </tr>
+      {if $vat == '1'}
+      <tr>
+        <td><span class="fieldtext">{#text_ustid#}</span><span class="stern">{$INPUT_VAT|replace:"Nur":"<br />Nur"}</span></td>
+      </tr>
+      {/if}
+    </table>
+    {/if}
+    <br />
+    <h4>{#title_newsletter#}</h4>
+    <table>
+      <tr>
+        <td class="checkbox">{$CHECKBOX_NEWSLETTER}</td>
+        <td class="midi">{#text_newsletter#}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="twoColums last">
+  <div class="highlightbox">
+    <h4>{#title_address#}</h4>
+    <table>
+      <tr>
+        <td><span class="fieldtext">{#text_street#}</span><span class="stern">{$INPUT_STREET}</span></td>
+      </tr>
+      {if $suburb == '1'}
+      <tr>
+        <td><span class="fieldtext">{#text_suburb#}</span><span class="stern">{$INPUT_SUBURB}</span></td>
+      </tr>
+      {/if}
+      <tr>
+        <td><span class="fieldtext">{#text_code#}</span><span class="stern">{$INPUT_CODE}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_city#}</span><span class="stern">{$INPUT_CITY}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_country#}</span><span class="stern">{$SELECT_COUNTRY}</span></td>
+      </tr>
+      {if $state == '1'}
+      <tr>
+        <td><span class="fieldtext">{#text_state#}</span><span class="stern">{$INPUT_STATE}</span></td>
+      </tr>
+      {/if}
+    </table>
+    <br />
+    <h4>{#title_contact#}</h4>
+    <table>
+      <tr>
+        <td><span class="fieldtext">{#text_tel#}</span><span class="stern">{$INPUT_TEL}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_fax#}</span><span class="stern">{$INPUT_FAX}</span></td>
+      </tr>
+    </table>
+  </div>
+  {if $PRIVACY_CHECKBOX}
+  <br />
+  <table>
+    <tr>
+      <td class="checkbox">{$PRIVACY_CHECKBOX}</td>
+      <td class="midi td_full"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</td>
+    </tr>
+  </table>
+  {/if}
+</div>
+<br class="clearfix" />
+<div class="button_right">{$BUTTON_SUBMIT}</div>
+{$FORM_END}

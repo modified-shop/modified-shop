@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: orders_edit.php 
+   $Id: orders_edit.php,v 1.0 
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -10,8 +10,8 @@
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(orders.php,v 1.27 2003/02/16); www.oscommerce.com 
-   (c) 2003 nextcommerce (orders.php,v 1.7 2003/08/14); www.nextcommerce.org
-   (c) 2006 xt:Commerce (orders_edit.php,v 1.0); www.xt-commerce.com
+   (c) 2003	 nextcommerce (orders.php,v 1.7 2003/08/14); www.nextcommerce.org
+   (c) 2006 XT-Commerce (orders_edit.php)
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -19,7 +19,7 @@
 // Allgemeine Texte
 define('TABLE_HEADING', 'Edit Order');
 define('TABLE_HEADING_ORDER', 'Order #:&nbsp;');
-define('TEXT_SAVE_ORDER', 'Finish Editing and Recalculate Order');
+define('TEXT_SAVE_ORDER', 'Finish editing and recalculate order.&nbsp;');
 
 define('TEXT_EDIT_ADDRESS', 'Address and customer details');
 define('TEXT_EDIT_PRODUCTS', 'Products, products options and prices');
@@ -63,9 +63,8 @@ define('TEXT_PRODUCT_SEARCH', 'Search Products:');
 
 define('TEXT_PRODUCT_OPTION', 'Attributes:');
 define('TEXT_PRODUCT_OPTION_VALUE', 'Option Value:');
-define('TEXT_PRICE', 'Price:');
 define('TEXT_PRICE_PREFIX', 'Price Prefix:');
-define('TEXT_SAVE_ORDER', 'Finish and Recalculate');
+define('TEXT_SAVE_ORDER', 'Finish and recalculate');
 define('TEXT_INS', 'Add:');
 define('TEXT_SHIPPING', 'Shipping Costs');
 define('TEXT_COD_COSTS', 'COD Costs');
@@ -94,8 +93,7 @@ Shipping costs must be changed manually!<br />
 In this case, shipping costs have to be entered gross or net depending on the customer group!<br />
 ');
 
-define('TEXT_CUSTOMER_GROUP_INFO', ' <span style="background:#FFD6D6;padding:3px;border:solid 1px red;">When you change the customer group, all invoice items are newly save!</span>');
-
+define('TEXT_CUSTOMER_GROUP_INFO', ' When you change the customer group, all invoice items are newly save!');
 
 define('TEXT_ORDER_TITLE', 'Title:');
 define('TEXT_ORDER_VALUE', 'Value:');
@@ -111,16 +109,16 @@ define('TEXT_LASTNAME', 'Lastname:');
 
 define('TEXT_GENDER', 'Salutation:'); 
 define('TEXT_MR', 'Mr'); 
-define('TEXT_MRS', 'Mrs'); 
+define('TEXT_MRS', 'Mrs');
 
 define('TEXT_SAVE_CUSTOMERS_DATA', 'Save Customers Data');
 
-define('TEXT_PRODUCTS_SEARCH_INFO', ' Products name or products model or EAN');
+define('TEXT_PRODUCTS_SEARCH_INFO', ' Products name or products model or GTIN/EAN');
 define('TEXT_PRODUCTS_STATUS', 'Status:');
 define('TEXT_PRODUCTS_IMAGE', 'Product images:');
 define('TEXT_PRODUCTS_QTY', 'Stock:');
-define('TEXT_PRODUCTS_EAN', 'EAN:');
+define('TEXT_PRODUCTS_EAN', 'GTIN/EAN:');
 define('TEXT_PRODUCTS_TAX_RATE', 'Tax:');
-define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Date Available:');
+define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Date available:');
 define('TEXT_IMAGE_NONEXISTENT', '---');
 ?>

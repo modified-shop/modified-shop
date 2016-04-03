@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: german.php 3569 2012-08-30 15:39:18Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -18,8 +18,7 @@
    Third Party contributions:
    Customers Status v3.x (c) 2002-2003 Copyright Elari elari@free.fr | www.unlockgsm.com/dload-osc/ | CVS : http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/elari/?sortby=date#dirlist
 
-   Coding: utf-8[äöüßÄÖÜ]
-   Released under the GNU General Public License
+   Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
 // look in your $PATH_LOCALE/locale directory for available locales..
@@ -34,7 +33,6 @@ define('DATE_FORMAT', 'd.m.Y');  // this is used for strftime()
 define('PHP_DATE_TIME_FORMAT', 'd.m.Y H:i:s'); // this is used for date()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
 
-////
 // Return date in raw format
 // $date should be in format mm/dd/yyyy
 // raw date is in format YYYYMMDD, or DDMMYYYY
@@ -46,9 +44,11 @@ function xtc_date_raw($date, $reverse = false) {
   }
 }
 
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_FS_LANGUAGES.'german/extra/admin/','php') as $file) require ($file);
+
 // Global entries for the <html> tag
 define('HTML_PARAMS','dir="ltr" lang="de"');
-
 
 // page title
 define('TITLE', defined('PROJECT_VERSION') ? PROJECT_VERSION : 'undefined');
@@ -71,14 +71,14 @@ define('DOB_FORMAT_STRING', 'tt.mm.jjjj');
 define('BOX_HEADING_CONFIGURATION','Konfiguration');
 define('BOX_HEADING_MODULES','Module');
 define('BOX_HEADING_PARTNER_MODULES','Partner Module');
-define('BOX_HEADING_ZONE','Land / Steuer');
+define('BOX_HEADING_ZONE','Land/Steuer');
 define('BOX_HEADING_CUSTOMERS','Kunden');
-define('BOX_HEADING_PRODUCTS','Artikelkatalog');
+define('BOX_HEADING_PRODUCTS','Katalog');
 define('BOX_HEADING_STATISTICS','Statistiken');
 define('BOX_HEADING_TOOLS','Hilfsprogramme');
 define('BOX_HEADING_LOCALIZATION', 'Sprachen/W&auml;hrungen');
 define('BOX_HEADING_TEMPLATES','Templates');
-define('BOX_HEADING_LOCATION_AND_TAXES', 'Land / Steuer');
+define('BOX_HEADING_LOCATION_AND_TAXES', 'Land/Steuer');
 define('BOX_HEADING_CATALOG', 'Katalog');
 define('BOX_MODULE_NEWSLETTER','Newsletter');
 
@@ -99,14 +99,15 @@ define('BOX_CONFIGURATION_10', 'Logging Optionen');
 define('BOX_CONFIGURATION_11', 'Cache Optionen');
 define('BOX_CONFIGURATION_12', 'E-Mail Optionen');
 define('BOX_CONFIGURATION_13', 'Download Optionen');
-define('BOX_CONFIGURATION_14', 'Gzip Kompression');
+define('BOX_CONFIGURATION_14', 'Komprimierung');
 define('BOX_CONFIGURATION_15', 'Sessions');
 define('BOX_CONFIGURATION_16', 'Meta-Tags/Suchmaschinen');
 define('BOX_CONFIGURATION_17', 'Zusatzmodule');
 define('BOX_CONFIGURATION_18', 'UST ID');
 define('BOX_CONFIGURATION_19', 'Partner');
 define('BOX_CONFIGURATION_22', 'Such-Optionen');
-define('BOX_CONFIGURATION_24', 'PIWIK &amp; Google Analytics');
+define('BOX_CONFIGURATION_24', 'PIWIK, Google Analytics &amp; Facebook');
+define('BOX_CONFIGURATION_25', 'Captcha');
 define('BOX_CONFIGURATION_40', 'Popup Fenster Optionen');
 define('BOX_CONFIGURATION_1000', 'Adminbereich Optionen');
 
@@ -114,10 +115,10 @@ define('BOX_MODULES', 'Zahlungs-/Versand-/Verrechnungs-Module');
 define('BOX_PAYMENT', 'Zahlungsoptionen');
 define('BOX_SHIPPING', 'Versandart');
 define('BOX_ORDER_TOTAL', 'Zusammenfassung');
-define('BOX_CATEGORIES', 'Kategorien / Artikel');
+define('BOX_CATEGORIES', 'Kategorien/Artikel');
 define('BOX_PRODUCTS_ATTRIBUTES', 'Artikelmerkmale');
 define('BOX_MANUFACTURERS', 'Hersteller');
-define('BOX_REVIEWS', 'Artikelbewertungen');
+define('BOX_REVIEWS', 'Produktrezensionen');
 define('BOX_CAMPAIGNS', 'Kampagnen');
 define('BOX_XSELL_PRODUCTS', 'Cross Marketing');
 define('BOX_SPECIALS', 'Sonderangebote');
@@ -156,18 +157,17 @@ define('BOX_SALES_REPORT','Umsatzstatistik');
 define('BOX_MODULE_EXPORT','Export Module');
 define('BOX_MODULE_SYSTEM','System Module');
 define('BOX_HEADING_GV_ADMIN', 'Gutscheine/Coupons');
-define('BOX_GV_ADMIN_QUEUE', 'Gutschein Queue');
+define('BOX_GV_ADMIN_QUEUE', 'Gutschein Warteschlange');
 define('BOX_GV_ADMIN_MAIL', 'Gutschein E-Mail');
 define('BOX_GV_ADMIN_SENT', 'Gutscheine versandt');
-define('BOX_HEADING_COUPON_ADMIN','Rabatt Coupons');
 define('BOX_COUPON_ADMIN','Coupon Admin');
+define('BOX_TOOLS_BLACKLIST','Kreditkarten-Blacklist');
 define('BOX_IMPORT','Import/Export');
 define('BOX_PRODUCTS_VPE','Verpackungseinheit');
 define('BOX_CAMPAIGNS_REPORT','Kampagnen Report');
 define('BOX_ORDERS_XSELL_GROUP','Cross-Marketing Gruppen');
 define('BOX_REMOVEOLDPICS','Alte Bilder l&ouml;schen'); // Remove old pictures - franky_n - 20110105
 define('BOX_JANOLAW','janolaw AGB Hosting'); // Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
-define('BOX_PARCEL_CARRIERS','Paketdienstleister'); //Dokuman - 2012-11-16 - Track & Trace functionality
 define('BOX_HAENDLERBUND','H&auml;ndlerbund AGB Service'); // Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
 define('BOX_SAFETERMS','Safeterms - AGB Service'); // Tomcraft - 2013-06-21 - Safeterms AGB interface
 define('BOX_SHOP','Shop');
@@ -175,8 +175,17 @@ define('BOX_LOGOUT','Abmelden');
 define('BOX_CREDITS','Credits');
 define('BOX_UPDATE','Versionscheck');
 define('BOX_EASYMARKETING','EASYMARKETING AG'); // Tomcraft - 2013-08-29 - Added easymarketing
-define('BOX_GV_CUSTOMERS','Guthaben - Kunden');
+define('BOX_GV_CUSTOMERS','Kunden-Guthaben');
 define('BOX_IT_RECHT_KANZLEI', 'IT Recht Kanzlei');
+define('BOX_PROTECTEDSHOPS', 'Protected Shops - AGB Service');
+define('BOX_CLEVERREACH', 'CleverReach');
+define('BOX_SUPERMAILER', 'SuperMailer');
+define('BOX_OFFLINE', 'Shop offline');
+define('BOX_LOGS', 'Logfiles');
+define('BOX_SHIPCLOUD', 'shipcloud');
+define('BOX_SHIPCLOUD_PICKUP', 'shipcloud - Abholung');
+define('BOX_PRODUCTS_TAGS', 'Artikeleigenschaften');
+define('BOX_TRUSTEDSHOPS', 'Trusted Shops');
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');
@@ -187,7 +196,7 @@ define('TXT_TOOLS','Zusatzprogramme');
 define('TEXT_ACCOUNTING','Zugriffseinstellungen f&uuml;r:');
 
 /******* SHOPGATE **********/
-include_once DIR_FS_EXTERNAL.'shopgate/base/lang/german/admin/german.php';
+include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/lang/german/admin/german.php');
 /******* SHOPGATE **********/
 
 // javascript messages
@@ -237,10 +246,10 @@ define('ENTRY_LAST_NAME', 'Nachname:');
 define('ENTRY_LAST_NAME_ERROR', '&nbsp;<span class="errorText">mindestens ' . ENTRY_LAST_NAME_MIN_LENGTH . ' Buchstaben</span>');
 define('ENTRY_DATE_OF_BIRTH', 'Geburtsdatum:');
 define('ENTRY_DATE_OF_BIRTH_ERROR', '&nbsp;<span class="errorText">(z.B. 21.05.1970)</span>');
-define('ENTRY_EMAIL_ADDRESS', 'E-Mail Adresse:');
+define('ENTRY_EMAIL_ADDRESS', 'E-Mail-Adresse:');
 define('ENTRY_EMAIL_ADDRESS_ERROR', '&nbsp;<span class="errorText">mindestens ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' Buchstaben</span>');
-define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', '&nbsp;<span class="errorText">ung&uuml;ltige E-Mail Adresse!</span>');
-define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', '&nbsp;<span class="errorText">Diese E-Mail Adresse existiert schon!</span>');
+define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', '&nbsp;<span class="errorText">ung&uuml;ltige E-Mail-Adresse! (Umlaute in E-Mail-Adressen werden derzeit nicht unterst&uuml;tzt.)</span>');
+define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', '&nbsp;<span class="errorText">Diese E-Mail-Adresse existiert schon!</span>');
 define('ENTRY_COMPANY', 'Firmenname:');
 define('ENTRY_STREET_ADDRESS', 'Strasse:');
 define('ENTRY_STREET_ADDRESS_ERROR', '&nbsp;<span class="errorText">mindestens ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' Buchstaben</span>');
@@ -262,7 +271,7 @@ define('ENTRY_NEWSLETTER_NO', 'nicht abonniert');
 define('ENTRY_MAIL_ERROR','&nbsp;<span class="errorText">Bitte treffen sie eine Auswahl</span>');
 define('ENTRY_PASSWORD','Passwort (autom. erstellt)');
 define('ENTRY_PASSWORD_ERROR','&nbsp;<span class="errorText">Ihr Passwort muss aus mindestens ' . ENTRY_PASSWORD_MIN_LENGTH . ' Zeichen bestehen.</span>');
-define('ENTRY_MAIL_COMMENTS','Zus&auml;tzlicher E-Mailtext:');
+define('ENTRY_MAIL_COMMENTS','Zus&auml;tzlicher E-Mail-Text:');
 
 define('ENTRY_MAIL','E-Mail mit Passwort an Kunden versenden?');
 define('YES','ja');
@@ -311,19 +320,16 @@ define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_VPE', 'Angezeigt werden <b>%d</b> bis <b
 define('TEXT_DISPLAY_NUMBER_OF_SHIPPING_STATUS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Lieferstatus)');
 define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Artikeln)');
 define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_EXPECTED', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> erwarteten Artikeln)');
-define('TEXT_DISPLAY_NUMBER_OF_REVIEWS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Bewertungen)');
+define('TEXT_DISPLAY_NUMBER_OF_REVIEWS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Rezensionen)');
 define('TEXT_DISPLAY_NUMBER_OF_SPECIALS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Sonderangeboten)');
 define('TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Steuerklassen)');
 define('TEXT_DISPLAY_NUMBER_OF_TAX_ZONES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Steuerzonen)');
 define('TEXT_DISPLAY_NUMBER_OF_TAX_RATES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Steuers&auml;tzen)');
 define('TEXT_DISPLAY_NUMBER_OF_ZONES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Bundesl&auml;ndern)');
-define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Paketdienstleistern)');
 define('TEXT_DISPLAY_NUMBER_OF_WHOS_ONLINE', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Kunden die online sind)');
 
-define('PREVNEXT_BUTTON_FIRST', '&lt;&lt;ERSTE');
-define('PREVNEXT_BUTTON_PREV', '&lt;&lt;');
-define('PREVNEXT_BUTTON_NEXT', '&gt;&gt;');
-define('PREVNEXT_BUTTON_LAST', 'LETZTE&gt;&gt;');
+define('PREVNEXT_BUTTON_PREV', '&laquo;');
+define('PREVNEXT_BUTTON_NEXT', '&raquo;');
 
 define('TEXT_DEFAULT', 'Standard');
 define('TEXT_SET_DEFAULT', 'als Standard definieren');
@@ -346,13 +352,14 @@ define('ERROR_FILE_NOT_SAVED', 'Fehler: Datei wurde nicht gespeichert.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Fehler: Dateityp ist nicht erlaubt.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Erfolg: Hochgeladene Datei wurde erfolgreich gespeichert.');
 define('WARNING_NO_FILE_UPLOADED', 'Warnung: Es wurde keine Datei hochgeladen.');
+define('ERROR_FILE_NOT_REMOVEABLE', 'Fehler: Datei konnte nicht entfernt werden.');
 
 define('DELETE_ENTRY','Eintrag l&ouml;schen?');
 define('TEXT_PAYMENT_ERROR','<b>WARNUNG:</b> Bitte aktivieren Sie ein Zahlungsmodul!');
 define('TEXT_SHIPPING_ERROR','<b>WARNUNG:</b> Bitte aktivieren Sie ein Versandmodul!');
 define('TEXT_PAYPAL_CONFIG','<b>WARNUNG:</b> Bitte konfigurieren Sie die PayPal-Zahlungseinstellungen f&uuml;r den "Live Modus" unter: <a href="%s"><strong>Partner -> PayPal</strong></a>'); //DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
-
 define('TEXT_NETTO','Netto: ');
+define('TEXT_DUPLUCATE_CONFIG_ERROR','<b>WARNUNG:</b> Duplicate configuration key: ');
 
 define('ENTRY_CID','Kundennummer:');
 define('IP','Bestell IP:');
@@ -404,7 +411,7 @@ define('SECURITY_CODE_LENGTH_TITLE', 'L&auml;nge des Gutscheincodes');
 define('SECURITY_CODE_LENGTH_DESC', 'Geben Sie hier die L&auml;nge des Gutscheincode ein. (max. 16 Zeichen)');
 
 define('NEW_SIGNUP_GIFT_VOUCHER_AMOUNT_TITLE', 'Willkommens-Geschenk Gutschein Wert');
-define('NEW_SIGNUP_GIFT_VOUCHER_AMOUNT_DESC', 'Willkommens-Geschenk Gutschein Wert: Wenn Sie keinen Gutschein in Ihrer Willkommens-E-Mail versenden wollen, tragen Sie hier 0 ein, ansonsten geben Sie den Wert des Gutscheins an, zB. 10.00 oder 50.00, aber keine W&auml;hrungszeichen');
+define('NEW_SIGNUP_GIFT_VOUCHER_AMOUNT_DESC', 'Willkommens-Geschenk Gutschein Wert: Wenn Sie keinen Gutschein in Ihrer Willkommens-E-Mail versenden wollen, tragen Sie hier 0 ein, ansonsten geben Sie den Wert des Gutscheins an, z.B. 10.00 oder 50.00, aber keine W&auml;hrungszeichen');
 define('NEW_SIGNUP_DISCOUNT_COUPON_TITLE', 'Willkommens-Rabatt Coupon Code');
 define('NEW_SIGNUP_DISCOUNT_COUPON_DESC', 'Willkommens-Rabatt Coupon Code: Wenn Sie keinen Coupon in Ihrer Willkommens-E-Mail versenden wollen, lassen Sie dieses Feld leer, ansonsten tragen Sie den Coupon Code ein, den Sie verwenden wollen');
 
@@ -439,12 +446,12 @@ define('BOX_PAYPAL','PayPal');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
 // BOF - Dokuman - 2009-10-02 - added moneybookers payment module version 2.4
-define('_PAYMENT_MONEYBOOKERS_EMAILID_TITLE','Moneybookers E-Mail Adresse');
-define('_PAYMENT_MONEYBOOKERS_EMAILID_DESC','E-Mail Adresse mit welcher Sie bei Moneybookers.com registriert sind.<br />Wenn Sie noch &uuml;ber kein Konto verf&uuml;gen, <b>melden Sie sich</b> jetzt bei <a href="https://www.moneybookers.com/app/register.pl" target="_blank"><b>Moneybookers</b></a> <b>gratis</b> an.');
+define('_PAYMENT_MONEYBOOKERS_EMAILID_TITLE','Moneybookers E-Mail-Adresse');
+define('_PAYMENT_MONEYBOOKERS_EMAILID_DESC','E-Mail-Adresse mit welcher Sie bei Moneybookers.com registriert sind.<br />Wenn Sie noch &uuml;ber kein Konto verf&uuml;gen, <b>melden Sie sich</b> jetzt bei <a href="https://www.moneybookers.com/app/register.pl" target="_blank"><b>Moneybookers</b></a> <b>gratis</b> an.');
 define('_PAYMENT_MONEYBOOKERS_MERCHANTID_TITLE','Moneybookers H&auml;ndler ID');
 define('_PAYMENT_MONEYBOOKERS_MERCHANTID_DESC','Ihre Moneybookers.com H&auml;ndler ID');
 define('_PAYMENT_MONEYBOOKERS_PWD_TITLE','Moneybookers Geheimwort');
-define('_PAYMENT_MONEYBOOKERS_PWD_DESC','Mit der Eingabe des Geheimwortes wird die Verbindung beim Bezahlvorgang verschl&uuml;sselt. So wird h&ouml;chste Sicherheit gew&auml;hrleistet. Geben Sie Ihr Moneybookers Geheimwort ein (dies ist nicht ihr Passwort!). Das Geheimwort darf nur aus Kleinbuchstaben und Zahlen bestehen. Sie k&ouml;nnen Ihr Geheimwort <b><font color="red">nach der Freischaltung</b></font> in Ihrem Moneybookers-Benutzerkonto definieren (H&auml;ndlereinstellungen).<br /><br /><font color="red">So schalten Sie Ihren Moneybookers.com Account f&uuml;r die Zahlungsabwicklung frei!</font><br /><br />Senden Sie eine E-Mail mit:<br/>- Ihrer Shopdomain<br/>- Ihrer Moneybookers E-Mail-Adresse<br /><br />An: <a href="mailto:ecommerce@moneybookers.com?subject=modified eCommerce Shopsoftware: Aktivierung fuer Moneybookers Quick Checkout">ecommerce@moneybookers.com</a>');
+define('_PAYMENT_MONEYBOOKERS_PWD_DESC','Mit der Eingabe des Geheimwortes wird die Verbindung beim Bezahlvorgang verschl&uuml;sselt. So wird h&ouml;chste Sicherheit gew&auml;hrleistet. Geben Sie Ihr Moneybookers Geheimwort ein (dies ist nicht ihr Passwort!). Das Geheimwort darf nur aus Kleinbuchstaben und Zahlen bestehen. Sie k&ouml;nnen Ihr Geheimwort <b><span class="col-red">nach der Freischaltung</b></span> in Ihrem Moneybookers-Benutzerkonto definieren (H&auml;ndlereinstellungen).<br /><br /><span class="col-red">So schalten Sie Ihren Moneybookers.com Account f&uuml;r die Zahlungsabwicklung frei!</span><br /><br />Senden Sie eine E-Mail mit:<br/>- Ihrer Shopdomain<br/>- Ihrer Moneybookers E-Mail-Adresse<br /><br />An: <a href="mailto:ecommerce@moneybookers.com?subject=modified eCommerce Shopsoftware: Aktivierung fuer Moneybookers Quick Checkout">ecommerce@moneybookers.com</a>');
 define('_PAYMENT_MONEYBOOKERS_TMP_STATUS_ID_TITLE','Bestellstatus - Zahlungsvorgang');
 define('_PAYMENT_MONEYBOOKERS_TMP_STATUS_ID_DESC',' Sobald der Kunde im Shop auf "Bestellung absenden" dr&uuml;ckt, wird eine "tempor&auml;re Bestellung" angelegt. Dies hat den Vorteil, dass bei Kunden die den Zahlungsvorgang bei Moneybookes abbrechen eine Bestellung aufgezeichnet wurde.');
 define('_PAYMENT_MONEYBOOKERS_PROCESSED_STATUS_ID_TITLE','Bestellstatus - Zahlung OK');
@@ -457,7 +464,7 @@ define('_PAYMENT_MONEYBOOKERS_CANCELED_STATUS_ID_DESC','Wird erscheinen, wenn z.
 define('MB_TEXT_MBDATE', 'Letzte Aktualisierung:');
 define('MB_TEXT_MBTID', 'TR ID:');
 define('MB_TEXT_MBERRTXT', 'Status:');
-define('MB_ERROR_NO_MERCHANT','Es Existiert kein Moneybookers.com Account mit dieser E-Mail Adresse!');
+define('MB_ERROR_NO_MERCHANT','Es Existiert kein Moneybookers.com Account mit dieser E-Mail-Adresse!');
 define('MB_MERCHANT_OK','Moneybookers.com Account korrekt, H&auml;ndler ID %s von Moneybookers.com empfangen und gespeichert.');
 define('MB_INFO','<img src="../images/icons/moneybookers/MBbanner.jpg" /><br /><br />Sie k&ouml;nnen jetzt Kreditkarten, Lastschrift, Sofort&uuml;berweisung, Giropay sowie alle weiteren wichtigen lokalen Bezahloptionen direkt akzeptieren, mit einer simplen Aktivierung im Shop. Mit Moneybookers als All-in-One-L&ouml;sung brauchen Sie dabei keine Einzelvertr&auml;ge pro Zahlart abzuschlie&szlig;en. Sie brauchen lediglich einen <a href="https://www.moneybookers.com/app/register.pl" target="_blank"><b>kostenlosen Moneybookers Account</b></a>, um alle wichtigen Bezahloptionen in Ihrem Shop zu akzeptieren. Zus&auml;tzliche Bezahlarten sind ohne Mehrkosten, das Modul beinhaltet <b>keine monatlichen Fixkosten oder Installationskosten</b>.<br /><br /><b>Ihre Vorteile:</b><br />-Die Akzeptanz der wichtigsten Bezahloptionen steigert Ihren Umsatz<br />-Ein Anbieter reduziert Ihre Aufw&auml;nde und Ihre Kosten<br />-Ihr Kunde bezahlt direkt und ohne Registrierungsprozedur<br />-Ein-Klick-Aktivierung und Integration<br />-Sehr attraktive <a href="http://www.moneybookers.com/app/help.pl?s=m_fees" target="_blank"><b>Konditionen</b></a> <br />-sofortige Zahlungsbest&auml;tigung und Pr&uuml;fung der Kundendaten<br />-Bezahlabwicklung auch im Ausland und ohne Mehrkosten<br />-6 Millionen Kunden weltweit vertrauen Moneybookers');
 // EOF - Dokuman - 2009-10-02 - added moneybookers payment module version 2.4
@@ -467,8 +474,8 @@ define('BOX_CUSTOMERS_GROUP','KG-Berechtigungen');
 // EOF - Tomcraft - 2009-11-02 - set global customers-group-permissions
 
 // BOF - Tomcraft - 2009-11-02 - New admin top menu
-define('TEXT_ADMIN_START', 'Startseite');
-define('BOX_HEADING_CONFIGURATION2','Erweiterte Konfiguration');
+define('TEXT_ADMIN_START', 'Start');
+define('BOX_HEADING_CONFIGURATION2','Erw. Konfiguration');
 // EOF - Tomcraft - 2009-11-02 - New admin top menu
 
 // BOF - Tomcraft - 2009-11-28 - Included xs:booster
@@ -479,16 +486,17 @@ define('BOX_XSBOOSTER_CONFIG','Grundkonfiguration');
 // EOF - Tomcraft - 2009-11-28 - Included xs:booster
 
 //BOF - web28 - 2010-04-10 - ADMIN SEARCH BAR
-define('ASB_QUICK_SEARCH_CUSTOMER','Kunde: ');
-define('ASB_QUICK_SEARCH_ORDER_ID','Bestellnummer: ');
-define('ASB_QUICK_SEARCH_ARTICLE','Artikel: ');
-define('ASB_QUICK_SEARCH_EMAIL', 'E-Mail Adresse: ');
+define('ASB_QUICK_SEARCH_CUSTOMER','Suche Kunde...');
+define('ASB_QUICK_SEARCH_ORDER_ID','Suche Bestellnummer...');
+define('ASB_QUICK_SEARCH_ARTICLE','Suche Artikel/Kategorie...');
+define('ASB_QUICK_SEARCH_EMAIL', 'Suche E-Mail-Adresse...');
+define('ASB_QUICK_SEARCH_ARTICLE_ID','Suche Artikel/Kategorie ID...');
 //EOF - web28 - 2010-04-10 - ADMIN SEARCH BAR
 
 //BOF - web28 - 2010.05.30 - accounting - set all checkboxes , countries - set all flags
 define('BUTTON_SET','Alle aktivieren');
 define('BUTTON_UNSET','Alle deaktivieren');
-//EOF - web28 - 2010.05.30 - accounting - set all checkboxes
+//EOF - web28 - 2010.05.30 - accounting - set all checkboxes 
 
 //BOF - DokuMan - 2010-08-12 - added possibility to reset admin statistics
 define('TEXT_ROWS','Zeile');
@@ -500,9 +508,9 @@ define('BUTTON_CLOSE_WINDOW' , 'Fenster schliessen');
 //EOF - web28 - 2010-11-13 - added BUTTON_CLOSE_WINDOW
 
 //BOF - hendrik - 2011-05-14 - independent invoice number and date
-define('ENTRY_INVOICE_NUMBER',  'Rechnungsnummer:');
-define('ENTRY_INVOICE_DATE',    'Rechnungdatum:');
-//EOF - hendrik - 2011-05-14 - independent invoice number and date
+define('ENTRY_INVOICE_NUMBER',  'Rechnungsnummer:'); 
+define('ENTRY_INVOICE_DATE',    'Rechnungdatum:'); 
+//EOF - hendrik - 2011-05-14 - independent invoice number and date  
 
 //BOF - web28 - 2010-07-06 - added missing error text
 define('ENTRY_VAT_ERROR', '&nbsp;<span class="errorText">Ung&uuml;ltge USt-IdNr.</span>');
@@ -521,6 +529,7 @@ define('TEXT_INFO_MODULE_REMOVE', 'Wollen Sie das Modul deinstallieren?<br /><br
 define('TEXT_INFO_MODULE_BACKUP', 'Wollen Sie die Moduleinstellungen sichern?');
 define('MODULE_BACKUP_CONFIRM', 'Die Moduleinstellungen wurden erfolgreich gesichert!');
 define('MODULE_RESTORE_CONFIRM', 'Die Moduleinstellungen wurden erfolgreich wiederhergestellt!');
+define('MODULE_UPDATE_CONFIRM', 'Die Moduleinstellungen wurden erfolgreich aktualisiert!');
 
 /* magnalister v1.0.0 */
 define('BOX_HEADING_MAGNALISTER', 'magnalister');
@@ -532,4 +541,61 @@ define('CHARS_MAX', 'von max.');
 
 define('DISPLAY_PER_PAGE', 'Anzeige pro Seite: ');
 
-define('SPECIALS_DATE_END_TT', 'Angebote enden um Mitternacht (23.59.59 Uhr)');
+define('SPECIALS_DATE_START_TT', 'Angebote starten um 00:00:00 Uhr');
+define('SPECIALS_DATE_END_TT', 'Angebote enden um Mitternacht (23:59:59 Uhr)');
+
+define('BOX_PARCEL_CARRIERS', 'Paketdienstleister');
+define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Paketdienstleister)');
+
+define('RSS_FEED_TITLE', 'Aktuelle Information von modified eCommerce Shopsoftware Blog');
+define('RSS_FEED_DESCRIPTION', 'Aktuelle Information von modified eCommerce Shopsoftware Support Forum');
+define('RSS_FEED_LINK', 'http://www.modified-shop.org/blog');
+define('RSS_FEED_ALTERNATIVE', 'Leider k&ouml;nnen die aktuellen Neuigkeiten nicht im RSS Feed dargestellt werden. Bitte besuchen sie unseren Blog unter <a href="'.RSS_FEED_LINK.'">www.modified-shop.org/blog</a> um wichtige Informationen f&uuml;r Shopbetreiber zu diesen Themen zu erfahren: <ul><li>Wichtige Updates und Fixes</li><li>Funktionserweiterungen</li><li>Rechtsprechungen</li><li>Neuigkeiten</li><li>Klatsch und Tratsch</li></ul>');
+define('TEXT_DISPLAY_NUMBER_OF_NEWSFEED', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> News)');
+
+define('CFG_TXT_YES', 'Ja');
+define('CFG_TXT_NO', 'Nein');
+define('CFG_TXT_OR', 'oder');
+define('CFG_TXT_AND', 'und');
+define('CFG_TXT_ASC', 'aufsteigend');
+define('CFG_TXT_DESC', 'absteigend');
+define('CFG_TXT_PRODUCTS_NAME', 'Artikelname');
+define('CFG_TXT_PRODUCTS_MODEL', 'Artikelnummer');
+define('CFG_TXT_DATE_EXPECTED', 'verf&uuml;gbar ab');
+define('CFG_TXT_ACCOUNT', 'Kundenkonto');
+define('CFG_TXT_GUEST', 'Gastkonto');
+define('CFG_TXT_BOTH', 'beides');
+define('CFG_TXT_NONE', 'deaktiviert');
+define('CFG_TXT_ADMIN', 'Admin');
+define('CFG_TXT_ALL', 'alle');
+define('CFG_TXT_WEIGHT', 'Gewicht');
+define('CFG_TXT_PRICE', 'Preis');
+define('CFG_TXT_ITEM', 'St&uuml;ck');
+
+define('CSRF_TOKEN_MANIPULATION', 'CSRFToken Manipulation (Aus Sicherheits-Aspekten ist es nicht mehr erlaubt im Adminbereich in verschiedenen Tabs zu arbeiten.)');
+define('CSRF_TOKEN_NOT_DEFINED', 'CSRFToken nicht definiert (Aus Sicherheits-Aspekten ist es nicht mehr erlaubt im Adminbereich in verschiedenen Tabs zu arbeiten.)');
+
+define('TEXT_ACCOUNTING_INFO','Dem Hauptadmin [1] k&ouml;nnen die Zugriffsrechte nicht entzogen werden!');
+
+define('JAVASCRIPT_DISABLED_INFO', 'JavaScript ist in Ihrem Browser deaktiviert. Aktivieren Sie JavaScript, um alle Funktionen dieser Webseite nutzen und alle Inhalte sehen zu k&ouml;nnen.');
+
+define('BOX_MODULE_TYPE', 'Klassenerweiterungen Module');
+
+define('MULTIPLE_INSTALLATION', '<span style="color:red">[Mehrfachinstallation: %s]</span>');
+
+define('FILEUPLOAD_INPUT_TXT', 'Keine Datei');
+define('FILEUPLOAD_BTN_TXT', 'Durchsuchen');
+
+define('CHECK_LABEL_PRICE', 'Preis abfragen');
+
+define('TEXT_PAYPAL_TAB_CONFIG', 'PayPal Konfiguration');
+define('TEXT_PAYPAL_TAB_PROFILE', 'PayPal Profil');
+define('TEXT_PAYPAL_TAB_WEBHOOK', 'PayPal Webhook');
+define('TEXT_PAYPAL_TAB_MODULE', 'PayPal Module');
+define('TEXT_PAYPAL_TAB_TRANSACTIONS', 'PayPal Transaktionen');
+
+define('TEXT_DEFAULT_SORT_ORDER_TITLE', 'Sortierreihenfolge');
+define('TEXT_DEFAULT_SORT_ORDER_DESC', 'Reihenfolge der Verarbeitung. Kleinste Ziffer wird zuerst ausgeführt.');
+define('TEXT_DEFAULT_STATUS_TITLE', 'Modul aktivieren?');
+define('TEXT_DEFAULT_STATUS_DESC', 'Modul Status');
+?>

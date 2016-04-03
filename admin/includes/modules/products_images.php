@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: products_images.php 3568 2012-08-30 08:45:43Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -20,6 +20,7 @@ clearstatcache();
 // show images
 if ($_GET['action'] == 'new_product') {
 
+  echo '<div class="main div_header"><?php echo HEADING_PRODUCT_IMAGES; ?></div>';
   echo '<div class="div_box">';
   // display images fields:  
   $rowspan = ' rowspan="'. 3 .'"';
@@ -28,7 +29,7 @@ if ($_GET['action'] == 'new_product') {
     <tr>
       <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCTS_IMAGE; ?></td>
       <td class="dataTableConfig col-middle"><?php echo $pInfo->products_image; ?></td>
-      <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php echo $pInfo->products_image ? xtc_image(DIR_WS_CATALOG_INFO_IMAGES.$pInfo->products_image, 'Standard Image') :xtc_draw_separator('pixel_trans.gif', PRODUCT_IMAGE_INFO_WIDTH, 10); ?></td>
+      <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php echo $pInfo->products_image ? xtc_image(DIR_WS_CATALOG_THUMBNAIL_IMAGES.$pInfo->products_image, 'Standard Image') : xtc_draw_separator('pixel_trans.gif', PRODUCT_IMAGE_THUMBNAIL_WIDTH, 10); ?></td>
     </tr>
     <tr>
       <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCTS_IMAGE; ?></td>
@@ -36,7 +37,7 @@ if ($_GET['action'] == 'new_product') {
     </tr>    
     <tr>
       <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
-      <td class="dataTableConfig col-middle"><?php echo xtc_draw_selection_field('del_pic', 'checkbox', $pInfo->products_image); ?></td>      
+      <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('del_pic', $pInfo->products_image); ?></td>      
     </tr>
   </table>
   
@@ -53,7 +54,7 @@ if ($_GET['action'] == 'new_product') {
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCTS_IMAGE.' '. ($i +1); ?></td>
           <td class="dataTableConfig col-middle"><?php echo (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : ''); ?></td>
-          <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php echo (isset($mo_images[$i]['image_name']) ? xtc_image(DIR_WS_CATALOG_INFO_IMAGES.$mo_images[$i]['image_name'], 'Image '. ($i +1)) : xtc_draw_separator('pixel_trans.gif', PRODUCT_IMAGE_INFO_WIDTH, 10)); ?></td>
+          <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php echo (isset($mo_images[$i]['image_name']) ? xtc_image(DIR_WS_CATALOG_THUMBNAIL_IMAGES.$mo_images[$i]['image_name'], 'Image '. ($i +1)) : xtc_draw_separator('pixel_trans.gif', PRODUCT_IMAGE_THUMBNAIL_WIDTH, 10)); ?></td>
         </tr>
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCTS_IMAGE.' '. ($i +1); ?></td>
@@ -61,7 +62,7 @@ if ($_GET['action'] == 'new_product') {
         </tr>        
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
-          <td class="dataTableConfig col-middle"><?php echo xtc_draw_selection_field('del_mo_pic[]', 'checkbox', (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : '')); ?></td>      
+          <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('del_mo_pic[]', (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : '')); ?></td>      
         </tr>
       </table>
       <?php
@@ -72,3 +73,18 @@ if ($_GET['action'] == 'new_product') {
   echo '</div>';
 }
 ?>
+
+<script type="text/javascript">
+//disable empty upload fields - fix ticket #459
+$(function() {
+    $('#new_product').submit(function( event ) {
+        var images = $("[name='products_image'],[name^='mo_pics_']");
+        images.each(function() {
+            $(this).prop( "disabled", false );
+            if ($(this).val() == '') {
+                $(this).prop( "disabled", true );
+            }
+        });
+    });
+});
+</script>

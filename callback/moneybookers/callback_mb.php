@@ -1,23 +1,23 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: callback_mb.php 22 2009-01-17 14:33:18Z mzanier $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   xt:Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2009 xt:Commerce GmbH
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-
-include ('../../includes/application_top_callback.php');
+chdir('../../');
+include ('includes/application_top_callback.php');
 include (DIR_FS_DOCUMENT_ROOT.'callback/moneybookers/moneybookers.php');
 // redirect
 
 $data = array ();
 
-if (count($_POST) > 0) {
+if (isset($_POST) && count($_POST) > 0) {
 
 	$mb = new moneybookers_callback();
 
@@ -38,6 +38,7 @@ if (count($_POST) > 0) {
 	if ($mb->debug) {
 		$mb->_logTransactions();
 	}
+	
 	if ($mb->repost) {
 		header('HTTP/1.0 404 Not Found');
 	} else {

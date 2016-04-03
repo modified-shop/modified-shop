@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: header.php 3808 2012-10-28 20:39:04Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -36,30 +36,29 @@ if ($shop_is_offline) {
   header("Status: 503 Service Temporarily Unavailable");
 }
 //SET 410 STATUS CODE
-elseif (isset($error) && ($error === CATEGORIE_NOT_FOUND || $error === TEXT_PRODUCT_NOT_FOUND || $error === TEXT_CONTENT_NOT_FOUND)) {
+elseif (isset($site_error) 
+        && ($site_error === CATEGORIE_NOT_FOUND 
+            || $site_error === TEXT_PRODUCT_NOT_FOUND 
+            || $site_error === TEXT_CONTENT_NOT_FOUND 
+            || $site_error === MANUFACTURER_NOT_FOUND
+            || $site_error === TEXT_SITE_NOT_FOUND
+            )
+        ) 
+{
   header("HTTP/1.0 410 Gone"); 
   header("Status: 410 Gone"); // FAST CGI
 }
 
-/******** SHOPGATE **********/
-if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True' && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'shopgate') === false){
-  include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/includes/header.php');
-}
-/******** SHOPGATE **********/
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_begin/','php') as $file) require_once ($file);
 
+defined('TEMPLATE_RESPONSIVE') or define('TEMPLATE_RESPONSIVE', 'false');
+defined('TEMPLATE_HTML_ENGINE') or define('TEMPLATE_HTML_ENGINE', 'xhtml');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html <?php echo HTML_PARAMS; ?>>
+<!DOCTYPE html<?php echo ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"' : ''); ?>>
+<html<?php echo ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ' lang="'.$_SESSION['language_code'].'"'); ?>>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>" /> 
-<meta http-equiv="Content-Style-Type" content="text/css" />
-<?php
-/******** SHOPGATE **********/
-if(isset($shopgateJsHeader)) echo $shopgateJsHeader;
-/******** SHOPGATE **********/
-?>
 <?php include(DIR_WS_MODULES.FILENAME_METATAGS); ?>
-<link rel="shortcut icon" href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/favicon.ico';?>" type="image/x-icon" />
+<?php include(DIR_WS_MODULES.'favicons.php'); ?>
 <?php
 /*
   The following copyright announcement is in compliance
@@ -85,70 +84,30 @@ Information and contribution at http://www.xt-commerce.com
 Please visit our website: www.modified-shop.org
 =========================================================
 -->
-<meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> ------ http://www.modified-shop.org" />
-
+<meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> 7D0 http://www.modified-shop.org" />
 <?php
-/*<base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />*/
-if (file_exists('templates/'.CURRENT_TEMPLATE.'/css/general.css.php')) {
+if (DIR_WS_BASE == '') {
+  echo '<base href="'.(($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'" />';
+}
+if (is_file('templates/'.CURRENT_TEMPLATE.'/css/general.css.php')) {
   require('templates/'.CURRENT_TEMPLATE.'/css/general.css.php');
 } else { //Maintain backwards compatibility for older templates 
   echo '<link rel="stylesheet" type="text/css" href="templates/'.CURRENT_TEMPLATE.'/stylesheet.css" />';
 }
 
-?>
-<script type="text/javascript"><!--
-var selected;
-var submitter = null;
-function submitFunction() {
-    submitter = 1;
-}
-function popupWindow(url) {
-  window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
-}  
-function selectRowEffect(object, buttonSelect) {
-  if (!selected) {
-    if (document.getElementById) {
-      selected = document.getElementById('defaultSelected');
-    } else {
-      selected = document.all['defaultSelected'];
-    }
-  }
-  if (selected) selected.className = 'moduleRow';
-  object.className = 'moduleRowSelected';
-  selected = object;
-  if (document.getElementById('payment'[0])) {
-    document.getElementById('payment'[buttonSelect]).checked=true;
-  }
-}
-function rowOverEffect(object) {
-  if (object.className == 'moduleRow') object.className = 'moduleRowOver';
-}
-function rowOutEffect(object) {
-  if (object.className == 'moduleRowOver') object.className = 'moduleRow';
-}
-function popupImageWindow(url) {
-  window.open(url,'popupImageWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
-}
-//--></script>
-<?php
 // require theme based javascript
 require('templates/'.CURRENT_TEMPLATE.'/javascript/general.js.php');
 
-// xajax support
-if( XAJAX_SUPPORT=='true' ) {
-  require ('xajax.common.php');
-  if ($imdxajax) {
-    $imdxajax->printJavascript('includes/');
-  }
-}
-
-switch(trim($PHP_SELF, '/')) {
+// require additional javascript
+switch(basename($PHP_SELF)) {
 
   case FILENAME_CHECKOUT_PAYMENT:
+      require('includes/form_check.js.php');
       echo $payment_modules->javascript_validation();
     break;
 
   case FILENAME_CHECKOUT_SHIPPING:
+      require('includes/form_check.js.php');
       echo $shipping_modules->javascript_validation();
     break;
 
@@ -156,77 +115,26 @@ switch(trim($PHP_SELF, '/')) {
   case FILENAME_CREATE_GUEST_ACCOUNT:
   case FILENAME_ACCOUNT_PASSWORD:
   case FILENAME_ACCOUNT_EDIT:
+  case FILENAME_CHECKOUT_PAYMENT:
+  case FILENAME_CHECKOUT_SHIPPING_ADDRESS:
+  case FILENAME_CHECKOUT_PAYMENT_ADDRESS:
+  case FILENAME_ADVANCED_SEARCH:
+  case FILENAME_PRODUCT_REVIEWS_WRITE: 
       require('includes/form_check.js.php');
     break;
 
   case FILENAME_ADDRESS_BOOK_PROCESS:
-      if (isset($_GET['delete']) == false) {
+      if (isset($_GET['delete']) === false) {
         include('includes/form_check.js.php');
       }
     break;
 
-  case FILENAME_CHECKOUT_SHIPPING_ADDRESS:
-  case FILENAME_CHECKOUT_PAYMENT_ADDRESS:
-      require('includes/form_check.js.php'); ?>
-<script type="text/javascript"><!--
-function check_form_optional(form_name) {
-  var form = form_name;
-  var firstname = form.elements['firstname'].value;
-  var lastname = form.elements['lastname'].value;
-  var street_address = form.elements['street_address'].value;
-  if (firstname == '' && lastname == '' && street_address == '') {
-    return true;
-  } else {
-    return check_form(form_name);
-  }
 }
-//--></script>
-<?php break;
 
-  case FILENAME_ADVANCED_SEARCH:
-      echo '<script type="text/javascript" src="includes/general.js"></script>' . PHP_EOL;
-    break;
-
-  case FILENAME_PRODUCT_REVIEWS_WRITE: ?>
-<script type="text/javascript"><!--
-function checkForm() {
-  var error = 0;
-  var error_message = unescape("<?php echo xtc_js_lang(JS_ERROR); ?>");
-  var review = document.getElementById("product_reviews_write").review.value;
-  if (review.length < <?php echo REVIEW_TEXT_MIN_LENGTH; ?>) {
-    error_message = error_message + unescape("<?php echo xtc_js_lang(JS_REVIEW_TEXT); ?>");
-    error = 1;
-  }
-  if (!((document.getElementById("product_reviews_write").rating[0].checked) || (document.getElementById("product_reviews_write").rating[1].checked) || (document.getElementById("product_reviews_write").rating[2].checked) || (document.getElementById("product_reviews_write").rating[3].checked) || (document.getElementById("product_reviews_write").rating[4].checked))) {
-    error_message = error_message + unescape("<?php echo xtc_js_lang(JS_REVIEW_RATING); ?>");
-    error = 1;
-  }
-  if (error == 1) {
-    alert(error_message);
-    return false;
-  } else {
-    return true;
-  }
-}
-//--></script>
-<?php break;
-
-  case FILENAME_POPUP_IMAGE: ?>
-<script type="text/javascript"><!--
-var i=0;
-function resize() {
-  if (navigator.appName == 'Netscape') i=40;
-  if (document.images[0]) window.resizeTo(document.images[0].width +30, document.images[0].height+60-i);
-  self.focus();
-}
-//--></script>
-<?php break;
-
-} // END SWITCH
-
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_head/','php') as $file) require_once ($file);
 ?>
 </head>
-<body<?php if(strstr($PHP_SELF, FILENAME_POPUP_IMAGE )) echo ' onload="resize();"'; ?>>
+<body>
 <?php
 
 // include needed functions
@@ -235,17 +143,17 @@ require_once('inc/xtc_parse_input_field_data.inc.php');
 
 // check if the 'install' directory exists, and warn of its existence
 if (WARN_INSTALL_EXISTENCE == 'true') {
-  if (file_exists(DIR_FS_CATALOG . '/' . DIR_MODIFIED_INSTALLER)) {
+  if (is_dir(DIR_FS_CATALOG . '/' . DIR_MODIFIED_INSTALLER)) {
     xtc_output_warning(sprintf(WARNING_INSTALL_DIRECTORY_EXISTS, DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER));
   }
 }
 
 // check if the configure.php file is writeable
 if (WARN_CONFIG_WRITEABLE == 'true') {
-  if ((file_exists(DIR_WS_INCLUDES . 'configure.php')) && (is_writeable(DIR_WS_INCLUDES . 'configure.php'))) {
+  if ((is_file(DIR_WS_INCLUDES . 'configure.php')) && (is_writeable(DIR_WS_INCLUDES . 'configure.php'))) {
     xtc_output_warning(sprintf(WARNING_CONFIG_FILE_WRITEABLE, DIR_WS_INCLUDES . 'configure.php'));
   }
-  if ((file_exists(DIR_WS_INCLUDES . 'local/configure.php')) && (is_writeable(DIR_WS_INCLUDES . 'local/configure.php'))) {
+  if ((is_file(DIR_WS_INCLUDES . 'local/configure.php')) && (is_writeable(DIR_WS_INCLUDES . 'local/configure.php'))) {
     xtc_output_warning(sprintf(WARNING_CONFIG_FILE_WRITEABLE, DIR_WS_INCLUDES . 'local/configure.php'));
   }
 }
@@ -282,7 +190,11 @@ if (isset($_SESSION['customer_id'])) {
 	$smarty->assign('create_account',xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
 }
 $smarty->assign('index',xtc_href_link(FILENAME_DEFAULT));
-if ( $_SESSION['account_type']=='0') {
+if ((isset($_SESSION['customer_id']) 
+     && $_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+     ) || GUEST_ACCOUNT_EDIT == 'true'
+    ) 
+{
   $smarty->assign('account',xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 $smarty->assign('cart',xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
@@ -290,10 +202,10 @@ $smarty->assign('checkout',xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'))
 $smarty->assign('store_name', encode_htmlspecialchars(TITLE));
 
 if (isset($_GET['error_message']) && xtc_not_null($_GET['error_message'])) {
-	$smarty->assign('error','<p class="errormessage">'. encode_htmlspecialchars(urldecode($_GET['error_message'])).'</p>');
+  $smarty->assign('error', get_message('error_message'));
 }
 if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
-	$smarty->assign('error','<p class="messageStackSuccess">'.encode_htmlspecialchars($_GET['info_message']).'</p>');
+  $smarty->assign('error', get_message('info_message'));
 }
 
 ## header_body_extra
@@ -306,40 +218,6 @@ if ($shop_is_offline) {
   exit();
 }
 
-// ECONDA TRACKING
-if (TRACKING_ECONDA_ACTIVE=='true') {
-  echo '<script type="text/javascript"><!--', PHP_EOL,
-       '  var emos_kdnr="', TRACKING_ECONDA_ID, '";', PHP_EOL,
-       '//--></script>', PHP_EOL,
-       '<a name="emos_sid" rel="', session_id(),'"></a>', PHP_EOL,
-       '<a name="emos_name" title="siteid" rel="', $_SESSION['languages_id'],'" rev=""></a>',
-       PHP_EOL;
-}
-
-// GOOGLE CONV. TRACKING
-if (trim($PHP_SELF, '/') == FILENAME_CHECKOUT_SUCCESS && GOOGLE_CONVERSION == 'true') {
-  require('includes/google_conversiontracking.js.php');
-}
-
-// BANNER SYSTEM
-include(DIR_WS_INCLUDES.FILENAME_BANNER);
-
-// BILLSAFE PAYMENT MODULE
-if (defined('MODULE_PAYMENT_BILLSAFE_2_LAYER') && MODULE_PAYMENT_BILLSAFE_2_LAYER == 'True') {
-  $bs_error = '';
-  if (basename($PHP_SELF) == 'checkout_payment.php') {
-    if (isset($_GET['payment_error'])) {
-      $bs_error = stripslashes(html_entity_decode('payment_error='.$_GET['payment_error'].'&error_message='.$_GET['error_message']));
-    }
-    echo '<script type="text/javascript"><!--' .
-         ' if (top.lpg) top.lpg.close("'.str_replace('&amp;', '&', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, $bs_error, 'SSL')).'");' .
-         '--></script>' . PHP_EOL;
-  }
-  if (basename($PHP_SELF) == 'checkout_success.php') {
-    echo '<script type="text/javascript"><!--' .
-         '  if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL').'");' .
-         '--></script>' . PHP_EOL;
-  }
-}
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_body/','php') as $file) require_once ($file);
 ## header_body_extra
 ?>

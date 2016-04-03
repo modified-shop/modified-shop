@@ -1,6 +1,6 @@
 <?php
 /* ----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: image_manipulator_GD2.php 950 2005-05-14 16:45:21Z mz $   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -18,9 +18,9 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 class image_manipulation
 	{
 	
-	function image_manipulation($resource_file, $max_width, $max_height, $destination_file="", $compression=IMAGE_QUALITY, $transform="")
+	function __construct($resource_file, $max_width, $max_height, $destination_file="", $compression=IMAGE_QUALITY, $transform="")
 		{
-		$this->a = $resource_file;	// image to be thumbnailed
+		$this->a = $this->correctImageOrientation($resource_file);	// image to be thumbnailed
 		$this->c = $transform;
 		$this->d = $destination_file;	// thumbnail saved to
 		$this->e = $compression;	// compression ration for jpeg thumbnails
@@ -44,10 +44,10 @@ class image_manipulation
 			$this->k = $this->h[2];
 
       //BOF -web28- 2011-03-27 - OPTION DO NOT ENLARGE SMALL PICTURES
-      //if(PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT == 'false'){
+      if(PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT == 'false'){
         if($this->i < $this->m) {$this->m = $this->i;}
         if($this->j < $this->n) {$this->n = $this->j;}
-      //}
+      }
       //EOF  -web28- 2011-03-27 - OPTION DO NOT ENLARGE SMALL PICTURES
       
             if($this->m == '0'){
@@ -327,5 +327,37 @@ class image_manipulation
 			imagedestroy($this->t);
 			}
 		}
+
+    function correctImageOrientation($resource_file) {
+      if (function_exists('exif_read_data') && function_exists('exif_imagetype') && exif_imagetype($resource_file) == IMAGETYPE_JPEG) {
+        $exif = exif_read_data($resource_file);
+        if($exif && isset($exif['Orientation'])) {
+          $orientation = $exif['Orientation'];
+          if($orientation != 1){
+            $img = imagecreatefromjpeg($resource_file);
+            $deg = 0;
+            switch ($orientation) {
+              case 3:
+                $deg = 180;
+                break;
+              case 6:
+                $deg = 270;
+                break;
+              case 8:
+                $deg = 90;
+                break;
+            }
+            if ($deg) {
+              $img = imagerotate($img, $deg, 0);        
+            }
+            imagejpeg($img, $resource_file, 100);
+            imagedestroy($img);
+          }
+        }
+      }
+            
+      return $resource_file;     
+    }
+
 	}
 ?>

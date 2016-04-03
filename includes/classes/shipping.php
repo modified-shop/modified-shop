@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: shipping.php 2807 2012-04-29 18:11:28Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,45 +16,70 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  //web28 ignore shipping modules
   define ('IGNORE_CHEAPEST_MODULES', 'selfpickup');
 
   class shipping {
     var $modules;
 
-    // class constructor
-    function shipping($module = '') {
+    function __construct($module = '') {
       global $PHP_SELF,$order;
 
+      $this->modules = array();
+      
       if (defined('MODULE_SHIPPING_INSTALLED') && xtc_not_null(MODULE_SHIPPING_INSTALLED)) {
-        $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
+        $modules = explode(';', MODULE_SHIPPING_INSTALLED);
+        
+        $module_directory = DIR_WS_MODULES . 'shipping/';
+        foreach($modules as $file) {
+          $class = substr($file, 0, strrpos($file, '.'));
+          $module_status = (defined('MODULE_SHIPPING_'. strtoupper($class) .'_STATUS') && strtolower(constant('MODULE_SHIPPING_'. strtoupper($class) .'_STATUS')) == 'true') ? true : false;
+          if (is_file($module_directory . $file) && $module_status) {
+            $this->modules[] = $file;
+          }
+        }
+        unset($modules);
 
         $include_modules = array();
 
-        if ( (xtc_not_null($module)) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
-          $include_modules[] = array('class' => substr($module['id'], 0, strpos($module['id'], '_')), 'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
+        if (xtc_not_null($module) 
+            && in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.php', $this->modules) 
+            ) 
+        {
+          $class = substr($module['id'], 0, strpos($module['id'], '_'));
+          $include_modules[] = array(
+            'class' => $class, 
+            'file' => $class.'.php'
+          );
         } else {
           reset($this->modules);
           while (list(, $value) = each($this->modules)) {
             $class = substr($value, 0, strrpos($value, '.'));
-            $include_modules[] = array('class' => $class, 'file' => $value);
+            $include_modules[] = array(
+              'class' => $class, 
+              'file' => $value
+            );
           }
         }
         // load unallowed modules into array - remove spaces and line breaks by web28
         $unallowed_modules = preg_replace("'[\r\n\s]+'",'',$_SESSION['customers_status']['customers_status_shipping_unallowed'].','. (isset($order->customer['shipping_unallowed']) ? $order->customer['shipping_unallowed']: ''));
         $unallowed_modules = explode(',',$unallowed_modules);
         for ($i = 0, $n = sizeof($include_modules); $i < $n; $i++) {
-          if (!in_array(str_replace('.php', '', $include_modules[$i]['file']), $unallowed_modules)) {
+          if (!in_array($include_modules[$i]['class'], $unallowed_modules)) {
             // check if zone is alowed to see module
-            if (constant('MODULE_SHIPPING_' . strtoupper(str_replace('.php', '', $include_modules[$i]['file'])) . '_ALLOWED') != '') {
-              $unallowed_zones = explode(',', constant('MODULE_SHIPPING_' . strtoupper(str_replace('.php', '', $include_modules[$i]['file'])) . '_ALLOWED'));
-            } else {
-              $unallowed_zones = array();
+             $unallowed_zones = array();
+            if (constant('MODULE_SHIPPING_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED') != '') {
+              $unallowed_zones = explode(',', constant('MODULE_SHIPPING_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'));
             }
-            if (in_array($_SESSION['delivery_zone'], $unallowed_zones) == true || count($unallowed_zones) == 0) {
+            if (in_array($_SESSION['delivery_zone'], $unallowed_zones) 
+                || count($unallowed_zones) == 0
+                ) 
+            {
               include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
               include_once(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
-              $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
+              
+              if (class_exists($include_modules[$i]['class'])) {
+                $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
+              }
             }
           }
         }
@@ -88,7 +113,7 @@
         while (list(, $value) = each($this->modules)) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (xtc_not_null($module) && isset($GLOBALS[$class])) {
-            if ( ($module == $class) && ($GLOBALS[$class]->enabled) ) {
+            if ($module == $class && $GLOBALS[$class]->enabled) {
               $include_quotes[] = $class;
             }
           } elseif ($GLOBALS[$class]->enabled) {
@@ -96,7 +121,7 @@
           }
         }
 
-        for ($i=0, $size = sizeof($include_quotes); $i<$size; $i++) {
+         for ($i=0, $size = sizeof($include_quotes); $i<$size; $i++) {
           $quotes = $GLOBALS[$include_quotes[$i]]->quote($method);
           if (is_array($quotes)) $quotes_array[] = $quotes;
         }
@@ -109,27 +134,28 @@
 
       if (is_array($this->modules)) {
         $rates = array();
-
-        $ignore_cheapest_array = explode(',',IGNORE_CHEAPEST_MODULES); //web28 ignore shipping modules
+        $ignore_cheapest_array = explode(',', IGNORE_CHEAPEST_MODULES);
 
         reset($this->modules);
         while (list(, $value) = each($this->modules)) {
           $class = substr($value, 0, strrpos($value, '.'));
-          if (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
+          if (isset($GLOBALS[$class])
+              && is_object($GLOBALS[$class]) 
+              && $GLOBALS[$class]->enabled
+              ) 
+          {
             $quotes = $GLOBALS[$class]->quotes;
-            //BOF - Dokuman - 2009-10-02 - set undefined index
-            //$size = sizeof($quotes['methods']);
             $size = isset($quotes['methods']) && is_array($quotes['methods']) ? sizeof($quotes['methods']) : 0;
-            //BOF - Dokuman - 2009-10-02 - set undefined index
             for ($i=0; $i<$size; $i++) {
-              // BOF - Tomcraft - 2011-02-01 - Paypal Express Modul
-              //if(array_key_exists("cost",$quotes['methods'][$i])) {
-              if(array_key_exists("cost",$quotes['methods'][$i]) && !isset ($quotes['error'][$i]) && !in_array($quotes['id'],$ignore_cheapest_array)) { //web28 ignore shipping modules
-              // EOF - Tomcraft - 2011-02-01 - Paypal Express Modul
-                $rates[] = array('id' => $quotes['id'] . '_' . $quotes['methods'][$i]['id'],
-                                 'title' => $quotes['module'] . ' (' . $quotes['methods'][$i]['title'] . ')',
-                                 'cost' => $quotes['methods'][$i]['cost']);
-                                // echo $quotes['methods'][$i]['cost'];
+              if (array_key_exists('cost', $quotes['methods'][$i]) 
+                  && !in_array($quotes['id'], $ignore_cheapest_array)
+                  ) 
+              {
+                $rates[] = array(
+                  'id' => $quotes['id'] . '_' . $quotes['methods'][$i]['id'],
+                  'title' => $quotes['module'] . ' (' . $quotes['methods'][$i]['title'] . ')',
+                  'cost' => $quotes['methods'][$i]['cost']
+                );
               }
             }
           }
@@ -145,10 +171,9 @@
             $cheapest = $rates[$i];
           }
         }
+        
         return $cheapest;
-
       }
-
     }
 
     function javascript_validation() {
@@ -174,7 +199,11 @@
         reset($this->modules);
         while (list(, $value) = each($this->modules)) {
           $class = substr($value, 0, strrpos($value, '.'));
-          if (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'javascript_validation')) {
+          if (isset($GLOBALS[$class]) 
+              && $GLOBALS[$class]->enabled 
+              && method_exists($GLOBALS[$class], 'javascript_validation')
+              ) 
+          {
             $js .= $GLOBALS[$class]->javascript_validation();
           }
         }

@@ -1,17 +1,16 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: tax_rates.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(tax_rates.php,v 1.9 2003/03/13); www.oscommerce.com 
    (c) 2003	 nextcommerce (tax_rates.php,v 1.4 2003/08/1); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -32,7 +31,7 @@ define('TEXT_INFO_CLASS_TITLE', 'Name der Steuerklasse:');
 define('TEXT_INFO_COUNTRY_NAME', 'Land:');
 define('TEXT_INFO_ZONE_NAME', 'Steuerzone:');
 define('TEXT_INFO_TAX_RATE', 'Steuersatz (%):');
-define('TEXT_INFO_TAX_RATE_PRIORITY', 'Steuers&auml;tze der selben Priorit&auml;t werden addiert, andere werden vermischt.<br /><br />Priorit&auml;t:');
+define('TEXT_INFO_TAX_RATE_PRIORITY', 'Steuers&auml;tze der selben Priorit&auml;t werden addiert, andere werden vermischt.<br/><br/><b>WICHTIG:</b> F&uuml;r elektronisch erbrachte Leistungen muss diese auf 99 gesetzt werden.<br /><br />Priorit&auml;t:');
 define('TEXT_INFO_RATE_DESCRIPTION', 'Beschreibung:');
 define('TEXT_INFO_INSERT_INTRO', 'Bitte geben Sie den neuen Steuersatz mit allen relevanten Daten ein');
 define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diesen Steuersatz l&ouml;schen m&ouml;chten?');

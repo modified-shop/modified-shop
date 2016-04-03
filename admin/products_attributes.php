@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: products_attributes.php 3220 2012-07-15 15:40:20Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -24,7 +24,8 @@ if (isset($_POST['option_id'])) $_GET['option_id'] = $_POST['option_id'];
 $filter_params_arr = array(
     'option_filter',
     'value_order_by',
-    'option_id'
+    'option_id',
+    'search_optionsname'
     );
     
 $filter_arr = array();
@@ -38,7 +39,8 @@ $option_filter = '&'. implode('&', $filter_arr);
 $page_params_arr = array(
     'option_page',
     'value_page',
-    'attribute_page'    
+    'attribute_page',
+    'search_optionsname'
     );
     
 $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
@@ -58,6 +60,10 @@ if ($_GET['action']) {
   include(DIR_WS_MODULES.'products_attributes_action.php');
 }
 
+if ($_GET['search_optionsname']) {
+  $search_optionsname = isset($_GET['search_optionsname']) && $_GET['search_optionsname'] ? '&search_optionsname=' . $_GET['search_optionsname'] : '';
+}
+
 require (DIR_WS_INCLUDES.'head.php');
 ?>
   <script type="text/javascript">
@@ -66,6 +72,9 @@ require (DIR_WS_INCLUDES.'head.php');
      if (document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value != "none") {
        location = "<?php echo xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'option_page=' . (isset($_GET['option_page']) ? $_GET['option_page'] : 1)); ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
      }
+   }
+   function option_filter(obj) {
+     location = "<?php echo xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'option_page=' . (isset($_GET['option_page']) ? $_GET['option_page'] : 1)); ?>&option_id="+obj.value;
    }
   //-->
   </script>

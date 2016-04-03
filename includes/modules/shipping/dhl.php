@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: dhl.php 5129 2013-07-18 14:00:37Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -27,7 +27,7 @@
 /**
  * class constructor
  */
-    function dhl() {
+    function __construct() {
       global $order;
 
       $this->code = 'dhl';
@@ -96,11 +96,11 @@
         $error = true;
       } else {
         $shipping = -1;
-        $dhl_cost_ecx = @constant('MODULE_SHIPPING_DHL_COST_ECX_' . $j);
-        $dhl_cost_dox = @constant('MODULE_SHIPPING_DHL_COST_DOX_' . $j);
-        $dhl_cost_wpx = @constant('MODULE_SHIPPING_DHL_COST_WPX_' . $j);
-        $dhl_cost_mdx = @constant('MODULE_SHIPPING_DHL_COST_MDX_' . $j);
-        $dhl_cost_sdx = @constant('MODULE_SHIPPING_DHL_COST_SDX_' . $j);
+        $dhl_cost_ecx = @constant('MODULE_SHIPPING_DHL_COST_ECX_' . $dest_zone);
+        $dhl_cost_dox = @constant('MODULE_SHIPPING_DHL_COST_DOX_' . $dest_zone);
+        $dhl_cost_wpx = @constant('MODULE_SHIPPING_DHL_COST_WPX_' . $dest_zone);
+        $dhl_cost_mdx = @constant('MODULE_SHIPPING_DHL_COST_MDX_' . $dest_zone);
+        $dhl_cost_sdx = @constant('MODULE_SHIPPING_DHL_COST_SDX_' . $dest_zone);
 
         $methods = array();
         $n == 0;

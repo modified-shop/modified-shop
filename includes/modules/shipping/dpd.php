@@ -7,7 +7,7 @@
 
    Copyrigt (c) 2004 cigamth
    ------------------------------------------------------------------------------
-   $Id$
+   $Id: dpd.php 5131 2013-07-18 14:17:18Z Tomcraft $
 
    XTC-GLS Shipping Module - Contribution for XT-Commerce http://www.xt-commerce.com
    modified by http://www.hhgag.com
@@ -35,7 +35,7 @@
     var $code, $title, $description, $enabled, $icon;
 
     // class constructor
-    function dpd() {
+    function __construct() {
       global $order;
 
       $this->code = 'dpd';

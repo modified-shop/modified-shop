@@ -26,17 +26,6 @@
   define('DIR_FS_DOWNLOAD_PUBLIC', DIR_FS_CATALOG . 'pub/');
   define('DIR_FS_INC', DIR_FS_CATALOG . 'inc/');
 
-   // Base/PHP_SELF/SSL-PROXY
-  require_once(DIR_FS_INC . 'set_php_self.inc.php'); 
-  $PHP_SELF = set_php_self();
-
- //compatibility for modified eCommerce Shopsoftware 1.06 files
-  $ssl_proxy = '';
-  if (isset($request_type) && $request_type == 'SSL' && ENABLE_SSL == true && defined('USE_SSL_PROXY') && USE_SSL_PROXY == true) {
-    $ssl_proxy = '/' . $_SERVER['HTTP_HOST'];
-  }
-  define('DIR_WS_BASE', $ssl_proxy . preg_replace('/\\' . DIRECTORY_SEPARATOR . '\/|\/\//', '/', dirname($PHP_SELF) . '/'));
-
   // SQL caching dir
   define('SQL_CACHEDIR', DIR_FS_CATALOG . 'cache/');
 
@@ -44,7 +33,9 @@
   define('DIR_FS_LOG', DIR_FS_CATALOG . 'log/');
   
   // external
-  define('DIR_WS_EXTERNAL', DIR_WS_CATALOG . 'includes/external/');
+  define('DIR_WS_EXTERNAL', 'includes/external/');
   define('DIR_FS_EXTERNAL', DIR_FS_CATALOG . 'includes/external/');
 
+  // installer
+  define('DIR_MODIFIED_INSTALLER', '_installer');
 ?>

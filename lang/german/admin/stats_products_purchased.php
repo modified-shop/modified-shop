@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: stats_products_purchased.php 3542 2012-08-27 10:52:20Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

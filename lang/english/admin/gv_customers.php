@@ -10,9 +10,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('HEADING_TITLE', 'Kunden - Credit');
+define('HEADING_TITLE', 'Customers Credit');
 
 define('TABLE_HEADING_GV_ID', 'ID');
 define('TABLE_HEADING_GV_NAME', 'Name');
 define('TABLE_HEADING_GV_AMOUNT', 'Credit');
+define('HEADING_TITLE_TOTAL', 'Total credit, all Customers: ');
 ?>

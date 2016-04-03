@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$
+   $Id: admin_search_bar.php 4387 2013-02-01 12:20:50Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -19,15 +19,17 @@
   $search_email = '';
   $search_ord = '';
   $search_cat = '';
+  $search_id = '';
   if (strpos($page_filename, 'customers.php') !== false) {
-    $search_cus = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); //DokuMan - 2010-09-08 - set undefined index
-    $search_email = htmlentities(isset($_GET['search_email']) ? $_GET['search_email'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); //DokuMan - 2010-09-08 - set undefined index
+    $search_cus = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
+    $search_email = htmlentities(isset($_GET['search_email']) ? $_GET['search_email'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
   }
   if (strpos($page_filename, 'orders.php') !== false) {
-    $search_ord = htmlentities(isset($_GET['oID']) ? $_GET['oID'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); //DokuMan - 2010-09-08 - set undefined index
+    $search_ord = htmlentities(isset($_GET['oID']) ? $_GET['oID'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
   }
   if (strpos($page_filename, 'categories.php') !== false){
-    $search_cat = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); //DokuMan - 2010-09-08 - set undefined index
+    $search_cat = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
+    $search_id = htmlentities(isset($_GET['search_id']) ? $_GET['search_id'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
   }
   
   if (!defined('NEW_ADMIN_STYLE')) {   
@@ -37,37 +39,32 @@
   }
   ?>
 
-<div class="searchbar">
-  <ul id="topmenu_search">
-    <li>
-      <form action="<?php echo xtc_href_link('customers.php'); ?>" method="get">
-        <?php echo ASB_QUICK_SEARCH_CUSTOMER; ?>
-        <input name="search" type="text" value="<?php echo $search_cus;?>" size="15" />
+  <div class="row2 cf" id="searchbar_new"<?php echo ((USE_ADMIN_FIXED_SEARCH == 'true') ? ' style="display:block;"' : ''); ?>>
+    <div class="col25">
+      <?php echo xtc_draw_form('search_customer', FILENAME_CUSTOMERS, '', 'get'); ?>
+        <input name="search" type="text" value="<?php echo $search_cus;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_CUSTOMER; ?>" />
         <input name="asb" type="hidden" value="asb" />
-        <input name="<?php echo xtc_session_name(); ?>" type="hidden" value="<?php echo xtc_session_id(); ?>" />
       </form>
-    </li>
-    <li>
-      <form action="<?php echo xtc_href_link('customers.php'); ?>" method="get">
-        <?php echo ASB_QUICK_SEARCH_EMAIL; ?>
-        <input name="search_email" type="text" value="<?php echo $search_email;?>" size="15" />
-        <input name="<?php echo xtc_session_name(); ?>" type="hidden" value="<?php echo xtc_session_id(); ?>" />
+    </div>
+    <div class="col25">
+      <?php echo xtc_draw_form('search_email', FILENAME_CUSTOMERS, '', 'get'); ?>
+        <input name="search_email" type="text" value="<?php echo $search_email;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_EMAIL; ?>" />
       </form>
-    </li>
-    <li>
-      <form action="<?php echo xtc_href_link('orders.php'); ?>" method="get">
-        <?php echo ASB_QUICK_SEARCH_ORDER_ID; ?>
-        <input name="oID" type="text" value="<?php echo $search_ord;?>" size="7" />
+    </div>
+    <div class="col25">
+      <?php echo xtc_draw_form('search_order', FILENAME_ORDERS, '', 'get'); ?>
+        <input name="oID" type="text" value="<?php echo $search_ord;?>" size="7" placeholder="<?php echo ASB_QUICK_SEARCH_ORDER_ID; ?>" />
         <input type="hidden" name="action" value="search" />
-        <input name="<?php echo xtc_session_name(); ?>" type="hidden" value="<?php echo xtc_session_id(); ?>" />
       </form>
-    </li>
-    <li>
-      <form action="<?php echo xtc_href_link('categories.php'); ?>" method="get">
-        <?php echo ASB_QUICK_SEARCH_ARTICLE; ?>
-        <input name="search" type="text" value="<?php echo $search_cat;?>" size="15" />
-        <input name="<?php echo xtc_session_name(); ?>" type="hidden" value="<?php echo xtc_session_id(); ?>" />
+    </div>
+    <div class="col25">
+      <?php echo xtc_draw_form('search_categorie', FILENAME_CATEGORIES, '', 'get'); ?>
+        <input name="search" type="text" value="<?php echo $search_cat;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_ARTICLE; ?>" />
       </form>
-    </li>
-  </ul>
-</div>
+    </div>
+    <div class="col25">
+      <?php echo xtc_draw_form('search_product', FILENAME_CATEGORIES, '', 'get'); ?>
+        <input name="search_id" type="text" value="<?php echo $search_id;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_ARTICLE_ID; ?>" />
+      </form>
+    </div>
+  </div>

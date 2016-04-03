@@ -20,8 +20,7 @@ function smarty_function_escape_special_chars($string)
 {
     if(!is_array($string)) {
         $string = preg_replace('!&(#?\w+);!', '%%%SMARTY_START%%%\\1%%%SMARTY_END%%%', $string);
-        //$string = htmlspecialchars($string);
-        $string = encode_htmlspecialchars($string); // web28 2013-01-11 - use encode_htmlentities (PHP5.4 ready)
+        $string = encode_htmlspecialchars($string);
         $string = str_replace(array('%%%SMARTY_START%%%','%%%SMARTY_END%%%'), array('&',';'), $string);
     }
     return $string;

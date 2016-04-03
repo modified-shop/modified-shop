@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: yategoConfig.php 3925 2014-06-03 12:54:45Z tim.neumann $
+ * $Id: yategoConfig.php 5452 2015-04-09 10:04:14Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -168,5 +168,6 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 		'ftp', 'checkin', 'lang', 'stats', 'price', 'shipping', 'inventoryupdate', 'checkinstandards', 'import', 'mail'
 	));
 	echo $cG->renderConfigForm();
+	echo $cG->exchangeRateAlert();
 	include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_bottom.php');
 }

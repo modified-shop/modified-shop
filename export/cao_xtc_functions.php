@@ -145,13 +145,12 @@ function table_exists($table_name)
 
 function column_exists($table, $column)
 {
-  $Table = xtc_db_query("show columns from $table LIKE '" . $column . "'");
-  if(xtc_db_fetch_row($Table) === false)
-  {
-    return(false);
-  } else {
-    return(true);
+  $result = xtc_db_query("SELECT * FROM ".$table." LIMIT 1");
+  $result_array = xtc_db_fetch_array($result);
+  if (isset($result_array[$column])) {
+    return true;
   }
+  return false;
 }
 
 //--------------------------------------------------------------
@@ -1185,19 +1184,19 @@ function UpdateTables ()
 
   $link = 'db_link';
 
-  global $$link, $logger;
+  global ${$link}, $logger;
 
   for ($i=1;$i<=13;$i++)
   {
-    echo '<b>SQL:</b> ' . $sql[$i] . '<br>';;
+    echo '<b>SQL:</b> ' . $sql[$i] . '<br>';
 
-    if (@xtc_db_query($sql[$i], $$link))
+    if (@xtc_db_query($sql[$i], ${$link}))
     {
       echo '<b>Ergebnis : OK</b>';
     }
      else
     {
-      $error = ((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? @xtc_db_error($query, mysqli_errno($$link), mysqli_error($$link)) : @xtc_db_error($query, mysql_errno($$link), mysql_error($$link)));
+      $error = ((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? @xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link})) : @xtc_db_error($query, mysql_errno(${$link}), mysql_error(${$link})));
       $pos=strpos($error,'Duplicate column name');
 
       if ($pos===false)
@@ -1246,12 +1245,45 @@ function clear_string($value)
 
 //--------------------------------------------------------------
 
+function xtc_RandomString($length)
+{
+        $chars = array( 'a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F', 'g', 'G', 'h', 'H', 'i', 'I', 'j', 'J',  'k', 'K', 'l', 'L', 'm', 'M', 'n','N', 'o', 'O', 'p', 'P', 'q', 'Q', 'r', 'R', 's', 'S', 't', 'T',  'u', 'U', 'v','V', 'w', 'W', 'x', 'X', 'y', 'Y', 'z', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0');
+
+        $max_chars = count($chars) - 1;
+        srand( (double) microtime()*1000000);
+
+        $rand_str = '';
+        for($i=0;$i<$length;$i++)
+        {
+          $rand_str = ( $i == 0 ) ? $chars[rand(0, $max_chars)] : $rand_str . $chars[rand(0, $max_chars)];
+        }
+
+  return $rand_str;
+}
+
+//--------------------------------------------------------------
+
+function xtc_create_password($pass)
+{
+  return md5($pass);
+}
+
+//--------------------------------------------------------------
+
 function xtc_remove_product($product_id)
 {
 //BOF - Dokuman - 2009-11-04 - fix typo customers_status_array -> customers_statuses_array
          //global $LangID, $customers_status_array;  //R Brym
          global $LangID, $customers_statuses_array;
 //EOF - Dokuman - 2009-11-04 - fix typo customers_status_array -> customers_statuses_array
+
+        // rewrite values to use resample classes
+        define('DIR_FS_CATALOG_ORIGINAL_IMAGES',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES);
+        define('DIR_FS_CATALOG_INFO_IMAGES',DIR_FS_CATALOG.DIR_WS_INFO_IMAGES);
+        define('DIR_FS_CATALOG_POPUP_IMAGES',DIR_FS_CATALOG.DIR_WS_POPUP_IMAGES);
+        define('DIR_FS_CATALOG_THUMBNAIL_IMAGES',DIR_FS_CATALOG.DIR_WS_THUMBNAIL_IMAGES);
+        define('DIR_FS_CATALOG_IMAGES',DIR_FS_CATALOG.DIR_WS_IMAGES);
+
         $product_image_query = xtc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . xtc_db_input($product_id) . "'");
         $product_image = xtc_db_fetch_array($product_image_query);
 
@@ -1259,31 +1291,61 @@ function xtc_remove_product($product_id)
         $duplicate_image = xtc_db_fetch_array($duplicate_image_query);
 
         if ($duplicate_image['total'] < 2) {
-          if (file_exists(DIR_FS_CATALOG_POPUP_IMAGES . $product_image['products_image'])) {
-            @unlink(DIR_FS_CATALOG_POPUP_IMAGES . $product_image['products_image']);
+          if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$product_image['products_image'])) {
+            @ unlink(DIR_FS_CATALOG_POPUP_IMAGES.$product_image['products_image']);
           }
-          // START CHANGES
-          $image_subdir = BIG_IMAGE_SUBDIR;
-          if (substr($image_subdir, -1) != '/') $image_subdir .= '/';
-          if (file_exists(DIR_FS_CATALOG_IMAGES . $image_subdir . $product_image['products_image'])) {
-            @unlink(DIR_FS_CATALOG_IMAGES . $image_subdir . $product_image['products_image']);
+          if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$product_image['products_image'])) {
+            @ unlink(DIR_FS_CATALOG_ORIGINAL_IMAGES.$product_image['products_image']);
           }
-          // END CHANGES
+          if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$product_image['products_image'])) {
+            @ unlink(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$product_image['products_image']);
+          }
+          if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$product_image['products_image'])) {
+            @ unlink(DIR_FS_CATALOG_INFO_IMAGES.$product_image['products_image']);
+          }
         }
 
-        xtc_db_query("delete from " . TABLE_SPECIALS . " where products_id = '" . xtc_db_input($product_id) . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS . " where products_id = '" . xtc_db_input($product_id) . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . xtc_db_input($product_id) . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . xtc_db_input($product_id) . "'");
-        xtc_db_query("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . xtc_db_input($product_id) . "'");
-        xtc_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where products_id = '" . xtc_db_input($product_id) . "'");
-        xtc_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where products_id = '" . xtc_db_input($product_id) . "'");
-
-        if (defined('TABLE_PRODUCTS_IMAGES'))
-          {
-            xtc_db_query("delete from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . xtc_db_input($product_id) . "'");
+        //delete more images
+        $mo_images_query = xtc_db_query("SELECT image_name 
+                                           FROM ".TABLE_PRODUCTS_IMAGES." 
+                                          WHERE products_id = '".(int)$product_id."'");
+        while ($mo_images_values = xtc_db_fetch_array($mo_images_query)) {
+          $duplicate_more_image_query = xtc_db_query("SELECT count(*) AS total 
+                                                        FROM ".TABLE_PRODUCTS_IMAGES." 
+                                                       WHERE image_name = '".xtc_db_input($mo_images_values['image_name'])."'");
+          $duplicate_more_image = xtc_db_fetch_array($duplicate_more_image_query);
+          if ($duplicate_more_image['total'] < 2) {
+            if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$mo_images_values['image_name'])) {
+              @ unlink(DIR_FS_CATALOG_POPUP_IMAGES.$mo_images_values['image_name']);
+            }
+            if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$mo_images_values['image_name'])) {
+              @ unlink(DIR_FS_CATALOG_ORIGINAL_IMAGES.$mo_images_values['image_name']);
+            }
+            if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$mo_images_values['image_name'])) {
+              @ unlink(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$mo_images_values['image_name']);
+            }
+            if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$mo_images_values['image_name'])) {
+              @ unlink(DIR_FS_CATALOG_INFO_IMAGES.$mo_images_values['image_name']);
+            }
           }
+        }
 
+        xtc_db_query("DELETE FROM ".TABLE_SPECIALS." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE xsell_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_IMAGES." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_DESCRIPTION." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_ATTRIBUTES." WHERE products_id = '".(int)$product_id."'");
+        xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
+        xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TAGS." WHERE products_id = '".(int)$product_id."'");
+
+        if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+          xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
+          xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
+        }
 
         // get statuses
         $customers_statuses_array = array(array());
@@ -1349,7 +1411,8 @@ function ProductsImageUpload ()
   global $_GET, $_POST;
   if ($products_image = &xtc_try_upload('products_image',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES,'777', '', true))
   {
-    $products_image_name = $products_image->filename;
+    $products_image_name = $products_image_name_process = $products_image->filename;
+    
     // rewrite values to use resample classes
     define('DIR_FS_CATALOG_ORIGINAL_IMAGES',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES);
     define('DIR_FS_CATALOG_INFO_IMAGES',DIR_FS_CATALOG.DIR_WS_INFO_IMAGES);
@@ -1358,9 +1421,9 @@ function ProductsImageUpload ()
     define('DIR_FS_CATALOG_IMAGES',DIR_FS_CATALOG.DIR_WS_IMAGES);
 
     // generate resampled images
-    require(DIR_FS_DOCUMENT_ROOT.DIR_WS_ADMIN.'includes/product_thumbnail_images.php');
-    require(DIR_FS_DOCUMENT_ROOT.DIR_WS_ADMIN.'includes/product_info_images.php');
-    require(DIR_FS_DOCUMENT_ROOT.DIR_WS_ADMIN.'includes/product_popup_images.php');
+    require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_thumbnail_images.php');
+    require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_info_images.php');
+    require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_popup_images.php');
 
     $code = 0;
     $message = 'OK';
@@ -1404,17 +1467,17 @@ function CheckImages ($FileName)
 
     if (!file_exists (DIR_FS_CATALOG_INFO_IMAGES . $FileName))
     {
-      require(DIR_FS_DOCUMENT_ROOT.DIR_WS_ADMIN.'includes/product_info_images.php');
+      require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_info_images.php');
     }
 
     if (!file_exists (DIR_FS_CATALOG_THUMBNAIL_IMAGES . $FileName))
     {
-      require(DIR_FS_DOCUMENT_ROOT.DIR_WS_ADMIN.'includes/product_thumbnail_images.php');
+      require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_thumbnail_images.php');
     }
 
     if (!file_exists (DIR_FS_CATALOG_POPUP_IMAGES . $FileName))
     {
-      require(DIR_FS_DOCUMENT_ROOT.DIR_WS_ADMIN.'includes/product_popup_images.php');
+      require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_popup_images.php');
     }
   }
 }
@@ -2331,14 +2394,13 @@ function OrderUpdate ()
           }
 
           // require functionblock for mails
-          require_once(DIR_WS_CLASSES.'class.phpmailer.php');
-          require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
           require_once(DIR_FS_INC . 'xtc_add_tax.inc.php');
           require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
-          require_once(DIR_FS_INC . 'changedataout.inc.php');
           require_once(DIR_FS_INC . 'xtc_href_link.inc.php');
           require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
           require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
+          require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
+
           $smarty = new Smarty;
 
           $smarty->assign('language', $check_status['language']);
@@ -2346,11 +2408,8 @@ function OrderUpdate ()
           $smarty->template_dir=DIR_FS_CATALOG.'templates';
           $smarty->compile_dir=DIR_FS_CATALOG.'templates_c';
           $smarty->config_dir=DIR_FS_CATALOG.'lang';
-          //BOF - GTB - 2010-08-03 - Security Fix - Base
-      $smarty->assign('tpl_path',DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-          //$smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
-          //EOF - GTB - 2010-08-03 - Security Fix - Base
-          $smarty->assign('logo_path',HTTP_SERVER  . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+          $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+          $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
           $smarty->assign('NAME',$check_status['customers_name']);
           $smarty->assign('ORDER_NR',$oID);
           $smarty->assign('ORDER_LINK',xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL'));
@@ -2436,6 +2495,8 @@ function CustomersUpdate ()
   global $_POST, $Lang_folder;
 
   $customers_id = -1;
+  // include PW function
+  require_once(DIR_FS_INC . 'xtc_encrypt_password.inc.php');
 
   if (isset($_POST['cID'])) $customers_id = xtc_db_prepare_input($_POST['cID']);
 
@@ -2504,7 +2565,7 @@ function CustomersUpdate ()
     if (strlen($_POST['customers_password'])==0)
     {
       // generate PW if empty
-      $pw=xtc_create_random_value(8);
+      $pw=xtc_RandomString(8);
       $sql_customers_data_array['customers_password']=xtc_create_password($pw);
     } else
     {
@@ -2527,14 +2588,12 @@ function CustomersUpdate ()
   if (SEND_ACCOUNT_MAIL==true && $mode=='APPEND' && $sql_customers_data_array['customers_email_address']!='')
   {
     // generate mail for customer if customer=new
-    require_once(DIR_WS_CLASSES.'class.phpmailer.php');
-    require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
     require_once(DIR_FS_INC . 'xtc_add_tax.inc.php');
     require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
-    require_once(DIR_FS_INC . 'changedataout.inc.php');
     require_once(DIR_FS_INC . 'xtc_href_link.inc.php');
     require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
     require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
+    require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
 
     require_once(DIR_FS_LANGUAGES . $Lang_folder . '/admin/' . $Lang_folder . '.php');  //JP 20080102
 
@@ -2549,11 +2608,8 @@ function CustomersUpdate ()
     $smarty->compile_dir=DIR_FS_CATALOG.'templates_c';
     $smarty->config_dir=DIR_FS_CATALOG.'lang';
 
-    //BOF - GTB - 2010-08-03 - Security Fix - Base
-  $smarty->assign('tpl_path',DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-  //$smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
-  //EOF - GTB - 2010-08-03 - Security Fix - Base
-    $smarty->assign('logo_path',HTTP_SERVER  . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+    $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+    $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
     $smarty->assign('NAME',$sql_customers_data_array['customers_lastname'] . ' ' . $sql_customers_data_array['customers_firstname']);
     $smarty->assign('EMAIL',$sql_customers_data_array['customers_email_address']);
     $smarty->assign('PASSWORD',$pw);
@@ -2565,19 +2621,18 @@ function CustomersUpdate ()
     $txt_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$Lang_folder.'/create_account_mail.txt');
 
     // send mail with html/txt template
-    xtc_php_mail(
-      EMAIL_SUPPORT_ADDRESS,
-      EMAIL_SUPPORT_NAME ,
-      $sql_customers_data_array['customers_email_address'],
-      $sql_customers_data_array['customers_lastname'] . ' ' . $sql_customers_data_array['customers_firstname'],
-      '',
-      EMAIL_SUPPORT_REPLY_ADDRESS,
-      EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
-      '',
-      '',
-      EMAIL_SUPPORT_SUBJECT,
-      $html_mail ,
-      $txt_mail);
+    xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
+                 EMAIL_SUPPORT_NAME ,
+                 $sql_customers_data_array['customers_email_address'],
+                 $sql_customers_data_array['customers_lastname'] . ' ' . $sql_customers_data_array['customers_firstname'],
+                 '',
+                 EMAIL_SUPPORT_REPLY_ADDRESS,
+                 EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
+                 '',
+                 '',
+                 EMAIL_SUPPORT_SUBJECT,
+                 $html_mail ,
+                 $txt_mail);
   }
   print_xml_status (0, $_POST['action'], 'OK', $mode, 'CUSTOMERS_ID', $customers_id);
 }
@@ -2785,6 +2840,7 @@ function SendLog ()
 
   require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
   require_once(DIR_FS_INC . 'xtc_redirect.inc.php');
+  require_once(DIR_FS_INC . 'xtc_rand.inc.php');
 
   //----------------------------------------------------------------------------
   class upload {

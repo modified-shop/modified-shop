@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="{$payonecss}" type="text/css" media="screen" />
+<script type="text/javascript" src="https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js"></script> 
+<div id="test_cc" class="payone_cc_container">
+  <div class="errormessage" id="errorOutput"></div>
+  <table width="100%" class="payone_cc_table">
+    <tr>
+      <td class="label">{$smarty.const.TEXT_CARDOWNER}</td>
+      <td><input id="p1_cc_cardholder" name="cardholder" type="text" class="clear_before_submit" value="{$smarty.session.customer_first_name} {$smarty.session.customer_last_name}"></td>
+    </tr>
+    <tr>
+      <td class="label">{$smarty.const.TEXT_CARDTYPE}</td>
+      <td><span id="cardtype" class="inputIframe cf"></span></td>
+    </tr>
+    <tr>
+      <td class="label">{$smarty.const.TEXT_CARDNO}</td>
+      <td><span class="inputIframe cf" id="cardpan"></span></td>
+    </tr>
+    <tr>
+      <td class="label">{$smarty.const.TEXT_CARDEXPIRES}</td>
+      <td style="text-align:left;">
+        <span id="cardexpiremonth" class="inputIframe cf" style="margin-right: 10px;"></span>
+        <span id="cardexpireyear" class="inputIframe cf"></span> 
+      </td>
+    </tr>
+    {if $genre_specific.check_cav == 'true'}
+      <tr>
+        <td class="label">{$smarty.const.TEXT_CARDCHECKNUM}</td>
+        <td><span id="cardcvc2" class="inputIframe cf"></span></td>
+      </tr>
+    {/if}
+  </table>
+</div>
+<input type="hidden" name="pseudocardpan" id="pseudocardpan"> 
+<input type="hidden" name="truncatedcardpan" id="truncatedcardpan">
+
+{$cc_javascript}

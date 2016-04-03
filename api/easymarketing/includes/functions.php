@@ -25,7 +25,7 @@ function mod_convert($string) {
     $string = '';
   }
   $string = utf8_encode($string);
-  
+    
   return $string;
 }
 
@@ -88,7 +88,7 @@ function mod_calculate_shipping_cost($products_id, $products_price) {
   
   // init shipping modules
   $quotes = $shipping->quote();
-  
+
   $free_shipping = false;
   if (defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true')) {
     switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {

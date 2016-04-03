@@ -53,4 +53,24 @@ class AmazonHelper extends MagnaCompatibleHelper {
 		return $config;
 	}
 
+	/*
+	 * watch out if new ean columns are coming for attributes!!!
+	 */
+	public static function getMLProductExtendFetchSingleVariationQueryWhere() {
+		$bAttrEAN = MagnaDB::gi()->columnExistsInTable('attributes_ean', TABLE_PRODUCTS_ATTRIBUTES);
+		$bGmEAN = MagnaDB::gi()->columnExistsInTable('gm_ean', TABLE_PRODUCTS_ATTRIBUTES);
+
+		if ($bAttrEAN && $bGmEAN) {
+			$sReturn = " AND (pa.attributes_ean != '' OR gm_ean != '') ";
+		} elseif ($bAttrEAN && !$bGmEAN) {
+			$sReturn = " AND pa.attributes_ean != '' ";
+		} elseif (!$bAttrEAN && $bGmEAN) {
+			$sReturn = " AND gm_ean != '' ";
+		} else {
+			$sReturn = "";
+		}
+
+		return $sReturn;
+	}
+
 }

@@ -1,0 +1,7 @@
+Den Rechnungsbetrag von{$PAYMENT_BANKTRANSFER_TOTAL} EUR ziehen wir als SEPA-Lastschrift zum Fälligkeitstag {$PAYMENT_BANKTRANSFER_DUE_DATE}
+zu Ihrer Mandatsreferenz {$PAYMENT_BANKTRANSFER_MANDATE_REFERENCE}
+und unserer Gläubiger-Identifikationsnummer {$PAYMENT_BANKTRANSFER_CREDITOR_ID}
+von Ihrem Konto {$PAYMENT_BANKTRANSFER_IBAN}
+bei der {$PAYMENT_BANKTRANSFER_BANKNAME} ein.
+
+Bitte stellen Sie sicher, dass genügend Geld für die Zahlung auf dem Konto verfügbar ist.

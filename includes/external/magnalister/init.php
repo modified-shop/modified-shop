@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: init.php 4897 2014-11-20 00:18:14Z miguel.heredia $
+ * $Id: init.php 5610 2015-05-08 15:42:43Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -490,12 +490,13 @@ if (isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['reques
 		if (defined('DB_SERVER_CHARSET')) {
 			MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
 		} elseif (SHOPSYSTEM == 'gambio' && MagnaDB::gi()->tableExists('version_history')) {
-			$sVersion = MagnaDB::gi()->fetchOne('
-			    SELECT version
-			      FROM version_history
-			  ORDER BY installation_date DESC
-			     LIMIT 1
-			');
+			$sVersion = MagnaDB::gi()->fetchOne("
+				SELECT version
+				  FROM version_history
+				  WHERE type IN ('service_pack', 'master_update')
+			   ORDER BY installation_date DESC
+				  LIMIT 1
+			");
 			if (version_compare($sVersion, '2.1', '>=')) {
 				MagnaDB::gi()->setCharset('utf8');
 			}
@@ -594,12 +595,13 @@ $magnaDB = MagnaDB::gi(); /* Database Connector */
 if (defined('DB_SERVER_CHARSET')) {
 	MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
 } elseif (SHOPSYSTEM == 'gambio' && MagnaDB::gi()->tableExists('version_history')) {
-	$sVersion = MagnaDB::gi()->fetchOne('
-			    SELECT version
-			      FROM version_history
-			  ORDER BY installation_date DESC
-			     LIMIT 1
-			');
+	$sVersion = MagnaDB::gi()->fetchOne("
+		SELECT version
+		  FROM version_history
+		  WHERE type IN ('service_pack', 'master_update')
+	   ORDER BY installation_date DESC
+		  LIMIT 1
+	");
 	if (version_compare($sVersion, '2.1', '>=')) {
 		MagnaDB::gi()->setCharset('utf8');
 	}
@@ -761,7 +763,7 @@ $_magnaQuery = array();
 
 /* ViewPages */
 if (isset($_GET['module']) && in_array($_GET['module'], array(
-	'viewchangelog', 'fixcollations', 'fixorderstotal',
+	'fixcollations', 'fixorderstotal',
 	'toolbox', 'viewdbtables', 'sql', 'simpletest',
 ))) {
 	if ($_GET['module'] == 'sql') {
@@ -838,6 +840,15 @@ if (!isset($_POST['conf']['general.passphrase']) && !loadMaranonCacheConfig()
 			: '<p>'. ML_ERROR_CANNOT_CONNECT_TO_SERVICE_LAYER_TEXT.'</p>'
 		).'
 	');
+}
+
+if (isset($_GET['module']) && in_array($_GET['module'], array(
+	'viewchangelog',
+))) {
+	if (file_exists(DIR_MAGNALISTER_MODULES.$_GET['module'].'.php')) {
+		$_url['module'] = $_magnaQuery['module'] = $_GET['module'];
+		include_once(DIR_MAGNALISTER_MODULES.$_GET['module'].'.php');
+	}
 }
 
 /* No modules are available (usually the case when the PassPhrase is wrong) or global config is requested.

@@ -1,0 +1,21 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{config_load file="lang_`$language`.custom"}
+<div class="box2">
+  <div class="box_header">
+    <span class="show_title">{#heading_whatsnew#}</span> 
+    <a class="show_all" href="{$LINK_NEW_PRODUCTS}">{#show_all#} <span class="arrow">&raquo;</span></a>
+    <br class="clearfix" />
+  </div>
+  <div class="box_line"></div>
+  <div class="box_title"><a href="{$box_content.PRODUCTS_LINK}"><strong>{$box_content.PRODUCTS_NAME}</strong></a></div>
+  {if $box_content.PRODUCTS_IMAGE!=''}<div class="box_image"><a href="{$box_content.PRODUCTS_LINK}"><img src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME|onlytext}" /></a></div>{/if}
+  <div class="box_price">
+    {foreach name=inner item=price_data from=$box_content.PRODUCTS_PRICE_ARRAY}
+      {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/price_box.html"}
+    {/foreach}
+  </div>
+  {if $box_content.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
+    {if $box_content.PRODUCTS_VPE}<div class="box_vpe">{$box_content.PRODUCTS_VPE}</div>{/if}
+    <div class="box_tax">{$box_content.PRODUCTS_TAX_INFO}{$box_content.PRODUCTS_SHIPPING_LINK}</div>
+  {/if}
+</div>

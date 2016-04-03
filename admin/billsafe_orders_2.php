@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: billsafe_orders_2.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -32,8 +32,9 @@
 */
 
   $order_id = $_GET['oID'];
-  $post_url = 'billsafe_orders_2.php?oID='.$order_id;
-
+  $post_url = 'billsafe_orders_2.php';
+  $post_param = 'oID='.$order_id;
+  
   require ('includes/application_top.php');
   $language= $_SESSION['language'];
 
@@ -45,10 +46,10 @@
   require (DIR_WS_CLASSES.'currencies.php');
   $currencies = new currencies();
 
-  require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
-  require (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+  require_once (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+  require (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
 
-  $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+  $bs = new Billsafe_Sdk(DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
 
   if($_SESSION['language_charset'] == 'iso-8859-1' || $_SESSION['language_charset'] == 'iso-8859-15') {
     $bs->setUtf8Mode(false);
@@ -63,13 +64,13 @@
 
   if (MODULE_PAYMENT_BILLSAFE_2_LOG == 'True') {
     if (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'Echo') {
-      require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerEcho.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
+      require_once DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/LoggerEcho.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
       $bs->setLogger(new Billsafe_LoggerEcho());
     } elseif (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'Mail') {
-      require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerMail.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
+      require_once DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/LoggerMail.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
       $bs->setLogger(new Billsafe_LoggerMail(MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR));
     } elseif (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'File') {
-      require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerFile.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
+      require_once DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/LoggerFile.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
       $bs->setLogger(new Billsafe_LoggerFile(DIR_FS_CATALOG.'export/BillSAFE_'.date('YmdHis').'.log'));
     }
   }
@@ -447,7 +448,7 @@
   }
 </script>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
+<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <table border="0" width="100%" cellspacing="2" cellpadding="2"><tr>
 <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
@@ -536,7 +537,9 @@
     </tr></table></td></tr></td></tr></table>
   <?php } ?>
 </td></tr></table>
-<table border="0" width="100%" cellspacing="0" cellpadding="2"><form action="<?php echo $post_url ?>" method="POST"><tr class="dataTableHeadingRow">
+<table border="0" width="100%" cellspacing="0" cellpadding="2">
+<?php echo xtc_draw_form('article', $post_url, $post_param, 'post'); ?>
+<tr class="dataTableHeadingRow">
 <td class="dataTableHeadingContent"><?php echo MODULE_PAYMENT_BILLSAFE_2_PRODUCTS; ?></td>
 <td class="dataTableHeadingContent"><?php echo MODULE_PAYMENT_BILLSAFE_2_MODEL; ?></td>
 <td class="dataTableHeadingContent" align="right"><?php echo MODULE_PAYMENT_BILLSAFE_2_TAX; ?></td>
@@ -581,13 +584,13 @@
 </td></tr></form></table>
 <br /><?php
   if (!empty($_SESSION['languages_id']) && $_SESSION['languages_id'] > 0) {
-    $language_id = $_SESSION['languages_id'];
+    $language_id = (int)$_SESSION['languages_id'];
   } else {
     $language_id = 1;
   }
   $prod_history_query = xtc_db_query('SELECT bd.articlenumber, bd.articletype, bsod.bsordersdetails_id, bd.articlename, bsod.transactionmethod, bsod.date, bd.retoure, bd.pause FROM billsafe_transactions_2 bsod, billsafe_orders_details_2 bd WHERE bsod.ordernumber = "'.xtc_db_input($order_id).'" AND bd.ordernumber = "'.xtc_db_input($order_id).'" AND bsod.bsordersdetails_id = bd.id');
-  if (xtc_db_num_rows($prod_history_query) > 0) { ?>
-    <form action="<?php echo $post_url ?>" method="POST"><?php
+  if (xtc_db_num_rows($prod_history_query) > 0) { 
+    echo xtc_draw_form('update_transaction', $post_url, $post_param, 'post');
     echo '<table border="0" width="100%" cellspacing="0" cellpadding="2"><tr class="dataTableHeadingRow"><td class="dataTableHeadingContent" align="center"><strong>'.MODULE_PAYMENT_BILLSAFE_2_MODEL.'</strong></td><td class="dataTableHeadingContent" align="center"><strong>'.MODULE_PAYMENT_BILLSAFE_2_PRODUCTS.'</strong></td><td class="dataTableHeadingContent" align="center"><strong>'.MODULE_PAYMENT_BILLSAFE_2_PREPORT_METHOD.'</strong></td><td class="dataTableHeadingContent" align="center"><strong>'.MODULE_PAYMENT_BILLSAFE_2_PREPORT_DATE.'</strong></td><td class="dataTableHeadingContent" align="center">&nbsp;</td></tr>';
     while ($prod_history = xtc_db_fetch_array($prod_history_query)) {
       if ($prod_history['transactionmethod'] == 'reportShipmentFull') {
@@ -649,7 +652,7 @@
     <td class="dataTableHeadingContent"><?php echo MODULE_PAYMENT_BILLSAFE_2_PAUSETRANSACTION; ?></td>
     </tr><tr class="dataTableRow">
     <td class="dataTableContent" align="right" valign="top">
-    <form id="pause" method="POST" action="<?php echo $post_url ?>">
+    <?php echo xtc_draw_form('pause', $post_url, $post_param, 'post'); ?>
     <input id="pauseDays" type="text" style="float:none;" maxlength="2" name="pauseDays" size="2" value="" />&nbsp;<?php echo MODULE_PAYMENT_BILLSAFE_2_PAUSEDAYS; ?>&nbsp;
     <input type="submit" name="pauseTransaction" value="<?php echo MODULE_PAYMENT_BILLSAFE_2_PAUSETRANSACTION; ?>" />
     </form></td></tr></table></td>
@@ -658,7 +661,7 @@
 <td class="dataTableHeadingContent"><?php echo MODULE_PAYMENT_BILLSAFE_2_UPDATEARTICLELISTVOUCHER; ?></td>
 </tr><tr class="dataTableRow">
 <td class="dataTableContent" align="right" valign="top">
-<form id="voucher" method="POST" action="<?php echo $post_url ?>">
+<?php echo xtc_draw_form('voucher', $post_url, $post_param, 'post'); ?>
 <input id="voucherAmount" type="text" style="float:none;" maxlength="4" name="voucherAmount" size="4" value="" />,<input style="float:none;" id="voucherAmountKomma" type="text" maxlength="2" name="voucherAmountKomma" size="2" value="" />&nbsp;<?php echo $currency; ?>,&nbsp;<?php echo MODULE_PAYMENT_BILLSAFE_2_TAX.': '; echo xtc_draw_pull_down_menu('voucherTax', $tax_class_array, $tax_class_id); ?><br /><br />
 <input type="submit" name="updateArticleListVoucher" value="<?php echo MODULE_PAYMENT_BILLSAFE_2_UPDATEARTICLELISTVOUCHER; ?>" />
 </form></td></tr></table></td>
@@ -668,7 +671,7 @@
 <td class="dataTableHeadingContent"><?php echo MODULE_PAYMENT_BILLSAFE_2_DPAYMENT; ?></td>
 </tr><tr class="dataTableRow">
 <td class="dataTableContent" align="right" valign="top">
-<form id="dpayment" method="POST" action="<?php echo $post_url ?>">
+<?php echo xtc_draw_form('dpayment', $post_url, $post_param, 'post'); ?>
 <input id="dpaymentAmount" type="text" style="float:none;" maxlength="10" name="dpaymentAmount" size="4" value="" />,<input style="float:none;" id="dpaymentAmountKomma" type="text" maxlength="2" name="dpaymentAmountKomma" size="2" value="" />&nbsp;<?php echo $currency; ?>&nbsp;&nbsp;&nbsp;<?php echo MODULE_PAYMENT_BILLSAFE_2_DAY; ?>:&nbsp;<input style="float:none;" id="dpaymentDay" type="text" maxlength="2" name="dpaymentDay" size="2" value="" />&nbsp;<?php echo MODULE_PAYMENT_BILLSAFE_2_MONTH; ?>:&nbsp;<input style="float:none;" id="dpaymentMonth" type="text" maxlength="2" name="dpaymentMonth" size="2" value="" />&nbsp;<?php echo MODULE_PAYMENT_BILLSAFE_2_YEAR; ?>:&nbsp;<input style="float:none;" id="dpaymentYear" type="text" maxlength="4" name="dpaymentYear" size="4" value="" /><br /><br />
 <input type="submit" name="reportDirectPayment" value="<?php echo MODULE_PAYMENT_BILLSAFE_2_REPORT_DPAYMENT; ?>" />
 </form></td></tr></table>

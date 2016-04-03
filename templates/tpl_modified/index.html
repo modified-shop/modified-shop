@@ -1,0 +1,145 @@
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="lang_`$language`.custom"}
+{if isset($box_ADMIN)}<div class="adminspacer"></div>{$box_ADMIN}{/if}
+<div id="layout_navbar">
+  <div id="layout_navbar_inner">
+    {if isset($box_INFOBOX)}<div id="customers_group">{$box_INFOBOX}</div>{/if}
+    {if isset($box_LANGUAGES)}<div id="languages">{$box_LANGUAGES}</div>{/if}
+    <ul class="topnavigation"> 
+      {if isset($account)}
+        <li class="first"><a href="{$account}">{#link_account#}</a></li>
+      {/if}
+      {if isset($smarty.session.customer_id)}
+        <li{if !isset($account)} class="first"{/if}><a href="{$logoff}">{#link_logoff#}</a></li>
+      {else}
+        <li{if !isset($account)} class="first"{/if}><a href="{$create_account}">{#new_customer#}</a></li>
+        <li><a href="{$login}">{#link_login#}</a></li>
+      {/if}
+    </ul>
+  </div>
+</div>
+{* ENDE layout_navbar *}
+
+<div id="layout_logo">
+  <div id="logo"><a href="{$index}" title="{#link_index#} &bull; {$store_name}">&nbsp;</a></div>
+  {if isset($box_SEARCH)}<div id="search">{$box_SEARCH}</div>{/if}
+</div>
+{* ENDE layout_logo *}
+
+<div id="layout_content" class="cf">
+  {if isset($home) && $home == true}
+    <div id="col_left">
+      {if isset($box_CATEGORIES)}{$box_CATEGORIES}{/if}
+      {if isset($box_ADD_QUICKIE)}{$box_ADD_QUICKIE}{/if}
+      {if isset($box_LOGIN)}{$box_LOGIN}{/if}
+      {if isset($box_WHATSNEW)}{$box_WHATSNEW}{/if}
+      {if isset($box_SPECIALS)}{$box_SPECIALS}{/if}
+      {if isset($box_LAST_VIEWED)}{$box_LAST_VIEWED}{/if}
+      {if isset($box_REVIEWS)}{$box_REVIEWS}{/if}
+      {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS}{/if}
+      {if isset($box_MANUFACTURERS_INFO)}{$box_MANUFACTURERS_INFO}{/if}
+      {if isset($box_CURRENCIES)}{$box_CURRENCIES}{/if}
+      {if isset($box_HISTORY)}{$box_HISTORY}{/if}
+      {if isset($box_TRUSTEDSHOPS)}{$box_TRUSTEDSHOPS}{/if}
+    </div>
+    {* ENDE col_left *}
+    <div id="col_right">
+      <div id="content_navbar">
+        <ul class="contentnavigation"> 
+          <li class="first"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}">{#link_contact#}</a></li>
+          <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}">{#link_imprint#}</a></li>
+          <li class="last"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
+          {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
+          {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
+        </ul>
+      </div>
+      {if isset($SLIDER)}
+        <div class="content_banner cf">
+          <ul class="bxcarousel_slider">
+          {foreach name=outer item=slider from=$SLIDER}
+            <li>{$slider.IMAGE}</li>
+          {/foreach}
+          </ul>
+        </div>
+      {/if}
+      {if isset($BANNER)}<div class="content_banner cf">{$BANNER}</div>{/if}
+      {if isset($main_content)}{$main_content}{/if}
+      {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
+    </div>
+    {* ENDE col_right *}
+  {elseif isset($fullcontent) && $fullcontent == true}
+    <div id="col_full" class="cf">
+      <div id="content_navbar">
+        <ul class="contentnavigation">
+          <li class="first"><a href="{$index}">{#link_index#}</a></li>
+          <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}">{#link_contact#}</a></li>
+          <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}">{#link_imprint#}</a></li>
+          <li class="last"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
+          {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
+          {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
+        </ul>
+      </div>
+      {if isset($navtrail)}<div id="breadcrumb"><span class="breadcrumb_info">{#text_here#}</span>{$navtrail}</div>{/if}
+      {if isset($main_content)}{$main_content}{/if}
+      {if $bestseller}
+        {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
+      {/if}
+    </div>
+    {* ENDE col_full *}
+  {else}
+    <div id="col_left">
+      {if isset($box_CATEGORIES)}{$box_CATEGORIES}{/if}
+      {if isset($box_ADD_QUICKIE)}{$box_ADD_QUICKIE}{/if}
+      {if isset($box_LOGIN)}{$box_LOGIN}{/if}
+      {if isset($box_WHATSNEW)}{$box_WHATSNEW}{/if}
+      {if isset($box_SPECIALS)}{$box_SPECIALS}{/if}
+      {if isset($box_LAST_VIEWED)}{$box_LAST_VIEWED}{/if}
+      {if isset($box_REVIEWS)}{$box_REVIEWS}{/if}
+      {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS}{/if}
+      {if isset($box_MANUFACTURERS_INFO)}{$box_MANUFACTURERS_INFO}{/if}
+      {if isset($box_CURRENCIES)}{$box_CURRENCIES}{/if}
+      {if isset($box_HISTORY)}{$box_HISTORY}{/if}
+      {if isset($box_TRUSTEDSHOPS)}{$box_TRUSTEDSHOPS}{/if}
+    </div>
+    {* ENDE col_left *}
+    <div id="col_right">
+      <div id="content_navbar">
+        <ul class="contentnavigation"> 
+          <li class="first"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}">{#link_contact#}</a></li>
+          <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}">{#link_imprint#}</a></li>
+          <li class="last"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
+          {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
+          {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
+        </ul>
+      </div>
+      {if isset($navtrail)}<div id="breadcrumb"><span class="breadcrumb_info">{#text_here#}</span>{$navtrail}</div>{/if}
+      {if isset($main_content)}{$main_content}{/if}
+      {if $bestseller}{if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}{/if}
+    </div>
+    {* ENDE col_right *}
+  {/if}        
+</div>
+{* ENDE layout_content *}
+
+<div id="layout_footer">
+  <div id="layout_footer_inner" class="cf">
+    {if isset($box_CONTENT)}<div class="footer_box first">{$box_CONTENT}</div>{/if}
+    {if isset($box_INFORMATION)}<div class="footer_box">{$box_INFORMATION}</div>{/if}
+    {if isset($box_MISCELLANEOUS)}<div class="footer_box">{$box_MISCELLANEOUS}</div>{/if}
+    {if isset($box_NEWSLETTER)}<div class="footer_box">{$box_NEWSLETTER}</div>{/if}
+  </div>
+  <div class="mod_copyright">{$smarty.const.TITLE} &copy; {$smarty.now|date_format:"%Y"} | Template &copy; 2009-{$smarty.now|date_format:"%Y"} by <span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware</span></div>
+</div>
+
+
+{if ($smarty.const.TRACKING_COUNT_ADMIN_ACTIVE == 'true' && $smarty.session.customers_status.customers_status_id == '0') || $smarty.session.customers_status.customers_status_id != '0'}
+  {if $smarty.const.TRACKING_PIWIK_ACTIVE == 'true'}
+    {piwik url=$smarty.const.TRACKING_PIWIK_LOCAL_PATH id=$smarty.const.TRACKING_PIWIK_ID goal=$smarty.const.TRACKING_PIWIK_GOAL}
+  {/if}
+  {if $smarty.const.TRACKING_GOOGLEANALYTICS_ACTIVE == 'true'}
+    {googleanalytics account=$smarty.const.TRACKING_GOOGLEANALYTICS_ID}
+  {/if}
+  {if $smarty.const.TRACKING_FACEBOOK_ACTIVE=='true'}
+    {facebook id=$smarty.const.TRACKING_FACEBOOK_ID}
+  {/if}
+{/if}

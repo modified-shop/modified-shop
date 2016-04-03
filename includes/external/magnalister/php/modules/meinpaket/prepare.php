@@ -36,11 +36,11 @@ $resources = array (
 );
 
 if ($_url['view'] == 'varmatch') {
-	require_once(DIR_MAGNALISTER_MODULES.$_Marketplace.'/prepare/MeinpaketVariationMatching.php');
+	require_once(DIR_MAGNALISTER_MODULES.'meinpaket/prepare/MeinpaketVariationMatching.php');
 	$mlc = new MeinpaketVariationMatching($resources);
 	$mlc->process();
 } else {
-	require_once(DIR_MAGNALISTER_MODULES.$_Marketplace.'/prepare/MeinpaketProductPrepare.php');
+	require_once(DIR_MAGNALISTER_MODULES.'meinpaket/prepare/MeinpaketProductPrepare.php');
 	$mlc = new MeinpaketProductPrepare($resources);
 	$mlc->process();
 }

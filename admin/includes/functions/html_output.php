@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$
+   $Id: html_output.php 4250 2013-01-11 15:09:59Z gtb-modified $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,83 +16,15 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-  ////
+
   // The HTML href link wrapper function
-  function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
-  
-    $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
-  
-    //BOF - DokuMan - 2011-01-07 - Sanitize parameters
-    //$page = xtc_output_string($page);
-    //EOF - DokuMan - 2011-01-07 - Sanitize parameters
-    if (!xtc_not_null($page)) {
-      die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine the page link!<br /><br />Function used:<br /><br />xtc_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
-    }
-    if ($connection == 'NONSSL') {
-      $link = HTTP_SERVER . DIR_WS_ADMIN;
-    } elseif ($connection == 'SSL') {
-      if (defined('ENABLE_SSL') && ENABLE_SSL == 'true') {
-        $link = (defined('HTTPS_SERVER') ? HTTPS_SERVER : HTTPS_CATALOG_SERVER) . DIR_WS_ADMIN;
-      } else {
-        $link = HTTP_SERVER . DIR_WS_ADMIN;
-      }
-    } else {
-      die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL<br /><br />Function used:<br /><br />xtc_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
-    }
-    if ($parameters == '') {
-      $link = $link . $page . '?' . SID;
-    } else {
-      //BOF - DokuMan - 2011-01-07 - Sanitize parameters
-      $link = $link . $page . '?' . $parameters . '&' . SID;
-      //$link = $link . $page . '?' . xtc_output_string($parameters) . '&' . SID;
-      //EOF - DokuMan - 2011-01-07 - Sanitize parameters
-    }
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') )
-      $link = substr($link, 0, -1);
-    
-    $link = str_replace('&', '&amp;', $link); // making link W3C-Conform
-  
-    return $link;
+  require_once (DIR_FS_INC . 'xtc_href_link.inc.php');
+
+  // The HTML href link wrapper function for frontend
+  function xtc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session = false) {
+    return xtc_href_link($page, $parameters, $connection, $add_session, true, true, true);
   }
 
-  function xtc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
-  
-    $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
-
-    if (!xtc_not_null($page)) {
-      $page = 'index.php';
-    }
-    
-    // GTB - 2012-04-10 - remove index.php from Startpage
-    if ($page == 'index.php' && !xtc_not_null($parameters)) {
-      $page = '';
-    }
-
-    if ($connection == 'NONSSL') {
-      $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
-    } elseif ($connection == 'SSL') {
-      if (ENABLE_SSL_CATALOG == 'true') {
-        $link = HTTPS_CATALOG_SERVER . DIR_WS_CATALOG;
-      } else {
-        $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
-      }
-    } else {
-      die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL<br /><br />Function used:<br /><br />xtc_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
-    }
-    if ($parameters == '') {
-      $link .= $page;
-    } else {
-      $link .= $page . '?' . $parameters;
-    }
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') )
-      $link = substr($link, 0, -1);
-      
-    $link = str_replace('&', '&amp;', $link); // making link W3C-Conform
-  
-    return $link;
-  }
-
-  ////
   // The HTML image wrapper function
   function xtc_image($src, $alt = '', $width = '', $height = '', $params = '') {
     $params  = preg_replace("'\s+=\s+'",'=',$params);
@@ -102,36 +34,33 @@
     } else {
       $params .= ' style="border:0;"';
     }
-    $image = '<img src="' . $src . '" alt="' . $alt . '"';
-    if ($alt) {
-      $image .= ' title="' . $alt . '"';
+    $image = '<img src="' . $src . '"';
+    if ($alt != '') {
+      $image .= ' alt="' . $alt . '" title="' . $alt . '"';
     }
-    if ($width) {
+    if ($width != '') {
       $image .= ' width="' . $width . '"';
     }
-    if ($height) {
+    if ($height != '') {
       $image .= ' height="' . $height . '"';
     }
-    if ($params) {
+    if ($params != '') {
       $image .= ' ' . $params;
     }
     $image .= '>';
     return $image;
   }
 
-  ////
   // Draw a 1 pixel black line
   function xtc_black_line() {
     return xtc_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '1');
   }
 
-  ////
   // Output a separator either through whitespace, or with an image
   function xtc_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
     return xtc_image(DIR_WS_IMAGES . $image, '', $width, $height);
   }
 
-  ////
   // javascript to dynamically update the states/provinces list when the country is changed
   // TABLES: zones
   function xtc_js_zone_list($country, $form, $field) {
@@ -146,7 +75,7 @@
       }
       $states_query = xtc_db_query("select zone_name, zone_id from " . TABLE_ZONES . " where zone_country_id = '" . $countries['zone_country_id'] . "' order by zone_name");
       $num_state = 1;
-      while ($states = xtc_db_fetch_array($states_query)) {
+     while ($states = xtc_db_fetch_array($states_query)) {
         if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . html_entity_decode(PLEASE_SELECT, ENT_COMPAT, strtoupper($_SESSION['language_charset']))  . '", "");' . "\n";
         $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $states['zone_name'] . '", "' . $states['zone_id'] . '");' . "\n";
         $num_state++;
@@ -159,24 +88,26 @@
     return $output_string;
   }
 
-  ////
   // Output a form
   function xtc_draw_form($name, $action, $parameters = '', $method = 'post', $params = '') {
-    $form = '<form name="' . $name . '" action="';
-    if ($parameters) {
-      $form .= xtc_href_link($action, $parameters);
-    } else {
-      $form .= xtc_href_link($action);
-    }
-    $form .= '" method="' . $method . '"';
-    if ($params) {
-      $form .= ' ' . $params;
-    }
+    $form = '<form name="' . $name . '"';
+    $form .= ' action="'.xtc_href_link($action, $parameters, 'NONSSL' , false).'"';
+    $form .= ' method="' . $method . '"';
+    $form .= ($params ? ' ' . $params : '');
     $form .= '>';
+
+    // add session if is in url
+    if (isset($_GET[xtc_session_name()]) && $_GET[xtc_session_name()] == xtc_session_id()) {
+      $form .= '<input type="hidden" name="'.xtc_session_name().'" value="'.xtc_session_id().'">';
+    }
+    // secure form with a random token
+    if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName']) && strtolower($method) == 'post') {
+      $form .= '<input type="hidden" name="'.$_SESSION['CSRFName'].'" value="'.$_SESSION['CSRFToken'].'">';
+    }
+
     return $form;
   }
 
-  ////
   // Output a form input field
   function xtc_draw_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
     $field = '<input type="' . $type . '" name="' . $name . '"';
@@ -211,7 +142,6 @@
     return $field;
   }
 
-  ////
   // Output a form password field
   function xtc_draw_password_field($name, $value = '', $required = false, $parameters = '') {
     $params = strpos($parameters,'maxlength') !== false ? '' : 'maxlength="40"';
@@ -222,46 +152,64 @@
     return $field;
   }
 
-  ////
   // Output a form filefield
   function xtc_draw_file_field($name, $required = false,$parameters = '') {
-    $field = xtc_draw_input_field($name, '', $parameters, $required, 'file');
+    $parameters  = preg_replace("'\s+=\s+'",'=',$parameters);
+    $parameters .= strpos($parameters,'id=') !== false ? '' : ' id='.$name;
+    if (NEW_SELECT_CHECKBOX == 'true' && strpos($parameters,'noStyling') === false) {
+      $parameters = (strpos($parameters,'class="') !== false ? str_replace('class="', 'class="fileInput ',$parameters) : $parameters . ' class="fileInput"');
+    }
+      
+    $field = xtc_draw_input_field($name, '', $parameters, false, 'file');
+
+    if (NEW_SELECT_CHECKBOX == 'true' && strpos($parameters,'noStyling') === false) {
+      $input_txt = defined('FILEUPLOAD_INPUT_TXT') ? FILEUPLOAD_INPUT_TXT : 'No file';
+      $btn_txt = defined('FILEUPLOAD_BTN_TXT') ? FILEUPLOAD_BTN_TXT : 'Search';
+      $field = '
+      <div class="inputBtnSection">
+      <input id="finput_'.$name.'" class="disableInputField" placeholder="'.$input_txt.'" disabled="disabled" />
+      <label class="fileUpload">
+        '.$field.'
+        <span class="uploadBtn">'.$btn_txt.'</span>
+      </label>
+      </div>';
+    }
+    if ($required)
+      $field .= TEXT_FIELD_REQUIRED;
     return $field;
   }
-
-  ////
+  
   // Output a selection field - alias function for xtc_draw_checkbox_field() and xtc_draw_radio_field()
   function xtc_draw_selection_field($name, $type, $value = '', $checked = false, $compare = '', $parameters = '') {
     $selection = '<input type="' . $type . '" name="' . $name . '"';
     if ($value != '') {
       $selection .= ' value="' . $value . '"';
     }
-    //BOF - DokuMan - 2010-09-08 - set undefined index
     if ( ($checked == true) || (isset($GLOBALS[$name]) && ($GLOBALS[$name] == 'on')) || ($value && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $value)) || ($value && ($value == $compare)) ) {
-    //if ( ($checked == true) || ($GLOBALS[$name] == 'on') || ($value && ($GLOBALS[$name] == $value)) || ($value && ($value == $compare)) ) {
-    //EOF - DokuMan - 2010-09-08 - set undefined index
       $selection .= ' checked="checked"';
     }
-    
+    $addtag = '';
+    if (NEW_SELECT_CHECKBOX == 'true' && strpos($parameters,'noStyling') === false) {
+      $addtag = '<em>&nbsp;</em>';
+      $parameters  = preg_replace("'\s+=\s+'",'=',$parameters);
+      $parameters = (strpos($parameters,'class="') !== false ? str_replace('class="', 'class="ChkBox ',$parameters) : $parameters . ' class="ChkBox"');
+    }
     if (xtc_not_null($parameters)) $selection .= ' ' . $parameters;
     
-    $selection .= '>';
+    $selection .= '>'.$addtag;
     return $selection;
   }
 
-  ////
   // Output a form checkbox field
   function xtc_draw_checkbox_field($name, $value = '', $checked = false, $compare = '', $parameters = '') {
     return xtc_draw_selection_field($name, 'checkbox', $value, $checked, $compare, $parameters);
   }
 
-  ////
   // Output a form radio field
   function xtc_draw_radio_field($name, $value = '', $checked = false, $compare = '', $parameters = '') {
     return xtc_draw_selection_field($name, 'radio', $value, $checked, $compare, $parameters);
   }
 
-  ////
   // Output a form textarea field
   function xtc_draw_textarea_field($name, $wrap, $width, $height, $text = '', $params = '', $reinsert_value = true) {
     $field = '<textarea id="'.$name.'" name="' . $name . '" wrap="' . $wrap . '" cols="' . $width . '" rows="' . $height . '"';
@@ -276,7 +224,6 @@
     return $field;
   }
 
-  ////
   // Output a form hidden field
   function xtc_draw_hidden_field($name, $value = '') {
     $field = '<input type="hidden" name="' . $name . '" value="';
@@ -289,27 +236,49 @@
     return $field;
   }
 
-  ////
   // Output a form pull down menu
-  function xtc_draw_pull_down_menu($name, $values, $default = '', $params = '', $required = false) {
+  function xtc_draw_pull_down_menu($name, $values, $default = '', $params = '', $required = false, $addwrap = true) {
     $field = '<select name="' . $name . '"';
+    if (!is_array($values) && $values == 'checkbox') {
+      $values = array(
+          array('id'=> 0,'text'=> CFG_TXT_NO),
+          array('id'=> 1,'text'=> CFG_TXT_YES)
+      );
+    }
+    if ($addwrap && NEW_SELECT_CHECKBOX == 'true' && strpos($params,'noStyling') === false) {
+      $params  = preg_replace("'\s+=\s+'",'=',$params);
+      $params = (strpos($params,'class="') !== false ? str_replace('class="', 'class="SlectBox ',$params) : $params . ' class="SlectBox"');
+      $params = (strpos($params,'style="') !== false ? str_replace('style="', 'style="visibility: hidden; ',$params) : $params . ' style="visibility: hidden;"');
+    }
     if ($params) $field .= ' ' . $params;
-    $field .= '>';
+    $field .= '>' . PHP_EOL;
+    $li = '';
+    $selText = '';
     if (is_array($values)) {
       foreach ($values as $key=>$val) {
         $field .= '<option value="' .$val['id'] . '"';
-        //BOF - DokuMan - 2010-09-08 - set undefined index
+        $li .= '<li data-val="' .$val['id'] . '"';
         if ( ((strlen($val['id']) > 0) && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $val['id'])) || ($default == $val['id']) ) {
-          //if ( ((strlen($val['id']) > 0) && ($GLOBALS[$name] == $val['id'])) || ($default == $val['id']) ) {
-          //EOF - DokuMan - 2010-09-08 - set undefined index
-          $field .= ' SELECTED';
+          $field .= ' selected="selected"';
+          //$li .= ' class="selected"';
+          $selText = $val['text'];
         }
-        $field .= '>' . $val['text'] . '</option>';
+        $field .= '>' . $val['text'] . '</option>' . PHP_EOL;
+        $li .= '>'. PHP_EOL .'<label>' . $val['text'] . '</label>'. PHP_EOL . '</li>' . PHP_EOL;
       }
     }
-    $field .= '</select>';
-    if ($required)
+    $field .= '</select>'. PHP_EOL;
+    if ($required) {
       $field .= TEXT_FIELD_REQUIRED;
+    }
+    if ($addwrap && NEW_SELECT_CHECKBOX == 'true' && strpos($params,'noStyling') === false) {
+      $name = str_replace(array('[',']'),array('_',''),$name); //fix for name is array:  example[...]
+      $add = '<p class="CaptionCont SlectBox">'. PHP_EOL;
+      $add .= '<span>'.$selText.'</span>'. PHP_EOL;
+      $add .= '<label><i></i></label></p>'. PHP_EOL;
+      $add .= '<div class="optWrapper">'. PHP_EOL . '<ul class="options">' . PHP_EOL . $li . PHP_EOL . '</ul>' . PHP_EOL . '</div>'. PHP_EOL;
+      $field = '<div class="SumoSelect '. strtolower($name) .'" tabindex="0">' . $field . $add . '</div>';
+    }
     return $field;
   }
 
@@ -320,10 +289,10 @@
    * @return string (2 sorting arrows)
    */
   function xtc_sorting($page,$sort) {
-    $nav= '<br /><a href="'.xtc_href_link($page, xtc_get_all_get_params(array('action','sorting')).'sorting='.$sort).'">';
-    $nav.= xtc_image(DIR_WS_ICONS . 'sort_down.gif', '', '20' ,'20').'</a>';
-    $nav.= '<a href="'.xtc_href_link($page, xtc_get_all_get_params(array('action','sorting')).'sorting='.$sort.'-desc').'">';
-    $nav.= xtc_image(DIR_WS_ICONS . 'sort_up.gif', '', '20' ,'20').'</a>';    
+    $nav= '<br /><a href="'.xtc_href_link($page, xtc_get_all_get_params(array('action','sorting')).'sorting='.$sort).'" title="'.TEXT_SORT_ASC.'">';
+    $nav.= xtc_image(DIR_WS_ICONS . 'sort_down.gif', TEXT_SORT_ASC, '20' ,'20').'</a>';
+    $nav.= '<a href="'.xtc_href_link($page, xtc_get_all_get_params(array('action','sorting')).'sorting='.$sort.'-desc').'" title="'.TEXT_SORT_DESC.'">';
+    $nav.= xtc_image(DIR_WS_ICONS . 'sort_up.gif', TEXT_SORT_DESC, '20' ,'20').'</a>';    
     return $nav;
   }
   
@@ -339,7 +308,7 @@
     $output .= '<div class="smallText pdg2 flt-l">'. PHP_EOL;
     $output .= xtc_draw_form('cfg_max', basename($PHP_SELF)). PHP_EOL;         
     $output .= DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"'). PHP_EOL; 
-    $output .= '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'. PHP_EOL; 
+    $output .= '<input type="submit" class="button" onclick="this.blur();" title="' . BUTTON_SAVE . '" value="' . BUTTON_SAVE . '"/>'. PHP_EOL; 
     $output .=  '</form>'. PHP_EOL; 
     $output .= '</div>'. PHP_EOL; 
     return $output;
@@ -352,7 +321,43 @@
    * @return string
    */
   function draw_tooltip($text) {
-    $output = '<a href="#" class="tooltip"><span>'.xtc_image(DIR_WS_ICONS.'tooltip_icon.png').'<em>'.$text.'</em></span></a>'. PHP_EOL; 
+    $output = '<span class="tooltip">'.xtc_image(DIR_WS_ICONS.'tooltip_icon.png').'<em>'.$text.'</em></span>'. PHP_EOL; 
     return $output;
+  }
+  
+  /**
+   * draw_on_off_selection()
+   *
+   * @param string $name
+   * @param array $select_array
+   * @param mixed $key_value
+   * @param string $params
+   * @return string
+   */
+  function draw_on_off_selection($name, $select_array, $key_value, $params = '') {
+    $string = '';
+    if (NEW_SELECT_CHECKBOX == 'true') {
+      $string .= '<span class="cfg_select_option">';
+    }
+    if (!is_array($select_array) && $select_array == 'checkbox') {
+      $select_array = array(
+         array('id'=> 1,'text'=> CFG_TXT_YES),
+         array('id'=> 0,'text'=> CFG_TXT_NO),
+      );
+    }
+    for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
+      $string .= '<input id="cfg_so_'.strtolower($name).($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$select_array[$i]['id'].'"';
+      if ($key_value == $select_array[$i]['id']) $string .= ' checked="checked"';
+      $string .= ($params ? ' ' . $params : '');
+      $string .= '><label for="cfg_so_'.strtolower($name).($i?"_$i":'').'" class="'.($key_value == $select_array[$i]['id'] ? 'cfg_so_before ':'').'cfg_sov_'.($select_array[$i]['id'] ? 'true' : 'false').'">';
+      $string .= $select_array[$i]['text'] . '</label>';
+      if (NEW_SELECT_CHECKBOX != 'true') {
+        $string .= '<br/>';
+      }
+    }
+    if (NEW_SELECT_CHECKBOX == 'true') {
+      $string .= '</span>';
+    }
+    return $string;
   }
 ?>

@@ -1,6 +1,18 @@
 {config_load file="$language/lang_$language.conf" section="shopping_cart"}
 <h1>{#heading_cart#}</h1>
-{if $info_message != ''}<div class="errormessage">{$info_message}</div>{/if}
+{*BOC error message for exceeded product quantity, noRiddle*}
+{if $error_max_prod}
+<div class="errormessage">
+    <ul>
+        {foreach item=err_max_data from=$error_max_prod}
+        <li>{$err_max_data.E_MSG}</li>
+        {/foreach}
+    </ul>
+</div>
+{/if}
+{*EOC error message for exceeded product quantity, noRiddle*}
+{if $info_message != ''}<div class="{if $smarty.get.info && $smarty.get.info == '1'}infomessage{else}errormessage{/if}">{$info_message}</div>{/if}
+{if $coupon_message != ''}<div class="{if $smarty.get.info && $smarty.get.info == '1'}infomessage{else}errormessage{/if}">{$coupon_message}</div>{/if}
 {if $cart_empty == true}
   <p>{#text_empty#}</p>
   <p>{$BUTTON_CONTINUE}</p>
@@ -11,6 +23,12 @@
   <p>{$MODULE_order_details}</p>
   {if $info_message_1 != ''}<div class="errormessage">{$info_message_1}{$min_order}{$info_message_2}{$order_amount}</div>{/if}
   <p align="right" style="padding-right:70px;">{if $CONTINUE_LINK}<a href="{$CONTINUE_LINK}">{$BUTTON_CONTINUE_SHOPPING}</a>&nbsp;{/if}{$BUTTON_RELOAD}&nbsp;{if $BUTTON_PAYPAL != ''}{$BUTTON_CHECKOUT}<br />{$BUTTON_PAYPAL}{else}{$BUTTON_CHECKOUT}{/if}</p>
+  {if isset($BUTTON_CHECKOUT_EXPRESS)}<p align="right" style="padding-right:70px;">{$BUTTON_CHECKOUT_EXPRESS}</p>{/if}
+  {if isset($ACTIVATE_EXPRESS_LINK)}<p align="right" style="padding-right:70px;"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></p>{/if}
+
   {$FORM_END}
 {/if}
 {$MODULE_gift_cart}
+{if $MODULE_wishlist}
+  {$MODULE_wishlist}
+{/if}

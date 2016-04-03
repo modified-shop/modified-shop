@@ -25,7 +25,7 @@ require_once(DIR_FS_CATALOG . 'includes/external/masterpayment/MasterpaymentActi
     var $code, $title, $description, $enabled;
 
 
-    function masterpayment_ratenzahlung() {
+    function __construct() {
       global $order;
 
       $this->code		 	= 'masterpayment_ratenzahlung';

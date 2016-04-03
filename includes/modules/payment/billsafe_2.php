@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: billsafe_2.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -45,9 +45,9 @@ class billsafe_2 {
   var $info;
   var $response;
 
-  function billsafe_2() {
+  function __construct() {
     global $order;
-    require (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+    require (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
     $this->code = 'billsafe_2';
     $this->title = MODULE_PAYMENT_BILLSAFE_2_TEXT_TITLE;
     // BOF - Changed to white label solution
@@ -75,23 +75,6 @@ class billsafe_2 {
 
   function update_status() {
     global $order;
-
-    // BOF - Hendrik - 2010-07-15 - exlusion config for shipping modules
-    if( MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING != '' ) {
-      $neg_shpmod_arr = explode(',',MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING);
-      foreach( $neg_shpmod_arr as $neg_shpmod ) {
-        $nd=$neg_shpmod.'_'.$neg_shpmod;
-        if( $_SESSION['shipping']['id']==$nd || $_SESSION['shipping']['id']==$neg_shpmod ) {
-          $this->enabled = false;
-          break;
-        }
-      }
-    }
-    //if ($_SESSION['shipping']['id'] != 'selfpickup_selfpickup') {
-    //  $this->enabled = false;
-    //}
-    // EOF - Hendrik - 2010-07-15 - exlusion config for shipping modules
-
     if (($this->enabled === true) && ((int)MODULE_PAYMENT_BILLSAFE_2_ZONE > 0) ) {
       $check_flag = false;
       $check_query = xtc_db_query('SELECT zone_id FROM '.TABLE_ZONES_TO_GEO_ZONES.' WHERE geo_zone_id = "'.xtc_db_input(MODULE_PAYMENT_BILLSAFE_2_ZONE).'" AND zone_country_id = "'.xtc_db_input($order->billing['country']['id']).'" ORDER BY zone_id');
@@ -119,7 +102,6 @@ class billsafe_2 {
     if (strtoupper($currency) != 'EUR') {
       $display = null;
       return $display;
-      break;
     }
     $order_total = $order->info['total'];
     $min_order = MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER;
@@ -127,19 +109,18 @@ class billsafe_2 {
     if (($order_total < $min_order) || ($order_total > $max_order)) {
       $display = null;
       return $display;
-      break;
     }
-    require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
-    $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+    require_once (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+    $bs = new Billsafe_Sdk(DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
     if (MODULE_PAYMENT_BILLSAFE_2_LOG == 'True') {
       if (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'Echo') {
-        require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerEcho.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
+        require_once DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/LoggerEcho.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
         $bs->setLogger(new Billsafe_LoggerEcho());
       } elseif (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'Mail') {
-        require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerMail.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
+        require_once DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/LoggerMail.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
         $bs->setLogger(new Billsafe_LoggerMail(MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR));
       } elseif (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'File') {
-        require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerFile.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
+        require_once DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/LoggerFile.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
         $bs->setLogger(new Billsafe_LoggerFile(DIR_FS_CATALOG.'export/BillSAFE_'.date('YmdHis').'.log'));
       }
     }
@@ -477,17 +458,17 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
       } elseif (!$_POST['checkbox_billsafe_tc'] && ($order->billing['company'] !== '' && $order->delivery['company'] !== '')) {
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=1&dob='.$_POST['dob'].'&error_message='.stripslashes(urlencode(decode_htmlentities(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_INLINE))), 'SSL'));
       }
-      require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
-      $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+      require_once (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+      $bs = new Billsafe_Sdk(DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
       if (MODULE_PAYMENT_BILLSAFE_2_LOG == 'True') {
         if (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'Echo') {
-          require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerEcho.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
+          require_once DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/LoggerEcho.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
           $bs->setLogger(new Billsafe_LoggerEcho());
         } elseif (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'Mail') {
-          require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerMail.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
+          require_once DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/LoggerMail.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
           $bs->setLogger(new Billsafe_LoggerMail(MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR));
         } elseif (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'File') {
-          require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerFile.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
+          require_once DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/LoggerFile.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
           $bs->setLogger(new Billsafe_LoggerFile(DIR_FS_CATALOG.'export/BillSAFE_'.date('YmdHis').'.log'));
         }
       }
@@ -519,17 +500,17 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
       }
     } elseif (MODULE_PAYMENT_BILLSAFE_2_INLINE === 'False') {
       if (empty($_GET['token'])) {
-        require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
-        $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+        require_once (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+        $bs = new Billsafe_Sdk(DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
         if (MODULE_PAYMENT_BILLSAFE_2_LOG == 'True') {
           if (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'Echo') {
-            require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerEcho.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
+            require_once DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/LoggerEcho.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
             $bs->setLogger(new Billsafe_LoggerEcho());
           } elseif (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'Mail') {
-            require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerMail.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
+            require_once DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/LoggerMail.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
             $bs->setLogger(new Billsafe_LoggerMail(MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR));
           } elseif (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'File') {
-            require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerFile.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
+            require_once DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/LoggerFile.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
             $bs->setLogger(new Billsafe_LoggerFile(DIR_FS_CATALOG.'export/BillSAFE_'.date('YmdHis').'.log'));
           }
         }
@@ -566,8 +547,8 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
         $check_query = xtc_db_query('SELECT token FROM billsafe_orders_2 WHERE token = "'.$token.'"');
         $check_token = xtc_db_num_rows($check_query);
         if ($check_token == 1) xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(decode_htmlentities(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_COMMON))), 'SSL'));
-        require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
-        $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+        require_once (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+        $bs = new Billsafe_Sdk(DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
         if($_SESSION['language_charset'] == 'iso-8859-1' || $_SESSION['language_charset'] == 'iso-8859-15') {
           $bs->setUtf8Mode(false);
         } else {
@@ -612,7 +593,7 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
       $resultQuery = xtc_db_query('SELECT id FROM billsafe_orders_2 WHERE transactionId = "'.xtc_db_input($this->response->transactionId).'"');
       $result = xtc_db_fetch_array($resultQuery);
       xtc_db_query('INSERT INTO billsafe_orders_user_2 (id, bsorders_id, gender, company, firstname, lastname, street, housenumber, postcode, city, country, dateofbirth, email, phone) VALUES (NULL, "'.xtc_db_input($result['id']).'", "'.xtc_db_input($customer->gender).'", "'.xtc_db_input($customer->firstname).'", "'.xtc_db_input($customer->company).'", "'.xtc_db_input($customer->lastname).'", "'.xtc_db_input($customer->street).'", "'.xtc_db_input($customer->housenumber).'", "'.xtc_db_input($customer->postcode).'", "'.xtc_db_input($customer->city).'", "'.xtc_db_input($customer->country).'", "0000-00-00", "'.xtc_db_input($customer->email).'", "'.xtc_db_input($customer->phone).'")');
-      $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+      $bs = new Billsafe_Sdk(DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
       if($_SESSION['language_charset'] == 'iso-8859-1' || $_SESSION['language_charset'] == 'iso-8859-15') {
         $bs->setUtf8Mode(false);
       } else {
@@ -635,7 +616,7 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
         }
       }
       $comments = MODULE_PAYMENT_BILLSAFE_2_STATUS_TEXT.': '.$this->response->status.'; '.MODULE_PAYMENT_BILLSAFE_2_TRANSACTIONID.': '.$this->response->transactionId;
-      xtc_db_query ('INSERT INTO orders_status_history (orders_status_history_id, orders_id, orders_status_id, date_added, customer_notified, comments) VALUES (NULL, "'.xtc_db_input($insert_id).'", "1", "'.date('Y-m-d H:i:s').'", "0", "'.xtc_db_input($comments).'")');
+      xtc_db_query ('INSERT INTO orders_status_history (orders_id, orders_status_id, date_added, customer_notified, comments) VALUES ("'.xtc_db_input($insert_id).'", "1", "'.date('Y-m-d H:i:s').'", "0", "'.xtc_db_input($comments).'")');
       $params = array('transactionId' => xtc_db_input($this->response->transactionId), 'orderNumber' => xtc_db_input($insert_id));
       $response = $bs->callMethod('setOrderNumber', $params);
       if ($response->ack === 'OK') {
@@ -767,8 +748,6 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SORT_ORDER", "0", "6", "0", now())');
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_ALLOWED"');
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_ALLOWED", "DE", "6", "0", now())');
-    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING"');
-    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING", "", "6", "99", now())');
   }
 
   function remove() {
@@ -778,9 +757,9 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
   function keys() {
     // BOF - Changed to white label solution
     /*
-    return array('MODULE_PAYMENT_BILLSAFE_2_STATUS', 'MODULE_PAYMENT_BILLSAFE_2_INLINE', 'MODULE_PAYMENT_BILLSAFE_2_LAYER', 'MODULE_PAYMENT_BILLSAFE_2_LOG', 'MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE', 'MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR', 'MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID', 'MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE', 'MODULE_PAYMENT_BILLSAFE_2_PKEY', 'MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_MAX_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_SCHG', 'MODULE_PAYMENT_BILLSAFE_2_SCHGTAX', 'MODULE_PAYMENT_BILLSAFE_2_SHOP_LOGO_URL', 'MODULE_PAYMENT_BILLSAFE_2_BILLSAFE_LOGO_URL', 'MODULE_PAYMENT_BILLSAFE_2_SERVER', 'MODULE_PAYMENT_BILLSAFE_2_ZONE', 'MODULE_PAYMENT_BILLSAFE_2_ORDER_STATUS_ID', 'MODULE_PAYMENT_BILLSAFE_2_SORT_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_ALLOWED', 'MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING');
+    return array('MODULE_PAYMENT_BILLSAFE_2_STATUS', 'MODULE_PAYMENT_BILLSAFE_2_INLINE', 'MODULE_PAYMENT_BILLSAFE_2_LAYER', 'MODULE_PAYMENT_BILLSAFE_2_LOG', 'MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE', 'MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR', 'MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID', 'MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE', 'MODULE_PAYMENT_BILLSAFE_2_PKEY', 'MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_MAX_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_SCHG', 'MODULE_PAYMENT_BILLSAFE_2_SCHGTAX', 'MODULE_PAYMENT_BILLSAFE_2_SHOP_LOGO_URL', 'MODULE_PAYMENT_BILLSAFE_2_BILLSAFE_LOGO_URL', 'MODULE_PAYMENT_BILLSAFE_2_SERVER', 'MODULE_PAYMENT_BILLSAFE_2_ZONE', 'MODULE_PAYMENT_BILLSAFE_2_ORDER_STATUS_ID', 'MODULE_PAYMENT_BILLSAFE_2_SORT_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_ALLOWED');
     */
-    return array('MODULE_PAYMENT_BILLSAFE_2_STATUS', 'MODULE_PAYMENT_BILLSAFE_2_INLINE', 'MODULE_PAYMENT_BILLSAFE_2_LAYER', 'MODULE_PAYMENT_BILLSAFE_2_LOG', 'MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE', 'MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR', 'MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID', 'MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE', 'MODULE_PAYMENT_BILLSAFE_2_PKEY', 'MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_MAX_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_SCHG', 'MODULE_PAYMENT_BILLSAFE_2_SCHGTAX', 'MODULE_PAYMENT_BILLSAFE_2_SHOP_LOGO_URL', 'MODULE_PAYMENT_BILLSAFE_2_SERVER', 'MODULE_PAYMENT_BILLSAFE_2_ZONE', 'MODULE_PAYMENT_BILLSAFE_2_ORDER_STATUS_ID', 'MODULE_PAYMENT_BILLSAFE_2_SORT_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_ALLOWED', 'MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING');
+    return array('MODULE_PAYMENT_BILLSAFE_2_STATUS', 'MODULE_PAYMENT_BILLSAFE_2_INLINE', 'MODULE_PAYMENT_BILLSAFE_2_LAYER', 'MODULE_PAYMENT_BILLSAFE_2_LOG', 'MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE', 'MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR', 'MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID', 'MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE', 'MODULE_PAYMENT_BILLSAFE_2_PKEY', 'MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_MAX_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_SCHG', 'MODULE_PAYMENT_BILLSAFE_2_SCHGTAX', 'MODULE_PAYMENT_BILLSAFE_2_SHOP_LOGO_URL', 'MODULE_PAYMENT_BILLSAFE_2_SERVER', 'MODULE_PAYMENT_BILLSAFE_2_ZONE', 'MODULE_PAYMENT_BILLSAFE_2_ORDER_STATUS_ID', 'MODULE_PAYMENT_BILLSAFE_2_SORT_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_ALLOWED');
     // EOF - Changed to white label solution
   }
 

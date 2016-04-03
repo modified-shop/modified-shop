@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: print_order.php 3792 2012-10-18 11:26:51Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -15,15 +15,11 @@
    ---------------------------------------------------------------------------------------*/
 
   require('includes/application_top.php');
-  // include needed functions
-  require_once(DIR_FS_INC .'xtc_get_attributes_model.inc.php');
-  require_once(DIR_FS_INC .'xtc_not_null.inc.php');
-  require_once(DIR_FS_INC .'xtc_format_price_order.inc.php');
 
   $smarty = new Smarty;
 
-  //get store name and store name_address 
-  $smarty->assign('store_name', STORE_NAME); 
+  //get store name and store name_address
+  $smarty->assign('store_name', STORE_NAME);
   $smarty->assign('store_name_address', STORE_NAME_ADDRESS); 
 
   // get order data
@@ -34,7 +30,7 @@
   $smarty->assign('address_label_shipping',xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
   $smarty->assign('address_label_payment',xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
   $smarty->assign('csID',$order->customer['csID']);
-  $smarty->assign('vat_id',$order->customer['vat_id']);
+  $smarty->assign('vatID',$order->customer['vat_id']);
 
   // get products data
   include_once(DIR_FS_CATALOG.DIR_WS_CLASSES .'xtcPrice.php');
@@ -54,29 +50,38 @@
   $smarty->assign('language', $order->info['language']);
 
   $smarty->assign('logo_path',HTTP_SERVER . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+  $smarty->assign('tpl_path',HTTP_SERVER . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+
   $smarty->assign('oID',$order->info['order_id']);
-  if ($order->info['payment_method']!='' && $order->info['payment_method']!='no_payment') {
-    //include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
-    include(DIR_FS_CATALOG.'lang/'.$order->info['language'].'/modules/payment/'.$order->info['payment_method'].'.php'); // Tomcraft - 2014-04-07 - changed to order language
-    $payment_method=constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
-    // BOF - DokuMan -2012-06-06 - BILLPAY payment module (in external directory)
-    require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_display_bankdata.php');
-    $payment_method .= display_billpay_bankdata();
-    /*
-     * falls das Modul "pdfrechnung" eingesetzt wird muss nach der Zeile:
-     * $pdf->RechnungStart($order->customer['lastname'], $customer_gender['customers_gender'], PDF_LIEFERSCHEIN);
-     * folgendes eingefügt werden:
-     */
-    //if($order->info['payment_method'] == 'billpay' || $order->info['payment_method'] == 'billpaydebit' || $order->info['payment_method'] == 'billpaytransactioncredit')
-    //  require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_display_pdf_data.php');
-    //}
-    // EOF - DokuMan -2012-06-06 - BILLPAY payment module (in external directory)
-    $smarty->assign('PAYMENT_METHOD',$payment_method);
+  if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {
+    include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
+    $payment_method = constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
+
+    // mod: BILLPAY payment module
+    if(stripos($order->info['payment_method'], 'billpay') !== false) {
+      require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_display_bankdata.php');
+      $payment_method .= display_billpay_bankdata();
+    }
+
+    if(strpos($order->info['payment_method'], 'paypalplus') !== false) {
+      require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
+      $paypal = new PayPalInfo($order->info['payment_method']);      
+      $smarty->assign('PAYMENT_INFO', $paypal->success($order->info['order_id']));
+    }
+    $smarty->assign('PAYMENT_METHOD', $payment_method);
   }
-  $smarty->assign('COMMENTS', $order->info['comments']);
+  $smarty->assign('COMMENTS', nl2br($order->info['comments']));
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));
-  $smarty->assign('INVOICE_NUMBER', $order->info['ibn_billnr']);
-  $smarty->assign('INVOICE_DATE',   xtc_date_short($order->info['ibn_billdate']));
+  $smarty->assign('INVOICE_NUMBER', isset($order->info['ibn_billnr']) && $order->info['ibn_billnr'] != '' ? $order->info['ibn_billnr'] :  $order->info['order_id']);
+  $smarty->assign('INVOICE_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));
+  $smarty->assign('DELIVERY_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));
+
+  require_once(DIR_FS_CATALOG.'includes/classes/main.php');
+  $main = new main();
+
+  $invoice_data = $main->getContentData(INVOICE_INFOS);
+  $smarty->assign('ADDRESS_SMALL', $invoice_data['content_heading']);
+  $smarty->assign('ADDRESS_LARGE', $invoice_data['content_text']);
 
   // dont allow cache
   $smarty->caching = false;

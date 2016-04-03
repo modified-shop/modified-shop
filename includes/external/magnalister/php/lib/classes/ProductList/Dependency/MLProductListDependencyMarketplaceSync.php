@@ -78,43 +78,63 @@ class MLProductListDependencyMarketplaceSync extends MLProductListDependency {
 		
 		switch ($this->getFilterRequest()) {
 			case 'notactive' : {
-				$sSql = $sAlias."Verified in('OK', 'EMPTY') AND (".$sAlias."transferred='0' or ".$sAlias."itemid is null or ".$sAlias."itemid ='' or ".$sAlias."deletedBy!='')";
+				$this->getQuery()
+					->where($sAlias."Verified in('OK', 'EMPTY') OR ".$sAlias."Verified IS NULL")
+					->where($sAlias."transferred='0' OR ".$sAlias."itemid IS NULL OR ".$sAlias."itemid='' OR ".$sAlias."deletedBy!=''")
+					->where($sAlias."mpid='".$this->getMagnaSession('mpID')."' OR ".$sAlias."mpid is null")
+				;
+				$iJoinType = ML_Database_Model_Query_Select::JOIN_TYPE_LEFT;
 				break;
 			}
 			case 'nottransferred' : {
-				$sSql = $sAlias."Verified in('OK', 'EMPTY') AND (".$sAlias."transferred='0' or ".$sAlias."itemid is null or ".$sAlias."itemid ='') AND deletedBy=''";
+				$this->getQuery()
+					->where($sAlias."Verified IN('OK', 'EMPTY') OR ".$sAlias."Verified IS NULL")
+					->where($sAlias."transferred='0' OR ".$sAlias."itemid IS NULL OR ".$sAlias."itemid =''")
+					->where($sAlias."deletedBy='' OR ".$sAlias."deletedBy is null")
+					->where($sAlias."mpid='".$this->getMagnaSession('mpID')."' OR ".$sAlias."mpid is null")
+				;
+				$iJoinType = ML_Database_Model_Query_Select::JOIN_TYPE_LEFT;
 				break;
 			}
 			case 'active': {
-				$sSql = $sAlias."Verified in('OK', 'EMPTY') AND (".$sAlias."transferred='1' and ".$sAlias."itemid is not null and ".$sAlias."itemid !='' and ".$sAlias."deletedBy='')";
+				$this->getQuery()
+					->where($sAlias."Verified in('OK', 'EMPTY')")
+					->where($sAlias."transferred='1'")
+					->where($sAlias."itemid is not null AND ".$sAlias."itemid !=''")
+					->where($sAlias."deletedBy=''")
+					->where($sAlias."mpid='".$this->getMagnaSession('mpID')."'")
+				;
+				$iJoinType = ML_Database_Model_Query_Select::JOIN_TYPE_INNER;
 				break;
 			}
 			case 'sync':
 			case 'button':
 			case 'expired': {
-				$sSql = $sAlias."Verified in('OK', 'EMPTY') AND ".$sAlias."deletedBy='" . $this->getFilterRequest() . "'";
+				$this->getQuery()
+					->where($sAlias."Verified in('OK', 'EMPTY')")
+					->where($sAlias."deletedBy='" . $this->getFilterRequest() . "'")
+					->where($sAlias."mpid='".$this->getMagnaSession('mpID')."'")
+				;
+				$iJoinType = ML_Database_Model_Query_Select::JOIN_TYPE_INNER;
 				break;
 			}
 		}
 		#echo var_dump_pre($_SESSION['magna_deletedFilter'][$this->getMagnaSession('mpID')], 'magna_deletedFilter');
 		#echo var_dump_pre($sSql, $this->getFilterRequest());
 		
-		if (isset($sSql)) {
-			if ($this->getConfig('propertiestablename') === $sAlias) {//tablename is equal to table alias - so table is already joined
-				$this->getQuery()->where($sSql);
-			} else {
-				$this->getQuery()->join(
-					array(
-						$this->getConfig('propertiestablename'),
-						substr($sAlias, 0, -1),//no dot
-						((getDBConfigValue('general.keytype', '0') == 'artNr')
-							? 'p.products_model = '.$sAlias.'products_model'
-							: 'p.products_id = '.$sAlias.'products_id'
-						).' AND '.$sSql." AND ".$sAlias."mpid='".$this->getMagnaSession('mpID')."'"
-					),
-					ML_Database_Model_Query_Select::JOIN_TYPE_INNER
-				);
-			}
+		if (isset($iJoinType) && $this->getConfig('propertiestablename') != $sAlias) {//tablename is equal to table alias - so table is already joined
+			$this->getQuery()->join(
+				array(
+					$this->getConfig('propertiestablename'),
+					substr($sAlias, 0, -1),//no dot
+					(
+						(getDBConfigValue('general.keytype', '0') == 'artNr')
+						? 'p.products_model = '.$sAlias.'products_model'
+						: 'p.products_id = '.$sAlias.'products_id'
+					)
+				),
+				$iJoinType
+			);
 		}
 		return $this;
 	}
@@ -273,9 +293,17 @@ class MLProductListDependencyMarketplaceSync extends MLProductListDependency {
 			return;
 		}
 		$mpID = $this->getMagnaSession('mpID');
+		// get sku for current product-id - id can be changed
+		$products_model = MagnaDB::gi()->fetchOne('SELECT products_model FROM '.TABLE_PRODUCTS.' WHERE products_id = '.$pID.'');
+		$aIdentify = array('mpID' => $mpID);
+		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+			$aIdentify['products_model'] = $products_model;
+		} else {
+			$aIdentify['products_id'] = $pID;
+		}
 		//setItemd=='true' if not setted
 		$data['transferred'] = 1; //todo check if depends on entry exists
-		if (MagnaDB::gi()->recordExists($this->getConfig('propertiestablename'), array('products_id' => $pID, 'mpID' => $mpID))) {
+		if (MagnaDB::gi()->recordExists($this->getConfig('propertiestablename'), $aIdentify)) {
 			$sSet = '';
 			foreach ($data as $sKey => $sValue) {
 				$sSet .= $sKey."='".MagnaDB::gi()->escape($sValue)."', ";
@@ -285,19 +313,21 @@ class MLProductListDependencyMarketplaceSync extends MLProductListDependency {
 				$sSet .= "ItemID = if (ItemID is null, '__true__', ItemID), ";
 			}
 			$sSet = substr($sSet, 0, -2);
+			$sWhere = '';
+			foreach ($aIdentify as $sKey => $sValue) {
+				$sWhere .= " ".$sKey."='".$sValue."' AND";
+			}
+			$sWhere =  substr($sWhere, 0, -4);
 			/**
 			 * limit is deactive, because one customer had changed the productmodel
 			 */
 			MagnaDB::gi()->query("
 				UPDATE ".$this->getConfig('propertiestablename')."
 				SET ".$sSet."
-				WHERE
-					products_id = '".$pID."' AND
-					mpID = '".$mpID."'
+				WHERE ".$sWhere."
 				-- LIMIT 1
 			");
 		} else {
-			$products_model = MagnaDB::gi()->fetchOne('SELECT products_model FROM '.TABLE_PRODUCTS.' WHERE products_id = '.$pID.'');
 			$data['ItemID'] = (isset($data['ItemID']) && !empty($data['ItemID'])) ? $data['ItemID'] : '__true__';
 			$data['products_id'] = $pID;
 			$data['products_model'] = $products_model;

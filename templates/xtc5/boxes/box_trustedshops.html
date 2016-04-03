@@ -1,0 +1,13 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{if isset($STICKER_EXISTS)}
+  {$STICKER_CODE}
+  <br/>
+{/if}
+{if isset($IMAGE_EXISTS)}
+<h2 class="boxheader">Trusted Shops</h2>
+<div class="boxbody">
+  <div style="text-align: center;">
+    <a rel="nofollow" target="_blank" href="{$LINK}"><img src="{$IMAGE}" style="padding:0; border:0px none;" /></a>
+  </div>
+</div>
+{/if}

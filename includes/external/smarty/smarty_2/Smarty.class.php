@@ -20,18 +20,23 @@
  *
  * For questions, help, comments, discussion, etc., please join the
  * Smarty mailing list. Send a blank e-mail to
- * smarty-discussion-subscribe@googlegroups.com 
+ * smarty-discussion-subscribe@googlegroups.com
  *
  * @link http://www.smarty.net/
  * @copyright 2001-2005 New Digital Group, Inc.
  * @author Monte Ohrt <monte at ohrt dot com>
  * @author Andrei Zmievski <andrei@php.net>
  * @package Smarty
- * @version 2.6.27
- * Modified for xt:Commerce v3.0.4 SP2.1 (c)2009 by Hetfield - www.MerZ-IT-SerVice.de
+ * @version 2.6.28
  */
 
-/* $Id$ */
+/* $Id: Smarty.class.php 4660 2012-09-24 20:05:15Z uwe.tews@googlemail.com $ */
+
+/**
+ * define smarty plugindir in template
+ */
+define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/smarty');
+define('MY_SHOP_PLUGINS', DIR_FS_EXTERNAL.'smarty/plugins');
 
 /**
  * DIR_SEP isn't used anymore, but third party apps might
@@ -59,9 +64,6 @@ define('SMARTY_PHP_QUOTE',      1);
 define('SMARTY_PHP_REMOVE',     2);
 define('SMARTY_PHP_ALLOW',      3);
 
-// BOF - Tomcraft - 2011-01-13 - Added path to smarty plugin dir in active template
-define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/smarty');
-// EOF - Tomcraft - 2011-01-13 - Added path to smarty plugin dir in active template
 /**
  * @package Smarty
  */
@@ -90,20 +92,14 @@ class Smarty
      *
      * @var string
      */
-// BOF - Tomcraft - 2009-05-26 - change path to "lang"
-//    var $config_dir      =  'configs';
-    var $config_dir      =  'lang'; // Modified for xt:Commerce v3.0.4 SP2.1 (c)2009 by Hetfield - www.MerZ-IT-SerVice.de
-// EOF - Tomcraft - 2009-05-26 - change path to "lang"
+    var $config_dir      =  'lang';
 
     /**
      * An array of directories searched for plugins.
      *
      * @var array
      */
-// BOF - Tomcraft - 2011-01-13 - Added path to smarty plugin dir in active template
-    //var $plugins_dir     =  array('plugins');
-    var $plugins_dir     =  array('plugins',MY_TEMPLATE_PLUGINS);
-// EOF - Tomcraft - 2011-01-13 - Added path to smarty plugin dir in active template
+    var $plugins_dir     =  array('plugins', MY_TEMPLATE_PLUGINS, MY_SHOP_PLUGINS);
 
     /**
      * If debugging is enabled, a debug console window will display
@@ -475,7 +471,7 @@ class Smarty
      *
      * @var string
      */
-    var $_version              = '2.6.27';
+    var $_version              = '2.6.28';
 
     /**
      * current template inclusion depth
@@ -1068,7 +1064,7 @@ class Smarty
         } else {
             // var non-existant, return valid reference
             $_tmp = null;
-            return $_tmp;   
+            return $_tmp;
         }
     }
 
@@ -1100,8 +1096,7 @@ class Smarty
      */
     function trigger_error($error_msg, $error_type = E_USER_WARNING)
     {
-        //$msg = htmlentities($error_msg);
-        $msg = encode_htmlentities($error_msg); // web28 2013-01-11 - use encode_htmlentities (PHP5.4 ready)
+        $msg = encode_htmlentities($error_msg);
         trigger_error("Smarty error: $msg", $error_type);
     }
 
@@ -1129,7 +1124,7 @@ class Smarty
     function fetch($resource_name, $cache_id = null, $compile_id = null, $display = false)
     {
         static $_cache_info = array();
-        
+
         $_smarty_old_error_level = $this->debugging ? error_reporting() : error_reporting(isset($this->error_reporting)
                ? $this->error_reporting : error_reporting() & ~E_NOTICE);
 
@@ -1317,14 +1312,7 @@ class Smarty
             return;
         } else {
             error_reporting($_smarty_old_error_level);
-            // BOF - Tomcraft - 2009-05-26 - Modified for xt:Commerce v3.0.4 SP2.1
-            //if (isset($_smarty_results)) { return $_smarty_results; }
-            if (file_exists('includes/local/configure.php')) {
-                if (isset($_smarty_results)) { return '<!-- Begin: '.$resource_name.' -->'.$_smarty_results.'<!-- End: '.$resource_name.' -->'; }
-            } else {
-                if (isset($_smarty_results)) { return $_smarty_results; }
-            } 
-            // EOF - Tomcraft - 2009-05-26 - Modified for xt:Commerce v3.0.4 SP2.1
+            if (isset($_smarty_results)) { return $_smarty_results; }
         }
     }
 
@@ -1737,6 +1725,9 @@ class Smarty
                 $contents .= fread($fd, 8192);
             }
             fclose($fd);
+            if (strpos($filename, '.txt') !== false) {
+              $contents = encode_utf8($contents);
+            }
             return $contents;
         } else {
             return false;
@@ -1952,10 +1943,10 @@ class Smarty
     {
         return eval($code);
     }
-    
+
     /**
      * Extracts the filter name from the given callback
-     * 
+     *
      * @param callback $function
      * @return string
      */
@@ -1970,7 +1961,7 @@ class Smarty
 			return $function;
 		}
 	}
-  
+
     /**#@-*/
 
 }

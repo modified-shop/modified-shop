@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: orders_edit.php 
+   $Id: orders_edit.php,v 1.0 
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -10,8 +10,8 @@
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(orders.php,v 1.27 2003/02/16); www.oscommerce.com 
-   (c) 2003 nextcommerce (orders.php,v 1.7 2003/08/14); www.nextcommerce.org
-   (c) 2006 xt:Commerce (orders_edit.php,v 1.0); www.xt-commerce.com
+   (c) 2003	 nextcommerce (orders.php,v 1.7 2003/08/14); www.nextcommerce.org
+   (c) 2006 XT-Commerce (orders_edit.php)
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -19,7 +19,7 @@
 // Allgemeine Texte
 define('TABLE_HEADING', 'Bestelldaten bearbeiten');
 define('TABLE_HEADING_ORDER', 'Bestellung Nr:&nbsp;');
-define('TEXT_SAVE_ORDER', 'Bestellungsbearbeitung beenden und Bestellung neu berechnen.');
+define('TEXT_SAVE_ORDER', 'Bestellungsbearbeitung beenden und Bestellung neu berechnen.&nbsp;');
 
 define('TEXT_EDIT_ADDRESS', 'Adress- und Kundendaten');
 define('TEXT_EDIT_PRODUCTS', 'Artikel, Artikeloptionen und Preise');
@@ -63,7 +63,6 @@ define('TEXT_PRODUCT_SEARCH', 'Artikelsuche:');
 
 define('TEXT_PRODUCT_OPTION', 'Artikelmerkmale:');
 define('TEXT_PRODUCT_OPTION_VALUE', 'Optionswert:');
-define('TEXT_PRICE', 'Preis:');
 define('TEXT_PRICE_PREFIX', 'Price Prefix:');
 define('TEXT_SAVE_ORDER', 'Bestellung abschlie&szlig;en und neu berechnen');
 define('TEXT_INS', 'Hinzuf&uuml;gen:');
@@ -94,7 +93,7 @@ Versandkosten m&uuml;ssen manuell ge&auml;ndert werden!<br />
 Hierbei sind je nach Kundengruppe die Versandkosten brutto oder netto einzutragen!<br />
 ');
 
-define('TEXT_CUSTOMER_GROUP_INFO', ' <span style="background:#FFD6D6;padding:3px;border:solid 1px red;">Bei einem Wechsel der Kundengruppe sind alle Einzelposten der Rechnung neu abzuspeichern!</span>');
+define('TEXT_CUSTOMER_GROUP_INFO', ' Bei einem Wechsel der Kundengruppe sind alle Einzelposten der Rechnung neu abzuspeichern!');
 
 define('TEXT_ORDER_TITLE', 'Titel:');
 define('TEXT_ORDER_VALUE', 'Wert:');
@@ -114,11 +113,11 @@ define('TEXT_MRS', 'Frau');
 
 define('TEXT_SAVE_CUSTOMERS_DATA', 'Kundendaten speichern');
 
-define('TEXT_PRODUCTS_SEARCH_INFO', ' Artikelname oder Art.Nr oder EAN');
+define('TEXT_PRODUCTS_SEARCH_INFO', ' Artikelname oder Art.-Nr. oder GTIN/EAN');
 define('TEXT_PRODUCTS_STATUS', 'Status:');
 define('TEXT_PRODUCTS_IMAGE', 'Artikelbild:');
 define('TEXT_PRODUCTS_QTY', 'Lagerbestand:');
-define('TEXT_PRODUCTS_EAN', 'EAN:');
+define('TEXT_PRODUCTS_EAN', 'GTIN/EAN:');
 define('TEXT_PRODUCTS_TAX_RATE', 'Steuersatz:');
 define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Erscheinungsdatum:');
 define('TEXT_IMAGE_NONEXISTENT', '---');

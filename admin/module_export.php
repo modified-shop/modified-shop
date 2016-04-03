@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: module_export.php 2985 2012-06-07 13:38:44Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -47,14 +47,16 @@
     switch ($set) {
       case 'system':
         $module_type = 'system';
-        $module_directory = DIR_WS_MODULES . 'system/';
+        $module_directory = DIR_FS_ADMIN.DIR_WS_MODULES . 'system/';
+        $module_directory_include = DIR_WS_ADMIN.DIR_WS_MODULES . 'system/';
         $module_key = 'MODULE_SYSTEM_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_SYSTEM);
         break;
       case 'export':
       default:
         $module_type = 'export';
-        $module_directory = DIR_WS_MODULES . 'export/';
+        $module_directory = DIR_FS_ADMIN.DIR_WS_MODULES . 'export/';
+        $module_directory_include = DIR_WS_ADMIN.DIR_WS_MODULES . 'export/';
         $module_key = 'MODULE_EXPORT_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_EXPORT);
         break;
@@ -63,6 +65,10 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (xtc_not_null($action)) {
+    //load language file for action
+    if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php')) {
+      include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php');
+    }
     switch ($action) {
       //BOF NEW MODULE PROCESSING
       case 'module_processing_do':
@@ -118,7 +124,7 @@
       case 'backupconfirm':
       case 'removeconfirm':
       case 'restoreconfirm':
-        $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+      case 'custom':
         $class = basename($module_class);
         if (file_exists($module_directory . $class . $file_extension)) {
           include($module_directory . $class . $file_extension);
@@ -139,6 +145,11 @@
             // reset backup values 
             xtc_restore_configuration($module->keys());
             $messageStack->add_session(MODULE_RESTORE_CONFIRM, 'success');
+          } elseif ($action == 'custom') {
+            // call custom method
+            if (method_exists($module,'custom')) {
+              $module->custom(); 
+            }
           }
 
         }
@@ -157,7 +168,9 @@
                            'extended_description' => isset($module->extended_description) ? $module->extended_description : '',
                            'status' => $module->check());
       $module_info['properties'] = isset($module->properties) ? $module->properties : array();
-      $module_keys = $module->keys();
+      $module_info['keys_dispnone'] = isset($module->keys_dispnone) ? $module->keys_dispnone : array();
+      $module_keys = method_exists($module,'keys') ? $module->keys() : array();
+
       $keys_extra = array();
       for ($j = 0, $k = sizeof($module_keys); $j < $k; $j++) {
         $key_value_query = xtc_db_query("SELECT configuration_key,
@@ -224,7 +237,14 @@
     reset($params_array);
     $params = array();
     while(list($key, $value) = each($params_array)) {
-      $params[] = $key .'='. $value;
+      if (is_array($value)) {
+        reset($value);
+        while(list($key2, $value2) = each($value)) {
+          $params[] = $key.'_'.strtolower($key2) .'='. $value2;
+        }
+      } else {
+        $params[] = $key .'='. $value;
+      }
     }
     $params_string = implode('&', $params);
     return $params_string;
@@ -248,7 +268,7 @@ if (xtc_not_null($action) && !$box) {
     <!-- body //-->
     <?php
     //BOF NEW MODULE PROCESSING
-    echo isset($modulelink) ? xtc_draw_form('modul_continue',FILENAME_MODULE_EXPORT, $params, 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()) : '';
+    echo isset($modulelink) ? xtc_draw_form('modul_continue',FILENAME_MODULE_EXPORT, $params, 'post') : '';
     
     echo isset($recursive_call) ? $recursive_call : '';
     //EOF NEW MODULE PROCESSING
@@ -268,25 +288,24 @@ if (xtc_not_null($action) && !$box) {
         <td class="boxCenter">
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_modules.png'); ?></div>
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?><br /></div>
+          <div class="main">Modules</div>
           <?php if ($set == 'export' && !xtc_not_null($action)) { ?>
-          <div style="clear:both;margin:10px 0;"><span class="main" style="border: 1px red solid; padding:5px; background: #FFD6D6;"><?php echo TEXT_MODULE_INFO; ?></span></div>
+          <div style="clear:both;margin:10px 0;"><span class="main important_info"><?php echo TEXT_MODULE_INFO; ?></span></div>
           <?php } ?>
           <table class="tableCenter">
             <tr>
                 <?php if(!xtc_not_null($action) || $box) { ?>
                     <td class="boxCenterLeft">
                       <table class="tableBoxCenter collapse">
-                        <tr class="dataTableHeadingRow">
-                          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
-                          <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
-                          <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
-                        </tr>
                         <?php
                         $directory_array = create_directory_array($module_directory,$file_extension);
                         $installed_modules = array();
                         foreach ($directory_array as $directory_array) {
                           for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
                             $file = $directory_array[$i];
+                            if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
+                              include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
+                            }
                             include_once($module_directory . $file);
                             $class = substr($file, 0, strrpos($file, '.'));
                             if (xtc_class_exists($class)) {
@@ -305,21 +324,26 @@ if (xtc_not_null($action) && !$box) {
                               if ($module->check() > 0 && !$installed) {
                                 $installed = true;
                                 ?>
-                                <tr class="dataTableHeadingRow">
+                                <tr class="dataTableHeadingRow sub">
                                   <td colspan="3" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
+                                </tr>
+                                <tr class="dataTableHeadingRow">
+                                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
+                                  <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
+                                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
                                 </tr>
                                 <?php
                               } elseif ($module->check() < 1 && !$deinstalled && $installed) {
                                 $deinstalled = true;
                                 ?>
                                 <tr><td colspan="3" style="height:35px;">&nbsp;</td></tr>
+                                <tr class="dataTableHeadingRow sub">
+                                  <td colspan="3" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
+                                </tr>
                                 <tr class="dataTableHeadingRow">
                                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
                                   <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
                                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
-                                </tr>
-                                <tr class="dataTableHeadingRow">
-                                  <td colspan="3" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
                                 </tr>
                                 <?php
                               }
@@ -366,7 +390,7 @@ if (xtc_not_null($action) && !$box) {
                         }
                         ?>
                       </table>
-                      <div class="smallText pdg2"><?php echo TEXT_MODULE_DIRECTORY . ' admin/' . $module_directory; ?></div>
+                      <div class="smallText pdg2"><?php echo TEXT_MODULE_DIRECTORY . $module_directory_include; ?></div>
                     </td>
                     <?php
                 }
@@ -381,6 +405,9 @@ if (xtc_not_null($action) && !$box) {
                       $heading = array();
                       $contents = array();
                       $class = basename($module_class);
+                      if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . '.php')) {
+                        include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . '.php');
+                      }
                       include($module_directory . $class . '.php');
                       if (xtc_class_exists($class)) {
                         $module = new $class();
@@ -389,6 +416,12 @@ if (xtc_not_null($action) && !$box) {
                       }
                     }
                     $keys = '';
+                    
+                    reset($mInfo->keys_dispnone);
+                    while (list($key, $value) = each($mInfo->keys_dispnone)) {
+                      unset($mInfo->keys[$value]);
+                    }
+                    
                     reset($mInfo->keys);
                     while (list($key, $value) = each($mInfo->keys)) {
                       $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
@@ -402,7 +435,7 @@ if (xtc_not_null($action) && !$box) {
                     }
                     $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=save','post'));
+                    $contents = array('form' => (isset($mInfo->properties['form_edit']) ? $mInfo->properties['form_edit'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=save','post')));
                     $contents[] = array('text' => $keys);
                     // display module fields
                     $contents[] = $module->display();                          
@@ -410,7 +443,7 @@ if (xtc_not_null($action) && !$box) {
 
                 case 'restore':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=restoreconfirm'));
+                    $contents = array ('form' => (isset($mInfo->properties['form_restore']) ? $mInfo->properties['form_restore'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=restoreconfirm')));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_RESTORE);
                     if (isset($mInfo->properties['restore']) && count($mInfo->properties['restore']) > 0) {
                       foreach($mInfo->properties['restore'] as $key) {
@@ -421,7 +454,7 @@ if (xtc_not_null($action) && !$box) {
                     break;
                 case 'backup':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=backupconfirm'));
+                    $contents = array ('form' => (isset($mInfo->properties['form_backup']) ? $mInfo->properties['form_backup'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=backupconfirm')));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_BACKUP);
                     if (isset($mInfo->properties['backup']) && count($mInfo->properties['backup']) > 0) {
                       foreach($mInfo->properties['backup'] as $key) {
@@ -432,7 +465,7 @@ if (xtc_not_null($action) && !$box) {
                     break;
                 case 'remove':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=removeconfirm'));
+                    $contents = array ('form' => (isset($mInfo->properties['form_remove']) ? $mInfo->properties['form_remove'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=removeconfirm')));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_REMOVE);
                     if (isset($mInfo->properties['remove']) && count($mInfo->properties['remove']) > 0) {
                       foreach($mInfo->properties['remove'] as $key) {
@@ -444,7 +477,7 @@ if (xtc_not_null($action) && !$box) {
 
                   default:
                     if (isset($mInfo) && is_object($mInfo)) {
-                      $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
+                      $heading[] = array('text' => '<b>' . $mInfo->title . ($mInfo->status > 1 ? ' '.sprintf(MULTIPLE_INSTALLATION,$mInfo->status) : '') . '</b>');
                       if ($mInfo->status != '0') {
                         $keys = '';
                         reset($mInfo->keys);
@@ -467,7 +500,7 @@ if (xtc_not_null($action) && !$box) {
                           }
                           $keys .= '<br /><br />';
                         }
-                        $btn_edit = isset($mInfo->properties['btn_edit']) && trim($mInfo->properties['btn_edit']) != '' ? $mInfo->properties['btn_edit'] : BUTTON_START;
+                        $btn_edit = isset($mInfo->properties['btn_edit']) && trim($mInfo->properties['btn_edit']) != '' ? $mInfo->properties['btn_edit'] : (($set == 'system') ? BUTTON_EDIT : BUTTON_START);
                         $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                         $contents[] = array('align' => 'center', 'text' => (!isset($mInfo->properties['process_key']) || (isset($mInfo->properties['process_key']) && $mInfo->properties['process_key'] == 1)
                                                                              ? '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . $btn_edit . '</a>'

@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   Modified - community made shopping
+   modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2013 Modified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -22,7 +22,11 @@ if (($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENA
   if ($_SESSION['SESSION_SSL_ID'] != $ssl_session_id) {
     xtc_session_recreate();
     xtc_session_destroy();
-    xtc_redirect(xtc_href_link(FILENAME_SSL_CHECK));
+    if (defined('RUN_MODE_ADMIN')) {
+      xtc_redirect(xtc_catalog_href_link('ssl_check.php'));
+    } else {
+      xtc_redirect(xtc_href_link(FILENAME_SSL_CHECK));
+    }
   }
 }
 
@@ -36,7 +40,11 @@ if (SESSION_CHECK_USER_AGENT == 'True') {
   } elseif ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
     xtc_session_recreate();
     xtc_session_destroy();
-    xtc_redirect(xtc_href_link(FILENAME_LOGIN));
+    if (defined('RUN_MODE_ADMIN')) {
+      xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
+    } else {
+      xtc_redirect(xtc_href_link(FILENAME_LOGIN));
+    }
   }
 }
 
@@ -48,7 +56,11 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
   } elseif ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
     xtc_session_recreate();
     xtc_session_destroy();
-    xtc_redirect(xtc_href_link(FILENAME_LOGIN));
+    if (defined('RUN_MODE_ADMIN')) {
+      xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
+    } else {
+      xtc_redirect(xtc_href_link(FILENAME_LOGIN));
+    }
   }
 }
 

@@ -21,6 +21,7 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/Configurator.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ShopAddOns.php');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
 include_once(DIR_MAGNALISTER_INCLUDES.'lib/configFunctions.php');
 require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/eBayShippingDetailsProcessor.php');
@@ -36,7 +37,7 @@ function renderAuthError($authError) {
 	}
 	# schreib in die Shop-DB dass Token nicht gueltig
 	removeDBConfigValue('ebay.token', $_MagnaSession['mpID']);
-	unset($magnaConfig['db'][$mpID]['ebay.token']);
+	unset($magnaConfig['db'][$_MagnaSession['mpID']]['ebay.token']);
 	removeDBConfigValue('ebay.authed', $_MagnaSession['mpID']);
     return '<p class="errorBox">
      	<span class="error bold larger">'.ML_ERROR_LABEL.':</span>
@@ -240,7 +241,7 @@ if (array_key_exists('conf', $_POST)) {
 
 	unset($currencyError);
 	$sp = new SimplePrice();
-	if ($auth['state'] && !$sp->currencyExists($_POST['conf']['ebay.currency'])) {
+	if ($auth['state'] && isset($_POST['conf']['ebay.currency']) && !$sp->currencyExists($_POST['conf']['ebay.currency'])) {
 		//removeDBConfigValue('ebay.validconfig', $_MagnaSession['mpID']);
 		$boxes .= '<p class="errorBox">'.sprintf(
 			ML_GENERIC_ERROR_CURRENCY_NOT_IN_SHOP,
@@ -281,43 +282,48 @@ if ($nSite !== null) {
 	$form['ebayaccount']['fields']['currency']['values'] = $curVal;
 	$form['ebayaccount']['fields']['site']['ajaxlinkto']['initload'] = false;
 }
+#echo var_dump_pre($auth, '$auth');
+
 //$auth['state'] = false;
 if ($auth['state']) {
 	$payment = geteBayPaymentOptions();
 	if (!is_array($payment)) {
 		$auth['state'] = false;
 		setDBConfigValue('ebay.authed', $_MagnaSession['mpID'], $auth, true);
+		
+	} else {
+		#$form['listingdefaults']['fields']['paymentmethod']['values'] = $payment;
+		$form['payment']['fields']['paymentmethod']['values'] = $payment;
+	
+		$shippingprofiles = geteBayShippingDiscountProfiles();
+		$form['shipping']['fields']['shippingprofilelocal']['values'] = $shippingprofiles;
+		$form['shipping']['fields']['shippingprofileinternational']['values'] = $shippingprofiles;
 	}
-	#$form['listingdefaults']['fields']['paymentmethod']['values'] = $payment;
-	$form['payment']['fields']['paymentmethod']['values'] = $payment;
-
-	$shippingprofiles = geteBayShippingDiscountProfiles();
-	$form['shipping']['fields']['shippingprofilelocal']['values'] = $shippingprofiles;
-	$form['shipping']['fields']['shippingprofileinternational']['values'] = $shippingprofiles;
 }
 
 if (!$auth['state']) {
+	$form = array('ebayaccount' => $form['ebayaccount']);
 	if (tokenAvailable()) {
 		$expires = getDBConfigValue('ebay.token.expires', $_MagnaSession['mpID'], '');
 		if (is_datetime($expires) && ($expires < date('Y-m-d H:i:s'))) {
 			$form = array ('ebayaccount' => $form['ebayaccount']);
 			unset($form['ebayaccount']['fields']['currency']);
 			$boxes .= '<p class="noticeBox">'.ML_EBAY_TEXT_TOKEN_INVALID.'</p>';
-		} else {
-			$auth['state'] = true;
-			$auth['expire'] = time() + 60 * 15;
-			setDBConfigValue('ebay.authed', $_MagnaSession['mpID'], $auth, true);
 		}
 	} else {
-		$form = array('ebayaccount' => $form['ebayaccount']);
-		unset($form['ebayaccount']['fields']['currency']);
 		$boxes .= '<p class="successBoxBlue">'.ML_EBAY_TEXT_TOKEN_NOT_AVAILABLE_YET.'</p>';
 	}
-}
-if ($auth['state']) {
+	$form = array('ebayaccount' => $form['ebayaccount']);
+	unset($form['ebayaccount']['fields']['currency']);
+	
+} else {
 	$auth['expire'] = time() + 60 * 15;
 	setDBConfigValue('ebay.authed', $_MagnaSession['mpID'], $auth, true);
-
+	// renderAuthError might have removed 'ebay.token'. But the token is there and valid at this point.
+	// Call tokenAvailable() again to set this config value.
+	if (getDBConfigValue('ebay.token', $_MagnaSession['mpID'], '') !== '__saved__') {
+		tokenAvailable();
+	}
 	#if (!is_array($form['listingdefaults']['fields']['paymentmethod']['values'])) {
 	#	$form['listingdefaults']['fields']['paymentmethod']['values'] = geteBayPaymentOptions();
 	#}
@@ -420,6 +426,13 @@ if ($auth['state']) {
 	if (false === getDBConfigValue('ebay.updateable.orderstatus', $_MagnaSession['mpID'], false)) {
 		setDBConfigValue('ebay.updateable.orderstatus', $_MagnaSession['mpID'], array($form['import']['fields']['openstatus']['default']));
 	}
+
+	# nur bezahlte importieren: Felder entspr. (wird über die Einstellung gesteuert, aber wg der Optik)
+	if (getDBConfigValue($mp.'.order.importonlypaid', $_MagnaSession['mpID'], false) === 'true') {
+		setDBConfigValue('ebay.orderstatus.closed', $_MagnaSession['mpID'], MagnaDB::gi()->fetchArray('
+            SELECT DISTINCT orders_status_id FROM '.TABLE_ORDERS_STATUS, true), true);
+		setDBConfigValue('ebay.updateable.orderstatus', $_MagnaSession['mpID'], array(), true);
+	}
 	mlGetOrderStatus($form['ordersync']['fields']['updateablestatus']);
 	
 	# Bestellstatus-Sync
@@ -464,6 +477,12 @@ if ($auth['state']) {
 	foreach ($carriers as $carKey => $carName) {
 		$form['orderSyncState']['fields']['carrier']['values'][$carKey] = $carName;
 	}
+
+	// only show matching options if booked
+	if (!ML_ShopAddOns::mlAddOnIsBooked('EbayProductIdentifierSync')) {
+		unset($form['stocksync']['fields']['propertiesMatching']);
+	}
+
 }
 
 if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
@@ -529,4 +548,51 @@ $('input[id="conf_ebay.usePrefilledInfo_val"]').change(function() {
 	});
 });
 /*]]>*/</script><?php
+?><script>/*<!CDATA[*/
+if ($('input[id="conf_ebay.order.importonlypaid_true"]').attr('checked') == 'checked') {
+    	$('select[id="config_ebay_orderstatus_closed"]').prop('disabled', true);
+    	$('select[id="config_ebay_orderstatus_paid"]').prop('disabled', true);
+    	$('select[id="config_ebay_updateable_orderstatus"]').prop('disabled', true);
+    	$('input[id="conf_ebay.update.orderstatus_val"]').prop('checked', false);
+    	$('input[id="conf_ebay.update.orderstatus_val"]').prop('disabled', true);
+}
+$('input[id="conf_ebay.order.importonlypaid_true"]').change(function() {
+    		var rdio = $(this);
+    		if (rdio.attr('checked') != 'checked') return true;
+			rdio.removeAttr('checked');
+			$('input[id="conf_ebay.order.importonlypaid_false"]').attr('checked', 'checked');
+			$('<div></div>').html('<?php echo ML_TEXT_WARNING_EBAY_IMPORT_ONLY_PAID_ORDERS ?>').jDialog({
+				title: '<?php echo ML_TITLE_EBAY_IMPORT_ONLY_PAID_ORDERS ?>',
+				buttons: {
+					'<?php echo ML_BUTTON_LABEL_NO; ?>': function() {
+						jQuery(this).dialog('close');
+					},
+					'<?php echo ML_BUTTON_LABEL_YES; ?>': function() {
+						$('input[id="conf_ebay.order.importonlypaid_false"]').removeAttr('checked');
+						rdio.attr('checked', 'checked');
+    					$('select[id="config_ebay_orderstatus_closed"]').prop('disabled', true);
+    					$('select[id="config_ebay_orderstatus_paid"]').prop('disabled', true);
+    					$('select[id="config_ebay_updateable_orderstatus"]').prop('disabled', true);
+    					$('input[id="conf_ebay.update.orderstatus_val"]').prop('checked', false);
+    					$('input[id="conf_ebay.update.orderstatus_val"]').prop('disabled', true);
+						jQuery(this).dialog('close');
+					}
+				}
+			})
+		});
+$('input[id="conf_ebay.order.importonlypaid_false"]').change(function() {
+    		var rdio = $(this);
+    		if (rdio.attr('checked') == 'checked') {
+    			$('select[id="config_ebay_orderstatus_closed"]').prop('disabled', false);
+    			$('select[id="config_ebay_orderstatus_paid"]').prop('disabled', false);
+    			$('select[id="config_ebay_updateable_orderstatus"]').prop('disabled', false);
+    			$('input[id="conf_ebay.update.orderstatus_val"]').prop('disabled', false);
+			}
+					
+		});
+/*]]>*/</script><?php
+	echo $cG->exchangeRateAlert();
+	ML_ShopAddOns::generateConfigPopup('EbayProductIdentifierSync', 'conf_ebay.listingdetails.sync', '#conf_ebay');
+	ML_ShopAddOns::generateConfigPopup('EbayZeroStockAndRelisting', 'conf_ebay.autorelist', '#conf_ebay');
+	ML_ShopAddOns::generateConfigPopup('EbayZeroStockAndRelisting', 'conf_ebay.zerostockontrol', '#conf_ebay');
 }

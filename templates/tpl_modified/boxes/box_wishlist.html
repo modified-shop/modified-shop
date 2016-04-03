@@ -1,0 +1,28 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{config_load file="$language/lang_$language.conf" section="wishlist"}
+{config_load file="lang_`$language`.custom"}
+<div id="wishlist_short"{if $empty == 'false'} style="cursor:pointer"{/if}>
+  {if $empty == 'false'}
+  <a {if $deny_cart neq 'true'}id="toggle_wishlist"{/if} href="{$LINK_WISHLIST}">{#heading_wishlist#} &raquo;<span class="cart_content"><span class="bold_font">{$PRODUCTS}</span> {#text_article#}</span></a>
+  {else}
+  <a {if $deny_cart neq 'true'}id="toggle_wishlist"{/if} href="{$LINK_WISHLIST}">{#heading_wishlist#} &raquo;<span class="cart_content"><span class="bold_font">0</span> {#text_article#}</span></a>
+  {/if}
+</div>
+
+<div class="toggle_wishlist">
+{if $deny_cart neq 'true'}
+  {if $empty == 'false'}
+    <div class="mini"><strong>{#text_full_wishlist#}</strong></div>
+    <ul class="tc_list">
+    {foreach name=aussen item=products_data from=$products}
+      <li><a href="{$products_data.PRODUCTS_LINK}">{$products_data.PRODUCTS_QTY}&nbsp;x&nbsp;{$products_data.PRODUCTS_NAME|truncate:40:"...":true}</a><span class="tc_delete">{$products_data.PRODUCTS_BUTTON_DELETE_CART}</span></li>
+    {/foreach}
+    </ul>
+    <div class="toogle_cart_links">
+      <a href="{$LINK_WISHLIST}"><strong>{#heading_wishlist#}&nbsp;&raquo;</strong></a>
+    </div>    
+  {else}
+    <div class="mini"><strong>{#text_empty_wishlist_box#}</strong></div>
+  {/if}
+{/if}
+</div>

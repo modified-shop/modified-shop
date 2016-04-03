@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: tracking.php 2812 2012-05-02 09:26:43Z gtb-modified $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -43,14 +43,11 @@ if (!isset ($_SESSION['tracking']['browser']))  $_SESSION['tracking']['browser']
 
 // pageview history
 if (!isset($_SESSION['tracking']['pageview_history'])) $_SESSION['tracking']['pageview_history'] = array();
-$i = count($_SESSION['tracking']['pageview_history']);
-if ($i > 6) {
-  array_shift($_SESSION['tracking']['pageview_history']);
-  $_SESSION['tracking']['pageview_history'][6] = $ref_url;
-} else {
-  $_SESSION['tracking']['pageview_history'][$i] = $ref_url;
-  if ($_SESSION['tracking']['pageview_history'][$i] == $_SESSION['tracking']['http_referer']) {
-    array_shift($_SESSION['tracking']['pageview_history']);
-  }
+if (end($_SESSION['tracking']['pageview_history']) != $_SESSION['tracking']['http_referer']) {
+  array_push($_SESSION['tracking']['pageview_history'], $ref_url);
 }
+if (count($_SESSION['tracking']['pageview_history']) > 6) {
+  array_shift($_SESSION['tracking']['pageview_history']); 
+}
+$_SESSION['tracking']['pageview_history'] = array_values($_SESSION['tracking']['pageview_history']);
 ?>

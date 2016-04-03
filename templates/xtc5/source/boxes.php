@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: boxes.php 3409 2012-08-10 12:47:17Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -12,15 +12,6 @@
    
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-
-// BOF - web28 - 2010-10-16 - Prevent duplicate content by SEO language switch
-  require_once (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/inc/clear_language_param.inc.php');
-// EOF - web28 - 2010-10-16 - Prevent duplicate content by SEO language switch  
-// BOF - Tomcraft - 2009-10-27 - Prevent duplicate content, see: http://www.gunnart.de/tipps-und-tricks/doppelten-content-vermeiden-productredirect-fuer-xtcommerce/
-  require_once (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/inc/gunnart_productRedirect.inc.php');
-// EOF - Tomcraft - 2009-10-27 - Prevent duplicate content, see: http://www.gunnart.de/tipps-und-tricks/doppelten-content-vermeiden-productredirect-fuer-xtcommerce/
-
-  define('DIR_WS_BOXES',DIR_FS_CATALOG .'templates/'.CURRENT_TEMPLATE. '/source/boxes/');
 
 //BOC require boxes
 // -----------------------------------------------------------------------------------------
@@ -36,12 +27,22 @@
   require_once(DIR_WS_BOXES . 'infobox.php');
   require_once(DIR_WS_BOXES . 'loginbox.php');
   require_once(DIR_WS_BOXES . 'newsletter.php');
+  if (defined('MODULE_TS_TRUSTEDSHOPS_ID') 
+      && (MODULE_TS_WIDGET == '1'
+          || (MODULE_TS_REVIEW_STICKER != '' && MODULE_TS_REVIEW_STICKER_STATUS == '1'))
+      ) 
+  {
+    require_once(DIR_WS_BOXES . 'trustedshops.php');
+  }
 // -----------------------------------------------------------------------------------------
 //	Nur, wenn Preise sichtbar
 // -----------------------------------------------------------------------------------------
   if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
     require_once(DIR_WS_BOXES . 'add_a_quickie.php');
     require_once(DIR_WS_BOXES . 'shopping_cart.php');
+    if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+      require_once(DIR_WS_BOXES . 'wishlist.php');
+    }
   }
 // -----------------------------------------------------------------------------------------
 //	In der Suche verborgen
@@ -59,13 +60,15 @@
 // -----------------------------------------------------------------------------------------
 //	Produkt-Detailseiten
 // -----------------------------------------------------------------------------------------
-  if ($product->isProduct()) {
+  if ($product->isProduct() === true) {
     //Aktuelle Seite ist Produkt-Detailseite
     require_once(DIR_WS_BOXES . 'manufacturer_info.php');
   } else {
     //Aktuelle Seite ist keine  Produkt-Detailseite
     require_once(DIR_WS_BOXES . 'best_sellers.php');
-    require_once(DIR_WS_BOXES . 'specials.php');
+    if ($_SESSION['customers_status']['customers_status_specials'] == '1') {
+      require_once(DIR_WS_BOXES . 'specials.php');
+    }
   }
 // -----------------------------------------------------------------------------------------
 //	Nur fuer eingeloggte Besucher
@@ -74,7 +77,7 @@
     require_once(DIR_WS_BOXES . 'order_history.php');
   }
 // -----------------------------------------------------------------------------------------
-//	Nur, wenn Bewertungen erlaubt
+//	Nur, wenn Rezensionen erlaubt
 // -----------------------------------------------------------------------------------------
   if ($_SESSION['customers_status']['customers_status_read_reviews'] == '1') {
     require_once(DIR_WS_BOXES . 'reviews.php');

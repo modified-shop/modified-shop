@@ -2,6 +2,7 @@
 {config_load file="$language/lang_$language.conf" section="print_order"}
 {config_load file="$language/lang_$language.conf" section="product_info"}
 <h1>{#heading_history_info#}</h1>
+{if $info_message}<div class="{if isset($smarty.get.info) && $smarty.get.info == '1'}info{else}error{/if}message">{$info_message}</div>{/if}
 <p>{$BUTTON_PRINT}&nbsp;{$BUTTON_BACK}</p>
 <div class="highlightbox">
   <h1>{#text_oid#}{$ORDER_NUMBER} ({$ORDER_STATUS})</h1>
@@ -30,10 +31,14 @@
   {/if}
   <h2>{#title_history#}:</h2>
   <p>{$HISTORY_BLOCK}</p>
-  {if $TRACKING_BLOCK}
-  <h2>{#title_tracking_history#}:</h2>
-  <p>{$TRACKING_BLOCK}</p>
-  {/if}
+  {if count($ORDER_TRACKING) > 0}
+  <h2>{#label_tracking#}</h2>
+  <p>
+  {foreach name=aussen item=tracking_data from=$ORDER_TRACKING}
+    <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a><br />
+  {/foreach}
+  </p>
+  {/if}  
   <h2>{#text_products#}</h2>
   <table class="accounthistoryinfoorderdetails" width="100%" border="0" cellspacing="0" cellpadding="4">
   <tr class="header">

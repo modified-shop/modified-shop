@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: split_page_results.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -24,10 +24,10 @@
     var $number_of_rows_per_page;
 
     // class constructor
-    function splitPageResults($query, $page, $max_rows, $count_key = '*') {
+    function __construct($query, $page, $max_rows, $count_key = '*') {
       $this->sql_query = $query;
 
-      if (empty($page) || !is_numeric($page)) $page = 1;
+      if (empty($page) || !is_numeric($page) || $page < 0) $page = 1;
       $this->current_page_number = $page;
 
       $this->number_of_rows_per_page = $max_rows;

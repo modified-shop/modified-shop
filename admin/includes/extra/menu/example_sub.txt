@@ -1,0 +1,51 @@
+<?php
+# MUSTER für DATEI in admin/includes/extra_menu - Dateiname 01_example.php
+# Damit ist es moeglich das Adminmenue mit weiteren Eintraegen beliebig zu ergaenzen
+# Die neuen Menueeintaege werden unten an die bestehenden Eintraege hinzugefuegt
+# Die Reihenfolge der neuen Einträge kann mit einer vorangestellten Nummer im Dateinamen gesteuert werden
+
+defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
+//Sprachabhaengiger Menueeintrag, kann fuer weitere Sprachen ergaenzt werden
+switch ($_SESSION['language_code']) {
+  case 'de':
+    define('MENU_NAME_EXAMPLE_MAIN','Beispiel');
+    define('MENU_NAME_EXAMPLE_SUB1','Beispiel1');
+    define('MENU_NAME_EXAMPLE_SUB2','Beispiel2');
+    break;
+  default:
+    define('MENU_NAME_EXAMPLE_MAIN','Example');
+    define('MENU_NAME_EXAMPLE_SUB1','Example1');
+    define('MENU_NAME_EXAMPLE_SUB2','Example2');
+    break;
+}
+
+//BOX_HEADING_TOOLS = Name der box in der der neue Menueeintrag erscheinen soll
+//MENU_NAME_EXAMPLE_MAIN = Name Hauptmenuepunkt
+
+$add_contents[BOX_HEADING_TOOLS][MENU_NAME_EXAMPLE_MAIN][] = array(
+    'admin_access_name' => 'example',   //Eintrag fuer Adminrechte
+    'filename' => 'example.php',        //Dateiname der neuen Admindatei
+    'boxname' => MENU_NAME_EXAMPLE_MAIN,     //Anzeigename im Menue
+    'parameters' => '',                 //zusaetzliche Parameter z.B. 'set=export'
+    'ssl' => '',                         //SSL oder NONSSL, kein Eintrag = NONSSL
+    'has_subs' => 1                     //wenn Menueeintrag Unterpunkte hat
+  );
+
+
+$add_contents[BOX_HEADING_TOOLS][MENU_NAME_EXAMPLE_MAIN][] = array(
+    'admin_access_name' => 'example1',
+    'filename' => 'example1.php',
+    'boxname' => MENU_NAME_EXAMPLE_SUB1,
+    'parameters' => '',
+    'ssl' => ''
+  );
+
+
+$add_contents[BOX_HEADING_TOOLS][MENU_NAME_EXAMPLE_MAIN][] = array(
+    'admin_access_name' => 'example2',
+    'filename' => 'example2.php',
+    'boxname' => MENU_NAME_EXAMPLE_SUB2,
+    'parameters' => '',
+    'ssl' => ''
+  );

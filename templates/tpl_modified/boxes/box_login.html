@@ -1,0 +1,18 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{config_load file="lang_`$language`.custom"}
+{if isset($FORM_ACTION) && $FORM_ACTION != ''}
+  <div class="box1">
+    <div class="box_header">{#heading_login#}</div>
+    <div class="box_line"></div>
+    {$FORM_ACTION}
+    <p class="box_sub">{#text_email#}:</p>
+    {$FIELD_EMAIL}
+    <p class="box_sub">{#text_pwd#}:</p>
+    {$FIELD_PWD}
+    <div class="box_sub_button cf">
+      <a href="{$LINK_LOST_PASSWORD}">{#text_password_forgotten#}</a>
+      {$BUTTON}
+    </div>
+    {$FORM_END}
+  </div>
+{/if}

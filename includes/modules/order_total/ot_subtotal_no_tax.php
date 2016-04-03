@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: ot_subtotal_no_tax.php 3664 2012-09-21 16:09:38Z web28 $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -21,7 +21,7 @@
 
     var $title, $output;
 
-    function ot_subtotal_no_tax() {
+    function __construct() {
     	global $xtPrice;
       $this->code = 'ot_subtotal_no_tax';
       $this->title = MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_TITLE;
@@ -35,11 +35,23 @@
 
     function process() {
       global $order, $xtPrice;
+      
+      // merchant
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-        //web28 - $order->info['total'] ist Nettosumme, enthält bereits Rabatte und Versandkosten und kann direkt übernommen werden
         $this->output[] = array('title' => $this->title . ':',
                                 'text' => '<strong>' . $xtPrice->xtcFormat($order->info['total'], true).'</strong>',
                                 'value' => $xtPrice->xtcFormat($order->info['total'], false));
+      }
+      
+      // default customer
+      elseif ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0 && $xtPrice->xtcRemoveCurr($order->info['total']) >= $_SESSION['customers_status']['customers_status_show_tax_total']) {
+        
+        // calculate notax
+        $sub_total_price = $order->info['total']-$order->info['tax'];
+        
+        $this->output[] = array('title' => $this->title . ':',
+                                'text' => '<b>' . $xtPrice->xtcFormat($sub_total_price, true).'</b>',
+                                'value' => $xtPrice->xtcFormat($sub_total_price, false));
       }
     }
 
@@ -58,7 +70,7 @@
 
     function install() {
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS', 'true', '6', '1','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER', '4','6', '2', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER', '40','6', '2', now())");
     }
 
     function remove() {

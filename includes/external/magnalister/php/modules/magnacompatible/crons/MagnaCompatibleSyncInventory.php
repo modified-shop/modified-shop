@@ -349,7 +349,8 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 	final protected function addToBatch($data) {
 		$mpID = $this->mpID;
 		$marketplace = $this->marketplace;
-		/* {Hook} "SyncInventory_UpdateItem": Runs during the inventory synchronization from your shop to the marketplace.<br>
+		/* {Hook} "SyncInventory_UpdateItem": Runs at the end of an item synchronization. Here you can add additional data to the item that
+			   should be synchronized or change the calculated data.<br>
 			   Variables that can be used: 
 			   <ul><li>$this->mpID: The ID of the marketplace.</li>
 			       <li>$this->marketplace: The name of the marketplace.</li>
@@ -391,6 +392,23 @@ if (($this->marketplace == 'amazon') && ($this->cItem['SKU'] == 'blabla123')) {
 				? $this->cItem['ItemTitle']
 				: 'unknown'
 			);
+		
+		/* {Hook} "SyncInventory_PreUpdateItem": Runs at the beginning of an item synchronization. Here you can try to fix the identification of
+			   the item to make sure it gets processed in case the SKU can not be found in the first try.<br>
+			   Variables that can be used: 
+			   <ul><li>$this->mpID: The ID of the marketplace.</li>
+			       <li>$this->marketplace: The name of the marketplace.</li>
+			       <li>$this->cItem (array): The current product from the marketplaces inventory including some identification information.
+			           <ul><li>SKU: Article number of marketplace</li>
+			               <li>pID: products_id of product</li>
+			               <li>aID: attributes_id of product</li></ul>
+			       </li>
+			   </ul>
+			   <p>Notice: In case the identification of the item was successfull the value of $this->cItem['pID'] is > 0.</p>
+		*/
+		if (($hp = magnaContribVerify('SyncInventory_PreUpdateItem', 1)) !== false) {
+			require($hp);
+		}
 		
 		if ((int)$this->cItem['pID'] <= 0) {
 			$this->log("\n".

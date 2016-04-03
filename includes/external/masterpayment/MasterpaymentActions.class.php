@@ -95,23 +95,8 @@ class MasterpaymentActions
 	
 					if ($check_result['masterpayment_status'] != 1) 
 					{
-					
-						if (STOCK_LIMITED == 'true') 
-						{
-							$order_query = xtc_db_query("select products_id, products_quantity from ".TABLE_ORDERS_PRODUCTS." where orders_id = '".xtc_db_input($order_id)."'");
-			
-							while ($order = xtc_db_fetch_array($order_query)) 
-							{
-								xtc_db_query("update ".TABLE_PRODUCTS." set products_quantity = products_quantity + ".$order['products_quantity'].", products_ordered = products_ordered - ".$order['products_quantity']." where products_id = '".$order['products_id']."'");
-							}
-						}
-					
-						xtc_db_query('delete from ' . TABLE_ORDERS . ' where orders_id = "' . (int)$order_id . '"');
-						xtc_db_query('delete from ' . TABLE_ORDERS_TOTAL . ' where orders_id = "' . (int)$order_id . '"');
-						xtc_db_query('delete from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '"');
-						xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS . ' where orders_id = "' . (int)$order_id . '"');
-						xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
-						xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
+            require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+            xtc_remove_order((int)$order_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
 					} else {					
 						xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'NONSSL'));	
 						exit();				

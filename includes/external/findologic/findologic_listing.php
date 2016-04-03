@@ -11,23 +11,10 @@
    ---------------------------------------------------------------------------------------*/
 
 $module_smarty = new Smarty;
-$module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
-$result = true;
+$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
-// include needed functions
-require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
-require_once (DIR_FS_INC . 'xtc_hide_session_id.inc.php');
-
-// fsk18 lock
-$fsk_lock = '';
-if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-  $fsk_lock = ' AND p.products_fsk18!=1';
-}
-// group check
-$group_check = '';
-if (GROUP_CHECK == 'true') {
-  $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-}
+$plain_content = array();
+$module_content = array();
 
 $listing_sql = "SELECT p.*,
                        pd.products_name,
@@ -35,29 +22,40 @@ $listing_sql = "SELECT p.*,
                        pd.products_short_description
                   FROM ".TABLE_PRODUCTS." p
                   JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                    ON p.products_id = pd.products_id AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                       ON p.products_id = pd.products_id 
+                          AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                  WHERE p.products_status = '1'
                    AND p.products_id IN ('".$products_id."')   
-                       ".$group_check."
-                       ".$fsk_lock;
+                       ".PRODUCTS_CONDITIONS_P;
 
 $listing_query = xtc_db_query($listing_sql);
-$module_content = array ();
-$category = array();
 
+$result = false;
 if (xtc_db_num_rows($listing_query) > 0) {
-
-  $rows = 0;
   while ($listing = xtc_db_fetch_array($listing_query, true)) {
-    $rows ++;
-    $module_content[] =  $product->buildDataArray($listing);
+    $plain_content[$listing['products_id']] =  $product->buildDataArray($listing);
   }
-} else {
-  // no product found
-  $result = false;
+  $result = true;
+
+  // SORT
+  $sorting_id = explode("', '", $products_id);
+  foreach ($sorting_id as $key) {
+    $module_content[] = $plain_content[$key];
+  }
+  unset($plain_content);
 }
 
-if ($result != false) {
+if (($count_module = count($module_content)) != ($count_result = count($product_id_array))) {
+  $empty = array('products_image' => 'no_image.gif',
+                 'products_name' => 'Artikel existiert nicht mehr');
+  for ($i=$count_module; $i<$count_result; $i++) {
+    $module_content[] = $product->buildDataArray($empty);
+  }
+  $result = true;
+}
+
+
+if ($result === true) {
   $files = array ();
   if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/')) {
     while (($file = readdir($dir)) !== false) {
@@ -77,7 +75,7 @@ if ($result != false) {
   $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$files[0]);
   $smarty->assign('main_content', $module);
 } else {
-  $error = TEXT_PRODUCT_NOT_FOUND;
+  $site_error = TEXT_PRODUCT_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 }
 ?>

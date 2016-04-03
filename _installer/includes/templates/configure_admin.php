@@ -31,7 +31,7 @@ $file_contents =
 //BOF - web28 - 2010.02.18 - STRATO ROOT PATCH
 '  define(\'DIR_FS_DOCUMENT_ROOT\', \'' . DIR_FS_DOCUMENT_ROOT . '\'); // where the pages are located on the server' . PHP_EOL .
 '  define(\'DIR_WS_ADMIN\', \'' . $_POST['DIR_WS_CATALOG'] .'admin/' . '\'); // absolute path required' . PHP_EOL .
-'  define(\'DIR_FS_ADMIN\', \'' . DIR_FS_DOCUMENT_ROOT.'admin/' . '\'); // absolute pate required' . PHP_EOL .
+'  define(\'DIR_FS_ADMIN\', \'' . DIR_FS_DOCUMENT_ROOT .'admin/' . '\'); // absolute pate required' . PHP_EOL .
 '  define(\'DIR_WS_CATALOG\', \'' . $_POST['DIR_WS_CATALOG'] . '\'); // absolute path required' . PHP_EOL .
 '  define(\'DIR_FS_CATALOG\', \'' . DIR_FS_DOCUMENT_ROOT . '\'); // absolute path required' . PHP_EOL .
 //EOF - web28 - 2010.02.18 - STRATO ROOT PATCH
@@ -57,10 +57,6 @@ $file_contents =
 '  define(\'DIR_FS_CATALOG_MODULES\', DIR_FS_CATALOG . \'includes/modules/\');' . PHP_EOL .
 '  define(\'DIR_FS_BACKUP\', DIR_FS_ADMIN . \'backups/\');' . PHP_EOL .
 '  define(\'DIR_FS_INC\', DIR_FS_CATALOG . \'inc/\');' . PHP_EOL .
-//BOF Add EXTERNAL-directories to installer
-'  define(\'DIR_WS_EXTERNAL\', DIR_WS_CATALOG . \'includes/external/\');' . PHP_EOL .
-'  define(\'DIR_FS_EXTERNAL\', DIR_FS_CATALOG . \'includes/external/\');' . PHP_EOL .
-//EOF Add EXTERNAL-directories to installer
 '  define(\'DIR_WS_FILEMANAGER\', DIR_WS_MODULES . \'fckeditor/editor/filemanager/browser/default/\');' . PHP_EOL .
 '' . PHP_EOL .
 '// define our database connection' . PHP_EOL .

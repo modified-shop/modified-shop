@@ -1,0 +1,14 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{config_load file="lang_`$language`.custom"}
+<div class="box1">
+  <div class="box_header">
+    <span class="show_title">{#heading_add_a_quickie#}</span> 
+  </div>
+  <div class="box_line"></div>
+  <p class="midi lineheight16">{#text_quickie#}</p>
+  {$FORM_ACTION}
+  <div class="quickie_form cf">
+    {$INPUT_FIELD}{$SUBMIT_BUTTON}
+  </div>
+  {$FORM_END}
+</div>

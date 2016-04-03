@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: table_block.php 1797 2011-02-12 15:31:48Z franky-n-xtcm $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -15,81 +15,108 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-  defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   class tableBlock {
-    protected static $table_border = '0';
-    protected static $table_width = '100%';
-    protected static $table_cellspacing = '0';
-    protected static $table_cellpadding = '2';
-    protected static $table_parameters = '';
-    protected static $table_row_parameters = '';
-    protected static $table_data_parameters = '';
-
-    // cYbercOsmOnauT - 2011-02-07 - Fallback method for old calls
-    public function tableBlock($contents = '') {
-      return self::constructor($contents);
-    }
-
-    protected static function constructor($contents) {
+    public $table_border = '0';     //deprecated -> removed
+    public $table_width = '100%';   //deprecated -> removed
+    public $table_cellspacing = '0';//deprecated -> removed
+    public $table_cellpadding = '2';//deprecated -> removed
+    public $table_parameters = '';
+    public $table_row_parameters = '';
+    public $table_data_parameters = '';
+    
+    public function createBlock($contents) {
       $tableBox_string = '';
+
       $form_set = false;
       if (isset($contents['form'])) {
         $tableBox_string .= $contents['form'] . "\n";
         $form_set = true;
-        array_shift($contents);
+        xtc_array_shift($contents);
       }
+
       $tableBox_string .= '<table class="contentTable"';
-      if (self::$table_parameters != '')
-        $tableBox_string .= ' ' . self::$table_parameters; //additional css styles
+      if ($this->table_parameters != '') {
+        $tableBox_string .= ' ' . $this->table_parameters;
+      }
       $tableBox_string .= '>' . "\n";
-      for ($i = 0; $i < sizeof($contents); $i++) {
+
+      for ($i = 0, $n = sizeof($contents); $i < $n; $i++) {
         $tableBox_string .= '  <tr';
-        if (self::$table_row_parameters != '')
-          $tableBox_string .= ' ' . self::$table_row_parameters;
-        if (isset($contents[$i]['params']))
-          $tableBox_string .= ' ' . $contents[$i]['params'];
-        $tableBox_string .= '>' . "\n";
-        if (!isset($contents[$i][0]))
-          $contents[$i][0] = '';
-        if (is_array($contents[$i][0])) {
-          for ($x = 0; $i < sizeof($contents[$i]); $x++) {
-            if ($contents[$i][$x]['text']) {
-              $tableBox_string .= '    <td ';
-              if ($contents[$i][$x]['align'] != '')
-                $tableBox_string .= ' style="text-align:' . $contents[$i][$x]['align'] . ';"'; //using css
-              if ($contents[$i][$x]['params']) {
-                $tableBox_string .= ' ' . $contents[$i][$x]['params'];
-              } elseif (self::$table_data_parameters != '') {
-                $tableBox_string .= ' ' . self::$table_data_parameters;
-              }
-              $tableBox_string .= '>';
-              if ($contents[$i][$x]['form'])
-                $tableBox_string .= $contents[$i][$x]['form'];
-              $tableBox_string .= $contents[$i][$x]['text'];
-              if ($contents[$i][$x]['form'])
-                $tableBox_string .= '</form>';
-              $tableBox_string .= '</td>' . "\n";
-            }
-          }
-        } else {
-          $tableBox_string .= '    <td ';
-          if (!isset($contents[$i]['align']))
-            $contents[$i]['align'] = '';
-          if ($contents[$i]['align'] != '')
-            $tableBox_string .= ' style="text-align:' . $contents[$i]['align'] . ';"'; //using css
-          if (isset($contents[$i]['params'])) {
+        if ($this->table_row_parameters != '') 
+            $tableBox_string .= ' ' . $this->table_row_parameters;
+        if (isset($contents[$i]['params'])) 
             $tableBox_string .= ' ' . $contents[$i]['params'];
-          } elseif (self::$table_data_parameters != '') {
-            $tableBox_string .= ' ' . self::$table_data_parameters;
-          }
-          $tableBox_string .= '>' . (isset($contents[$i]['text']) ? $contents[$i]['text'] : '') . '</td>' . "\n";
+        $tableBox_string .= '>' . "\n";
+        if (!isset($contents[$i][0]))   
+            $contents[$i][0] = '';
+        if (is_array($contents[$i][0])) {
+            for ($x = 0, $y = sizeof($contents[$i]); $x < $y; $x++) {
+                if ($contents[$i][$x]['text']) {
+                    $tableBox_string .= '    <td ';
+                    //using css
+                    $this->set_styles($contents[$i][$x]);
+                    $contents[$i][$x]['params'] = $this->contents_param;                        
+                    if (isset($contents[$i][$x]['params']) && $contents[$i][$x]['params'] != '') {
+                        $tableBox_string .= ' ' . $contents[$i][$x]['params'];
+                    } elseif ($this->table_data_parameters != '') {
+                        $tableBox_string .= ' ' . $this->table_data_parameters;
+                    }
+                    $tableBox_string .= '>';
+                    if ($contents[$i][$x]['form']) $tableBox_string .= $contents[$i][$x]['form'];
+                        $tableBox_string .= $contents[$i][$x]['text'];
+                    if ($contents[$i][$x]['form']) $tableBox_string .= '</form>';
+                        $tableBox_string .= '</td>' . "\n";
+                }
+            }
+        } else {
+            $tableBox_string .= '    <td ';
+            //using css
+            $this->set_styles($contents[$i]);
+            $contents[$i]['params'] = $this->contents_param;                        
+            if (isset($contents[$i]['params']) && $contents[$i]['params'] != '') {
+                $tableBox_string .= ' ' . $contents[$i]['params'];
+            } elseif ($this->table_data_parameters != '') {
+                $tableBox_string .= ' ' . $this->table_data_parameters;
+            }
+            $tableBox_string .= '>' . $contents[$i]['text'] . '</td>' . "\n";
         }
+
         $tableBox_string .= '  </tr>' . "\n";
       }
+
       $tableBox_string .= '</table>' . "\n";
-      if ($form_set)
-        $tableBox_string .= '</form>' . "\n";
+
+      if ($form_set) 
+          $tableBox_string .= '</form>' . "\n";
+
       return $tableBox_string;
+    }
+    
+    private function set_styles($contents) 
+    {    
+        $this->contents_param = isset($contents['params']) ? $contents['params'] : '';
+        if (isset($contents['align']) && trim($contents['align']) != '') {  
+            if (isset($contents['params']) && strpos($contents['params'],'text-align') === false) {
+                $contents['params']  = preg_replace("'\s+=\s+'",'=',$contents['params']);
+                if (strpos($contents['params'],'style="') !== false) {
+                    $this->contents_param = str_replace('style="','style="text-align:'.$contents['align'].';',$contents['params']);
+                } else {
+                   $this->contents_param .= ' style="text-align:' . $contents['align'] . ';"';  
+                }
+            } else {
+                $this->contents_param .= ' style="text-align:' . $contents['align'] . ';"'; 
+            }
+        }
+        if ($this->table_data_parameters != '') {
+            $table_data_parameters  = preg_replace("'\s+=\s+'",'=',$this->table_data_parameters);
+            if (strpos($table_data_parameters,'style="') !== false) {
+                $this->contents_param = str_replace('style="','style="text-align:'.$contents['align'].';',$table_data_parameters);
+            } else {
+               $this->contents_param .= ' ' . $this->table_data_parameters;  
+            }            
+        }                
+    
     }
   }
 ?>

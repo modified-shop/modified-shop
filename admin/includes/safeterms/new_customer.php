@@ -32,7 +32,7 @@
 			<p>Sie sind bereits Kunde bei Safeterms.de. Dann richten Sie jetzt das Auto-Update f&uuml;r Rechtstexte von Safeterms f&uuml;r Ihre modified eCommerce Shopsoftware ein.</p>
 			<p>Um die Einrichtung Ihrer Rechtstexte zu starten geben Sie bitte im folgenden Feld Ihren <strong>API Sicherheitsschl&uuml;ssel</strong> ein. Diesen erhalten Sie in Ihrem pers&ouml;nlichen Bereich auf Safeterms.de</p>
 			<p style="margin-top:20px;">Ihr API-Sicherheitsschl&uuml;ssel:</p>
-			<form method="POST">
+			<?php echo xtc_draw_form('customer', FILENAME_SAFETERMS, '', 'post'); ?>
 			<input type="hidden" name="action" value="new_apikey" />
 			<p><input type="text" name="apikey" value="" /></p>
 			<p><input type="submit" style="background-color:#dedede; cursor:pointer" value="Einrichtung starten" /></p>

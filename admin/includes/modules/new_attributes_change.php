@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: new_attributes_change.php 3676 2012-09-26 12:35:43Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -99,6 +99,14 @@
                              );
     //additional values
     $add_data_array = array ('attributes_ean' => xtc_db_prepare_input($_POST[$cv_id . '_ean']));
+    
+    //VPE
+    if (isset($_POST[$cv_id . '_vpe_value'])) {
+        $sql_data_array['attributes_vpe_value'] = xtc_db_prepare_input($_POST[$cv_id .'_vpe_value']);
+    }
+    if (isset($_POST[$cv_id . '_vpe_id'])) {
+        $sql_data_array['attributes_vpe_id'] = xtc_db_prepare_input($_POST[$cv_id .'_vpe_id']);
+    }    
     
     $sql_data_array = xtc_array_merge($sql_data_array, $add_data_array);
     xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES, $sql_data_array);

@@ -14,7 +14,7 @@ class mcp_ebank2pay extends micropayment_method
     var $code = 'mcp_ebank2pay';
     var $url = '/ebank2pay/event';
 
-    function mcp_ebank2pay()
+    function __construct()
     {
         global $order, $language;
         $this->title       = MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE;

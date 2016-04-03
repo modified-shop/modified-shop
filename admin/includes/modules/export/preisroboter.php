@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-$Id$
+$Id: preisroboter.php 2666 2012-02-23 11:38:17Z dokuman $
 
 XT-Commerce - community made shopping
 http://www.xt-commerce.com

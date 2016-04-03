@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: whats_new.php 4583 2013-04-05 15:25:22Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -27,22 +27,16 @@ $box_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_random_select.inc.php');
 
-// query restrictions
-$fsk_lock = ($_SESSION['customers_status']['customers_fsk18_display'] == '0') ? 'AND p.products_fsk18 != 1': '';
-
-$group_check = (GROUP_CHECK == 'true') ? 'AND p.group_permission_'.$_SESSION['customers_status']['customers_status_id'].' = 1' : '';
-
 $current_prd =  (isset($_GET['products_id']) && (int)$_GET['products_id'] > 0) ? 'AND p.products_id != ' . (int)$_GET['products_id'] : '';
 
+$days = '';
 if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
-  $days = "AND p.products_date_added > '".date("Y.m.d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")))."'";
-} else {
-  $days = '';
+  $days = "AND p.products_date_added > '".date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")))."'";
 }
 
 // get random product data
 if ($random_product = xtc_random_select("-- templates/xtc5/source/boxes/whats_new.php
-                                        SELECT distinct
+                                       SELECT distinct
                                               p.products_id,
                                               p.products_image,                                              
                                               p.products_tax_class_id,
@@ -52,15 +46,18 @@ if ($random_product = xtc_random_select("-- templates/xtc5/source/boxes/whats_ne
                                               p.products_price,
                                               pd.products_name
                                          FROM ".TABLE_PRODUCTS." p
-                                    LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
-                                           ON (p.products_id = pd.products_id AND pd.language_id = '".(int) $_SESSION['languages_id']."' AND pd.products_name != '')
-                                    LEFT JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                         JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                           ON p.products_id = pd.products_id 
+                                             AND pd.language_id = ".(int)$_SESSION['languages_id']."
+                                             AND trim(pd.products_name) != ''
+                                         JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                            ON p.products_id = p2c.products_id
-                                    LEFT JOIN ".TABLE_CATEGORIES." c
-                                           ON c.categories_id = p2c.categories_id AND c.categories_status = 1
+                                         JOIN ".TABLE_CATEGORIES." c
+                                           ON c.categories_id = p2c.categories_id 
+                                             AND c.categories_status = 1 
+                                             ".CATEGORIES_CONDITIONS_C."
                                         WHERE p.products_status = 1
-                                          " . $fsk_lock . "
-                                          " . $group_check . "
+                                          " . PRODUCTS_CONDITIONS_P . "
                                           " . $current_prd . "
                                           " . $days . "                                           
                                      ORDER BY p.products_date_added desc

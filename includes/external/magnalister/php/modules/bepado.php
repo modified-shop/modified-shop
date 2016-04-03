@@ -23,4 +23,18 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 defined('MAGNA_DEV_PRODUCTLIST') OR define('MAGNA_DEV_PRODUCTLIST', true);
 require_once('magnacompatible.php');
 
-new MagnaCompatMarketplace($_MagnaSession['currentPlatform']);
+
+class BepadoMarketplace extends MagnaCompatMarketplace {
+	protected function loadAuthKeys() {
+		$this->authConfigKeys = array(
+			$this->marketplace.'.access.MPUsername',
+			$this->marketplace.'.access.MPPassword',
+			$this->marketplace.'.access.ApiKey',
+			$this->marketplace.'.access.ShopId',
+			$this->marketplace.'.access.FtpPassword',
+			$this->marketplace.'.access.FtpUsername',
+		);
+	}
+}
+
+new BepadoMarketplace($_MagnaSession['currentPlatform']);

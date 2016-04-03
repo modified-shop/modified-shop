@@ -1,25 +1,24 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: navigation_history.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    -----------------------------------------------------------------------------------------
-   based on:
+   based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(navigation_history.php,v 1.5 2003/02/12); www.oscommerce.com
-   (c) 2003 nextcommerce (navigation_history.php,v 1.6 2003/08/13); www.nextcommerce.org
-   (c) 2006 XT-Commerce (navigation_history.php 899 2005-04-29)
+   (c) 2002-2003 osCommerce(navigation_history.php,v 1.5 2003/02/12); www.oscommerce.com 
+   (c) 2003	 nextcommerce (navigation_history.php,v 1.6 2003/08/13); www.nextcommerce.org
 
-   Released under the GNU General Public License
+   Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
   class navigationHistory {
     var $path, $snapshot;
 
-    function navigationHistory() {
+    function __construct() {
       $this->reset();
     }
 
@@ -32,11 +31,7 @@
       global $PHP_SELF, $cPath;
 
       $set = 'true';
-      //BOF - DokuMan - 2011-12-19 - precount for performance
-      //for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
-      $n=sizeof($this->path);
-      for ($i=0; $i<$n; $i++) {
-      //EOF - DokuMan - 2011-12-19 - precount for performance
+      for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
         if ( ($this->path[$i]['page'] == basename($PHP_SELF)) ) {
           if (isset($cPath)) {
             if (!isset($this->path[$i]['get']['cPath'])) {
@@ -50,11 +45,7 @@
                 $old_cPath = explode('_', $this->path[$i]['get']['cPath']);
                 $new_cPath = explode('_', $cPath);
 
-                //BOF - DokuMan - 2011-12-19 - precount for performance
-                //for ($j=0, $n2=sizeof($old_cPath); $j<$n2; $j++) {
-                $n2=sizeof($old_cPath);
-                for ($j=0; $j<$n2; $j++) {
-                //EOF - DokuMan - 2011-12-19 - precount for performance
+                for ($j=0, $n2=sizeof($old_cPath); $j<$n2; $j++) {
                   if ($old_cPath[$j] != $new_cPath[$j]) {
                     array_splice($this->path, ($i));
                     $set = 'true';
@@ -117,11 +108,7 @@
     }
 
     function debug() {
-        //BOF - DokuMan - 2011-12-19 - precount for performance
-        //for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
-        $n=sizeof($this->path);
-        for ($i=0; $i<$n; $i++) {
-        //EOF - DokuMan - 2011-12-19 - precount for performance
+      for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
         echo $this->path[$i]['page'] . '?';
         while (list($key, $value) = each($this->path[$i]['get'])) {
           echo $key . '=' . $value . '&';

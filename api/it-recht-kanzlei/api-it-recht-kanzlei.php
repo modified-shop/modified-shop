@@ -11,8 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   chdir('../../');
-  require_once ('includes/application_top.php');
-  error_reporting(0);
+  require_once ('includes/application_top_callback.php');
 
   require_once(DIR_FS_CATALOG.'api/it-recht-kanzlei/classes/class.api_it_recht_kanzlei.php');
   $xml_input = file_get_contents('php://input');

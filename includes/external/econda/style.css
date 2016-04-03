@@ -1,35 +1,22 @@
 /**********************************************************
-First set everything to zero 
-***********************************************************/
-h1,h2,h3,h4,a,th,td.text_box_text,table.text_box,hr,img,span,script,page,head,title,ol,ul,li {
-	margin : 0px;
-	padding: 0px;
-}
-/**********************************************************
 set defaults
 ***********************************************************/
-h1,h2,h3,h4,p,a,th,td.text_box_text,table.text_box,hr,img,span,script,page,head,title {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size:12px;
-	letter-spacing: 0.065em;
-	color:#646464;
-}
-h1{
+tableBody h1{
 	padding-bottom:6px;
 }
-a {
+tableBody a {
 	color:#003c89;
 	text-decoration:none;
 }
-ul{
+tableBody ul{
 	margin-bottom:12px;
 	margin-top:12px;
 }
-li {
+tableBody li {
 	list-style-type: square;
 	margin-left:16px;
 }
-hr{
+tableBody hr{
 	margin:0px;
 	padding:0px;
 	position:absolute;

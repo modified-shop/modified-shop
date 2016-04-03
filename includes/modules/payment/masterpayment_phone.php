@@ -24,7 +24,7 @@ require_once(DIR_FS_CATALOG . 'includes/external/masterpayment/MasterpaymentActi
   class masterpayment_phone extends MasterpaymentActions {
     var $code, $title, $description, $enabled;
 
-    function masterpayment_phone() {
+    function __construct() {
       global $order;
 
       $this->code		 	= 'masterpayment_phone';

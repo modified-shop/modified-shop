@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: sessions.php 3570 2012-08-30 16:15:47Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,13 +16,14 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-   define('SESSION_LIFE_ADMIN_DEFAULT', 7200);
+  define('SESSION_LIFE_ADMIN_DEFAULT', 7200);
 
-   @ini_set("session.gc_maxlifetime", 1440);
-   @ini_set("session.gc_probability", 100);
+  @ini_set("session.gc_maxlifetime", 1440);
+  @ini_set("session.gc_probability", 100);
+  @ini_set('session.cookie_httponly', true);
 
   if (STORE_SESSIONS == 'mysql') {  
-    if (!$SESS_LIFE = get_cfg_var('session.gc_maxlifetime')) {
+    if (!$SESS_LIFE = xtc_get_cfg_var('session.gc_maxlifetime')) {
       $SESS_LIFE = 1440;
     }
     if (defined('SESSION_LIFE_CUSTOMERS')) {
@@ -38,8 +39,7 @@
     }
 
     function _sess_read($key) {
-      $value_query = xtc_db_query("-- includes/functions/sessions.php
-                                   SELECT value
+      $value_query = xtc_db_query("SELECT value
                                      FROM " . TABLE_SESSIONS . "
                                     WHERE sesskey = '" . xtc_db_input($key) . "'
                                       AND expiry > '" . time() . "'");
@@ -48,7 +48,9 @@
       if (isset($value['value']) && $value['value']!='') {
         return base64_decode($value['value']);
       }
-      return '';
+      
+      // prevent wrong session id
+      xtc_session_recreate();
     }
 
     function _sess_write($key, $val) {
@@ -60,42 +62,34 @@
         $flag = 'admin';
       }
       $expiry = time() + (int)$SESS_LIFE;
-      //$value = addslashes($val);
       $value = base64_encode($val);
 
-      $check_query = xtc_db_query("-- includes/functions/sessions.php
-                                   SELECT count(*) as total
-                                     FROM " . TABLE_SESSIONS . "
-                                    WHERE sesskey = '" . xtc_db_input($key) . "'");
-      $total = xtc_db_fetch_array($check_query);
-
-      if ($total['total'] > 0) {
-        return xtc_db_query("-- includes/functions/sessions.php
-                                   UPDATE " . TABLE_SESSIONS . "
-                                SET expiry = '". $expiry ."',
-                                     value = '". xtc_db_input($value) ."',
-                                      flag = '". xtc_db_input($flag) ."'
-                             WHERE sesskey = '". xtc_db_input($key) ."'");
-      } else {
-        $sql_data_array = array('sesskey' => $key,
-                                'expiry'  => (int)$expiry,
-                                'value'   => $value,
-                                'flag'    => $flag
-                               );
-        return xtc_db_perform(TABLE_SESSIONS,$sql_data_array);
-      }
+      return xtc_db_query("REPLACE INTO " . TABLE_SESSIONS . " (sesskey, expiry, value, flag)
+                                 VALUES ('". xtc_db_input($key) ."', '".(int)$expiry."', '".xtc_db_input($value)."', '".xtc_db_input($flag)."')");
     }
 
     function _sess_destroy($key) {
-      return xtc_db_query("-- includes/functions/sessions.php
-                           DELETE FROM " . TABLE_SESSIONS . "
-                            WHERE sesskey = '" . xtc_db_input($key) . "'");
+      return xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($key) . "'");
     }
 
     function _sess_gc($maxlifetime) {
-      xtc_db_query("-- includes/functions/sessions.php
-                    DELETE FROM " . TABLE_SESSIONS . "
-                    WHERE expiry < '" . time() . "'");
+      if (DELETE_GUEST_ACCOUNT == 'true') {
+        $session_query = xtc_db_query("SELECT sesskey,
+                                              value
+                                         FROM " . TABLE_SESSIONS . "
+                                        WHERE expiry < '" . time() . "'");
+        while ($session = xtc_db_fetch_array($session_query)) {
+          $customers = unserialize_session_data(base64_decode($session['value']));
+          if (is_array($customers) && isset($customers['customer_id']) && isset($customers['account_type']) && $customers['account_type'] != '0') {
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$customers['customer_id']."'");
+            xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$customers['customer_id']."'");
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$customers['customer_id']."'");
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$customers['customer_id']."'");
+          }
+        }                                       
+      }
+      xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < '" . time() . "'");
+      
       return true;
     }
 
@@ -201,4 +195,41 @@
                      WHERE session_id = '".xtc_db_input($old_session_id)."'");
     }
   }
+
+  function unserialize_session_data( $session_data ) {
+    //check for suhosin.session.encrypt
+    if (suhosin_check()) return 'ENCRYPTED';
+ 
+    //check for correct session value  
+    if (strpos($session_data, 'customers_status|') === false) $session_data = '';
+   
+    if ($session_data != '') {
+      $variables = array();
+      $a = preg_split( "/(\w+)\|/", $session_data, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
+      for( $i = 0; $i < count( $a ); $i = $i+2 ) {
+        $variables[$a[$i]] = unserialize( $a[$i+1] );
+      }
+      return($variables);
+    }
+    return '';
+  }
+
+  function suhosin_check() {
+    if ( extension_loaded( "suhosin" ) && ini_get( "suhosin.session.encrypt" ) ) {
+      // suhosin is active and suhosin.session.encrypt is On    
+      return true;      
+    }
+    return false;
+  }
+
+  function xtc_get_cfg_var($ini_option){
+    try {
+      $ini_option_value = get_cfg_var($ini_option);
+    } catch (Exception $e) {
+      $ini_option_value = ini_get($ini_option);
+      trigger_error($e->getMessage(), E_WARNING);
+    }       
+    return $ini_option_value;
+  }
+        
 ?>

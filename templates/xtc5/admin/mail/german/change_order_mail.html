@@ -1,7 +1,7 @@
-<table  width="100%" border="0" align="center" cellpadding="4" cellspacing="0">
+<table width="100%" border="0" align="center" cellpadding="4" cellspacing="0">
   <tr>
     <td style="border-bottom: 1px solid; border-color: #cccccc;">
-      <div align="right"><img src="{$logo_path}logo.gif"></div>
+      <div align="right"><img src="{$logo_path}logo.gif" /></div>
     </td>
   </tr>
   <tr>
@@ -18,6 +18,7 @@
         {if $NOTIFY_COMMENTS}
           <br />
           Anmerkungen und Kommentare zu Ihrer Bestellung:
+          <br />
           {$NOTIFY_COMMENTS}
           <br />
         {/if}
@@ -25,12 +26,13 @@
         Neuer Status:
         <b>{$ORDER_STATUS}</b><br />
         <br />
-        {if $PARCEL_COUNT}
+        {if $PARCEL_COUNT > 0}
+          <br /><br />
           Die Sendung besteht aus {$PARCEL_COUNT} Paket(en).<br />
-        {/if}
-        {if $PARCEL_LINK_HTML}
-          <br />Sie können sich über den Zustellstatus durch einen Klick auf die nachstende(n) Paketnummer(n) informieren:<br />
-          {$PARCEL_LINK_HTML}<br />
+          Sie k&ouml;nnen sich &uuml;ber den Zustellstatus durch einen Klick auf die nachstende(n) Paketnummer(n) informieren:<br />
+          {foreach name=aussen item=tracking_data from=$PARCEL_ARRAY}
+            <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a><br />
+          {/foreach}
         {/if}
         Bei Fragen zu Ihrer Bestellung antworten Sie bitte auf diese E-Mail.<br />
       </font>

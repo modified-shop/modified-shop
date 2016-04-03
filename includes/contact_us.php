@@ -13,41 +13,50 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-//included by shop_content.php
+  //included by shop_content.php
 
-  //BOF - DokuMan - 2010-09-06 - contact_us.php language file not needed any more, added constants to main language file
-  //BOF - web28 - 2010-07-17 - move language definition on top
-  //  require (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
-  //EOF - web28 - 2010-07-17 - move language definition on top
-  //EOF - DokuMan - 2010-09-06 - contact_us.php language file not needed any more, added constants to main language file
+  //use contact_us.php language file
+  require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
+  
+  // captcha
+  $use_captcha = array('contact');
+  if (defined('MODULE_CAPTCHA_ACTIVE')) {
+    $use_captcha = explode(',', MODULE_CAPTCHA_ACTIVE);
+  }
+  defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
+  defined('MODULE_CAPTCHA_LOGGED_IN') or define('MODULE_CAPTCHA_LOGGED_IN', 'True');
 
   $error = false;
   if (isset ($_GET['action']) && ($_GET['action'] == 'send')) {
 
-    //BOF - web28 - 2010-07-17 - move language definition on top
-    //require (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
-    //EOF - web28 - 2010-07-17 - move language definition on top
-
-    //BOF - web28 - 2010-04-03 - New error handling for required fileds
     //jedes Feld kann hier auf die gewünschte Bedingung getestet und eine Fehlermeldung zugeordnet werden
-    //BOF error handling
     $err_msg = '';
-    if (!xtc_validate_email(trim($_POST['email']))) $err_msg .= ERROR_EMAIL;
-    if ((strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) || $_SESSION['vvcode']=='') $err_msg .= ERROR_VVCODE;
-    if (trim($_POST['message_body']) == '') $err_msg .= ERROR_MSG_BODY;
-    //EOF error handling
+    if (!xtc_validate_email(trim($_POST['email']))) {
+      $err_msg .= ERROR_EMAIL;
+      $error = true;
+    }
+    
+    if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
+      if ((strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) || $_SESSION['vvcode']=='') {
+        $err_msg .= ERROR_VVCODE;
+        $error = true;
+      }
+    }
+    
+    if (trim($_POST['message_body']) == '') {
+      $err_msg .= ERROR_MSG_BODY;
+      $error = true;
+    }
 
     $smarty->assign('error_message', ERROR_MAIL . $err_msg);
-
-    if ($err_msg != '') $error = true;
+    unset($_SESSION['vvcode']);
 
     //Wenn kein Fehler Email formatieren und absenden
     if (!$error) {
       // Datum und Uhrzeit
-      $datum= date("d.m.Y");
-      $uhrzeit= date("H:i");
+      $datum = date("d.m.Y");
+      $uhrzeit = date("H:i");
 
-      // BOF - Tomcraft - 2009-11-05 - Advanced contact form (additional fields)
       $additional_fields = '';
       if (isset($_POST['company']))  $additional_fields =  EMAIL_COMPANY. $_POST['company'] . "\n" ;
       if (isset($_POST['street']))   $additional_fields .= EMAIL_STREET . $_POST['street'] . "\n" ;
@@ -55,52 +64,52 @@
       if (isset($_POST['city']))     $additional_fields .= EMAIL_CITY . $_POST['city'] . "\n" ;
       if (isset($_POST['phone']))    $additional_fields .= EMAIL_PHONE . $_POST['phone'] . "\n" ;
       if (isset($_POST['fax']))      $additional_fields .= EMAIL_FAX . $_POST['fax'] . "\n" ;
-      // EOF - Tomcraft - 2009-11-05 - Advanced contact form (additional fields)
 
-      // BOF - Tomcraft - 2009-11-05 - Advanced contact form (check for USE_CONTACT_EMAIL_ADDRESS)
-      $use_contact_email_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'USE_CONTACT_EMAIL_ADDRESS'");
-      $use_contact_email = xtc_db_fetch_array($use_contact_email_query);
-      if ($use_contact_email['configuration_value'] == 'true') {
-          $email = trim(CONTACT_US_EMAIL_ADDRESS);
-        $name = CONTACT_US_NAME;
-        $notify =  EMAIL_NOTIFY . "\n\n";
+      if (file_exists(DIR_FS_DOCUMENT_ROOT.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.html') 
+          && file_exists(DIR_FS_DOCUMENT_ROOT.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.txt')
+          ) 
+      {
+        $smarty->assign('language', $_SESSION['language']);
+        $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');    
+        $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+        $smarty->assign('NAME', $_POST['name']);
+        $smarty->assign('EMAIL', $_POST['email']);
+        $smarty->assign('DATE', $datum);
+        $smarty->assign('TIME', $uhrzeit);
+        $smarty->assign('ADDITIONAL_FIELDS', nl2br($additional_fields));
+        $smarty->assign('MESSAGE', nl2br($_POST['message_body']));
+     
+        // dont allow cache
+        $smarty->caching = false;
+     
+        $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.html');
+        $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.txt');
       } else {
-        $email = trim($_POST['email']);
-        $name = $_POST['name'];
-        $notify =  '';
+        $txt_mail = sprintf(EMAIL_SENT_BY, CONTACT_US_NAME, CONTACT_US_EMAIL_ADDRESS, $datum , $uhrzeit) . "\n" .
+                "--------------------------------------------------------------" . "\n" .
+                EMAIL_NAME. $_POST['name'] . "\n" .
+                EMAIL_EMAIL. trim($_POST['email']) . "\n" .
+                $additional_fields .
+                "\n".EMAIL_MESSAGE."\n ". $_POST['message_body'] . "\n";
+        $html_mail = nl2br($txt_mail);
       }
-      // EOF - Tomcraft - 2009-11-05 - Advanced contact form (check for USE_CONTACT_EMAIL_ADDRESS)
+      
+      xtc_php_mail(CONTACT_US_EMAIL_ADDRESS,
+                   CONTACT_US_NAME,
+                   CONTACT_US_EMAIL_ADDRESS,
+                   CONTACT_US_NAME,
+                   CONTACT_US_FORWARDING_STRING,
+                   trim($_POST['email']),
+                   $_POST['name'],
+                   '',
+                   '',
+                   CONTACT_US_EMAIL_SUBJECT,
+                   $html_mail,
+                   $txt_mail
+                   );
 
-      $email_layout = sprintf(EMAIL_SENT_BY, CONTACT_US_NAME, CONTACT_US_EMAIL_ADDRESS, $datum , $uhrzeit) . "\n" .
-              "--------------------------------------------------------------" . "\n" . $notify .
-              EMAIL_NAME. $_POST['name'] . "\n" .
-              EMAIL_EMAIL. trim($_POST['email']) . "\n" .
-              // BOF - Tomcraft - 2009-11-05 - Advanced contact form (additional fields)
-              $additional_fields .
-              // EOF - Tomcraft - 2009-11-05 - Advanced contact form (additional fields)
-              "\n".EMAIL_MESSAGE."\n ". $_POST['message_body'] . "\n";
-
-      xtc_php_mail($email,
-             $name,
-             CONTACT_US_EMAIL_ADDRESS,
-             CONTACT_US_NAME,
-             CONTACT_US_FORWARDING_STRING,
-             $email,
-             $name,
-             '',
-             '',
-             CONTACT_US_EMAIL_SUBJECT,
-             nl2br($email_layout),
-             $email_layout
-             );
-
-      if (!isset ($mail_error)) {
-        xtc_redirect(xtc_href_link(FILENAME_CONTENT, 'action=success&coID='.(int) $_GET['coID']));
-      } else {
-        $smarty->assign('error_message', $mail_error);
-      }
+      xtc_redirect(xtc_href_link(FILENAME_CONTENT, 'action=success&coID='.(int) $_GET['coID']));
     }
-    //EOF - web28 - 2010-04-03 - New error handling for required fileds
   }
 
   $smarty->assign('CONTACT_HEADING', $shop_content_data['content_heading']);
@@ -116,33 +125,37 @@
       include (DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file']);
       if (strpos($shop_content_data['content_file'], '.txt'))
         echo '</pre>';
-    $contact_content = ob_get_contents();
-    ob_end_clean();
+      $contact_content = ob_get_contents();
+      ob_end_clean();
     } else {
       $contact_content = $shop_content_data['content_text'];
     }
+    
     require (DIR_WS_INCLUDES.'header.php');
 
     if (isset ($_SESSION['customer_id']) && !$error) {
-      $customers_name = $_SESSION['customer_first_name'].' '.$_SESSION['customer_last_name'];
-      $c_query = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS." WHERE customers_id='".(int)$_SESSION['customer_id']."'");
+      $c_query = xtc_db_query("SELECT c.customers_email_address,
+                                      c.customers_telephone,
+                                      c.customers_fax,
+                                      ab.entry_company,
+                                      ab.entry_street_address,
+                                      ab.entry_city,
+                                      ab.entry_postcode
+                                 FROM ".TABLE_CUSTOMERS." c
+                                 JOIN ".TABLE_ADDRESS_BOOK." ab
+                                      ON ab.customers_id = c.customers_id
+                                         AND ab.address_book_id = c.customers_default_address_id
+                                WHERE c.customers_id = '".(int)$_SESSION['customer_id']."'");
       $c_data  = xtc_db_fetch_array($c_query);
-      $email_address = stripslashes($c_data['customers_email_address']);
-      $phone = stripslashes($c_data['customers_telephone']);
-      $fax = stripslashes($c_data['customers_fax']);
-      $address_query = xtc_db_query("select
-                        entry_company,
-                        entry_street_address,
-                        entry_city,
-                        entry_postcode
-                        from " . TABLE_ADDRESS_BOOK . "
-                        where customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                        and address_book_id = '" . (int)$_SESSION['customer_default_address_id'] . "'");
-      $address_data = xtc_db_fetch_array($address_query);
-      $company  = stripslashes($address_data['entry_company']);
-      $street   = stripslashes($address_data['entry_street_address']);
-      $postcode = stripslashes($address_data['entry_postcode']);
-      $city     = stripslashes($address_data['entry_city']);
+      $c_data = array_map('stripslashes', $c_data);
+      $customers_name = $_SESSION['customer_first_name'].' '.$_SESSION['customer_last_name'];
+      $email_address = $c_data['customers_email_address'];
+      $phone = $c_data['customers_telephone'];
+      $fax = $c_data['customers_fax'];
+      $company = $c_data['entry_company'];
+      $street = $c_data['entry_street_address'];
+      $postcode = $c_data['entry_postcode'];
+      $city = $c_data['entry_city'];
     } elseif (!$error) {
     	$customers_name = '';
     	$email_address = '';
@@ -156,39 +169,28 @@
 
     $products_info = '';
     if (isset($_GET['products_id']) && $_GET['products_id']  && isset($_GET['inq']) && $_GET['inq']) {
-      $product->product((int)$_GET['products_id']);
+      $product_inq = new product((int)$_GET['products_id']);
       $products_info = defined('PRODUCT_INQUIRY') ? PRODUCT_INQUIRY . "\n" : '';
-      $products_info .= HEADER_ARTICLE . ': '. $product->data['products_name'] . "\n";  
-      $products_info .= ($product->data['products_model'] ? HEADER_MODEL . ': ' .$product->data['products_model'] : '') . "\n";
+      $products_info .= HEADER_ARTICLE . ': '. $product_inq->data['products_name'] . "\n";  
+      $products_info .= ($product_inq->data['products_model'] ? HEADER_MODEL . ': ' .$product_inq->data['products_model'] : '') . "\n";
     }
     if (!$error) $message_body = $products_info . "\n";
 
     $smarty->assign('CONTACT_CONTENT', $contact_content);
-    //BOF - Dokuman - 2009-12-23 - send contact form information with SSL
-    //$smarty->assign('FORM_ACTION', xtc_draw_form('contact_us', xtc_href_link(FILENAME_CONTENT, 'action=send&coID='.(int) $_GET['coID'])));
     $smarty->assign('FORM_ACTION', xtc_draw_form('contact_us', xtc_href_link(FILENAME_CONTENT, 'action=send&coID='.(int) $_GET['coID'], 'SSL')));
-    //EOF - Dokuman - 2009-12-23 - send contact form information with SSL
-    //BOF - web28 - 2009-07-28 - FIX SSL captcha image path
-    $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES,'','SSL').'" alt="Captcha" />');
-    //EOF - web28 - 2009-07-28 - FIX SSL captcha image path
-    $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="8" maxlength="6"', 'text', false));
+    if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
+      $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL').'" alt="Captcha" />');
+      $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'. MODULE_CAPTCHA_CODE_LENGTH .'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+    }
     $smarty->assign('INPUT_NAME', xtc_draw_input_field('name', ($error ? $_POST['name'] : $customers_name), 'size="30"'));
     $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ($error ? $_POST['email'] : $email_address), 'size="30"'));
-    // BOF - Tomcraft - 2009-11-05 - Advanced contact form (additional fields)
     $smarty->assign('INPUT_PHONE', xtc_draw_input_field('phone', ($error ? $_POST['phone'] : $phone), 'size="30"'));
     $smarty->assign('INPUT_COMPANY', xtc_draw_input_field('company', ($error ? $_POST['company'] : $company), 'size="30"'));
     $smarty->assign('INPUT_STREET', xtc_draw_input_field('street', ($error ? $_POST['street'] : $street), 'size="30"'));
     $smarty->assign('INPUT_POSTCODE', xtc_draw_input_field('postcode', ($error ? $_POST['postcode'] : $postcode), 'size="30"'));
     $smarty->assign('INPUT_CITY', xtc_draw_input_field('city', ($error ? $_POST['city'] : $city), 'size="30"'));
     $smarty->assign('INPUT_FAX', xtc_draw_input_field('fax', ($error ? $_POST['fax'] : $fax), 'size="30"'));
-    // EOF - Tomcraft - 2009-11-05 - Advanced contact form (additional fields)
-    // BOF - Tomcraft - 2009-09-29 - fixed word-wrap in contact-form
-    //$smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('message_body', 'soft', 50, 15, ($error ? xtc_db_input($_POST['message_body']) : $first_name)));
-    // BOF - Tomcraft - 2010-02-18 - Fixed width of textarea in FireFox under Linux.
-    //$smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('message_body', 'soft', 50, 15, ($error ? $_POST['message_body'] : $message_body)));
     $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('message_body', 'soft', 45, 15, ($error ? $_POST['message_body'] : $message_body)));
-    // EOF - Tomcraft - 2010-02-18 - Fixed width of textarea in FireFox under Linux.
-    // EOF - Tomcraft - 2009-09-29 - fixed word-wrap in contact-form
     $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_send.gif', IMAGE_BUTTON_SEND));
     $smarty->assign('FORM_END', '</form>');
   }

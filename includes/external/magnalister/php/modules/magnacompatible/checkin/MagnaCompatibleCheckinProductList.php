@@ -37,6 +37,11 @@ class MagnaCompatibleCheckinProductList extends MLProductListMagnaCompatibleAbst
 		$this
 			->addDependency('MLProductListDependencyCheckinToSummaryAction')
 			->addDependency('MLProductListDependencyTemplateSelectionAction')
+			->addDependency('MLProductListDependencyLastPreparedFilter', array(
+				'propertiestablename' => TABLE_MAGNA_COMPAT_CATEGORYMATCHING,
+				'propertiestablealias' => 'mcc',
+				'preparedtimestampfield' => 'PreparedTS',
+			))
 		;
 	}
 	

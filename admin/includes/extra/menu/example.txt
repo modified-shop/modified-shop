@@ -21,6 +21,6 @@ $add_contents[BOX_HEADING_TOOLS][] = array(
     'admin_access_name' => 'example',   //Eintrag fuer Adminrechte
     'filename' => 'example.php',        //Dateiname der neuen Admindatei
     'boxname' => MENU_NAME_EXAMPLE,     //Anzeigename im Menue
-    'parameter' => '',                  //zusaetzliche Parameter z.B. 'set=export'
+    'parameters' => '',                 //zusaetzliche Parameter z.B. 'set=export'
     'ssl' => ''                         //SSL oder NONSSL, kein Eintrag = NONSSL
   );

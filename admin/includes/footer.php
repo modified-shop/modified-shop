@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$   
+   $Id: footer.php 3072 2012-06-18 15:01:13Z hhacker $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -35,14 +35,14 @@
       ?>
       <a style="text-decoration:none;" href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">&nbsp;&copy;2009-<?php echo date("Y"); ?>&nbsp;provides no warranty and is redistributable under the <a style="color:#555555;text-decoration:none;" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a><br />eCommerce Engine 2006 based on <a style="text-decoration:none; color:#555555;" href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a></span>
     </div>  
+    <?php
+      if (DISPLAY_PAGE_PARSE_TIME == 'all' || DISPLAY_PAGE_PARSE_TIME == 'admin') {
+        $parse_time = number_format((microtime(true)-PAGE_PARSE_START_TIME), 3);
+        echo '<div class="smallText" style="color:#ccc;">Parse Time: ' . $parse_time . 's</div>';
+      }
+    ?>
 </div>
 <?php
-  /*
-    echo ('<font size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Session Debug:</strong><br />');
-    echo "<pre>";
-    print_r($_SESSION);
-    echo "</pre>";
-    echo '</font>';
-    echo xtc_session_id();
-  */
+  require_once(DIR_FS_INC.'auto_include.inc.php');
+  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/footer/','php') as $file) require ($file);
 ?>

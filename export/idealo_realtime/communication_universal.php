@@ -145,7 +145,7 @@ class communication_universal{
 	
 	public function errorMessageSimpleXML(){
 		echo '<script type="text/javascript">
-			alert("Daten konnten nicht geladen werden!\n\nFragen Sie bei Ihren Hoster nach, ob SimpleXML, oder DomDocument für Ihren Shop verfügbar ist?\nOhne SimpleXML können wichtige Daten vom Modul nicht geladen werden und damit keine Angebote an idealo übertragen werden!");
+			alert("Daten konnten nicht geladen werden!\n\nFragen Sie bei Ihren Hoster nach, ob SimpleXML, oder DomDocument fÃ¼r Ihren Shop verfÃ¼gbar ist?\nOhne SimpleXML kÃ¶nnen wichtige Daten vom Modul nicht geladen werden und damit keine Angebote an idealo Ã¼bertragen werden!");
 			</script>';
 	}
 	

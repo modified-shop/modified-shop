@@ -1,3 +1,14 @@
 {config_load file="$language/lang_$language.conf" section="boxes"}
+{if isset($BOX_CONTENT) && count($BOX_CONTENT) > 0}
 <h2 class="boxheader">{#heading_order_history#}</h2>
-<div class="boxbody">{$BOX_CONTENT}</div>
+<div class="boxbody">
+  <table border="0" width="100%" cellspacing="0" cellpadding="1">
+  {foreach item=data from=$BOX_CONTENT}  
+    <tr>
+      <td class="infoBoxContents">{$data.PRODUCTS_LINK}</td>
+      <td class="infoBoxContents" align="right" valign="top">{$data.ORDER_LINK}</td>
+    </tr>
+  {/foreach}
+  </table>
+</div>
+{/if}

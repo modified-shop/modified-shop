@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: configuration.php 3130 2012-06-28 11:17:12Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -53,7 +53,7 @@ define('SEND_EXTRA_ORDER_EMAILS_TO_TITLE' , 'Send Copies of Order E-Mails to:');
 define('SEND_EXTRA_ORDER_EMAILS_TO_DESC' , 'Send copies of order e-mails to the following e-mail addresses, like: Name1 &lt;e-mail@address1&gt;, Name2 &lt;e-mail@address2&gt;');
 
 define('SEARCH_ENGINE_FRIENDLY_URLS_TITLE' , 'Use Search-Engine Safe URLs?');
-define('SEARCH_ENGINE_FRIENDLY_URLS_DESC' , 'Use search-engine friendly URLs for all site links.<br /><br /><strong>For search-engine optimized URLs, the file _.htaccess in the root directory has to be activated, i.e. renamed to .htaccess! Moreover, your webserver has to support the <a href="http://www.modrewrite.com/" target="_blank">mod_rewrite</a> module!</strong> (Please ask your webhoster if you are unsure how to check that.)');
+define('SEARCH_ENGINE_FRIENDLY_URLS_DESC' , 'Use search-engine friendly URLs for all site links.<br /><br /><strong>Attention:</strong> For search-engine optimized URLs, the file _.htaccess in the root directory has to be activated, i.e. renamed to .htaccess! Moreover, your webserver has to support the <a href="http://www.modrewrite.com/" target="_blank">mod_rewrite</a> module! (Please ask your webhoster if you are unsure how to check that.)');
 
 define('DISPLAY_CART_TITLE' , 'Display Cart After Adding a Product?');
 define('DISPLAY_CART_DESC' , 'Display the shopping cart after adding a product or return back to product?');
@@ -86,8 +86,6 @@ define('ALLOW_DISCOUNT_ON_PRODUCTS_ATTRIBUTES_TITLE' , 'Allow discount on produc
 define('ALLOW_DISCOUNT_ON_PRODUCTS_ATTRIBUTES_DESC' , 'Allow customers to get discount on attribute price (if main product is not a "specials" product)');
 define('CURRENT_TEMPLATE_TITLE' , 'Template Set (Theme)');
 define('CURRENT_TEMPLATE_DESC' , 'Choose a template set (theme). The theme must have been saved before in the following folder: www.Your-Domain.com/templates/');
-define('CC_KEYCHAIN_TITLE','CC String');
-define('CC_KEYCHAIN_DESC','String to encrypt CC number (please change!)');
 
 define('ENTRY_FIRST_NAME_MIN_LENGTH_TITLE' , 'First Name');
 define('ENTRY_FIRST_NAME_MIN_LENGTH_DESC' , 'Minimum length of first name');
@@ -112,11 +110,6 @@ define('ENTRY_TELEPHONE_MIN_LENGTH_DESC' , 'Minimum length of telephone number')
 define('ENTRY_PASSWORD_MIN_LENGTH_TITLE' , 'Password');
 define('ENTRY_PASSWORD_MIN_LENGTH_DESC' , 'Minimum length of password');
 
-define('CC_OWNER_MIN_LENGTH_TITLE' , 'Credit Card Owner Name');
-define('CC_OWNER_MIN_LENGTH_DESC' , 'Minimum length of credit card owner name');
-define('CC_NUMBER_MIN_LENGTH_TITLE' , 'Credit Card Number');
-define('CC_NUMBER_MIN_LENGTH_DESC' , 'Minimum length of credit card number');
-
 define('REVIEW_TEXT_MIN_LENGTH_TITLE' , 'Reviews');
 define('REVIEW_TEXT_MIN_LENGTH_DESC' , 'Minimum length of review text');
 
@@ -127,8 +120,8 @@ define('MIN_DISPLAY_ALSO_PURCHASED_DESC' , 'Minimum number of products to displa
 
 define('MAX_ADDRESS_BOOK_ENTRIES_TITLE' , 'Address Book Entries');
 define('MAX_ADDRESS_BOOK_ENTRIES_DESC' , 'Maximum address book entries a customer is allowed to have');
-define('MAX_DISPLAY_SEARCH_RESULTS_TITLE' , 'Search Results');
-define('MAX_DISPLAY_SEARCH_RESULTS_DESC' , 'Amount of products to list');
+define('MAX_DISPLAY_SEARCH_RESULTS_TITLE' , 'Amount Products');
+define('MAX_DISPLAY_SEARCH_RESULTS_DESC' , 'Amount of products in product listing');
 define('MAX_DISPLAY_PAGE_LINKS_TITLE' , 'Page Links');
 define('MAX_DISPLAY_PAGE_LINKS_DESC' , 'Number of "number" links use for page-sets');
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_TITLE' , 'Specials');
@@ -138,7 +131,7 @@ define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum number of new products to disp
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_TITLE' , 'Upcoming Products');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_DESC' , 'Maximum number of upcoming products to display');
 define('MAX_DISPLAY_MANUFACTURERS_IN_A_LIST_TITLE' , 'Manufacturers List');
-define('MAX_DISPLAY_MANUFACTURERS_IN_A_LIST_DESC' , 'Used in manufacturers box; when the number of manufacturers exceeds this number, a drop-down list will be displayed instead of the default list');
+define('MAX_DISPLAY_MANUFACTURERS_IN_A_LIST_DESC' , 'Used in manufacturers box; when the number of manufacturers exceeds this number, a drop-down list or list-box will be displayed instead of the default link-list (depends on what you entered in "Manufacturers Select Size").');
 define('MAX_MANUFACTURERS_LIST_TITLE' , 'Manufacturers Select Size');
 define('MAX_MANUFACTURERS_LIST_DESC' , 'Used in manufacturers box; when this value is "1" the classic drop-down list will be used for the manufacturers box. Otherwise, a list-box with the specified number of rows will be displayed.');
 define('MAX_DISPLAY_MANUFACTURER_NAME_LEN_TITLE' , 'Length of Manufacturers Name');
@@ -157,6 +150,8 @@ define('MAX_DISPLAY_PRODUCTS_NEW_TITLE' , 'New Products Listing');
 define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum number of new products to display in new products page');
 define('MAX_DISPLAY_BESTSELLERS_TITLE' , 'Best Sellers');
 define('MAX_DISPLAY_BESTSELLERS_DESC' , 'Maximum number of best sellers to display');
+define('MAX_DISPLAY_BESTSELLERS_DAYS_TITLE' , 'Maximum Age (days) for Best Sellers');
+define('MAX_DISPLAY_BESTSELLERS_DAYS_DESC' , 'Maximum age (in days) for products to be displayed as "Best Sellers"');
 define('MAX_DISPLAY_ALSO_PURCHASED_TITLE' , 'Also Purchased');
 define('MAX_DISPLAY_ALSO_PURCHASED_DESC' , 'Maximum number of products to display in the "This Customer Also Purchased" box');
 define('MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX_TITLE' , 'Customer Order History Box');
@@ -169,19 +164,19 @@ define('MAX_DISPLAY_NEW_PRODUCTS_DAYS_TITLE' , 'Maximum Age (days) for New Produ
 define('MAX_DISPLAY_NEW_PRODUCTS_DAYS_DESC' , 'Maximum age (in days) for products to be displayed as "new products"');
 
 define('PRODUCT_IMAGE_THUMBNAIL_WIDTH_TITLE' , 'Width of Product Thumbnails');
-define('PRODUCT_IMAGE_THUMBNAIL_WIDTH_DESC' , 'Maximum width of product thumbnails (in pixels) (Standard: 120). For larger values possibly "productPreviewImage" is adjusted in the templates stylesheet.css file.');
+define('PRODUCT_IMAGE_THUMBNAIL_WIDTH_DESC' , 'Maximum width of product thumbnails (in pixels) (Standard: 160). For larger values possibly "productPreviewImage" is adjusted in the templates stylesheet.css file.');
 define('PRODUCT_IMAGE_THUMBNAIL_HEIGHT_TITLE' , 'Height of Product Thumbnails');
-define('PRODUCT_IMAGE_THUMBNAIL_HEIGHT_DESC' , 'Maximum height of product thumbnails (in pixels) (Standard: 80).');
+define('PRODUCT_IMAGE_THUMBNAIL_HEIGHT_DESC' , 'Maximum height of product thumbnails (in pixels) (Standard: 160).');
 
 define('PRODUCT_IMAGE_INFO_WIDTH_TITLE' , 'Width of Product Info Images');
-define('PRODUCT_IMAGE_INFO_WIDTH_DESC' , 'Maximum width of product info images (in pixels) (Standard: 200).');
+define('PRODUCT_IMAGE_INFO_WIDTH_DESC' , 'Maximum width of product info images (in pixels) (Standard: 230).');
 define('PRODUCT_IMAGE_INFO_HEIGHT_TITLE' , 'Height of Product Info Images');
-define('PRODUCT_IMAGE_INFO_HEIGHT_DESC' , 'Maximum height of product info images (in pixels) (Standard: 160).');
+define('PRODUCT_IMAGE_INFO_HEIGHT_DESC' , 'Maximum height of product info images (in pixels) (Standard: 230).');
 
 define('PRODUCT_IMAGE_POPUP_WIDTH_TITLE' , 'Width of Popup Images');
 define('PRODUCT_IMAGE_POPUP_WIDTH_DESC' , 'Maximum width of popup images (in pixels) (Standard: 800).');
 define('PRODUCT_IMAGE_POPUP_HEIGHT_TITLE' , 'Height of Popup Images');
-define('PRODUCT_IMAGE_POPUP_HEIGHT_DESC' , 'Maximum height of popup images (in pixels) (Standard: 640).');
+define('PRODUCT_IMAGE_POPUP_HEIGHT_DESC' , 'Maximum height of popup images (in pixels) (Standard: 800).');
 
 define('SMALL_IMAGE_WIDTH_TITLE' , 'Small Image Width');
 define('SMALL_IMAGE_WIDTH_DESC' , 'Width of small images (in pixels)');
@@ -288,15 +283,15 @@ define('IMAGE_MANIPULATOR_DESC','Image Manipulator for GD2 or GD1<br /><br /><b>
 
 
 define('ACCOUNT_GENDER_TITLE' , 'Salutation');
-define('ACCOUNT_GENDER_DESC' , 'Display salutation in customer account');
+define('ACCOUNT_GENDER_DESC' , 'Display salutation upon customer account creation/editing');
 define('ACCOUNT_DOB_TITLE' , 'Date of Birth');
-define('ACCOUNT_DOB_DESC' , 'Display date of birth in customer account');
+define('ACCOUNT_DOB_DESC' , 'Display date of birth upon customer account creation/editing');
 define('ACCOUNT_COMPANY_TITLE' , 'Company');
-define('ACCOUNT_COMPANY_DESC' , 'Display company in customer account');
+define('ACCOUNT_COMPANY_DESC' , 'Display company upon customer account creation/editing');
 define('ACCOUNT_SUBURB_TITLE' , 'Suburb');
-define('ACCOUNT_SUBURB_DESC' , 'Display suburb in customer account');
+define('ACCOUNT_SUBURB_DESC' , 'Display suburb upon customer account creation/editing');
 define('ACCOUNT_STATE_TITLE' , 'State');
-define('ACCOUNT_STATE_DESC' , 'Display state in customer account');
+define('ACCOUNT_STATE_DESC' , 'Display state upon customer account creation/editing');
 
 define('DEFAULT_CURRENCY_TITLE' , 'Default Currency');
 define('DEFAULT_CURRENCY_DESC' , 'Currency to be used as default');
@@ -305,20 +300,16 @@ define('DEFAULT_LANGUAGE_DESC' , 'Language to be used as default');
 define('DEFAULT_ORDERS_STATUS_ID_TITLE' , 'Default Order Status');
 define('DEFAULT_ORDERS_STATUS_ID_DESC' , 'Default order status when a new order is placed.');
 
-define('SHIPPING_ORIGIN_COUNTRY_TITLE' , 'Country of Origin');
-define('SHIPPING_ORIGIN_COUNTRY_DESC' , 'Select the country of origin to be used in shipping quotes.');
-define('SHIPPING_ORIGIN_ZIP_TITLE' , 'Postal Code');
-define('SHIPPING_ORIGIN_ZIP_DESC' , 'Enter the Postal Code (ZIP) of the Store to be used in shipping quotes.');
 define('SHIPPING_MAX_WEIGHT_TITLE' , 'Enter the Maximum Package Weight you will ship');
 define('SHIPPING_MAX_WEIGHT_DESC' , 'Carriers have a max weight limit for a single package. This is a common one for all.');
-define('SHIPPING_BOX_WEIGHT_TITLE' , 'Package Tare weight.');
+define('SHIPPING_BOX_WEIGHT_TITLE' , 'Package Tare weight');
 define('SHIPPING_BOX_WEIGHT_DESC' , 'What is the weight of typical packaging of small to medium packages?');
-define('SHIPPING_BOX_PADDING_TITLE' , 'Larger packages - percentage increase.');
+define('SHIPPING_BOX_PADDING_TITLE' , 'Larger packages - percentage increase');
 define('SHIPPING_BOX_PADDING_DESC' , 'For 10% enter 10');
-define('SHOW_SHIPPING_TITLE' , 'Shipping Costs in Shopping Cart');
-define('SHOW_SHIPPING_DESC' , 'Show link to shipping costs in shopping cart');
-define('SHIPPING_INFOS_TITLE' , 'Group ID');
-define('SHIPPING_INFOS_DESC' , 'Group ID of shipping costs content');
+define('SHOW_SHIPPING_TITLE' , 'Display shipping costs');
+define('SHOW_SHIPPING_DESC' , 'Show link to shipping costs');
+define('SHIPPING_INFOS_TITLE' , 'Shipping costs');
+define('SHIPPING_INFOS_DESC' , 'Select content to display shipping costs');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_TITLE' , 'Calculation method of default tax class');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_DESC' , 'none: do not show shipping tax<br />auto proportional: show shipping tax proportional to order<br />auto max: show shipping tax, use tax rate of biggest turnover group');
 
@@ -337,24 +328,26 @@ define('STOCK_ALLOW_CHECKOUT_DESC' , 'Allow customer to checkout even if there i
 define('STOCK_MARK_PRODUCT_OUT_OF_STOCK_TITLE' , 'Mark product out of stock');
 define('STOCK_MARK_PRODUCT_OUT_OF_STOCK_DESC' , 'Display on-screen message so customers can see which product has insufficient stock');
 define('STOCK_REORDER_LEVEL_TITLE' , 'Stock re-order level');
-define('STOCK_REORDER_LEVEL_DESC' , 'Define when stock needs to be re-ordered  (planned function)');
+define('STOCK_REORDER_LEVEL_DESC' , 'Define when stock needs to be re-ordered (planned function)');
 define('STORE_PAGE_PARSE_TIME_TITLE' , 'Store page parse time');
 define('STORE_PAGE_PARSE_TIME_DESC' , 'Store the time it takes to parse a page');
-define('STORE_PAGE_PARSE_TIME_LOG_TITLE' , 'Log file destination');
-define('STORE_PAGE_PARSE_TIME_LOG_DESC' , 'Enter storage location/filename, where the page parse time as well as the database queries will be stored.<br/><strong>Caution: File can get very big in size in long logging sessions !</strong>.<br/><br/>Default value "query.log":<br/><strong>Frontend:</strong> Parse time and database queries in the shop frontend will be stored in the root directory in the file "<strong>query.log</strong>".<br/><strong>Administration (Backend):</strong> Parse time and database queries in the shop backend will be stored in the file "<strong>admin/query.log</strong>".');
 define('STORE_PARSE_DATE_TIME_FORMAT_TITLE' , 'Log file date format');
 define('STORE_PARSE_DATE_TIME_FORMAT_DESC' , 'The date format (Default: %d/%m/%Y %H:%M:%S)');
+define('STORE_DB_SLOW_QUERY_TITLE' , 'Slow Query Log');
+define('STORE_DB_SLOW_QUERY_DESC' , 'Should only slow SQL Queries be saved?<br/><strong>Caution: Store Database Queries must be enabled!</strong>.<br/><strong>Caution: File can get very big in size in long logging sessions!</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
+define('STORE_DB_SLOW_QUERY_TIME_TITLE' , 'Slow Query Log - Time');
+define('STORE_DB_SLOW_QUERY_TIME_DESC' , 'Time for the slow querys wich should be logged.');
 
 define('DISPLAY_PAGE_PARSE_TIME_TITLE' , 'Display The Page Parse Time');
 define('DISPLAY_PAGE_PARSE_TIME_DESC' , 'Display the page parse time<br /><strong>none</strong>: deactivated<br /><strong>admin</strong>: Only the admin sees the page parse time<br /><strong>all</strong>: Everybody sees the page parse time');
 define('STORE_DB_TRANSACTIONS_TITLE' , 'Store Database Queries');
-define('STORE_DB_TRANSACTIONS_DESC' , 'Store the database queries in the page parse time log file');
+define('STORE_DB_TRANSACTIONS_DESC' , 'Store the database queries in the page parse time log file<br/><strong>Caution: File can get very big in size in long logging sessions!</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
 
 define('USE_CACHE_TITLE' , 'Use Cache');
 define('USE_CACHE_DESC' , 'Use caching features');
 
-define('DB_CACHE_TITLE','Database Caching');
-define('DB_CACHE_DESC','Cache SELECT query results in files to gain more speed for slow databases.');
+define('DB_CACHE_TITLE','DB Cache');
+define('DB_CACHE_DESC','Cache database query results to gain more speed for slow databases.');
 
 define('DB_CACHE_EXPIRE_TITLE','DB Cache lifetime');
 define('DB_CACHE_EXPIRE_DESC','Time in seconds to rebuild cached result.');
@@ -386,7 +379,7 @@ define('SMTP_USERNAME_TITLE' , 'SMTP Username');
 define('SMTP_USERNAME_DESC' , 'Please enter the username of your SMTP Account.');
 define('SMTP_PASSWORD_TITLE' , 'SMTP Password');
 define('SMTP_PASSWORD_DESC' , 'Please enter the password of your SMTP Account.');
-define('SMTP_AUTH_TITLE' , 'SMTP AUTH');
+define('SMTP_AUTH_TITLE' , 'SMTP-Auth');
 define('SMTP_AUTH_DESC' , 'Enable secure authentication for your SMTP Server');
 define('SMTP_PORT_TITLE' , 'SMTP Port');
 define('SMTP_PORT_DESC' , 'Please enter the SMTP port of your SMTP server(default: 25)?');
@@ -437,7 +430,7 @@ define('EMAIL_BILLING_REPLY_ADDRESS_NAME_DESC' , 'Please enter a name to be used
 define('EMAIL_BILLING_SUBJECT_TITLE' , 'Billing - E-Mail Subject');
 define('EMAIL_BILLING_SUBJECT_DESC' , 'Please enter an e-mail subject for <b>Billing</b> messages.');
 define('EMAIL_BILLING_SUBJECT_ORDER_TITLE','Billing - Order Mail Subject');
-define('EMAIL_BILLING_SUBJECT_ORDER_DESC','Please enter a subject for order mails. (like <b>our order {$nr},{$date}</b>). You can use, {$nr},{$date},{$firstname},{$lastname}');
+define('EMAIL_BILLING_SUBJECT_ORDER_DESC','Please enter a subject for order mails generated by xtcm. (like <b>our order {$nr},{$date}</b>). You can use, {$nr},{$date},{$firstname},{$lastname}');
 
 define('DOWNLOAD_ENABLED_TITLE' , 'Enable Download');
 define('DOWNLOAD_ENABLED_DESC' , 'Enable the products download functions.');
@@ -447,14 +440,15 @@ define('DOWNLOAD_MAX_DAYS_TITLE' , 'Expiry Delay (Days)');
 define('DOWNLOAD_MAX_DAYS_DESC' , 'Set number of days before the download link expires. 0 means no limit.');
 define('DOWNLOAD_MAX_COUNT_TITLE' , 'Maximum Number of Downloads');
 define('DOWNLOAD_MAX_COUNT_DESC' , 'Set the maximum number of downloads. 0 means no download authorized.');
+define('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED_TITLE' , 'Multiple Attribute for Downloads');
+define('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED_DESC' , 'Allow Multiple Attribute to skip Shipping.');
 
 define('GZIP_COMPRESSION_TITLE' , 'Enable GZip Compression');
 define('GZIP_COMPRESSION_DESC' , 'Enable HTTP gzip compression.');
 define('GZIP_LEVEL_TITLE' , 'Compression Level');
 define('GZIP_LEVEL_DESC' , 'Set a compression level from 0-9 (0 = minimum, 9 = maximum).');
 
-define('SESSION_WARNING', '<br /><br /><font color="#FF0000"><strong>ATTENTION:</strong></font>
-This feature might reduce the operability of the shop system. Change it only when you are aware of the following consequences and your webserver supports the corresponding feature.');
+define('SESSION_WARNING', '<br /><br /><span class="col-red"><strong>CAUTION:</strong></span> This feature might reduce the operability of the shop system. Change it only when you are aware of the following consequences and your webserver supports the corresponding feature.');
 
 define('SESSION_WRITE_DIRECTORY_TITLE' , 'Session Directory');
 define('SESSION_WRITE_DIRECTORY_DESC' , 'If sessions are file based, store them in this directory.');
@@ -528,7 +522,7 @@ define('SHOW_IP_LOG_TITLE','IP-Log on Checkout?');
 define('SHOW_IP_LOG_DESC','Show Text "Your IP will be saved", in checkout?');
 
 define('ACTIVATE_GIFT_SYSTEM_TITLE','Activate Gift Voucher System');
-define('ACTIVATE_GIFT_SYSTEM_DESC','Activate gift voucher system<br/><br/><b>Attention: </b>You have to install the Modules ot_coupon and ot_gv <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal').'"><b>here</span></b></a>.');
+define('ACTIVATE_GIFT_SYSTEM_DESC','Activate gift voucher system<br/><br/><b>Attention: </b>You have to install the Modules ot_coupon <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal&module=ot_coupon').'"><b>here</b></a> and ot_gv <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal&module=ot_gv').'"><b>here</b></a>.');
 
 define('ACTIVATE_SHIPPING_STATUS_TITLE','Display Shipping Status');
 define('ACTIVATE_SHIPPING_STATUS_DESC','Show shipping status? (Different dispatch times can be specified for individual products. If enabled, a new item <b>Delivery Status</b> is displayed on product input)');
@@ -550,8 +544,8 @@ define('QUICKLINK_ACTIVATED_DESC','Allows selection of multiple categories when 
 
 define('DOWNLOAD_UNALLOWED_PAYMENT_TITLE', 'Disallowed Download Payment Modules');
 define('DOWNLOAD_UNALLOWED_PAYMENT_DESC', '<strong>DISALLOWED</strong> payment modules for downloads. Comma separated list, e.g. {banktransfer,cod,invoice,moneyorder}');
-define('DOWNLOAD_MIN_ORDERS_STATUS_TITLE', 'Min. Order Status');
-define('DOWNLOAD_MIN_ORDERS_STATUS_DESC', 'Min. order status to allow download of files.');
+define('DOWNLOAD_MIN_ORDERS_STATUS_TITLE', 'Order Status');
+define('DOWNLOAD_MIN_ORDERS_STATUS_DESC', 'order status to allow download of files.');
 
 // Vat Check
 define('STORE_OWNER_VAT_ID_TITLE' , 'VAT Reg No of Shop Owner');
@@ -561,7 +555,7 @@ define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_DESC' , 'Customers group for customers w
 define('ACCOUNT_COMPANY_VAT_CHECK_TITLE' , 'Validate VAT Reg No');
 define('ACCOUNT_COMPANY_VAT_CHECK_DESC' , 'Customers may enter a VAT Registration number. If false, the box disappears');
 define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_TITLE' , 'Validate VAT Reg No online for plausability');
-define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_DESC' , 'Validate VAT Registration number online for plausability using the webservice of the taxation portal of the EU (<a href="http://ec.europa.eu/taxation_customs" style="font-style:italic">http://ec.europa.eu/taxation_customs</a>).<br/>Requires PHP5 with activated "SOAP" support! <strong><span class="messageStackSuccess">The "PHP5 SOAP"-support is actually '.(in_array ('soap', get_loaded_extensions()) ? '' : '<span class="messageStackError">NOT</span>').' active!</span></strong>');
+define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_DESC' , 'Validate VAT Registration number online for plausability using the webservice of the taxation portal of the EU (<a href="http://ec.europa.eu/taxation_customs" style="font-style:italic">http://ec.europa.eu/taxation_customs</a>).<br/>Requires PHP5 with activated "SOAP" support!<br/><br/><span class="messageStackSuccess">The "PHP5 SOAP"-support is actually '.(in_array ('soap', get_loaded_extensions()) ? '' : '<span class="messageStackError">NOT</span>').' active!</span><br/><br/>');
 define('ACCOUNT_COMPANY_VAT_GROUP_TITLE' , 'Automatic Pruning?');
 define('ACCOUNT_COMPANY_VAT_GROUP_DESC' , 'Set to true, the customers group will be changed automatically if a valid VAT Reg No is used');
 define('ACCOUNT_VAT_BLOCK_ERROR_TITLE' , 'Allow Invalid VAT Reg No?');
@@ -597,20 +591,16 @@ define('AFTERBUY_IGNORE_GROUPE_TITLE', 'Customer group ignor');
 define('AFTERBUY_IGNORE_GROUPE_DESC', 'Example: <em>6,5,8</em>.');
 
 // Search-Options
-define('SEARCH_IN_DESC_TITLE','Search in Products Descriptions');
+define('SEARCH_IN_DESC_TITLE','Search in products descriptions');
 define('SEARCH_IN_DESC_DESC','Include products descriptions when searching');
-define('SEARCH_IN_ATTR_TITLE','Search in Products Attributes');
+define('SEARCH_IN_ATTR_TITLE','Search in products attributes');
 define('SEARCH_IN_ATTR_DESC','Include products attributes when searching');
-# BOF - h-h-h - 2011-04-13 - Highlight Search Terms
-define('SEARCH_HIGHLIGHT_TITLE','Highlight Search Terms');
-define('SEARCH_HIGHLIGHT_DESC','Activate to Highlight Search Terms in the results');
-define('SEARCH_HIGHLIGHT_STYLE_TITLE','Configuration of Highlights');
-define('SEARCH_HIGHLIGHT_STYLE_DESC','CSS for Search Term Highlights (e.g. font and background color, border, etc.)');
-# EOF - h-h-h - 2011-04-13 - Highlight Search Terms
+define('SEARCH_IN_MANU_TITLE','Search in products manufacturers');
+define('SEARCH_IN_MANU_DESC','Include products manufacturers when searching');
 
 // changes for 3.0.4 SP2
-define('REVOCATION_ID_TITLE','Revocation ID');
-define('REVOCATION_ID_DESC','Content ID of revocation content');
+define('REVOCATION_ID_TITLE','Revocation');
+define('REVOCATION_ID_DESC','Select content to display revocation');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Display right of revocation?');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Display right of revocation on checkout_confirmation?');
 
@@ -630,7 +620,7 @@ define('PAYPAL_API_SANDBOX_PWD_DESC','Enter password (sandbox)');
 define('PAYPAL_API_SANDBOX_SIGNATURE_TITLE','PayPal API-Signature (Sandbox)');
 define('PAYPAL_API_SANDBOX_SIGNATURE_DESC','Enter API signature (sandbox)');
 define('PAYPAL_API_VERSION_TITLE','PayPal API-Version');
-define('PAYPAL_API_VERSION_DESC','Enter PayPal API version, e.g. 84.0');
+define('PAYPAL_API_VERSION_DESC','Enter PayPal API version, e.g. 119.0');
 define('PAYPAL_API_IMAGE_TITLE','PayPal Shop Logo');
 define('PAYPAL_API_IMAGE_DESC','Please enter the name of the logo file to be displayed with PayPal.<br />Note: Only displayed if the shop uses SSL.<br />Max. width: 750px, max. height: 90px.<br />The logo file is called from: '.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 define('PAYPAL_API_CO_BACK_TITLE','PayPal Background Colour');
@@ -677,13 +667,14 @@ define('USE_ADMIN_THUMBS_IN_LIST_STYLE_DESC', 'Here, simple CSS style informatio
 // EOF - Hendrik - 2010-08-11 - Thumbnails in admin products list
 
 // BOF - Tomcraft - 2009-11-05 - Advanced contact form
-define('USE_CONTACT_EMAIL_ADDRESS_TITLE' , 'Contact Us - sending option');
-define('USE_CONTACT_EMAIL_ADDRESS_DESC' , 'Use "Contact Us" e-mail address for sending contact form (important for some Hosters like Hosteurope)');
+//define('USE_CONTACT_EMAIL_ADDRESS_TITLE' , 'Contact Us - sending option'); // not needed anymore!
+//define('USE_CONTACT_EMAIL_ADDRESS_DESC' , 'Use "Contact Us" e-mail address for sending contact form (important for some Hosters like Hosteurope)'); // not needed anymore!
 // EOF - Tomcraft - 2009-11-05 - Advanced contact form
 
 // BOF - Dokuman - 2010-02-04 - delete cache files in admin section
 define('DELETE_CACHE_SUCCESSFUL', 'Cache deleted successfully.');
 define('DELETE_TEMP_CACHE_SUCCESSFUL', 'Templatecache deleted successfully.');
+define('DELETE_LOGS_SUCCESSFUL', 'Logfiles deleted successfully.');
 // EOF - Dokuman - 2010-02-04 - delete cache files in admin section
 
 // BOF - DokuMan - 2010-08-13 - set Google RSS Feed in admin section
@@ -697,15 +688,15 @@ define('PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT_DESC','If set to <strong>false</s
 // EOF - web28 - 2010-08-17 -  Bildgrößenberechnung kleinerer Bilder
 
 //BOF - hendrik - 2011-05-14 - independent invoice number and date
-define('IBN_BILLNR_TITLE', 'Next invoice number');
-define('IBN_BILLNR_DESC', 'When assigning an invoice number, this number is given next.');
-define('IBN_BILLNR_FORMAT_TITLE', 'Invoice number format');
-define('IBN_BILLNR_FORMAT_DESC', 'Format invoice number.: {n}=number, {d}=day, {m}=month, {y}=year, <br>example. "100{n}-{d}-{m}-{y}" => "10099-28-02-2007"');
+//define('IBN_BILLNR_TITLE', 'Next invoice number');
+//define('IBN_BILLNR_DESC', 'When assigning an invoice number, this number is given next.');
+//define('IBN_BILLNR_FORMAT_TITLE', 'Invoice number format');
+//define('IBN_BILLNR_FORMAT_DESC', 'Format invoice number.: {n}=number, {d}=day, {m}=month, {y}=year, <br>example. "100{n}-{d}-{m}-{y}" => "10099-28-02-2007"');
 //EOF - hendrik - 2011-05-14 - independent invoice number and date
 
 //BOC - h-h-h - 2011-12-23 - Button "Buy Now" optional - default off
-define('SHOW_BUTTON_BUY_NOW_TITLE', 'Show "Buy Now" in productlists');
-define('SHOW_BUTTON_BUY_NOW_DESC', '<b>Caution:</b><br /> This option is judicially critical if customers can\'t see all important informations directly in the productlists .');
+define('SHOW_BUTTON_BUY_NOW_TITLE', 'Show "Cart"-Button in product lists');
+define('SHOW_BUTTON_BUY_NOW_DESC', '<span class="col-red"><strong>CAUTION:</strong></span> This option is legally critical if customers can\'t see all chief product features directly in the product lists.');
 //EOC - h-h-h - 2011-12-23 - Button "Buy Now" optional - default off
 
 //split page results
@@ -728,15 +719,17 @@ define('MAX_DISPLAY_COUPON_RESULTS_DESC', 'Maximum number of coupons to be displ
 define ('WHOS_ONLINE_TIME_LAST_CLICK_TITLE', 'Who\'s Online - Display period in seconds');
 define ('WHOS_ONLINE_TIME_LAST_CLICK_DESC', 'Timing of online users in the "Who\'s Online" table, afterwhich time the entries are deleted (min value: 900).');
 
-// Sessions
+//Sessions
 define ('SESSION_LIFE_ADMIN_TITLE', 'Session Lifetime Admin');
-define ('SESSION_LIFE_ADMIN_DESC', 'time in seconds after the expiry of the session time for Admins (logged out) - Default 7200');
+define ('SESSION_LIFE_ADMIN_DESC', 'Time in seconds before the session time for Admins expires (logging out) - Default 7200<br />The entered value is only applied if the session handling is db based (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />Maximum value: 14400');
 define ('SESSION_LIFE_CUSTOMERS_TITLE', 'Session lifetime customer');
-define ('SESSION_LIFE_CUSTOMERS_DESC', 'time in seconds after the expiry of the session time for customers (logging out) - Default 1440');
+define ('SESSION_LIFE_CUSTOMERS_DESC', 'Time in seconds before the session time for customers expires (logging out) - Default 1440<br />The entered value is only applied if the session handling is db based (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />Maximum value: 14400');
 
 //checkout confirmation options
-define ('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_TITLE', 'Order Confirmation page: Description');
-define ('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_DESC', 'On the order confirmation page you want the Item Description will be displayed? Note: The short description is displayed when there is NO Item Order Description True, the description does not always displayed.');
+define ('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_TITLE', 'Order Confirmation page: Short Description');
+define ('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_DESC', 'Do you want to display the products short description on the order confirmation page? Note: The short description is displayed when there is NO products order description. Setting this to FALSE, the short description is generally not displayed!');
+define('CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH_TITLE','Length of the description when short description is empty');
+define('CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH_DESC','From which length shall the description be cropped when there is no short description?');
 define ('CHECKOUT_SHOW_PRODUCTS_IMAGES_TITLE', 'Order Confirmation page: Product images');
 define ('CHECKOUT_SHOW_PRODUCTS_IMAGES_DESC', 'If on the order confirmation page, the product images are displayed?');
 define ('CHECKOUT_SHOW_PRODUCTS_MODEL_TITLE', 'Order Confirmation Page: Item no.');
@@ -777,22 +770,22 @@ define ('POPUP_PRODUCT_PRINT_SIZE_DESC', 'Sets the size of the popup window to b
 define ('POPUP_PRINT_ORDER_SIZE_TITLE', 'order window size Print view');
 define ('POPUP_PRINT_ORDER_SIZE_DESC', 'Sets the size of the popup window to be defined - default: width = 640, height = 600');
 
-// BOF - Dokuman - 2012-08-27 - added entries for new google analytics & piwik tracking
 define('TRACKING_COUNT_ADMIN_ACTIVE_TITLE' , 'Count page views of the shop owner');
 define('TRACKING_COUNT_ADMIN_ACTIVE_DESC' , 'By activating this option, all page views of the administration usersof the shop owner will be counted as well. This will falsify the visitor stats.');
+
 define('TRACKING_GOOGLEANALYTICS_ACTIVE_TITLE' , 'Activate Google Analytics tracking');
 define('TRACKING_GOOGLEANALYTICS_ACTIVE_DESC' , 'By activating this option, all page views will be submitted to Google Analytics for later evaluation. Before using this option, you need to register at <a href="http://www.google.com/analytics/" target="_blank"><b>Google Analytics</b></a> and create a new account.');
 define('TRACKING_GOOGLEANALYTICS_ID_TITLE' , 'Google Analytics account number');
 define('TRACKING_GOOGLEANALYTICS_ID_DESC' , 'Enter your Google Analytics account number in the format "UA-XXXXXXXX-X" which you received after successfully creating an account.');
+
 define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Activate PIWIK Web-Analytics tracking');
-define('TRACKING_PIWIK_ACTIVE_DESC' , 'In order to use PIWIK at all, you have to download and install it to your webspace at first. See also <a href="http://de.piwik.org/" target="_blank"><b>PIWIK Web-Analytics</b></a>. In comparison to Google Analytics all data will be stored locally, i.e. you as show owner have complete control over all data.');
+define('TRACKING_PIWIK_ACTIVE_DESC' , 'In order to use PIWIK at all, you have to download and install it to your webspace at first. See also <a href="http://http://de.piwik.org/" target="_blank"><b>PIWIK Web-Analytics</b></a>. In comparison to Google Analytics all data will be stored locally, i.e. you as show owner have complete control over all data.');
 define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'PIWIK install path (without "http://")');
 define('TRACKING_PIWIK_LOCAL_PATH_DESC' , 'Enter the path when PIWIK was installed successfully. The complete path of the domain has to be given, but without "http://", e.g. "www.domain.de/piwik".');
 define('TRACKING_PIWIK_ID_TITLE' , 'PIWIK page ID');
 define('TRACKING_PIWIK_ID_DESC' , 'In the PIWIK administration a page ID will be created per domain (usually "1")');
 define('TRACKING_PIWIK_GOAL_TITLE' , 'PIWIK campaign number (optional)');
 define('TRACKING_PIWIK_GOAL_DESC' , 'Enter your campaign number, if you want to track predefined goals.. Details see <a href="http://piwik.org/docs/tracking-goals-web-analytics/" target="_blank"><b>PIWIK: Tracking Goal Conversions</b></a>');
-// EOF - Dokuman - 2012-08-27 - added entries for new google analytics & piwik tracking
 
 define ('CONFIRM_SAVE_ENTRY_TITLE', 'Confirmation when saving articles/category');
 define ('CONFIRM_SAVE_ENTRY_DESC', 'Should be made a confirmation message when saving products/categories? Default: true (yes)');
@@ -807,7 +800,9 @@ define('SEND_EMAILS_DOUBLE_OPT_IN_TITLE','Double-Opt-In for Newsletter registrat
 define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','If "true" an eMail will be send where the Registration have to be confirmed. This  only works if send eMails is activated.');
 
 define('USE_ADMIN_FIXED_TOP_TITLE', 'Fixate admin page header?'); 
-define('USE_ADMIN_FIXED_TOP_DESC', 'Shall the page header allways be visable when scrolling? Standard: true (yes)');
+define('USE_ADMIN_FIXED_TOP_DESC', 'Shall the page header always be visable when scrolling?');
+define('USE_ADMIN_FIXED_SEARCH_TITLE', 'Always display admin searchbar?'); 
+define('USE_ADMIN_FIXED_SEARCH_DESC', 'Shall the admin searchbar always be visable?');
 
 define('SMTP_SECURE_TITLE' , 'SMTP SECURE');
 define('SMTP_SECURE_DESC' , 'Does the SMTP server require a secure connection? Contact your ISP for the appropriate settings.');
@@ -818,14 +813,26 @@ define('DISPLAY_ERROR_REPORTING_DESC', 'Display formatted error reporting in foo
 define('DISPLAY_BREADCRUMB_OPTION_TITLE', 'Breadcrumb navigation');
 define('DISPLAY_BREADCRUMB_OPTION_DESC', '<strong>name:</strong> In the breadcrumb navigation, the article name is displayed.<br /><strong>model:</strong> In the breadcrumb navigation, the item number is displayed if it is available. Otherwise fallback to the article name.');
 
-define('TEMPLATE_ENGINE_TITLE', 'Template Engine');
-define('TEMPLATE_ENGINE_DESC', 'Choose the Smarty version.<br/><br/><b>Attention:</b> In Smarty 3 there is a new syntax and older templates may not work properly.');
-
 define('EMAIL_WORD_WRAP_TITLE', 'WordWrap for text e-mails');
 define('EMAIL_WORD_WRAP_DESC', 'Indicate number of characters for one line in text e-mails before text will be wrapped (only whole numbers).<br /><strong>Attention:</strong> A character count greater than 76 may cause the shop mails to be categorized as SPAM by SpamAssassin.<br />More infos <a href="http://wiki.apache.org/spamassassin/Rules/MIME_QP_LONG_LINE" target="_blank">here</a>.');
 
-define('USE_PAGINATION_LIST_TITLE', 'Pagination List'); 
-define('USE_PAGINATION_LIST_DESC', 'Use a HTML list (ul / li Tag) for Pagination.'); 
+define('USE_PAGINATION_LIST_TITLE', 'Pagination List');
+define('USE_PAGINATION_LIST_DESC', 'Use a HTML list (ul / li Tag) for Pagination.<br/><b>Attention:</b> This only works with a shop version 2.00 compatible template!');
+
+define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Sales Report Filter');
+define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Choose the order statuses which shall be considered on the admin startpage and in the sales report when choosing "Sales Report Filter" in the status dropdown.<br />(To show only the real sales volume, choose the order status for completed orders.)<br /><b>Note:</b> For the "Sales Report Filter" to be displayed in the status dropdown, you have to choose at least two statuses. Otherwise you can directly choose the desired status in the dropdown.');
+
+define('SAVE_IP_LOG_TITLE', 'Save IP Address');
+define('SAVE_IP_LOG_DESC', 'Save the IP Address to database?<br/>With Option xxx the IP will be anonymous.');
+
+define('META_MAX_KEYWORD_LENGTH_TITLE', 'Maximum Length Meta-Keywords');
+define('META_MAX_KEYWORD_LENGTH_DESC', 'Maximum Length automatic generated Meta-Keywords');
+define('META_DESCRIPTION_LENGTH_TITLE', 'Length Meta-Description');
+define('META_DESCRIPTION_LENGTH_DESC', 'Maximum Length of description (Letters)');
+define('META_STOP_WORDS_TITLE', 'Stop Words');
+define('META_STOP_WORDS_DESC', 'Please enter comma separated keywords that are not allowed.');
+define('META_GO_WORDS_TITLE', 'Go Words');
+define('META_GO_WORDS_DESC', 'Please enter comma separated keywords that are allowed.');
 
 //BOC added text constants for group id 20, noRiddle
 define('CSV_CATEGORY_DEFAULT_TITLE','Category for Import');
@@ -838,6 +845,214 @@ define('COMPRESS_EXPORT_TITLE','Compression');
 define('COMPRESS_EXPORT_DESC','Compress export file');
 //BOC added constants for category depth, noRiddle
 define('CSV_CAT_DEPTH_TITLE','Category depth');
-define('CSV_CAT_DEPTH_DESC','How deep shall the category tree go ? (e.g. with default 4: main category plus 3 sub-categories)<br />This indication is important to get the in the CSV integrated categories imported well. Same applies to the export function.<br /><span style="color:#c00;">More than 4 may result in performance loss and is probably not user friendly !');
+define('CSV_CAT_DEPTH_DESC','How deep shall the category tree go? (e.g. with default 4: main category plus 3 sub-categories)<br />This indication is important to get the in the CSV integrated categories imported well. Same applies to the export function.<br /><span style="color:#c00;">More than 4 may result in performance loss and is probably not user friendly!');
 //EOC added constants for category depth, noRiddle
 //EOC added text constants for group id 20, noRiddle
+
+define('MIN_GROUP_PRICE_STAFFEL_TITLE', 'Additional Graduated Price');
+define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Additional Graduated Price to show.');
+
+define('MODULE_CAPTCHA_ACTIVE_TITLE', 'Activate Captcha');
+define('MODULE_CAPTCHA_ACTIVE_DESC', 'For which shop sections shall the Captcha be activated?');
+define('MODULE_CAPTCHA_LOGGED_IN_TITLE', 'Logged in Customers');
+define('MODULE_CAPTCHA_LOGGED_IN_DESC', 'Show Captcha for logged in customers');
+define('MODULE_CAPTCHA_USE_COLOR_TITLE', 'Random Color');
+define('MODULE_CAPTCHA_USE_COLOR_DESC', 'Show lines and signs in random color');
+define('MODULE_CAPTCHA_USE_SHADOW_TITLE', 'Shadow');
+define('MODULE_CAPTCHA_USE_SHADOW_DESC', 'Additional shadow for the signs');
+define('MODULE_CAPTCHA_CODE_LENGTH_TITLE', 'Captcha Length');
+define('MODULE_CAPTCHA_CODE_LENGTH_DESC', 'Number of Signs<br/>(default: 6)');
+define('MODULE_CAPTCHA_NUM_LINES_TITLE', 'Number of lines');
+define('MODULE_CAPTCHA_NUM_LINES_DESC', 'Set number of lines<br/>(default: 70)');
+define('MODULE_CAPTCHA_MIN_FONT_TITLE', 'Min font size');
+define('MODULE_CAPTCHA_MIN_FONT_DESC', 'Set minimum font size in px.<br/>(default: 24)');
+define('MODULE_CAPTCHA_MAX_FONT_TITLE', 'Max font size');
+define('MODULE_CAPTCHA_MAX_FONT_DESC', 'Set maximum font size in px<br/>(default: 28)');
+define('MODULE_CAPTCHA_BACKGROUND_RGB_TITLE', 'Background color');
+define('MODULE_CAPTCHA_BACKGROUND_RGB_DESC', 'Set background color in RGB<br/>(default: 192,192,192)');
+define('MODULE_CAPTCHA_LINES_RGB_TITLE', 'Line color');
+define('MODULE_CAPTCHA_LINES_RGB_DESC', 'Set line color in RGB<br/>(default: 220,148,002)');
+define('MODULE_CAPTCHA_CHARS_RGB_TITLE', 'Zeichenfarbe');
+define('MODULE_CAPTCHA_CHARS_RGB_DESC', 'Set line color in RGB<br/>(default: 112,112,112)');
+define('MODULE_CAPTCHA_WIDTH_TITLE', 'Width');
+define('MODULE_CAPTCHA_WIDTH_DESC', 'Set width in px');
+define('MODULE_CAPTCHA_HEIGHT_TITLE', 'Height');
+define('MODULE_CAPTCHA_HEIGHT_DESC', 'Set height in px');
+
+define('SHIPPING_STATUS_INFOS_TITLE', 'Shippingtime');
+define('SHIPPING_STATUS_INFOS_DESC', 'Select content to display Information for Shippingtime');
+
+define('USE_SHORT_DATE_FORMAT_TITLE', 'Show Date in short format');
+define('USE_SHORT_DATE_FORMAT_DESC', 'Always show date in short format: <b> 01/03/2014 </ b> instead <b> Saturday 01 March 2014 </ b> <br /> Recommended for display errors with the long date format as incorrect language or special signs!');
+
+define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximum Products');
+define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximum products of same category');
+define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Search Search Results');
+define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Amount of products in search result');
+define('MAX_DISPLAY_PRODUCTS_HISTORY_TITLE' , 'Maximum History');
+define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum visited products in account history');
+
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Product noimage.gif');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no product image assigned');
+define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_TITLE', 'Category noimage.gif');
+define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no category image assigned');
+define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_TITLE', 'Manufacturer noimage.gif');
+define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no manufacturer image assigned');
+
+define('MODULE_SMALL_BUSINESS_TITLE', 'Small Business');
+define('MODULE_SMALL_BUSINESS_DESC', 'Shall the store be switched to small business according to &sect; 19 UStG.<br/><b>Important:</b> Under "Modules" -> "Order Total" the module "ot_tax" must be disabled or uninstalled <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal&module=ot_tax').'"><b>here</b></a>. In addition you have to set "Prices incl. Tax" to "No" in the particular <a href="'.xtc_href_link(FILENAME_CUSTOMERS_STATUS, '').'"><b>customer groups</b></a>.');
+
+define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Compression');
+define('COMPRESS_HTML_OUTPUT_DESC', 'Compress HTML Output from the Template?');
+define('COMPRESS_STYLESHEET_TITLE', 'CSS Compression');
+define('COMPRESS_STYLESHEET_DESC', 'Compress Stylesheet?<br/><b>Attention:</b> This only works with a shop version 2.00 compatible template!');
+
+define('USE_ATTRIBUTES_IFRAME_TITLE', 'Edit Attributes in iframe');
+define('USE_ATTRIBUTES_IFRAME_DESC', 'Open Attribute Manager in the Category / Product view in an iframe');
+
+define('ADMIN_HEADER_X_FRAME_OPTIONS_TITLE', 'Admin Clickjacking Protection');
+define('ADMIN_HEADER_X_FRAME_OPTIONS_DESC', 'Protect Adminarea with Header "X-Frame-Options: SAMEORIGIN"<br>Supported Browsers: FF 3.6.9+ Chrome 4.1.249.1042+ IE 8+ Safari 4.0+ Opera 10.50+ ');
+
+define('SEND_MAIL_ACCOUNT_CREATED_TITLE', 'E-Mail upon Create Account');
+define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Send an E-Mail to customer upon account creation?');
+
+define('STATUS_EMAIL_SENT_COPY_TO_ADMIN_TITLE', 'E-Mail upon status change');
+define('STATUS_EMAIL_SENT_COPY_TO_ADMIN_DESC', 'Send an E-Mail to admin upon status change of order?');
+
+define('STOCK_CHECK_SPECIALS_TITLE', 'Check Specials Stock');
+define('STOCK_CHECK_SPECIALS_DESC', 'Check to see if sufficent specials stock is available<br/><br/><b>ATTENTION:</b> If there is insufficient specials stock, the order can only be processed after a reduction of the quantity.');
+
+define('DOWNLOAD_SHOW_LANG_DROPDOWN_TITLE', 'Countries dropdown in cart');
+define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Show countries dropdown in cart if only download products are buyed?');
+
+define('GUEST_ACCOUNT_EDIT_TITLE', 'Edit guest accounts');
+define('GUEST_ACCOUNT_EDIT_DESC', 'enable guest accounts to see and edit avvount details?');
+
+define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail signature');
+define('EMAIL_SIGNATURE_ID_DESC', 'Select the content to be used for the signature in shop E-Mails.');
+
+define('TEXT_PAYPAL_NOT_INSTALLED', '<div class="important_info">PayPal not installed. This can be done <a href="'.xtc_href_link(FILENAME_MODULES, 'set=payment&module=paypal').'">here</a>.</div>');
+
+define('POLICY_MIN_LOWER_CHARS_TITLE', 'Password lower case');
+define('POLICY_MIN_LOWER_CHARS_DESC', 'How many lower case signs should to the password at least have ?');
+define('POLICY_MIN_UPPER_CHARS_TITLE', 'Password upper case');
+define('POLICY_MIN_UPPER_CHARS_DESC', 'How many upper case signs should to the password at least have ?');
+define('POLICY_MIN_NUMERIC_CHARS_TITLE', 'Password Numbers');
+define('POLICY_MIN_NUMERIC_CHARS_DESC', 'How many numeric signs should to the password at least have ?');
+define('POLICY_MIN_SPECIAL_CHARS_TITLE', 'Password special chars');
+define('POLICY_MIN_SPECIAL_CHARS_DESC', 'How many special chars signs should to the password at least have ?');
+
+define('SHOW_SHIPPING_EXCL_TITLE', 'Shippingcost excl.');
+define('SHOW_SHIPPING_EXCL_DESC', 'Show excl. or incl. shippingcost');
+
+define('ACCOUNT_TELEPHONE_OPTIONAL_TITLE', 'Telephone number optional');
+define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Telephone number only optional on registration ?');
+
+define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Universal Analytics');
+define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Use Google Universal Analytics Code ?<br/><br/><b>Attention:</b> After switching to Google Universal Analytics it is not possible to go back to the old one!');
+define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Shop-URL');
+define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Please enter the Shop-URL (example.com oder www.example.com). Only works with Google Universal Analytics.');
+define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics LinkID');
+define('TRACKING_GOOGLE_LINKID_DESC' , 'You can see separate information on multiple links on a page that all have the same goal. If there is for example two links are on the same side, both lead to the contact page, you will see separate click information for each link. Only works with Google Universal Analytics.');
+define('TRACKING_GOOGLE_DISPLAY_TITLE' , 'Google Universal Analytics Displayfeature');
+define('TRACKING_GOOGLE_DISPLAY_DESC' , 'The areas to demographics and interests included an overview and new reports about the performance by age, gender and interest categories. Only works with Google Universal Analytics.');
+define('TRACKING_GOOGLE_ECOMMERCE_TITLE' , 'Google Universal Analytics E-Commerce');
+define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Set up an E-Commerce tracking to find out what visitors buy from your website or app. In addition, you receive the following information:<br><br><strong>Products:</strong> Purchased products and the quantities and the revenues from these products<br><strong>Transactions:</strong> Information about sales, tax, shipping costs and quantities for each transaction<br><strong>time to Purchase:</strong> Number of days and visits, starting from the current campaign until the completion of the transaction');
+
+define('NEW_ATTRIBUTES_STYLING_TITLE', 'Attribute Manager Styling');
+define('NEW_ATTRIBUTES_STYLING_DESC', 'Enable styling of the checkboxes/dropdowns in the attribute manager? Set it to "No" if you experience problems with a huge number of attributes and performance problems.');
+
+define('DB_CACHE_TYPE_TITLE', 'Cache Engine');
+define('DB_CACHE_TYPE_DESC', 'Choose an available Engine for caching');
+
+define('META_PRODUCTS_KEYWORDS_LENGTH_TITLE', 'Length of extra words for Search');
+define('META_PRODUCTS_KEYWORDS_LENGTH_DESC', 'Maximum Length of extra words for Search (Letters)');
+define('META_KEYWORDS_LENGTH_TITLE', 'Length Meta-Keywords');
+define('META_KEYWORDS_LENGTH_DESC', 'Maximum Length of Keywords (Letters)');
+define('META_TITLE_LENGTH_TITLE', 'Length Meta-Title');
+define('META_TITLE_LENGTH_DESC', 'Maximum Length of Title (Letters)');
+define('META_CAT_SHOP_TITLE_TITLE', 'Shop-Title Categories');
+define('META_CAT_SHOP_TITLE_DESC', 'Add Shop-Title to Categories?');
+define('META_PROD_SHOP_TITLE_TITLE', 'Shop-Title Products');
+define('META_PROD_SHOP_TITLE_DESC', 'Add Shop-Title to Products?');
+define('META_CONTENT_SHOP_TITLE_TITLE', 'Shop-Title Contents');
+define('META_CONTENT_SHOP_TITLE_DESC', 'Add Shop-Title to Contents?');
+define('META_SPECIALS_SHOP_TITLE_TITLE', 'Shop-Title Specials');
+define('META_SPECIALS_SHOP_TITLE_DESC', 'Add Shop-Title to Specials?');
+define('META_NEWS_SHOP_TITLE_TITLE', 'Shop-Title New Products');
+define('META_NEWS_SHOP_TITLE_DESC', 'Add Shop-Title to New Products?');
+define('META_SEARCH_SHOP_TITLE_TITLE', 'Shop-Title Search');
+define('META_SEARCH_SHOP_TITLE_DESC', 'Add Shop-Title to search results?');
+define('META_OTHER_SHOP_TITLE_TITLE', 'Shop-Title other pages');
+define('META_OTHER_SHOP_TITLE_DESC', 'Add Shop-Title all other pages?');
+define('META_GOOGLE_VERIFICATION_KEY_TITLE', 'Google Verification Key');
+define('META_GOOGLE_VERIFICATION_KEY_DESC', '<meta name="verifiy-v1">');
+define('META_BING_VERIFICATION_KEY_TITLE', 'Bing Verification Key');
+define('META_BING_VERIFICATION_KEY_DESC', '<meta name="msvalidate.01">');
+
+define('GOOGLE_CONVERSION_TITLE','Google Conversion Tracking');
+define('GOOGLE_CONVERSION_DESC','Track conversion keywords on orders');
+define('GOOGLE_CONVERSION_ID_TITLE','Conversion ID');
+define('GOOGLE_CONVERSION_ID_DESC','Your Google conversion ID');
+
+define('TRACKING_FACEBOOK_ACTIVE_TITLE', 'Activate Facebook Conversion-Tracking');
+define('TRACKING_FACEBOOK_ACTIVE_DESC', 'By activating this option, all purchases will be submitted to Facebook for later evaluation. Before using this option, you need to register at <a href="https://www.facebook.com" target="_blank"><b>Facebook</b></a> and create a new account.');
+define('TRACKING_FACEBOOK_ID_TITLE', 'Facebook Conversion ID');
+define('TRACKING_FACEBOOK_ID_DESC', 'Your Facebook conversion ID');
+
+define('NEW_SELECT_CHECKBOX_TITLE', 'Admin Styling');
+define('NEW_SELECT_CHECKBOX_DESC', 'Use Styling for Checkboxes/Dropdowns?');
+define('CSRF_TOKEN_SYSTEM_TITLE', 'Admin Token System');
+define('CSRF_TOKEN_SYSTEM_DESC', 'Use Token System in admin area?<br/><b>Attention:</b> the Token System is used to secure the admin area.');
+
+define('DISPLAY_FILTER_INDEX_TITLE', 'Filter display per page - Products');
+define('DISPLAY_FILTER_INDEX_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 3,12,27,all');
+define('DISPLAY_FILTER_SPECIALS_TITLE', 'Filter display per page - Specials');
+define('DISPLAY_FILTER_SPECIALS_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 3,12,27,all');
+define('DISPLAY_FILTER_PRODUCTS_NEW_TITLE', 'Filter display per page - New Products');
+define('DISPLAY_FILTER_PRODUCTS_NEW_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 3,12,27,all');
+define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_TITLE', 'Filter display per page - Search results');
+define('DISPLAY_FILTER_ADVANCED_SEARCH_RESULT_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 4,12,32,all');
+
+define('USE_BROWSER_LANGUAGE_TITLE' , 'Switch to browser language');
+define('USE_BROWSER_LANGUAGE_DESC' , 'Automatically switch language to customers browser language.');
+
+define('WYSIWYG_SKIN_TITLE' , 'WYSIWYG Editor Skin');
+define('WYSIWYG_SKIN_DESC' , 'Choose the skin for the WYSIWYG Editor.');
+
+define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'Preselect cheapest shipping method');
+define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Shall the cheapest shipping method be preselected in checkout for the customer?');
+
+define('DISPLAY_PRIVACY_CHECK_TITLE', 'Show privacy checkbox');
+define('DISPLAY_PRIVACY_CHECK_DESC', 'Shall the privacy checkbox be displayed during account creation? (Obligation for B2C businesses)');
+
+define('SHOW_SELFPICKUP_FREE_TITLE', 'Shipping module "Self Pickup" on "free shipping"');
+define('SHOW_SELFPICKUP_FREE_DESC', 'Shall the shipping module "Self Pickup (selfpickup)" be displayed upon reaching the amount for "free shipping" in module "Shipping (ot_shipping)"?');
+
+define('CHECK_FIRST_PAYMENT_MODUL_TITLE', 'Preselect first payment method');
+define('CHECK_FIRST_PAYMENT_MODUL_DESC', 'Shall the first payment method be preselected in checkout for the customer?');
+
+define('ATTRIBUTES_VALID_CHECK_TITLE', 'Attribute validation');
+define('ATTRIBUTES_VALID_CHECK_DESC', 'Checks products in customers cart for attributes, that are no longer valid.<br/>(This can occur, if a customer revisits the shop after a long time and purchases a product from a previous visit that remained in the cart.)<br/><b>Note:</b> For extensions that expand the attributes such as text field, this check must be disabled.');
+
+define('ATTRIBUTE_MODEL_DELIMITER_TITLE', 'Product-/Attribute-No. delimiter');
+define('ATTRIBUTE_MODEL_DELIMITER_DESC', 'Delimiter between product number &amp; attribute product number');
+
+define('STORE_PAGE_PARSE_TIME_THRESHOLD_TITLE' , 'Threshold for storing the page parse time');
+define('STORE_PAGE_PARSE_TIME_THRESHOLD_DESC' , 'Determines the threshold in seconds for storing the page parse time.');
+
+define('SEARCH_IN_FILTER_TITLE', 'Search in products features');
+define('SEARCH_IN_FILTER_DESC', 'Include products features when searching');
+define('SEARCH_AC_STATUS_TITLE','Autocomplete search');
+define('SEARCH_AC_STATUS_DESC','Activate for autocomplete search');
+define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete number of characters');
+define('SEARCH_AC_MIN_LENGTH_DESC', 'Number of characters to display first search results');
+
+define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_TITLE', 'Display right of withdrawal for Downloads');
+define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_DESC', 'Display a checkbox to inform the customer, that the right of withdrawal expires for downloads?');
+define('ORDER_STATUSES_DISPLAY_DEFAULT_TITLE', 'Display Orders');
+define('ORDER_STATUSES_DISPLAY_DEFAULT_DESC', 'Orders with which status will be shown by default?');
+
+define('INVOICE_INFOS_TITLE', 'Invoice data');
+define('INVOICE_INFOS_DESC', 'Choose a content site. The content will be displayed on invoices.');
+?>

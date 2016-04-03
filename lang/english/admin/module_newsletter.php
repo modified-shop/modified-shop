@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-  $Id$
+  $Id: module_newsletter.php 2515 2011-12-12 16:15:44Z dokuman $
 
   modified eCommerce Shopsoftware
   http://www.modified-shop.org

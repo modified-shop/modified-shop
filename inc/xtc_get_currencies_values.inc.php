@@ -1,11 +1,11 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: xtc_get_currencies_values.inc.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2003	 nextcommerce (xtc_get_currencies_values.inc.php,v 1.1 2003/08/213); www.nextcommerce.org
@@ -15,7 +15,9 @@
 
 
 function xtc_get_currencies_values($code) {
-    $currency_values = xtc_db_query("select * from " . TABLE_CURRENCIES . " where code = '" . $code . "'");
+    $currency_values = xtc_db_query("SELECT * 
+                                       FROM " . TABLE_CURRENCIES . " 
+                                      WHERE code = '" . xtc_db_input($code) . "'");
     $currencie_data=xtc_db_fetch_array($currency_values);
     return $currencie_data;
   }

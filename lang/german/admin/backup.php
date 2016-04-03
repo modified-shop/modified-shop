@@ -1,17 +1,16 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: backup.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(backup.php,v 1.21 2002/06/15); www.oscommerce.com 
    (c) 2003	 nextcommerce (backup.php,v 1.4 2003/08/14); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -57,7 +56,12 @@ define('SUCCESS_BACKUP_UPLOAD', 'Erfolgreich: Die Backupdatei wurde erfolgreich 
 //TEXT_COMPLETE_INSERTS
 define('TEXT_COMPLETE_INSERTS', "<b>Vollst&auml;ndige 'INSERT's</b><br> - Feldnamen werden in jede INSERT-Zeile eingetragen (vergr&ouml;ssert das Backup)");
 
+define('TEXT_INFO_TABLES_IN_BACKUP', '<br />' . "\n" .'<b>Tabellen in diesem Backup:</b>' . "\n");
+define('TEXT_INFO_NO_INFORMATION', 'Kein Informationen vorhanden');
 //UTF-8 convert
 define('TEXT_CONVERT_TO_UTF', 'Datenbank auf UTF-8 konvertieren');
 define('TEXT_IMPORT_UTF', 'UTF-8 Datenbank wiederherstellen');
+
+//TEXT_REMOVE_COLLATE
+define('TEXT_REMOVE_COLLATE', "<b>Ohne Zeichenkodierung 'COLLATE' und 'DEFAULT CHARSET'</b><br> - Die Angaben zur Zeichenkodierung werden nicht eingef&uuml;gt. Sinnvoll bei Migration auf eine andere DB-Zeichenkodierung.");
 ?>

@@ -1,0 +1,82 @@
+{config_load file="$language/lang_$language.conf" section="shopping_cart"}
+{config_load file="lang_`$language`.custom"}
+<table class="order_table">
+  <tr class="headerrow">
+    <td class="ord_table_center">{#text_qty#}</td>
+    <td class="ord_table_left">&nbsp;</td>
+    <td class="ord_table_left">{#text_article#}</td>
+    <td class="ord_table_center">{#text_remove#}</td>
+    <td class="ord_table_right">{#text_single#}</td>
+    <td class="ord_table_right">{#text_total#}</td>
+  </tr>
+  {foreach name=aussen item=module_data from=$module_content} 
+  <tr class="mainrow {cycle values="m_row1,m_row2"}">
+    <td class="ord_table_center ord_width60 ord_quantity">{$module_data.PRODUCTS_QTY}</td>
+    <td class="ord_table_left ord_width90"><img class="cartimage" src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></td>
+    <td class="ord_table_left toppad">
+      <a class="ord_prdoducts_name" href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a>
+      {if $module_data.ATTRIBUTES != ''} 
+      <ul class="attributes_list">
+        {foreach key=key_data item=item_data from=$module_data.ATTRIBUTES} 
+        <li><strong>{$item_data.NAME}:</strong> {$item_data.VALUE_NAME}</li>
+        {/foreach} 
+      </ul>
+      {/if}
+      {if $module_data.BUTTON_WISHLIST != ''}<span class="ord_wishlist">&laquo; {$module_data.BUTTON_WISHLIST}</span>{/if}
+    </td>
+    <td class="ord_table_center ord_width90 delete toppad">{$module_data.BUTTON_DELETE}</td>
+    <td class="ord_table_right ord_width110 toppad">{$module_data.PRODUCTS_SINGLE_PRICE}</td>
+    <td class="ord_table_right ord_width110 toppad">{$module_data.PRODUCTS_PRICE}</td>
+  </tr>
+  {/foreach}
+</table>
+<div class="hr_10"></div>
+<div class="ord_subtotal cf">
+  {if sizeof($TOTAL_BLOCK_ARRAY) > 0}
+    <div class="total_table_right">
+      <table class="total_table">
+        {foreach name=aussen item=order_total_values from=$TOTAL_BLOCK_ARRAY}
+        <tr>
+          <td class="ord_table_right">{$order_total_values.title}</td>
+          <td class="ord_table_right ord_width120">{$order_total_values.text}</td>
+        </tr>
+        {/foreach}
+        {if sizeof($shipping_content) > 0}
+          {if $SELECT_COUNTRY}
+          <td class="ord_table_right" colspan="2">{$SELECT_COUNTRY}
+          {/if}
+          {foreach name=aussen item=shipping_data from=$shipping_content}
+          <tr>
+            <td class="ord_table_right">{$shipping_data.NAME} ({$COUNTRY}):</td>
+            <td class="ord_table_right ord_width120">{$shipping_data.VALUE}</td>
+          </tr>
+          {/foreach}
+        {/if}
+        {if $total}
+        <tr>
+          <td class="ord_table_right"><strong>{#text_total#}:</strong></td>
+          <td class="ord_table_right ord_width120"><strong>{$total}</strong></td>
+        <tr>
+        {/if}
+      </table>
+    </div>
+    <br class="clearfix" /> 
+  {else}
+    {if $smarty.const.MODULE_SMALL_BUSINESS != 'true'}
+      {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
+    {/if}
+    <strong>{$TOTAL_CONTENT}</strong>
+    {if sizeof($shipping_content) > 0}
+      {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY}</div>{else}<br />{/if}
+      {foreach name=aussen item=shipping_data from=$shipping_content}
+        <div class="shipping_hinweis">{$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}</div>
+      {/foreach}
+    {/if}
+    {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
+  {/if}
+  
+  {if isset($FREE_SHIPPING_INFO)}{$FREE_SHIPPING_INFO}{/if}
+  
+  {*if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT|number_format:2:",":"."} kg{/if*}
+  {if $KLARNA_PPBOX}<div class="karna_container cf">{$KLARNA_PPBOX}</div>{/if}
+</div>

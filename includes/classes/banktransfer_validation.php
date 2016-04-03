@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: banktransfer_validation.php 4434 2013-02-11 09:05:02Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -31,26 +31,36 @@
 
    Aktuelle Beschreibung der Pruefverfahren:
    http://www.bundesbank.de/Navigation/DE/Kerngeschaeftsfelder/Unbarer_Zahlungsverkehr/Pruefzifferberechnung/pruefzifferberechnung.html
-
-   Released under the GNU General Public License
+   
+   Stand dieses Klassen-Moduls: 9. Dezember 2013 
+   
+   Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
 
 class AccountCheck {
 
-/* Folgende Returncodes werden übergeben                                      */
-/*                                                                            */
-/* 0 -> Kontonummer & BLZ OK                                                  */
-/* 1 -> Kontonummer & BLZ passen nicht                                        */
-/* 2 -> Für diese Kontonummer ist kein Prüfziffernverfahren definiert         */
-/* 3 -> Dieses Prüfziffernverfahren ist noch nicht implementiert              */
-/* 4 -> Diese Kontonummer ist technisch nicht prüfbar                         */
-/* 5 -> BLZ nicht gefunden                                                    */
-/* 8 -> Keine BLZ übergeben                                                   */
-/* 9 -> Keine Kontonummer übergeben                                           */
-/* 10 -> Kein Kontoinhaber übergeben                                          */
-/* 128 -> interner Fehler,der zeigt, das eine Methode nicht implementiert ist */
-/*                                                                            */
+/* Folgende Returncodes werden übergeben                                        */
+/*                                                                              */
+/* 0 -> Kontonummer & BLZ OK                                                    */
+/* 1 -> Kontonummer & BLZ passen nicht                                          */
+/* 2 -> Für diese Kontonummer ist kein Prüfziffernverfahren definiert           */
+/* 3 -> Dieses Prüfziffernverfahren ist noch nicht implementiert                */
+/* 4 -> Diese Kontonummer ist technisch nicht prüfbar                           */
+/* 5 -> BLZ nicht gefunden                                                      */
+/* 8 -> Keine BLZ übergeben                                                     */
+/* 9 -> Keine Kontonummer übergeben                                             */
+/* 10 -> Kein Kontoinhaber übergeben                                            */
+/* 128 -> interner Fehler, der zeigt, dass eine Methode nicht implementiert ist */
+/*                                                                              */
+
+	function __construct() {
+		$this->banktransfer_number = ''; // Enthält nach der Prüfung die geprüfte Kontonummer
+		$this->banktransfer_blz = ''; // Enthält nach der Prüfung die geprüfte BLZ
+		$this->Bankname = ''; // Enthält nach der Prüfung den Namen der Bank bei der Suche nach BLZ
+		$this->PRZ = ''; //Enthält nach der Prüfung die Prüfziffer
+  	$this->checkmode = 'classic'; // 
+	}
 
 var $Bankname; // Enthält den Namen der Bank bei der Suche nach BLZ
 var $PRZ; //Enthält die Prüfziffer
@@ -292,7 +302,7 @@ var $PRZ; //Enthält die Prüfziffer
        $Method16 = 0;
      }
      if ($Help == 1) {
-       if ($Checksum == substr($AccountNo,Checkpoint - 2,1)) {
+       if ($Checksum == substr($AccountNo,$Checkpoint - 2,1)) {
          $Method16 = 0;
        }
      }
@@ -924,6 +934,7 @@ var $PRZ; //Enthält die Prüfziffer
 
 
   /* --- Hotfix FrankM 20081208 --- */
+  /* --- Changed Christian Rothe 20130603 --- */
   private function Mark51($AccountNo) {
       $AccountNo = $this->ExpandAccount($AccountNo);
       // Normale Berechnung, keine Sachkonten
@@ -934,19 +945,23 @@ var $PRZ; //Enthält die Prüfziffer
             // Methode B: Modulus 11, Gewichtung 2, 3, 4, 5, 6 (= Mark33)
             $Help = $this->Method06($AccountNo, '000065432', FALSE, 10, 11);
             if ($Help == 1) {
-              // 10. Stelle 7, 8 oder 9 = ungueltig
-              switch (substr($AccountNo, -1)) {
-                case '7' :
-                case '8' :
-                case '9' :
-                  $Help = 1;
-                  break;
-                default :
-                  // Methode C: Modulus 7, Gewichtung 2, 3, 4, 5, 6
-                  $Help = $this->Method06($AccountNo, '000065432', FALSE, 10, 7);
-                  break;
-              }
-           }
+            	// Methode C: Modulus 10, Gewichtung 2, 1, 2, 1, 2, 1
+            	$Help = $this->Method00($AccountNo,'000121212',10);
+	            if ($Help == 1) {
+	              // 10. Stelle 7, 8 oder 9 = ungueltig
+	              switch (substr($AccountNo, -1)) {
+	                case '7' :
+	                case '8' :
+	                case '9' :
+	                  $Help = 1;
+	                  break;
+	                default :
+	                  // Methode D: Modulus 7, Gewichtung 2, 3, 4, 5, 6
+	                  $Help = $this->Method06($AccountNo, '000065432', FALSE, 10, 7);
+	                  break;
+	              }
+	           }
+	         }
         }
       } else {
         // Ausnahme fuer Sachkonten, 3. Stelle der Kontonummer = 9
@@ -990,6 +1005,7 @@ var $PRZ; //Enthält die Prüfziffer
       $Gewicht = HexDec(substr($Significance,5,1));
 
       $PZ = -1;
+      $Help2 = $Rest + ($PZ * $Gewicht);
       while ($Help2 % 11 <>10) {  //franky_n
         $PZ++;
         $Help2 = $Rest + ($PZ * $Gewicht);
@@ -1046,6 +1062,7 @@ var $PRZ; //Enthält die Prüfziffer
 
       $Gewicht = HexDec(substr($Significance,5, 1));
       $PZ = -1;
+      $Help2 = $Rest + ($PZ * $Gewicht);
       while ($Help2 % 11 <> 10 or $PZ > 9) { //franky_n
         $PZ++;
         $Help2 = $Rest + ($PZ * $Gewicht);
@@ -1139,6 +1156,7 @@ var $PRZ; //Enthält die Prüfziffer
 
   /* --- Neue Methode 57 --- */
   /* --- Changed FrankM 20061206, 20070822 --- */
+  /* --- Changed Christian Rothe 20130909 --- */
   private function Mark57($AccountNo) {
 
     // Auffuellen mit Nullen auf 10 Stellen.
@@ -1154,8 +1172,7 @@ var $PRZ; //Enthält die Prüfziffer
       case ($help01 == 61):
       case ($help01 >= 64 && $help01 <= 66):
       case ($help01 == 70):
-      case ($help01 == 73):
-      case ($help01 >= 75 && $help01 <= 82):
+      case ($help01 >= 73 && $help01 <= 82):
       case ($help01 == 88):
       case ($help01 >= 94 && $help01 <= 95):
         // Variante 1: Modulus 10, Gewichtung 1,2,1,2,1,2,1,2,1, Pruefziffer Stelle 10.
@@ -1176,7 +1193,6 @@ var $PRZ; //Enthält die Prüfziffer
       case ($help01 >= 62 && $help01 <= 63):
       case ($help01 >= 67 && $help01 <= 69):
       case ($help01 >= 71 && $help01 <= 72):
-      case ($help01 == 74):
       case ($help01 >= 83 && $help01 <= 87):
       case ($help01 >= 89 && $help01 <= 90):
       case ($help01 >= 92 && $help01 <= 93):
@@ -1190,9 +1206,9 @@ var $PRZ; //Enthält die Prüfziffer
       case ($help01 == 91):
       case ($help01 == 99):
         // Variante 3: Methode 09 (Keine Berechnung).
-        $PResult = $this->Mark09($AccountNo);;
+        $PResult = $this->Mark09($AccountNo);
         break;
-      case ($help01 >= 01 && $help <= 31):
+      case ($help01 >= 01 && $help01 <= 31):
         // Variante 4: Dritte und vierte Stelle zwischen 01 und 12
         // -UND- siebte bis neunte Stelle kleiner 500.
         $help03 = substr($AccountNo,2,2);
@@ -1204,7 +1220,7 @@ var $PRZ; //Enthält die Prüfziffer
           }
         }
         // Ausnahme: Diese Kontonummer ist als richtig zu bewerten.
-        if ($AccountNo == 0185125434) {
+        if ((string)$AccountNo == '0185125434') {
           $PResult = 0;
         }
         break;
@@ -1277,25 +1293,30 @@ var $PRZ; //Enthält die Prüfziffer
     return $Mark65;
   }  /* End of Mark65 */
 
+  /* --- Changed Christian Rothe 20140303 --- */
   private function Mark66($AccountNo) {
-    $Significance = '000065432';
-    $Help = 0;
-    $Mark66 = 1;
     $AccountNo = $this->ExpandAccount($AccountNo);
-    for ($Run = 0;$Run < strlen($Significance);$Run++) {
-      $Help += (substr($AccountNo,$Run,1) * substr($Significance,$Run,1));
-    }
-    $Help = $Help % 11;
-    $Checksum = 11 - $Help;
-    if ($Help == 0) {
-      $Checksum = 0;
-    }
-    if ($Help == 1) {
-      $Checksum = 1;
-    }
-    if ($Checksum == substr($AccountNo,-1)) {
-      $Mark66 = 0;
-    }
+    if (substr($AccountNo,1,1) == '9') {
+      $Mark66 = $this->Mark09($AccountNo);
+    } else {
+	    $Significance = '070065432';
+	    $Help = 0;
+	    $Mark66 = 1;    
+	    for ($Run = 0;$Run < strlen($Significance);$Run++) {
+	      $Help += (substr($AccountNo,$Run,1) * substr($Significance,$Run,1));
+	    }
+	    $Help = $Help % 11;
+	    $Checksum = 11 - $Help;
+	    if ($Help == 0) {
+	      $Checksum = 1;
+	    }
+	    if ($Help == 1) {
+	      $Checksum = 0;
+	    }
+	    if ($Checksum == substr($AccountNo,-1)) {
+	      $Mark66 = 0;
+	    }
+	  }
     return $Mark66;
   }  /* End of Mark66 */
 
@@ -1638,12 +1659,19 @@ var $PRZ; //Enthält die Prüfziffer
     return $Mark83;
   }  /* End of Mark83 */
 
+  /* --- Changed Christian Rothe 20130603 --- */
   private function Mark84($AccountNo) {
     $AccountNo = $this->ExpandAccount($AccountNo);
     if (substr($AccountNo, 2, 1) != '9') {
-      $Help = $this->Mark33($AccountNo);
+      // Methode A: Modulus 11, Gewichtung 2, 3, 4, 5, 6
+      $Help = $this->Method06($AccountNo, '000065432', FALSE, 10, 11);
+      // Methode B: Modulus 7, Gewichtung 2, 3, 4, 5, 6
       if ($Help == 1) {
         $Help = $this->Method06($AccountNo, '000065432', FALSE, 10, 7);
+      }
+      // Methode C: Modulus 10, Gewichtung 2, 1, 2, 1, 2
+      if ($Help == 1) {
+        $Help = $this->Method06($AccountNo, '000021212', FALSE, 10, 10);
       }
     } else {
         $Help = $this->Mark51($AccountNo);
@@ -1792,9 +1820,9 @@ var $PRZ; //Enthält die Prüfziffer
         }
       }
       if ($D2 == 0) {
-        $P = $TAB1[$A5];
+        $P = $Tab1[$A5];
       } else {
-        $P = $TAB2[$A5];
+        $P = $Tab2[$A5];
       }
       if ($P == $AccountNoTemp[10]) {
         $Result = 0;
@@ -1892,7 +1920,7 @@ var $PRZ; //Enthält die Prüfziffer
         }
       }
     }
-    return $Help;;
+    return $Help;
   }  /* End of Mark91 */
 
   private function Mark92($AccountNo) {
@@ -1924,29 +1952,22 @@ var $PRZ; //Enthält die Prüfziffer
     return $Mark94;
   }  /* End of Mark94 */
 
+  /* --- Changed Christian Rothe 20130909 --- */
   private function Mark95($AccountNo) {
-    if (strlen($AccountNo) == 10) {
-      if ((substr($AccountNo,3,1) == '5') Or (substr($AccountNo, 3, 2) == '69')) {
-        $Mark95 = $this->Method06($AccountNo, '000765432', FALSE, 10, 11);
-      } else {
-        $Mark95 = $this->Method06($AccountNo, '432765432', FALSE, 10, 11);
-      }
-    } else {
-      $Mark95 = $this->Method06($AccountNo, '432765432', FALSE, 10, 11);
-      if ((int) $AccountNo < 2000000) {
+    $AccountNo = $this->ExpandAccount($AccountNo);
+
+    switch($AccountNo) {
+      case ($AccountNo >= '0000000001' && $AccountNo <= '0001999999'):
+      case ($AccountNo >= '0009000000' && $AccountNo <= '0025999999'):
+      case ($AccountNo >= '0396000000' && $AccountNo <= '0499999999'):
+      case ($AccountNo >= '0700000000' && $AccountNo <= '0799999999'):
+      case ($AccountNo >= '0910000000' && $AccountNo <= '0989999999'):
         $Mark95 = 4;
-      }
-      if ((int) $AccountNo > 699999999) {
-        if ((int) $AccountNo < 800000000) {
-          $Mark95 = 4;
-        }
-      }
-      if ((int) $AccountNo > 395999999) {
-        if ((int) $AccountNo < 500000000) {
-          $Mark95 = 4;
-        }
-      }
+        break;
+      default: 
+	     $Mark95 = $this->Method06($AccountNo, '432765432', FALSE, 10, 11);	
     }
+
     return $Mark95;
   }  /* End of Mark95 */
 
@@ -2260,6 +2281,7 @@ var $PRZ; //Enthält die Prüfziffer
     // Variante 1 - Zwei führende Nullen
     if ((substr($AccountNo,0,2) == "00")And (substr($AccountNo,2,1) != "0")){
       $Significance = '1231231';
+	    $Step3 = 0;
       for ($Run = 0;$Run < strlen($Significance);$Run++) {
         $Step1 = (substr($AccountNo,$Run + 2,1) * substr($Significance,$Run,1));
         $Step2 = $Step1 + substr($Significance,$Run,1);
@@ -2281,6 +2303,7 @@ var $PRZ; //Enthält die Prüfziffer
     // Variante 2 - Drei führende Nullen
     } elseif ((substr($AccountNo,0,3) == "000")And (substr($AccountNo,3,1) != "0")){
       $Significance = '654321';
+	    $Step1 = 0;
       for ($Run = 0;$Run < strlen($Significance);$Run++) {
         $Step1 += (substr($AccountNo,$Run + 3,1) * substr($Significance,$Run,1));
       }
@@ -2697,15 +2720,15 @@ var $PRZ; //Enthält die Prüfziffer
   /* --- Added Christian Rothe 20120606 --- */
   private function MarkD9($AccountNo) {
     $AccountNo = $this->ExpandAccount($AccountNo);
-     $markD9 = $this->Method00($AccountNo, '212121212', 10, 10, 0, 0, 'D9');
-     // Wenn Pruefzifferfehler, dann weiter pruefen mit Methode 10.
-     if ($markD9) {
-       $markD9 = $this->Mark10($AccountNo);
-     }
-     // Wenn Pruefzifferfehler, dann weiter pruefen mit Methode 18.
-     if ($markD9) {
-       $markD9 = $this->Mark18($AccountNo);
-     }
+    $markD9 = $this->Method00($AccountNo, '212121212', 10, 10, 0, 0, 'D9');
+    // Wenn Pruefzifferfehler, dann weiter pruefen mit Methode 10.
+    if ($markD9) {
+      $markD9 = $this->Mark10($AccountNo);
+    }
+    // Wenn Pruefzifferfehler, dann weiter pruefen mit Methode 18.
+    if ($markD9) {
+      $markD9 = $this->Mark18($AccountNo);
+    }
     return $markD9;
   }
 
@@ -2716,6 +2739,23 @@ var $PRZ; //Enthält die Prüfziffer
     return $markE0;
   }
 
+  /* --- Added Christian Rothe 20131209 --- */
+  private function MarkE1($AccountNo) {
+  	$markE1 = 1;
+    $AccountNo = $this->ExpandAccount($AccountNo);
+    $Help = 0;
+    $Significance = array(9, 10, 11, 6, 5, 4, 3, 2, 1);
+    // Rechnen mit ASCII-Repräsentation der Zahlen
+    for ($Run = 0; $Run < sizeof($Significance);$Run++) {
+      $Help += ((substr($AccountNo,$Run,1) + 48) * $Significance[$Run]);
+    }
+		$Checksum = $Help % 11; 
+    if ($Checksum < 10 && $Checksum == substr($AccountNo,-1)) {
+        $markE1 = 0;
+    }    
+    return $markE1;
+  }
+
 /* ----- Ende Endgueltige Funktionen der einzelnen Berechnungsmethoden. ---- */
 
 /* -------- Dies ist die wichtigste function ---------- */
@@ -2724,10 +2764,10 @@ var $PRZ; //Enthält die Prüfziffer
     $BLZ = preg_replace('/[^0-9]/', '', $banktransfer_blz); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
 
     $Result = 0;
-    if ($BLZ == '' || strlen($BLZ) < 8) {
+    if ((int)$BLZ == 0 || strlen($BLZ) < 8) {
       return 8;  /* Keine BLZ übergeben */
     }
-    if ($KontoNR == '') {
+    if ((int) $KontoNR == 0) {
       return 9;  /* Keine Kontonummer übergeben */
     }
 
@@ -2773,8 +2813,1062 @@ var $PRZ; //Enthält die Prüfziffer
 
       } /* end if num_rows */
 
+			if ($Result > 0 && $this->checkmode == 'iban') {
+				$Result += 2000;
+			}
+
       return $Result;
     }  /* End of CheckAccount */
+
+		/* -------- 
+			Diese Funktion liefert eine Beurteilung, ob eine Kontonummer grundsätzlich 
+			angenommen und für Zahlungen verwendet werden kann 
+		---------- */
+
+		function account_acceptable($check_result) {
+				$result = false;
+				if (	$check_result == 0 || 
+							$check_result == 2 ||
+							$check_result == 3 ||
+							$check_result == 4 ||
+							$check_result == 2002 ||
+							$check_result == 2003 ||
+							$check_result == 2004) {
+					$result = true;
+				}
+				return $result;
+		}
+
+		/*
+		// Funktionen zu Testen einzelner Methoden mit von Bundesbank angegebenen Testkontonummern
+		// Für Produktivbetrieb auskommentieren
+
+		function devTest($KontoNR, $PRZ) {
+
+			$MethodName = "Mark$PRZ";
+      $Result =  call_user_func (array($this, $MethodName), $KontoNR);
+
+      return $Result;
+			
+		}
+		*/
+
   }  /* End Class AccountCheck */
+
+
+
+class IbanAccountCheck extends AccountCheck { 
+	private $ibanstructure = Array();
+
+/*
+   -----------------------------------------------------------------------------------------
+   Copyright (c) 2013 Christian Rothe
+   -----------------------------------------------------------------------------------------
+*/
+
+/* Folgende Returncodes werden übergeben                                         */
+/*                                                                               */
+/* 0 -> IBAN ist okay                                                            */
+/* 1000 -> Länderkennung ist unbekannt                                           */
+/* 1010 -> Länge der IBAN ist falsch: Zu viele Stellen                           */
+/* 1020 -> Länge der IBAN ist falsch: Zu wenige Stellen                          */
+/* 1030 -> IBAN entspricht nicht dem für das Land festgelegten Format            */
+/* 1040 -> Prüfsumme der IBAN ist nicht korrekt -> Tippfehler                    */
+/* 1050 -> BIC ist ungültig                                                      */
+/* 1060 -> Länge des BIC ist falsch: Zu viele Stellen                            */
+/* 1070 -> Länge des BIC ist falsch: Zu wenige Stellen                           */
+/* 1080 -> Länge des BIC ist ungültig                                            */
+
+/* Zusätzlich werden für Deutsche Konten folgende Returncodes übergeben          */
+/* 2001 -> Deutsche Kontonummer & deutsche BLZ passen nicht                      */
+/* 2002 -> Für diese Kontonummer kein deutsches Prüfziffernverfahren definiert   */
+/*         Da die IBAN-Prüfung klappte, ist die Nr. wahrscheinlich trotzdem okay */
+/* 2003 -> Dieses Deutsche Prüfziffernverfahren ist noch nicht implementiert     */
+/*         Da die IBAN-Prüfung klappte, ist die Nr. wahrscheinlich trotzdem okay */
+/* 2004 -> Diese Kontonummer ist mit deutschen Methoden im Detail nicht prüfbar  */
+/*         Da die IBAN-Prüfung klappte, ist die Nr. wahrscheinlich trotzdem okay */
+/* 2005 -> Deutsche BLZ nicht gefunden                                           */
+/* 2008 -> Keine deutsche BLZ übergeben                                          */
+/* 2009 -> Keine deutsche Kontonummer übergeben                                  */
+/* 2010 -> Kein Kontoinhaber übergeben                                           */
+/* 2020 -> BIC ist ungültig                                                      */
+/* 2128 -> interner Fehler, der zeigt, dass eine Methode nicht implementiert ist */
+/*                                                                               */
+
+		function __construct() {
+
+			parent::__construct();
+
+			$this->banktransfer_iban = ''; // Enthält nach der Prüfung die geprüfte IBAN
+			$this->banktransfer_bic = '';  // Enthält nach der Prüfung den geprüften BIC
+			$this->IBAN_country = '';  // Enthält nach der Prüfung das Land der geprüften IBAN
+
+			// Basis-Informationen / Definition zu IBAN-Kontonummern der einzelnen Länder einlesen 
+    	$this->init();
+    	$this->checkmode = 'iban';
+		}
+
+		function IbanCheckAccount($iban, $bic = null) {
+
+			$result = $this->is_valid_iban($iban);
+
+			// Keine BIC-Überprüfung / keine BIC-Fehlermeldungen bei deutschen Shops, 
+			// wenn IBAN eine deutsche IBAN ist und BIC nicht eingegebn
+			if ($this->get_store_ctryiso2() == 'DE' && $this->iban_get_ctryiso2($iban) == 'DE' && $bic == '') {
+				$bic = null;
+			}
+			
+			if ($result == 0 && isset($bic)) {
+				$result = $this->is_valid_bic($bic,$iban);		
+			}
+			
+			// IBAN und BIC für spätere Verwendung nach außen verfügbar machen
+			$this->banktransfer_iban = $this->iban_trim($iban);
+			$this->banktransfer_bic = $this->bic_trim($bic);
+			$this->IBAN_country = $this->iban_get_ctryiso2($iban);
+			 
+			return $result;
+
+		}
+    
+		function is_valid_iban($iban, $use_german_check = true) {
+
+			$result = 0;
+			
+			if (!$this->iban_check_country($iban)) {
+				$result = 1000;				
+			}
+			
+			// Länge der IBAN prüfen		
+			if ($result == 0) {		
+				$temp_result = $this->iban_check_length($iban);
+				if ($temp_result) {
+					$result = $temp_result;
+				}
+			}
+
+			// Format der IBAN anhand von regulären Ausdrücken prüfen
+			if ($result == 0 && !$this->iban_check_format($iban)) {
+				$result = 1030;
+			}
+
+			// IBAN-Fehler über Prüfsumme aufdecken 
+			if ($result == 0 && !$this->iban_check_checksum($iban)) {
+				$result = 1040;
+			}
+			
+			// Detail-Check für deutsche IBAN-Nummern
+			if ($result == 0 && $this->iban_get_ctryiso2($iban) == 'DE' && $use_german_check) {
+				$result = $this->iban_check_german_account($iban);
+			}
+					
+			return $result;
+			
+		}
+
+		function is_valid_bic($bic, $iban = null) {
+			
+			$result = 0;
+
+			$temp_result = $this->bic_check_length($bic);
+			if ($temp_result) {
+				$result = $temp_result;
+			}
+		
+			if ($result == 0 && !$this->bic_validate($bic)) {
+				 $result = 1050;
+			}
+
+			// Detail-Check für deutsche Konto: Existiert BIC?
+			if ($result == 0 && isset($iban) && $this->iban_get_ctryiso2($iban) == 'DE') {
+				$result = $this->bic_check_german_account($bic, $iban);
+			}
+			
+			return $result;
+		}
+    
+    function iban_check_country($iban) {
+    	
+			// Länge der IBAN prüfen
+			$iban = $this->iban_trim($iban);
+			$ctry_iso_2 = $this->iban_get_ctryiso2($iban);
+   	    	
+    	if (isset($this->ibanstructure[$ctry_iso_2])) {
+    		return true;
+    	}  
+    	
+    	return false;
+    	
+    }
+
+    function iban_check_length($iban) {
+    	
+			// Länge der IBAN prüfen
+			$iban = $this->iban_trim($iban);
+			$ctry_iso_2 = $this->iban_get_ctryiso2($iban);
+   	    	
+    	if (strlen($iban) > $this->ibanstructure[$ctry_iso_2]['length']) {
+    		return 1010;
+    	} elseif (strlen($iban) < $this->ibanstructure[$ctry_iso_2]['length']) {
+     		return 1020;   	
+			}  
+    	
+    	return false;
+    	
+    }
+
+    function iban_check_format($iban) {
+
+			// Format der IBAN anhand von regulären Ausdrücken prüfen
+			$result = true;
+			
+			$iban = $this->iban_trim($iban);
+			$ctry_iso_2 = $this->iban_get_ctryiso2($iban);
+			
+			if (isset($this->ibanstructure[$ctry_iso_2]['regex'])) {
+	 			if (!preg_match('/^' . $this->ibanstructure[$ctry_iso_2]['regex'] . '$/', $iban)) {
+	            $result = false;
+	      }
+	    }
+	    
+	    return $result;    	
+
+		}		
+
+		function iban_get_ctryiso2($iban) {
+
+			// Land aus IBAN extrahieren
+
+			$iban = $this->iban_trim($iban);
+			$ctry_iso_2 = substr($iban,0,2);			
+
+			return $ctry_iso_2;
+		}
+
+		function iban_check_checksum($iban) {
+			
+			// IBAN-Fehler über Prüfsumme aufdecken
+			 
+			$result = false;
+			
+			$iban = $this->iban_trim($iban);
+
+			$iban1 = substr($iban, 4) . substr($iban, 0, 4);
+			$iban1 = str_replace(
+					array('A',  'B',  'C',  'D',  'E',  'F',  'G',  'H',  'I',  'J',  'K',  'L',  'M',
+								'N',  'O',  'P',  'Q',  'R',  'S',  'T',  'U',  'V',  'W',  'X',  'Y',  'Z'),
+					array('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22',
+								'23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35'),
+			    $iban1);
+
+			$help = intval(substr($iban1, 0, 1));
+			$len  = strlen($iban1);
+			for ($x = 1; $x < $len; ++$x) {
+			    $help *= 10;
+			    $help += intval(substr($iban1, $x, 1));
+			    $help %= 97;
+			}
+
+			if ($help == 1) {
+			    $result = true;
+			}
+
+			return $result;
+			
+		}    
+
+		function iban_check_german_account($iban) {
+		
+			// Überprüfe deutsche Kontonummern mit den Prüfziffern-Methoden der Deutschen Bundesbank
+			
+			$iban = $this->iban_trim($iban);
+			$kontonr = substr($iban, 12, 10);
+			$blz = substr($iban, 4, 8);
+			
+			$result = $this->CheckAccount($kontonr,$blz);
+			
+			return $result;
+			
+		}
+
+		function is_sepa_country($ctry_iso2) {
+			
+			$result = false;
+			
+			if ($this->ibanstructure[$ctry_iso2]['sepa_ctry']) {
+				$result = true;
+			}
+			
+			return $result;
+			
+		}
+
+		function iban_trim($iban) {
+			
+			// IBAN auf einheitliches Format mit Großbuchstaben und ohne Leerstellen bringen
+			// Swift (BIC) können damit ebenfalls formatiert werden
+			$iban = trim($iban); 
+			$iban = strtoupper($iban);
+			$iban = preg_replace('/[^A-Z0-9]/','',$iban);
+			
+			return $iban;
+		
+		}
+		
+		function iban_format_human($iban) {
+
+			// IBAN in durch Leerzeichen getrennte Vierergruppen formatieren
+
+			$iban = $this->iban_trim($iban);
+
+			$quadrupel_count = ceil(strlen($iban)/4);
+			$iban_formatted = substr($iban,0,4);
+			
+			for ($i = 1, $n = $quadrupel_count; $i < $n; $i++) {
+				$iban_formatted .= ' '.substr($iban,($i*4),4);
+			}
+
+			return $iban_formatted;
+
+		}
+
+		function bic_trim($bic) {
+			
+			$bic = $this->iban_trim($bic);
+			
+			return $bic;
+		
+		}
+		    
+    function init() {
+    			
+				/*
+				Dabei bedeutet:
+				AD, BE, ... Länderkennzeichen
+				pp zweistellige Prüfsumme
+				b Stelle der Bankleitzahl
+				d Kontotyp
+				k Stelle der Kontonummer
+				K Kontrollziffern
+				r Regionalcode
+				s Stelle der Filialnummer (Branch Code / code guichet)
+				X sonstige Funktionen
+    		*/
+   	
+				$this->ibanstructure = array(
+															// Albanien
+																'AL' => array(	'scheme' => 'ALpp bbbs sssK kkkk kkkk kkkk kkkk',
+																								'regex' => 'AL[0-9]{2}[0-9]{8}[A-Z0-9]{16}',
+																								'length' => 28,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5, 
+																								'bank_length' => 8),
+															// Andorra	
+																'AD' => array(	'scheme' => 'ADpp bbbb ssss kkkk kkkk kkkk', 
+																								'regex' => 'AD[0-9]{2}[0-9]{4}[0-9]{4}[A-Z0-9]{12}', 
+																								'length' => 24,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5, 
+																								'bank_length' => 8),
+															// Aserbaidschan
+																'AZ' => array(	'scheme' => 'AZpp bbbb kkkk kkkk kkkk kkkk kkkk', 
+																								'regex' => 'AZ[0-9]{2}[A-Z]{4}[A-Z0-9]{20}', 
+																								'length' => 28,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5, 
+																								'bank_length' => 5),
+															// Bahrain
+																'BH' => array(	'scheme' =>	'BHpp bbbb kkkk kkkk kkkk kk',
+																								'regex' => 'BH[0-9]{2}[A-Z]{4}[A-Z0-9]{14}', 
+																								'length' => 22,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5, 
+																								'bank_length' => 4),													
+															// Belgien 
+																'BE' => array(	'scheme' => 'BEpp bbbk kkkk kkKK',
+																								'regex' => 'BE[0-9]{2}[0-9]{3}[0-9]{7}[0-9]{2}', 
+																								'length' => 16,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 3),
+															// Bosnien und Herzegowina
+																'BA' => array(	'scheme' => 'BApp bbbs sskk kkkk kkKK', 
+																								'regex' => 'BA[0-9]{2}[0-9]{3}[0-9]{3}[0-9]{8}[0-9]{2}',
+																								'length' => 20,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 7),
+															// Brasilien
+																'BR' => array(	'scheme' => 'BRpp bbbb bbbb ssss skkk kkkk kkkk k',
+																								'regex' => 'BR[0-9]{2}[0-9]{8}[0-9]{5}[0-9]{10}[A-Z][A-Z0-9]', 
+																								'length' => 29,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 13),
+															// Bulgarien
+																'BG' => array(	'scheme' => 'BGpp bbbb ssss ddkk kkkk kk',
+																								'regex' => 'BG[0-9]{2}[A-Z]{4}[0-9]{4}[0-9]{2}[A-Z0-9]{8}', 
+																								'length' => 22,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 8),
+															// Costa Rica
+																'CR' => array(	'scheme' => 'CRpp bbbk kkkk kkkk kkkk k',
+																								'regex' => 'CR[0-9]{2}[0-9]{3}[0-9]{14}', 
+																								'length' => 21,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 3),															
+															// Dänemark
+																'DK' => array(	'scheme' => 'DKpp bbbb kkkk kkkk kK',
+																								'regex' => 'DK[0-9]{2}[0-9]{14}', 
+																								'length' => 18,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Deutschland
+																'DE' => array(	'scheme' => 'DEpp bbbb bbbb kkkk kkkk kk',
+																								'regex' => 'DE[0-9]{2}[0-9]{8}[0-9]{10}', 
+																								'length' => 22,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 8),
+															// Dominikanische Republik
+																'DO' => array(	'scheme' => 'DOpp bbbb kkkk kkkk kkkk kkkk kkkk',
+																								'regex' => 'DO[0-9]{2}[A-Z0-9]{4}[0-9]{20}', 
+																								'length' => 28,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Estland
+																'EE' => array(	'scheme' => 'EEpp bbkk kkkk kkkk kkkK',
+																								'regex' => 'EE[0-9]{2}[0-9]{2}[0-9]{2}[0-9]{11}[0-9]{1}', 
+																								'length' => 20,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Faröer Insel 
+																'FO' => array(	'scheme' => 'FOpp bbbb kkkk kkkk kK',
+																								'regex' => 'FO[0-9]{2}[0-9]{4}[0-9]{9}[0-9]{1}', 
+																								'length' => 18,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Finnland
+																'FI' => array(	'scheme' => 'FIpp bbbb bbkk kkkk kK',
+																								'regex' => 'FI[0-9]{2}[0-9]{6}[0-9]{7}[0-9]{1}', 
+																								'length' => 18,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 6),
+															// Frankreich
+																'FR' => array(	'scheme' => 'FRpp bbbb bsss sskk kkkk kkkk kKK',
+																								'regex' => 'FR[0-9]{2}[0-9]{5}[0-9]{5}[A-Z0-9]{11}[0-9]{2}', 
+																								'length' => 27,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 10),
+															// Georgien
+																'GE' => array(	'scheme' => 'GEpp bbkk kkkk kkkk kkkk kk',
+																								'regex' => 'GE[0-9]{2}[A-Z]{2}[0-9]{16}', 
+																								'length' => 22,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 2),
+															// Gibraltar
+																'GI' => array(	'scheme' => 'GIpp bbbb kkkk kkkk kkkk kkk',
+																								'regex' => 'GI[0-9]{2}[A-Z]{4}[A-Z0-9]{15}', 
+																								'length' => 23,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Griechenland
+																'GR' => array(	'scheme' => 'GRpp bbbs sssk kkkk kkkk kkkk kkk',
+																								'regex' => 'GR[0-9]{2}[0-9]{3}[0-9]{4}[A-Z0-9]{16}', 
+																								'length' => 27,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 7),
+															// Grönland
+																'GL' => array(	'scheme' => 'GLpp bbbb kkkk kkkk kK',
+																								'regex' => 'GL[0-9]{2}[0-9]{4}[0-9]{9}[0-9]{1}', 
+																								'length' => 18,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Großbritannien
+																'GB' => array(	'scheme' => 'GBpp bbbb ssss sskk kkkk kk',
+																								'regex' => 'GB[0-9]{2}[A-Z]{4}[0-9]{6}[0-9]{8}', 
+																								'length' => 22,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Guadeloupe
+																'GP' => array(	'scheme' => 'GPpp bbbb bsss sskk kkkk kkkk kKK',
+																								'regex' => null, 
+																								'length' => 27,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 10),
+															// Guatemala
+																'GT' => array(	'scheme' => 'GTpp bbbb kkkk kkkk kkkk kkkk kkkk',
+																								'regex' => 'GT[0-9]{2}[A-Z0-9]{4}[A-Z0-9]{20}', 
+																								'length' => 28,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Hongkong 
+																'HK' => array(	'scheme' => 'HKpp bbbb kkkk kkkk',
+																								'regex' => null, 
+																								'length' => 16,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Irland
+																'IE' => array(	'scheme' => 'IEpp bbbb ssss sskk kkkk kk',
+																								'regex' => 'IE[0-9]{2}[A-Z]{4}[0-9]{6}[0-9]{8}', 
+																								'length' => 22,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 10),
+															// Island
+																'IS' => array(	'scheme' => 'ISpp bbbb sskk kkkk XXXX XXXX XX',
+																								'regex' => 'IS[0-9]{2}[0-9]{4}[0-9]{2}[0-9]{6}[0-9]{10}', 
+																								'length' => 26,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 6),
+															// Israel 
+																'IL' => array(	'scheme' => 'ILpp bbbs sskk kkkk kkkk kkk',
+																								'regex' => 'IL[0-9]{2}[0-9]{3}[0-9]{3}[0-9]{13}', 
+																								'length' => 23,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 6),
+															// Italien 
+																'IT' => array(	'scheme' => 'ITpp Kbbb bbss sssk kkkk kkkk kkk',
+																								'regex' => 'IT[0-9]{2}[A-Z]{1}[0-9]{5}[0-9]{5}[A-Z0-9]{12}', 
+																								'length' => 27,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 6,
+																								'bank_length' => 10),
+															// Jordanien 
+																'JO' => array(	'scheme' => 'JOpp bbbb ssss kkkk kkkk kkkk kkkk kk',
+																								'regex' => null, 
+																								'length' => 30,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 8),
+															// Jungferninseln
+																'VG' => array(	'scheme' => 'VGpp bbbb kkkk kkkk kkkk kkkk',
+																								'regex' => 'VG[0-9]{2}[A-Z]{4}[0-9]{16}', 
+																								'length' => 24,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),																								
+															// Kasachstan
+																'KZ' => array(	'scheme' => 'KZpp bbbk kkkk kkkk kkkk',
+																								'regex' => 'KZ[0-9]{2}[0-9]{3}[A-Z0-9]{13}', 
+																								'length' => 20,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 3),
+															// Katar
+																'QA' => array(	'scheme' => 'QApp bbbb kkkk kkkk kkkk kkkk kkkk k',
+																								'regex' => null, 
+																								'length' => 29,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Kroatien
+																'HR' => array(	'scheme' => 'HRpp bbbb bbbk kkkk kkkk k',
+																								'regex' => 'HR[0-9]{2}[0-9]{7}[0-9]{10}', 
+																								'length' => 21,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 7),
+															// Kuwait
+																'KW' => array(	'scheme' => 'KWpp bbbb kkkk kkkk kkkk kkkk kkkk kk',
+																								'regex' => 'KW[0-9]{2}[A-Z]{4}[0-9]{22}', 
+																								'length' => 30,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Lettland
+																'LV' => array(	'scheme' => 'LVpp bbbb kkkk kkkk kkkk k',
+																								'regex' => 'LV[0-9]{2}[A-Z]{4}[A-Z0-9]{13}', 
+																								'length' => 21,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Libanon
+																'LB' => array(	'scheme' => 'LBpp bbbb kkkk kkkk kkkk kkkk kkkk',
+																								'regex' => 'LB[0-9]{2}[0-9]{4}[A-Z0-9]{20}', 
+																								'length' => 28,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Liechtenstein
+																'LI' => array(	'scheme' => 'LIpp bbbb bkkk kkkk kkkk k',
+																								'regex' => 'LI[0-9]{2}[0-9]{5}[A-Z0-9]{12}', 
+																								'length' => 21,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 5),
+															// Litauen
+																'LT' => array(	'scheme' => 'LTpp bbbb bkkk kkkk kkkk',
+																								'regex' => 'LT[0-9]{2}[0-9]{5}[0-9]{11}', 
+																								'length' => 20,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 5),
+															// Luxemburg
+																'LU' => array(	'scheme' => 'LUpp bbbk kkkk kkkk kkkk',
+																								'regex' => 'LU[0-9]{2}[0-9]{3}[A-Z0-9]{13}', 
+																								'length' => 20,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 3),
+															// Malta 
+																'MT' => array(	'scheme' => 'MTpp bbbb ssss skkk kkkk kkkk kkkk kkk',
+																								'regex' => 'MT[0-9]{2}[A-Z]{4}[0-9]{5}[A-Z0-9]{18}', 
+																								'length' => 31,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 9),
+															// Marokko
+																'MT' => array(	'scheme' => 'MApp bbba aakk kkkk kkkk kkKK',
+																								'regex' => null, 
+																								'length' => 24,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 3),
+															// Martinique
+																'MQ' => array(	'scheme' => 'MQpp bbbb bsss sskk kkkk kkkk kKK',
+																								'regex' => null, 
+																								'length' => 27,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 10),
+															// Mauretanien
+																'MR' => array(	'scheme' => 'MRpp bbbb bsss sskk kkkk kkkk kKK',
+																								'regex' => 'MR13[0-9]{5}[0-9]{5}[0-9]{11}[0-9]{2}', 
+																								'length' => 27,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 10),																														
+															// Mauritius
+																'MU' => array(	'scheme' => 'MUpp bbbb bbss kkkk kkkk kkkk kkkK KK',
+																								'regex' => 'MU[0-9]{2}[A-Z]{4}[0-9]{2}[0-9]{2}[0-9]{12}[0-9]{3}[A-Z]{3}', 
+																								'length' => 30,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 7),
+															// Mazedonien
+																'MK' => array(	'scheme' => 'MKpp bbbk kkkk kkkk kKK',
+																								'regex' => 'MK[0-9]{2}[0-9]{3}[A-Z0-9]{10}[0-9]{2}', 
+																								'length' => 19,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 3),
+															// Moldawien
+																'MD' => array(	'scheme' => 'MDpp bbkk kkkk kkkk kkkk kkkk',
+																								'regex' => 'MD[0-9]{2}[A-Z0-9]{20}', 
+																								'length' => 24,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 2),
+															// Monaco
+																'MC' => array(	'scheme' => 'MCpp bbbb bsss sskk kkkk kkkk kKK',
+																								'regex' => 'MC[0-9]{2}[0-9]{5}[0-9]{5}[A-Z0-9]{11}[0-9]{2}', 
+																								'length' => 27,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 10),
+															// Montenegro
+																'ME' => array(	'scheme' => 'MEpp bbbk kkkk kkkk kkkk KK',
+																								'regex' => 'ME[0-9]{2}[0-9]{3}[0-9]{13}[0-9]{2}', 
+																								'length' => 20,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 3),
+															// Neukaledonien													
+																'NC' => array(	'scheme' => 'NCpp bbbb bsss sskk kkkk kkkk kKK',
+																								'regex' => null, 
+																								'length' => 30,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 10),
+															// Niederlande
+																'NL' => array(	'scheme' => 'NLpp bbbb kkkk kkkk kk',
+																								'regex' => 'NL[0-9]{2}[A-Z]{4}[0-9]{10}', 
+																								'length' => 18,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Norwegen
+																'NO' => array(	'scheme' => 'NOpp bbbb kkkk kkK',
+																								'regex' => 'NO[0-9]{2}[0-9]{4}[0-9]{6}[0-9]{1}', 
+																								'length' => 15,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Österreich
+																'AT' => array(	'scheme' => 'ATpp bbbb bkkk kkkk kkkk',
+																								'regex' => 'AT[0-9]{2}[0-9]{5}[0-9]{11}', 
+																								'length' => 20,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 5),
+															// Pakistan
+																'PK' => array(	'scheme' => 'PKpp bbbb rrkk kkkk kkkk kkkk',
+																								'regex' => 'PK[0-9]{2}[A-Z]{4}[A-Z0-9]{16}', 
+																								'length' => 24,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 6),
+															// Polen
+																'PL' => array(	'scheme' => 'PLpp bbbs sssK kkkk kkkk kkkk kkkk',
+																								'regex' => 'PL[0-9]{2}[0-9]{8}[0-9]{16}', 
+																								'length' => 28,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 8),
+															// Palästinensische Autonomiegebiete
+																'PS' => array(	'scheme' => 'PSpp bbbb rrrr rrrr rkkk kkkk kkkk k',
+																								'regex' => 'PS[0-9]{2}[A-Z]{4}[A-Z0-9]{21}', 
+																								'length' => 29,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 13),															
+															// Portugal
+																'PT' => array(	'scheme' => 'PTpp bbbb ssss kkkk kkkk kkkK K',
+																								'regex' => 'PT[0-9]{2}[0-9]{4}[0-9]{4}[0-9]{11}[0-9]{2}', 
+																								'length' => 25,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 8),
+															// Réunion
+																'RE' => array(	'scheme' => 'REpp bbbb bsss sskk kkkk kkkk kKK',
+																								'regex' => null, 
+																								'length' => 27,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 10),
+															// Rumänien*	
+																'RO' => array(	'scheme' => 'ROpp bbbb kkkk kkkk kkkk kkkk',
+																								'regex' => 'RO[0-9]{2}[A-Z]{4}[A-Z0-9]{16}', 
+																								'length' => 24,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// San Marino
+																'SM' => array(	'scheme' => 'SMpp Kbbb bbss sssk kkkk kkkk kkk',
+																								'regex' => 'SM[0-9]{2}[A-Z]{1}[0-9]{5}[0-9]{5}[A-Z0-9]{12}', 
+																								'length' => 27,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 6,
+																								'bank_length' => 10),
+															// Saudi-Arabien
+																'SA' => array(	'scheme' => 'SApp bbkk kkkk kkkk kkkk kkkk',
+																								'regex' => 'SA[0-9]{2}[0-9]{2}[A-Z0-9]{18}', 
+																								'length' => 24,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 2),
+															// Schweden
+																'SE' => array(	'scheme' => 'SEpp bbbk kkkk kkkk kkkk kkkK',
+																								'regex' => 'SE[0-9]{2}[0-9]{3}[0-9]{16}[0-9]{1}', 
+																								'length' => 24,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 3),
+															// Schweiz
+																'CH' => array(	'scheme' => 'CHpp bbbb bkkk kkkk kkkk k',
+																								'regex' => 'CH[0-9]{2}[0-9]{5}[A-Z0-9]{12}', 
+																								'length' => 21,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 5),
+															// Serbien
+																'RS' => array(	'scheme' => 'RSpp bbbk kkkk kkkk kkkk KK',
+																								'regex' => 'RS[0-9]{2}[0-9]{3}[0-9]{13}[0-9]{2}', 
+																								'length' => 22,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 3),
+															// Slowakei 
+																'SK' => array(	'scheme' => 'SKpp bbbb ssss sskk kkkk kkkk',
+																								'regex' => 'SK[0-9]{2}[0-9]{4}[0-9]{6}[0-9]{10}', 
+																								'length' => 24,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Slowenien
+																'SI' => array(	'scheme' => 'SIpp bbss skkk kkkk kKK',
+																								'regex' => 'SI[0-9]{2}[0-9]{5}[0-9]{8}[0-9]{2}', 
+																								'length' => 19,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 5),
+															// Spanien
+																'ES' => array(	'scheme' => 'ESpp bbbb ssss KKkk kkkk kkkk',
+																								'regex' => 'ES[0-9]{2}[0-9]{4}[0-9]{4}[0-9]{1}[0-9]{1}[0-9]{10}', 
+																								'length' => 24,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 8),
+															// Tschechien 
+																'CZ' => array(	'scheme' => 'CZpp bbbb kkkk kkkk kkkk kkkk',
+																								'regex' => 'CZ[0-9]{2}[0-9]{20}', 
+																								'length' => 24,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 4),
+															// Türkei
+																'TR' => array(	'scheme' => 'TRpp bbbb brkk kkkk kkkk kkkk kk',
+																								'regex' => 'TR[0-9]{2}[0-9]{5}[A-Z0-9]{1}[A-Z0-9]{16}', 
+																								'length' => 26,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 6),
+															// Tunesien
+																'TN' => array(	'scheme' => 'TNpp bbss skkk kkkk kkkk kkKK',
+																								'regex' => 'TN59[0-9]{2}[0-9]{3}[0-9]{13}[0-9]{2}', 
+																								'length' => 24,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 5),
+															// Ungarn
+																'HU' => array(	'scheme' => 'HUpp bbbs sssK kkkk kkkk kkkk kkkK',
+																								'regex' => 'HU[0-9]{2}[0-9]{3}[0-9]{4}[0-9]{1}[0-9]{15}[0-9]{1}', 
+																								'length' => 28,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 7),
+															// Vereinigte Arabische Emirate
+																'AE' => array(	'scheme' => 'AEpp bbbk kkkk kkkk kkkk kkk',
+																								'regex' => 'AE[0-9]{2}[0-9]{3}[0-9]{16}', 
+																								'length' => 23,
+																								'sepa_ctry' => false,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 3),															
+															// Zypern
+																'CY' => array(	'scheme' => 'CYpp bbbs ssss kkkk kkkk kkkk kkkk',
+																								'regex' => 'CY[0-9]{2}[0-9]{3}[0-9]{5}[A-Z0-9]{16}', 
+																								'length' => 28,
+																								'sepa_ctry' => true,
+																								'bank_start_pos' => 5,
+																								'bank_length' => 8),
+													);    	
+
+
+
+
+ 
+    }
+
+
+    function bic_check_length($bic) {
+    	
+			// Länge des BIC prüfen
+			if (strlen($bic) > 11) {
+				return 1060;
+			} elseif (strlen($bic) < 8) {
+				return 1070;
+			} elseif (strlen($bic) != 8 && strlen($bic) != 11) {
+				return 1080;
+			};
+    	
+    	return false;
+    	
+    }
+    
+    
+		function bic_validate($bic) {
+
+			/*
+					Der BIC oder SWIFT-Code hat eine Länge von 8 oder 11 alphanumerischen Zeichen und folgenden Aufbau: BBBBCCLLbbb	
+					Bedeutung
+					BBBB:	nur Buchstaben 		4-stelliger Bankcode, vom Geldinstitut frei wählbar
+					CC:	nur Buchstaben			2-stelliger Ländercode nach ISO 3166-1
+					LL:	Buchstaben/Ziffern 	2-stellige Codierung des Ortes in zwei Zeichen. 
+																	Das erste Zeichen darf nicht die Ziffer "0" oder "1" sein. 
+																	Wenn das zweite Zeichen kein Buchstabe, sondern eine Ziffer ist, so bedeutet dies:
+																	0 – es handelt sich um eine Test-BIC
+																	1 – es handelt sich um einen passiven SWIFT-Teilnehmer
+																	2 – der Empfänger zahlt die Transaktionskosten
+																	Der Buchstabe 'O' ist als zweites Zeichen nicht gestattet.
+					bbb: Buchstaben/Ziffern	3-stellige Kennzeichnung (Branch-Code) der Filiale oder Abteilung (optional)
+																	Ein 8-stelliger BIC kann um "XXX" auf einen 11-stelligen ergänzt werden, entsprechend kann "XXX" auch weggelassen werden, 
+																	andere Kennzeichen nicht. Der Branch-Code darf nicht mit "X" anfangen, es sei denn, es ist "XXX".
+			*/
+		
+			$bic = $this->bic_trim($bic);
+		
+			$result = false;
+			if(preg_match('/^([A-Z]){4}([A-Z]){2}([0-9A-Z]){2}([0-9A-Z]{3})?$/', $bic)) {
+				$result = true;
+			}
+			// Stellen 7 und 8: 2-stellige Codierung des Ortes in zwei Zeichen. Das erste Zeichen davon darf nicht die Ziffer "0" oder "1" sein. Der Buchstabe 'O' ist als zweites Zeichen nicht gestattet.
+			if (substr($bic,6,1) == '0' || substr($bic,6,1) == '1') {
+				$result = false;
+			}
+			if (substr($bic,7,1) == 'O') {
+				$result = false;
+			}
+			// Der Branch-Code darf nicht mit "X" anfangen, es sei denn, es ist "XXX".
+			if (substr($bic,8,1) == 'X' && substr($bic,8,3) != 'XXX') {
+				$result = false;
+			}
+			
+			return $result;
+		
+		}   
+
+		function get_bic($blz) {
+			$result = false;
+			$check_blz = $this->query($blz);
+			if ($check_blz != -1 && isset($check_blz['bic'])) {
+				$result = $check_blz['bic'];
+			} 
+			return $result;
+		}
+
+		function get_bankname($blz) {
+			$result = false;
+			$check_blz = $this->query($blz);
+			if ($check_blz != -1 && isset($check_blz['bankname'])) {
+				$result = $check_blz['bankname'];
+			} 
+			return $result;
+		}
+
+		function bic_check_german_account($bic, $iban) {
+		
+			// Überprüfe, ob BIC in BLZ-Daten der Deutschen Bundesbank vorhanden ist.
+
+			$result = 0;
+
+	    if (MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ == 'true' && defined(MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ)) {
+				// Zunächst prüfen, ob BIC-Spalte in Bankleitzahlen-Tabelle enthalten
+				$table_query = xtc_db_query("SHOW COLUMNS from ".TABLE_BANKTRANSFER_BLZ." where Field = 'bic'"); 
+				if (xtc_db_num_rows($table_query) > 0) {
+	
+					// Okay: BIC-Spalte existiert
+					// Wir prüfen also den BIC
+					$result = 2020;
+	
+					$bic = $this->bic_trim($bic);
+					$bic_padded = str_pad($bic, 11, "X", STR_PAD_RIGHT);
+		
+					$german_bank_query = xtc_db_query("select * from ".TABLE_BANKTRANSFER_BLZ." where bic = '".xtc_db_input($bic)."' or bic = '".xtc_db_input($bic_padded)."' limit 1");	
+					
+					if ($german_bank = xtc_db_fetch_array($german_bank_query)) {
+						$result = 0;
+					}
+
+				} 	
+			}
+		
+			return $result;
+			
+		}
+
+		function bban_to_iban($bban, $ctry_iso2) {
+			
+			// Leerzeichen entfernen und Buchstaben in Großbuchstaben verwandeln
+			$ctry_iso2 = $this->iban_trim($ctry_iso2);
+			$bban = $this->iban_trim($bban);
+
+			$iban_tmp = $bban . $ctry_iso2.'00'; 
+
+			$iban_tmp = str_replace(
+					array('A',  'B',  'C',  'D',  'E',  'F',  'G',  'H',  'I',  'J',  'K',  'L',  'M',
+								'N',  'O',  'P',  'Q',  'R',  'S',  'T',  'U',  'V',  'W',  'X',  'Y',  'Z'),
+					array('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22',
+								'23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35'),
+			    $iban_tmp);
+
+
+			$modulo = (bcmod($iban_tmp,"97"));
+			$pruefziffer = str_pad ( 98 - $modulo, 2, "0",STR_PAD_LEFT);
+			$iban = $ctry_iso2 . $pruefziffer . $bban;
+
+			// Ergebnis überprüfen
+			$checkresult = $this->is_valid_iban($iban, false);
+			if ($checkresult > 0) {
+				$iban = false;
+			}
+	
+			return $iban;
+	
+		}
+
+
+		function message($error_code) {
+
+				/* Folgende Error-Codes werden berücksichtigt                                    */
+				/*                                                                               */
+
+				/* 0 -> Bankverbindung ist okay                                                  */
+
+				/* 1 -> Kontonummer & BLZ passen nicht                                           */
+				/* 2 -> Für diese Kontonummer ist kein Prüfziffernverfahren definiert            */
+				/* 3 -> Dieses Prüfziffernverfahren ist noch nicht implementiert                 */
+				/* 4 -> Diese Kontonummer ist technisch nicht prüfbar                            */
+				/* 5 -> BLZ nicht gefunden                                                       */
+				/* 8 -> Keine BLZ übergeben                                                      */
+				/* 9 -> Keine Kontonummer übergeben                                              */
+				/* 10 -> Kein Kontoinhaber übergeben                                             */
+				/* 128 -> interner Fehler, der zeigt, dass eine Methode nicht implementiert ist  */
+
+				/* 1000 -> Länderkennung ist unbekannt                                           */
+				/* 1010 -> Länge der IBAN ist falsch: Zu viele Stellen                           */
+				/* 1020 -> Länge der IBAN ist falsch: Zu wenige Stellen                          */
+				/* 1030 -> IBAN entspricht nicht dem für das Land festgelegten Format            */
+				/* 1040 -> Prüfsumme der IBAN ist nicht korrekt -> Tippfehler                    */
+				/* 1050 -> BIC ist ungültig                                                      */
+				/* 1060 -> Länge des BIC ist falsch: Zu viele Stellen                            */
+				/* 1070 -> Länge des BIC ist falsch: Zu wenige Stellen                           */
+				/* 1080 -> Länge des BIC ist ungültig                                            */
+				
+				/* 2001 -> Deutsche Kontonummer & deutsche BLZ passen nicht                      */
+				/* 2002 -> Für diese Kontonummer kein deutsches Prüfziffernverfahren definiert   */
+				/*         Da die IBAN-Prüfung klappte, ist die Nr. wahrscheinlich trotzdem okay */
+				/* 2003 -> Dieses Deutsche Prüfziffernverfahren ist noch nicht implementiert     */
+				/*         Da die IBAN-Prüfung klappte, ist die Nr. wahrscheinlich trotzdem okay */
+				/* 2004 -> Diese Kontonummer ist mit deutschen Methoden im Detail nicht prüfbar  */
+				/*         Da die IBAN-Prüfung klappte, ist die Nr. wahrscheinlich trotzdem okay */
+				/* 2005 -> Deutsche BLZ nicht gefunden                                           */
+				/* 2008 -> Keine deutsche BLZ übergeben                                          */
+				/* 2009 -> Keine deutsche Kontonummer übergeben                                  */
+				/* 2010 -> Kein Kontoinhaber übergeben                                           */
+				/* 2020 -> BIC ist ungültig                                                      */
+				/* 2128 -> interner Fehler, der zeigt, dass eine Methode nicht implementiert ist */
+				/*                                                                               */
+
+
+				if (defined('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_'.(int)$error_code)) {
+					$result = constant('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_'.(int)$error_code);
+				} else {
+					$result = BANKACCOUNT_CHECK_TEXT_BANK_ERROR_UNKNOWN;
+				}
+				
+				return $result;
+			
+		}		
+ 
+ 		function get_store_ctryiso2() {
+ 			
+ 			$country_query = xtc_db_query("select countries_iso_code_2 from ".TABLE_COUNTRIES." where countries_id = '".(int)STORE_COUNTRY."'");
+ 			$country = xtc_db_fetch_array($country_query);
+ 			
+ 			return $country['countries_iso_code_2'];
+ 			
+ 		}
+ 
+    
+}  /* End Class IbanAccountCheck */
 
 ?>

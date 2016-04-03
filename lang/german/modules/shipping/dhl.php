@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: dhl.php 5123 2013-07-18 11:49:11Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -40,7 +40,7 @@ define('MODULE_SHIPPING_DHL_ZONE_DESC' , 'Wenn Sie eine Zone ausw&auml;hlen, wir
 define('MODULE_SHIPPING_DHL_SORT_ORDER_TITLE' , 'Reihenfolge der Anzeige');
 define('MODULE_SHIPPING_DHL_SORT_ORDER_DESC' , 'Niedrigste wird zuerst angezeigt.');
 define('MODULE_SHIPPING_DHL_ALLOWED_TITLE' , 'Einzelne Versandzonen');
-define('MODULE_SHIPPING_DHL_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. zb AT,DE');
+define('MODULE_SHIPPING_DHL_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. z.B. AT,DE');
 
 define('MODULE_SHIPPING_DHL_COUNTRIES_1_TITLE' , 'Tarifzone 0 L&auml;nder');
 define('MODULE_SHIPPING_DHL_COUNTRIES_1_DESC' , 'Inlandszone');

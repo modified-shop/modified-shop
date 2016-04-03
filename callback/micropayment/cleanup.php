@@ -9,7 +9,7 @@ chdir('../../');
 
 require_once('includes/application_top.php');
 
-$method_class_file = dirname(__FILE__).'/../../includes/external/micropayment/class.micropayment_method.php';
+$method_class_file = DIR_FS_EXTERNAL.'micropayment/class.micropayment_method.php';
 require_once($method_class_file);
 
 if(

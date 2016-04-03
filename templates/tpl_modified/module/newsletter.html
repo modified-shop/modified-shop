@@ -1,0 +1,54 @@
+{config_load file="$language/lang_$language.conf" section="newsletter"}
+{config_load file="lang_`$language`.custom"}
+<h1>{#heading_title#}</h1>
+{if $info_message != ''}<div class="{if $message_class}{$message_class}{else}info{/if}message">{$info_message}</div>{/if}
+{if !isset($activated)}
+  {$FORM_ACTION}
+  <div class="twoColums">
+    <div class="highlightbox">
+      <h4>{#heading_personal#}</h4>
+      <table>
+        {if $INPUT_CODE}
+        <tr>
+          <td><span class="fieldtext">{#text_sec_code#}</span><span class="stern">{$VVIMG}</span></td>
+        </tr>
+        <tr>
+          <td><span class="fieldtext">{#text_sec_code#}</span><span class="stern">{$INPUT_CODE}<span class="inputRequirement"> *</span></span></td>
+        </tr>
+        {/if}
+        <tr>
+          <td><span class="fieldtext">{#text_email#}</span><span class="stern">{$INPUT_EMAIL} <span class="inputRequirement">*</span></span></td>
+        </tr>
+        <tr>
+          <td>
+            <table cellspacing="0" cellpadding="0">
+              <tr>
+                <td style="vertical-align:top;padding: 5px 5px 0px 0px;">{$CHECK_INP}</td>
+                <td>{#text_in#}</td>
+              </tr>
+              <tr>
+                <td style="vertical-align:top;padding: 5px 5px 0px 0px;">{$CHECK_DEL}</td>
+                <td>{#text_out#}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="button_right">{$BUTTON_SEND}</div>
+  </div>
+
+  <div class="twoColums last">
+    <div class="highlightbox plainright">
+      <h4>{#heading_text#}</h4>
+      <p>{#text_zusatz#}</p>
+    </div>
+  </div> 
+  {$FORM_END}
+{else}
+  <div class="highlightbox">
+    <h4>{#heading_text#}</h4>
+    <p>{#text_zusatz#}</p>
+  </div>
+{/if}
+<br class="clearfix" />

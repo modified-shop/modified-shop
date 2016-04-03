@@ -18,29 +18,92 @@ class Billpay_Base_Bankdata
      */
     var $_attributes = array();
 
-    function loadByOrdersId($ordersId)
+    public static function LoadByOrdersId($ordersId)
     {
-        $fieldData = $this->buildStatement('orders_id = ' . (int)$ordersId);
-        $this->setAttributes($fieldData);
-
-        return $this;
+        $ret = new Billpay_Base_Bankdata();
+        $fieldData = self::buildStatement('orders_id = ' . (int)$ordersId);
+        $ret->setAttributes($fieldData);
+        return $ret;
     }
 
-    function loadByApiReference($referenceId)
+    public static function LoadByTxId($tx_id)
     {
-        $fieldData = $this->buildStatement('api_reference_id = "' . mysql_real_escape_string($referenceId) . '"');
-        $this->setAttributes($fieldData);
-
-        return $this;
+        $ret = new Billpay_Base_Bankdata();
+        $fieldData = self::buildStatement('tx_id = "' . mysql_real_escape_string($tx_id) . '"');
+        $ret->setAttributes($fieldData);
+        return $ret;
     }
 
-    function buildStatement($condition)
+    public static function LoadByApiReference($referenceId)
     {
-        $qry = 'SELECT *
-                FROM ' . self::TABLE . '
-                WHERE ' . $condition . '
-                LIMIT 1';
+        $ret = new Billpay_Base_Bankdata();
+        $fieldData = self::buildStatement('api_reference_id = "' . mysql_real_escape_string($referenceId) . '"');
+        $ret->setAttributes($fieldData);
+        return $ret;
+    }
 
+    /**
+     * @param string $referenceId
+     * @return mixed
+     * @static
+     */
+    function GetTxIdFromApiReference($referenceId)
+    {
+        $query = "SELECT tx_id FROM billpay_bankdata WHERE api_reference_id = '$referenceId' LIMIT 1";
+        $resource = xtc_db_query($query);
+        $data = xtc_db_fetch_array($resource);
+        return $data['tx_id'];
+    }
+
+    /**
+     * Method creates new row in Bankdata, saving basic fields from request.
+     *
+     * @param ipl_preauthorize_request  $req
+     * @param float                     $order_total_gross
+     * @param string                    $transaction_id
+     * @static
+     */
+    public static function SaveRequest($req, $order_total_gross, $transaction_id)
+    {
+        $query_proto = 'INSERT INTO billpay_bankdata
+                           (tx_id, account_holder,
+                            account_number, bank_code,
+                            bank_name,
+                            total_amount,
+                            api_reference_id)
+                    VALUES ("%s", "%s","%s",
+                            "%s","%s", "%s",
+                            "%s")';
+        $query = sprintf($query_proto,
+            $transaction_id, $req->get_account_holder(), $req->get_account_number(),
+            $req->get_bank_code(), $req->get_bank_name(), $order_total_gross,
+            $transaction_id
+            );
+        xtc_db_query($query);
+    }
+
+    /**
+     * Method updates existing record with additional data.
+     *
+     * @param string $txId
+     * @param Array $newData
+     * @static
+     */
+    public static function UpdateByTxId($txId, $newData)
+    {
+        $sets = array();
+        foreach ($newData as $key => $val) {
+            $sets[] = $key . ' = "'.$val.'"';
+        }
+        $query_array_string = join(",\n", $sets);
+        $query = "UPDATE billpay_bankdata SET $query_array_string WHERE tx_id = '$txId' LIMIT 1";
+        xtc_db_query($query);
+    }
+
+    public static function BuildStatement($condition)
+    {
+        $table = self::TABLE;
+        $qry = "SELECT * FROM $table WHERE $condition LIMIT 1";
         $resource = xtc_db_query($qry);
         $data = xtc_db_fetch_array($resource);
 
@@ -96,7 +159,7 @@ class Billpay_Base_Bankdata
      *
      * @return string
      */
-    function serializeDueDateArray($dueDateArray)
+    public static function serializeDueDateArray($dueDateArray)
     {
         $serializedDueDateList = '';
         foreach ($dueDateArray as $entry) {
@@ -162,7 +225,7 @@ class Billpay_Base_Bankdata
         return $this->getAttribute('invoice_reference');
     }
 
-    function getInvoiceDueData()
+    function getInvoiceDueDate()
     {
         return $this->getAttribute('invoice_due_date');
     }
@@ -187,9 +250,39 @@ class Billpay_Base_Bankdata
         return $this->getAttribute('rate_total_amount');
     }
 
+    public function getTotalAmount()
+    {
+        return $this->getAttribute('total_amount');
+    }
+
+    /**
+     * Returns number of months that payment credit will last.
+     * Ie. If customer borrows money for 12 months, this function will return 12.
+     * @return int
+     */
+    function getCreditLength()
+    {
+        $duration = $this->getAttribute('duration');
+        if (empty($duration)) {
+            // fallback for old orders
+            $duration = $this->getAttribute('rate_count');
+        }
+        return $duration;
+    }
+
+    /**
+     * Returns number of rates.
+     * Ie. If customer borrows money for 12 months in Swiss and will pay it in 4 rates, this function will return 4.
+     * @return int
+     */
     function getRateCount()
     {
-        return $this->getAttribute('rate_count');
+        $instalment_count = $this->getAttribute('instalment_count');
+        if (empty($instalment_count)) {
+            // fallback for old orders
+            $instalment_count = $this->getAttribute('rate_count');
+        }
+        return $instalment_count;
     }
 
     function getRateDues()
@@ -228,9 +321,23 @@ class Billpay_Base_Bankdata
         return $this->getAttribute('rate_fee');
     }
 
-    function getFeeTax()
+    /**
+     * Returns VAT tax on credit fee.
+     * @param string $country3
+     * @return float
+     */
+    function getFeeTax($country3 = 'DEU')
     {
-        return $this->getAttribute('rate_fee_tax');
+        switch ($country3) {
+            case 'DEU':
+                $taxPercent = 19;
+                break;
+            // AUT is 20%
+            // CHE is 8%
+            default:
+                $taxPercent = 19;
+        }
+        return $taxPercent * 0.01 * (float)$this->getAttribute('rate_fee') / 100;
     }
 
     function getPrePayment()
@@ -266,4 +373,21 @@ class Billpay_Base_Bankdata
         }
         return array();
     }
+
+    // TODO: add method to save token to cache
+
+    /**
+     * Checks if token saved in "customerCache" is the same as one created during preauth
+     * @param $token
+     * @return bool
+     */
+    function isValidToken($token)
+    {
+        $customerCache = $this->getCustomerCache();
+        if (empty($customerCache['token']) || empty($token)) {
+            return false;
+        }
+        return $customerCache['token'] === $token;
+    }
+
 }

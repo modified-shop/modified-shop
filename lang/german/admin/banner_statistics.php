@@ -1,17 +1,16 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: banner_statistics.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(banner_statistics.php,v 1.3 2003/02/16); www.oscommerce.com 
    (c) 2003	 nextcommerce (banner_statistics.php,v 1.4 2003/08/14); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -23,8 +22,8 @@ define('TABLE_HEADING_VIEWS', 'Anzeigen');
 define('TABLE_HEADING_CLICKS', 'Klicks');
 
 define('TEXT_BANNERS_DATA', 'D<br />A<br />T<br />E<br />N');
-define('TEXT_BANNERS_DAILY_STATISTICS', '%s Tagesstatistik für %s %s');
-define('TEXT_BANNERS_MONTHLY_STATISTICS', '%s Monatsstatistik für %s');
+define('TEXT_BANNERS_DAILY_STATISTICS', '%s Tagesstatistik f&uuml;r %s %s');
+define('TEXT_BANNERS_MONTHLY_STATISTICS', '%s Monatsstatistik f&uuml;r %s');
 define('TEXT_BANNERS_YEARLY_STATISTICS', '%s Jahresstatistik');
 
 define('STATISTICS_TYPE_DAILY', 't&auml;glich');

@@ -56,9 +56,9 @@
               <td class="dataTableContent" align="left">
                 <?php
                   if ($content_array['content_file']!='') {
-                    echo xtc_image('../'. DIR_WS_IMAGES.'icons/icon_'.str_replace('.','',strstr($content_array['content_file'],'.')).'.gif');
+                    echo xtc_image('../'. DIR_WS_IMAGES.'icons/filetype/icon_'.str_replace('.','',strstr($content_array['content_file'],'.')).'.gif');
                   } else {
-                    echo xtc_image('../'. DIR_WS_IMAGES.'icons/icon_link.gif');
+                    echo xtc_image('../'. DIR_WS_IMAGES.'icons/filetype/icon_link.gif');
                   }
                 ?>
               </td>

@@ -1,19 +1,18 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: index.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
-   based on:
+   based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(index.php,v 1.5 2002/03/30); www.oscommerce.com
-   (c) 2003 nextcommerce (index.php,v 1.5 2003/08/14); www.nextcommerce.org
-   (c) 2006 XT-Commerce (index.php 899 2005-04-29)
+   (c) 2002-2003 osCommerce(index.php,v 1.5 2002/03/30); www.oscommerce.com 
+   (c) 2003	 nextcommerce (index.php,v 1.5 2003/08/14); www.nextcommerce.org
 
-   Released under the GNU General Public License
+   Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
 define('HEADING_TITLE', 'Option w&auml;hlen...');
@@ -30,10 +29,15 @@ define('BOX_ENTRY_LIVE_DISCUSSIONS', 'Live Diskussionen');
 define('BOX_ENTRY_CVS_REPOSITORY', 'CVS Repository');
 define('BOX_ENTRY_INFORMATION_PORTAL', 'Informationsportal');
 
+define('BOX_ENTRY_CUSTOMERS', 'Kunden:');
+define('BOX_ENTRY_PRODUCTS', 'Artikel:');
+define('BOX_ENTRY_REVIEWS', 'Rezensionen:');
+
 define('BOX_CONNECTION_PROTECTED', 'Sie sind gesichert durch eine %s sichere SSL Verbindung.');
-define('BOX_CONNECTION_UNPROTECTED', 'Sie sind <font color="#ff0000">nicht</font> durch eine sichere SSL Verbindung gesichert.');
+define('BOX_CONNECTION_UNPROTECTED', 'Sie sind <span class="col-red">nicht</span> durch eine sichere SSL Verbindung gesichert.');
 define('BOX_CONNECTION_UNKNOWN', 'unbekannt');
 
+define('BOX_HEADING_CONFIGURATION', 'Konfiguration');
 define('BOX_CONFIGURATION_MYSTORE', 'Mein Shop');
 define('BOX_CONFIGURATION_LOGGING', 'Logging Informationen');
 define('BOX_CONFIGURATION_CACHE', 'Cache Optionen');

@@ -1,4 +1,32 @@
 <?php
+/* -----------------------------------------------------------------------------------------
+   $Id$
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
+
+// include needed class
+require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
+
+$config = array(
+  'LogEnabled' => true,
+  'SplitLogging' => true,
+  'LogLevel' => ((defined('LOGGING_LEVEL')) ? LOGGING_LEVEL : 'INFO'), // DEBUG, FINE, INFO, WARN, ERROR, CUSTOM
+  'LogThreshold' => '2MB',
+  'FileName' => DIR_FS_LOG.'mod_error_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+  'FileName.debug' => DIR_FS_LOG.'mod_notice_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+  'FileName.fine' => DIR_FS_LOG.'mod_deprecated_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+  'FileName.info' => DIR_FS_LOG.'mod_strict_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+  'FileName.warning' => DIR_FS_LOG.'mod_warning_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+  'FileName.error' => DIR_FS_LOG.'mod_error_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+  'FileName.custom' => DIR_FS_LOG.'mod_custom_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
+);
+$LoggingManager = new LoggingManager($config);
 
 /**
  * Error handler, passes flow over the exception logger with new ErrorException.
@@ -13,7 +41,11 @@ function log_error($num, $str, $file, $line, $context=null)
  */
 function log_exception(Exception $e)
 {
-    global $error_exceptions;
+    global $error_exceptions, $sql_error, $sql_query, $LoggingManager, $config;
+    
+    if (!is_object($LoggingManager)) {
+        $LoggingManager = new LoggingManager($config);
+    }
     
     if (strpos($e->getFile(), 'templates_c') !== false
         || strpos($e->getFile(), 'cache') !== false) return;
@@ -21,26 +53,42 @@ function log_exception(Exception $e)
     if (!is_array($error_exceptions)) {
       $error_exceptions = array();
     }
-    
-    $error_number = $e->getseverity();
-    $error_name = error_level($error_number);
-    $error_line = $e->getLine();
-    $error_file = $e->getFile();
-    $error_message = $e->getMessage();
-    $index = md5($error_name.$error_line.$error_file.$error_message);
-    
-    if (!isset($error_exceptions[$index])) {
-        $error_exceptions[$index] = '<table style="width: 1000px; display: inline-block;">' . PHP_EOL .
-                              '  <tr style="color:#000; background-color:rgb(230,230,230);"><th style="width:100px;">Type</th><td style="width:900px;">'.$error_name.'</td></tr>' . PHP_EOL .
-                              '  <tr style="color:#000; background-color:rgb(240,240,240);"><th>Message</th><td>'.$error_message.'</td></tr>' . PHP_EOL .
-                              '  <tr style="color:#000; background-color:rgb(230,230,230);"><th>File</th><td>'.$error_file.'</td></tr>' . PHP_EOL .
-                              '  <tr style="color:#000; background-color:rgb(240,240,240);"><th>Line</th><td>'.$error_line.'</td></tr>' . PHP_EOL .
-                              '</table>' . PHP_EOL .
-                              '<div style="height:1px; border-top:1px dotted #000; margin:10px 0px;"></div>';
 
-        // write Logfile
-        if ($error_number != E_NOTICE) {
-            error_log(strftime('%d/%m/%Y %H:%M:%S') . ' ' . $error_name . ' - ' . $error_message . ' in File: ' . $error_file . ' on Line: ' . $error_line . "\n", 3, DIR_FS_LOG.'error.log');
+    if (is_object($e)) {
+        $backtrace = debug_backtrace();
+        $error = array();
+        $error['number'] = (method_exists($e, 'getseverity') ? $e->getseverity() : 'UNDEFINED_ERROR');
+        $error['name'] = (($error['number'] != 'UNDEFINED_ERROR') ? error_level($error['number']) : 'UNDEFINED_ERROR');
+        $error['line'] = $e->getLine();
+        $error['file'] = $e->getFile();
+        $error['message'] = $e->getMessage();
+        $index = md5($error['name'].$error['line'].$error['file'].$error['message']);
+    
+        if (!isset($error_exceptions[$index])) {
+            $error_exceptions[$index] = '<table style="width: 1000px; display: inline-block;">' . PHP_EOL .
+                                        '  <tr style="color:#000; background-color:#e6e6e6;"><th style="width:100px;">Type</th><td style="width:900px;">'.$error['name'].'</td></tr>' . PHP_EOL .
+                                        '  <tr style="color:#000; background-color:#F0F0F0;"><th>Message</th><td>'.$error['message'].'</td></tr>' . PHP_EOL .
+                                        '  <tr style="color:#000; background-color:#e6e6e6;"><th>File</th><td>'.$error['file'].'</td></tr>' . PHP_EOL .
+                                        '  <tr style="color:#000; background-color:#F0F0F0;"><th>Line</th><td>'.$error['line'].'</td></tr>' . PHP_EOL;
+                                        $err = 0;
+                                        for ($i=0, $n=count($backtrace); $i<$n; $i++) {
+                                            if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error['file'] && basename($backtrace[$i]['file']) != 'error_reporting.php') {
+                                                $error_exceptions[$index] .= '  <tr style="color:#000; background-color:#e6e6e6;"><th>Backtrace #'.$err.'</th><td>'.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'].'</td></tr>' . PHP_EOL;
+                                                $err ++;
+                                            }
+                                        }
+            $error_exceptions[$index] .= '</table>' . PHP_EOL .
+                                         '<div style="height:1px; border-top:1px dotted #000; margin:10px 0px;"></div>';
+
+            // write Logfile
+            $LoggingManager->log(html_entity_decode($error['message']) . ' in File: ' . $error['file'] . ' on Line: ' . $error['line'], $error['name']);
+            $err = 0;
+            for ($i=0, $n=count($backtrace); $i<$n; $i++) {
+                if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error['file'] && basename($backtrace[$i]['file']) != 'error_reporting.php') {
+                    $LoggingManager->log('Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'], $error['name']);
+                    $err ++;
+                }
+            }
         }
     }
 }

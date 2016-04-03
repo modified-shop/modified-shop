@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: config.php 4493 2013-02-20 15:26:15Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -13,7 +13,7 @@
   if(!defined('DIR_MODIFIED_INSTALLER')) {
       define('DIR_MODIFIED_INSTALLER', '_installer');
   }
-  define('MODIFIED_SQL', 'modified_utf8.sql');
+  define('MODIFIED_SQL', 'includes/sql/modified.sql');
   define('DISABLE_PATH_CHECK', false); //default false
   
   /*######################################*/  

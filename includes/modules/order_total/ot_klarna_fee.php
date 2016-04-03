@@ -227,7 +227,7 @@ class ot_klarna_fee
         $this->_klarnaDB->query(
             "INSERT INTO " . TABLE_CONFIGURATION . " (sort_order, ".
             "configuration_key, configuration_value, configuration_group_id, date_added) ".
-            "VALUES ('5', 'MODULE_ORDER_TOTAL_KLARNA_FEE_SORT_ORDER', '0', '6', now())"
+            "VALUES ('5', 'MODULE_ORDER_TOTAL_KLARNA_FEE_SORT_ORDER', '35', '6', now())"
         );
     }
 

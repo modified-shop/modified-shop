@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: guenstiger.php 2124 2011-08-29 10:14:43Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

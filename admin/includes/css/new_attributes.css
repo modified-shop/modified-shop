@@ -1,1 +1,44 @@
-.dataTableHeadingContent.attr-chk {background-color: #C1FFC1!important;}/* BOC new classes for new_attributes.php, noRiddle */.dataTableHeadingRow.att-red{color:#c00;}.dataTableHeadingRow.att-green {color:#060;}/* EOC new classes for new_attributes.php, noRiddle *//*BOC new styles for icons, noRiddle*/.dataTableHeadingContent {font-family: Verdana, Arial, Helvetica, sans-serif;font-size: 10px;font-weight: bold;padding: 5px 10px 5px 5px;background: #f1f1f1 url(images/bullet_arrow_down.png) right center no-repeat;border: 1px solid #CCCCCC;line-height: 18px;height: 20px;}.dataTableHeadingContent.active {background: #E4E4E6 url(images/bullet_arrow_up.png) right center no-repeat;}.dataTableHeadingRow.all-open .dataTableHeadingContent {background: #f1f1f1;}/*EOC new styles for icons, noRiddle*/.dataTableHeadingContent input[type=checkbox], .dataTableHeadingContent input[type=radio] {  vertical-align: middle;  position: relative;  bottom: 1px;}#attributes .attributes-odd, #attributes .attributes-even, #attributes .downloads{display:none;}.select_all{display:none;}input.disabled,select.disabled,input[disabled],select[disabled]{  background:#D4D0C8;}
+.dataTableHeadingContent.attr-chk {
+background-color: #C1FFC1!important;
+}
+
+/* BOC new classes for new_attributes.php, noRiddle */
+.dataTableHeadingRow.att-red{color:#c00;}
+.dataTableHeadingRow.att-green {color:#060;}
+/* EOC new classes for new_attributes.php, noRiddle */
+
+/*BOC new styles for icons, noRiddle*/
+.dataTableHeadingContent {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 10px;
+font-weight: bold;
+padding: 5px 10px 5px 5px;
+background: #f1f1f1 url(images/bullet_arrow_down.png) right center no-repeat;
+border: 1px solid #CCCCCC;
+line-height: 18px;
+height: 20px;
+}
+.dataTableHeadingContent.active {background: #E4E4E6 url(images/bullet_arrow_up.png) right center no-repeat;}
+.dataTableHeadingRow.all-open .dataTableHeadingContent {background: #f1f1f1;}
+/*EOC new styles for icons, noRiddle*/
+
+.dataTableHeadingContent input[type=checkbox], .dataTableHeadingContent input[type=radio] {
+  vertical-align: middle;
+  position: relative;
+  bottom: 1px;
+}
+
+.attributes .attributes-odd, .attributes .attributes-even, .attributes .downloads{
+display:none;
+}
+
+.select_all{
+display:none;
+}
+
+input.disabled,select.disabled,
+input[disabled],select[disabled]
+{
+  background:#D4D0C8;
+}
+

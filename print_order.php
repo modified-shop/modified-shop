@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: print_order.php 3113 2012-06-22 16:23:20Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,17 +16,12 @@
 
 include ('includes/application_top.php');
 
-// include needed functions
-require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
-
 $smarty = new Smarty;
 
-$smarty->assign('base_href', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
-  //BOF - GTB - 2010-08-03 - Security Fix - Base
-  //$path = DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/';
-  $smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-  //$smarty->assign('tpl_path', $path);
-  //EOF - GTB - 2010-08-03 - Security Fix - Base
+if (DIR_WS_BASE == '') {
+  $smarty->assign('base_href', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
+}
+$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 $oID = (int) $_GET['oID'];
 
@@ -59,7 +54,7 @@ if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check
   $smarty->assign('language', $order->info['language']);  
   $smarty->assign('charset', $_SESSION['language_charset'] );
 
-  $smarty->assign('oID', (int) $_GET['oID']);
+  $smarty->assign('oID', $oID);
   $payment_method = false; //DokuMan - 2010-03-18 - set undefined variable
   if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {
     include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
@@ -70,10 +65,9 @@ if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check
   $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
 
   // dont allow cache
-  $smarty->caching = 0;
+  $smarty->caching =0;
   $smarty->display(CURRENT_TEMPLATE.'/module/print_order.html');
 } else {
-  $smarty->assign('ERROR', 'You are not allowed to view this order!');
-  $smarty->display(CURRENT_TEMPLATE.'/module/error_message.html');
+  die('You are not allowed to view this order!');
 }
 ?>

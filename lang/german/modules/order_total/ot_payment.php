@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: ot_payment.php 3481 2012-08-22 07:07:50Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -13,8 +13,6 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-
-$num = 3; //Anzahl der Rabattstaffeln
 
 define('MODULE_ORDER_TOTAL_PAYMENT_HELP_LINK', ' <a onclick="window.open(\'popup_help.php?type=order_total&modul=ot_payment&lng=german\', \'Hilfe\', \'scrollbars=yes,resizable=yes,menubar=yes,width=800,height=600\'); return false" target="_blank" href="popup_help.php?type=order_total&modul=ot_payment&lng=german"><b>[HILFE]</b></a>');
 define('MODULE_ORDER_TOTAL_PAYMENT_HELP_TEXT', '<h2>Rabatt und Zuschlag auf Zahlungsarten</h2>
@@ -66,7 +64,7 @@ define('MODULE_ORDER_TOTAL_PAYMENT_STATUS_DESC', 'Wollen Sie den Zahlungsartenra
 define('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER_TITLE', '<hr>Sortierreihenfolge');
 define('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER_DESC', 'Anzeigereihenfolge');
 
-for ($j=1; $j<=$num; $j++) {
+for ($j=1; $j<=MODULE_ORDER_TOTAL_PAYMENT_NUMBER; $j++) {
   define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_TITLE', '<hr>'.$j . '. Rabattstaffel');
   define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_DESC', 'Rabattierung (Mindestwert:Prozent)');
   define('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $j . '_TITLE', $j . '. Zahlungsart');
@@ -99,4 +97,7 @@ define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT_DESC', 'Anzeige im B
 
 define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE_TITLE', '<hr>Anzeigeart bei den Zahlungsarten');
 define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE_DESC', 'Anzeigeart im Bestellprozess bei der Zahlungsauswahl <br />-- default: Prozent oder Betrag, abh&auml;ngig von den Eingaben bei Rabattstaffel<br />-- price: es wird immer der tats&auml;chliche Betrag angezeigt');
+
+define('MODULE_ORDER_TOTAL_PAYMENT_NUMBER_TITLE', 'Anzahl Zahlarten');
+define('MODULE_ORDER_TOTAL_PAYMENT_NUMBER_DESC', 'Anzahl an Rabatt &amp; Zuschlag auf Zahlungsarten');
 ?>

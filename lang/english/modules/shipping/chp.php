@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: chp.php 5123 2013-07-18 11:49:11Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

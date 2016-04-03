@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: billiger.php 2020 2011-06-24 10:10:55Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

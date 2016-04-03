@@ -25,19 +25,24 @@ function eBayGetSelection() {
 	global $_MagnaSession;
 	# Daten aus magnalister_ebay_properties (bereits frueher vorbereitet)
 	$keytypeIsArtNr = (getDBConfigValue('general.keytype', '0') == 'artNr');
+	$shortDescColumnExists =  MagnaDB::gi()->columnExistsInTable('products_short_description', TABLE_PRODUCTS_DESCRIPTION);
 	
 	if ($keytypeIsArtNr) { 
 	    $dbOldSelectionQuery = 'SELECT '
 		.' ep.products_id products_id, ep.products_model products_model, '
 		.' Price, IF(0.0=Price, 0, 1) as priceFrozen, '
 		.' ms.mpID mpID, Title, Subtitle, Description, '
-		.' pd.products_name products_name, pd.products_description description, PictureURL, GalleryURL, ConditionID,  '
+		.' p.products_weight AS products_weight, '
+		.' pd.products_name products_name, pd.products_description description, '
+		.($shortDescColumnExists?' pd.products_short_description ':'\'\'').' AS shortdescription, '
+		.'PictureURL, GalleryURL, ConditionID,  '
 		.' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
 		.' Attributes, ItemSpecifics, '
 		.' ListingType, ListingDuration, PaymentMethods, ShippingDetails, DispatchTimeMax '
 		.' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '.TABLE_MAGNA_SELECTION.' ms, '
 		. TABLE_PRODUCTS .' p, ' . TABLE_PRODUCTS_DESCRIPTION .' pd '
 		.' WHERE ep.products_model = p.products_model '
+		.' AND ep.Verified <> \'EMPTY\' '
 		.' AND p.products_id = ms.pID AND ep.mpID = ms.mpID '
 		.' AND pd.products_id = p.products_id '
 		.' AND pd.language_id = \''.getDBConfigValue('ebay.lang', $_MagnaSession['mpID']).'\' '
@@ -49,13 +54,16 @@ function eBayGetSelection() {
 		.' ep.products_id products_id, ep.products_model products_model, '
 		.' Price, IF(0.0=Price, 0, 1) as priceFrozen, '
 		.' ms.mpID mpID, Title, Subtitle, Description, '
-		.' pd.products_name products_name, pd.products_description description, PictureURL, GalleryURL, ConditionID,  '
+		.' pd.products_name products_name, pd.products_description description, '
+		.($shortDescColumnExists?' pd.products_short_description ':'\'\'').' AS shortdescription, '
+		.' PictureURL, GalleryURL, ConditionID,  '
+		.' p.products_weight AS products_weight, '
 		.' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
 		.' Attributes, ItemSpecifics, '
 		.' ListingType, ListingDuration, PaymentMethods, ShippingDetails, DispatchTimeMax '
 		.' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '.TABLE_MAGNA_SELECTION.' ms, '
-		. TABLE_PRODUCTS_DESCRIPTION .' pd '
-		.' WHERE ep.products_id = ms.pID AND ep.mpID = ms.mpID  AND pd.products_id = ep.products_id '
+		. TABLE_PRODUCTS_DESCRIPTION .' pd, '.TABLE_PRODUCTS.' p '
+		.' WHERE p.products_id=pd.products_id and ep.products_id = ms.pID AND ep.mpID = ms.mpID  AND pd.products_id = ep.products_id '
 		.' AND pd.language_id = \''.getDBConfigValue('ebay.lang', $_MagnaSession['mpID']).'\' '
 		.' AND selectionname=\'prepare\' '
 		.' AND ms.mpID = \''.$_MagnaSession['mpID'].'\' '
@@ -83,9 +91,12 @@ function eBayGetSelection() {
 		.' p.products_price AS Price, '
 		.' ms.mpID AS mpID, '
 		.' pd.products_name AS products_name, ';
-	if (MagnaDB::gi()->columnExistsInTable('products_short_description', TABLE_PRODUCTS_DESCRIPTION)) {
+	if ($shortDescColumnExists) {
 		$dbNewSelectionQuery .=
-		 ' pd.products_short_description AS Subtitle, ';
+		 ' pd.products_short_description AS shortdescription, ';
+	} else {
+		$dbNewSelectionQuery .=
+		 ' \'\' AS shortdescription, ';
 	}
 	$dbNewSelectionQuery .= 
 		 ' pd.products_description AS description, '
@@ -123,12 +134,6 @@ function eBayGetSelection() {
 		$pictureWithoutPath = $current_row['PictureURL'];
 		$current_row['PictureURL'] = empty($current_row['PictureURL'])? '': $imagePath . $pictureWithoutPath;
 		$current_row['GalleryURL'] = empty($current_row['PictureURL'])? '': $galleryPath . $pictureWithoutPath;
-		if (array_key_exists('Subtitle', $current_row)) {
-			$current_row['shortdescription'] = $current_row['Subtitle']; # for eBay Item Description
-			$current_row['Subtitle'] = strip_tags($current_row['Subtitle']);
-		} else {
-			$current_row['shortdescription'] = $current_row['Subtitle'] = '';
-		}
 	}
 
 	if ((1 == $rowCount) && empty($dbSelection[0]['Description'])) {
@@ -136,6 +141,9 @@ function eBayGetSelection() {
 		# Template fuellen
 		# bei mehreren Artikeln erst beim Speichern fuellen
 		# Preis und ggf. VPE wird erst beim Uebermitteln eingesetzt.
+	if (false) { # DEBUG
+		echo print_m($dbSelection[0], '$dbSelection[0]');
+	}
 		$substitution = array (
 			'#TITLE#' => fixHTMLUTF8Entities($dbSelection[0]['products_name']),
 			'#ARTNR#' => $dbSelection[0]['products_model'],
@@ -223,7 +231,13 @@ if (array_key_exists('savePrepareData', $_POST)) {
 				foreach ($ebayItemErrors['ERRORS'] as $ebayError) {
 					if (($ebayError['ERRORCLASS'] != 'RequestError') || ($ebayError['ERRORLEVEL'] != 'Error')) continue;
 					if (!$supportsUTF8) arrayEntitiesToLatin1($ebayError);
-					echo '<div class="ebay errorBox"><span class="error">'.sprintf(ML_EBAY_LABEL_EBAYERROR, $ebayError['ERRORCODE']).'</span>: '.
+					if (    array_key_exists('ORIGIN',$ebayError) 
+					     && !empty($ebayError['ORIGIN'])         ) {
+						$sMsgHead = $ebayError['ORIGIN'].' '.ML_ERROR_LABEL.' '.$ebayError['ERRORCODE'].': ';
+					} else {
+						$sMsgHead = sprintf(ML_EBAY_LABEL_EBAYERROR, $ebayError['ERRORCODE']);
+					}
+					echo '<div class="ebay errorBox"><span class="error">'.$sMsgHead.'</span>: '.
 						$ebayError['ERRORMESSAGE'].'</div>';
 					//echo print_m($ebayError);
 				}

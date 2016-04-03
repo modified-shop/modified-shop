@@ -47,13 +47,13 @@
 			$shop_status.= '<p style="text-align: center; margin:10px; font-size:20px; line-height:30px; background-color:green;">'.date("d.m.Y - H:i",$safeterms_control["VERSION"]).'</p>';
 			$shop_update = '<p style="text-align: justify; margin:10px; margin-top:20px;">Ihre Rechtstexte sind auf dem gleichen Stand wie bei Safeterms.de. Sollten Sie Ihre Rechtstexte versehntlich ge&auml;ndert haben, dann f&uuml;hren Sie einfach ein neues Update aus.</p>';
 		}
-		$shop_update.= '<form method="POST"><input type="hidden" name="action" value="start_update" /><input type="submit" value="Update Starten" style="width:300px; height:40px;margin-left:50px; margin-top:15px; font-size:22px; background-color:#dedede; cursor:pointer;"; /></form></p>';
+		$shop_update.= xtc_draw_form('safeterms_update', FILENAME_SAFETERMS, '', 'post') .'<input type="hidden" name="action" value="start_update" /><input type="submit" value="Update Starten" style="width:300px; height:40px;margin-left:50px; margin-top:15px; font-size:22px; background-color:#dedede; cursor:pointer;"; /></form></p>';
 		$shop_status.= $shop_update;
 	} else {
 		$shop_status = '			<p>Sie sind bereits Kunde bei Safeterms.de. Dann richten Sie jetzt das Auto-Update f&uuml;r Rechtstexte von Safeterms f&uuml;r Ihre modified eCommerce Shopsoftware ein.</p>
 			<p>Um die Einrichtung Ihrer Rechtstexte zu starten geben Sie bitte im folgenden Feld Ihren <strong>API Sicherheitsschl&uuml;ssel</strong> ein. Diesen erhalten Sie in Ihrem pers&ouml;nlichen Bereich auf Safeterms.de</p>
 			<p style="margin-top:20px;">Ihr API-Sicherheitsschl&uuml;ssel:</p>
-			<form method="POST">
+			'.xtc_draw_form('auto_update', FILENAME_SAFETERMS, '', 'post').'
 			<input type="hidden" name="action" value="new_apikey" />
 			<p><input type="text" name="apikey" value="" /></p>
 			<p><input type="submit" style="background-color:#dedede; cursor:pointer" value="Einrichtung starten" /></p>

@@ -1,97 +1,100 @@
 <?php
-  /* --------------------------------------------------------------
-   $Id$
+/* --------------------------------------------------------------
+   $Id: geo_zones.php 1123 2005-07-27 09:00:31Z novalis $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
-   based on:
+   based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(geo_zones.php,v 1.27 2003/05/07); www.oscommerce.com
-   (c) 2003 nextcommerce (geo_zones.php,v 1.9 2003/08/18); www.nextcommerce.org
-   (c) 2006 XT-Commerce (geo_zones.php 1123 2005-07-27)
+   (c) 2002-2003 osCommerce(geo_zones.php,v 1.27 2003/05/07); www.oscommerce.com 
+   (c) 2003	 nextcommerce (geo_zones.php,v 1.9 2003/08/18); www.nextcommerce.org
 
-   Released under the GNU General Public License
+   Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
   require('includes/application_top.php');
 
-  $saction = (isset($_GET['saction']) ? $_GET['saction'] : '');
+  //display per page
+  $cfg_max_display_tax_key = 'MAX_DISPLAY_NUMBER_OF_TAX_ZONES';
+  $page_max_display_tax_results = xtc_cfg_save_max_display_results($cfg_max_display_tax_key);
 
-  if (xtc_not_null($saction)) {
-    switch ($saction) {
-      case 'insert_sub':
-        $zID = xtc_db_prepare_input($_GET['zID']);
-        $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
-        $zone_id = xtc_db_prepare_input($_POST['zone_id']);
+  $cfg_max_display_countries_key = 'MAX_DISPLAY_NUMBER_OF_COUNTRIES';
+  $page_max_display_countries_results = xtc_cfg_save_max_display_results($cfg_max_display_countries_key);
 
-        xtc_db_query("insert into " . TABLE_ZONES_TO_GEO_ZONES . " (zone_country_id, zone_id, geo_zone_id, date_added) values ('" . (int)$zone_country_id . "', '" . (int)$zone_id . "', '" . (int)$zID . "', now())");
-        $new_subzone_id = xtc_db_insert_id();
 
-        xtc_redirect(xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $new_subzone_id));
-        break;
+  switch ($_GET['saction']) {
+    case 'insert_sub':
+      $zID = xtc_db_prepare_input($_GET['zID']);
+      $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
+      $zone_id = xtc_db_prepare_input($_POST['zone_id']);
 
-      case 'save_sub':
-        $sID = xtc_db_prepare_input($_GET['sID']);
-        $zID = xtc_db_prepare_input($_GET['zID']);
-        $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
-        $zone_id = xtc_db_prepare_input($_POST['zone_id']);
+      xtc_db_query("insert into " . TABLE_ZONES_TO_GEO_ZONES . " (zone_country_id, zone_id, geo_zone_id, date_added) values ('" . xtc_db_input($zone_country_id) . "', '" . xtc_db_input($zone_id) . "', '" . xtc_db_input($zID) . "', now())");
+      $new_subzone_id = xtc_db_insert_id();
 
-        xtc_db_query("update " . TABLE_ZONES_TO_GEO_ZONES . " set geo_zone_id = '" . (int)$zID . "', zone_country_id = '" . (int)$zone_country_id . "', zone_id = " . (xtc_not_null($zone_id) ? "'" . (int)$zone_id . "'" : 'null') . ", last_modified = now() where association_id = '" . (int)$sID . "'");
+      xtc_redirect(xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $new_subzone_id));
+      break;
 
-        xtc_redirect(xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $_GET['sID']));
-        break;
+    case 'save_sub':
+      $sID = xtc_db_prepare_input($_GET['sID']);
+      $zID = xtc_db_prepare_input($_GET['zID']);
+      $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
+      $zone_id = xtc_db_prepare_input($_POST['zone_id']);
 
-      case 'deleteconfirm_sub':
-        $sID = xtc_db_prepare_input($_GET['sID']);
+      xtc_db_query("update " . TABLE_ZONES_TO_GEO_ZONES . " set geo_zone_id = '" . xtc_db_input($zID) . "', zone_country_id = '" . xtc_db_input($zone_country_id) . "', zone_id = " . ((xtc_db_input($zone_id)) ? "'" . xtc_db_input($zone_id) . "'" : 'null') . ", last_modified = now() where association_id = '" . xtc_db_input($sID) . "'");
 
-        xtc_db_query("delete from " . TABLE_ZONES_TO_GEO_ZONES . " where association_id = '" . (int)$sID . "'");
+      xtc_redirect(xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $_GET['sID']));
+      break;
 
-        xtc_redirect(xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage']));
-        break;
-    }
+    case 'deleteconfirm_sub':
+      $sID = xtc_db_prepare_input($_GET['sID']);
+
+      xtc_db_query("delete from " . TABLE_ZONES_TO_GEO_ZONES . " where association_id = '" . xtc_db_input($sID) . "'");
+
+      xtc_redirect(xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage']));
+      break;
   }
 
-  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  switch ($_GET['action']) {
+    case 'insert_zone':
+      $geo_zone_name = xtc_db_prepare_input($_POST['geo_zone_name']);
+      $geo_zone_description = xtc_db_prepare_input($_POST['geo_zone_description']);
+      $geo_zone_info = ((isset($_POST['geo_zone_info'])) ? '1' : '0');
 
-  if (xtc_not_null($action)) {
-    switch ($action) {
-      case 'insert_zone':
-        $geo_zone_name = xtc_db_prepare_input($_POST['geo_zone_name']);
-        $geo_zone_description = xtc_db_prepare_input($_POST['geo_zone_description']);
+      xtc_db_query("insert into " . TABLE_GEO_ZONES . " (geo_zone_name, geo_zone_description, geo_zone_info, date_added) values ('" . xtc_db_input($geo_zone_name) . "', '" . xtc_db_input($geo_zone_description) . "', '" . $geo_zone_info . "', now())");
+      $new_zone_id = xtc_db_insert_id();
 
-        xtc_db_query("insert into " . TABLE_GEO_ZONES . " (geo_zone_name, geo_zone_description, date_added) values ('" . xtc_db_input($geo_zone_name) . "', '" . xtc_db_input($geo_zone_description) . "', now())");
-        $new_zone_id = xtc_db_insert_id();
+      xtc_redirect(xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $new_zone_id));
+      break;
 
-        xtc_redirect(xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $new_zone_id));
-        break;
+    case 'save_zone':
+      $zID = xtc_db_prepare_input($_GET['zID']);
+      $geo_zone_name = xtc_db_prepare_input($_POST['geo_zone_name']);
+      $geo_zone_description = xtc_db_prepare_input($_POST['geo_zone_description']);
+      $geo_zone_info = ((isset($_POST['geo_zone_info'])) ? '1' : '0');
 
-      case 'save_zone':
-        $zID = xtc_db_prepare_input($_GET['zID']);
-        $geo_zone_name = xtc_db_prepare_input($_POST['geo_zone_name']);
-        $geo_zone_description = xtc_db_prepare_input($_POST['geo_zone_description']);
+      xtc_db_query("update " . TABLE_GEO_ZONES . " set geo_zone_name = '" . xtc_db_input($geo_zone_name) . "', geo_zone_description = '" . xtc_db_input($geo_zone_description) . "', geo_zone_info = '" . $geo_zone_info . "', last_modified = now() where geo_zone_id = '" . xtc_db_input($zID) . "'");
 
-        xtc_db_query("update " . TABLE_GEO_ZONES . " set geo_zone_name = '" . xtc_db_input($geo_zone_name) . "', geo_zone_description = '" . xtc_db_input($geo_zone_description) . "', last_modified = now() where geo_zone_id = '" . xtc_db_input($zID) . "'");
+      xtc_redirect(xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID']));
+      break;
 
-        xtc_redirect(xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID']));
-        break;
+    case 'deleteconfirm_zone':
+      $zID = xtc_db_prepare_input($_GET['zID']);
 
-      case 'deleteconfirm_zone':
-        $zID = xtc_db_prepare_input($_GET['zID']);
-
-        xtc_db_query("delete from " . TABLE_GEO_ZONES . " where geo_zone_id = '" . (int)$zID . "'");
-        xtc_db_query("delete from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . (int)$zID . "'");
+      xtc_db_query("delete from " . TABLE_GEO_ZONES . " where geo_zone_id = '" . xtc_db_input($zID) . "'");
+      xtc_db_query("delete from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . xtc_db_input($zID) . "'");
 
       xtc_redirect(xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage']));
       break;
-    }
   }
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
-<?php if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) { ?>
+<?php
+  if ($_GET['zID']  && (($_GET['saction'] == 'edit') || ($_GET['saction'] == 'new'))) {
+?>
 <script type="text/javascript"><!--
 function resetZoneSelected(theForm) {
   if (theForm.state.value != '') {
@@ -121,7 +124,7 @@ function update_zone(theForm) {
   }
 ?>
 </head>
-<body onload="SetFocus();">
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -147,7 +150,7 @@ function update_zone(theForm) {
           <tr>
             <td class="boxCenterLeft">
             <?php
-            if ($action == 'list') {
+            if ($_GET['action'] == 'list') {
             ?>
             <table class="tableBoxCenter collapse">
               <tr class="dataTableHeadingRow">
@@ -158,14 +161,14 @@ function update_zone(theForm) {
               <?php
               $rows = 0;
               $zones_query_raw = "select a.association_id, a.zone_country_id, c.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name from " . TABLE_ZONES_TO_GEO_ZONES . " a left join " . TABLE_COUNTRIES . " c on a.zone_country_id = c.countries_id left join " . TABLE_ZONES . " z on a.zone_id = z.zone_id where a.geo_zone_id = " . $_GET['zID'] . " order by association_id";
-              $zones_split = new splitPageResults($_GET['spage'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows);
+              $zones_split = new splitPageResults($_GET['spage'], $page_max_display_countries_results, $zones_query_raw, $zones_query_numrows);
               $zones_query = xtc_db_query($zones_query_raw);
               while ($zones = xtc_db_fetch_array($zones_query)) {
                 $rows++;
-                if ((!isset($_GET['sID']) || (isset($_GET['sID']) && ($_GET['sID'] == $zones['association_id']))) && !isset($sInfo) && (substr($action, 0, 3) != 'new')) {
+                if (((!$_GET['sID']) || (@$_GET['sID'] == $zones['association_id'])) && (!$sInfo) && (substr($_GET['saction'], 0, 3) != 'new')) {
                   $sInfo = new objectInfo($zones);
                 }
-                if (isset($sInfo) && (is_object($sInfo)) && ($zones['association_id'] == $sInfo->association_id) ) {
+                if ( (is_object($sInfo)) && ($zones['association_id'] == $sInfo->association_id) ) {
                   echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=edit') . '\'">' . "\n";
                 } else {
                   echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zones['association_id']) . '\'">' . "\n";
@@ -173,17 +176,18 @@ function update_zone(theForm) {
               ?>
                 <td class="dataTableContent"><?php echo (($zones['countries_name']) ? $zones['countries_name'] : TEXT_ALL_COUNTRIES); ?></td>
                 <td class="dataTableContent"><?php echo (($zones['zone_id']) ? $zones['zone_name'] : PLEASE_SELECT); ?></td>
-                <td class="dataTableContent txta-r"><?php if (isset($sInfo) && is_object($sInfo) && ($zones['association_id'] == $sInfo->association_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zones['association_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent txta-r"><?php if ( (is_object($sInfo)) && ($zones['association_id'] == $sInfo->association_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zones['association_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
               <?php
               }
               ?>
             </table>
             
-            <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['spage'], 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list', 'spage'); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, $page_max_display_countries_results, $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, $page_max_display_countries_results, MAX_DISPLAY_PAGE_LINKS, $_GET['spage'], 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list', 'spage'); ?></div>
             <div class="clear"></div>
-            <div class="smallText pdg2 flt-r"><?php if (empty($saction)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID']) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=new') . '">' . BUTTON_INSERT . '</a>'; ?></div>
+            <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('zpage')),$cfg_max_display_countries_key,$page_max_display_countries_results); ?>
+            <div class="smallText pdg2 flt-r"><?php if (!$_GET['saction']) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID']) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=new') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             } else {
             ?>
@@ -193,11 +197,11 @@ function update_zone(theForm) {
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
-                  $zones_query_raw = "select geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added from " . TABLE_GEO_ZONES . " order by geo_zone_name";
-                  $zones_split = new splitPageResults($_GET['zpage'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows);
+                  $zones_query_raw = "select geo_zone_id, geo_zone_name, geo_zone_description, geo_zone_info, last_modified, date_added from " . TABLE_GEO_ZONES . " order by geo_zone_name";
+                  $zones_split = new splitPageResults($_GET['zpage'], $page_max_display_tax_results, $zones_query_raw, $zones_query_numrows);
                   $zones_query = xtc_db_query($zones_query_raw);
                   while ($zones = xtc_db_fetch_array($zones_query)) {
-                    if ((!isset($_GET['zID']) || (isset($_GET['zID']) && ($_GET['zID'] == $zones['geo_zone_id']))) && !isset($zInfo) && (substr($action, 0, 3) != 'new')) {
+                    if (((!$_GET['zID']) || (@$_GET['zID'] == $zones['geo_zone_id'])) && (!$zInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
                       $num_zones_query = xtc_db_query("select count(*) as num_zones from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . $zones['geo_zone_id'] . "' group by geo_zone_id");
                       if (xtc_db_num_rows($num_zones_query) > 0) {
                         $num_zones = xtc_db_fetch_array($num_zones_query);
@@ -207,24 +211,25 @@ function update_zone(theForm) {
                       }
                       $zInfo = new objectInfo($zones);
                     }
-                    if (isset($zInfo) && is_object($zInfo) && ($zones['geo_zone_id'] == $zInfo->geo_zone_id) ) {
+                    if ( (is_object($zInfo)) && ($zones['geo_zone_id'] == $zInfo->geo_zone_id) ) {
                       echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=list') . '\'">' . "\n";
                     } else {
                       echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zones['geo_zone_id']) . '\'">' . "\n";
                     }
               ?>
                 <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zones['geo_zone_id'] . '&action=list') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;' . $zones['geo_zone_name']; ?></td>
-                <td class="dataTableContent txta-r"><?php if (isset($zInfo) && is_object($zInfo) && ($zones['geo_zone_id'] == $zInfo->geo_zone_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zones['geo_zone_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent txta-r"><?php if ( (is_object($zInfo)) && ($zones['geo_zone_id'] == $zInfo->geo_zone_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zones['geo_zone_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
                 <?php
                 }
                 ?>
             </table>
             
-            <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['zpage'], TEXT_DISPLAY_NUMBER_OF_TAX_ZONES); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['zpage'], '', 'zpage'); ?></div>
-            <div class="clear"></div>  
-            <div class="smallText pdg2 flt-r"><?php if (!$action) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=new_zone') . '">' . BUTTON_INSERT . '</a>'; ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, $page_max_display_tax_results, $_GET['zpage'], TEXT_DISPLAY_NUMBER_OF_TAX_ZONES); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, $page_max_display_tax_results, MAX_DISPLAY_PAGE_LINKS, $_GET['zpage'], '', 'zpage'); ?></div>
+            <div class="clear"></div>
+            <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_tax_key,$page_max_display_tax_results); ?> 
+            <div class="smallText pdg2 flt-r"><?php if (!$_GET['action']) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=new_zone') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             }
             ?>
@@ -233,8 +238,8 @@ function update_zone(theForm) {
               $heading = array();
               $contents = array();
 
-              if ($action == 'list') {
-                switch ($saction) {
+              if ($_GET['action'] == 'list') {
+                switch ($_GET['saction']) {
                   case 'new':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_SUB_ZONE . '</b>');
 
@@ -265,18 +270,17 @@ function update_zone(theForm) {
                     break;
 
                   default:
-                    if (isset($sInfo) && is_object($sInfo)) {
+                    if (is_object($sInfo)) {
                       $heading[] = array('text' => '<b>' . $sInfo->countries_name . '</b>');
 
                       $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=delete') . '">' . BUTTON_DELETE . '</a>');
                       $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($sInfo->date_added));
-                      if (xtc_not_null($sInfo->last_modified))
-                        $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($sInfo->last_modified));
+                      if (xtc_not_null($sInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($sInfo->last_modified));
                     }
                     break;
                 }
               } else {
-                switch ($action) {
+                switch ($_GET['action']) {
                   case 'new_zone':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_ZONE . '</b>');
 
@@ -284,6 +288,7 @@ function update_zone(theForm) {
                     $contents[] = array('text' => TEXT_INFO_NEW_ZONE_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . xtc_draw_input_field('geo_zone_name'));
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . xtc_draw_input_field('geo_zone_description'));
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_INFO . '<br />' . xtc_draw_checkbox_field('geo_zone_info', '1', false));
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID']) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
@@ -294,6 +299,8 @@ function update_zone(theForm) {
                     $contents[] = array('text' => TEXT_INFO_EDIT_ZONE_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . xtc_draw_input_field('geo_zone_name', $zInfo->geo_zone_name));
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . xtc_draw_input_field('geo_zone_description', $zInfo->geo_zone_description));
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_INFO . '<br />' . xtc_draw_checkbox_field('geo_zone_info', '1', (($zInfo->geo_zone_info == '1') ? true : false)));
+
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
@@ -307,14 +314,14 @@ function update_zone(theForm) {
                     break;
 
                   default:
-                    if (isset($zInfo) && is_object($zInfo)) {
+                    if (is_object($zInfo)) {
                       $heading[] = array('text' => '<b>' . $zInfo->geo_zone_name . '</b>');
 
                       $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=edit_zone') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=delete_zone') . '">' . BUTTON_DELETE . '</a>' . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=list') . '">' . BUTTON_DETAILS . '</a>');
                       $contents[] = array('text' => '<br />' . TEXT_INFO_NUMBER_ZONES . ' ' . $zInfo->num_zones);
                       $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($zInfo->date_added));
-                      if (xtc_not_null($zInfo->last_modified))
-                        $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($zInfo->last_modified));
+                      if ($zInfo->geo_zone_info == '1') $contents[] = array('text' => TEXT_INFO_ZONE_INFO_DEFAULT);
+                      if (xtc_not_null($zInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($zInfo->last_modified));
                       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . $zInfo->geo_zone_description);
                     }
                     break;
@@ -323,7 +330,8 @@ function update_zone(theForm) {
 
               if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
                 echo '            <td class="boxRight">' . "\n";
-                echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
+                $box = new box;
+                echo $box->infoBox($heading, $contents);
                 echo '            </td>' . "\n";
               }
            ?>

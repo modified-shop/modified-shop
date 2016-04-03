@@ -1,6 +1,6 @@
 <?PHP
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: selfpickup.php 5137 2013-07-18 14:48:00Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

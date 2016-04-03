@@ -29,7 +29,7 @@
   // secure SSL
   define('ENABLE_SSL', false); // secure webserver for checkout procedure?
   define('USE_SSL_PROXY', false); // using SSL proxy?
-  
+
   // define our database connection
   define('DB_MYSQL_TYPE', 'mysql'); // define mysql type set to 'mysql' or 'mysqli'
   define('DB_SERVER', 'localhost'); // eg, localhost - should not be empty for productive servers
@@ -38,11 +38,12 @@
   define('DB_DATABASE', '');
   define('USE_PCONNECT', 'false'); // use persistent connections?
   define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
-  define('DB_SERVER_CHARSET', 'utf8'); // set db charset utf8 or latin1
+  define('DB_SERVER_CHARSET', 'latin1'); // set db charset 'utf8' or 'latin1'
 
-  if (DB_DATABASE != '') { 
+  if (DB_DATABASE != '') {
     // set admin directory DIR_ADMIN
-    require(DIR_FS_CATALOG.'inc/set_admin_directory.inc.php');
+    require_once(DIR_FS_CATALOG.'inc/set_admin_directory.inc.php');
+
     // include standard settings
     require(DIR_FS_CATALOG.(defined('RUN_MODE_ADMIN')? DIR_ADMIN : '').'includes/paths.php');
   }

@@ -69,21 +69,4 @@
       return;
     }
   }
-  
-  //Alle offenen UL LI Tags schlieﬂen
-  if (!function_exists('close_ul_tags')) {
-    function close_ul_tags($level, $oldlevel) {
-      $count = 1;
-      $ul = '';
-      while($count <= $oldlevel - $level) { //f¸r jede Ebene die UL LI Tags schlieﬂen
-        $tab_end = '';
-        for ($i = 1; $i <= $oldlevel - $count; $i++) {
-          $tab_end .= "\t";
-        }      
-        $ul .=  $tab_end . "\t". '</ul>'. "\n". $tab_end . '</li>'. "\n";      
-        $count++;
-      }
-      return $ul;
-    }
-  }
 ?>

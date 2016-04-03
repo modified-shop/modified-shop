@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$
+   $Id: server_info.php 4981 2013-06-26 02:39:47Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -17,14 +17,60 @@
    --------------------------------------------------------------*/
 
 require('includes/application_top.php');
-if (isset($_REQUEST['phpInfo'])) {
-  phpinfo();
-  exit;
-}
-$system = xtc_get_system_information();
 
+$system = xtc_get_system_information();
 require (DIR_WS_INCLUDES.'head.php');
 ?>
+<style type="text/css">
+#phpinfo table {
+  border-collapse: collapse !important;
+  border: 0; width: 934px !important; 
+  box-shadow: 1px 2px 3px #ccc !important;
+}
+#phpinfo .center table {
+  margin: 0 auto !important; 
+  text-align: left !important;
+}
+#phpinfo td, th {
+  border: 1px solid #666 !important;
+  font-size: 75% !important; 
+  vertical-align: baseline !important; 
+  padding: 4px 5px !important;
+  word-wrap: break-word !important;
+}
+#phpinfo h2{
+  background-color: #ccc !important;
+  padding: 10px !important;
+  margin-bottom:0 !important;
+  border: 1px solid #666 !important;
+  border-bottom: none !important;
+}
+#phpinfo h2 a:hover{
+  font-size: 100% !important;
+  font-weight:bold !important;
+  font-family: sans-serif !important;
+}
+#phpinfo .e {
+  background-color: #cdd7b3 !important; 
+  width: 300px !important;
+  font-weight: bold!important;
+}
+#phpinfo .h {
+  background-color: #ccc !important; 
+  font-weight: bold !important;
+}
+#phpinfo .v {
+  background-color: #f2f2f2 !important;
+  max-width: 300px !important;
+  overflow-x: auto !important;
+}
+#phpinfo hr {
+  width: 934px !important; 
+  background-color: #ccc !important; 
+  border: 0 !important; 
+  height: 1px !important;
+}
+</style>
 </head>
 <body>
     <!-- header //-->
@@ -37,23 +83,18 @@ require (DIR_WS_INCLUDES.'head.php');
         if (USE_ADMIN_TOP_MENU == 'false') {
           echo '<td class="columnLeft2">'.PHP_EOL;
           echo '<!-- left_navigation //-->'.PHP_EOL;       
-
-
           require_once(DIR_WS_INCLUDES . 'column_left.php');
           echo '<!-- left_navigation eof //-->'.PHP_EOL; 
           echo '</td>'.PHP_EOL;      
         }
         ?>
-
-
-
         <!-- body_text //--> 
         <td class="boxCenter">
-        
-          <div class="pageHeading pgd2 mrg5"><?php echo HEADING_TITLE; ?></div>       
-        
+          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
+          <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
+          <div class="main pdg2 flt-l"><?php echo HTTP_CATALOG_SERVER; ?></div>
+          <div class="clear pdg2"></div>
           <table class="tableCenter mrg5" style="width:900px">          
-
             <tr>
               <td class="smallText"><strong><?php echo TITLE_SERVER_HOST; ?></strong></td>
               <td class="smallText"><?php echo $system['host'] . ' (' . $system['ip'] . ')'; ?></td>
@@ -88,64 +129,36 @@ require (DIR_WS_INCLUDES.'head.php');
               <td colspan="3" class="smallText"><?php echo $system['php'] . ' (' . TITLE_ZEND_VERSION . ' ' . $system['zend'] . ')'; ?></td>
             </tr>
           </table>
-                    
-              <!--
-              <iframe src="<?php echo xtc_href_link(basename($PHP_SELF), 'phpInfo', 'NONSSL'); ?>" width="100%" height="700" style="border: solid 1px #a3a3a3;">
-              <p>Der verwendete Browser kann leider nicht mit inline Frames (iframe)
-              umgehen:
-              <a href="<?php echo xtc_href_link(basename($PHP_SELF), 'phpInfo', 'NONSSL'); ?>" target="_blank">Hier geht es zur phpinfo()
-              Seite vom System</a>
-              </p>
-              </iframe>
-              -->
-             
-                <div style="width:980px; border: solid 1px #a3a3a3; padding:10px; overflow:auto; height:600px;">
-                  <?php
-                  if (function_exists('ob_start')) {
-                    ob_start();
-                    phpinfo();
-                    $phpinfo = ob_get_contents();
-                    ob_end_clean();
-                    $phpinfo = str_replace('border: 1px', '', $phpinfo);
-                    //BOF - DokuMan - 2010-09-16 - replace ereg by preg_match
-                    /*
-                    ereg("(<style type=\"text/css\">{1})(.*)(</style>{1})", $phpinfo, $regs);
-                    //BOF css border and link  correction
-                    $regs[2] = str_replace('.e {', '.e {border: 1px solid #000000; ', $regs[2]);
-                    $regs[2] = str_replace('.v {', '.v {border: 1px solid #000000; ', $regs[2]);
-                    $regs[2] = str_replace('.h {', '.h {border: 1px solid #000000; ', $regs[2]);
-                    $regs[2] = str_replace('.h {', '.h {border: 1px solid #000000; ', $regs[2]);
-                    $regs[2] = str_replace('a:link', 'a.phpinfo:link', $regs[2]);
-                    $regs[2] = str_replace('a:hover', 'a.phpinfo:hover', $regs[2]);
-                    //EOF css border and link correction
-                    echo '<style type="text/css">' . $regs[2] . '</style>';
-                    ereg("(<body>{1})(.*)(</body>{1})", $phpinfo, $regs);
-                    echo $regs[2];
-                    */
-                    preg_match('/<style type=\"text\/css\">(.*)<\/style>/msi', $phpinfo, $regs);
-                    //BOF css border and link correction
-                    $regs[1] = str_replace('.e {', '.e {border: 1px solid #000000; ', $regs[1]);
-                    $regs[1] = str_replace('.v {', '.v {border: 1px solid #000000; ', $regs[1]);
-                    $regs[1] = str_replace('.h {', '.h {border: 1px solid #000000; ', $regs[1]);
-                    $regs[1] = str_replace('.h {', '.h {border: 1px solid #000000; ', $regs[1]);
-                    $regs[1] = str_replace('img {float: right; border: 0px;}', '', $regs[1]);
-                    $regs[1] = str_replace('a:link', 'a.phpinfo:link', $regs[1]);
-                    $regs[1] = str_replace('a:hover', 'a.phpinfo:hover', $regs[1]);
-                    //EOF css border and link correction
-                    echo '<style type="text/css">' . $regs[1] . '</style>';
-                    preg_match('/<body>(.*)<\/body>/msi', $phpinfo, $regs);
-                    echo $regs[1];
-                    //EOF - DokuMan - 2010-09-16 - replace ereg by preg_match
-                  } else {
-                    phpinfo();
-                  }
-                  ?>
-                </div>
-                
         </td>
-        <!-- body_text_eof //-->
       </tr>
     </table>
+      
+    <table style="margin:10px auto">
+      <tr>
+        <td id="phpinfo" >
+          <?php
+          if (function_exists('ob_start')) {
+            ob_start();
+            phpinfo();
+            $phpinfo = ob_get_contents();
+            ob_end_clean();
+
+            //$phpinfo = str_replace('border: 1px', '', $phpinfo);
+            preg_match("!<style type=\"text/css\">(.+?)</style>!s", $phpinfo, $regs);
+            $regs[1] = str_replace("\n", "\n#phpinfo ", $regs[1]);
+            $regs[1] = str_replace("#phpinfo body", "body #phpinfo", $regs[1]);
+            $regs[1] .= '{}';
+            echo '<style type="text/css">' . $regs[1] . '</style>';
+            preg_match("!<body>(.+)</body>!s", $phpinfo, $regs);
+            echo $regs[1];
+          } else {
+            phpinfo();
+          }
+          ?>
+        </td>
+      </tr>
+    </table>
+         
     <!-- body_eof //-->
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>

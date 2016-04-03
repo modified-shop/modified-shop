@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: freeamount.php 4856 2013-06-03 12:37:26Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -10,7 +10,7 @@
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(freeamount.php,v 1.01 2002/01/24); www.oscommerce.com 
-   (c) 2003	 nextcommerce (freeamount.php,v 1.12 2003/08/24); www.nextcommerce.org
+   (c) 2003  nextcommerce (freeamount.php,v 1.12 2003/08/24); www.nextcommerce.org
    (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
@@ -19,7 +19,7 @@
   class freeamount {
     var $code, $title, $description, $icon, $enabled, $num_freeamount;
 
-    function freeamount() {
+    function __construct() {
       global $order;
 
       $this->code = 'freeamount';
@@ -28,7 +28,7 @@
       $this->icon ='';   // change $this->icon =  DIR_WS_ICONS . 'shipping_ups.gif'; to some freeshipping icon
       $this->sort_order = MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER;
       $this->enabled = ((MODULE_SHIPPING_FREEAMOUNT_STATUS == 'True') ? true : false);
-      $this->num_freeamount = defined('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES')?MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES:'';
+      $this->num_zones = defined('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES') ? MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES : '1';
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_FREEAMOUNT_ZONE > 0) && is_object($order) ) {
         $check_flag = false;
@@ -48,23 +48,39 @@
         }
       }
       
-      if ($this->check() > 0) {      
+      if ($this->check() > 0) {
+        //update compatibility
+        if (!defined('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES')) {
+          xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES', '1', '6', '0', now())");
+          if (defined('MODULE_SHIPPING_FREEAMOUNT_AMOUNT')) {
+            if (!defined('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_1')) {
+              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_1', ". MODULE_SHIPPING_FREEAMOUNT_ALLOWED .", '6', '0', 'xtc_cfg_textarea(', now())");
+            }
+            if (!defined('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_1')) {
+              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_1', ". MODULE_SHIPPING_FREEAMOUNT_AMOUNT .", '6', '0', now())");
+            }
+          }
+        }
+        if (!defined('MODULE_SHIPPING_FREEAMOUNT_ZONE')) {
+          xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
+        }    
+        
         $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_%'");
-        $check_zones_rows_query = xtc_db_num_rows($check_zones_query);
+        $check_zones_rows = xtc_db_num_rows($check_zones_query);
 
-        if ($check_zones_rows_query != $this->num_freeamount) {
-          $this->install_zones($check_zones_rows_query);
+        if ($check_zones_rows != $this->num_zones) {
+          $this->install_zones($check_zones_rows);
         }
       }
     }
 
     function quote($method = '') {
-    	global $xtPrice, $order;
-	
+      global $xtPrice, $order;
+  
       $dest_country = $order->delivery['country']['iso_code_2'];
       $dest_zone = 0;
       
-      for ($i=1; $i<=$this->num_freeamount; $i++) {
+      for ($i=1; $i<=$this->num_zones; $i++) {
         $countries_table = constant('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_' . $i);
         $countries_table  = preg_replace("'[\r\n\s]+'",'',$countries_table);
         $country_zones = explode(',', $countries_table);
@@ -124,7 +140,17 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_DISPLAY', 'True', '6', '7', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER', '0', '6', '4', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES', '2', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES', '1', '6', '0', now())");
+
+      $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_".strtoupper($this->code)."_COUNTRIES_%'");
+      $check_zones_rows_query = xtc_db_num_rows($check_zones_query);
+
+      if ($check_zones_rows_query != 0) {
+        $this->install_zones($check_zones_rows_query);
+        xtc_db_query("UPDATE ".TABLE_CONFIGURATION." 
+                         SET configuration_value = '".(int)$check_zones_rows_query."' 
+                       WHERE configuration_key = 'MODULE_SHIPPING_".strtoupper($this->code)."_NUMBER_ZONES'");
+      }
     }
 
     function install_zones($number_of_zones) {
@@ -133,24 +159,24 @@
       xtc_backup_configuration($this->keys_zones($number_of_zones));
 
       // add new zone
-      if ($number_of_zones <= $this->num_freeamount) {
-        for ($i = (($number_of_zones==0) ? 1 : $number_of_zones); $i <= $this->num_freeamount; $i ++) {
+      if ($number_of_zones <= $this->num_zones) {
+        for ($i = (($number_of_zones==0) ? 1 : $number_of_zones); $i <= $this->num_zones; $i ++) {
           $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_".$i."'");
           if (xtc_db_num_rows($check_zones_query) < 1) {
-            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_".$i."', '', '6', '0', 'xtc_cfg_textarea(', now())");
-            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_".$i."', '', '6', '0', now())");
+            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_".$i."', '', '6', '0', 'xtc_cfg_textarea(', now())");
+            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_".$i."', '', '6', '0', now())");
           }
         }      
       } else {
         // remove zone
-        for ($i = $number_of_zones; $i >= $this->num_freeamount; $i --) {
+        for ($i = $number_of_zones; $i >= $this->num_zones; $i --) {
           xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_".$i."'");
           xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_AMOUNT_".$i."'");      
         }
       }
 
       // set standard values
-      for ($i = 1; $i <= $this->num_freeamount; $i ++) {
+      for ($i = 1; $i <= $this->num_zones; $i ++) {
         if ($i == 1) {
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'DE' WHERE configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_1'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '50.00' WHERE  configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_AMOUNT_1'");
@@ -174,7 +200,7 @@
       }
       
       // restore old values
-      xtc_restore_configuration($this->keys_zones($this->num_freeamount));
+      xtc_restore_configuration($this->keys_zones($this->num_zones));
     }
 
     function remove() {
@@ -198,7 +224,7 @@
                     'MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES',
                     'MODULE_SHIPPING_FREEAMOUNT_DISPLAY'
                     );
-      $keys = array_merge($keys, $this->keys_zones($this->num_freeamount));
+      $keys = array_merge($keys, $this->keys_zones($this->num_zones));
 
       return $keys;
     }

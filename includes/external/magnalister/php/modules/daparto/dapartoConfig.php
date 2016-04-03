@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: dapartoConfig.php 4799 2014-11-04 18:15:56Z derpapst $
+ * $Id: dapartoConfig.php 5452 2015-04-09 10:04:14Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -79,5 +79,6 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 } else {
 	include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_top.php');
 	echo $cG->renderConfigForm();
+	echo $cG->exchangeRateAlert();
 	include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_bottom.php');
 }

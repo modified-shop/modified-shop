@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: print_packingslip.php 3419 2012-08-11 12:17:52Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -15,15 +15,11 @@
    ---------------------------------------------------------------------------------------*/
 
   require('includes/application_top.php');
-  // include needed functions
-  require_once(DIR_FS_INC .'xtc_get_attributes_model.inc.php');
-  require_once(DIR_FS_INC .'xtc_not_null.inc.php');
-  require_once(DIR_FS_INC .'xtc_format_price_order.inc.php');
 
   $smarty = new Smarty;
 
-  //get store name and store name_address 
-  $smarty->assign('store_name', STORE_NAME); 
+  //get store name and store name_address
+  $smarty->assign('store_name', STORE_NAME);
   $smarty->assign('store_name_address', STORE_NAME_ADDRESS); 
 
   // get order data
@@ -34,6 +30,7 @@
   $smarty->assign('address_label_shipping',xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
   $smarty->assign('address_label_payment',xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
   $smarty->assign('csID',$order->customer['csID']);
+  $smarty->assign('vatID',$order->customer['vat_id']);
 
   // get products data
   include_once(DIR_FS_CATALOG.DIR_WS_CLASSES .'xtcPrice.php');
@@ -53,15 +50,23 @@
   $smarty->assign('language', $order->info['language']);
 
   $smarty->assign('logo_path',HTTP_SERVER  . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+  $smarty->assign('tpl_path',HTTP_SERVER . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+
   $smarty->assign('oID',$order->info['order_id']);
   if ($order->info['payment_method']!='' && $order->info['payment_method']!='no_payment') {
-    //include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
-    include(DIR_FS_CATALOG.'lang/'.$order->info['language'].'/modules/payment/'.$order->info['payment_method'].'.php'); // Tomcraft - 2014-04-07 - changed to order language
+    include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
     $payment_method=constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
     $smarty->assign('PAYMENT_METHOD',$payment_method);
   }
-  $smarty->assign('COMMENTS', $order->info['comments']);
+  $smarty->assign('COMMENTS', nl2br($order->info['comments']));
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));
+
+  require_once(DIR_FS_CATALOG.'includes/classes/main.php');
+  $main = new main();
+
+  $invoice_data = $main->getContentData(INVOICE_INFOS);
+  $smarty->assign('ADDRESS_SMALL', $invoice_data['content_heading']);
+  $smarty->assign('ADDRESS_LARGE', $invoice_data['content_text']);
 
   // dont allow cache
   $smarty->caching = false;

@@ -31,10 +31,11 @@
                   <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br />
                   <strong>{#order#}</strong> {$oID}<br />
                   <strong>{#date#}</strong> {$DATE}
+                  {if $vatID}<br /><strong>{#vatID#}</strong> {$vatID}{/if}
                 </p>
                 <p class="large">{#packingslip#}</p>
               </td>
-              <td width="1"><img src="{$logo_path}logo.gif" alt=""></td>
+              <td width="1"><img src="{$logo_path}logo.gif" alt="{$store_name}" /></td>
             </tr>
           </table>
           <br />

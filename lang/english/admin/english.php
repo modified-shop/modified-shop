@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: english.php 3447 2012-08-21 12:10:42Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -18,7 +18,7 @@
    Third Party contributions:
    Customers Status v3.x (c) 2002-2003 Copyright Elari elari@free.fr | www.unlockgsm.com/dload-osc/ | CVS : http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/elari/?sortby=date#dirlist
 
-   Released under the GNU General Public License
+   Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
 // look in your $PATH_LOCALE/locale directory for available locales..
@@ -33,7 +33,6 @@ define('DATE_FORMAT', 'd/m/Y');  // this is used for strftime()
 define('PHP_DATE_TIME_FORMAT', 'd/m/Y H:i:s'); // this is used for date()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
 
-////
 // Return date in raw format
 // $date should be in format mm/dd/yyyy
 // raw date is in format YYYYMMDD, or DDMMYYYY
@@ -45,9 +44,11 @@ function xtc_date_raw($date, $reverse = false) {
   }
 }
 
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_FS_LANGUAGES.'english/extra/admin/','php') as $file) require ($file);
+
 // Global entries for the <html> tag
 define('HTML_PARAMS','dir="ltr" lang="en"');
-
 
 // page title
 define('TITLE', defined('PROJECT_VERSION') ? PROJECT_VERSION : 'undefined');
@@ -69,17 +70,16 @@ define('DOB_FORMAT_STRING', 'dd/mm/yyyy');
 
 define('BOX_HEADING_CONFIGURATION','Configuration');
 define('BOX_HEADING_MODULES','Modules');
-define('BOX_HEADING_PARTNER_MODULES','Partner modules');
-define('BOX_HEADING_ZONE','Zone / Tax');
+define('BOX_HEADING_PARTNER_MODULES','Partner Modules');
+define('BOX_HEADING_ZONE','Zones/Tax');
 define('BOX_HEADING_CUSTOMERS','Customers');
 define('BOX_HEADING_PRODUCTS','Catalog');
 define('BOX_HEADING_STATISTICS','Statistics');
 define('BOX_HEADING_TOOLS','Tools');
 define('BOX_HEADING_LOCALIZATION', 'Languages/Currencies');
 define('BOX_HEADING_TEMPLATES','Templates');
-define('BOX_HEADING_LOCATION_AND_TAXES', 'Location / Tax');
+define('BOX_HEADING_LOCATION_AND_TAXES', 'Location/Tax');
 define('BOX_HEADING_CATALOG', 'Catalog');
-define('BOX_MODULE_NEWSLETTER','Newsletter');
 
 define('BOX_CONTENT','Content Manager');
 define('TEXT_ALLOWED', 'Permission');
@@ -98,22 +98,23 @@ define('BOX_CONFIGURATION_10', 'Logging Options');
 define('BOX_CONFIGURATION_11', 'Cache Options');
 define('BOX_CONFIGURATION_12', 'E-Mail Options');
 define('BOX_CONFIGURATION_13', 'Download Options');
-define('BOX_CONFIGURATION_14', 'Gzip Compression');
+define('BOX_CONFIGURATION_14', 'Compression');
 define('BOX_CONFIGURATION_15', 'Sessions');
 define('BOX_CONFIGURATION_16', 'Meta-Tags/Searchengines');
 define('BOX_CONFIGURATION_17', 'Additional Modules');
 define('BOX_CONFIGURATION_18', 'VAT Reg No');
 define('BOX_CONFIGURATION_19', 'Partner');
 define('BOX_CONFIGURATION_22', 'Search-Options');
-define('BOX_CONFIGURATION_24', 'PIWIK &amp; Google Analytics');
+define('BOX_CONFIGURATION_24', 'PIWIK, Google Analytics &amp; Facebook');
+define('BOX_CONFIGURATION_25', 'Captcha');
 define('BOX_CONFIGURATION_40', 'Popup Window Options');
 define('BOX_CONFIGURATION_1000', 'My Admin');
 
 define('BOX_MODULES', 'Payment-/Shipping-/Billing-Modules');
-define('BOX_PAYMENT', 'Payment Systems');
+define('BOX_PAYMENT', 'Payment Methods');
 define('BOX_SHIPPING', 'Shipping Methods');
 define('BOX_ORDER_TOTAL', 'Order Total');
-define('BOX_CATEGORIES', 'Categories / Products');
+define('BOX_CATEGORIES', 'Categories/Products');
 define('BOX_PRODUCTS_ATTRIBUTES', 'Product Options');
 define('BOX_MANUFACTURERS', 'Manufacturers');
 define('BOX_REVIEWS', 'Product Reviews');
@@ -160,13 +161,13 @@ define('BOX_GV_ADMIN_QUEUE', 'Gift Voucher Queue');
 define('BOX_GV_ADMIN_MAIL', 'Mail Gift Voucher');
 define('BOX_GV_ADMIN_SENT', 'Gift Vouchers sent');
 define('BOX_COUPON_ADMIN','Coupon Admin');
-define('BOX_IMPORT','Import/Export');
+define('BOX_TOOLS_BLACKLIST','Creditcard-Blacklist');
+define('BOX_IMPORT','Import/Export'); 
 define('BOX_PRODUCTS_VPE','Packing unit');
 define('BOX_CAMPAIGNS_REPORT','Campaign report');
 define('BOX_ORDERS_XSELL_GROUP','Cross-sell groups');
 define('BOX_REMOVEOLDPICS','Remove old pictures'); // Remove old pictures - franky_n - 20110105
 define('BOX_JANOLAW','janolaw AGB Hosting'); // Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
-define('BOX_PARCEL_CARRIERS','Parcel carriers'); //Dokuman - 2012-11-16 - Track & Trace functionality
 define('BOX_HAENDLERBUND','H&auml;ndlerbund AGB Service'); // Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
 define('BOX_SAFETERMS','Safeterms - AGB Service'); // Tomcraft - 2013-06-21 - Safeterms AGB interface
 define('BOX_SHOP','Shop');
@@ -174,8 +175,17 @@ define('BOX_LOGOUT','Logout');
 define('BOX_CREDITS','Credits');
 define('BOX_UPDATE','Check Version');
 define('BOX_EASYMARKETING','EASYMARKETING AG'); // Tomcraft - 2013-08-29 - Added easymarketing
-define('BOX_GV_CUSTOMERS','Credit - Customers');
+define('BOX_GV_CUSTOMERS','Customers Credit');
 define('BOX_IT_RECHT_KANZLEI', 'IT Recht Kanzlei');
+define('BOX_PROTECTEDSHOPS', 'Protected Shops - AGB Service');
+define('BOX_CLEVERREACH', 'CleverReach');
+define('BOX_SUPERMAILER', 'SuperMailer');
+define('BOX_OFFLINE', 'Shop offline');
+define('BOX_LOGS', 'Logfiles');
+define('BOX_SHIPCLOUD', 'shipcloud');
+define('BOX_SHIPCLOUD_PICKUP', 'shipcloud - pickup');
+define('BOX_PRODUCTS_TAGS', 'Product features');
+define('BOX_TRUSTEDSHOPS', 'Trusted Shops');
 
 define('TXT_GROUPS','<b>Groups</b>:');
 define('TXT_SYSTEM','System');
@@ -186,7 +196,7 @@ define('TXT_TOOLS','Tools');
 define('TEXT_ACCOUNTING','Admin-access for:');
 
 /******* SHOPGATE **********/
-include_once DIR_FS_EXTERNAL.'shopgate/base/lang/english/admin/english.php';
+include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/lang/english/admin/english.php');
 /******* SHOPGATE **********/
 
 // javascript messages
@@ -235,10 +245,10 @@ define('ENTRY_FIRST_NAME_ERROR', '&nbsp;<span class="errorText">min. ' . ENTRY_F
 define('ENTRY_LAST_NAME', 'Last Name:');
 define('ENTRY_LAST_NAME_ERROR', '&nbsp;<span class="errorText">min. ' . ENTRY_LAST_NAME_MIN_LENGTH . ' chars</span>');
 define('ENTRY_DATE_OF_BIRTH', 'Date of Birth:');
-define('ENTRY_DATE_OF_BIRTH_ERROR', '&nbsp;<span class="errorText">(e.g. 05/21/1970)</span>');
+define('ENTRY_DATE_OF_BIRTH_ERROR', '&nbsp;<span class="errorText">(e.g. 21/05/1970)</span>');
 define('ENTRY_EMAIL_ADDRESS', 'E-Mail Address:');
 define('ENTRY_EMAIL_ADDRESS_ERROR', '&nbsp;<span class="errorText">min. ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' chars</span>');
-define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', '&nbsp;<span class="errorText">Invalid E-Mail Address!</span>');
+define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', '&nbsp;<span class="errorText">Invalid E-Mail Address! (We currently don\'t support german umlauts in e-mail addresses.)</span>');
 define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', '&nbsp;<span class="errorText">This e-mail address already exists!</span>');
 define('ENTRY_COMPANY', 'Company name:');
 define('ENTRY_STREET_ADDRESS', 'Street Address:');
@@ -316,13 +326,10 @@ define('TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES', 'Displaying <b>%d</b> to <b>%d</b> 
 define('TEXT_DISPLAY_NUMBER_OF_TAX_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> Tax Zones)');
 define('TEXT_DISPLAY_NUMBER_OF_TAX_RATES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> Tax Rates)');
 define('TEXT_DISPLAY_NUMBER_OF_ZONES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> zones)');
-define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> carriers)');
 define('TEXT_DISPLAY_NUMBER_OF_WHOS_ONLINE', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> Customers who are online)');
 
-define('PREVNEXT_BUTTON_FIRST', '&lt;&lt;FIRST');
-define('PREVNEXT_BUTTON_PREV', '&lt;&lt;');
-define('PREVNEXT_BUTTON_NEXT', '&gt;&gt;');
-define('PREVNEXT_BUTTON_LAST', 'LAST&gt;&gt;');
+define('PREVNEXT_BUTTON_PREV', '&laquo;');
+define('PREVNEXT_BUTTON_NEXT', '&raquo;');
 
 define('TEXT_DEFAULT', 'Default');
 define('TEXT_SET_DEFAULT', 'Set as default');
@@ -345,11 +352,13 @@ define('ERROR_FILE_NOT_SAVED', 'Error: File upload not saved.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Error: File upload type not allowed.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Success: File upload saved successfully.');
 define('WARNING_NO_FILE_UPLOADED', 'Warnung: No file uploaded.');
+define('ERROR_FILE_NOT_REMOVEABLE', 'Error: File not removed.');
 
 define('DELETE_ENTRY','Delete entry?');
 define('TEXT_PAYMENT_ERROR','<b>WARNING:</b> Please activate a Payment Module!');
 define('TEXT_SHIPPING_ERROR','<b>WARNING:</b> Please activate a Shipping Module!');
 define('TEXT_PAYPAL_CONFIG','<b>WARNING:</b> Please configure the PayPal payment settings for "Live mode" here: <a href="%s"><strong>Partner -> PayPal</strong></a>.'); //DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
+define('TEXT_DUPLUCATE_CONFIG_ERROR','<b>WARNING:</b> Duplicate configuration key: ');
 
 define('TEXT_NETTO','net: ');
 
@@ -466,27 +475,28 @@ define('BOX_CUSTOMERS_GROUP','CG-authorizations');
 
 // BOF - Tomcraft - 2009-11-02 - New admin top menu
 define('TEXT_ADMIN_START', 'Home');
-define('BOX_HEADING_CONFIGURATION2','Advanced Configuration');
+define('BOX_HEADING_CONFIGURATION2','Adv. Configuration');
 // EOF - Tomcraft - 2009-11-02 - New admin top menu
 
 // BOF - Tomcraft - 2009-11-28 - Included xs:booster
-define('BOX_HEADING_XSBOOSTER','xs:booster');
+define('BOX_HEADING_XSBOOSTER','xs:booster');	
 define('BOX_XSBOOSTER_LISTAUCTIONS','List Auctions');
 define('BOX_XSBOOSTER_ADDAUCTIONS','Add Auctions');
 define('BOX_XSBOOSTER_CONFIG','Base Configuration');
 // EOF - Tomcraft - 2009-11-28 - Included xs:booster
 
 //BOF - web28 - 2010-04-10 - ADMIN SEARCH BAR
-define('ASB_QUICK_SEARCH_CUSTOMER','Customer: ');
-define('ASB_QUICK_SEARCH_ORDER_ID','Order: ');
-define('ASB_QUICK_SEARCH_ARTICLE','Product: ');
-define('ASB_QUICK_SEARCH_EMAIL', 'E-Mail Address:');
+define('ASB_QUICK_SEARCH_CUSTOMER','Search customers...');
+define('ASB_QUICK_SEARCH_ORDER_ID','Search orders...');
+define('ASB_QUICK_SEARCH_ARTICLE','Search products/categories...');
+define('ASB_QUICK_SEARCH_EMAIL', 'Search E-Mail Addresses...');
+define('ASB_QUICK_SEARCH_ARTICLE_ID','Search products/categories ID...');
 //EOF - web28 - 2010-04-10 - ADMIN SEARCH BAR
 
 //BOF - web28 - 2010.05.30 - accounting - set all checkboxes , countries - set all flags
 define('BUTTON_SET','Check All');
 define('BUTTON_UNSET','Uncheck All');
-//EOF - web28 - 2010.05.30 - accounting - set all checkboxes
+//EOF - web28 - 2010.05.30 - accounting - set all checkboxes 
 
 //BOF - DokuMan - 2010-08-12 - added possibility to reset admin statistics
 define('TEXT_ROWS','Row');
@@ -498,9 +508,9 @@ define('BUTTON_CLOSE_WINDOW' , 'Close Window');
 //EOF - web28 - 2010-11-13 - add BUTTON_CLOSE_WINDOW
 
 //BOF - hendrik - 2011-05-14 - independent invoice number and date
-define('ENTRY_INVOICE_NUMBER',  'Invoice number:');
-define('ENTRY_INVOICE_DATE',    'Invoice date:');
-//EOF - hendrik - 2011-05-14 - independent invoice number and date
+define('ENTRY_INVOICE_NUMBER',  'Invoice number:'); 
+define('ENTRY_INVOICE_DATE',    'Invoice date:'); 
+//EOF - hendrik - 2011-05-14 - independent invoice number and date 
 
 //BOF - web28 - 2010-07-06 - added missing error text
 define('ENTRY_VAT_ERROR', '&nbsp;<span class="errorText">OUT OF RANGE VAT Reg.</span>');
@@ -519,6 +529,7 @@ define ('TEXT_INFO_MODULE_REMOVE', 'Do you want to uninstall the module?<br /><b
 define ('TEXT_INFO_MODULE_BACKUP', 'Do you want to backup the module settings?');
 define ('MODULE_BACKUP_CONFIRM', 'The module settings were backuped successfully!');
 define ('MODULE_RESTORE_CONFIRM', 'The module settings were restored successfully!');
+define ('MODULE_UPDATE_CONFIRM', 'The module settings were updated successfully!');
 
 /* magnalister v1.0.0 */
 define('BOX_HEADING_MAGNALISTER', 'magnalister');
@@ -530,4 +541,61 @@ define('CHARS_MAX', 'of max.');
 
 define('DISPLAY_PER_PAGE', 'Display per page: ');
 
-define('SPECIALS_DATE_END_TT', 'Offers end at midnight (23.59.59)');
+define('SPECIALS_DATE_START_TT', 'Offers start at 00:00:00');
+define('SPECIALS_DATE_END_TT', 'Offers end at midnight (23:59:59)');
+
+define('BOX_PARCEL_CARRIERS', 'Parcel carriers');
+define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> carriers)');
+
+define('RSS_FEED_TITLE', 'Latest informations from modified eCommerce Shopsoftware Blog');
+define('RSS_FEED_DESCRIPTION', 'Latest informations from modified eCommerce Shopsoftware Support Forum');
+define('RSS_FEED_LINK', 'http://www.modified-shop.org/blog');
+define('RSS_FEED_ALTERNATIVE', 'Unfortunately the latest news cannot be displayed in the RSS feed. Please visit our Blog at <a href="'.RSS_FEED_LINK.'">www.modified-shop.org/blog</a> to get important informations for shop maintainers concerning the following topics: <ul><li>Important Updates and Fixes</li><li>Function extensions</li><li>jurisdictions</li><li>News</li><li>Gossip</li></ul>');
+define('TEXT_DISPLAY_NUMBER_OF_NEWSFEED', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> News)');
+
+define('CFG_TXT_YES', 'Yes');
+define('CFG_TXT_NO', 'No');
+define('CFG_TXT_OR', 'or');
+define('CFG_TXT_AND', 'and');
+define('CFG_TXT_ASC', 'ascending');
+define('CFG_TXT_DESC', 'descending');
+define('CFG_TXT_PRODUCTS_NAME', 'Product name');
+define('CFG_TXT_PRODUCTS_MODEL', 'Product model');
+define('CFG_TXT_DATE_EXPECTED', 'Date Expected');
+define('CFG_TXT_ACCOUNT', 'Account');
+define('CFG_TXT_GUEST', 'Guest');
+define('CFG_TXT_BOTH', 'both');
+define('CFG_TXT_NONE', 'none');
+define('CFG_TXT_ADMIN', 'admin');
+define('CFG_TXT_ALL', 'all');
+define('CFG_TXT_WEIGHT', 'Weight');
+define('CFG_TXT_PRICE', 'Price');
+define('CFG_TXT_ITEM', 'Item');
+
+define('CSRF_TOKEN_MANIPULATION', 'CSRFToken manipulation (Due to security aspects it is not allowed to work in the admin area in different browser tabs anymore.)');
+define('CSRF_TOKEN_NOT_DEFINED', 'CSRFToken not defined (Due to security aspects it is not allowed to work in the admin area in different browser tabs anymore.)');
+
+define('TEXT_ACCOUNTING_INFO','The main admin [1] cannot be deprived of the access rights.');
+
+define('JAVASCRIPT_DISABLED_INFO', 'JavaScript seem to be disabled in your browser. Enable JavaScript to be able to use all functions of this site and all site content');
+
+define('BOX_MODULE_TYPE', 'Class Extensions Modules');
+
+define('MULTIPLE_INSTALLATION', '<span style="color:red">[Multiple Installation: %s]</span>');
+
+define('FILEUPLOAD_INPUT_TXT', 'No file');
+define('FILEUPLOAD_BTN_TXT', 'Search');
+
+define('CHECK_LABEL_PRICE', 'Check price');
+
+define('TEXT_PAYPAL_TAB_CONFIG', 'PayPal Configuration');
+define('TEXT_PAYPAL_TAB_PROFILE', 'PayPal Profile');
+define('TEXT_PAYPAL_TAB_WEBHOOK', 'PayPal Webhook');
+define('TEXT_PAYPAL_TAB_MODULE', 'PayPal Module');
+define('TEXT_PAYPAL_TAB_TRANSACTIONS', 'PayPal Transactions');
+
+define('TEXT_DEFAULT_SORT_ORDER_TITLE', 'Sort order');
+define('TEXT_DEFAULT_SORT_ORDER_DESC', 'Order of processing. Smallest number is executed first.');
+define('TEXT_DEFAULT_STATUS_TITLE', 'Enable module?');
+define('TEXT_DEFAULT_STATUS_DESC', 'Modules status');
+?>

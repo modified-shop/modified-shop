@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: stylesheet.css 4246 2013-01-11 14:36:07Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -33,6 +33,10 @@ body {
   color:#555;
   line-height:18px;
 }
+.cf:before, .cf:after { content: ""; display: table; }
+.cf:after { clear: both; }
+.cf { zoom: 1; }
+
 /* HEADINGS */
 h1 {
   color:#000;
@@ -191,7 +195,7 @@ table td {
   background:#fff url(img/bg_breadcrumb.gif) repeat-x;
   font-size:11px;
 }
-#breadcrumb a, #breadcrumb a:link, #breadcrumb a:visited, #breadcrumb a:hover, #breadcrumb a:active {
+#breadcrumb a, #breadcrumb a:link, #breadcrumb a:visited, #breadcrumb a:hover, #breadcrumb a:active, #breadcrumb span.current {
   line-height:23px;
   text-decoration:none;
   outline:none;
@@ -200,6 +204,10 @@ table td {
   color:#333;
   margin:0;
   padding:0;
+}
+#breadcrumb span.current {
+  font-weight:bold;
+  cursor:default;
 }
 /* TOPMENU AS LIST */
 #topmenuwrap {
@@ -552,7 +560,7 @@ h2.boxcartheader a {
 /* Dokuman - 2009-06-06 - Fix new products display in firefox - picture size is 120px by default */
 /*.productPreviewImage { width:100px; display:block } */
 .productPreviewImage {
-  width:120px;
+  /*width:120px;*/
   display:block;
   vertical-align:top;
   padding:3px 15px 0 0;
@@ -1248,7 +1256,7 @@ dd {
   width:125px;
 }
 td.productPreviewContent {
-  width:400px;
+  /*width:400px;*/
   text-align:left;
 }
 /* Tomcraft - 2009-09-22 - FIX DER AUFZÄHLUNGEN IM CONTENT */
@@ -1518,6 +1526,7 @@ ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
   padding: 15px;
   background-color: #e5ffe8;
   margin-bottom: 10px;
+  line-height: 16px;
 }
 
 /* PAGINATION */
@@ -1538,4 +1547,345 @@ ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
 .popup-cont {
 font-family:Arial, Helvetica, sans-serif;
 background:#fff;
+}
+
+/* styles for boxes */
+#quick_find input[type="text"] {
+    width: 160px;
+}
+
+#currencies > select {
+    width: 100%;
+}
+
+#loginbox input[type="text"] {
+    width: 170px;
+}
+#loginbox input[type="password"] {
+    width: 80px;
+}
+
+/* Color Defination from language-Files, main.php, ot-Module  */
+.color_ot_total {
+  color:#ff0000;
+}
+.color_error_message {
+  color:#ff0000;
+}
+a.color_more {
+  color:#ff0000 !important;
+}
+a.color_more:hover {
+  color:#ff0000 !important;
+  text-decoration:underline !important;
+}
+.color_edit_info {
+  color:#009933;
+}
+
+/* Banner Manager */
+.banner_item img {
+  max-width:100%;
+  height:auto;
+}
+
+/* account cart and click buttons */
+.account_row_payment,
+.account_row_shipping {
+  padding:3px 0px;
+}
+.account_row_payment span,
+.account_row_shipping span {
+  display:inline-block;
+  width:23px;
+  float:left;
+}
+ul.address_block {
+  margin: 15px 0px 0px 0px !important;
+  list-style-type:none !important;
+}
+ul.address_block li {
+  border-top: 1px solid #4e4e4f;
+  margin-top:10px;
+  padding-top: 10px;
+}
+ul.address_block li .address_check {
+  float:left;
+  display:inline-block;
+  width:23px;
+  margin: 2px 0 0 0;
+}
+ul.address_block li .address_head {
+  display:inline-block;
+  font-weight:bold;
+}
+ul.address_block li .address {
+  display:block;
+  padding:5px 0px 0px 23px;
+}
+.accountbutton_row {
+  margin: 5px 0px 5px 0px;
+}
+.accountbutton_history_row {
+  margin: 5px 0px 0px 0px;
+}
+.accountbutton_historyinfo_row {
+  margin: 10px 0px 0px 0px;
+}
+.account_actions_right {
+  float:right;
+  display:inline-block;
+}
+.accounthistory_actions {
+  text-align:center;
+  display:inline-block;
+  padding-top:4px;
+}
+/* END account cart and click buttons */
+
+ul.attributes_list {
+  list-style-type:none;
+  margin: 7px 0px 0px 0px !important;
+}
+ul.attributes_list li {
+  font-size:12px;
+  line-height:20px;
+}
+
+/* START filter manufacturer */
+.filter_bar {
+  background-color: #f2f2f2;
+  border: 1px solid #e6e6e6;
+  margin-bottom: 15px;
+  padding: 0px 5px;
+}
+
+.sort_bar {
+  margin: 0px 0 0 0;
+}
+.sort_bar_row {
+  margin: 0px -5px 0px -5px;
+}
+.sort_bar_item {
+  float:left;
+  width:25%;
+  padding:5px 5px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.sort_bar_item select {
+  width:100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.tags_bar {
+  margin: 5px 0 0 0;
+}
+.tags_bar_headline {
+  font-size:10px;
+  line-height:12px;
+  font-weight:bold;
+  padding: 0px 0px 0px 2px;
+}
+a.tags_bar_reset {
+  float:right;
+  font-size:10px;
+  line-height:12px;
+}
+.tags_bar_row {
+  margin: 0px -5px 0px -5px;
+}
+.tags_bar_item {
+  float:left;
+  width:25%;
+  padding:5px 5px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.tags_bar_item select {
+  width:100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* START tags */
+.tags_block {
+  margin: 0 0 15px 0;
+  border-top: 1px solid #eee;
+}
+.tags_row {
+  font-size:12px;
+  line-height:20px;
+  border-bottom: 1px solid #eee;
+}
+.tags_bg1 {
+  background:#fafafa;
+}
+.tags_bg2 {
+  background:#ffffff;
+}
+.tags_row .tags_options {
+  float:left;
+  width:25%;
+  display:block;
+  font-weight:bold;
+  padding: 5px 10px 5px 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.tags_row .tags_options img {
+  vertical-align: -3px;
+  padding-left:4px;
+}
+.tags_options_tooltip {
+  position:relative;
+}
+.tags_options_tooltip img {
+  vertical-align:-3px;
+}
+.tags_options_tooltip .tags_options_tooltip_hover {
+  position:absolute;
+  bottom:20px;
+  left:-95px;
+  width:200px;
+  background:#eee;
+  border: 1px solid #ddd;
+  display:none;
+  font-size:12px;
+  line-height:16px;
+  font-weight:normal;
+  padding:10px;
+}
+.tags_options_tooltip:hover .tags_options_tooltip_hover {
+  display:block;
+}
+.tags_row .tags_values {
+  float:left;
+  width:75%;
+  display:block;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size:0px;
+}
+.tags_values_icon_row {
+  font-size:12px;
+  line-height:20px;
+  float:left;
+  padding:5px 0px 0px 0px;
+}
+.tags_values_icon {
+  float:left;
+  display:inline-block;
+  height:20px;
+  width:auto;
+  margin:0 10px 5px 0;
+}
+.tags_values_icon img {
+  float:left;
+  height:20px;
+}
+.tags_values_icon a {
+  display:block;
+}
+.tags_values_icon a:hover {
+  text-decoration:none;
+}
+.tags_icons_tooltip {
+  position:relative;
+  display:block;
+}
+.tags_icons_tooltip img {
+  vertical-align:-3px;
+}
+.tags_icons_tooltip .tags_icons_tooltip_hover {
+  position:absolute;
+  bottom:24px;
+  left:-95px;
+  width:200px;
+  background:#eee;
+  border: 1px solid #ddd;
+  display:none;
+  font-size:12px;
+  line-height:16px;
+  font-weight:normal;
+  padding:10px;
+}
+.tags_icons_tooltip:hover .tags_icons_tooltip_hover {
+  display:block;
+}
+.tags_values_text_row {
+  font-size:12px;
+  line-height:20px;
+  float:left;
+  padding:5px 0px 5px 0px;
+}
+.tags_values_name {
+  position:relative;
+  cursor:default;
+  float:left;
+  clear:left;
+}
+.tags_values_desc_hover {
+  position:absolute;
+  bottom:20px;
+  left:-95px;
+  width:200px;
+  background:#eee;
+  border: 1px solid #ddd;
+  display:none;
+  font-size:12px;
+  line-height:16px;
+  font-weight:normal;
+  padding:10px;
+}
+.tags_values_name:hover .tags_values_desc_hover {
+  display:block;
+}
+.tags_values_info {
+  position:relative;
+}
+.tags_values_info img {
+  vertical-align:-3px;
+  padding-left:4px;
+}
+.tags_values_diff {
+  font-size:12px;
+  line-height:20px;
+  padding-left:1px;
+  padding-right:4px;
+}
+/* END tags */
+
+/* START Subcontent navigation in content */
+.subcontent {
+  float:right;
+  margin: 5px 0px 40px 40px;
+  background: #f2f2f2;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width:180px;
+}
+.subcontent p a:hover {
+  text-decoration:none;
+}
+.subcontent ul {
+  margin: 0px 0px 0px 15px;
+  list-style-type:square;
+}
+.subcontent ul li {
+
+}
+.subcontent ul li a {
+  display:block;
+  padding: 4px 0px;
+  border-bottom: 1px dotted #ccc;
+}
+.subcontent ul li a:hover {
+  text-decoration:none;
 }

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: coupon_admin.php 2094 2011-08-15 14:56:49Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -55,7 +55,7 @@ define('TABLE_HEADING_ACTION', 'Aktion');
 define('CUSTOMER_ID', 'Kunden Nr.');
 define('CUSTOMER_NAME', 'Kunden Name');
 define('REDEEM_DATE', 'eingel&ouml;st am');
-define('IP_ADDRESS', 'IP Adresse');
+define('IP_ADDRESS', 'IP-Adresse');
 
 define('TEXT_REDEMPTIONS', 'Einl&ouml;sung');
 define('TEXT_REDEMPTIONS_TOTAL', 'Insgesamt:');
@@ -85,15 +85,15 @@ define('TEXT_NEW_INTRO', 'Bitte geben Sie die folgende Informationen f&uuml;r de
 define('COUPON_NAME_HELP', 'Eine Kurzbezeichnung f&uuml;r den Coupon');
 define('COUPON_AMOUNT_HELP', 'Tragen Sie hier den Rabatt f&uuml;r diesen Coupon ein. Entweder einen festen Betrag oder einen prozentualen Rabatt wie z.B. 10%');
 define('COUPON_CODE_HELP', 'Hier k&ouml;nnen Sie einen eigenen Code eintragen (max. 16 Zeichen). Lassen Sie das Feld frei, dann wird dieser Code automatisch generiert.');
-define('COUPON_STARTDATE_HELP', 'Das Datum ab dem der Coupon g&uuml;ltig ist');
-define('COUPON_FINISHDATE_HELP', 'Das Datum an dem der Coupon abl&auml;uft');
+define('COUPON_STARTDATE_HELP', 'Das Datum ab dem der Coupon g&uuml;ltig ist.<br>');
+define('COUPON_FINISHDATE_HELP', 'Das Datum an dem der Coupon abl&auml;uft.<br>');
 define('COUPON_FREE_SHIP_HELP', 'Coupon f&uuml;r eine versandkostenfreie Lieferung. <strong>Achtung:</strong> Der Coupon Wert wird <b>nicht</b> ber&uuml;cksichtigt! Der Mindestbestellwert bleibt g&uuml;ltig.');
 define('COUPON_DESC_HELP', 'Beschreibung des Coupons f&uuml;r den Kunden');
 define('COUPON_MIN_ORDER_HELP', 'Mindestbestellwert ab dem dieser Coupon g&uuml;ltig ist');
 define('COUPON_USES_COUPON_HELP', 'Tragen Sie hier ein wie oft dieser Coupon eingel&ouml;st werden darf. Lassen Sie das Feld frei, dann ist die Benutzung unlimitiert.');
 define('COUPON_USES_USER_HELP', 'Tragen Sie hier ein wie oft ein Kunde diesen Coupon einl&ouml;sen darf. Lassen Sie das Feld frei, dann ist die Benutzung unlimitiert.');
-define('COUPON_PRODUCTS_HELP', 'Eine durch Komma getrennte Liste von product_ids f&uuml;r die dieser Coupon g&uuml;ltig ist. Ein leeres Feld bedeutet keine Einschr&auml;nkung.');
-define('COUPON_CATEGORIES_HELP', 'Eine durch Komma getrennte Liste von Kategorien (cpaths) f&uuml;r die dieser Coupon g&uuml;ltig ist. Ein leeres Feld bedeutet keine Einschr&auml;nkung.');
+define('COUPON_PRODUCTS_HELP', 'Eine durch Komma getrennte Liste von Artikel-IDs f&uuml;r die dieser Coupon g&uuml;ltig ist. Ein leeres Feld bedeutet keine Einschr&auml;nkung.');
+define('COUPON_CATEGORIES_HELP', 'Eine durch Komma getrennte Liste von Kategorie-IDs f&uuml;r die dieser Coupon g&uuml;ltig ist. Ein leeres Feld bedeutet keine Einschr&auml;nkung.');
 define('COUPON_ID', 'cID');
 define('BUTTON_DELETE_NO_CONFIRM', 'ohne Abfrage l&ouml;schen');
 define('TEXT_NONE', 'keine Einschr&auml;nkung');
@@ -114,11 +114,15 @@ define('COUPON_FREE_SHIPPING', 'Versandkostenfrei');
 define('COUPON_LINK_TEXT', '\n\nDetails');
 define('COUPON_CATEGORIES_RESTRICT', '\nG&uuml;ltig f&uuml;r diese Kategorien');
 define('COUPON_PRODUCTS_RESTRICT', '\nG&uuml;ltig f&uuml;r diese Artikel');
-define('COUPON_NO_RESTRICT', '\nG&uuml;ltig f&uuml;r alle Artikel');;
+define('COUPON_NO_RESTRICT', '\nG&uuml;ltig f&uuml;r alle Artikel');
 //EOF - web28 - 2011-04-13 - ADD Coupon message infos
 
 //BOF - web28 - 2011-07-05 - ADD error message
 define('ERROR_NO_COUPON_NAME', 'FEHLER: Kein Couponname ');
-define('ERROR_NO_COUPON_AMOUNT', 'FEHLER: Kein Couponwert ');
+define('ERROR_NO_COUPON_AMOUNT', 'FEHLER: Kein Couponwert');
 //EOF - web28 - 2011-07-05 - ADD error message
+
+define('COUPON_DATE_START_TT', 'Beginnt um 00:00:00 Uhr');
+define('COUPON_DATE_END_TT', 'Endet um Mitternacht (23:59:59 Uhr)');
+define('ERROR_COUPON_DATE', 'FEHLER: Das Enddatum ist &auml;lter als das Startdatum');
 ?>

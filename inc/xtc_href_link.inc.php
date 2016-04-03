@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_href_link.inc.php 4256 2013-01-11 16:23:35Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -22,13 +22,22 @@
 
     $parameters = str_replace('&amp;', '&', $parameters); // undo W3C-Conform link
 
-    $page = (!xtc_not_null($page) ? FILENAME_DEFAULT : $page); // if page is not defined then use index.php
+    $link = $connection == 'SSL' && ENABLE_SSL ? HTTPS_SERVER : HTTP_SERVER;
 
-    $page = (($page == FILENAME_DEFAULT && !xtc_not_null($parameters)) ? '' : $page); // remove index.php from startpage
-
-    $link = ($connection == 'SSL' && ENABLE_SSL == true ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG;
+    if (defined('RUN_MODE_ADMIN') && $admin === false) {
+      $link .= DIR_WS_ADMIN;
+      $page = (($page == '') ? FILENAME_START : $page);
+      $search_engine_safe = false;
+    } else {
+      $link .= DIR_WS_CATALOG;
+      $page = (($page == FILENAME_DEFAULT && !xtc_not_null($parameters)) ? '' : $page);
+      if (defined('RUN_MODE_ADMIN')) {
+        $admin = false;
+      }
+    }
 
     $link .= $page;
+
     $separator = '?';
     if (xtc_not_null($parameters)) {
       $link .= '?' . $parameters;
@@ -37,26 +46,21 @@
 
     $link = rtrim($link, '&?'); // strip ?/& from the end of link
 
-    ### shopstat SEO URL
-    if (!$admin && (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true)) {
-        require_once(DIR_FS_INC . 'shopstat_functions.inc.php');
-        $seolink = shopstat_getSEO($page, $parameters, $connection, $add_session_id, $search_engine_safe, 'user');
-        if($seolink){
-            $link      = $seolink;
-            $elements  = parse_url($link);
-            $separator = (isset($elements['query']) ? '&' : '?');
-         }
+    if ($admin === false && SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $search_engine_safe === true) {
+      require_once (DIR_FS_INC . 'seo_url_mod.php');
+      list($link, $separator) = seo_url_mod($link, $page, $parameters, $connection, $separator);
     }
-    ### shopstat SEO URL
 
     // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ( (!isset($truncate_session_id) || $truncate_session_id === false) # no session if useragent is a known Spider
-        && $add_session_id == true && $session_started == true
-        && (SESSION_FORCE_COOKIE_USE == 'False' && ($admin || !$cookie))
+        && $add_session_id === true 
+        && $session_started === true
+        && (SESSION_FORCE_COOKIE_USE == 'False' && ($admin === true || $cookie === false))
        ) 
     {
-      if (defined('SID') 
-          && constant('SID') != '')
+      if (defined('SID')
+          && constant('SID') != ''
+          && session_id() != '')
       {
         $link .= $separator . session_name() . '=' . session_id();
       } elseif ( 
@@ -68,15 +72,15 @@
     }
 
     // W3C-Conform
-    $link = ($urlencode !== false ? encode_htmlentities($link) : str_replace('&', '&amp;', $link));
-
+    if ($admin === false && !defined('RUN_MODE_ADMIN')) {
+      $link = ($urlencode !== false ? encode_htmlentities($link) : str_replace('&', '&amp;', $link));
+    }
+    
     return $link;
   }
 
-  // link to admin
-  // used in source/boxes/admin.php, pn_sofortueberweisung.php, account_edit.php
+  // link to admin - used in source/boxes/admin.php, account_edit.php
   function xtc_href_link_admin($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode = false) {
-    $link = xtc_href_link($page, $parameters, $connection, $add_session_id, $search_engine_safe, $urlencode, true);
-    return $link;
+    return xtc_href_link($page, $parameters, $connection, $add_session_id, $search_engine_safe, $urlencode, true);
   }
 ?>

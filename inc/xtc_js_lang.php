@@ -1,14 +1,12 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_js_lang.php 4203 2013-01-10 20:36:14Z Tomcraft1980 $
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   -----------------------------------------------------------------------------------------
-   based on: 
-   (c) 2006 XT-Commerce
+   Copyright (c) 2005 XT-Commerce
+
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -30,5 +28,8 @@
    	$message=str_replace($search_array,$replace_array,$message);
    	   	
    	return $message;
+   	
    }
+   
+   
 ?>

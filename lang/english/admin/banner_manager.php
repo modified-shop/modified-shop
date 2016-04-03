@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: banner_manager.php 5100 2013-07-17 13:25:47Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -23,12 +23,14 @@ define('TABLE_HEADING_GROUPS', 'Groups');
 define('TABLE_HEADING_STATISTICS', 'Displays / Clicks');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Action');
+define('TABLE_HEADING_LANGUAGE', 'Language');
 
 define('TEXT_BANNERS_TITLE', 'Banner Title:');
 define('TEXT_BANNERS_URL', 'Banner URL:');
 define('TEXT_BANNERS_URL_NOTE', 'URL target when clicking the banner.'); 
 define('TEXT_BANNERS_GROUP', 'Banner Group:');
 define('TEXT_BANNERS_NEW_GROUP', 'Choose an existing banner group (if exists) or enter a new banner group below.');
+define('TEXT_BANNERS_NEW_GROUP_NOTE', 'To display a Banner in the template, the template must be extended<br/>Example: Banner Group banner , the banner can be displayed in the template in the index.html with ${BANNER}');
 define('TEXT_BANNERS_IMAGE', 'Image:');
 define('TEXT_BANNERS_IMAGE_LOCAL', 'Choose the desired image by clicking the "Browse" button or enter local file below in path &quot;' . DIR_FS_CATALOG_IMAGES.'banner/&quot; an.<br /><strong>Allowed extensions:</strong> jpg, jpeg, jpe, gif, png, bmp, tiff, tif, bmp, swf, cab');
 define('TEXT_BANNERS_IMAGE_TARGET', 'Image Target (Save To):');
@@ -75,6 +77,9 @@ define('ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST', 'Error: Graphs directory does no
 define('ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE', 'Error: Graphs directory is not writeable.');
 
 // BOF - Tomcraft - 2009-11-06 - Use variable TEXT_BANNERS_DATE_FORMAT
-define('TEXT_BANNERS_DATE_FORMAT', 'JJJJ-MM-TT');
+define('TEXT_BANNERS_DATE_FORMAT', 'YYYY-MM-DD');
 // EOF - Tomcraft - 2009-11-06 - Use variable TEXT_BANNERS_DATE_FORMAT
+
+define('TEXT_BANNERS_LANGUAGE', 'Language:');
+define('TEXT_BANNERS_LANGUAGE_NOTE', 'Select the language where the banner should be displayed?');
 ?>

@@ -129,7 +129,7 @@ function isDomestic($countryISO) {
 }
 
 /* Versandkosten bei zusammengefassten Bestellungen ermitteln */
-function calculate_shipping_cost($existingShippingCost, $currItemShippingCost, $totalNumberOfItems, $currProductsCount, $countryISO, $mpID) {
+function calculate_shipping_cost($existingShippingCost, $currItemShippingCost, $totalNumberOfItems, $totalPriceWOShipping, $currProductsCount, $countryISO, $mpID) {
 	if ((0 == $existingShippingCost) && (0 == $currItemShippingCost)) return 0.0;
 	# ShippingServiceAdditionalCost aus den Profilen nehmen
 	$shippingProfiles         = getDBConfigValue('ebay.shippingprofiles', $mpID, null);
@@ -154,11 +154,21 @@ function calculate_shipping_cost($existingShippingCost, $currItemShippingCost, $
 		if (array_key_exists('PromotionalShippingDiscount', $shippingProfiles)) {
 			if (   array_key_exists('DiscountName',$shippingProfiles['PromotionalShippingDiscount'])
 			    && array_key_exists('ShippingCost',$shippingProfiles['PromotionalShippingDiscount'])) {
-				if ('MaximumShippingCostPerOrder' == $shippingProfiles['PromotionalShippingDiscount']['DiscountName']) {
-					$MaximumShippingCostPerOrder = (float)$shippingProfiles['PromotionalShippingDiscount']['ShippingCost'];
-				}
+				switch ($shippingProfiles['PromotionalShippingDiscount']['DiscountName']) {
+					case ('MaximumShippingCostPerOrder'): {
+						$MaximumShippingCostPerOrder = (float)$shippingProfiles['PromotionalShippingDiscount']['ShippingCost'];
+						break;
+					}
+					case ('ShippingCostXForAmountY'): {
+						if ($totalPriceWOShipping >= (float)$shippingProfiles['PromotionalShippingDiscount']['OrderAmount']) {
+							$MaximumShippingCostPerOrder = (float)$shippingProfiles['PromotionalShippingDiscount']['ShippingCost'];
+						}
+						break;
+					}
+					default: break;
+				} # switch
 			}
-		}
+		} # if (array_key_exists('PromotionalShippingDiscount', $shippingProfiles))
 	}
 	$domestic = isDomestic($countryISO);
 	if ($domestic) {
@@ -221,12 +231,12 @@ function magnaImportEbayOrders($mpID) {
         require_once(DIR_WS_FUNCTIONS.'password_funcs.php');
     }
 
-	/*
-	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MagnaTestDB.php');
-	$MagnaDB = MagnaTestDB::gi();
-	/*/
-	$MagnaDB = MagnaDB::gi();
-	//*/
+	if (isset($_GET['MLDEBUG']) && ($_GET['MLDEBUG'] == 'true')) {
+		require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MagnaTestDB.php');
+		$MagnaDB = MagnaTestDB::gi();
+	} else {
+		$MagnaDB = MagnaDB::gi();
+	}
 	
 	$character_set_client = MagnaDB::gi()->mysqlVariableValue('character_set_client');
     if (('utf8mb3' == $character_set_client) || ('utf8mb4' == $character_set_client)) {
@@ -685,6 +695,7 @@ function magnaImportEbayOrders($mpID) {
 
 			$currProductsCount = 0;
 			foreach ($order['products'] as &$prodOrderData) {
+				$sku = $prodOrderData['products_id'];
 				$prodOrderData['products_price'] = $prodOrderData['final_price'] / $prodOrderData['products_quantity'];
 				$mailOrderSummary[] = array(
 					'quantity' => $prodOrderData['products_quantity'],
@@ -813,6 +824,17 @@ function magnaImportEbayOrders($mpID) {
 								$prodOrderAttrData['products_options_id'] = $attrValue['options_id'];
 								$prodOrderAttrData['products_options_values_id'] = $attrValue['options_values_id'];
 							}
+							if (MagnaDB::gi()->columnExistsInTable('products_attributes_model', TABLE_ORDERS_PRODUCTS_ATTRIBUTES)) {
+								$prodOrderAttrData['products_attributes_model'] = ('artNr' == getDBConfigValue('general.keytype', '0'))
+									? $sku
+									: MagnaDB::gi()->fetchOne('
+											SELECT attributes_model
+											  FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
+											 WHERE products_id='.(int)$prodOrderData['products_id'].'
+											       AND options_id='.(int)$attrValue['options_id'].'
+											       AND options_values_id='.(int)$attrValue['options_values_id'].'
+									');
+							}
 						    $MagnaDB->insert(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $prodOrderAttrData);
 						}
 				    }
@@ -868,22 +890,15 @@ function magnaImportEbayOrders($mpID) {
 					FROM '.TABLE_ORDERS_PRODUCTS.'
 				WHERE orders_id = '.$ordersId.'
 			', $verbose));
-			if ((0 == $existingShippingCost) && ($productsCount == $currProductsCount)) {
-			/* erster Artikel in der Bestellung */
-				$shippingCost = array_key_exists('Shipping', $order['orderTotal'])
-				? $order['orderTotal']['Shipping']['value']
-				: 0;
-			} else {
-			/* zusammengefasste Bestellung */
-				$shippingCost = calculate_shipping_cost($existingShippingCost,
-					array_key_exists('Shipping', $order['orderTotal'])
-						? $order['orderTotal']['Shipping']['value']
-						: 0,
-					$productsCount,
-					$currProductsCount,
-					$countryISO,
-					$mpID);
-			}
+			$shippingCost = calculate_shipping_cost($existingShippingCost,
+				array_key_exists('Shipping', $order['orderTotal'])
+					? $order['orderTotal']['Shipping']['value']
+					: 0,
+				$productsCount,
+				$prodOrderData['final_price'], # CHECKEN ist das auch der Gesamtpreis?
+				$currProductsCount,
+				$countryISO,
+				$mpID);
 			if ($verbose) { echo "shippingCost == $shippingCost\n"; }
 
 			$mfot = new MagnaRecalcOrdersTotal();

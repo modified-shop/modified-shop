@@ -23,7 +23,9 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncOrderStatus.php');
 
 class MeinpaketSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
-	
+
+	protected $confirmationResponseField = 'CONFIRMATIONS';
+
 	/**
 	 * Specifies the settings and their default values for order status
 	 * synchronisation. Assumes the order status synchronisation is 
@@ -83,7 +85,7 @@ class MeinpaketSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 	
 	/**
 	 * Builds an element for the ConfirmShipment request.
-	 * @return void
+	 * @return array
 	 */
 	protected function confirmShipment($date) {
 		$cfirm = parent::confirmShipment($date);
@@ -93,7 +95,7 @@ class MeinpaketSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 	
 	/**
 	 * Builds an element for the CancelShipment request
-	 * @return void
+	 * @return array
 	 */
 	protected function cancelOrder($date) { 
 		$cncl = parent::cancelOrder($date);
@@ -133,6 +135,9 @@ class MeinpaketSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 		))) {
 			$this->cancellations[] = $this->cancelOrder($date);
 		}
+
+		# Redmine Enhancement #834 !Hack!
+		$this->oOrder['__dirty'] = false;
 	}
 	
 	/**

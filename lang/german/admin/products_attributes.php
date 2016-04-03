@@ -1,17 +1,16 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: products_attributes.php 1101 2005-07-24 14:51:13Z mz $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(products_attributes.php,v 1.9 2002/03/30); www.oscommerce.com 
    (c) 2003	 nextcommerce (products_attributes.php,v 1.4 2003/08/1); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -44,4 +43,5 @@ define('TEXT_OPTION_NAME', 'Optionsname');
 define('TABLE_HEADING_SORTORDER', 'Sortierung');
 define('TEXT_SORTORDER', 'Sortierung');
 // EOF - Tomcraft - 2009-11-07 - Added sortorder to products_options
+define('TEXT_OPTION_ID_FILTER', 'Filter: ');
 ?>

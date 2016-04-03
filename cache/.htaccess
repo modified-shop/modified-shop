@@ -1,5 +1,5 @@
 #  -----------------------------------------------------------------------------------------
-#  $Id$
+#  $Id: .htaccess,v 1.2 2004/04/14 19:26:25 fanta2k Exp $
 #
 #   XT-Commerce - ebusiness solutions
 #   http://www.xt-commerce.com
@@ -38,7 +38,7 @@ Deny from all
 Order Deny,Allow
 Deny from all
 </Files>
-<Files *.xtc>
+<Files *.cache>
 Order Deny,Allow
 Deny from all
 </Files>

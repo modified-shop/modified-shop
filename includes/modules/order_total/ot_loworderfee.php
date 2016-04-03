@@ -1,40 +1,41 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: ot_loworderfee.php 1002 2005-07-10 16:11:37Z mz $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    -----------------------------------------------------------------------------------------
-   based on:
+   based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(ot_loworderfee.php,v 1.11 2003/02/14); www.oscommerce.com
-   (c) 2003 nextcommerce (ot_loworderfee.php,v 1.7 2003/08/24); www.nextcommerce.org
-   (c) 2006 xt:Commerce (ot_loworderfee.php 1002 2005-07-10); www.xt-commerce.de
+   (c) 2002-2003 osCommerce(ot_loworderfee.php,v 1.11 2003/02/14); www.oscommerce.com 
+   (c) 2003	 nextcommerce (ot_loworderfee.php,v 1.7 2003/08/24); www.nextcommerce.org
 
-   Released under the GNU General Public License
+   Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
+   
 
   class ot_loworderfee {
     var $title, $output;
 
-    function ot_loworderfee() {
-      global $xtPrice;
+    function __construct() {
+    	global $xtPrice;
       $this->code = 'ot_loworderfee';
       $this->title = MODULE_ORDER_TOTAL_LOWORDERFEE_TITLE;
       $this->description = MODULE_ORDER_TOTAL_LOWORDERFEE_DESCRIPTION;
-      $this->enabled = ((defined('MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS') && MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS == 'true') ? true : false);
-      $this->sort_order = defined('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER')?MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER:'';
+      $this->enabled = ((MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS == 'true') ? true : false);
+      $this->sort_order = MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER;
+
       $this->output = array();
     }
 
     function process() {
       global $order, $xtPrice;
-
+      
       //include needed functions
       require_once(DIR_FS_INC . 'xtc_calculate_tax.inc.php');
-
+      
       if (MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE == 'true') {
         switch (MODULE_ORDER_TOTAL_LOWORDERFEE_DESTINATION) {
           case 'national':
@@ -52,32 +53,31 @@
           $tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
 
 
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-          $order->info['tax'] += xtc_calculate_tax(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, $tax);
-          //BOF - DokuMan - 2010-09-28 - set correct order of VAT display, added .TAX_SHORT_DISPLAY
-          //$order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"] += xtc_calculate_tax(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, $tax);
-          $order->info['tax_groups'][TAX_ADD_TAX . "$tax_description".TAX_SHORT_DISPLAY] += xtc_calculate_tax(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, $tax);
-          //EOF - DokuMan - 2010-09-28 - set correct order of VAT display, added .TAX_SHORT_DISPLAY
+
+          
+
+		if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
+		  $order->info['tax'] += xtc_calculate_tax(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, $tax);
+          $order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"] += xtc_calculate_tax(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, $tax);
           $order->info['total'] += MODULE_ORDER_TOTAL_LOWORDERFEE_FEE + xtc_calculate_tax(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, $tax);
           $low_order_fee=xtc_add_tax(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, $tax);
         }
-
+        
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-          $low_order_fee=MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
-          $order->info['tax'] += xtc_calculate_tax(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, $tax);
-          //BOF - DokuMan - 2010-09-28 - set correct order of VAT display, added .TAX_SHORT_DISPLAY
-          //$order->info['tax_groups'][TAX_NO_TAX . "$tax_description"] += xtc_calculate_tax(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, $tax);
-          $order->info['tax_groups'][TAX_NO_TAX . "$tax_description".TAX_SHORT_DISPLAY] += xtc_calculate_tax(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, $tax);
-          //EOF - DokuMan - 2010-09-28 - set correct order of VAT display, added .TAX_SHORT_DISPLAY
-          $order->info['subtotal'] += $low_order_fee;
-          $order->info['total'] += $low_order_fee;
+		$low_order_fee=MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
+		$order->info['tax'] += xtc_calculate_tax(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, $tax);
+        $order->info['tax_groups'][TAX_NO_TAX . "$tax_description"] += xtc_calculate_tax(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, $tax);
+		$order->info['subtotal'] += $low_order_fee;
+        $order->info['total'] += $low_order_fee;
+        }
+        
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] != 1) {
+		$low_order_fee=MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
+		$order->info['subtotal'] += $low_order_fee;
+        $order->info['total'] += $low_order_fee;
         }
 
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] != 1) {
-          $low_order_fee=MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
-          $order->info['subtotal'] += $low_order_fee;
-          $order->info['total'] += $low_order_fee;
-        }
+
 
           $this->output[] = array('title' => $this->title . ':',
                                   'text' => $xtPrice->xtcFormat($low_order_fee, true),

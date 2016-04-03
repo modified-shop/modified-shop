@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: billsafe_print_order_2.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -57,6 +57,7 @@ $smarty->assign('address_label_customer', xtc_address_format($order->customer['f
 $smarty->assign('address_label_shipping', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
 $smarty->assign('address_label_payment', xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
 $smarty->assign('csID', $order->customer['csID']);
+$smarty->assign('vatID',$order->customer['vat_id']);
 
 $order_query = xtc_db_query('SELECT *, COUNT(articlenumber) AS quantity FROM billsafe_orders_details_2 WHERE ordernumber = "'.xtc_db_input($order_id).'" AND articletype = "goods" AND storno = 0 AND retoure = 0 GROUP BY articlenumber, articlename, articleprice;');
 $order_data = array();
@@ -163,12 +164,14 @@ if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'n
 }
 $smarty->assign('COMMENTS', $order->info['comments']);
 $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
+$smarty->assign('INVOICE_NUMBER', isset($order->info['ibn_billnr']) && $order->info['ibn_billnr'] != '' ? $order->info['ibn_billnr'] :  $order->info['order_id']);
+$smarty->assign('INVOICE_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));
 $smarty->assign('order_data', $order_data);
 $smarty->assign('order_total', $order_total);
 
-require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
-require (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
-$bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+require_once (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+require (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+$bs = new Billsafe_Sdk(DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
 if ($_SESSION['language_charset'] == 'iso-8859-1' || $_SESSION['language_charset'] == 'iso-8859-15') {
   $bs->setUtf8Mode(false);
 } else {

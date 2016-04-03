@@ -1,0 +1,8 @@
+<p><a href="{$parent_content.CONTENT_LINK}"><strong>{$parent_content.CONTENT_TITLE}</strong></a></p>
+<ul>
+  {foreach name=aussen item=content_data from=$sub_content}
+  <li>
+    <a href="{$content_data.CONTENT_LINK}">{$content_data.CONTENT_TITLE}</a>
+  </li>
+  {/foreach}
+</ul>

@@ -103,11 +103,14 @@ class InventoryView {
 		}
 	}
 
-	private function getPendingItems() {
-
+	/**
+	 * Hint: Don't forget to add a define like: ML_EBAY_N_PENDING_UPDATES_TITLE_.strtoupper($sRequest)
+	 * @param string $sRequest
+	 */
+	private function getPendingFunction($sRequest = 'Items') {
 		try {
 			$result = MagnaConnector::gi()->submitRequest(array(
-				'ACTION' => 'GetPendingItems',
+				'ACTION' => 'GetPending'.$sRequest,
 			));
 		} catch (MagnaException $e) {
 			$result = array('DATA' => false);
@@ -120,7 +123,7 @@ class InventoryView {
 				$waitingItems  += 1;
 			}
 		}
-		$this->pendingItems = array (
+		$this->pendingItems[$sRequest] = array (
 			'itemsCount' => $waitingItems,
 			'estimatedWaitingTime' => $maxEstimatedTime
 		);
@@ -266,7 +269,8 @@ class InventoryView {
 	
 	public function prepareInventoryData() {
 		$result = $this->getInventory();
-		$this->getPendingItems();
+		$this->getPendingFunction('Items');
+		$this->getPendingFunction('ProductDetailUpdates');
 		if (($result !== false) && !empty($result['DATA'])) {
 			$this->renderableData = $result['DATA'];
 			foreach ($this->renderableData as &$item) {
@@ -539,12 +543,14 @@ class InventoryView {
 					</td>
 				</tr></tbody></table>';
 
-		if (    !empty($this->pendingItems)
-		     && !empty($this->pendingItems['itemsCount'])
-		   ) {
-			$html .= '<p class="successBoxBlue">'
-			.sprintf(ML_EBAY_N_PENDING_UPDATES_ESTIMATED_TIME_M, $this->pendingItems['itemsCount'], $this->pendingItems['estimatedWaitingTime'])
-			.'</p>';
+		if (!empty($this->pendingItems)) {
+			foreach ($this->pendingItems as $sKey => $aPendingItems) {
+				if (!empty($aPendingItems['itemsCount'])) {
+					$html .= '<p class="successBoxBlue">'.constant('ML_EBAY_N_PENDING_UPDATES_TITLE_'.strtoupper($sKey))
+						.sprintf(ML_EBAY_N_PENDING_UPDATES_ESTIMATED_TIME_M, $aPendingItems['itemsCount'], $aPendingItems['estimatedWaitingTime'])
+						.'</p>';
+				}
+			}
 		}
 		if (!empty($this->renderableData)) {
 			$html .= $this->renderDataGrid('ebayinventory');

@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: modules.php 2957 2012-05-31 11:55:56Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -30,8 +30,10 @@ define('TEXT_MODULE_FILE_MISSING', '<b>Sprachdatei "%s" fehlt, Modul "%s" wird n
 define('TABLE_HEADING_FILENAME','Modulname (f&uuml;r internen Gebrauch)');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-define('TEXT_INFO_DELETE_PAYPAL', 'Wenn Sie dieses Modul jetzt deinstallieren werden die PayPal Transaktions-Daten gel&ouml;scht!<br /> Wollen Sie diese Daten erhalten, dr&uuml;cken Sie jetzt auf Abbruch und de-aktivieren Sie das Modul (Modul aktivieren = False) nur.');
+define('TEXT_INFO_DELETE_PAYPAL', 'Wenn Sie dieses Modul jetzt deinstallieren werden die PayPal Transaktions-Daten gel&ouml;scht!<br />Wollen Sie diese Daten erhalten, dr&uuml;cken Sie jetzt auf Abbruch und deaktivieren Sie das Modul nur. (Modul aktivieren = False)');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 define('TABLE_HEADING_MODULES_INSTALLED', 'Folgende Module wurden installiert');
+define('TABLE_HEADING_MODULES_PREFERRED', 'Beliebte Module');
 define('TABLE_HEADING_MODULES_NOT_INSTALLED', 'Folgende Module sind noch verf&uuml;gbar');
+define('TEXT_MODULE_UPDATE_NEEDED', 'Folgende Module wurden aktualisiert und ben&ouml;tigen ein Update der Datenbank. Dazu sichern Sie bitte die Einstellungen und installieren Sie diese Module neu.');
 ?>

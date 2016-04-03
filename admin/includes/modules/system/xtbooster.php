@@ -7,29 +7,11 @@
 ##
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-define('MODULE_XTBOOSTER_TEXT_DESCRIPTION', 'xt:booster eBay-Connector f&uuml;r xt:Commerce');
-define('MODULE_XTBOOSTER_TEXT_TITLE', 'xt:booster eBay-Connector');
-define('MODULE_XTBOOSTER_STATUS_DESC','Modulstatus');
-define('MODULE_XTBOOSTER_STATUS_TITLE','Status');
-
-define('MODULE_XTBOOSTER_SHOPKEY_TITLE','ShopKey');
-define('MODULE_XTBOOSTER_SHOPKEY_DESC','');
-define('MODULE_XTBOOSTER_STDSITE_TITLE','Standard-Site');
-define('MODULE_XTBOOSTER_STDSITE_DESC','');
-define('MODULE_XTBOOSTER_STDCURRENCY_TITLE','Standard-W&auml;hrung');
-define('MODULE_XTBOOSTER_STDCURRENCY_DESC','');
-
-define('MODULE_XTBOOSTER_STDPLZ_TITLE','Standard Artikelstandort (PLZ)');
-define('MODULE_XTBOOSTER_STDPLZ_DESC','');
-define('MODULE_XTBOOSTER_STDSTANDORT_TITLE','Standard Artikelstandort');
-define('MODULE_XTBOOSTER_STDSTANDORT_DESC','');
-
-
 class xtbooster
 {
 	var $code, $title, $description, $enabled;
 
-    function xtbooster() {
+    function __construct() {
 		$this->code = 'xtbooster';
 		$this->title = MODULE_XTBOOSTER_TEXT_TITLE;
 		$this->description = MODULE_XTBOOSTER_TEXT_DESCRIPTION;

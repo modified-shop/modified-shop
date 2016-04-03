@@ -1,17 +1,16 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: xtc_get_path.inc.php 1009 2005-07-11 16:19:29Z mz $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(general.php,v 1.225 2003/05/29); www.oscommerce.com 
    (c) 2003	 nextcommerce (xtc_get_path.inc.php,v 1.3 2003/08/13); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
@@ -25,11 +24,15 @@
         $cPath_new = $current_category_id;
       } else {
         $cPath_new = '';
-        $last_category_query = "select parent_id from " . TABLE_CATEGORIES . " where categories_id = '" . $cPath_array[($cp_size-1)] . "'";
+        $last_category_query = "SELECT parent_id 
+                                  FROM " . TABLE_CATEGORIES . " 
+                                 WHERE categories_id = '" . (int)$cPath_array[($cp_size-1)] . "'";
         $last_category_query  = xtDBquery($last_category_query);
         $last_category = xtc_db_fetch_array($last_category_query,true);
 
-        $current_category_query = "select parent_id from " . TABLE_CATEGORIES . " where categories_id = '" . $current_category_id . "'";
+        $current_category_query = "SELECT parent_id 
+                                     FROM " . TABLE_CATEGORIES . " 
+                                    WHERE categories_id = '" . (int)$current_category_id . "'";
         $current_category_query  = xtDBquery($current_category_query);
         $current_category = xtc_db_fetch_array($current_category_query,true);
 

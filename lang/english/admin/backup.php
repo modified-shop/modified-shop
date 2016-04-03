@@ -1,17 +1,16 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: backup.php 899 2005-04-29 02:40:57Z hhgag $
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(backup.php,v 1.21 2002/06/15); www.oscommerce.com
    (c) 2003	 nextcommerce (backup.php,v 1.4 2003/08/14); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
@@ -44,7 +43,7 @@ define('TEXT_BACKUP_DIRECTORY', 'Backup Directory:');
 define('TEXT_LAST_RESTORATION', 'Last Restoration:');
 define('TEXT_FORGET', '(<u>forget</u>)');
 
-define('ERROR_BACKUP_DIRECTORY_DOES_NOT_EXIST', 'Error: Backup directory does not exist. Please set this in configure.php.');
+define('ERROR_BACKUP_DIRECTORY_DOES_NOT_EXIST', 'Error: Backup directory does not exist.');
 define('ERROR_BACKUP_DIRECTORY_NOT_WRITEABLE', 'Error: Backup directory is not writeable.');
 define('ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE', 'Error: Download link not acceptable.');
 
@@ -57,7 +56,12 @@ define('SUCCESS_BACKUP_UPLOAD', 'Success: The backup file has been uploaded.');
 //TEXT_COMPLETE_INSERTS
 define('TEXT_COMPLETE_INSERTS', "<b>Complete 'INSERT's</b><br> - field names are entered into each row INSERT (increased backup)");
 
+define('TEXT_INFO_TABLES_IN_BACKUP', '<br />' . "\n" .'<b>Tables in this backup:</b>' . "\n");
+define('TEXT_INFO_NO_INFORMATION', 'No information available');
 //UTF-8 convert
 define('TEXT_CONVERT_TO_UTF', 'Convert database to UTF-8');
 define('TEXT_IMPORT_UTF', 'Restore UTF-8 database');
+
+//TEXT_REMOVE_COLLATE
+define('TEXT_REMOVE_COLLATE', "<b>Without encoding 'COLLATE' and 'DEFAULT CHARSET'</b><br> - The encoding statements are not beeing inserted. Usefull when migrating to another database encoding.");
 ?>

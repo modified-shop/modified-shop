@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: manufacturer_info.php 2853 2012-05-10 08:48:39Z gtb-modified $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -59,7 +59,7 @@
         if (!file_exists($image)) $image = DIR_WS_IMAGES . 'manufacturers/noimage.gif';
         // EOF - Tomcraft - 2009-10-30 - noimage.gif is displayed, when no image is defined
       }
-      $box_smarty->assign('IMAGE', DIR_WS_BASE.$image);
+      $box_smarty->assign('IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
       $box_smarty->assign('NAME',$manufacturer['manufacturers_name']);
       if ($manufacturer['manufacturers_url']!='')
         $box_smarty->assign('URL','<a href="' . xtc_href_link(FILENAME_REDIRECT, 'action=manufacturer&'.xtc_manufacturer_link($manufacturer['manufacturers_id'],$manufacturer['manufacturers_name'])) . '" onclick="window.open(this.href); return false;">' . sprintf(BOX_MANUFACTURER_INFO_HOMEPAGE, $manufacturer['manufacturers_name']) . '</a>');

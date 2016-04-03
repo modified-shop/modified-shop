@@ -1,17 +1,16 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: customers.php 2666 2012-02-23 11:38:17Z dokuman $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(customers.php,v 1.13 2002/06/15); www.oscommerce.com 
    (c) 2003 nextcommerce (customers.php,v 1.8 2003/08/15); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -22,7 +21,7 @@ define('HEADING_TITLE_SEARCH', 'Suche:');
 define('TABLE_HEADING_CUSTOMERSCID','Kundennummer');
 define('TABLE_HEADING_FIRSTNAME', 'Vorname');
 define('TABLE_HEADING_LASTNAME', 'Nachname');
-define('TABLE_HEADING_ACCOUNT_CREATED', 'Zugang erstellt am');
+define('TABLE_HEADING_ACCOUNT_CREATED', 'erstellt am');
 define('TABLE_HEADING_ACTION', 'Aktion');
 
 define('TEXT_DATE_ACCOUNT_CREATED', 'Zugang erstellt am:');
@@ -30,9 +29,9 @@ define('TEXT_DATE_ACCOUNT_LAST_MODIFIED', 'letzte &Auml;nderung:');
 define('TEXT_INFO_DATE_LAST_LOGON', 'letzte Anmeldung:');
 define('TEXT_INFO_NUMBER_OF_LOGONS', 'Anzahl der Anmeldungen:');
 define('TEXT_INFO_COUNTRY', 'Land:');
-define('TEXT_INFO_NUMBER_OF_REVIEWS', 'Anzahl der Artikelbewertungen:');
+define('TEXT_INFO_NUMBER_OF_REVIEWS', 'Anzahl der Produktrezensionen:');
 define('TEXT_DELETE_INTRO', 'Wollen Sie diesen Kunden wirklich l&ouml;schen?');
-define('TEXT_DELETE_REVIEWS', '%s Bewertung(en) l&ouml;schen');
+define('TEXT_DELETE_REVIEWS', '%s Rezension(en) l&ouml;schen');
 define('TEXT_INFO_HEADING_DELETE_CUSTOMER', 'Kunden l&ouml;schen');
 define('TYPE_BELOW', 'Bitte unten eingeben');
 define('PLEASE_SELECT', 'Ausw&auml;hlen');
@@ -51,7 +50,7 @@ define('ENTRY_PASSWORD_CUSTOMER','Passwort:');
 define('TABLE_HEADING_ACCOUNT_TYPE','Konto');
 define('TEXT_ACCOUNT','Ja');
 define('TEXT_GUEST','Nein');
-define('NEW_ORDER','Neue Bestellung ?');
+define('NEW_ORDER','Neue Bestellung?');
 define('ENTRY_PAYMENT_UNALLOWED','Nicht erlaubte Zahlungsmodule:');
 define('ENTRY_SHIPPING_UNALLOWED','Nicht erlaubte Versandmodule:');
 define('ENTRY_NEW_PASSWORD','Neues Passwort:');
@@ -66,4 +65,10 @@ define('TABLE_HEADING_EMAIL','E-Mail');
 define('TEXT_INFO_HEADING_ADRESS_BOOK', 'Adressbuch');
 define('TEXT_INFO_DELETE', '<b>Diesen Adressbucheintrag l&ouml;schen?</b>');
 define('TEXT_INFO_DELETE_DEFAULT', '<b>Dieser Adressbucheintrag kann nicht gel&ouml;scht werden!</b>'); 
+
+define('TABLE_HEADING_AMOUNT','Guthaben');
+define('WARNING_CUSTOMER_ALREADY_EXISTS', 'Kundengruppe kann nicht ge&auml;ndert werden. Diese E-Mail Adresse wird bereits für einen Kundenaccount verwendet.');
+
+define('TEXT_SORT_ASC','aufsteigend');
+define('TEXT_SORT_DESC','absteigend');
 ?>

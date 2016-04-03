@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$
+   $Id: install_step3.php 3072 2012-06-18 15:01:13Z hhacker $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -17,32 +17,18 @@
   require('includes/application.php');
 
   // include Database functions for installer
-  require_once(DIR_FS_INC.'xtc_db_connect_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_select_db.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_query_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_test_create_db_permission.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_test_connection.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_install.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_connect_installer.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_select_db.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_query_installer.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_test_create_db_permission.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_test_connection.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_install.inc.php');
 
   include('language/'.$lang.'.php');
 
+  require ('includes/header.php');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-    <title>modified eCommerce Shopsoftware Installer - STEP 3 / DB Import</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
-    <style type="text/css">
-      body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
-      table,td,div { font-family: Arial, sans-serif; font-size: 12px;}
-      h1 { font-size: 18px; margin: 0; padding: 0; margin-bottom: 10px; }
-      <!--
-        .messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10px; background-color: #; }
-      -->
-    </style>
-  </head>
-  <body>
-  <table width="800" style="border:30px solid #fff;" border="0" align="center" cellpadding="0" cellspacing="0">
+  <table width="803" style="border:10px solid #fff;" bgcolor="#ffffff" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr>
       <td height="95" colspan="2" >
         <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -53,23 +39,32 @@
       </td>
     </tr>
     <tr>
-      <td align="center" valign="top">
-        <br />
+      <td align="left" valign="top">
         <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td>
-              <img src="images/step3.gif" width="705" height="180" border="0">
+              <ul id="navigation" class="cf">
+                <li class="inactive"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_INDEX; ?></span><br /><span class="description"><?php echo NAV_DESC_INDEX; ?></span></li>
+                <li class="inactive"><span class="number">1.</span> <span class="title"><?php echo NAV_TITLE_STEP1; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP1; ?></span></li>
+                <li class="inactive"><span class="number">2.</span> <span class="title"><?php echo NAV_TITLE_STEP2; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP2; ?></span></li>
+                <li class="active last"><span class="number">3.</span> <span class="title"><?php echo NAV_TITLE_STEP3; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP3; ?></span></li>
+                <li class="inactive second_line"><span class="number">4.</span> <span class="title"><?php echo NAV_TITLE_STEP4; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP4; ?></span></li>
+                <li class="inactive second_line"><span class="number">5.</span> <span class="title"><?php echo NAV_TITLE_STEP5; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP5; ?></span></li>
+                <li class="inactive second_line"><span class="number">6.</span> <span class="title"><?php echo NAV_TITLE_STEP6; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP6; ?></span></li>
+                <!--
+                <li class="inactive second_line"><span class="number">7.</span> <span class="title"><?php echo NAV_TITLE_STEP7; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP7; ?></span></li>
+                //-->
+                <li class="inactive second_line last"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_FINISHED; ?></span><br /><span class="description"><?php echo NAV_DESC_FINISHED; ?></span></li>
+              </ul>
               <br />
-              <br />
-              <br />
-              <div style="border:1px solid #ccc; background:#fff; padding:10px;">
+              <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
                 <?php echo TEXT_WELCOME_STEP3; ?>
               </div>
             </td>
           </tr>
         </table>
         <br />
-        <table width="95%" border="0">
+        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td>
               <?php 
@@ -86,65 +81,67 @@
                   @xtc_db_query_installer('SET NAMES '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
 
                   $db_error = false;
-                  $sql_file = DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/'.MODIFIED_SQL;
-                  xtc_db_install($db['DB_DATABASE'], $db['DB_MYSQL_TYPE'], $sql_file);
+                  $sql_file_array = array(MODIFIED_SQL, 'includes/sql/banktransfer_blz.sql');
+                  foreach ($sql_file_array as $sql_file) {
+                    xtc_db_install($db['DB_DATABASE'], $db['DB_MYSQL_TYPE'], DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/'.$sql_file);
+                  }
                   if ($db_error) {
-                ?>
-                <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td style="border-bottom: 1px solid; border-color: #CFCFCF">
-                      <h1><?php echo TEXT_TITLE_ERROR; ?></h1>
-                    </td>
-                    <td style="border-bottom: 1px solid; border-color: #CFCFCF">&nbsp;</td>
-                  </tr>
-                </table>
-                <table border="0" cellpadding="0" cellspacing="0" bgcolor="f3f3f3">
-                  <tr>
-                    <td><b><?php echo $db_error; ?></b></td>
-                  </tr>
-                </table>
-                <form name="install" action="install_step3.php" method="post">
-                <?php echo $input_lang; 
-                      echo draw_hidden_fields(); ?>
-                  <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
-                      <td align="center"><input type="image" src="buttons/<?php echo $lang;?>/button_retry.gif" border="0" alt="Retry"></td>
-                    </tr>
-                  </table>
-                </form>
-                <?php
-                  } else {
-                ?>
+                  ?>
                   <table width="100%" border="0" cellpadding="0" cellspacing="0">
                     <tr>
-                      <td align="center"><div style="border:1px solid #ccc; background:#fff; padding:10px;"><h1><?php echo TEXT_TITLE_SUCCESS; ?></h1></div></td>
+                      <td style="border-bottom: 1px solid; border-color: #CFCFCF">
+                        <h1><?php echo TEXT_TITLE_ERROR; ?></h1>
+                      </td>
                     </tr>
                   </table>
-                  <form name="install" action="install_step4.php" method="post">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="f4f4f4">
+                    <tr>
+                      <td><div style="background:#F2DEDE; color:#A94442; padding:10px; border:1px solid #DCA7A7"><b><?php echo $db_error; ?></b></div></td>
+                    </tr>
+                  </table>
+                  <br />
+                  <form name="install" action="install_step3.php" method="post">
                   <?php echo $input_lang; 
                         echo draw_hidden_fields(); ?>
-                    <br />
                     <table border="0" width="100%" cellspacing="0" cellpadding="0">
                       <tr>
-                      <?php                        
-                        if($_POST['install_cfg'] == 1) {                         
-                      ?>
-                          <td align="right"><input type="image" src="buttons/<?php echo $lang;?>/button_continue.gif"></td>
-                      <?php
-                        } else {
-                      ?>
-                          <td align="right"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_continue.gif"></a></td>
-                      <?php
-                        }
-                      ?>
+                        <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
+                        <td align="center"><input type="image" src="images/buttons/<?php echo $lang;?>/button_retry.gif" border="0" alt="Retry"></td>
                       </tr>
                     </table>
                   </form>
-                 <?php
+                  <?php
+                  } else {
+                  ?>
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center"><div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;"><h1><?php echo TEXT_TITLE_SUCCESS; ?></h1></div></td>
+                      </tr>
+                    </table>
+                    <form name="install" action="install_step4.php" method="post">
+                    <?php echo $input_lang; 
+                          echo draw_hidden_fields(); ?>
+                      <br />
+                      <table border="0" width="100%" cellspacing="0" cellpadding="0">
+                        <tr>
+                        <?php                        
+                          if($_POST['install_cfg'] == 1) {                         
+                        ?>
+                            <td align="right"><input type="image" src="images/buttons/<?php echo $lang;?>/button_continue.gif"></td>
+                        <?php
+                          } else {
+                        ?>
+                            <td align="right"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_continue.gif"></a></td>
+                        <?php
+                          }
+                        ?>
+                        </tr>
+                      </table>
+                    </form>
+                   <?php
+                   }
                  }
-               }
-               ?>
+                 ?>
                </td>
              </tr>
            </table>

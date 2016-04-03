@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$
+   $Id: language.php 2800 2012-04-28 11:51:51Z web28 $
    
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

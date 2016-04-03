@@ -16,10 +16,14 @@
   Released under the GNU General Public License
   --------------------------------------------------------------*/
 
+defined('RUN_MODE_ADMIN') or define('RUN_MODE_ADMIN', true);
+
 // compatibility for modified eCommerce Shopsoftware 1.06 files
-if (file_exists('../includes/local/configure.php')) {
-  include('../includes/local/configure.php');
+$config_path = realpath(dirname(__FILE__) . '/../../') . '/';
+
+if (file_exists($config_path.'includes/local/configure.php')) {
+ include($config_path.'includes/local/configure.php');
 } else {
-  require('../includes/configure.php');
+ require($config_path.'includes/configure.php');
 }
 ?>

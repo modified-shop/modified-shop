@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: new_attributes_select.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -23,6 +23,47 @@
    --------------------------------------------------------------*/
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 $adminImages = DIR_WS_CATALOG . "lang/". $_SESSION['language'] ."/admin/images/buttons/";
+
+$product_select = $products_copy = array();
+                               
+$dbQuery = xtc_db_query(
+    "SELECT p.products_model,
+            p.products_id,
+            pd.products_name
+       FROM ".TABLE_PRODUCTS."  p,
+            ".TABLE_PRODUCTS_DESCRIPTION."  pd
+      WHERE p.products_id != '0'
+        AND p.products_id = pd.products_id
+        AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+   ORDER BY pd.products_name ASC
+   ");
+
+if (xtc_db_num_rows($dbQuery)) {
+  while ($line = xtc_db_fetch_array($dbQuery)) {
+    $product_select[] = array('id'=> $line['products_id'], 'text'=> $line['products_name'] .' [' .$line['products_model'] . ']' ); 
+  }
+} 
+
+$dbQuery = xtc_db_query(
+    "SELECT p.products_model,
+            p.products_id,
+            pd.products_name
+       FROM ".TABLE_PRODUCTS."  p, 
+            ".TABLE_PRODUCTS_DESCRIPTION."  pd, 
+            ".TABLE_PRODUCTS_ATTRIBUTES." pa 
+      WHERE p.products_id != '0'
+        AND p.products_id = pd.products_id
+        AND pa.products_id = pd.products_id
+        AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' 
+   GROUP BY pd.products_id 
+   ORDER BY pd.products_name ASC
+  ");
+if (xtc_db_num_rows($dbQuery)) {
+  $products_copy[] = array('id'=> '0', 'text'=> TEXT_SELECT );
+  while ($line = xtc_db_fetch_array($dbQuery)) {
+    $products_copy[] = array('id'=> $line['products_id'], 'text'=> $line['products_name'] .' [' .$line['products_model'] . ']' ); 
+  }
+} 
 ?>
 <tr>
   <td>
@@ -30,62 +71,30 @@ $adminImages = DIR_WS_CATALOG . "lang/". $_SESSION['language'] ."/admin/images/b
     <?php 
       echo xtc_draw_form('SELECT_PRODUCT', FILENAME_NEW_ATTRIBUTES, '', 'post').PHP_EOL;
       echo '<input type="hidden" name="action" value="edit">'.PHP_EOL;
-      echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()).PHP_EOL;
       echo '<div class="main pdg2"><br /><strong>'.SELECT_PRODUCT.'</strong><br /></div>'.PHP_EOL;
-      echo '<div class="main pdg2"><select name="current_product_id">'.PHP_EOL;
-
-      $query = xtc_db_query("SELECT * 
-                               FROM ".TABLE_PRODUCTS_DESCRIPTION."  
-                              WHERE products_id LIKE '%' 
-                                AND language_id = '" . $_SESSION['languages_id'] . "' 
-                           ORDER BY products_name ASC
-                           ");
-
-      if (xtc_db_num_rows($query)) {
-        while ($line = xtc_db_fetch_array($query)) {
-          $title = $line['products_name'];
-          $current_product_id = $line['products_id'];
-          echo '<option value="' . $current_product_id . '">' . $title.PHP_EOL;
-        }
+      echo '<div class="main pdg2">'.PHP_EOL;
+      
+      echo '<div class="main pdg2">'.PHP_EOL;
+      if (count($product_select) > 0) {
+        echo xtc_draw_pull_down_menu('current_product_id', $product_select).PHP_EOL;
       } else {
-        echo "You have no products at this time.";
+        echo 'You have no products at this time.'.PHP_EOL;
       }
-
-      echo '</select></div>'.PHP_EOL;
+      echo '</div>'.PHP_EOL;
 
       echo '<div class="main pdg2">'. xtc_button(BUTTON_EDIT).'</div>'.PHP_EOL;
       // start change for Attribute Copy
 
       echo '<div class="main pdg2"><br /><strong>'.SELECT_COPY.'</strong><br /></div>'.PHP_EOL;
 
-      echo '<div class="main pdg2"><select name="copy_product_id">'.PHP_EOL;
-
-      $copy_query = xtc_db_query("SELECT pd.products_name, 
-                                         pd.products_id 
-                                   FROM ".TABLE_PRODUCTS_DESCRIPTION."  pd, 
-                                        ".TABLE_PRODUCTS_ATTRIBUTES." pa 
-                                  WHERE pa.products_id = pd.products_id 
-                                    AND pd.products_id LIKE '%' 
-                                    AND pd.language_id = '" . $_SESSION['languages_id'] . "' 
-                               GROUP BY pd.products_id 
-                               ORDER BY pd.products_name ASC
-                               ");
-      $copy_count = xtc_db_num_rows($copy_query);
-
-      if ($copy_count) {
-          echo '<option value="0">no copy</option>';
-          while ($copy_res = xtc_db_fetch_array($copy_query)) {
-              echo '<option value="' . $copy_res['products_id'] . '">' . $copy_res['products_name'] . '</option>';
-          }
+      echo '<div class="main pdg2">'.PHP_EOL;
+      if (count($products_copy) > 0) {
+        echo xtc_draw_pull_down_menu('copy_product_id', $products_copy).PHP_EOL;
+      } else {
+        echo 'No products to copy attributes from'.PHP_EOL;
       }
-      else {
-          echo 'No products to copy attributes from';
-      }
-      echo '</select></div>'.PHP_EOL;
-
+      echo '</div>'.PHP_EOL;
       echo '<div class="main pdg2">'. xtc_button(BUTTON_EDIT).'</div>'.PHP_EOL;
-
-
     ?>
 
     </form>

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: request_type.php 1259 2010-09-03 12:01:51Z web28 $
  
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

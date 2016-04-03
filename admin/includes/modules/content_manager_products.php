@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$
+   $Id: content_manager_products.php 5007 2013-07-04 09:31:37Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -33,7 +33,7 @@ if (!$action) {
   <div class="borderTab">
   <?php
     $total_space_media_products = xtc_spaceUsed(DIR_FS_CATALOG.'media/products/'); // DokuMan - 2011-09-06 - sum up correct filesize avoiding global variable
-    echo '<div class="main clear">'.USED_SPACE.xtc_format_filesize($total_space_media_products).'</div></br>';
+    echo '<div class="main clear">'.USED_SPACE.xtc_format_filesize($total_space_media_products).'</div><br />';
   ?>
   <table class="tableCenter">
     <tr class="dataTableHeadingRow">
@@ -100,9 +100,9 @@ if (!$action) {
                       <td class="dataTableContent txta-c">
                         <?php
                           if ($content_array[$ii]['file']!='') {
-                            echo xtc_image('../'. DIR_WS_IMAGES.'icons/icon_'.str_replace('.','',strstr($content_array[$ii]['file'],'.')).'.gif'); //web28 - 2010-09-03 - change path
+                            echo xtc_image('../'. DIR_WS_IMAGES.'icons/filetype/icon_'.str_replace('.','',strstr($content_array[$ii]['file'],'.')).'.gif'); //web28 - 2010-09-03 - change path
                           } else {
-                            echo xtc_image('../'. DIR_WS_IMAGES.'icons/icon_link.gif'); //web28 - 2010-09-03 - change path
+                            echo xtc_image('../'. DIR_WS_IMAGES.'icons/filetype/icon_link.gif'); //web28 - 2010-09-03 - change path
                           }
                           for ($xx=0,$zz=sizeof($languages); $xx<$zz;$xx++){
                             if ($languages[$xx]['id']==$content_array[$ii]['languages_id']) {
@@ -236,7 +236,7 @@ if (!$action) {
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_LANGUAGE; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('language',$languages_array,$languages_selected); ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('language_code',$languages_array,$languages_selected); ?></td>
           </tr>
           <?php
             if (GROUP_CHECK=='true') {
@@ -248,12 +248,11 @@ if (!$action) {
                   <div class="customers-groups">
                     <?php
                       for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
+                        $checked = false;
                         if (strstr($content['group_ids'],'c_'.$customers_statuses_array[$i]['id'].'_group')) {
-                          $checked = 'checked ';
-                        } else {
-                          $checked = '';
+                          $checked = true;
                         }
-                        echo '<input type="checkbox" name="groups[]" value="'.$customers_statuses_array[$i]['id'].'"'.$checked.'> '.$customers_statuses_array[$i]['text'].'<br />';
+                        echo xtc_draw_checkbox_field('groups[]', $customers_statuses_array[$i]['id'], $checked).' '.$customers_statuses_array[$i]['text'].'<br />';
                       }
                     ?>
                   </div>
@@ -287,7 +286,7 @@ if (!$action) {
               ?>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_FILENAME; ?></td>
-                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_hidden_field('file_name',$content['content_file']).xtc_image('../'. DIR_WS_IMAGES. 'icons/icon_'.str_replace('.','',strstr($content['content_file'],'.')).'.gif').$content['content_file']; //DokuMan - 2011-09-06 - change path ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_hidden_field('file_name',$content['content_file']).xtc_image('../'. DIR_WS_IMAGES. 'icons/filetype/icon_'.str_replace('.','',strstr($content['content_file'],'.')).'.gif').$content['content_file']; //DokuMan - 2011-09-06 - change path ?></td>
               </tr>
               <?php
             }

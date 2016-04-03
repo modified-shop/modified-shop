@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$   
+   $Id: form_check.js.php 3072 2012-06-18 15:01:13Z hhacker $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

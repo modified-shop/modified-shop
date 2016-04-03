@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: xtc_redirect.inc.php 5462 2013-09-03 13:10:26Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -15,7 +15,7 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-  
+
   function xtc_redirect($url, $ssl='') {
   	global $request_type, $PHP_SELF;
 
@@ -24,13 +24,21 @@
 		    $url = HTTPS_SERVER . substr($url, strlen(HTTP_SERVER));
 		  }
     }
-    
+
     $_SESSION['REFERER'] = '';
-    if (strpos($PHP_SELF, 'admin') === false && 
+    if (strpos($PHP_SELF, 'admin') === false &&
         strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) === false &&
-        strpos($PHP_SELF, FILENAME_LOGIN) === false) 
+        strpos($PHP_SELF, FILENAME_LOGIN) === false &&
+        strpos($PHP_SELF, FILENAME_PASSWORD_DOUBLE_OPT) === false)
     {
       $_SESSION['REFERER'] = basename($PHP_SELF);
+    }
+
+    // save SESSION before redirect
+    session_write_close();
+
+    if (function_exists('xtc_db_close')) {
+      xtc_db_close();
     }
     
     header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url)));

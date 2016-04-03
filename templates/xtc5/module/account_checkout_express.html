@@ -1,0 +1,60 @@
+{config_load file="$language/lang_$language.conf" section="account_checkout_express"}
+<h1>{#heading_checkout_express#}</h1>
+<p>{#text_checkout_express_info#}</p>
+{$FORM_ACTION}
+
+<div class="highlightbox">
+<h1>{#heading_shipping#}</h1>
+  {if isset($module_shipping_error)}<div class="errormessage">{$module_shipping_error}</div>{/if}
+  {foreach name=aussen item=shipping from=$module_shipping}
+    <div class="account_row_shipping cf"><span>{$shipping.FIELD}</span> <label for="shipping_{$shipping.ID}">{$shipping.NAME}</label></div>
+  {/foreach}
+</div>
+<br />
+
+<div class="highlightbox">
+  <h1>{#heading_payment#}</h1>
+  {if isset($module_payment_error)}<div class="errormessage">{$module_payment_error}</div>{/if}
+  {foreach name=aussen item=payment from=$module_payment}
+    <div class="account_row_payment cf"><span>{$payment.FIELD}</span> <label for="payment_{$payment.ID}">{$payment.NAME}</label></div>
+  {/foreach}
+</div>
+<br />
+
+<div class="highlightbox">
+  <h1>{#heading_shipping_address#}</h1>
+  {if isset($module_shipping_address_error)}<div class="errormessage">{$module_shipping_address_error}</div>{/if}
+  <p>{#text_choose_shipping_address#}</p>
+  <ul class="address_block">
+  {foreach name=aussen item=shipping_address from=$module_shipping_address}
+    <li>
+      <span class="address_check">{$shipping_address.FIELD}</span>
+      <label for="shipping_address_{$shipping_address.ID}">
+        <span class="address_head"><strong>{$shipping_address.NAME}</strong></span>
+        <span class="address">{$shipping_address.ADDRESS}</span>
+      </label>
+    </li>
+  {/foreach}
+  </ul>
+</div>
+<br />
+
+<div class="highlightbox">
+  <h1>{#heading_payment_address#}</h1>
+  {if isset($module_payment_address_error)}<div class="errormessage">{$module_payment_address_error}</div>{/if}
+  <p>{#text_choose_payment_address#}</p>
+  <ul class="address_block">
+  {foreach name=aussen item=payment_address from=$module_payment_address}
+    <li class="cf">
+      <span class="address_check">{$payment_address.FIELD}</span>
+      <label for="payment_address_{$payment_address.ID}">
+        <span class="address_head"><strong>{$payment_address.NAME}</strong></span>
+        <span class="address">{$payment_address.ADDRESS}</span>
+      </label>
+    </li>
+  {/foreach}
+  </ul>
+</div>
+
+<p>{$BUTTON_BACK}&nbsp;{$BUTTON_SUBMIT}</p>
+{$FORM_END}

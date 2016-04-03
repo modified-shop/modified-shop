@@ -1,0 +1,25 @@
+input[type=checkbox].ChkBox:not(old),
+input[type=radio   ].ChkBox:not(old){
+  width   : 28px;
+  margin  : 0;
+  padding : 0;
+  opacity : 0;
+}
+
+input[type=checkbox].ChkBox:not(old):not([disabled]) + em,
+input[type=radio   ].ChkBox:not(old):not([disabled]) + em{
+  display      : inline-block;
+  margin-left  : -28px;
+  padding-left : 28px;
+  background   : url('images/checks.png') no-repeat 0 0;
+  line-height  : 24px;
+  margin-right : -10px;
+}
+
+input[type=checkbox].ChkBox:not(old):checked + em{
+  background-position : 0 -24px;
+}
+
+input[type=radio].ChkBox:not(old):checked + em{
+  background-position : 0 -48px;
+}

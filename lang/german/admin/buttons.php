@@ -1,18 +1,19 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: buttons.php 4892 2013-06-06 16:34:15Z Tomcraft $
+
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
-   based on:
+   based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(categories.php,v 1.22 2002/08/17); www.oscommerce.com
-   (c) 2003 nextcommerce (categories.php,v 1.10 2003/08/14); www.nextcommerce.org
+   (c) 2002-2003 osCommerce(categories.php,v 1.22 2002/08/17); www.oscommerce.com 
+   (c) 2003	 nextcommerce (categories.php,v 1.10 2003/08/14); www.nextcommerce.org
 
-   Released under the GNU General Public License
+   Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
 // buttons
@@ -40,7 +41,6 @@ define('BUTTON_SEND_EMAIL', 'E-Mail senden');
 define('BUTTON_SEND_COUPON', 'Gutschein senden');
 define('BUTTON_INVOICE', 'Rechnung');
 define('BUTTON_PACKINGSLIP', 'Lieferschein');
-define('BUTTON_REMOVE_CC_INFO', 'L&ouml;sche KK Info');
 define('BUTTON_AFTERBUY_SEND', 'Afterbuy - senden');
 define('BUTTON_NEW_NEWSLETTER', 'Neuer Newsletter');
 define('BUTTON_RESET', 'Zur&uuml;cksetzen');
@@ -74,6 +74,7 @@ define('BUTTON_DETAILS', 'Details');
 define('BUTTON_NEW_TAX_CLASS', 'Neue Steuerklasse');
 define('BUTTON_NEW_TAX_RATE', 'Neuer Steuersatz');
 define('BUTTON_SEND', 'Senden');
+define('BUTTON_REVERSE', 'Stornieren');
 
 // BOF - Tomcraft - 2009-11-28 - Included xs:booster
 define('BUTTON_EDIT_XTBOOSTER', 'eBay-Artikel');
@@ -83,20 +84,12 @@ define('BUTTON_XTBOOSTER_MULTI', 'eBay-Multi-Artikel');
 // BOF - Dokuman - 2010-02-04 - delete cache files in admin section
 define('BUTTON_DELETE_CACHE', 'Cache leeren');
 define('BUTTON_DELETE_TEMP_CACHE', 'Templatecache leeren');
+define('BUTTON_DELETE_LOGS', 'Logfiles l&ouml;schen');
 // EOF - Dokuman - 2010-02-04 - delete cache files in admin section
 
-//BOF - DokuMan - 2010-08-12 - added possibility to reset admin statistics
-define('BUTTON_RESET_PRODUCTS_PURCHASED', 'Alle Positionen zur&uuml;cksetzen');
-define('BUTTON_RESET_PRODUCTS_VIEWED', 'Alle Positionen zur&uuml;cksetzen');
-//EOF - DokuMan - 2010-08-12 - added possibility to reset admin statistics
+// BOF - web28 - 2011-07-13 - New Button
+define('BUTTON_VIEW_PRODUCT', 'Artikel ansehen');
+//EOF - web28 - 2011-07-13 - New Button
 
-// BOF - web28 - 2010-08-21 - add  button view products
-define('BUTTON_VIEW_PRODUCT','Produktansicht');
-// EOF - web28 - 2010-08-21 - add  button view products
-
-//BOF - hendrik - 2011-05-14 - independent invoice number and date
-define('BUTTON_BILL', 'Neue Rechnungsnummer vergeben');
-//EOF - hendrik - 2011-05-14 - independent invoice number and date
-
-define('BUTTON_NEW_CARRIER', 'Neuer Paketdienstleister'); //Dokuman - 2012-11-16 - Track & Trace functionality
+define('BUTTON_VALUES', 'Werte');
 ?>

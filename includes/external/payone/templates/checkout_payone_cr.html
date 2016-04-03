@@ -1,0 +1,21 @@
+<link rel="stylesheet" type="text/css" href="{$content_data.payonecss}" />
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+<ul id="checkoutnavigation" class="cf">
+  <li class="inactive"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></li>
+  <li class="{if $content_data.timeofcheck == 'before'}active{else}inactive{/if}"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></li>
+  <li class="{if $content_data.timeofcheck == 'before'}inactive{else}active{/if}"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></li>
+  <li class="inactive last"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></li>
+</ul>
+
+<div>
+	<h1>{$smarty.const.CREDIT_RISK_HEADING}</h1>
+	{$content_data.form_action}
+		<p>{$smarty.const.TEXT_CREDIT_RISK_INFO}</p>
+		<p>{$smarty.const.TEXT_CREDIT_RISK_COMFIRM}</p>
+		<p>
+			<input class="yesbutton" type="submit" name="confirm" value="{$smarty.const.BUTTON_CONFIRM}">
+			<input class="nobutton" type="submit" name="noconfirm" value="{$smarty.const.BUTTON_NOCONFIRM}">
+		</p>
+	</form>
+</div>
+

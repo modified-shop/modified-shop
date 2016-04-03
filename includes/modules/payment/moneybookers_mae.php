@@ -1,16 +1,15 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: moneybookers_mae.php 39 2009-01-22 15:44:52Z mzanier $
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   xt:Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2009 xt:Commerce
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(moneybookers.php,v 1.00 2003/10/27); www.oscommerce.com
-   (c) 2009 xt:Commerce
 
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
@@ -40,10 +39,7 @@ class moneybookers_mae extends fcnt_moneybookers {
 	var $images='maestro.gif';
 
 	// class constructor
-	// BOF - Hendrik - 2010-08-11 - php5 compatible
-	// function moneybookers_mae() {
 	function __construct() {
-	// EOF - Hendrik - 2010-08-11 - php5 compatible
 		global $order, $language;
 
 		$this->_setAllowed('ES,GB,AT');

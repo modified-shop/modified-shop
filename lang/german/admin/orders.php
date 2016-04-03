@@ -1,30 +1,31 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: orders.php 1185 2010-08-20 09:00:29Z web28 $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on:
+   based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce; www.oscommerce.com
-   (c) 2003 nextcommerce; www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
+   (c) 2002-2003 osCommerce; www.oscommerce.com 
+   (c) 2003      nextcommerce; www.nextcommerce.org
+   (c) 2006      xt:Commerce; www.xt-commerce.com
 
-   Released under the GNU General Public License
+   Released under the GNU General Public License 
    --------------------------------------------------------------*/
 define('TEXT_BANK', 'Bankeinzug');
 define('TEXT_BANK_OWNER', 'Kontoinhaber:');
 define('TEXT_BANK_NUMBER', 'Kontonummer:');
 define('TEXT_BANK_BLZ', 'BLZ:');
 define('TEXT_BANK_NAME', 'Bank:');
-define('TEXT_BANK_IBAN', 'IBAN:'); //DokuMan - 2012-11-26 - added IBAN and BIC
-define('TEXT_BANK_BIC', 'BIC-Code:'); //DokuMan - 2012-11-26 - added IBAN and BIC
+define('TEXT_BANK_BIC', 'BIC:');
+define('TEXT_BANK_IBAN', 'IBAN:');
 define('TEXT_BANK_FAX', 'Einzugserm&auml;chtigung wird per Fax best&auml;tigt');
 define('TEXT_BANK_STATUS', 'Pr&uuml;fstatus:');
 define('TEXT_BANK_PRZ', 'Pr&uuml;fverfahren:');
+define('TEXT_BANK_OWNER_EMAIL', 'E-Mail-Adresse Kontoinhaber:');
 
 define('TEXT_BANK_ERROR_1', 'Kontonummer stimmt nicht mit BLZ &uuml;berein!');
 define('TEXT_BANK_ERROR_2', 'F&uuml;r diese Kontonummer ist kein Pr&uuml;fverfahren definiert!');
@@ -41,7 +42,6 @@ define('HEADING_TITLE_STATUS', 'Status:');
 
 define('TABLE_HEADING_COMMENTS', 'Kommentar');
 define('TABLE_HEADING_CUSTOMERS', 'Kunden');
-define('TABLE_HEADING_ORDERS_ID', 'Best.Nr.');
 define('TABLE_HEADING_ORDER_TOTAL', 'Gesamtwert');
 define('TABLE_HEADING_DATE_PURCHASED', 'Bestelldatum');
 define('TABLE_HEADING_ACTION', 'Aktion');
@@ -50,6 +50,7 @@ define('TABLE_HEADING_PRODUCTS_MODEL', 'Artikel-Nr.');
 define('TABLE_HEADING_PRODUCTS', 'Artikel');
 define('TABLE_HEADING_TAX', 'MwSt.');
 define('TABLE_HEADING_TOTAL', 'Gesamtsumme');
+define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_PRICE_EXCLUDING_TAX', 'Preis (exkl.)');
 define('TABLE_HEADING_PRICE_INCLUDING_TAX', 'Preis (inkl.)');
 define('TABLE_HEADING_TOTAL_EXCLUDING_TAX', 'Total (exkl.)');
@@ -62,7 +63,14 @@ define('TABLE_HEADING_DATE_ADDED', 'hinzugef&uuml;gt am:');
 
 define('ENTRY_CUSTOMER', 'Kunde:');
 define('ENTRY_SOLD_TO', 'Rechnungsadresse:');
+define('ENTRY_STREET_ADDRESS', 'Strasse:');
+define('ENTRY_SUBURB', 'zus. Anschrift:');
+define('ENTRY_CITY', 'Stadt:');
+define('ENTRY_POST_CODE', 'PLZ:');
+define('ENTRY_STATE', 'Bundesland:');
+define('ENTRY_COUNTRY', 'Land:');
 define('ENTRY_TELEPHONE', 'Telefon:');
+define('ENTRY_EMAIL_ADDRESS', 'E-Mail-Adresse:');
 define('ENTRY_DELIVERY_TO', 'Lieferanschrift:');
 define('ENTRY_SHIP_TO', 'Lieferanschrift:');
 define('ENTRY_SHIPPING_ADDRESS', 'Versandadresse:');
@@ -90,6 +98,7 @@ define('TEXT_INFO_RESTOCK_PRODUCT_QUANTITY', 'Artikelanzahl dem Lager gutschreib
 define('TEXT_DATE_ORDER_CREATED', 'erstellt am:');
 define('TEXT_DATE_ORDER_LAST_MODIFIED', 'letzte &Auml;nderung:');
 define('TEXT_INFO_PAYMENT_METHOD', 'Zahlungsweise:');
+define('TEXT_INFO_SHIPPING_METHOD', 'Versandart:');
 
 define('TEXT_ALL_ORDERS', 'Alle Bestellungen');
 define('TEXT_NO_ORDER_HISTORY', 'Keine Bestellhistorie verf&uuml;gbar');
@@ -108,6 +117,7 @@ define('WARNING_ORDER_NOT_UPDATED', 'Hinweis: Es wurde nichts ge&auml;ndert. Dah
 
 define('TABLE_HEADING_DISCOUNT','Rabatt');
 define('ENTRY_CUSTOMERS_GROUP','Kundengruppe:');
+define('ENTRY_CUSTOMERS_VAT_ID','USt-IdNr.:');
 define('TEXT_VALIDATING','Nicht best&auml;tigt');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
@@ -130,18 +140,34 @@ define('TEXT_ORDER', 'Bestellung:');
 define('TEXT_ORDER_HISTORY', 'Bestellhistorie:');
 define('TEXT_ORDER_STATUS', 'Bestellstatus:');
 
-// DokuMan - 2012-01-05 - option to reverse an order instead of deleting it
-define('TEXT_INFO_REVERSE_ORDER', 'Stornieren mit Bestellstatus: ');
-define('BUTTON_DELETE_OR_REVERSE','L&ouml;schen/Stornieren');
-
+define('TABLE_HEADING_ORDERS_ID', 'Best.Nr.');
 define('TEXT_SHIPPING_TO', 'Versand nach');
-define('TEXT_SHIPPING_LANG', 'Sprache');
-
-// DokuMan - 2012-08-28 - Track & Trace functionality
-define('TABLE_HEADING_TRACKING', 'Sendungsverfolgung:');
-define('TABLE_HEADING_CARRIER', 'Paketdienstleister');
-define('TABLE_HEADING_PARCEL_LINK', 'Sendungsnummer');
-define('TABLE_HEADING_REMOVE_LINK', 'Nummer hinzuf&uuml;gen/entfernen');
 
 define('TABLE_HEADING_COMMENTS_SENT', 'Kommentar versandt');
+
+define('TABLE_HEADING_TRACK_TRACE', 'Track &amp; Trace:');
+define('TABLE_HEADING_CARRIER', 'Versandart');
+define('TABLE_HEADING_PARCEL_LINK', 'Trackinglink');
+
+define('TEXT_INFO_HEADING_REVERSE_ORDER', 'Bestellung stornieren');
+define('TEXT_INFO_REVERSE_INTRO', 'Sind Sie sicher, das Sie diese Bestellung stornieren m&ouml;chten?');
+
+define('TABLE_HEADING_SHIPCLOUD', 'Shipcloud:');
+define('TABLE_HEADING_PARCEL_ID', 'Paketschein Nummer');
+define('DOWNLOAD_LABEL', 'Paketschein herunterladen');
+define('CREATE_LABEL', 'Paketschein erstellen');
+define('TEXT_DELETE_SHIPMENT_SUCCESS', 'shipcloud Paketschein gel&ouml;scht.');
+define('TEXT_LABEL_CREATED', 'Paketschein erfolgreich erstellt.');
+define('TEXT_CARRIER_ERROR', 'Paketdienstleister nicht in Ihrem shipcloud Account freigeschaltet oder ung&uuml;ltiger API-Key.');
+define('TEXT_CARRIER_PLACEHOLDER', 'Beschreibung (optional)');
+
+define('TEXT_DOWNLOADS', 'Downloads');
+define('TABLE_HEADING_FILENAME', 'Dateiname');
+define('TABLE_HEADING_EXPIRES', 'Ablaufdatum');
+define('TABLE_HEADING_DOWNLOADS', 'Anzahl Downloads');
+define('TABLE_HEADING_DAYS', 'Anzahl Tage');
+
+define('ENTRY_SEND_TRACKING_INFO', 'Versandinformationen:');
+
+define('TEXT_ORDERS_STATUS_FILTER', 'Bestellstatus Filter');
 ?>

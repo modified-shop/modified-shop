@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: modules.php 4899 2014-11-20 09:02:25Z derpapst $
+ * $Id: modules.php 5603 2015-05-08 14:12:38Z miguel.heredia $
  *
  * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -26,14 +26,17 @@ $_modules = array(
 		'displayAlways' => true,
 		'requiredConfigKeys' => array (
 			'amazon.firstactivation',
-			'amazon.username', 
-			'amazon.password', 
-			'amazon.merchantid', 
-			'amazon.marketplaceid', 
+			'amazon.username',
+			'amazon.password',
+			'amazon.merchantid',
+			'amazon.marketplaceid',
+			'amazon.mwstoken',
 			'amazon.lang',
 			'amazon.internationalShipping', 
 			'amazon.mwstfallback', 
-			'amazon.mwst.shipping', 
+			/*//
+			{search: 1427198983}'amazon.mwst.shipping', 
+			//*/			
 			'amazon.quantity.type', 
 			'amazon.leadtimetoship', 
 			'amazon.price.addkind', 
@@ -70,7 +73,7 @@ $_modules = array(
 			'conf' => ML_GENERIC_CONFIGURATION,
 		),
 		'settings' => array (
-			'defaultpage' => 'checkin',
+			'defaultpage' => 'prepare',
 			'subsystem' => 'Amazon',
 			'currency' => '__depends__',
 			'hasOrderImport' => true,
@@ -85,6 +88,8 @@ $_modules = array(
 			'ebay.firstactivation',
 			'ebay.token',
 			'ebay.lang',
+			'ebay.location',
+			'ebay.postalcode',
 		),
 		'pages' => array (
 			'prepare' => ML_GENERIC_PREPARE,
@@ -100,7 +105,7 @@ $_modules = array(
 			'conf' => ML_GENERIC_CONFIGURATION,
 		),
 		'settings' => array (
-			'defaultpage' => 'checkin',
+			'defaultpage' => 'prepare',
 			'subsystem' => 'eBay',
 			'currency' => '__depends__',
 			'hasOrderImport' => true,
@@ -129,7 +134,9 @@ $_modules = array(
 			'yatego.orderstatus.open',
 			//'yatego.orderstatus.cancelled',
 			//'yatego.orderstatus.shipped',
+			/*//{search: 1427198983}
 			'yatego.mwst.shipping',
+			//*/
 			'yatego.mail.send',
 		),
 		'pages' => array (
@@ -155,7 +162,7 @@ $_modules = array(
 	),
 	'meinpaket' => array(
 		'title' => ML_MODULE_MEINPAKET,
-		'logo' => 'meinpaket',
+		'logo' => 'ayn',
 		'displayAlways' => true,
 		'referer' => array('meinpaket.de'),
 		'requiredConfigKeys' => array (
@@ -169,7 +176,9 @@ $_modules = array(
 			'meinpaket.import',
 			'meinpaket.orderstatus.open',
 			'meinpaket.mwst.fallback',
+			/*//{search: 1427198983}
 			'meinpaket.mwst.shipping',
+			//*/
 			'meinpaket.orderstatus.shipped',
 			'meinpaket.orderstatus.sync',
 			'meinpaket.orderstatus.cancelled.customerrequest',
@@ -197,9 +206,62 @@ $_modules = array(
 			'conf' => ML_GENERIC_CONFIGURATION,
 		),
 		'settings' => array (
-			'defaultpage' => 'checkin',
+			'defaultpage' => 'prepare',
 			'subsystem' => 'Meinpaket',
 			'currency' => 'EUR',
+			'hasOrderImport' => true,
+		),
+		'type' => 'marketplace',
+	),
+	'ayn24' => array(
+		'title' => ML_MODULE_AYN24,
+		'logo' => 'ayn24',
+		'displayAlways' => false,
+		'referer' => array('ayn24.pl'),
+		'requiredConfigKeys' => array (
+			'ayn24.username',
+			'ayn24.password',
+			'ayn24.lang',
+			'ayn24.quantity.type',
+			'ayn24.quantity.value',
+			'ayn24.stocksync.frommarketplace',
+			'ayn24.stocksync.tomarketplace',
+			'ayn24.import',
+			'ayn24.orderstatus.open',
+			'ayn24.mwst.fallback',
+			/*//{search: 1427198983}
+			'ayn24.mwst.shipping',
+			//*/
+			'ayn24.orderstatus.shipped',
+			'ayn24.orderstatus.sync',
+			'ayn24.orderstatus.cancelled.customerrequest',
+			'ayn24.orderstatus.cancelled.outofstock',
+			'ayn24.orderstatus.cancelled.damagedgoods',
+			'ayn24.orderstatus.cancelled.dealerrequest',
+		),
+		'pages' => array (
+			'prepare' => array (
+				'title' => ML_GENERIC_PREPARE,
+				'views' => array (
+					'apply' => ML_AMAZON_NEW_ITMES,
+					'varmatch' => ML_AYN24_VARIANT_MATCHING,
+				),
+			),
+			'checkin' => ML_GENERIC_CHECKIN,
+			'listings' => array (
+				'title' => ML_GENERIC_LISTINGS,
+				'views' => array (
+					'inventory' => ML_GENERIC_INVENTORY,
+					'deleted' => ML_GENERIC_DELETED,
+				),
+			),
+			'errorlog' => ML_GENERIC_ERRORLOG,
+			'conf' => ML_GENERIC_CONFIGURATION,
+		),
+		'settings' => array (
+			'defaultpage' => 'prepare',
+			'subsystem' => 'Ayn24',
+			'currency' => 'PLN',
 			'hasOrderImport' => true,
 		),
 		'type' => 'marketplace',
@@ -233,7 +295,7 @@ $_modules = array(
 			'conf' => ML_GENERIC_CONFIGURATION,
 		),
 		'settings' => array (
-			'defaultpage' => 'checkin',
+			'defaultpage' => 'prepare',
 			'subsystem' => 'Hitmeister',
 			'currency' => 'EUR',
 			'hasOrderImport' => true,
@@ -517,7 +579,7 @@ $_modules = array(
 			'conf' => ML_GENERIC_CONFIGURATION,
 		),
 		'settings' => array (
-			'defaultpage' => 'checkin',
+			'defaultpage' => 'catmatch',
 			'subsystem' => 'Tradoria',
 			'currency' => 'EUR',
 			'hasOrderImport' => true,
@@ -577,7 +639,7 @@ $_modules = array(
 			'conf' => ML_GENERIC_CONFIGURATION,
 		),
 		'settings' => array (
-			'defaultpage' => 'checkin',
+			'defaultpage' => 'prepare',
 			'subsystem' => 'hood',
 			'currency' => 'EUR',
 			'hasOrderImport' => true,
@@ -638,7 +700,7 @@ $_modules = array(
 			'conf' => ML_GENERIC_CONFIGURATION,
 		),
 		'settings' => array (
-			'defaultpage' => 'checkin',
+			'defaultpage' => 'prepare',
 			'subsystem' => 'DaWanda',
 			'currency' => 'EUR',
 			'hasOrderImport' => true,
@@ -671,8 +733,70 @@ $_modules = array(
 			'conf' => ML_GENERIC_CONFIGURATION,
 		),
 		'settings' => array (
-			'defaultpage' => 'checkin',
+			'defaultpage' => 'prepare',
 			'subsystem' => 'bepado',
+			'currency' => 'EUR',
+			'hasOrderImport' => true,
+		),
+		'type' => 'marketplace',
+	),
+	'ricardo' => array (
+		'title' => 'ricardo',
+		'logo' => 'ricardo',
+		'displayAlways' => false,
+		'requiredConfigKeys' => array (
+			'ricardo.access.MPUSERNAME',
+			'ricardo.access.MPPASSWORD',
+			'ricardo.access.LANG',
+			'ricardo.checkin.displayfees'
+		),
+		'pages' => array (
+			'prepare' => ML_GENERIC_PREPARE,
+			'checkin' => ML_GENERIC_CHECKIN,
+			'listings' => array (
+				'title' => ML_GENERIC_LISTINGS,
+				'views' => array (
+					'inventory' => ML_GENERIC_INVENTORY,
+					'deleted' => ML_GENERIC_DELETED
+				)
+			),
+			'errorlog' => ML_GENERIC_ERRORLOG,
+			'conf' => ML_GENERIC_CONFIGURATION,
+		),
+		'settings' => array (
+			'defaultpage' => 'prepare',
+			'subsystem' => 'ricardo',
+			'currency' => 'CHF',
+			'hasOrderImport' => true,
+		),
+		'type' => 'marketplace',
+	),
+	'check24' => array (
+		'title' => 'check24',
+		'logo' => 'check24',
+		'displayAlways' => false,
+		'requiredConfigKeys' => array (
+			'check24.access.MPUSERNAME',
+			'check24.access.MPPASSWORD',
+			'check24.access.PORT',
+			'check24.access.FTPSERVER',
+		),
+		'pages' => array (
+			'prepare' => ML_GENERIC_PREPARE,
+			'checkin' => ML_GENERIC_CHECKIN,
+			'listings' => array (
+				'title' => ML_GENERIC_LISTINGS,
+				'views' => array (
+					'inventory' => ML_GENERIC_INVENTORY,
+					'deleted' => ML_GENERIC_DELETED
+				)
+			),
+			'errorlog' => ML_GENERIC_ERRORLOG,
+			'conf' => ML_GENERIC_CONFIGURATION,
+		),
+		'settings' => array (
+			'defaultpage' => 'prepare',
+			'subsystem' => 'check24',
 			'currency' => 'EUR',
 			'hasOrderImport' => true,
 		),

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: flat.php 5038 2013-07-07 10:08:54Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -21,7 +21,7 @@
     var $code, $title, $description, $icon, $enabled;
 
 
-    function flat() {
+    function __construct() {
       global $order;
 
       $this->code = 'flat';

@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: check_update.php 5019 2013-07-05 09:10:32Z GTB $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -19,6 +19,7 @@
 define('HEADING_TITLE', 'Software Update');
 define('HEADING_SUBTITLE', 'Update Check');
 
+define('TEXT_DB_VERSION','Database version:');
 define('TEXT_INFO_UPDATE_RECOMENDED', 'A new Version is available.');
 define('TEXT_INFO_UPDATE_NOT_POSSIBLE', 'Sorry, no check was possible. Please visit our <a target="_blank" href="http://www.modified-shop.org"><b>Website</b></a>.');
 define('TEXT_INFO_UPDATE', 'Your Version is up to date.');
@@ -32,4 +33,5 @@ define('TEXT_INFO_THANKS', 'We wish to thank all coders and developers involved 
 define('TEXT_INFO_DISCLAIMER', 'This program is distributed in the hope that it will be useful. Nevertheless, we do not give any warranty that it is without bugs.');
 define('TEXT_INFO_DONATIONS', 'The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by donating to the project.');
 define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
+define('BUTTON_DONATE', '<a href="http://www.modified-shop.org/spenden"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0"></a>');
 ?>

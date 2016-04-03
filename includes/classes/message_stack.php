@@ -1,17 +1,16 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: message_stack.php 799 2005-02-23 18:08:06Z novalis $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    -----------------------------------------------------------------------------------------
-   based on:
+   based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(message_stack.php,v 1.1 2003/05/19); www.oscommerce.com
-   (c) 2003 nextcommerce (message_stack.php,v 1.9 2003/08/13); www.nextcommerce.org
-   (c) 2006 XT-Commerce (message_stack.php 799 2005-02-23)
+   (c) 2002-2003 osCommerce(message_stack.php,v 1.1 2003/05/19); www.oscommerce.com 
+   (c) 2003	 nextcommerce (message_stack.php,v 1.9 2003/08/13); www.nextcommerce.org
 
    Released under the GNU General Public License
    Example usage:
@@ -21,44 +20,34 @@
    if ($messageStack->size('general') > 0) echo $messageStack->output('general');
    ---------------------------------------------------------------------------------------*/
 
-  class messageStack extends tableBox {
-    // class constructor
-    function messageStack() {
+  class messageStack {
 
+    function __construct() {
       $this->messages = array();
-
       if (isset($_SESSION['messageToStack'])) {
-        //BOF - DokuMan - 2011-12-19 - precount for performance
-        //for ($i=0, $n=sizeof($_SESSION['messageToStack']); $i<$n; $i++) {
-        $n=sizeof($_SESSION['messageToStack']);
-        for ($i=0; $i<$n; $i++) {
-        //EOF - DokuMan - 2011-12-19 - precount for performance
-          if (isset($_SESSION['messageToStack'][$i]['class'])) //DokuMan - 2010-08-31 - set undefined index
+        for ($i=0, $n=sizeof($_SESSION['messageToStack']); $i<$n; $i++) {
           $this->add($_SESSION['messageToStack'][$i]['class'], $_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
         }
         unset($_SESSION['messageToStack']);
       }
     }
 
-    // class methods
     function add($class, $message, $type = 'error') {
       if ($type == 'error') {
-        $this->messages[] = array('params' => 'class="messageStackError"', 'class' => $class, 'text' => xtc_image(DIR_WS_ICONS . 'error.gif', ICON_ERROR) . '&nbsp;' . $message);
+        $this->messages[$class]['error'][] = $message;
       } elseif ($type == 'warning') {
-        $this->messages[] = array('params' => 'class="messageStackWarning"', 'class' => $class, 'text' => xtc_image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;' . $message);
+        $this->messages[$class]['warning'][] = $message;
       } elseif ($type == 'success') {
-        $this->messages[] = array('params' => 'class="messageStackSuccess"', 'class' => $class, 'text' => xtc_image(DIR_WS_ICONS . 'success.gif', ICON_SUCCESS) . '&nbsp;' . $message);
+        $this->messages[$class]['success'][] = $message;
       } else {
-        $this->messages[] = array('params' => 'class="messageStackError"', 'class' => $class, 'text' => $message);
+        $this->messages[$class]['warning'][] = $message;
       }
     }
 
     function add_session($class, $message, $type = 'error') {
-
       if (!isset($_SESSION['messageToStack'])) {
         $_SESSION['messageToStack'] = array();
       }
-
       $_SESSION['messageToStack'][] = array('class' => $class, 'text' => $message, 'type' => $type);
     }
 
@@ -66,37 +55,26 @@
       $this->messages = array();
     }
 
-    function output($class) {
-      $this->table_data_parameters = 'class="messageBox"';
-
-      $output = array();
-      //BOF - DokuMan - 2011-12-19 - precount for performance
-      //for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
-      $n=sizeof($this->messages);
-      for ($i=0; $i<$n; $i++) {
-      //EOF - DokuMan - 2011-12-19 - precount for performance
-        if ($this->messages[$i]['class'] == $class) {
-          $output[] = $this->messages[$i];
-        }
-      }
-
-      return $this->tableBox($output);
-    }
-
     function size($class) {
       $count = 0;
-
-      //BOF - DokuMan - 2011-12-19 - precount for performance
-      //for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
-      $n=sizeof($this->messages);
-      for ($i=0; $i<$n; $i++) {
-      //EOF - DokuMan - 2011-12-19 - precount for performance
-        if ($this->messages[$i]['class'] == $class) {
-          $count++;
+      if (isset($this->messages[$class])) {
+        foreach ($this->messages[$class] as $key => $messages) {
+           $count += count($messages);
         }
       }
-
       return $count;
+    }
+
+    function output($class) {
+      $output = '';
+      if ($this->size($class) > 0) {
+        foreach ($this->messages[$class] as $key => $messages) {
+          foreach ($messages as $message) {
+            $output .= '<p>'.$message.'</p>';
+          }   
+        }
+      }
+      return $output;
     }
   }
 ?>

@@ -1,0 +1,16 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{config_load file="lang_`$language`.custom"}
+{if isset($NAME) && $NAME != ''}
+  <div class="box1">
+    <div class="box_header">
+      <span class="show_title">{$NAME}</span> 
+    </div>
+    <div class="box_line" style="margin-bottom:10px;"></div>
+      {if $IMAGE}
+        <div class="box_image"><img src="{$IMAGE}" alt="{$NAME|onlytext}" /></div>
+        <div class="box_line abstand"></div>
+      {/if}
+      {if $URL}{$URL} &raquo;<br />{/if}
+      {$LINK_MORE} &raquo;
+  </div>
+{/if}

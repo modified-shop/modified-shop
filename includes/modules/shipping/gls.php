@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: gls.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,7 +28,7 @@
   class gls {
     var $code, $title, $description, $icon, $enabled, $num_gls;
 
-    function gls() {
+    function __construct() {
       global $order;
 
       $this->code = 'gls';
@@ -101,7 +101,7 @@
         $error = true;
       } else {
         $shipping = -1;
-        $gls_cost = constant('MODULE_SHIPPING_GLS_COST_' . $i);
+        $gls_cost = constant('MODULE_SHIPPING_GLS_COST_' . $dest_zone);
         $gls_table = preg_split("/[:,]/" , $gls_cost); // DokuMan - 2010-11-20 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
         for ($i=0; $i<sizeof($gls_table); $i+=2) {
           if ($shipping_weight <= $gls_table[$i]) {

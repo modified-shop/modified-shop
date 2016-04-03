@@ -1,162 +1,20 @@
 <?php
-/* -----------------------------------------------------------------------------------------
-   $Id$
+/*-----------------------------------------------------------
+   $Id:$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   -----------------------------------------------------------------------------------------
-   based on:
-   (c) 2006 XT-Commerce (general.js.php 1262 2005-09-30)
-
+  -----------------------------------------------------------
+   based on: (c) 2003 - 2006 XT-Commerce (general.js.php)
+  -----------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------------------------*/
-
- // this javascriptfile get includes at the BOTTOM of every template page in shop
- // you can add your template specific js scripts here
+   -----------------------------------------------------------
+*/
+define('DIR_TMPL_JS', 'templates/'.CURRENT_TEMPLATE. '/javascript/');
+// this javascriptfile get includes at the TOP of every template page in shop
+// you can add your template specific js scripts here
 ?>
 <script type="text/javascript">var DIR_WS_BASE="<?php echo DIR_WS_BASE ?>"</script>
-
-<?php //BOF - DokuMan - 2011-05-12 - load jQuery default library jquery.js from faster Google CDN
-/*<script src="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery.js" type="text/javascript"></script>*/
- ?>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-/* <![CDATA[ */
-  !window.jQuery && document.write('<script src="<?php echo DIR_WS_BASE; ?>templates/<?php echo CURRENT_TEMPLATE; ?>/javascript/jquery_1.7.2.min.js" type="text/javascript"><\/script>');
-/*]]>*/
-</script>
-
-<script src="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery.colorbox-min.js" type="text/javascript"></script>
-<script type="text/javascript">
-/* <![CDATA[ */
-$(document).ready(function() {
-  $('a.thickbox').each(function(){
-    if(typeof($(this).attr('rel')) != "undefined"
-      && $(this).attr('rel') !== null
-      && $(this).attr('rel') !== ""
-      && $(this).attr('rel') !== "nofollow"
-      && $(this).attr('rel') !== "NaN") {
-      $(this).colorbox({
-        opacity :0.5,
-        rel     :$(this).attr('rel')
-      });
-    } else {
-      var cwidth = 650;    // set to standard width
-      var cheight = 450;   // set to standard height
-      var checkW = getParam($(this).attr("href"), "width");
-      if(checkW != "undefined" && checkW !== null && checkW !== "" && checkW !== "NaN") {
-        cwidth = parseInt(checkW);
-      }
-      var checkH = getParam($(this).attr("href"), "height");
-      if(checkH != "undefined" && checkH !== null && checkH !== "" && checkH !== "NaN") {
-        cheight = parseInt(checkH);
-      }
-      if(typeof($(this).attr('data-width')) != "undefined") {
-        var checkW = $(this).attr('data-width');
-        if(checkW !== null && checkW !== "" && checkW !== "NaN") {
-          cwidth = parseInt(checkW);
-        }
-      }
-      if(typeof($(this).attr('data-height')) != "undefined") {
-        var checkH = $(this).attr('data-height');
-        if(checkH !== null && checkH !== "" && checkH !== "NaN") {
-          cheight = parseInt(checkH);
-        }
-      }
-      $(this).colorbox({
-        iframe      :true,
-        fastIframe  :true,
-        opacity     :0.5,
-        width       :cwidth,
-        height      :cheight
-      });
-    }
-  });
-});
-function getParam(url, name) {
-  name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-  var regexS = "[\\?&]"+name+"=([^&#]*)";
-  var regex = new RegExp( regexS );
-  var results = regex.exec(url);
-  if( results == null ) {
-    return "";
-  } else {
-    return results[1];
-  }
-}
-/*]]>*/
-</script>
-
-<script src="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery.alerts.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-/* <![CDATA[ */
-  function alert(message, type) {
-    type = type || 'Information';
-    jAlert(message, type);
-  }
-/*]]>*/
-</script>
-
-<?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { // TABS/ACCORDION in product_info - web28
-    //BOF - DokuMan - 2011-05-12 - load jQuery default library jquery-ui.js from faster Google CDN
-    /*<script src="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery-ui.js" type="text/javascript"></script>*/
-    echo '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>';
-    //EOF - DokuMan - 2011-05-12 - load jQuery default library jquery-ui.js from faster Google CDN
-?>
-  <script src="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery.cookie.js" type="text/javascript"></script>
-  <script type="text/javascript">
-  //<![CDATA[
-    //Laden einer CSS Datei mit jquery
-    $.get("<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>"+"/css/javascript.css",
-    function(css) {
-      $("head").append("<style type='text/css'>"+css+"<\/style>");
-    });
-    $(function() {
-      $('#tabbed_product_info').tabs({
-	      fx: { opacity: 'toggle' },
-	      cookie: {
-          // store cookie for a day, without, it would be a session cookie
-          expires: 1
-	      }
-      });
-      $("#accordion_product_info").accordion({ autoHeight: false });
-    });
-  //]]>
-  </script>
-<?php } // TABS/ACCORDION in product_info - web28 ?>
-
-<?php // Ajax State/District/Bundesland Updater - h-h-h
-$state_pages = array('address_book_process.php','create_account.php','create_guest_account.php','checkout_shipping_address.php','checkout_payment_address.php');
-if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) { ?>
-<script type="text/javascript">
-/* <![CDATA[ */
-function load_state() {
-  var selection = $("select[name='country']").val();
-  $.get('ajax.php', {ext: 'get_states', country: selection, speed: 1}, function(data) {
-    if (data != '' && data != undefined) {  
-      $("[name='state']").replaceWith('<select name="state"></select>');
-      var stateSelect = $("[name='state']");
-      $.each(data, function(id, text) {
-        $("<option />", {
-          "value"   : text,
-          "text"    : text
-        }).appendTo(stateSelect);
-      });
-    } else {
-      $("[name='state']").replaceWith('<input type="text" name="state"></input>');
-    }
-  });
-}
-$(function() {
-  if ($("[name=state]").length) {
-    $("select[name='country']").change(function() { load_state(); });
-    if ($('div.errormessage').length == 0 && $("select[type=state] option:selected").length == 0) {
-      load_state();
-    }
-  }
-});
-/*]]>*/
-</script>
-<?php } // Ajax State/District/Bundesland Updater - h-h-h ?>
+<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery-1.8.3.min.js" type="text/javascript"></script>

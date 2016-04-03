@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: categories.php 3392 2012-08-06 12:45:26Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,7 +28,7 @@ define('TABLE_HEADING_CATEGORIES_PRODUCTS', 'Categories / Products');
 define('TABLE_HEADING_ACTION', 'Action');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_STARTPAGE', 'TOP');
-define('TABLE_HEADING_STOCK','Stock Warning');
+define('TABLE_HEADING_STOCK','Stock');
 define('TABLE_HEADING_SORT','Sort');
 define('TABLE_HEADING_EDIT','Edit');
 // BOF - Tomcraft - 2010-04-07 - Added definition for products model
@@ -44,7 +44,8 @@ define('TEXT_INFORMATIONS','Informations');
 define('TEXT_MARKED_ELEMENTS','Marked Elements');
 define('TEXT_INSERT_ELEMENT','New Element');
 
-define('TEXT_WARN_MAIN','Main');
+define('TEXT_WARN','Stock Warning:');
+define('TEXT_WARN_MAIN','Main product');
 define('TEXT_NEW_PRODUCT', 'New Product in &quot;%s&quot;');
 define('TEXT_EDIT_PRODUCT', 'Edit Product in &quot;%s&quot;');
 define('TEXT_CATEGORIES', 'Categories:');
@@ -52,12 +53,12 @@ define('TEXT_PRODUCTS', 'Products:');
 define('TEXT_PRODUCTS_PRICE_INFO', 'Price:');
 define('TEXT_PRODUCTS_TAX_CLASS', 'Tax Class:');
 define('TEXT_PRODUCTS_AVERAGE_RATING', 'Average Rating:');
-define('TEXT_PRODUCTS_QUANTITY_INFO', 'Quantity:');
+define('TEXT_PRODUCTS_QUANTITY_INFO', 'Stock:');
 define('TEXT_PRODUCTS_DISCOUNT_ALLOWED_INFO', 'Max. allowed Discount:');
 define('TEXT_DATE_ADDED', 'Date Added:');
 define('TEXT_DATE_AVAILABLE', 'Date Available:');
 define('TEXT_LAST_MODIFIED', 'Last Modified:');
-define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
+define('TEXT_IMAGE_NONEXISTENT', 'Image does not exist');
 define('TEXT_NO_CHILD_CATEGORIES_OR_PRODUCTS', 'Please insert a new category or product in <br />&nbsp;<br /><b>%s</b>');
 define('TEXT_PRODUCT_MORE_INFORMATION', 'For more information, please visit this products <a href="http://%s" target="_blank"><u>webpage</u></a>.');
 define('TEXT_PRODUCT_DATE_ADDED', 'This product was added to our catalog on %s.');
@@ -120,24 +121,24 @@ define('TEXT_PRODUCT_AVAILABLE', 'Active');
 define('TEXT_PRODUCT_NOT_AVAILABLE', 'Deactivated');
 // EOF - Hetfield - 2010-01-28 - Changing product available in correctly names for status
 define('TEXT_PRODUCTS_MANUFACTURER', 'Products Manufacturer:');
-define('TEXT_PRODUCTS_MANUFACTURER_MODEL', 'Manufacturer model no.:');
+define('TEXT_PRODUCTS_MANUFACTURER_MODEL', 'Manufacturer model no. (MPN):');
 define('TEXT_PRODUCTS_NAME', 'Products Name:');
 define('TEXT_PRODUCTS_DESCRIPTION', 'Products Description:');
-define('TEXT_PRODUCTS_QUANTITY', 'Products Quantity:');
+define('TEXT_PRODUCTS_QUANTITY', 'Products Stock:');
 define('TEXT_PRODUCTS_MODEL', 'Products Model:');
 define('TEXT_PRODUCTS_IMAGE', 'Products Image:');
 define('TEXT_PRODUCTS_URL', 'Products URL:');
 define('TEXT_PRODUCTS_URL_WITHOUT_HTTP', '<small>(without leading http://)</small>');
 define('TEXT_PRODUCTS_PRICE', 'Product price:');
 define('TEXT_PRODUCTS_WEIGHT', 'Product weight:');
-define('TEXT_PRODUCTS_EAN','Barcode/EAN');
+define('TEXT_PRODUCTS_EAN','GTIN/EAN');
 define('TEXT_PRODUCT_LINKED_TO','Linked to:');
 define('TEXT_DELETE', 'Delete');
 define('EMPTY_CATEGORY', 'Empty Category');
 
-define('TEXT_HOW_TO_COPY', 'Copy Method:');
-define('TEXT_COPY_AS_LINK', 'Link product');
-define('TEXT_COPY_AS_DUPLICATE', 'Duplicate product');
+define('TEXT_HOW_TO_COPY', 'Products Copy Method:');
+define('TEXT_COPY_AS_LINK', 'Link');
+define('TEXT_COPY_AS_DUPLICATE', 'Duplicate');
 
 define('ERROR_CANNOT_LINK_TO_SAME_CATEGORY', 'Error: Can not link products in the same directory.');
 define('ERROR_CATALOG_IMAGE_DIRECTORY_NOT_WRITEABLE', 'Error: Catalog images directory is not writeable: ' . DIR_FS_CATALOG_IMAGES);
@@ -188,7 +189,8 @@ define('TEXT_PRODUCTS_VPE','Unit');
 define('TEXT_PRODUCTS_VPE_VISIBLE','Show Unit Price:');
 define('TEXT_PRODUCTS_VPE_VALUE',' Value:');
 
-define('CROSS_SELLING','Cross selling for article');
+define('CROSS_SELLING_1','Cross selling');
+define('CROSS_SELLING_2','for product');
 define('CROSS_SELLING_SEARCH','Search product:<br/><small><i>enter productnr.</i></small>');
 define('BUTTON_EDIT_CROSS_SELLING','Cross selling');
 define('HEADING_DEL','delete');
@@ -217,9 +219,8 @@ define('TEXT_ATTRIBUTE_COPY_INFO', 'Product attributes also copy <br/> Only sing
 
 define('TEXT_PRODUCTS_ORDER_DESCRIPTION','Order description');
 
-// web28 - redirect to product input mask
-define ('TEXT_HOW_TO_LINK', '<b>Page view after copying/linking</ b>');
-define ('TEXT_HOW_TO_LINK_INFO', 'Product input mask<br/> (If there are several items goto last in the list)');
+define('TEXT_HOW_TO_LINK', '<b>Page view after copying / link</b>');
+define('TEXT_HOW_TO_LINK_INFO', 'Item entry screen <br/> (For multiple items to last in the list)');
 
 define('TEXT_SET_GROUP_PERMISSIONS', 'Inherit customer group permissions to all subfolders and products?');
 
@@ -231,4 +232,26 @@ define('TEXT_CONTENT_COPY_INFO', 'Product content also copy <br/> Only single-co
 define('TEXT_LINKS_COPY', 'Product links also copy');
 define('TEXT_LINKS_COPY_INFO', 'Product links also copy <br/> Only single-copy (1 item) recommended');
 // EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
+
+define('TEXT_GRADUATED_PRICES_INFO', 'The number of input fields for the Graduated Prices may be "<b>Configuration - Admin Options area - Number Graduated Price</b>" to be adjusted.');
+define('TEXT_CATEGORY_SETTINGS', 'Category Settings:');
+
+define('ERROR_QTY_SAVE_CHANGED', 'While editing the article, the inventory has been changed and not saved.');
+
+define('TEXT_NO_MOVE_POSSIBLE', 'Not possible to move product.');
+
+define('TEXT_IN', 'in:');
+
+define('TEXT_PRODUCTS_ATTRIBUTES_RECALCULATE', 'Reclaculate attribute on changing tax rate');
+
+define('HEADING_TITLE_CAT_BREADCRUMB', ' in &quot;%s&quot;');
+
+define('TEXT_PRODUCTS_TAGS', 'Product features');
+
+define('TEXT_GRADUATED_PRICES_GROUP_INFO', 'The customer group currently has no permission to view graduated prices. This can be changed in the customers group settings at any time.');
+
+define('TEXT_NO_FILE', 'No template file existing!');
+
+define('ERROR_COPY_METHOD_NOT_SPECIFIED', 'Copy Method not specified.');
+define('ERROR_COPY_METHOD_NOT_ALLOWED', 'Copy Method "Link" not allowed on categories.');
 ?>

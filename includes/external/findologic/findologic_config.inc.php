@@ -13,9 +13,20 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  define('FL_SHOP_ID', MODULE_FINDOLOGIC_SHOP_ID);
-  define('FL_SHOP_URL', HTTP_SERVER.DIR_WS_CATALOG); // Changed to static value
-  define('FL_SERVICE_URL', MODULE_FINDOLOGIC_SERVICE_URL);
+  $shop_id = trim(constant('MODULE_FINDOLOGIC_SHOP_ID_'.strtoupper($_SESSION['language_code'])));
+  if ($shop_id == '' && $_SESSION['language_code'] != DEFAULT_LANGUAGE) {
+    $shop_id = trim(constant('MODULE_FINDOLOGIC_SHOP_ID_'.strtoupper(DEFAULT_LANGUAGE)));
+  }
+
+  $service_url = trim(constant('MODULE_FINDOLOGIC_SERVICE_URL_'.strtoupper($_SESSION['language_code'])));
+  if ($service_url == '' && $_SESSION['language_code'] != DEFAULT_LANGUAGE) {
+    $service_url = trim(constant('MODULE_FINDOLOGIC_SERVICE_URL_'.strtoupper(DEFAULT_LANGUAGE)));
+  }
+
+  define('FL_FS_API', DIR_FS_CATALOG . 'api/findologic/');
+  define('FL_SHOP_ID', $shop_id);
+  define('FL_SHOP_URL', str_replace(array('http://', 'https://'), '', HTTP_SERVER).DIR_WS_CATALOG); // Changed to static value
+  define('FL_SERVICE_URL', $service_url);
   define('FL_NET_PRICE', false); // Changed to static value
   define('FL_ALIVE_TEST_TIMEOUT', 1); // Changed to static value
   define('FL_REQUEST_TIMEOUT', 3); // Changed to static value

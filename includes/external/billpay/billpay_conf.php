@@ -9,13 +9,13 @@ return array(
             'image-buttons' => true,
             'btn-back'      => array(
                 'image'  => 'templates/' . CURRENT_TEMPLATE . '/buttons/german/button_back.gif',
-                'text'   => 'go back to cart',
+                'text'   => 'Andere Zahlart w&auml;hlen',
                 'height' => '24px',
                 'width'  => '124px',
             ),
             'btn-continue'  => array(
                 'image'  => 'templates/' . CURRENT_TEMPLATE . '/buttons/german/button_continue.gif',
-                'text'   => 'go to Giropay',
+                'text'   => 'Weiter zu Giropay',
                 'height' => '24px',
                 'width'  => '124px',
             ),

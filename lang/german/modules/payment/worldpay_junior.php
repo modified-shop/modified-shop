@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: worldpay_junior.php 4762 2013-05-10 16:12:34Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -58,9 +58,4 @@
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID_TITLE', 'Bestellstatus festlegen');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID_DESC', 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen.');
-
-// BOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING_TITLE', 'Ausschlu&szlig; bei Versandmodulen');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING_DESC', 'Dieses Zahlungsmodul deaktivieren wenn Versandmodul gew&auml;hlt (Komma separierte Liste)');
-// EOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
 ?>

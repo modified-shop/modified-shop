@@ -1,17 +1,17 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: meinpaketConfig.php 3925 2014-06-03 12:54:45Z tim.neumann $
+ * $Id: meinpaketConfig.php 5452 2015-04-09 10:04:14Z MaW $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -95,7 +95,7 @@ function meinpaketDescFieldSelector($args, &$value = '') {
 		  FROM '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd
 		 WHERE p.products_id = pd.products_id
 		       AND pd.language_id = "'.$_SESSION['languages_id'].'"
-		       AND pd.products_description <> "" 
+		       AND pd.products_description <> ""
 		       AND pd.products_description IS NOT NULL
 		 LIMIT 1
 	', false));
@@ -174,11 +174,11 @@ $cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_meinpaket');
 $cG->setRenderTabIdent(true);
 
 $boxes = '';
-$auth = getDBConfigValue('meinpaket.authed', $_MagnaSession['mpID'], false);
+$auth = getDBConfigValue($_Marketplace.'.authed', $_MagnaSession['mpID'], false);
 if ((!is_array($auth) || !$auth['state']) &&
-	allRequiredConfigKeysAvailable($authConfigKeys, $_MagnaSession['mpID']) && 
+	allRequiredConfigKeysAvailable($authConfigKeys, $_MagnaSession['mpID']) &&
 	!(
-		array_key_exists('conf', $_POST) && 
+		array_key_exists('conf', $_POST) &&
 		allRequiredConfigKeysAvailable($authConfigKeys, $_MagnaSession['mpID'], $_POST['conf'])
 	)
 ) {
@@ -189,7 +189,7 @@ if (array_key_exists('conf', $_POST)) {
 	$nUser = trim($_POST['conf'][$_Marketplace.'.username']);
 	$nPass = trim($_POST['conf'][$_Marketplace.'.password']);
 
-	if (!empty($nUser) && (getDBConfigValue($_Marketplace.'.password', $_MagnaSession['mpID']) == '__saved__') 
+	if (!empty($nUser) && (getDBConfigValue($_Marketplace.'.password', $_MagnaSession['mpID']) == '__saved__')
 		&& empty($nPass)
 	) {
 		$nPass = '__saved__';
@@ -197,7 +197,7 @@ if (array_key_exists('conf', $_POST)) {
 
 	if ((strpos($nPass, '&#9679;') === false) && (strpos($nPass, '&#8226;') === false)) {
 		/*			   Windows								  Mac				*/
-		setDBConfigValue('meinpaket.authed', $_MagnaSession['mpID'], array (
+		setDBConfigValue($_Marketplace.'.authed', $_MagnaSession['mpID'], array (
 			'state' => false,
 			'expire' => time()
 		), true);
@@ -224,7 +224,7 @@ if (array_key_exists('conf', $_POST)) {
 					'state' => true,
 					'expire' => time() + 60 * 30
 				);
-				setDBConfigValue('meinpaket.authed', $_MagnaSession['mpID'], $auth, true);
+				setDBConfigValue($_Marketplace.'.authed', $_MagnaSession['mpID'], $auth, true);
 			} catch (MagnaException $e) {
 				$e->setCriticalStatus(false);
 				$boxes .= renderAuthError($e->getErrorArray());
@@ -256,5 +256,6 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 		}
 	}
 	echo $cG->renderConfigForm();
+	echo $cG->exchangeRateAlert();
 	include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_bottom.php');
 }

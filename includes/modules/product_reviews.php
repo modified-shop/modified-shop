@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: product_reviews.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -18,30 +18,34 @@
 
   // create smarty elements
   $module_smarty = new Smarty;
-  //BOF - GTB - 2010-08-03 - Security Fix - Base
-  $module_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-  //$module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
-  //EOF - GTB - 2010-08-03 - Security Fix - Base
+  $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+  $module_smarty->assign('language', $_SESSION['language']);
+  $module_smarty->caching = 0;
+
   // include needed functions
   require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
   require_once (DIR_FS_INC.'xtc_date_short.inc.php');
-
-  if (isset($products_options_data)) {
-    $info_smarty->assign('options', $products_options_data);
-  }
-  if ($_SESSION['customers_status']['customers_status_write_reviews'] == 1) {
-    $button_preview = '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']).'">'.xtc_image_button('button_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW).'</a>';
+    
+  if (defined('MODULE_TS_TRUSTEDSHOPS_ID') && MODULE_TS_PRODUCT_STICKER_STATUS == '1') {
+    $module_smarty->assign('MODULE_TS_PRODUCT_STICKER', sprintf(MODULE_TS_PRODUCT_STICKER, MODULE_TS_TRUSTEDSHOPS_ID, $product->data['products_model']));
   } else {
+  
     $button_preview = '';
+    if ($_SESSION['customers_status']['customers_status_write_reviews'] == 1) {
+      $button_preview = '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']).'">'.xtc_image_button('button_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW).'</a>';
+    }
+  
+    $module_smarty->assign('BUTTON_WRITE', $button_preview);
+  
+    $reviews_count = $product->getReviewsCount();
   }
-  $module_smarty->assign('BUTTON_WRITE', $button_preview);
-  $module_smarty->assign('language', $_SESSION['language']);
-  $module_smarty->caching = 0;
-  if (($_SESSION['customers_status']['customers_status_read_reviews'] == 1 && ($product->getReviewsCount() > 0) || $_SESSION['customers_status']['customers_status_write_reviews'] == 1)) {
+  
+  $module = '';
+  if (($_SESSION['customers_status']['customers_status_read_reviews'] == '1' && $reviews_count > 0) || $_SESSION['customers_status']['customers_status_write_reviews'] == 1) {    
+    $module_smarty->assign('reviews_count', $reviews_count);
     $module_smarty->assign('module_content', $product->getReviews());
     $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/products_reviews.html');
-  } else {
-    $module = '';
   }
+  
   $info_smarty->assign('MODULE_products_reviews', $module);
 ?>

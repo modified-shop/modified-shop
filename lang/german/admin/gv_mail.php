@@ -1,11 +1,11 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: gv_mail.php 899 2005-04-29 02:40:57Z hhgag $
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -31,9 +31,9 @@ define('TEXT_CUSTOMER', 'Kunde:');
 define('TEXT_SUBJECT', 'Betreff:');
 define('TEXT_FROM', 'Absender:');
 define('TEXT_TO', 'E-Mail an:');
-define('TEXT_AMOUNT', 'Gutscheinwert:');
+define('TEXT_AMOUNT', 'Wert:');
 define('TEXT_MESSAGE', 'Nachricht:');
-define('TEXT_SINGLE_EMAIL', '<span class="smallText">Benutzen Sie dieses Feld nur f&uuml;r einzelne E-Mails, ansonsten bitte das Feld '.TEXT_CUSTOMER.' benutzen</span>');
+define('TEXT_SINGLE_EMAIL', '<span class="smallText">Benutzen Sie dieses Feld nur f&uuml;r einzelne E-Mails, ansonsten bitte das Feld Kunde benutzen</span>');
 define('TEXT_SELECT_CUSTOMER', 'Kunde ausw&auml;hlen');
 define('TEXT_ALL_CUSTOMERS', 'Alle Kunden');
 define('TEXT_NEWSLETTER_CUSTOMERS', 'An alle Newsletter-Abonnenten');
@@ -53,4 +53,5 @@ define ('TEXT_REDEEM_COUPON_MESSAGE_HEADER', 'Sie haben k&uuml;rzlich in unserem
 define ('TEXT_REDEEM_COUPON_MESSAGE_AMOUNT', "\n\n" . 'Der Wert Ihres Gutscheines betr&auml;gt %s');
 define ('TEXT_REDEEM_COUPON_MESSAGE_BODY', "\n\n" . 'Sie k&ouml;nnen nun &uuml;ber Ihr pers&ouml;nliches Konto den Gutschein an jemanden versenden.');
 define ('TEXT_REDEEM_COUPON_MESSAGE_FOOTER', "\n\n");
+
 ?>

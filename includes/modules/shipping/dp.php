@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: dp.php 5118 2013-07-18 10:58:36Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -27,7 +27,7 @@
   class dp {
     var $code, $title, $description, $icon, $enabled, $num_dp;
 
-    function dp() {
+    function __construct() {
       global $order;
 
       $this->code = 'dp';
@@ -37,7 +37,7 @@
       $this->icon = DIR_WS_ICONS . 'shipping_dp.gif';
       $this->tax_class = MODULE_SHIPPING_DP_TAX_CLASS;
       $this->enabled = ((MODULE_SHIPPING_DP_STATUS == 'True') ? true : false);
-      $this->num_dp = defined('MODULE_SHIPPING_DP_NUMBER_ZONES')?MODULE_SHIPPING_DP_NUMBER_ZONES:'';
+      $this->num_zones = defined('MODULE_SHIPPING_DP_NUMBER_ZONES') ? MODULE_SHIPPING_DP_NUMBER_ZONES : '';
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_DP_ZONE > 0) && is_object($order) ) {
         $check_flag = false;
@@ -59,10 +59,20 @@
       
       if ($this->check() > 0) {      
         $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_DP_COUNTRIES_%'");
-        $check_zones_rows_query = xtc_db_num_rows($check_zones_query);
+        $check_zones_rows = xtc_db_num_rows($check_zones_query);
+        
+        //update compatibility
+        if (!defined('MODULE_SHIPPING_DP_NUMBER_ZONES')) {
+          $this->num_zones = $check_zones_rows;
+          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_NUMBER_ZONES', '". (int)$this->num_zones ."', '6', '0', now())");
+        }
 
-        if ($check_zones_rows_query != $this->num_dp) {
-          $this->install_zones($check_zones_rows_query);
+        if ($check_zones_rows != $this->num_zones) {
+          $this->install_zones($check_zones_rows);
+        }
+        //update compatibility
+        if (!defined('MODULE_SHIPPING_DP_DISPLAY')) {
+          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_DP_DISPLAY', 'True', '6', '7', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
         }
       }
     }
@@ -74,7 +84,7 @@
       $dest_zone = 0;
       $error = false;
 
-      for ($i=1; $i<=$this->num_dp; $i++) {
+      for ($i=1; $i<=$this->num_zones; $i++) {
         $countries_table = constant('MODULE_SHIPPING_DP_COUNTRIES_' . $i);
         $countries_table  = preg_replace("'[\r\n\s]+'",'',$countries_table);
         $country_zones = explode(",", $countries_table);
@@ -100,7 +110,7 @@
         }
       } else {
         $shipping = -1;
-        $dp_cost = constant('MODULE_SHIPPING_DP_COST_' . $i);
+        $dp_cost = constant('MODULE_SHIPPING_DP_COST_' . $dest_zone);
 
         $dp_table = preg_split("/[:,]/" , $dp_cost);
         for ($i=0; $i<sizeof($dp_table); $i+=2) {
@@ -145,14 +155,28 @@
     }
 
     function install() {
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPPING_DP_STATUS', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_HANDLING', '0', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_DP_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_DP_ZONE', '0', '6', '0', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_SORT_ORDER', '0', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPPING_DP_STATUS', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_HANDLING', '0', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_DP_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_DP_ZONE', '0', '6', '0', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_SORT_ORDER', '0', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_DP_ALLOWED', '', '6', '0', 'xtc_cfg_textarea(', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_NUMBER_ZONES', '5', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_DP_DISPLAY', 'True', '6', '7', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      if (!defined('MODULE_SHIPPING_DP_NUMBER_ZONES')) {
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_NUMBER_ZONES', '5', '6', '0', now())");
+      }
+      if (!defined('MODULE_SHIPPING_DP_DISPLAY')) {
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_DP_DISPLAY', 'True', '6', '7', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      }
+
+      $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_".strtoupper($this->code)."_COUNTRIES_%'");
+      $check_zones_rows_query = xtc_db_num_rows($check_zones_query);
+
+      if ($check_zones_rows_query != 0) {
+        $this->install_zones($check_zones_rows_query);
+        xtc_db_query("UPDATE ".TABLE_CONFIGURATION." 
+                         SET configuration_value = '".(int)$check_zones_rows_query."' 
+                       WHERE configuration_key = 'MODULE_SHIPPING_".strtoupper($this->code)."_NUMBER_ZONES'");
+      }
     }
 
     function install_zones($number_of_zones) {
@@ -161,24 +185,24 @@
       xtc_backup_configuration($this->keys_zones($number_of_zones));
 
       // add new zone
-      if ($number_of_zones <= $this->num_dp) {
-        for ($i = (($number_of_zones==0) ? 1 : $number_of_zones); $i <= $this->num_dp; $i ++) {
+      if ($number_of_zones <= $this->num_zones) {
+        for ($i = (($number_of_zones==0) ? 1 : $number_of_zones); $i <= $this->num_zones; $i ++) {
           $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_DP_COUNTRIES_".$i."'");
           if (xtc_db_num_rows($check_zones_query) < 1) {
-            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_DP_COUNTRIES_".$i."', '', '6', '0', 'xtc_cfg_textarea(', now())");
-            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_COST_".$i."', '', '6', '0', now())");
+            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_DP_COUNTRIES_".$i."', '', '6', '0', 'xtc_cfg_textarea(', now())");
+            xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_COST_".$i."', '', '6', '0', now())");
           }
         }      
       } else {
         // remove zone
-        for ($i = $number_of_zones; $i >= $this->num_dp; $i --) {
+        for ($i = $number_of_zones; $i >= $this->num_zones; $i --) {
           xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_DP_COUNTRIES_".$i."'");
           xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_DP_COST_".$i."'");      
         }
       }
 
       // set standard values
-      for ($i = 1; $i <= $this->num_dp; $i ++) {
+      for ($i = 1; $i <= $this->num_zones; $i ++) {
         if ($i == 1) {
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'DE' WHERE configuration_key = 'MODULE_SHIPPING_DP_COUNTRIES_1'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '10:6.90,20:11.90,31.5:13.90' WHERE  configuration_key = 'MODULE_SHIPPING_DP_COST_1'");
@@ -202,7 +226,7 @@
       }
       
       // restore old values
-      xtc_restore_configuration($this->keys_zones($this->num_dp));
+      xtc_restore_configuration($this->keys_zones($this->num_zones));
     }
 
     function remove() {
@@ -228,7 +252,7 @@
                     'MODULE_SHIPPING_DP_NUMBER_ZONES',
                     'MODULE_SHIPPING_DP_DISPLAY'
                    );
-      $keys = array_merge($keys, $this->keys_zones($this->num_dp));
+      $keys = array_merge($keys, $this->keys_zones($this->num_zones));
 
       return $keys;
     }

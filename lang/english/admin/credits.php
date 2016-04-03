@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: credits.php 3072 2012-06-18 15:01:13Z hhacker $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -32,4 +32,5 @@ define('TEXT_INFO_THANKS', 'We wish to thank all coders and developers involved 
 define('TEXT_INFO_DISCLAIMER', 'This program is distributed in the hope that it will be useful. Nevertheless, we do not give any warranty that it is without bugs.');
 define('TEXT_INFO_DONATIONS', 'The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by donating to the project.');
 define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
+define('BUTTON_DONATE', '<a href="http://www.modified-shop.org/spenden"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0"></a>');
 ?>

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: Configurator.php 4633 2014-09-23 08:19:58Z miguel.heredia $
+ * $Id: Configurator.php 5820 2015-07-09 16:22:14Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -549,6 +549,12 @@ class MLConfigurator {
 		if (in_array($item['key'], $this->missingConfigKeys)) {
 			$item['cssClasses'][] = 'missing';
 		}
+
+		if (isset($item['cssStyles']) && is_array($item['cssStyles'])) {
+			$style = ' style="'.implode(';', $item['cssStyles']).'" ';
+		} else {
+			$style = '';
+		}
 		
 		$html = '';
 		switch ($item['type']) {
@@ -568,12 +574,16 @@ class MLConfigurator {
 
 				$class = ' class="'.implode(' ', $item['cssClasses']).'"';
 
-				$html .= '<input type="'.$item['type'].'"'.$class.' id="config_'.$idkey.'" name="conf['.$item['key'].']" value="'.(string)$value.'"'.$parameters.'/>';
+				$html .= '<input type="'.$item['type'].'"'.$class.$style.' id="config_'.$idkey.'" name="conf['.$item['key'].']" value="'.(string)$value.'"'.$parameters.'/>';
 				break;
 			}
 			case 'selection': {
 				$class = ' class="'.implode(' ', $item['cssClasses']).'"';
-				$html .= '<select id="config_'.$idkey.'" name="conf['.$item['key'].']"'.$parameters.''.$class.'>'."\n";
+				if (isset($item['labelinfo'])) {
+					$html .= ' <label for="config_'.$idkey.'"'.$class.$style.'>'.$item['labelinfo'].'</label> ';				
+				}
+				
+				$html .= '<select id="config_'.$idkey.'" name="conf['.$item['key'].']"'.$parameters.''.$class.$style.'>'."\n";
 				foreach ($item['values'] as $k => $v) {
 					if ($k === '__calc__') {
 						if (preg_match('/^range\(([0-9]*),([0-9]*)\)$/', $v, $matches)) {
@@ -592,7 +602,7 @@ class MLConfigurator {
 			case 'multiselection': {
 				$class = ' class="'.implode(' ', $item['cssClasses']).'"';
 				$html .= '<input type="hidden" value="[]" name="conf['.$item['key'].']" />';
-				$html .= '<select id="config_'.$idkey.'" name="conf['.$item['key'].'][]" multiple="multiple" '.$parameters.''.$class.'>'."\n";
+				$html .= '<select id="config_'.$idkey.'" name="conf['.$item['key'].'][]" multiple="multiple" '.$parameters.''.$class.$style.'>'."\n";
 				if (empty($item['values'])) {
 					$html .= '<option>&mdash;</option>';
 				} else {
@@ -614,7 +624,7 @@ class MLConfigurator {
 					}
 					$html .= '<span><input type="radio" value="'.$k.'" name="conf['.$item['key'].']" id="conf_'.$item['key'].'_'.$k.'"'.
 								(($value == $k) ? ' checked="checked"' : '').$parameters.
-							' /> <label for="conf_'.$item['key'].'_'.$k.'"'.$class.'>'.$v.'</label></span>'.$sep."\n";
+							' /> <label for="conf_'.$item['key'].'_'.$k.'"'.$class.$style.'>'.$v.'</label></span>'.$sep."\n";
 				}
 				break;
 			}
@@ -627,7 +637,7 @@ class MLConfigurator {
 					if (is_array($v)) {
 						$v = $this->renderSubInput($v, $k, $item);
 					} else {
-						$v = '<label for="conf_'.$item['key'].'_'.$k.'"'.$class.'>'.$v.'</label>';
+						$v = '<label for="conf_'.$item['key'].'_'.$k.'"'.$class.$style.'>'.$v.'</label>';
 					}
 					$sep = '';
 					if (($c % $modSep) == ($modSep - 1)) {
@@ -655,7 +665,7 @@ class MLConfigurator {
 						if (is_array($v)) {
 							$v = $this->renderSubInput($v, $k, $item);
 						} else {
-							$v = '<label for="conf_'.$item['key'].'_'.$k.'"'.$class.'>'.$v.'</label>';
+							$v = '<label for="conf_'.$item['key'].'_'.$k.'"'.$class.$style.'>'.$v.'</label>';
 						}
 						$sep = '';
 						if (($c % $modSep) == ($modSep - 1)) {
@@ -673,12 +683,12 @@ class MLConfigurator {
 			case 'textarea': {
 				$item['cssClasses'][] = 'fullwidth';
 				$class = ' class="'.implode(' ', $item['cssClasses']).'"';
-				$html .= '<textarea'.$class.' id="config_'.$idkey.'" name="conf['.$item['key'].']"'.$parameters.'>'.str_replace('<', '&lt;', (string)$value).'</textarea>';
+				$html .= '<textarea'.$class.$style.' id="config_'.$idkey.'" name="conf['.$item['key'].']"'.$parameters.'>'.str_replace('<', '&lt;', (string)$value).'</textarea>';
 				break;
 			}
 			case 'dbfieldselector': {
 				$class = ' class="'.implode(' ', $item['cssClasses']).'"';
-				$html .= '<select id="config_'.$idkey.'_table" name="conf['.$item['key'].'][table]"'.$parameters.''.$class.'>'."\n";
+				$html .= '<select id="config_'.$idkey.'_table" name="conf['.$item['key'].'][table]"'.$parameters.''.$class.$style.'>'."\n";
 				$tables = MagnaDB::gi()->getAvailableTables();
 				if (!empty($tables)) {
 					$tables = array_flip($tables);
@@ -707,7 +717,7 @@ class MLConfigurator {
 				);
 				$this->ajaxUpdateFuncs[] = $item['ajaxlinkto'];
 
-				$html .= '<select id="config_'.$idkey.'_column" name="conf['.$item['key'].'][column]"'.$parameters.''.$class.'>'."\n";
+				$html .= '<select id="config_'.$idkey.'_column" name="conf['.$item['key'].'][column]"'.$parameters.''.$class.$style.'>'."\n";
 				$html .= $this->renderDBCols(array(
 					'value' => $tblVal,
 					'key' => $item['key']
@@ -743,7 +753,7 @@ class MLConfigurator {
 				$deleteButton = '';
 
 				$html .= '
-					<input type="text" id="config_'.$idkey.'_visual" value="" readonly="readonly" '.$class.'/>
+					<input type="text" id="config_'.$idkey.'_visual" value="" readonly="readonly" '.$class.$style.'/>
 					<input type="hidden" id="config_'.$idkey.'" name="conf['.$item['key'].']" value="'.$default.'"/>
 					'.$deleteButton.'
 					<script type="text/javascript">/*<![CDATA[*/
@@ -869,7 +879,7 @@ class MLConfigurator {
 			foreach ($section['fields'] as $sKey => $item) { //clean fields
 				if (
 					(empty($item) || !is_array($item))
-					|| (!MAGNA_SECRET_DEV
+					|| ((!defined('MAGNA_SECRET_DEV') || !MAGNA_SECRET_DEV)
 						&& array_key_exists('MAGNA_SECRET_DEV_SETTING', $item)
 						&& $item['MAGNA_SECRET_DEV_SETTING']
 					)
@@ -914,7 +924,8 @@ class MLConfigurator {
 						foreach ($item['morefields'] as $mfItem) {
 							$mfidkey = str_replace('.', '_', $mfItem['key']);
 							if (isset($mfItem['label'])) {
-								$input .= '&nbsp;'.$this->renderLabel($mfItem['label'], $mfidkey);
+								#$input .= '&nbsp;'.$this->renderLabel($mfItem['label'], $mfidkey);
+								$input .= $this->renderLabel($mfItem['label'], $mfidkey);
 							}
 							if (isset($mfItem['desc'])) {
 								$input .= '&nbsp;<div class="desc" id="desc_'.($descCount++).'" title="'.ML_LABEL_INFOS.'"><span>'.$mfItem['desc'].'</span></div>';
@@ -1178,6 +1189,181 @@ class MLConfigurator {
 
 		$html .= '				
 			/*]]>*/</script>';
+		return $html;
+	}
+
+	/**
+	 * popup dialog for checkboxes, appears when activating,
+	 * leaves the checkbox active if clicked yes, or switches it of if clicked no
+	 *
+	 * currently used for exchangeRateAlert (in ALL module configs, so be careful when changing things here)
+	 */
+	public function checkboxAlert($sCheckboxId, $sTitle, $sText, $yes = ML_BUTTON_LABEL_YES, $no = ML_BUTTON_LABEL_NO) {
+		ob_start();?>
+		<script type="text/javascript">/*<!CDATA[*/
+		$('input[id="<?php echo $sCheckboxId;?>"]').change(function() {
+    		var chbx = $(this);
+    		if (chbx.attr('checked') != 'checked') return true;
+			chbx.removeAttr('checked');
+    		$('<div></div>').html('<?php echo $sText ?>').jDialog({
+				title: '<?php echo $sTitle ?>',
+				buttons: {
+					'<?php echo ML_BUTTON_LABEL_NO; ?>': function() {
+						chbx.removeAttr('checked');
+						jQuery(this).dialog('close');
+					},
+					'<?php echo ML_BUTTON_LABEL_YES; ?>': function() {
+						chbx.attr('checked', 'checked');
+						jQuery(this).dialog('close');
+					}
+				}
+			});
+		});
+		/*]]>*/</script><?php
+		$html = ob_get_contents();
+		ob_end_clean();
+		return $html;
+	}
+	
+	public function exchangeRateAlert($sCheckboxId = false) {
+		global $_MagnaSession;
+		if (!$sCheckboxId) {
+			if (    (!array_key_exists('currentPlatform',$_MagnaSession))
+			     || empty($_MagnaSession['currentPlatform'])
+			) {
+				return '';
+			}
+			// it's mostly like this, only hood has other name
+			$sCheckboxId = 'conf_'.$_MagnaSession['currentPlatform'].'.exchangerate_update';
+		}
+		return $this->checkboxAlert($sCheckboxId,
+			ML_TITLE_WARNING_AUTO_EXCHANGE_RATE_UPDATE,
+			ML_TEXT_WARNING_AUTO_EXCHANGE_RATE_UPDATE,
+			ML_BUTTON_LABEL_YES,
+			ML_BUTTON_LABEL_NO);
+	}
+
+	/**
+	 * popup dialog for radio buttons, appears when chosen yes,
+	 * leaves on yes if clicked yes in dialog, or goes back to no if no.
+	 *
+	 */
+	public function radioAlert($sRadio, $sTitle, $sText, $yes = ML_BUTTON_LABEL_YES, $no = ML_BUTTON_LABEL_NO) {
+		ob_start();?>
+		<script type="text/javascript">/*<!CDATA[*/
+		$('input[id="<?php echo $sRadio.'_true';?>"]').change(function() {
+    		var rdio = $(this);
+    		if (rdio.attr('checked') != 'checked') return true;
+			$('input[id="<?php echo $sRadio.'_false';?>"]').attr('checked', 'checked');
+			rdio.removeAttr('checked');
+    		$('<div></div>').html('<?php echo $sText ?>').jDialog({
+				title: '<?php echo $sTitle ?>',
+				buttons: {
+					'<?php echo ML_BUTTON_LABEL_NO; ?>': function() {
+						jQuery(this).dialog('close');
+					},
+					'<?php echo ML_BUTTON_LABEL_YES; ?>': function() {
+						$('input[id="<?php echo $sRadio.'_false';?>"]').removeAttr('checked');
+						rdio.attr('checked', 'checked');
+						jQuery(this).dialog('close');
+					}
+				}
+			});
+		});
+		/*]]>*/</script><?php
+		$html = ob_get_contents();
+		ob_end_clean();
+		return $html;
+	}
+
+	/*
+	 * disable one or more fields when a 2-value radio button is set to true
+	 * field types implemented so far: selects, checkboxes, texts
+	 * 
+	 * currently not used (was intended for eBay, it's tested and works, but then
+	 * we need addionally an alert there, which is too complex for an universal function)
+	 * 
+	 * format:
+	 * disableFieldsIfRadioOn (array (
+	 *		'selects' => array ('sel1', 'sel2', ...),
+	 *		'checkboxes' => array ('chb1', 'chb2', ...),
+	 *		'texts' => array ('txt1', 'txt2', ...),
+	 *		),
+	 *		'radioFieldIdWithoutTrueOrFalse'
+	 *		);
+	 */
+	public function disableFieldsIfRadioOn($aFields, $sRadio) {
+		if (!is_array($aFields)) {
+			if (is_string($aFields) && !empty($aFields)) {
+				$aFields = array('texts' => array($aFields));
+			} else {
+				return '';
+			}
+		}
+		ob_start();?>
+		<script type="text/javascript">/*<!CDATA[*/
+		if ($('input[id="<?php echo $sRadio.'_true';?>"]').attr('checked') == 'checked') {
+			<?php if (array_key_exists('selects', $aFields) && is_array($aFields['selects'])) {
+				foreach ($aFields['selects'] as $sField) { ?>
+			$('select[id="<?php echo $sField ?>"]').prop('disabled', true);
+			<?php } 
+			  }
+			      if (array_key_exists('checkboxes', $aFields) && is_array($aFields['checkboxes'])) {
+				foreach ($aFields['checkboxes'] as $sField) { ?>
+			$('input[id="<?php echo $sField ?>"]').prop('checked', false);
+			$('input[id="<?php echo $sField ?>"]').prop('disabled', true);
+			<?php }
+			  }
+			      if (array_key_exists('texts', $aFields) && is_array($aFields['texts'])) {
+				foreach ($aFields['texts'] as $sField) { ?>
+			$('input[id="<?php echo $sField ?>"]').prop('disabled', true);
+			<?php }
+			  } ?>
+		}
+		$('input[id="<?php echo $sRadio.'_true';?>"]').change(function() {
+    		var rdio = $(this);
+    		if (rdio.attr('checked') == 'checked') {
+			<?php if (array_key_exists('selects', $aFields) && is_array($aFields['selects'])) {
+				foreach ($aFields['selects'] as $sField) { ?>
+			$('select[id="<?php echo $sField ?>"]').prop('disabled', true);
+			<?php } 
+			  }
+			      if (array_key_exists('checkboxes', $aFields) && is_array($aFields['checkboxes'])) {
+				foreach ($aFields['checkboxes'] as $sField) { ?>
+			$('input[id="<?php echo $sField ?>"]').prop('checked', false);
+			$('input[id="<?php echo $sField ?>"]').prop('disabled', true);
+			<?php }
+			  }
+			      if (array_key_exists('texts', $aFields) && is_array($aFields['texts'])) {
+				foreach ($aFields['texts'] as $sField) { ?>
+			$('input[id="<?php echo $sField ?>"]').prop('disabled', true);
+			<?php }
+			  } ?>
+			}
+		});
+		$('input[id="<?php echo $sRadio.'_false';?>"]').change(function() {
+    		var rdio = $(this);
+    		if (rdio.attr('checked') == 'checked') {
+			<?php if (array_key_exists('selects', $aFields) && is_array($aFields['selects'])) {
+				foreach ($aFields['selects'] as $sField) { ?>
+			$('select[id="<?php echo $sField ?>"]').prop('disabled', false);
+			<?php } 
+			  }
+			      if (array_key_exists('checkboxes', $aFields) && is_array($aFields['checkboxes'])) {
+				foreach ($aFields['checkboxes'] as $sField) { ?>
+			$('input[id="<?php echo $sField ?>"]').prop('disabled', false);
+			<?php } 
+			  }
+			      if (array_key_exists('texts', $aFields) && is_array($aFields['texts'])) {
+				foreach ($aFields['texts'] as $sField) { ?>
+			$('input[id="<?php echo $sField ?>"]').prop('disabled', false);
+			<?php }
+			  } ?>
+			}
+		});
+		/*]]>*/</script><?php
+		$html = ob_get_contents();
+		ob_end_clean();
 		return $html;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: freeamount.php 4855 2013-06-03 12:15:20Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -24,6 +24,7 @@
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_TITLE', 'Versandkostenfrei');
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_DESCRIPTION', 'Versandkostenfreie Lieferung');
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_WAY', 'ab %s  Bestellwert versenden wir Ihre Bestellung versandkostenfrei');
+define('MODULE_SHIPPING_FREEAMOUNT_INVALID_ZONE', 'Es ist leider kein Versand in dieses Land m&ouml;glich');
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER', 'Sortierreihenfolge');
 
 define('MODULE_SHIPPING_FREEAMOUNT_ALLOWED_TITLE' , 'Erlaubte Versandzonen');

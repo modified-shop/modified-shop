@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: product_info.php 3072 2012-06-18 15:01:13Z hhacker $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -22,9 +22,12 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// todo: move to configuration ?
+defined('MANUFACTURER_IMAGE_SHOW_NO_IMAGE') OR define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE', 'false');
+
 /******* SHOPGATE **********/
 if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True' && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'shopgate') === false){
-  include_once DIR_FS_EXTERNAL.'shopgate/base/includes/modules/product_info.php';
+  include_once DIR_FS_CATALOG.'includes/external/shopgate/base/includes/modules/product_info.php';
 }
 /******* SHOPGATE **********/
 
@@ -32,13 +35,12 @@ if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS==
 require_once (DIR_FS_INC.'xtc_check_categories_status.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
-require_once (DIR_FS_INC.'get_cross_sell_name.inc.php');
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');  // for specials
 
-if (!is_object($product) || !$product->isProduct()) {
+if (!is_object($product) || $product->isProduct() === false || $language_not_found === true) {
 
   // product not found in database
-  $error = TEXT_PRODUCT_NOT_FOUND;
+  $site_error = TEXT_PRODUCT_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 
 } else {
@@ -79,39 +81,83 @@ if (!is_object($product) || !$product->isProduct()) {
         UPDATE ".TABLE_PRODUCTS_DESCRIPTION."
            SET products_viewed = products_viewed+1
          WHERE products_id = '".$product->data['products_id']."'
-           AND language_id = ".$_SESSION['languages_id']);
+           AND language_id = ".(int)$_SESSION['languages_id']);
   }
 
   // Get manufacturer name etc. for the product page
   $manufacturer_query = xtc_db_query("SELECT m.manufacturers_id,
                                              m.manufacturers_name,
                                              m.manufacturers_image,
-                                             mi.manufacturers_url
+                                             mi.manufacturers_url,
+                                             mi.manufacturers_description
                                         FROM " . TABLE_MANUFACTURERS . " m
-                                   LEFT JOIN " . TABLE_MANUFACTURERS_INFO . " mi
-                                          ON (m.manufacturers_id = mi.manufacturers_id
-                                         AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "'),
-                                             " . TABLE_PRODUCTS . " p
-                                       WHERE p.products_id = '" . $product->data['products_id'] . "'
-                                         AND p.manufacturers_id = m.manufacturers_id");
+                                        JOIN " . TABLE_MANUFACTURERS_INFO . " mi
+                                             ON (m.manufacturers_id = mi.manufacturers_id
+                                                 AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "')
+                                        JOIN " . TABLE_PRODUCTS . " p
+                                             ON p.manufacturers_id = m.manufacturers_id
+                                                AND p.products_id = '" . $product->data['products_id'] . "'");
   if (xtc_db_num_rows($manufacturer_query)) {
     $manufacturer = xtc_db_fetch_array($manufacturer_query);
-    $info_smarty->assign('MANUFACTURER_IMAGE', (!empty($manufacturer['manufacturers_image']) ? DIR_WS_IMAGES.$manufacturer['manufacturers_image'] : ''));
+    if ($manufacturer['manufacturers_image'] != '') {
+      $image = DIR_WS_IMAGES.$manufacturer['manufacturers_image'];
+      if (!file_exists(DIR_FS_CATALOG.$image)) {
+        if (MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') {
+          $image = DIR_WS_IMAGES.'manufacturers/noimage.gif';
+        } else {
+          $image = '';
+        }
+      }
+    }
+    $info_smarty->assign('MANUFACTURER_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
     $info_smarty->assign('MANUFACTURER', $manufacturer['manufacturers_name']);
+    $info_smarty->assign('MANUFACTURER_DESCRIPTION', $manufacturer['manufacturers_description']);
     $info_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name'])));
   }
 
   // check if customer is allowed to add to cart
   if ($_SESSION['customers_status']['customers_status_show_price'] != '0'
       && (($_SESSION['customers_status']['customers_fsk18'] == '1' && $product->data['products_fsk18'] == '0')
-      || $_SESSION['customers_status']['customers_fsk18'] != '1')) {
+      || $_SESSION['customers_status']['customers_fsk18'] != '1')) 
+  {
     $add_pid_to_qty = xtc_draw_hidden_field('products_id', $product->data['products_id']);
     $info_smarty->assign('ADD_QTY', xtc_draw_input_field('products_qty', '1', ($hide_qty ? '' : 'size="3"'), ($hide_qty ? 'hidden' : 'text')).' '.$add_pid_to_qty);
     $info_smarty->assign('ADD_CART_BUTTON', xtc_image_submit('button_in_cart.gif', IMAGE_BUTTON_IN_CART));
-  }
 
+    if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+      if (isset($_SESSION['customer_id']) && $_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+        $express_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_CUSTOMERS_CHECKOUT." 
+                                        WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+        if (xtc_db_num_rows($express_query) > 0) {
+          $info_smarty->assign('ADD_CART_BUTTON_EXPRESS', xtc_image_submit('button_checkout_express.gif', IMAGE_BUTTON_IN_CART, 'name="express"'));
+        } else {
+          $info_smarty->assign('ACTIVATE_EXPRESS_LINK', xtc_href_link(FILENAME_ACCOUNT_CHECKOUT_EXPRESS, 'products_id='.$product->data['products_id'], 'SSL'));
+        }
+      }
+      if (MODULE_CHECKOUT_EXPRESS_CONTENT != '') {
+        $info_smarty->assign('EXPRESS_LINK', $main->getContentLink(MODULE_CHECKOUT_EXPRESS_CONTENT, TEXT_CHECKOUT_EXPRESS_INFO_LINK, 'NONSSL', false));
+      }
+    }
+
+    // check for gift
+    if (preg_match('/^GIFT/', addslashes($product->data['products_model']))
+        && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+        && isset($_SESSION['customer_id']))
+    {
+      $info_smarty->clear_assign('ADD_QTY');
+      $info_smarty->clear_assign('ADD_CART_BUTTON');      
+    }
+    
+    // wishlist
+    if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+      $info_smarty->assign('ADD_CART_BUTTON_WISHLIST', xtc_image_submit('button_in_wishlist.gif', IMAGE_BUTTON_TO_WISHLIST, 'name="wishlist"'));
+      $info_smarty->assign('ADD_CART_BUTTON_WISHLIST_TEXT', '<input type="submit" value="submit" style="display:none;" />'.xtc_draw_input_field('wishlist', IMAGE_BUTTON_TO_WISHLIST, 'class="wishlist_submit_link"', 'submit'));
+    }
+  }
+  
   // form tags
-  $info_smarty->assign('FORM_ACTION', xtc_draw_form('cart_quantity', xtc_href_link(FILENAME_PRODUCT_INFO, xtc_get_all_get_params(array ('action')).'action=add_product')));
+  $info_smarty->assign('FORM_ACTION', xtc_draw_form('cart_quantity', xtc_href_link(FILENAME_PRODUCT_INFO, xtc_get_all_get_params(array ('action')).'action=add_product', $request_type)));
   $info_smarty->assign('FORM_END', '</form>');
   
   // load all definitions from product class
@@ -128,10 +174,14 @@ if (!is_object($product) || !$product->isProduct()) {
   $special_expires_date_query = "SELECT expires_date
                                    FROM ".TABLE_SPECIALS."
                                   WHERE products_id = '".$product->data['products_id']."'
-                                    AND status = '1'";
+                                    AND status = '1'
+                                    AND (start_date IS NULL 
+                                         OR start_date <= NOW())";
   $special_expires_date_query = xtDBquery($special_expires_date_query);
-  $sDate = xtc_db_fetch_array($special_expires_date_query, true);
-  $info_smarty->assign('PRODUCTS_EXPIRES', $sDate['expires_date'] != '0000-00-00 00:00:00' ? xtc_date_short($sDate['expires_date']) : '');
+  if (xtc_db_num_rows($special_expires_date_query, true) > 0) {
+    $sDate = xtc_db_fetch_array($special_expires_date_query, true);
+    $info_smarty->assign('PRODUCTS_EXPIRES', $sDate['expires_date'] != '0000-00-00 00:00:00' ? xtc_date_short($sDate['expires_date']) : '');
+  }
 
   // FSK18
   $info_smarty->assign('PRODUCTS_FSK18', $product->data['products_fsk18'] == '1' ? 'true' : '');
@@ -139,6 +189,7 @@ if (!is_object($product) || !$product->isProduct()) {
   //get shippingstatus image and name
   if (ACTIVATE_SHIPPING_STATUS == 'true') {
     $info_smarty->assign('SHIPPING_NAME', $main->getShippingStatusName($product->data['products_shippingtime']));
+    $info_smarty->assign('SHIPPING_NAME_LINK', $main->getShippingStatusName($product->data['products_shippingtime'], true));
     $info_smarty->assign('SHIPPING_IMAGE', $main->getShippingStatusImage($product->data['products_shippingtime']));
   }
   
@@ -151,13 +202,11 @@ if (!is_object($product) || !$product->isProduct()) {
     $info_smarty->assign('PRODUCTS_SHIPPING_LINK',$main->getShippingLink());
   }
 
-  $info_smarty->assign('PRODUCTS_WEIGHT', $product->data['products_weight']);
-  $info_smarty->assign('PRODUCTS_STATUS', $product->data['products_status']);
-  $info_smarty->assign('PRODUCTS_ORDERED', $product->data['products_ordered']);
-  $info_smarty->assign('PRODUCTS_PRINT', xtc_image_button('print.gif', $product->data['products_name'], 'onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, '.POPUP_PRODUCT_PRINT_SIZE.'\')"'));
+  $info_smarty->assign('PRODUCTS_PRINT', xtc_image_button('print.gif', PRINTVIEW_INFO, 'onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, '.POPUP_PRODUCT_PRINT_SIZE.'\')"'));
+  $info_smarty->assign('PRODUCTS_PRINT_LAYER', '<a class="iframe" target="_blank" rel="nofollow" href="'.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id']). '" title="'.PRINTVIEW_INFO.'">'.PRINTVIEW_INFO.'</a>');
+  $info_smarty->assign('PRODUCTS_WRITE_REVIEW', '<a rel="nofollow" href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']). '" title="'.PRODUCTS_REVIEW_LINK.'">'.PRODUCTS_REVIEW_LINK.'</a>');
   $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes($product->data['products_description']));
   $info_smarty->assign('PRODUCTS_SHORT_DESCRIPTION', stripslashes($product->data['products_short_description']));
-  $info_smarty->assign('PRODUCTS_POPUP_LINK', 'javascript:popupWindow(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 'pID='.$product->data['products_id'].'&imgID=0').'\')');
   $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');
 
   // more images
@@ -166,20 +215,17 @@ if (!is_object($product) || !$product->isProduct()) {
     $more_images_data = array();
     foreach ($mo_images as $img) {
       $mo_img = $product->productImage($img['image_name'], 'info');
-      $more_images_data[] = array ('PRODUCTS_IMAGE' => $mo_img, 
-                                   'PRODUCTS_POPUP_LINK' => 'javascript:popupWindow(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 
-                                   'pID='.$product->data['products_id'].'&imgID='.$img['image_nr']).'\')'
-                                   );
-      //next 2 lines only needed for non modified templates
-      $info_smarty->assign('PRODUCTS_IMAGE_'.$img['image_nr'], $mo_img);
-      $info_smarty->assign('PRODUCTS_POPUP_LINK_'.$img['image_nr'], 'javascript:popupWindow(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 'pID='.$product->data['products_id'].'&imgID='.$img['image_nr']).'\')');
+      $mo_img_nr = $img['image_nr'];
+      if ($mo_img != '') {
+        $more_images_data[$mo_img_nr] = array ('PRODUCTS_IMAGE' => $mo_img);
+      }
     }
     $info_smarty->assign('more_images', $more_images_data);
   }
 
   // product discount
-  if ($_SESSION['customers_status']['customers_status_public'] == 1 && $_SESSION['customers_status']['customers_status_discount'] != '0.00') {
-    $discount = 0.00;
+  $discount = 0.00;
+  if ($_SESSION['customers_status']['customers_status_public'] == '1' && $_SESSION['customers_status']['customers_status_discount'] != '0.00') {
     $discount = $_SESSION['customers_status']['customers_status_discount'];
     if ($product->data['products_discount_allowed'] < $_SESSION['customers_status']['customers_status_discount'])
       $discount = $product->data['products_discount_allowed'];
@@ -188,12 +234,16 @@ if (!is_object($product) || !$product->isProduct()) {
   }
 
   // date available/added
-  if ($product->data['products_date_available'] > date('Y-m-d H:i:s')) {
+  if (isset($product->data['products_date_available']) && $product->data['products_date_available'] > date('Y-m-d H:i:s')) {
     $info_smarty->assign('PRODUCTS_DATE_AVIABLE', sprintf(TEXT_DATE_AVAILABLE, xtc_date_long($product->data['products_date_available'])));
     $info_smarty->assign('PRODUCTS_DATE_AVAILABLE', sprintf(TEXT_DATE_AVAILABLE, xtc_date_long($product->data['products_date_available']))); 
-  } elseif ($product->data['products_date_added'] != '0000-00-00 00:00:00') {
+  } elseif (isset($product->data['products_date_available']) && $product->data['products_date_added'] != '0000-00-00 00:00:00') {
     $info_smarty->assign('PRODUCTS_ADDED', sprintf(TEXT_DATE_ADDED, xtc_date_long($product->data['products_date_added'])));
   }
+  
+  // mircrotags
+  $info_smarty->assign('PRODUCTS_AVERAGE_RATING', $product->getReviewsAverage());
+  $info_smarty->assign('PRODUCTS_RATING_COUNT', $product->getReviewsCount());
 
   /*
    * assign smarty additional variables or overwrite them
@@ -204,32 +254,34 @@ if (!is_object($product) || !$product->isProduct()) {
   if ($_SESSION['customers_status']['customers_status_graduated_prices'] == 1) {
     include (DIR_WS_MODULES.FILENAME_GRADUATED_PRICE);
   }
+  include (DIR_WS_MODULES.'product_tags.php');
   include (DIR_WS_MODULES.'product_attributes.php');
   include (DIR_WS_MODULES.'product_reviews.php');
   include (DIR_WS_MODULES.FILENAME_PRODUCTS_MEDIA);
   include (DIR_WS_MODULES.FILENAME_ALSO_PURCHASED_PRODUCTS);
   include (DIR_WS_MODULES.FILENAME_CROSS_SELLING);
 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_info_end/','php') as $file) require ($file);
+
   // get default product_info template
   if ($product->data['product_template'] == '' || $product->data['product_template'] == 'default') {
-    $files = array ();
-    if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/')) {
-      while ($file = readdir($dir)) {
-        if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/'.$file) && (substr($file, -5) == ".html") && ($file != "index.html") && (substr($file, 0, 1) !=".")) { 
-          $files[] = $file;
-        }
-      }
-      closedir($dir);
-    }
-    sort($files); 
-    $product->data['product_template'] = $files[0];
+    $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/','html'), function($file) {
+      return false === strpos($file, 'index.html');
+    });
+    $product->data['product_template'] = basename($files[0]);
   }
 
   // session products history
-  $i = isset($_SESSION['tracking']['products_history']) ? count($_SESSION['tracking']['products_history']) : 0;
-  if ($i > 6) { $i = 6; array_shift($_SESSION['tracking']['products_history']); }
-  $_SESSION['tracking']['products_history'][$i] = $product->data['products_id'];
-  $_SESSION['tracking']['products_history'] = array_unique($_SESSION['tracking']['products_history']);
+  if (!isset($_SESSION['tracking']['products_history'])) $_SESSION['tracking']['products_history'] = array();
+  if (in_array($product->data['products_id'], $_SESSION['tracking']['products_history'])) {
+    unset($_SESSION['tracking']['products_history'][array_search($product->data['products_id'], $_SESSION['tracking']['products_history'])]);
+    $_SESSION['tracking']['products_history'] = array_values($_SESSION['tracking']['products_history']);
+  }
+  array_push($_SESSION['tracking']['products_history'], $product->data['products_id']);
+  if (count($_SESSION['tracking']['products_history']) > (int)MAX_DISPLAY_PRODUCTS_HISTORY) {
+    array_shift($_SESSION['tracking']['products_history']); 
+  }
+  $_SESSION['tracking']['products_history'] = array_values($_SESSION['tracking']['products_history']);
 
   $info_smarty->assign('language', $_SESSION['language']);
 
@@ -241,7 +293,7 @@ if (!is_object($product) || !$product->isProduct()) {
     $info_smarty->caching = 1;
     $info_smarty->cache_lifetime = CACHE_LIFETIME;
     $info_smarty->cache_modified_check = CACHE_CHECK;
-    $cache_id = $product->data['products_id'].$_SESSION['language'].$_SESSION['customers_status']['customers_status_name'].$_SESSION['currency'];
+    $cache_id = md5($product->data['products_id'].$_SESSION['language'].$_SESSION['customers_status']['customers_status_name'].$_SESSION['currency']);
     $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template'], $cache_id);
   }
   $smarty->assign('main_content', $product_info);

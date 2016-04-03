@@ -6,7 +6,7 @@
       <tr>
         <td style="padding-right:20px;">
           {if $PRODUCTS_IMAGE != ''}
-            <a title="{$PRODUCTS_NAME}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" class="thickbox" rel="{$PRODUCTS_ID}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME}" class="productimage" />{if $PRODUCTS_POPUP_LINK != ''}<br /><br /><img src="{$tpl_path}img/magnifier.gif" alt="Zoom" border="0" />&nbsp;{#text_zoom#}{/if}</a>
+            <a title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" class="thickbox" rel="{$PRODUCTS_ID}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" class="productimage" />{if $PRODUCTS_POPUP_LINK != ''}<br /><br /><img src="{$tpl_path}img/magnifier.gif" alt="Zoom" border="0" />&nbsp;{#text_zoom#}{/if}</a>
           {/if}
         </td>
         <td style="vertical-align:top">
@@ -16,8 +16,8 @@
             {if $SHIPPING_NAME}
               <p class="shippingtime">
                 <strong>{#text_shippingtime#}</strong>
-                {if $SHIPPING_IMAGE}<img src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME}" />{/if}
-                {$SHIPPING_NAME}
+                {if $SHIPPING_IMAGE}<img src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME|onlytext}" />{/if}
+                {$SHIPPING_NAME_LINK}
               </p>
             {/if}
             {if $PRODUCTS_VPE}
@@ -49,14 +49,17 @@
               <strong>{#manufacturer#}</strong> {$MANUFACTURER}<br />
             {/if}
             {if $MANUFACTURER_IMAGE != ''}
-              <a title="{$MANUFACTURER}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER}" /></a><br />
+              <a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" /></a><br />
             {/if}
             {if $MANUFACTURER_LINK != ''}
-              <strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a><br />
+              <strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a><br />
             {/if}
             {if $PRODUCTS_URL != ''}
               <div class="hrlightgrey"></div>
               <div style="padding-top:5px;">{$PRODUCTS_URL}</div>
+            {/if}
+            {if $EXPRESS_LINK}
+              <div class="hrlightgrey"></div>{$EXPRESS_LINK}
             {/if}
             <br />
             {if $KLARNA_PPBOX}{$KLARNA_PPBOX}{/if}
@@ -65,6 +68,7 @@
             {if $PRODUCTS_DATE_AVIABLE != ''}
               <p>{$PRODUCTS_DATE_AVIABLE}</p>
             {/if}
+            {* if $ADD_CART_BUTTON_WISHLIST_TEXT}{$ADD_CART_BUTTON_WISHLIST_TEXT}{/if *}
           </div>
           <div style="clear:both;"></div>
         </td>
@@ -77,12 +81,37 @@
       <div style='width:400px;padding:10px;color:white;background-color:green;'><strong>Sie haben die eBay Auktion gewonnen!</strong><br />Bitte w&auml;hlen Sie nun noch die gew&uuml;nschten Produkteigenschaften und legen Sie den Artikel danach in den Warenkorb, um mit der Zahlung fortzufahren und das Produkt versandfertig zu machen!</div>
     {/if}
     <div class="addtobasket">
+      {if $ADD_CART_BUTTON != ''}
       <table border="0" cellspacing="0" cellpadding="2">
         <tr>
           <td style="width:100%; padding-right:5px;">{$ADD_QTY}</td>
           <td>{$ADD_CART_BUTTON}</td>
         </tr>
+        {if $ADD_CART_BUTTON_WISHLIST}
+          <tr>
+            <td style="width:100%; padding-right:5px;">&nbsp;</td>
+            <td>{$ADD_CART_BUTTON_WISHLIST}</td>
+          </tr>
+        {/if}
+        {if isset($ADD_CART_BUTTON_EXPRESS)}
+          <tr>
+            <td style="width:100%; padding-right:5px;">&nbsp;</td>
+            <td>{$ADD_CART_BUTTON_EXPRESS}</td>
+          </tr>
+        {elseif $ACTIVATE_EXPRESS_LINK}
+          <tr>
+            <td colspan="2" style="text-align:right;"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></td>
+          </tr>
+        {/if}
+        {if $ADD_CART_BUTTON_PAYPAL}
+          <tr>
+            <td style="width:100%; padding-right:5px;">&nbsp;</td>
+            <td>{$ADD_CART_BUTTON_PAYPAL}</td>
+          </tr>
+        {/if}
       </table>
+      {/if}
+      {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<p>{#products_gift_forbidden#}</p>{/if}
     </div>
     {if $PRODUCTS_DESCRIPTION != ''}<div>{$PRODUCTS_DESCRIPTION}</div>{/if}
   </div>
@@ -91,18 +120,20 @@
     {* More Pictures *}
     <div class="morepics">
       {foreach item=more_images_data from=$more_images}
-        <a class="thickbox" rel="{$PRODUCTS_ID}" title="{$PRODUCTS_NAME}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME}" /></a>
+        <a class="thickbox" rel="{$PRODUCTS_ID}" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a>
       {/foreach}
     </div>
     <div style="clear:both;"></div>
   {/if}
 {$FORM_END}
 
+{if $MODULE_product_tags != ''}{$MODULE_product_tags}{/if}
 {if $MODULE_products_media != ''}{$MODULE_products_media}{/if}
 {if $MODULE_products_reviews != ''}{$MODULE_products_reviews}{/if}
 {if $MODULE_cross_selling != ''}{$MODULE_cross_selling}{/if}
 {if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}
 {if $MODULE_also_purchased != ''}{$MODULE_also_purchased}{/if}
+{if $MODULE_products_category != ''}{$MODULE_products_category}{/if}
 {if $PRODUCTS_ADDED != ''}
   <p class="productinfoproductadded">{$PRODUCTS_ADDED}</p>
 {/if}

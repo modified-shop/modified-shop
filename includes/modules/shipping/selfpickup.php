@@ -1,6 +1,6 @@
 <?PHP
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: selfpickup.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -25,7 +25,7 @@ class selfpickup
 {
     var $code, $title, $description, $icon, $enabled;
 
-    function selfpickup()
+    function __construct()
     {
         $this->code        = 'selfpickup';
         $this->title       = MODULE_SHIPPING_SELFPICKUP_TEXT_TITLE;

@@ -1,17 +1,16 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
+   $Id: geo_zones.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(geo_zones.php,v 1.11 2003/05/07); www.oscommerce.com 
    (c) 2003	 nextcommerce ( geo_zones.php,v 1.4 2003/08/1); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -51,4 +50,7 @@ define('TEXT_INFO_COUNTRY_ZONE', 'Zone:');
 define('TYPE_BELOW', 'All Zones');
 define('PLEASE_SELECT', 'All Zones');
 define('TEXT_ALL_COUNTRIES', 'All Countries');
+
+define('TEXT_INFO_ZONE_INFO', 'Show duty info for this zone?');
+define('TEXT_INFO_ZONE_INFO_DEFAULT', 'Duty info selected.');
 ?>

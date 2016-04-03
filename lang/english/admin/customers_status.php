@@ -1,17 +1,16 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: customers_status.php 1062 2005-07-21 19:57:29Z gwinger $
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(customers.php,v 1.76 2003/05/04); www.oscommerce.com
    (c) 2003	 nextcommerce (customers_status.php,v 1.12 2003/08/14); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
@@ -88,10 +87,18 @@ define('TEXT_INFO_HEADING_DELETE_CUSTOMERS_STATUS', 'Delete Customer Group');
 define('TEXT_INFO_HEADING_EDIT_CUSTOMERS_STATUS','Edit Group Data');
 define('TEXT_INFO_HEADING_NEW_CUSTOMERS_STATUS', 'New Customer Group');
 
-define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Basis Kundengruppe für Artikelpreise</strong>');
-define('ENTRY_CUSTOMERS_STATUS_BASE', 'wird als Grundlage für die Preise der neuen Kundengruppe gewählt. Wenn Auswahl = Admin werden keine Preise für die neue Kundengruppe angelegt.');
+define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Base customers group for product prices</strong>');
+define('ENTRY_CUSTOMERS_STATUS_BASE', 'Apply customers group prices from the following customer group. If selection = Admin, no prices are applied to the new customer group.');
+define('ENTRY_CUSTOMERS_STATUS_BASE_EDIT', 'Apply customers group prices from the following customer group. If selection = Admin, no prices are applied to the customer group.<br /><span class="col-red"><strong>CAUTION:</strong></span> Hereby you overwrite all existing customer group prices for the customer group!');
 
 define('TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION', '<strong>Adopt customer group permissions</strong>');
 define('ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION', 'Adopt visibility rights for categories, products and content pages of the following customer group:');
 define('CUSTOMERS_GROUP_ADOPT_PERMISSIONS', 'Don\'t adopt any rights');
+
+define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', '<b>Show VAT at Total</b>');
+define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', 'Minimum Total');
+
+define('TABLE_HEADING_CUSTOMERS_SPECIALS', 'Special prices');
+define('TEXT_INFO_CUSTOMERS_STATUS_SPECIALS_INTRO', '<strong>Special prices</strong>');
+define('ENTRY_CUSTOMERS_STATUS_SPECIALS', 'Group allowed to see special prices?');
 ?>

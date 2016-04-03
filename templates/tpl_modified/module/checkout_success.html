@@ -1,0 +1,66 @@
+{config_load file="$language/lang_$language.conf" section="checkout_success"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+{config_load file="lang_`$language`.custom"}
+<ul id="checkoutnavigation" class="cf">
+  <li class="inactive"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></li>
+  <li class="inactive"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></li>
+  <li class="inactive"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></li>
+  <li class="active last"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></li>
+</ul>
+
+<h1 class="checkout">{#heading_success#}</h1>
+
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4>{#title_printorder#}</h4>
+    <p>{#text_printorder#}<br />
+    <strong>{#text_thankyou#}</strong></p>
+  </div>
+</div>
+
+<div class="twoColums last">
+  <div class="highlightbox plainright">
+    <h4>{#heading_success#}</h4>
+    <p>{#text_success#}</p>
+  </div>
+</div>
+<br class="clearfix" />
+
+{if $GV_SEND_LINK}
+<p>{#gv_has_vouchera#} {$GV_SEND_LINK} {#gv_has_voucherb#}</p>
+{/if}
+
+{if count($PAYMENT_INFO) > 0}
+<div class="highlightbox">
+  {foreach name=aussen item=data from=$PAYMENT_INFO}
+    <h4>{$data.title|stripslashes}</h4>
+    <table class="paymentinfotable $data.class">
+      {foreach name=aussen item=info from=$data.fields}
+        <tr>
+          {if $info.title != ''}<td>{$info.title|stripslashes}</td>{/if}
+          <td>{if $info.field}{$info.field|stripslashes}{else}&nbsp;{/if}</td>
+        </tr>      
+      {/foreach}
+    </table>
+  {/foreach}
+</div>
+<br class="clearfix" />
+{/if}
+
+<div class="button_left"">{$FORM_ACTION_PRINT}{$BUTTON_PRINT}{$FORM_END}</div>
+<div class="button_right"">{$FORM_ACTION}{$BUTTON_CONTINUE}{$FORM_END}</div>
+<br class="clearfix" />
+
+
+{if $downloads_content neq ''}
+  <br />
+  {if $title_downloadfiles != ''}
+  <h1>{#title_downloadfiles#}</h1>
+  {/if}
+  {$downloads_content}
+{/if}
+
+{if $google_tracking eq 'true'}
+{$tracking_code}
+{/if}
+

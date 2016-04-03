@@ -1,6 +1,7 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: xtc_get_countries.inc.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
+
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -23,9 +24,9 @@
       if ($with_iso_codes == true) {
         $countries = xtc_db_query("SELECT countries_name, countries_iso_code_2, countries_iso_code_3 
                                      FROM " . TABLE_COUNTRIES . " 
-                                    WHERE countries_id = '" . $countries_id . "' 
+                                    WHERE countries_id = '" . (int)$countries_id . "' 
                                       AND status = '1'
-                                      ".$no_france_fx."
+                                          ".$no_france_fx."
                                  ORDER BY countries_name
                                   ");
         $countries_values = xtc_db_fetch_array($countries);
@@ -35,8 +36,8 @@
       } else {
         $countries = xtc_db_query("SELECT countries_name 
                                      FROM " . TABLE_COUNTRIES . " 
-                                    WHERE countries_id = '" . $countries_id . "'
-                                      ".$no_france_fx."                                    
+                                    WHERE countries_id = '" . (int)$countries_id . "'
+                                          ".$no_france_fx."                                    
                                       AND status = '1'
                                   ");
         $countries_values = xtc_db_fetch_array($countries);
@@ -46,7 +47,7 @@
       $countries = xtc_db_query("SELECT countries_id, countries_name 
                                    FROM " . TABLE_COUNTRIES . " 
                                   WHERE status = '1'
-                                   ".$no_france_fx."                                  
+                                        ".$no_france_fx."                                  
                                ORDER BY countries_name");
       while ($countries_values = xtc_db_fetch_array($countries)) {
         $countries_array[] = array('countries_id' => $countries_values['countries_id'],

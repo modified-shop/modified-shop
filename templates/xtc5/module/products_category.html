@@ -1,0 +1,20 @@
+{config_load file="$language/lang_$language.conf" section="products_category"}
+<h2>{#heading_text#}</h2>
+<table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
+{foreach name=aussen item=module_data from=$module_content}
+  <tr>
+    <td class="productPreviewImage">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
+    <td class="productPreviewContent">
+    <h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2>
+    <br />{$module_data.PRODUCTS_SHORT_DESCRIPTION}
+    <span class="price">{$module_data.PRODUCTS_PRICE}</span>&nbsp;<span class="taxandshippinginfo">({$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK})</span>
+    {if $module_data.PRODUCTS_VPE}<p class="vpe">{$module_data.PRODUCTS_VPE}</p>{/if}
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+    <div class="hrproductpreview"></div>
+    </td>
+  </tr>
+{/foreach}
+</table>

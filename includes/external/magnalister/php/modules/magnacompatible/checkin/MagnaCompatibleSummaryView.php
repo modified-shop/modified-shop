@@ -32,6 +32,8 @@ class MagnaCompatibleSummaryView extends SimpleSummaryView {
 		), $settings);
 
 		parent::__construct($settings);
+
+		$this->inventoryPriceSync = getDBConfigValue($this->marketplace.'.inventorysync.price', $this->mpID, false);
 	}
 	
 	protected function additionalInitialisation() {
@@ -151,6 +153,14 @@ class MagnaCompatibleSummaryView extends SimpleSummaryView {
 	}
 
 	protected function getAdditionalHeadlines() {
+		if ($this->inventoryPriceSync == 'auto') {
+			return '
+				<td title="'.ML_LABEL_BRUTTO.'">'.ML_MAGNACOMPAT_LABEL_MP_PRICE_SHORT.'&nbsp;<span class="small">'.$this->settings['currency'].'</span></td>
+				<td>'.ML_LABEL_QUANTITY_AVAILABLE.'</td>
+				<td>'.$this->provideResetFunction(ML_LABEL_QUANTITY, 'quantity').'</td>
+			';
+		}
+
 		return '<td title="'.ML_LABEL_BRUTTO.'">'.$this->provideResetFunction(
 					ML_MAGNACOMPAT_LABEL_MP_PRICE_SHORT.' <span class="small">'.
 						$this->settings['currency'].
@@ -168,9 +178,13 @@ class MagnaCompatibleSummaryView extends SimpleSummaryView {
 		return '
 				<td><table class="nostyle"><tbody>
 						<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>
-							<input type="text" id="price_'.$dbRow['products_id'].'"
+						'.(($this->inventoryPriceSync == 'auto')
+							? $this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice()
+							: '<input type="text" id="price_'.$dbRow['products_id'].'"
 						           name="price['.$dbRow['products_id'].']"
 						           value="'.$this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice().'"/>
+							'
+						).'
 							<input type="hidden" id="backup_price_'.$dbRow['products_id'].'"
 						           value="'.$this->simplePrice->getPrice().'"/>
 						</td></tr>

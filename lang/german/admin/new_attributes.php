@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$
+   $Id: new_attributes.php 899 2005-04-29 02:40:57Z hhgag $
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -33,6 +33,8 @@
    define('TEXT_SORTORDER', 'Sortierung');
 // EOF - Tomcraft - 2009-11-11 - NEW SORT SELECTION
 
-  define('ATTR_EAN', 'EAN-Nr.');
+  define('ATTR_EAN', 'GTIN/EAN');
   define('ATTR_SAVE_ACTIVE', 'Aufgeklappte Attribute speichern');
+  
+  define('ATTR_VPE','VPE');
 ?>

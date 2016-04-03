@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: account_history.php 5581 2013-09-08 21:26:38Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -20,7 +20,6 @@ include ('includes/application_top.php');
 
 // create smarty elements
 $smarty = new Smarty;
-$smarty->caching = false;
 
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
@@ -30,9 +29,19 @@ require_once (DIR_FS_INC.'xtc_count_customer_orders.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
+require_once (DIR_FS_INC.'get_tracking_link.inc.php');
+require_once (DIR_FS_INC.'get_order_total.inc.php');
 
-if (!isset ($_SESSION['customer_id'])) {
+if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+}
+
+if (isset($_SESSION['customer_id']) 
+    && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+    && GUEST_ACCOUNT_EDIT != 'true'
+    )
+{ 
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
 }
 
 $breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_HISTORY, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
@@ -72,6 +81,7 @@ if (xtc_count_customer_orders() > 0) {
     $smarty->assign('PAGINATION', $pagination);
   }
   
+  $row = 0;
   $history_query = xtc_db_query($history_split->sql_query);
   while ($history = xtc_db_fetch_array($history_query)) {
     // count products in order
@@ -80,30 +90,35 @@ if (xtc_count_customer_orders() > 0) {
                                      WHERE orders_id = '".$history['orders_id']."'");
     $products = xtc_db_fetch_array($products_query);
     
-    // get order_total
-    $orders_total_query = xtc_db_query("SELECT value
-                                          FROM ".TABLE_ORDERS_TOTAL."
-                                         WHERE class IN ('ot_total', 'ot_subtotal_no_tax', 'ot_subtotal')
-                                           AND orders_id = '".$history['orders_id']."'
-                                      ORDER BY sort_order DESC
-                                         LIMIT 1");
-    $orders_total = xtc_db_fetch_array($orders_total_query);
+    $module_content[$row] = array ('ORDER_ID' => $history['orders_id'],
+                                   'ORDER_STATUS' => $history['orders_status_name'],
+                                   'ORDER_DATE' => xtc_date_long($history['date_purchased']),
+                                   'ORDER_PRODUCTS' => $products['count'],
+                                   'ORDER_TOTAL' => xtc_format_price_order(get_order_total($history['orders_id']), 1, $history['currency'], 1),
+                                   'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, xtc_get_all_get_params().'order_id='.$history['orders_id'],'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
+                                   'ORDER_TRACKING' => get_tracking_link($history['orders_id'], $_SESSION['language_code']),
+                                   'BUTTON_CART' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY, 'action=add_order&order_id='.$history['orders_id'], 'SSL').'">'.xtc_image_button('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>',
+                                   'ORDER_LINK' => xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$history['orders_id'], 'SSL'),
+                                   );
 
-    $module_content[] = array ('ORDER_ID' => $history['orders_id'],
-                               'ORDER_STATUS' => $history['orders_status_name'],
-                               'ORDER_DATE' => xtc_date_long($history['date_purchased']),
-                               'ORDER_PRODUCTS' => $products['count'],
-                               'ORDER_TOTAL' => xtc_format_price_order($orders_total['value'], 1, $history['currency'], 1),
-                               'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, xtc_get_all_get_params().'order_id='.$history['orders_id'],'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>'
-                               );
+    if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
+      $module_content[$row]['BUTTON_CART_EXPRESS'] = '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY, 'action=add_order&express=on&order_id='.$history['orders_id'], 'SSL').'">'.xtc_image_button('small_express.gif', IMAGE_BUTTON_IN_CART).'</a>';
+    }
+
+    $row ++;
   }
 }
 
 $smarty->assign('order_content', $module_content);
-$smarty->assign('language', $_SESSION['language']);
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+$smarty->assign('language', $_SESSION['language']);
+
+$smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/account_history.html');
+
 $smarty->assign('main_content', $main_content);
+$smarty->assign('language', $_SESSION['language']);
+$smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');

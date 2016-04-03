@@ -1,17 +1,16 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: ot_shipping.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   XT-Commerce - community made shopping
+   http://www.xt-commerce.com
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   Copyright (c) 2003 XT-Commerce
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(ot_shipping.php,v 1.4 2003/02/16); www.oscommerce.com 
    (c) 2003	 nextcommerce (ot_shipping.php,v 1.4 2003/08/13); www.nextcommerce.org
-   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
@@ -29,10 +28,13 @@
   define('MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER_DESC', 'Anzeigereihenfolge.');
   
   define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_TITLE','Versandkostenfrei erlauben');
-  define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_DESC','Versandkostenfreie Lieferung erlauben ?');
+  define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_DESC','Versandkostenfreie Lieferung erlauben?');
   
-  define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_TITLE','Versandkostenfrei f&uuml;r Bestellungen ab');
+  define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_TITLE','Versandkostenfrei f&uuml;r nationale Bestellungen ab');
   define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_DESC','Versandkostenfrei ab einem Bestellwert von.');
+
+  define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_INTERNATIONAL_TITLE','Versandkostenfrei f&uuml;r internationale Bestellungen ab');
+  define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_INTERNATIONAL_DESC','Versandkostenfrei ab einem Bestellwert von.');
   
   define('MODULE_ORDER_TOTAL_SHIPPING_DESTINATION_TITLE','Versandkostenfrei nach Zonen');
   define('MODULE_ORDER_TOTAL_SHIPPING_DESTINATION_DESC','Versandkostenfrei nach Zonen berechnen.');
