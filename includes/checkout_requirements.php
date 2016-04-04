@@ -114,7 +114,6 @@ if ($_SESSION['customers_status']['customers_status_max_order'] != 0 && $xtPrice
     xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
 }
 
-
 // from checkout_payment
 if ($checkout_position[$current_page] >= 2) {
   // avoid hack attempts during the checkout procedure by checking the internal cartID
@@ -134,10 +133,12 @@ if ($checkout_position[$current_page] >= 3) {
   }
 }
 
+// from checkout_process / checkout_payment_iframe
 if ($checkout_position[$current_page] >= 4) {
   if (xtc_not_null(MODULE_PAYMENT_INSTALLED) && !isset($_SESSION['payment'])) {
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 }
 
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_requirements/','php') as $file) require_once ($file);
 ?>
