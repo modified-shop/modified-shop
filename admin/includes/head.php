@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: head.php 5065 2013-07-15 12:22:56Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -96,6 +96,7 @@
     function confirmSubmit(message, title, form) { 
         title = title || 'Information'; 
         $.confirm({
+            keyboardEnabled: true,
             title: title,
             content: (message ? message : ' '),
             confirmButton: js_button_yes,
