@@ -26,12 +26,10 @@
     $css_min_ts = is_writeable($css_min) ? filemtime($css_min) : false;
     if ($css_min_ts && ($css_plain_ts > $css_min_ts || filesize($css_min) == 0)) {
       require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
-      if (($css_content = file_get_contents($css_plain)) !== false) {
-        $compactor = new Compactor(array('strip_php_comments' => true));
-        $css_content = $compactor->squeeze($css_content);
-        if (file_put_contents($css_min, $css_content, LOCK_EX) !== false) {
-          $css_file = '/stylesheet.min.css?v='.$css_min_ts;
-        }
+      $compactor = new Compactor(array('strip_php_comments' => true));
+      $compactor->add($css_plain);
+      if ($compactor->save($css_min) === true) {
+        $css_file = '/stylesheet.min.css?v='.$css_min_ts;
       }
     } elseif ($css_min_ts) {
       $css_file = '/stylesheet.min.css?v='.$css_min_ts;

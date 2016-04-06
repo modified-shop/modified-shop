@@ -130,6 +130,61 @@
 			}
 		}
 		
+    /**
+     * Add a file
+     *
+     * @param string $data
+     */
+    public function add($data)
+    {
+        // load data
+        $value = $this->load($data);
+        $key = ($data != $value) ? $data : count($this->data);
+        
+        // store data
+        $this->data[$key] = $value;
+    }
+
+    /**
+     * Load data.
+     *
+     * @param  string $data path to a file
+     * @return string
+     */
+    protected function load($data)
+    {
+        // check if the data is a file
+        if (file_exists($data) && is_file($data)) {
+            if (($data = file_get_contents($data)) !== false) {
+                // strip BOM, if any
+                if (substr($data, 0, 3) == "\xef\xbb\xbf") {
+                    $data = substr($data, 3);
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Save to file
+     *
+     * @param  string    $content The minified data.
+     * @param  string    $path    The path to save the minified data to.
+     * @throws Exception
+     */
+    public function save($path)
+    {
+        $content = '';
+        foreach ($this->data as $data) {
+            $content .= $this->squeeze($data);
+        }
+        
+        if (file_put_contents($path, $content, LOCK_EX) !== false) {
+            return true;
+        }
+    }
+
 		/**
 		 * Compresses the html, either that is supplied to the function or if the use_buffer
 		 * option is enabled then the buffer is grabbed for compression.
