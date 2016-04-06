@@ -24,9 +24,15 @@
   $css_min = 'templates/'.CURRENT_TEMPLATE.'/css/tpl_plugins.min.css';
 
   if (COMPRESS_STYLESHEET == 'true') {
-    $css_plain_ts = filemtime(DIR_FS_CATALOG.$css_plain);
     $css_min_ts = is_writeable(DIR_FS_CATALOG.$css_min) ? filemtime(DIR_FS_CATALOG.$css_min) : false;
-    if ($css_min_ts && ($css_plain_ts > $css_min_ts || filesize(DIR_FS_CATALOG.$css_min) == 0)) {
+    $compress = false;
+    foreach ($css_array as $css_plain) {
+      if (filemtime(DIR_FS_CATALOG.$css_plain) > $css_min_ts) {
+        $compress = true;
+        break;
+      }
+    }
+    if ($css_min_ts && ($compress === true || filesize(DIR_FS_CATALOG.$css_min) == 0)) {
       require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
       $compactor = new Compactor(array('strip_php_comments' => true));
       foreach ($css_array as $css_plain) {
