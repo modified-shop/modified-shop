@@ -96,7 +96,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
   } elseif (isset($current_category_id) && $current_category_id > 0) {
     $join = " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                    ON p2c.products_id = p.products_id
-                      AND p2c.categories_id = '".(int)$current_category_id."' ";
+                      AND p2c.categories_id IN ('".((isset($subcat_list)) ? $subcat_list : (int)$current_category_id)."') ";
   } elseif (basename($PHP_SELF) == FILENAME_SPECIALS) {
     $join = " JOIN ".TABLE_SPECIALS." s 
                    ON p.products_id = s.products_id
@@ -212,7 +212,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
   if (isset($current_category_id) && $current_category_id > 0) {
     $join .= " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                     ON p2c.products_id = p.products_id
-                       AND p2c.categories_id = '".(int)$current_category_id."' ";
+                       AND p2c.categories_id IN ('".((isset($subcat_list)) ? $subcat_list : (int)$current_category_id)."') ";
   }
   if (basename($PHP_SELF) == FILENAME_SPECIALS) {
     $join .= " JOIN ".TABLE_SPECIALS." s 

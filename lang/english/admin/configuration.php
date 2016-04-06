@@ -1055,4 +1055,7 @@ define('ORDER_STATUSES_DISPLAY_DEFAULT_DESC', 'Orders with which status will be 
 
 define('INVOICE_INFOS_TITLE', 'Invoice data');
 define('INVOICE_INFOS_DESC', 'Choose a content site. The content will be displayed on invoices.');
+
+define('CATEGORIES_SHOW_PRODUCTS_SUBCATS_TITLE', 'Show products from subcategories');
+define('CATEGORIES_SHOW_PRODUCTS_SUBCATS_DESC', 'Show all products from subcategories in products listing?');
 ?>
