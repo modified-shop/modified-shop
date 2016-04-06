@@ -25,6 +25,7 @@
 
 // todo: move to configuration ?
 defined('CATEGORIES_IMAGE_SHOW_NO_IMAGE') OR define('CATEGORIES_IMAGE_SHOW_NO_IMAGE', 'true');
+defined('CATEGORIES_SHOW_PRODUCTS_SUBCATS') OR define('CATEGORIES_SHOW_PRODUCTS_SUBCATS', 'false');
 
 $default_smarty = new smarty;
 $default_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
@@ -36,6 +37,7 @@ $main_content = '';
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_path.inc.php');
 require_once (DIR_FS_INC.'xtc_check_categories_status.inc.php');
+require_once (DIR_FS_INC.'xtc_get_subcategories.inc.php');
 
 // check categorie exist
 if (xtc_check_categories_status($current_category_id) >= 1) {
@@ -47,11 +49,20 @@ if (xtc_check_categories_status($current_category_id) >= 1) {
 // the following cPath references come from application_top.php
 $category_depth = 'top';
 if (isset ($cPath) && xtc_not_null($cPath)) {
+  
+  $subcat_list = $current_category_id;
+  if (CATEGORIES_SHOW_PRODUCTS_SUBCATS == 'true') {
+    $subcategories_array = array ();
+    xtc_get_subcategories($subcategories_array, $current_category_id);
+    $subcategories_array[] = $current_category_id;
+    $subcat_list = implode("', '", $subcategories_array);
+  }
+  
   $categories_products_query = "SELECT p2c.products_id
                                   FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                              LEFT JOIN ".TABLE_PRODUCTS." p
                                        ON p2c.products_id = p.products_id
-                                          AND p2c.categories_id = ".(int)$current_category_id."
+                                          AND p2c.categories_id IN ('".$subcat_list."')
                                 WHERE p.products_status = '1'
                                       ".PRODUCTS_CONDITIONS_P;
   $categories_products_result = xtDBquery($categories_products_query);
@@ -233,7 +244,7 @@ if ($category_depth == 'nested') {
     // show the products in a given categorie
     $from   .= "JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                      ON p2c.products_id = pd.products_id
-                        AND p2c.categories_id = '".(int)$current_category_id."' ";
+                        AND p2c.categories_id IN ('".$subcat_list."') ";
     
     // We are asked to show only specific manufacturer                    
     if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
@@ -290,6 +301,7 @@ if ($category_depth == 'nested') {
                    WHERE p.products_status = '1'
                          ".PRODUCTS_CONDITIONS_P."
                          ".$where."
+                GROUP BY p.products_id
                          ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting);
 
   include (DIR_WS_MODULES.FILENAME_PRODUCT_LISTING);
