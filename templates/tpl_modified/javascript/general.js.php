@@ -12,7 +12,7 @@
    Released under the GNU General Public License
    -----------------------------------------------------------
 */
-define('DIR_TMPL_JS', 'templates/'.CURRENT_TEMPLATE. '/javascript/');
+define('DIR_TMPL_JS', DIR_TMPL.'javascript/');
 // this javascriptfile get includes at the TOP of every template page in shop
 // you can add your template specific js scripts here
 ?>

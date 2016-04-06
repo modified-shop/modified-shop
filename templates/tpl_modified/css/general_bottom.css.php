@@ -17,11 +17,11 @@
    // you can add your template specific css scripts here
 
   $css_array = array(
-    'templates/'.CURRENT_TEMPLATE.'/css/jquery.colorbox.css',
-    'templates/'.CURRENT_TEMPLATE.'/css/jquery.alerts.css',
-    'templates/'.CURRENT_TEMPLATE.'/css/jquery.bxslider.css',    
+    DIR_TMPL_CSS.'jquery.colorbox.css',
+    DIR_TMPL_CSS.'jquery.alerts.css',
+    DIR_TMPL_CSS.'jquery.bxslider.css',    
   );
-  $css_min = 'templates/'.CURRENT_TEMPLATE.'/css/tpl_plugins.min.css';
+  $css_min = DIR_TMPL_CSS.'tpl_plugins.min.css';
 
   if (COMPRESS_STYLESHEET == 'true') {
     $css_min_ts = is_writeable(DIR_FS_CATALOG.$css_min) ? filemtime(DIR_FS_CATALOG.$css_min) : false;
@@ -51,5 +51,5 @@
   }
 ?>
 <!--[if lte IE 8]>
-<link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/ie8fix.css" type="text/css" media="screen" />
+<link rel="stylesheet" property="stylesheet" href="<?php echo DIR_WS_BASE.DIR_TMPL_CSS; ?>ie8fix.css" type="text/css" media="screen" />
 <![endif]-->

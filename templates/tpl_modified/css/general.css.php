@@ -13,14 +13,17 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  define('DIR_TMPL', 'templates/'.CURRENT_TEMPLATE.'/');
+  define('DIR_TMPL_CSS', DIR_TMPL.'css/');
+
   if ($_SESSION['customers_status']['customers_status'] == '0') {
-    echo '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/css/adminbar.css" type="text/css" media="screen" />';
+    echo '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.DIR_TMPL_CSS.'adminbar.css" type="text/css" media="screen" />';
   }
 
-  $css_plain = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/stylesheet.css';
-  $css_min = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/stylesheet.min.css';
+  $css_plain = DIR_FS_CATALOG.DIR_TMPL.'stylesheet.css';
+  $css_min = DIR_FS_CATALOG.DIR_TMPL.'stylesheet.min.css';
 
-  $css_file = '/stylesheet.css';
+  $css_file = 'stylesheet.css';
   if (COMPRESS_STYLESHEET == 'true') {
     $css_plain_ts = filemtime($css_plain);
     $css_min_ts = is_writeable($css_min) ? filemtime($css_min) : false;
@@ -29,13 +32,13 @@
       $compactor = new Compactor(array('strip_php_comments' => true));
       $compactor->add($css_plain);
       if ($compactor->save($css_min) === true) {
-        $css_file = '/stylesheet.min.css?v='.$css_min_ts;
+        $css_file = 'stylesheet.min.css?v='.$css_min_ts;
       }
     } elseif ($css_min_ts) {
-      $css_file = '/stylesheet.min.css?v='.$css_min_ts;
+      $css_file = 'stylesheet.min.css?v='.$css_min_ts;
     }
   }
 
   // Put CSS-Inline-Definitions here, these CSS-files will be loaded at the TOP of every page
 ?>
-<link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.$css_file; ?>" type="text/css" media="screen" />
+<link rel="stylesheet" href="<?php echo DIR_WS_BASE.DIR_TMPL.$css_file; ?>" type="text/css" media="screen" />
