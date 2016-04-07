@@ -159,6 +159,9 @@ if (PRODUCT_LIST_FILTER == 'true') {
     } else {
       $options = array (array ('id' => '', 'text' => TEXT_ALL_MANUFACTURERS));
     }
+    if (isset($_GET['cPath']) && !empty($_GET['cPath']) && SEARCH_ENGINE_FRIENDLY_URLS != 'true') {
+      $manufacturer_dropdown .= xtc_draw_hidden_field('cPath', (int)$_GET['cPath']).PHP_EOL;
+    }
     if (isset($_GET['categories_id']) && !empty($_GET['categories_id'])) {
       $manufacturer_dropdown .= xtc_draw_hidden_field('categories_id', (int)$_GET['categories_id']).PHP_EOL;
     }
@@ -296,6 +299,9 @@ if (PRODUCT_LIST_FILTER == 'true') {
         if (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT || SEARCH_ENGINE_FRIENDLY_URLS != 'true') {
           $filter_dropdown[$options_id] .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']).PHP_EOL;
         }
+      }
+      if (isset($_GET['cPath']) && !empty($_GET['cPath']) && SEARCH_ENGINE_FRIENDLY_URLS != 'true') {
+        $filter_dropdown[$options_id] .= xtc_draw_hidden_field('cPath', (int)$_GET['cPath']).PHP_EOL;
       }
       if (isset($_GET['categories_id']) && !empty($_GET['categories_id'])) {
         $filter_dropdown[$options_id] .= xtc_draw_hidden_field('categories_id', (int)$_GET['categories_id']).PHP_EOL;
