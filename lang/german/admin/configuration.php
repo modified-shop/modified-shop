@@ -1049,5 +1049,5 @@ define('INVOICE_INFOS_TITLE', 'Rechnungsdaten');
 define('INVOICE_INFOS_DESC', 'W&auml;hlen sie eine Contentseite. Der Inhalt wird auf dem Rechnungsdruck angezeigt.');
 
 define('CATEGORIES_SHOW_PRODUCTS_SUBCATS_TITLE', 'Artikel aus Unterkategorien anzeigen');
-define('CATEGORIES_SHOW_PRODUCTS_SUBCATS_DESC', 'Sollen alle Artikel aus vorhandenen Unterkategorien angezeigt im Listing werden?');
+define('CATEGORIES_SHOW_PRODUCTS_SUBCATS_DESC', 'Sollen alle Artikel aus vorhandenen Unterkategorien im Listing angezeigt werden?');
 ?>
