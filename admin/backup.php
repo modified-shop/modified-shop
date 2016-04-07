@@ -66,6 +66,7 @@
   if ($result_array = xtc_db_fetch_array($result)) {
     if (!isset($result_array['backup_db'])) {
       xtc_db_query("ALTER TABLE `". TABLE_ADMIN_ACCESS."` ADD `backup_db` INT( 1 ) DEFAULT '0' NOT NULL");
+      xtc_db_query("UPDATE `".TABLE_ADMIN_ACCESS."` SET `backup_db` = '5' WHERE `customers_id` = 'groups' LIMIT 1");
       xtc_db_query("UPDATE `".TABLE_ADMIN_ACCESS."` SET `backup_db` = '1' WHERE `customers_id` = '1' LIMIT 1");
       //Rechte automatisch setzen fuer Unteradmin
       if ($_SESSION['customer_id'] > 1) {

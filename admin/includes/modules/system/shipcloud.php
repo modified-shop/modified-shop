@@ -81,6 +81,7 @@ class shipcloud {
     $admin = xtc_db_fetch_array($admin_query);
     if (!isset($admin['shipcloud_pickup'])) {
       xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." ADD `shipcloud_pickup` INT(1) DEFAULT '0' NOT NULL");
+      xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET shipcloud_pickup = '9' WHERE customers_id = 'groups' LIMIT 1");
       xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET shipcloud_pickup = '1' WHERE customers_id = '1' LIMIT 1");        
       if ($_SESSION['customer_id'] > 1) {
         xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET shipcloud_pickup = '1' WHERE customers_id = '".$_SESSION['customer_id']."' LIMIT 1") ;

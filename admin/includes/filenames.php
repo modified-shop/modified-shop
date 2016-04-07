@@ -34,7 +34,6 @@ define('FILENAME_MODULES', 'modules.php');
 define('FILENAME_ORDERS', 'orders.php');
 define('FILENAME_ORDERS_STATUS', 'orders_status.php');
 define('FILENAME_ORDERS_EDIT', 'orders_edit.php');
-define('FILENAME_POPUP_IMAGE', 'popup_image.php');
 define('FILENAME_PRODUCTS_ATTRIBUTES', 'products_attributes.php');
 define('FILENAME_PRODUCTS_EXPECTED', 'products_expected.php');
 define('FILENAME_REVIEWS', 'reviews.php');
