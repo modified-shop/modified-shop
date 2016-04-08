@@ -117,8 +117,8 @@
       'color' => '#66cdaa',
     ),
     '99' => array(
-      'name' =>  BOX_HEADING_CUSTOM,
-      'color' => '#000000',
+      'name' =>  TXT_TOOLS,
+      'color' => '#f46cb1',
     ),
   );
 
