@@ -94,11 +94,11 @@
     ),   
     '4' => array(
       'name' =>  BOX_HEADING_STATISTICS,
-      'color' => '#FFE6A8',
+      'color' => '#ebc360',
     ),
     '5' => array(
       'name' =>  BOX_HEADING_TOOLS,
-      'color' => '#6BFF7F',
+      'color' => '#82b645',
     ),
     '6' => array(
       'name' =>  BOX_HEADING_GV_ADMIN,
@@ -110,7 +110,7 @@
     ),
     '8' => array(
       'name' =>  BOX_HEADING_CONFIGURATION,
-      'color' => '#FF6969',
+      'color' => '#cb7272',
     ),
     '9' => array(
       'name' =>  BOX_HEADING_PARTNER_MODULES,
