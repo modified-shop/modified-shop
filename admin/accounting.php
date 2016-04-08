@@ -231,11 +231,13 @@ require (DIR_WS_INCLUDES.'head.php');
                     ksort($accounting_array[$group_access[$field['Field']]]);
                   }
                 }
-                if (isset($accounting_array[0])) {
-                  $accounting_array[99] = $accounting_array[0];
-                  unset($accounting_array[0]);
-                }
                 ksort($accounting_array);
+                
+                if (isset($accounting_array[0])) {
+                  $accounting_tmp = $accounting_array[0];
+                  unset($accounting_array[0]);
+                  $accounting_array[0] = $accounting_tmp;
+                }
                 
                 echo '<div class="multicolumn">';
                 foreach ($accounting_array as $field => $accounting) {
