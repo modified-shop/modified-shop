@@ -86,19 +86,19 @@
     ),
     '2' => array(
       'name' =>  BOX_HEADING_CUSTOMERS,
-      'color' => '#cbbeb5',
+      'color' => '#ebbb97',
     ),
     '3' => array(
       'name' =>  BOX_HEADING_PRODUCTS,
-      'color' => '#69CDFF',
+      'color' => '#aacfe2',
     ),   
     '4' => array(
       'name' =>  BOX_HEADING_STATISTICS,
-      'color' => '#ebc360',
+      'color' => '#ebd397',
     ),
     '5' => array(
       'name' =>  BOX_HEADING_TOOLS,
-      'color' => '#82b645',
+      'color' => '#afd088',
     ),
     '6' => array(
       'name' =>  BOX_HEADING_GV_ADMIN,
@@ -114,11 +114,11 @@
     ),
     '9' => array(
       'name' =>  BOX_HEADING_PARTNER_MODULES,
-      'color' => '#66cdaa',
+      'color' => '#8cd1ba',
     ),
     '99' => array(
       'name' =>  TXT_TOOLS,
-      'color' => '#f46cb1',
+      'color' => '#c689ab',
     ),
   );
 
