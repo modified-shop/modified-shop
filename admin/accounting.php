@@ -116,7 +116,7 @@
       'name' =>  BOX_HEADING_PARTNER_MODULES,
       'color' => '#8cd1ba',
     ),
-    '99' => array(
+    '0' => array(
       'name' =>  TXT_TOOLS,
       'color' => '#c689ab',
     ),
