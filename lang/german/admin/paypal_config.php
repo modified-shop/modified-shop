@@ -65,7 +65,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_LOG_LEVEL' => 'Log Level:',
   'TEXT_PAYPAL_CONFIG_LOG_LEVEL_INFO' => '<b>Hinweis:</b> Im Livebetrieb wird nur bis Level FINE geloggt.',
   
-  'BUTTON_PAYPAL_STATUS_INSTALL' => 'Bestellstati installieren',
+  'BUTTON_PAYPAL_STATUS_INSTALL' => 'Bestellstatus installieren',
 );
 
 
