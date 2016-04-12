@@ -92,12 +92,12 @@ class categories {
       $this->catModules->delete_category_image($category_image['categories_image']);
     }
 
+    //new module support
+    $this->catModules->remove_category($category_id);
+
     xtc_db_query("DELETE FROM ".TABLE_CATEGORIES." WHERE categories_id = '".xtc_db_input($category_id)."'");
     xtc_db_query("DELETE FROM ".TABLE_CATEGORIES_DESCRIPTION." WHERE categories_id = '".xtc_db_input($category_id)."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE categories_id = '".xtc_db_input($category_id)."'");
-
-    //new module support
-    $this->catModules->remove_category($category_id);
   }
 
 
@@ -414,6 +414,10 @@ class categories {
         xtc_del_image_file($mo_images_values['image_name']);
       }
     }
+
+    //new module support
+    $this->catModules->remove_product($product_id);
+
     xtc_db_query("DELETE FROM ".TABLE_SPECIALS." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_XSELL." WHERE products_id = '".(int)$product_id."'");
@@ -430,8 +434,6 @@ class categories {
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
     }
-    //new module support
-    $this->catModules->remove_product($product_id);
 
     $customers_statuses_array = xtc_get_customers_statuses();
     for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
