@@ -75,6 +75,11 @@ $values_group_update = array();
   $values[] = "(NULL, 'POLICY_MIN_NUMERIC_CHARS', '1', '2', '12', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'POLICY_MIN_SPECIAL_CHARS', '1', '2', '12', NULL, NOW(), NULL, NULL);";
 
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '0'",
+                           'configuration_key' => 'ENTRY_STATE_MIN_LENGTH'
+                           );
+
 //configuration_group_id 3 --- "Maximalwerte"
   $values[] = "(NULL, 'MAX_DISPLAY_PRODUCTS_CATEGORY', '10', '3', '23', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MAX_DISPLAY_ADVANCED_SEARCH_RESULTS', '10', '3', '24', NULL, NOW(), NULL, NULL);";
