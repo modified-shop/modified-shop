@@ -110,7 +110,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   // New VAT Check
   if (ACCOUNT_COMPANY_VAT_CHECK == 'true'){
     require_once (DIR_WS_CLASSES . 'vat_validation.php');
-    $vatID = new vat_validation($vat, '', '', $country, true);
+    $vatID = new vat_validation($vat, '', '', (int)$country, true);
     $customers_status = $vatID->vat_info['status'];
     $customers_vat_id_status = isset($vatID->vat_info['vat_id_status']) ? $vatID->vat_info['vat_id_status'] : '';
     if (isset($vatID->vat_info['error']) && $vatID->vat_info['error']==1){
@@ -290,7 +290,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $_SESSION['customer_first_name'] = $firstname;
     $_SESSION['customer_last_name'] = $lastname;
     $_SESSION['customer_default_address_id'] = $address_id;
-    $_SESSION['customer_country_id'] = $country;
+    $_SESSION['customer_country_id'] = (int)$country;
     $_SESSION['customer_zone_id'] = $zone_id;
     $_SESSION['customer_vat_id'] = $vat;
 
@@ -426,7 +426,7 @@ if (ACCOUNT_STATE == 'true') {
   $smarty->assign('state', '0');
 }
 
-$smarty->assign('SELECT_COUNTRY', xtc_get_country_list(array ('name' => 'country', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>' : '')), $country));
+$smarty->assign('SELECT_COUNTRY', xtc_get_country_list(array ('name' => 'country', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>' : '')), (int)$country));
 $smarty->assign('INPUT_TEL', xtc_draw_input_fieldNote(array ('name' => 'telephone','text' => '&nbsp;'. ((ACCOUNT_TELEPHONE_OPTIONAL == 'false' && xtc_not_null(ENTRY_TELEPHONE_NUMBER_TEXT)) ? '<span class="inputRequirement">' . ENTRY_TELEPHONE_NUMBER_TEXT . '</span>' : ''))));
 $smarty->assign('INPUT_FAX', xtc_draw_input_fieldNote(array ('name' => 'fax','text' => '&nbsp;' . (xtc_not_null(ENTRY_FAX_NUMBER_TEXT) ? '<span class="inputRequirement">' . ENTRY_FAX_NUMBER_TEXT . '</span>' : ''))));
 $smarty->assign('CHECKBOX_NEWSLETTER', xtc_draw_checkbox_field('newsletter', '1').'&nbsp;'. (xtc_not_null(ENTRY_NEWSLETTER_TEXT) ? '<span class="inputRequirement">'.ENTRY_NEWSLETTER_TEXT.'</span>' : ''));
