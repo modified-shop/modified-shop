@@ -26,7 +26,7 @@
 
 //######################//
 //Fuer korrekte Steuerberechnung hier die Rabattmodule eintragen - kommagetrennt ohne Leerzeichen
-define('DISCOUNT_MODULES', 'ot_discount,ot_payment');
+defined('DISCOUNT_MODULES') OR define('DISCOUNT_MODULES', 'ot_discount,ot_payment');
 
 //######################//
 
