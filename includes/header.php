@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: header.php 3808 2012-10-28 20:39:04Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -87,12 +87,12 @@ Please visit our website: www.modified-shop.org
 <meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> 7D0 http://www.modified-shop.org" />
 <?php
 if (DIR_WS_BASE == '') {
-  echo '<base href="'.(($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'" />';
+  echo '<base href="'.(($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'" />'.PHP_EOL;
 }
 if (is_file('templates/'.CURRENT_TEMPLATE.'/css/general.css.php')) {
   require('templates/'.CURRENT_TEMPLATE.'/css/general.css.php');
 } else { //Maintain backwards compatibility for older templates 
-  echo '<link rel="stylesheet" type="text/css" href="templates/'.CURRENT_TEMPLATE.'/stylesheet.css" />';
+  echo '<link rel="stylesheet" type="text/css" href="templates/'.CURRENT_TEMPLATE.'/stylesheet.css" />'.PHP_EOL;
 }
 
 // require theme based javascript
@@ -115,7 +115,6 @@ switch(basename($PHP_SELF)) {
   case FILENAME_CREATE_GUEST_ACCOUNT:
   case FILENAME_ACCOUNT_PASSWORD:
   case FILENAME_ACCOUNT_EDIT:
-  case FILENAME_CHECKOUT_PAYMENT:
   case FILENAME_CHECKOUT_SHIPPING_ADDRESS:
   case FILENAME_CHECKOUT_PAYMENT_ADDRESS:
   case FILENAME_ADVANCED_SEARCH:
