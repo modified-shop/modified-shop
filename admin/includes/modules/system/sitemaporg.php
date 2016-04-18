@@ -75,7 +75,7 @@ class sitemaporg {
 		$this->schema .= "\t\t<image:image>\n";
 		$this->schema .= "\t\t\t<image:loc>".encode_utf8(decode_htmlentities($link))."</image:loc>\n";
 		$this->schema .= "\t\t\t<image:title><![CDATA[".encode_utf8(decode_htmlentities($title))."]]></image:title>\n";
-		$this->schema .= "\t\t\t<image:caption><![CDATA[".encode_utf8(decode_htmlentities($title))."]]></image:title>\n";
+		$this->schema .= "\t\t\t<image:caption><![CDATA[".encode_utf8(decode_htmlentities($title))."]]></image:caption>\n";
 		$this->schema .= "\t\t</image:image>\n";
   }
   
@@ -90,9 +90,9 @@ class sitemaporg {
                         FROM ".TABLE_CONTENT_MANAGER."
                        WHERE languages_id = '".(int)$_SESSION['languages_id']."'
                              ".$group_check." 
-                         and content_status = '1' 
-                         and content_meta_robots NOT LIKE '%noindex%' 
-                    order by sort_order";
+                         AND content_status = '1' 
+                         AND content_meta_robots NOT LIKE '%noindex%' 
+                    ORDER BY sort_order";
 
     $content_query = xtDBquery($content_query);
     while ($content_data=xtc_db_fetch_array($content_query,true)) {
