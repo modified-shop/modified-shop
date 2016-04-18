@@ -501,7 +501,7 @@ class shoppingCart {
             $values['price'] = $this->shoppingCartModules->calculate_option_price($values['price'], $option, $value, $products_id, $qty);
             $this->weight += $values['weight'] * $qty;
             $this->total += $values['price'] * $qty;
-            //$attribute_price+=$values['price'];
+            $attribute_price += $values['price'];
           }
         }
 
