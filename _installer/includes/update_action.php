@@ -100,7 +100,7 @@
                 if (isset($data['rename']) && isset($data['rename'][$key])) {
                   $cnt ++;
                   xtc_db_query("ALTER TABLE ".$table." CHANGE ".$data['rename'][$key]. " ".$key." ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT ".$table_check[$key]['Default'] : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".$table_check[$key]['Extra'] : ""));
-                } elseif (array_key_exists($key, $table_check)) {
+                } else {
                   $cnt ++;
                   xtc_db_query("ALTER TABLE ".$table." ADD ".$key." ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT ".$table_check[$key]['Default'] : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".$table_check[$key]['Extra'] : "").(($table_check_pos[$key] > 0) ? " AFTER ".$table_check_pos[($table_check_pos[$key] - 1)] : " FIRST"));
                 }
@@ -148,7 +148,7 @@
             $success .= 'Table '.$table.' Index OK<br/>';
           } else {
             foreach ($result_index as $key => $value) {
-              if (!isset($table_idx_exists[$value[0]['Key_name']])) {
+              if (array_key_exists('Key_name', $value[0]) && !isset($table_idx_exists[$value[0]['Key_name']])) {
                 $index_array = array();
                 for ($i=0, $n=count($value); $i<$n; $i++) {
                   $index_array[] = $value[$i]['Column_name'];
