@@ -50,11 +50,11 @@ if (xtc_check_categories_status($current_category_id) >= 1) {
 $category_depth = 'top';
 if (isset ($cPath) && xtc_not_null($cPath)) {
   
-  $subcat_list = $current_category_id;
+  $subcat_list = (int)$current_category_id;
   if (CATEGORIES_SHOW_PRODUCTS_SUBCATS == 'true') {
     $subcategories_array = array ();
-    xtc_get_subcategories($subcategories_array, $current_category_id);
-    $subcategories_array[] = $current_category_id;
+    xtc_get_subcategories($subcategories_array, $subcat_list);
+    $subcategories_array[] = $subcat_list;
     $subcat_list = implode("', '", $subcategories_array);
   }
   
