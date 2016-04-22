@@ -25,6 +25,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   global $order, $main;
 
   // include needed function
+  require_once(DIR_FS_INC.'xtc_not_null.inc.php');
   require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
   
   // includes main class
@@ -33,6 +34,9 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $main = new main();
   }
 
+  if (!class_exists('Smarty')) {
+    require (DIR_FS_EXTERNAL.'smarty/smarty_2/Smarty.class.php');
+  }
   $mailsmarty= new Smarty;
   $mailsmarty->compile_dir = DIR_FS_CATALOG.'templates_c';
   

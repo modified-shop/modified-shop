@@ -100,7 +100,7 @@
                 if (isset($data['rename']) && isset($data['rename'][$key])) {
                   $cnt ++;
                   xtc_db_query("ALTER TABLE ".$table." CHANGE ".$data['rename'][$key]. " ".$key." ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT ".$table_check[$key]['Default'] : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".$table_check[$key]['Extra'] : ""));
-                } else {
+                } elseif (array_key_exists($key, $table_check)) {
                   $cnt ++;
                   xtc_db_query("ALTER TABLE ".$table." ADD ".$key." ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT ".$table_check[$key]['Default'] : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".$table_check[$key]['Extra'] : "").(($table_check_pos[$key] > 0) ? " AFTER ".$table_check_pos[($table_check_pos[$key] - 1)] : " FIRST"));
                 }
