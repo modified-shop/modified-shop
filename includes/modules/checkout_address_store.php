@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: checkout_address_store.php 3783 2012-10-17 11:29:42Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -9,6 +9,8 @@
    -----------------------------------------------------------------------------------------
      Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
+
+    require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
 
     $valid_params = array(
       'gender',
@@ -29,6 +31,8 @@
         ${$key} = xtc_db_prepare_input($value);
       }
     }
+
+    $required_zones = check_country_required_zones($country);
 
     $process = true;
 
@@ -62,13 +66,10 @@
       $messageStack->add('checkout_address', ENTRY_CITY_ERROR);
     }
 
-    if (ACCOUNT_STATE == 'true') {
+    if (ACCOUNT_STATE == 'true' && $required_zones) {
       $zone_id = 0;
       $check_query = xtc_db_query("SELECT count(*) AS total 
                                      FROM ".TABLE_ZONES." z
-                                     JOIN ".TABLE_COUNTRIES." c
-                                          ON c.countries_id = z.zone_country_id
-                                             AND c.required_zones = '1'
                                     WHERE z.zone_country_id = '".(int)$country."'");
       $check = xtc_db_fetch_array($check_query);
       $entry_state_has_zones = ($check['total'] > 0);
@@ -118,7 +119,7 @@
       if (ACCOUNT_SUBURB == 'true') {
         $sql_data_array['entry_suburb'] = $suburb;
       }
-      if (ACCOUNT_STATE == 'true') {
+      if (ACCOUNT_STATE == 'true' && $required_zones) {
         $sql_data_array['entry_zone_id'] = (int)$zone_id;
         $sql_data_array['entry_state'] = $state;
       }

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: create_account.php 2810 2012-04-30 16:16:59Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -50,11 +50,14 @@ require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
 require_once (DIR_FS_INC.'generate_customers_cid.inc.php');
+require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
 
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
 
-$country = isset($_POST['country']) ? (int)$_POST['country'] : STORE_COUNTRY;
+$country = isset($_POST['country']) ? (int)$_POST['country'] : STORE_COUNTRY; //is country_id (int)
 $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? 'privacy' : '';
+
+$required_zones = check_country_required_zones($country);
 
 $process = false;
 if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
@@ -172,13 +175,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add('create_account', ENTRY_COUNTRY_ERROR);
   }
 
-  if (ACCOUNT_STATE == 'true') {
+  if (ACCOUNT_STATE == 'true' && $required_zones) {
     $zone_id = 0;
     $check_query = xtc_db_query("SELECT count(*) AS total 
                                    FROM ".TABLE_ZONES." z
-                                   JOIN ".TABLE_COUNTRIES." c
-                                        ON c.countries_id = z.zone_country_id
-                                           AND c.required_zones = '1'
                                   WHERE z.zone_country_id = '".(int)$country."'");
     $check = xtc_db_fetch_array($check_query);
     $entry_state_has_zones = ($check['total'] > 0);
@@ -286,7 +286,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     if (ACCOUNT_SUBURB == 'true') {
       $sql_data_array['entry_suburb'] = $suburb;
     }
-    if (ACCOUNT_STATE == 'true') {
+    if (ACCOUNT_STATE == 'true' && $required_zones) {
       $sql_data_array['entry_zone_id'] = (int)$zone_id;
       $sql_data_array['entry_state'] = $state;
     }
@@ -530,7 +530,7 @@ if (ACCOUNT_SUBURB == 'true') {
 $smarty->assign('INPUT_CODE', xtc_draw_input_fieldNote(array ('name' => 'postcode', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_POST_CODE_TEXT) ? '<span class="inputRequirement">'.ENTRY_POST_CODE_TEXT.'</span>' : ''))));
 $smarty->assign('INPUT_CITY', xtc_draw_input_fieldNote(array ('name' => 'city', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_CITY_TEXT) ? '<span class="inputRequirement">'.ENTRY_CITY_TEXT.'</span>' : ''))));
 
-if (ACCOUNT_STATE == 'true') {
+if (ACCOUNT_STATE == 'true' && $required_zones) {
   $smarty->assign('state', '1');
   if ($process == true) {
     if ($entry_state_has_zones == true) {
