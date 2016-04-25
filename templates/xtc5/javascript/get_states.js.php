@@ -1,6 +1,6 @@
 <?php
 /*
- * $Id: get_states.js.php 7777 2012-06-15 20:20:00Z h-h-h $
+ * $Id$
  *
  * modified eCommerce Shopsoftware
  * http://www.modified-shop.org
@@ -22,29 +22,65 @@ $state_pages = array(
   'checkout_shipping_address.php',
   'checkout_payment_address.php'
 );
+
 if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) {
-  $query = xtc_db_query("
-      SELECT GROUP_CONCAT(countries_id) AS ids
+  
+  //Länder mit required_zones = 1 -> Dropdown anzeigen
+  $query = xtc_db_query(
+    "SELECT GROUP_CONCAT(countries_id) AS ids
         FROM ".TABLE_COUNTRIES."
        WHERE required_zones = 1
     ");
   $countries = xtc_db_fetch_array($query);
-  if (!empty($countries['ids'])) {
+  
+  //Länder ohne Zonen -> Inputfeld anzeigen
+  $query = xtc_db_query(
+      "SELECT GROUP_CONCAT(c.countries_id) AS ids
+         FROM countries c 
+    LEFT JOIN zones z ON c.countries_id = z.zone_country_id
+        WHERE z.zone_country_id IS NULL;
+      ");
+
+  $countries_without_zones = xtc_db_fetch_array($query);
 ?>
 <script type="text/javascript">
 /* <![CDATA[ */
-var req_states = [<?php echo $countries['ids']; ?>];
+var req_zones = [<?php echo $countries['ids']; ?>];
+var no_zones = [<?php echo $countries_without_zones['ids']; ?>];
 var state = '';
+var min_length = <?php echo (ENTRY_STATE_MIN_LENGTH > 0 ? 1 : 0)?>;
+
+function hide_state() {
+  $("[name='state']").parent().parent().hide();
+  $("[name='state']").prop('type', 'hidden'); //fix for check_form in form_check.js.php
+}
+
 function load_state() {
   var selection = $("select[name='country']").val();
-  if ($.inArray(parseInt(selection), req_states) == -1) {
-<?php if (ENTRY_STATE_MIN_LENGTH > 0) { ?>
-    $("select[name='state']").replaceWith('<input type="text" name="state"></input>');
-<?php } else { ?>
-    $("[name='state']").parent().parent().hide();
-<?php } ?>
+  //console.log('SE:'+ selection);
+  
+  //change select to input
+  $("select[name='state']").replaceWith('<input type="text" name="state"></input>');
+  
+  //countries without zones
+  if ($.inArray(parseInt(selection), no_zones) != -1) {
+    //console.log('no_zones:'+ min_length);
+    if (min_length) {
+        $("[name='state']").parent().parent().show();
+    } else {
+        hide_state();
+    } 
     return;
   }
+  
+  //countries without required_zones
+  if ($.inArray(parseInt(selection), req_zones) == -1) {
+    //console.log('req_zones');
+    hide_state();
+    return;
+  }
+  
+  //countries with required_zones
   $.get('ajax.php', {ext: 'get_states', country: selection, speed: 1}, function(data) {
     if (data != '' && data != undefined) { 
       $("[name='state']").replaceWith('<select name="state"></select>');
@@ -57,14 +93,14 @@ function load_state() {
         }).appendTo(stateSelect);
       });
       $("[name='state']").val(state);
-<?php if (ENTRY_STATE_MIN_LENGTH > 0) { ?>
-    } else {
-      $("[name='state']").replaceWith('<input type="text" name="state"></input>');
-<?php } else { ?>
       stateSelect.parent().parent().show();
     } else {
-      $("[name='state']").parent().parent().hide();
-<?php } ?>
+      $("[name='state']").replaceWith('<input type="text" name="state"></input>');
+      if (min_length) {
+         $("[name='state']").parent().parent().show();
+      } else {
+         hide_state();
+      }
     }
   });
 }
@@ -76,15 +112,15 @@ $(function() {
       state = $("[name='state']").val();
     }
     //console.log('state: ' + state);
-    $("select[name='country']").change(function() { load_state(); });
-    if ($('div.errormessage').length == 0 && $("select[type=state] option:selected").length == 0) {
-      load_state();
-    }
   }
+  $("select[name='country']").change(function() { load_state(); });
+  //if ($('div.errormessage').length == 0 && $("select[type=state] option:selected").length == 0) {
+  load_state();
+  //}
 });
 /*]]>*/
 </script>
 <?php 
-  }
+  //}
 } 
 ?>

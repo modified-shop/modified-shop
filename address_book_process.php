@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: address_book_process.php 4221 2013-01-11 10:18:52Z gtb-modified $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,6 +28,8 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'xtc_get_country_name.inc.php');
+require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
+
 
 if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -86,6 +88,8 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
       ${$key} = xtc_db_prepare_input($value);
     }
   }
+  
+  $required_zones = check_country_required_zones($country);
 
 	$error = false;
 
@@ -124,7 +128,7 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
 		$messageStack->add('addressbook', ENTRY_COUNTRY_ERROR);
 	}
 
-  if (ACCOUNT_STATE == 'true') {
+  if (ACCOUNT_STATE == 'true' && $required_zones) {
     $zone_id = 0;
     $check_query = xtc_db_query("SELECT count(*) AS total FROM " . TABLE_ZONES . " WHERE zone_country_id = '" . (int)$country . "'");
     $check = xtc_db_fetch_array($check_query);
@@ -140,6 +144,7 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
         if (xtc_db_num_rows($zone_query) == 1) {
         $zone = xtc_db_fetch_array($zone_query);
         $zone_id = $zone['zone_id'];
+        $state = '';
       } else {
         $error = true;
         $messageStack->add('addressbook', ENTRY_STATE_ERROR_SELECT);
@@ -170,7 +175,7 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
 		if (ACCOUNT_SUBURB == 'true') {
 			$sql_data_array['entry_suburb'] = $suburb;
 		}
-		if (ACCOUNT_STATE == 'true') {
+		if (ACCOUNT_STATE == 'true' && $required_zones) {
       $sql_data_array['entry_zone_id'] = (int)$zone_id;
       $sql_data_array['entry_state'] = $state;
 		}
