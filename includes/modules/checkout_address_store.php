@@ -84,6 +84,7 @@
         if (xtc_db_num_rows($zone_query) == 1) {
           $zone = xtc_db_fetch_array($zone_query);
           $zone_id = $zone['zone_id'];
+          $state = '';
         } else {
           $error = true;
           $messageStack->add('checkout_address', ENTRY_STATE_ERROR_SELECT);
