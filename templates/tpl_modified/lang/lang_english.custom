@@ -1,3 +1,5 @@
+# The lang_english.custom is only included, if "TEMPLATE_ENGINE" is set to "smarty_3" in "../config/config.php"!
+
 zoomtext = 'For a larger view click on the thumbnail'
 products_desc = 'Products description'
 products_fsk18_check = 'This article can be purchased only after age verification.'

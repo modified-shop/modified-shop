@@ -35,7 +35,7 @@
   define('PRODUCT_INFO_BOX', 'false'); // 'true' or 'false'
   
   // template output
-  define('TEMPLATE_ENGINE', 'smarty_3'); // smarty_3 or smarty_2
+  define('TEMPLATE_ENGINE', 'smarty_3'); // smarty_3 or smarty_2 (Nur "smarty_3" unterstützt die custom Sprachdateien (lang_english.custom & lang_german.custom) aus dem Ordner "../lang/" des Templates!)
   define('TEMPLATE_HTML_ENGINE', 'html5'); // html5 or xhtml
   define('TEMPLATE_RESPONSIVE', 'false'); // true or false
 
