@@ -67,6 +67,8 @@
    $test_welcome_step2 = TEXT_WELCOME_STEP2A;
   }
 
+  $messageStack = new messageStack();
+
   //connect to database
   $db = array();
   $db['DB_MYSQL_TYPE'] = trim(stripslashes($_POST['DB_MYSQL_TYPE']));
@@ -77,16 +79,20 @@
 
   $db_error = false;
   xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD'], $db['DB_MYSQL_TYPE']);
-
+  
+  $check_query = xtc_db_query_installer("SHOW TABLES FROM ".$db['DB_DATABASE'], $db['DB_MYSQL_TYPE']);
+  if (xtc_db_num_row_installer($check_query, $db['DB_MYSQL_TYPE']) > 0) {
+    $messageStack->add('db_warning', '<strong>' . TEXT_DB_NOT_EMPTY . '</strong>');
+  }
+  
   @xtc_db_query_installer('ALTER DATABASE '.$db['DB_DATABASE'].' DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
   @xtc_db_query_installer('SET NAMES '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
 
   //check MySQL *server* version
-  $db_warning = '';
   if (!$db_error) {
     if (function_exists('version_compare')) {
       if(version_compare(xtc_db_get_server_info($db['DB_MYSQL_TYPE']), "5.0.0", "<=") && strpos(strtolower(xtc_db_get_server_info($db['DB_MYSQL_TYPE'])), 'native')=== false){
-          $db_warning = '<br /><strong>' . TEXT_DB_SERVER_VERSION_ERROR .  ' 5.0.0. <br /><br />' . TEXT_DB_SERVER_VERSION . xtc_db_get_server_info($db['DB_MYSQL_TYPE']) . '</strong>.';
+        $messageStack->add('db_warning', '<strong>' . TEXT_DB_SERVER_VERSION_ERROR . ' 5.0.0.<br/>' . TEXT_DB_SERVER_VERSION . xtc_db_get_server_info($db['DB_MYSQL_TYPE']) . '</strong>');
       }
     }
   }
@@ -95,8 +101,9 @@
   if (!$db_error) {
     if (function_exists('version_compare')) {
       preg_match("/[0-9]\.[0-9]\.[0-9]/",xtc_db_get_client_info($db['DB_MYSQL_TYPE']), $client_info);
-      if(version_compare($client_info[0], "5.0.0", "<=") && strpos(strtolower(xtc_db_get_client_info($db['DB_MYSQL_TYPE'])), 'native')=== false){
-        $db_warning = '<strong>' . TEXT_DB_CLIENT_VERSION_WARNING .  '<br /><br />' . TEXT_DB_CLIENT_VERSION . xtc_db_get_client_info($db['DB_MYSQL_TYPE']) . '</strong>.';
+      if(version_compare($client_info[0], "5.0.0", "<=") && strpos(strtolower(xtc_db_get_client_info($db['DB_MYSQL_TYPE'])), 'native') === false){
+        $messageStack->add('db_warning', '<strong>' . TEXT_DB_CLIENT_VERSION_WARNING . ' 5.0.0.<br/>' . TEXT_DB_CLIENT_VERSION . xtc_db_get_client_info($db['DB_MYSQL_TYPE']) . '</strong>');
+        $messageStack->add('db_warning', '<strong>' . TEXT_DB_CLIENT_VERSION_NOTE . '</strong>');
       }
     }
   }
@@ -208,9 +215,9 @@
                 <?php
                   }
                  // DB CLIENT WARNING
-                  if ($db_warning != '') {
+                  if ($messageStack->size('db_warning') > 0 ) {
                 ?>
-                  <div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;"><?php echo $db_warning; ?></div>
+                  <div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;"><?php echo $messageStack->output('db_warning'); ?></div>
                 <?php
                   }
                   if($_POST['install_db'] == 1) {
