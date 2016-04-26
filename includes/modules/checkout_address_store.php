@@ -66,11 +66,14 @@
       $messageStack->add('checkout_address', ENTRY_CITY_ERROR);
     }
 
-    if (ACCOUNT_STATE == 'true' && $required_zones) {
+    if (ACCOUNT_STATE == 'true') {
       $zone_id = 0;
-      $check_query = xtc_db_query("SELECT count(*) AS total 
-                                     FROM ".TABLE_ZONES." z
-                                    WHERE z.zone_country_id = '".(int)$country."'");
+      $check_query = xtc_db_query("SELECT count(*) AS total  
+                                     FROM ".TABLE_ZONES." z 
+                                     JOIN ".TABLE_COUNTRIES." c 
+                                          ON c.countries_id = z.zone_country_id 
+                                             AND c.required_zones = '1' 
+                                    WHERE z.zone_country_id = '".(int)$country."'"); 
       $check = xtc_db_fetch_array($check_query);
       $entry_state_has_zones = ($check['total'] > 0);
       if ($entry_state_has_zones == true) {
@@ -120,9 +123,9 @@
       if (ACCOUNT_SUBURB == 'true') {
         $sql_data_array['entry_suburb'] = $suburb;
       }
-      if (ACCOUNT_STATE == 'true' && $required_zones) {
-        $sql_data_array['entry_zone_id'] = (int)$zone_id;
-        $sql_data_array['entry_state'] = $state;
+      if (ACCOUNT_STATE == 'true') {
+        $sql_data_array['entry_zone_id'] = (isset($zone_id) ? (int)$zone_id : 0);
+        $sql_data_array['entry_state'] = (isset($state) ? $state : '');
       }
 
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);      

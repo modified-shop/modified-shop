@@ -288,8 +288,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $sql_data_array['entry_suburb'] = $suburb;
     }
     if (ACCOUNT_STATE == 'true' && $required_zones) {
-      $sql_data_array['entry_zone_id'] = (int)$zone_id;
-      $sql_data_array['entry_state'] = $state;
+      $sql_data_array['entry_zone_id'] = (isset($zone_id) ? (int)$zone_id : 0);
+      $sql_data_array['entry_state'] = (isset($state) ? $state : '');
     }
 
     xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
@@ -531,7 +531,7 @@ if (ACCOUNT_SUBURB == 'true') {
 $smarty->assign('INPUT_CODE', xtc_draw_input_fieldNote(array ('name' => 'postcode', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_POST_CODE_TEXT) ? '<span class="inputRequirement">'.ENTRY_POST_CODE_TEXT.'</span>' : ''))));
 $smarty->assign('INPUT_CITY', xtc_draw_input_fieldNote(array ('name' => 'city', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_CITY_TEXT) ? '<span class="inputRequirement">'.ENTRY_CITY_TEXT.'</span>' : ''))));
 
-if (ACCOUNT_STATE == 'true' && $required_zones) {
+if (ACCOUNT_STATE == 'true') { //important no $required_zones because of ajax loader
   $smarty->assign('state', '1');
   if ($process == true) {
     if ($entry_state_has_zones == true) {
