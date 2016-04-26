@@ -88,4 +88,15 @@
 
     return addslashes($string);
   }
+
+  function xtc_db_num_row_installer($db_query, $type) {
+    switch ($type) {
+      case 'mysql':
+        return mysql_num_rows($db_query);
+        break;
+      case 'mysqli':
+        return mysqli_num_rows($db_query);
+        break;
+    }        
+  }
  ?>
