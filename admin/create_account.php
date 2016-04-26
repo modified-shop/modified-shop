@@ -653,7 +653,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_PASSWORD; ?></td>
                       <td class="dataTableConfig col-single-right bg_notice">
                       <?php
-                        echo xtc_draw_password_field('entry_password', isset($customers_password_encrypted)?$customers_password_encrypted:'', 'autocomplete="off"');
+                        echo xtc_draw_password_field('entry_password', isset($customers_password_encrypted)?$customers_password_encrypted:'', true, 'autocomplete="off"');
                         if ($error && $entry_password_error) echo '&nbsp;'.ENTRY_PASSWORD_ERROR;
                       ?>
                       </td>
