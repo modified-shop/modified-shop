@@ -70,15 +70,15 @@
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
   define('TEXT_DB_UPGRADE','Only perform database update on already installed modified eCommerce Shopsoftware!');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
-  define('TEXT_DB_NOT_EMPTY', 'ATTENTION: Your database contains already tables!');
+  define('TEXT_DB_NOT_EMPTY', 'ATTENTION: Your database already contains tables!');
   // BOF - vr - 2010-01-14 - check MySQL *server* version
-  define('TEXT_DB_SERVER_VERSION_ERROR','Your MySQL-Version is too old. The shop requires at least version: ');
-  define('TEXT_DB_SERVER_VERSION','Your MySQL-Version: ');
+  define('TEXT_DB_SERVER_VERSION_ERROR','Your MySQL version is too old. The shop requires at least version: ');
+  define('TEXT_DB_SERVER_VERSION','Your MySQL version: ');
   // EOF - vr - 2010-01-14 - check MySQL *server* version
   // BOF - vr - 2010-01-14 - check MySQL *client* version
-  define('TEXT_DB_CLIENT_VERSION_WARNING','Your MySQL-Client-Version is too old. The shop requires at least version: ');
-  define('TEXT_DB_CLIENT_VERSION_NOTE','You can continue the installation. If the installation can not be correctly carried out, ask your provider for an update!');
-  define('TEXT_DB_CLIENT_VERSION','Your MySQL-Client-Version: ');
+  define('TEXT_DB_CLIENT_VERSION_WARNING','Your MySQL client version is too old. The shop requires at least version: ');
+  define('TEXT_DB_CLIENT_VERSION_NOTE','You can continue the installation anyway. If the installation can not be preceeded flawlessly, ask your provider for an update!');
+  define('TEXT_DB_CLIENT_VERSION','Your MySQL client version: ');
   // EOF - vr - 2010-01-14 - check MySQL *client* version
   // BOF - web28 - 2010-02-1014 - check FILE PATH
   define('TEXT_PATH_ERROR','<h1>Invalid path</h1>');
