@@ -524,7 +524,9 @@
       // build customer, billing, delivery array
       if (isset($_SESSION['customer_id'])) {
         $this->customer = $this->parse_customers_data($customer_address, array_merge($customers_standard_arr, $customers_extended_arr));
+        $shipping_address['state'] = ((xtc_not_null($shipping_address['state'])) ? $shipping_address['state'] : $shipping_address['zone_name']);
         $this->delivery = $this->parse_customers_data($shipping_address, $customers_standard_arr);
+        $billing_address['state'] = ((xtc_not_null($billing_address['state'])) ? $billing_address['state'] : $billing_address['zone_name']);
         $this->billing = $this->parse_customers_data($billing_address, $customers_standard_arr);
       } else {
         $this->customer = array_merge($customers_standard_arr, $customers_extended_arr);
