@@ -154,6 +154,14 @@ define('TEXT_INFO_REVERSE_INTRO', 'Sind Sie sicher, das Sie diese Bestellung sto
 
 define('TABLE_HEADING_SHIPCLOUD', 'Shipcloud:');
 define('TABLE_HEADING_PARCEL_ID', 'Paketschein Nummer');
+define('TEXT_SHIPCLOUD_STANDARD', 'Standard');
+define('TEXT_SHIPCLOUD_ONE_DAY', 'Express');
+define('TEXT_SHIPCLOUD_ONE_DAY_EARLY', 'Express 10:00');
+define('TEXT_SHIPCLOUD_RETURNS', 'Retour');
+define('TEXT_SHIPCLOUD_LETTER', 'Post Brief');
+define('TEXT_SHIPCLOUD_BOOKS', 'Post B&uuml;chersendung');
+define('TEXT_SHIPCLOUD_PARCEL_LETTER', 'Post Warensendung');
+
 define('DOWNLOAD_LABEL', 'Paketschein herunterladen');
 define('CREATE_LABEL', 'Paketschein erstellen');
 define('TEXT_DELETE_SHIPMENT_SUCCESS', 'shipcloud Paketschein gel&ouml;scht.');

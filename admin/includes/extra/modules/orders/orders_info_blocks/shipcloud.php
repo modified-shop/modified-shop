@@ -13,10 +13,13 @@
       </tr>
       <?php
         $service_array = array(
-          array('id' => 'standard', 'text' => 'Standard'),
-          array('id' => 'one_day', 'text' => 'Express'),
-          array('id' => 'one_day_early', 'text' => 'Express 10:00'),
-          array('id' => 'returns', 'text' => 'Retour'),
+          array('id' => 'standard', 'text' => TEXT_SHIPCLOUD_STANDARD),
+          array('id' => 'one_day', 'text' => TEXT_SHIPCLOUD_ONE_DAY),
+          array('id' => 'one_day_early', 'text' => TEXT_SHIPCLOUD_ONE_DAY_EARLY),
+          array('id' => 'returns', 'text' => TEXT_SHIPCLOUD_RETURNS),
+          array('id' => 'letter', 'text' => TEXT_SHIPCLOUD_LETTER),
+          array('id' => 'parcel_letter', 'text' => TEXT_SHIPCLOUD_PARCEL_LETTER),
+          array('id' => 'books', 'text' => TEXT_SHIPCLOUD_BOOKS),
         );
         $parcel_array = array();
         $dim_array = explode(';', preg_replace("'[\r\n\s]+'", '', MODULE_SHIPCLOUD_PARCEL));

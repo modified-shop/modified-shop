@@ -156,6 +156,14 @@ define('TEXT_INFO_REVERSE_INTRO', 'Are you sure you want to reverse this order?'
 
 define('TABLE_HEADING_SHIPCLOUD', 'Shipcloud:');
 define('TABLE_HEADING_PARCEL_ID', 'Parcel ID');
+define('TEXT_SHIPCLOUD_STANDARD', 'Standard');
+define('TEXT_SHIPCLOUD_ONE_DAY', 'Express');
+define('TEXT_SHIPCLOUD_ONE_DAY_EARLY', 'Express 10:00');
+define('TEXT_SHIPCLOUD_RETURNS', 'Retour');
+define('TEXT_SHIPCLOUD_LETTER', 'Post Letter');
+define('TEXT_SHIPCLOUD_BOOKS', 'Post Book');
+define('TEXT_SHIPCLOUD_PARCEL_LETTER', 'Post Parcel Letter');
+
 define('DOWNLOAD_LABEL', 'Download Label');
 define('CREATE_LABEL', 'Create Label');
 define('TEXT_DELETE_SHIPMENT_SUCCESS', 'shipcloud Label deleted.');

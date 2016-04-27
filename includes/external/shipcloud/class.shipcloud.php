@@ -67,6 +67,12 @@ class shipcloud {
         'service'               => $params['service'],
       );
       
+      if (in_array($params['service'], array('books', 'letter', 'parcel_letter'))) {
+        $request_array['carrier'] = 'dpag';
+        $request_array['service'] = 'standard';
+        $request_array['package']['type'] = $params['service'];
+      }
+      
       $sender_data = $this->sender_data();
       if ($sender_data != '') {
         $request_array['from'] = $sender_data;
@@ -84,7 +90,7 @@ class shipcloud {
         }
       }
       
-      if (strtolower($this->carrier) == 'dpd') {
+      if ($this->carrier == 'dpd') {
         if (!isset($request_array['additional_services']) 
             || !is_array($request_array['additional_services'])
             ) 
