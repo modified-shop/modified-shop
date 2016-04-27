@@ -44,7 +44,11 @@
   define('DIR_WS_BASE',''); //web28 - 2010-12-13 - FIX for $messageStack icons
 
   //BOF - web28 - 2010-12-13 - redirect to db_upgrade.php, if database is already set up (do an update instead of a new installation)
-  include(DIR_FS_CATALOG.'/includes/configure.php');
+  if (file_exists(DIR_FS_CATALOG.'/includes/local/configure.php')) {
+    include(DIR_FS_CATALOG.'/includes/local/configure.php');
+  } else {
+    include(DIR_FS_CATALOG.'/includes/configure.php');
+  }
   $upgrade = true;
   if (DB_SERVER_USERNAME == '' && DB_SERVER_PASSWORD == '' && DB_DATABASE == '') {
     $upgrade = false;
