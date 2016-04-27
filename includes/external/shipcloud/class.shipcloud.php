@@ -84,6 +84,22 @@ class shipcloud {
         }
       }
       
+      if (strtolower($this->carrier) == 'dpd') {
+        if (!isset($request_array['additional_services']) 
+            || !is_array($request_array['additional_services'])
+            ) 
+        {
+          $request_array['additional_services'] = array();
+        }
+        $request_array['additional_services'][] = array(
+          'name' => 'advance_notice',
+          'properties' => array(
+            'email' => $this->order->customer['email_address'],
+            'language' => (($this->order->info['language'] == 'german') ? 'de' : 'en'),
+          ),
+        );
+      }
+      
       if (MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'shipcloud') {
         $request_array['notification_email'] = $this->order->customer['email_address'];
       }
