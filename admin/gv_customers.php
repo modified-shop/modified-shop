@@ -63,30 +63,26 @@ require (DIR_WS_INCLUDES.'head.php');
                   <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_GV_AMOUNT; ?></td>
                 </tr>
                 <?php
-                  $gv_query_raw = "SELECT * 
+                  $gv_query_raw = "SELECT c.customers_id,
+                                          c.customers_firstname,
+                                          c.customers_lastname,
+                                          cgc.amount
                                      FROM " . TABLE_COUPON_GV_CUSTOMER . " cgc
                                      JOIN " . TABLE_CUSTOMERS . " c
                                           ON c.customers_id = cgc.customer_id";
                   $gv_split = new splitPageResults($_GET['page'], $page_max_display_results, $gv_query_raw, $gv_query_numrows);
                   $gv_query = xtc_db_query($gv_query_raw);
                   while ($gv_list = xtc_db_fetch_array($gv_query)) {
-                    if (((!$_GET['cID']) || ($_GET['cID'] == $gv_list['customers_id'])) && (!$gInfo)) {
-                    $gInfo = new objectInfo($gv_list);
-                    }
-                    if ( (is_object($gInfo)) && ($gv_list['coupon_id'] == $gInfo->coupon_id) ) {
-                      $tr_attributes ='class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CUSTOMERS, 'cID=' . $gInfo->customers_id . '&action=edit') .'\'"';
-                    } else {
-                      $tr_attributes ='class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CUSTOMERS, 'cID=' . $gv_list['customers_id']) .'\'"';
-                    }
-                ?>
-                <tr <?php echo $tr_attributes;?>>
-                  <td class="dataTableContent"><?php echo $gv_list['customers_id']; ?></td>
-                  <td class="dataTableContent"><?php echo $gv_list['customers_firstname'] . ' ' . $gv_list['customers_lastname']; ?></td>
-                  <td class="dataTableContent txta-c"><?php echo $currencies->format($gv_list['amount']); ?></td>
-                </tr>
+                    $tr_attributes ='class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CUSTOMERS, 'cID=' . $gv_list['customers_id'] . '&action=edit') .'\'"';
+                    ?>
+                    <tr <?php echo $tr_attributes;?>>
+                      <td class="dataTableContent"><?php echo $gv_list['customers_id']; ?></td>
+                      <td class="dataTableContent"><?php echo $gv_list['customers_firstname'] . ' ' . $gv_list['customers_lastname']; ?></td>
+                      <td class="dataTableContent txta-c"><?php echo $currencies->format($gv_list['amount']); ?></td>
+                    </tr>
                   <?php
-                    }
-                  ?>
+                  }
+                ?>
               </table>
               <div class="smallText pdg2 flt-l"><?php echo $gv_split->display_count($gv_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
               <div class="smallText pdg2 flt-r"><?php echo $gv_split->display_links($gv_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
