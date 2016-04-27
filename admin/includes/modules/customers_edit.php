@@ -501,12 +501,12 @@
               <?php
                 if ($error == true) {
                   if ($entry_password_error == true) {
-                    echo xtc_draw_password_field('entry_password', $cInfo->customers_password, false, 'autocomplete="off"').'&nbsp;'.ENTRY_PASSWORD_ERROR;
+                    echo xtc_draw_password_field('entry_password', $cInfo->customers_password, false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.removeAttribute(\'readonly\', \'readonly\');"').'&nbsp;'.ENTRY_PASSWORD_ERROR;
                   } else {
-                    echo xtc_draw_password_field('entry_password', $cInfo->customers_password, false, 'autocomplete="off"');
+                    echo xtc_draw_password_field('entry_password', $cInfo->customers_password, false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.removeAttribute(\'readonly\', \'readonly\');"');
                   }
                 } else {
-                  echo xtc_draw_password_field('entry_password', '', false, 'autocomplete="off"');
+                  echo xtc_draw_password_field('entry_password', '', false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.removeAttribute(\'readonly\', \'readonly\');"');
                 }
                 ?>
               </td>
