@@ -64,7 +64,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $config = array(
       'LogEnabled' => ((defined('MODULE_PAYMENT_'.strtoupper($class).'_STATUS') && $this->get_config('PAYPAL_LOG_ENALBLED') == '1') ? true : false),
       'SplitLogging' => true,
-      'LogLevel' => $this->loglevel,
+      'LogLevel' => ((isset($this->loglevel)) ? $this->loglevel : 'FINE'),
       'LogThreshold' => '2MB',
       'FileName' => DIR_FS_LOG.'paypal_error_' .date('Y-m-d') .'.log',
       'FileName.debug' => DIR_FS_LOG.'paypal_debug_' .date('Y-m-d') .'.log',
