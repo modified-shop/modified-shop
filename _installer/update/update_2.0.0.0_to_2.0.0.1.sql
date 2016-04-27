@@ -7,6 +7,9 @@
 #  Copyright (c) 2009 - 2013 [www.modified-shop.org]
 #  -----------------------------------------------------------------------------------------
 
+#Tomcraft - 2016-04-27 - changed database_version
+UPDATE database_version SET version = 'MOD_2.0.0.1';
+
 #GTB - 2016-04-07 - remove old admin access
 ALTER TABLE admin_access DROP cache;
 ALTER TABLE admin_access DROP define_language;
