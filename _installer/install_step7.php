@@ -14,7 +14,11 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-  require('../includes/configure.php');
+  if (file_exists('../includes/local/configure.php')) {
+    require('../includes/local/configure.php');
+  } else {
+    require('../includes/configure.php');
+  }
   require('includes/application.php');
 
   // Database

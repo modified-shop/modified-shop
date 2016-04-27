@@ -98,7 +98,7 @@
                     </ul>
                   */ ?>
                     <ul class="boxMe">
-                      <li>cd <?php echo DIR_FS_CATALOG; ?>includes/</li>
+                      <li>cd <?php echo DIR_FS_CATALOG; ?>includes/<?php echo ((file_exists(DIR_FS_CATALOG.'/includes/local/configure.php')) ? 'local/' : ''); ?></li>
                       <li>touch configure.php</li>
                       <li>chmod 777 configure.php</li>
               <?php //<li>chmod 777 configure.org.php</li> - 2011-10-20 - h-h-h - Remove/comment out unneeded secondary configure ?>
@@ -126,7 +126,7 @@
                         echo draw_hidden_fields(); ?>
                     <p><?php echo TEXT_VALUES; ?><br />
                       <br />
-                      includes/configure.php<br />
+                      includes/<?php echo ((file_exists(DIR_FS_CATALOG.'/includes/local/configure.php')) ? 'local/' : ''); ?>configure.php<br />
               <?php //includes/configure.org.php<br /> - 2011-10-20 - h-h-h - Remove/comment out unneeded secondary configure ?>
               <?php //admin/includes/configure.php<br /> ?>
               <?php //admin/includes/configure.org.php<br /> - 2011-10-20 - h-h-h - Remove/comment out unneeded secondary configure ?>

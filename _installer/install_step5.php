@@ -185,7 +185,11 @@
                       } 
                           //create  includes/configure.php
                           include ('includes/templates/configure.php');
-                          $fp = fopen(DIR_FS_CATALOG . 'includes/configure.php', 'w');
+                          if (file_exists(DIR_FS_CATALOG.'/includes/local/configure.php')) {
+                            $fp = fopen(DIR_FS_CATALOG . 'includes/local/configure.php', 'w');
+                          } else {
+                            $fp = fopen(DIR_FS_CATALOG . 'includes/configure.php', 'w');
+                          }
                           fputs($fp, $file_contents);
                           fclose($fp);
 
