@@ -156,8 +156,10 @@
     error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' ' . $type . ' [' . $processTime . 's] ' . $query . "\n", 3, DIR_FS_LOG.'mod_sql_'.strtolower($type).'_'. date('Y-m-d') .'.log');
     $err = 0;
     for ($i=0, $n=count($backtrace); $i<$n; $i++) {
-      error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'] . "\n", 3, DIR_FS_LOG.'mod_sql_'.strtolower($type).'_'. date('Y-m-d') .'.log');
-      $err ++;
+      if (isset($backtrace[$i]['file'])) {
+        error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'] . "\n", 3, DIR_FS_LOG.'mod_sql_'.strtolower($type).'_'. date('Y-m-d') .'.log');
+        $err ++;
+      }
     }
   }
 
