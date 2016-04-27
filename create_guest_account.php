@@ -445,7 +445,7 @@ $smarty->assign('INPUT_TEL', xtc_draw_input_fieldNote(array ('name' => 'telephon
 $smarty->assign('INPUT_FAX', xtc_draw_input_fieldNote(array ('name' => 'fax','text' => '&nbsp;' . (xtc_not_null(ENTRY_FAX_NUMBER_TEXT) ? '<span class="inputRequirement">' . ENTRY_FAX_NUMBER_TEXT . '</span>' : ''))));
 $smarty->assign('CHECKBOX_NEWSLETTER', xtc_draw_checkbox_field('newsletter', '1').'&nbsp;'. (xtc_not_null(ENTRY_NEWSLETTER_TEXT) ? '<span class="inputRequirement">'.ENTRY_NEWSLETTER_TEXT.'</span>' : ''));
 if (DISPLAY_PRIVACY_CHECK == 'true') {
-  $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', $privacy));
+  $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', $privacy, 'id="privacy"'));
   $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
 }
 $smarty->assign('FORM_END', '</form>');
