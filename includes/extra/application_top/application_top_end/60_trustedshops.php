@@ -36,33 +36,35 @@
         $url = 'https://api.trustedshops.com/rest/public/v2/products.xml?tsId='.MODULE_TS_TRUSTEDSHOPS_ID.'&sku='.$product->data['products_model'];
         $reviews_api = get_external_content($url, 3, false);
         $reviews_xml = simplexml_load_string($reviews_api);
-    
-        foreach ($reviews_xml->data->products->product->reviews->review as $reviews) {
-          $check_query = xtc_db_query("SELECT customers_id  
-                                         FROM ".TABLE_REVIEWS."
-                                        WHERE customers_name = '".xtc_db_input($reviews->reviewer->firstname . ' ' . $reviews->reviewer->lastname)."'
-                                          AND date_added = '".xtc_db_input(date('Y-m-d H:i:s', strtotime($reviews->creationDate)))."'
-                                          AND customers_id = '0'");
-          if (xtc_db_num_rows($check_query) < 1) {
-            $sql_data_array = array('products_id' => $product->data['products_id'],
-                                    'customers_id' => 0,
-                                    'customers_name' => xtc_db_prepare_input($reviews->reviewer->firstname . ' ' . $reviews->reviewer->lastname),
-                                    'reviews_rating' => (int)$reviews->mark,
-                                    'date_added' => date('Y-m-d H:i:s', strtotime($reviews->creationDate)),
-                                    //'ts_uid' => $reviews->UID
-                                    );
+        
+        if (is_object($reviews_xml->data->products)) {
+          foreach ($reviews_xml->data->products->product->reviews->review as $reviews) {
+            $check_query = xtc_db_query("SELECT customers_id  
+                                           FROM ".TABLE_REVIEWS."
+                                          WHERE customers_name = '".xtc_db_input($reviews->reviewer->firstname . ' ' . $reviews->reviewer->lastname)."'
+                                            AND date_added = '".xtc_db_input(date('Y-m-d H:i:s', strtotime($reviews->creationDate)))."'
+                                            AND customers_id = '0'");
+            if (xtc_db_num_rows($check_query) < 1) {
+              $sql_data_array = array('products_id' => $product->data['products_id'],
+                                      'customers_id' => 0,
+                                      'customers_name' => xtc_db_prepare_input($reviews->reviewer->firstname . ' ' . $reviews->reviewer->lastname),
+                                      'reviews_rating' => (int)$reviews->mark,
+                                      'date_added' => date('Y-m-d H:i:s', strtotime($reviews->creationDate)),
+                                      //'ts_uid' => $reviews->UID
+                                      );
       
-            xtc_db_perform(TABLE_REVIEWS, $sql_data_array);
-            $insert_id = xtc_db_insert_id();
+              xtc_db_perform(TABLE_REVIEWS, $sql_data_array);
+              $insert_id = xtc_db_insert_id();
 
-            $sql_data_array = array('reviews_id' => $insert_id,
-                                    'languages_id' => (int)$_SESSION['languages_id'],
-                                    'reviews_text' => xtc_db_prepare_input($reviews->comment)
-                                    );
-            xtc_db_perform(TABLE_REVIEWS_DESCRIPTION, $sql_data_array);
-          } 
+              $sql_data_array = array('reviews_id' => $insert_id,
+                                      'languages_id' => (int)$_SESSION['languages_id'],
+                                      'reviews_text' => xtc_db_prepare_input($reviews->comment)
+                                      );
+              xtc_db_perform(TABLE_REVIEWS_DESCRIPTION, $sql_data_array);
+            } 
+          }
         }
-      
+        
         // update product for caching
         xtc_db_query("UPDATE ".TABLE_PRODUCTS."
                          SET products_last_modified = now()
