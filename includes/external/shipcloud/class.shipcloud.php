@@ -350,13 +350,23 @@ class shipcloud {
       if (is_array($value)) {
         $array[$key] = $this->encode_request($value);
       } else {
-        $array[$key] = utf8_encode(decode_htmlentities($value));
+        $array[$key] = $this->encode_utf8(decode_htmlentities($value));
       }
     }
     
     return $array;
   }
 
+
+  private function encode_utf8($in_str) {
+    $cur_encoding = mb_detect_encoding($in_str);
+    if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
+      return $in_str;
+    } else {
+      return mb_convert_encoding($in_str, "UTF-8", "ISO-8859-15");
+    }
+  }
+  
   
   private function do_request($data, $url = '', $request = 'POST') {
     global $messageStack;
