@@ -82,7 +82,7 @@ function product_redirect($actual_products_id) {
     $current_link = preg_replace("/([^\?]*)(\?.*)/", "$1", $_SERVER['REQUEST_URI']);
     
     //check for products links without cat names
-    if (ADD_CAT_NAMES_TO_PRODUCT_LINK === false) {
+    if (defined('ADD_CAT_NAMES_TO_PRODUCT_LINK') && ADD_CAT_NAMES_TO_PRODUCT_LINK === false) {
       $shortURL = ((strlen(DIR_WS_CATALOG) > 1) ? str_replace(DIR_WS_CATALOG, '', $current_link) : ltrim($current_link, '/'));
       if (isset($_SESSION['CatPath']) && trim($_SESSION['CatPath']) != '' && strpos($shortURL, '/') === false) {
         return $_SESSION['CatPath'];
