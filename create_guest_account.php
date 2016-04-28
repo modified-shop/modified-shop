@@ -51,7 +51,7 @@ require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
 
 $country = isset($_POST['country']) ? (int)$_POST['country'] : STORE_COUNTRY;
-$privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? 'privacy' : '';
+$privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? true : false;
 
 $required_zones = check_country_required_zones($country);
 
