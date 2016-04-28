@@ -20,9 +20,9 @@ define('HEADING_TITLE', 'Software Update');
 define('HEADING_SUBTITLE', 'Update Check');
 
 define('TEXT_DB_VERSION','Database version:');
-define('TEXT_INFO_UPDATE_RECOMENDED', 'A new Version is available.');
-define('TEXT_INFO_UPDATE_NOT_POSSIBLE', 'Sorry, no check was possible. Please visit our <a target="_blank" href="http://www.modified-shop.org"><b>Website</b></a>.');
-define('TEXT_INFO_UPDATE', 'Your Version is up to date.');
+define('TEXT_INFO_UPDATE_RECOMENDED', '<div class="error_message">A new Version is available. You can download from here: <a href="http://www.modified-shop.org/download" target="_blank">http://www.modified-shop.org/download</a></div>');
+define('TEXT_INFO_UPDATE_NOT_POSSIBLE', '<div class="error_message">Sorry, no check was possible. Please visit our <a target="_blank" href="http://www.modified-shop.org"><b>Website</b></a>.</div>');
+define('TEXT_INFO_UPDATE', '<div class="success_message">Your Version is up to date.</div>');
 
 define('TEXT_HEADING_DEVELOPERS', 'Developers of the modified eCommerce Shopsoftware:');
 define('TEXT_HEADING_SUPPORT', 'Please support further development:');
