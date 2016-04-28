@@ -545,10 +545,10 @@ UPDATE geo_zones SET geo_zone_name = 'Steuerzone Nicht-EU-Ausland', geo_zone_des
 
 #GTB - 2015-03-12 - add Signature
 INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', 'EMAIL_SIGNATURE_ID', '', 12, 19, NULL, NOW(), NULL, 'xtc_cfg_select_content(\'EMAIL_SIGNATURE_ID\',');
-INSERT INTO `content_manager` (`content_id`, `languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_active`, `content_group`, `content_delete`)
-  SELECT MAX(content_id)+1, '1','E-Mail Signature','','<b>Company</b><br />Address<br />Location<br />Homepage<br />E-mail:<br />Phone:<br />Fax:<br />CEO:<br />VAT Reg No:','0','1','','0',MAX(content_group)+1,'0' FROM content_manager;
-INSERT INTO `content_manager` (`content_id`, `languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_active`, `content_group`, `content_delete`)
-  SELECT MAX(content_id)+1, '2','E-Mail Signatur','','Firma<br />Adresse<br />Ort<br />Homepage<br />E-Mail:<br />Fon:<br />Fax:<br />USt-IdNr.:<br />Handelsregister<br />Gesch&auml;ftsf&uuml;hrer:','0','1','','0',MAX(content_group),'0' FROM content_manager;
+INSERT INTO `content_manager` (`content_id`, `languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_status`, `content_group`, `content_delete`, `content_active`)
+  SELECT MAX(content_id)+1, '1','E-Mail Signature','','<b>Company</b><br />Address<br />Location<br />Homepage<br />E-mail:<br />Phone:<br />Fax:<br />CEO:<br />VAT Reg No:','0','1','','0',MAX(content_group)+1,'0','0' FROM content_manager;
+INSERT INTO `content_manager` (`content_id`, `languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_status`, `content_group`, `content_delete`, `content_active`)
+  SELECT MAX(content_id)+1, '2','E-Mail Signatur','','Firma<br />Adresse<br />Ort<br />Homepage<br />E-Mail:<br />Fon:<br />Fax:<br />USt-IdNr.:<br />Handelsregister<br />Gesch&auml;ftsf&uuml;hrer:','0','1','','0',MAX(content_group),'0','0' FROM content_manager;
 UPDATE configuration SET configuration_value = (SELECT MAX(content_group) FROM content_manager) WHERE configuration_key = 'EMAIL_SIGNATURE_ID';
 
 #GTB - 2015-03-12 - brute force login
@@ -745,10 +745,10 @@ ALTER TABLE content_manager ADD last_modified DATETIME NOT NULL AFTER date_added
 
 #GTB - 2016-04-01 - Added Invoice time
 INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', 'INVOICE_INFOS', '', 17, 14, NULL, NOW(), NULL, 'xtc_cfg_select_content(\'INVOICE_INFOS\',');
-INSERT INTO `content_manager` (`content_id`, `languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_status`, `content_group`, `content_delete`)
-  SELECT MAX(content_id)+1, '1','Invoice data','Company - Address - Code City','Company<br/>Address<br/>Code City<br/><br/>Phone: 0123456789<br/>E-Mail: info@shop.de<br/>www: www.shopurl.de<br/><br/>IBAN: DE123456789011<br/>BIC: BYLEMDNE1DE<br/><br/>You can change this in the content manager.','0','1','','1',MAX(content_group)+1,'0' FROM content_manager;
-INSERT INTO `content_manager` (`content_id`, `languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_status`, `content_group`, `content_delete`)
-  SELECT MAX(content_id)+1, '2','Rechnungsdaten','Firma - Adresse - PLZ Stadt','Firma<br/>Adresse<br/>PLZ Stadt<br/><br/>Tel: 0123456789<br/>E-Mail: info@shop.de<br/>www: www.shopurl.de<br/><br/>IBAN: DE123456789011<br/>BIC: BYLEMDNE1DE<br/><br/>Diese Daten k&ouml;nnen im Content Manager ge&auml;ndert werden.','0','1','','1',MAX(content_group),'0' FROM content_manager;
+INSERT INTO `content_manager` (`content_id`, `languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_status`, `content_group`, `content_delete`, `content_active`)
+  SELECT MAX(content_id)+1, '1','Invoice data','Company - Address - Code City','Company<br/>Address<br/>Code City<br/><br/>Phone: 0123456789<br/>E-Mail: info@shop.de<br/>www: www.shopurl.de<br/><br/>IBAN: DE123456789011<br/>BIC: BYLEMDNE1DE<br/><br/>You can change this in the content manager.','0','1','','0',MAX(content_group)+1,'0','0' FROM content_manager;
+INSERT INTO `content_manager` (`content_id`, `languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_status`, `content_group`, `content_delete`, `content_active`)
+  SELECT MAX(content_id)+1, '2','Rechnungsdaten','Firma - Adresse - PLZ Stadt','Firma<br/>Adresse<br/>PLZ Stadt<br/><br/>Tel: 0123456789<br/>E-Mail: info@shop.de<br/>www: www.shopurl.de<br/><br/>IBAN: DE123456789011<br/>BIC: BYLEMDNE1DE<br/><br/>Diese Daten k&ouml;nnen im Content Manager ge&auml;ndert werden.','0','1','','0',MAX(content_group),'0','0' FROM content_manager;
 UPDATE configuration SET configuration_value = (SELECT MAX(content_group) FROM content_manager) WHERE configuration_key = 'INVOICE_INFOS';
 
 # Keep an empty line at the end of this file for the db_updater to work properly
