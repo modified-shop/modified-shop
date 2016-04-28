@@ -55,7 +55,7 @@ require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
 
 $country = isset($_POST['country']) ? (int)$_POST['country'] : STORE_COUNTRY; //is country_id (int)
-$privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? 'privacy' : '';
+$privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? true : false;
 
 $required_zones = check_country_required_zones($country);
 
