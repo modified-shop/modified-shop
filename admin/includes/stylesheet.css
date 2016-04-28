@@ -1327,6 +1327,9 @@ line-height:18px;
 color:#A94442;
 background-color:#F2DEDE ;
 }
+.error_message a {
+font-size:inherit;
+}
 .warning_message {
 font-family: Verdana, Arial, sans-serif;
 border:solid #DCA7A7 1px;
