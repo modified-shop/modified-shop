@@ -778,7 +778,7 @@ define('TRACKING_GOOGLEANALYTICS_ID_TITLE' , 'Google Analytics Kontonummer');
 define('TRACKING_GOOGLEANALYTICS_ID_DESC' , 'Tragen Sie hier die Google Analytics Kontonummer im Format "UA-XXXXXXXX-X" ein, die Sie nach einer erfolgreichen Kontoerstellen bekommen haben.');
 
 define('TRACKING_PIWIK_ACTIVE_TITLE' , 'PIWIK Web-Analytics Tracking aktivieren');
-define('TRACKING_PIWIK_ACTIVE_DESC' , 'Um PIWIK nutzen zu k&ouml;nnen, m&uuml;ssen Sie es zun&auml;chst herunterladen und auf Ihrem Webspace installieren, siehe auch <a href="http://http://de.piwik.org/" target="_blank"><b>PIWIK Web-Analytics</b></a>. Im Gegensatz zu Google Analytics werden die Daten lokal gespeichert, d.h. Sie als Shopbetreiber haben die Datenhoheit.');
+define('TRACKING_PIWIK_ACTIVE_DESC' , 'Um PIWIK nutzen zu k&ouml;nnen, m&uuml;ssen Sie es zun&auml;chst herunterladen und auf Ihrem Webspace installieren, siehe auch <a href="http://piwik.org/" target="_blank"><b>PIWIK Web-Analytics</b></a>. Im Gegensatz zu Google Analytics werden die Daten lokal gespeichert, d.h. Sie als Shopbetreiber haben die Datenhoheit.');
 define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'PIWIK Installationsverzeichnis (ohne "http://")');
 define('TRACKING_PIWIK_LOCAL_PATH_DESC' , 'Tragen Sie hier das Verzeichnis ein, nachdem PIWIK erfolgreich installiert worden ist. Als Pfad ist hier der komplette Domainname ohne "http://" einzutragen, z.B. "www.domain.de/piwik".');
 define('TRACKING_PIWIK_ID_TITLE' , 'PIWIK Seiten-ID');
