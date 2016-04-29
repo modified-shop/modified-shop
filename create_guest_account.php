@@ -249,7 +249,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
     $_SESSION['customer_id'] = xtc_db_insert_id();
-
+    xtc_write_user_info($_SESSION['customer_id']);
+    
     $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                             'entry_firstname' => $firstname,
                             'entry_lastname' => $lastname,
@@ -300,6 +301,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $_SESSION['customer_zone_id'] = $zone_id;
     $_SESSION['customer_vat_id'] = $vat;
 
+    // session gender
+    if (ACCOUNT_GENDER == 'true') {
+      $_SESSION['customer_gender'] = $gender;
+    }
+    
     // restore cart contents
     $_SESSION['cart']->restore_contents();
 
