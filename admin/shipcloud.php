@@ -76,7 +76,6 @@ require (DIR_WS_INCLUDES.'head.php');
               <font color="#d52d53"><strong>Voraussetzungen / Anforderungen</strong></font>
               <font color="#91c24f">
               <ul>
-                <li style="list-style-type: circle !important;">modified eCommerce Shopsoftware, Version 2.00</li>
                 <li style="list-style-type: circle !important;"><a href="https://www.shipcloud.io/de/lp/modified/?pc=modified" target="_blank"><font style="font-size:12px; color:#56a5cf;"><u><strong>shipcloud Account</strong></u></font></a></li>
               </ul>
               </font>
