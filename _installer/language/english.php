@@ -110,6 +110,7 @@
   define('TEXT_CHECKING','Checking');
   define('TEXT_INSTALLATION_NOT_POSSIBLE','Due to missing requirements the installation process cannot proceed! Please correct the issues and try again!');
   // EOF - DokuMan - 2010-08-16 - language dependent definitions for index.php
+  define('TEXT_ERROR_SSLVERSION', 'Minimum required version TLS %s.');
 
   // index.php
   define('TITLE_SELECT_LANGUAGE','Select your language:');

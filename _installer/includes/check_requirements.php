@@ -10,6 +10,7 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------*/
 
+  define('SSL_VERSION_MIN', '1.2');
   define('PHP_VERSION_MIN', '5.3.0');
   define('PHP_VERSION_MAX', '5.6.99');
 
@@ -41,14 +42,32 @@
   //EOF *************  check PHP-Version *************
   
   //BOF *************  check cURL-Support *************
+  $ssl_version = 'undefined';
   $curl_version = array();
   if (function_exists('curl_init')) {
     $status='<strong>OK</strong>';
     $curl_version = curl_version();
+
+    // check for SSL Version
+    $ch = curl_init('https://www.howsmyssl.com/a/check');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $data = curl_exec($ch);
+    curl_close($ch);
+    $json = json_decode($data);
+    if (is_object($json)) {
+      $ssl_version = $json->tls_version;
+    }
+    if(version_compare(preg_replace('/[^0-9.]/', '', $ssl_version), SSL_VERSION_MIN, "<")){
+      $status_tls = '<strong><font color="#A94442">'.TEXT_WARNING.'</font></strong><br />'.sprintf(TEXT_ERROR_SSLVERSION, SSL_VERSION_MIN, $ssl_version);
+    } else {
+      $status_tls = '<strong>OK</strong>';
+    }
   } else {
     $status='<strong><font color="#A94442">'.TEXT_WARNING.'</font></strong><br />'.TEXT_CURL_NOT_SUPPORTED;
+    $status_tls = '<strong><font color="#A94442">'.TEXT_WARNING.'</font></strong><br />'.sprintf(TEXT_ERROR_SSLVERSION, SSL_VERSION_MIN, $ssl_version);
   }
   $ok_message.='<tr><td>CURL VERSION</td><td>'.$status.' ('.$curl_version['version'].')</td></tr>';
+  $ok_message.='<tr><td>SSL VERSION</td><td>'.$status_tls.' ('.$ssl_version.')</td></tr>';
   //EOF *************  check cURL-Support *************
   
   //BOF *************  check fsockopen *************

@@ -110,7 +110,8 @@
   define('TEXT_CHECKING','&Uuml;berpr&uuml;fung');
   define('TEXT_INSTALLATION_NOT_POSSIBLE','Die Installation kann wegen fehlender Voraussetzungen nicht fortgesetzt werden! Bitte beheben Sie die Fehler und versuchen Sie es dann erneuet!');
   // EOF - DokuMan - 2010-08-16 - language dependent definitions for index.php
-
+  define('TEXT_ERROR_SSLVERSION', 'Es wird mindestens Version TLS %s ben&ouml;tigt.');
+  
   // index.php
   define('TITLE_SELECT_LANGUAGE','W&auml;hlen Sie eine Sprache aus:');
   define('TEXT_GERMAN','Deutsch');
@@ -350,4 +351,5 @@
   define('TITLE_PERFORM_MANUAL_SQL_UPDATE', ' Manuelle SQL-Eingabe');
   define('TEXT_TABLE', 'Tabelle ');
   define('TEXT_OF', ' von ');
+  
   
