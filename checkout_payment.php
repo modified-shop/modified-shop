@@ -92,6 +92,11 @@ if (!isset($_SESSION['billto'])) {
 if (!isset($_SESSION['sendto']) || $_SESSION['sendto'] == "") {
   $_SESSION['sendto'] = $_SESSION['billto'];
 }
+
+// load the selected shipping module
+require_once (DIR_WS_CLASSES . 'shipping.php');
+$shipping_modules = new shipping($_SESSION['shipping']);
+
 require_once (DIR_WS_CLASSES . 'order.php');
 $order = new order();
 
