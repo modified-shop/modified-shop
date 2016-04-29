@@ -175,10 +175,14 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add('create_account', ENTRY_COUNTRY_ERROR);
   }
 
-  if (ACCOUNT_STATE == 'true' && $required_zones) {
+  $entry_state_has_zones = false;
+  if (ACCOUNT_STATE == 'true') {
     $zone_id = 0;
     $check_query = xtc_db_query("SELECT count(*) AS total 
                                    FROM ".TABLE_ZONES." z
+                                   JOIN ".TABLE_COUNTRIES." c 
+                                        ON c.countries_id = z.zone_country_id 
+                                          AND c.required_zones = '1' 
                                   WHERE z.zone_country_id = '".(int)$country."'");
     $check = xtc_db_fetch_array($check_query);
     $entry_state_has_zones = ($check['total'] > 0);
@@ -287,7 +291,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     if (ACCOUNT_SUBURB == 'true') {
       $sql_data_array['entry_suburb'] = $suburb;
     }
-    if (ACCOUNT_STATE == 'true' && $required_zones) {
+    if (ACCOUNT_STATE == 'true') {
       $sql_data_array['entry_zone_id'] = (isset($zone_id) ? (int)$zone_id : 0);
       $sql_data_array['entry_state'] = (isset($state) ? $state : '');
     }
@@ -533,6 +537,7 @@ $smarty->assign('INPUT_CITY', xtc_draw_input_fieldNote(array ('name' => 'city', 
 
 if (ACCOUNT_STATE == 'true') { //important no $required_zones because of ajax loader
   $smarty->assign('state', '1');
+  $smarty->assign('display_state', '');
   if ($process == true) {
     if ($entry_state_has_zones == true) {
       $zones_array = array ();
@@ -549,9 +554,17 @@ if (ACCOUNT_STATE == 'true') { //important no $required_zones because of ajax lo
       $state_input = xtc_draw_pull_down_menuNote(array ('name' => 'state', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">'.ENTRY_STATE_TEXT.'</span>' : '')), $zones_array, $zone_id);
     } else {
       $state_input = xtc_draw_input_fieldNote(array ('name' => 'state', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">'.ENTRY_STATE_TEXT.'</span>' : '')));
+      if (!$required_zones) {
+        $state_input = '<input type="hidden" value="0" name="state">';
+        $smarty->assign('display_state', ' style="display:none"');        
+      }
     }
   } else {
     $state_input = xtc_draw_input_fieldNote(array ('name' => 'state', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">'.ENTRY_STATE_TEXT.'</span>' : '')));
+    if (!$required_zones) {
+      $state_input = '<input type="hidden" value="0" name="state">';
+      $smarty->assign('display_state', ' style="display:none"');     
+    }
   }
   $smarty->assign('INPUT_STATE', $state_input);
 } else {
