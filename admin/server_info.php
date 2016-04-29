@@ -18,6 +18,17 @@
 
 require('includes/application_top.php');
 
+// check for SSL Version
+$ssl_version = 'undefined';
+$ch = curl_init('https://www.howsmyssl.com/a/check');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$data = curl_exec($ch);
+curl_close($ch);
+$json = json_decode($data);
+if (is_object($json)) {
+  $ssl_version = $json->tls_version;
+}
+
 $system = xtc_get_system_information();
 require (DIR_WS_INCLUDES.'head.php');
 ?>
@@ -128,11 +139,15 @@ require (DIR_WS_INCLUDES.'head.php');
               <td class="smallText"><strong><?php echo TITLE_PHP_VERSION; ?></strong></td>
               <td colspan="3" class="smallText"><?php echo $system['php'] . ' (' . TITLE_ZEND_VERSION . ' ' . $system['zend'] . ')'; ?></td>
             </tr>
+            <tr>
+              <td class="smallText"><strong><?php echo TITLE_SSL_VERSION; ?></strong></td>
+              <td colspan="3" class="smallText"><?php echo $ssl_version; ?></td>
+            </tr>
           </table>
         </td>
       </tr>
     </table>
-      
+    
     <table style="margin:10px auto">
       <tr>
         <td id="phpinfo" >

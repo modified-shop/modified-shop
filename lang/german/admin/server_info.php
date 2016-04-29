@@ -27,4 +27,5 @@ define('TITLE_ZEND_VERSION', 'Zend:');
 define('TITLE_DATABASE_HOST', 'Datenbank Host:');
 define('TITLE_DATABASE', 'Datenbank:');
 define('TITLE_DATABASE_DATE', 'Datenbank Datum:');
+define('TITLE_SSL_VERSION', 'SSL Version:');
 ?>
