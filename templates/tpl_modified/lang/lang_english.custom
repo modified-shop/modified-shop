@@ -29,6 +29,7 @@ ab_edit_content = 'Edit content'
 ab_edit_product = 'Edit product'
 ab_edit_attributes = 'Edit product attributes'
 ab_edit_category = 'Edit category'
+ab_edit_xsell = 'Edit cross selling'
 
 info_reviews = 'Reviews:'
 info_review = 'Review:'
