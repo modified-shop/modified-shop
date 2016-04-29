@@ -141,8 +141,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $error = true;
     $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
   } elseif ($email_address != $confirm_email_address) {
-       $error = true;
-       $messageStack->add('create_account', ENTRY_EMAIL_ERROR_NOT_MATCHING);
+    $error = true;
+    $messageStack->add('create_account', ENTRY_EMAIL_ERROR_NOT_MATCHING);
   } else {
     $check_email_query = xtc_db_query("SELECT count(*) as total
                                          FROM ".TABLE_CUSTOMERS."
@@ -244,6 +244,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     }
   }
 
+  if (!$newsletter) {
+    $newsletter = '';
+  }
+
   if ($error == false) {
     $sql_data_array = array('customers_cid' => generate_customers_cid(true),
                             'customers_vat_id' => $vat,
@@ -308,7 +312,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                             'customers_info_number_of_logons' => '1',
                             'customers_info_date_account_created' => 'now()'
                             );
-    xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);                       
+    xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
 
     if (SESSION_RECREATE == 'True') {
       xtc_session_recreate();
@@ -459,7 +463,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $newsletter->AddUserAuto($email_address);
     }
 
-    xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 }
 
@@ -478,7 +482,6 @@ if(@isset($_SESSION['xtb0']['tx'][0])) {
   $GLOBALS['email_address'] = $_SESSION['xtb0']['tx'][0]['XTB_EBAY_EMAIL'];
   $GLOBALS['telephone'] = $_SESSION['xtb0']['tx'][0]['XTB_EBAY_PHONE'];
 }
-
 
 if ($messageStack->size('create_account') > 0) {
   $smarty->assign('error', $messageStack->output('create_account'));
