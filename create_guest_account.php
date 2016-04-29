@@ -159,6 +159,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add('create_account', ENTRY_COUNTRY_ERROR);
   }
 
+  $entry_state_has_zones = false;
   if (ACCOUNT_STATE == 'true') {
     $zone_id = 0;
     $check_query = xtc_db_query("SELECT count(*) AS total 
