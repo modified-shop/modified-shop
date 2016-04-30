@@ -92,4 +92,5 @@ define('BUTTON_VIEW_PRODUCT', 'View Product');
 //EOF - web28 - 2011-07-13 - New Button
 
 define('BUTTON_VALUES', 'Values');
+define('BUTTON_DELETE_BANKTRANSFER', 'Delete Banktransfer data');
 ?>
