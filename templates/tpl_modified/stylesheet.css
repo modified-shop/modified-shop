@@ -3885,7 +3885,7 @@ ul.resp-tabs-list{
   position:absolute;
   right:0;
   margin:0px;
-  width:300px;
+  width:400px;
   background-color:#f1f1f1;
   border:1px solid #ccc;
   color:#333;
@@ -3898,7 +3898,7 @@ ul.resp-tabs-list{
 .suggestionList {
   margin:0px;
   padding:0px;
-  max-height:300px;
+  max-height:600px;
   overflow:auto;
   padding-right:5px;
   -moz-box-sizing: border-box;
@@ -3929,7 +3929,7 @@ ul.resp-tabs-list{
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   border: 1px solid #ddd;
-  margin-right:5px;
+  margin-right:10px;
 }
 .suggestionList li a.autocomplete .autocomplete_image img {
   float:left;

@@ -61,7 +61,7 @@
 </script>
 <script type="text/javascript">
   <?php if (SEARCH_AC_STATUS == 'true') { ?>
-  var ac_pageSize = 4;
+  var ac_pageSize = 8;
   var ac_page = 1;
   var ac_result = 0;
   var ac_show_page = '<?php echo AC_SHOW_PAGE; ?>';
