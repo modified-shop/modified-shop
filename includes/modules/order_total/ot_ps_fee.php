@@ -41,7 +41,6 @@
       $this->enabled = ((MODULE_ORDER_TOTAL_PS_FEE_STATUS == 'true') ? true : false);
       $this->sort_order = MODULE_ORDER_TOTAL_PS_FEE_SORT_ORDER;
 
-
       $this->default_values = 'AT:3.00,DE:3.58,00:9.99';
       
       $this->properties['button_update'] = '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . 'ordertotal' . '&module=' . $this->code . '&action=update') . '">' . BUTTON_UPDATE. '</a>';
@@ -96,20 +95,20 @@
               $order->info['tax'] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
               $order->info['tax_groups'][TAX_ADD_TAX . "$ps_tax_description"] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
               $order->info['total'] += $ps_cost + (xtc_add_tax($ps_cost, $ps_tax)-$ps_cost);
-              $ps_cost_value= xtc_add_tax($ps_cost, $ps_tax);
-              $ps_cost= $xtPrice->xtcFormat($ps_cost_value,true);
+              $ps_cost_value = xtc_add_tax($ps_cost, $ps_tax);
+              $ps_cost= $xtPrice->xtcFormat($ps_cost_value, true);
           }
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
               $order->info['tax'] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
               $order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
               $ps_cost_value = $ps_cost;
-              $ps_cost = $xtPrice->xtcFormat($ps_cost,true);
+              $ps_cost = $xtPrice->xtcFormat($ps_cost, true);
               $order->info['subtotal'] += $ps_cost_value;
               $order->info['total'] += $ps_cost_value;
           }
           if (!$ps_cost_value) {
              $ps_cost_value = $ps_cost;
-             $ps_cost = $xtPrice->xtcFormat($ps_cost,true);
+             $ps_cost = $xtPrice->xtcFormat($ps_cost, true);
              $order->info['total'] += $ps_cost_value;
           }
           $this->output[] = array('title' => $this->title . ':',

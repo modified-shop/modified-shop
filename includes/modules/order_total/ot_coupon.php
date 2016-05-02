@@ -70,16 +70,16 @@ class ot_coupon {
     global $order, $xtPrice;
     $order_total = $this->get_order_total(); //Betrag, der für die Kuponberechnung verwendet wird
     $od_amount = $this->calculate_credit($order_total);  //Kuponbetrag berechnen
+    
     $this->deduction = $od_amount;
 
     if ($od_amount > 0) {
-      //$od_amount = $xtPrice->xtcFormat($od_amount, false); //Rabatt runden ??? Rundungsfehler ???
       if ($this->calculate_tax != 'None') {
-        $this->new_calculate_tax_deduction($od_amount,$order_total);
+        $this->new_calculate_tax_deduction($od_amount, $order_total);
       }
       $order->info['total'] = $xtPrice->xtcFormat($order->info['total'] - $od_amount, false);
       $order->info['deduction'] = $od_amount;
-      $order->info['subtotal'] = $order->info['subtotal'] - $od_amount;// web28 - 2010-05-23 - BUGFIX tax_deduction
+      $order->info['subtotal'] = $order->info['subtotal'] - $od_amount;
       $this->output[] = array (
           'title' => $this->title.' '.$this->coupon_code.$this->tax_info.':',
           'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($od_amount*(-1), true).'</b></span>',

@@ -58,7 +58,10 @@ class ot_shipping {
           break;
       }
       
-      if (($pass == true) && ($xtPrice->xtcRemoveCurr($order->info['total'] - $order->info['shipping_cost']) >= $free_shipping_value_over)) {
+      if ($pass == true 
+          && $xtPrice->xtcRemoveCurr($order->info['total'] - $order->info['shipping_cost']) >= $free_shipping_value_over
+          ) 
+      {
         $order->info['shipping_method'] = $this->title;
         $order->info['total'] -= $order->info['shipping_cost'];
         $order->info['shipping_cost'] = 0;
@@ -80,8 +83,8 @@ class ot_shipping {
       $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       
       $shipping_tax_description = xtc_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-      $tax = xtc_add_tax($order->info['shipping_cost'], $shipping_tax)-$order->info['shipping_cost'];
-      $tax = $xtPrice->xtcFormat($tax,false,0,true);
+      $tax = xtc_add_tax($order->info['shipping_cost'], $shipping_tax) - $order->info['shipping_cost'];
+      $tax = $xtPrice->xtcFormat($tax, false, 0, true);
       
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
         // price with tax
@@ -97,8 +100,8 @@ class ot_shipping {
       }
       
       $this->output[] = array('title' => $order->info['shipping_method'] . ':',
-                              'text' => $xtPrice->xtcFormat($order->info['shipping_cost'], true,0,true),
-                              'value' => $xtPrice->xtcFormat($order->info['shipping_cost'], false,0,true));
+                              'text' => $xtPrice->xtcFormat($order->info['shipping_cost'], true, 0, true),
+                              'value' => $xtPrice->xtcFormat($order->info['shipping_cost'], false, 0, true));
     }
   }
 
@@ -149,13 +152,15 @@ class ot_shipping {
   }
 
   function keys() {
-    return array('MODULE_ORDER_TOTAL_SHIPPING_STATUS', 
-                 'MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER', 
-                 'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING', 
-                 'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER', 
-                 'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_INTERNATIONAL',
-                 'MODULE_ORDER_TOTAL_SHIPPING_DESTINATION', 
-                 'MODULE_ORDER_TOTAL_SHIPPING_TAX_CLASS');
+    return array(
+      'MODULE_ORDER_TOTAL_SHIPPING_STATUS', 
+      'MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER', 
+      'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING', 
+      'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER', 
+      'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_INTERNATIONAL',
+      'MODULE_ORDER_TOTAL_SHIPPING_DESTINATION', 
+      'MODULE_ORDER_TOTAL_SHIPPING_TAX_CLASS'
+    );
   }
 
 }

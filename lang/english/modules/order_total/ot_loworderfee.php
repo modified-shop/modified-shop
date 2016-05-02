@@ -30,6 +30,12 @@
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_TITLE','Order Fee For Orders Under');
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_DESC','Add the low order fee to orders under this amount.');
 
+  define('MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_INTERNATIONAL_TITLE','Order Fee for international orders under');
+  define('MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_INTERNATIONAL_DESC','Add the low order fee to international orders under this amount.');
+
+  define('MODULE_ORDER_TOTAL_LOWORDERFEE_FEE_INTERNATIONAL_TITLE','Order Fee international');
+  define('MODULE_ORDER_TOTAL_LOWORDERFEE_FEE_INTERNATIONAL_DESC','Low order fee international.');
+
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_FEE_TITLE','Order Fee');
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_FEE_DESC','Low order fee.');
 

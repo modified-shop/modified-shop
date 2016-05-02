@@ -44,18 +44,15 @@ class ot_gv {
     $this->calculate_tax = MODULE_ORDER_TOTAL_GV_CALC_TAX;
     $this->credit_tax = MODULE_ORDER_TOTAL_GV_CREDIT_TAX;
     $this->tax_class = MODULE_ORDER_TOTAL_GV_TAX_CLASS;
-    //$this->show_redeem_box = MODULE_ORDER_TOTAL_GV_REDEEM_BOX; //DokuMan - 2010-10-14 - remove unused constant MODULE_ORDER_TOTAL_GV_REDEEM_BOX
     $this->credit_class = true;
-    // BOF - Tomcraft - 2010-01-29 - Fix display of voucher
-    //$this->checkbox = $this->user_prompt.'<input type="checkbox" onclick="submitFunction()" name="'.'c'.$this->code.'">';
     $this->checkbox = '<input type="checkbox" onclick="submitFunction()" name="'.'c'.$this->code.'"> '.$this->user_prompt;
-    // EOF - Tomcraft - 2010-01-29 - Fix display of voucher
+    
     $this->output = array ();
   }
 
   function process() {
     global $order, $xtPrice;
-    //      if ($_SESSION['cot_gv']) {  // old code Strider
+
     if (isset ($_SESSION['cot_gv']) && $_SESSION['cot_gv'] == true) {
       $order_total = $this->get_order_total();
 
@@ -65,26 +62,21 @@ class ot_gv {
         $od_amount = $this->calculate_credit($order_total);
       }
 
-      $this->deduction = $od_amount;
-      //        if (($this->calculate_tax == "Credit Note") && (DISPLAY_PRICE_WITH_TAX != 'true')) {
-      //          $od_amount -= $tod_amount;
-      //          $order->info['total'] -= $tod_amount;
-      //        }
+      $this->deduction = $od_amount * (-1);
 
-      $order->info['total'] = $order->info['total'] - $od_amount;
+      $order->info['total'] = $order->info['total'] + $this->deduction;
 
-      if ($od_amount > 0) {
+      if ($this->deduction < 0) {
         $this->output[] = array (
             'title' => $this->title . ':', 
-            'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($od_amount *(-1), true).'</b></span>', //2011-08-25 - web28 - fix negativ sign
-            'value' => $xtPrice->xtcFormat($od_amount *(-1), false) //2011-08-25 - web28 - fix negativ sign
+            'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($this->deduction, true).'</b></span>', 
+            'value' => $xtPrice->xtcFormat($this->deduction, false) 
           );
       }
     }
   }
 
   function selection_test() {
-
     if ($this->user_has_gv_account($_SESSION['customer_id'])) {
       return true;
     } else {
@@ -94,7 +86,7 @@ class ot_gv {
 
   function pre_confirmation_check($order_total) {
     global $order;
-    //    if ($_SESSION['cot_gv']) {  // old code Strider
+
     $od_amount = 0; // set the default amount we will send back
     if (isset ($_SESSION['cot_gv']) && $_SESSION['cot_gv'] == true) {
       // pre confirmation check doesn't do a true order process. It just attempts to see if
@@ -116,39 +108,25 @@ class ot_gv {
         $od_amount = $this->calculate_credit($order_total) + $tod_amount;
       }
     }
+    
     return $od_amount;
   }
-  // original code
-  /*function pre_confirmation_check($order_total) {
-    if ($SESSION['cot_gv']) {
-      $gv_payment_amount = $this->calculate_credit($order_total);
-    }
-    return $gv_payment_amount;
-  } */
 
   function use_credit_amount() {
-    //$output_string = ''.
-
     $_SESSION['cot_gv'] = false;
     if ($this->selection_test()) {
-      //BOF - DokuMan - 2010-09-29 - remove layout formatting from checkbox
-      //$output_string .= '    <td nowrap align="right" class="main">';
-      //$output_string .= '<strong>'.$this->checkbox.'</strong>'.'</td>'."\n";
-      //$output_string = $this->checkbox;
       return true;
-      //EOF - DokuMan - 2010-09-29 - remove layout formatting from checkbox
     }
     return false;
-    //return $output_string;
   }
 
   function update_credit_account($i) {
     global $order, $insert_id, $REMOTE_ADDR;
-    if (preg_match('/^GIFT/', addslashes($order->products[$i]['model']))) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
+    if (preg_match('/^GIFT/', addslashes($order->products[$i]['model']))) {
       $gv_order_amount = ($order->products[$i]['final_price']);
-      if ($this->credit_tax == 'true')
+      if ($this->credit_tax == 'true') {
         $gv_order_amount = $gv_order_amount * (100 + $order->products[$i]['tax']) / 100;
-      //        $gv_order_amount += 0.001;
+      }
       $gv_order_amount = $gv_order_amount * 100 / 100;
       if (MODULE_ORDER_TOTAL_GV_QUEUE == 'false') {
         // GV_QUEUE is false so release amount to account immediately
@@ -173,22 +151,6 @@ class ot_gv {
   }
 
   function credit_selection() {
-    /*
-    global $currencies;
-    $selection_string = '';
-    $gv_query = xtc_db_query("select coupon_id from ".TABLE_COUPONS." where coupon_type = 'G' and coupon_active='Y'");
-    /*
-    if (xtc_db_num_rows($gv_query)) {
-      $selection_string .= '<tr>' . "\n";
-      $selection_string .= '  <td width="10">' .  xtc_draw_separator('pixel_trans.gif', '10', '1') .'</td>';
-      $selection_string .= '  <td class="main">' . "\n";
-      $selection_string .= TEXT_ENTER_GV_CODE . xtc_draw_input_field('gv_redeem_code') . '</td>';
-      $selection_string .= ' <td align="right"></td>';
-      $selection_string .= '  <td width="10">' . xtc_draw_separator('pixel_trans.gif', '10', '1') . '</td>';
-      $selection_string .= '</tr>' . "\n";
-    }
-    */
-    //return $selection_string;
     return false;
   }
 
@@ -241,7 +203,6 @@ class ot_gv {
           // no gv_amount so insert
           $gv_insert = xtc_db_query("insert into ".TABLE_COUPON_GV_CUSTOMER." (customer_id, amount) values ('".$_SESSION['customer_id']."', '".$total_gv_amount."')");
         }
-        //xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_REDEEMED_AMOUNT. $currencies->format($gv_amount)), 'SSL'));
       }
     }
     if (isset($_POST['submit_redeem_x']) && $gv_result['coupon_type'] == 'G')
@@ -260,13 +221,15 @@ class ot_gv {
       $full_cost = 0;
       $gv_payment_amount = $save_total_cost;
     }
+    
     return $gv_payment_amount;
   }
 
   function calculate_tax_deduction($amount, $od_amount, $method) {
     global $order;
+    
     switch ($method) {
-      case 'Standard' :
+      case 'Standard':
         $ratio1 = number_format($od_amount / $amount, 2);
         $tod_amount = 0;
         reset($order->info['tax_groups']);
@@ -289,15 +252,14 @@ class ot_gv {
         $order->info['tax'] -= $tod_amount;
         $order->info['total'] -= $tod_amount;
         break;
-      case 'Credit Note' :
+      case 'Credit Note':
         $tax_rate = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         $tax_desc = xtc_get_tax_description($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         $tod_amount = $this->deduction / (100 + $tax_rate) * $tax_rate;
         $order->info['tax_groups'][$tax_desc] -= $tod_amount;
-        //          $order->info['total'] -= $tod_amount;   //// ????? Strider
-        break;
-      default :
-        }
+        break;    
+    }
+    
     return $tod_amount;
   }
 
@@ -308,6 +270,7 @@ class ot_gv {
         return true;
       }
     }
+    
     return false;
   }
 
@@ -319,21 +282,35 @@ class ot_gv {
         return $gv_result['amount'];
       }
     }
+    
     return false;
   }
 
   function get_order_total() {
     global $order;
-    if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 0)
+    
+    if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 0) {
       $order_total = $order->info['total'];
-    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1)
+    }
+    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+        && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+        )
+    {
       $order_total = $order->info['tax'] + $order->info['total'];
-    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0)
+    }
+    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+        && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+        )
+    {
       $order_total = $order->info['total'];
-    if ($this->include_tax == 'false')
+    }
+    if ($this->include_tax == 'false') {
       $order_total = $order_total - $order->info['tax'];
-    if ($this->include_shipping == 'false')
+    }
+    if ($this->include_shipping == 'false') {
       $order_total = $order_total - $order->info['shipping_cost'];
+    }
+    
     return $order_total;
   }
 
@@ -347,7 +324,16 @@ class ot_gv {
   }
 
   function keys() {
-    return array ('MODULE_ORDER_TOTAL_GV_STATUS', 'MODULE_ORDER_TOTAL_GV_SORT_ORDER', 'MODULE_ORDER_TOTAL_GV_QUEUE', 'MODULE_ORDER_TOTAL_GV_INC_SHIPPING', 'MODULE_ORDER_TOTAL_GV_INC_TAX', 'MODULE_ORDER_TOTAL_GV_CALC_TAX', 'MODULE_ORDER_TOTAL_GV_TAX_CLASS', 'MODULE_ORDER_TOTAL_GV_CREDIT_TAX');
+    return array (
+      'MODULE_ORDER_TOTAL_GV_STATUS', 
+      'MODULE_ORDER_TOTAL_GV_SORT_ORDER', 
+      'MODULE_ORDER_TOTAL_GV_QUEUE', 
+      'MODULE_ORDER_TOTAL_GV_INC_SHIPPING', 
+      'MODULE_ORDER_TOTAL_GV_INC_TAX', 
+      'MODULE_ORDER_TOTAL_GV_CALC_TAX', 
+      'MODULE_ORDER_TOTAL_GV_TAX_CLASS', 
+      'MODULE_ORDER_TOTAL_GV_CREDIT_TAX'
+    );
   }
 
   function install() {

@@ -32,19 +32,21 @@
 
     function process() {
       global $order, $xtPrice;
-	//echo $order->info['total'];
+
       reset($order->info['tax_groups']);
       while (list($key, $value) = each($order->info['tax_groups'])) {
         if ($value > 0) {
-
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 0) {
             $this->output[] = array('title' => $key . ':',
-                                    'text' =>$xtPrice->xtcFormat($value,true),
+                                    'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+              && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+              ) 
+          {
             $this->output[] = array('title' => $key .':',
-                                    'text' =>$xtPrice->xtcFormat($value,true),
+                                    'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
           }
         }
@@ -61,7 +63,10 @@
     }
 
     function keys() {
-      return array('MODULE_ORDER_TOTAL_TAX_STATUS', 'MODULE_ORDER_TOTAL_TAX_SORT_ORDER');
+      return array(
+        'MODULE_ORDER_TOTAL_TAX_STATUS', 
+        'MODULE_ORDER_TOTAL_TAX_SORT_ORDER'
+      );
     }
 
     function install() {
