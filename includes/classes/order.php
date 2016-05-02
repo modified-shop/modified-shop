@@ -650,9 +650,6 @@
       }
 
       $this->info['total'] = $this->info['subtotal'] + $xtPrice->xtcFormat($this->info['shipping_cost'], false,0,true);
-      if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
-        $this->info['total'] -= ($this->info['subtotal'] / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
-      }
     }
   }
 ?>

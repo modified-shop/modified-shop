@@ -26,25 +26,31 @@
       $this->enabled = ((MODULE_ORDER_TOTAL_SUBTOTAL_STATUS == 'true') ? true : false);
       $this->sort_order = MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER;
  
-
       $this->output = array();
     }
 
     function process() {
       global $order, $xtPrice;
-      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) {
+      
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+          ) 
+      {
         $this->output[] = array('title' => MODULE_ORDER_TOTAL_SUBTOTAL_TITLE_NO_TAX . ':',
-                                'text' => $xtPrice->xtcFormat($order->info['subtotal'],true),
+                                'text' => $xtPrice->xtcFormat($order->info['subtotal'], true),
                                 'value' => $order->info['subtotal']);
       }
-      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+          ) 
+      {
         $this->output[] = array('title' => $this->title . ':',
-                                'text' => $xtPrice->xtcFormat($order->info['subtotal'],true),
+                                'text' => $xtPrice->xtcFormat($order->info['subtotal'], true),
                                 'value' => $order->info['subtotal']);
       } 
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 0) {
         $this->output[] = array('title' => $this->title . ':',
-                                'text' => $xtPrice->xtcFormat($order->info['subtotal'],true),
+                                'text' => $xtPrice->xtcFormat($order->info['subtotal'], true),
                                 'value' => $order->info['subtotal']);
       }
 

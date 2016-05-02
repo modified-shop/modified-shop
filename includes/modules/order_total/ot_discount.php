@@ -21,26 +21,33 @@
 
     function __construct() {
     	global $xtPrice;
+    	
       $this->code = 'ot_discount';
       $this->title = MODULE_ORDER_TOTAL_DISCOUNT_TITLE;
       $this->description = MODULE_ORDER_TOTAL_DISCOUNT_DESCRIPTION;
       $this->enabled = ((MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true') ? true : false);
       $this->sort_order = MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER;
-
-
+      
       $this->output = array();
     }
 
     function process() {
       global $order, $xtPrice;
-//      echo 'xx';
+
       $this->title = $_SESSION['customers_status']['customers_status_ot_discount'] . ' % ' . MODULE_ORDER_TOTAL_DISCOUNT_TITLE;
-      if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' && $_SESSION['customers_status']['customers_status_ot_discount']!='0.00') {
-        $discount_price = $xtPrice->xtcFormat($order->info['subtotal'], false) / 100 * $_SESSION['customers_status']['customers_status_ot_discount']*-1;
+      if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
+          && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+          ) 
+      {
+        $discount_price = $xtPrice->xtcFormat(($xtPrice->xtcFormat($order->info['subtotal'], false) / 100 * $_SESSION['customers_status']['customers_status_ot_discount']), false);
+        $this->deduction = $discount_price * (-1);
+        
+        $order->info['total'] = $order->info['total'] + $this->deduction;
+
         $this->output[] = array(
             'title' => $this->title . ':',
-            'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($discount_price,true).'</b></span>',
-            'value' => $discount_price
+            'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($this->deduction, true).'</b></span>',
+            'value' => $this->deduction
           );
       }
     }
@@ -55,16 +62,15 @@
     }
 
     function keys() {
-      return array('MODULE_ORDER_TOTAL_DISCOUNT_STATUS', 'MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER');
+      return array(
+        'MODULE_ORDER_TOTAL_DISCOUNT_STATUS',
+        'MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER'
+      );
     }
 
     function install() {
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_ORDER_TOTAL_DISCOUNT_STATUS', 'true','6', '1','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-      // hendrik 2010-11-24 beginn
-      //xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER', '2', '7', '2', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER', '20', '6', '2', now())");
-      // hendrik 2010-11-24 beginn
-      
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER', '20', '6', '2', now())");      
     }
 
     function remove() {

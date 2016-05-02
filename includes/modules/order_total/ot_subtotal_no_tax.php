@@ -29,7 +29,6 @@
       $this->enabled = ((MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS == 'true') ? true : false);
       $this->sort_order = MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER;
 
-
       $this->output = array();
     }
 
@@ -37,20 +36,25 @@
       global $order, $xtPrice;
       
       // merchant
-      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+          ) 
+      {
         $this->output[] = array('title' => $this->title . ':',
-                                'text' => '<strong>' . $xtPrice->xtcFormat($order->info['total'], true).'</strong>',
+                                'text' => '<b>'.$xtPrice->xtcFormat($order->info['total'], true).'</b>',
                                 'value' => $xtPrice->xtcFormat($order->info['total'], false));
       }
-      
       // default customer
-      elseif ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0 && $xtPrice->xtcRemoveCurr($order->info['total']) >= $_SESSION['customers_status']['customers_status_show_tax_total']) {
-        
+      elseif ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1 
+              && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0 
+              && $xtPrice->xtcRemoveCurr($order->info['total']) >= $_SESSION['customers_status']['customers_status_show_tax_total']
+              ) 
+      {
         // calculate notax
         $sub_total_price = $order->info['total']-$order->info['tax'];
         
         $this->output[] = array('title' => $this->title . ':',
-                                'text' => '<b>' . $xtPrice->xtcFormat($sub_total_price, true).'</b>',
+                                'text' => '<b>'.$xtPrice->xtcFormat($sub_total_price, true).'</b>',
                                 'value' => $xtPrice->xtcFormat($sub_total_price, false));
       }
     }
@@ -65,7 +69,10 @@
     }
 
     function keys() {
-      return array('MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS', 'MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER');
+      return array(
+        'MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS', 
+        'MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER'
+      );
     }
 
     function install() {
