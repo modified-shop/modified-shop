@@ -190,7 +190,7 @@
       $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'. MODULE_CAPTCHA_CODE_LENGTH .'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
     }
     if (DISPLAY_PRIVACY_CHECK == 'true') {
-      $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', $privacy, 'id="privacy"'));
+      $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', ((isset($_POST['privacy']) && $_POST['privacy'] == 'privacy') ? true : false), 'id="privacy"'));
       $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
     }
     $smarty->assign('INPUT_NAME', xtc_draw_input_field('name', ($error ? $_POST['name'] : $customers_name), 'size="30"'));
