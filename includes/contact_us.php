@@ -13,7 +13,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  //included by shop_content.php
+  defined('DISPLAY_PRIVACY_CHECK') or define('DISPLAY_PRIVACY_CHECK', 'true');
 
   //use contact_us.php language file
   require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
@@ -30,29 +30,36 @@
   if (isset ($_GET['action']) && ($_GET['action'] == 'send')) {
 
     //jedes Feld kann hier auf die gewünschte Bedingung getestet und eine Fehlermeldung zugeordnet werden
-    $err_msg = '';
     if (!xtc_validate_email(trim($_POST['email']))) {
-      $err_msg .= ERROR_EMAIL;
+      $messageStack->add('contact_us', ERROR_EMAIL);
       $error = true;
     }
     
     if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
       if ((strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) || $_SESSION['vvcode']=='') {
-        $err_msg .= ERROR_VVCODE;
+        $messageStack->add('contact_us', ERROR_VVCODE);
         $error = true;
       }
     }
     
     if (trim($_POST['message_body']) == '') {
-      $err_msg .= ERROR_MSG_BODY;
+      $messageStack->add('contact_us', ERROR_MSG_BODY);
       $error = true;
     }
 
-    $smarty->assign('error_message', ERROR_MAIL . $err_msg);
+    if (DISPLAY_PRIVACY_CHECK == 'true' && empty($_POST['privacy'])) {
+      $messageStack->add('contact_us', ENTRY_PRIVACY_ERROR);
+      $error = true;
+    }
+
+    if ($messageStack->size('contact_us') > 0) {
+      $messageStack->add('contact_us', ERROR_MAIL);
+      $smarty->assign('error_message', $messageStack->output('contact_us'));
+    }
     unset($_SESSION['vvcode']);
 
     //Wenn kein Fehler Email formatieren und absenden
-    if (!$error) {
+    if ($error === false) {
       // Datum und Uhrzeit
       $datum = date("d.m.Y");
       $uhrzeit = date("H:i");
@@ -181,6 +188,10 @@
     if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
       $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL').'" alt="Captcha" />');
       $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'. MODULE_CAPTCHA_CODE_LENGTH .'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+    }
+    if (DISPLAY_PRIVACY_CHECK == 'true') {
+      $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', $privacy, 'id="privacy"'));
+      $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
     }
     $smarty->assign('INPUT_NAME', xtc_draw_input_field('name', ($error ? $_POST['name'] : $customers_name), 'size="30"'));
     $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ($error ? $_POST['email'] : $email_address), 'size="30"'));
