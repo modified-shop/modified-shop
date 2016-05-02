@@ -89,6 +89,10 @@ if (isset ($_POST['multi_status_off'])) {
 // --- MULTI STATUS ENDS ---
 
 //regular actions
+$redirect_parameters = array ('action', 'flag', 'page');
+if (isset($_GET['search']) && $_GET['search'] != '') {
+  array_push($redirect_parameters, 'cPath');
+}
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 if (xtc_not_null($action)) {
   switch ($action) {
@@ -98,7 +102,7 @@ if (xtc_not_null($action)) {
           $catfunc->set_category_recursive($_GET['cID'], $_GET['flag']);
         }
       }
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('action', 'flag', 'page')).$catfunc->page_parameter));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params($redirect_parameters).$catfunc->page_parameter_plain));
       break;
       //EOB setcflag
     case 'setpflag' :
@@ -107,7 +111,7 @@ if (xtc_not_null($action)) {
           $catfunc->set_product_status($_GET['pID'], $_GET['flag']);
         }
       }
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('action', 'flag', 'page')).$catfunc->page_parameter));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params($redirect_parameters).$catfunc->page_parameter_plain));
       break;
       //EOB setpflag
     case 'setsflag' :
@@ -118,7 +122,7 @@ if (xtc_not_null($action)) {
           $catfunc->set_product_remove_startpage_sql($_GET['pID'], $_GET['flag']);
         }
       }
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('action', 'flag', 'page')).$catfunc->page_parameter));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params($redirect_parameters).$catfunc->page_parameter_plain));
       break;
       //EOB setsflag
     case 'update_category' :
