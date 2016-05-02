@@ -133,7 +133,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $this->details->setShippingDiscount($this->details->getShippingDiscount() + ($xtPrice->xtcGetDC($price, $_SESSION['customers_status']['customers_status_ot_discount']) * (-1)));
       }
 
-      $this->amount->setTotal($total);
+      $this->amount->setTotal($total + $this->details->getShippingDiscount());
 
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
           && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
