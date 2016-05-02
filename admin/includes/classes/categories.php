@@ -1165,6 +1165,7 @@ class categories {
   
   function set_page_parameter() {
     $this->page_parameter = isset($_GET['page']) ? '&page='.(int)$_GET['page'] : '';
+    $this->page_parameter_plain = isset($_GET['page']) ? 'page='.(int)$_GET['page'] : '';
   }
 
   
