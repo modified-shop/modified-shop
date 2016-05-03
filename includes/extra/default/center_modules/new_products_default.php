@@ -16,6 +16,22 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+//count products on startpage
+$count_query = xtc_db_query("SELECT count(*) as total
+                               FROM ".TABLE_PRODUCTS." p
+                               JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                    ON p.products_id = pd.products_id
+                                       AND trim(pd.products_name) != ''
+                                       AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                              WHERE p.products_startpage = 1
+                                AND p.products_status = 1
+                                    ".PRODUCTS_CONDITIONS_P);
+$count = xtc_db_fetch_array($count_query);
+
+$order_by = "p.products_startpage_sort ASC";
+if ($count['total'] > MAX_DISPLAY_NEW_PRODUCTS) {
+  $order_by .= ",MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP))";
+}
 
 $new_products_query = "SELECT p.*,
                               pd.products_name,
@@ -32,7 +48,7 @@ $new_products_query = "SELECT p.*,
                           AND p.products_status = 1
                               ".PRODUCTS_CONDITIONS_P."
                      GROUP BY p.products_id
-                     ORDER BY p.products_startpage_sort ASC
+                     ORDER BY ".$order_by."
                         LIMIT ".MAX_DISPLAY_NEW_PRODUCTS;
 
 $check_new_products_query = xtDBquery($new_products_query);
