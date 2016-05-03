@@ -1003,7 +1003,7 @@ define('TRACKING_FACEBOOK_ID_DESC', 'Your Facebook conversion ID');
 define('NEW_SELECT_CHECKBOX_TITLE', 'Admin Styling');
 define('NEW_SELECT_CHECKBOX_DESC', 'Use Styling for Checkboxes/Dropdowns?');
 define('CSRF_TOKEN_SYSTEM_TITLE', 'Admin Token System');
-define('CSRF_TOKEN_SYSTEM_DESC', 'Use Token System in admin area?<br/><b>Attention:</b> the Token System is used to secure the admin area.');
+define('CSRF_TOKEN_SYSTEM_DESC', 'Use Token System in admin area?<br/><b>Attention:</b> The Token System is used to secure the admin area.');
 
 define('DISPLAY_FILTER_INDEX_TITLE', 'Filter display per page - Products');
 define('DISPLAY_FILTER_INDEX_DESC', 'Please enter comma separated values for the selection. For all products enter all.<br/>E.g.: 3,12,27,all');

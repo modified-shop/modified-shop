@@ -995,7 +995,7 @@ define('TRACKING_FACEBOOK_ID_DESC', 'Ihre Facebook Conversion ID');
 define('NEW_SELECT_CHECKBOX_TITLE', 'Adminbereich Styling');
 define('NEW_SELECT_CHECKBOX_DESC', 'Im Adminbereich das Styling bei den Checkboxen/Dropdowns aktivieren?');
 define('CSRF_TOKEN_SYSTEM_TITLE', 'Admin Token System');
-define('CSRF_TOKEN_SYSTEM_DESC', 'Soll das Token System in Admin verwendet werden?<br/><b>Achtung:</b> das Token System wurde zur Erh&ouml;hung der Sicherheit eingef&uuml;hrt.');
+define('CSRF_TOKEN_SYSTEM_DESC', 'Soll das Token System in Admin verwendet werden?<br/><b>Achtung:</b> Das Token System wurde zur Erh&ouml;hung der Sicherheit eingef&uuml;hrt.');
 
 define('DISPLAY_FILTER_INDEX_TITLE', 'Filter Anzeige pro Seite - Artikel');
 define('DISPLAY_FILTER_INDEX_DESC', 'Bitte geben Sie die m&ouml;glichen Werte f&uuml;r die Auswahl separiert durch ein Komma ein. F&uuml;r alle Artikel geben Sie all ein.<br/>Bsp.: 3,12,27,all');
