@@ -184,9 +184,9 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   $subtotal = 0;#rem
   $total_tax = 0;
 
+  $_SESSION['disable_products'] = array();
   for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
     // Stock Update - Joao Correia
-    $_SESSION['disable_products'] = array();
     if (STOCK_LIMITED == 'true') {
       if (DOWNLOAD_ENABLED == 'true') {
         $add_stock_query_raw = '';
