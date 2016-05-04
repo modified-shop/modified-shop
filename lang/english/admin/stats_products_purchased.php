@@ -16,7 +16,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-define('HEADING_TITLE', 'Purchased Products');
+define('HEADING_TITLE', 'Sold Products');
 define('TABLE_HEADING_MODEL', 'Products model');
 define('TABLE_HEADING_NUMBER', 'No.');
 define('TABLE_HEADING_PRODUCTS', 'Products');
