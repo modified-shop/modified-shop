@@ -24,6 +24,7 @@ class PaypalAutoload {
   }
 
   public function loadClass($class) {
+    $class = ltrim($class, '\\');
     if (substr($class, 0, strlen(self::CLASS_PREFIX)) === self::CLASS_PREFIX) {
       require_once(DIR_FS_EXTERNAL.'paypal/lib/' . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php');
     }
