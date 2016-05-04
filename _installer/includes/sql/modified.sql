@@ -884,7 +884,7 @@ CREATE TABLE orders_tracking (
   orders_id INT(11) NOT NULL,
   carrier_id INT(11) NOT NULL,
   parcel_id VARCHAR(80) NOT NULL,
-  date_added NOT NULL DEFAULT '0000-00-00 00:00:00',
+  date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (tracking_id),
   KEY idx_orders_id (orders_id)
 ) ENGINE=MyISAM;
