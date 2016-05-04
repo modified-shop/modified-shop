@@ -884,6 +884,7 @@ CREATE TABLE orders_tracking (
   orders_id INT(11) NOT NULL,
   carrier_id INT(11) NOT NULL,
   parcel_id VARCHAR(80) NOT NULL,
+  date_added NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (tracking_id),
   KEY idx_orders_id (orders_id)
 ) ENGINE=MyISAM;
@@ -1302,6 +1303,7 @@ INSERT INTO carriers VALUES (8, 'TRANS-O-FLEX', 'http://track.tof.de/trace/track
 INSERT INTO carriers VALUES (9, 'KUEHNE-NAGEL', 'https://knlogin.kuehne-nagel.com/apps/fls.do?subevent=search&knReference=$1', '90', NOW(), '');
 INSERT INTO carriers VALUES (10, 'ILOXX', 'http://www.iloxx.de/net/einzelversand/tracking.aspx?ix=$1', '100', NOW(), '');
 INSERT INTO carriers VALUES (11, 'LogoiX', 'http://www.logoix.com/cgi-bin/tnt.pl?q=$1', '110', NOW(), '');
+INSERT INTO carriers VALUES (12, 'POST', 'https://www.deutschepost.de/sendung/simpleQueryResult.html?form.sendungsnummer=$1&form.einlieferungsdatum_tag=$3&form.einlieferungsdatum_monat=$4&form.einlieferungsdatum_jahr=$5', '120', NOW(), '');
 
 # file flag
 INSERT INTO cm_file_flags (file_flag, file_flag_name) VALUES ('0', 'information');

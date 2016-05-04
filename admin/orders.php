@@ -340,10 +340,13 @@ switch ($action) {
 		$oID = (int)$_GET['oID'];
 		$carrier_id = xtc_db_prepare_input($_POST['carrier_id']);
 		$parcel_id = xtc_db_prepare_input($_POST['parcel_id']);
-    $sql_data_array = array('orders_id' => $oID,
-                            'carrier_id' => $carrier_id,
-                            'parcel_id' => $parcel_id);
-    xtc_db_perform(TABLE_ORDERS_TRACKING,$sql_data_array);
+    $sql_data_array = array(
+      'orders_id' => $oID,
+      'carrier_id' => $carrier_id,
+      'parcel_id' => $parcel_id,
+      'date_added' => 'now()'
+    );
+    xtc_db_perform(TABLE_ORDERS_TRACKING, $sql_data_array);
 		xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));              
 		break;
 		

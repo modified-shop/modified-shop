@@ -20,7 +20,7 @@ define('TABLE_HEADING_CARRIER_NAME', 'Name des Paketdienstleisters');
 define('TABLE_HEADING_TRACKING_LINK', 'URL der Sendungsverfolgung des Paketdienstleisters');
 define('TABLE_HEADING_SORT_ORDER', 'Sortierreihenfolge');
 define('TABLE_HEADING_ACTION', 'Aktion');
-define('TEXT_CARRIER_LINK_DESCRIPTION', '<b>Hinweis:</b> Die URL ist mit den Platzhaltersymbolen <b>$1</b> und <b>$2</b> versehen. Diese Platzhalter werden sp&auml;ter durch die Tracking-Nummer bzw. Tracking ID und den ISO 639-1 Sprachcode (falls vorhanden) ersetzt, die bei der jeweiligen Bestellung hinterlegt werden. Beim Anlegen neuer Paketdienstleister, m&uuml;ssen also der Platz an der die Tracking-ID in der URL steht, durch <b>$1</b> und der ISO 639-1 Sprachcode durch durch <b>$2</b> ersetzt werden.');
+define('TEXT_CARRIER_LINK_DESCRIPTION', '<b>Hinweis:</b> Die URL ist mit den Platzhaltersymbolen <b>$1, $2, $3, $4</b> und <b>$5</b> versehen. Diese Platzhalter werden sp&auml;ter folgenderma&szlig;en ersetzt:<br/><ul><li>$1: Tracking-Nummer bzw. Tracking ID</li><li>$2: ISO 639-1 Sprachcode</li><li>$3: Tag des Erstellungsdatums</li><li>$5: Monat des Erstellungsdatums</li><li>$5: Jahr des Erstellungsdatums</li></ul>');
 define('TEXT_INFO_EDIT_INTRO', 'Bitte f&uuml;hren Sie alle notwendigen &Auml;nderungen durch');
 define('TEXT_INFO_CARRIER_NAME', 'Name des Paketdienstleisters:');
 define('TEXT_INFO_CARRIER_TRACKING_LINK', 'URL der Sendungsverfolgung:');
