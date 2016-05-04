@@ -178,4 +178,6 @@ define('TABLE_HEADING_DAYS', 'Anzahl Tage');
 define('ENTRY_SEND_TRACKING_INFO', 'Versandinformationen:');
 
 define('TEXT_ORDERS_STATUS_FILTER', 'Bestellstatus Filter');
+
+define('TABLE_HEADING_DATE', 'Datum');
 ?>

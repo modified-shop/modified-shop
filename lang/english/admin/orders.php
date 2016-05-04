@@ -180,4 +180,6 @@ define('TABLE_HEADING_DAYS', 'Number days');
 define('ENTRY_SEND_TRACKING_INFO', 'Shipping information:');
 
 define('TEXT_ORDERS_STATUS_FILTER', 'Orders status filter');
+
+define('TABLE_HEADING_DATE', 'Date');
 ?>

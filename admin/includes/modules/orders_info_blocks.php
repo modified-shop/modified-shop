@@ -256,6 +256,7 @@
           <tr>
             <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
             <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_PARCEL_LINK; ?></strong></td>
+            <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_DATE; ?></strong></td>
             <td class="smallText" align="center" style="width:155px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
           </tr>
           <?php
@@ -266,6 +267,7 @@
                 <tr>
                   <td class="smallText" align="center"><?php echo $tracking['carrier_name']; ?></td>
                   <td class="smallText" align="left"><a href="<?php echo $tracking['tracking_link']; ?>" target="_blank"><?php echo $tracking['parcel_id']; ?></a></td>
+                  <td class="smallText" align="center"><?php echo xtc_date_short($tracking['date_added']); ?></td>
                   <td class="smallText" align="center">
                   <?php
                     if (!isset($tracking['external']) || $tracking['external'] == '0') {
@@ -280,7 +282,7 @@
           ?>
           <tr>
             <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); ?></td>
-            <td class="smallText" align="center"><?php echo xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
+            <td class="smallText" align="center" colspan="2"><?php echo xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
             <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo BUTTON_INSERT; ?>"></td>
           </tr>
         </table>
