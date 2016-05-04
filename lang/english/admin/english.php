@@ -135,7 +135,7 @@ define('BOX_HEADING_REPORTS', 'Reports');
 define('BOX_PRODUCTS_VIEWED', 'Viewed Products');
 define('BOX_STOCK_WARNING','Stock Info');
 define('BOX_PRODUCTS_PURCHASED', 'Sold Products');
-define('BOX_STATS_CUSTOMERS', 'Purchasing Statistics');
+define('BOX_STATS_CUSTOMERS', 'Sales Statistics');
 define('BOX_BACKUP', 'Database Manager');
 define('BOX_BANNER_MANAGER', 'Banner Manager');
 define('BOX_CACHE', 'Cache Control');
