@@ -941,7 +941,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         
         $orderData["shipping_method"] = $shippingMethod;
         $orderData["shipping_class"]  = $shippingClass;
-        
+        /*
         $orderData["cc_type"]    = "";
         $orderData["cc_owner"]   = "";
         $orderData["cc_number"]  = "";
@@ -949,6 +949,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         $orderData["cc_start"]   = "";
         $orderData["cc_issue"]   = "";
         $orderData["cc_cvv"]     = "";
+        */
         $orderData["comments"]   = "";
         
         $orderData["last_modified"]  = date('Y-m-d H:i:s');
