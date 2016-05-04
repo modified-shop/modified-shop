@@ -33,12 +33,7 @@
       $i = 0;
       while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
         $parcel_link[$i] = $tracking_link;
-        
-        $parcel_link[$i]['carrier_name'] = $tracking_link['carrier_name'];
-        $parcel_link[$i]['parcel_id'] = $tracking_link['parcel_id'];
-        $parcel_link[$i]['tracking_link'] = str_replace(array('$1', '$2', '$3', '$4', '$5'), array($tracking_link['parcel_id'], $lang_code, date('d', strtotime($tracking_link['date_added'])), date('m', strtotime($tracking_link['date_added'])), date('Y', strtotime($tracking_link['date_added']))), $tracking_link['carrier_tracking_link']);
-        $parcel_link[$i]['tracking_id'] = $tracking_link['tracking_id'];
-        
+        $parcel_link[$i]['tracking_link'] = str_replace(array('$1', '$2', '$3', '$4', '$5'), array($tracking_link['parcel_id'], $lang_code, date('d', strtotime($tracking_link['date_added'])), date('m', strtotime($tracking_link['date_added'])), date('Y', strtotime($tracking_link['date_added']))), $tracking_link['carrier_tracking_link']);        
         $i++;
       }
     }
