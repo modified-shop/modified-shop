@@ -16,10 +16,13 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-define('HEADING_TITLE', 'Meistverkaufte Artikel');
+define('HEADING_TITLE', 'Verkaufte Artikel');
 define('TABLE_HEADING_MODEL', 'Artikelnummer');
 define('TABLE_HEADING_NUMBER', 'Nr.');
 define('TABLE_HEADING_PRODUCTS', 'Artikel');
 define('TABLE_HEADING_PURCHASED', 'Anzahl verkauft');
 define('TABLE_HEADING_QUANTITY', 'Bestand');
+define('TABLE_HEADING_DATE_PURCHASED', 'Bestelldatum');
+define('TABLE_HEADING_ORDERS_ID', 'Bestell-Nr.');
+define('TEXT_SEARCH_PRODUCTS', 'Suche Artikel:');
 ?>
