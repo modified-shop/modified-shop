@@ -27,10 +27,10 @@ define('TEXT_INFO_CARRIER_TRACKING_LINK', 'URL der Sendungsverfolgung:');
 define('TEXT_INFO_CARRIER_SORT_ORDER', 'Sortierreihenfolge:');
 define('TEXT_INFO_DATE_ADDED', 'hinzugef&uuml;gt am:');
 define('TEXT_INFO_LAST_MODIFIED', 'letzte &Auml;nderung:');
-define('TEXT_INFO_INSERT_INTRO', 'Bitte geben Sie den neuen Paketdienstleister mit allen relevanten Daten ein');
+define('TEXT_INFO_INSERT_INTRO', 'Bitte geben Sie den neuen Paketdienstleister mit allen relevanten Daten ein.');
 define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diesen Paketdienstleister l&ouml;schen m&ouml;chten?');
 define('TEXT_INFO_HEADING_NEW_CARRIER', 'neuer Paketdienstleister');
 define('TEXT_INFO_HEADING_EDIT_CARRIER', 'Paketdienstleister bearbeiten');
 define('TEXT_INFO_HEADING_DELETE_CARRIER', 'Paketdienstleister l&ouml;schen');
-define('BUTTON_NEW_CARRIER', 'neuer Paketdienstleister');
+define('BUTTON_NEW_CARRIER', 'Neuer Paketdienstleister');
 ?>
