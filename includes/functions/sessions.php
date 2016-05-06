@@ -154,7 +154,7 @@
   }
 
   function xtc_session_recreate() {
-    global $http_domain, $https_domain, $current_domain;
+    global $http_domain, $https_domain;
     
     if ($http_domain == $https_domain) {
       // backup old session
