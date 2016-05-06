@@ -14,11 +14,11 @@
 require_once (DIR_FS_INC . 'xtc_create_password.inc.php');
 
 if (defined('CSRF_TOKEN_EXCLUSIONS') && CSRF_TOKEN_EXCLUSIONS != '') {
-  $user_exclusions  = preg_replace("'[\r\n\s]+'",'',CSRF_TOKEN_EXCLUSIONS);
-  $user_exclusions = explode(',',$user_exclusions);
+  $user_exclusions  = preg_replace("'[\r\n\s]+'", '', CSRF_TOKEN_EXCLUSIONS);
+  $user_exclusions = explode(',', $user_exclusions);
 }
 
-if ( !isset($module_exclusions) || !is_array($module_exclusions) ) {
+if (!isset($module_exclusions) || !is_array($module_exclusions)) {
   $module_exclusions = array();
 }
 
@@ -27,7 +27,10 @@ $CSRFKeep = false;
 if (defined('RUN_MODE_ADMIN')) {
   $exclusions = array('print_order', 'print_packingslip', 'bill', 'popup', 'haendlerbund', 'new_attributes', 'products_tags');
   if (isset($user_exclusions) && is_array($user_exclusions)) {
-    $exclusion = array_merge($exclusions,$user_exclusions,$module_exclusions);
+    $exclusions = array_merge($exclusions, $user_exclusions);
+  }
+  if (isset($module_exclusions) && is_array($module_exclusions)) {
+    $exclusions = array_merge($exclusions, $module_exclusions);
   }
   foreach ($exclusions as $filename) {
     if (strpos(basename($PHP_SELF), $filename) !== false) {
