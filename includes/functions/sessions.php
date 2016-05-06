@@ -43,14 +43,13 @@
                                      FROM " . TABLE_SESSIONS . "
                                     WHERE sesskey = '" . xtc_db_input($key) . "'
                                       AND expiry > '" . time() . "'");
-      $value = xtc_db_fetch_array($value_query);
+      if (xtc_db_num_rows($value_query) == 1) {
+        $value = xtc_db_fetch_array($value_query);
 
-      if (isset($value['value']) && $value['value']!='') {
-        return base64_decode($value['value']);
+        if (isset($value['value']) && $value['value']!='') {
+          return base64_decode($value['value']);
+        }
       }
-      
-      // prevent wrong session id
-      xtc_session_recreate();
     }
 
     function _sess_write($key, $val) {
@@ -69,7 +68,14 @@
     }
 
     function _sess_destroy($key) {
-      return xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($key) . "'");
+      global $current_domain;
+      
+      if (isset($_COOKIE[xtc_session_name()])) {
+        xtc_setcookie(xtc_session_name(), $_COOKIE[xtc_session_name()], (time() - 3600), '/', (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
+      }
+      xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($key) . "'");
+      
+      return true;
     }
 
     function _sess_gc($maxlifetime) {
@@ -107,28 +113,9 @@
     return $temp;
   }
 
-
-//removed deprecated function session_register to be ready for PHP >= 5.3
-/*
-  function xtc_session_register($variable) {
-    global $session_started;
-    if ($session_started == true) {
-      return session_register($variable);
-    }
-  }
-*/
-
   function xtc_session_is_registered($variable) {
     return isset($_SESSION[$variable]);
   }
-
-//removed deprecated function session_unregister to be ready for PHP >= 5.3
-/*
-  function xtc_session_unregister($variable) {
-    return session_unregister($variable);
-  }
-*/
-
 
   function xtc_session_id($sessid = '') {
     if (!empty($sessid)) {
@@ -154,12 +141,6 @@
     }
   }
 
-  function xtc_session_close() {
-    if (function_exists('session_close')) {
-      return session_close();
-    }
-  }
-
   function xtc_session_destroy() {
     return session_destroy();
   }
@@ -173,26 +154,39 @@
   }
 
   function xtc_session_recreate() {
-    global $http_domain, $https_domain;
+    global $http_domain, $https_domain, $current_domain;
     
     if ($http_domain == $https_domain) {
+      // backup old session
       $session_backup = $_SESSION;
-      $old_session_id = session_id();
-      session_regenerate_id(true);
-      $new_session_id = xtc_session_id();
-      //session_id($old_session_id);
-      session_id($new_session_id);
-      $_SESSION = $session_backup;
+      $old_session_id = xtc_session_id();
       
+      // regenerate session
+      session_regenerate_id();
+      
+      // write session
+      session_write_close();
+      
+      // delete old session
+      $new_session_id = xtc_session_id();
+      xtc_session_id($old_session_id);
+      xtc_session_destroy();
+      
+      // set new session
+      xtc_session_id($new_session_id);
+      xtc_session_start();
+      $_SESSION = $session_backup;
+
       if (STORE_SESSIONS == 'mysql') {
         session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
         register_shutdown_function('session_write_close');
+        xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($old_session_id) . "'");
       }
-            
+
       // update whos_online
       xtc_db_query("UPDATE " . TABLE_WHOS_ONLINE . "
                        SET session_id = '".xtc_db_input($new_session_id)."' 
-                     WHERE session_id = '".xtc_db_input($old_session_id)."'");
+                     WHERE session_id = '".xtc_db_input($old_session_id)."'");      
     }
   }
 
