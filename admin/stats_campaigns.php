@@ -25,9 +25,6 @@ require ('includes/application_top.php');
 require (DIR_WS_CLASSES.'currencies.php');
 $currencies = new currencies();
 
-require (DIR_WS_CLASSES.'campaigns.php');
-$campaign = new campaigns($_GET);
-
 // default view (monthly)
 $srDefaultView = 2;
 
@@ -111,6 +108,21 @@ if ($endDateG) {
 } else {
 	$endDate = mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"));
 }
+
+$campaign_array = array(
+  'report' => $srView,
+  'startD' => $sDay,
+  'startM' => $sMon,
+  'startY' => $sYear,
+  'endD' => $eDay,
+  'endM' => $eMon,
+  'endY' => $eYear,
+  'status' => ((isset($_GET['status']) && $_GET['status'] != '') ? $_GET['status'] : 0),
+  'campaign' => ((isset($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0),
+);
+require (DIR_WS_CLASSES.'campaigns.php');
+$campaign = new campaigns($campaign_array);
+
 
 $day_array = array();
 for ($i = 1; $i < 32; $i++) {
