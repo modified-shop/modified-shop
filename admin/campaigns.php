@@ -92,11 +92,13 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
-              $campaigns_query_raw = "select * from ".TABLE_CAMPAIGNS." order by campaigns_name";
+              $campaigns_query_raw = "SELECT * 
+                                        FROM ".TABLE_CAMPAIGNS." 
+                                    ORDER BY campaigns_name";
               $campaigns_split = new splitPageResults($_GET['page'], $page_max_display_results, $campaigns_query_raw, $campaigns_query_numrows);
               $campaigns_query = xtc_db_query($campaigns_query_raw);
               while ($campaigns = xtc_db_fetch_array($campaigns_query)) {
-                if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $campaigns['campaigns_id']))) && !isset($cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
+                if ((!xtc_not_null($_GET['cID']) || (isset($_GET['cID']) && $_GET['cID'] == $campaigns['campaigns_id'])) && !isset($cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
                   $cInfo = new objectInfo($campaigns);
                 }
                 if (isset($cInfo) && is_object($cInfo) && ($campaigns['campaigns_id'] == $cInfo->campaigns_id)) {
