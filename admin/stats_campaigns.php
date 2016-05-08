@@ -25,6 +25,8 @@ require ('includes/application_top.php');
 require (DIR_WS_CLASSES.'currencies.php');
 $currencies = new currencies();
 
+require (DIR_WS_CLASSES.'campaigns.php');
+
 // default view (monthly)
 $srDefaultView = 2;
 
@@ -52,62 +54,51 @@ while ($campaign_data = xtc_db_fetch_array($campaign_query)) {
 if (isset($_GET['report']) && (xtc_not_null($_GET['report'])) ) {
   $srView = $_GET['report'];
 }
-if ($srView < 1 || $srView > 4) {
+if (!isset($srView) || $srView < 1 || $srView > 4) {
   $srView = $srDefaultView;
 }
 
 // check start and end Date
-$startDate = "";
-$startDateG = 0;
-if (($_GET['startD']) && (xtc_not_null($_GET['startD']))) {
-	$sDay = $_GET['startD'];
-	$startDateG = 1;
+if (isset($_GET['startD']) && (xtc_not_null($_GET['startD'])) ) {
+  $sDay = $_GET['startD'];
 } else {
-	$sDay = 1;
+  $sDay = 1;
 }
-if (($_GET['startM']) && (xtc_not_null($_GET['startM']))) {
-	$sMon = $_GET['startM'];
-	$startDateG = 1;
+if (isset($_GET['startM']) && (xtc_not_null($_GET['startM'])) ) {
+  $sMon = $_GET['startM'];
 } else {
-	$sMon = 1;
+  switch ($srDefaultView) {
+    case 1:
+      $sMon = 1;
+      break;
+    default:
+      $sMon = date("n");
+      break;
+  }
 }
-if (($_GET['startY']) && (xtc_not_null($_GET['startY']))) {
-	$sYear = $_GET['startY'];
-	$startDateG = 1;
+if (isset($_GET['startY']) && (xtc_not_null($_GET['startY'])) ) {
+  $sYear = $_GET['startY'];
 } else {
-	$sYear = date("Y");
+  $sYear = date("Y");
 }
-if ($startDateG) {
-	$startDate = mktime(0, 0, 0, $sMon, $sDay, $sYear);
-} else {
-	$startDate = mktime(0, 0, 0, date("m"), 1, date("Y"));
-}
+$startDate = mktime(0, 0, 0, $sMon, $sDay, $sYear);
 
-$endDate = "";
-$endDateG = 0;
-if (($_GET['endD']) && (xtc_not_null($_GET['endD']))) {
-	$eDay = $_GET['endD'];
-	$endDateG = 1;
+if (isset($_GET['endD']) && (xtc_not_null($_GET['endD'])) ) {
+  $eDay = $_GET['endD'];
 } else {
-	$eDay = 1;
+  $eDay = date("j");
 }
-if (($_GET['endM']) && (xtc_not_null($_GET['endM']))) {
-	$eMon = $_GET['endM'];
-	$endDateG = 1;
+if (isset($_GET['endM']) && (xtc_not_null($_GET['endM'])) ) {
+  $eMon = $_GET['endM'];
 } else {
-	$eMon = 1;
+  $eMon = date("n");
 }
-if (($_GET['endY']) && (xtc_not_null($_GET['endY']))) {
-	$eYear = $_GET['endY'];
-	$endDateG = 1;
+if (isset($_GET['endY']) && (xtc_not_null($_GET['endY'])) ) {
+  $eYear = $_GET['endY'];
 } else {
-	$eYear = date("Y");
+  $eYear = date("Y");
 }
-if ($endDateG) {
-	$endDate = mktime(0, 0, 0, $eMon, $eDay +1, $eYear);
-} else {
-	$endDate = mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"));
-}
+$endDate = mktime(0, 0, 0, $eMon, $eDay + 1, $eYear);
 
 $campaign_array = array(
   'report' => $srView,
@@ -120,9 +111,7 @@ $campaign_array = array(
   'status' => ((isset($_GET['status']) && $_GET['status'] != '') ? $_GET['status'] : 0),
   'campaign' => ((isset($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0),
 );
-require (DIR_WS_CLASSES.'campaigns.php');
 $campaign = new campaigns($campaign_array);
-
 
 $day_array = array();
 for ($i = 1; $i < 32; $i++) {
@@ -188,23 +177,17 @@ require (DIR_WS_INCLUDES.'head.php');
                         </td>
                         <td class="menuBoxHeading">
                           <?php 
-                            $day = $month = $year = 1;
-                            if ($startDate) {
-                              $day = date("j", $startDate);
-                              $month = date("n", $startDate);
-                              $year = date("Y", $startDate);
-                            }
                             echo REPORT_START_DATE.'<br/>';
-                            echo xtc_draw_pull_down_menu('startD', $day_array, $day);
-                            echo xtc_draw_pull_down_menu('startM', $month_array, $month);
-                            echo xtc_draw_pull_down_menu('startY', $year_array, $year);
+                            echo xtc_draw_pull_down_menu('startD', $day_array, $sDay);
+                            echo xtc_draw_pull_down_menu('startM', $month_array, $sMon);
+                            echo xtc_draw_pull_down_menu('startY', $year_array, $sYear);
                           ?>
                         </td>
                         <td rowspan="2" class="menuBoxHeading txta-l">
                           <?php echo REPORT_STATUS_FILTER; ?><br />
-                          <?php echo xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $orders_statuses), $_GET['status']); ?> 
+                          <?php echo xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $orders_statuses), ((isset($_GET['status']) && $_GET['status'] != '') ? $_GET['status'] : 0)); ?> 
                           <br /><?php echo REPORT_CAMPAIGN_FILTER; ?><br /> 
-                          <?php echo xtc_draw_pull_down_menu('campaign', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $campaigns), $_GET['campaign']); ?> 
+                          <?php echo xtc_draw_pull_down_menu('campaign', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $campaigns), ((isset($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0)); ?> 
                         </td>
                         <td rowspan="2" align="left" class="menuBoxHeading"><br /></td>
                         <td rowspan="2" align="left" class="menuBoxHeading"><br /></td>
@@ -212,18 +195,10 @@ require (DIR_WS_INCLUDES.'head.php');
                       <tr>
                         <td class="menuBoxHeading">
                           <?php 
-                            $day = date("j");
-                            $month = date("n");
-                            $year = 0;
-                            if ($endDate) {
-                              $day = date("j", $endDate - (60 * 60 * 24));
-                              $month = date("n", $endDate - (60 * 60 * 24));
-                              $year = date("Y", $endDate - (60 * 60 * 24));
-                            }
                             echo REPORT_END_DATE.'<br/>';
-                            echo xtc_draw_pull_down_menu('endD', $day_array, $day);
-                            echo xtc_draw_pull_down_menu('endM', $month_array, $month);
-                            echo xtc_draw_pull_down_menu('endY', $year_array, $year);
+                            echo xtc_draw_pull_down_menu('endD', $day_array, $eDay);
+                            echo xtc_draw_pull_down_menu('endM', $month_array, $eMon);
+                            echo xtc_draw_pull_down_menu('endY', $year_array, $eYear);
                           ?>
                         </td>
                       </tr>
