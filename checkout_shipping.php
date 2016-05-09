@@ -83,10 +83,10 @@ $order = new order();
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
 if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
-    if ($_SESSION['cart']->cartID !== $_SESSION['cartID']) {
-      unset($_SESSION['shipping']);
-      unset($_SESSION['payment']);
-    }
+  if ($_SESSION['cart']->cartID !== $_SESSION['cartID']) {
+    unset($_SESSION['shipping']);
+    unset($_SESSION['payment']);
+  }
 }
 
 // register a random ID in the session to check throughout the checkout procedure
@@ -107,6 +107,7 @@ $total_count = $_SESSION['cart']->count_contents();
 if ($order->delivery['country']['iso_code_2'] != '') {
 	$_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
 }
+
 // load all enabled shipping modules
 require_once (DIR_WS_CLASSES.'shipping.php');
 $shipping_modules = new shipping;
@@ -137,41 +138,8 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
 
 // process the selected shipping method
 if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
-
-	if ((xtc_count_shipping_modules() > 0) || ($free_shipping == true)) {
-		if ((isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_'))) {
-			$_SESSION['shipping'] = $_POST['shipping'];#sec
-
-			list ($module, $method) = explode('_', $_SESSION['shipping']);
-			if ((isset(${$module}) && is_object(${$module}) ) || ($_SESSION['shipping'] == 'free_free')) {
-				if ($_SESSION['shipping'] == 'free_free') {
-					$quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
-					$quote[0]['methods'][0]['cost'] = '0';
-				} else {
-					$quote = $shipping_modules->quote($method, $module);
-				}
-				if (isset($quote['error'])) {
-					unset ($_SESSION['shipping']);
-				} else {
-					if ((isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost']))) {
-						$_SESSION['shipping'] = array (
-                'id' => $_SESSION['shipping'], 
-                'title' => (($free_shipping == true) ? $quote[0]['methods'][0]['title'] : $quote[0]['module'].(($quote[0]['methods'][0]['title'] != '') ? ' ('.$quote[0]['methods'][0]['title'].')' : '')), 
-                'cost' => $quote[0]['methods'][0]['cost']
-              );
-						xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, xtc_get_all_get_params(), 'SSL'));
-					}
-				}
-			} else {
-				unset ($_SESSION['shipping']);
-			}
-    } else {
-      $smarty->assign('error', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
-		}
-	} else {
-		$_SESSION['shipping'] = false;
-    $smarty->assign('error', ERROR_CHECKOUT_SHIPPING_NO_MODULE);
-	}
+  $redirect_link = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, xtc_get_all_get_params(), 'SSL');
+  require(DIR_WS_INCLUDES.'shipping_action.php');
 }
 
 // get all available shipping quotes
@@ -181,7 +149,7 @@ $quotes = $shipping_modules->quote();
 // if the modules status was changed when none were available, to save on implementing
 // a javascript force-selection method, also automatically select the cheapest shipping
 // method if more than one module is now enabled
-if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL == 'true') || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() > 1))) { //web28 - 2012-04-27 - pre-selection the cheapest shipping option
+if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL == 'true') || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() > 1))) {
 	$_SESSION['shipping'] = $shipping_modules->cheapest();
 }
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_SHIPPING, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
@@ -204,49 +172,8 @@ if (SHOW_SELFPICKUP_FREE == 'true') {
   }                    
 }
 
-$module_smarty = new Smarty;
-$shipping_block = '';
-if (xtc_count_shipping_modules() > 0) {
-	$showtax = $_SESSION['customers_status']['customers_status_show_price_tax'];
-	$module_smarty->assign('FREE_SHIPPING', $free_shipping);
-	# free shipping or not...
-	if ($free_shipping == true) {
-		$module_smarty->assign('FREE_SHIPPING_TITLE', FREE_SHIPPING_TITLE);
-		$module_smarty->assign('FREE_SHIPPING_DESCRIPTION', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)).xtc_draw_hidden_field('shipping', 'free_free'));
-		$module_smarty->assign('FREE_SHIPPING_ICON', $quotes[$i]['icon']);
-	} else {
-		$radio_buttons = 0;
-		#loop through installed shipping methods...
-		for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
-			if (!isset($quotes[$i]['error'])) {
-				for ($j = 0, $n2 = sizeof($quotes[$i]['methods']); $j < $n2; $j ++) {
-					# set the radio button to be checked if it is the method chosen
-					$quotes[$i]['methods'][$j]['radio_buttons'] = $radio_buttons;
-					$checked = ((isset($_SESSION['shipping']) && $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']) ? true : false);
-					if (($checked == true) || ($n == 1 && $n2 == 1)) {
-						$quotes[$i]['methods'][$j]['checked'] = 1;
-					}
-					if (($n > 1) || ($n2 > 1)) {
-						if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quotes[$i]['tax'])) {
-							$quotes[$i]['tax'] = 0;
-            }
-						$quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax']), true, 0, true);						
-            $quotes[$i]['methods'][$j]['radio_field'] = xtc_draw_radio_field('shipping', $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'], $checked, 'id="rd-'.($i+1).'"');
-					} else {
-						if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0) {
-							$quotes[$i]['tax'] = 0;
-            }
-            $quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0), true, 0, true).xtc_draw_hidden_field('shipping', $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id']);
-					}
-					$radio_buttons ++;
-				}
-			}
-		}
-		$module_smarty->assign('module_content', $quotes);
-	}
-	$module_smarty->caching = 0;
-	$shipping_block = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_shipping_block.html');
-}
+// build shipping block
+require(DIR_WS_INCLUDES.'shipping_block.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('SHIPPING_BLOCK', $shipping_block);
