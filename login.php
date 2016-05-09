@@ -151,6 +151,9 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 			               WHERE customers_info_id = '".(int) $_SESSION['customer_id']."'");
 			xtc_write_user_info((int) $_SESSION['customer_id']);
 			
+      // who's online
+      xtc_update_whos_online();
+
 			// restore cart contents
 			$_SESSION['cart']->restore_contents();
 
