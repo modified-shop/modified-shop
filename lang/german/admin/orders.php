@@ -56,8 +56,6 @@ define('TABLE_HEADING_PRICE_INCLUDING_TAX', 'Preis (inkl.)');
 define('TABLE_HEADING_TOTAL_EXCLUDING_TAX', 'Total (exkl.)');
 define('TABLE_HEADING_TOTAL_INCLUDING_TAX', 'Total');
 define('TABLE_HEADING_AFTERBUY','Afterbuy');
-
-define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_CUSTOMER_NOTIFIED', 'Kunde benachrichtigt');
 define('TABLE_HEADING_DATE_ADDED', 'hinzugef&uuml;gt am:');
 

@@ -44,7 +44,6 @@ define('TABLE_HEADING_COMMENTS', 'Comments');
 define('TABLE_HEADING_CUSTOMERS', 'Customers');
 define('TABLE_HEADING_ORDER_TOTAL', 'Order Total');
 define('TABLE_HEADING_DATE_PURCHASED', 'Date Purchased');
-define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Action');
 define('TABLE_HEADING_QUANTITY', 'Qty.');
 define('TABLE_HEADING_PRODUCTS_MODEL', 'Model');
@@ -57,8 +56,6 @@ define('TABLE_HEADING_PRICE_INCLUDING_TAX', 'Price (inc)');
 define('TABLE_HEADING_TOTAL_EXCLUDING_TAX', 'Total (ex)');
 define('TABLE_HEADING_TOTAL_INCLUDING_TAX', 'Total');
 define('TABLE_HEADING_AFTERBUY','Afterbuy');
-
-define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_CUSTOMER_NOTIFIED', 'Customer Notified');
 define('TABLE_HEADING_DATE_ADDED', 'Date Added');
 
