@@ -226,9 +226,6 @@ class categories {
       $cname_arr = explode('.', $categories_image->filename);
       $cnsuffix = array_pop($cname_arr);
       $categories_image_name = $categories_image_name_process = $this->image_name($categories_id, '', $cnsuffix, $cname_arr);
-      if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image_name)) {
-        @ unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image_name);
-      }
       rename(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image->filename, DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image_name);
       xtc_db_query("UPDATE ".TABLE_CATEGORIES."
                        SET categories_image = '".xtc_db_input($categories_image_name)."'
@@ -1251,7 +1248,6 @@ class categories {
         if ($dup_check['total'] < 2) {
           @ xtc_del_image_file($products_data['products_previous_image_'. ($img +1)]);
         }
-        @ xtc_del_image_file($products_image_name);
         rename(DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$pIMG->filename, DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$products_image_name);
         //get data & write to table
         $mo_img = array ('products_id' => xtc_db_prepare_input($products_id), 
