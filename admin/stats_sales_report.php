@@ -122,57 +122,46 @@
   }
 
   // check start and end Date
-  $startDate = "";
-  $startDateG = 0;
   if (isset($_GET['startD']) && (xtc_not_null($_GET['startD'])) ) {
     $sDay = $_GET['startD'];
-    $startDateG = 1;
   } else {
     $sDay = 1;
   }
   if (isset($_GET['startM']) && (xtc_not_null($_GET['startM'])) ) {
     $sMon = $_GET['startM'];
-    $startDateG = 1;
   } else {
-    $sMon = 1;
+    switch ($srDefaultView) {
+      case 1:
+        $sMon = 1;
+        break;
+      default:
+        $sMon = date("n");
+        break;
+    }
   }
   if (isset($_GET['startY']) && (xtc_not_null($_GET['startY'])) ) {
     $sYear = $_GET['startY'];
-    $startDateG = 1;
   } else {
     $sYear = date("Y");
   }
-  if ($startDateG) {
-    $startDate = mktime(0, 0, 0, $sMon, $sDay, $sYear);
-  } else {
-    $startDate = mktime(0, 0, 0, date("m"), 1, date("Y"));
-  }
+  $startDate = mktime(0, 0, 0, $sMon, $sDay, $sYear);
 
-  $endDate = "";
-  $endDateG = 0;
   if (isset($_GET['endD']) && (xtc_not_null($_GET['endD'])) ) {
     $eDay = $_GET['endD'];
-    $endDateG = 1;
   } else {
-    $eDay = 1;
+    $eDay = date("j");
   }
   if (isset($_GET['endM']) && (xtc_not_null($_GET['endM'])) ) {
     $eMon = $_GET['endM'];
-    $endDateG = 1;
   } else {
-    $eMon = 1;
+    $eMon = date("n");
   }
   if (isset($_GET['endY']) && (xtc_not_null($_GET['endY'])) ) {
     $eYear = $_GET['endY'];
-    $endDateG = 1;
   } else {
     $eYear = date("Y");
   }
-  if ($endDateG) {
-    $endDate = mktime(0, 0, 0, $eMon, $eDay + 1, $eYear);
-  } else {
-    $endDate = mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"));
-  }
+  $endDate = mktime(0, 0, 0, $eMon, $eDay + 1, $eYear);
   
   require(DIR_WS_CLASSES . 'sales_report.php');
   $sr = new sales_report($srView, $startDate, $endDate, $srSort, $srStatus, $srFilter, $srPayment, $srCgroup);
@@ -285,97 +274,81 @@
                       <?php
                       if ($srExp < 1) {
                         echo xtc_draw_form('sales_report', FILENAME_SALES_REPORT, '', 'get');
-                        ?>
-                    
-                              <table style="border: 1px solid #cccccc; width:100%; padding:5px; background:#f1f1f1;">
-                                <tr>
-                                  <td rowspan="2" class="menuBoxHeading txta-l">
-                                    <input type="radio" name="report" value="1" <?php if ($srView == 1) echo "checked"; ?>><?php echo REPORT_TYPE_YEARLY; ?><br />
-                                    <input type="radio" name="report" value="2" <?php if ($srView == 2) echo "checked"; ?>><?php echo REPORT_TYPE_MONTHLY; ?><br />
-                                    <input type="radio" name="report" value="3" <?php if ($srView == 3) echo "checked"; ?>><?php echo REPORT_TYPE_WEEKLY; ?><br />
-                                    <input type="radio" name="report" value="4" <?php if ($srView == 4) echo "checked"; ?>><?php echo REPORT_TYPE_DAILY; ?><br />
-                                  </td>
-                                  <td class="menuBoxHeading">
-                                    <?php 
-                                      $day = $month = $year = 1;
-                                      if ($startDate) {
-                                        $day = date("j", $startDate);
-                                        $month = date("n", $startDate);
-                                        $year = date("Y", $startDate);                                  
-                                      }
-                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_START_DATE.'</b></p>';
-                                      echo xtc_draw_pull_down_menu('startD', $day_array, $day);
-                                      echo xtc_draw_pull_down_menu('startM', $month_array, $month);
-                                      echo xtc_draw_pull_down_menu('startY', $year_array, $year);
-                                    ?>
-                                  </td>
-                                  <td class="menuBoxHeading txta-l">
-                                    <?php 
-                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_DETAIL.'</b></p>'; 
-                                      echo xtc_draw_pull_down_menu('detail', $detail_array, $srDetail);
-                                    ?>
-                                  </td>
-                                  <td class="menuBoxHeading txta-l">
-                                    <?php
-                                      echo '<div class="flt-l">';                                    
-                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_STATUS_FILTER.'</b></p>'; 
-                                      echo xtc_draw_pull_down_menu('status', $status_array, $srStatus);
-                                      echo '</div>';
-                                      echo '<div class="flt-l">'; 
-                                      echo '<p class="pdg2 mrg0"><b>'.ENTRY_CUSTOMERS_STATUS.'</b></p>'; 
-                                      echo xtc_draw_pull_down_menu('cgroup', $customers_statuses_array, $srCgroup);
-                                      echo '</div>';
-                                    ?>
-                                  </td>
-                                  <td class="menuBoxHeading txta-l">
-                                    <?php 
-                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_EXP.'</b></p>'; 
-                                      echo xtc_draw_pull_down_menu('export', $exp_array, $srExp);
-                                    ?>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="menuBoxHeading">
-                                    <?php 
-                                      $day = date("j");
-                                      $month = date("n");
-                                      $year = 0;
-                                      if ($endDate) {
-                                        $day = date("j", $endDate - (60 * 60 * 24));
-                                        $month = date("n", $endDate - (60* 60 * 24));
-                                        $year = date("Y", $endDate - (60* 60 * 24));
-                                      }
-                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_END_DATE.'</b></p>';
-                                      echo xtc_draw_pull_down_menu('endD', $day_array, $day);
-                                      echo xtc_draw_pull_down_menu('endM', $month_array, $month);
-                                      echo xtc_draw_pull_down_menu('endY', $year_array, $year);
-                                    ?>
-                                  </td>
-                                  <td class="menuBoxHeading txta-l">
-                                    <?php 
-                                      echo'<p class="pdg2 mrg0"><b>'. REPORT_MAX.'</b></p>'; 
-                                      echo xtc_draw_pull_down_menu('max', $max_array, $srMax);
-                                    ?>
-                                  </td>
-                                  <td class="menuBoxHeading txta-l">
-                                    <?php
-                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_PAYMENT_FILTER.'</b></p>'; 
-                                      echo xtc_draw_pull_down_menu('payment', $payment_array, $srPayment);
-                                    ?>
-                                  </td>
-                                  <td class="menuBoxHeading txta-l">
-                                    <?php 
-                                      echo '<p class="pdg2 mrg0"><b>'.REPORT_SORT.'</b></p>'; 
-                                      echo xtc_draw_pull_down_menu('sort', $sort_array, $srSort);
-                                    ?>
-                                  </td>
-                                </tr>
-                              </table>  
-                              <div class="main mrg5 txta-r">
-                                <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'; ?>
-                              </div>                         
-                            </form>
-
+                        ?>                    
+                          <table style="border: 1px solid #cccccc; width:100%; padding:5px; background:#f1f1f1;">
+                            <tr>
+                              <td rowspan="2" class="menuBoxHeading txta-l">
+                                <input type="radio" name="report" value="1" <?php if ($srView == 1) echo "checked"; ?>><?php echo REPORT_TYPE_YEARLY; ?><br />
+                                <input type="radio" name="report" value="2" <?php if ($srView == 2) echo "checked"; ?>><?php echo REPORT_TYPE_MONTHLY; ?><br />
+                                <input type="radio" name="report" value="3" <?php if ($srView == 3) echo "checked"; ?>><?php echo REPORT_TYPE_WEEKLY; ?><br />
+                                <input type="radio" name="report" value="4" <?php if ($srView == 4) echo "checked"; ?>><?php echo REPORT_TYPE_DAILY; ?><br />
+                              </td>
+                              <td class="menuBoxHeading">
+                                <?php 
+                                  echo '<p class="pdg2 mrg0"><b>'.REPORT_START_DATE.'</b></p>';
+                                  echo xtc_draw_pull_down_menu('startD', $day_array, $sDay);
+                                  echo xtc_draw_pull_down_menu('startM', $month_array, $sMon);
+                                  echo xtc_draw_pull_down_menu('startY', $year_array, $sYear);
+                                ?>
+                              </td>
+                              <td class="menuBoxHeading txta-l">
+                                <?php 
+                                  echo '<p class="pdg2 mrg0"><b>'.REPORT_DETAIL.'</b></p>'; 
+                                  echo xtc_draw_pull_down_menu('detail', $detail_array, $srDetail);
+                                ?>
+                              </td>
+                              <td class="menuBoxHeading txta-l">
+                                <?php
+                                  echo '<div class="flt-l">';                                    
+                                  echo '<p class="pdg2 mrg0"><b>'.REPORT_STATUS_FILTER.'</b></p>'; 
+                                  echo xtc_draw_pull_down_menu('status', $status_array, $srStatus);
+                                  echo '</div>';
+                                  echo '<div class="flt-l">'; 
+                                  echo '<p class="pdg2 mrg0"><b>'.ENTRY_CUSTOMERS_STATUS.'</b></p>'; 
+                                  echo xtc_draw_pull_down_menu('cgroup', $customers_statuses_array, $srCgroup);
+                                  echo '</div>';
+                                ?>
+                              </td>
+                              <td class="menuBoxHeading txta-l">
+                                <?php 
+                                  echo '<p class="pdg2 mrg0"><b>'.REPORT_EXP.'</b></p>'; 
+                                  echo xtc_draw_pull_down_menu('export', $exp_array, $srExp);
+                                ?>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="menuBoxHeading">
+                                <?php 
+                                  echo '<p class="pdg2 mrg0"><b>'.REPORT_END_DATE.'</b></p>';
+                                  echo xtc_draw_pull_down_menu('endD', $day_array, $eDay);
+                                  echo xtc_draw_pull_down_menu('endM', $month_array, $eMon);
+                                  echo xtc_draw_pull_down_menu('endY', $year_array, $eYear);
+                                ?>
+                              </td>
+                              <td class="menuBoxHeading txta-l">
+                                <?php 
+                                  echo'<p class="pdg2 mrg0"><b>'. REPORT_MAX.'</b></p>'; 
+                                  echo xtc_draw_pull_down_menu('max', $max_array, $srMax);
+                                ?>
+                              </td>
+                              <td class="menuBoxHeading txta-l">
+                                <?php
+                                  echo '<p class="pdg2 mrg0"><b>'.REPORT_PAYMENT_FILTER.'</b></p>'; 
+                                  echo xtc_draw_pull_down_menu('payment', $payment_array, $srPayment);
+                                ?>
+                              </td>
+                              <td class="menuBoxHeading txta-l">
+                                <?php 
+                                  echo '<p class="pdg2 mrg0"><b>'.REPORT_SORT.'</b></p>'; 
+                                  echo xtc_draw_pull_down_menu('sort', $sort_array, $srSort);
+                                ?>
+                              </td>
+                            </tr>
+                          </table>  
+                          <div class="main mrg5 txta-r">
+                            <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'; ?>
+                          </div>                         
+                        </form>
                         <?php
                       } // end of ($srExp < 1)
                       ?>
@@ -429,7 +402,7 @@
                             $total_item += (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : 0);
                             $total_total += (isset($info[$last]['totsum']) ? $info[$last]['totsum'] : 0);
                             $total_shipping += (isset($info[0]['shipping']) ? $info[0]['shipping'] : 0);
-                       } else {
+                        } else {
                           // csv export
                           ('Content-type: application/x-octet-stream');
                           header('Content-disposition: attachment; filename=stats_sales_report.csv');
