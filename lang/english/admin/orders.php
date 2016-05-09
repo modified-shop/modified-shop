@@ -127,7 +127,7 @@ define('TEXT_PRODUCTS', 'Products');
 // EOF - Tomcraft - 2010-04-22 - Added a missing language definition
 
 //BOF - web28 - 2010-03-20 - Send Order by Admin
-define('COMMENT_SEND_ORDER_BY_ADMIN' , 'Order confirmation is sent'); //ACHTUNG hier  keine HTML-Entities verwenden
+define('COMMENT_SEND_ORDER_BY_ADMIN' , 'Order confirmation is sent');
 define('BUTTON_ORDER_CONFIRMATION', 'Send confirmation');
 define('SUCCESS_ORDER_SEND', 'Order confirmation sent successfully');
 //EOF - web28 - 2010-03-20 - Send Order by Admin
