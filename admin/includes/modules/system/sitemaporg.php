@@ -52,7 +52,7 @@ class sitemaporg {
   function xml_sitemap_entry($url, $lastmod = '', $products = '') {    
     $this->schema .= "\t<url>\n";
     $this->schema .= "\t\t<loc>" . $url . "</loc>\n";
-    if ($lastmod != '' && (strtotime($lastmod) > 0 || strtotime($lastmod) !== false)) {
+    if ($this->check_date($lastmod) === true) {
       $this->schema .= "\t\t<lastmod>" . date('c', strtotime($lastmod)) . "</lastmod>\n";
     }
     if (is_array($products)) {      
@@ -97,7 +97,7 @@ class sitemaporg {
     $content_query = xtDBquery($content_query);
     while ($content_data=xtc_db_fetch_array($content_query,true)) {
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('shop_content.php','coID='.$content_data['content_group'], 'NONSSL', false));
-      $date = ((!empty($content_data['last_modified']) && strtotime($content_data['last_modified']) > 1) ? $content_data['last_modified'] : $content_data['date_added']);
+      $date = (($this->check_date($content_data['last_modified']) === true) ? $content_data['last_modified'] : $content_data['date_added']);
       $this->xml_sitemap_entry($link, $date);     
     }
   }
@@ -132,7 +132,7 @@ class sitemaporg {
     while ($categories = xtc_db_fetch_array($categories_query,true)) {
       $cPath = xtc_get_category_path($categories['categories_id']);
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', 'cPath='.$cPath, 'NONSSL', false));
-      $date = ((!empty($categories['last_modified']) && strtotime($categories['last_modified']) > 1) ? $categories['last_modified'] : $categories['date_added']);
+      $date = (($this->check_date($categories['last_modified']) === true) ? $categories['last_modified'] : $categories['date_added']);
       $this->xml_sitemap_entry($link, $date);     
     }
   }
@@ -152,11 +152,18 @@ class sitemaporg {
 
     while ($products = xtc_db_fetch_array($export_query)) {
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('product_info.php', 'products_id='.$products['products_id'], 'NONSSL', false));
-      $date = ((!empty($products['products_last_modified']) && strtotime($products['products_last_modified']) > 1) ? $products['products_last_modified'] : $products['products_date_added']);
+      $date = (($this->check_date($products['products_last_modified']) === true) ? $products['products_last_modified'] : $products['products_date_added']);
       $this->xml_sitemap_entry($link, $date, $products);     
     }
   }
-
+  
+  function check_date($date) {
+    if ($date != '' && strtotime($date) !== false && strtotime($date) > 0) {
+      return true;
+    }
+    return false;
+  }
+  
   function encode_utf8($in_str) {
     $cur_encoding = mb_detect_encoding($in_str);
     if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
