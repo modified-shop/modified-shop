@@ -96,13 +96,12 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   $_POST = $InputFilter->process($_POST);
   $_POST = $InputFilter->safeSQL($_POST);
 
-  $check_customer_query = xtc_db_query('
-                                       SELECT customers_id,
-                                              customers_password,
-                                              customers_email_address
-                                         FROM '. TABLE_CUSTOMERS .'
-                                        WHERE customers_email_address = "'. xtc_db_input($_POST['email_address']) .'"
-                                          AND customers_status = 0');
+  $check_customer_query = xtc_db_query("SELECT customers_id,
+                                               customers_password,
+                                               customers_email_address
+                                          FROM ". TABLE_CUSTOMERS ."
+                                         WHERE customers_email_address = '". xtc_db_input($_POST['email_address']) ."'
+                                           AND customers_status = '0'");
 
   $check_customer = xtc_db_fetch_array($check_customer_query);
   if(!xtc_validate_password(xtc_db_input($_POST['password']),
