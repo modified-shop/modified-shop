@@ -66,6 +66,7 @@ class paypalplus extends PayPalPayment {
           $.get("'.xtc_href_link('callback/paypal/paypalplus.php', '', 'SSL').'", function(data) {
             $("#ppp_result").html(data);
           })
+          '.(($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_USE_TABS') == '1' || count($payments) > 0) ? '
           $("[id*=\"rd\"]").click(function(e) {
             if ($(\'input[name="payment"]:checked\', \'#checkout_payment\').val() == "'.$this->code.'") {
               '.(($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_USE_TABS') == '1') ? '
@@ -80,7 +81,7 @@ class paypalplus extends PayPalPayment {
             } else {
               '.((count($payments) > 0) ? '$("#continueButton").removeAttr("onclick");' : '').'
             }
-          });
+          });' : '').'
         });
       </script>';
     
