@@ -28,7 +28,7 @@ $warnings = array();
  ******************************************************************************/
 $db_version_check = get_database_version();
 if ($db_version_check['full'] !== constant('DB_VERSION')) {
-  $check[] = sprintf(ERROR_DB_VERSION_UPDATE_INFO, $db_version_check, constant('DB_VERSION'));
+  $check[] = sprintf(ERROR_DB_VERSION_UPDATE_INFO, $db_version_check['full'], constant('DB_VERSION'));
 }
 
 if (!empty($check)) {
