@@ -372,7 +372,7 @@ class shipcloud {
       if (is_array($value)) {
         $array[$key] = $this->encode_request($value);
       } else {
-        $array[$key] = $this->encode_utf8(decode_htmlentities($value));
+        $array[$key] = encode_utf8(decode_htmlentities($value), $_SESSION['language_charset'], true);
       }
     }
     
@@ -380,16 +380,6 @@ class shipcloud {
   }
 
 
-  private function encode_utf8($in_str) {
-    $cur_encoding = mb_detect_encoding($in_str);
-    if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
-      return $in_str;
-    } else {
-      return mb_convert_encoding($in_str, "UTF-8", $_SESSION['language_charset']);
-    }
-  }
-  
-  
   private function do_request($data, $url = '', $request = 'POST') {
     global $messageStack;
     
