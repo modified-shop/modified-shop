@@ -10,15 +10,14 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
   
+  require_once(DIR_FS_INC.'get_database_version.inc.php');
   require_once(DIR_FS_INC.'get_external_content.inc.php');
   
   function get_newsfeed() {
     // newsfeed
     if (NEWSFEED_LAST_UPDATE < (time()-86400)) {
-      $check_query = xtc_db_query("SELECT version FROM database_version");
-      $check = xtc_db_fetch_array($check_query);
-      $version = preg_replace('/[^0-9\.]/', '', $check['version']);
-      $feed = get_external_content('http://www.modified-shop.org/feed/?v='.$version, 2);    
+      $db_version = get_database_version();
+      $feed = get_external_content('http://www.modified-shop.org/feed/?v='.$db_version['plain'], 2);    
       if ($feed && class_exists('SimpleXmlElement')) {
         $rss = new SimpleXmlElement($feed, LIBXML_NOCDATA);
         $rss->addAttribute('encoding', 'UTF-8');

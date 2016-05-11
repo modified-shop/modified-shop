@@ -8,7 +8,8 @@
 #  -----------------------------------------------------------------------------------------
 
 #Tomcraft - 2016-04-27 - changed database_version
-UPDATE database_version SET version = 'MOD_2.0.0.1';
+ALTER TABLE `database_version` ADD `id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ;
+INSERT INTO `database_version` (`version`) VALUES ('MOD_2.0.0.1');
 
 #GTB - 2016-04-07 - remove old admin access
 ALTER TABLE admin_access DROP cache;

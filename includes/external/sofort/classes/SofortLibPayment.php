@@ -396,11 +396,9 @@ class SofortLibPayment {
 
   function get_version() {
     if (!isset($this->_version)) {
-      $query = xtc_db_query('select * from database_version');
-      while ($row = xtc_db_fetch_array($query)) {
-        $db_version_check = $row['version'];
-      }
-      $this->_version = 'modified_'.$db_version_check.'_v1.00';
+      require_once(DIR_FS_INC.'get_database_version.inc.php');
+      $db_version = get_database_version();
+      $this->_version = 'modified_'.$db_version['full'].'_v1.00';
     }
     
     return $this->_version;

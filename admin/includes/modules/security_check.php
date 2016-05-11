@@ -17,19 +17,17 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-require_once DIR_WS_INCLUDES.'file_permissions.php';
+require_once (DIR_FS_INC.'get_database_version.inc.php');
+require_once (DIR_WS_INCLUDES.'file_permissions.php');
 
+$check = array();
 $warnings = array();
 
 /*******************************************************************************
  ** check Database Version
  ******************************************************************************/
-$query = xtc_db_query('select * from database_version');
-while ($row = xtc_db_fetch_array($query)) {
-  $db_version_check = $row['version'];
-}
-$check = array();
-if ($db_version_check !== constant('DB_VERSION')) {
+$db_version_check = get_database_version();
+if ($db_version_check['full'] !== constant('DB_VERSION')) {
   $check[] = sprintf(ERROR_DB_VERSION_UPDATE_INFO, $db_version_check, constant('DB_VERSION'));
 }
 

@@ -570,7 +570,9 @@ CREATE TABLE customers_status_history (
 
 DROP TABLE IF EXISTS database_version;
 CREATE TABLE database_version (
-  version VARCHAR(32) NOT NULL
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  version VARCHAR(32) NOT NULL,
+  PRIMARY KEY (id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS geo_zones;
