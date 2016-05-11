@@ -252,6 +252,10 @@
         $js .= "\n" . '  if (document.getElementById("gccover")) {' . "\n" .
                '     payment_value = "gccover";' . "\n" .
                '  }' . "\n\n"; 
+
+        $js .= "\n" . '  if (document.getElementById("nopayment")) {' . "\n" .
+               '     payment_value = "no_payment";' . "\n" .
+               '  }' . "\n\n"; 
        
         $js .= "\n" . '  if (payment_value == null) {' . "\n" .
                '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_NO_PAYMENT_MODULE_SELECTED) . '");' . "\n" .
