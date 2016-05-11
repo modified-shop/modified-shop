@@ -31,6 +31,9 @@ class order_total {
   var $modules;
   
   function __construct() {
+    global $order;
+    
+    $this->order_total = $order->info['total'];
     
     $this->modules = array();
     
@@ -75,33 +78,6 @@ class order_total {
     //$credit_class_string = '';
     $output_array = array();
     if (MODULE_ORDER_TOTAL_INSTALLED) {
-         // BOF - vr - 2010-03-03 fix gv display on checkout
-      /*$header_string = '<tr>'."\n";
-      $header_string .= '   <td><table border="0" width="100%" cellspacing="0" cellpadding="2">'."\n";
-      $output1_string .= '      <tr>'."\n";
-      $header_string .= '        <td class="main"><strong>'.TABLE_HEADING_CREDIT.'</strong></td>'."\n";
-      $header_string .= '      </tr>'."\n";
-      $header_string .= '    </table></td>'."\n";
-      $header_string .= '  </tr>'."\n";
-      $header_string .= '<tr>'."\n";
-      $header_string .= '   <td><table border="0" width="100%" cellspacing="1" cellpadding="2" class="infoBox">'."\n";
-      $header_string .= '     <tr class="infoBoxContents"><td><table border="0" width="100%" cellspacing="0" cellpadding="2">'."\n";
-      $header_string .= '       <tr><td width="10">'.xtc_draw_separator('pixel_trans.gif', '10', '1').'</td>'."\n";
-      $header_string .= '           <td colspan="2"><table border="0" width="100%" cellspacing="0" cellpadding="2">'."\n";
-      $close_string = '                           </table></td>';
-      $close_string .= '<td width="10">'.xtc_draw_separator('pixel_trans.gif', '10', '1').'</td>';
-      $close_string .= '</tr></table></td></tr></table></td>';
-      $close_string .= '<tr><td width="100%">'.xtc_draw_separator('pixel_trans.gif', '100%', '10').'</td></tr>';*/
-      /*
-      $header_string  = '<tr><td>';
-      $header_string .= '<table class="paymentblock" border="0" width="100%" cellspacing="0" cellpadding="6">';
-      $header_string .= '<td width="90%" class="header">'.TABLE_HEADING_CREDIT.'</td>';
-      $header_string .= '<td width="10%" class="header"></td>';
-      $header_string .= '</table>';
-      $header_string .= '</td></tr>';
-      $close_string .= '<tr><td width="100%">'.xtc_draw_separator('pixel_trans.gif', '100%', '10').'</td></tr>';
-      // EOF - vr - 2010-03-03 fix gv display on checkout
-      */
       reset($this->modules);
       $output_string = '';
       while (list (, $value) = each($this->modules)) {
@@ -118,40 +94,16 @@ class order_total {
                                      'credit_amount' => method_exists($GLOBALS[$class], 'get_credit_amount') ? $GLOBALS[$class]->get_credit_amount() : '0',
                                      'credit_order_total' => method_exists($GLOBALS[$class], 'get_order_total') ? $GLOBALS[$class]->get_order_total() : '0'
                                      );
-            /*
-            $output_string .= '<tr colspan="4"><td colspan="4" width="100%">'.xtc_draw_separator('pixel_trans.gif', '100%', '10').'</td></tr>';
-            $output_string .= '<tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" >';
-            $output_string .= '<td width="10">'.xtc_draw_separator('pixel_trans.gif', '10', '1').'</td>';
-            // BOF - vr - 2010-03-03 fix gv display on checkout
-            // $output_string .='<td class="main"><strong>'.$GLOBALS[$class]->header.'</strong></td>';
-            // EOF - vr - 2010-03-03 fix gv display on checkout
-            $output_string .=  $use_credit_string;
-            $output_string .= '<td width="10">'.xtc_draw_separator('pixel_trans.gif', '10', '1').'</td>';
-            $output_string .= '</tr>'."\n";
-            $output_string .= $selection_string;
-            */
           }
         }
       }
       if (count($output_array)>0) {
         return $output_array;
       }
-      /*
-      if ($output_string != '') {
-        $output_string = $header_string.$output_string;
-        $output_string .= $close_string;
-      }
-      */
     }
   
     return $output_array;
-    //return $output_string;
   }
-
-  //            if ($selection_string !='') {
-  //              $output_string .= '</td>' . "\n";
-  //              $output_string .= $selection_string;
-  //            }
 
   // update_credit_account is called in checkout process on a per product basis. It's purpose
   // is to decide whether each product in the cart should add something to a credit account.
@@ -170,6 +122,7 @@ class order_total {
       }
     }
   }
+  
   // This function is called in checkout confirmation.
   // It's main use is for credit classes that use the credit_selection() method. This is usually for
   // entering redeem codes(Gift Vouchers/Discount Coupons). This function is used to validate these codes.
@@ -191,6 +144,7 @@ class order_total {
       }
     }
   }
+  
   // pre_confirmation_check is called on checkout confirmation. It's function is to decide whether the
   // credits available are greater than the order total. If they are then a variable (credit_covers) is set to
   // true. This is used to bypass the payment method. In other words if the Gift Voucher is more than the order
@@ -205,22 +159,22 @@ class order_total {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       $total_deductions = 0;
       reset($this->modules);
-      $order_total = $order->info['total'];
       while (list (, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
-        $order_total = $this->get_order_total_main($class, $order_total);
+        $order_total = $this->get_order_total_main($class, $this->order_total);
         if (($GLOBALS[$class]->enabled && isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class)) {
           $total_deductions = $total_deductions + $GLOBALS[$class]->pre_confirmation_check($order_total);
           $order_total = $order_total - $GLOBALS[$class]->pre_confirmation_check($order_total);
         }
       }
-      if ($order->info['total'] - $total_deductions <= 0) {
+      if ($this->order_total - $total_deductions <= 0) {
         $_SESSION['credit_covers'] = true;
       } else { // belts and suspenders to get rid of credit_covers variable if it gets set once and they put something else in the cart
         unset ($_SESSION['credit_covers']);
       }
     }
   }
+  
   // this function is called in checkout process. it tests whether a decision was made at checkout payment to use
   // the credit amount be applied aginst the order. If so some action is taken. E.g. for a Gift voucher the account
   // is reduced the order total amount.
@@ -236,6 +190,7 @@ class order_total {
       }
     }
   }
+  
   // Called in checkout process to clear session variables created by each credit class module.
   //
   function clear_posts() {
@@ -250,6 +205,7 @@ class order_total {
       }
     }
   }
+  
   // Called at various times. This function calulates the total value of the order that the
   // credit will be appled aginst. This varies depending on whether the credit class applies
   // to shipping & tax
@@ -260,9 +216,6 @@ class order_total {
     //      if ($GLOBALS[$class]->include_shipping == 'false') $order_total=$order_total-$order->info['shipping_cost'];
     return $order_total;
   }
-  // ICW ORDER TOTAL CREDIT CLASS/GV SYSTEM - END ADDITION
-  // GV Code End
-
 
   function process() {
     $order_total_array = array ();
@@ -271,7 +224,7 @@ class order_total {
       while (list (, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
-          $GLOBALS[$class]->output = array(); //DokuMan - 2011-09-29 - calling $order_total_modules->process() multiple times would duplicate the output data due to the order total modules already being instantiated
+          $GLOBALS[$class]->output = array();
           $GLOBALS[$class]->process();
 
           for ($i = 0, $n = sizeof($GLOBALS[$class]->output); $i < $n; $i ++) {

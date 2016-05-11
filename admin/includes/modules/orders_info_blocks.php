@@ -116,11 +116,15 @@
                   <td class="main" style="width:140px;"><b><?php echo ENTRY_LANGUAGE; ?></b></td>
                   <td class="main"><?php echo $lang_img = xtc_image(DIR_WS_LANGUAGES . $order->info['language'].'/admin/images/'.$lang_array['image'], $order->info['language']) .'&nbsp;&nbsp;'. $order->info['language']; ?></td>
                 </tr>
-                <tr>
-                  <td class="main"><b><?php echo ENTRY_PAYMENT_METHOD; ?></b></td>
-                  <td class="main"><?php echo get_payment_name($order->info['payment_method']) . ' ('.$order->info['payment_method'].')'; ?></td>
-                </tr>
-                <?php
+                <?php 
+                  if ($order->info['payment_method'] != '') {
+                  ?>
+                    <tr>
+                      <td class="main"><b><?php echo ENTRY_PAYMENT_METHOD; ?></b></td>
+                      <td class="main"><?php echo get_payment_name($order->info['payment_method']) . ' ('.$order->info['payment_method'].')'; ?></td>
+                    </tr>
+                  <?php
+                  }
                   ## invoice number and date
                   echo add_table_infos_ibillnr($order);
                 

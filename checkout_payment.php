@@ -238,6 +238,9 @@ elseif (isset($_SESSION['cc_id']) && $total <= 0) {
 elseif (!isset($_SESSION['cot_gv'])) {
   $order_total_modules->pre_confirmation_check();
   //$smarty->assign('GV_COVER', 'true');
+} elseif ($total <= 0) {
+  unset($_SESSION['payment']);
+  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions')).'conditions=on', 'SSL'));
 }
 
 // move header for Javascript form check
