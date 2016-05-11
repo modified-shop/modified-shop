@@ -25,11 +25,13 @@
 <div class="twoColums">
   <div class="highlightbox">
     <h4 class="checkout">{#title_payment#}</h4>
-    <p>{#text_payment#}</p>
-    {if $GV_COVER != 'true'}
+    {if (!isset($GV_COVER) || $GV_COVER != 'true') && (!isset($NO_PAYMENT) || $NO_PAYMENT != 'true')}
+      <p>{#text_payment#}</p>
       {$PAYMENT_BLOCK}{$module_gift}
-    {else}
+    {elseif isset($GV_COVER) && $GV_COVER == 'true'}
       <div class="infomessage" id="gccover"><b>{#text_gccover#}</b></div>
+    {elseif isset($NO_PAYMENT) && $NO_PAYMENT == 'true'}
+      <div class="infomessage" id="nopayment"><b>{#text_nopayment#}</b></div>
     {/if}
   </div>
 </div>
