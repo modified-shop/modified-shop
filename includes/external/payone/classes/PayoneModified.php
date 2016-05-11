@@ -512,10 +512,8 @@ class PayoneModified {
 			$config = array_merge($config, $config_override);
 		}
 
-    $query = xtc_db_query('select * from database_version');
-    while ($row = xtc_db_fetch_array($query)) {
-      $db_version_check = $row['version'];
-    }
+    require_once(DIR_FS_INC.'get_database_version.inc.php');
+    $db_version = get_database_version();
 
 		$params = array(
 			'mid' => $config['merchant_id'],
@@ -526,7 +524,7 @@ class PayoneModified {
 			'encoding' => 'ISO-8859-1',
 			'language' => strtolower($_SESSION['language_code']),
 			'solution_name' => PROJECT_VERSION,
-			'solution_version' => $db_version_check,
+			'solution_version' => $db_version['full'],
 			'integrator_name' => 'Modified',
 			'integrator_version' => $this->integrator_version,
 		);

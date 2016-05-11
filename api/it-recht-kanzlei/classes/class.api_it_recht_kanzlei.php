@@ -282,10 +282,9 @@ class it_recht_kanzlei {
   
   function set_shopversion() {
     if (!$this->shopversion) {
-      $query = xtc_db_query('SELECT * FROM database_version');
-      while ($row = xtc_db_fetch_array($query)) {
-        $this->shopversion = $row['version'];
-      }
+      require_once(DIR_FS_INC.'get_database_version.inc.php');
+      $db_version = get_database_version();
+      $this->shopversion = $db_version['full'];
     }
   }
 

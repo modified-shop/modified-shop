@@ -15,10 +15,9 @@ class micropayment_helper
 
     private function getShopSignatur()
     {
-        $query = xtc_db_query("SELECT `version` FROM " . TABLE_DATABASE_VERSION);
-        $version = xtc_db_fetch_array($query);
-        $version = $version['version'];
-        return 'modifiedshop:' . $version . ':' . $this->version;
+        require_once(DIR_FS_INC.'get_database_version.inc.php');
+        $db_version = get_database_version();
+        return 'modifiedshop:' . $db_version['full'] . ':' . $this->version;
     }
 
     function generateBillingUrl($order)

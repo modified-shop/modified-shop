@@ -30,9 +30,9 @@ define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INFO','ERR: %s - %s');
 
 
 if(isset($_REQUEST['function']) && $_REQUEST['function'] == 'test') {
-    $order_query = xtc_db_query("SELECT `version` FROM " . TABLE_DATABASE_VERSION);
-    $version     = xtc_db_fetch_array($order_query);
-    $version     = $version['version'];
+    require_once(DIR_FS_INC.'get_database_version.inc.php');
+    $db_version  = get_database_version();
+    $version     = $db_version['full'];
     $accKey      = MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY;
     $billingUrl  = MODULE_PAYMENT_MCP_SERVICE_URL;
     $accId       = MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID;
