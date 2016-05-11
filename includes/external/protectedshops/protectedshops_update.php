@@ -79,7 +79,7 @@ class protectedshops_update {
       
     if (strtolower(MODULE_PROTECTEDSHOPS_TYPE) == 'database') {
       // update data in table
-      $sql_data_array = array('content_text' => utf8_decode($content['Document']),
+      $sql_data_array = array('content_text' => decode_utf8($content['Document']),
                               'content_file' => '');
             
       xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group='" . (int)$coID . "' and languages_id='2'");
