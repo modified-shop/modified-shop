@@ -240,7 +240,7 @@ elseif (!isset($_SESSION['cot_gv'])) {
   //$smarty->assign('GV_COVER', 'true');
 } elseif ($total <= 0) {
   unset($_SESSION['payment']);
-  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions')).'conditions=on', 'SSL'));
+  $smarty->assign('NO_PAYMENT', 'true');
 }
 
 // move header for Javascript form check
