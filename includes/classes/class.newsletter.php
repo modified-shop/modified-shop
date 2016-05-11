@@ -331,8 +331,8 @@ class newsletter {
                         'registered' => strtotime($newsletter['date_added']),
                         'activated' => time(),
                         'source' => MODULE_CLEVERREACH_NAME,
-                        'attributes' => array(array('key' => 'firstname', 'value' => utf8_decode($newsletter['customers_firstname'])),
-                                              array('key' => 'lastname', 'value' => utf8_decode($newsletter['customers_lastname'])))
+                        'attributes' => array(array('key' => 'firstname', 'value' => decode_utf8($newsletter['customers_firstname'], $_SESSION['language_charset'], true)),
+                                              array('key' => 'lastname', 'value' => decode_utf8($newsletter['customers_lastname'], $_SESSION['language_charset'], true)))
                         );
           $result = $api->receiverAdd(MODULE_CLEVERREACH_APIKEY, MODULE_CLEVERREACH_GROUP, $user);
           break; 

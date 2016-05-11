@@ -35,12 +35,7 @@
     $second = (int)substr($raw_date, 17, 2);
 
     $date = strftime(DATE_FORMAT_LONG, mktime($hour,$minute,$second,$month,$day,$year));
-    $is_unicode = (mb_detect_encoding($date, array('UTF-8'), true) == 'UTF-8');
-
-    if ($is_unicode) {
-      return utf8_decode($date);
-    } else {
-      return $date;
-    }
+    
+    return decode_utf8($date);
   }
  ?>

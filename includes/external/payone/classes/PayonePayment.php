@@ -380,7 +380,7 @@ class PayonePayment {
 			return $error;
 		}
 		if (isset($_GET['payment_error']) && $_GET['payment_error'] = 'payone_error' && isset($_GET['customermessage']) && $_GET['customermessage'] != '') {
-		  $error = array('error' => strip_tags(utf8_decode($_GET['customermessage'])));
+		  $error = array('error' => strip_tags(decode_utf8($_GET['customermessage'])));
 		  return $error;
 		}
 		
