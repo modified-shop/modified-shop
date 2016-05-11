@@ -257,7 +257,7 @@
                         $contents[] = array ('text' => '<br />'.TEXT_INFO_PAYMENT_METHOD.' '.get_payment_name($oInfo->payment_method).' ('.$oInfo->payment_method.')');
                       }
                       if ($oInfo->shipping_class != '') {
-                        $contents[] = array ('text' => TEXT_INFO_SHIPPING_METHOD.' '.get_shipping_name($oInfo->shipping_class));
+                        $contents[] = array ('text' => (($oInfo->payment_method == '') ? '<br/>' : '').TEXT_INFO_SHIPPING_METHOD.' '.get_shipping_name($oInfo->shipping_class));
                       }
                       $order = new order($oInfo->orders_id);
                       $contents[] = array ('text' => '<br /><br />'.sizeof($order->products).'&nbsp;'.TEXT_PRODUCTS);
