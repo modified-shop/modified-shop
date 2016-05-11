@@ -19,7 +19,7 @@ define('ENCODE_DEFAULT_CHARSET', 'ISO-8859-15');
  */
 function encode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 {
-  $supported_charsets = explode(',',strtoupper(ENCODE_DEFINED_CHARSETS));  
+  $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));  
   $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
   $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;  
   return htmlentities($string, $flags , $encoding);
@@ -30,7 +30,7 @@ function encode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
  */
 function encode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 {
-  $supported_charsets = explode(',',strtoupper(ENCODE_DEFINED_CHARSETS));  
+  $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));  
   $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
   $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;
   return htmlspecialchars($string, $flags , $encoding);
@@ -39,11 +39,11 @@ function encode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 /**
  * encode_utf8
  */
-function encode_utf8($string, $encoding = '', $force_utf8 = false) {
-  $supported_charsets = explode(',',strtoupper(ENCODE_DEFINED_CHARSETS));  
+function encode_utf8($string, $encoding = '', $force_utf8 = false)
+{
+  $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));  
   $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
   $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;  
-
   if (strtolower($_SESSION['language_charset']) == 'utf-8' || $force_utf8 === true) {
     $cur_encoding = mb_detect_encoding($string);
     if ($cur_encoding == 'UTF-8' && mb_check_encoding($string, 'UTF-8')) {
@@ -61,7 +61,7 @@ function encode_utf8($string, $encoding = '', $force_utf8 = false) {
  */
 function decode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
 {
-  $supported_charsets = explode(',',strtoupper(ENCODE_DEFINED_CHARSETS));  
+  $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));  
   $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
   $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;
   return html_entity_decode($string, $flags , $encoding);
@@ -72,7 +72,7 @@ function decode_htmlentities($string, $flags = ENT_COMPAT, $encoding = '')
  */
 function decode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 {
-  $supported_charsets = explode(',',strtoupper(ENCODE_DEFINED_CHARSETS));  
+  $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));  
   $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
   $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;
   return htmlspecialchars_decode($string, $flags , $encoding);
@@ -81,11 +81,11 @@ function decode_htmlspecialchars($string, $flags = ENT_COMPAT, $encoding = '')
 /**
  * decode_utf8
  */
-function decode_utf8($string, $encoding = '', $force_utf8 = false) {
-  $supported_charsets = explode(',',strtoupper(ENCODE_DEFINED_CHARSETS));  
+function decode_utf8($string, $encoding = '', $force_utf8 = false) 
+{
+  $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));  
   $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
   $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;  
-
   if (strtolower($_SESSION['language_charset']) != 'utf-8' || $force_utf8 === true) {
     $cur_encoding = mb_detect_encoding($string);
     if ($cur_encoding == 'UTF-8' && mb_check_encoding($string, 'UTF-8')) {
@@ -104,7 +104,7 @@ function decode_utf8($string, $encoding = '', $force_utf8 = false) {
 function get_supported_charset($charset = '')
 {
   $charset = !empty($charset) ? $charset : (isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : null);
-  $supported_charsets = explode(',',strtoupper(ENCODE_DEFINED_CHARSETS));
+  $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));
   $default_charset = isset($charset) && in_array(strtoupper($charset), $supported_charsets) ? strtoupper($charset) : ENCODE_DEFAULT_CHARSET;
   return $default_charset;
 }
