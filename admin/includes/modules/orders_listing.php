@@ -253,8 +253,12 @@
                         if (xtc_not_null($oInfo->last_modified)) {
                         $contents[] = array ('text' => TEXT_DATE_ORDER_LAST_MODIFIED.' '.xtc_date_short($oInfo->last_modified));
                       }
-                      $contents[] = array ('text' => '<br />'.TEXT_INFO_PAYMENT_METHOD.' '.get_payment_name($oInfo->payment_method).' ('.$oInfo->payment_method.')');
-                      $contents[] = array ('text' => TEXT_INFO_SHIPPING_METHOD.' '.get_shipping_name($oInfo->shipping_class));
+                      if ($oInfo->payment_method != '') {
+                        $contents[] = array ('text' => '<br />'.TEXT_INFO_PAYMENT_METHOD.' '.get_payment_name($oInfo->payment_method).' ('.$oInfo->payment_method.')');
+                      }
+                      if ($oInfo->shipping_class != '') {
+                        $contents[] = array ('text' => TEXT_INFO_SHIPPING_METHOD.' '.get_shipping_name($oInfo->shipping_class));
+                      }
                       $order = new order($oInfo->orders_id);
                       $contents[] = array ('text' => '<br /><br />'.sizeof($order->products).'&nbsp;'.TEXT_PRODUCTS);
                       for ($i = 0; $i < sizeof($order->products); $i ++) {
