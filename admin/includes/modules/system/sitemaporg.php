@@ -73,9 +73,9 @@ class sitemaporg {
   
   function xml_image_entry($link, $title) {
 		$this->schema .= "\t\t<image:image>\n";
-		$this->schema .= "\t\t\t<image:loc>".$this->encode_utf8(decode_htmlentities($link))."</image:loc>\n";
-		$this->schema .= "\t\t\t<image:title><![CDATA[".$this->encode_utf8(decode_htmlentities($title))."]]></image:title>\n";
-		$this->schema .= "\t\t\t<image:caption><![CDATA[".$this->encode_utf8(decode_htmlentities($title))."]]></image:caption>\n";
+		$this->schema .= "\t\t\t<image:loc>".encode_utf8(decode_htmlentities($link), $_SESSION['language_charset'], true)."</image:loc>\n";
+		$this->schema .= "\t\t\t<image:title><![CDATA[".encode_utf8(decode_htmlentities($title), $_SESSION['language_charset'], true)."]]></image:title>\n";
+		$this->schema .= "\t\t\t<image:caption><![CDATA[".encode_utf8(decode_htmlentities($title), $_SESSION['language_charset'], true)."]]></image:caption>\n";
 		$this->schema .= "\t\t</image:image>\n";
   }
   
@@ -164,15 +164,6 @@ class sitemaporg {
     return false;
   }
   
-  function encode_utf8($in_str) {
-    $cur_encoding = mb_detect_encoding($in_str);
-    if($cur_encoding == "UTF-8" && mb_check_encoding($in_str,"UTF-8")) {
-      return $in_str;
-    } else {
-      return mb_convert_encoding($in_str, "UTF-8", $_SESSION['language_charset']);
-    }
-  }
-
   function process($file) {
     @xtc_set_time_limit(0);
    
