@@ -112,7 +112,7 @@ class ot_payment {
     //Steuerkorrektur für Berechnung ohne Versandkosten
     if ($this->include_shipping == 'false' && $order->info['shipping_class']) {
       $shipping_modul = explode('_',$order->info['shipping_class']);
-      $shipping_tax_class = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul[0]).'_TAX_CLASS');
+      $shipping_tax_class = constant((($shipping_modul[0] == 'free') ? 'MODULE_ORDER_TOTAL_SHIPPING' : 'MODULE_SHIPPING_'.strtoupper($shipping_modul[0])).'_TAX_CLASS');
       $shipping_tax = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] && !$_SESSION['customers_status']['customers_status_add_tax_ot']) {
         $tod_shipping = $order->info['shipping_cost'] / (100 + $shipping_tax) * $shipping_tax;
@@ -201,11 +201,8 @@ class ot_payment {
     $this->amounts['total'] = 0;
 
     $order_total = $order->info['total'];
-    //FIX $order->info['total'] enthält auf der Seite checkout_payment die Versandkosten OHNE Steuer warum auch immer
-    $shipping_cost = $this->get_shipping_cost();
-    $shipping_tax = $shipping_cost - $order->info['shipping_cost'];
-    $order_total += $shipping_tax;
-    
+    $shipping_cost = $order->info['shipping_cost'];
+        
     if ($this->include_shipping == 'false') $order_total -= $shipping_cost;
     // Check if gift voucher is in cart and adjust total
     $products = $_SESSION['cart']->get_products();
@@ -232,8 +229,7 @@ class ot_payment {
     }
     
     if ($this->include_tax == 'false') {
-      $order_total -= $order->info['tax']; //Steuer nur von Artikeln
-      $order_total -= $shipping_tax; //Steuer von Versandmodul
+      $order_total -= $order->info['tax'];
     }
     $this->amount = $order_total;
   }
@@ -281,23 +277,6 @@ class ot_payment {
     }
   }
   
-  function get_shipping_cost() {
-    global $order, $PHP_SELF;
-    
-    $shipping_cost = $order->info['shipping_cost'];
-    
-    if ($shipping_cost > 0) {
-      //Steuer auf der Seite checkout_payment hinzurechnen
-      if (basename($PHP_SELF) == 'checkout_payment.php') {
-        $shipping_modul = explode('_',$order->info['shipping_class']);
-        $shipping_tax_class = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul[0]).'_TAX_CLASS');
-        $shipping_tax_rate = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-        $shipping_cost = $order->info['shipping_cost'] * (1.0 + ($shipping_tax_rate / 100));
-      }
-    }
-    return $shipping_cost;
-  }
-
   function check() {
     if (!isset($this->check)) {
       $check_query = xtc_db_query("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_PAYMENT_STATUS'");
