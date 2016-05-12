@@ -21,8 +21,13 @@
     require_once(DIR_FS_INC.'xtc_set_time_limit.inc.php');
   }
   
-  if (isset($_GET['token']) &&  $_GET['token'] == MODULE_EASYBILL_CSV_CRON_TOKEN) {
-
+  if (defined('MODULE_EASYBILL_CSV_STATUS') 
+      && MODULE_EASYBILL_CSV_STATUS == 'True'
+      && trim(MODULE_EASYBILL_CSV_CRON_TOKEN) != ''
+      && isset($_GET['token'])
+      && $_GET['token'] == MODULE_EASYBILL_CSV_CRON_TOKEN
+      ) 
+  {
     define('_VALID_XTC', true);
     
     include(DIR_FS_CATALOG.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/modules/system/easybillcsv.php');
@@ -33,7 +38,7 @@
     // orders status
     $module->from_orders_status = DEFAULT_SHIPPING_STATUS_ID;
     if (count($_GET['orders_status']) > 0) {
-      $_GET['orders_status'] = preg_replace("'[\r\n\s]+'", '', $_GET['orders_status']);
+      $_GET['orders_status'] = preg_replace('/[^0-9,]/', '', $_GET['orders_status']);
       $orders_status = explode(',', $_GET['orders_status']);
       $module->from_orders_status = implode("', '", $orders_status);
     }
@@ -41,7 +46,7 @@
     // customers status
     $module->from_customers_status = DEFAULT_CUSTOMERS_STATUS_ID;
     if (isset($_GET['customers_status'])) {
-      $_GET['customers_status'] = preg_replace("'[\r\n\s]+'", '', $_GET['customers_status']);
+      $_GET['customers_status'] = preg_replace('/[^0-9,]/', '', $_GET['customers_status']);
       $customers_status = explode(',', $_GET['customers_status']);
       $module->from_customers_status = implode("', '", $customers_status);
     } 
