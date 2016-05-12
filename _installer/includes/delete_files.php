@@ -281,10 +281,12 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'sseq-lib/seq_dump/.htaccess', // neu
                      'sseq-lib/seq_lib/.htaccess', // neu
                      'sseq-lib/seq_log/.htaccess', // neu
+                     'templates/xtc5/boxes/box.html', // neu
                      'templates/xtc5/buttons/english/button_arrow_left.gif', // neu
                      'templates/xtc5/buttons/english/button_arrow_right.gif', // neu
                      'templates/xtc5/buttons/english/button_ask_a_question.gif', // neu
                      'templates/xtc5/buttons/english/button_bonus_add.gif', // neu
+                     'templates/xtc5/buttons/english/sofortueberweisung.gif', // neu
                      'templates/xtc5/buttons/english/sofortueberweisung_.gif', // neu
                      'templates/xtc5/buttons/english/sofortueberweisung_block.gif', // neu
                      'templates/xtc5/buttons/english/sofortueberweisung_info.gif', // neu
@@ -300,11 +302,74 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'templates/xtc5/buttons/german/button_search_small.gif', // neu
                      'templates/xtc5/buttons/german/button_sign_guestbook.gif', // neu
                      'templates/xtc5/buttons/german/button_tell_a_friend.gif', // neu
+                     'templates/xtc5/buttons/german/sofortueberweisung.gif', // neu
                      'templates/xtc5/buttons/german/sofortueberweisung_.gif', // neu
                      'templates/xtc5/buttons/german/sofortueberweisung_block.gif', // neu
                      'templates/xtc5/buttons/german/sofortueberweisung_info.gif', // neu
                      'templates/xtc5/buttons/german/sofortueberweisung_paynow.gif', // neu
+                     'templates/xtc5/css/images/ui-anim_basic_16x16.gif', // neu
                      'templates/xtc5/css/no_javascript.css',
+                     'templates/xtc5/img/arrow1.gif', // neu
+                     'templates/xtc5/img/arrow2.gif', // neu
+                     'templates/xtc5/img/arrow_green.gif', // neu
+                     'templates/xtc5/img/arrow_right.gif', // neu
+                     'templates/xtc5/img/arrow_south_east.gif', // neu
+                     'templates/xtc5/img/basketIcon.gif', // neu
+                     'templates/xtc5/img/bg_breadcrumbarrow.gif', // neu
+                     'templates/xtc5/img/bg_header.gif', // neu
+                     'templates/xtc5/img/bg_left_column.jpg', // neu
+                     'templates/xtc5/img/bg_right_column.jpg', // neu
+                     'templates/xtc5/img/bg_search_breakline.gif', // neu
+                     'templates/xtc5/img/bg_top.jpg', // neu
+                     'templates/xtc5/img/bg_toplinks.gif', // neu
+                     'templates/xtc5/img/box_write_review.gif', // neu
+                     'templates/xtc5/img/breadcrumbbg.gif', // neu
+                     'templates/xtc5/img/cartBoxHeaderLeft.gif', // neu
+                     'templates/xtc5/img/cartBoxHeaderRight.gif', // neu
+                     'templates/xtc5/img/cart_bg.gif', // neu
+                     'templates/xtc5/img/cart_bg.png', // neu
+                     'templates/xtc5/img/category_header.gif', // neu
+                     'templates/xtc5/img/checkout_bullet.gif', // neu
+                     'templates/xtc5/img/checkout_success.gif', // neu
+                     'templates/xtc5/img/greenboxbg.gif', // neu
+                     'templates/xtc5/img/greycaleBG.gif', // neu
+                     'templates/xtc5/img/horMenuItemBg.gif', // neu
+                     'templates/xtc5/img/icon_arrow.gif', // neu
+                     'templates/xtc5/img/icon_arrow.jpg', // neu
+                     'templates/xtc5/img/icon_more.gif', // neu
+                     'templates/xtc5/img/icon_more_light.gif', // neu
+                     'templates/xtc5/img/img_gift.gif', // neu
+                     'templates/xtc5/img/img_line.jpg', // neu
+                     'templates/xtc5/img/infoBoxHeaderLeft.gif', // neu
+                     'templates/xtc5/img/infoBoxHeaderRight.gif', // neu
+                     'templates/xtc5/img/karteiLeft.gif', // neu
+                     'templates/xtc5/img/karteiRight.gif', // neu
+                     'templates/xtc5/img/mainBG.gif', // neu
+                     'templates/xtc5/img/menuspacer.gif', // neu
+                     'templates/xtc5/img/mnu_dark_background.gif', // neu
+                     'templates/xtc5/img/mnu_green_background.gif', // neu
+                     'templates/xtc5/img/orangeHeaderBg.gif', // neu
+                     'templates/xtc5/img/paymentShippingTypeHeader.gif', // neu
+                     'templates/xtc5/img/pixel_silver.gif', // neu
+                     'templates/xtc5/img/pixel_trans.gif', // neu
+                     'templates/xtc5/img/print.gif', // neu
+                     'templates/xtc5/img/productHeaderLeft.gif', // neu
+                     'templates/xtc5/img/productHeaderRight.gif', // neu
+                     'templates/xtc5/img/productSplitLine.gif', // neu
+                     'templates/xtc5/img/smallHeaderLeft.gif', // neu
+                     'templates/xtc5/img/smallHeaderRight.gif', // neu
+                     'templates/xtc5/img/smallLightHeaderLeft.gif', // neu
+                     'templates/xtc5/img/smallLightHeaderRight.gif', // neu
+                     'templates/xtc5/img/sprites.gif', // neu
+                     'templates/xtc5/img/submenuarrow.gif', // neu
+                     'templates/xtc5/img/submenuheaderbg.gif', // neu
+                     'templates/xtc5/img/topCornerLeft.gif', // neu
+                     'templates/xtc5/img/topCornerRight.gif', // neu
+                     'templates/xtc5/img/topMenuBG.gif', // neu
+                     'templates/xtc5/img/toplinks_newproducts.gif', // neu
+                     'templates/xtc5/img/toplinks_search.gif', // neu
+                     'templates/xtc5/img/toplinks_specials.gif', // neu
+                     'templates/xtc5/img/toprowbg.gif', // neu
                      'templates/xtc5/javascript/jquery.js', // neu
                      'templates/xtc5/javascript/macFFBgHack.png', // neu
                      'templates/xtc5/javascript/thickbox.css', // neu
@@ -323,6 +388,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'templates/xtc5/module/account_newsletter.html', // neu
                      'templates/xtc5/module/checkout_paypal.html', // neu
                      'templates/xtc5/module/google_sitemap.html', // neu
+                     'templates/xtc5/module/gv_faq.html', // neu
                      'templates/xtc5/module/paypal_express_cart.html', // neu
                      'templates/xtc5/module/sofort_vorkasse.html', // neu
                      'templates/xtc5/module/wpcallback.html', // neu
@@ -331,6 +397,96 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'templates/xtc5/smarty/function.piwik.php',
                      'templates/xtc5/smarty/function.onlytext.php',
                      'templates/xtc5/source/inc/gunnart_productRedirect.inc.php', // neu
+                     'templates/tpl_modified/buttons/english/sofortueberweisung.gif', // neu
+                     'templates/tpl_modified/buttons/german/sofortueberweisung.gif', // neu
+                     'templates/tpl_modified/css/images/ui-anim_basic_16x16.gif', // neu
+                     'templates/tpl_modified/css/images/ui-bg_flat_0_aaaaaa_40x100.png', // neu
+                     'templates/tpl_modified/css/images/ui-bg_flat_75_ffffff_40x100.png', // neu
+                     'templates/tpl_modified/css/images/ui-bg_glass_55_fbf9ee_1x400.png', // neu
+                     'templates/tpl_modified/css/images/ui-bg_glass_65_ffffff_1x400.png', // neu
+                     'templates/tpl_modified/css/images/ui-bg_glass_75_dadada_1x400.png', // neu
+                     'templates/tpl_modified/css/images/ui-bg_glass_75_e6e6e6_1x400.png', // neu
+                     'templates/tpl_modified/css/images/ui-bg_glass_95_fef1ec_1x400.png', // neu
+                     'templates/tpl_modified/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png', // neu
+                     'templates/tpl_modified/css/images/ui-icons_222222_256x240.png', // neu
+                     'templates/tpl_modified/css/images/ui-icons_2e83ff_256x240.png', // neu
+                     'templates/tpl_modified/css/images/ui-icons_454545_256x240.png', // neu
+                     'templates/tpl_modified/css/images/ui-icons_888888_256x240.png', // neu
+                     'templates/tpl_modified/css/images/ui-icons_cd0a0a_256x240.png', // neu
+                     'templates/tpl_modified/css/macFFBgHack.png', // neu
+                     'templates/tpl_modified/img/arrow1.gif', // neu
+                     'templates/tpl_modified/img/arrow2.gif', // neu
+                     'templates/tpl_modified/img/arrow_green.gif', // neu
+                     'templates/tpl_modified/img/arrow_right.gif', // neu
+                     'templates/tpl_modified/img/arrow_south_east.gif', // neu
+                     'templates/tpl_modified/img/basketIcon.gif', // neu
+                     'templates/tpl_modified/img/bg.gif', // neu
+                     'templates/tpl_modified/img/bg_boxheader.gif', // neu
+                     'templates/tpl_modified/img/bg_boxheader_cart.gif', // neu
+                     'templates/tpl_modified/img/bg_breadcrumb.gif', // neu
+                     'templates/tpl_modified/img/bg_breadcrumbarrow.gif', // neu
+                     'templates/tpl_modified/img/bg_header.gif', // neu
+                     'templates/tpl_modified/img/bg_left_column.jpg', // neu
+                     'templates/tpl_modified/img/bg_right_column.jpg', // neu
+                     'templates/tpl_modified/img/bg_search_breakline.gif', // neu
+                     'templates/tpl_modified/img/bg_top.jpg', // neu
+                     'templates/tpl_modified/img/bg_toplinks.gif', // neu
+                     'templates/tpl_modified/img/bg_topmenu.gif', // neu
+                     'templates/tpl_modified/img/bg_topmenu_breakline.gif', // neu
+                     'templates/tpl_modified/img/box_write_review.gif', // neu
+                     'templates/tpl_modified/img/breadcrumbbg.gif', // neu
+                     'templates/tpl_modified/img/cartBoxHeaderLeft.gif', // neu
+                     'templates/tpl_modified/img/cartBoxHeaderRight.gif', // neu
+                     'templates/tpl_modified/img/cart_bg.gif', // neu
+                     'templates/tpl_modified/img/cart_bg.png', // neu
+                     'templates/tpl_modified/img/category_header.gif', // neu
+                     'templates/tpl_modified/img/checkout_bullet.gif', // neu
+                     'templates/tpl_modified/img/checkout_success.gif', // neu
+                     'templates/tpl_modified/img/greenboxbg.gif', // neu
+                     'templates/tpl_modified/img/greycaleBG.gif', // neu
+                     'templates/tpl_modified/img/horMenuItemBg.gif', // neu
+                     'templates/tpl_modified/img/hr_productpreview.gif', // neu
+                     'templates/tpl_modified/img/icon_arrow.gif', // neu
+                     'templates/tpl_modified/img/icon_arrow.jpg', // neu
+                     'templates/tpl_modified/img/icon_more.gif', // neu
+                     'templates/tpl_modified/img/icon_more_light.gif', // neu
+                     'templates/tpl_modified/img/img_gift.gif', // neu
+                     'templates/tpl_modified/img/img_line.jpg', // neu
+                     'templates/tpl_modified/img/img_willkommen.jpg', // neu
+                     'templates/tpl_modified/img/infoBoxHeaderLeft.gif', // neu
+                     'templates/tpl_modified/img/infoBoxHeaderRight.gif', // neu
+                     'templates/tpl_modified/img/input_bg.gif', // neu
+                     'templates/tpl_modified/img/karteiLeft.gif', // neu
+                     'templates/tpl_modified/img/karteiRight.gif', // neu
+                     'templates/tpl_modified/img/magnifier.gif', // neu
+                     'templates/tpl_modified/img/mainBG.gif', // neu
+                     'templates/tpl_modified/img/menuspacer.gif', // neu
+                     'templates/tpl_modified/img/mnu_dark_background.gif', // neu
+                     'templates/tpl_modified/img/mnu_green_background.gif', // neu
+                     'templates/tpl_modified/img/orangeHeaderBg.gif', // neu
+                     'templates/tpl_modified/img/paymentShippingTypeHeader.gif', // neu
+                     'templates/tpl_modified/img/pixel_silver.gif', // neu
+                     'templates/tpl_modified/img/pixel_trans.gif', // neu
+                     'templates/tpl_modified/img/print.gif', // neu
+                     'templates/tpl_modified/img/productHeaderLeft.gif', // neu
+                     'templates/tpl_modified/img/productHeaderRight.gif', // neu
+                     'templates/tpl_modified/img/productSplitLine.gif', // neu
+                     'templates/tpl_modified/img/smallHeaderLeft.gif', // neu
+                     'templates/tpl_modified/img/smallHeaderRight.gif', // neu
+                     'templates/tpl_modified/img/smallLightHeaderLeft.gif', // neu
+                     'templates/tpl_modified/img/smallLightHeaderRight.gif', // neu
+                     'templates/tpl_modified/img/spacer.gif', // neu
+                     'templates/tpl_modified/img/sprites.gif', // neu
+                     'templates/tpl_modified/img/submenuarrow.gif', // neu
+                     'templates/tpl_modified/img/submenuheaderbg.gif', // neu
+                     'templates/tpl_modified/img/topCornerLeft.gif', // neu
+                     'templates/tpl_modified/img/topCornerRight.gif', // neu
+                     'templates/tpl_modified/img/topMenuBG.gif', // neu
+                     'templates/tpl_modified/img/top_logo.jpg', // neu
+                     'templates/tpl_modified/img/toplinks_newproducts.gif', // neu
+                     'templates/tpl_modified/img/toplinks_search.gif', // neu
+                     'templates/tpl_modified/img/toplinks_specials.gif', // neu
+                     'templates/tpl_modified/img/toprowbg.gif', // neu
                      'templates/'.CURRENT_TEMPLATE.'/javascript/macFFBgHack.png', // neu
                      'templates/'.CURRENT_TEMPLATE.'/javascript/thickbox.css', // neu
                      'templates/'.CURRENT_TEMPLATE.'/mail/english/change_password_mail.html', // neu
