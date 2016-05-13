@@ -239,7 +239,7 @@ class PayPalPayment extends PayPalPaymentBase {
     }
 
     if (($cart === false 
-         //&& $order_exists === false 
+         && $approval === false
          && $address_override === false) || ($order_exists === true)
         ) 
     {
