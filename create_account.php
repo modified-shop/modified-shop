@@ -82,7 +82,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     'telephone',
     'fax',
     'newsletter',
-    'privacy',
     'dob',
   );
 
