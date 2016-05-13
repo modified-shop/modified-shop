@@ -146,7 +146,7 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
       $maname = $manufacturers[$maid]['text'];        
       $link .= shopstat_hrefManulink($maname, $maid, $pager);
     }
-    $separator  = '?';
+    $separator = '?';
     //-- Concat the lang-var
     //-- Check parameters and given language, just concat
     //-- if the language is different
@@ -154,6 +154,7 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
     //if (strlen($lang)>0 && $lang_id != $languages_id) {
     if (strlen($lang) > 0) {
       $link .= $separator.'language='. $lang;
+      $separator = '&';
     }
 
     // unset not needed params
@@ -168,7 +169,7 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
     
     if (count($pararray) > 0) {
       $link .= $separator.http_build_query($pararray, '', '&');
-      $separator  = '&';
+      $separator = '&';
     }
   }
   
