@@ -25,29 +25,52 @@
   }
   defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
   defined('MODULE_CAPTCHA_LOGGED_IN') or define('MODULE_CAPTCHA_LOGGED_IN', 'True');
-
+  
+  $action = isset($_GET['action']) && $_GET['action'] != '' ? $_GET['action'] : '';
+  $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? true : false;
+  
   $error = false;
-  if (isset ($_GET['action']) && ($_GET['action'] == 'send')) {
+  if ($action == 'send') {
+
+    $valid_params = array(
+      'name',
+      'email',
+      'vvcode',
+      'message_body',
+      'company',
+      'street',
+      'postcode',
+      'city',
+      'phone',
+      'fax',
+    );
+
+    // prepare variables
+    foreach ($_POST as $key => $value) {
+      if (!is_object(${$key}) && in_array($key , $valid_params)) {
+        ${$key} = xtc_db_prepare_input($value);
+      }
+    }
 
     //jedes Feld kann hier auf die gewünschte Bedingung getestet und eine Fehlermeldung zugeordnet werden
-    if (!xtc_validate_email(trim($_POST['email']))) {
+    if (!xtc_validate_email(trim($email))) {
       $messageStack->add('contact_us', ERROR_EMAIL);
       $error = true;
     }
     
     if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
-      if ((strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) || $_SESSION['vvcode']=='') {
+      if ((strtoupper($vvcode) != $_SESSION['vvcode']) || $_SESSION['vvcode']=='') {
         $messageStack->add('contact_us', ERROR_VVCODE);
         $error = true;
       }
     }
     
-    if (trim($_POST['message_body']) == '') {
+    if (trim($message_body) == '') {
       $messageStack->add('contact_us', ERROR_MSG_BODY);
       $error = true;
     }
 
-    if (DISPLAY_PRIVACY_CHECK == 'true' && empty($_POST['privacy'])) {
+    if (DISPLAY_PRIVACY_CHECK == 'true' && empty($privacy)) {
       $messageStack->add('contact_us', ENTRY_PRIVACY_ERROR);
       $error = true;
     }
@@ -65,12 +88,12 @@
       $uhrzeit = date("H:i");
 
       $additional_fields = '';
-      if (isset($_POST['company']))  $additional_fields =  EMAIL_COMPANY. $_POST['company'] . "\n" ;
-      if (isset($_POST['street']))   $additional_fields .= EMAIL_STREET . $_POST['street'] . "\n" ;
-      if (isset($_POST['postcode'])) $additional_fields .= EMAIL_POSTCODE . $_POST['postcode'] . "\n" ;
-      if (isset($_POST['city']))     $additional_fields .= EMAIL_CITY . $_POST['city'] . "\n" ;
-      if (isset($_POST['phone']))    $additional_fields .= EMAIL_PHONE . $_POST['phone'] . "\n" ;
-      if (isset($_POST['fax']))      $additional_fields .= EMAIL_FAX . $_POST['fax'] . "\n" ;
+      if (isset($company))  $additional_fields =  EMAIL_COMPANY. $company . "\n" ;
+      if (isset($street))   $additional_fields .= EMAIL_STREET . $street . "\n" ;
+      if (isset($postcode)) $additional_fields .= EMAIL_POSTCODE . $postcode . "\n" ;
+      if (isset($city))     $additional_fields .= EMAIL_CITY . $city . "\n" ;
+      if (isset($phone))    $additional_fields .= EMAIL_PHONE . $phone . "\n" ;
+      if (isset($fax))      $additional_fields .= EMAIL_FAX . $fax . "\n" ;
 
       if (file_exists(DIR_FS_DOCUMENT_ROOT.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.html') 
           && file_exists(DIR_FS_DOCUMENT_ROOT.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.txt')
@@ -79,12 +102,12 @@
         $smarty->assign('language', $_SESSION['language']);
         $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');    
         $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-        $smarty->assign('NAME', $_POST['name']);
-        $smarty->assign('EMAIL', $_POST['email']);
+        $smarty->assign('NAME', $name);
+        $smarty->assign('EMAIL', $email);
         $smarty->assign('DATE', $datum);
         $smarty->assign('TIME', $uhrzeit);
         $smarty->assign('ADDITIONAL_FIELDS', nl2br($additional_fields));
-        $smarty->assign('MESSAGE', nl2br($_POST['message_body']));
+        $smarty->assign('MESSAGE', nl2br($message_body));
      
         // dont allow cache
         $smarty->caching = false;
@@ -94,10 +117,10 @@
       } else {
         $txt_mail = sprintf(EMAIL_SENT_BY, CONTACT_US_NAME, CONTACT_US_EMAIL_ADDRESS, $datum , $uhrzeit) . "\n" .
                 "--------------------------------------------------------------" . "\n" .
-                EMAIL_NAME. $_POST['name'] . "\n" .
-                EMAIL_EMAIL. trim($_POST['email']) . "\n" .
+                EMAIL_NAME. $name . "\n" .
+                EMAIL_EMAIL. trim($email) . "\n" .
                 $additional_fields .
-                "\n".EMAIL_MESSAGE."\n ". $_POST['message_body'] . "\n";
+                "\n".EMAIL_MESSAGE."\n ". $message_body . "\n";
         $html_mail = nl2br($txt_mail);
       }
       
@@ -106,8 +129,8 @@
                    CONTACT_US_EMAIL_ADDRESS,
                    CONTACT_US_NAME,
                    CONTACT_US_FORWARDING_STRING,
-                   trim($_POST['email']),
-                   $_POST['name'],
+                   trim($email),
+                   $name,
                    '',
                    '',
                    CONTACT_US_EMAIL_SUBJECT,
@@ -140,7 +163,7 @@
     
     require (DIR_WS_INCLUDES.'header.php');
 
-    if (isset ($_SESSION['customer_id']) && !$error) {
+    if (isset ($_SESSION['customer_id']) && $action == '') {
       $c_query = xtc_db_query("SELECT c.customers_email_address,
                                       c.customers_telephone,
                                       c.customers_fax,
@@ -155,17 +178,17 @@
                                 WHERE c.customers_id = '".(int)$_SESSION['customer_id']."'");
       $c_data  = xtc_db_fetch_array($c_query);
       $c_data = array_map('stripslashes', $c_data);
-      $customers_name = $_SESSION['customer_first_name'].' '.$_SESSION['customer_last_name'];
-      $email_address = $c_data['customers_email_address'];
+      $name = $_SESSION['customer_first_name'].' '.$_SESSION['customer_last_name'];
+      $email = $c_data['customers_email_address'];
       $phone = $c_data['customers_telephone'];
       $fax = $c_data['customers_fax'];
       $company = $c_data['entry_company'];
       $street = $c_data['entry_street_address'];
       $postcode = $c_data['entry_postcode'];
       $city = $c_data['entry_city'];
-    } elseif (!$error) {
-    	$customers_name = '';
-    	$email_address = '';
+    } elseif ($action == '') {
+    	$name = '';
+    	$email = '';
     	$phone = '';
     	$company = '';
     	$street = '';
@@ -190,18 +213,18 @@
       $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'. MODULE_CAPTCHA_CODE_LENGTH .'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
     }
     if (DISPLAY_PRIVACY_CHECK == 'true') {
-      $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', ((isset($_POST['privacy']) && $_POST['privacy'] == 'privacy') ? true : false), 'id="privacy"'));
+      $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', $privacy, 'id="privacy"'));
       $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
     }
-    $smarty->assign('INPUT_NAME', xtc_draw_input_field('name', ($error ? $_POST['name'] : $customers_name), 'size="30"'));
-    $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ($error ? $_POST['email'] : $email_address), 'size="30"'));
-    $smarty->assign('INPUT_PHONE', xtc_draw_input_field('phone', ($error ? $_POST['phone'] : $phone), 'size="30"'));
-    $smarty->assign('INPUT_COMPANY', xtc_draw_input_field('company', ($error ? $_POST['company'] : $company), 'size="30"'));
-    $smarty->assign('INPUT_STREET', xtc_draw_input_field('street', ($error ? $_POST['street'] : $street), 'size="30"'));
-    $smarty->assign('INPUT_POSTCODE', xtc_draw_input_field('postcode', ($error ? $_POST['postcode'] : $postcode), 'size="30"'));
-    $smarty->assign('INPUT_CITY', xtc_draw_input_field('city', ($error ? $_POST['city'] : $city), 'size="30"'));
-    $smarty->assign('INPUT_FAX', xtc_draw_input_field('fax', ($error ? $_POST['fax'] : $fax), 'size="30"'));
-    $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('message_body', 'soft', 45, 15, ($error ? $_POST['message_body'] : $message_body)));
+    $smarty->assign('INPUT_NAME', xtc_draw_input_field('name', $name, 'size="30"'));
+    $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', $email, 'size="30"'));
+    $smarty->assign('INPUT_PHONE', xtc_draw_input_field('phone', $phone, 'size="30"'));
+    $smarty->assign('INPUT_COMPANY', xtc_draw_input_field('company', $company, 'size="30"'));
+    $smarty->assign('INPUT_STREET', xtc_draw_input_field('street', $street, 'size="30"'));
+    $smarty->assign('INPUT_POSTCODE', xtc_draw_input_field('postcode', $postcode, 'size="30"'));
+    $smarty->assign('INPUT_CITY', xtc_draw_input_field('city', $city, 'size="30"'));
+    $smarty->assign('INPUT_FAX', xtc_draw_input_field('fax', $fax, 'size="30"'));
+    $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('message_body', 'soft', 45, 15, $message_body));
     $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_send.gif', IMAGE_BUTTON_SEND));
     $smarty->assign('FORM_END', '</form>');
   }
