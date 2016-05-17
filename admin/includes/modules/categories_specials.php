@@ -49,10 +49,10 @@ if (isset($_GET['pID'])) {
                             ON p.products_id = s.products_id
                                AND s.products_id = '" . (int)$_GET['pID'] . "'";
 
-  $specials_query = xtDBquery($specials_query);
+  $specials_query = xtc_db_query($specials_query);
   // if there exists already a special for this product
-  if(xtc_db_num_rows($specials_query, true) > 0) {
-    $special = xtc_db_fetch_array($specials_query, true);
+  if(xtc_db_num_rows($specials_query) > 0) {
+    $special = xtc_db_fetch_array($specials_query);
     $sInfo = new objectInfo($special);
   }
 }
