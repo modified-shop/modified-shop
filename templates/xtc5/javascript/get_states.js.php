@@ -50,6 +50,10 @@ var no_zones = [<?php echo $countries_without_zones['ids']; ?>];
 var state = '';
 var min_length = <?php echo (ENTRY_STATE_MIN_LENGTH > 0 ? 1 : 0)?>;
 
+function show_state() {
+  $("[name='state']").parent().parent().show();
+  $("[name='state']").prop('type', 'text'); //fix for check_form in form_check.js.php
+}
 function hide_state() {
   $("[name='state']").parent().parent().hide();
   $("[name='state']").prop('type', 'hidden'); //fix for check_form in form_check.js.php
@@ -66,7 +70,7 @@ function load_state() {
   if ($.inArray(parseInt(selection), no_zones) != -1) {
     //console.log('no_zones:'+ min_length);
     if (min_length) {
-        $("[name='state']").parent().parent().show();
+        show_state();
     } else {
         hide_state();
     } 
@@ -97,7 +101,7 @@ function load_state() {
     } else {
       $("[name='state']").replaceWith('<input type="text" name="state"></input>');
       if (min_length) {
-         $("[name='state']").parent().parent().show();
+         show_state();
       } else {
          hide_state();
       }
@@ -121,6 +125,5 @@ $(function() {
 /*]]>*/
 </script>
 <?php 
-  //}
 } 
 ?>
