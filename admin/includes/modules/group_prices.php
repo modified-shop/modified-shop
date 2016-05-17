@@ -24,7 +24,7 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
 
-require (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
+require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
 $xtPrice = new xtcPrice(DEFAULT_CURRENCY, $_SESSION['customers_status']['customers_status_id']);
 
 $group_array = array();
