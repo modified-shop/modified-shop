@@ -36,6 +36,9 @@
     function __construct($module = '') {
       global $PHP_SELF,$order;
 
+      require_once (DIR_FS_CATALOG.'includes/classes/checkoutModules.class.php');
+      $this->checkoutModules = new checkoutModules();
+      
       $this->modules = array();
       
       if (defined('MODULE_PAYMENT_INSTALLED') && xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
@@ -64,7 +67,10 @@
           }
         }
         unset($modules);
-
+        
+        //new module support
+        $this->modules = $this->checkoutModules->payment_modules($this->modules);
+        
         $include_modules = array();
 
         if (xtc_not_null($module) && in_array($module.'.php', $this->modules)) {
@@ -114,6 +120,9 @@
         // unallowed modules as array
         $unallowed_modules_string = preg_replace("'[\r\n\s]+'",'',$unallowed_modules_string);
         $unallowed_modules = explode(',', $unallowed_modules_string);
+
+        //new module support
+        $unallowed_modules = $this->checkoutModules->unallowed_payment_modules($unallowed_modules);
 
         for ($i = 0, $n = sizeof($include_modules); $i < $n; $i++) {
           if (!in_array($include_modules[$i]['class'], $unallowed_modules)) {

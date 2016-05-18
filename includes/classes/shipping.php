@@ -24,6 +24,9 @@
     function __construct($module = '') {
       global $PHP_SELF,$order;
 
+      require_once (DIR_FS_CATALOG.'includes/classes/checkoutModules.class.php');
+      $this->checkoutModules = new checkoutModules();
+
       $this->modules = array();
       
       if (defined('MODULE_SHIPPING_INSTALLED') && xtc_not_null(MODULE_SHIPPING_INSTALLED)) {
@@ -38,6 +41,9 @@
           }
         }
         unset($modules);
+
+        //new module support
+        $this->modules = $this->checkoutModules->shipping_modules($this->modules);
 
         $include_modules = array();
 
@@ -63,6 +69,10 @@
         // load unallowed modules into array - remove spaces and line breaks by web28
         $unallowed_modules = preg_replace("'[\r\n\s]+'",'',$_SESSION['customers_status']['customers_status_shipping_unallowed'].','. (isset($order->customer['shipping_unallowed']) ? $order->customer['shipping_unallowed']: ''));
         $unallowed_modules = explode(',',$unallowed_modules);
+
+        //new module support
+        $unallowed_modules = $this->checkoutModules->unallowed_shipping_modules($unallowed_modules);
+
         for ($i = 0, $n = sizeof($include_modules); $i < $n; $i++) {
           if (!in_array($include_modules[$i]['class'], $unallowed_modules)) {
             // check if zone is alowed to see module
