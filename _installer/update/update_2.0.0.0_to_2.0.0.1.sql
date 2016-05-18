@@ -24,4 +24,40 @@ INSERT INTO `admin_access` (`customers_id`, `configuration`, `modules`, `countri
 ALTER TABLE orders_tracking ADD date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER parcel_id;
 INSERT INTO `carriers` (`carrier_name`, `carrier_tracking_link`, `carrier_sort_order`, `carrier_date_added`) VALUES ('POST', 'https://www.deutschepost.de/sendung/simpleQueryResult.html?form.sendungsnummer=$1&form.einlieferungsdatum_tag=$3&form.einlieferungsdatum_monat=$4&form.einlieferungsdatum_jahr=$5', 120, NOW());
 
+#GTB - 2016-05-18 - add states for china
+INSERT INTO zones VALUES (NULL,44,'BJ','Beijing Municipality');
+INSERT INTO zones VALUES (NULL,44,'TJ','Tianjin Municipality');
+INSERT INTO zones VALUES (NULL,44,'HE','Hebei Province');
+INSERT INTO zones VALUES (NULL,44,'SX','Shanxi Province');
+INSERT INTO zones VALUES (NULL,44,'NM','Inner Mongolia Autonomous Region');
+INSERT INTO zones VALUES (NULL,44,'LN','Liaoning Province');
+INSERT INTO zones VALUES (NULL,44,'JL','Jilin Province');
+INSERT INTO zones VALUES (NULL,44,'HL','Heilongjiang Province');
+INSERT INTO zones VALUES (NULL,44,'SH','Shanghai Municipality');
+INSERT INTO zones VALUES (NULL,44,'JS','Jiangsu Province');
+INSERT INTO zones VALUES (NULL,44,'ZJ','Zhejiang Province');
+INSERT INTO zones VALUES (NULL,44,'AH','Anhui Province');
+INSERT INTO zones VALUES (NULL,44,'FJ','Fujian Province');
+INSERT INTO zones VALUES (NULL,44,'JX','Jiangxi Province');
+INSERT INTO zones VALUES (NULL,44,'SD','Shandong Province');
+INSERT INTO zones VALUES (NULL,44,'HA','Henan Province');
+INSERT INTO zones VALUES (NULL,44,'HB','Hubei Province');
+INSERT INTO zones VALUES (NULL,44,'HN','Hunan Province');
+INSERT INTO zones VALUES (NULL,44,'GD','Guangdong Province');
+INSERT INTO zones VALUES (NULL,44,'GX','Guangxi Zhuang Autonomous Region');
+INSERT INTO zones VALUES (NULL,44,'HI','Hainan Province');
+INSERT INTO zones VALUES (NULL,44,'CQ','Chongqing Municipality');
+INSERT INTO zones VALUES (NULL,44,'SC','Sichuan Province');
+INSERT INTO zones VALUES (NULL,44,'GZ','Guizhou Province');
+INSERT INTO zones VALUES (NULL,44,'YN','Yunnan Province');
+INSERT INTO zones VALUES (NULL,44,'XZ','Tibet Autonomous Region');
+INSERT INTO zones VALUES (NULL,44,'SN','Shaanxi Province');
+INSERT INTO zones VALUES (NULL,44,'GS','Gansu Province');
+INSERT INTO zones VALUES (NULL,44,'QH','Qinghai Province');
+INSERT INTO zones VALUES (NULL,44,'NX','Ningxia Hui Autonomous Region');
+INSERT INTO zones VALUES (NULL,44,'XJ','Xinjiang Uyghur Autonomous Region');
+INSERT INTO zones VALUES (NULL,44,'HK','Hong Kong Special Administrative Region');
+INSERT INTO zones VALUES (NULL,44,'MC','Macau Special Administrative Region');
+INSERT INTO zones VALUES (NULL,44,'TW','Taiwan Province');
+
 # Keep an empty line at the end of this file for the db_updater to work properly
