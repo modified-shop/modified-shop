@@ -30,18 +30,19 @@
   define('TPL_POPUP_PRODUCT_PRINT_SIZE', '');
   define('TPL_POPUP_PRINT_ORDER_SIZE', '');
   
-  define('PRODUCT_LIST_BOX', ((isset($_SESSION['listbox'])) ? $_SESSION['listbox'] : 'true')); // 'true' or 'false'
-  define('PRODUCT_LIST_BOX_STARTPAGE', 'true'); // 'true' or 'false'
-  define('PRODUCT_INFO_BOX', 'false'); // 'true' or 'false'
+  define('PRODUCT_LIST_BOX', ((isset($_SESSION['listbox'])) ? $_SESSION['listbox'] : 'true')); // 'true' zeigt Artikel in Kategorie-Navigation (product_listing) als Box-Ansicht / 'false' zeigt Listen-Ansicht
+  define('PRODUCT_LIST_BOX_STARTPAGE', 'true'); // 'true' zeigt "Unsere TOP-Artikel" als Box-Ansicht / 'false' zeigt als Listen-Ansicht
+  define('PRODUCT_INFO_BOX', 'false'); // 'true' zeigt Cross-Selling-, Reverse-Cross-Selling- & Also-Purchased-Artikel auf Artikel-Detailseite als Box-Ansicht / 'false' zeigt als Listen-Ansicht
   
   // template output
-  define('TEMPLATE_ENGINE', 'smarty_3'); // smarty_3 or smarty_2 (Nur "smarty_3" unterstützt die custom Sprachdateien (lang_english.custom & lang_german.custom) aus dem Ordner "../lang/" des Templates!)
-  define('TEMPLATE_HTML_ENGINE', 'html5'); // html5 or xhtml
-  define('TEMPLATE_RESPONSIVE', 'false'); // true or false
+  define('TEMPLATE_ENGINE', 'smarty_3'); // 'smarty_3' oder 'smarty_2' -> Nicht ändern! (Nur "smarty_3" unterstützt die custom Sprachdateien (lang_english.custom & lang_german.custom) aus dem Ordner "../lang/" des Templates!)
+  define('TEMPLATE_HTML_ENGINE', 'html5'); // 'html5' oder 'xhtml' -> Nicht ändern!
+  define('TEMPLATE_RESPONSIVE', 'true'); // 'true' oder 'false' -> Nicht ändern!
+  define('COMBINE_PLUGIN_JS', 'true'); // 'true' kombiniert & komprimiert die zusätzliche JS-Dateien / 'false' bindet alle JS-Dateien einzeln ein
 
   // categories
-  defined('SPECIALS_CATEGORIES') or define('SPECIALS_CATEGORIES', true);
-  defined('WHATSNEW_CATEGORIES') or define('WHATSNEW_CATEGORIES', true);
+  defined('SPECIALS_CATEGORIES') or define('SPECIALS_CATEGORIES', true); // 'true' zeigt den Link "Angebote" im Kategoriebaum / 'false' zeigt die "Angebote" als separate Box
+  defined('WHATSNEW_CATEGORIES') or define('WHATSNEW_CATEGORIES', true); // 'true' zeigt den Link "Neue Artikel" im Kategoriebaum / 'false' zeigt die "Neue Artikel" als separate Box
 
   // check specials
   if (SPECIALS_CATEGORIES === true) {

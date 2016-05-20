@@ -24,26 +24,8 @@
   $css_min = DIR_TMPL_CSS.'tpl_plugins.min.css';
 
   if (COMPRESS_STYLESHEET == 'true') {
-    $css_min_ts = is_writeable(DIR_FS_CATALOG.$css_min) ? filemtime(DIR_FS_CATALOG.$css_min) : false;
-    $compress = false;
-    foreach ($css_array as $css_plain) {
-      if (filemtime(DIR_FS_CATALOG.$css_plain) > $css_min_ts) {
-        $compress = true;
-        break;
-      }
-    }
-    if ($css_min_ts && ($compress === true || filesize(DIR_FS_CATALOG.$css_min) == 0)) {
-      require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
-      $compactor = new Compactor(array('strip_php_comments' => true));
-      foreach ($css_array as $css_plain) {
-        $compactor->add(DIR_FS_CATALOG.$css_plain);
-      }
-      if ($compactor->save($css_min) === true) {
-        $css_array = array($css_min.'?v='.$css_min_ts);
-      }
-    } elseif ($css_min_ts) {
-      $css_array = array($css_min.'?v='.$css_min_ts);
-    }
+    require_once(DIR_FS_BOXES_INC.'combine_files.inc.php');
+    $css_array = combine_files($css_array,$css_min,true);
   }
   
   foreach ($css_array as $css) {

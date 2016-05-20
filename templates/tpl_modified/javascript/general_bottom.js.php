@@ -14,13 +14,25 @@
 */
 // this javascriptfile get includes at the BOTTOM of every template page in shop
 // you can add your template specific js scripts here
+$script_array = array(
+  DIR_TMPL_JS.'jquery.colorbox.min.js',
+  DIR_TMPL_JS.'jquery.unveil.min.js',
+  DIR_TMPL_JS.'jquery.bxslider.min.js',
+  DIR_TMPL_JS.'jquery.easyTabs.min.js',
+  DIR_TMPL_JS.'jquery.alerts.min.js',
+);
+$script_min = DIR_TMPL_JS.'tpl_plugins.min.js';
+  
+if (COMBINE_PLUGIN_JS == 'true') {
+  require_once(DIR_FS_BOXES_INC.'combine_files.inc.php');
+  $script_array = combine_files($script_array,$script_min,false);
+}
+
+foreach ($script_array as $script) {
+  echo '<script src="'.DIR_WS_BASE.$script.'" type="text/javascript"></script>'.PHP_EOL;
+}
 ?>
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.colorbox.min.js" type="text/javascript"></script>
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.unveil.min.js" type="text/javascript"></script>
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.alerts.min.js" type="text/javascript"></script>
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.bxslider.min.js" type="text/javascript"></script>
 <?php require DIR_FS_CATALOG . DIR_TMPL_JS . 'get_states.js.php'; ?>
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.easyTabs.min.js" type="text/javascript"></script>
 <script type="text/javascript">
   $(document).ready(function(){
     $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true});
