@@ -112,7 +112,9 @@
                                'entry_street_address' => $street_address,
                                'entry_postcode' => $postcode,
                                'entry_city' => $city,
-                               'entry_country_id' => (int)$country);
+                               'entry_country_id' => (int)$country,
+                               'address_date_added' => 'now()',
+                               'address_last_modified' => 'now()');
 
       if (ACCOUNT_GENDER == 'true') {
         $sql_data_array['entry_gender'] = $gender;
