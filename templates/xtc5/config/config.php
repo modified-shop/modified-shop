@@ -15,7 +15,8 @@
    */
   
   // paths
-  define('DIR_WS_BOXES', DIR_FS_CATALOG .'templates/'.CURRENT_TEMPLATE. '/source/boxes/');
+  define('DIR_FS_BOXES', DIR_FS_CATALOG .'templates/'.CURRENT_TEMPLATE. '/source/boxes/');
+  define('DIR_FS_BOXES_INC', DIR_FS_CATALOG .'templates/'.CURRENT_TEMPLATE. '/source/inc/');
 
   // popup
   define('TPL_POPUP_SHIPPING_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
@@ -32,6 +33,8 @@
   // template output
   define('TEMPLATE_ENGINE', 'smarty_2'); // smarty_3 or smarty_2
   define('TEMPLATE_HTML_ENGINE', 'xhtml'); // html5 or xhtml
+  define('TEMPLATE_RESPONSIVE', 'false'); // 'true' oder 'false' -> Nicht ändern!
+  define('COMBINE_PLUGIN_JS', 'true'); // 'true' kombiniert & komprimiert die zusätzliche JS-Dateien / 'false' bindet alle JS-Dateien einzeln ein
   
   
   // set base
