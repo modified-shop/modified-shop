@@ -14,9 +14,21 @@
 */
 // this javascriptfile get includes at the BOTTOM of every template page in shop
 // you can add your template specific js scripts here
+$script_array = array(
+  DIR_TMPL_JS.'thickbox.js',
+  DIR_TMPL_JS.'jquery.alerts.min.js',
+);
+$script_min = DIR_TMPL_JS.'tpl_plugins.min.js';
+  
+if (COMBINE_PLUGIN_JS == 'true') {
+  require_once(DIR_FS_BOXES_INC.'combine_files.inc.php');
+  $script_array = combine_files($script_array,$script_min,false);
+}
+
+foreach ($script_array as $script) {
+  echo '<script src="'.DIR_WS_BASE.$script.'" type="text/javascript"></script>'.PHP_EOL;
+}
 ?>
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>thickbox.js" type="text/javascript"></script>
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.alerts.min.js" type="text/javascript"></script>
 
 <script type="text/javascript">
   /*BOC jQuery Alerts*/
