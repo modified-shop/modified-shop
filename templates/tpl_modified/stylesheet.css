@@ -1259,6 +1259,15 @@ div.highlightbox ul {
   list-style-type:square;
   line-height:20px;
 }
+.homesite ul {
+  margin-left:15px;
+  padding:0;
+  display:block;
+}
+.homesite img {
+  max-width:100% !important;
+  height:auto !important;
+}
 /* 13. END Highlightbox */
 
 
