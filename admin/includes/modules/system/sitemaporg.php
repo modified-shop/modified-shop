@@ -94,8 +94,8 @@ class sitemaporg {
                          AND content_meta_robots NOT LIKE '%noindex%' 
                     ORDER BY sort_order";
 
-    $content_query = xtDBquery($content_query);
-    while ($content_data=xtc_db_fetch_array($content_query,true)) {
+    $content_query = xtc_db_query($content_query);
+    while ($content_data=xtc_db_fetch_array($content_query)) {
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('shop_content.php','coID='.$content_data['content_group'], 'NONSSL', false));
       $date = (($this->check_date($content_data['last_modified']) === true) ? $content_data['last_modified'] : $content_data['date_added']);
       $this->xml_sitemap_entry($link, $date);     
@@ -107,8 +107,8 @@ class sitemaporg {
                                    manufacturers_name
                               FROM ". TABLE_MANUFACTURERS;
 
-    $manufacturers_query = xtDBquery($manufacturers_query);
-    while ($manufacturers_data=xtc_db_fetch_array($manufacturers_query,true)) {
+    $manufacturers_query = xtc_db_query($manufacturers_query);
+    while ($manufacturers_data=xtc_db_fetch_array($manufacturers_query)) {
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php','manufacturers_id='.$manufacturers_data['manufacturers_id'], 'NONSSL', false));
       $this->xml_sitemap_entry($link);     
     }
@@ -128,8 +128,8 @@ class sitemaporg {
                                 ".$group_check."
                        ORDER BY c.sort_order ASC";
 
-    $categories_query = xtDBquery($categories_query);
-    while ($categories = xtc_db_fetch_array($categories_query,true)) {
+    $categories_query = xtc_db_query($categories_query);
+    while ($categories = xtc_db_fetch_array($categories_query)) {
       $cPath = xtc_get_category_path($categories['categories_id']);
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', 'cPath='.$cPath, 'NONSSL', false));
       $date = (($this->check_date($categories['last_modified']) === true) ? $categories['last_modified'] : $categories['date_added']);

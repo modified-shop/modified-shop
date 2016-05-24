@@ -341,15 +341,12 @@ if (isset ($cPath_array)) {
   for ($i = 0, $n = sizeof($cPath_array); $i < $n; $i ++) {
     if ($cPath_array[$i]) {
       $cPathLinkParam[] = $cPath_array[$i];
-      $categories_query = xtDBquery("-- /includes/application_top.php
-                                     SELECT cd.categories_name
-                                       FROM ".TABLE_CATEGORIES_DESCRIPTION." cd,
-                                            ".TABLE_CATEGORIES." c
-                                      WHERE cd.categories_id = '".$cPath_array[$i]."'
-                                        AND c.categories_id = cd.categories_id
-                                        AND cd.language_id = '".(int) $_SESSION['languages_id']."'");
-      if (xtc_db_num_rows($categories_query,true) > 0) {
-        $categories = xtc_db_fetch_array($categories_query,true);
+      $categories_query = xtc_db_query("SELECT categories_name
+                                          FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                         WHERE categories_id = '".(int)$cPath_array[$i]."'
+                                           AND language_id = '".(int)$_SESSION['languages_id']."'");
+      if (xtc_db_num_rows($categories_query) > 0) {
+        $categories = xtc_db_fetch_array($categories_query);
         $breadcrumb->add($categories['categories_name'], xtc_href_link(FILENAME_CATEGORIES, 'cPath='.implode('_',$cPathLinkParam) . (isset($_GET['page']) ? '&page='.(int)$_GET['page'] : '')));
       } else {
         break;
