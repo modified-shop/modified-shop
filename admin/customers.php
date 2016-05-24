@@ -711,7 +711,7 @@ function check_form() {
     }
   }
 <?php
-  if (ACCOUNT_TELEPHONE_OPTIONAL == 'true') {
+  if (ACCOUNT_TELEPHONE_OPTIONAL == 'false') {
 ?>
   if (customers_telephone == "" || customers_telephone.length < <?php echo ENTRY_TELEPHONE_MIN_LENGTH; ?>) {
     error_message = error_message + "<?php echo xtc_js_lang(JS_TELEPHONE); ?>";
