@@ -13,7 +13,7 @@
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(ot_cod_fee.php,v 1.02 2003/02/24); www.oscommerce.com
    (C) 2001 - 2003 TheMedia, Dipl.-Ing Thomas Plänkers ; http://www.themedia.at & http://www.oscommerce.at
-   (c) 2003 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id: ot_cod_fee.php 1003 2005-07-10 18:58:52Z mz $)
+   (c) 2003 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id$)
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -270,6 +270,7 @@ function formpartPaymentGenreConfig($topkey, $config) {
             <?php foreach($config['types'] as $type => $typedata) { ?>
             <dt><?php echo constant('paymenttype_'.$type); ?></dt>
             <dd>
+              <input type="hidden" name="config[<?php echo $topkey ?>][types][<?php echo $type ?>][name]" value="paymenttype_<?php echo $type ?>" />
               <input id="pg_paymenttype_active_<?php echo $type.'_'.$topkey ?>" name="config[<?php echo $topkey ?>][types][<?php echo $type ?>][active]"
                 type="checkbox" value="true" <?php echo ($config['types'][$type]['active'] == 'true' ? 'checked="checked"' : '') ?>>
               <label for="pg_paymenttype_active_<?php echo $type.'_'.$topkey ?>"><?php echo PG_TYPE_ACTIVE; ?></label>
