@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: categories_view.php 5390 2013-08-15 12:14:27Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,7 +28,10 @@
   require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/categories_specials.php');
 
   if (is_file('includes/modules/products_attributes_iframe.php')) {
-    include_once("includes/modules/products_attributes_iframe.php");
+    include_once('includes/modules/products_attributes_iframe.php');
+  } 
+  if (is_file('includes/modules/products_tags_iframe.php')) {
+    include_once('includes/modules/products_tags_iframe.php');
   } 
 
   define('CAT_VIEW_DROPDOWN', true); //remove dropdown field due to performance issues on many categories
@@ -965,9 +968,11 @@
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                   $contents[] = array('align' => 'center', 
                                       'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=new_product') . '">' . BUTTON_EDIT . '</a>'
-                                                 . (function_exists('attributes_iframe_link') ? attributes_iframe_link($pInfo->products_id) :
+                                                 .(function_exists('attributes_iframe_link') ? attributes_iframe_link($pInfo->products_id) :
                                                  '<a href="'.xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'action=edit&current_product_id='.$pInfo->products_id.'&cpath='.$cPath.'&page='.(int)$_GET['page']).'" class="button">' . BUTTON_EDIT_ATTRIBUTES . '</a>'                                                 
-                                                 ));
+                                                 )
+                                                 .(function_exists('tags_iframe_link') ? tags_iframe_link($pInfo->products_id) : '')
+                                                 );
                   $contents[] = array('align' => 'center', 
                                       'text' =>  '<a class="button" href="'.xtc_href_link(FILENAME_CATEGORIES, 'action=edit_crossselling&current_product_id='.$pInfo->products_id.'&cpath='.$cPath).'">' . BUTTON_EDIT_CROSS_SELLING . '</a>
                                                   <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . (isset($_GET['action']) ? 'last_action='.$_GET['action'] : '') .'&action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>'
