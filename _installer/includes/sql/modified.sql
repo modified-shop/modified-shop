@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------------------
-#  $Id: modified.sql 2796 2012-04-27 16:56:01Z tonne1 $
+#  $Id$
 #
 #  modified eCommerce Shopsoftware
 #  http://www.modified-shop.org
@@ -165,7 +165,7 @@ CREATE TABLE banktransfer (
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS banktransfer_blz;
-CREATE TABLE IF NOT EXISTS banktransfer_blz (
+CREATE TABLE banktransfer_blz (
   blz int(10) NOT NULL DEFAULT 0,
   bankname varchar(255) NOT NULL DEFAULT '',
   prz char(2) NOT NULL DEFAULT '',
