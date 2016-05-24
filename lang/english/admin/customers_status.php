@@ -38,8 +38,7 @@ define('ENTRY_NO','No');
 define('ENTRY_OT_XMEMBER', 'Customer Discount on order total ? :');
 define('ENTRY_YES','Yes');
 
-define('ERROR_REMOVE_DEFAULT_CUSTOMER_STATUS', 'Error: You can not delete the default customer group. Please set another group to default customer group and try again.');
-define('ERROR_REMOVE_DEFAULT_CUSTOMERS_STATUS','ERROR! You cant delete a standardgroup');
+define('ERROR_REMOVE_DEFAULT_CUSTOMERS_STATUS', 'Error: You can not delete the default customer group. Please set another group to default customer group and try again.');
 define('ERROR_STATUS_USED_IN_CUSTOMERS', 'Error: This customer group is actually in use.');
 define('ERROR_STATUS_USED_IN_HISTORY', 'Error: This customer group is actually in use for order history.');
 
@@ -58,7 +57,7 @@ define('TEXT_DISPLAY_NUMBER_OF_CUSTOMERS_STATUS', 'Existing customer groups:');
 
 define('TEXT_INFO_CUSTOMERS_FSK18_DISPLAY_INTRO','<strong>FSK18 Products</strong>');
 define('TEXT_INFO_CUSTOMERS_FSK18_INTRO','<strong>FSK18 Lock</strong>');
-define('TEXT_INFO_CUSTOMERS_STATUS_ADD_TAX_INTRO','<strong>If prices incl. tax = set to "No"</strong>');
+define('TEXT_INFO_CUSTOMERS_STATUS_ADD_TAX_INTRO','<strong>If "prices incl. tax" = "yes", set to "No"</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_MIN_ORDER_INTRO','<strong>Define a minimum order value or leave the field empty.</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_MAX_ORDER_INTRO','<strong>Define a maximum order value or leave the field empty.</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_BT_PERMISSION_INTRO', '<strong>Shall we allow customers of this group to pay via bank collection?</strong>');
