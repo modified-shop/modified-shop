@@ -31,6 +31,7 @@ class ot_gv {
 
   function __construct() {
     global $xtPrice;
+    
     $this->code = 'ot_gv';
     $this->title = MODULE_ORDER_TOTAL_GV_TITLE;
     $this->header = MODULE_ORDER_TOTAL_GV_HEADER;
@@ -141,11 +142,11 @@ class ot_gv {
         if ($customer_gv) {
           $gv_update = xtc_db_query("update ".TABLE_COUPON_GV_CUSTOMER." set amount = '".$total_gv_amount."' where customer_id = '".$_SESSION['customer_id']."'");
         } else {
-          $gv_insert = xtc_db_query("insert into ".TABLE_COUPON_GV_CUSTOMER." (customer_id, amount) values ('".$_SESSION['customer_id']."', '".$total_gv_amount."')");
+          $gv_insert = xtc_db_query("INSERT INTO ".TABLE_COUPON_GV_CUSTOMER." (customer_id, amount) values ('".$_SESSION['customer_id']."', '".$total_gv_amount."')");
         }
       } else {
         // GV_QUEUE is true - so queue the gv for release by store owner
-        $gv_insert = xtc_db_query("insert into ".TABLE_COUPON_GV_QUEUE." (customer_id, order_id, amount, date_created, ipaddr) values ('".$_SESSION['customer_id']."', '".$insert_id."', '".$gv_order_amount."', NOW(), '".$REMOTE_ADDR."')");
+        $gv_insert = xtc_db_query("INSERT INTO ".TABLE_COUPON_GV_QUEUE." (customer_id, order_id, amount, date_created, ipaddr) values ('".$_SESSION['customer_id']."', '".$insert_id."', '".$gv_order_amount."', NOW(), '".$REMOTE_ADDR."')");
       }
     }
   }
@@ -155,15 +156,17 @@ class ot_gv {
   }
 
   function apply_credit() {
-    global $order, $coupon_no,$xtPrice;
+    global $order, $coupon_no, $xtPrice;
+    
     if (isset ($_SESSION['cot_gv']) && $_SESSION['cot_gv'] == true) {
-      $gv_query = xtc_db_query("select amount from ".TABLE_COUPON_GV_CUSTOMER." where customer_id = '".$_SESSION['customer_id']."'");
+      $gv_query = xtc_db_query("SELECT amount 
+                                  FROM ".TABLE_COUPON_GV_CUSTOMER." 
+                                 WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
       $gv_result = xtc_db_fetch_array($gv_query);
-      $gv_payment_amount = $this->deduction;
-      $gv_amount = $gv_result['amount'] - $xtPrice->xtcRemoveCurr($gv_payment_amount);
-      //prepare for DB insert
-      $gv_amount = str_replace(",", ".", $gv_amount);
-      $gv_update = xtc_db_query("update ".TABLE_COUPON_GV_CUSTOMER." set amount = '".$gv_amount."' where customer_id = '".$_SESSION['customer_id']."'");
+      $gv_amount = $gv_result['amount'] + $xtPrice->xtcRemoveCurr($this->deduction);
+      xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER." 
+                       SET amount = '".$gv_amount."' 
+                     WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
     }
     return $gv_payment_amount;
   }
@@ -195,31 +198,32 @@ class ot_gv {
           $customer_gv = true;
         }
         $gv_update = xtc_db_query("update ".TABLE_COUPONS." set coupon_active = 'N' where coupon_id = '".$gv_result['coupon_id']."'");
-        $gv_redeem = xtc_db_query("insert into  ".TABLE_COUPON_REDEEM_TRACK." (coupon_id, customer_id, redeem_date, redeem_ip) values ('".$gv_result['coupon_id']."', '".$SESSION['customer_id']."', now(),'".$REMOTE_ADDR."')");
+        $gv_redeem = xtc_db_query("INSERT INTO  ".TABLE_COUPON_REDEEM_TRACK." (coupon_id, customer_id, redeem_date, redeem_ip) values ('".$gv_result['coupon_id']."', '".$SESSION['customer_id']."', now(),'".$REMOTE_ADDR."')");
         if ($customer_gv) {
           // already has gv_amount so update
           $gv_update = xtc_db_query("update ".TABLE_COUPON_GV_CUSTOMER." set amount = '".$total_gv_amount."' where customer_id = '".$_SESSION['customer_id']."'");
         } else {
           // no gv_amount so insert
-          $gv_insert = xtc_db_query("insert into ".TABLE_COUPON_GV_CUSTOMER." (customer_id, amount) values ('".$_SESSION['customer_id']."', '".$total_gv_amount."')");
+          $gv_insert = xtc_db_query("INSERT INTO ".TABLE_COUPON_GV_CUSTOMER." (customer_id, amount) values ('".$_SESSION['customer_id']."', '".$total_gv_amount."')");
         }
       }
     }
-    if (isset($_POST['submit_redeem_x']) && $gv_result['coupon_type'] == 'G')
+    if (isset($_POST['submit_redeem_x']) && $gv_result['coupon_type'] == 'G') {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode(ERROR_NO_REDEEM_CODE), 'SSL'));
+    }
   }
 
   function calculate_credit($amount) {
     global $order;
-    $gv_query = xtc_db_query("select amount from ".TABLE_COUPON_GV_CUSTOMER." where customer_id = '".$_SESSION['customer_id']."'");
+    
+    $gv_query = xtc_db_query("SELECT amount 
+                                FROM ".TABLE_COUPON_GV_CUSTOMER." 
+                               WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
     $gv_result = xtc_db_fetch_array($gv_query);
     $gv_payment_amount = $gv_result['amount'];
-    $gv_amount = $gv_payment_amount;
-    $save_total_cost = $amount;
-    $full_cost = $save_total_cost - $gv_payment_amount;
-    if ($full_cost <= 0) {
-      $full_cost = 0;
-      $gv_payment_amount = $save_total_cost;
+    
+    if (($amount - $gv_payment_amount) <= 0) {
+      $gv_payment_amount = $amount;
     }
     
     return $gv_payment_amount;
@@ -256,7 +260,7 @@ class ot_gv {
         $tax_rate = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         $tax_desc = xtc_get_tax_description($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         $tod_amount = $this->deduction / (100 + $tax_rate) * $tax_rate;
-        $order->info['tax_groups'][$tax_desc] -= $tod_amount;
+        $order->info['tax_groups'][$tax_desc] += $tod_amount;
         break;    
     }
     
@@ -264,7 +268,9 @@ class ot_gv {
   }
 
   function user_has_gv_account($c_id) {
-    $gv_query = xtc_db_query("select amount from ".TABLE_COUPON_GV_CUSTOMER." where customer_id = '".$c_id."'");
+    $gv_query = xtc_db_query("SELECT amount 
+                                FROM ".TABLE_COUPON_GV_CUSTOMER." 
+                               WHERE customer_id = '".(int)$c_id."'");
     if ($gv_result = xtc_db_fetch_array($gv_query)) {
       if ($gv_result['amount'] > 0) {
         return true;
@@ -275,7 +281,9 @@ class ot_gv {
   }
 
   function get_credit_amount() {
-    $gv_query = xtc_db_query("SELECT amount FROM ".TABLE_COUPON_GV_CUSTOMER." WHERE customer_id = '".$_SESSION['customer_id']."'");
+    $gv_query = xtc_db_query("SELECT amount 
+                                FROM ".TABLE_COUPON_GV_CUSTOMER." 
+                               WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
     if (xtc_db_num_rows($gv_query) > 0) {
       $gv_result = xtc_db_fetch_array($gv_query);
       if ($gv_result['amount'] > 0) {
@@ -316,7 +324,9 @@ class ot_gv {
 
   function check() {
     if (!isset ($this->check)) {
-      $check_query = xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_ORDER_TOTAL_GV_STATUS'");
+      $check_query = xtc_db_query("SELECT configuration_value 
+                                     FROM ".TABLE_CONFIGURATION." 
+                                    WHERE configuration_key = 'MODULE_ORDER_TOTAL_GV_STATUS'");
       $this->check = xtc_db_num_rows($check_query);
     }
 
@@ -337,18 +347,18 @@ class ot_gv {
   }
 
   function install() {
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('', 'MODULE_ORDER_TOTAL_GV_STATUS', 'true', '6', '1','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('', 'MODULE_ORDER_TOTAL_GV_SORT_ORDER', '80', '6', '2', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('', 'MODULE_ORDER_TOTAL_GV_QUEUE', 'true', '6', '3','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) values ('', 'MODULE_ORDER_TOTAL_GV_INC_SHIPPING', 'true', '6', '5', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) values ('', 'MODULE_ORDER_TOTAL_GV_INC_TAX', 'true', '6', '6','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) values ('', 'MODULE_ORDER_TOTAL_GV_CALC_TAX', 'None', '6', '7','xtc_cfg_select_option(array(\'None\', \'Standard\', \'Credit Note\'), ', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('', 'MODULE_ORDER_TOTAL_GV_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) values ('', 'MODULE_ORDER_TOTAL_GV_CREDIT_TAX', 'false', '6', '8','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_GV_STATUS', 'true', '6', '1','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_GV_SORT_ORDER', '80', '6', '2', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_GV_QUEUE', 'true', '6', '3','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('', 'MODULE_ORDER_TOTAL_GV_INC_SHIPPING', 'true', '6', '5', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('', 'MODULE_ORDER_TOTAL_GV_INC_TAX', 'true', '6', '6','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('', 'MODULE_ORDER_TOTAL_GV_CALC_TAX', 'None', '6', '7','xtc_cfg_select_option(array(\'None\', \'Standard\', \'Credit Note\'), ', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_GV_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('', 'MODULE_ORDER_TOTAL_GV_CREDIT_TAX', 'false', '6', '8','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
   }
 
   function remove() {
-    xtc_db_query("delete from ".TABLE_CONFIGURATION." where configuration_key in ('".implode("', '", $this->keys())."')");
+    xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key IN ('".implode("', '", $this->keys())."')");
   }
 }
 ?>
