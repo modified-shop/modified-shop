@@ -61,7 +61,7 @@ if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
 // set the level of error reporting
 @ini_set('display_errors', true);
 if (is_file(DIR_FS_CATALOG.'export/_error_reporting.admin')) {
-  error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
+  error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED); //exlude E_STRICT on PHP 5.4
   define('LOGGING_LEVEL', 'INFO');
 } elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.all')) {
   error_reporting(E_ALL); //exlude E_STRICT on PHP 5.4
