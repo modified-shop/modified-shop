@@ -100,12 +100,14 @@
       while ($attribute_stock_values = xtc_db_fetch_array($attribute_stock_query)) {
         if ($attribute_stock_values['attributes_stock'] <= STOCK_REORDER_LEVEL) {
           $stock_flag = 'true';
-          $which_attribute_query = xtDBquery("SELECT products_options_values_name
-                                                FROM ".TABLE_PRODUCTS_OPTIONS_VALUES."
-                                               WHERE products_options_values_id = '".$attribute_stock_values['options_values_id']."'
-                                                 AND language_id = '".(int)$_SESSION['languages_id']."'");
-          $which_attribute = xtc_db_fetch_array($which_attribute_query,true);
-          $stock_warn .= '<li>'.$which_attribute['products_options_values_name'].'</li>';
+          $which_attribute_query = xtc_db_query("SELECT products_options_values_name
+                                                   FROM ".TABLE_PRODUCTS_OPTIONS_VALUES."
+                                                  WHERE products_options_values_id = '".$attribute_stock_values['options_values_id']."'
+                                                    AND language_id = '".(int)$_SESSION['languages_id']."'");
+          if (xtc_db_num_rows($which_attribute_query) == 1) {
+            $which_attribute = xtc_db_fetch_array($which_attribute_query);
+            $stock_warn .= '<li>'.$which_attribute['products_options_values_name'].'</li>';
+          }
         }
       }
     }
