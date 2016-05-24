@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_shipping.php 5176 2013-07-19 14:26:57Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -102,6 +102,10 @@ class ot_shipping {
       $this->output[] = array('title' => $order->info['shipping_method'] . ':',
                               'text' => $xtPrice->xtcFormat($order->info['shipping_cost'], true, 0, true),
                               'value' => $xtPrice->xtcFormat($order->info['shipping_cost'], false, 0, true));
+    } elseif ($free_shipping === true) {
+      $this->output[] = array('title' => $order->info['shipping_method'] . ':',
+                              'text' => $xtPrice->xtcFormat(0, true, 0, true),
+                              'value' => $xtPrice->xtcFormat(0, false, 0, true));
     }
   }
 
