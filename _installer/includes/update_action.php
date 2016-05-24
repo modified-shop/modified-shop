@@ -12,15 +12,13 @@
   
   
   include(DIR_FS_DOCUMENT_ROOT.'_installer/includes/update_data.php');
-  
-  
+    
   $step = 1;
   $start = 0;
   if (isset($_POST['start']) && is_numeric($_POST['start'])) {
     $start = (int)$_POST['start'];
   }
     
-  
   // update table
   for ($j=$start; $j<($start + $step); $j++) {
   
@@ -35,6 +33,10 @@
           xtc_db_query(str_replace('_mod_', '', $data['create']));
         } else {
   
+          // create temp table
+          xtc_db_query("DROP TABLE IF EXISTS `_mod_".$table."`");
+          xtc_db_query($data['create']);
+
           // drop column
           $table_exists = array();
           $describe_query = xtc_db_query("DESCRIBE `".$table."`");
@@ -47,7 +49,7 @@
               foreach ($data['drop']['col'] as $column) {
                 if (isset($table_exists[$column])) {
                   xtc_db_query("ALTER TABLE ".$table." DROP ".$column);
-                  $success .= 'Table '.$table.' Column '.$column.' DELETED<br/>';
+                  trigger_error('Table '.$table.' Column '.$column.' DELETED', E_USER_NOTICE);
                 }
               }
             }
@@ -59,10 +61,7 @@
           while ($describe = xtc_db_fetch_array($describe_query)) {
             $table_exists[$describe['Field']] = $describe;      
           }
-
-          xtc_db_query("DROP TABLE IF EXISTS `_mod_".$table."`");
-          xtc_db_query($data['create']);
-    
+              
           $count = 0;
           $table_check = array();
           $describe_query = xtc_db_query("DESCRIBE `_mod_".$table."`");
@@ -73,43 +72,33 @@
             $table_check_pos[$count] = $describe['Field'];     
             $count ++;
           }
-    
-          $table_idx_check = array();
-          $index_query = xtc_db_query("SHOW INDEX FROM `_mod_".$table."`");
-          while ($index = xtc_db_fetch_array($index_query)) {
-            unset($index['Table']);
-            unset($index['Cardinality']);
-            $table_idx_check[$index['Key_name']][] = $index;      
-          }
-
-          xtc_db_query("DROP TABLE IF EXISTS `_mod_".$table."`");
-        
+            
           $result_table = array_diff_assoc_recursive($table_check, $table_exists);
 
-          if (count($result_table) < 1 /*&& xtc_not_null($result_table)*/) {
-            $success .= 'Table '.$table.' OK<br/>';
+          if (count($result_table) < 1) {
+            trigger_error('Table '.$table.' OK', E_USER_NOTICE);
           } else {
             $cnt = 0;
             foreach ($result_table as $key => $value) {
               if (isset($table_exists[$key])) {
                 if (isset($result_table[$key]['Type'])) {
                   $cnt ++;
-                  xtc_db_query("ALTER TABLE ".$table." MODIFY ".$key." ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT ".$table_check[$key]['Default'] : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".$table_check[$key]['Extra'] : ""));
+                  xtc_db_query("ALTER TABLE `".$table."` MODIFY `".$key."` ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT '".$table_check[$key]['Default']."'" : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".$table_check[$key]['Extra'] : ""));
                 }
               } else {
                 if (isset($data['rename']) && isset($data['rename'][$key])) {
                   $cnt ++;
-                  xtc_db_query("ALTER TABLE ".$table." CHANGE ".$data['rename'][$key]. " ".$key." ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT ".$table_check[$key]['Default'] : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".$table_check[$key]['Extra'] : ""));
+                  xtc_db_query("ALTER TABLE `".$table."` CHANGE `".$data['rename'][$key]."` ".$key." ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT '".$table_check[$key]['Default']."'" : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".$table_check[$key]['Extra'] : ""));
                 } else {
                   $cnt ++;
-                  xtc_db_query("ALTER TABLE ".$table." ADD ".$key." ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT ".$table_check[$key]['Default'] : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".$table_check[$key]['Extra'] : "").(($table_check_pos[$key] > 0) ? " AFTER ".$table_check_pos[($table_check_pos[$key] - 1)] : " FIRST"));
+                  xtc_db_query("ALTER TABLE `".$table."` ADD `".$key."` ".$table_check[$key]['Type'].(($table_check[$key]['Default'] != '') ? " DEFAULT '".$table_check[$key]['Default']."'" : "").((strtolower($table_check[$key]['Null']) == 'no') ? " NOT NULL" : "").(($table_check[$key]['Extra'] != '') ? " ".(($table_check[$key]['Extra'] == 'auto_increment') ? 'PRIMARY KEY '.$table_check[$key]['Extra'] : $table_check[$key]['Extra']) : "").(($table_check_pos[$key] > 0) ? " AFTER `".$table_check_pos[($table_check_pos[$key] - 1)]."`" : " FIRST"));
                 }
               }
             }
             if ($cnt > 0) {
-              $success .= 'Table '.$table.' UPDATED<br/>';
+              trigger_error('Table '.$table.' UPDATED', E_USER_NOTICE);
             } else {
-              $success .= 'Table '.$table.' OK<br/>';
+              trigger_error('Table '.$table.' OK', E_USER_NOTICE);
             }
           }
         
@@ -126,14 +115,22 @@
             if (isset($data['drop']['idx']) && is_array($data['drop']['idx'])) {
               foreach ($data['drop']['idx'] as $index) {
                 if (isset($table_idx_exists[$index])) {
-                  xtc_db_query("ALTER TABLE ".$table.((strtoupper($index) == 'PRIMARY') ? " DROP PRIMARY KEY" : " DROP INDEX ".$index));
-                  $success .= 'Table '.$table.' Index '.$index.' DELETED<br/>';
+                  xtc_db_query("ALTER TABLE `".$table."`".((strtoupper($index) == 'PRIMARY') ? " DROP PRIMARY KEY" : " DROP INDEX `".$index."`"));
+                  trigger_error('Table '.$table.' Index '.$index.' DELETED', E_USER_NOTICE);
                 }
               }
             }
           }
 
           // add index
+          $table_idx_check = array();
+          $index_query = xtc_db_query("SHOW INDEX FROM `_mod_".$table."`");
+          while ($index = xtc_db_fetch_array($index_query)) {
+            unset($index['Table']);
+            unset($index['Cardinality']);
+            $table_idx_check[$index['Key_name']][] = $index;      
+          }
+
           $table_idx_exists = array();
           $index_query = xtc_db_query("SHOW INDEX FROM `".$table."`");
           while ($index = xtc_db_fetch_array($index_query)) {
@@ -145,7 +142,7 @@
           $result_index = array_diff_assoc_recursive($table_idx_check, $table_idx_exists);
 
           if (count($result_index) < 1) {
-            $success .= 'Table '.$table.' Index OK<br/>';
+            trigger_error('Table '.$table.' Index OK', E_USER_NOTICE);
           } else {
             foreach ($result_index as $key => $value) {
               if (array_key_exists('Key_name', $value[0]) && !isset($table_idx_exists[$value[0]['Key_name']])) {
@@ -153,20 +150,36 @@
                 for ($i=0, $n=count($value); $i<$n; $i++) {
                   $index_array[] = $value[$i]['Column_name'];
                 }
-                xtc_db_query("ALTER TABLE ".$table." ADD ".((strtoupper($value[0]['Key_name']) == 'PRIMARY') ? 'PRIMARY KEY' : (($value[0]['Non_unique'] == '0') ? "UNIQUE" : "KEY")." ".$value[0]['Key_name'])." (".implode(", ", $index_array).")");
-                $success .= 'Table '.$table.' Index '.$value[0]['Key_name'].' UPDATED<br/>';
+                $index_error = false;
+                if ($value[0]['Non_unique'] == '0') {
+                  $check_query = xtc_db_query("SELECT ".implode(", ", $index_array)." 
+                                                 FROM `".$table."`
+                                             GROUP BY ".implode(", ", $index_array)."
+                                               HAVING COUNT(*) > 1");
+                  if (xtc_db_num_rows($check_query) > 0) {
+                    $index_error = true;
+                    trigger_error('Table '.$table.' Index '.$value[0]['Key_name'].' NOT POSSIBLE', E_USER_WARNING);
+                  }
+                }
+                if ($index_error === false) {
+                  xtc_db_query("ALTER TABLE `".$table."` ADD ".((strtoupper($value[0]['Key_name']) == 'PRIMARY') ? 'PRIMARY KEY' : (($value[0]['Non_unique'] == '0') ? "UNIQUE" : "KEY")." ".$value[0]['Key_name'])." (".implode(", ", $index_array).")");
+                  trigger_error('Table '.$table.' Index '.$value[0]['Key_name'].' UPDATED', E_USER_NOTICE);
+                }
               }
             }
-          }        
+          }
+          
+          // delete temp table
+          xtc_db_query("DROP TABLE IF EXISTS `_mod_".$table."`");
         }
       } else {
-        $error .= 'Table '.$table.' structure NOT FOUND<br/>';
+        trigger_error('Table '.$table.' structure NOT FOUND', E_USER_WARNING);
       }
     }
   }
-  
+    
   // reset output
-  $success = $error = '';
+  $success = '';
   
   $success .= '<form action="'.basename($_SERVER['PHP_SELF']).'?action=db_update&lg='.$lang.'" method="post" name="update">';
   $success .= '<input type="hidden" name="start" value="'.($start + $step).'">';
