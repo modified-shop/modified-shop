@@ -710,12 +710,16 @@ function check_form() {
       error = 1;
     }
   }
-
+<?php
+  if (ACCOUNT_TELEPHONE_OPTIONAL == 'true') {
+?>
   if (customers_telephone == "" || customers_telephone.length < <?php echo ENTRY_TELEPHONE_MIN_LENGTH; ?>) {
     error_message = error_message + "<?php echo xtc_js_lang(JS_TELEPHONE); ?>";
     error = 1;
   }
-
+<?php
+  }
+?>
   if (error == 1) {
     alert(unescape(error_message));
     return false;
