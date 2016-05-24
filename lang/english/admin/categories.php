@@ -191,15 +191,16 @@ define('TEXT_PRODUCTS_VPE_VALUE',' Value:');
 
 define('CROSS_SELLING_1','Cross selling');
 define('CROSS_SELLING_2','for product');
-define('CROSS_SELLING_SEARCH','Search product:<br/><small><i>enter productnr.</i></small>');
+define('CROSS_SELLING_SEARCH','Search product:<br/><small><i>enter model no.</i></small>');
 define('BUTTON_EDIT_CROSS_SELLING','Cross selling');
-define('HEADING_DEL','delete');
+define('HEADING_DEL','Delete');
 define('HEADING_ADD','Add?');
 define('HEADING_GROUP','Group');
-define('HEADING_SORTING','sorting');
-define('HEADING_MODEL','model');
-define('HEADING_NAME','article');
-define('HEADING_CATEGORY','category');
+define('HEADING_SORTING','Sorting');
+define('HEADING_MODEL','Model');
+define('HEADING_NAME','Article');
+define('HEADING_CATEGORY','Category');
+define('HEADING_IMAGE','Image');
 
 // BOF - Tomcraft - 2009-11-02 - Admin language tabs
 define('TEXT_SORT_ASC','ascending');

@@ -15,6 +15,14 @@
 
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+  //BOF - web28 -  2012-08-25 - change imagesize by css size  
+  if( defined('USE_ADMIN_THUMBS_IN_LIST_STYLE')) {
+    $admin_thumbs_size = 'style="'.USE_ADMIN_THUMBS_IN_LIST_STYLE.'"';
+  } else {
+    $admin_thumbs_size = 'style="max-width: 40px; max-height: 40px;"';
+  }
+  //EOF - web28 - 2012-08-25 - change imagesize by css size
+
   $confirm_save_entry = ' onclick="ButtonClicked(this);"';
   $confirm_submit = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onsubmit="return confirmSubmit(\'\',\''. SAVE_ENTRY .'\',this)"' : '';
 
@@ -71,9 +79,15 @@
             <td class="dataTableHeadingContent" align="center" style="width:4%"><?php echo HEADING_DEL.'<br/>'.xtc_draw_checkbox_field('deleteall', '', false, '', 'id="deleteall"'); ?></td>
             <td class="dataTableHeadingContent" style="width:5%"><?php echo HEADING_SORTING; ?></td>
             <td class="dataTableHeadingContent" style="width:5%"><?php echo HEADING_GROUP; ?></td>
+            <?php
+            if( USE_ADMIN_THUMBS_IN_LIST=='true' ) { ?>
+              <td class="dataTableHeadingContent" style="width:5%"><?php echo HEADING_IMAGE; ?></td>
+              <?php
+            }
+            ?>
             <td class="dataTableHeadingContent" style="width:10%"><?php echo HEADING_MODEL; ?></td>
             <td class="dataTableHeadingContent" style="width:34%"><?php echo HEADING_NAME; ?></td>
-            <td class="dataTableHeadingContent" style="width:42%"><?php echo HEADING_CATEGORY; ?></td>
+            <td class="dataTableHeadingContent" style="width:<?php echo (( USE_ADMIN_THUMBS_IN_LIST=='true' ) ? '37%' : '42%'); ?>"><?php echo HEADING_CATEGORY; ?></td>
           </tr>
         <?php
           $cross_query = "SELECT cs.ID,cs.products_id,
@@ -81,6 +95,7 @@
                                  cs.sort_order,
                                  p.products_model,
                                  p.products_id,
+                                 p.products_image,
                                  cs.products_xsell_grp_name_id
                             FROM ".TABLE_PRODUCTS_XSELL." cs,
                                  ".TABLE_PRODUCTS_DESCRIPTION." pd,
@@ -94,7 +109,7 @@
           if (!xtc_db_num_rows($cross_query)) {
             ?>
             <tr>
-              <td class="categories_view_data" colspan="6">- NO ENRTY -</td>
+              <td class="categories_view_data" colspan="<?php echo (( USE_ADMIN_THUMBS_IN_LIST=='true' ) ? '7' : '6'); ?>">- NO ENRTY -</td>
             </tr>
             <?php
           }
@@ -109,6 +124,16 @@
               <td class="categories_view_data"><?php echo xtc_draw_checkbox_field('ids[]', $cross_data['ID'], false, '', 'class="delete"'); ?></td>
               <td class="categories_view_data txta-l"><input name="sort[<?php echo $cross_data['ID']; ?>]" type="text" size="3" value="<?php echo $cross_data['sort_order']; ?>"></td>
               <td class="categories_view_data txta-l"><?php echo xtc_draw_pull_down_menu('group_name['.$cross_data['ID'].']',$cross_sell_groups,$cross_data['products_xsell_grp_name_id']); ?></td>
+              <?php
+              if( USE_ADMIN_THUMBS_IN_LIST=='true' ) { ?>
+               <td class="categories_view_data txta-l">
+                 <?php
+                 echo xtc_product_thumb_image($cross_data['products_image'], $cross_data['products_name'], '','',$admin_thumbs_size);
+                 ?>
+               </td>
+               <?php
+              }
+              ?>
               <td class="categories_view_data txta-l"><?php echo $cross_data['products_model']; ?></td>
               <td class="categories_view_data txta-l"><?php echo $cross_data['products_name']; ?></td>
               <td class="categories_view_data txta-l"><?php echo buildCAT($categorie_data['categories_id']); ?> </td>
@@ -159,9 +184,15 @@
           <tr>
             <td class="dataTableHeadingContent" align="center" style="width:4%"><?php echo HEADING_ADD.'<br/>'.xtc_draw_checkbox_field('addall', '', false, '', 'id="addall"'); ?></td>
             <td class="dataTableHeadingContent" style="width:10%"><?php echo HEADING_GROUP; ?></td>
+            <?php
+            if( USE_ADMIN_THUMBS_IN_LIST=='true' ) { ?>
+              <td class="dataTableHeadingContent" style="width:5%"><?php echo HEADING_IMAGE; ?></td>
+              <?php
+            }
+            ?>
             <td class="dataTableHeadingContent" style="width:10%"><?php echo HEADING_MODEL; ?></td>
             <td class="dataTableHeadingContent" style="width:34%"><?php echo HEADING_NAME; ?></td>
-            <td class="dataTableHeadingContent" style="width:42%"><?php echo HEADING_CATEGORY; ?></td>
+            <td class="dataTableHeadingContent" style="width:<?php echo (( USE_ADMIN_THUMBS_IN_LIST=='true' ) ? '37%' : '42%'); ?>"><?php echo HEADING_CATEGORY; ?></td>
           </tr>
           <?php
 /*
@@ -267,6 +298,16 @@
               <tr>
                 <td class="categories_view_data"><?php echo xtc_draw_checkbox_field('ids[]', $search_data['products_id'], false, '', 'class="add"'); ?></td>
                 <td class="categories_view_data txta-l"><?php echo xtc_draw_pull_down_menu('group_name['.$search_data['products_id'].']',$cross_sell_groups); ?></td>
+                <?php
+                if( USE_ADMIN_THUMBS_IN_LIST=='true' ) { ?>
+                 <td class="categories_view_data txta-l">
+                   <?php
+                   echo xtc_product_thumb_image($search_data['products_image'], $search_data['products_name'], '','',$admin_thumbs_size);
+                   ?>
+                 </td>
+                 <?php
+                }
+                ?>
                 <td class="categories_view_data txta-l"><?php echo $search_data['products_model']; ?></td>
                 <td class="categories_view_data txta-l"><?php echo $search_data['products_name']; ?></td>
                 <td class="categories_view_data txta-l"><?php echo buildCAT($categorie_data['categories_id']); ?> </td>

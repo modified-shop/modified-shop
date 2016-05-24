@@ -200,6 +200,7 @@ define('HEADING_SORTING','Reihung');
 define('HEADING_MODEL','Artikelnummer');
 define('HEADING_NAME','Artikel');
 define('HEADING_CATEGORY','Kategorie');
+define('HEADING_IMAGE','Bild');
 
 // BOF - Tomcraft - 2009-11-02 - Admin language tabs
 define('TEXT_SORT_ASC','aufsteigend');
