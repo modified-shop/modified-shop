@@ -865,8 +865,16 @@ class KlarnaUtils
 
         $totalSum = 0;
         foreach ($order->products as $product) {
+            if (KlarnaConstant::showPriceTax() === true || KlarnaConstant::addTaxOT() === false) {
+              $totalSum += $product['price'] * $product['qty'];
+            } else {
+              $totalSum += ($product['price']
+                * (1 + $product['tax'] / 100)) * $product['qty'];
+            }            
+            /*
             $totalSum += ($product['price']
                 * (1 + $product['tax'] / 100)) * $product['qty'];
+            */
         }
 
         return $shippingCost + $totalSum;
@@ -888,13 +896,19 @@ class KlarnaUtils
         // All prices except the shipping cost are multipled by the currency value.
         $cval = $xtPrice->currencies[$currency]['value'];
         $shippingCost = $cval * $shipping["cost"];
-
+        
+        /*
         if (KlarnaConstant::showPriceTax() === true) {
             return $shippingCost;
         }
-
-        $taxRate = $this->_getShippingTaxRate($shipping["id"]);
-        return ($shippingCost * ($taxRate / 100 + 1));
+        */
+        
+        if (KlarnaConstant::showPriceTax() === true || KlarnaConstant::addTaxOT() === true) {
+          $taxRate = $this->_getShippingTaxRate($shipping["id"]);
+          return ($shippingCost * ($taxRate / 100 + 1));
+        } else {
+          return $shippingCost;
+        }
     }
 
     /**

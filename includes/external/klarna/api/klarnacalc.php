@@ -306,13 +306,13 @@ class KlarnaCalc
     private static function _getPayArray($sum, $pclass, $flags)
     {
         $monthsfee = 0;
-        if ($flags === KlarnaFlags::CHECKOUT_PAGE) {
+        //if ($flags === KlarnaFlags::CHECKOUT_PAGE) {
             $monthsfee = $pclass->getInvoiceFee();
-        }
+        //}
         $startfee = 0;
-        if ($flags === KlarnaFlags::CHECKOUT_PAGE) {
+        //if ($flags === KlarnaFlags::CHECKOUT_PAGE) {
             $startfee = $pclass->getStartFee();
-        }
+        //}
 
         //Include start fee in sum
         $sum += $startfee;
@@ -408,13 +408,13 @@ class KlarnaCalc
         }
 
         $monthsfee = 0;
-        if ($flags === KlarnaFlags::CHECKOUT_PAGE) {
+        //if ($flags === KlarnaFlags::CHECKOUT_PAGE) {
             $monthsfee = $pclass->getInvoiceFee();
-        }
+        //}
         $startfee = 0;
-        if ($flags === KlarnaFlags::CHECKOUT_PAGE) {
+        //if ($flags === KlarnaFlags::CHECKOUT_PAGE) {
             $startfee = $pclass->getStartFee();
-        }
+        //}
 
         //Include start fee in sum
         $sum += $startfee;
