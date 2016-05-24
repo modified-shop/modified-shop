@@ -56,7 +56,7 @@ class PayPalPaymentBase extends PayPalCommon {
       }
     }
     
-    if (is_object($order)) {
+    if (is_object($order) && !defined('RUN_MODE_ADMIN')) {
       $this->update_status();
     }
   }
