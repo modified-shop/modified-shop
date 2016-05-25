@@ -47,8 +47,12 @@ class paypalclassic extends PayPalPayment {
 	}
 
 
-	function after_process() {
+  function before_send_order() {
 		$this->validate_payment_paypal();
+  }
+
+
+	function after_process() {
 		unset($_SESSION['paypal']);
 	}
 

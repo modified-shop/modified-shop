@@ -127,6 +127,11 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  function before_send_order() {
+    return false;
+  }
+
+
   function after_process() {
     global $insert_id;
 

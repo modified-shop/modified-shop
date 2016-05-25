@@ -277,8 +277,12 @@ class paypalcart extends PayPalPayment {
   }
 
 
-  function after_process() {
+  function before_send_order() {
     $this->complete_cart();
+  }
+
+
+  function after_process() {
 		unset($_SESSION['paypal']);
   }
 

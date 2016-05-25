@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: payment.php 2594 2012-01-04 10:53:58Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -379,6 +379,18 @@
             ) 
         {
           return $GLOBALS[$this->selected_module]->payment_action();
+        }
+      }
+    }
+
+    function before_send_order() {
+      if (is_array($this->modules)) {
+        if (is_object($GLOBALS[$this->selected_module]) 
+            && $GLOBALS[$this->selected_module]->enabled
+            && method_exists($GLOBALS[$this->selected_module], 'before_send_order')
+            ) 
+        {
+          return $GLOBALS[$this->selected_module]->before_send_order();
         }
       }
     }
