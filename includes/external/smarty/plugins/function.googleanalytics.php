@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: function.googleanalytics.php 2147 2011-09-01 07:15:14Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -151,13 +151,13 @@ function getOrderDetailsAnalytics() {
    */
   $addTrans = sprintf("        _gaq.push(['_addTrans','%s','%s','%s','%s','%s','%s','%s','%s']);\n",
     $last_order,
-    STORE_NAME,
+    addslashes(STORE_NAME),
     $total,
     $tax["value"],
     $shipping['value'],
-    $location['customers_city'],
-    $location['customers_state'],
-    $location['customers_country']
+    addslashes($location['customers_city']),
+    addslashes($location['customers_state']),
+    addslashes($location['customers_country'])
   );
 
   $item_query = xtc_db_query("-- function.googleanalytics_universal.php
@@ -193,8 +193,8 @@ function getOrderDetailsAnalytics() {
     $addItem[] = sprintf("        _gaq.push(['_addItem','%s','%s','%s','%s','%s','%s']);\n",
       $last_order,
       $item['products_id'],
-      $item['products_name'],
-      $item['categories_name'],
+      addslashes($item['products_name']),
+      addslashes($item['categories_name']),
       $item['products_price'],
       $item['products_quantity']
     );
@@ -249,7 +249,7 @@ function getOrderDetailsAnalyticsUniversal() {
   */
   $addTrans = sprintf("        ga('ecommerce:addTransaction', {'id': '%s', 'affiliation': '%s', 'revenue': '%s', 'shipping': '%s', 'tax': '%s', 'currency': '%s'});\n",
     $last_order,
-    STORE_NAME,
+    addslashes(STORE_NAME),
     $total,
     $shipping['value'],
     $tax["value"],
@@ -288,9 +288,9 @@ function getOrderDetailsAnalyticsUniversal() {
     */
     $addItem[] = sprintf("        ga('ecommerce:addItem', {'id': '%s', 'name': '%s', 'sku': '%s', 'category': '%s', 'price': '%s', 'quantity': '%s', 'currency': '%s'});\n",
       $last_order,
-      $item['products_name'],
+      addslashes($item['products_name']),
       $item['products_id'],
-      $item['categories_name'],
+      addslashes($item['categories_name']),
       $item['products_price'],
       $item['products_quantity'],
       $currency['currency']
