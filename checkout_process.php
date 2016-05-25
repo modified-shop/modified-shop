@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: checkout_process.php 3731 2012-09-30 17:35:19Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -434,13 +434,19 @@ if (!$tmp) {
     }
   }
   
-  // NEW EMAIL configuration !
-  $order_totals = $order_total_modules->apply_credit();
+  // apply customers gv
+  $order_total_modules->apply_credit();
+
+  // load the before_send_order function from the payment modules
+  $payment_modules->before_send_order();
+  
+  // send order mail
   include ('send_order.php');
   
   // load the after_process function from the payment modules
   $payment_modules->after_process();
-
+  
+  // reset shopping cart
   $_SESSION['cart']->reset(true);
 
   // unregister session variables used during checkout
