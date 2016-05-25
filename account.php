@@ -99,7 +99,7 @@ if (xtc_count_customer_orders() > 0) {
 	                                     ON o.orders_status = s.orders_status_id
 	                                        AND s.language_id = '".(int) $_SESSION['languages_id']."'
 	                               WHERE o.customers_id = '".(int) $_SESSION['customer_id']."'
-	                            ORDER BY orders_id DESC
+	                            ORDER BY o.orders_id DESC
 	                               LIMIT 3");
   $row = 0;
 	while ($orders = xtc_db_fetch_array($orders_query)) {
