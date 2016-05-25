@@ -3,6 +3,7 @@ if (defined('MODULE_ORDER_MAIL_STEP_STATUS')
     && MODULE_ORDER_MAIL_STEP_STATUS == 'true'
     && (!isset($action)
         || $action == 'send_order_mail'
+        || !isset($send_by_admin)
         )
     )
 {
