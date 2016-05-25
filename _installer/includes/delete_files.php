@@ -188,6 +188,12 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'includes/external/shopgate/helper/ShopgateHelperLoader.php', // neu
                      'includes/external/shopgate/Model/ShopgateModelLoader.php', // neu
                      'includes/external/shopgate/shopgate_library/vendors/mobile_redirect.class.php', // neu
+                     'includes/extra/send_order/banktransfer.php', // neu
+                     'includes/extra/send_order/billpay.php', // neu
+                     'includes/extra/send_order/index.html', // neu
+                     'includes/extra/send_order/janolaw.php', // neu
+                     'includes/extra/send_order/payone.php', // neu
+                     'includes/extra/send_order/paypal.php', // neu
                      'includes/masterpayment/logs/.htaccess', // neu
                      'includes/modules/reviews.php',
                      'includes/modules/module.easybill.php',
