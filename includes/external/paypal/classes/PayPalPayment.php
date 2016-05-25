@@ -1117,6 +1117,9 @@ class PayPalPayment extends PayPalPaymentBase {
 
   function parsePaymentInstruction($instruction) {
     
+    // include needed functions
+    require_once(DIR_FS_INC.'xtc_date_short.inc.php');
+    
     // set amount
     $amount = $instruction->getAmount();
     
@@ -1130,7 +1133,7 @@ class PayPalPayment extends PayPalPaymentBase {
         'total' => $amount->getValue(),
         'currency' => $amount->getCurrency(),
       ),
-      'date' => $instruction->getPaymentDueDate(),
+      'date' => xtc_date_short($instruction->getPaymentDueDate()),
       'note' => $instruction->getNote(),
       'bank' => array(
         'name' => $banking->getBankName(),
