@@ -135,6 +135,8 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   //email attachments
   $email_attachments = defined('EMAIL_BILLING_ATTACHMENTS') ? EMAIL_BILLING_ATTACHMENTS : '';
 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/send_order/data/','php') as $file) require ($file);
+
   $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.html');
   $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.txt');
   
@@ -144,7 +146,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $order_subject = str_replace('{$lastname}', $order->customer['lastname'], $order_subject);
   $order_subject = str_replace('{$firstname}', $order->customer['firstname'], $order_subject);
 
-  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/send_order/','php') as $file) require ($file);
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/send_order/mail/','php') as $file) require ($file);
     
   // send mail to admin
   xtc_php_mail(EMAIL_BILLING_ADDRESS,

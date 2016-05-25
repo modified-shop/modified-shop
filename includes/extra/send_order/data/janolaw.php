@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: janolaw.php 2011-11-24 modified-shop $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
