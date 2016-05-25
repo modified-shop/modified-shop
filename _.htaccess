@@ -138,7 +138,7 @@ ErrorDocument 500 /sitemap.html?error=500
   #RewriteCond %{HTTP_HOST}                 !^www\. [NC]
   #RewriteCond %{HTTP_HOST}                 !\.(.*)\. [NC]
   #RewriteCond %{HTTP_HOST}                 !^localhost [NC]
-  #RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+  #RewriteRule ^ http://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
   ##-- redirect to https-domain (Do not uncomment if you only have a SSL-Proxy!)
   #RewriteCond %{HTTPS} off
