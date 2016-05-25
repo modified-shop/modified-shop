@@ -46,10 +46,13 @@ class PayoneModified {
 		
 		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_ModifiedLog/mode', 'api');
 		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_Log4php/filename', DIR_FS_LOG.'payone_sdk_api.log');
+		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_Log4php/max_file_count', '10');
 		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_Log4php/max_file_size', '5MB');
 		
-		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_Log4php/filename', DIR_FS_LOG.'payone_sdk_transaction.log');
 		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_ModifiedLog/mode', 'transactions');
+		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_Log4php/filename', DIR_FS_LOG.'payone_sdk_transaction.log');
+		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_Log4php/max_file_count', '10');
+		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_Log4php/max_file_size', '5MB');
 
 		return $payone_config;
 	}
@@ -343,44 +346,34 @@ class PayoneModified {
 
 	public function mergeConfigs($old_config, $new_config) {
 		$old_keys = array_keys($old_config);
-		if (is_array($old_keys) && isset($old_keys[0]) && $old_keys[0] === 0)
-		{
+		if (is_array($old_keys) && isset($old_keys[0]) && $old_keys[0] === 0) {
 			# special case: numerically indexed array, e.g. list of countries
 			$merged = array_values(array_unique($new_config));
-		}
-		else
-		{
+		} else {
 			$merged = array();
 			foreach($old_config as $key => $value) {
 				if (isset($new_config[$key]) && empty($new_config[$key]) && !is_numeric($new_config[$key])) {
 					if (array_key_exists($key, $new_config)) {
 						if (is_array($value)) {
 							$merged[$key] = array();
-						}
-						else if ($value == 'true' || $value == 'false') {
+						} else if ($value == 'true' || $value == 'false') {
 							$merged[$key] = 'false';
-						}
-						else {
+						} else {
 							$merged[$key] = '';
 						}
-					}
-					else {
+					} else {
 						if ($value == 'true' || $value == 'false') {
 							$merged[$key] = 'false';
-						}
-						else {
+						} else {
 							$merged[$key] = $value;
 						}
 					}
-				}
-				else {
+				} else {
 					if (is_array($value)) {
 						$merged[$key] = $this->mergeConfigs($value, $new_config[$key]);
-					}
-					else if ($value == 'true' || $value == 'false') {
+					} else if ($value == 'true' || $value == 'false') {
 						$merged[$key] = $new_config[$key] == 'true' ? 'true' : 'false';
-					}
-					else {
+					} else {
 						$merged[$key] = $new_config[$key];
 					}
 				}
@@ -389,10 +382,12 @@ class PayoneModified {
 					$merged[$key] = $new_config[$key] == 'true' ? 'true' : 'false';
 				}
 			}
-			foreach($new_config as $nkey => $nvalue) {
-				if (!array_key_exists($nkey, $merged)) {
-					$merged[$nkey] = $nvalue;
-				}
+			if (is_array($new_config) && count($new_config) > 0) {
+        foreach($new_config as $nkey => $nvalue) {
+          if (!array_key_exists($nkey, $merged)) {
+            $merged[$nkey] = $nvalue;
+          }
+        }
 			}
 		}
 		return $merged;
