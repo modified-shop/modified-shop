@@ -2,9 +2,9 @@
 
 function email_popup () {
     var form = $("form[name='status']");
-    var checkbox_notify = $("input[name='notify']");
+    //var checkbox_notify = $("input[name='notify']");
     var email_preview = $("input[name='email_preview']");
-    if (checkbox_notify.is(':checked')) {
+    //if (checkbox_notify.is(':checked')) {
         form.attr('target', 'emailPreview');
         email_preview.val('1');
         var w = window.open('', 'emailPreview', 'width=700,height=800,resizable=yes,scrollbars=yes,left=100,top=50');
@@ -14,5 +14,5 @@ function email_popup () {
         form.submit();
         email_preview.val('');
         form.attr('target', '');        
-    }
+    //}
 }
