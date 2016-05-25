@@ -419,6 +419,11 @@
                 <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page='.$_GET['page'].'&oID='.$oID); ?>"><?php echo BUTTON_BACK;?></a>
               </div>
               <div class="flt-r"> 
+                <?php
+                if (defined('MODULE_ORDER_MAIL_STEP_STATUS') && MODULE_ORDER_MAIL_STEP_STATUS == 'true') {
+                  echo '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=send_order_mail&site=1').'">'.BUTTON_ORDER_MAIL_STEP.'</a>';
+                }
+                ?>
                 <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=send&site=1'); ?>"><?php echo BUTTON_ORDER_CONFIRMATION; ?></a>
                 <?php
                   if (ACTIVATE_GIFT_SYSTEM == 'true') {

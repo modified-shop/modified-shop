@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: send_order.php 1510 2010-11-22 13:24:04Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -135,8 +135,6 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   //email attachments
   $email_attachments = defined('EMAIL_BILLING_ATTACHMENTS') ? EMAIL_BILLING_ATTACHMENTS : '';
 
-  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/send_order/','php') as $file) require ($file);
-
   $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.html');
   $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.txt');
   
@@ -146,6 +144,8 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $order_subject = str_replace('{$lastname}', $order->customer['lastname'], $order_subject);
   $order_subject = str_replace('{$firstname}', $order->customer['firstname'], $order_subject);
 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/send_order/','php') as $file) require ($file);
+    
   // send mail to admin
   xtc_php_mail(EMAIL_BILLING_ADDRESS,
                EMAIL_BILLING_NAME,
@@ -205,8 +205,24 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     $customer_notified = '1';
     $orders_status_id = '1';
     //Comment out the next line for setting  the $orders_status_id= '1 '- Auskommentieren der nächste Zeile, um die $orders_status_id = '1' zu setzen
-    $orders_status_id = ($order->info['orders_status']  < 1) ? '1' : $order->info['orders_status'];
-
+    $orders_status_id = ($order->info['orders_status'] < 1) ? '1' : $order->info['orders_status'];
+    $comments = encode_utf8(COMMENT_SEND_ORDER_BY_ADMIN, 'ISO-8859-15');
+    
+    if (defined('MODULE_ORDER_MAIL_STEP_STATUS')
+        && MODULE_ORDER_MAIL_STEP_STATUS == 'true'
+        )
+    {
+      if ($action == 'send') {
+        $orders_status_id = ($order->info['orders_status'] != MODULE_ORDER_MAIL_STEP_ORDERS_STATUS_ID) ? MODULE_ORDER_MAIL_STEP_ORDERS_STATUS_ID : $order->info['orders_status'];
+        $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
+      } else {
+        $comments = encode_utf8(COMMENT_SEND_ORDER_MAIL_STEP, 'ISO-8859-15');
+        $messageStack->add_session(SUCCESS_ORDER_MAIL_STEP_SEND, 'success');
+      }
+    } else {
+      $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
+    }
+    
     $sql_data_array = array(
       'orders_status' => (int)$orders_status_id,
       'last_modified' => 'now()'
@@ -218,12 +234,10 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
       'orders_status_id' => (int)$orders_status_id,
       'date_added' => 'now()',
       'customer_notified' => $customer_notified,
-      'comments' => encode_utf8(COMMENT_SEND_ORDER_BY_ADMIN),
+      'comments' => $comments,
     );  
     xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
     
-    $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
-
     if (isset($_GET['site']) && $_GET['site'] == 1) {
       xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&action=edit'));
     } else {

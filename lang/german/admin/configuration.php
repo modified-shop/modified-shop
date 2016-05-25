@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: configuration.php 3130 2012-06-28 11:17:12Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -430,6 +430,8 @@ define('EMAIL_BILLING_SUBJECT_TITLE' , 'Verrechnung - E-Mail-Betreff Status&auml
 define('EMAIL_BILLING_SUBJECT_DESC' , 'Geben Sie bitte einen E-Mail-Betreff f&uuml;r E-Mails des <b>Verrechnungs-Systems</b> Ihres Shops ein (Status&auml;nderungen).');
 define('EMAIL_BILLING_SUBJECT_ORDER_TITLE','Verrechnung - E-Mail-Betreff f&uuml;r Bestellungen');
 define('EMAIL_BILLING_SUBJECT_ORDER_DESC','Geben Sie bitte einen E-Mail-Betreff f&uuml;r Ihre Bestell-E-Mails an. (z.B.: <b>Ihre Bestellung {$nr},am {$date}</b>) ps: folgende Variablen stehen zur Verf&uuml;gung, {$nr},{$date},{$firstname},{$lastname}');
+define('MODULE_ORDER_MAIL_STEP_SUBJECT_TITLE','Verrechnung - E-Mail-Betreff f&uuml;r Bestellbest&auml;tigung');
+define('MODULE_ORDER_MAIL_STEP_SUBJECT_DESC','Geben Sie bitte einen E-Mail-Betreff f&uuml;r Ihre Bestellbest&auml;tigung E-Mails an. (z.B.: <b>Ihre Bestellung {$nr},am {$date}</b>) ps: folgende Variablen stehen zur Verf&uuml;gung, {$nr},{$date},{$firstname},{$lastname}');
 
 define('DOWNLOAD_ENABLED_TITLE' , 'Download von Artikeln erlauben');
 define('DOWNLOAD_ENABLED_DESC' , 'Die Artikel Download Funktionen einschalten (Software etc.).');

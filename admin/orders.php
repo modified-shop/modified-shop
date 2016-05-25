@@ -1,6 +1,6 @@
 <?php
   /*-------------------------------------------------------------
-   $Id: orders.php 3554 2012-08-29 09:48:14Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -187,10 +187,12 @@ while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
 
 switch ($action) {
   case 'send':
+  case 'send_order_mail':
     $smarty->template_dir = DIR_FS_CATALOG.'templates';
     $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
     $smarty->config_dir = DIR_FS_CATALOG.'lang';
     $send_by_admin = true;
+    $send_confirmation = false;
     $insert_id = $oID;
     require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
     require_once(DIR_FS_INC.'xtc_href_link_from_admin.inc.php');
