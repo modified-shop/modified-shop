@@ -213,7 +213,7 @@ switch ($action) {
       }
 
       $customer_notified = 0;
-      if ($_POST['notify'] == 'on') {
+      if ($_POST['notify'] == 'on' || $email_preview) {
         $notify_comments = ($_POST['notify_comments'] == 'on') ? $comments : '';        
         //fallback gender modified < 2.00
         if (!isset($order->customer['gender']) || empty($order->customer['gender'])) {
