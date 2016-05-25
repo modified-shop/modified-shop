@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: orders.php 1185 2010-08-20 09:00:29Z web28 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -178,4 +178,8 @@ define('ENTRY_SEND_TRACKING_INFO', 'Versandinformationen:');
 define('TEXT_ORDERS_STATUS_FILTER', 'Bestellstatus Filter');
 
 define('TABLE_HEADING_DATE', 'Datum');
+
+define('BUTTON_ORDER_MAIL_STEP', 'Bestellbest&auml;tigung senden');
+define('COMMENT_SEND_ORDER_MAIL_STEP' , 'Bestellbestätigung gesendet'); // ACHTUNG hier keine HTML-Entities verwenden
+define('SUCCESS_ORDER_MAIL_STEP_SEND', 'Bestellbest&auml;tigung erfolgreich gesendet');
 ?>
