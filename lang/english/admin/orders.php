@@ -128,7 +128,7 @@ define('TEXT_PRODUCTS', 'Products');
 
 //BOF - web28 - 2010-03-20 - Send Order by Admin
 define('COMMENT_SEND_ORDER_BY_ADMIN' , 'Order confirmation is sent');
-define('BUTTON_ORDER_CONFIRMATION', 'Send confirmation');
+define('BUTTON_ORDER_CONFIRMATION', 'Send order confirmation');
 define('SUCCESS_ORDER_SEND', 'Order confirmation sent successfully');
 //EOF - web28 - 2010-03-20 - Send Order by Admin
 

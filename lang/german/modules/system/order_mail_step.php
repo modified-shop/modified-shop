@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 define('MODULE_ORDER_MAIL_STEP_TEXT_TITLE', 'Manuelle Auftragsbest&auml;tigung');
-define('MODULE_ORDER_MAIL_STEP_TEXT_DESCRIPTION', 'Manuelle Auftragsbest&auml;tigung.<br/><b>Wichtig:</b> es d&uuml;rfen nur Zahlarten daf&uuml;r verwendet werden, bei denen der Kunde im Checkout nicht zur Zahlung aufgefordert wird.');    
+define('MODULE_ORDER_MAIL_STEP_TEXT_DESCRIPTION', 'Manuelle Auftragsbest&auml;tigung.<br/><b>Wichtig:</b> Es d&uuml;rfen nur Zahlarten daf&uuml;r verwendet werden, bei denen der Kunde im Checkout nicht zur Zahlung aufgefordert wird.');    
 
 define('MODULE_ORDER_MAIL_STEP_STATUS_TITLE','Status');
 define('MODULE_ORDER_MAIL_STEP_STATUS_DESC','Modulstatus');

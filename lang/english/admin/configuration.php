@@ -431,8 +431,8 @@ define('EMAIL_BILLING_SUBJECT_TITLE' , 'Billing - E-Mail Subject');
 define('EMAIL_BILLING_SUBJECT_DESC' , 'Please enter an e-mail subject for <b>Billing</b> messages.');
 define('EMAIL_BILLING_SUBJECT_ORDER_TITLE','Billing - Order Mail Subject');
 define('EMAIL_BILLING_SUBJECT_ORDER_DESC','Please enter a subject for order mails. (like <b>our order {$nr},{$date}</b>). You can use, {$nr},{$date},{$firstname},{$lastname}');
-define('MODULE_ORDER_MAIL_STEP_SUBJECT_TITLE','Billing - Order Mail Step Subject');
-define('MODULE_ORDER_MAIL_STEP_SUBJECT_DESC','Please enter a subject for order mails. (like <b>our order {$nr},{$date}</b>). You can use, {$nr},{$date},{$firstname},{$lastname}');
+define('MODULE_ORDER_MAIL_STEP_SUBJECT_TITLE','Billing - Order Confirmation Mail Subject');
+define('MODULE_ORDER_MAIL_STEP_SUBJECT_DESC','Please enter a subject for order confirmation mails. (like <b>our order {$nr},{$date}</b>). You can use, {$nr},{$date},{$firstname},{$lastname}');
 
 define('DOWNLOAD_ENABLED_TITLE' , 'Enable Download');
 define('DOWNLOAD_ENABLED_DESC' , 'Enable the products download functions.');
