@@ -319,7 +319,8 @@ function xtc_check_agent() {
      "wz101",
      "xget",
      "yahoo",
-     "yandex"
+     "yandex",
+     "google-structured-data-testing-tool"
      );
 
      $botID = strtolower($_SERVER['HTTP_USER_AGENT']);
