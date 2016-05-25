@@ -168,17 +168,18 @@ $smarty->assign('ORDER_TAX_GROUPS', sizeof($order->info['tax_groups']));
 if ($order->info['payment_method'] != 'no_payment' && $order->info['payment_method'] != '') {
   include_once (DIR_WS_LANGUAGES . '/' . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_method'] . '.php');
   $smarty->assign('PAYMENT_METHOD', constant('MODULE_PAYMENT_' . strtoupper($order->info['payment_method']) . '_TEXT_TITLE'));
+  $smarty->assign('PAYMENT_EDIT', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
 
 $no_payment = false;
 if ($_SESSION['cart']->show_total() <= 0 && count($order->totals) == 0) {
   $no_payment = true;
+  $smarty->clear_assign('PAYMENT_EDIT');
 };
 
 if ($no_payment === false && isset($_SESSION['credit_covers']) && $order->info['payment_method'] == 'no_payment') {
   include_once (DIR_WS_LANGUAGES . '/' . $_SESSION['language'] . '/modules/order_total/ot_gv.php');
   $smarty->assign('PAYMENT_METHOD', constant('MODULE_ORDER_TOTAL_GV_TITLE'));
-  $smarty->assign('PAYMENT_EDIT', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
 
 if (is_array($payment_modules->modules) && ($confirmation = $payment_modules->confirmation())) { // $confirmation['title'];
