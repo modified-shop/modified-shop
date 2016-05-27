@@ -134,6 +134,7 @@ ErrorDocument 500 /sitemap.html?error=500
   #RewriteCond %{HTTP:X-Forwarded-Server}   !^ssl-account\.com$ [NC]
   ##-- Strato
   #RewriteCond %{HTTP:X-Forwarded-Server}   !^www\.ssl-id\.de$ [NC]
+  
   ##-- redirect to www-domain, when www is missing and no subdomain given and not using an ssl-proxy
   #RewriteCond %{HTTP_HOST}                 !^www\. [NC]
   #RewriteCond %{HTTP_HOST}                 !\.(.*)\. [NC]
