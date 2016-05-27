@@ -26,6 +26,7 @@ if ($shop_content_data['parent_id'] == '0') {
                                            FROM ".TABLE_CONTENT_MANAGER." c1
                                            JOIN ".TABLE_CONTENT_MANAGER." c2
                                                 ON c2.content_id = c1.parent_id
+                                                   AND c2.file_flag = c1.file_flag
                                                    AND c2.content_status = '1'
                                                    AND c2.content_active = '1'
                                                    AND c2.languages_id = '".(int)$_SESSION['languages_id']."'
@@ -51,12 +52,14 @@ if ($shop_content_data['parent_id'] == '0') {
                                            FROM ".TABLE_CONTENT_MANAGER." c1
                                            JOIN ".TABLE_CONTENT_MANAGER." c2
                                                 ON c1.parent_id = c2.parent_id
+                                                   AND c2.file_flag = c1.file_flag
                                                    AND c2.content_status = '1'
                                                    AND c2.content_active = '1'
                                                    AND c2.languages_id = '".(int)$_SESSION['languages_id']."'
                                                    ".CONTENT_CONDITIONS_C2."
                                            JOIN ".TABLE_CONTENT_MANAGER." c3
                                                 ON c3.content_id = c2.parent_id
+                                                   AND c3.file_flag = c2.file_flag
                                                    AND c3.content_status = '1'
                                                    AND c3.content_active = '1'
                                                    AND c3.languages_id = '".(int)$_SESSION['languages_id']."'
