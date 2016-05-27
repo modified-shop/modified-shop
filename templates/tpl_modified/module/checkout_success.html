@@ -34,7 +34,7 @@
 <div class="highlightbox">
   {foreach name=aussen item=data from=$PAYMENT_INFO}
     <h4>{$data.title|stripslashes}</h4>
-    <table class="paymentinfotable $data.class">
+    <table class="paymentinfotable {$data.class}">
       {foreach name=aussen item=info from=$data.fields}
         <tr>
           {if $info.title != ''}<td>{$info.title|stripslashes}</td>{/if}
