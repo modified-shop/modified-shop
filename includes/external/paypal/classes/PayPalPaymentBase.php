@@ -402,6 +402,19 @@ class PayPalPaymentBase extends PayPalCommon {
       xtc_db_query("ALTER TABLE ".TABLE_ORDERS_STATUS." ADD `sort_order` int(11) NOT NULL DEFAULT '0'");
     }
 	  
+	  // check tabs
+	  if ($this->code == 'paypalplus') {
+      $check_query = xtc_db_query("SELECT config_key
+                                     FROM ".TABLE_PAYPAL_CONFIG."
+                                    WHERE config_value = 'MODULE_PAYMENT_PAYPALPLUS_USE_TABS'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        $sql_data_array = array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALPLUS_USE_TABS',
+          'config_value' => '1'
+        );
+        xtc_db_perform(TABLE_PAYPAL_CONFIG, $sql_data_array);
+      }
+	  }
 	}
 
 
