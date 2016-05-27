@@ -2034,7 +2034,9 @@
           include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/'.$module_type.'/' . $module_array[$p]);
         }
         $module_name = substr($module_array[$p], 0,-4);
-        $unallowed_module .= xtc_draw_checkbox_field($checkbox_name.'[]', $module_name, (in_array($module_name, $module_unallowed) ? true : false)).constant('MODULE_'.strtoupper($module_type).'_'.strtoupper($module_name).'_TEXT_TITLE').' ('.$module_array[$p].')<br/>';
+        $unallowed_module .= '<label>';
+        $unallowed_module .= xtc_draw_checkbox_field($checkbox_name.'[]', $module_name, (in_array($module_name, $module_unallowed) ? true : false)).constant('MODULE_'.strtoupper($module_type).'_'.strtoupper($module_name).'_TEXT_TITLE').' ('.$module_array[$p].')';
+        $unallowed_module .= '</label><br>';
       }
     } else {
       $unallowed_module = constant('TEXT_'.strtoupper($module_type).'_ERROR');
