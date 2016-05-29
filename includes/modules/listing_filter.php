@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: stylesheet.css 4246 2013-01-11 14:36:07Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -294,7 +294,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
       unset($values['NAME']);
       $options_array = array_merge($options_array, $values);
             
-      $filter_dropdown[$options_id] .= xtc_draw_form('filter', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'show', 'cat'))), 'get');
+      $filter_dropdown[$options_id] = xtc_draw_form('filter', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'show', 'cat'))), 'get');
       if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
         if (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT || SEARCH_ENGINE_FRIENDLY_URLS != 'true') {
           $filter_dropdown[$options_id] .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']).PHP_EOL;
