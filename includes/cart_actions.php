@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: cart_actions.php 3255 2012-07-18 18:27:41Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -46,7 +46,7 @@ if (xtc_not_null($action)) {
 
   $co_express = false;
   if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
-    if ((isset($_POST['express_x']) && isset($_POST['express_y'])) || isset($_GET['express'])) {
+    if ((isset($_POST['express_x']) && isset($_POST['express_y'])) || isset($_GET['express']) || isset($_POST['express'])) {
       $co_express = true;
     }
   }
