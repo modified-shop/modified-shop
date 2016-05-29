@@ -1052,4 +1052,7 @@ define('INVOICE_INFOS_DESC', 'W&auml;hlen sie eine Contentseite. Der Inhalt wird
 
 define('CATEGORIES_SHOW_PRODUCTS_SUBCATS_TITLE', 'Artikel aus Unterkategorien anzeigen');
 define('CATEGORIES_SHOW_PRODUCTS_SUBCATS_DESC', 'Sollen alle Artikel aus vorhandenen Unterkategorien im Listing angezeigt werden?');
+
+define('SEO_URL_MOD_CLASS_TITLE', 'URL Modul');
+define('SEO_URL_MOD_CLASS_DESC', 'W&auml;hlen sie ein URL Modul.');
 ?>

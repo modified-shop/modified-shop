@@ -1,0 +1,36 @@
+<?php
+class seo_url_example extends modified_seo_url {
+
+  /**
+   * instance
+   *
+   * @var Singleton
+   */
+  protected static $_instance = null;
+
+
+  /**
+   * get instance
+   *
+   * @return Singleton
+   */
+  public static function getInstance() {
+
+    if (null === self::$_instance) {
+      self::$_instance = new self;
+    }
+
+    return self::$_instance;
+  }
+
+
+  /**
+   * create link
+   *
+   * @return SEO link
+   */
+  public function create_link($page = '', $parameters = '', $connection = 'NONSSL') {
+  
+  }
+}
+?>

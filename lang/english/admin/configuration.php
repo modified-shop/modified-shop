@@ -1060,4 +1060,7 @@ define('INVOICE_INFOS_DESC', 'Choose a content site. The content will be display
 
 define('CATEGORIES_SHOW_PRODUCTS_SUBCATS_TITLE', 'Show products from subcategories');
 define('CATEGORIES_SHOW_PRODUCTS_SUBCATS_DESC', 'Show all products from subcategories in products listing?');
+
+define('SEO_URL_MOD_CLASS_TITLE', 'URL Module');
+define('SEO_URL_MOD_CLASS_DESC', 'Choose an URL Module.');
 ?>

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: stylesheet.css 4246 2013-01-11 14:36:07Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -10,15 +10,24 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+defined('SEO_URL_MOD_CLASS') OR define('SEO_URL_MOD_CLASS', 'seo_url_shopstat');
+
+// include needed class
+require_once(DIR_FS_CATALOG.'includes/classes/modified_seo_url.php');
 
 function seo_url_mod($link, $page, $parameters, $connection, $separator) {
-  require_once(DIR_FS_INC . 'shopstat_functions.inc.php');
-  $mode = (!defined('RUN_MODE_ADMIN') ? 'user' : 'admin');
-  if ($seolink = shopstat_getSEO($page, $parameters, $connection, true, true, $mode)) {
+
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/seo_url_mod/','php') as $file) require_once ($file);
+
+  $seo_url_mod = SEO_URL_MOD_CLASS;
+  $modified_seo = $seo_url_mod::getInstance();
+  
+  if ($seolink = $modified_seo->create_link($page, $parameters, $connection)) {
     $link = $seolink;
     $elements  = parse_url($link);
-    $separator = (isset($elements['query']) ? '&' : '?');
-  }  
+    $separator = (isset($elements['query']) ? '&' : '?');  
+  }
+
   return array($link, $separator);
 }
 

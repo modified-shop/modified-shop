@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: general.php 5859 2013-10-01 06:45:14Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -2345,6 +2345,26 @@
    */
   function xtc_cfg_display_password($cfg_value) {
     return '**********';
+  }
+
+  /**
+   * xtc_cfg_select_mod_seo_url()
+   *
+   * @param string $configuration
+   * @return dropdown
+   */
+  function xtc_cfg_select_mod_seo_url() {
+    $name = (isset($key) ? 'configuration['.$key.']' : 'configuration_value');
+    if ($dir = opendir(DIR_FS_CATALOG.'includes/extra/seo_url_mod/')) {
+      while (($seo_url_mod = readdir($dir)) !== false) {
+        if (is_file(DIR_FS_CATALOG.'includes/extra/seo_url_mod/'.$seo_url_mod) && substr($seo_url_mod, -4) == ".php") {
+          $seo_url_mod_array[] = array ('id' => substr($seo_url_mod, 0, -4), 'text' => substr($seo_url_mod, 0, -4));
+        }
+      }
+      closedir($dir);
+      sort($seo_url_mod_array);
+      return xtc_draw_pull_down_menu($name, $seo_url_mod_array, SEO_URL_MOD_CLASS);
+    }
   }
 
 
