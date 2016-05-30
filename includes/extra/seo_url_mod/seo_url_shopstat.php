@@ -12,13 +12,13 @@
 
 defined('SEO_SEPARATOR') OR define('SEO_SEPARATOR',':');
 
-define('CAT_DIVIDER',SEO_SEPARATOR.SEO_SEPARATOR.SEO_SEPARATOR);
-define('ART_DIVIDER',SEO_SEPARATOR.SEO_SEPARATOR);
-define('CNT_DIVIDER',SEO_SEPARATOR.'_'.SEO_SEPARATOR);
-define('MAN_DIVIDER',SEO_SEPARATOR.'.'.SEO_SEPARATOR);
-define('PAG_DIVIDER',SEO_SEPARATOR);
+defined('CAT_DIVIDER') OR define('CAT_DIVIDER',SEO_SEPARATOR.SEO_SEPARATOR.SEO_SEPARATOR);
+defined('ART_DIVIDER') OR define('ART_DIVIDER',SEO_SEPARATOR.SEO_SEPARATOR);
+defined('CNT_DIVIDER') OR define('CNT_DIVIDER',SEO_SEPARATOR.'_'.SEO_SEPARATOR);
+defined('MAN_DIVIDER') OR define('MAN_DIVIDER',SEO_SEPARATOR.'.'.SEO_SEPARATOR);
+defined('PAG_DIVIDER') OR define('PAG_DIVIDER',SEO_SEPARATOR);
 
-defined('ADD_CAT_NAMES_TO_PRODUCT_LINK') OR define('ADD_CAT_NAMES_TO_PRODUCT_LINK', true);
+defined('ADD_CAT_NAMES_TO_PRODUCT_LINK') OR defined('MODULE_SHOPSTAT_ADD_CAT_NAMES_TO_PRODUCT') ? define('ADD_CAT_NAMES_TO_PRODUCT_LINK', MODULE_SHOPSTAT_ADD_CAT_NAMES_TO_PRODUCT == 'true') : define('ADD_CAT_NAMES_TO_PRODUCT_LINK', true);
 
 
 class seo_url_shopstat extends modified_seo_url {
@@ -63,7 +63,9 @@ class seo_url_shopstat extends modified_seo_url {
     } else {
       $this->language_id = $_SESSION['languages_id'];
     }
-          
+    
+    $link = '';
+        
     switch ($page) {
   
       case '':
@@ -73,15 +75,27 @@ class seo_url_shopstat extends modified_seo_url {
             self::$links_array['categories'][$this->language_id][$this->params_array['cPath']] = self::create_catagory_link();
           }
         
-          $link = self::$links_array['categories'][$this->language_id][$this->params_array['cPath']] . self::get_link_params();
-        }
-      
-        if (isset($this->params_array['manufacturers_id'])) {
+          $link = self::$links_array['categories'][$this->language_id][$this->params_array['cPath']];
+          if ($link !== false) {
+            $link .= self::get_link_params();
+          }
+        } elseif (isset($this->params_array['manufacturers_id'])) {
           if (!isset(self::$links_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']])) {
             self::$links_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']] = self::create_manufacturers_link();
           }
         
-          $link = self::$links_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']] . self::get_link_params();
+          $link = self::$links_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']];
+          if ($link !== false) {
+            $link .= self::get_link_params();
+          }
+        } elseif (defined('ADD_LANGUAGE_TO_LINK')
+                  && ADD_LANGUAGE_TO_LINK === true
+                  )
+        {
+          if (!isset(self::$host_array[$this->language_id][$connection])) {
+            self::get_host($connection);
+          }
+          return self::$host_array[$this->language_id][$connection];
         }
         break;
       
@@ -91,7 +105,10 @@ class seo_url_shopstat extends modified_seo_url {
             self::$links_array['content'][$this->language_id][$this->params_array['coID']] = self::create_content_link();
           }
         
-          $link = self::$links_array['content'][$this->language_id][$this->params_array['coID']] . self::get_link_params();
+          $link = self::$links_array['content'][$this->language_id][$this->params_array['coID']];
+          if ($link !== false) {
+            $link .= self::get_link_params();
+          }
         }
         break;
 
@@ -104,7 +121,10 @@ class seo_url_shopstat extends modified_seo_url {
             self::$links_array['products'][$this->language_id][$this->params_array['products_id']] = self::create_products_link();
           }
         
-          $link = self::$links_array['products'][$this->language_id][$this->params_array['products_id']] . self::get_link_params();
+          $link = self::$links_array['products'][$this->language_id][$this->params_array['products_id']];
+          if ($link !== false) {
+            $link .= self::get_link_params();
+          }
         }
         break;
 
@@ -117,11 +137,13 @@ class seo_url_shopstat extends modified_seo_url {
         break;
     }
   
-    if (isset($link) && !empty($link)) {
+    if (!empty($link)) {
       if (!isset(self::$host_array[$this->language_id][$connection])) {
         self::get_host($connection);
       }
       return self::$host_array[$this->language_id][$connection].$link;
+    } elseif ($link === false) {
+      return '#';
     }
   }
 
@@ -153,15 +175,34 @@ class seo_url_shopstat extends modified_seo_url {
     
     if (!empty(self::$names_array['products'][$this->language_id][$this->params_array['products_id']])) {
       $products_link_array[$this->params_array['products_id']] = self::$names_array['products'][$this->language_id][$this->params_array['products_id']];
+    } else {
+      return false;
     }
     
-    if (ADD_CAT_NAMES_TO_PRODUCT_LINK === true) {
+    if (!defined('ADD_CAT_NAMES_TO_PRODUCT_LINK')
+        || ADD_CAT_NAMES_TO_PRODUCT_LINK === true
+        )
+    {
       $this->params_array['cPath'] = xtc_get_product_path($this->params_array['products_id']);
       $category_link_array = self::create_catagory_link(true);
       $products_link_array = array_merge($category_link_array, $products_link_array);
     }
     
     $link = implode('/', $products_link_array).ART_DIVIDER.$this->params_array['products_id'];
+    
+    if (defined('ADD_CAT_NAMES_TO_PRODUCT_LINK')
+        && ADD_CAT_NAMES_TO_PRODUCT_LINK === false
+        && defined('ADD_CAT_ID_TO_PRODUCT_LINK')
+        && ADD_CAT_ID_TO_PRODUCT_LINK === true
+        )
+    {
+      $this->params_array['cPath'] = xtc_get_product_path($this->params_array['products_id']);
+      $cat_path_array = explode('_', $this->params_array['cPath']);
+      $cat_id = array_pop($cat_path_array);
+      if ($cat_id != '') {
+        $link .= SEO_SEPARATOR.$cat_id;
+      }
+    }
     
     return $link;
   }
@@ -187,6 +228,8 @@ class seo_url_shopstat extends modified_seo_url {
     
     if (!empty(self::$names_array['content'][$this->language_id][$this->params_array['coID']])) {
       $content_link_array[$this->params_array['coID']] = self::$names_array['content'][$this->language_id][$this->params_array['coID']];
+    } else {
+      return false;
     }
 
     $link = implode('/', $content_link_array).CNT_DIVIDER.$this->params_array['coID'];
@@ -214,6 +257,8 @@ class seo_url_shopstat extends modified_seo_url {
     
     if (!empty(self::$names_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']])) {
       $manufacturers_link_array[$this->params_array['manufacturers_id']] = self::$names_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']];
+    } else {
+      return false;
     }
 
     $link = implode('/', $manufacturers_link_array).MAN_DIVIDER.$this->params_array['manufacturers_id'];
@@ -250,9 +295,12 @@ class seo_url_shopstat extends modified_seo_url {
     if ($plain === true) {
       return $category_link_array;
     }
+
+    $link = false;
+    if (count($category_link_array) > 0) {    
+      $link = implode('/', $category_link_array).CAT_DIVIDER.$this->params_array['cPath'];
+    }
     
-    $link = implode('/', $category_link_array).CAT_DIVIDER.$this->params_array['cPath'];
-        
     return $link;
   }
   
@@ -306,7 +354,7 @@ class seo_url_shopstat extends modified_seo_url {
       $link .= $separator.http_build_query($this->params_array, '', '&');
       $separator  = '&';
     }
-        
+    
     return $link;
   }
   
