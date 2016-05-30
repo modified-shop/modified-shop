@@ -66,6 +66,7 @@ class seo_url_shopstat extends modified_seo_url {
           
     switch ($page) {
   
+      case '':
       case 'index.php':
         if (isset($this->params_array['cPath'])) {
           if (!isset(self::$links_array['categories'][$this->language_id][$this->params_array['cPath']])) {
@@ -108,11 +109,11 @@ class seo_url_shopstat extends modified_seo_url {
         break;
 
       case 'specials.php':
-        $link = 'specials.php';
+        $link = 'specials.php' . self::get_link_params(false, '?page=');
         break;
       
       case 'products_new.php':
-        $link = 'products_new.php';
+        $link = 'products_new.php' . self::get_link_params(false, '?page=');
         break;
     }
   
@@ -261,20 +262,30 @@ class seo_url_shopstat extends modified_seo_url {
    *
    * @return cleared params
    */
-  protected function get_link_params() {
+  protected function get_link_params($add_suffix = true, $page_divider = PAG_DIVIDER) {
     
     $link = '';
+    $separator  = '?';
+
     if (isset($this->params_array['page'])
         && $this->params_array['page'] > 1
         )
     {
-      $link .= PAG_DIVIDER.$this->params_array['page'];
+      $link .= $page_divider.$this->params_array['page'];
+      
+      if (strpos($page_divider, $separator) !== false) {
+        $separator = '&';
+      }
     }
-    $link .= '.html';
     
-    $separator  = '?';
+    if ($add_suffix === true) {
+      $link .= '.html';
+    }
+    
     if (!defined('ADD_LANGUAGE_TO_LINK')
-        || ADD_LANGUAGE_TO_LINK === false) {
+        || ADD_LANGUAGE_TO_LINK === false
+        ) 
+    {
       if (isset($this->params_array['language'])) {
         $link .= $separator.'language='.$this->params_array['language'];
         $separator  = '&';
