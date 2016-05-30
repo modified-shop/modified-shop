@@ -134,9 +134,9 @@
   
     // Deliver 503 Error on database error (so crawlers won't index the error page)
     if (!defined('DIR_FS_ADMIN')) {
-      header("HTTP/1.1 503 Service Temporarily Unavailable");
-      header("Status: 503 Service Temporarily Unavailable");
-      header("Connection: Close");
+      //header("HTTP/1.1 503 Service Temporarily Unavailable");
+      //header("Status: 503 Service Temporarily Unavailable");
+      //header("Connection: Close");
     }
     
     // Send an email to the shop owner if a sql error occurs
