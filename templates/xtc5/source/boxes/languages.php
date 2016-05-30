@@ -24,25 +24,30 @@
   $languages_string = '';
   $count_lng = 0;
   reset($lng->catalog_languages);
-  while (list($key, $value) = each($lng->catalog_languages)) {
-    $count_lng++;
-    $lng_link_txt = file_exists('lang/' .  $value['directory'] .'/' . $value['image']) ? xtc_image('lang/' .  $value['directory'] .'/' . $value['image'], $value['name']) : $value['name'];
-    $languages_string .= ' <a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . $lng_link_txt . '</a> ';
-  }
+  if (count($lng->catalog_languages) > 1 && strpos(basename($PHP_SELF), 'checkout') === false) {
+    while (list($key, $value) = each($lng->catalog_languages)) {
+      $lng_link_txt = file_exists('lang/' .  $value['directory'] .'/' . $value['image']) ? xtc_image('lang/' .  $value['directory'] .'/' . $value['image'], $value['name']) : $value['name'];
+      $lng_link_url = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type);
+      if ($lng_link_url != '#') {
+        $count_lng++;
+        $languages_string .= ' <a href="' . $lng_link_url . '">' . $lng_link_txt . '</a> ';
+      }
+    }
 
-  // dont show box if there's only 1 language
-  if ($count_lng > 1 ) {
-    $box_smarty = new smarty;
-    $box_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+    // dont show box if there's only 1 language
+    if ($count_lng > 1 ) {
+      $box_smarty = new smarty;
+      $box_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
-    $box_content='';
-    $box_smarty->assign('BOX_CONTENT', $languages_string);
-    $box_smarty->assign('language', $_SESSION['language']);
+      $box_content='';
+      $box_smarty->assign('BOX_CONTENT', $languages_string);
+      $box_smarty->assign('language', $_SESSION['language']);
 
-    // set cache ID
-    $box_smarty->caching = 0;
-    $box_languages= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_languages.html');
+      // set cache ID
+      $box_smarty->caching = 0;
+      $box_languages= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_languages.html');
 
-    $smarty->assign('box_LANGUAGES',$box_languages);
+      $smarty->assign('box_LANGUAGES',$box_languages);
+    }
   }
 ?>
