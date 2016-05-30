@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: set_ids_by_url_parameters.php 6052 2013-11-14 09:06:49Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -45,6 +45,10 @@ if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '') {
 
 // calculate category path
 defined('PRODUCTS_CANONICAL_CAT_ID') OR define('PRODUCTS_CANONICAL_CAT_ID', false);
+if (isset($_GET['cpID']) && (int)$_GET['cpID'] > 0) {
+  $_GET['cPath'] = xtc_get_category_path((int)$_GET['cpID']);
+  unset($_GET['cpID']);
+}
 if (isset ($_GET['cPath']) && (!isset($product) || !is_object($product))) {
   $cPath = $_GET['cPath'] = xtc_input_validation($_GET['cPath'], 'cPath', '');
 } elseif (isset($product) && is_object($product) && !isset($_GET['manufacturers_id'])) {

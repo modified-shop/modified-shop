@@ -116,6 +116,13 @@ class modified_seo_url {
 
     if (defined('ADD_LANGUAGE_TO_LINK')
         && ADD_LANGUAGE_TO_LINK === true
+        && (!defined('ADD_DEFAULT_LANGUAGE_TO_LINK')
+            || (ADD_DEFAULT_LANGUAGE_TO_LINK == true
+                || (ADD_DEFAULT_LANGUAGE_TO_LINK === false
+                    && DEFAULT_LANGUAGE != self::$language[$this->language_id]
+                    )
+                )
+            )
         )
     {
       self::$host_array[$this->language_id][$connection] .= self::$language[$this->language_id].'/';
