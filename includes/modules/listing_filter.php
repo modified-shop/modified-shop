@@ -350,11 +350,11 @@ if (PRODUCT_LIST_FILTER == 'true') {
   }
 }
 
-if (is_object($smarty)) {
+if (isset($smarty) && is_object($smarty)) {
   $smarty->assign('LISTING_FILTER', $module_filter);
 }
 
-if (is_object($module_smarty)) {
+if (isset($module_smarty) && is_object($module_smarty)) {
   $module_smarty->assign('LISTING_FILTER', $module_filter);
 }
 ?>
