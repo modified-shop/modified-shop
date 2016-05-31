@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: shipping_estimate.php 6035 2013-11-08 10:46:36Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -135,7 +135,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
       $quotes = array_merge($ot_shipping->quote(), $shipping->quote('selfpickup', 'selfpickup'));
     }                    
   }
-    
+  
   $shipping_content = array ();
   if ($free_shipping == true) {
     $shipping_content[] = array(
@@ -151,15 +151,21 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
     {
       $module_smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)));
     }
-    
+  
     $i = 0;
     foreach ($quotes as $quote) {
       if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {
-        $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quote['tax'])) { 
           $quote['tax'] = 0;
         }
-        $value = ((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0'));
+        $value = '0';
+        if (isset($quote['methods'][0]['cost']) && $quote['methods'][0]['cost'] > 0) {
+          if (isset($quote['tax']) && $quote['tax'] > 0) {
+            $value = $xtPrice->xtcAddTax($quote['methods'][0]['cost'], $quote['tax']);
+          } else {
+            $value = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
+          }
+        }
         $total += $value;
         $shipping_content[$i] = array(
           'NAME' => $quote['module'] . ' - ' . $quote['methods'][0]['title'],
