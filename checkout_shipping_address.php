@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: checkout_shipping_address.php 3783 2012-10-17 11:29:42Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -131,6 +131,9 @@ if ($process == true) {
   $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, $params, 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 }
 $smarty->assign('FORM_END', '</form>');
+if (isset($_SESSION['NO_SHIPPING']) && $_SESSION['NO_SHIPPING'] === true) {
+  $smarty->assign('NO_SHIPPING', $_SESSION['NO_SHIPPING']);
+}
 $smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_shipping_address.html');
 $smarty->assign('main_content', $main_content);

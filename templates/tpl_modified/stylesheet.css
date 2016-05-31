@@ -1373,6 +1373,10 @@ ul#checkoutnavigation li {
   border:solid 1px;
   padding:12px;
 }
+ul#checkoutnavigation li.no_shipping {
+  width:294px;
+  height:45px;
+}
 ul#checkoutnavigation li.active {
   background-color: #7B3C62;
   border-color: #6D2551;

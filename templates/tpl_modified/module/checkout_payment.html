@@ -12,10 +12,16 @@
 {/literal}
 
 <ul id="checkoutnavigation" class="cf">
-  <li class="inactive"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></li>
-  <li class="active"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></li>
-  <li class="inactive"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></li>
-  <li class="inactive last"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></li>
+  {if isset($NO_SHIPPING)}
+    <li class="active no_shipping"><span class="title">1. {#title_payment#}</span><span class="description">{#desc_payment#}</span></li>
+    <li class="inactive no_shipping"><span class="title">2. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></li>
+    <li class="inactive no_shipping last"><span class="title">3. {#title_success#}</span><span class="description">{#desc_success#}</span></li>
+  {else}
+    <li class="inactive"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></li>
+    <li class="active"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></li>
+    <li class="inactive"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></li>
+    <li class="inactive last"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></li>
+  {/if}
 </ul>
 
 <h1 class="checkout">{#heading_payment#}</h1>
