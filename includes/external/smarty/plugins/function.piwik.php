@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: function.piwik.php 2147 2011-09-01 07:15:14Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -57,7 +57,7 @@ function smarty_function_piwik($params, &$smarty) {
     <script type="text/javascript">
       var _paq = _paq || [];
       (function(){
-        var u=(("https:" == document.location.protocol) ? "https://'.$url.'/" : "http://'.$url.'/");
+        var u="//'.$url.'/";
         _paq.push([\'setSiteId\', '.$id.']);
         _paq.push([\'setTrackerUrl\', u+\'piwik.php\']);
   '."\n";
@@ -76,7 +76,7 @@ function smarty_function_piwik($params, &$smarty) {
         s.parentNode.insertBefore(g,s);
       })();
     </script>
-    <noscript><p><img src="http://'.$url.'/piwik.php?idsite='.$id.'&rec=1" style="border:0" alt="" /></p></noscript>
+    <noscript><p><img src="//'.$url.'/piwik.php?idsite='.$id.'&rec=1" style="border:0" alt="" /></p></noscript>
   ';
 
   $orderCode = null;
