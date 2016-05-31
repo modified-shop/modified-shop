@@ -165,6 +165,10 @@ $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE
 $smarty->assign('BUTTON_CHECKOUT_STEP2', xtc_image_submit('button_checkout_step2.gif', IMAGE_BUTTON_CHECKOUT_STEP2));
 $smarty->assign('FORM_END', '</form>');
 
+$backlink = xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL');
+$smarty->assign('BUTTON_BACK', '<a href="'.$backlink.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+$smarty->assign('BUTTON_BACK_LINK', $backlink);
+
 if (SHOW_SELFPICKUP_FREE == 'true') {
   if ($free_shipping == true) {
     $free_shipping = false;
