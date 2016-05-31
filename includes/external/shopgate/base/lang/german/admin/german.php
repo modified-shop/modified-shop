@@ -44,9 +44,9 @@ define('SHOPGATE_CONFIG_TITLE', 'SHOPGATE');
 define('SHOPGATE_CONFIG_ERROR', 'FEHLER:');
 define('SHOPGATE_CONFIG_ERROR_SAVING', 'Fehler beim Speichern der Konfiguration. ');
 define('SHOPGATE_CONFIG_ERROR_LOADING', 'Fehler beim Laden der Konfiguration. ');
-define('SHOPGATE_CONFIG_ERROR_READ_WRITE', 'Bitte überprüfen Sie die Schreibrechte (777) für den Ordner "/shopgate_library/config/" des Shopgate-Plugins.');
-define('SHOPGATE_CONFIG_ERROR_INVALID_VALUE', 'Bitte überprüfen Sie ihre Eingaben in den folgenden Feldern: ');
-define('SHOPGATE_CONFIG_ERROR_DUPLICATE_SHOP_NUMBERS', 'Es existieren mehrere Konfigurationen mit der gleichen Shop-Nummer. Dies kann zu erheblichen Problemen führen!');
+define('SHOPGATE_CONFIG_ERROR_READ_WRITE', 'Bitte &uuml;berpr&uuml;fen Sie die Schreibrechte (777) f&uuml;r den Ordner "/shopgate_library/config/" des Shopgate-Plugins.');
+define('SHOPGATE_CONFIG_ERROR_INVALID_VALUE', 'Bitte &uuml;berpr&uuml;fen Sie ihre Eingaben in den folgenden Feldern: ');
+define('SHOPGATE_CONFIG_ERROR_DUPLICATE_SHOP_NUMBERS', 'Es existieren mehrere Konfigurationen mit der gleichen Shop-Nummer. Dies kann zu erheblichen Problemen f&uuml;hren!');
 define('SHOPGATE_CONFIG_INFO_MULTIPLE_CONFIGURATIONS', 'Es existieren Konfigurationen f&uuml;r mehrere Marktpl&auml;tze.');
 define('SHOPGATE_CONFIG_SAVE', 'Speichern');
 define('SHOPGATE_CONFIG_GLOBAL_CONFIGURATION', 'Globale Konfiguration');
@@ -149,7 +149,7 @@ define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_OFF', 'Nein');
 define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_MAX_ID', 'Aktuell h&ouml;chste Kategorie Id ihres Shopsystems');
 
 define('SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD', 'Export von Produkoptionen als Eingabefelder');
-define('SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD_DESCRIPTION', 'Die IDs der Produktoptionen (siehe "Artikelmerkmale"), die als Eingabefelder exportiert werden müssen. Beispiel: 1,2,3');
+define('SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD_DESCRIPTION', 'Die IDs der Produktoptionen (siehe "Artikelmerkmale"), die als Eingabefelder exportiert werden m&uuml;ssen. Beispiel: 1,2,3');
 
 define('SHOPGATE_PLUGIN_FIELD_AVAILABLE_TEXT_AVAILABLE_ON_DATE', 'Verf&uuml;gbar ab dem #DATE#');
 

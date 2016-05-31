@@ -21,7 +21,7 @@
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 
-define('SHOPGATE_PLUGIN_VERSION', '2.9.28');
+define("SHOPGATE_PLUGIN_VERSION", "2.9.29");
 
 /**
  * Modified eCommerce Plugin for Shopgate
@@ -2039,12 +2039,12 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
             
             switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
                 case 'national':
-                    if ($order->delivery['country_id'] == STORE_COUNTRY) {
+                    if ($order->delivery['country']['id'] == STORE_COUNTRY) {
                         $pass = true;
                     }
                     break;
                 case 'international':
-                    if ($order->delivery['country_id'] != STORE_COUNTRY) {
+                    if ($order->delivery['country']['id'] != STORE_COUNTRY) {
                         $pass = true;
                     }
                     break;
@@ -2061,7 +2061,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         } else {
             $free_shipping = false;
         }
-        
+
         //if shipping is free all other shipping methods will be ignored
         if ($free_shipping) {
             $sgShippingMethod = new ShopgateShippingMethod();
@@ -3642,7 +3642,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         );
         $ordersTotal["text"]       = $xtPrice->xtcFormat($shippingCosts, true);
         $ordersTotal["value"]      = $shippingCosts;
-        $ordersTotal["class"]      = "ot_shipping";
+        $ordersTotal["class"]      = ShopgateCustomerOrderModel::TOTAL_CLASS_SHIPPING;
         $ordersTotal["sort_order"] = $shippingSortOrder;
         xtc_db_perform(TABLE_ORDERS_TOTAL, $ordersTotal);
         // insert payment costs.
@@ -3660,7 +3660,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
             );
             $ordersTotal["text"]       = $xtPrice->xtcFormat($order->getAmountShopPayment(), true);
             $ordersTotal["value"]      = $order->getAmountShopPayment();
-            $ordersTotal["class"]      = "ot_shipping";
+            $ordersTotal["class"]      = ShopgateCustomerOrderModel::TOTAL_CLASS_PAYMENT;
             $ordersTotal["sort_order"] = ++$shippingSortOrder;
             xtc_db_perform(TABLE_ORDERS_TOTAL, $ordersTotal);
             

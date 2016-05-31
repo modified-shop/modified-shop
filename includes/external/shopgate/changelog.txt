@@ -1,3 +1,7 @@
+'''Version 2.9.29’’’
+* fixed detection of free shipping
+* improved mapping of payment fees in the order import
+
 '''Version 2.9.28’’’
 * added export of article number (sku) to the xml item export
 
