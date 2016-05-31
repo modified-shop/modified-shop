@@ -98,6 +98,10 @@ if (DOWNLOAD_ENABLED == 'true') {
 	include (DIR_WS_MODULES.'downloads.php');
 }
 
+if (isset($_SESSION['NO_SHIPPING']) && $_SESSION['NO_SHIPPING'] === true) {
+  $smarty->assign('NO_SHIPPING', $_SESSION['NO_SHIPPING']);
+}
+
 //delete Guests from Database
 if ($_SESSION['account_type'] == '1') {
   if (DELETE_GUEST_ACCOUNT == 'true') {

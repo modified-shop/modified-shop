@@ -270,6 +270,16 @@ if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
   $smarty->assign('REVOCATION_checkbox', '<input type="checkbox" value="revocation" name="revocation" id="revocation"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
 }
 
+if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) {
+  $backlink = xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL');
+  $_SESSION['NO_SHIPPING'] = true;
+  $smarty->assign('NO_SHIPPING', $_SESSION['NO_SHIPPING']);
+} else {
+  $backlink = xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL');
+}
+$smarty->assign('BUTTON_BACK', '<a href="'.$backlink.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+$smarty->assign('BUTTON_BACK_LINK', $backlink);
+
 ### BILLSAFE payment module
 if ((isset($_GET['billsafe_close']) && $_GET['billsafe_close'] == 'true') 
 || (isset($_GET['payment_error']) && $_GET['payment_error'] == 'billsafe_2')) {
