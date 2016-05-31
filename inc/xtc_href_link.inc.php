@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_href_link.inc.php 4256 2013-01-11 16:23:35Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -22,7 +22,7 @@
 
     $parameters = str_replace('&amp;', '&', $parameters); // undo W3C-Conform link
 
-    $link = $connection == 'SSL' && ENABLE_SSL ? HTTPS_SERVER : HTTP_SERVER;
+    $link = $connection == 'SSL' && (ENABLE_SSL || $request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER;
 
     if (defined('RUN_MODE_ADMIN') && $admin === false) {
       $link .= DIR_WS_ADMIN;
