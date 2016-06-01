@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: content_manager_pages.php 5007 2013-07-04 09:31:37Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -245,17 +245,18 @@ if (!$action) {
         ?>
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_FILE_FLAG; ?></td>
-          <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('file_flag', $file_flag_array, $default_content['file_flag']); ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('file_flag', $file_flag_array, $default_content['file_flag'], 'id="file_flag"'); ?></td>
         </tr>
-        <?php if ($action != 'new' 
-                  && CONTENT_CHILDS_ACTIV == 'true' 
-                  && count($content_data_array) > 1
-                  && check_content_childs($default_content['content_id'], 0) === false
-                  ) 
+        <?php if (CONTENT_CHILDS_ACTIV == 'true' 
+                  && count($content_data_array) > 1 
+                  && (check_content_childs($default_content['content_id'], $_SESSION['languages_id']) === false
+                      || $action == 'new'
+                      )
+                  )
         { ?>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_PARENT; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('parent_id', $content_data_array, $default_content['parent_id']); ?><span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;"><?php echo check_content_childs($default_content['content_id'], 0) ? '' : xtc_draw_checkbox_field('parent_check', 'yes', (($default_content['parent_id'] > 0) ? true : false)).' '.TEXT_PARENT_DESCRIPTION; ?></span></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('parent_id', $content_data_array, $default_content['parent_id'], 'id="parent_id"'); ?><span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;"><?php echo xtc_draw_checkbox_field('parent_check', 'yes', (($default_content['parent_id'] > 0) ? true : false)).' '.TEXT_PARENT_DESCRIPTION; ?></span></td>
           </tr>
         <?php } ?>
         <tr>
@@ -466,6 +467,51 @@ if (!$action) {
     
     </form>
   </div>
+
+  <script type="text/javascript">
+    var parentid = $('#parent_id').val();  
+    var stateparent = $('[name="parent_check"]').is(":checked") ? true : false; 
+    var checkparent = false;
+  
+    $('#file_flag').on('change', function() {
+      get_content_pages();
+    });
+  
+    $(document).ready(function(){
+      get_content_pages();
+    });
+  
+    function get_content_pages() {
+      var flag = $('#file_flag').val();
+      var lang = <?php echo $_SESSION['languages_id']; ?>;
+      $.get('../ajax.php', {ext: 'get_content_flag', file_flag: flag, language: lang, speed: 1}, function(data) {
+        if (data != '' && data != undefined) { 
+          $('#parent_id').replaceWith('<select id="parent_id" name="parent_id" class="SlectBox" style="visibility: hidden;"></select>');
+          $('#parent_id').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="options"></ul></div>');
+
+          $('<option value="">---</option>').appendTo('#parent_id');
+          $('<li data-val=""><label>---</label></li>').appendTo('#options');
+        
+          $.each(data, function(id, arr) {
+            if (arr.id == parentid) {
+              checkparent = true;
+            }
+            $('<option value="'+arr.id+'"'+((arr.id == parentid) ? 'selected="selected"' : '')+'>'+arr.name+'</option>').appendTo('#parent_id');
+            $('<li data-val="'+arr.id+'"'+((arr.id == parentid) ? 'class="selected"' : '')+'><label>'+arr.name+'</label></li>').appendTo('#options');        
+          });
+        
+          $('.SlectBox').not('.noStyling').SumoSelect({ createElems: 'mod', placeholder: '-'});
+        
+          if (checkparent === true) {
+            $('[name="parent_check"]').prop("checked", stateparent);
+          } else {
+            $('[name="parent_check"]').prop("checked", false);
+          }
+          checkparent = false;
+        }
+      });
+    }
+  </script>
 
 <?php
 }
