@@ -259,7 +259,7 @@ if (isset ($_GET['edit']) && is_numeric($_GET['edit'])) {
 
 } elseif (isset ($_GET['delete']) && is_numeric($_GET['delete'])) {
   if ($_GET['delete'] == $_SESSION['customer_default_address_id']) {
-    $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
+    $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'error');
 
     xtc_redirect(xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
   } else {

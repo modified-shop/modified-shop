@@ -57,7 +57,7 @@ if ($messageStack->size('addressbook') > 0) {
 	$smarty->assign('error', $messageStack->output('addressbook'));
 }
 
-if ($messageStack->size('account', 'success') > 0) {
+if ($messageStack->size('addressbook', 'success') > 0) {
 	$smarty->assign('success_message', $messageStack->output('account', 'success'));
 }
 
