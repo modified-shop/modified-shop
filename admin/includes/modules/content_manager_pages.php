@@ -484,7 +484,7 @@ if (!$action) {
     function get_content_pages() {
       var flag = $('#file_flag').val();
       var lang = <?php echo $_SESSION['languages_id']; ?>;
-      var contentgroup = <?php echo $default_content['content_group']; ?>;
+      var contentgroup = <?php echo (isset($default_content['content_group']) && $default_content['content_group'] != '') ? $default_content['content_group'] : ''; ?>;
       $.get('../ajax.php', {ext: 'get_content_flag', file_flag: flag, language: lang, content_group: contentgroup, speed: 1}, function(data) {
         if (data != '' && data != undefined) { 
           $('#parent_id').replaceWith('<select id="parent_id" name="parent_id" class="SlectBox" style="visibility: hidden;"></select>');
