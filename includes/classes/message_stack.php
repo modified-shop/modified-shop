@@ -33,15 +33,7 @@
     }
 
     function add($class, $message, $type = 'error') {
-      if ($type == 'error') {
-        $this->messages[$class]['error'][] = $message;
-      } elseif ($type == 'warning') {
-        $this->messages[$class]['warning'][] = $message;
-      } elseif ($type == 'success') {
-        $this->messages[$class]['success'][] = $message;
-      } else {
-        $this->messages[$class]['warning'][] = $message;
-      }
+      $this->messages[$class][$type][] = $message;
     }
 
     function add_session($class, $message, $type = 'error') {
