@@ -24,12 +24,14 @@ function get_content_flag() {
 
   $file_flag = (int)$_GET['file_flag'];
   $language = (int)$_GET['language'];
-                            
+  $content_group = (int)$_GET['content_group'];
+                  
   $query = xtc_db_query("SELECT content_id, 
                                 content_title
                            FROM ".TABLE_CONTENT_MANAGER."
                           WHERE file_flag = '".$file_flag."'
                             AND parent_id = '0'
+                            AND content_group != '".$content_group."'
                             AND languages_id = '".$language."'");
 
   $content = array ();

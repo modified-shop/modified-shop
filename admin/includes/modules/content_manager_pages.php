@@ -484,7 +484,8 @@ if (!$action) {
     function get_content_pages() {
       var flag = $('#file_flag').val();
       var lang = <?php echo $_SESSION['languages_id']; ?>;
-      $.get('../ajax.php', {ext: 'get_content_flag', file_flag: flag, language: lang, speed: 1}, function(data) {
+      var contentgroup = <?php echo $default_content['content_group']; ?>;
+      $.get('../ajax.php', {ext: 'get_content_flag', file_flag: flag, language: lang, content_group: contentgroup, speed: 1}, function(data) {
         if (data != '' && data != undefined) { 
           $('#parent_id').replaceWith('<select id="parent_id" name="parent_id" class="SlectBox" style="visibility: hidden;"></select>');
           $('#parent_id').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="options"></ul></div>');
