@@ -484,25 +484,34 @@ if (!$action) {
     function get_content_pages() {
       var flag = $('#file_flag').val();
       var lang = <?php echo $_SESSION['languages_id']; ?>;
-      var contentgroup = <?php echo (isset($default_content['content_group']) && $default_content['content_group'] != '') ? $default_content['content_group'] : ''; ?>;
+      var contentgroup = <?php echo (isset($default_content['content_group']) && $default_content['content_group'] != '') ? $default_content['content_group'] : "''"; ?>;
       $.get('../ajax.php', {ext: 'get_content_flag', file_flag: flag, language: lang, content_group: contentgroup, speed: 1}, function(data) {
         if (data != '' && data != undefined) { 
-          $('#parent_id').replaceWith('<select id="parent_id" name="parent_id" class="SlectBox" style="visibility: hidden;"></select>');
-          $('#parent_id').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="options"></ul></div>');
-
-          $('<option value="">---</option>').appendTo('#parent_id');
-          $('<li data-val=""><label>---</label></li>').appendTo('#options');
         
+          <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
+            $('#parent_id').replaceWith('<select id="parent_id" name="parent_id" class="SlectBox" style="visibility: hidden;"></select>');
+            $('#parent_id').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="options"></ul></div>');
+            $('<li data-val=""><label>---</label></li>').appendTo('#options');
+          <?php } else { ?>
+            $('#parent_id').replaceWith('<select id="parent_id" name="parent_id" class="SlectBox"></select>');
+          <?php } ?>
+          
+          $('<option value="">---</option>').appendTo('#parent_id');
+          
           $.each(data, function(id, arr) {
             if (arr.id == parentid) {
               checkparent = true;
             }
             $('<option value="'+arr.id+'"'+((arr.id == parentid) ? 'selected="selected"' : '')+'>'+arr.name+'</option>').appendTo('#parent_id');
-            $('<li data-val="'+arr.id+'"'+((arr.id == parentid) ? 'class="selected"' : '')+'><label>'+arr.name+'</label></li>').appendTo('#options');        
+            <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
+              $('<li data-val="'+arr.id+'"'+((arr.id == parentid) ? 'class="selected"' : '')+'><label>'+arr.name+'</label></li>').appendTo('#options');        
+            <?php } ?>
           });
-        
-          $('.SlectBox').not('.noStyling').SumoSelect({ createElems: 'mod', placeholder: '-'});
-        
+          
+          <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
+            $('.SlectBox').not('.noStyling').SumoSelect({ createElems: 'mod', placeholder: '-'});
+          <?php } ?>
+          
           if (checkparent === true) {
             $('[name="parent_check"]').prop("checked", stateparent);
           } else {
