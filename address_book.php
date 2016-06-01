@@ -58,7 +58,7 @@ if ($messageStack->size('addressbook') > 0) {
 }
 
 if ($messageStack->size('addressbook', 'success') > 0) {
-	$smarty->assign('success_message', $messageStack->output('account', 'success'));
+	$smarty->assign('success_message', $messageStack->output('addressbook', 'success'));
 }
 
 $smarty->assign('ADDRESS_DEFAULT', xtc_address_label($_SESSION['customer_id'], $_SESSION['customer_default_address_id'], true, ' ', '<br />'));
