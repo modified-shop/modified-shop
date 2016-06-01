@@ -58,20 +58,16 @@
     function size($class, $type = 'error') {
       $count = 0;
       if (isset($this->messages[$class][$type])) {
-        foreach ($this->messages[$class][$type] as $key => $messages) {
-           $count += count($messages);
-        }
+        $count = count($this->messages[$class][$type]);
       }
       return $count;
     }
 
     function output($class, $type = 'error') {
       $output = '';
-      if ($this->size($class) > 0) {
-        foreach ($this->messages[$class][$type] as $key => $messages) {
-          foreach ($messages as $message) {
-            $output .= '<p>'.$message.'</p>';
-          }   
+      if ($this->size($class, $type) > 0) {
+        foreach ($this->messages[$class][$type] as $message) {
+          $output .= '<p>'.$message.'</p>';
         }
       }
       return $output;

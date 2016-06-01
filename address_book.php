@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: address_book.php 4221 2013-01-11 10:18:52Z gtb-modified $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -53,8 +53,13 @@ $breadcrumb->add(NAVBAR_TITLE_2_ADDRESS_BOOK, xtc_href_link(FILENAME_ADDRESS_BOO
 
 require (DIR_WS_INCLUDES.'header.php');
 
-if ($messageStack->size('addressbook') > 0)
+if ($messageStack->size('addressbook') > 0) {
 	$smarty->assign('error', $messageStack->output('addressbook'));
+}
+
+if ($messageStack->size('account', 'success') > 0) {
+	$smarty->assign('success_message', $messageStack->output('account', 'success'));
+}
 
 $smarty->assign('ADDRESS_DEFAULT', xtc_address_label($_SESSION['customer_id'], $_SESSION['customer_default_address_id'], true, ' ', '<br />'));
 
