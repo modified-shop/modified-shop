@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: message_stack.php 799 2005-02-23 18:08:06Z novalis $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -55,20 +55,20 @@
       $this->messages = array();
     }
 
-    function size($class) {
+    function size($class, $type = 'error') {
       $count = 0;
-      if (isset($this->messages[$class])) {
-        foreach ($this->messages[$class] as $key => $messages) {
+      if (isset($this->messages[$class][$type])) {
+        foreach ($this->messages[$class][$type] as $key => $messages) {
            $count += count($messages);
         }
       }
       return $count;
     }
 
-    function output($class) {
+    function output($class, $type = 'error') {
       $output = '';
       if ($this->size($class) > 0) {
-        foreach ($this->messages[$class] as $key => $messages) {
+        foreach ($this->messages[$class][$type] as $key => $messages) {
           foreach ($messages as $message) {
             $output .= '<p>'.$message.'</p>';
           }   

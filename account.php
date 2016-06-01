@@ -53,6 +53,10 @@ if ($messageStack->size('account') > 0) {
 	$smarty->assign('error_message', $messageStack->output('account'));
 }
 
+if ($messageStack->size('account', 'success') > 0) {
+	$smarty->assign('success_message', $messageStack->output('account', 'success'));
+}
+
 $order_content = array();
 $products_history = array();
 $also_purchased_history = array();
