@@ -157,7 +157,7 @@ if (isset($order) && is_object($order)) {
 // Trying to get property of non-object $order->info
 if (isset($order) && is_object($order)) {
   $lang_query = xtc_db_query("SELECT languages_id, 
-                                     language_charset
+                                     language_charset,
                                      code,
                                      image
                                 FROM " . TABLE_LANGUAGES . "
