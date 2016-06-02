@@ -66,7 +66,7 @@
         $manufacturers_name = ((strlen($manufacturers['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturers['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN).'..' : $manufacturers['manufacturers_name']);
         $manufacturers_array[] = array ('id' => xtc_href_link(FILENAME_DEFAULT,xtc_manufacturer_link($manufacturers['manufacturers_id'],$manufacturers['manufacturers_name'])), 'text' => $manufacturers_name);
       }
-      $box_content = xtc_draw_form('manufacturers', xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL', false), 'get').xtc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, isset($_GET['manufacturers_id']) ? xtc_href_link(FILENAME_DEFAULT,xtc_manufacturer_link($_GET['manufacturers_id'], isset($_GET['manufacturers_name']) ? $_GET['manufacturers_name'] : '')) : '', 'onchange="'.$js.'" size="'.MAX_MANUFACTURERS_LIST.'" style="width: 100%;"').xtc_hide_session_id().'</form>';
+      $box_content = xtc_draw_form('manufacturers', xtc_href_link(FILENAME_DEFAULT, '', $request_type, false), 'get').xtc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, isset($_GET['manufacturers_id']) ? xtc_href_link(FILENAME_DEFAULT,xtc_manufacturer_link($_GET['manufacturers_id'], isset($_GET['manufacturers_name']) ? $_GET['manufacturers_name'] : '')) : '', 'onchange="'.$js.'" size="'.MAX_MANUFACTURERS_LIST.'" style="width: 100%;"').xtc_hide_session_id().'</form>';
     }
     if ($box_content != '')
       $box_smarty->assign('BOX_CONTENT', $box_content);
