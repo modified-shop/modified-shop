@@ -29,7 +29,7 @@
       }
       $ts_snippets = explode(', ', MODULE_TS_SNIPPETS);
       if (in_array($filename, $ts_snippets)) {
-        if (!is_file(SQL_CACHEDIR.'reviews.xml') || filemtime(SQL_CACHEDIR.'reviews.xml') < (time() - 3600)) {
+        if (!is_file(SQL_CACHEDIR.'reviews.xml') || time() - filemtime(SQL_CACHEDIR.'reviews.xml') > 3600) {
           // include needed functions
           require_once (DIR_FS_INC.'get_external_content.inc.php');
   
