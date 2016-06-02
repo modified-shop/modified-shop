@@ -79,7 +79,7 @@ if (is_dir($fs_dir)) {
     $browserconfig .= '</tile></msapplication></browserconfig>';
     $browserconfig_file_path = $fs_dir.'browserconfig.xml';
     $browserconfig_file = is_writeable($browserconfig_file_path) ? filemtime($browserconfig_file_path) : false;
-    if ($browserconfig_file && ($browserconfig_file < (time() - 86400) || filesize($browserconfig_file_path) == 0)) {
+    if ($browserconfig_file && (time() - $browserconfig_file > 86400 || filesize($browserconfig_file_path) == 0)) {
       file_put_contents($browserconfig_file_path, $browserconfig, LOCK_EX);
     }
     echo '<meta name="msapplication-config" content="'.xtc_href_link($ws_dir.'browserconfig.xml','', $request_type, false).'" />'."\n";

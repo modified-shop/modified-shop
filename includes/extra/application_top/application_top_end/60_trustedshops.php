@@ -27,7 +27,7 @@
     if (defined('MODULE_TS_TRUSTEDSHOPS_ID') && MODULE_TS_PRODUCT_STICKER_API == '1') {
       if (is_object($product) 
           && $product->isProduct() === true
-          && strtotime($product->data['products_last_modified']) < (time() - 3600)
+          && (time() - strtotime($product->data['products_last_modified']) > 3600)
           ) 
       {
         // include needed functions

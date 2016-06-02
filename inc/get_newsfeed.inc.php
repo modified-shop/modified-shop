@@ -15,7 +15,7 @@
   
   function get_newsfeed() {
     // newsfeed
-    if (NEWSFEED_LAST_UPDATE < (time()-86400)) {
+    if (time() - NEWSFEED_LAST_UPDATE > 86400) {
       $db_version = get_database_version();
       $feed = get_external_content('http://www.modified-shop.org/feed/?v='.$db_version['plain'], 2);    
       if ($feed && class_exists('SimpleXmlElement')) {
