@@ -47,7 +47,7 @@ function smarty_function_googleanalytics($params, &$smarty) {
 
     // chache ga.js
     $cache_gs = DIR_FS_CATALOG.'cache/ga.js';
-    if (!is_file($cache_gs) || (filemtime($cache_gs) > (time() - 3600))) {
+    if (!is_file($cache_gs) || (filemtime($cache_gs) < (time() - 3600))) {
       require_once(DIR_FS_INC.'get_external_content.inc.php');
       $source_gs = get_external_content('http://www.google-analytics.com/ga.js', 2, false);
       if (file_put_contents($cache_gs, $source_gs, LOCK_EX) !== false) {
