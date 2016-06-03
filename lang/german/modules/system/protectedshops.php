@@ -25,7 +25,7 @@ define('MODULE_PROTECTEDSHOPS_AUTOUPDATE_DESC', 'Sollen die Daten automatisch ak
 define('MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL_TITLE', 'Update Intervall');
 define('MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL_DESC', 'In welchen Abst&auml;nden sollen die Daten aktualisiert werden?');
 define('MODULE_PROTECTEDSHOPS_ACTION_TITLE', '<hr noshade>Aktion');
-define('MODULE_PROTECTEDSHOPS_ACTION_DESC', 'Sollen die Einstellungen gespeichert, oder die Dokumente manuell aktualisiert werden ?<br/><br/><b>Wichtig:</b> wenn Einstellungen ge&auml;ndert wurden, m&uuml;ssen diese zuerst gespeichert werden, bevor mit diesen Einstellungen die Dokumente erstellt werden.<br/>');
+define('MODULE_PROTECTEDSHOPS_ACTION_DESC', 'Sollen die Einstellungen gespeichert, oder die Dokumente manuell aktualisiert werden?<br/><br/><b>Wichtig:</b> wenn Einstellungen ge&auml;ndert wurden, m&uuml;ssen diese zuerst gespeichert werden, bevor mit diesen Einstellungen die Dokumente erstellt werden.<br/>');
 define('TEXT_SAVE', 'Einstellungen speichern');
 define('TEXT_PROCESS', 'Dokumente aktualisieren');
 

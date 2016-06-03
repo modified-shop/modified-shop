@@ -71,7 +71,7 @@ define('TEXT_INFO_CUSTOMERS_STATUS_GRADUATED_PRICES_INTRO','<strong>Staffelpreis
 define('TEXT_INFO_CUSTOMERS_STATUS_IMAGE', '<strong>Kundengruppen-Bild:</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_NAME','<strong>Gruppenname</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_PAYMENT_UNALLOWED_INTRO','<strong>Nicht erlaubte Zahlungsweisen</strong>');
-define('TEXT_INFO_CUSTOMERS_STATUS_PUBLIC_INTRO','<strong>Gruppe &öuml;ffentlich ?</strong>');
+define('TEXT_INFO_CUSTOMERS_STATUS_PUBLIC_INTRO','<strong>Gruppe &öuml;ffentlich?</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_SHIPPING_UNALLOWED_INTRO','<strong>Nicht erlaubte Versandarten</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_INTRO','<strong>Preisanzeige im Shop</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_INTRO', '<strong>M&ouml;chten Sie die Preise inklusive oder exklusive MwSt. anzeigen?</strong>');

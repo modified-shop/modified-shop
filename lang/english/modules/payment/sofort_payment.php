@@ -98,7 +98,7 @@ define('MODULE_PAYMENT_'.$sofort_code.'_NOTIFY_PASS_TITLE', 'Notification Passwo
 define('MODULE_PAYMENT_'.$sofort_code.'_NOTIFY_PASS_DESC', 'Find this under Settings at SOFORT Banking');
 define('MODULE_PAYMENT_'.$sofort_code.'_HASH_ALGORITHM_TITLE', 'Hash-Algorithmus:');
 define('MODULE_PAYMENT_'.$sofort_code.'_HASH_ALGORITHM_DESC', 'Find this under Settings at SOFORT Banking');
-define('MODULE_PAYMENT_'.$sofort_code.'_DESCRIPTION_INSTALL', '<br/><br/>Do you want to install proper order status ?<br/>The currently set statuses are overwritten.');
+define('MODULE_PAYMENT_'.$sofort_code.'_DESCRIPTION_INSTALL', '<br/><br/>Do you want to install proper order status?<br/>The currently set statuses are overwritten.');
 
 // status
 define('TEXT_NO_STATUSUPDATE', 'no status update');

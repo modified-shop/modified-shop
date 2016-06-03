@@ -85,4 +85,4 @@
  
  define('TEXT_CONTENT_DOUBLE_GROUP_INDEX', 'Duplicate Content Group Index! Please save again. The problem is thus automatically corrected!');
  
- ?>
+?>
