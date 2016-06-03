@@ -36,6 +36,6 @@ define('CSV_CATEGORY_DEFAULT_TITLE','Category for Import');
 define('CSV_CATEGORY_DEFAULT_DESC','All products in the csv-importfile that do <b>not</b> have a category defined will be imported into this category.<br/><b>Attention:</b> If you do not want to import products which have no category defined, then select category "Top" as it is not possible to import into this category.');
 //BOC added constants for category depth, noRiddle
 define('CSV_CAT_DEPTH_TITLE','Category depth');
-define('CSV_CAT_DEPTH_DESC','How deep shall the category tree go ? (e.g. with default 4: main category plus 3 sub-categories)<br />This indication is important to get the in the CSV integrated categories imported well. Same applies to the export function.<br /><span style="color:#c00;">More than 4 may result in performance loss and is probably not user friendly!');
+define('CSV_CAT_DEPTH_DESC','How deep shall the category tree go? (e.g. with default 4: main category plus 3 sub-categories)<br />This indication is important to get the in the CSV integrated categories imported well. Same applies to the export function.<br /><span style="color:#c00;">More than 4 may result in performance loss and is probably not user friendly!');
 //EOC added constants for category depth, noRiddle
 ?>

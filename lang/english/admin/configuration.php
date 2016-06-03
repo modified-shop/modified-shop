@@ -936,22 +936,22 @@ define('EMAIL_SIGNATURE_ID_DESC', 'Select the content to be used for the signatu
 define('TEXT_PAYPAL_NOT_INSTALLED', '<div class="important_info">PayPal not installed. This can be done <a href="'.xtc_href_link(FILENAME_MODULES, 'set=payment&module=paypal').'">here</a>.</div>');
 
 define('POLICY_MIN_LOWER_CHARS_TITLE', 'Password lower case');
-define('POLICY_MIN_LOWER_CHARS_DESC', 'How many lower case signs should to the password at least have ?');
+define('POLICY_MIN_LOWER_CHARS_DESC', 'How many lower case signs should to the password at least have?');
 define('POLICY_MIN_UPPER_CHARS_TITLE', 'Password upper case');
-define('POLICY_MIN_UPPER_CHARS_DESC', 'How many upper case signs should to the password at least have ?');
+define('POLICY_MIN_UPPER_CHARS_DESC', 'How many upper case signs should to the password at least have?');
 define('POLICY_MIN_NUMERIC_CHARS_TITLE', 'Password Numbers');
-define('POLICY_MIN_NUMERIC_CHARS_DESC', 'How many numeric signs should to the password at least have ?');
+define('POLICY_MIN_NUMERIC_CHARS_DESC', 'How many numeric signs should to the password at least have?');
 define('POLICY_MIN_SPECIAL_CHARS_TITLE', 'Password special chars');
-define('POLICY_MIN_SPECIAL_CHARS_DESC', 'How many special chars signs should to the password at least have ?');
+define('POLICY_MIN_SPECIAL_CHARS_DESC', 'How many special chars signs should to the password at least have?');
 
 define('SHOW_SHIPPING_EXCL_TITLE', 'Shippingcost excl.');
 define('SHOW_SHIPPING_EXCL_DESC', 'Show excl. or incl. shippingcost');
 
 define('ACCOUNT_TELEPHONE_OPTIONAL_TITLE', 'Telephone number optional');
-define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Telephone number only optional on registration ?');
+define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Telephone number only optional on registration?');
 
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Universal Analytics');
-define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Use Google Universal Analytics Code ?<br/><br/><b>Attention:</b> After switching to Google Universal Analytics it is not possible to go back to the old one!');
+define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Use Google Universal Analytics Code?<br/><br/><b>Attention:</b> After switching to Google Universal Analytics it is not possible to go back to the old one!');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Shop-URL');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Please enter the Shop-URL (example.com oder www.example.com). Only works with Google Universal Analytics.');
 define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics LinkID');

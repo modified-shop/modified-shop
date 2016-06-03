@@ -97,7 +97,7 @@ define('MODULE_PAYMENT_'.$sofort_code.'_NOTIFY_PASS_TITLE', 'Benachrichtigungspa
 define('MODULE_PAYMENT_'.$sofort_code.'_NOTIFY_PASS_DESC', 'Das Benachrichtigungspasswort (unter Erweiterte Einstellungen / Passw&ouml;rter und Hashfunktionen)');
 define('MODULE_PAYMENT_'.$sofort_code.'_HASH_ALGORITHM_TITLE', 'Hash-Algorithmus:');
 define('MODULE_PAYMENT_'.$sofort_code.'_HASH_ALGORITHM_DESC', 'Der Hash-Algorithmus (unter Erweiterte Einstellungen / Passw&ouml;rter und Hashfunktionen)');
-define('MODULE_PAYMENT_'.$sofort_code.'_DESCRIPTION_INSTALL', '<br/><br/>Wollen sie geeignete Bestellstatus installieren ?<br/>Dabei werden die aktuell eingestellten Status &uuml;berschrieben.');
+define('MODULE_PAYMENT_'.$sofort_code.'_DESCRIPTION_INSTALL', '<br/><br/>Wollen sie geeignete Bestellstatus installieren?<br/>Dabei werden die aktuell eingestellten Status &uuml;berschrieben.');
 
 // status
 define('TEXT_NO_STATUSUPDATE', 'keine Statusaktualisierung');

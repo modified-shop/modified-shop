@@ -35,7 +35,7 @@ define('ENTRY_CUSTOMERS_STATUS_WRITE_REVIEWS','Customer group is allowed to writ
 define('ENTRY_CUSTOMERS_STATUS_READ_REVIEWS','Customer group is allowed to read reviews?');
 define('ENTRY_GRADUATED_PRICES','Graduated Prices');
 define('ENTRY_NO','No');
-define('ENTRY_OT_XMEMBER', 'Customer Discount on order total ? :');
+define('ENTRY_OT_XMEMBER', 'Customer Discount on order total? :');
 define('ENTRY_YES','Yes');
 
 define('ERROR_REMOVE_DEFAULT_CUSTOMERS_STATUS', 'Error: You can not delete the default customer group. Please set another group to default customer group and try again.');
@@ -71,7 +71,7 @@ define('TEXT_INFO_CUSTOMERS_STATUS_GRADUATED_PRICES_INTRO','<strong>Graduated Pr
 define('TEXT_INFO_CUSTOMERS_STATUS_IMAGE', '<strong>Customers Group Image:</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_NAME','<strong>Groupname</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_PAYMENT_UNALLOWED_INTRO','<strong>not allowed Payment Methods</strong>');
-define('TEXT_INFO_CUSTOMERS_STATUS_PUBLIC_INTRO','<strong>Show Public ?</strong>');
+define('TEXT_INFO_CUSTOMERS_STATUS_PUBLIC_INTRO','<strong>Show Public?</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_SHIPPING_UNALLOWED_INTRO','<strong>not allowed Shipping Modules</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_INTRO','<strong>Show price in shop</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_INTRO', '<strong>Do you want to display prices inclusive or exclusive tax?</strong>');

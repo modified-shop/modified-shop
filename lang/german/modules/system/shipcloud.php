@@ -46,7 +46,7 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_EMAIL_TITLE', '<hr noshade>E-Mail Benachrichtigung');
   define('MODULE_SHIPCLOUD_EMAIL_DESC', 'Soll der Kunde per E-Mail benachrichtigt werden?');
   define('MODULE_SHIPCLOUD_EMAIL_TYPE_TITLE', '<hr noshade>Benachrichtigung');
-  define('MODULE_SHIPCLOUD_EMAIL_TYPE_DESC', 'Soll der Kunde vom Shop oder von shipcloud benachrichtigt werden ?<br><Hinweis:</b>F&uuml;r eine Benachrichtigung vom Shop muss ein Webhook auf diese URL: '.xtc_catalog_href_link('callback/shipcloud/callback.php', '', 'SSL', false).' in shipcloud erstelt werden.');
+  define('MODULE_SHIPCLOUD_EMAIL_TYPE_DESC', 'Soll der Kunde vom Shop oder von shipcloud benachrichtigt werden?<br><Hinweis:</b>F&uuml;r eine Benachrichtigung vom Shop muss ein Webhook auf diese URL: '.xtc_catalog_href_link('callback/shipcloud/callback.php', '', 'SSL', false).' in shipcloud erstelt werden.');
 }
 
 define('SHIPMENT.TRACKING.SHIPCLOUD_LABEL_CREATED', 'Paketschein bei shipcloud erstellt');
