@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: english.php 3447 2012-08-21 12:10:42Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -598,4 +598,7 @@ define('TEXT_DEFAULT_SORT_ORDER_TITLE', 'Sort order');
 define('TEXT_DEFAULT_SORT_ORDER_DESC', 'Order of processing. Smallest number is executed first.');
 define('TEXT_DEFAULT_STATUS_TITLE', 'Enable module?');
 define('TEXT_DEFAULT_STATUS_DESC', 'Modules status');
+
+define('TEXT_HOUR', 'hour');
+define('TEXT_HOURS', 'hours');
 ?>

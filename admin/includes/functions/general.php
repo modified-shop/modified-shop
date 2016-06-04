@@ -2350,7 +2350,6 @@
   /**
    * xtc_cfg_select_mod_seo_url()
    *
-   * @param string $configuration
    * @return dropdown
    */
   function xtc_cfg_select_mod_seo_url() {
@@ -2365,6 +2364,55 @@
       sort($seo_url_mod_array);
       return xtc_draw_pull_down_menu($name, $seo_url_mod_array, SEO_URL_MOD_CLASS);
     }
+  }
+
+  /**
+   * xtc_cfg_select_interval_module()
+   *
+   * @param string $value
+   * @param string $key
+   * @return pulldown
+   */
+  function xtc_cfg_select_interval_module($cfg_value, $cfg_key) {
+    return xtc_cfg_select_interval($cfg_key, $cfg_value, 'configuration[%s]');
+  }
+
+  /**
+   * xtc_cfg_select_interval()
+   *
+   * @param string $configuration_value
+   * @param string $configuration_key
+   * @return dropdown
+   */
+  function xtc_cfg_select_interval($cfg_value, $cfg_key, $name = '%s') {  
+    $interval_array = array(array('id' => '86400', 'text' => '24 '.TEXT_HOURS),
+                            array('id' => '43200', 'text' => '12 '.TEXT_HOURS),
+                            array('id' => '21600', 'text' => '6 '.TEXT_HOURS),
+                            array('id' => '10800', 'text' => '3 '.TEXT_HOURS),
+                            array('id' => '3600',  'text' => '1 '.TEXT_HOUR),
+                           );
+
+    return xtc_draw_pull_down_menu(sprintf($name, $cfg_key), $interval_array, $cfg_value);
+  }
+
+  /**
+   * xtc_cfg_display_interval()
+   *
+   * @param string $configuration
+   * @return string
+   */
+  function xtc_cfg_display_interval($value) {
+    $interval_array = array(
+      '86400' => '24 '.TEXT_HOURS,
+      '43200' => '12 '.TEXT_HOURS,
+      '21600' => '6 '.TEXT_HOURS,
+      '10800' => '3 '.TEXT_HOURS,
+      '3600' => '1 '.TEXT_HOUR,
+    );
+    if (isset($interval_array[$value])) {
+      return $interval_array[$value];
+    }
+    return $value;
   }
 
 
