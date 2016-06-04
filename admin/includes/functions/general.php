@@ -2384,7 +2384,7 @@
    * @param string $configuration_key
    * @return dropdown
    */
-  function xtc_cfg_select_interval($cfg_value, $cfg_key, $name = '%s') {  
+  function xtc_cfg_select_interval($cfg_key, $cfg_value, $name = '%s') {  
     $interval_array = array(array('id' => '86400', 'text' => '24 '.TEXT_HOURS),
                             array('id' => '43200', 'text' => '12 '.TEXT_HOURS),
                             array('id' => '21600', 'text' => '6 '.TEXT_HOURS),
