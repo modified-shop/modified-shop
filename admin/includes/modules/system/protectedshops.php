@@ -47,17 +47,8 @@ class protectedshops {
   }
 
   // display
-  function display() {
-    $interval_array = array(array('id' => '86400', 'text' => '24 Stunden'),
-                            array('id' => '43200', 'text' => '12 Stunden'),
-                            array('id' => '21600', 'text' => '6 Stunden'),
-                           );
-    
-    return array('text' => '<br/><b>'.MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL_TITLE.'</b>
-                            <br/>'.MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL_DESC.'<br/>'.
-                            xtc_draw_pull_down_menu('configuration[MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL]', $interval_array, MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL).'<br />'.
-
-                            '<br/><b>'.MODULE_PROTECTEDSHOPS_ACTION_TITLE.'</b><br/>'.
+  function display() {    
+    return array('text' =>  '<br/><b>'.MODULE_PROTECTEDSHOPS_ACTION_TITLE.'</b><br/>'.
                             MODULE_PROTECTEDSHOPS_ACTION_DESC.'<br>'.
                           	xtc_draw_radio_field('export', 'no', true).TEXT_SAVE.'<br>'.
                             xtc_draw_radio_field('export', 'yes', false).TEXT_PROCESS.'<br>'.
@@ -77,13 +68,13 @@ class protectedshops {
 
   // install
   function install() {
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_STATUS', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_TOKEN', '',  '6', '1', '', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_TYPE', 'Database',  '6', '4', 'xtc_cfg_select_option(array(\'File\', \'Database\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_FORMAT', 'Html',  '6', '5', 'xtc_cfg_select_option(array(\'Html\', \'HtmlLite\', \'Text\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_AUTOUPDATE', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL', '86400',  '6', '6', '', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_LAST_UPDATED', '',  '6', '6', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_STATUS', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_TOKEN', '',  '6', '1', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_TYPE', 'Database',  '6', '4', 'xtc_cfg_select_option(array(\'File\', \'Database\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_FORMAT', 'Html',  '6', '5', 'xtc_cfg_select_option(array(\'Html\', \'HtmlLite\', \'Text\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_AUTOUPDATE', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_LAST_UPDATED', '',  '6', '6', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL', '86400',  '6', '1', 'xtc_cfg_select_interval_module(', 'xtc_cfg_display_interval', now())");
 
     // dynamic
     $this->auto_install();
@@ -116,7 +107,6 @@ class protectedshops {
   // remove
   function remove() {
     $keys = $this->keys();
-    $keys[] = 'MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL';
     $keys[] = 'MODULE_PROTECTEDSHOPS_LAST_UPDATED';
     
     xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $keys) . "')");
@@ -150,6 +140,7 @@ class protectedshops {
     }
 
     $keys[] = 'MODULE_PROTECTEDSHOPS_AUTOUPDATE';
+    $keys[] = 'MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL';
     
     return $keys;
   }

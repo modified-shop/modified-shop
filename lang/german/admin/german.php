@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: german.php 3569 2012-08-30 15:39:18Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -598,4 +598,7 @@ define('TEXT_DEFAULT_SORT_ORDER_TITLE', 'Sortierreihenfolge');
 define('TEXT_DEFAULT_SORT_ORDER_DESC', 'Reihenfolge der Verarbeitung. Kleinste Ziffer wird zuerst ausgeführt.');
 define('TEXT_DEFAULT_STATUS_TITLE', 'Modul aktivieren?');
 define('TEXT_DEFAULT_STATUS_DESC', 'Modul Status');
+
+define('TEXT_HOUR', 'Stunde');
+define('TEXT_HOURS', 'Stunden');
 ?>
