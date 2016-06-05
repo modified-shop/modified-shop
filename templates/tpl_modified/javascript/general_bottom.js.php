@@ -57,7 +57,7 @@ foreach ($script_array as $script) {
       if($('#cboxTitle').height() > 20){
         $("#cboxTitle").hide();
         $("<div>"+$("#cboxTitle").html()+"</div>").css({color: $("#cboxTitle").css('color')}).insertAfter("#cboxPhoto");
-        $.fn.colorbox.resize();
+        //$.fn.colorbox.resize(); // Tomcraft - 2016-06-05 - Fix Colorbox resizing
       }
     });
     <?php if (SEARCH_AC_STATUS == 'true') { ?>
