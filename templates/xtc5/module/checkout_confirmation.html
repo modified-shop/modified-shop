@@ -89,13 +89,13 @@
     <br />
     <h2>{#text_payment_info#}</h2>
     <table style="clear:both">
-      <tr>
-        {foreach name=aussen item=data from=$PAYMENT_INFORMATION}
-          <td class="main">{$data.title|stripslashes}</td>
+      {foreach name=aussen item=data from=$PAYMENT_INFORMATION}
+        <tr>
+          <td class="main">{if $data.title != ''}{$data.title|stripslashes}{else}&nbsp;{/if}</td>
           <td>&nbsp;</td>
-          <td class="main">{if $data.field}{$data.field|stripslashes}{else}&nbsp;{/if}</td>
-        {/foreach}
-      </tr>
+          <td class="main">{if $data.field != ''}{$data.field|stripslashes}{else}&nbsp;{/if}</td>
+        </tr>
+      {/foreach}
     </table>
   {/if}
 
