@@ -217,7 +217,7 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
 <meta charset="utf-8" />
 <title>Administator-Login</title>
 <meta name="robots" content="noindex, nofollow, noodp" />
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <style type="text/css">
 <!--
 
@@ -300,9 +300,10 @@ table td {
 }
 
 #layout_offline {
-  width:700px;
+  width:80%;
+  max-width:700px;
   margin:40px auto;
-  padding:30px;
+  padding:20px;
   border: 1px solid #ddd;
 }
 #layout_adminlogin {
@@ -314,7 +315,7 @@ table td {
   -webkit-box-shadow: 0px 0px 15px #3d3d3d; 
   -moz-box-shadow: 0px 0px 15px #3d3d3d; 
   box-shadow: 0px 0px 15px #3d3d3d;
-  width:400px;
+  max-width:400px;
 }
 #layout_adminlogin a.help_adminlogin {
   position:absolute;
