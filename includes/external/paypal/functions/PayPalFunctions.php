@@ -46,7 +46,13 @@ function get_third_party_payments() {
  */
 if (!function_exists('draw_on_off_selection')) {
   function draw_on_off_selection($name, $select_array, $key_value, $params = '') {
-    return xtc_draw_pull_down_menu($name, $select_array, $key_value, $params);
+    $string = '';
+    for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
+      $string .= '<input id="'.$name.'_'.$i.'" type="radio" name="'.$name.'" value="'.$select_array[$i]['id'].'" '.$params;
+      if ($key_value == $select_array[$i]['id']) $string .= ' checked="checked"';
+      $string .= '><label for="'.$name.'_'.$i.'">'.$select_array[$i]['text'].'</label><br/>';
+    }
+    return $string;
   }
 }
 
