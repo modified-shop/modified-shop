@@ -100,12 +100,12 @@
   <div class="highlightbox {if $ORDER_COMMENTS != ''}plainright{else}plainleft{/if}">
     <h4 class="checkout">{#text_payment_info#}</h4>
     <table class="paymentinfotable">
-      <tr>
-        {foreach name=aussen item=data from=$PAYMENT_INFORMATION}
-          {if $data.title != ''}<td>{$data.title|stripslashes}</td>{/if}
-          <td>{if $data.field}{$data.field|stripslashes}{else}&nbsp;{/if}</td>
-        {/foreach}
-      </tr>
+      {foreach name=aussen item=data from=$PAYMENT_INFORMATION}
+        <tr>
+          <td>{if $data.title != ''}{$data.title|stripslashes}{else}&nbsp;{/if}</td>
+          <td>{if $data.field != ''}{$data.field|stripslashes}{else}&nbsp;{/if}</td>
+        </tr>
+      {/foreach}
     </table>
   </div>
 </div>
