@@ -37,7 +37,7 @@ $lang_array = array(
   
   // instruction
   'TEXT_PAYPAL_INSTRUCTIONS' => 'Zahlungsanweisung',
-  'TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT' => 'Bitte &uuml;berweisen sie den Betrag von %s bis sp&auml;testens %s auf folgendes Konto:',
+  'TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT' => 'Bitte &uuml;berweisen Sie den Betrag von %s bis sp&auml;testens %s auf folgendes Konto:',
   'TEXT_PAYPAL_INSTRUCTIONS_AMOUNT' => 'Betrag:',
   'TEXT_PAYPAL_INSTRUCTIONS_REFERENCE' => 'Verwendungszweck:',
   'TEXT_PAYPAL_INSTRUCTIONS_PAYDATE' => 'Zahlbar bis:',
@@ -65,7 +65,7 @@ $lang_array = array(
   
   
   // error
-  'TEXT_PAYPAL_ERROR_AMOUNT' => 'Bitte geben sie einen Betrag ein.',
+  'TEXT_PAYPAL_ERROR_AMOUNT' => 'Bitte geben Sie einen Betrag ein.',
   
   
   // diverse
