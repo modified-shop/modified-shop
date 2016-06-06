@@ -39,6 +39,7 @@ function manufacturer_redirect($manufacturers_id) {
     if ($manufacturer_link != $current_link) {
       header('HTTP/1.1 301 Moved Permanently' );
       header('Location: '.preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($redirect_link)));
+      exit();
     }
   }
   

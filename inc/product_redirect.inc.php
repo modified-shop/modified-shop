@@ -94,10 +94,12 @@ function product_redirect($actual_products_id) {
     if ($redirect_arr['redirect']) {
       if ($redirect_arr['RedirectionLink'] != '') {
         header('HTTP/1.1 301 Moved Permanently' );
-        header('Location: '.preg_replace("/[\r\n]+(.*)$/i", "", $redirect_arr['RedirectionLink']));        
+        header('Location: '.preg_replace("/[\r\n]+(.*)$/i", "", $redirect_arr['RedirectionLink']));
+        exit();      
       } else {
         header('HTTP/1.1 404 Not Found' );
-        header('Location: '.preg_replace("/[\r\n]+(.*)$/i", "", xtc_href_link(FILENAME_DEFAULT))); 
+        header('Location: '.preg_replace("/[\r\n]+(.*)$/i", "", xtc_href_link(FILENAME_DEFAULT)));
+        exit();
       }        
     }
     
