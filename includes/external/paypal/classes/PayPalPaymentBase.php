@@ -161,7 +161,9 @@ class PayPalPaymentBase extends PayPalCommon {
 
     $payment = $this->get_order_details($orders_id);
   
-    if (isset($payment['instruction'])) {  
+    if (isset($payment['instruction'])) {
+      $payment['instruction']['date'] = date('Y-m-d H:i:s', strtotime($payment['instruction']['date']));
+       
       $fields = array(
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_AMOUNT,
@@ -173,7 +175,7 @@ class PayPalPaymentBase extends PayPalCommon {
         ),
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_PAYDATE,
-          'field' => $payment['instruction']['date'],
+          'field' => xtc_date_short($payment['instruction']['date']),
         ),
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_ACCOUNT,
