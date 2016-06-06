@@ -33,13 +33,22 @@ $LoggingManager = new LoggingManager($config);
  */
 function log_error($num, $str, $file, $line, $context=null)
 {
-    log_exception(new ErrorException($str, 0, $num, $file, $line));
+    log_exception_handler(new ErrorException($str, 0, $num, $file, $line));
+}
+
+/**
+ * check if exception is an valid object
+ */
+function log_exception_handler($e) {
+  if (is_object($e)) {
+    log_exception($e);
+  }
 }
 
 /**
  * Uncaught exception handler.
  */
-function log_exception(Exception $e)
+function log_exception($e)
 {
     global $error_exceptions, $sql_error, $sql_query, $LoggingManager, $config;
     
@@ -149,5 +158,5 @@ function error_level($type)
  */
 register_shutdown_function('check_for_fatal');
 set_error_handler('log_error');
-set_exception_handler('log_exception');
+set_exception_handler('log_exception_handler');
 ?>
