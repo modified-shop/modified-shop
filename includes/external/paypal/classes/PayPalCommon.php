@@ -296,8 +296,8 @@ class PayPalCommon extends PayPalAuth {
 			if (isset($econda) && is_object($econda)) {
 			  $econda->_loginUser();			
       }
-      if ($_SESSION['old_customers_basket'] === true) {
-        unset($_SESSION['old_customers_basket']);
+      if ($_SESSION['old_customers_basket_cart'] === true) {
+        unset($_SESSION['old_customers_basket_cart']);
         unset($_SESSION['paypal']);
         xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message_3='.strtolower('TEXT_SAVED_BASKET')),'NONSSL'); 
       }

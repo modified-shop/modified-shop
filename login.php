@@ -172,7 +172,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
                               FILENAME_CHECKOUT_SHIPPING, 
                               FILENAME_PRODUCT_REVIEWS_WRITE
                               );
-      if (isset($_SESSION['REFERER']) && xtc_not_null($_SESSION['REFERER']) && in_array($_SESSION['REFERER'], $redirect_array) && $_SESSION['old_customers_basket'] === false) {
+      if (isset($_SESSION['REFERER']) && xtc_not_null($_SESSION['REFERER']) && in_array($_SESSION['REFERER'], $redirect_array) && $_SESSION['old_customers_basket_cart'] === false) {
         xtc_redirect(xtc_href_link($_SESSION['REFERER'], xtc_get_all_get_params(array('review_prod_id', 'action')).(isset($_GET['review_prod_id']) ? 'products_id=' .$_GET['review_prod_id'] : ''))); 
       } elseif ($_SESSION['cart']->count_contents() > 0) {
         if ($_SESSION['old_customers_basket_cart'] === true) {
