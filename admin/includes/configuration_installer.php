@@ -98,7 +98,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'DISPLAY_PRIVACY_CHECK', 'true', '5', '130', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
 
 //configuration_group_id 6 --- "Modul Optionen"
-  $values[] = "(NULL, 'COMPRESS_STYLESHEET_TIME', '', '6', '100', NULL, NOW(), NULL, NULL);";
+  //$values[] = "(NULL, 'COMPRESS_STYLESHEET_TIME', '', '6', '100', NULL, NOW(), NULL, NULL);"; // Tomcraft - 2016-06-06 - Obsolete since r7607
   $values[] = "(NULL, 'NEWSFEED_LAST_READ', '', '6', '100', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'NEWSFEED_LAST_UPDATE', '', '6', '100', NULL, NOW(), NULL, NULL);";
 
