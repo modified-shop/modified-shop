@@ -904,7 +904,9 @@ define('MODULE_SMALL_BUSINESS_DESC', 'Soll der Shop umgestellt werden auf Kleinu
 define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Komprimierung');
 define('COMPRESS_HTML_OUTPUT_DESC', 'Soll der HTML Output vom Template komprimiert ausgeliefert werden?');
 define('COMPRESS_STYLESHEET_TITLE', 'CSS Komprimierung');
-define('COMPRESS_STYLESHEET_DESC', 'Soll ein komprimiertes Stylesheet ausgeliefert werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem f&uuml;r Shopversion 2.00 kompatiblem Template!');
+define('COMPRESS_STYLESHEET_DESC', 'Soll ein komprimiertes Stylesheet ausgeliefert werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
+define('COMPRESS_JAVASCRIPT_TITLE', 'JavaScript Komprimierung');
+define('COMPRESS_JAVASCRIPT_DESC', 'Soll eine komprimierte JavaScript-Datei ausgeliefert werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.1.0 kompatiblem Template!');
 
 define('USE_ATTRIBUTES_IFRAME_TITLE', 'Attribute editieren in iframe');
 define('USE_ATTRIBUTES_IFRAME_DESC', '&Ouml;ffnet die Attribut Verwaltung in der Kategorie/Artikelansicht in einem iframe');

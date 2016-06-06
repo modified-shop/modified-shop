@@ -23,7 +23,7 @@ $script_array = array(
 );
 $script_min = DIR_TMPL_JS.'tpl_plugins.min.js';
   
-if (COMBINE_PLUGIN_JS == 'true') {
+if (COMPRESS_JAVASCRIPT == 'true') {
   require_once(DIR_FS_BOXES_INC.'combine_files.inc.php');
   $script_array = combine_files($script_array,$script_min,false);
 }

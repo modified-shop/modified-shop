@@ -254,6 +254,7 @@ $values_group_update = array();
 //configuration_group_id 14 --- "GZIP Kompression"
   $values[] = "(NULL, 'COMPRESS_HTML_OUTPUT', 'true', 14, 3, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'COMPRESS_STYLESHEET', 'true', 14, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'COMPRESS_JAVASCRIPT', 'true', 14, 5, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
 
 //configuration_group_id 15 --- "Sessions"
   $values[] = "(NULL, 'SESSION_LIFE_CUSTOMERS', '1440', '15', '20', NULL, NOW(), NULL, NULL);";
