@@ -204,4 +204,7 @@ INSERT INTO zones VALUES (NULL,209,'35','Yasothon');
 #GTB - 2016-05-18 - insert kosovo
 INSERT INTO countries VALUES (242,'Kosovo','CS','SCG',1,1,0);
 
+#Tomcraft - 2016-06-06 - Remove obsolete configuration_key COMPRESS_STYLESHEET_TIME (since r7607)
+DELETE FROM configuration WHERE configuration_key = 'COMPRESS_STYLESHEET_TIME';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
