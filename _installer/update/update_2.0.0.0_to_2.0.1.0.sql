@@ -203,8 +203,13 @@ INSERT INTO zones VALUES (NULL,209,'35','Yasothon');
 
 #GTB - 2016-05-18 - insert kosovo
 INSERT INTO countries VALUES (242,'Kosovo','CS','SCG',1,1,0);
+INSERT INTO zones_to_geo_zones VALUES (242, 242, 0, 6, NULL, NOW());
 
 #Tomcraft - 2016-06-06 - Remove obsolete configuration_key COMPRESS_STYLESHEET_TIME (since r7607)
 DELETE FROM configuration WHERE configuration_key = 'COMPRESS_STYLESHEET_TIME';
+
+#Tomcraft - 2016-06-07 - insert missing zones_to_geo_zones from r975 for Serbia (ID 240) and Montenegro (ID 241)
+INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES (240, 240, 0, 6, NULL, NOW());
+INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES (241, 241, 0, 6, NULL, NOW());
 
 # Keep an empty line at the end of this file for the db_updater to work properly
