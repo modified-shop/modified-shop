@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: order_details_cart.php 3717 2012-09-29 10:09:21Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -32,9 +32,6 @@
 $module_smarty = new Smarty;
 
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-if(defined('MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS') && MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS=='True' && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'klarna_partPayment') === false){
-    include_once(DIR_WS_INCLUDES.'modules/payment/klarna/display_klarna_cart.php');
-}
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_products_stock.inc.php');
@@ -153,14 +150,16 @@ if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
 }
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/order_details_cart_total/','php') as $file) require ($file);
+
 if (SHOW_SHIPPING == 'true') {
-  $module_smarty->assign('SHIPPING_INFO', $main->getShippingLink()); //web28 -2012-09-29 - use main function
+  $module_smarty->assign('SHIPPING_INFO', $main->getShippingLink());
 }
+
 if ($_SESSION['customers_status']['customers_status_show_price'] == '1' && MODULE_SMALL_BUSINESS != 'true') {
   $module_smarty->assign('UST_CONTENT', $_SESSION['cart']->show_tax());
 }
 
-include DIR_FS_CATALOG.'/includes/shipping_estimate.php';
+include (DIR_WS_INCLUDES.'shipping_estimate.php');
 
 $module_smarty->assign('TOTAL_CONTENT', $total_content);
 $module_smarty->assign('language', $_SESSION['language']);
