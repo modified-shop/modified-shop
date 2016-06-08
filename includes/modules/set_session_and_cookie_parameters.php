@@ -10,6 +10,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// include needed function
+require_once(DIR_FS_INC.'redirect_invalid_session.inc.php');
+
 @ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
 
 // set the session name and save path
@@ -28,17 +31,7 @@ if (STORE_SESSIONS == 'mysql'
                                  FROM ".TABLE_SESSIONS." 
                                 WHERE sesskey = '".xtc_db_input(preg_replace('/[^0-9a-zA-Z]/', '', $_GET[xtc_session_name()]))."'");
   if (xtc_db_num_rows($check_query) < 1) {
-    $uri = preg_replace("/([^\?]*)(\?.*)/", "$1", $_SERVER['REQUEST_URI']);
-    $params = str_replace($uri, '', $_SERVER['REQUEST_URI']);
-    $params = ltrim($params, '?');
-    parse_str($params, $params);
-    $key = xtc_session_name();
-    if (isset($params[$key])) unset($params[$key]);
-    $params = http_build_query($params);
-    $location = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $uri . (xtc_not_null($params) ? '?' . $params : '');
-    header("HTTP/1.0 301 Moved Permanently");
-    header("Location: $location");
-    exit();
+    redirect_invalid_session();
   }
 }
 
@@ -74,19 +67,7 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
   $session_started = false;
   // Redirect search engines with session id to the same url without session id to prevent indexing session id urls
   if (strpos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false || preg_match('/XTCsid/i', $_SERVER['REQUEST_URI'])) {
-    $uri = preg_replace("/([^\?]*)(\?.*)/", "$1", $_SERVER['REQUEST_URI']);
-    $params = str_replace($uri, '', $_SERVER['REQUEST_URI']);
-    $params = ltrim($params, '?');
-    parse_str($params,$params);
-    $key = xtc_session_name();
-    if (isset($params[$key])) unset($params[$key]);
-    $key = 'XTCsid';
-    if (isset($params[$key])) unset($params[$key]);
-    $params = http_build_query($params);
-    $location = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $uri . (xtc_not_null($params) ? '?' . $params : '');
-    header("HTTP/1.0 301 Moved Permanently");
-    header("Location: $location");
-    exit();
+    redirect_invalid_session();
   }
 } else {
   $session_started = xtc_session_start();
