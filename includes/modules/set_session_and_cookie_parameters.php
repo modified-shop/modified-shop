@@ -18,6 +18,30 @@ if (STORE_SESSIONS != 'mysql') {
   xtc_session_save_path(SESSION_WRITE_DIRECTORY);
 }
 
+// check valid session_id
+if (STORE_SESSIONS == 'mysql' 
+    && isset($_GET[xtc_session_name()]) 
+    && $_GET[xtc_session_name()] != ''
+    ) 
+{
+  $check_query = xtc_db_query("SELECT sesskey 
+                                 FROM ".TABLE_SESSIONS." 
+                                WHERE sesskey = '".xtc_db_input(preg_replace('/[^0-9a-zA-Z]/', '', $_GET[xtc_session_name()]))."'");
+  if (xtc_db_num_rows($check_query) < 1) {
+    $uri = preg_replace("/([^\?]*)(\?.*)/", "$1", $_SERVER['REQUEST_URI']);
+    $params = str_replace($uri, '', $_SERVER['REQUEST_URI']);
+    $params = ltrim($params, '?');
+    parse_str($params, $params);
+    $key = xtc_session_name();
+    if (isset($params[$key])) unset($params[$key]);
+    $params = http_build_query($params);
+    $location = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $uri . (xtc_not_null($params) ? '?' . $params : '');
+    header("HTTP/1.0 301 Moved Permanently");
+    header("Location: $location");
+    exit();
+  }
+}
+
 // set the session cookie parameters
 if (function_exists('session_set_cookie_params')) {
   session_set_cookie_params(0, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
@@ -51,8 +75,8 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
   // Redirect search engines with session id to the same url without session id to prevent indexing session id urls
   if (strpos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false || preg_match('/XTCsid/i', $_SERVER['REQUEST_URI'])) {
     $uri = preg_replace("/([^\?]*)(\?.*)/", "$1", $_SERVER['REQUEST_URI']);
-    $params = str_replace($uri,'',$_SERVER['REQUEST_URI']);
-    $params = ltrim($params,'?');
+    $params = str_replace($uri, '', $_SERVER['REQUEST_URI']);
+    $params = ltrim($params, '?');
     parse_str($params,$params);
     $key = xtc_session_name();
     if (isset($params[$key])) unset($params[$key]);
