@@ -165,6 +165,8 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 			if (isset($econda) && is_object($econda)) {
 			  $econda->_loginUser();			
       }
+
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/','php') as $file) require_once ($file);
       
       // define pages allowed to redirect
       $redirect_array = array(FILENAME_ACCOUNT_HISTORY_INFO, 
