@@ -114,7 +114,7 @@ class PayPalPayment extends PayPalPaymentBase {
                  ->setCurrency($_SESSION['currency']) 
                  ->setQuantity($products[$i]['quantity']) 
                  ->setPrice($products[$i]['price'])
-                 ->setSku($products[$i]['model']); 
+                 ->setSku(($products[$i]['model'] != '') ? $products[$i]['model'] : $products[$i]['id']); 
 
         $this->details->setSubtotal($this->details->getSubtotal() + $products[$i]['final_price']);
       }    
@@ -172,7 +172,7 @@ class PayPalPayment extends PayPalPaymentBase {
                  ->setCurrency($order->info['currency']) 
                  ->setQuantity($order->products[$i]['qty']) 
                  ->setPrice($order->products[$i]['price'])
-                 ->setSku($order->products[$i]['model']); 
+                 ->setSku(($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : $order->products[$i]['id']); 
       }  
       
       // set totals
@@ -344,7 +344,7 @@ class PayPalPayment extends PayPalPaymentBase {
                  ->setCurrency($order->info['currency']) 
                  ->setQuantity($order->products[$i]['qty']) 
                  ->setPrice($order->products[$i]['price'])
-                 ->setSku($order->products[$i]['model']); 
+                 ->setSku(($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : $order->products[$i]['id']); 
       }  
     }
 
