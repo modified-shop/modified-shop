@@ -39,7 +39,7 @@ define('TEXT_MANUFACTURERS_IMAGE', 'Herstellerbild:');
 define('TEXT_MANUFACTURERS_URL', 'Hersteller URL:');
 
 define('TEXT_DELETE_INTRO', 'Sind Sie sicher, dass Sie diesen Hersteller l&ouml;schen m&ouml;chten?');
-define('TEXT_DELETE_IMAGE', 'Hersteller Image l&ouml;schen?');
+define('TEXT_DELETE_IMAGE', 'Hersteller-Bild l&ouml;schen?');
 define('TEXT_DELETE_PRODUCTS', 'Alle Artikel von diesem Hersteller l&ouml;schen? (inkl. Rezensionen, Angebote und Neuerscheinungen)');
 define('TEXT_DELETE_WARNING_PRODUCTS', '<b>WARNUNG:</b> Es existieren noch %s Artikel, welche mit diesem Hersteller verbunden sind!');
 
