@@ -32,6 +32,13 @@ require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php');
 
 $shop_is_offline = get_shop_offline_status();
 if ($shop_is_offline) {
+  $current_link = preg_replace("/([^\?]*)(\?.*)/", "$1", $_SERVER['REQUEST_URI']);  
+  $redirect_link = xtc_href_link(FILENAME_DEFAULT);
+  $category_link = str_replace(array(HTTP_SERVER, HTTPS_SERVER), '', preg_replace("/([^\?]*)(\?.*)/", "$1", $redirect_link));
+  if ($category_link != $current_link) {
+    header('Location: '.preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($redirect_link)));
+    exit();
+  }  
   header("HTTP/1.1 503 Service Temporarily Unavailable");
   header("Status: 503 Service Temporarily Unavailable");
 }
