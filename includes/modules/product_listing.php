@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: product_listing.php 5861 2013-10-01 12:50:02Z GTB $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -135,6 +135,8 @@ if ($listing_split->number_of_rows > 0) {
   $module_smarty->assign('CATEGORIES_DESCRIPTION', isset($category['categories_description']) ? $category['categories_description'] : '');
   $module_smarty->assign('CATEGORIES_IMAGE', ((isset($image) && $image != '') ? DIR_WS_BASE . $image : ''));
 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_listing_begin/','php') as $file) require ($file);
+
   $listing_query = xtDBquery($listing_split->sql_query);
   while ($listing = xtc_db_fetch_array($listing_query, true)) {
     $module_content[] =  $product->buildDataArray($listing);
@@ -148,19 +150,13 @@ if ($listing_split->number_of_rows > 0) {
 include (DIR_WS_MODULES. 'categories_listing.php');
 
 if ($result != false) {
+
   // get default template
-  if (empty($category['listing_template']) || $category['listing_template'] == 'default') {
-    $files = array ();
-    if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/')) {
-      while (($file = readdir($dir)) !== false) {
-        if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-          $files[] = $file;
-        }
-      }
-      closedir($dir);
-    }
-    sort($files);
-    $category['listing_template'] = $files[0];
+  if ($category['listing_template'] == '' || $category['listing_template'] == 'default') {
+    $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/','html'), function($file) {
+      return false === strpos($file, 'index.html');
+    });
+    $category['listing_template'] = basename($files[0]);
   }
 
   include (DIR_WS_MODULES.'listing_filter.php');
@@ -230,6 +226,13 @@ if ($result != false) {
       }
     }
 
+    $module_smarty->assign('CATEGORIES_NAME', $category['categories_name']);
+    $module_smarty->assign('CATEGORIES_HEADING_TITLE', $category['categories_heading_title']);
+    $module_smarty->assign('CATEGORIES_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
+    $module_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
+
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_listing_end/','php') as $file) require ($file);
+
     // get default template
     if ($category['categories_template'] == '' || $category['categories_template'] == 'default') {
       $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/','html'), function($file) {
@@ -237,11 +240,7 @@ if ($result != false) {
       });
       $category['categories_template'] = basename($files[0]);
     }
-
-    $module_smarty->assign('CATEGORIES_NAME', $category['categories_name']);
-    $module_smarty->assign('CATEGORIES_HEADING_TITLE', $category['categories_heading_title']);
-    $module_smarty->assign('CATEGORIES_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
-    $module_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
+    
     $module_smarty->assign('language', $_SESSION['language']);
     $module_smarty->caching = 0;
     $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$category['categories_template']);
