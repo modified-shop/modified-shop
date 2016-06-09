@@ -1,1 +1,35 @@
+#  -----------------------------------------------------------------------------------------
+#  $Id$
+#
+#  modified eCommerce Shopsoftware
+#  http://www.modified-shop.org
+#
+#  Copyright (c) 2009 - 2016 [www.modified-shop.org]
+#  -----------------------------------------------------------------------------------------
+#  based on: 
+#  (c) 2000-2001 The Exchange Project 
+#  (c) 2002-2003 osCommerce (.htaccess,v 1.4 2001/04/22); www.oscommerce.com 
+#  (c) 2003	 nextcommerce (.htaccess,v 1.3 2003/08/13); www.nextcommerce.org 
+#  (c) 2003	 XT-Commerce (.htaccess,v 1.3 2003/08/13); www.xt-commerce.com
+#
+#  Released under the GNU General Public License 
+#  -----------------------------------------------------------------------------------------
+#
+# This is used with Apache WebServers
+# The following blocks direct HTTP requests in this directory recursively
+
+<Files *.*>
+  <IfModule mod_authz_core.c>
+    # Apache 2.4
+    <RequireAll>
+      Require all denied
+    </RequireAll>
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    # Apache 2.2
+    Order Deny,Allow
+    Deny from all
+  </IfModule>
+</Files>
+
 Deny From All
