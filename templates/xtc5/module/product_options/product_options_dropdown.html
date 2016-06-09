@@ -4,7 +4,7 @@
     <tr>
       <td class="main"><b>{$options_data.NAME}:</b>&nbsp;</td>
       <td>
-        <select name="id[{$options_data.ID}]" id="{$options_data.ID}">
+        <select name="id[{$options_data.ID}]" id="sel_{$options_data.ID}">
           {foreach key=key_data item=item_data from=$options_data.DATA}
             <option value="{$item_data.ID}">&nbsp;{$item_data.TEXT} {if $item_data.PRICE != ''}{$item_data.PREFIX} {$item_data.PRICE}{/if}&nbsp; </option>
           {/foreach}
