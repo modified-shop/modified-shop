@@ -36,11 +36,9 @@
          return mysql_num_rows($db_query);
        }
     }
-    /*
-    if (!is_array($db_query)) return mysql_num_rows($db_query);
-    if (!count($db_query)) return false;
-     return count($db_query);
-    */
-  //}
+    //if (!is_array($db_query)) return mysql_num_rows($db_query);
+    //if (!count($db_query)) return false;
+    // return count($db_query);
+  }
 */
 ?>
