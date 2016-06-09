@@ -215,4 +215,8 @@ INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`
 #Tomcraft - 2016-06-07 - Display duty info for geo_zone_id 6
 UPDATE geo_zones SET geo_zone_info = '1' WHERE geo_zone_id = '6';
 
+#GTB - 2016-06-09 - add index products_tags
+ALTER TABLE `products_tags` ADD INDEX idx_options_id (`options_id`),
+ALTER TABLE `products_tags` ADD INDEX idx_values_id (`values_id`),
+
 # Keep an empty line at the end of this file for the db_updater to work properly
