@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: html_output.php 4250 2013-01-11 15:09:59Z gtb-modified $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -216,9 +216,9 @@
     if ($params) $field .= ' ' . $params;
     $field .= '>';
     if ( isset($GLOBALS[$name]) && ($reinsert_value) ) {
-      $field .= $GLOBALS[$name];
+      $field .= encode_htmlspecialchars(trim($GLOBALS[$name]));
     } elseif ($text != '') {
-      $field .= $text;
+      $field .= encode_htmlspecialchars(trim($text));
     }
     $field .= '</textarea>';
     return $field;
