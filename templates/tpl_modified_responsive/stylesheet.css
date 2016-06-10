@@ -4875,4 +4875,17 @@ ul.tc_list li .tc_delete .cssButton .fa {
   min-width:220px;
 }
 
+/* Small Cart Buttons delete */
+.cssButtonPos13 {
+  display:block;
+  margin: 0 0 0px 0px;
+}
+.cssButtonPos13 .cssButton {
+  padding: 3px 5px;
+}
+.cssButtonPos13 .fa {
+  font-size:15px;
+  vertical-align:bottom;
+}
+
 /* END CSS Buttons */

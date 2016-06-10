@@ -38,7 +38,7 @@
         <td><span class="fieldtext">{#text_country#}</span><span class="stern">{$SELECT_COUNTRY}</span></td>
       </tr>
       {if $state == '1'}
-      <tr>
+      <tr{if $display_state}{$display_state}{/if}>
         <td><span class="fieldtext">{#text_state#}</span><span class="stern">{$INPUT_STATE}</span></td>
       </tr>
       {/if}

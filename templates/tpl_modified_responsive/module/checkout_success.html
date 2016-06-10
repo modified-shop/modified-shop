@@ -1,6 +1,7 @@
 {config_load file="$language/lang_$language.conf" section="checkout_success"}
 {config_load file="$language/lang_$language.conf" section="checkout_navigation"}
 {config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="checkout_success"}
 {if isset($NO_SHIPPING)}
   <ul id="checkoutnavigation" class="cn_no_shipping cf">
     <li><span class="inactive cf"><span class="title">1. {#title_payment#}</span><span class="description">{#desc_payment#}</span></span></li>

@@ -2,10 +2,11 @@
 {config_load file="$language/lang_$language.conf" section="index"}
 {config_load file="$language/lang_$language.conf" section="wishlist"}
 {config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="wishlist"}
 {if isset($BUTTON_CONTINUE)}
   <div class="headline_big">{#heading_wishlist#}</div>
   <p>{#text_empty_wishlist#}</p>
-  <div class="button_right">{$BUTTON_CONTINUE}</div>
+  <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_CONTINUE}</div></div>
 {elseif isset($module_content)}
   {if isset($wishlist_cart)}<br />{/if}
   <div class="headline_big">{#heading_wishlist#}</div>

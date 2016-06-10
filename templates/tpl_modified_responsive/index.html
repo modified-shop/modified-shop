@@ -157,7 +157,8 @@
     <div class="mod_copyright">{$smarty.const.TITLE} &copy; {$smarty.now|date_format:"%Y"} | Template &copy; 2009-{$smarty.now|date_format:"%Y"} by <span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware</span></div>
   </div>
 
-</div><!-- END #layout_wrap -->
+</div>
+{* ENDE layout_wrap *}
 
 {if ($smarty.const.TRACKING_COUNT_ADMIN_ACTIVE == 'true' && $smarty.session.customers_status.customers_status_id == '0') || $smarty.session.customers_status.customers_status_id != '0'}
   {if $smarty.const.TRACKING_PIWIK_ACTIVE == 'true'}
