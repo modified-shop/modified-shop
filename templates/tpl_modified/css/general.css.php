@@ -33,6 +33,6 @@
   // Put CSS-Inline-Definitions here, these CSS-files will be loaded at the TOP of every page
   
   foreach ($css_array as $css) {
-    echo '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.$css.'" type="text/css" media="screen" />'.PHP_EOL;
+    echo '<link rel="stylesheet" href="'.DIR_WS_BASE.$css.'" type="text/css" media="screen" />'.PHP_EOL;
   }
 ?>
