@@ -394,6 +394,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'templates/xtc5/mail/german/widerruf.html',
                      'templates/xtc5/module/account_newsletter.html', // neu
                      'templates/xtc5/module/checkout_paypal.html', // neu
+                     'templates/xtc5/module/error_handler.html', // neu
                      'templates/xtc5/module/google_sitemap.html', // neu
                      'templates/xtc5/module/gv_faq.html', // neu
                      'templates/xtc5/module/paypal_express_cart.html', // neu
@@ -494,6 +495,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'templates/tpl_modified/img/toplinks_search.gif', // neu
                      'templates/tpl_modified/img/toplinks_specials.gif', // neu
                      'templates/tpl_modified/img/toprowbg.gif', // neu
+                     'templates/tpl_modified/module/error_handler.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/javascript/macFFBgHack.png', // neu
                      'templates/'.CURRENT_TEMPLATE.'/javascript/thickbox.css', // neu
                      'templates/'.CURRENT_TEMPLATE.'/mail/english/change_password_mail.html', // neu
@@ -510,6 +512,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      //'templates/'.CURRENT_TEMPLATE.'/mail/german/widerruf.html',
                      'templates/'.CURRENT_TEMPLATE.'/module/account_newsletter.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/checkout_paypal.html', // neu
+                     'templates/'.CURRENT_TEMPLATE.'/module/error_handler.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/google_sitemap.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/paypal_express_cart.html', // neu
                      'templates/'.CURRENT_TEMPLATE.'/module/sofort_vorkasse.html', // neu
