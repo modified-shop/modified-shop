@@ -3141,9 +3141,6 @@ ul.pd_iconlist li.wishlist .wishlist_submit_link:hover {
   margin: 20px 0px 0px 0px;
   padding: 20px 0px 5px 0px;
   border-top: 1px solid #ddd;
-  -webkit-border-radius: 8px;
-  -moz-border-radius: 8px;
-  border-radius: 8px;
 }
 .addtobasket_input {
   float:left;
