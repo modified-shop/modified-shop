@@ -1,0 +1,10 @@
+{config_load file="$language/lang_$language.conf" section="account_newsletter"}
+<h1>{#heading_newsletter#}</h1>
+{$FORM_ACTION}
+<div class="highlightbox">
+<h1>{#title_newsletter#}</h1>
+<p>{$CHECKBOX} <strong>{#text_newsletter#}</strong></p>
+<p>{#text_newsletter_desc#}</p>
+</div>
+<p>{$BUTTON_BACK}&nbsp;{$BUTTON_CONTINUE}</p>
+{$FORM_END}
