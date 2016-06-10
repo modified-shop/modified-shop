@@ -19,5 +19,5 @@
 {/if}
 <br class="clearfix" />
 <div class="button_left">{$BUTTON_BACK}</div>
-<div class="button_right">{$BUTTON_UPDATE}{$BUTTON_DELETE}</div>
+<div class="button_right">{if isset($BUTTON_UPDATE)}{$BUTTON_UPDATE}{/if}{if isset($BUTTON_DELETE)}{$BUTTON_DELETE}{/if}</div>
 {$FORM_END}

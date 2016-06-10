@@ -7,13 +7,13 @@
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(currencies.php,v 1.16 2003/02/12); www.oscommerce.com 
+   (c) 2002-2003 osCommerce(currencies.php,v 1.16 2003/02/12); www.oscommerce.com
    (c) 2003 nextcommerce (currencies.php,v 1.11 2003/08/17); www.nextcommerce.org
    (c) 2003-2006 XT-Commerce (currencies.php 1262 2005-09-30)
-   
-   Released under the GNU General Public License 
+
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
@@ -44,7 +44,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_currencies.html', $cach
         }
       }
     }
-    
+
     $box_content = xtc_draw_form('currencies', xtc_href_link(basename($PHP_SELF), '', $request_type, false), 'get', 'class="box-currencies"')
                    . xtc_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"')
                    . $hidden_get_variables . xtc_hide_session_id()

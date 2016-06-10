@@ -4,7 +4,7 @@
   <div class="options_row_multi">
     <div class="options_name">{$options_data.NAME}</div>
     <div class="options_select">
-      <select name="id[{$options_data.ID}]" id="{$options_data.ID}">
+      <select name="id[{$options_data.ID}]" id="sel_{$options_data.ID}">
       {foreach key=key_data item=item_data from=$options_data.DATA}
         <option value="{$item_data.ID}">{$item_data.TEXT} {if $item_data.PRICE != ''}{$item_data.PREFIX} {$item_data.PRICE}{/if} </option>
       {/foreach}

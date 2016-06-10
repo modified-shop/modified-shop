@@ -5,14 +5,14 @@
   {$FORM_ACTION}
   <h1 itemprop="name">{$PRODUCTS_NAME}</h1>
   <div id="product_details">
+    {if $PRODUCTS_IMAGE != ''}
     <div class="pd_imagebox">
-      {if $PRODUCTS_IMAGE != ''}
-        <div class="pd_big_image">
-          <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img itemprop="image" src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a>
-        </div>
-        <div class="zoomtext">{#zoomtext#}</div>
-      {/if}
+      <div class="pd_big_image">
+        <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img itemprop="image" src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a>
+      </div>
+      <div class="zoomtext">{#zoomtext#}</div>
     </div>
+    {/if}
 
     <div class="pd_content">
       <div class="pd_infobox">
@@ -138,8 +138,8 @@
       <div class="cf">
         {foreach item=more_images_data from=$more_images} 
           <div class="pd_small_image_tab">
-            <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
-            <noscript><a href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
+            <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
+            <noscript><a href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
           </div>                          
         {/foreach}
       </div>
