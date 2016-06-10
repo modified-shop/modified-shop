@@ -10,7 +10,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-if (isset($order) && is_object($order)) {
+if (isset($oID) && $oID != '') {
+  $order = new order($oID);
+  
   if ($order->info['payment_method'] == 'paypalclassic' 
       || $order->info['payment_method'] == 'paypalcart'
       || $order->info['payment_method'] == 'paypalplus'
