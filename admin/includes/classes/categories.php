@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-  $Id: categories.php 5376 2013-08-12 16:09:06Z web28 $
+  $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -1324,6 +1324,7 @@ class categories {
       if ($products_data['specials_action'] == 'insert') {
         unset($sql_data_array['specials_last_modified']);
         xtc_db_perform(TABLE_SPECIALS, $sql_data_array);
+        $products_data['specials_id'] = xtc_db_insert_id();
       } else {
         unset($sql_data_array['specials_date_added']);
         xtc_db_perform(TABLE_SPECIALS, $sql_data_array, 'update', "specials_id = '" . (int)$products_data['specials_id']  . "'" );    
@@ -1334,6 +1335,8 @@ class categories {
     if(isset($products_data['specials_delete'])) {
       xtc_db_query("DELETE FROM " . TABLE_SPECIALS . " WHERE specials_id = '" . xtc_db_input($products_data['specials_id']) . "'");
     }
+    
+    return $products_data['specials_id'];
   }
   
   function save_products_tags($products_data,$products_id)

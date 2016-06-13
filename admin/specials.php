@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: specials.php 4937 2013-06-17 09:19:54Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -17,9 +17,16 @@
    --------------------------------------------------------------*/
 
   require('includes/application_top.php');
-  require(DIR_FS_CATALOG.DIR_WS_CLASSES . 'xtcPrice.php');
+  
+  // include needed functions
+  require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
+
+  // include needed classes
+  require_once (DIR_WS_CLASSES.'categories.php');
+  require_once (DIR_FS_CATALOG.DIR_WS_CLASSES . 'xtcPrice.php');
+
   $xtPrice = new xtcPrice(DEFAULT_CURRENCY,$_SESSION['customers_status']['customers_status_id']);
-  require_once(DIR_FS_INC .'xtc_get_tax_rate.inc.php');
+  $catfunc = new categories();
   
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_SPECIALS_RESULTS';
@@ -37,55 +44,7 @@
 
       case 'insert':
       case 'update':
-        if (PRICE_IS_BRUTTO=='true' && substr($_POST['specials_price'], -1) != '%'){
-          $sql = "-- /admin/specials.php
-                  SELECT tr.tax_rate
-                    FROM " . TABLE_TAX_RATES . " tr,
-                         " . TABLE_PRODUCTS . " p
-                   WHERE tr.tax_class_id = p. products_tax_class_id
-                     AND p.products_id = '". (int)$_POST['products_id'] . "'
-                 ";
-
-          $tax_query = xtc_db_query($sql);
-          $tax = xtc_db_fetch_array($tax_query);
-          $_POST['specials_price'] = ($_POST['specials_price']/($tax['tax_rate']+100)*100);
-        }
-        if (substr($_POST['specials_price'], -1) == '%') {
-          $new_special_insert_query = xtc_db_query("-- /admin/specials.php
-                                                      SELECT products_id,
-                                                             products_tax_class_id,
-                                                             products_price
-                                                        FROM " . TABLE_PRODUCTS . "
-                                                       WHERE products_id = '" . (int)$_POST['products_id'] . "'");
-          $new_special_insert = xtc_db_fetch_array($new_special_insert_query);
-          $_POST['products_price'] = $new_special_insert['products_price'];
-          $_POST['specials_price'] = ($_POST['products_price'] - (($_POST['specials_price'] / 100) * $_POST['products_price']));
-        }
-        
-        $expires_date = isset($_POST['specials_expires']) && !empty($_POST['specials_expires']) ? date('Y-m-d', strtotime($_POST['specials_expires'])).' 23:59:59' : '';
-        $start_date = isset($_POST['specials_start']) && !empty($_POST['specials_start']) ? date('Y-m-d', strtotime($_POST['specials_start'])).' 00:00:00' : '';
-
-        $sql_data_array = array('products_id' => (int)$_POST['products_id'],
-                                'specials_quantity' => (int)$_POST['specials_quantity'],
-                                'specials_new_products_price' => xtc_db_prepare_input($_POST['specials_price']),
-                                'specials_date_added' => 'now()',
-                                'specials_last_modified' => 'now()',
-                                'start_date' => xtc_db_prepare_input($start_date),
-                                'expires_date' => xtc_db_prepare_input($expires_date),
-                                'status' => '1'
-                                );
-                                
-        if ($action == 'insert') {
-          unset($sql_data_array['specials_last_modified']);
-          xtc_db_perform(TABLE_SPECIALS, $sql_data_array);
-          $specials_id = xtc_db_insert_id();
-        } else {
-          unset($sql_data_array['specials_date_added']);
-          unset($sql_data_array['status']);
-          $specials_id = (int)$_POST['specials_id'];
-          xtc_db_perform(TABLE_SPECIALS, $sql_data_array, 'update', "specials_id = '".$specials_id."'");
-        }
-        
+        $specials_id = $catfunc->saveSpecialsData($_POST);
         xtc_redirect(xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $specials_id));
         break;
 
@@ -129,11 +88,9 @@ require (DIR_WS_INCLUDES.'head.php');
         if ($action == 'new' || $action == 'edit') {
           $form_action = 'insert';
           $expires_date = '';
-          if ( ($action == 'edit') && isset($sID) ) {
+          if ($action == 'edit' && isset($sID)) {
             $form_action = 'update';
-            $product_query = xtc_db_query("-- /admin/specials.php
-                                            SELECT
-                                                  p.products_id,
+            $product_query = xtc_db_query("SELECT p.products_id,
                                                   p.products_model,
                                                   p.products_price,
                                                   p.products_tax_class_id,
@@ -142,13 +99,13 @@ require (DIR_WS_INCLUDES.'head.php');
                                                   s.start_date,
                                                   s.expires_date,
                                                   pd.products_name
-                                             FROM " . TABLE_PRODUCTS . " p,
-                                                  " . TABLE_PRODUCTS_DESCRIPTION . " pd,
-                                                  " . TABLE_SPECIALS . " s
-                                            WHERE p.products_id = pd.products_id
-                                              AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                              AND p.products_id = s.products_id
-                                              AND s.specials_id = '" . $sID ."'");
+                                             FROM " . TABLE_PRODUCTS . " p
+                                             JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                                  ON p.products_id = pd.products_id
+                                                     AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                             JOIN " . TABLE_SPECIALS . " s
+                                                  ON p.products_id = s.products_id
+                                                     AND s.specials_id = '" . $sID ."'");
             $product = xtc_db_fetch_array($product_query);
             $sInfo = new objectInfo($product);
             // build the expires date in the format YYYY-MM-DD
@@ -168,11 +125,10 @@ require (DIR_WS_INCLUDES.'head.php');
             // create an array of products on special, which will be excluded from the pull down menu of products
             // (when creating a new product on special)
             $specials_array = array();
-            $specials_query = xtc_db_query("-- /admin/specials.php
-                                            SELECT p.products_id
-                                              FROM " . TABLE_PRODUCTS . " p,
-                                                   " . TABLE_SPECIALS . " s
-                                             WHERE s.products_id = p.products_id");
+            $specials_query = xtc_db_query("SELECT p.products_id
+                                              FROM " . TABLE_PRODUCTS . " p
+                                              JOIN " . TABLE_SPECIALS . " s
+                                                   ON s.products_id = p.products_id");
             while ($specials = xtc_db_fetch_array($specials_query)) {
               $specials_array[] = $specials['products_id'];
             }
@@ -198,6 +154,9 @@ require (DIR_WS_INCLUDES.'head.php');
           if ($form_action == 'update') { 
             echo xtc_draw_hidden_field('specials_id', $sID);                
           }
+          echo xtc_draw_hidden_field('tax_rate', xtc_get_tax_rate($sInfo->products_tax_class_id));
+          echo xtc_draw_hidden_field('products_price_hidden', $sInfo->products_price);
+          echo xtc_draw_hidden_field('specials_action', $form_action);
           ?>
           
           <table class="tableConfig">
@@ -245,7 +204,7 @@ require (DIR_WS_INCLUDES.'head.php');
            :
            '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'). '&nbsp;&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $sID) . '">' . BUTTON_CANCEL . '</a>'; ?>
           </div>
-         </form>
+        </form>
       </td>                   
         <?php
         // BEGIN LISTING TABLE
@@ -267,8 +226,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
-                $specials_query_raw = "-- /admin/specials.php
-                                       SELECT p.products_id,
+                $specials_query_raw = "SELECT p.products_id,
                                               p.products_model,
                                               p.products_quantity,
                                               p.products_price,
