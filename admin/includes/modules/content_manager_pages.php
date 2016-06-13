@@ -441,7 +441,7 @@ if (!$action) {
           </tr>
           <tr>
             <td class="dataTableConfig col-left" style="border-bottom:0;border-right:1px solid #a3a3a3;vertical-align:top;"><?php echo $lang_img.TEXT_CONTENT; ?></td>
-            <td class="dataTableConfig col-single-right" style="border-bottom:0;"><?php  echo xtc_draw_textarea_field('content_text['.$i.']['.$languages[$l]['id'].']', $languages[$l]['id'], '100%', '35', ((isset($content_lang['content_text'])) ? $content_lang['content_text'] : '')); ?>
+            <td class="dataTableConfig col-single-right" style="border-bottom:0;"><?php  echo xtc_draw_textarea_field('content_text['.$i.']['.$languages[$l]['id'].']', $languages[$l]['id'], '100%', '35', ((isset($content_lang['content_text'])) ? $content_lang['content_text'] : ''), '', true, true); ?>
             </td>
           </tr>          
         </table>          

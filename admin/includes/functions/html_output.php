@@ -211,14 +211,18 @@
   }
 
   // Output a form textarea field
-  function xtc_draw_textarea_field($name, $wrap, $width, $height, $text = '', $params = '', $reinsert_value = true) {
+  function xtc_draw_textarea_field($name, $wrap, $width, $height, $text = '', $params = '', $reinsert_value = true, $encode = false) {
     $field = '<textarea id="'.$name.'" name="' . $name . '" wrap="' . $wrap . '" cols="' . $width . '" rows="' . $height . '"';
     if ($params) $field .= ' ' . $params;
     $field .= '>';
     if ( isset($GLOBALS[$name]) && ($reinsert_value) ) {
       $field .= encode_htmlspecialchars(trim($GLOBALS[$name]));
     } elseif ($text != '') {
-      $field .= encode_htmlspecialchars(trim($text));
+      if ($encode === true) {
+        $field .= encode_htmlspecialchars(trim($text));
+      } else {
+        $field .= trim($text);
+      }
     }
     $field .= '</textarea>';
     return $field;
