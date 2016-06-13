@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: languages.php 5069 2013-07-15 12:57:14Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -39,10 +39,8 @@
             'code' => xtc_db_prepare_input($_POST['code']),  
             'image' => xtc_db_prepare_input($_POST['image']),  
             'directory' => xtc_db_prepare_input($_POST['directory']),  
-            //'status' => xtc_db_prepare_input($_POST['status']),  
             'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
             'language_charset' => xtc_db_prepare_input($_POST['charset']),
-            //'status_admin' => xtc_db_prepare_input($_POST['status_admin'])
           );
         xtc_db_perform(TABLE_LANGUAGES, $sql_data_array);      
         $insert_id = xtc_db_insert_id();
@@ -52,8 +50,7 @@
                                                 FROM ".TABLE_CUSTOMERS_STATUS
                                             );
         while ($data=xtc_db_fetch_array($customers_status_query)) {
-
-          $customers_status_data_query=xtc_db_query("SELECT *
+          $customers_status_data_query = xtc_db_query("SELECT *
                                                          FROM ".TABLE_CUSTOMERS_STATUS."
                                                         WHERE customers_status_id='".$data['customers_status_id']."'");
           $c_data = xtc_db_fetch_array($customers_status_data_query);
@@ -61,7 +58,7 @@
           xtc_db_perform(TABLE_CUSTOMERS_STATUS, $c_data);
         }
         if (isset($_POST['default']) && $_POST['default'] == 'on') {
-          xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($code) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
+          xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($sql_data_array['code']) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
         }
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $insert_id));
         break;
@@ -81,7 +78,7 @@
         xtc_db_perform(TABLE_LANGUAGES, $sql_data_array, 'update', 'languages_id = \''.$lID.'\'');        
         
         if ($_POST['default'] == 'on') {
-          xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($code) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
+          xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($sql_data_array['code']) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
         }
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $lID));
         break;
@@ -115,12 +112,9 @@
           $remove_language = false;
           $messageStack->add(ERROR_REMOVE_DEFAULT_LANGUAGE, 'error');
         }
-        // BOF - vr - 2009-12-11 - $lng must not be an array when entering header
         unset($lng);
-        // EOF - vr - 2009-12-11 - $lng must not be an array when entering header
         break;
       case 'transfer':
-        //echo '<pre>'.print_r($_POST,1).'</pre>'; EXIT;
         $lngID_from = (int)$_POST['lngID_from'];
         $lngID_to =(int)$_POST['lngID_to'];
         
@@ -396,8 +390,6 @@ input[type=checkbox], input[type=radio] {
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_input_field('charset'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . xtc_draw_input_field('image', 'icon.gif'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . xtc_draw_input_field('directory'));
-                //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . '<br />' . xtc_draw_input_field('status'));
-                //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . '<br />' . xtc_draw_input_field('status_admin'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order'));
                 $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . (int)$_GET['lID']) . '">' . BUTTON_CANCEL . '</a>');
@@ -411,8 +403,6 @@ input[type=checkbox], input[type=radio] {
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_input_field('charset', $lInfo->language_charset));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . xtc_draw_input_field('image', $lInfo->image));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . xtc_draw_input_field('directory', $lInfo->directory));
-                //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . '<br />' . xtc_draw_input_field('status', $lInfo->status));
-                //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . '<br />' . xtc_draw_input_field('status_admin', $lInfo->status_admin));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', $lInfo->sort_order));
                 if (DEFAULT_LANGUAGE != $lInfo->code)
                   $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
@@ -434,8 +424,6 @@ input[type=checkbox], input[type=radio] {
                   $contents[] = array('text' => 'Language-ID:' . ' ' . $lInfo->languages_id);
                   $contents[] = array('text' => '<br />' . xtc_image(DIR_WS_LANGUAGES . $lInfo->directory . '/' . $lInfo->image, $lInfo->name));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . DIR_WS_LANGUAGES . '<b>' . $lInfo->directory . '</b>');
-                  //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . ' ' . $lInfo->status);
-                  //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . ' '. $lInfo->status_admin);
                   $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . ' ' . $lInfo->sort_order);
                 }
                 break;
