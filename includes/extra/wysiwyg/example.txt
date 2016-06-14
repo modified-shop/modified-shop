@@ -1,0 +1,57 @@
+<?php
+/*-------------------------------
+
+$ID$
+
+$customConfig CKEDITOR
+
+Hier können spezielle Einstellungen für den CKEDITOR definiert werden.
+Alle $customConfig Einstellungen in der inc/xtc_wysiwig.inc.php können hier 
+überschrieben und/oder neue Definitionen angelegt werden.
+---------------------------------*/
+
+
+//GLOBALE EINSTELLUNGEN - die Einstellungen können auch im case Block eines bestimmten Editors gesetzt werden:
+
+//Custom Config Datei mit Einstellungen, die Datei muss sich in dem angegebenen Ordner befinden
+//$customConfig['customConfig'] = "customConfig : '../ckeditor/custom/ckeditor_config.js',";
+
+//skin
+//$customConfig['skin'] = "skin: '".(defined('WYSIWYG_SKIN') ? WYSIWYG_SKIN : moonocolor)."',";
+
+//extraPlugins
+//$customConfig['extraPlugins'] = "extraPlugins: '',";
+
+//Plugins entfernen
+//$customConfig['removePlugins'] = "removePlugins: '',";
+
+//Eingabeoptionen
+//$customConfig['enterMode'] = "enterMode: CKEDITOR.ENTER_BR,";
+//$customConfig['shiftEnterMode'] = "shiftEnterMode: CKEDITOR.ENTER_P,";
+
+//NEUEN EDITOR DEFINIEREN (mehrsprachig - SprachTabs)
+
+switch($type) {
+        // WYSIWYG editor event_calender
+        case 'test_editor_multi':
+            $editorName = 'test_editor_multi['.$langID.']';
+            $default_editor_height = 200;
+            
+            // Weitere Einstellung hier einfügen, diese gelten nur für diesen Editor
+          
+            break;
+}
+
+//NEUEN EDITOR DEFINIEREN (einsprachig - keine Sprachtabs)
+
+switch($type) {
+        case 'test_editor':
+            $editorName = 'test_editor';
+            $default_editor_height = 400;
+            
+            // Weitere Einstellung hier einfügen, diese gelten nur für diesen Editor
+        
+            break;
+}
+
+?>
