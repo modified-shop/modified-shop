@@ -16,7 +16,7 @@ require('includes/application_top.php');
 // include needed function
 require_once(DIR_FS_INC.'get_external_content.inc.php');
 
-$blz_file_default_link = 'http://www.bundesbank.de/Redaktion/DE/Downloads/Aufgaben/Unbarer_Zahlungsverkehr/Bankleitzahlen/2015_12_06/blz_2015_09_07_txt.txt?__blob=publicationFile';
+$blz_file_default_link = 'http://www.bundesbank.de/Redaktion/DE/Downloads/Aufgaben/Unbarer_Zahlungsverkehr/Bankleitzahlen/2016_09_04/blz_2016_06_06_txt.txt?__blob=publicationFile';
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
