@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: application_top.php 9983 2016-06-15 12:15:51Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -30,7 +30,7 @@
    --------------------------------------------------------------*/
 
 // DB version, used for updates (_installer)
-define('DB_VERSION', 'MOD_2.0.0.0');
+define('DB_VERSION', 'MOD_2.0.1.0');
 
 //Run Mode
 define('RUN_MODE_ADMIN',true);
