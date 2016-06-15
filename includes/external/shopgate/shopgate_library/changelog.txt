@@ -1,3 +1,40 @@
+'''Version 2.9.45'''
+* fixed product export issue related to invalid data in field tax_class
+
+'''Version 2.9.44'''
+* won't crash anymore when an array of objects expected from the Shopgate Merchant API is set, but empty
+* fixed encoding issue with non-object responses
+
+'''Version 2.9.43'''
+* changed error reporting settings for development environments
+* fixes redirect when a shop is not active & full view mode 
+
+'''Version 2.9.42'''
+* fixed an issue with home page infinite redirect loop
+* fixed a bug in processing the user agent blacklist used for mobile redirect
+* moved ShopgateOrder::$tracking_get_parameters and its getter & setter to ShopgateCartBase
+
+'''Version 2.9.41'''
+* meta tags and mobile header script won't be displayed anymore for inactive shops when using Shopgate_Helper_Redirect_MobileRedirect
+
+'''Version 2.9.40'''
+* added better escaping for the mobile redirect of search queries
+* added customer ip address getter/setter in order object
+* fixed issue with curly brace regex for jsHeader template
+* started unit test structure
+* removed PHP 4 style constructors from vendor classes as of http://php.net/manual/de/migration70.deprecated.php
+
+'''Version 2.9.39'''
+* adjusted type-hints to API documentations
+
+'''Version 2.9.38'''
+* minor bug fixes
+
+'''Version 2.9.37'''
+* added outputting open graph and other tags with the mobile redirect if activated in the configuration
+* added a replacement class tree for ShopgateMobileRedirect
+* ShopgateMobileRedirect is now deprecated
+
 '''Version 2.9.36'''
 * added a fallback in case that json_encode returns false (failure)
 * added new constant ShopgateLibraryException::CART_ITEM_INVALID_PRODUCT_COMBINATION

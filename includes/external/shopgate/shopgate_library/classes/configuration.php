@@ -208,132 +208,132 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	### Indicators to (de)activate Shopgate Plugin API actions ###
 	##############################################################
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_ping;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_add_order;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_update_order;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_check_cart;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_check_stock;
 	
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_redeem_coupons;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_get_orders;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_get_customer;
 	
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_register_customer;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_get_debug_info;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_get_items;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_get_items_csv;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_get_categories_csv;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_get_categories;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_get_reviews_csv;
 
     /**
-     * @var bool
+     * @var int
      */
     protected $enable_get_reviews;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_get_media_csv;
 	
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_get_log_file;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_mobile_website;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_cron;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_clear_log_file;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_clear_cache;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_get_settings;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_set_settings;
 	
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_sync_favourite_list;
 	
 	/**
-	 * @var bool
+	 * @var int
 	 */
 	protected $enable_receive_authorization;
 	
@@ -484,6 +484,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 * @var array<int, string> an array with a list of get params which are allowed to passthrough to the mobile device on redirect
 	 */
 	protected $redirectable_get_params = array();
+	
+	/**
+	 * @var string A JSON encoded string containing the HTML tags to be placed on the desktop website.
+	 */
+	protected $html_tags;
 
 	/**
 	 * @var int execution time limit for file export in seconds
@@ -598,6 +603,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 
 		$this->is_shopgate_adapter = false;
 		$this->redirectable_get_params = array('gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content');
+		$this->html_tags = '';
 
 		$this->default_memory_limit = ShopgateConfigInterface::DEFAULT_MEMORY_LIMIT;
 		$this->default_execution_time = ShopgateConfigInterface::DEFAULT_EXECUTION_TIME;
@@ -1101,107 +1107,107 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	}
 
 	public function getEnablePing() {
-		return $this->enable_ping;
+		return (int)$this->enable_ping;
 	}
 
 	public function getEnableAddOrder() {
-		return $this->enable_add_order;
+		return (int)$this->enable_add_order;
 	}
 
 	public function getEnableUpdateOrder() {
-		return $this->enable_update_order;
+		return (int)$this->enable_update_order;
 	}
 
 	public function getEnableCheckCart() {
-		return $this->enable_check_cart;
+		return (int)$this->enable_check_cart;
 	}
 	
 	public function getEnableCheckStock() {
-		return $this->enable_check_stock;
+		return (int)$this->enable_check_stock;
 	}
 	
 	public function getEnableRedeemCoupons() {
-		return $this->enable_redeem_coupons;
+		return (int)$this->enable_redeem_coupons;
 	}
 
 	public function getEnableGetOrders() {
-		return $this->enable_get_orders;
+		return (int)$this->enable_get_orders;
 	}
 
 	public function getEnableGetCustomer() {
-		return $this->enable_get_customer;
+		return (int)$this->enable_get_customer;
 	}
 
 	public function getEnableRegisterCustomer() {
-		return $this->enable_register_customer;
+		return (int)$this->enable_register_customer;
 	}
 
 	public function getEnableGetDebugInfo() {
-		return $this->enable_get_debug_info;
+		return (int)$this->enable_get_debug_info;
 	}
 
 	public function getEnableGetItemsCsv() {
-		return $this->enable_get_items_csv;
+		return (int)$this->enable_get_items_csv;
 	}
 
 	public function getEnableGetItems() {
-		return $this->enable_get_items;
+		return (int)$this->enable_get_items;
 	}
 
 	public function getEnableGetCategoriesCsv() {
-		return $this->enable_get_categories_csv;
+		return (int)$this->enable_get_categories_csv;
 	}
 
 	public function getEnableGetCategories() {
-		return $this->enable_get_categories;
+		return (int)$this->enable_get_categories;
 	}
 
 	public function getEnableGetReviewsCsv() {
-		return $this->enable_get_reviews_csv;
+		return (int)$this->enable_get_reviews_csv;
 	}
 
     public function getEnableGetReviews() {
-        return $this->enable_get_reviews;
+        return (int)$this->enable_get_reviews;
     }
 
 	public function getEnableGetMediaCsv(){
-		return $this->enable_get_media_csv;
+		return (int)$this->enable_get_media_csv;
 	}
 	
 	public function getEnableGetLogFile() {
-		return $this->enable_get_log_file;
+		return (int)$this->enable_get_log_file;
 	}
 
 	public function getEnableMobileWebsite() {
-		return $this->enable_mobile_website;
+		return (int)$this->enable_mobile_website;
 	}
 
 	public function getEnableCron() {
-		return $this->enable_cron;
+		return (int)$this->enable_cron;
 	}
 
 	public function getEnableClearLogFile() {
-		return $this->enable_clear_log_file;
+		return (int)$this->enable_clear_log_file;
 	}
 
 	public function getEnableClearCache() {
-		return $this->enable_clear_cache;
+		return (int)$this->enable_clear_cache;
 	}
 
 	public function getEnableGetSettings() {
-		return $this->enable_get_settings;
+		return (int)$this->enable_get_settings;
 	}
 
 	public function getEnableSetSettings() {
-		return $this->enable_set_settings;
+		return (int)$this->enable_set_settings;
 	}
 	
 	public function getEnableSyncFavouriteList() {
-		return $this->enable_sync_favourite_list;
+		return (int)$this->enable_sync_favourite_list;
 	}
 	
 	public function getEnableReceiveAuthorization() {
-		return $this->enable_receive_authorization;
+		return (int)$this->enable_receive_authorization;
 	}
 	
 	public function getCountry() {
@@ -1371,17 +1377,15 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	public function getRedirectableGetParams() {
 		return $this->redirectable_get_params;
 	}
+	
+	public function getHtmlTags() {
+		return $this->html_tags;
+	}
 
-	/**
-	 * @return int
-	 */
 	public function getDefaultExecutionTime() {
 		return $this->default_execution_time;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getDefaultMemoryLimit() {
 		return $this->default_memory_limit;
 	}
@@ -1854,7 +1858,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	}
 
 	public function setRedirectableGetParams($value) {
-		return $this->redirectable_get_params = $value;
+		$this->redirectable_get_params = $value;
+	}
+	
+	public function setHtmlTags($value) {
+		$this->html_tags = $value;
 	}
 
 	/**
@@ -2623,132 +2631,132 @@ interface ShopgateConfigInterface {
 	public function getSupportedMethodsCron();
 	
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnablePing();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableAddOrder();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableUpdateOrder();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableCheckCart();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableCheckStock();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableRedeemCoupons();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableGetOrders();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableGetCustomer();
 	
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableRegisterCustomer();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableGetDebugInfo();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableGetItemsCsv();
 	
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableGetItems();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableGetCategoriesCsv();
 	
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableGetCategories();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableGetReviewsCsv();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableGetReviews();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableGetMediaCsv();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableGetLogFile();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableMobileWebsite();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableCron();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableClearLogFile();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableClearCache();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableGetSettings();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableSetSettings();
 
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableSyncFavouriteList();
 	
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getEnableReceiveAuthorization();
 	
@@ -2956,7 +2964,17 @@ interface ShopgateConfigInterface {
 	 * @return bool True if the plugin is an adapter between Shopgate's and a third-party-API and servers multiple shops on both ends.
 	 */
 	public function getIsShopgateAdapter();
-
+	
+	/**
+	 * @return array<int, string> an array with a list of get params which are allowed to passthrough to the mobile device on redirect
+	 */
+	public function getRedirectableGetParams();
+	
+	/**
+	 * @return string A JSON encoded string containing the HTML tags to be placed on the desktop website.
+	 */
+	public function getHtmlTags();
+	
 	/**
 	 * @return int maximum execution time in seconds
 	 */
@@ -3085,132 +3103,132 @@ interface ShopgateConfigInterface {
 	public function setSupportedResponseTypes($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnablePing($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableAddOrder($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableUpdateOrder($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableCheckCart($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableCheckStock($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableRedeemCoupons($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableGetOrders($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableGetCustomer($value);
 	
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableRegisterCustomer($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableGetDebugInfo($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableGetItemsCsv($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableGetItems($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableGetCategoriesCsv($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableGetCategories($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableGetReviewsCsv($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableGetReviews($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableGetMediaCsv($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableGetLogFile($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableMobileWebsite($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableCron($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableClearLogFile($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableClearCache($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableGetSettings($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableSetSettings($value);
 	
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableSyncFavouriteList($value);
 
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setEnableReceiveAuthorization($value);
 	
@@ -3428,6 +3446,16 @@ interface ShopgateConfigInterface {
 	 * @param bool $value True if the plugin is an adapter between Shopgate's and a third-party-API and servers multiple shops on both ends.
 	 */
 	public function setIsShopgateAdapter($value);
+	
+	/**
+	 * @param array<int, string> $value an array with a list of get params which are allowed to passthrough to the mobile device on redirect
+	 */
+	public function setRedirectableGetParams($value);
+	
+	/**
+	 * @param string $value A JSON encoded string containing the HTML tags to be placed on the desktop website.
+	 */
+	public function setHtmlTags($value);
 
 	/**
 	 * @param $default_execution_time int set value for maximum execution time in seconds

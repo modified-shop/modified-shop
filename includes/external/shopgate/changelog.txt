@@ -1,11 +1,18 @@
-'''Version 2.9.29’’’
+'''Version 2.9.30'''
+* uses Shopgate Library 2.9.45
+* added manufacturer model number to product export
+* adjusted manufacturer uid's in product export to contain database index values
+* fixed a bug in detection of the correct language for product export
+* fixed negative sort_order positions in product export
+
+'''Version 2.9.29'''
 * fixed detection of free shipping
 * improved mapping of payment fees in the order import
 
-'''Version 2.9.28’’’
+'''Version 2.9.28'''
 * added export of article number (sku) to the xml item export
 
-'''Version 2.9.27’’’
+'''Version 2.9.27'''
 * uses Shopgate Library 2.9.36
 * fixed reduction type fixed in tier prices
 * checkCart will only return shipping methods if a delivery address is given

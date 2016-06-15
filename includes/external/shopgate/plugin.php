@@ -21,7 +21,7 @@
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 
-define("SHOPGATE_PLUGIN_VERSION", "2.9.29");
+define("SHOPGATE_PLUGIN_VERSION", "2.9.30");
 
 /**
  * Modified eCommerce Plugin for Shopgate
@@ -68,21 +68,21 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
     {
         $this->requireFiles();
     
-        $initHelper = new ShopgatePluginInitHelper();
-        $initHelper->defineXtcValidationConstant();
         $this->config = new ShopgateConfigModified();// initialize configuration
-        $initHelper->getDefaultLanguageData($this->config->getLanguage(), $this->languageId, $this->language);
-        $initHelper->getDefaultCurrencyData(
-            $this->config->getCurrency(), $this->exchangeRate, $this->currencyId, $this->currency
-        );
-        $this->countryId = $initHelper->getDefaultCountryId($this->config->getCountry());// fetch country
-        
         if (!isset($_REQUEST['shop_number'])) {
             $this->config->loadFile();
         } else {
             $this->config->loadByShopNumber($_REQUEST['shop_number']);
         }
-        
+    
+        $initHelper = new ShopgatePluginInitHelper();
+        $initHelper->defineXtcValidationConstant();
+        $initHelper->getDefaultLanguageData($this->config->getLanguage(), $this->languageId, $this->language);
+        $initHelper->getDefaultCurrencyData(
+            $this->config->getCurrency(), $this->exchangeRate, $this->currencyId, $this->currency
+        );
+        $this->countryId = $initHelper->getDefaultCountryId($this->config->getCountry());// fetch country
+    
         $this->zoneId = $this->config->getTaxZoneId();
         
         if (file_exists(DIR_FS_CATALOG . (defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/') . "includes/version.php")) {

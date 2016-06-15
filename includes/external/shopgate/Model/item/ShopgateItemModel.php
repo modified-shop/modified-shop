@@ -213,7 +213,9 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
                 pdsc.products_description,
                 pdsc.products_short_description,
                 shst.shipping_status_name,
+                mf.manufacturers_id,
                 mf.manufacturers_name,
+                p.products_manufacturers_model,
                 p.products_tax_class_id,
                 p.products_fsk18,
                 p.products_vpe_status,
@@ -250,19 +252,20 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
         
         return $qry;
     }
-    
+
     /**
-     * get the highest, in the database existing, product id
+     * get the highest product position
      *
-     * @return mixed
+     * @return int
      */
-    public function getMaxProductUid()
+    public function getMaxProductSortPosition()
     {
-        $this->log("execute SQL get max_id ...", ShopgateLogger::LOGTYPE_DEBUG);
-        $result = xtc_db_query("SELECT MAX(products_id) max_id FROM " . TABLE_PRODUCTS);
+        $this->log('execute SQL get max sort position ...', ShopgateLogger::LOGTYPE_DEBUG);
+        /** @noinspection SqlDialectInspection */
+        $result = xtc_db_query("SELECT MAX(products_sort) max_sort FROM " . TABLE_PRODUCTS);
         $maxId  = xtc_db_fetch_array($result);
-        
-        return $maxId["max_id"];
+
+        return (int)isset($maxId['max_sort']) ? $maxId['max_sort'] : 0;
     }
     
     /**
@@ -1003,9 +1006,9 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
         
         return $asArray ? $properties : implode("||", $properties);
     }
-    
+
     /**
-     * generates data which contains all categorie ids which point to an product
+     * generates data which contains all category ids which point to a product
      *
      * @param $item array
      *
@@ -1013,56 +1016,50 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     public function getProductCategoryNumbers($item)
     {
-        $this->log("execute _getProductCategoryNumbers() ...", ShopgateLogger::LOGTYPE_DEBUG);
-        
+        $this->log('execute _getProductCategoryNumbers() ...', ShopgateLogger::LOGTYPE_DEBUG);
         $this->getProductOrderValues($maxOrder, $minOrder, $addToOrderIndex);
-        
-        $category_numbers = array();
-        
+        $categories = array();
+        /** @noinspection SqlDialectInspection */
         $catsQry   = "
             SELECT DISTINCT
                 ptc.categories_id,
                 c.products_sorting2
             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
             INNER JOIN " . TABLE_CATEGORIES . " c ON (ptc.categories_id = c.categories_id)
-            WHERE ptc.products_id = '" . $item["products_id"] . "'
+            WHERE ptc.products_id = '" . $item['products_id'] . "'
                 AND c.categories_status = 1
             ";
         $catsQuery = xtc_db_query($catsQry);
-        
+
         while ($category = xtc_db_fetch_array($catsQuery)) {
-            if (empty($category["categories_id"])) {
+            if (empty($category['categories_id'])) {
                 continue;
             }
-            
-            $catNumber = "";
-            
-            if ($category["products_sorting2"] != "ASC") {
-                
+
+            $catNumber = '';
+            if ($category['products_sorting2'] != 'ASC') {
                 if ($this->reverseItemSortOrder) {
-                    $sort = $this->getMaxProductUid() - $item["products_sort"];
+                    $sort = $this->getMaxProductSortPosition() - $item['products_sort'];
                 } else {
-                    $sort = $item["products_sort"];
+                    $sort = $item['products_sort'];
                 }
-                
             } else {
-                
                 if ($this->reverseItemSortOrder) {
-                    $sort = $item["products_sort"];
+                    $sort = $item['products_sort'];
                 } else {
-                    $sort = $this->getMaxProductUid() - $item["products_sort"];
+                    $sort = $this->getMaxProductSortPosition() - $item['products_sort'];
                 }
             }
-            
+
             if (!empty($sort) || ((string)$sort === '0')) {
                 $sort += $addToOrderIndex;
-                $catNumber = "=>" . $sort;
+                $catNumber = '=>' . $sort;
             }
-            $catNumber          = $category["categories_id"] . $catNumber;
-            $category_numbers[] = $catNumber;
+            $catNumber    = $category['categories_id'] . $catNumber;
+            $categories[] = $catNumber;
         }
-        
-        return $category_numbers;
+
+        return $categories;
     }
     
     /**

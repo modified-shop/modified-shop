@@ -130,7 +130,7 @@ class sgServicesJSON
     *                                   bubble up with an error, so all return values
     *                                   from encode() should be checked with isError()
     */
-    function sgServicesJSON($use = 0)
+    function __construct($use = 0)
     {
         $this->use = $use;
     }
@@ -795,7 +795,7 @@ class sgServicesJSON
      */
     class sgServicesJSON_Error
     {
-        function sgServicesJSON_Error($message = 'unknown error', $code = null,
+        function __construct($message = 'unknown error', $code = null,
                                      $mode = null, $options = null, $userinfo = null)
         {
 

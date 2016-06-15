@@ -18,9 +18,11 @@
  * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
  * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
  *
- * @author Shopgate GmbH <interfaces@shopgate.com>
+ * @author     Shopgate GmbH <interfaces@shopgate.com>
+ * @deprecated Will be removed in 3.0.0. Use Shopgate_Helper_Redirect_MobileRedirect instead.
  */
-class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRedirectInterface {
+class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRedirectInterface
+{
 	/**
 	 * @var string alias name of shop at Shopgate, e.g. 'yourshop' to redirect to 'http://yourshop.shopgate.com'
 	 */
@@ -156,16 +158,25 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	 * @var boolean determines if for a specific case the mobile redirect should be suppressed
 	 */
 	protected $suppressRedirect;
-
+	
+	/** @var Shopgate_Helper_Redirect_TagsGeneratorInterface */
+	protected $tagsGenerator;
+	
 	/**
 	 * Instantiates the Shopgate mobile redirector.
 	 *
-	 * @param ShopgateConfig $shopgateConfig An instance of the ShopgateConfig
-	 * @param ShopgateMerchantApiInterface $merchantApi An instance of the ShopgateMerchantApi required for keyword updates or null.
+	 * @param ShopgateConfigInterface                         $shopgateConfig An instance of the ShopgateConfig
+	 * @param ShopgateMerchantApiInterface                    $merchantApi    An instance of the ShopgateMerchantApi required for keyword updates or null.
+	 * @param Shopgate_Helper_Redirect_TagsGeneratorInterface $tagsGenerator
 	 */
-	public function __construct(ShopgateConfig $shopgateConfig, ShopgateMerchantApiInterface $merchantApi = null) {
-		$this->merchantApi = $merchantApi;
-		$this->config = $shopgateConfig;
+	public function __construct(
+		ShopgateConfigInterface $shopgateConfig,
+		ShopgateMerchantApiInterface $merchantApi = null,
+		Shopgate_Helper_Redirect_TagsGeneratorInterface $tagsGenerator = null
+	) {
+		$this->tagsGenerator = $tagsGenerator;
+		$this->merchantApi   = $merchantApi;
+		$this->config        = $shopgateConfig;
 		$this->setAlias($shopgateConfig->getAlias());
 		$this->setCustomMobileUrl($shopgateConfig->getCname());
 
@@ -358,6 +369,50 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		$linkTag = '';
 		if ($this->config->getShopIsActive() && !$this->suppressRedirect) {
 			$linkTag = $this->loadTemplate($this->linkTagTemplatePath);
+			
+			$htmlTags = $this->config->getHtmlTags();
+			if (!empty($htmlTags) && !empty($this->tagsGenerator)) {
+				$this->tagsGenerator->setHtmlTagsFromJson($htmlTags);
+				$types = array(
+					'item'       => array(
+						'pageType'   => Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_PRODUCT,
+						'parameters' => array('product_uid' => $this->itemNumber),
+					),
+					'itempublic' => array(
+						'pageType'   => Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_PRODUCT,
+						'parameters' => array('product_uid' => $this->itemNumberPublic),
+					),
+					'category'   => array(
+						'pageType'   => Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_CATEGORY,
+						'parameters' => array('category_uid' => $this->categoryNumber),
+					),
+					'cms'        => array(
+						'pageType'   => Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_CMS,
+						'parameters' => array('page_uid' => $this->cmsPage),
+					),
+					'brand'      => array(
+						'pageType'   => Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_BRAND,
+						'parameters' => array('brand_name' => $this->manufacturerName),
+					),
+					'search'     => array(
+						'pageType'   => Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_SEARCH,
+						'parameters' => array('search_query' => $this->searchQuery),
+					),
+					'start'      => array(
+						'pageType'   => Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_HOME,
+						'parameters' => array(),
+					),
+					'default'    => array(
+						'pageType'   => Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_DEFAULT,
+						'parameters' => array(),
+					),
+				);
+				
+				$linkTag = $this->tagsGenerator->getTagsFor(
+					$types[$this->redirectType]['pageType'],
+					$types[$this->redirectType]['parameters']
+				);
+			}
 		}
 		
 		if (!$this->config->getShopNumber()) {
@@ -456,13 +511,13 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		}
 		
 		// set parameters
-		$html = str_replace('{$link_tag}', $linkTag, $html);
-		$html = str_replace('{$mobile_url}', $mobileRedirectUrl, $html);
-		$html = str_replace('{$shop_number}', $this->config->getShopNumber(), $html);
-		$html = str_replace('{$redirect_code}', $redirectCode, $html);
-		$html = str_replace('{$additional_parameters}', $additionalParameters, $html);
-		$html = str_replace('{$ssl_url}', $sslUrl, $html);
-		$html = str_replace('{$non_ssl_url}', $nonSslUrl, $html);
+		$html = str_replace('{link_tags}', $linkTag, $html);
+		$html = str_replace('{mobile_url}', $mobileRedirectUrl, $html);
+		$html = str_replace('{shop_number}', $this->config->getShopNumber(), $html);
+		$html = str_replace('{redirect_code}', $redirectCode, $html);
+		$html = str_replace('{additional_parameters}', $additionalParameters, $html);
+		$html = str_replace('{ssl_url}', $sslUrl, $html);
+		$html = str_replace('{non_ssl_url}', $nonSslUrl, $html);
 		
 		return $html;
 	}
@@ -697,7 +752,7 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	}
 	
 	public function buildScriptSearch($searchQuery, $autoRedirect = true){
-		$this->searchQuery = addslashes($searchQuery);
+		$this->searchQuery = addslashes(htmlentities($searchQuery));
 		$this->redirectType = 'search';
 
 		$this->setAdditionalHttpHeaders();
@@ -743,7 +798,7 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
  * browser.
  *
  * @author Shopgate GmbH, 35510 Butzbach, DE
- *
+ * @deprecated Will be removed in 3.0.0. Use Shopgate_Helper_Redirect_MobileRedirect instead.
  */
 interface ShopgateMobileRedirectInterface {
 	const SHOPGATE_STATIC = 'http://static.shopgate.com';

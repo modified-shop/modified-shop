@@ -214,15 +214,19 @@ class ShopgateItemXmlModel extends ShopgateItemModel
         
         parent::setShipping($shipping);
     }
-    
+
     public function setManufacturer()
     {
-        $title             = $this->item['manufacturers_name'];
+        $title   = $this->item['manufacturers_name'];
+        $uid     = isset($this->item['manufacturers_id']) ? $this->item['manufacturers_id'] : 0;
+        $modelId =
+            isset($this->item['products_manufacturers_model']) ? $this->item['products_manufacturers_model'] : '';
+
         $manufacturerModel = new Shopgate_Model_Catalog_Manufacturer();
-        $manufacturerModel->setUid(bin2hex($title));
+        $manufacturerModel->setUid($uid);
         $manufacturerModel->setTitle($title);
-        $manufacturerModel->setItemNumber(false);
-        
+        $manufacturerModel->setItemNumber($modelId);
+
         parent::setManufacturer($manufacturerModel);
     }
     

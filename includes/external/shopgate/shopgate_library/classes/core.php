@@ -24,7 +24,7 @@
 ###################################################################################
 # define constants
 ###################################################################################
-define('SHOPGATE_LIBRARY_VERSION', '2.9.36');
+define("SHOPGATE_LIBRARY_VERSION", "2.9.45");
 define('SHOPGATE_LIBRARY_ENCODING' , 'UTF-8');
 define('SHOPGATE_BASE_DIR', realpath(dirname(__FILE__).'/../'));
 
@@ -89,7 +89,7 @@ function ShopgateShutdownHandler() {
  * @param string $errfile
  * @param int $errline
  * @param array $errContext
- * @return boolean
+ * @return bool
  * @see http://php.net/manual/en/function.set-error-handler.php
  */
 function ShopgateErrorHandler($errno, $errstr, $errfile, $errline, $errContext) {
@@ -1073,15 +1073,80 @@ class ShopgateBuilder {
 	 * Builds the Shopgate Library object graph for Shopgate mobile redirect and returns the instance.
 	 *
 	 * @return ShopgateMobileRedirect
+	 * 
+	 * @deprecated Will be removed in 3.0.0. Use SopgateBuilder::buildMobileRedirect() instead.
 	 */
 	public function buildRedirect() {
 		$merchantApi = $this->buildMerchantApi();
+		$settingsManager = new Shopgate_Helper_Redirect_SettingsManager(
+				$this->config,
+				$_GET,
+				$_COOKIE
+		);
+		
+		$templateParser = new Shopgate_Helper_Redirect_TemplateParser();
+		
+		$linkBuilder = new Shopgate_Helper_Redirect_LinkBuilder(
+				$settingsManager,
+				$templateParser
+		);
+		
+		$tagsGenerator = new Shopgate_Helper_Redirect_TagsGenerator(
+				$linkBuilder,
+				$templateParser
+		);
+		
 		$redirect = new ShopgateMobileRedirect(
 				$this->config,
-				$merchantApi
+				$merchantApi,
+				$tagsGenerator
 		);
 		
 		return $redirect;
+	}
+	
+	/**
+	 * Builds the Shopgate Library object graph for Shopgate mobile redirect and returns the instance.
+	 *
+	 * @param string $userAgent              The requesting entity's user agent, e.g. $_SERVER['HTTP_USER_AGENT']
+	 * @param array  $get    [string, mixed] A copy of $_GET or the query string in the form of $_GET.
+	 * @param array  $cookie [string, mixed] A copy of $_COOKIE or the request cookies in the form of $_COOKIE.
+	 *
+	 * @return Shopgate_Helper_Redirect_MobileRedirect
+	 */
+	public function buildMobileRedirect($userAgent, array $get, array $cookie) {
+		$settingsManager = new Shopgate_Helper_Redirect_SettingsManager($this->config, $get, $cookie);
+		$templateParser = new Shopgate_Helper_Redirect_TemplateParser();
+		
+		$linkBuilder = new Shopgate_Helper_Redirect_LinkBuilder(
+			$settingsManager,
+			$templateParser
+		);
+		
+		$redirector = new Shopgate_Helper_Redirect_Redirector(
+			$settingsManager,
+			new Shopgate_Helper_Redirect_KeywordsManager(
+				$this->buildMerchantApi(),
+				$this->config->getRedirectKeywordCachePath(),
+				$this->config->getRedirectSkipKeywordCachePath()
+			),
+			$linkBuilder,
+			$userAgent
+		);
+		
+		$tagsGenerator = new Shopgate_Helper_Redirect_TagsGenerator(
+			$linkBuilder,
+			$templateParser
+		);
+		
+		return new Shopgate_Helper_Redirect_MobileRedirect(
+			$redirector,
+			$tagsGenerator,
+			$settingsManager,
+			$templateParser,
+			dirname(__FILE__) . '/../assets/js_header.html',
+			$this->config->getShopNumber()
+		);
 	}
 }
 
@@ -1279,6 +1344,46 @@ abstract class ShopgateObject {
 		return ($destinationEncoding == SHOPGATE_LIBRARY_ENCODING) && !$force
 				? $string
 				: $this->convertEncoding($string, $destinationEncoding, SHOPGATE_LIBRARY_ENCODING, $useIconv);
+	}
+
+	/**
+	 * Encodes the values inside an array from a given encoding to UTF-8 recursively.
+	 *
+	 * @param array|string $array The array to encode.
+	 * @param string|string[] $sourceEncoding The (possible) encoding(s) of $string.
+	 * @param bool $force Set this true to enforce encoding even if the source encoding is already UTF-8.
+	 * @param bool $useIconv True to use iconv instead of mb_convert_encoding even if the mb library is present.
+	 * @return array|string $utf8Array The UTF-8 encoded array.
+	 */
+	public function arrayToUtf8($array, $sourceEncoding = 'ISO-8859-15', $force = false, $useIconv = false) {
+		if (is_array($array)) {
+			$utf8Array = array();
+			foreach ($array as $key => $value) {
+				$utf8Array[$key] = $this->arrayToUtf8($value, $sourceEncoding, $force, $useIconv);
+			}
+			return $utf8Array;
+		}
+		return $this->stringToUtf8($array, $sourceEncoding, $force, $useIconv);
+	}
+
+	/**
+	 * Decodes the values inside an array from UTF-8 to a given encoding recursively.
+	 *
+	 * @param array|string $utf8Array The array to decode.
+	 * @param string $destinationEncoding The desired encoding of the return value.
+	 * @param bool $force Set this true to enforce encoding even if the destination encoding is set to UTF-8.
+	 * @param bool $useIconv True to use iconv instead of mb_convert_encoding even if the mb library is present.
+	 * @return array|string $array The UTF-8 decoded array.
+	 */
+	public function arrayFromUtf8($utf8Array, $destinationEncoding = 'ISO-8859-15', $force = false, $useIconv = false) {
+		if (is_array($utf8Array)) {
+			$array = array();
+			foreach ($utf8Array as $key => $value) {
+				$array[$key] = $this->arrayFromUtf8($value, $destinationEncoding, $force, $useIconv);
+			}
+			return $array;
+		}
+		return $this->stringFromUtf8($utf8Array, $destinationEncoding, $force, $useIconv);
 	}
 	
 	/**
@@ -1501,7 +1606,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	
 	/**
 	 *
-	 * @var boolean true use tax classes for export
+	 * @var bool true use tax classes for export
 	 */
 	protected $useTaxClasses = false;
 	

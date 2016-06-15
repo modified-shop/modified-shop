@@ -255,7 +255,7 @@ class ShopgateExternalOrder extends ShopgateContainer {
 	}
 	
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setIsShippingCompleted($value) {
 		$this->is_shipping_completed = $value;
@@ -269,7 +269,7 @@ class ShopgateExternalOrder extends ShopgateContainer {
 	}
 	
 	/**
-	 * @param bool $value
+	 * @param int $value
 	 */
 	public function setIsPaid($value) {
 		$this->is_paid = $value;
@@ -534,10 +534,10 @@ class ShopgateExternalOrder extends ShopgateContainer {
 	}
 	
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getIsShippingCompleted() {
-		return $this->is_shipping_completed;
+		return (int)$this->is_shipping_completed;
 	}
 
 	/**
@@ -548,10 +548,10 @@ class ShopgateExternalOrder extends ShopgateContainer {
 	}
 	
 	/**
-	 * @return bool
+	 * @return int
 	 */
 	public function getIsPaid() {
-		return $this->is_paid;
+		return (int)$this->is_paid;
 	}
 	
 	/**
