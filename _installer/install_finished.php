@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: install_finished.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -89,6 +89,6 @@
       </tr>
     </table>
     <br />
-    <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?><br /><img src='http://images.modified-shop.org/modified200.gif' border='0' alt='modified eCommerce Shopsoftware'></div>
+    <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?><br /><img src='http://images.modified-shop.org/modified2010.gif' border='0' alt='modified eCommerce Shopsoftware'></div>
   </body>
 </html>
