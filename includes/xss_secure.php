@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -57,7 +57,7 @@ function xss_secure_params($secvalue, $ip, $type)
     $error = false;
     switch ($type) 
     {    
-        case 'get':        
+        case 'get':
             if ((preg_match("/<[^>]*script.*\"?[^>]*>/i", $secvalue)) ||
                 (preg_match("/.*[[:space:]](or|and)[[:space:]].*(=|like).*/i", $secvalue)) ||
                 (preg_match("/<[^>]*object.*\"?[^>]*>/i", $secvalue)) ||
@@ -70,6 +70,8 @@ function xss_secure_params($secvalue, $ip, $type)
                 (preg_match("/<[^>]*alert.*\"?[^>]*>/i", $secvalue)) ||
                 (preg_match("/<[^>]*img.*\"?[^>]*>/i", $secvalue)) ||
                 (preg_match("/<[^>]*document.*\"?[^>]*>/i", $secvalue)) ||
+                (preg_match("/(.*)select(.*)/i", $secvalue)) ||
+                (preg_match("/(.*)concat(.*)/i", $secvalue)) ||
                 (preg_match("/<[^>]*cookie.*\"?[^>]*>/i", $secvalue))) 
             {
                 $error = true;
@@ -85,6 +87,8 @@ function xss_secure_params($secvalue, $ip, $type)
                 (preg_match("/<[^>]*alert.*\"?[^>]*>/i", $secvalue)) ||
                 (preg_match("/<[^>]*document.*\"?[^>]*>/i", $secvalue)) ||
                 (preg_match("/<[^>]*cookie.*\"?[^>]*>/i", $secvalue)) ||
+                (preg_match("/(.*)select(.*)/i", $secvalue)) ||
+                (preg_match("/(.*)concat(.*)/i", $secvalue)) ||
                 (preg_match("/<[^>]*meta.*\"?[^>]*>/i", $secvalue))) 
             {
                 $error = true;
@@ -104,6 +108,8 @@ function xss_secure_params($secvalue, $ip, $type)
                 (preg_match("/<[^>]*alert.*\"?[^>]*>/i", $secvalue)) ||
                 (preg_match("/<[^>]*document.*\"?[^>]*>/i", $secvalue)) ||
                 (preg_match("/<[^>]*cookie.*\"?[^>]*>/i", $secvalue)) ||
+                (preg_match("/(.*)select(.*)/i", $secvalue)) ||
+                (preg_match("/(.*)concat(.*)/i", $secvalue)) ||
                 (preg_match("/<[^>]*img.*\"?[^>]*>/i", $secvalue))) 
             {
                 $error = true;
@@ -119,10 +125,10 @@ function xss_secure_params($secvalue, $ip, $type)
           if (defined('XSS_BLACKLIST') && XSS_BLACKLIST === true) { 
             xss_add_blacklist($ip);
             //Redirect
-            header("Location: error.html");
+            header("Location: ".XSS_BASE."error.html");
           } else {
             //Redirect
-            header("Location: index.php");
+            header("Location: ".XSS_BASE."index.php");
           }
           exit();
       }
@@ -273,12 +279,15 @@ function xss_add_blacklist($ip)
 
 function xss_write_blacklist($blacklist_arr)
 {
-  $blackliste_write = array();
   $blacklist_file = XSS_PATH. 'log/xss_blacklist.log';  
   $fp = fopen($blacklist_file, 'w');
+  flock($fp, LOCK_EX);
+  ftruncate($fp, 0);
+  rewind($fp);
   foreach(array_keys($blacklist_arr) as $key){    
     @fwrite($fp, $key . ';' . $blacklist_arr[$key] . "\r\n");
   }
+  flock($fp, LOCK_UN);
   @fclose($fp);
 }
 
@@ -288,16 +297,17 @@ function xss_read_blacklist()
   $blacklist_arr = array();
   $blacklist_file = XSS_PATH. 'log/xss_blacklist.log';
   if (is_file($blacklist_file)) {
-    if (($fp = fopen($blacklist_file, 'r')) !== false) {
-      while (($blacklist_val = @fgetcsv($fp, 4096, ';')) !== false) {
-        if (is_array($blacklist_val) && count($blacklist_val) == 2) {
-          if (($blacklist_val[1]+XSS_BLACKLIST_TIME) > time()) {
-            $blacklist_arr[$blacklist_val[0]] = $blacklist_val[1];
-          }
+    $fp = fopen($blacklist_file, 'r');
+    flock($fp, LOCK_EX);
+    while (($blacklist_val = @fgetcsv($fp, 4096, ';')) !== false) {
+      if (is_array($blacklist_val) && count($blacklist_val) == 2) {
+        if (($blacklist_val[1]+XSS_BLACKLIST_TIME) > time()) {
+          $blacklist_arr[$blacklist_val[0]] = $blacklist_val[1];
         }
       }
-      fclose($fp);
     }
+    flock($fp, LOCK_UN);
+    fclose($fp);
   }
   return $blacklist_arr;
 }
@@ -305,6 +315,10 @@ function xss_read_blacklist()
 // here comes the action
 error_reporting(0);
 define('XSS_PATH', str_replace('\\', '/', dirname(dirname(__FILE__))) . '/');
+
+// set base 
+$ssl_proxy = ((isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? '/' . $_SERVER['HTTP_HOST'] : ''); 
+define('XSS_BASE', $ssl_proxy . preg_replace('/\\' . DIRECTORY_SEPARATOR . '\/|\/\//', '/', dirname($PHP_SELF) . '/')); 
 
 $ip = '';
 if (defined('XSS_BLACKLIST') && XSS_BLACKLIST) {
@@ -316,7 +330,7 @@ if (defined('XSS_BLACKLIST') && XSS_BLACKLIST) {
     xss_write_blacklist($blacklist_arr);
 
     //Redirect
-    header("Location: error.html");
+    header("Location: ".XSS_BASE."error.html");
     exit();
   }
 }
