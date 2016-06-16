@@ -1065,7 +1065,7 @@ CREATE TABLE products_tags (
   products_options_id int(11) NOT NULL DEFAULT '0',
   products_options_values_id int(11) NOT NULL DEFAULT '0',
   KEY idx_products_options_values (products_id,options_id,values_id),
-  KEY idx_products_options_id (products_options_id)
+  KEY idx_products_options_id (products_options_id),
   KEY idx_options_id (options_id),
   KEY idx_values_id (values_id),
 ) ENGINE=MyISAM;
