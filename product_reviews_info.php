@@ -53,6 +53,7 @@ $reviews_query = xtc_db_query("SELECT r.*,
                                 WHERE r.reviews_id = '".(int) $_GET['reviews_id']."'
                                   AND r.products_id = '".(int) $_GET['products_id']."'
                                   AND p.products_status = '1'
+                                  AND r.reviews_status = '1'
                                       ".PRODUCTS_CONDITIONS_P);
 
 if (xtc_db_num_rows($reviews_query) < 1) {

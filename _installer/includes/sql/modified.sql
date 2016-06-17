@@ -552,6 +552,7 @@ CREATE TABLE customers_status (
   customers_fsk18_display INT(1) NOT NULL DEFAULT 1,
   customers_status_write_reviews INT(1) NOT NULL DEFAULT 1,
   customers_status_read_reviews INT(1) NOT NULL DEFAULT 1,
+  customers_status_reviews_status INT(1) NOT NULL DEFAULT 1,
   customers_status_specials INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (customers_status_id, language_id),
   UNIQUE idx_customers_status_name (customers_status_name, language_id)
@@ -1152,6 +1153,7 @@ CREATE TABLE reviews (
   date_added DATETIME,
   last_modified DATETIME,
   reviews_read INT(5) NOT NULL DEFAULT 0,
+  reviews_status INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (reviews_id),
   KEY idx_products_id (products_id)
 ) ENGINE=MyISAM;

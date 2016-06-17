@@ -60,6 +60,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
                               AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                      WHERE p.products_status = '1'
                            ".PRODUCTS_CONDITIONS_P."
+                       AND r.reviews_status = '1'
                   ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
                      LIMIT 1";
   $reviews_query = xtc_db_query($reviews_query);

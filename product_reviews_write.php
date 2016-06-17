@@ -80,6 +80,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process') {
                               'customers_id' => (int) $_SESSION['customer_id'],
                               'customers_name' => $author,
                               'reviews_rating' => $rating,
+                              'reviews_status' => $_SESSION['customers_status']['customers_status_reviews_status'],
                               'date_added' =>  'now()'
                               );
       xtc_db_perform(TABLE_REVIEWS,$sql_data_array);

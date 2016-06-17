@@ -33,6 +33,7 @@ define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE','Preis');
 define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX','Preise inkl. MwSt.');
 define('ENTRY_CUSTOMERS_STATUS_WRITE_REVIEWS','Kundengruppe darf Produktrezensionen schreiben?');
 define('ENTRY_CUSTOMERS_STATUS_READ_REVIEWS','Kundengruppe darf Produktrezensionen lesen?');
+define('ENTRY_CUSTOMERS_STATUS_REVIEWS_STATUS','Produktrezensionen automatisch freischalten?');
 define('ENTRY_GRADUATED_PRICES','Staffelpreise');
 define('ENTRY_NO','Nein');
 define('ENTRY_OT_XMEMBER', 'Kundenrabatt auf Gesamtbestellwert? :');
@@ -77,6 +78,7 @@ define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_INTRO','<strong>Preisanzeige im Sh
 define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_INTRO', '<strong>M&ouml;chten Sie die Preise inklusive oder exklusive MwSt. anzeigen?</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_WRITE_REVIEWS_INTRO','<strong>Produktrezensionen schreiben</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_READ_REVIEWS_INTRO', '<strong>Produktrezensionen lesen</strong>');
+define('TEXT_INFO_CUSTOMERS_STATUS_REVIEWS_STATUS_INTRO', '<strong>Produktrezensionen freischalten</strong>');
 
 define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese Kundengruppe l&ouml;schen wollen?');
 define('TEXT_INFO_EDIT_INTRO', 'Bitte nehmen Sie alle n&ouml;tigen Einstellungen vor');

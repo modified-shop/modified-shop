@@ -57,6 +57,7 @@ $reviews_query_raw = "SELECT r.reviews_id,
                                 AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                        WHERE p.products_status = '1'
                              ".PRODUCTS_CONDITIONS_P."
+                         AND r.reviews_status = '1'
                     ORDER BY r.reviews_id DESC";
                     
 $reviews_split = new splitPageResults($reviews_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_NEW_REVIEWS);
