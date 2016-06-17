@@ -49,7 +49,8 @@
                          AND rd.languages_id = '" . (int)$_SESSION['languages_id'] . "'
                          AND p.products_id = pd.products_id
                          AND trim(pd.products_name) != ''
-                         AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+                         AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                         AND r.reviews_status = '1'";
 
     if ($product->isProduct() === true) {
       $random_select .= " AND p.products_id = '" . $product->data['products_id'] . "'";
