@@ -33,6 +33,7 @@ define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE','Price');
 define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX','Prices incl. Tax');
 define('ENTRY_CUSTOMERS_STATUS_WRITE_REVIEWS','Customer group is allowed to write reviews?');
 define('ENTRY_CUSTOMERS_STATUS_READ_REVIEWS','Customer group is allowed to read reviews?');
+define('ENTRY_CUSTOMERS_STATUS_REVIEWS_STATUS','Activate reviews automatic?');
 define('ENTRY_GRADUATED_PRICES','Graduated Prices');
 define('ENTRY_NO','No');
 define('ENTRY_OT_XMEMBER', 'Customer Discount on order total? :');
@@ -77,6 +78,7 @@ define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_INTRO','<strong>Show price in shop
 define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_INTRO', '<strong>Do you want to display prices inclusive or exclusive tax?</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_WRITE_REVIEWS_INTRO','<strong>Productsreview write</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_READ_REVIEWS_INTRO', '<strong>Productsreview read</strong>');
+define('TEXT_INFO_CUSTOMERS_STATUS_REVIEWS_STATUS_INTRO', '<strong>Productsreview status</strong>');
 
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this customer group?');
 define('TEXT_INFO_EDIT_INTRO', 'Please make all neccessary changes');
