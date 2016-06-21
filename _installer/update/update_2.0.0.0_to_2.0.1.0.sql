@@ -219,4 +219,7 @@ UPDATE geo_zones SET geo_zone_info = '1' WHERE geo_zone_id = '6';
 ALTER TABLE `products_tags` ADD INDEX idx_options_id (`options_id`),
 ALTER TABLE `products_tags` ADD INDEX idx_values_id (`values_id`),
 
+#GTB - 2016-06-17 - extend reviews for status
+ALTER TABLE customers_status ADD customers_status_reviews_status INT(1) NOT NULL DEFAULT 1 AFTER customers_status_read_reviews;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
