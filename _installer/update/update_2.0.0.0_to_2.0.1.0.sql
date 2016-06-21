@@ -216,8 +216,8 @@ INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`
 UPDATE geo_zones SET geo_zone_info = '1' WHERE geo_zone_id = '6';
 
 #GTB - 2016-06-09 - add index products_tags
-ALTER TABLE `products_tags` ADD INDEX idx_options_id (`options_id`),
-ALTER TABLE `products_tags` ADD INDEX idx_values_id (`values_id`),
+ALTER TABLE `products_tags` ADD INDEX idx_options_id (`options_id`);
+ALTER TABLE `products_tags` ADD INDEX idx_values_id (`values_id`);
 
 #GTB - 2016-06-17 - extend reviews for status
 ALTER TABLE customers_status ADD customers_status_reviews_status INT(1) NOT NULL DEFAULT 1 AFTER customers_status_read_reviews;
