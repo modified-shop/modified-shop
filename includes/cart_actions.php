@@ -413,6 +413,9 @@ if (xtc_not_null($action)) {
       xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array_merge(array('id'), $parameters)), $request_type));
       break;
 
+    case 'custom':
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/custom/','php') as $file) require ($file);
+      break;
   }
 }
 ?>
