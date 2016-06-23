@@ -11,11 +11,27 @@
    --------------------------------------------------------------*/
 
 /* NEUE FUNKTION  by web28 - www.rpa-com.de
-Hier koennen neue Zusatzfelder definiert werden
-Bezeichnung genauso wie das neue Tabellenfeld, kommagetrennt ohne Leerzeichen
-Die neuen Felder werden automatisch gespeichert bzw. mitkopiert
-Beispiel neueTabellenfelder in der Tabelle products: products_manufacturer_model, products_shipping_class
-define('ADD_PRODUCTS_FIELDS','products_manufacturer_model,products_shipping_class');
+IN DIESER DATEI MUSS NICHTS GEÄNDERT WERDEN!!!!
+
+Hier koennen neue Zusatzfelder definiert werden, in dieses Verzeichnis einfach ein neue PHP Datei einfügen:
+
+admin/includes/extra/modules/add_db_fields/
+
+Inhalt der PHP Datei (Beispiel):
+Bezeichnung genauso wie das neue Tabellenfeld als Array Wert
+
+Beispiel neues Feld in Tabelle products:
+$add_products_fields[] = 'products_neues_feld'; 
+
+Beispiel neues Feld in Tabelle products_description:
+$add_products_description_fields[] = 'products_desc_neues_feld'; 
+
+Beispiel neues Feld in Tabelle categories:
+$add_categories_fields[] = 'categories_neues_feld'; 
+
+Beispiel neues Feld in Tabelle categories_description:
+$add_categories_description_fields[] = 'categories_desc_neues_feld'; 
+
 */
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
