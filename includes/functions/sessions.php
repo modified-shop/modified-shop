@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: sessions.php 3570 2012-08-30 16:15:47Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -50,29 +50,36 @@
           return base64_decode($value['value']);
         }
       }
+      
+      return '';
     }
 
     function _sess_write($key, $val) {
       global $SESS_LIFE;
 
       $flag = '';
-      if (isset($_SESSION['customers_status']['customers_status']) && $_SESSION['customers_status']['customers_status'] == '0') {
+      if (isset($_SESSION['customers_status']['customers_status']) 
+          && $_SESSION['customers_status']['customers_status'] == '0'
+          )
+      {
         $SESS_LIFE = defined('SESSION_LIFE_ADMIN') ? (int)SESSION_LIFE_ADMIN : (int)SESSION_LIFE_ADMIN_DEFAULT;
         $flag = 'admin';
       }
       $expiry = time() + (int)$SESS_LIFE;
       $value = base64_encode($val);
 
-      return xtc_db_query("REPLACE INTO " . TABLE_SESSIONS . " (sesskey, expiry, value, flag)
-                                 VALUES ('". xtc_db_input($key) ."', '".(int)$expiry."', '".xtc_db_input($value)."', '".xtc_db_input($flag)."')");
+      $result = xtc_db_query("INSERT INTO " . TABLE_SESSIONS . " (sesskey, expiry, value, flag)
+                              VALUES ('". xtc_db_input($key) ."', '".(int)$expiry."', '".xtc_db_input($value)."', '".xtc_db_input($flag)."')
+                              ON DUPLICATE KEY UPDATE expiry = '".(int)$expiry."', value = '".xtc_db_input($value)."', flag = '".xtc_db_input($flag)."'");
+
+      if (xtc_db_affected_rows() > 0) {
+        return true;
+      }
+  
+      return false;
     }
 
     function _sess_destroy($key) {
-      global $current_domain;
-      
-      if (isset($_COOKIE[xtc_session_name()])) {
-        xtc_setcookie(xtc_session_name(), $_COOKIE[xtc_session_name()], (time() - 3600), '/', (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
-      }
       xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($key) . "'");
       
       return true;
@@ -104,12 +111,18 @@
   }
 
 
-  function xtc_session_start() {
+  function xtc_session_start($recreate = true) {
     if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '') {
-      xtc_session_id(md5(uniqid(rand(), true)));
+      xtc_session_id(xtc_generate_session_id());
     }
     $temp = session_start();
-
+    
+    if ($recreate === true && SESSION_RECREATE == 'True') {
+      if (mt_rand(1, 100) <= 50) {
+        xtc_session_recreate();
+      }
+    }
+    
     return $temp;
   }
 
@@ -121,7 +134,7 @@
     if (!empty($sessid)) {
       $tempSessid = $sessid;
       if (preg_replace('/[a-zA-Z0-9]/', '', $tempSessid) != '') {
-       $sessid = md5(uniqid(rand(), true));
+       $sessid = xtc_generate_session_id();
       }
       return session_id($sessid);
     } else {
@@ -142,6 +155,12 @@
   }
 
   function xtc_session_destroy() {
+    global $current_domain;
+    
+    if (isset($_COOKIE[xtc_session_name()])) {
+      require_once(DIR_FS_INC.'set_session_cookie.inc.php');
+      set_session_cookie((time() - 3600), DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
+    }
     return session_destroy();
   }
 
@@ -161,20 +180,13 @@
       $session_backup = $_SESSION;
       $old_session_id = xtc_session_id();
       
-      // regenerate session
-      session_regenerate_id();
-      
-      // write session
+      // delete old session
       session_write_close();
       
-      // delete old session
-      $new_session_id = xtc_session_id();
-      xtc_session_id($old_session_id);
-      xtc_session_destroy();
-      
       // set new session
+      $new_session_id = xtc_generate_session_id();
       xtc_session_id($new_session_id);
-      xtc_session_start();
+      xtc_session_start(false);
       $_SESSION = $session_backup;
 
       if (STORE_SESSIONS == 'mysql') {
@@ -189,7 +201,18 @@
                      WHERE session_id = '".xtc_db_input($old_session_id)."'");      
     }
   }
-
+  
+  function xtc_generate_session_id() {
+    $session_id = md5(openssl_random_pseudo_bytes(128));
+    $check_query = xtc_db_query("SELECT sesskey
+                                   FROM " . TABLE_SESSIONS . "
+                                  WHERE sesskey = '" . xtc_db_input($session_id) . "'");
+    if (xtc_db_num_rows($check_query) > 0) {
+      xtc_generate_session_id();
+    }
+    return $session_id;
+  }
+  
   function unserialize_session_data( $session_data ) {
     //check for suhosin.session.encrypt
     if (suhosin_check()) return 'ENCRYPTED';

@@ -17,9 +17,11 @@
    ---------------------------------------------------------------------------------------*/
 
 function xtc_get_top_level_domain($url) {
-  // set empty array
-  $return_array = array('old' => '', 
-                        'new' => '');
+  // set array
+  $return_array = array(
+    'old' => '', 
+    'new' => get_cookie_domain($url)
+  );
 
   if (strpos($url, '://')) {
     $url = parse_url($url);
@@ -34,16 +36,26 @@ function xtc_get_top_level_domain($url) {
       $return_array['old'] = $domain_array[$domain_size - 2] . '.' . $domain_array[$domain_size - 1];
       
       // new routine
-      $domain_path = $url;
-      if(substr($domain_path, 0, 4) == 'www.') {
-          $domain_path = substr($domain_path, 4);
+      if ($return_array['new'] === false) {
+        $domain_path = $url;
+        if(substr($domain_path, 0, 4) == 'www.') {
+            $domain_path = substr($domain_path, 4);
+        }
+        $return_array['new'] = $domain_path;
       }
-      $return_array['new'] = $domain_path;
-    
     }
   }
   
   return $return_array;
+}
+
+function get_cookie_domain($url) {
+  $url_array = parse_url($url);
+  $domain = $url_array['host'];
+  if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
+    return $regs['domain'];
+  }
+  return false;
 }
 
 
