@@ -1454,7 +1454,6 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_CHECK_SSL_SESSION_ID', 'False', 6, 100, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_CHECK_USER_AGENT', 'False', 6, 100, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_CHECK_IP_ADDRESS', 'False', 6, 100, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_RECREATE', 'False', 6, 100, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');
 
 # configuration_group_id 7, Shipping/Packaging
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SHIPPING_MAX_WEIGHT', '50', 7, 3, NULL, NOW(), NULL, NULL);
@@ -1579,8 +1578,9 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 # configuration_group_id 15, Sessions
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_WRITE_DIRECTORY', '/tmp', 15, 1, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_FORCE_COOKIE_USE', 'False', 15, 2, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_LIFE_CUSTOMERS', '1440', '15', '20', NULL, NOW(), NULL, NULL);
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_LIFE_ADMIN', '7200', '15', '21', NULL, NOW(), NULL, NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_RECREATE', 'False', 15, 3, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_LIFE_CUSTOMERS', '1440', 15, 20, NULL, NOW(), NULL, NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_LIFE_ADMIN', '7200', 15, 21, NULL, NOW(), NULL, NULL);
 
 # configuration_group_id 16, Meta-Tags/Search engines
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'META_MAX_KEYWORD_LENGTH', '18', 16, 1, NULL, NOW(), NULL, NULL);
