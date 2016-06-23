@@ -1,12 +1,12 @@
 /*
-  $Id: jquery.sidebar.js 84 2016-06-05 12:49:10Z Tomcraft $
-
-* id, col_left = gesamte sidebar
-* class, sidebar_btn = schalter zum umschalten
-* class, sidebar_marker = Markierung für die Art der Ansicht, wenn hier die font-size > 0, dann mobile
-* layout_navbar, layout_logo, layout_content, layout_footer
-* col_left, sidebar_filler
-*/
+ * $Id: jquery.sidebar.js 87 2016-06-06 09:38:11Z Tomcraft $
+ *
+ * id, col_left = gesamte sidebar
+ * class, sidebar_btn = schalter zum umschalten
+ * class, sidebar_marker = Markierung für die Art der Ansicht, wenn hier die font-size > 0, dann mobile
+ * layout_navbar, layout_logo, layout_content, layout_footer
+ * col_left, sidebar_filler
+ */
 var marker = null;
 var markerSize = null;
 var windowWidth = null;
