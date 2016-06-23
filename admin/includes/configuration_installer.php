@@ -260,6 +260,23 @@ $values_group_update = array();
   $values[] = "(NULL, 'SESSION_LIFE_CUSTOMERS', '1440', '15', '20', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'SESSION_LIFE_ADMIN', '7200', '15', '21', NULL, NOW(), NULL, NULL);";
 
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '15'",
+                           'configuration_key' => 'SESSION_RECREATE'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '6', configuration_value = 'False'",
+                           'configuration_key' => 'SESSION_CHECK_SSL_SESSION_ID'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '6', configuration_value = 'False'",
+                           'configuration_key' => 'SESSION_CHECK_USER_AGENT'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '6', configuration_value = 'False'",
+                           'configuration_key' => 'SESSION_CHECK_IP_ADDRESS'
+                           );
+
 //configuration_group_id 16 --- "Metatags Suchmaschinen"
   $values[] = "(NULL, 'DISPLAY_BREADCRUMB_OPTION', 'name', '16', '15', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'name\', \'model\'),');";
   $values[] = "(NULL, 'META_MAX_KEYWORD_LENGTH', '18', '16', '1', NULL, NOW(), NULL, NULL);";
