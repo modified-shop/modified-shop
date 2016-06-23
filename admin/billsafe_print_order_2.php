@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: billsafe_print_order_2.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -62,7 +62,15 @@ $smarty->assign('vatID',$order->customer['vat_id']);
 $order_query = xtc_db_query('SELECT *, COUNT(articlenumber) AS quantity FROM billsafe_orders_details_2 WHERE ordernumber = "'.xtc_db_input($order_id).'" AND articletype = "goods" AND storno = 0 AND retoure = 0 GROUP BY articlenumber, articlename, articleprice;');
 $order_data = array();
 while ($order_data_values = xtc_db_fetch_array($order_query)) {
-  $order_data[] = array('PRODUCTS_MODEL' => $order_data_values['articlenumber'], 'PRODUCTS_NAME' => $order_data_values['articlename'], 'PRODUCTS_ATTRIBUTES' => '', 'PRODUCTS_ATTRIBUTES_MODEL' => '', 'PRODUCTS_PRICE' => xtc_format_price_order($order_data_values['articleprice'] * $order_data_values['quantity'], 1, $order->info['currency']), 'PRODUCTS_QTY' => $order_data_values['quantity']);
+  $order_data[] = array(
+    'PRODUCTS_MODEL' => $order_data_values['articlenumber'], 
+    'PRODUCTS_NAME' => $order_data_values['articlename'], 
+    'PRODUCTS_ATTRIBUTES' => '', 
+    'PRODUCTS_ATTRIBUTES_MODEL' => '', 
+    'PRODUCTS_SINGLE_PRICE' => xtc_format_price_order($order_data_values['articleprice'], 1, $order->info['currency']), 
+    'PRODUCTS_PRICE' => xtc_format_price_order($order_data_values['articleprice'] * $order_data_values['quantity'], 1, $order->info['currency']), 
+    'PRODUCTS_QTY' => $order_data_values['quantity']
+  );
   $total = $total + $order_data_values['articleprice'] * $order_data_values['quantity'];
   for ($i = 0; $i < $countTaxRates; $i++) {
     if ($taxRate[$i] == number_format($order_data_values['articletax'], 2, '.', '')) $tax[$i] = $tax[$i] + (($order_data_values['articleprice'] / (100 + $order_data_values['articletax'])) * $order_data_values['articletax'] * $order_data_values['quantity']);
