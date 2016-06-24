@@ -192,6 +192,17 @@ foreach ($script_array as $script) {
     unset($_SESSION['new_products_id_in_cart']);
     unset($_SESSION['new_products_id_in_wishlist']);
   } ?>
+
+  jQuery.extend(jQuery.colorbox.settings, {
+          current: "<?php echo TEXT_COLORBOX_CURRENT; ?>",
+          previous: "<?php echo TEXT_COLORBOX_PREVIOUS; ?>",
+          next: "<?php echo TEXT_COLORBOX_NEXT; ?>",
+          close: "<?php echo TEXT_COLORBOX_CLOSE; ?>",
+          xhrError: "<?php echo TEXT_COLORBOX_XHRERROR; ?>",
+          imgError: "<?php echo TEXT_COLORBOX_IMGERROR; ?>",
+          slideshowStart: "<?php echo TEXT_COLORBOX_SLIDESHOWSTART; ?>",
+          slideshowStop: "<?php echo TEXT_COLORBOX_SLIDESHOWSTOP; ?>"
+  });
 </script>
 <?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { ?>
 <script type="text/javascript">
