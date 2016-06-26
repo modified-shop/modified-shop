@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: boxes.php 3409 2012-08-10 12:47:17Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -26,7 +26,9 @@
   require_once(DIR_FS_BOXES . 'languages.php'); 
   require_once(DIR_FS_BOXES . 'infobox.php');
   require_once(DIR_FS_BOXES . 'loginbox.php');
-  require_once(DIR_FS_BOXES . 'newsletter.php');
+  if (defined('MODULE_NEWSLETTER_STATUS') && MODULE_NEWSLETTER_STATUS == 'true') {
+    require_once(DIR_FS_BOXES . 'newsletter.php');
+  }
   if (defined('MODULE_TS_TRUSTEDSHOPS_ID') 
       && (MODULE_TS_WIDGET == '1'
           || (MODULE_TS_REVIEW_STICKER != '' && MODULE_TS_REVIEW_STICKER_STATUS == '1'))

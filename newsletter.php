@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -20,6 +20,10 @@
    ---------------------------------------------------------------------------------------*/
 
 require ('includes/application_top.php');
+
+if (!defined('MODULE_NEWSLETTER_STATUS') || MODULE_NEWSLETTER_STATUS == 'false') {
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
+}
 
 // captcha
 $use_captcha = array('newsletter');
