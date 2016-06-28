@@ -70,7 +70,7 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
   $truncate_session_id = true;
   $session_started = false;
   // Redirect search engines with session id to the same url without session id to prevent indexing session id urls
-  if (strpos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false || preg_match('/XTCsid/i', $_SERVER['REQUEST_URI'])) {
+  if (stripos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false || preg_match('/XTCsid/i', $_SERVER['REQUEST_URI'])) {
     redirect_invalid_session();
   }
 } else {
