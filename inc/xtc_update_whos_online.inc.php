@@ -59,26 +59,9 @@
     // remove entries that have expired
     xtc_db_query("DELETE FROM " . TABLE_WHOS_ONLINE . " WHERE time_last_click < '" . $xx_mins_ago . "'");
 
-    $stored_customer_query = xtc_db_query("SELECT count(*) as count 
-                                             FROM " . TABLE_WHOS_ONLINE . " 
-                                            WHERE session_id = '" . xtc_db_input($wo_session_id) . "'");
-    $stored_customer = xtc_db_fetch_array($stored_customer_query);
-
-    $sql_data_array = array('customer_id' => (int)$wo_customer_id,
-                            'full_name' => xtc_db_prepare_input($wo_full_name),
-                            'ip_address' => $wo_ip_address,
-                            'time_last_click' => $current_time,
-                            'last_page_url' => $wo_last_page_url,
-                            );
-
-    if ($stored_customer['count'] > 0) {
-      xtc_db_perform(TABLE_WHOS_ONLINE,$sql_data_array,'update', "session_id = '".$wo_session_id."'");
-    } else {
-      $sql_data_array['time_entry'] = $current_time;
-      $sql_data_array['session_id'] = $wo_session_id;
-      $sql_data_array['http_referer'] = $wo_referer;
-      xtc_db_perform(TABLE_WHOS_ONLINE,$sql_data_array);
-    }
+    xtc_db_query("INSERT INTO " . TABLE_WHOS_ONLINE . " (customer_id, full_name, session_id, time_entry, ip_address, time_last_click, last_page_url, http_referer)
+                       VALUES ('". (int)$wo_customer_id ."', '".xtc_db_input($wo_full_name)."', '".xtc_db_input($wo_session_id)."', '".xtc_db_input($current_time)."', '".xtc_db_input($wo_ip_address)."', '".xtc_db_input($current_time)."', '".xtc_db_input($wo_last_page_url)."', '".xtc_db_input($wo_referer)."')
+                       ON DUPLICATE KEY UPDATE customer_id = '".(int)$wo_customer_id."', full_name = '".xtc_db_input($wo_full_name)."', ip_address = '".xtc_db_input($wo_ip_address)."', time_last_click = '".xtc_db_input($current_time)."', last_page_url = '".xtc_db_input($wo_last_page_url)."'");
 
   }
 ?>
