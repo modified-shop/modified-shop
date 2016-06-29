@@ -17,12 +17,15 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  $box_order_history = '';
+// include smarty
+include(DIR_FS_BOXES_INC . 'smarty_default.php');
+
+// set cache id
+$cache_id = md5($_SESSION['language'].((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : '0'));
+
+if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_newsletter.html', $cache_id) || !$cache) {
 
   if (isset($_SESSION['customer_id'])) {
-
-    $box_smarty = new smarty;
-    $customer_orders_array = array();
 
     // retreive the last x products purchased
     $orders_query = xtc_db_query("SELECT DISTINCT p.products_id,
@@ -54,13 +57,14 @@
     }
 
     $box_smarty->assign('BOX_CONTENT', $customer_orders_array);
-
-    $box_smarty->caching = 0;
-    $box_smarty->assign('language', $_SESSION['language']);
-    $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/'); 
-    $box_order_history = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_order_history.html');
   }
+}
 
-  $smarty->assign('box_HISTORY', $box_order_history);
+if (!$cache) {
+  $box_order_history = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_order_history.html');
+} else {
+  $box_order_history = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_order_history.html', $cache_id);
+}
 
+$smarty->assign('box_HISTORY', $box_order_history);
 ?>

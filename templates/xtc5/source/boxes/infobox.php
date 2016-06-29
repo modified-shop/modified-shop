@@ -20,30 +20,41 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-$box_smarty = new smarty;
-$box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/' . CURRENT_TEMPLATE . '/');
-$box_content = '';
 
-if ($_SESSION['customers_status']['customers_status_image'] != '') {
-	$loginboxcontent = xtc_image('images/icons/' . $_SESSION['customers_status']['customers_status_image']) . '<br />';
+// include smarty
+include(DIR_FS_BOXES_INC . 'smarty_default.php');
+
+// set cache id
+$cache_id = md5($_SESSION['language'] . $_SESSION['customers_status']['customers_status']);
+
+if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_infobox.html', $cache_id) || !$cache) {
+
+  $box_content = '';
+  if ($_SESSION['customers_status']['customers_status_image'] != '') {
+  	$box_content = xtc_image('images/icons/' . $_SESSION['customers_status']['customers_status_image']) . '<br />';
+  }
+
+  $box_content .= BOX_LOGINBOX_STATUS . ' <strong>' . $_SESSION['customers_status']['customers_status_name'] . '</strong><br />';
+
+  if ($_SESSION['customers_status']['customers_status_show_price'] == 0) {
+    $box_content .= NOT_ALLOWED_TO_SEE_PRICES_TEXT;
+  } else {
+    if ($_SESSION['customers_status']['customers_status_discount'] != '0.00') {
+      $box_content .= BOX_LOGINBOX_DISCOUNT . ' ' . $_SESSION['customers_status']['customers_status_discount'] . '%<br />';
+    }
+    if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1 && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00') {
+      $box_content .= BOX_LOGINBOX_DISCOUNT_TEXT . ' ' . $_SESSION['customers_status']['customers_status_ot_discount'] . ' % ' . BOX_LOGINBOX_DISCOUNT_OT . '<br />';
+    }
+  }
+
+  $box_smarty->assign('BOX_CONTENT', $box_content);
 }
-$loginboxcontent .= BOX_LOGINBOX_STATUS . ' <strong>' . $_SESSION['customers_status']['customers_status_name'] . '</strong><br />';
-if ($_SESSION['customers_status']['customers_status_show_price'] == 0) {
-	$loginboxcontent .= NOT_ALLOWED_TO_SEE_PRICES_TEXT;
+
+if (!$cache) {
+  $box_infobox = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_infobox.html');
 } else {
-	if ($_SESSION['customers_status']['customers_status_discount'] != '0.00') {
-		$loginboxcontent .= BOX_LOGINBOX_DISCOUNT . ' ' . $_SESSION['customers_status']['customers_status_discount'] . '%<br />';
-	}
-	if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1 && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00') {
-		$loginboxcontent .= BOX_LOGINBOX_DISCOUNT_TEXT . ' ' . $_SESSION['customers_status']['customers_status_ot_discount'] . ' % ' . BOX_LOGINBOX_DISCOUNT_OT . '<br />';
-	}
+  $box_infobox = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_infobox.html', $cache_id);
 }
-
-$box_smarty->assign('BOX_CONTENT', $loginboxcontent);
-$box_smarty->assign('language', $_SESSION['language']);
-
-$box_smarty->caching = 0;
-$box_infobox = $box_smarty->fetch(CURRENT_TEMPLATE . '/boxes/box_infobox.html');
 
 $smarty->assign('box_INFOBOX', $box_infobox);
 ?>

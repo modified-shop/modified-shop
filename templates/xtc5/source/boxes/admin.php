@@ -16,9 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  $box_smarty = new smarty;
-
-  $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+// include smarty
+include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
   $admin_link = '';
   $box_content = '';
@@ -66,7 +65,6 @@
   $box_smarty->assign('BOX_CONTENT', $box_content);
 
   $box_smarty->caching = 0;
-  $box_smarty->assign('language', $_SESSION['language']);
   $box_admin= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_admin.html');
   $smarty->assign('box_ADMIN',$box_admin);
 ?>

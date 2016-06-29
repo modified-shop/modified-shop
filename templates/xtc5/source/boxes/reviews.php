@@ -15,18 +15,23 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
+  // include smarty
+  include(DIR_FS_BOXES_INC . 'smarty_default.php');
+
+  // reset cache id
+  $cache_id = '';
+
   if ($_SESSION['customers_status']['customers_status_read_reviews'] == 1) {
+  
+    // set cache id
+    $cache_id = md5($_SESSION['language'].$reviews['reviews_id']);
+  
     // Show if customer read reviews
     
-    $box_smarty = new smarty;
-
-    $box_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-
     $random = true;
     $products_link = '';
 
     // include needed functions
-    require_once(DIR_FS_INC . 'xtc_random_select.inc.php');
     require_once(DIR_FS_INC . 'xtc_break_string.inc.php');
 
     // query restrictions
@@ -55,8 +60,8 @@
     if ($product->isProduct() === true) {
       $random_select .= " AND p.products_id = '" . $product->data['products_id'] . "'";
     }
-    $random_select .= " ORDER BY r.reviews_id DESC LIMIT " . MAX_RANDOM_SELECT_REVIEWS;
-    $random_product = xtc_random_select($random_select);
+    $random_select .= " ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) LIMIT " . MAX_RANDOM_SELECT_REVIEWS;
+    $random_product = xtc_db_query($random_select);
 
     if ($product->isProduct() === true) {
       // display product review box
@@ -94,17 +99,10 @@
     }
     $box_smarty->assign('PRODUCTS_LINK', $products_link);
     $box_smarty->assign('RANDOM', $random);
-    $box_smarty->assign('language', $_SESSION['language']);
 
-    // set cache ID
-    if (!CacheCheck()) {
-      $box_smarty->caching = 0;
+    if (!$cache) {
       $box_reviews= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_reviews.html');
     } else {
-      $box_smarty->caching = 1;
-      $box_smarty->cache_lifetime=CACHE_LIFETIME;
-      $box_smarty->cache_modified_check=CACHE_CHECK;
-      $cache_id = $_SESSION['language'].(isset($random_product['reviews_id']) ? $random_product['reviews_id'] : '0').(isset($product->data['products_id']) ? $product->data['products_id'] : '0').$_SESSION['language'];
       $box_reviews= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_reviews.html',$cache_id);
     }
     $smarty->assign('box_REVIEWS',$box_reviews);
