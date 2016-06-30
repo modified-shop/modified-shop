@@ -28,6 +28,7 @@ function xtc_get_top_level_domain($url) {
     $url = $url['host'];
   }
 
+  $domain_array = explode('.', $url);
   if (count($domain_array) > 0) {
     // old routine
     $domain_path = $url;
