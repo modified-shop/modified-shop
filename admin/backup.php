@@ -263,10 +263,10 @@
                               $buInfo = new objectInfo($file_array);
                             }
                             if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file)) {
-                              echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'">' . "\n";
+                              echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'">' . "\n";
                               $onclick_link = 'file=' . $buInfo->file . '&action=restore';
                             } else {
-                              echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
+                              echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
                               $onclick_link = 'file=' . $entry;
                             }
                             ?>
