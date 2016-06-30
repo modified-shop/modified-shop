@@ -16,10 +16,6 @@
   define('DIR_TMPL', 'templates/'.CURRENT_TEMPLATE.'/');
   define('DIR_TMPL_CSS', DIR_TMPL.'css/');
 
-  if ($_SESSION['customers_status']['customers_status'] == '0') {
-    echo '<link rel="stylesheet" property="stylesheet" href="'.DIR_WS_BASE.DIR_TMPL_CSS.'adminbar.css" type="text/css" media="screen" />';
-  }
-
   $css_array = array(
     DIR_TMPL.'stylesheet.css',
   );
