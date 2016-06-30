@@ -1,6 +1,7 @@
 {config_load file="$language/lang_$language.conf" section="boxes"}
 {config_load file="$language/lang_$language.conf" section="specials"}
 {config_load file="lang_`$language`.custom"}
+{if isset($box_content) && count($box_content) > 0}
 <div class="box2">
   <div class="box_header">
     <span class="show_title">{#heading_specials#}</span> 
@@ -21,3 +22,4 @@
     {if $box_content.PRODUCTS_EXPIRES!=0}{#text_expires_date#} {$box_content.PRODUCTS_EXPIRES|date_format:"%x"}{/if}
   {/if}
 </div>
+{/if}
