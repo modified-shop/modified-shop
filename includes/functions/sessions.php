@@ -111,18 +111,12 @@
   }
 
 
-  function xtc_session_start($recreate = true) {
+  function xtc_session_start() {
     if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '') {
       xtc_session_id(xtc_generate_session_id());
     }
     $temp = session_start();
-    
-    if ($recreate === true && SESSION_RECREATE == 'True') {
-      if (mt_rand(1, 100) <= 50) {
-        xtc_session_recreate();
-      }
-    }
-    
+        
     return $temp;
   }
 
@@ -186,7 +180,7 @@
       // set new session
       $new_session_id = xtc_generate_session_id();
       xtc_session_id($new_session_id);
-      xtc_session_start(false);
+      xtc_session_start();
       $_SESSION = $session_backup;
 
       if (STORE_SESSIONS == 'mysql') {

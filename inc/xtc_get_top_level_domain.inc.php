@@ -34,6 +34,11 @@ function xtc_get_top_level_domain($url) {
 
       // old routine
       $return_array['old'] = $domain_array[$domain_size - 2] . '.' . $domain_array[$domain_size - 1];
+      $domain_path = $url;
+      if(substr($domain_path, 0, 4) == 'www.') {
+          $domain_path = substr($domain_path, 4);
+      }
+      $return_array['old'] = $domain_path;
       
       // new routine
       if ($return_array['new'] === false) {

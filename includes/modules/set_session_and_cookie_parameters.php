@@ -39,8 +39,11 @@ if (STORE_SESSIONS == 'mysql') {
                                   WHERE sesskey = '".xtc_db_input(preg_replace('/[^0-9a-zA-Z]/', '', $_COOKIE[xtc_session_name()]))."'");
     $check = xtc_db_fetch_array($check_query);
     if (($check['expiry'] + (int)$SESS_LIFE) < time()) {
-      set_session_cookie((time() - 3600), '/', (xtc_not_null($current_domain_old) ? '.'.$current_domain_old : ''));
-      set_session_cookie((time() - 3600), DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
+      $cookie_params = session_get_cookie_params();      
+      xtc_setcookie(xtc_session_name(), '', time()-3600, '/', (xtc_not_null($current_domain_old) ? '.'.$current_domain_old : ''));
+      xtc_setcookie(xtc_session_name(), '', time()-3600, DIR_WS_CATALOG, (xtc_not_null($current_domain_old) ? '.'.$current_domain_old : ''));
+      xtc_setcookie(xtc_session_name(), '', time()-3600, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
+      xtc_setcookie(xtc_session_name(), '', time()-3600, $cookie_params['path'], $cookie_params['domain']);
     }
   }
 }
