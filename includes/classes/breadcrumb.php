@@ -30,6 +30,21 @@
     }
 
 
+    function remove_last() {
+      array_pop($this->_trail);
+    }
+
+
+    function remove($title) {
+      for ($i=0, $n=sizeof($this->_trail); $i<$n; $i++) {
+        if ($this->_trail[$i]['title'] == $title) {
+          unset($this->_trail[$i]);
+        }
+      }
+      $this->_trail = array_values($this->_trail);
+    }
+
+
     function add($title, $link = '') {
       global $PHP_SELF, $request_type;
       
