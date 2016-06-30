@@ -27,27 +27,18 @@ function xtc_get_top_level_domain($url) {
     $url = parse_url($url);
     $url = $url['host'];
   }
-  $domain_array = explode('.', $url);
-  $domain_size = sizeof($domain_array);
-  if ($domain_size > 1) {
-    if (!is_numeric($domain_array[$domain_size -2]) && !is_numeric($domain_array[$domain_size -1])) {
 
-      // old routine
-      $return_array['old'] = $domain_array[$domain_size - 2] . '.' . $domain_array[$domain_size - 1];
-      $domain_path = $url;
-      if(substr($domain_path, 0, 4) == 'www.') {
-          $domain_path = substr($domain_path, 4);
-      }
-      $return_array['old'] = $domain_path;
-      
-      // new routine
-      if ($return_array['new'] === false) {
-        $domain_path = $url;
-        if(substr($domain_path, 0, 4) == 'www.') {
-            $domain_path = substr($domain_path, 4);
-        }
-        $return_array['new'] = $domain_path;
-      }
+  if (count($domain_array) > 0) {
+    // old routine
+    $domain_path = $url;
+    if(substr($domain_path, 0, 4) == 'www.') {
+        $domain_path = substr($domain_path, 4);
+    }
+    $return_array['old'] = $domain_path;
+    
+    // new routine
+    if ($return_array['new'] === false) {
+      $return_array['new'] = $return_array['old'];
     }
   }
   
