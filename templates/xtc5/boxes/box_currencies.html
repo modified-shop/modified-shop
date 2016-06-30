@@ -1,3 +1,5 @@
 {config_load file="$language/lang_$language.conf" section="boxes"}
+{if isset($BOX_CONTENT) && $BOX_CONTENT != ''}
 <h2 class="boxheader">{#heading_currencies#}</h2>
 <div class="boxbody">{$BOX_CONTENT}</div>
+{/if}
