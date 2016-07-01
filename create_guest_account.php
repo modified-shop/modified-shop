@@ -47,6 +47,7 @@ require_once (DIR_FS_INC . 'xtc_get_country_list.inc.php');
 require_once (DIR_FS_INC . 'xtc_validate_email.inc.php');
 require_once (DIR_FS_INC . 'xtc_create_password.inc.php');
 require_once (DIR_FS_INC . 'xtc_get_geo_zone_code.inc.php');
+require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
 
