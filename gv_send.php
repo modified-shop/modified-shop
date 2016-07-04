@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: gv_send.php 1793 2011-02-10 13:32:53Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -100,7 +100,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
                             'coupon_amount' => str_replace(",", ".", $_POST['amount'])
                             );
     xtc_db_perform(TABLE_COUPONS, $sql_data_array);
-    $insert_id = xtc_db_insert_id($gv_query);
+    $insert_id = xtc_db_insert_id();
 
     $sql_data_array = array('coupon_id' => $insert_id,
                             'customer_id_sent' => $_SESSION['customer_id'],
