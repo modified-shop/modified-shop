@@ -66,7 +66,8 @@
         //store banners_image
         $accepted_banners_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp","swf","cab");
         $accepted_banners_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp","application/x-shockwave-flash");
-        if ($banners_image_exist == '' && !$banners_image = xtc_try_upload('banners_image', DIR_FS_CATALOG_IMAGES.'banner/', '644', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types)) {
+        $banners_image = xtc_try_upload('banners_image', DIR_FS_CATALOG_IMAGES.'banner/', '644', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types);
+        if ($banners_image_exist == '' && !$banners_image) {
           $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
           $banner_error = true;
         }
@@ -284,6 +285,7 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
                     if ($bInfo->banners_image != '') {
                       echo '<img style="max-width:360px; margin-bottom:10px;" src="'.DIR_WS_CATALOG_IMAGES . 'banner/'.$bInfo->banners_image.'" />';
                       echo xtc_draw_hidden_field('banners_image_exist', $bInfo->banners_image); 
+                      echo '<div>'.$bInfo->banners_image .'</div><br>';
                     }
                      echo xtc_draw_file_field('banners_image');
                   ?></td>
