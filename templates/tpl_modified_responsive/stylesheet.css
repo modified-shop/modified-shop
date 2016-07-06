@@ -2167,12 +2167,11 @@ a.color_more:hover {
 .cat_image {
   float:left;
   margin: 6px 25px 10px 0px;
-  max-width:100% !important;
+  max-width:100%;
   position:relative;
 }
 .ci_nomargin {
   margin-right: 0px !important;
-  max-width:755px;
 }
 .subcats {
   margin: 0 -5px 25px -5px;

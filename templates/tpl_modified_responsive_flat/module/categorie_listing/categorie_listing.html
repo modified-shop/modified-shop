@@ -10,7 +10,7 @@
 {if (isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != '')
      || isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != ''}
 <div class="cat_description cf">
-  {if isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != ''}<img class="cat_image" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />{/if}
+  {if isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != ''}<img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />{/if}
   {if (isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != '')}{$CATEGORIES_DESCRIPTION}{/if}
 </div>
 {/if}
