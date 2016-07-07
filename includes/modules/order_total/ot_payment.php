@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------
-   $Id: ot_payment.php 3453 2012-08-21 14:11:56Z franky-n-xtcm $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -84,7 +84,7 @@ class ot_payment {
       if (isset($this->discount['sum']) && $this->discount['sum']!=0) {
         for ($i=1; $i<=$this->num_payment; $i++) {
           if (isset($this->discount['amount' . $i]) && $this->discount['amount' . $i]!=0) {
-            $this->output[] = array('title' => (($this->discount['pro' . $i] != 0.0) ? number_format(abs($this->discount['pro' . $i]), 2, $xtPrice->currencies[$_SESSION['currency']]['decimal_point'], '') . '% ' .
+            $this->output[] = array('title' => (($this->discount['pro' . $i] != 0.0) ? number_format(abs($this->discount['pro' . $i]), 2, $xtPrice->currencies[$_SESSION['currency']]['decimal_point'], '') . ' % ' .
                                                (($this->discount['fee' . $i] != 0) ? (($this->discount['pro' . $i] != 0.0) ? ' +' : '') . $xtPrice->xtcFormat(abs($this->discount['fee' . $i]), true) . ' ' : '') : '') .
                                                (($this->discount['amount' . $i] < 0) ? MODULE_ORDER_TOTAL_PAYMENT_DISCOUNT : MODULE_ORDER_TOTAL_PAYMENT_FEE) . ':',
                                     'text' => ($this->discount['amount' . $i] < 0) ? '<span class="color_ot_total">' . $xtPrice->xtcFormat($this->discount['amount' . $i], true).'</span>' : $xtPrice->xtcFormat($this->discount['amount' . $i], true),
