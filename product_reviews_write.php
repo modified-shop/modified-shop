@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: product_reviews_write.php 3840 2012-11-04 12:47:14Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -67,6 +67,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process') {
         $messageStack->add('product_reviews_write', strip_tags(ERROR_VVCODE, '<b><strong>'));
         $error = true;
       }
+      unset($_SESSION['vvcode']);
     }
     
     if ($error === false) {
