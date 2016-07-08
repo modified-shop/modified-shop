@@ -1062,5 +1062,5 @@ define('MODULE_BANNER_MANAGER_STATUS_TITLE', 'Banner Manager');
 define('MODULE_BANNER_MANAGER_STATUS_DESC', 'Banner Manager aktivieren?');
 
 define('MODULE_NEWSLETTER_STATUS_TITLE', 'Newsletter');
-define('MODULE_NEWSLETTER_STATUS_DESC', 'Newslettersystem aktivieren?');
+define('MODULE_NEWSLETTER_STATUS_DESC', 'Newsletter-System aktivieren?');
 ?>

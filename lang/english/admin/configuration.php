@@ -1067,8 +1067,8 @@ define('SEO_URL_MOD_CLASS_TITLE', 'URL Module');
 define('SEO_URL_MOD_CLASS_DESC', 'Select an URL Module.');
 
 define('MODULE_BANNER_MANAGER_STATUS_TITLE', 'Banner Manager');
-define('MODULE_BANNER_MANAGER_STATUS_DESC', 'activate Banner Manager?');
+define('MODULE_BANNER_MANAGER_STATUS_DESC', 'Activate Banner Manager?');
 
 define('MODULE_NEWSLETTER_STATUS_TITLE', 'Newsletter');
-define('MODULE_NEWSLETTER_STATUS_DESC', 'activate Newslettersystem?');
+define('MODULE_NEWSLETTER_STATUS_DESC', 'Activate Newsletter System?');
 ?>
