@@ -234,6 +234,7 @@ class PayPalAdmin extends PayPalPayment {
     }
     
     if ($id == $this->get_config('PAYPAL_STANDARD_PROFILE')) {
+      $this->delete_config($id, 'config_value');
       $this->delete_config('PAYPAL_STANDARD_PROFILE');
     }
   }

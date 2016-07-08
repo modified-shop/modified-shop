@@ -74,7 +74,7 @@ if (isset($_GET['oID'])
 
       require (DIR_WS_INCLUDES.'header.php');
 
-      $javascript = '<script type="application/javascript">
+      $javascript = '<script type="text/javascript">
       var ppp = PAYPAL.apps.PPP({	
         "approvalUrl": "'.$approval.'",
         "placeholder": "ppplus",
