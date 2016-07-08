@@ -50,7 +50,9 @@ class PayPalCommon extends PayPalAuth {
       } else {
         return mb_convert_encoding($string, "UTF-8", $_SESSION['language_charset']);
       }
-    }    
+    }
+    
+    return $string;  
   }
 
   
