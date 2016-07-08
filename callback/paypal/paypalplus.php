@@ -19,7 +19,7 @@ if (!isset($_SESSION['customer_id'])) {
 
 if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
   echo '<script src="https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js" type="text/javascript"></script>'."\n";
-  echo '<script type="application/javascript">PAYPAL.apps.PPP.doCheckout();</script>'."\n";
+  echo '<script type="text/javascript">PAYPAL.apps.PPP.doCheckout();</script>'."\n";
 } elseif (isset($_SESSION['paypal']['approval'])) {
   require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');                                        
 

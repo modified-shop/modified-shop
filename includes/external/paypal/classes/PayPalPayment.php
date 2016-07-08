@@ -1086,6 +1086,14 @@ class PayPalPayment extends PayPalPaymentBase {
           
           $type = strtolower($reflect->getShortName());
           
+          if ($type == 'refund' 
+              && $object->getState() == 'completed'
+              && isset($payment_array['instruction'])
+              ) 
+          {
+            $payment_array['instruction'] = $this->updatePaymentInstruction($payment_array['instruction'], $amount);
+          }
+          
           if ($type == 'sale'
               || $type == 'order'
               || $type == 'authorization'
@@ -1147,6 +1155,12 @@ class PayPalPayment extends PayPalPaymentBase {
     return $payment_array;
   }
 
+  
+  function updatePaymentInstruction($payment_array, $amount) {
+    $payment_array['amount']['total'] += $amount->getTotal();
+    return $payment_array;
+  }
+  
   
   function get_customer_data($payment) {
     

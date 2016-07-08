@@ -63,7 +63,7 @@ $status_array = array(
 
 $landingpage_array = array(
   array('id' => 'Login', 'text' => 'Login'),
-  array('id' => 'Payment', 'text' => 'Payment'),
+  array('id' => 'Billing', 'text' => 'Billing'),
 ); 
 
 //$locale_code = array(

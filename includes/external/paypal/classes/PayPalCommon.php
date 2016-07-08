@@ -77,8 +77,8 @@ class PayPalCommon extends PayPalAuth {
   }
 
 
-  function delete_config($config_key) {
-    xtc_db_query("DELETE FROM ".TABLE_PAYPAL_CONFIG." WHERE config_key = '".xtc_db_input($config_key)."'");
+  function delete_config($value, $col = 'config_key') {
+    xtc_db_query("DELETE FROM ".TABLE_PAYPAL_CONFIG." WHERE ".$col." = '".xtc_db_input($value)."'");
   }
 
 
