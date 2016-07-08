@@ -1057,4 +1057,10 @@ define('CATEGORIES_SHOW_PRODUCTS_SUBCATS_DESC', 'Sollen alle Artikel aus vorhand
 
 define('SEO_URL_MOD_CLASS_TITLE', 'URL Modul');
 define('SEO_URL_MOD_CLASS_DESC', 'W&auml;hlen sie ein URL Modul.');
+
+define('MODULE_BANNER_MANAGER_STATUS_TITLE', 'Banner Manager');
+define('MODULE_BANNER_MANAGER_STATUS_DESC', 'Banner Manager aktivieren?');
+
+define('MODULE_NEWSLETTER_STATUS_TITLE', 'Newsletter');
+define('MODULE_NEWSLETTER_STATUS_DESC', 'Newslettersystem aktivieren?');
 ?>

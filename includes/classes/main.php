@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: main.php 3277 2012-07-22 15:18:21Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -29,17 +29,17 @@ class main {
     $this->SHIPPING = array();
 
     // prefetch shipping status
-    $status_query=xtDBquery("SELECT shipping_status_name,
-                                    shipping_status_image,
-                                    shipping_status_id
-                             FROM ".TABLE_SHIPPING_STATUS."
-                             WHERE language_id = ".(int)$_SESSION['languages_id']);
+    $status_query = xtDBquery("SELECT shipping_status_name,
+                                      shipping_status_image,
+                                      shipping_status_id
+                               FROM ".TABLE_SHIPPING_STATUS."
+                               WHERE language_id = '".(int)$_SESSION['languages_id']."'");
 
     while ($status_data=xtc_db_fetch_array($status_query,true)) {
       $this->SHIPPING[$status_data['shipping_status_id']] = array(
         'name'=>$status_data['shipping_status_name'],
         'image'=>$status_data['shipping_status_image']
-        );
+      );
     }
   }
 
@@ -49,7 +49,7 @@ class main {
    * @param integer $id
    * @return  string
    */
-  function getShippingStatusName($id, $link=false) {
+  function getShippingStatusName($id, $link = false) {
     global $request_type;
     if (!defined('SHIPPING_STATUS_INFOS') || $link === false) {
       return (isset($this->SHIPPING[$id]['name']) ? $this->SHIPPING[$id]['name'] : '');
@@ -348,7 +348,7 @@ class main {
    *
    * @return array
    */
-  function getAttributes($products_id, $option_id, $value_id, $add_select= '',$left_join='') {
+  function getAttributes($products_id, $option_id, $value_id, $add_select = '', $left_join = '') {
     $attributes = xtc_db_query("SELECT ".$add_select."
                                        popt.products_options_name,
                                        poval.products_options_values_name,
