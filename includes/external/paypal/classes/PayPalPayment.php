@@ -1126,7 +1126,9 @@ class PayPalPayment extends PayPalPaymentBase {
   function parsePaymentInstruction($instruction) {
     
     // include needed functions
-    require_once(DIR_FS_INC.'xtc_date_short.inc.php');
+    if (!function_exists('xtc_date_short')) {
+      require_once(DIR_FS_INC.'xtc_date_short.inc.php');
+    }
     
     // set amount
     $amount = $instruction->getAmount();
