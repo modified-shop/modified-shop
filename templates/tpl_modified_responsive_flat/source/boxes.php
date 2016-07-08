@@ -70,9 +70,8 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
   require_once(DIR_FS_BOXES . 'languages.php'); 
   require_once(DIR_FS_BOXES . 'infobox.php');
   if (defined('MODULE_NEWSLETTER_STATUS') && MODULE_NEWSLETTER_STATUS == 'true') {
-    require_once(DIR_FS_BOXES . 'loginbox.php');
+    require_once(DIR_FS_BOXES . 'newsletter.php');
   }
-  require_once(DIR_FS_BOXES . 'newsletter.php');
   if (defined('MODULE_TS_TRUSTEDSHOPS_ID') 
       && (MODULE_TS_WIDGET == '1'
           || (MODULE_TS_REVIEW_STICKER != '' && MODULE_TS_REVIEW_STICKER_STATUS == '1'))
