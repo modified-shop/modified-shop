@@ -18,34 +18,48 @@
 
 // ibclude the needed functions
 if (!function_exists('xtc_date_long')) {
-	require_once (DIR_FS_INC.'xtc_date_long.inc.php');
+  require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 }
 
 $module_smarty = new Smarty;
 
-if (!strstr($PHP_SELF, FILENAME_ACCOUNT_HISTORY_INFO)) {
-	// Get last order id for checkout_success
-	$orders_query = xtc_db_query("SELECT orders_id, 
-	                                     orders_status 
-	                                FROM ".TABLE_ORDERS." 
-	                               WHERE customers_id = '".(int)$_SESSION['customer_id']."' 
-	                            ORDER BY orders_id desc limit 1");
-	$orders = xtc_db_fetch_array($orders_query);
-	$last_order = $orders['orders_id'];
-	$order_status = $orders['orders_status'];
+$customer_id = (int)$_SESSION['customer_id'];
+$language = $_SESSION['language'];
+
+if (isset($send_by_admin)) {
+  $last_order = $insert_id;
+  $orders_query = xtc_db_query("SELECT orders_status,
+                                       customers_id,
+                                       language
+                                  FROM ".TABLE_ORDERS." 
+                                 WHERE orders_id = '".$last_order."'");
+  $orders = xtc_db_fetch_array($orders_query);
+  $customer_id = $orders['customers_id'];
+  $language = $orders['language'];
+  $order_status = $orders['orders_status'];
+} elseif (!strstr($PHP_SELF, FILENAME_ACCOUNT_HISTORY_INFO)) {
+  // Get last order id for checkout_success
+  $orders_query = xtc_db_query("SELECT orders_id, 
+                                       orders_status 
+                                  FROM ".TABLE_ORDERS." 
+                                 WHERE customers_id = '".(int)$customer_id."' 
+                              ORDER BY orders_id desc limit 1");
+  $orders = xtc_db_fetch_array($orders_query);
+  $last_order = $orders['orders_id'];
+  $order_status = $orders['orders_status'];
 } else {
-	$last_order = (int)$_GET['order_id'];
-	$orders_query = xtc_db_query("SELECT orders_status 
-	                                FROM ".TABLE_ORDERS." 
-	                               WHERE orders_id = '".$last_order."'");
-	$orders = xtc_db_fetch_array($orders_query);
-	$order_status = $orders['orders_status'];
+  $last_order = (int)$_GET['order_id'];
+  $orders_query = xtc_db_query("SELECT orders_status 
+                                  FROM ".TABLE_ORDERS." 
+                                 WHERE orders_id = '".$last_order."'");
+  $orders = xtc_db_fetch_array($orders_query);
+  $order_status = $orders['orders_status'];
 }
 
 // check if allowed to download
 $allowed_status = explode(',', DOWNLOAD_MIN_ORDERS_STATUS);
 if (!in_array($order_status, $allowed_status)) {
-	$module_smarty->assign('dl_prevented', 'true');
+  $module_smarty->assign('dl_prevented', 'true');
 }
 
 // Get all downloadable products in that order
@@ -62,7 +76,7 @@ $downloads_query = xtc_db_query("SELECT o.customers_id,
                                         ON op.orders_id = o.orders_id
                                    JOIN ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd 
                                         ON opd.orders_products_id = op.orders_products_id
-                                  WHERE o.customers_id = '".(int)$_SESSION['customer_id']."' 
+                                  WHERE o.customers_id = '".(int)$customer_id."' 
                                     AND o.orders_id = '".$last_order."'
                                     AND opd.orders_products_filename != ''");
 
@@ -81,8 +95,13 @@ if (xtc_db_num_rows($downloads_query) > 0) {
     {
       $dl[$jj]['allowed'] = true;
     }
-    $dl[$jj]['pic_link'] = xtc_href_link(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($last_order.$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename']));
-    $dl[$jj]['download_link'] = '<a href="'.xtc_href_link(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($last_order.$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename'])).'">'.$downloads['products_name'].'</a>';
+    if (isset($send_by_admin)) {
+      require_once(DIR_FS_INC.'xtc_href_link_from_admin.inc.php');
+      $dl[$jj]['pic_link'] = xtc_href_link_from_admin(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($last_order.$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename']), 'NONSSL', false);    
+    } else {
+      $dl[$jj]['pic_link'] = xtc_href_link(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($last_order.$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename']));
+    }
+    $dl[$jj]['download_link'] = '<a href="'.$dl[$jj]['pic_link'].'">'.$downloads['products_name'].'</a>';
     $dl[$jj]['date'] = xtc_date_long($downloads['download_expiry']);
     $dl[$jj]['count'] = $downloads['download_count'];
     $jj ++;
@@ -90,7 +109,7 @@ if (xtc_db_num_rows($downloads_query) > 0) {
   $module_smarty->assign('dl', (isset($dl) ? $dl : array()));
 }
 
-$module_smarty->assign('language', $_SESSION['language']);
+$module_smarty->assign('language', $language);
 $module_smarty->caching = 0;
 
 if ($send_order) {
@@ -100,8 +119,8 @@ if ($send_order) {
     $module_smarty->config_dir = DIR_FS_CATALOG.'lang';
   }
   $module_smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-  $module_txt = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/downloads.txt');
-  $module_html = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/downloads.html');
+  $module_txt = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$language.'/downloads.txt');
+  $module_html = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$language.'/downloads.html');
   $smarty->assign('downloads_content_html', $module_html);
   $smarty->assign('downloads_content_txt', $module_txt);
 } else {

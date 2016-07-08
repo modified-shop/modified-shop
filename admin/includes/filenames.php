@@ -90,6 +90,7 @@ define('FILENAME_LOGS', 'logs.php');
 define('FILENAME_SHIPCLOUD', 'shipcloud.php');
 define('FILENAME_PRODUCTS_TAGS', 'products_tags.php');
 define('FILENAME_TRUSTEDSHOPS', 'trustedshops.php');
+define('FILENAME_DOWNLOAD', 'download.php');
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/filenames/','php') as $file) require ($file);
