@@ -51,7 +51,7 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
   $country = xtc_db_fetch_array($country_query);
 
   echo '<div id="ppplus"></div>';
-  echo '<script type="application/javascript">
+  echo '<script type="text/javascript">
   var ppp = PAYPAL.apps.PPP({	
   "approvalUrl": "'.$_SESSION['paypal']['approval'].'",
   "placeholder": "ppplus",
