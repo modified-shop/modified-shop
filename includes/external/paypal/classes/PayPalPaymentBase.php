@@ -153,16 +153,10 @@ class PayPalPaymentBase extends PayPalCommon {
     if ($orders_id == '') {
       $orders_id = $last_order;
     }
-  
-    // include needed function
-    if (!function_exists('xtc_date_short')) {
-      require_once(DIR_FS_INC.'xtc_date_short.inc.php');
-    }
-
+    
     $payment = $this->get_order_details($orders_id);
   
     if (isset($payment['instruction'])) {
-      $payment['instruction']['date'] = date('Y-m-d H:i:s', strtotime($payment['instruction']['date']));
        
       $fields = array(
         array(
@@ -175,7 +169,7 @@ class PayPalPaymentBase extends PayPalCommon {
         ),
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_PAYDATE,
-          'field' => xtc_date_short($payment['instruction']['date']),
+          'field' => $payment['instruction']['date'],
         ),
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_ACCOUNT,
@@ -196,7 +190,7 @@ class PayPalPaymentBase extends PayPalCommon {
       );
   
       $success = array(
-        array ('title' => sprintf(TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT, $payment['instruction']['amount']['total'].' '.$payment['instruction']['amount']['currency'], xtc_date_short($payment['instruction']['date'])),
+        array ('title' => sprintf(TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT, $payment['instruction']['amount']['total'].' '.$payment['instruction']['amount']['currency'], $payment['instruction']['date']),
                'class' => $this->code,
                'fields' => $fields
                ),
