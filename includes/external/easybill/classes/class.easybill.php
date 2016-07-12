@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: class.easybill.php 4313 2013-01-14 13:31:11Z gtb-modified $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -435,7 +435,7 @@
     
       require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
       $paypal = new PayPalInfo($order->info['payment_method']);      
-      $bankdata_array = $paypal->success($this->info['order_id']);
+      $bankdata_array = $paypal->get_payment_instructions($this->info['order_id']);
       
       $bank = '';
       if (isset($bankdata_array[0]['fields'])) {

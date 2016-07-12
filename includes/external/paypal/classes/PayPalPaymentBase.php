@@ -147,13 +147,18 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
-  function success($orders_id = '') {
+  function success() {
     global $last_order;
   
-    if ($orders_id == '') {
-      $orders_id = $last_order;
+    if (!isset($last_order) || $last_order == '') {
+      return;
     }
     
+    return $this->get_payment_instructions($last_order);
+  }
+
+
+  function get_payment_instructions($orders_id) {
     $payment = $this->get_order_details($orders_id);
   
     if (isset($payment['instruction'])) {

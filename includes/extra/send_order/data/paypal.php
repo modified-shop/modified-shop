@@ -51,7 +51,7 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
     $smarty->assign('PAYMENT_INFO_TXT', sprintf(constant('MODULE_PAYMENT_'.strtoupper($paypal->code).'_TEXT_SUCCESS'), $paypal->create_paypal_link($order->info['order_id'], true)));
 
   } else {
-    $paypal_payment_info = $paypal->success($order->info['order_id']);
+    $paypal_payment_info = $paypal->get_payment_instructions($order->info['order_id']);
   
     if (is_array($paypal_payment_info)) {
       $paypal_smarty = new Smarty;
