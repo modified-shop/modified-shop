@@ -333,10 +333,10 @@ ul.topnavigation li a:hover {
   border:0px solid transparent;
   margin-top:22px;
 }
-.search_field {
+#search input[type=text] {
   padding-right:90px;
 }
-.search_button {
+#search input[type=image] {
   position:absolute;
   right:0px;
   top:0px;
