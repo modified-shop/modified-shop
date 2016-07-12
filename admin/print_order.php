@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: print_order.php 3792 2012-10-18 11:26:51Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -66,7 +66,7 @@
     if(strpos($order->info['payment_method'], 'paypalplus') !== false) {
       require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
       $paypal = new PayPalInfo($order->info['payment_method']);      
-      $smarty->assign('PAYMENT_INFO', $paypal->success($order->info['order_id']));
+      $smarty->assign('PAYMENT_INFO', $paypal->get_payment_instructions($order->info['order_id']));
     }
     $smarty->assign('PAYMENT_METHOD', $payment_method);
   }
