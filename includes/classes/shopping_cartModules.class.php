@@ -114,5 +114,10 @@ class shoppingCartModules {
         return self::call_module_method($opt_val_array);
     }
     
-    
+    public static function get_products($products_data, $product, $contents)
+    {
+        self::$function_call = 'get_products';
+        return self::call_module_method($products_data, $product, $contents);
+    }
+
 }

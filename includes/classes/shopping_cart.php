@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: shopping_cart.php 5640 2013-09-10 14:49:46Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -608,6 +608,7 @@ class shoppingCart {
                                                p.products_weight,
                                                p.products_tax_class_id,
                                                p.products_status,
+                                               p.products_fsk18,
                                                p.products_price as products_price_origin,
                                                p.products_quantity as products_stock
                                           FROM ".TABLE_PRODUCTS." p
@@ -657,6 +658,9 @@ class shoppingCart {
             $products_data['final_weight'] =  $products_data['weight'] * $this->contents[$products_id]['qty'];
             $products_data['tax'] = isset($xtPrice->TAX[$products['products_tax_class_id']]) ? $xtPrice->TAX[$products['products_tax_class_id']] : 0;
             $products_data['attributes'] = isset($this->contents[$products_id]['attributes']) ? $this->contents[$products_id]['attributes'] : null;
+
+            $products_data = $this->shoppingCartModules->get_products($products_data, $products, $this->contents[$products_id]);
+
             $products_array[$index++] = $products_data;
           }
         }
