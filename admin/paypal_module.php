@@ -54,6 +54,14 @@ $payment_array = array(
   'paypalcart',
   'paypallink',
   'paypalpluslink',
+  'banktransfer',
+  'billpay',
+  'billpaydebit',
+  'billpaypaylater',
+  'billpaytransactioncredit',
+  'billsafe_2',
+  'payone_installment',
+  'payone_otrans',
 );
 
 $status_array = array(
