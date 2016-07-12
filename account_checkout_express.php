@@ -186,6 +186,10 @@ $selection = $payment_modules->selection();
 // disable some modules, because needed action on checkout_payment
 $disallowed_payment = array(
   'banktransfer',
+  'billpay',
+  'billpaydebit',
+  'billpaypaylater',
+  'billpaytransactioncredit',
   'billsafe_2',  
   'paypalplus',
   'payone_installment',
