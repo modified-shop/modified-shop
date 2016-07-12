@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: product_info.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -76,7 +76,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   }
 
   // Update products_viewed
-  if ($_SESSION['customers_status']['customers_status_id'] != 0) {
+  if ($_SESSION['customers_status']['customers_status_id'] != '0') {
     xtc_db_query("-- product_info.php
         UPDATE ".TABLE_PRODUCTS_DESCRIPTION."
            SET products_viewed = products_viewed+1
@@ -85,20 +85,20 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   }
 
   // Get manufacturer name etc. for the product page
-  $manufacturer_query = xtc_db_query("SELECT m.manufacturers_id,
-                                             m.manufacturers_name,
-                                             m.manufacturers_image,
-                                             mi.manufacturers_url,
-                                             mi.manufacturers_description
-                                        FROM " . TABLE_MANUFACTURERS . " m
-                                        JOIN " . TABLE_MANUFACTURERS_INFO . " mi
-                                             ON (m.manufacturers_id = mi.manufacturers_id
-                                                 AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "')
-                                        JOIN " . TABLE_PRODUCTS . " p
-                                             ON p.manufacturers_id = m.manufacturers_id
-                                                AND p.products_id = '" . $product->data['products_id'] . "'");
-  if (xtc_db_num_rows($manufacturer_query)) {
-    $manufacturer = xtc_db_fetch_array($manufacturer_query);
+  $manufacturer_query = xtDBquery("SELECT m.manufacturers_id,
+                                          m.manufacturers_name,
+                                          m.manufacturers_image,
+                                          mi.manufacturers_url,
+                                          mi.manufacturers_description
+                                     FROM " . TABLE_MANUFACTURERS . " m
+                                     JOIN " . TABLE_MANUFACTURERS_INFO . " mi
+                                          ON m.manufacturers_id = mi.manufacturers_id
+                                             AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "'
+                                     JOIN " . TABLE_PRODUCTS . " p
+                                          ON p.manufacturers_id = m.manufacturers_id
+                                             AND p.products_id = '" . $product->data['products_id'] . "'");
+  if (xtc_db_num_rows($manufacturer_query, true)) {
+    $manufacturer = xtc_db_fetch_array($manufacturer_query, true);
     if ($manufacturer['manufacturers_image'] != '') {
       $image = DIR_WS_IMAGES.$manufacturer['manufacturers_image'];
       if (!file_exists(DIR_FS_CATALOG.$image)) {
@@ -171,16 +171,18 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
    */
    
   // show expiry date of active special products
-  $special_expires_date_query = "SELECT expires_date
-                                   FROM ".TABLE_SPECIALS."
-                                  WHERE products_id = '".$product->data['products_id']."'
-                                    AND status = '1'
-                                    AND (start_date IS NULL 
-                                         OR start_date <= NOW())";
-  $special_expires_date_query = xtDBquery($special_expires_date_query);
-  if (xtc_db_num_rows($special_expires_date_query, true) > 0) {
-    $sDate = xtc_db_fetch_array($special_expires_date_query, true);
-    $info_smarty->assign('PRODUCTS_EXPIRES', $sDate['expires_date'] != '0000-00-00 00:00:00' ? xtc_date_short($sDate['expires_date']) : '');
+  if ($_SESSION['customers_status']['customers_status_specials'] != '0') {
+    $special_expires_date_query = "SELECT expires_date
+                                     FROM ".TABLE_SPECIALS."
+                                    WHERE products_id = '".$product->data['products_id']."'
+                                      AND status = '1'
+                                      AND (start_date IS NULL 
+                                           OR start_date <= NOW())";
+    $special_expires_date_query = xtDBquery($special_expires_date_query);
+    if (xtc_db_num_rows($special_expires_date_query, true) > 0) {
+      $sDate = xtc_db_fetch_array($special_expires_date_query, true);
+      $info_smarty->assign('PRODUCTS_EXPIRES', $sDate['expires_date'] != '0000-00-00 00:00:00' ? xtc_date_short($sDate['expires_date']) : '');
+    }
   }
 
   // FSK18
@@ -210,17 +212,19 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');
 
   // more images
-  $mo_images = xtc_get_products_mo_images($product->data['products_id']);
-  if ($mo_images != false) {
-    $more_images_data = array();
-    foreach ($mo_images as $img) {
-      $mo_img = $product->productImage($img['image_name'], 'info');
-      $mo_img_nr = $img['image_nr'];
-      if ($mo_img != '') {
-        $more_images_data[$mo_img_nr] = array ('PRODUCTS_IMAGE' => $mo_img);
+  if (MO_PICS != '0') {
+    $mo_images = xtc_get_products_mo_images($product->data['products_id']);
+    if ($mo_images != false) {
+      $more_images_data = array();
+      foreach ($mo_images as $img) {
+        $mo_img = $product->productImage($img['image_name'], 'info');
+        $mo_img_nr = $img['image_nr'];
+        if ($mo_img != '') {
+          $more_images_data[$mo_img_nr] = array ('PRODUCTS_IMAGE' => $mo_img);
+        }
       }
+      $info_smarty->assign('more_images', $more_images_data);
     }
-    $info_smarty->assign('more_images', $more_images_data);
   }
 
   // product discount
@@ -240,23 +244,23 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   } elseif (isset($product->data['products_date_available']) && $product->data['products_date_added'] != '0000-00-00 00:00:00') {
     $info_smarty->assign('PRODUCTS_ADDED', sprintf(TEXT_DATE_ADDED, xtc_date_long($product->data['products_date_added'])));
   }
-  
-  // mircrotags
-  $info_smarty->assign('PRODUCTS_AVERAGE_RATING', $product->getReviewsAverage());
-  $info_smarty->assign('PRODUCTS_RATING_COUNT', $product->getReviewsCount());
-
+    
   /*
    * assign smarty additional variables or overwrite them
    * END
    */
 
   //include modules
-  if ($_SESSION['customers_status']['customers_status_graduated_prices'] == 1) {
+  if ($_SESSION['customers_status']['customers_status_graduated_prices'] == '1') {
     include (DIR_WS_MODULES.FILENAME_GRADUATED_PRICE);
+  }
+  if ($_SESSION['customers_status']['customers_status_read_reviews'] == '1') {
+    $info_smarty->assign('PRODUCTS_AVERAGE_RATING', $product->getReviewsAverage());
+    $info_smarty->assign('PRODUCTS_RATING_COUNT', $product->getReviewsCount());
+    include (DIR_WS_MODULES.'product_reviews.php');
   }
   include (DIR_WS_MODULES.'product_tags.php');
   include (DIR_WS_MODULES.'product_attributes.php');
-  include (DIR_WS_MODULES.'product_reviews.php');
   include (DIR_WS_MODULES.FILENAME_PRODUCTS_MEDIA);
   include (DIR_WS_MODULES.FILENAME_ALSO_PURCHASED_PRODUCTS);
   include (DIR_WS_MODULES.FILENAME_CROSS_SELLING);
