@@ -54,6 +54,9 @@ $payment_array = array(
   'paypalcart',
   'paypallink',
   'paypalpluslink',
+);
+
+$payment_disallowed_array = array(
   'banktransfer',
   'billpay',
   'billpaydebit',
@@ -268,7 +271,10 @@ require (DIR_WS_INCLUDES.'head.php');
                       $thirdparty_exists = false;
                       for ($p=0, $x=sizeof($module_array); $p<$x; $p++) {
                         $module_name = substr($module_array[$p], 0,-4);
-                        if (!in_array($module_name, $payment_array)) {
+                        if (!in_array($module_name, $payment_array)
+                            && !in_array($module_name, $payment_disallowed_array)
+                            ) 
+                        {
                           $thirdparty_exists = true;
                         }
                       }
@@ -282,7 +288,10 @@ require (DIR_WS_INCLUDES.'head.php');
                         <?php                      
                         for ($p=0, $x=sizeof($module_array); $p<$x; $p++) {
                           $module_name = substr($module_array[$p], 0,-4);
-                          if (!in_array($module_name, $payment_array)) {
+                          if (!in_array($module_name, $payment_array)
+                              && !in_array($module_name, $payment_disallowed_array)
+                              ) 
+                          {
                             if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $module_array[$p])) {
                               include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $module_array[$p]);
                             }
