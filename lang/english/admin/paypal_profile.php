@@ -30,7 +30,7 @@ $lang_array = array(
   'TEXT_PAYPAL_PROFILE_LOCALE_INFO' => '',
   
   'TEXT_PAYPAL_PROFILE_PAGE' => 'Page:',
-  'TEXT_PAYPAL_PROFILE_PAGE_INFO' => '<b>Default:</b> Login<br/><br/>For Payment the act of transfer without customer account is pre-selected.',
+  'TEXT_PAYPAL_PROFILE_PAGE_INFO' => '<b>Default:</b> Login<br/><br/>For Billing the act of transfer without customer account is pre-selected.',
 
   'TEXT_PAYPAL_PROFILE_ADDRESS' => 'Address override:',
   'TEXT_PAYPAL_PROFILE_ADDRESS_INFO' => 'Shall the shipping address provided by PayPal be taken over?',
