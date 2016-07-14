@@ -19,29 +19,34 @@
     $('#Datepicker1').datetimepicker({
       dayOfWeekStart:1,
       timepicker:false, 
-      format:'Y-m-d'
+      format:'Y-m-d',
+      scrollInput:false
     });
     $('#Datepicker2').datetimepicker({
       dayOfWeekStart:1,
       timepicker:false, 
-      format:'Y-m-d'
+      format:'Y-m-d',
+      scrollInput:false
     });    
     // specials
     $('#DatepickerSpecials').datetimepicker({
       dayOfWeekStart:1,
       timepicker:false, 
-      format:'Y-m-d'
+      format:'Y-m-d',
+      scrollInput:false
     });
     $('#DatepickerSpecialsStart').datetimepicker({
       dayOfWeekStart:1,
       timepicker:false, 
-      format:'Y-m-d'
+      format:'Y-m-d',
+      scrollInput:false
     });  
     // product
     $('#DatepickerProduct').datetimepicker({
       dayOfWeekStart:1,
       timepicker:false, 
-      format:'Y-m-d'
+      format:'Y-m-d',
+      scrollInput:false
     });
   });
 </script>
