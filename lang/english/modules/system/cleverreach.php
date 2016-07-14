@@ -18,7 +18,7 @@ define('MODULE_CLEVERREACH_APIKEY_TITLE', 'CleverReach API');
 define('MODULE_CLEVERREACH_APIKEY_DESC', 'API Key for CleverReach.');
 define('MODULE_CLEVERREACH_NAME_TITLE', 'CleverReach Project');
 define('MODULE_CLEVERREACH_NAME_DESC', 'Projectname for your Newsletter.');
-define('MODULE_CLEVERREACH_GROUP_TITLE', 'CleverReach Group');
-define('MODULE_CLEVERREACH_GROUP_DESC', 'Group for your Newsletter.');
+define('MODULE_CLEVERREACH_GROUP_TITLE', 'CleverReach Group ID');
+define('MODULE_CLEVERREACH_GROUP_DESC', 'Group ID for your Newsletter.');
 
 ?>
