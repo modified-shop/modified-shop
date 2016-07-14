@@ -3,11 +3,11 @@
 .SelectClass { position: absolute; top: 0px; left: 0px; right: 0px; height: 100%; width: 100%; border: none; z-index: 1; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; filter: alpha(opacity=0); -moz-opacity: 0; -khtml-opacity: 0; opacity: 0; }
 .SumoSelect > .optWrapper > .options > li label, .SumoSelect > .CaptionCont { user-select: none; -o-user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; }
 
-.SumoSelect { display: inline-block; position: relative;outline:none; width:100%;}
+.SumoSelect { display: inline-block; position: relative;outline:none !important; width:100%;}
 .stern .SumoSelect { width:95%;}
 
 .SumoSelect:focus > .CaptionCont,.SumoSelect:hover > .CaptionCont { background-color:#FFFFFF; border-color: #C6C6C6 #DADADA #EAEAEA; color: #666666;}
-.SumoSelect:focus > .CaptionCont,.SumoSelect:focus > .CaptionCont { background-color:#FFFFFF; border-color: #659EC9 #70AEDD #A8CFEC; color: #333333; outline: 0 none;}
+.SumoSelect:focus > .CaptionCont,.SumoSelect:focus > .CaptionCont { background-color:#FFFFFF; border-color: #659EC9 #70AEDD #A8CFEC; color: #333333; outline: 0 none !important;}
 
 .SumoSelect > .CaptionCont { position: relative; border: 1px solid; border-color: #C6C6C6 #DADADA #EAEAEA; min-height: 14px; background-color: #fafafa;border-radius:2px;margin:0px; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px;}
 .SumoSelect > .CaptionCont > span { display: block; padding-right: 30px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;cursor:default;}

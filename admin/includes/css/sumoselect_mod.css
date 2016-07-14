@@ -7,7 +7,7 @@ td.dataTableConfig.col-middle .SumoSelect {width:100%; }
 .SelectClass { position: absolute; top: 0px; left: 0px; right: 0px; height: 100%; width: 100%; border: none; z-index: 1; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; filter: alpha(opacity=0); -moz-opacity: 0; -khtml-opacity: 0; opacity: 0; }
 .SumoSelect > .optWrapper > .options > li { -moz-transition: 200ms ease; -webkit-transition: 200ms ease; transition: 200ms ease; }
 .SumoSelect > .optWrapper > .options > li label, .SumoSelect > .CaptionCont { user-select: none; -o-user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; }
-.SumoSelect { display: inline-block; position: relative;outline:none;}
+.SumoSelect { display: inline-block; position: relative;outline:none !important;}
 .SumoSelect:not(.disabled):focus > .CaptionCont,.SumoSelect:not(.disabled):hover > .CaptionCont {box-shadow: 0px 0px 2px #7799D0;border-color: #7799D0;}
 .SumoSelect > .CaptionCont { position: relative;min-height: 20px; background-color: #fafafa;border-color: #c6c6c6 #dadada #eaeaea;-webkit-border-radius: 2px;-moz-border-radius: 2px;border-radius: 2px;border-style: solid;border-width: 1px;}
 .SumoSelect > .CaptionCont > span { display: block; padding-right: 22px; white-space: nowrap; line-height:20px; overflow:hidden;}
