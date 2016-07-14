@@ -15,10 +15,10 @@ define('MODULE_CLEVERREACH_TEXT_DESCRIPTION', 'Die Schnittstelle erm&ouml;glicht
 define('MODULE_CLEVERREACH_STATUS_TITLE', 'Modul aktivieren?');
 define('MODULE_CLEVERREACH_STATUS_DESC', 'CleverReach Newslettersystem aktivieren<br/><b>Wichtig:</b> Es ist daf&uuml;r eine <a href="http://www.cleverreach.de/frontend/" target="_blank"><strong><u>Registrierung bei CleverReach</u></strong></a> erforderlich.');
 define('MODULE_CLEVERREACH_APIKEY_TITLE', 'CleverReach API');
-define('MODULE_CLEVERREACH_APIKEY_DESC', 'Tragen sie hier den API Schl&uuml;ssel ein.');
+define('MODULE_CLEVERREACH_APIKEY_DESC', 'Tragen Sie hier den API Schl&uuml;ssel ein.');
 define('MODULE_CLEVERREACH_NAME_TITLE', 'CleverReach Projekt');
-define('MODULE_CLEVERREACH_NAME_DESC', 'Tragen sie hier den Projektnamen ein.');
-define('MODULE_CLEVERREACH_GROUP_TITLE', 'CleverReach Gruppe');
-define('MODULE_CLEVERREACH_GROUP_DESC', 'Tragen sie hier die Gruppe f&uuml;r den Newsletter ein.');
+define('MODULE_CLEVERREACH_NAME_DESC', 'Tragen Sie hier den Projektnamen ein.');
+define('MODULE_CLEVERREACH_GROUP_TITLE', 'CleverReach Gruppen-ID');
+define('MODULE_CLEVERREACH_GROUP_DESC', 'Tragen Sie hier die Gruppen-ID f&uuml;r den Newsletter ein.');
 
 ?>
