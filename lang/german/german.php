@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: german.php 2751 2012-04-12 13:28:06Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -596,4 +596,5 @@ define('AC_SHOW_PAGE_OF', ' von ');
 define('FREE_SHIPPING_INFO', 'ab %s  Bestellwert versenden wir Ihre Bestellung versandkostenfrei');
 
 define('MANUFACTURER_NOT_FOUND', 'Hersteller nicht gefunden');
+define('ENTRY_TOKEN_ERROR', 'Bitte &uuml;berpr&uuml;fen sie ihre Eingaben.');
 ?>
