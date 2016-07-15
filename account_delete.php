@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: account_delete.php 4220 2013-01-11 09:57:28Z gtb-modified $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -19,6 +19,7 @@ include ('includes/application_top.php');
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
+require_once (DIR_FS_INC.'secure_form.inc.php');
 
 // create smarty elements
 $smarty = new Smarty;
@@ -51,7 +52,9 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
                                          WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
   $check_customer = xtc_db_fetch_array($check_customer_query);
 
-  if (!xtc_validate_password($password, $check_customer['customers_password'], $_SESSION['customer_id'])) {
+  if (check_secure_form($_POST) === false) {
+    $messageStack->add('account_delete', ENTRY_TOKEN_ERROR);
+  } elseif (!xtc_validate_password($password, $check_customer['customers_password'], $_SESSION['customer_id'])) {
     $messageStack->add('account_delete', TEXT_LOGIN_ERROR);
   } else {
 
@@ -92,7 +95,7 @@ require (DIR_WS_INCLUDES.'header.php');
 if ($messageStack->size('account_delete') > 0) {
   $smarty->assign('error', $messageStack->output('account_delete'));
 }
-$smarty->assign('FORM_ACTION', xtc_draw_form('account_delete', xtc_href_link(FILENAME_ACCOUNT_DELETE, '', 'SSL'), 'post'). xtc_draw_hidden_field('action', 'process'));
+$smarty->assign('FORM_ACTION', xtc_draw_form('account_delete', xtc_href_link(FILENAME_ACCOUNT_DELETE, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'process').secure_form());
 $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
