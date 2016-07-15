@@ -99,7 +99,14 @@
       ),
     ),
     'currencies' => array(),
-    'customers' => array(),
+    'customers' => array(
+      'drop' => array(
+        'col' => array(
+          'customers_login_tries',
+          'customers_login_time',
+        ),
+      ),
+    ),
     'customers_basket' => array(),
     'customers_basket_attributes' => array(),
     'customers_info' => array(),

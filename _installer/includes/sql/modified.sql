@@ -160,7 +160,7 @@ CREATE TABLE banktransfer (
   banktransfer_status INT(11) DEFAULT NULL,
   banktransfer_prz CHAR(2) DEFAULT NULL,
   banktransfer_fax CHAR(2) DEFAULT NULL,
-  banktransfer_owner_email VARCHAR(96) DEFAULT NULL,
+  banktransfer_owner_email VARCHAR(255) DEFAULT NULL,
   KEY idx_orders_id (orders_id)
 ) ENGINE=MyISAM;
 
@@ -216,7 +216,7 @@ CREATE TABLE campaigns (
 
 DROP TABLE IF EXISTS campaigns_ip;
 CREATE TABLE campaigns_ip (
-  user_ip VARCHAR(39) NOT NULL,
+  user_ip VARCHAR(50) NOT NULL,
   time DATETIME NOT NULL,
   campaign VARCHAR(32) NOT NULL,
   KEY idx_campaign (campaign)
@@ -351,7 +351,7 @@ CREATE TABLE coupon_email_track (
   customer_id_sent INT(11) NOT NULL DEFAULT 0,
   sent_firstname VARCHAR(32) DEFAULT NULL,
   sent_lastname VARCHAR(32) DEFAULT NULL,
-  emailed_to VARCHAR(32) DEFAULT NULL,
+  emailed_to VARCHAR(255) DEFAULT NULL,
   date_sent DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (unique_id),
   UNIQUE idx_coupon_id (coupon_id)
@@ -371,7 +371,7 @@ CREATE TABLE coupon_gv_queue (
   order_id INT(5) NOT NULL DEFAULT 0,
   amount DECIMAL(8,4) NOT NULL DEFAULT '0.0000',
   date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  ipaddr VARCHAR(39) NOT NULL DEFAULT '',
+  ipaddr VARCHAR(50) NOT NULL DEFAULT '',
   release_flag CHAR(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (unique_id),
   KEY idx_customer_id (customer_id)
@@ -383,7 +383,7 @@ CREATE TABLE coupon_redeem_track (
   coupon_id INT(11) NOT NULL DEFAULT 0,
   customer_id INT(11) NOT NULL DEFAULT 0,
   redeem_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  redeem_ip VARCHAR(39) NOT NULL DEFAULT '',
+  redeem_ip VARCHAR(50) NOT NULL DEFAULT '',
   order_id INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (unique_id)
 ) ENGINE=MyISAM;
@@ -447,7 +447,7 @@ CREATE TABLE customers (
   customers_firstname VARCHAR(64) NOT NULL,
   customers_lastname VARCHAR(64) NOT NULL,
   customers_dob DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
-  customers_email_address VARCHAR(96) NOT NULL,
+  customers_email_address VARCHAR(255) NOT NULL,
   customers_default_address_id INT NOT NULL,
   customers_telephone VARCHAR(32) NOT NULL,
   customers_fax VARCHAR(32),
@@ -464,8 +464,6 @@ CREATE TABLE customers (
   refferers_id VARCHAR(32) DEFAULT '0' NOT NULL,
   customers_date_added DATETIME DEFAULT '0000-00-00 00:00:00',
   customers_last_modified DATETIME DEFAULT '0000-00-00 00:00:00',
-  customers_login_tries INT(11) NOT NULL DEFAULT '0',
-  customers_login_time DATETIME DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (customers_id),
   KEY idx_customers_email_address (customers_email_address)
 ) ENGINE=MyISAM;
@@ -508,13 +506,22 @@ DROP TABLE IF EXISTS customers_ip;
 CREATE TABLE customers_ip (
   customers_ip_id INT(11) NOT NULL AUTO_INCREMENT,
   customers_id INT(11) NOT NULL DEFAULT 0,
-  customers_ip VARCHAR(39) NOT NULL DEFAULT '',
+  customers_ip VARCHAR(50) NOT NULL DEFAULT '',
   customers_ip_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   customers_host VARCHAR(255) NOT NULL DEFAULT '',
   customers_advertiser VARCHAR(30) DEFAULT NULL,
   customers_referer_url VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (customers_ip_id),
   KEY idx_customers_id (customers_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS customers_login;
+CREATE TABLE customers_login (
+  customers_ip varchar(50) DEFAULT NULL,
+  customers_email_address varchar(255) DEFAULT NULL,
+  customers_login_tries int(11) NOT NULL,
+  KEY idx_customers_ip (customers_ip),
+  KEY idx_customers_email_address (customers_email_address)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS customers_memo;
@@ -664,7 +671,7 @@ CREATE TABLE module_newsletter (
 DROP TABLE IF EXISTS newsletter_recipients;
 CREATE TABLE newsletter_recipients (
   mail_id INT(11) NOT NULL AUTO_INCREMENT,
-  customers_email_address VARCHAR(96) NOT NULL DEFAULT '',
+  customers_email_address VARCHAR(255) NOT NULL DEFAULT '',
   customers_id INT(11) NOT NULL DEFAULT 0,
   customers_status INT(5) NOT NULL DEFAULT 0,
   customers_firstname VARCHAR(64) NOT NULL DEFAULT '',
@@ -672,9 +679,9 @@ CREATE TABLE newsletter_recipients (
   mail_status INT(1) NOT NULL DEFAULT 0,
   mail_key VARCHAR(32) NOT NULL DEFAULT '',
   date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  ip_date_added varchar(32) DEFAULT NULL,
+  ip_date_added varchar(50) DEFAULT NULL,
   date_confirmed datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  ip_date_confirmed varchar(32) DEFAULT NULL,
+  ip_date_confirmed varchar(50) DEFAULT NULL,
   PRIMARY KEY (mail_id),
   KEY idx_mail_key (mail_key),
   UNIQUE idx_customers_email_address (customers_email_address)
@@ -723,7 +730,7 @@ CREATE TABLE orders (
   customers_state VARCHAR(32),
   customers_country VARCHAR(64) NOT NULL,
   customers_telephone VARCHAR(32) NOT NULL,
-  customers_email_address VARCHAR(96) NOT NULL,
+  customers_email_address VARCHAR(255) NOT NULL,
   customers_address_format_id INT(5) NOT NULL,
   customers_country_iso_code_2 varchar(2) NOT NULL,
   delivery_name VARCHAR(64) NOT NULL,
@@ -764,7 +771,7 @@ CREATE TABLE orders (
   payment_class VARCHAR(64) NOT NULL,
   shipping_method VARCHAR(128) NOT NULL,
   shipping_class VARCHAR(32) NOT NULL,
-  customers_ip VARCHAR(39) NOT NULL,
+  customers_ip VARCHAR(50) NOT NULL,
   language VARCHAR(32) NOT NULL,
   languages_id int(11) NOT NULL,
   afterbuy_success INT(1) DEFAULT 0 NOT NULL,
@@ -1242,7 +1249,7 @@ CREATE TABLE whos_online (
   customer_id INT(11) DEFAULT NULL,
   full_name VARCHAR(64) NOT NULL,
   session_id VARCHAR(32) NOT NULL,
-  ip_address VARCHAR(39) NOT NULL,
+  ip_address VARCHAR(50) NOT NULL,
   time_entry VARCHAR(14) NOT NULL,
   time_last_click VARCHAR(14) NOT NULL,
   last_page_url VARCHAR(255) NOT NULL,

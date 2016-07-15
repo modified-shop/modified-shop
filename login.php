@@ -23,7 +23,6 @@
 include ('includes/application_top.php');
 
 define('LOGIN_NUM', 2);
-define('LOGIN_TIME', 3600);
 defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
 
 if (isset ($_SESSION['customer_id'])) {
@@ -61,9 +60,34 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	$email_address = xtc_db_prepare_input($_POST['email_address']);
 	$password = xtc_db_prepare_input($_POST['password']);
 
-	$vvcode = xtc_db_prepare_input($_POST['vvcode']);
-	$captcha = xtc_db_prepare_input($_SESSION['vvcode']);
+	$vvcode = xtc_db_prepare_input((isset($_POST['vvcode'])) ? $_POST['vvcode'] : '0');
+	$captcha = xtc_db_prepare_input((isset($_SESSION['vvcode'])) ? $_SESSION['vvcode'] : '1');
   unset($_SESSION['vvcode']);		
+  
+  // brute force
+  $check_login_query = xtc_db_query("SELECT customers_login_tries
+                                       FROM ".TABLE_CUSTOMERS_LOGIN."
+                                      WHERE (customers_email_address = '".xtc_db_input($email_address)."'
+                                             OR customers_ip = '".xtc_db_input($_SESSION['tracking']['ip'])."')");
+  if (xtc_db_num_rows($check_login_query) > 0) {
+    while ($check_login = xtc_db_fetch_array($check_login_query)) {
+      if ($check_login['customers_login_tries'] > $_SESSION['customers_login_tries']) {
+        $_SESSION['customers_login_tries'] = $check_login['customers_login_tries'];
+      }
+    }
+    // update login tries
+    xtc_db_query("UPDATE ".TABLE_CUSTOMERS_LOGIN." 
+                     SET customers_login_tries = '".($_SESSION['customers_login_tries'] + 1)."'
+                   WHERE (customers_email_address = '".xtc_db_input($email_address)."'
+                          OR customers_ip = '".xtc_db_input($_SESSION['tracking']['ip'])."')");
+  } else {
+    $sql_data_array = array(
+      'customers_ip' => $_SESSION['tracking']['ip'],
+      'customers_email_address' => $email_address,
+      'customers_login_tries' => ($_SESSION['customers_login_tries'] + 1),
+    );
+    xtc_db_perform(TABLE_CUSTOMERS_LOGIN, $sql_data_array);
+  }
 
   // captcha
   $captcha_error = false;	
@@ -85,8 +109,6 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	                                             customers_password, 
 	                                             customers_email_address, 
 	                                             customers_default_address_id,
-	                                             customers_login_tries,
-	                                             customers_login_time,
 	                                             password_request_key,
 	                                             password_request_time
 	                                        FROM ".TABLE_CUSTOMERS." 
@@ -97,23 +119,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 		$messageStack->add('login', TEXT_LOGIN_ERROR);
 	} else {
 		$check_customer = xtc_db_fetch_array($check_customer_query);
-        
-    // update login tries
-    xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
-                     SET customers_login_tries = customers_login_tries+1, 
-                         customers_login_time = now() 
-                   WHERE customers_email_address = '".xtc_db_input($email_address)."'");
-		
-		if (($check_customer['customers_login_tries'] + 1) > $_SESSION['customers_login_tries']) {
-		  $_SESSION['customers_login_tries'] = $check_customer['customers_login_tries'] + 1;
-		}
-		
-		if ($_SESSION['customers_login_tries'] >= LOGIN_NUM && (time() - strtotime($check_customer['customers_login_time'])) < LOGIN_TIME) {
-      if (strtoupper($vvcode) != $captcha) {
-        $captcha_error = true;
-      }
-		}
-		
+    		
 		// Check that password is good
 		if (xtc_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id']) !== true) {
 			$messageStack->add('login', TEXT_LOGIN_ERROR);      
@@ -126,10 +132,9 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
       
       // reset Login tries
       unset($_SESSION['customers_login_tries']);
-      xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
-                       SET customers_login_tries = '0', 
-                           customers_login_time = now() 
-                     WHERE customers_email_address = '".xtc_db_input($email_address)."'");
+      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_LOGIN."
+                          WHERE (customers_email_address = '".xtc_db_input($email_address)."'
+                                 OR customers_ip = '".xtc_db_input($_SESSION['tracking']['ip'])."')");
 
 			$check_country_query = xtc_db_query("SELECT entry_country_id, 
 			                                            entry_zone_id 
