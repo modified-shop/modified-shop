@@ -152,8 +152,7 @@
     global $current_domain;
     
     if (isset($_COOKIE[xtc_session_name()])) {
-      require_once(DIR_FS_INC.'set_session_cookie.inc.php');
-      set_session_cookie((time() - 3600), DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
+      xtc_setcookie(xtc_session_name(), '', time()-3600, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
     }
     return session_destroy();
   }
