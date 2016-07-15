@@ -41,6 +41,7 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
+require_once (DIR_FS_INC.'secure_form.inc.php');
 require_once (DIR_WS_CLASSES.'class.newsletter.php');
 
 $info_message = '';
@@ -48,7 +49,10 @@ $newsletter = new newsletter();
 
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
   $email = xtc_db_prepare_input($_POST['email']);
-  if (xtc_validate_email($email) != false) {
+  if (check_secure_form($_POST) === false) {
+    $info_message = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+    $newsletter->message_class = 'error';
+  } elseif (xtc_validate_email($email) != false) {
     if (!in_array('newsletter', $use_captcha) || (isset($_SESSION['customer_id']) && MODULE_CAPTCHA_LOGGED_IN == 'False')) {
       $newsletter->auto = true;
     }
@@ -89,7 +93,7 @@ $smarty->assign('info_message', $info_message);
 if ($newsletter->message_class != '') {
   $smarty->assign('message_class', $newsletter->message_class);
 }
-$smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_NEWSLETTER, 'action=process', 'SSL')));
+$smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_NEWSLETTER, 'action=process', 'SSL')).secure_form());
 $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ((isset($_GET['email']) && xtc_db_input($_GET['email'])!='') ? xtc_db_input($_GET['email']):((isset($_POST['email']) && xtc_db_input($_POST['email']))?xtc_db_input($_POST['email']):''))));
 
 if(isset($_POST['check']) && $_POST['check'] == 'inp') {$inp = 'true'; $del = '';}

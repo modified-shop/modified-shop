@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -119,7 +119,7 @@ class newsletter {
 
       $this->generateCode();
 
-      if ((strtoupper($postCode) == $_SESSION['vvcode'] && $_SESSION['vvcode']!='') || $this->auto==true) {
+      if ((isset($_SESSION['vvcode']) && strtoupper($postCode) == $_SESSION['vvcode'] && $_SESSION['vvcode'] != '') || $this->auto==true) {
 
         if ($check == 'inp') {
           // Check if email exists

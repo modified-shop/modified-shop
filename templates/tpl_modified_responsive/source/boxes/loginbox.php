@@ -28,8 +28,9 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_login.html', $cache_id)
   if (!isset($_SESSION['customer_id'])) {
     // include needed functions
     require_once (DIR_FS_INC.'xtc_draw_password_field.inc.php');
+    require_once (DIR_FS_INC.'secure_form.inc.php');
     
-    $box_smarty->assign('FORM_ACTION', xtc_draw_form('loginbox', xtc_href_link(FILENAME_LOGIN, 'action=process', 'SSL'), 'post', 'class="box-login"'));
+    $box_smarty->assign('FORM_ACTION', xtc_draw_form('loginbox', xtc_href_link(FILENAME_LOGIN, 'action=process', 'SSL'), 'post', 'class="box-login"').secure_form());
     $box_smarty->assign('FIELD_EMAIL', xtc_draw_input_field('email_address', '', 'maxlength="50"'));
     $box_smarty->assign('FIELD_PWD', xtc_draw_password_field('password', '', 'maxlength="30"'));
     $box_smarty->assign('BUTTON', xtc_image_submit('button_login_small.gif', IMAGE_BUTTON_LOGIN));

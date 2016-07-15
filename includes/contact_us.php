@@ -35,7 +35,6 @@
     $valid_params = array(
       'name',
       'email',
-      'vvcode',
       'message_body',
       'company',
       'street',
@@ -59,10 +58,17 @@
     }
     
     if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
-      if ((strtoupper($vvcode) != $_SESSION['vvcode']) || $_SESSION['vvcode']=='') {
+      if (!isset($_SESSION['vvcode'])
+          || !isset($_POST['vvcode'])
+          || $_SESSION['vvcode'] == ''
+          || $_POST['vvcode'] == ''
+          || strtoupper($_POST['vvcode']) != $_SESSION['vvcode']
+          ) 
+      {
         $messageStack->add('contact_us', ERROR_VVCODE);
         $error = true;
       }
+      unset($_SESSION['vvcode']);
     }
     
     if (trim($message_body) == '') {
@@ -79,7 +85,6 @@
       $messageStack->add('contact_us', ERROR_MAIL);
       $smarty->assign('error_message', $messageStack->output('contact_us'));
     }
-    unset($_SESSION['vvcode']);
 
     //Wenn kein Fehler Email formatieren und absenden
     if ($error === false) {

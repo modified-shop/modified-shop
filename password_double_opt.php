@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-  $Id: password_double_opt.php 3072 2012-06-18 15:01:13Z hhacker $
+  $Id$
 
   modified eCommerce Shopsoftware
   http://www.modified-shop.org
@@ -40,6 +40,7 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
+require_once (DIR_FS_INC.'secure_form.inc.php');
 
 // include needed classes
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
@@ -76,7 +77,13 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && isset($_PO
   $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/new_password_mail.html');
   $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/new_password_mail.txt');
 
-  if (!in_array('password', $use_captcha) || (isset($_POST['vvcode']) && isset($_SESSION['vvcode']) && strtoupper($_POST['vvcode']) == strtoupper($_SESSION['vvcode']))) {
+  if (check_secure_form($_POST) === false) {
+    if (!in_array('password', $use_captcha)) {
+      $messageStack->add('password_double_opt_in', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
+    } else {
+      $messageStack->add('password_double_opt_in', TEXT_EMAIL_ERROR);
+    }
+  } elseif (!in_array('password', $use_captcha) || (isset($_POST['vvcode']) && isset($_SESSION['vvcode']) && strtoupper($_POST['vvcode']) == strtoupper($_SESSION['vvcode']))) {
     if (!xtc_db_num_rows($check_customer_query)) {
       $case = 'wrong_mail';
       if (!in_array('password', $use_captcha)) {
@@ -229,7 +236,7 @@ switch ($case) {
     $smarty->assign('text_heading', HEADING_PASSWORD_FORGOTTEN);
     $smarty->assign('message', TEXT_PASSWORD_FORGOTTEN);
     $smarty->assign('SHOP_NAME', STORE_NAME);
-    $smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=first_opt_in', 'SSL')));
+    $smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=first_opt_in', 'SSL')).secure_form());
     $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', xtc_db_input(isset($_POST['email']) ? $_POST['email'] : ''), '', 'text', false));
     $smarty->assign('BUTTON_SEND', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
     $smarty->assign('FORM_END', '</form>');

@@ -22,11 +22,11 @@ if (!isset($module_exclusions) || !is_array($module_exclusions)) {
   $module_exclusions = array();
 }
 
-foreach(auto_include(DIR_FS_ADMIN.'includes/extra/csrf_exclusion/','php') as $file) require_once ($file);
-
 // keep Token for popups, user_exclusions, module_exclusions
 $CSRFKeep = false;
 if (defined('RUN_MODE_ADMIN')) {
+  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/csrf_exclusion/','php') as $file) require_once ($file);
+  
   $exclusions = array('print_order', 'print_packingslip', 'bill', 'popup', 'haendlerbund', 'new_attributes', 'products_tags');
   if (isset($user_exclusions) && is_array($user_exclusions)) {
     $exclusions = array_merge($exclusions, $user_exclusions);

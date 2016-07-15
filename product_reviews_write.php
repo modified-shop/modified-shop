@@ -19,7 +19,7 @@
 include ('includes/application_top.php');
 
 // captcha
-$use_captcha = array('reviews');
+$use_captcha = array();
 if (defined('MODULE_CAPTCHA_ACTIVE')) {
   $use_captcha = explode(',', MODULE_CAPTCHA_ACTIVE);
 }
@@ -63,7 +63,13 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process') {
       $error = true;
     }
     if (in_array('reviews', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
-      if ((strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) || $_SESSION['vvcode'] == '') {
+      if (!isset($_SESSION['vvcode'])
+          || !isset($_POST['vvcode'])
+          || $_SESSION['vvcode'] == ''
+          || $_POST['vvcode'] == ''
+          || strtoupper($_POST['vvcode']) != $_SESSION['vvcode']
+          ) 
+      {
         $messageStack->add('product_reviews_write', strip_tags(ERROR_VVCODE, '<b><strong>'));
         $error = true;
       }

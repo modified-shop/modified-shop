@@ -29,7 +29,7 @@ require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'xtc_get_country_name.inc.php');
 require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
-
+require_once (DIR_FS_INC.'secure_form.inc.php');
 
 if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -160,6 +160,11 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
         $messageStack->add('addressbook', ENTRY_STATE_ERROR);
       }
     }
+  }
+
+  if (check_secure_form($_POST) === false) {
+    $messageStack->add('addressbook', ENTRY_TOKEN_ERROR);
+    $error = true;
   }
 
   if ($error == false) {
@@ -302,7 +307,7 @@ elseif (isset ($_GET['delete']) && is_numeric($_GET['delete'])) {
 require (DIR_WS_INCLUDES.'header.php');
 
 if (!isset($_GET['delete'])) {
-  $action = xtc_draw_form('addressbook', xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, (isset ($_GET['edit']) ? 'edit='.$_GET['edit'] : ''), 'SSL'), 'post', 'onsubmit="return check_form(addressbook);"');
+  $action = xtc_draw_form('addressbook', xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, (isset ($_GET['edit']) ? 'edit='.$_GET['edit'] : ''), 'SSL'), 'post', 'onsubmit="return check_form(addressbook);"').secure_form();
 }
 
 $smarty->assign('FORM_ACTION', $action);

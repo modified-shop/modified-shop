@@ -126,6 +126,16 @@
     <td>{#text_confirmation#}</td>
     <td>{$INPUT_CONFIRMATION}</td>
   </tr>
+  {if $INPUT_CODE}
+    <tr>
+      <td style="white-space:nowrap;"><strong>{#text_sec_code#}:</strong></td>
+      <td>{$VVIMG}</td>
+    </tr>
+    <tr>
+      <td style="white-space:nowrap;"><strong>{#text_sec_code#}:</strong></td>
+      <td>{$INPUT_CODE}</td>
+    </tr>
+  {/if}
 </table>
 </div>
 {if $PRIVACY_CHECKBOX}

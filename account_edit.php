@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: account_edit.php 4221 2013-01-11 10:18:52Z gtb-modified $   
+   $Id$   
    
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -31,6 +31,7 @@ require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
 require_once (DIR_FS_INC.'xtc_get_customers_country.inc.php');
 require_once (DIR_FS_INC.'get_customers_gender.inc.php');
+require_once (DIR_FS_INC.'secure_form.inc.php');
 
 if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -146,6 +147,11 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 		$messageStack->add('account_edit', ENTRY_TELEPHONE_NUMBER_ERROR);
 	}
 
+  if (check_secure_form($_POST) === false) {
+    $messageStack->add('account_edit', ENTRY_TOKEN_ERROR);
+    $error = true;
+  }
+
 	if ($error == false) {
 		$sql_data_array = array('customers_vat_id' => $vat, 
 		                        'customers_vat_id_status' => $customers_vat_id_status, 
@@ -196,7 +202,7 @@ $breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_EDIT, xtc_href_link(FILENAME_ACCOUNT_EDI
 
 require (DIR_WS_INCLUDES.'header.php');
 
-$smarty->assign('FORM_ACTION', xtc_draw_form('account_edit', xtc_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'), 'post', 'onsubmit="return check_form(account_edit);"').xtc_draw_hidden_field('action', 'process'));
+$smarty->assign('FORM_ACTION', xtc_draw_form('account_edit', xtc_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'), 'post', 'onsubmit="return check_form(account_edit);"').xtc_draw_hidden_field('action', 'process').secure_form());
 
 if ($messageStack->size('account_edit') > 0)
 	$smarty->assign('error', $messageStack->output('account_edit'));

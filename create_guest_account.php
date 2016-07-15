@@ -21,6 +21,14 @@ include ('includes/application_top.php');
 
 defined('DISPLAY_PRIVACY_CHECK') or define('DISPLAY_PRIVACY_CHECK', 'true');
 
+// captcha
+$use_captcha = array();
+if (defined('MODULE_CAPTCHA_ACTIVE')) {
+  $use_captcha = explode(',', MODULE_CAPTCHA_ACTIVE);
+}
+defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
+defined('MODULE_CAPTCHA_LOGGED_IN') or define('MODULE_CAPTCHA_LOGGED_IN', 'True');
+
 // redirect to create_account if creation of guest accounts is not enabled
 if (ACCOUNT_OPTIONS == 'account') {
   xtc_redirect(FILENAME_DEFAULT);
@@ -43,13 +51,14 @@ $smarty = new Smarty;
 require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
 
 // include needed functions
-require_once (DIR_FS_INC . 'xtc_get_country_list.inc.php');
-require_once (DIR_FS_INC . 'xtc_validate_email.inc.php');
-require_once (DIR_FS_INC . 'xtc_create_password.inc.php');
-require_once (DIR_FS_INC . 'xtc_get_geo_zone_code.inc.php');
+require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
+require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
+require_once (DIR_FS_INC.'xtc_create_password.inc.php');
+require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
 require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
+require_once (DIR_FS_INC.'secure_form.inc.php');
 
 $country = isset($_POST['country']) ? (int)$_POST['country'] : STORE_COUNTRY;
 $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? true : false;
@@ -202,6 +211,25 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   if (DISPLAY_PRIVACY_CHECK == 'true' && empty($privacy)) {
     $error = true;
     $messageStack->add('create_account', ENTRY_PRIVACY_ERROR);
+  }
+
+  if (in_array('create_account', $use_captcha)) {
+    if (!isset($_SESSION['vvcode'])
+        || !isset($_POST['vvcode'])
+        || $_SESSION['vvcode'] == ''
+        || $_POST['vvcode'] == ''
+        || strtoupper($_POST['vvcode']) != $_SESSION['vvcode']
+        ) 
+    {
+      $messageStack->add('create_account', strip_tags(ERROR_VVCODE, '<b><strong>'));
+      $error = true;
+    }
+    unset($_SESSION['vvcode']);
+  }
+  
+  if (check_secure_form($_POST) === false) {
+    $messageStack->add('create_account', ENTRY_TOKEN_ERROR);
+    $error = true;
   }
 
   if(isset($customers_status)) {
@@ -360,7 +388,7 @@ if ($messageStack->size('create_account') > 0) {
   $smarty->assign('error', $messageStack->output('create_account'));
 }
 
-$smarty->assign('FORM_ACTION', xtc_draw_form('create_account', xtc_href_link(FILENAME_CREATE_GUEST_ACCOUNT, '', 'SSL'), 'post') . xtc_draw_hidden_field('action', 'process'));
+$smarty->assign('FORM_ACTION', xtc_draw_form('create_account', xtc_href_link(FILENAME_CREATE_GUEST_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'process').secure_form());
 
 if (ACCOUNT_GENDER == 'true') {
   $smarty->assign('gender', '1');
@@ -447,6 +475,10 @@ if (ACCOUNT_STATE == 'true') { //important no $required_zones because of ajax lo
   $smarty->assign('state', '0');
 }
 
+if (in_array('create_account', $use_captcha)) {
+  $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL') .'" alt="Captcha" />');
+  $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'style="width:240px;" size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+}
 $smarty->assign('SELECT_COUNTRY', xtc_get_country_list(array ('name' => 'country', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>' : '')), (int)$country));
 $smarty->assign('INPUT_TEL', xtc_draw_input_fieldNote(array ('name' => 'telephone','text' => '&nbsp;'. ((ACCOUNT_TELEPHONE_OPTIONAL == 'false' && xtc_not_null(ENTRY_TELEPHONE_NUMBER_TEXT)) ? '<span class="inputRequirement">' . ENTRY_TELEPHONE_NUMBER_TEXT . '</span>' : ''))));
 $smarty->assign('INPUT_FAX', xtc_draw_input_fieldNote(array ('name' => 'fax','text' => '&nbsp;' . (xtc_not_null(ENTRY_FAX_NUMBER_TEXT) ? '<span class="inputRequirement">' . ENTRY_FAX_NUMBER_TEXT . '</span>' : ''))));
