@@ -49,7 +49,7 @@ if (STORE_SESSIONS == 'mysql') {
 }
 
 // set the session cookie
-set_session_cookie(0, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''), true, ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false));
+set_session_cookie(0, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''), ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false), true);
 
 // set the session ID if it exists
 if (isset($_POST[xtc_session_name()])) {
