@@ -105,6 +105,11 @@
       $messageStack->add('checkout_address', ENTRY_COUNTRY_ERROR);
     }
 
+    if (check_secure_form($_POST) === false) {
+      $messageStack->add('checkout_address', ENTRY_TOKEN_ERROR);
+      $error = true;
+    }
+
     if ($error == false) {
       $sql_data_array = array ('customers_id' => (int)$_SESSION['customer_id'],
                                'entry_firstname' => $firstname,
