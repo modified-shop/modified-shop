@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: shipping.php 2807 2012-04-29 18:11:28Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -112,7 +112,7 @@
           $shipping_weight = $shipping_weight + ($shipping_weight*SHIPPING_BOX_PADDING/100);
         }
 
-        if ($shipping_weight > SHIPPING_MAX_WEIGHT) { // Split into many boxes
+        if (SHIPPING_MAX_WEIGHT != '' && $shipping_weight > SHIPPING_MAX_WEIGHT) { // Split into many boxes
           $shipping_num_boxes = ceil($shipping_weight/SHIPPING_MAX_WEIGHT);
           $shipping_weight = $shipping_weight/$shipping_num_boxes;
         }
