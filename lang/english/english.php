@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: english.php 2721 2012-03-23 20:12:07Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -596,4 +596,5 @@ define('AC_SHOW_PAGE_OF', ' from ');
 define('FREE_SHIPPING_INFO', 'Free Shipping minimum order: %s');
 
 define('MANUFACTURER_NOT_FOUND', 'Manufacturer not found');
+define('ENTRY_TOKEN_ERROR', 'Please check your data.');
 ?>

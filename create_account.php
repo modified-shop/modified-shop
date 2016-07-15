@@ -159,7 +159,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $check_email = xtc_db_fetch_array($check_email_query);
     if ($check_email['total'] > 0) {
       $error = true;
-      $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
+      $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
     }
   }
 
@@ -297,200 +297,211 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     if (ACCOUNT_DOB == 'true') {
       $sql_data_array['customers_dob'] = xtc_date_raw($dob);
     }
-    xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
-
-    $_SESSION['customer_id'] = xtc_db_insert_id();
-    xtc_write_user_info($_SESSION['customer_id']);
     
-    $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
-                            'entry_firstname' => $firstname,
-                            'entry_lastname' => $lastname,
-                            'entry_street_address' => $street_address,
-                            'entry_postcode' => $postcode,
-                            'entry_city' => $city,
-                            'entry_country_id' => (int)$country,
-                            'address_date_added' => 'now()',
-                            'address_last_modified' => 'now()'
-                            );
+    // check email again
+    $check_email_query = xtc_db_query("SELECT count(*) as total
+                                         FROM ".TABLE_CUSTOMERS."
+                                        WHERE customers_email_address = '".xtc_db_input($email_address)."'
+                                          AND account_type = '0'");
+    $check_email = xtc_db_fetch_array($check_email_query);
+    if ($check_email['total'] == 0) {
+      xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
-    if (ACCOUNT_GENDER == 'true') {
-      $sql_data_array['entry_gender'] = $gender;
-    }
-    if (ACCOUNT_COMPANY == 'true') {
-      $sql_data_array['entry_company'] = $company;
-    }
-    if (ACCOUNT_SUBURB == 'true') {
-      $sql_data_array['entry_suburb'] = $suburb;
-    }
-    if (ACCOUNT_STATE == 'true') {
-      $sql_data_array['entry_zone_id'] = (isset($zone_id) ? (int)$zone_id : 0);
-      $sql_data_array['entry_state'] = (isset($state) ? $state : '');
-    }
-
-    xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
-
-    $address_id = xtc_db_insert_id();
-
-    xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
-                     SET customers_default_address_id = '".(int)$address_id."' 
-                   WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+      $_SESSION['customer_id'] = xtc_db_insert_id();
+      xtc_write_user_info($_SESSION['customer_id']);
     
-    $sql_data_array = array('customers_info_id' => (int)$_SESSION['customer_id'],
-                            'customers_info_number_of_logons' => '1',
-                            'customers_info_date_account_created' => 'now()'
-                            );
-    xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
+      $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
+                              'entry_firstname' => $firstname,
+                              'entry_lastname' => $lastname,
+                              'entry_street_address' => $street_address,
+                              'entry_postcode' => $postcode,
+                              'entry_city' => $city,
+                              'entry_country_id' => (int)$country,
+                              'address_date_added' => 'now()',
+                              'address_last_modified' => 'now()'
+                              );
 
-    if (SESSION_RECREATE == 'True') {
-      xtc_session_recreate();
-    }
-
-    $_SESSION['customer_first_name'] = $firstname;
-    $_SESSION['customer_last_name'] = $lastname;
-    $_SESSION['customer_default_address_id'] = $address_id;
-    $_SESSION['customer_country_id'] = (int)$country;
-    $_SESSION['customer_zone_id'] = $zone_id;
-    $_SESSION['customer_vat_id'] = $vat;
-
-    // session gender
-    if (ACCOUNT_GENDER == 'true') {
-      $_SESSION['customer_gender'] = $gender;
-    }
-    
-    // restore cart contents
-    $_SESSION['cart']->restore_contents();
-
-    // build the message content
-    $name = $firstname.' '.$lastname;
-
-    // load data into array
-    $module_content = array('MAIL_NAME' => $name,
-                            'MAIL_REPLY_ADDRESS' => parse_multi_language_value(EMAIL_SUPPORT_REPLY_ADDRESS, $_SESSION['language_code']),
-                            'MAIL_GENDER' => get_customers_gender($gender));
-
-    // assign data to smarty
-    $smarty->assign('language', $_SESSION['language']);
-    $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-    $smarty->assign('content', $module_content);
-    $smarty->assign('GENDER', get_customers_gender($gender));
-    $smarty->assign('LASTNAME',$lastname);
-
-	  // campaign tracking
-    if (isset($_SESSION['tracking']['refID'])) {
-      $refID = $leads = 0;
-      $campaign_check = xtc_db_query("SELECT campaigns_id, 
-                                             campaigns_leads
-                                        FROM ".TABLE_CAMPAIGNS."
-                                       WHERE campaigns_refID = '".$_SESSION['tracking']['refID']."'");
-      if (xtc_db_num_rows($campaign_check) > 0) {
-        $campaign = xtc_db_fetch_array($campaign_check);
-        $refID = $campaign['campaigns_id'];
-		    $leads = $campaign['campaigns_leads'];
+      if (ACCOUNT_GENDER == 'true') {
+        $sql_data_array['entry_gender'] = $gender;
       }
-      $leads++;
-      xtc_db_query("UPDATE " . TABLE_CUSTOMERS . "
-	                     SET refferers_id = '".$refID."'
+      if (ACCOUNT_COMPANY == 'true') {
+        $sql_data_array['entry_company'] = $company;
+      }
+      if (ACCOUNT_SUBURB == 'true') {
+        $sql_data_array['entry_suburb'] = $suburb;
+      }
+      if (ACCOUNT_STATE == 'true') {
+        $sql_data_array['entry_zone_id'] = (isset($zone_id) ? (int)$zone_id : 0);
+        $sql_data_array['entry_state'] = (isset($state) ? $state : '');
+      }
+
+      xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
+
+      $address_id = xtc_db_insert_id();
+
+      xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
+                       SET customers_default_address_id = '".(int)$address_id."' 
                      WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
-      xtc_db_query("UPDATE " . TABLE_CAMPAIGNS . "
-                       SET campaigns_leads = '".$leads."'
-                     WHERE campaigns_id = '".$refID."'");
-    }
-
-    // GV Code - CREDIT CLASS CODE BLOCK
-    if (ACTIVATE_GIFT_SYSTEM == 'true') {
-      if (NEW_SIGNUP_GIFT_VOUCHER_AMOUNT > 0) {
-        $coupon_code = create_coupon_code();
-        $sql_data_array = array('coupon_code' => $coupon_code,
-                                'coupon_type' => 'G',
-                                'coupon_amount' => NEW_SIGNUP_GIFT_VOUCHER_AMOUNT,
-                                'date_created' => $email_address
-                                );
-        xtc_db_perform(TABLE_COUPONS, $sql_data_array);
-
-        $insert_id = xtc_db_insert_id($insert_query);
-        $sql_data_array = array('coupon_id' => $insert_id,
-                                'customer_id_sent' => '0',
-                                'sent_firstname' => 'Admin',
-                                'emailed_to' => $email_address,
-                                'date_sent' => 'now()'
-                                );
-        xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
-
-        $smarty->assign('SEND_GIFT', 'true');
-        $smarty->assign('GIFT_AMMOUNT', $xtPrice->xtcFormat(NEW_SIGNUP_GIFT_VOUCHER_AMOUNT, true));
-        $smarty->assign('GIFT_CODE', $coupon_code);
-        $smarty->assign('GIFT_LINK', xtc_href_link(FILENAME_GV_REDEEM, 'gv_no='.$coupon_code, 'NONSSL', false));
-      }
-      if (NEW_SIGNUP_DISCOUNT_COUPON != '') {
-        $coupon_code = NEW_SIGNUP_DISCOUNT_COUPON;
-        $coupon_query = xtc_db_query("SELECT * 
-                                        FROM ".TABLE_COUPONS." 
-                                       WHERE coupon_code = '".xtc_db_input($coupon_code)."'");
-        $coupon = xtc_db_fetch_array($coupon_query);
-        $coupon_id = $coupon['coupon_id'];
-        $coupon_desc_query = xtc_db_query("SELECT * 
-                                             FROM ".TABLE_COUPONS_DESCRIPTION." 
-                                            WHERE coupon_id = '".$coupon_id."' 
-                                              AND language_id = '".(int)$_SESSION['languages_id']."'");
-        $coupon_desc = xtc_db_fetch_array($coupon_desc_query);
-        
-        $sql_data_array = array('coupon_id' => $coupon_id,
-                                'customer_id_sent' => '0',
-                                'sent_firstname' => 'Admin',
-                                'emailed_to' => $email_address,
-                                'date_sent' => 'now()'
-                                );
-        xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
-        
-        $smarty->assign('SEND_COUPON', 'true');
-        $smarty->assign('COUPON_DESC', $coupon_desc['coupon_description']);
-        $smarty->assign('COUPON_CODE', $coupon['coupon_code']);
-      }
-    }
-
-    // create templates
-    $smarty->caching = 0;
-    $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/create_account_mail.html');
-    $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/create_account_mail.txt');
     
-    if (SEND_EMAILS == 'true' && SEND_MAIL_ACCOUNT_CREATED == 'true') {
-      xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
-                   EMAIL_SUPPORT_NAME, 
-                   $email_address, 
-                   $name, 
-                   '', 
-                   EMAIL_SUPPORT_REPLY_ADDRESS, 
-                   EMAIL_SUPPORT_REPLY_ADDRESS_NAME, 
-                   '', 
-                   '', 
-                   EMAIL_SUPPORT_SUBJECT, 
-                   $html_mail, 
-                   $txt_mail);
-    }
+      $sql_data_array = array('customers_info_id' => (int)$_SESSION['customer_id'],
+                              'customers_info_number_of_logons' => '1',
+                              'customers_info_date_account_created' => 'now()'
+                              );
+      xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
+
+      if (SESSION_RECREATE == 'True') {
+        xtc_session_recreate();
+      }
+
+      $_SESSION['customer_first_name'] = $firstname;
+      $_SESSION['customer_last_name'] = $lastname;
+      $_SESSION['customer_default_address_id'] = $address_id;
+      $_SESSION['customer_country_id'] = (int)$country;
+      $_SESSION['customer_zone_id'] = $zone_id;
+      $_SESSION['customer_vat_id'] = $vat;
+
+      // session gender
+      if (ACCOUNT_GENDER == 'true') {
+        $_SESSION['customer_gender'] = $gender;
+      }
     
-    // send mail to admin
-    if (EMAIL_SUPPORT_FORWARDING_STRING != '') {
-      xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
-                   EMAIL_SUPPORT_NAME, 
-                   EMAIL_SUPPORT_FORWARDING_STRING, 
-                   EMAIL_SUPPORT_NAME, 
-                   '',
-                   $email_address, 
-                   $name, 
-                   '', 
-                   '', 
-                   EMAIL_SUPPORT_SUBJECT, 
-                   $html_mail, 
-                   $txt_mail);
-    }
+      // restore cart contents
+      $_SESSION['cart']->restore_contents();
+
+      // build the message content
+      $name = $firstname.' '.$lastname;
+
+      // load data into array
+      $module_content = array('MAIL_NAME' => $name,
+                              'MAIL_REPLY_ADDRESS' => parse_multi_language_value(EMAIL_SUPPORT_REPLY_ADDRESS, $_SESSION['language_code']),
+                              'MAIL_GENDER' => get_customers_gender($gender));
+
+      // assign data to smarty
+      $smarty->assign('language', $_SESSION['language']);
+      $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+      $smarty->assign('content', $module_content);
+      $smarty->assign('GENDER', get_customers_gender($gender));
+      $smarty->assign('LASTNAME',$lastname);
+
+      // campaign tracking
+      if (isset($_SESSION['tracking']['refID'])) {
+        $refID = $leads = 0;
+        $campaign_check = xtc_db_query("SELECT campaigns_id, 
+                                               campaigns_leads
+                                          FROM ".TABLE_CAMPAIGNS."
+                                         WHERE campaigns_refID = '".$_SESSION['tracking']['refID']."'");
+        if (xtc_db_num_rows($campaign_check) > 0) {
+          $campaign = xtc_db_fetch_array($campaign_check);
+          $refID = $campaign['campaigns_id'];
+          $leads = $campaign['campaigns_leads'];
+        }
+        $leads++;
+        xtc_db_query("UPDATE " . TABLE_CUSTOMERS . "
+                         SET refferers_id = '".$refID."'
+                       WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+        xtc_db_query("UPDATE " . TABLE_CAMPAIGNS . "
+                         SET campaigns_leads = '".$leads."'
+                       WHERE campaigns_id = '".$refID."'");
+      }
+
+      // GV Code - CREDIT CLASS CODE BLOCK
+      if (ACTIVATE_GIFT_SYSTEM == 'true') {
+        if (NEW_SIGNUP_GIFT_VOUCHER_AMOUNT > 0) {
+          $coupon_code = create_coupon_code();
+          $sql_data_array = array('coupon_code' => $coupon_code,
+                                  'coupon_type' => 'G',
+                                  'coupon_amount' => NEW_SIGNUP_GIFT_VOUCHER_AMOUNT,
+                                  'date_created' => $email_address
+                                  );
+          xtc_db_perform(TABLE_COUPONS, $sql_data_array);
+
+          $insert_id = xtc_db_insert_id($insert_query);
+          $sql_data_array = array('coupon_id' => $insert_id,
+                                  'customer_id_sent' => '0',
+                                  'sent_firstname' => 'Admin',
+                                  'emailed_to' => $email_address,
+                                  'date_sent' => 'now()'
+                                  );
+          xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
+
+          $smarty->assign('SEND_GIFT', 'true');
+          $smarty->assign('GIFT_AMMOUNT', $xtPrice->xtcFormat(NEW_SIGNUP_GIFT_VOUCHER_AMOUNT, true));
+          $smarty->assign('GIFT_CODE', $coupon_code);
+          $smarty->assign('GIFT_LINK', xtc_href_link(FILENAME_GV_REDEEM, 'gv_no='.$coupon_code, 'NONSSL', false));
+        }
+        if (NEW_SIGNUP_DISCOUNT_COUPON != '') {
+          $coupon_code = NEW_SIGNUP_DISCOUNT_COUPON;
+          $coupon_query = xtc_db_query("SELECT * 
+                                          FROM ".TABLE_COUPONS." 
+                                         WHERE coupon_code = '".xtc_db_input($coupon_code)."'");
+          $coupon = xtc_db_fetch_array($coupon_query);
+          $coupon_id = $coupon['coupon_id'];
+          $coupon_desc_query = xtc_db_query("SELECT * 
+                                               FROM ".TABLE_COUPONS_DESCRIPTION." 
+                                              WHERE coupon_id = '".$coupon_id."' 
+                                                AND language_id = '".(int)$_SESSION['languages_id']."'");
+          $coupon_desc = xtc_db_fetch_array($coupon_desc_query);
+        
+          $sql_data_array = array('coupon_id' => $coupon_id,
+                                  'customer_id_sent' => '0',
+                                  'sent_firstname' => 'Admin',
+                                  'emailed_to' => $email_address,
+                                  'date_sent' => 'now()'
+                                  );
+          xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
+        
+          $smarty->assign('SEND_COUPON', 'true');
+          $smarty->assign('COUPON_DESC', $coupon_desc['coupon_description']);
+          $smarty->assign('COUPON_CODE', $coupon['coupon_code']);
+        }
+      }
+
+      // create templates
+      $smarty->caching = 0;
+      $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/create_account_mail.html');
+      $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/create_account_mail.txt');
+    
+      if (SEND_EMAILS == 'true' && SEND_MAIL_ACCOUNT_CREATED == 'true') {
+        xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
+                     EMAIL_SUPPORT_NAME, 
+                     $email_address, 
+                     $name, 
+                     '', 
+                     EMAIL_SUPPORT_REPLY_ADDRESS, 
+                     EMAIL_SUPPORT_REPLY_ADDRESS_NAME, 
+                     '', 
+                     '', 
+                     EMAIL_SUPPORT_SUBJECT, 
+                     $html_mail, 
+                     $txt_mail);
+      }
+    
+      // send mail to admin
+      if (EMAIL_SUPPORT_FORWARDING_STRING != '') {
+        xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
+                     EMAIL_SUPPORT_NAME, 
+                     EMAIL_SUPPORT_FORWARDING_STRING, 
+                     EMAIL_SUPPORT_NAME, 
+                     '',
+                     $email_address, 
+                     $name, 
+                     '', 
+                     '', 
+                     EMAIL_SUPPORT_SUBJECT, 
+                     $html_mail, 
+                     $txt_mail);
+      }
    
-    if ($newsletter == '1') {
-      require_once (DIR_WS_CLASSES.'class.newsletter.php');
-      $newsletter = new newsletter;
-      $newsletter->AddUserAuto($email_address);
-    }
+      if ($newsletter == '1') {
+        require_once (DIR_WS_CLASSES.'class.newsletter.php');
+        $newsletter = new newsletter;
+        $newsletter->AddUserAuto($email_address);
+      }
 
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+    } else {
+      $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
+    }
   }
 }
 
