@@ -26,7 +26,7 @@
 define('MODULE_SHIPPING_CHRONOPOST_TEXT_TITLE', 'Chronopost Zone Rates');
 define('MODULE_SHIPPING_CHRONOPOST_TEXT_DESCRIPTION', 'Chronopost Zone Based Rates');
 define('MODULE_SHIPPING_CHRONOPOST_TEXT_WAY', 'Shipping to');
-define('MODULE_SHIPPING_CHRONOPOST_TEXT_UNITS', 'Kg(s)');
+define('MODULE_SHIPPING_CHRONOPOST_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_CHRONOPOST_INVALID_ZONE', 'Chronopost No shipping available to the selected country');
 define('MODULE_SHIPPING_CHRONOPOST_UNDEFINED_RATE', 'Chronopost The shipping rate cannot be determined at this time');
 
