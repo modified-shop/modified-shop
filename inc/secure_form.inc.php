@@ -15,8 +15,13 @@ require_once (DIR_FS_INC . 'xtc_create_password.inc.php');
 
 function secure_form() {
   // create CSRF Token
-  $_SESSION['SFName'] = xtc_RandomString(6);
-  $_SESSION['SFToken'] = xtc_RandomString(32);
+  if (!isset($_SESSION['SFName'])
+      || !isset($_SESSION['SFToken'])
+      )
+  {
+    $_SESSION['SFName'] = xtc_RandomString(6);
+    $_SESSION['SFToken'] = xtc_RandomString(32);
+  }
   
   return xtc_draw_hidden_field($_SESSION['SFName'], $_SESSION['SFToken']);
 }
@@ -28,9 +33,14 @@ function check_secure_form($params) {
       || $params[$_SESSION['SFName']] != $_SESSION['SFToken']
       )
   {
+    unset($_SESSION['SFName']);
+    unset($_SESSION['SFToken']);
+    
     return false;
   }
-  
+  unset($_SESSION['SFName']);
+  unset($_SESSION['SFToken']);
+
   return true;
 }
 ?>
