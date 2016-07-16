@@ -222,4 +222,29 @@ ALTER TABLE `products_tags` ADD INDEX idx_values_id (`values_id`);
 #GTB - 2016-06-17 - extend reviews for status
 ALTER TABLE customers_status ADD customers_status_reviews_status INT(1) NOT NULL DEFAULT 1 AFTER customers_status_read_reviews;
 
+#GTB - 2016-07-15 - new brute force method
+ALTER TABLE banktransfer MODIFY banktransfer_owner_email VARCHAR(255) DEFAULT NULL;
+ALTER TABLE campaigns_ip MODIFY user_ip VARCHAR(50) NOT NULL;
+ALTER TABLE coupon_email_track MODIFY emailed_to VARCHAR(255) DEFAULT NULL;
+ALTER TABLE coupon_gv_queue MODIFY ipaddr VARCHAR(50) NOT NULL DEFAULT '';
+ALTER TABLE coupon_redeem_track MODIFY redeem_ip VARCHAR(50) NOT NULL DEFAULT '';
+ALTER TABLE customers MODIFY customers_email_address VARCHAR(255) NOT NULL;
+ALTER TABLE customers DROP customers_login_tries;
+ALTER TABLE customers DROP customers_login_time;
+ALTER TABLE customers_ip MODIFY customers_ip VARCHAR(50) NOT NULL DEFAULT '';
+DROP TABLE IF EXISTS customers_login;
+CREATE TABLE customers_login ( 
+  customers_ip varchar(50) DEFAULT NULL, 
+  customers_email_address varchar(255) DEFAULT NULL, 
+  customers_login_tries int(11) NOT NULL, 
+  KEY idx_customers_ip (customers_ip), 
+  KEY idx_customers_email_address (customers_email_address) 
+) ENGINE=MyISAM; 
+ALTER TABLE newsletter_recipients MODIFY customers_email_address VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE newsletter_recipients MODIFY ip_date_added VARCHAR(50) DEFAULT NULL;
+ALTER TABLE newsletter_recipients MODIFY ip_date_confirmed VARCHAR(50) DEFAULT NULL;
+ALTER TABLE orders MODIFY customers_email_address VARCHAR(255) NOT NULL;
+ALTER TABLE orders MODIFY customers_ip VARCHAR(50) NOT NULL;
+ALTER TABLE whos_online MODIFY ip_address VARCHAR(50) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
