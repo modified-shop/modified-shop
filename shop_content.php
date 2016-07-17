@@ -107,7 +107,7 @@ if ($language_not_found === true) {
     }
   }
 
-  if (($_GET['coID'] != 7) || (isset($_GET['action']) && $_GET['action'] == 'success')) {
+  if (($_GET['coID'] != 7) || (isset($_GET['action']) && $_GET['action'] == 'success') || $content_exists == 0) {
     require (DIR_WS_INCLUDES.'header.php');
   }
 }
