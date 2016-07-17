@@ -395,7 +395,7 @@
       $document->textPrefix = utf8_encode($textPrefix);
       
       // Text after Positions
-      $document->text = utf8_encode(constant(strtoupper('MODULE_EASYBILL_PAYMENT_TEXT_'.$this->info['payment_method'])));
+      $document->text = ((defined(strtoupper('MODULE_EASYBILL_PAYMENT_TEXT_'.$this->info['payment_method']))) ? utf8_encode(constant(strtoupper('MODULE_EASYBILL_PAYMENT_TEXT_'.$this->info['payment_method']))) : '');
       
       if ($this->info['payment_method'] == 'billpay') {
         $document->text .= EASYBILL_EOL.$this->getBankData();
