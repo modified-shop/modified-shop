@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -51,7 +51,8 @@ if ($language_not_found === true) {
                                          AND content_active = '1'
                                          AND trim(content_title) != ''
                                          AND languages_id=".(int)$_SESSION['languages_id']);
-
+  
+  $content_exists = xtc_db_num_rows($shop_content_query);
   if ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {
     // sub content
     include (DIR_WS_MODULES.'sub_content_listing.php');
@@ -64,19 +65,22 @@ if ($language_not_found === true) {
 
   $smarty->assign('CONTENT_HEADING', (($shop_content_data['content_heading'] != '') ? $shop_content_data['content_heading'] : $shop_content_data['content_title']));
 
-  if ($_GET['coID'] == 7) {
+  if ($_GET['coID'] == 7 && $content_exists == 1) {
     include (DIR_WS_INCLUDES.'contact_us.php');
   } else {
-    $content_body = $shop_content_data['content_text'];
-    if ($shop_content_data['content_file'] != '' && is_file(DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file'])) {
-      ob_start();
-      if (strpos($shop_content_data['content_file'], '.txt'))
-        echo '<pre>';
-      include (DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file']);
-      if (strpos($shop_content_data['content_file'], '.txt'))
-        echo '</pre>';
-      $smarty->assign('file', ob_get_contents());
-      ob_end_clean();
+    $content_body = '';
+    if ($content_exists == 1) {
+      $content_body = $shop_content_data['content_text'];
+      if ($shop_content_data['content_file'] != '' && is_file(DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file'])) {
+        ob_start();
+        if (strpos($shop_content_data['content_file'], '.txt'))
+          echo '<pre>';
+        include (DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file']);
+        if (strpos($shop_content_data['content_file'], '.txt'))
+          echo '</pre>';
+        $smarty->assign('file', ob_get_contents());
+        ob_end_clean();
+      }
     }
     $smarty->assign('CONTENT_BODY', $content_body);
 
