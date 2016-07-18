@@ -88,6 +88,7 @@
         }
         
         if ($ps_country) {
+          $ps_cost = $xtPrice->xtcCalculateCurr($ps_cost);
           $ps_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_PS_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
           $ps_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_PS_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
 
