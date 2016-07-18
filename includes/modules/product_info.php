@@ -222,6 +222,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
         if ($mo_img != '') {
           $more_images_data[$mo_img_nr] = array ('PRODUCTS_IMAGE' => $mo_img);
         }
+        foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_info_mo_images/','php') as $file) require ($file);
       }
       $info_smarty->assign('more_images', $more_images_data);
     }
