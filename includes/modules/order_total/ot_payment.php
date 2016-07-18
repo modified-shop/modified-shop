@@ -100,7 +100,7 @@ class ot_payment {
   }
 
   function calculate_credit($payment = '') {
-    global $order;
+    global $order, $xtPrice;
 
     $discount = array();
     $values = array();
@@ -142,11 +142,12 @@ class ot_payment {
       }
       $discount_table = (preg_split("/[:,]/" , $string));
       for ($i=0; $i<sizeof($discount_table); $i+=2) {
+        $discount_table[$i] = $xtPrice->xtcCalculateCurr($discount_table[$i]);
         if (round($this->amount, 2) >= $discount_table[$i]) {
           $values[$j]['minimum'] = $discount_table[$i];
           $fees = preg_split('/&/', $discount_table[$i+1]);
           $values[$j]['percent'] = ((isset($fees[0])) ? $fees[0] : '');
-          $values[$j]['fee'] = ((isset($fees[1]) && $fees[1] != '') ? $fees[1] : 0);
+          $values[$j]['fee'] = ((isset($fees[1]) && $fees[1] != '') ? $xtPrice->xtcCalculateCurr($fees[1]) : 0);
         } else {
           break;
         }
