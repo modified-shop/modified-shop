@@ -186,6 +186,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'includes/configure.org.php',
                      'includes/external/janolaw/send_order.php', // from r9293
                      'includes/external/payone/modules/send_order.php', // from r9293
+                     'includes/external/paypal/lib/PayPal/Core/PayPalLoggingLevel.php', // neu
                      'includes/external/shopgate/api.php', // neu
                      'includes/external/shopgate/helper/ShopgateHelperLoader.php', // neu
                      'includes/external/shopgate/Model/ShopgateModelLoader.php', // neu
