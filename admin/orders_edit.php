@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: orders_edit.php 5338 2013-08-06 13:00:51Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -952,6 +952,13 @@ if ($action == 'save_order') {
 
     $tax_rate = $products['products_tax'];
 
+    if ($status['customers_status_add_tax_ot'] == 0
+        && $status['customers_status_show_price_tax'] == 0
+        ) 
+    {
+      $tax_rate = 0;
+    }
+
     if ($products['allow_tax'] == '1') {
       $bprice = $products['final_price'];
       $nprice = $xtPrice->xtcRemoveTax($bprice, $tax_rate);
@@ -1027,6 +1034,14 @@ if ($action == 'save_order') {
 
     $c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2'])); // web28 - 2012-04-05 - FIX orders tax
     $module_tax_rate = xtc_get_tax_rate($module_tax_class, $c_info['country_id'], $c_info['zone_id']);
+
+    if ($status['customers_status_add_tax_ot'] == 0
+        && $status['customers_status_show_price_tax'] == 0
+        ) 
+    {
+      $module_tax_rate = 0;
+    }
+
     //echo $module_value['class'].'|'.$module_tax_rate.'<br>'; //DEBUG
     if ($status['customers_status_show_price_tax'] == 1) {
       $module_b_price = $module_value['value'];
