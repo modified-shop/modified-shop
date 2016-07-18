@@ -102,6 +102,9 @@ class xtcPrice {
         // EOF VERSANDKOSTEN IM WARENKORB
       }
     }
+    
+    $currency = $this->priceModules->construct($currency, $cGroup);
+    
   }
   
   /**
@@ -340,10 +343,7 @@ class xtcPrice {
                p.products_tax_class_id,
                p.products_price,
                p.products_weight,
-               pa.options_values_price,
-               pa.price_prefix,
-               pa.options_values_weight,
-               pa.weight_prefix
+               pa.*
           FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
           JOIN " . TABLE_PRODUCTS . " p
                ON p.products_id = pa.products_id
@@ -386,7 +386,7 @@ class xtcPrice {
       );
       
       //new module support
-      $dataArr = $this->priceModules->GetOptionPrice($dataArr,$attribute_data,$pID, $option, $value);
+      $dataArr = $this->priceModules->GetOptionPrice($dataArr,$attribute_data,$pID, $option, $value, $qty);
     }
     return $dataArr;
   }
@@ -418,15 +418,18 @@ class xtcPrice {
    */
   function xtcCheckSpecial($pID) {
     if ($this->cStatus['customers_status_specials'] == '1') {
-      $product_query = xtDBquery("SELECT specials_new_products_price
+      $product_query = xtDBquery("SELECT *
                                     FROM ".TABLE_SPECIALS."
-                                   WHERE products_id = '".$pID."'
+                                   WHERE products_id = '".(int)$pID."'
                                      AND status = 1
                                      AND (start_date IS NULL 
                                           OR start_date <= NOW())
                                  ");
       if (xtc_db_num_rows($product_query, true) > 0) {
         $product = xtc_db_fetch_array($product_query, true);
+        
+        $product = $this->priceModules->CheckSpecial($product, $pID);
+      
         return $product['specials_new_products_price'];
       }
     }
@@ -723,9 +726,9 @@ class xtcPrice {
       }
 
       if ($vpeStatus == 0) {
-        return $price;
+        $return = $price;
       } else {
-        return array(
+        $return = array(
           'formated' => $price,
           'plain' => $sPrice,
           'special_price' =>  $special_price,
@@ -739,8 +742,12 @@ class xtcPrice {
         );
       }
     } else {
-      return $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $sPrice;
+      $return = $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $sPrice;
     }
+    
+    $return = $this->priceModules->FormatSpecial($return, $pID, $sPrice, $pPrice, $format, $vpeStatus);
+    
+    return $return;
   }
   
   /**

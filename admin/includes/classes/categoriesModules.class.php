@@ -149,4 +149,10 @@ class categoriesModules {
         $this->function_call = 'image_name';
         return $this->call_module_method($image_name,$products_id, $counter, $suffix, $pname_arr, $srcID); //Return parameter must be in first place
     }
+    
+    function saveSpecialsData($sql_data_array,$products_data)
+    {
+        $this->function_call = 'saveSpecialsData';
+        return $this->call_module_method($sql_data_array,$products_data);  //Return parameter must be in first place
+    }
 }

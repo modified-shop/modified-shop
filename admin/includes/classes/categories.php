@@ -1321,6 +1321,9 @@ class categories {
                               'status' => ((isset($products_data['specials_status'])) ? (int)$products_data['specials_status'] : '1')
                               );
     
+      //new module support
+      $sql_data_array = $this->catModules->saveSpecialsData($sql_data_array,$products_data);
+      
       if ($products_data['specials_action'] == 'insert') {
         unset($sql_data_array['specials_last_modified']);
         xtc_db_perform(TABLE_SPECIALS, $sql_data_array);
