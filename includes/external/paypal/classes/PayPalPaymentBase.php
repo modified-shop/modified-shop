@@ -35,6 +35,7 @@ class PayPalPaymentBase extends PayPalCommon {
   
     $this->sort_order = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER') : '');
     $this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
+    $this->loglevel = $this->get_config('PAYPAL_LOG_LEVEL');
   
     if (defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS')) {
       $this->order_status_success = (($this->get_config('PAYPAL_ORDER_STATUS_SUCCESS_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_SUCCESS_ID') : DEFAULT_SHIPPING_STATUS_ID);
@@ -44,7 +45,6 @@ class PayPalPaymentBase extends PayPalCommon {
       $this->order_status_tmp = (($this->get_config('PAYPAL_ORDER_STATUS_TMP_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_TMP_ID') : DEFAULT_SHIPPING_STATUS_ID);
       $this->tmpStatus = $this->order_status_tmp;
       $this->tmpOrders = true;
-      $this->loglevel = $this->get_config('PAYPAL_LOG_LEVEL');
   
       $payment_sale = array(
         'paypalplus',
