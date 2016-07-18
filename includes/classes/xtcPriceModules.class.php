@@ -9,6 +9,7 @@ class priceModules {
         $module_directory = DIR_FS_CATALOG . 'includes/modules/'. $module_type .'/';
         $this->modules = array();
         if (defined('MODULE_'. strtoupper($module_type) .'_INSTALLED') && xtc_not_null(constant('MODULE_'. strtoupper($module_type) .'_INSTALLED'))) {
+          $modules = explode(';', constant('MODULE_'. strtoupper($module_type) .'_INSTALLED'));
           foreach($modules as $file) {
             $class = substr($file, 0, strpos($file, '.'));
             $module_status = (defined('MODULE_'. strtoupper($module_type) .'_'. strtoupper($class) .'_STATUS') && strtolower(constant('MODULE_'. strtoupper($module_type) .'_'. strtoupper($class) .'_STATUS')) == 'true') ? true : false;
@@ -38,10 +39,27 @@ class priceModules {
     }
     
     //----- PRICE FUNCTIONS -----//
-    function GetOptionPrice($dataArr,$attribute_data,$pID, $option, $value)
+    function construct($currency, $cGroup)
     {
-        $this->function_call = 'GetOptionPrice';
-        return $this->call_module_method($dataArr,$attribute_data,$pID, $option, $value); //Return parameter must be in first place
+        $this->function_call = 'construct';
+        return $this->call_module_method($currency, $cGroup); //Return parameter must be in first place
     }
     
+    function CheckSpecial($product, $pID)
+    {
+        $this->function_call = 'CheckSpecial';
+        return $this->call_module_method($product, $pID); //Return parameter must be in first place
+    }
+    
+    function GetOptionPrice($dataArr,$attribute_data,$pID, $option, $value, $qty)
+    {
+        $this->function_call = 'GetOptionPrice';
+        return $this->call_module_method($dataArr,$attribute_data,$pID, $option, $value, $qty); //Return parameter must be in first place
+    }
+    
+    function FormatSpecial($return, $pID, $sPrice, $pPrice, $format, $vpeStatus)
+    {
+        $this->function_call = 'FormatSpecial';
+        return $this->call_module_method($return, $pID, $sPrice, $pPrice, $format, $vpeStatus); //Return parameter must be in first place
+    }
 }
