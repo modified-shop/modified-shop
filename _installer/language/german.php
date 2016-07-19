@@ -266,7 +266,7 @@
   define('ENTRY_COUNTRY_ERROR','Bitte &uuml;berpr&uuml;fen Sie das Bundesland');
   define('ENTRY_STATE_ERROR','Bitte &uuml;berpr&uuml;fen Sie das Land');
   define('ENTRY_TELEPHONE_NUMBER_ERROR','Telefonnummer ist zu kurz');
-  define('ENTRY_PASSWORD_ERROR', 'Ihr Passwort muss aus mindestens %s Zeichen bestehen.');
+  define('ENTRY_PASSWORD_ERROR','Bitte &uuml;berpr&uuml;fen Sie das Passwort');
   define('ENTRY_PASSWORD_ERROR_NOT_MATCHING','Bitte geben Sie zwei Mal das gleiche Passwort ein');
   define('ENTRY_STORE_NAME_ERROR','Shop-Name ist zu kurz');
   define('ENTRY_COMPANY_NAME_ERROR','Firmenname ist zu kurz');
