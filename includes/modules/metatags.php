@@ -562,7 +562,7 @@ if (TEMPLATE_HTML_ENGINE == 'xhtml') {
   echo '<meta charset="'.$_SESSION['language_charset'].'" />'."\n";
 }
 if (TEMPLATE_RESPONSIVE == 'true') {
-  echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />'."\n";
+  echo '<meta name="viewport" content="width=device-width, user-scalable=yes" />'."\n";
 }
 /******** SHOPGATE **********/
 if (isset($shopgateJsHeader)) {
