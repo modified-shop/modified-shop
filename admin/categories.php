@@ -144,7 +144,7 @@ if (xtc_not_null($action)) {
         xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'pID')).'action=new_product&pID='.$result['products_id']));
       }
       if (isset($_GET['origin']) && $_GET['origin'] != '') {
-        xtc_redirect(xtc_href_link(basename($_GET['origin']), $catfunc->page_parameter_plain));
+        xtc_redirect(xtc_href_link(basename($_GET['origin']), 'pID='.$result['products_id'].$catfunc->page_parameter));
       }
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($current_category_id).'&pID='.$result['products_id'].$catfunc->page_parameter));
       break;
