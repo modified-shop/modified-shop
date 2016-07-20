@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: categories.php 2645 2012-01-31 21:08:03Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -142,6 +142,9 @@ if (xtc_not_null($action)) {
       //redirect by update button
       if(isset($_POST['prod_update']) || $result['error'] === true) {
         xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'pID')).'action=new_product&pID='.$result['products_id']));
+      }
+      if (isset($_GET['origin']) && $_GET['origin'] != '') {
+        xtc_redirect(xtc_href_link(basename($_GET['origin']), $catfunc->page_parameter_plain));
       }
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($current_category_id).'&pID='.$result['products_id'].$catfunc->page_parameter));
       break;

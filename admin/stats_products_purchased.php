@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: stats_products_purchased.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -170,7 +170,7 @@ require (DIR_WS_INCLUDES.'head.php');
             $contents = array();
             $heading[] = array('text' => '<b>' . $pInfo->products_name . '</b>');
             $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, xtc_get_all_get_params(array('action', 'pID')).'action=orders&pID=' . $pInfo->products_id) . '">' . BUTTON_ORDERS . '</a> 
-                                                                <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $pInfo->products_id . '&origin=' . FILENAME_STATS_PRODUCTS_PURCHASED . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($pInfo->categories_id)) . '">' . BUTTON_EDIT . '</a>');
+                                                                <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, 'action=new_product&pID=' . $pInfo->products_id . '&origin=' . FILENAME_STATS_PRODUCTS_PURCHASED . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($pInfo->categories_id)) . '">' . BUTTON_EDIT . '</a>');
             
             if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
               echo '<td class="boxRight">' . "\n";
