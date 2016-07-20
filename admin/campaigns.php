@@ -25,8 +25,6 @@ $_GET['action'] = (isset($_GET['action']) ? $_GET['action'] : '');
 $_GET['page'] = (isset($_GET['page']) ? $_GET['page'] : '');
 $_GET['cID'] = (isset($_GET['cID']) ? $_GET['cID'] : '');
 
-$campaigns_refID = $campaigns_name = '';
-
 if (xtc_not_null($_GET['action'])) {
   switch ($_GET['action']) {
     case 'insert' :
@@ -62,6 +60,8 @@ if (xtc_not_null($_GET['action'])) {
           xtc_db_perform(TABLE_CAMPAIGNS, $sql_data_array, 'update', "campaigns_id = '".xtc_db_input($campaigns_id)."'");
         }
         xtc_redirect(xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$campaigns_id));
+      } else {
+        xtc_redirect(xtc_href_link(FILENAME_CAMPAIGNS, 'action='.(($_GET['action'] == 'insert') ? 'new' : 'edit').'&page='.$_GET['page'].'&cID='.$campaigns_id));
       }
       break;
     case 'deleteconfirm' :
