@@ -603,7 +603,7 @@ if (META_REPLY_TO != 'xx@xx.com' && TEMPLATE_HTML_ENGINE == 'xhtml') {
   echo '<meta name="reply-to" content="'. META_REPLY_TO .'" />'."\n";
 }
 if (META_REVISIT_AFTER != '0') {
-  echo '<meta name="revisit-after" content="'. META_REVISIT_AFTER .'" />'."\n";
+  echo '<meta name="revisit-after" content="'. META_REVISIT_AFTER .' days" />'."\n";
 }
 if (META_GOOGLE_VERIFICATION_KEY != '') {
   echo '<meta name="verify-v1" content="'. META_GOOGLE_VERIFICATION_KEY .'" />'."\n";
