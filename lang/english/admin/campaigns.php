@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: campaigns.php 1059 2005-07-20 18:26:11Z gwinger $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -38,4 +38,7 @@ define('TEXT_CAMPAIGNS_REFID', 'Campaigns refID:');
 define('TEXT_DISPLAY_NUMBER_OF_CAMPAIGNS', 'Tracked campaigns:');
 
 define('TEXT_DELETE_INTRO', 'Are you sure you want to delete the campaign?');
+
+define('TEXT_CAMPAIGNS_ERROR_REFID', 'refID is invalid');
+define('TEXT_CAMPAIGNS_ERROR_REFID_EXISTS', 'refID is already in use');
 ?>

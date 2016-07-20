@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: campaigns.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -25,6 +25,8 @@ $_GET['action'] = (isset($_GET['action']) ? $_GET['action'] : '');
 $_GET['page'] = (isset($_GET['page']) ? $_GET['page'] : '');
 $_GET['cID'] = (isset($_GET['cID']) ? $_GET['cID'] : '');
 
+$campaigns_refID = $campaigns_name = '';
+
 if (xtc_not_null($_GET['action'])) {
   switch ($_GET['action']) {
     case 'insert' :
@@ -32,18 +34,35 @@ if (xtc_not_null($_GET['action'])) {
       $campaigns_id = xtc_db_prepare_input($_GET['cID']);
       $campaigns_name = xtc_db_prepare_input($_POST['campaigns_name']);
       $campaigns_refID = xtc_db_prepare_input($_POST['campaigns_refID']);
-      $sql_data_array = array ('campaigns_name' => $campaigns_name, 'campaigns_refID' => $campaigns_refID);
-      if ($_GET['action'] == 'insert') {
-        $insert_sql_data = array ('date_added' => 'now()');
-        $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
-        xtc_db_perform(TABLE_CAMPAIGNS, $sql_data_array);
-        $campaigns_id = xtc_db_insert_id();
-      }	elseif ($_GET['action'] == 'save') {
-        $update_sql_data = array ('last_modified' => 'now()');
-        $sql_data_array = xtc_array_merge($sql_data_array, $update_sql_data);
-        xtc_db_perform(TABLE_CAMPAIGNS, $sql_data_array, 'update', "campaigns_id = '".xtc_db_input($campaigns_id)."'");
+
+      $error = false;
+      if (trim($campaigns_refID) == '') {
+        $error = true;
+        $messageStack->add(TEXT_CAMPAIGNS_ERROR_REFID, 'warning');
+      } else {
+        $check_query = xtc_db_query("SELECT * 
+                                       FROM ".TABLE_CAMPAIGNS."
+                                      WHERE campaigns_refID = '".xtc_db_input($campaigns_refID)."'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $error = true;
+          $messageStack->add(TEXT_CAMPAIGNS_ERROR_REFID_EXISTS, 'warning');
+        }
       }
-      xtc_redirect(xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$campaigns_id));
+      
+      if ($error === false) {
+        $sql_data_array = array ('campaigns_name' => $campaigns_name, 'campaigns_refID' => $campaigns_refID);
+        if ($_GET['action'] == 'insert') {
+          $insert_sql_data = array ('date_added' => 'now()');
+          $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+          xtc_db_perform(TABLE_CAMPAIGNS, $sql_data_array);
+          $campaigns_id = xtc_db_insert_id();
+        }	elseif ($_GET['action'] == 'save') {
+          $update_sql_data = array ('last_modified' => 'now()');
+          $sql_data_array = xtc_array_merge($sql_data_array, $update_sql_data);
+          xtc_db_perform(TABLE_CAMPAIGNS, $sql_data_array, 'update', "campaigns_id = '".xtc_db_input($campaigns_id)."'");
+        }
+        xtc_redirect(xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$campaigns_id));
+      }
       break;
     case 'deleteconfirm' :
       $campaigns_id = xtc_db_prepare_input($_GET['cID']);
@@ -136,8 +155,8 @@ require (DIR_WS_INCLUDES.'head.php');
                 $heading[] = array ('text' => '<b>'.TEXT_HEADING_NEW_CAMPAIGN.'</b>');
                 $contents = array ('form' => xtc_draw_form('campaigns', FILENAME_CAMPAIGNS, 'action=insert', 'post', 'enctype="multipart/form-data"'));
                 $contents[] = array ('text' => TEXT_NEW_INTRO);
-                $contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_NAME.'<br />'.xtc_draw_input_field('campaigns_name'));
-                $contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_REFID.'<br />'.xtc_draw_input_field('campaigns_refID'));
+                $contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_NAME.'<br />'.xtc_draw_input_field('campaigns_name', $campaigns_name));
+                $contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_REFID.'<br />'.xtc_draw_input_field('campaigns_refID', $campaigns_refID));
                 $contents[] = array ('align' => 'center', 'text' => '<br />'.xtc_button(BUTTON_SAVE).'&nbsp;'.xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$_GET['cID'])));
                 break;
               case 'edit' :
