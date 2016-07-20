@@ -88,7 +88,7 @@ define('BOX_REVIEWS_TEXT_OF_5_STARS', '%s of 5 stars!');
 define('PULL_DOWN_DEFAULT', 'Please choose');
 
 // javascript messages
-define('JS_ERROR', 'Missing necessary information!\nPlease fill in correctly.\n\n');
+define('JS_ERROR', 'Missing necessary information!\nPlease fill in completely.\n\n');
 
 define('JS_REVIEW_TEXT', '* The text must consist of at least ' . REVIEW_TEXT_MIN_LENGTH . ' characters..\n');
 define('JS_REVIEW_RATING', '* Enter your review.\n');
