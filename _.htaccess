@@ -10,6 +10,7 @@ ServerSignature Off
 ##-- Turn off ETags in HTTP-header (use both directives)
 <IfModule mod_headers.c>
   Header unset ETag
+  RequestHeader unset Proxy
 </IfModule>
 FileETag None
 
