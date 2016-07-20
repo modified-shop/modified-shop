@@ -62,7 +62,7 @@ class paypalcart extends PayPalPayment {
 
 
   function confirmation() {
-    global $order, $smarty, $xtPrice, $main, $messageStack;
+    global $order, $smarty, $xtPrice, $main, $messageStack, $total_weight, $total_count, $free_shipping;
         
     if (isset($_GET['conditions_message'])) {
       $message_condition = str_replace('\n', '', ERROR_CONDITIONS_NOT_ACCEPTED);
