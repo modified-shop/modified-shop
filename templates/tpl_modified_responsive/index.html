@@ -171,3 +171,6 @@
     {facebook id=$smarty.const.TRACKING_FACEBOOK_ID}
   {/if}
 {/if}
+{if $smarty.const.GOOGLE_CERTIFIED_SHOPS_MERCHANT_ACTIVE == 'true'}
+  {googlecertificate subaccount=GOOGLE_SHOPPING_ID account=GOOGLE_TRUSTED_ID}
+{/if}

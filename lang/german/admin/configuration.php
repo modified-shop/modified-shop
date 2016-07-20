@@ -779,14 +779,14 @@ define('TRACKING_GOOGLEANALYTICS_ACTIVE_DESC' , 'Wird diese Option aktiviert, so
 define('TRACKING_GOOGLEANALYTICS_ID_TITLE' , 'Google Analytics Kontonummer');
 define('TRACKING_GOOGLEANALYTICS_ID_DESC' , 'Tragen Sie hier die Google Analytics Kontonummer im Format "UA-XXXXXXXX-X" ein, die Sie nach einer erfolgreichen Kontoerstellen bekommen haben.');
 
-define('TRACKING_PIWIK_ACTIVE_TITLE' , 'PIWIK Web-Analytics Tracking aktivieren');
-define('TRACKING_PIWIK_ACTIVE_DESC' , 'Um PIWIK nutzen zu k&ouml;nnen, m&uuml;ssen Sie es zun&auml;chst herunterladen und auf Ihrem Webspace installieren, siehe auch <a href="http://piwik.org/" target="_blank"><b>PIWIK Web-Analytics</b></a>. Im Gegensatz zu Google Analytics werden die Daten lokal gespeichert, d.h. Sie als Shopbetreiber haben die Datenhoheit.');
-define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'PIWIK Installationsverzeichnis (ohne "http://")');
-define('TRACKING_PIWIK_LOCAL_PATH_DESC' , 'Tragen Sie hier das Verzeichnis ein, nachdem PIWIK erfolgreich installiert worden ist. Als Pfad ist hier der komplette Domainname ohne "http://" einzutragen, z.B. "www.domain.de/piwik".');
-define('TRACKING_PIWIK_ID_TITLE' , 'PIWIK Seiten-ID');
-define('TRACKING_PIWIK_ID_DESC' , 'In der PIWIK Administrationsoberfl&auml;che wird pro angelegter Domain wird eine ID vergeben (meist "1")');
-define('TRACKING_PIWIK_GOAL_TITLE' , 'PIWIK Kampagnen-Nummer (optional)');
-define('TRACKING_PIWIK_GOAL_DESC' , 'Tragen Sie hier eine Kampagnen-Nummer ein, wenn Sie vordefinierte Ziele nachverfolgen m&ouml;chten. Details siehe <a href="http://piwik.org/docs/tracking-goals-web-analytics/" target="_blank"><b>PIWIK: Tracking Goal Conversions</b></a>');
+define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Piwik Web-Analytics Tracking aktivieren');
+define('TRACKING_PIWIK_ACTIVE_DESC' , 'Um Piwik nutzen zu k&ouml;nnen, m&uuml;ssen Sie es zun&auml;chst herunterladen und auf Ihrem Webspace installieren, siehe auch <a href="http://piwik.org/" target="_blank"><b>Piwik Web-Analytics</b></a>. Im Gegensatz zu Google Analytics werden die Daten lokal gespeichert, d.h. Sie als Shopbetreiber haben die Datenhoheit.');
+define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'Piwik Installationsverzeichnis (ohne "http://")');
+define('TRACKING_PIWIK_LOCAL_PATH_DESC' , 'Tragen Sie hier das Verzeichnis ein, nachdem Piwik erfolgreich installiert worden ist. Als Pfad ist hier der komplette Domainname ohne "http://" einzutragen, z.B. "www.domain.de/piwik".');
+define('TRACKING_PIWIK_ID_TITLE' , 'Piwik Seiten-ID');
+define('TRACKING_PIWIK_ID_DESC' , 'In der Piwik Administrationsoberfl&auml;che wird pro angelegter Domain wird eine ID vergeben (meist "1")');
+define('TRACKING_PIWIK_GOAL_TITLE' , 'Piwik Kampagnen-Nummer (optional)');
+define('TRACKING_PIWIK_GOAL_DESC' , 'Tragen Sie hier eine Kampagnen-Nummer ein, wenn Sie vordefinierte Ziele nachverfolgen m&ouml;chten. Details siehe <a href="http://piwik.org/docs/tracking-goals-web-analytics/" target="_blank"><b>Piwik: Tracking Goal Conversions</b></a>');
 
 define('CONFIRM_SAVE_ENTRY_TITLE', 'Best&auml;tigungsabfrage beim Speichern von Artikeln/Kategorien');
 define('CONFIRM_SAVE_ENTRY_DESC', 'Soll eine Best&auml;tigungsabfrage beim Speichern von Artikeln/Kategorien erfolgen? Standard: true (ja)');
@@ -950,7 +950,7 @@ define('ACCOUNT_TELEPHONE_OPTIONAL_TITLE', 'Telefonnummer optional');
 define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Soll die Telefonnummer nur optional abgefragt werden?');
 
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Universal Analytics');
-define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Soll der Google Universal Analytics Code verwendet werden?<br/><br/><b>Achtung:</b> Sobald Sie in Ihrem Google Analytics Konto auf den neuen Google Universal Analytics Code umstellen, kann das bisherige Google Analytics nicht mehr verwendet werden!');
+define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Soll der Google Universal Analytics Code verwendet werden?<br/><br/><b>Achtung:</b> Sobald Sie in Ihrem Google Analytics Konto auf den neuen Google Universal Analytics Code umstellen, kann das bisherige Google Analytics nicht mehr verwendet werden!<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Shop-URL');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Tragen Sie hier Standard-Shop-URL ein (example.com oder www.example.com). Funktioniert nur f&uuml;r Google Universal Analytics.');
 define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics LinkID');
@@ -992,7 +992,7 @@ define('META_BING_VERIFICATION_KEY_TITLE', 'Bing Verification Key');
 define('META_BING_VERIFICATION_KEY_DESC', '<meta name="msvalidate.01">');
 
 define('TRACKING_FACEBOOK_ACTIVE_TITLE', 'Facebook Conversion-Tracking aktivieren');
-define('TRACKING_FACEBOOK_ACTIVE_DESC', 'Wird diese Option aktiviert, so werden alle K&auml;ufe an Facebook &uuml;bermittelt und k&ouml;nnen sp&auml;ter ausgewertet werden. Dazu ist vorher die Anlage eines Kontos bei <a href="https://www.facebook.com" target="_blank"><b>Facebook</b></a> erforderlich.');
+define('TRACKING_FACEBOOK_ACTIVE_DESC', 'Wird diese Option aktiviert, so werden alle K&auml;ufe an Facebook &uuml;bermittelt und k&ouml;nnen sp&auml;ter ausgewertet werden. Dazu ist vorher die Anlage eines Kontos bei <a href="https://www.facebook.com" target="_blank"><b>Facebook</b></a> erforderlich.<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 define('TRACKING_FACEBOOK_ID_TITLE', 'Facebook Conversion ID');
 define('TRACKING_FACEBOOK_ID_DESC', 'Ihre Facebook Conversion ID');
 
@@ -1063,4 +1063,11 @@ define('MODULE_BANNER_MANAGER_STATUS_DESC', 'Banner Manager aktivieren?');
 
 define('MODULE_NEWSLETTER_STATUS_TITLE', 'Newsletter');
 define('MODULE_NEWSLETTER_STATUS_DESC', 'Newsletter-System aktivieren?');
+
+define('GOOGLE_CERTIFIED_SHOPS_MERCHANT_ACTIVE_TITLE', 'Google Certified Shops Merchant aktivieren');
+define('GOOGLE_CERTIFIED_SHOPS_MERCHANT_ACTIVE_DESC', 'Soll der Google Certified Shops Merchant Code verwendet werden?<br/><br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.1.0 kompatiblem Template!');
+define('GOOGLE_SHOPPING_ID_TITLE', 'Google Shopping ID');
+define('GOOGLE_SHOPPING_ID_DESC', 'Ihre Google Shopping ID');
+define('GOOGLE_TRUSTED_ID_TITLE', 'Google Trusted ID');
+define('GOOGLE_TRUSTED_ID_DESC', 'Ihre Google Trusted ID');
 ?>
