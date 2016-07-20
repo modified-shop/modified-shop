@@ -247,4 +247,9 @@ ALTER TABLE orders MODIFY customers_email_address VARCHAR(255) NOT NULL;
 ALTER TABLE orders MODIFY customers_ip VARCHAR(50) NOT NULL;
 ALTER TABLE whos_online MODIFY ip_address VARCHAR(50) NOT NULL;
 
+#GTB - 2016-07-20 - change name length
+ALTER TABLE orders MODIFY customers_name VARCHAR(128) NOT NULL;
+ALTER TABLE orders MODIFY delivery_name VARCHAR(128) NOT NULL;
+ALTER TABLE orders MODIFY billing_name VARCHAR(128) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
