@@ -35,9 +35,8 @@ class PayPalPaymentBase extends PayPalCommon {
   
     $this->sort_order = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER') : '');
     $this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
-    $this->loglevel = $this->get_config('PAYPAL_LOG_LEVEL');
   
-    if (defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS')) {
+    if ($this->check_install() === true) {
       $this->order_status_success = (($this->get_config('PAYPAL_ORDER_STATUS_SUCCESS_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_SUCCESS_ID') : DEFAULT_SHIPPING_STATUS_ID);
       $this->order_status_rejected = (($this->get_config('PAYPAL_ORDER_STATUS_REJECTED_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_REJECTED_ID') : DEFAULT_SHIPPING_STATUS_ID);
       $this->order_status_pending = (($this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID') : DEFAULT_SHIPPING_STATUS_ID);
@@ -45,6 +44,7 @@ class PayPalPaymentBase extends PayPalCommon {
       $this->order_status_tmp = (($this->get_config('PAYPAL_ORDER_STATUS_TMP_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_TMP_ID') : DEFAULT_SHIPPING_STATUS_ID);
       $this->tmpStatus = $this->order_status_tmp;
       $this->tmpOrders = true;
+      $this->loglevel = $this->get_config('PAYPAL_LOG_LEVEL');
   
       $payment_sale = array(
         'paypalplus',
@@ -239,6 +239,15 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  function check_install() {
+    $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_PAYPAL_CONFIG."'");
+    if (xtc_db_num_rows($check_query) > 0) {
+      return true;
+    }
+    return false;
+  }
+  
+  
   function checkout_button() {
     global $PHP_SELF;
   
