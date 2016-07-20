@@ -780,14 +780,14 @@ define('TRACKING_GOOGLEANALYTICS_ACTIVE_DESC' , 'By activating this option, all 
 define('TRACKING_GOOGLEANALYTICS_ID_TITLE' , 'Google Analytics account number');
 define('TRACKING_GOOGLEANALYTICS_ID_DESC' , 'Enter your Google Analytics account number in the format "UA-XXXXXXXX-X" which you received after successfully creating an account.');
 
-define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Activate PIWIK Web-Analytics tracking');
-define('TRACKING_PIWIK_ACTIVE_DESC' , 'In order to use PIWIK at all, you have to download and install it to your webspace at first. See also <a href="http://piwik.org/" target="_blank"><b>PIWIK Web-Analytics</b></a>. In comparison to Google Analytics all data will be stored locally, i.e. you as show owner have complete control over all data.');
-define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'PIWIK install path (without "http://")');
-define('TRACKING_PIWIK_LOCAL_PATH_DESC' , 'Enter the path when PIWIK was installed successfully. The complete path of the domain has to be given, but without "http://", e.g. "www.domain.de/piwik".');
-define('TRACKING_PIWIK_ID_TITLE' , 'PIWIK page ID');
-define('TRACKING_PIWIK_ID_DESC' , 'In the PIWIK administration a page ID will be created per domain (usually "1")');
-define('TRACKING_PIWIK_GOAL_TITLE' , 'PIWIK campaign number (optional)');
-define('TRACKING_PIWIK_GOAL_DESC' , 'Enter your campaign number, if you want to track predefined goals.. Details see <a href="http://piwik.org/docs/tracking-goals-web-analytics/" target="_blank"><b>PIWIK: Tracking Goal Conversions</b></a>');
+define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Activate Piwik Web-Analytics tracking');
+define('TRACKING_PIWIK_ACTIVE_DESC' , 'In order to use Piwik at all, you have to download and install it to your webspace at first. See also <a href="http://piwik.org/" target="_blank"><b>Piwik Web-Analytics</b></a>. In comparison to Google Analytics all data will be stored locally, i.e. you as show owner have complete control over all data.');
+define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'Piwik install path (without "http://")');
+define('TRACKING_PIWIK_LOCAL_PATH_DESC' , 'Enter the path when Piwik was installed successfully. The complete path of the domain has to be given, but without "http://", e.g. "www.domain.de/piwik".');
+define('TRACKING_PIWIK_ID_TITLE' , 'Piwik page ID');
+define('TRACKING_PIWIK_ID_DESC' , 'In the Piwik administration a page ID will be created per domain (usually "1")');
+define('TRACKING_PIWIK_GOAL_TITLE' , 'Piwik campaign number (optional)');
+define('TRACKING_PIWIK_GOAL_DESC' , 'Enter your campaign number, if you want to track predefined goals.. Details see <a href="http://piwik.org/docs/tracking-goals-web-analytics/" target="_blank"><b>Piwik: Tracking Goal Conversions</b></a>');
 
 define ('CONFIRM_SAVE_ENTRY_TITLE', 'Confirmation when saving articles/category');
 define ('CONFIRM_SAVE_ENTRY_DESC', 'Should be made a confirmation message when saving products/categories? Default: true (yes)');
@@ -953,7 +953,7 @@ define('ACCOUNT_TELEPHONE_OPTIONAL_TITLE', 'Telephone number optional');
 define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Telephone number only optional on registration?');
 
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Universal Analytics');
-define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Use Google Universal Analytics Code?<br/><br/><b>Attention:</b> After switching to Google Universal Analytics it is not possible to go back to the old one!');
+define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Use Google Universal Analytics Code?<br/><br/><b>Attention:</b> After switching to Google Universal Analytics it is not possible to go back to the old one!<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Shop-URL');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Please enter the Shop-URL (example.com oder www.example.com). Only works with Google Universal Analytics.');
 define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics LinkID');
@@ -1000,7 +1000,7 @@ define('GOOGLE_CONVERSION_ID_TITLE','Conversion ID');
 define('GOOGLE_CONVERSION_ID_DESC','Your Google conversion ID');
 
 define('TRACKING_FACEBOOK_ACTIVE_TITLE', 'Activate Facebook Conversion-Tracking');
-define('TRACKING_FACEBOOK_ACTIVE_DESC', 'By activating this option, all purchases will be submitted to Facebook for later evaluation. Before using this option, you need to register at <a href="https://www.facebook.com" target="_blank"><b>Facebook</b></a> and create a new account.');
+define('TRACKING_FACEBOOK_ACTIVE_DESC', 'By activating this option, all purchases will be submitted to Facebook for later evaluation. Before using this option, you need to register at <a href="https://www.facebook.com" target="_blank"><b>Facebook</b></a> and create a new account.<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
 define('TRACKING_FACEBOOK_ID_TITLE', 'Facebook Conversion ID');
 define('TRACKING_FACEBOOK_ID_DESC', 'Your Facebook conversion ID');
 
@@ -1071,4 +1071,11 @@ define('MODULE_BANNER_MANAGER_STATUS_DESC', 'Activate Banner Manager?');
 
 define('MODULE_NEWSLETTER_STATUS_TITLE', 'Newsletter');
 define('MODULE_NEWSLETTER_STATUS_DESC', 'Activate Newsletter System?');
+
+define('GOOGLE_CERTIFIED_SHOPS_MERCHANT_ACTIVE_TITLE', 'Activate Google Certified Shops Merchant');
+define('GOOGLE_CERTIFIED_SHOPS_MERCHANT_ACTIVE_DESC', 'Use Google Certified Shops Merchant?<br/><br/><b>Attention:</b> This only works with a shop version 2.0.1.0 compatible template!');
+define('GOOGLE_SHOPPING_ID_TITLE', 'Google Shopping ID');
+define('GOOGLE_SHOPPING_ID_DESC', 'Your Google shopping ID');
+define('GOOGLE_TRUSTED_ID_TITLE', 'Google Trusted ID');
+define('GOOGLE_TRUSTED_ID_DESC', 'Your Google trusted ID');
 ?>
