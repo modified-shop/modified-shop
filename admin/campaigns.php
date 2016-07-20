@@ -36,14 +36,14 @@ if (xtc_not_null($_GET['action'])) {
       $error = false;
       if (trim($campaigns_refID) == '') {
         $error = true;
-        $messageStack->add(TEXT_CAMPAIGNS_ERROR_REFID, 'warning');
+        $messageStack->add_session(TEXT_CAMPAIGNS_ERROR_REFID, 'warning');
       } else {
         $check_query = xtc_db_query("SELECT * 
                                        FROM ".TABLE_CAMPAIGNS."
                                       WHERE campaigns_refID = '".xtc_db_input($campaigns_refID)."'");
         if (xtc_db_num_rows($check_query) > 0) {
           $error = true;
-          $messageStack->add(TEXT_CAMPAIGNS_ERROR_REFID_EXISTS, 'warning');
+          $messageStack->add_session(TEXT_CAMPAIGNS_ERROR_REFID_EXISTS, 'warning');
         }
       }
       
