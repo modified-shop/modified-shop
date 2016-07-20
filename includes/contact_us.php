@@ -129,6 +129,19 @@
         $html_mail = nl2br($txt_mail);
       }
       
+      if (defined('MODULE_CONTACT_US_STATUS') && MODULE_CONTACT_US_STATUS == 'true') {
+        require_once (DIR_FS_INC.'ip_clearing.inc.php');
+
+        $sql_data_array = array(
+          'customers_id' => (int)$_SESSION['customer_id'],
+          'customers_name' => $name,
+          'customers_email_address' => $email,
+          'customers_ip' => ip_clearing($_SESSION['tracking']['ip']),
+          'date_added' => 'now()',
+        );
+        xtc_db_perform('contact_us_log', $sql_data_array);
+      }
+      
       xtc_php_mail(CONTACT_US_EMAIL_ADDRESS,
                    CONTACT_US_NAME,
                    CONTACT_US_EMAIL_ADDRESS,
