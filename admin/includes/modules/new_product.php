@@ -244,7 +244,7 @@
         echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>';
         echo '&nbsp;&nbsp;<a class="button" href="' . xtc_catalog_href_link('product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
       }
-      echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : '')) . '">' . BUTTON_CANCEL . '</a>';
+      echo '&nbsp;&nbsp;<a class="button" href="' . ((isset($_GET['origin']) && $_GET['origin'] != '') ? xtc_href_link(basename($_GET['origin']), 'pID=' . (int)$_GET['pID'].$catfunc->page_parameter) : xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : ''))) . '">' . BUTTON_CANCEL . '</a>';
       ?>
     </div>
 
@@ -329,7 +329,7 @@
           echo '&nbsp;&nbsp;<input type="submit" class="button" name="prod_update" value="'.BUTTON_UPDATE.'" '.$confirm_save_entry.'/>';
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_catalog_href_link('product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
         }
-        echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : '')) . '">' . BUTTON_CANCEL . '</a>';
+        echo '&nbsp;&nbsp;<a class="button" href="' . ((isset($_GET['origin']) && $_GET['origin'] != '') ? xtc_href_link(basename($_GET['origin']), 'pID=' . (int)$_GET['pID'].$catfunc->page_parameter) : xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : ''))) . '">' . BUTTON_CANCEL . '</a>';
         ?>
       </div>
       <!-- EOF Save //-->
