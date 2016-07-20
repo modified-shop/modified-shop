@@ -50,12 +50,12 @@ class contact_us
     {
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_CONTACT_US_STATUS', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
         xtc_db_query("CREATE TABLE IF NOT EXISTS `contact_us_log` (
-                        `customers_id` INT( 11 ) NOT NULL ,
-                        `customers_name` VARCHAR( 128 ) NOT NULL ,
-                        `customers_email_address` VARCHAR( 255 ) NOT NULL ,
-                        `customers_ip` VARCHAR( 50 ) NOT NULL,
-                        `date_added' DATETIME DEFAULT '0000-00-00 00:00:00',
-                        KEY idx_customers_id (customers_id)
+                        `customers_id` int(11) NOT NULL,
+                        `customers_name` varchar(128) NOT NULL,
+                        `customers_email_address` varchar(255) NOT NULL,
+                        `customers_ip` varchar(50) NOT NULL,
+                        `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+                        KEY `idx_customers_id` (`customers_id`)
                       ) ENGINE=MyISAM;");
     }
 
