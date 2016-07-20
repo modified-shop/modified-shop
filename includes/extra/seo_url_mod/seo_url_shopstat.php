@@ -141,6 +141,12 @@ class seo_url_shopstat extends modified_seo_url {
       if (!isset(self::$host_array[$this->language_id][$connection])) {
         self::get_host($connection);
       }
+      if (defined('LOWERCASE_SEO_URL')
+          && LOWERCASE_SEO_URL === true
+          )
+      {
+        $link = strtolower($link);
+      }
       return self::$host_array[$this->language_id][$connection].$link;
     } elseif ($link === false) {
       return '#';
