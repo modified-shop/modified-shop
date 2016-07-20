@@ -91,7 +91,7 @@
   //if ($pInfo->products_startpage == '1') { $startpage_checked = true; } else { $startpage_checked = false; }
 
   $form_action = isset($_GET['pID']) ? 'update_product' : 'insert_product';
-  $form_action .= ((isset($_GET['origin']) && $_GET['origin'] != '') ? $_GET['origin'] : '');
+  $form_action .= ((isset($_GET['origin']) && $_GET['origin'] != '') ? '&origin='.$_GET['origin'] : '');
   
   echo xtc_draw_form('new_product', FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . $catfunc->page_parameter . '&pID=' . $_GET['pID'] . '&action='.$form_action, 'post', 'id="new_product" enctype="multipart/form-data"' . $confirm_submit); 
   echo xtc_draw_hidden_field('products_quantity_before_edit', $prod_quantity['products_quantity']);
