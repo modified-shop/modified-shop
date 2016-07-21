@@ -69,4 +69,16 @@ class mainModules {
         return $this->call_module_method($productPopupLink, $pID, $text, $class, $add_params);
     }
     
+    function getAttributes($paramsArr,$paramsArrOrigin)
+    {
+        $this->function_call = 'getAttributes';
+        return $this->call_module_method($paramsArr,$paramsArrOrigin);
+    }
+    
+    function getAttributesSelect($attributes,$paramsArr,$paramsArrOrigin)
+    {
+        $this->function_call = 'getAttributesSelect';
+        return $this->call_module_method($attributes,$paramsArr,$paramsArrOrigin);
+    }
+    
 }
