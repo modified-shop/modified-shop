@@ -39,6 +39,12 @@ class productModules {
     }
     
     //----- PRODUCT FUNCTIONS -----//
+    function construct($data)
+    {
+        $this->function_call = 'construct';
+        return $this->call_module_method($data);
+    }
+
     function buildDataArray($productData,$array,$image)
     {
         $this->function_call = 'buildDataArray';

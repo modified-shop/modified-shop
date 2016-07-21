@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: product.php 2696 2012-03-04 10:44:41Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -80,6 +80,8 @@ class product {
       {
         $this->data['products_tax_class_id'] = xtc_get_tax_class($this->data['products_tax_class_id']);
       }
+
+      $this->data = $this->productModules->construct($this->data);
     }
   }
 
