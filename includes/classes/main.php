@@ -349,6 +349,11 @@ class main {
    * @return array
    */
   function getAttributes($products_id, $option_id, $value_id, $add_select = '', $left_join = '') {
+    
+    //new module support
+    $paramsArr = $paramsArrOrigin = array($products_id, $option_id, $value_id, $add_select, $left_join);
+    list($products_id, $option_id, $value_id, $add_select, $left_join) = $this->mainModules->getAttributes($paramsArr,$paramsArrOrigin);
+
     $attributes = xtc_db_query("SELECT ".$add_select."
                                        popt.products_options_name,
                                        poval.products_options_values_name,
@@ -364,6 +369,10 @@ class main {
                                  WHERE pa.products_id = '".(int)$products_id."'
                                    AND pa.options_id = '".(int)$option_id."'
                                    AND pa.options_values_id = '".(int)$value_id."'");
+    
+    //new module support
+    $attributes = $this->mainModules->getAttributesSelect($attributes,$paramsArr,$paramsArrOrigin);
+    
     return xtc_db_fetch_array($attributes);  
   }
 }
