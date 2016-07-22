@@ -829,9 +829,11 @@ class categories {
         $this->set_products_images_file_rights($dup_products_image_name);
 
         //write to DB
+        $sql_data_array = $mo_img;
+        unset($sql_data_array['image_id ']);
         $sql_data_array = array('products_id' => $this->dup_products_id,
-                                'image_nr' => $mo_img['image_nr'],
                                 'image_name' => $dup_products_image_name);
+
         xtc_db_perform(TABLE_PRODUCTS_IMAGES, $sql_data_array);
       }
     }
@@ -1265,6 +1267,8 @@ class categories {
         //set file rights
         $this->set_products_images_file_rights($products_image_name);
       }
+      //new module support
+      $this->catModules->insert_mo_images_after($products_data,$img+1,$products_id,$products_image_name);
     } 
   } 
 
