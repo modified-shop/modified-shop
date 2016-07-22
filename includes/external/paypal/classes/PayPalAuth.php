@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: PayPalAuth.php 10126 2016-07-21 12:08:19Z GTB $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -32,8 +32,6 @@ class PayPalAuth {
   
   protected function apiContext() {
 
-    $TMP_DIR = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR).'/';
-
     $apiContext = new ApiContext(
       new OAuthTokenCredential(
           $this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($this->get_config('PAYPAL_MODE'))),
@@ -48,8 +46,8 @@ class PayPalAuth {
         'log.FileName' => DIR_FS_LOG.'mod_paypal_'.$this->get_config('PAYPAL_MODE').'_'.date('Y-m-d') .'.log',
         'log.LogLevel' => $this->loglevel,
         'validation.level' => 'log',
-        'cache.enabled' => ((is_writeable($TMP_DIR)) ? true : false),
-        'cache.FileName' => $TMP_DIR.'pp_auth_'.$this->get_config('PAYPAL_MODE').'.cache'
+        'cache.enabled' => ((is_writeable(SQL_CACHEDIR)) ? true : false),
+        'cache.FileName' => SQL_CACHEDIR.'pp_auth_'.$this->get_config('PAYPAL_MODE').'.cache'
       )
     );
     
