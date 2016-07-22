@@ -1268,7 +1268,7 @@ class categories {
         $this->set_products_images_file_rights($products_image_name);
       }
       //new module support
-      $this->catModules->insert_mo_images_after($products_data,$img+1,$products_id,$products_image_name);
+      $this->catModules->insert_mo_images_after($products_data,$img+1,$products_id);
     } 
   } 
 

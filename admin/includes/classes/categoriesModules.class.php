@@ -159,6 +159,6 @@ class categoriesModules {
     function insert_mo_images_after($products_data,$iImg,$products_id,$products_image_name)
     {
         $this->function_call = 'insert_mo_images_after';
-        $this->call_module_method($products_data,$iImg,$products_id,$products_image_name);  //Return parameter must be in first place
+        $this->call_module_method($products_data,$iImg,$products_id);  //Return parameter must be in first place
     }   
 }
