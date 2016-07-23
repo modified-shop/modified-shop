@@ -597,4 +597,6 @@ define('FREE_SHIPPING_INFO', 'Free Shipping minimum order: %s');
 
 define('MANUFACTURER_NOT_FOUND', 'Manufacturer not found');
 define('ENTRY_TOKEN_ERROR', 'Please check your data.');
+
+define('IMAGE_BUTTON_CONFIRM', 'Confirm'); // Needed for PayPal
 ?>

@@ -597,4 +597,6 @@ define('FREE_SHIPPING_INFO', 'ab %s  Bestellwert versenden wir Ihre Bestellung v
 
 define('MANUFACTURER_NOT_FOUND', 'Hersteller nicht gefunden');
 define('ENTRY_TOKEN_ERROR', 'Bitte &uuml;berpr&uuml;fen sie ihre Eingaben.');
+
+define('IMAGE_BUTTON_CONFIRM', 'Best&auml;tigen'); // Needed for PayPal
 ?>
