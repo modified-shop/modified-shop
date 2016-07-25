@@ -601,4 +601,6 @@ define('TEXT_DEFAULT_STATUS_DESC', 'Modul Status');
 
 define('TEXT_HOUR', 'Stunde');
 define('TEXT_HOURS', 'Stunden');
+
+define('DELETE_LOGS_SUCCESSFUL', 'Logfiles erfolgreich gel&ouml;scht.');
 ?>

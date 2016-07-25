@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: backup.php 1780 2011-02-08 02:09:45Z cybercosmonaut $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -30,6 +30,7 @@
           $messageStack->add(ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE, 'error');
         }
         break;
+        
       case 'deleteconfirm':
         if (strstr($_GET['file'], '..')) {
           xtc_redirect(xtc_href_link(FILENAME_LOGS));
@@ -40,6 +41,12 @@
           $messageStack->add_session(SUCCESS_LOG_DELETED, 'success');
           xtc_redirect(xtc_href_link(FILENAME_LOGS));
         }
+        break;
+        
+      case 'dellog':
+        clear_dir(DIR_FS_CATALOG.'log/');
+        $messageStack->add_session(DELETE_LOGS_SUCCESSFUL, 'success');
+        xtc_redirect(xtc_href_link(FILENAME_LOGS));
         break;
     }
   }
@@ -79,53 +86,75 @@
     <!-- body_text //--> 
         <td class="boxCenter">         
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>
-          <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
-          <div class="main pdg2 flt-l">Tools</div>
+          <div class="pageHeading pdg2 flt-l">
+            <?php echo HEADING_TITLE; ?><br />
+            <div class="main pdg2 flt-l">Tools</div>
+          </div>
+          <div class="main pdg2 flt-l" style="padding-left:30px;">
+          <?php
+            echo xtc_draw_form('configuration', FILENAME_LOGS, 'action=dellog');
+            echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE_LOGS . '"/></form>';
+          ?>
+          </div>
           <table class="tableCenter">
             <tr>
               <td class="boxCenterLeft">
                 <table class="tableBoxCenter collapse">
-                  <tr class="dataTableHeadingRow">
-                    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TITLE; ?></td>
-                    <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_FILE_DATE; ?></td>
-                    <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_FILE_SIZE; ?></td>
-                  </tr>
                   <?php
                     if ($dir_ok) {
                       $dir = dir(DIR_FS_LOG);
-                      $contents = array();
+                      $contents_array = array();
                       $exts = array("log","log.zip","log.gz");
                       while ($file = $dir->read()) {
                         if (!is_dir(DIR_FS_LOG . $file)) {
                           foreach ($exts as $value) {
                             if (xtc_CheckExt($file, $value)) {
-                              $contents[] = $file;
+                              $contents_array[(date('Y-m-d', filemtime(rtrim($dir->path, '/').'/'.$file)))][] = $file;
                             }
                           }
                         }
                       }
-                      if (count($contents) > 0) {
-                        sort($contents);
-                        for ($files = 0, $count = sizeof($contents); $files < $count; $files++) {
-                          $entry = $contents[$files];
-                          if ((!isset($_GET['file']) || ($_GET['file'] == $entry)) && !isset($buInfo)) {
-                            $file_array['file'] = $entry;
-                            $buInfo = new objectInfo($file_array);
-                          }
-                          if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file)) {
-                            echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'">' . "\n";
-                            $onclick_link = 'file=' . $buInfo->file . '&action=download';
-                          } else {
-                            echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
-                            $onclick_link = 'file=' . $entry;
-                          }
+                      ksort($contents_array);
+                      $contents_array = array_reverse($contents_array);
+                      if (count($contents_array) > 0) {
+                        foreach ($contents_array as $date => $contents) {
                           ?>
-                            <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_LOGS, 'action=download&file=' . $entry) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . $entry; ?></td>
-                            <td class="dataTableContent txta-c" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_LOG . $entry)); ?></td>
-                            <td class="dataTableContent txta-r" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_LOG . $entry)); ?> bytes</td>
+                          <tr class="dataTableHeadingRow">
+                            <td class="dataTableHeadingContent"><?php echo HEADING_TITLE; ?></td>
+                            <td class="dataTableHeadingContent txta-c"><?php echo xtc_date_short($date); ?></td>
+                            <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_FILE_SIZE; ?></td>
                           </tr>
                           <?php
+                          sort($contents);
+                          for ($files = 0, $count = sizeof($contents); $files < $count; $files++) {
+                            $entry = $contents[$files];
+                            if ((!isset($_GET['file']) || ($_GET['file'] == $entry)) && !isset($buInfo)) {
+                              $file_array['file'] = $entry;
+                              $buInfo = new objectInfo($file_array);
+                            }
+                            if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file)) {
+                              echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'">' . "\n";
+                              $onclick_link = 'file=' . $buInfo->file . '&action=download';
+                            } else {
+                              echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
+                              $onclick_link = 'file=' . $entry;
+                            }
+                            ?>
+                              <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_LOGS, 'action=download&file=' . $entry) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . $entry; ?></td>
+                              <td class="dataTableContent txta-c" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_LOG . $entry)); ?></td>
+                              <td class="dataTableContent txta-r" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_LOGS, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_LOG . $entry)); ?> bytes</td>
+                            </tr>
+                            <?php
+                          }
                         }
+                      } else {
+                        ?>
+                        <tr class="dataTableHeadingRow">
+                          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TITLE; ?></td>
+                          <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_FILE_DATE; ?></td>
+                          <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_FILE_SIZE; ?></td>
+                        </tr>
+                        <?php
                       }
                       $dir->close();
                     }

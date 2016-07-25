@@ -676,7 +676,6 @@ define('USE_ADMIN_THUMBS_IN_LIST_STYLE_DESC', 'Here, simple CSS style informatio
 // BOF - Dokuman - 2010-02-04 - delete cache files in admin section
 define('DELETE_CACHE_SUCCESSFUL', 'Cache deleted successfully.');
 define('DELETE_TEMP_CACHE_SUCCESSFUL', 'Templatecache deleted successfully.');
-define('DELETE_LOGS_SUCCESSFUL', 'Logfiles deleted successfully.');
 // EOF - Dokuman - 2010-02-04 - delete cache files in admin section
 
 // BOF - DokuMan - 2010-08-13 - set Google RSS Feed in admin section
