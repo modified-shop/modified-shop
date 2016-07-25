@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: checkout_success.php 896 2005-04-27 19:22:59Z mz $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -53,7 +53,7 @@ $orders_query = xtc_db_query("SELECT orders_id,
                                      payment_class
                                 FROM ".TABLE_ORDERS."
                                WHERE customers_id = '".$_SESSION['customer_id']."'
-                                 AND unix_timestamp(date_purchased) > '".(time() - SESSION_LIFE_CUSTOMERS)."'
+                                 AND unix_timestamp(date_purchased) > (unix_timestamp(now()) - '".SESSION_LIFE_CUSTOMERS."')
                             ORDER BY orders_id DESC
                                LIMIT 1");
 
