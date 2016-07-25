@@ -34,7 +34,7 @@ class paypalcart extends PayPalPayment {
   
   
   function pre_confirmation_check() {
-    global $order, $smarty;
+    global $order, $smarty, $total_weight, $total_count, $free_shipping;
 
     // include needed functions
     require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
