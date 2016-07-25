@@ -117,7 +117,7 @@ function xss_secure_params($secvalue, $ip, $type)
             break;
       }
       
-      // send mail on error
+      // write log
       if ($error === true) {
           if (defined('XSS_WRITE_LOG') && XSS_WRITE_LOG === true) { 
             xss_log_hack_attempt(__FILE__, __LINE__, 'modified eCommerce Shopsoftware - Security Alert', 'Intrusion detection.');
@@ -272,8 +272,15 @@ function xss_add_blacklist($ip)
 {
   global $blacklist_arr;
   
-  $blacklist_arr[$ip] = time();
-  xss_write_blacklist($blacklist_arr);
+  defined('CHECK_CLIENT_AGENT') OR define('CHECK_CLIENT_AGENT', 'true');
+  require_once (XSS_PATH . 'inc/xtc_check_agent.inc.php');
+  
+  $_SERVER['HTTP_USER_AGENT'] = gethostbyaddr($ip);
+
+  if (xtc_check_agent() == 0) {
+    $blacklist_arr[$ip] = time();
+    xss_write_blacklist($blacklist_arr);
+  }
 }
 
 
@@ -316,14 +323,16 @@ function xss_read_blacklist()
 error_reporting(0);
 define('XSS_PATH', str_replace('\\', '/', dirname(dirname(__FILE__))) . '/');
 
+require_once (XSS_PATH . 'inc/set_php_self.inc.php');
+
 // set base 
 $ssl_proxy = ((isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? '/' . $_SERVER['HTTP_HOST'] : ''); 
-define('XSS_BASE', $ssl_proxy . preg_replace('/\\' . DIRECTORY_SEPARATOR . '\/|\/\//', '/', dirname($PHP_SELF) . '/')); 
+define('XSS_BASE', $ssl_proxy . preg_replace('/\\' . DIRECTORY_SEPARATOR . '\/|\/\//', '/', dirname(set_php_self()) . '/')); 
 
 $ip = '';
 if (defined('XSS_BLACKLIST') && XSS_BLACKLIST) {
   require_once (XSS_PATH.'inc/xtc_get_ip_address.inc.php');
-  $ip = md5(xtc_get_ip_address());
+  $ip = xtc_get_ip_address();
 
   $blacklist_arr = xss_read_blacklist();
   if (isset($blacklist_arr[$ip])) {
