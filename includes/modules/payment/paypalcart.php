@@ -42,9 +42,13 @@ class paypalcart extends PayPalPayment {
     // process the selected shipping method
     if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
+      $total_weight = $_SESSION['cart']->show_weight();
+      $total_count = $_SESSION['cart']->count_contents();
+
       if ($order->delivery['country']['iso_code_2'] != '') {
         $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
       }
+
       // load all enabled shipping modules
       require_once (DIR_WS_CLASSES.'shipping.php');
       $shipping_modules = new shipping;
