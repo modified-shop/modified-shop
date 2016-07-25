@@ -14,6 +14,9 @@
 // include needed classes
 require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
 
+// include needed functions
+require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
+
 
 class paypalcart extends PayPalPayment {
   var $code, $title, $description, $extended_description, $enabled;
@@ -35,9 +38,6 @@ class paypalcart extends PayPalPayment {
   
   function pre_confirmation_check() {
     global $order, $smarty, $total_weight, $total_count, $free_shipping;
-
-    // include needed functions
-    require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
 
     // process the selected shipping method
     if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
@@ -101,9 +101,6 @@ class paypalcart extends PayPalPayment {
       }
     }
 
-    // include needed functions
-    require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
-    
     if ($order->delivery['country']['iso_code_2'] != '') {
       $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
     }
