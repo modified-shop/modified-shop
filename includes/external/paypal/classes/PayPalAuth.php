@@ -38,7 +38,12 @@ class PayPalAuth {
           $this->get_config('PAYPAL_SECRET_'.strtoupper($this->get_config('PAYPAL_MODE')))
       )
     );
-
+    
+    $auth_cache_file = SQL_CACHEDIR.'pp_auth_'.$this->get_config('PAYPAL_MODE').'.cache';
+    if (!is_file($auth_cache_file)) {
+      file_put_contents($auth_cache_file, '');
+    }
+    
     $apiContext->setConfig(
       array(
         'mode' => $this->get_config('PAYPAL_MODE'),
@@ -47,7 +52,7 @@ class PayPalAuth {
         'log.LogLevel' => $this->loglevel,
         'validation.level' => 'log',
         'cache.enabled' => ((is_writeable(SQL_CACHEDIR)) ? true : false),
-        'cache.FileName' => SQL_CACHEDIR.'pp_auth_'.$this->get_config('PAYPAL_MODE').'.cache'
+        'cache.FileName' => $auth_cache_file
       )
     );
     
