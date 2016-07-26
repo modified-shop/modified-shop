@@ -77,6 +77,10 @@
                   <td class="main"><?php echo '<a href="mailto:' . $order->customer['email_address'] . '" style="font-size: 11px;">' . $order->customer['email_address'] . '</a>'; ?></td>
                 </tr>
                 <tr>
+                  <td class="main"><b><?php echo ENTRY_CUSTOMERS_STATUS; ?></b></td>
+                  <td class="main"><?php echo $order->customer['status_name']; ?></td>
+                </tr>
+                <tr>
                   <td class="main"><b><?php echo ENTRY_CUSTOMERS_VAT_ID; ?></b></td>
                   <td class="main"><?php echo $order->customer['vat_id']; ?></td>
                 </tr>
