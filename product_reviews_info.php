@@ -76,8 +76,8 @@ $smarty->assign('RATING', xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.
 $smarty->assign('PRODUCTS_NAME', $reviews['products_name']);
 $smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($reviews['products_id'], $reviews['products_name'])));
 $smarty->assign('PRODUCTS_IMAGE', $product->productImage($reviews['products_image'], 'info'));
-$smarty->assign('PRODUCTS_IMAGE_TITLE', str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']));
-$smarty->assign('PRODUCTS_IMAGE_ALT', str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']));
+$smarty->assign('PRODUCTS_IMAGE_TITLE', str_replace(array('"', "'"), array('&quot;', '&apos;'), $reviews['products_name']));
+$smarty->assign('PRODUCTS_IMAGE_ALT', str_replace(array('"', "'"), array('&quot;', '&apos;'), $reviews['products_name']));
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS).'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_BUY_NOW', '<a href="'.xtc_href_link(FILENAME_DEFAULT, 'action=buy_now&BUYproducts_id='.$reviews['products_id']).'">'.xtc_image_button('button_in_cart.gif', IMAGE_BUTTON_IN_CART).'</a>');
 $smarty->assign('PRODUCTS_BUTTON_DETAILS', '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($reviews['products_id'], $reviews['products_name'])).'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>');
