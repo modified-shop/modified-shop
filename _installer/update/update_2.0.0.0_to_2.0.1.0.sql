@@ -252,4 +252,9 @@ ALTER TABLE orders MODIFY customers_name VARCHAR(128) NOT NULL;
 ALTER TABLE orders MODIFY delivery_name VARCHAR(128) NOT NULL;
 ALTER TABLE orders MODIFY billing_name VARCHAR(128) NOT NULL;
 
+#GTB - 2016-07-26 - add blacklist_logs
+ALTER TABLE admin_access ADD blacklist_logs INT(1) NOT NULL DEFAULT 0 AFTER trustedshops;
+UPDATE admin_access SET blacklist_logs = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET blacklist_logs = 5 WHERE customers_id = 'groups' LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
