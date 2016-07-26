@@ -603,4 +603,6 @@ define('TEXT_HOUR', 'hour');
 define('TEXT_HOURS', 'hours');
 
 define('DELETE_LOGS_SUCCESSFUL', 'Logfiles deleted successfully.');
+
+define('BOX_BLACKLIST_LOGS', 'Blacklist Logs');
 ?>
