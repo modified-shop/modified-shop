@@ -146,6 +146,7 @@
                             </tr>
                             <?php
                           }
+                          echo '<tr><td colspan="3">&nbsp;</td></tr>';
                         }
                       } else {
                         ?>
