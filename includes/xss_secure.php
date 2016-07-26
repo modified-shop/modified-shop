@@ -22,6 +22,7 @@
    
 //TEST: newsletter.php?email=%3C/script%3E%3Cscript%3Ealert%281%29%3C/script%3E
 //############  KONFIGURATION ##############//
+define('XSS_SEND_LOG', false); //default: false
 define('XSS_WRITE_LOG', true); //default: true
 define('XSS_BLACKLIST', true); //default: true
 define('XSS_BLACKLIST_TIME', 3600); // time to block IP in seconds. default: 3600
@@ -261,10 +262,14 @@ function xss_log_hack_attempt($detecting_file = "(no filename available)",
 
 function xss_write_log($text)
 {
-  $log_file = XSS_PATH. 'log/xss_attacks.log.gz';
+  $log_file = XSS_PATH.'log/xss_attacks_'.date('Y-m-d').'.log.gz';
   $fp = @gzopen($log_file,'a');
   @gzwrite($fp,$text . "\r\n");
   @gzclose($fp);
+  
+  if (XSS_SEND_LOG === true) {
+    file_put_contents(XSS_PATH.'log/xss_attacks_'.time().'.mail', $text);
+  }
 }
 
 
@@ -273,7 +278,7 @@ function xss_add_blacklist($ip)
   global $blacklist_arr;
   
   defined('CHECK_CLIENT_AGENT') OR define('CHECK_CLIENT_AGENT', 'true');
-  require_once (XSS_PATH . 'inc/xtc_check_agent.inc.php');
+  require_once (XSS_PATH.'inc/xtc_check_agent.inc.php');
   
   $_SERVER['HTTP_USER_AGENT'] = gethostbyaddr($ip);
 
@@ -286,7 +291,7 @@ function xss_add_blacklist($ip)
 
 function xss_write_blacklist($blacklist_arr)
 {
-  $blacklist_file = XSS_PATH. 'log/xss_blacklist.log';  
+  $blacklist_file = XSS_PATH.'log/xss_blacklist.log';  
   $fp = fopen($blacklist_file, 'w');
   flock($fp, LOCK_EX);
   ftruncate($fp, 0);
@@ -302,7 +307,7 @@ function xss_write_blacklist($blacklist_arr)
 function xss_read_blacklist()
 {
   $blacklist_arr = array();
-  $blacklist_file = XSS_PATH. 'log/xss_blacklist.log';
+  $blacklist_file = XSS_PATH.'log/xss_blacklist.log';
   if (is_file($blacklist_file)) {
     $fp = fopen($blacklist_file, 'r');
     flock($fp, LOCK_EX);
@@ -323,7 +328,7 @@ function xss_read_blacklist()
 error_reporting(0);
 define('XSS_PATH', str_replace('\\', '/', dirname(dirname(__FILE__))) . '/');
 
-require_once (XSS_PATH . 'inc/set_php_self.inc.php');
+require_once (XSS_PATH.'inc/set_php_self.inc.php');
 
 // set base 
 $ssl_proxy = ((isset($_SERVER['HTTP_X_FORWARDED_HOST'])) ? '/' . $_SERVER['HTTP_HOST'] : ''); 
