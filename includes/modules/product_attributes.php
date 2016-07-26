@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: product_attributes.php 3045 2012-06-16 20:06:59Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -22,7 +22,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-if ($product->getAttributesCount() > 0) {
+if ($product->getAttributesCount($product->data['products_id']) > 0) {
 
   $module_smarty = new Smarty;
 
@@ -89,9 +89,11 @@ if ($product->getAttributesCount() > 0) {
           $CalculateCurr = ($product->data['products_tax_class_id'] == 0) ? true : false; //FIX several currencies on product attributes
           $price = $xtPrice->xtcFormat($products_options['options_values_price'], false, $product->data['products_tax_class_id'],$CalculateCurr);
         }
-
-        $products_price = $xtPrice->xtcGetPrice($product->data['products_id'], $format = false, 1, $product->data['products_tax_class_id'], $product->data['products_price']);
-
+        
+        if (!isset($products_price)) {
+          $products_price = $xtPrice->xtcGetPrice($product->data['products_id'], false, 1, $product->data['products_tax_class_id'], $product->data['products_price']);
+        }
+        
         if ($_SESSION['customers_status']['customers_status_discount_attributes'] == 1 && $products_options['price_prefix'] == '+') {
           $price -= $price / 100 * $discount;
         }
@@ -130,7 +132,7 @@ if ($product->getAttributesCount() > 0) {
   }
 
 
-  if ($product->data['options_template'] == '' or $product->data['options_template'] == 'default') {
+  if ($product->data['options_template'] == '' || $product->data['options_template'] == 'default') {
     $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/','html'), function($file) {
       return false === strpos($file, 'index.html');
     });
