@@ -4,7 +4,7 @@
 <h1>{#heading_product_reviews#} {$PRODUCTS_NAME}</h1>
 <div class="pri_imagebox">
   <div class="pri_big_image">
-    {if $PRODUCTS_IMAGE != ''}<a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a>{/if}
+    {if $PRODUCTS_IMAGE != ''}<a class="cbimages" title="{$PRODUCTS_IMAGE_TITLE}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_IMAGE_ALT}" /></a>{/if}
   </div>
   <div class="pri_zoomtext">{#zoomtext#}</div>
 </div>

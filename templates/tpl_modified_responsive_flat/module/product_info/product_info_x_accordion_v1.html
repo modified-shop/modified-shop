@@ -8,7 +8,7 @@
     {if $PRODUCTS_IMAGE != ''}
     <div class="pd_imagebox">
       <div class="pd_big_image">
-        <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img itemprop="image" src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a>
+        <a class="cbimages" title="{$PRODUCTS_IMAGE_TITLE}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img itemprop="image" src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_IMAGE_ALT}" /></a>
       </div>
       <div class="zoomtext">{#zoomtext#}</div>
     </div>
@@ -140,8 +140,8 @@
         <div class="pd_small_image_tab_row cf">
           {foreach item=more_images_data from=$more_images}
             <div class="pd_small_image_tab"><div class="pd_small_image_tab_inner cf">
-              <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
-              <noscript><a href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
+              <a class="cbimages" title="{$PRODUCTS_IMAGE_TITLE}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$module_data.PRODUCTS_IMAGE_ALT}" /></a>
+              <noscript><a title="{$PRODUCTS_IMAGE_TITLE}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$module_data.PRODUCTS_IMAGE_ALT}" /></a></noscript>
             </div></div>
           {/foreach}
         </div>
