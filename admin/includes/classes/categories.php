@@ -830,7 +830,7 @@ class categories {
 
         //write to DB
         $sql_data_array = $mo_img;
-        unset($sql_data_array['image_id ']);
+        unset($sql_data_array['image_id']);
         $sql_data_array = array('products_id' => $this->dup_products_id,
                                 'image_name' => $dup_products_image_name);
 
@@ -1260,7 +1260,7 @@ class categories {
           xtc_db_perform(TABLE_PRODUCTS_IMAGES, $mo_img);
         } elseif ($action == 'update' && $dup_check['total']) {
           xtc_db_perform(TABLE_PRODUCTS_IMAGES, $mo_img, 'update', "image_name = '".xtc_db_input($products_data['products_previous_image_'. ($img +1)])."'");
-        } 
+        }
         //image processing
         $this->image_process($products_image_name, $products_image_name_process);
 
