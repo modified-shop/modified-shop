@@ -173,6 +173,7 @@ echo mainMenue(BOX_HEADING_TOOLS);
     if ($admin_access['csv_backend'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CSV_BACKEND) . '" class="menuBoxContentLink"> -' . BOX_IMPORT . '</a></li>';
     if ($admin_access['parcel_carriers'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS) . '" class="menuBoxContentLink"> -' . BOX_PARCEL_CARRIERS . '</a></li>';
     if ($admin_access['logs'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_LOGS) . '" class="menuBoxContentLink"> -' . BOX_LOGS . '</a></li>';
+    if ($admin_access['blacklist_logs'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_BLACKLIST_LOGS) . '" class="menuBoxContentLink"> -' . BOX_BLACKLIST_LOGS . '</a></li>';
 echo endMenue(BOX_HEADING_TOOLS);
 
 //---------------------------GUTSCHEINE

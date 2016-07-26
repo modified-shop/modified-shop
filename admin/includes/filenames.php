@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: filenames.php 4149 2012-12-23 14:21:35Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -91,6 +91,7 @@ define('FILENAME_SHIPCLOUD', 'shipcloud.php');
 define('FILENAME_PRODUCTS_TAGS', 'products_tags.php');
 define('FILENAME_TRUSTEDSHOPS', 'trustedshops.php');
 define('FILENAME_DOWNLOAD', 'download.php');
+define('FILENAME_BLACKLIST_LOGS', 'blacklist_logs.php');
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/filenames/','php') as $file) require ($file);
