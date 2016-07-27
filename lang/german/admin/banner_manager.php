@@ -32,7 +32,7 @@ define('TEXT_BANNERS_GROUP', 'Banner-Gruppe:');
 define('TEXT_BANNERS_NEW_GROUP', 'W&auml;hlen Sie im Dropdown-Feld die gew&uuml;nschte Banner-Gruppe aus (falls vorhanden) oder geben Sie unten eine neue Banner-Gruppe ein.'); 
 define('TEXT_BANNERS_NEW_GROUP_NOTE', 'Damit ein Banner im Template angezeigt wird, muss das Template erweitert werden.<br/>Beispiel: Banner Gruppe ist banner, dann kann im Template in der index.html mit {$BANNER} angezeigt werden'); 
 define('TEXT_BANNERS_IMAGE', 'Bild (Datei):'); 
-define('TEXT_BANNERS_IMAGE_LOCAL', 'W&auml;hlen Sie das gew&uuml;nschte Bild mit Klick auf "Durchsuchen" oder w&auml;hlen sie einen existierenden Banner aus.<br /><strong>Erlaubte Dateitypen:</strong> jpg, jpeg, jpe, gif, png, bmp, tiff, tif, bmp, swf, cab'); 
+define('TEXT_BANNERS_IMAGE_LOCAL', 'W&auml;hlen Sie das gew&uuml;nschte Bild mit Klick auf "Durchsuchen" oder w&auml;hlen Sie einen existierenden Banner aus.<br /><strong>Erlaubte Dateitypen:</strong> jpg, jpeg, jpe, gif, png, bmp, tiff, tif, bmp, swf, cab'); 
 define('TEXT_BANNERS_IMAGE_TARGET', 'Bildziel (Speichern nach):'); 
 define('TEXT_BANNERS_HTML_TEXT', 'HTML Text:');
 define('TEXT_BANNERS_HTML_TEXT_NOTE', 'Hier kann direkt der HTML-Code eines Affiliate Dienstes zur Banner-Anzeige eingetragen werden.');
