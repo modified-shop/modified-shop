@@ -5,8 +5,8 @@
     <div class="lb_inner">
       <div class="lb_image">
       {if $module_data.PRODUCTS_IMAGE != ''}
-        <a href="{$module_data.PRODUCTS_LINK}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_IMAGE_ALT}" /></a>
-        <noscript><a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_IMAGE_ALT}" /></a></noscript>
+        <a href="{$module_data.PRODUCTS_LINK}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
+        <noscript><a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
       {else}
         &nbsp;
       {/if}

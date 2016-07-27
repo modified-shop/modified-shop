@@ -6,7 +6,7 @@
       <tr>
         <td style="padding-right:20px;">
           {if $PRODUCTS_IMAGE != ''}
-            <a title="{$PRODUCTS_IMAGE_TITLE}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" class="thickbox" rel="{$PRODUCTS_ID}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_IMAGE_ALT}" class="productimage" />{if $PRODUCTS_POPUP_LINK != ''}<br /><br /><img src="{$tpl_path}img/magnifier.gif" alt="Zoom" border="0" />&nbsp;{#text_zoom#}{/if}</a>
+            <a title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" class="thickbox" rel="{$PRODUCTS_ID}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" class="productimage" />{if $PRODUCTS_POPUP_LINK != ''}<br /><br /><img src="{$tpl_path}img/magnifier.gif" alt="Zoom" border="0" />&nbsp;{#text_zoom#}{/if}</a>
           {/if}
         </td>
         <td style="vertical-align:top">
@@ -120,7 +120,7 @@
     {* More Pictures *}
     <div class="morepics">
       {foreach item=more_images_data from=$more_images}
-        <a class="thickbox" rel="{$PRODUCTS_ID}" title="{$PRODUCTS_IMAGE_TITLE}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_IMAGE_ALT}" /></a>
+        <a class="thickbox" rel="{$PRODUCTS_ID}" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a>
       {/foreach}
     </div>
     <div style="clear:both;"></div>
