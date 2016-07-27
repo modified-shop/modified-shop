@@ -19,9 +19,9 @@
   <h1 style="margin-top:0px;">{$PRODUCTS_NAME}</h1>
   <div id="productinfowrap">
     {if $PRODUCTS_IMAGE != ''}
-      <div id="productinfoimages" style="width:{$smarty.const.PRODUCT_IMAGE_THUMBNAIL_WIDTH}px;"><img src="{$PRODUCTS_IMAGE}" alt="{$module_data.NAME|onlytext}" border="0" />
+      <div id="productinfoimages" style="width:{$smarty.const.PRODUCT_IMAGE_THUMBNAIL_WIDTH}px;"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" border="0" />
       {foreach item=more_images_data from=$more_images}
-        <div class="hrlightgrey"></div><img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.NAME|onlytext}" border="0" class="productimage" />
+        <div class="hrlightgrey"></div><img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" border="0" class="productimage" />
       {/foreach}
     </div>
     {/if}
