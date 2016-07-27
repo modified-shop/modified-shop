@@ -584,6 +584,7 @@ textarea#message {
 }
 /* contact */
 textarea#message_body {
+  resize: vertical;
   height:120px;
 }
 /* write_review */
