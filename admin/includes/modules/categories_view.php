@@ -914,6 +914,7 @@
                 $contents[] = array('text' => '<strong>' . TEXT_CONTENT_COPY . '</strong><br />' . xtc_draw_checkbox_field('cnt_copy', 'cnt_copy', false).'<font size="1">'.TEXT_CONTENT_COPY_INFO.'</font><br /><hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_LINKS_COPY . '</strong><br />' . xtc_draw_checkbox_field('links_copy', 'links_copy', false).'<font size="1">'.TEXT_LINKS_COPY_INFO.'</font><br /><hr noshade>');
                 // EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
+                $contents[] = array('text' => '<strong>' . TEXT_TAGS_COPY . '</strong><br />' . xtc_draw_checkbox_field('tags_copy', 'tags_copy', false).'<font size="1">'.TEXT_TAGS_COPY_INFO.'</font><br /><hr noshade>');
                 $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_copy_confirm" value="' . BUTTON_COPY . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&cID=' . $cInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
               }
               // multi_copy confirm ENDS

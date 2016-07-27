@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: categories.php 3392 2012-08-06 12:45:26Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -255,4 +255,7 @@ define('TEXT_NO_FILE', 'No template file existing!');
 
 define('ERROR_COPY_METHOD_NOT_SPECIFIED', 'Copy Method not specified.');
 define('ERROR_COPY_METHOD_NOT_ALLOWED', 'Copy Method "Link" not allowed on categories.');
+
+define('TEXT_TAGS_COPY', 'Product features also copy');
+define('TEXT_TAGS_COPY_INFO', 'Product features also copy <br/> Only single-copy (1 item) recommended ');
 ?>
