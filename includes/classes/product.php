@@ -498,7 +498,8 @@ class product {
       'PRODUCTS_VPE_NAME' => $main->vpe_name,
       'PRODUCTS_IMAGE' => $products_image,
       'PRODUCTS_IMAGE_SIZE' => $img_attr,
-      'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']),
+      'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
+      'PRODUCTS_IMAGE_ALT' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
       'PRODUCTS_LINK' => $products_link,
       'PRODUCTS_TAX_INFO' => $main->getTaxInfo($tax_rate),
       'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
