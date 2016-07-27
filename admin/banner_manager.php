@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: banner_manager.php 4564 2013-04-02 15:14:54Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -22,14 +22,14 @@
 
   $banner_extension = xtc_banner_image_extension();
   $languages = xtc_get_languages();
-  
+
   $lang_array = array();
   $lang_array_id = array();
   for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
     $lang_array[] = array('id' => $languages[$i]['id'], 'text' => $languages[$i]['name']);
     $lang_array_id[$languages[$i]['id']] = $languages[$i]['name'];
   }
-  
+
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'setflag':
@@ -41,7 +41,7 @@
         }
         xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . (int)$_GET['bID']));
         break;
-        
+      
       case 'insert':
       case 'update':
         if (isset($_POST['banners_id'])) $banners_id = xtc_db_prepare_input($_POST['banners_id']);
@@ -52,7 +52,7 @@
         $banners_group = ((empty($new_banners_group)) ? xtc_db_prepare_input($_POST['banners_group']) : $new_banners_group);
         $html_text = xtc_db_prepare_input($_POST['html_text']);
         $banners_image_exist = xtc_db_prepare_input($_POST['banners_image_exist']);
-        
+      
         $banner_error = false;
         if (empty($banners_title)) {
           $messageStack->add(ERROR_BANNER_TITLE_REQUIRED, 'error');
@@ -62,16 +62,16 @@
           $messageStack->add(ERROR_BANNER_GROUP_REQUIRED, 'error');
           $banner_error = true;
         }
-        
+      
         //store banners_image
         $accepted_banners_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp","swf","cab");
         $accepted_banners_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp","application/x-shockwave-flash");
         $banners_image = xtc_try_upload('banners_image', DIR_FS_CATALOG_IMAGES.'banner/', '644', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types);
-        if ($banners_image_exist == '' && !$banners_image) {
-          $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
+        if ($banners_image_exist == '' && $html_text == '' && !$banners_image) {
+          $messageStack->add(ERROR_BANNER_IMAGE_HTML_REQUIRED, 'error');
           $banner_error = true;
         }
-        
+      
         // new banner available & delete old
         if (is_object($banners_image) && $banners_image->filename != '') {
           $banners_image_exist = $banners_image->filename;
@@ -84,7 +84,7 @@
             @unlink($image_location);
           }          
         }
-        
+      
         if ($banner_error === false) {          
           $sql_data_array = array('banners_title' => $banners_title,
                                   'banners_url' => $banners_url,
@@ -125,7 +125,7 @@
           $action = 'new';
         }
         break;
-        
+      
       case 'deleteconfirm':
         $banners_id = xtc_db_prepare_input($_GET['bID']);
         if (isset($_POST['delete_image']) && ($_POST['delete_image'] == 'on')) {
@@ -170,7 +170,7 @@
         break;
     }
   }
-  
+
   // check if the graphs directory exists
   $dir_ok = false;
   if (function_exists('imagecreate') && xtc_not_null($banner_extension)) {
@@ -240,6 +240,19 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
               array('id' => 'slider', 'text' => 'SLIDER'),
             );              
 
+            // banner file
+            $files = array();
+            if ($dir= opendir(DIR_FS_CATALOG.'images/banner/')) {
+              while (($file = readdir($dir)) !== false) {
+                if (is_file( DIR_FS_CATALOG.'images/banner/'.$file) and ($file != 'index.html')) {
+                  $files[] = array('id' => $file,
+                                   'text' => $file);
+                }
+              }
+              closedir($dir);
+              sort($files);
+            }      
+
             $groups_query = xtc_db_query("SELECT DISTINCT banners_group 
                                                      FROM " . TABLE_BANNERS . " 
                                                     WHERE banners_group != 'banner'
@@ -248,7 +261,7 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
             while ($groups = xtc_db_fetch_array($groups_query)) {
               $groups_array[] = array('id' => $groups['banners_group'], 'text' => strtoupper($groups['banners_group']));
             }
-            
+          
             echo xtc_draw_form('new_banner', FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action, 'post', 'enctype="multipart/form-data"'); 
               if ($form_action == 'update') {
                 echo xtc_draw_hidden_field('banners_id', $bID); 
@@ -284,11 +297,12 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
                     <?php
                     if ($bInfo->banners_image != '') {
                       echo '<img style="max-width:360px; margin-bottom:10px;" src="'.DIR_WS_CATALOG_IMAGES . 'banner/'.$bInfo->banners_image.'" />';
-                      echo xtc_draw_hidden_field('banners_image_exist', $bInfo->banners_image); 
-                      echo '<div>'.$bInfo->banners_image .'</div><br>';
                     }
-                     echo xtc_draw_file_field('banners_image');
-                  ?></td>
+                    echo xtc_draw_file_field('banners_image');
+                    echo '<br/><br/>';
+                    echo xtc_draw_pull_down_menu('banners_image_exist', array_merge(array(array('id' => '','text' => (($bInfo->banners_image != '') ? TEXT_NO_FILE : TEXT_SELECT))), $files), $bInfo->banners_image);
+                    ?>
+                  </td>
                   <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_IMAGE_LOCAL;?></td>
                 </tr>
                 <tr>
@@ -312,11 +326,11 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
                   <td class="dataTableConfig col-right">&nbsp;</td>
                 </tr>
               </table>
-                     
+                   
               <div class="pdg2 flt-r">
                 <?php echo (($form_action == 'insert') ? '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>' : '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'). '&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] : '')) . '">' . BUTTON_CANCEL . '</a>'; ?>
               </div>
-            
+          
               <div class="pdg2 customers-groups smallText" style="width:100%;margin-top:10px;">
                 <?php echo TEXT_BANNERS_BANNER_NOTE . '<br />' . TEXT_BANNERS_INSERT_NOTE . '<br />' . TEXT_BANNERS_EXPIRCY_NOTE . '<br />' . TEXT_BANNERS_SCHEDULE_NOTE; ?>
               </div>          
@@ -379,12 +393,12 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
                       ?>
                     <tr>                      
                   </table>
-                  
+                
                   <div class="smallText pdg2 flt-l"><?php echo $banners_split->display_count($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_BANNERS); ?></div>
                   <div class="smallText pdg2 flt-r"><?php echo $banners_split->display_links($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
                   <div class="clear"></div>
                   <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'action=new') . '">' . BUTTON_NEW_BANNER . '</a>'; ?></div>
-                
+              
                 </td>
                 <?php
                   $heading = array();

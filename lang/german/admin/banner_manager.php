@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: banner_manager.php 5100 2013-07-17 13:25:47Z Tomcraft $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -32,7 +32,7 @@ define('TEXT_BANNERS_GROUP', 'Banner-Gruppe:');
 define('TEXT_BANNERS_NEW_GROUP', 'W&auml;hlen Sie im Dropdown-Feld die gew&uuml;nschte Banner-Gruppe aus (falls vorhanden) oder geben Sie unten eine neue Banner-Gruppe ein.'); 
 define('TEXT_BANNERS_NEW_GROUP_NOTE', 'Damit ein Banner im Template angezeigt wird, muss das Template erweitert werden.<br/>Beispiel: Banner Gruppe ist banner, dann kann im Template in der index.html mit {$BANNER} angezeigt werden'); 
 define('TEXT_BANNERS_IMAGE', 'Bild (Datei):'); 
-define('TEXT_BANNERS_IMAGE_LOCAL', 'W&auml;hlen Sie das gew&uuml;nschte Bild mit Klick auf "Durchsuchen" oder geben Sie unten die lokale Datei auf Ihrem Server im Pfad &quot;' . DIR_FS_CATALOG_IMAGES.'banner/&quot; an.<br /><strong>Erlaubte Dateitypen:</strong> jpg, jpeg, jpe, gif, png, bmp, tiff, tif, bmp, swf, cab'); 
+define('TEXT_BANNERS_IMAGE_LOCAL', 'W&auml;hlen Sie das gew&uuml;nschte Bild mit Klick auf "Durchsuchen" oder w&auml;hlen sie einen existierenden Banner aus.<br /><strong>Erlaubte Dateitypen:</strong> jpg, jpeg, jpe, gif, png, bmp, tiff, tif, bmp, swf, cab'); 
 define('TEXT_BANNERS_IMAGE_TARGET', 'Bildziel (Speichern nach):'); 
 define('TEXT_BANNERS_HTML_TEXT', 'HTML Text:');
 define('TEXT_BANNERS_HTML_TEXT_NOTE', 'Hier kann direkt der HTML-Code eines Affiliate Dienstes zur Banner-Anzeige eingetragen werden.');
@@ -66,7 +66,7 @@ define('SUCCESS_BANNER_STATUS_UPDATED', 'Erfolg: Der Status des Banners wurde ak
 
 define('ERROR_BANNER_TITLE_REQUIRED', 'Fehler: Ein Bannertitel wird ben&ouml;tigt.');
 define('ERROR_BANNER_GROUP_REQUIRED', 'Fehler: Eine Bannergruppe wird ben&ouml;tigt.');
-define('ERROR_BANNER_IMAGE_REQUIRED', 'Fehler: Ein Bannerbild wird ben&ouml;tigt.');
+define('ERROR_BANNER_IMAGE_HTML_REQUIRED', 'Fehler: Ein Bannerbild oder HTML Text wird ben&ouml;tigt.');
 define('ERROR_IMAGE_DIRECTORY_DOES_NOT_EXIST', 'Fehler: Das Zielverzeichnis %s existiert nicht.');
 define('ERROR_IMAGE_DIRECTORY_NOT_WRITEABLE', 'Fehler: Das Zielverzeichnis %s ist nicht beschreibbar.');
 define('ERROR_IMAGE_DOES_NOT_EXIST', 'Fehler: Bild existiert nicht.');
@@ -82,4 +82,5 @@ define('TEXT_BANNERS_DATE_FORMAT', 'JJJJ-MM-TT');
 
 define('TEXT_BANNERS_LANGUAGE', 'Sprache:');
 define('TEXT_BANNERS_LANGUAGE_NOTE', 'F&uuml;r welche Sprache soll der Banner angezeigt werden?');
+define('TEXT_NO_FILE', '-- keine Datei --');
 ?>

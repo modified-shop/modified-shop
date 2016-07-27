@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: banner_manager.php 5100 2013-07-17 13:25:47Z Tomcraft $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -32,7 +32,7 @@ define('TEXT_BANNERS_GROUP', 'Banner Group:');
 define('TEXT_BANNERS_NEW_GROUP', 'Choose an existing banner group (if exists) or enter a new banner group below.');
 define('TEXT_BANNERS_NEW_GROUP_NOTE', 'To display a Banner in the template, the template must be extended<br/>Example: Banner Group banner , the banner can be displayed in the template in the index.html with ${BANNER}');
 define('TEXT_BANNERS_IMAGE', 'Image:');
-define('TEXT_BANNERS_IMAGE_LOCAL', 'Choose the desired image by clicking the "Browse" button or enter local file below in path &quot;' . DIR_FS_CATALOG_IMAGES.'banner/&quot; an.<br /><strong>Allowed extensions:</strong> jpg, jpeg, jpe, gif, png, bmp, tiff, tif, bmp, swf, cab');
+define('TEXT_BANNERS_IMAGE_LOCAL', 'Choose the desired image by clicking the "Browse" button or choose an existing banner below.<br /><strong>Allowed extensions:</strong> jpg, jpeg, jpe, gif, png, bmp, tiff, tif, bmp, swf, cab');
 define('TEXT_BANNERS_IMAGE_TARGET', 'Image Target (Save To):');
 define('TEXT_BANNERS_HTML_TEXT', 'HTML Text:');
 define('TEXT_BANNERS_HTML_TEXT_NOTE', 'Here you can enter directly a HTML code you received from an affiliate service to display the banner.');
@@ -66,7 +66,7 @@ define('SUCCESS_BANNER_STATUS_UPDATED', 'Success: The status of the banner has b
 
 define('ERROR_BANNER_TITLE_REQUIRED', 'Error: Banner title required.');
 define('ERROR_BANNER_GROUP_REQUIRED', 'Error: Banner group required.');
-define('ERROR_BANNER_IMAGE_REQUIRED', 'Error: Banner image required.');
+define('ERROR_BANNER_IMAGE_HTML_REQUIRED', 'Error: Banner image or HTML text required.');
 define('ERROR_IMAGE_DIRECTORY_DOES_NOT_EXIST', 'Error: Target directory does not exist: %s');
 define('ERROR_IMAGE_DIRECTORY_NOT_WRITEABLE', 'Error: Target directory is not writeable: %s');
 define('ERROR_IMAGE_DOES_NOT_EXIST', 'Error: Image does not exist.');
@@ -82,4 +82,5 @@ define('TEXT_BANNERS_DATE_FORMAT', 'YYYY-MM-DD');
 
 define('TEXT_BANNERS_LANGUAGE', 'Language:');
 define('TEXT_BANNERS_LANGUAGE_NOTE', 'Select the language where the banner should be displayed?');
+define('TEXT_NO_FILE', '-- no file --');
 ?>
