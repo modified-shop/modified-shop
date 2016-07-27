@@ -14,7 +14,12 @@
       {if $more_images|@count > 0}
       <div class="pd_small_image_row cf">
         {foreach item=more_images_data from=$more_images} 
-        <div class="pd_small_image"><div class="pd_small_image_inner cf"><a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$PRODUCTS_NAME|onlytext}" /></a></div></div>
+        <div class="pd_small_image">
+          <div class="pd_small_image_inner cf">
+            <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$PRODUCTS_NAME|onlytext}" /></a>
+            <noscript><a title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$PRODUCTS_NAME|onlytext}" /></a></noscript>
+          </div>
+        </div>
         {/foreach}
       </div>
       {/if}

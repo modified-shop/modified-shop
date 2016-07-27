@@ -141,7 +141,7 @@
           {foreach item=more_images_data from=$more_images}
             <div class="pd_small_image_tab"><div class="pd_small_image_tab_inner cf">
               <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
-              <noscript><a href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
+              <noscript><a title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
             </div></div>
           {/foreach}
         </div>
