@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: categories.php 3392 2012-08-06 12:45:26Z web28 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -255,4 +255,7 @@ define('TEXT_NO_FILE', 'Keine Vorlagen-Datei vorhanden!');
 
 define('ERROR_COPY_METHOD_NOT_SPECIFIED', 'Kopiermethode nicht angegeben.');
 define('ERROR_COPY_METHOD_NOT_ALLOWED', 'Kopiermethode "Verlinken" nicht erlaubt bei Kategorien.');
+
+define('TEXT_TAGS_COPY', 'Artikeleigenschaften mitkopieren');
+define('TEXT_TAGS_COPY_INFO', 'Artikeleigenschaften mitkopieren<br/ >Nur bei Einzelkopie (1 Artikel) empfohlen');
 ?>

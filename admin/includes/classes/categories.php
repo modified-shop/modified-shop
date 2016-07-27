@@ -867,7 +867,7 @@ class categories {
     //dublicate products attributes
     if (isset($_POST['attr_copy']) && $_POST['attr_copy'] == 'attr_copy') {
       $attribute_copy_query = xtc_db_query("SELECT *
-                                              FROM products_attributes
+                                              FROM ".TABLE_PRODUCTS_ATTRIBUTES."
                                              WHERE products_id = '".$src_products_id."'");
       while ($attribute_copy_data = xtc_db_fetch_array($attribute_copy_query)) {
         $sql_data_array = $attribute_copy_data;
@@ -876,6 +876,19 @@ class categories {
         $sql_data_array['products_id'] = $this->dup_products_id;
         //write attributes data to DB
         xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES, $sql_data_array);
+      }
+    }
+
+    //dublicate products tags
+    if (isset($_POST['tags_copy']) && $_POST['tags_copy'] == 'tags_copy') {
+      $tags_copy_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_PRODUCTS_TAGS."
+                                        WHERE products_id = '".$src_products_id."'");
+      while ($tags_copy_data = xtc_db_fetch_array($tags_copy_query)) {
+        $sql_data_array = $tags_copy_data;
+        $sql_data_array['products_id'] = $this->dup_products_id;
+        //write tags data to DB
+        xtc_db_perform(TABLE_PRODUCTS_TAGS, $sql_data_array);
       }
     }
     
