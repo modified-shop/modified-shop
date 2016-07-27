@@ -1547,6 +1547,13 @@ class Smarty
         else
             $_params['resource_base_path'] = $this->template_dir;
 
+#mod
+        $_params['resource_base_path'] = array(
+            $this->template_dir,
+            $this->template_dir . DIRECTORY_SEPARATOR . CURRENT_TEMPLATE
+        );
+#mod
+
         if ($this->_parse_resource_name($_params)) {
             $_resource_type = $_params['resource_type'];
             $_resource_name = $_params['resource_name'];

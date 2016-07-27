@@ -90,7 +90,7 @@
         </span>
         <span class="hl_price">
           {foreach name=inner item=price_data from=$prod_history_data.PRODUCTS_PRICE_ARRAY}
-            {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/price_box.html"}
+            {include file="module/includes/price_box.html"}
           {/foreach}
         </span>
       </li>

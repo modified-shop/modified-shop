@@ -74,7 +74,7 @@
         <div class="pd_price{if $PRODUCTS_FSK18 == 'true'} pd_fsk_padding{/if}">
         {if $PRODUCTS_FSK18 == 'true'}<div class="pd_fsk18"></div>{/if}
         {foreach name=inner item=price_data from=$PRODUCTS_PRICE_ARRAY}
-          {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/price_info.html"}
+          {include file="module/includes/price_info.html"}
         {/foreach}
         </div>
         {if $PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}

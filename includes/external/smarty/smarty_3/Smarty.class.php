@@ -694,6 +694,7 @@ class Smarty extends Smarty_Compatibility
         $this->start_time = microtime(true);
         // set default dirs
         $this->setTemplateDir(DIR_FS_CATALOG . 'templates' . DS)
+             ->addTemplateDir(DIR_FS_CATALOG . 'templates' . DS . CURRENT_TEMPLATE . DS)
              ->setCompileDir(DIR_FS_CATALOG . 'templates_c' . DS)
              ->setPluginsDir(SMARTY_PLUGINS_DIR)
              ->setCacheDir(DIR_FS_CATALOG . 'cache' . DS)

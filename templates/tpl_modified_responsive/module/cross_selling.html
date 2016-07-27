@@ -7,7 +7,7 @@
 {if $products_data.GROUP != ''}<h2>{$products_data.GROUP}</h2>{/if}
   <div class="listingcontainer_details cf">
   {foreach item=module_data from=$products_data.PRODUCTS}
-    {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/product_info_include.html"}
+    {include file="module/includes/product_info_include.html"}
   {/foreach}
   </div>  
 {/foreach}

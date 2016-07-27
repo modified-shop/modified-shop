@@ -16,7 +16,7 @@
           <span class="hl_text" style="width:145px;">{$products_data.PRODUCTS_NAME}</span>
           <span class="hl_price" style="color:#555">
             {foreach name=inner item=price_data from=$products_data.PRODUCTS_PRICE_ARRAY}
-              {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/price_box.html"}
+              {include file="module/includes/price_box.html"}
             {/foreach}
             {if $products_data.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
               {if $products_data.PRODUCTS_VPE}<div class="lb_vpe" style="position:inherit;font-weight: normal;">{$products_data.PRODUCTS_VPE}</div>{/if}

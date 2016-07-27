@@ -13,7 +13,7 @@
   {if $box_content.PRODUCTS_IMAGE!=''}<div class="box_image"><a href="{$box_content.PRODUCTS_LINK}"><img src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME|onlytext}" /></a></div>{/if}
   <div class="box_price">
     {foreach name=inner item=price_data from=$box_content.PRODUCTS_PRICE_ARRAY}
-      {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/price_box.html"}
+      {include file="module/includes/price_box.html"}
     {/foreach}
   </div>
   {if $box_content.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
