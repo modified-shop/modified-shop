@@ -116,11 +116,11 @@
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_STARTPAGE_SORT; ?></span></td>
-            <td><span class="main"><?php echo  xtc_draw_input_field('products_startpage_sort', $pInfo->products_startpage_sort ,'style="width: 155px"'); ?></span></td>
+            <td><span class="main"><?php echo xtc_draw_input_field('products_startpage_sort', $pInfo->products_startpage_sort ,'style="width: 155px"'); ?></span></td>
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_SORT; ?></span></td>
-            <td><span class="main"><?php echo  xtc_draw_input_field('products_sort', $pInfo->products_sort,'style="width: 155px"'); ?></span></td>
+            <td><span class="main"><?php echo xtc_draw_input_field('products_sort', $pInfo->products_sort,'style="width: 155px"'); ?></span></td>
           </tr>
           <tr>
             <td>
@@ -150,11 +150,11 @@
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_MODEL; ?></span></td>
-            <td><span class="main"><?php echo  xtc_draw_input_field('products_model', $pInfo->products_model, 'style="width: 155px"'); ?></span></td>
+            <td><span class="main"><?php echo xtc_draw_input_field('products_model', $pInfo->products_model, 'style="width: 155px"'); ?></span></td>
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_EAN; ?></span></td>
-            <td><span class="main"><?php echo  xtc_draw_input_field('products_ean', $pInfo->products_ean, 'style="width: 155px"'); ?></span></td>
+            <td><span class="main"><?php echo xtc_draw_input_field('products_ean', $pInfo->products_ean, 'style="width: 155px"'); ?></span></td>
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER; ?></span></td>
@@ -162,7 +162,7 @@
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER_MODEL; ?></span></td>
-            <td><span class="main"><?php echo  xtc_draw_input_field('products_manufacturers_model', $pInfo->products_manufacturers_model, 'style="width: 155px"'); ?></span></td>
+            <td><span class="main"><?php echo xtc_draw_input_field('products_manufacturers_model', $pInfo->products_manufacturers_model, 'style="width: 155px"'); ?></span></td>
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_WEIGHT; ?><?php echo TEXT_PRODUCTS_WEIGHT_INFO; ?></span></td>
