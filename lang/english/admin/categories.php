@@ -215,8 +215,8 @@ define('TEXT_PRODUCTS_DATE_FORMAT', 'JJJJ-MM-TT');
 define('TEXT_CHARACTERS','characters');
 // EOF - web28 - 2010-08-03 - add metatags max charakters info
 
-define('TEXT_ATTRIBUTE_COPY', 'Product attributes also copy');
-define('TEXT_ATTRIBUTE_COPY_INFO', 'Product attributes also copy <br/> Only single-copy (1 item) recommended ');
+define('TEXT_ATTRIBUTE_COPY', 'Also copy product attributes');
+define('TEXT_ATTRIBUTE_COPY_INFO', 'Also copy product attributes<br />Only recommended for single copy (1 item)');
 
 define('TEXT_PRODUCTS_ORDER_DESCRIPTION','Order description');
 
@@ -228,22 +228,22 @@ define('TEXT_SET_GROUP_PERMISSIONS', 'Inherit customer group permissions to all 
 define('HEADING_TITLE_ONLY_INACTIVE_PRODUCTS', 'Show only inactive products');
 
 // BOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
-define('TEXT_CONTENT_COPY', 'Product content also copy');
-define('TEXT_CONTENT_COPY_INFO', 'Product content also copy <br/> Only single-copy (1 item) recommended');
-define('TEXT_LINKS_COPY', 'Product links also copy');
-define('TEXT_LINKS_COPY_INFO', 'Product links also copy <br/> Only single-copy (1 item) recommended');
+define('TEXT_CONTENT_COPY', 'Also copy product content');
+define('TEXT_CONTENT_COPY_INFO', 'Also copy product content<br />Only recommended for single copy (1 item)');
+define('TEXT_LINKS_COPY', 'Also copy product links');
+define('TEXT_LINKS_COPY_INFO', 'Also copy product links<br />Only recommended for single copy (1 item)');
 // EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
 
 define('TEXT_GRADUATED_PRICES_INFO', 'The number of input fields for the Graduated Prices may be "<b>Configuration - Admin Options area - Number Graduated Price</b>" to be adjusted.');
 define('TEXT_CATEGORY_SETTINGS', 'Category Settings:');
 
-define('ERROR_QTY_SAVE_CHANGED', 'While editing the article, the inventory has been changed and not saved.');
+define('ERROR_QTY_SAVE_CHANGED', 'While editing the product, the inventory has been changed and not saved.');
 
 define('TEXT_NO_MOVE_POSSIBLE', 'Not possible to move product.');
 
 define('TEXT_IN', 'in:');
 
-define('TEXT_PRODUCTS_ATTRIBUTES_RECALCULATE', 'Reclaculate attribute on changing tax rate');
+define('TEXT_PRODUCTS_ATTRIBUTES_RECALCULATE', 'Recalculate attribute on changing tax rate');
 
 define('HEADING_TITLE_CAT_BREADCRUMB', ' in &quot;%s&quot;');
 
@@ -256,6 +256,6 @@ define('TEXT_NO_FILE', 'No template file existing!');
 define('ERROR_COPY_METHOD_NOT_SPECIFIED', 'Copy Method not specified.');
 define('ERROR_COPY_METHOD_NOT_ALLOWED', 'Copy Method "Link" not allowed on categories.');
 
-define('TEXT_TAGS_COPY', 'Product features also copy');
-define('TEXT_TAGS_COPY_INFO', 'Product features also copy <br/> Only single-copy (1 item) recommended ');
+define('TEXT_TAGS_COPY', 'Also copy product features');
+define('TEXT_TAGS_COPY_INFO', 'Also copy product features<br />Only recommended for single copy (1 item)');
 ?>
