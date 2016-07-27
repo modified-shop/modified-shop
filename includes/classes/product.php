@@ -577,7 +577,7 @@ class product {
     if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
       $link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action','BUYproducts_id')).'action=buy_now&wishlist=true&BUYproducts_id='.$id, 'NONSSL');
       if ($plain === false) {
-        $link = '<a href="'.$link.'">'.xtc_image_submit('button_in_wishlist.gif', $name.' '.TEXT_TO_WISHLIST).'</a>';
+        $link = '<a href="'.$link.'">'.xtc_image_button('button_in_wishlist.gif', $name.' '.TEXT_TO_WISHLIST).'</a>';
       }
     
       return $link;
