@@ -36,7 +36,6 @@ $smarty = new Smarty;
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'xtc_array_to_string.inc.php');
 require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
-require_once (DIR_FS_INC.'secure_form.inc.php');
 
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
 if ($session_started == false) {
@@ -123,9 +122,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 		// Check that password is good
 		if (xtc_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id']) !== true) {
 			$messageStack->add('login', TEXT_LOGIN_ERROR);      
-		} elseif (check_secure_form($_POST) === false) {
-      $messageStack->add('login', TEXT_LOGIN_ERROR);
-    } elseif ($captcha_error === false) {		
+		} elseif ($captcha_error === false) {		
 			if (SESSION_RECREATE == 'True') {
 				xtc_session_recreate();
 			}
@@ -219,7 +216,7 @@ $smarty->assign('account_option', $account_options);
 $smarty->assign('BUTTON_NEW_ACCOUNT', '<a href="'.xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 $smarty->assign('BUTTON_LOGIN', xtc_image_submit('button_login.gif', IMAGE_BUTTON_LOGIN));
 $smarty->assign('BUTTON_GUEST', '<a href="'.xtc_href_link(FILENAME_CREATE_GUEST_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
-$smarty->assign('FORM_ACTION', xtc_draw_form('login', xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params().'action=process', 'SSL')).secure_form());
+$smarty->assign('FORM_ACTION', xtc_draw_form('login', xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params().'action=process', 'SSL')));
 $smarty->assign('INPUT_MAIL', xtc_draw_input_field('email_address'));
 $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));
 $smarty->assign('LINK_LOST_PASSWORD', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, '', 'SSL'));
