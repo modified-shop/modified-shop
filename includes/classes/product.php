@@ -366,7 +366,7 @@ class product {
         if (isset($this->data) && $this->data['products_vpe_status'] == 1 && $this->data['products_vpe_value'] != 0.0 && $staffel[$i]['price'] > 0) {
           $vpe = $staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount;
           $vpe = $vpe * (1 / $this->data['products_vpe_value']);
-          $vpe = $xtPrice->xtcFormat($vpe, true, $this->data['products_tax_class_id']).TXT_PER.xtc_get_vpe_name($this->data['products_vpe']);
+          $vpe = $xtPrice->xtcFormatCurrency($xtPrice->xtcFormat($vpe, false, $this->data['products_tax_class_id']), 0, false).TXT_PER.xtc_get_vpe_name($this->data['products_vpe']);
         }
         $staffel_data[$i] = array('QUANTITY' => $quantity,
                                   'PLAIN_QUANTITY' => $staffel[$i]['stk'],
