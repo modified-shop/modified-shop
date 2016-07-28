@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtcPrice.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware  
    http://www.modified-shop.org     
@@ -561,8 +561,15 @@ class xtcPrice {
    * @param integer $decimal_places
    * @return unknown
    */
-  function xtcFormatCurrency($price, $decimal_places = 0) {
+  function xtcFormatCurrency($price, $decimal_places = 0, $round = true) {
     $decimal_places = ($decimal_places > 0) ? $decimal_places : $this->currencies[$this->actualCurr]['decimal_places'];
+    if ($round === false) {
+      $price_array = explode('.', $price, 2);
+      $price = intval($price);
+      if (count($price_array) > 1) {
+        $price .= '.'.substr($price_array[1], 0, $decimal_places);
+      }
+    }
     $Pprice = number_format(floatval($price), $decimal_places, $this->currencies[$this->actualCurr]['decimal_point'], $this->currencies[$this->actualCurr]['thousands_point']);
     $Pprice = $this->currencies[$this->actualCurr]['symbol_left'] . ' ' . $Pprice . ' ' . $this->currencies[$this->actualCurr]['symbol_right'];
     
