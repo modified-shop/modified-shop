@@ -22,7 +22,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-if ($product->getAttributesCount($product->data['products_id']) > 0) {
+if ($product->getAttributesCount() > 0) {
 
   $module_smarty = new Smarty;
 
