@@ -22,6 +22,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_top/','php') as $file) require ($file);
+
 if ($product->getAttributesCount() > 0) {
 
   $module_smarty = new Smarty;
@@ -44,8 +47,7 @@ if ($product->getAttributesCount() > 0) {
   $row = 0;
 
   $products_options_data = array ();
-  
-  require_once(DIR_FS_INC.'auto_include.inc.php');
+
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_begin/','php') as $file) require ($file);
   
   while ($products_options_name = xtc_db_fetch_array($products_options_name_query,true)) {
@@ -150,4 +152,6 @@ if ($product->getAttributesCount() > 0) {
   $info_smarty->assign('MODULE_product_options_template', $product->data['options_template']);
   $info_smarty->assign('MODULE_product_options', $module);
 }
+
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_bottom/','php') as $file) require ($file);
 ?>
