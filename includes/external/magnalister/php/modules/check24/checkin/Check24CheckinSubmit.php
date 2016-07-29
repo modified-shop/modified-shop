@@ -36,6 +36,8 @@ class Check24CheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			'itemsPerBatch' => 100,
 			'mlProductsUseLegacy' => false,
 		), $settings);
+
+		$this->summaryAddText = ML_CHECK24_TEXT_AFTER_UPLOAD;
 		
 		parent::__construct($settings);
 		
@@ -127,10 +129,11 @@ class Check24CheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
 		foreach ($this->selection as $productId => $product) {
 			if (isset($product['submit']['Variations']) === false) {
-				$newSelection[] = $product;
+				$newSelection[$productId] = $product;
 				continue;
 			}
 
+			$i = 1;
 			foreach ($product['submit']['Variations'] as $variation) {
 				$variationData = $product;
 				unset($variationData['submit']['Variations']);
@@ -152,7 +155,8 @@ class Check24CheckinSubmit extends MagnaCompatibleCheckinSubmit {
 					}
 				}
 
-				$newSelection[] = $variationData;
+				$newSelection[$productId . '_' . $i] = $variationData;
+				$i++;
 			}
 		}
 
@@ -166,17 +170,15 @@ class Check24CheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		unset($this->selection[$iPID]);
 	}
 
-	protected function postSubmit() {
+	/*protected function postSubmit() {
 		try {
-			//*
 			$result = MagnaConnector::gi()->submitRequest(array(
 				'ACTION' => 'UploadItems',
 			));
-			//*/
 		} catch (MagnaException $e) {
 			$this->submitSession['api']['exception'] = $e;
 			$this->submitSession['api']['html'] = MagnaError::gi()->exceptionsToHTML();
 		}
-	}
+	}*/
 
 }

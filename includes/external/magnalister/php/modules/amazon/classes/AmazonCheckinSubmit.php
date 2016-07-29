@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: AmazonCheckinSubmit.php 5515 2015-04-21 12:05:51Z tim.neumann $
+ * $Id: AmazonCheckinSubmit.php 6027 2015-09-21 16:25:46Z tim.neumann $
  *
  * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -87,6 +87,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				))
 			)
 		);
+		$pID = magnaSKU2pID($sku);
 		$this->badItems[] = $pID;
 		unset($this->selection[$pID]);
 	}

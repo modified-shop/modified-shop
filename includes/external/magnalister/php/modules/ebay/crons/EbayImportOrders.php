@@ -217,6 +217,13 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
 		;
 	}
 
+	private function getEbayPlus () {
+		return (empty($this->o['orderInfo']['eBayPlus']))
+			? ''
+			: "\neBayPlus"
+		;
+	}
+
 	private function getEbaySalesRecordNumber() {
 		return (0 != $this->o['orderInfo']['eBaySalesRecordNumber'])
 			? "\n".ML_LABEL_EBAY_SALES_RECORD_NUMBER.': '.$this->o['orderInfo']['eBaySalesRecordNumber']
@@ -244,7 +251,8 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
 		return trim(
 			sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP, $this->marketplaceTitle)."\n".
 			'eBayOrderID: '.$this->getMarketplaceOrderID().
-			$this->getEbayBuyerUserName()."\n\n".
+			$this->getEbayBuyerUserName().
+			$this->getEbayPlus()."\n\n".
 			$this->comment . (isset($PUIcomment)?$PUIcomment:'')
 		);
 	}
@@ -375,6 +383,13 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
 				);
 			} else {
 				$magnaOrdersDataArr['eBayOrderID'][] = $this->o['magnaOrders']['eBayOrderID'];
+			}
+			# eBayPlus or other additional info
+			$aNewMagnaOrdersDataKeys = array_keys($this->o['magnaOrders']);
+			foreach ($aNewMagnaOrdersDataKeys as $newKey) {
+				if (!array_key_exists($newKey, $magnaOrdersDataArr)) {
+					$magnaOrdersDataArr[$newKey] = $this->o['magnaOrders'][$newKey];
+				}
 			}
 			$magnaOrdersData = serialize($magnaOrdersDataArr);
 			$magnaOrdersSpecial = $existingOpenOrder['special']."\n".$this->getMarketplaceOrderID();

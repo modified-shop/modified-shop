@@ -318,6 +318,7 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 		$product =  MLProduct::gi()->getProductById($this->cItem['pID']);
 		arrayEntitiesToUTF8($product);
 		$process = false;
+		$blVarStockOnEbay = false; // if zero stock control active
 		$data = array(
 			'fixed.stocksync' => $this->config['FixedStockSync'],
 			'fixed.pricesync' => $this->config['FixedPriceSync'],
@@ -361,6 +362,12 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 			$process = $process || (isset($data['Price']) && (float)$this->cItem['Price'] != (float)$data['Price']);
 		}
 
+		if (   ML_ShopAddOns::mlAddOnIsBooked('EbayProductIdentifierSync')
+		    && array_key_exists('EAN', $product)
+		    && !empty($product['EAN'])) {
+			$data['EAN'] = $product['EAN'];
+		}
+
 		if (isset($this->cItem['Variations']) && isset($product['Variations'])) {
 			$data['Variations'] = array();
 			foreach ($product['Variations'] as $variantData) {
@@ -381,11 +388,17 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 					}
 				}
 
+				if (    array_key_exists('EAN', $variantData)
+				     && !empty($variantData['EAN'])) {
+					$variant['EAN'] = $variantData['EAN'];
+				}
+
 				$process = ($process || (count($currentCVariation) == 0));
 				if ($syncStock) {
 					$variant['Quantity'] = $variantData['Quantity'];
 					$process = ($process || (count($currentCVariation) > 0 && $currentCVariation['Quantity'] != $variant['Quantity']));
 				}
+				$blVarStockOnEbay = ($blVarStockOnEbay || (count($currentCVariation) > 0 && $currentCVariation['Quantity'] > 0));
 				if ($syncPrice) {
 					$variant['StartPrice'] = $variantData['Price'][$listingMasterType];
 					// if PriceReduced is set use this one
@@ -405,7 +418,6 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 				$variant['Variation'] = $variationSpecifics;
 				$data['Variations'][] = $variant;
 			}
-			
 		}
 		$this->log(
 		"\n\teBay Quantity: ".$this->cItem['Quantity'].
@@ -421,15 +433,23 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 			');
 			if ($iStatus == 0) {//notavailible => noStock
 				if (    (0  != $this->cItem['Quantity'])
-				     || (isset($this->cItem['Variations']))
+				     || (isset($this->cItem['Variations']) && $blVarStockOnEbay)
 				   ) {
 					$process = true;
-					$this->log(
-					"\n\tDeleting Item due to inactive Status"
-					);
+					if (!getDBConfigValue('ebay.zerostockontrol', $this->mpID, false)) {
+						$this->log(
+						"\n\tDeleting Item due to inactive Status"
+						);
+					}
 				}
 				$data['NewQuantity'] = 0;
-				unset($data['Variations']);
+				if (getDBConfigValue('ebay.zerostockontrol', $this->mpID, false)) {
+					foreach($data['Variations'] as &$vv) {
+						$vv['Quantity'] = 0;
+					}
+				} else {
+					unset($data['Variations']);
+				}
 			}
 		}
 

@@ -61,7 +61,7 @@ class RicardoBuyingModeProcessor {
 					if (this.value === 'auction') {
 						jQuery('#config_ricardo_checkin_maxrelistcount option').last().remove();
 					} else {
-						jQuery('#config_ricardo_checkin_maxrelistcount option').last().after('<option value="2147483647"><?= ML_RICARDO_MAX_RELIST_COUNT_UNLIMITED ?></option>');
+						jQuery('#config_ricardo_checkin_maxrelistcount option').last().after('<option value="2147483647"><?php echo ML_RICARDO_MAX_RELIST_COUNT_UNLIMITED ?></option>');
 					}
 				});
 			});

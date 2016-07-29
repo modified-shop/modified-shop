@@ -85,7 +85,12 @@ class VariationsCalculator {
 		if ($permutationsCount > self::MAX_PERMUTATIONS) {
 			return false;
 		}
-		
+
+		$fBaseProductPrice = $base['products_price'];
+		$fBaseProductWeight = $base['products_weight'];
+		unset($base['products_price']);
+		unset($base['products_weight']);
+
 		$std = array_merge(array (
 			'products_id' => '',
 			'products_sku' => '',
@@ -125,10 +130,18 @@ class VariationsCalculator {
 						++$i;
 					}
 					$permutations[$offset]['variation_attributes'] .= $oID.','.$vID.'|';
-					$permutations[$offset]['variation_price'] += (float)$attr['options_values_price'] * ($attr['price_prefix'] == '+' ? 1 : -1);
-					
+					if ($dimensions === 1 && $attr['price_prefix'] == '=') {
+						$permutations[$offset]['variation_price'] += (float)$attr['options_values_price'] - (float)$fBaseProductPrice;
+					} else {
+						$permutations[$offset]['variation_price'] += (float)$attr['options_values_price'] * ($attr['price_prefix'] == '+' ? 1 : -1);
+					}
+
 					if (isset($attr['options_values_weight'])) {
-						$permutations[$offset]['variation_weight'] += (float)$attr['options_values_weight'] * ($attr['weight_prefix'] == '+' ? 1 : -1);
+						if ($dimensions === 1 && $attr['weight_prefix'] == '=') {
+							$permutations[$offset]['variation_weight'] += (float)$attr['options_values_weight'] - (float)$fBaseProductWeight;
+						} else {
+							$permutations[$offset]['variation_weight'] += (float)$attr['options_values_weight'] * ($attr['weight_prefix'] == '+' ? 1 : -1);
+						}
 					}
 					
 					switch ($this->settings['stockmerge']) {
@@ -176,7 +189,7 @@ class VariationsCalculator {
 	
 	function getBaseVariationsArray($pID) {
 		$productQuery = '
-		    SELECT products_model, products_weight';
+		    SELECT products_model, products_weight, products_price';
 		
 		if ($GLOBALS['SDB']->columnExistsInTable('products_vpe_value', TABLE_PRODUCTS)) {
 			$productQuery .= ', products_vpe, products_vpe_value';
@@ -195,6 +208,8 @@ class VariationsCalculator {
 			'products_sku' => $product[0]['products_model'],
 			'marketplace_id' => 'ML'.$pID,
 			'marketplace_sku' => $product[0]['products_model'],
+			'products_price' => $product[0]['products_price'],
+			'products_weight' => $product[0]['products_weight'],
 			'variation_products_model' => $product[0]['products_model'],
 			'variation_volume' => 0,
 			'variation_unit_of_measure' => '',

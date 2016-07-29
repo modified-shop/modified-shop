@@ -101,10 +101,14 @@ class HoodImportOrders extends MagnaCompatibleImportOrders {
 				# PayPal
 				if (in_array('paypal.php', $paymentModules))
 					$class = 'paypal';
-				if (in_array('paypalng.php', $paymentModules))
+				else if (in_array('paypalng.php', $paymentModules))
 					$class = 'paypalng';
-				if (in_array('paypalexpress.php', $paymentModules))
+				else if (in_array('paypal_ipn.php', $paymentModules))
+					$class = 'paypal_ipn';
+				else if (in_array('paypalexpress.php', $paymentModules))
 					$class = 'paypalexpress';
+				else if (in_array('paypal3.php', $paymentModules))
+					$class = 'paypal3';
 				if (in_array('paypalgambio_alt.php', $paymentModules))
 					$class = 'paypalgambio_alt';
 				if (in_array('wcp_paypal.php', $paymentModules))
@@ -129,7 +133,7 @@ class HoodImportOrders extends MagnaCompatibleImportOrders {
 				if (in_array('cod.php', $paymentModules))
 					$class = 'cod';
 			
-			} else if (stripos($paymentMethod, 'Bezahlung per Überweisung') !== false) {
+			} else if (stripos($paymentMethod, 'Bezahlung per Ãœberweisung') !== false) {
 				# Vorkasse
 				if (in_array('moneyorder.php', $paymentModules))
 					$class = 'moneyorder';

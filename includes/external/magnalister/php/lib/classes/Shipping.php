@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: Shipping.php 4799 2014-11-04 18:15:56Z derpapst $
+ * $Id: Shipping.php 5924 2015-08-18 09:20:58Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -115,7 +115,7 @@ class Shipping {
 					|| (count($unallowed_zones) == 0)
 				) {
 					if (!class_exists($include_modules[$i]['class'])) {
-						$this->includeOB($langPath . $include_modules[$i]['file']);
+						mlLoadModuleLanguageDefines($langPath.$include_modules[$i]['file']);
 						$this->includeOB($modulePath . $include_modules[$i]['file']);
 					}
 					if (class_exists($include_modules[$i]['class'])) {

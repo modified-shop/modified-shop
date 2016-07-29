@@ -21,14 +21,12 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/checkin/MagnaCompatibleCheckinSubmit.php');
 
-/**
- * TODO: Siehe appendAdditionalData()
- */
 class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
 	protected $useShippingtimeMatching = false;
 	protected $defaultShippingtime = '';
 	protected $shippingtimeMatching = array();
+	protected $ignoreErrors = true;
 
 	public function __construct($settings = array()) {
 		parent::__construct($settings);
@@ -59,14 +57,14 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 	}
 	
 	protected function appendAdditionalData($pID, $product, &$data) {
-		parent::appendAdditionalData($pID, $product, $data);
-		
-		$data['submit']['Title'] = $data['submit']['ItemTitle'];
-		unset($data['submit']['ItemTitle']);
-		
 		if (defined('MAGNA_FIELD_PRODUCTS_EAN') && array_key_exists(MAGNA_FIELD_PRODUCTS_EAN, $product)) {
-			$data['submit']['EAN'] = $product[MAGNA_FIELD_PRODUCTS_EAN];
+			$ean = $product[MAGNA_FIELD_PRODUCTS_EAN];
 		}
+		
+		$defaultLocation = getDBConfigValue($this->settings['marketplace'].'.itemcountry', $this->_magnasession['mpID']);
+		$defaultTitle = isset($product['products_name']) ? $product['products_name'] : '';
+		$defaultSubtitle = isset($product['products_short_description']) ? $product['products_short_description'] : '';
+		$defaultDescription = isset($product['products_description']) ? $product['products_description'] : '';
 		
 		$prepare = MagnaDB::gi()->fetchRow('
 			SELECT * FROM '.TABLE_MAGNA_HITMEISTER_PREPARE.'
@@ -76,15 +74,55 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 					).' 
 				   AND mpID = '.$this->_magnasession['mpID'].'
 		');
+		
 		if (is_array($prepare)) {
-			$data['submit']['MarketplaceCategory'] = $prepare['mp_category_id'];
-			$data['submit']['IsPorn']    = $prepare['is_porn'];
-			$data['submit']['AgeRating'] = $prepare['age_rating'];
-			$data['submit']['ShippingTime']  = $prepare['shippingtime'];
-			$data['submit']['ConditionType'] = $prepare['condition_id'];
-			$data['submit']['Comment']   = $prepare['comment'];
+			$categoryAttributes = (!empty($prepare['CategoryAttributes'])) ? $this->fixCategoryAttributes($prepare['CategoryAttributes'], $pID) : '';
+			$data['submit']['SKU'] = magnaPID2SKU($pID);
+			$data['submit']['ParentSKU'] = magnaPID2SKU($pID);
+			$data['submit']['EAN'] = isset($prepare['EAN']) ? $prepare['EAN'] : $ean;
+			$data['submit']['MarketplaceCategory'] = isset($prepare['MarketplaceCategories']) ? $prepare['MarketplaceCategories'] : '';
+			$data['submit']['MarketplaceCategoryName'] = isset($prepare['MarketplaceCategoriesName']) ? $prepare['MarketplaceCategoriesName'] : '';
+			$data['submit']['CategoryAttributes'] = $categoryAttributes;
+			$data['submit']['Title'] = isset($prepare['Title']) ? $prepare['Title'] : $defaultTitle;
+			$data['submit']['Subtitle'] = isset($prepare['Subtitle']) ? $prepare['Subtitle'] : $defaultSubtitle;
+			$data['submit']['Description'] = isset($prepare['Description']) ? $prepare['Description'] : $defaultDescription;
+			
+			$imagePath = getDBConfigValue($this->marketplace . '.imagepath', $this->_magnasession['mpID'], SHOP_URL_POPUP_IMAGES);
+			$imagePath = trim($imagePath, '/ ').'/';
+			if (empty($prepare['PictureUrl']) === false) {
+				$pictureUrls = json_decode($prepare['PictureUrl']);
+
+				foreach ($pictureUrls as $image => $use) {
+					if ($use == 'true') {
+						$data['submit']['Images'][] = array(
+							'URL' => $imagePath . $image
+						);
+					}
+				}
+			} else if (isset($product['products_allimages'])) {
+				foreach($product['products_allimages'] as $image) {
+					$data['submit']['Images'][] = array(
+							'URL' => $imagePath . $image
+						);
+				}
+			}
+			
+			$data['submit']['ShippingTime'] = isset($data['shippingtime']) && !empty($data['shippingtime'])
+				? $data['shippingtime']
+				: $prepare['ShippingTime'];
+			if ($data['submit']['ShippingTime'] == 'm') { //fallback if old data stored
+				$data['submit']['ShippingTime'] = (($this->useShippingtimeMatching)
+					? $this->shippingtimeMatching[$product['products_shippingtime']]
+					: isset($data['shippingtime']) && !empty($data['shippingtime'])
+						? $data['shippingtime']
+						: $this->defaultShippingtime
+				);
+			}
+			$data['submit']['ConditionType'] = $prepare['ConditionType'];
+			$data['submit']['Location'] = isset($prepare['Location']) ? $prepare['Location'] : $defaultLocation;
+			$data['submit']['Comment'] = isset($prepare['Comment']) ? $prepare['Comment'] : '';
+			$data['submit']['Matched'] = $prepare['PrepareType'] === 'Match' ? true : false;
 		} else {
-			/* TODO: Shippingtime aus selection oder aus matching oder der generelle wert. */
 			$data['submit']['ShippingTime']  = isset($data['shippingtime']) && !empty($data['shippingtime'])
 				? $data['shippingtime']
 				: (($this->useShippingtimeMatching)
@@ -93,9 +131,50 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				);
 			$data['submit']['ConditionType'] = getDBConfigValue($this->settings['marketplace'].'.itemcondition', $this->_magnasession['mpID']);
 		}
-		$data['submit']['Location'] = getDBConfigValue($this->settings['marketplace'].'.itemcountry', $this->_magnasession['mpID']);
 		
-		 //echo print_m($data);
+		$data['submit']['Price'] = $data['price'];
+		$data['submit']['Currency'] = $this->settings['currency'];
+		$data['submit']['Quantity'] = $data['quantity'] < 0 ? 0 : $data['quantity'];
+		
+		$manufacturerName = '';
+		if ($product['manufacturers_id'] > 0) {
+			$manufacturerName = (string)MagnaDB::gi()->fetchOne(
+				'SELECT manufacturers_name FROM '.TABLE_MANUFACTURERS.' WHERE manufacturers_id=\''.$product['manufacturers_id'].'\''
+			);
+		}
+		if (empty($manufacturerName)) {
+			$manufacturerName = getDBConfigValue(
+				$this->marketplace.'.checkin.manufacturerfallback',
+				$this->mpID,
+				''
+			);
+		}
+		if (!empty($manufacturerName)) {
+			$data['submit']['Manufacturer'] = $manufacturerName;
+		}
+		$mfrmd = getDBConfigValue($this->marketplace.'.checkin.manufacturerpartnumber.table', $this->mpID, false);
+		if (is_array($mfrmd) && !empty($mfrmd['column']) && !empty($mfrmd['table'])) {
+			$pIDAlias = getDBConfigValue($this->marketplace.'.checkin.manufacturerpartnumber.alias', $this->mpID);
+			if (empty($pIDAlias)) {
+				$pIDAlias = 'products_id';
+			}
+			$data['submit']['ManufacturerPartNumber'] = MagnaDB::gi()->fetchOne('
+				SELECT `'.$mfrmd['column'].'` 
+				  FROM `'.$mfrmd['table'].'` 
+				 WHERE `'.$pIDAlias.'`=\''.MagnaDB::gi()->escape($pID).'\'
+				 LIMIT 1
+			');
+		}
+		
+		$data['submit']['ItemTax'] = $this->getItemTax($pID, $product, $data);
+		
+		if (!$this->getCategoryMatching($pID, $product, $data)) {
+			return;
+		}
+		
+		if (!$this->getVariations($pID, $product, $data)) {
+			return;
+		}
 	}
 	
 	protected function filterItem($pID, $data) {
@@ -170,6 +249,41 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			#echo print_m($e, 'Exception', true);
 			$this->submitSession['api']['exception'] = $e->getErrorArray();
 		}
+	}
+
+	protected function generateRedirectURL($state) {
+		return toURL(array(
+			'mp' => $this->realUrl['mp'],
+			'mode'   => ($state == 'fail') ? 'errorlog' : 'listings'
+		), true);
+	}
+	
+	private function fixCategoryAttributes($categoryAttributes, $itemID) {
+		$categoryAttributes = json_decode($categoryAttributes, true);
+		foreach ($categoryAttributes as $key => &$categoryAttribute) {
+			if ($key === 'additional_categories') {
+				foreach ($categoryAttribute as $k => &$value) {
+					$value = utf8_decode(urldecode($value));
+					$values = explode('>', $value);
+					$value = end($values);
+					$values = explode(';', $value);
+					$value = end($values);
+					if (empty($value)) {
+						unset($categoryAttribute[$k]);
+					}
+				}
+			} elseif ($key === 'weight' && empty($categoryAttribute)) {
+				$categoryAttribute = HitmeisterHelper::GetWeightFromShop($itemID);
+			} elseif ($key === 'content_volume' && empty($categoryAttribute)) {
+				$categoryAttribute = HitmeisterHelper::GetContentVolumeFromShop($itemID);
+			}
+
+			if (empty($categoryAttribute)) {
+				unset($categoryAttributes[$key]);
+			}
+		}
+		
+		return $categoryAttributes;
 	}
 
 }

@@ -59,11 +59,12 @@ class MagnaCompatibleApiConfigValues {
 			return $this->data[$key];
 		}
 		try {
-			$data = MagnaConnector::gi()->submitRequest(array_replace(array(
+			$aRequest = array(
 				'ACTION' => $action,
 				'SUBSYSTEM' => $this->marketplace,
 				'MARKETPLACEID' => $this->mpId
-			), $extend));
+			);
+			$data = MagnaConnector::gi()->submitRequest(array_replace($aRequest, $extend));
 			$this->data[$key] = $data['DATA'];
 			if ($encode) {
 				arrayEntitiesFixHTMLUTF8($this->data[$key]);

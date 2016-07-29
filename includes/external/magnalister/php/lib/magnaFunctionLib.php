@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnaFunctionLib.php 5794 2015-06-30 16:36:54Z tim.neumann $
+ * $Id: magnaFunctionLib.php 6818 2016-07-26 10:54:59Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -396,29 +396,30 @@ function sendTestMail($mpID) {
 }
 
 function delete_double_orders() {
-	$ordersids = MagnaDB::gi()->fetchArray('
-	    SELECT DISTINCT mo2.orders_id orders_id
-	      FROM '.TABLE_MAGNA_ORDERS.' mo1, '.TABLE_MAGNA_ORDERS.' mo2
-	     WHERE mo1.orders_id < mo2.orders_id
-	           AND mo1.special=mo2.special
-	  ORDER BY mo2.orders_id
-	', true);
-
-	if (empty($ordersids)) {
-		return true;
-	}
-	$tables = array(
+	$orders_id_array = MagnaDB::gi()->fetchArray('
+		SELECT COUNT(*) cnt, MAX(orders_id) max_orders_id
+		  FROM '. TABLE_MAGNA_ORDERS .'
+		 GROUP BY data, special
+		 HAVING cnt > 1
+		ORDER BY orders_id
+	');
+	$orders_id_list = '';
+	foreach($orders_id_array as $current_order)
+		$orders_id_list .= ', '.$current_order['max_orders_id'];
+	$orders_id_list = trim($orders_id_list, ', ');
+	if(empty($orders_id_list)) return true;
+	$orders_tables = array( 
 		TABLE_ORDERS,
 		TABLE_ORDERS_STATUS_HISTORY,
 		TABLE_ORDERS_TOTAL,
 		TABLE_ORDERS_PRODUCTS,
-		TABLE_ORDERS_PRODUCTS_ATTRIBUTES
+		TABLE_ORDERS_PRODUCTS_ATTRIBUTES,
+		TABLE_MAGNA_ORDERS
 	);
-	$in = '"'.implode('", "', $ordersids).'"';
-	foreach ($tables as $t) {
+	foreach($orders_tables as $t) {
 		MagnaDB::gi()->query('
-			DELETE FROM '.$t.'
-			 WHERE orders_id IN ('.$in.')
+			DELETE FROM '. $t .'
+				WHERE orders_id IN ('. $orders_id_list .')
 		');
 	}
 	return true;
@@ -775,7 +776,7 @@ function magnaSKU2pID($sku, $mainOnly = false) {
 				SELECT products_id FROM '.TABLE_PRODUCTS.'
 				 WHERE products_model = \''.$sku.'\' LIMIT 1
 			');
-			if ($pID > 0) break;
+			break;
 		}
 		case 'pID': {
 			if (strpos($sku, 'ML') === 0) {
@@ -1042,7 +1043,7 @@ function magnaSKU2GambioProp($sSku) {
 			    SELECT CONCAT(p.products_model, '-', ppc.combi_model) AS SKU, ppc.*
 			      FROM products_properties_combis ppc
 			INNER JOIN products p ON p.products_id = ppc.products_id
-			    HAVING products_properties_combis_id = '".((int)$mProductPropertiesCombisId[0])."'
+			    WHERE products_properties_combis_id = '".((int)$mProductPropertiesCombisId[0])."'
 			", false));
 		} else {
 			return false;
@@ -1472,7 +1473,7 @@ function magna_wysiwyg($params, $value = '') {
 		ob_start();?>
 		<script type="text/javascript">/*<![CDATA[*/
 			<?php echo getTinyMCEDefaultConfigObject(); ?>
-			$(document).ready(function() {
+			$(window).load(function() {
 				tinyMCE.init(tinyMCEMagnaDefaultConfig);
 			});
 		/*]]>*/</script><?php
@@ -1854,10 +1855,18 @@ function magnaGenerateSideNav($args) {
 			if (isset($args['out']) && ($args['out'] == 'xml')) {
 				$base = toURL().'?';
 				$sort = 0;
+				$sLink = 'FILENAME_MAGNALISTER';
+				$sLinkParam = '';
+
+				if (defined('ML_GAMBIO_USE_IFRAME') && ML_GAMBIO_USE_IFRAME === true) {
+					$sLink = 'admin.php';
+					$sLinkParam = 'do=EmbeddedModule/magnalister&amp;';
+				}
+
 				foreach ($structure as $item) {
 					$html .= '
-						<menuitem link="FILENAME_MAGNALISTER" sort="'.(++$sort).'" '.
-						         'link_param="'.str_replace($base, '', $item['url']).'" '.
+						<menuitem link="'.$sLink.'" sort="'.(++$sort).'" '.
+						         'link_param="'.$sLinkParam.str_replace($base, '', $item['url']).'" '.
 						         'title="'.$item['title'].'"'.
 						'></menuitem>';
 				}
@@ -2168,38 +2177,44 @@ function ml_setMinRam($newRam) {
 	return $newRam;
 }
 
-function mlGambio2_3_ModulesFix($sModule, $sModuleType, $sModuleDefine = '_TEXT_TITLE', $bStop = false) {
-	$lang = (isset($_SESSION['language']) && !empty($_SESSION['language'])) ? $_SESSION['language'] : 'english';
-
-	// check for params and its an gambio 2.3 based on path
-	if (   empty($sModule)
-		|| empty($sModuleType)
-		|| !file_exists(DIR_FS_LANGUAGES.$lang.'/original_sections/modules/'.$sModuleType.'/')
-		|| !class_exists('MainFactory')
-	) {
-		return false;
+function mlLoadModuleLanguageDefines($sModulePath) {
+	if (empty($sModulePath)) {
+		return;
 	}
 
-	$oLTM = MainFactory::create_object('LanguageTextManager', array(), true);
-	if (!is_object($oLTM) || !method_exists($oLTM, 'init_from_lang_file')) {
-		return false;
+	// check for params and its an actual gambio with LanguageTextManager
+	if (SHOPSYSTEM == 'gambio' && class_exists('MainFactory') && MagnaDB::gi()->tableExists('version_history')) {
+			$sVersion = MagnaDB::gi()->fetchOne("
+				SELECT version
+				  FROM version_history
+				 WHERE     type IN ('service_pack', 'master_update')
+				".((MagnaDB::gi()->columnExistsInTable('installed', 'version_history'))
+					? 'AND installed = 1'
+					: 'AND (is_full_version = 0 OR (is_full_version = 1 AND history_id = 1))'
+				)."
+			  ORDER BY installation_date DESC
+				 LIMIT 1
+			");
+			if (version_compare($sVersion, '2.1', '>=')) {
+				if (defined('DIR_FS_LANGUAGES')) {
+					$aReplace[] = DIR_FS_LANGUAGES;
+				}
+				$aReplace[] = DIR_MAGNA_LANGUAGES;
+				$sSpecialModulePath = str_replace($aReplace, 'lang/', $sModulePath);
+				$oLTM = MainFactory::create_object('LanguageTextManager', array(), true);
+				if (is_object($oLTM) && method_exists($oLTM, 'init_from_lang_file')) {
+					$oLTM->init_from_lang_file($sSpecialModulePath, $_SESSION['languages_id']);
+					// return because defines are loaded
+					return;
+				}
+			}
 	}
-	$oLTM->init_from_lang_file($sModule);
 
-	// for order totals remove 'ot_'
-	if (substr($sModule, 0, 3) == 'ot_') {
-		$sModule = substr($sModule, 3);
+	if (file_exists($sModulePath)) {
+		try {
+			require_once($sModulePath);
+		} catch (Exception $e) {}
 	}
-
-	if (   !$bStop
-		&& !defined('MODULE_'.strtoupper($sModuleType).'_'.strtoupper($sModule).$sModuleDefine)
-	) {
-		return mlGambio2_3_ModulesFix(strtolower($sModuleType).'_'.$sModule, $sModuleType, $sModuleDefine, true);
-	} elseif ($bStop) {
-		return false;
-	}
-
-	return true;
 }
 
 function mlShopBookAnAddOn($args) {

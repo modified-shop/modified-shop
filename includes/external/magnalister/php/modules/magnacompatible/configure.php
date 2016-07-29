@@ -333,6 +333,9 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 			}
 			echo $cG->renderConfigForm();
 			echo $cG->exchangeRateAlert($this->exchangeRateField);
+
+			//require_once(DIR_MAGNALISTER_INCLUDES . 'lib/classes/ShopAddOns.php');
+			//ML_ShopAddOns::generateConfigPopupOnCombobox('FastSyncInventory', "config_{$this->marketplaceTitle}_stocksync_tomarketplace", "#config_{$this->marketplaceTitle}", "$(this).val() == 'auto_fast'");
 		}
 	}
 }

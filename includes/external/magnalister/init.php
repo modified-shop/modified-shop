@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: init.php 5610 2015-05-08 15:42:43Z tim.neumann $
+ * $Id: init.php 6806 2016-07-19 09:59:44Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -34,6 +34,8 @@ defined('MAGNA_DEV_PRODUCTLIST') OR define('MAGNA_DEV_PRODUCTLIST', true);
 // backwards compat
 defined('DIR_MAGNALISTER_FS') OR define('DIR_MAGNALISTER_FS', DIR_MAGNALISTER);
 defined('DIR_MAGNALISTER_WS') OR define('DIR_MAGNALISTER_WS', DIR_MAGNALISTER);
+
+if (!array_key_exists('language', $_SESSION)) $_SESSION['language'] = 'english';
 
 function outOfOrder() {
 	require(DIR_MAGNALISTER_FS_INCLUDES.'admin_view_top.php');
@@ -399,7 +401,6 @@ function mlDetectShopFeatures() {
 	
 	// Detect Gambio GX2.1 property tables.
 	define('MAGNA_GAMBIO_VARIATIONS',
-		MAGNA_SECRET_DEV && // Remove before release!
 		MagnaDB::gi()->tableExists('products_properties_combis')
 		&& MagnaDB::gi()->columnExistsInTable('combi_ean', 'products_properties_combis')
 	);
@@ -493,13 +494,22 @@ if (isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['reques
 			$sVersion = MagnaDB::gi()->fetchOne("
 				SELECT version
 				  FROM version_history
-				  WHERE type IN ('service_pack', 'master_update')
-			   ORDER BY installation_date DESC
-				  LIMIT 1
+				 WHERE     type IN ('service_pack', 'master_update')
+				".((MagnaDB::gi()->columnExistsInTable('installed', 'version_history'))
+					? 'AND installed = 1'
+					: 'AND (is_full_version = 0 OR (is_full_version = 1 AND history_id = 1))'
+				)."
+			  ORDER BY installation_date DESC
+				 LIMIT 1
 			");
 			if (version_compare($sVersion, '2.1', '>=')) {
 				MagnaDB::gi()->setCharset('utf8');
 			}
+			// in gambio v2.5.2.1 ml will displayed in iframe so no stuff to display from gambio backend
+			if (version_compare($sVersion, '2.5.2.1', '>=')) {
+				define('ML_GAMBIO_USE_IFRAME', true);
+			}
+			MagnaDB::gi()->insert(TABLE_MAGNA_CONFIG, array('mpID' => '0', 'mkey' => 'ShopSystemVersion', 'value' => $sVersion), true);
 		}
 	}
 	echo 'live!';
@@ -598,12 +608,20 @@ if (defined('DB_SERVER_CHARSET')) {
 	$sVersion = MagnaDB::gi()->fetchOne("
 		SELECT version
 		  FROM version_history
-		  WHERE type IN ('service_pack', 'master_update')
-	   ORDER BY installation_date DESC
-		  LIMIT 1
+		 WHERE     type IN ('service_pack', 'master_update')
+		".((MagnaDB::gi()->columnExistsInTable('installed', 'version_history'))
+			? 'AND installed = 1'
+			: 'AND (is_full_version = 0 OR (is_full_version = 1 AND history_id = 1))'
+		)."
+	  ORDER BY installation_date DESC
+		 LIMIT 1
 	");
 	if (version_compare($sVersion, '2.1', '>=')) {
 		MagnaDB::gi()->setCharset('utf8');
+	}
+	// in gambio v2.5.2.1 ml will displayed in iframe so no stuff to display from gambio backend
+	if (version_compare($sVersion, '2.5.2.1', '>=')) {
+		define('ML_GAMBIO_USE_IFRAME', true);
 	}
 }
 
@@ -818,10 +836,15 @@ if (getDBConfigValue('general.keytype', '0', 'pID') == 'artNr') {
 /* If the PassPhrase is not set in the database show the global config */
 if (!allRequiredConfigKeysAvailable($requiredConfigKeys, '0') || ($forceConfigView !== false)) {
 	/* Send the user to the configuration panel */
-	$_url['module'] = $_GET['module'] = $_magnaQuery['module'] = 'configuration';
+	/* 2016-04-26 help page allowed here */
+	if ('guide' == $_GET['module']) {
+		$_url['module'] = $_magnaQuery['module'] = 'guide';
+	} else {
+		$_url['module'] = $_GET['module'] = $_magnaQuery['module'] = 'configuration';
+	}
 	$_MagnaSession['currentPlatform'] = '';
 	include_once(DIR_MAGNALISTER_FS_INCLUDES.'admin_view_top.php');
-	include_once(DIR_MAGNALISTER_MODULES.'configuration.php');
+	include_once(DIR_MAGNALISTER_MODULES.$_url['module'].'.php');
 	include_once(DIR_MAGNALISTER_FS_INCLUDES.'admin_view_bottom.php');
 	include_once(DIR_WS_INCLUDES . 'application_bottom.php');
 	exit();
@@ -945,10 +968,47 @@ if (array_key_exists('mp', $_GET) && array_key_exists($_GET['mp'], $magnaConfig[
 				<p>'.sprintf(ML_TEXT_CURRENT_MODULE_NOT_BOOKED, $_modules[$_GET['module']]['title']).'</p>
 			');
 		}
+	} elseif (isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['request']) && ($_GET['request'] == 'refreshPromotionHtml')) {
+		$partner = trim((string)@file_get_contents('magnabundle.dat'));
+		$sPromotionTextFile = DIR_MAGNALISTER_FS_CACHE.'promotion_'.$_langISO.'.html';
+		$sPromotionTextUrl = MAGNA_SERVICE_URL.MAGNA_APIRELATED.'promotion/?shopsystem='.SHOPSYSTEM.(!empty($partner) && ($partner != 'key') ? '&partner='.$partner : ''). '&lang='.$_langISO;
+		$sPromotionContent = fileGetContents($sPromotionTextUrl, $warings, 10);
+		if (!empty($sPromotionContent)) {
+			file_put_contents($sPromotionTextFile, $sPromotionContent);
+		}
+		exit();
 	} else {
-		$marketingText = fileGetContents(MAGNA_SERVICE_URL.MAGNA_APIRELATED.'Marketing/?shop='.SHOPSYSTEM.'&build='.CLIENT_BUILD_VERSION, $warings, 10);
-		$marketingText = !empty($marketingText) ? '<div class="marketing">'.$marketingText.'</div>' : '';
-		
-		shopAdminDiePage($marketingText);
+		$sMarketingTextFile = DIR_MAGNALISTER_FS_CACHE.'marketing_'.$_langISO.'.html';
+		if (
+			isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['request']) && ($_GET['request'] == 'refreshMarketingHtml')
+			|| !file_exists($sMarketingTextFile)
+		) {
+			$marketingText = fileGetContents(MAGNA_SERVICE_URL.MAGNA_APIRELATED.'Marketing/?shop='.SHOPSYSTEM.'&build='.CLIENT_BUILD_VERSION.'&lang='.$_langISO, $warings, 10);
+			$marketingText = !empty($marketingText) ? '<div class="marketing">'.$marketingText.'</div>' : '';
+			if (!empty($marketingText)) {
+				file_put_contents($sMarketingTextFile, $marketingText);
+			}
+			if (isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['request']) && ($_GET['request'] == 'refreshMarketingHtml')) {
+				exit();
+			}
+		}
+		$marketingText = file_exists($sMarketingTextFile) ? file_get_contents($sMarketingTextFile) : '';
+		shopAdminDiePage($marketingText.'
+			<script type="text/javascript">/*<![CDATA[*/
+				(function(jQuery) {
+					jQuery(document).ready(function() {
+						jQuery.get(
+							"magnalister.php", {
+								"module":"ajax",
+								"request":"refreshMarketingHtml"
+							},
+							function(data) {
+								//myConsole.log(data);
+							}
+						);
+					});
+				})(jQuery);
+			/*]]>*/</script>
+		');
 	}
 }

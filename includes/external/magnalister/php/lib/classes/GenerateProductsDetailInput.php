@@ -1,4 +1,23 @@
 <?php
+/**
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
+ *
+ *                          m a g n a l i s t e r
+ *                                      boost your Online-Shop
+ *
+ * -----------------------------------------------------------------------------
+ * $Id: GenerateProductsDetailInput.php 167 2013-02-08 12:00:00Z tim.neumann $
+ *
+ * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
+ *     Released under the MIT License (Expat)
+ * -----------------------------------------------------------------------------
+ */
+
 class GenerateProductsDetailInput {
 	/* TODO
 	 *   - LIMIT Parameter fuer Textfields und inputs
@@ -6,6 +25,7 @@ class GenerateProductsDetailInput {
 	 */
 	private $structure = array();
 	private $data = array();
+	private $prefilledReadonlyFields = array();
 
 	private $field = 'add';
 
@@ -15,6 +35,7 @@ class GenerateProductsDetailInput {
 	private $curField = array();
 	private $curRow   = array();
 	private $curInput = array();
+	private $curInputReadonly = false;
 
 	private $oddEven = false;
 	private $curProcItem = array();
@@ -23,9 +44,10 @@ class GenerateProductsDetailInput {
 	
 	private $tinyMCEInited = false;
 
-	public function __construct($structure, $data = array()) {
+	public function __construct($structure, $data = array(), $prefilledReadonlyFields = array()) {
 		$this->structure = $structure;
 		$this->data = $data;
+		$this->prefilledReadonlyFields = $prefilledReadonlyFields;
 	}
 	
 	private function debugBacktrace($pos = 0) {
@@ -81,6 +103,11 @@ class GenerateProductsDetailInput {
 			}
 			$val = $val[$key];
 		}
+		if (is_array($val)) {
+			array_walk_recursive($val, 'fixHTMLUTF8Entities');
+		} else {
+			$val = fixHTMLUTF8Entities($val);
+		}
 		return $val;
 	}
 
@@ -99,6 +126,30 @@ class GenerateProductsDetailInput {
 		
 		$tmpdata = $this->getInputValueHelper('data', $keys);
 		$tmppost = $this->getInputValueHelper('post', $keys);
+
+		$this->curInputReadonly = false;
+		 // code to fill MPN , EAN and Brand in ebay product attributes
+		 
+		/* ggf noch ausgrauen u. tooltip? */
+		if (in_array($this->curInput['type'], array('text','select&text')) && !empty($this->prefilledReadonlyFields)) {
+			$sValue = '';
+			if (in_array($this->curField['label'], array('Marke', 'Hersteller', 'Brand')) && $this->prefilledReadonlyFields['Brand'] !== null) {
+				$sValue = $this->prefilledReadonlyFields['Brand'];
+		    } elseif (in_array($this->curField['label'], array('Herstellernummer', 'MPN')) && $this->prefilledReadonlyFields['MPN'] !== null) {
+				$sValue = $this->prefilledReadonlyFields['MPN'];
+		    } elseif (in_array($this->curField['label'], array('EAN', 'ISBN', 'UPC')) && $this->prefilledReadonlyFields['EAN'] !== null) {
+				$sValue = $this->prefilledReadonlyFields['EAN'];
+		    }
+		    if ($sValue !== null && $sValue !== '') {
+				$this->curInputReadonly = true;
+				if ($this->curInput['type'] == 'select&text' && 'select' == $subKey) {
+					return "-6";
+				} else {
+					return $sValue;
+				}
+		    }
+		}
+
 		if (!empty($tmppost) || ('0' == (string)($tmppost))) {
 			return $tmppost;
 		}
@@ -174,7 +225,8 @@ class GenerateProductsDetailInput {
 				} else {
 					$class = 'class="'.implode(' ', $class).'"';
 				}
-				$this->out .= '<input type="text" id="'.$inputID.'" name="'.$inputName.'" value="'.$this->getInputValue($curRowC, $isMulticolumn).'" '.$class.'/>'."\n";
+				#$this->out .= '<input type="text" id="'.$inputID.'" name="'.$inputName.'" value="'.$this->getInputValue($curRowC, $isMulticolumn).'" '.$class.'/>'."\n";
+				$this->out .= '<input type="text" id="'.$inputID.'" name="'.$inputName.'" value="'.$this->getInputValue($curRowC, $isMulticolumn).'" '.($this->curInputReadonly?'readonly="readonly" title="'.ML_EBAY_PRODUCTDETAIL_PREFILLED.'" style="color:#555555;background-color:#DCDAD5" ':'').$class.'/>'."\n";
 				break;
 			}
 			case 'select': {
@@ -184,14 +236,14 @@ class GenerateProductsDetailInput {
 					$class = 'class="'.implode(' ', $class).'"';
 				}
 				$ret = '<select id="'.$inputID.'" name="'.$inputName.'" '.$class.'>'."\n";
-				$default = $this->getInputValue($curRowC, $isMulticolumn);
+				$default = fixHTMLUTF8Entities($this->getInputValue($curRowC, $isMulticolumn));
 				foreach ($this->curInput['values'] as $val => $text) {
-					if ($default == $val) {
+					if ($default == fixHTMLUTF8Entities($val)) {
 					 	$sel = ' selected="selected"';
 					} else {
 						$sel = '';
 					}
-					$ret .= '	<option value="'.$val.'"'.$sel.'>'.fixHTMLUTF8Entities($text).'</option>'."\n";
+					$ret .= '	<option value="'.fixHTMLUTF8Entities($val).'"'.$sel.'>'.fixHTMLUTF8Entities($text).'</option>'."\n";
 				}
 				$this->out .= $ret.'</select>'."\n";
 				break;
@@ -205,13 +257,14 @@ class GenerateProductsDetailInput {
 				$ret = '<select id="'.$inputID.'" name="'.$inputName.'[]" '.$class.' size="5" '.
 					'multiple="multiple"'.(isset($this->curInput['limit']) ? ' data-limit="'.$this->curInput['limit'].'"' : '').'>'."\n";
 				$default = $this->getInputValue($curRowC, $isMulticolumn);
+				arrayEntitiesFixHTMLUTF8($default);
 				foreach ($this->curInput['values'] as $val => $text) {
-					if (is_array($default) && in_array($val, $default)) {
+					if (is_array($default) && in_array(fixHTMLUTF8Entities($val), $default)) {
 					 	$sel = ' selected="selected"';
 					} else {
 						$sel = '';
 					}
-					$ret .= '	<option value="'.$val.'"'.$sel.'>'.fixHTMLUTF8Entities($text).'</option>'."\n";
+					$ret .= '	<option value="'.fixHTMLUTF8Entities($val).'"'.$sel.'>'.fixHTMLUTF8Entities($text).'</option>'."\n";
 				}
 				$this->out .= $ret.'</select>'."\n";
 				break;
@@ -226,41 +279,51 @@ class GenerateProductsDetailInput {
 				} else {
 					$class = 'class="'.implode(' ', $class).'"';
 				}
-				$ret = '<select id="'.$inputID.'_select" name="'.$inputName.'[select]" '.$class.'>'."\n";
-				$default = $this->getInputValue($curRowC, $isMulticolumn, 'select');
-				foreach ($this->curInput['values'] as $val => $text) {
-					if ($default == $val) {
-						$sel = ' selected="selected"';
-					} else {
-						$sel = '';
+				$default = fixHTMLUTF8Entities($this->getInputValue($curRowC, $isMulticolumn, 'select'));
+				if ($this->curInputReadonly) {
+					$ret = '<input  type="hidden" name="'.$inputName.'[select]" value="-6" '."/>\n";
+				} else {
+					$ret = '<select id="'.$inputID.'_select" name="'.$inputName.'[select]" '.$class.'>'."\n";
+					foreach ($this->curInput['values'] as $val => $text) {
+						if ($default == fixHTMLUTF8Entities($val)) {
+							$sel = ' selected="selected"';
+						} else {
+							$sel = '';
+						}
+						$ret .= '	<option value="'.fixHTMLUTF8Entities($val).'"'.$sel.'>'.fixHTMLUTF8Entities($text).'</option>'."\n";
 					}
-					$ret .= '	<option value="'.$val.'"'.$sel.'>'.fixHTMLUTF8Entities($text).'</option>'."\n";
-				}
-				$ret .= '</select>'."\n";
-				$js = '';
-				$style = '';
-				if (array_key_exists('textOnKey', $this->curInput)) {
-					$js = '
-					<script type="text/javascript">/*<![CDATA[*/
-						$(document).ready(function() {
-							$(\'#'.$inputID.'_select\').change(function() {
-								textEl = $(\'#'.$inputID.'_text\');
-								if ($(this).val() == \''.$this->curInput['textOnKey'].'\') {
-									textEl.css({\'display\':\'inline\'});
-								} else {
-									textEl.val(\'\');
-									textEl.css({\'display\':\'none\'});
-								}
+					$ret .= '</select>'."\n";
+					$js = '';
+					$style = '';
+					if (array_key_exists('textOnKey', $this->curInput)) {
+						$js = '
+						<script type="text/javascript">/*<![CDATA[*/
+							$(document).ready(function() {
+								$(\'#'.$inputID.'_select\').change(function() {
+									textEl = $(\'#'.$inputID.'_text\');
+									if ($(this).val() == \''.$this->curInput['textOnKey'].'\') {
+										textEl.css({\'display\':\'inline\'});
+									} else {
+										textEl.val(\'\');
+										textEl.css({\'display\':\'none\'});
+									}
+								}).trigger("change");
 							});
-						});
-					/*]]>*/</script>'."\n";
-					if ($default != $this->curInput['textOnKey']) {
-						$style = 'display: none;';
+						/*]]>*/</script>'."\n";
+						if ($default != $this->curInput['textOnKey']) {
+							$style = 'display: none;';
+						}
 					}
+				}
+				if ($this->curInputReadonly) {
+					$style = 'color:#555555; background-color:#DCDAD5';
+					$addStuff = 'readonly="readonly" title="'.ML_EBAY_PRODUCTDETAIL_PREFILLED.'" ';
+				} else {
+					$addStuff = '';
 				}
 				$ret .= '<input style="'.$style.'" type="text" id="'.$inputID.'_text" name="'.$inputName.'[text]" value="'.
 								$this->getInputValue($curRowC, $isMulticolumn, 'text').
-						'" '.$class.'/>'.$js."\n";
+						'" '.$addStuff.$class.'/>'.$js."\n";
 				$this->out .= $ret;
 				break;
 			}

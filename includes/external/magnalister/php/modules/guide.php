@@ -33,9 +33,8 @@ $_url = array(
 );
 
 include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_top.php');
-
+if ('de' == $_langISO) {
 ?>
-
 <iframe id="wikiframe"
 	style="
 		border: 1px solid #ccc;
@@ -61,3 +60,36 @@ $(window).load(function() {
 include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_bottom.php');
 include_once(DIR_WS_INCLUDES . 'application_bottom.php');
 exit();
+
+} else {
+	$sHelpTextFile = DIR_MAGNALISTER_FS_CACHE.'help'.$_langISO.'.html';
+	$sHelpTextUrl = MAGNA_SERVICE_URL.MAGNA_APIRELATED.'Help/?&lang='.$_langISO;
+	if (    (isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['request']) && ($_GET['request'] == 'refreshHelpHtml'))
+	     || (!file_exists($sHelpTextFile))) {
+		$sHelpContent = fileGetContents($sHelpTextUrl, $warnings, 10);
+		if (!empty($sHelpContent)) {
+			file_put_contents($sHelpTextFile, $sHelpContent);
+		}
+		if (isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['request']) && ($_GET['request'] == 'refreshHelpHtml')) {
+			exit();
+		}
+	}
+	$helpText = file_exists($sHelpTextFile) ? file_get_contents($sHelpTextFile) : '';
+		shopAdminDiePage($helpText.'
+			<script type="text/javascript">/*<![CDATA[*/
+				(function(jQuery) {
+					jQuery(document).ready(function() {
+						jQuery.get(
+							"magnalister.php", {
+								"module":"ajax",
+								"request":"refreshHelpHtml"
+							},
+							function(data) {
+								//myConsole.log(data);
+							}
+						);
+					});
+				})(jQuery);
+			/*]]>*/</script>
+		');
+}

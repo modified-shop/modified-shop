@@ -70,7 +70,24 @@ class MLProductListDependencyEbayPrepareFormAction extends MLProductListDependen
 		}
 		return $this;
 	}
-	protected function resetDescription(){
+
+//	protected function resetDescription() { 
+//		return $this->resetPartly(array('Description', 'PictureURL'));
+//	}
+
+	protected function resetPartly($aParts) {
+		if (empty($aParts)) {
+			return $this;
+		} else {
+			$aUpdateCols = array();
+			foreach ($aParts as $sPart) {
+				$aUpdateCols[$sPart] = '';
+				if ('PictureURL' == $sPart) {
+					$aUpdateCols[$sPart] = NULL;
+					$aUpdateCols['eBayPicturePackPurge'] = '1';
+				}
+			}
+		}
 		$pIDs = MagnaDB::gi()->fetchArray('
 			SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
 			WHERE 
@@ -91,7 +108,7 @@ class MLProductListDependencyEbayPrepareFormAction extends MLProductListDependen
 					: array ('products_id' => $pID)
 				;
 				$where['mpID'] = $this->getMagnaSession('mpID');
-				MagnaDB::gi()->update(TABLE_MAGNA_EBAY_PROPERTIES, array('Description' => ''), $where);
+				MagnaDB::gi()->update(TABLE_MAGNA_EBAY_PROPERTIES, $aUpdateCols, $where);
 				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
 					'pID' => $pID,
 					'mpID' => $this->getMagnaSession('mpID'),
@@ -105,10 +122,25 @@ class MLProductListDependencyEbayPrepareFormAction extends MLProductListDependen
 
 	public function executeAction() {
 		$aRequest = $this->getActionRequest();
+		$aPartsToReset = array();
 		if (isset($aRequest['unprepare'])) {
 			$this->unprepare();
-		} elseif (isset($aRequest['resetDescription'])) {
-			$this->resetDescription();
+		} else {
+			if (isset($aRequest['resetTitle'])) {
+				$aPartsToReset[] = 'Title';
+			}
+			if (isset($aRequest['resetSubtitle'])) {
+				$aPartsToReset[] = 'Subtitle';
+			}
+			if (isset($aRequest['resetDescription'])) {
+				$aPartsToReset[] = 'Description';
+			}
+			if (isset($aRequest['resetPictures'])) {
+				$aPartsToReset[] = 'PictureURL';
+			}
+			if (!empty($aPartsToReset)) {
+				$this->resetPartly($aPartsToReset);
+			}
 		}
 		return $this;
 	}

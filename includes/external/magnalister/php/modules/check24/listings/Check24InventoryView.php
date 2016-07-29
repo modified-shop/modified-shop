@@ -67,7 +67,27 @@ class Check24InventoryView extends MagnaCompatibleInventoryView {
 				'Getter' => 'getLastModified',
 				'Field' => null
 			),
+			'Status' => array (
+				'Label' => ML_GENERIC_LABEL_STATUS,
+				'Getter' => 'getStatus',
+				'Field' => null
+			),
 		);
+	}
+
+	protected function getStatus($item) {
+		$html = '<td>';
+		$status = $item['Status'];
+		$itemId = $item['ItemId'];
+		if ($status == 'active') {
+			$html .= html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_AMAZON_LABEL_IN_INVENTORY, 9, 9);
+		} elseif ($status == 'pending' /*&& $itemId == ''*/) {
+			$html .= html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/grey_dot.png', ML_AMAZON_LABEL_ADD_WAIT, 9, 9);
+		}/* elseif ($status == 'pending' && $itemId != '') {
+			$html .= html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/blue_dot.png', ML_EBAY_PRODUCT_PREPARED_FAULTY_BUT_MP, 9, 9);
+		}*/
+
+		return $html . '</td>';
 	}
 
 	protected function getMarketplaceTitle($item) {
@@ -86,5 +106,70 @@ class Check24InventoryView extends MagnaCompatibleInventoryView {
 		MagnaConnector::gi()->submitRequest(array(
 			'ACTION' => 'UploadItems'
 		));
+	}
+
+	/**
+	 * Overriden from base class because of asynchronous upload concept
+	 */
+	public function prepareInventoryData() {
+		global $magnaConfig;
+
+		$result = $this->getInventory();
+		if (($result !== false) && !empty($result['DATA'])) {
+			$this->renderableData = $result['DATA'];
+			foreach ($this->renderableData as &$item) {
+				if (isset($item['ItemTitle'])) {
+					$item['Title'] = $item['ItemTitle'];
+					unset($item['ItemTitle']);
+				}
+				$this->prepareInventoryItemData($item);
+				$pID = magnaSKU2pID($item['SKU']);
+				if (is_array($this->settings['language'])) {
+					$iLanguageId = current($this->settings['language']);
+				} else {
+					$iLanguageId = $this->settings['language'];
+				}
+				$sTitle = (string)MagnaDB::gi()->fetchOne("
+					SELECT products_name
+					  FROM ".TABLE_PRODUCTS_DESCRIPTION."
+					 WHERE     products_id = '".$pID."'
+					       AND language_id = '".$iLanguageId."'
+				");
+				if (!empty($sTitle)) {
+					$item['Title'] = $sTitle;
+				}
+				$item['TitleShort'] = (mb_strlen($item['Title'], 'UTF-8') > $this->settings['maxTitleChars'] + 2)
+					? (fixHTMLUTF8Entities(mb_substr($item['Title'], 0, $this->settings['maxTitleChars'], 'UTF-8')).'&hellip;')
+					: fixHTMLUTF8Entities($item['Title']);
+			}
+			unset($result);
+		}
+
+	}
+
+	/**
+	 * Overriden from base class because of asynchronous upload concept
+	 */
+	private function getInventory() {
+		try {
+			$request = array(
+				'ACTION' => 'GetInventory',
+				'LIMIT' => $this->settings['itemLimit'],
+				'OFFSET' => $this->offset,
+				'ORDERBY' => $this->sort['order'],
+				'SORTORDER' => $this->sort['type'],
+				'EXTRA' => 'ShowPending'
+			);
+			if (!empty($this->search)) {
+				#$request['SEARCH'] = (!magnalisterIsUTF8($this->search)) ? utf8_encode($this->search) : $this->search;
+				$request['SEARCH'] = $this->search;
+			}
+			$result = MagnaConnector::gi()->submitRequest($request);
+			$this->numberofitems = (int)$result['NUMBEROFLISTINGS'];
+			return $result;
+
+		} catch (MagnaException $e) {
+			return false;
+		}
 	}
 }

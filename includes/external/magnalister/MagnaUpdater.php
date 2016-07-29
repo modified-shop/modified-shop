@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaUpdater.php 4989 2014-12-16 23:37:06Z derpapst $
+ * $Id: MagnaUpdater.php 6198 2015-11-04 10:39:36Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -476,14 +476,16 @@ class MagnaUpdater {
 		$localBuild = array_key_exists('CLIENT_BUILD_VERSION', $this->localClientVersion)
 			? $this->localClientVersion['CLIENT_BUILD_VERSION']
 			: 0;
-		foreach ($queries as $query) {
-			$query = trim(str_replace("\t", '', str_replace("\t\t", "    ", $query)));
-			//echo print_m($query);
-			if (MagnaDB::gi()->query($query) === false) {
-				$errors[] = $query;
+		if (isset($queries) && !empty($queries)) {
+			foreach ($queries as $query) {
+				$query = trim(str_replace("\t", '', str_replace("\t\t", "    ", $query)));
+				//echo print_m($query);
+				if (MagnaDB::gi()->query($query) === false) {
+					$errors[] = $query;
+				}
 			}
 		}
-		if (!empty($functions)) {
+		if (isset($functions) && !empty($functions)) {
 			foreach ($functions as $function) {
 				$function();
 			}

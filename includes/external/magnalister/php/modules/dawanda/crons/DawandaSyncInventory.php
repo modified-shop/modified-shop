@@ -24,4 +24,7 @@ require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncI
 
 class DawandaSyncInventory extends MagnaCompatibleSyncInventory {
 
+	protected function uploadItems() {
+		return true;
+	}
 }

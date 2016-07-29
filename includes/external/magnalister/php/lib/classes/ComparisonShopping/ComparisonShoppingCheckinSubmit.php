@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ComparisonShoppingCheckinSubmit.php 4806 2014-11-05 20:33:08Z derpapst $
+ * $Id: ComparisonShoppingCheckinSubmit.php 6641 2016-04-18 15:34:12Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -318,6 +318,7 @@ class ComparisonShoppingCheckinSubmit extends CheckinSubmit {
 				$shitHappend = true;
 				$this->badItems[] = $pID;
 				unset($this->selection[$pID]);
+				$this->ajaxReply['ignoreErrors'] = true;
 			}
 		}
 		return $shitHappend;

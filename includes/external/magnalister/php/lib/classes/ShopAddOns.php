@@ -28,12 +28,78 @@ class ML_ShopAddOns {
 	 * @param $sConfigRadioId
 	 * @param $sConfigFormId
 	 */
-	public static function generateConfigPopup($sSKU, $sConfigRadioId, $sConfigFormId) {
+	public static function generateConfigPopup($sSKU, $sConfigRadioId, $sConfigFormId, $sType = 'radio') {
 		global $_url;
 		if (!self::mlAddOnIsBooked($sSKU)) {
 			$aAddOnInfo = self::getAddOnInfo($sSKU);
+			if (!array_key_exists('DATA', $aAddOnInfo)) {
+				return;
+			}
 			ob_start();?>
 			<script type="text/javascript">/*<!CDATA[*/
+				<?php if($sType == 'checkbox'){ ?>
+				jQuery('input:checkbox[id="<?php echo $sConfigRadioId; ?>"]').change(function () {
+					if (jQuery(this).prop('checked')) {
+						var $checkbox = jQuery(this);
+						jQuery('<div></div>').html(<?php echo json_encode($aAddOnInfo['DATA']['PluginText']['content']); ?>).jDialog({
+							title: <?php echo json_encode($aAddOnInfo['DATA']['PluginText']['headline']); ?>,
+							close: function(event, ui) {
+								if (event.originalEvent) {
+									$checkbox.prop('checked', false);
+								}
+							},
+							buttons: {
+								'abort': {
+									text: '<?php echo ML_BUTTON_LABEL_ABORT; ?>',
+									class: 'abort',
+									click: function() {
+										$checkbox.prop('checked', false);
+										jQuery(this).dialog('close');
+									}
+								},
+								'<?php echo ML_BUTTON_LABEL_ACCEPT_COSTS; ?>': function () {
+									jQuery.blockUI(blockUILoading);
+									jQuery.ajax({
+										'method': 'get',
+										'url': '<?php echo toURL($_url, array(
+											'action' => 'extern',
+											'function' => 'mlShopBookAnAddOn',
+											'kind' => 'ajax',
+											'SKU' => $sSKU,
+										), true)?>',
+										'success': function (data) {
+											jQuery.unblockUI();
+											myConsole.log('ajax.success', data);
+											if (data != '1') {
+												$checkbox.prop('checked', false);
+												jQuery('<div></div>').html(data).jDialog({
+													title: '<?php echo ML_LABEL_NOTE; ?>'
+												});
+											} else {
+												jQuery('<div></div>').html('<?php echo ML_ADDON_BOOK_SUCCESS; ?>').jDialog({
+													title: '<?php echo ML_LABEL_NOTE; ?>',
+													closeOnEscape: false,
+													open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+													buttons: {
+														'<?php echo ML_BUTTON_LABEL_OK; ?>': function () {
+															jQuery('<?php echo $sConfigFormId; ?>').submit();
+														}
+													}
+												});
+											}
+										}
+									});
+									jQuery(this).dialog('close');
+								}
+							}
+						}).on("dialogclose", function(){
+							$checkbox.prop('checked', false);
+						});
+					}
+				});
+				<?php 
+			} else {
+				?>
 				jQuery('input:radio[id="<?php echo $sConfigRadioId; ?>_true"]').change(function () {
 					if (jQuery(this).is(':checked') && jQuery(this).val() == 'true') {
 						var $false = $('input:radio[id="<?php echo $sConfigRadioId; ?>_false"]');
@@ -45,11 +111,15 @@ class ML_ShopAddOns {
 								}
 							},
 							buttons: {
-								'<?php echo ML_BUTTON_LABEL_ABORT; ?>': function () {
-									$false.attr('checked', 'checked');
-									jQuery(this).dialog('close');
+								'abort' : {
+									text: '<?php echo ML_BUTTON_LABEL_ABORT; ?>',
+									class: 'abort',
+									click: function () {
+										$false.attr('checked', 'checked');
+										jQuery(this).dialog('close');
+									}
 								},
-								'<?php echo ML_BUTTON_LABEL_ACCEPT; ?>': function () {
+								'<?php echo ML_BUTTON_LABEL_ACCEPT_COSTS; ?>': function () {
 									jQuery.blockUI(blockUILoading);
 									jQuery.ajax({
 										'method': 'get',
@@ -89,6 +159,87 @@ class ML_ShopAddOns {
 						});
 					}
 				});
+			<?php } ?>
+				/*]]>*/</script><?php
+			$html = ob_get_contents();
+			ob_end_clean();
+			echo $html;
+		}
+	}
+
+	public static function generateConfigPopupOnCombobox($sSKU, $sConfigComboboxId, $sConfigFormId, $JSConstraint)
+	{
+		global $_url;
+		if (!self::mlAddOnIsBooked($sSKU)) {
+			$aAddOnInfo = self::getAddOnInfo($sSKU);
+			ob_start(); ?>
+			<script type="text/javascript">/*<!CDATA[*/
+				(function () {
+					var previousValue;
+					jQuery('#<?php echo $sConfigComboboxId; ?>').on('focus', function () {
+						previousValue = this.value;
+					}).change(function () {
+						if (<?= $JSConstraint ?>) {
+							var currentComponent = $('#<?php echo $sConfigComboboxId; ?>');
+							jQuery('<div></div>').html('<?php echo str_replace(array("\n", "\r", "'"), array('', '', "\\'"), $aAddOnInfo['DATA']['PluginText']['content']); ?>')
+								.jDialog({
+									title: '<?php echo $aAddOnInfo['DATA']['PluginText']['headline']; ?>',
+									close: function (event, ui) {
+                                    if (event.originalEvent) {
+										currentComponent.val(previousValue);
+                                    }
+									},
+									buttons: {
+										'abort': {
+											text: '<?php echo ML_BUTTON_LABEL_ABORT; ?>',
+											class: 'abort',
+											click: function () {
+												currentComponent.val(previousValue);
+												jQuery(this).dialog('close');
+											}
+										},
+										'<?php echo ML_BUTTON_LABEL_ACCEPT_COSTS; ?>': function () {
+											jQuery.blockUI(blockUILoading);
+											jQuery.ajax({
+												'method': 'get',
+												'url': '<?php echo toURL($_url, array(
+													'action' => 'extern',
+													'function' => 'mlShopBookAnAddOn',
+													'kind' => 'ajax',
+													'SKU' => $sSKU,
+												), true)?>',
+												'success': function (data) {
+													jQuery.unblockUI();
+													if (data != '1') {
+														previousValue = $(currentComponent).val();
+														jQuery('<div></div>').html(data).jDialog({
+															title: '<?php echo ML_LABEL_NOTE; ?>'
+														});
+													} else {
+														jQuery('<div></div>').html('<?php echo ML_ADDON_BOOK_SUCCESS; ?>').jDialog({
+															title: '<?php echo ML_LABEL_NOTE; ?>',
+															closeOnEscape: false,
+															open: function (event, ui) {
+																$(".ui-dialog-titlebar-close").hide();
+															},
+															buttons: {
+																'<?php echo ML_BUTTON_LABEL_OK; ?>': function () {
+																	jQuery('<?php echo $sConfigFormId; ?>').submit();
+																	jQuery(this).dialog('close');
+																}
+															}
+														});
+													}
+												}
+											});
+											jQuery(this).dialog('close');
+										}
+									}
+								});
+						}
+					});
+				})();
+
 				/*]]>*/</script><?php
 			$html = ob_get_contents();
 			ob_end_clean();
@@ -105,7 +256,10 @@ class ML_ShopAddOns {
 				)
 			);
 		} catch (MagnaException $e) {
-			return '';
+			return false;
+		}
+		if (!array_key_exists('DATA', $aResponse)) {
+			return false;
 		}
 		#echo print_m($aResponse, 'response');
 		return $aResponse;

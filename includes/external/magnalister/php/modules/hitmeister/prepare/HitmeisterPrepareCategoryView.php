@@ -115,7 +115,7 @@ class HitmeisterPrepareCategoryView extends SimpleCategoryView {
 		$matchMPShopCats = !getDBConfigValue(array($this->marketplace.'.catmatch.mpshopcats', 'val'), $this->mpID, false);
 		return '
 			<table class="nostyle"><tbody>
-				<tr><td>MP:</td><td>'.(empty($data['mp_category_id']) ? '&mdash;' : $data['mp_category_id']).(empty($data['mp_category_name']) ? '' : ' '.$data['mp_category_name']).'</td><tr>
+				<tr><td>MP:</td><td>'.(empty($data['MarketplaceCategories']) ? '&mdash;' : $data['MarketplaceCategories']).(empty($data['MarketplaceCategoriesName']) ? '' : ' '.$data['MarketplaceCategoriesName']).'</td><tr>
 				'.($matchMPShopCats 
 					? ('<tr><td>Store:</td><td>'.(empty($data['store_category_id']) ? '&mdash;' : $data['store_category_id']).'</td><tr>')
 					: ''

@@ -26,7 +26,8 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 	protected $offset = 0;
 	protected $limit = 100;
 	protected $steps = false;
-	
+
+	/** @var SimplePrice $simplePrice */
 	protected $simplePrice = null;
 	
 	protected $syncStock = false;
@@ -94,6 +95,10 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 			),
 			'QuantityValue' => array (
 				'key' => 'quantity.value',
+				'default' => 0,
+			),
+			'QuantityMax' => array (
+				'key' => 'quantity.maxquantity',
 				'default' => 0,
 			),
 			'StatusMode' => array (
@@ -242,6 +247,9 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 		}
 	
 		$curQty -= $this->config['QuantitySub'];
+		if (($this->config['QuantityMax'] > 0)) {
+			$curQty = min($curQty, $this->config['QuantityMax']);
+		}
 		if ($curQty < 0) {
 			$curQty = 0;
 		}
@@ -249,7 +257,7 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 	}
 	
 	protected function isAutoSyncEnabled() {
-		$this->syncStock = $this->config['StockSync'] == 'auto';
+		$this->syncStock = $this->config['StockSync'] == 'auto'  || ($this->config['StockSync'] == 'auto_fast');
 		$this->syncPrice = $this->config['PriceSync'] == 'auto';
 		
 		//$this->syncStock = $this->syncPrice = true;

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: amazonFunctions.php 5138 2015-02-06 15:13:04Z derpapst $
+ * $Id: amazonFunctions.php 6690 2016-05-06 13:51:57Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -410,10 +410,10 @@ function amazonProcessSingleOrderStatus($args) {
 			);
 		}
 		if (isset($trackercode)) {
-			magnaAmazonSaveTrackingCode3rdParty($order['orders_id'], $trackercode, $mpID);
+			empty($trackercode) or magnaAmazonSaveTrackingCode3rdParty($order['orders_id'], $trackercode, $mpID);
 		}
 		if (isset($carrier)) {
-			magnaAmazonSaveCarrier3rdParty($order['orders_id'], $carrier, $mpID);
+			empty($carrier) or magnaAmazonSaveCarrier3rdParty($order['orders_id'], $carrier, $mpID);
 		}
 		magnaSaveOrder($order);
 		return '';
@@ -498,6 +498,12 @@ function amazonProcessMultiOrderStatus($args) {
 				magnaSaveOrder($o);
 				continue;
 			}
+			if (empty($trackercode)) {
+				$trackercode = magnaAmazonFetchTrackingCode3rdParty($o['orders_id'], $mpID);
+			}
+			if (empty($carrier)) {
+				$carrier     = magnaAmazonFetchCarrier3rdParty($o['orders_id'], $mpID);
+			}
 			$r = array (
 				'ShippingDate' => gmdate('Y-m-d'),
 				'Carrier' => $carrier,
@@ -509,8 +515,8 @@ function amazonProcessMultiOrderStatus($args) {
 					'Data' => $r
 				);
 				magnaSaveOrder($o);
-				magnaAmazonSaveTrackingCode3rdParty($o['orders_id'], $trackercode, $mpID);
-				magnaAmazonSaveCarrier3rdParty($o['orders_id'], $carrier, $mpID);
+				empty($trackercode) or magnaAmazonSaveTrackingCode3rdParty($o['orders_id'], $trackercode, $mpID);
+				empty($carrier) or magnaAmazonSaveCarrier3rdParty($o['orders_id'], $carrier, $mpID);
 			} else {
 				$r['AmazonOrderID'] = $o['data']['AmazonOrderID'];
 				$request['DATA'][] = $r;
@@ -576,8 +582,8 @@ function amazonProcessMultiOrderStatus($args) {
 			$o['data']['ML_LABEL_SHIPPING_DATE'] = date('Y-m-d H:i:s');
 			$o['data']['ML_LABEL_TRACKINGCODE'] = $trackercode;
 			$o['data']['ML_LABEL_CARRIER'] = $carrier;
-			magnaAmazonSaveTrackingCode3rdParty($o['orders_id'], $trackercode, $o['mpID']);
-			magnaAmazonSaveCarrier3rdParty($o['orders_id'], $carrier, $o['mpID']);
+			empty($trackercode) or magnaAmazonSaveTrackingCode3rdParty($o['orders_id'], $trackercode, $o['mpID']);
+			empty($carrier) or magnaAmazonSaveCarrier3rdParty($o['orders_id'], $carrier, $o['mpID']);
 		} else if ($args['status'] == $cancelledState) {
 			$o['data']['ML_LABEL_ORDER_CANCELLED'] = date('Y-m-d H:i:s');
 		}
@@ -659,6 +665,7 @@ function autoupdateAmazonOrdersStatus($mpID) {
 	     WHERE mo.orders_id=o.orders_id
 	           AND mo.mpID=\''.$mpID.'\'
 	           AND mo.orders_status<>o.orders_status
+	     LIMIT 100
 	', function_exists('ml_debug_out')));
 	if (function_exists('ml_debug_out')) ml_debug_out(print_m($orders, '$orders'));
 	if (empty($orders)) return true;
@@ -844,4 +851,28 @@ function autoupdateAmazonOrdersStatus($mpID) {
 		//*/
 	}
 	return true;
+}
+
+function getAmazonOfferLink($sAsin, $sTitle) {
+	if (empty($sAsin)) {
+		return '&mdash;';
+	} else {
+		global $_MagnaSession;
+		$sAmazonSite = strtolower(getDBConfigValue('amazon.site', $_MagnaSession['mpID'], 'de'));
+		switch ($sAmazonSite) {
+			case 'jp': {
+					$sAmazonSite = 'co.jp';
+					break;
+				}
+			case 'us': {
+					$sAmazonSite = 'com';
+				}
+			case 'uk': {
+					$sAmazonSite = 'co.uk';
+				}
+			default: {//fr, in, it, ca, es, cn
+				}
+		}
+		return '<a href="http://www.amazon.' . $sAmazonSite . '/gp/offer-listing/' . $sAsin . '" title="' . $sTitle . '" target="_blank">' . $sAsin . '</a>';
+	}
 }

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: KelkooCheckinSubmit.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: KelkooCheckinSubmit.php 6046 2015-09-23 15:08:33Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -35,7 +35,7 @@ class KelkooCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 
 		$catdata = MagnaDB::gi()->fetchRow('
 			SELECT p.categories_id, c.parent_id
-			  FROM products_to_categories p 
+			  FROM '.TABLE_PRODUCTS_TO_CATEGORIES.' p
 			  JOIN categories c ON p.categories_id = c.categories_id
 			 WHERE products_id = '.$pID.'
 			 LIMIT 1

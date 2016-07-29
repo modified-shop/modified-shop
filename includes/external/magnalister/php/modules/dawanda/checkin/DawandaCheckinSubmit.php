@@ -55,6 +55,7 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			'mlProductsUseLegacy' => false,
 		), $settings);
 		
+		$this->summaryAddText = "<br /><br />\n".ML_DAWANDA_UPLOAD_EXPLANATION;
 		parent::__construct($settings);
 	}
 
@@ -305,7 +306,10 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
 	protected function postSubmit() {
 		try {
-			//*
+			/*
+			// wait only 15s on that request
+			MagnaConnector::gi()->setTimeOutInSeconds(15);
+			// this request can took some time because its live and uploads also update item requests
 			$result = MagnaConnector::gi()->submitRequest(array(
 				'ACTION' => 'UploadItems',
 			));
@@ -314,6 +318,7 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			$this->submitSession['api']['exception'] = $e;
 			$this->submitSession['api']['html'] = MagnaError::gi()->exceptionsToHTML();
 		}
+		MagnaConnector::gi()->resetTimeOut();
 	}
 
 }

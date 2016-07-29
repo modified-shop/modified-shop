@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaDB.php 4966 2014-12-10 11:28:10Z derpapst $
+ * $Id: MagnaDB.php 6309 2015-12-17 01:05:22Z MaW $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -1155,6 +1155,16 @@ class MagnaDB {
 			}
 		}
 		$this->columnExistsInTableCache[$table][$column] = false;
+		return false;
+	}
+
+	public function isSingleColumnNotPrimaryKey($ckey, $table) {
+		$keys = $this->fetchArray('SHOW KEYS FROM '.$table.' WHERE Key_name = Column_name');
+		foreach ($keys as $k) {
+			if ($k['Column_name'] == $ckey) {
+				return true;
+			}
+		}
 		return false;
 	}
 

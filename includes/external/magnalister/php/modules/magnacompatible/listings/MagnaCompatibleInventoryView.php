@@ -320,7 +320,7 @@ class MagnaCompatibleInventoryView {
 		return '<td>'.date("d.m.Y", $item['DateAdded']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateAdded']).'</span>'.'</td>';	
 	}
 
-	private function renderDataGrid($id = '') {
+	protected function renderDataGrid($id = '') {
 		global $magnaConfig;
 
 		#echo print_m($this->renderableData, '$this->renderableData');

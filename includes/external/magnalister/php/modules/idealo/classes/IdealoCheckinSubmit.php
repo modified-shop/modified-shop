@@ -36,7 +36,7 @@ class IdealoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 		
 		$catdata = MagnaDB::gi()->fetchRow('
 			SELECT p.categories_id, c.parent_id
-			  FROM products_to_categories p 
+			  FROM '.TABLE_PRODUCTS_TO_CATEGORIES.' p
 			  JOIN categories c ON p.categories_id = c.categories_id
 			 WHERE products_id = '.$pID.'
 			 LIMIT 1

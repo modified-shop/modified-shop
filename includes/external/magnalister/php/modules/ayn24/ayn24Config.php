@@ -130,6 +130,8 @@ mlGetCustomersStatus($form['import']['fields']['customersgroup']);
 mlGetShippingModules($form['import']['fields']['defaultshipping']);
 mlGetPaymentModules($form['import']['fields']['defaultpayment']);
 
+mlPresetTrackingCodeMatching($_MagnaSession['mpID'], 'ayn24.orderstatus.carrier', 'ayn24.orderstatus.trackingcode');
+
 $form['checkin']['fields']['imagepath']['default'] = SHOP_URL_POPUP_IMAGES;
 
 $cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_ayn24');

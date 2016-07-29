@@ -68,6 +68,23 @@ class EbaySyncListingDetails extends EbaySyncInventory {
 		}
 
 		$aRequestData = EbayHelper::getProductListingDetailsFromProduct($this->cItem['pID'], $this->config['Lang']);
+		// variations, if any
+		MLProduct::gi()->setLanguage($this->config['Lang']);
+		$product =  MLProduct::gi()->getProductById($this->cItem['pID']);
+		if (isset($this->cItem['Variations']) && isset($product['Variations'])) {
+			$aVariationData = array();
+			foreach ($product['Variations'] as $n => $variantData) {
+				if (    !array_key_exists('EAN', $variantData)
+				     || empty($variantData['EAN'])) {
+					continue;
+				}
+				$aVariationData[$n]['SKU'] = ($this->config['SKUType'] == 'artNr') ? $variantData['MarketplaceSku'] : $variantData['MarketplaceId'];
+				$aVariationData[$n]['EAN'] = $variantData['EAN'];
+			}
+			if (!empty($aVariationData)) {
+				$aRequestData['Variations'] = $aVariationData;
+			}
+		}
 		$aRequestData['SKU'] = $this->cItem['SKU'];
 
 		$this->updateProductListingDetails($aRequestData);

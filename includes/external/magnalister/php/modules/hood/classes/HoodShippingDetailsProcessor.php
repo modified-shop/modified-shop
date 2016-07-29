@@ -124,10 +124,10 @@ class HoodShippingDetailsProcessor {
 					<td class="textright">'.ML_HOOD_LABEL_SHIPPING_COSTS.':&nbsp;</td>
 					<td class="paddingRight">'.$shippingCost.'</td>
 					<td rowspan="2">
-						<input id="" type="button" value="(+)" class="ml-button plus" />
+						<input id="" type="button" value="+" class="ml-button plus" />
 						'.((array_key_exists('func', $this->args) && ($this->args['func'] == '' || $this->args['func'] == 'addRow'))
-							? '<input type="button" value="(-)" class="ml-button minus" />'
-							: '<input type="button" value="(-)" class="ml-button minus" style="display: none" />'
+							? '<input type="button" value="&#8211;" class="ml-button minus" />'
+							: '<input type="button" value="&#8211;" class="ml-button minus" style="display: none" />'
 						).'
 					</td>
 				</tr>

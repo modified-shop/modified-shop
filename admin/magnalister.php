@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.php 4691 2014-10-08 13:32:11Z miguel.heredia $
+ * $Id: magnalister.php 6033 2015-09-22 10:12:38Z markus.bauer $
  *
  * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -94,6 +94,8 @@ $_backup = array (
 	'POST'    => $_POST,
 	'COOKIE'  => $_COOKIE
 );
+
+date_default_timezone_set(@date_default_timezone_get());
 
 #ob_start(); # avoid output from broken files, so that our ajax requests don't fail.
 require_once(dirname(__FILE__).'/includes/application_top.php');
@@ -297,7 +299,10 @@ function fileGetContentsCURL($path, &$warnings = null, $timeout = 10, $forceSSLO
 }
 
 function fileGetContents($path, &$warnings = null, $timeout = 10) {
-	if (($contents = fileGetContentsCURL($path, $warnings, $timeout)) !== false) {
+	if (!defined('Magna_CURL_NO_SSL') && ($contents = fileGetContentsCURL($path, $warnings, $timeout)) !== false) {
+		return $contents;
+	} elseif (($contents = fileGetContentsCURL($path, $warnings, $timeout, true)) !== false) {// no-ssl
+		defined('Magna_CURL_NO_SSL') or define('Magna_CURL_NO_SSL', true);
 		return $contents;
 	}
 	return fileGetContentsPHP($path, $warnings, $timeout);
@@ -414,7 +419,7 @@ if (!MAGNA_SAFE_MODE) {
 		$doDownload = (isset($_GET['update']) && ($_GET['update'] == 'true')) || ($_SESSION['MagnaPurge'] === true);
 		$scriptPath = MAGNA_UPDATE_FILEURL.'magnalister/'.$file;
 		if ($doDownload || !file_exists(DIR_MAGNALISTER_FS.$file)) {
-			$scriptContent = fileGetContents($scriptPath, $foo, -1);
+			$scriptContent = fileGetContents($scriptPath, $foo, 30);
 			if ($scriptContent === false) {
 				echoDiePage(
 					$scriptPath.' '.(

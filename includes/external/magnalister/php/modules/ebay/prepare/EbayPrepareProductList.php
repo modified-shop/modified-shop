@@ -41,6 +41,7 @@ class EbayPrepareProductList extends MLProductListEbayAbstract {
 			->addDependency('MLProductListDependencyEbayPrepareFormAction', array('selectionname' => $this->getSelectionName()))
 			->addDependency('MLProductListDependencyMarketplaceSync', array('propertiestablename' => TABLE_MAGNA_EBAY_PROPERTIES))
 			->addDependency('MLProductListDependencyEbayPrepareStatusFilter')
+			->addDependency('MLProductListDependencyProductStatusFilter')
 		;
 	}
 	

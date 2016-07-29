@@ -35,7 +35,7 @@ class Ayn24CheckinSubmit extends CheckinSubmit {
 		 */
 		$settings = array_merge(array(
 			'language' => getDBConfigValue($settings['marketplace'].'.lang', $_MagnaSession['mpID']),
-			'itemsPerBatch' => 100,
+			'itemsPerBatch' => 10,
 			'mlProductsUseLegacy' => false,
 		), $settings);
 		

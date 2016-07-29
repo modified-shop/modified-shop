@@ -88,6 +88,7 @@ class MLProduct {
 	
 	/**
 	 * Singleton - gets Instance
+	 * @return MLProduct
 	 */
 	public static function gi() {
 		if (self::$instance == null) {
@@ -1195,6 +1196,43 @@ class MLProduct {
 		}
 		return $variations;
 	}
+	
+	/**
+	 * Loads the variations images to a product.
+	 *
+	 * @param array $parent
+	 *    The parent product
+	 * @param bool $onlyOffer
+	 *    If this is set to true only the offer data will be included
+	 *    along with everything needed to "identify" the variation.
+	 *
+	 * @return array
+	 *    List of variations or empty if no variations exist.
+	 */
+	protected function fetchVariationImages(&$parent) {
+		$attrs = array();
+		if ($this->optionsTmp['useGambioProperties']) {
+			$combis = MagnaDB::gi()->fetchArray('
+			  SELECT *
+			    FROM '.'products_properties_combis'.'
+			   WHERE products_id = "'.$parent['ProductId'].'"
+			ORDER BY sort_order ASC
+			');
+			if (empty($combis)) {
+				return array();
+			}
+			foreach ($combis as $combi) {
+				$v = array (
+					'VariationId' => $combi['products_properties_combis_id'],
+					'Image' => $combi['combi_image'],
+					'Variation' => $this->translateProductsProperties($combi['products_properties_combis_id']),
+				);
+
+				$attrs[] = $v;
+			}
+		}
+		return $attrs;
+	}
 
 	/**
 	 * Loads data based of a config db matching.
@@ -1880,7 +1918,8 @@ $images = array (
 		
 		$this->prepareParentPrices($product);
 		
-		$product['Variations'] = $this->fetchVariations($product, false);
+		$product['Variations'] = $this->fetchVariations($product, false);		
+		$product['VariationPictures'] = $this->fetchVariationImages($product);
 		$this->completeParentOffer($product);
 		
 		$product = $this->postProcessVariations($product);
@@ -2242,6 +2281,44 @@ $images = array (
 		}
 		
 		return $categories_array;
+	}
+	
+	/**
+	 * 
+	 * @param int $id id of product
+	 */
+	public function getProductPropertiesByProductid($id){
+		$aProperties = array();
+		if (MAGNA_GAMBIO_VARIATIONS && (getDBConfigValue('general.gambio.useproperties', '0', 'true') == 'true')) {
+			$properties = MagnaDb::gi()->fetchArray('
+				SELECT DISTINCT ppas.properties_id as id,  properties_name as name 
+				FROM products_properties_admin_select ppas 
+				JOIN properties_description pd on ppas.properties_id = pd.properties_id
+				WHERE products_id = '.$id.' AND language_id = '.$_SESSION['languages_id'].'
+			');
+			if(!empty($properties)){
+				foreach ($properties as $property) {
+					$aProperties[$property['id']] = $property['name'];
+				}
+			}
+		}
+		return $aProperties;
+	}
+
+	public function getProductAttributesByProductId($id){
+		$aAttributes = array();
+		$attributes = MagnaDb::gi()->fetchArray('
+			SELECT DISTINCT po.products_options_id as id, products_options_name as name
+			  FROM '.TABLE_PRODUCTS_OPTIONS.' po
+			  JOIN '.TABLE_PRODUCTS_ATTRIBUTES.' pa on po.products_options_id = pa.options_id
+			 WHERE pa.products_id = '.$id.' AND po.language_id = '.$_SESSION['languages_id'].' 
+		');
+		if(!empty($attributes)){
+			foreach ($attributes as $attribute) {
+				$aAttributes[$attribute['id']] = $attribute['name'];
+			}
+		}
+		return $aAttributes;
 	}
 	
 }
