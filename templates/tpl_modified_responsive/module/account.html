@@ -63,13 +63,15 @@
 </div>
 
 <div class="twoColums last">
+  {if $LINK_NEWSLETTER}
   <div class="highlightbox plainright">
     <h4>{#title_notification#}</h4>
     <ul class="accountlist">
       <li><a class="black" href="{$LINK_NEWSLETTER}">{#text_newsletter#}</a></li>
     </ul>
   </div>
-
+  {/if}
+  
   {if $products_history}
   <br />
   <div class="highlightbox plainright">
