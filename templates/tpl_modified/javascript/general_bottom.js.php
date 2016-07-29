@@ -34,11 +34,13 @@ foreach ($script_array as $script) {
 ?>
 <?php require DIR_FS_CATALOG . DIR_TMPL_JS . 'get_states.js.php'; ?>
 <script type="text/javascript">
+  $(window).load(function() {
+    $(".unveil").show();
+    $(".unveil").unveil(200);
+  });
   $(document).ready(function(){
     $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true});
     $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true});
-    $(".unveil").show();
-    $(".unveil").unveil(200);
     $('.bxcarousel_bestseller').bxSlider({
       minSlides: 6,
       maxSlides: 8,
