@@ -1923,11 +1923,15 @@ a.color_more:hover {
   line-height:15px;
 }
 .lb_price .item_price {
+  font-family: 'fjallaoneregular', sans-serif;
+  position:absolute;
+  bottom: 10px;
+  left:0px;
+  font-size:9px;
+  line-height:12px;
   display:block;
-  font-size:12px;
-  line-height:18px;
   font-weight:normal;
-  color:#777;
+  color:#666;
 }
 .lb_price .uvp_price {
   display:block;
@@ -1937,7 +1941,7 @@ a.color_more:hover {
 }
 .lb_vpe {
   position:absolute;
-  bottom:2px;
+  bottom:0px;
   left:0px;
   font-family: 'fjallaoneregular', sans-serif;
   text-align:right;
