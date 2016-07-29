@@ -203,7 +203,7 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 
 #GTB - 2016-05-18 - insert kosovo
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id, status, required_zones) VALUES (242,'Kosovo','CS','SCG',1,1,0);
-INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) (242, 242, 0, 6, NULL, NOW());
+INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES (242, 242, 0, 6, NULL, NOW());
 
 #Tomcraft - 2016-06-06 - Remove obsolete configuration_key COMPRESS_STYLESHEET_TIME (since r7607)
 DELETE FROM configuration WHERE configuration_key = 'COMPRESS_STYLESHEET_TIME';
@@ -256,5 +256,11 @@ ALTER TABLE orders MODIFY billing_name VARCHAR(128) NOT NULL;
 ALTER TABLE admin_access ADD blacklist_logs INT(1) NOT NULL DEFAULT 0 AFTER trustedshops;
 UPDATE admin_access SET blacklist_logs = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET blacklist_logs = 5 WHERE customers_id = 'groups' LIMIT 1;
+
+#GTB - 2016-07-29 - fix zones for switzerland
+DELETE FROM zones WHERE zone_country_id = 204 AND zone_code = 'JU';
+DELETE FROM zones WHERE zone_country_id = 204 AND zone_code = 'GR';
+INSERT INTO zones VALUES (NULL,204,'GR','Graubünden');
+INSERT INTO zones VALUES (NULL,204,'JU','Jura');
 
 # Keep an empty line at the end of this file for the db_updater to work properly
