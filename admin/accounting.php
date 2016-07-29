@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: accounting.php 1167 2005-08-22 00:43:01Z mz $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -51,7 +51,7 @@
         break;
 
       case 'new':
-        $new_field = xtc_db_prepare_input($_POST['admin_access']);
+        $new_field = xtc_db_prepare_input($_POST['admin_access_new']);
         $exists = false;
         $fields = xtc_db_query("SHOW COLUMNS FROM `".TABLE_ADMIN_ACCESS."` FROM `".DB_DATABASE."`");
         while ($field = xtc_db_fetch_array($fields)) {
@@ -177,7 +177,7 @@ require (DIR_WS_INCLUDES.'head.php');
           <table class="tableBoxCenter collapse">
             <tr class="dataTableHeadingRow">
               <td class="dataTableHeadingContent" style="vertical-align:middle;"><?php echo TEXT_ACCESS . ' ' . BUTTON_INSERT; ?></td>
-              <td class="dataTableHeadingContent"><?php echo  xtc_draw_input_field('admin_access', '', 'style="width: 250px"'); ?></td>
+              <td class="dataTableHeadingContent"><?php echo  xtc_draw_input_field('admin_access_new', '', 'style="width: 250px"'); ?></td>
               <td class="dataTableHeadingContent"><input type="submit" class="button" value="<?php echo BUTTON_INSERT; ?>" <?php echo $confirm_save_entry;?>></td>
             </tr>
           </table>
