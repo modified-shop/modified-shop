@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: products_vpe.php 2990 2012-06-07 14:35:48Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -228,7 +228,5 @@ require (DIR_WS_INCLUDES.'head.php');
   <!-- footer_eof //-->
   <br />
 </body>
-</html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
