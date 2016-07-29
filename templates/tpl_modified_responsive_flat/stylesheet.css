@@ -1903,13 +1903,16 @@ a.color_more:hover {
 .lb_price .item_price {
   font-family: 'fjallaoneregular', sans-serif;
   position:absolute;
-  bottom: 10px;
+  bottom: 2px;
   left:0px;
   font-size:9px;
   line-height:12px;
   display:block;
   font-weight:normal;
   color:#666;
+}
+.lb_price .item_price.with_vpe {
+  bottom: 12px !important;
 }
 .lb_price .uvp_price {
   display:block;
@@ -1919,7 +1922,7 @@ a.color_more:hover {
 }
 .lb_vpe {
   position:absolute;
-  bottom:0px;
+  bottom:2px;
   left:0px;
   font-family: 'fjallaoneregular', sans-serif;
   text-align:right;

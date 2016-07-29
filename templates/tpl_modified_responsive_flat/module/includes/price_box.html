@@ -7,7 +7,7 @@
             {elseif $price_data.PRODUCTS_PRICE_FLAG == 'SpecialGraduated'}
               {if $price_data.PRODUCTS_PRICE_UVP != ''} 
                 {* START Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
-                <span class="uvp_price">  
+                <span class="uvp_price">
                   <span class="small_price">{$smarty.const.YOUR_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}
                 </span>
                 {* ENDE Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
@@ -16,7 +16,11 @@
                 <span class="graduated_price">
                   <span class="small_price">{$smarty.const.FROM}</span> {$price_data.PRODUCTS_PRICE_OLD_PRICE}
                 </span>
-                <span class="item_price"><span class="small_price">{$smarty.const.UNIT_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
+                {if $module_data.PRODUCTS_VPE}
+                  <span class="item_price with_vpe"><span class="small_price">{$smarty.const.UNIT_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
+                {else}
+                  <span class="item_price"><span class="small_price">{$smarty.const.UNIT_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
+                {/if}
                 {* ENDE Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis *}
               {/if}
             {elseif $price_data.PRODUCTS_PRICE_FLAG == 'NotAllowed'}
