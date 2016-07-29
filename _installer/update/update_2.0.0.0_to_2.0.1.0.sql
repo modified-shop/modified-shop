@@ -66,17 +66,17 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'CT','Catamarca');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'CC','Chaco');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'CH','Chubut');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'CD','C√≥rdoba');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'CD','CÛrdoba');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'CR','Corrientes');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'ER','Entre R√≠os');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'ER','Entre RÌos');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'FO','Formosa');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'JY','Jujuy');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'LP','La Pampa');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'LR','La Rioja');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'MZ','Mendoza');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'MN','Misiones');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'NQ','Neuqu√©n');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'RN','R√≠o Negro');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'NQ','NeuquÈn');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'RN','RÌo Negro');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'SA','Salta');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'SJ','San Juan');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'SL','San Luis');
@@ -84,7 +84,7 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'SF','Santa Fe');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'SE','Santiago del Estero');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'TF','Tierra del Fuego');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'TM','Tucum√°n');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,10,'TM','Tucum·n');
 
 #GTB - 2016-05-18 - add states for indonesia
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,100,'AC','Aceh');
