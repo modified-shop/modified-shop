@@ -257,10 +257,4 @@ ALTER TABLE admin_access ADD blacklist_logs INT(1) NOT NULL DEFAULT 0 AFTER trus
 UPDATE admin_access SET blacklist_logs = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET blacklist_logs = 5 WHERE customers_id = 'groups' LIMIT 1;
 
-#GTB - 2016-07-29 - fix zones for switzerland
-DELETE FROM zones WHERE zone_country_id = 204 AND zone_code = 'JU';
-DELETE FROM zones WHERE zone_country_id = 204 AND zone_code = 'GR';
-INSERT INTO zones VALUES (NULL,204,'GR','Graubünden');
-INSERT INTO zones VALUES (NULL,204,'JU','Jura');
-
 # Keep an empty line at the end of this file for the db_updater to work properly
