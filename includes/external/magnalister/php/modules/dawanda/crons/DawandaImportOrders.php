@@ -88,6 +88,8 @@ class DawandaImportOrders extends MagnaCompatibleImportOrders {
 				$class = 'paypal_ipn';
 			else if (in_array('paypalexpress.php', $paymentModules))
 				$class = 'paypalexpress';
+			else if (in_array('paypal3.php', $paymentModules))
+				$class = 'paypal3';
 		} else if ('Cash' == $paymentMethod) {
 			# Barzahlung
 			if (in_array('cash.php', $paymentModules))

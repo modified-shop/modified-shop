@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: amazonConfig.php 5452 2015-04-09 10:04:14Z MaW $
+ * $Id: amazonConfig.php 6288 2015-12-04 15:08:12Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -276,7 +276,8 @@ if (!$auth['state']) {
 	mlGetPaymentModules($form['import']['fields']['defaultpayment']);
 	mlGetShippingModules($form['import']['fields']['defaultshippingfba']);
 	mlGetPaymentModules($form['import']['fields']['defaultpaymentfba']);
-	
+
+	mlPresetTrackingCodeMatching($_MagnaSession['mpID'], 'amazon.orderstatus.carrier.carrierDBMatching', 'amazon.orderstatus.carrier.trackingcode');
 	
 	if ((getDBConfigValue('amazon.checkin.SkuAsMfrPartNo', $_MagnaSession['mpID']) == null) // setting doesn't exist yet
 		// has the config been saved before that feature was implemented?

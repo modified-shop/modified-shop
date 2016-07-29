@@ -26,7 +26,7 @@ if (!isset($_MagnaSession)) {
 
 require(DIR_MAGNALISTER_MODULES.'magnacompatible/config.php');
 
-$mpconfig['auth']['authkeys'] = array('ident', 'accesskey');
+$mpconfig['auth']['authkeys'] = array('clientkey', 'secretkey', 'mpusername', 'mppassword');
 
 $mpconfig['pages']['conf']['class'] = 'HitmeisterConfigure';
 $mpconfig['pages']['prepare']['class'] = 'HitmeisterPrepare';

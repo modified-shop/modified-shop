@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: applicationviews.php 5096 2015-01-30 12:58:08Z tim.neumann $
+ * $Id: applicationviews.php 6382 2016-01-19 12:31:41Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -437,7 +437,7 @@ function renderSingleApplication($data) {
 				<td class="info">' . ML_AMAZON_TEXT_APPLY_MANUFACTURER_NAME . '</td>
 			</tr>
 			<tr class="odd">
-				<th>' . ML_LABEL_BRAND . '</th>
+				<th>' . ML_LABEL_BRAND . ' <span>&bull;</span></th>
 				<td class="input"><input class="fullwidth" type="text" name="Brand" value="' . fixHTMLUTF8Entities($data['Brand']) . '"/></td>
 				<td class="info">' . ML_AMAZON_TEXT_APPLY_BRAND . '</td>
 			</tr>

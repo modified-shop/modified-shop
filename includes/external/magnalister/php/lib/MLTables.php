@@ -62,3 +62,4 @@ define('TABLE_MAGNA_DAWANDA_PROPERTIES', 'magnalister_dawanda_properties');
 define('TABLE_MAGNA_BEPADO_PROPERTIES', 'magnalister_bepado_properties');
 define('TABLE_MAGNA_RICARDO_PROPERTIES', 'magnalister_ricardo_properties');
 define('TABLE_MAGNA_CHECK24_PROPERTIES', 'magnalister_check24_properties');
+define('TABLE_MAGNA_FYNDIQ_PROPERTIES', 'magnalister_fyndiq_properties');

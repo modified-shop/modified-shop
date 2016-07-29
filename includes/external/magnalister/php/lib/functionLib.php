@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: functionLib.php 5338 2015-03-09 21:16:46Z derpapst $
+ * $Id: functionLib.php 6797 2016-07-08 23:57:30Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -426,6 +426,15 @@ function convert2Bytes($val) {
     return $val;
 }
 
+# http://php.net/manual/de/function.base64-encode.php, user notes
+function base64url_encode($data) {
+	return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+}
+
+function base64url_decode($data) {
+	return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
+}
+
 function randomString($length = 8) {
 	$pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 	$poolLength = strlen($pool) - 1;
@@ -443,6 +452,13 @@ function eecho($str, $print = false) {
 		} else {
 			echo $str;
 		}
+	}
+	return $str;
+}
+
+function eechoIP($str, $print = false) {
+	if ('176.198.38.42' == $_SERVER['REMOTE_ADDR']) {
+		return eecho($str, $print);
 	}
 	return $str;
 }
@@ -528,6 +544,9 @@ function charset_decode_utf_8($string) {
 
 function fixHTMLUTF8Entities($str, $quoteStyle = ENT_NOQUOTES) {
 	$str = (string)$str;
+	if (!is_numeric($quoteStyle)) {
+		$quoteStyle = ENT_NOQUOTES;
+	}
 	
 	// htmlentities() has a slightly broken translation table.
 	// Fix that by encoding those beforehand.
@@ -547,6 +566,10 @@ function fixHTMLUTF8Entities($str, $quoteStyle = ENT_NOQUOTES) {
 
 function arrayEntitiesFixHTMLUTF8(&$array) {
 	if (empty($array)) return;
+	if (is_string($array)) {
+		$array = fixHTMLUTF8Entities($array);
+		return;
+	}
 	foreach ($array as &$item) {
 		if (is_array($item)) arrayEntitiesFixHTMLUTF8($item);
 		if (!is_string($item)) continue;
@@ -729,6 +752,22 @@ function myUnserialize($serialized) {
 	return unserialize($serialized);
 }
 
+# #2016042910000453: Umlaut broken in json encoding (backslash stripped). Cannot properly be decoded,
+# so use this function before decoding
+function fixBrokenJsonUmlauts($sString) {
+	if (    (strpos($sString, 'u00')  === false)
+	     || (strpos($sString, '\u00') !== false)) {
+		return $sString;
+	}
+	$aBrokenUmlauts = array ('u00c4','u00d6','u00dc','u00e4','u00f6','u00fc','u00df');
+	foreach ($aBrokenUmlauts as $sBrokenUmlaut) {
+		if (strpos($sString, $sBrokenUmlaut) !== false) {
+			$sString = str_replace($sBrokenUmlaut, '\\'.$sBrokenUmlaut, $sString);
+		}
+	}
+	return $sString;
+}
+
 function stripHTMLComments($str)
     /* Geschachtelte Kommentare werden nicht unterstuetzt. */
     {
@@ -833,6 +872,31 @@ function strip_tags_attributes($string, $allowtags = '', $allowattributes = '') 
     return $string;
 }
 
+/**
+ * strip links from a string
+ * If $sTarget given, strip only the links starting with this target, e.h. 'http://www.magnalister',
+ * and leave everything else untouched.
+ * If you want to remove links from several subdomains,
+ * like http://www.example.com and http://shop.example.com, you have to call this function multiple times.
+ * If no target given, all links will be removed.
+ */
+function stripLinks($str, $sTarget = '') {
+	if (!empty($sTarget)) {
+		$sTarget = str_replace('/', '\/', $sTarget);
+	}
+	$iLength = strlen($str);
+	do {
+		// strip the opening Link tag, then the next closing tag, one by one, until none found
+		// there can be everything between the tags
+		$iOldLength = $iLength;
+		$str = preg_replace("/(\<[aA] *)([0-9a-zA-Z;:\.#'\" =_-]*)(href *= *|HREF *= *)('|\")".$sTarget."([0-9a-zA-Z:\.\/\?\&;# =_-]*)('|\")([0-9a-zA-Z;:\.#'\" =_-]*\>)/", '', $str, 1);
+		$iLength = strlen($str);
+		if ($iLength == $iOldLength) break;
+		$str = preg_replace("/\<\/[aA]\>/", '', $str, 1);
+	} while ($iLength < $iOldLength);
+	return $str;
+}
+
 function arrayMap($callback, $arr1) {
 	$results = array();
 	$args = array();
@@ -905,11 +969,11 @@ class BacktraceProccessor {
 			}
 			foreach (self::$hideFromStack as $el) {
 				if (($value === $el) && ($el != null)) {
-					$aa = '*****';
+					$aa[$k] = '*****';
 					break;
 				}
 			}
-			$aa[$k] = $value;
+                        $aa[$k] = $value;
 		}
 		return $aa;
 	}
@@ -1076,6 +1140,31 @@ function json_indent($json) {
     }
 
     return $result;
+}
+
+/*
+ * add empty cells to a numeric-indexed array which is not sequential
+ * so that json_encode encodes it as array, not object
+ * CAUTION: array MUST have only natural numeric indexes (no check here)
+ */
+function arrayFillLackingKeys(&$arr) {
+	$aKeys = array_keys($arr);
+	$iMaxKey = max($aKeys);
+	if ((count($arr)) > $iMaxKey) {
+		// e.g. 5 Elements, numbered 0 to 4 => nothing to do
+		return;
+	}
+	$aResult = array();
+	$i = 0;
+	while ($i <= $iMaxKey) {
+		if (array_key_exists($i, $arr)) {
+			$aResult[$i] = $arr[$i];
+		} else {
+			$aResult[$i] = "";
+		}
+		++$i;
+	}
+	$arr = $aResult;
 }
 
 function renderDataGrid($data, $opts = array()) {

@@ -94,6 +94,33 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		) {
 			require_once(DIR_WS_FUNCTIONS.'password_funcs.php');
 		}
+
+		if (SHOPSYSTEM == 'gambio') {
+			$this->requireLibsForGambioOrderConfirmation();
+		}
+	}
+
+	private function requireLibsForGambioOrderConfirmation() {
+		if(    !class_exists('MainFactory')
+		    || !class_exists('RecreateOrder')) return;
+			// need order.php from the admin area, cos the other doesn't provide the necessary data
+			if (false === strpos(DIR_WS_CLASSES, 'admin')) {
+				$classesDir = str_replace('includes', 'admin/includes', DIR_WS_CLASSES);
+			} else {
+				$classesDir = DIR_WS_CLASSES;
+			}
+			if (false === strpos($classesDir, DIR_FS_CATALOG)) {
+				$classesDir = DIR_FS_CATALOG . $classesDir;
+			}
+			require_once(DIR_FS_INC     . 'xtc_get_order_data.inc.php');
+			require_once(DIR_FS_INC     . 'xtc_get_attributes_model.inc.php');
+			require_once(DIR_FS_INC     . 'xtc_not_null.inc.php');
+			require_once(DIR_FS_INC     . 'xtc_format_price_order.inc.php');
+			function_exists('xtc_date_long')      or require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
+			function_exists('xtc_address_format') or require_once(DIR_FS_INC . 'xtc_address_format.inc.php');
+			require_once($classesDir    . 'order.php');
+			require_once(DIR_FS_CATALOG . 'gm/inc/gm_prepare_number.inc.php');
+			require_once(DIR_FS_CATALOG . 'gm/inc/gm_save_order.inc.php');
 	}
 	
 	protected function getConfigKeys() {
@@ -182,10 +209,12 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			'customers.customers_cid' => MagnaDB::gi()->columnExistsInTable('customers_cid', TABLE_CUSTOMERS),
 			'orders.gm_send_order_status' => MagnaDB::gi()->columnExistsInTable('gm_send_order_status', TABLE_ORDERS),
 			'orders.customers_status_discount' => MagnaDB::gi()->columnExistsInTable('customers_status_discount', TABLE_ORDERS),
+			'orders.orders_hash' => MagnaDB::gi()->columnExistsInTable('orders_hash', TABLE_ORDERS),
 		);
 		
 		foreach (array(
-			'products_options_id', 'products_attributes_id', 'products_attributes_model'
+			'products_options_id', 'products_attributes_id', 'products_attributes_model',
+			'attributes_model', 'attributes_ean'// modified 2.0.0
 		) as $col) {
 			$this->config['DBColumnExists']['orders_products_attributes.'.$col] = defined('TABLE_ORDERS_PRODUCTS_ATTRIBUTES')
 				&& MagnaDB::gi()->tableExists(TABLE_ORDERS_PRODUCTS_ATTRIBUTES)
@@ -421,7 +450,11 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		
 		if (SHOPSYSTEM != 'oscommerce') {
 			$this->o['customer']['customers_status'] = $this->config['CustomerGroup'];
-			$this->o['customer']['account_type'] = '0';
+			if (defined('DEFAULT_CUSTOMERS_STATUS_ID_GUEST') && $this->config['CustomerGroup'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+				$this->o['customer']['account_type'] = '1';//guest_account
+			} else {
+				$this->o['customer']['account_type'] = '0';
+			}
 		} else if (function_exists('tep_encrypt_password')) {
 			$this->o['customer']['customers_password'] = tep_encrypt_password($customer['Password']);
 		}
@@ -706,6 +739,9 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		if ($this->config['DBColumnExists']['orders.customers_status_discount']) {
 			$this->o['order']['customers_status_discount'] = '0.0';
 		}
+		if ($this->config['DBColumnExists']['orders.orders_hash']) {
+			$this->o['order']['orders_hash'] = md5(strtotime($this->o['order']['date_purchased']) + mt_rand());
+		}
 		
 		/* Change Shipping and Payment Methods */
 		$this->o['order']['payment_method'] = $this->getPaymentMethod();
@@ -856,6 +892,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				// reduces main product stock
 				$this->reduceStockBySKU($sSKU);
 			}
+			// set products.products_ordered for statistics
+			$this->increaseOrdered();
 		}
 
 		// set the products_tax
@@ -913,7 +951,11 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			  FROM products_properties_combis
 			 WHERE products_properties_combis_id = '".$iOptionsId."'
 		");
+
 		$this->p['products_model'] = $this->p['products_model'].'-'.$sCombModel;
+		if (defined('APPEND_PROPERTIES_MODEL') && APPEND_PROPERTIES_MODEL != "true") {
+			$this->p['products_model'] = $sCombModel;
+		}
 		$this->p['properties_combi_model'] = $sCombModel;
 
 		$this->db->update(TABLE_ORDERS_PRODUCTS,
@@ -945,6 +987,17 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				       AND ".mlGetVariationSkuField()." = '".MagnaDB::gi()->escape($sSKU)."'
 			");
 		}
+	}
+
+	/*
+	 * adds the ordered count to products.products_ordered for statistics
+	 */
+	protected function increaseOrdered() {
+		$this->db->query("
+			UPDATE ".TABLE_PRODUCTS."
+			   SET products_ordered = products_ordered + ".(int)$this->p['products_quantity']."
+			 WHERE products_id = '".(int)$this->p['products_id']."'
+		");
 	}
 
 	/*
@@ -1022,8 +1075,27 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$this->p['final_price'] = $this->p['products_price'];
 		}
 	}
-
-	protected function insertProductAttribute($iProductsId, $aOption, $sSKU) {
+	
+	/**
+	 * get attribute data in modified 2.0.0
+	 * 
+	 * @param int $iProductId
+	 * @param int $iOptionId
+	 * @param int $iOptionValueId
+	 * @param string $sFieldName
+	 * @return string
+	 */
+        protected function getProductAttributeData($iProductId, $iOptionId, $iOptionValueId, $sFieldName) {
+		return MagnaDB::gi()->fetchOne("
+			SELECT ".$sFieldName."
+			  FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+			 WHERE     products_id = '".$iProductId."'
+			       AND options_id = '".$iOptionId."'
+			       AND options_values_id = '".$iOptionValueId."'
+		");
+        }
+	
+        protected function insertProductAttribute($iProductsId, $aOption, $sSKU) {
 		if (empty($aOption['options_name'])) {
 			return;
 		}
@@ -1043,15 +1115,19 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		}
 
 		if ($this->config['DBColumnExists']['orders_products_attributes.products_attributes_model']) {
-			$aOrderProductsAttribute['products_attributes_model'] = ($this->config['KeyType'] == 'artNr')
-				? $sSKU
-				: MagnaDB::gi()->fetchOne("
-					SELECT attributes_model
-					  FROM ".TABLE_PRODUCTS_ATTRIBUTES."
-					 WHERE     products_id = '".(int)$this->p['products_id']."'
-					       AND options_id = '".(int)$aOption['options_id']."'
-					       AND options_values_id = '".(int)$aOption['options_values_id']."'
-				");
+			$aOrderProductsAttribute['products_attributes_model'] = ($this->config['KeyType'] == 'artNr')? 
+				$sSKU : 
+				$this->getProductAttributeData((int)$this->p['products_id'],(int)$aOption['options_id'], (int)$aOption['options_values_id'], 'attributes_model');
+		}
+		
+		if ($this->config['DBColumnExists']['orders_products_attributes.attributes_model']) {//modified 2.0.0
+			$aOrderProductsAttribute['attributes_model'] = ($this->config['KeyType'] == 'artNr')? 
+				$sSKU : 
+				$this->getProductAttributeData((int)$this->p['products_id'],(int)$aOption['options_id'], (int)$aOption['options_values_id'], 'attributes_model');
+		}
+		
+		if ($this->config['DBColumnExists']['orders_products_attributes.attributes_ean']) {//modified 2.0.0
+			$aOrderProductsAttribute['attributes_ean'] = $this->getProductAttributeData((int)$this->p['products_id'],(int)$aOption['options_id'], (int)$aOption['options_values_id'], 'attributes_ean');
 		}
 
 		if ($this->config['DBColumnExists']['orders_products_attributes.products_attributes_id']) {
@@ -1099,7 +1175,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$sku = $this->p['products_id']; 
 		}
 		$customersLanguage = getLanguageIsoForCountryIso($this->o['orderInfo']['BuyerCountryISO']);
-		#if ($this->verbose) echo "magnaSKU2pOpt($sku, $customersLanguage, multivariationsEnabled == ".$this->multivariationsEnabled.")\n";
+		#if ($this->verbose) echo "magnaSKU2pOpt($sku, $customersLanguage, multivariationsEnabled == ".$this->multivariationsEnabled.")\n";;
 		$attrValues = magnaSKU2pOpt($sku, $customersLanguage, $this->multivariationsEnabled);
 		if (array_key_exists('options_name', $attrValues)) {
 			$attrValues = array($attrValues);
@@ -1403,9 +1479,50 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$this->generatePromoMailContent()
 		);
 	}
+
+	private function createGambioOrderConfirmation() {
+		if(    !class_exists('MainFactory')
+		    || !class_exists('RecreateOrder')) return;
+		try {
+			$coo_recreate_order = MainFactory::create_object('RecreateOrder', array($this->cur['OrderID']));
+		} catch (MagnaException $e) {
+			if ((MAGNA_CALLBACK_MODE == 'STANDALONE') || $this->verbose) {
+				echo print_m($e->getErrorArray(), 'Error: '.$e->getMessage(), true);
+			}
+			return;
+		}
+	}
 	
 	protected function processSingleOrder() {
 		if ($this->verbose) echo print_m($this->o, 'order');
+		if (SHOPSYSTEM == 'gambio') {
+			/**
+			 * check if state(s) exists in table zones
+			 * if not add state to city ( - separated) and clean state
+			 */
+			$sArrayKey = $sStateKey = $sCityKey = '';
+			foreach (array(
+				array('adress', 'entry_state', 'entry_city'),
+				array('order', 'billing_state', 'billing_city'),
+				array('order', 'delivery_state', 'delivery_city'),
+				array('order', 'customers_state', 'customers_city'),
+			) as $aCheckStateData) {
+				list ($sArrayKey, $sStateKey, $sCityKey) = $aCheckStateData;
+				if (
+					array_key_exists($sArrayKey, $this->o)
+					&& array_key_exists($sStateKey, $this->o[$sArrayKey])
+					&& !empty($this->o[$sArrayKey][$sStateKey])
+					&& !MagnaDB::gi()->recordExists(TABLE_ZONES, array('zone_name' => $this->o[$sArrayKey][$sStateKey]))
+				) {
+					$this->o[$sArrayKey][$sCityKey] = (
+						array_key_exists($sCityKey, $this->o[$sArrayKey])
+						? $this->o[$sArrayKey][$sCityKey].' - '
+						: ''
+					).$this->o[$sArrayKey][$sStateKey];
+					$this->o[$sArrayKey][$sStateKey] = '';
+				}
+			}
+		}
 		$this->o['_processingData'] = array();
 		if (!$this->updateOrderCurrency($this->o['order']['currency'])) {
 			/* Currency is not available in this shop or 
@@ -1444,6 +1561,11 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		$this->addTaxValuesToOrdersTotal();
 		
 		$this->insertOrdersTotal();
+
+		/* Gambio: create order confirmation PDF */
+		if (SHOPSYSTEM == 'gambio') {
+			$this->createGambioOrderConfirmation();
+		}
 		
 		$this->sendPromoMail();
 		
@@ -1490,7 +1612,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	final public function process() {
 		while (($orders = $this->getOrders()) !== false) {
 			#if ($this->verbose) echo print_m($orders, 'orders');
-			foreach ($orders as $order) {
+			while ($order = array_shift($orders)) {
 				$this->cur = array();
 				$this->o = $order;
 				

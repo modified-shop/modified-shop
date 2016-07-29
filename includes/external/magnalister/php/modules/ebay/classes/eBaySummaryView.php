@@ -262,14 +262,8 @@ class eBaySummaryView extends SimpleSummaryView {
 
 		return '
 			<td><table class="nostyle"><tbody>
-					<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>
-					'.((($this->inventoryPriceSync == 'auto') || $type == 'chinese')
-						? $this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice()
-						: '<input type="text" id="price_'.$dbRow['products_id'].'"
-						           name="price['.$dbRow['products_id'].']"
-						           value="'.$this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice().'"/>
-						'
-					).'
+					<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>'
+			.$this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice().'
 						<input type="hidden" id="backup_price_'.$dbRow['products_id'].'"
 					           value="'.$this->simplePrice->getPrice().'"/>
 					</td></tr>
@@ -285,13 +279,8 @@ class eBaySummaryView extends SimpleSummaryView {
 			<td>'.(int)$dbRow['products_quantity'].'</td>
 			<td><input type="hidden" id="old_quantity_'.$dbRow['products_id'].'"
 				       value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/>
-				'.(($stock || ($type == 'chinese'))
-					? $this->selection[$dbRow['products_id']]['quantity']
-					: '
-			    <input type="text" id="quantity_'.$dbRow['products_id'].'"
-				       name="quantity['.$dbRow['products_id'].']" size="4" maxlength="4" 
-				       value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/></td>'
-				);
+				'.$this->selection[$dbRow['products_id']]['quantity'].'</td>'
+				;
 	}
 
 	# beim Preis anders als im allg. Fall: Reset gibt Preis aus Konfig, auch wenn sonst eingefroren

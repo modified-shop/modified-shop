@@ -213,7 +213,7 @@
             },
             "imgcount": {
                  "label": "Maximale Bildanzahl",
-                 "desc": "Je nach Tarif auf _#_platformName_#_ ist die Anzahl der kostenlosen Produktbilder beschr&auml;nkt. Hier k&ouml;nnen Sie festlegen wie viele Produktbilder maximal &uuml;bertragen werden sollen. Jedes Bild, welches extra &uuml;bermittelt wird, verursacht kosten (0,09&euro; pro kostenpflichtigem Bild).",
+                 "desc": "Je nach Tarif auf _#_platformName_#_ ist die Anzahl der kostenlosen Produktbilder beschr&auml;nkt. Hier k&ouml;nnen Sie festlegen wie viele Produktbilder maximal &uuml;bertragen werden sollen. Jedes Bild, welches extra &uuml;bermittelt wird, verursacht Kosten (0,09&euro; pro Bild).",
                  "key": "_#_platform_#_.prepare.maximagecount",
                  "type": "selection",
                  "values": {
@@ -342,8 +342,9 @@
                 }
             },
             "whichprice": {
-                "label": "Preise berechnen aus",
+                "label": "Preisoptionen",
                 "leftlabel": "Preis aus Kundengruppe",
+                "desc":"Mit dieser Funktion k&ouml;nnen Sie abweichende Preise zum Marktplatz &uuml;bergeben und automatisch synchronisieren lassen, die Sie in Ihren Web-Shop Kundengruppen hinterlegen k&ouml;nnen.\nWenn Sie keinen Preis in der neuen Kundengruppe eintragen, wird automatisch der Standard-Preis aus dem Web-Shop verwendet. Somit ist es sehr einfach, auch f&uuml;r nur wenige Artikel einen abweichenden Preis zu hinterlegen.<br \/>\nDie &uuml;brigen Konfigurationen zum Preis finden ebenfalls Anwendung.<ul>\n\t<li> Hinterlegen Sie in Ihrem Web-Shop eine Kundengruppe z.B. &quot;_#_platformName_#_-Kunden&quot;<\/li>\n\t<li> F&uuml;gen Sie in Ihrem Web-Shop an den Artikeln in der neuen Kundengruppe die gew&uuml;nschten Preise ein.<\/li><\/ul>",
                 "key": "_#_platform_#_.auction.price.group",
                 "type": "selection",
                 "values": null,
@@ -393,7 +394,7 @@
                     "stocksub": "Shop-Lagerbestand &uuml;bernehmen abzgl. Wert aus rechtem Feld",
                     "lump": "Pauschal (aus rechtem Feld)"
                 },
-                "default": "lump",
+                "default": "stock",
                 "morefields": {
                     "quantity": {
                         "key": "_#_platform_#_.fixed.quantity.value",
@@ -450,8 +451,9 @@
                 }
             },
             "whichprice": {
-                "label": "Preis berechnen aus",
+                "label": "Preisoptionen",
                 "leftlabel": "Preis aus Kundengruppe",
+                "desc":"Mit dieser Funktion k&ouml;nnen Sie abweichende Preise zum Marktplatz &uuml;bergeben und automatisch synchronisieren lassen, die Sie in Ihren Web-Shop Kundengruppen hinterlegen k&ouml;nnen.\nWenn Sie keinen Preis in der neuen Kundengruppe eintragen, wird automatisch der Standard-Preis aus dem Web-Shop verwendet. Somit ist es sehr einfach, auch f&uuml;r nur wenige Artikel einen abweichenden Preis zu hinterlegen.<br \/>\nDie &uuml;brigen Konfigurationen zum Preis finden ebenfalls Anwendung.<ul>\n\t<li> Hinterlegen Sie in Ihrem Web-Shop eine Kundengruppe z.B. &quot;_#_platformName_#_-Kunden&quot;<\/li>\n\t<li> F&uuml;gen Sie in Ihrem Web-Shop an den Artikeln in der neuen Kundengruppe die gew&uuml;nschten Preise ein.<\/li><\/ul>",
                 "key": "_#_platform_#_.fixed.price.group",
                 "type": "selection",
                 "values": null,
@@ -498,7 +500,7 @@
         "fields": {
             "exchangerate": {
                 "label": "Wechselkurs",
-				"desc": "<b>Grunds&auml;tzlich:<\/b><br \/> <br \/> Wenn die Web-Shop Standard-W&auml;hrung von der Marktplatz-W&auml;hrung abweicht, berechnet magnalister beim Bestellimport und beim Artikelupload anhand des W&auml;hrungskurses, der im Web-Shop hinterlegt ist.<br \/> Beim Bestellimport verh&auml;lt sich magnalister beim Speichern der W&auml;hrungen und Betr&auml;ge 1:1 so, wie der Web-Shop sie bei Bestelleingang auch anlegt.<br \/> <br \/> <b>Achtung:<\/b><br \/> <br \/> Durch Aktivieren dieser Funktion hier wird der <span style=\"color:red\">im Web-Shop hinterlegte Wechselkurs mit dem aktuellen Kurs aus Yahoo-Finance aktualisiert<\/span>.  Dadurch werden <span style=\"color:red\">auch die Preise in Ihrem Web-Shop<\/span> mit dem aktualisierten Wechselkurs zum Verkauf angezeigt.<br \/> <br \/> Folgende Funktionen l&ouml;sen die Aktualisierung aus:<ul> <li>Bestellimport<\/li> <li>Artikel-Vorbereitung<\/li> <li>Artikel-Upload<\/li> <li>Lager-\/Preis-Synchronisation<\/li> <\/ul><br \/> Sollte der W&auml;hrungskurs eines Marktplatzes in der W&auml;hrungskonfiguration des Web-Shops nicht angelegt sein, gibt magnalister eine Fehlermeldung aus.<br \/> <b>Haftungshinweis:<\/b><br \/> RedGecko GmbH &uuml;bernimmt keine Haftung f&uuml;r die Richtigkeit des Wechselkurses. Bitte pr&uuml;fen Sie die &uuml;bermittelten Werte in Ihrem _#_platformName_#_-Konto.",
+                "desc": "<b>Grunds&auml;tzlich:<\/b><br \/> <br \/> Wenn die Web-Shop Standard-W&auml;hrung von der Marktplatz-W&auml;hrung abweicht, berechnet magnalister beim Bestellimport und beim Artikelupload anhand des W&auml;hrungskurses, der im Web-Shop hinterlegt ist.<br \/> Beim Bestellimport verh&auml;lt sich magnalister beim Speichern der W&auml;hrungen und Betr&auml;ge 1:1 so, wie der Web-Shop sie bei Bestelleingang auch anlegt.<br \/> <br \/> <b>Achtung:<\/b><br \/> <br \/> Durch Aktivieren dieser Funktion hier wird der <span style=\"color:red\">im Web-Shop hinterlegte Wechselkurs mit dem aktuellen Kurs aus Yahoo-Finance aktualisiert<\/span>.  Dadurch werden <span style=\"color:red\">auch die Preise in Ihrem Web-Shop<\/span> mit dem aktualisierten Wechselkurs zum Verkauf angezeigt.<br \/> <br \/> Folgende Funktionen l&ouml;sen die Aktualisierung aus:<ul> <li>Bestellimport<\/li> <li>Artikel-Vorbereitung<\/li> <li>Artikel-Upload<\/li> <li>Lager-\/Preis-Synchronisation<\/li> <\/ul><br \/> Sollte der W&auml;hrungskurs eines Marktplatzes in der W&auml;hrungskonfiguration des Web-Shops nicht angelegt sein, gibt magnalister eine Fehlermeldung aus.<br \/> <b>Haftungshinweis:<\/b><br \/> RedGecko GmbH &uuml;bernimmt keine Haftung f&uuml;r die Richtigkeit des Wechselkurses. Bitte pr&uuml;fen Sie die &uuml;bermittelten Werte in Ihrem _#_platformName_#_-Konto.",
                 "key": "_#_platform_#_.price.exchangerate",
                 "type": "checkbox",
                 "values": {

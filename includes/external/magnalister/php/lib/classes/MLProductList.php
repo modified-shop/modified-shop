@@ -118,13 +118,34 @@ abstract class MLProductList {
 			->addDependency('MLProductListDependencyManufacturersFilter')
 //			->addDependency('MLProductListDependencyHtmlAction', array('html' => '<input type="hidden" name="fuuuu" value="narf"><input type="submit" name="doStuff" value="Zeug">'))
 		;
+		$this->hookAddProductListDependencies();
+	}
+
+	protected function hookAddProductListDependencies () {
+		/* {Hook} "AddProductListDependencies": Enables you to extend the product list with additional features.<br>
+			Used dependencies must be included and must be child-class of MLProductListDependency.<br>
+			Dependencies must be injected.<br>
+			Eg.:<br>
+			&nbsp;&nbsp;  require_once ('/path/to/your_dependency.php');<br>
+			&nbsp;&nbsp; $this->injectDependency('your_dependency');<br>
+			Variables that can be used:
+			<ul>
+				<li>$this: current class</li>
+				<li>$this->aMagnaSession['mpID']: The ID of the marketplace.</li>
+				<li>$this->aMagnaSession['currentPlatform']: The name of the marketplace.</li>
+			</ul>
+		 */
+
+		if (($hp = magnaContribVerify('AddProductListDependencies', 1)) !== false) {
+			require($hp);
+		}
 	}
 	
 	protected function buildQuery(){
 		$this->oQuery = MLDatabase::factorySelectClass()
 			->select(
 				array(
-					'p.products_tax_class_id', 
+					'distinct p.products_tax_class_id', //distinct is for whole query
 					'p.products_id', 
 					'pd.products_name', 
 					'p.products_model',

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: modules.php 5603 2015-05-08 14:12:38Z miguel.heredia $
+ * $Id: modules.php 6799 2016-07-14 08:05:07Z tim.neumann $
  *
  * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -272,23 +272,32 @@ $_modules = array(
 		'displayAlways' => false,
 		'requiredConfigKeys' => array (
 			'hitmeister.firstactivation',
-			'hitmeister.ident',
-			'hitmeister.accesskey',
+			'hitmeister.clientkey',
+			'hitmeister.secretkey',
+			'hitmeister.mpusername',
+			'hitmeister.mppassword',
 			'hitmeister.lang',
 			'hitmeister.shippingtime',
 			'hitmeister.itemcondition',
 			'hitmeister.itemcountry',
 			'hitmeister.import',
+			'hitmeister.multimatching.itemsperpage'
 		),
 		'pages' => array (
-			'prepare' => ML_GENERIC_PREPARE,
+			'prepare' => array (
+				'title' => ML_GENERIC_PREPARE,
+				'views' => array (
+					'apply' => ML_AMAZON_NEW_ITMES,
+					'match' => ML_AMAZON_PRODUCT_MATCHING,
+					//'varmatch' => ML_AYN24_VARIANT_MATCHING,
+				)
+			),
 			'checkin' => ML_GENERIC_CHECKIN,
 			'listings' => array (
 				'title' => ML_GENERIC_LISTINGS,
 				'views' => array (
 					'inventory' => ML_GENERIC_INVENTORY,
 					'deleted' => ML_GENERIC_DELETED,
-//					'failed' => ML_GENERIC_FAILED
 				)
 			),
 			'errorlog' => ML_GENERIC_ERRORLOG,
@@ -797,6 +806,37 @@ $_modules = array(
 		'settings' => array (
 			'defaultpage' => 'prepare',
 			'subsystem' => 'check24',
+			'currency' => 'EUR',
+			'hasOrderImport' => true,
+		),
+		'type' => 'marketplace',
+	),
+	'fyndiq' => array (
+		'title' => 'Fyndiq',
+		'logo' => 'fyndiq',
+		'displayAlways' => false,
+		'requiredConfigKeys' => array (
+			'fyndiq.access.MPUSERNAME',
+			'fyndiq.access.MPPASSWORD',
+			'fyndiq.access.MPAPITOKEN',
+		),
+		'pages' => array (
+			'prepare' => ML_GENERIC_PREPARE,
+			'checkin' => ML_GENERIC_CHECKIN,
+			'listings' => array (
+				'title' => ML_GENERIC_LISTINGS,
+				'views' => array (
+					'inventory' => ML_GENERIC_INVENTORY,
+					'deleted' => ML_GENERIC_DELETED,
+					'rejected' => ML_GENERIC_REJECTED,
+				)
+			),
+			'errorlog' => ML_GENERIC_ERRORLOG,
+			'conf' => ML_GENERIC_CONFIGURATION,
+		),
+		'settings' => array (
+			'defaultpage' => 'prepare',
+			'subsystem' => 'fyndiq',
 			'currency' => 'EUR',
 			'hasOrderImport' => true,
 		),

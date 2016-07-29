@@ -37,7 +37,7 @@ function eBayGetSelection() {
 		.($shortDescColumnExists?' pd.products_short_description ':'\'\'').' AS shortdescription, '
 		.'PictureURL, GalleryURL, ConditionID,  '
 		.' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
-		.' Attributes, ItemSpecifics, '
+		.' Attributes, ItemSpecifics, eBayPicturePackPurge, VariationDimensionForPictures, GalleryType, '
 		.' ListingType, ListingDuration, PaymentMethods, ShippingDetails, DispatchTimeMax '
 		.' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '.TABLE_MAGNA_SELECTION.' ms, '
 		. TABLE_PRODUCTS .' p, ' . TABLE_PRODUCTS_DESCRIPTION .' pd '
@@ -59,7 +59,7 @@ function eBayGetSelection() {
 		.' PictureURL, GalleryURL, ConditionID,  '
 		.' p.products_weight AS products_weight, '
 		.' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
-		.' Attributes, ItemSpecifics, '
+		.' Attributes, ItemSpecifics, eBayPicturePackPurge, VariationDimensionForPictures, GalleryType, '
 		.' ListingType, ListingDuration, PaymentMethods, ShippingDetails, DispatchTimeMax '
 		.' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '.TABLE_MAGNA_SELECTION.' ms, '
 		. TABLE_PRODUCTS_DESCRIPTION .' pd, '.TABLE_PRODUCTS.' p '
@@ -121,19 +121,36 @@ function eBayGetSelection() {
 	}
 	$rowCount = 0;
 	$imagePath = getDBConfigValue('ebay.imagepath',$_MagnaSession['mpID']);
-	$galleryPath = getDBConfigValue('ebay.gallery.imagepath',$_MagnaSession['mpID']);
-	if (empty($galleryPath)) $galleryPath = $imagePath;
 	foreach ($dbSelection as &$current_row) {
 		++$rowCount;
 		// Filter JNH Tab
 		$current_row['description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $current_row['description']);
+		$product_images = MLProduct::gi()->getAllImagesByProductsId($current_row['products_id']);
+		if(empty($current_row['PictureURL'])){//if product images was reset
+			$aPictureUrls = $product_images;
+		} else {
+			$aPictureUrls = json_decode($current_row['PictureURL'],true);
+		}
 		
-		#$current_row['SKU'] = magnaPID2SKU($current_row['products_id']);
-		if (isset($current_row['PrimaryCategory'])) continue;
-		# Nur bei unvorbereiteten Produkten: Pfade an Bilder dranmachen
-		$pictureWithoutPath = $current_row['PictureURL'];
-		$current_row['PictureURL'] = empty($current_row['PictureURL'])? '': $imagePath . $pictureWithoutPath;
-		$current_row['GalleryURL'] = empty($current_row['PictureURL'])? '': $galleryPath . $pictureWithoutPath;
+		if(getDBConfigValue(array('ebay.picturepack', 'val'), $_MagnaSession['mpID']) ){
+			if(is_array($aPictureUrls)){
+				$current_row['PictureURL'] = $aPictureUrls;
+			}else{
+				$current_row['PictureURL'] = array(
+					str_replace($imagePath, '', $current_row['PictureURL'])
+				);
+			}
+		} elseif(is_array($aPictureUrls)) {//picture pack was active before , now it is inactive
+			$current_row['PictureURL'] = $imagePath . current($aPictureUrls);
+		} else {//picture pack inactive
+			$current_row['PictureURL'] = empty($current_row['PictureURL'])? '': $current_row['PictureURL'];
+			if (false === strpos($current_row['PictureURL'], 'http')) {
+				$current_row['PictureURL'] = $imagePath . $current_row['PictureURL'];
+			}
+		}
+		if(empty($current_row['GalleryType'])){
+			$current_row['GalleryType'] = getDBConfigValue('ebay.gallery.type', $_MagnaSession['mpID'], 'Gallery');
+		}
 	}
 
 	if ((1 == $rowCount) && empty($dbSelection[0]['Description'])) {
@@ -141,9 +158,9 @@ function eBayGetSelection() {
 		# Template fuellen
 		# bei mehreren Artikeln erst beim Speichern fuellen
 		# Preis und ggf. VPE wird erst beim Uebermitteln eingesetzt.
-	if (false) { # DEBUG
-		echo print_m($dbSelection[0], '$dbSelection[0]');
-	}
+		if (false) { # DEBUG
+			echo print_m($dbSelection[0], '$dbSelection[0]');
+		}
 		$substitution = array (
 			'#TITLE#' => fixHTMLUTF8Entities($dbSelection[0]['products_name']),
 			'#ARTNR#' => $dbSelection[0]['products_model'],
@@ -151,7 +168,7 @@ function eBayGetSelection() {
 			'#SKU#' => magnaPID2SKU($dbSelection[0]['products_id']),
 			'#SHORTDESCRIPTION#' => fixHTMLUTF8Entities($dbSelection[0]['shortdescription']),
 			'#DESCRIPTION#' => fixHTMLUTF8Entities(stripLocalWindowsLinks($dbSelection[0]['description'])),
-			'#PICTURE1#' => $dbSelection[0]['PictureURL'],
+			'#PICTURE1#' => is_array($dbSelection[0]['PictureURL'])? $imagePath.current($dbSelection[0]['PictureURL']) : $dbSelection[0]['PictureURL'],
 			'#WEIGHT#' => ((float)$dbSelection[0]['products_weight']>0)?$dbSelection[0]['products_weight']:'',
 		);
 		$dbSelection[0]['Description'] = substitutePictures(eBaySubstituteTemplate(
@@ -172,6 +189,63 @@ function eBayGetSelection() {
 		);
 	}
 	return $dbSelection;
+}
+
+function jsProcessPrepareButton() {
+	global $_MagnaSession;
+	$div = '<div id="unpreparePopup"></div>'."\n";
+	/*
+	 * deactivate all other checkboxes if "unprepare" checked
+	 * (must be done in 1 line and apostrophes + slashes escaped, otherwise it doesn't work in jDialog)
+	 */
+	ob_start();?> <script type="text\/javascript">/*<![CDATA[*/ $(\'input[id="unprepare"]\').change(function() { if ($(this).attr(\'checked\') == \'checked\') { $(\'input[id="resetTitle"]\').prop(\'disabled\', true); $(\'input[id="resetSubtitle"]\').prop(\'disabled\', true); $(\'input[id="resetDescription"]\').prop(\'disabled\', true); $(\'input[id="resetPictures"]\').prop(\'disabled\', true); } else { $(\'input[id="resetTitle"]\').prop(\'disabled\', false); $(\'input[id="resetSubtitle"]\').prop(\'disabled\', false); $(\'input[id="resetDescription"]\').prop(\'disabled\', false); $(\'input[id="resetPictures"]\').prop(\'disabled\', false); } }); /*]]>*/<\/script> <?php
+	$popupJs = ob_get_contents();
+	ob_end_clean();
+	/* checkboxes */
+	$popupContent =
+	 '<form id="resetPrepareForm" action="magnalister.php?mp='.$_MagnaSession['mpID'].'&amp;mode=prepare" method="post">'
+	.'<input type="checkbox" value="resetTitle" name="action[ebayprepareformaction][resetTitle]" id="resetTitle" />'.ML_EBAY_LABEL_RESET_PREPARE_TITLE.'<br />'
+	.'<input type="checkbox" value="resetSubtitle" name="action[ebayprepareformaction][resetSubtitle]" id="resetSubtitle" />'.ML_EBAY_LABEL_RESET_PREPARE_SUBTITLE.'<br />'
+	.'<input type="checkbox" value="resetDescription" name="action[ebayprepareformaction][resetDescription]" id="resetDescription" />'.ML_EBAY_LABEL_RESET_PREPARE_DESCRIPTION.'<br />';
+	if (getDBConfigValue(array('ebay.picturepack', 'val'), $_MagnaSession['mpID'], false)) {
+		$popupContent .=
+	'<input type="checkbox" value="resetPictures" name="action[ebayprepareformaction][resetPictures]" id="resetPictures" />'.ML_EBAY_LABEL_RESET_PREPARE_PICTURES.'<br />';
+	} else {
+		$popupContent .=
+	'<span style="display:none"><input type="checkbox" value="resetPictures" name="action[ebayprepareformaction][resetPictures]" id="resetPictures" />'.ML_EBAY_LABEL_RESET_PREPARE_PICTURES.'<br /></span>';
+	}
+	$popupContent .=
+	'<br /><input type="checkbox" value="unprepare" name="action[ebayprepareformaction][unprepare]" id="unprepare" />'.ML_EBAY_LABEL_UNPREPARE.'<br />'
+	.'</form>';
+	$popupContent .= $popupJs;
+
+	/* jDialog call */
+	ob_start();?>
+<script type="text/javascript">/*<![CDATA[*/
+$(document).ready(function() {
+	$('#unpreparePopup').html('<?php echo $popupContent; ?>').jDialog({
+		title: '<?php echo ML_BUTTON_LABEL_REVERT ?>',
+		buttons: {
+			'<?php echo ML_BUTTON_LABEL_ABORT; ?>': function() {
+				jQuery(this).dialog('close');
+			},
+			'<?php echo ML_BUTTON_LABEL_OK; ?>': function() { 
+				$('#resetPrepareForm').submit();
+				jQuery(this).dialog('close');
+			}
+		}
+	});
+	jQuery($('#unpreparePopup')).dialog('close');
+});
+$('#reset_partly').click(function() {
+	// works also without the open / close stuff (just jDialog on click), but so we have an example how to call the window afterwards
+	jQuery($('#unpreparePopup')).dialog('open');
+});
+/*]]>*/</script>
+<?php
+	$js = ob_get_contents();
+	ob_end_clean();
+	return ($div.$js);	
 }
 
 $_url['mode'] = 'prepare';
@@ -435,7 +509,7 @@ if (isset($prepareAction)
 	if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
 		require_once(DIR_MAGNALISTER_MODULES.'ebay/prepare/EbayPrepareProductList.php');
 		$o = new EbayPrepareProductList();
-		echo $o;
+		echo $o . jsProcessPrepareButton();
 	} else {
 		require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/PrepareCategoryView.php');
 		if (!isset($_GET['sorting'])) $_GET['sorting'] = false;

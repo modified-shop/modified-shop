@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: config.php 4655 2014-09-29 13:23:38Z derpapst $
+ * $Id: config.php 6760 2016-06-16 00:29:38Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -43,7 +43,7 @@ function loadDBConfig($mpID = '0') {
 	if (empty($tmpConf)) return false;
 
 	foreach ($tmpConf as $row) {
-		$a = json_decode($row['value'], true);
+		$a = json_decode(fixBrokenJsonUmlauts($row['value']), true);
 		if (is_array($a)) {
 			$magnaConfig['db'][$row['mpID']][$row['mkey']] = $a;
 		} else {

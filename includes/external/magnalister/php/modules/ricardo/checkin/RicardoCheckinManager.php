@@ -120,7 +120,7 @@ class RicardoCheckinManager extends CheckinManager {
 						<div id="infoDiagFee" class="dialog2" title="'.ML_LABEL_INFORMATION.'"></div>
 				';
 				ob_start();?>
-<script type="text/javascript" src="includes/magnalister/js/jquery.itemsFee.js"></script>
+<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery.itemsFee.js"></script>
 <script type="text/javascript">/*<![CDATA[*/
 var listingsExceeded = <?php echo $listingsExceeded ? 'true' : 'false'; ?>;
 var eForm = this;
@@ -165,25 +165,8 @@ $(document).ready(function() {
 			execSubmit(e);
 		}
 	};
-	$('#checkin_add').click(function() {
-		$(this).itemsFee({
-			mode: '<?= $this->bDisplayFees === true ? 'on' : 'off' ?>',
-			addItems: okFunction,
-			method: 'getItemsFee',
-			message: '<?= ML_RICARDO_ARTICLES_FEE ?>',
-			currency: '<?= ML_RICARDO_CURRENCY ?>',
-			i18n: {
-				ok: '<?= ML_BUTTON_LABEL_OK ?>',
-				abort: '<?= ML_BUTTON_LABEL_ABORT ?>',
-				process: '<?= ML_RICARDO_ARTICLE_FEE_CALCULATING ?>'
-			}
-		});
-
-		return false;
-	});
-	$('#checkin_add_debug').click(function() { e = this; execSubmit(e); });
-	$('#checkin_purge').click(function() {
-		e = this;
+	
+	function okPurgeFunction(e) {
 		if (listingsExceeded) {
 			showListingsExceedConfirmDiag(function () {
 				showPurgeConfirmDiag(e);
@@ -191,10 +174,48 @@ $(document).ready(function() {
  		} else {
 			showPurgeConfirmDiag(e);
 		}
+	};
+	
+	$('#checkin_add').click(function() {
+		$(this).itemsFee({
+			mode: '<?php echo $this->bDisplayFees === true ? 'on' : 'off' ?>',
+			addItems: okFunction,
+			method: 'getItemsFee',
+			message: '<?php echo ML_RICARDO_ARTICLES_FEE ?>',
+			currency: '<?php echo ML_RICARDO_CURRENCY ?>',
+			i18n: {
+				ok: '<?php echo ML_BUTTON_LABEL_OK ?>',
+				abort: '<?php echo ML_BUTTON_LABEL_ABORT ?>',
+				process: '<?php echo ML_RICARDO_ARTICLE_FEE_CALCULATING ?>',
+			}
+		});
+
+		return false;
 	});
+	
+	$('#checkin_purge').click(function() {
+		$(this).itemsFee({
+			mode: '<?php echo $this->bDisplayFees === true ? 'on' : 'off' ?>',
+			addItems: okPurgeFunction,
+			method: 'getItemsFee',
+			message: '<?php echo ML_RICARDO_ARTICLES_FEE ?>',
+			currency: '<?php echo ML_RICARDO_CURRENCY ?>',
+			i18n: {
+				ok: '<?php echo ML_BUTTON_LABEL_OK ?>',
+				abort: '<?php echo ML_BUTTON_LABEL_ABORT ?>',
+				process: '<?php echo ML_RICARDO_ARTICLE_FEE_CALCULATING ?>',
+			}
+		});
+
+		return false;
+	});
+	
+	$('#checkin_add_debug').click(function() { e = this; execSubmit(e); });
+	
 	$('#desc_ci_add').click(function() {
 		$('#infoDiag').html($(this, 'span').html()).jDialog();
 	});
+	
 	$('#desc_ci_purge').click(function() {
 		$('#infoDiag').html($(this, 'span').html()).jDialog();
 	});

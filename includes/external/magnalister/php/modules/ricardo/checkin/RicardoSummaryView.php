@@ -42,15 +42,17 @@ class RicardoSummaryView extends MagnaCompatibleSummaryView {
 		
 		return '
 				<td><table class="nostyle"><tbody>
-						<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>
+						<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>'.$ricardoPrice
+						/* we don't use a price input field here anymore (unified policy for all MPs)
+						   (and the function was buggy here)
 						'.(($this->inventoryPriceSync == 'auto')
 							? $ricardoPrice
 							: '<input type="text" id="price_'.$dbRow['products_id'].'"
 						           name="price['.$dbRow['products_id'].']"
 						           value="'.$ricardoPrice.'"/>
 							'
-						).'
-							<input type="hidden" id="backup_price_'.$dbRow['products_id'].'"
+						).'*/
+							.'<input type="hidden" id="backup_price_'.$dbRow['products_id'].'"
 						           value="'.$ricardoPrice.'"/>
 						</td></tr>
 				    	<tr><td>'.ML_LABEL_OLD.':&nbsp;</td><td>&nbsp;'.(
@@ -67,9 +69,7 @@ class RicardoSummaryView extends MagnaCompatibleSummaryView {
 						<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>
 							<input type="hidden" id="old_quantity_'.$dbRow['products_id'].'"
 						           value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/>
-						    <input type="text" id="quantity_'.$dbRow['products_id'].'"
-						           name="quantity['.$dbRow['products_id'].']" size="4" maxlength="4" 
-						           value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/>
+						    '.$this->selection[$dbRow['products_id']]['quantity'].'
 						</td></tr>
 				    	<tr><td>'.ML_LABEL_OLD.':&nbsp;</td><td>&nbsp;'.(
 							array_key_exists($dbRow['products_id'], $this->inventoryData) ?

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaConnector.php 4717 2014-10-15 12:10:30Z derpapst $
+ * $Id: MagnaConnector.php 6767 2016-06-17 14:42:39Z masoud.khodaparast $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -57,6 +57,9 @@ class MagnaConnector {
 
 	protected function __clone() {}
 
+	/**
+	 * @return MagnaConnector
+	 */
 	public static function gi() {
 		if (self::$instance === null) {
 			self::$instance = new self();
@@ -288,7 +291,6 @@ class MagnaConnector {
 		#echo var_dump_pre(curl_error($connection), 'curl_error');
 		
 		if (curl_errno($connection) == CURLE_OPERATION_TIMEOUTED) {
-			curl_close($connection);
 			
 			/* This detects a very seldom cURL bug, where cURL doesn't close the connection,
 			 * even though it received everything in time. The connection is closed just because of
@@ -297,22 +299,15 @@ class MagnaConnector {
 			 */
 			if (   is_string($response)
 			    && (strpos($response, '{#') !== false)
-			    && (strpos($redponse, '#}') !== false)
+			    && (strpos($response, '#}') !== false)
 			) {
+				curl_close($connection);
 				$this->cURLStatus['use'] = false;
 				$this->cURLStatusSave();
 				
 				return $response;
 			}
-			
-			$me = new MagnaException(ML_INTERNAL_API_TIMEOUT, MagnaException::TIMEOUT, $this->lastRequest, $response, $curRequestTime);
-			MagnaError::gi()->addMagnaException($me);
-			$this->timePerRequest[] = array (
-				'request' => $this->lastRequest,
-				'time' => $curRequestTime,
-				'status' => 'TIMEOUT',
-			);
-			throw $me;
+			// dont throw exception here, sometimes there are timeout-problems with https, so retry curl without https and/or file_contents
 		}
 		
 		if (curl_error($connection) != '') {

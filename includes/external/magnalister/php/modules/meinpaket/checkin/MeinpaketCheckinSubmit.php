@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketCheckinSubmit.php 5631 2015-05-14 15:40:52Z Soprex $
+ * $Id: MeinpaketCheckinSubmit.php 5936 2015-08-24 14:27:38Z tim.neumann $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -35,7 +35,7 @@ class MeinpaketCheckinSubmit extends CheckinSubmit {
 		 */
 		$settings = array_merge(array(
 			'language' => getDBConfigValue($settings['marketplace'].'.lang', $_MagnaSession['mpID']),
-			'itemsPerBatch' => 100,
+			'itemsPerBatch' => 25,
 			'mlProductsUseLegacy' => false,
 		), $settings);
 		

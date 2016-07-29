@@ -112,50 +112,9 @@ class HoodConfigure extends MagnaCompatibleConfigure {
 		unset($this->form['orderSyncState']['fields']['carrierMatch']);
 		unset($this->form['orderSyncState']['fields']['trackingMatch']);
 		mlGetOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
+
+		mlPresetTrackingCodeMatching($this->mpID, 'hood.orderstatus.carrier.dbmatching', 'hood.orderstatus.trackingcode.dbmatching');
 		
-	/*
-		# Bestellimporte
-		mlGetCustomersStatus($this->form['import']['fields']['customersgroup']);
-		mlGetOrderStatus($this->form['import']['fields']['openstatus']);
-		# Build 1735: allow multiple 'closed states'
-		if (!is_array($closedstatus = getDBConfigValue('hood.orderstatus.closed', $this->mpID, '3'))) {
-			setDBConfigValue('hood.orderstatus.closed', $this->mpID, array($closedstatus));
-		}
-		mlGetOrderStatus($this->form['import']['fields']['closedstatus']);
-		if (false === getDBConfigValue('hood.orderstatus.paid', $this->mpID, false)) {
-			$paidStatus = (int)MagnaDB::gi()->fetchOne('SELECT orders_status_id FROM '.TABLE_ORDERS_STATUS.'
-				WHERE orders_status_name IN (\'Bezahlt\',\'Payment received\') ORDER BY language_id LIMIT 1');
-			setDBConfigValue('hood.orderstatus.paid', $this->mpID, $paidStatus);
-		}
-	//	mlGetOrderStatus($this->form['ordersync']['fields']['paidstatus']);
-	//	if (false === getDBConfigValue('hood.updateable.orderstatus', $this->mpID, false)) {
-	//		setDBConfigValue('hood.updateable.orderstatus', $this->mpID, array($this->form['import']['fields']['openstatus']['default']));
-	//	}
-	//	mlGetOrderStatus($this->form['ordersync']['fields']['updateablestatus']);
-	
-		# Bestellstatus-Sync
-	//	mlGetOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);
-	//	mlGetOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
-		
-		mlGetShippingModules($this->form['import']['fields']['defaultshipping']);
-		mlGetPaymentModules($this->form['import']['fields']['defaultpayment']);
-	
-		if (false === getDBConfigValue('hood.imagepath', $this->mpID, false)) {
-			$this->form['images']['fields']['imagepath']['default'] =
-			defined('DIR_WS_CATALOG_POPUP_IMAGES')
-				? HTTP_CATALOG_SERVER.DIR_WS_CATALOG_POPUP_IMAGES
-				: HTTP_CATALOG_SERVER.DIR_WS_CATALOG_IMAGES;
-			setDBConfigValue('hood.imagepath', $this->mpID, $this->form['images']['fields']['imagepath']['default'], true);
-		}
-		# Bilder
-		if (false === getDBConfigValue('hood.gallery.imagepath', $this->mpID, false)) {
-			$this->form['images']['fields']['galleryimagepath']['default'] =
-			defined('DIR_WS_CATALOG_POPUP_IMAGES')
-				? HTTP_CATALOG_SERVER.DIR_WS_CATALOG_POPUP_IMAGES
-				: HTTP_CATALOG_SERVER.DIR_WS_CATALOG_IMAGES;
-			setDBConfigValue('hood.gallery.imagepath', $this->mpID, $this->form['images']['fields']['galleryimagepath']['default'], true);
-		}
-	*/
 	}
 	
 	protected function finalizeForm() {

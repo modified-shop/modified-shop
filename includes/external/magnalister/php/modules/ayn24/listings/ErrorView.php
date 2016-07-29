@@ -81,9 +81,11 @@ class ErrorView {
 	            break;
 	    }
 
-		$this->numberofitems = (int)MagnaDB::gi()->fetchOne('
-			SELECT DISTINCT count(id) FROM '.TABLE_MAGNA_AYN24_ERRORLOG.'
-		');
+		$this->numberofitems = (int)MagnaDB::gi()->fetchOne("
+			SELECT DISTINCT count(id)
+			  FROM ".TABLE_MAGNA_AYN24_ERRORLOG."
+			 WHERE mpID = '".$_MagnaSession['mpID']."'
+		");
 		$this->pages = ceil($this->numberofitems / $this->settings['itemLimit']);
 		$this->currentPage = 1;
 

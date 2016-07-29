@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: InventoryView.php 5845 2015-07-20 14:45:51Z tim.neumann $
+ * $Id: InventoryView.php 6572 2016-03-21 09:00:26Z markus.bauer $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -429,12 +429,7 @@ class InventoryView {
 						? ('<td>'.ML_AMAZON_LABEL_INCOMPLETE.'</td>')
 						: ('<td title="'.$item['ItemTitle'].'">'.str_replace(' ', '&nbsp;', $item['ItemTitleShort']).'</td>')
 					).'
-					<td>'.(empty($item['ASIN']) 
-						? '&mdash;' 
-						: '<a href="http://www.amazon.de/gp/offer-listing/'.$item['ASIN'].'" '.
-					      'title="'.ML_AMAZON_LABEL_PRODUCT_IN_AMAZON.'" '.
-					      'target="_blank">'.$item['ASIN'].'</a>').
-					'</td>
+					<td>'.getAmazonOfferLink($item['ASIN'], ML_AMAZON_LABEL_PRODUCT_IN_AMAZON).'</td>
 					<td>'.$this->simpleprice->setPrice($item['Price'])->format().'</td>
 					<td>'.(($item['Quantity'] > 0) ? $item['Quantity'] : ML_LABEL_SOLD_OUT).'</td>
 					<td>'.(($item['DateAdded'] == 0)

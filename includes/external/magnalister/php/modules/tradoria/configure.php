@@ -55,7 +55,7 @@ class TradoriaConfigure extends MagnaCompatibleConfigure {
 		$forms[] = 'checkinSubmitVariations';
 		$forms[] = 'orderStatus';
 		$forms[] = 'prepare/catMatch';
-		$forms[] = 'prepare/useShopCatsAsOwn';
+		$forms[] = 'useShopCatsAsOwn';
 		$forms[] = 'orderImportExtras';
 		$forms[] = 'promotionmail';
 		return $forms;

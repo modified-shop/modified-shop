@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ErrorView.php 4826 2014-11-09 02:39:18Z derpapst $
+ * $Id: ErrorView.php 6243 2015-11-18 10:17:26Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -140,9 +140,11 @@ class ErrorView {
 				break;
 		}
 
-		$this->numberofitems = (int)MagnaDB::gi()->fetchOne('
-			SELECT DISTINCT count(id) FROM '.TABLE_MAGNA_AMAZON_ERRORLOG.'
-		');
+		$this->numberofitems = (int)MagnaDB::gi()->fetchOne("
+			SELECT DISTINCT count(al.id)
+			  FROM ".TABLE_MAGNA_AMAZON_ERRORLOG." al
+			 WHERE al.mpID = '".$this->mpID."'
+		");
 		$this->pages = ceil($this->numberofitems / $this->settings['itemLimit']);
 		$this->currentPage = 1;
 

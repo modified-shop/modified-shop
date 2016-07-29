@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: apply.php 5468 2015-04-14 09:33:35Z tim.neumann $
+ * $Id: apply.php 6005 2015-09-17 08:12:42Z masoud.khodaparast $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -31,7 +31,7 @@ function amazonSanitizeDesc($str) {
 	$str = str_replace(array('&nbsp;', html_entity_decode('&nbsp;')), ' ', $str);
 	$str = sanitizeProductDescription(
 		$str,
-		'<p><br>',
+		'',
 		'_keep_all_'
 	);
 	$str = str_replace(array('<br />', '<br/>'), '<br>', $str);

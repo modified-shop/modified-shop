@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: configuration.php 5000 2014-12-20 11:05:38Z derpapst $
+ * $Id: configuration.php 6548 2016-03-10 16:13:01Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -92,27 +92,51 @@ if (empty($passPhrase) || isset($_GET['welcome'])) {
 		'general' => $form['general']
 	);
 	$partner = trim((string)@file_get_contents('magnabundle.dat'));
+
+	$_langISO = strtolower(magnaGetLanguageCode($_lang)); 
 	if (!empty($partner) && ($partner != 'key')) {
-		$partner = 'partner='.$partner;
+		$sPromotionTextUrl = MAGNA_SERVICE_URL.MAGNA_APIRELATED.'promotion/?shopsystem='.SHOPSYSTEM.'&partner='.$partner.'&lang='.$_langISO;
+		$partner = '?partner='.$partner;
 	} else {
+		$sPromotionTextUrl = MAGNA_SERVICE_URL.MAGNA_APIRELATED.'promotion/?shopsystem='.SHOPSYSTEM.'&lang='.$_langISO;
 		$partner = '';
 	}
 	
-	$promoContent = MAGNA_SERVICE_URL.MAGNA_APIRELATED.'promotion/?shopsystem='.SHOPSYSTEM;
-	$promoContent = preg_replace('/:\/\/[a-z]+\./', '://devshops.', $promoContent);
-	
+	$sPromotionTextFile = DIR_MAGNALISTER_FS_CACHE.'promotion.html';
+	if (file_exists($sPromotionTextFile)) {
+		$sPromotionContent = fileGetContents($sPromotionTextFile, $warnings);
+	} else {
+		$sPromotionContent = fileGetContents($sPromotionTextUrl, $warnings);
+		if (!empty($sPromotionContent)) {
+			file_put_contents($sPromotionTextFile, $sPromotionContent);
+		} else {
+			$sPromotionContent = '';
+		}
+	}
+
 	unset($form['general']['headline']);
 	/* Hier die bunte Startseite */
 	echo '
 		<p class="noticeBox bottomSpace">'.sprintf(ML_NOTICE_PLACE_PASSPHRASE, $partner).'</p>
 		<div style="padding-bottom: 1em"></div>';
 	$comercialText = '
-		<div id="pageContent">'.fileGetContents($promoContent, $warnings, 10).'</div>';	
-	$comercialText = str_replace(
-		array('##_PARTNER_##', ),
-		array($partner,        ),
-		$comercialText
-	);
+		<div id="pageContent">'.$sPromotionContent.'
+			<script type="text/javascript">/*<![CDATA[*/
+				(function(jQuery) {
+					jQuery(document).ready(function() {
+						jQuery.get(
+							"magnalister.php", {
+								"module":"ajax",
+								"request":"refreshPromotionHtml",
+							},
+							function(data) {
+								myConsole.log(data);
+							}
+						);
+					});
+				})(jQuery);
+			/*]]>*/</script>
+		</div>';
 	MagnaDB::gi()->delete(TABLE_CONFIGURATION, array (
 		'configuration_key' => 'MAGNALISTER_PASSPHRASE'
 	));

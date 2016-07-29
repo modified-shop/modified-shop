@@ -38,6 +38,11 @@ class MLProductListDependencyCategoryFilter extends MLProductListDependency {
 	 */
 	protected $aCatsFilter = null;
 	
+	/**
+	 * @var array $aCatCache for less sql-querys
+	 */
+	protected $aCatCache = array();
+	
 	public function executeAction() {
 		return $this;
 	}
@@ -69,7 +74,7 @@ class MLProductListDependencyCategoryFilter extends MLProductListDependency {
 			$aResult = MagnaDB::gi()->fetchArray("
 				   SELECT p.".$sKeyType."
 				     FROM ".TABLE_PRODUCTS." p
-				LEFT JOIN products_to_categories p2c ON p.products_id = p2c.products_id
+				LEFT JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c ON p.products_id = p2c.products_id
 				    WHERE p2c.products_id IS NULL
 			", true);
 			return array(
@@ -106,37 +111,41 @@ class MLProductListDependencyCategoryFilter extends MLProductListDependency {
 		return array('selectValues' => array('null' => ML_OPTION_FILTER_CATEGORY_ARTICLES_ALL) + $this->getCategoryTree());
 	}
 
-	protected function getCategoryTree($iParentId = 0){
+	protected function getCategoryTree($iParentId = 0) {
+		if (array_key_exists($iParentId, $this->aCatCache)) {
+			return $this->aCatCache[$iParentId];
+		}
+		$this->aCatCache[$iParentId] = array();
 		$this->getFilterCategories();
 		$sQuery = "
 			    SELECT c.categories_id, cd.categories_name".($this->blCountProducts ? ", count(p2c.products_id) as productcount" : '')."
-			      FROM ".TABLE_CATEGORIES." c
+			      FROM ".TABLE_CATEGORIES." c 
 			INNER JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd ON c.categories_id = cd.categories_id AND cd.language_id = '".(int)$_SESSION['languages_id']."'
 			           ".($this->blCountProducts ? "LEFT JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c ON c.categories_id = p2c.categories_id" : '')."
 			     WHERE c.parent_id = '".$iParentId."' ".$this->getFilterCategories()."
 			           ".($this->blCountProducts ? "GROUP BY c.categories_id" : '')."
 			  ORDER BY TRIM(cd.categories_name) ASC
 		"; 
-		$aCats = array();
+		
 		// top cat
 		if ($iParentId == 0) {
-			$aCats['top'] = ML_LABEL_CATEGORY_TOP.'&nbsp;&#8628;';
+			$this->aCatCache[$iParentId]['top'] = ML_LABEL_CATEGORY_TOP.'&nbsp;&#8628;';
 		}
 		
 		$sPad = str_repeat('&nbsp;', 3);
 		foreach (MagnaDB::gi()->fetchArray($sQuery) as $aRow){
 			$aChilds = $this->getCategoryTree($aRow['categories_id']);
-			$aCats[$aRow['categories_id']] =
+			$this->aCatCache[$iParentId][$aRow['categories_id']] =
 				$sPad
 				.fixHTMLUTF8Entities(trim($aRow['categories_name']))
 				.($this->blCountProducts ? '&nbsp;&nbsp;('.$aRow['productcount'].')' : '')
 				.((count($aChilds) == 0) && $this->haveSubCats($aRow['categories_id']) ? '&nbsp;&#8628;' : '' )
 			;
 			foreach ($aChilds as $iChild => $sChild) {
-				$aCats[$iChild] = $sPad.$sChild;
+				$this->aCatCache[$iParentId][$iChild] = $sPad.$sChild;
 			}
 		}
-		return $aCats;
+		return $this->aCatCache[$iParentId];
 	}
 	
 	protected function haveSubCats($iId){

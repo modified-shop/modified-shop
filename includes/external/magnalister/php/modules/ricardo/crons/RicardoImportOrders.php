@@ -42,6 +42,10 @@ class RicardoImportOrders extends MagnaCompatibleImportOrders {
 	}
 
 	protected function getPaymentMethod() {
+		if ($this->config['PaymentMethod'] == 'matching') {
+			return $this->getPaymentClassForRicardoPaymentMethod($this->o['order']['payment_code']);
+		}
+
 		return $this->config['PaymentMethod'];
 	}
 
@@ -58,5 +62,38 @@ class RicardoImportOrders extends MagnaCompatibleImportOrders {
 		}
 
 		return $tax;
+	}
+
+	private function getPaymentClassForRicardoPaymentMethod($paymentMethod) {
+		$PaymentModules = explode(';', MODULE_PAYMENT_INSTALLED);
+		$class = 'ricardo';
+
+		if (('Kreditkarte' == $paymentMethod) || ('KreditkarteViaSeller' == $paymentMethod) || ('KreditkarteViaRicardo' == $paymentMethod)
+			|| ('Visa' == $paymentMethod) || ('AmericanExpress' == $paymentMethod)) {
+			# Kreditkarte
+			if (in_array('cc.php', $PaymentModules)){
+				$class = 'cc';
+			} else if (in_array('heidelpaycc.php', $PaymentModules)) {
+				$class = 'heidelpaycc';
+			} else if (in_array('moneybookers_cc.php', $PaymentModules)) {
+				$class = 'moneybookers_cc';
+			} else if (in_array('uos_kreditkarte_modul.php', $PaymentModules)) {
+				$class = 'uos_kreditkarte_modul';
+			}
+		} else if ('Moneybookers' == $paymentMethod) {
+			# Moneybookers
+			if (in_array('monebookers.php', $PaymentModules)) {
+				$class = 'monebookers';
+			}
+		} else if ('Bankzahlung' == $paymentMethod) {
+			# Barzahlung
+			if (in_array('cash.php', $PaymentModules)) {
+				$class = 'cash';
+			}
+		} else if (!empty($paymentMethod)) {
+			$class = $paymentMethod;
+		}
+
+		return $class;
 	}
 }

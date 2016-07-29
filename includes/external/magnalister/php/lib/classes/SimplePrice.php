@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: SimplePrice.php 5645 2015-05-19 10:48:29Z MaW $
+ * $Id: SimplePrice.php 6525 2016-03-01 11:56:23Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -423,8 +423,9 @@ class SimplePrice {
 		
 		$tmpTax = $this->addedTax;
 		$this->removeTax();
-		
-		if ($attr['Type'] == 'fix') {
+
+		// for gambio properties we need to always use addLump
+		if ($attr['Type'] == 'fix' && (!$this->settings['UseGambioProperties'])) {
 			$this->price = $attr['Price'];
 		} else {
 			$this->addLump($attr['Price']);

@@ -10,7 +10,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.css 5794 2015-06-30 16:36:54Z tim.neumann $
+ * $Id: magnalister.css 6832 2016-07-27 11:36:55Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -86,7 +86,9 @@ body.ielt9 div.magnamain {
 	/*height: expression( this.scrollHeight < 181 ? "180px" : "auto" ); */
 }
 div#content.magnamain {
+	background-color: #fff;
 	margin-top: 0px;
+	overflow: hidden;
 }
 body.xtcommerce div.magnamain {
 	background: #F7F7F7;
@@ -168,6 +170,11 @@ body.magna td.boxCenter p a {
 	text-decoration: underline;
 }
 /* reset */
+body.magna input[type="text"],
+body.magna select {
+	color: #000;
+	background-color: #fff;
+}
 body.magna label {
 	margin-bottom: 0;
 	font-weight: normal;
@@ -482,6 +489,16 @@ input#unprepare.ml-button {
 } 
 input#reset_description.ml-button{
 	margin-top: 0px !important;
+}
+body.magna div#content .ml-button.plus,
+body.magna div#content .ml-button.minus,
+body.magna .ui-dialog .ml-button.plus,
+body.magna .ui-dialog .ml-button.minus {
+	font-size: 17px;
+	height: 23px;
+	width: 32px;
+	margin: 3px 0 3px 3px;
+	padding: 0;
 }
 body.magna div#content .ml-button:hover,
 body.magna .ui-dialog .ml-button:hover,
@@ -1349,7 +1366,7 @@ table.magnaframe div.desc,
 table.actions div.desc,
 form.config div.desc {
 	width: 16px;
-	height: 16px;
+	height: 17px;
 	background: transparent url('../images/information.png') no-repeat 0 0;
 	cursor: pointer;
 	display: inline-block;
@@ -1958,7 +1975,7 @@ table.attributesTable table.categorySelect tr td.label {
 table.attributesTable table.categorySelect td div.catVisual {
 	display: inline-block;
 	width: 100%;
-	height: 1.5em;
+	height: 100%;
 	line-height: 1.5em;
 	background: #fff;
 	color: #000;
@@ -2568,6 +2585,7 @@ body.magna.ielt9 div.magnaTabs2 ul {
 body.magna div.magnaTabs2 ul li {
 	display: inline;
 	line-height: 2em;
+	position: relative;
 }
 body.magna.ielt9 div.magnaTabs2 ul li {
 	background: #fff;
@@ -2621,7 +2639,12 @@ body.magna div.magnaTabs2 ul li span img {
 	border: none;
 	margin-bottom: -6px;
 }
-
+body.magna div.magnaTabs2 ul li a img[src$="bepado.png"],
+body.magna div.magnaTabs2 ul li span img[src$="bepado.png"],
+body.magna div.magnaTabs2 ul li a img[src$="dawanda.png"],
+body.magna div.magnaTabs2 ul li span img[src$="dawanda.png"] {
+	margin-bottom: -5px;
+}
 body.magna div.magnaTabs2 ul li.inactive span {
 	color: #555;
 	background: #ddd;
@@ -2651,7 +2674,7 @@ body.magna div.magnaTabs2 ul li a:hover {
 body.magna div.magnaTabs2 ul li.selected a,
 body.magna div.magnaTabs2 ul li.selected span {
 	position: relative;
-	top: -3px;
+	top: -5px;
 	box-shadow: 2px -1px 4px -1px rgba(0, 0, 0, 0.2);
 	-moz-box-shadow: 2px -1px 4px -1px rgba(0, 0, 0, 0.2);
 	-webkit-box-shadow: 2px -1px 4px -1px rgba(0, 0, 0, 0.2);
@@ -2810,6 +2833,7 @@ body.magna.jqueryui .ui-dialog .ui-dialog-titlebar-close span.ui-icon-closethick
 	background: url("../images/icons/closethick.png");
 	width: 19px;
 	height: 18px;
+	display: none;
 }
 body.magna.jqueryui .ui-dialog a.ui-icon-arrowrefresh-wrap {
 	height: 24px;
@@ -3138,6 +3162,16 @@ body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ui-widget {
 	color: #fff;
 	outline: none;
 }
+body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ui-widget.abort{
+	background-color: #f7f6f5;
+	border-color: rgba(0, 0, 0, 0.25) rgba(0, 0, 0, 0.25) rgba(0, 0, 0, 0.35);
+	color: #000;
+}
+body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ui-widget.abort:hover,
+body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ui-widget.abort:active {
+	color: #fff;
+}
+
 #ebayCategorySelector ~ div button, #modal-dawanda_prepare_form_field_primarycategory ~ div button {
 	margin-right: 4px;
 	text-transform: uppercase;

@@ -107,7 +107,7 @@ class HitmeisterCheckinCategoryView extends SimpleCheckinCategoryView {
 		return '
 			<td>
 				<table class="nostyle"><tbody>
-					<tr><td class="label">'.'Kategorie'.':&nbsp;</td><td>'.(empty($a['mp_category_id']) ? '&mdash;' : $a['mp_category_id']).(empty($a['mp_category_name']) ? '' : ' '.$a['mp_category_name']).'</td><tr>
+					<tr><td class="label">'.'Kategorie'.':&nbsp;</td><td>'.(empty($a['MarketplaceCategories']) ? '&mdash;' : $a['MarketplaceCategories']).(empty($a['MarketplaceCategoriesName']) ? '' : ' '.$a['MarketplaceCategoriesName']).'</td><tr>
 				</tbody></table>
 			</td>';
 	}

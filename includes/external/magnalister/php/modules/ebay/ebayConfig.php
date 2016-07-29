@@ -81,7 +81,7 @@ function eBayGenToken($args, &$value = '') {
 	} else {
 		$firstToken = ' mlbtn-action';
 	}
-	return '<input class="ml-button'.$firstToken.'" type="button" value="'.ML_EBAY_BUTTON_TOKEN_NEW.'" id="requestToken"/>
+	return '<input class="ml-button'.$firstToken.' mlbtn-action" type="button" value="'.ML_EBAY_BUTTON_TOKEN_NEW.'" id="requestToken"/>
 	'.$expires.'
 <script type="text/javascript">/*<![CDATA[*/
 $(document).ready(function() {
@@ -185,13 +185,20 @@ if (isset($_GET['what'])) {
 	}
 }
 
+if (SHOPSYSTEM == 'gambio') {
+	$sGambioVarPicsExpla = ML_EBAY_GAMBIO_VARIATIONPICS_EXPLANATION;
+} else {
+	$sGambioVarPicsExpla = '';
+}
+
 $form = loadConfigForm($_lang,
 	array(
 		'ebay.form' => array(),
 		'email_template_generic.form' => array()
 	), array(
 		'_#_platform_#_' => $_MagnaSession['currentPlatform'],
-		'_#_platformName_#_' => $_modules[$_Marketplace]['title']
+		'_#_platformName_#_' => $_modules[$_Marketplace]['title'],
+		'_#_ebayGambioVariationpicsExplanation_#_' => $sGambioVarPicsExpla
 	)
 );
 
@@ -386,6 +393,8 @@ if (!$auth['state']) {
 	}
 	$form['fixedsettings']['fields']['fixedduration']['default'] = getDBConfigValue('ebay.fixed.duration', $_MagnaSession['mpID'], $lastFixedDuration);
 
+	# eBay Plus ist unten (nur wenn nicht ajax)
+
 	# Voreinstellung Dauer Steigerungsauktionen
 	try {
 		$chineseDurationData = MagnaConnector::gi()->submitRequest(array(
@@ -442,6 +451,8 @@ if (!$auth['state']) {
 	mlGetShippingModules($form['import']['fields']['defaultshipping']);
 	mlGetPaymentModules($form['import']['fields']['defaultpayment']);
 
+	mlPresetTrackingCodeMatching($_MagnaSession['mpID'], 'ebay.orderstatus.carrier.dbmatching', 'ebay.orderstatus.trackingcode.dbmatching');
+
 	if (false === getDBConfigValue('ebay.imagepath', $_MagnaSession['mpID'], false)) {
 		#$form['listingdefaults']['fields']['imagepath']['default'] =
 		$form['images']['fields']['imagepath']['default'] =
@@ -452,16 +463,16 @@ if (!$auth['state']) {
 		setDBConfigValue('ebay.imagepath', $_MagnaSession['mpID'], $form['images']['fields']['imagepath']['default'], true);
 	}
 	# Bilder
-	if (false === getDBConfigValue('ebay.gallery.imagepath', $_MagnaSession['mpID'], false)) {
-		# normalerweise dasselbe wie fuer die Hauptbilder
-		#$form['listingdefaults']['fields']['galleryimagepath']['default'] =
-		$form['images']['fields']['galleryimagepath']['default'] =
-			defined('DIR_WS_CATALOG_POPUP_IMAGES')
-				? HTTP_CATALOG_SERVER.DIR_WS_CATALOG_POPUP_IMAGES
-				: HTTP_CATALOG_SERVER.DIR_WS_CATALOG_IMAGES;
-		#setDBConfigValue('ebay.gallery.imagepath', $_MagnaSession['mpID'], $form['listingdefaults']['fields']['galleryimagepath']['default'], true);
-		setDBConfigValue('ebay.gallery.imagepath', $_MagnaSession['mpID'], $form['images']['fields']['galleryimagepath']['default'], true);
-	}
+//	if (false === getDBConfigValue('ebay.gallery.imagepath', $_MagnaSession['mpID'], false)) {
+//		# normalerweise dasselbe wie fuer die Hauptbilder
+//		#$form['listingdefaults']['fields']['galleryimagepath']['default'] =
+//		$form['images']['fields']['galleryimagepath']['default'] =
+//			defined('DIR_WS_CATALOG_POPUP_IMAGES')
+//				? HTTP_CATALOG_SERVER.DIR_WS_CATALOG_POPUP_IMAGES
+//				: HTTP_CATALOG_SERVER.DIR_WS_CATALOG_IMAGES;
+//		#setDBConfigValue('ebay.gallery.imagepath', $_MagnaSession['mpID'], $form['listingdefaults']['fields']['galleryimagepath']['default'], true);
+//		setDBConfigValue('ebay.gallery.imagepath', $_MagnaSession['mpID'], $form['images']['fields']['galleryimagepath']['default'], true);
+//	}
 	# Ruecknahmebedingungen
 	$form['returnpolicy']['fields']['returnsaccepted']['values']    = geteBaySingleReturnPolicyDetail('ReturnsAccepted');
 	$form['returnpolicy']['fields']['returnswithin']['values']      = geteBaySingleReturnPolicyDetail('ReturnsWithin');
@@ -483,11 +494,76 @@ if (!$auth['state']) {
 		unset($form['stocksync']['fields']['propertiesMatching']);
 	}
 
+	// PicturePack: show only if bookable
+	if (!ML_ShopAddOns::getAddOnInfo('EbayPicturePack')) {
+		unset($form['images']['fields']['picturepack']);
+	}
+	
+	if (   MAGNA_GAMBIO_VARIATIONS
+	    && (getDBConfigValue('general.gambio.useproperties', '0', 'true') == 'true')
+	    && (ML_ShopAddOns::mlAddOnIsBooked('EbayPicturePack'))) {
+		$properties = MagnaDb::gi()->fetchArray('
+			SELECT properties_id ,  properties_name 
+			FROM properties_description
+			WHERE language_id = '.$_SESSION['languages_id'].'
+		');
+		$properties[] = array ('properties_id' => '-1', 'properties_name' => ML_EBAY_DO_NOT_USE_VARIATION_PICS);
+		$form['images']['fields']['picturepackproperty']['values'] = array();
+		if(!empty($properties)){
+			foreach ($properties as $property) {
+				$form['images']['fields']['picturepackproperty']['values'][$property['properties_id']] = $property['properties_name'];
+			}
+		}
+	} else if (    MagnaDb::gi()->columnExistsInTable('attributes_image', TABLE_PRODUCTS_ATTRIBUTES)
+	            && ML_ShopAddOns::mlAddOnIsBooked('EbayPicturePack')) {
+		$attributes = MagnaDb::gi()->fetchArray('
+			SELECT products_options_id, products_options_name
+			FROM '.TABLE_PRODUCTS_OPTIONS.'
+			WHERE language_id = '.$_SESSION['languages_id'].'
+		');
+		$attributes[] = array ('products_options_id' => '-1', 'products_options_name' => ML_EBAY_DO_NOT_USE_VARIATION_PICS);
+		$form['images']['fields']['picturepackproperty']['values'] = array();
+		if(!empty($attributes)){
+			foreach ($attributes as $attr) {
+				$form['images']['fields']['picturepackproperty']['values'][$attr['products_options_id']] = $attr['products_options_name'];
+			}
+		}
+	} else {
+		unset($form['images']['fields']['picturepackproperty']);
+	}
+
 }
 
 if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 	echo $cG->processAjaxRequest();
 } else {
+
+	# eBay Plus (nur wenn nicht ajax)
+	try {
+		$eBayPlusSettings = MagnaConnector::gi()->submitRequest(array(
+			'ACTION' => 'GeteBayAccountSettings',
+		));
+	} catch (MagnaException $e) {
+		$eBayPlusSettings = array('DATA' => array('eBayPlus' => 'false', 'eBayPlusListingDefault' => 'false'));
+	}
+	if (    ('false' == $eBayPlusSettings['DATA']['eBayPlus'])
+	     || ( false  == $eBayPlusSettings['DATA']['eBayPlus'])) {
+?><script>/*<!CDATA[*/
+	$(document).ready(function() {
+		$('input[id="conf_ebay.plus_val"]').prop('checked', false);
+		$('input[id="conf_ebay.plus_val"]').prop('disabled', true);
+	});
+/*]]>*/</script><?php
+	} else if ('true' == getDBConfigValue('ebay.plus', $_MagnaSession['mpID'], $eBayPlusSettings['DATA']['eBayPlusListingDefault'])) {
+	# aktiviere Checkbox, wenn Voreinstellung auf eBay aktiv und noch keine Voreistellung im Plugin getroffen
+?><script>/*<!CDATA[*/
+	$(document).ready(function() {
+		$('input[id="conf_ebay.plus_val"]').prop('checked', true);
+	});
+/*]]>*/</script><?php
+	}
+	
+
 	$cG->setRenderTabIdent(true);
 	$allCorrect = $cG->processPOST();
 
@@ -591,8 +667,35 @@ $('input[id="conf_ebay.order.importonlypaid_false"]').change(function() {
 					
 		});
 /*]]>*/</script><?php
+?><script>/*<!CDATA[*/
+	$(document).ready(function() {
+      $('select[id="config_ebay_gallery_type"]').data('ml-oldvalue', $('select[id="config_ebay_gallery_type"]').val());
+    });
+    $('select[id="config_ebay_gallery_type"]').change(function() {
+      var sel=$(this);
+      if (sel.val() != 'Plus') {
+        sel.data('ml-oldvalue', sel.val());
+        return true;
+      }
+      sel.val(sel.data('ml-oldvalue'));
+		$('<div></div>').html('<?php echo ML_TEXT_WARNING_EBAY_GALLERY_PLUS_COSTS ?>').jDialog({
+			title: '<?php echo ML_TITLE_EBAY_WARNING_GALLERY_PLUS_COST ?>',
+			buttons: {
+				'<?php echo ML_BUTTON_LABEL_NO; ?>': function() {
+					jQuery(this).dialog('close');
+				},
+				'<?php echo ML_BUTTON_LABEL_YES; ?>': function() {
+					sel.data('ml-oldvalue', 'Plus');
+					sel.val('Plus');
+					jQuery(this).dialog('close');
+				}
+			}
+		})
+    });
+/*]]>*/</script><?php
 	echo $cG->exchangeRateAlert();
 	ML_ShopAddOns::generateConfigPopup('EbayProductIdentifierSync', 'conf_ebay.listingdetails.sync', '#conf_ebay');
 	ML_ShopAddOns::generateConfigPopup('EbayZeroStockAndRelisting', 'conf_ebay.autorelist', '#conf_ebay');
 	ML_ShopAddOns::generateConfigPopup('EbayZeroStockAndRelisting', 'conf_ebay.zerostockontrol', '#conf_ebay');
+	ML_ShopAddOns::generateConfigPopup('EbayPicturePack', 'conf_ebay.picturepack_val', '#conf_ebay','checkbox');
 }

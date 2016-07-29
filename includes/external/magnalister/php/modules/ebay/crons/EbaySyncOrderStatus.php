@@ -44,7 +44,7 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 	
 	/**
 	 * Builds an element for the ConfirmShipment request.
-	 * @return void
+	 * @return array
 	 */
 	protected function confirmShipment($date) {
 		$cfirm = parent::confirmShipment($date);
@@ -55,7 +55,7 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 	
 	/**
 	 * Builds an element for the CancelShipment request
-	 * @return void
+	 * @return array
 	 */
 	protected function cancelOrder($date) {
 		$cncl = parent::cancelOrder($date);

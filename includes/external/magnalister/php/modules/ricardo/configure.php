@@ -144,6 +144,8 @@ class RicardoConfigure extends MagnaCompatibleConfigure {
 			for ($i = 1; $i <= (int)$duration['DATA']['Duration']; $i++) {
 				$this->form['prepare']['fields']['duration']['values'][$i] = $i . ' ' . ML_RICARDO_DAYS;
 			}
+
+			$this->form['orders']['fields']['defaultpayment']['values'] = array('textfield' => 'Aus Textfeld', 'matching' => 'Automatische Zuordnung');
 		}
 
 		$this->form['login']['fields']['lang']['values'] = array (
@@ -261,13 +263,13 @@ class RicardoConfigure extends MagnaCompatibleConfigure {
 		ob_start();
 		?>
 		<div class="input langCheckBoxes">
-			<input type="hidden" value="false" name="conf[<?= $args['key'] ?>.de][val]"/>
-			<input type="checkbox" value="true" id="config_<?= $id ?>_de_val" name="conf[<?= $args['key'] ?>.de][val]" <?= $de?>/>
-			<label for="conf[<?= $args['key'] ?>.de]">DE</label>
+			<input type="hidden" value="false" name="conf[<?php echo $args['key'] ?>.de][val]"/>
+			<input type="checkbox" value="true" id="config_<?php echo $id ?>_de_val" name="conf[<?php echo $args['key'] ?>.de][val]" <?php echo $de?>/>
+			<label for="conf[<?php echo $args['key'] ?>.de]">DE</label>
 			
-			<input type="hidden" value="false" name="conf[<?= $args['key'] ?>.fr][val]"/>
-			<input type="checkbox" value="true" id="config_<?= $id ?>_fr_val" name="conf[<?= $args['key'] ?>.fr][val]" <?= $fr?>/>
-			<label for="conf[<?= $args['key'] ?>.de]">FR</label>
+			<input type="hidden" value="false" name="conf[<?php echo $args['key'] ?>.fr][val]"/>
+			<input type="checkbox" value="true" id="config_<?php echo $id ?>_fr_val" name="conf[<?php echo $args['key'] ?>.fr][val]" <?php echo $fr?>/>
+			<label for="conf[<?php echo $args['key'] ?>.de]">FR</label>
 		</div>
 		<script type="text/javascript">
 			$(document).on("click", ".langCheckBoxes input", function(e) {
@@ -328,6 +330,101 @@ class RicardoConfigure extends MagnaCompatibleConfigure {
 		
 		#	$html .= print_m($taxes, '$taxes');
 		#	$html .= print_m(func_get_args(), 'func_get_args');
+		return $html;
+	}
+	
+	public function process() {
+		$this->form = $this->loadConfigForm(
+			$this->getForms(), 
+			array(
+				'_#_platform_#_' => $this->marketplace,
+				'_#_platformName_#_' => $this->marketplaceTitle
+			)
+		);
+		$this->processAuth();
+		$this->loadChoiseValues();
+		$this->finalizeForm();
+		
+		$cG = new MLConfigurator($this->form, $this->mpID, 'conf_magnacompat');
+		$cG->setRenderTabIdent(true);
+		$allCorrect = $cG->processPOST();
+		
+		$this->loadChoiseValuesAfterProcessPOST();
+
+		if ($this->isAjax) {
+			echo $cG->processAjaxRequest();
+		} else {
+			echo $this->boxes;
+			if (array_key_exists('sendTestmail', $_POST)) {
+				if ($allCorrect) {
+					if (sendTestMail($this->mpID)) {
+						echo '<p class="successBox">'.ML_GENERIC_TESTMAIL_SENT.'</p>';
+					} else {
+						echo '<p class="successBox">'.ML_GENERIC_TESTMAIL_SENT_FAIL.'</p>';
+					}
+				} else {
+					echo '<p class="noticeBox">'.ML_GENERIC_NO_TESTMAIL_SENT.'</p>';
+				}
+			}
+			echo $cG->renderConfigForm();
+			echo $this->displayDialogMessage();
+			echo $cG->exchangeRateAlert($this->exchangeRateField);
+			//require_once(DIR_MAGNALISTER_INCLUDES . 'lib/classes/ShopAddOns.php');
+			//ML_ShopAddOns::generateConfigPopupOnCombobox('FastSyncInventory', "config_{$this->marketplaceTitle}_stocksync_tomarketplace", "#config_{$this->marketplaceTitle}", "$(this).val() == 'auto_fast'");
+		}
+	}
+	
+	private function displayDialogMessage() {
+		ob_start();
+		?>
+		<div id="infodiagQuantity" class="dialog2" title="<?php echo ML_RICARDO_LABEL_SYNC_QUANTITY ?>"></div>
+		<span id="textQuantity" style="display: none"><?php echo ML_RICARDO_TEXT_QUANTITY ?></span>
+		<div id="infodiagPrice" class="dialog2" title="<?php echo ML_RICARDO_LABEL_SYNC_PRICE ?>"></div>
+		<span id="textPrice" style="display: none"><?php echo ML_RICARDO_TEXT_PRICE ?></span>
+		<script type="text/javascript">
+			$(document).ready(function() {				
+				$('#config_ricardo_stocksync_tomarketplace').change(function () {
+					var oldValue = $('#config_ricardo_stocksync_tomarketplace').defaultValue;
+					if ($('#config_ricardo_stocksync_tomarketplace').val() === 'auto_reduce') {
+						var d = $('#textQuantity').html();
+						$('#infodiagQuantity').html(d).jDialog({
+							width: (d.length > 1000) ? '700px' : '500px',
+							buttons: {
+								'<?php echo ML_BUTTON_LABEL_ABORT; ?>': function() {
+									$(this).dialog('close');
+									$('#config_ricardo_stocksync_tomarketplace').val(oldValue);
+								},
+								'<?php echo ML_BUTTON_LABEL_ACCEPT; ?>': function() {
+									$(this).dialog('close');
+								}
+							}
+						});
+					}
+				});
+				$('#config_ricardo_inventorysync_price').change(function () {
+					var oldValue = $('#config_ricardo_inventorysync_price').defaultValue;
+					if ($('#config_ricardo_inventorysync_price').val() === 'auto_reduce') {
+						var d = $('#textPrice').html();
+						$('#infodiagPrice').html(d).jDialog({
+							width: (d.length > 1000) ? '700px' : '500px',
+							buttons: {
+								'<?php echo ML_BUTTON_LABEL_ABORT; ?>': function() {
+									$(this).dialog('close');
+									$('#config_ricardo_inventorysync_price').val(oldValue);
+								},
+								'<?php echo ML_BUTTON_LABEL_ACCEPT; ?>': function() {
+									$(this).dialog('close');
+								}
+							}
+						});
+					}
+				});
+			});
+		</script>
+		<?php
+		$html = ob_get_contents();
+		ob_end_clean();
+
 		return $html;
 	}
 }

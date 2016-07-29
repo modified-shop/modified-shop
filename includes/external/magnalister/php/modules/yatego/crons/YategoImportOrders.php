@@ -73,7 +73,14 @@ class YategoImportOrders extends MagnaCompatibleImportOrders {
 			# PayPal
 			if (in_array('paypal.php', $paymentModules))
 				$class = 'paypal';
-			
+			else if (in_array('paypalng.php', $paymentModules))
+				$class = 'paypalng';
+			else if (in_array('paypal_ipn.php', $paymentModules))
+				$class = 'paypal_ipn';
+			else if (in_array('paypalexpress.php', $paymentModules))
+				$class = 'paypalexpress';
+			else if (in_array('paypal3.php', $paymentModules))
+				$class = 'paypal3';
 		} else if (stripos($paymentMethod, 'Rechnung') !== false) {
 			# Auf Rechnung
 			if (in_array('invoice.php', $paymentModules))

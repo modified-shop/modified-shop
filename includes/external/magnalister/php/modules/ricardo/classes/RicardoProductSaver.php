@@ -225,6 +225,7 @@ class RicardoProductSaver {
 		$aRow['ShippingDetails'] = $aItemDetails['conf']['ricardo.checkin.shippingdetails'];
 		$aRow['ShippingCost'] = $aItemDetails['conf']['ricardo.checkin.shippingdetails.shippingcost'];
 		$aRow['PackageSize'] = $aItemDetails['conf']['ricardo.checkin.shippingdetails.packagesize'];
+		$aRow['ShippingCumulative'] = $aItemDetails['conf']['ricardo.checkin.shippingdetails.shippingcumulative'];
 		
 		$aRow['ShippingDescriptionDe'] = $aItemDetails['conf']['ricardo.checkin.shippingdetails.description.de'];
 		if ((!isset($aRow['ShippingDescriptionDe']) || $aRow['ShippingDescriptionDe'] === '') && ($aRow['ShippingDetails'] == 0) && ($aRow['LangDe'] === 'true')) {

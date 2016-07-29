@@ -178,13 +178,8 @@ class MagnaCompatibleSummaryView extends SimpleSummaryView {
 		return '
 				<td><table class="nostyle"><tbody>
 						<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>
-						'.(($this->inventoryPriceSync == 'auto')
-							? $this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice()
-							: '<input type="text" id="price_'.$dbRow['products_id'].'"
-						           name="price['.$dbRow['products_id'].']"
-						           value="'.$this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice().'"/>
-							'
-						).'
+						'. $this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice()
+						.'
 							<input type="hidden" id="backup_price_'.$dbRow['products_id'].'"
 						           value="'.$this->simplePrice->getPrice().'"/>
 						</td></tr>
@@ -202,9 +197,7 @@ class MagnaCompatibleSummaryView extends SimpleSummaryView {
 						<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>
 							<input type="hidden" id="old_quantity_'.$dbRow['products_id'].'"
 						           value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/>
-						    <input type="text" id="quantity_'.$dbRow['products_id'].'"
-						           name="quantity['.$dbRow['products_id'].']" size="4" maxlength="4" 
-						           value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/>
+						    '.$this->selection[$dbRow['products_id']]['quantity'].'
 						</td></tr>
 				    	<tr><td>'.ML_LABEL_OLD.':&nbsp;</td><td>&nbsp;'.(
 							array_key_exists($dbRow['products_id'], $this->inventoryData) ?

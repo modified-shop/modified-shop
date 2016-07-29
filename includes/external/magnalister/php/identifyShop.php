@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: identifyShop.php 4468 2014-08-29 08:45:09Z derpapst $
+ * $Id: identifyShop.php 6705 2016-05-13 10:05:57Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -22,7 +22,7 @@ function identShopSystem() {
 	$content = file_get_contents('includes/application_top.php', 0, null, -1, 1500);
 	if (defined('_GM_VALID_CALL') || (stripos($content, 'gambio') !== false)) {
 		define('SHOPSYSTEM', 'gambio');
-	} else if (defined('PROJECT_VERSION') && (stripos(PROJECT_VERSION, 'modified') !== false)) {
+	} else if (defined('PROJECT_VERSION') && (stripos(PROJECT_VERSION, 'modified') !== false || stripos($content, 'modified eCommerce Shopsoftware') !== false)) {
 		define('SHOPSYSTEM', 'xtcmodified');
 	} else if (defined('PROJECT_VERSION') && (stripos(PROJECT_VERSION, 'xt:commerce') !== false)) {
 		define('SHOPSYSTEM', 'xtcommerce');

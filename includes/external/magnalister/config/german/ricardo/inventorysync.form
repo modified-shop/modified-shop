@@ -1,0 +1,44 @@
+{
+    "inventorysync": {
+        "headline": "Synchronisation des Inventars",
+        "desc": "Legt fest, welche Produkteigenschaften des Produktes in diesem Shop ebenfalls bei _#_platformName_#_ automatisch aktualisiert werden sollen.",
+        "fields": {
+            "stock_shop": {
+                "label": "Lagerver&auml;nderung Shop",
+                "desc": "<dl>\n\t\t\t\t\t\t\t\t<dt>Automatische Synchronisierung per CronJob<\/dt>\n\t\t\t\t\t\t\t\t\t<dd>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\n\t\t\t\t\t\t                den aktuellen Shop-Lagerbestand auf Ihren Marketplace-Lagerbestand an.<br>\n    \t\t\t                        Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. \n    \t\t\t                        eine Warenwirtschaft nur in der Datenbank erfolgten.<br><br>\n    \t\t\t                        Einen manuellen Abgleich k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\n    \t\t\t                        Zus&auml;tzlich k&ouml;nnen Sie den Lagerabgleich (ab Tarif Premium - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, \n    \t\t\t                        indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\n    \t\t\t                        <i>http:\/\/www.IhrShop.de\/plugins\/magnalister\/magnaCallback.php?do=SyncInventory<\/i><br>\n    \t\t\t                        Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Premium sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.\n    \t\t\t                        <\/dd>\n\t\t\t\t\t\t\t\t<dt>Bestellung \/ Artikel bearbeiten setzt MeinPaket.de-Lagerbestand gleich Shop-Lagerbestand<\/dt>\n\t\t\t\t\t\t\t\t\t<dd>Wenn der Lagerbestand im Shop durch eine Bestellung oder durch das Bearbeiten des Artikels ge&auml;ndert wird,\n\t\t\t\t\t\t\t\t\t    wird der dann g&uuml;ltige aktuelle Lagerbestand vom Shop zu MeinPaket.de &uuml;bertragen.<br>\n\t\t\t\t\t\t\t\t\t    &Auml;nderungen nur in der Datenbank, z.B. durch eine Warenwirtschaft, werden hier <b>nicht<\/b> erfasst und &uuml;bermittelt!<\/dd>\n\t\t\t\t\t\t\t\t<dt>Bestellung \/ Artikel bearbeiten &auml;ndert MeinPaket.de-Lagerbestand (Differenz)<\/dt>\n\t\t\t\t\t\t\t\t\t<dd>Wenn z. B. im Shop ein Artikel 2 mal gekauft wurde, wird der Lagerbestand bei MeinPaket.de um 2 reduziert.<br \/>\n\t\t\t\t\t\t\t\t\t\tWenn die Artikelanzahl unter \"Artikel bearbeiten\" im Shop ge&auml;ndert wird, wird die Differenz zum vorigen Stand aufaddiert bzw. abgezogen.<br>\n\t\t\t\t\t\t\t\t\t    &Auml;nderungen nur in der Datenbank, z.B. durch eine Warenwirtschaft, werden hier <b>nicht<\/b> erfasst und &uuml;bermittelt!<\/dd>\n\t\t\t\t\t\t\t<\/dl>\n\t\t\t\t\t\t\t<b>Hinweis:<\/b> Die Einstellungen unter \"Konfiguration\" &rarr; \"Einstellvorgang\" &rarr; \"St&uuml;ckzahl Lagerbestand\" werden f&uuml;r die \n\t\t\t\t\t\t\t\tersten beiden Optionen ber&uuml;cksichtigt.\n\t\t\t\t",
+                "key": "_#_platform_#_.stocksync.tomarketplace",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob (nur Lager-Reduzierung)",
+                    "auto_reduce": "Automatische Synchronisierung per CronJob (Reduzierung und Erh&ouml;hung)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "auto",
+                "submit": "Callback.SyncInventory"
+            },
+            "stock_mp": {
+                "label": "Lagerver&auml;nderung _#_platformName_#_",
+                "desc": "Wenn z. B. bei _#_platformName_#_ ein Artikel 3 mal gekauft wurde, wird der Lagerbestand im Shop um 3 reduziert.<br \/><br \/>\n\t\t\t\t           <strong>Wichtig:<\/strong> Diese Funktion l&auml;uft nur, wenn Sie den Bestellimport aktiviert haben!",
+                "key": "_#_platform_#_.stocksync.frommarketplace",
+                "type": "selection",
+                "values": {
+                    "rel": "Bestellung reduziert Shop-Lagerbestand (empfohlen)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "rel"
+            },
+            "price": {
+                "label": "Artikelpreis",
+                "desc": "<dl>\n\t\t\t\t\t\t\t\t<dt>Automatische Synchronisierung per CronJob (empfohlen)<\/dt>\n\t\t\t\t\t\t\t\t    <dd>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\n\t\t\t\t\t\t\t\t        den aktuellen Shop-Preis auf Ihren _#_platformName_#_-Preis an.<br>\n    \t\t\t                        Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. \n    \t\t\t                        eine Warenwirtschaft nur in der Datenbank erfolgten.<\/dd>\n\t\t\t\t\t\t\t\t<dt>Artikel bearbeiten setzt _#_platformName_#_-Preis gleich den Shop-Preis<\/dt>\n\t\t\t\t\t\t\t\t\t<dd>Wenn der Artikelpreis im Shop durch das Bearbeiten des Artikels ge&auml;ndert wird,\n\t\t\t\t\t\t\t\t\t    wird der dann g&uuml;ltige aktuelle Artikelpreis vom Shop zu _#_platformName_#_ &uuml;bertragen.<br>\n\t\t\t\t\t\t\t\t\t    &Auml;nderungen nur in der Datenbank, z.B. durch eine Warenwirtschaft, werden hier <b>nicht<\/b> erfasst und &uuml;bermittelt!<\/dd>\n\t\t\t\t\t\t\t<\/dl><br>\n\t\t\t\t\t\t\t<b>Hinweis:<\/b> Die Einstellungen unter \"Konfiguration\" &rarr; \"Preisberechnung\" werden ber&uuml;cksichtigt.\n\t\t\t\t",
+                "key": "_#_platform_#_.inventorysync.price",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob (nur Preis-Reduzierung)",
+                    "auto_reduce": "Automatische Synchronisierung per CronJob (Reduzierung und Erh&ouml;hung)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "auto"
+            }
+        }
+    }
+}

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: AmazonSummaryView.php 4965 2014-12-09 21:31:53Z derpapst $
+ * $Id: AmazonSummaryView.php 6173 2015-10-29 11:59:53Z markus.bauer $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -375,6 +375,12 @@ class AmazonSummaryView extends SimpleSummaryView {
 					$data['quantity'] = getDBConfigValue($mp.'.quantity.value', $this->mpID, 1);
 				}
 			}
+			if (
+				(getDBConfigValue($mp.'.quantity.maxquantity', $this->mpID) > 0) 
+				&& (getDBConfigValue($mp.'.quantity.type', $this->mpID) != 'lump')
+			) {
+				$data['quantity'] = min($data['quantity'], getDBConfigValue($mp.'.quantity.maxquantity', $this->mpID));
+			}
 			if ($data['quantity'] < 0) {
 				$data['quantity'] = 0;
 			}
@@ -419,10 +425,8 @@ class AmazonSummaryView extends SimpleSummaryView {
 		$html = '
 				<td>'.$lowPrice.'<br />&nbsp;</td>
 				<td><table class="nostyle"><tbody>
-						<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>
-							<input type="text" id="price_'.$dbRow['products_id'].'"
-							       name="price['.$dbRow['products_id'].']"
-							       value="'.$this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice().'"/>
+						<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>'.
+			$this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice().'
 							<input type="hidden" id="backup_price_'.$dbRow['products_id'].'"
 							       value="'.$this->simplePrice->getPrice().'"/>
 						</td></tr>
@@ -439,10 +443,8 @@ class AmazonSummaryView extends SimpleSummaryView {
 				<td><table class="nostyle"><tbody>
 						<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>
 							<input type="hidden" id="old_quantity_'.$dbRow['products_id'].'"
-							       value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/>
-							<input type="text" id="quantity_'.$dbRow['products_id'].'"
-							       name="quantity['.$dbRow['products_id'].']" size="4" maxlength="4" 
-							       value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/>
+							       value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/>'
+			.$this->selection[$dbRow['products_id']]['quantity'].'
 						</td></tr>
 						<tr><td>'.ML_LABEL_OLD.':&nbsp;</td><td>&nbsp;'.(
 							array_key_exists($dbRow['products_id'], $this->inventoryData) ?

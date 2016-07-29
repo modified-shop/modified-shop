@@ -74,7 +74,7 @@ class RicardoPaymentDetailsProcessor {
 		ob_start();?>
 		<script type="text/javascript">/*<![CDATA[*/
 			$(document).ready(function() {
-				togglePaymentMethodDescription(jQuery('#<?= $idkey ?>').val());
+				togglePaymentMethodDescription(jQuery('#<?php echo $idkey ?>').val());
 
 				$('#<?php echo $idkey; ?>').change(function () {
 					togglePaymentMethodDescription($(this).val());
@@ -83,9 +83,9 @@ class RicardoPaymentDetailsProcessor {
 
 			function togglePaymentMethodDescription(value) {
 				if (value !== null && value.indexOf('0') !== -1) {
-					jQuery('#<?= $paymentDesc['id'] ?>').show();
+					jQuery('#<?php echo $paymentDesc['id'] ?>').show();
 				} else {
-					jQuery('#<?= $paymentDesc['id'] ?>').hide();
+					jQuery('#<?php echo $paymentDesc['id'] ?>').hide();
 				}
 			}
 		/*]]>*/</script><?php

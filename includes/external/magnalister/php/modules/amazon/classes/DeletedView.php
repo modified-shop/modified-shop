@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: DeletedView.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: DeletedView.php 6571 2016-03-21 08:51:30Z markus.bauer $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -177,7 +177,7 @@ class DeletedView {
 				$html .= '
 					<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 						<td title="'.$item['ShopItemName'].'">'.$item['ShopItemNameShort'].'</td>
-						<td><a href="http://www.amazon.de/gp/offer-listing/'.$item['ASIN'].'" title="'.ML_AMAZON_LABEL_SAME_PRODUCTS.'" target="_blank">'.$item['ASIN'].'</a></td>
+						<td>'.getAmazonOfferLink($item['ASIN'], ML_AMAZON_LABEL_SAME_PRODUCTS).'</a></td>
 						<td>'.$this->simpleprice->setPrice($item['Price'])->format().'</td>
 						<td>'.$item['Quantity'].'</td>
 						<td>'.date("d.m.Y", $item['DateAdded']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateAdded']).'</span>'.'</td>

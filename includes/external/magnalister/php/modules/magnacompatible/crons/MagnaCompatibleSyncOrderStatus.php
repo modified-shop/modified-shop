@@ -170,10 +170,22 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 *   The tracking code
 	 */
 	protected function getTrackingCode($orderId) {
-		return $this->runDbMatching(array (
+		$mTrackingCode = $this->runDbMatching(array (
 			'Table' => $this->config['TrackingCodeMatchingTable'],
 			'Alias' => $this->config['TrackingCodeMatchingAlias']
 		), 'orders_id', $orderId);
+
+		// for Gambio 2.3 > if table "orders_parcel_tracking_codes" exists
+		if (false == $mTrackingCode && MagnaDB::gi()->tableExists('orders_parcel_tracking_codes')) {
+			$mTrackingCode = MagnaDB::gi()->fetchOne("
+				SELECT tracking_code
+				  FROM orders_parcel_tracking_codes
+				 WHERE order_id = '".MagnaDB::gi()->escape($orderId)."'
+				 LIMIT 1
+			");
+		}
+
+		return $mTrackingCode;
 	}
 	
 	/**
@@ -187,6 +199,16 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 			'Table' => $this->config['CarrierMatchingTable'],
 			'Alias' => $this->config['CarrierMatchingAlias']
 		), 'orders_id', $orderId);
+
+		// for Gambio 2.3 > if table "orders_parcel_tracking_codes" exists
+		if (false == $mCarrier && MagnaDB::gi()->tableExists('orders_parcel_tracking_codes')) {
+			$mCarrier = MagnaDB::gi()->fetchOne("
+				SELECT parcel_service_name
+				  FROM orders_parcel_tracking_codes
+				 WHERE order_id = '".MagnaDB::gi()->escape($orderId)."'
+				 LIMIT 1
+			");
+		}
 
 		// carrier should not be empty
 		if (false == $mCarrier && !empty($this->config['CarrierDefault'])) {

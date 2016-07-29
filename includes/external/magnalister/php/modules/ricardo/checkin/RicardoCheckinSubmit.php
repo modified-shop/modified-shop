@@ -39,6 +39,8 @@ class RicardoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			'mlProductsUseLegacy' => false,
 		), $settings);
 
+		#$this->summaryAddText = ML_RICARDO_TEXT_AFTER_UPLOAD;
+
 		parent::__construct($settings);
 	}
 	
@@ -100,21 +102,25 @@ class RicardoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
 		if ($aPropertiesRow['LangDe'] === 'true') {
 			$sTitle = html_entity_decode(fixHTMLUTF8Entities($aPropertiesRow['TitleDe']), ENT_COMPAT, 'UTF-8');
+			$sSubtitle = html_entity_decode(fixHTMLUTF8Entities($aPropertiesRow['SubtitleDe']), ENT_COMPAT, 'UTF-8');
+			$sDescription = html_entity_decode(fixHTMLUTF8Entities($aPropertiesRow['DescriptionDe']), ENT_COMPAT, 'UTF-8');
 
 			$aData['submit']['Descriptions']['DE'] = array(
 				'Title' => $sTitle,
-				'Subtitle' => $aPropertiesRow['SubtitleDe'],
-				'Description' => $aPropertiesRow['DescriptionDe']
+				'Subtitle' => $sSubtitle,
+				'Description' => $sDescription
 			);
 		}
 
 		if ($aPropertiesRow['LangFr'] === 'true') {
 			$sTitle = html_entity_decode(fixHTMLUTF8Entities($aPropertiesRow['TitleFr']), ENT_COMPAT, 'UTF-8');
+			$sSubtitle = html_entity_decode(fixHTMLUTF8Entities($aPropertiesRow['SubtitleFr']), ENT_COMPAT, 'UTF-8');
+			$sDescription = html_entity_decode(fixHTMLUTF8Entities($aPropertiesRow['DescriptionFr']), ENT_COMPAT, 'UTF-8');
 
 			$aData['submit']['Descriptions']['FR'] = array(
 				'Title' => $sTitle,
-				'Subtitle' => $aPropertiesRow['SubtitleFr'],
-				'Description' => $aPropertiesRow['DescriptionFr']
+				'Subtitle' => $sSubtitle,
+				'Description' => $sDescription
 			);
 		}
 
@@ -199,7 +205,8 @@ class RicardoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
 		$shippingService = array(
 			'Service' => $aPropertiesRow['ShippingDetails'],
-			'Cost' => $aPropertiesRow['ShippingCost']
+			'Cost' => $aPropertiesRow['ShippingCost'],
+			'Cumulative' => $aPropertiesRow['ShippingCumulative'] === 'true' ? 1 : 0,
 		);
 
 		if ($aPropertiesRow['PackageSize'] !== null) {

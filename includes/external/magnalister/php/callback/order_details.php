@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: order_details.php 3664 2014-03-23 21:16:31Z derpapst $
+ * $Id: order_details.php 6608 2016-04-05 16:34:46Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -82,6 +82,13 @@ function magnaGetOrderPlatformIcon($order) {
 			}
 		}
 	}
+	if ($logo == 'ebay') {
+		if (array_key_exists('eBayPlus', $order['data'])) {
+			$filename = 'ebay_plus_orderview';
+		} else {
+			$filename = 'ebay_orderview';
+		}
+	}
 	if (empty($filename)) {
 		$filename = $logo.'_orderview';
 	}
@@ -94,7 +101,11 @@ function magnaRenderOrderPlatformIcon($args) {
 		return '';
 	}
 	$filename = magnaGetOrderPlatformIcon($order);
-	
+
+	if (defined('ML_GAMBIO_USE_IFRAME') && ML_GAMBIO_USE_IFRAME === true) {
+		return '<img class="magnaOrderIcon magna_'.$order['platform'].'" src="'.DIR_MAGNALISTER_WS.'images/logos/'.$filename.'.png">';
+	}
+
 	return ' style="
 		background-image: url('.DIR_MAGNALISTER_WS.'images/logos/'.$filename.'.png);
 		background-repeat: no-repeat;
@@ -183,7 +194,7 @@ table.magnaOrderDetails tbody tr td.key {
 	
 	if (defined('DEFAULT_CURRENCY') && (DEFAULT_CURRENCY != $details['Currency'])) {
 		$total = (float)MagnaDB::gi()->fetchOne('
-			SELECT `value` FROM orders_total WHERE orders_id="400375" AND `class`="ot_total"
+			SELECT `value` FROM orders_total WHERE orders_id='.$args['oID'].' AND `class`="ot_total"
 		');
 		if ($total > 0) {
 			$total = round($total * 1 / $details['CurrencyValue'], 2);
@@ -293,7 +304,7 @@ $_GET = array (
 );
 
 # Bei $argsv == array()
-# InfoBox: "Bestellstatus für mehrere Bestellungen gleichzeitig ändern"
+# InfoBox: "Bestellstatus fÃ¼r mehrere Bestellungen gleichzeitig Ã¤ndern"
 $args = array ();
 $_GET = array (
   'page' => '1',

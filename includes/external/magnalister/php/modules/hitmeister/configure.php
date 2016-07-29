@@ -13,7 +13,7 @@
  * -----------------------------------------------------------------------------
  * $Id$
  *
- * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -25,30 +25,35 @@ require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/configure.php');
 class HitmeisterConfigure extends MagnaCompatibleConfigure {
 
 	protected function getAuthValuesFromPost() {
-		$nIdent = trim($_POST['conf'][$this->marketplace.'.ident']);
-		$nAccessKey = trim($_POST['conf'][$this->marketplace.'.accesskey']);
-		$nAccessKey = $this->processPasswordFromPost('mppassword', $nAccessKey);
+		$nClientKey = trim($_POST['conf'][$this->marketplace.'.clientkey']);
+		$nSecretKey = trim($_POST['conf'][$this->marketplace.'.secretkey']);
+		$nSecretKey = $this->processPasswordFromPost('secretkey', $nSecretKey);
+		
 		$nMPUser = trim($_POST['conf'][$this->marketplace.'.mpusername']);
 		$nMPPass = trim($_POST['conf'][$this->marketplace.'.mppassword']);
 		$nMPPass = $this->processPasswordFromPost('mppassword', $nMPPass);
 
-		if (empty($nIdent)) {
-			unset($_POST['conf'][$this->marketplace.'.ident']);
+		if (empty($nClientKey)) {
+			unset($_POST['conf'][$this->marketplace.'.clientkey']);
 		}
-		if ($nAccessKey === false) {
-			unset($_POST['conf'][$this->marketplace.'.accesskey']);
+		
+		if ($nSecretKey === false) {
+			unset($_POST['conf'][$this->marketplace.'.secretkey']);
 			return false;
 		}
+		
 		if (empty($nMPUser)) {
 			unset($_POST['conf'][$this->marketplace.'.mpusername']);
 		}
+		
 		if ($nMPPass === false) {
 			unset($_POST['conf'][$this->marketplace.'.mppassword']);
 			return false;
 		}
+		
 		$data = array (
-			'IDENT' => $nIdent,
-			'ACCESSKEY' => $nAccessKey,
+			'CLIENTKEY' => $nClientKey,
+			'SECRETKEY' => $nSecretKey,
 			'MPUSERNAME' => $nMPUser,
 			'MPPASSWORD' => $nMPPass,
 		);
@@ -58,8 +63,9 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 	
 	protected function getFormFiles() {
 		$forms = parent::getFormFiles();
-		$forms[] = 'login';
 		$forms[] = 'prepareadd';
+		$forms[] = 'orderStatus';
+
 		return $forms;
 	}
 	
@@ -108,17 +114,50 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 	
 	protected function loadChoiseValues() {
 		parent::loadChoiseValues();
-		
-		mlGetCountriesWithIso2Keys($this->form['prepare']['fields']['location']);
-		HitmeisterHelper::GetConditionTypesConfig($this->form['prepare']['fields']['condition']);
-		HitmeisterHelper::GetShippingTimesConfig($this->form['prepare']['fields']['shippingtime']);
-		
-		$this->form['prepare']['fields']['shippingtimeMatching']['procFunc'] = array($this, 'confShippingtimeMatching');
-		/*
-		if (isset($this->form['orders']['fields']['unpaidsatus'])) {
-			mlGetOrderStatus($this->form['orders']['fields']['unpaidsatus']);
+		if ($this->isAuthed) {
+			HitmeisterHelper::GetDeliveryCountriesConfig($this->form['prepare']['fields']['location']);
+			HitmeisterHelper::GetConditionTypesConfig($this->form['prepare']['fields']['condition']);
+			HitmeisterHelper::GetShippingTimesConfig($this->form['prepare']['fields']['shippingtime']);
+
+			$this->form['prepare']['fields']['shippingtimeMatching']['procFunc'] = array($this, 'confShippingtimeMatching');
+			mlGetOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);
+			mlGetOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
+			
+			try {
+				$orderStatusConditions = MagnaConnector::gi()->submitRequest(array('ACTION' => 'GetOrderStatusData'));
+			} catch (MagnaException $me) {
+				$orderStatusConditions = array (
+					'DATA' => array(
+						'CarrierCodes' => ML_ERROR_LABEL,
+						'Reasons' => array ('null' => ML_ERROR_LABEL)
+					)
+				);
+			}
+			
+			$this->form['orderSyncState']['fields']['carrier']['values'] = $orderStatusConditions['DATA']['CarrierCodes'];
+			$this->form['orderSyncState']['fields']['cancelreason']['values'] = $orderStatusConditions['DATA']['Reasons'];
+
+			unset($this->form['checkin']['fields']['leadtimetoship']);
 		}
-		*/
+	}
+	
+	protected function finalizeForm() {
+		parent::finalizeForm();
+		if (!$this->isAuthed) {
+			$this->form = array (
+				'login' => $this->form['login']
+			);
+			return;
+		}
+	}
+
+	protected function loadChoiseValuesAfterProcessPOST() {
+		if (!$this->isAuthed) {
+			global $magnaConfig;
+
+			unset($magnaConfig['db'][$this->mpID]['hitmeister.secretkey']);
+			unset($magnaConfig['db'][$this->mpID]['hitmeister.mppassword']);
+		}
 	}
 	
 }

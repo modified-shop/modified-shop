@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: YategoSummaryView.php 3261 2013-11-01 18:08:09Z derpapst $
+ * $Id: YategoSummaryView.php 6119 2015-10-19 14:20:21Z masoud.khodaparast $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -178,9 +178,7 @@ class YategoSummaryView extends ComparisonShoppingSummaryView {
 		return '
 			<td><table class="nostyle"><tbody>
 					<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>
-						<input type="text" id="price_'.$dbRow['products_id'].'"
-					           name="price['.$dbRow['products_id'].']"
-					           value="'.$this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice().'"/>
+						'.$this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice().'
 						<input type="hidden" id="backup_price_'.$dbRow['products_id'].'"
 					           value="'.$this->simplePrice->getPrice().'"/>
 					</td></tr>
@@ -196,9 +194,7 @@ class YategoSummaryView extends ComparisonShoppingSummaryView {
 			<td>'.(int)$dbRow['products_quantity'].'</td>
 			<td><input type="hidden" id="old_quantity_'.$dbRow['products_id'].'"
 				       value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/>
-			    <input type="text" id="quantity_'.$dbRow['products_id'].'"
-				       name="quantity['.$dbRow['products_id'].']" size="4" maxlength="4" 
-				       value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/></td>';
+			    '.$this->selection[$dbRow['products_id']]['quantity'].'</td>';
 	}
 
 	public function renderSelection() {

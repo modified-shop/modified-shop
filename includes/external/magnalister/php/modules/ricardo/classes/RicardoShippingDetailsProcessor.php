@@ -88,18 +88,24 @@ class RicardoShippingDetailsProcessor {
 			$shippingCost = $this->getShippingCost();
 		}
 
+		if (isset($this->args['content']['ShippingCumulative']) === true) {
+			$shippingCumulative = $this->getShippingCumulative($this->args['content']['ShippingCumulative']);
+		} else {
+			$shippingCumulative = $this->getShippingCumulative();
+		}
+
 		$shippingDesc = $this->getShippingDesc();
 
 		ob_start();?>
 		<script type="text/javascript">/*<![CDATA[*/
 			$(document).ready(function() {
-				var shippingId = jQuery('#<?= $idkey ?>').val();
+				var shippingId = jQuery('#<?php echo $idkey ?>').val();
 				toggleShippingDesc(shippingId);
 
-				$('#<?= $idkey ?>').change(function () {
+				$('#<?php echo $idkey ?>').change(function () {
 					jQuery.blockUI(blockUILoading);
 					var shippingId = jQuery(this).val();
-					var postData = <?= json_encode(array_merge(
+					var postData = <?php echo json_encode(array_merge(
 							$this->args,
 							array (
 								'action' => 'extern',
@@ -114,11 +120,11 @@ class RicardoShippingDetailsProcessor {
 
 					jQuery.ajax({
 						type: 'POST',
-						url: '<?= toURL($this->url, array('kind' => 'ajax'), true) ?>',
+						url: '<?php echo toURL($this->url, array('kind' => 'ajax'), true) ?>',
 						data: postData,
 						success: function(data) {
 							jQuery.unblockUI();
-							jQuery('#<?= $packageSize['id'] ?>').replaceWith(data);
+							jQuery('#<?php echo $packageSize['id'] ?>').replaceWith(data);
 						},
 						error: function (xhr, status, error) {
 							jQuery.unblockUI();
@@ -134,21 +140,21 @@ class RicardoShippingDetailsProcessor {
 
 
 				var payments = paymentOptions.val();
-				var opts = document.getElementById('<?= $idkey ?>').options;
+				var opts = document.getElementById('<?php echo $idkey ?>').options;
 				toggleRemoveShippingByDesc(payments, opts);
 
 				paymentOptions.change(function () {
 					var payments = $(this).val();
-					var opts = document.getElementById('<?= $idkey ?>').options;
+					var opts = document.getElementById('<?php echo $idkey ?>').options;
 					toggleRemoveShippingByDesc(payments, opts);
 				});
 			});
 
 			function toggleShippingDesc(shippingId) {
 				if (shippingId === "0") {
-					jQuery('#<?= $shippingDesc['id'] ?>').show();
+					jQuery('#<?php echo $shippingDesc['id'] ?>').show();
 				} else {
-					jQuery('#<?= $shippingDesc['id'] ?>').hide();
+					jQuery('#<?php echo $shippingDesc['id'] ?>').hide();
 				}
 			}
 			
@@ -162,14 +168,14 @@ class RicardoShippingDetailsProcessor {
 				}
 
 				if (typeof(payments) !== 'undefined' && payments !== null && payments.indexOf('262144') !== -1) {
-					$("#<?= $idkey ?> option[value='0']").remove();
+					$("#<?php echo $idkey ?> option[value='0']").remove();
 				} else if (exists === false) {
-					$("#<?= $idkey ?>").append('<option value="0"><?= $shippingByDescription ?></option>');
+					$("#<?php echo $idkey ?>").append('<option value="0"><?php echo $shippingByDescription ?></option>');
 				}
 			}
 
 		/*]]>*/</script><?php
-		$buyingModeContent = $shippingSelect . '&nbsp' . $packageSize['select'] . '&nbsp' . $shippingCost['text'] . '<br/>' . $shippingDesc['table'];
+		$buyingModeContent = $shippingSelect . '&nbsp' . $packageSize['select'] . '&nbsp' . $shippingCost['text'] . '<br/>' . $shippingCumulative['checkbox'] . '<br/>' . $shippingDesc['table'];
 		$buyingModeContent .= ob_get_contents();
 		ob_end_clean();
 
@@ -222,6 +228,27 @@ class RicardoShippingDetailsProcessor {
 			'text' => '<label for="' . $shippingCostIdKey . '">' . ML_GENERIC_SHIPPING_COST . ': </label><input type="text" class="autoWidth fullwidth" id="' . $shippingCostIdKey . '" name="' . $shippingCostNameKey . '" value="' . $shippingCostDefault . '"/><span style="margin-left: 3px;">' . ML_RICARDO_CURRENCY . '</span>',
 			'id' => $shippingCostIdKey,
 			'key' => $shippingCostKeys
+		);
+	}
+
+	protected function getShippingCumulative($shippingCumulativeDefault = null) {
+		$shippingCumulativeKeys = $this->args['key'] . '.shippingcumulative';
+		$shippingCumulativeNameKey = 'conf[' . $shippingCumulativeKeys . ']';
+		$shippingCumulativeIdKey = 'config_' . (isset($shippingCumulativeKeys) ? str_replace('.', '_', $shippingCumulativeKeys) : '');
+
+		if ($shippingCumulativeDefault === null) {
+			$shippingCumulativeDefault = getDBConfigValue($shippingCumulativeKeys, $this->mpID);
+		}
+
+		$checked = $shippingCumulativeDefault === 'true' ? 'checked' : '';
+
+		return array(
+			'checkbox' => '
+				<input type="hidden" name="' . $shippingCumulativeNameKey . '" value="false"/>
+				<input type="checkbox" id="' . $shippingCumulativeIdKey . '" name="' . $shippingCumulativeNameKey . '" value="true" ' . $checked . '/><label for="' . $shippingCumulativeIdKey . '">' . ML_RICARDO_CUMULATIVE . '</label>
+			',
+			'id' => $shippingCumulativeIdKey,
+			'key' => $shippingCumulativeKeys
 		);
 	}
 

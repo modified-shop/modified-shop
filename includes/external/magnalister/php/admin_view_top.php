@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: admin_view_top.php 5794 2015-06-30 16:36:54Z tim.neumann $
+ * $Id: admin_view_top.php 6246 2015-11-18 12:01:13Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -271,6 +271,7 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 		}
 ?>
 		<script type="text/javascript">/*<![CDATA[*/
+			
 			(function(jQuery) {
 				jQuery.fn.jDialog = function(parameters, okFunction) {
 					if (okFunction == undefined) {
@@ -295,7 +296,7 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 				}
 			})(jQuery);
 
-			jQuery(document).ready(function() {
+			jQuery(window).load(function() {
 				jQuery("body").everyTime('960s', 'keepAlive', function(i) {
 					jQuery.get(
 						"<?php echo FILENAME_MAGNALISTER; ?>", {
@@ -307,7 +308,9 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 						}
 					);
 				});
+			});
 
+			jQuery(document).ready(function() {
 				var bgC = jQuery('#content').css('background-color');
 				if (bgC.length > 1) {
 					jQuery('td.boxCenter').css({'background-color': bgC});
@@ -368,7 +371,9 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 		ob_start();
 		if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) & ~E_NOTICE & ~E_STRICT);
 		$current_page = basename($_SERVER["PHP_SELF"]);
-		require(DIR_WS_INCLUDES . 'header.php'); 
+		if (!defined('ML_GAMBIO_USE_IFRAME') || ML_GAMBIO_USE_IFRAME !== true) {
+			require(DIR_WS_INCLUDES . 'header.php');
+		}
 		if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) | E_WARNING | E_NOTICE | E_STRICT);
 		$out = ob_get_contents();
 		ob_end_clean();
@@ -377,7 +382,7 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 		/* Prepare Navigation */
 		$nav = '';
 		$tclass = '';
-		if (!$hasHeadNav && file_exists(DIR_WS_INCLUDES . 'column_left.php')) {
+		if (!$hasHeadNav && file_exists(DIR_WS_INCLUDES . 'column_left.php') && (!defined('ML_GAMBIO_USE_IFRAME') || ML_GAMBIO_USE_IFRAME !== true)) {
 			$tnav = file_get_contents(DIR_WS_INCLUDES . 'column_left.php');
 			if (in_array(SHOPSYSTEM, array('oscommerce', 'xonsoft'))) {
 				if (strpos($tnav, '$(\'#adminAppMenu\').accordion({') === false) {
@@ -488,7 +493,7 @@ if ($_MagnaSession['currentPlatform'] == 'ebay') {
 }
 
 ?>
-					<table border="0" width="100%" cellspacing="0" cellpadding="2" style="padding: 0 10px;"><tbody>
+					<table border="0" width="100%" cellspacing="0" cellpadding="2" style="<?php echo ((defined('ML_GAMBIO_USE_IFRAME') && ML_GAMBIO_USE_IFRAME === true)) ? '' : 'padding: 0 10px;'?>"><tbody>
 						<tr>
 							<td width="100%">
 								<h1 id="magnalogo"><a href="<?php echo toURL(); ?>" title="<?php echo ML_HEADLINE_MAIN; ?>">

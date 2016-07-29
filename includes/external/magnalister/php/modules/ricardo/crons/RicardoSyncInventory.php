@@ -82,12 +82,20 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 		if ($bSyncStock) {
 			// Check Quantity variants or master. QuantityTotal is only set if product has variants
 			if ((isset($this->cItem['Variations']) && isset($product['Variations'])) && isset($product['QuantityTotal'])) {
+				$data['IncreaseQuantity'] = false;
 				$data['NewQuantity'] = $product['QuantityTotal'];
+				if ($product['QuantityTotal'] > $this->cItem['Quantity'] && $this->config['StockSync'] === 'auto_reduce') {
+					$data['IncreaseQuantity'] = true;
+				}
 			} else {
 				// If quantity is lower, update it
-				if (isset($this->cItem['Quantity']) && $product['Quantity'] < $this->cItem['Quantity']) {
+				if (isset($this->cItem['Quantity']) && $product['Quantity'] != $this->cItem['Quantity']) {
+					$data['IncreaseQuantity'] = false;
 					$data['NewQuantity'] = $product['Quantity'];
 					$data['Process'] = true;
+					if ($product['Quantity'] > $this->cItem['Quantity'] && $this->config['StockSync'] === 'auto_reduce') {
+						$data['IncreaseQuantity'] = true;
+					}
 				}
 			}
 		}
@@ -110,9 +118,13 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
                 }
 
 				// If price is lower, update it
-				if (isset($price) && (float)$price < (float)$this->cItem['Price']) {
+				if (isset($price) && (float)$price != (float)$this->cItem['Price']) {
 					$data['Price'] = $price;
 					$data['Process'] = true;
+					$data['IncreasePrice'] = false;
+					if ($price > $this->cItem['Price'] && $this->config['PriceSync'] === 'auto_reduce') {
+						$data['IncreasePrice'] = true;
+					}
 				}
 			}
 		}
@@ -139,9 +151,11 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 				}
 
 				if ($bSyncStock) {
-					if ((int)$variantData['Quantity'] < (int)$cVariation['Quantity']) {
-						$variant['Quantity'] = $variantData['Quantity'];
-						$variant['Process'] = true;
+					$variant['Quantity'] = $variantData['Quantity'];
+					$variant['Process'] = true;
+					$variant['IncreaseQuantity'] = false;
+					if ((int)$variantData['Quantity'] > (int)$cVariation['Quantity'] && $this->config['StockSync'] === 'auto_reduce') {
+						$variant['IncreaseQuantity'] = true;
 					}
 				}
 
@@ -158,9 +172,13 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 						$price = round($price * (($taxFromConfig + 100) / 100), 2);
 					}
 
-					if ((float)$price < (float)$cVariation['Price']) {
+					if ((float)$price !== (float)$cVariation['Price']) {
 						$variant['Price'] = $price;
 						$variant['Process'] = true;
+						$variant['IncreasePrice'] = false;
+						if ($price > $cVariation['Price'] && $this->config['PriceSync'] === 'auto_reduce') {
+							$variant['IncreasePrice'] = true;
+						}
 					}
 				}
 
@@ -175,12 +193,20 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 				"\n\tRicardo Quantity: " . $this->cItem['Quantity'] .
 				"\n\tShop Main Quantity: " . $data['NewQuantity']
 			);
+		} else {
+			$this->log("\n\t".
+				'Quantity not changed (' . $this->cItem['Quantity'] . ')'
+			);
 		}
 
-		if (isset($this->cItem['Price']) === true) {
+		if (isset($data['Price']) === true) {
 			$this->log(
 				"\n\tRicardo Price: " . $this->cItem['Price'] .
 				"\n\tShop Price: " . $data['Price']
+			);
+		} else {
+			$this->log("\n\t".
+				'Price not changed (' . $this->cItem['Price'] . ')'
 			);
 		}
 
@@ -199,13 +225,31 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 						}
 						
 						$this->log(
-							"\n\t\tVariation SKU: " . $ricardoVariation['SKU'] .
-							"\n\t\tRicardo Quantity: " . $ricardoVariation['Quantity'] .
-							"\n\t\tShop Main Quantity: " . $aShopVariantData['Quantity'] .
-							"\n\t\tRicardo Price: " . $ricardoVariation['Price'] .
-							"\n\t\tShop Price: " . $price .
-							"\n"
+							"\n\t\tVariation SKU: " . $ricardoVariation['SKU']
 						);
+
+						if (isset($aShopVariantData['Quantity']) === true) {
+							$this->log(
+								"\n\tRicardo Quantity: " . $ricardoVariation['Quantity'] .
+								"\n\tShop Main Quantity: " . $aShopVariantData['Quantity']
+							);
+						} else {
+							$this->log("\n\t".
+								'Quantity not changed (' . $ricardoVariation['Quantity'] . ')'
+							);
+						}
+
+						if (isset($price) === true) {
+							$this->log(
+								"\n\tRicardo Price: " . $ricardoVariation['Price'] .
+								"\n\tShop Main Price: " . $price
+							);
+						} else {
+							$this->log("\n\t".
+								'Price not changed (' . $ricardoVariation['Price'] . ')'
+							);
+						}
+
 						break;
 					}
 				}
@@ -232,5 +276,23 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 			unset($data['Process']);
 			$this->updateItems(array($data));
 		}
+	}
+	
+	protected function isAutoSyncEnabled() {
+		$this->syncStock = ($this->config['StockSync'] == 'auto') || ($this->config['StockSync'] == 'auto_reduce')  || ($this->config['StockSync'] == 'auto_fast');
+		$this->syncPrice = ($this->config['PriceSync'] == 'auto') || ($this->config['PriceSync'] == 'auto_reduce');
+		
+		//$this->syncStock = $this->syncPrice = true;
+
+		if (!($this->syncStock || $this->syncPrice)) {
+			$this->log('== '.$this->marketplace.' ('.$this->mpID.'): no autosync =='."\n");
+			return false;
+		}
+		$this->log(
+			'== '.$this->marketplace.' ('.$this->mpID.'): '.
+			'Sync stock: '.($this->syncStock ? 'true' : 'false').'; '.
+			'Sync price: '.($this->syncPrice ? 'true' : 'false')." ==\n"
+		);
+		return true;
 	}
 }

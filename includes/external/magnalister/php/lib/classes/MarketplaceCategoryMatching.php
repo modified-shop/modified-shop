@@ -517,9 +517,9 @@ var mpCategorySelector = (function() {
 				}
 			},
 			open: function(event, ui) {
-				if (isStoreCategory) {
-					return;
-				}
+				//if (isStoreCategory) {
+				//	return;
+				//}
 				var tbar = $('#mpCategorySelector').parent().find('.ui-dialog-titlebar');
 				if (tbar.find('.ui-icon-arrowrefresh-1-n').length == 0) {
 					var rlBtn = $('<a class="ui-dialog-titlebar-close ui-corner-all ui-state-focus" '+

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: inventoryUpdate.php 5033 2015-01-08 13:33:24Z tim.neumann $
+ * $Id: inventoryUpdate.php 5959 2015-09-01 10:02:05Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *	 Released under the GNU General Public License v2 or later
@@ -275,6 +275,8 @@ function magnaGetCartContents() {
 }
 
 function magnaInventoryUpdateByOrder() {
+	// don't use this any more 01.09.2015 Problems with magnalister (Max execution time -> MagnaConnector)
+	return;
 	global $magnaConfig, $_modules;
 	
 	if (getDBConfigValue(array('general.trigger.checkoutprocess.inventoryupdate', 'val'), 0, 'true') != 'true') {
@@ -335,6 +337,8 @@ function magnaInventoryUpdateByOrder() {
 }
 
 function magnaInventoryUpdateByEdit() {
+	// don't use this any more 01.09.2015 Problems with magnalister (Max execution time -> MagnaConnector)
+	return;
 	global $magnaConfig, $_modules;
 	/*
 	echo var_export_pre($_POST, '$_POST');

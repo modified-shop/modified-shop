@@ -33,6 +33,13 @@ class HitmeisterCheckinProductList extends MLProductListMagnaCompatibleAbstract{
 			),
 			'field' => array('magnacompatmpcategory'),
 		);
+		$this->aListConfig[] = array(
+			'head' => array(
+				'attributes' => 'class="lowestprice"',
+				'content' => 'ML_LABEL_DATA_PREPARED',
+			),
+			'field' => array('hitmeisterpreparetype'),
+		);
 		parent::__construct();
 		$this
 			->addDependency('MLProductListDependencyCheckinToSummaryAction')
@@ -97,12 +104,16 @@ class HitmeisterCheckinProductList extends MLProductListMagnaCompatibleAbstract{
 					<table class="nostyle"><tbody>
 						<tr>
 							<td class="label">'.'Kategorie'.':&nbsp;</td>
-							<td>'.(empty($aData['mp_category_id']) ? '&mdash;' : $aData['mp_category_id']).(empty($aData['mp_category_name']) ? '' : ' '.$aData['mp_category_name']).'</td>
+							<td>'.(empty($aData['MarketplaceCategories']) ? '&mdash;' : $aData['MarketplaceCategories']).(empty($aData['MarketplaceCategoriesName']) ? '' : ' '.$aData['MarketplaceCategoriesName']).'</td>
 						<tr>
 					</tbody></table>
 				</td><tr>
 			</tbody></table>';
 		}
 		return '&mdash;';
+	}
+
+	protected function getPrepareType($aRow){
+		return $this->getPrepareData($aRow, 'PrepareType') == 'Apply' ? ML_AMAZON_LABEL_PREPARE_IS_APPLIED : ML_AMAZON_LABEL_PREPARE_IS_MATCHED;
 	}
 }

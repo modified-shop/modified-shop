@@ -1,19 +1,19 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: checkin.php 1174 2011-07-30 17:49:04Z derpapst $
+ * $Id$
  *
- * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -27,77 +27,54 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 	public function __construct(&$params) {
 		parent::__construct($params);
 
-		$this->prepareSettings['selectionName'] = 'prepare';
-		$this->resources['url']['mode'] = $this->prepareSettings['selectionName'];
+		$this->prepareSettings['selectionName'] = isset($_GET['view']) ? $_GET['view'] : 'apply';
+		$this->resources['url']['mode'] = 'prepare';
+		$this->resources['url']['view'] = $this->prepareSettings['selectionName'];
 	}
-	
+
 	protected function saveMatching() {
-		#echo print_m($_POST, '$_POST');
-		
 		if (!array_key_exists('saveMatching', $_POST)) {
 			return;
 		}
+		
+		require_once(DIR_MAGNALISTER_MODULES . 'hitmeister/classes/HitmeisterProductSaver.php');
+		
+		$itemDetails = $_POST;
+		$oProductSaver = new HitmeisterProductSaver($this->resources['session']);
+		
+		$aProductIDs = MagnaDB::gi()->fetchArray("
+			SELECT pID
+			  FROM ".TABLE_MAGNA_SELECTION."
+			 WHERE     mpID = '".$this->mpID."'
+				   AND selectionname = '".$this->prepareSettings['selectionName']."'
+				   AND session_id = '".session_id()."'
+		", true);
 
-	$fsk2porn = false;
-	if (!isset($_POST['is_porn'])) {
-		# je nach hitmeister.pornsetting
-		# checkbox => _POST isset
-		# none => 0
-		# fsk18 => nachsehen
-		if ('fsk18' == getDBConfigValue('hitmeister.pornsetting', $this->mpID, 'none')) {
-			$fsk2porn = true;
+		if (1 == count($aProductIDs)) {
+			$oProductSaver->saveSingleProductProperties($aProductIDs[0], $itemDetails, $this->prepareSettings['selectionName']);
+		} else if (!empty($aProductIDs)) {
+			$oProductSaver->saveMultipleProductProperties($aProductIDs, $itemDetails, $this->prepareSettings['selectionName']);
 		}
-		$_POST['is_porn'] = 0;
-	}
-		# Lieferzeit - Matching vom Array ins SQL uebersetzen
-		if ('m' == $_POST['shippingtime']) {
-			$shippingTimeSql = 'CASE ';
-			foreach (getDBConfigValue('hitmeister.shippingtimematching.values', $this->mpID, array()) as $shopShippingTime => $hitmeisterShippingTime) {
-				$shippingTimeSql .=  'WHEN p.products_shippingtime = \''.$shopShippingTime.'\' THEN \''.$hitmeisterShippingTime.'\' ';
+		
+		if (count($oProductSaver->aErrors) === 0) {
+			$matchingNotFinished = isset($_POST['matching_nextpage']) && ctype_digit($_POST['matching_nextpage']);
+			if ($matchingNotFinished === false) {
+				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+					'mpID' => $this->mpID,
+					'selectionname' => $this->prepareSettings['selectionName'],
+					'session_id' => session_id()
+				));
 			}
-			$shippingTimeSql .=  'ELSE \''.getDBConfigValue('hitmeister.shippingtime', $this->mpID).'\' END';
-			if (!strpos($shippingTimeSql, 'WHEN')) {
-				$shippingTimeSql = ', \''.getDBConfigValue('hitmeister.shippingtime', $this->mpID).'\'';
-			}
-		} else if (!empty($_POST['shippingtime'])) {
-			$shippingTimeSql = '\''.$_POST['shippingtime'].'\'';
 		} else {
-			$shippingTimeSql = ', \''.getDBConfigValue('hitmeister.shippingtime', $this->mpID).'\'';
-		}
-		MagnaDB::gi()->query(eecho('
-			REPLACE INTO '.TABLE_MAGNA_HITMEISTER_PREPARE.'
-				SELECT DISTINCT ms.mpID, p.products_id, p.products_model, 
-				       \''.MagnaDB::gi()->escape($_POST['mpCategory']).'\' AS mp_category_id,
-				       \''.MagnaDB::gi()->escape($_POST['mpCategoryName']).'\' AS mp_category_name,
-				       \''.MagnaDB::gi()->escape($_POST['condition_id']).'\' AS `condition_id`,
-				       '.$shippingTimeSql.' AS shippingtime,
-				       \''.MagnaDB::gi()->escape($_POST['is_porn']).'\' AS is_porn,
-				       \''.MagnaDB::gi()->escape($_POST['age_rating']).'\' AS age_rating,
-				       \''.MagnaDB::gi()->escape(strip_tags($_POST['comment'])).'\' AS `comment`,
-					   \''.date('Y-m-d H:i:s').'\' AS PreparedTs
-				  FROM '.TABLE_MAGNA_SELECTION.' ms, '.TABLE_PRODUCTS.' p
-				 WHERE ms.mpID=\''.$this->mpID.'\' AND
-				       ms.selectionname=\''.$this->prepareSettings['selectionName'].'\' AND
-				       ms.session_id=\''.session_id().'\' AND
-				       ms.pID=p.products_id
-		', false));
-		if ($fsk2porn) {
-			MagnaDB::gi()->query(eecho('UPDATE '.TABLE_MAGNA_HITMEISTER_PREPARE.' hp, '.TABLE_MAGNA_SELECTION.' ms, '.TABLE_PRODUCTS.' p
-				SET hp.is_porn = p.products_fsk18
-				WHERE hp.products_id = p.products_id AND
-					  ms.mpID=\''.$this->mpID.'\' AND
-					  ms.selectionname=\''.$this->prepareSettings['selectionName'].'\' AND
-					  ms.session_id=\''.session_id().'\' AND
-					  ms.pID=p.products_id
-		', false));
-		}
-		MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
-			'mpID' => $this->mpID,
-			'selectionname' => $this->prepareSettings['selectionName'],
-			'session_id' => session_id()
-		));
+			# stay on prepare product form
+			$_POST['prepare'] = 'prepare';
+
+			foreach ($oProductSaver->aErrors as $sError) {
+				echo '<div class="errorBox">' . $sError . '</div>';
+			}
+		}	
 	}
-	
+
 	protected function deleteMatching() {
 		if (!(array_key_exists('unprepare', $_POST)) || empty($_POST['unprepare'])) {
 			return;
@@ -132,9 +109,15 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 		}
 		unset($_POST['unprepare']);
 	}
-	
+
 	protected function processMatching() {
-		if (($class = $this->loadResource('prepare', 'PrepareView')) === false) {
+		if ($this->prepareSettings['selectionName'] === 'match') {
+			$className = 'MatchingPrepareView';
+		} else {
+			$className = 'ApplyPrepareView';
+		}
+
+		if (($class = $this->loadResource('prepare', $className)) === false) {
 			if ($this->isAjax) {
 				echo '{"error": "This is not supported"}';
 			} else {
@@ -142,14 +125,14 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 			}
 			return;
 		}
-	
+
 		$params = array();
 		foreach (array('mpID', 'marketplace', 'marketplaceName', 'resources', 'prepareSettings') as $attr) {
 			if (isset($this->$attr)) {
 				$params[$attr] = &$this->$attr;
 			}
 		}
-		
+
 		$cMDiag = new $class($params);
 
 		if ($this->isAjax) {
@@ -168,7 +151,7 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 			echo $html;
 		}
 	}
-	
+
 	protected function processSelection() {
 		if (($class = $this->loadResource('prepare', 'PrepareCategoryView')) === false) {
 			if ($this->isAjax) {
@@ -187,7 +170,13 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 	}
 
 	protected function processProductList() {
-		if (($sClass = $this->loadResource('prepare', 'PrepareProductList')) === false) {
+		if ($this->prepareSettings['selectionName'] === 'match') {
+			$className = 'MatchingProductList';
+		} else {
+			$className = 'ApplyProductList';
+		}
+
+		if (($sClass = $this->loadResource('prepare', $className)) === false) {
 			if ($this->isAjax) {
 				echo '{"error": "This is not supported"}';
 			} else {
@@ -195,14 +184,78 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 			}
 			return;
 		}
+
 		$o = new $sClass();
 		echo $o;
 	}
 
 	public function process() {
+		if (   isset($_POST['request'])
+			&& ($_POST['request'] === 'ItemSearchByTitle' || $_POST['request'] === 'ItemSearchByEAN')
+		) {
+			if ($_POST['request'] === 'ItemSearchByTitle') {
+				$sSearch = $_POST['search'];
+				$sType = 'Title';
+			} else {
+				$sSearch = $_POST['ean'];
+				$sType = 'EAN';
+			}
+
+			$product = array(
+				'Id'		=> $_POST['productID'],
+				'Results'	=> HitmeisterHelper::SearchOnHitmeister($sSearch, $sType)
+			);
+
+			$sClass = $this->loadResource('prepare', 'MatchingPrepareView');
+
+			$params = array();
+			foreach (array('mpID', 'marketplace', 'marketplaceName', 'resources', 'prepareSettings') as $attr) {
+				if (isset($this->$attr)) {
+					$params[$attr] = &$this->$attr;
+				}
+			}
+
+			$v = new $sClass($params);
+			echo $v->getSearchResultsHtml($product);
+			return;
+		}
+
+		if (isset($_GET['automatching']) && $_GET['automatching'] === 'getProgress') {
+			global $_MagnaSession;
+
+			echo json_encode(array('x' => (int) MagnaDB::gi()->fetchOne("
+			    SELECT count(pID)
+			      FROM ".TABLE_MAGNA_SELECTION."
+			     WHERE     mpID = '".$_MagnaSession['mpID']."'
+			           AND selectionname = '".$this->prepareSettings['selectionName']."'
+			           AND session_id = '".session_id()."'
+			  GROUP BY mpID
+			")));
+			return;
+		} else if (isset($_GET['automatching']) && $_GET['automatching'] === 'start') {
+			$autoMatchingStats = $this->insertAutoMatchProduct();
+			$re = trim(sprintf(
+				ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_SUMMARY,
+				$autoMatchingStats['success'],
+				$autoMatchingStats['nosuccess'],
+				$autoMatchingStats['almost']
+			));
+			echo magnalisterIsUTF8($re) ? $re : utf8_encode($re);
+		}
+
 		$this->saveMatching();
 		$this->deleteMatching();
-		if (isset($_POST['prepare']) || (isset($_GET['where']) && ($_GET['where'] == 'catMatchView'))) {
+
+		$hasNextPage = isset($_POST['matching_nextpage']) && ctype_digit($_POST['matching_nextpage']);
+
+		if (
+				(
+					isset($_POST['prepare']) || 
+					(isset($_GET['where']) && (($_GET['where'] == 'catMatchView') || ($_GET['where'] == 'catAttributes'))) || 
+					$hasNextPage
+				) &&
+				($this->getSelectedProductsCount() > 0)
+		) {
 			$this->processMatching();
 		} else {
 			if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
@@ -212,4 +265,111 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 			}
 		}
 	}
+	
+	protected function getSelectedProductsCount() {
+		$query = '
+			SELECT COUNT(*)
+			FROM ' . TABLE_MAGNA_SELECTION . ' s
+			LEFT JOIN ' . TABLE_MAGNA_HITMEISTER_PREPARE . ' p on p.mpID = s.mpID and p.products_id = s.pID
+			WHERE s.mpID = ' . $this->mpID . '
+			    AND s.selectionname = "' . $this->prepareSettings['selectionName'] . '"
+			    AND s.session_id = "' . session_id() . '"
+		';
+
+		if (isset($_POST['match']) && $_POST['match'] === 'notmatched') {
+			$query .= ' AND coalesce(p.Verified, "") != "OK"';
+		}
+
+		return (int) MagnaDB::gi()->fetchOne($query);
+	}
+
+	private function insertAutoMatchProduct() {
+		$autoMatchingStats = array (
+			'success' => 0,
+			'almost' => 0,
+			'nosuccess' => 0,
+			'_timer' => microtime(true)
+		);
+
+		$sClass = $this->loadResource('prepare', 'MatchingPrepareView');
+
+		$params = array();
+		foreach (array('mpID', 'marketplace', 'marketplaceName', 'resources', 'prepareSettings') as $attr) {
+			if (isset($this->$attr)) {
+				$params[$attr] = &$this->$attr;
+			}
+		}
+
+		$v = new $sClass($params);
+		$products = $v->getSelection(true);
+
+		foreach ($products as $product) {
+			$searchResults = HitmeisterHelper::SearchOnHitmeister($product['EAN'], 'EAN');
+
+			if (   $searchResults === false
+				|| (is_array($searchResults) && count($searchResults) === 0)
+			) {
+				$searchResults = HitmeisterHelper::SearchOnHitmeister($product['Title'], 'Title');
+			}
+
+			$iMatchedArrayKey = null;
+			if (!empty($searchResults)) {
+				foreach ($searchResults as $sKey => $searchResult) {
+					if ($searchResult['ean_match'] === true) {
+						$iMatchedArrayKey = $sKey;
+						break;
+					}
+				}
+			} else {
+				$searchResults = array();
+			}
+
+			if (   $iMatchedArrayKey === null
+				&& count($searchResults) != 1
+			) {
+				if (count($searchResults) > 0) {
+					$autoMatchingStats['almost']++;
+				}
+				$autoMatchingStats['nosuccess']++;
+				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+					'pID' => $product['Id'],
+					'mpID' => $this->mpID,
+					'selectionname' => 'Match',
+					'session_id' => session_id()
+				));
+				continue;
+			} elseif ($iMatchedArrayKey === null) {
+				$iMatchedArrayKey = 0;
+			}
+
+			$matchedProduct = array(
+				'mpID'				=> $this->mpID,
+				'products_id'		=> $product['Id'],
+				'products_model'	=> $product['Model'],
+				'Title'				=> $searchResults[$iMatchedArrayKey]['title'],
+				'EAN'				=> reset($searchResults[$iMatchedArrayKey]['eans']),
+				'ConditionType'		=> $product['Condition'],
+				'ShippingTime'		=> $product['ShippingTime'],
+				'Location'			=> $product['Country'],
+				'Comment'			=> $product['Comment'],
+				'PrepareType'		=> 'Match',
+				'PreparedTS'		=> date('Y-m-d H:i:s'),
+				'Verified'			=> 'OK'
+			);
+
+			MagnaDB::gi()->insert(TABLE_MAGNA_HITMEISTER_PREPARE, $matchedProduct, true);
+
+			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+				'pID' => $product['Id'],
+				'mpID' => $this->mpID,
+				'selectionname' => 'Match',
+				'session_id' => session_id()
+			));
+
+			$autoMatchingStats['success']++;
+		}
+
+		return $autoMatchingStats;
+	}
+
 }

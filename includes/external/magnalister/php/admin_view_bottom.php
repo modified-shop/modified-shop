@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: admin_view_bottom.php 5211 2015-02-18 16:33:00Z derpapst $
+ * $Id: admin_view_bottom.php 6842 2016-07-29 10:15:21Z markus.bauer $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -127,7 +127,11 @@ if (MAGNA_DEBUG && class_exists('MagnaDB')) {
 		</tbody></table>
 		<!-- body_eof //-->
 		<!-- footer //-->
-		<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+		<?php
+		if (!defined('ML_GAMBIO_USE_IFRAME') || ML_GAMBIO_USE_IFRAME !== true) {
+			require(DIR_WS_INCLUDES . 'footer.php');
+		}
+		?>
 		<!-- footer_eof //-->
 		<script type="text/javascript">
 			var magnaErrors = <?php echo MagnaError::gi()->exceptionsToHTML(); ?>;
@@ -135,6 +139,25 @@ if (MAGNA_DEBUG && class_exists('MagnaDB')) {
 			if (magnaErrors.length >= 1) {
 				$('#magnaErrors').css({'display':'block'});
 			}
+			<?php if (array_key_exists('CSRFName', $_SESSION) && array_key_exists('CSRFToken', $_SESSION)) { ?>
+				(function($) {
+					var oCsrfConfig = {"<?php echo $_SESSION['CSRFName']; ?>": "<?php echo  $_SESSION['CSRFToken']; ?>"};
+					$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+						if(
+							(typeof options.type === 'string' && options.type.toLowerCase() === 'post')
+							|| 
+							(typeof originalOptions.type === 'string' && originalOptions.type.toLowerCase() === 'post')
+						) { // adding CSRF-token to each ajax-post-request
+							options.data = $.param($.extend(typeof originalOptions.data === 'object' ? originalOptions.data : {}, oCsrfConfig));
+						}
+					});
+					$(document).ready(function() { // adding CSRF-token to each post-form
+						for (var sCsrfName in oCsrfConfig) {
+							$('#content.magnamain form[method="post"]').prepend('<input type="hidden" name="'+sCsrfName+'" value="'+oCsrfConfig[sCsrfName]+'" >');
+						} 
+					});
+				})(jQuery);
+			<?php } ?>
 		</script>
 	</body>
 </html>

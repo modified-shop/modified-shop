@@ -35,7 +35,12 @@ class MagnaCompatibleListingLoader extends MagnaCompatibleBase {
 			$ivC = $this->loadResource('listings', 'InventoryView');
 			$iV = new $ivC();
 			echo $iV->renderView();
-			
+
+		} else if ($this->resources['query']['view'] == 'rejected') {
+			$rvC = $this->loadResource('listings', 'RejectedView');
+			$rV = new $rvC();
+			echo $rV->renderView();
+
 		} else {
 			$dvC = $this->loadResource('listings', 'DeletedView');
 			$dV = new $dvC();

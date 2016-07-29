@@ -59,7 +59,7 @@ class RicardoWarrantyProcessor {
 		ob_start();?>
 		<script type="text/javascript">/*<![CDATA[*/
 			$(document).ready(function() {
-				toggleWarrantyDescription(jQuery('#<?= $idkey ?>').val());
+				toggleWarrantyDescription(jQuery('#<?php echo $idkey ?>').val());
 
 				$('#<?php echo $idkey; ?>').change(function () {
 					toggleWarrantyDescription(this.value);
@@ -68,9 +68,9 @@ class RicardoWarrantyProcessor {
 
 			function toggleWarrantyDescription(value) {
 				if (value === '0') {
-					jQuery('#<?= $warrantyDesc['id'] ?>').show();
+					jQuery('#<?php echo $warrantyDesc['id'] ?>').show();
 				} else {
-					jQuery('#<?= $warrantyDesc['id'] ?>').hide();
+					jQuery('#<?php echo $warrantyDesc['id'] ?>').hide();
 				}
 			}
 		/*]]>*/</script><?php

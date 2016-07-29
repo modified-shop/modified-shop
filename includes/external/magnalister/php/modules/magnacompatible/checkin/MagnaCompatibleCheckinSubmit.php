@@ -398,7 +398,7 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 		$images = array();
 		if (!empty($product['products_allimages'])) {
 			foreach($product['products_allimages'] as $img) {
-				$images[] = $imagePath.$img;
+				$images[] = (preg_match('/http(s{0,1}):\/\//', $img) ? '' : $imagePath ).$img;
 			}
 		}
 		$data['submit']['Images'] = $images;

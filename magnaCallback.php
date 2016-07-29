@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnaCallback.php 5449 2015-04-08 11:36:36Z tim.neumann $
+ * $Id: magnaCallback.php 6648 2016-04-20 13:05:21Z markus.bauer $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -477,12 +477,20 @@ function magnaInstalled($woDBCheck = false) {
 		$sVersion = MagnaDB::gi()->fetchOne("
 			SELECT version
 			  FROM version_history
-			  WHERE type IN ('service_pack', 'master_update')
-		   ORDER BY installation_date DESC
-			  LIMIT 1
+			 WHERE     type IN ('service_pack', 'master_update')
+			".((MagnaDB::gi()->columnExistsInTable('installed', 'version_history'))
+				? 'AND installed = 1'
+				: 'AND (is_full_version = 0 OR (is_full_version = 1 AND history_id = 1))'
+			)."
+		  ORDER BY installation_date DESC
+			 LIMIT 1
 		");
 		if (version_compare($sVersion, '2.1', '>=')) {
 			MagnaDB::gi()->setCharset('utf8');
+		}
+		// in gambio v2.5.2.1 ml will displayed in iframe so no stuff to display from gambio backend
+		if (version_compare($sVersion, '2.5.2.1', '>=')) {
+			define('ML_GAMBIO_USE_IFRAME', true);
 		}
 	}
 	$_magnaIsInstalled = MagnaDB::gi()->tableExists(TABLE_MAGNA_CONFIG);
@@ -735,12 +743,20 @@ function magnaCallbackRun() {
 		$sVersion = MagnaDB::gi()->fetchOne("
 			SELECT version
 			  FROM version_history
-			  WHERE type IN ('service_pack', 'master_update')
-		   ORDER BY installation_date DESC
-			  LIMIT 1
+			 WHERE     type IN ('service_pack', 'master_update')
+			".((MagnaDB::gi()->columnExistsInTable('installed', 'version_history'))
+				? 'AND installed = 1'
+				: 'AND (is_full_version = 0 OR (is_full_version = 1 AND history_id = 1))'
+			)."
+		  ORDER BY installation_date DESC
+			 LIMIT 1
 		");
 		if (version_compare($sVersion, '2.1', '>=')) {
 			MagnaDB::gi()->setCharset('utf8');
+		}
+		// in gambio v2.5.2.1 ml will displayed in iframe so no stuff to display from gambio backend
+		if (version_compare($sVersion, '2.5.2.1', '>=')) {
+			define('ML_GAMBIO_USE_IFRAME', true);
 		}
 	}
 	/* Language-Foo */
@@ -909,7 +925,7 @@ if (MAGNA_CALLBACK_MODE == 'STANDALONE') {
 			'POST'    => $_POST,
 			'COOKIE'  => $_COOKIE
 		);
-		
+		$_GET['language'] = '__notExistingLanguageToForceDefault__';
 		require_once('includes/application_top.php');
 		
 		/* Kein MagicQuotes mist mitmachen... */

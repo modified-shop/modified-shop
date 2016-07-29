@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: configFunctions.php 5709 2015-06-04 08:11:46Z tim.neumann $
+ * $Id: configFunctions.php 6288 2015-12-04 15:08:12Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -117,20 +117,16 @@ function mlGetCustomersStatus(&$form, $inclAdmin = true) {
 }
 
 function mlGetPaymentModules(&$form) {
+	global $_magnaLanguage;
 	$payments = explode(';', MODULE_PAYMENT_INSTALLED);
-	$lang = (isset($_SESSION['language']) && !empty($_SESSION['language'])) ? $_SESSION['language'] : 'english';
 	
 	if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) ^ E_NOTICE);
 	foreach ($payments as $p) {
 		if (empty($p)) continue;
 		$payment = substr(basename($p), 0, strrpos($p, '.'));
 		$c = 'MODULE_PAYMENT_'.strtoupper($payment).'_TEXT_TITLE';
-		// Gambio 2.3 fix
-		if (mlGambio2_3_ModulesFix($payment, 'payment')) {
-			$m = DIR_FS_LANGUAGES.$lang.'/original_sections/modules/payment/'.$payment.'.lang.inc.php';
-		} else {
-			$m = DIR_FS_LANGUAGES.$lang.'/modules/payment/'.$p;
-		}
+		$m = DIR_FS_LANGUAGES.$_magnaLanguage.'/modules/payment/'.$p;
+		mlLoadModuleLanguageDefines($m);
 		if (!defined($c) && file_exists($m) && is_file($m)) {
 			try {
 				require_once($m);
@@ -144,20 +140,16 @@ function mlGetPaymentModules(&$form) {
 }
 
 function mlGetShippingModules(&$form) {
+	global $_magnaLanguage;
 	$shippings = explode(';', MODULE_SHIPPING_INSTALLED);
-	$lang = (isset($_SESSION['language']) && !empty($_SESSION['language'])) ? $_SESSION['language'] : 'english';
 	
 	if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) ^ E_NOTICE);
 	foreach ($shippings as $s) {
 		if (empty($s)) continue;
 		$shipping = substr(basename($s), 0, strrpos($s, '.'));
 		$c = 'MODULE_SHIPPING_'.strtoupper($shipping).'_TEXT_TITLE';
-		// Gambio 2.3 fix
-		if (mlGambio2_3_ModulesFix($shipping, 'shipping')) {
-			$m = DIR_FS_LANGUAGES.$lang.'/original_sections/modules/shipping/'.$shipping.'.lang.inc.php';
-		} else {
-			$m = DIR_FS_LANGUAGES.$lang.'/modules/shipping/'.$s;
-		}
+		$m = DIR_FS_LANGUAGES.$_magnaLanguage.'/modules/shipping/'.$s;
+		mlLoadModuleLanguageDefines($m);
 		if (!defined($c) && file_exists($m) && is_file($m)) {
 			try {
 				require_once($m);
@@ -220,5 +212,48 @@ function mlGetShippingStatus(&$form) {
 		foreach ($data as $elem) {
 			$form['values'][$elem['id']] = fixHTMLUTF8Entities($elem['name']);
 		}
+	}
+}
+
+/**
+ * Preset the tracking and carrier matching if Gambio has "orders_parcel_tracking_codes" table
+ * @param $sMarketplaceId
+ * @param $sConfigKeyCarrier
+ * @param $sConfigKeyTrackingCode
+ */
+function mlPresetTrackingCodeMatching($sMarketplaceId, $sConfigKeyCarrier, $sConfigKeyTrackingCode) {
+	if (   MagnaDB::gi()->tableExists('orders_parcel_tracking_codes')
+		&& !MagnaDB::gi()->recordExists(TABLE_MAGNA_CONFIG, array('mpID' => $sMarketplaceId, 'mkey' => $sConfigKeyCarrier.'.table'))
+		&& !MagnaDB::gi()->recordExists(TABLE_MAGNA_CONFIG, array('mpID' => $sMarketplaceId, 'mkey' => $sConfigKeyTrackingCode.'.table'))
+		&& !MagnaDB::gi()->recordExists(TABLE_MAGNA_CONFIG, array('mpID' => $sMarketplaceId, 'mkey' => $sConfigKeyCarrier.'.alias'))
+		&& !MagnaDB::gi()->recordExists(TABLE_MAGNA_CONFIG, array('mpID' => $sMarketplaceId, 'mkey' => $sConfigKeyTrackingCode.'.alias'))
+	) {
+		MagnaDB::gi()->insert(TABLE_MAGNA_CONFIG, array(
+			'mpID' => $sMarketplaceId,
+			'mkey' => $sConfigKeyCarrier.'.table',
+			'value' => json_encode(array(
+				'table' => 'orders_parcel_tracking_codes',
+				'column' => 'parcel_service_name',
+			)),
+		));
+		MagnaDB::gi()->insert(TABLE_MAGNA_CONFIG, array(
+			'mpID' => $sMarketplaceId,
+			'mkey' => $sConfigKeyCarrier.'.alias',
+			'value' => 'order_id',
+		));
+
+		MagnaDB::gi()->insert(TABLE_MAGNA_CONFIG, array(
+			'mpID' => $sMarketplaceId,
+			'mkey' => $sConfigKeyTrackingCode.'.table',
+			'value' => json_encode(array(
+				'table' => 'orders_parcel_tracking_codes',
+				'column' => 'tracking_code',
+			)),
+		));
+		MagnaDB::gi()->insert(TABLE_MAGNA_CONFIG, array(
+			'mpID' => $sMarketplaceId,
+			'mkey' => $sConfigKeyTrackingCode.'.alias',
+			'value' => 'order_id',
+		));
 	}
 }

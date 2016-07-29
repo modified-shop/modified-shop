@@ -26,12 +26,13 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 function magnaUpdateEbayOrders($mpID) {
 	global $magnaConfig, $_magnaLanguage, $_modules;
 
+	$mp = 'ebay';
+
 	if (getDBConfigValue($mp.'.order.importonlypaid', $mpID, false) === 'true') {
 		# no order update if importonlypaid
 		return;
 	}
 
-	$mp = 'ebay';
 
 	require_once(DIR_MAGNALISTER_MODULES.'ebay/ebayFunctions.php');
 	require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
@@ -271,7 +272,7 @@ function magnaUpdateEbayOrders($mpID) {
 	                if (empty($val)) unset($order[$key]);
 	            }
 	
-			# ShippingService
+				# ShippingService
 				if (array_key_exists('OrderTotal', $order)) {
 					if (array_key_exists('Shipping', $order['OrderTotal']))
 						$orderTotalShipping = $order['OrderTotal']['Shipping'];
@@ -355,7 +356,13 @@ function magnaUpdateEbayOrders($mpID) {
 					unset($itemCount);
 					if (isset($ordersTotal)) unset($ordersTotal);
 				}
-	
+
+				# magnaOrders, Angaben zu eBayPlus dazu mergen
+				if (array_key_exists('magnaOrders', $order)) {
+					$aOldMagnaOrdersData = unserialize(MagnaDB::gi()->fetchOne('SELECT data FROM '.TABLE_MAGNA_ORDERS.' WHERE orders_id = '.$currentOrderID));
+					$sMagnaOrdersData = serialize(array_merge($aOldMagnaOrdersData, $order['magnaOrders']));
+					$MagnaDB->update(TABLE_MAGNA_ORDERS, array ('data' => $sMagnaOrdersData), array('orders_id' => $currentOrderID));
+				}
 				
 	            ## Werte aus der Tabelle holen fuer die Info-mail was sich geaendert hat
 				## Mail noch zu bauen

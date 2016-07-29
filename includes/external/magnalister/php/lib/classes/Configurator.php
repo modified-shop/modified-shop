@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: Configurator.php 5820 2015-07-09 16:22:14Z MaW $
+ * $Id: Configurator.php 6148 2015-10-23 13:00:34Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -1069,7 +1069,7 @@ class MLConfigurator {
 			ob_start();?>
 	        <script type="text/javascript">/*<![CDATA[*/
 	        	<?php echo getTinyMCEDefaultConfigObject(); ?>
-				$(document).ready(function() {
+				$(window).load(function() {
 					tinyMCE.init(tinyMCEMagnaDefaultConfig);
 				});
 			/*]]>*/</script><?php

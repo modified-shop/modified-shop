@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: meinpaketConfig.php 5452 2015-04-09 10:04:14Z MaW $
+ * $Id: meinpaketConfig.php 6288 2015-12-04 15:08:12Z tim.neumann $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -167,6 +167,8 @@ mlGetCustomersStatus($form['import']['fields']['customersgroup']);
 
 mlGetShippingModules($form['import']['fields']['defaultshipping']);
 mlGetPaymentModules($form['import']['fields']['defaultpayment']);
+
+mlPresetTrackingCodeMatching($_MagnaSession['mpID'], 'meinpaket.orderstatus.carrier', 'meinpaket.orderstatus.trackingcode');
 
 $form['checkin']['fields']['imagepath']['default'] = SHOP_URL_POPUP_IMAGES;
 

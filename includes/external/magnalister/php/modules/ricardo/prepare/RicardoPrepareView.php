@@ -230,13 +230,13 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 		?>
 		<tbody>
 			<tr class="headline">
-				<td colspan="3"><h4><?= ML_RICARDO_LANGUAGE ?></h4></td>
+				<td colspan="3"><h4><?php echo ML_RICARDO_LANGUAGE ?></h4></td>
 			</tr>
-			<tr class="<?= ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
-				<th><?= ML_RICARDO_LABEL_LANGUAGE_2 ?></th>
+			<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+				<th><?php echo ML_RICARDO_LABEL_LANGUAGE_2 ?></th>
 				<td class="input langCheckBoxes">
-					<input type="checkbox" id="LangDe" name="LangDe" <?= $langDeChecked ?>/><label for="LangDe">DE</label>
-					<input type="checkbox" id="LangFr" name="LangFr" <?= $langFrChecked ?>/><label for="LangFr">FR</label>
+					<input type="checkbox" id="LangDe" name="LangDe" <?php echo $langDeChecked ?>/><label for="LangDe">DE</label>
+					<input type="checkbox" id="LangFr" name="LangFr" <?php echo $langFrChecked ?>/><label for="LangFr">FR</label>
 				</td>
 				<td class="info"></td>
 			</tr>
@@ -328,26 +328,26 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 		?>
 		<tbody>
 			<tr class="headline">
-				<td colspan="3"><h4><?= ML_RICARDO_PRODUCT_DETAILS ?></h4></td>
+				<td colspan="3"><h4><?php echo ML_RICARDO_PRODUCT_DETAILS ?></h4></td>
 			</tr>
-			<tr class="<?= ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langde">
-				<th><?= ML_RICARDO_ITEM_NAME_TITLE ?> (<?= ML_RICARDO_LANGUAGE_GERMAN ?>)</th>
+			<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langde">
+				<th><?php echo ML_RICARDO_ITEM_NAME_TITLE ?> (<?php echo ML_RICARDO_LANGUAGE_GERMAN ?>)</th>
 				<td class="input">
-					<input type="text" class="fullwidth" name="TitleDe" id="TitleDe" maxlength="<?= self::TITLE_MAX_LENGTH ?>" value="<?= fixHTMLUTF8Entities($data['TitleDe'], ENT_COMPAT, 'UTF-8') ?>"/>
+					<input type="text" class="fullwidth" name="TitleDe" id="TitleDe" maxlength="<?php echo self::TITLE_MAX_LENGTH ?>" value="<?php echo fixHTMLUTF8Entities($data['TitleDe'], ENT_COMPAT, 'UTF-8') ?>"/>
 				</td>
-				<td class="info"><?= ML_RICARDO_TITLE_MAXLENGTH ?></td>
+				<td class="info"><?php echo ML_RICARDO_TITLE_MAXLENGTH ?></td>
 			</tr>
-			<tr class="<?= ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langde">
-				<th><?= ML_RICARDO_SUBTITLE ?> (<?= ML_RICARDO_LANGUAGE_GERMAN ?>)</th>
+			<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langde">
+				<th><?php echo ML_RICARDO_SUBTITLE ?> (<?php echo ML_RICARDO_LANGUAGE_GERMAN ?>)</th>
 				<td class="input">
-					<input type="text" class="fullwidth" name="SubtitleDe" id="SubtitleDe" maxlength="<?= self::SUBTITLE_MAX_LENGTH ?>" value="<?= fixHTMLUTF8Entities(strip_tags($data['SubtitleDe']), ENT_COMPAT, 'UTF-8') ?>"/>
+					<input type="text" class="fullwidth" name="SubtitleDe" id="SubtitleDe" maxlength="<?php echo self::SUBTITLE_MAX_LENGTH ?>" value="<?php echo fixHTMLUTF8Entities(strip_tags($data['SubtitleDe']), ENT_COMPAT, 'UTF-8') ?>"/>
 				</td>
-				<td class="info"><?= ML_RICARDO_SUBTITLE_MAXLENGTH ?></td>
+				<td class="info"><?php echo ML_RICARDO_SUBTITLE_MAXLENGTH ?></td>
 			</tr>
-			<tr class="<?= ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langde">
-				<th><?= ML_RICARDO_DESCRIPTION ?> (<?= ML_RICARDO_LANGUAGE_GERMAN ?>)</th>
+			<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langde">
+				<th><?php echo ML_RICARDO_DESCRIPTION ?> (<?php echo ML_RICARDO_LANGUAGE_GERMAN ?>)</th>
 				<td class="input">
-					<?= magna_wysiwyg(array(
+					<?php echo magna_wysiwyg(array(
 						'id' => 'DescriptionDe',
 						'name' => 'DescriptionDe',
 						'class' => 'fullwidth',
@@ -357,45 +357,45 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 					), fixHTMLUTF8Entities($data['DescriptionDe'], ENT_COMPAT)) ?>
 				</td>
 				<td class="info">
-					<?= ML_EBAY_PRODUCTS_DESCRIPTION ?>
+					<?php echo ML_EBAY_PRODUCTS_DESCRIPTION ?>
 					<br>
-					<?= ML_EBAY_PLACEHOLDERS ?> :
+					<?php echo ML_EBAY_PLACEHOLDERS ?> :
 					<dl>
 						<dt style="font-weight:bold; color:black">#TITLE#</dt>
-							<dd><?= ML_EBAY_ITEM_NAME_TITLE ?></dd>
+							<dd><?php echo ML_EBAY_ITEM_NAME_TITLE ?></dd>
 						<dt style="font-weight:bold; color:black">#ARTNR#</dt>
-							<dd><?= ML_EBAY_ARTNO ?></dd>
+							<dd><?php echo ML_EBAY_ARTNO ?></dd>
 						<dt style="font-weight:bold; color:black">#PID#</dt>
-							<dd><?= ML_EBAY_PRODUCTS_ID ?></dd>';
+							<dd><?php echo ML_EBAY_PRODUCTS_ID ?></dd>';
 						<dt style="font-weight:bold; color:black">#SHORTDESCRIPTION#</dt>
-							<dd><?= ML_EBAY_SHORTDESCRIPTION_FROM_SHOP ?></dd>
+							<dd><?php echo ML_EBAY_SHORTDESCRIPTION_FROM_SHOP ?></dd>
 						<dt style="font-weight:bold; color:black">#DESCRIPTION#</dt>
-							<dd><?= ML_EBAY_DESCRIPTION_FROM_SHOP ?></dd>
+							<dd><?php echo ML_EBAY_DESCRIPTION_FROM_SHOP ?></dd>
 						<dt style="font-weight:bold; color:black">#PICTURE1#</dt>
-							<dd><?= ML_EBAY_FIRST_PIC ?></dd>
+							<dd><?php echo ML_EBAY_FIRST_PIC ?></dd>
 						<dt style="font-weight:bold; color:black">#PICTURE2# etc.</dt>
-							<dd><?= ML_EBAY_MORE_PICS ?></dd>
+							<dd><?php echo ML_EBAY_MORE_PICS ?></dd>
 					</dl>
 				</td>
 			</tr>
-			<tr class="<?= ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langfr">
-				<th><?= ML_RICARDO_ITEM_NAME_TITLE ?> (<?= ML_RICARDO_LANGUAGE_FRENCH ?>)</th>
+			<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langfr">
+				<th><?php echo ML_RICARDO_ITEM_NAME_TITLE ?> (<?php echo ML_RICARDO_LANGUAGE_FRENCH ?>)</th>
 				<td class="input">
-					<input type="text" class="fullwidth" name="TitleFr" id="TitleFr" maxlength="<?= self::TITLE_MAX_LENGTH ?>" value="<?= fixHTMLUTF8Entities($data['TitleFr'], ENT_COMPAT, 'UTF-8') ?>"/>
+					<input type="text" class="fullwidth" name="TitleFr" id="TitleFr" maxlength="<?php echo self::TITLE_MAX_LENGTH ?>" value="<?php echo fixHTMLUTF8Entities($data['TitleFr'], ENT_COMPAT, 'UTF-8') ?>"/>
 				</td>
-				<td class="info"><?= ML_RICARDO_TITLE_MAXLENGTH ?></td>
+				<td class="info"><?php echo ML_RICARDO_TITLE_MAXLENGTH ?></td>
 			</tr>
-			<tr class="<?= ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langfr">
-				<th><?= ML_RICARDO_SUBTITLE ?> (<?= ML_RICARDO_LANGUAGE_FRENCH ?>)</th>
+			<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langfr">
+				<th><?php echo ML_RICARDO_SUBTITLE ?> (<?php echo ML_RICARDO_LANGUAGE_FRENCH ?>)</th>
 				<td class="input">
-					<input type="text" class="fullwidth" name="SubtitleFr" id="SubtitleFr" maxlength="<?= self::SUBTITLE_MAX_LENGTH ?>" value="<?= fixHTMLUTF8Entities(strip_tags($data['SubtitleFr']), ENT_COMPAT, 'UTF-8') ?>"/>
+					<input type="text" class="fullwidth" name="SubtitleFr" id="SubtitleFr" maxlength="<?php echo self::SUBTITLE_MAX_LENGTH ?>" value="<?php echo fixHTMLUTF8Entities(strip_tags($data['SubtitleFr']), ENT_COMPAT, 'UTF-8') ?>"/>
 				</td>
-				<td class="info"><?= ML_RICARDO_SUBTITLE_MAXLENGTH ?></td>
+				<td class="info"><?php echo ML_RICARDO_SUBTITLE_MAXLENGTH ?></td>
 			</tr>
-			<tr class="<?= ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langfr">
-				<th><?= ML_RICARDO_DESCRIPTION ?> (<?= ML_RICARDO_LANGUAGE_FRENCH ?>)</th>
+			<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langfr">
+				<th><?php echo ML_RICARDO_DESCRIPTION ?> (<?php echo ML_RICARDO_LANGUAGE_FRENCH ?>)</th>
 				<td class="input">
-					<?= magna_wysiwyg(array(
+					<?php echo magna_wysiwyg(array(
 						'id' => 'DescriptionFr',
 						'name' => 'DescriptionFr',
 						'class' => 'fullwidth',
@@ -405,40 +405,40 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 					), fixHTMLUTF8Entities($data['DescriptionFr'], ENT_COMPAT)) ?>
 				</td>
 				<td class="info">
-					<?= ML_EBAY_PRODUCTS_DESCRIPTION ?>
+					<?php echo ML_EBAY_PRODUCTS_DESCRIPTION ?>
 					<br>
-					<?= ML_EBAY_PLACEHOLDERS ?> :
+					<?php echo ML_EBAY_PLACEHOLDERS ?> :
 					<dl>
 						<dt style="font-weight:bold; color:black">#TITLE#</dt>
-							<dd><?= ML_EBAY_ITEM_NAME_TITLE ?></dd>
+							<dd><?php echo ML_EBAY_ITEM_NAME_TITLE ?></dd>
 						<dt style="font-weight:bold; color:black">#ARTNR#</dt>
-							<dd><?= ML_EBAY_ARTNO ?></dd>
+							<dd><?php echo ML_EBAY_ARTNO ?></dd>
 						<dt style="font-weight:bold; color:black">#PID#</dt>
-							<dd><?= ML_EBAY_PRODUCTS_ID ?></dd>';
+							<dd><?php echo ML_EBAY_PRODUCTS_ID ?></dd>';
 						<dt style="font-weight:bold; color:black">#SHORTDESCRIPTION#</dt>
-							<dd><?= ML_EBAY_SHORTDESCRIPTION_FROM_SHOP ?></dd>
+							<dd><?php echo ML_EBAY_SHORTDESCRIPTION_FROM_SHOP ?></dd>
 						<dt style="font-weight:bold; color:black">#DESCRIPTION#</dt>
-							<dd><?= ML_EBAY_DESCRIPTION_FROM_SHOP ?></dd>
+							<dd><?php echo ML_EBAY_DESCRIPTION_FROM_SHOP ?></dd>
 						<dt style="font-weight:bold; color:black">#PICTURE1#</dt>
-							<dd><?= ML_EBAY_FIRST_PIC ?></dd>
+							<dd><?php echo ML_EBAY_FIRST_PIC ?></dd>
 						<dt style="font-weight:bold; color:black">#PICTURE2# etc.</dt>
-							<dd><?= ML_EBAY_MORE_PICS ?></dd>
+							<dd><?php echo ML_EBAY_MORE_PICS ?></dd>
 					</dl>
 				</td>
 			</tr>
-			<tr class="<?= ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
-				<th><?= ML_LABEL_PRODUCTS_IMAGES ?></th>
+			<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+				<th><?php echo ML_LABEL_PRODUCTS_IMAGES ?></th>
 				<td class="input">
 					<input type="hidden" id="image_hidden" name="Images[]" value="false"/>
 				<?php foreach ($data['Images'] as $img => $checked) : ?>
 					<table class="imageBox"><tbody>
-						<tr><td class="image"><label for="image_<?= $img ?>"><?= generateProductCategoryThumb($img, 60, 60) ?></label></td></tr>
-						<tr><td class="cb"><input type="checkbox" id="image_<?= $img ?>" name="Images[<?= urlencode($img) ?>]" value="true" <?= $checked == 'true' ? 'checked="checked"' : '' ?> /></td></tr>
+						<tr><td class="image"><label for="image_<?php echo $img ?>"><?php echo generateProductCategoryThumb($img, 60, 60) ?></label></td></tr>
+						<tr><td class="cb"><input type="checkbox" id="image_<?php echo $img ?>" name="Images[<?php echo urlencode($img) ?>]" value="true" <?php echo $checked == 'true' ? 'checked="checked"' : '' ?> /></td></tr>
 					</tbody></table>
 				<?php endforeach; ?>
 				</td>
 				<td class="info">
-					<?= ML_RICARDO_TEXT_APPLY_PRODUCTS_IMAGES ?>
+					<?php echo ML_RICARDO_TEXT_APPLY_PRODUCTS_IMAGES ?>
 				</td>
 			</tr>
 			<tr class="spacer">
@@ -468,6 +468,7 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 			'ShippingDetails' => null,
 			'PackageSize' => null,
 			'ShippingCost' => null,
+			'ShippingCumulative' => null,
 			'ShippingDescriptionDe' => null,
 			'ShippingDescriptionFr' => null,
 			'Availability' => null,
@@ -502,6 +503,7 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 			'ShippingDetails' => getDBConfigValue($this->marketplace.'.checkin.shippingdetails', $this->mpID, 1),
 			'PackageSize' => getDBConfigValue($this->marketplace.'.checkin.shippingdetails.packagesize', $this->mpID, null),
 			'ShippingCost' => getDBConfigValue($this->marketplace.'.checkin.shippingdetails.shippingcost', $this->mpID, 0),
+			'ShippingCumulative' => getDBConfigValue($this->marketplace.'.checkin.shippingdetails.shippingcumulative', $this->mpID),
 			'ShippingDescriptionDe' => getDBConfigValue($this->marketplace.'.checkin.shippingdetails.description.de', $this->mpID, null),
 			'ShippingDescriptionFr' => getDBConfigValue($this->marketplace.'.checkin.shippingdetails.description.fr', $this->mpID, null),
 			'Availability' => getDBConfigValue($this->marketplace.'.checkin.availability', $this->mpID),
@@ -827,7 +829,7 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
 					<th>
 						<div style="float: left;">'.ML_RICARDO_FIRST_PROMOTION.'</div>
-						<div style="float: right; width: 16px; height: 16px; background: transparent url(\'includes/magnalister/images/information.png\') no-repeat 0 0;
+						<div style="float: right; width: 16px; height: 16px; background: transparent url(\''.DIR_MAGNALISTER_WS.'images/information.png\') no-repeat 0 0;
 							cursor: pointer; display: inline-block; vertical-align: top;" class="desc" id="desc_1" title="Infos">
 							<span style="display: none">'. $firstPromotions['DATA']['Text'] .'</span>
 						</div>
@@ -854,7 +856,7 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
 					<th>
 						<div style="float: left;">'.ML_RICARDO_SECOND_PROMOTION.'</div>
-						<div style="float: right; width: 16px; height: 16px; background: transparent url(\'includes/magnalister/images/information.png\') no-repeat 0 0;
+						<div style="float: right; width: 16px; height: 16px; background: transparent url(\''.DIR_MAGNALISTER_WS.'images/information.png\') no-repeat 0 0;
 							cursor: pointer; display: inline-block; vertical-align: top;" class="desc " id="desc_2" title="Infos">
 							<span style="display: none">'. $secondPromotions['DATA']['Text'] .'</span>
 						</div>
@@ -926,7 +928,7 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 			<div id="infodiag" class="dialog2" title="'.ML_LABEL_INFORMATION.'"></div>';
 		ob_start();
 		?>
-		<script type="text/javascript" src="includes/magnalister/js/jquery-ui-timepicker-addon.js"></script>
+		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery-ui-timepicker-addon.js"></script>
 		<script type="text/javascript">/*<![CDATA[*/
 			function getMpCategoryAttributes(cID, aMode, preselectedValues) {
 				jQuery.ajax({
@@ -988,14 +990,14 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 
 				jQuery.datepicker.setDefaults(jQuery.datepicker.regional['']);
 				jQuery.timepicker.setDefaults(jQuery.timepicker.regional['']);
-				$("#config_<?= $this->marketplace ?>_start_date_visual").datetimepicker(
+				$("#config_<?php echo $this->marketplace ?>_start_date_visual").datetimepicker(
 					jQuery.extend(
-						jQuery.datepicker.regional['<?= isset($_SESSION['magna']['selected_language']) ? $_SESSION['magna']['selected_language'] : '' ?>'],
-						jQuery.timepicker.regional['<?= isset($_SESSION['magna']['selected_language']) ? $_SESSION['magna']['selected_language'] : '' ?>']
+						jQuery.datepicker.regional['<?php echo isset($_SESSION['magna']['selected_language']) ? $_SESSION['magna']['selected_language'] : '' ?>'],
+						jQuery.timepicker.regional['<?php echo isset($_SESSION['magna']['selected_language']) ? $_SESSION['magna']['selected_language'] : '' ?>']
 					)
 				).datetimepicker("option", {
 					onClose:  function(dateText, inst) {
-						var d = $("#config_<?= $this->marketplace ?>_start_date_visual").datetimepicker("getDate");
+						var d = $("#config_<?php echo $this->marketplace ?>_start_date_visual").datetimepicker("getDate");
 						if (d !== null) {
 							var s = jQuery.datepicker.formatDate("yy-mm-dd", d) + ' ' +
 								jQuery.datepicker.formatTime("HH:mm:ss", {
@@ -1003,55 +1005,55 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 									minute: d.getMinutes(),
 									second: d.getSeconds()
 								}, { ampm: false });
-							$("#config_<?= $this->marketplace ?>_start_date").val(s);
+							$("#config_<?php echo $this->marketplace ?>_start_date").val(s);
 						}
 					}
 				}).datetimepicker(
 					"option", "minDate", 0
 				).datetimepicker(
-					"option", "maxDate", <?= $listingStartTimeAndDurationOptions['MaxStartDate'] ?>
+					"option", "maxDate", <?php echo $listingStartTimeAndDurationOptions['MaxStartDate'] ?>
 				)<?php if ($preSelected['StartDate'] !== null) : ?>.datetimepicker(
-					"setDate", new Date('<?= $preSelected['StartDate'] ?>')
+					"setDate", new Date('<?php echo $preSelected['StartDate'] ?>')
 				)<?php endif ?>;
 
 				jQuery.timepicker.setDefaults(jQuery.timepicker.regional['']);
-				$("#config_<?= $this->marketplace ?>_end_time").timepicker(
-					jQuery.timepicker.regional['<?= isset($_SESSION['magna']['selected_language']) ? $_SESSION['magna']['selected_language'] : '' ?>']
+				$("#config_<?php echo $this->marketplace ?>_end_time").timepicker(
+					jQuery.timepicker.regional['<?php echo isset($_SESSION['magna']['selected_language']) ? $_SESSION['magna']['selected_language'] : '' ?>']
 				).datetimepicker("option", {
 					onClose:  function(dateText, inst) {
-						var t = $("#config_<?= $this->marketplace ?>_end_time").val();
+						var t = $("#config_<?php echo $this->marketplace ?>_end_time").val();
 						var tArray = t.split(':');
 						if ((t !== null) && (tArray.length === 2)) {
-							$("#config_<?= $this->marketplace ?>_end_time").val(t + ':00');
+							$("#config_<?php echo $this->marketplace ?>_end_time").val(t + ':00');
 						}
 					}
 				});
 
-				$('#config_<?= $this->marketplace ?>_duration').change(function() {
+				$('#config_<?php echo $this->marketplace ?>_duration').change(function() {
 					if (this.value == 10) {
-						$('#config_<?= $this->marketplace ?>_end_time').parent().hide();
+						$('#config_<?php echo $this->marketplace ?>_end_time').parent().hide();
 					} else {
-						$('#config_<?= $this->marketplace ?>_end_time').parent().show();
+						$('#config_<?php echo $this->marketplace ?>_end_time').parent().show();
 					}
 				});
 				
-				$('#config_<?= $this->marketplace ?>_checkin_buyingmode').change(function() {
+				$('#config_<?php echo $this->marketplace ?>_checkin_buyingmode').change(function() {
 					if (this.value === 'auction') {
-						$('#config_<?= $this->marketplace ?>_price_start_price').parent().show();
-						$('#config_<?= $this->marketplace ?>_price_increment').parent().show();
+						$('#config_<?php echo $this->marketplace ?>_price_start_price').parent().show();
+						$('#config_<?php echo $this->marketplace ?>_price_increment').parent().show();
 						<?php if (isset($aProduct)) : ?>
-						$('#config_<?= $this->marketplace ?>_price_buy_now_price').prop('disabled', false);
+						$('#config_<?php echo $this->marketplace ?>_price_buy_now_price').prop('disabled', false);
 						<?php else : ?>
-						$('#config_<?= $this->marketplace ?>_enable_price_buy_now_price').closest('.visibilityprice').show();
+						$('#config_<?php echo $this->marketplace ?>_enable_price_buy_now_price').closest('.visibilityprice').show();
 						<?php endif ?>
 					} else {
-						$('#config_<?= $this->marketplace ?>_price_start_price').parent().hide();
-						$('#config_<?= $this->marketplace ?>_price_increment').parent().hide();
+						$('#config_<?php echo $this->marketplace ?>_price_start_price').parent().hide();
+						$('#config_<?php echo $this->marketplace ?>_price_increment').parent().hide();
 						<?php if (isset($aProduct)) : ?>
-						$('#config_<?= $this->marketplace ?>_price_buy_now_price').prop('disabled', true);
-						$('#config_<?= $this->marketplace ?>_price_buy_now_price').val('<?= $ricardoPrice ?>');
+						$('#config_<?php echo $this->marketplace ?>_price_buy_now_price').prop('disabled', true);
+						$('#config_<?php echo $this->marketplace ?>_price_buy_now_price').val('<?php echo $ricardoPrice ?>');
 						<?php else : ?>
-						$('#config_<?= $this->marketplace ?>_enable_price_buy_now_price').closest('.visibilityprice').hide();
+						$('#config_<?php echo $this->marketplace ?>_enable_price_buy_now_price').closest('.visibilityprice').hide();
 						<?php endif ?>
 					}
 				});

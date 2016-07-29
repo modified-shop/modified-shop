@@ -40,7 +40,7 @@ class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			#echo __LINE__."<br>\n";
 			return false;
 		}
-		
+
 		/* This is limited to one VariationTheme. 
 		   Start with guessing the "right" one, aka using the one that has the most variations. */
 		$pVID = MagnaDB::gi()->fetchRow('
@@ -113,7 +113,11 @@ class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 					'Group' => $v['VariationTitle'],
 					'Value' => $v['VariationValue']
 				),
-			);/*
+			);
+			if (array_key_exists('VPE', $data['submit']) && !empty($data['submit']['VPE'])) {
+				$vi['VPE'] = $data['submit']['VPE'];
+			}
+			/*
 			if (!empty($v['variation_unit_of_measure']) && !empty($v['variation_volume'])) {
 				$vi['VPE'] = array (
 					'Unit' => $v['variation_unit_of_measure'],

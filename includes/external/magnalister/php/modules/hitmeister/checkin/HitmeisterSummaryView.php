@@ -58,8 +58,8 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 
 	protected function setupQuery($addFields = '', $addFrom = '', $addWhere = '') {
 		$addFields .= (empty($addFields) ? '' : ',').' p.products_shippingtime, '.
-							'hp.mp_category_id, hp.mp_category_name, hp.condition_id, hp.shippingtime, '.
-							'hp.is_porn, hp.age_rating, hp.comment
+							'hp.MarketplaceCategories, hp.MarketplaceCategoriesName, hp.ConditionType, hp.ShippingTime, '.
+							'hp.Comment
 		              ';
 		$addFrom   = 'LEFT JOIN '.TABLE_MAGNA_HITMEISTER_PREPARE.' hp ON (
 							hp.mpID=\''.$this->mpID.'\' 
@@ -104,7 +104,7 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 			    	? 'a.products_model = p.products_model'
 			    	: 'a.products_id = p.products_id'
 			    ).')
-	               SET a.shippingtime = \'_#_VALUE_#_\'
+	               SET a.ShippingTime = \'_#_VALUE_#_\'
 	             WHERE p.products_shippingtime = \'_#_TIME_#_\'
 			';
 
@@ -123,7 +123,7 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 
 		} else {
 			MagnaDB::gi()->update(TABLE_MAGNA_HITMEISTER_PREPARE, array (
-				'shippingtime' => $this->defaultShippingtime
+				'ShippingTime' => $this->defaultShippingtime
 			));
 		}
 		
@@ -133,7 +133,7 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 
 		$changedData = MagnaDB::gi()->fetchArray(eecho('
 		    SELECT p.products_id AS pID,
-		           hp.shippingtime, p.products_shippingtime
+		           hp.ShippingTime, p.products_shippingtime
 		      FROM '.TABLE_PRODUCTS.' p
 		 LEFT JOIN '.TABLE_MAGNA_HITMEISTER_PREPARE.' hp ON (
 		               hp.mpID=\''.$this->mpID.'\' 
@@ -186,13 +186,13 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 				$shippingtimeSQL = '
 				    UPDATE '.TABLE_MAGNA_HITMEISTER_PREPARE.' AS a 
 				INNER JOIN '.TABLE_PRODUCTS.' AS p ON (a.products_model = p.products_model)
-				       SET a.shippingtime = \'_#_VALUE_#_\'
+				       SET a.ShippingTime = \'_#_VALUE_#_\'
 				     WHERE p.products_id = \'_#_ID_#_\'
 				';
 			} else {
 				$shippingtimeSQL = '
 					UPDATE '.TABLE_MAGNA_HITMEISTER_PREPARE.'
-					   SET shippingtime = \'_#_VALUE_#_\'
+					   SET ShippingTime = \'_#_VALUE_#_\'
 					 WHERE products_id = \'_#_ID_#_\' 
 				';
 			}

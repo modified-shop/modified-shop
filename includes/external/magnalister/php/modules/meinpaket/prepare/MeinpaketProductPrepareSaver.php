@@ -134,7 +134,25 @@ class MeinpaketProductPrepareSaver {
 			);
 			$set['ShippingDetails'] = json_encode($set['ShippingDetails']);
 			
-			#echo print_m($set, '$set');
+			/*
+			 * omit double data sets (the table primary unique key contains both products_id and _model,
+			 * so it doesn't prevent it)
+			 */
+			switch (getDBConfigValue('general.keytype', '0')) {
+				case ('pID'):
+					MagnaDB::gi()->delete(TABLE_MAGNA_MEINPAKET_PROPERTIES, array (
+						'mpID' => $this->mpId,
+						'products_id' => $set['products_id']
+					));
+					break;
+				case ('artNr'):
+					MagnaDB::gi()->delete(TABLE_MAGNA_MEINPAKET_PROPERTIES, array (
+						'mpID' => $this->mpId,
+						'products_model' => $set['products_model']
+					));
+					break;
+				default: break;
+			}
 			MagnaDB::gi()->insert(TABLE_MAGNA_MEINPAKET_PROPERTIES, $set, true);
 		}
 		
