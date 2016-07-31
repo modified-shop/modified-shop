@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: index.php 3426 2012-08-13 15:39:17Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -263,7 +263,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />UTF-8 (Beta)</td>
+                    <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />UTF-8</td>
                     <td>
                     <?php echo xtc_draw_radio_field_installer('char', 'utf8', ((INSTALL_CHARSET=='utf8')?true:false)); ?> </td>
                   </tr>

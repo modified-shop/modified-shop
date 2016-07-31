@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: install_step1.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -142,7 +142,7 @@
                         </td>
                       </tr>
                       <tr>
-                        <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysqli (Beta)</td>
+                        <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysqli</td>
                         <td>
                         <?php echo xtc_draw_radio_field_installer('DB_MYSQL_TYPE', 'mysqli', ((INSTALL_CHARSET=='utf8')?true:false)); ?> </td>
                       </tr>
