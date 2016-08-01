@@ -56,7 +56,7 @@ class paypalplus extends PayPalPayment {
           var s = document.getElementsByTagName(\'script\')[0];
           s . parentNode . insertBefore(pp, s);
         })();
-        $(window).load(function() {
+        $(window).on(\'load\',function() {
           '.((count($payments) > 0) ? '
           if ($(\'input[name="payment"]:checked\', \'#checkout_payment\').val() == "'.$this->code.'") {
             $("#continueButton").attr("onclick", "ppp.doContinue(); return false;");
