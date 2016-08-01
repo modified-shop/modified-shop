@@ -1,6 +1,6 @@
 <?php
 /*-----------------------------------------------------------
-   $Id: general_bottom.js.php 89 2016-06-06 12:44:27Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -36,7 +36,7 @@ foreach ($script_array as $script) {
 ?>
 <?php require DIR_FS_CATALOG . DIR_TMPL_JS . 'get_states.js.php'; ?>
 <script type="text/javascript">
-  $(window).load(function() {
+  $(window).on('load',function() {
     $(".unveil").show();
     $(".unveil").unveil(200);
   });
