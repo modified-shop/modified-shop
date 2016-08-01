@@ -43,6 +43,10 @@ foreach ($script_array as $script) {
   $(document).ready(function(){
     $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true});
     $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true});
+    $("#print_order_layer").on('submit', function(event) {
+      $.colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", href:$(this).attr("action") + $(this).serialize()});
+      return false;
+    });
     $('select').SumoSelect();
     /* Mark Selected */
     var tmpStr = '';

@@ -75,6 +75,7 @@ $smarty->assign('PAYMENT_INFO', $payment_modules->success());
 $smarty->assign('FORM_ACTION', xtc_draw_form('order', xtc_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=update', 'SSL')).xtc_draw_hidden_field('account_type', $_SESSION['account_type']));
 $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 $smarty->assign('FORM_ACTION_PRINT', xtc_draw_form('print_order', xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.$last_order, 'SSL'), 'post', 'target="popup" onsubmit="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.$last_order, 'SSL').'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, '.POPUP_PRINT_ORDER_SIZE.'\')"').xtc_draw_hidden_field('customer_id', $_SESSION['customer_id']));
+$smarty->assign('FORM_ACTION_PRINT_LAYER', xtc_draw_form('print_order_layer', xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.$last_order, 'SSL', 'post', 'target="popup"')).xtc_draw_hidden_field('customer_id', $_SESSION['customer_id']));
 $smarty->assign('BUTTON_PRINT', xtc_image_submit('print.gif', TEXT_PRINT));
 $smarty->assign('FORM_END', '</form>');
 
