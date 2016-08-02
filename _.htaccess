@@ -137,13 +137,17 @@ ErrorDocument 500 /sitemap.html?error=500
   ##-- Strato
   #RewriteCond %{HTTP:X-Forwarded-Server}   !^www\.ssl-id\.de$ [NC]
   
-  ##-- redirect to www-domain, when www is missing and no subdomain given and not using an ssl-proxy
+  ##-- redirect to http www-domain, when www is missing and no subdomain given and not using an ssl-proxy
   #RewriteCond %{HTTP_HOST}                 !^www\. [NC]
   #RewriteCond %{HTTP_HOST}                 !\.(.*)\. [NC]
   #RewriteCond %{HTTP_HOST}                 !^localhost [NC]
   #RewriteRule ^ http://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-  ##-- redirect to https-domain (Do not uncomment if you only have a SSL-Proxy!)
+  ##-- redirect to https www-domain, when www is missing and no subdomain given and not using an ssl-proxy
+  #RewriteCond %{HTTP_HOST}                 !^www\. [NC]
+  #RewriteCond %{HTTP_HOST}                 !\.(.*)\. [NC]
+  #RewriteCond %{HTTP_HOST}                 !^localhost [NC]
+  #RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
   #RewriteCond %{HTTPS} off
   #RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
