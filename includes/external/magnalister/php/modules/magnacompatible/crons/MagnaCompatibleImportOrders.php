@@ -1175,7 +1175,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$sku = $this->p['products_id']; 
 		}
 		$customersLanguage = getLanguageIsoForCountryIso($this->o['orderInfo']['BuyerCountryISO']);
-		#if ($this->verbose) echo "magnaSKU2pOpt($sku, $customersLanguage, multivariationsEnabled == ".$this->multivariationsEnabled.")\n";;
+		#if ($this->verbose) echo "magnaSKU2pOpt($sku, $customersLanguage, multivariationsEnabled == ".$this->multivariationsEnabled.")\n";
 		$attrValues = magnaSKU2pOpt($sku, $customersLanguage, $this->multivariationsEnabled);
 		if (array_key_exists('options_name', $attrValues)) {
 			$attrValues = array($attrValues);
