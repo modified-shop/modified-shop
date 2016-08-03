@@ -32,4 +32,6 @@ define('MODULE_PAYMENT_INVOICE_MIN_ORDER_TITLE' , 'Minimum Orders');
 define('MODULE_PAYMENT_INVOICE_MIN_ORDER_DESC' , 'Minimum orders for a Customer to view this Option.');
 define('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID_TITLE' , 'Order status for calculation');
 define('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID_DESC' , 'Set the status for calculating the value of orders');
+define('MODULE_PAYMENT_INVOICE_MAX_AMOUNT_TITLE' , 'Maximum amount');
+define('MODULE_PAYMENT_INVOICE_MAX_AMOUNT_DESC' , 'Please enter the maximum amount for paying per invoice.');
 ?>
