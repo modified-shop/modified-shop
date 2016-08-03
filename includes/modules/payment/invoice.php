@@ -38,7 +38,7 @@ class invoice {
   }
 
   function update_status() {
-    global $order;
+    global $order, $xtPrice;
     
     $check_order_query = xtc_db_query("select count(*) as count from ".TABLE_ORDERS." where customers_id = '".(int) $_SESSION['customer_id']."' AND orders_status = '".(int)MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID."'");
     $order_check = xtc_db_fetch_array($check_order_query);
@@ -46,7 +46,7 @@ class invoice {
     if ($order_check['count'] < MODULE_PAYMENT_INVOICE_MIN_ORDER) {
       $check_flag = false;
       $this->enabled = false;
-    } elseif ($order->info['total'] > MODULE_PAYMENT_INVOICE_MAX_AMOUNT) {
+    } elseif ($xtPrice->xtcRemoveCurr($order->info['total']) > MODULE_PAYMENT_INVOICE_MAX_AMOUNT) {
       $check_flag = false;
       $this->enabled = false;
     } else {
