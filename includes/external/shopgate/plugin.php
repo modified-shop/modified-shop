@@ -4608,7 +4608,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         if (!defined('PROJECT_MAJOR_VERSION')) {
             require_once(dirname(__FILE__) . '/../../../inc/xtc_db_prepare_input.inc.php');
         } else {
-            require_once(dirname(__FILE__) . '/../../../inc/db_functions_mysql.inc.php');
+            require_once(dirname(__FILE__) . '/../../../inc/db_functions_'.DB_MYSQL_TYPE.'.inc.php');
         }
         
         // include Shopgate plugin files
