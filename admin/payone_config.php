@@ -31,6 +31,15 @@ if (!isset($_SESSION[$messages_ns])) {
 	$_SESSION[$messages_ns] = array();
 }
 
+// check new column
+$check_query = xtc_db_query("SELECT *
+                               FROM payone_transactions
+                              LIMIT 1");
+$check = xtc_db_fetch_array($check_query);
+if (!isset($check['type'])) {
+  xtc_db_query("ALTER TABLE payone_transactions ADD type varchar(64) NOT NULL");
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	if (isset($_POST['cmd'])) {
