@@ -133,11 +133,16 @@ input.yesbutton:hover {
   font-weight:bold;
 }
 
+.payone_cc_container .payone_cc_table .small tr td {
+  line-height:16px;
+  font-size:11px;
+}
+
 .payone_cc_container .errormessage {
     border: 0px;
-    padding: 0px 10px;
+    padding: 5px 10px;
     font-size: 13px !important;
-    line-height: 30px;
+    line-height: 20px;
     color: #A94442;
     background-color: #F2DEDE;
     margin-bottom: 8px !important;

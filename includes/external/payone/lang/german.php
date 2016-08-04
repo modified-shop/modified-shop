@@ -76,7 +76,7 @@ define('AC_AUTOMATIC_CORRECTION_YES', 'ja');
 define('AC_AUTOMATIC_CORRECTION_USER', 'Benutzerentscheidung');
 define('AC_ERROR_MODE_ABORT', 'Vorgang abbrechen');
 define('AC_ERROR_MODE_REENTER', 'Neueingabe');
-define('AC_ERROR_MODE_CHECK', 'Anschlieﬂende Bonit&auml;tspr&uuml;fung durchf&uuml;hren');
+define('AC_ERROR_MODE_CHECK', 'Anschlie&szlig;ende Bonit&auml;tspr&uuml;fung durchf&uuml;hren');
 define('AC_ERROR_MODE_CONTINUE', 'fortfahren');
 define('DAYS', 'Tage');
 define('ERROR_MESSAGE_INFO', 'Verwenden Sie {payone_error} als Platzhalter f&uuml;r die R&uuml;ckmeldung der PAYONE-Plattform');
@@ -224,8 +224,6 @@ define('AUTHORIZATION_METHOD', 'Autorisierungsmethode');
 define('AUTHMETHOD_AUTH', 'Sofortautorisierung');
 define('AUTHMETHOD_PREAUTH', 'Vorautorisierung');
 define('SEND_CART', 'Warenkorb &uuml;bertragen');
-define('SENDCART_TRUE', 'ja');
-define('SENDCART_FALSE', 'nein');
 
 // payment genre
 define('PAYMENT_GENRE', 'Zahlungsart');
@@ -352,4 +350,18 @@ define('EVENT_LOG_COUNT', 'Unterereignis-Nr.');
 define('NO_LOGS', 'F&uuml;r den gew&auml;hlten Zeitraum liegen keine Eintr&auml;ge dieser Art vor.');
 define('API', 'API');
 
+
+// Payolution
+define('paymenttype_payolution_debit', 'Payolution Lastschrift');
+define('paymenttype_payolution_invoice', 'Payolution Rechnung');
+define('paymenttype_payolution_monthly', 'Payolution Monatsrechnung');
+define('paymenttype_payolution_financing', 'Payolution Finanzierung');
+
+define('company_uid', 'UstID (optional):');
+define('company_trade_registry_number', 'Handelsregister (optional):');
+define('company_register_key', 'Register-Nr (optional):');
+
+define('TEXT_PAYOLUTION_ERROR_CONDITIONS', 'Sofern Sie der &Uuml;bermittlung ihrer Daten f&uuml;r die Abwicklung des Kaufes nicht einwilligen, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
+define('TEXT_PAYOLUTION_CONFIRM_SEPA', 'Hiermit erteile ich das <a class="'.((defined('TPL_POPUP_SHIPPING_LINK_CLASS')) ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_PRODUCT_LINK_CLASS).'" href="https://payment.payolution.com/payolution-payment/infoport/sepa/mandate?link=true'.((defined('TPL_POPUP_CONTENT_LINK_PARAMETERS')) ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_PRODUCT_LINK_PARAMETERS).'">SEPA-Lastschriftmandat</a>');
+define('TEXT_PAYOLUTION_CONFIRM', 'Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufes und einer Identit&auml;tspr&uuml;fung und Bonit&auml;tspr&uuml;fung erforderlicher Daten an Payolution bin ich einverstanden.<br/>Meine <a class="'.((defined('TPL_POPUP_SHIPPING_LINK_CLASS')) ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_PRODUCT_LINK_CLASS).'" href="https://payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?mId='.base64_encode(STORE_OWNER).((defined('TPL_POPUP_CONTENT_LINK_PARAMETERS')) ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_PRODUCT_LINK_PARAMETERS).'">Einwilligung</a> kann ich jederzeit mit Wirkung f&uuml;r die Zukunft widerrufen.');
 ?>

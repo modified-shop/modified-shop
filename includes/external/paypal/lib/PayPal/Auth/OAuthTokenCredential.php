@@ -300,4 +300,14 @@ class OAuthTokenCredential extends PayPalResourceModel
     {
         return $this->cipher->decrypt($data);
     }
+
+    /**
+     * Helper method to set expiryBufferTime
+     *
+     * @param $time
+     */
+    public function setExpiryBufferTime($time)
+    {
+        self::$expiryBufferTime = (int)$time;
+    }
 }

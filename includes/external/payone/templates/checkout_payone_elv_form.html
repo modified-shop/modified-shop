@@ -31,4 +31,20 @@
       <td><input type="text" id="p1_elv_bankcode" name="p1_elv_bankcode" value="{$smarty.session.payone_elv_data.bankcode}"></td>
     </tr>
 	{/if}
+  {if $required_fields}
+    {foreach key=key_data item=item_data from=$required_fields}
+      <tr>
+        <td class="label">{$key_data|constant}</td>
+        <td style="min-width: 120px;"><input id="{$key_data}" name="{$key_data}" type="text" value="{$item_data}"></td>
+      </tr>
+    {/foreach}
+  {/if}
+  {if $confirm_text}
+    <tr style="text-align:left;line-height:18px;">
+      <td colspan="2"><input type="checkbox" id="p1_elv_conditions" name="p1_elv_conditions" value="true"/> {$confirm_text}</td>
+    </tr>
+    <tr style="text-align:left;line-height:18px;">
+      <td colspan="2"><input type="checkbox" id="p1_elv_sepa" name="p1_elv_sepa" value="true"/> {$sepa_text}</td>
+    </tr>
+  {/if}
 </table>

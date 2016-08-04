@@ -144,11 +144,22 @@ function formpartGlobalConfig($identifier, $config, $parent_identifier = '') {
       <dt><label for="<?php echo $id_prefix ?>_send_cart"><?php echo SEND_CART; ?></label></dt>
       <dd>
         <input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][send_cart]" value="true" id="<?php echo $id_prefix ?>_sendcart_true" <?php echo $config['send_cart'] == 'true' ? 'checked="checked"' : '' ?>>
-        <label for="<?php echo $id_prefix ?>_sendcart_true"><?php echo SENDCART_TRUE; ?></label>
+        <label for="<?php echo $id_prefix ?>_sendcart_true"><?php echo TEXT_YES; ?></label>
         <input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][send_cart]" value="false" id="<?php echo $id_prefix ?>_sendcart_false" <?php echo $config['send_cart'] == 'false' ? 'checked="checked"' : '' ?>>
-        <label for="<?php echo $id_prefix ?>_sendcart_false"><?php echo SENDCART_FALSE; ?></label>
+        <label for="<?php echo $id_prefix ?>_sendcart_false"><?php echo TEXT_NO; ?></label>
       </dd>
     </div>
+    <?php if ($parent_identifier == '') { ?>
+    <div class="dlrow cf">  
+      <dt><label for="<?php echo $id_prefix ?>_logging"><?php echo 'Logging'; ?></label></dt>
+      <dd>
+        <input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][logging]" value="true" id="<?php echo $id_prefix ?>_logging_true" <?php echo $config['logging'] == 'true' ? 'checked="checked"' : '' ?>>
+        <label for="<?php echo $id_prefix ?>_logging_true"><?php echo TEXT_YES; ?></label>
+        <input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][logging]" value="false" id="<?php echo $id_prefix ?>_logging_false" <?php echo $config['logging'] == 'false' ? 'checked="checked"' : '' ?>>
+        <label for="<?php echo $id_prefix ?>_logging_false"><?php echo TEXT_NO; ?></label>
+      </dd>
+    </div>
+    <?php } ?>
   </dl>
 <?php
 }

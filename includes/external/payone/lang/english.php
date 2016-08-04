@@ -352,4 +352,13 @@ define('EVENT_LOG_COUNT', 'Subevent-No.');
 define('NO_LOGS', 'There are no entries for the chosen period.');
 define('API', 'API');
 
+// Payolution
+define('paymenttype_payolution_debit', 'Payolution DirectDebit');
+define('paymenttype_payolution_invoice', 'Payolution Invoice');
+define('paymenttype_payolution_monthly', 'Payolution Monthly Invoice');
+define('paymenttype_payolution_financing', 'Payolution Financing');
+
+define('company_uid', 'VAT (optional):');
+define('company_trade_registry_number', 'Trade Registry (optional):');
+define('company_register_key', 'Register-ID (optional):');
 ?>

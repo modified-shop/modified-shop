@@ -32,6 +32,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `payone_transactions` (
   `status` varchar(255) NOT NULL,
   `txid` varchar(100) NOT NULL,
   `userid` varchar(100) NOT NULL,
+  `type` varchar(64) NOT NULL,
   `created` datetime DEFAULT NULL,
   `last_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`payone_transactions_id`),

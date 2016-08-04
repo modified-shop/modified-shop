@@ -473,14 +473,12 @@ class PayonePayment {
   function _set_customers_standard_params() {
     global $order;
 
-    $this->payone->log("orders:\n".print_r($order, true));
-
     $this->personal_data->setCustomerid($_SESSION['customer_id']);
     $this->personal_data->setFirstname($order->billing['firstname']);
     $this->personal_data->setLastname($order->billing['lastname']);
     $this->personal_data->setCompany($order->billing['company']);
     $this->personal_data->setStreet($order->billing['street_address']);
-    if (method_exists($this->personal_data, setAddressaddition)) {
+    if (method_exists($this->personal_data, 'setAddressaddition')) {
       $this->personal_data->setAddressaddition($order->billing['suburb']);
     }
     $this->personal_data->setZip($order->billing['postcode']);
@@ -491,22 +489,22 @@ class PayonePayment {
     } else {
       $this->personal_data->setCountry($order->billing['country']['iso_code_2']);
     }
-    if (method_exists($this->personal_data, setState) && in_array($order->billing['country']['iso_code_2'], array('US', 'CA'))) {
+    if (method_exists($this->personal_data, 'setState') && in_array($order->billing['country']['iso_code_2'], array('US', 'CA'))) {
       $this->personal_data->setState($order->billing['state']);
     }
-    if (method_exists($this->personal_data, setVatid)) {
+    if (method_exists($this->personal_data, 'setVatid')) {
       $this->personal_data->setVatid($_SESSION['customer_vat_id']);
     }
-    if (method_exists($this->personal_data, setIp)) {
+    if (method_exists($this->personal_data, 'setIp')) {
       $this->personal_data->setIp($_SESSION['tracking']['ip']);
     }
-    if (method_exists($this->personal_data, setTelephonenumber)) {
+    if (method_exists($this->personal_data, 'setTelephonenumber')) {
       $this->personal_data->setTelephonenumber($order->customer['telephone']);
     }
-    if (method_exists($this->personal_data, setGender)) {
+    if (method_exists($this->personal_data, 'setGender')) {
       $this->personal_data->setGender($order->customer['gender']);
     }
-    if (method_exists($this->personal_data, setBirthday)) {
+    if (method_exists($this->personal_data, 'setBirthday')) {
       $this->personal_data->setBirthday($this->_get_customers_dob($_SESSION['customer_id']));
     }
     $this->personal_data->setEmail($order->customer['email_address']);

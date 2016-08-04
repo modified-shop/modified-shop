@@ -26,10 +26,17 @@ class payone_elv extends PayonePayment {
 		$this->code = 'payone_elv';
 		parent::__construct();
 		$this->form_action_url = '';
+
+		$this->elvtypes = array(
+			'payolution_debit' => 'PYD',
+		);
 	}
 
 	function selection() {
-		if ($this->pg_config['types']['lastschrift']['active'] == 'true') {
+		if ($this->pg_config['types']['lastschrift']['active'] == 'true'
+		    || $this->pg_config['types']['payolution_debit']['active'] == 'true'
+		    )
+		{
 			$selection = parent::selection();
       if (is_array($selection)) {
         $selection['description'] = '';
@@ -56,9 +63,23 @@ class payone_elv extends PayonePayment {
 	}
 
 	function _paymentDataForm($active_genre_identifier) {
+	  global $order;
+	  
 	  $payment_smarty = new Smarty();
     $payment_smarty->template_dir = DIR_FS_EXTERNAL.'payone/templates/';
-
+    
+    if ($this->pg_config['types']['payolution_debit']['active'] == 'true') {
+      if ($order->billing['company'] != '' || $order->customer['company'] != '') {
+        $required_fields = array(
+          'company_uid' => $_SESSION[$this->code]['invoice_company_uid'],
+          'company_trade_registry_number' => $_SESSION[$this->code]['invoice_company_trade_registry_number'],
+          'company_register_key' => $_SESSION[$this->code]['invoice_company_register_key'],
+        );
+        $payment_smarty->assign('required_fields', $required_fields);                        
+      }
+      $payment_smarty->assign('confirm_text', TEXT_PAYOLUTION_CONFIRM);
+      $payment_smarty->assign('sepa_text', TEXT_PAYOLUTION_CONFIRM_SEPA);
+    }
     $payment_smarty->assign('genre_specific', $this->pg_config['genre_specific']);
     
 		$sepa_countries_all = $this->payone->getSepaCountries();
@@ -87,6 +108,12 @@ class payone_elv extends PayonePayment {
 	function pre_confirmation_check() {
 		parent::pre_confirmation_check();
 
+    $valid_request = array(
+      'company_uid', 
+      'company_trade_registry_number', 
+      'company_register_key',
+    );
+
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$_SESSION[$this->code] = array(
 				'country' => ((isset($_POST['p1_elv_country'])) ? $_POST['p1_elv_country'] : ''),
@@ -94,26 +121,39 @@ class payone_elv extends PayonePayment {
 				'bankcode' => ((isset($_POST['p1_elv_bankcode'])) ? $_POST['p1_elv_bankcode'] : ''),
 				'iban' => ((isset($_POST['p1_elv_iban'])) ? $_POST['p1_elv_iban'] : ''),
 				'bic' => ((isset($_POST['p1_elv_bic'])) ? $_POST['p1_elv_bic'] : ''),
+				'conditions' => ((isset($_POST['p1_elv_conditions'])) ? $_POST['p1_elv_conditions'] : false),
+				'sepa' => ((isset($_POST['p1_elv_sepa'])) ? $_POST['p1_elv_sepa'] : false),
 			);
+
+		  foreach ($valid_request as $key) {
+		    if (isset($_POST[$key])) {
+		      $_SESSION[$this->code][$key] = $_POST[$key];
+		    }
+		  }
 		}
 
-		$this->payone->log("verfication $this->code payment data");
-		$standard_parameters = parent::_standard_parameters();    
-		unset($standard_parameters['request']);
-		
+    $_SESSION[$this->code]['elv_type'] = 'lastschrift';
+    if ($this->pg_config['types']['payolution_debit']['active'] == 'true') {
+      $_SESSION[$this->code]['elv_type'] = 'payolution_debit';
+    }
+    
+    $this->payone->log("verfication $this->code payment data");
+    $standard_parameters = parent::_standard_parameters();    
+    unset($standard_parameters['request']);
+  
     $request_parameters = array(
       'aid' => $this->global_config['subaccount_id'],
       'key' => $this->global_config['key'],
     );
 
-		$params = array_merge($standard_parameters, $request_parameters, $_SESSION[$this->code]);
-		
-		$builder = new Payone_Builder($this->payone->getPayoneConfig());
+    $params = array_merge($standard_parameters, $request_parameters, $_SESSION[$this->code]);
+  
+    $builder = new Payone_Builder($this->payone->getPayoneConfig());
     $service = $builder->buildServiceVerificationBankAccountCheck();
-    
+  
     $request = new Payone_Api_Request_BankAccountCheck($params);
     $this->payone->log("elv BankAccountCheck request:\n".print_r($request, true));
-    
+  
     $response = $service->check($request);
     $this->payone->log("elv BankAccountCheck response:\n".print_r($response, true));
 
@@ -123,6 +163,15 @@ class payone_elv extends PayonePayment {
       $this->payone->log("ERROR verification bankaccount: ".$response->getErrorcode().' - '.$response->getErrormessage());
       $_SESSION['payone_error'] = $response->getCustomermessage();
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+    }
+    
+    if ($_SESSION[$this->code]['elv_type'] == 'lastschrift') {
+      if ((!isset($_SESSION[$this->code]['conditions']) || $_SESSION[$this->code]['conditions'] == false)) {
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));		
+      }
+      if ((!isset($_SESSION[$this->code]['sepa']) || $_SESSION[$this->code]['sepa'] == false)) {
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));		
+      }
     }
 	}
 
@@ -136,7 +185,10 @@ class payone_elv extends PayonePayment {
 	function process_button() {
 	  global $order;
 	  
-		if ($this->pg_config['genre_specific']['sepa_use_managemandate'] == 'true') {
+		if ($this->pg_config['genre_specific']['sepa_use_managemandate'] == 'true' 
+		    && $_SESSION[$this->code]['elv_type'] == 'lastschrift'
+		    )
+		{
 		  $this->payone->log("managemandate $this->code payment");
 			$standard_parameters = parent::_standard_parameters();
 			unset($standard_parameters['request']);
@@ -228,17 +280,19 @@ class payone_elv extends PayonePayment {
 	}
 
 	function before_process() {
-		if (isset($_SESSION['tmp_oID']) === false)
-		{
+		if (isset($_SESSION['tmp_oID']) === false) {
 			# we're on the first run of checkout_process
-			if ($this->pg_config['genre_specific']['sepa_use_managemandate'] == 'true')
-			{
-				if (isset($_POST['mandate_confirm']) !== true && $_SESSION['payone_elv_sepa_mandate_mustconfirm'] == true)
-				{
-					unset($_SESSION['payone_elv_sepa_mandate_id']);
-          $_SESSION['payone_error'] = ERROR_MUST_CONFIRM_MANDATE;
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-				}
+			if ($_SESSION[$this->code]['elv_type'] == 'lastschrift') {
+        if ($this->pg_config['genre_specific']['sepa_use_managemandate'] == 'true') {
+          if (isset($_POST['mandate_confirm']) !== true 
+              && $_SESSION['payone_elv_sepa_mandate_mustconfirm'] == true
+              )
+          {
+            unset($_SESSION['payone_elv_sepa_mandate_id']);
+            $_SESSION['payone_error'] = ERROR_MUST_CONFIRM_MANDATE;
+            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+          }
+        }
 			}
 		}
 	}
@@ -275,12 +329,47 @@ class payone_elv extends PayonePayment {
 			$this->payment_method->setMandateIdentification($_SESSION[$this->code]['sepa_mandate_id']);
 		}
 		
-    $request_parameters = parent::_request_parameters('elv');
-
-		$this->params = array_merge($standard_parameters, $request_parameters);
-		$this->builder = new Payone_Builder($this->payone->getPayoneConfig());
+		if ($_SESSION[$this->code]['elv_type'] == 'lastschrift') {
+      $request_parameters = parent::_request_parameters('elv');
+      $this->params = array_merge($standard_parameters, $request_parameters);
+      $this->builder = new Payone_Builder($this->payone->getPayoneConfig());
     
-    parent::_build_service_authentification('elv');
+      parent::_build_service_authentification('elv');
+    } else {
+      
+      $debit = $this->payment_method;
+      $this->payment_method = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_Financing();
+      $this->payment_method->setSuccessurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PROCESS.'?'.xtc_session_name().'='.xtc_session_id());
+      $this->payment_method->setBackurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id());
+      $this->payment_method->setErrorurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id().'&payment_error='.$this->code);
+    
+      // set order_id for deleting canceld order
+      $_SESSION['tmp_payone_oID'] = $_SESSION['tmp_oID'];
+    
+      $paydata_item = array(
+        array('key' => 'b2b', 'data' => (($order->billing['company'] != '' || $order->customer['company'] != '') ? 'yes' : 'no')),
+        array('key' => 'company_uid', 'data' => $_SESSION[$this->code]['company_uid']),
+        array('key' => 'company_trade_registry_number', 'data' => $_SESSION[$this->code]['company_trade_registry_number']),
+        array('key' => 'company_register_key', 'data' => $_SESSION[$this->code]['company_register_key']),
+      );
+      $paydata = new Payone_Api_Request_Parameter_Paydata_Paydata();
+      $paydata->addItem(
+        new Payone_Api_Request_Parameter_Paydata_DataItem($paydata_item)
+      );
+      $this->payment_method->setPaydata($paydata);
+
+      $financingtype = $this->elvtypes[$_SESSION[$this->code]['elv_type']];
+      $this->payment_method->setFinancingtype($financingtype);
+      $this->payment_method->setBankData($debit);
+
+      $request_parameters = parent::_request_parameters('fnc');
+    
+      $this->params = array_merge($standard_parameters, $request_parameters);		
+      $this->builder = new Payone_Builder($this->payone->getPayoneConfig());
+        
+      parent::_build_service_authentification('fnc');
+    }
+    
     parent::_parse_response_payone_api();
 
 		xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));

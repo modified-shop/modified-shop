@@ -48,6 +48,12 @@ class Payone_Api_Request_Genericpayment extends Payone_Api_Request_Abstract {
     protected $currency = NULL;
 
     /**
+     * Enum FinancingType
+     * @var string
+     */
+    protected $financingtype = NULL;
+
+    /**
      * dynamic text for debit and creditcard payments
      *
      * @var string
@@ -58,6 +64,11 @@ class Payone_Api_Request_Genericpayment extends Payone_Api_Request_Abstract {
      * @var Payone_Api_Request_Parameter_Authorization_DeliveryData
      */
     protected $deliveryData = null;
+
+    /**
+     * @var Payone_Api_Request_Parameter_Authorization_PersonalData
+     */
+    protected $personalData = null;
 
     /**
      * With the first genericpayment the workorderid will be generated from the 
@@ -180,6 +191,20 @@ class Payone_Api_Request_Genericpayment extends Payone_Api_Request_Abstract {
     }
 
     /**
+     * @param Payone_Api_Request_Parameter_Authorization_PersonalData $personalData
+     */
+    public function setPersonalData(Payone_Api_Request_Parameter_Authorization_PersonalData $personalData) {
+        $this->personalData = $personalData;
+    }
+
+    /**
+     * @return Payone_Api_Request_Parameter_Authorization_PersonalData
+     */
+    public function getPersonalData() {
+        return $this->personalData;
+    }
+
+    /**
      * 
      * @return string
      */
@@ -224,6 +249,22 @@ class Payone_Api_Request_Genericpayment extends Payone_Api_Request_Abstract {
      */
     public function getPaydata() {
         return $this->paydata;
+    }
+
+    /**
+     * @param string $financingtype
+     */
+    public function setFinancingtype($financingtype)
+    {
+        $this->financingtype = $financingtype;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFinancingtype()
+    {
+        return $this->financingtype;
     }
 
 }

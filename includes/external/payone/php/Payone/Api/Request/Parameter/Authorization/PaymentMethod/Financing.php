@@ -132,4 +132,19 @@ class Payone_Api_Request_Parameter_Authorization_PaymentMethod_Financing
     public function getPaydata() {
         return $this->paydata;
     }
+
+    /**
+     * @param Payone_Api_Request_Parameter_Authorization_PaymentMethod_DebitPayment $bankdata
+     */
+    public function setBankData($bankdata) {
+        $this->bankdata = $bankdata;
+    }
+
+    /**
+     * 
+     * @return Payone_Api_Request_Parameter_Authorization_PaymentMethod_DebitPayment
+     */
+    public function getBankData() {
+        return $this->bankdata;
+    }
 }

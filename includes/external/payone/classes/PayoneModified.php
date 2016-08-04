@@ -18,7 +18,6 @@
    ---------------------------------------------------------------------------------------*/
 
 require_once (DIR_FS_EXTERNAL.'payone/php/Payone/Bootstrap.php');
-//require_once (DIR_FS_EXTERNAL.'payone/classes/FileLog.php');
 
 class PayoneModified {
 
@@ -26,7 +25,9 @@ class PayoneModified {
 	protected $_frontend_url;
 	protected $_server_api_url;
   
-  public $integrator_version = '1.02';
+  public $integrator_version = '1.03';
+  public $api_version = '3.10';
+  public $logging = false;
   
 	public function __construct() {
 		$this->_client_api_url = 'https://secure.pay1.de/client-api/';
@@ -35,22 +36,27 @@ class PayoneModified {
 
 		$bootstrap = new Payone_Bootstrap();
 		$bootstrap->init();
+		
+		$global_config = $this->getConfig('global');
+		$this->logging = (($global_config['logging'] == 'true') ? true : false);
 	}
 
-	public function log($message, $filename='payone.log') {
-    error_log(strftime('%d/%m/%Y %H:%M:%S').' | '.$message."\n", 3, DIR_FS_LOG.$filename);
+	public function log($message) {
+	  if ($this->logging === true) {
+      error_log(strftime('%d/%m/%Y %H:%M:%S').' | '.$message."\n", 3, DIR_FS_LOG.'mod_payone_'.date('Y-m-d').'.log');
+    }
 	}
 
 	public function getPayoneConfig() {
 		$payone_config = new Payone_Config();
 		
 		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_ModifiedLog/mode', 'api');
-		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_Log4php/filename', DIR_FS_LOG.'payone_sdk_api.log');
+		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_Log4php/filename', DIR_FS_LOG.'mod_payone_sdk_api_'.date('Y-m-d').'.log');
 		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_Log4php/max_file_count', '10');
 		$payone_config->setValue('api/default/protocol/loggers/Payone_Protocol_Logger_Log4php/max_file_size', '5MB');
 		
 		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_ModifiedLog/mode', 'transactions');
-		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_Log4php/filename', DIR_FS_LOG.'payone_sdk_transaction.log');
+		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_Log4php/filename', DIR_FS_LOG.'mod_payone_sdk_transaction_'.date('Y-m-d').'.log');
 		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_Log4php/max_file_count', '10');
 		$payone_config->setValue('transaction_status/default/protocol/loggers/Payone_Protocol_Logger_Log4php/max_file_size', '5MB');
 
@@ -73,46 +79,65 @@ class PayoneModified {
   }
   
 	public function getStatusNames() {
-		$names = array('approved', 
-		               'appointed', 
-		               'capture', 
-		               'paid', 
-		               'underpaid', 
-		               'cancelation', 
-		               'refund', 
-		               'debit', 
-		               'transfer', 
-		               'reminder', 
-		               'vauthorization', 
-		               'vsettlement', 
-		               'invoice');
+		$names = array(
+		  'approved', 
+      'appointed', 
+      'capture', 
+      'paid', 
+      'underpaid', 
+      'cancelation', 
+      'refund', 
+      'debit', 
+      'transfer', 
+      'reminder', 
+      'vauthorization', 
+      'vsettlement', 
+      'invoice',
+    );
+		
 		return $names;
 	}
 
 	public function getPaymentTypes() {
-		$payment_types = array('creditcard' => array('visa', 
-		                                             'mastercard', 
-		                                             'amex', 
-		                                             'cartebleue', 
-		                                             'dinersclub', 
-		                                             'discover', 
-		                                             'jcb', 
-		                                             'maestro'),
-                           'onlinetransfer' => array('sofortueberweisung', 
-                                                     'giropay', 
-                                                     'eps', 
-                                                     'pfefinance', 
-                                                     'pfcard', 
-                                                     'ideal'),
-                           'ewallet' => array('paypal'),
-                           'accountbased' => array('lastschrift', 
-                                                   'invoice', 
-                                                   'prepay', 
-                                                   'cod'),
-                           'installment' => array('billsafe', 
-                                                  'commerzfinanz',
-                                                  'klarna'),
+	  $payment_types = array(
+		  'creditcard' => array(
+		    'visa', 
+        'mastercard', 
+        'amex', 
+        'cartebleue', 
+        'dinersclub', 
+        'discover', 
+        'jcb', 
+        'maestro',
+      ),
+      'onlinetransfer' => array(
+        'sofortueberweisung', 
+        'giropay', 
+        'eps', 
+        'pfefinance', 
+        'pfcard', 
+        'ideal',
+      ),
+      'ewallet' => array(
+        'paypal',
+      ),
+      'accountbased' => array(
+        'lastschrift', 
+        'invoice', 
+        'prepay', 
+        'cod',
+        'payolution_debit',
+        'payolution_invoice',
+      ),
+      'installment' => array(
+        'billsafe', 
+        'commerzfinanz',
+        'klarna',
+        'payolution_financing',
+        'payolution_monthly',
+      ),
 		);
+		
 		return $payment_types;
 	}
 
@@ -267,12 +292,12 @@ class PayoneModified {
 			case 'ewallet':
 			  break;
 			case 'installment':
-				$configuration['genre_specific']['klarna'] = array('storeid' => '',
-                                                           'countries' => array()
-                                                           );
+				$configuration['genre_specific']['klarna'] = array(
+				  'storeid' => '',
+          'countries' => array()
+        );
 				break;
 		}
-
 		return $configuration;
 	}
 
@@ -346,34 +371,44 @@ class PayoneModified {
 
 	public function mergeConfigs($old_config, $new_config) {
 		$old_keys = array_keys($old_config);
-		if (is_array($old_keys) && isset($old_keys[0]) && $old_keys[0] === 0) {
+		if (is_array($old_keys) && isset($old_keys[0]) && $old_keys[0] === 0)
+		{
 			# special case: numerically indexed array, e.g. list of countries
 			$merged = array_values(array_unique($new_config));
-		} else {
+		}
+		else
+		{
 			$merged = array();
 			foreach($old_config as $key => $value) {
 				if (isset($new_config[$key]) && empty($new_config[$key]) && !is_numeric($new_config[$key])) {
 					if (array_key_exists($key, $new_config)) {
 						if (is_array($value)) {
 							$merged[$key] = array();
-						} else if ($value == 'true' || $value == 'false') {
+						}
+						else if ($value == 'true' || $value == 'false') {
 							$merged[$key] = 'false';
-						} else {
+						}
+						else {
 							$merged[$key] = '';
 						}
-					} else {
+					}
+					else {
 						if ($value == 'true' || $value == 'false') {
 							$merged[$key] = 'false';
-						} else {
+						}
+						else {
 							$merged[$key] = $value;
 						}
 					}
-				} else {
+				}
+				else {
 					if (is_array($value)) {
 						$merged[$key] = $this->mergeConfigs($value, $new_config[$key]);
-					} else if ($value == 'true' || $value == 'false') {
+					}
+					else if ($value == 'true' || $value == 'false') {
 						$merged[$key] = $new_config[$key] == 'true' ? 'true' : 'false';
-					} else {
+					}
+					else {
 						$merged[$key] = $new_config[$key];
 					}
 				}
@@ -382,12 +417,10 @@ class PayoneModified {
 					$merged[$key] = $new_config[$key] == 'true' ? 'true' : 'false';
 				}
 			}
-			if (is_array($new_config) && count($new_config) > 0) {
-        foreach($new_config as $nkey => $nvalue) {
-          if (!array_key_exists($nkey, $merged)) {
-            $merged[$nkey] = $nvalue;
-          }
-        }
+			foreach($new_config as $nkey => $nvalue) {
+				if (!array_key_exists($nkey, $merged)) {
+					$merged[$nkey] = $nvalue;
+				}
 			}
 		}
 		return $merged;
@@ -478,14 +511,16 @@ class PayoneModified {
 		$pgenre = $this->getConfig($genre_identifier);
 		$types = array();
 		if ($pgenre['genre'] == 'creditcard') {
-			$cctypes = array('visa' => 'V', 
-			                 'mastercard' => 'M', 
-			                 'amex' => 'A', 
-			                 'cartebleue' => 'B', 
-			                 'dinersclub' => 'D', 
-			                 'discover' => 'C', 
-			                 'jcb' => 'J', 
-			                 'maestro' => 'O');
+			$cctypes = array(
+			  'visa' => 'V', 
+        'mastercard' => 'M', 
+        'amex' => 'A', 
+        'cartebleue' => 'B', 
+        'dinersclub' => 'D', 
+        'discover' => 'C', 
+        'jcb' => 'J', 
+        'maestro' => 'O',
+      );
 			foreach($cctypes as $cctype => $shorttype) {
 				if ($pgenre['types'][$cctype]['active'] != 'true') {
 					continue;
@@ -522,6 +557,7 @@ class PayoneModified {
 			'solution_version' => $db_version['full'],
 			'integrator_name' => 'Modified',
 			'integrator_version' => $this->integrator_version,
+			'api_version' => $this->api_version,
 		);
 		if ($request !== null) {
 			$params['request'] = $request;
@@ -545,8 +581,8 @@ class PayoneModified {
 		ksort($hash_data);
 		$hash_string = implode('', $hash_data);
 		$hash_string .= $key;
-		//$this->log("computing hash for $hash_string");
 		$hash = md5($hash_string);
+		
 		return $hash;
 	}
 
@@ -554,42 +590,32 @@ class PayoneModified {
 		return $this->_client_api_url;
 	}
 
-	public function retrieveSepaMandate($file_reference)
-	{
+	public function retrieveSepaMandate($file_reference) {
 		$global_config = $this->getConfig('global');
 		$standard_parameters = $this->getStandardParameters();
 		$builder = new Payone_Builder($this->getPayoneConfig());
 		$service = $builder->buildServiceManagementGetFile();
-		$request_data = array
-			(
-				'key' => $global_config['key'],
-				'file_reference' => $file_reference,
-				'file_type' => 'SEPA_MANDATE',
-				'file_format' => 'PDF',
-			);
+		$request_data = array(
+      'key' => $global_config['key'],
+      'file_reference' => $file_reference,
+      'file_type' => 'SEPA_MANDATE',
+      'file_format' => 'PDF',
+    );
 		$params = array_merge($standard_parameters, $request_data);
 		$request = new Payone_Api_Request_GetFile($params);
-		$this->log('getFile request:'.PHP_EOL.print_r($request, true));
 		$result = $service->getFile($request);
-		//$this->log('getFile result:'.PHP_EOL.print_r($result, true));
-		if ($result instanceof Payone_Api_Response_Management_GetFile)
-		{
+		if ($result instanceof Payone_Api_Response_Management_GetFile) {
 			$t_pdf_data = $result->getRawResponse();
 			$mandate_filename = 'sepa_mandate_'.$_SESSION['customer_id'].'_'.md5($file_reference).'.pdf';
 			$bytes_written = file_put_contents(DIR_FS_DOWNLOAD_PUBLIC.$mandate_filename, $t_pdf_data);
 			if ($bytes_written === false) {
 				$this->log('ERROR writing mandate file '.DIR_FS_DOWNLOAD_PUBLIC.$mandate_filename);
 				return false;
-			}
-			else
-			{
+			} else {
 				$this->log('SEPA mandate written to '.$mandate_filename.' ('.$bytes_written.' bytes)');
 				return $mandate_filename;
 			}
-
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
@@ -603,7 +629,6 @@ class PayoneModified {
 
 		foreach($config as $topkey => $pgconfig) {
 			if ($pgconfig['active'] != 'true') {
-				$this->log("$topkey not active");
 				continue;
 			}
 			if ($pgconfig['min_cart_value'] > $cart_value || $pgconfig['max_cart_value'] < $cart_value) {
@@ -611,7 +636,6 @@ class PayoneModified {
 				continue;
 			}
 			if (!is_array($pgconfig['countries']) || !in_array($billto_address['countries_iso_code_2'], $pgconfig['countries'])) {
-				$this->log("$topkey country ".$billto_address['countries_iso_code_2']." not activated");
 				continue;
 			}
 			$available[$topkey] = $pgconfig;
@@ -650,17 +674,19 @@ class PayoneModified {
 	}
 
 	public function getAddressHash($ab_id) {
-		$hash_fields = array('entry_gender', 
-		                     'entry_company', 
-		                     'entry_firstname', 
-		                     'entry_lastname', 
-		                     'entry_street_address', 
-		                     'entry_suburb',
-			                   'entry_postcode', 
-			                   'entry_city', 
-			                   'entry_state', 
-			                   'entry_country_id', 
-			                   'entry_zone_id');
+		$hash_fields = array(
+		  'entry_gender', 
+      'entry_company', 
+      'entry_firstname', 
+      'entry_lastname', 
+      'entry_street_address', 
+      'entry_suburb',
+      'entry_postcode', 
+      'entry_city', 
+      'entry_state', 
+      'entry_country_id', 
+      'entry_zone_id',
+    );
 		$ab_entry = $this->_getAddressBookEntry($ab_id);
 		$hash_input = '';
 		foreach($hash_fields as $key) {
@@ -672,12 +698,21 @@ class PayoneModified {
 	}
 
 	public function saveTransaction($orders_id, $status, $txid, $userid) {
-	  $sql_data_transactions_array = array('orders_id' => (int)$orders_id,
-	                                       'status' => $status,
-	                                       'txid' => $txid,
-	                                       'userid' => $userid,
-	                                       'created' => 'now()',
-	                                       'last_modified' => 'now()');
+	  $sql_data_transactions_array = array(
+	    'orders_id' => (int)$orders_id,
+      'status' => $status,
+      'txid' => $txid,
+      'userid' => $userid,
+      'created' => 'now()',
+      'last_modified' => 'now()',
+    );
+    if (isset($_SESSION['payone_installment']['installment_type'])) {
+      $sql_data_transactions_array['type'] = $_SESSION['payone_installment']['installment_type'];
+    } elseif (isset($_SESSION['payone_elv']['elv_type'])) {
+      $sql_data_transactions_array['type'] = $_SESSION['payone_elv']['elv_type'];
+    } elseif (isset($_SESSION['payone_invoice']['invoice_type'])) {
+      $sql_data_transactions_array['type'] = $_SESSION['payone_invoice']['invoice_type'];
+    }
 	  xtc_db_perform('payone_transactions', $sql_data_transactions_array);  
 		$this->log("transaction saved: orders_id $orders_id, status $status, txid $txid, userid $userid");
 	}
@@ -720,11 +755,9 @@ class PayoneModified {
 
     if (curl_getinfo($curl, CURLINFO_HTTP_CODE) != 200) {
       $this->log("sendTransactionStatus invalid:\n".print_r($result, true));
-    }
-    elseif (curl_error($curl)) {
+    } elseif (curl_error($curl)) {
       $this->log("sendTransactionStatus error ".curl_errno($curl) . ": " . curl_error($curl));
-    }
-    else {
+    } else {
       $this->log("sendTransactionStatus success:\n".print_r($result, true));
     }
     curl_close($curl);
@@ -785,8 +818,7 @@ class PayoneModified {
           $this->sendTransactionStatus($config['orders_status_redirect']['url'][$txstatus['txaction']], $txstatus, $config['orders_status_redirect']['timeout'][$txstatus['txaction']]);
         }
 			}
-		}
-		else {
+		} else {
 			$this->log("received TxStatus with an invalid key! TxStatus will not be processed.");
 		}
 
@@ -803,7 +835,6 @@ class PayoneModified {
 		                        'log_level' => '0',
 		                        'message' => $message,
 		                        'customers_id' => '0');
-		$this->log(print_r($sql_data_array, true));
 		xtc_db_perform('payone_transactions_log', $sql_data_array);
 	}
 
@@ -1055,7 +1086,6 @@ class PayoneModified {
 		  $request->setAmount(round($data['amount'], 2));
 		}
 		
-		$this->log("capture request:\n".print_r($request, true));
 		$response = $service->capture($request);
     
     if ($response instanceof Payone_Api_Response_Capture_Approved) {
@@ -1110,7 +1140,6 @@ class PayoneModified {
 			$request->setPayment($payment);
 		}
 		
-		$this->log("debit request:\n".print_r($request, true));
 		$response = $service->debit($request);
 		
     if ($response instanceof Payone_Api_Response_Debit_Approved) {
@@ -1322,7 +1351,6 @@ class PayoneModified {
 		           WHERE address_hash = '".xtc_db_input($address_hash)."' 
 		             AND `scoretype` = '".xtc_db_input($scoretype)."' 
 		             AND `received` >= DATE_SUB(NOW(), INTERVAL ".(int)$cache_days." DAY)";
-		$this->log("credit_risk checking cache:\n".$query);
 		$cached_response = false;
 		$result = xtc_db_query($query);
 		while($row = xtc_db_fetch_array($result)) {

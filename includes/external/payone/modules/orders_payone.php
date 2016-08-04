@@ -23,7 +23,7 @@ function payone_get_order_details() {
   global $order;
 
   ?>
-  <table cellspacing="0" cellpadding="2" class="table" style="width: 813px;">
+  <table cellspacing="0" cellpadding="2" class="table">
     <tr class="dataTableHeadingRow">
       <td class="dataTableHeadingContent" colspan="2"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
       <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></td>
@@ -116,30 +116,7 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
 		$_SESSION['orders_payone_messages'] = array();
 	}
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-		if ($_POST['cmd'] == 'capture') {
-		  if (isset($_POST['positions'])) {
-		    $_POST['capture']['positions'] = $_POST['positions'];
-		  }
-			$response = $payone->captureAmount($_POST['capture']);
-			if ($response->getStatus() == 'ERROR') {
-				$_SESSION['orders_payone_messages'][] = ERROR_OCCURED.": ".$response->getErrorcode().' '.$response->getErrormessage();
-			} else {
-				$_SESSION['orders_payone_messages'][] = AMOUNT_CAPTURED;
-			}
-		}
-		if ($_POST['cmd'] == 'refund') {
-		  if (isset($_POST['positions'])) {
-		    $_POST['refund']['positions'] = $_POST['positions'];
-		  }
-			$response = $payone->refundAmount($_POST['refund']);
-			if ($response->getStatus() == 'ERROR') {
-				$_SESSION['orders_payone_messages'][] = ERROR_OCCURED.": ".$response->getErrorcode().' '.$response->getErrormessage();
-			} else {
-				$_SESSION['orders_payone_messages'][] = AMOUNT_REFUNDED;
-			}
-		}
-	}
+  //include (DIR_FS_EXTERNAL.'payone/modules/orders_payone_action.php');
 
 	$payone_messages = $_SESSION['orders_payone_messages'];
 	$_SESSION['orders_payone_messages'] = array();
@@ -149,11 +126,11 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
 
 	?>
 	<tr>
-	  <td colspan="2" style="width:840px;">
+	  <td colspan="2" style="width:985px;">
       <style type="text/css">
         p.message { padding: 1ex 1em; margin: 5px 1px; color: #A94442; border: 1px solid #DCA7A7; background-color: #F2DEDE; }
         div.p1_box { background: #E2E2E2; float: left; padding: 1ex; margin: 1px; min-height: 125px; min-width:48.4%; width:48.4%; }
-        .p1_box_full {width:98.3% !important;}
+        .p1_box_full {width:98.1% !important;}
         div.p1_boxheading { font-size: 1.2em; font-weight: bold; background: #CCCCCC; padding: .2ex .5ex;}
         dl.p1_transaction { overflow: auto; margin: 0 0; border-bottom: 1px dotted #999; padding:2px 0px; }
         dl.p1_transaction dt, dl.p1_transaction dd { margin: 0; float: left; }
@@ -201,6 +178,8 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
             <div class="p1_transactions p1_box">
               <div class="p1_boxheading"><?php echo TRANSACTIONS; ?></div>
               <?php 
+                $transaction_type = $orders_data['transactions'][0]['type'];
+                unset($orders_data['transactions'][0]['type']);
                 unset($orders_data['transactions'][0]['payone_transactions_id']);
                 unset($orders_data['transactions'][0]['orders_id']);
               
@@ -256,16 +235,19 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
             <?php 
             if ($capture_data !== false) { 
               ?>
-              <div class="p1_capture p1_box <?php echo (($order->info['payment_method'] == 'payone_installment') ? 'p1_box_full' : ''); ?>">
+              <div class="p1_capture p1_box <?php echo (($order->info['payment_method'] == 'payone_installment' && strpos($transaction_type, 'payolution') === false) ? 'p1_box_full' : ''); ?>">
                 <div class="p1_boxheading"><?php echo CAPTURE_TRANSACTION; ?></div>
                 <?php 
-                  echo xtc_draw_form('capture', FILENAME_ORDERS, xtc_get_all_get_params()); 
+                  echo xtc_draw_form('capture', FILENAME_ORDERS, xtc_get_all_get_params(array('subaction', 'action')).'action=custom&subaction=payoneaction'); 
                   echo xtc_draw_hidden_field('cmd', 'capture').
                        xtc_draw_hidden_field('capture[oID]', (int)$oID).
                        xtc_draw_hidden_field('capture[txid]', $capture_data['txid']).
                        xtc_draw_hidden_field('capture[portalid]', $capture_data['portalid']).
                        xtc_draw_hidden_field('capture[currency]', $capture_data['currency']);
-                  if ($order->info['payment_method'] == 'payone_installment') {
+                  if ($order->info['payment_method'] == 'payone_installment'
+                      && strpos($transaction_type, 'payolution') === false
+                      )
+                  {
                     payone_get_order_details();
                   } else { 
                     echo '<div class="refund_row">';
@@ -286,10 +268,10 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
             <?php 
             if ($capture_data !== false) { 
               ?>
-              <div class="p1_refund p1_box <?php echo (($order->info['payment_method'] == 'payone_installment') ? 'p1_box_full' : ''); ?>">
+              <div class="p1_refund p1_box <?php echo (($order->info['payment_method'] == 'payone_installment' && strpos($transaction_type, 'payolution') === false) ? 'p1_box_full' : ''); ?>">
                 <div class="p1_boxheading"><?php echo REFUND_TRANSACTION; ?></div>
                 <?php 
-                  echo xtc_draw_form('refund', FILENAME_ORDERS, xtc_get_all_get_params());
+                  echo xtc_draw_form('refund', FILENAME_ORDERS, xtc_get_all_get_params(array('subaction', 'action')).'action=custom&subaction=payoneaction');
                   echo xtc_draw_hidden_field('cmd', 'refund').
                        xtc_draw_hidden_field('refund[oID]', (int)$oID).
                        xtc_draw_hidden_field('refund[txid]', $capture_data['txid']).
@@ -331,7 +313,10 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
                       <?php echo xtc_draw_input_field('refund[bic]', '', 'id="bic" style="width: 135px"'); ?>
                     </div>
                   <?php 
-                  } elseif ($order->info['payment_method'] == 'payone_installment') {
+                  } elseif ($order->info['payment_method'] == 'payone_installment'
+                            && strpos($transaction_type, 'payolution') === false
+                            )
+                  {
                     payone_get_order_details();
                   } else { 
                     echo '<div class="refund_row">';
