@@ -224,8 +224,6 @@ define('AUTHORIZATION_METHOD', 'Authorization method');
 define('AUTHMETHOD_AUTH', 'Instant authorization');
 define('AUTHMETHOD_PREAUTH', 'Pre-authorization');
 define('SEND_CART', 'Transfer cart');
-define('SENDCART_TRUE', 'yes');
-define('SENDCART_FALSE', 'no');
  
 // payment genre
 define('PAYMENT_GENRE', 'Payment method');
