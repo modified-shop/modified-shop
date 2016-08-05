@@ -27,7 +27,8 @@
  * @author Monte Ohrt <monte at ohrt dot com>
  * @author Andrei Zmievski <andrei@php.net>
  * @package Smarty
- * @version 2.6.28
+ * @version 2.6.28 
+ * @version Modified Shop 2016-08-05
  */
 
 /* $Id: Smarty.class.php 4660 2012-09-24 20:05:15Z uwe.tews@googlemail.com $ */
@@ -35,8 +36,10 @@
 /**
  * define smarty plugindir in template
  */
-define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/smarty');
-define('MY_SHOP_PLUGINS', DIR_FS_EXTERNAL.'smarty/plugins');
+define('MY_TEMPLATE', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE); //modified shop
+define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/smarty'); //modified shop
+define('MY_TEMPLATE_LANG', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/lang'); //modified shop
+define('MY_SHOP_PLUGINS', DIR_FS_EXTERNAL.'smarty/plugins');//modified shop
 
 /**
  * DIR_SEP isn't used anymore, but third party apps might
@@ -78,7 +81,7 @@ class Smarty
      *
      * @var string
      */
-    var $template_dir    =  'templates';
+    var $template_dir    =  array('templates', MY_TEMPLATE); //modified shop
 
     /**
      * The directory where compiled templates are located.
@@ -92,14 +95,14 @@ class Smarty
      *
      * @var string
      */
-    var $config_dir      =  'lang';
+    var $config_dir      =  array('lang', MY_TEMPLATE_LANG); //modified shop
 
     /**
      * An array of directories searched for plugins.
      *
      * @var array
      */
-    var $plugins_dir     =  array('plugins', MY_TEMPLATE_PLUGINS, MY_SHOP_PLUGINS);
+    var $plugins_dir     =  array('plugins', MY_TEMPLATE_PLUGINS, MY_SHOP_PLUGINS); //modified shop
 
     /**
      * If debugging is enabled, a debug console window will display
@@ -572,9 +575,22 @@ class Smarty
     /**
      * The class constructor.
      */
+    /*
     function Smarty()
     {
       $this->assign('SCRIPT_NAME', isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME']
+                    : @$GLOBALS['HTTP_SERVER_VARS']['SCRIPT_NAME']);
+    }
+    */
+    function __construct() //modified shop
+    {
+        $this->compile_dir     = DIR_FS_CATALOG . $this->compile_dir; //modified shop
+        $this->config_dir[0]   = DIR_FS_CATALOG . $this->config_dir[0]; //modified shop
+        $this->template_dir[0] = DIR_FS_CATALOG . $this->template_dir[0]; //modified shop
+        $this->cache_dir       = DIR_FS_CATALOG . $this->cache_dir; //modified shop
+        $this->plugins_dir[0]  = dirname(__FILE__) . '/' . $this->plugins_dir[0]; //modified shop
+        
+        $this->assign('SCRIPT_NAME', isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME']
                     : @$GLOBALS['HTTP_SERVER_VARS']['SCRIPT_NAME']);
     }
 
@@ -1096,7 +1112,7 @@ class Smarty
      */
     function trigger_error($error_msg, $error_type = E_USER_WARNING)
     {
-        $msg = encode_htmlentities($error_msg);
+        $msg = encode_htmlentities($error_msg); //modified shop
         trigger_error("Smarty error: $msg", $error_type);
     }
 
@@ -1547,13 +1563,6 @@ class Smarty
         else
             $_params['resource_base_path'] = $this->template_dir;
 
-#mod
-        $_params['resource_base_path'] = array(
-            $this->template_dir,
-            $this->template_dir . DIRECTORY_SEPARATOR . CURRENT_TEMPLATE
-        );
-#mod
-
         if ($this->_parse_resource_name($_params)) {
             $_resource_type = $_params['resource_type'];
             $_resource_name = $_params['resource_name'];
@@ -1733,7 +1742,7 @@ class Smarty
             }
             fclose($fd);
             if (strpos($filename, '.txt') !== false) {
-              $contents = encode_utf8($contents);
+              $contents = encode_utf8($contents); //modified shop
             }
             return $contents;
         } else {

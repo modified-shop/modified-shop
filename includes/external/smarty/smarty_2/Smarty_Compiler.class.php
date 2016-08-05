@@ -24,6 +24,7 @@
  * @version 2.6.25-dev
  * @copyright 2001-2005 New Digital Group, Inc.
  * @package Smarty
+ * @version Modified Shop 2016-08-05
  */
 
 /* $Id: Smarty_Compiler.class.php 4779 2013-09-30 19:14:32Z Uwe.Tews@googlemail.com $ */
@@ -78,7 +79,7 @@ class Smarty_Compiler extends Smarty {
     /**
      * The class constructor.
      */
-    function Smarty_Compiler()
+    function __construct() //modified shop
     {
         // matches double quoted strings:
         // "foobar"
