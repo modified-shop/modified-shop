@@ -39,7 +39,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_CAPTURE_INFO' => 'Wollen Sie Zahlungen bei PayPal manuell erfassen (Capture)?<br/><br/><b>Hinweis:</b> Dazu ist es notwendig, dass die Transaktion auf Authorize gesetzt ist.',
 
   'TEXT_PAYPAL_CONFIG_CART' => 'Warenkorb:',
-  'TEXT_PAYPAL_CONFIG_CART_INFO' => 'Soll der Warenkorb zu PayPal &uuml;bertragen werden?',
+  'TEXT_PAYPAL_CONFIG_CART_INFO' => 'Soll der Warenkorb zu PayPal &uuml;bertragen werden?<br/><br/><b>Hinweis:</b> Diese Einstellung kann Probleme bei der Verwendung von ot-Modulen unter "Module" -> "Zusammenfassung" mit sich bringen, die einen Rabatt oder Aufschlag gew&auml;hren ("Rabatt [ot_discount]", "Rabatt Coupons [ot_coupon]", "Gutscheine [ot_gv]", "Rabatt &amp; Zuschlag auf Zahlungsarten [ot_payment]", etc.).<br/>Empfohlene Einstellung: "Nein"',
 
   'TEXT_PAYPAL_CONFIG_STATE_SUCCESS' => 'Status Erfolg:',
   'TEXT_PAYPAL_CONFIG_STATE_SUCCESS_INFO' => 'Status bei erfolgreicher Bestellung',
