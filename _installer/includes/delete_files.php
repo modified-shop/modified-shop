@@ -99,7 +99,6 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/includes/modules/export/shipcloud.php', // neu
                      'admin/includes/modules/export/tag_cloud.php', // neu
                      'admin/includes/modules/export/xtbooster.php', // neu
-                     'admin/includes/modules/export/xtbooster.php', // neu
                      'admin/includes/modules/export/image_processing.php',
                      'admin/includes/modules/export/image_processing_new.php',
                      'admin/includes/modules/export/image_processing_new_step.php',
