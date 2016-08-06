@@ -368,13 +368,26 @@ class product {
           $vpe = $vpe * (1 / $this->data['products_vpe_value']);
           $vpe = $xtPrice->xtcFormatCurrency($xtPrice->xtcFormat($vpe, false, $this->data['products_tax_class_id']), 0, false).TXT_PER.xtc_get_vpe_name($this->data['products_vpe']);
         }
+
+        $Pprice = $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $this->data['products_tax_class_id']);
+
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0') {
+          $Bprice = $xtPrice->xtcFormatCurrency($xtPrice->xtcAddTax($Pprice, $xtPrice->TAX[$this->data['products_tax_class_id']]));
+          $Nprice = $xtPrice->xtcFormatCurrency($Pprice);
+        } else {
+          $Bprice = $xtPrice->xtcFormatCurrency($Pprice);
+          $Nprice = $xtPrice->xtcFormatCurrency($xtPrice->xtcRemoveTax($Pprice, $xtPrice->TAX[$this->data['products_tax_class_id']]));
+        }
+
         $staffel_data[$i] = array('QUANTITY' => $quantity,
                                   'PLAIN_QUANTITY' => $staffel[$i]['stk'],
                                   'FROM_QUANTITY' => GRADUATED_PRICE_MAX_VALUE,
                                   'TO_QUANTITY' => $to_quantity,
                                   'VPE' => $vpe,
-                                  'PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, true, $this->data['products_tax_class_id']),
-                                  'PLAIN_PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $this->data['products_tax_class_id'])
+                                  'PRICE' => $xtPrice->xtcFormat($Pprice, true),
+                                  'PLAIN_PRICE' => $Pprice,
+                                  'PRICE_NETTO' => $Nprice,
+                                  'PRICE_BRUTTO' => $Bprice,
                                   );
       }
     }

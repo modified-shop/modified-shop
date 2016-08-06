@@ -789,11 +789,13 @@ class xtcPrice {
         if ($discount) {
           $bestPrice -= $bestPrice / 100 * $discount;
         }
-        $old_price = $this->xtcFormat($bestPrice, $format, $tax_class);
+        $old_price_plain = $this->xtcFormat($bestPrice, false, $tax_class);
+        $old_price = $this->xtcFormat($old_price_plain, true);
         $special_price = $this->xtcFormat($sPrice, $format);
         $price = FROM . $old_price . ' <br /><small>' . UNIT_PRICE . $special_price . '</small>';
-      } else if ($sPrice != $pPrice) {
-        $old_price = $this->xtcFormat($pPrice, $format);
+      } elseif ($sPrice != $pPrice) {
+        $old_price_plain = $this->xtcFormat($pPrice, false);
+        $old_price = $this->xtcFormat($old_price_plain, true);
         $special_price = $this->xtcFormat($sPrice, $format);
         $from = $this->checkAttributes($pID);
         $uvp = MSRP;
@@ -804,11 +806,15 @@ class xtcPrice {
       }
 
       if ($this->cStatus['customers_status_show_price_tax'] == '0') {
-        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($sPrice, $this->TAX[$this->tax_class]));
-        $Nprice = $special_price;
+        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($old_price_plain, $this->TAX[$this->tax_class]));
+        $Nprice = $this->xtcFormatCurrency($old_price_plain);
+        $Bspecial_price = $this->xtcFormatCurrency($this->xtcAddTax($sPrice, $this->TAX[$this->tax_class]));
+        $Nspecial_price = $this->xtcFormatCurrency($sPrice);
       } else {
-        $Bprice = $special_price;
-        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($sPrice, $this->TAX[$this->tax_class]));
+        $Bprice = $this->xtcFormatCurrency($old_price_plain);
+        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($old_price_plain, $this->TAX[$this->tax_class]));
+        $Bspecial_price = $this->xtcFormatCurrency($sPrice);
+        $Nspecial_price = $this->xtcFormatCurrency($this->xtcRemoveTax($sPrice, $this->TAX[$this->tax_class]));
       }
       
       if ($vpeStatus == 0) {
@@ -818,6 +824,8 @@ class xtcPrice {
           'formated' => $price,
           'plain' => $sPrice,
           'special_price' =>  $special_price,
+          'special_price_netto' =>  $Nspecial_price,
+          'special_price_brutto' =>  $Bspecial_price,
           'old_price' =>  $old_price,
           'from' =>  $from,
           'uvp' =>  $uvp,
