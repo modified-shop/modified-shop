@@ -32,12 +32,13 @@ class PayPalAuth {
   
   protected function apiContext() {
 
-    $apiContext = new ApiContext(
-      new OAuthTokenCredential(
-          $this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($this->get_config('PAYPAL_MODE'))),
-          $this->get_config('PAYPAL_SECRET_'.strtoupper($this->get_config('PAYPAL_MODE')))
-      )
+    $credential = new OAuthTokenCredential(
+      $this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($this->get_config('PAYPAL_MODE'))),
+      $this->get_config('PAYPAL_SECRET_'.strtoupper($this->get_config('PAYPAL_MODE')))
     );
+    $credential::$expiryBufferTime = ((defined('SESSION_LIFE_CUSTOMERS')) ? SESSION_LIFE_CUSTOMERS : 1440);
+    
+    $apiContext = new ApiContext($credential);
     
     $auth_cache_file = SQL_CACHEDIR.'pp_auth_'.$this->get_config('PAYPAL_MODE').'.cache';
     if (!is_file($auth_cache_file)) {
