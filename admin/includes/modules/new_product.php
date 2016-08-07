@@ -145,8 +145,8 @@
       <div style="float:left;width:43%; vertical-align:top">
         <table class="tableInput border0">
           <tr>
-            <td style="width:180px"><span class="main"><?php echo TEXT_PRODUCTS_LAST_MODIFIED; ?></span></td>
-            <td><span class="main"><?php echo xtc_datetime_short($pInfo->products_last_modified); ?></span></td>
+            <td style="width:180px; line-height: 35px;"><span class="main"><?php echo TEXT_PRODUCTS_LAST_MODIFIED; ?></span></td>
+            <td><span class="main"><?php echo (($pInfo->products_last_modified != NULL && strtotime($pInfo->products_last_modified) > 0 && strtotime($pInfo->products_last_modified) !== false) ? xtc_datetime_short($pInfo->products_last_modified) : '---'); ?></span></td>
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_QUANTITY; ?></span></td>
