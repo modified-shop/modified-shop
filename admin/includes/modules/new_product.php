@@ -145,7 +145,11 @@
       <div style="float:left;width:43%; vertical-align:top">
         <table class="tableInput border0">
           <tr>
-            <td style="width:180px"><span class="main"><?php echo TEXT_PRODUCTS_QUANTITY; ?></span></td>
+            <td style="width:180px"><span class="main"><?php echo TEXT_PRODUCTS_LAST_MODIFIED; ?></span></td>
+            <td><span class="main"><?php echo xtc_datetime_short($pInfo->products_last_modified); ?></span></td>
+          </tr>
+          <tr>
+            <td><span class="main"><?php echo TEXT_PRODUCTS_QUANTITY; ?></span></td>
             <td><span class="main"><?php echo xtc_draw_input_field('products_quantity', $pInfo->products_quantity, 'style="width: 155px"'); ?></span></td>
           </tr>
           <tr>
@@ -174,10 +178,6 @@
             <td><span class="main"><?php echo xtc_draw_pull_down_menu('shipping_status', $shipping_statuses, $pInfo->products_shippingtime=='' ? (int)(DEFAULT_SHIPPING_STATUS_ID) : $pInfo->products_shippingtime, 'style="width: 155px"'); ?></span></td>
           </tr>
           <?php } ?>
-          <tr>
-            <td><span class="main">&nbsp;</span></td>
-            <td><span class="main">&nbsp;</span></td>
-          </tr>            
         </table>
       </div>
       

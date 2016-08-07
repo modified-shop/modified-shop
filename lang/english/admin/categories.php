@@ -258,4 +258,6 @@ define('ERROR_COPY_METHOD_NOT_ALLOWED', 'Copy Method "Link" not allowed on categ
 
 define('TEXT_TAGS_COPY', 'Also copy product features');
 define('TEXT_TAGS_COPY_INFO', 'Also copy product features<br />Only recommended for single copy (1 item)');
+
+define('TEXT_PRODUCTS_LAST_MODIFIED', 'Last modified:');
 ?>
