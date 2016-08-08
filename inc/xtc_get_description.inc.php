@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_short_description.inc.php 976 2005-06-08 13:23:10Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -15,7 +15,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-  function xtc_get_description($product_id, $language = '') {
+  function xtc_get_description($product_id, $language = '', $shorten = false) {
 
     if (empty($language)) $language = $_SESSION['languages_id'];
 
@@ -25,8 +25,11 @@
                          AND language_id = '" . (int)$language . "'";
     $product_query  = xtDBquery($product_query);
     $product = xtc_db_fetch_array($product_query,true);
-
-    //return preg_replace("/[^ ]*$/", '', substr(strip_tags($product['products_description']), 0, CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH)) . ' [...]';
+    
+    if ($shorten === true) {
+      return preg_replace("/[^ ]*$/", '', substr(strip_tags($product['products_description']), 0, CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH)) . ' [...]';
+    }
+    
     return $product['products_description'];
   }
  ?>

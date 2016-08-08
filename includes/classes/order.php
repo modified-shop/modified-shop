@@ -299,6 +299,11 @@
           
           $subindex++;
         }
+
+        //using short description  if order description is not defined or empty
+        if ($order_data_values['order_description'] == '' && CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true') {
+          $order_data_values['order_description'] = (($order_data_values['products_short_description'] != '') ? $order_data_values['products_short_description'] : xtc_get_description($order_data_values['products_id'], $order_lang_id, true));
+        }
         
         // build order_data array dynamically
         foreach ($order_data_values as $key => $val) {
@@ -386,6 +391,8 @@
 
     function cart() {
       global $currencies, $xtPrice, $main;
+
+      require_once(DIR_FS_INC . 'xtc_get_description.inc.php');
 
       $this->content_type = $_SESSION['cart']->get_content_type();
 
@@ -554,7 +561,7 @@
         //using short description  if order description is not defined or empty
         $short_description = '';
         if (CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true') {
-          $short_description = (($products[$i]['short_description'] != '') ? $products[$i]['short_description'] : $products[$i]['description']);
+          $short_description = (($products[$i]['short_description'] != '') ? $products[$i]['short_description'] : xtc_get_description($products[$i]['id'], $_SESSION['languages_id'], true));
         }
         $this->products[$index]['order_description'] = !empty($products[$i]['order_description']) ? nl2br($products[$i]['order_description']) : $short_description;
         $this->products[$index]['image'] = !empty($products[$i]['image']) ? $main->getProductPopupLink($products[$i]['id'],$products[$i]['image'], 'image') : '&nbsp;';
