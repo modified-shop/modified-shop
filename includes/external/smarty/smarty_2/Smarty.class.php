@@ -1658,6 +1658,7 @@ class Smarty
 
         if ($params['resource_type'] == 'file') {
             if (!preg_match('/^([\/\\\\]|[a-zA-Z]:[\/\\\\])/', $params['resource_name'])) {
+                //BOC modified shop
                 // relative pathname to $params['resource_base_path']
                 // use the first directory where the file is found
                 foreach ((array)$params['resource_base_path'] as $_curr_path) {
@@ -1666,6 +1667,9 @@ class Smarty
                         $params['resource_name'] = $_fullpath;
                         return true;
                     }
+                }
+                foreach ((array)$params['resource_base_path'] as $_curr_path) {
+                    $_fullpath = $_curr_path . DIRECTORY_SEPARATOR . $params['resource_name'];
                     // didn't find the file, try include_path
                     $_params = array('file_path' => $_fullpath);
                     require_once(SMARTY_CORE_DIR . 'core.get_include_path.php');
@@ -1674,6 +1678,7 @@ class Smarty
                         return true;
                     }
                 }
+                //EOC modified shop
                 return false;
             } else {
                 /* absolute path */
