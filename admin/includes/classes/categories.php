@@ -225,7 +225,7 @@ class categories {
     if ($categories_image = xtc_try_upload('categories_image', DIR_FS_CATALOG_IMAGES.'categories/', '777', $accepted_categories_image_files_extensions, $accepted_categories_image_files_mime_types)) {
       $cname_arr = explode('.', $categories_image->filename);
       $cnsuffix = array_pop($cname_arr);
-      $categories_image_name = $categories_image_name_process = $this->image_name($categories_id, '', $cnsuffix, $cname_arr);
+      $categories_image_name = $categories_image_name_process = $this->image_name($categories_id, '', $cnsuffix, $cname_arr, false, $categories_data);
       rename(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image->filename, DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image_name);
       xtc_db_query("UPDATE ".TABLE_CATEGORIES."
                        SET categories_image = '".xtc_db_input($categories_image_name)."'
@@ -321,7 +321,7 @@ class categories {
       if (is_file($src_pic)) {
         $get_suffix = explode('.', $ccopy_values['categories_image']);
         $suffix = array_pop($get_suffix);
-        $dest_pic = $this->image_name($new_cat_id, '', $suffix, $get_suffix, $src_category_id);
+        $categories_image_name = $categories_image_name_process = $this->image_name($new_cat_id, '', $cnsuffix, $cname_arr, false, $sql_data_array);
         @copy($src_pic, DIR_FS_CATALOG_IMAGES.'categories/'.$dest_pic);
         @chmod(DIR_FS_CATALOG_IMAGES.'categories/'.$dest_pic, 0644);
 
@@ -774,8 +774,7 @@ class categories {
       //build new image_name for duplicate
       $pname_arr = explode('.', $product['products_image']);
       $nsuffix = array_pop($pname_arr);
-      $dup_products_image_name = $this->image_name($this->dup_products_id, 0, $nsuffix, $pname_arr, $src_products_id);
-
+      $dup_products_image_name = $this->image_name($this->dup_products_id, 0, $nsuffix, $pname_arr, $src_products_id, $product);
       //write to DB
       xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
                        SET products_image = '".xtc_db_input($dup_products_image_name)."' 
@@ -820,7 +819,7 @@ class categories {
         //build new image_name for duplicate
         $pname_arr = explode('.', $mo_img['image_name']);
         $nsuffix = array_pop($pname_arr);
-        $dup_products_image_name = $this->image_name($this->dup_products_id, $mo_img['image_nr'], $nsuffix, $pname_arr, $src_products_id);
+        $dup_products_image_name = $this->image_name($this->dup_products_id, $mo_img['image_nr'], $nsuffix, $pname_arr, $src_products_id, $product);
         //copy org images to duplicate
         @ copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$mo_img['image_name'], DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$dup_products_image_name);
         @ copy(DIR_FS_CATALOG_INFO_IMAGES.'/'.$mo_img['image_name'], DIR_FS_CATALOG_INFO_IMAGES.'/'.$dup_products_image_name);
@@ -1202,7 +1201,7 @@ class categories {
     if ($products_image = xtc_try_upload('products_image', DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_products_image_files_extensions, $accepted_products_image_files_mime_types)) {
       $pname_arr = explode('.', $products_image->filename);
       $nsuffix = array_pop($pname_arr);
-      $products_image_name = $products_image_name_process = $this->image_name($products_id, 0, $nsuffix, $pname_arr);
+      $products_image_name = $products_image_name_process = $this->image_name($products_id, 0, $nsuffix, $pname_arr, false, $products_data);
       $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                         FROM ".TABLE_PRODUCTS."
                                        WHERE products_image = '".xtc_db_input($products_data['products_previous_image_0'])."'");
@@ -1255,7 +1254,7 @@ class categories {
       if ($pIMG = xtc_try_upload('mo_pics_'.$img, DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_mo_pics_image_files_extensions, $accepted_mo_pics_image_files_mime_types)) {
         $pname_arr = explode('.', $pIMG->filename);
         $nsuffix = array_pop($pname_arr);
-        $products_image_name = $products_image_name_process = $this->image_name($products_id, ($img +1), $nsuffix, $pname_arr);
+        $products_image_name = $products_image_name_process = $this->image_name($products_id, ($img +1), $nsuffix, $pname_arr, false, $products_data);
         $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                            FROM ".TABLE_PRODUCTS_IMAGES."
                                           WHERE image_name = '".xtc_db_input($products_data['products_previous_image_'. ($img +1)])."'");
@@ -1293,11 +1292,11 @@ class categories {
   }
   
   
-  function image_name($products_id, $counter, $suffix, $pname_arr = array(), $srcID = false) {
+  function image_name($data_id, $counter, $suffix, $name_arr = array(), $srcID = false, $data_arr = array()) {
     $separator = (((string)$counter != '') ? '_' : '');
-    $image_name = $products_id.$separator.$counter.'.'.$suffix;
+    $image_name = $data_id.$separator.$counter.'.'.$suffix;
     //new module support
-    $image_name = $this->catModules->image_name($image_name, $products_id, $counter, $suffix, $pname_arr, $srcID);
+    $image_name = $this->catModules->image_name($image_name, $data_id, $counter, $suffix, $name_arr, $srcID, $data_arr);
     return $image_name;
   }
   
