@@ -55,7 +55,7 @@
     $categories_string .= $ul; //UL LI Versschachtelung
     $categories_string .= $tab; //Tabulator Codedarstellung
     $categories_string .= '<li class="level'.$level.$cat_active.$cat_active_parent.'">';
-    $categories_string .= '<a href="'.$foo[$counter]['link'].'" title="'. $foo[$counter]['name'] . '">';
+    $categories_string .= '<a href="'.$foo[$counter]['link'].'" title="'.str_replace(array('"', "'"), array('&quot;', '&apos;'), $foo[$counter]['name']).'">';
     $categories_string .= $foo[$counter]['name'];
     //Anzeige Anzahl der Produkte in Kategorie, für bessere Performance im Admin deaktivieren
     if (SHOW_COUNTS == 'true') {
