@@ -36,7 +36,7 @@ function category_redirect($cPath) {
     $category_link = str_replace(array(HTTP_SERVER, HTTPS_SERVER), '', preg_replace("/([^\?]*)(\?.*)/", "$1", $redirect_link));
     
     // redirect
-    if ($category_link != $current_link) {
+    if ($category_link != '#' && $category_link != $current_link) {
       header('HTTP/1.1 301 Moved Permanently' );
       header('Location: '.preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($redirect_link)));
       exit();
