@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: customers.php 5140 2013-07-18 15:09:39Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -61,7 +61,7 @@
 
   if ($action) {
     switch ($action) {
-      case 'new_order' :
+      case 'new_order_confirm':
         // customers
         $customers1_query = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".$customers_id."'");
         $customers1 = xtc_db_fetch_array($customers1_query);
@@ -81,6 +81,10 @@
         // customers status
         $stat_query = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS_STATUS." WHERE customers_status_id = '".(int)$customers1['customers_status']."' ");
         $stat = xtc_db_fetch_array($stat_query);
+
+        if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $_POST['shipping'] . '.php')) {
+          require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $_POST['shipping'] . '.php');
+        }
 
         $sql_data_array = array (
             'customers_id' => xtc_db_prepare_input($customers['customers_id']),
@@ -103,6 +107,7 @@
             'customers_country' => xtc_db_prepare_input($country['countries_name']),
             'customers_telephone' => xtc_db_prepare_input($customers1['customers_telephone']),
             'customers_email_address' => xtc_db_prepare_input($customers1['customers_email_address']),
+            'customers_country_iso_code_2' => xtc_db_prepare_input($country['countries_iso_code_2']),
             'customers_address_format_id' => xtc_db_prepare_input($country['address_format_id']),
             'delivery_name' => xtc_db_prepare_input($customers['entry_firstname'].' '.$customers['entry_lastname']),
             'delivery_lastname' => xtc_db_prepare_input($customers['entry_lastname']),
@@ -130,7 +135,7 @@
             'billing_country' => xtc_db_prepare_input($country['countries_name']),
             'billing_country_iso_code_2' => xtc_db_prepare_input($country['countries_iso_code_2']),
             'billing_address_format_id' => xtc_db_prepare_input($country['address_format_id']),
-            'payment_method' => 'cod',
+            'payment_method' => xtc_db_prepare_input($_POST['payment']),
             'comments' => '',
             'last_modified' => 'now()',
             'date_purchased' => 'now()',
@@ -139,11 +144,12 @@
             'currency' => DEFAULT_CURRENCY,
             'currency_value' => '1.0000',
             'account_type' => '0',
-            'payment_class' => 'cod',
-            'shipping_method' => MODULE_SHIPPING_FLAT_TEXT_TITLE,
-            'shipping_class' => 'flat_flat',
+            'payment_class' => xtc_db_prepare_input($_POST['payment']),
+            'shipping_method' => constant('MODULE_SHIPPING_'.strtoupper($_POST['shipping']).'_TEXT_TITLE'),
+            'shipping_class' => xtc_db_prepare_input($_POST['shipping']).'_'.xtc_db_prepare_input($_POST['shipping']),
             'customers_ip' => '',
-            'language' => $_SESSION['language']
+            'language' => $_SESSION['language'],
+            'languages_id' => $_SESSION['languages_id']
           );
 
         xtc_db_perform(TABLE_ORDERS, $sql_data_array);
@@ -157,6 +163,17 @@
             'value' => '0',
             'class' => 'ot_total',
             'sort_order' => MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER
+          );
+        xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
+
+        require_once (DIR_FS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
+        $sql_data_array = array(
+            'orders_id' => (int)$orders_id,
+            'title' => constant('MODULE_SHIPPING_'.strtoupper($_POST['shipping']).'_TEXT_TITLE').':',
+            'text' => '0',
+            'value' => '0',
+            'class' => 'ot_shipping',
+            'sort_order' => MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER
           );
         xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
 

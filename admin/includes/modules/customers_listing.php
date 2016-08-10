@@ -377,6 +377,36 @@
                     }
                     break;
 
+                  case 'new_order' :
+                    if (trim(MODULE_PAYMENT_INSTALLED) != '') {
+                      $payments = explode(';', MODULE_PAYMENT_INSTALLED);
+                      for ($i=0; $i<count($payments); $i++) {
+                        if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i])) {
+                          require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i]);
+                        }
+                        $payment_modul = substr($payments[$i], 0, strrpos($payments[$i], '.'));
+                        $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payment_modul).'_TEXT_TITLE');
+                        $payment_array[] = array('id' => $payment_modul,
+                                                 'text' => $payment_text);
+                      }
+                    }
+                    $shippings = explode(';', MODULE_SHIPPING_INSTALLED);
+                    for ($i=0; $i<count($shippings); $i++) {
+                      if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shippings[$i])) {
+                        require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shippings[$i]);
+                      }
+                      $shipping_modul = substr($shippings[$i], 0, strrpos($shippings[$i], '.'));
+                      $shipping_text = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul).'_TEXT_TITLE');
+                      $shipping_array[] = array('id' => $shipping_modul,
+                                                'text' => $shipping_text);
+                    }
+                    $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_STATUS_NEW_ORDER.'</b>');
+                    $contents = array ('form' => xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=new_order_confirm'));
+                    $contents[] = array ('text' => TEXT_INFO_PAYMENT.'<br />'.xtc_draw_pull_down_menu('payment', $payment_array));
+                    $contents[] = array ('text' => TEXT_INFO_SHIPPING.'<br />'.xtc_draw_pull_down_menu('shipping', $shipping_array));
+                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="'.BUTTON_UPDATE.'"><a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id).'">'.BUTTON_CANCEL.'</a>');
+                    break;
+
                   default :
                     if (isset($cInfo) && is_object($cInfo)) {
                       $heading[] = array ('text' => '<b>'.$cInfo->customers_firstname.' '.$cInfo->customers_lastname.'</b>');

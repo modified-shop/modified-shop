@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: customers.php 2666 2012-02-23 11:38:17Z dokuman $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -71,4 +71,8 @@ define('WARNING_CUSTOMER_ALREADY_EXISTS', 'Customer group can not be changed. Th
 
 define('TEXT_SORT_ASC','ascending');
 define('TEXT_SORT_DESC','descending');
+
+define('TEXT_INFO_HEADING_STATUS_NEW_ORDER','New order');
+define('TEXT_INFO_PAYMENT','Payment:');
+define('TEXT_INFO_SHIPPING','Shipping:');
 ?>
