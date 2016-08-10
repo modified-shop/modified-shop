@@ -952,7 +952,7 @@
 
 
   function orders_save_order($oID, $data_array) {
-    global $order, $xtPrice, $billpayOrderEdit;
+    global $order, $xtPrice, $status, $billpayOrderEdit;
   
     $lang_query = xtc_db_query("SELECT languages_id 
                                   FROM ".TABLE_LANGUAGES." 
