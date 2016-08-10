@@ -76,7 +76,7 @@ class payone_installment extends PayonePayment {
 		);
 	}
   
-  function _payment_plan() {
+  function _payment_plan($active_genre_identifier) {
 		$financingtype = $this->installmenttypes[$_SESSION[$this->code]['installment_type']];
 		$standard_parameters = parent::_standard_parameters('preauthorization');
 
@@ -122,6 +122,9 @@ class payone_installment extends PayonePayment {
         if (count($matches[0]) == 1) {
           $name = str_replace('PaymentDetails_'.$index.'_', '', $key);
           $payment_array[$index][$name] = $value;
+          if ($name == 'StandardCreditInformationUrl') {
+            $payment_array[$index][$name] = $this->save_contract($active_genre_identifier, $value, $index);
+          }
         } else {
           $name = str_replace('PaymentDetails_'.$index.'_Installment_'.$matches[0][1].'_', '', $key);
           $payment_array[$index]['plan'][$matches[0][1]][$name] = $value;
@@ -139,8 +142,28 @@ class payone_installment extends PayonePayment {
     }
   }
   
+  function save_contract($active_genre_identifier, $url, $id) {
+    $filename = 'contract_'.strtolower($_SESSION[$this->code]['workorderid']).'_'.$id.'.pdf';
+    
+    $fp = fopen(SQL_CACHEDIR.$filename, 'w+');
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FILE, $fp);
+    curl_setopt($ch, CURLOPT_USERPWD, $this->config[$active_genre_identifier]['genre_specific']['payolution']['channelid'].':'.$this->config[$active_genre_identifier]['genre_specific']['payolution']['channelpwd']);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_exec($ch);
+    curl_close($ch);
+    fclose($fp);
+    
+    return xtc_href_link('cache/'.$filename, '', 'SSL', false);
+  }
+  
 	function _paymentDataFormProcess($active_genre_identifier) {
 	  global $order;
+	  
+	  require_once(DIR_FS_INC.'xtc_date_short.inc.php');
 	  
 	  $payment_smarty = new Smarty();
 	  $payment_smarty->template_dir = DIR_FS_EXTERNAL.'payone/templates/';
@@ -169,7 +192,7 @@ class payone_installment extends PayonePayment {
               $required_fields['company_register_key'] = $_SESSION[$this->code]['installment_company_register_key'];
             }
             $payment_smarty->assign('required_fields', $required_fields);                        
-            $payment_smarty->assign('installment_plan', $this->_payment_plan());                        
+            $payment_smarty->assign('installment_plan', $this->_payment_plan($active_genre_identifier));                        
             $payment_smarty->assign('confirm_text', TEXT_PAYOLUTION_CONFIRM);
         }
         if ($type_name == 'payolution_monthly' && $_SESSION[$this->code]['installment_type'] == 'payolution_monthly') {
@@ -355,32 +378,6 @@ class payone_installment extends PayonePayment {
         {
           $_SESSION['payone_error'] = CHECK_BANKDATA;
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&payment_error='.$this->code, 'SSL', true));		
-        } else {
-          $standard_parameters = parent::_standard_parameters();    
-          unset($standard_parameters['request']);
-    
-          $request_parameters = array(
-            'aid' => $this->global_config['subaccount_id'],
-            'key' => $this->global_config['key'],
-            'iban' => $_SESSION[$this->code]['installment_iban'],
-				    'bic' => $_SESSION[$this->code]['installment_bic'],
-          );
-
-          $params = array_merge($standard_parameters, $request_parameters);
-          $builder = new Payone_Builder($this->payone->getPayoneConfig());
-          
-          $service = $builder->buildServiceVerificationBankAccountCheck();
-          $request = new Payone_Api_Request_BankAccountCheck($params);
-          $response = $service->check($request);
-
-          if ($response instanceof Payone_Api_Response_Error
-              || $response instanceof Payone_Api_Response_BankAccountCheck_Blocked
-              || $response instanceof Payone_Api_Response_BankAccountCheck_Invalid
-              )
-          {
-            $_SESSION['payone_error'] = $response->getCustomermessage();
-            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&payment_error='.$this->code, 'SSL', true));		
-          }
         }
 		  }
 		}

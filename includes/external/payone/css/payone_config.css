@@ -180,3 +180,10 @@ ul.countrylist li {
   float:left;
   width:300px; 
 }
+
+dl.paymenttypes dt {
+	width: 20%;
+}
+dl.paymenttypes dd {
+	width: 70%;
+}

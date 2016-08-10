@@ -352,6 +352,9 @@ define('API', 'API');
 
 
 // Payolution
+define('PAYOLUTION_CHANNELID', 'Payolution Channel ID');
+define('PAYOLUTION_CHANNELPWD', 'Payolution Channel Passwort');
+
 define('paymenttype_payolution_debit', 'Payolution Lastschrift');
 define('paymenttype_payolution_invoice', 'Payolution Rechnung');
 define('paymenttype_payolution_monthly', 'Payolution Monatsrechnung');
@@ -362,6 +365,20 @@ define('company_trade_registry_number', 'Handelsregister (optional):');
 define('company_register_key', 'Register-Nr (optional):');
 
 define('TEXT_PAYOLUTION_ERROR_CONDITIONS', 'Sofern Sie der &Uuml;bermittlung ihrer Daten f&uuml;r die Abwicklung des Kaufes nicht einwilligen, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
-define('TEXT_PAYOLUTION_CONFIRM_SEPA', 'Hiermit erteile ich das <a class="'.((defined('TPL_POPUP_SHIPPING_LINK_CLASS')) ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_PRODUCT_LINK_CLASS).'" href="https://payment.payolution.com/payolution-payment/infoport/sepa/mandate?link=true'.((defined('TPL_POPUP_CONTENT_LINK_PARAMETERS')) ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_PRODUCT_LINK_PARAMETERS).'">SEPA-Lastschriftmandat</a>');
+define('TEXT_PAYOLUTION_CONFIRM_SEPA', 'Hiermit erteile ich das <a target="_blank" href="%s">SEPA-Lastschriftmandat</a>');
 define('TEXT_PAYOLUTION_CONFIRM', 'Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufes und einer Identit&auml;tspr&uuml;fung und Bonit&auml;tspr&uuml;fung erforderlicher Daten an Payolution bin ich einverstanden.<br/>Meine <a class="'.((defined('TPL_POPUP_SHIPPING_LINK_CLASS')) ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_PRODUCT_LINK_CLASS).'" href="https://payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?mId='.base64_encode(STORE_OWNER).((defined('TPL_POPUP_CONTENT_LINK_PARAMETERS')) ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_PRODUCT_LINK_PARAMETERS).'">Einwilligung</a> kann ich jederzeit mit Wirkung f&uuml;r die Zukunft widerrufen.');
+
+define('TEXT_EACH_MONTH', 'pro Monat');
+define('TEXT_RATES', 'Raten');
+define('TEXT_DURATION', 'Laufzeit');
+define('TEXT_DURATION_MONTHS', 'Monate');
+define('TEXT_FINANCING_AMOUNT', 'Finanzierungsbetrag');
+define('TEXT_TOTAL_AMOUNT', 'Gesamtbetrag');
+define('TEXT_INTERESTRATE', 'Normalzins');
+define('TEXT_EFFECTIVE_INTERESTRATE', 'Effektivzins');
+define('TEXT_MONTHLY_RATES', 'Monatliche Rate');
+define('TEXT_RATES_PLAN', 'Ratenplan');
+define('TEXT_RATES_DUE', 'Rate f&auml;llig am');
+define('TEXT_CONTRACT', 'Vertragsentwurf');
+define('TEXT_DOWNLOAD_CONTRACT', 'herunterladen');
 ?>

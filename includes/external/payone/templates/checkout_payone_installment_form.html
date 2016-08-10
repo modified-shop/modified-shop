@@ -21,38 +21,47 @@
           <div id="horizontalAccordion" class="checkout_accordion">
           {foreach name=inner item=item_data from=$installment_plan}
             <ul class="resp-tabs-list nonjs-fallback">
-              <li><input id="rd-{$item_data.Duration}" type="radio" name="duration" value="{$item_data.Duration}" {if $smarty.foreach.inner.iteration == 1}checked="checked"{/if}> {$item_data.plan.1.Amount|number_format:"2":",":""} {$item_data.Currency} pro Monat - {$item_data.Duration} Raten</li>
+              <li><input id="rd-{$item_data.Duration}" type="radio" name="duration" value="{$item_data.Duration}" {if $smarty.foreach.inner.iteration == 1}checked="checked"{/if}> {$item_data.plan.1.Amount|number_format:"2":",":""} {$item_data.Currency} {$smarty.const.TEXT_EACH_MONTH} - {$item_data.Duration} {$smarty.const.TEXT_RATES}</li>
             </ul>
             <div class="resp-tabs-container">
               <div>
               <table width="100%" class="payone_cc_table small">
                 <tr>
-                  <td class="label">Laufzeit:</td>
-                  <td>{$item_data.Duration} Monate</td>
+                  <td class="label">{$smarty.const.TEXT_DURATION}:</td>
+                  <td>{$item_data.Duration} {$smarty.const.TEXT_DURATION_MONTHS}</td>
                 </tr>
                 <tr>
-                  <td class="label">Finanzierungsbetrag:</td>
+                  <td class="label">{$smarty.const.TEXT_FINANCING_AMOUNT}:</td>
                   <td>{$item_data.OriginalAmount|number_format:"2":",":""} {$item_data.Currency}</td>
                 </tr>
                 <tr>
-                  <td class="label">Gesamtbetrag:</td>
+                  <td class="label">{$smarty.const.TEXT_TOTAL_AMOUNT}:</td>
                   <td>{$item_data.TotalAmount|number_format:"2":",":""} {$item_data.Currency}</td>
                 </tr>
                 <tr>
-                  <td class="label">Normalzins:</td>
+                  <td class="label">{$smarty.const.TEXT_INTERESTRATE}:</td>
                   <td>{$item_data.InterestRate}%</td>
                 </tr>
                 <tr>
-                  <td class="label">Effektivzins:</td>
+                  <td class="label">{$smarty.const.TEXT_EFFECTIVE_INTERESTRATE}:</td>
                   <td>{$item_data.EffectiveInterestRate}%</td>
                 </tr>
                 <tr>
-                  <td class="label">Monatliche Rate:</td>
+                  <td class="label">{$smarty.const.TEXT_MONTHLY_RATES}:</td>
                   <td>{$item_data.plan.1.Amount|number_format:"2":",":""} {$item_data.Currency}</td>
                 </tr>
                 <tr>
-                  <td class="label">Vertrag:</td>
-                  <td><a target="_blank" href="{$item_data.StandardCreditInformationUrl}">herunterladen</a></td>
+                  <td colspan="2" class="label" style="text-align:center;">{$smarty.const.TEXT_RATES_PLAN}</td>
+                </tr>
+                {foreach name=plan item=item_plan from=$item_data.plan}
+                <tr>
+                  <td class="label">{$smarty.foreach.plan.iteration}. {$smarty.const.TEXT_RATES_DUE} {$item_plan.Due|xtc_date_short}</td>
+                  <td>{$item_plan.Amount|number_format:"2":",":""} {$item_data.Currency}</td>
+                </tr>
+                {/foreach}
+                <tr>
+                  <td class="label">{$smarty.const.TEXT_CONTRACT}:</td>
+                  <td><a target="_blank" href="{$item_data.StandardCreditInformationUrl}">{$smarty.const.TEXT_DOWNLOAD_CONTRACT}</a></td>
                 </tr>
               </table>
               </div>

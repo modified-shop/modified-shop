@@ -27,6 +27,8 @@ class payone_elv extends PayonePayment {
 		parent::__construct();
 		$this->form_action_url = '';
 
+    $this->payolution_mandate_url = 'https://payment.payolution.com/payolution-payment/infoport/sepa/mandate.pdf';
+
 		$this->elvtypes = array(
 			'payolution_debit' => 'PYD',
 		);
@@ -78,7 +80,7 @@ class payone_elv extends PayonePayment {
         $payment_smarty->assign('required_fields', $required_fields);                        
       }
       $payment_smarty->assign('confirm_text', TEXT_PAYOLUTION_CONFIRM);
-      $payment_smarty->assign('sepa_text', TEXT_PAYOLUTION_CONFIRM_SEPA);
+      $payment_smarty->assign('sepa_text', sprintf(TEXT_PAYOLUTION_CONFIRM_SEPA, $this->get_sepa_madate()));
     }
     $payment_smarty->assign('genre_specific', $this->pg_config['genre_specific']);
     
@@ -104,7 +106,29 @@ class payone_elv extends PayonePayment {
 		);
 		return $return;
 	}
+  
+  function get_sepa_madate() {
+    $filename = 'sepa_mandate.pdf';
+    
+    if (!is_file(SQL_CACHEDIR.$filename)
+        || filemtime(SQL_CACHEDIR.$filename) < (time() - 86400)
+        )
+    {
+      $fp = fopen(SQL_CACHEDIR.$filename, 'w+');
 
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $this->payolution_mandate_url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_FILE, $fp);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+      curl_exec($ch);
+      curl_close($ch);
+      fclose($fp);
+    }
+    
+    return xtc_href_link('cache/'.$filename, '', 'SSL', false);
+  }
+  
 	function pre_confirmation_check() {
 		parent::pre_confirmation_check();
 
@@ -137,40 +161,42 @@ class payone_elv extends PayonePayment {
       $_SESSION[$this->code]['elv_type'] = 'payolution_debit';
     }
     
-    $this->payone->log("verfication $this->code payment data");
-    $standard_parameters = parent::_standard_parameters();    
-    unset($standard_parameters['request']);
-  
-    $request_parameters = array(
-      'aid' => $this->global_config['subaccount_id'],
-      'key' => $this->global_config['key'],
-    );
-
-    $params = array_merge($standard_parameters, $request_parameters, $_SESSION[$this->code]);
-  
-    $builder = new Payone_Builder($this->payone->getPayoneConfig());
-    $service = $builder->buildServiceVerificationBankAccountCheck();
-  
-    $request = new Payone_Api_Request_BankAccountCheck($params);
-    $this->payone->log("elv BankAccountCheck request:\n".print_r($request, true));
-  
-    $response = $service->check($request);
-    $this->payone->log("elv BankAccountCheck response:\n".print_r($response, true));
-
-    if ($response instanceof Payone_Api_Response_Error
-        || $response instanceof Payone_Api_Response_BankAccountCheck_Blocked
-        || $response instanceof Payone_Api_Response_BankAccountCheck_Invalid) {
-      $this->payone->log("ERROR verification bankaccount: ".$response->getErrorcode().' - '.$response->getErrormessage());
-      $_SESSION['payone_error'] = $response->getCustomermessage();
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-    }
-    
     if ($_SESSION[$this->code]['elv_type'] == 'lastschrift') {
-      if ((!isset($_SESSION[$this->code]['conditions']) || $_SESSION[$this->code]['conditions'] == false)) {
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));		
+      $this->payone->log("verfication $this->code payment data");
+      $standard_parameters = parent::_standard_parameters();    
+      unset($standard_parameters['request']);
+  
+      $request_parameters = array(
+        'aid' => $this->global_config['subaccount_id'],
+        'key' => $this->global_config['key'],
+      );
+
+      $params = array_merge($standard_parameters, $request_parameters, $_SESSION[$this->code]);
+  
+      $builder = new Payone_Builder($this->payone->getPayoneConfig());
+      $service = $builder->buildServiceVerificationBankAccountCheck();
+  
+      $request = new Payone_Api_Request_BankAccountCheck($params);
+      $this->payone->log("elv BankAccountCheck request:\n".print_r($request, true));
+  
+      $response = $service->check($request);
+      $this->payone->log("elv BankAccountCheck response:\n".print_r($response, true));
+
+      if ($response instanceof Payone_Api_Response_Error
+          || $response instanceof Payone_Api_Response_BankAccountCheck_Blocked
+          || $response instanceof Payone_Api_Response_BankAccountCheck_Invalid) {
+        $this->payone->log("ERROR verification bankaccount: ".$response->getErrorcode().' - '.$response->getErrormessage());
+        $_SESSION['payone_error'] = $response->getCustomermessage();
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
       }
-      if ((!isset($_SESSION[$this->code]['sepa']) || $_SESSION[$this->code]['sepa'] == false)) {
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));		
+    
+      if ($_SESSION[$this->code]['elv_type'] == 'lastschrift') {
+        if ((!isset($_SESSION[$this->code]['conditions']) || $_SESSION[$this->code]['conditions'] == false)) {
+          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));		
+        }
+        if ((!isset($_SESSION[$this->code]['sepa']) || $_SESSION[$this->code]['sepa'] == false)) {
+          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));		
+        }
       }
     }
 	}

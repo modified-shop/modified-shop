@@ -128,7 +128,7 @@ function formpartGlobalConfig($identifier, $config, $parent_identifier = '') {
     <div class="dlrow cf">  
       <dt><label for="<?php echo $id_prefix ?>_key"><?php echo KEY; ?></label></dt>
       <dd>
-        <input type="text" id="<?php echo $id_prefix ?>_key" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][key]" value="<?php echo $config['key'] ?>">
+        <input type="password" id="<?php echo $id_prefix ?>_key" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][key]" value="<?php echo $config['key'] ?>">
       </dd>
     </div>
     <div class="dlrow cf">  
@@ -346,6 +346,20 @@ function formpartPaymentGenreSpecific($topkey, $config) {
         </ul>
       </dd>
     </div>
+    <div class="dlrow cf">
+      <dt><?php echo PAYOLUTION_CHANNELID; ?></dt>
+      <dd>
+        <input id="payolution_channelid_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][genre_specific][payolution][channelid]" type="text" value="<?php echo $config['genre_specific']['payolution']['channelid'] ?>">
+      </dd>
+    </div>
+    <div class="dlrow cf">
+      <dt><?php echo PAYOLUTION_CHANNELPWD; ?></dt>
+      <dd>
+        <input id="payolution_channelpwd_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][genre_specific][payolution][channelpwd]" type="password" value="<?php echo $config['genre_specific']['payolution']['channelpwd'] ?>">
+      </dd>
+    </div>
+
+
 	<?php
 	}
 	
