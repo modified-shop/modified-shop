@@ -38,7 +38,7 @@
 
 
   function get_customers_taxprice_status() {
-    global $order,$lang;
+    global $order, $lang;
 
     $status_query = xtc_db_query("SELECT customers_status_show_price_tax,
                                          customers_status_add_tax_ot,
@@ -46,8 +46,7 @@
                                          customers_status_discount_attributes
                                     FROM ".TABLE_CUSTOMERS_STATUS."
                                    WHERE customers_status_id = '".$order->info['status']."'
-                                     AND language_id ='".(int)$lang['languages_id']."'
-                                 ");
+                                     AND language_id ='".(int)$lang['languages_id']."'");
     return xtc_db_fetch_array($status_query);
   }
 
@@ -186,7 +185,6 @@
 
 
   function orders_lang_edit($oID, $data_array) {
-
     $lang_query = xtc_db_query("SELECT languages_id, 
                                        name, 
                                        directory 
@@ -317,7 +315,7 @@
 
 
   function orders_address_edit($oID, $data_array) {
-    global $order;
+    global $order, $lang;
   
     $customers_country = xtc_get_countriesList(xtc_db_prepare_input($data_array['customers_country_id']), true);
     $delivery_country = xtc_get_countriesList(xtc_db_prepare_input($data_array['delivery_country_id']), true);
@@ -391,7 +389,7 @@
 
 
   function orders_product_edit($oID, $data_array) {
-    global $order, $xtPrice;
+    global $order, $xtPrice, $lang;
   
     $lang_query = xtc_db_query("SELECT languages_id 
                                   FROM ".TABLE_LANGUAGES." 
@@ -526,7 +524,7 @@
 
 
   function orders_product_insert($oID, $data_array) {
-    global $order, $xtPrice;
+    global $order, $xtPrice, $lang;
   
     $lang_query = xtc_db_query("SELECT languages_id 
                                   FROM ".TABLE_LANGUAGES." 
@@ -642,7 +640,7 @@
 
 
   function orders_product_option_edit($oID, $data_array) {
-    global $order, $xtPrice;
+    global $order, $xtPrice, $lang;
   
     $lang_query = xtc_db_query("SELECT languages_id 
                                   FROM ".TABLE_LANGUAGES." 
@@ -710,7 +708,7 @@
 
 
   function orders_product_option_insert($oID, $data_array) {
-    global $order, $xtPrice;
+    global $order, $xtPrice, $lang;
   
     $lang_query = xtc_db_query("SELECT languages_id 
                                   FROM ".TABLE_LANGUAGES." 
