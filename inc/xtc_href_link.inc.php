@@ -49,6 +49,9 @@
     if ($admin === false && SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $search_engine_safe === true) {
       require_once (DIR_FS_INC . 'seo_url_mod.php');
       list($link, $separator) = seo_url_mod($link, $page, $parameters, $connection, $separator);
+      if ($link == '#') {
+        return $link;
+      }
     }
 
     // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
