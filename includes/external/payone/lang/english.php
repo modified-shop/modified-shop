@@ -351,6 +351,9 @@ define('NO_LOGS', 'There are no entries for the chosen period.');
 define('API', 'API');
 
 // Payolution
+define('PAYOLUTION_CHANNELID', 'Payolution Channel ID');
+define('PAYOLUTION_CHANNELPWD', 'Payolution Channel Password');
+
 define('paymenttype_payolution_debit', 'Payolution DirectDebit');
 define('paymenttype_payolution_invoice', 'Payolution Invoice');
 define('paymenttype_payolution_monthly', 'Payolution Monthly Invoice');
@@ -359,4 +362,22 @@ define('paymenttype_payolution_financing', 'Payolution Financing');
 define('company_uid', 'VAT (optional):');
 define('company_trade_registry_number', 'Trade Registry (optional):');
 define('company_register_key', 'Register-ID (optional):');
+
+define('TEXT_PAYOLUTION_ERROR_CONDITIONS', 'Sofern Sie der &Uuml;bermittlung ihrer Daten f&uuml;r die Abwicklung des Kaufes nicht einwilligen, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
+define('TEXT_PAYOLUTION_CONFIRM_SEPA', 'Hiermit erteile ich das <a target="_blank" href="%s">SEPA-Lastschriftmandat</a>');
+define('TEXT_PAYOLUTION_CONFIRM', 'Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufes und einer Identit&auml;tspr&uuml;fung und Bonit&auml;tspr&uuml;fung erforderlicher Daten an Payolution bin ich einverstanden.<br/>Meine <a class="'.((defined('TPL_POPUP_SHIPPING_LINK_CLASS')) ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_PRODUCT_LINK_CLASS).'" href="https://payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?mId='.base64_encode(STORE_OWNER).((defined('TPL_POPUP_CONTENT_LINK_PARAMETERS')) ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_PRODUCT_LINK_PARAMETERS).'">Einwilligung</a> kann ich jederzeit mit Wirkung f&uuml;r die Zukunft widerrufen.');
+
+define('TEXT_EACH_MONTH', 'per month');
+define('TEXT_RATES', 'rates');
+define('TEXT_DURATION', 'Duration');
+define('TEXT_DURATION_MONTHS', 'months');
+define('TEXT_FINANCING_AMOUNT', 'Financing amount');
+define('TEXT_TOTAL_AMOUNT', 'Total amount');
+define('TEXT_INTERESTRATE', 'Interestrate');
+define('TEXT_EFFECTIVE_INTERESTRATE', 'Effective interestrate');
+define('TEXT_MONTHLY_RATES', 'Monthly rate');
+define('TEXT_RATES_PLAN', 'Rate plan');
+define('TEXT_RATES_DUE', 'rate due');
+define('TEXT_CONTRACT', 'Contract');
+define('TEXT_DOWNLOAD_CONTRACT', 'downloat');
 ?>
