@@ -363,8 +363,8 @@ define('company_uid', 'VAT (optional):');
 define('company_trade_registry_number', 'Trade Registry (optional):');
 define('company_register_key', 'Register-ID (optional):');
 
-define('TEXT_PAYOLUTION_ERROR_CONDITIONS', 'Sofern Sie der &Uuml;bermittlung ihrer Daten f&uuml;r die Abwicklung des Kaufes nicht einwilligen, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
-define('TEXT_PAYOLUTION_CONFIRM_SEPA', 'Hiermit erteile ich das <a target="_blank" href="%s">SEPA-Lastschriftmandat</a>');
+define('TEXT_PAYOLUTION_ERROR_CONDITIONS', 'If you do not agree to the transfer of your data for the settlement of the purchase, unfortunately we can not accept your order!');
+define('TEXT_PAYOLUTION_CONFIRM_SEPA', 'I authorize the <a target="_blank" href="%s">SEPA direct debit mandate</a>');
 define('TEXT_PAYOLUTION_CONFIRM', 'Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufes und einer Identit&auml;tspr&uuml;fung und Bonit&auml;tspr&uuml;fung erforderlicher Daten an Payolution bin ich einverstanden.<br/>Meine <a class="'.((defined('TPL_POPUP_SHIPPING_LINK_CLASS')) ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_PRODUCT_LINK_CLASS).'" href="https://payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?mId='.base64_encode(STORE_OWNER).((defined('TPL_POPUP_CONTENT_LINK_PARAMETERS')) ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_PRODUCT_LINK_PARAMETERS).'">Einwilligung</a> kann ich jederzeit mit Wirkung f&uuml;r die Zukunft widerrufen.');
 
 define('TEXT_EACH_MONTH', 'per month');
