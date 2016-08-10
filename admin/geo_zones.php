@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: geo_zones.php 1123 2005-07-27 09:00:31Z novalis $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -160,7 +160,21 @@ function update_zone(theForm) {
               </tr>
               <?php
               $rows = 0;
-              $zones_query_raw = "select a.association_id, a.zone_country_id, c.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name from " . TABLE_ZONES_TO_GEO_ZONES . " a left join " . TABLE_COUNTRIES . " c on a.zone_country_id = c.countries_id left join " . TABLE_ZONES . " z on a.zone_id = z.zone_id where a.geo_zone_id = " . $_GET['zID'] . " order by association_id";
+              $zones_query_raw = "SELECT a.association_id, 
+                                         a.zone_country_id, 
+                                         c.countries_name, 
+                                         a.zone_id, 
+                                         a.geo_zone_id, 
+                                         a.last_modified, 
+                                         a.date_added, 
+                                         z.zone_name 
+                                    FROM " . TABLE_ZONES_TO_GEO_ZONES . " a 
+                               LEFT JOIN " . TABLE_COUNTRIES . " c 
+                                         ON a.zone_country_id = c.countries_id 
+                               LEFT JOIN " . TABLE_ZONES . " z 
+                                         ON a.zone_id = z.zone_id 
+                                   WHERE a.geo_zone_id = " . (int)$_GET['zID'] . " 
+                                ORDER BY association_id";
               $zones_split = new splitPageResults($_GET['spage'], $page_max_display_countries_results, $zones_query_raw, $zones_query_numrows);
               $zones_query = xtc_db_query($zones_query_raw);
               while ($zones = xtc_db_fetch_array($zones_query)) {
@@ -174,7 +188,7 @@ function update_zone(theForm) {
                   echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zones['association_id']) . '\'">' . "\n";
                 }
               ?>
-                <td class="dataTableContent"><?php echo (($zones['countries_name']) ? $zones['countries_name'] : TEXT_ALL_COUNTRIES); ?></td>
+                <td class="dataTableContent"><?php echo (($zones['countries_name'] != '') ? $zones['countries_name'] : '---'); ?></td>
                 <td class="dataTableContent"><?php echo (($zones['zone_id']) ? $zones['zone_name'] : PLEASE_SELECT); ?></td>
                 <td class="dataTableContent txta-r"><?php if ( (is_object($sInfo)) && ($zones['association_id'] == $sInfo->association_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zones['association_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
@@ -197,7 +211,14 @@ function update_zone(theForm) {
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
-                  $zones_query_raw = "select geo_zone_id, geo_zone_name, geo_zone_description, geo_zone_info, last_modified, date_added from " . TABLE_GEO_ZONES . " order by geo_zone_name";
+                  $zones_query_raw = "SELECT geo_zone_id, 
+                                             geo_zone_name, 
+                                             geo_zone_description, 
+                                             geo_zone_info, 
+                                             last_modified, 
+                                             date_added 
+                                        FROM " . TABLE_GEO_ZONES . " 
+                                    ORDER BY geo_zone_name";
                   $zones_split = new splitPageResults($_GET['zpage'], $page_max_display_tax_results, $zones_query_raw, $zones_query_numrows);
                   $zones_query = xtc_db_query($zones_query_raw);
                   while ($zones = xtc_db_fetch_array($zones_query)) {
