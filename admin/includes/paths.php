@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -10,10 +10,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('HTTP_CATALOG_SERVER', HTTP_SERVER);
-  define('HTTPS_CATALOG_SERVER', HTTPS_SERVER);
+  defined('HTTP_CATALOG_SERVER') or define('HTTP_CATALOG_SERVER', HTTP_SERVER);
+  defined('HTTPS_CATALOG_SERVER') or define('HTTPS_CATALOG_SERVER', HTTPS_SERVER);
   
-  define('ENABLE_SSL_CATALOG', ((ENABLE_SSL === true) ? 'true' : 'false'));
+  defined('ENABLE_SSL_CATALOG') or define('ENABLE_SSL_CATALOG', ((ENABLE_SSL === true) ? 'true' : 'false'));
   
   define('DIR_WS_ADMIN', DIR_WS_CATALOG.DIR_ADMIN);
   define('DIR_FS_ADMIN', DIR_FS_DOCUMENT_ROOT.DIR_ADMIN); 

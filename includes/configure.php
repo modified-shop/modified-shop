@@ -20,15 +20,9 @@
   // * DIR_WS_* = Webserver directories (virtual/URL)
 
   // global defines
-  define('HTTP_SERVER', 'http://localhost'); // eg, http://localhost - should not be empty for productive servers
-  define('HTTPS_SERVER', 'https://localhost'); // eg, https://localhost - should not be empty for productive servers
   define('DIR_FS_DOCUMENT_ROOT', '/var/www/modified-shop-2.00/'); // absolute path required
   define('DIR_WS_CATALOG', '/modified-shop-2.00/'); // relative path required
   define('DIR_FS_CATALOG', DIR_FS_DOCUMENT_ROOT);
-
-  // secure SSL
-  define('ENABLE_SSL', false); // secure webserver for checkout procedure?
-  define('USE_SSL_PROXY', false); // using SSL proxy?
 
   // define our database connection
   define('DB_MYSQL_TYPE', 'mysql'); // define mysql type set to 'mysql' or 'mysqli'
@@ -39,6 +33,19 @@
   define('USE_PCONNECT', 'false'); // use persistent connections?
   define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
   define('DB_SERVER_CHARSET', 'latin1'); // set db charset 'utf8' or 'latin1'
+  
+  // auto include
+  require_once (DIR_FS_CATALOG.'inc/auto_include.inc.php');
+
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/configure/','php') as $file) require_once ($file);
+
+  // server
+  defined('HTTP_SERVER') or define('HTTP_SERVER', 'http://localhost'); // eg, http://localhost - should not be empty for productive servers
+  defined('HTTPS_SERVER') or define('HTTPS_SERVER', 'https://localhost'); // eg, https://localhost - should not be empty for productive servers
+
+  // secure SSL
+  defined('ENABLE_SSL') or define('ENABLE_SSL', false); // secure webserver for checkout procedure?
+  defined('USE_SSL_PROXY') or define('USE_SSL_PROXY', false); // using SSL proxy?
 
   if (DB_DATABASE != '') {
     // set admin directory DIR_ADMIN
