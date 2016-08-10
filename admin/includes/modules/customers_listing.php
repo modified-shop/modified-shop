@@ -404,7 +404,7 @@
                     $contents = array ('form' => xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=new_order_confirm'));
                     $contents[] = array ('text' => TEXT_INFO_PAYMENT.'<br />'.xtc_draw_pull_down_menu('payment', $payment_array));
                     $contents[] = array ('text' => TEXT_INFO_SHIPPING.'<br />'.xtc_draw_pull_down_menu('shipping', $shipping_array));
-                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="'.BUTTON_UPDATE.'"><a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id).'">'.BUTTON_CANCEL.'</a>');
+                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="'.BUTTON_SAVE.'"><a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id).'">'.BUTTON_CANCEL.'</a>');
                     break;
 
                   default :
