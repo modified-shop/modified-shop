@@ -129,7 +129,7 @@
 
     $c_info_array = array(
       'country_id' => $countries['countries_id'],
-      'zone_id' => $zone_id.
+      'zone_id' => $zone_id,
     );
 
     return $c_info_array;
