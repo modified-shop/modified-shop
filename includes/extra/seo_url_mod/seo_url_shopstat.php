@@ -115,6 +115,7 @@ class seo_url_shopstat extends modified_seo_url {
       case 'product_info.php':
         if (!isset($this->params_array['action'])
             && isset($this->params_array['products_id'])
+            && strpos($this->params_array['products_id'], '{') === false
             )
         {
           if (!isset(self::$links_array['products'][$this->language_id][$this->params_array['products_id']])) {

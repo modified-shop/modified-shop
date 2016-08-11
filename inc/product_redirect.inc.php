@@ -41,7 +41,7 @@ function product_redirect_link($products_id = false, $current_link) {
       $link_array = array();
       while ($check_link = xtc_db_fetch_array($check_link_query, true)) {
         $products_link_cat_id = $check_link['categories_id'];
-        $redirection_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.(int)$products_id);
+        $redirection_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products_id);
         $link_array[] = $redirection_link;
     
         // Link without http/https, Session-ID and $_GET-Parameter
@@ -89,6 +89,10 @@ function product_redirect($actual_products_id) {
       }
     }
    
+    if (strpos($_GET['products_id'], '{') !== false) {
+      $actual_products_id = $_GET['products_id'];
+    }
+
     // redirect
     $redirect_arr = product_redirect_link($actual_products_id, $current_link);
     if ($redirect_arr['redirect']) {
