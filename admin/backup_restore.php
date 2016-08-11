@@ -11,10 +11,7 @@
   * 2011-07-02 - Security Fix - PHP_SELF
   * 2011-09-13 - fix some PHP notices
   ***************************************************************/
-  //#################################
-  define ('ANZAHL_ZEILEN', 10000); //Anzahl der Zeilen die pro Durchlauf bei der Wiederherstellung aus der SQL-Datei eingelesen werden sollen
-  define ('RESTORE_TEST', false); //Standard: false - auf true ändern für Simulation für die Wiederherstellung, die SQL Befehle werden in eine Protokolldatei (log) im Backup-Verzeichnis geschrieben
-  //#################################
+
   define ('VERSION', 'Database Restore Ver. 2.00');
 
   // ?file=dbd_mod105sp1b-20111123170925.sql.gz&action=restorenow
@@ -70,6 +67,11 @@
       require_once(DIR_FS_INC . 'xtc_db_output.inc.php');
       require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
   }
+  
+  //#################################
+  defined ('ANZAHL_ZEILEN') or define ('ANZAHL_ZEILEN', 10000); //Anzahl der Zeilen die pro Durchlauf bei der Wiederherstellung aus der SQL-Datei eingelesen werden sollen
+  defined ('RESTORE_TEST') or define ('RESTORE_TEST', false); //Standard: false - auf true ändern für Simulation für die Wiederherstellung, die SQL Befehle werden in eine Protokolldatei (log) im Backup-Verzeichnis geschrieben
+  //#################################
 
   xtc_db_connect() or die('Unable to connect to database server!');
 

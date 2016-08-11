@@ -14,13 +14,15 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
   * 2011-09-13 - fix some PHP notices
   ***************************************************************/
 
-  //#################################
-  define ('ANZAHL_ZEILEN_BKUP', 20000); //Anzahl der Zeilen die beim Backup pro Durchlauf maximal aus einer Tabelle  gelesen werden.
-  define ('MAX_RELOADS', 600); //Anzahle der maximalen Seitenreloads beim Backup  - falls etwas nicht richtig funktioniert stoppt das Script nach 600 Seitenaufrufen
-  //#################################
   define ('VERSION', 'Database Backup Ver. 2.00 UTF-8');
 
   require('includes/application_top.php');
+  
+  //#################################
+  defined ('ANZAHL_ZEILEN_BKUP') or define ('ANZAHL_ZEILEN_BKUP', 20000); //Anzahl der Zeilen die beim Backup pro Durchlauf maximal aus einer Tabelle  gelesen werden.
+  defined ('MAX_RELOADS') or define ('MAX_RELOADS', 600); //Anzahle der maximalen Seitenreloads beim Backup  - falls etwas nicht richtig funktioniert stoppt das Script nach 600 Seitenaufrufen
+  //#################################
+  
   include ('includes/functions/db_restore.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
