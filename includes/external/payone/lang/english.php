@@ -365,7 +365,7 @@ define('company_register_key', 'Register-ID (optional):');
 
 define('TEXT_PAYOLUTION_ERROR_CONDITIONS', 'If you do not agree to the transfer of your data for the settlement of the purchase, unfortunately we can not accept your order!');
 define('TEXT_PAYOLUTION_CONFIRM_SEPA', 'I authorize the <a target="_blank" href="%s">SEPA direct debit mandate</a>');
-define('TEXT_PAYOLUTION_CONFIRM', 'Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufes und einer Identit&auml;tspr&uuml;fung und Bonit&auml;tspr&uuml;fung erforderlicher Daten an Payolution bin ich einverstanden.<br/>Meine <a class="'.((defined('TPL_POPUP_SHIPPING_LINK_CLASS')) ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_PRODUCT_LINK_CLASS).'" href="https://payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?mId='.base64_encode(STORE_OWNER).((defined('TPL_POPUP_CONTENT_LINK_PARAMETERS')) ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_PRODUCT_LINK_PARAMETERS).'">Einwilligung</a> kann ich jederzeit mit Wirkung f&uuml;r die Zukunft widerrufen.');
+define('TEXT_PAYOLUTION_CONFIRM', 'I agree to the verification of the data required for the completion of the purchase on invoice and an identity and credit check.<br/>I may revoke <a class="'.((defined('TPL_POPUP_SHIPPING_LINK_CLASS')) ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_PRODUCT_LINK_CLASS).'" href="https://payment.payolution.com/payolution-payment/infoport/dataprivacydeclaration?lang=en&mId='.base64_encode(STORE_OWNER).((defined('TPL_POPUP_CONTENT_LINK_PARAMETERS')) ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_PRODUCT_LINK_PARAMETERS).'">my permission</a> with effect for the future at any time.');
 
 define('TEXT_EACH_MONTH', 'per month');
 define('TEXT_RATES', 'rates');
@@ -379,5 +379,5 @@ define('TEXT_MONTHLY_RATES', 'Monthly rate');
 define('TEXT_RATES_PLAN', 'Rate plan');
 define('TEXT_RATES_DUE', 'rate due');
 define('TEXT_CONTRACT', 'Contract');
-define('TEXT_DOWNLOAD_CONTRACT', 'downloat');
+define('TEXT_DOWNLOAD_CONTRACT', 'download');
 ?>
