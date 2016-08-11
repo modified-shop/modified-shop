@@ -30,9 +30,8 @@
   define('DB_SERVER_USERNAME', '');
   define('DB_SERVER_PASSWORD', '');
   define('DB_DATABASE', '');
-  define('USE_PCONNECT', 'false'); // use persistent connections?
-  define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
   define('DB_SERVER_CHARSET', 'latin1'); // set db charset 'utf8' or 'latin1'
+  define('USE_PCONNECT', 'false'); // use persistent connections?
   
   // auto include
   require_once (DIR_FS_CATALOG.'inc/auto_include.inc.php');
@@ -46,6 +45,9 @@
   // secure SSL
   defined('ENABLE_SSL') or define('ENABLE_SSL', false); // secure webserver for checkout procedure?
   defined('USE_SSL_PROXY') or define('USE_SSL_PROXY', false); // using SSL proxy?
+  
+  // session handling
+  define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
 
   if (DB_DATABASE != '') {
     // set admin directory DIR_ADMIN
