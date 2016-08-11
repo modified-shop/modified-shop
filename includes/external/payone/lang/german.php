@@ -132,7 +132,7 @@ define('addressaddition', 'Adresszusatz:');
 
 // installment
 define('TEXT_KLARNA_CONFIRM', 'Mit der Datenverarbeitung der f&uuml;r die Abwicklung des Rechnungskaufes und einer Identit&auml;ts- und Bonit&auml;tspr&uuml;fung erforderlichen Daten durch Klarna bin ich einverstanden. Meine %s kann ich jederzeit mit Wirkung f&uuml;r die Zukunft widerrufen. Es gelten die AGB des H&auml;ndlers.');
-define('TEXT_KLARNA_ERROR_CONDITIONS', 'Sofern Sie Rechnungsbedingungen von Klarna nicht akzeptieren, können wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
+define('TEXT_KLARNA_ERROR_CONDITIONS', 'Sofern Sie Rechnungsbedingungen von Klarna nicht akzeptieren, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
 define('TEXT_KLARNA_INVOICE', 'Weitere Informationen zum Rechnungskauf finden sie in den');
 define('KLARNA_STOREID', 'Klarna SoreID');
 define('KLARNA_COUNTRIES', 'Klarna L&auml;nder');
