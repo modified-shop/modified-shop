@@ -75,15 +75,16 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
 if (isset($_SESSION['paypal_express_new_customer']) 
     && $_SESSION['paypal_express_new_customer'] == 'true'
     && !isset($send_by_admin)
+    && is_object($order)
     ) 
 {
   require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
   
   $vlcode = xtc_random_charcode(32);
-  $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$check_customer['customers_id'].'&key='.$vlcode, 'SSL');
+  $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$order->customer['ID'].'&key='.$vlcode, 'SSL', false);
 
   $sql_data_array = array('password_request_key' => $vlcode);
-  xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . $check_customer['customers_id'] . "'");
+  xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . $order->customer['ID'] . "'");
   
   $smarty->assign('NEW_PASSWORD', $link);
 }
