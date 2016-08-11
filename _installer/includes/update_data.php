@@ -117,6 +117,7 @@
         ),
       ),
     ),
+    'customers_login' => array(),
     'customers_memo' => array(),
     'customers_status' => array(
       'drop' => array(
