@@ -14,7 +14,8 @@
 if (isset($_GET['info'])) {
   $site = explode('_', $_GET['info']);
   $pID = $site[0];
-  $actual_products_id = (int) str_replace('p', '', $pID);
+  $_GET['products_id'] = str_replace('p', '', $pID);
+  $actual_products_id = (int) $_GET['products_id'];
   $product = new product($actual_products_id);
 } elseif (isset($_GET['products_id'])) { // also check for old 3.0.3 URLS
   $actual_products_id = (int) $_GET['products_id'];
