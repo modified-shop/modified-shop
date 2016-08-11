@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: install_step4.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -179,7 +179,7 @@
                     <p>
                       <b><?php echo TEXT_ADMIN_DIRECTORY; ?>*</b><br />
                       <?php echo xtc_draw_input_field_installer('admin_directory', trim(DIR_ADMIN, '/'), '', 'style="width:250px;"'); ?> <br />
-                      <?php echo TEXT_ADMIN_DIRECTORY_LONG . '<b>'.xtc_random_charcode(10).'</b>'; ?>
+                      <?php echo TEXT_ADMIN_DIRECTORY_LONG . '<b>admin_'.xtc_random_charcode(10).'</b>'; ?>
                     </p>
                     <table width="100%" border="0" cellpadding="0" cellspacing="0">
                       <tr>                        
