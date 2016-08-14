@@ -130,7 +130,7 @@
         } else {
           $shipping_cost = ($shipping + MODULE_SHIPPING_DP_HANDLING);
           $this->quotes['methods'] = array(array('id' => $this->code,
-                                                 'title' => $shipping_method . ' (' . $shipping_num_boxes . ' x ' . $shipping_weight . ' ' . MODULE_SHIPPING_DP_TEXT_UNITS .')',
+                                                 'title' => $shipping_method . ' (' . $shipping_num_boxes . ' x ' . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_DP_TEXT_UNITS .')',
                                                  'cost'  => $shipping_cost));
         }
       }
