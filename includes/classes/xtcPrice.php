@@ -335,7 +335,9 @@ class xtcPrice {
         'weight' => 0,
         'price' => 0,
         'discount' => 0,
-        'qty' => $qty
+        'qty' => $qty,
+        'weight_prefix' => '',
+        'price_prefix' => ''
       );
       
     $attribute_query = xtDBquery(
@@ -382,7 +384,9 @@ class xtcPrice {
         'weight' => $attributes_weight,
         'price' => $price,
         'discount' => $discount,
-        'qty' => $qty
+        'qty' => $qty,
+        'weight_prefix' => $attribute_data['weight_prefix'],
+        'price_prefix' => $attribute_data['price_prefix']
       );
       
       //new module support
