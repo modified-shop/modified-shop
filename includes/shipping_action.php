@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,7 +28,7 @@
 					if ((isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost']))) {
 						$_SESSION['shipping'] = array (
               'id' => $_SESSION['shipping'], 
-              'title' => (($free_shipping == true) ? $quote[0]['methods'][0]['title'] : $quote[0]['module'].(($quote[0]['methods'][0]['title'] != '') ? ' ('.$quote[0]['methods'][0]['title'].')' : '')), 
+              'title' => (($free_shipping == true) ? $quote[0]['methods'][0]['title'] : $quote[0]['module'].((trim($quote[0]['methods'][0]['title']) != '') ? ' ('.$quote[0]['methods'][0]['title'].')' : '')), 
               'cost' => $quote[0]['methods'][0]['cost']
             );
             if (isset($redirect_link) && $redirect_link != '') {
