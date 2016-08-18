@@ -328,6 +328,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 <table class="tableBoxCenter collapse">
                   <tr class="dataTableHeadingRow">
                     <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
+                    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
                     <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
                     <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
                     <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
@@ -341,10 +342,15 @@ require (DIR_WS_INCLUDES.'head.php');
                       <tr class="dataTableRow">
                         <td class="dataTableContent">
                           <?php
-                            echo $module->title . '('.$payment_module.')';
+                            echo $module->title;
                             if (isset($module->icons_available)) {
                               echo '<br />'.$module->icons_available;
                             }
+                          ?>
+                        </td>
+                        <td class="dataTableContent">
+                          <?php
+                            echo $payment_module;
                           ?>
                         </td>
                         <td class="dataTableContent txta-r">
