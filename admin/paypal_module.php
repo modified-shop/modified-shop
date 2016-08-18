@@ -341,7 +341,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <tr class="dataTableRow">
                         <td class="dataTableContent">
                           <?php
-                            echo $module->title;
+                            echo $module->title . '('.$payment_module.')';
                             if (isset($module->icons_available)) {
                               echo '<br />'.$module->icons_available;
                             }
