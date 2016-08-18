@@ -15,6 +15,7 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_HEADING_TITLE' => 'PayPal Module',
   
   'TABLE_HEADING_MODULES' => 'Modul',
+  'TABLE_HEADING_FILENAME' => 'Modulname (f&uuml;r internen Gebrauch)',
   'TABLE_HEADING_SORT_ORDER' => 'Sortierung',
   'TABLE_HEADING_STATUS' => 'Status',
   'TABLE_HEADING_ACTION' => 'Aktion',
