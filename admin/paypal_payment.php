@@ -20,7 +20,7 @@ $paypal = new PayPalInfo('paypal');
 //display per page
 $cfg_max_display_results_key = 'MAX_DISPLAY_PAYPAL_PAYMENTS_RESULTS';
 $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
-$page_max_display_results = (($page_max_display_results > 20) ? '20' : $page_max_display_results);
+$page_max_display_results = (($page_max_display_results > 10) ? '10' : $page_max_display_results);
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
