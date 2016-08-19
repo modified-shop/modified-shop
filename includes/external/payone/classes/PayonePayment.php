@@ -277,6 +277,9 @@ class PayonePayment {
 		);
 		if (method_exists($this, '_paymentDataForm')) {
 			$selection['fields'] = $this->_paymentDataForm($active_genre);
+			if (!is_array($selection['fields'])) {
+			  return false;
+			}
 		}
 
     // delete old session
