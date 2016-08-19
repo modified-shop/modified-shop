@@ -117,19 +117,6 @@ class PayPalCommon extends PayPalAuth {
             $this->details->setTax($this->details->getTax() + $totals[$i]['value']);
           }
           break;
-        /*           
-        case 'ot_discount':
-        case 'ot_bonus_fee':
-        case 'ot_coupon':
-        case 'ot_gv':
-          $this->details->setShippingDiscount($this->details->getShippingDiscount() + (($totals[$i]['value'] > 0) ? $totals[$i]['value'] : $totals[$i]['value'] * (-1)));
-          break;
-        case 'ot_ps_fee':
-        case 'ot_cod_fee':
-        case 'ot_loworderfee':
-          $this->details->setHandlingFee($this->details->getHandlingFee() + $totals[$i]['value']);
-          break;
-        */
         default:
           if($totals[$i]['value'] < 0) {
             $this->details->setShippingDiscount($this->details->getShippingDiscount() + $totals[$i]['value']);
@@ -140,22 +127,39 @@ class PayPalCommon extends PayPalAuth {
       }
     }
 
+
     if ($calc_total === true) {
-      $total = 0;
-      $total += $this->details->getSubtotal();
-      $total += $this->details->getShipping();
-      $total += $this->details->getTax();
-      $total += $this->details->getHandlingFee();
-      $total += $this->details->getShippingDiscount();
-      $total += $this->details->getInsurance();
-      $total += $this->details->getGiftWrap();
-      $total += $this->details->getFee();
-  
+      $total = $this->calc_total();
       $this->amount->setTotal($total);
+    } elseif ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+        && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+        ) 
+    {
+      $total = $this->calc_total();
+      $amount_total = $this->amount->getTotal();
+      
+      if ((string)$amount_total != (string)$total) {
+        $this->details->setTax($this->details->getTax() + ($amount_total - $total));
+      } 
     }
   }
 
-
+  
+  function calc_total() {
+    $total = 0;
+    $total += $this->details->getSubtotal();
+    $total += $this->details->getShipping();
+    $total += $this->details->getTax();
+    $total += $this->details->getHandlingFee();
+    $total += $this->details->getShippingDiscount();
+    $total += $this->details->getInsurance();
+    $total += $this->details->getGiftWrap();
+    $total += $this->details->getFee();
+    
+    return $total;
+  }
+  
+  
   function fix_totals($totals) {
           
     for ($i = 0, $n = sizeof($totals); $i < $n; $i ++) {
