@@ -47,7 +47,7 @@
   defined('USE_SSL_PROXY') or define('USE_SSL_PROXY', false); // using SSL proxy?
   
   // session handling
-  define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
+  defined('STORE_SESSIONS') or define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
 
   if (DB_DATABASE != '') {
     // set admin directory DIR_ADMIN

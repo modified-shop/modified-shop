@@ -49,7 +49,7 @@ $file_contents =
 '  defined(\'USE_SSL_PROXY\') or define(\'USE_SSL_PROXY\', ' . (($_POST['USE_SSL_PROXY'] == 'true') ? 'true' : 'false') . '); // using SSL proxy?' . PHP_EOL .
 '' . PHP_EOL .
 '  // session handling' . PHP_EOL .
-'  define(\'STORE_SESSIONS\', \'' . (($_POST['STORE_SESSIONS'] == 'files') ? '' : 'mysql') . '\'); // leave empty \'\' for default handler or set to \'mysql\'' . PHP_EOL .                     
+'  defined(\'STORE_SESSIONS\') or define(\'STORE_SESSIONS\', \'' . (($_POST['STORE_SESSIONS'] == 'files') ? '' : 'mysql') . '\'); // leave empty \'\' for default handler or set to \'mysql\'' . PHP_EOL .                     
 '' . PHP_EOL .
 '  if (DB_DATABASE != \'\') {' . PHP_EOL . 
 '    // set admin directory DIR_ADMIN' . PHP_EOL . 
