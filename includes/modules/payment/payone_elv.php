@@ -184,7 +184,9 @@ class payone_elv extends PayonePayment {
 
       if ($response instanceof Payone_Api_Response_Error
           || $response instanceof Payone_Api_Response_BankAccountCheck_Blocked
-          || $response instanceof Payone_Api_Response_BankAccountCheck_Invalid) {
+          || $response instanceof Payone_Api_Response_BankAccountCheck_Invalid
+          ) 
+      {
         $this->payone->log("ERROR verification bankaccount: ".$response->getErrorcode().' - '.$response->getErrormessage());
         $_SESSION['payone_error'] = $response->getCustomermessage();
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
@@ -223,7 +225,12 @@ class payone_elv extends PayonePayment {
       parent::_set_customers_standard_params();
 
 			$this->payment_method = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_DebitPayment();
-		  if (isset($_SESSION[$this->code]['iban']) && $_SESSION[$this->code]['iban'] != '' && isset($_SESSION[$this->code]['bic']) && $_SESSION[$this->code]['bic'] != '') {
+		  if (isset($_SESSION[$this->code]['iban']) 
+		      && $_SESSION[$this->code]['iban'] != '' 
+		      && isset($_SESSION[$this->code]['bic']) 
+		      && $_SESSION[$this->code]['bic'] != ''
+		      ) 
+		  {
         $this->payment_method->setIban($_SESSION[$this->code]['iban']);
         $this->payment_method->setBic($_SESSION[$this->code]['bic']);
       } else {
@@ -233,9 +240,9 @@ class payone_elv extends PayonePayment {
 			$this->payment_method->setBankcountry($_SESSION[$this->code]['bankcountry']);
 
 			$request_parameters = array(
-					'aid' => $this->global_config['subaccount_id'],
-					'key' => $this->global_config['key'],
-					'currency' => $order->info['currency'],
+        'aid' => $this->global_config['subaccount_id'],
+        'key' => $this->global_config['key'],
+        'currency' => $order->info['currency'],
 			);
 
 			$params = array_merge($standard_parameters, $request_parameters);
@@ -260,8 +267,7 @@ class payone_elv extends PayonePayment {
 				  $_SESSION['payone_error'] = PAYMENT_ERROR;
 				}
 				xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-			}
-			else if ($manage_mandate_result instanceof Payone_Api_Response_Management_ManageMandate_Approved) {
+			} elseif ($manage_mandate_result instanceof Payone_Api_Response_Management_ManageMandate_Approved) {
 				if ($manage_mandate_result->isApproved()) {
 					$mandate_status = $manage_mandate_result->getMandateStatus();
 					if ($mandate_status == 'pending' || $mandate_status == 'active') {
@@ -343,7 +349,12 @@ class payone_elv extends PayonePayment {
     $this->payment_method->setBankcountry($_SESSION[$this->code]['bankcountry']);
 		//$payment_method->setBankaccountholder($_SESSION[$this->code]['accountholder']);
 		
-		if (isset($_SESSION[$this->code]['iban']) && $_SESSION[$this->code]['iban'] != '' && isset($_SESSION[$this->code]['bic']) && $_SESSION[$this->code]['bic'] != '') {
+		if (isset($_SESSION[$this->code]['iban']) 
+		    && $_SESSION[$this->code]['iban'] != '' 
+		    && isset($_SESSION[$this->code]['bic']) 
+		    && $_SESSION[$this->code]['bic'] != ''
+		    ) 
+		{
       $this->payment_method->setIban($_SESSION[$this->code]['iban']);
       $this->payment_method->setBic($_SESSION[$this->code]['bic']);
     } else {
@@ -379,9 +390,11 @@ class payone_elv extends PayonePayment {
         array('key' => 'company_register_key', 'data' => $_SESSION[$this->code]['company_register_key']),
       );
       $paydata = new Payone_Api_Request_Parameter_Paydata_Paydata();
-      $paydata->addItem(
-        new Payone_Api_Request_Parameter_Paydata_DataItem($paydata_item)
-      );
+      foreach ($paydata_item as $item) {
+        $paydata->addItem(
+          new Payone_Api_Request_Parameter_Paydata_DataItem($item)
+        );
+      }
       $this->payment_method->setPaydata($paydata);
 
       $financingtype = $this->elvtypes[$_SESSION[$this->code]['elv_type']];

@@ -49,16 +49,21 @@ class payone_invoice extends PayonePayment {
     foreach ($genre_config['types'] as $type_name => $type_config) {
       if ($type_config['active'] == 'true') {
         if ($type_name == 'payolution_invoice') {
-            $required_fields = array('customers_dob' => $_SESSION[$this->code]['invoice_customers_dob'], 
-                                     'customers_telephone' => $_SESSION[$this->code]['invoice_customers_telephone'],
-                                     );
-            if ($order->billing['company'] != '' || $order->customer['company'] != '') {
-              $required_fields['company_uid'] = $_SESSION[$this->code]['invoice_company_uid'];
-              $required_fields['company_trade_registry_number'] = $_SESSION[$this->code]['invoice_company_trade_registry_number'];
-              $required_fields['company_register_key'] = $_SESSION[$this->code]['invoice_company_register_key'];
-            }
-            $payment_smarty->assign('required_fields', $required_fields);                        
-            $payment_smarty->assign('confirm_text', TEXT_PAYOLUTION_CONFIRM);
+          if ($order->billing['company'] != '' || $order->customer['company'] != '') {
+            $required_fields = array(
+              'customers_telephone' => $_SESSION[$this->code]['invoice_customers_telephone'],
+              'company_uid' => $_SESSION[$this->code]['invoice_company_uid'],
+              'company_trade_registry_number' => $_SESSION[$this->code]['invoice_company_trade_registry_number'],
+              'company_register_key' => $_SESSION[$this->code]['invoice_company_register_key'],
+            );
+          } else {
+            $required_fields = array(
+              'customers_dob' => $_SESSION[$this->code]['invoice_customers_dob'], 
+              'customers_telephone' => $_SESSION[$this->code]['invoice_customers_telephone'],
+            );
+          }
+          $payment_smarty->assign('required_fields', $required_fields);                        
+          $payment_smarty->assign('confirm_text', TEXT_PAYOLUTION_CONFIRM);
         }
       }
     }
@@ -135,8 +140,10 @@ class payone_invoice extends PayonePayment {
       parent::_build_service_authentification('rec');
     } else {
   		$standard_parameters = parent::_standard_parameters('preauthorization');
-
-      $this->personal_data->setBirthday(xtc_date_raw($_SESSION[$this->code]['invoice_customers_dob']));
+      
+      if (isset($_SESSION[$this->code]['invoice_customers_dob'])) {
+        $this->personal_data->setBirthday(xtc_date_raw($_SESSION[$this->code]['invoice_customers_dob']));
+      }
       $this->personal_data->setTelephonenumber($_SESSION[$this->code]['invoice_customers_telephone']);
     
       $this->payment_method = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_Financing();
@@ -157,9 +164,11 @@ class payone_invoice extends PayonePayment {
         array('key' => 'company_register_key', 'data' => $_SESSION[$this->code]['invoice_company_register_key']),
       );
       $paydata = new Payone_Api_Request_Parameter_Paydata_Paydata();
-      $paydata->addItem(
-        new Payone_Api_Request_Parameter_Paydata_DataItem($paydata_item)
-      );
+      foreach ($paydata_item as $item) {
+        $paydata->addItem(
+          new Payone_Api_Request_Parameter_Paydata_DataItem($item)
+        );
+      }
       $this->payment_method->setPaydata($paydata);
 
       $request_parameters = parent::_request_parameters('fnc');
@@ -206,9 +215,11 @@ class payone_invoice extends PayonePayment {
 		
 	  if ($_SESSION[$this->code]['invoice_type'] == 'payolution_invoice') {
 		  //check
-      if (is_numeric(xtc_date_raw($_SESSION[$this->code]['invoice_customers_dob'])) == false || (@checkdate(substr(xtc_date_raw($_SESSION[$this->code]['invoice_customers_dob']), 4, 2), substr(xtc_date_raw($_SESSION[$this->code]['invoice_customers_dob']), 6, 2), substr(xtc_date_raw($_SESSION[$this->code]['invoice_customers_dob']), 0, 4)) == false)) {
-        $_SESSION['payone_error'] = ENTRY_DATE_OF_BIRTH_ERROR;
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&payment_error='.$this->code, 'SSL', true));		
+		  if (isset($_SESSION[$this->code]['invoice_customers_dob'])) {
+        if (is_numeric(xtc_date_raw($_SESSION[$this->code]['invoice_customers_dob'])) == false || (@checkdate(substr(xtc_date_raw($_SESSION[$this->code]['invoice_customers_dob']), 4, 2), substr(xtc_date_raw($_SESSION[$this->code]['invoice_customers_dob']), 6, 2), substr(xtc_date_raw($_SESSION[$this->code]['invoice_customers_dob']), 0, 4)) == false)) {
+          $_SESSION['payone_error'] = ENTRY_DATE_OF_BIRTH_ERROR;
+          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&payment_error='.$this->code, 'SSL', true));		
+        }
       }
       if (strlen($_SESSION[$this->code]['invoice_customers_telephone']) < ENTRY_TELEPHONE_MIN_LENGTH) {
         $_SESSION['payone_error'] = ENTRY_TELEPHONE_NUMBER_ERROR;
