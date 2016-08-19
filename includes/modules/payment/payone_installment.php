@@ -179,39 +179,47 @@ class payone_installment extends PayonePayment {
     foreach ($genre_config['types'] as $type_name => $type_config) {
       if ($type_config['active'] == 'true') {
         if ($type_name == 'payolution_financing' && $_SESSION[$this->code]['installment_type'] == 'payolution_financing') {
-            $required_fields = array('customers_dob' => $_SESSION[$this->code]['installment_customers_dob'], 
-                                     'customers_telephone' => $_SESSION[$this->code]['installment_customers_telephone'],
-                                     //'bankaccountholder' => $_SESSION[$this->code]['installment_bankaccountholder'],
-                                     'iban' => $_SESSION[$this->code]['installment_iban'],
-                                     'bic' => $_SESSION[$this->code]['installment_bic'],
-                                     );
+            $required_fields = array(
+              'customers_telephone' => $_SESSION[$this->code]['installment_customers_telephone'],
+              'iban' => $_SESSION[$this->code]['installment_iban'],
+              'bic' => $_SESSION[$this->code]['installment_bic'],
+            );
             
             if ($order->billing['company'] != '' || $order->customer['company'] != '') {
               $required_fields['company_uid'] = $_SESSION[$this->code]['installment_company_uid'];
               $required_fields['company_trade_registry_number'] = $_SESSION[$this->code]['installment_company_trade_registry_number'];
               $required_fields['company_register_key'] = $_SESSION[$this->code]['installment_company_register_key'];
+            } else {
+              $required_fields = array_reverse($required_fields, true);
+              $required_fields['customers_dob'] = $_SESSION[$this->code]['installment_customers_dob'];
+              $required_fields = array_reverse($required_fields, true);
             }
             $payment_smarty->assign('required_fields', $required_fields);                        
             $payment_smarty->assign('installment_plan', $this->_payment_plan($active_genre_identifier));                        
             $payment_smarty->assign('confirm_text', TEXT_PAYOLUTION_CONFIRM);
         }
         if ($type_name == 'payolution_monthly' && $_SESSION[$this->code]['installment_type'] == 'payolution_monthly') {
-            $required_fields = array('customers_dob' => $_SESSION[$this->code]['installment_customers_dob'], 
-                                     'customers_telephone' => $_SESSION[$this->code]['installment_customers_telephone'],
-                                     );
+            $required_fields = array(
+              'customers_telephone' => $_SESSION[$this->code]['installment_customers_telephone'],
+            );
             if ($order->billing['company'] != '' || $order->customer['company'] != '') {
               $required_fields['company_uid'] = $_SESSION[$this->code]['installment_company_uid'];
               $required_fields['company_trade_registry_number'] = $_SESSION[$this->code]['installment_company_trade_registry_number'];
               $required_fields['company_register_key'] = $_SESSION[$this->code]['installment_company_register_key'];
+            } else {
+              $required_fields = array_reverse($required_fields, true);
+              $required_fields['customers_dob'] = $_SESSION[$this->code]['installment_customers_dob'];
+              $required_fields = array_reverse($required_fields, true);
             }
             $payment_smarty->assign('required_fields', $required_fields);                        
             $payment_smarty->assign('confirm_text', TEXT_PAYOLUTION_CONFIRM);
         }
         if ($type_name == 'klarna' && $_SESSION[$this->code]['installment_type'] == 'klarna') {
           if (in_array($order->billing['country']['iso_code_2'], $genre_config['genre_specific']['klarna']['countries'])) {
-            $required_fields = array('customers_dob' => $_SESSION[$this->code]['installment_customers_dob'], 
-                                     'customers_telephone' => $_SESSION[$this->code]['installment_customers_telephone']
-                                     );
+            $required_fields = array(
+              'customers_dob' => $_SESSION[$this->code]['installment_customers_dob'], 
+              'customers_telephone' => $_SESSION[$this->code]['installment_customers_telephone']
+            );
             $required_fields = array_merge($required_fields, $this->klarnalocale[$order->billing['country']['iso_code_2']]['required']);
 
             $payment_smarty->assign('required_fields', $required_fields);                        
@@ -355,9 +363,11 @@ class payone_installment extends PayonePayment {
 	      )
 	  {
 		  //check
-      if (is_numeric(xtc_date_raw($_SESSION[$this->code]['installment_customers_dob'])) == false || (@checkdate(substr(xtc_date_raw($_SESSION[$this->code]['installment_customers_dob']), 4, 2), substr(xtc_date_raw($_SESSION[$this->code]['installment_customers_dob']), 6, 2), substr(xtc_date_raw($_SESSION[$this->code]['installment_customers_dob']), 0, 4)) == false)) {
-        $_SESSION['payone_error'] = ENTRY_DATE_OF_BIRTH_ERROR;
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&payment_error='.$this->code, 'SSL', true));		
+		  if (isset($_SESSION[$this->code]['installment_customers_dob'])) {
+        if (is_numeric(xtc_date_raw($_SESSION[$this->code]['installment_customers_dob'])) == false || (@checkdate(substr(xtc_date_raw($_SESSION[$this->code]['installment_customers_dob']), 4, 2), substr(xtc_date_raw($_SESSION[$this->code]['installment_customers_dob']), 6, 2), substr(xtc_date_raw($_SESSION[$this->code]['installment_customers_dob']), 0, 4)) == false)) {
+          $_SESSION['payone_error'] = ENTRY_DATE_OF_BIRTH_ERROR;
+          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&payment_error='.$this->code, 'SSL', true));		
+        }
       }
       if (strlen($_SESSION[$this->code]['installment_customers_telephone']) < ENTRY_TELEPHONE_MIN_LENGTH) {
         $_SESSION['payone_error'] = ENTRY_TELEPHONE_NUMBER_ERROR;
@@ -440,9 +450,11 @@ class payone_installment extends PayonePayment {
         array('key' => 'installment_duration', 'data' => $_SESSION[$this->code]['installment_duration']),        
       );
       $paydata = new Payone_Api_Request_Parameter_Paydata_Paydata();
-      $paydata->addItem(
-        new Payone_Api_Request_Parameter_Paydata_DataItem($paydata_item)
-      );
+      foreach ($paydata_item as $item) {
+        $paydata->addItem(
+          new Payone_Api_Request_Parameter_Paydata_DataItem($item)
+        );
+      }
       $this->payment_method->setPaydata($paydata);
 
 			$debit = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_DebitPayment();
