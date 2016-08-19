@@ -267,24 +267,35 @@ class payone_installment extends PayonePayment {
         case 'klarna':
           if ($genre_config['types']['klarna']['active'] == 'true') {
             if ($genre_config['genre_specific']['klarna']['storeid'] == '' || !in_array($order->billing['country']['iso_code_2'], $genre_config['genre_specific']['klarna']['countries'])) {            
-              $genre_config['types']['klarna']['active'] = 'false';
+              unset($genre_config['types']['klarna']);
             }
+          }
+          break;
+          
+        case 'payolution_monthly':
+        case 'payolution_financing':
+          if ($order->billing['company'] != '' || $order->customer['company'] != '') {
+              unset($genre_config['types']['payolution_monthly']);
+              unset($genre_config['types']['payolution_financing']);
           }
           break;
 		  }
 		}
-    $payment_smarty->assign('genre_config', $genre_config['types']);
-    $payment_smarty->assign('code', $this->code);
+		
+		if (count($genre_config['types']) > 0) {
+      $payment_smarty->assign('genre_config', $genre_config['types']);
+      $payment_smarty->assign('code', $this->code);
     
-    $payment_smarty->assign('payonecss', DIR_WS_EXTERNAL.'payone/css/payone.css');
-    $payment_smarty->caching = 0;
-    $module_form = $payment_smarty->fetch('checkout_payone_type_selection.html');
-				
-		$return = array(
-			array('title' => '', 
-			      'field' => $module_form),
-		);
-		return $return;
+      $payment_smarty->assign('payonecss', DIR_WS_EXTERNAL.'payone/css/payone.css');
+      $payment_smarty->caching = 0;
+      $module_form = $payment_smarty->fetch('checkout_payone_type_selection.html');
+        
+      $return = array(
+        array('title' => '', 
+              'field' => $module_form),
+      );
+      return $return;
+		}
 	}
 
 	function pre_confirmation_check() {
