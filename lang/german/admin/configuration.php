@@ -1039,9 +1039,9 @@ define('STORE_PAGE_PARSE_TIME_THRESHOLD_DESC' , 'Legt den Schwellwert in Sekunde
 define('SEARCH_IN_FILTER_TITLE', 'Suche in Artikeleigenschaften');
 define('SEARCH_IN_FILTER_DESC', 'Aktivieren um die Suche in den Artikeleigenschaften zu erm&ouml;glichen');
 define('SEARCH_AC_STATUS_TITLE','Autocomplete Suche');
-define('SEARCH_AC_STATUS_DESC','Aktivieren um die Autocomplete Suche zu aktivieren');
+define('SEARCH_AC_STATUS_DESC','Aktivieren um die Autocomplete Suche zu aktivieren<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete Suche Zeichenanzahl');
-define('SEARCH_AC_MIN_LENGTH_DESC', 'Ab welchen Zeichenanzahl sollen die ersten Suchergebnisse angezeigt werden?');
+define('SEARCH_AC_MIN_LENGTH_DESC', 'Ab welcher Zeichenanzahl sollen die ersten Suchergebnisse angezeigt werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_TITLE', 'Anzeige Widerrufsrecht Downloads');
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_DESC', 'Soll eine Checkbox im Checkout angezeigt werden, mit welcher darauf hingewiesen wird, dass das Widerrufsrecht erlischt?');
