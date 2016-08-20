@@ -279,6 +279,12 @@ class payone_installment extends PayonePayment {
               unset($genre_config['types']['payolution_financing']);
           }
           break;
+        
+        default:
+          if ($genre_config['types'][$key]['active'] != 'true') {
+            unset($genre_config['types'][$key]);
+          }
+          break;
 		  }
 		}
 		
