@@ -1047,9 +1047,9 @@ define('STORE_PAGE_PARSE_TIME_THRESHOLD_DESC' , 'Determines the threshold in sec
 define('SEARCH_IN_FILTER_TITLE', 'Search in products features');
 define('SEARCH_IN_FILTER_DESC', 'Include products features when searching');
 define('SEARCH_AC_STATUS_TITLE','Autocomplete search');
-define('SEARCH_AC_STATUS_DESC','Activate for autocomplete search');
+define('SEARCH_AC_STATUS_DESC','Activate for autocomplete search<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
 define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete number of characters');
-define('SEARCH_AC_MIN_LENGTH_DESC', 'Number of characters to display first search results');
+define('SEARCH_AC_MIN_LENGTH_DESC', 'Number of characters to display first search results<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
 
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_TITLE', 'Display right of withdrawal for Downloads');
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_DESC', 'Display a checkbox to inform the customer, that the right of withdrawal expires for downloads?');
