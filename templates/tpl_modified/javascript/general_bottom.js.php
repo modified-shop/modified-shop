@@ -126,7 +126,7 @@ foreach ($script_array as $script) {
 		if(inputString.length == 0) {
 			$('#suggestions').hide();
 		} else {
-			$.post("<?php echo xtc_href_link('api/autocomplete/autocomplete.php'); ?>", {queryString: ""+inputString+""}, function(data) {
+			$.post("<?php echo xtc_href_link('api/autocomplete/autocomplete.php', '', $request_type); ?>", {queryString: ""+inputString+""}, function(data) {
 				if(data.length > 0) {
 					$('#suggestions').slideDown();
 					$('#autoSuggestionsList').html(data);
