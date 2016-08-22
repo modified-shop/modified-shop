@@ -138,13 +138,13 @@
                       <tr>
                         <td width="98"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysql</td>
                         <td width="192">
-                          <?php echo xtc_draw_radio_field_installer('DB_MYSQL_TYPE', 'mysql', ((INSTALL_CHARSET=='latin1')?true:false)); ?>
+                          <?php echo xtc_draw_radio_field_installer('DB_MYSQL_TYPE', 'mysql', false); ?>
                         </td>
                       </tr>
                       <tr>
                         <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysqli</td>
                         <td>
-                        <?php echo xtc_draw_radio_field_installer('DB_MYSQL_TYPE', 'mysqli', ((INSTALL_CHARSET=='utf8')?true:false)); ?> </td>
+                        <?php echo xtc_draw_radio_field_installer('DB_MYSQL_TYPE', 'mysqli', true); ?> </td>
                       </tr>
                     </table>
                     <?php echo TEXT_DATABASE_TYPE_LONG; ?></p>
