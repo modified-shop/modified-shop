@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: checkout_payment.php 3434 2012-08-20 11:25:35Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -161,7 +161,7 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
       && ($error = ${$_GET['payment_error']}->get_error())
       ) 
   {
-    $smarty->assign('error',  encode_htmlspecialchars($error['error']));
+    $smarty->assign('error',  encode_htmlspecialchars(encode_utf8($error['error'], 'ISO-8859-15')));
     $_SESSION['payment'] = $_GET['payment_error'];
     $error = true;
   }
