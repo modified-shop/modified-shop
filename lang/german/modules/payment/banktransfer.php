@@ -39,7 +39,7 @@ define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_FAX', 'Einzugserm&auml;chtigung wi
 
 // Note these MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_X texts appear also in the URL, so no html-entities are allowed here
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR', 'FEHLER: ');
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_1', 'Kontonummer und Bankleitzahl stimmen nicht &uuml;berein, bitte korrigieren Sie Ihre Angabe.');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_1', 'Kontonummer und Bankleitzahl passen nicht zusammen, bitte korrigieren Sie Ihre Angabe.');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_2', 'Diese Kontonummer ist nicht pr&uuml;fbar, bitte kontrollieren Sie zur Sicherheit Ihre Eingabe nochmals.');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_3', 'Diese Kontonummer ist nicht pr&uuml;fbar, bitte kontrollieren Sie zur Sicherheit Ihre Eingabe nochmals.');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_4', 'Diese Kontonummer ist nicht pr&uuml;fbar, bitte kontrollieren Sie zur Sicherheit Ihre Eingabe nochmals.');
