@@ -221,6 +221,7 @@ ALTER TABLE `products_tags` ADD INDEX idx_values_id (`values_id`);
 
 #GTB - 2016-06-17 - extend reviews for status
 ALTER TABLE customers_status ADD customers_status_reviews_status INT(1) NOT NULL DEFAULT 1 AFTER customers_status_read_reviews;
+ALTER TABLE reviews ADD reviews_status INT(1) NOT NULL DEFAULT 1 AFTER reviews_read;
 
 #GTB - 2016-07-15 - new brute force method
 ALTER TABLE banktransfer MODIFY banktransfer_owner_email VARCHAR(255) DEFAULT NULL;
