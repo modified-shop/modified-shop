@@ -14,5 +14,5 @@ define('MODULE_CONTACT_US_STATUS_TITLE','Status');
 define('MODULE_CONTACT_US_STATUS_DESC','Modulstatus');
 define('MODULE_CONTACT_US_STATUS_INFO','Aktiv');
 define('MODULE_CONTACT_US_TEXT_TITLE', 'Kontaktformular Log');
-define('MODULE_CONTACT_US_TEXT_DESCRIPTION', 'Es wird ein Log in der Datenbank geschrieben, wann eine Anfrage über das Kontaktformular gemacht wird.');    
+define('MODULE_CONTACT_US_TEXT_DESCRIPTION', 'Es wird ein Log in der Datenbank geschrieben, wann eine Anfrage &uuml;ber das Kontaktformular gemacht wird.');    
 ?>
