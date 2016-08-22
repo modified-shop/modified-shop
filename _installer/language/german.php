@@ -70,7 +70,7 @@
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
   define('TEXT_DB_UPGRADE','Nur Datenbank-Update der bereits installierten modified eCommerce Shopsoftware durchf&uuml;hren!');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
-  define('TEXT_DB_NOT_EMPTY', 'ACHTUNG: die angegeben Datenbank enth&auml;lt bereits Tabellen!');
+  define('TEXT_DB_NOT_EMPTY', 'ACHTUNG: Die angegebene Datenbank enth&auml;lt bereits Tabellen!');
   // BOF - vr - 2010-01-14 - check MySQL *server* version
   define('TEXT_DB_SERVER_VERSION_ERROR','Ihre MySQL-Version ist zu alt. Der Shop ben&ouml;tigt mindestens die Version: ');
   define('TEXT_DB_SERVER_VERSION','Ihre MySQL-Version: ');
