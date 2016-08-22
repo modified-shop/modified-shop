@@ -24,6 +24,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      '_installer/images/step7.gif', // neu
                      '_installer/images/step8.gif', // neu
                      '_installer/images/title_index.gif', // neu
+                     '_installer/includes/templates/configure_admin.php', // neu
                      '_installer/modified.sql', // neu
                      '_installer/update_1.0.1.0_to_1.0.2.0.sql', // neu
                      '_installer/update_1.0.2.0_to_1.0.3.0.sql', // neu
@@ -126,6 +127,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/includes/stylesheet_stocklist.css', // neu
                      'admin/includes/stylesheet_stocklist_print.css', // neu
                      'admin/paypal.php', // neu
+                     'admin/popup_image.php', // neu
                      'admin/rss/index.html',
                      'admin/rss/xt-news.cache',
                      'admin/rss/xtc.cache',
@@ -184,6 +186,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'includes/classes/cc_validation.php',
                      'includes/configure.org.php',
                      'includes/external/janolaw/send_order.php', // from r9293
+                     'includes/external/magnalister/config/german/hood.form', // neu
                      'includes/external/payone/modules/send_order.php', // from r9293
                      'includes/external/paypal/lib/PayPal/Core/PayPalLoggingLevel.php', // neu
                      'includes/external/shopgate/api.php', // neu
