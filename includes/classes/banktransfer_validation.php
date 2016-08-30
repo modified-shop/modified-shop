@@ -24,7 +24,7 @@
    OSC German Banktransfer v0.85a       	Autor:	Dominik Guder <osc@guder.org>
    Extensioncode: 							Marcel Bossert-Schwab <info@opensourcecommerce.de> (mbs)
    New methods 2005 - 2010: 				Frank Maroke (FrankM) <info@fmce.de>
-   New methods and bug fixes 2010 - 2013:	Christian Rothe <buero@laufstar.de>
+   New methods and bug fixes 2010 - 2015:	Christian Rothe <buero@laufstar.de>
 
 	 BLZ-Downloadseite der Deutschen Bundesbank:
 	 http://www.bundesbank.de/Redaktion/DE/Standardartikel/Kerngeschaeftsfelder/Unbarer_Zahlungsverkehr/bankleitzahlen_download.html
@@ -32,7 +32,7 @@
    Aktuelle Beschreibung der Pruefverfahren:
    http://www.bundesbank.de/Navigation/DE/Kerngeschaeftsfelder/Unbarer_Zahlungsverkehr/Pruefzifferberechnung/pruefzifferberechnung.html
    
-   Stand dieses Klassen-Moduls: 9. Dezember 2013 
+   Stand dieses Klassen-Moduls: 7. September 2015 
    
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
@@ -62,14 +62,12 @@ class AccountCheck {
   	$this->checkmode = 'classic'; // 
 	}
 
-var $Bankname; // Enthält den Namen der Bank bei der Suche nach BLZ
-var $PRZ; //Enthält die Prüfziffer
 
 ////
 // Diese Funktion gibt die Bankinformationen aus der csv-Datei zurück*/
   function csv_query($blz) {
     $cdata = -1;
-    $fp = fopen(DIR_WS_INCLUDES . 'data/blz.csv', 'r');
+    $fp = fopen(DIR_FS_CATALOG.DIR_WS_INCLUDES . 'data/blz.csv', 'r');
     while ($data = fgetcsv($fp, 1024, ";")) {
       if ($data[0] == $blz){
         $cdata = array ('blz' => $data[0],
@@ -158,7 +156,7 @@ var $PRZ; //Enthält die Prüfziffer
     // Pruefziffer ermitteln..
     $PNumber = substr($AccountNo, $Checkpoint-1, 1);
 
-    // Sonderfall Methoden der Bundesbank C6 und D1, zur Pruefung letzte Stelle entfernen.
+    // Sonderfall Methoden der Bundesbank C6, D1 und E2: zur Pruefung letzte Stelle entfernen.
     if ($Checkpoint == 16) {
       $AccountNo = substr($AccountNo, 0, -1);
     }
@@ -302,7 +300,7 @@ var $PRZ; //Enthält die Prüfziffer
        $Method16 = 0;
      }
      if ($Help == 1) {
-       if ($Checksum == substr($AccountNo,$Checkpoint - 2,1)) {
+       if ($Checksum == substr($AccountNo,$Checkpoint-2,1)) {
          $Method16 = 0;
        }
      }
@@ -1243,11 +1241,11 @@ var $PRZ; //Enthält die Prüfziffer
 
   private function Mark59($AccountNo) {
     $Mark59 = 1;
-      if (strlen($AccountNo) > 8) {
-        $Mark59 = $this->Method00($AccountNo, '212121212', 10);
-      }
-      return $Mark59;
-    }  /* End of Mark59 */
+    if (strlen($AccountNo) > 8) {
+      $Mark59 = $this->Method00($AccountNo, '212121212', 10);
+    }
+    return $Mark59;
+  }  /* End of Mark59 */
 
   private function Mark60($AccountNo) {
     $Mark60 = $this->Method00($AccountNo, '002121212', 10);
@@ -1724,12 +1722,14 @@ var $PRZ; //Enthält die Prüfziffer
   }  /* End of Mark86 */
 
   private function Mark87($AccountNo) {
+    $Tab1 = array();
     $Tab1[0] = 0;
     $Tab1[1] = 4;
     $Tab1[2] = 3;
     $Tab1[3] = 2;
     $Tab1[4] = 6;
 
+    $Tab2 = array();
     $Tab2[0] = 7;
     $Tab2[1] = 1;
     $Tab2[2] = 5;
@@ -1739,8 +1739,10 @@ var $PRZ; //Enthält die Prüfziffer
     $Result = 1;
     $AccountNo = $this->ExpandAccount($AccountNo);
     if (substr($AccountNo,2,1) == '9') {
+    	// Ausnahme für Kontonummern, die nach linksbündiger Auffüllung an 3. Stelle eine 9 haben
       $Result = $this->Mark10($AccountNo);
     } else {
+    	// Methode A
       for ($Run = 0; $Run < strlen($AccountNo); $Run++) {
         // $AccountNoTemp[$Run + 1] = (int) substr($AccountNo,$Run,1);
         $AccountNoTemp[$Run] = (int) substr($AccountNo,$Run,1);
@@ -1838,11 +1840,17 @@ var $PRZ; //Enthält die Prüfziffer
           }
         }
       }
-      if ($Result <> 0 ) {
+      // Methode B
+      if ($Result <> 0) {
         $Result = $this->Mark33($AccountNo);
-        if ($Result <> 0 ) {
-          $Result = $this->Method06($AccountNo,'000065432',FALSE,10,7);
-        }
+      }
+      // Methode C
+      if ($Result <> 0) {
+        $Result = $this->Method06($AccountNo,'000065432',FALSE,10,7);
+      }
+      // Methode D (gültig zum 07.09.2015)
+      if ($Result <> 0) {
+        $Result = $this->Method06($AccountNo,'000765432',FALSE,10,11);
       }
     }
     return $Result;
@@ -1883,8 +1891,16 @@ var $PRZ; //Enthält die Prüfziffer
     return $Correct;
   }  /* End of Mark89 */
 
+  /* --- Changed Christian Rothe 20140609 --- */
+  /* --- Changed Christian Rothe 20140908 --- */
   private function Mark90($AccountNo) {
-    $Help = $this->Method06($AccountNo, '000765432', FALSE, 10, 11); // Methode A
+    $AccountNo = $this->ExpandAccount($AccountNo);   
+    if (substr($AccountNo,2,1) == '9') {
+    	// Sachkonten haben an der 3. Stelle die Ziffer 9 stehen -> Werden mit Methode F geprüft
+    	$Help = $this->Method06($AccountNo, '008765432', FALSE, 10, 11); // Methode F   	
+    } else {
+    	// Kundenkonten haben an der 3. Stelle im Gegensatz zu Sachkonten nicht die Ziffer 9 stehen -> Prüfung mit Methoden A bis E und G
+    	$Help = $this->Method06($AccountNo, '000765432', FALSE, 10, 11); // Methode A
       if ($Help != 0) {
         $Help = $this->Method06($AccountNo, '000065432', FALSE, 10, 11); // Methode B
         if ($Help != 0) {
@@ -1903,9 +1919,14 @@ var $PRZ; //Enthält die Prüfziffer
           $Help = $this->Method06($AccountNo, '000065432',FALSE, 10, 9);  //Methode D
         }
         if ($Help != 0) {
-              $Help = $this->Method06($AccountNo, '000021212',FALSE, 10, 10); //Methode E
+          $Help = $this->Method06($AccountNo, '000021212',FALSE, 10, 10); //Methode E
         }
+        if ($Help != 0) {
+          $Help = $this->Method06($AccountNo, '000121212',FALSE, 10, 7); //Methode G
+        }
+
       }
+    }
     return $Help;
   }  /* End of Mark90 */
 
@@ -2216,6 +2237,7 @@ var $PRZ; //Enthält die Prüfziffer
      --- Hotfix 20070717 ---
      --- Hotfix FrankM 20080110 --- */
   /* --- Changed Christian Rothe 20110901 --- */
+  /* --- Hotfix Christian Rothe 20150104 --- */
 
   private function MarkB6($AccountNo, $BLZ) {
     // Wenn Laenge = 9 dann Kontonummer fuer Methode 53 merken, Hotfix 20080110.
@@ -2279,9 +2301,9 @@ var $PRZ; //Enthält die Prüfziffer
     $RetVal = 1;
 
     // Variante 1 - Zwei führende Nullen
-    if ((substr($AccountNo,0,2) == "00")And (substr($AccountNo,2,1) != "0")){
+    if ((substr($AccountNo,0,2) == "00") && (substr($AccountNo,2,1) != "0")) {
       $Significance = '1231231';
-	    $Step3 = 0;
+      $Step3 = 0;
       for ($Run = 0;$Run < strlen($Significance);$Run++) {
         $Step1 = (substr($AccountNo,$Run + 2,1) * substr($Significance,$Run,1));
         $Step2 = $Step1 + substr($Significance,$Run,1);
@@ -2301,9 +2323,9 @@ var $PRZ; //Enthält die Prüfziffer
       }
 
     // Variante 2 - Drei führende Nullen
-    } elseif ((substr($AccountNo,0,3) == "000")And (substr($AccountNo,3,1) != "0")){
+    } elseif ((substr($AccountNo,0,3) == "000") && (substr($AccountNo,3,1) != "0")) {
       $Significance = '654321';
-	    $Step1 = 0;
+      $Step1 = 0;
       for ($Run = 0;$Run < strlen($Significance);$Run++) {
         $Step1 += (substr($AccountNo,$Run + 3,1) * substr($Significance,$Run,1));
       }
@@ -2756,9 +2778,22 @@ var $PRZ; //Enthält die Prüfziffer
     return $markE1;
   }
 
+  /* --- Added Christian Rothe 20150402 --- */
+  private function MarkE2($AccountNo) {
+  	$markE2 = 1;
+    $AccountNo = $this->ExpandAccount($AccountNo);
+    // Kontonummern, die an der 1. Stelle von links der 10-stelligen Kontonummer den Wert 6, 7, 8 oder 9 beinhalten, sind falsch.
+    if ($AccountNo < 6000000000) {
+	    // Kontonummern, die an der 1. Stelle von links der 10-stelligen Kontonummer den Wert 0, 1, 2, 3, 4 oder 5 beinhalten, sind wie folgt zu prüfen: 
+	    $Help = '438320'.$AccountNo;
+	    $markE2 = $this->Method00($Help, '212121212121212', 16, 10, 0, 1);
+	  }   
+    return $markE2;
+  }
+
 /* ----- Ende Endgueltige Funktionen der einzelnen Berechnungsmethoden. ---- */
 
-/* -------- Dies ist die wichtigste function ---------- */
+/* -------- Dies ist die wichtigste Function ---------- */
   function CheckAccount($banktransfer_number, $banktransfer_blz) {
     $KontoNR = preg_replace('/[^0-9]/', '', $banktransfer_number); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
     $BLZ = preg_replace('/[^0-9]/', '', $banktransfer_blz); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
@@ -2842,7 +2877,6 @@ var $PRZ; //Enthält die Prüfziffer
 		/*
 		// Funktionen zu Testen einzelner Methoden mit von Bundesbank angegebenen Testkontonummern
 		// Für Produktivbetrieb auskommentieren
-
 		function devTest($KontoNR, $PRZ) {
 
 			$MethodName = "Mark$PRZ";
@@ -2856,9 +2890,7 @@ var $PRZ; //Enthält die Prüfziffer
   }  /* End Class AccountCheck */
 
 
-
 class IbanAccountCheck extends AccountCheck { 
-	private $ibanstructure = Array();
 
 /*
    -----------------------------------------------------------------------------------------
@@ -2894,6 +2926,8 @@ class IbanAccountCheck extends AccountCheck {
 /* 2020 -> BIC ist ungültig                                                      */
 /* 2128 -> interner Fehler, der zeigt, dass eine Methode nicht implementiert ist */
 /*                                                                               */
+
+		private $ibanstructure = array();
 
 		function __construct() {
 
@@ -3083,6 +3117,8 @@ class IbanAccountCheck extends AccountCheck {
 			
 			$iban = $this->iban_trim($iban);
 			$kontonr = substr($iban, 12, 10);
+			$kontonr = ltrim($kontonr, "0"); // Bugfix: Führende Nullen entfernen, damit Längenprüfung auch mit aus IBAN extrahierten Kontonummern klappt.
+
 			$blz = substr($iban, 4, 8);
 			
 			$result = $this->CheckAccount($kontonr,$blz);

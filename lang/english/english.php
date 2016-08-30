@@ -599,4 +599,45 @@ define('MANUFACTURER_NOT_FOUND', 'Manufacturer not found');
 define('ENTRY_TOKEN_ERROR', 'Please check your data.');
 
 define('IMAGE_BUTTON_CONFIRM', 'Confirm'); // Needed for PayPal
+
+// ***************************************************
+//  Kontodaten-Prüfung
+// ***************************************************
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_0', 'Bank details okay.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1', 'Account number and/or bank code are invalid or do not match!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2', 'The account number is not automatically testable.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_3', 'The account number is not testable.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_4', 'Account number is not testable! Please check your data again.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_5', 'This routing number does not exist, please correct your entry.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_8', 'Error in the bank code or no bank code specified!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_9', 'No account number specified!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_10', 'You do not have account holders indicated.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_128', 'Internal error when checking the bank details.');
+
+// Fehlermeldungen alle IBAN-Nummern 
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1000', 'In IBAN included country code (1st and 2nd place) unknown.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1010', 'IBAN length wrong: Too many points entered.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1020', 'IBAN length wrong: Too few points entered.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1030', 'IBAN is not equivalent to that established for the country format.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1040', 'Check digits of IBAN (points 3 and 4) not correctly -> Typo in the IBAN.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1050', 'BIC has invalid format.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1060', 'BIC-length wrong: Too many characters entered. 8 or 11 characters are required.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1070', 'BIC-length wrong: Zu wenige Zeichen angeben. 8 or 11 characters are required.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-length invalid: 8 or 11 characters are required.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-length invalid: 8 or 11 characters are required.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1200', 'IBANs from the specified country (1st and 2nd place of the IBAN) are not accepted.');
+
+// Fehlermeldungen für deutsche Kontonummern 
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2001', 'In IBAN included account number (points 13 to 22) and/or routing number (points 5 to 12) invalid or do not match each other.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2002', 'In IBAN included account number (points 13 to 22) is not automatically testable.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2003', 'For in IBAN included account number (points 13 to 22) there is no check digit defined.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2004', 'In IBAN included account number (points 13 to 22) is not testable!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2005', 'Bank code (points 5 to 12 of the IBAN) nonexistent!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2008', 'Error in the bank code (points 5 to 12 of the IBAN) or no bank code specified!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2009', 'No account number (points 13 to 22 of the IBAN) specified!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2010', 'No account holders indicated.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2020', 'BIC invalid: No bank existent with this BIC.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2128', 'Internal error when checking the bank details.');
+
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_UNKNOWN', 'Unknown error when checking the bank details.');
 ?>

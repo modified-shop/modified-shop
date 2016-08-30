@@ -599,4 +599,45 @@ define('MANUFACTURER_NOT_FOUND', 'Hersteller nicht gefunden');
 define('ENTRY_TOKEN_ERROR', 'Bitte &uuml;berpr&uuml;fen sie ihre Eingaben.');
 
 define('IMAGE_BUTTON_CONFIRM', 'Best&auml;tigen'); // Needed for PayPal
+
+// ***************************************************
+//  Kontodaten-PrŸfung
+// ***************************************************
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_0', 'Bankverbindung okay.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1', 'Kontonummer und/oder BLZ sind ung&uuml;ltig bzw. passen nicht zueinander!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2', 'Die Kontonummer ist nicht automatisch pr&uuml;fbar.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_3', 'Die Kontonummer ist nicht pr&uuml;fbar.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_4', 'Kontonummer nicht pr&uuml;fbar! Bitte &uuml;berpr&uuml;fen Sie Ihre Angaben nochmals.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_5', 'Diese Bankleitzahl existiert nicht, bitte korrigieren Sie Ihre Angabe.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_8', 'Fehler bei der Bankleitzahl oder keine Bankleitzahl angegeben!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_9', 'Keine Kontonummer angegeben!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_10', 'Sie haben keinen Kontoinhaber angegeben.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_128', 'Interner Fehler bei Pr&uuml;fung der Bankverbindung.');
+
+// Fehlermeldungen alle IBAN-Nummern 
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1000', 'In IBAN enthaltenes L&auml;nderk&uuml;rzel (1. und 2. Stelle) unbekannt.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1010', 'IBAN-LŠnge falsch: Zu viele Stellen eingegeben.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1020', 'IBAN-LŠnge falsch: Zu wenige Stellen eingegeben.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1030', 'IBAN entspricht nicht dem f&uuml;r das Land festgelegten Format.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1040', 'Pr&uuml;fziffern der IBAN (Stellen 3 und 4) nicht korrekt -> Tippfehler in der IBAN.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1050', 'BIC hat ung&uuml;ltiges Format.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1060', 'BIC-LŠnge falsch: Zu viele Zeichen eingegeben. 8 oder 11 Zeichen sind erforderlich.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1070', 'BIC-LŠnge falsch: Zu wenige Zeichen angeben. 8 oder 11 Zeichen sind erforderlich.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-LŠnge ung&uuml;tig: 8 oder 11 Zeichen erforderlich.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-LŠnge ung&uuml;tig: 8 oder 11 Zeichen erforderlich.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1200', 'IBANs aus dem angegebenen Land (1. und 2. Stelle der IBAN) k&ouml;nnen wir leider nicht akzeptieren.');
+
+// Fehlermeldungen fŸr deutsche Kontonummern 
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2001', 'In IBAN enthaltene Kontonummer (Stellen 13 bis 22) und/oder Bankleitzahl (Stellen 5 bis 12) ung&uuml;ltig bzw. nicht zueinander passend.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2002', 'In IBAN enthaltene Kontonummer (Stellen 13 bis 22) nicht automatisch pr&uuml;fbar.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2003', 'F&uuml;r in IBAN enthaltene Kontonummer (Stellen 13 bis 22) ist kein Pr&uuml;fziffernverfahren definiert.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2004', 'In IBAN enthaltene Kontonummer (Stellen 13 bis 22) nicht pr&uuml;fbar!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2005', 'Bankleitzahl (Stellen 5 bis 12 der IBAN) nicht existent!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2008', 'Fehler bei Bankleitzahl (Stellen 5 bis 12 der IBAN) oder keine Bankleitzahl angegeben!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2009', 'Keine Kontonummer (Stellen 13 bis 22 der IBAN) angegeben!');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2010', 'Kein Kontoinhaber angegeben.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2020', 'BIC ung&uuml;ltig: Keine Bank mit diesem BIC existent.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2128', 'Interner Fehler bei Pr&uuml;fung der Bankverbindung.');
+
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_UNKNOWN', 'Unbekannter Fehler bei Pr&uuml;fung der Bankverbindung.');
 ?>
