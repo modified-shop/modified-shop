@@ -612,11 +612,12 @@
             }
 
             //new module support
-            $this->products[$index]['attributes'][$subindex] = $this->orderModules->cart_attributes($this->products[$index]['attributes'][$subindex],$attributes,$products[$i]['id'],$value);
+            $this->products[$index]['attributes'][$subindex] = $this->orderModules->cart_attributes($this->products[$index]['attributes'][$subindex],$attributes,$products[$i]['id'],$value,$this->products[$index]);
   
             $subindex++;
           }
-          $this->products[$i]['attributes'] = array_merge($this->products[$i]['attributes']); //index correction needed in "for loops"
+          $this->products[$index]['attributes'] = array_merge(array_filter($this->products[$index]['attributes'])); //index correction needed in "for loops"
+          
           if($check_attributes_model === true && count($attributes_model) > 0) {
           	$attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
           	$this->products[$index]['model'] = implode($attr_model_delimiter, $attributes_model);

@@ -69,10 +69,10 @@ class orderModules {
         return $this->call_module_method($products,$products_id);
     }
 
-    function cart_attributes($products_attributes,$attributes,$products_id,$value)
+    function cart_attributes($products_attributes,$attributes,$products_id,$value,$products)
     {
         $this->function_call = 'cart_attributes';
-        return $this->call_module_method($products_attributes,$attributes,$products_id,$value);
+        return $this->call_module_method($products_attributes,$attributes,$products_id,$value,$products);
     }
     
 }
