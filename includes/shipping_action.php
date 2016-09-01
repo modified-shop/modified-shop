@@ -31,6 +31,9 @@
               'title' => (($free_shipping == true) ? $quote[0]['methods'][0]['title'] : $quote[0]['module'].((trim($quote[0]['methods'][0]['title']) != '') ? ' ('.$quote[0]['methods'][0]['title'].')' : '')), 
               'cost' => $quote[0]['methods'][0]['cost']
             );
+            if (isset(${$module}) && is_object(${$module}) && method_exists(${$module}, 'session') ) {
+              ${$module}->session($method, $module, $quote); 
+            } 
             if (isset($redirect_link) && $redirect_link != '') {
 						  xtc_redirect($redirect_link);
 						}
