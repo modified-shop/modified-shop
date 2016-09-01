@@ -1,0 +1,18 @@
+{config_load file="$language/lang_$language.conf" section="categorie_listing"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="categorie_listing"}
+{if isset($categories_content) && $categories_content != '' && $TR_COLS > 0}
+<h4>{#heading_more_categories#}</h4>
+<div class="subcats cf">
+  {foreach name=aussen item=categories_data from=$categories_content key=spalten}
+  <div class="subcatlist">
+    <div class="subcatlist_inner cf">
+      <a href="{$categories_data.CATEGORIES_LINK}">
+        {if $categories_data.CATEGORIES_IMAGE}<span class="subcat_image"><span class="subcat_image_inner cf"><img src="{$categories_data.CATEGORIES_IMAGE}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" /></span></span>{/if}
+        <span class="subcat_title"><span class="subcat_title_inner">{$categories_data.CATEGORIES_NAME}</span></span>
+      </a>
+    </div>
+  </div>
+  {/foreach}
+</div>
+{/if}
