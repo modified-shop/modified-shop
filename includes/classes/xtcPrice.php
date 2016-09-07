@@ -50,6 +50,7 @@ class xtcPrice {
     $this->TAX = array();
     $this->SHIPPING = array();
     $this->showFrom_Attributes = true;
+    $this->flagSpecial = false;
     
     $this->show_price_tax = 0;
 
@@ -421,6 +422,7 @@ class xtcPrice {
    * @return Double special offer
    */
   function xtcCheckSpecial($pID) {
+    $this->flagSpecial = false;
     if ($this->cStatus['customers_status_specials'] == '1') {
       $product_query = xtDBquery("SELECT *
                                     FROM ".TABLE_SPECIALS."
@@ -431,6 +433,7 @@ class xtcPrice {
                                  ");
       if (xtc_db_num_rows($product_query, true) > 0) {
         $product = xtc_db_fetch_array($product_query, true);
+        $this->flagSpecial = true;
         
         $product = $this->priceModules->CheckSpecial($product, $pID);
       
