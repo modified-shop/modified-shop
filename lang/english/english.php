@@ -624,7 +624,6 @@ define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1050', 'BIC has invalid format.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1060', 'BIC-length wrong: Too many characters entered. 8 or 11 characters are required.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1070', 'BIC-length wrong: Zu wenige Zeichen angeben. 8 or 11 characters are required.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-length invalid: 8 or 11 characters are required.');
-define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-length invalid: 8 or 11 characters are required.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1200', 'IBANs from the specified country (1st and 2nd place of the IBAN) are not accepted.');
 
 // Fehlermeldungen für deutsche Kontonummern 
