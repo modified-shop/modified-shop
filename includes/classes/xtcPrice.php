@@ -424,6 +424,7 @@ class xtcPrice {
   function xtcCheckSpecial($pID) {
     $this->flagSpecial = false;
     if ($this->cStatus['customers_status_specials'] == '1') {
+      $special_price = 0;
       $product_query = xtDBquery("SELECT *
                                     FROM ".TABLE_SPECIALS."
                                    WHERE products_id = '".(int)$pID."'
@@ -437,8 +438,12 @@ class xtcPrice {
         
         $product = $this->priceModules->CheckSpecial($product, $pID);
       
-        return $product['specials_new_products_price'];
+        $special_price = $product['specials_new_products_price'];
       }
+      
+      $special_price = $this->priceModules->CheckSpecialPrice($special_price, $pID);
+      
+      return $special_price;
     }
   }
   
