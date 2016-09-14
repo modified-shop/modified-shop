@@ -118,11 +118,13 @@ class seo_url_shopstat extends modified_seo_url {
             && strpos($this->params_array['products_id'], '{') === false
             )
         {
-          if (!isset(self::$links_array['products'][$this->language_id][$this->params_array['products_id']])) {
-            self::$links_array['products'][$this->language_id][$this->params_array['products_id']] = self::create_products_link();
+          $id = xtc_get_product_path($this->params_array['products_id']);
+          
+          if (!isset(self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$id])) {
+            self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$id] = self::create_products_link();
           }
         
-          $link = self::$links_array['products'][$this->language_id][$this->params_array['products_id']];
+          $link = self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$id];
           if ($link !== false) {
             $link .= self::get_link_params();
           }
