@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: login_admin.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -33,16 +33,21 @@ if (file_exists('includes/local/configure.php')) {
   require('includes/configure.php');
 }
 
+@ini_set('display_errors', false);
+error_reporting(0);
+
 // loading only necessary functions
 require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
 require_once(DIR_FS_INC . 'xtc_draw_password_field.inc.php');
 require_once(DIR_FS_INC . 'xtc_draw_input_field.inc.php');
 require_once(DIR_FS_INC . 'xtc_parse_input_field_data.inc.php');
+require_once(DIR_FS_INC . 'xtc_redirect.inc.php');
+
 
 $error = false;
 
 //allowed repair options
-$allwowed_repair_array = array('seo_friendly','sess_write','sess_default','default_template','gzip_off');
+$allwowed_repair_array = array('seo_friendly','sess_write','sess_default','default_template','gzip_off','reset_login');
 
 if (isset($_GET['repair']) && !empty($_GET['repair']) && !in_array($_GET['repair'],$allwowed_repair_array)) {
   $error = true;
@@ -83,8 +88,6 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   require_once (DIR_FS_INC.'db_functions.inc.php');
   
   require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_fetch_array.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
   require_once(DIR_FS_INC . 'xtc_validate_password.inc.php');
   require_once(DIR_FS_INC . 'xtc_get_ip_address.inc.php');
 
@@ -111,7 +114,7 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
     die('Zugriff verweigert. E-Mail und/oder Passwort falsch!');
   } else {
     if (isset($_POST['repair']) && xtc_not_null($_POST['repair'])) {
-
+      
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_LOGIN."  
                           WHERE customers_email_address = '".xtc_db_input($check_customer['customers_email_address'])."'");
       
@@ -191,7 +194,11 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
           ');
           die('Report: GZIP_COMPRESSION wurde deaktiviert.');
           break;
-
+        //reset_login
+        case 'reset_login':
+          xtc_redirect('login_admin.php');
+          exit();
+          break;
         // unknown repair option
         default:
           die('Report: repair-Befehl ung&uuml;ltig.');
