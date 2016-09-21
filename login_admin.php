@@ -86,6 +86,7 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   require_once(DIR_FS_INC . 'xtc_db_fetch_array.inc.php');
   require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
   require_once(DIR_FS_INC . 'xtc_validate_password.inc.php');
+  require_once(DIR_FS_INC . 'xtc_get_ip_address.inc.php');
 
   require_once(DIR_WS_CLASSES.'class.inputfilter.php');
 
@@ -110,6 +111,14 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
     die('Zugriff verweigert. E-Mail und/oder Passwort falsch!');
   } else {
     if (isset($_POST['repair']) && xtc_not_null($_POST['repair'])) {
+
+      xtc_db_query("DELETE FROM customers_login 
+                          WHERE customers_email_address = '".xtc_db_input($check_customer['customers_email_address'])."'");
+      
+      $ip_address = xtc_get_ip_address();
+      xtc_db_query("DELETE FROM customers_login 
+                          WHERE customers_ip = '".xtc_db_input($ip_address)."'");
+      
       //repair options
       switch($_POST['repair']) {
 
