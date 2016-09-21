@@ -162,6 +162,9 @@ if ($_POST['cpath'] != '') {
       $output .= '<th class="dataTableHeadingContent" style="width:180px"><strong>'.ATTR_VPE.'</strong></th>'. PHP_EOL;
       $output .= '<th class="dataTableHeadingContent" style="min-width:135px;"><strong>'.ATTR_WEIGHT.'&nbsp;&nbsp;&nbsp;</strong></th>'. PHP_EOL;
       $output .= '<th class="dataTableHeadingContent" style="min-width:135px;"><strong>'.ATTR_PRICE.'&nbsp;&nbsp;&nbsp;</strong></th>'. PHP_EOL;
+    
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_attributes/new_attributes_include_th/','php') as $file) require ($file);
+    
       $output .= '</tr>'. PHP_EOL;
       $output .= '</thead>'. PHP_EOL;
       
@@ -245,6 +248,9 @@ if ($_POST['cpath'] != '') {
           $output .= xtc_draw_pull_down_menu($current_value_id . '_prefix', $prefix_array, (isset($attr_array['price_prefix'])?$attr_array['price_prefix']:''), $noStylingClass . $disable). PHP_EOL;
           $output .= '<input'.$disable.'type="text" name="' . $current_value_id . '_price" value="' . $attribute_value_price_calculate . '" size="10">'. $attribute_value_price_calculate_netto. PHP_EOL;
           $output .= '</td>'. PHP_EOL;
+          
+          foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_attributes/new_attributes_include_td/','php') as $file) require ($file);
+    
           $output .= '</tr>'. PHP_EOL;
           
           // Download function start

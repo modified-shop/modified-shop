@@ -109,6 +109,9 @@
     }    
     
     $sql_data_array = xtc_array_merge($sql_data_array, $add_data_array);
+    
+    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_attributes/new_attributes_change/','php') as $file) require ($file);
+    
     xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES, $sql_data_array);
     $products_attributes_id = xtc_db_insert_id();
 
@@ -122,6 +125,9 @@
                                'products_attributes_maxdays' => $value_download_expire,
                                'products_attributes_maxcount' => $value_download_count
                               );
+                              
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/new_attributes/new_attributes_change_dl/','php') as $file) require ($file);                        
+            
       xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, $sql_data_array);
     }
   }
