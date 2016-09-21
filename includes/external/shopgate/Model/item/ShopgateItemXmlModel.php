@@ -546,6 +546,7 @@ class ShopgateItemXmlModel extends ShopgateItemModel
     {
         $this->fireMethods = array(
             'setUid',
+            'setStock',
             'setInputs',
             'setAttributes',
             'setPrice',

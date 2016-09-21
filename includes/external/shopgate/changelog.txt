@@ -1,3 +1,9 @@
+'''Version 2.9.32'''
+* fixed stock export of child products
+
+'''Version 2.9.31'''
+* fixed calculation of coupon values
+
 '''Version 2.9.30'''
 * uses Shopgate Library 2.9.45
 * added manufacturer model number to product export

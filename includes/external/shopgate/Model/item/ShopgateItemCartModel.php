@@ -101,15 +101,15 @@ class ShopgateItemCartModel extends ShopgateObject
      * 
      * this function returns the id, the product has in the shop system
      * 
-     * @param ShopgateOrderItem $sgOrderItem
+     * @param ShopgateOrderItem $orderItem
      *
      * @return string
      */
-    public function getProductIdFromCartItem(ShopgateOrderItem $sgOrderItem)
+    public function getProductIdFromCartItem(ShopgateOrderItem $orderItem)
     {
-        $parentId = $sgOrderItem->getParentItemNumber();
+        $parentId = $orderItem->getParentItemNumber();
         if (empty($parentId)) {
-            $id = $sgOrderItem->getItemNumber();
+            $id = $orderItem->getItemNumber();
             if (strpos($id, "_") !== false) {
                 $productIdArr = explode('_', $id);
                 
