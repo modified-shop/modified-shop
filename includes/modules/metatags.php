@@ -162,6 +162,8 @@
   }
 // ---------------------------------------------------------------------------------------
 
+  $set_hreflang = true;
+  
 
 // ---------------------------------------------------------------------------------------
 //  Aufräumen: Umlaute und Sonderzeichen wandeln.
@@ -318,6 +320,13 @@ switch(basename($PHP_SELF)) {
       $canonical_flag = true;
       $canonical_url = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'], 'NONSSL', false);
       $canonical_flag = false;
+      //Wenn Produkt URL nicht Canonical URL dann auf noindex setzen und keine hreflang setzen
+      $product_link = str_replace(array(HTTP_SERVER,HTTPS_SERVER), '', preg_replace("/([^\?]*)(\?.*)/", "$1", $canonical_url));
+      $current_link = preg_replace("/([^\?]*)(\?.*)/", "$1", $_SERVER['REQUEST_URI']);
+      if ($product_link != $current_link) {
+        $set_hreflang = false;
+        $meta_robots = 'noindex';
+      }
     }
     break;
 // ---------------------------------------------------------------------------------------
@@ -616,7 +625,7 @@ if (!isset($lng) || (isset($lng) && !is_object($lng))) {
   require_once(DIR_WS_CLASSES . 'language.php');
   $lng = new language;
 }
-if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && count($lng->catalog_languages) > 1 && (!isset($_GET['page']) || $_GET['page'] == 1)) {
+if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $set_hreflang && count($lng->catalog_languages) > 1 && (!isset($_GET['page']) || $_GET['page'] == 1)) {
   $canonical_flag = true;
   $x_default_flag = true;
   $x_default_lng = 'en'; //DEFAULT_LANGUAGE
