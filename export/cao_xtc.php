@@ -159,9 +159,6 @@ define('STANDARD_GROUP',DEFAULT_CUSTOMERS_STATUS_ID);
 
 include(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/classes/'.IMAGE_MANIPULATOR);
 
-// include needed function
-require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
-
 if ((isset($_POST['user']))and(isset($_POST['password']))) {
    $user = $_POST['user'];
    $password = $_POST['password'];
@@ -194,38 +191,19 @@ Aufruf des Scriptes mit <br><b><?php echo $PHP_SELF; ?>?user=<font color="red">A
      xtc_db_query('UPDATE admin_access SET xml_export= 1 WHERE customers_id=\'1\';');
   }
  
-  $check_customer_query = xtc_db_query("SELECT customers_id, customers_status, customers_password
-                                          FROM " . TABLE_CUSTOMERS . "
-                                         WHERE customers_email_address = '" . xtc_db_input($user) . "'");
-
-  if (!xtc_db_num_rows($check_customer_query)) {
+  if (!defined('MODULE_CAO_FAKTURA_STATUS') || MODULE_CAO_FAKTURA_STATUS == 'false') {
     if (!$debug_login) exit;
     SendXMLHeader ();
     print_xml_status (105, $_POST['action'], 'WRONG LOGIN', '', '', '');	 
     exit; 
   } else {
-    $check_customer = xtc_db_fetch_array($check_customer_query);
-    // check if customer is Admin
-    if ($check_customer['customers_status'] != '0') {
+    if ($user != MODULE_CAO_FAKTURA_EMAIL) {
       if (!$debug_login) exit;
       SendXMLHeader ();
-      print_xml_status (106, $_POST['action'], 'WRONG LOGIN', '', '', '');	  
+      print_xml_status (105, $_POST['action'], 'WRONG LOGIN', '', '', '');	  	
       exit;
     }
-
-    // check if Admin is allowed to access xml_export
-    $access_query=xtc_db_query("SELECT xml_export
-                                  FROM admin_access
-                                 WHERE customers_id='".$check_customer['customers_id']."'");
-    $access_data = xtc_db_fetch_array($access_query);
-    if ($access_data['xml_export'] != 1) {
-      if (!$debug_login) exit;
-      SendXMLHeader ();
-      print_xml_status (107, $_POST['action'], 'WRONG LOGIN', '', '', '');
-      exit;
-    }
-
-    if (!xtc_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id'])) {
+    if ($password != MODULE_CAO_FAKTURA_PASSWORD) {
       if (!$debug_login) exit;
       SendXMLHeader ();
       print_xml_status (108, $_POST['action'], 'WRONG PASSWORD', '', '', '');	  	
