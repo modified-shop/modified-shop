@@ -115,13 +115,6 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   } else {
     if (isset($_POST['repair']) && xtc_not_null($_POST['repair'])) {
       
-      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_LOGIN."  
-                          WHERE customers_email_address = '".xtc_db_input($check_customer['customers_email_address'])."'");
-      
-      $ip_address = xtc_get_ip_address();
-      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_LOGIN."  
-                          WHERE customers_ip = '".xtc_db_input($ip_address)."'");
-      
       //repair options
       switch($_POST['repair']) {
 
@@ -196,6 +189,12 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
           break;
         //reset_login
         case 'reset_login':
+          xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_LOGIN."  
+                              WHERE customers_email_address = '".xtc_db_input($check_customer['customers_email_address'])."'");
+          
+          $ip_address = xtc_get_ip_address();
+          xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_LOGIN."  
+                              WHERE customers_ip = '".xtc_db_input($ip_address)."'");
           xtc_redirect('login_admin.php');
           exit();
           break;
