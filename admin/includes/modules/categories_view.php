@@ -670,12 +670,20 @@
                  </td>
                  <td class="categories_view_data">
                    <?php
-                   //show price
+                   $price = $products['products_price'];
+                   if (PRICE_IS_BRUTTO == 'true') {
+                    $tax_rate = xtc_get_tax_rate($products['products_tax_class_id']);
+                    $price = ($price*($tax_rate+100)/100);
+                   }
                    if ($products['specials_status'] == 1) {
-                     echo '<div class="oldPrice">'.$currencies->format($products['products_price']) . '</div>'. 
-                     '<div class="specialPrice">'.$currencies->format($products['specials_new_products_price']) . '</div>';
+                     $price_special = $products['specials_new_products_price'];
+                     if (PRICE_IS_BRUTTO == 'true') {
+                      $price_special = ($price_special*($tax_rate+100)/100);
+                     }
+                     echo '<div class="oldPrice">'.$currencies->format($price) . '</div>'. 
+                     '<div class="specialPrice">'.$currencies->format($price_special) . '</div>';
                    } else {
-                     echo $currencies->format($products['products_price']);
+                     echo $currencies->format($price);
                    }
                    ?>
                  </td>
