@@ -33,11 +33,13 @@
   define('DB_SERVER_CHARSET', 'latin1'); // set db charset 'utf8' or 'latin1'
   define('USE_PCONNECT', 'false'); // use persistent connections?
   
-  // auto include
-  require_once (DIR_FS_CATALOG.'inc/auto_include.inc.php');
+  if (DB_DATABASE != '') {
+    // auto include
+    require_once (DIR_FS_CATALOG.'inc/auto_include.inc.php');
 
-  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/configure/','php') as $file) require_once ($file);
-
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/configure/','php') as $file) require_once ($file);
+  }
+  
   // server
   defined('HTTP_SERVER') or define('HTTP_SERVER', 'http://localhost'); // eg, http://localhost - should not be empty for productive servers
   defined('HTTPS_SERVER') or define('HTTPS_SERVER', 'https://localhost'); // eg, https://localhost - should not be empty for productive servers
