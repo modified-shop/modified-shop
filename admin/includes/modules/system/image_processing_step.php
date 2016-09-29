@@ -39,7 +39,7 @@ if ( !class_exists( "image_processing_step" ) ) {
       $this->properties = array();
       $this->files = array();
 
-      $this->logfile = DIR_FS_CATALOG.'log/image_processing.log';
+      $this->logfile = DIR_FS_CATALOG.'log/image_processing_*.log';
 
       //define used get parameters
       $this->get_params = array();
@@ -84,12 +84,12 @@ if ( !class_exists( "image_processing_step" ) ) {
       $step = (int)$_POST['max_datasets'];
       $count = isset($_POST['count']) ? (int)$_POST['count'] : 0;
       $limit = $offset + $step;
-      
-      if(is_file($this->logfile) && $offset == 0) {
-          @ unlink ($this->logfile);
-      }
-      
+ 
       $rData = array();
+      
+      $rData['file_time'] = isset($_POST['file_time']) ? $_POST['file_time'] : date("Y-m-d-His");
+      
+      $this->logfile = str_replace('*',$rData['file_time'],$this->logfile);
       
       @ini_set('memory_limit','256M');
       @xtc_set_time_limit(0);
