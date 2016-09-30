@@ -118,13 +118,13 @@ if ( !class_exists( "image_processing_step" ) ) {
 
         if ($_POST['only_missing_images'] == 1) {
           $flag = false;
-          if (!is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$files[$i]['text'])) {
+          if (!is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image_name_process)) {
             require(DIR_WS_INCLUDES . 'product_thumbnail_images.php'); $flag = true;
           }
-          if (!is_file(DIR_FS_CATALOG_INFO_IMAGES.$files[$i]['text'])) {
+          if (!is_file(DIR_FS_CATALOG_INFO_IMAGES.$products_image_name_process)) {
             require(DIR_WS_INCLUDES . 'product_info_images.php'); $flag = true;
           }
-          if (!is_file(DIR_FS_CATALOG_POPUP_IMAGES.$files[$i]['text'])) {
+          if (!is_file(DIR_FS_CATALOG_POPUP_IMAGES.$products_image_name_process)) {
             require(DIR_WS_INCLUDES . 'product_popup_images.php'); $flag = true;
           }
           if ($flag) {
