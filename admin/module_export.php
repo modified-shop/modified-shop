@@ -88,6 +88,7 @@
         if (is_array($_POST['configuration'])) {
           if (count($_POST['configuration'])) {
             while (list($key, $value) = each($_POST['configuration'])) {
+              $value = is_array($_POST['configuration'][$key]) ? implode(',', $_POST['configuration'][$key]) : $value;
               xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '" . $value . "' WHERE configuration_key = '" . $key . "'");
               if (@strpos($key,'FILE') !== false) $file=$value; //GTB - 2010-08-06 - start Download Problem PHP > 5.3
             }
@@ -425,9 +426,17 @@ if (xtc_not_null($action) && !$box) {
                     reset($mInfo->keys);
                     while (list($key, $value) = each($mInfo->keys)) {
                       $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
-                      // }
                       if ($value['set_function']) {
-                        eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                        if (strpos($value['set_function'], '->') !== false) {
+                          $class_method = explode('->', $value['set_function']);
+                          if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) { // DokuMan - 2011-05-10 - check if object is first set
+                            include(DIR_WS_CLASSES . $class_method[0] . '.php');
+                            ${$class_method[0]} = new $class_method[0]();
+                          }
+                          $keys .= call_user_func_array(array(${$class_method[0]}, $class_method[1]), array($value['value'], $key));
+                        } else {
+                          eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                        }
                       } else {
                         $keys .= xtc_draw_input_field('configuration[' . $key . ']', $value['value']);
                       }
