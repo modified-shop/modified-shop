@@ -146,12 +146,13 @@ foreach ($script_array as $script) {
 			});
 		}
 	}
+  <?php } ?>
+	<?php if (SEARCH_AC_STATUS == 'true' || (!strstr($PHP_SELF, FILENAME_SHOPPING_CART) && !strstr($PHP_SELF, 'checkout'))) { ?>	
 	function ac_closing() {
 		setTimeout("$('#suggestions').slideUp();", 100);
 		ac_page = 1;
 	}
   <?php } ?>
-
   $.alerts.overlayOpacity = .2;
   $.alerts.overlayColor = '#000';
   function alert(message, title) {
