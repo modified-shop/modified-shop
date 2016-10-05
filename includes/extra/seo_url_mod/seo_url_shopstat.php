@@ -53,6 +53,13 @@ class seo_url_shopstat extends modified_seo_url {
    */
   public function create_link($page = '', $parameters = '', $connection = 'NONSSL') {
 
+    if (defined('RUN_MODE_ADMIN')) {
+      require_once(DIR_FS_INC . 'xtc_parse_category_path.inc.php');
+      require_once(DIR_FS_INC . 'xtc_get_product_path.inc.php');
+      require_once(DIR_FS_INC . 'xtc_get_parent_categories.inc.php');
+      require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
+    }
+
     parse_str($parameters, $this->params_array);
 
     if (isset($this->params_array['language']) 
@@ -163,14 +170,7 @@ class seo_url_shopstat extends modified_seo_url {
    * @return products link
    */
   protected function create_products_link() {
-    
-    if (defined('RUN_MODE_ADMIN')) {
-      require_once(DIR_FS_INC . 'xtc_parse_category_path.inc.php');
-      require_once(DIR_FS_INC . 'xtc_get_product_path.inc.php');
-      require_once(DIR_FS_INC . 'xtc_get_parent_categories.inc.php');
-      require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
-    }
-    
+        
     $products_link_array = array();    
     
     if (!isset(self::$names_array['products'][$this->language_id][$this->params_array['products_id']])) {
