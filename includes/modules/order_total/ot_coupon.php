@@ -25,7 +25,8 @@
 
    Released under the GNU General Public License
 
-    BUGFIXES & MODIFIED rev1.3.9 by web28 - www.rpa-com.de
+    BUGFIXES & MODIFIED rev1.3.10 by web28 - www.rpa-com.de
+   1.3.10 fix tax calculation
    1.3.9 fix linked products at categories restrictions// fix tax calculation at restrictions
    1.3.8 add minimum order message // change get_order_total() // remove get_product_price()
    1.3.7 remove //KORREKTUR wenn Kunde Nettopreise und Steuer in Rechnung
@@ -359,13 +360,23 @@ class ot_coupon {
       //Steuer neu berechnen
       if ($t_flag && (!$restriction || $restriction && isset($this->tax_groups[$key]))) {
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] != '1') { //NETTO Preise
+          if ($restriction) {
+            $od_amount_diff = $this->price_total_by_tax_groups[$key] * $od_amount_pro / 100;
+            $god_amount = ($od_amount_diff * ((100 + $this->price_total_by_tax_rate[$key]) / 100)) - $od_amount_diff;
+            $god_amount = $order->info['tax_groups'][$key] - $god_amount;
+          } else {
             $god_amount = $order->info['tax_groups'][$key] - $order->info['tax_groups'][$key] * $od_amount_pro / 100;
-            $order->info['tax_groups'][$key] = $god_amount; //bei NETTO Preisen ersetzen
+          }
+          $order->info['tax_groups'][$key] = $god_amount; //bei NETTO Preisen ersetzen
         } else { //BRUTTO Preise
-          $god_amount = $order->info['tax_groups'][$key] * $od_amount_pro / 100;
-          $order->info['tax_groups'][$key] = $order->info['tax_groups'][$key] - $god_amount; //bei BRUTTO Preisen abziehen
+          if ($restriction) {
+            $od_amount_diff = $this->price_total_by_tax_groups[$key] * $od_amount_pro / 100;
+            $god_amount = $od_amount_diff - ($od_amount_diff / ((100 + $this->price_total_by_tax_rate[$key]) / 100));
+          } else {
+            $god_amount = $order->info['tax_groups'][$key] * $od_amount_pro / 100;
+          }
+          $order->info['tax_groups'][$key] -= $god_amount; //bei BRUTTO Preisen abziehen
         }
-        //echo $god_amount . '<br>';
         $tod_amount += $god_amount; //hier wird die Steuer aufaddiert
       }
     }
@@ -435,7 +446,8 @@ class ot_coupon {
 
     $order_total = $order->info['total'];
     $this->products_price = array();
-    $this->tax_description = array();
+    $this->products_tax_description = array();
+    $this->products_tax_rate = array();
     // Check if gift voucher is in cart and adjust total
     $products = $order->products; //use order objekt
     //echo '<pre>'.print_r($products,true).'</pre>';
@@ -445,6 +457,7 @@ class ot_coupon {
       $products_price = $products[$i]['price'] * $products[$i]['qty'];
       $this->products_price["$product_id"] = $products_price;
       $this->products_tax_description["$product_id"] = $products[$i]['tax_description'];
+      $this->products_tax_rate["$product_id"] = xtc_get_tax_rate($products[$i]['tax_class_id'], $order->delivery['country']['id'], $order->delivery['zone_id']);
       //echo $products[$i]['tax_description'] .'<br>';
       if (preg_match('/^GIFT/', addslashes($products[$i]['model']))) {
         $order_total -= $products_price;
@@ -467,6 +480,7 @@ class ot_coupon {
     if (isset($this->products_tax_description["$product_id"])) {
         $tax_index = $this->set_tax_group_index($this->products_tax_description["$product_id"]);
     }
+    $this->price_total_by_tax_rate[$tax_index] = $this->products_tax_rate["$product_id"];
     $this->price_total_by_tax_groups[$tax_index] += $products_price;
     return $products_price;
   }
