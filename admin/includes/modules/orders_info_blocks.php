@@ -444,3 +444,7 @@
         </table>
         <!-- EOC BUTTONS BLOCK -->
       </div>
+      
+      <?php 
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_info_blocks_end/','php') as $file) require ($file);
+      ?>
