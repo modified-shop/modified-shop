@@ -59,6 +59,7 @@ if (is_file(CURRENT_TEMPLATE.'/module/offline/login_shop.html')) {
     exit();
 } 
 
+$action = xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params().'action=process', 'SSL');
 //Fallback for missing template file
 ?>
 <!DOCTYPE html>
