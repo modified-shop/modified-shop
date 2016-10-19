@@ -616,7 +616,8 @@ class xtcPrice {
                              FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . " po
                              JOIN " . TABLE_PRODUCTS . " p
                                   ON po.products_id = p.products_id
-                            WHERE po.products_id='" . $pID . "'");
+                            WHERE po.products_id='" . $pID . "'
+                         GROUP BY p.products_id");
       $sQuery = xtc_db_fetch_array($sQuery, true);
       if (($this->cStatus['customers_status_graduated_prices'] == '1') && ($sQuery['qty'] > 1)) {
         $from = ' ' . FROM . ' ';
