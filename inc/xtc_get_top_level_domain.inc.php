@@ -48,9 +48,13 @@ function xtc_get_top_level_domain($url) {
 
 function get_cookie_domain($url) {
   $url_array = parse_url($url);
-  $domain = $url_array['host'];
+  $domain = $subdomains = $url_array['host'];
   if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
-    return $regs['domain'];
+    $domain = $regs['domain'];
+    $subdomains = strstr($subdomains, $domain, true);
+    $domain = $subdomains != 'www.' ? $subdomains.$domain : $domain;    
+    //echo '<pre>DM'. $domain . '</pre>';
+    return $subdomains . $regs['domain'];
   }
   return false;
 }
