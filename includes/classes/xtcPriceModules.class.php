@@ -84,4 +84,10 @@ class priceModules {
         $this->function_call = 'FormatSpecial';
         return $this->call_module_method($return, $pID, $sPrice, $pPrice, $format, $vpeStatus); //Return parameter must be in first place
     }
+    
+    function checkAttributes($pID)
+    {
+        $this->function_call = 'checkAttributes';
+        return $this->call_module_method($pID); //Return parameter must be in first place
+    }
 }

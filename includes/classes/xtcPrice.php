@@ -541,6 +541,9 @@ class xtcPrice {
    */
   function checkAttributes($pID) {
     if (!$this->showFrom_Attributes || $pID == 0) return;
+    
+    $pID = $this->priceModules->checkAttributes($pID);
+    
     $products_attributes_query = "SELECT count(*) as total 
                                     FROM " . TABLE_PRODUCTS_OPTIONS . " popt,
                                          " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
