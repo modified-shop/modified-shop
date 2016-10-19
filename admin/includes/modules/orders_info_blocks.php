@@ -124,6 +124,15 @@
                   ## invoice number and date
                   echo add_table_infos_ibillnr($order);
 
+                  if ($order->info['shipping_method'] != '') {
+                  ?>
+                    <tr>
+                      <td class="main"><b><?php echo ENTRY_SHIPPING_METHOD; ?></b></td>
+                      <td class="main"><?php echo get_shipping_name($order->info['shipping_method']) . ' ('.$order->info['shipping_class'].')'; ?></td>
+                    </tr>
+                  <?php
+                  }
+
                   if ($order->info['payment_method'] != '') {
                   ?>
                     <tr>
@@ -134,16 +143,6 @@
                   }
                 
                   foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_info_payment/','php') as $file) require ($file);
-                ?>
-                <?php 
-                  if ($order->info['shipping_method'] != '') {
-                  ?>
-                    <tr>
-                      <td class="main"><b><?php echo ENTRY_SHIPPING_METHOD; ?></b></td>
-                      <td class="main"><?php echo get_shipping_name($order->info['shipping_method']) . ' ('.$order->info['shipping_method'].')'; ?></td>
-                    </tr>
-                  <?php
-                  }
                 ?>
               </table>
             </td>
