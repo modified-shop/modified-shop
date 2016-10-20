@@ -41,6 +41,20 @@ class shoppingCartModules {
         return $arg_list[0]; //Returns only first parameter
     }
     
+    function secure_call_module_method() //change no parameter
+    {
+        $arg_list = func_get_args();
+        $function_call = $this->function_call;
+        if (is_array($this->modules)) {
+            reset($this->modules);
+            foreach($this->modules as $class) {
+                if (is_callable(array($GLOBALS[$class], $function_call))) {
+                    call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
+                }
+            }
+        }
+    }
+    
     //----- SHOPPING CART METHODS -----//
     public static function restore_contents_products_db($sql_data_array,$products_id,$table_basket,$qty,$type)
     {

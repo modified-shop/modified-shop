@@ -48,7 +48,7 @@ class categoriesModules {
             reset($this->modules);
             foreach($this->modules as $class) {
                 if (is_callable(array($GLOBALS[$class], $function_call))) {
-                    call_user_func(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
+                    call_user_func_array(array($GLOBALS[$class], $function_call), $arg_list); //Call the $GLOBALS[$class]->$function_call() method with $arg_list
                 }
             }
         }
