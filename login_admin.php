@@ -14,7 +14,7 @@ error_reporting(0);
 
 define('_MODIFIED_SHOP_LOGIN',1);
 
-if ((isset($_GET['repair']) && !empty($_GET['repair'])) || (isset($_GET['show_error']) && $_GET['show_error']!='')) {
+if (isset($_GET['repair']) || isset($_POST['repair']) || isset($_GET['show_error']) || isset($_POST['show_error'])) {
   include('includes/login_admin.php');
 } else {
   include('includes/login_shop.php');
