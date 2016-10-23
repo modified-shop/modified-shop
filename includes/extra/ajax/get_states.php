@@ -22,7 +22,7 @@ function get_states() {
 
   xtc_db_connect() or die('Unable to connect to database server!');
 
-  $country_id = (int)$_GET['country'];
+  $country_id = (int)$_REQUEST['country'];
 
   $query = xtc_db_query("
       SELECT zone_id,zone_name
