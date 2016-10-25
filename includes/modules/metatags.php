@@ -615,7 +615,7 @@ if (META_REVISIT_AFTER != '0') {
   echo '<meta name="revisit-after" content="'. META_REVISIT_AFTER .' days" />'."\n";
 }
 if (META_GOOGLE_VERIFICATION_KEY != '') {
-  echo '<meta name="verify-v1" content="'. META_GOOGLE_VERIFICATION_KEY .'" />'."\n";
+  echo '<meta name="google-site-verification" content="'. META_GOOGLE_VERIFICATION_KEY .'" />'."\n";
 }
 if (META_BING_VERIFICATION_KEY != '') {
   echo '<meta name="msvalidate.01" content="'. META_BING_VERIFICATION_KEY .'" />'."\n";
