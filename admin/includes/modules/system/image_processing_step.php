@@ -109,7 +109,7 @@ if ( !class_exists( "image_processing_step" ) ) {
         $products_image_name = $files[$i]['text'];
         $products_image_name_process = ($_GET['lower_file_ext'] == 1) ? str_replace($ext_search, $ext_replace ,$files[$i]['text']) : $files[$i]['text'];
 
-        $rData['imgname'] = htmlentities($products_image_name_process);
+        $rData['imgname'] = encode_htmlentities($products_image_name_process);
 
         if ($_POST['logging'] == 1) {
           $handle = fopen($this->logfile, "a"); fwrite($handle, $products_image_name. '|read'."\n"); fclose($handle);
