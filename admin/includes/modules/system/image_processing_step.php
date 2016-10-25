@@ -50,7 +50,7 @@ if ( !class_exists( "image_processing_step" ) ) {
     }
     
     function get_images_files($filedir,$offset=1,$limit=1) {
-      $ext_array = array('gif','jpg','jpeg','png'); //Gültige Dateiendungen
+      $ext_array = array('gif','jpg','jpeg','png'); //Gï¿½ltige Dateiendungen
       $files = array();
       $this->data_volume = 0;
       if ($dir = opendir($filedir)) {
@@ -101,17 +101,16 @@ if ( !class_exists( "image_processing_step" ) ) {
       $ext_replace = array('.gif','.jpg','.jpeg','.png');
       
       for ($i = $offset; $i < $limit; $i++) {
-        if ($i >= $this->max_files) { // FERTIG
+        if ($i >= $this->max_files) {
           $rData['start'] = $limit;
           $rData['count'] = $count;
-          return $rData;
-          //FERTIG
+          return $rData; // step is done
         }
         $products_image_name = $files[$i]['text'];
         $products_image_name_process = ($_GET['lower_file_ext'] == 1) ? str_replace($ext_search, $ext_replace ,$files[$i]['text']) : $files[$i]['text'];
 
-        $rData['imgname'] = $products_image_name_process;
-        
+        $rData['imgname'] = htmlentities($products_image_name_process);
+
         if ($_POST['logging'] == 1) {
           $handle = fopen($this->logfile, "a"); fwrite($handle, $products_image_name. '|read'."\n"); fclose($handle);
         }
@@ -162,7 +161,7 @@ if ( !class_exists( "image_processing_step" ) ) {
 
     function display() {
 
-      //Array für max. Bilder pro Seitenreload
+      //Array fï¿½r max. Bilder pro Seitenreload
       $max_array = array (array ('id' => '1', 'text' => '1'));
       $max_array[] = array ('id' => '5', 'text' => '5');
       $max_array[] = array ('id' => '10', 'text' => '10');
