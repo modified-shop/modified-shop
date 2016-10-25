@@ -19,7 +19,6 @@
       </div>
     </div>
     <div class="checkoutconditions" style="padding: 10px 0px;">
-      {if $conditions_message != ''}<div class="errormessage">{$conditions_message}</div>{/if}
       {if isset($ADR_checkbox)}{$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong>{if isset($AGB_checkbox)}<br/>{/if}{/if}
       {if isset($AGB_checkbox)}{$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}{/if}
     </div>
@@ -29,7 +28,6 @@
     <div class="checkoutconditions">
       {if isset($ADR_checkbox)}{$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong>{/if}
     </div>
-    {if $conditions_message != ''}<div class="errormessage">{$conditions_message}</div>{/if}
   {/if}
 </div>
 <br class="clearfix" />
@@ -47,11 +45,6 @@
   <h2 style="text-align:left;">{#title_agb#}</h2>
   <p class="checkoutagb" style="text-align:left;">{$AGB}</p>
   <table width="100%" border="0" cellspacing="0" cellpadding="4">
-    {if $conditions_message != ''}
-      <tr>
-        <td colspan="2"><div class="errormessage">{$conditions_message}</div></td>
-      </tr>
-    {/if}
     {if $AGB_checkbox}
       <tr>
         <td>{$AGB_checkbox}</td>
