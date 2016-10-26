@@ -89,6 +89,23 @@
     {if $DELIVERY_DUTY_INFO}
     <div class="dutyinfo">{#text_duty_info#}</div>
     {/if}
+    {if count($PAYMENT_INFO) > 0}
+    <br /><br />
+    <div class="highlightbox">
+      {foreach name=aussen item=data from=$PAYMENT_INFO}
+        <strong>{$data.title|stripslashes}</strong>
+        <table class="paymentinfotable {$data.class}">
+          {foreach name=aussen item=info from=$data.fields}
+            <tr>
+              {if $info.title != ''}<td>{$info.title|stripslashes}</td>{/if}
+              <td>{if $info.field}{$info.field|stripslashes}{else}&nbsp;{/if}</td>
+            </tr>
+          {/foreach}
+        </table>
+      {/foreach}
+    </div>
+    <br class="clearfix" />
+    {/if}
     <br />
   </div>
 </body>
