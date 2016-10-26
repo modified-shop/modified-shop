@@ -41,6 +41,10 @@ class paypalcart extends PayPalPayment {
 
     // process the selected shipping method
     if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
+      if ((isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_'))) {
+        list ($module, $method) = explode('_', $_POST['shipping']);
+        global ${$module};
+      }
 
       $total_weight = $_SESSION['cart']->show_weight();
       $total_count = $_SESSION['cart']->count_contents();
