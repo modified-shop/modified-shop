@@ -237,6 +237,12 @@ class paypalcart extends PayPalPayment {
 
     if ($messageStack->size('checkout_confirmation') > 0) {
       $smarty->assign('error', $messageStack->output('checkout_confirmation'));
+    } elseif (isset($_SESSION['paypal_express_new_customer'])
+              && !isset($_SESSION['paypal_express_new_customer_note'])
+              )
+    {
+      $smarty->assign('error', TEXT_PAYPAL_CART_ACCOUNT_CREATED);
+      $_SESSION['paypal_express_new_customer_note'] = 'true';
     }
 
     $module_smarty->assign('language', $_SESSION['language']);

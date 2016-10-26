@@ -137,7 +137,12 @@ class PayPalPayment extends PayPalPaymentBase {
         $this->details->setShippingDiscount($this->details->getShippingDiscount() + ($xtPrice->xtcGetDC($price, $_SESSION['customers_status']['customers_status_ot_discount']) * (-1)));
       }
 
-      $this->amount->setTotal($total + $this->details->getShippingDiscount());
+      $shipping_cost = $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHIPPING_COST');
+      if ((int)$shipping_cost > 0) {
+        $this->details->setShipping($shipping_cost);
+      }
+      
+      $this->amount->setTotal($total + $this->details->getShippingDiscount() + $this->details->getShipping());
 
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
           && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
@@ -206,7 +211,10 @@ class PayPalPayment extends PayPalPaymentBase {
     }
 
     // set ItemList
-    if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0') { 
+    if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0'
+        || $this->check_discount() === false
+        ) 
+    { 
       $item = array();
       $item[0] = new Item(); 
       $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
@@ -334,7 +342,10 @@ class PayPalPayment extends PayPalPaymentBase {
     $patches_array[] = $patch_amount;
 
     // set ItemList
-    if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0') { 
+    if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0'
+        || $this->check_discount() === false
+        ) 
+    { 
       $item = array();
       $item[0] = new Item(); 
       $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
