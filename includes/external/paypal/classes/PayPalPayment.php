@@ -137,12 +137,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $this->details->setShippingDiscount($this->details->getShippingDiscount() + ($xtPrice->xtcGetDC($price, $_SESSION['customers_status']['customers_status_ot_discount']) * (-1)));
       }
 
-      $shipping_cost = $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHIPPING_COST');
-      if ((int)$shipping_cost > 0) {
-        $this->details->setShipping($shipping_cost);
-      }
-      
-      $this->amount->setTotal($total + $this->details->getShippingDiscount() + $this->details->getShipping());
+      $this->amount->setTotal($total + $this->details->getShippingDiscount());
 
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
           && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
@@ -221,6 +216,19 @@ class PayPalPayment extends PayPalPaymentBase {
               ->setCurrency($_SESSION['currency']) 
               ->setQuantity(1) 
               ->setPrice($this->details->getSubtotal()); 
+    
+      if ($cart === true) {
+        $shipping_cost = $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHIPPING_COST');
+        if ((int)$shipping_cost > 0) {
+          $item[1] = new Item(); 
+          $item[1]->setName($this->encode_utf8(PAYPAL_EXP_VORL))
+                  ->setCurrency($_SESSION['currency']) 
+                  ->setQuantity(1) 
+                  ->setPrice($shipping_cost); 
+          $this->amount->setTotal($this->amount->getTotal() + $shipping_cost);
+          $this->details->setSubtotal($this->amount->getTotal());
+        }    
+      }
     }
     $itemList->setItems($item);
     
