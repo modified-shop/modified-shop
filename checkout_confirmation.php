@@ -136,8 +136,10 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
 }
 
 if (SHOW_IP_LOG == 'true') {
+  // include needed functions
+  require_once (DIR_FS_INC.'ip_clearing.inc.php');
   $smarty->assign('IP_LOG', 'true');
-  $smarty->assign('CUSTOMERS_IP', $_SESSION['tracking']['ip']);
+  $smarty->assign('CUSTOMERS_IP', ip_clearing($_SESSION['tracking']['ip']));
 }
 
 //allow duty-note in checkout_confirmation
