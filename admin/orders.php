@@ -45,7 +45,16 @@ if(!defined('MAX_DISPLAY_ORDER_RESULTS')) {
 function get_payment_name($payment_method) {
   if (file_exists(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$payment_method.'.php')){
     include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$payment_method.'.php');
-    $payment_method = constant(strtoupper('MODULE_PAYMENT_'.$payment_method.'_TEXT_TITLE'));
+    $text = '';
+    if ($payment_method == 'paypalplus' && (int)$order_id > 0) {
+      require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
+      $paypal = new PayPalInfo($payment_method);
+      $payment_array = $paypal->get_payment_data($order_id);
+      if (count($payment_array) > 0 && $payment_array['payment_method'] == 'pay_upon_invoice') {
+        $text = ' - ' . MODULE_PAYMENT_PAYPALPLUS_INVOICE;
+      }
+    }
+    $payment_method = constant(strtoupper('MODULE_PAYMENT_'.$payment_method.'_TEXT_TITLE')) . $text;
   }
   return $payment_method;
 }

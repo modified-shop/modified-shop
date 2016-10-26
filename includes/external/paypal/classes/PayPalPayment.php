@@ -1013,6 +1013,43 @@ class PayPalPayment extends PayPalPaymentBase {
   }
   
   
+  function get_payment_data($order_id) {
+  
+    $payment_array = array();
+    $orders_query = xtc_db_query("SELECT p.*
+                                    FROM ".TABLE_PAYPAL_PAYMENT." p
+                                   WHERE p.orders_id = '".(int)$order_id."'");
+    if (xtc_db_num_rows($orders_query) > 0) {
+      $orders = xtc_db_fetch_array($orders_query);
+
+       // auth
+      $apiContext = $this->apiContext();
+    
+      try {
+        // Get the payment Object by passing paymentId
+        $payment = Payment::get($orders['payment_id'], $apiContext);
+
+        // customer details
+        $payer = $payment->getPayer();
+        $payerinfo = $payer->getPayerInfo();
+
+        $payment_array = array(
+          'id' => $payment->getId(),
+          'payment_method' => $payer->getPaymentMethod(),
+          'email_address' => $payerinfo->getEmail(),
+          'account_status' => $payer->getStatus(),
+          'intent' => $payment->getIntent(),
+          'state' => $payment->getState(),
+        );
+      } catch (Exception $ex) {
+        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      }
+    }
+    
+    return $payment_array;
+  }
+
+
   function get_payment_details($payment, $order = false) {
 
     // auth
