@@ -148,6 +148,18 @@ class PayPalPayment extends PayPalPaymentBase {
           $this->details->setTax($this->details->getTax() + $tax['value']);
         }
       }
+
+      $shipping_cost = $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHIPPING_COST');
+      if ((int)$shipping_cost > 0) {
+        $i = count($item);
+        $item[$i] = new Item(); 
+        $item[$i]->setName($this->encode_utf8(PAYPAL_EXP_VORL))
+                ->setCurrency($_SESSION['currency']) 
+                ->setQuantity(1) 
+                ->setPrice($shipping_cost); 
+        $this->amount->setTotal($this->amount->getTotal() + $shipping_cost);
+        $this->details->setSubtotal($this->amount->getTotal());
+      }    
           
       // set amount 
       $this->amount->setCurrency($_SESSION['currency'])
@@ -207,7 +219,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
     // set ItemList
     if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0'
-        || $this->check_discount() === false
+        || $this->check_discount() === true
         ) 
     { 
       $item = array();
@@ -351,7 +363,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
     // set ItemList
     if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0'
-        || $this->check_discount() === false
+        || $this->check_discount() === true
         ) 
     { 
       $item = array();
