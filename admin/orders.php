@@ -42,7 +42,7 @@ if(!defined('MAX_DISPLAY_ORDER_RESULTS')) {
   define('MAX_DISPLAY_ORDER_RESULTS', 30);
 }
 //New function
-function get_payment_name($payment_method) {
+function get_payment_name($payment_method, $order_id = '') {
   if (file_exists(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$payment_method.'.php')){
     include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$payment_method.'.php');
     $text = '';
