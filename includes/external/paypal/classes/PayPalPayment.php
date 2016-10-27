@@ -352,7 +352,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $order_totals = $order_total_modules->output_array();
     $this->get_totals($order_totals);
           
-    $this->amount->setCurrency($_SESSION['currency'])
+    $this->amount->setCurrency($order->info['currency'])
                  ->setDetails($this->details);
             
     $patch_amount = new Patch();
@@ -369,7 +369,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $item = array();
       $item[0] = new Item(); 
       $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
-              ->setCurrency($_SESSION['currency']) 
+              ->setCurrency($order->info['currency']) 
               ->setQuantity(1) 
               ->setPrice($this->details->getSubtotal()); 
     } else {
@@ -678,6 +678,7 @@ class PayPalPayment extends PayPalPaymentBase {
       
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
+      unset($_SESSION['tmp_oID']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
     
@@ -748,6 +749,34 @@ class PayPalPayment extends PayPalPaymentBase {
                  ->setValue($this->amount);
     $patches_array[] = $patch_amount;
     
+    // set ItemList
+    if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0'
+        || $this->check_discount() === true
+        ) 
+    { 
+      $item = array();
+      $item[0] = new Item(); 
+      $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
+              ->setCurrency($order->info['currency']) 
+              ->setQuantity(1) 
+              ->setPrice($this->details->getSubtotal()); 
+    } else {
+      for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
+        $item[$i] = new Item(); 
+        $item[$i]->setName($this->encode_utf8($order->products[$i]['name']))
+                 ->setCurrency($order->info['currency']) 
+                 ->setQuantity($order->products[$i]['qty']) 
+                 ->setPrice($order->products[$i]['price'])
+                 ->setSku(($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : $order->products[$i]['id']); 
+      }  
+    }
+
+    $patch_items = new Patch();
+    $patch_items->setOp('replace')
+                ->setPath('/transactions/0/item_list/items')
+                ->setValue($item);
+    $patches_array[] = $patch_items;
+
     $patchRequest->setPatches($patches_array);     
     
     try {
@@ -764,6 +793,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
+      unset($_SESSION['tmp_oID']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
     
@@ -782,6 +812,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
+      unset($_SESSION['tmp_oID']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
 
@@ -809,6 +840,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
+      unset($_SESSION['tmp_oID']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
 
