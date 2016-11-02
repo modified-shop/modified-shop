@@ -20,7 +20,7 @@ include ('includes/application_top.php');
 define('LOGIN_NUM', 2);
 defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
 
-if (is_file(CURRENT_TEMPLATE.'/module/offline/login_shop.html')) {
+if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/offline/login_shop.html')) {
 
     // create smarty elements
     $smarty = new Smarty;
@@ -55,11 +55,9 @@ if (is_file(CURRENT_TEMPLATE.'/module/offline/login_shop.html')) {
 
 
     $smarty->display(CURRENT_TEMPLATE.'/module/offline/login_shop.html');
-    
     exit();
 } 
 
-$action = xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params().'action=process', 'SSL');
 //Fallback for missing template file
 ?>
 <!DOCTYPE html>
@@ -209,7 +207,7 @@ table td {
 </head>
 <body>
   <div id="layout_login" class="cf">
-    <form name="login" method="post" action="<?php echo $action; ?>">
+    <form name="login" method="post" action="<?php echo xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params().'action=process', 'SSL'); ?>">
       <h1>Shop-Login</h1>
       <table>
         <tr>

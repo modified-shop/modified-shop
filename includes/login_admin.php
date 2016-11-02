@@ -17,7 +17,6 @@
   // USAGE: /login_admin.php?repair=sess_default
   // USAGE: /login_admin.php?repair=default_template
   // USAGE: /login_admin.php?repair=gzip_off
-  // USAGE: /login_admin.php?repair=reset_login
 
   // USAGE: /login_admin.php?show_error=none
   // USAGE: /login_admin.php?show_error=all
@@ -67,18 +66,11 @@ if (isset($_POST['show_error']) && !empty($_POST['show_error']) && !in_array($_P
   $error = true;
 }
 //parameter error
-if ($error) {
+if ($error === true) {
   unset($_GET['repair']);
   unset($_GET['show_error']);
   unset($_POST['repair']);
   unset($_POST['show_error']);
-}
-
-//set default form action
-if(isset($_GET['repair']) || isset($_GET['show_error'])) {
-  $action = 'login_admin.php';
-} else {
-  $action = 'login.php?action=process';
 }
 
 if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
@@ -90,11 +82,12 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
   require_once (DIR_FS_INC.'db_functions.inc.php');
   
-  require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
-  require_once(DIR_FS_INC . 'xtc_validate_password.inc.php');
-  require_once(DIR_FS_INC . 'xtc_get_ip_address.inc.php');
+  require_once (DIR_FS_INC.'html_encoding.php');
+  require_once (DIR_FS_INC.'xtc_not_null.inc.php');
+  require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
+  require_once (DIR_FS_INC.'xtc_get_ip_address.inc.php');
 
-  require_once(DIR_WS_CLASSES.'class.inputfilter.php');
+  require_once (DIR_WS_CLASSES.'class.inputfilter.php');
 
   xtc_db_connect() or die('Unable to connect to database server!');
 
@@ -102,6 +95,39 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   $InputFilter = new InputFilter();
   $_POST = $InputFilter->process($_POST);
   $_POST = $InputFilter->safeSQL($_POST);
+  
+  $ip_address = xtc_get_ip_address();
+  
+  // brute force
+  $check_login_query = xtc_db_query("SELECT MAX(customers_login_tries) as login_tries
+                                       FROM ".TABLE_CUSTOMERS_LOGIN."
+                                      WHERE (customers_email_address = '".xtc_db_input($_POST['email_address'])."'
+                                             OR customers_ip = '".xtc_db_input($ip_address)."')");
+  $check_login = xtc_db_fetch_array($check_login_query);
+  if ($check_login['login_tries'] > 0) {
+    // update login tries
+    xtc_db_query("UPDATE ".TABLE_CUSTOMERS_LOGIN." 
+                     SET customers_login_tries = '".($check_login['login_tries'] + 1)."'
+                   WHERE (customers_email_address = '".xtc_db_input($_POST['email_address'])."'
+                          OR customers_ip = '".xtc_db_input($ip_address)."')");
+    
+    // wait before continue
+    if ($check_login['login_tries'] > 10) {
+      $check_login['login_tries'] = 10;
+    }
+    $wait = 1;
+    for ($i=1; $i<=$check_login['login_tries']; $i++) {
+      $wait *= $1;
+    } 
+    sleep($wait);
+  } else {
+    $sql_data_array = array(
+      'customers_ip' => $ip_address,
+      'customers_email_address' => $_POST['email_address'],
+      'customers_login_tries' => ($check_login['login_tries'] + 1),
+    );
+    xtc_db_perform(TABLE_CUSTOMERS_LOGIN, $sql_data_array);
+  }
 
   $check_customer_query = xtc_db_query("SELECT customers_id,
                                                customers_password,
@@ -111,96 +137,72 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
                                            AND customers_status = '0'");
 
   $check_customer = xtc_db_fetch_array($check_customer_query);
-  if(!xtc_validate_password(xtc_db_input($_POST['password']),
-                            $check_customer['customers_password'],
-                            $check_customer['customers_id'])) {
+  if (!xtc_validate_password(xtc_db_input($_POST['password']), $check_customer['customers_password'], $check_customer['customers_id'])) {
     die('Zugriff verweigert. E-Mail und/oder Passwort falsch!');
   } else {
     if (isset($_POST['repair']) && xtc_not_null($_POST['repair'])) {
+      // reset login
+      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_LOGIN."  
+                          WHERE customers_email_address = '".xtc_db_input($check_customer['customers_email_address'])."'");
+      
+      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_LOGIN."  
+                          WHERE customers_ip = '".xtc_db_input($ip_address)."'");
       
       //repair options
       switch($_POST['repair']) {
 
         // turn off SEO friendy URLs
         case 'seo_friendly':
-          xtc_db_query('
-            UPDATE configuration
-            SET    configuration_value = "false"
-            WHERE  configuration_key   = "SEARCH_ENGINE_FRIENDLY_URLS"
-          ');
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = 'false'
+                         WHERE configuration_key = 'SEARCH_ENGINE_FRIENDLY_URLS'");
           die('Report: Die Einstellung "Suchmaschinenfreundliche URLs verwenden" wurde deaktiviert.');
           break;
 
         // reset session write directory
         case 'sess_write':
-          xtc_db_query('
-            UPDATE configuration
-            SET    configuration_value = "'.DIR_FS_CATALOG.'cache"
-            WHERE  configuration_key   = "SESSION_WRITE_DIRECTORY"
-          ');
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = '".DIR_FS_CATALOG.'cache'."'
+                         WHERE configuration_key = 'SESSION_WRITE_DIRECTORY'");
           die('Report: SESSION_WRITE_DIRECTORY wurde auf das Cache-Verzeichnis zur&uuml;ckgesetzt.');
           break;
 
         // reset session behaviour to default values
         case 'sess_default':
-          xtc_db_query('
-            UPDATE configuration
-            SET    configuration_value = "False"
-            WHERE  configuration_key   = "SESSION_FORCE_COOKIE_USE"
-          ');
-          xtc_db_query('
-            UPDATE configuration
-            SET    configuration_value = "False"
-            WHERE  configuration_key   = "SESSION_CHECK_SSL_SESSION_ID"
-          ');
-          xtc_db_query('
-            UPDATE configuration
-            SET    configuration_value = "False"
-            WHERE  configuration_key   = "SESSION_CHECK_USER_AGENT"
-          ');
-          xtc_db_query('
-            UPDATE configuration
-            SET    configuration_value = "False"
-            WHERE  configuration_key   = "SESSION_CHECK_IP_ADDRESS"
-          ');
-          xtc_db_query('
-            UPDATE configuration
-            SET    configuration_value = "False"
-            WHERE  configuration_key   = "SESSION_RECREATE"
-          ');
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = 'False'
+                         WHERE configuration_key = 'SESSION_FORCE_COOKIE_USE'");
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = 'False'
+                         WHERE configuration_key = 'SESSION_CHECK_SSL_SESSION_ID'");
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = 'False'
+                         WHERE configuration_key = 'SESSION_CHECK_USER_AGENT'");
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = 'False'
+                         WHERE configuration_key = 'SESSION_CHECK_IP_ADDRESS'");
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = 'False'
+                         WHERE configuration_key = 'SESSION_RECREATE'");
           die('Report: Die Session-Einstellungen wurden auf die Standardwerte zur&uuml;ckgesetzt.');
           break;
 
         // set template to default template
         case 'default_template':
-          xtc_db_query('
-            UPDATE configuration
-            SET    configuration_value = "xtc5"
-            WHERE  configuration_key = "CURRENT_TEMPLATE"
-          ');
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = 'xtc5'
+                         WHERE configuration_key = 'CURRENT_TEMPLATE'");
           die('Report: CURRENT_TEMPLATE wurde auf das Standardtemplate zur&uuml;ckgesetzt.');
           break;
 
         // turn off GZIP compression
         case 'gzip_off':
-          xtc_db_query('
-            UPDATE configuration
-            SET    configuration_value = "false"
-            WHERE  configuration_key = "GZIP_COMPRESSION"
-          ');
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                           SET configuration_value = 'false'
+                         WHERE configuration_key = 'GZIP_COMPRESSION'");
           die('Report: GZIP_COMPRESSION wurde deaktiviert.');
           break;
-        //reset_login
-        case 'reset_login':
-          xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_LOGIN."  
-                              WHERE customers_email_address = '".xtc_db_input($check_customer['customers_email_address'])."'");
-          
-          $ip_address = xtc_get_ip_address();
-          xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_LOGIN."  
-                              WHERE customers_ip = '".xtc_db_input($ip_address)."'");
-          xtc_redirect('login_admin.php');
-          exit();
-          break;
+
         // unknown repair option
         default:
           die('Report: repair-Befehl ung&uuml;ltig.');
@@ -377,7 +379,7 @@ table td {
 <body>
   <div id="layout_adminlogin" class="cf">
     <a class="help_adminlogin" href="http://www.modified-shop.org/wiki/Login_in_den_Administrationsbereich_nach_%C3%84nderungen_nicht_mehr_m%C3%B6glich" target="_blank"><img src="images/icons/question.png" width="32" height="32" title="Eingabehilfe und Reparaturoptionen" /></a>
-    <form name="login" method="post" action="<?php echo $action; ?>">
+    <form name="login" method="post" action="<?php echo basename($PHP_SELF); ?>">
       <h1>Administrator-Login</h1>
       <table>
         <tr>
