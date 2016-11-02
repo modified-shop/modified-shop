@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: update.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -8,6 +8,9 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    Stand 04.03.2012
    ---------------------------------------------------------------------------------------*/
+
+// deactivate error mail
+define('EMAIL_SQL_ERRORS', 'false');
 
 error_reporting(0);
 chdir('../');
