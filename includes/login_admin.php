@@ -117,7 +117,7 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
     }
     $wait = 1;
     for ($i=1; $i<=$check_login['login_tries']; $i++) {
-      $wait *= $1;
+      $wait *= $i;
     } 
     sleep($wait);
   } else {
