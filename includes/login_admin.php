@@ -49,7 +49,7 @@ require_once(DIR_FS_INC . 'xtc_redirect.inc.php');
 $error = false;
 
 //allowed repair options
-$allwowed_repair_array = array('seo_friendly','sess_write','sess_default','default_template','gzip_off','reset_login');
+$allwowed_repair_array = array('seo_friendly','sess_write','sess_default','default_template','gzip_off');
 
 if (isset($_GET['repair']) && !empty($_GET['repair']) && !in_array($_GET['repair'],$allwowed_repair_array)) {
   $error = true;
@@ -112,14 +112,9 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
                           OR customers_ip = '".xtc_db_input($ip_address)."')");
     
     // wait before continue
-    if ($check_login['login_tries'] > 10) {
-      $check_login['login_tries'] = 10;
+    if ($check_login['login_tries'] > 3) {
+      xtc_redirect(basename($PHP_SELF));
     }
-    $wait = 1;
-    for ($i=1; $i<=$check_login['login_tries']; $i++) {
-      $wait *= $i;
-    } 
-    sleep($wait);
   } else {
     $sql_data_array = array(
       'customers_ip' => $ip_address,
