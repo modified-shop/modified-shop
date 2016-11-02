@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_attributes_model.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -26,8 +26,7 @@
 		                                             ON pa.options_values_id = pov.products_options_values_id
 		                                                AND pov.language_id = '".(int)$language."'
 		                                                AND pov.products_options_values_name = '".xtc_db_input($attribute_name)."'
-		                                       WHERE pa.products_id = '".(int)$product_id."' 
-		                                         AND pa.products_id='".(int)$product_id."'");
+		                                       WHERE pa.products_id = '".(int)$product_id."'");
     $options_attr_data = xtc_db_fetch_array($options_value_id_query);
     
     return $options_attr_data['attributes_model'];
