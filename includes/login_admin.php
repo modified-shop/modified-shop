@@ -112,7 +112,7 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
                           OR customers_ip = '".xtc_db_input($ip_address)."')");
     
     // wait before continue
-    if ($check_login['login_tries'] > 3) {
+    if ($check_login['login_tries'] >= 3) {
       xtc_redirect(basename($PHP_SELF));
     }
   } else {
