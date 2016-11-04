@@ -120,17 +120,27 @@
                   <td class="main" style="width:140px;"><b><?php echo ENTRY_LANGUAGE; ?></b></td>
                   <td class="main"><?php echo $lang_img = xtc_image(DIR_WS_LANGUAGES . $order->info['language'].'/admin/images/'.$lang_array['image'], $order->info['language']) .'&nbsp;&nbsp;'. $order->info['language']; ?></td>
                 </tr>
-                <?php 
+                <?php
+                  ## invoice number and date
+                  echo add_table_infos_ibillnr($order);
+
+                  if ($order->info['shipping_method'] != '') {
+                  ?>
+                    <tr>
+                      <td class="main"><b><?php echo ENTRY_SHIPPING_METHOD; ?></b></td>
+                      <td class="main"><?php echo get_shipping_name($order->info['shipping_method']) . ' ('.$order->info['shipping_class'].')'; ?></td>
+                    </tr>
+                  <?php
+                  }
+
                   if ($order->info['payment_method'] != '') {
                   ?>
                     <tr>
                       <td class="main"><b><?php echo ENTRY_PAYMENT_METHOD; ?></b></td>
-                      <td class="main"><?php echo get_payment_name($order->info['payment_method']) . ' ('.$order->info['payment_method'].')'; ?></td>
+                      <td class="main"><?php echo get_payment_name($order->info['payment_method'], $order->info['order_id']) . ' ('.$order->info['payment_method'].')'; ?></td>
                     </tr>
                   <?php
                   }
-                  ## invoice number and date
-                  echo add_table_infos_ibillnr($order);
                 
                   foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_info_payment/','php') as $file) require ($file);
                 ?>
@@ -444,3 +454,7 @@
         </table>
         <!-- EOC BUTTONS BLOCK -->
       </div>
+      
+      <?php 
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_info_blocks_end/','php') as $file) require ($file);
+      ?>

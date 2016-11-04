@@ -88,7 +88,11 @@ class ShopgateCouponModel extends ShopgateObject
      *
      * @return string
      */
-    public function validateCoupon(ShopgateCart $cart, ShopgateItemCartModel $cartItemModel, array $coupon, $orderAmount
+    public function validateCoupon(
+        ShopgateCart $cart,
+        ShopgateItemCartModel $cartItemModel,
+        array $coupon,
+        $orderAmount
     ) {
         $msg = "";
         if ($coupon['coupon_type'] != self::SG_COUPON_TYPE_GIFT) {
@@ -223,36 +227,41 @@ class ShopgateCouponModel extends ShopgateObject
      * @param int                    $customerGroupId
      */
     public function setCouponData(
-        array $coupon, ShopgateExternalCoupon $sgCoupon, ShopgateCart $cart, ShopgateItemCartModel $cartItemModel,
+        array $coupon,
+        ShopgateExternalCoupon $sgCoupon,
+        ShopgateCart $cart,
+        ShopgateItemCartModel $cartItemModel,
         $customerGroupId
     ) {
-        $creditAmount = 0;
+        $couponAmount = 0;
+        $freeShipping = false;
+        
+        $applicableProducts = $this->getApplicableProducts(
+            $cart->getItems(),
+            $coupon['restrict_to_categories'],
+            $coupon['restrict_to_products'],
+            $cartItemModel
+        );
         
         switch ($coupon['coupon_type']) {
-            
+            /** @noinspection PhpMissingBreakStatementInspection */
             case self::SG_COUPON_TYPE_FREE_SHIPPING:
-                $sgCoupon->setIsFreeShipping(true);
-                $creditAmount =
-                    $this->calculateCreditToCart($coupon, $cart->getItems(), $cartItemModel, $customerGroupId);
+                $freeShipping = true;
+            // for free shipping coupons, if an amount was provided it's always handled as if fixed, so fall through:
+            
+            case self::SG_COUPON_TYPE_FIX:
+                $couponAmount = empty($applicableProducts)
+                    ? 0
+                    : (float)$coupon['coupon_amount'];
                 break;
             
-            case self::SG_COUPON_TYPE_FIX :
-            case self::SG_COUPON_TYPE_PERCENTAGE :
-                if ($coupon['restrict_to_products']) {
-                    $creditAmount =
-                        $this->calculateCreditToRestrictedProducts(
-                            $coupon, $cart->getItems(), $cartItemModel, $customerGroupId
-                        );
-                } elseif ($coupon['restrict_to_categories']) {
-                    $creditAmount =
-                        $this->calculateCreditToRestrictedProductsToCategory(
-                            $coupon, $cart->getItems(), $cartItemModel, $customerGroupId
-                        );
-                } else {
-                    $creditAmount =
-                        $this->calculateCreditToCart($coupon, $cart->getItems(), $cartItemModel, $customerGroupId);
-                }
-                $sgCoupon->setIsFreeShipping(false);
+            case self::SG_COUPON_TYPE_PERCENTAGE:
+                $couponAmount = $this->calculateCouponAmountPercentage(
+                    $applicableProducts,
+                    (float)$coupon['coupon_amount'],
+                    $customerGroupId,
+                    $cartItemModel
+                );
                 break;
             
             // Nothing to do here. The coupon will be marked as "accepted" by modified but there is
@@ -262,11 +271,101 @@ class ShopgateCouponModel extends ShopgateObject
                 break;
         }
         
-        $sgCoupon->setAmountGross($creditAmount);
         $sgCoupon->setName($coupon['coupon_name']);
         $sgCoupon->setCode($coupon['coupon_code']);
         $sgCoupon->setCurrency($this->currencyCode);
+        $sgCoupon->setAmountGross($couponAmount);
+        $sgCoupon->setIsFreeShipping($freeShipping);
         $sgCoupon->setDescription($coupon['coupon_description']);
+    }
+    
+    /**
+     * Finds out products the coupon applies to.
+     *
+     * If the coupon has no restrictions, all items in the cart are applicable and returned by this method.
+     *
+     * If the coupon is restricted to products, categories or both, it is applicable to any product that is either in
+     * the list of allowed products or in one of the allowed categories (including sub-categories).
+     *
+     * @param ShopgateOrderItem[]   $cartProducts
+     * @param string                $restrictedCategories A comma-separated list of categories this coupon is restricted to
+     * @param string                $restrictedProducts   A comma-separated list of products this coupon is restricted to
+     * @param ShopgateItemCartModel $shopgateItemCartModel
+     *
+     * @return ShopgateOrderItem[]
+     */
+    protected function getApplicableProducts(
+        $cartProducts,
+        $restrictedCategories,
+        $restrictedProducts,
+        ShopgateItemCartModel $shopgateItemCartModel
+    ) {
+        if (empty($restrictedCategories) && empty($restrictedProducts)) {
+            return $cartProducts;
+        }
+        
+        $restrictedCategories = empty($restrictedCategories)
+            ? array()
+            : array_flip(explode(',', $restrictedCategories));
+        
+        $restrictedProducts = empty($restrictedProducts)
+            ? array()
+            : array_flip(explode(',', $restrictedProducts));
+        
+        /** @var ShopgateOrderItem[] $applicableProducts */
+        $applicableProducts = array();
+        foreach ($cartProducts as $product) {
+            $itemNumber = $shopgateItemCartModel->getProductIdFromCartItem($product);
+            if (isset($restrictedProducts[$itemNumber])) {
+                $applicableProducts[] = $product;
+                continue; // product is valid for coupon, on to the next
+            }
+            
+            // fetch the category numbers, including parent categories
+            $categoryPath = xtc_get_product_path(xtc_get_prid($itemNumber));
+            if (empty($categoryPath)) {
+                // product has no category path (also happens when deactivated), on to the next
+                continue;
+            }
+            
+            $categoryNumbers = explode('_', $categoryPath);
+            foreach ($categoryNumbers as $categoryNumber) {
+                if (isset($restrictedCategories[$categoryNumber])) {
+                    $applicableProducts[] = $product;
+                    continue 2; // product is in a valid category for coupon, on to the next
+                }
+            }
+        }
+        
+        return $applicableProducts;
+    }
+    
+    /**
+     * @param ShopgateOrderItem[]   $applicableItems
+     * @param float                 $percentage
+     * @param int                   $customerGroupId
+     * @param ShopgateItemCartModel $itemCartModel
+     *
+     * @return float
+     */
+    protected function calculateCouponAmountPercentage(
+        $applicableItems,
+        $percentage,
+        $customerGroupId,
+        ShopgateItemCartModel $itemCartModel
+    ) {
+        $amount = 0;
+        foreach ($applicableItems as $item) {
+            $itemAmount = $this->getCartItemAmount(
+                $item,
+                $itemCartModel->getProductIdFromCartItem($item),
+                $customerGroupId
+            );
+            
+            $amount += ($itemAmount * $item->getQuantity()) * ($percentage / 100);
+        }
+        
+        return (float)$amount;
     }
     
     /**
@@ -535,48 +634,6 @@ class ShopgateCouponModel extends ShopgateObject
     }
     
     /**
-     * calculate the coupon amount to every product the cart contains
-     *
-     * @param array                 $coupon
-     * @param ShopgateOrderItem[]   $items
-     * @param ShopgateItemCartModel $cartItemModel
-     * @param int                   $customerGroupId
-     *
-     * @return float|int
-     */
-    private function calculateCreditToCart(array $coupon, $items, ShopgateItemCartModel $cartItemModel, $customerGroupId
-    ) {
-        $creditAmount = 0;
-        foreach ($items as $item) {
-            $id = $cartItemModel->getProductIdFromCartItem($item);
-            $creditAmount += $this->calculateCouponAmount(
-                $coupon, $this->getCartItemAmount($item, $id, $customerGroupId), $item->getQuantity()
-            );
-        }
-        
-        return $creditAmount;
-    }
-    
-    /**
-     * @param array        $coupon
-     * @param float|string $itemAmount
-     * @param int          $quantity
-     *
-     * @return float|int|string
-     */
-    private function calculateCouponAmount(array $coupon, $itemAmount, $quantity)
-    {
-        if ($coupon['coupon_type'] == self::SG_COUPON_TYPE_PERCENTAGE) {
-            $itemAmount *= (!empty($quantity) ? $quantity : 1);
-            $creditAmount = ($itemAmount * ($coupon['coupon_amount'] / 100));
-        } else {
-            $creditAmount = $coupon['coupon_amount'];
-        }
-        
-        return $creditAmount;
-    }
-    
-    /**
      * get the amount to a cart item depending on the tax rate
      *
      * @param ShopgateOrderItem $item
@@ -599,70 +656,5 @@ class ShopgateCouponModel extends ShopgateObject
         );
         
         return $priceWithTax;
-    }
-    
-    /**
-     * calculate the coupon amount to all restricted products the cart contains
-     *
-     * @param array                 $coupon
-     * @param ShopgateOrderItem[]   $items
-     * @param ShopgateItemCartModel $cartItemModel
-     * @param int                   $customerGroupId
-     *
-     * @return float|int
-     */
-    private function calculateCreditToRestrictedProducts(
-        array $coupon, $items, ShopgateItemCartModel $cartItemModel, $customerGroupId
-    ) {
-        $creditAmount = 0;
-        $productIds   = explode(",", $coupon['restrict_to_products']);
-        foreach ($items as $item) {
-            $pid = $cartItemModel->getProductIdFromCartItem($item);
-            foreach ($productIds as $id) {
-                if ($id == $pid) {
-                    $creditAmount =
-                        $this->calculateCouponAmount(
-                            $coupon, $this->getCartItemAmount($item, $pid, $customerGroupId), $item->getQuantity()
-                        );
-                }
-            }
-        }
-        
-        return $creditAmount;
-    }
-    
-    /**
-     * calculate the coupon amount to all restricted categories which point to products, the cart contains
-     *
-     * attention: need to have a look if a product has tax or not.
-     *
-     * @param array                 $coupon
-     * @param ShopgateOrderItem[]   $items
-     * @param ShopgateItemCartModel $cartItemModel
-     * @param int                   $customerGroupId
-     *
-     * @return float|int
-     */
-    private function calculateCreditToRestrictedProductsToCategory(
-        array $coupon, $items, ShopgateItemCartModel $cartItemModel, $customerGroupId
-    ) {
-        $creditAmount = 0;
-        $categoryIds  = explode(",", $coupon['restrict_to_categories']);
-        foreach ($items AS $item) {
-            $id                      = $cartItemModel->getProductIdFromCartItem($item);
-            $categoryPath            = xtc_get_product_path(xtc_get_prid($id));
-            $productCategoryIdsArray = explode("_", $categoryPath);
-            for ($ii = 0, $nn = count($categoryIds); $ii < $nn; $ii++) {
-                if (in_array($categoryIds[$ii], $productCategoryIdsArray)) {
-                    $creditAmount =
-                        $this->calculateCouponAmount(
-                            $coupon, $this->getCartItemAmount($item, $id, $customerGroupId),
-                            $item->getQuantity()
-                        );
-                }
-            }
-        }
-        
-        return $creditAmount;
     }
 }

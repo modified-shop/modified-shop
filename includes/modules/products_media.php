@@ -60,7 +60,7 @@ if (xtc_db_num_rows($content_query, true) > 0) {
         $filesize = xtc_filesize($content_data['content_file']);
       } elseif ($content_data['content_file'] != '') {
         $button = '<a target="_blank"'.
-                  'href="'.xtc_href_link('media/products/'.$content_data['content_file']).'">'.
+                  ' href="'.xtc_href_link('media/products/'.$content_data['content_file']).'">'.
                   xtc_image_button('button_download.gif', TEXT_DOWNLOAD).
                   '</a>';
         $filesize = xtc_filesize($content_data['content_file']);

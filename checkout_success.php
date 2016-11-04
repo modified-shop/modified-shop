@@ -80,13 +80,15 @@ $smarty->assign('BUTTON_PRINT', xtc_image_submit('print.gif', TEXT_PRINT));
 $smarty->assign('FORM_END', '</form>');
 
 // GV Code
-$gv_query = xtc_db_query("SELECT amount 
-                            FROM ".TABLE_COUPON_GV_CUSTOMER." 
-                           WHERE customer_id='".$_SESSION['customer_id']."'");
-if ($gv_result = xtc_db_fetch_array($gv_query)) {
-	if ($gv_result['amount'] > 0) {
-		$smarty->assign('GV_SEND_LINK', xtc_href_link(FILENAME_GV_SEND));
-	}
+if (ACTIVATE_GIFT_SYSTEM == 'true') {
+  $gv_query = xtc_db_query("SELECT amount 
+                              FROM ".TABLE_COUPON_GV_CUSTOMER." 
+                             WHERE customer_id='".$_SESSION['customer_id']."'");
+  if ($gv_result = xtc_db_fetch_array($gv_query)) {
+    if ($gv_result['amount'] > 0) {
+      $smarty->assign('GV_SEND_LINK', xtc_href_link(FILENAME_GV_SEND));
+    }
+  }
 }
 
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_SUCCESS);

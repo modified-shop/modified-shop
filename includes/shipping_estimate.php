@@ -117,7 +117,10 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
   if (DOWNLOAD_SHOW_LANG_DROPDOWN == 'false') {
     $module_smarty->clear_assign('SELECT_COUNTRY');
   }
-} else {
+} elseif (defined('MODULE_ORDER_TOTAL_SHIPPING_STATUS')
+          && MODULE_ORDER_TOTAL_SHIPPING_STATUS == 'true'
+          )
+{
   require_once (DIR_WS_CLASSES.'shipping.php');
   $shipping = new shipping;
 

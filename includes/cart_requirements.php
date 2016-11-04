@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -60,4 +60,6 @@
     $smarty->assign('error_max_prod', $error_msg);
     unset($_SESSION['err_max_prod']);
   }
+  
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/shopping_cart/cart_requirements/','php') as $file) require_once ($file);
 ?>

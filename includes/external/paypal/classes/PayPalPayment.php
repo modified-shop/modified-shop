@@ -147,7 +147,25 @@ class PayPalPayment extends PayPalPaymentBase {
         foreach ($_SESSION['cart']->tax as $tax) {
           $this->details->setTax($this->details->getTax() + $tax['value']);
         }
+        $total = $this->calc_total();
+        $amount_total = $this->amount->getTotal();
+      
+        if ((string)$amount_total != (string)$total) {
+          $this->details->setTax($this->details->getTax() + ($amount_total - $total));
+        } 
       }
+
+      $shipping_cost = $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHIPPING_COST');
+      if ((int)$shipping_cost > 0) {
+        $i = count($item);
+        $item[$i] = new Item(); 
+        $item[$i]->setName($this->encode_utf8(PAYPAL_EXP_VORL))
+                ->setCurrency($_SESSION['currency']) 
+                ->setQuantity(1) 
+                ->setPrice($shipping_cost); 
+        $this->amount->setTotal($this->amount->getTotal() + $shipping_cost);
+        $this->details->setSubtotal($this->amount->getTotal());
+      }    
           
       // set amount 
       $this->amount->setCurrency($_SESSION['currency'])
@@ -206,13 +224,29 @@ class PayPalPayment extends PayPalPaymentBase {
     }
 
     // set ItemList
-    if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0') { 
+    if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0'
+        || $this->check_discount() === true
+        ) 
+    { 
       $item = array();
       $item[0] = new Item(); 
       $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
               ->setCurrency($_SESSION['currency']) 
               ->setQuantity(1) 
               ->setPrice($this->details->getSubtotal()); 
+    
+      if ($cart === true) {
+        $shipping_cost = $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHIPPING_COST');
+        if ((int)$shipping_cost > 0) {
+          $item[1] = new Item(); 
+          $item[1]->setName($this->encode_utf8(PAYPAL_EXP_VORL))
+                  ->setCurrency($_SESSION['currency']) 
+                  ->setQuantity(1) 
+                  ->setPrice($shipping_cost); 
+          $this->amount->setTotal($this->amount->getTotal() + $shipping_cost);
+          $this->details->setSubtotal($this->amount->getTotal());
+        }    
+      }
     }
     $itemList->setItems($item);
     
@@ -324,7 +358,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $order_totals = $order_total_modules->output_array();
     $this->get_totals($order_totals);
           
-    $this->amount->setCurrency($_SESSION['currency'])
+    $this->amount->setCurrency($order->info['currency'])
                  ->setDetails($this->details);
             
     $patch_amount = new Patch();
@@ -334,11 +368,14 @@ class PayPalPayment extends PayPalPaymentBase {
     $patches_array[] = $patch_amount;
 
     // set ItemList
-    if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0') { 
+    if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0'
+        || $this->check_discount() === true
+        ) 
+    { 
       $item = array();
       $item[0] = new Item(); 
       $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
-              ->setCurrency($_SESSION['currency']) 
+              ->setCurrency($order->info['currency']) 
               ->setQuantity(1) 
               ->setPrice($this->details->getSubtotal()); 
     } else {
@@ -647,6 +684,7 @@ class PayPalPayment extends PayPalPaymentBase {
       
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
+      unset($_SESSION['tmp_oID']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
     
@@ -717,6 +755,34 @@ class PayPalPayment extends PayPalPaymentBase {
                  ->setValue($this->amount);
     $patches_array[] = $patch_amount;
     
+    // set ItemList
+    if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0'
+        || $this->check_discount() === true
+        ) 
+    { 
+      $item = array();
+      $item[0] = new Item(); 
+      $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
+              ->setCurrency($order->info['currency']) 
+              ->setQuantity(1) 
+              ->setPrice($this->details->getSubtotal()); 
+    } else {
+      for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
+        $item[$i] = new Item(); 
+        $item[$i]->setName($this->encode_utf8($order->products[$i]['name']))
+                 ->setCurrency($order->info['currency']) 
+                 ->setQuantity($order->products[$i]['qty']) 
+                 ->setPrice($order->products[$i]['price'])
+                 ->setSku(($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : $order->products[$i]['id']); 
+      }  
+    }
+
+    $patch_items = new Patch();
+    $patch_items->setOp('replace')
+                ->setPath('/transactions/0/item_list/items')
+                ->setValue($item);
+    $patches_array[] = $patch_items;
+
     $patchRequest->setPatches($patches_array);     
     
     try {
@@ -733,6 +799,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
+      unset($_SESSION['tmp_oID']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
     
@@ -751,6 +818,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
+      unset($_SESSION['tmp_oID']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
 
@@ -778,6 +846,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
+      unset($_SESSION['tmp_oID']);
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
     }
 
@@ -1002,6 +1071,43 @@ class PayPalPayment extends PayPalPaymentBase {
   }
   
   
+  function get_payment_data($order_id) {
+  
+    $payment_array = array();
+    $orders_query = xtc_db_query("SELECT p.*
+                                    FROM ".TABLE_PAYPAL_PAYMENT." p
+                                   WHERE p.orders_id = '".(int)$order_id."'");
+    if (xtc_db_num_rows($orders_query) > 0) {
+      $orders = xtc_db_fetch_array($orders_query);
+
+       // auth
+      $apiContext = $this->apiContext();
+    
+      try {
+        // Get the payment Object by passing paymentId
+        $payment = Payment::get($orders['payment_id'], $apiContext);
+
+        // customer details
+        $payer = $payment->getPayer();
+        $payerinfo = $payer->getPayerInfo();
+
+        $payment_array = array(
+          'id' => $payment->getId(),
+          'payment_method' => $payer->getPaymentMethod(),
+          'email_address' => $payerinfo->getEmail(),
+          'account_status' => $payer->getStatus(),
+          'intent' => $payment->getIntent(),
+          'state' => $payment->getState(),
+        );
+      } catch (Exception $ex) {
+        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      }
+    }
+    
+    return $payment_array;
+  }
+
+
   function get_payment_details($payment, $order = false) {
 
     // auth

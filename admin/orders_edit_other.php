@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: orders_edit_other.php 1920 2011-05-09 13:18:51Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -198,11 +198,26 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     $total = substr($totals[$i], 0, strrpos($totals[$i], '.'));
     $total_name = str_replace('ot_','',$total);
     $total_text = constant('MODULE_ORDER_TOTAL_'.strtoupper($total_name).'_TITLE');
-    $ototal_query = xtc_db_query("SELECT * 
+    
+    $ot_total_query = xtc_db_query("SELECT * 
                                     FROM " . TABLE_ORDERS_TOTAL . " 
-                                   WHERE orders_id = '" . $_GET['oID'] . "' 
-                                     AND class = '" . $total . "' ");
-    $ototal = xtc_db_fetch_array($ototal_query);
+                                   WHERE orders_id = '" . (int)$_GET['oID'] . "' 
+                                     AND class = '" . xtc_db_input($total) . "' ");
+    if (xtc_db_num_rows($ot_total_query) > 0) {
+      $ototal_array = array();
+      while ($ot_total = xtc_db_fetch_array($ot_total_query)) {
+        $ototal_array[] = $ot_total;
+      }
+    } else {
+      $ototal_array = array(
+        array(
+          'title' => '',
+          'value' => '',
+        )
+      );
+    }
+    
+    foreach ($ototal_array as $ototal) {
     ?>
     <tr class="dataTableRow">
       <?php echo xtc_draw_form('ot_edit', FILENAME_ORDERS_EDIT, 'action=ot_edit', 'post'); ?>
@@ -231,6 +246,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       </td>
     </tr>
     <?php
+    }
   }
   ?>
 </table>

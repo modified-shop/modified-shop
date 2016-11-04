@@ -254,13 +254,13 @@
                         $contents[] = array ('text' => TEXT_DATE_ORDER_LAST_MODIFIED.' '.xtc_date_short($oInfo->last_modified));
                       }
                       if ($oInfo->payment_method != '') {
-                        $contents[] = array ('text' => '<br />'.TEXT_INFO_PAYMENT_METHOD.' '.get_payment_name($oInfo->payment_method).' ('.$oInfo->payment_method.')');
+                        $contents[] = array ('text' => '<br />'.TEXT_INFO_PAYMENT_METHOD.' '.get_payment_name($oInfo->payment_method, $oInfo->orders_id).' ('.$oInfo->payment_method.')');
                       }
                       if ($oInfo->shipping_class != '') {
                         $contents[] = array ('text' => (($oInfo->payment_method == '') ? '<br/>' : '').TEXT_INFO_SHIPPING_METHOD.' '.get_shipping_name($oInfo->shipping_class));
                       }
                       $order = new order($oInfo->orders_id);
-                      $contents[] = array ('text' => '<br /><br />'.sizeof($order->products).'&nbsp;'.TEXT_PRODUCTS);
+                      $contents[] = array ('text' => '<br />'.sizeof($order->products).'&nbsp;'.TEXT_PRODUCTS);
                       for ($i = 0; $i < sizeof($order->products); $i ++) {
                         $contents[] = array ('text' => $order->products[$i]['qty'].'&nbsp;x&nbsp;'.$order->products[$i]['name']);
                         if (isset($order->products[$i]['attributes']) && sizeof($order->products[$i]['attributes']) > 0) {

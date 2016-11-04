@@ -35,10 +35,12 @@ $file_contents =
 '  define(\'DB_SERVER_CHARSET\', \'' . DB_SERVER_CHARSET . '\'); // set db charset \'utf8\' or \'latin1\'' . PHP_EOL .
 '  define(\'USE_PCONNECT\', \'' . (($_POST['USE_PCONNECT'] == 'true') ? 'true' : 'false') . '\'); // use persistent connections?' . PHP_EOL .
 '' . PHP_EOL .
-'  // auto include' . PHP_EOL .
-'  require_once (DIR_FS_CATALOG.\'inc/auto_include.inc.php\');' . PHP_EOL .
+'  if (DB_DATABASE != \'\') {' . PHP_EOL . 
+'    // auto include' . PHP_EOL .
+'    require_once (DIR_FS_CATALOG.\'inc/auto_include.inc.php\');' . PHP_EOL .
 '' . PHP_EOL .
-'  foreach(auto_include(DIR_FS_CATALOG.\'includes/extra/configure/\',\'php\') as $file) require_once ($file);' . PHP_EOL .
+'    foreach(auto_include(DIR_FS_CATALOG.\'includes/extra/configure/\',\'php\') as $file) require_once ($file);' . PHP_EOL .
+'  }'. PHP_EOL .
 '' . PHP_EOL .
 '  // server' . PHP_EOL .
 '  defined(\'HTTP_SERVER\') or define(\'HTTP_SERVER\', \'' . $http_server . '\'); // eg, http://localhost - should not be empty for productive servers' . PHP_EOL .

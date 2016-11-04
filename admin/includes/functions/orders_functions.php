@@ -169,7 +169,7 @@
                                             FROM ".TABLE_ORDERS_TOTAL." 
                                            WHERE orders_id = '".(int)$oID."' 
                                              AND class = 'ot_shipping'");
-    if (xtc_db_num_rows($check_shipping_query) < 1) {
+    if (xtc_db_num_rows($check_shipping_query) > 0) {
       xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array, 'update', "orders_id = '".(int)($oID)."' AND class = 'ot_shipping'");
     } else {
       xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
@@ -1109,7 +1109,6 @@
     $tax_rate_query = xtc_db_query("SELECT tax_rate 
                                       FROM ".TABLE_ORDERS_RECALCULATE." 
                                      WHERE orders_id = '".(int)$oID."' 
-                                       AND class = 'ot_tax' 
                                   GROUP BY tax_rate");
     while ($newtax = xtc_db_fetch_array($tax_rate_query)) {
       $new_tax_query = xtc_db_query("SELECT SUM(tax) as new_tax_value
@@ -1119,12 +1118,38 @@
                                         AND tax_rate > 0
                                         AND tax_rate = '". $newtax['tax_rate'] ."'");
       $newtax_array = xtc_db_fetch_array($new_tax_query);
-
-      xtc_db_query("UPDATE ".TABLE_ORDERS_RECALCULATE."
-                       SET tax = '".xtc_db_prepare_input($newtax_array['new_tax_value'])."'
-                     WHERE orders_id = '".(int)$oID."'
-                       AND tax_rate = '".xtc_db_prepare_input($newtax['tax_rate'])."'
-                       AND class = 'ot_tax'");
+      
+      $check_tax_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_ORDERS_RECALCULATE."
+                                        WHERE orders_id = '".(int)$oID."'
+                                          AND tax_rate = '".xtc_db_input($newtax['tax_rate'])."'
+                                          AND class = 'ot_tax'");
+      
+      if (xtc_db_num_rows($check_tax_query) > 0) {
+        xtc_db_query("UPDATE ".TABLE_ORDERS_RECALCULATE."
+                         SET tax = '".xtc_db_prepare_input($newtax_array['new_tax_value'])."'
+                       WHERE orders_id = '".(int)$oID."'
+                         AND tax_rate = '".xtc_db_prepare_input($newtax['tax_rate'])."'
+                         AND class = 'ot_tax'");
+      } else {
+        $sql_data_array = array(
+          'orders_id' => (int)($oID),
+          'tax' => $newtax_array['new_tax_value'],
+          'tax_rate' => $newtax['tax_rate'],
+          'class' => 'ot_tax',
+        );
+        xtc_db_perform(TABLE_ORDERS_RECALCULATE, $sql_data_array);
+      }
+    }
+        
+    $where_array = array();
+    $totals = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
+    for ($i=0; $i<count($totals); $i++) {
+      $total = substr($totals[$i], 0, strrpos($totals[$i], '.'));
+      $total_name = str_replace('ot_','',$total);
+      if (constant('MODULE_ORDER_TOTAL_'.strtoupper($total_name).'_SORT_ORDER') > MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER) {
+        $where_array[] = " AND class != '".$total."'";
+      }
     }
 
     $check_no_tax_value_query = xtc_db_query("SELECT count(*) as count 
@@ -1138,7 +1163,8 @@
     
       $subtotal_no_tax_query = xtc_db_query("SELECT SUM(n_price) as subtotal_no_tax_value 
                                                FROM ".TABLE_ORDERS_RECALCULATE." 
-                                              WHERE orders_id = '".(int)$oID."'");
+                                              WHERE orders_id = '".(int)$oID."'
+                                                    ".implode(' ', $where_array));
       $subtotal_no_tax_value = xtc_db_fetch_array($subtotal_no_tax_query);
       $subtotal_no_tax_final = $subtotal_no_tax_value['subtotal_no_tax_value'];
       $subtotal_no_tax_text = '<b>'.$xtPrice->xtcFormat($subtotal_no_tax_final, true).'</b>';
@@ -1156,7 +1182,8 @@
 
         $subtotal_no_tax_value_query = xtc_db_query("SELECT SUM(n_price) as subtotal_no_tax_value 
                                                        FROM ".TABLE_ORDERS_RECALCULATE." 
-                                                      WHERE orders_id = '".(int)$oID."'");
+                                                      WHERE orders_id = '".(int)$oID."'
+                                                            ".implode(' ', $where_array));
         $subtotal_no_tax_value = xtc_db_fetch_array($subtotal_no_tax_value_query);
         $subtotal_no_tax_final = $subtotal_no_tax_value['subtotal_no_tax_value'];
         $subtotal_no_tax_text = '<b>'.$xtPrice->xtcFormat($subtotal_no_tax_final, true).'</b>';

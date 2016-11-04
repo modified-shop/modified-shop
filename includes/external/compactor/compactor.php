@@ -177,7 +177,7 @@
     {
         $content = '';
         foreach ($this->data as $data) {
-            $content .= $this->squeeze($data);
+            $content .= $this->squeeze($data)."\n";
         }
         
         if (file_put_contents($path, $content, LOCK_EX) !== false) {

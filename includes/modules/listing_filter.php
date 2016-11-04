@@ -294,7 +294,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
       unset($values['NAME']);
       $options_array = array_merge($options_array, $values);
             
-      $filter_dropdown[$options_id] = xtc_draw_form('filter', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'show', 'cat'))), 'get');
+      $filter_dropdown[$options_id] = xtc_draw_form('filter_'.$options_id, xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'show', 'cat'))), 'get');
       if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
         if (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT || SEARCH_ENGINE_FRIENDLY_URLS != 'true') {
           $filter_dropdown[$options_id] .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']).PHP_EOL;
@@ -329,7 +329,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
         }
       }
       $filter_dropdown[$options_id] .= xtc_draw_pull_down_menu('filter['.$options_id.']', $options_array, isset($_GET['filter'][$options_id]) ? (int)$_GET['filter'][$options_id] : '', 'onchange="this.form.submit()"').PHP_EOL;
-      $filter_dropdown[$options_id] .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_submit" /></noscript>'.PHP_EOL;
+      $filter_dropdown[$options_id] .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_'.$options_id.'_submit" /></noscript>'.PHP_EOL;
       $filter_dropdown[$options_id] .= xtc_hide_session_id() .PHP_EOL;
       $filter_dropdown[$options_id] .= '</form>'.PHP_EOL;
     }

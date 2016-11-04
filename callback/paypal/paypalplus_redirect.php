@@ -34,6 +34,6 @@ for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
 if ($found === true) {
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true', 'SSL'));
 } else {
-  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMNET, '', 'SSL'));
+  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
 ?>

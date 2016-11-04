@@ -616,15 +616,14 @@ define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_128', 'Interner Fehler bei Pr&uuml;fun
 
 // Fehlermeldungen alle IBAN-Nummern 
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1000', 'In IBAN enthaltenes L&auml;nderk&uuml;rzel (1. und 2. Stelle) unbekannt.');
-define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1010', 'IBAN-Länge falsch: Zu viele Stellen eingegeben.');
-define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1020', 'IBAN-Länge falsch: Zu wenige Stellen eingegeben.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1010', 'IBAN-L&auml;nge falsch: Zu viele Stellen eingegeben.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1020', 'IBAN-L&auml;nge falsch: Zu wenige Stellen eingegeben.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1030', 'IBAN entspricht nicht dem f&uuml;r das Land festgelegten Format.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1040', 'Pr&uuml;fziffern der IBAN (Stellen 3 und 4) nicht korrekt -> Tippfehler in der IBAN.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1050', 'BIC hat ung&uuml;ltiges Format.');
-define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1060', 'BIC-Länge falsch: Zu viele Zeichen eingegeben. 8 oder 11 Zeichen sind erforderlich.');
-define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1070', 'BIC-Länge falsch: Zu wenige Zeichen angeben. 8 oder 11 Zeichen sind erforderlich.');
-define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-Länge ung&uuml;tig: 8 oder 11 Zeichen erforderlich.');
-define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-Länge ung&uuml;tig: 8 oder 11 Zeichen erforderlich.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1060', 'BIC-L&auml;nge falsch: Zu viele Zeichen eingegeben. 8 oder 11 Zeichen sind erforderlich.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1070', 'BIC-L&auml;nge falsch: Zu wenige Zeichen angeben. 8 oder 11 Zeichen sind erforderlich.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-L&auml;nge ung&uuml;tig: 8 oder 11 Zeichen erforderlich.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1200', 'IBANs aus dem angegebenen Land (1. und 2. Stelle der IBAN) k&ouml;nnen wir leider nicht akzeptieren.');
 
 // Fehlermeldungen für deutsche Kontonummern 

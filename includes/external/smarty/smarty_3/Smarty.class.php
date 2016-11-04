@@ -34,6 +34,23 @@ define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/sma
 define('MY_SHOP_PLUGINS', DIR_FS_EXTERNAL.'smarty/plugins/');
 
 /**
+ * define smarty charset
+ */
+if (isset($_SESSION['language_charset'])) {
+  $charset = $_SESSION['language_charset'];
+} else {
+  switch (strtolower(DB_SERVER_CHARSET)) {
+    case 'utf8':
+      $charset = 'UTF-8';
+      break;
+    default:
+      $charset = 'ISO-8859-1';
+      break;
+  }
+}
+define('SMARTY_RESOURCE_CHAR_SET', $charset);
+
+/**
  * define shorthand directory separator constant
  */
 if (!defined('DS')) {

@@ -29,6 +29,8 @@ $lang_array = array(
 
   'MODULE_PAYMENT_PAYPALPLUS_TEXT_ERROR_HEADING' => 'Note',
   'MODULE_PAYMENT_PAYPALPLUS_TEXT_ERROR_MESSAGE' => 'PayPal payment has been canceled',
+
+  'MODULE_PAYMENT_PAYPALPLUS_INVOICE' => 'Pay upon Invoice',
 );
 
 

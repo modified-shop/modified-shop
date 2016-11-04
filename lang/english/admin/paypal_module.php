@@ -38,6 +38,9 @@ $lang_array = array(
 
   'TEXT_PAYPAL_MODULE_USE_TABS' => 'Accordion / Tabs',
   'TEXT_PAYPAL_MODULE_USE_TABS_INFO' => 'Does the template use accordion or tabs in the checkout?',
+
+  'TEXT_PAYPAL_MODULE_SHIPPING_COST' => 'provisional shipping costs',
+  'TEXT_PAYPAL_MODULE_SHIPPING_COST_INFO' => 'Amount for provisional shipping costs.',
 );
 
 

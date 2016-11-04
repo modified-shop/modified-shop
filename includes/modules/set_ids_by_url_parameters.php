@@ -48,7 +48,7 @@ if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '') {
 // calculate category path
 defined('PRODUCTS_CANONICAL_CAT_ID') OR define('PRODUCTS_CANONICAL_CAT_ID', false);
 if (isset($_GET['cpID']) && (int)$_GET['cpID'] > 0) {
-  $_GET['cPath'] = xtc_get_category_path((int)$_GET['cpID']);
+  $_SESSION['CatPath'] = xtc_get_category_path((int)$_GET['cpID']);
   unset($_GET['cpID']);
 }
 if (isset ($_GET['cPath']) && (!isset($product) || !is_object($product))) {
