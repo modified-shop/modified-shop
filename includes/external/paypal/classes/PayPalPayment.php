@@ -147,6 +147,12 @@ class PayPalPayment extends PayPalPaymentBase {
         foreach ($_SESSION['cart']->tax as $tax) {
           $this->details->setTax($this->details->getTax() + $tax['value']);
         }
+        $total = $this->calc_total();
+        $amount_total = $this->amount->getTotal();
+      
+        if ((string)$amount_total != (string)$total) {
+          $this->details->setTax($this->details->getTax() + ($amount_total - $total));
+        } 
       }
 
       $shipping_cost = $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHIPPING_COST');
