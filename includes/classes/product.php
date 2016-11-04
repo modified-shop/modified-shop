@@ -283,9 +283,9 @@ class product {
             'GROUP' => $cross_sells['groupname'],
             'PRODUCTS' => array()
           );
-        }
-        while ($xsell = xtc_db_fetch_array($xsell_query, true)) {
-          $cross_sell_data[$cross_sells['products_xsell_grp_name_id']]['PRODUCTS'][] = $this->buildDataArray($xsell);
+          while ($xsell = xtc_db_fetch_array($xsell_query, true)) {
+            $cross_sell_data[$cross_sells['products_xsell_grp_name_id']]['PRODUCTS'][] = $this->buildDataArray($xsell);
+          }
         }
       }
       return $cross_sell_data;
@@ -316,8 +316,10 @@ class product {
                                      ".PRODUCTS_CONDITIONS_P."
                             ORDER BY xp.sort_order ASC");
     $cross_sell_data = array();
-    while ($xsell = xtc_db_fetch_array($cross_query, true)) {
-      $cross_sell_data[] = $this->buildDataArray($xsell);
+    if (xtc_db_num_rows($cross_query, true) > 0) {
+      while ($xsell = xtc_db_fetch_array($cross_query, true)) {
+        $cross_sell_data[] = $this->buildDataArray($xsell);
+      }
     }
     return $cross_sell_data;
   }

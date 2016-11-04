@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: modules.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -93,6 +93,7 @@
       case 'save':
         reset($_POST['configuration']); //DokuMan - 2011-09-29 - reset $_POST array
         while (list($key, $value) = each($_POST['configuration'])) {
+          $value = is_array($_POST['configuration'][$key]) ? implode(',', $_POST['configuration'][$key]) : $value;
           xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . $value . "' where configuration_key = '" . $key . "'");
         }
         xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class));
@@ -513,7 +514,16 @@ if (xtc_not_null($action) && !$box) {
                 while (list($key, $value) = each($mInfo->keys)) {
                   $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
                   if ($value['set_function']) {
-                    eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                    if (strpos($value['set_function'], '->') !== false) {
+                      $class_method = explode('->', $value['set_function']);
+                      if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) { // DokuMan - 2011-05-10 - check if object is first set
+                        include(DIR_WS_CLASSES . $class_method[0] . '.php');
+                        ${$class_method[0]} = new $class_method[0]();
+                      }
+                      $keys .= call_user_func_array(array(${$class_method[0]}, $class_method[1]), array($value['value'], $key));
+                    } else {
+                      eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                    }
                   } else {
                     $keys .= xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'class="inputModule"'); //web28- 2010-05-17 - set css definition
                   }
@@ -523,7 +533,9 @@ if (xtc_not_null($action) && !$box) {
                 $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
                 $contents = array('form' => (isset($mInfo->properties['form_edit']) ? $mInfo->properties['form_edit'] : xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class . '&action=save')));
                 $contents[] = array('text' => $keys);
+                $contents[] = method_exists($module,'display') ? $module->display() : '';
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = method_exists($module,'display_end') ? $module->display_end() : '';
                 break;
 
               default:
@@ -536,7 +548,7 @@ if (xtc_not_null($action) && !$box) {
                       $keys .= '<b>' . (isset($value['title'])?$value['title']:'') . '</b><br />';
                       if ($value['use_function']) {
                         $use_function = $value['use_function'];
-                        if (preg_match('/->/', $use_function)) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
+                        if (strpos($use_function, '->') !== false) {
                           $class_method = explode('->', $use_function);
                           if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) { // DokuMan - 2011-05-10 - check if object is first set
                             include(DIR_WS_CLASSES . $class_method[0] . '.php');

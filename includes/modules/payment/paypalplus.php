@@ -33,6 +33,19 @@ class paypalplus extends PayPalPayment {
         
     $payments = get_third_party_payments();
     
+    if (ACTIVATE_GIFT_SYSTEM == 'true') {
+      require_once (DIR_WS_CLASSES . 'order_total.php');
+      $order_total_modules = new order_total();
+      $credit_selection = $order_total_modules->credit_selection();
+    }
+    if (isset($credit_selection) 
+        && is_array($credit_selection) 
+        && count($credit_selection) > 0
+        ) 
+    {
+      $payments = array();
+    }
+    
     if (isset($_SESSION['payment'])) {
       for ($i=0, $n=count($payments); $i<$n; $i++) {
         if ($payments[$i]['id'] == $_SESSION['payment']) {

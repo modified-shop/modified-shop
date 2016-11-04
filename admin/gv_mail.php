@@ -155,6 +155,7 @@
     }
     xtc_redirect(xtc_href_link(FILENAME_GV_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to)));
   }
+  
   $error = false;
   if ( ($_GET['action'] == 'preview') && (!$_POST['customers_email_address']) && (!$_POST['email_to']) ) {
     $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
@@ -204,7 +205,7 @@
         <div class="clear"></div>
       <div class="div_box brd-none pdg2">
         <?php
-        if ($_GET['action'] == 'preview' && ($_POST['customers_email_address'] || $_POST['email_to']) ) {
+        if ($_GET['action'] == 'preview' && $error === false) {
           switch ($_POST['customers_email_address']) {
             case '***':
               $mail_sent_to = TEXT_ALL_CUSTOMERS;

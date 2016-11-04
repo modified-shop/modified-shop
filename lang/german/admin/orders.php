@@ -74,6 +74,7 @@ define('ENTRY_SHIP_TO', 'Lieferanschrift:');
 define('ENTRY_SHIPPING_ADDRESS', 'Versandadresse:');
 define('ENTRY_BILLING_ADDRESS', 'Rechnungsadresse:');
 define('ENTRY_PAYMENT_METHOD', 'Zahlungsweise:');
+define('ENTRY_SHIPPING_METHOD', 'Versandart:');
 define('ENTRY_CREDIT_CARD_TYPE', 'Kreditkartentyp:');
 define('ENTRY_CREDIT_CARD_OWNER', 'Kreditkarteninhaber:');
 define('ENTRY_CREDIT_CARD_NUMBER', 'Kreditkartennummer:');

@@ -38,6 +38,9 @@ $lang_array = array(
 
   'TEXT_PAYPAL_MODULE_USE_TABS' => 'Accordion / Tabs',
   'TEXT_PAYPAL_MODULE_USE_TABS_INFO' => 'Verwendet das Template Accordion oder Tabs im Checkout?',
+
+  'TEXT_PAYPAL_MODULE_SHIPPING_COST' => 'Vorl&auml;ufige Versandkosten',
+  'TEXT_PAYPAL_MODULE_SHIPPING_COST_INFO' => 'Geben sie den Betrag f&uuml;r vorl&auml;ufige Versandkosten an.',
 );
 
 

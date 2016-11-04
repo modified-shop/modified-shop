@@ -53,6 +53,13 @@ class seo_url_shopstat extends modified_seo_url {
    */
   public function create_link($page = '', $parameters = '', $connection = 'NONSSL') {
 
+    if (defined('RUN_MODE_ADMIN')) {
+      require_once(DIR_FS_INC . 'xtc_parse_category_path.inc.php');
+      require_once(DIR_FS_INC . 'xtc_get_product_path.inc.php');
+      require_once(DIR_FS_INC . 'xtc_get_parent_categories.inc.php');
+      require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
+    }
+
     parse_str($parameters, $this->params_array);
 
     if (isset($this->params_array['language']) 
@@ -118,11 +125,13 @@ class seo_url_shopstat extends modified_seo_url {
             && strpos($this->params_array['products_id'], '{') === false
             )
         {
-          if (!isset(self::$links_array['products'][$this->language_id][$this->params_array['products_id']])) {
-            self::$links_array['products'][$this->language_id][$this->params_array['products_id']] = self::create_products_link();
+          $id = xtc_get_product_path($this->params_array['products_id']);
+          
+          if (!isset(self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$id])) {
+            self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$id] = self::create_products_link();
           }
         
-          $link = self::$links_array['products'][$this->language_id][$this->params_array['products_id']];
+          $link = self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$id];
           if ($link !== false) {
             $link .= self::get_link_params();
           }
@@ -161,14 +170,7 @@ class seo_url_shopstat extends modified_seo_url {
    * @return products link
    */
   protected function create_products_link() {
-    
-    if (defined('RUN_MODE_ADMIN')) {
-      require_once(DIR_FS_INC . 'xtc_parse_category_path.inc.php');
-      require_once(DIR_FS_INC . 'xtc_get_product_path.inc.php');
-      require_once(DIR_FS_INC . 'xtc_get_parent_categories.inc.php');
-      require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
-    }
-    
+        
     $products_link_array = array();    
     
     if (!isset(self::$names_array['products'][$this->language_id][$this->params_array['products_id']])) {

@@ -597,7 +597,7 @@ define('TEXT_PAYPAL_TAB_MODULE', 'PayPal Module');
 define('TEXT_PAYPAL_TAB_TRANSACTIONS', 'PayPal Transaktionen');
 
 define('TEXT_DEFAULT_SORT_ORDER_TITLE', 'Sortierreihenfolge');
-define('TEXT_DEFAULT_SORT_ORDER_DESC', 'Reihenfolge der Verarbeitung. Kleinste Ziffer wird zuerst ausgeführt.');
+define('TEXT_DEFAULT_SORT_ORDER_DESC', 'Reihenfolge der Verarbeitung. Kleinste Ziffer wird zuerst ausgef&uuml;hrt.');
 define('TEXT_DEFAULT_STATUS_TITLE', 'Modul aktivieren?');
 define('TEXT_DEFAULT_STATUS_DESC', 'Modul Status');
 

@@ -260,27 +260,26 @@ class easybillcsv {
       }
 
       // create the File
-      if (xtc_not_null($file)) {
+      if (xtc_not_null($file) && strpos($file, '.csv') !== false) {
         $filename = $file;
       } else {
         $filename = 'easybill_' . time() . '.csv';
       }
-      $fp = fopen(DIR_FS_DOCUMENT_ROOT.'export/'.$filename, "w+");
-      fputs($fp, encode_utf8('#! exported-by: modified-shop.org' . "\n"));
-      fputs($fp, encode_utf8(implode(';', $filecontent_header) . "\n"));
+
+      file_put_contents(DIR_FS_CATALOG.'export/'.$filename, encode_utf8('#! exported-by: modified-shop.org' . "\n"));
+      file_put_contents(DIR_FS_CATALOG.'export/'.$filename, encode_utf8(implode(';', $filecontent_header) . "\n"), FILE_APPEND);      
       for ($w=0, $n=sizeof($easybill_export); $w<$n; $w++) {
-        fputs($fp, '"' . encode_utf8(implode('";"', $this->convert($easybill_export[$w])) . '"' . "\n"));
+        file_put_contents(DIR_FS_CATALOG.'export/'.$filename, '"' . encode_utf8(implode('";"', $this->convert($easybill_export[$w])) . '"' . "\n"), FILE_APPEND);
       }
-      fclose($fp);
 
       if ($this->export == 'yes') {
-        $fp = fopen(DIR_FS_DOCUMENT_ROOT.'export/'.$filename, "rb");
-        $buffer = fread($fp, filesize(DIR_FS_DOCUMENT_ROOT.'export/'.$filename));
+        $fp = fopen(DIR_FS_CATALOG.'export/'.$filename, "rb");
+        $buffer = fread($fp, filesize(DIR_FS_CATALOG.'export/'.$filename));
         fclose($fp);
         header('Content-type: application/x-octet-stream');
         header('Content-disposition: attachment; filename='.$filename);
         echo $buffer;
-        @unlink(DIR_FS_DOCUMENT_ROOT.'export/'.$filename);
+        @unlink(DIR_FS_CATALOG.'export/'.$filename);
         exit();
       }
     } else {

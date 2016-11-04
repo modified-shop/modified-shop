@@ -39,7 +39,7 @@ if ( !class_exists( "image_processing_step" ) ) {
       $this->properties = array();
       $this->files = array();
 
-      $this->logfile = DIR_FS_CATALOG.'log/image_processing.log';
+      $this->logfile = DIR_FS_CATALOG.'log/image_processing_*.log';
 
       //define used get parameters
       $this->get_params = array();
@@ -50,7 +50,7 @@ if ( !class_exists( "image_processing_step" ) ) {
     }
     
     function get_images_files($filedir,$offset=1,$limit=1) {
-      $ext_array = array('gif','jpg','jpeg','png'); //Gültige Dateiendungen
+      $ext_array = array('gif','jpg','jpeg','png'); //Gï¿½ltige Dateiendungen
       $files = array();
       $this->data_volume = 0;
       if ($dir = opendir($filedir)) {
@@ -84,12 +84,12 @@ if ( !class_exists( "image_processing_step" ) ) {
       $step = (int)$_POST['max_datasets'];
       $count = isset($_POST['count']) ? (int)$_POST['count'] : 0;
       $limit = $offset + $step;
-      
-      if(is_file($this->logfile) && $offset == 0) {
-          @ unlink ($this->logfile);
-      }
-      
+ 
       $rData = array();
+      
+      $rData['file_time'] = isset($_POST['file_time']) ? $_POST['file_time'] : date("Y-m-d-His");
+      
+      $this->logfile = str_replace('*',$rData['file_time'],$this->logfile);
       
       @ini_set('memory_limit','256M');
       @xtc_set_time_limit(0);
@@ -101,30 +101,29 @@ if ( !class_exists( "image_processing_step" ) ) {
       $ext_replace = array('.gif','.jpg','.jpeg','.png');
       
       for ($i = $offset; $i < $limit; $i++) {
-        if ($i >= $this->max_files) { // FERTIG
+        if ($i >= $this->max_files) {
           $rData['start'] = $limit;
           $rData['count'] = $count;
-          return $rData;
-          //FERTIG
+          return $rData; // step is done
         }
         $products_image_name = $files[$i]['text'];
         $products_image_name_process = ($_GET['lower_file_ext'] == 1) ? str_replace($ext_search, $ext_replace ,$files[$i]['text']) : $files[$i]['text'];
 
-        $rData['imgname'] = $products_image_name_process;
-        
+        $rData['imgname'] = encode_htmlentities($products_image_name_process);
+
         if ($_POST['logging'] == 1) {
           $handle = fopen($this->logfile, "a"); fwrite($handle, $products_image_name. '|read'."\n"); fclose($handle);
         }
 
         if ($_POST['only_missing_images'] == 1) {
           $flag = false;
-          if (!is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$files[$i]['text'])) {
+          if (!is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image_name_process)) {
             require(DIR_WS_INCLUDES . 'product_thumbnail_images.php'); $flag = true;
           }
-          if (!is_file(DIR_FS_CATALOG_INFO_IMAGES.$files[$i]['text'])) {
+          if (!is_file(DIR_FS_CATALOG_INFO_IMAGES.$products_image_name_process)) {
             require(DIR_WS_INCLUDES . 'product_info_images.php'); $flag = true;
           }
-          if (!is_file(DIR_FS_CATALOG_POPUP_IMAGES.$files[$i]['text'])) {
+          if (!is_file(DIR_FS_CATALOG_POPUP_IMAGES.$products_image_name_process)) {
             require(DIR_WS_INCLUDES . 'product_popup_images.php'); $flag = true;
           }
           if ($flag) {
@@ -162,7 +161,7 @@ if ( !class_exists( "image_processing_step" ) ) {
 
     function display() {
 
-      //Array für max. Bilder pro Seitenreload
+      //Array fï¿½r max. Bilder pro Seitenreload
       $max_array = array (array ('id' => '1', 'text' => '1'));
       $max_array[] = array ('id' => '5', 'text' => '5');
       $max_array[] = array ('id' => '10', 'text' => '10');

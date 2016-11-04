@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: print_order.php 3113 2012-06-22 16:23:20Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -63,6 +63,12 @@ if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check
   $smarty->assign('PAYMENT_METHOD', $payment_method);
   $smarty->assign('COMMENT', $order->info['comments']);
   $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
+
+  if (strpos($order->info['payment_method'], 'paypalplus') !== false) {
+    require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
+    $paypal = new PayPalInfo($order->info['payment_method']);      
+    $smarty->assign('PAYMENT_INFO', $paypal->get_payment_instructions($order->info['order_id']));
+  }
 
   // dont allow cache
   $smarty->caching =0;

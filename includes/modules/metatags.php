@@ -162,6 +162,8 @@
   }
 // ---------------------------------------------------------------------------------------
 
+  $set_hreflang = true;
+  
 
 // ---------------------------------------------------------------------------------------
 //  Aufräumen: Umlaute und Sonderzeichen wandeln.
@@ -318,6 +320,13 @@ switch(basename($PHP_SELF)) {
       $canonical_flag = true;
       $canonical_url = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'], 'NONSSL', false);
       $canonical_flag = false;
+      //Wenn Produkt URL nicht Canonical URL dann auf noindex setzen und keine hreflang setzen
+      $product_link = str_replace(array(HTTP_SERVER,HTTPS_SERVER), '', preg_replace("/([^\?]*)(\?.*)/", "$1", $canonical_url));
+      $current_link = preg_replace("/([^\?]*)(\?.*)/", "$1", $_SERVER['REQUEST_URI']);
+      if ($product_link != $current_link) {
+        $set_hreflang = false;
+        //$meta_robots = 'noindex'; // Nicht notwendig, da Google sonst den canonical gar nicht mitbekommt
+      }
     }
     break;
 // ---------------------------------------------------------------------------------------
@@ -606,17 +615,30 @@ if (META_REVISIT_AFTER != '0') {
   echo '<meta name="revisit-after" content="'. META_REVISIT_AFTER .' days" />'."\n";
 }
 if (META_GOOGLE_VERIFICATION_KEY != '') {
-  echo '<meta name="verify-v1" content="'. META_GOOGLE_VERIFICATION_KEY .'" />'."\n";
+  echo '<meta name="google-site-verification" content="'. META_GOOGLE_VERIFICATION_KEY .'" />'."\n";
 }
 if (META_BING_VERIFICATION_KEY != '') {
   echo '<meta name="msvalidate.01" content="'. META_BING_VERIFICATION_KEY .'" />'."\n";
+}
+
+if (strpos($meta_robots,'noindex') !== false) {
+  $set_hreflang = false;
+  if (isset($canonical_url)) {
+    unset($canonical_url);
+  }
+} else {
+  $meta_url = parse_url($_SERVER['REQUEST_URI']);
+  parse_str($meta_url['query'], $meta_params_array);
+  if (count($meta_params_array) && !isset($meta_params_array['language']) && (!isset($_GET['page']) || $_GET['page'] > 1)) {
+    $set_hreflang = false;
+  }
 }
 $meta_alternate = array();
 if (!isset($lng) || (isset($lng) && !is_object($lng))) {
   require_once(DIR_WS_CLASSES . 'language.php');
   $lng = new language;
 }
-if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && count($lng->catalog_languages) > 1 && (!isset($_GET['page']) || $_GET['page'] == 1)) {
+if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $set_hreflang && count($lng->catalog_languages) > 1 && (!isset($_GET['page']) || $_GET['page'] == 1)) {
   $canonical_flag = true;
   $x_default_flag = true;
   $x_default_lng = 'en'; //DEFAULT_LANGUAGE

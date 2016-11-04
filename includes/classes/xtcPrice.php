@@ -50,6 +50,7 @@ class xtcPrice {
     $this->TAX = array();
     $this->SHIPPING = array();
     $this->showFrom_Attributes = true;
+    $this->flagSpecial = false;
     
     $this->show_price_tax = 0;
 
@@ -421,7 +422,9 @@ class xtcPrice {
    * @return Double special offer
    */
   function xtcCheckSpecial($pID) {
+    $this->flagSpecial = false;
     if ($this->cStatus['customers_status_specials'] == '1') {
+      $special_price = 0;
       $product_query = xtDBquery("SELECT *
                                     FROM ".TABLE_SPECIALS."
                                    WHERE products_id = '".(int)$pID."'
@@ -431,11 +434,16 @@ class xtcPrice {
                                  ");
       if (xtc_db_num_rows($product_query, true) > 0) {
         $product = xtc_db_fetch_array($product_query, true);
+        $this->flagSpecial = true;
         
         $product = $this->priceModules->CheckSpecial($product, $pID);
       
-        return $product['specials_new_products_price'];
+        $special_price = $product['specials_new_products_price'];
       }
+      
+      $special_price = $this->priceModules->CheckSpecialPrice($special_price, $pID);
+      
+      return $special_price;
     }
   }
   
@@ -533,6 +541,9 @@ class xtcPrice {
    */
   function checkAttributes($pID) {
     if (!$this->showFrom_Attributes || $pID == 0) return;
+    
+    $pID = $this->priceModules->checkAttributes($pID);
+    
     $products_attributes_query = "SELECT count(*) as total 
                                     FROM " . TABLE_PRODUCTS_OPTIONS . " popt,
                                          " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
@@ -608,7 +619,8 @@ class xtcPrice {
                              FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . " po
                              JOIN " . TABLE_PRODUCTS . " p
                                   ON po.products_id = p.products_id
-                            WHERE po.products_id='" . $pID . "'");
+                            WHERE po.products_id='" . $pID . "'
+                         GROUP BY p.products_id");
       $sQuery = xtc_db_fetch_array($sQuery, true);
       if (($this->cStatus['customers_status_graduated_prices'] == '1') && ($sQuery['qty'] > 1)) {
         $from = ' ' . FROM . ' ';

@@ -71,12 +71,20 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
             if (check == true) {
               var payment = ppp.getPaymentMethod();
               if (payment.substring(0, 2) != "pp") {
-                ppp.doCheckout();
+                var comment = $("#comments").val();
+                $.ajax({
+                  type: "POST",
+                  url: "'.xtc_href_link('callback/paypal/paypalplus_comment.php', '', 'SSL').'",
+                  data: { comments: comment },
+                  success: function(data) {
+                    ppp.doCheckout();
+                  }
+                });
               } else {
                 setTimeout("document.checkout_payment.submit()", 10);
               }
             }
-	        }, ';
+	        }, '."\n";
 	  echo '  "thirdPartyPaymentMethods": '.json_encode($module)."\n";
 	}
 
