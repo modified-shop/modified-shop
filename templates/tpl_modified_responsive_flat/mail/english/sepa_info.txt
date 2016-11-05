@@ -1,0 +1,7 @@
+The invoice amount of {$PAYMENT_BANKTRANSFER_TOTAL} will be collected by using the SEPA Direct Debit with due date {$PAYMENT_BANKTRANSFER_DUE_DATE}
+with mandate {$PAYMENT_BANKTRANSFER_MANDATE_REFERENCE}
+and for creditor identifier {$PAYMENT_BANKTRANSFER_CREDITOR_ID}
+from your account {$PAYMENT_BANKTRANSFER_IBAN}
+at {$PAYMENT_BANKTRANSFER_BANKNAME}.
+
+Please ensure that there are sufficient funds on your account to cover the payment.
