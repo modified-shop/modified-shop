@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_customers_statuses.inc.php 808 2005-02-27 09:04:50Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -25,7 +25,10 @@
   function xtc_get_customers_statuses() {
 
     $customers_statuses_array = array();
-    if ($_SESSION['languages_id']=='') {
+    if (!isset($_SESSION['languages_id'])
+        || $_SESSION['languages_id'] == ''
+        ) 
+    {
       $customers_statuses_query = xtc_db_query("SELECT * 
                                                   FROM " . TABLE_CUSTOMERS_STATUS . " 
                                                  WHERE language_id = '1' 
@@ -38,18 +41,20 @@
     }
 
     while ($customers_statuses = xtc_db_fetch_array($customers_statuses_query)) {
-      $customers_statuses_array[] = array('id' => $customers_statuses['customers_status_id'],
-                                          'text' => $customers_statuses['customers_status_name'],
-                                          'csa_public' => $customers_statuses['customers_status_public'],
-                                          'csa_show_price' => $customers_statuses['customers_status_show_price'],
-                                          'csa_show_price_tax' => $customers_statuses['customers_status_show_price_tax'],
-                                          'csa_image' => $customers_statuses['customers_status_image'],
-                                          'csa_discount' => $customers_statuses['customers_status_discount'],
-                                          'csa_ot_discount_flag' => $customers_statuses['customers_status_ot_discount_flag'],
-                                          'csa_ot_discount' => $customers_statuses['customers_status_ot_discount'],
-                                          'csa_graduated_prices' => $customers_statuses['customers_status_graduated_prices'],
-                                          );
+      $customers_statuses_array[$customers_statuses['customers_status_id']] = array(
+        'id' => $customers_statuses['customers_status_id'],
+        'text' => $customers_statuses['customers_status_name'],
+        'csa_public' => $customers_statuses['customers_status_public'],
+        'csa_show_price' => $customers_statuses['customers_status_show_price'],
+        'csa_show_price_tax' => $customers_statuses['customers_status_show_price_tax'],
+        'csa_image' => $customers_statuses['customers_status_image'],
+        'csa_discount' => $customers_statuses['customers_status_discount'],
+        'csa_ot_discount_flag' => $customers_statuses['customers_status_ot_discount_flag'],
+        'csa_ot_discount' => $customers_statuses['customers_status_ot_discount'],
+        'csa_graduated_prices' => $customers_statuses['customers_status_graduated_prices'],
+      );
     }
+    
     return $customers_statuses_array;
   }
  ?>
