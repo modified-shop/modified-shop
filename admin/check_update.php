@@ -17,12 +17,10 @@
 --------------------------------------------------------------*/
 
 require ('includes/application_top.php');
-require_once (DIR_FS_INC.'get_external_content.inc.php');
-$new_version = get_external_content('http://www.modified-shop.org/VERSION', 3, false);
-$update_recomended = false;
-if (version_compare($new_version, PROJECT_VERSION, '>')) {
-  $update_recomended = true;
-}
+
+// newsfeed
+require_once(DIR_FS_INC.'check_version_update.inc.php');
+$update_recomended = check_version_update(true);
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
@@ -129,6 +127,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <dt>h-h-h</dt><dd>&lt;h-h-h@modified-shop.org&gt;</dd> <!-- 3386 -->
                         <dt>franky_n</dt><dd>&lt;franky_n@modified-shop.org&gt;</dd> <!-- 4516 -->
                         <dt>cYbercOsmOnauT</dt><dd>&lt;cybercosmonaut@modified-shop.org&gt;</dd> <!-- 6446 -->
+                        <dt>hellwanger</dt><dd>&lt;hellwanger@modified-shop.org&gt;</dd> <!-- 21189 -->
                       </dl>
                     </dd>
                   </dl>

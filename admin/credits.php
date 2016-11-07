@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-  $Id: credits.php 4901 2013-06-11 09:37:07Z Tomcraft $
+  $Id$
 
   modified eCommerce Shopsoftware
   http://www.modified-shop.org
@@ -113,6 +113,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <dt>h-h-h</dt><dd>&lt;h-h-h@modified-shop.org&gt;</dd> <!-- 3386 -->
                         <dt>franky_n</dt><dd>&lt;franky_n@modified-shop.org&gt;</dd> <!-- 4516 -->
                         <dt>cYbercOsmOnauT</dt><dd>&lt;cybercosmonaut@modified-shop.org&gt;</dd> <!-- 6446 -->
+                        <dt>hellwanger</dt><dd>&lt;hellwanger@modified-shop.org&gt;</dd> <!-- 21189 -->
                       </dl>
                     </dd>
                   </dl>
