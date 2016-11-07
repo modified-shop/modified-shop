@@ -1321,7 +1321,7 @@ class categories {
       if (substr($products_data['specials_price'], -1) != '%'){
         $products_data['specials_price'] = $this->priceCheck($products_data['specials_price'], $products_data['tax_rate']);
       } else {
-        $products_data['specials_price'] = ($products_data['products_price_hidden'] - (($products_data['specials_price'] / 100) * $products_data['products_price_hidden']));
+        $products_data['specials_price'] = ($products_data['products_price'] - (($products_data['specials_price'] / 100) * $products_data['products_price']));
       }
 
       $expires_date = isset($products_data['specials_expires']) && !empty($products_data['specials_expires']) ? date('Y-m-d H:i:s', strtotime($products_data['specials_expires'].' 23:59:59')) : '';
