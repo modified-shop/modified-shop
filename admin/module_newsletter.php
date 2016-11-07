@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: module_newsletter.php 2906 2012-05-24 12:15:42Z gtb-modified $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -359,8 +359,8 @@
                     <td class="dataTableContent txta-c">
                       <a href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'action=edit&ID='.$news_data[$i]['id']); ?>">
                       <?php echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','').'</a>&nbsp;'; ?>
-                      <a href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'action=delete&ID='.$news_data[$i]['id']); ?>" onclick="return confirm('<?php echo CONFIRM_DELETE; ?>')">
-                      <?php echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirm(\''.DELETE_ENTRY.'\')"').'</a>&nbsp;&nbsp;'; ?>
+                      <a href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'action=delete&ID='.$news_data[$i]['id']); ?>" onclick="return confirmLink('<?php echo DELETE_ENTRY; ?>', '', this)">
+                      <?php echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer"').'</a>&nbsp;&nbsp;'; ?>
                     </td>
                   </tr>
                   <?php
