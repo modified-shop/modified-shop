@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: categories_specials.php 4476 2013-02-15 19:37:01Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -110,11 +110,6 @@ echo SPECIALS_TITLE;
 <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/<?php echo $arrow; ?>" height="16" width="16" onclick="javascript:toggleBox('special');" style="vertical-align: middle;">
 <div id="special" class="longDescription">
   <table class="tableInput">
-    <?php if(!isset($_GET['pID'])) { ?>
-    <tr>
-      <td class="main"><?php echo TEXT_SPECIALS_NO_PID; ?></td>             
-    </tr>
-    <?php } else { ?>
     <?php /*
     <tr>
       <td class="main"><?php echo TEXT_PRODUCTS_PRICE; ?></td>
@@ -156,7 +151,6 @@ echo SPECIALS_TITLE;
       <td class="main"><label for="input_specials_delete"><?php echo TEXT_INFO_HEADING_DELETE_SPECIALS; ?></label></td>
       <td class="main"><?php echo xtc_draw_checkbox_field('specials_delete', 'true', $checked, '', 'id="input_specials_delete" onclick="if(this.checked==true)return confirm(\''.TEXT_INFO_DELETE_INTRO.'\');" style="vertical-align:middle;"'); ?></td>
     </tr>
-    <?php } ?>
     <?php } ?>
   </table>
 </div>

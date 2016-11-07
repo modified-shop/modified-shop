@@ -565,6 +565,7 @@ class categories {
       $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
       xtc_db_perform(TABLE_PRODUCTS, $sql_data_array);
       $products_id = xtc_db_insert_id();
+      $products_data['products_id'] = $products_id;
       $sql_data_array = array('products_id' => $products_id,
                               'categories_id' => $dest_category_id);
       xtc_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, $sql_data_array);                   
