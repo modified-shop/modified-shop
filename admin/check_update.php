@@ -20,7 +20,7 @@ require ('includes/application_top.php');
 
 // newsfeed
 require_once(DIR_FS_INC.'check_version_update.inc.php');
-$update_recomended = check_version_update(true);
+$update_array = check_version_update(true);
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
@@ -94,10 +94,10 @@ require (DIR_WS_INCLUDES.'head.php');
               <dt><?php echo TEXT_DB_VERSION.' "'.DB_VERSION.'"'; ?></dt>
             </dl>
             <?php
-            if ($update_recomended) {
+            if ($update_array['update'] === true) {
               echo TEXT_INFO_UPDATE_RECOMENDED;
             } else {
-              if (!$new_version || empty($new_version)) {
+              if ($update_array['version'] == '') {
                 echo TEXT_INFO_UPDATE_NOT_POSSIBLE;            
               } else {              
                 echo TEXT_INFO_UPDATE; 
