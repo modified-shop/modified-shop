@@ -20,8 +20,8 @@ define('HEADING_TITLE', 'Software Aktualisierung');
 define('HEADING_SUBTITLE', 'Update Check');
 
 define('TEXT_DB_VERSION','Datenbank Version:');
-define('TEXT_INFO_UPDATE_RECOMENDED', '<div class="error_message">Es ist eine neue Version verf&uuml;gbar. Sie k&ouml;nnen Sie hier herunterladen: <a href="http://www.modified-shop.org/download" target="_blank">http://www.modified-shop.org/download</a></div>');
-define('TEXT_INFO_UPDATE_NOT_POSSIBLE', '<div class="error_message">Leider konnte keine &Uuml;berpr&uuml;fung gemacht werden. Bitte besuchen sie unsere <a target="_blank" href="http://www.modified-shop.org"><b>Webseite</b></a>.</div>');
+define('TEXT_INFO_UPDATE_RECOMENDED', '<div class="error_message">Es ist eine neue Version verf&uuml;gbar. Diese k&ouml;nnen Sie hier herunterladen: <a href="http://www.modified-shop.org/download" target="_blank">http://www.modified-shop.org/download</a></div>');
+define('TEXT_INFO_UPDATE_NOT_POSSIBLE', '<div class="error_message">Leider konnte keine &Uuml;berpr&uuml;fung gemacht werden. Bitte besuchen Sie unsere <a target="_blank" href="http://www.modified-shop.org"><b>Webseite</b></a>.</div>');
 define('TEXT_INFO_UPDATE', '<div class="success_message">Ihre Version ist aktuell.</div>');
 
 define('TEXT_HEADING_DEVELOPERS', 'Entwickler der modified eCommerce Shopsoftware:');
