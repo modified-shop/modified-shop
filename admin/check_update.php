@@ -20,7 +20,7 @@ require ('includes/application_top.php');
 
 // newsfeed
 require_once(DIR_FS_INC.'check_version_update.inc.php');
-$update_array = check_version_update(true);
+$update_array = check_version_update(false);
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
