@@ -38,7 +38,7 @@ define ('TEXT_SPECIALS_NO_PID', 'The item must first be stored, otherwise the di
 
 define('TEXT_CATSPECIALS_START_DATE_TT', 'Enter the date from when the offer price will apply.<br>');
 define('TEXT_CATSPECIALS_EXPIRES_DATE_TT', 'Leave the <strong>expiry date</strong> empty for no expiration.<br>');
-define('TEXT_CATSPECIALS_SPECIAL_QUANTITY_TT', 'You can enter the item quantity in the field <strong>Quantity</strong> for products the special price apply to.<br>Enter 0 in the field <strong>Quantity</strong>, if you don\'t want to limit the quantity.');
+define('TEXT_CATSPECIALS_SPECIAL_QUANTITY_TT', 'You can enter the item quantity in the field <strong>Quantity</strong> for products the special price apply to.<br>You can decide whether to check stock of specials or not under "Configuration" -> "Stock Options" -> "Check Specials Stock".');
 define('TEXT_CATSPECIALS_SPECIAL_PRICE_TT', 'You can enter a percentage to deduct in the Specials Price field, for example: <strong>20%</strong><br>If you enter a new price, the decimal separator must be a \'.\' (decimal-point), example: <strong>49.99</strong>');
 
 ?>
