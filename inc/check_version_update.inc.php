@@ -31,6 +31,9 @@
       $update_recomended = true;
     }
   
-    return $update_recomended;
+    return array(
+      'update' => $update_recomended,
+      'version' => $check_version,
+    );
   }
 ?>

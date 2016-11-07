@@ -50,7 +50,7 @@
 
   // newsfeed
   require_once(DIR_FS_INC.'check_version_update.inc.php');
-  $num_update = check_version_update();
+  $update_array = check_version_update();
   ?>
  
 <div id="fixed-header"<?php echo ((USE_ADMIN_FIXED_SEARCH == 'true') ? ' class="active"' : ''); ?>>
@@ -167,7 +167,7 @@
               'icon'  => 'icon_update.png',
               'name'  => BOX_UPDATE,
               'class' => 'right',
-              'count' => $num_update
+              'count' => $update_array['update']
             );
 
           // overwrite with hooks
