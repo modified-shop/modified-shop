@@ -83,5 +83,13 @@
         </a>
       </li>
     {/if}
+    
+    {if isset($UPDATE)}
+      <li class="right">
+        <a class="togglelink" href="{$UPDATE}" title="{#ab_update#}"><img src="{$tpl_path}img/adminbar_update.png" alt="{#ab_update#}" />
+        {if $UPDATE_COUNT > 0}<span class="icon_count">{$UPDATE_COUNT}</span>{/if}
+        </a>
+      </li>
+    {/if}
   </ul>
 </div>
