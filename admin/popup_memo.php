@@ -14,85 +14,55 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-   require('includes/application_top.php');
-   include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/customers.php');
+  require('includes/application_top.php');
+  include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/customers.php');
 
-if ($_GET['action']) {
-switch ($_GET['action']) {
+  if (isset($_GET['action'])) {
+    switch ($_GET['action']) {
 
-        case 'save':
-
+      case 'save':
         $memo_title = xtc_db_prepare_input($_POST['memo_title']);
         $memo_text = xtc_db_prepare_input($_POST['memo_text']);
 
         if ($memo_text != '' && $memo_title != '' ) {
           $sql_data_array = array(
-            'customers_id' => $_POST['ID'],
+            'customers_id' => $_GET['cID'],
             'memo_date' => date("Y-m-d"),
             'memo_title' =>$memo_title,
             'memo_text' => nl2br($memo_text),
-            'poster_id' => $_SESSION['customer_id']);
-
+            'poster_id' => (int)$_SESSION['customer_id']
+          );
           xtc_db_perform(TABLE_CUSTOMERS_MEMO, $sql_data_array);
-          }
+        }
+        xtc_redirect(xtc_href_link('popup_memo.php', xtc_get_all_get_params(array('action'))));
         break;
 
-        case 'remove':
-        xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." where memo_id='".$_GET['mID']."'");
+      case 'edit':
+        if (isset($_GET['special']) && $_GET['special'] == 'remove_memo') {
+          xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." where memo_id='".(int)$_GET['mID']."'");
+        }
+        xtc_redirect(xtc_href_link('popup_memo.php', xtc_get_all_get_params(array('action','special','mID'))));
         break;
-
-}
-}
-
-require (DIR_WS_INCLUDES.'head.php');
-?>
-
-</head>
-<body>
-<div class="pageHeading"><?php echo TITLE_MEMO; ?></div></p>
-    <table width="100%">
-      <tr>
-      <?php echo xtc_draw_form('customers_memo', 'popup_memo.php', 'action=save&ID='.(int)$_GET['ID'], 'post'); ?>
-        <td class="main" style="border-top: 1px solid; border-color: #cccccc;"><b><?php echo TEXT_TITLE ?></b>:<?php echo xtc_draw_input_field('memo_title').xtc_draw_hidden_field('ID',(int)$_GET['ID']); ?><br /><?php echo xtc_draw_textarea_field('memo_text', 'soft', '73', '5'); ?><br /><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>'; ?></td>
-      </tr>
-    </table></form>
-<table width="100%"  border="0" cellpadding="0" cellspacing="0">
-
-  <tr>
-    <td>
-
-
-
-    <td class="main"><?php
-  $memo_query = xtc_db_query("SELECT
-                                  *
-                              FROM
-                                  " . TABLE_CUSTOMERS_MEMO . "
-                              WHERE
-                                  customers_id = '" . (int)$_GET['ID'] . "'
-                              ORDER BY
-                                  memo_id DESC");
-  while ($memo_values = xtc_db_fetch_array($memo_query)) {
-    $poster_query = xtc_db_query("SELECT customers_firstname, customers_lastname FROM " . TABLE_CUSTOMERS . " WHERE customers_id = '" . $memo_values['poster_id'] . "'");
-    $poster_values = xtc_db_fetch_array($poster_query);
-?><table width="100%">
-      <tr>
-        <td class="main"><hr noshade><b><?php echo TEXT_DATE; ?></b>:<i><?php echo $memo_values['memo_date']; ?><br /></i><b><?php echo TEXT_TITLE; ?></b>:<?php echo $memo_values['memo_title']; ?><br /><b>  <?php echo TEXT_POSTER; ?></b>:<?php echo $poster_values['customers_lastname']; ?> <?php echo $poster_values['customers_firstname']; ?></td>
-      </tr>
-      <tr>
-        <td width="142" class="main" style="border: 1px solid; border-color: #cccccc;"><?php echo $memo_values['memo_text']; ?></td>
-      </tr>
-      <tr>
-        <td><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link('popup_memo.php', 'ID=' . $_GET['ID'] . '&action=remove&mID=' . $memo_values['memo_id']); ?>" onclick="return confirmLink('<?php echo DELETE_ENTRY; ?>', '', this)"><?php echo BUTTON_DELETE; ?></a></td>
-      </tr>
-    </table>
-<?php
+    }
   }
-?>
-  </td>
-    </td>
-  </tr>
-</table>
 
-</body>
+  require (DIR_WS_INCLUDES.'head.php');
+?>
+</head>
+  <body>
+    <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_customers.png'); ?></div>
+    <div class="flt-l">
+      <div class="pageHeading"><?php echo TITLE_MEMO; ?></div>
+      <div class="main pdg2"><?php echo BOX_HEADING_CUSTOMERS; ?></div>
+    </div>
+    <?php echo xtc_draw_form('customers_memo', 'popup_memo.php', 'action=save&cID='.(int)$_GET['cID'], 'post'); ?>  
+      <table class="tableConfig borderall">
+        <tr>
+        <?php
+          require(DIR_WS_INCLUDES.'modules/customer_memo.php');
+        ?>
+        </tr>
+      </table>
+    </form>
+  </body>
 </html>
