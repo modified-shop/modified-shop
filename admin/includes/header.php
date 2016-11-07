@@ -48,7 +48,7 @@
   $num_news_query = xtc_db_query("SELECT count(*) as total FROM newsfeed WHERE news_date > '".NEWSFEED_LAST_READ."'");
   $num_news = xtc_db_fetch_array($num_news_query);
 
-  // newsfeed
+  // check update
   require_once(DIR_FS_INC.'check_version_update.inc.php');
   $update_array = check_version_update();
   ?>

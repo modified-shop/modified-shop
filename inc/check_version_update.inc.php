@@ -15,6 +15,11 @@
   function check_version_update($cache = true) {
     $filename = SQL_CACHEDIR.'version.cache';
   
+    $version = PROJECT_VERSION;
+    if (!defined('RUN_MODE_ADMIN')) {
+      require_once(DIR_FS_CATALOG.DIR_ADMIN.'includes/version.php');
+    }
+
     if (!is_file($filename)
         || (filemtime($filename) + 86400) < time()
         || $cache === false
@@ -27,7 +32,7 @@
     $check_version = file_get_contents($filename);
   
     $update_recomended = false;
-    if (version_compare($check_version, PROJECT_VERSION, '>')) {
+    if (version_compare($check_version, $version, '>')) {
       $update_recomended = true;
     }
   

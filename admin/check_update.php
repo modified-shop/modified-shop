@@ -18,7 +18,7 @@
 
 require ('includes/application_top.php');
 
-// newsfeed
+// check update
 require_once(DIR_FS_INC.'check_version_update.inc.php');
 $update_array = check_version_update(false);
 
