@@ -82,46 +82,63 @@
     function alert(message, title) {
       title = title || 'Information';
       $.alert({
-          title: title,
-          content: (message ? message : ' '),
-          confirmButton: js_button_ok,
-          columnClass: 'jalert-width',
-          animation: 'none',
-          confirm: function(){
+        title: title,
+        content: (message ? message : ' '),
+        confirmButton: js_button_ok,
+        columnClass: 'jalert-width',
+        animation: 'none',
+        confirm: function(){
 
-          }
+        }
       });
     }  
-    //confirmSubmit
+
+    function confirmLink(message, title, link) {
+      title = title || 'Information';
+      $.confirm({
+        title: title,
+        content: (message ? message : ' '),
+        confirmButton: js_button_ok,
+        cancelButton: js_button_cancel,
+        columnClass: 'jalert-width',
+        animation: 'none',
+        confirm: function () {
+          if (typeof link !== 'undefined') {
+            location.href = link;
+          }
+        }
+      });
+      return false;
+    }  
+
     function confirmSubmit(message, title, form) { 
-        title = title || 'Information'; 
-        $.confirm({
-            keyboardEnabled: true,
-            title: title,
-            content: (message ? message : ' '),
-            confirmButton: js_button_yes,
-            cancelButton: js_button_no,
-            columnClass: 'jconfirm-width',
-            animation: 'none',
-            confirm: function () {
-                //console.log('form.submit: ' + form.name);
-                if (typeof js_submit !== 'undefined') {
-                    var addElement = $("<input type='hidden'/>");
-                    addElement.attr("name", js_submit.name).val(js_submit.value).appendTo(form);
-                }
-                form.submit();
-                if (typeof js_submit !== 'undefined') {
-                    addElement.remove();
-                }
-            },
-            cancel: function () {
-                var fimages = $("[name='products_image'],[name^='mo_pics_']");
-                if (fimages) {
-                    fimages.prop( "disabled", false );
-                }
-            }
-        });
-        return false;
+      title = title || 'Information'; 
+      $.confirm({
+        keyboardEnabled: true,
+        title: title,
+        content: (message ? message : ' '),
+        confirmButton: js_button_yes,
+        cancelButton: js_button_no,
+        columnClass: 'jconfirm-width',
+        animation: 'none',
+        confirm: function () {
+          if (typeof js_submit !== 'undefined') {
+            var addElement = $("<input type='hidden'/>");
+            addElement.attr("name", js_submit.name).val(js_submit.value).appendTo(form);
+          }
+          form.submit();
+          if (typeof js_submit !== 'undefined') {
+            addElement.remove();
+          }
+        },
+        cancel: function () {
+          var fimages = $("[name='products_image'],[name^='mo_pics_']");
+          if (fimages) {
+            fimages.prop( "disabled", false );
+          }
+        }
+      });
+      return false;
     } 
   /*]]>*/
   </script>
