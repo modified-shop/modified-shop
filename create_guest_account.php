@@ -166,6 +166,15 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   if (is_numeric($country) == false) {
     $error = true;
     $messageStack->add('create_account', ENTRY_COUNTRY_ERROR);
+  } else {
+    $check_country_query = xtc_db_query("SELECT countries_id
+                                           FROM ".TABLE_COUNTRIES."
+                                          WHERE countries_id = '".(int)$country."'
+                                            AND status = '1'");
+    if (xtc_db_num_rows($check_country_query) < 1) {
+      $error = true;
+      $messageStack->add('create_account', ENTRY_COUNTRY_ERROR);
+    }
   }
 
   $entry_state_has_zones = false;
