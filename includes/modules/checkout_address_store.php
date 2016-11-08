@@ -103,6 +103,15 @@
     if ((is_numeric($country) == false) || ($country < 1)) {
       $error = true;
       $messageStack->add('checkout_address', ENTRY_COUNTRY_ERROR);
+    } else {
+      $check_country_query = xtc_db_query("SELECT countries_id
+                                             FROM ".TABLE_COUNTRIES."
+                                            WHERE countries_id = '".(int)$country."'
+                                              AND status = '1'");
+      if (xtc_db_num_rows($check_country_query) < 1) {
+        $error = true;
+        $messageStack->add('checkout_address', ENTRY_COUNTRY_ERROR);
+      }
     }
 
     if (check_secure_form($_POST) === false) {
