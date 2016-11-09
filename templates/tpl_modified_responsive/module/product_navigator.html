@@ -1,0 +1,12 @@
+{config_load file="$language/lang_$language.conf" section="product_navigator"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="product_navigator"}
+<div class="productnavigator cf">
+  <span class="detail_back">{if $OVERVIEW != ''}<a href="{$OVERVIEW}">{#overview#}</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;{/if}{#product#}&nbsp;<strong>{$ACTUAL_PRODUCT}&nbsp;{#of#}&nbsp;{$PRODUCTS_COUNT}</strong>&nbsp;{#total#}</span>
+  <span class="detail_next_previous">
+    {if $FIRST != ''}<a href="{$FIRST}">{#first#}</a>{else}<span class="inactive">{#first#}</span>{/if}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+    {if $PREVIOUS != ''}<a href="{$PREVIOUS}">{#back#}</a>{else}<span class="inactive">{#back#}</span>{/if}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+    {if $NEXT != ''}<a href="{$NEXT}">{#next#}</a>{else}<span class="inactive">{#next#}</span>{/if}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+    {if $LAST != ''}<a href="{$LAST}">{#last#}</a>{else}<span class="inactive">{#last#}</span>{/if}
+  </span>
+</div>

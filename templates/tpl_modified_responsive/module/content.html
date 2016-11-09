@@ -1,0 +1,11 @@
+{if isset($CONTENT_HEADING)}<h1>{$CONTENT_HEADING}</h1>{/if}
+<div class="content_site cf">
+  {if isset($file)}
+    {$CONTENT_BODY}
+    {$file}
+  {else}
+    {if isset($SUB_CONTENT_LISTING)}<div class="subcontent cf">{$SUB_CONTENT_LISTING}</div>{/if}
+    {$CONTENT_BODY}
+  {/if}
+</div>
+<div class="button_left cf"><div class="cssButtonPos4">{$BUTTON_CONTINUE}</div></div>
