@@ -95,7 +95,15 @@ class PayPalCommon extends PayPalAuth {
 
 
   function get_totals($totals, $calc_total = false) {
-        
+    
+    for ($i = 0, $n = sizeof($totals); $i < $n; $i ++) {
+      switch(((isset($totals[$i]['code'])) ? $totals[$i]['code'] : $totals[$i]['class'])) {
+        case 'ot_subtotal':
+          $sortorder_subtotal = $totals[$i]['sort_order'];
+          break;
+      }
+    }
+    
     for ($i = 0, $n = sizeof($totals); $i < $n; $i ++) {
       switch(((isset($totals[$i]['code'])) ? $totals[$i]['code'] : $totals[$i]['class'])) {
         case 'ot_subtotal_no_tax':
@@ -118,10 +126,12 @@ class PayPalCommon extends PayPalAuth {
           }
           break;
         default:
-          if($totals[$i]['value'] < 0) {
-            $this->details->setShippingDiscount($this->details->getShippingDiscount() + $totals[$i]['value']);
-          } else {
-            $this->details->setHandlingFee($this->details->getHandlingFee() + $totals[$i]['value']);
+          if ($totals[$i]['sort_order'] > $sortorder_subtotal) {
+            if($totals[$i]['value'] < 0) {
+              $this->details->setShippingDiscount($this->details->getShippingDiscount() + $totals[$i]['value']);
+            } else {
+              $this->details->setHandlingFee($this->details->getHandlingFee() + $totals[$i]['value']);
+            }
           }
           break;
       }
