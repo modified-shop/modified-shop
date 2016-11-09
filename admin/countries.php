@@ -191,7 +191,7 @@
                   <td class="dataTableContent txta-c" style="width:40px"><?php echo $countries['countries_iso_code_2']; ?></td>
                   <td class="dataTableContent txta-c" style="width:40px"><?php echo $countries['countries_iso_code_3']; ?></td>
                   <td class="dataTableContent txta-c"><?php echo $status; ?></td>
-                  <td class="dataTableContent txta-r"><?php if ( isset($cInfo) && (is_object($cInfo)) && ($countries['countries_id'] == $cInfo->countries_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')).'page=' . $_GET['page'] . '&cID=' . $countries['countries_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                  <td class="dataTableContent txta-r"><?php if ( isset($cInfo) && (is_object($cInfo)) && ($countries['countries_id'] == $cInfo->countries_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')).'page=' . $_GET['page'] . '&cID=' . $countries['countries_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
             <?php
               }

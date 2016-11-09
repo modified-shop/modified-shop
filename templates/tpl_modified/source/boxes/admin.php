@@ -46,6 +46,14 @@ if ($admin_access['newsfeed'] == '1') {
   $box_smarty->assign('NEWSFEED', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'newsfeed.php','', 'NONSSL'));
 }
 
+// update check
+if ($admin_access['check_update'] == '1') {
+  require_once(DIR_FS_INC.'check_version_update.inc.php');
+  $update_array = check_version_update();
+  $box_smarty->assign('UPDATE_COUNT', $update_array['update']);
+  $box_smarty->assign('UPDATE', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'check_update.php','', 'NONSSL'));
+}
+
 // language
 if ($admin_access['languages'] == '1' || $admin_access['categories'] == '1') {
   $languages_string = '';

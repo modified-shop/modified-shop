@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: header.php 5065 2013-07-15 12:22:56Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -47,6 +47,10 @@
   // news count
   $num_news_query = xtc_db_query("SELECT count(*) as total FROM newsfeed WHERE news_date > '".NEWSFEED_LAST_READ."'");
   $num_news = xtc_db_fetch_array($num_news_query);
+
+  // check update
+  require_once(DIR_FS_INC.'check_version_update.inc.php');
+  $update_array = check_version_update();
   ?>
  
 <div id="fixed-header"<?php echo ((USE_ADMIN_FIXED_SEARCH == 'true') ? ' class="active"' : ''); ?>>
@@ -162,7 +166,8 @@
               'mode'  => 0,
               'icon'  => 'icon_update.png',
               'name'  => BOX_UPDATE,
-              'class' => 'right'
+              'class' => 'right',
+              'count' => $update_array['update']
             );
 
           // overwrite with hooks

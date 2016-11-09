@@ -319,7 +319,7 @@ if (xtc_not_null($action) && $action != 'delete') {
                       <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_specials'] == 0 ? NO : YES;?></td>
                       <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_payment_unallowed'];?></td>
                       <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_shipping_unallowed'];?></td>
-                      <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($customers_status['customers_status_id'] == $cInfo->customers_status_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $customers_status['customers_status_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                      <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($customers_status['customers_status_id'] == $cInfo->customers_status_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $customers_status['customers_status_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                     </tr>
                     <?php
                   }

@@ -48,7 +48,7 @@ define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie das Sonderangebot l&
 define('TEXT_IMAGE_NONEXISTENT','Kein Bild verf&uuml;gbar!');
 
 define('TEXT_SPECIALS_PRICE_TIP', 'Sie k&ouml;nnen im Feld Angebotspreis auch prozentuale Werte angeben, z.B.: <strong>20%</strong><br>Wenn Sie einen neuen Preis eingeben, m&uuml;ssen die Nachkommastellen mit einem \'.\' getrennt werden, z.B.: <strong>49.99</strong>');
-define('TEXT_SPECIALS_QUANTITY_TIP', 'Im Feld <strong>Anzahl</strong> k&ouml;nnen Sie die St&uuml;ckzahl eingeben, f&uuml;r die das Angebot gelten soll.<br>Tragen Sie im Feld <strong>Anzahl</strong> eine 0 ein, wenn Sie die Anzahl nicht begrenzen wollen.');
+define('TEXT_SPECIALS_QUANTITY_TIP', 'Im Feld <strong>Anzahl</strong> k&ouml;nnen Sie die St&uuml;ckzahl eingeben, f&uuml;r die das Angebot gelten soll.<br>Unter "Konfiguration" -> "Lagerverwaltungs Optionen" -> "&Uuml;berpr&uuml;fen der Sonderangebote" k&ouml;nnen Sie entscheiden, ob der Bestand von Sonderangeboten &uuml;berpr&uuml;ft werden soll.');
 define('TEXT_SPECIALS_START_DATE_TIP', 'Geben Sie das Datum an, ab wann der Angebotspreis gelten soll.<br>');
 define('TEXT_SPECIALS_EXPIRES_DATE_TIP', 'Lassen Sie das Feld <strong>G&uuml;ltig bis</strong> leer, wenn der Angebotspreis zeitlich unbegrenzt gelten soll.<br>');
 ?>
