@@ -27,7 +27,19 @@ $CSRFKeep = false;
 if (defined('RUN_MODE_ADMIN')) {
   foreach(auto_include(DIR_FS_ADMIN.'includes/extra/csrf_exclusion/','php') as $file) require_once ($file);
   
-  $exclusions = array('print_order', 'print_packingslip', 'bill', 'popup', 'haendlerbund', 'new_attributes', 'products_tags', 'magnalister', 'validproducts', 'validcategories');
+  $exclusions = array(
+    'bill', 
+    'haendlerbund', 
+    'magnalister', 
+    'new_attributes', 
+    'popup', 
+    'popup_memo',
+    'print_order', 
+    'print_packingslip', 
+    'products_tags', 
+    'validproducts', 
+    'validcategories',
+  );
   if (isset($user_exclusions) && is_array($user_exclusions)) {
     $exclusions = array_merge($exclusions, $user_exclusions);
   }

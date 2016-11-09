@@ -75,11 +75,11 @@
               </td>
               <td class="dataTableContent" align="left"><?php echo $content_array['content_read']; ?></td>
               <td class="dataTableContent" align="left">
-                <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&special=delete_product&coID='.$content_array['content_id'].'&set=product'); ?>" onclick="return confirm('<?php echo CONFIRM_DELETE; ?>')">
+                <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&special=delete_product&coID='.$content_array['content_id'].'&set=product'); ?>" onclick="return confirmLink('<?php echo CONFIRM_DELETE.'<br/>'.CONTINUE_WITHOUT_SAVE; ?>', '', this)">
                 <?php
-                  echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirm(\''.DELETE_ENTRY.'\')"').'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
+                  echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer"').'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
                 ?>
-                <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&action=edit_products_content&coID='.$content_array['content_id'].'&set=product'); ?>">
+                <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&action=edit_products_content&coID='.$content_array['content_id'].'&set=product'); ?>" onclick="return confirmLink('<?php echo CONTINUE_WITHOUT_SAVE; ?>', '', this)">
                 <?php
                   echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','','style="cursor:pointer"').'  '.TEXT_EDIT.'</a>';
                   if (preg_match('/.gif/i',$content_array['content_file'])

@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: backup.php 1780 2011-02-08 02:09:45Z cybercosmonaut $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -273,7 +273,7 @@
                               <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'action=download&file=' . $entry) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . $entry; ?></td>
                               <td class="dataTableContent txta-c" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry)); ?></td>
                               <td class="dataTableContent txta-r" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_BACKUP . $entry)); ?> bytes</td>
-                              <td class="dataTableContent txta-r" ><?php if ( (isset($buInfo) && is_object($buInfo)) && ($entry == $buInfo->file) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $entry) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                              <td class="dataTableContent txta-r" ><?php if ( (isset($buInfo) && is_object($buInfo)) && ($entry == $buInfo->file) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $entry) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                             </tr>
                             <?php
                           }
@@ -309,18 +309,14 @@
 
                       $contents = array('form' => xtc_draw_form('backup', BK_FILENAME, 'action=backupnow'));
                       $contents[] = array('text' => TEXT_INFO_NEW_BACKUP);
-                      if ($messageStack->size > 0) {
-                        $contents[] = array('text' => '<br />' . xtc_draw_radio_field('compress', 'no', true) . ' ' . TEXT_INFO_USE_NO_COMPRESSION);
-                      } else {
-                        if(function_exists('gzopen')) {
-                          $contents[] = array('text' => '<br />' . xtc_draw_radio_field('compress', 'gzip', true) . ' ' . TEXT_INFO_USE_GZIP);
-                        }
-                        $contents[] = array('text' => xtc_draw_radio_field('compress', 'no') . ' ' . TEXT_INFO_USE_NO_COMPRESSION);
-                        $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('remove_collate', 'yes', false) . ' ' . TEXT_REMOVE_COLLATE);
-                        $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('complete_inserts', 'yes', true) . ' ' . TEXT_COMPLETE_INSERTS);
-                        if (!$check_utf8) {
-                          $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('utf8-convert', 'yes', false) . ' ' . TEXT_CONVERT_TO_UTF);
-                        }
+                      if (function_exists('gzopen')) {
+                        $contents[] = array('text' => '<br />' . xtc_draw_radio_field('compress', 'gzip', true) . ' ' . TEXT_INFO_USE_GZIP);
+                      }
+                      $contents[] = array('text' => xtc_draw_radio_field('compress', 'no', !function_exists('gzopen')) . ' ' . TEXT_INFO_USE_NO_COMPRESSION);
+                      $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('remove_collate', 'yes', false) . ' ' . TEXT_REMOVE_COLLATE);
+                      $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('complete_inserts', 'yes', true) . ' ' . TEXT_COMPLETE_INSERTS);
+                      if (!$check_utf8) {
+                        $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('utf8-convert', 'yes', false) . ' ' . TEXT_CONVERT_TO_UTF);
                       }
                       $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_BACKUP . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP) . '">' . BUTTON_CANCEL . '</a>');
                       break;

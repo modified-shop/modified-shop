@@ -565,6 +565,7 @@ class categories {
       $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
       xtc_db_perform(TABLE_PRODUCTS, $sql_data_array);
       $products_id = xtc_db_insert_id();
+      $products_data['products_id'] = $products_id;
       $sql_data_array = array('products_id' => $products_id,
                               'categories_id' => $dest_category_id);
       xtc_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, $sql_data_array);                   
@@ -1321,7 +1322,7 @@ class categories {
       if (substr($products_data['specials_price'], -1) != '%'){
         $products_data['specials_price'] = $this->priceCheck($products_data['specials_price'], $products_data['tax_rate']);
       } else {
-        $products_data['specials_price'] = ($products_data['products_price_hidden'] - (($products_data['specials_price'] / 100) * $products_data['products_price_hidden']));
+        $products_data['specials_price'] = ($products_data['products_price'] - (($products_data['specials_price'] / 100) * $products_data['products_price']));
       }
 
       $expires_date = isset($products_data['specials_expires']) && !empty($products_data['specials_expires']) ? date('Y-m-d H:i:s', strtotime($products_data['specials_expires'].' 23:59:59')) : '';

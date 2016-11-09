@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: content_manager_products.php 5007 2013-07-04 09:31:37Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -126,9 +126,9 @@ if (!$action) {
                       </td>
                       <td class="dataTableContent txta-c"><?php echo $content_array[$ii]['read']; ?></td>
                       <td class="dataTableContent">
-                        <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete_product&coID='.$content_array[$ii]['id'].'&pID='.$products_ids[$i]['id'].'&set='.$set); ?>" onclick="return confirm('<?php echo CONFIRM_DELETE; ?>')">
+                        <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete_product&coID='.$content_array[$ii]['id'].'&pID='.$products_ids[$i]['id'].'&set='.$set); ?>" onclick="return confirmLink('<?php echo DELETE_ENTRY; ?>', '', this)">
                         <?php
-                          echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirm(\''.DELETE_ENTRY.'\')"').'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
+                          echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirmLink(\''. DELETE_ENTRY .'\', \'\' ,this)"').'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
                         ?>
                         <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit_products_content&coID='.$content_array[$ii]['id'].$setparam); ?>">
                           <?php

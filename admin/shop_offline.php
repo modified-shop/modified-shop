@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: shop_offline.php 3512 2012-08-23 17:46:58Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -58,8 +58,7 @@
   
   $customers_statuses_array = xtc_get_customers_statuses();
   unset($customers_statuses_array[0]); //Admin
-  unset($customers_statuses_array[1]); //Guest
-  //echo '<pre>'.print_r($customers_statuses_array,1).'</pre>';
+  unset($customers_statuses_array[DEFAULT_CUSTOMERS_STATUS_ID_GUEST]); //Guest
   $customers_statuses_array = array_merge($customers_statuses_array);
  
   $offline_status_array = array(

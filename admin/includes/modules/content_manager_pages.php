@@ -14,7 +14,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 if (!$action) {
   $icon_edit = xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','','style="cursor:pointer"');
-  $icon_delete = xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirm(\''.DELETE_ENTRY.'\')"');
+  $icon_delete = xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer"');
   $icon_preview = xtc_image(DIR_WS_ICONS.'preview.gif', ICON_PREVIEW,'','','style="cursor:pointer"');
   $icon_status_on = xtc_image(DIR_WS_IMAGES.'icon_lager_green.gif', BUTTON_STATUS_ON);
   $icon_status_off = xtc_image(DIR_WS_IMAGES.'icon_lager_red.gif', BUTTON_STATUS_OFF);
@@ -72,7 +72,7 @@ if (!$action) {
           <td class="dataTableContent txta-r nobr">
           <?php
             if ($content_data['content_delete'] == '1') {
-              echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$content_data['content_group']).'&coIndex='.$content_data['content_group_index'].'" onclick="return confirm(\''.CONFIRM_DELETE.'\')">'.$icon_delete.'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
+              echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$content_data['content_group']).'&coIndex='.$content_data['content_group_index'].'" onclick="return confirmLink(\''. DELETE_ENTRY .'\', \'\' ,this)">'.$icon_delete.'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
             }
             echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$content_data['content_group']).'&coIndex='.$content_data['content_group_index'].'">'.$icon_edit.'  '.TEXT_EDIT.'</a>&nbsp;&nbsp;';
             echo '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$content_data['content_group']).'&preview=true&coIndex='.$content_data['content_group_index'].'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=640,height=600\')">'.$icon_preview.'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
@@ -110,7 +110,7 @@ if (!$action) {
             <td class="dataTableContent txta-r nobr">
             <?php
               if ($sub_content_data['content_delete'] == '1') {
-                echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'" onclick="return confirm(\''.CONFIRM_DELETE.'\')">'.$icon_delete.'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
+                echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'" onclick="return confirmLink(\''. DELETE_ENTRY .'\', \'\' ,this)">'.$icon_delete.'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
               }
               echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'">'.$icon_edit.'  '.TEXT_EDIT.'</a>&nbsp;&nbsp;';
               echo '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$sub_content_data['content_group']).'&preview=true&coIndex='.$sub_content_data['content_group_index'].'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')">'.$icon_preview.'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';

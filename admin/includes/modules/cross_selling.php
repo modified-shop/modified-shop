@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: cross_selling.php 5201 2013-07-22 11:57:22Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -68,7 +68,7 @@
     </div>
 
       <?php
-      echo xtc_draw_form('cross_selling', FILENAME_CATEGORIES, '', 'GET', '');
+      echo xtc_draw_form('cross_selling', FILENAME_CATEGORIES, '', 'GET', $confirm_submit);
         echo xtc_draw_hidden_field('action', 'edit_crossselling');
         echo xtc_draw_hidden_field('special', 'edit');
         echo xtc_draw_hidden_field('current_product_id', $_GET['current_product_id']);
@@ -143,7 +143,7 @@
           ?>
         </table>
         <div class="mrg5">
-          <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" onclick="return confirm('<?php echo SAVE_ENTRY; ?>')">
+          <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
         </div>
       </form>
 

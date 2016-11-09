@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: new_category.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -25,7 +25,6 @@
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-  //$confirm_save_entry = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onclick="return confirm(\''. SAVE_ENTRY .'\')"' : '';
   $confirm_save_entry = ' onclick="ButtonClicked(this);"';
   $confirm_submit = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onsubmit="return confirmSubmit(\'\',\''. SAVE_ENTRY .'\',this)"' : '';
 

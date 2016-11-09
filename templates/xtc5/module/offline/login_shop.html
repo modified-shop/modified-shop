@@ -1,17 +1,13 @@
 {config_load file="$language/lang_$language.conf" section="login"}
 {config_load file="$language/lang_$language.conf" section="newsletter"}
-{config_load file="lang_`$language`.custom"}
-{config_load file="lang_`$language`.section" section="login"}
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="{$charset}" />
 <title>Shop-Login</title>
 <meta name="robots" content="noindex, nofollow, noodp" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <style type="text/css">
-<!--
-
+{literal}
 body {
   font-family: Tahoma, sans-serif;
   font-weight: normal;
@@ -144,7 +140,7 @@ table td {
   background: -moz-linear-gradient(top,  #242424,  #494949);
   filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#242424', endColorstr='#494949');
 }
--->
+{/literal}
 </style>
 </head>
 <body>
