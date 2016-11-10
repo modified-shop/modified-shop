@@ -25,7 +25,7 @@ class PayoneModified {
 	protected $_frontend_url;
 	protected $_server_api_url;
   
-  public $integrator_version = '1.03';
+  public $integrator_version = '1.04';
   public $api_version = '3.10';
   public $logging = false;
   
@@ -120,6 +120,7 @@ class PayoneModified {
       ),
       'ewallet' => array(
         'paypal',
+        'paydirekt',
       ),
       'accountbased' => array(
         'lastschrift', 

@@ -116,6 +116,7 @@ define('paymenttype_invoice', 'Sale on account');
 define('paymenttype_prepay', 'Cash in advance');
 define('paymenttype_cod', 'Cash on delivery');
 define('paymenttype_paypal', 'PayPal');
+define('paymenttype_paydirekt', 'PayDirekt');
 define('paymenttype_sofortueberweisung', 'Sofort&uuml;berweisung');
 define('paymenttype_giropay', 'GiroPay');
 define('paymenttype_eps', 'EPS');

@@ -116,6 +116,7 @@ define('paymenttype_invoice', 'Rechnung');
 define('paymenttype_prepay', 'Vorkasse');
 define('paymenttype_cod', 'Nachnahme');
 define('paymenttype_paypal', 'PayPal');
+define('paymenttype_paydirekt', 'PayDirekt');
 define('paymenttype_sofortueberweisung', 'Sofort&uuml;berweisung');
 define('paymenttype_giropay', 'GiroPay');
 define('paymenttype_eps', 'EPS');

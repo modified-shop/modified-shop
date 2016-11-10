@@ -19,15 +19,15 @@
 
 require_once (DIR_FS_EXTERNAL.'payone/classes/PayonePayment.php');
 
-class payone_wlt extends PayonePayment {
+class payone_paydirekt extends PayonePayment {
 	var $payone_genre = 'ewallet';
 
 	function __construct() {
-		$this->code = 'payone_wlt';
+		$this->code = 'payone_paydirekt';
 		parent::__construct();
 		$this->form_action_url = '';
 	}
-
+  
   function update_status() {
     parent::update_status();
     
@@ -36,7 +36,7 @@ class payone_wlt extends PayonePayment {
       
       foreach ($genre_config['types'] as $key => $value) {
         if ($genre_config['types'][$key]['active'] != 'true'
-            && $genre_config['types'][$key]['name'] == 'paymenttype_paypal'
+            && $genre_config['types'][$key]['name'] == 'paymenttype_paydirekt'
             ) 
         {
           $this->enabled = false;
@@ -44,7 +44,7 @@ class payone_wlt extends PayonePayment {
       }
     }
   }
-
+  
 	function selection() {
 		$selection = parent::selection();
 
@@ -76,7 +76,7 @@ class payone_wlt extends PayonePayment {
 		parent::_set_customers_shipping_params();
 
 		$this->payment_method = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_Wallet();
-		$this->payment_method->setWallettype('PPE');
+		$this->payment_method->setWallettype('PDT');
 		$this->payment_method->setSuccessurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PROCESS.'?'.xtc_session_name().'='.xtc_session_id());
 		$this->payment_method->setBackurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id());
 		$this->payment_method->setErrorurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id().'&payment_error='.$this->code);
