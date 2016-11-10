@@ -25,7 +25,7 @@ class checkout_express
         $this->enabled = ((MODULE_CHECKOUT_EXPRESS_STATUS == 'true') ? true : false);
 
         if (defined('RUN_MODE_ADMIN') && $this->enabled === true) {
-          $this->description .= ((defined('MODULE_'.strtoupper($this->code).'_DESCRIPTION_INSTALL')) ? constant('MODULE_'.strtoupper($this->code).'_DESCRIPTION_INSTALL').'<a class="button btnbox" style="text-align:center;" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&moduleaction=content') . '">' . 'Content '.BUTTON_MODULE_INSTALL . '</a>' : '');
+          $this->description .= ((defined('MODULE_'.strtoupper($this->code).'_DESCRIPTION_INSTALL')) ? constant('MODULE_'.strtoupper($this->code).'_DESCRIPTION_INSTALL').'<a class="button btnbox" style="text-align:center;" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&moduleaction=content') . '">' . MODULE_CHECKOUT_EXPRESS_BUTTON_INSTALL . '</a>' : '');
           if (isset($_GET['moduleaction']) && $_GET['moduleaction'] == 'content') {
             $this->content_install();
             unset($_GET['moduleaction']);
