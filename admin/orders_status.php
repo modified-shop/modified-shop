@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: orders_status.php 1497 2010-11-15 18:06:58Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -129,8 +129,6 @@
   }
   require (DIR_WS_INCLUDES.'head.php');
 ?>
-<script type="text/javascript" src="includes/general.js"></script>
-</head>
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
 <body>
