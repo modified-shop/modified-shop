@@ -18,6 +18,10 @@
 
   require('includes/application_top.php');
 
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_ORDERS_STATUS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (xtc_not_null($action)) {
@@ -167,7 +171,7 @@
                                               FROM " . TABLE_ORDERS_STATUS . " 
                                              WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
                                           ORDER BY sort_order";
-                $orders_status_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $orders_status_query_raw, $orders_status_query_numrows);
+                $orders_status_split = new splitPageResults($_GET['page'], $page_max_display_results, $orders_status_query_raw, $orders_status_query_numrows);
                 $orders_status_query = xtc_db_query($orders_status_query_raw);
                 while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
                   if ((!isset($_GET['oID']) || (isset($_GET['oID']) && ($_GET['oID'] == $orders_status['orders_status_id']))) && !isset($oInfo) && (substr($action, 0, 3) != 'new')) {
@@ -194,18 +198,18 @@
               ?>
             </table>
                 
-            <div class="smallText pdg2 flt-l"><?php echo $orders_status_split->display_count($orders_status_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS_STATUS); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $orders_status_split->display_links($orders_status_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $orders_status_split->display_count($orders_status_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS_STATUS); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $orders_status_split->display_links($orders_status_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+            <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
 
             <?php
             if (empty($action)) {
-            ?>
-              <div class="clear"></div>      
+              ?>
               <div class="pdg2 flt-r smallText"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&action=new') . '">' . BUTTON_INSERT . '</a>'; ?></div>
-           <?php
-              }
+              <?php
+            }
             ?>               
-            </td>
+          </td>
           <?php
             $heading = array();
             $contents = array();
