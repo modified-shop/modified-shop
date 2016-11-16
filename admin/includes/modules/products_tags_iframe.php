@@ -28,10 +28,11 @@ if (defined('USE_TAGS_IFRAME') && USE_TAGS_IFRAME == 'true') {
   function tags_iframe_link($pID, $icon=false)
   {
     global $icon_padding;
+    $sid = SID ? '&'. SID : '';
     if ($icon) {
-      $link = '<a href="javascript:iframeBox_show('. $pID .', \''.TEXT_PRODUCTS_TAGS.'\' , \''.NEW_TAGS_IFRAME_FILENAME.'\');">' . xtc_image(DIR_WS_ICONS . 'icon_edit_tags.gif', TEXT_PRODUCTS_TAGS,'', '', $icon_padding). '</a>';
+      $link = '<a href="javascript:iframeBox_show('. $pID .', \''.TEXT_PRODUCTS_TAGS.'\' , \''.NEW_TAGS_IFRAME_FILENAME.'\',\''.$sid.'\');">' . xtc_image(DIR_WS_ICONS . 'icon_edit_tags.gif', TEXT_PRODUCTS_TAGS,'', '', $icon_padding). '</a>';
     } else {
-      $link = '<a href="javascript:iframeBox_show('. $pID .', \''.TEXT_PRODUCTS_TAGS.'\' , \''.NEW_TAGS_IFRAME_FILENAME.'\');" class="button">'. TEXT_PRODUCTS_TAGS.'</a>';
+      $link = '<a href="javascript:iframeBox_show('. $pID .', \''.TEXT_PRODUCTS_TAGS.'\' , \''.NEW_TAGS_IFRAME_FILENAME.'\',\''.$sid.'\');" class="button">'. TEXT_PRODUCTS_TAGS.'</a>';
     }
     return $link;
   }
