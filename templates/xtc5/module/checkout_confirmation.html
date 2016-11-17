@@ -82,7 +82,7 @@
   {if $ORDER_COMMENTS != ''}
     <br />
     <h2>{#text_comments#}</h2>
-    <div class="text">&nbsp;<a href="{$PAYMENT_EDIT}">{#text_edit#}</a></div>
+    <div class="text">&nbsp;{if isset($PAYMENT_EDIT)}<a href="{$PAYMENT_EDIT}">{#text_edit#}</a>{/if}</div>
     <div style="clear:both;padding: 0 5px;">{$ORDER_COMMENTS}</div>
   {/if}
 
