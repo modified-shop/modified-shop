@@ -831,8 +831,8 @@ class categories {
         //write to DB
         $sql_data_array = $mo_img;
         unset($sql_data_array['image_id']);
-        $sql_data_array = array('products_id' => $this->dup_products_id,
-                                'image_name' => $dup_products_image_name);
+        $sql_data_array['products_id'] = $this->dup_products_id;
+        $sql_data_array['image_name'] = $dup_products_image_name;
 
         xtc_db_perform(TABLE_PRODUCTS_IMAGES, $sql_data_array);
       }
