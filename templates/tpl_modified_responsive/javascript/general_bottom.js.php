@@ -1,6 +1,6 @@
 <?php
 /*-----------------------------------------------------------
-   $Id: general_bottom.js.php 10309 2016-10-04 10:42:01Z GTB $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -44,7 +44,7 @@ foreach ($script_array as $script) {
     $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true});
     $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true});
     $("#print_order_layer").on('submit', function(event) {
-      $.colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", href:$(this).attr("action") + $(this).serialize()});
+      $.colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", href:$(this).attr("action") + '&' + $(this).serialize()});
       return false;
     });
     $('select').SumoSelect();

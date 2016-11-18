@@ -32,7 +32,10 @@ $order_query_check = xtc_db_query("SELECT customers_id
 $order_check = xtc_db_fetch_array($order_query_check);
 
 if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check['customers_id']) 
-    || (isset($_POST['customer_id']) && $_POST['customer_id'] == $order_check['customers_id'])) {
+    || (isset($_POST['customer_id']) && $_POST['customer_id'] == $order_check['customers_id'])
+    || (isset($_GET['customer_id']) && $_GET['customer_id'] == $order_check['customers_id'])
+    ) 
+{
 
   // get order data
   include (DIR_WS_CLASSES.'order.php');
