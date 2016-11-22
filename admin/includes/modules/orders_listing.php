@@ -135,7 +135,7 @@
                                           WHERE s.language_id = '".(int)$_SESSION['languages_id']."'
                                                 ".$filter.$sort;
 
-                } elseif ($action == 'search' && $oID) {
+                } elseif ($action == 'search' && $oID && $customer == '') {
                      // ADMIN SEARCH BAR $orders_query_raw moved it to the top
                 } elseif ($action == 'search' && $customer) {
                       $orders_query_raw = "-- /admin/orders.php

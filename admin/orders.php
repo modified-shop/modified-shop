@@ -140,7 +140,7 @@ while ($carrier = xtc_db_fetch_array($carriers_query)) {
 }
 
 //admin search bar
-if ($action == 'search' && $oID) {
+if ($action == 'search' && $oID && $customer == '') {
   $orders_query_raw = "-- /admin/orders.php
                      SELECT ".$order_select_fields.",
                             s.orders_status_name
