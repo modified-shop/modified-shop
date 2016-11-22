@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -40,6 +40,8 @@ $specials_query = xtc_db_query("SELECT p.products_id,
                                   JOIN ".TABLE_SPECIALS." s 
                                        ON p.products_id = s.products_id
                                           AND s.status = '1'
+                                          AND (now() >= s.start_date
+                                               OR s.start_date IS NULL)
                                  WHERE p.products_status = '1'
                                        ".PRODUCTS_CONDITIONS_P."                                             
                               ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
