@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: specials.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -68,6 +68,8 @@ if ($language_not_found === true) {
                           JOIN ".TABLE_SPECIALS." s
                                 ON p.products_id = s.products_id
                                    AND s.status = '1'
+                                   AND (now() >= s.start_date
+                                        OR s.start_date IS NULL)
                                 ".$filter_join."
                           WHERE p.products_status = '1'
                                 ".PRODUCTS_CONDITIONS_P."
