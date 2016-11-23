@@ -277,6 +277,7 @@ class order_total {
               'text' => $GLOBALS[$class]->output[$i]['text'],
               'value' => $GLOBALS[$class]->output[$i]['value'],
               'class' => $class,
+              'sort_order' => ((isset($GLOBALS[$class]->output[$i]['sort_order'])) ? $GLOBALS[$class]->output[$i]['sort_order'] : $GLOBALS[$class]->sort_order)
             );
           }
         }
