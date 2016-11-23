@@ -69,12 +69,24 @@ function smarty_function_googleanalytics($params, &$smarty) {
       </script>
     ';
   } else {
+    // chache analytics.js
+    $cache_gs = DIR_FS_CATALOG.'cache/analytics.js';
+    if (!is_file($cache_gs) || (time() - filemtime($cache_gs) > 3600)) {
+      require_once(DIR_FS_INC.'get_external_content.inc.php');
+      $source_gs = get_external_content('http://www.google-analytics.com/analytics.js', 2, false);
+      if (file_put_contents($cache_gs, $source_gs, LOCK_EX) !== false) {
+        $gs = xtc_href_link('cache/analytics.js', '', $request_type, false);
+      }
+    } elseif (is_file($cache_gs)) {
+      $gs = xtc_href_link('cache/analytics.js', '', $request_type, false);
+    }
+
     $beginCode = "
       <script type=\"text/javascript\">
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        })(window,document,'script',".((isset($gs)) ? "'".$gs."'" : '//www.google-analytics.com/analytics.js').",'ga');
   
         ga('create', '".$account."', '".$account_domain."');
         ga('set', 'anonymizeIp', true);\n";
