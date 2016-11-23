@@ -1,7 +1,7 @@
 <?php 
 /* -------------------------------------------------------------------------------------
 jquery.image_processing.php
-Vers. 3.52 (c) www.rpa-com.de
+Vers. 3.53 (c) www.rpa-com.de
 * ----------------------------------------------------------------------------------- */
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
@@ -36,7 +36,7 @@ jQuery(document).submit(function(e){
         $('.ajax_count').html('0');
         updateProgressBar(1,'image',0);
         var ajax_url = form.attr("action");
-        ajax_url += ''<?php echo SID ? '&'. SID : '';?>;
+        ajax_url += <?php echo SID ? "'&". SID ."'": "''";?>;
         var dataStr = form.serialize();
         ajaxCall(ajax_url, dataStr);
     }
