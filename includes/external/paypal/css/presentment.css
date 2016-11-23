@@ -44,6 +44,8 @@
 .psc_checkout {
   border: 0px;
   padding: 0px;
+  max-width: 500px;
+  float: left;
 }
 .paypal_short_container_item {
   margin: 0 0 0px 0;
