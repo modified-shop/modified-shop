@@ -1094,12 +1094,6 @@ class PayPalPayment extends PayPalPaymentBase {
 	}
     
 
-  function format_price_currency($price) {
-    $xtPrice = new xtcPrice('EUR', $_SESSION['customers_status']['customers_status_id']);
-    return $xtPrice->xtcFormat($price, true);
-  }
-
-
   function validate_paypal_installment() {
     // auth
     $apiContext = $this->apiContext();
@@ -1114,15 +1108,21 @@ class PayPalPayment extends PayPalPaymentBase {
       // get financing offered
       $credit_financing_offered = $payment->getCreditFinancingOffered();
       
-      // set installment
-      $_SESSION['paypal']['installment'] = array(
-        'total_cost' => $credit_financing_offered->getTotalCost()->getValue(),
-        'term' => $credit_financing_offered->getTerm(),
-        'monthly_payment' => $credit_financing_offered->getMonthlyPayment()->getValue(),
-        'total_interest' => $credit_financing_offered->getTotalInterest()->getValue(),
-        'payer_acceptance' => $credit_financing_offered->getPayerAcceptance(),
-        'cart_amount_immutable' => $credit_financing_offered->getCartAmountImmutable(),
-      );
+      if (is_object($credit_financing_offered)) {
+        // set installment
+        $_SESSION['paypal']['installment'] = array(
+          'total_cost' => $credit_financing_offered->getTotalCost()->getValue(),
+          'term' => $credit_financing_offered->getTerm(),
+          'monthly_payment' => $credit_financing_offered->getMonthlyPayment()->getValue(),
+          'total_interest' => $credit_financing_offered->getTotalInterest()->getValue(),
+          'payer_acceptance' => $credit_financing_offered->getPayerAcceptance(),
+          'cart_amount_immutable' => $credit_financing_offered->getCartAmountImmutable(),
+        );
+      } else {
+        $this->LoggingManager->log(print_r($payment, true), 'DEBUG');
+        unset($_SESSION['paypal']);
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+      }
     } catch (Exception $ex) { 
       $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
       unset($_SESSION['paypal']);
