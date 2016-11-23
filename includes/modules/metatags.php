@@ -629,6 +629,9 @@ if (strpos($meta_robots,'noindex') !== false) {
 } else {
   $meta_url = parse_url($_SERVER['REQUEST_URI']);
   parse_str($meta_url['query'], $meta_params_array);
+  if (isset($meta_params_array[xtc_session_name()])) {
+    unset($meta_params_array[xtc_session_name()]);
+  }
   if (count($meta_params_array) && !isset($meta_params_array['language']) && (!isset($_GET['page']) || $_GET['page'] > 1)) {
     $set_hreflang = false;
   }
@@ -651,6 +654,14 @@ if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $set_hreflang && count($lng->catalo
   reset($lng->catalog_languages);
   while (list($key, $value) = each($lng->catalog_languages)) {
     $alternate_link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'language', 'currency')).'language='.$key, 'NONSSL', false);
+    /*
+    // dont show hreflang  for urls with language param
+    $meta_url = parse_url($alternate_link);
+    parse_str($meta_url['query'], $meta_params_array);
+    if (isset($meta_params_array['language'])) {
+      break;
+    }
+    */
     if ($alternate_link != '#') {
       if ($x_default_flag === false) {
         $meta_alternate['x-default'] = '<link rel="alternate" href="'.$alternate_link.'" hreflang="x-default" />';
