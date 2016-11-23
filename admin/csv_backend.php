@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: csv_backend.php 5750 2013-09-13 13:26:51Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -29,6 +29,7 @@
       if ($upload_file = &xtc_try_upload('file_upload',DIR_FS_CATALOG.'import/','644',$accepted_file_upload_files_extensions,$accepted_file_upload_files_mime_types)) {
         ${$upload_file_name} = $upload_file->filename;
       }
+      xtc_redirect(xtc_href_link(FILENAME_CSV_BACKEND));
     break;
 
     case 'import':
