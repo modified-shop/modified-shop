@@ -1076,23 +1076,7 @@ class PayPalPayment extends PayPalPaymentBase {
     
     return $presentments;
   }
-  
-  
-	function get_min_installment_amount() {
-		return array(
-		  'amount' => 99.00, 
-		  'currency' => 'EUR',
-		);
-	}
-
-
-	function get_max_installment_amount() {
-		return array(
-		  'amount' => 5000.00, 
-		  'currency' => 'EUR',
-		);
-	}
-    
+      
 
   function validate_paypal_installment() {
     // auth
@@ -1108,8 +1092,8 @@ class PayPalPayment extends PayPalPaymentBase {
       // get financing offered
       $credit_financing_offered = $payment->getCreditFinancingOffered();
       
+      // set installment
       if (is_object($credit_financing_offered)) {
-        // set installment
         $_SESSION['paypal']['installment'] = array(
           'total_cost' => $credit_financing_offered->getTotalCost()->getValue(),
           'term' => $credit_financing_offered->getTerm(),

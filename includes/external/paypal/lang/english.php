@@ -93,7 +93,7 @@ $lang_array = array(
   'TEXT_PAYPALINSTALLMENT_NOTICE' => 'Finanzierung verf&uuml;gbar ab %s bis %s Warenkorbwert mit',
   'TEXT_PAYPALINSTALLMENT_NOTICE_PRODUCT' => 'Sie k&ouml;nnen diesen Artikel auch finanzieren!',
   'TEXT_PAYPALINSTALLMENT_NOTICE_CART' => 'Sie k&ouml;nnen diesen Warenkorb auch finanzieren!',
-  'TEXT_PAYPALINSTALLMENT_NOTICE_CHECKOUT' => 'Sie k&ouml;nnen diese Bestellung auch finanzieren!',
+  'TEXT_PAYPALINSTALLMENT_NOTICE_PAYMENT' => 'Sie k&ouml;nnen diese Bestellung auch finanzieren!',
   
   'TEXT_PAYPALINSTALLMENT_CREDITOR' => 'Darlehensgeber',
   'TEXT_PAYPALINSTALLMENT_INFO_LINK' => 'Informationen zu m&ouml;glichen Raten',

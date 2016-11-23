@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="{$smarty.const.DIR_WS_BASE}includes/external/paypal/css/presentment.css" type="text/css" media="screen" />
-<div class="paypal_short_container_outer{if isset($checkout)} psco_checkout{/if} cf">
-  <div class="paypal_short_container{if isset($cart)} psc_cart{elseif isset($checkout)} psc_checkout{/if} cf">
+<div class="paypal_short_container_outer{if isset($payment)} psco_checkout{/if} cf">
+  <div class="paypal_short_container{if isset($cart)} psc_cart{elseif isset($payment)} psc_checkout{/if} cf">
     {if isset($presentment)}
       {foreach name=aussen item=data from=$presentment}
         <div class="paypal_short_container_item cf">

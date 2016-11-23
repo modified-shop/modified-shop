@@ -81,30 +81,7 @@ class paypalinstallment extends PayPalPayment {
   function selection() {
     global $order, $request_type;
     
-    $pp_smarty = new Smarty();
-    
-    if ($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_UPSTREAM_PAYMENT') == '1') {
-      $presentment_array = $this->get_presentment($this->total_amount, $order->info['currency'], $order->billing['country']['iso_code_2'], true);
-      $pp_smarty->assign('presentment', array($presentment_array));
-      $pp_smarty->assign('details', '1');
-      $pp_smarty->assign('logo_image', xtc_image(DIR_WS_IMAGES.'icons/pp_credit-german_v_rgb.png'));
-    } else {
-      $pp_smarty->assign('logo_image', xtc_image(DIR_WS_IMAGES.'icons/pp_credit-german_h_rgb.png'));
-    }
-    
-    $total = $this->total_amount;
-    $country['countries_iso_code_2'] = $order->billing['country']['iso_code_2'];
-    include(DIR_FS_EXTERNAL.'paypal/modules/presentment.php');
-
-    $pp_smarty->assign('checkout', true);
-    $pp_smarty->assign('creditor', $store_owner);
-    $pp_smarty->assign('link_class', $link_class);
-    $pp_smarty->assign('link', $link);
-    $pp_smarty->assign('notice', TEXT_PAYPALINSTALLMENT_NOTICE_CHECKOUT);
-    $pp_smarty->assign('total_amount', $this->format_price_currency($this->total_amount));
-
-    $pp_smarty->assign('language', $_SESSION['language']);
-    $presentment = $pp_smarty->fetch(DIR_FS_EXTERNAL.'paypal/templates/presentment_info.html');
+    $presentment = $this->get_presentment_details($this->total_amount, $order->info['currency'], $order->billing['country']['iso_code_2'], 'payment');
 
     return array(
       'id' => $this->code, 
