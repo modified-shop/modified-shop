@@ -450,7 +450,7 @@
                  $from_str .= "LEFT OUTER JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) ";
                  $from_str .= "LEFT OUTER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) ";
                }
-               $from_str .= "LEFT OUTER JOIN ".TABLE_SPECIALS." AS s ON (p.products_id = s.products_id) AND s.status = '1'";
+               $from_str .= "LEFT OUTER JOIN ".TABLE_SPECIALS." AS s ON (p.products_id = s.products_id) AND s.status = '1' AND (now() >= s.start_date OR s.start_date IS NULL) ";
                //where-string
                $where_str = " WHERE pd.language_id = '".(int) $_SESSION['languages_id']."'";
                $where_str .= $current_category_id != '' ? " AND p2c.categories_id = '" . (int)$current_category_id ."'" : '';
@@ -533,7 +533,7 @@
                   $add_where = ' WHERE p.products_status = 0 ';
                   $add_join = '';
                 } 
-                $add_join .= "LEFT OUTER JOIN ".TABLE_SPECIALS." AS s ON (p.products_id = s.products_id) AND s.status = '1'";
+                $add_join .= "LEFT OUTER JOIN ".TABLE_SPECIALS." AS s ON (p.products_id = s.products_id) AND s.status = '1' AND (now() >= s.start_date OR s.start_date IS NULL) ";
                 $add_select = 's.specials_new_products_price,specials_quantity,expires_date,s.status as specials_status,';
                 $select_str = "SELECT $add_select
                                       p.products_tax_class_id,

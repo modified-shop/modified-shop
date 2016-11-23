@@ -298,7 +298,7 @@ if ($category_depth == 'nested') {
                          ".$from."
                LEFT JOIN ".TABLE_SPECIALS." s
                          ON p.products_id = s.products_id 
-                            AND s.status = '1'
+                            ".SPECIALS_CONDITIONS_S."
                    WHERE p.products_status = '1'
                          ".PRODUCTS_CONDITIONS_P."
                          ".$where."

@@ -1951,7 +1951,8 @@
     $product_query = xtc_db_query("SELECT specials_new_products_price
                                      FROM " . TABLE_SPECIALS . "
                                     WHERE products_id = '" . (int)$product_id . "'
-                                      AND status = '1'");
+                                      AND status = '1'
+                                      AND (now() >= s.start_date OR s.start_date IS NULL)");
     $product = xtc_db_fetch_array($product_query);
     return $product['specials_new_products_price'];
   }

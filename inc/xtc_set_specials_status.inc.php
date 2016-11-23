@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_set_specials_status.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -18,7 +18,7 @@
    
   // Sets the status of a special product
   function xtc_set_specials_status($specials_id, $status) {
-    if ($status != '1') {
+    if ((int)$status != 1) {
       $status = 0;
     }
     xtc_db_query("UPDATE " . TABLE_SPECIALS . " 

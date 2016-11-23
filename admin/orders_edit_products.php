@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: orders_edit_products.php 5338 2013-08-06 13:00:51Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -188,9 +188,12 @@ if ($_GET['action'] =='product_search') {
                                    pd.products_name                                         
                               FROM " . TABLE_PRODUCTS . " p
                               JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                                ON p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                   ON p.products_id = pd.products_id 
+                                      AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                          LEFT JOIN " . TABLE_SPECIALS . " s
-                                ON p.products_id = s.products_id AND s.status = 1                             
+                                   ON p.products_id = s.products_id 
+                                      AND s.status = 1 
+                                      AND (now() >= s.start_date OR s.start_date IS NULL)                      
                              WHERE (pd.products_name LIKE ('%" . $_GET['search'] . "%') OR 
                                     p.products_model LIKE ('%" . $_GET['search'] . "%') OR 
                                     p.products_ean LIKE ('%" . $_GET['search'] . "%')

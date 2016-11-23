@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: products_new.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -86,6 +86,7 @@ if ($language_not_found === true) {
                                                 AND c.categories_status=1
                                    LEFT JOIN ".TABLE_SPECIALS." s
                                              ON p.products_id = s.products_id
+                                                ".SPECIALS_CONDITIONS_S."
                                              ".$filter_join."
                                        WHERE p.products_status = '1'
                                              ".PRODUCTS_CONDITIONS_P."
@@ -138,6 +139,7 @@ if ($language_not_found === true) {
                                               AND c.categories_status=1
                                  LEFT JOIN ".TABLE_SPECIALS." s
                                            ON p.products_id = s.products_id
+                                              ".SPECIALS_CONDITIONS_S."
                                            ".$filter_join."
                                      WHERE p.products_status = '1'
                                            ".PRODUCTS_CONDITIONS_P."

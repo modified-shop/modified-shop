@@ -20,9 +20,7 @@ function check_specials() {
                                                        AND pd.language_id = ".(int)$_SESSION['languages_id']."
                                                JOIN ".TABLE_SPECIALS." s
                                                     ON p.products_id = s.products_id
-                                                       AND s.status = '1'
-                                                       AND (now() >= s.start_date
-                                                            OR s.start_date IS NULL)
+                                                       ".SPECIALS_CONDITIONS_S."
                                               WHERE p.products_status = '1'
                                                     ".PRODUCTS_CONDITIONS_P);
     if (xtc_db_num_rows($products_specials_query) > 0) {

@@ -175,9 +175,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $special_expires_date_query = "SELECT expires_date
                                      FROM ".TABLE_SPECIALS."
                                     WHERE products_id = '".$product->data['products_id']."'
-                                      AND status = '1'
-                                      AND (start_date IS NULL 
-                                           OR start_date <= NOW())";
+                                          ".SPECIALS_CONDITIONS;
     $special_expires_date_query = xtDBquery($special_expires_date_query);
     if (xtc_db_num_rows($special_expires_date_query, true) > 0) {
       $sDate = xtc_db_fetch_array($special_expires_date_query, true);

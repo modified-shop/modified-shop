@@ -121,11 +121,7 @@ class ot_coupon {
     if (isset($_POST['gv_redeem_code']) && $_POST['gv_redeem_code']) {
 
       // INFOS ÜBER KUPON AUSLESEN
-      $coupon_query = xtc_db_query("select coupon_id, coupon_amount,
-                                           coupon_type, coupon_minimum_order,
-                                           coupon_start_date, coupon_expire_date,
-                                           uses_per_coupon, uses_per_user,
-                                           restrict_to_products, restrict_to_categories
+      $coupon_query = xtc_db_query("select *
                                       from ".TABLE_COUPONS."
                                      where coupon_code='".$_POST['gv_redeem_code']."'
                                        and coupon_active='Y'");
@@ -180,13 +176,10 @@ class ot_coupon {
     $od_amount = 0;
     if (isset ($_SESSION['cc_id'])) {
 
-      $coupon_query = xtc_db_query("SELECT coupon_code, coupon_amount, coupon_minimum_order,
-                                           restrict_to_products, restrict_to_categories,
-                                           coupon_type
+      $coupon_query = xtc_db_query("SELECT *
                                       FROM ".TABLE_COUPONS."
                                      WHERE coupon_id = '".$_SESSION['cc_id']."'
-                                       AND coupon_active = 'Y'
-                                   ");
+                                       AND coupon_active = 'Y'");
       if (xtc_db_num_rows($coupon_query) != 0) {
         $coupon_array = xtc_db_fetch_array($coupon_query);
 
@@ -287,7 +280,10 @@ class ot_coupon {
         if (MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES != 'true'){
           $pr_c = 0;
           for ($i = 0; $i < sizeof($order->products); $i ++) {
-            $product_query = "select specials_new_products_price from ".TABLE_SPECIALS." where products_id = '".xtc_get_prid($order->products[$i]['id'])."' and status=1";
+            $product_query = "SELECT specials_new_products_price 
+                                FROM ".TABLE_SPECIALS." 
+                               WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."' 
+                                     ".SPECIALS_CONDITIONS;
             $product_query = xtDBquery($product_query);
             $product = xtc_db_fetch_array($product_query, true);
             if($product['specials_new_products_price']) {
@@ -498,20 +494,18 @@ class ot_coupon {
   
   function get_cat_ids_array($products_id) {
     $cat_ids_array = array();
-    $category_query = xtDBquery(
-        "SELECT p2c.categories_id 
-           FROM " . TABLE_PRODUCTS . " p, 
-                " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c,
-                " . TABLE_CATEGORIES . " c
-          WHERE p.products_id = '" . (int)$products_id . "' 
-            AND p.products_status = '1' 
-            AND p.products_id = p2c.products_id 
-            AND p2c.categories_id != 0 
-            AND c.categories_id = p2c.categories_id
-            AND c.categories_status = '1'
-        ");
-    if (xtc_db_num_rows($category_query,true)) {
-      while ($category = xtc_db_fetch_array($category_query)) {
+    $category_query = xtDBquery("SELECT p2c.categories_id 
+                                   FROM " . TABLE_PRODUCTS . " p
+                                   JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+                                        ON p.products_id = p2c.products_id 
+                                           AND p2c.categories_id != 0 
+                                   JOIN " . TABLE_CATEGORIES . " c
+                                        ON c.categories_id = p2c.categories_id
+                                           AND c.categories_status = '1'
+                                  WHERE p.products_id = '" . (int)$products_id . "' 
+                                    AND p.products_status = '1'");
+    if (xtc_db_num_rows($category_query, true)) {
+      while ($category = xtc_db_fetch_array($category_query, true)) {
         xtc_get_parent_categories($categories, $category['categories_id']);
         $categories[] = $category['categories_id'];
         $categories = array_reverse($categories);

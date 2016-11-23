@@ -1,6 +1,6 @@
 <?php
 /*
-   $Id: $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -35,7 +35,7 @@ $p_group_check = GROUP_CHECK == 'true' ? ' AND p.group_permission_'.$customers_s
 
 $products_conditions_p = $fsk_lock . $p_group_check . (isset($products_conditions_p) ? $products_conditions_p : '');
 define('PRODUCTS_CONDITIONS_P', $products_conditions_p);
-define('PRODUCTS_CONDITIONS', str_replace('p.','', $products_conditions_p));
+define('PRODUCTS_CONDITIONS', str_replace('p.', '', $products_conditions_p));
 
 
 # CATEGORIES
@@ -46,8 +46,12 @@ $c_group_check = GROUP_CHECK == 'true' ? " AND c.group_permission_".$customers_s
 
 $categories_conditions_c = $c_group_check . (isset($categories_conditions_c) ? $categories_conditions_c : '');
 define('CATEGORIES_CONDITIONS_C', $categories_conditions_c);
-define('CATEGORIES_CONDITIONS', str_replace('c.','', $categories_conditions_c));
+define('CATEGORIES_CONDITIONS', str_replace('c.', '', $categories_conditions_c));
 
 
-  
+# SPECIALS
+########################
+$specials_conditions_s = " AND s.status = '1' AND (now() >= s.start_date OR s.start_date IS NULL) " . (isset($specials_conditions_s) ? $specials_conditions_s : '');
+define('SPECIALS_CONDITIONS_S', $specials_conditions_s);
+define('SPECIALS_CONDITIONS', str_replace('s.', '', $specials_conditions_s));
 ?>
