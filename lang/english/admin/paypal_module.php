@@ -41,6 +41,15 @@ $lang_array = array(
 
   'TEXT_PAYPAL_MODULE_SHIPPING_COST' => 'provisional shipping costs',
   'TEXT_PAYPAL_MODULE_SHIPPING_COST_INFO' => 'Amount for provisional shipping costs.',
+
+  'TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT' => 'Show at product',
+  'TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT_INFO' => 'Show details for Installment at product?',
+
+  'TEXT_PAYPAL_MODULE_UPSTREAM_CART' => 'Show at cart',
+  'TEXT_PAYPAL_MODULE_UPSTREAM_CART_INFO' => 'Show details for Installment at cart?',
+
+  'TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT' => 'Show at checkout',
+  'TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT_INFO' => 'Show details for Installment during checkout?',
 );
 
 

@@ -30,6 +30,7 @@
     'paypalpluslink',
     'paypalclassic',
     'paypallink',
+    'paypalinstallment',
     'sofort_sofortueberweisung_classic',
     'sofort_sofortueberweisung_gateway',
   );
@@ -140,7 +141,10 @@
         break;
 
       case 'edit':
-        if (strpos($module_class, 'paypal') !== false) {
+        if ($set == 'payment'
+            && strpos($module_class, 'paypal') !== false
+            ) 
+        {
           xtc_redirect(xtc_href_link('paypal_module.php', 'action=edit&module=' . $module_class));
         }
         break;

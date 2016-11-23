@@ -49,6 +49,7 @@ class PayPalPaymentBase extends PayPalCommon {
       $payment_sale = array(
         'paypalplus',
         'paypalpluslink',
+        'paypalinstallment',
       );
       $this->transaction_type = $this->get_config('PAYPAL_TRANSACTION_TYPE');
       if (in_array($this->code, $payment_sale)) {
@@ -65,7 +66,11 @@ class PayPalPaymentBase extends PayPalCommon {
   function update_status() {
     global $order;
 
-    if ($this->enabled == true && ((int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE') > 0)) {
+    if ($this->enabled == true
+        && defined('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')
+        && (int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE') > 0
+        ) 
+    {
       $check_flag = false;
       $check_query = xtc_db_query("SELECT zone_id 
                                      FROM ".TABLE_ZONES_TO_GEO_ZONES." 
@@ -356,9 +361,12 @@ class PayPalPaymentBase extends PayPalCommon {
 
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_STATUS', 'True', '6', '1', NULL, now(), '', 'xtc_cfg_select_option(array(\'True\', \'False\'),' )");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_SORT_ORDER', '0', '6', '2', NULL, now(), '', '')");
-    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_ALLOWED', '', '6', '3', NULL, now(), '', '')");
-    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_ZONE', '0', '6', '4', NULL, now(), 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(')");
-  
+    
+    if ($this->code != 'paypalinstallment') {
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_ALLOWED', '', '6', '3', NULL, now(), '', '')");
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_ZONE', '0', '6', '4', NULL, now(), 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(')");
+    }
+    
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_PAYMENT." ( 
                     paypal_id int(11) NOT NULL auto_increment, 
                     orders_id int(11) NOT NULL default '0', 
@@ -463,15 +471,23 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
-  function status_install() {
+  function status_install($stati = '') {
 
     // install order status
-    $stati = array('PAYPAL_INST_ORDER_STATUS_TMP_NAME' => 'PAYPAL_ORDER_STATUS_TMP_ID',
-                   'PAYPAL_INST_ORDER_STATUS_SUCCESS_NAME' => 'PAYPAL_ORDER_STATUS_SUCCESS_ID',
-                   'PAYPAL_INST_ORDER_STATUS_PENDING_NAME' => 'PAYPAL_ORDER_STATUS_PENDING_ID',
-                   'PAYPAL_INST_ORDER_STATUS_CAPTURED_NAME' => 'PAYPAL_ORDER_STATUS_CAPTURED_ID',
-                   'PAYPAL_INST_ORDER_STATUS_REFUNDED_NAME' => 'PAYPAL_ORDER_STATUS_REFUNDED_ID',
-                   'PAYPAL_INST_ORDER_STATUS_REJECTED_NAME' => 'PAYPAL_ORDER_STATUS_REJECTED_ID');
+    if (!is_array($stati) 
+        || (is_array($stati) && count($stati) < 1)
+        )
+    {
+      $stati = array(
+        'PAYPAL_INST_ORDER_STATUS_TMP_NAME' => 'PAYPAL_ORDER_STATUS_TMP_ID',
+        'PAYPAL_INST_ORDER_STATUS_SUCCESS_NAME' => 'PAYPAL_ORDER_STATUS_SUCCESS_ID',
+        'PAYPAL_INST_ORDER_STATUS_PENDING_NAME' => 'PAYPAL_ORDER_STATUS_PENDING_ID',
+        'PAYPAL_INST_ORDER_STATUS_CAPTURED_NAME' => 'PAYPAL_ORDER_STATUS_CAPTURED_ID',
+        'PAYPAL_INST_ORDER_STATUS_REFUNDED_NAME' => 'PAYPAL_ORDER_STATUS_REFUNDED_ID',
+        'PAYPAL_INST_ORDER_STATUS_REJECTED_NAME' => 'PAYPAL_ORDER_STATUS_REJECTED_ID',
+      );
+    }
+    
     foreach($stati as $statusname => $statusid) {
       $languages_query = xtc_db_query("SELECT * 
                                          FROM " . TABLE_LANGUAGES . " 

@@ -1,0 +1,101 @@
+.ppc_logo {
+  text-align:center;
+  margin: 0 0 10px 0;
+}
+.ppc_logo img {
+  width:100%;
+  max-width:200px;
+  height:auto;
+}
+.ppc_logo_small {
+  margin: 0 0 0px 0;
+  padding:4px 0px;
+}
+.ppc_logo_small img {
+  float:left;
+  width:100%;
+  max-width:200px;
+  height:auto;
+}
+.ppc_logo_cart img {
+  float:right;
+}
+.paypal_short_container_outer {
+  padding: 20px 0px 10px 0px;
+}
+.psco_checkout {
+  padding: 0px;
+}
+.paypal_short_container {
+  display:block;
+  width:100%;
+  float:right;
+  max-width:440px;
+  border: 1px solid #1099DB;
+  padding:5px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.psc_cart {
+  display:inline-block;
+  width:auto;
+}
+.psc_checkout {
+  border: 0px;
+  padding: 0px;
+}
+.paypal_short_container_item {
+  margin: 0 0 0px 0;
+  padding: 5px 0px;
+}
+.psc_rating_plan_heading {
+  font-weight:bold;
+  padding:0 0 5px 0;
+  font-size:12px;
+  line-height:16px;
+}
+.psc_rating_plan_example {
+  font-size:10px;
+  line-height:14px;
+  padding: 0px 0px 5px 0px;
+}
+.paypal_short_container_item table {
+  padding: 0px;
+  margin: 0px;
+  width:100%;
+  border-bottom: 1px solid #ddd;
+}
+.paypal_short_container_item table td {
+  text-align:left;
+  padding: 5px 0px;
+  vertical-align:top;
+  border-top: 1px solid #ddd;
+  font-size:10px;
+  line-height:12px;
+}
+.paypal_short_container_item table td.td_total {
+  text-align:right;
+  white-space:nowrap;
+  padding-left:5px;
+}
+.psc_rating_plan_short {
+  font-size:12px;
+  line-height:16px;
+  padding: 0 0 5px 0px;
+}
+.psc_creditor {
+  font-size:11px;
+  line-height:15px;
+  padding: 4px 0px;
+}
+.psc_notice {
+  font-size:11px;
+  line-height:15px;
+  padding: 4px 0px;
+}
+.psc_infolink {
+  font-size:11px;
+  line-height:15px;
+  padding: 1px 0px;
+}

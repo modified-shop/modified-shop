@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: order_total.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -234,7 +234,7 @@ class order_total {
                 'title' => $GLOBALS[$class]->output[$i]['title'], 
                 'text' => $GLOBALS[$class]->output[$i]['text'], 
                 'value' => $GLOBALS[$class]->output[$i]['value'], 
-                'sort_order' => $GLOBALS[$class]->sort_order
+                'sort_order' => ((isset($GLOBALS[$class]->output[$i]['sort_order'])) ? $GLOBALS[$class]->output[$i]['sort_order'] : $GLOBALS[$class]->sort_order)
                 );
             }
           }

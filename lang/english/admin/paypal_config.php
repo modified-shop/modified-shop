@@ -33,7 +33,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX_INFO' => 'Arbitrary string of letters (prefix), which is placed in front of each order number and is used for generating the PayPal invoice number.<br />This allows multiple store operation with only one PayPal App. Conflicts regarding the order numbers are avoided. Each order has its own invoice numbers within the PayPal account.',
 
   'TEXT_PAYPAL_CONFIG_TRANSACTION' => 'Transaction:',
-  'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'Chose type of Transaction.<br/><br/><b>Note:</b> With PayPal Plus always a Sale is made.',
+  'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'Chose type of Transaction.<br/><br/><b>Note:</b> With PayPal Plus and PayPal Installment always a Sale is made.',
 
   'TEXT_PAYPAL_CONFIG_CAPTURE' => 'Capture manually:',
   'TEXT_PAYPAL_CONFIG_CAPTURE_INFO' => 'Manually capture PayPal payments?<br/><br/><b>Note:</b> Therefore it is necessary that the Transaction is set to Authorize.',
@@ -81,4 +81,5 @@ $PAYPAL_INST_ORDER_STATUS_PENDING_NAME = 'PayPal pending';
 $PAYPAL_INST_ORDER_STATUS_CAPTURED_NAME = 'PayPal captured';
 $PAYPAL_INST_ORDER_STATUS_REFUNDED_NAME = 'PayPal refunded';
 $PAYPAL_INST_ORDER_STATUS_REJECTED_NAME = 'PayPal rejected';
+$PAYPAL_INST_ORDER_STATUS_ACCEPTED_NAME = 'PayPal accepted';
 ?>

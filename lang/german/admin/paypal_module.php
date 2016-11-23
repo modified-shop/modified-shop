@@ -41,6 +41,18 @@ $lang_array = array(
 
   'TEXT_PAYPAL_MODULE_SHIPPING_COST' => 'Vorl&auml;ufige Versandkosten',
   'TEXT_PAYPAL_MODULE_SHIPPING_COST_INFO' => 'Geben sie den Betrag f&uuml;r vorl&auml;ufige Versandkosten an.',
+
+  'TEXT_PAYPAL_MODULE_ORDER_STATUS_ACCEPTED' => 'Bestellstatus',
+  'TEXT_PAYPAL_MODULE_ORDER_STATUS_ACCEPTED_INFO' => 'W&auml;hlen sie den Bestellstatus.<br/><b>Wichtig:</b> die Bezeichnung darf nicht das Wort "bezahlt" enthalten.',
+  
+  'TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT' => 'Anzeige beim Artikel',
+  'TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT_INFO' => 'Sollen Details zur Ratenzahlung beim Artikel angezeigt werden?',
+
+  'TEXT_PAYPAL_MODULE_UPSTREAM_CART' => 'Anzeige im Warenkorb',
+  'TEXT_PAYPAL_MODULE_UPSTREAM_CART_INFO' => 'Sollen Details zur Ratenzahlung im Warenkorb angezeigt werden?',
+
+  'TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT' => 'Anzeige im Checkout',
+  'TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT_INFO' => 'Sollen Details zur Ratenzahlung im Checkout angezeigt werden?',
 );
 
 

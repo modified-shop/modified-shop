@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="{$smarty.const.DIR_WS_BASE}includes/external/paypal/css/presentment.css" type="text/css" media="screen" />
+<div class="paypal_short_container_outer{if isset($checkout)} psco_checkout{/if} cf">
+  <div class="paypal_short_container{if isset($cart)} psc_cart{elseif isset($checkout)} psc_checkout{/if} cf">
+    {if isset($presentment)}
+      {foreach name=aussen item=data from=$presentment}
+        <div class="paypal_short_container_item cf">
+          {if $details == '1'}
+            {if isset($logo_image)}
+              <div class="ppc_logo">{$logo_image}</div>
+            {/if}
+            <div class="psc_rating_plan_heading">{$smarty.const.TEXT_PAYPALINSTALLMENT_RATING_PLAN|sprintf:$data.monthly_payment:$data.term}</div>
+            <div class="psc_rating_plan_example">{$smarty.const.TEXT_PAYPALINSTALLMENT_LEGAL}</div>
+            <table>
+              <tr>
+                <td>{$smarty.const.TEXT_PAYPALINSTALLMENT_NOMINAL_RATE}:</td>
+                <td class="td_total">{$data.nominal_rate|number_format:"2":",":""} %</td>
+              </tr>
+              <tr>
+                <td>{$smarty.const.TEXT_PAYPALINSTALLMENT_APR}:</td>
+                <td class="td_total">{$data.apr|number_format:"2":",":""} %</td>
+              </tr>
+              <tr>
+                <td>{$smarty.const.TEXT_PAYPALINSTALLMENT_TOTAL_COST}:</td>
+                <td class="td_total"><b>{$data.total_cost}</b></td>
+              </tr>
+              <tr>
+                <td>{$data.term} {$smarty.const.TEXT_PAYPALINSTALLMENT_MONTHLY_PAYMENT}</td>
+                <td class="td_total"><b>{$data.monthly_payment}</b></td>
+              </tr>
+            </table>
+          {else}
+            <div class="psc_rating_plan_short">{$smarty.const.TEXT_PAYPALINSTALLMENT_RATING_PLAN_SHORT|sprintf:$data.monthly_payment}</div>
+            <div class="ppc_logo_small{if isset($cart)} ppc_logo_cart{/if} cf">{$logo_image}</div>
+          {/if}
+        </div>
+      {/foreach}
+
+      {if $details == '1'}
+        <div class="psc_creditor"><b>{$smarty.const.TEXT_PAYPALINSTALLMENT_CREDITOR}:</b> {$creditor}</div>
+      {/if}
+    {elseif isset($nopresentment)}
+      <div class="psc_notice">{$smarty.const.TEXT_PAYPALINSTALLMENT_NOTICE|sprintf:$min_amount:$max_amount}</div>
+      <div class="ppc_logo_small cf">{$logo_image}</div>
+    {else}
+      <div class="psc_notice">{$notice}</div>
+      <div class="ppc_logo_small cf">{$logo_image}</div>
+    {/if}
+    
+    {if !isset($nopresentment)}
+      <div class="psc_infolink"><a target="_blank" href="{$link}" title="Information" class="{$link_class}">{$smarty.const.TEXT_PAYPALINSTALLMENT_INFO_LINK}</a></div>
+    {/if}
+  </div>
+</div>

@@ -1,0 +1,133 @@
+<!DOCTYPE html{$doctype}>
+<html {$html_params}>
+<head>
+  <meta charset="{$charset}" />
+  <meta name="robots" content="noindex, nofollow, noodp" />
+  {if $base}<base href="{$base}" />{/if}
+  <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet.css" />
+  <style type="text/css">
+    .paypal_popup_container {
+      overflow:hidden;
+      padding:0px 10px;
+    }
+    .ppc_logo {
+      text-align:center;
+      margin: 0 0 10px 0;
+    }
+    .ppc_logo img {
+      width:100%;
+      max-width:200px;
+      height:auto;
+    }
+    .ppc_text {
+      font-size:13px;
+      line-height:21px;
+      text-align:center;
+      padding: 5px 0px;
+    }
+    .ppc_rating_row {
+      margin: 0px -5px 0px -5px !important;
+      padding: 10px 0 0 0;
+    }
+    .ppc_rating_item {
+      float:left;
+      width:50%;
+      padding: 0px 5px;
+      margin: 0px 0px 10px 0px;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    .ppc_rating_item_inner {
+      border: 1px solid #ccc;
+      padding:5px;
+    }
+    .ppc_rating_plan_heading {
+      text-align:center;
+      font-weight:bold;
+      padding:0 0 5px 0;
+    }
+    .ppc_rating_item table {
+      padding: 0px;
+      margin: 0px;
+      width:100%;
+    }
+    .ppc_rating_item table tr:nth-child(odd) td {
+      background:#f2f2f2;
+    }
+    .ppc_rating_item table td {
+      padding: 3px 0px;
+      vertical-align:top;
+      border-top: 1px solid #ddd;
+    }
+    .ppc_rating_item table td.td_total {
+      text-align:right;
+      white-space:nowrap;
+      padding-left:5px;
+    }
+    .ppc_disclaimer {
+      text-align:center;
+      font-size:10px;
+      line-height:12px;
+      padding: 4px 0px;
+    }
+    .ppc_store_owner {
+      text-align:center;
+      font-size:13px;
+      line-height:19px;
+      padding: 4px 0px;
+    }
+  </style>
+</head>
+<body class="popupcontent">
+<div class="paypal_popup_container cf">
+  
+  {if isset($logo_image)}
+    <div class="ppc_logo">{$logo_image}</div>
+  {/if}
+  
+  <div class="ppc_text">
+    <strong>{$smarty.const.TEXT_PAYPALINSTALLMENT_HEADING}</strong><br />
+    {$smarty.const.TEXT_PAYPALINSTALLMENT_DESCRIPTION}<br />
+    <strong>{$smarty.const.TEXT_PAYPALINSTALLMENT_TOTAL_NETTO}: {$total_amount}</strong>
+  </div>
+
+  <div class="ppc_rating_row cf">
+    {foreach name=aussen item=data from=$presentment}
+      <div class="ppc_rating_item">
+        <div class="ppc_rating_item_inner cf">
+
+          <div class="ppc_rating_plan_heading">Plan {$smarty.foreach.aussen.iteration}{if $data.mark} *{/if}</div>
+          <table>
+            <tr>
+              <td>{$data.term} {$smarty.const.TEXT_PAYPALINSTALLMENT_MONTHLY_PAYMENT}</td>
+              <td style="text-align:right;"><b>{$data.monthly_payment}</b></td>
+            </tr>
+            <tr>
+              <td>{$smarty.const.TEXT_PAYPALINSTALLMENT_NOMINAL_RATE}:</td>
+              <td class="td_total">{$data.nominal_rate|number_format:"2":",":""} %</td>
+            </tr>
+            <tr>
+              <td>{$smarty.const.TEXT_PAYPALINSTALLMENT_APR}:</td>
+              <td class="td_total">{$data.apr|number_format:"2":",":""} %</td>
+            </tr>
+            <tr>
+              <td>{$smarty.const.TEXT_PAYPALINSTALLMENT_TOTAL_INTEREST}:</td>
+              <td class="td_total">{$data.total_interest}</td>
+            </tr>
+            <tr>
+              <td>{$smarty.const.TEXT_PAYPALINSTALLMENT_TOTAL_COST}:</td>
+              <td class="td_total"><b>{$data.total_cost}</b></td>
+            </tr>
+          </table>
+
+        </div>
+      </div>
+    {/foreach}
+  </div>
+  <div class="ppc_disclaimer">* {$smarty.const.TEXT_PAYPALINSTALLMENT_LEGAL}</div>
+  <div class="ppc_store_owner"><b>{$smarty.const.TEXT_PAYPALINSTALLMENT_CREDITOR}:</b> {$creditor}</div>
+</div>
+
+</body>
+</html>
