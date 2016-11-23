@@ -39,7 +39,15 @@ if (isset($_GET['amount'])
       $pp_smarty->assign('base', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
     }
 
-    include(DIR_FS_EXTERNAL.'paypal/modules/presentment.php');
+    $store_owner = explode("\n", STORE_NAME_ADDRESS);
+    for ($i=0, $n=count($store_owner); $i<$n; $i++) {
+      if (trim($store_owner[$i]) == '') {
+        unset($store_owner[$i]);
+      } else {
+        $store_owner[$i] = trim($store_owner[$i]);
+      }
+    }
+    $store_owner = implode(', ', $store_owner);
 
     $pp_smarty->assign('creditor', $store_owner);
     $pp_smarty->assign('total_amount', $xtPrice->xtcFormat($_GET['amount'], true));
