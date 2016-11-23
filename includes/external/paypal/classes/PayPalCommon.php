@@ -69,6 +69,12 @@ class PayPalCommon extends PayPalAuth {
   }
   
   
+  function format_price_currency($price) {
+    $xtPrice = new xtcPrice('EUR', $_SESSION['customers_status']['customers_status_id']);
+    return $xtPrice->xtcFormat($price, true);
+  }
+
+
   function save_config($sql_data_array) {
     if (is_array($sql_data_array) && count($sql_data_array) > 0) {
       foreach ($sql_data_array as $sql_data) {        
