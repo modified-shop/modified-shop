@@ -25,7 +25,6 @@ if (isset($_GET['amount'])
     ) 
 {
   $paypal_installment = new PayPalPayment('paypalinstallment');
-  $paypal_installment->update_status(false);
 
   if ($paypal_installment->enabled === true) {
     $presentment_array = $paypal_installment->get_presentment($_GET['amount'], ((isset($_GET['currency'])) ? $_GET['currency'] : $_SESSION['currency']), $_GET['country']);
