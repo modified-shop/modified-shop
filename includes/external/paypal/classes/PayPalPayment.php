@@ -67,7 +67,8 @@ use PayPal\Api\CreditFinancing;
 class PayPalPayment extends PayPalPaymentBase {
 
 
-  function __construct($class) {   
+  function __construct($class) {  
+    $this->loglevel = $this->get_config('PAYPAL_LOG_LEVEL'); 
     $config = array(
       'LogEnabled' => ((defined('MODULE_PAYMENT_'.strtoupper($class).'_STATUS') && $this->get_config('PAYPAL_LOG_ENALBLED') == '1') ? true : false),
       'SplitLogging' => true,
@@ -200,6 +201,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $shipping_address->setLine2($this->encode_utf8($order->delivery['suburb']));
       }
       
+      $subtotal = 0;
       for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
         $item[$i] = new Item(); 
         $item[$i]->setName($this->encode_utf8($order->products[$i]['name']))
@@ -207,6 +209,7 @@ class PayPalPayment extends PayPalPaymentBase {
                  ->setQuantity($order->products[$i]['qty']) 
                  ->setPrice($order->products[$i]['price'])
                  ->setSku(($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : $order->products[$i]['id']); 
+        $subtotal += $order->products[$i]['price'] * $order->products[$i]['qty'];
       }  
       
       // set totals
@@ -216,7 +219,7 @@ class PayPalPayment extends PayPalPaymentBase {
         }
         $order_total_modules = new order_total();
         $order_totals = $order_total_modules->process();
-        $this->get_totals($order_totals, true);
+        $this->get_totals($order_totals, true, $subtotal);
       } else {
         $this->get_totals($order->totals);
       }

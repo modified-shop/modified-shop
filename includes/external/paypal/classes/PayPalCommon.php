@@ -116,7 +116,7 @@ class PayPalCommon extends PayPalAuth {
   }
 
 
-  function get_totals($totals, $calc_total = false) {
+  function get_totals($totals, $calc_total = false, $subtotal = 0) {
     
     for ($i = 0, $n = sizeof($totals); $i < $n; $i ++) {
       switch(((isset($totals[$i]['code'])) ? $totals[$i]['code'] : $totals[$i]['class'])) {
@@ -131,7 +131,7 @@ class PayPalCommon extends PayPalAuth {
         case 'ot_subtotal_no_tax':
           break;
         case 'ot_subtotal':
-          $this->details->setSubtotal($this->details->getSubtotal() + $totals[$i]['value']);
+          $this->details->setSubtotal((($subtotal > 0) ? $subtotal : $totals[$i]['value']));
           break;
         case 'ot_total':
           $this->amount->setTotal($totals[$i]['value']);
