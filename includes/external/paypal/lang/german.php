@@ -77,7 +77,7 @@ $lang_array = array(
   
   // template
   'TEXT_PAYPALINSTALLMENT_HEADING' => 'Zahlen sie bequem und einfach in monatlichen Raten',
-  'TEXT_PAYPALINSTALLMENT_DESCRIPTION' => 'Ihre Ratenzahlung und den passenden Finanzierungsplan können Sie im Rahmen des Bestellprozesses auswählen. Ihr Antrag erfolgt komplett online und wird in wenigen Schritten hier im Shop abgeschlossen.',
+  'TEXT_PAYPALINSTALLMENT_DESCRIPTION' => 'Ihre Ratenzahlung und den passenden Finanzierungsplan k&ouml;nnen Sie im Rahmen des Bestellprozesses ausw&auml;hlen. Ihr Antrag erfolgt komplett online und wird in wenigen Schritten hier im Shop abgeschlossen.',
 
   'TEXT_PAYPALINSTALLMENT_RATING_PLAN' => 'Finanzierung ab %s in %s Raten mit Ratenzahlung Powered by PayPal',
   'TEXT_PAYPALINSTALLMENT_RATING_PLAN_SHORT' => 'Finanzierung ab %s im Monat mit',

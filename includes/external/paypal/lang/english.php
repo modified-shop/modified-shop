@@ -76,27 +76,27 @@ $lang_array = array(
   'TEXT_PAYPAL_NO_STATUS_CHANGE' => 'no status change',
   
   // template
-  'TEXT_PAYPALINSTALLMENT_HEADING' => 'Zahlen sie bequem und einfach in monatlichen Raten',
-  'TEXT_PAYPALINSTALLMENT_DESCRIPTION' => 'Ihre Ratenzahlung und den passenden Finanzierungsplan können Sie im Rahmen des Bestellprozesses auswählen. Ihr Antrag erfolgt komplett online und wird in wenigen Schritten hier im Shop abgeschlossen.',
+  'TEXT_PAYPALINSTALLMENT_HEADING' => 'Pay easily in monthly installments',
+  'TEXT_PAYPALINSTALLMENT_DESCRIPTION' => 'You can choose your installment payment and the appropriate financing plan as part of the ordering process. Your application is completely online and will be completed in a few steps here in the shop.',
 
-  'TEXT_PAYPALINSTALLMENT_RATING_PLAN' => 'Finanzierung ab %s in %s Raten mit Ratenzahlung Powered by PayPal',
-  'TEXT_PAYPALINSTALLMENT_RATING_PLAN_SHORT' => 'Finanzierung ab %s im Monat mit',
+  'TEXT_PAYPALINSTALLMENT_RATING_PLAN' => 'Financing from %s with %s Installments Powered by PayPal',
+  'TEXT_PAYPALINSTALLMENT_RATING_PLAN_SHORT' => 'Financing from %s in the month with',
 
-  'TEXT_PAYPALINSTALLMENT_LEGAL' => 'Repr&auml;sentatives Beispiel gem. &sect; 6a PAngV',
-  'TEXT_PAYPALINSTALLMENT_NOMINAL_RATE' => 'fester Sollzinssatz',
-  'TEXT_PAYPALINSTALLMENT_APR' => 'effektiver Jahreszins',
-  'TEXT_PAYPALINSTALLMENT_TOTAL_COST' => 'Gesamtbetrag',
-  'TEXT_PAYPALINSTALLMENT_TOTAL_NETTO' => 'Nettodarlehensbetrag',
-  'TEXT_PAYPALINSTALLMENT_TOTAL_INTEREST' => 'Zinsbetrag',
-  'TEXT_PAYPALINSTALLMENT_MONTHLY_PAYMENT' => 'monatliche Raten in H&ouml;he von je',
+  'TEXT_PAYPALINSTALLMENT_LEGAL' => 'Representative example according to &sect; 6a PAngV',
+  'TEXT_PAYPALINSTALLMENT_NOMINAL_RATE' => 'Nominal rate',
+  'TEXT_PAYPALINSTALLMENT_APR' => 'Effective interest rate',
+  'TEXT_PAYPALINSTALLMENT_TOTAL_COST' => 'Total amount',
+  'TEXT_PAYPALINSTALLMENT_TOTAL_NETTO' => 'Net loan amount',
+  'TEXT_PAYPALINSTALLMENT_TOTAL_INTEREST' => 'Interest',
+  'TEXT_PAYPALINSTALLMENT_MONTHLY_PAYMENT' => 'Monthly installments of each',
 
-  'TEXT_PAYPALINSTALLMENT_NOTICE' => 'Finanzierung verf&uuml;gbar ab %s bis %s Warenkorbwert mit',
-  'TEXT_PAYPALINSTALLMENT_NOTICE_PRODUCT' => 'Sie k&ouml;nnen diesen Artikel auch finanzieren!',
-  'TEXT_PAYPALINSTALLMENT_NOTICE_CART' => 'Sie k&ouml;nnen diesen Warenkorb auch finanzieren!',
-  'TEXT_PAYPALINSTALLMENT_NOTICE_PAYMENT' => 'Sie k&ouml;nnen diese Bestellung auch finanzieren!',
+  'TEXT_PAYPALINSTALLMENT_NOTICE' => 'Financing available from %s to %s basket value with',
+  'TEXT_PAYPALINSTALLMENT_NOTICE_PRODUCT' => 'You can also finance this product!',
+  'TEXT_PAYPALINSTALLMENT_NOTICE_CART' => 'You can also finance this basket!',
+  'TEXT_PAYPALINSTALLMENT_NOTICE_PAYMENT' => 'You can also finance this order!',
   
-  'TEXT_PAYPALINSTALLMENT_CREDITOR' => 'Darlehensgeber',
-  'TEXT_PAYPALINSTALLMENT_INFO_LINK' => 'Informationen zu m&ouml;glichen Raten',
+  'TEXT_PAYPALINSTALLMENT_CREDITOR' => 'Borrower',
+  'TEXT_PAYPALINSTALLMENT_INFO_LINK' => 'Information on possible rates',
 
 );
 
