@@ -111,6 +111,12 @@
         {/if}
       </table>
       {/if}
+
+      {if $PAYPAL_INSTALLMENT}
+        <br class="clearfix" />
+        {$PAYPAL_INSTALLMENT}
+      {/if}
+
       {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<p>{#products_gift_forbidden#}</p>{/if}
     </div>
     {if $PRODUCTS_DESCRIPTION != ''}<div>{$PRODUCTS_DESCRIPTION}</div>{/if}
