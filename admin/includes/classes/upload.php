@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: upload.php 1630 2011-01-14 09:10:41Z franky-n-xtcm $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -15,7 +15,9 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+  
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+  
   class upload {
     var $file, $filename, $destination, $permissions, $extensions, $mime_types, $tmp_filename;
 
@@ -46,24 +48,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
                       'size' => $_FILES[$this->file]['size'],
                       'tmp_name' => $_FILES[$this->file]['tmp_name']);
       }
-      //BOF - DokuMan - 2010-12-25 - remove useless if-condition
-      /*
-      elseif (isset($_FILES[$this->file])) {
-        $file = array('name' => $_FILES[$this->file]['name'],
-                      'type' => $_FILES[$this->file]['type'],
-                      'size' => $_FILES[$this->file]['size'],
-                      'tmp_name' => $_FILES[$this->file]['tmp_name']);
-      }
-      else {
-        $file = array('name' => (isset($GLOBALS[$this->file . '_name']) ? $GLOBALS[$this->file . '_name'] : ''),
-                      'type' => (isset($GLOBALS[$this->file . '_type']) ? $GLOBALS[$this->file . '_type'] : ''),
-                      'size' => (isset($GLOBALS[$this->file . '_size']) ? $GLOBALS[$this->file . '_size'] : ''),
-                      'tmp_name' => (isset($GLOBALS[$this->file]) ? $GLOBALS[$this->file] : ''));
-      }
-      */
-      // EOF - DokuMan - 2010-12-25 - remove useless if-condition
 
-      //if (xtc_not_null($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name'])) {
       if (isset($file['tmp_name']) && !empty($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name'])) {
         if (sizeof($this->mime_types) > 0) {
           if (!in_array(strtolower($file['type']), $this->mime_types)) {
@@ -77,18 +62,11 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
             return false;
           }
         }
-        //BOF - DokuMan - 2010-08-31 - disable upload of php files and htaccess/htpasswd to avoid uploading of malicious scripts
-        /*
-        if (in_array(strtolower(substr($file['name'], strrpos($file['name'], '.')+1)), array('php', 'php3', 'php4', 'php5', 'phtml'))) {
-            $messageStack->add_session(ERROR_FILETYPE_NOT_ALLOWED, 'error');
-            return false;
-        }
-        */
+
         if ($file['name'] == '.htaccess' || $file['name'] == '.htpasswd') {
-            $messageStack->add_session(ERROR_FILETYPE_NOT_ALLOWED, 'error');
-            return false;
+          $messageStack->add_session(ERROR_FILETYPE_NOT_ALLOWED, 'error');
+          return false;
         }
-        //EOF - DokuMan - 2010-08-31 - disable upload of php files and htaccess/htpasswd to avoid uploading of malicious scripts
 
         $this->set_file($file);
         $this->set_filename($file['name']);
@@ -107,7 +85,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       if (substr($this->destination, -1) != '/') $this->destination .= '/';
 
       // GDlib check
-      if (!function_exists(imagecreatefromgif)) {
+      if (!function_exists('imagecreatefromgif')) {
 
         // check if uploaded file = gif
         if ($this->destination==DIR_FS_CATALOG_ORIGINAL_IMAGES) {
@@ -127,7 +105,13 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
         }
 
       }
-
+      
+      // prevent overwriting existing files
+      $name_arr = explode('.', $this->filename);
+      $extension = '.'.array_pop($name_arr);
+      $name = implode('.', $name_arr);
+      $this->filename = $this->check_filename($name, $extension);
+      
       if (move_uploaded_file($this->file['tmp_name'], $this->destination . $this->filename)) {
         chmod($this->destination . $this->filename, $this->permissions);
         $messageStack->add_session(SUCCESS_FILE_SAVED_SUCCESSFULLY, 'success');
@@ -186,6 +170,18 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
         return true;
       }
     }
+    
+    function check_filename($name, $extension, $counter = '') {
+      $this->counter = $counter;
+      
+      if (is_file($this->destination.$name.(($this->counter != '') ? '-'.$this->counter : '').$extension)) {
+        $this->counter ++;
+        $this->check_filename($name, $extension, $this->counter);
+      }
 
+      $filename = $name.(($this->counter != '') ? '-'.$this->counter : '').$extension;
+
+      return $filename;		    
+    }
   }
 ?>
