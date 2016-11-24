@@ -57,7 +57,7 @@ if ($product->getAttributesCount() > 0) {
     $products_options_data[$row] = array ('NAME' => $products_options_name['products_options_name'],
                                           'ID' => $products_options_name['products_options_id'],
                                           'SORTORDER' => $products_options_name['products_options_sortorder'],  //web28 - 2010-12-14  - add OPTIONS SORTORDER for using in template
-                                          'DATA' => ''
+                                          'DATA' => array()
                                           );
 
     $products_options_query = xtDBquery("SELECT pov.products_options_values_id,
