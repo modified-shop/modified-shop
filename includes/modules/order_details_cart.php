@@ -90,10 +90,11 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
     'PRODUCTS_SINGLE_WEIGHT' => $products[$i]['weight'], //$products[$i]['final_weight']  single products_weight including attributes_weight
     'PRODUCTS_SHORT_DESCRIPTION' => xtc_get_short_description($products[$i]['id']), 
     'BUTTON_WISHLIST' => $product->getCartToWishlistLink($products[$i]['id'], $products[$i]['name']), 
-    'ATTRIBUTES' => '',
+    'ATTRIBUTES' => array(),
   );
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/order_details_cart_content/','php') as $file) require ($file);
+  
   //products attributes
   if (isset ($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
     $subindex = 0;
