@@ -98,6 +98,7 @@
               $order->info['total'] += $ps_cost + (xtc_add_tax($ps_cost, $ps_tax)-$ps_cost);
               $ps_cost_value = xtc_add_tax($ps_cost, $ps_tax);
               $ps_cost= $xtPrice->xtcFormat($ps_cost_value, true);
+              $order->info['subtotal'] += $ps_cost_value;
           }
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
               $order->info['tax'] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
@@ -110,6 +111,7 @@
           if (!$ps_cost_value) {
              $ps_cost_value = $ps_cost;
              $ps_cost = $xtPrice->xtcFormat($ps_cost, true);
+             $order->info['subtotal'] += $ps_cost_value;
              $order->info['total'] += $ps_cost_value;
           }
           $this->output[] = array('title' => $this->title . ':',

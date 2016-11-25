@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_gv.php 2099 2011-08-17 18:22:16Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -65,6 +65,7 @@ class ot_gv {
 
       $this->deduction = $od_amount * (-1);
 
+      $order->info['subtotal'] = $order->info['subtotal'] + $this->deduction;
       $order->info['total'] = $order->info['total'] + $this->deduction;
 
       if ($this->deduction < 0) {

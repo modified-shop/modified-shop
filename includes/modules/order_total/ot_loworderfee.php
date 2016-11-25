@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_loworderfee.php 1002 2005-07-10 16:11:37Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -38,28 +38,6 @@
       
       if (MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE == 'true') {
 
-      switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
-        case 'national':
-          if ($order->delivery['country_id'] == STORE_COUNTRY) $pass = true;
-          $free_shipping_value_over = MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER;
-          break;
-        case 'international':
-          if ($order->delivery['country_id'] != STORE_COUNTRY) $pass = true; 
-          $free_shipping_value_over = MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_INTERNATIONAL;
-          break;
-        case 'both':
-          if ($order->delivery['country_id'] == STORE_COUNTRY) {
-            $free_shipping_value_over = MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER;
-          } else {
-            $free_shipping_value_over = MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_INTERNATIONAL;
-          }
-          $pass = true; 
-          break;
-        default:
-          $pass = false; 
-          break;
-      }
-
         switch (MODULE_ORDER_TOTAL_LOWORDERFEE_DESTINATION) {
           case 'national':
             if ($order->delivery['country_id'] == STORE_COUNTRY) $pass = true; 
@@ -92,12 +70,13 @@
         {
           $tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
           $tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
-          
+                    
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
             $order->info['tax'] += xtc_calculate_tax($low_order_fee_value, $tax);
             $order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"] += xtc_calculate_tax($low_order_fee_value, $tax);
             $order->info['total'] += $low_order_fee_value + xtc_calculate_tax($low_order_fee_value, $tax);
             $low_order_fee = xtc_add_tax($low_order_fee_value, $tax);
+            $order->info['subtotal'] += $low_order_fee;
           }
         
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
@@ -152,7 +131,7 @@
 
     function install() {
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS', 'true', '6', '1','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER', '4', '6', '2', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER', '35', '6', '2', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE', 'false', '6', '3', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, date_added) values ('MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER', '50','6', '4', 'currencies->format', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, date_added) values ('MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER_INTERNATIONAL', '50','6', '4', 'currencies->format', now())");

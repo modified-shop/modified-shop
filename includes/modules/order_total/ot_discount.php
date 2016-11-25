@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_discount.php 2093 2011-08-14 15:32:50Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -42,6 +42,7 @@
         $discount_price = $xtPrice->xtcFormat(($xtPrice->xtcFormat($order->info['subtotal'], false) / 100 * $_SESSION['customers_status']['customers_status_ot_discount']), false);
         $this->deduction = $discount_price * (-1);
         
+        $order->info['subtotal'] = $order->info['subtotal'] + $this->deduction;
         $order->info['total'] = $order->info['total'] + $this->deduction;
 
         $this->output[] = array(
