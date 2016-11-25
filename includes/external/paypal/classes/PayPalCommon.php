@@ -207,7 +207,7 @@ class PayPalCommon extends PayPalAuth {
 
   function check_discount() {
     if ($this->details->getHandlingFee() > 0
-        || $this->details->getShippingDiscount() > 0
+        || $this->details->getShippingDiscount() < 0
         || $this->details->getInsurance() > 0
         || $this->details->getGiftWrap() > 0
         || $this->details->getFee() > 0
