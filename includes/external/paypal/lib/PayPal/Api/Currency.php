@@ -75,7 +75,7 @@ class Currency extends PayPalModel
     public function setValue($value)
     {
         NumericValidator::validate($value, "Value");
-        $value = FormatConverter::formatToPrice($value, ((!empty($this->getCurrency())) ? $this->getCurrency() : $this->getCurrencyCode()));
+        $value = FormatConverter::formatToPrice($value, (($this->getCurrency() != '') ? $this->getCurrency() : $this->getCurrencyCode()));
         $this->value = $value;
         return $this;
     }
