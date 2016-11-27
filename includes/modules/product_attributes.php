@@ -74,7 +74,7 @@ if ($product->getAttributesCount() > 0) {
                                         ");
     $col = 0;
     while ($products_options = xtc_db_fetch_array($products_options_query,true)) {
-      $price = '';
+      $price = 0;
       if ($_SESSION['customers_status']['customers_status_show_price'] == '0') {
         $products_options_data[$row]['DATA'][$col] = array ('ID' => $products_options['products_options_values_id'],
                                                             'TEXT' => $products_options['products_options_values_name'],
@@ -100,10 +100,10 @@ if ($product->getAttributesCount() > 0) {
           $price -= $price / 100 * $discount;
         }
 
-        $attr_price=$price;
+        $attr_price = $price;
 
         if ($products_options['price_prefix'] == "-") {
-          $attr_price=$price*(-1);
+          $attr_price = $price*(-1);
         }
 
         $full = $products_price + $attr_price;
