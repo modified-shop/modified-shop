@@ -628,12 +628,14 @@ if (strpos($meta_robots,'noindex') !== false) {
   }
 } else {
   $meta_url = parse_url($_SERVER['REQUEST_URI']);
-  parse_str($meta_url['query'], $meta_params_array);
-  if (isset($meta_params_array[xtc_session_name()])) {
-    unset($meta_params_array[xtc_session_name()]);
-  }
-  if (count($meta_params_array) && !isset($meta_params_array['language']) && (!isset($_GET['page']) || $_GET['page'] > 1)) {
-    $set_hreflang = false;
+  if (isset($meta_url['query'])) {
+    parse_str($meta_url['query'], $meta_params_array);
+    if (isset($meta_params_array[xtc_session_name()])) {
+      unset($meta_params_array[xtc_session_name()]);
+    }
+    if (count($meta_params_array) && !isset($meta_params_array['language']) && (!isset($_GET['page']) || $_GET['page'] > 1)) {
+      $set_hreflang = false;
+    }
   }
 }
 $meta_alternate = array();
@@ -657,9 +659,11 @@ if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $set_hreflang && count($lng->catalo
     /*
     // dont show hreflang  for urls with language param
     $meta_url = parse_url($alternate_link);
-    parse_str($meta_url['query'], $meta_params_array);
-    if (isset($meta_params_array['language'])) {
-      break;
+    if (isset($meta_url['query'])) {
+      parse_str($meta_url['query'], $meta_params_array);
+      if (isset($meta_params_array['language'])) {
+        break;
+      }
     }
     */
     if ($alternate_link != '#') {
