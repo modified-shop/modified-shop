@@ -1,7 +1,7 @@
 <?php
 
 /* -----------------------------------------------------------------------------------------
-   $Id: cod.php 1003 2005-07-10 18:58:52Z mz $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -91,7 +91,8 @@ class cod {
         //process installed shipping modules
         $shipping_code = '';
         if (isset($_SESSION['shipping']['id'])) {
-          $shipping_code = strtoupper(array_shift(explode('_',$_SESSION['shipping']['id'])));
+          $shipping_array = explode('_', $_SESSION['shipping']['id']);
+          $shipping_code = strtoupper(array_shift($shipping_array));
         }
         $shipping_code = (isset($shipping_code) && $shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
 
