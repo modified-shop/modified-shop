@@ -92,7 +92,7 @@
       <table class="tableInput border0">
         <tr>
           <td class="main" style="width:260px"><?php echo TEXT_EDIT_STATUS; ?>:</td>
-          <td class="main"><?php echo draw_on_off_selection('status', $category_status_array, ($cInfo->categories_status == '1' ? true : false), 'style="width: 155px"'); ?></td>
+          <td class="main"><?php echo draw_on_off_selection('status', $category_status_array, ($cInfo->categories_status == '0' ? false : true), 'style="width: 155px"'); ?></td>
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_EDIT_PRODUCT_SORT_ORDER; ?>:</td>
