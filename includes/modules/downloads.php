@@ -1,7 +1,7 @@
 <?php
 
 /* -----------------------------------------------------------------------------------------
-   $Id: downloads.php 4245 2013-01-11 14:26:03Z gtb-modified $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -112,7 +112,7 @@ if (xtc_db_num_rows($downloads_query) > 0) {
 $module_smarty->assign('language', $language);
 $module_smarty->caching = 0;
 
-if ($send_order) {
+if (isset($send_order)) {
   if (isset($send_by_admin)) {
     $module_smarty->template_dir = DIR_FS_CATALOG.'templates';
     $module_smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
