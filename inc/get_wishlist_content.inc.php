@@ -34,25 +34,26 @@
         $shipping_status_link = $main->getShippingStatusName($products[$i]['shippingtime'], true);      
       }
   
-      $module_data[$i] = array ('PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])),
-                              'PRODUCTS_NAME' => $products[$i]['name'],
-                              'PRODUCTS_IMAGE' => $product->productImage(xtc_get_products_image(xtc_get_prid($products[$i]['id'])), 'thumbnail'),
-                              'PRODUCTS_BUTTON_DELETE' => $del_button,
-                              'PRODUCTS_BUTTON_DELETE_CART' => $cart_del_button,
-                              'PRODUCTS_VPE' => $products[$i]['vpe'],
-                              'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
-                              'PRODUCTS_SHIPPING_NAME' => $shipping_status_name,
-                              'PRODUCTS_SHIPPING_IMAGE' => $shipping_status_image,
-                              'PRODUCTS_SHIPPING_NAME_LINK' => $shipping_status_link,
-                              'PRODUCTS_TAX_INFO' => $main->getTaxInfo($products[$i]['tax']),
-                              'PRODUCTS_PRICE' => $xtPrice->xtcFormat($products[$i]['price'], true, 0, false, 0, 0, 0),
-                              'PRODUCTS_BUTTON_BUY_NOW' => $product->getWishlistToCartButton($products[$i]['id'], $products[$i]['name']),
-                              'PRODUCTS_BUTTON_BUY_NOW_CART' => $product->getWishlistToCartButton($products[$i]['id'], $products[$i]['name'], true),
-                              'PRODUCTS_QTY' => $products[$i]['quantity'],
-                              'PRODUCTS_SHORT_DESCRIPTION' => $products[$i]['short_description'],
-                              'PRODUCTS_DESCRIPTION' => $products[$i]['description'],
-                              'ATTRIBUTES' => ''
-                              );
+      $module_data[$i] = array (
+        'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])),
+        'PRODUCTS_NAME' => $products[$i]['name'],
+        'PRODUCTS_IMAGE' => $product->productImage(xtc_get_products_image(xtc_get_prid($products[$i]['id'])), 'thumbnail'),
+        'PRODUCTS_BUTTON_DELETE' => $del_button,
+        'PRODUCTS_BUTTON_DELETE_CART' => $cart_del_button,
+        'PRODUCTS_VPE' => $products[$i]['vpe'],
+        'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
+        'PRODUCTS_SHIPPING_NAME' => $shipping_status_name,
+        'PRODUCTS_SHIPPING_IMAGE' => $shipping_status_image,
+        'PRODUCTS_SHIPPING_NAME_LINK' => $shipping_status_link,
+        'PRODUCTS_TAX_INFO' => $main->getTaxInfo($products[$i]['tax']),
+        'PRODUCTS_PRICE' => $xtPrice->xtcFormat($products[$i]['price'], true, 0, false, 0, 0, 0),
+        'PRODUCTS_BUTTON_BUY_NOW' => $product->getWishlistToCartButton($products[$i]['id'], $products[$i]['name']),
+        'PRODUCTS_BUTTON_BUY_NOW_CART' => $product->getWishlistToCartButton($products[$i]['id'], $products[$i]['name'], true),
+        'PRODUCTS_QTY' => $products[$i]['quantity'],
+        'PRODUCTS_SHORT_DESCRIPTION' => $products[$i]['short_description'],
+        'PRODUCTS_DESCRIPTION' => $products[$i]['description'],
+        'ATTRIBUTES' => array()
+      );
 
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/wishlist_content/','php') as $file) require ($file);
       
