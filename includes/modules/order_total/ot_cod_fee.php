@@ -58,7 +58,11 @@
         $cod_country = false;
 
         //check if payment method is cod. If yes, check if cod is possible.
-        if ($_SESSION['payment'] == 'cod' && isset($_SESSION['shipping']['id'])) {
+        if (isset($_SESSION['payment']) 
+            && $_SESSION['payment'] == 'cod' 
+            && isset($_SESSION['shipping']['id'])
+            ) 
+        {
           //process installed shipping modules
           $shipping_code = strtoupper(array_shift(explode('_',$_SESSION['shipping']['id'])));
           $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
