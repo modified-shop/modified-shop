@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: application_bottom.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -30,9 +30,11 @@
   // new error handling
   if (isset($error_exceptions) && is_array($error_exceptions) && count($error_exceptions) > 0) {
     if ((DISPLAY_ERROR_REPORTING == 'all') || DISPLAY_ERROR_REPORTING == 'admin') {
-      echo '<div style="width:1000px; margin:20px auto; font-family: Verdana,Arial,sans-serif; font-size: 10px;">' . PHP_EOL .
-             '<h2 style="color: rgb(190, 50, 50);">Exception Occured:</h2>' . PHP_EOL;
-             echo implode(PHP_EOL, $error_exceptions);
+      echo '<div style="max-width:1000px; margin:20px auto; font-family: Verdana,Arial,sans-serif; font-size: 10px;">' . PHP_EOL;
+      foreach ($error_exceptions as $error_name => $error_exception) {
+        echo '<h2 style="color: #BE3232;">Exception '.$error_name.':</h2>' . PHP_EOL;
+        echo implode('<div style="height:1px; border-top:1px dotted #000; margin:10px 0px;"></div>'.PHP_EOL, $error_exception);
+      }
       echo '</div>';
     }
   }
