@@ -664,7 +664,10 @@
         $this->info['tax'] += round($value, $xtPrice->get_decimal_places(''));
       }
 
-      $this->info['total'] = $this->info['subtotal'] + $xtPrice->xtcFormat($this->info['shipping_cost'], false,0,true);
+      $this->info['total'] = $this->info['subtotal'];
+      if (isset($this->info['shipping_cost']) && $this->info['shipping_cost'] > 0) {
+        $this->info['total'] += $xtPrice->xtcFormat($this->info['shipping_cost'], false,0,true);
+      }
     }
   }
 ?>
