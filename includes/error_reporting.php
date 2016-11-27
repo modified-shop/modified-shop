@@ -73,21 +73,20 @@ function log_exception($e)
         $error['message'] = $e->getMessage();
         $index = md5($error['name'].$error['line'].$error['file'].$error['message']);
     
-        if (!isset($error_exceptions[$index])) {
-            $error_exceptions[$index] = '<table style="width: 1000px; display: inline-block;">' . PHP_EOL .
-                                        '  <tr style="color:#000; background-color:#e6e6e6;"><th style="width:100px;">Type</th><td style="width:900px;">'.$error['name'].'</td></tr>' . PHP_EOL .
-                                        '  <tr style="color:#000; background-color:#F0F0F0;"><th>Message</th><td>'.$error['message'].'</td></tr>' . PHP_EOL .
-                                        '  <tr style="color:#000; background-color:#e6e6e6;"><th>File</th><td>'.$error['file'].'</td></tr>' . PHP_EOL .
-                                        '  <tr style="color:#000; background-color:#F0F0F0;"><th>Line</th><td>'.$error['line'].'</td></tr>' . PHP_EOL;
-                                        $err = 0;
-                                        for ($i=0, $n=count($backtrace); $i<$n; $i++) {
-                                            if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error['file'] && basename($backtrace[$i]['file']) != 'error_reporting.php') {
-                                                $error_exceptions[$index] .= '  <tr style="color:#000; background-color:#e6e6e6;"><th>Backtrace #'.$err.'</th><td>'.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'].'</td></tr>' . PHP_EOL;
-                                                $err ++;
-                                            }
-                                        }
-            $error_exceptions[$index] .= '</table>' . PHP_EOL .
-                                         '<div style="height:1px; border-top:1px dotted #000; margin:10px 0px;"></div>';
+        if (!isset($error_exceptions[$error['name']][$index])) {
+            $error_exceptions[$error['name']][$index] = '<table style="width: 1000px; display: inline-block;">' . PHP_EOL .
+                                                        '  <tr style="color:#000; background-color:#e6e6e6;"><th style="width:100px;">Type</th><td style="width:900px;">'.$error['name'].'</td></tr>' . PHP_EOL .
+                                                        '  <tr style="color:#000; background-color:#F0F0F0;"><th>Message</th><td>'.$error['message'].'</td></tr>' . PHP_EOL .
+                                                        '  <tr style="color:#000; background-color:#e6e6e6;"><th>File</th><td>'.$error['file'].'</td></tr>' . PHP_EOL .
+                                                        '  <tr style="color:#000; background-color:#F0F0F0;"><th>Line</th><td>'.$error['line'].'</td></tr>' . PHP_EOL;
+                                                        $err = 0;
+                                                        for ($i=0, $n=count($backtrace); $i<$n; $i++) {
+                                                            if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error['file'] && basename($backtrace[$i]['file']) != 'error_reporting.php') {
+                                                                $error_exceptions[$error['name']][$index] .= '  <tr style="color:#000; background-color:#e6e6e6;"><th>Backtrace #'.$err.'</th><td>'.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'].'</td></tr>' . PHP_EOL;
+                                                                $err ++;
+                                                            }
+                                                        }
+            $error_exceptions[$error['name']][$index] .= '</table>' . PHP_EOL;
 
             // write Logfile
             $LoggingManager->log(html_entity_decode($error['message']) . ' in File: ' . $error['file'] . ' on Line: ' . $error['line'], $error['name']);
