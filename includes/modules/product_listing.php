@@ -88,7 +88,8 @@ if ($listing_split->number_of_rows > 0) {
   }
   
   if (isset($manufacturers_id) && basename($PHP_SELF) != FILENAME_ADVANCED_SEARCH_RESULT) {
-    $manu_query = xtDBquery("SELECT m.manufacturers_image, 
+    $manu_query = xtDBquery("SELECT m.manufacturers_id,
+                                    m.manufacturers_image, 
                                     m.manufacturers_name,
                                     mi.manufacturers_description 
                                FROM ".TABLE_MANUFACTURERS." m
