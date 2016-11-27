@@ -111,7 +111,7 @@
         if (MODULE_EXCLUDE_PAYMENT_STATUS == 'True') {
           for ($i=1; $i<=MODULE_EXCLUDE_PAYMENT_NUMBER; $i++) {
             $shipping_exclude = explode(',', constant('MODULE_EXCLUDE_PAYMENT_SHIPPING_'.$i));
-            if (in_array(substr($_SESSION['shipping']['id'], 0, (strpos($_SESSION['shipping']['id'], '_'))), $shipping_exclude) !== false) {
+            if (isset($_SESSION['shipping']) && in_array(substr($_SESSION['shipping']['id'], 0, (strpos($_SESSION['shipping']['id'], '_'))), $shipping_exclude) !== false) {
               $unallowed_modules_string .= (($unallowed_modules_string != '') ? ',' : '').constant('MODULE_EXCLUDE_PAYMENT_PAYMENT_'.$i);
             }
           }
