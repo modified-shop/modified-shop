@@ -246,12 +246,21 @@ if ($result != false) {
     $module_smarty->caching = 0;
     $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$category['categories_template']);
     $smarty->assign('main_content', $main_content);
+  } elseif (isset($_GET['filter_id']) && $_GET['filter_id'] > 0) {
+    $site_error = MANUFACTURER_NOT_FOUND;
+    include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   } else {
     $site_error = CATEGORIE_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   }
 } elseif (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
   $site_error = MANUFACTURER_NOT_FOUND;
+  if (isset($_GET['filter_id']) && $_GET['filter_id'] > 0) {
+    $site_error = CATEGORIE_NOT_FOUND;  
+  }
+  include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
+} elseif ($current_category_id == '0' && isset($_GET['keywords'])) {
+  $site_error = TEXT_PRODUCT_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 } else {
   $site_error = CATEGORIE_NOT_FOUND;
