@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: security_check.php 3561 2012-08-29 18:11:38Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -177,19 +177,32 @@ if (($registerGlobals == '1') || (strtolower($registerGlobals) == 'on')) {
 /*******************************************************************************
  ** duplicate configuration check:
  ******************************************************************************/
+if (isset($duplicate_configuration) 
+    && count($duplicate_configuration) > 0 
+    && isset($_POST['action']) 
+    && $_POST['action'] == 'delete_duplicate_configuration'
+    ) 
+{
+  xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION."
+                      USING configuration, configuration as duplicate
+                  WHERE NOT configuration.configuration_id = duplicate.configuration_id
+                        AND configuration.configuration_id > duplicate.configuration_id
+                        AND configuration.configuration_key = duplicate.configuration_key");
+  
+  unset($duplicate_configuration);
+}
+
 if (isset($duplicate_configuration) && count($duplicate_configuration) > 0) {
   foreach ($duplicate_configuration as $key) {
     $warnings[] = TEXT_DUPLUCATE_CONFIG_ERROR.$key.'<br/>';
   }
-} 
-/*
-else {
+  $warnings[] = xtc_draw_form('configuration', basename($PHP_SELF)).xtc_draw_hidden_field('action', 'delete_duplicate_configuration').'<input class="button" type="submit" value="'.BUTTON_DELETE.'"/></form>';
+} else {
   $check_unique = xtc_db_query("SHOW INDEX FROM ".TABLE_CONFIGURATION." WHERE key_name = 'idx_configuration_key'");
   if (xtc_db_num_rows($check_unique) < 1) {
     xtc_db_query("ALTER TABLE ".TABLE_CONFIGURATION." ADD UNIQUE idx_configuration_key (configuration_key)");
   }
 }
-*/
 
 /*******************************************************************************
  ** output warnings:
