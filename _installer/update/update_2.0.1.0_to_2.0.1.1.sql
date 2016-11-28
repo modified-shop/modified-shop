@@ -10,4 +10,25 @@
 #Tomcraft - 2016-10-17 - changed database_version
 INSERT INTO `database_version` (`version`) VALUES ('MOD_2.0.1.1');
 
+#GTB - 2016-11-28 - changed language_id
+ALTER TABLE banners MODIFY languages_id INT(11) NOT NULL;
+ALTER TABLE content_manager MODIFY languages_id INT(11) NOT NULL;
+ALTER TABLE products_content MODIFY languages_id INT(11) NOT NULL;
+ALTER TABLE products_tags_options MODIFY languages_id INT(11) NOT NULL;
+ALTER TABLE categories_description MODIFY language_id INT(11) NOT NULL;
+ALTER TABLE coupons_description MODIFY language_id INT(11) NOT NULL;
+ALTER TABLE customers_status MODIFY language_id INT(11) NOT NULL;
+ALTER TABLE manufacturers_info MODIFY languages_id INT(11) NOT NULL;
+ALTER TABLE orders_status MODIFY language_id INT(11) NOT NULL;
+ALTER TABLE products_description MODIFY language_id INT(11) NOT NULL;
+ALTER TABLE products_options MODIFY language_id INT(11) NOT NULL;
+ALTER TABLE products_options_values MODIFY language_id INT(11) NOT NULL;
+ALTER TABLE products_vpe MODIFY language_id INT(11) NOT NULL;
+ALTER TABLE products_xsell_grp_name MODIFY language_id INT(11) NOT NULL;
+ALTER TABLE shipping_status MODIFY language_id INT(11) NOT NULL;
+
+#GTB - 2016-11-28 - changed status
+ALTER TABLE categories MODIFY categories_status INT(1) NOT NULL;
+ALTER TABLE products MODIFY products_status INT(1) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

@@ -181,7 +181,7 @@ CREATE TABLE banners (
   banners_image VARCHAR(64) NOT NULL,
   banners_group VARCHAR(10) NOT NULL,
   banners_html_text TEXT,
-  languages_id INT(11) NOT NULL DEFAULT 0,
+  languages_id INT(11) NOT NULL,
   expires_impressions INT(7) DEFAULT NULL,
   expires_date DATETIME DEFAULT NULL,
   date_scheduled DATETIME DEFAULT NULL,
@@ -239,7 +239,7 @@ CREATE TABLE categories (
   categories_id INT NOT NULL AUTO_INCREMENT,
   categories_image VARCHAR(64),
   parent_id INT DEFAULT 0 NOT NULL,
-  categories_status TINYINT (1) UNSIGNED DEFAULT 1 NOT NULL,
+  categories_status INT(1) NOT NULL,
   categories_template VARCHAR(64),
   group_permission_0 TINYINT(1) NOT NULL,
   group_permission_1 TINYINT(1) NOT NULL,
@@ -259,7 +259,7 @@ CREATE TABLE categories (
 DROP TABLE IF EXISTS categories_description;
 CREATE TABLE categories_description (
   categories_id INT(11) NOT NULL,
-  language_id TINYINT DEFAULT 1 NOT NULL,
+  language_id INT(11) NOT NULL,
   categories_name VARCHAR(255) NOT NULL,
   categories_heading_title VARCHAR(255) NOT NULL,
   categories_description text NOT NULL,
@@ -308,7 +308,7 @@ CREATE TABLE content_manager (
   categories_id INT(11) NOT NULL DEFAULT 0,
   parent_id INT(11) NOT NULL DEFAULT 0,
   group_ids TEXT,
-  languages_id INT(11) NOT NULL DEFAULT 0,
+  languages_id INT(11) NOT NULL,
   content_title TEXT NOT NULL,
   content_heading TEXT NOT NULL,
   content_text TEXT NOT NULL,
@@ -413,7 +413,7 @@ CREATE TABLE coupons (
 DROP TABLE IF EXISTS coupons_description;
 CREATE TABLE coupons_description (
   coupon_id INT(11) NOT NULL DEFAULT 0,
-  language_id TINYINT NOT NULL DEFAULT 1,
+  language_id INT(11) NOT NULL,
   coupon_name VARCHAR(32) NOT NULL DEFAULT '',
   coupon_description text,
   PRIMARY KEY (coupon_id, language_id)
@@ -539,7 +539,7 @@ CREATE TABLE customers_memo (
 DROP TABLE IF EXISTS customers_status;
 CREATE TABLE customers_status (
   customers_status_id INT(11) NOT NULL DEFAULT 0,
-  language_id TINYINT NOT NULL DEFAULT 1,
+  language_id INT(11) NOT NULL,
   customers_status_name VARCHAR(32) NOT NULL DEFAULT '',
   customers_status_public INT(1) NOT NULL DEFAULT 1,
   customers_status_min_order INT(7) DEFAULT NULL,
@@ -625,7 +625,7 @@ CREATE TABLE manufacturers (
 DROP TABLE IF EXISTS manufacturers_info;
 CREATE TABLE manufacturers_info (
   manufacturers_id INT NOT NULL,
-  languages_id INT NOT NULL,
+  languages_id INT(11) NOT NULL,
   manufacturers_description text,
   manufacturers_meta_title VARCHAR(100) NOT NULL,
   manufacturers_meta_description VARCHAR(255) NOT NULL,
@@ -857,7 +857,7 @@ CREATE TABLE orders_recalculate (
 DROP TABLE IF EXISTS orders_status;
 CREATE TABLE orders_status (
   orders_status_id INT DEFAULT 0 NOT NULL,
-  language_id TINYINT DEFAULT 1 NOT NULL,
+  language_id INT(11) NOT NULL,
   orders_status_name VARCHAR(64) NOT NULL,
   sort_order INT(11) DEFAULT 0 NOT NULL,
   PRIMARY KEY (orders_status_id, language_id),
@@ -932,7 +932,7 @@ CREATE TABLE products (
   products_last_modified DATETIME,
   products_date_available DATETIME,
   products_weight DECIMAL(6,3) NOT NULL,
-  products_status TINYINT(1) NOT NULL,
+  products_status INT(1) NOT NULL,
   products_tax_class_id INT NOT NULL,
   product_template VARCHAR(64),
   options_template VARCHAR(64),
@@ -989,7 +989,7 @@ CREATE TABLE products_content (
   content_name VARCHAR(32) NOT NULL DEFAULT '',
   content_file VARCHAR(64) NOT NULL,
   content_link TEXT NOT NULL,
-  languages_id INT(11) NOT NULL DEFAULT 0,
+  languages_id INT(11) NOT NULL,
   content_read INT(11) NOT NULL DEFAULT 0,
   file_comment TEXT NOT NULL,
   PRIMARY KEY (content_id),
@@ -999,7 +999,7 @@ CREATE TABLE products_content (
 DROP TABLE IF EXISTS products_description;
 CREATE TABLE products_description (
   products_id INT(11) NOT NULL,
-  language_id TINYINT NOT NULL DEFAULT 1,
+  language_id INT(11) NOT NULL,
   products_name VARCHAR(255) NOT NULL DEFAULT '',
   products_description text,
   products_short_description text,
@@ -1043,7 +1043,7 @@ CREATE TABLE products_notifications (
 DROP TABLE IF EXISTS products_options;
 CREATE TABLE products_options (
   products_options_id INT NOT NULL DEFAULT 0,
-  language_id TINYINT NOT NULL DEFAULT 1,
+  language_id INT(11) NOT NULL,
   products_options_name VARCHAR(255) NOT NULL DEFAULT '',
   products_options_sortorder INT(11) NOT NULL,
   PRIMARY KEY (products_options_id, language_id)
@@ -1052,7 +1052,7 @@ CREATE TABLE products_options (
 DROP TABLE IF EXISTS products_options_values;
 CREATE TABLE products_options_values (
   products_options_values_id INT NOT NULL DEFAULT 0,
-  language_id TINYINT NOT NULL DEFAULT 1,
+  language_id INT(11) NOT NULL,
   products_options_values_name VARCHAR(255) NOT NULL DEFAULT '',
   PRIMARY KEY (products_options_values_id, language_id)
 ) ENGINE=MyISAM;
@@ -1086,7 +1086,7 @@ CREATE TABLE products_tags_options (
   options_description text NOT NULL,
   options_content_group int(11) DEFAULT NULL,
   sort_order int(11) NOT NULL DEFAULT '0',
-  languages_id int(11) NOT NULL,
+  languages_id INT(11) NOT NULL,
   status int(1) NOT NULL DEFAULT '1',
   filter int(1) NOT NULL DEFAULT '1',
   last_modified datetime DEFAULT NULL,
@@ -1127,7 +1127,7 @@ CREATE TABLE products_to_categories (
 DROP TABLE IF EXISTS products_vpe;
 CREATE TABLE products_vpe (
   products_vpe_id INT(11) NOT NULL DEFAULT 0,
-  language_id TINYINT NOT NULL DEFAULT 1,
+  language_id INT(11) NOT NULL,
   products_vpe_name VARCHAR(32) NOT NULL DEFAULT '',
   PRIMARY KEY (products_vpe_id, language_id)
 ) ENGINE=MyISAM;
@@ -1146,7 +1146,7 @@ DROP TABLE IF EXISTS products_xsell_grp_name;
 CREATE TABLE products_xsell_grp_name (
   products_xsell_grp_name_id INT(10) NOT NULL,
   xsell_sort_order INT(10) NOT NULL DEFAULT 0,
-  language_id TINYINT NOT NULL DEFAULT 1,
+  language_id INT(11) NOT NULL,
   groupname VARCHAR(255) NOT NULL DEFAULT '',
   PRIMARY KEY (products_xsell_grp_name_id, language_id)
 ) ENGINE=MyISAM;
@@ -1187,7 +1187,7 @@ CREATE TABLE sessions (
 DROP TABLE IF EXISTS shipping_status;
 CREATE TABLE shipping_status (
   shipping_status_id INT DEFAULT 0 NOT NULL,
-  language_id TINYINT DEFAULT 1 NOT NULL,
+  language_id INT(11) NOT NULL,
   shipping_status_name VARCHAR(32) NOT NULL,
   shipping_status_image VARCHAR(32) NOT NULL,
   sort_order INT(11) DEFAULT 0 NOT NULL,
