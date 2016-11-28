@@ -45,7 +45,7 @@ function smarty_function_googleanalytics($params, &$smarty) {
         _gaq.push([\'_trackPageview\']);
     '."\n";
 
-    // chache ga.js
+    // cache ga.js
     $cache_gs = DIR_FS_CATALOG.'cache/ga.js';
     if (!is_file($cache_gs) || (time() - filemtime($cache_gs) > 3600)) {
       require_once(DIR_FS_INC.'get_external_content.inc.php');
@@ -69,7 +69,7 @@ function smarty_function_googleanalytics($params, &$smarty) {
       </script>
     ';
   } else {
-    // chache analytics.js
+    // cache analytics.js
     $cache_gs = DIR_FS_CATALOG.'cache/analytics.js';
     if (!is_file($cache_gs) || (time() - filemtime($cache_gs) > 3600)) {
       require_once(DIR_FS_INC.'get_external_content.inc.php');

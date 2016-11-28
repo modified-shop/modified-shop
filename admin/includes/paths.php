@@ -63,7 +63,7 @@
   // filemanager
   define('DIR_WS_FILEMANAGER', DIR_WS_MODULES . 'fckeditor/editor/filemanager/browser/default/');
 
-  // chache
+  // cache
   define('SQL_CACHEDIR', DIR_FS_CATALOG . 'cache/');
 
   // log
