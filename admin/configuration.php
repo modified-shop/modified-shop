@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: configuration.php 5547 2013-09-06 13:19:01Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -304,7 +304,7 @@
                             $value_field = xtc_call_function($function, $parameters);
                           }
                         } else {
-                          $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'], 'style="width:380px;"');
+                          $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'], 'style="width:100%;"');
                         }
                         if (strstr($value_field,'cfg_so_k')) {
                           $value_field=str_replace('cfg_so_k',strtolower($configuration['configuration_key']),$value_field);
