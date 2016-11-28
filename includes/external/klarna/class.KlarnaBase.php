@@ -319,7 +319,7 @@ class KlarnaBase
 
         return array(
             'id' => $this->code,
-            'module' => KITT_String::decode($view->getTitle(), "UTF-8", "ISO-8859-15"),
+            'module' => KITT_String::decode($view->getTitle(), "UTF-8", $_SESSION['language_charset']),
             'module_cost' => $view->getExtra(),
             'fields' => array(
                 array(
