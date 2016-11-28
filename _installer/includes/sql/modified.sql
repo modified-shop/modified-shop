@@ -289,7 +289,8 @@ CREATE TABLE configuration (
   use_function VARCHAR(255) NULL,
   set_function VARCHAR(255) NULL,
   PRIMARY KEY (configuration_id),
-  KEY idx_configuration_group_id (configuration_group_id)
+  KEY idx_configuration_group_id (configuration_group_id),
+  UNIQUE idx_configuration_key (configuration_key)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS configuration_group;
