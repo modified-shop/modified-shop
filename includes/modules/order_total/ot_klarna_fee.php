@@ -104,7 +104,7 @@ class ot_klarna_fee
                     $od_amount, KiTT::locale($this->_country)
                 ),
                 "UTF-8",
-                "ISO-8859-15"
+                $_SESSION['language_charset']
             ),
             'value' => $od_amount
         );
