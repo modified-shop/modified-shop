@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: dp.php 5118 2013-07-18 10:58:36Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -128,7 +128,7 @@
             $this->enabled = false;
           }
         } else {
-          $shipping_cost = ($shipping + MODULE_SHIPPING_DP_HANDLING);
+          $shipping_cost = ($shipping * $shipping_num_boxes) + MODULE_SHIPPING_DP_HANDLING;
           $this->quotes['methods'] = array(array('id' => $this->code,
                                                  'title' => $shipping_method . ' (' . $shipping_num_boxes . ' x ' . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_DP_TEXT_UNITS .')',
                                                  'cost'  => $shipping_cost));

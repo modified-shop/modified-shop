@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: dhl.php 5129 2013-07-18 14:00:37Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -130,12 +130,12 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_1 = ($shipping_ecx + MODULE_SHIPPING_DHL_HANDLING);
+            $shipping_cost_1 = ($shipping_ecx * $shipping_num_boxes) + MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'ECX',
                              'title' => 'EU Express Service',
-                             'cost' => (MODULE_SHIPPING_DHL_HANDLING + $shipping_cost_1) * $shipping_num_boxes);
+                             'cost' => $shipping_cost_1);
           $n++;
         }
 
@@ -164,12 +164,12 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_2 = ($shipping_dox + MODULE_SHIPPING_DHL_HANDLING);
+            $shipping_cost_2 = ($shipping_dox * $shipping_num_boxes) + MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'DOX',
                              'title' => 'Document Express Service',
-                             'cost' => (MODULE_SHIPPING_DHL_HANDLING + $shipping_cost_2) * $shipping_num_boxes);
+                             'cost' => $shipping_cost_2);
           $n++;
         }
 
@@ -197,12 +197,12 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_3 = ($shipping_wpx + MODULE_SHIPPING_DHL_HANDLING);
+            $shipping_cost_3 = ($shipping_wpx * $shipping_num_boxes) + MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'WPX',
                              'title' => 'Waren Express Service',
-                             'cost' => (MODULE_SHIPPING_DHL_HANDLING + $shipping_cost_3) * $shipping_num_boxes);
+                             'cost' => $shipping_cost_3);
           $n++;
         }
 
@@ -230,12 +230,12 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_4 = ($shipping_mdx + MODULE_SHIPPING_DHL_HANDLING);
+            $shipping_cost_4 = ($shipping_mdx * $shipping_num_boxes) + MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'MDX',
                              'title' => 'Mid Day Express Service',
-                             'cost' => (MODULE_SHIPPING_DHL_HANDLING + $shipping_cost_4) * $shipping_num_boxes);
+                             'cost' => $shipping_cost_4);
           $n++;
         }
 
@@ -263,12 +263,12 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_5 = ($shipping_sdx + MODULE_SHIPPING_DHL_HANDLING);
+            $shipping_cost_5 = ($shipping_sdx * $shipping_num_boxes) + MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'SDX',
                              'title' => 'Start Day Express Service',
-                             'cost' => (MODULE_SHIPPING_DHL_HANDLING + $shipping_cost_5) * $shipping_num_boxes);
+                             'cost' => $shipping_cost_5;
           $n++;
         }
       }
