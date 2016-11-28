@@ -636,6 +636,8 @@ if (strpos($meta_robots,'noindex') !== false) {
     if (count($meta_params_array) && !isset($meta_params_array['language']) && (!isset($_GET['page']) || $_GET['page'] > 1)) {
       $set_hreflang = false;
     }
+  } elseif (basename($meta_url['path']) == FILENAME_DEFAULT) {
+    $set_hreflang = false;
   }
 }
 $meta_alternate = array();
