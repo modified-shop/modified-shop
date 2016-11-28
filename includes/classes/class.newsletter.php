@@ -294,11 +294,13 @@ class newsletter {
     $newsletter = xtc_db_fetch_array($newsletter_query);
     
     if (defined('MODULE_SUPERMAILER_STATUS') && MODULE_SUPERMAILER_STATUS == 'True') {
-      $txt_mail_std_arr = array('EMail' => $newsletter['customers_email_address'],
-                                'RG' => MODULE_SUPERMAILER_GROUP);
+      $txt_mail_arr = array(
+        'EMail' => $newsletter['customers_email_address'],
+        'RG' => MODULE_SUPERMAILER_GROUP
+      );
     
       if ($type == 'subscribe') {
-        $txt_mail_add_arr['Name'] = $newsletter['customers_firstname'] . ' ' . $newsletter['customers_lastname'];
+        $txt_mail_arr['Name'] = $newsletter['customers_firstname'] . ' ' . $newsletter['customers_lastname'];
       }
     
       $txt_mail = '';
