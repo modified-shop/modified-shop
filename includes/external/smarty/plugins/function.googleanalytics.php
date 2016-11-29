@@ -36,8 +36,27 @@ function smarty_function_googleanalytics($params, &$smarty) {
   $google_linkid = null;
   $google_display = null;
   
+  $beginCode = '
+      <script>
+        // Set to the same value as the web property used on the site
+        var gaProperty = \''.$account.'\';
+
+        // Disable tracking if the opt-out cookie exists.
+        var disableStr = \'ga-disable-\' + gaProperty;
+        if (document.cookie.indexOf(disableStr + \'=true\') > -1) {
+          window[disableStr] = true;
+        }
+
+        // Opt-out function
+        function gaOptout() {
+          document.cookie = disableStr + \'=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/\';
+          window[disableStr] = true;
+        }
+      </script>
+    '."\n";
+  
   if (TRACKING_GOOGLEANALYTICS_UNIVERSAL == 'false') {
-    $beginCode = '
+    $beginCode .= '
       <script type="text/javascript">
         var _gaq = _gaq || [];
         _gaq.push([\'_setAccount\', \''.$account.'\']);
@@ -81,7 +100,7 @@ function smarty_function_googleanalytics($params, &$smarty) {
       $gs = xtc_href_link('cache/analytics.js', '', $request_type, false);
     }
 
-    $beginCode = "
+    $beginCode .= "
       <script type=\"text/javascript\">
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
