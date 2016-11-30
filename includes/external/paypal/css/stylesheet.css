@@ -6,6 +6,7 @@
 margin:0px 10px 0px 10px;
 border-bottom: 1px solid #aaa;
 border-left: 1px solid #aaa;
+width: 100%;
 }
 .configPartner a.configtab {
 font-family: Verdana,Arial,Helvetica,sans-serif;
