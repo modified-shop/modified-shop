@@ -69,7 +69,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
   function __construct($class) {
     $paypal_installed = false;
-    $check_installed_query = xtc_db_query("SHOW TABLES LIKE ".TABLE_PAYPAL_CONFIG);
+    $check_installed_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_PAYPAL_CONFIG."'");
     if (xtc_db_num_rows($check_installed_query) > 0) {
       $paypal_installed = true;
     }
