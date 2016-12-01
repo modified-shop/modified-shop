@@ -98,7 +98,6 @@ class ot_coupon {
 ///////////////////////////////////////////////////////////////////////
 
   function pre_confirmation_check($order_total) {
-    $this->get_order_total();
     return $this->calculate_credit($order_total);
   }
 
@@ -119,7 +118,6 @@ class ot_coupon {
 
   function collect_posts() {
     global $xtPrice;
-    
     if (isset($_POST['gv_redeem_code']) && $_POST['gv_redeem_code']) {
 
       // INFOS ÜBER KUPON AUSLESEN
@@ -279,10 +277,7 @@ class ot_coupon {
         //echo 'OD'.$od_amount;
 
         //BOF  - web28- 2010-06-19 - ADD no discount for special offers
-        if (MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES != 'true'
-            && $_SESSION['customers_status']['customers_status_specials'] == '1'
-            ) 
-        {
+        if (MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES != 'true'){
           $pr_c = 0;
           for ($i = 0; $i < sizeof($order->products); $i ++) {
             $product_query = "SELECT specials_new_products_price 
