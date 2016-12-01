@@ -469,7 +469,8 @@ class shoppingCart {
     reset($this->contents);
     while (list ($products_id) = each($this->contents)) {
 
-      if (MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES != 'true'
+      if (defined('MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES')
+          && MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES != 'true'
           && $_SESSION['customers_status']['customers_status_specials'] == '1'
           && $coupon === true
           ) 
@@ -534,7 +535,7 @@ class shoppingCart {
         // $this->total + $this->tax wird berechnet
         if ($product['products_tax_class_id'] != 0) {
 
-          if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
+          if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
             // Rabatt für die Steuerberechnung
             // der eigentliche Rabatt wird im order-details_cart abgezogen
             $products_price_tax = $products_price - ($products_price / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
@@ -547,23 +548,27 @@ class shoppingCart {
           // price incl tax
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') {
             if (!isset($this->tax[$product['products_tax_class_id']])) $this->tax[$product['products_tax_class_id']]['value'] = 0; 
-            if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
+            if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
               $this->tax[$product['products_tax_class_id']]['value'] += ((($products_price_tax+$attribute_price_tax) / (100 + $products_tax)) * $products_tax)*$qty;
             } else {
               $this->tax[$product['products_tax_class_id']]['value'] += ((($products_price+$attribute_price) / (100 + $products_tax)) * $products_tax)*$qty;
             }
             $this->tax[$product['products_tax_class_id']]['desc'] = TAX_ADD_TAX.$products_tax_description;
           }
+          
           // excl tax + tax at checkout
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0' 
+              && $_SESSION['customers_status']['customers_status_add_tax_ot'] == '1'
+              ) 
+          {
             if (!isset($this->tax[$product['products_tax_class_id']])) $this->tax[$product['products_tax_class_id']]['value'] = 0; 
-            if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
+            if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
               $this->tax[$product['products_tax_class_id']]['value'] += (($products_price_tax+$attribute_price_tax) / 100) * ($products_tax)*$qty;
               if (!isset($this->tax_discount[$product['products_tax_class_id']])) $this->tax_discount[$product['products_tax_class_id']] = 0;
-              $this->tax_discount[$product['products_tax_class_id']]+=(($products_price_tax+$attribute_price_tax) / 100) * ($products_tax)*$qty; 
+              $this->tax_discount[$product['products_tax_class_id']] += (($products_price_tax+$attribute_price_tax) / 100) * ($products_tax)*$qty; 
             } else {
               $this->tax[$product['products_tax_class_id']]['value'] += (($products_price+$attribute_price) / 100) * ($products_tax)*$qty;
-              $this->total += (($products_price+$attribute_price) / 100) * ($products_tax)*$qty;
+              $this->tax_discount[$product['products_tax_class_id']] += (($products_price+$attribute_price) / 100) * ($products_tax)*$qty;
             }
             $this->tax[$product['products_tax_class_id']]['desc'] = TAX_NO_TAX.$products_tax_description;
           }
