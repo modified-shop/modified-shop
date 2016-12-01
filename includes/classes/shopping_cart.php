@@ -457,7 +457,7 @@ class shoppingCart {
    *
    * @return unknown
    */
-  function calculate() {
+  function calculate($coupon = false) {
     global $xtPrice;
     $this->total = 0;
     $this->weight = 0;
@@ -468,6 +468,21 @@ class shoppingCart {
     }
     reset($this->contents);
     while (list ($products_id) = each($this->contents)) {
+
+      if (MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES != 'true'
+          && $_SESSION['customers_status']['customers_status_specials'] == '1'
+          && $coupon === true
+          ) 
+      {
+        $specials_query = xtDBquery("SELECT specials_new_products_price 
+                                       FROM ".TABLE_SPECIALS." 
+                                      WHERE products_id = '".xtc_get_prid($products_id)."' 
+                                            ".SPECIALS_CONDITIONS);
+        if (xtc_db_fetch_array($specials_query, true) > 0) {
+          continue;
+        }
+      }
+      
       $qty = $this->contents[$products_id]['qty'];
       // products price
       $product_query = xtc_db_query("SELECT products_id,
@@ -555,9 +570,16 @@ class shoppingCart {
         }
       }
     }
-
-    foreach ($this->tax_discount as $value) {
-      $this->total += round($value, $xtPrice->get_decimal_places(''));
+    
+    if ($coupon === false
+        || ($coupon === true
+            && $_SESSION['customers_status']['customers_status_show_price_tax'] == '1'
+            )
+        )
+    {
+      foreach ($this->tax_discount as $value) {
+        $this->total += round($value, $xtPrice->get_decimal_places(''));
+      }
     }
   }
 
@@ -681,8 +703,8 @@ class shoppingCart {
    *
    * @return unknown
    */
-  function show_total() {
-    $this->calculate();
+  function show_total($coupon = false) {
+    $this->calculate($coupon);
     return $this->total;
   }
 

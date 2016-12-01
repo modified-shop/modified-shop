@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_collect_posts.inc.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -161,7 +161,7 @@
         }
         $_SESSION['cc_amount_min_order'] = $xtPrice->xtcCalculateCurr($gv_result['coupon_minimum_order']);
         $_SESSION['cc_amount_info'] = $coupon_amount;
-        if ($_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->show_total()) {
+        if ($_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->show_total(true)) {
           $_SESSION['cc_id'] = $gv_result['coupon_id'];
         }
         $_SESSION['cc_post'] = true;

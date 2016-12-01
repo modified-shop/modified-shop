@@ -1,7 +1,7 @@
 <?php
 
 /* -----------------------------------------------------------------------------------------
-   $Id: gift_cart.php 842 2005-03-24 14:35:02Z mz $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -50,7 +50,7 @@ if (isset ($_SESSION['gv_id'])) {
 	$coupon = xtc_db_fetch_array($gv_query);
 	$gift_smarty->assign('COUPON_AMOUNT2', $xtPrice->xtcFormat($coupon['coupon_amount'], true, 0, true));
 }
-$cc_check = isset($_SESSION['cc_amount_min_order']) && $_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->show_total() ? true : false;
+$cc_check = isset($_SESSION['cc_amount_min_order']) && $_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->show_total(true) ? true : false;
 if (isset ($_SESSION['cc_id']) && $cc_check) {
   if (!defined('POPUP_COUPON_HELP_LINK_PARAMETERS')) {
     define('POPUP_COUPON_HELP_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
@@ -67,7 +67,7 @@ if (isset ($_SESSION['customer_id'])) {
 }
 
 //check coupon minimum order
-$cc_check = isset($_SESSION['cc_amount_min_order']) && $_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->show_total() ? true : false;
+$cc_check = isset($_SESSION['cc_amount_min_order']) && $_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->show_total(true) ? true : false;
 if (isset($_SESSION['cc_post']) && !$cc_check) {
   unset($_SESSION['cc_id']); 
   unset($_SESSION['cc_post']);   
