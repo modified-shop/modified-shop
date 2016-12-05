@@ -297,7 +297,7 @@ class shoppingCart {
     //$this->contents[$products_id] = array ('qty' => (int)$quantity);
     $this->contents[$products_id]['qty'] = (int)$quantity; //don't reset $this->contents[$products_id] by update_quantity
     //new module support           
-    $this->shoppingCartModules->update_cart_products_session($products_id, $this->type, $qty, $attributes);
+    $this->shoppingCartModules->update_cart_products_session($products_id, $this->type, $quantity, $attributes);
     
     // update database
     if (isset($_SESSION['customer_id'])){

@@ -96,10 +96,10 @@ class shoppingCartModules {
         return self::call_module_method($products,$table_basket_attributes,$type);
     }
     
-    public static function update_cart_products_session($products_id,$type,$qty,$attributes)
+    public static function update_cart_products_session($products_id,$type,$quantity,$attributes)
     {
         self::$function_call = 'update_cart_products_session';
-        return self::call_module_method($products_id,$type,$qty,$attributes);
+        return self::call_module_method($products_id,$type,$quantity,$attributes);
     }
     
     public static function update_cart_products_db($sql_data_array,$products_id,$attributes)
