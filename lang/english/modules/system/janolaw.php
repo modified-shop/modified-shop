@@ -61,8 +61,8 @@ define('MODULE_JANOLAW_PDF_REVOCATION_DESC', 'Save document and add a link to th
 define('MODULE_JANOLAW_MAIL_REVOCATION_TITLE', 'E-Mail Attachment');
 define('MODULE_JANOLAW_MAIL_REVOCATION_DESC', 'Send PDF as attachment with order confirmation?');
 
-define('MODULE_JANOLAW_TYPE_WITHDRAWL_TITLE', 'Legal text Withdrawal form');
-define('MODULE_JANOLAW_TYPE_WITHDRAWL_DESC', 'Please specify content of this legal text to be inserted<br/><br/><b>Important:</b> this works from version 3. The changes can be made at Janolaw.');
+define('MODULE_JANOLAW_TYPE_WITHDRAWAL_TITLE', 'Legal text Withdrawal form');
+define('MODULE_JANOLAW_TYPE_WITHDRAWAL_DESC', 'Please specify content of this legal text to be inserted<br/><br/><b>Important:</b> this works from version 3. The changes can be made at Janolaw.');
 define('MODULE_JANOLAW_PDF_WITHDRAWAL_TITLE', 'PDF as Download');
 define('MODULE_JANOLAW_PDF_WITHDRAWAL_DESC', 'Save document and add a link to the document?<br/><b>Important:</b> This only works with HTML version!');
 define('MODULE_JANOLAW_MAIL_WITHDRAWAL_TITLE', 'E-Mail Attachment');
