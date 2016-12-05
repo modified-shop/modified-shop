@@ -56,7 +56,7 @@ class janolaw_content {
         $this->get_page_content('datasecurity', $this->get_configuration('MODULE_JANOLAW_TYPE_DATASECURITY'));
         $this->get_page_content('terms', $this->get_configuration('MODULE_JANOLAW_TYPE_TERMS'));
         $this->get_page_content('legaldetails', $this->get_configuration('MODULE_JANOLAW_TYPE_LEGALDETAILS'));
-        $this->get_page_content('model-withdrawal-form', $this->get_configuration('MODULE_JANOLAW_TYPE_WITHDRAWL'));
+        $this->get_page_content('model-withdrawal-form', $this->get_configuration('MODULE_JANOLAW_TYPE_WITHDRAWAL'));
         $this->get_page_content('revocation', $this->get_configuration('MODULE_JANOLAW_TYPE_REVOCATION'));
                 
         xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='".xtc_db_input(time())."', last_modified = NOW() where configuration_key='MODULE_JANOLAW_LAST_UPDATED'");
