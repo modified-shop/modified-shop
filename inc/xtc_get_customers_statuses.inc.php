@@ -22,7 +22,7 @@
    
   // Return all customers statuses for a specified language_id and return an array(array())
   // Use it to make pull_down_menu, checkbox....
-  function xtc_get_customers_statuses() {
+  function xtc_get_customers_statuses($use_customers_status_id = false) {
 
     $customers_statuses_array = array();
     if (!isset($_SESSION['languages_id'])
@@ -39,9 +39,10 @@
                                                  WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
                                               ORDER BY customers_status_id");
     }
-
+    $index = 0;
     while ($customers_statuses = xtc_db_fetch_array($customers_statuses_query)) {
-      $customers_statuses_array[$customers_statuses['customers_status_id']] = array(
+      $index = $use_customers_status_id ? $customers_statuses['customers_status_id'] : $index;
+      $customers_statuses_array[$index] = array(
         'id' => $customers_statuses['customers_status_id'],
         'text' => $customers_statuses['customers_status_name'],
         'csa_public' => $customers_statuses['customers_status_public'],
@@ -53,6 +54,7 @@
         'csa_ot_discount' => $customers_statuses['customers_status_ot_discount'],
         'csa_graduated_prices' => $customers_statuses['customers_status_graduated_prices'],
       );
+      $index++;
     }
     
     return $customers_statuses_array;

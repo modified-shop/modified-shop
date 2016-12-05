@@ -34,7 +34,7 @@
         $group_ids .= 'c_'.$b."_group ,";
       }
     }
-    $customers_statuses_array = xtc_get_customers_statuses();
+    
     if (xtc_get_shop_conf('SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS') !== false) {
       xtc_db_query("UPDATE ". "shop_configuration" ." SET configuration_value= '" . $group_ids . "' WHERE configuration_key = 'SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS'");
     } else {
@@ -56,7 +56,7 @@
     xtc_redirect(xtc_href_link('shop_offline.php'));  
   }
   
-  $customers_statuses_array = xtc_get_customers_statuses();
+  $customers_statuses_array = xtc_get_customers_statuses(true);
   unset($customers_statuses_array[0]); //Admin
   unset($customers_statuses_array[DEFAULT_CUSTOMERS_STATUS_ID_GUEST]); //Guest
   $customers_statuses_array = array_merge($customers_statuses_array);
@@ -121,12 +121,12 @@ if (USE_WYSIWYG == 'true') {
               <div class="customers-groups">
                 <?php
                 $customers_groups = xtc_get_shop_conf('SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS');
-                for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
+                foreach ($customers_statuses_array as $customers_statuses) {
                   $checked = false;
-                  if (strstr($customers_groups,'c_'.$customers_statuses_array[$i]['id'].'_group')) {
+                  if (strstr($customers_groups,'c_'.$customers_statuses['id'].'_group')) {
                     $checked = true;
                   }
-                  echo xtc_draw_checkbox_field('customers_groups[]', $customers_statuses_array[$i]['id'], $checked).' '.$customers_statuses_array[$i]['text'].'<br />';
+                  echo xtc_draw_checkbox_field('customers_groups[]', $customers_statuses['id'], $checked).' '.$customers_statuses['text'].'<br />';
                   }
                 ?>
               </div>
