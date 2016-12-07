@@ -671,13 +671,13 @@ class xtcPrice {
    * @param integer $vpeStatus
    * @return unknown
    */
-  function xtcFormatSpecialDiscount($pID, $discount, $pPrice, $format, $vpeStatus = 0) {
-    $sPrice = $pPrice - ($pPrice / 100) * $discount;
+  function xtcFormatSpecialDiscount($pID, $discount, $pPrice, $format, $vpeStatus = 0, $qty = 1) {
+    $sPrice = $this->xtcFormat($pPrice - ($pPrice / 100) * $discount, false) * $qty;
     if ($format) {
-      $old_price = $this->xtcFormat($pPrice, $format);
+      $old_price = $this->xtcFormat($pPrice * $qty, $format);
       $special_price = $this->xtcFormat($sPrice, $format);
-      $save_percent = round(($pPrice - $sPrice) / $pPrice * 100);
-      $save_diff = $this->xtcFormat($pPrice - $sPrice, $format);
+      $save_percent = round(($pPrice * $qty - $sPrice) / $pPrice * 100 / $qty);
+      $save_diff = $this->xtcFormat($pPrice * $qty - $sPrice, $format);
       $from = $this->checkAttributes($pID);
       $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br /><span class="productNewPrice">' . ONLY . $from . $special_price . '</span><br /><small class="productSavePrice">' . YOU_SAVE . $save_percent . ' % /' . $save_diff;
       if ($discount != 0) {
