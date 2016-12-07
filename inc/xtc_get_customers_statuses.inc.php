@@ -45,15 +45,10 @@
       $customers_statuses_array[$index] = array(
         'id' => $customers_statuses['customers_status_id'],
         'text' => $customers_statuses['customers_status_name'],
-        'csa_public' => $customers_statuses['customers_status_public'],
-        'csa_show_price' => $customers_statuses['customers_status_show_price'],
-        'csa_show_price_tax' => $customers_statuses['customers_status_show_price_tax'],
-        'csa_image' => $customers_statuses['customers_status_image'],
-        'csa_discount' => $customers_statuses['customers_status_discount'],
-        'csa_ot_discount_flag' => $customers_statuses['customers_status_ot_discount_flag'],
-        'csa_ot_discount' => $customers_statuses['customers_status_ot_discount'],
-        'csa_graduated_prices' => $customers_statuses['customers_status_graduated_prices'],
-      );
+      );      
+      foreach ($customers_statuses as $key => $value) {
+        $customers_statuses_array[$index][str_replace('customers_status', 'csa', $key)] = $value;
+      }
       $index++;
     }
     
