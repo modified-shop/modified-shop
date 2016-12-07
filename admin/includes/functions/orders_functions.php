@@ -219,7 +219,7 @@
         require_once (DIR_FS_LANGUAGES.$lang['directory'].'/modules/order_total/'.$order_total['class'].'.php');
       }
       $name = str_replace('ot_', '', $order_total['class']);
-      $text = ((defined('MODULE_ORDER_TOTAL_'.strtoupper($name).'_TITLE') ? constant('MODULE_ORDER_TOTAL_'.strtoupper($name).'_TITLE') : $order_total['title']);
+      $text = ((defined('MODULE_ORDER_TOTAL_'.strtoupper($name).'_TITLE')) ? constant('MODULE_ORDER_TOTAL_'.strtoupper($name).'_TITLE') : $order_total['title']);
 
       $sql_data_array = array(
         'title' => xtc_db_prepare_input($text),
