@@ -494,7 +494,7 @@ class shoppingCart {
                                                 $product['products_tax_class_id'],
                                                 $product['products_price']);
         //new module support       
-        $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $product, $this->contents[$products_id]);
+        $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $product, $this->contents[$products_id],$products_id);
        
         $this->total += $products_price * $qty;
         $this->weight += ($qty * $product['products_weight']);
@@ -654,7 +654,7 @@ class shoppingCart {
                                                     );
 
             //new module support                                    
-            $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $products, $this->contents[$products_id]);
+            $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $products, $this->contents[$products_id],$products_id);
         
             $this->attributes_price($products_id,$this->contents[$products_id]['qty']);
             $products_data = array();

@@ -150,10 +150,10 @@ class shoppingCartModules {
         return self::call_module_method($products_id);
     }
     
-    public static function calculate_product_price($products_price, $product, $contents)
+    public static function calculate_product_price($products_price, $product, $contents, $products_id)
     {
         self::$function_call = 'calculate_product_price';
-        return self::call_module_method($products_price, $product, $contents);
+        return self::call_module_method($products_price, $product, $contents, $products_id);
     }
     
     public static function calculate_option_price($price, $option, $value, $products_id, $qty)
