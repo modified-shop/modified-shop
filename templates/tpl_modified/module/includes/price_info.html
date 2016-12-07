@@ -29,7 +29,7 @@
               {else}
                 {* START Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis *}
                 <span class="graduated_price">
-                  <span class="small_price">{$smarty.const.FROM}</span> {$price_data.PRODUCTS_PRICE_OLD_PRICE}
+                  {if isset($price_data.PRODUCTS_PRICE_FROM)}<span class="small_price">{$smarty.const.FROM}</span> {/if}{$price_data.PRODUCTS_PRICE_OLD_PRICE}
                 </span>
                 <span class="item_price"><span class="small_price">{$smarty.const.UNIT_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
                 <meta itemprop="price" content="{$price_data.PRODUCTS_PRICE_PLAIN}" />
