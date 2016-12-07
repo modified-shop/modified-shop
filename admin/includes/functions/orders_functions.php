@@ -215,14 +215,14 @@
                                          FROM ".TABLE_ORDERS_TOTAL." 
                                         WHERE orders_id = '".(int)$oID."'");
     while ($order_total = xtc_db_fetch_array($order_total_query)) {
-
-      require (DIR_FS_LANGUAGES.$lang['directory'].'/modules/order_total/'.$order_total['class'].'.php');
+      if (is_file(DIR_FS_LANGUAGES.$lang['directory'].'/modules/order_total/'.$order_total['class'].'.php')) {
+        require_once (DIR_FS_LANGUAGES.$lang['directory'].'/modules/order_total/'.$order_total['class'].'.php');
+      }
       $name = str_replace('ot_', '', $order_total['class']);
-      $text = constant('MODULE_ORDER_TOTAL_'.strtoupper($name).'_TITLE');
+      $text = ((defined('MODULE_ORDER_TOTAL_'.strtoupper($name).'_TITLE') ? constant('MODULE_ORDER_TOTAL_'.strtoupper($name).'_TITLE') : $order_total['title']);
 
       $sql_data_array = array(
-        'language' => xtc_db_prepare_input($lang['directory']),
-        'languages_id' => xtc_db_prepare_input($lang['languages_id']),
+        'title' => xtc_db_prepare_input($text),
       );
       xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array, 'update', "orders_total_id  = '".(int)($order_total['orders_total_id'])."'");
     }
