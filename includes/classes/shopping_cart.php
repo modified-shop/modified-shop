@@ -460,6 +460,7 @@ class shoppingCart {
   function calculate() {
     global $xtPrice;
     $this->total = 0;
+    $this->total_netto = 0;
     $this->weight = 0;
     $this->tax = array ();
     $this->tax_discount = array ();
@@ -512,6 +513,8 @@ class shoppingCart {
           }
         }
 
+        $this->total_netto = $this->total;
+        
         // $this->total hat netto * Stück in der 1. Runde
         // Artikel Rabatt berücksichtigt
         // Gesamt Rabatt auf Bestellung nicht
@@ -519,11 +522,13 @@ class shoppingCart {
         // $this->total + $this->tax wird berechnet
         if ($product['products_tax_class_id'] != 0) {
 
+          $products_price_total = $products_price + $attribute_price;
           if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
             // Rabatt für die Steuerberechnung
             // der eigentliche Rabatt wird im order-details_cart abgezogen
             $products_price_tax = $products_price - ($products_price / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
             $attribute_price_tax = $attribute_price - ($attribute_price / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
+            $products_price_total = $products_price_tax + $attribute_price_tax;  //Evtl. einzeln auf 4 Stellen runden ???
           }
 
           $products_tax = $xtPrice->TAX[$product['products_tax_class_id']];
@@ -532,34 +537,35 @@ class shoppingCart {
           // price incl tax
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') {
             if (!isset($this->tax[$product['products_tax_class_id']])) $this->tax[$product['products_tax_class_id']]['value'] = 0; 
-            if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
-              $this->tax[$product['products_tax_class_id']]['value'] += ((($products_price_tax+$attribute_price_tax) / (100 + $products_tax)) * $products_tax)*$qty;
-            } else {
-              $this->tax[$product['products_tax_class_id']]['value'] += ((($products_price+$attribute_price) / (100 + $products_tax)) * $products_tax)*$qty;
-            }
+            $this->tax[$product['products_tax_class_id']]['value'] += (($products_price_total / (100 + $products_tax)) * $products_tax) * $qty;
             $this->tax[$product['products_tax_class_id']]['desc'] = TAX_ADD_TAX.$products_tax_description;
           }
+
           // excl tax + tax at checkout
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-            if (!isset($this->tax[$product['products_tax_class_id']])) $this->tax[$product['products_tax_class_id']]['value'] = 0; 
-            if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
-              $this->tax[$product['products_tax_class_id']]['value'] += (($products_price_tax+$attribute_price_tax) / 100) * ($products_tax)*$qty;
-              if (!isset($this->tax_discount[$product['products_tax_class_id']])) $this->tax_discount[$product['products_tax_class_id']] = 0;
-              $this->tax_discount[$product['products_tax_class_id']]+=(($products_price_tax+$attribute_price_tax) / 100) * ($products_tax)*$qty; 
-            } else {
-              $this->tax[$product['products_tax_class_id']]['value'] += (($products_price+$attribute_price) / 100) * ($products_tax)*$qty;
-              $this->total += (($products_price+$attribute_price) / 100) * ($products_tax)*$qty;
-            }
+            if (!isset($this->tax[$product['products_tax_class_id']])) $this->tax[$product['products_tax_class_id']]['value'] = 0;
+            $this->tax[$product['products_tax_class_id']]['value'] += ($products_price_total / 100) * ($products_tax) * $qty;
             $this->tax[$product['products_tax_class_id']]['desc'] = TAX_NO_TAX.$products_tax_description;
+            $this->total += ($products_price_total / 100) * ($products_tax)*$qty;            
+            if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
+              if (!isset($this->tax_discount[$product['products_tax_class_id']])) $this->tax_discount[$product['products_tax_class_id']] = 0;
+              $this->tax_discount[$product['products_tax_class_id']] += ($products_price_total / 100) * ($products_tax) * $qty;
+            } 
           }
         }
       }
     }
-
-    foreach ($this->tax_discount as $value) {
-      $this->total += round($value, $xtPrice->get_decimal_places(''));
+    
+    $this->total = round($this->total,4); //4 Stellen entspricht Dezimalstellen in DB
+    
+    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
+      foreach ($this->tax as $key => $val) {
+        $this->total_netto -= round($val['value'],4); //4 Stellen entspricht Dezimalstellen in DB
+      }
     }
+    
   }
+
 
   /**
    * get price for a product's attribute
