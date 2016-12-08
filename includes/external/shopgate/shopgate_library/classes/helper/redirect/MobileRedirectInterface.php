@@ -19,7 +19,8 @@
  * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
  * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
  *
- * @author Shopgate GmbH <interfaces@shopgate.com>
+ * @author     Shopgate GmbH <interfaces@shopgate.com>
+ * @deprecated 3.0.0 - deprecated as of 2.9.51
  */
 interface Shopgate_Helper_Redirect_MobileRedirectInterface
 {
@@ -28,13 +29,13 @@ interface Shopgate_Helper_Redirect_MobileRedirectInterface
 	 * @param bool $javascript
 	 */
 	public function supressRedirectTechniques($http = false, $javascript = false);
-	
+
 	/**
 	 * @param string $name One of the Shopgate_Helper_Redirect_TagsGeneratorInterface::SITE_PARAMETER_* constants.
 	 * @param string $value
 	 */
 	public function addSiteParameter($name, $value);
-	
+
 	/**
 	 * @param string $url
 	 * @param bool   $sendVary
@@ -42,52 +43,52 @@ interface Shopgate_Helper_Redirect_MobileRedirectInterface
 	 * @post ends script execution in case of http redirect
 	 */
 	public function redirect($url, $sendVary = true);
-	
+
 	/**
 	 * @return string
 	 */
 	public function buildScriptDefault();
-	
+
 	/**
 	 * @return string
 	 */
 	public function buildScriptShop();
-	
+
 	/**
 	 * @param string $itemNumber
 	 *
 	 * @return string
 	 */
 	public function buildScriptItem($itemNumber);
-	
+
 	/**
 	 * @param string $itemNumberPublic
 	 *
 	 * @return string
 	 */
 	public function buildScriptItemPublic($itemNumberPublic);
-	
+
 	/**
 	 * @param string $categoryNumber
 	 *
 	 * @return string
 	 */
 	public function buildScriptCategory($categoryNumber);
-	
+
 	/**
 	 * @param string $cmsPage
 	 *
 	 * @return string
 	 */
 	public function buildScriptCms($cmsPage);
-	
+
 	/**
 	 * @param string $manufacturerName
 	 *
 	 * @return mixed
 	 */
 	public function buildScriptBrand($manufacturerName);
-	
+
 	/**
 	 * @param string $searchQuery
 	 *

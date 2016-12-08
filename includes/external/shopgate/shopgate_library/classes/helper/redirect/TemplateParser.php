@@ -26,7 +26,7 @@ class Shopgate_Helper_Redirect_TemplateParser implements Shopgate_Helper_Redirec
 	public function getVariables($template)
 	{
 		$matches = array();
-		if (!preg_match_all('/{([^}]+)}*/', $template, $matches)) {
+		if (!preg_match_all('/{([\w:]+)}/', $template, $matches)) {
 			return array();
 		}
 		

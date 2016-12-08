@@ -1,3 +1,12 @@
+'''Version 2.9.34'''
+* fixed detection of Modified eCommerce version
+* fixed customer group for guest orders
+* uses library 2.9.58
+* fixed item validation in checkCart and checkStock for products with options
+
+'''Version 2.9.33'''
+* fixed prices of inputs in product export
+
 '''Version 2.9.32'''
 * fixed stock export of child products
 
@@ -41,7 +50,7 @@
 * implemented tier price support
 
 '''Version 2.9.22'''
-* fixed categories in xml product export 
+* fixed categories in xml product export
 
 '''Version 2.9.21'''
 * helper loading logic changed
@@ -128,7 +137,7 @@
 * fixed a bug in the mobile redirect for the welcome page
 
 '''Version 2.9.0'''
-* dynamic initialising of shipping module constants improved 
+* dynamic initialising of shipping module constants improved
 * Shopgate wiki link will be red out of the config now
 * bug in export shipping methods fixed
 * uses Shopgate Library 2.9.4
@@ -178,7 +187,7 @@
 * Shipping methods can be selected
 
 '''Version 2.6.1'''
-* request plugin configuration extended 
+* request plugin configuration extended
 
 '''Version 2.6.0'''
 * virtual category "new products" can now be exported
@@ -186,7 +195,7 @@
 
 '''Version 2.5.5'''
 * uses Shopgate Library 2.6.6
-* VAT bug fixed in Shopgate order import 
+* VAT bug fixed in Shopgate order import
 
 '''Version 2.5.4'''
 * uses Shopgate Library 2.5.6
@@ -200,7 +209,7 @@
 * order confirmation mail can now be sent through the shop system
 
 '''Version 2.5.1'''
-* bug fixed in plugin installation 
+* bug fixed in plugin installation
 
 '''Version 2.5.0'''
 * uses Shopgate Library 2.5.0
@@ -291,7 +300,7 @@
 * the stock level options are now accessed on importing orders and adapted to the ordered products, attributes and specials. Products and specials are now deactivated according to the shoppingsystem
 * support for the older products structure to avoid false order imports after updating to a newer shopgate plugin is already included
 * preorder products are now exported as such
-* method updateOrder() doesn't throw an exception anymore if payment is done after shipping and shipping was not blocked by Shopgate. 
+* method updateOrder() doesn't throw an exception anymore if payment is done after shipping and shipping was not blocked by Shopgate.
 * the Shopgate configuration file can now be saved without any problems, even if false formatted GET parameters are appended on navigation to the Shopgate configuration page
 * the orders status "Shipping blocked (Shopgate)" can now be recognized while installing the Shopgate payment module even if its name has been changed, as long as it is marked with the keyword "Shopgate" (without quoutes)
 * fixed an issue with DreamRobot and shipping costs
@@ -301,7 +310,7 @@
 
 '''Version 2.1.16'''
 * revised configuration interface
-* it's now possible to select multiple languages for the Mobile Redirect 
+* it's now possible to select multiple languages for the Mobile Redirect
 * added global configuration settings
 * uses Shopgate Library 2.1.23
 
@@ -317,7 +326,7 @@
 * uses Shopgate Library 2.1.21
 
 '''Version 2.1.12'''
-* fixed an issue that caused categories to be in the exactly reversed sort order 
+* fixed an issue that caused categories to be in the exactly reversed sort order
 * a setting has been added for shops that use the category sort order in an inverted way to display the categories
 * the sort order of products can now also be inverted by setting in the extended shopgate settings
 * fixed an issue with products discount allowed values where product prices was exportet wrong in some cases
@@ -327,7 +336,7 @@
 * <link rel="alternate" ...> HTML tag output in <head>
 
 '''Version 2.1.11'''
-* fixed an issue in order synchronization 
+* fixed an issue in order synchronization
 
 '''Version 2.1.10'''
 * the default charset is no longer set while creating the orders_shopgate_order table, because there seems to be a problem with some providers, while using this functionality

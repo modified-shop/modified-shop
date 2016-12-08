@@ -52,7 +52,7 @@ class Shopgate_Helper_Redirect_TemplateParserTest extends PHPUnit_Framework_Test
 
         $this->assertEquals($returned->getData(), $expected->getData());
     }
-
+    
     /**
      * Testing the more complex variable setter
      *
@@ -74,7 +74,7 @@ class Shopgate_Helper_Redirect_TemplateParserTest extends PHPUnit_Framework_Test
         $this->assertEquals($returnedOne->getData(), $expectedOne->getData());
         $this->assertEquals($returnedTwo->getData(), $expectedTwo->getData());
     }
-
+    
     /**
      * Simple empty array return check
      *
@@ -106,7 +106,31 @@ class Shopgate_Helper_Redirect_TemplateParserTest extends PHPUnit_Framework_Test
 
         $this->assertCount(5, $variables);
     }
-
+    
+    public function testCurlyBracesNotAlwaysVariables() {
+        // some invalid variable names that should not be detected as variables
+        $this->assertCount(0, $this->class->getVariables('{a b}'));
+        $this->assertCount(0, $this->class->getVariables('{ ab}'));
+        $this->assertCount(0, $this->class->getVariables('{ab }'));
+        $this->assertCount(0, $this->class->getVariables('{ ab }'));
+        $this->assertCount(0, $this->class->getVariables('{ a b }'));
+        $this->assertCount(0, $this->class->getVariables('{ ab }'));
+        $this->assertCount(0, $this->class->getVariables('fdgdf {a b} gdfgdf'));
+        
+        // The dash is explicitly invalid for now as we don't have any such variables up until now. But this is only an
+        // assumption that can change. If it changes, this assertion needs to be updated accordingly.
+        $this->assertCount(0, $this->class->getVariables('{a-b}'));
+        
+        // curly braced JS blocks that should not be detected as variables
+        $this->assertCount(0, $this->class->getVariables('function minified(a,b){ var a="test"; };'));
+        $this->assertCount(0, $this->class->getVariables('function minified(a,b){var a="test"; };'));
+        $this->assertCount(0, $this->class->getVariables('function minified(a,b){ var a="test";};'));
+        $this->assertCount(0, $this->class->getVariables('function minified(a,b){var a="test";};'));
+        
+        // variable inside curly braced JS block
+        $this->assertCount(1, $this->class->getVariables('function minified(a,b){var {abc}="test";};'));
+    }
+    
     /**
      * Helps initializing the variable model
      *

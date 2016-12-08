@@ -3,9 +3,6 @@
 # Author: Martin Weber
 # Shopgate GmbH
 # website: http://www.shopgate.com
-# Project: http://code.google.com/p/shopgate-framework/
-#
-# Revision: $Rev: 50 $
 ###############################################################################
 
 #AddType x-mapp-php5 .php

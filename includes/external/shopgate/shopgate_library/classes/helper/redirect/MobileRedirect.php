@@ -20,6 +20,7 @@
  * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
+ * @deprecated 3.0.0 - deprecated as of 2.9.51
  */
 class Shopgate_Helper_Redirect_MobileRedirect
 	extends ShopgateObject
@@ -27,38 +28,38 @@ class Shopgate_Helper_Redirect_MobileRedirect
 {
 	/** @var Shopgate_Helper_Redirect_RedirectorInterface */
 	protected $redirector;
-	
+
 	/** @var Shopgate_Helper_Redirect_TagsGeneratorInterface */
 	protected $tagsGenerator;
-	
+
 	/** @var Shopgate_Helper_Redirect_SettingsManagerInterface */
 	protected $settingsManager;
-	
+
 	/** @var Shopgate_Helper_Redirect_TemplateParserInterface */
 	protected $templateParser;
-	
+
 	/** @var string */
 	protected $jsTemplateFilePath;
-	
+
 	/** @var string */
 	protected $shopNumber;
-	
+
 	/** @var bool */
 	protected $suppressRedirectHttp;
-	
+
 	/** @var bool */
 	protected $suppressRedirectJavascript;
-	
+
 	/**
 	 * @var array [string, mixed] Parameters that should be replaced in the HTML tags, indexed by their name.
 	 */
 	protected $siteParameters;
-	
+
 	/**
 	 * @var array [string, string] An array with the page names as indices and the "old" JS redirect types as values, if different.
 	 */
 	protected $pageTypeToRedirectMapping;
-	
+
 	/**
 	 * ShopgateMobileRedirect constructor.
 	 *
@@ -83,16 +84,16 @@ class Shopgate_Helper_Redirect_MobileRedirect
 		$this->templateParser     = $templateParser;
 		$this->jsTemplateFilePath = $jsTemplateFilePath;
 		$this->shopNumber         = $shopNumber;
-		
+
 		$this->suppressRedirectHttp       = false;
 		$this->suppressRedirectJavascript = false;
 		$this->siteParameters             = array();
-		
+
 		$this->pageTypeToRedirectMapping = array(
 			Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_HOME    => 'start',
 			Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_PRODUCT => 'item',
 		);
-		
+
 		try {
 			$htmlTags = $this->settingsManager->getHtmlTags();
 			$this->tagsGenerator->setHtmlTagsFromJson($htmlTags);
@@ -100,7 +101,7 @@ class Shopgate_Helper_Redirect_MobileRedirect
 			$this->tagsGenerator->setHtmlTagsFromJson($this->getFallBackTags());
 		}
 	}
-	
+
 	/**
 	 * Suppresses the redirect via JavaScript without disabling the mobile header.
 	 *
@@ -110,96 +111,96 @@ class Shopgate_Helper_Redirect_MobileRedirect
 	{
 		$this->suppressRedirectJavascript = true;
 	}
-	
+
 	public function supressRedirectTechniques($http = false, $javascript = false)
 	{
 		$this->suppressRedirectHttp       = $http;
 		$this->suppressRedirectJavascript = $javascript;
 	}
-	
+
 	public function addSiteParameter($name, $value)
 	{
 		$this->siteParameters[$name] = $value;
 	}
-	
+
 	public function redirect($url, $sendVary = true)
 	{
 		if ($this->suppressRedirectHttp) {
 			return;
 		}
-		
+
 		$this->redirector->redirect($url, $sendVary);
 	}
-	
+
 	public function buildScriptDefault()
 	{
 		$this->redirector->redirectDefault();
-		
+
 		return $this->buildTags(Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_DEFAULT);
 	}
-	
+
 	public function buildScriptShop()
 	{
 		$this->redirector->redirectHome();
-		
+
 		return $this->buildTags(Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_HOME);
 	}
-	
+
 	public function buildScriptItem($itemNumber)
 	{
 		$this->redirector->redirectProduct($itemNumber);
-		
+
 		return $this->buildTags(
 			Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_PRODUCT,
 			array('product_uid' => $itemNumber)
 		);
 	}
-	
+
 	public function buildScriptItemPublic($itemNumberPublic)
 	{
 		return $this->buildScriptItem($itemNumberPublic);
 	}
-	
+
 	public function buildScriptCategory($categoryNumber)
 	{
 		$this->redirector->redirectCategory($categoryNumber);
-		
+
 		return $this->buildTags(
 			Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_CATEGORY,
 			array('category_uid' => $categoryNumber)
 		);
 	}
-	
+
 	public function buildScriptCms($cmsPage)
 	{
 		$this->redirector->redirectCms($cmsPage);
-		
+
 		return $this->buildTags(
 			Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_CMS,
 			array('page_uid' => $cmsPage)
 		);
 	}
-	
+
 	public function buildScriptBrand($manufacturerName)
 	{
 		$this->redirector->redirectBrand($manufacturerName);
-		
+
 		return $this->buildTags(
 			Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_BRAND,
 			array('brand_name' => $manufacturerName)
 		);
 	}
-	
+
 	public function buildScriptSearch($searchQuery)
 	{
 		$this->redirector->redirectSearch($searchQuery);
-		
+
 		return $this->buildTags(
 			Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_SEARCH,
 			array('search_query' => $searchQuery)
 		);
 	}
-	
+
 	/**
 	 * @param string $pageType
 	 * @param array  $parameters [string, string]
@@ -211,14 +212,14 @@ class Shopgate_Helper_Redirect_MobileRedirect
 		if ($this->settingsManager->isMobileHeaderDisabled()) {
 			return '';
 		}
-		
+
 		$parameters = $this->siteParameters + $parameters;
-		
+
 		$parameters['link_tags']     = $this->tagsGenerator->getTagsFor($pageType, $parameters);
 		$parameters['redirect_code'] = $this->getRedirectCode($pageType);
 		$parameters['shop_number']   = $this->shopNumber;
 		$parameters += $this->settingsManager->getShopgateStaticUrl();
-		
+
 		// pre-process the additional parameters to add in the correct JS variables
 		$variable = new Shopgate_Model_Redirect_HtmlTagVariable();
 		$variable->setName('additional_parameters');
@@ -227,20 +228,20 @@ class Shopgate_Helper_Redirect_MobileRedirect
 			$variable,
 			$this->getAdditionalParameters($pageType)
 		);
-		
+
 		// process all variables left in the template (and those added with the processing of 'additional_parameters'.
 		$variables = $this->templateParser->getVariables($jsTemplate);
 		foreach ($variables as $variable) {
 			$replacement = !empty($parameters[$variable->getName()])
 				? $parameters[$variable->getName()]
 				: '';
-			
+
 			$jsTemplate = $this->templateParser->process($jsTemplate, $variable, $replacement);
 		}
-		
+
 		return $jsTemplate;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -271,7 +272,7 @@ class Shopgate_Helper_Redirect_MobileRedirect
 			)
 		);
 	}
-	
+
 	/**
 	 * @param string $pageType
 	 *
@@ -280,38 +281,38 @@ class Shopgate_Helper_Redirect_MobileRedirect
 	protected function getAdditionalParameters($pageType)
 	{
 		$additionalParameters = '';
-		
+
 		$defaultRedirect = $this->settingsManager->isDefaultRedirectDisabled() ? 'false' : 'true';
 		$jsRedirect      = $this->suppressRedirectJavascript ? 'false' : 'true';
-		
+
 		$additionalParameters .= "_shopgate.is_default_redirect_disabled = {$defaultRedirect};\n";
 		$additionalParameters .= "    _shopgate.redirect_to_webapp = {$jsRedirect};\n";
-		
+
 		switch ($pageType) {
 			case Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_CATEGORY:
 				$additionalParameters .= '_shopgate.category_number = "{category_uid}";';
 				break;
-			
+
 			case Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_PRODUCT:
 				$additionalParameters .= '_shopgate.item_number = "{product_uid}";';
 				break;
-			
+
 			case Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_CMS:
 				$additionalParameters .= '_shopgate.cms_page = "{page_uid}";';
 				break;
-			
+
 			case Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_BRAND:
 				$additionalParameters .= '_shopgate.brand_name = "{brand_name}";';
 				break;
-			
+
 			case Shopgate_Helper_Redirect_TagsGeneratorInterface::PAGE_TYPE_SEARCH:
 				$additionalParameters .= '_shopgate.search_query = "{search_query:escaped}";';
 				break;
 		}
-		
+
 		return $additionalParameters . "\n";
 	}
-	
+
 	/**
 	 * @param string $pageType
 	 *
