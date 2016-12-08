@@ -16,6 +16,8 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+defined('SPECIALS_CONDITIONS_S') or define('SPECIALS_CONDITIONS_S', 'AND s.status = \'1\'');
+
 // include smarty
 include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
