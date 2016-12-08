@@ -17,39 +17,39 @@
  * for the purpose of facilitating communication between the IT system of the customer and the IT system
  * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
  * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
- * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+ * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain
+ * unaffected.
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 
 /**
  * @class Shopgate_Model_Catalog_Category
- * @see http://developer.shopgate.com/file_formats/xml/categories
+ * @see   http://developer.shopgate.com/file_formats/xml/categories
  *
- *  @method                             setUid(int $value)
- *  @method int                         getUid()
+ * @method                                      setUid(int $value)
+ * @method int                                  getUid()
  *
- *  @method                             setSortOrder(int $value)
- *  @method int                         getSortOrder()
+ * @method                                      setSortOrder(int $value)
+ * @method int                                  getSortOrder()
  *
- *  @method                             setName(string $value)
- *  @method string                      getName()
+ * @method                                      setName(string $value)
+ * @method string                               getName()
  *
- *  @method                             setParentUid(int $value)
- *  @method int                         getParentUid()
+ * @method                                      setParentUid(int $value)
+ * @method int                                  getParentUid()
  *
- *  @method                             setImage(Shopgate_Model_Media_Image $value)
- *  @method Shopgate_Model_Media_Image  getImage()
+ * @method                                      setImage(Shopgate_Model_Media_Image $value)
+ * @method Shopgate_Model_Media_Image | null    getImage()
  *
- *  @method                             setIsActive(bool $value)
- *  @method bool                        getIsActive()
+ * @method                                      setIsActive(bool $value)
+ * @method bool                                 getIsActive()
  *
- *  @method                             setDeeplink(string $value)
- *  @method string                      getDeeplink()
+ * @method                                      setDeeplink(string $value)
+ * @method string                               getDeeplink()
  *
- *  @method                             setIsAnchor(bool $value)
- *  @method bool                        getIsAnchor()
- *
+ * @method                                      setIsAnchor(bool $value)
+ * @method bool                                 getIsAnchor()
  */
 class Shopgate_Model_Catalog_Category extends Shopgate_Model_AbstractExport {
 	/**
@@ -123,7 +123,7 @@ class Shopgate_Model_Catalog_Category extends Shopgate_Model_AbstractExport {
 		$categoryNode->addAttribute('is_anchor', (int)$this->getIsAnchor());
 		$categoryNode->addChildWithCDATA('name', $this->getName());
 		$categoryNode->addChildWithCDATA('deeplink', $this->getDeeplink());
-		
+
 		if ($this->getImage()) {
 			$this->getImage()->asXml($categoryNode);
 		}
@@ -145,7 +145,9 @@ class Shopgate_Model_Catalog_Category extends Shopgate_Model_AbstractExport {
 		$categoryResult->setData('name', $this->getName());
 		$categoryResult->setData('deeplink', $this->getDeeplink());
 
-		$categoryResult->setData('image', $this->getImage()->asArray());
+        if ($this->getImage() instanceof Shopgate_Model_Media_Image) {
+            $categoryResult->setData('image', $this->getImage()->asArray());
+        }
 
 		return $categoryResult->getData();
 	}

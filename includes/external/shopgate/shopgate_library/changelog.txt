@@ -1,5 +1,61 @@
+'''Version 2.9.58'''
+* fixed 'undefined index' notice in ShopgateBuilder
+* fixed turning on error_reporting for all errors by default
+
+'''Version 2.9.57'''
+* fixed missing plugin_version in JSON response
+
+'''Version 2.9.56'''
+* fixed class names for logging classes to avoid duplicate declarations
+* removed self-logging functionality from ShopgateLibraryException
+* added proper stack trace generation
+* added proper handlers for errors and exceptions
+* added a new shutdown function to be able to log fatal errors that cause a script to stop unexpectedly
+* moved initialization of error reporting settings and handlers from ShopgatePluginApi to ShopgateBuilder
+* ShopgatePluginApi is now working with the "logging strategy" introduced in 2.9.55 if it was set
+* ShopgatePluginApi is now using the stack trace generation mentioned above if it was set
+* ShopgatePluginApi won't log stack traces anymore when using ShopgateLogger to avoid logging sensitive information
+* deprecated ShopgateLogger
+* added ShopgateClient to ShopgateCartBase to distinguish between the mobile clients
+* added error code to remove items silently in the cart validation
+* replaced "document.write" with asynchronous loading of mobile redirect / mobile header
+* added Content-Length header to Response objects for CSV, XML and JSON repsonses
+
+'''Version 2.9.55'''
+* refactored ShopgateLogger to be able to pass a strategy for logging
+
+'''Version 2.9.54'''
+* adjusting CartCustomer object properties to contain an empty group array
+
+'''Version 2.9.53'''
+* added missing entries to composer.json
+* fix for category asArray method when image is missing
+
+'''Version 2.9.52'''
+* extended method clear_cache so plugin related cache files can be deleted as well
+
+'''Version 2.9.51'''
+* http/js redirect split via new forwarder class
+
+'''Version 2.9.50'''
+* added constant for new error code 222 (missing fields in register_customer)
+* updated deprecated status of product visibility statuses
+
+'''Version 2.9.49'''
+* fixed encoding issue related to objects in Plugin API responses that are in JSON
+
+'''Version 2.9.48'''
+* added process ID of incoming requests to access log
+* added new constant for checkCart error "CART_ITEM_PRODUCT_NOT_ALLOWED"
+
+'''Version 2.9.47'''
+* "manufacturer_item_number" in the XML export of products is now CDATA, allowing for a correct handling of Umlauts and special characters
+
+'''Version 2.9.46'''
+* made isMobile() check public in the redirector class
+
 '''Version 2.9.45'''
-* fixed product export issue related to invalid data in field tax_class
+* "tax_class" in the XML export of products is now CDATA, allowing for a correct handling of Umlauts and special characters
 
 '''Version 2.9.44'''
 * won't crash anymore when an array of objects expected from the Shopgate Merchant API is set, but empty
@@ -7,7 +63,7 @@
 
 '''Version 2.9.43'''
 * changed error reporting settings for development environments
-* fixes redirect when a shop is not active & full view mode 
+* fixes redirect when a shop is not active & full view mode
 
 '''Version 2.9.42'''
 * fixed an issue with home page infinite redirect loop
@@ -117,7 +173,7 @@
 
 '''Version 2.9.13'''
 * ShopgateLibraryException: new constructor argument for previous Exception; improved stack trace logging
-* product XML export: removed the subnode <paths> of <category> 
+* product XML export: removed the subnode <paths> of <category>
 * product XML export: The nodes <tax_percent> + <tax_class> will only be exported if a value was explicitly set
 * XML export: all invalid characters are filtered out now (according to the rules from www.w3.org)
 * added a new constant for product invisibility
@@ -132,7 +188,7 @@
 * bugfix: non-existent function ShopgateContainerVisitor::visitCoupon() was called
 
 '''Version 2.9.10'''
-* corrected wrong constant names 
+* corrected wrong constant names
 
 '''Version 2.9.9'''
 * it is now possible to get instances of Shopgate helper classes via function call to ensure that the helper functionality is available on every level in the plugin
@@ -167,7 +223,7 @@
 * export of reviews as xml added
 
 '''Version 2.8.10'''
-* added cdata for deep links in categories and products (xml) 
+* added cdata for deep links in categories and products (xml)
 * extended cname validation
 * removed legacy code
 
@@ -192,7 +248,7 @@
 
 '''Version 2.8.4'''
 * regex adjustment for cname validation
-* new child node for grouped products / different display types added to xml 
+* new child node for grouped products / different display types added to xml
 
 '''Version 2.8.3'''
 * stripping invalid UTF-8 sequences now on XML export
@@ -390,7 +446,7 @@
 
 '''Version 2.3.1'''
 * if shop number is missing the js redirect script is not rendered
-* ping returns size and ownership of files from now on 
+* ping returns size and ownership of files from now on
 
 '''Version 2.3.0'''
 * New function get_settings() for exporting the shop's tax rates, tax rules and tax classes (and other settings in the future)

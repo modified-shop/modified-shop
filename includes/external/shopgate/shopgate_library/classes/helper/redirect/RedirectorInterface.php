@@ -75,4 +75,12 @@ interface Shopgate_Helper_Redirect_RedirectorInterface
 	 * @param bool   $sendVary True to send the "Vary: User-Agent" header.
 	 */
 	public function redirect($url, $sendVary = true);
+
+	/**
+	 * Checks current browser user agent string
+	 * against allowed mobile keywords, e.g. Iphone, Android, etc
+	 * 
+	 * @return bool
+	 */
+	public function isMobile();
 }

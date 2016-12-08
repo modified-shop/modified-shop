@@ -194,6 +194,8 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	protected $phone;
 	protected $mobile;
 
+    protected $client;
+
 	protected $custom_fields;
 
 	protected $shipping_group;
@@ -219,7 +221,7 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 
 	protected $items                   = array();
 	protected $tracking_get_parameters = array();
-	
+
 	##########
 	# Setter #
 	##########
@@ -286,6 +288,23 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	public function setMobile($value) {
 		$this->mobile = $value;
 	}
+
+    /**
+     * @param ShopgateClient $value
+     */
+    public function setClient($value) {
+        if (!($value instanceof ShopgateClient) && !is_array($value)) {
+            $this->client = null;
+
+            return;
+        }
+
+        if (is_array($value)) {
+            $value = new ShopgateClient($value);
+        }
+
+        $this->client = $value;
+    }
 
 	/**
 	 * @param string $value
@@ -528,7 +547,7 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 
 		$this->items = $value;
 	}
-	
+
 	/**
 	 * @param array $value
 	 */
@@ -536,8 +555,8 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	{
 		$this->tracking_get_parameters = (array)$value;
 	}
-	
-	
+
+
 	##########
 	# Getter #
 	##########
@@ -590,6 +609,13 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	public function getMobile() {
 		return $this->mobile;
 	}
+
+    /**
+     * @return ShopgateClient
+     */
+    public function getClient() {
+        return $this->client;
+    }
 
 	/**
 	 * @return string
@@ -732,7 +758,7 @@ abstract class ShopgateCartBase extends ShopgateContainer {
 	public function getItems() {
 		return $this->items;
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -790,7 +816,7 @@ class ShopgateOrder extends ShopgateCartBase {
 	protected $update_payment = 0;
 
 	protected $delivery_notes = array();
-	
+
 	public function accept(ShopgateContainerVisitor $v) {
 		$v->visitOrder($this);
 	}
@@ -951,10 +977,10 @@ class ShopgateOrder extends ShopgateCartBase {
 
 		$this->delivery_notes = $value;
 	}
-	
-	
-	
-	
+
+
+
+
 	##########
 	# Getter #
 	##########
@@ -1125,56 +1151,56 @@ class ShopgateOrder extends ShopgateCartBase {
 	public function getDeliveryNotes() {
 		return $this->delivery_notes;
 	}
-	
-	
+
+
 }
 
 class ShopgateOrderItem extends ShopgateContainer {
-	
+
 	const TYPE_ITEM            = 'item';
 	const TYPE_PRODUCT         = 'item';
 	const TYPE_PAYMENT         = 'payment';
 	const TYPE_SHOPGATE_COUPON = 'sg_coupon';
-	
+
 	/** @var string */
 	protected $item_number;
-	
+
 	/** @var string */
 	protected $item_number_public;
-	
+
 	/** @var string */
 	protected $parent_item_number;
-	
+
 	/** @var int */
 	protected $order_item_id;
-	
+
 	/** @var string */
 	protected $type;
-	
+
 	/** @var int */
 	protected $quantity;
-	
+
 	/** @var string */
 	protected $name;
-	
+
 	/** @var float */
 	protected $unit_amount;
-	
+
 	/** @var float */
 	protected $unit_amount_with_tax;
-	
+
 	/** @var float */
 	protected $tax_percent;
-	
+
 	/** @var string */
 	protected $tax_class_key;
-	
+
 	/** @var string */
 	protected $tax_class_id;
-	
+
 	/** @var string */
 	protected $currency;
-	
+
 	/** @var string */
 	protected $internal_order_info;
 
@@ -2866,7 +2892,7 @@ class ShopgateCartItem extends ShopgateContainer {
 
 class ShopgateCartCustomer extends ShopgateContainer {
 	protected $customer_tax_class_key;
-	protected $customer_groups;
+	protected $customer_groups = array();
 
 	##########
 	# Setter #

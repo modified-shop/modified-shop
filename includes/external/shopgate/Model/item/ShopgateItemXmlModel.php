@@ -382,6 +382,7 @@ class ShopgateItemXmlModel extends ShopgateItemModel
             $inputResult    = array();
             $optionAsInput  = $this->config->getExportOptionAsInputField();
             $optionAsInput  = explode(",", $optionAsInput);
+            $taxRate        = xtc_get_tax_rate($this->item["products_tax_class_id"], $this->countryId, $this->zoneId);
             
             foreach ($variations as $variationGroup) {
                 $firstItem = reset($variationGroup);
@@ -395,6 +396,7 @@ class ShopgateItemXmlModel extends ShopgateItemModel
                     $price = $variation['price_prefix'] == "-"
                         ? $priceHelper->formatPriceNumber($variation['options_values_price'] * (-1), 2)
                         : $priceHelper->formatPriceNumber($variation['options_values_price'], 2);
+                    $price = $price * (1 + $taxRate / 100);
                     
                     $this->orderInfo["attribute_{$attributeCount}"][$variation['products_attributes_id']][] = array(
                         'options_id'        => $variation['products_options_id'],

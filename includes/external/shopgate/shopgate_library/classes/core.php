@@ -24,7 +24,7 @@
 ###################################################################################
 # define constants
 ###################################################################################
-define("SHOPGATE_LIBRARY_VERSION", "2.9.45");
+define("SHOPGATE_LIBRARY_VERSION", "2.9.58");
 define('SHOPGATE_LIBRARY_ENCODING' , 'UTF-8');
 define('SHOPGATE_BASE_DIR', realpath(dirname(__FILE__).'/../'));
 
@@ -61,7 +61,7 @@ function shopgateGetErrorType($type) {
 		case E_USER_DEPRECATED: // 16384 //
 			return 'E_USER_DEPRECATED';
 	}
-	
+
 	return "UNKWOWN_ERROR_CODE";
 }
 
@@ -93,7 +93,7 @@ function ShopgateShutdownHandler() {
  * @see http://php.net/manual/en/function.set-error-handler.php
  */
 function ShopgateErrorHandler($errno, $errstr, $errfile, $errline, $errContext) {
-	
+
 	switch ($errno) {
 		case E_NOTICE:
 		case E_USER_NOTICE:
@@ -115,7 +115,7 @@ function ShopgateErrorHandler($errno, $errstr, $errfile, $errline, $errContext) 
 	$msg = "$severity [Nr. $errno : $errfile / $errline] ";
 	$msg .= "$errstr";
 	$msg .= (isset($errContext["printStackTrace"]) && $errContext["printStackTrace"]) ?  "\n". print_r(debug_backtrace(false), true) : "";
-	
+
 	ShopgateLogger::getInstance()->log($msg);
 
 	return true;
@@ -136,27 +136,27 @@ class ShopgateLibraryException extends Exception {
 	 * @var string
 	 */
 	private $additionalInformation;
-	
+
 	// Initizialization / instantiation of plugin failure
 	//const INIT_EMPTY_CONFIG = 1;
 	const INIT_LOGFILE_OPEN_ERROR = 2;
-	
+
 	// Configuration failure
 	const CONFIG_INVALID_VALUE = 10;
 	const CONFIG_READ_WRITE_ERROR = 11;
 	const CONFIG_PLUGIN_NOT_ACTIVE = 12;
-	
+
 	// Plugin API errors
 	const PLUGIN_API_NO_ACTION = 20;
 	const PLUGIN_API_UNKNOWN_ACTION = 21;
 	const PLUGIN_API_DISABLED_ACTION = 22;
 	const PLUGIN_API_WRONG_RESPONSE_FORMAT = 23;
-	
+
 	const PLUGIN_API_UNKNOWN_SHOP_NUMBER = 24;
-	
+
 	const PLUGIN_API_INVALID_ACTION = 25;
 	const PLUGIN_API_ADMIN_LOGIN_REQUIRED = 26;
-	
+
 	const PLUGIN_API_NO_ORDER_NUMBER = 30;
 	const PLUGIN_API_NO_CART = 31;
 	const PLUGIN_API_NO_AUTHORIZATION_CODE = 33;
@@ -179,7 +179,7 @@ class ShopgateLibraryException extends Exception {
 	const PLUGIN_ORDER_STATUS_IS_SENT = 64;
 	const PLUGIN_ORDER_ALREADY_UP_TO_DATE = 65;
 	const PLUGIN_REGISTER_CUSTOMER_ERROR = 66;
-	
+
 	const PLUGIN_NO_ADDRESSES_FOUND = 70;
 	const PLUGIN_WRONG_USERNAME_OR_PASSWORD = 71;
 
@@ -190,7 +190,7 @@ class ShopgateLibraryException extends Exception {
 	const PLUGIN_CUSTOMER_ACCOUNT_NOT_CONFIRMED = 75;
 	const PLUGIN_CUSTOMER_UNKNOWN_ERROR = 76;
 	const PLUGIN_MISSING_ACCOUNT_PERMISSIONS = 77;
-	
+
 	const PLUGIN_FILE_DELETE_ERROR = 79;
 	const PLUGIN_FILE_NOT_FOUND = 80;
 	const PLUGIN_FILE_OPEN_ERROR = 81;
@@ -198,26 +198,26 @@ class ShopgateLibraryException extends Exception {
 	const PLUGIN_DATABASE_ERROR = 83;
 	const PLUGIN_UNKNOWN_COUNTRY_CODE = 84;
 	const PLUGIN_UNKNOWN_STATE_CODE = 85;
-	
+
 	const PLUGIN_EMAIL_SEND_ERROR = 90;
-	
+
 	const PLUGIN_CRON_UNSUPPORTED_JOB = 91;
-	
+
 	// Merchant API errors
 	const MERCHANT_API_NO_CONNECTION = 100;
 	const MERCHANT_API_INVALID_RESPONSE = 101;
 	const MERCHANT_API_ERROR_RECEIVED = 102;
-	
+
 	// OAuth errors
 	const SHOPGATE_OAUTH_NO_CONNECTION = 115;
 	const SHOPGATE_OAUTH_MISSING_ACCESS_TOKEN = 116;
-	
+
 	// Authentication errors
 	const AUTHENTICATION_FAILED = 120;
-	
+
 	// File errors
 	const FILE_READ_WRITE_ERROR = 130;
-	
+
 	// Coupon Errors
 	const COUPON_NOT_VALID = 200;
 	const COUPON_CODE_NOT_VALID = 201;
@@ -225,10 +225,11 @@ class ShopgateLibraryException extends Exception {
 	const COUPON_INVALID_ADDRESS = 203;
 	const COUPON_INVALID_USER = 204;
 	const COUPON_TOO_MANY_COUPONS = 205;
-	
+
 	const REGISTER_FAILED_TO_ADD_USER = 220;
 	const REGISTER_USER_ALREADY_EXISTS = 221;
-	
+	const REGISTER_MISSING_FIELDS = 222;
+
 	// Cart Item Errors
 	const CART_ITEM_OUT_OF_STOCK = 300;
 	const CART_ITEM_PRODUCT_NOT_FOUND = 301;
@@ -237,37 +238,39 @@ class ShopgateLibraryException extends Exception {
 	const CART_ITEM_REQUESTED_QUANTITY_UNDER_MINIMUM_QUANTITY = 304;
 	const CART_ITEM_REQUESTED_QUANTITY_OVER_MAXIMUM_QUANTITY = 305;
     const CART_ITEM_INVALID_PRODUCT_COMBINATION = 306;
+	const CART_ITEM_PRODUCT_NOT_ALLOWED = 307;
+	const CART_ITEM_SILENT_UPDATE = 308;
 
 	//Helper class exception
 	const SHOPGATE_HELPER_FUNCTION_NOT_FOUND_EXCEPTION = 310;
-	
+
 	// extended error code format that contains information on multiple errors
 	const MULTIPLE_ERRORS = 998;
-	
+
 	// Unknown error code (the value passed as code gets to be the message)
 	const UNKNOWN_ERROR_CODE = 999;
-	
+
 	protected static $errorMessages = array(
 		// Initizialization / instantiation of plugin failure
 		//self::INIT_EMPTY_CONFIG => 'empty configuration',
 		self::INIT_LOGFILE_OPEN_ERROR => 'cannot open/create logfile(s)',
-		
+
 		// Configuration failure
 		self::CONFIG_INVALID_VALUE => 'invalid value in configuration',
 		self::CONFIG_READ_WRITE_ERROR => 'error reading or writing configuration',
 		self::CONFIG_PLUGIN_NOT_ACTIVE => 'plugin not activated',
-		
+
 		// Plugin API errors
 		self::PLUGIN_API_NO_ACTION => 'no action specified',
 		self::PLUGIN_API_UNKNOWN_ACTION  => 'unknown action requested',
 		self::PLUGIN_API_DISABLED_ACTION => 'disabled action requested',
 		self::PLUGIN_API_WRONG_RESPONSE_FORMAT => 'wrong response format',
-		
+
 		self::PLUGIN_API_UNKNOWN_SHOP_NUMBER => 'unknown shop number received',
-		
+
 		self::PLUGIN_API_INVALID_ACTION => 'invalid action call',
 		self::PLUGIN_API_ADMIN_LOGIN_REQUIRED => 'login/access rights required',
-		
+
 		self::PLUGIN_API_NO_ORDER_NUMBER => 'parameter "order_number" missing',
 		self::PLUGIN_API_NO_CART => 'parameter "cart" missing',
 		self::PLUGIN_API_NO_USER => 'parameter "user" missing',
@@ -289,18 +292,18 @@ class ShopgateLibraryException extends Exception {
 		self::PLUGIN_ORDER_STATUS_IS_SENT => 'order status is "sent"',
 		self::PLUGIN_ORDER_ALREADY_UP_TO_DATE => 'order is already up to date',
 		self::PLUGIN_REGISTER_CUSTOMER_ERROR => 'error while registering new customer',
-		
+
 		self::PLUGIN_NO_ADDRESSES_FOUND => 'no addresses found for customer',
 		self::PLUGIN_WRONG_USERNAME_OR_PASSWORD => 'wrong username or password',
-			
+
 		self::PLUGIN_NO_CUSTOMER_TOKEN => 'customer token missing',
 		self::PLUGIN_CUSTOMER_TOKEN_INVALID => 'invalid customer token',
 		self::PLUGIN_NO_CUSTOMER_LANGUAGE => 'customer language missing',
-			
+
 		self::PLUGIN_CUSTOMER_ACCOUNT_NOT_CONFIRMED => 'customer account not confirmed',
 		self::PLUGIN_CUSTOMER_UNKNOWN_ERROR => 'unknown error while customer login',
 		self::PLUGIN_MISSING_ACCOUNT_PERMISSIONS => 'missing account permissions',
-		
+
 		self::PLUGIN_FILE_DELETE_ERROR => 'cannot delete file(s)',
 		self::PLUGIN_FILE_NOT_FOUND => 'file not found',
 		self::PLUGIN_FILE_OPEN_ERROR => 'cannot open file',
@@ -308,11 +311,11 @@ class ShopgateLibraryException extends Exception {
 		self::PLUGIN_DATABASE_ERROR => 'database error',
 		self::PLUGIN_UNKNOWN_COUNTRY_CODE => 'unknown country code',
 		self::PLUGIN_UNKNOWN_STATE_CODE => 'unknown state code',
-		
+
 		self::PLUGIN_EMAIL_SEND_ERROR => 'error sending email',
-		
+
 		self::PLUGIN_CRON_UNSUPPORTED_JOB => 'unsupported job',
-		
+
 		// Merchant API errors
 		self::MERCHANT_API_NO_CONNECTION => 'no connection to server',
 		self::MERCHANT_API_INVALID_RESPONSE => 'error parsing response',
@@ -321,10 +324,10 @@ class ShopgateLibraryException extends Exception {
 		// OAuth errors
 		self::SHOPGATE_OAUTH_NO_CONNECTION => 'no connection to shopgate server',
 		self::SHOPGATE_OAUTH_MISSING_ACCESS_TOKEN => 'no oauth access token received',
-		
+
 		// File errors
 		self::FILE_READ_WRITE_ERROR => 'error reading or writing file',
-		
+
 		// Coupon Errors
 		self::COUPON_NOT_VALID => 'invalid coupon',
 		self::COUPON_CODE_NOT_VALID => 'invalid coupon code',
@@ -332,9 +335,10 @@ class ShopgateLibraryException extends Exception {
 		self::COUPON_INVALID_ADDRESS => 'invalid address for coupon',
 		self::COUPON_INVALID_USER => 'invalid user for coupon',
 		self::COUPON_TOO_MANY_COUPONS => 'too many coupons in cart',
-		
+
 		self::REGISTER_FAILED_TO_ADD_USER => 'failed to add user',
 		self::REGISTER_USER_ALREADY_EXISTS => 'the given username already exists',
+		self::REGISTER_MISSING_FIELDS => 'data fields are missing',
 
 		// Cart Item Errors
 		self::CART_ITEM_OUT_OF_STOCK => 'product is not in stock',
@@ -344,10 +348,12 @@ class ShopgateLibraryException extends Exception {
 		self::CART_ITEM_REQUESTED_QUANTITY_UNDER_MINIMUM_QUANTITY => 'requested quantity is lower than required minimum quantity',
 		self::CART_ITEM_REQUESTED_QUANTITY_OVER_MAXIMUM_QUANTITY => 'requested quantity is higher than allowed maximum quantity',
         self::CART_ITEM_INVALID_PRODUCT_COMBINATION => 'products can not be ordered together',
-		
+		self::CART_ITEM_PRODUCT_NOT_ALLOWED => 'product not allowed in cart constellation',
+		self::CART_ITEM_SILENT_UPDATE => '',
+
 		// Authentication errors
 		self::AUTHENTICATION_FAILED => 'authentication failed',
-		
+
 		self::MULTIPLE_ERRORS => '',
 	);
 
@@ -378,11 +384,11 @@ class ShopgateLibraryException extends Exception {
 
 		// Save additional information
 		$this->additionalInformation = $additionalInformation;
-		
+
 		if ($appendAdditionalInformationToMessage) {
 			$message .= ': ' . $this->additionalInformation;
 		}
-		
+
 		// We ALWAYS want to append the additional information for logging. So if it has already been appended here,
 		// it doesn't have to be appended again later.
 		$appendAdditionalInformationToLog = !$appendAdditionalInformationToMessage;
@@ -400,18 +406,8 @@ class ShopgateLibraryException extends Exception {
 		} else {
 			parent::__construct($message, $code);
 		}
-		
-		// Log the error
-		$logMessage = $this->buildLogMessage($appendAdditionalInformationToLog);
-		if (empty($writeLog)) {
-			$this->message .= ' (logging disabled for this message)';
-		} else {
-			if (ShopgateLogger::getInstance()->log($code.' - '.$logMessage) === false) {
-				$this->message .= ' (unable to log)';
-			}
-		}
 	}
-	
+
 	/**
 	 * Returns the saved additional information.
 	 *
@@ -452,29 +448,31 @@ class ShopgateLibraryException extends Exception {
 		$e = new ShopgateLibraryException($code, $additionalInformation, false, false);
 		return $e->buildLogMessage();
 	}
-	
+
 	/**
 	 * Builds the message that will be logged to the error log.
+	 *
+	 * @param bool $appendAdditionalInformation
 	 *
 	 * @return string
 	 */
 	protected function buildLogMessage($appendAdditionalInformation = true) {
 		$logMessage = $this->getMessage();
-		
+
 		if ($appendAdditionalInformation && !empty($this->additionalInformation)) {
 			$logMessage .= ': ' . $this->additionalInformation;
 		}
-		
+
 		$logMessage .= "\n";
-		
+
 		// Add tracing information to the message
-		
+
 		$previous = $this->getPreviousException();
 		$trace    = $previous ? $previous->getTraceAsString() : $this->getTraceAsString();
 		$line     = $previous ? $previous->getLine() : $this->getLine();
 		$file     = $previous ? $previous->getFile() : $this->getFile();
 		$class    = $previous ? get_class($previous) : get_class($this);
-		
+
 		$traceLines = explode("\n", $trace);
 		array_unshift($traceLines, "## $file($line): throw $class");
 		$i     = 0;
@@ -488,7 +486,7 @@ class ShopgateLibraryException extends Exception {
 		}
 		return $logMessage;
 	}
-	
+
 	/**
 	 * Exception::getPrevious() was introduced in PHP 5.3
 	 * @return Exception|null
@@ -499,7 +497,7 @@ class ShopgateLibraryException extends Exception {
 		}
 		return null;
 	}
-	
+
 }
 
 /**
@@ -517,13 +515,13 @@ class ShopgateMerchantApiException extends Exception {
 	const AUTHORIZATION_NOT_SET = 400;
 	const AUTHORIZATION_USERNAME_INVALID = 401;
 	const AUTHORIZATION_PASSWORD_INVALID = 402;
-	
+
 	const ORDER_NOT_FOUND = 201;
 	const ORDER_ON_HOLD = 202;
 	const ORDER_ALREADY_COMPLETED = 203;
 	const ORDER_SHIPPING_STATUS_ALREADY_COMPLETED = 204;
 	const ORDER_INVALID_SHIPPING_SERVICE_ID = 119;
-	
+
 	const CATEGORY_NAME_ALREADY_EXISTS = 142;
 	const CATEGORY_NOT_FOUND = 205;
 	const CATEGORY_PARENT_NOT_FOUND = 212;
@@ -531,29 +529,29 @@ class ShopgateMerchantApiException extends Exception {
 	const CATEGORY_CHILD_ITEMS_COULD_NOT_BE_MAPPED = 217;
 	const CATEGORY_CANNOT_MAP_CHILD_ITEMS = 217;
 	const CATEGORY_ERROR_DELETING_ITEM_MAPPING = 147;
-	
+
 	const ITEM_ERROR_DOWNLOADING_IMAGE = 149;
 	const ITEM_NOT_FOUND = 206;
 	const ITEM_CURRENCY_NOT_FOUND = 207;
 	const ITEM_PARENT_NOT_FOUND = 220;
 	const ITEM_ALREADY_EXISTS = 221;
 	const ITEM_ERROR_DELETING = 129;
-	
+
 	const BATCH_ITEM_MULTIPLE_ERRORS = 166;
 	const BATCH_ITEM_TOO_MANY_ELEMENTS = 167;
-	
-	
+
+
 	const ORDER_ALREADY_CANCELLED = 222;
 	const ORDER_CANCEL_INVALID_ITEM = 223;
 	const ORDER_CANCEL_INVALID_ITEM_QUANTITY = 224;
 	const ORDER_SHIPPING_COSTS_ALREADY_CANCELLED = 225;
 	const ORDER_CANCEL_INVALID_ARGUMENTS = 226;
-	
+
 	const INTERNAL_ERROR_OCCURED_WHILE_SAVING = 803;
 	const INTERNAL_ERROR_OCCURED_WHILE_DELETING = 804;
-	
+
 	const UNKNOWN_ERROR = 999;
-	
+
 	/**
 	 * @var ShopgateMerchantApiResponse
 	 */
@@ -569,370 +567,25 @@ class ShopgateMerchantApiException extends Exception {
 	 */
 	public function __construct($code, $additionalInformation, ShopgateMerchantApiResponse $response) {
 		$this->response = $response;
-		
+
 		$message = $additionalInformation;
 		$errors = $this->response->getErrors();
 		if (!empty($errors)) {
 			$message .= "\n".print_r($errors, true);
 		}
-		
+
 		if (ShopgateLogger::getInstance()->log('SMA reports error: '.$code.' - '.$additionalInformation) === false) {
 			$message .= ' (unable to log)';
 		}
-		
+
 		parent::__construct($message, $code);
 	}
-	
+
 	/**
 	 * @return ShopgateMerchantApiResponse
 	 */
 	public function getResponse() {
 		return $this->response;
-	}
-}
-
-/**
- * Global class (Singleton) to manage log files.
- *
- * @author Shopgate GmbH, 35510 Butzbach, DE
- */
-class ShopgateLogger {
-	const LOGTYPE_ACCESS = 'access';
-	const LOGTYPE_REQUEST = 'request';
-	const LOGTYPE_ERROR = 'error';
-	const LOGTYPE_DEBUG = 'debug';
-
-	const OBFUSCATION_STRING = 'XXXXXXXX';
-	const REMOVED_STRING = '<removed>';
-
-	/**
-	 * @var bool
-	 */
-	private $debug;
-	
-	/**
-	 * @var string
-	 */
-	private $memoryAnalyserLoggingSizeUnit;
-	
-	/**
-	 * @var string[] Names of the fields that should be obfuscated on logging.
-	 */
-	private $obfuscationFields;
-	
-	/**
-	 * @var string Names of the fields that should be removed from logging.
-	 */
-	private $removeFields;
-	
-	/**
-	 * @var mixed[]
-	 */
-	private $files = array(
-			self::LOGTYPE_ACCESS => array('path' => '', 'handle' => null, 'mode' => 'a+'),
-			self::LOGTYPE_REQUEST => array('path' => '', 'handle' => null, 'mode' => 'a+'),
-			self::LOGTYPE_ERROR => array('path' => '', 'handle' => null, 'mode' => 'a+'),
-			self::LOGTYPE_DEBUG => array('path' => '', 'handle' => null, 'mode' => 'w+'),
-	);
-
-	/**
-	 * @var ShopgateLogger
-	 */
-	private static $singleton;
-
-	private function __construct() {
-		$this->debug = false;
-		$this->memoryAnalyserLoggingSizeUnit = 'MB';
-		$this->obfuscationFields = array('pass');
-		$this->removeFields = array('cart');
-	}
-	
-	
-	/**
-	 * @param string $accessLogPath
-	 * @param string $requestLogPath
-	 * @param string $errorLogPath
-	 * @param string $debugLogPath
-	 * @return ShopgateLogger
-	 */
-	public static function getInstance($accessLogPath = null, $requestLogPath = null, $errorLogPath = null, $debugLogPath = null) {
-		if (empty(self::$singleton)) {
-			self::$singleton = new self();
-			
-			// fall back to default log paths if none are specified
-			if (empty($accessLogPath))  $accessLogPath  = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'access.log';
-			if (empty($requestLogPath)) $requestLogPath = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'request.log';
-			if (empty($errorLogPath))   $errorLogPath   = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'error.log';
-			if (empty($debugLogPath))   $debugLogPath   = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'debug.log';
-		}
-		
-		// set log file paths if requested
-		self::$singleton->setLogFilePaths($accessLogPath, $requestLogPath, $errorLogPath, $debugLogPath);
-		
-		return self::$singleton;
-	}
-
-	/**
-	 * Sets the paths to the log files.
-	 *
-	 * @param string $accessLogPath
-	 * @param string $requestLogPath
-	 * @param string $errorLogPath
-	 * @param string $debugLogPath
-	 */
-	public function setLogFilePaths($accessLogPath, $requestLogPath, $errorLogPath, $debugLogPath) {
-		if (!empty($accessLogPath)) {
-			$this->files[self::LOGTYPE_ACCESS]['path'] = $accessLogPath;
-		}
-		
-		if (!empty($requestLogPath)) {
-			$this->files[self::LOGTYPE_REQUEST]['path'] = $requestLogPath;
-		}
-		
-		if (!empty($errorLogPath)) {
-			$this->files[self::LOGTYPE_ERROR]['path'] = $errorLogPath;
-		}
-		
-		if (!empty($debugLogPath)) {
-			$this->files[self::LOGTYPE_DEBUG]['path'] = $debugLogPath;
-		}
-	}
-	
-	/**
-	 * Enables logging messages to debug log file.
-	 */
-	public function enableDebug() {
-		$this->debug = true;
-	}
-	
-	/**
-	 * Disables logging messages to debug log file.
-	 */
-	public function disableDebug() {
-		$this->debug = false;
-	}
-	
-	/**
-	 * @return true if logging messages to debug log file is enabled, false otherwise.
-	 */
-	public function isDebugEnabled() {
-		return $this->debug;
-	}
-	
-	/**
-	 * Sets the unit in which the memory usage logger outputs its values in
-	 * @param string $sizeUnit ('MB', 'BYTES', 'GB', 'KB', ...)
-	 */
-	public function setMemoryAnalyserLoggingSizeUnit($sizeUnit) {
-		switch(strtoupper(trim($sizeUnit))) {
-			case 'GB':
-			case 'GIGABYTE':
-			case 'GIGABYTES':
-				$this->memoryAnalyserLoggingSizeUnit = 'GB';
-				break;
-			case 'MB':
-			case 'MEGABYTE':
-			case 'MEGABYTES':
-				$this->memoryAnalyserLoggingSizeUnit = 'MB';
-				break;
-			case 'KB':
-			case 'KILOBYTE':
-			case 'KILOBYTES':
-				$this->memoryAnalyserLoggingSizeUnit = 'KB';
-				break;
-// 			case 'BYTES':
-// 			case 'BYTE':
-			default:
-				$this->memoryAnalyserLoggingSizeUnit = 'BYTES';
-				break;
-		}
-	}
-	
-	/**
-	 * returns the unit in which the memory usage logger outputs its values in
-	 * @return string
-	 */
-	public function getMemoryAnalyserLoggingSizeUnit() {
-		return $this->memoryAnalyserLoggingSizeUnit;
-	}
-	
-	/**
-	 * Logs a message to the according log file.
-	 *
-	 * This produces a log entry of the form<br />
-	 * <br />
-	 * [date] [time]: [message]\n<br />
-	 * <br />
-	 * to the selected log file. If an unknown log type is passed the message will be logged to the error log file.<br />
-	 * <br />
-	 * Logging to LOGTYPE_DEBUG only is done after $this->enableDebug() has been called and $this->disableDebug() has not
-	 * been called after that. The debug log file will be truncated on opening by default. To prevent this call
-	 * $this->keepDebugLog(true).
-	 *
-	 * @param string $msg The error message.
-	 * @param string $type The log type, that would be one of the ShopgateLogger::LOGTYPE_* constants.
-	 * @return bool True on success, false on error.
-	 */
-	public function log($msg, $type = self::LOGTYPE_ERROR) {
-		// build log message
-		$msg = gmdate('d-m-Y H:i:s: ').$msg."\n";
-
-		// determine log file type and append message
-		switch (strtolower($type)) {
-			// write to error log if type is unknown
-			default: $type = self::LOGTYPE_ERROR;
-
-			// allowed types:
-			case self::LOGTYPE_ERROR:
-			case self::LOGTYPE_ACCESS:
-			case self::LOGTYPE_REQUEST:
-			case self::LOGTYPE_DEBUG:
-		}
-
-		// if debug logging is requested but not activated, simply return
-		if (($type === self::LOGTYPE_DEBUG) && !$this->debug) {
-			return true;
-		}
-
-		// open log files if necessary
-		if (!$this->openLogFileHandle($type)) {
-			return false;
-		}
-
-
-		// try to log
-		$success = false;
-		if (fwrite($this->files[$type]['handle'], $msg) !== false) {
-			$success = true;
-		}
-
-		return $success;
-	}
-
-	/**
-	 * Set the file handler mode to a+ (keep) or to w+ (reverse) the debug log file
-	 *
-	 * @param bool $keep
-	 */
-	public function keepDebugLog($keep) {
-		if ($keep)
-			$this->files[self::LOGTYPE_DEBUG]["mode"]  = "a+";
-		else
-			$this->files[self::LOGTYPE_DEBUG]["mode"]  = "w+";
-	}
-	
-	/**
-	 * Returns the requested number of lines of the requested log file's end.
-	 *
-	 * @param string $type The log file to be read
-	 * @param int $lines Number of lines to return
-	 * @return string The requested log file content
-	 * @throws ShopgateLibraryException
-	 * @see http://tekkie.flashbit.net/php/tail-functionality-in-php
-	 */
-	public function tail($type = self::LOGTYPE_ERROR, $lines = 20) {
-		if (!isset($this->files[$type])) {
-			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_UNKNOWN_LOGTYPE, 'Type: '.$type);
-		}
-
-		if (!$this->openLogFileHandle($type)) {
-			throw new ShopgateLibraryException(ShopgateLibraryException::INIT_LOGFILE_OPEN_ERROR, 'Type: '.$type);
-		}
-
-		if (empty($lines)) {
-			$lines = 20;
-		}
-
-		$handle = $this->files[$type]['handle'];
-		$lineCounter = $lines;
-		$pos = -2;
-		$beginning = false;
-		$text = '';
-
-		while ($lineCounter > 0) {
-			$t = '';
-			while ($t !== "\n") {
-				if (@fseek($handle, $pos, SEEK_END) == -1) {
-					$beginning = true;
-					break;
-				}
-				$t = @fgetc($handle);
-				$pos--;
-			}
-
-			$lineCounter--;
-			if ($beginning) @rewind($handle);
-			$text = @fgets($handle).$text;
-			if ($beginning) break;
-		}
-
-		return $text;
-	}
-	
-	/**
-	 * Adds field names to the list of fields that should be obfuscated in the logs.
-	 *
-	 * @param string[] $fieldNames
-	 */
-	public function addObfuscationFields(array $fieldNames) {
-		$this->obfuscationFields = array_merge($fieldNames, $this->obfuscationFields);
-	}
-
-	/**
-	 * Adds field names to the list of fields that should be removed from the logs.
-	 *
-	 * @param string[] $fieldNames
-	 */
-	public function addRemoveFields(array $fieldNames) {
-		$this->removeFields = array_merge($fieldNames, $this->removeFields);
-	}
-
-	/**
-	 * Function to prepare the parameters of an API request for logging.
-	 *
-	 * Strips out critical request data like the password of a get_customer request.
-	 *
-	 * @param mixed[] $data The incoming request's parameters.
-	 * @return string The cleaned parameters as string ready to log.
-	 */
-	public function cleanParamsForLog($data) {
-		foreach ($data as $key => &$value) {
-			if (in_array($key, $this->obfuscationFields)) {
-				$value = self::OBFUSCATION_STRING;
-			}
-			
-			if (in_array($key, $this->removeFields)) {
-				$value = self::REMOVED_STRING;
-			}
-		}
-
-		return print_r($data, true);
-	}
-
-	/**
-	 * Opens log file handles for the requested log type if necessary.
-	 *
-	 * Already opened file handles will not be opened again.
-	 *
-	 * @param string $type The log type, that would be one of the ShopgateLogger::LOGTYPE_* constants.
-	 * @return bool true if opening succeeds or the handle is already open; false on error.
-	 */
-	protected function openLogFileHandle($type) {
-		// don't open file handle if already open
-		if (!empty($this->files[$type]['handle'])) {
-			return true;
-		}
-
-		// set the file handle
-		$this->files[$type]['handle'] = @fopen($this->files[$type]['path'], $this->files[$type]['mode']);
-
-		// if log files are not writeable continue silently to the next handle
-		// TODO: This seems a bit too silent... How could we get notice of the error?
-		if ($this->files[$type]['handle'] === false) {
-			return false;
-		}
-
-		return true;
 	}
 }
 
@@ -946,6 +599,9 @@ class ShopgateBuilder {
 	 * @var ShopgateConfigInterface
 	 */
 	protected $config;
+    
+    /** @var Shopgate_Helper_Logging_Strategy_LoggingInterface */
+    protected $logging;
 
 	/**
 	 * Loads configuration and initializes the ShopgateLogger class.
@@ -958,11 +614,95 @@ class ShopgateBuilder {
 		} else {
 			$this->config = $config;
 		}
-		
+
 		// set up logger
 		ShopgateLogger::getInstance($this->config->getAccessLogPath(), $this->config->getRequestLogPath(), $this->config->getErrorLogPath(), $this->config->getDebugLogPath());
+        
+        // set up logging strategy
+        /** @noinspection PhpDeprecationInspection */
+        $this->logging  = ShopgateLogger::getInstance()->getLoggingStrategy();
+        
+        // set error reporting
+        $errorReporting = $this->determineErrorReporting($_REQUEST);
+        $this->setErrorReporting($errorReporting);
+        
+        // set custom error and exception handlers if requested
+        if (!empty($_REQUEST['use_errorhandler'])) {
+            $this->enableErrorHandler($errorReporting);
+        }
+        
+        // register shutdown function if requested
+        if (!empty($_REQUEST['use_shutdown_handler'])) {
+            $this->enableShutdownFunction();
+        }
+        
+        // set memory logging size unit; default to MB
+        $this->setMemoryLoggingSizeUnit(isset($_REQUEST['memory_logging_unit'])
+            ? $_REQUEST['memory_logging_unit']
+            : 'MB'
+        );
 	}
-	
+    
+	public function enableErrorHandler($errorReporting = 32767)
+    {
+        set_error_handler(
+            array(
+                new Shopgate_Helper_Error_Handling_ErrorHandler($this->buildStackTraceGenerator(), $this->logging),
+                'handle',
+            ),
+            $errorReporting
+        );
+        
+        set_exception_handler(array(
+            new Shopgate_Helper_Error_Handling_ExceptionHandler($this->buildStackTraceGenerator(), $this->logging),
+        ));
+        
+        $logFileHandler = @fopen($this->config->getErrorLogPath(), 'a');
+        @fclose($logFileHandler);
+        @chmod($this->config->getErrorLogPath(), 0777);
+        @chmod($this->config->getErrorLogPath(), 0755);
+        @error_reporting(E_ALL ^ E_DEPRECATED);
+        @ini_set('log_errors', 1);
+        @ini_set('error_log', $this->config->getErrorLogPath());
+        @ini_set('ignore_repeated_errors', 1);
+        @ini_set('html_errors', 0);
+    }
+    
+    public function enableShutdownFunction()
+    {
+        register_shutdown_function(array(
+            new Shopgate_Helper_Error_Handling_ShutdownHandler(
+                $this->logging,
+                new Shopgate_Helper_Error_Handling_Shutdown_Handler_LastErrorProvider()
+            ),
+            'handle'
+        ));
+    }
+    
+    public function enableDebug($keepDebugLog)
+    {
+        // todo call to $this->logging once ShopgateLogger has been removed
+        
+        /** @noinspection PhpDeprecationInspection */
+        ShopgateLogger::getInstance()->enableDebug();
+    
+        /** @noinspection PhpDeprecationInspection */
+        ShopgateLogger::getInstance()->keepDebugLog($keepDebugLog);
+    }
+    
+    public function setErrorReporting($errorReporting = 0)
+    {
+        error_reporting($errorReporting);
+        ini_set('display_errors', (version_compare(PHP_VERSION, '5.2.4', '>=')) ? 'stdout' : true);
+    }
+    
+    public function setMemoryLoggingSizeUnit($unit = 'MB')
+    {
+        // todo call to $this->logging once ShopgateLogger has been removed
+        /** @noinspection PhpDeprecationInspection */
+        ShopgateLogger::getInstance()->setMemoryAnalyserLoggingSizeUnit($unit);
+    }
+
 	/**
 	 * Builds the Shopgate Library object graph for a given ShopgatePlugin object.
 	 *
@@ -976,7 +716,7 @@ class ShopgateBuilder {
 		if ($this->config->getUseCustomErrorHandler()) {
 			set_error_handler('ShopgateErrorHandler');
 		}
-		
+
 		// instantiate API stuff
 		// -> MerchantAPI auth service (needs to be initialized first, since the config still can change along with the authentication information
 		switch($this->config->getSmaAuthServiceClassName()) {
@@ -996,7 +736,7 @@ class ShopgateBuilder {
 		}
 		// -> PluginAPI auth service (currently the plugin API supports only one auth service)
 		$spaAuthService = new ShopgateAuthenticationServiceShopgate($this->config->getCustomerNumber(), $this->config->getApikey());
-		$pluginApi = new ShopgatePluginApi($this->config, $spaAuthService, $merchantApi, $plugin);
+		$pluginApi = new ShopgatePluginApi($this->config, $spaAuthService, $merchantApi, $plugin, null, $this->buildStackTraceGenerator(), $this->logging);
 
 		if ($this->config->getExportConvertEncoding()) {
 			array_splice(ShopgateObject::$sourceEncodings, 1, 0, $this->config->getEncoding());
@@ -1024,7 +764,7 @@ class ShopgateBuilder {
 					$xmlNode = new Shopgate_Model_XmlResultObject($xmlModel->getItemNodeIdentifier());
 					$fileBuffer = new ShopgateFileBufferXml($xmlModel, $xmlNode, $this->config->getExportBufferCapacity(), $this->config->getExportConvertEncoding(), ShopgateObject::$sourceEncodings);
 				break;
-				
+
 				case 'json':
 					$fileBuffer = new ShopgateFileBufferJson($this->config->getExportBufferCapacity(), $this->config->getExportConvertEncoding(), ShopgateObject::$sourceEncodings);
 				break;
@@ -1034,14 +774,24 @@ class ShopgateBuilder {
 		} else {
 			$fileBuffer = new ShopgateFileBufferCsv($this->config->getExportBufferCapacity(), $this->config->getExportConvertEncoding(), ShopgateObject::$sourceEncodings);
 		}
-		
+
 		// inject apis into plugin
 		$plugin->setConfig($this->config);
 		$plugin->setMerchantApi($merchantApi);
 		$plugin->setPluginApi($pluginApi);
 		$plugin->setBuffer($fileBuffer);
 	}
-	
+    
+    /**
+     * @return Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault
+     */
+	public function buildStackTraceGenerator() {
+        return new Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault(
+            ShopgateLogger::getInstance()->getObfuscator(),
+            new Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflection()
+        );
+    }
+
 	/**
 	 * Builds the Shopgate Library object graph for ShopgateMerchantApi and returns the instance.
 	 *
@@ -1065,15 +815,15 @@ class ShopgateBuilder {
 				trigger_error('Invalid SMA-Auth-Service defined - this should not happen with valid plugin code', E_USER_ERROR);
 				break;
 		}
-		
+
 		return $merchantApi;
 	}
-	
+
 	/**
 	 * Builds the Shopgate Library object graph for Shopgate mobile redirect and returns the instance.
 	 *
 	 * @return ShopgateMobileRedirect
-	 * 
+	 *
 	 * @deprecated Will be removed in 3.0.0. Use SopgateBuilder::buildMobileRedirect() instead.
 	 */
 	public function buildRedirect() {
@@ -1083,28 +833,28 @@ class ShopgateBuilder {
 				$_GET,
 				$_COOKIE
 		);
-		
+
 		$templateParser = new Shopgate_Helper_Redirect_TemplateParser();
-		
+
 		$linkBuilder = new Shopgate_Helper_Redirect_LinkBuilder(
 				$settingsManager,
 				$templateParser
 		);
-		
+
 		$tagsGenerator = new Shopgate_Helper_Redirect_TagsGenerator(
 				$linkBuilder,
 				$templateParser
 		);
-		
+
 		$redirect = new ShopgateMobileRedirect(
 				$this->config,
 				$merchantApi,
 				$tagsGenerator
 		);
-		
+
 		return $redirect;
 	}
-	
+
 	/**
 	 * Builds the Shopgate Library object graph for Shopgate mobile redirect and returns the instance.
 	 *
@@ -1113,16 +863,20 @@ class ShopgateBuilder {
 	 * @param array  $cookie [string, mixed] A copy of $_COOKIE or the request cookies in the form of $_COOKIE.
 	 *
 	 * @return Shopgate_Helper_Redirect_MobileRedirect
+     *
+     * @deprecated 3.0.0 - deprecated as of 2.9.51
+     * @see buildJsRedirect()
+     * @see buildHttpRedirect()
 	 */
 	public function buildMobileRedirect($userAgent, array $get, array $cookie) {
 		$settingsManager = new Shopgate_Helper_Redirect_SettingsManager($this->config, $get, $cookie);
 		$templateParser = new Shopgate_Helper_Redirect_TemplateParser();
-		
+
 		$linkBuilder = new Shopgate_Helper_Redirect_LinkBuilder(
 			$settingsManager,
 			$templateParser
 		);
-		
+
 		$redirector = new Shopgate_Helper_Redirect_Redirector(
 			$settingsManager,
 			new Shopgate_Helper_Redirect_KeywordsManager(
@@ -1133,12 +887,12 @@ class ShopgateBuilder {
 			$linkBuilder,
 			$userAgent
 		);
-		
+
 		$tagsGenerator = new Shopgate_Helper_Redirect_TagsGenerator(
 			$linkBuilder,
 			$templateParser
 		);
-		
+
 		return new Shopgate_Helper_Redirect_MobileRedirect(
 			$redirector,
 			$tagsGenerator,
@@ -1148,6 +902,95 @@ class ShopgateBuilder {
 			$this->config->getShopNumber()
 		);
 	}
+
+	/**
+	 * Generates JavaScript code to redirect the
+	 * current page Shopgate mobile site
+	 *
+	 * @param array $get
+	 * @param array $cookie
+	 *
+	 * @return Shopgate_Helper_Redirect_Type_Js
+	 */
+	public function buildJsRedirect(array $get, array $cookie)
+	{
+		$settingsManager = new Shopgate_Helper_Redirect_SettingsManager($this->config, $get, $cookie);
+		$templateParser  = new Shopgate_Helper_Redirect_TemplateParser();
+
+		$linkBuilder   = new Shopgate_Helper_Redirect_LinkBuilder(
+			$settingsManager,
+			$templateParser
+		);
+		$tagsGenerator = new Shopgate_Helper_Redirect_TagsGenerator(
+			$linkBuilder,
+			$templateParser
+		);
+
+		$jsBuilder = new Shopgate_Helper_Redirect_JsScriptBuilder(
+			$tagsGenerator,
+			$settingsManager,
+			$templateParser,
+			dirname(__FILE__) . '/../assets/js_header.html',
+			$this->config->getShopNumber()
+		);
+
+		$jsType = new Shopgate_Helper_Redirect_Type_Js($jsBuilder);
+
+		return $jsType;
+	}
+
+	/**
+	 * Attempts to redirect via an HTTP header call
+	 * before the page is loaded
+	 *
+	 * @param string $userAgent - browser agent string
+	 * @param array  $get
+	 * @param array  $cookie
+	 *
+	 * @return Shopgate_Helper_Redirect_Type_Http
+	 */
+	public function buildHttpRedirect($userAgent, array $get, array $cookie)
+	{
+		$settingsManager = new Shopgate_Helper_Redirect_SettingsManager($this->config, $get, $cookie);
+		$templateParser  = new Shopgate_Helper_Redirect_TemplateParser();
+
+		$linkBuilder = new Shopgate_Helper_Redirect_LinkBuilder(
+			$settingsManager,
+			$templateParser
+		);
+
+		$redirector = new Shopgate_Helper_Redirect_Redirector(
+			$settingsManager,
+			new Shopgate_Helper_Redirect_KeywordsManager(
+				$this->buildMerchantApi(),
+				$this->config->getRedirectKeywordCachePath(),
+				$this->config->getRedirectSkipKeywordCachePath()
+			),
+			$linkBuilder,
+			$userAgent
+		);
+
+		return new Shopgate_Helper_Redirect_Type_Http($redirector);
+	}
+    
+    /**
+     * @param array $request The request parameters.
+     *
+     * @return int
+     */
+    private function determineErrorReporting($request)
+    {
+        // determine desired error reporting (default to 0)
+        $errorReporting = (isset($request['error_reporting'])) ? $request['error_reporting'] : 0;
+        
+        // determine error reporting for the current stage (custom, pg => E_ALL; the previously requested otherwise)
+        $serverTypesAdvancedErrorLogging = array('custom', 'pg');
+        $errorReporting                  = (isset($serverTypesAdvancedErrorLogging[$this->config->getServer()]))
+            ? 32767
+            : $errorReporting;
+        
+        return $errorReporting;
+    }
 }
 
 /**
@@ -1215,7 +1058,7 @@ abstract class ShopgateObject {
 		}
 		throw new ShopgateLibraryException("Helper function {$helperName} not found",ShopgateLibraryException::SHOPGATE_HELPER_FUNCTION_NOT_FOUND_EXCEPTION);
 	}
-	
+
 	/**
 	 * Convenience method for logging to the ShopgateLogger.
 	 *
@@ -1226,7 +1069,7 @@ abstract class ShopgateObject {
 	public function log($msg, $type = ShopgateLogger::LOGTYPE_ERROR) {
 		return ShopgateLogger::getInstance()->log($msg, $type);
 	}
-	
+
 	/**
 	 * Converts a an underscored string to a camelized one.
 	 *
@@ -1251,7 +1094,7 @@ abstract class ShopgateObject {
 
 		return $this->camelizeCache[$hash];
 	}
-	
+
 	private function camelizeHelper($matches) {
 		return strtoupper($matches[1]);
 	}
@@ -1325,7 +1168,7 @@ abstract class ShopgateObject {
 			is_string($sourceEncoding) &&
 			($sourceEncoding == SHOPGATE_LIBRARY_ENCODING) &&
 			!$force;
-		
+
 		return ($conditions)
 			? $string
 			: $this->convertEncoding($string, SHOPGATE_LIBRARY_ENCODING, $sourceEncoding, $useIconv);
@@ -1347,45 +1190,83 @@ abstract class ShopgateObject {
 	}
 
 	/**
-	 * Encodes the values inside an array from a given encoding to UTF-8 recursively.
+	 * Encodes the values of an array, object or string from a given encoding to UTF-8 recursively.
 	 *
-	 * @param array|string $array The array to encode.
-	 * @param string|string[] $sourceEncoding The (possible) encoding(s) of $string.
-	 * @param bool $force Set this true to enforce encoding even if the source encoding is already UTF-8.
-	 * @param bool $useIconv True to use iconv instead of mb_convert_encoding even if the mb library is present.
-	 * @return array|string $utf8Array The UTF-8 encoded array.
+	 * If the subject is an array, the values will be encoded, keys will be preserved.
+	 * If the subject is an object, all accessible properties' values will be encoded.
+	 * If the subject is a string, it will simply be encoded.
+	 * If the subject is anything else, it will be returned as is.
+	 *
+	 * @param mixed           $subject        The subject to encode
+	 * @param string|string[] $sourceEncoding The (possible) encoding(s) of $string
+	 * @param bool            $force          Set this true to enforce encoding even if the source encoding is already UTF-8
+	 * @param bool            $useIconv       True to use iconv instead of mb_convert_encoding even if the mb library is present
+	 *
+	 * @return mixed UTF-8 encoded $subject
 	 */
-	public function arrayToUtf8($array, $sourceEncoding = 'ISO-8859-15', $force = false, $useIconv = false) {
-		if (is_array($array)) {
-			$utf8Array = array();
-			foreach ($array as $key => $value) {
-				$utf8Array[$key] = $this->arrayToUtf8($value, $sourceEncoding, $force, $useIconv);
+	public function recursiveToUtf8($subject, $sourceEncoding = 'ISO-8859-15', $force = false, $useIconv = false) {
+		if (is_array($subject)) {
+			/** @var array $subject */
+			foreach ($subject as $key => $value) {
+				$subject[$key] = $this->recursiveToUtf8($value, $sourceEncoding, $force, $useIconv);
 			}
-			return $utf8Array;
+
+			return $subject;
+		} elseif (is_object($subject)) {
+			/** @var \stdClass $subject */
+			$objectVars = get_object_vars($subject);
+			foreach ($objectVars as $property => $value) {
+				$subject->{$property} = $this->recursiveToUtf8($value, $sourceEncoding, $force, $useIconv);
+			}
+
+			return $subject;
+		} elseif (is_string($subject)) {
+			/** @var string $subject */
+			return $this->stringToUtf8($subject, $sourceEncoding, $force, $useIconv);
 		}
-		return $this->stringToUtf8($array, $sourceEncoding, $force, $useIconv);
+
+		return $subject;
 	}
 
 	/**
-	 * Decodes the values inside an array from UTF-8 to a given encoding recursively.
+	 * Decodes the values of an array, object or string from UTF-8 to a given encoding recursively
 	 *
-	 * @param array|string $utf8Array The array to decode.
-	 * @param string $destinationEncoding The desired encoding of the return value.
-	 * @param bool $force Set this true to enforce encoding even if the destination encoding is set to UTF-8.
-	 * @param bool $useIconv True to use iconv instead of mb_convert_encoding even if the mb library is present.
-	 * @return array|string $array The UTF-8 decoded array.
+	 * If the subject is an array, the values will be decoded, keys will be preserved.
+	 * If the subject is an object, all accessible properties' values will be decoded.
+	 * If the subject is a string, it will simply be decoded.
+	 * If the subject is anything else, it will be returned as is.
+	 *
+	 * @param mixed  $subject             The subject to decode
+	 * @param string $destinationEncoding The desired encoding of the return value
+	 * @param bool   $force               Set this true to enforce encoding even if the destination encoding is set to UTF-8
+	 * @param bool   $useIconv            True to use iconv instead of mb_convert_encoding even if the mb library is present
+	 *
+	 * @return mixed UTF-8 decoded $subject
 	 */
-	public function arrayFromUtf8($utf8Array, $destinationEncoding = 'ISO-8859-15', $force = false, $useIconv = false) {
-		if (is_array($utf8Array)) {
-			$array = array();
-			foreach ($utf8Array as $key => $value) {
-				$array[$key] = $this->arrayFromUtf8($value, $destinationEncoding, $force, $useIconv);
+	public function recursiveFromUtf8($subject, $destinationEncoding = 'ISO-8859-15', $force = false, $useIconv = false) {
+		if (is_array($subject)) {
+			/** @var array $subject */
+			foreach ($subject as $key => $value) {
+				$subject[$key] = $this->recursiveFromUtf8($value, $destinationEncoding, $force, $useIconv);
 			}
-			return $array;
+
+			return $subject;
+		} elseif (is_object($subject)) {
+			/** @var \stdClass $subject */
+			$objectVars = get_object_vars($subject);
+			foreach ($objectVars as $property => $value) {
+				$subject->{$property} = $this->recursiveFromUtf8($value, $destinationEncoding, $force, $useIconv);
+			}
+
+			return $subject;
+		} elseif (is_string($subject)) {
+			/** @var string $subject */
+			return $this->stringFromUtf8($subject, $destinationEncoding, $force, $useIconv);
 		}
-		return $this->stringFromUtf8($utf8Array, $destinationEncoding, $force, $useIconv);
+
+		return $subject;
 	}
-	
+
 	/**
 	 * Converts a string's encoding to another.
 	 *
@@ -1419,13 +1300,13 @@ abstract class ShopgateObject {
 						$bestEncoding = $encoding;
 					}
 				}
-				
+
 				$sourceEncoding = $bestEncoding;
 			}
-			
+
 			$convertedString = @iconv($sourceEncoding, $destinationEncoding.'//IGNORE', $string);
 		}
-		
+
 		return $convertedString;
 	}
 
@@ -1490,7 +1371,7 @@ abstract class ShopgateObject {
 				? $memoryLimit.'M'
 				: (string) $memoryLimit
 		;
-		
+
 		@ini_set('memory_limit', $limit);
 	}
 
@@ -1534,7 +1415,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	const PRODUCT_STATUS_STOCK = 'stock';
 	const PRODUCT_STATUS_ACTIVE = 'active';
 	const PRODUCT_STATUS_INACTIVE = 'inactive';
-	
+
 	/**
 	 * @var Shopgate_Model_Abstract
 	 */
@@ -1543,27 +1424,27 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	/** convert weight units **/
 	const CONVERT_POUNDS_TO_GRAM_FACTOR = 453.59237;
 	const CONVERT_OUNCES_TO_GRAM_FACTOR = 28.3495231;
-	
+
 	/**
 	 * @var ShopgateBuilder
 	 */
 	protected $builder;
-	
+
 	/**
 	 * @var ShopgateConfigInterface
 	 */
 	protected $config;
-	
+
 	/**
 	 * @var ShopgateMerchantApiInterface
 	 */
 	protected $merchantApi;
-	
+
 	/**
 	 * @var ShopgatePluginApiInterface
 	 */
 	protected $pluginApi;
-	
+
 	/**
 	 * @var ShopgateFileBufferInterface
 	 */
@@ -1588,29 +1469,29 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @var double The exchange rate used for items export or orders import.
 	 */
 	protected $exchangeRate = 1;
-	
+
 	/**
 	 * @var int the number of attributes in the item csv file header
 	 */
 	protected $defaultItemRowAttributeCount = 10;
-	
+
 	/**
 	 * @var int the number of options in the item csv file header
 	 */
 	protected $defaultItemRowOptionCount = 10;
-	
+
 	/**
 	 * @var int the number of inputs in the item csv file header
 	 */
 	protected $defaultItemRowInputCount = 10;
-	
+
 	/**
 	 *
 	 * @var bool true use tax classes for export
 	 */
 	protected $useTaxClasses = false;
-	
-	
+
+
 	/**
 	 * @param ShopgateBuilder $builder If empty, the default ShopgateBuilder will be instantiated.
 	 */
@@ -1619,54 +1500,54 @@ abstract class ShopgatePlugin extends ShopgateObject {
 		$this->splittedExport = false;
 		$this->exportOffset = 0;
 		$this->exportLimit = 1000;
-		
+
 		// fire the plugin's startup callback
 		try {
 			$this->startup();
 		} catch (ShopgateLibraryException $e) {
 			// logging is done in exception constructor
 		}
-		
+
 		// build the object graph and get needed objects injected via set* methods
 		if (empty($builder)) $builder = new ShopgateBuilder($this->config);
 		$builder->buildLibraryFor($this);
-		
+
 		// store the builder
 		$this->builder = $builder;
 	}
-	
+
 	/**
 	 * @param bool $splitted True to activate partial export via limit and offset.
 	 */
 	public final function setSplittedExport($splitted) {
 		$this->splittedExport = $splitted;
 	}
-	
+
 	/**
 	 * @param int $offset Offset to start export at.
 	 */
 	public final function setExportOffset($offset) {
 		$this->exportOffset = $offset;
 	}
-	
+
 	/**
 	 * @param int $limit Maximum number of items to be exported.
 	 */
 	public final function setExportLimit($limit) {
 		$this->exportLimit = $limit;
 	}
-	
+
 	/**
 	 * @param ShopgateConfigInterface $config
 	 */
 	public final function setConfig(ShopgateConfigInterface $config) {
 		$this->config = $config;
 	}
-	
+
 	public final function setMerchantApi(ShopgateMerchantApiInterface $merchantApi) {
 		$this->merchantApi = $merchantApi;
 	}
-	
+
 	/**
 	 * @param ShopgatePluginApiInterface $pluginApi
 	 */
@@ -1680,11 +1561,11 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	public final function setBuffer(ShopgateFileBufferInterface $buffer) {
 		$this->buffer = $buffer;
 	}
-	
+
 	###################################################
 	## Dispatching to Plugin API or export callbacks ##
 	###################################################
-	
+
 	/**
 	 * Convenience method to call ShopgatePluginApi::handleRequest() from $this.
 	 *
@@ -1694,7 +1575,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	public final function handleRequest($data = array()) {
 		return $this->pluginApi->handleRequest($data);
 	}
-	
+
 	/**
 	 * Wrapper method to fetch OAuth url from ShopgatePluginApi
 	 *
@@ -1711,9 +1592,9 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 */
 	public function getEnabledPluginActions() {
 		$enabledActionsList = array();
-		
+
 		$configValues = $this->config->toArray();
-		
+
 		// find all settings that start with "enable_" in the config-value-name and collect all active ones
 		$searchKeyPart = 'enable_';
 		foreach ($configValues as $key => $val) {
@@ -1723,7 +1604,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 				}
 			}
 		}
-		
+
 		return $enabledActionsList;
 	}
 
@@ -1748,7 +1629,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 		$this->createMediaCsv();
 		$this->buffer->finish();
 	}
-	
+
 	/**
 	 * Takes care of buffer and file handlers and calls ShopgatePlugin::createCategoriesCsv().
 	 *
@@ -1784,7 +1665,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 			default: case 'xml':
 				$this->buffer->setFile($this->config->getItemsXmlPath());
 				break;
-				
+
 			case 'json':
 				$this->buffer->setFile($this->config->getItemsJsonPath());
 				break;
@@ -1807,7 +1688,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 			default: case 'xml':
 				$this->buffer->setFile($this->config->getCategoriesXmlPath());
 				break;
-				
+
 			case 'json':
 				$this->buffer->setFile($this->config->getCategoriesJsonPath());
 				break;
@@ -1840,11 +1721,11 @@ abstract class ShopgatePlugin extends ShopgateObject {
 		$this->createReviews($limit, $offset, $uids);
 		$this->buffer->finish();
 	}
-	
+
 	#############
 	## Helpers ##
 	#############
-		
+
 	/**
 	 * Calls the addRow() method on the currently associated ShopgateFileBuffer
 	 *
@@ -1854,7 +1735,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	private final function addRow($row) {
 		$this->buffer->addRow($row);
 	}
-	
+
 	/**
 	 * Calls the addRow() method on the currently associated ShopgateFileBuffer
 	 *
@@ -1866,12 +1747,14 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	}
 
 	/**
+	 * @param mixed[] $item
+	 *
 	 * @deprecated Use ShopgatePlugin::addItemRow(), ::addCategoryRow() or ::addReviewRow().
 	 */
 	protected final function addItem($item) {
 		$this->addRow($item);
 	}
-	
+
 	/**
 	 * @param Shopgate_Model_Catalog_Product $item
 	 */
@@ -1884,7 +1767,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 */
 	protected final function addItemRow($item) {
 		$item = array_merge( $this->buildDefaultItemRow(), $item );
-		
+
 		$this->addRow( $item );
 	}
 
@@ -1893,7 +1776,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 */
 	protected final function addMediaRow($item) {
 		$item = array_merge( $this->buildDefaultMediaRow(), $item );
-		
+
 		$this->addRow( $item );
 	}
 
@@ -1903,13 +1786,13 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	protected final function addCategoryModel(Shopgate_Model_Catalog_Category $category) {
 		$this->addModel($category);
 	}
-	
+
 	/**
 	 * @param mixed[] $category
 	 */
 	protected final function addCategoryRow($category) {
 		$category = array_merge($this->buildDefaultCategoryRow(), $category);
-		
+
 		$this->addRow($category);
 	}
 
@@ -1925,7 +1808,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 */
 	protected final function addReviewRow($review) {
 		$review = array_merge($this->buildDefaultReviewRow(), $review);
-		
+
 		$this->addRow($review);
 	}
 
@@ -1962,7 +1845,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	protected function setDefaultItemRowAttributeCount($attributeCount=10) {
 		$this->defaultItemRowAttributeCount = max(1, $attributeCount);
 	}
-	
+
 	/**
 	 * get the number of attributes to put in the csv head row
 	 * @return int
@@ -1970,7 +1853,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	protected function getDefaultItemRowAttributeCount() {
 		return $this->defaultItemRowAttributeCount;
 	}
-	
+
 	/**
 	 * set the number of options to put in the csv head row
 	 * @param int $optionCount
@@ -1978,7 +1861,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	protected function setDefaultItemRowOptionCount($optionCount=10) {
 		$this->defaultItemRowOptionCount = max(1, $optionCount);
 	}
-	
+
 	/**
 	 * get the number of options to put in the csv head row
 	 * @return int
@@ -1986,7 +1869,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	protected function getDefaultItemRowOptionCount() {
 		return $this->defaultItemRowOptionCount;
 	}
-	
+
 	/**
 	 * set the number of inputs to put in the csv head row
 	 * @param int $inputCount
@@ -1994,7 +1877,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	protected function setDefaultItemRowInputCount($inputCount=10) {
 		$this->defaultItemRowInputCount = max(1, $inputCount);
 	}
-	
+
 	/**
 	 * get the number of inputs to put in the csv head row
 	 * @return int
@@ -2002,14 +1885,14 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	protected function getDefaultItemRowInputCount() {
 		return $this->defaultItemRowInputCount;
 	}
-	
+
 	/**
 	 * @deprecated Use ShopgatePlugin::buildDefaultItemRow().
 	 */
 	protected function buildDefaultProductRow() {
 		return $this->buildDefaultItemRow();
 	}
-	
+
 	/**
 	 *
 	 * @see http://wiki.shopgate.com/CSV_File_Items/
@@ -2017,7 +1900,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	protected function useTaxClasses() {
 		$this->useTaxClasses = true;
 	}
-	
+
 	/**
 	 * @return string[] An array with the csv file field names as indices and empty strings as values.
 	 * @see http://wiki.shopgate.com/CSV_File_Items/
@@ -2032,14 +1915,14 @@ abstract class ShopgatePlugin extends ShopgateObject {
 		for ($attr = 1; $attr <= $this->defaultItemRowAttributeCount; $attr++) {
 			$attributes['attribute_' . $attr] = '';
 		}
-		
+
 		// prepare options
 		$options = array('has_options' => '0');
 		for ($opt = 1; $opt <= $this->defaultItemRowOptionCount; $opt++) {
 			$options['option_' . $opt] = '';
 			$options['option_' . $opt . '_values'] = '';
 		}
-		
+
 		// prepare inputs
 		$inputs = array('has_input_fields' => '0');
 		for ($inp = 1; $inp <= $this->defaultItemRowInputCount; $inp++) {
@@ -2051,14 +1934,14 @@ abstract class ShopgatePlugin extends ShopgateObject {
 			$inputs['input_field_' . $inp . '_add_amount'] = '';
 		}
 
-		
-		
+
+
 		$rowHead = array(
 			/* responsible fields */
 			'item_number' 				=> "",
 			'item_name' 				=> "",
 		);
-		
+
 		if ($this->useTaxClasses) {
 			$tax = array(
 				'unit_amount_net' 			=> "",
@@ -2070,10 +1953,10 @@ abstract class ShopgatePlugin extends ShopgateObject {
 				'unit_amount'	 			=> "",
 				'tax_percent'				=> "",
 				'old_unit_amount'			=> "",
-				
+
 			);
 		}
-		
+
 		$rowBody = array('currency'	=> "EUR",
 			'description' 				=> "",
 			'urls_images' 				=> "",
@@ -2118,7 +2001,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 			'is_hidden'					=> "",
 			/* parent/child relationship */
 		) ;
-		
+
 		$row =
 			$rowHead +
 			$tax +
@@ -2126,7 +2009,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 			$attributes +
 			$options +
 			$inputs;
-		
+
 		return $row;
 	}
 
@@ -2253,7 +2136,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 		$helper = $this->getHelper(self::HELPER_DATASTRUCTURE);
 		return $helper->arrayCross($src, $enableFirstRow);
 	}
-	
+
 	/**
 	 * @param array $loaders
 	 * @return mixed
@@ -2286,7 +2169,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 
 		return $arguments[0];
 	}
-	
+
 	/**
 	 * Creates an array of corresponding helper method names, based on the export type given
 	 * @param string $subjectName
@@ -2303,10 +2186,10 @@ abstract class ShopgatePlugin extends ShopgateObject {
 				}
 			}
 		}
-		
+
 		return $actions;
 	}
-	
+
 	/**
 	 * Returns an array with the method names of all item-loaders
 	 *
@@ -2317,7 +2200,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	protected function getCreateItemsCsvLoaders() {
 		return $this->getCreateCsvLoaders("item");
 	}
-	
+
 	/**
 	 * Returns an array with the method names of all item-loaders
 	 *
@@ -2328,7 +2211,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	protected function getCreateMediaCsvLoaders() {
 		return $this->getCreateCsvLoaders("media");
 	}
-	
+
 	/**
 	 * Returns an array with the method names of all item-loaders
 	 *
@@ -2339,7 +2222,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	protected function getCreateCategoriesCsvLoaders() {
 		return $this->getCreateCsvLoaders("category");
 	}
-	
+
 	/**
 	 * Returns an array with the method names of all item-loaders
 	 *
@@ -2351,7 +2234,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 
 	/**
 	 * disables an API method in the local config
-	 * 
+	 *
 	 * @param string $actionName
 	 */
 	public function disableAction($actionName) {
@@ -2359,7 +2242,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 		$this->config->load($shopgateSettingsNew);
 		$this->config->save(array_keys($shopgateSettingsNew), true);
 	}
-	
+
 	#################################################################################
 	## Following methods are the callbacks that need to be implemented by plugins. ##
 	#################################################################################
@@ -2417,15 +2300,15 @@ abstract class ShopgatePlugin extends ShopgateObject {
 			'category_count' => 0,
 			'item_count' => 0,
 		);
-		
+
 		if ($this->config->getEnableGetReviewsCsv()) {
 			$shopInfo['review_count'] = 0;
 		}
-		
+
 		if ($this->config->getEnableGetMediaCsv()) {
 			$shopInfo['media_count'] = array();
 		}
-		
+
 		return $shopInfo;
 	}
 
@@ -2449,7 +2332,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @throws ShopgateLibraryException on invalid log in data or hard errors like database failure.
 	 */
 	public abstract function getCustomer($user, $pass);
-	
+
 	/**
 	 * This method creates a new user account / user addresses for a customer in the shop system's database
 	 * The method should not abort on soft errors like when the street or phone number of a customer is not set.
@@ -2462,7 +2345,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @throws ShopgateLibraryException if an error occurs
 	 */
 	public abstract function registerCustomer($user, $pass, ShopgateCustomer $customer);
-	
+
 	/**
 	 * Performs the necessary queries to add an order to the shop system's database.
 	 *
@@ -2494,7 +2377,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @throws ShopgateLibraryException if an error occurs.
 	 */
 	public abstract function updateOrder(ShopgateOrder $order);
-	
+
 	/**
 	 * Redeems coupons that are passed along with a ShopgateCart object.
 	 *
@@ -2504,7 +2387,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @return array('external_coupons' => ShopgateExternalCoupon[])
 	 * @throws ShopgateLibraryException if an error occurs.
 	 *
-	 * @deprecated no longer supported. 
+	 * @deprecated no longer supported.
 	 */
 	public function redeemCoupons(ShopgateCart $cart){
 		$this->disableAction('redeem_coupons');
@@ -2515,7 +2398,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 			false
 		);
 	}
-	
+
 	/**
 	 * Checks the content of a cart to be valid and returns necessary changes if applicable.
 	 *
@@ -2532,7 +2415,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @throws ShopgateLibraryException if an error occurs.
 	 */
 	public abstract function checkCart(ShopgateCart $cart);
-	
+
 	/**
 	 * Checks the items array and returns stock quantity for each item.
 	 *
@@ -2545,7 +2428,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @throws ShopgateLibraryException if an error occurs.
 	 */
 	public abstract function checkStock(ShopgateCart $cart);
-	
+
 	/**
 	 * Returns an array of certain settings of the shop. (Currently mainly tax settings.)
 	 *
@@ -2566,7 +2449,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @throws ShopgateLibraryException on invalid log in data or hard errors like database failure.
 	 */
 	public abstract function getSettings();
-	
+
 	/**
 	 * Loads the products of the shop system's database and passes them to the buffer.
 	 *
@@ -2591,7 +2474,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 				false
 		);
 	}
-	
+
 	/**
 	 * Loads the Media file information to the products of the shop system's database and passes them to the buffer.
 	 *
@@ -2604,7 +2487,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @throws ShopgateLibraryException
 	 */
 	protected abstract function createMediaCsv();
-	
+
 	/**
 	 * Loads the product categories of the shop system's database and passes them to the buffer.
 	 *
@@ -2627,7 +2510,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 				false
 		);
 	}
-	
+
 	/**
 	 * Loads the product reviews of the shop system's database and passes them to the buffer.
 	 *
@@ -2650,7 +2533,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 				false
 		);
 	}
-	
+
 	/**
 	 * Exports orders from the shop system's database to Shopgate.
 	 *
@@ -2663,12 +2546,12 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @param string $orderDateFrom
 	 * @param string $sortOrder
 	 *
-	 * @return ShopgateExternalOrder[] A list of ShopgateExternalOrder objects
+	 * @return ShopgateExternalOrder[] A list of ShopgateExternalOrder objects.
 	 *
 	 * @throws ShopgateLibraryException
 	 */
 	public abstract function getOrders($customerToken, $customerLanguage, $limit = 10, $offset = 0, $orderDateFrom = '', $sortOrder = 'created_desc');
-	
+
 	/**
 	 * Updates and returns synchronization information for the favourite list of a customer.
 	 *
@@ -2677,10 +2560,10 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @param string $customerToken
 	 * @param ShopgateSyncItem[] $items A list of ShopgateSyncItem objects that need to be synchronized
 	 *
-	 * @return ShopgateSyncItem[] The updated list of ShopgateSyncItem objects
+	 * @return ShopgateSyncItem[] The updated list of ShopgateSyncItem objects.
 	 */
 	public abstract function syncFavouriteList($customerToken, $items);
-	
+
 	/**
 	 * Loads the products of the shop system's database and passes them to the buffer.
 	 *
@@ -2693,7 +2576,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @throws ShopgateLibraryException
 	 */
 	protected abstract function createItems($limit = null, $offset = null, array $uids = array());
-	
+
 	/**
 	 * Loads the product categories of the shop system's database and passes them to the buffer.
 	 *
@@ -2719,6 +2602,17 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * @throws ShopgateLibraryException
 	 */
 	protected abstract function createReviews($limit = null, $offset = null, array $uids = array());
+
+	/**
+	 * Returns an array of cache files that should be deleted.
+	 *
+	 * @return string[] A list of cache files.
+	 *
+	 * @see http://developer.shopgate.com/plugin_api/system_information/clear_cache
+	 */
+	protected function clearCache() {
+		return array();
+	}
 }
 
 interface ShopgateFileBufferInterface {
@@ -2728,7 +2622,7 @@ interface ShopgateFileBufferInterface {
 	 * @param string $filePath Path to the file (the .tmp extension is added automatically).
 	 */
 	public function setFile($filePath);
-	
+
 	/**
 	 * Adds a line / row to the csv file buffer.
 	 *
@@ -2736,7 +2630,7 @@ interface ShopgateFileBufferInterface {
 	 * @throws ShopgateLibraryException if flushing the buffer fails.
 	 */
 	public function addRow($row);
-	
+
 	/**
 	 * Closes the file and flushes the buffer.
 	 *
@@ -2750,7 +2644,7 @@ abstract class ShopgateFileBuffer extends ShopgateObject implements ShopgateFile
 	 * @var string[]
 	 */
 	protected $allowedEncodings;
-	
+
 	/**
 	 * @var bool true to enable automatic encoding conversion to utf-8
 	 */
@@ -2760,12 +2654,12 @@ abstract class ShopgateFileBuffer extends ShopgateObject implements ShopgateFile
 	 * @var int (timestamp) time of the first call of addItem()
 	 */
 	protected $timeStart;
-	
+
 	/**
 	 * @var string
 	 */
 	protected $filePath;
-	
+
 	/**
 	 * @var resource
 	 */
@@ -2801,20 +2695,20 @@ abstract class ShopgateFileBuffer extends ShopgateObject implements ShopgateFile
 	public function setFile($filePath) {
 		$this->filePath = $filePath;
 		$this->buffer = array();
-		
+
 		if (empty($this->fileHandle)) {
 			if (!preg_match("/^php/", $filePath)) {
 				$filePath = $this->filePath.".tmp";
 			}
 			$this->log('Trying to create "'.basename($filePath).'". ', 'access');
-			
+
 			$this->fileHandle = @fopen($filePath, 'w');
 			if (!$this->fileHandle) {
 				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_FILE_OPEN_ERROR, 'File: '.$filePath);
 			}
 		}
 	}
-	
+
 	public function addRow($row) {
 		$this->buffer[] = $row;
 
@@ -2822,7 +2716,7 @@ abstract class ShopgateFileBuffer extends ShopgateObject implements ShopgateFile
 			$this->flush();
 		}
 	}
-	
+
 	/**
 	 * Flushes buffer to the currently opened file handle in $this->fileHandle.
 	 *
@@ -2834,7 +2728,7 @@ abstract class ShopgateFileBuffer extends ShopgateObject implements ShopgateFile
 		if (empty($this->buffer) && ftell($this->fileHandle) == 0) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_FILE_EMPTY_BUFFER, null, false, false);
 		}
-		
+
 		// perform prerequisites on first call
 		if (ftell($this->fileHandle) == 0) {
 			$this->onStart();
@@ -2854,7 +2748,7 @@ abstract class ShopgateFileBuffer extends ShopgateObject implements ShopgateFile
 	 * or any other necessary prerequisite.
 	 */
 	abstract protected function onStart();
-	
+
 	/**
 	 * Callback for deriving classes.
 	 *
@@ -2862,7 +2756,7 @@ abstract class ShopgateFileBuffer extends ShopgateObject implements ShopgateFile
 	 * flush all data to the given output file.
 	 */
 	abstract protected function onFlush();
-	
+
 	/**
 	 * Callback for deriving classes.
 	 *
@@ -2870,16 +2764,16 @@ abstract class ShopgateFileBuffer extends ShopgateObject implements ShopgateFile
 	 * is renamed to its original name.
 	 */
 	abstract protected function onFinish();
-	
+
 
 	public function finish() {
 		$this->flush();
-		
+
 		$this->onFinish();
-		
+
 		fclose($this->fileHandle);
 		$this->fileHandle = null;
-		
+
 		if (!preg_match("/^php/", $this->filePath)) {
 			// FIX for Windows Servers
 			if (file_exists($this->filePath)) {
@@ -2898,7 +2792,7 @@ class ShopgateFileBufferCsv extends ShopgateFileBuffer {
 	protected function onStart() {
 		fputcsv($this->fileHandle, array_keys($this->buffer[0]), ';', '"');
 	}
-	
+
 	protected function onFlush() {
 		foreach ($this->buffer as $item) {
 			if (!empty($this->convertEncoding)) {
@@ -2906,11 +2800,11 @@ class ShopgateFileBufferCsv extends ShopgateFileBuffer {
 					$field = $this->stringToUtf8($field, $this->allowedEncodings);
 				}
 			}
-			
+
 			fputcsv($this->fileHandle, $item, ";", "\"");
 		}
 	}
-	
+
 	protected function onFinish() { /* no finishing necessary for CSV files */ }
 }
 
@@ -2918,20 +2812,20 @@ class ShopgateFileBufferJson extends ShopgateFileBuffer {
 	protected function onStart() {
 		fputs($this->fileHandle, '[');
 	}
-	
+
 	protected function onFlush() {
 		$result = array();
-		
+
 		foreach ($this->buffer as $item) {
 			/* @var $item Shopgate_Model_AbstractExport */
 			$result[] = $this->jsonEncode($item->asArray());
 		}
-		
+
 		if (!empty($result)) {
 			fputs($this->fileHandle, implode(',', $result).',');
 		}
 	}
-	
+
 	protected function onFinish() {
 		fseek($this->fileHandle, -1, SEEK_END);
 		fputs($this->fileHandle, ']');
@@ -2943,12 +2837,12 @@ class ShopgateFileBufferXml extends ShopgateFileBuffer {
 	 * @var Shopgate_Model_XmlResultObject
 	 */
 	protected $xmlNode;
-	
+
 	/**
 	 * @var Shopgate_Model_AbstractExport
 	 */
 	protected $xmlModel;
-	
+
 	/**
 	 * @param Shopgate_Model_Abstract $xmlModel
 	 * @param Shopgate_Model_XmlResultObject $xmlNode
@@ -2958,11 +2852,11 @@ class ShopgateFileBufferXml extends ShopgateFileBuffer {
 	 */
 	public function __construct(Shopgate_Model_Abstract $xmlModel, Shopgate_Model_XmlResultObject $xmlNode, $capacity, $convertEncoding = true, array $sourceEncodings = array()) {
 		parent::__construct($capacity, $convertEncoding, $sourceEncodings);
-		
+
 		$this->xmlNode = $xmlNode;
 		$this->xmlModel = $xmlModel;
 	}
-	
+
 	protected function onStart() {
 		fputs($this->fileHandle, sprintf(
 			'<%s xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="%s">',
@@ -2970,21 +2864,21 @@ class ShopgateFileBufferXml extends ShopgateFileBuffer {
 			$this->xmlModel->getXsdFileLocation()
 		));
 	}
-	
+
 	protected function onFlush() {
 		$itemsNode = clone $this->xmlNode;
-		
+
 		foreach ($this->buffer as $item) {
 			/* @var $item Shopgate_Model_AbstractExport */
 			$item->asXml($itemsNode);
 		}
-		
+
 		foreach ($itemsNode as $xmlItem) {
 			/* @var $xmlItem Shopgate_Model_XmlResultObject */
 			fputs($this->fileHandle, $xmlItem->asXML());
 		}
 	}
-	
+
 	protected function onFinish() {
 		fputs($this->fileHandle, '</'.$this->xmlModel->getIdentifier().'>');
 	}
@@ -3009,7 +2903,7 @@ abstract class ShopgateContainer extends ShopgateObject {
 	public function __construct($data = array()) {
 		$this->loadArray($data);
 	}
-	
+
 	/**
 	 * Tries to map an associative array to the object's attributes.
 	 *
@@ -3023,7 +2917,7 @@ abstract class ShopgateContainer extends ShopgateObject {
 	 */
 	public function loadArray(array $data = array()) {
 		$unmappedData = array();
-		
+
 		if (is_array($data)) {
 			$methods = get_class_methods($this);
 			foreach ($data as $key => $value) {
@@ -3035,7 +2929,7 @@ abstract class ShopgateContainer extends ShopgateObject {
 				$this->$setter($value);
 			}
 		}
-		
+
 		return $unmappedData;
 	}
 
@@ -3048,7 +2942,7 @@ abstract class ShopgateContainer extends ShopgateObject {
 	 * @return bool
 	 */
 	public function compare($obj,$obj2,$whitelist) {
-		
+
 		foreach ($whitelist as $acceptedField) {
 			if ($obj->{$this->camelize('get_'.$acceptedField)}() != $obj2->{$this->camelize('get_'.$acceptedField)}()) {
 				return false;
@@ -3056,7 +2950,7 @@ abstract class ShopgateContainer extends ShopgateObject {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Converts the Container object recursively to an associative array.
 	 *
@@ -3134,6 +3028,7 @@ interface ShopgateContainerVisitor {
 	public function visitCustomer(ShopgateCustomer $c);
 	public function visitAddress(ShopgateAddress $a);
 	public function visitCart(ShopgateCart $c);
+    public function visitClient(ShopgateClient $c);
 	public function visitOrder(ShopgateOrder $o);
 	public function visitExternalOrder(ShopgateExternalOrder $o);
 	public function visitExternalOrderTax(ShopgateExternalOrderTax $t);
@@ -3170,6 +3065,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 	const MODE_ENCODE = 1;
 	const MODE_DECODE = 2;
 
+	/** @var ShopgateContainer */
 	protected $firstObject;
 	protected $object;
 	protected $mode;
@@ -3251,7 +3147,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 	public function visitAddress(ShopgateAddress $a) {
 		$properties = $a->buildProperties();
 		$this->iterateSimpleProperties($properties);
-		
+
 		$properties['custom_fields'] = $this->iterateObjectList($properties['custom_fields']);
 
 		// create new object with utf-8 en- / decoded data
@@ -3265,16 +3161,16 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 	public function visitCart(ShopgateCart $c) {
 		// get properties
 		$properties = $c->buildProperties();
-	
+
 		// iterate the simple variables and arrays with simple variables recursively
 		$this->iterateSimpleProperties($properties);
-	
+
 		// visit delivery_address
 		if (!empty($properties['delivery_address']) && ($properties['delivery_address'] instanceof ShopgateAddress)) {
 			$properties['delivery_address']->accept($this);
 			$properties['delivery_address'] = $this->object;
 		}
-	
+
 		// visit invoice_address
 		if (!empty($properties['invoice_address']) && ($properties['invoice_address'] instanceof ShopgateAddress)) {
 			$properties['invoice_address']->accept($this);
@@ -3291,7 +3187,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 		$properties['external_coupons'] = $this->iterateObjectList($properties['external_coupons']);
 		$properties['shopgate_coupons'] = $this->iterateObjectList($properties['shopgate_coupons']);
 		$properties['items'] = $this->iterateObjectList($properties['items']);
-	
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateCart($properties);
@@ -3300,13 +3196,25 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 		}
 	}
 
+    public function visitClient(ShopgateClient $c) {
+        $properties = $c->buildProperties();
+        $this->iterateSimpleProperties($properties);
+
+        // create new object with utf-8 en- / decoded data
+        try {
+            $this->object = new ShopgateClient($properties);
+        } catch (ShopgateLibraryException $e) {
+            $this->object = null;
+        }
+    }
+
 	public function visitOrder(ShopgateOrder $o) {
 		// get properties
 		$properties = $o->buildProperties();
 
 		// iterate the simple variables and arrays with simple variables recursively
 		$this->iterateSimpleProperties($properties);
-		
+
 		// visit delivery_address
 		if (!empty($properties['delivery_address']) && ($properties['delivery_address'] instanceof ShopgateAddress)) {
 			$properties['delivery_address']->accept($this);
@@ -3318,7 +3226,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 			$properties['invoice_address']->accept($this);
 			$properties['invoice_address'] = $this->object;
 		}
-		
+
 		// visit shipping_infos
 		if (!empty($properties['shipping_infos']) && ($properties['shipping_infos'] instanceof ShopgateShippingInfo)) {
 			$properties['shipping_infos']->accept($this);
@@ -3343,22 +3251,22 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 	public function visitExternalOrder(ShopgateExternalOrder $o) {
 		// get properties
 		$properties = $o->buildProperties();
-		
+
 		// iterate the simple variables and arrays with simple variables recursively
 		$this->iterateSimpleProperties($properties);
-		
+
 		// visit delivery_address
 		if (!empty($properties['delivery_address']) && ($properties['delivery_address'] instanceof ShopgateAddress)) {
 			$properties['delivery_address']->accept($this);
 			$properties['delivery_address'] = $this->object;
 		}
-		
+
 		// visit invoice_address
 		if (!empty($properties['invoice_address']) && ($properties['invoice_address'] instanceof ShopgateAddress)) {
 			$properties['invoice_address']->accept($this);
 			$properties['invoice_address'] = $this->object;
 		}
-		
+
 		// iterate lists of referred objects
 		$properties['custom_fields'] = $this->iterateObjectList($properties['custom_fields']);
 		$properties['external_coupons'] = $this->iterateObjectList($properties['external_coupons']);
@@ -3366,7 +3274,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 		$properties['delivery_notes'] = $this->iterateObjectList($properties['delivery_notes']);
 		$properties['order_taxes'] = $this->iterateObjectList($properties['order_taxes']);
 		$properties['extra_costs'] = $this->iterateObjectList($properties['extra_costs']);
-		
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateExternalOrder($properties);
@@ -3378,7 +3286,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 	public function visitExternalOrderTax(ShopgateExternalOrderTax $t) {
 		$properties = $t->buildProperties();
 		$this->iterateSimpleProperties($properties);
-		
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateExternalOrderTax($properties);
@@ -3390,7 +3298,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 	public function visitExternalOrderExtraCost(ShopgateExternalOrderExtraCost $c) {
 		$properties = $c->buildProperties();
 		$this->iterateSimpleProperties($properties);
-		
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateExternalOrderExtraCost($properties);
@@ -3398,18 +3306,18 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 			$this->object = null;
 		}
 	}
-	
+
 	public function visitOrderItem(ShopgateOrderItem $i) {
 		// get properties
 		$properties = $i->buildProperties();
-	
+
 		// iterate the simple variables
 		$this->iterateSimpleProperties($properties);
-	
+
 		// iterate lists of referred objects
 		$properties['options'] = $this->iterateObjectList($properties['options']);
 		$properties['inputs'] = $this->iterateObjectList($properties['inputs']);
-		
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateOrderItem($properties);
@@ -3417,14 +3325,14 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 			$this->object = null;
 		}
 	}
-	
+
 	public function visitSyncItem(ShopgateSyncItem $i) {
 		// get properties
 		$properties = $i->buildProperties();
-	
+
 		// iterate the simple variables
 		$this->iterateSimpleProperties($properties);
-	
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateSyncItem($properties);
@@ -3432,14 +3340,14 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 			$this->object = null;
 		}
 	}
-	
+
 	public function visitExternalOrderItem(ShopgateExternalOrderItem $i) {
 		// get properties
 		$properties = $i->buildProperties();
-	
+
 		// iterate the simple variables
 		$this->iterateSimpleProperties($properties);
-	
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateExternalOrderItem($properties);
@@ -3447,7 +3355,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 			$this->object = null;
 		}
 	}
-	
+
 	public function visitOrderItemOption(ShopgateOrderItemOption $o) {
 		$properties = $o->buildProperties();
 		$this->iterateSimpleProperties($properties);
@@ -3463,7 +3371,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 	public function visitOrderItemInput(ShopgateOrderItemInput $i) {
 		$properties = $i->buildProperties();
 		$this->iterateSimpleProperties($properties);
-		
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateOrderItemInput($properties);
@@ -3475,7 +3383,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 	public function visitOrderItemAttribute(ShopgateOrderItemAttribute $i) {
 		$properties = $i->buildProperties();
 		$this->iterateSimpleProperties($properties);
-		
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateOrderItemAttribute($properties);
@@ -3483,11 +3391,11 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 			$this->object = null;
 		}
 	}
-	
+
 	public function visitOrderCustomField(ShopgateOrderCustomField $c) {
 		$properties = $c->buildProperties();
 		$this->iterateSimpleProperties($properties);
-		
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateOrderCustomField($properties);
@@ -3495,11 +3403,11 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 			$this->object = null;
 		}
 	}
-	
+
 	public function visitShippingInfo(ShopgateShippingInfo $o) {
 		$properties = $o->buildProperties();
 		$this->iterateSimpleProperties($properties);
-		
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateShippingInfo($properties);
@@ -3519,7 +3427,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 			$this->object = null;
 		}
 	}
-	
+
 	public function visitExternalCoupon(ShopgateExternalCoupon $c) {
 		$properties = $c->buildProperties();
 
@@ -3533,13 +3441,13 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 			$this->object = null;
 		}
 	}
-	
+
 	public function visitShopgateCoupon(ShopgateShopgateCoupon $c) {
 		$properties = $c->buildProperties();
-		
+
 		// iterate the simple variables
 		$this->iterateSimpleProperties($properties);
-		
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateShopgateCoupon($properties);
@@ -3547,7 +3455,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 			$this->object = null;
 		}
 	}
-	
+
 	public function visitCategory(ShopgateCategory $c) {
 		$properties = $c->buildProperties();
 
@@ -3572,7 +3480,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 		$properties['options']    = $this->iterateObjectList($properties['options']);
 		$properties['inputs']     = $this->iterateObjectList($properties['inputs']);
         $properties['attributes'] = $this->iterateObjectList($properties['attributes']);
-        
+
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateItem($properties);
@@ -3625,7 +3533,7 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 			$this->object = null;
 		}
 	}
-	
+
 	public function visitConfig(ShopgateConfig $c) {
 		$properties = $c->buildProperties();
 
@@ -3805,10 +3713,10 @@ class ShopgateContainerToArrayVisitor implements ShopgateContainerVisitor {
 	public function visitAddress(ShopgateAddress $a) {
 		// get and iterate simple properties
 		$properties = $this->iterateSimpleProperties($a->buildProperties());
-		
+
 		// iterate ShopgateOrderCustomField objects
 		$properties['custom_fields'] = $this->iterateObjectList($properties['custom_fields']);
-		
+
 		// update array
 		$this->array = $properties;
 	}
@@ -3816,16 +3724,16 @@ class ShopgateContainerToArrayVisitor implements ShopgateContainerVisitor {
 	public function visitCart(ShopgateCart $c) {
 			// get properties
 		$properties = $c->buildProperties();
-	
+
 		// iterate the simple variables and arrays with simple variables recursively
 		$this->iterateSimpleProperties($properties);
-	
+
 		// visit delivery_address
 		if (!empty($properties['delivery_address']) && ($properties['delivery_address'] instanceof ShopgateAddress)) {
 			$properties['delivery_address']->accept($this);
 			$properties['delivery_address'] = $this->array;
 		}
-	
+
 		// visit invoice_address
 		if (!empty($properties['invoice_address']) && ($properties['invoice_address'] instanceof ShopgateAddress)) {
 			$properties['invoice_address']->accept($this);
@@ -3842,42 +3750,47 @@ class ShopgateContainerToArrayVisitor implements ShopgateContainerVisitor {
 		$properties['external_coupons'] = $this->iterateObjectList($properties['external_coupons']);
 		$properties['shopgate_coupons'] = $this->iterateObjectList($properties['shopgate_coupons']);
 		$properties['items'] = $this->iterateObjectList($properties['items']);
-	
+
 		$this->array = $properties;
 	}
+
+    public function visitClient(ShopgateClient $c) {
+        // get properties and iterate (no complex types in ShopgateClient objects)
+        $this->array = $this->iterateSimpleProperties($c->buildProperties());
+    }
 
 	public function visitOrder(ShopgateOrder $o) {
 		// get properties
 		$properties = $o->buildProperties();
-	
+
 		// iterate the simple variables
 		$properties = $this->iterateSimpleProperties($properties);
-	
+
 		// visit invoice address
 		if (!empty($properties['invoice_address']) && ($properties['invoice_address'] instanceof ShopgateAddress)) {
 			$properties['invoice_address']->accept($this);
 			$properties['invoice_address'] = $this->array;
 		}
-	
+
 		// visit delivery address
 		if (!empty($properties['delivery_address']) && ($properties['delivery_address'] instanceof ShopgateAddress)) {
 			$properties['delivery_address']->accept($this);
 			$properties['delivery_address'] = $this->array;
 		}
-	
+
 		// visit shipping info
 		if (!empty($properties['shipping_infos']) && ($properties['shipping_infos'] instanceof ShopgateShippingInfo)) {
 			$properties['shipping_infos']->accept($this);
 			$properties['shipping_infos'] = $this->array;
 		}
-	
+
 		// visit the items and delivery notes arrays
 		$properties['custom_fields'] = $this->iterateObjectList($properties['custom_fields']);
 		$properties['external_coupons'] = $this->iterateObjectList($properties['external_coupons']);
 		$properties['shopgate_coupons'] = $this->iterateObjectList($properties['shopgate_coupons']);
 		$properties['items'] = $this->iterateObjectList($properties['items']);
 		$properties['delivery_notes'] = $this->iterateObjectList($properties['delivery_notes']);
-	
+
 		// set last value to converted array
 		$this->array = $properties;
 	}
@@ -3885,22 +3798,22 @@ class ShopgateContainerToArrayVisitor implements ShopgateContainerVisitor {
 	public function visitExternalOrder(ShopgateExternalOrder $o) {
 		// get properties
 		$properties = $o->buildProperties();
-	
+
 		// iterate the simple variables
 		$properties = $this->iterateSimpleProperties($properties);
-	
+
 		// visit invoice address
 		if (!empty($properties['invoice_address']) && ($properties['invoice_address'] instanceof ShopgateAddress)) {
 			$properties['invoice_address']->accept($this);
 			$properties['invoice_address'] = $this->array;
 		}
-	
+
 		// visit delivery address
 		if (!empty($properties['delivery_address']) && ($properties['delivery_address'] instanceof ShopgateAddress)) {
 			$properties['delivery_address']->accept($this);
 			$properties['delivery_address'] = $this->array;
 		}
-	
+
 		// visit the items and delivery notes arrays
 		$properties['custom_fields'] = $this->iterateObjectList($properties['custom_fields']);
 		$properties['external_coupons'] = $this->iterateObjectList($properties['external_coupons']);
@@ -3908,11 +3821,11 @@ class ShopgateContainerToArrayVisitor implements ShopgateContainerVisitor {
 		$properties['delivery_notes'] = $this->iterateObjectList($properties['delivery_notes']);
 		$properties['order_taxes'] = $this->iterateObjectList($properties['order_taxes']);
 		$properties['extra_costs'] = $this->iterateObjectList($properties['extra_costs']);
-	
+
 		// set last value to converted array
 		$this->array = $properties;
 	}
-	
+
 	public function visitExternalOrderTax(ShopgateExternalOrderTax $t) {
 		// get properties and iterate (no complex types in ShopgateExternalOrderTax objects)
 		$this->array = $this->iterateSimpleProperties($t->buildProperties());
@@ -3921,14 +3834,14 @@ class ShopgateContainerToArrayVisitor implements ShopgateContainerVisitor {
 		// get properties and iterate (no complex types in ShopgateExternalOrderExtraCost objects)
 		$this->array = $this->iterateSimpleProperties($c->buildProperties());
 	}
-	
+
 	public function visitOrderItem(ShopgateOrderItem $i) {
 		// get properties
 		$properties = $i->buildProperties();
-	
+
 		// iterate the simple variables
 		$properties = $this->iterateSimpleProperties($properties);
-	
+
 		// iterate options/attributes/input fields objects
 		$properties['options']    = $this->iterateObjectList($properties['options']);
 		$properties['inputs']     = $this->iterateObjectList($properties['inputs']);
@@ -3937,23 +3850,23 @@ class ShopgateContainerToArrayVisitor implements ShopgateContainerVisitor {
 		// set last value to converted array
 		$this->array = $properties;
 	}
-	
+
 	public function visitSyncItem(ShopgateSyncItem $i) {
 		// get properties and iterate (no options and inputs available in ShopgateSyncOrderItem objects)
 		$this->array = $this->iterateSimpleProperties($i->buildProperties());
 	}
-	
+
 	public function visitExternalOrderItem(ShopgateExternalOrderItem $i) {
 		// get properties
 		$properties = $i->buildProperties();
-	
+
 		// iterate the simple variables
 		$properties = $this->iterateSimpleProperties($properties);
-	
+
 		// set last value to converted array
 		$this->array = $properties;
 	}
-	
+
     /**
      * @param ShopgateShippingMethod $c
      */
@@ -4028,12 +3941,12 @@ class ShopgateContainerToArrayVisitor implements ShopgateContainerVisitor {
 		// get properties and iterate (no complex types in ShopgateOrderItemAttribute objects)
 		$this->array = $this->iterateSimpleProperties($i->buildProperties());
 	}
-	
+
 	public function visitOrderCustomField(ShopgateOrderCustomField $c) {
 		// get properties and iterate (no complex types in ShopgateOrderCustomField objects)
 		$this->array = $this->iterateSimpleProperties($c->buildProperties());
 	}
-	
+
 	public function visitShippingInfo(ShopgateShippingInfo $i) {
 		// get properties and iterate (no complex types in ShopgateOrderItemAttribute objects)
 		$this->array = $this->iterateSimpleProperties($i->buildProperties());
@@ -4048,12 +3961,12 @@ class ShopgateContainerToArrayVisitor implements ShopgateContainerVisitor {
 		// get properties and iterate (no complex types in ShopgateExternalCoupon objects)
 		$this->array = $this->iterateSimpleProperties($c->buildProperties());
 	}
-	
+
 	public function visitShopgateCoupon(ShopgateShopgateCoupon $c) {
 		// get properties and iterate (no complex types in ShopgateShopgateCoupon objects)
 		$this->array = $this->iterateSimpleProperties($c->buildProperties());
 	}
-	
+
 	public function visitCategory(ShopgateCategory $d) {
 		$this->array = $this->iterateSimpleProperties($d->buildProperties());
 	}

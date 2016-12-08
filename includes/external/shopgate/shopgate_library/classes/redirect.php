@@ -505,8 +505,8 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 				$nonSslUrl = ShopgateMobileRedirectInterface::SHOPGATE_PG_STATIC;
 			break;
 			case 'custom':
-				$sslUrl = 'https://shopgatedev-public.s3.amazonaws.com';
-				$nonSslUrl = 'http://shopgatedev-public.s3.amazonaws.com';
+				$sslUrl = '//shopgatedev-public.s3.amazonaws.com';
+				$nonSslUrl = '//shopgatedev-public.s3.amazonaws.com';
 			break;
 		}
 		
@@ -801,35 +801,35 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
  * @deprecated Will be removed in 3.0.0. Use Shopgate_Helper_Redirect_MobileRedirect instead.
  */
 interface ShopgateMobileRedirectInterface {
-	const SHOPGATE_STATIC = 'http://static.shopgate.com';
-	const SHOPGATE_STATIC_SSL = 'https://static-ssl.shopgate.com';
+	const SHOPGATE_STATIC = Shopgate_Helper_Redirect_SettingsManagerInterface::SHOPGATE_STATIC;
+	const SHOPGATE_STATIC_SSL = Shopgate_Helper_Redirect_SettingsManagerInterface::SHOPGATE_STATIC;
 	
-	const SHOPGATE_PG_STATIC = 'http://static.shopgatepg.com';
-	const SHOPGATE_PG_STATIC_SSL = 'https://static-ssl.shopgatepg.com';
+	const SHOPGATE_PG_STATIC = Shopgate_Helper_Redirect_SettingsManagerInterface::SHOPGATE_PG_STATIC;
+	const SHOPGATE_PG_STATIC_SSL = Shopgate_Helper_Redirect_SettingsManagerInterface::SHOPGATE_PG_STATIC;
 	
-	const SHOPGATE_SL_STATIC = 'http://static.shopgatesl.com';
-	const SHOPGATE_SL_STATIC_SSL = 'https://static-ssl.shopgatesl.com';
+	const SHOPGATE_SL_STATIC = Shopgate_Helper_Redirect_SettingsManagerInterface::SHOPGATE_SL_STATIC;
+	const SHOPGATE_SL_STATIC_SSL = Shopgate_Helper_Redirect_SettingsManagerInterface::SHOPGATE_SL_STATIC;
 	
 	
 	/**
 	 * @var string the URL that is appended to the end of a shop alias (aka subdomain) if the shop is live
 	 */
-	const SHOPGATE_LIVE_ALIAS = '.shopgate.com';
+	const SHOPGATE_LIVE_ALIAS = Shopgate_Helper_Redirect_SettingsManagerInterface::SHOPGATE_LIVE_ALIAS;
 	
 	/**
 	 * @var string the URL that is appended to the end of a shop alias (aka subdomain) if the shop is on spotlight
 	 */
-	const SHOPGATE_SL_ALIAS = '.shopgatesl.com';
+	const SHOPGATE_SL_ALIAS = Shopgate_Helper_Redirect_SettingsManagerInterface::SHOPGATE_SL_ALIAS;
 
 	/**
 	 * @var string the URL that is appended to the end of a shop alias (aka subdomain) if the shop is on playground
 	 */
-	const SHOPGATE_PG_ALIAS = '.shopgatepg.com';
+	const SHOPGATE_PG_ALIAS = Shopgate_Helper_Redirect_SettingsManagerInterface::SHOPGATE_PG_ALIAS;
 
 	/**
 	 * @var string name of the cookie to set in case a customer turns of mobile redirect
 	 */
-	const COOKIE_NAME = 'SHOPGATE_MOBILE_WEBPAGE';
+	const COOKIE_NAME = Shopgate_Helper_Redirect_SettingsManagerInterface::DEFAULT_DISABLE_REDIRECT_COOKIE_NAME;
 
 	/**
 	 * @var int (hours) the minimum time that can be set for updating of the cache
@@ -839,7 +839,7 @@ interface ShopgateMobileRedirectInterface {
 	/**
 	 * @var int (hours) the default time to be set for updating the cache
 	 */
-	const DEFAULT_CACHE_TIME = 24;
+	const DEFAULT_CACHE_TIME = Shopgate_Helper_Redirect_KeywordsManagerInterface::DEFAULT_CACHE_TIME;
 
 	/**
 	 * Sets the description to be displayed to the left of the button.

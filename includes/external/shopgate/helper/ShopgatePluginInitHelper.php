@@ -23,7 +23,7 @@
  */
 class ShopgatePluginInitHelper
 {
-    
+
     /**
      * check if needed shop system constants were defined
      */
@@ -33,7 +33,7 @@ class ShopgatePluginInitHelper
             define('DIR_FS_LANGUAGES', rtrim(DIR_FS_CATALOG, '/') . '/lang/');
         }
     }
-    
+
     /**
      * @param $country
      *
@@ -45,10 +45,10 @@ class ShopgatePluginInitHelper
             "SELECT * FROM `" . TABLE_COUNTRIES . "` WHERE UPPER(countries_iso_code_2) = UPPER('" . $country . "')";
         $result = xtc_db_query($qry);
         $qry    = xtc_db_fetch_array($result);
-        
+
         return !empty($qry['countries_id']) ? $qry['countries_id'] : 'DE';
     }
-    
+
     /**
      * @param $defaultLanguage
      * @param $languageId
@@ -62,7 +62,7 @@ class ShopgatePluginInitHelper
         $languageId = !empty($qry['languages_id']) ? $qry['languages_id'] : 2;
         $language   = !empty($qry['directory']) ? $qry['directory'] : 'german';
     }
-    
+
     /**
      * @param $defaultCurrency
      * @param $exchangeRate
@@ -84,7 +84,7 @@ class ShopgatePluginInitHelper
                 'thousands_point' => '.', 'decimal_places' => '2', 'value' => 1.0
             );
     }
-    
+
     /**
      * @param $isoCode
      *
@@ -95,11 +95,11 @@ class ShopgatePluginInitHelper
     {
         $isoCodeParts = explode('_', $isoCode);
         $isoCode      = isset($isoCodeParts[0]) ? $isoCodeParts[0] : $isoCode;
-        
+
         $qry        = "SELECT * FROM `" . TABLE_LANGUAGES . "` WHERE UPPER(code) = UPPER('" . $isoCode . "')";
         $result     = ShopgateWrapper::db_query($qry);
         $resultItem = ShopgateWrapper::db_fetch_array($result);
-        
+
         if (!isset($resultItem['languages_id'])) {
             throw new ShopgateLibraryException(
                 ShopgateLibraryException::UNKNOWN_ERROR_CODE, 'Invalid iso code given : ' . $isoCode
@@ -108,7 +108,7 @@ class ShopgatePluginInitHelper
             return $resultItem['languages_id'];
         }
     }
-    
+
     /**
      * @param $isoCode
      *
@@ -119,11 +119,11 @@ class ShopgatePluginInitHelper
     {
         $isoCodeParts = explode('_', $isoCode);
         $isoCode      = isset($isoCodeParts[0]) ? $isoCodeParts[0] : $isoCode;
-        
+
         $qry        = "SELECT * FROM `" . TABLE_LANGUAGES . "` WHERE UPPER(code) = UPPER('" . $isoCode . "')";
         $result     = ShopgateWrapper::db_query($qry);
         $resultItem = ShopgateWrapper::db_fetch_array($result);
-        
+
         if (!isset($resultItem['languages_id'])) {
             throw new ShopgateLibraryException(
                 ShopgateLibraryException::UNKNOWN_ERROR_CODE, 'Invalid iso code given : ' . $isoCode
@@ -131,5 +131,50 @@ class ShopgatePluginInitHelper
         } else {
             return $resultItem['directory'];
         }
+    }
+
+    /**
+     * Returns the version of the modified shop
+     *
+     * @return string
+     */
+    public function getModifiedVersion()
+    {
+        $modifiedVersion = PROJECT_VERSION;
+
+        if (defined('PROJECT_MAJOR_VERSION') && defined('PROJECT_MINOR_VERSION')) {
+            $modifiedVersion = PROJECT_MAJOR_VERSION . '.' . PROJECT_MINOR_VERSION;
+        } elseif (file_exists(DIR_FS_CATALOG . (defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/') . "includes/version.php")) {
+            $versionContent = file_get_contents(DIR_FS_CATALOG . (defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/') . "includes/version.php");
+
+            if (preg_match_all("/define\(\s*'([^']+)'\,\s*'([^']+)'\);/si", $versionContent, $resultVersion)) {
+                $resultVersion   = end($resultVersion);
+                $modifiedVersion = $this->getVersionNumber($resultVersion[0]);
+            }
+        }
+
+        return $modifiedVersion;
+    }
+    
+    /**
+     * parses the version number out of a string like
+     * 'modified eCommerce Shopssoftware v1.06 rev 4642 SP2 dated: 2014-08-12'
+     *
+     * @param string $versionString
+     *
+     * @return string
+     */
+    private function getVersionNumber($versionString)
+    {
+        $pattern = '#v([0-9]+\.[0-9]+)#';
+        if (preg_match($pattern, $versionString, $matches) && !empty($matches[1])) {
+            return $matches[1];
+        }
+        $pattern = '#^([0-9]+\.[0-9]+)(\.[0-9]+)*$#';
+        if (preg_match($pattern, $versionString, $matches) && !empty($matches[1])) {
+            return $matches[1];
+        }
+        
+        return '1.00';
     }
 }
