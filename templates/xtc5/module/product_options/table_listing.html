@@ -7,11 +7,7 @@
       {foreach name=inner key=key_data item=item_data from=$options_data.DATA}
         <tr class="{cycle values="tableListingI,tableListingII"}">
           <td>
-            {if $smarty.foreach.inner.iteration == 1}
-              <input type="radio" name="id[{$options_data.ID}]" id="rdb_{$item_data.ID}" value="{$item_data.ID}" checked="checked" />
-            {else}
-              <input type="radio" name="id[{$options_data.ID}]" id="rdb_{$item_data.ID}" value="{$item_data.ID}" />
-            {/if}
+            <input type="radio" name="id[{$options_data.ID}]" id="rdb_{$item_data.ID}" value="{$item_data.ID}"{if $item_data.CHECKED == '1'} checked="checked"{/if} />
           </td>
           <td><label for="rdb_{$item_data.ID}">{$item_data.TEXT}<br />ArtNr.: {$item_data.MODEL}</label></td>
           <td>&nbsp;</td>
