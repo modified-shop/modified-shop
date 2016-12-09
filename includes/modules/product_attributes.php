@@ -27,6 +27,15 @@ foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_
 
 if ($product->getAttributesCount() > 0) {
 
+  $attrib_checked_array = array();
+  if (strpos($_GET['products_id'], '{') !== false) {
+    $attrib_array = preg_split('/[{}]/', $_GET['products_id'], null, PREG_SPLIT_NO_EMPTY);
+    array_shift($attrib_array);
+    for ($i=0, $n=count($attrib_array); $i<$n; $i+=2) {
+      $attrib_checked_array[$attrib_array[$i]] = $attrib_array[$i + 1];
+    }
+  }
+  
   $module_smarty = new Smarty;
 
   $module_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
@@ -75,6 +84,16 @@ if ($product->getAttributesCount() > 0) {
     $col = 0;
     while ($products_options = xtc_db_fetch_array($products_options_query,true)) {
       $price = 0;
+      
+      $checked = '0';
+      if (isset($attrib_checked_array[$products_options_name['products_options_id']])) {
+        if ($products_options['products_options_values_id'] == $attrib_checked_array[$products_options_name['products_options_id']]) {
+          $checked = '1';
+        }
+      } elseif ($col == 0) {
+        $checked = '1';
+      }
+      
       if ($_SESSION['customers_status']['customers_status_show_price'] == '0') {
         $products_options_data[$row]['DATA'][$col] = array ('ID' => $products_options['products_options_values_id'],
                                                             'TEXT' => $products_options['products_options_values_name'],
@@ -84,7 +103,8 @@ if ($product->getAttributesCount() > 0) {
                                                             'PLAIN_PRICE' => '',
                                                             'STOCK' => $products_options['attributes_stock'],
                                                             'SORTORDER' => $products_options['sortorder'],
-                                                            'PREFIX' => $products_options['price_prefix']
+                                                            'PREFIX' => $products_options['price_prefix'],
+                                                            'CHECKED' => $checked,
                                                             );
       } else {
         if ($products_options['options_values_price'] != '0.00') {
@@ -116,7 +136,8 @@ if ($product->getAttributesCount() > 0) {
                                                             'PLAIN_PRICE' => $xtPrice->xtcFormat($price,false),
                                                             'STOCK' => $products_options['attributes_stock'],
                                                             'SORTORDER' => $products_options['sortorder'],
-                                                            'PREFIX' => $products_options['price_prefix']
+                                                            'PREFIX' => $products_options['price_prefix'],
+                                                            'CHECKED' => $checked,
                                                             );
 
         //if PRICE for option is 0 we don't need to display it
