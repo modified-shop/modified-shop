@@ -158,7 +158,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
     $i = 0;
     foreach ($quotes as $quote) {
       if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quote['tax'])) { 
+        if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] != 1) || !isset($quote['tax'])) { 
           $quote['tax'] = 0;
         }
         $value = '0';
