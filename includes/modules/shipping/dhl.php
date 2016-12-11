@@ -268,7 +268,7 @@
 
           $methods[] = array('id' => 'SDX',
                              'title' => 'Start Day Express Service',
-                             'cost' => $shipping_cost_5;
+                             'cost' => $shipping_cost_5);
           $n++;
         }
       }
