@@ -147,7 +147,7 @@
         } else {
           if($order->info['subtotal'] >= $dpd_cost['dpd_free_shipping_over']){
             //shipping is subsidized
-            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + MODULE_SHIPPING_DPD_HANDLING - $dpd_cost['dpd_shipping_subsidized']);
+            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + MODULE_SHIPPING_DPD_HANDLING - $dpd_cost['dpd_shipping_subsidized'];
             $shipping_dpd_method = MODULE_SHIPPING_DPD_SUBSIDIZED_SHIPPING . ' ' . MODULE_SHIPPING_DPD_TEXT_WAY . ' ' . $dest_country . ' (' . $shipping_num_boxes . ' x ' . $shipping_weight . ' ' . MODULE_SHIPPING_DPD_TEXT_UNITS . ') :';
           } else {
             //charge for shipping
