@@ -47,7 +47,7 @@ if ($admin_access['newsfeed'] == '1') {
 }
 
 // update check
-if ($admin_access['check_update'] == '1') {
+if ($admin_access['check_update'] == '1' && file_exists(DIR_FS_INC.'check_version_update.inc.php')) {
   require_once(DIR_FS_INC.'check_version_update.inc.php');
   $update_array = check_version_update();
   $box_smarty->assign('UPDATE_COUNT', $update_array['update']);
