@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: orders_edit_address.php 5338 2013-08-06 13:00:51Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -206,7 +206,7 @@ if ($_GET['edit_action']=='address') {
   </tr>
   <?php } ?>
   <tr class="dataTableRow">
-    <td class="dataTableContent" colspan="4" style="padding: 0px !important; border-bottom: 0px !important;"><br /><br /><div class="main important_info"><?php echo TEXT_CUSTOMER_GROUP_INFO;?></div></td>
+    <td class="dataTableContent" colspan="4">&nbsp;</td>
   </tr>
   <tr class="dataTableRow">
     <td class="dataTableContent">

@@ -51,7 +51,7 @@
   }
 
 
-  function calculate_tax($amount) {
+  function calculate_tax($amount, $oID) {
     global $xtPrice, $status;
 
     $price = 'b_price';
@@ -385,6 +385,18 @@
     }
   
     xtc_db_perform(TABLE_ORDERS, $sql_data_array, 'update', "orders_id = '".(int)$oID."'");
+    
+    $products_query = xtc_db_query("SELECT *,
+                                           orders_products_id as opID,
+                                           products_quantity as old_qty
+                                      FROM ".TABLE_ORDERS_PRODUCTS."
+                                     WHERE orders_id = '".(int)$oID."'");
+    if (xtc_db_num_rows($products_query) > 0) {
+      $order = new order($oID);
+      while ($products = xtc_db_fetch_array($products_query)) {
+        orders_product_edit($oID, $products);
+      }
+    }
   }
 
 
@@ -1091,7 +1103,10 @@
       }
 
       if ($module_name != 'shipping' && $module_name != 'cod_fee' && $module_tax_rate == 0) {
-        $module_tax = calculate_tax($module_value['value']);
+        $module_tax = calculate_tax($module_value['value'], $oID);
+        if ($status['customers_status_show_price_tax'] == 0) {
+          $module_tax = 0;
+        }
         $module_n_price -= $module_tax;
       }
 
