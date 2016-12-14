@@ -88,7 +88,7 @@ class checkout_express
           'content_meta_title' => '',
           'content_meta_description' => '',
           'content_meta_keywords' => '',
-          'content_delete' => '0',
+          'content_delete' => '1',
           'content_active' => '1',
           'date_added' => 'now()'
           

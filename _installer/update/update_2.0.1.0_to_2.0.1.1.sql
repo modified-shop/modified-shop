@@ -31,4 +31,12 @@ ALTER TABLE shipping_status MODIFY language_id INT(11) NOT NULL;
 ALTER TABLE categories MODIFY categories_status INT(1) NOT NULL;
 ALTER TABLE products MODIFY products_status INT(1) NOT NULL;
 
+#GTB - 2016-12-14 - delete duplicate content_group
+DELETE FROM content_manager
+USING content_manager, content_manager as Dup
+WHERE NOT content_manager.content_id = Dup.content_id
+AND content_manager.content_id > Dup.content_id
+AND content_manager.content_group = Dup.content_group
+AND content_manager.languages_id = Dup.languages_id;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
