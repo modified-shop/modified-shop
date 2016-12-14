@@ -140,8 +140,8 @@ class fcnt_moneybookers {
 		'currency'=>  $mbCurrency,
 		'detail1_description'=>  'Shop:',
 		'detail1_text'=>  STORE_NAME.' Order:'.$_SESSION['tmp_oID'],
-		 'recipient_description' => STORE_NAME,
-		 'hide_login'=>'1',
+		'recipient_description' => STORE_NAME,
+		'hide_login'=>'1',
 
 		'detail2_description'=>  'Datum:',
 		'detail2_text'=>  strftime(DATE_FORMAT_LONG),
@@ -150,8 +150,9 @@ class fcnt_moneybookers {
 		'amount2'=>  round($amount,2),
 		'payment_methods'=>$this->method,
 
-		'merchant_fields'=>  'Field1',
+		'merchant_fields'=>  'Field1,platform',
 		'Field1'=>  md5(_PAYMENT_MONEYBOOKERS_MERCHANTID),
+    'platform' => '87039772',
 
 		'firstname'=>  $order->billing['firstname'],
 		'lastname'=>  $order->billing['lastname'],

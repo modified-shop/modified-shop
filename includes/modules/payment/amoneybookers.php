@@ -259,9 +259,10 @@ class amoneybookers {
 		'amount2_description'=>  'Summe:',
 		'amount2'=>  $amount,
 
-		'merchant_fields'=>  'Field1',
+		'merchant_fields'=>  'Field1,platform',
 		'Field1'=>  md5(MODULE_PAYMENT_AMONEYBOOKERS_MERCHANTID),
-
+    'platform' => '87039772',
+    
 		'firstname'=>  $order->billing['firstname'],
 		'lastname'=>  $order->billing['lastname'],
 		'address'=>  $order->billing['street_address'],
