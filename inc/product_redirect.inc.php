@@ -21,9 +21,8 @@ function product_redirect_link($products_id = false, $current_link) {
                       'RedirectionLink' => '');
 
   if ($products_id !== false) {
-    $add_select = ((defined('PRODUCTS_CANONICAL_CAT_ID') && PRODUCTS_CANONICAL_CAT_ID) ? "p.products_canonical_cat_id," : '');
-    $check_link_query = xtDBquery("SELECT ".$add_select."
-                                          p.products_id, 
+    $order_by = ((defined('PRODUCTS_CANONICAL_CAT_ID') && PRODUCTS_CANONICAL_CAT_ID) ? "ORDER BY FIELD(p2c.categories_id, p.products_canonical_cat_id) DESC" : '');
+    $check_link_query = xtDBquery("SELECT p.products_id, 
                                           pd.products_name,
                                           p2c.categories_id
                                      FROM " . TABLE_PRODUCTS . " p
@@ -35,7 +34,8 @@ function product_redirect_link($products_id = false, $current_link) {
                                              AND trim(pd.products_name) != ''
                                     WHERE p.products_id = '" . (int)$products_id . "'
                                           " . PRODUCTS_CONDITIONS_P . "
-                                      AND p.products_status = '1'");
+                                      AND p.products_status = '1'
+                                          " . $order_by);
                     
     if (xtc_db_num_rows($check_link_query, true) > 0) {
       $link_array = array();
