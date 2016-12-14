@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -37,7 +37,7 @@ if (xtc_db_num_rows($content_query, true) > 0) {
   while ($content_data = xtc_db_fetch_array($content_query, true)) {
     
     $icon = xtc_image(DIR_WS_ICONS.'filetype/icon_link.gif');
-    $filename = ($content_data['content_link'] != '') ? '<a href="'.$content_data['content_link'].'" target="_blank">'.$content_data['content_name'].'</a>' : $content_data['content_name'];
+    $filename = ($content_data['content_link'] != '') ? '<a href="'.DIR_WS_BASE.$content_data['content_link'].'" target="_blank">'.$content_data['content_name'].'</a>' : $content_data['content_name'];
     
     $button = '';
     $filesize = '';
