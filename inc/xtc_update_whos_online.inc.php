@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_update_whos_online.inc.php 3952 2012-11-15 00:20:51Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -17,7 +17,11 @@
    ---------------------------------------------------------------------------------------*/
 
   function xtc_update_whos_online() {
-
+    
+    if (defined('MODULE_WHOS_ONLINE_STATUS') && MODULE_WHOS_ONLINE_STATUS == 'false') {
+      return;
+    }
+    
     $crawler = 0; 
     if (isset($_SESSION['customer_id'])) {
       $wo_customer_id = (int)$_SESSION['customer_id'];

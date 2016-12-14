@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: whos_online.php 3571 2012-08-30 16:27:57Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -22,6 +22,24 @@
   require (DIR_FS_CATALOG.DIR_WS_CLASSES.'main.php');
   require (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
   
+  $whosonline_status_array = array(
+    array('id' => '1','text'=> CFG_TXT_YES),
+    array('id' => '0','text'=> CFG_TXT_NO)
+  );
+  
+  if (!defined('MODULE_WHOS_ONLINE_STATUS')) {
+		xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_WHOS_ONLINE_STATUS', 'true',  '6', '0', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    define('MODULE_WHOS_ONLINE_STATUS', 'true');
+  }
+  
+  if (isset($_GET['action']) && $_GET['action'] == 'save') {
+    xtc_db_query("TRUNCATE " . TABLE_WHOS_ONLINE);
+    xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                     SET configuration_value = '".(($_POST['whos_online'] == '1') ? 'true' : 'false')."'
+                   WHERE configuration_key = 'MODULE_WHOS_ONLINE_STATUS'");
+    xtc_redirect(xtc_href_link(basename($PHP_SELF)));
+  }
+
   $main = new main();
   
   //display per page
@@ -66,6 +84,19 @@
           if (defined('WHOS_ONLINE_TIME_LAST_CLICK_INFO')) {
             echo sprintf(WHOS_ONLINE_TIME_LAST_CLICK_INFO ,$time_last_click);
           }
+          ?>
+        </div>
+        <div class="main pdg2 flt-l" style="margin:5px 0 0 128px;">
+          <?php 
+          echo xtc_draw_form('whos_online', basename($PHP_SELF), 'action=save', 'post').PHP_EOL;
+          echo '<div class="flt-l" style="margin: 10px 0 0">'.PHP_EOL;
+          echo TEXT_ACTIVATE_WHOS_ONLINE.PHP_EOL;
+          echo '<div class="flt-r" style="margin: -6px 50px 0px 5px">'.PHP_EOL;
+          echo draw_on_off_selection('whos_online', $whosonline_status_array, ((MODULE_WHOS_ONLINE_STATUS == 'true') ? true : false)).PHP_EOL;
+          echo '<input style="margin-top: -23px;" type="submit" name="go" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+          echo '</div>'.PHP_EOL;
+          echo '</div>'.PHP_EOL;
+          echo '</form>';
           ?>
         </div>
           
