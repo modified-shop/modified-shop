@@ -1092,9 +1092,9 @@ class categories {
     $add_data_fields_array = array();
     for ($i = 0, $n = sizeof($add_data_array); $i < $n; $i ++) {
       if ($language_id != '') {
-        $add_data_fields_array[$add_data_array[$i]] = xtc_db_prepare_input($data[$add_data_array[$i]][$language_id]);
+        $add_data_fields_array[$add_data_array[$i]] = xtc_db_prepare_input(implode(',', (array)$data[$add_data_array[$i]][$language_id]));
       } else {
-        $add_data_fields_array[$add_data_array[$i]] = xtc_db_prepare_input($data[$add_data_array[$i]]);
+        $add_data_fields_array[$add_data_array[$i]] = xtc_db_prepare_input(implode(',', (array)$data[$add_data_array[$i]]));
       }
     }
     return $add_data_fields_array;
