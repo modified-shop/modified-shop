@@ -737,7 +737,7 @@ define ('CHECKOUT_SHOW_PRODUCTS_MODEL_TITLE', 'Order Confirmation Page: Item no.
 define ('CHECKOUT_SHOW_PRODUCTS_MODEL_DESC', 'on the order confirmation page you want the item number will be displayed.');
 
 // Billing email attachments
-define ('EMAIL_BILLING_ATTACHMENTS_TITLE', 'Billing - e-mail attachments for orders');
+define ('EMAIL_BILLING_ATTACHMENTS_TITLE', 'Billing - E-Mail attachments for orders');
 define ('EMAIL_BILLING_ATTACHMENTS_DESC', 'Example of attachments - assumed that the files are in the shop directory <b>/media/content/</b>, separate multiple attachments with comma and no space:<br /> media/content/agb.pdf,media/content/widerruf.pdf.');
 
 // email images
@@ -1077,4 +1077,7 @@ define('GOOGLE_SHOPPING_ID_TITLE', 'Google Shopping ID');
 define('GOOGLE_SHOPPING_ID_DESC', 'Your Google shopping ID');
 define('GOOGLE_TRUSTED_ID_TITLE', 'Google Trusted ID');
 define('GOOGLE_TRUSTED_ID_DESC', 'Your Google trusted ID');
+
+define('EMAIL_ARCHIVE_ADDRESS_TITLE', 'Archive - E-Mail-Address');
+define('EMAIL_ARCHIVE_ADDRESS_DESC', 'Please enter an e-mail address for archiving all outgoing e-mails. This is used to send the e-mails to an archive mailbox via BCC.');
 ?>
