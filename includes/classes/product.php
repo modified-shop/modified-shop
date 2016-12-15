@@ -131,7 +131,7 @@ class product {
    *
    * @return string
    */
-  function getReviewsAverage($pID = '') {
+  function getReviewsAverage($pID = '', $precision = 0) {
     if ($pID == '') {
       $pID = $this->pID;
     }
@@ -141,7 +141,7 @@ class product {
                                           AND reviews_status = '1'");
     $avg_reviews = xtc_db_fetch_array($avg_reviews_query);
 
-    return round($avg_reviews['avg_rating'], 0);
+    return round($avg_reviews['avg_rating'], $precision);
   } 
 
 
@@ -187,6 +187,38 @@ class product {
       }
     }
     return $data_reviews;
+  }
+
+  /**
+   * check_purchased
+   *
+   * @return boolean
+   */
+  function check_purchased($pID = '', $customer_id = '') {
+    if ($pID == '') {
+      $pID = $this->pID;
+    }
+
+    if ($customer_id == '') {
+      $customer_id = $_SESSION['customer_id'];
+    }
+    
+    $purchased = true;
+    if (!isset($_SESSION['customer_id'])) {
+      $purchased = false;
+    } else {
+      $check_customer = xtc_db_query("SELECT op.products_id
+                                        FROM ".TABLE_ORDERS." o
+                                        JOIN ".TABLE_ORDERS_PRODUCTS." op
+                                             ON o.orders_id = op.orders_id
+                                                AND op.products_id = '".(int)$pID."'
+                                       WHERE o.customers_id = '".(int)$customer_id."'");
+      if (xtc_db_num_rows($check_customer) < 1) {
+        $purchased = false;
+      }
+    }
+    
+    return $purchased;
   }
 
   /**
