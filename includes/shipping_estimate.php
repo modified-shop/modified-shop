@@ -68,6 +68,9 @@ if (!isset($order->delivery['country']['iso_code_2']) || $order->delivery['count
 $order_total_modules = new order_total();
 $order_total_modules->collect_posts();
 $order_total_modules->pre_confirmation_check();
+if (isset($_SESSION['credit_covers'])) {
+  unset($_SESSION['credit_covers']);
+}
 
 if (MODULE_ORDER_TOTAL_INSTALLED) {
   $order_total_array = $order_total_modules->process();
