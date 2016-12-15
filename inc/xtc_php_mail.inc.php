@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_php_mail.inc.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -185,6 +185,9 @@ function xtc_php_mail($from_email_address, $from_email_name,
     foreach ($forwarding as $forwarding_address) {
       $mail->AddBCC(trim($forwarding_address));
     }
+  }
+  if (defined('EMAIL_ARCHIVE_ADDRESS') && trim(EMAIL_ARCHIVE_ADDRESS) != '') {
+    $mail->AddBCC(trim(EMAIL_ARCHIVE_ADDRESS));
   }
   $mail->AddReplyTo($reply_address, $reply_address_name);
 

@@ -152,6 +152,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'SEND_MAIL_ACCOUNT_CREATED', 'false', '12', '14', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'STATUS_EMAIL_SENT_COPY_TO_ADMIN', 'false', '12', '14', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'EMAIL_WORD_WRAP', '50', '12', '18', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'EMAIL_ARCHIVE_ADDRESS', '', '12', '40', NULL, NOW(), NULL, 'xtc_cfg_input_email_language;EMAIL_ARCHIVE_ADDRESS');";
   //$values[] = "(NULL, 'EMAIL_SIGNATURE_ID', '', '12', '19', NULL, NOW(), NULL, 'xtc_cfg_select_content(\'EMAIL_SIGNATURE_ID\',');"; // Tomcraft - 2015-09-23 - Moved to update_1.0.6.0_to_2.0.0.0.sql for dynamic update
 
   $values_update[] = array (
