@@ -186,8 +186,11 @@ function xtc_php_mail($from_email_address, $from_email_name,
       $mail->AddBCC(trim($forwarding_address));
     }
   }
-  if (defined('EMAIL_ARCHIVE_ADDRESS') && trim(EMAIL_ARCHIVE_ADDRESS) != '') {
-    $mail->AddBCC(trim(EMAIL_ARCHIVE_ADDRESS));
+  if (defined('EMAIL_ARCHIVE_ADDRESS')) {
+    $email_archive_address = parse_multi_language_value(trim(EMAIL_ARCHIVE_ADDRESS), $lang_data['code']);
+    if (trim($email_archive_address) != '') {
+      $mail->AddBCC(trim($email_archive_address));
+    }
   }
   $mail->AddReplyTo($reply_address, $reply_address_name);
 
