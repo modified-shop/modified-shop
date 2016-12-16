@@ -42,8 +42,8 @@ $order_query_check = xtc_db_query('SELECT customers_id FROM '.TABLE_ORDERS.' WHE
 $order_check = xtc_db_fetch_array($order_query_check);
 
 include (DIR_WS_CLASSES.'order.php');
-$order = new order($_GET['oID']);
-$order_id = $_GET['oID'];
+$order = new order((int)$_GET['oID']);
+$order_id = (int)$_GET['oID'];
 
 $i = 0;
 $tax_rates_query = xtc_db_query('SELECT tax_rate FROM '.TABLE_TAX_RATES.' WHERE tax_rate != "0"');
@@ -176,6 +176,13 @@ $smarty->assign('INVOICE_NUMBER', isset($order->info['ibn_billnr']) && $order->i
 $smarty->assign('INVOICE_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));
 $smarty->assign('order_data', $order_data);
 $smarty->assign('order_total', $order_total);
+
+require_once(DIR_FS_CATALOG.'includes/classes/main.php');
+$main = new main();
+
+$invoice_data = $main->getContentData(INVOICE_INFOS);
+$smarty->assign('ADDRESS_SMALL', $invoice_data['content_heading']);
+$smarty->assign('ADDRESS_LARGE', $invoice_data['content_text']);
 
 require_once (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
 require (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
