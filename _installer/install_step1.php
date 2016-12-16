@@ -136,7 +136,7 @@
                     <p><b><?php echo TEXT_DATABASE_TYPE; ?></b><br />
                     <table width="300" border="0" cellpadding="0" cellspacing="4">
                       <?php
-                      if (version_compare(phpversion(), '7', "<")) {
+                      if (function_exists('mysql_connect')) {
                       ?>
                       <tr>
                         <td width="98"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysql</td>
