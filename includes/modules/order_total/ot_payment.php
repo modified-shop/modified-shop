@@ -186,10 +186,10 @@ class ot_payment {
       ((!isset($this->discount['pro' . $j])) ? $this->discount['pro' . $j] = 0 : '');
       ((!isset($this->discount['fee' . $j])) ? $this->discount['fee' . $j] = 0 : '');
       
-      $this->discount['sum'] -= ((isset($values[$j]['discount'])) ? $values[$j]['discount'] : '');
-      $this->discount['amount' . $j] = ((isset($values[$j]['discount'])) ? -$values[$j]['discount'] : '');
-      $this->discount['pro' . $j] = ((isset($values[$j]['percent'])) ? $values[$j]['percent'] : '');
-      $this->discount['fee' . $j] = ((isset($values[$j]['fee'])) ? $values[$j]['fee'] : '');
+      $this->discount['sum'] -= ((isset($values[$j]['discount'])) ? $values[$j]['discount'] : 0);
+      $this->discount['amount' . $j] = ((isset($values[$j]['discount'])) ? -$values[$j]['discount'] : 0);
+      $this->discount['pro' . $j] = ((isset($values[$j]['percent'])) ? $values[$j]['percent'] : 0);
+      $this->discount['fee' . $j] = ((isset($values[$j]['fee'])) ? $values[$j]['fee'] : 0);
       if ($do && MODULE_ORDER_TOTAL_PAYMENT_BREAK != 'true') {
         break;
       }
