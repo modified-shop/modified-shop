@@ -112,7 +112,11 @@ class ot_payment {
     //Steuerkorrektur für Berechnung ohne Versandkosten
     if ($this->include_shipping == 'false' && $order->info['shipping_class']) {
       $shipping_modul = explode('_',$order->info['shipping_class']);
-      $shipping_tax_class = constant((($shipping_modul[0] == 'free') ? 'MODULE_ORDER_TOTAL_SHIPPING' : 'MODULE_SHIPPING_'.strtoupper($shipping_modul[0])).'_TAX_CLASS');
+      $shipping_tax_class = 0;
+      $tax_constant = (($shipping_modul[0] == 'free') ? 'MODULE_ORDER_TOTAL_SHIPPING' : 'MODULE_SHIPPING_'.strtoupper($shipping_modul[0])).'_TAX_CLASS';
+      if (defined($tax_constant)) {
+        $shipping_tax_class = constant($tax_constant);
+      }
       $shipping_tax = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] && !$_SESSION['customers_status']['customers_status_add_tax_ot']) {
         $tod_shipping = $order->info['shipping_cost'] / (100 + $shipping_tax) * $shipping_tax;
