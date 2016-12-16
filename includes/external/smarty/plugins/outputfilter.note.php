@@ -13,11 +13,15 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-# SIE SIND IM BEGRIFF ETWAS ZU ÄNDERN, WAS NICHT FAIR IST. SIE MÖCHTEN MIT
-# DIESER SOFTWARE GELD VERDIENEN ODER KUNDEN GEWINNEN. SIE HABEN NICHT STUNDEN 
-# UND MONATE VERBRACHT DIESE SOFTWARE ZU ENTWICKELN UND ZU VERBESSEREN. ALS
-# DANKESCHÖN AN DIE ENTWICKLER UND CODER LASSEN SIE DIESE DATEI, WIE SIE IST 
-# ODER KRATZEN SIE AUCH VON IHREN ELEKTROGERÄTEN IM HAUS DIE MARKENZEICHEN AB!!!!
+# Die modified eCommerce Shopsoftware ist eine freie Software, mit der zahlreiche Händler
+# und Entwickler bares Geld verdienen. 
+# Damit wir die laufende Weiterentwicklung ermöglichen können, sind wir aber ebenfalls auf
+# Unterstützung angewiesen.
+# Wenn Sie den nachfolgenden Backlink umformatieren möchten, so können Sie dies tun und / 
+# oder einen Link in Ihrem Impressum einfügen.
+# Gerne können Sie uns auch mit einer Spende unterstützen:
+# http://www.modified-shop.org/spenden.html
+# Vielen Dank für Ihre Fairness!
 
 function smarty_outputfilter_note($tpl_output, &$smarty) {
   global $PHP_SELF;
@@ -37,9 +41,13 @@ function smarty_outputfilter_note($tpl_output, &$smarty) {
   return $tpl_output.$cop;
 }
 
-# SIE SIND IM BEGRIFF ETWAS ZU ÄNDERN, WAS NICHT FAIR IST. SIE MÖCHTEN MIT
-# DIESER SOFTWARE GELD VERDIENEN ODER KUNDEN GEWINNEN. SIE HABEN NICHT STUNDEN 
-# UND MONATE VERBRACHT DIESE SOFTWARE ZU ENTWICKELN UND ZU VERBESSEREN. ALS
-# DANKESCHÖN AN DIE ENTWICKLER UND CODER LASSEN SIE DIESE DATEI, WIE SIE IST 
-# ODER KRATZEN SIE AUCH VON IHREN ELEKTROGERÄTEN IM HAUS DIE MARKENZEICHEN AB!!!!
+# Die modified eCommerce Shopsoftware ist eine freie Software, mit der zahlreiche Händler
+# und Entwickler bares Geld verdienen. 
+# Damit wir die laufende Weiterentwicklung ermöglichen können, sind wir aber ebenfalls auf
+# Unterstützung angewiesen.
+# Wenn Sie den nachfolgenden Backlink umformatieren möchten, so können Sie dies tun und / 
+# oder einen Link in Ihrem Impressum einfügen.
+# Gerne können Sie uns auch mit einer Spende unterstützen:
+# http://www.modified-shop.org/spenden.html
+# Vielen Dank für Ihre Fairness!
 ?>
