@@ -47,7 +47,7 @@ define('EXPECTED_PRODUCTS_FIELD_TITLE' , 'Expexted Products Sort Field');
 define('EXPECTED_PRODUCTS_FIELD_DESC' , 'The column to sort by in the expected products box.');
 
 define('USE_DEFAULT_LANGUAGE_CURRENCY_TITLE' , 'Switch to language specific currency');
-define('USE_DEFAULT_LANGUAGE_CURRENCY_DESC' , 'Automatically switch to language specific currency when language is changed.');
+define('USE_DEFAULT_LANGUAGE_CURRENCY_DESC' , 'Automatically switch currency to customers country if currency is available.');
 
 define('SEND_EXTRA_ORDER_EMAILS_TO_TITLE' , 'Send Copies of Order E-Mails to:');
 define('SEND_EXTRA_ORDER_EMAILS_TO_DESC' , 'Send copies of order e-mails to the following e-mail addresses, like: Name1 &lt;e-mail@address1&gt;, Name2 &lt;e-mail@address2&gt;');

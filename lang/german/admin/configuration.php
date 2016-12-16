@@ -46,7 +46,7 @@ define('EXPECTED_PRODUCTS_FIELD_TITLE' , 'Sortierfeld f&uuml;r Artikelank&uuml;n
 define('EXPECTED_PRODUCTS_FIELD_DESC' , 'Das ist die Spalte, die zum Sortieren angek&uuml;ndigter Artikel benutzt wird.');
 
 define('USE_DEFAULT_LANGUAGE_CURRENCY_TITLE' , 'Auf die Landesw&auml;hrung automatisch umstellen');
-define('USE_DEFAULT_LANGUAGE_CURRENCY_DESC' , 'Wenn die Spracheinstellung gewechselt wird, automatisch die W&auml;hrung anpassen.');
+define('USE_DEFAULT_LANGUAGE_CURRENCY_DESC' , 'Automatisch auf die Landesw&auml;hrung des Kunden umstellen sofern verf&uuml;gbar.');
 
 define('SEND_EXTRA_ORDER_EMAILS_TO_TITLE' , 'Senden einer extra Bestell-E-Mail an:');
 define('SEND_EXTRA_ORDER_EMAILS_TO_DESC' , 'Wenn zus&auml;tzlich eine Kopie des Bestell-E-Mails versendet werden soll, bitte in dieser Weise die Empfangs-Adressen auflisten: Name 1 &lt;E-Mail@adresse1&gt;, Name 2 &lt;E-Mail@adresse2&gt;');
