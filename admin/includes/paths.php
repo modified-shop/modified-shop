@@ -75,4 +75,7 @@
   // external
   define('DIR_WS_EXTERNAL', DIR_WS_CATALOG . 'includes/external/');
   define('DIR_FS_EXTERNAL', DIR_FS_CATALOG . 'includes/external/');
+
+  // extra paths
+  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/paths/','php') as $file) require_once ($file);
 ?>
