@@ -140,19 +140,22 @@ class ot_payment {
       } else {
         $string = $this->percentage[$j];
       }
+      
       $discount_table = (preg_split("/[:,]/" , $string));
-      for ($i=0; $i<sizeof($discount_table); $i+=2) {
-        $discount_table[$i] = $xtPrice->xtcCalculateCurr($discount_table[$i]);
-        if (round($this->amount, 2) >= $discount_table[$i]) {
-          $values[$j]['minimum'] = $discount_table[$i];
-          $fees = preg_split('/&/', $discount_table[$i+1]);
-          $values[$j]['percent'] = ((isset($fees[0])) ? $fees[0] : '');
-          $values[$j]['fee'] = ((isset($fees[1]) && $fees[1] != '') ? $xtPrice->xtcCalculateCurr($fees[1]) : 0);
-        } else {
-          break;
+      if (count($discount_table) % 2 == 0) {
+        for ($i=0; $i<sizeof($discount_table); $i+=2) {
+          $discount_table[$i] = $xtPrice->xtcCalculateCurr($discount_table[$i]);
+          if (round($this->amount, 2) >= $discount_table[$i]) {
+            $values[$j]['minimum'] = $discount_table[$i];
+            $fees = preg_split('/&/', $discount_table[$i+1]);
+            $values[$j]['percent'] = ((isset($fees[0])) ? $fees[0] : '');
+            $values[$j]['fee'] = ((isset($fees[1]) && $fees[1] != '') ? $xtPrice->xtcCalculateCurr($fees[1]) : 0);
+          } else {
+            break;
+          }
         }
       }
-
+      
       if (isset($values[$j]['minimum']) && round($this->amount, 2) >= $values[$j]['minimum']) {
         $od_amount = 0;
         $tod_amount = 0;
