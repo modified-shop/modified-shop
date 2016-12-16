@@ -216,7 +216,8 @@ class ot_coupon {
           $pr_c = 0; //web28- 2010-05-21 - FIX - restrict  max coupon amount
 
           //allowed products
-          if ($coupon_array['restrict_to_products']) {
+          $coupon_array['restrict_to_products'] = preg_replace("'[\r\n\s]+'", '', $coupon_array['restrict_to_products']);
+          if (trim($coupon_array['restrict_to_products']) != '') {
             $pr_ids = explode(",", $coupon_array['restrict_to_products']);
             for ($i = 0, $n = sizeof($order->products); $i < $n; ++$i) {
               for ($ii = 0, $nn = count($pr_ids); $ii < $nn; $ii ++) {
@@ -237,7 +238,8 @@ class ot_coupon {
 
           //allowed categories
           $_c_products_ids = array();
-          if ($coupon_array['restrict_to_categories']) {
+          $coupon_array['restrict_to_categories'] = preg_replace("'[\r\n\s]+'", '', $coupon_array['restrict_to_categories']);
+          if (trim($coupon_array['restrict_to_categories']) != '') {
             $cat_ids = explode(",", $coupon_array['restrict_to_categories']);
             for ($i = 0, $n = sizeof($order->products); $i < $n; ++$i) {
               // web28 - 2010-06-19 - test for product_id to prevent double counting
