@@ -1,7 +1,7 @@
 <?php
 
 /* -----------------------------------------------------------------------------------------
-   $Id: popup_coupon_help.php 1313 2005-10-18 15:49:15Z mz $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -57,33 +57,37 @@ $text_coupon_help .= '<strong>'.TEXT_COUPON_HELP_RESTRICT.'</strong>';
 
 $text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_CATEGORIES;
 $cats = '<br />---';
-$cat_ids = explode(",", $coupon['restrict_to_categories']);
-$categories_query = xtc_db_query("SELECT categories_name
-                                    FROM ".TABLE_CATEGORIES_DESCRIPTION."
-                                   WHERE categories_id IN ('" . implode("', '", $cat_ids) . "')
-                                     AND language_id = '".(int)$_SESSION['languages_id']."'
-                                     AND trim(categories_name) != ''");
-if (xtc_db_num_rows($categories_query) > 0) {
-  $cats = '';
-  while ($categories = xtc_db_fetch_array($categories_query)) {
-    $cats .= '<br />'.$row["categories_name"];
-  }
+if (trim($coupon['restrict_to_categories'])) {
+    $cat_ids = explode(",", $coupon['restrict_to_categories']);
+    $categories_query = xtc_db_query("SELECT categories_name
+                                        FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                       WHERE categories_id IN ('" . implode("', '", $cat_ids) . "')
+                                         AND language_id = '".(int)$_SESSION['languages_id']."'
+                                         AND trim(categories_name) != ''");
+    if (xtc_db_num_rows($categories_query) > 0) {
+      $cats = '';
+      while ($categories = xtc_db_fetch_array($categories_query)) {
+        $cats .= '<br />'.$row["categories_name"];
+      }
+    }
 }
 $text_coupon_help .= $cats;
 
 $text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_PRODUCTS;
 $prods = '<br />---';
-$pr_ids = explode(",", $coupon['restrict_to_products']); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
-$products_query = xtc_db_query("SELECT products_name
-                                  FROM ".TABLE_PRODUCTS_DESCRIPTION."
-                                 WHERE products_id IN ('" . implode("', '", $pr_ids) . "')
-                                   AND language_id = '".(int)$_SESSION['languages_id']."'
-                                   AND trim(products_name) != ''");
-if (xtc_db_num_rows($products_query) > 0) {
-  $prods = '';
-	if ($products = xtc_db_fetch_array($products_query)) {
-		$prods .= '<br />'.$products["products_name"];
-	}
+if (trim($coupon['restrict_to_products'])) {
+    $pr_ids = explode(",", $coupon['restrict_to_products']); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
+    $products_query = xtc_db_query("SELECT products_name
+                                      FROM ".TABLE_PRODUCTS_DESCRIPTION."
+                                     WHERE products_id IN ('" . implode("', '", $pr_ids) . "')
+                                       AND language_id = '".(int)$_SESSION['languages_id']."'
+                                       AND trim(products_name) != ''");
+    if (xtc_db_num_rows($products_query) > 0) {
+      $prods = '';
+      if ($products = xtc_db_fetch_array($products_query)) {
+        $prods .= '<br />'.$products["products_name"];
+      }
+    }
 }
 $text_coupon_help .= $prods;
 
