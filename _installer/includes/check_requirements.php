@@ -11,8 +11,8 @@
    --------------------------------------------------------------*/
 
   define('SSL_VERSION_MIN', '1.2');
-  define('PHP_VERSION_MIN', '5.3.0');
-  define('PHP_VERSION_MAX', '5.6.99');
+  define('PHP_VERSION_MIN', '5.4.0');
+  define('PHP_VERSION_MAX', '7.1.99');
 
   //BOF *************  check PHP-Version *************
   //BOF - Dokuman - 2012-11-19: remove irritating PHP-Version message
