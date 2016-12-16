@@ -181,10 +181,10 @@ class ot_payment {
           $values[$j]['discount'] = $this->get_discount($this->amount, $values[$j]['percent']) + $values[$j]['fee'];
         }
       }
-      ((!isset($this->discount['sum'])) ? $this->discount['sum'] = '' : '');
-      ((!isset($this->discount['amount' . $j])) ? $this->discount['amount' . $j] = '' : '');
-      ((!isset($this->discount['pro' . $j])) ? $this->discount['pro' . $j] = '' : '');
-      ((!isset($this->discount['fee' . $j])) ? $this->discount['fee' . $j] = '' : '');
+      ((!isset($this->discount['sum'])) ? $this->discount['sum'] = 0 : '');
+      ((!isset($this->discount['amount' . $j])) ? $this->discount['amount' . $j] = 0 : '');
+      ((!isset($this->discount['pro' . $j])) ? $this->discount['pro' . $j] = 0 : '');
+      ((!isset($this->discount['fee' . $j])) ? $this->discount['fee' . $j] = 0 : '');
       
       $this->discount['sum'] -= ((isset($values[$j]['discount'])) ? $values[$j]['discount'] : '');
       $this->discount['amount' . $j] = ((isset($values[$j]['discount'])) ? -$values[$j]['discount'] : '');
@@ -264,9 +264,8 @@ class ot_payment {
 
   function get_discount($value, $percent) {
     global $xtPrice;
-    // return round($value * 100) / 100 * $percent / 100;
-    //return $god_amount = $value * $percent / 100;
-    return $xtPrice->xtcFormat($value * $percent / 100, false);
+
+    return $xtPrice->xtcFormat($value * (double)$percent / 100, false);
   }
   
   function get_module_cost($payment_modul) {
