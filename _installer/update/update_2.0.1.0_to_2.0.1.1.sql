@@ -39,4 +39,10 @@ AND content_manager.content_id > Dup.content_id
 AND content_manager.content_group = Dup.content_group
 AND content_manager.languages_id = Dup.languages_id;
 
+#GTB - 2016-12-16 - increase field length
+ALTER TABLE address_book MODIFY entry_state VARCHAR(64);
+ALTER TABLE orders MODIFY customers_state VARCHAR(64);
+ALTER TABLE orders MODIFY delivery_state VARCHAR(64);
+ALTER TABLE orders MODIFY billing_state VARCHAR(64);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
