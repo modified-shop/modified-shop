@@ -39,6 +39,7 @@
     return array(
       'update' => $update_recomended,
       'version' => $check_version,
+      'version_installed' => $version,
     );
   }
 ?>
