@@ -135,12 +135,18 @@
                   <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
                     <p><b><?php echo TEXT_DATABASE_TYPE; ?></b><br />
                     <table width="300" border="0" cellpadding="0" cellspacing="4">
+                      <?php
+                      if (version_compare(phpversion(), '7', "<")) {
+                      ?>
                       <tr>
                         <td width="98"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysql</td>
                         <td width="192">
                           <?php echo xtc_draw_radio_field_installer('DB_MYSQL_TYPE', 'mysql', false); ?>
                         </td>
                       </tr>
+                      <?php
+                      }
+                      ?>
                       <tr>
                         <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysqli</td>
                         <td>
