@@ -8082,9 +8082,9 @@ class nusoap_client extends nusoap_base
                     $paramArrayStr = '';
                     $paramCommentStr = '';
                     foreach ($opData['input']['parts'] as $name => $type) {
-                        $paramStr .= "\$$name, ";
-                        $paramArrayStr .= "'$name' => \$$name, ";
-                        $paramCommentStr .= "$type \$$name, ";
+                        $paramStr .= "\${$name}, ";
+                        $paramArrayStr .= "'$name' => \${$name}, ";
+                        $paramCommentStr .= "$type \${$name}, ";
                     }
                     $paramStr = substr($paramStr, 0, strlen($paramStr) - 2);
                     $paramArrayStr = substr($paramArrayStr, 0, strlen($paramArrayStr) - 2);
