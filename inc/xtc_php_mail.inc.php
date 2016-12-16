@@ -205,7 +205,9 @@ function xtc_php_mail($from_email_address, $from_email_name,
 
   if (!$mail->Send()) {
     trigger_error('Mailer Error - '.$mail->ErrorInfo, E_USER_WARNING);
+    return false;
   }
+  return true;
 }
 
 function attachments_array($path_to_attachments,$path_to_more_attachments)
