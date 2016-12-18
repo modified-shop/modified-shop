@@ -69,7 +69,7 @@ if (trim($coupon['restrict_to_categories'])) {
   if (xtc_db_num_rows($categories_query) > 0) {
     $cats = '';
     while ($categories = xtc_db_fetch_array($categories_query)) {
-      $cats .= '<br />'.$row["categories_name"];
+      $cats .= '<br />'.$categories["categories_name"];
     }
   }
 }
@@ -87,7 +87,7 @@ if (trim($coupon['restrict_to_products'])) {
                                      AND trim(products_name) != ''");
   if (xtc_db_num_rows($products_query) > 0) {
     $prods = '';
-    if ($products = xtc_db_fetch_array($products_query)) {
+    while ($products = xtc_db_fetch_array($products_query)) {
       $prods .= '<br />'.$products["products_name"];
     }
   }
