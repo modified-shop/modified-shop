@@ -45,4 +45,31 @@
 
     return $get_url;
   }
+  
+  
+  function xtc_get_all_get_params_include($include_array = '') {
+
+    if (!is_array($include_array)) $include_array = array();
+    
+    $get_url = '';
+    if (is_array($_GET) && (sizeof($_GET) > 0)) {
+      reset($_GET);
+      while (list($key, $value) = each($_GET)) {        
+        if ((is_array($value) || (!is_array($value) && strlen($value) > 0))
+            && (in_array($key, $include_array)) 
+            ) 
+        {
+          if (!is_array($value)) {
+            $get_url .= rawurlencode(stripslashes($key)) . '=' . rawurlencode(stripslashes($value)) . '&';
+          } else {
+            foreach ($value as $k => $v) {
+              $get_url .= rawurlencode(stripslashes($key.'['.$k.']')) . '=' . rawurlencode(stripslashes($v)) . '&';
+            }
+          }
+        }
+      }
+    }
+
+    return $get_url;
+  }
 ?>
