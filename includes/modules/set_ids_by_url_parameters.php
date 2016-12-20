@@ -17,6 +17,7 @@ if (isset($_GET['info'])) {
   $_GET['products_id'] = xtc_input_validation(str_replace('p', '', $pID), 'products_id', '');
   $actual_products_id = (int) $_GET['products_id'];
   $product = new product($actual_products_id);
+  unset($_GET['info']);
 } elseif (isset($_GET['products_id'])) {
   $_GET['products_id'] = xtc_input_validation($_GET['products_id'], 'products_id', '');
   $actual_products_id = (int) $_GET['products_id'];
@@ -29,6 +30,7 @@ if (isset($_GET['cat'])) {
   $cID = $site[0];
   $cID = str_replace('c', '', $cID);
   $_GET['cPath'] = xtc_get_category_path($cID);
+  unset($_GET['cat']);
 }
 
 // manufacturer URLS
@@ -42,6 +44,7 @@ if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '') {
   $mID = $site[0];
   $mID = (int)str_replace('m', '', $mID);
   $_GET['manufacturers_id'] = $mID;
+  unset($_GET['manu']);
   $_GET['manufacturers_id'] = manufacturer_redirect($_GET['manufacturers_id']);
 }
 
