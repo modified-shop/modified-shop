@@ -18,7 +18,6 @@ ini_set('error_reporting', E_ERROR);
 ini_set('display_errors', '1');
 
 require_once dirname(__FILE__) . '/../../includes/configure.php';
-include_once dirname(__FILE__) . '/../../inc/xtc_db_query.inc.php';
 include_once dirname(__FILE__) . '/../../includes/database_tables.php';
 include_once dirname(__FILE__) . '/application_idealo.php';
 include_once dirname(__FILE__) . '/export_functions_idealo.php';
