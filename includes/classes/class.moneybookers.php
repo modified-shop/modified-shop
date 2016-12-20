@@ -288,7 +288,7 @@ class fcnt_moneybookers {
 		//BOF - Hetfield - 2010-01-28 - replace mysql_list_tables with query SHOW TABLES -> PHP5.3 deprecated
 		//$tables = mysql_list_tables(DB_DATABASE);
 		$tables = xtc_db_query("SHOW TABLES LIKE 'payment_moneybookers'");			
-		while ($checktables = mysql_fetch_array($tables, MYSQL_NUM)) {
+		while ($checktables = xtc_db_fetch_array($tables, MYSQL_NUM)) {
 			if ($checktables[0] == 'payment_moneybookers')  $mb_installed=true;
 		}
 		//EOF - Hetfield - 2010-01-28 - replace mysql_list_tables with query SHOW TABLES -> PHP5.3 deprecated

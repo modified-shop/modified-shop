@@ -73,12 +73,12 @@ class amoneybookers {
 		if ($this->enabled) {
 
 			$result = xtc_db_query("SELECT mb_currID FROM payment_AMONEYBOOKERS_currencies");
-			while (list ($currID) = mysql_fetch_row($result)) {
+			while (list ($currID) = xtc_db_fetch_row($result)) {
 				$this->mbCurrencies[] = $currID;
 			}
 
 			$result = xtc_db_query("SELECT code FROM currencies");
-			while (list ($currID) = mysql_fetch_row($result)) {
+			while (list ($currID) = xtc_db_fetch_row($result)) {
 				$this->aCurrencies[] = $currID;
 			}
 
@@ -209,7 +209,7 @@ class amoneybookers {
 		global $order, $xtPrice,$insert_id;
 
 		$result = xtc_db_query("SELECT code FROM languages WHERE languages_id = '" . (int)$_SESSION['languages_id'] . "'");
-		list ($lang_code) = mysql_fetch_row($result);
+		list ($lang_code) = xtc_db_fetch_row($result);
 		$mbLanguage = strtoupper($lang_code);
 		if ($mbLanguage == "US") {
 			$mbLanguage = "EN";
@@ -224,7 +224,7 @@ class amoneybookers {
 		}
 
 		$result = xtc_db_query("SELECT mb_cID FROM payment_AMONEYBOOKERS_countries, countries WHERE (xtc_cID = countries_id) AND (countries_id = '{$order->billing['country']['id']}')");
-		list ($mbCountry) = mysql_fetch_row($result);
+		list ($mbCountry) = xtc_db_fetch_row($result);
 
 		$this->transaction_id = $this->generate_trid();
 		$result = xtc_db_query("INSERT INTO payment_moneybookers (mb_TRID, mb_DATE) VALUES ('{$this->transaction_id}', NOW())");
@@ -591,12 +591,12 @@ class amoneybookers {
 		xtc_db_query("INSERT INTO payment_AMONEYBOOKERS_currencies VALUES ('ZAR', 'South-African Rand')");
 
 		$result = xtc_db_query("SELECT mb_currID FROM payment_AMONEYBOOKERS_currencies");
-			while (list ($currID) = mysql_fetch_row($result)) {
+			while (list ($currID) = xtc_db_fetch_row($result)) {
 				$this->mbCurrencies[] = $currID;
 			}
 
 			$result = xtc_db_query("SELECT code FROM currencies");
-			while (list ($currID) = mysql_fetch_row($result)) {
+			while (list ($currID) = xtc_db_fetch_row($result)) {
 				$this->aCurrencies[] = $currID;
 			}
 			
@@ -612,7 +612,7 @@ class amoneybookers {
 			//BOF - Hetfield - 2010-01-28 - replace mysql_list_tables with query SHOW TABLES -> PHP5.3 deprecated
 			//$tables = mysql_list_tables(DB_DATABASE);
 			$tables = xtc_db_query("SHOW TABLES LIKE 'payment_moneybookers'");			
-			while ($checktables = mysql_fetch_array($tables, MYSQL_NUM)) {
+			while ($checktables = xtc_db_fetch_array($tables, MYSQL_NUM)) {
 				if ($checktables[0] == 'payment_moneybookers')  $mb_installed=true;
 			}
 			//EOF - Hetfield - 2010-01-28 - replace mysql_list_tables with query SHOW TABLES -> PHP5.3 deprecated
