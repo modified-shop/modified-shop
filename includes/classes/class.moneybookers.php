@@ -193,7 +193,7 @@ class fcnt_moneybookers {
 	}
 	
 	function payment_action() {
-		xtc_redirect(xtc_href_link('checkout_payment_iframe.php', '', 'SSL'));
+		xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT_IFRAME, '', 'SSL'));
 	}
 
 

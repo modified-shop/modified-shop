@@ -46,6 +46,7 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
                      FILENAME_CONTENT,
                      FILENAME_REVIEWS,
                      FILENAME_WISHLIST,
+                     FILENAME_CHECKOUT_PAYMENT_IFRAME,
                      );
 
 // -----------------------------------------------------------------------------------------
