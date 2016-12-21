@@ -250,7 +250,7 @@ class fcnt_moneybookers {
 			$trid = xtc_create_random_value(16, "digits");
 			$trid =  chr(88).chr(84).chr(67) . $trid;
 			$result = xtc_db_query("SELECT mb_TRID FROM payment_moneybookers WHERE mb_TRID = '".$trid."'");
-		} while (mysql_num_rows($result));
+		} while (xtc_db_num_rows($result));
 
 		return $trid;
 

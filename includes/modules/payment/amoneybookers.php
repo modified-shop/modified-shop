@@ -695,7 +695,7 @@ class amoneybookers {
 			$trid = xtc_create_random_value(16, "digits");
 			$trid = 'XTC' . $trid;
 			$result = xtc_db_query("SELECT mb_TRID FROM payment_moneybookers WHERE mb_TRID = '".$trid."'");
-		} while (mysql_num_rows($result));
+		} while (xtc_db_num_rows($result));
 
 		return $trid;
 
