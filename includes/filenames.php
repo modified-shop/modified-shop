@@ -89,6 +89,7 @@ define('FILENAME_BANNER', 'banners.php');
 define('FILENAME_FINDOLOGIC', 'findologic.php');
 define('FILENAME_WISHLIST', 'wishlist.php');
 define('FILENAME_ACCOUNT_CHECKOUT_EXPRESS', 'account_checkout_express.php');
+define('FILENAME_CHECKOUT_PAYMENT_IFRAME', 'checkout_payment_iframe.php');
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/filenames/','php') as $file) require ($file);
