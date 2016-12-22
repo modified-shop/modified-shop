@@ -242,7 +242,8 @@ class product {
     if ($pID == '') {
       $pID = $this->pID;
     }
-
+    
+    $check_array = array();
 		$module_content = array ();
     		
     $orders_query = "SELECT orders_id 
@@ -266,7 +267,10 @@ class product {
                        GROUP BY p.products_id";
       $products_query = xtDBquery($products_query);
       while ($products = xtc_db_fetch_array($products_query, true)) {
-        $module_content[] = $this->buildDataArray($products);
+        if (!in_array($products['products_id'], $check_array)) {
+          $module_content[] = $this->buildDataArray($products);
+          $check_array[] = $products['products_id'];
+        }
         if (count($module_content) >= MAX_DISPLAY_ALSO_PURCHASED) {
           break 2;
         }
