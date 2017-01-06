@@ -256,7 +256,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $item = array();
       $item[0] = new Item(); 
       $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
-              ->setCurrency($order->info['currency']) 
+              ->setCurrency($_SESSION['currency']) 
               ->setQuantity(1) 
               ->setPrice($this->details->getSubtotal()); 
     
