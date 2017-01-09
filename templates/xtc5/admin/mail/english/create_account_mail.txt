@@ -1,6 +1,6 @@
 
 
-Dear {$GENDER} {$LASTNAME},
+{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},
 
 we just created your customer account.
 

@@ -7,7 +7,7 @@
   <tr> 
     <td>
       <font size="2" face="Verdana, Arial, Helvetica, sans-serif">
-        <strong>Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER} {$LASTNAME},</strong>
+        <strong>{if $GENDER == 'm'}Sehr geehrter Herr{elseif $GENDER == 'f'}Sehr geehrte Frau{else}Hallo{/if} {$NAME},</strong>
       </font>
       <font size="2" face="Verdana, Arial, Helvetica, sans-serif">
         <br />

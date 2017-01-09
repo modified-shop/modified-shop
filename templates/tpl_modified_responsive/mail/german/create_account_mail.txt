@@ -1,4 +1,4 @@
-Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER} {$LASTNAME},
+{if $GENDER != ''}Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER}{else}Hallo{/if} {$NAME},
 
 Sie haben soeben Ihr Kundenkonto erfolgreich erstellt.
 

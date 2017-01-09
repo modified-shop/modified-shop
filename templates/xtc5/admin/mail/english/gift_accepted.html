@@ -8,7 +8,7 @@
     <td>
       <font size="1" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; </font>
       <font size="2" face="Verdana, Arial, Helvetica, sans-serif">
-        <strong>Dear {$GENDER} {$LASTNAME},</strong>
+        <strong>{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},</strong>
       </font>
       <br />
       <br />
