@@ -46,7 +46,7 @@
       if (xtc_db_num_rows($value_query) == 1) {
         $value = xtc_db_fetch_array($value_query);
 
-        if (isset($value['value']) && $value['value']!='') {
+        if (isset($value['value']) && $value['value'] != '') {
           return base64_decode($value['value']);
         }
       }
@@ -103,7 +103,7 @@
       }
       xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < '" . time() . "'");
       
-      return true;
+      return xtc_db_affected_rows();
     }
 
     session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
