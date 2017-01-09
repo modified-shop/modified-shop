@@ -49,7 +49,7 @@
       if ($gv_resulta=xtc_db_fetch_array($gv_query)) {
       $gv_amount = $gv_resulta['amount'];
       //Let's build a message object using the email class
-      $mail_query = xtc_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_id = '" . $gv_resulta['customer_id'] . "'");
+      $mail_query = xtc_db_query("select customers_gender, customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_id = '" . $gv_resulta['customer_id'] . "'");
       $mail = xtc_db_fetch_array($mail_query);
 
 
@@ -66,6 +66,10 @@
       $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 
       $smarty->assign('AMMOUNT',$currencies->format($gv_amount));
+      $smarty->assign('NAME', $mail['customers_firstname'].' '.$mail['customers_lastname']);
+      $smarty->assign('GENDER', $mail['customers_gender']);
+      $smarty->assign('FIRSTNAME', $mail['customers_firstname']);
+      $smarty->assign('LASTNAME', $mail['customers_lastname']);
 
       $html_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/gift_accepted.html');
       $txt_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/gift_accepted.txt');

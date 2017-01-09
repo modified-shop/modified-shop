@@ -3,7 +3,7 @@
     <td style="border-bottom: 1px solid; border-color: #cccccc;"><div align="right"><img src="{$logo_path}logo.gif" /></div></td>
   </tr>
   <tr>
-    <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER} {$LASTNAME},</strong></font> <br />
+    <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>{if $GENDER != ''}Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER}{else}Hallo{/if} {$NAME},</strong></font> <br />
       <br />
       <font size="2" face="Verdana, Arial, Helvetica, sans-serif">Sie haben soeben Ihr Kundenkonto erfolgreich erstellt.<br /><br />Als registrierter Kunde haben Sie folgende Vorteile in unserem Shop:</font><br />
       <br />

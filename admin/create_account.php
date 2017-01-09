@@ -305,6 +305,7 @@
       if (($customers_send_mail == 'yes')) {
 
         $smarty->assign('GENDER', ($customers_gender == 'f' ? FEMALE : ($customers_gender == 'm' ? MALE : '')));
+        $smarty->assign('FIRSTNAME',$customers_firstname);
         $smarty->assign('LASTNAME',$customers_lastname);
         // assign language to template for caching
         $smarty->assign('language', $_SESSION['language']);
@@ -314,7 +315,7 @@
         $smarty->config_dir = DIR_FS_CATALOG.'lang';
         $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
         $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-        $smarty->assign('NAME', $customers_lastname.' '.$customers_firstname);
+        $smarty->assign('NAME', $customers_firstname.' '.$customers_lastname);
         $smarty->assign('EMAIL', $customers_email_address);
         $smarty->assign('COMMENTS', $customers_mail_comments);
         $smarty->assign('PASSWORD', $customers_password_encrypted);

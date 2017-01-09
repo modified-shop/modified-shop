@@ -11,7 +11,7 @@
 	<tr> 
 		<td>
         <br />
-        <font size="2" face="Tahoma, Verdana, sans-serif"><b>Dear {$GENDER} {$LASTNAME},</b>
+        <font size="2" face="Tahoma, Verdana, sans-serif"><b>{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},</b>
         <br /><br />
         The voucher code you purchased has been activated!
         <br /><br />
