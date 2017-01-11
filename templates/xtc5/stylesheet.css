@@ -1547,6 +1547,7 @@ ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
 .popup-cont {
 font-family:Arial, Helvetica, sans-serif;
 background:#fff;
+margin:0px;
 }
 
 /* styles for boxes */
