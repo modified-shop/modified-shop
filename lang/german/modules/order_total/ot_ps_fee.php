@@ -31,6 +31,8 @@
   function define_shipping_titles_ps() {
     $module_keys = str_replace('.php','',MODULE_SHIPPING_INSTALLED);
     $installed_shipping_modules = explode(';',$module_keys);
+    //support for ot_shipping
+    $installed_shipping_modules[] = 'free';
 
     if (count($installed_shipping_modules) > 0) {
       foreach($installed_shipping_modules as $shipping_code) {
@@ -43,6 +45,9 @@
           include_once(DIR_FS_LANGUAGES . 'german/modules/' . $module_type . '/' . $file);
           $title = constant('MODULE_SHIPPING_'.$shipping_code.'_TEXT_TITLE');
         }
+        //support for ot_shipping
+        $title = $shipping_code == 'FREE' ? 'Versandkostenfrei (Zusammenfassung Modul ot_shipping)' : $title;
+        
         $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
 
         define('MODULE_ORDER_TOTAL_PS_'.$shipping_code.'_TITLE',$title);

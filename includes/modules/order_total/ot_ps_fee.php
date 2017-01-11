@@ -192,6 +192,8 @@
     function get_installed_shipping_modules() {
       $module_keys = str_replace('.php','',MODULE_SHIPPING_INSTALLED);
       $installed_shipping_modules = explode(';',$module_keys);
+      //support for ot_shipping
+      $installed_shipping_modules[] = 'free';
       return $installed_shipping_modules;    
     }
 
