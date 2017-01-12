@@ -25,11 +25,11 @@ class path {
         if (substr($path, 0, 1) == "/") return $path;
         $dir = @getcwd();
 
-        if (!isset($_SERVER['DOCUMENT_ROOT']) || ($dir === false))
+        if (!defined('DIR_FS_DOCUMENT_ROOT') || ($dir === false))
             return false;
 
         $dir = self::normalize($dir);
-        $doc_root = self::normalize(realpath($_SERVER['DOCUMENT_ROOT']));
+        $doc_root = self::normalize(realpath(DIR_FS_DOCUMENT_ROOT));
 
         if (substr($dir, 0, strlen($doc_root)) != $doc_root)
             return false;
@@ -61,8 +61,8 @@ class path {
             $url = dirname($uri) . "/$url";
         }
 
-        if (isset($_SERVER['DOCUMENT_ROOT'])) {
-            return self::normalize(realpath($_SERVER['DOCUMENT_ROOT']) . "/$url");
+        if (defined('DIR_FS_DOCUMENT_ROOT')) {
+            return self::normalize(realpath(DIR_FS_DOCUMENT_ROOT) . "/$url");
 
         } else {
             if ($uri === false) return false;
