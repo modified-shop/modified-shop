@@ -86,7 +86,7 @@
       $products_id = orders_product_option_insert($_POST['oID'], $_POST);
       xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=options&oID='.(int)$_POST['oID'].'&pID='.(int)$products_id.'&opID='.(int)$_POST['opID']));
       break;
-    case 'product_option_edit':
+    case 'product_option_delete':
       $products_id = orders_product_option_delete($_POST['oID'], $_POST);
       xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=options&oID='.(int)$_POST['oID'].'&pID='.(int)$products_id.'&opID='.(int)$_POST['opID']));
       break;
