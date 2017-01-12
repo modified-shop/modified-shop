@@ -57,7 +57,8 @@ define('MODULE_PAYMENT_AMONEYBOOKERS_ICONS_TITLE', 'Icons');
 define('MODULE_PAYMENT_AMONEYBOOKERS_ICONS_DESC', '');
 
 define('MODULE_PAYMENT_AMONEYBOOKERS_STATUS_TITLE', 'Enable Skrill');
-define('MODULE_PAYMENT_AMONEYBOOKERS_STATUS_DESC', 'Do you want to accept payments through Skrill?<br /><br /><img src="images/icon_arrow_right.gif"> <b><a href="http://www.xt-commerce.com/index.php?option=com_content&task=view&id=76&lang=en" target="_blank">Help / Explanation</a></b>');
+//define('MODULE_PAYMENT_AMONEYBOOKERS_STATUS_DESC', 'Do you want to accept payments through Skrill?<br /><br /><img src="images/icon_arrow_right.gif"> <b><a href="http://www.xt-commerce.com/index.php?option=com_content&task=view&id=76&lang=en" target="_blank">Help / Explanation</a></b>');
+define('MODULE_PAYMENT_AMONEYBOOKERS_STATUS_DESC', 'Do you want to accept payments through Skrill?');
 define('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID_TITLE', 'Email Address');
 define('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID_DESC', 'Email address you have registered with Skrill. <font color="#ff0000">* Required</font>');
 define('MODULE_PAYMENT_AMONEYBOOKERS_PWD_TITLE', 'Skrill Secret Word');
