@@ -179,7 +179,7 @@ class uploader {
         } elseif ($this->config['uploadURL'] == "/") {
             $this->config['uploadDir'] = strlen($this->config['uploadDir'])
                 ? path::normalize($this->config['uploadDir'])
-                : path::normalize(realpath($_SERVER['DOCUMENT_ROOT']));
+                : path::normalize(realpath(DIR_FS_DOCUMENT_ROOT));
             $this->typeDir = "{$this->config['uploadDir']}/{$this->type}";
             $this->typeURL = "/{$this->type}";
 
