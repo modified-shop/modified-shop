@@ -32,6 +32,7 @@ class paypalcart extends PayPalPayment {
 
 
   function selection() {
+    unset($_SESSION['paypal']);
     xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
   }
   
@@ -39,6 +40,13 @@ class paypalcart extends PayPalPayment {
   function pre_confirmation_check() {
     global $order, $smarty, $total_weight, $total_count, $free_shipping;
 
+    $free_shipping = false;
+    require_once (DIR_WS_MODULES.'order_total/ot_shipping.php');
+    include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
+    $this->ot_shipping = new ot_shipping;
+    $this->ot_shipping->process();
+    $this->free_shipping = $free_shipping;
+    
     // process the selected shipping method
     if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       if ((isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_'))) {
@@ -56,16 +64,14 @@ class paypalcart extends PayPalPayment {
       // load all enabled shipping modules
       require_once (DIR_WS_CLASSES.'shipping.php');
       $shipping_modules = new shipping;
-
-      $free_shipping = false;
-      require_once (DIR_WS_MODULES.'order_total/ot_shipping.php');
-      include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
-      $ot_shipping = new ot_shipping;
-      $ot_shipping->process();
-
+      
+      $ot_shipping = $this->ot_shipping;
+      
       $redirect_link = xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions_message')), 'SSL');
       require(DIR_WS_INCLUDES.'shipping_action.php');
     }
+    
+    $this->confirmation();
   }
 
 
@@ -118,6 +124,7 @@ class paypalcart extends PayPalPayment {
     $total_count = $_SESSION['cart']->count_contents();
 
     // load all enabled shipping modules
+    require_once (DIR_WS_CLASSES . 'shipping.php');
     $shipping_modules = new shipping;
 
     // add unallowed payment / shipping
@@ -137,11 +144,9 @@ class paypalcart extends PayPalPayment {
         }
       }
     }
-
-    $free_shipping = false;
-    $ot_shipping = new ot_shipping;
-    $ot_shipping->process();
-
+    
+    $free_shipping = $this->free_shipping;
+    
     if ($no_shipping === true) $_SESSION['shipping'] = false;
 
     // get all available shipping quotes
@@ -153,6 +158,7 @@ class paypalcart extends PayPalPayment {
     // method if more than one module is now enabled
     if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL == 'true') || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() > 1))) {
       $_SESSION['shipping'] = $shipping_modules->cheapest();
+      $order = new order();
     }
 
     if ($no_shipping === true) $_SESSION['shipping'] = false;
@@ -160,7 +166,7 @@ class paypalcart extends PayPalPayment {
     if (defined('SHOW_SELFPICKUP_FREE') && SHOW_SELFPICKUP_FREE == 'true') {
       if ($free_shipping == true) {
         $free_shipping = false;
-        $quotes = array_merge($ot_shipping->quote(), $shipping_modules->quote('selfpickup', 'selfpickup'));
+        $quotes = array_merge($this->ot_shipping->quote(), $shipping_modules->quote('selfpickup', 'selfpickup'));
       }                    
     }
 
