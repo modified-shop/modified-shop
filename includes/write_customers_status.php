@@ -26,8 +26,8 @@
   // write customers status in session
   if (isset($_SESSION['customer_id'])) {
     $customer_status_query = xtc_db_query("SELECT customers_status
-                                                FROM " . TABLE_CUSTOMERS . "
-                                               WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+                                             FROM " . TABLE_CUSTOMERS . "
+                                            WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'");
 
     if (xtc_db_num_rows($customer_status_query) == 1) {
       $customer_status = xtc_db_fetch_array($customer_status_query);      
