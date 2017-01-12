@@ -315,7 +315,7 @@ CREATE TABLE content_manager (
   content_text TEXT NOT NULL,
   sort_order INT(4) NOT NULL DEFAULT 0,
   file_flag INT(1) NOT NULL DEFAULT 0,
-  content_file VARCHAR(64) NOT NULL DEFAULT '',
+  content_file VARCHAR(255) NOT NULL DEFAULT '',
   content_status INT(1) NOT NULL DEFAULT 0,
   content_group INT(11) NOT NULL,
   content_delete INT(1) NOT NULL DEFAULT 1,

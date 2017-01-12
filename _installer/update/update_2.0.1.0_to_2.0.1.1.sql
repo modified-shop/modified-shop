@@ -45,4 +45,9 @@ ALTER TABLE orders MODIFY customers_state VARCHAR(64);
 ALTER TABLE orders MODIFY delivery_state VARCHAR(64);
 ALTER TABLE orders MODIFY billing_state VARCHAR(64);
 
+#GTB - 2017-01-12 - increase field length
+ALTER TABLE content_manager MODIFY content_file VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE products_content MODIFY content_name VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE products_content MODIFY content_file VARCHAR(255) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
