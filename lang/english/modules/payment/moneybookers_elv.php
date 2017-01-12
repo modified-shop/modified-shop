@@ -14,23 +14,23 @@
    ---------------------------------------------------------------------------------------*/
 
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_TEXT_TITLE', 'DirectDebit');
-$_var = 'DirectDebit via Moneybookers';
+$_var = 'DirectDebit via Skrill';
 if (_PAYMENT_MONEYBOOKERS_EMAILID=='') {
-  $_var.='<br /><br /><b><font color="red">Please setup moneybookers.com configuration first! (Adv. Configuration -> Partner -> Moneybookers.com)!</font></b>';
+  $_var.='<br /><br /><b><font color="red">Please setup skrill.com configuration first! (Adv. Configuration -> Partner -> Skrill.com)!</font></b>';
 }
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_TEXT_DESCRIPTION', $_var);
-define('MODULE_PAYMENT_MONEYBOOKERS_ELV_NOCURRENCY_ERROR', 'There\'s no Moneybookers accepted currency installed!');
+define('MODULE_PAYMENT_MONEYBOOKERS_ELV_NOCURRENCY_ERROR', 'There\'s no Skrill accepted currency installed!');
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_ERRORTEXT1', 'payment_error=');
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_TEXT_INFO','');
-define('MODULE_PAYMENT_MONEYBOOKERS_ELV_ERRORTEXT2', '&error=There was an error during your payment at Moneybookers!');
+define('MODULE_PAYMENT_MONEYBOOKERS_ELV_ERRORTEXT2', '&error=There was an error during your payment at Skrill!');
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_ORDER_TEXT', 'Date of the order: ');
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_TEXT_ERROR', 'Payment error!');
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_CONFIRMATION_TEXT', 'Thank you for your order!');
-define('MODULE_PAYMENT_MONEYBOOKERS_ELV_TRANSACTION_FAILED_TEXT', 'Your payment transaction at Moneybookers has failed. Please try again, or select an other payment option!');
+define('MODULE_PAYMENT_MONEYBOOKERS_ELV_TRANSACTION_FAILED_TEXT', 'Your payment transaction at Skrill has failed. Please try again, or select an other payment option!');
 
 
-define('MODULE_PAYMENT_MONEYBOOKERS_ELV_STATUS_TITLE', 'Enable Moneybookers');
-define('MODULE_PAYMENT_MONEYBOOKERS_ELV_STATUS_DESC', 'Do you want to accept payments through Moneybookers?');
+define('MODULE_PAYMENT_MONEYBOOKERS_ELV_STATUS_TITLE', 'Enable Skrill');
+define('MODULE_PAYMENT_MONEYBOOKERS_ELV_STATUS_DESC', 'Do you want to accept payments through Skrill?');
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_SORT_ORDER_TITLE', 'Sort order of display.');
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_SORT_ORDER_DESC', 'Sort order of display. Lowest is displayed first.');
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_ZONE_TITLE', 'Payment Zone');
