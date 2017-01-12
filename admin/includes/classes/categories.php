@@ -321,10 +321,11 @@ class categories {
       if (is_file($src_pic)) {
         $get_suffix = explode('.', $ccopy_values['categories_image']);
         $suffix = array_pop($get_suffix);
-        $categories_image_name = $categories_image_name_process = $this->image_name($new_cat_id, '', $cnsuffix, $cname_arr, false, $sql_data_array);
-        @copy($src_pic, DIR_FS_CATALOG_IMAGES.'categories/'.$dest_pic);
-        @chmod(DIR_FS_CATALOG_IMAGES.'categories/'.$dest_pic, 0644);
-
+        $dest_pic = $this->image_name($new_cat_id, '', $suffix, $get_suffix, $src_category_id, $ccopy_values);
+        if ($dest_pic != '') {
+          @copy($src_pic, DIR_FS_CATALOG_IMAGES.'categories/'.$dest_pic);
+          @chmod(DIR_FS_CATALOG_IMAGES.'categories/'.$dest_pic, 0644);
+        }
         $this->catModules->copy_category_image($src_pic,$dest_pic);
 
         //write to DB
@@ -1125,9 +1126,11 @@ class categories {
 
   //set products images file rights
   function set_products_images_file_rights($image_name) {
-    @ chmod(DIR_FS_CATALOG_INFO_IMAGES.$image_name, 0644);
-    @ chmod(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image_name, 0644);
-    @ chmod(DIR_FS_CATALOG_POPUP_IMAGES.$image_name, 0644);
+    if ($image_name != '') {
+      @ chmod(DIR_FS_CATALOG_INFO_IMAGES.$image_name, 0644);
+      @ chmod(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image_name, 0644);
+      @ chmod(DIR_FS_CATALOG_POPUP_IMAGES.$image_name, 0644);
+    }
   }
 
 
