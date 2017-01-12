@@ -50,4 +50,7 @@ ALTER TABLE content_manager MODIFY content_file VARCHAR(255) NOT NULL DEFAULT ''
 ALTER TABLE products_content MODIFY content_name VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE products_content MODIFY content_file VARCHAR(255) NOT NULL;
 
+#GTB - 2017-01-12 - increase session value to longtext
+ALTER TABLE sessions MODIFY value longtext NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
