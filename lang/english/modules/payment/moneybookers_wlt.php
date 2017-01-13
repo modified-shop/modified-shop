@@ -13,8 +13,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('MODULE_PAYMENT_MONEYBOOKERS_WLT_TEXT_TITLE', 'Moneybookers E-Wallet');
-$_var = 'Moneybookers E-Wallet via Skrill';
+define('MODULE_PAYMENT_MONEYBOOKERS_WLT_TEXT_TITLE', 'Skrill E-Wallet');
+$_var = 'Skrill E-Wallet via Skrill';
 if (_PAYMENT_MONEYBOOKERS_EMAILID=='') {
   $_var.='<br /><br /><b><font color="red">Please setup skrill.com configuration first! (Adv. Configuration -> Partner -> Skrill.com)!</font></b>';
 }
