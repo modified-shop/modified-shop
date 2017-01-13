@@ -254,23 +254,29 @@ class PayPalPayment extends PayPalPaymentBase {
         ) 
     { 
       $item = array();
-      $item[0] = new Item(); 
-      $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
-              ->setCurrency($_SESSION['currency']) 
-              ->setQuantity(1) 
-              ->setPrice($this->details->getSubtotal()); 
     
       if ($cart === true) {
         $shipping_cost = $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHIPPING_COST');
+        
+        $item[0] = new Item(); 
+        $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
+                ->setCurrency($_SESSION['currency']) 
+                ->setQuantity(1) 
+                ->setPrice($this->details->getSubtotal() - (int)$shipping_cost); 
+
         if ((int)$shipping_cost > 0) {
           $item[1] = new Item(); 
           $item[1]->setName($this->encode_utf8(PAYPAL_EXP_VORL))
                   ->setCurrency($_SESSION['currency']) 
                   ->setQuantity(1) 
                   ->setPrice($shipping_cost); 
-          $this->amount->setTotal($this->amount->getTotal() + $shipping_cost);
-          $this->details->setSubtotal($this->amount->getTotal());
         }    
+      } else {
+        $item[0] = new Item(); 
+        $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
+                ->setCurrency($_SESSION['currency']) 
+                ->setQuantity(1) 
+                ->setPrice($this->details->getSubtotal()); 
       }
     }
     $itemList->setItems($item);
