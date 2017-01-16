@@ -53,6 +53,10 @@
   if (DB_SERVER_USERNAME == '' && DB_SERVER_PASSWORD == '' && DB_DATABASE == '') {
     $upgrade = false;
   }
+  require ('includes/auth.php');
+  if ($upgrade === true && check_auth() === false) {
+    show_auth();
+  }
   if (isset($_POST['db_upgrade']) && ($_POST['db_upgrade'] == true)) {
     xtc_redirect(xtc_href_link('update.php?lg='. $lang, '', 'NONSSL'));
   }
