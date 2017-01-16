@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: checkout_confirmation.php 3252 2012-07-18 15:24:42Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -256,6 +256,20 @@ if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
   $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
   $smarty->assign('TEXT_AGB_CHECKOUT', sprintf(TEXT_AGB_CHECKOUT,$main->getContentLink(3, MORE_INFO,'SSL') , $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL')));
 }
+
+$store_owner = STORE_NAME;
+if (defined('DISPLAY_HEADQUATER_ON_CHECKOUT') && DISPLAY_HEADQUATER_ON_CHECKOUT == 'true') {
+  $store_owner = explode("\n", STORE_NAME_ADDRESS);
+  for ($i=0, $n=count($store_owner); $i<$n; $i++) {
+    if (trim($store_owner[$i]) == '') {
+      unset($store_owner[$i]);
+    } else {
+      $store_owner[$i] = trim($store_owner[$i]);
+    }
+  }
+  $store_owner = implode(', ', $store_owner);
+}
+$smarty->assign('HEADQUARTER', $store_owner);
 
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_CONFIRMATION, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_CONFIRMATION);

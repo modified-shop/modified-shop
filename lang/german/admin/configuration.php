@@ -1072,4 +1072,7 @@ define('GOOGLE_TRUSTED_ID_DESC', 'Ihre Google Trusted ID');
 
 define('EMAIL_ARCHIVE_ADDRESS_TITLE', 'Archiv - E-Mail-Adresse');
 define('EMAIL_ARCHIVE_ADDRESS_DESC', 'Bitte geben Sie eine E-Mail-Adresse f&uuml;r die Archivierung aller ausgehenden E-Mails ein. Damit werden per BCC die E-Mails an ein Archivpostfach geschickt.');
+
+define('DISPLAY_HEADQUATER_ON_CHECKOUT_TITLE', 'Firmensitz im Checkout');
+define('DISPLAY_HEADQUATER_ON_CHECKOUT_DESC', 'Soll der Firmensitz im Checkout angezeigt werden?');
 ?>

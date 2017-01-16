@@ -16,7 +16,7 @@
 <div class="checkout_infos">
 
   <div class="{if $REVOCATION}checkoutInfoBoxes{else}checkoutInfoBoxesLarge{/if}" style="text-align: justify;">
-    {#text_information#}
+    {#text_information#|sprintf:$HEADQUARTER}
     {if $IP_LOG == 'true'}
     <p>{#text_ip#}&nbsp;<strong>{$CUSTOMERS_IP}</strong></p>
     {/if}

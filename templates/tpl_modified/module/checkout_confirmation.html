@@ -22,7 +22,7 @@
 
 <div class="twoColums">
   <div class="highlightbox plainleft">
-    {#text_information#}
+    {#text_information#|sprintf:$HEADQUARTER}
     {if $IP_LOG == 'true'}
     <p>{#text_ip#}&nbsp;<strong>{$CUSTOMERS_IP}</strong></p>
     {/if}
