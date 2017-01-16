@@ -31,10 +31,7 @@
   } else {
   
     $button_preview = '';
-    if ($_SESSION['customers_status']['customers_status_write_reviews'] == 1
-        && $product->check_purchased() === true
-        ) 
-    {
+    if ($_SESSION['customers_status']['customers_status_write_reviews'] == 1) {
       $button_preview = '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']).'">'.xtc_image_button('button_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW).'</a>';
     }
   
