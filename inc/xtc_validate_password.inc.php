@@ -36,7 +36,11 @@
   function xtc_validate_password_collation($plain, $encrypted, $customers_id) {
     if (xtc_not_null($plain) && xtc_not_null($encrypted)) {
 
+      $password_check = false;
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/validate_password/','php') as $file) require ($file);
+      if ($password_check === true) {
+        return true;
+      }
 
       // check for old passwords
       if (preg_match('#^[a-z0-9]{32}$#i', $encrypted)) {
