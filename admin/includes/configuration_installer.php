@@ -309,7 +309,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT', 'false', '17', '13', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'MODULE_BANNER_MANAGER_STATUS', 'true', '17', '18', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'MODULE_NEWSLETTER_STATUS', 'true', '17', '19', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'DISPLAY_HEADQUATER_ON_CHECKOUT', 'true', '17', '19', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'DISPLAY_HEADQUATER_ON_CHECKOUT', 'true', '17', '8', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
 
   $values_update[] = array (
                            'values' => "set_function = 'xtc_cfg_select_content(\'REVOCATION_ID\','",
