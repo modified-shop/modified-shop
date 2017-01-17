@@ -14,6 +14,6 @@
       define('DIR_MODIFIED_INSTALLER', '_installer');
   }
   define('MODIFIED_SQL', 'includes/sql/modified.sql');
-  define('DISABLE_PATH_CHECK', false); //default false
+  define('DISABLE_PATH_CHECK', true); //default false
   
   /*######################################*/  

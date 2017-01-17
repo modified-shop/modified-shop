@@ -57,6 +57,7 @@
   if ($upgrade === true && check_auth() === false) {
     show_auth();
   }
+  $_SESSION['auth'] = true;
   if (isset($_POST['db_upgrade']) && ($_POST['db_upgrade'] == true)) {
     xtc_redirect(xtc_href_link('update.php?lg='. $lang, '', 'NONSSL'));
   }

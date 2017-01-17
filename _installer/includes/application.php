@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: application.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -157,7 +157,8 @@
   $input_lang  = '<input type="hidden" name="lg" value="'. $lang .'">';
   $input_lang .= '<input type="hidden" name="char" value="'. INSTALL_CHARSET .'">';
   //EOF - web28 - 2010.02.09 - FIX LOST SESSION
-
+  
+  session_start();
 /*########### FUNCTIONS #############*/
 
   // Determine Document Root

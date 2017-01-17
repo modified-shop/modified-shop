@@ -18,6 +18,10 @@
   
   require('includes/application.php');
 
+  if (!isset($_SESSION['auth'])) {
+    header('Location: index.php');
+  }
+
   // include Database functions for installer
   require_once(DIR_FS_INC_INSTALLER.'xtc_db_connect_installer.inc.php');
   require_once(DIR_FS_INC_INSTALLER.'xtc_db_select_db.inc.php');

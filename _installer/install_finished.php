@@ -17,6 +17,10 @@
   require('../includes/configure.php');
   require('includes/application.php');  
 
+  if (!isset($_SESSION['auth'])) {
+    header('Location: index.php');
+  }
+
   //BOF - web28 - 2010.02.11 - NEW LANGUAGE HANDLING IN application.php
   //include('language/'.$_SESSION['language'].'.php');
   include('language/'.$lang.'.php');
