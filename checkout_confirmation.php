@@ -258,7 +258,7 @@ if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
 }
 
 $store_owner = STORE_NAME;
-if (defined('DISPLAY_HEADQUATER_ON_CHECKOUT') && DISPLAY_HEADQUATER_ON_CHECKOUT == 'true') {
+if (defined('DISPLAY_HEADQUARTER_ON_CHECKOUT') && DISPLAY_HEADQUARTER_ON_CHECKOUT == 'true') {
   $store_owner = explode("\n", STORE_NAME_ADDRESS);
   for ($i=0, $n=count($store_owner); $i<$n; $i++) {
     if (trim($store_owner[$i]) == '') {

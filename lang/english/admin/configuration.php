@@ -1081,6 +1081,6 @@ define('GOOGLE_TRUSTED_ID_DESC', 'Your Google trusted ID');
 define('EMAIL_ARCHIVE_ADDRESS_TITLE', 'Archive - E-Mail-Address');
 define('EMAIL_ARCHIVE_ADDRESS_DESC', 'Please enter an e-mail address for archiving all outgoing e-mails. This is used to send the e-mails to an archive mailbox via BCC.');
 
-define('DISPLAY_HEADQUATER_ON_CHECKOUT_TITLE', 'Company Headquarter on Checkout');
-define('DISPLAY_HEADQUATER_ON_CHECKOUT_DESC', 'Display Company Headquarter during checkout?');
+define('DISPLAY_HEADQUARTER_ON_CHECKOUT_TITLE', 'Company Headquarter on Checkout');
+define('DISPLAY_HEADQUARTER_ON_CHECKOUT_DESC', 'Display Company Headquarter during checkout?');
 ?>
