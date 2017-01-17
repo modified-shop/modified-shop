@@ -61,6 +61,9 @@
         }
         if ($exists === false) {
           xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." ADD ".$new_field." INT(1) NOT NULL DEFAULT 0;");
+          xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS."
+                           SET ".$new_field." = '1'
+                         WHERE customers_id = '1'");
         }
         xtc_redirect(xtc_href_link(FILENAME_ACCOUNTING, xtc_get_all_get_params(array('cID','action')).'cID=' . (int)$_GET['cID'], 'NONSSL'));
         break;
