@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: install_step6.php 2999 2012-06-11 08:27:32Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -20,6 +20,10 @@
     require('../includes/configure.php');
   }
   require('includes/application.php');
+
+  if (!isset($_SESSION['auth'])) {
+    header('Location: index.php');
+  }
 
   // Database
   require_once(DIR_FS_INC . 'db_functions_'.DB_MYSQL_TYPE.'.inc.php');

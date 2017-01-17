@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: install_step5.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -15,6 +15,10 @@
    --------------------------------------------------------------*/
 
   require('includes/application.php');
+
+  if (!isset($_SESSION['auth'])) {
+    header('Location: index.php');
+  }
 
   // include Database functions for installer
   require_once(DIR_FS_INC_INSTALLER.'xtc_db_connect_installer.inc.php');

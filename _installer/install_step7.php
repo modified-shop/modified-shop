@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: install_step7.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -20,6 +20,10 @@
     require('../includes/configure.php');
   }
   require('includes/application.php');
+
+  if (!isset($_SESSION['auth'])) {
+    header('Location: index.php');
+  }
 
   // Database
   require_once(DIR_FS_INC . 'db_functions_'.DB_MYSQL_TYPE.'.inc.php');

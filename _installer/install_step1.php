@@ -18,6 +18,10 @@
 
   require('includes/application.php');
 
+  if (!isset($_SESSION['auth'])) {
+    header('Location: index.php');
+  }
+
   include('language/'.$lang.'.php');
 
   if (!$script_filename = str_replace('\\', '/', getenv('PATH_TRANSLATED'))) {
