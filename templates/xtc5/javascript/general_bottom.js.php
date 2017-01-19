@@ -1,6 +1,6 @@
 <?php
 /*-----------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -39,6 +39,9 @@ foreach ($script_array as $script) {
     jAlert(message, title);
   }
   /*EOC jQuery Alerts*/
+  $('#button_checkout_confirmation').on('click',function() {
+    $(this).hide();
+  });
 </script>
 
 <?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { // TABS/ACCORDION in product_info - web28 ?>

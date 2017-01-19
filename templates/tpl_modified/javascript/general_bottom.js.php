@@ -219,21 +219,24 @@ foreach ($script_array as $script) {
 <?php } ?>
 <?php if (strstr($PHP_SELF, 'checkout')) { ?>
 <script type="text/javascript">
-    $.get("<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>"+"/css/jquery.easyTabs.css", function(css) {
-      $("head").append("<style type='text/css'>"+css+"<\/style>");
-    });
-    $(document).ready(function () {
-        $('#horizontalAccordion').easyResponsiveTabs({
-            type: 'accordion', //Types: default, vertical, accordion     
-            closed: true,     
-            activate: function(event) { // Callback function if tab is switched
-               $(".resp-tab-active input[type=radio]").prop('checked', true);
-            }
-        });
-        $('#horizontalTab').easyResponsiveTabs({
-            type: 'default' //Types: default, vertical, accordion           
-        });
-    });
+  $.get("<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>"+"/css/jquery.easyTabs.css", function(css) {
+    $("head").append("<style type='text/css'>"+css+"<\/style>");
+  });
+  $(document).ready(function () {
+      $('#horizontalAccordion').easyResponsiveTabs({
+          type: 'accordion', //Types: default, vertical, accordion     
+          closed: true,     
+          activate: function(event) { // Callback function if tab is switched
+             $(".resp-tab-active input[type=radio]").prop('checked', true);
+          }
+      });
+      $('#horizontalTab').easyResponsiveTabs({
+          type: 'default' //Types: default, vertical, accordion           
+      });
+  });
+  $('#button_checkout_confirmation').on('click',function() {
+    $(this).hide();
+  });
 </script>
 <?php } ?>
 

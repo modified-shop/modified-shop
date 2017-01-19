@@ -199,7 +199,7 @@ if (isset(${$_SESSION['payment']}->form_action_url) && (!isset(${$_SESSION['paym
 }
 $smarty->assign('CHECKOUT_FORM', xtc_draw_form('checkout_confirmation', $form_action_url, 'post', 'name="checkout_confirmation"'));
 $smarty->assign('MODULE_BUTTONS', (is_array($payment_modules->modules) ? $payment_modules->process_button() : ''));
-$smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER, (($_SESSION['payment'] == 'payone_cc') ? 'onclick="return payoneCheck();"' :  'onclick="this.style.display = \'none\'"')) . '</form>' . "\n");
+$smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER, (($_SESSION['payment'] == 'payone_cc') ? 'onclick="return payoneCheck();"' : '') . ' id="button_checkout_confirmation"') . '</form>' . "\n");
 
 //express checkout
 if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
