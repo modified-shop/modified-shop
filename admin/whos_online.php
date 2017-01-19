@@ -131,9 +131,12 @@
               while ($whos_online = xtc_db_fetch_array($whos_online_query)) {
                 $time_online = (time() - $whos_online['time_entry']);
                 if ((!isset($_GET['info']) || (isset($_GET['info']) && ($_GET['info'] == $whos_online['session_id']))) && !isset($info) ) {
-                  $info = $whos_online['session_id'];
+                  $info = array(
+                    'session_id' => $whos_online['session_id'],
+                    'ip' => $whos_online['ip_address'],
+                  );
                 }
-                if ($whos_online['session_id'] === $info) {
+                if ($whos_online['session_id'] === $info['session_id']) {
                   echo '              <tr class="dataTableRowSelected">' . "\n";
                   } elseif (($whos_online['session_id'] == '') || (substr($whos_online['session_id'],0,1) == '[')) {
                     echo '              <tr class="dataTableRow">' . "\n";
@@ -186,10 +189,10 @@
             $heading[] = array('text' => '<strong>' . TABLE_HEADING_SHOPPING_CART . '</strong>');
             $session_data = '';
             if (STORE_SESSIONS == 'mysql') {
-              $session_data = _sess_read($info);
+              $session_data = _sess_read($info['session_id']);
             } else {
-              if ( (file_exists(xtc_session_save_path() . '/sess_' . $info)) && (filesize(xtc_session_save_path() . '/sess_' . $info) > 0) ) {
-                $session_data = file(xtc_session_save_path() . '/sess_' . $info);
+              if ( (file_exists(xtc_session_save_path() . '/sess_' . $info['session_id'])) && (filesize(xtc_session_save_path() . '/sess_' . $info['session_id']) > 0) ) {
+                $session_data = file(xtc_session_save_path() . '/sess_' . $info['session_id']);
                 $session_data = trim(implode('', $session_data));
               }
             }
@@ -216,6 +219,7 @@
             if ($user_session == 'ENCRYPTED') {
               $contents[] = array('text' => TEXT_SESSION_IS_ENCRYPTED);
             }
+            $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_BLACKLIST_LOGS, 'action=edit&ip='.$info['ip']) . '">'.BUTTON_BLACKLIST.'</a><br/><br/>');
           }
           if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
               echo '            <td class="boxRight" style="min-width:120px">' . "\n";

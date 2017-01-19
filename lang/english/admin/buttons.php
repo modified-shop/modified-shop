@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: buttons.php 4892 2013-06-06 16:34:15Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -93,4 +93,5 @@ define('BUTTON_VIEW_PRODUCT', 'View Product');
 
 define('BUTTON_VALUES', 'Values');
 define('BUTTON_DELETE_BANKTRANSFER', 'Delete Banktransfer data');
+define('BUTTON_BLACKLIST', 'Blacklist');
 ?>
