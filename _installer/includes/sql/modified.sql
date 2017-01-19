@@ -1805,7 +1805,7 @@ INSERT INTO configuration_group VALUES (22,'Search Options','Additional Options 
 INSERT INTO configuration_group VALUES (23,'Econda Tracking','Econda Tracking System',23,1);
 INSERT INTO configuration_group VALUES (24,'PIWIK & Google Analytics Tracking','Settings for PIWIK & Google Analytics Tracking',24,1); 
 INSERT INTO configuration_group VALUES (25,'Captcha','Captcha Configuration',25,1);
-INSERT INTO configuration_group VALUES (31,'Moneybookers','Moneybookers System',31,1);
+INSERT INTO configuration_group VALUES (31,'Skrill','Skrill System',31,1);
 INSERT INTO configuration_group VALUES (40,'Popup Window Configuration','Popup Window Parameters',40,1);
 INSERT INTO configuration_group VALUES (1000,'Adminarea Options','Adminarea Configuration', 1000,1);
 

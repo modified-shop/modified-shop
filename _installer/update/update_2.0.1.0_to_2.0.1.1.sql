@@ -53,4 +53,7 @@ ALTER TABLE products_content MODIFY content_file VARCHAR(255) NOT NULL;
 #GTB - 2017-01-12 - increase session value to longtext
 ALTER TABLE sessions MODIFY value longtext NOT NULL;
 
+#GTB - 2017-01-19 - rename moneybookers
+UPDATE configuration_group SET configuration_group_title = 'Skrill', configuration_group_description = 'Skrill System' WHERE configuration_group_id = '31';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
