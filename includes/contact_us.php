@@ -119,6 +119,7 @@
      
         $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.html');
         $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.txt');
+        $txt_mail = str_replace(array('<br />', '<br/>', '<br>'), '', $txt_mail);
       } else {
         $txt_mail = sprintf(EMAIL_SENT_BY, CONTACT_US_NAME, CONTACT_US_EMAIL_ADDRESS, $datum , $uhrzeit) . "\n" .
                 "--------------------------------------------------------------" . "\n" .
