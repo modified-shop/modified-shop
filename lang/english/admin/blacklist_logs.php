@@ -16,7 +16,7 @@ define('TABLE_HEADING_IP', 'IP adress');
 define('TABLE_HEADING_BANNED', 'Time banned');
 define('TABLE_HEADING_ACTION', 'Action');
 
-define('TEXT_EDIT_ENTRY', 'Entry edit');
+define('TEXT_EDIT_ENTRY', 'Edit entry');
 define('TEXT_NEW_ENTRY', 'New entry');
 define('TEXT_ENTRY_IP', 'IP Address');
 define('TEXT_ENTRY_IP_INFO', 'Enter IP Address to block.');
