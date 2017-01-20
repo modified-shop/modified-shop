@@ -1,0 +1,38 @@
+<div id="horizontalAccordion" class="checkout_accordion">
+  <ul class="resp-tabs-list nonjs-fallback">
+    {if $FREE_SHIPPING}
+      <li><span class="shipping_radio"></span>{$FREE_SHIPPING_TITLE|onlytext}</li>
+    {else}    
+      {foreach name=outer item=module_data from=$module_content}
+        {if $module_data.error != ''}
+          <li><span class="shipping_radio"></span>{$module_data.module|onlytext}</li>
+        {else}
+          {foreach name=inner item=method_data from=$module_data.methods} 
+            <li><span class="shipping_radio">{$method_data.radio_field}</span><label for="{$method_data.id}">{$module_data.module|onlytext}<span class="shipping_costs">{$method_data.price}</span></label></li>
+          {/foreach}
+        {/if}
+      {/foreach}
+    {/if}
+  </ul>
+  <div class="resp-tabs-container">
+    {if $FREE_SHIPPING}
+      <noscript>
+        <div><span class="shipping_radio"></span>{$FREE_SHIPPING_TITLE}</div>
+      </noscript>
+      <div>{$FREE_SHIPPING_DESCRIPTION}</div>
+    {else}    
+      {foreach name=outer item=module_data from=$module_content}
+        {if $module_data.error != ''}
+          <div>{$module_data.error}</div>
+        {else}
+          {foreach name=inner item=method_data from=$module_data.methods} 
+            <noscript>
+              <div class="nonjs-heading"><span class="shipping_radio">{$method_data.radio_field}</span><label for="{$method_data.id}">{$module_data.module}<span class="shipping_costs">{$method_data.price}</span></label></div>
+            </noscript>
+            <div>{$module_data.icon}{$method_data.title}</div>
+          {/foreach}
+        {/if}
+      {/foreach}
+    {/if}
+  </div>
+</div>
