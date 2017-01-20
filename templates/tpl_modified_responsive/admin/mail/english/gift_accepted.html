@@ -1,0 +1,29 @@
+<div style="width:700px;margin: 0px auto;">
+<table width="700" border="0" align="center" cellpadding="5" cellspacing="0">
+	<tr> 
+    	<td align="center" style="padding: 10px 0px;"><img src="{$logo_path}logo.gif" /></td>
+	</tr>
+	<tr> 
+    	<td style="font-size:14px;text-transform:uppercase;padding:10px 5px;border-top: 1px dotted #999;border-bottom: 1px dotted #999;">
+        <font face="Tahoma, Verdana, sans-serif">Your voucher</font>
+      </td>
+	</tr>
+	<tr> 
+		<td>
+        <br />
+        <font size="2" face="Tahoma, Verdana, sans-serif"><b>{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},</b>
+        <br /><br />
+        The voucher code you purchased has been activated!
+        <br /><br />
+        You may now redeem your voucher and/or send it to someone by e-mail.
+        <br /><br />
+        Your voucher is worth {$AMMOUNT}.
+
+        </font>
+
+		</td>
+	</tr>
+</table>
+
+[SIGNATUR]
+</div>

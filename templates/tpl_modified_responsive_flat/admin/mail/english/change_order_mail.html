@@ -1,0 +1,50 @@
+<div style="width:700px;margin: 0px auto;">
+<table width="700" border="0" align="center" cellpadding="5" cellspacing="0">
+	<tr> 
+    	<td align="center" style="padding: 10px 0px;"><img src="{$logo_path}logo.gif" /></td>
+	</tr>
+	<tr> 
+    	<td style="font-size:14px;text-transform:uppercase;padding:10px 5px;border-top: 1px dotted #999;border-bottom: 1px dotted #999;">
+        <font face="Tahoma, Verdana, sans-serif">Status of your order has been changed</font>
+      </td>
+	</tr>
+	<tr> 
+		<td>
+        <br />
+        <font size="2" face="Tahoma, Verdana, sans-serif"><b>{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},</b>
+        <br /><br />
+        The status of your order {if $ORDER_NR}No. {$ORDER_NR}{/if} {if $ORDER_DATE}from {$ORDER_DATE}{/if} has been changed.
+        
+        {if $ORDER_LINK}
+          <br /><br />
+          Link to order: <a href="{$ORDER_LINK}">click here</a>
+        {/if}
+                
+        {if $NOTIFY_COMMENTS}
+          <br /><br />
+          Notes to your order:<br />
+          {$NOTIFY_COMMENTS}
+        {/if}        
+        
+        <br /><br />
+        New status: <b>{$ORDER_STATUS}</b>
+
+        {if $PARCEL_COUNT > 0}
+          <br /><br />
+          Your shipment consists of {$PARCEL_COUNT} parcel(s).<br />
+          You can inform yourself about the delivery status with a click on the following package number(s):<br />
+          {foreach name=aussen item=tracking_data from=$PARCEL_ARRAY}
+            <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a><br />
+          {/foreach}
+        {/if}
+
+        <br /><br />
+        If you have any questions, please reply to this e-mail.        
+        
+        </font>
+		</td>
+	</tr>
+</table>
+
+[SIGNATUR]
+</div>

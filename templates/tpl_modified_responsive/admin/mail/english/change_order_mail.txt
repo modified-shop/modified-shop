@@ -1,0 +1,23 @@
+
+{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},
+
+The status of your order {if $ORDER_NR}No. {$ORDER_NR}{/if} {if $ORDER_DATE}from {$ORDER_DATE}{/if} has been changed.
+
+{if $ORDER_LINK}Link to order:
+{$ORDER_LINK} {/if}
+
+{if $NOTIFY_COMMENTS}Notes to your order:
+{$NOTIFY_COMMENTS}{/if}
+
+New status: {$ORDER_STATUS}
+
+{if $PARCEL_COUNT > 0}
+Your shipment consists of {$PARCEL_COUNT} parcel(s).
+You can inform yourself about the delivery status with a click on the following package number(s):
+{foreach name=aussen item=tracking_data from=$PARCEL_ARRAY}
+{$tracking_data.tracking_link}
+{/foreach}{/if}
+
+If you have any questions, please reply to this e-mail.
+
+[SIGNATUR]

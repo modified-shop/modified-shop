@@ -1,0 +1,11 @@
+{config_load file="$language/lang_$language.conf" section="specials"}
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="specials"}
+<h1>{#heading_text#}</h1>
+{$LISTING_FILTER}
+{$PAGINATION}
+<div class="listingcontainer cf">
+  {include file="module/includes/product_listing_include.html"}
+</div>
+{$PAGINATION}

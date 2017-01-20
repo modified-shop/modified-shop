@@ -1,0 +1,36 @@
+{config_load file="$language/lang_$language.conf" section="account"}
+{config_load file="$language/lang_$language.conf" section="account_history"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="account_history"}
+<h1>{#heading_history#}</h1>
+{foreach name=aussen item=order_data from=$order_content}
+<div class="twoColums{if $smarty.foreach.aussen.iteration is div by 2} last{/if} cf">
+  <div class="highlightbox cf">
+    <h4><a href="{$order_data.ORDER_LINK}">{#text_oid#}{$order_data.ORDER_ID}</a></h4>
+    <div class="cf">
+      <span class="account_actions_right cf">
+        {if isset($order_data.BUTTON_CART_EXPRESS)}<span class="cssButtonPos6">{$order_data.BUTTON_CART_EXPRESS}</span>{/if}
+        <span class="cssButtonPos6">{$order_data.BUTTON_CART}</span>
+      </span>
+      <strong><a href="{$order_data.ORDER_LINK}">{$order_data.ORDER_DATE}</a> / {#order_nr#}{$order_data.ORDER_ID}</strong><br />
+      <strong>{#text_total#}</strong>{$order_data.ORDER_TOTAL}<br />
+      <strong>{#text_status#}</strong>{$order_data.ORDER_STATUS}
+      {if count($order_data.ORDER_TRACKING) > 0}
+        {foreach name=aussen item=tracking_data from=$order_data.ORDER_TRACKING}
+          <br />{#label_tracking#} <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a>
+        {/foreach}
+      {/if}
+    </div>
+  </div>
+</div>
+{if $smarty.foreach.aussen.iteration is div by 2}
+    <div class="cf"></div>
+{else}
+  {if $smarty.foreach.aussen.last == true}
+    <div class="cf"></div>
+  {/if}
+{/if}
+{/foreach}
+
+{$PAGINATION}
+<div class="button_left cf"><div class="cssButtonPos4">{$BUTTON_BACK}</div></div>
