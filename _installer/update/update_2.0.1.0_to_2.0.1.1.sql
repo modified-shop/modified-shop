@@ -8,7 +8,7 @@
 #  -----------------------------------------------------------------------------------------
 
 #Tomcraft - 2016-10-17 - changed database_version
-INSERT INTO `database_version` (`version`) VALUES ('MOD_2.0.1.1');
+INSERT INTO `database_version` (`version`) VALUES ('MOD_2.0.2.0');
 
 #GTB - 2016-11-28 - changed language_id
 ALTER TABLE banners MODIFY languages_id INT(11) NOT NULL;
