@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: banktransfer_validation.php 4434 2013-02-11 09:05:02Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -67,7 +67,7 @@ class AccountCheck {
 // Diese Funktion gibt die Bankinformationen aus der csv-Datei zurück*/
   function csv_query($blz) {
     $cdata = -1;
-    $fp = fopen(DIR_FS_CATALOG.DIR_WS_INCLUDES . 'data/blz.csv', 'r');
+    $fp = fopen(DIR_FS_CATALOG.'includes/data/blz.csv', 'r');
     while ($data = fgetcsv($fp, 1024, ";")) {
       if ($data[0] == $blz){
         $cdata = array ('blz' => $data[0],
@@ -81,7 +81,7 @@ class AccountCheck {
 ////
 // Diese Funktion gibt die Bankinformationen aus der Datenbank zurück*/
   function db_query($blz) {
-    $blz_query = xtc_db_query("SELECT * from ".TABLE_BANKTRANSFER_BLZ." WHERE blz = '" . xtc_db_input($blz) . "'");
+    $blz_query = xtc_db_query("SELECT * FROM ".TABLE_BANKTRANSFER_BLZ." WHERE blz = '" . xtc_db_input($blz) . "'");
     if (xtc_db_num_rows($blz_query)){
       $data = xtc_db_fetch_array ($blz_query);
     }else
@@ -92,7 +92,7 @@ class AccountCheck {
 ////
 // Diese Funktion gibt die Bankinformationen aus der Datenbank zurück*/
   function query($blz) {
-    if (MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ == 'true' && defined(MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ))
+    if (defined('MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ') && MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ == 'true')
       $data = $this->db_query($blz);
     else
       $data = $this->csv_query($blz);
