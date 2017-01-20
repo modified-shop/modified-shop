@@ -9,7 +9,7 @@
    --------------------------------------------------------------*/
 
 define('PROJECT_MAJOR_VERSION', '2');
-define('PROJECT_MINOR_VERSION', '0.1.0');
+define('PROJECT_MINOR_VERSION', '0.2.0');
 define('PROJECT_REVISION', '10403'); // ToDo before release!
 define('PROJECT_SERVICEPACK_VERSION', '');
 define('PROJECT_RELEASE_DATE', '2016-11-09'); // ToDo before release!
