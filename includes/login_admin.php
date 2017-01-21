@@ -29,10 +29,10 @@
 // Set the local configuration parameters - mainly for developers or the main-configure
 
 defined( '_MODIFIED_SHOP_LOGIN' ) or die( 'Direct Access to this location is not allowed.' );
-if (file_exists('includes/local/configure.php')) {
-  include('includes/local/configure.php');
+if (file_exists(dirname(__FILE__).'/local/configure.php')) {
+  include(dirname(__FILE__).'/local/configure.php');
 } else {
-  require('includes/configure.php');
+  require(dirname(__FILE__).'/configure.php');
 }
 
 @ini_set('display_errors', false);
