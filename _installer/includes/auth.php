@@ -11,9 +11,7 @@
    --------------------------------------------------------------*/
 
   function check_auth() {
-    if (!isset($_SERVER['PHP_AUTH_USER'])) {
-      return false;
-    } else {    
+    if (isset($_POST) && count($_POST) > 0) {    
       // include functions
       require_once(DIR_FS_INC.'auto_include.inc.php');
       require_once(DIR_WS_INCLUDES . 'database_tables.php');
@@ -29,8 +27,8 @@
       // make a connection to the database... now
       xtc_db_connect() or die('Unable to connect to database server!');
   
-      $email_address = $_SERVER['PHP_AUTH_USER'];
-      $password = $_SERVER['PHP_AUTH_PW'];
+      $email_address = $_POST['email_address'];
+      $password = $_POST['password'];
       
       // check if email exists
       $check_customer_query = xtc_db_query("SELECT customers_id, 
@@ -49,26 +47,15 @@
       } else {
         return false;
       }
+    } elseif (!isset($_SESSION['auth']) || $_SESSION['auth'] === false) {
+      return false;
     }
-
     return true;
   }
 
   function show_auth() {
-    header('WWW-Authenticate: Basic realm="ADMIN Authentication required"');
-    header('HTTP/1.0 401 Unauthorized');
-    die('<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
-         <html><head>
-         <title>401 Unauthorized</title>
-         </head><body>
-         <h1>Unauthorized</h1>
-         <p>This server could not verify that you
-         are authorized to access the document
-         requested.  Either you supplied the wrong
-         credentials (e.g., bad password), or your
-         browser doesn\'t understand how to supply
-         the credentials required.</p>
-        </body></html>'
-    );
+    define('_MODIFIED_SHOP_LOGIN', true);
+    include(DIR_FS_CATALOG.'includes/login_admin.php');
+    exit();
   }  
 ?>
