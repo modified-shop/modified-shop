@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: janolaw.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -147,7 +147,7 @@ class janolaw_content {
                 fwrite($fp, $content_pdf);
                 fclose($fp);
                 if ($module_name == 'withdrawal' && $this->get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
-                  $this->withdrawal_link[$key] = DIR_WS_CATALOG.$filename;
+                  $this->withdrawal_link[$key] = ((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$filename;
                 }
                 if (($this->format == 'html' 
                     && $this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True'
@@ -159,11 +159,11 @@ class janolaw_content {
                       ) 
                   {
                     if ($this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True') {
-                      $content .= '<br /><br /><a href="'.DIR_WS_CATALOG.$filename.'" target="_blank">PDF - '.$this->document_name[strtoupper($language)][$module_name].'</a>';
+                      $content .= '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$filename.'" target="_blank">PDF - '.$this->document_name[strtoupper($language)][$module_name].'</a>';
                     }
                     $content .= '<br /><a href="'.$this->withdrawal_link[$key].'" target="_blank">PDF - '.$this->document_name[strtoupper($language)]['withdrawal'].'</a>';
                   } else {
-                    $content .= '<br /><br /><a href="'.DIR_WS_CATALOG.$filename.'" target="_blank">PDF - '.$this->document_name[strtoupper($language)][$module_name].'</a>';            
+                    $content .= '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$filename.'" target="_blank">PDF - '.$this->document_name[strtoupper($language)][$module_name].'</a>';            
                   }
                 }
               }
