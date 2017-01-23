@@ -59,7 +59,7 @@ define('TEXT_REVIEW_STICKER_INFO', 'Der Review Sticker zeigt die aktuellen Bewer
 define('TEXT_REVIEW_STICKER_INTRO', 'Kundenbewertungen');
 
 define('TEXT_HEADING_DELETE_TRUSTEDSHOPS', 'TS-ID l&ouml;schen');
-define('TEXT_DELETE_INTRO', 'Sind sie sicher, dass sie diese TS-ID l&ouml;schen wollen?');
+define('TEXT_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese TS-ID l&ouml;schen wollen?');
 
 define('TEXT_DISABLED', 'deaktiviert');
 define('TEXT_ENABLED', 'aktiviert');

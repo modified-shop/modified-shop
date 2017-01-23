@@ -56,7 +56,7 @@
   define('BOX_WRITE_CONFIG','Schreiben der Konfigurationsdatei');
   define('BOX_ADMIN_CONFIG','Administrator Konfiguration');
   define('BOX_USERS_CONFIG','User Konfiguration');
-  define('PULL_DOWN_DEFAULT','Bitte W&auml;hlen Sie ein Land');
+  define('PULL_DOWN_DEFAULT','Bitte w&auml;hlen Sie ein Land');
 
   // Error messages
   // index.php
@@ -156,7 +156,7 @@
   define('TEXT_AUTOMATIC_LONG','Ihre Informationen bez&uuml;glich Webserver und Datenbank werden automatisch in die ben&ouml;tigten Catalog und Admin Konfigurations-Dateien geschrieben, bestehende Dateien werden dabei &uuml;berschrieben!');
   define('TITLE_DATABASE_SETTINGS','Datenbank Informationen');
   define('TEXT_DATABASE_TYPE','Datenbankverbindung');
-  define('TEXT_DATABASE_TYPE_LONG','Bitte w&auml;hlen sie die Datenbankverbindung.');
+  define('TEXT_DATABASE_TYPE_LONG','Bitte w&auml;hlen Sie die Datenbankverbindung.');
   define('TEXT_DATABASE_TYPE_PREFERRED', '(bevorzugt)');
   define('TEXT_DATABASE_SERVER','Datenbankserver');
   define('TEXT_DATABASE_SERVER_LONG','Der Datenbankserver kann entweder in Form eines Hostnamens, wie zum Beispiel <i>db1.myserver.com</i> oder <i>localhost</i>, oder als IP-Adresse, wie <i>192.168.0.1</i> angegeben werden.');
@@ -219,11 +219,11 @@
   //EOF - GTB - 2010-08-31 - Layout correction
   //EOF - web28 - 2010-03-02 - New SSL-PROXY info
   define('TEXT_ADMIN_DIRECTORY','Admin Verzeichnis');
-  define('TEXT_ADMIN_DIRECTORY_LONG', '<div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;">Bitte &auml;ndern sie aus Sicherheitsgr&uuml;nden den Namen des Admin Verzeichnisses.</div><br/>Hier ein per Zufallsgenerator generierter Vorschlag: ');
+  define('TEXT_ADMIN_DIRECTORY_LONG', '<div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;">Bitte &auml;ndern Sie aus Sicherheitsgr&uuml;nden den Namen des Admin Verzeichnisses.</div><br/>Hier ein per Zufallsgenerator generierter Vorschlag: ');
 
   // install_step5.php
   define('TEXT_WS_CONFIGURATION_SUCCESS','Die <strong>modified eCommerce Shopsoftware</strong> Webserver Konfiguration war erfolgreich');
-  define('TEXT_ADMIN_DIRECTORY_ERROR','<b>HINWEIS:</b><br/>Das Admin Verzeichnis konnte nicht umbenannt werden! Bitte &auml;ndern sie das Verzeichnis manuell.<br/><br/>');
+  define('TEXT_ADMIN_DIRECTORY_ERROR','<b>HINWEIS:</b><br/>Das Admin Verzeichnis konnte nicht umbenannt werden! Bitte &auml;ndern Sie das Verzeichnis manuell.<br/><br/>');
 
   // install_step6.php
   define('TITLE_ADMIN_CONFIG','Administrator Konfiguration');
@@ -295,7 +295,7 @@
   define('TEXT_STATUS_COD_PERMISSION','Per Nachnahme');
   define('TEXT_STATUS_COD_PERMISSION_LONG','Erlaubt dem Kunden per Nachnahme zu bestellen.');
   define('TEXT_STATUS_CC_PERMISSION','Kreditkarten.');
-  define('TEXT_STATUS_CC_PERMISSION_LONG','Erlaubt dem Kunden &uuml;ber ihre Kreditkartenzahlsysteme zu bestellen.');
+  define('TEXT_STATUS_CC_PERMISSION_LONG','Erlaubt dem Kunden &uuml;ber Ihre Kreditkartenzahlsysteme zu bestellen.');
   define('TEXT_STATUS_BT_PERMISSION','Bankeinzug');
   define('TEXT_STATUS_BT_PERMISSION_LONG','Erlaubt dem Kunden per Bankeinzug zu bestellen.');
   define('ENTRY_DISCOUNT_ERROR','Product discount -Guest');

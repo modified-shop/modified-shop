@@ -40,10 +40,10 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_USE_TABS_INFO' => 'Verwendet das Template Accordion oder Tabs im Checkout?',
 
   'TEXT_PAYPAL_MODULE_SHIPPING_COST' => 'Vorl&auml;ufige Versandkosten',
-  'TEXT_PAYPAL_MODULE_SHIPPING_COST_INFO' => 'Geben sie den Betrag f&uuml;r vorl&auml;ufige Versandkosten an.',
+  'TEXT_PAYPAL_MODULE_SHIPPING_COST_INFO' => 'Geben Sie den Betrag f&uuml;r vorl&auml;ufige Versandkosten an.',
 
   'TEXT_PAYPAL_MODULE_ORDER_STATUS_ACCEPTED' => 'Bestellstatus',
-  'TEXT_PAYPAL_MODULE_ORDER_STATUS_ACCEPTED_INFO' => 'W&auml;hlen sie den Bestellstatus.<br/><b>Wichtig:</b> die Bezeichnung darf nicht das Wort "bezahlt" enthalten.',
+  'TEXT_PAYPAL_MODULE_ORDER_STATUS_ACCEPTED_INFO' => 'W&auml;hlen Sie den Bestellstatus.<br/><b>Wichtig:</b> die Bezeichnung darf nicht das Wort "bezahlt" enthalten.',
   
   'TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT' => 'Anzeige beim Artikel',
   'TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT_INFO' => 'Sollen Details zur Ratenzahlung beim Artikel angezeigt werden?',

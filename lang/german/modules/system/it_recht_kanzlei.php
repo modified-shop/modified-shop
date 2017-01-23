@@ -17,7 +17,7 @@ define('MODULE_API_IT_RECHT_KANZLEI_STATUS_DESC', 'Modulstatus');
 define('MODULE_API_IT_RECHT_KANZLEI_TOKEN_TITLE', 'Authentifizierungs-Token');
 define('MODULE_API_IT_RECHT_KANZLEI_TOKEN_DESC', 'Authentifizierungs-Token den Sie der IT-Recht Kanzlei mitteilen.');
 define('MODULE_API_IT_RECHT_KANZLEI_VERSION_TITLE', 'API Version');
-define('MODULE_API_IT_RECHT_KANZLEI_VERSION_DESC', 'Diese ist nur zu &auml;ndern, wenn sie von der IT-Recht Kanzlei dazu aufgefordert werden. (Standard: 1.0)');
+define('MODULE_API_IT_RECHT_KANZLEI_VERSION_DESC', 'Diese ist nur zu &auml;ndern, wenn Sie von der IT-Recht Kanzlei dazu aufgefordert werden. (Standard: 1.0)');
 define('MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB_TITLE', '<hr noshade>Rechtstext AGB');
 define('MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB_DESC', 'Bitte geben Sie an, in welcher Seite dieser Rechtstext automatisch eingef&uuml;gt werden soll.');
 define('MODULE_API_IT_RECHT_KANZLEI_TYPE_DSE_TITLE', 'Rechtstext Datenschutz');

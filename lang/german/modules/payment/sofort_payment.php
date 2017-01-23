@@ -60,7 +60,7 @@ define('MODULE_PAYMENT_'.$sofort_code.'_TMP_ORDER_DESC', 'M&ouml;chten Sie eine 
 define('MODULE_PAYMENT_'.$sofort_code.'_LOGGING_TITLE', 'Logging aktivieren');
 define('MODULE_PAYMENT_'.$sofort_code.'_LOGGING_DESC', 'M&ouml;chten Sie das Logging aktivieren?<br/>Die Logfiles werden im Ordner /log abgelegt.');
 define('MODULE_PAYMENT_'.$sofort_code.'_KEY_TITLE', 'Konfigurationsschl&uuml;ssel');
-define('MODULE_PAYMENT_'.$sofort_code.'_KEY_DESC', 'Den Konfigurationsschl&uuml;ssel finden sie in den Einstellungen von SOFORT &Uuml;berweisung');
+define('MODULE_PAYMENT_'.$sofort_code.'_KEY_DESC', 'Den Konfigurationsschl&uuml;ssel finden Sie in den Einstellungen von SOFORT &Uuml;berweisung');
 define('MODULE_PAYMENT_'.$sofort_code.'_SORT_ORDER_TITLE', 'Anzeigereihenfolge');
 define('MODULE_PAYMENT_'.$sofort_code.'_SORT_ORDER_DESC', 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt');
 define('MODULE_PAYMENT_'.$sofort_code.'_ZONE_TITLE', 'Zahlungszone');
@@ -97,7 +97,7 @@ define('MODULE_PAYMENT_'.$sofort_code.'_NOTIFY_PASS_TITLE', 'Benachrichtigungspa
 define('MODULE_PAYMENT_'.$sofort_code.'_NOTIFY_PASS_DESC', 'Das Benachrichtigungspasswort (unter Erweiterte Einstellungen / Passw&ouml;rter und Hashfunktionen)');
 define('MODULE_PAYMENT_'.$sofort_code.'_HASH_ALGORITHM_TITLE', 'Hash-Algorithmus:');
 define('MODULE_PAYMENT_'.$sofort_code.'_HASH_ALGORITHM_DESC', 'Der Hash-Algorithmus (unter Erweiterte Einstellungen / Passw&ouml;rter und Hashfunktionen)');
-define('MODULE_PAYMENT_'.$sofort_code.'_DESCRIPTION_INSTALL', '<br/><br/>Wollen sie geeignete Bestellstatus installieren?<br/>Dabei werden die aktuell eingestellten Status &uuml;berschrieben.');
+define('MODULE_PAYMENT_'.$sofort_code.'_DESCRIPTION_INSTALL', '<br/><br/>Wollen Sie geeignete Bestellstatus installieren?<br/>Dabei werden die aktuell eingestellten Status &uuml;berschrieben.');
 
 // status
 define('TEXT_NO_STATUSUPDATE', 'keine Statusaktualisierung');

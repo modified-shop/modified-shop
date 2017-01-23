@@ -31,7 +31,7 @@ define('MODULE_JANOLAW_FORMAT_TITLE', 'Format Typ');
 define('MODULE_JANOLAW_FORMAT_DESC', 'Sollen die Daten als Text oder HTML gespeichert werden?');
 define('MODULE_JANOLAW_UPDATE_INTERVAL_TITLE', '<hr noshade>Update Intervall');
 define('MODULE_JANOLAW_UPDATE_INTERVAL_DESC', 'In welchen Abst&auml;nden sollen die Daten aktualisiert werden?');
-define('MODULE_JANOLAW_ERROR', 'Bitte pr&uuml;fen sie die Zuordnung der Dokumente.');
+define('MODULE_JANOLAW_ERROR', 'Bitte pr&uuml;fen Sie die Zuordnung der Dokumente.');
 
 define('MODULE_JANOLAW_TYPE_DATASECURITY_TITLE', '<hr noshade>Rechtstext Datenschutz');
 define('MODULE_JANOLAW_TYPE_DATASECURITY_DESC', 'Bitte geben Sie an, in welcher Seite dieser Rechtstext automatisch eingef&uuml;gt werden soll.');

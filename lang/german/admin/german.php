@@ -271,7 +271,7 @@ define('ENTRY_NEWSLETTER', 'Newsletter:');
 define('ENTRY_CUSTOMERS_STATUS', 'Kundengruppe:');
 define('ENTRY_NEWSLETTER_YES', 'abonniert');
 define('ENTRY_NEWSLETTER_NO', 'nicht abonniert');
-define('ENTRY_MAIL_ERROR','&nbsp;<span class="errorText">Bitte treffen sie eine Auswahl</span>');
+define('ENTRY_MAIL_ERROR','&nbsp;<span class="errorText">Bitte treffen Sie eine Auswahl</span>');
 define('ENTRY_PASSWORD','Passwort (autom. erstellt)');
 define('ENTRY_PASSWORD_ERROR','&nbsp;<span class="errorText">Ihr Passwort muss aus mindestens ' . ENTRY_PASSWORD_MIN_LENGTH . ' Zeichen bestehen.</span>');
 define('ENTRY_MAIL_COMMENTS','Zus&auml;tzlicher E-Mail-Text:');
@@ -431,7 +431,7 @@ define('TEXT_VAT_INVALID_INPUT','<span class="messageStackError">Nicht gepr&uuml
 define('TEXT_VAT_SERVICE_UNAVAILABLE','<span class="messageStackError">Nicht gepr&uuml;ft/Der SOAP Service ist nicht erreichbar, versuchen Sie es sp&auml;ter noch einmal!</span>');
 define('TEXT_VAT_MS_UNAVAILABLE','<span class="messageStackError">Nicht gepr&uuml;ft/Der Service des Mitgliedsstaats ist nicht erreichbar, versuchen Sie es sp&auml;ter noch einmal oder mit einem anderen Mitgliedsstaat!</span>');
 define('TEXT_VAT_TIMEOUT','<span class="messageStackError">Nicht gepr&uuml;ft/Der Service des Mitgliedsstaats konnte nicht erreicht werden (timeout), versuchen Sie es sp&auml;ter noch einmal oder mit einem anderen Mitgliedsstaat!</span>');
-define('TEXT_VAT_SERVER_BUSY','<span class="messageStackError">Nicht gepr&uuml;ft/Der Service kann ihre Anfrage nicht bearbeiten. Versuchen Sie es sp&auml;ter noch einmal!</span>');
+define('TEXT_VAT_SERVER_BUSY','<span class="messageStackError">Nicht gepr&uuml;ft/Der Service kann Ihre Anfrage nicht bearbeiten. Versuchen Sie es sp&auml;ter noch einmal!</span>');
 define('TEXT_VAT_NO_PHP5_SOAP_SUPPORT','<span class="messageStackError">Nicht gepr&uuml;ft/Unterst&uumltzung f&uumlr PHP5 SOAP ist nicht vorhanden!</span>');
 define('TEXT_VAT_CONNECTION_NOT_POSSIBLE','<span class="messageStackError">FEHLER: Verbindung zu Webservice nicht m&ouml;glich (SOAP-FEHLER)!</span>');
 
@@ -553,7 +553,7 @@ define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Angezeigt werden <b>%d</b> bis <b>%d<
 define('RSS_FEED_TITLE', 'Aktuelle Information von modified eCommerce Shopsoftware Blog');
 define('RSS_FEED_DESCRIPTION', 'Aktuelle Information von modified eCommerce Shopsoftware Support Forum');
 define('RSS_FEED_LINK', 'http://www.modified-shop.org/blog');
-define('RSS_FEED_ALTERNATIVE', 'Leider k&ouml;nnen die aktuellen Neuigkeiten nicht im RSS Feed dargestellt werden. Bitte besuchen sie unseren Blog unter <a href="'.RSS_FEED_LINK.'">www.modified-shop.org/blog</a> um wichtige Informationen f&uuml;r Shopbetreiber zu diesen Themen zu erfahren: <ul><li>Wichtige Updates und Fixes</li><li>Funktionserweiterungen</li><li>Rechtsprechungen</li><li>Neuigkeiten</li><li>Klatsch und Tratsch</li></ul>');
+define('RSS_FEED_ALTERNATIVE', 'Leider k&ouml;nnen die aktuellen Neuigkeiten nicht im RSS Feed dargestellt werden. Bitte besuchen Sie unseren Blog unter <a href="'.RSS_FEED_LINK.'">www.modified-shop.org/blog</a> um wichtige Informationen f&uuml;r Shopbetreiber zu diesen Themen zu erfahren: <ul><li>Wichtige Updates und Fixes</li><li>Funktionserweiterungen</li><li>Rechtsprechungen</li><li>Neuigkeiten</li><li>Klatsch und Tratsch</li></ul>');
 define('TEXT_DISPLAY_NUMBER_OF_NEWSFEED', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> News)');
 
 define('CFG_TXT_YES', 'Ja');

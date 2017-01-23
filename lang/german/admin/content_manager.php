@@ -54,7 +54,7 @@
  define('TEXT_CHOOSE_FILE','Datei w&auml;hlen:');
  define('TEXT_CHOOSE_FILE_DESC','Sie k&ouml;nnen ebenfalls eine bereits verwendete Datei aus der Liste ausw&auml;hlen.');
  define('TEXT_NO_FILE','Auswahl L&ouml;schen');
- define('TEXT_CHOOSE_FILE_SERVER','(Falls Sie ihre Dateien selbst via FTP auf ihren Server gespeichert haben <i>(media/content)</i>, k&ouml;nnen Sie hier die Datei ausw&auml;hlen.');
+ define('TEXT_CHOOSE_FILE_SERVER','(Falls Sie Ihre Dateien selbst via FTP auf Ihren Server gespeichert haben <i>(media/content)</i>, k&ouml;nnen Sie hier die Datei ausw&auml;hlen.');
  define('TEXT_CURRENT_FILE','Aktuelle Datei:');
  define('TEXT_FILE_DESCRIPTION','<b>Info:</b><br />Sie haben ebenfalls die M&ouml;glichkeit eine <b>.html</b> oder <b>.htm</b> Datei als Content einzubinden.<br /> Falls Sie eine Datei ausw&auml;hlen oder hochladen, wird der Text im Textfeld ignoriert.<br /><br />');
  define('ERROR_FILE','Falsches Dateiformat (nur .html od .htm)');
@@ -67,7 +67,7 @@
  define('TEXT_LINK','Link:');
  define('TEXT_SORT_ORDER','Sortierung:');
  define('TEXT_GROUP','coID:');
- define('TEXT_GROUP_DESC','Mit dieser ID verkn&uuml;pfen sie gleiche Themen unterschiedlicher Sprachen miteinander.');
+ define('TEXT_GROUP_DESC','Mit dieser ID verkn&uuml;pfen Sie gleiche Themen unterschiedlicher Sprachen miteinander.');
  
  define('TEXT_CONTENT_DESCRIPTION','Mit diesem Content Manager haben Sie die M&ouml;glichkeit, jeden beliebige Dateityp einem Artikel hinzuzuf&uuml;gen.<br />Z.B. Artikelbeschreibungen, Handb&uuml;cher, technische Datenbl&auml;tter, H&ouml;rproben, usw...<br />Diese Elemente werden In der Artikel-Detailansicht angezeigt.<br /><br />');
  define('TEXT_FILENAME','Benutze Datei:');

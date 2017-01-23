@@ -381,7 +381,7 @@ define('SMTP_PASSWORD_DESC' , 'Bitte geben Sie hier das Passwort Ihres SMTP-Kont
 define('SMTP_AUTH_TITLE' , 'SMTP-Auth');
 define('SMTP_AUTH_DESC' , 'Erfordert der SMTP-Server eine sichere Authentifizierung?');
 define('SMTP_PORT_TITLE' , 'SMTP-Port');
-define('SMTP_PORT_DESC' , 'Geben sie den SMTP-Port Ihres SMTP-Servers ein (default: 25)?');
+define('SMTP_PORT_DESC' , 'Geben Sie den SMTP-Port Ihres SMTP-Servers ein (default: 25)?');
 
 //DokuMan - 2011-09-20 - E-Mail SQL errors
 define('EMAIL_SQL_ERRORS_TITLE','SQL-Fehlermeldungen als E-Mail versenden');
@@ -929,7 +929,7 @@ define('GUEST_ACCOUNT_EDIT_TITLE', 'Gastkonten bearbeiten');
 define('GUEST_ACCOUNT_EDIT_DESC', 'D&uuml;rfen G&auml;ste ihre Accountdetails sehen und bearbeiten?');
 
 define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail Signatur');
-define('EMAIL_SIGNATURE_ID_DESC', 'W&auml;hlen sie den Content aus, der als Signatur in den Shop E-Mails verwendet werden soll.');
+define('EMAIL_SIGNATURE_ID_DESC', 'W&auml;hlen Sie den Content aus, der als Signatur in den Shop E-Mails verwendet werden soll.');
 
 define('TEXT_PAYPAL_NOT_INSTALLED', '<div class="important_info">PayPal wurde noch nicht installiert. Dies kann <a href="'.xtc_href_link(FILENAME_MODULES, 'set=payment&module=paypal').'">hier</a> gemacht werden.</div>');
 
@@ -963,7 +963,7 @@ define('NEW_ATTRIBUTES_STYLING_TITLE', 'Attribut Verwaltung Styling');
 define('NEW_ATTRIBUTES_STYLING_DESC', 'In der Attribut Verwaltung das Styling bei den Checkboxen/Dropdowns aktivieren? Bei sehr vielen Attributen und Performanceproblemen auf Nein/false setzen.');
 
 define('DB_CACHE_TYPE_TITLE', 'Cache Engine');
-define('DB_CACHE_TYPE_DESC', 'W&auml;hlen sie eine der verf&uuml;gbaren Engines zum Cachen');
+define('DB_CACHE_TYPE_DESC', 'W&auml;hlen Sie eine der verf&uuml;gbaren Engines zum Cachen');
 
 define('META_PRODUCTS_KEYWORDS_LENGTH_TITLE', 'L&auml;nge der Zusatz-Begriffe f&uuml;r Suche');
 define('META_PRODUCTS_KEYWORDS_LENGTH_DESC', 'Maximum L&auml;nge der Zusatz-Begriffe f&uuml;r Suche (in Buchstaben)');
@@ -1049,13 +1049,13 @@ define('ORDER_STATUSES_DISPLAY_DEFAULT_TITLE', 'Anzeige Bestellungen');
 define('ORDER_STATUSES_DISPLAY_DEFAULT_DESC', 'Bestellungen mit welchem Bestellstatus sollen standardm&auml;&szlig;ig angezeigt werden?');
 
 define('INVOICE_INFOS_TITLE', 'Rechnungsdaten');
-define('INVOICE_INFOS_DESC', 'W&auml;hlen sie eine Contentseite. Der Inhalt wird auf dem Rechnungsdruck angezeigt.');
+define('INVOICE_INFOS_DESC', 'W&auml;hlen Sie eine Contentseite. Der Inhalt wird auf dem Rechnungsdruck angezeigt.');
 
 define('CATEGORIES_SHOW_PRODUCTS_SUBCATS_TITLE', 'Artikel aus Unterkategorien anzeigen');
 define('CATEGORIES_SHOW_PRODUCTS_SUBCATS_DESC', 'Sollen alle Artikel aus vorhandenen Unterkategorien im Listing angezeigt werden?');
 
 define('SEO_URL_MOD_CLASS_TITLE', 'URL Modul');
-define('SEO_URL_MOD_CLASS_DESC', 'W&auml;hlen sie ein URL Modul.');
+define('SEO_URL_MOD_CLASS_DESC', 'W&auml;hlen Sie ein URL Modul.');
 
 define('MODULE_BANNER_MANAGER_STATUS_TITLE', 'Banner Manager');
 define('MODULE_BANNER_MANAGER_STATUS_DESC', 'Banner Manager aktivieren?');

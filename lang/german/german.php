@@ -98,7 +98,7 @@ define('ERROR_NO_PAYMENT_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Zahlung
 define('JS_ERROR_NO_SHIPPING_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Versandart f&uuml;r Ihre Bestellung.\n');
 define('JS_ERROR_CONDITIONS_NOT_ACCEPTED', '* Sofern Sie unsere Allgemeinen Gesch&auml;ftsbedingungen nicht akzeptieren,\nk&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
 define('JS_ERROR_REVOCATION_NOT_ACCEPTED', '* Sofern Sie das Erl&ouml;schen des Widerrufsrecht f&uuml;r virtuelle Artikel nicht akzeptieren,\nk&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
-define('JS_REVIEW_AUTHOR', '* Bitte geben sie ihren Namen ein.\n\n');
+define('JS_REVIEW_AUTHOR', '* Bitte geben Sie Ihren Namen ein.\n\n');
 
 /*
  * 
@@ -537,7 +537,7 @@ define('TEXT_SAVED_BASKET', 'Bitte &uuml;berpr&uuml;fen Sie Ihren Warenkorb. Die
 
 define('ERROR_REVIEW_TEXT', 'Der Rezensions-Text muss aus mindestens ' . REVIEW_TEXT_MIN_LENGTH . ' Zeichen bestehen.');
 define('ERROR_REVIEW_RATING', 'Bitte geben Sie Ihre Bewertung ab.');
-define('ERROR_REVIEW_AUTHOR', 'Bitte geben sie Ihren Namen ein.');
+define('ERROR_REVIEW_AUTHOR', 'Bitte geben Sie Ihren Namen ein.');
 
 define('GV_NO_PAYMENT_INFO', '<div class="infomessage">Sie k&ouml;nnen mit Ihrem Guthaben die Bestellung komplett bezahlen. Wenn Sie Ihr Guthaben nicht einl&ouml;sen m&ouml;chten, deaktivieren Sie die Guthabenauswahl und w&auml;hlen eine Zahlungsweise!</div>');
 define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Ihr Guthaben reicht nicht aus um die Bestellung komplett zu bezahlen. Bitte w&auml;hlen Sie zus&auml;tzlich eine Zahlungsweise!</div>');
@@ -557,8 +557,8 @@ define('PRODUCTS_REVIEW_LINK', 'Rezension schreiben');
 define('TAX_INFO_SMALL_BUSINESS', 'Endpreis nach &sect; 19 UStG.');
 define('TAX_INFO_SMALL_BUSINESS_FOOTER', 'Aufgrund des Kleinunternehmerstatus gem. &sect; 19 UStG erheben wir keine Umsatzsteuer und weisen diese daher auch nicht aus.');
 
-define('NEED_CHANGE_PWD', 'Bitte &auml;ndern sie ihr Passwort.');
-define('TEXT_REQUEST_NOT_VALID', 'Der Link ist abgelaufen. Bitte fordern sie ein neues Passwort an.');
+define('NEED_CHANGE_PWD', 'Bitte &auml;ndern Sie Ihr Passwort.');
+define('TEXT_REQUEST_NOT_VALID', 'Der Link ist abgelaufen. Bitte fordern Sie ein neues Passwort an.');
 
 define('NAVBAR_TITLE_WISHLIST', 'Merkzettel');
 define('TEXT_TO_WISHLIST', 'Auf den Merkzettel');
@@ -582,10 +582,10 @@ define('TEXT_FILTER_SORTING_ORDER_DESC', 'Am meisten verkauft');
 
 define('NAVBAR_TITLE_ACCOUNT_CHECKOUT_EXPRESS_EDIT', 'Einstellungen f&uuml;r Mein Schnellkauf');
 define('SUCCESS_CHECKOUT_EXPRESS_UPDATED', 'Die Einstellungen f&uuml;r Mein Schnellkauf wurden gespeichert.');
-define('TEXT_ERROR_CHECKOUT_EXPRESS_SHIPPING_ADDRESS', 'Bitte w&auml;hlen sie eine Versandadresse');
-define('TEXT_ERROR_CHECKOUT_EXPRESS_SHIPPING_MODULE', 'Bitte w&auml;hlen sie eine Versandart');
-define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_ADDRESS', 'Bitte w&auml;hlen sie eine Rechnungsadresse');
-define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_MODULE', 'Bitte w&auml;hlen sie eine Zahlart');
+define('TEXT_ERROR_CHECKOUT_EXPRESS_SHIPPING_ADDRESS', 'Bitte w&auml;hlen Sie eine Versandadresse');
+define('TEXT_ERROR_CHECKOUT_EXPRESS_SHIPPING_MODULE', 'Bitte w&auml;hlen Sie eine Versandart');
+define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_ADDRESS', 'Bitte w&auml;hlen Sie eine Rechnungsadresse');
+define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_MODULE', 'Bitte w&auml;hlen Sie eine Zahlart');
 define('TEXT_CHECKOUT_EXPRESS_INFO_LINK', 'Mein Schnellkauf');
 define('TEXT_CHECKOUT_EXPRESS_INFO_LINK_MORE', 'Mehr Informationen zu Mein Schnellkauf &raquo;');
 define('TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST', 'Immer g&uuml;nstigste Versandard w&auml;hlen');
@@ -596,7 +596,7 @@ define('AC_SHOW_PAGE_OF', ' von ');
 define('FREE_SHIPPING_INFO', 'ab %s  Bestellwert versenden wir Ihre Bestellung versandkostenfrei');
 
 define('MANUFACTURER_NOT_FOUND', 'Hersteller nicht gefunden');
-define('ENTRY_TOKEN_ERROR', 'Bitte &uuml;berpr&uuml;fen sie ihre Eingaben.');
+define('ENTRY_TOKEN_ERROR', 'Bitte &uuml;berpr&uuml;fen Sie Ihre Eingaben.');
 
 define('IMAGE_BUTTON_CONFIRM', 'Best&auml;tigen'); // Needed for PayPal
 

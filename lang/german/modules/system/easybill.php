@@ -33,6 +33,6 @@ define('MODULE_EASYBILL_NO_AUTO_PAYMENT_DESC','Welche Zahlarten sollen nicht aut
 define('MODULE_EASYBILL_STATUS_CHANGE_TITLE','Bestellstatus');
 define('MODULE_EASYBILL_STATUS_CHANGE_DESC','Nach erfolgter Rechnungserstellung auf diesen Status setzen.');
 define('MODULE_EASYBILL_STANDARD_TAX_CLASS_TITLE','<hr /><b>Standard Steuersatz:</b>');
-define('MODULE_EASYBILL_STANDARD_TAX_CLASS_DESC','Bitte geben sie einen Standardsatz an, f&uuml;r den Fall, dass keine Steuerklasse ermittelt werden kann.');
+define('MODULE_EASYBILL_STANDARD_TAX_CLASS_DESC','Bitte geben Sie einen Standardsatz an, f&uuml;r den Fall, dass keine Steuerklasse ermittelt werden kann.');
   
 ?>

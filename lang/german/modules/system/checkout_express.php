@@ -18,6 +18,6 @@ define('MODULE_CHECKOUT_EXPRESS_TEXT_DESCRIPTION', 'Express Checkout erm&ouml;gl
 define('MODULE_CHECKOUT_EXPRESS_CONTENT_TITLE','Content');
 define('MODULE_CHECKOUT_EXPRESS_CONTENT_DESC','Sie k&ouml;nnen noch eine Contentseite anlegen und den Expresscheckout erkl&auml;ren.');
 
-define('MODULE_CHECKOUT_EXPRESS_DESCRIPTION_INSTALL','<br/><br/>Zus&auml;tzlich k&ouml;nnen sie eine Informationsseite f&uuml;r den Express Checkout installieren.');
+define('MODULE_CHECKOUT_EXPRESS_DESCRIPTION_INSTALL','<br/><br/>Zus&auml;tzlich k&ouml;nnen Sie eine Informationsseite f&uuml;r den Express Checkout installieren.');
 define('MODULE_CHECKOUT_EXPRESS_BUTTON_INSTALL','Content einf&uuml;gen');
 ?>

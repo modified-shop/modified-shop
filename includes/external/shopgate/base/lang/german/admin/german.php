@@ -45,7 +45,7 @@ define('SHOPGATE_CONFIG_ERROR', 'FEHLER:');
 define('SHOPGATE_CONFIG_ERROR_SAVING', 'Fehler beim Speichern der Konfiguration. ');
 define('SHOPGATE_CONFIG_ERROR_LOADING', 'Fehler beim Laden der Konfiguration. ');
 define('SHOPGATE_CONFIG_ERROR_READ_WRITE', 'Bitte &uuml;berpr&uuml;fen Sie die Schreibrechte (777) f&uuml;r den Ordner "/shopgate_library/config/" des Shopgate-Plugins.');
-define('SHOPGATE_CONFIG_ERROR_INVALID_VALUE', 'Bitte &uuml;berpr&uuml;fen Sie ihre Eingaben in den folgenden Feldern: ');
+define('SHOPGATE_CONFIG_ERROR_INVALID_VALUE', 'Bitte &uuml;berpr&uuml;fen Sie Ihre Eingaben in den folgenden Feldern: ');
 define('SHOPGATE_CONFIG_ERROR_DUPLICATE_SHOP_NUMBERS', 'Es existieren mehrere Konfigurationen mit der gleichen Shop-Nummer. Dies kann zu erheblichen Problemen f&uuml;hren!');
 define('SHOPGATE_CONFIG_INFO_MULTIPLE_CONFIGURATIONS', 'Es existieren Konfigurationen f&uuml;r mehrere Marktpl&auml;tze.');
 define('SHOPGATE_CONFIG_SAVE', 'Speichern');
