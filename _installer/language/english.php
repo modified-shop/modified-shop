@@ -70,6 +70,9 @@
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
   define('TEXT_DB_UPGRADE','Only perform database update on already installed modified eCommerce Shopsoftware!');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
+  define('TEXT_NEW_INSTALL', 'New installation');
+  define('TEXT_WRITE_CONFIG', 'Recreate configuration file (configure.php)');
+
   define('TEXT_DB_NOT_EMPTY', 'ATTENTION: Your database already contains tables!');
   // BOF - vr - 2010-01-14 - check MySQL *server* version
   define('TEXT_DB_SERVER_VERSION_ERROR','Your MySQL version is too old. The shop requires at least version: ');
@@ -116,7 +119,7 @@
   define('TITLE_SELECT_LANGUAGE','Select your language:');
   define('TEXT_GERMAN','German');
   define('TEXT_ENGLISH','English');
-  define('TITLE_UPGRADE','Execute Updater:');
+  define('TITLE_UPGRADE','Execute:');
   define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
   define('BUTTON_DONATE','<a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_WELCOME_INDEX','<b>Welcome to the modified eCommerce Shopsoftware installation process</b><br /><br />The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP 5.3 and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
@@ -344,9 +347,15 @@
   define('TEXT_FINISHED_DB_STRUCTURE_UPDATE', 'Database structure update finished');
   define('TEXT_START_DB_STRUCTURE_UPDATE', 'Start Database structure update');
   define('TEXT_PERFORM_MANUAL_SQL_UPDATE', 'SQL statements have to be enclosed with a semicolon ( ; )!');
+  define('TITLE_PERFORM_WRITE_CONFIGURE', ' Update configuration file (configure.php)<br />');
   define('TITLE_PERFORM_DELETE_FILES_AND_DIRS', ' Delete old files and directories<br />');
   define('TITLE_PERFORM_DB_STRUCTURE_UPDATE', ' Database structure update<br />');
   define('TITLE_PERFORM_DB_UPDATE', ' Database update<br />');
   define('TITLE_PERFORM_MANUAL_SQL_UPDATE', ' Manual SQL input');
   define('TEXT_TABLE', 'Table ');
   define('TEXT_OF', ' of ');
+  define('TEXT_START_CONFIG_UPDATE', 'Start update of the configuration file (configure.php).');
+  define('TEXT_CONFIG_NOT_OPEN', 'File %s cannot be opened for writing.');
+  define('TEXT_CONFIG_NOT_WRITEABLE', 'File %s is not writable.');
+  define('TEXT_CONFIG_NOT_WRITTEN', 'File %s could not be written.');
+  define('TEXT_CONFIG_SUCCESS', 'File %s was succesfully updated.');

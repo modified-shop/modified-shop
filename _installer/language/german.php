@@ -356,7 +356,7 @@
   define('TITLE_PERFORM_MANUAL_SQL_UPDATE', ' Manuelle SQL-Eingabe');
   define('TEXT_TABLE', 'Tabelle ');
   define('TEXT_OF', ' von ');
-  define('TEXT_START_CONFIG_UPDATE', 'Aktualisierung der Konfiguration starten.');
+  define('TEXT_START_CONFIG_UPDATE', 'Aktualisierung der Konfigurations-Datei (configure.php) starten.');
   define('TEXT_CONFIG_NOT_OPEN', 'Datei %s kann nicht zum Schreiben ge&ouml;ffnet werden.');
   define('TEXT_CONFIG_NOT_WRITEABLE', 'Datei %s ist nicht beschreibbar.');
   define('TEXT_CONFIG_NOT_WRITTEN', 'Datei %s konnte nicht geschrieben werden.');
