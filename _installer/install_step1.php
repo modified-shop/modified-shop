@@ -137,27 +137,29 @@
                     </tr>
                   </table>
                   <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
-                    <p><b><?php echo TEXT_DATABASE_TYPE; ?></b><br />
-                    <table width="300" border="0" cellpadding="0" cellspacing="4">
-                      <?php
-                      if (function_exists('mysql_connect')) {
-                      ?>
-                      <tr>
-                        <td width="98"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysql</td>
-                        <td width="192">
-                          <?php echo xtc_draw_radio_field_installer('DB_MYSQL_TYPE', 'mysql', false); ?>
-                        </td>
-                      </tr>
-                      <?php
-                      }
-                      ?>
-                      <tr>
-                        <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysqli</td>
-                        <td>
-                        <?php echo xtc_draw_radio_field_installer('DB_MYSQL_TYPE', 'mysqli', true); ?> </td>
-                      </tr>
-                    </table>
-                    <?php echo TEXT_DATABASE_TYPE_LONG; ?></p>
+                    <?php
+                    if (function_exists('mysql_connect')) {
+                    ?>
+                      <p><b><?php echo TEXT_DATABASE_TYPE; ?></b><br />
+                      <table width="300" border="0" cellpadding="0" cellspacing="4">
+                        <tr>
+                          <td width="98"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysql</td>
+                          <td width="192">
+                            <?php echo xtc_draw_radio_field_installer('DB_MYSQL_TYPE', 'mysql', false); ?>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysqli <?php echo TEXT_DATABASE_TYPE_PREFERRED; ?></td>
+                          <td>
+                          <?php echo xtc_draw_radio_field_installer('DB_MYSQL_TYPE', 'mysqli', true); ?> </td>
+                        </tr>
+                      </table>
+                      <?php echo TEXT_DATABASE_TYPE_LONG; ?></p>
+                    <?php
+                    } else {
+                      echo xtc_draw_hidden_field_installer('DB_MYSQL_TYPE', 'mysqli');
+                    }
+                    ?>
                     <p><b><?php echo TEXT_DATABASE_SERVER; ?></b><br />
                     <?php echo xtc_draw_input_field_installer('DB_SERVER'); ?><br />
                     <?php echo TEXT_DATABASE_SERVER_LONG; ?></p>
