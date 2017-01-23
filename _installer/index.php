@@ -58,7 +58,7 @@
     show_auth();
   }
   $_SESSION['auth'] = true;
-  if (isset($_POST['db_upgrade']) && ($_POST['db_upgrade'] == true)) {
+  if (isset($_POST['update']) && $_POST['update'] == 'db_upgrade') {
     xtc_redirect(xtc_href_link('update.php?lg='. $lang, '', 'NONSSL'));
   }
   //EOF - web28 - 2010-12-13 - redirect to db_upgrade.php, if database is already set up (do an update instead of a new installation)
@@ -72,7 +72,7 @@
       $messageStack->add('index', SELECT_LANGUAGE_ERROR);
     }
     if ($error == false) {
-      xtc_redirect(xtc_href_link('install_step1.php?lg='. $lang .'&char='.INSTALL_CHARSET, '', 'NONSSL'));
+      xtc_redirect(xtc_href_link('install_step1.php?lg='. $lang .'&char='.INSTALL_CHARSET.((isset($_POST['update']) && $_POST['update'] == 'configure') ? '&insdb=0' : ''), '', 'NONSSL'));
     }
   }
 
@@ -280,7 +280,17 @@
                   <table width="100%" border="0" cellpadding="0" cellspacing="4">
                     <tr>
                       <td style="padding-left:4px"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" /></td>
-                      <td  style="padding-right:10px"><?php echo xtc_draw_checkbox_field_installer('db_upgrade','',true); ?></td>
+                      <td  style="padding-right:10px"><?php echo xtc_draw_radio_field_installer('update', '', false); ?></td>
+                      <td><?php echo TEXT_NEW_INSTALL; ?></td>
+                    </tr>
+                    <tr>
+                      <td style="padding-left:4px"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" /></td>
+                      <td  style="padding-right:10px"><?php echo xtc_draw_radio_field_installer('update', 'configure', false); ?></td>
+                      <td><?php echo TEXT_WRITE_CONFIG; ?></td>
+                    </tr>
+                    <tr>
+                      <td style="padding-left:4px"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" /></td>
+                      <td  style="padding-right:10px"><?php echo xtc_draw_radio_field_installer('update', 'db_upgrade', true); ?></td>
                       <td><?php echo TEXT_DB_UPGRADE; ?></td>
                     </tr>
                   </table>

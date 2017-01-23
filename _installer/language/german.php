@@ -70,6 +70,9 @@
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
   define('TEXT_DB_UPGRADE','Nur Datenbank-Update der bereits installierten modified eCommerce Shopsoftware durchf&uuml;hren!');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
+  define('TEXT_NEW_INSTALL', 'Neuinstallation');
+  define('TEXT_WRITE_CONFIG', 'Konfigurations-Datei (configure.php) neu erstellen');
+
   define('TEXT_DB_NOT_EMPTY', 'ACHTUNG: Die angegebene Datenbank enth&auml;lt bereits Tabellen!');
   // BOF - vr - 2010-01-14 - check MySQL *server* version
   define('TEXT_DB_SERVER_VERSION_ERROR','Ihre MySQL-Version ist zu alt. Der Shop ben&ouml;tigt mindestens die Version: ');
@@ -116,7 +119,7 @@
   define('TITLE_SELECT_LANGUAGE','W&auml;hlen Sie eine Sprache aus:');
   define('TEXT_GERMAN','Deutsch');
   define('TEXT_ENGLISH','Englisch');
-  define('TITLE_UPGRADE','Updater ausf&uuml;hren:');
+  define('TITLE_UPGRADE','Ausf&uuml;hren:');
   define('TEXT_INFO_DONATIONS_IMG_ALT','Unterst&uuml;tzen Sie dieses Projekt mit Ihrer Spende');
   define('BUTTON_DONATE','<a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_WELCOME_INDEX','<b>Willkommen zur modified eCommerce Shopsoftware Installation</b><br /><br />Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP 5.3.0) und MySQL (ab MySQL 5.0.0) zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.<br /><br />' . BUTTON_DONATE);
@@ -346,11 +349,15 @@
   define('TEXT_FINISHED_DB_STRUCTURE_UPDATE', 'Datenbankstruktur-Update beendet');
   define('TEXT_START_DB_STRUCTURE_UPDATE', 'Datenbankstruktur-Update starten');
   define('TEXT_PERFORM_MANUAL_SQL_UPDATE', 'SQL-Befehle m&uuml;ssen mit einem Semikolon ( ; ) abgeschlossen werden!');
+  define('TITLE_PERFORM_WRITE_CONFIGURE', ' Konfigurations-Datei (configure.php) aktualisieren<br />');
   define('TITLE_PERFORM_DELETE_FILES_AND_DIRS', ' Alte Dateien und Verzeichnise l&ouml;schen<br />');
   define('TITLE_PERFORM_DB_STRUCTURE_UPDATE', ' Datenbankstruktur-Update<br />');
   define('TITLE_PERFORM_DB_UPDATE', ' Datenbank-Update<br />');
   define('TITLE_PERFORM_MANUAL_SQL_UPDATE', ' Manuelle SQL-Eingabe');
   define('TEXT_TABLE', 'Tabelle ');
   define('TEXT_OF', ' von ');
-  
-  
+  define('TEXT_START_CONFIG_UPDATE', 'Aktualisierung der Konfiguration starten.');
+  define('TEXT_CONFIG_NOT_OPEN', 'Datei %s kann nicht zum Schreiben ge&ouml;ffnet werden.');
+  define('TEXT_CONFIG_NOT_WRITEABLE', 'Datei %s ist nicht beschreibbar.');
+  define('TEXT_CONFIG_NOT_WRITTEN', 'Datei %s konnte nicht geschrieben werden.');
+  define('TEXT_CONFIG_SUCCESS', 'Datei %s wurde erfolgreich aktualisiert.');

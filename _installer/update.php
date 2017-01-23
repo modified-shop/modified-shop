@@ -104,7 +104,50 @@ $clean = false;
 if (isset($_POST['update']) && $_POST['update']=='true') {
 
   switch ($_GET['action']) {
-  
+
+    case 'configure':
+      $http_server = HTTP_SERVER;
+      $https_server = HTTPS_SERVER;
+    
+      $_POST['ENABLE_SSL'] = (ENABLE_SSL === false ? 'false' : 'true');
+      $_POST['USE_SSL_PROXY'] = (USE_SSL_PROXY === false ? 'false' : 'true');
+      
+      $_POST['DIR_FS_DOCUMENT_ROOT'] = DIR_FS_DOCUMENT_ROOT;
+      $_POST['DIR_WS_CATALOG'] = DIR_WS_CATALOG;
+      
+      $_POST['DB_SERVER'] =  DB_SERVER;
+      $_POST['DB_SERVER_USERNAME'] = DB_SERVER_USERNAME;
+      $_POST['DB_SERVER_PASSWORD'] =  DB_SERVER_PASSWORD;
+      $_POST['DB_DATABASE'] =  DB_DATABASE;
+      $_POST['DB_MYSQL_TYPE'] = DB_MYSQL_TYPE;
+
+      $_POST['USE_PCONNECT'] =  USE_PCONNECT;    
+      $_POST['STORE_SESSIONS'] =  STORE_SESSIONS;
+      
+      //create  includes/configure.php
+      include(DIR_FS_DOCUMENT_ROOT.'_installer/includes/templates/configure.php');
+      
+      if (file_exists(DIR_FS_CATALOG.'/includes/local/configure.php')) {
+        $filename = 'includes/local/configure.php';
+      } else {
+        $filename = 'includes/configure.php';
+      }
+      
+      if (is_writable(DIR_FS_CATALOG.$filename)) {
+        if (!$fp = fopen($filename, 'w')) {
+         $error = sprintf(TEXT_CONFIG_NOT_OPEN, $filename);
+        }
+        if (!fputs($fp, $file_contents)) {
+          $error = sprintf(TEXT_CONFIG_NOT_WRITTEN, $filename);
+        } else {
+          $success = sprintf(TEXT_CONFIG_SUCCESS, $filename);
+        }
+        fclose($fp);
+      } else {
+        $error = sprintf(TEXT_CONFIG_NOT_WRITEABLE, $filename);
+      }
+      break;
+    
     case 'db_update':
       include(DIR_FS_DOCUMENT_ROOT.'_installer/includes/update_action.php');
       break;
@@ -183,6 +226,22 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
                 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
                   <?php
                   switch ($_GET['action']) {
+                    case 'configure':
+                      if (!empty($success)) {
+                        ?>
+                        <tr>
+                          <td width="20%" valign="top"><?php echo TITLE_PERFORM_SUCCESS; ?></td>
+                          <td><?php echo $success; ?></td>
+                        </tr>
+                        <?php 
+                      }
+                      if ($error) {
+                        echo '<div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;">'.$error.'</div>';
+                      }
+                      echo '<form name="update" method="post">';
+                      echo '<p style="text-align:center;">'.TEXT_START_CONFIG_UPDATE.'</p>';                      
+                      break;
+                  
                     case 'unlink':
                       if (!empty($success)) {
                       ?>
@@ -277,6 +336,7 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
                     default:
                       echo '<form name="update" method="get">' .
                            '<input type="hidden" name="lg" value="'.$lang.'" />' .
+                           '<input type="radio" name="action" value="configure">' . TITLE_PERFORM_WRITE_CONFIGURE .
                            '<input type="radio" name="action" value="unlink">' . TITLE_PERFORM_DELETE_FILES_AND_DIRS .
                            '<input type="radio" name="action" value="db_update">' . TITLE_PERFORM_DB_STRUCTURE_UPDATE .
                            '<input type="radio" name="action" value="sql_update">' . TITLE_PERFORM_DB_UPDATE .
@@ -307,8 +367,17 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
             <td>
               <?php
               switch ($_GET['action']) {
-                case 'unlink':
+                case 'configure':
                   echo '<a href="'.$_SERVER['PHP_SELF'].'?lg='.$lang.'"><img style="border: 0;" src="images/buttons/'.$lang.'/button_cancel.gif" /></a>';
+                  if (!$clean) {
+                    echo '<input type="hidden" name="update" value="true" />' .
+                         '<input style="float:right" type="image" src="images/buttons/'.$lang.'/button_execute.gif">' .
+                         '</form>';
+                  }
+                  break;
+
+                case 'unlink':
+                 echo '<a href="'.$_SERVER['PHP_SELF'].'?lg='.$lang.'"><img style="border: 0;" src="images/buttons/'.$lang.'/button_cancel.gif" /></a>';
                   if ($clean === false && !$_POST) {
                     echo '<input type="hidden" name="update" value="true" />' .
                          '<input style="float:right" type="image" src="images/buttons/'.$lang.'/button_execute.gif">' .
