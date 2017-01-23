@@ -58,5 +58,6 @@
   define('DIR_MODIFIED_INSTALLER', '_installer');
   
   // extra paths
+  require_once(DIR_FS_INC.'auto_include.inc.php');
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/paths/','php') as $file) require_once ($file);
 ?>

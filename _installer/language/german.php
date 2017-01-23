@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: german.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -156,7 +156,8 @@
   define('TEXT_AUTOMATIC_LONG','Ihre Informationen bez&uuml;glich Webserver und Datenbank werden automatisch in die ben&ouml;tigten Catalog und Admin Konfigurations-Dateien geschrieben, bestehende Dateien werden dabei &uuml;berschrieben!');
   define('TITLE_DATABASE_SETTINGS','Datenbank Informationen');
   define('TEXT_DATABASE_TYPE','Datenbankverbindung');
-  define('TEXT_DATABASE_TYPE_LONG','Bitte w&auml;hlen sie die Datenbankverbindung.<br /><b>Wichtig:</b> mysqli ist noch in der Beta Phase. Sollte es nach der Installation zu Problemem kommen, kann das in der /includes/configure.php umgestellt werden.');
+  define('TEXT_DATABASE_TYPE_LONG','Bitte w&auml;hlen sie die Datenbankverbindung.');
+  define('TEXT_DATABASE_TYPE_PREFERRED', '(bevorzugt)');
   define('TEXT_DATABASE_SERVER','Datenbankserver');
   define('TEXT_DATABASE_SERVER_LONG','Der Datenbankserver kann entweder in Form eines Hostnamens, wie zum Beispiel <i>db1.myserver.com</i> oder <i>localhost</i>, oder als IP-Adresse, wie <i>192.168.0.1</i> angegeben werden.');
   define('TEXT_USERNAME','Benutzername');

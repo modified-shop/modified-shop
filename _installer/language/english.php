@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: english.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -154,7 +154,8 @@
   define('TEXT_AUTOMATIC_LONG','The information you submit regarding the web server and database server will be automatically saved into both modified eCommerce Shopsoftware and Administration Tool configuration files.');
   define('TITLE_DATABASE_SETTINGS','Database Settings');
   define('TEXT_DATABASE_TYPE','Database connection');
-  define('TEXT_DATABASE_TYPE_LONG','Please choose your database connection.<br /><b>Attention:</b> mysqli is still beta. If you are experiencing any problems after installation, you can change it in /includes/configure.php');
+  define('TEXT_DATABASE_TYPE_LONG','Please choose your database connection.');
+  define('TEXT_DATABASE_TYPE_PREFERRED', '(preferred)');
   define('TEXT_DATABASE_SERVER','Database Server');
   define('TEXT_DATABASE_SERVER_LONG','The database server can be in the form of a hostname, such as <i>db1.myserver.com</i>, or as an IP address, such as <i>192.168.0.1</i>.');
   define('TEXT_USERNAME','Username');
