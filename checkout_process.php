@@ -316,7 +316,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         if ($update_attr_stock === true) {
           xtc_db_query("UPDATE ".TABLE_PRODUCTS_ATTRIBUTES."
                            SET attributes_stock=attributes_stock - '".$order->products[$i]['qty']."'
-                         WHERE products_id='".$order->products[$i]['id']."'
+                         WHERE products_id='".xtc_get_prid($order->products[$i]['id'])."'
                            AND options_values_id='".$order->products[$i]['attributes'][$j]['value_id']."'
                            AND options_id='".$order->products[$i]['attributes'][$j]['option_id']."'
                          ");
