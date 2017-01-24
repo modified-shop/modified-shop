@@ -1744,8 +1744,8 @@ class AccountCheck {
     } else {
     	// Methode A
       for ($Run = 0; $Run < strlen($AccountNo); $Run++) {
-        // $AccountNoTemp[$Run + 1] = (int) substr($AccountNo,$Run,1);
-        $AccountNoTemp[$Run] = (int) substr($AccountNo,$Run,1);
+        $AccountNoTemp[$Run + 1] = (int) substr($AccountNo,$Run,1);
+        //$AccountNoTemp[$Run] = (int) substr($AccountNo,$Run,1);
       }
 
       $i = 4;
@@ -2789,6 +2789,17 @@ class AccountCheck {
 	    $markE2 = $this->Method00($Help, '212121212121212', 16, 10, 0, 1);
 	  }   
     return $markE2;
+  }
+
+  /* --- Added Christian Rothe 20170103 --- */
+  private function MarkE3($AccountNo) {
+    $AccountNo = $this->ExpandAccount($AccountNo);
+    $markE3 = $this->Method00($AccountNo, '212121212', 10, 10);
+    // Wenn Pruefzifferfehler, dann weiter pruefen mit Methode 21.
+    if ($markE3) {
+      $markE3 = $this->Mark21($AccountNo);
+    }
+    return $markE3;
   }
 
 /* ----- Ende Endgueltige Funktionen der einzelnen Berechnungsmethoden. ---- */
