@@ -28,6 +28,7 @@ class paypalcart extends PayPalPayment {
     PayPalPayment::__construct('paypalcart');
 
 		$this->tmpOrders = true;
+		$this->messageStack = false;
   }
 
 
@@ -78,7 +79,7 @@ class paypalcart extends PayPalPayment {
   function confirmation() {
     global $order, $smarty, $xtPrice, $main, $messageStack, $total_weight, $total_count, $free_shipping;
         
-    if (isset($_GET['conditions_message'])) {
+    if (isset($_GET['conditions_message']) && $this->messageStack === false) {
       $message_condition = str_replace('\n', '', ERROR_CONDITIONS_NOT_ACCEPTED);
       $message_address = str_replace('\n', '', ERROR_ADDRESS_NOT_ACCEPTED);
       switch($_GET['conditions_message']) {
@@ -109,6 +110,7 @@ class paypalcart extends PayPalPayment {
           $messageStack->add('checkout_confirmation', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
           break;
       }
+      $this->messageStack = true;
     }
 
     if ($order->delivery['country']['iso_code_2'] != '') {
