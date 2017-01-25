@@ -1,0 +1,13 @@
+
+Vielen Dank für die Anmeldung zu unserem Newsletter.
+
+Sie erhalten diese E-Mail, weil Sie unseren Newsletter empfangen möchten.
+Bitte klicken Sie auf den Aktivierungslink, damit Ihre E-Mail-Adresse für den Newsletterempfang freigeschaltet wird.
+
+Sollten Sie sich nicht für unseren Newsletter eingetragen haben bzw. den Empfang des Newsletters nicht wünschen,
+bitten wir Sie, den Aktivierungslink einfach zu ignorieren. 
+      
+Ihr Aktivierungslink:
+{$LINK}
+
+[SIGNATUR]

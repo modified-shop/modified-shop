@@ -1,0 +1,165 @@
+body {
+  position: relative;
+}
+
+.sidebar_btn {
+  display: none;
+}
+
+#col_left {
+  display: block;
+}
+
+#sidebar_marker {
+  display: none;
+  width: 0px;
+  height: 0px;
+  line-height: 0px;
+  font-size: 0px;
+  background-position: 300px;/* Verschiebung des Contents bei mobile-Menu open*/
+}
+#sidebar_filler {
+  background: #434343;
+}
+
+.sidebar_layer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 9000;
+  background: transparent url(images/overlay.png) repeat scroll 0px 0px;
+  display: none;
+  opacity: 0.9;
+}
+
+.sidebar_closer {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  font-size:24px;
+  line-height:24px;
+  color:#6d2551;
+  cursor:pointer;
+  padding:10px;
+  background:#fafafa;
+  width:100%;
+  max-width:300px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  text-align:right;
+  z-index:9002;
+  display: none;
+}
+.sidebar_moremargin {
+  top: 36px;
+}
+
+
+@media only screen and (min-width: 986px) {
+  #col_left_overlay{
+    display: block;
+    width: 100%;
+    max-width: 265px;
+    position: relative;
+  }
+
+  #col_left {
+    display: block;
+    width: 100%;
+    max-width: 265px;
+    position: relative;
+  }
+
+  .sidebar_btn {
+    display: none;
+  }
+
+  #sidebar_marker {
+    font-size: 0px;
+  }
+
+  .box_sidebar {
+    display: block;
+  }
+
+}
+
+@media only screen and (max-width: 985px) {
+  #layout_navbar {
+    z-index: 1000;
+  }
+
+  #layout_logo {
+    z-index: 1000;
+  }
+
+  #layout_content {
+    z-index: 1000;
+  }
+
+  #layout_footer {
+    z-index: 1000;
+  }
+  
+  #col_left_overlay{
+    display: none;
+    z-index: 9001;
+    position: absolute;
+    top:0px;
+    background:transparent;
+    width:100%;
+    height:100%;
+    left:-300px;
+    padding-top:45px;
+  }
+
+  #col_left {
+    display: block;
+    padding:10px;
+    background:#fafafa;
+    width:280px;
+  }
+
+  .sidebar_btn {
+    display: block;
+  }
+
+  #sidebar_marker {
+    font-size: 5px;
+  }
+
+  .box_sidebar {
+    display: none;
+  }
+
+  /* Arrows up and down */
+  .sidebar_inactive {
+    cursor: pointer;
+  }
+
+  .sidebar_active {
+    cursor: pointer;
+  }
+
+  .box_sidebar{
+    display: none;
+  }
+
+  .box_header.sidebar_inactive .fa {
+    display:inline-block;
+  }
+
+  .box_header.sidebar_active .fa {
+    display:inline-block;
+    vertical-align:0px;
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+
+}
