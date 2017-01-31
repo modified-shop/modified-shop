@@ -27,11 +27,13 @@
   $confirm_submit = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onsubmit="return confirmSubmit(\'\',\''. SAVE_ENTRY .'\',this)"' : '';
 
   // select article data
-  $article_query = "SELECT products_name
-                      FROM ".TABLE_PRODUCTS_DESCRIPTION."
-                     WHERE products_id='".(int) $_GET['current_product_id']."'
-                       AND language_id = '".(int)$_SESSION['languages_id']."'";
-  $article_data = xtc_db_fetch_array(xtc_db_query($article_query));
+  $article_query = xtc_db_query(
+     "SELECT products_name
+        FROM ".TABLE_PRODUCTS_DESCRIPTION."
+       WHERE products_id='".(int) $_GET['current_product_id']."'
+         AND language_id = '".(int)$_SESSION['languages_id']."'
+     ");
+  $article_data = xtc_db_fetch_array($article_query);
   $cross_sell_groups = xtc_get_cross_sell_groups();
 
   function buildCAT($catID) {
