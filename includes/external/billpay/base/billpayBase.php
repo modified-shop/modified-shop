@@ -739,14 +739,11 @@ billpayCheckout('exec', function($) {
     var selected_payment_name = $('input[name="payment"]:checked').val();
     show_payment(selected_payment_name);
     /**
-     * Shop -> class
-     * * Gambio: .payment_item
-     * * Xtc3: .moduleRow, .moduleRowSelected
-     * * Xtcmod: .paymentblock td
+     * modified eCommerce Shopsoftware
      */
-    $('.payment_item, .moduleRow, .moduleRowSelected, .paymentblock td').on('click', function() {
-        var payment_name = $(this).find('input[name="payment"]').val();
-        show_payment(payment_name);
+    $("[id*=\"rd\"]").click(function(e) {
+      var payment_name = $('input[name="payment"]:checked', '#checkout_payment').val();
+      show_payment(payment_name);
     });
 });
 </script>
