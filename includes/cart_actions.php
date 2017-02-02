@@ -96,8 +96,10 @@ if (xtc_not_null($action)) {
   switch ($action) {
 
     case 'remove_product':
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/remove_product_prepare_get/','php') as $file) require ($file);
       $prd_id = xtc_input_validation($_GET['prd_id'], 'products_id', '');
       $cart_object->remove($prd_id);
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/remove_product_before_redirect/','php') as $file) require ($file);
       xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
       break;
 
