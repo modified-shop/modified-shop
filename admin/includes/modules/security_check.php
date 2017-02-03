@@ -38,14 +38,16 @@ if (!empty($check)) {
 /*******************************************************************************
  ** check file permissions
  ******************************************************************************/
-$check = array();
-foreach($configFiles as $file) {
-  if (is_writable($file)) {
-    $check[] = $file;
+if (WARN_CONFIG_WRITEABLE == 'true') {
+  $check = array();
+  foreach($configFiles as $file) {
+    if (is_writable($file)) {
+      $check[] = $file;
+    }
   }
-}
-if (!empty($check)) {
-  $warnings[] = '<p>'.TEXT_FILE_WARNING_WRITABLE.'</p><ul><li>'.implode('</li><li>',$check).'</li></ul>';
+  if (!empty($check)) {
+    $warnings[] = '<p>'.TEXT_FILE_WARNING_WRITABLE.'</p><ul><li>'.implode('</li><li>',$check).'</li></ul>';
+  }
 }
 
 $check = array();
