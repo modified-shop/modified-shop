@@ -1,3 +1,6 @@
+'''Version 2.9.35'''
+* improved integration with version modified eCommerce 2.00
+
 '''Version 2.9.34'''
 * fixed detection of Modified eCommerce version
 * fixed customer group for guest orders

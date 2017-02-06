@@ -1,10 +1,3 @@
-###############################################################################
-# .htacces Security File
-# Author: Martin Weber
-# Shopgate GmbH
-# website: http://www.shopgate.com
-###############################################################################
-
 #AddType x-mapp-php5 .php
 #AddHandler x-mapp-php5 .php
 
