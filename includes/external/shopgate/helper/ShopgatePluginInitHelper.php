@@ -132,7 +132,7 @@ class ShopgatePluginInitHelper
             return $resultItem['directory'];
         }
     }
-
+    
     /**
      * Returns the version of the modified shop
      *
@@ -141,18 +141,19 @@ class ShopgatePluginInitHelper
     public function getModifiedVersion()
     {
         $modifiedVersion = PROJECT_VERSION;
-
+        $versionFilePath = DIR_FS_CATALOG . (defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/') . "includes/version.php";
+        
         if (defined('PROJECT_MAJOR_VERSION') && defined('PROJECT_MINOR_VERSION')) {
             $modifiedVersion = PROJECT_MAJOR_VERSION . '.' . PROJECT_MINOR_VERSION;
-        } elseif (file_exists(DIR_FS_CATALOG . (defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/') . "includes/version.php")) {
-            $versionContent = file_get_contents(DIR_FS_CATALOG . (defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/') . "includes/version.php");
-
+        } elseif (file_exists($versionFilePath)) {
+            $versionContent = file_get_contents($versionFilePath);
+            
             if (preg_match_all("/define\(\s*'([^']+)'\,\s*'([^']+)'\);/si", $versionContent, $resultVersion)) {
                 $resultVersion   = end($resultVersion);
                 $modifiedVersion = $this->getVersionNumber($resultVersion[0]);
             }
         }
-
+        
         return $modifiedVersion;
     }
     

@@ -25,7 +25,6 @@
 ### Plugin ###
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING', 'Shop system encoding');
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING_DESCRIPTION', 'Choose the encoding of your shop system. This is usually "ISO-8859-15" for versions before 1.06.');
-#define('SHOPGATE_CONFIG_WIKI_LINK', 'http://wiki.shopgate.com/Modified/de'); // Tomcraft- Wird nicht mehr verwendet
 
 ### Menu ###
 define('BOX_SHOPGATE', 'Shopgate');
@@ -35,8 +34,6 @@ define('BOX_SHOPGATE_CONFIG', 'Settings');
 
 ### Links ###
 define('SHOPGATE_LINK_HOME', 'https://www.shopgate.com/en/?partner=30051');
-#define('SHOPGATE_LINK_REGISTER', 'https://www.shopgate.com/en/free-trial/?partner=30051'); // Tomcraft- Wird nicht mehr verwendet
-#define('SHOPGATE_LINK_LOGIN', 'https://admin.shopgate.com/us/users/login/0/2/?partner=30051'); // Tomcraft- Wird nicht mehr verwendet
 define('SHOPGATE_LINK_WIKI', 'https://support.shopgate.com/hc/en-us/articles/202911763');
 
 ### Configuration ###

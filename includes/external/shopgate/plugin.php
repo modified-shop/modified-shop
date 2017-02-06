@@ -21,7 +21,7 @@
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 
-define("SHOPGATE_PLUGIN_VERSION", "2.9.34");
+define("SHOPGATE_PLUGIN_VERSION", "2.9.35");
 
 /**
  * Modified eCommerce Plugin for Shopgate
@@ -3883,7 +3883,11 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
                 $smarty->assign('EMAIL', $order->customer['email_address']);
                 $smarty->assign('PHONE', $order->customer['telephone']);
                 /** BEGIN BILLPAY CHANGED **/
-                require_once(DIR_FS_CATALOG . 'includes/external/billpay/utils/billpay_mail.php');
+                if ($this->assertMinimumVersion('2.0.0.0')) {
+                    require_once(DIR_FS_CATALOG . 'includes/external/billpay/utils/billpay_mail.php');
+                } else {
+                    require_once(DIR_FS_CATALOG . 'includes/billpay/utils/billpay_mail.php');
+                }
                 /** EOF BILLPAY CHANGED **/
                 //BOF  - web28 - 2010-03-27 PayPal Bezahl-Link
                 unset ($_SESSION['paypal_link']);
@@ -4008,8 +4012,12 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
                     $order->info['language'] = $this->language;
                 }
                 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+                $sessionAccountPassword = ($this->assertMinimumVersion('2.0.0.0'))
+                    ? : isset($_SESSION['ACCOUNT_PASSWORD']) && $_SESSION['ACCOUNT_PASSWORD'] == 'true';
+    
                 if (isset($_SESSION['paypal_express_new_customer'])
                     && $_SESSION['paypal_express_new_customer'] == 'true'
+                    && $sessionAccountPassword
                 ) {
                     require_once(DIR_FS_INC . 'xtc_create_password.inc.php');
                     require_once(DIR_FS_INC . 'xtc_encrypt_password.inc.php');
@@ -4533,30 +4541,35 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         require_once(dirname(__FILE__) . '/Model/review/ShopgateReviewXmlModel.php');
 
         // load modified eCommerce files
-        require_once(dirname(__FILE__) . '/../../../inc/xtc_validate_password.inc.php');
-        require_once(dirname(__FILE__) . '/../../../inc/xtc_format_price_order.inc.php');
-        require_once(dirname(__FILE__) . '/../../../inc/xtc_get_tax_class_id.inc.php');
-        require_once(dirname(__FILE__) . '/../../../inc/xtc_get_products_stock.inc.php');
-        require_once(dirname(__FILE__) . '/../../../includes/classes/xtcPrice.php');
+        require_once(DIR_FS_INC . 'xtc_validate_password.inc.php');
+        require_once(DIR_FS_INC . 'xtc_format_price_order.inc.php');
+        require_once(DIR_FS_INC . 'xtc_get_tax_class_id.inc.php');
+        require_once(DIR_FS_INC . 'xtc_get_products_stock.inc.php');
+        require_once(DIR_WS_CLASSES .'xtcPrice.php');
 
-        if (file_exists(dirname(__FILE__) . '/../../../'.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/version.php')) {
-            require_once(dirname(__FILE__) . '/../../../'.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/version.php');
+        if (!defined('DIR_FS_ADMIN')) {
+            $admin = defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/';
+            define('DIR_FS_ADMIN', DIR_FS_CATALOG . $admin);
+        }
+        
+        if (file_exists(DIR_FS_ADMIN . 'includes/version.php')) {
+            require_once(DIR_FS_ADMIN. 'includes/version.php');
         }
 
         if (!defined('PROJECT_MAJOR_VERSION')) {
-            require_once(dirname(__FILE__) . '/../../../inc/xtc_db_prepare_input.inc.php');
+            require_once(DIR_FS_INC . 'xtc_db_prepare_input.inc.php');
         } else {
-            require_once(dirname(__FILE__) . '/../../../inc/db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+            require_once(DIR_FS_INC . 'db_functions_' . DB_MYSQL_TYPE . '.inc.php');
+        }
+
+        if (!defined('DIR_FS_EXTERNAL')) {
+            define('DIR_FS_EXTERNAL', DIR_FS_CATALOG . 'includes/external/');
         }
 
         // include Shopgate plugin files
-        require_once(dirname(__FILE__) . '/../../../includes/external/shopgate/base/shopgate_wrapper.php');
-        require_once(dirname(__FILE__) . '/../../../includes/external/shopgate/base/shopgate_config.php');
-        require_once(
-            dirname(__FILE__) . '/../../../includes/external/shopgate/base/lang/' .
-            $this->language .
-            '/modules/payment/shopgate.php'
-        );
+        require_once(DIR_FS_EXTERNAL . 'shopgate/base/shopgate_wrapper.php');
+        require_once(DIR_FS_EXTERNAL . 'shopgate/base/shopgate_config.php');
+        require_once(DIR_FS_EXTERNAL . 'shopgate/base/lang/' . $this->language . '/modules/payment/shopgate.php');
     }
 }
 
