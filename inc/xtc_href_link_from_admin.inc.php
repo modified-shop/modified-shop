@@ -1,6 +1,6 @@
 <?php
 /*-----------------------------------------------------------------------
-   $Id: xtc_href_link_from_admin.inc.php 2539 2011-12-20 15:31:37Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -20,7 +20,7 @@
    (c) 2004 ShopStat.com - All Rights Reserved.
    ---------------------------------------------------------------------------------------*/
 
-  function xtc_href_link_from_admin($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = false, $search_engine_safe = true) {    
+  function xtc_href_link_from_admin($page = '', $parameters = '', $connection = 'NONSSL', $add_session = false, $search_engine_safe = true) {    
     return xtc_href_link($page, $parameters, $connection, $add_session, $search_engine_safe, true, true);
   }
 ?>
