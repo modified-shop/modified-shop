@@ -2295,10 +2295,11 @@
     if(class_exists("Redis")) {
       $cache_array[] = array('id' => 'redis', 'text' => 'REDIS');
     }
+    /* disabled due performance
     if (extension_loaded('sqlite3')) {
       $cache_array[] = array('id' => 'sqlite', 'text' => 'SQLITE');
     }
-
+    */
     return xtc_draw_pull_down_menu($cfg_key, $cache_array, $cfg_value);
   }
 
