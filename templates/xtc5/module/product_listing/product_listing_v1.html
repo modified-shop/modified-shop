@@ -17,7 +17,7 @@
         {if $module_data.PRODUCTS_VPE}<p class="vpe">{$module_data.PRODUCTS_VPE}</p>{/if}
         {if $module_data.PRODUCTS_SHIPPING_NAME}
           <p class="shippingtime">
-            {#text_shippingtime#}
+            {#text_shippingtime#}&nbsp;
             {if $module_data.PRODUCTS_SHIPPING_IMAGE}
               <img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" />
             {/if}

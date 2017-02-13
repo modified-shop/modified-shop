@@ -10,9 +10,9 @@
     <p class="price">{$module_data.PRODUCTS_PRICE}</p><p class="taxandshippinginfo">( {$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK} )</p>
     {if $module_data.PRODUCTS_VPE}<p class="vpe">{$module_data.PRODUCTS_VPE}</p>{/if}
     {if ACTIVATE_SHIPPING_STATUS == 'true'}
-      {if $module_data.PRODUCTS_SHIPPING_NAME}<p class="shippingtime">{#text_shippingtime#}
+      {if $module_data.PRODUCTS_SHIPPING_NAME}<p class="shippingtime">{#text_shippingtime#}&nbsp;
         {if $module_data.PRODUCTS_SHIPPING_IMAGE}<img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME}" />{/if}
-        {$module_data.PRODUCTS_SHIPPING_NAME}</p>
+        {$module_data.PRODUCTS_SHIPPING_NAME_LINK}</p>
       {/if}
     {/if}
     <p>{if $module_data.PRODUCTS_BUTTON_BUY_NOW}{$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;{/if}{$module_data.PRODUCTS_BUTTON_DETAILS}</p>
