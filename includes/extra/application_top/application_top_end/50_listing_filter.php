@@ -8,7 +8,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
   if (defined('DISPLAY_FILTER_'.$filter_set_const)) {
     $filter_vars_array = explode(',', constant('DISPLAY_FILTER_'.$filter_set_const));
     $key_all = array_search('all', $filter_vars_array);
-    if ($key_all != '' && isset($filter_vars_array[$key_all])) {
+    if ($key_all !== false && isset($filter_vars_array[$key_all])) {
       $filter_vars_array[$key_all] = '999999';
     }
     $filter_vars_array[] = '';
