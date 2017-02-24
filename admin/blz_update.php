@@ -16,7 +16,7 @@ require('includes/application_top.php');
 // include needed function
 require_once(DIR_FS_INC.'get_external_content.inc.php');
 
-$blz_file_default_link = 'http://www.bundesbank.de/Redaktion/DE/Downloads/Aufgaben/Unbarer_Zahlungsverkehr/Bankleitzahlen/2016_09_04/blz_2016_06_06_txt.txt?__blob=publicationFile';
+$blz_file_default_link = 'https://www.bundesbank.de/Redaktion/DE/Downloads/Aufgaben/Unbarer_Zahlungsverkehr/Bankleitzahlen/2017_06_04/blz_2017_03_06_txt.txt?__blob=publicationFile';
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
@@ -58,7 +58,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   if (empty($blz_file)) {
                     echo BLZ_LINK_NOT_GIVEN_TEXT;
                     break;
-                  } elseif (strpos($blz_file, 'http://www.bundesbank.de/') === false ||
+                  } elseif (strpos($blz_file, '://www.bundesbank.de/') === false ||
                              strpos($blz_file, '.txt') === false) {
                     echo BLZ_LINK_INVALID_TEXT;
                     break;
@@ -105,7 +105,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     // "bankleitzahlführender Zahlungsdienstleister" will be queried
                     if (substr($line, 8, 1) == '1') {                //leading payment provider for bank code number (only one per bank code)
                       $blz['blz'] = substr($line, 0, 8);             //bank code number(8)
-                      $blz['bankname'] = encode_utf8(trim(substr($line, 9, 58))); //bank name(58)
+                      $blz['bankname'] = encode_utf8(trim(substr($line, 9, 58)), 'ISO-8859-15'); //bank name(58)
                       $blz['prz'] = substr($line, 150, 2);           //checksum(2)
                       $kennzeichen = substr($line, 158, 1); //change code(1)
 
