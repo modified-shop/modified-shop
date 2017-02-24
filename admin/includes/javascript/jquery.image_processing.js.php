@@ -1,5 +1,7 @@
 <?php 
 /* -------------------------------------------------------------------------------------
+$Id$
+
 jquery.image_processing.php
 Vers. 3.53 (c) www.rpa-com.de
 * ----------------------------------------------------------------------------------- */
@@ -53,9 +55,8 @@ function ajaxCall(ajax_url, dataStr) {
       timeout: 60000, //Set a timeout (in milliseconds) for the request. 
       dataType: 'json',
       data : dataStr,
-      error: function() {
-        //alert('Error loading json data!');
-        alert('Error!');
+      error: function(xhr, status, error) {
+        alert(xhr.responseText);
       },
       success: function(data) {
         JStoPHPResponse(data);

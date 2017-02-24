@@ -1,7 +1,9 @@
 <?php 
 /* -------------------------------------------------------------------------------------
+$Id$
+
 jquery.backup_db.js.php
-Vers. 1.00 (c) www.rpa-com.de
+Vers. 1.01 (c) www.rpa-com.de
 * ----------------------------------------------------------------------------------- */
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
@@ -10,7 +12,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 
 <script type="text/javascript">
 var debug = false;
-var ajax_url = 'backup_restore.php?ajax=1&action=restoredb<?php echo SID ? '&'. SID : '';?>';
+var ajax_url = 'backup_restore.php?ajax=1&action=restoredb<?php echo defined('SID') ? '&'. SID : '';?>';
 var ajax_type = 'POST';
 var dataStr = '';
 
@@ -23,20 +25,19 @@ function ajaxCall(dataStr) {
     if (debug) console.log('dataStr: ' + dataStr);
     if (debug) console.log('url:' + ajax_url);
     //return;
-		jQuery.ajax({
-			url: ajax_url,
-			type: ajax_type,
-			timeout: 300000, //Set a timeout (in milliseconds) for the request. 
-			dataType: 'json',
+    jQuery.ajax({
+      url: ajax_url,
+      type: ajax_type,
+      timeout: 300000, //Set a timeout (in milliseconds) for the request. 
+      dataType: 'json',
       data : dataStr,
-			error: function() {
-        //('.img_'+response.type).css('display','none');
-				alert('Error loading json data!');
-			},
-			success: function(data){
+      error: function(xhr, status, error) {
+        alert(xhr.responseText);
+      },
+      success: function(data){
         JStoPHPResponse(data);
-			}
-		})
+      }
+    })
 }
 
 function JStoPHPResponse(data) {
