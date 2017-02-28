@@ -2051,7 +2051,7 @@ a.tags_bar_reset {
   display:block;
   font-size:13px;
   line-height:19px;
-  color:#666;
+  color:#333;
 }
 a.autocomplete, a.autocomplete:link, a.autocomplete:visited, a.autocomplete:active, a.autocomplete:hover {
   background:transparent !important;
