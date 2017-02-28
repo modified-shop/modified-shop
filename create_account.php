@@ -362,17 +362,14 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
         xtc_session_recreate();
       }
 
+			$_SESSION['customer_gender'] = $gender;
       $_SESSION['customer_first_name'] = $firstname;
       $_SESSION['customer_last_name'] = $lastname;
+			$_SESSION['customer_email_address'] = $email_address];
       $_SESSION['customer_default_address_id'] = $address_id;
       $_SESSION['customer_country_id'] = (int)$country;
       $_SESSION['customer_zone_id'] = $zone_id;
       $_SESSION['customer_vat_id'] = $vat;
-
-      // session gender
-      if (ACCOUNT_GENDER == 'true') {
-        $_SESSION['customer_gender'] = $gender;
-      }
     
       // restore cart contents
       $_SESSION['cart']->restore_contents();
