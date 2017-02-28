@@ -103,7 +103,7 @@
       }
       xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < '" . time() . "'");
       
-      return xtc_db_affected_rows();
+      return true;
     }
 
     session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
