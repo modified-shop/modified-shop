@@ -61,3 +61,78 @@ foreach ($script_array as $script) {
 
 <?php require DIR_FS_CATALOG . DIR_TMPL_JS . 'get_states.js.php'; // Ajax State/District/Bundesland Updater - h-h-h ?>
 
+<?php if (SEARCH_AC_STATUS == 'true') { ?>
+<script type="text/javascript">
+  var option = $('#suggestions');
+  $(document).click(function(e){
+    var target = $(e.target);
+    if(!(target.is(option) || option.find(target).length)){
+      ac_closing();
+    }
+  });
+  var ac_pageSize = 8;
+  var ac_page = 1;
+  var ac_result = 0;
+  var ac_show_page = '<?php echo AC_SHOW_PAGE; ?>';
+  var ac_show_page_of = '<?php echo AC_SHOW_PAGE_OF; ?>';
+  
+  function ac_showPage(ac_page) {
+    ac_result = Math.ceil($("#autocomplete_main").children().length/ac_pageSize);
+    $('.autocomplete_content').hide();   
+    $('.autocomplete_content').each(function(n) {    
+      if (n >= (ac_pageSize * (ac_page - 1)) && n < (ac_pageSize * ac_page)) {
+        $(this).show();
+      }
+    });
+    $('#autocomplete_next').css('visibility', 'hidden');
+    $('#autocomplete_prev').css('visibility', 'hidden');
+    if (ac_page > 1) {
+      $('#autocomplete_prev').css('visibility', 'visible');
+    }
+    if (ac_page < ac_result && ac_result > 1) {
+      $('#autocomplete_next').css('visibility', 'visible');
+    }
+    $('#autocomplete_count').html(ac_show_page+ac_page+ac_show_page_of+ac_result);
+  }
+  function ac_prevPage() {
+    if (ac_page == 1) {
+      ac_page = ac_result;
+    } else {
+      ac_page--;
+    }
+    if (ac_page < 1) {
+      ac_page = 1;
+    }
+    ac_showPage(ac_page);
+  }
+  function ac_nextPage() {
+    if (ac_page == ac_result) {
+      ac_page = 1;
+    } else {
+      ac_page++;
+    }
+    ac_showPage(ac_page);
+  }
+	function ac_lookup(inputString) {
+		if(inputString.length == 0) {
+			$('#suggestions').hide();
+		} else {
+			$.post("<?php echo xtc_href_link('api/autocomplete/autocomplete.php', '', $request_type); ?>", {queryString: ""+inputString+""}, function(data) {
+				if(data.length > 0) {
+					$('#suggestions').slideDown();
+					$('#autoSuggestionsList').html(data);
+					ac_showPage(1);
+					$('#autocomplete_prev').click(ac_prevPage);
+          $('#autocomplete_next').click(ac_nextPage);
+				}
+			});
+		}
+	}
+  <?php } ?>
+	<?php if (SEARCH_AC_STATUS == 'true' || (!strstr($PHP_SELF, FILENAME_SHOPPING_CART) && !strstr($PHP_SELF, 'checkout'))) { ?>	
+	function ac_closing() {
+		setTimeout("$('#suggestions').slideUp();", 100);
+		ac_page = 1;
+	}
+</script>
+<?php } ?>

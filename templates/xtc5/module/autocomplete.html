@@ -1,0 +1,65 @@
+{config_load file="$language/lang_$language.conf" section="error_handler"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="error_handler"}
+{if $error}
+  <span class="autocomplete_error">{#text_search_again#}</span>
+{else}
+  <ul id="autocomplete_main">
+    {foreach item=products_data from=$module_content}
+      <li class="cf autocomplete_content">
+        <a class="autocomplete" href="{$products_data.PRODUCTS_LINK}">
+          {if $products_data.PRODUCTS_IMAGE}
+            <span class="autocomplete_image cf"><img src="{$products_data.PRODUCTS_IMAGE}" alt="{$products_data.PRODUCTS_NAME|onlytext}" /></span>
+          {else}
+            <span class="autocomplete_image cf">&nbsp;</span>
+          {/if}
+          <span class="hl_text" style="width:145px;">{$products_data.PRODUCTS_NAME}</span>
+          <span class="hl_price" style="color:#555">
+            {foreach name=inner item=price_data from=$products_data.PRODUCTS_PRICE_ARRAY}
+              {if $price_data.PRODUCTS_PRICE_FLAG == 'Special' || $price_data.PRODUCTS_PRICE_FLAG == 'SpecialDiscount'}
+                {* START Produkt Sonderpreis Kurzform mit Ausgabe #Sonderpreis# *}
+                <span class="special_price">
+                  <span class="small_price">{#special_price#}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}
+                </span>              
+                {* ENDE Produkt Sonderpreis Kurzform mit Ausgabe #Sonderpreis# *}
+              {elseif $price_data.PRODUCTS_PRICE_FLAG == 'SpecialGraduated'}
+                {if $price_data.PRODUCTS_PRICE_UVP != ''} 
+                  {* START Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
+                  <span class="uvp_price">
+                    <span class="small_price">{$smarty.const.YOUR_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}
+                  </span>
+                  {* ENDE Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
+                {else}
+                  {* START Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis *}
+                  <span class="graduated_price">
+                    <span class="small_price">{$smarty.const.FROM}</span> {$price_data.PRODUCTS_PRICE_OLD_PRICE}
+                  </span>
+                  <span class="item_price{if $module_data.PRODUCTS_VPE} with_vpe{/if}"><span class="small_price">{$smarty.const.UNIT_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
+                  {* ENDE Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis *}
+                {/if}
+              {elseif $price_data.PRODUCTS_PRICE_FLAG == 'NotAllowed'}
+                <span class="no_price">{$price_data.PRODUCTS_PRICE_NOT_ALLOWED}</span>
+              {else}
+                {* START Produkt Standardpreis mit Ausgabe ab Preis *}
+                <span class="standard_price">
+                  {if $price_data.PRODUCTS_PRICE_FROM != ''}<span class="small_price">{$price_data.PRODUCTS_PRICE_FROM}</span>{/if}
+                  {$price_data.PRODUCTS_PRICE_STANDARD_PRICE}
+                </span>
+                {* ENDE Produkt Standardpreis mit Ausgabe ab Preis *}
+              {/if}
+            {/foreach}
+            {if $products_data.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
+              {if $products_data.PRODUCTS_VPE}<div class="lb_vpe" style="position:inherit;font-weight: normal;">{$products_data.PRODUCTS_VPE}</div>{/if}
+            {/if}
+          </span>
+        </a>
+      </li>
+    {/foreach}
+  </ul>
+  
+  <ul id="autocomplete_pagination">
+    <li id="autocomplete_prev">&laquo;</li>
+    <li id="autocomplete_count"></li>
+    <li id="autocomplete_next">&raquo;</li>
+  </ul>
+{/if}
