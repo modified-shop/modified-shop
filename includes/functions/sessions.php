@@ -72,11 +72,7 @@
                               VALUES ('". xtc_db_input($key) ."', '".(int)$expiry."', '".xtc_db_input($value)."', '".xtc_db_input($flag)."')
                               ON DUPLICATE KEY UPDATE expiry = '".(int)$expiry."', value = '".xtc_db_input($value)."', flag = '".xtc_db_input($flag)."'");
 
-      if (xtc_db_affected_rows() > 0) {
-        return true;
-      }
-  
-      return false;
+      return true;
     }
 
     function _sess_destroy($key) {
