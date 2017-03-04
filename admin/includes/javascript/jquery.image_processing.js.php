@@ -38,7 +38,7 @@ jQuery(document).submit(function(e){
         $('.ajax_count').html('0');
         updateProgressBar(1,'image',0);
         var ajax_url = form.attr("action");
-        ajax_url += <?php echo SID ? "'&". SID ."'": "''";?>;
+        ajax_url += <?php echo defined('SID') ? "'&". SID ."'": "''";?>;
         var dataStr = form.serialize();
         ajaxCall(ajax_url, dataStr);
     }
