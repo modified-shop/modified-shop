@@ -94,7 +94,7 @@
     </table>
     <br />
     <h4>{#title_password#}</h4>
-    <p>{#text_password_policy#|sprintf:$smarty.const.ENTRY_PASSWORD_MIN_LENGTH}</p>
+    {#text_password_policy#|sprintf:$smarty.const.ENTRY_PASSWORD_MIN_LENGTH}
     <table>
       <tr>
         <td><span class="fieldtext">{#text_password#}</span><span class="stern">{$INPUT_PASSWORD}</span></td>
