@@ -963,7 +963,7 @@
                   if (xtc_not_null($cInfo->last_modified)) {
                     $contents[] = array('text' => '<div style="padding-left: 10px;">' . TEXT_LAST_MODIFIED . ' ' . xtc_date_short($cInfo->last_modified) . '</div>');
                   }
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding: 10px;">' . xtc_info_image_c($cInfo->categories_image, $cInfo->categories_name, '','',$box_cat_image_size)   . '</div><div style="padding-bottom: 10px;">' . $cInfo->categories_image . '</div>');
+                  $contents[] = array('align' => 'center', 'text' => '<div style="padding: 10px;">' . xtc_info_image_c($cInfo->categories_image, strip_tags($cInfo->categories_name), '','',$box_cat_image_size)   . '</div><div style="padding-bottom: 10px;">' . $cInfo->categories_image . '</div>');
                 } elseif (isset($pInfo) && is_object($pInfo)) {
                   // product info box contents
                   $heading[]  = array('text' => '<b>' . xtc_get_products_name($pInfo->products_id, $_SESSION['languages_id']) . '</b>');
