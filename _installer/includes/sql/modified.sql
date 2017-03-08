@@ -949,7 +949,8 @@ CREATE TABLE products (
   PRIMARY KEY (products_id),
   KEY idx_products_date_added (products_date_added),
   KEY idx_products_model (products_model),
-  KEY idx_products_status (products_status)
+  KEY idx_products_status (products_status),
+  KEY idx_manufacturers_id (manufacturers_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_attributes;
@@ -1094,7 +1095,8 @@ CREATE TABLE products_tags_options (
   date_added datetime NOT NULL,
   products_options_id int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (options_id,languages_id),
-  KEY idx_products_options_id (products_options_id)
+  KEY idx_products_options_id (products_options_id),
+  KEY idx_filter (filter)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_tags_values;
@@ -1114,7 +1116,8 @@ CREATE TABLE products_tags_values (
   products_options_values_id int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (values_id,languages_id),
   KEY idx_options_id (options_id),
-  KEY idx_products_options_values_id (products_options_values_id)
+  KEY idx_products_options_values_id (products_options_values_id),
+  KEY idx_filter (filter)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_to_categories;
