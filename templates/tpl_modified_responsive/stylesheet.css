@@ -3312,7 +3312,7 @@ ul.pd_iconlist li.wishlist .wishlist_submit_link:hover {
   font-style:italic;
 }
 .mediarow_desc {
-  padding: 0 130px 0 0;
+  padding: 0px;
 }
 /* END product_details media */
 
