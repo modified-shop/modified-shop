@@ -75,7 +75,7 @@ if ($language_not_found === true) {
                                         FROM ".TABLE_PRODUCTS." p 
                                    LEFT JOIN ".TABLE_MANUFACTURERS." m
                                              ON p.manufacturers_id = m.manufacturers_id
-                                   LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                        JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                              ON p.products_id = pd.products_id
                                                 AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                                 AND trim(pd.products_name) != ''
@@ -129,7 +129,7 @@ if ($language_not_found === true) {
                                       FROM ".TABLE_PRODUCTS." p
                                  LEFT JOIN ".TABLE_MANUFACTURERS." m
                                            ON p.manufacturers_id = m.manufacturers_id
-                                 LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                      JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                            ON p.products_id = pd.products_id
                                               AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                                       JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
