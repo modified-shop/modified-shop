@@ -6,7 +6,7 @@
     <dl>
       <dt><a href="{$box_data.PRODUCTS_LINK}" title="{$box_data.PRODUCTS_NAME}">{if $box_data.PRODUCTS_IMAGE}<img src="{$box_data.PRODUCTS_IMAGE}" alt="{$box_data.PRODUCTS_NAME|onlytext}" title="{$box_data.PRODUCTS_NAME|onlytext}" />{/if}</a></dt>
       <dd>
-        <h3>{$box_data.COUNT}. <a href="{$box_data.PRODUCTS_LINK}">{textformat wrap=18 wrap_cut=true}{$box_data.PRODUCTS_NAME}{/textformat}</a></h3>
+        <h3>{$box_data.COUNT}. <a href="{$box_data.PRODUCTS_LINK}">{$box_data.PRODUCTS_NAME}</a></h3>
         <p>
           {$box_data.PRODUCTS_PRICE}<br />
           {if $box_data.PRODUCTS_VPE}{$box_data.PRODUCTS_VPE}<br />{/if}

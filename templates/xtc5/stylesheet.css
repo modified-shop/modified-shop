@@ -453,6 +453,7 @@ h2.boxheader a:link, h2.boxheader a:hover, h2.boxheader a:active, h2.boxheader a
 }
 .boxbody h3, .boxbody h3 a {
   font-size:11px;
+  word-wrap:break-word;
 }
 .boxbody h3.center, .boxbody h3.center a {
   font-size:11px;
