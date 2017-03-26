@@ -251,6 +251,7 @@ switch ($action) {
         } else {
           $smarty->assign('GENDER', '');
         }
+        $smarty->assign('FIRSTNAME',$order->customer['firstname'] != '' ? $order->customer['firstname'] : $order->customer['name']);
         $smarty->assign('LASTNAME',$order->customer['lastname'] != '' ? $order->customer['lastname'] : $order->customer['name']);
         
         $smarty->assign('order', $order);
