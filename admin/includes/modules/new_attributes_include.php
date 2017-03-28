@@ -255,7 +255,7 @@ if ($_POST['cpath'] != '') {
           
           // Download function start
           if (strtoupper($current_product_option_name) == 'DOWNLOADS') {
-            $output .= '<tr class="downloads oid-'.$current_product_option_id.'">'. PHP_EOL;
+            $output .= '<tr class="downloads ' . $rowClass . '">'. PHP_EOL;
            // $output .= '<td colspan="2">File: <input type="file" name="' . $current_value_id . "_download_file"></td>';
             $output .= '<td class="main">&nbsp;</td>';
             $output .= '<td class="main" colspan="'.(int)($colspan - 1) .'" style="white-space: nowrap; background: #ccc; padding: 4px;">'.xtc_draw_pull_down_menu($current_value_id . '_download_file', xtc_getDownloads(), (isset($attr_dl_array['products_attributes_filename'])?$attr_dl_array['products_attributes_filename']:''), $noStylingClass . $disable). PHP_EOL;
