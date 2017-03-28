@@ -4227,6 +4227,8 @@ ul.resp-tabs-list{
 }
 .tags_options_tooltip {
   position:relative;
+  z-index: 1;
+  display:inline-block;
 }
 .tags_options_tooltip img {
   vertical-align:-3px;
@@ -4313,6 +4315,9 @@ ul.resp-tabs-list{
   cursor:default;
   float:left;
   clear:left;
+}
+.tags_values_name_tooltip {
+    border-bottom: 1px dashed #999;
 }
 .tags_values_desc_hover {
   position:absolute;

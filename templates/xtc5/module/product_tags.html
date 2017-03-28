@@ -6,10 +6,10 @@
   <div class="tags_row {cycle values="tags_bg1,tags_bg2"} cf">
     <span class="tags_options">
     {if $module_data.OPTIONS_CONTENT_LINK != ''}
-      <span class="tags_options_tooltip">{$module_data.OPTIONS_NAME}{if $module_data.OPTIONS_DESCRIPTION != ''}<span class="tags_options_tooltip_hover">{$module_data.OPTIONS_DESCRIPTION}</span>{/if}</span>:
+      <span class="tags_options_tooltip{if $module_data.OPTIONS_DESCRIPTION != ''} tags_values_name_tooltip{/if}">{$module_data.OPTIONS_NAME}{if $module_data.OPTIONS_DESCRIPTION != ''}<span class="tags_options_tooltip_hover">{$module_data.OPTIONS_DESCRIPTION}</span>{/if}</span>:
       {if $module_data.OPTIONS_DESCRIPTION != ''}<a class="iframe" target="_blank" title="{$module_data.OPTIONS_NAME|onlytext}" href="{$module_data.OPTIONS_CONTENT_LINK}"><img src="{$tpl_path}img/icon_tags_info.png" alt="" /></a>{/if}
     {else}
-      <span class="tags_options_tooltip">{$module_data.OPTIONS_NAME}{if $module_data.OPTIONS_DESCRIPTION != ''}<span class="tags_options_tooltip_hover">{$module_data.OPTIONS_DESCRIPTION}</span>{/if}</span>:
+      <span class="tags_options_tooltip{if $module_data.OPTIONS_DESCRIPTION != ''} tags_values_name_tooltip{/if}">{$module_data.OPTIONS_NAME}{if $module_data.OPTIONS_DESCRIPTION != ''}<span class="tags_options_tooltip_hover">{$module_data.OPTIONS_DESCRIPTION}</span>{/if}</span>:
     {/if}
     </span>
 
@@ -25,7 +25,7 @@
         </span>
       {else}
         <span class="tags_values_text_row">
-          <span class="tags_values_name">{$item_data.VALUES_NAME}{if $item_data.VALUES_DESCRIPTION != ''}<span class="tags_values_desc_hover">{$item_data.VALUES_DESCRIPTION}</span>{/if}</span>
+          <span class="tags_values_name{if $item_data.VALUES_DESCRIPTION != ''} tags_values_name_tooltip{/if}">{$item_data.VALUES_NAME}{if $item_data.VALUES_DESCRIPTION != ''}<span class="tags_values_desc_hover">{$item_data.VALUES_DESCRIPTION}</span>{/if}</span>
           {if $item_data.VALUES_CONTENT_LINK != ''}<span class="tags_values_info"><a class="iframe" target="_blank" href="{$item_data.VALUES_CONTENT_LINK}"><img src="{$tpl_path}img/icon_tags_info.png" alt="" /></a></span>{/if}
           {if !$smarty.foreach.inner.last}<span class="tags_values_diff">, </span>{/if}
         </span>
