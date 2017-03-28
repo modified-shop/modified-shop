@@ -450,7 +450,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                              AND pto.languages_id = '".(int)$_SESSION['languages_id']."'
                                     WHERE ptv.options_id = '".$_GET['oID']."'
                                       AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
-                                 ORDER BY ptv.sort_order, ptv.values_description";
+                                 ORDER BY ptv.sort_order, ptv.values_name";
               $values_split = new splitPageResults($_GET['spage'], $page_max_display_values_results, $values_query_raw, $values_query_numrows);
               $values_query = xtc_db_query($values_query_raw);
               while ($values = xtc_db_fetch_array($values_query)) {
