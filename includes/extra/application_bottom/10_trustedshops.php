@@ -86,13 +86,130 @@
                                       FROM ".TABLE_ORDERS."
                                      WHERE orders_id = '".(int)$last_order."'");
       $orders = xtc_db_fetch_array($orders_query);
+      
+      $payment_class = $orders['payment_class'];
+      /* ZAHLUNGSART
+      Lastschrift/Bankeinzug          DIRECT_DEBIT
+      Kreditkarte                     CREDIT_CARD
+      Rechnung                        INVOICE
+      Nachnahme                       CASH_ON_DELIVERY
+      Vorauskasse / Überweisung       PREPAYMENT
+      Verrechnungsscheck              CHEQUE
+      Paybox                          PAYBOX
+      PayPal                          PAYPAL
+      Amazon Payments                 AMAZON_PAYMENTS
+      Zahlung bei Abholung            CASH_ON_PICKUP
+      Finanzierung                    FINANCING
+      Leasing                         LEASING
+      T-Pay                           T_PAY
+      Click&Buy (Firstgate)           CLICKANDBUY
+      Giropay                         GIROPAY
+      Google Checkout                 GOOGLE_CHECKOUT
+      Online Shop Zahlungskarte       SHOP_CARD
+      Sofortüberweisung.de            DIRECT_E_BANKING
+      Moneybookers.com                MONEYBOOKERS
+      Dotpay                          DOTPAY
+      Płatności                       PLATNOSCI
+      Przelewy24                      PRZELEWY24
+      Andere Zahlungsart              OTHER
+      */
+      switch ($orders['payment_class'])
+      {
+        case 'paypal':
+        case 'paypal_ipn':
+        case 'paypalcart':
+        case 'paypalclassic':
+        case 'paypalinstallment':
+        case 'paypallink':
+        case 'paypalplus':
+        case 'paypalpluslink':
+        case 'payone_wlt':
+          $paymenttype = 'PAYPAL';
+          break;
+        case 'billpaydebit':
+        case 'masterpayment_credit_card':
+        case 'masterpayment_debit_card':
+        case 'mcp_creditcard':
+        case 'mcp_debit':
+        case 'payone_cc':
+          $paymenttype = 'CREDIT_CARD';
+          break;
+        case 'banktransfer':
+        case 'masterpayment_elv':
+        case 'payone_elv':
+          $paymenttype = 'DIRECT_DEBIT';
+          break;
+        case 'moneyorder':
+        case 'eustandardtransfer':
+        case 'mcp_prepay':
+        case 'payone_prepay':
+          $paymenttype = 'PREPAYMENT';
+          break;
+        case 'cash':
+          $paymenttype = 'CASH_ON_PICKUP';
+          break;
+        case 'cod':
+        case 'payone_cod':
+          $paymenttype = 'CASH_ON_DELIVERY';
+          break;
+        case 'invoice':
+        case 'billpay':
+        case 'klarna_invoice':
+        case 'billsafe_2':
+        case 'masterpayment_rechnungskauf':
+        case 'payone_invoice':
+          $paymenttype = 'INVOICE';
+          break;
+        case 'sofort_sofortueberweisung_classic':
+        case 'sofort_sofortueberweisung_gateway':
+        case 'masterpayment_sofortbanking':
+        case 'mcp_ebank2pay':
+          $paymenttype = 'DIRECT_E_BANKING';
+          break;
+        case 'amoneybookers':
+        case 'moneybookers_cc':
+        case 'moneybookers_cgb':
+        case 'moneybookers_csi':
+        case 'moneybookers_elv':
+        case 'moneybookers_giropay':
+        case 'moneybookers_ideal':
+        case 'moneybookers_mae':
+        case 'moneybookers_netpay':
+        case 'moneybookers_psp':
+        case 'moneybookers_pwy':
+        case 'moneybookers_sft':
+        case 'moneybookers_wlt':
+          $paymenttype = 'MONEYBOOKERS';
+          break;
+        case 'billpaypaylater':
+        case 'billpaytransactioncredit':
+        case 'klarna_partPayment':
+        case 'masterpayment_anzahlungskauf':
+        case 'masterpayment_finanzierung':
+        case 'masterpayment_ratenzahlung':
+        case 'payone_installment':
+          $paymenttype = 'FINANCING';
+          break;
+        case 'klarna_SpecCamp':
+        case 'masterpayment_phone':
+        case 'payone_otrans':
+        case 'shopgate':
+        case 'sofort_ideal':
+        case 'worldpay_junior':
+        case 'payone_paydirekt':
+          $paymenttype = 'OTHER';
+          break;
+        default:
+          $paymenttype = '';
+          break;
+      }
       ?>
       <div id="trustedShopsCheckout" style="display: none;"> 
         <span id="tsCheckoutOrderNr"><?php echo $last_order; ?></span>
         <span id="tsCheckoutBuyerEmail"><?php echo $orders['customers_email_address']; ?></span>
         <span id="tsCheckoutOrderAmount"><?php echo $total; ?></span>
         <span id="tsCheckoutOrderCurrency"><?php echo $orders['currency']; ?></span>
-        <span id="tsCheckoutOrderPaymentType"><?php echo $orders['customers_email_address']; ?></span>
+        <span id="tsCheckoutOrderPaymentType"><?php echo $paymenttype; ?></span>
         <?php
         $item_query = xtc_db_query("SELECT op.products_id,
                                            op.orders_products_id,
