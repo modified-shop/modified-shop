@@ -59,25 +59,25 @@
       $customer_details = xtc_db_fetch_array($customer_details_query);
       
       $customer->salutation     = str_replace(array('m', 'f'), array('1', '2'), $customer_details['customers_gender']);
-      $customer->fax            = utf8_encode($customer_details['customers_fax']);
+      $customer->fax            = encode_utf8($customer_details['customers_fax'], '', true);
 
       if (!xtc_not_null($this->billing['country_iso_2'])) {
         $this->billing['country_iso_2'] = $this->getCountryIso($this->billing['billing_country']);
       }
   
-      $customer->firstName      = utf8_encode((($this->billing['firstname'] != '') ? $this->billing['firstname'] : $this->customer['firstname']));
-      $customer->lastName       = utf8_encode((($this->billing['lastname'] != '') ? $this->billing['lastname'] : $this->customer['lastname']));
-      $customer->street         = utf8_encode((($this->billing['street_address'] != '') ? $this->billing['street_address'] : $this->customer['street_address']));
-      $customer->zipCode        = utf8_encode((($this->billing['postcode'] != '') ? $this->billing['postcode'] : $this->customer['postcode']));
-      $customer->city           = utf8_encode((($this->billing['city'] != '') ? $this->billing['city'] : $this->customer['city']));
-      $customer->country        = utf8_encode((($this->billing['country_iso_2'] != '') ? $this->billing['country_iso_2'] : $this->customer['country_iso_2']));
-      $customer->companyName    = utf8_encode((($this->billing['company'] != '') ? $this->billing['company'] : $this->customer['company']));
-      $customer->phone_1        = utf8_encode($this->customer['telephone']);
-      $customer->email          = utf8_encode($this->customer['email_address']);
-      $customer->customerNumber = utf8_encode($this->customer['datev_id']);
+      $customer->firstName      = encode_utf8((($this->billing['firstname'] != '') ? $this->billing['firstname'] : $this->customer['firstname']), '', true);
+      $customer->lastName       = encode_utf8((($this->billing['lastname'] != '') ? $this->billing['lastname'] : $this->customer['lastname']), '', true);
+      $customer->street         = encode_utf8((($this->billing['street_address'] != '') ? $this->billing['street_address'] : $this->customer['street_address']), '', true);
+      $customer->zipCode        = encode_utf8((($this->billing['postcode'] != '') ? $this->billing['postcode'] : $this->customer['postcode']), '', true);
+      $customer->city           = encode_utf8((($this->billing['city'] != '') ? $this->billing['city'] : $this->customer['city']), '', true);
+      $customer->country        = encode_utf8((($this->billing['country_iso_2'] != '') ? $this->billing['country_iso_2'] : $this->customer['country_iso_2']), '', true);
+      $customer->companyName    = encode_utf8((($this->billing['company'] != '') ? $this->billing['company'] : $this->customer['company']), '', true);
+      $customer->phone_1        = encode_utf8($this->customer['telephone'], '', true);
+      $customer->email          = encode_utf8($this->customer['email_address'], '', true);
+      $customer->customerNumber = encode_utf8($this->customer['datev_id'], '', true);
   
       if (xtc_not_null($this->customer['vat_id'])) {
-        $customer->ustid = utf8_encode($this->customer['vat_id']);
+        $customer->ustid = encode_utf8($this->customer['vat_id'], '', true);
         if ($this->customer['status'] == DEFAULT_CUSTOMERS_VAT_STATUS_ID) {
           $customer->taxOptions = '2';   // without VAT  
         } else {
@@ -202,8 +202,8 @@
                                               ");
       $customers_statuses = xtc_db_fetch_array($customers_statuses_query);
       
-      $customergroup->number  = utf8_encode($customers_statuses['customers_status_id']);
-      $customergroup->name    = utf8_encode($customers_statuses['customers_status_name']);
+      $customergroup->number  = encode_utf8($customers_statuses['customers_status_id'], '', true);
+      $customergroup->name    = encode_utf8($customers_statuses['customers_status_name'], '', true);
       
       //SOAP Call
       try {
@@ -262,9 +262,9 @@
         $positions[$i]->positionType      = 'POSITION';
         $positions[$i]->itemNumber        = (xtc_not_null($this->products[$i]['model']) ? $this->products[$i]['model'] : $this->products[$i]['id']);
         $positions[$i]->companyPositionID = $this->products[$i]['id'];
-        $positions[$i]->itemDescription   = utf8_encode($this->products[$i]['name'].$attributes);
+        $positions[$i]->itemDescription   = encode_utf8($this->products[$i]['name'].$attributes, '', true);
         $positions[$i]->count             = $this->products[$i]['qty'];
-        $positions[$i]->unit              = utf8_encode(((xtc_not_null($this->products[$i]['vpe']) && $this->products[$i]['vpe']!='0')?xtc_get_vpe_name($this->products[$i]['vpe']):EASYBILL_UNIT));
+        $positions[$i]->unit              = encode_utf8(((xtc_not_null($this->products[$i]['vpe']) && $this->products[$i]['vpe']!='0')?xtc_get_vpe_name($this->products[$i]['vpe']):EASYBILL_UNIT), '', true);
         $positions[$i]->ustPercent        = $this->products[$i]['tax'];
         if ($this->products[$i]['allow_tax'] == 1) {
         	$this->customer['allow_tax'] = 1;
@@ -290,15 +290,12 @@
           case 'ot_shipping':        
             $positions[$i]->positionType      = 'POSITION';
             $positions[$i]->count             = 1;
-            $positions[$i]->unit              = utf8_encode(EASYBILL_UNIT);
-            $positions[$i]->itemDescription   = utf8_encode(rtrim(strip_tags($this->totals[$t]['title']), ':'));
+            $positions[$i]->unit              = encode_utf8(EASYBILL_UNIT, '', true);
+            $positions[$i]->itemDescription   = encode_utf8(rtrim(strip_tags($this->totals[$t]['title']), ':'), '', true);
             $positions[$i]->ustPercent        = $this->getShippingTax();
-            if ($this->customer['allow_tax'] == 1)
-            {
+            if ($this->customer['allow_tax'] == 1) {
             	$positions[$i]->singlePriceNetto  = floatval($xtPrice->xtcRemoveTax($this->totals[$t]['value'], $positions[$i]->ustPercent)*100);
-            }
-            else
-            {
+            } else {
             	$positions[$i]->singlePriceNetto  = floatval($this->totals[$t]['value']*100);
             }        
 						// delete Shipping if cost = 0
@@ -312,8 +309,8 @@
           case 'ot_payment':
             $positions[$i]->positionType      = 'POSITION';
             $positions[$i]->count             = 1;
-            $positions[$i]->unit              = utf8_encode(EASYBILL_UNIT);
-            $positions[$i]->itemDescription   = utf8_encode(rtrim(strip_tags($this->totals[$t]['title']), ':'));
+            $positions[$i]->unit              = encode_utf8(EASYBILL_UNIT, '', true);
+            $positions[$i]->itemDescription   = encode_utf8(rtrim(strip_tags($this->totals[$t]['title']), ':'), '', true);
             $positions[$i]->ustPercent        = 0;  
             $positions[$i]->singlePriceNetto  = floatval($this->totals[$t]['value']*100);
             $i++;
@@ -332,15 +329,12 @@
           case 'ot_shippingfee':
             $positions[$i]->positionType      = 'POSITION';
             $positions[$i]->count             = 1;
-            $positions[$i]->unit              = utf8_encode(EASYBILL_UNIT);
-            $positions[$i]->itemDescription   = utf8_encode(rtrim(strip_tags($this->totals[$t]['title']), ':'));
+            $positions[$i]->unit              = encode_utf8(EASYBILL_UNIT, '', true);
+            $positions[$i]->itemDescription   = encode_utf8(rtrim(strip_tags($this->totals[$t]['title']), ':'), '', true);
             $positions[$i]->ustPercent        = $this->getOrderTotalTax($this->totals[$t]['class']);
-            if ($this->customer['allow_tax'] == 1)
-            {
+            if ($this->customer['allow_tax'] == 1) {
             	$positions[$i]->singlePriceNetto  = floatval($xtPrice->xtcRemoveTax($this->totals[$t]['value'], $positions[$i]->ustPercent)*100);
-            }
-            else
-            {
+            } else {
             	$positions[$i]->singlePriceNetto  = floatval($this->totals[$t]['value']*100);
             }        
             $i++;
@@ -349,15 +343,12 @@
           default:
             $positions[$i]->positionType      = 'POSITION';
             $positions[$i]->count             = 1;
-            $positions[$i]->unit              = utf8_encode(EASYBILL_UNIT);
-            $positions[$i]->itemDescription   = utf8_encode(rtrim(strip_tags($this->totals[$t]['title']), ':'));
+            $positions[$i]->unit              = encode_utf8(EASYBILL_UNIT, '', true);
+            $positions[$i]->itemDescription   = encode_utf8(rtrim(strip_tags($this->totals[$t]['title']), ':'), '', true);
             $positions[$i]->ustPercent        = xtc_get_tax_rate(MODULE_EASYBILL_STANDARD_TAX_CLASS, $this->customer['country_id'], $this->customer['zone_id']);
-            if ($this->customer['allow_tax'] == 1)
-            {
+            if ($this->customer['allow_tax'] == 1) {
             	$positions[$i]->singlePriceNetto  = floatval($xtPrice->xtcRemoveTax($this->totals[$t]['value'], $positions[$i]->ustPercent)*100);
-            }
-            else
-            {
+            } else {
             	$positions[$i]->singlePriceNetto  = floatval($this->totals[$t]['value']*100);
             }        
             $i++;
@@ -392,10 +383,10 @@
       $textPrefix = EASYBILL_PAYMENT_HEADING . $this->getPaymentMethod();
       $textPrefix .= EASYBILL_EOL;
       $textPrefix .= EASYBILL_PAYMENT_HEADING_II . $this->info['order_id'];
-      $document->textPrefix = utf8_encode($textPrefix);
+      $document->textPrefix = encode_utf8($textPrefix, '', true);
       
       // Text after Positions
-      $document->text = ((defined(strtoupper('MODULE_EASYBILL_PAYMENT_TEXT_'.$this->info['payment_method']))) ? utf8_encode(constant(strtoupper('MODULE_EASYBILL_PAYMENT_TEXT_'.$this->info['payment_method']))) : '');
+      $document->text = ((defined(strtoupper('MODULE_EASYBILL_PAYMENT_TEXT_'.$this->info['payment_method']))) ? encode_utf8(constant(strtoupper('MODULE_EASYBILL_PAYMENT_TEXT_'.$this->info['payment_method'])), '', true) : '');
       
       if ($this->info['payment_method'] == 'billpay') {
         $document->text .= EASYBILL_EOL.$this->getBankData();
@@ -669,7 +660,7 @@
 
       xtc_db_query("UPDATE ".TABLE_EASYBILL."
                        SET payment = '1'
-                     WHERE orders_id = ".$this->info['order_id']);
+                     WHERE orders_id = '".$this->info['order_id']."'");
     }
   }
 ?>
