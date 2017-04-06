@@ -20,10 +20,12 @@
     DIR_TMPL.'stylesheet.css',
   );
   $css_min = DIR_TMPL.'stylesheet.min.css';
+  
+  $this_f_time = filemtime(DIR_FS_CATALOG.DIR_TMPL_CSS.'general.css.php');
 
   if (COMPRESS_STYLESHEET == 'true') {
     require_once(DIR_FS_BOXES_INC.'combine_files.inc.php');
-    $css_array = combine_files($css_array,$css_min,true);
+    $css_array = combine_files($css_array,$css_min,true,$this_f_time);
   }
 
   // Put CSS-Inline-Definitions here, these CSS-files will be loaded at the TOP of every page

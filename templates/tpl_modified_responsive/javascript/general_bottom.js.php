@@ -25,9 +25,11 @@ $script_array = array(
 );
 $script_min = DIR_TMPL_JS.'tpl_plugins.min.js';
   
+$this_f_time = filemtime(DIR_FS_CATALOG.DIR_TMPL_JS.'general_bottom.js.php');
+  
 if (COMPRESS_JAVASCRIPT == 'true') {
   require_once(DIR_FS_BOXES_INC.'combine_files.inc.php');
-  $script_array = combine_files($script_array,$script_min,false);
+  $script_array = combine_files($script_array,$script_min,false,$this_f_time);
 }
 
 foreach ($script_array as $script) {
