@@ -28,6 +28,7 @@ if (COMPRESS_JAVASCRIPT == 'true') {
 }
 
 foreach ($script_array as $script) {
+  $script .= strpos($script,$script_min) === false ? '?v=' . filemtime(DIR_FS_CATALOG.$script) : '';
   echo '<script src="'.DIR_WS_BASE.$script.'" type="text/javascript"></script>'.PHP_EOL;
 }
 ?>
