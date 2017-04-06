@@ -2103,9 +2103,9 @@ INSERT INTO orders_status VALUES (1,1,'Pending', 1);
 INSERT INTO orders_status VALUES (1,2,'Offen', 1);
 INSERT INTO orders_status VALUES (2,1,'Processing', 2);
 INSERT INTO orders_status VALUES (2,2,'In Bearbeitung', 2);
-INSERT INTO orders_status VALUES (3,1,'Delivered', 3);
+INSERT INTO orders_status VALUES (3,1,'Shipped', 3);
 INSERT INTO orders_status VALUES (3,2,'Versendet', 3);
-INSERT INTO orders_status VALUES (4,1,'Reversed', 4);
+INSERT INTO orders_status VALUES (4,1,'Canceled', 4);
 INSERT INTO orders_status VALUES (4,2,'Storniert', 4);
 
 # shipping status

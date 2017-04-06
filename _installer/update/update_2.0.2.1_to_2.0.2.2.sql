@@ -25,4 +25,7 @@ UPDATE content_manager SET content_text = REPLACE(content_text, '<p>The EU Commi
 UPDATE content_manager SET content_text = REPLACE(content_text, '<p>Die EU-Kommission stellt im Internet unter folgendem Link eine Plattform zur Online-Streitbeilegung bereit: http://ec.europa.eu/consumers/odr</p>', '<p>Die EU-Kommission stellt im Internet unter folgendem Link eine Plattform zur Online-Streitbeilegung bereit: <a href="http://ec.europa.eu/consumers/odr/" target="_blank">http://ec.europa.eu/consumers/odr/</a></p>');
 UPDATE content_manager SET content_text = REPLACE(content_text, '<a href="http//ec.europa.eu/consumers/odr" target="_blank">http//ec.europa.eu/consumers/odr</a>', '<a href="http://ec.europa.eu/consumers/odr/" target="_blank">http://ec.europa.eu/consumers/odr/</a>');
 
+UPDATE orders_status SET orders_status_name = 'Shipped' WHERE orders_status_name = 'Delivered';
+UPDATE orders_status SET orders_status_name = 'Canceled' WHERE orders_status_name = 'Reversed';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
