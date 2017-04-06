@@ -344,7 +344,7 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
                   <table class="tableBoxCenter collapse">
                     <tr class="dataTableHeadingRow">
                       <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_BANNERS; ?></td>
-                      <?php /* <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_GROUPS; ?></td> */ ?>
+                      <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_GROUPS; ?></td>
                       <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_LANGUAGE; ?></td>
                       <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_STATISTICS; ?></td>
                       <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_STATUS; ?></td>
@@ -374,7 +374,7 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
                         ?>
                         <tr <?php echo $tr_attributes;?>>
                           <td class="dataTableContent"><?php echo $banners['banners_title']; ?></td>
-                          <?php /* <td class="dataTableContent txta-r"><?php echo $banners['banners_group']; ?></td> */ ?>
+                          <td class="dataTableContent txta-c"><?php echo $banners['banners_group']; ?></td>
                           <td class="dataTableContent txta-c"><?php echo $lang_array_id[$banners['languages_id']]; ?></td>
                           <td class="dataTableContent txta-r"><?php echo $banners_shown . ' / ' . $banners_clicked; ?></td>
                           <td class="dataTableContent txta-r">
