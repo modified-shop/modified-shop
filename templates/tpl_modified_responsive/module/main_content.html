@@ -2,8 +2,8 @@
 {config_load file="lang_`$language`.custom"}
 {config_load file="lang_`$language`.section" section="index"}
 {if isset($MODULE_error)}{$MODULE_error}{/if}
-<h1>{$title}</h1>
-<div class="homesite cf">{$text}</div>
+{if isset($title) && $title != ''}<h1>{$title}</h1>{/if}
+{if isset($text) && $text != ''}<div class="homesite cf">{$text}</div>{/if}
 {if isset($MODULE_new_products)}
 {$MODULE_new_products}
 {/if}
