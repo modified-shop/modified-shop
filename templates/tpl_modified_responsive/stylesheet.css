@@ -2186,7 +2186,7 @@ a.color_more:hover {
 }
 .subcatlist {
   float:left;
-  width:20%;
+  width:25%;
   height:auto;
   padding: 0px 5px;
   margin: 0px 0px 10px 0px;
@@ -2250,6 +2250,7 @@ a.color_more:hover {
   display:table-cell;
   vertical-align:middle;
   text-align:center;
+  word-break:break-all;
 }
 .subcat_desc {
   display:inline-block;

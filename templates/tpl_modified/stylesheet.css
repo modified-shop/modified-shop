@@ -1984,6 +1984,7 @@ a.color_more:hover {
   display:table-cell;
   vertical-align:middle;
   text-align:center;
+  word-break:break-all;
 }
 .subcat_desc {
   display:inline-block;
