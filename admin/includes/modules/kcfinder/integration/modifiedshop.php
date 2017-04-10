@@ -44,6 +44,11 @@ class modifiedshop {
         $_SESSION['KCFINDER']['DOCUMENT_ROOT'] = $_SERVER['DOCUMENT_ROOT'];
         $_SESSION['KCFINDER']['uploadURL'] = DIR_WS_CATALOG;
         //$_SESSION['KCFINDER']['uploadURL'] = '/';
+        
+        if (strpos($_SERVER['DOCUMENT_ROOT'],'strato') !== false) {
+          $_SESSION['KCFINDER']['DOCUMENT_ROOT'] =  DIR_WS_CATALOG == '/' ? DIR_FS_DOCUMENT_ROOT : $_SERVER['DOCUMENT_ROOT'];
+        }
+        
         $_SESSION['KCFINDER']['uploadDir'] = '';
         $_SESSION['KCFINDER']['thumbsDir'] = 'images/.thumbs';
         $_SESSION['KCFINDER']['theme'] = 'default';
