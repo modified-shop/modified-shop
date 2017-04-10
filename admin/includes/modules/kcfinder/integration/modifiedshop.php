@@ -41,7 +41,8 @@ class modifiedshop {
         }
         
         // settings
-        $_SESSION['KCFINDER']['uploadURL'] = DIR_WS_CATALOG;
+        //$_SESSION['KCFINDER']['uploadURL'] = DIR_WS_CATALOG;
+        $_SESSION['KCFINDER']['uploadURL'] = '/';
         $_SESSION['KCFINDER']['uploadDir'] = '';
         $_SESSION['KCFINDER']['thumbsDir'] = 'images/.thumbs';
         $_SESSION['KCFINDER']['theme'] = 'default';
