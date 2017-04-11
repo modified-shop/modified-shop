@@ -192,7 +192,7 @@ class KiTT_Payment_Widget extends KiTT_Widget
         foreach ($fields as &$value) {
             if (array_key_exists('custom', $value)) {
                 if (method_exists($helper, $value['custom'])) {
-                    $value['custom'] = $helper->$value['custom']();
+                    $value['custom'] = $helper->{$value['custom']}();
                 }
             }
         }
