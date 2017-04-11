@@ -607,7 +607,7 @@ class KlarnaUtils
                 );
             } else {
                 $this->setError(
-                    htmlentities($e->getMessage()) . " (#" . $e->getCode() . ")",
+                    htmlentities($e->getMessage(), ENT_DISALLOWED, 'ISO-8859-1') . " (#" . $e->getCode() . ")",
                     $option
                 );
             }
