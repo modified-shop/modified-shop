@@ -115,7 +115,7 @@ if (isset($_GET['action'])) {
           foreach ($_POST['config']['profile'] as $key => $value) {
             $sql_data_array[] = array(
               'config_key' => $key,
-              'config_value' => $value,
+              'config_value' => str_replace(',', '.', preg_replace('/[^0-9,.%]/','',$value)),
             );
           }
           $paypal->save_config($sql_data_array);
