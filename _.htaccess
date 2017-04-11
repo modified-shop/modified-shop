@@ -23,8 +23,8 @@ FileETag None
 #AddType x-mapp-php5 .php
 #AddHandler x-mapp-php5 .php
 
-# Disable directory browsing (disabled by default as this causes problems on some servers)
-#Options All -Indexes
+# Disable directory browsing (disabled by default as this causes problems on some servers because they don't allow AllowOverride Directive for Options)
+#Options -Indexes
 
 ##-- Enable the compression for any type of content
 <IfModule mod_deflate.c>
@@ -72,7 +72,7 @@ FileETag None
 
   <IfModule mod_headers.c>
     Header append Cache-Control "public"
-  </IfModule>   
+  </IfModule>
 </IfModule>
 
 ##-- Configure php_flags if necessary
@@ -127,26 +127,26 @@ ErrorDocument 500 /sitemap.html?error=500
   ##-- Use canonical URLs
   ##-- Use SSL-Proxy
   ##-- HostEurope
-  #RewriteCond %{HTTP:X-Forwarded-Server}   !^ssl\.webpack\.de$ [NC]
+  #RewriteCond %{HTTP:X-Forwarded-Server} !^ssl\.webpack\.de$ [NC]
   ##-- 1und1
-  #RewriteCond %{HTTP:X-Forwarded-Server}   !^ssl\.kundenserver\.de$ [NC]
+  #RewriteCond %{HTTP:X-Forwarded-Server} !^ssl\.kundenserver\.de$ [NC]
   ##-- domainFACTORY
-  #RewriteCond %{HTTP:X-Forwarded-Server}   !^sslsites\.de$ [NC]
+  #RewriteCond %{HTTP:X-Forwarded-Server} !^sslsites\.de$ [NC]
   ##-- All-Inkl
-  #RewriteCond %{HTTP:X-Forwarded-Server}   !^ssl-account\.com$ [NC]
+  #RewriteCond %{HTTP:X-Forwarded-Server} !^ssl-account\.com$ [NC]
   ##-- Strato
-  #RewriteCond %{HTTP:X-Forwarded-Server}   !^www\.ssl-id\.de$ [NC]
+  #RewriteCond %{HTTP:X-Forwarded-Server} !^www\.ssl-id\.de$ [NC]
   
   ##-- redirect to http www-domain, when www is missing and no subdomain given and not using an ssl-proxy
-  #RewriteCond %{HTTP_HOST}                 !^www\. [NC]
-  #RewriteCond %{HTTP_HOST}                 !\.(.*)\. [NC]
-  #RewriteCond %{HTTP_HOST}                 !^localhost [NC]
+  #RewriteCond %{HTTP_HOST} !^www\. [NC]
+  #RewriteCond %{HTTP_HOST} !\.(.*)\. [NC]
+  #RewriteCond %{HTTP_HOST} !^localhost [NC]
   #RewriteRule ^ http://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
   ##-- redirect to https www-domain, when www is missing and no subdomain given and not using an ssl-proxy
-  #RewriteCond %{HTTP_HOST}                 !^www\. [NC]
-  #RewriteCond %{HTTP_HOST}                 !\.(.*)\. [NC]
-  #RewriteCond %{HTTP_HOST}                 !^localhost [NC]
+  #RewriteCond %{HTTP_HOST} !^www\. [NC]
+  #RewriteCond %{HTTP_HOST} !\.(.*)\. [NC]
+  #RewriteCond %{HTTP_HOST} !^localhost [NC]
   #RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
   #RewriteCond %{SERVER_PORT} !^443$
   #RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
