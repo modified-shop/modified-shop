@@ -182,7 +182,7 @@ class PayPalPayment extends PayPalPaymentBase {
                 ->setCurrency($_SESSION['currency']) 
                 ->setQuantity(1) 
                 ->setPrice($shipping_cost); 
-        $this->amount->setTotal($this->amount->getTotal() + $shipping_cost);
+        $this->amount->setTotal($this->amount->getTotal() + (double)$shipping_cost);
         $this->details->setSubtotal($this->amount->getTotal());
       }    
           
@@ -262,7 +262,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
                 ->setCurrency($_SESSION['currency']) 
                 ->setQuantity(1) 
-                ->setPrice($this->details->getSubtotal() - (int)$shipping_cost); 
+                ->setPrice($this->details->getSubtotal() - (double)$shipping_cost); 
 
         if ((int)$shipping_cost > 0) {
           $item[1] = new Item(); 
