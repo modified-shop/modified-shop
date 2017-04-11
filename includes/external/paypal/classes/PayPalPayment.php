@@ -549,6 +549,7 @@ class PayPalPayment extends PayPalPaymentBase {
           
           // sendto
           $_SESSION['sendto'] = $this->get_shipping_address($_SESSION['customer_id'], $customer['delivery']);
+          $_SESSION['delivery_zone'] = $customer['delivery']['delivery_country']['iso_code_2'];
 
         } elseif (!isset($_SESSION['customer_id'])) {
           // redirect
