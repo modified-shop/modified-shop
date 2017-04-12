@@ -202,6 +202,9 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $mail->AddAttachment($attachments[$i]);
   }
   $mail->Subject = $email_subject;
+  
+  require_once(DIR_FS_INC.'auto_include.inc.php');
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/php_mail/','php') as $file) require ($file);
 
   if (!$mail->Send()) {
     trigger_error('Mailer Error - '.$mail->ErrorInfo, E_USER_WARNING);
