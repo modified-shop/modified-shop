@@ -124,7 +124,7 @@ class SMTP
      * </code>
      * @var string|callable
      */
-    public $Debugoutput = 'echo';
+    public $Debugoutput = 'trigger_error';
 
     /**
      * Whether to use VERP.
@@ -216,7 +216,7 @@ class SMTP
             return;
         }
         //Avoid clash with built-in function names
-        if (!in_array($this->Debugoutput, array('error_log', 'html', 'echo')) and is_callable($this->Debugoutput)) {
+        if (!in_array($this->Debugoutput, array('error_log', 'html', 'echo', 'trigger_error')) and is_callable($this->Debugoutput)) {
             call_user_func($this->Debugoutput, $str, $level);
             return;
         }
@@ -232,6 +232,9 @@ class SMTP
                     ENT_QUOTES,
                     'UTF-8'
                 ) . "<br>\n";
+                break;
+            case 'trigger_error':
+                trigger_error($str, E_USER_WARNING);
                 break;
             case 'echo':
             default:
