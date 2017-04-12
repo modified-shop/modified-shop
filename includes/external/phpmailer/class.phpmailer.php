@@ -2495,7 +2495,7 @@ class PHPMailer
 
     /**
      * Add an attachment from a path on the filesystem.
-     * Never use a user-supplied path to a file!                             
+     * Never use a user-supplied path to a file!
      * Returns false if the file could not be found or read.
      * @param string $path Path to the attachment.
      * @param string $name Overrides the attachment name.
