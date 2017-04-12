@@ -5,15 +5,10 @@ add trigger_error
 fix PHP 7:
 if (!empty(${$current}) && strpos($header, ' =?') === 0) {
                     ${$current} .= $header;
-                    
+
 #####################
 class.smtp.php
 
 add trigger_error
-                    
-#####################
 
-language/phpmailer.lang-de.php
-
-comment out:
-$PHPMAILER_LANG['extension_missing']    = 'Fehlende Erweiterung: ';
+Additional fix from ticket #1017, see: https://github.com/PHPMailer/PHPMailer/issues/1017
