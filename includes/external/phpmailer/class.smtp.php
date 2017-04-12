@@ -30,7 +30,7 @@ class SMTP
      * The PHPMailer SMTP version number.
      * @var string
      */
-    const VERSION = '5.2.21';
+    const VERSION = '5.2.23';
 
     /**
      * SMTP line break constant.
@@ -81,7 +81,7 @@ class SMTP
      * @deprecated Use the `VERSION` constant instead
      * @see SMTP::VERSION
      */
-    public $Version = '5.2.21';
+    public $Version = '5.2.23';
 
     /**
      * SMTP server port number.
@@ -231,8 +231,7 @@ class SMTP
                     preg_replace('/[\r\n]+/', '', $str),
                     ENT_QUOTES,
                     'UTF-8'
-                )
-                . "<br>\n";
+                ) . "<br>\n";
                 break;
             case 'echo':
             default:
@@ -276,7 +275,8 @@ class SMTP
         }
         // Connect to the SMTP server
         $this->edebug(
-            "Connection: opening to $host:$port, timeout=$timeout, options=".var_export($options, true),
+            "Connection: opening to $host:$port, timeout=$timeout, options=" .
+            var_export($options, true),     
             self::DEBUG_CONNECTION
         );
         $errno = 0;
@@ -361,15 +361,15 @@ class SMTP
             $crypto_method |= STREAM_CRYPTO_METHOD_TLSv1_1_CLIENT;
         }
 
-        // Begin encrypted connection
-        if (!stream_socket_enable_crypto(
+       // Begin encrypted connection
+        set_error_handler(array($this, 'errorHandler'));
+        $crypto_ok = stream_socket_enable_crypto(
             $this->smtp_conn,
             true,
             $crypto_method
-        )) {
-            return false;
-        }
-        return true;
+        );
+        restore_error_handler();
+        return $crypto_ok;
     }
 
     /**
@@ -398,8 +398,7 @@ class SMTP
         }
 
         if (array_key_exists('EHLO', $this->server_caps)) {
-        // SMTP extensions are available. Let's try to find a proper authentication method
-
+            // SMTP extensions are available; try to find a proper authentication method
             if (!array_key_exists('AUTH', $this->server_caps)) {
                 $this->setError('Authentication is not allowed at this stage');
                 // 'at this stage' means that auth may be allowed after the stage changes
@@ -893,7 +892,8 @@ class SMTP
             $code_ex = (count($matches) > 2 ? $matches[2] : null);
             // Cut off error code from each response line
             $detail = preg_replace(
-                "/{$code}[ -]".($code_ex ? str_replace('.', '\\.', $code_ex).' ' : '')."/m",
+                "/{$code}[ -]" .
+                ($code_ex ? str_replace('.', '\\.', $code_ex) . ' ' : '') . "/m",
                 '',
                 $this->last_reply
             );
@@ -1089,8 +1089,10 @@ class SMTP
             $this->edebug("SMTP -> get_lines(): \$data is \"$data\"", self::DEBUG_LOWLEVEL);
             $this->edebug("SMTP -> get_lines(): \$str is  \"$str\"", self::DEBUG_LOWLEVEL);
             $data .= $str;
-            // If 4th character is a space, we are done reading, break the loop, micro-optimisation over strlen
-            if ((isset($str[3]) and $str[3] == ' ')) {
+            // If response is only 3 chars (not valid, but RFC5321 S4.2 says it must be handled),
+            // or 4th character is a space, we are done reading, break the loop,
+            // string array access is a micro-optimisation over strlen
+            if (!isset($str[3]) or (isset($str[3]) and $str[3] == ' ')) {
                 break;
             }
             // Timed-out? Log and break
@@ -1208,17 +1210,19 @@ class SMTP
      * Reports an error number and string.
      * @param integer $errno The error number returned by PHP.
      * @param string $errmsg The error message returned by PHP.
+     * @param string $errfile The file the error occurred in
+     * @param integer $errline The line number the error occurred on                                                                 
      */
-    protected function errorHandler($errno, $errmsg)
+    protected function errorHandler($errno, $errmsg, $errfile = '', $errline = 0)
     {
-        $notice = 'Connection: Failed to connect to server.';
+        $notice = 'Connection failed.';
         $this->setError(
             $notice,
             $errno,
             $errmsg
         );
         $this->edebug(
-            $notice . ' Error number ' . $errno . '. "Error notice: ' . $errmsg,
+            $notice . ' Error #' . $errno . ': ' . $errmsg . " [$errfile line $errline]",
             self::DEBUG_CONNECTION
         );
     }
