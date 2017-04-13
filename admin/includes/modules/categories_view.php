@@ -120,6 +120,14 @@
         $catsort    = 'c.sort_order ASC'; //default
         $prodsort   = 'p.products_discount_allowed DESC';
         break;
+      case 'image'         :
+        $catsort    = 'c.sort_order ASC';
+        $prodsort   = 'p.products_image ASC';
+        break;
+      case 'image-desc'   :
+        $catsort    = 'c.sort_order ASC'; //default
+        $prodsort   = 'p.products_image DESC';
+        break;
       default:
         $catsort    = 'cd.categories_name ASC';
         $prodsort   = 'pd.products_name ASC';
@@ -206,7 +214,7 @@
                 if( USE_ADMIN_THUMBS_IN_LIST=='true' ) {
                   ?>
                   <td class="dataTableHeadingContent txta-c" style="width:10%">
-                    <?php echo TABLE_HEADING_IMAGE ?>
+                    <?php echo TABLE_HEADING_IMAGE.xtc_sorting(FILENAME_CATEGORIES,'image'); ?>
                   </td>
                   <?php
                 }
