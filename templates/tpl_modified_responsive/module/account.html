@@ -1,0 +1,103 @@
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="$language/lang_$language.conf" section="account"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="account"}
+<h1>{#heading_account#}</h1>
+{if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+{if $success_message}<div class="infomessage">{$success_message}</div>{/if}
+
+<div class="twoColums">
+  <div class="highlightbox">
+    {if !$products_history || !isset($smarty.session.customer_id)}
+      <h4>{#title_welcome#}</h4>
+      {if #text_welcome#}
+        <p>{#text_welcome#}</p>
+      {/if}
+      {if $LINK_LOGIN}
+        <p><a class="black" href="{$LINK_LOGIN}"><strong>{#text_login#}</strong></a></p>
+      {/if}
+      <br />
+    {/if}
+    {if isset($smarty.session.customer_id)}
+      <h4>{#title_account#}</h4>
+      <ul class="accountlist">
+        <li><a class="black" href="{$LINK_EDIT}"><strong>{#text_edit#}</strong></a></li>
+        <li><a class="black" href="{$LINK_ADDRESS}"><strong>{#text_address#}</strong></a></li>
+        {if isset($LINK_EXPRESS)}
+          <li><a class="black" href="{$LINK_EXPRESS}"><strong>{#text_express_checkout#}</strong></a></li>
+        {/if}
+        {if $LINK_PASSWORD}
+          <li><a class="black" href="{$LINK_PASSWORD}"><strong>{#text_password#}</strong></a></li>
+        {/if}
+        {if $LINK_DELETE}
+          <li><a class="black" href="{$LINK_DELETE}"><strong>{#text_delete#}</strong></a></li>
+        {/if}
+      </ul>
+    {/if}
+  </div>
+
+  {if $order_content}
+  <br />
+  <div class="highlightbox">
+    <h4>{#title_orders#}</h4>
+		{foreach name=aussen item=order_data from=$order_content}
+    	<p class="cf">
+      <span class="account_actions_right cf">
+        {if isset($order_data.BUTTON_CART_EXPRESS)}<span class="cssButtonPos6">{$order_data.BUTTON_CART_EXPRESS}</span>{/if}
+        <span class="cssButtonPos6">{$order_data.BUTTON_CART}</span>
+      </span>
+      <strong><a href="{$order_data.ORDER_LINK}">{$order_data.ORDER_DATE}</a> / {#order_nr#}{$order_data.ORDER_ID}</strong><br />
+			<strong>{#order_total#}</strong>{$order_data.ORDER_TOTAL}<br />
+      <strong>{#order_status#}</strong>{$order_data.ORDER_STATUS}<br />
+			{if count($order_data.TRACKING) > 0}
+			  {foreach name=aussen item=tracking_data from=$order_data.TRACKING}
+			    {#label_tracking#} <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a><br />
+			  {/foreach}
+			{/if}
+      </p>
+			<div class="hr_1"></div>
+		{/foreach}
+		<p><a href="{$LINK_ALL}">{#text_all#}</a></p>
+  </div>
+  {/if}
+</div>
+
+<div class="twoColums last">
+  {if $LINK_NEWSLETTER}
+  <div class="highlightbox plainright">
+    <h4>{#title_notification#}</h4>
+    <ul class="accountlist">
+      <li><a class="black" href="{$LINK_NEWSLETTER}">{#text_newsletter#}</a></li>
+    </ul>
+  </div>
+  <br />
+  {/if}
+  
+  {if $products_history}
+  <div class="highlightbox plainright">
+    <h4>{#title_viewed_products#}</h4>
+    <ul class="historylist">
+    {foreach name=history_products item=prod_history_data from=$products_history}
+      <li class="{if $smarty.foreach.history_products.first}first {/if}cf">
+        <span class="hl_image cf">
+        {if $prod_history_data.PRODUCTS_IMAGE != ''}
+          <a href="{$prod_history_data.PRODUCTS_LINK}"><img src="{$prod_history_data.PRODUCTS_IMAGE}" alt="{$prod_history_data.PRODUCTS_NAME|onlytext}" /></a>
+        {else}
+          &nbsp;
+        {/if}
+        </span>
+        <span class="hl_text">
+          <span class="hl_text_entry"><a href="{$prod_history_data.PRODUCTS_LINK}">{$prod_history_data.PRODUCTS_NAME}</a></span>
+          <span class="hl_text_entry"><strong>{#text_goto_cat#}</strong> <a href="{$prod_history_data.CAT_URL}">{$prod_history_data.CATEGORIES_NAME}</a></span>
+        </span>
+        <span class="hl_price">
+          {foreach name=inner item=price_data from=$prod_history_data.PRODUCTS_PRICE_ARRAY}
+            {include file="module/includes/price_box.html"}
+          {/foreach}
+        </span>
+      </li>
+    {/foreach}
+    </ul>
+  </div>
+  {/if}
+</div>  
