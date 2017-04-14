@@ -111,7 +111,7 @@ input {
   font-family: Tahoma, sans-serif;
   font-size:13px;
 }
-input[type=text], input[type=password] {
+input[type=text], input[type=password], input[type=email] {
   background-color:#fafafa;
   border-color: #C6C6C6 #DADADA #EAEAEA;
   color: #999999;
@@ -128,12 +128,12 @@ input[type=text], input[type=password] {
   width:100%;
   height:32px;
 }
-input[type=text]:hover, input[type=password]:hover {
+input[type=text]:hover, input[type=password]:hover, input[type=email]:hover {
     background-color:#FFFFFF;
     border-color: #C6C6C6 #DADADA #EAEAEA;
     color: #666666;
 }    
-input[type=text]:focus, input[type=password]:focus {
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
     background-color:#FFFFFF;
     border-color: #659EC9 #70AEDD #A8CFEC;
     color: #333333;
@@ -211,7 +211,7 @@ table td {
       <h1>Shop-Login</h1>
       <table>
         <tr>
-          <td><span class="fieldtext">E-Mail</span><input type="text" name="email_address" maxlength="50" /></td>
+          <td><span class="fieldtext">E-Mail</span><input type="email" name="email_address" maxlength="50" /></td>
         </tr>  
         <tr>
           <td><span class="fieldtext">Passwort</span><?php echo xtc_draw_password_field('password'); ?></td>
