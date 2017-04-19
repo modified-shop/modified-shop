@@ -28,6 +28,8 @@
   require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
   require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
   require_once (DIR_FS_INC.'generate_customers_cid.inc.php');
+  
+  require(DIR_WS_INCLUDES . 'get_states.php');
 
   // initiate template engine for mail
   $smarty = new Smarty;
@@ -516,12 +518,22 @@ require (DIR_WS_INCLUDES.'head.php');
                       </td>
                     </tr>
 
-                    <?php if (ACCOUNT_STATE == 'true') { ?>
                     <tr>
-                      <td class="dataTableConfig col-left"><?php echo ENTRY_STATE; ?></td>
+                      <td class="dataTableConfig col-left"><?php echo ENTRY_COUNTRY; ?></td>
                       <td class="dataTableConfig col-single-right">
                       <?php
-                        $entry_state = xtc_get_zone_name(isset($entry_country_id)?$entry_country_id:'', isset($entry_zone_id)?$entry_zone_id:'', isset($entry_state)?$entry_state:'');
+                        echo xtc_draw_pull_down_menu('entry_country_id', xtc_get_countries(xtc_get_country_name(STORE_COUNTRY)), isset($entry_country_id)?$entry_country_id:'');
+                        if ($error && $entry_country_error) echo '&nbsp;'.ENTRY_COUNTRY_ERROR;
+                      ?>
+                      </td>
+                    </tr>
+                    
+                    <?php if (ACCOUNT_STATE == 'true') { ?>
+                    <tr id="states">
+                      <td class="dataTableConfig col-left"><?php echo ENTRY_STATE; ?></td>
+                      <td class="dataTableConfig col-single-right" id="states_container">
+                      <?php
+                        $entry_state = xtc_get_zone_name(isset($entry_country_id) ? $entry_country_id : xtc_get_countries(xtc_get_country_name(STORE_COUNTRY)), isset($entry_zone_id) ? $entry_zone_id :'', isset($entry_state) ? $entry_state:'');
                         $entry_state_str = xtc_draw_input_field('entry_state', $entry_state);
                         if ($error && $entry_state_error) {
                           if ($entry_state_has_zones) {
@@ -538,16 +550,6 @@ require (DIR_WS_INCLUDES.'head.php');
                       </td>
                     </tr>
                     <?php } ?>
-
-                    <tr>
-                      <td class="dataTableConfig col-left"><?php echo ENTRY_COUNTRY; ?></td>
-                      <td class="dataTableConfig col-single-right">
-                      <?php
-                        echo xtc_draw_pull_down_menu('entry_country_id', xtc_get_countries(xtc_get_country_name(STORE_COUNTRY)), isset($entry_country_id)?$entry_country_id:'');
-                        if ($error && $entry_country_error) echo '&nbsp;'.ENTRY_COUNTRY_ERROR;
-                      ?>
-                      </td>
-                    </tr>
 
                   </table>
                 </div>
@@ -681,6 +683,7 @@ require (DIR_WS_INCLUDES.'head.php');
         <!-- body_text_eof //-->
       </tr>
     </table>
+    <?php require(DIR_WS_INCLUDES . 'javascript/jquery.entry_state.js.php'); ?>                                                          
     <!-- body_eof //-->
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>

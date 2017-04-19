@@ -26,6 +26,8 @@
   require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
   require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
   require_once (DIR_FS_INC.'xtc_js_lang.php');
+  
+  require(DIR_WS_INCLUDES . 'get_states.php');
 
   // split page results
   if(!defined('MAX_DISPLAY_LIST_CUSTOMERS')) {

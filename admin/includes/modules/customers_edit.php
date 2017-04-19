@@ -376,12 +376,29 @@
               </td>
 
             </tr>
-            <?php
-              if (ACCOUNT_STATE == 'true') {
-            ?>
+            
             <tr>
-              <td class="dataTableConfig col-left"><?php echo ENTRY_STATE; ?></td>
+              <td class="dataTableConfig col-left"><?php echo ENTRY_COUNTRY; ?></td>
               <td class="dataTableConfig col-single-right">
+                <?php
+                if ($error == true) {
+                  if ($entry_country_error == true) {
+                    echo xtc_draw_pull_down_menu('entry_country_id', xtc_get_countries('',1), $cInfo->entry_country_id, 'style="width:250px"').'&nbsp;'.ENTRY_COUNTRY_ERROR; //Web28 - 2012-04-17 - NEW: show only active language
+                  } else {
+                    echo xtc_get_country_name($cInfo->entry_country_id).xtc_draw_hidden_field('entry_country_id', $cInfo->entry_country_id);
+                  }
+                } else {
+                  echo xtc_draw_pull_down_menu('entry_country_id', xtc_get_countries('',1), $cInfo->entry_country_id, 'style="width:250px"'); //Web28 - 2012-04-17 - NEW: show only active language
+                }
+                ?>
+              </td>
+            </tr>
+            <?php
+            if (ACCOUNT_STATE == 'true') {
+            ?>
+            <tr id="states">
+              <td class="dataTableConfig col-left"><?php echo ENTRY_STATE; ?></td>
+              <td class="dataTableConfig col-single-right" id="states_container">
                 <?php
                 $entry_state = xtc_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state);
                 if ($error == true) {
@@ -404,28 +421,11 @@
                 }
                 ?>
               </td>
-
-           </tr>
-            <?php
-              }
-            ?>
-            <tr>
-              <td class="dataTableConfig col-left"><?php echo ENTRY_COUNTRY; ?></td>
-              <td class="dataTableConfig col-single-right">
-                <?php
-                if ($error == true) {
-                  if ($entry_country_error == true) {
-                    echo xtc_draw_pull_down_menu('entry_country_id', xtc_get_countries('',1), $cInfo->entry_country_id, 'style="width:250px"').'&nbsp;'.ENTRY_COUNTRY_ERROR; //Web28 - 2012-04-17 - NEW: show only active language
-                  } else {
-                    echo xtc_get_country_name($cInfo->entry_country_id).xtc_draw_hidden_field('entry_country_id', $cInfo->entry_country_id);
-                  }
-                } else {
-                  echo xtc_draw_pull_down_menu('entry_country_id', xtc_get_countries('',1), $cInfo->entry_country_id, 'style="width:250px"'); //Web28 - 2012-04-17 - NEW: show only active language
-                }
-                ?>
-              </td>
-
             </tr>
+            <?php
+            }
+            ?>
+
           </table>
         </div>
         <?php
@@ -545,3 +545,5 @@
 
       </form>
     </div>
+    
+    <?php require(DIR_WS_INCLUDES . 'javascript/jquery.entry_state.js.php'); ?>                                                                             
