@@ -154,7 +154,7 @@
                 $shipping_status_query_raw = "SELECT * 
                                                 FROM " . TABLE_SHIPPING_STATUS . " 
                                                WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
-                                            ORDER BY sort_order";
+                                            ORDER BY sort_order, shipping_status_id";
                 $shipping_status_split = new splitPageResults($_GET['page'], '20', $shipping_status_query_raw, $shipping_status_query_numrows);
                 $shipping_status_query = xtc_db_query($shipping_status_query_raw);
                 while ($shipping_status = xtc_db_fetch_array($shipping_status_query)) {
