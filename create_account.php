@@ -423,7 +423,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                                   );
           xtc_db_perform(TABLE_COUPONS, $sql_data_array);
 
-          $insert_id = xtc_db_insert_id($insert_query);
+          $insert_id = xtc_db_insert_id();
           $sql_data_array = array('coupon_id' => $insert_id,
                                   'customer_id_sent' => '0',
                                   'sent_firstname' => 'Admin',
