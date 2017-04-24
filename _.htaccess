@@ -178,8 +178,8 @@ ErrorDocument 500 /sitemap.html?error=500
   RewriteRule :_:([0-9]+)\.html$ shop_content.php?coID=$1 [QSA,L]
 
   ##-- Manufacturers (:.:)
-  RewriteRule :.:([_0-9]+):([_0-9]+)\.html$ index.php?manufacturers_id=$1&page=$2 [QSA,L]
-  RewriteRule :.:([0-9]+)\.html$ index.php?manufacturers_id=$1 [QSA,L]
+  RewriteRule :\.:([_0-9]+):([_0-9]+)\.html$ index.php?manufacturers_id=$1&page=$2 [QSA,L]
+  RewriteRule :\.:([0-9]+)\.html$ index.php?manufacturers_id=$1 [QSA,L]
 
   ##-- Use dash delimiter "-" for SEO-URLS (alternative setting i.e. for windows servers)
   ##-- Categories (---)
@@ -193,6 +193,6 @@ ErrorDocument 500 /sitemap.html?error=500
   RewriteRule -_-([0-9]+)\.html$ shop_content.php?coID=$1 [QSA,L]
 
   ##-- Manufacturers (-.-)
-  RewriteRule -.-([_0-9]+)-([_0-9]+)\.html$ index.php?manufacturers_id=$1&page=$2 [QSA,L]
-  RewriteRule -.-([0-9]+)\.html$ index.php?manufacturers_id=$1 [QSA,L]
+  RewriteRule -\.-([_0-9]+)-([_0-9]+)\.html$ index.php?manufacturers_id=$1&page=$2 [QSA,L]
+  RewriteRule -\.-([0-9]+)\.html$ index.php?manufacturers_id=$1 [QSA,L]
 </IfModule>
