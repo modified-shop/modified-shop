@@ -1,3 +1,12 @@
+'''Version 2.9.37'''
+* fixed issue with decoding the inter order infos
+* fixed an issue with changing the order status in the admin area
+* uses library 2.9.62
+* fixed item export for modified versions below 1.06
+
+'''Version 2.9.36'''
+* improved stock validation for products with attributes
+
 '''Version 2.9.35'''
 * improved integration with version modified eCommerce 2.00
 

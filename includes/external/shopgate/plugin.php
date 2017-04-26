@@ -21,7 +21,7 @@
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
 
-define("SHOPGATE_PLUGIN_VERSION", "2.9.35");
+define("SHOPGATE_PLUGIN_VERSION", "2.9.37");
 
 /**
  * Modified eCommerce Plugin for Shopgate
@@ -48,7 +48,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
     private $zoneId;
 
     /**
-     * @var string
+     * @var array
      */
     private $currency;
 
@@ -267,6 +267,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         $itemModel->setCountryId($this->countryId);
         $itemModel->setZoneId($this->zoneId);
         $itemModel->setExchangeRate($this->exchangeRate);
+        $itemModel->setModifiedVersion($this->modifiedVersion);
 
         if ($this->splittedExport) {
             $itemModel->setExportLimit($this->exportLimit);
@@ -1584,19 +1585,21 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
                 include_once $file;
             }
         }
-        $result    = array();
-        $itemModel = new ShopgateItemModel($this->config);
+        $result     = array();
+        $itemHelper = new ShopgateItemHelper();
+        $itemModel  = new ShopgateItemModel($this->config);
         $itemModel->setLanguageId($this->languageId);
         $itemModel->setStringHelper($this->getHelper(ShopgateObject::HELPER_STRING));
+        $itemModel->setModifiedVersion($this->modifiedVersion);
 
         foreach ($cart->getItems() as $orderItem) {
-            $sgCartItem   = new ShopgateCartItem();
-            $sgOrderInfos = $this->jsonDecode($orderItem->getInternalOrderInfo(), true);
-            $id           = $itemModel->getProductIdFromOrderItem($orderItem);
+            $sgCartItem  = new ShopgateCartItem();
+            $sgOrderInfo = $this->jsonDecode(stripslashes($orderItem->getInternalOrderInfo()), true);
+            $id          = $itemModel->getProductIdFromOrderItem($orderItem);
+            $quantity    = $itemHelper->getProductQuantity($id, $sgOrderInfo);
+            $status      = $this->xtc_get_products_status($id);
             $sgCartItem->setItemNumber($id);
-            $quantity = xtc_get_products_stock($id);
             $sgCartItem->setStockQuantity($quantity);
-            $status = $this->xtc_get_products_status($id);
             $sgCartItem->setIsBuyable($status);
             if (!$status) {
                 $sgCartItem->setIsBuyable(false);
@@ -1625,11 +1628,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
                 $orderItemTaxClassId, $this->countryId, $this->zoneId
             );
 
-            $sgCartItem->setOptions(
-                $itemModel->getOptionsToProduct(
-                    $id, $sgOrderInfos, $orderItemTaxRate
-                )
-            );
+            $sgCartItem->setOptions($itemModel->getOptionsToProduct($id, $sgOrderInfo, $orderItemTaxRate));
             $sgCartItem->setAttributes($itemModel->getAttributesToProduct($orderItem));
 
             // not supported
@@ -1690,8 +1689,9 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         $itemXmlModel->setCurrencyData($this->currency);
         $itemXmlModel->setStringHelper($this->getHelper(ShopgateObject::HELPER_STRING));
         $itemXmlModel->setReverseItemSortOrder($this->config->getReverseItemsSortOrder());
-
+        $itemXmlModel->setModifiedVersion($this->modifiedVersion);
         $itemXmlModel->setLog(ShopgateLogger::getInstance());
+
         $_SESSION['languages_id'] = $this->languageId;
         $_SESSION['country']      = $this->countryId;
         $xtPricesByCustomerGroups = array();
@@ -2106,28 +2106,25 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
      */
     private function checkCartItems(ShopgateCart $cart, $customerGroupId)
     {
-        $return    = array();
-        $itemModel = new ShopgateItemModel($this->config);
+        $return     = array();
+        $itemHelper = new ShopgateItemHelper();
+        $itemModel  = new ShopgateItemModel($this->config);
         $itemModel->setLanguageId($this->languageId);
         $itemModel->setStringHelper($this->getHelper(ShopgateObject::HELPER_STRING));
+        $itemModel->setModifiedVersion($this->modifiedVersion);
 
         foreach ($cart->getItems() AS $orderItem) {
-
             $sgCartItem  = new ShopgateCartItem();
-            $sgOrderInfo =
-                $this->jsonDecode($orderItem->getInternalOrderInfo(), true);
-
-            $id = $itemModel->getProductIdFromOrderItem($orderItem);
+            $sgOrderInfo = $this->jsonDecode(stripslashes($orderItem->getInternalOrderInfo()), true);
+            $id          = $itemModel->getProductIdFromOrderItem($orderItem);
+            $status      = $this->xtc_get_products_status($id);
             $sgCartItem->setItemNumber($id);
-            $status = $this->xtc_get_products_status($id);
             $sgCartItem->setIsBuyable($status);
             if (!$status) {
                 $sgCartItem->setIsBuyable(false);
                 $sgCartItem->setQtyBuyable(0);
                 $sgCartItem->setStockQuantity(0);
-                $sgCartItem->setError(
-                    ShopgateLibraryException::CART_ITEM_PRODUCT_NOT_FOUND
-                );
+                $sgCartItem->setError(ShopgateLibraryException::CART_ITEM_PRODUCT_NOT_FOUND);
                 $return[] = $sgCartItem;
                 continue;
             }
@@ -2160,11 +2157,9 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
             $sgCartItem->setUnitAmount($price);
             $sgCartItem->setUnitAmountWithTax($priceWithTax);
 
-            $quantity = xtc_get_products_stock($id);
-
+            $quantity = $itemHelper->getProductQuantity($id, $sgOrderInfo);
             $sgCartItem->setStockQuantity($quantity);
-            $sgCartItem->setQtyBuyable($quantity);
-
+            $sgCartItem->setQtyBuyable($orderItem->getQuantity());
 
             if (STOCK_CHECK == 'true' && STOCK_ALLOW_CHECKOUT == 'false') {
                 if ($quantity <= 0) {
@@ -2177,6 +2172,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
                 }
                 if ($quantity < $orderItem->getQuantity()) {
                     $sgCartItem->setIsBuyable(true);
+                    $sgCartItem->setQtyBuyable($quantity);
                     $sgCartItem->setError(ShopgateLibraryException::CART_ITEM_REQUESTED_QUANTITY_NOT_AVAILABLE);
                     $return[] = $sgCartItem;
                     continue;
@@ -3101,7 +3097,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         $errors = '';
         foreach ($order->getItems() as $orderItem) {
 
-            $orderInfo = $orderItem->getInternalOrderInfo();
+            $orderInfo = stripslashes($orderItem->getInternalOrderInfo());
             $orderInfo = $this->jsonDecode($orderInfo, true);
 
             $item_number = $orderItem->getItemNumber();
@@ -3404,7 +3400,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
             }
 
             // Attribute ids are set inside the internal order info
-            $internalOrderInfo = $this->jsonDecode($item->getInternalOrderInfo(), true);
+            $internalOrderInfo = $this->jsonDecode(stripslashes($item->getInternalOrderInfo()), true);
 
             $usesProductsAttributes = false;
 
@@ -4014,7 +4010,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
                 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
                 $sessionAccountPassword = ($this->assertMinimumVersion('2.0.0.0'))
                     ? : isset($_SESSION['ACCOUNT_PASSWORD']) && $_SESSION['ACCOUNT_PASSWORD'] == 'true';
-    
+
                 if (isset($_SESSION['paypal_express_new_customer'])
                     && $_SESSION['paypal_express_new_customer'] == 'true'
                     && $sessionAccountPassword
@@ -4523,6 +4519,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
     {
         // load helper class(es)
         require_once(dirname(__FILE__) . '/helper/ShopgatePluginInitHelper.php');
+        require_once(dirname(__FILE__) . '/helper/ShopgateItemHelper.php');
 
         // load model classes
         require_once(dirname(__FILE__) . '/Model/category/ShopgateCategoryModel.php');
@@ -4545,13 +4542,15 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         require_once(DIR_FS_INC . 'xtc_format_price_order.inc.php');
         require_once(DIR_FS_INC . 'xtc_get_tax_class_id.inc.php');
         require_once(DIR_FS_INC . 'xtc_get_products_stock.inc.php');
-        require_once(DIR_WS_CLASSES .'xtcPrice.php');
+        if (file_exists(DIR_WS_CLASSES .'xtcPrice.php')) {
+            require_once(DIR_WS_CLASSES.'xtcPrice.php');
+        }
 
         if (!defined('DIR_FS_ADMIN')) {
             $admin = defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/';
             define('DIR_FS_ADMIN', DIR_FS_CATALOG . $admin);
         }
-        
+
         if (file_exists(DIR_FS_ADMIN . 'includes/version.php')) {
             require_once(DIR_FS_ADMIN. 'includes/version.php');
         }
