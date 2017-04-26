@@ -83,11 +83,6 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     protected $currencyData;
 
-    /**
-     * @var string
-     */
-    protected $modifiedVersion = '';
-
     const SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_OTHER      = 0;
     const SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_TEXT_FIELD = 1;
     const SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_ALL        = 2;
@@ -109,14 +104,6 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     public function setCurrencyData($currencyData)
     {
         $this->currencyData = $currencyData;
-    }
-
-    /**
-     * @param string $modifiedVersion
-     */
-    public function setModifiedVersion($modifiedVersion)
-    {
-        $this->modifiedVersion = $modifiedVersion;
     }
 
     /**
@@ -208,10 +195,6 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     {
         $this->log("generate SQL get products ...", ShopgateLogger::LOGTYPE_DEBUG);
 
-        $manufacturerColumn = ShopgateItemHelper::manufacturerColumnAvailable($this->modifiedVersion)
-            ? "p.products_manufacturers_model,"
-            : "";
-
         $qry = "
             SELECT DISTINCT
                 p.products_id,
@@ -232,7 +215,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
                 shst.shipping_status_name,
                 mf.manufacturers_id,
                 mf.manufacturers_name,
-                " . $manufacturerColumn . "
+                p.products_manufacturers_model,
                 p.products_tax_class_id,
                 p.products_fsk18,
                 p.products_vpe_status,
@@ -413,7 +396,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     public function getOptionsToProduct($productId, $sgOrderInfo, $taxRate)
     {
         $resultAttributes = array();
-        $attributeIds     = ShopgateItemHelper::filterOptionsFromOrderInfo($sgOrderInfo);
+        $attributeIds     = $this->filterOptionsFromOrderInfo($sgOrderInfo);
 
         foreach ($attributeIds as $attributeId) {
             $query = "SELECT
@@ -457,6 +440,30 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
         }
 
         return $resultAttributes;
+    }
+
+    /**
+     * @param array $sgOrderInfo
+     *
+     * @return array
+     */
+    protected function filterOptionsFromOrderInfo($sgOrderInfo)
+    {
+        $attributeIds = array();
+        foreach ($sgOrderInfo as $infoName => $infoValue) {
+            if (strpos($infoName, 'attribute_') === 0
+                && is_array($infoValue)
+            ) {
+                foreach ($infoValue as $attributeKey => $attributeArray) {
+                    $attributeIds[] = array_merge(
+                        array('products_attributes_id' => $attributeKey),
+                        $attributeArray[0]
+                    );
+                }
+            }
+        }
+
+        return $attributeIds;
     }
 
     /**

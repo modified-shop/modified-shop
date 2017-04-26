@@ -32,9 +32,6 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTest extends PHPUnit_F
     /** @var Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTestFixtureBuilder */
     protected $fixtureProvider;
     
-    /** @var Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault */
-    protected $subjectUnderTest;
-    
     public function setUp()
     {
         // workaround for PHP versions below 7: load Throwable interface; TODO move to some bootstrap.php or the like
@@ -49,11 +46,6 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTest extends PHPUnit_F
             ->getMockBuilder('Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderInterface')
             ->getMockForAbstractClass()
         ;
-        
-        $this->subjectUnderTest = new Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault(
-            $this->obfuscator,
-            $this->namedParameterProvider
-        );
         
         include_once(dirname(__FILE__)
             . '/../../../../fixtures/helper/logging/stack_trace/GeneratorDefaultTestFixtureBuilder.php');
@@ -71,9 +63,14 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTest extends PHPUnit_F
         
         $this->namedParameterProvider->expects($this->any())->method('get')->willReturnArgument(2);
         
+        $SUT = new Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault(
+            $this->obfuscator,
+            $this->namedParameterProvider
+        );
+        
         $this->assertEquals(
             $this->fixtureProvider->getSimpleExceptionExpected(),
-            $this->subjectUnderTest->generate($this->fixtureProvider->getSimpleException()));
+            $SUT->generate($this->fixtureProvider->getSimpleException()));
     }
     
     public function testExceptionWithPreviousExceptionsProducesProperStackTrace()
@@ -87,77 +84,14 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTest extends PHPUnit_F
         
         $this->namedParameterProvider->expects($this->any())->method('get')->willReturnArgument(2);
         
+        $SUT = new Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault(
+            $this->obfuscator,
+            $this->namedParameterProvider
+        );
+        
         $this->assertEquals(
             $this->fixtureProvider->getExceptionWithPreviousExceptionsExpected(),
-            $this->subjectUnderTest->generate($this->fixtureProvider->getExceptionWithPreviousExceptions())
-        );
-    }
-    
-    public function testStackTraceGenerationWithMissingFileAndLine()
-    {
-        $this->obfuscator
-            ->expects($this->any())
-            ->method('cleanParamsForLog')
-            ->withAnyParameters()
-            ->willReturnArgument(0)
-        ;
-        
-        $this->namedParameterProvider->expects($this->any())->method('get')->willReturnArgument(2);
-        
-        $this->assertEquals(
-            $this->fixtureProvider->getExceptionWithMissingFileAndLineExpected(),
-            $this->subjectUnderTest->generate($this->fixtureProvider->getExceptionWithMissingFileAndLineFixture())
-        );
-    }
-    
-    public function testStackTraceGenerationWithMissingClassAndType()
-    {
-        $this->obfuscator
-            ->expects($this->any())
-            ->method('cleanParamsForLog')
-            ->withAnyParameters()
-            ->willReturnArgument(0)
-        ;
-        
-        $this->namedParameterProvider->expects($this->any())->method('get')->willReturnArgument(2);
-        
-        $this->assertEquals(
-            $this->fixtureProvider->getExceptionWithMissingClassAndTypeExpected(),
-            $this->subjectUnderTest->generate($this->fixtureProvider->getExceptionWithMissingClassAndTypeFixture())
-        );
-    }
-    
-    public function testStackTraceGenerationWithFunction()
-    {
-        $this->obfuscator
-            ->expects($this->any())
-            ->method('cleanParamsForLog')
-            ->withAnyParameters()
-            ->willReturnArgument(0)
-        ;
-        
-        $this->namedParameterProvider->expects($this->any())->method('get')->willReturnArgument(2);
-        
-        $this->assertEquals(
-            $this->fixtureProvider->getExceptionWithMissingFunctionExpected(),
-            $this->subjectUnderTest->generate($this->fixtureProvider->getExceptionWithMissingFunctionFixture())
-        );
-    }
-    
-    public function testStackTraceGenerationWithArgs()
-    {
-        $this->obfuscator
-            ->expects($this->any())
-            ->method('cleanParamsForLog')
-            ->withAnyParameters()
-            ->willReturnArgument(0)
-        ;
-        
-        $this->namedParameterProvider->expects($this->any())->method('get')->willReturnArgument(2);
-        
-        $this->assertEquals(
-            $this->fixtureProvider->getExceptionWithMissingArgsExpected(),
-            $this->subjectUnderTest->generate($this->fixtureProvider->getExceptionWithMissingArgsFixture())
+            $SUT->generate($this->fixtureProvider->getExceptionWithPreviousExceptions())
         );
     }
     
@@ -172,9 +106,14 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTest extends PHPUnit_F
         
         $this->namedParameterProvider->expects($this->any())->method('get')->willReturnArgument(2);
         
+        $SUT = new Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault(
+            $this->obfuscator,
+            $this->namedParameterProvider
+        );
+        
         $this->assertEquals(
             $this->fixtureProvider->getExceptionWithPreviousExceptionsDepth2Expected(),
-            $this->subjectUnderTest->generate($this->fixtureProvider->getExceptionWithPreviousExceptions(), 2)
+            $SUT->generate($this->fixtureProvider->getExceptionWithPreviousExceptions(), 2)
         );
     }
     
@@ -203,7 +142,12 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTest extends PHPUnit_F
             ->willReturn(array())
         ;
         
-        $this->subjectUnderTest->generate($this->fixtureProvider->getExceptionExampleForFailedGetCustomer());
+        $SUT = new Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault(
+            $this->obfuscator,
+            $this->namedParameterProvider
+        );
+        
+        $SUT->generate($this->fixtureProvider->getExceptionExampleForFailedGetCustomer());
     }
     
     public function testIntegrationObfuscation()
@@ -237,7 +181,7 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTest extends PHPUnit_F
                 array('data' => array())                                 // ShopgatePlugin::handleRequest()
             )
         ;
-        
+    
         // use the real obfuscator as this is an integration test
         $SUT = new Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault(
             new Shopgate_Helper_Logging_Obfuscator(),

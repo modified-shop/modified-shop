@@ -98,24 +98,6 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault
         $formattedTraceLines = array();
         $traces              = array_reverse($traces);
         foreach ($traces as $trace) {
-            if (!isset($trace['class'])) {
-                $trace['class'] = '';
-                $trace['type']  = '';
-            }
-            
-            if (!isset($trace['file'])) {
-                $trace['file'] = 'unknown file';
-                $trace['line'] = 'unknown line';
-            }
-            
-            if (!isset($trace['function'])) {
-                $trace['function'] = 'unknown function';
-            }
-            
-            if (!isset($trace['args']) || !is_array($trace['args'])) {
-                $trace['args'] = array();
-            }
-            
             $arguments = $this->namedParameterProvider->get($trace['class'], $trace['function'], $trace['args']);
             $arguments = $this->obfuscator->cleanParamsForLog($arguments);
             

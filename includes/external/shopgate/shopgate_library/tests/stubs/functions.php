@@ -32,15 +32,3 @@ function shopgateTestFunctionWithOneParameter($one)
 function shopgateTestFunctionWithTwoParameters($one, $two = 'optional')
 {
 }
-
-function shopgateTestFunctionWithDefaultBooleanParameters($one = true, $two = false)
-{
-}
-
-function shopgateTestFunctionWithDefaultArrayParameter($one = array())
-{
-}
-
-function shopgateTestFunctionWithDefaultNullParameter($one = null)
-{
-}

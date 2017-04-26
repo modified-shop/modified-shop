@@ -1,17 +1,3 @@
-'''Version 2.9.62'''
-* restored compatibility for PHP versions below 5.3
-
-'''Version 2.9.61'''
-* fixed a bug in stack trace generation that may appear on certain server configurations
-
-'''Version 2.9.60'''
-* fixed debug logging
-
-'''Version 2.9.59'''
-* fixed a bug in the stack trace generation
-* fixed a bug in registering an exception handler
-* Shopgate configuration extended with parameter exclude_item_ids
-
 '''Version 2.9.58'''
 * fixed 'undefined index' notice in ShopgateBuilder
 * fixed turning on error_reporting for all errors by default
