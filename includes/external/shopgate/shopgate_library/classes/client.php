@@ -53,7 +53,7 @@ class ShopgateClient extends ShopgateContainer {
 	 */
 	public function isMobileWebsite()
 	{
-		return $this->type == $this::TYPE_MOBILESITE;
+		return $this->type == self::TYPE_MOBILESITE;
 	}
 
 	/**
@@ -62,10 +62,10 @@ class ShopgateClient extends ShopgateContainer {
 	public function isApp()
 	{
 		$appTypes = array(
-			$this::TYPE_ANDROIDPHONEAPP,
-			$this::TYPE_ANDROIDTABLETAPP,
-			$this::TYPE_IPADAPP,
-			$this::TYPE_IPHONEAPP
+			self::TYPE_ANDROIDPHONEAPP,
+			self::TYPE_ANDROIDTABLETAPP,
+			self::TYPE_IPADAPP,
+			self::TYPE_IPHONEAPP
 		);
 		return in_array($this->type, $appTypes);
 	}
