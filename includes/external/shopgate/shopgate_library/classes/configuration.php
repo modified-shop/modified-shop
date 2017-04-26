@@ -494,11 +494,16 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 * @var int execution time limit for file export in seconds
 	 */
 	protected $default_execution_time;
-	
+
 	/**
 	 * @var int memory limit in MB
 	 */
 	protected $default_memory_limit;
+
+	/**
+	 * @var array list of items which should be excluded from the item export
+	 */
+	protected $exclude_item_ids = array();
 
 	###################################################
 	### Initialization, loading, saving, validating ###
@@ -607,7 +612,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 
 		$this->default_memory_limit = ShopgateConfigInterface::DEFAULT_MEMORY_LIMIT;
 		$this->default_execution_time = ShopgateConfigInterface::DEFAULT_EXECUTION_TIME;
-		
+
 		// call possible sub class' startup()
 		if (!$this->startup()) {
 			$this->loadArray($data);
@@ -1390,6 +1395,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		return $this->default_memory_limit;
 	}
 
+	public function getExcludeItemIds() {
+		return $this->exclude_item_ids;
+	}
+
 	###############
 	### Setters ###
 	###############
@@ -1871,11 +1880,20 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	public function setDefaultExecutionTime($default_execution_time) {
 		$this->default_execution_time = $default_execution_time;
 	}
+
 	/**
 	 * @param int $default_memory_limit
 	 */
 	public function setDefaultMemoryLimit($default_memory_limit) {
 		$this->default_memory_limit = $default_memory_limit;
+	}
+
+	/**
+	 * @param array|string $exclude_item_ids list of item Ids which should be excluded from the item export
+	 */
+	public function setExcludeItemIds($exclude_item_ids) {
+		$this->exclude_item_ids =
+			is_array($exclude_item_ids) ? $exclude_item_ids : (array)$this->jsonDecode($exclude_item_ids);
 	}
 	
 	###############
@@ -2984,6 +3002,11 @@ interface ShopgateConfigInterface {
 	 * @return int default memory limit in MB
 	 */
 	public function getDefaultMemoryLimit();
+
+	/**
+	 * @return array list of items which should be excluded from the item export
+	 */
+	public function getExcludeItemIds();
 	
 	/**
 	 * @param string $value The name of the plugin / shop system the plugin is for.
@@ -3466,6 +3489,11 @@ interface ShopgateConfigInterface {
 	 * @param $default_memory_limit int set value for default memory limit in MB
 	 */
 	public function setDefaultMemoryLimit($default_memory_limit);
+
+	/**
+	 * @param array|string $exclude_item_ids list of item Ids which should be excluded from the item export
+	 */
+	public function setExcludeItemIds($exclude_item_ids);
 	
 	/**
 	 * Returns an additional setting.

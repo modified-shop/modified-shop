@@ -46,4 +46,16 @@ class ShopgateTestClass
     public function methodWithTwoParameters($one, $two = 'optional')
     {
     }
+    
+    public function methodWithDefaultBooleanParameters($one = true, $two = false)
+    {
+    }
+    
+    public function methodWithDefaultArrayParameter($one = array())
+    {
+    }
+    
+    public function methodWithDefaultNullParameter($one = null)
+    {
+    }
 }

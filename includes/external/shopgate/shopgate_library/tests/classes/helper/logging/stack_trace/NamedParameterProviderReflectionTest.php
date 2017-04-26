@@ -24,7 +24,7 @@
 class Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflectionTest extends PHPUnit_Framework_TestCase
 {
     /** @var Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflection */
-    protected $SUT;
+    protected $subjectUnderTest;
     
     public function setUp()
     {
@@ -32,14 +32,14 @@ class Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflectionTest e
         include_once(dirname(__FILE__) . '/../../../../stubs/functions.php');
         include_once(dirname(__FILE__) . '/../../../../stubs/ShopgateTestClass.php');
         
-        $this->SUT = new Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflection();
+        $this->subjectUnderTest = new Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflection();
     }
     
     public function tearDown()
     {
         parent::tearDown();
         
-        $this->SUT = null;
+        $this->subjectUnderTest = null;
     }
     
     public function testUndefinedFunction()
@@ -50,7 +50,7 @@ class Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflectionTest e
         
         $this->assertEquals(
             array(123, 456),
-            $this->SUT->get('', $functionName, array(123, 456))
+            $this->subjectUnderTest->get('', $functionName, array(123, 456))
         );
     }
     
@@ -62,7 +62,7 @@ class Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflectionTest e
         
         $this->assertEquals(
             array(123, 456),
-            $this->SUT->get($className, '', array(123, 456))
+            $this->subjectUnderTest->get($className, '', array(123, 456))
         );
     }
     
@@ -76,7 +76,7 @@ class Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflectionTest e
         
         $this->assertEquals(
             array(123, 456),
-            $this->SUT->get($className, $methodName, array(123, 456))
+            $this->subjectUnderTest->get($className, $methodName, array(123, 456))
         );
     }
     
@@ -90,7 +90,7 @@ class Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflectionTest e
         
         $this->assertEquals(
             array('one' => 123),
-            $this->SUT->get($className, $methodName, array(123))
+            $this->subjectUnderTest->get($className, $methodName, array(123))
         );
     }
     
@@ -104,7 +104,7 @@ class Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflectionTest e
         
         $this->assertEquals(
             array('one' => 123),
-            $this->SUT->get($className, $methodName, array(123))
+            $this->subjectUnderTest->get($className, $methodName, array(123))
         );
     }
     
@@ -112,37 +112,52 @@ class Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflectionTest e
     {
         $this->assertEquals(
             array(),
-            $this->SUT->get('', 'shopgateTestFunctionWithNoParameters', array())
+            $this->subjectUnderTest->get('', 'shopgateTestFunctionWithNoParameters', array())
         );
         
         $this->assertEquals(
             array('unnamed argument 0' => 123, 'unnamed argument 1' => 456),
-            $this->SUT->get('', 'shopgateTestFunctionWithNoParameters', array(123, 456))
+            $this->subjectUnderTest->get('', 'shopgateTestFunctionWithNoParameters', array(123, 456))
         );
         
         $this->assertEquals(
             array('one' => 123),
-            $this->SUT->get('', 'shopgateTestFunctionWithOneParameter', array(123))
+            $this->subjectUnderTest->get('', 'shopgateTestFunctionWithOneParameter', array(123))
         );
         
         $this->assertEquals(
             array('one' => 123, 'unnamed argument 1' => 456),
-            $this->SUT->get('', 'shopgateTestFunctionWithOneParameter', array(123, 456))
+            $this->subjectUnderTest->get('', 'shopgateTestFunctionWithOneParameter', array(123, 456))
         );
         
         $this->assertEquals(
             array('one' => 123, 'two' => '[defaultValue:optional]'),
-            $this->SUT->get('', 'shopgateTestFunctionWithTwoParameters', array(123))
+            $this->subjectUnderTest->get('', 'shopgateTestFunctionWithTwoParameters', array(123))
         );
         
         $this->assertEquals(
             array('one' => 123, 'two' => 'test'),
-            $this->SUT->get('', 'shopgateTestFunctionWithTwoParameters', array(123, 'test'))
+            $this->subjectUnderTest->get('', 'shopgateTestFunctionWithTwoParameters', array(123, 'test'))
         );
         
         $this->assertEquals(
             array('one' => 123, 'two' => 456, 'unnamed argument 2' => 'test'),
-            $this->SUT->get('', 'shopgateTestFunctionWithTwoParameters', array(123, 456, 'test'))
+            $this->subjectUnderTest->get('', 'shopgateTestFunctionWithTwoParameters', array(123, 456, 'test'))
+        );
+        
+        $this->assertEquals(
+            array('one' => '[defaultValue:true]', 'two' => '[defaultValue:false]'),
+            $this->subjectUnderTest->get('', 'shopgateTestFunctionWithDefaultBooleanParameters', array())    
+        );
+        
+        $this->assertEquals(
+            array('one' => '[defaultValue:array]'),
+            $this->subjectUnderTest->get('', 'shopgateTestFunctionWithDefaultArrayParameter', array())    
+        );
+        
+        $this->assertEquals(
+            array('one' => '[defaultValue:null]'),
+            $this->subjectUnderTest->get('', 'shopgateTestFunctionWithDefaultNullParameter', array())    
         );
     }
     
@@ -150,37 +165,52 @@ class Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflectionTest e
     {
         $this->assertEquals(
             array(),
-            $this->SUT->get('ShopgateTestClass', 'methodWithNoParameters', array())
+            $this->subjectUnderTest->get('ShopgateTestClass', 'methodWithNoParameters', array())
         );
         
         $this->assertEquals(
             array('unnamed argument 0' => 123, 'unnamed argument 1' => 456),
-            $this->SUT->get('ShopgateTestClass', 'methodWithNoParameters', array(123, 456))
+            $this->subjectUnderTest->get('ShopgateTestClass', 'methodWithNoParameters', array(123, 456))
         );
         
         $this->assertEquals(
             array('one' => 123),
-            $this->SUT->get('ShopgateTestClass', 'methodWithOneParameter', array(123))
+            $this->subjectUnderTest->get('ShopgateTestClass', 'methodWithOneParameter', array(123))
         );
         
         $this->assertEquals(
             array('one' => 123, 'unnamed argument 1' => 456),
-            $this->SUT->get('ShopgateTestClass', 'methodWithOneParameter', array(123, 456))
+            $this->subjectUnderTest->get('ShopgateTestClass', 'methodWithOneParameter', array(123, 456))
         );
         
         $this->assertEquals(
             array('one' => 123, 'two' => '[defaultValue:optional]'),
-            $this->SUT->get('ShopgateTestClass', 'methodWithTwoParameters', array(123))
+            $this->subjectUnderTest->get('ShopgateTestClass', 'methodWithTwoParameters', array(123))
         );
         
         $this->assertEquals(
             array('one' => 123, 'two' => 'test'),
-            $this->SUT->get('ShopgateTestClass', 'methodWithTwoParameters', array(123, 'test'))
+            $this->subjectUnderTest->get('ShopgateTestClass', 'methodWithTwoParameters', array(123, 'test'))
         );
         
         $this->assertEquals(
             array('one' => 123, 'two' => 456, 'unnamed argument 2' => 'test'),
-            $this->SUT->get('ShopgateTestClass', 'methodWithTwoParameters', array(123, 456, 'test'))
+            $this->subjectUnderTest->get('ShopgateTestClass', 'methodWithTwoParameters', array(123, 456, 'test'))
+        );
+    
+        $this->assertEquals(
+            array('one' => '[defaultValue:true]', 'two' => '[defaultValue:false]'),
+            $this->subjectUnderTest->get('ShopgateTestClass', 'methodWithDefaultBooleanParameters', array())
+        );
+    
+        $this->assertEquals(
+            array('one' => '[defaultValue:array]'),
+            $this->subjectUnderTest->get('ShopgateTestClass', 'methodWithDefaultArrayParameter', array())
+        );
+    
+        $this->assertEquals(
+            array('one' => '[defaultValue:null]'),
+            $this->subjectUnderTest->get('ShopgateTestClass', 'methodWithDefaultNullParameter', array())
         );
     }
 }
