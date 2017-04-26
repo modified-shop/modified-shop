@@ -24,7 +24,7 @@
 ###################################################################################
 # define constants
 ###################################################################################
-define("SHOPGATE_LIBRARY_VERSION", "2.9.58");
+define("SHOPGATE_LIBRARY_VERSION", "2.9.62");
 define('SHOPGATE_LIBRARY_ENCODING' , 'UTF-8');
 define('SHOPGATE_BASE_DIR', realpath(dirname(__FILE__).'/../'));
 
@@ -626,6 +626,11 @@ class ShopgateBuilder {
         $errorReporting = $this->determineErrorReporting($_REQUEST);
         $this->setErrorReporting($errorReporting);
         
+        // enable debug logging if requested
+        if (!empty($_REQUEST['debug_log'])) {
+            $this->enableDebug(true);
+        }
+
         // set custom error and exception handlers if requested
         if (!empty($_REQUEST['use_errorhandler'])) {
             $this->enableErrorHandler($errorReporting);
@@ -655,6 +660,7 @@ class ShopgateBuilder {
         
         set_exception_handler(array(
             new Shopgate_Helper_Error_Handling_ExceptionHandler($this->buildStackTraceGenerator(), $this->logging),
+            'handle'
         ));
         
         $logFileHandler = @fopen($this->config->getErrorLogPath(), 'a');
@@ -2610,7 +2616,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 *
 	 * @see http://developer.shopgate.com/plugin_api/system_information/clear_cache
 	 */
-	protected function clearCache() {
+    public function clearCache() {
 		return array();
 	}
 }

@@ -79,7 +79,7 @@ class Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflection
         foreach ($this->functionArgumentsCache[$fullFunctionName] as $parameter) {
             /** @var ReflectionParameter $parameter */
             try {
-                $defaultValue = '[defaultValue:' . $parameter->getDefaultValue() . ']';
+                $defaultValue = '[defaultValue:' . $this->sanitize($parameter->getDefaultValue()) . ']';
             } catch (ReflectionException $e) {
                 $defaultValue = '';
             }
@@ -128,5 +128,27 @@ class Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderReflection
         return
             function_exists($this->getFullFunctionName($className, $functionName))
             || method_exists($className, $functionName);
+    }
+    
+    /**
+     * @param mixed $value
+     *
+     * @return string
+     */
+    private function sanitize($value)
+    {
+        if ($value === null) {
+            $value = 'null';
+        }
+        
+        if (is_array($value)) {
+            $value = 'array';
+        }
+        
+        if (is_bool($value)) {
+            $value = $value ? 'true' : 'false';
+        }
+        
+        return $value;
     }
 }
