@@ -58,7 +58,7 @@ define('TEXT_DISPLAY_NUMBER_OF_CUSTOMERS_STATUS', 'Vorhandene Kundengruppen:');
 
 define('TEXT_INFO_CUSTOMERS_FSK18_DISPLAY_INTRO','<strong>FSK18 Artikel</strong>');
 define('TEXT_INFO_CUSTOMERS_FSK18_INTRO','<strong>FSK18 Sperre</strong>');
-define('TEXT_INFO_CUSTOMERS_STATUS_ADD_TAX_INTRO','<strong>Falls "Preise inkl. MwSt". = "Ja", dann auf "Nein" setzen</strong>');
+define('TEXT_INFO_CUSTOMERS_STATUS_ADD_TAX_INTRO','<strong>Falls "Preise inkl. MwSt." = "Ja", dann auf "Nein" setzen</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_MIN_ORDER_INTRO','<strong>Tragen Sie einen Mindestbestellwert ein oder lassen Sie dieses Feld leer.</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_MAX_ORDER_INTRO','<strong>Tragen Sie einen H&ouml;chstbestellwert ein oder lassen Sie dieses Feld leer.</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_BT_PERMISSION_INTRO', '<strong>M&ouml;chten Sie erlauben, dass diese Kundengruppe per Bankeinzug bezahlen darf?</strong>');

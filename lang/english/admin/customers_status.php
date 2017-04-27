@@ -58,7 +58,7 @@ define('TEXT_DISPLAY_NUMBER_OF_CUSTOMERS_STATUS', 'Existing customer groups:');
 
 define('TEXT_INFO_CUSTOMERS_FSK18_DISPLAY_INTRO','<strong>FSK18 Products</strong>');
 define('TEXT_INFO_CUSTOMERS_FSK18_INTRO','<strong>FSK18 Lock</strong>');
-define('TEXT_INFO_CUSTOMERS_STATUS_ADD_TAX_INTRO','<strong>If "prices incl. tax" = "yes", set to "No"</strong>');
+define('TEXT_INFO_CUSTOMERS_STATUS_ADD_TAX_INTRO','<strong>If "Prices incl. Tax" = "Yes", set to "No"</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_MIN_ORDER_INTRO','<strong>Define a minimum order value or leave the field empty.</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_MAX_ORDER_INTRO','<strong>Define a maximum order value or leave the field empty.</strong>');
 define('TEXT_INFO_CUSTOMERS_STATUS_BT_PERMISSION_INTRO', '<strong>Shall we allow customers of this group to pay via bank collection?</strong>');
