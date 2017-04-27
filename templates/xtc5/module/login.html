@@ -2,7 +2,6 @@
 {config_load file="$language/lang_$language.conf" section="newsletter"}
 <h1>{#heading_login#}</h1>
 {if $info_message != ''}<div class="{if isset($smarty.get.info) && $smarty.get.info == '1'}info{else}error{/if}message">{$info_message}</div>{/if}
-{if $account_option == 'account' or $account_option == 'both'}
 <div class="highlightbox">
   <h1>{#title_returning#}</h1>
   {$FORM_ACTION}
@@ -47,13 +46,15 @@
   </table>
   {$FORM_END}
 </div>
+{if $account_option == 'account' or $account_option == 'both'}
 <br />
 <div class="highlightbox">
       <h1>{#title_new#}</h1>
       <p>{#text_new#}</p>
       <p>{$BUTTON_NEW_ACCOUNT}</p>
 </div>
-{/if} {if $account_option == 'both' or $account_option == 'guest'}
+{/if}
+{if $account_option == 'both' or $account_option == 'guest'}
 <br />
 <div class="highlightbox">
       <h1>{#title_guest#}</h1>
