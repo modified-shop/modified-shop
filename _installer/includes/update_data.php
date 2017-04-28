@@ -25,6 +25,7 @@
         'col' => array(
           'blacklist',
           'xajax',
+          'fck_wrapper',
         ),
       ),
     ),
