@@ -130,6 +130,7 @@ $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE
 $smarty->assign('BUTTON_CHECKOUT_STEP3', xtc_image_submit('button_checkout_step3.gif', IMAGE_BUTTON_CHECKOUT_STEP3));
 $smarty->assign('FORM_END', '</form>');
 
+$total = $xtPrice->xtcFormat($order->info['total'], false);
 $module_smarty = new Smarty;
 
 $credit_amount = 0;
@@ -143,15 +144,14 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
     }
     $credit_amount =  $credit_selection[$i]['credit_amount'];
     $credit_order_total = $credit_selection[$i]['credit_order_total'];
-    $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $credit_amount, $credit_selection[$i]['checked'], 'id="rd-'.'c'.$credit_selection[$i]['id'].'"');
-    $credit_selection[$i]['selection'] .= '<input type="hidden" name="credit_order_total"  id="cot-'.'c'.$credit_selection[$i]['id'].'" value="'.$credit_order_total.'">';
+    $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $credit_order_total, $credit_selection[$i]['checked'], 'id="rd-'.'c'.$credit_selection[$i]['id'].'"');
+    $credit_selection[$i]['selection'] .= '<input type="hidden" name="credit_order_total"  id="cot-'.'c'.$credit_selection[$i]['id'].'" value="'.$total.'">';
     $credit_selection[$i]['credit_amount'] = $xtPrice->xtcFormat($credit_amount, true);
-    $module_smarty->assign('credit_amount_payment_info', $credit_amount >= $credit_order_total ? GV_NO_PAYMENT_INFO : GV_ADD_PAYMENT_INFO);
+    $module_smarty->assign('credit_amount_payment_info', $credit_order_total >= $total ? GV_NO_PAYMENT_INFO : GV_ADD_PAYMENT_INFO);
   }
-  $module_smarty->assign('module_gift', $credit_selection);  
+  $module_smarty->assign('module_gift', $credit_selection);
 }
 
-$total = $xtPrice->xtcFormat($order->info['total'], false);
 if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_covers']) && $_SESSION['credit_covers'] == 1 && $total > 0)) {
   
   $error = false;
