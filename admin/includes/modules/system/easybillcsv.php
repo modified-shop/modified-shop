@@ -202,7 +202,7 @@ class easybillcsv {
               break;
    
             case 'ot_shipping':
-              $shipping_tax = $this->getShippingTax($order->info['shipping_class'], $order->delivery['country_id'], $order->delivery['country']);  
+              $shipping_tax = $this->getShippingTax($order->info['shipping_class'], $order->delivery['country_id'], $order->delivery['zone_id']);  
               $easybill_export[$count]['order_shipping_price'] = (($xtPrice->show_price_tax != '0') ? $order->totals[$t]['value'] : $this->xtcAddTax($order->totals[$t]['value'], $shipping_tax));
               //$easybill_export[$count]['order_shipping_price'] = $order->totals[$t]['value'];
               break;
@@ -219,7 +219,7 @@ class easybillcsv {
             case 'ot_loworderfee':
             case 'ot_cod_fee':
             case 'ot_shippingfee':
-              $ot_total_tax = $this->getOrderTotalTax($order->totals[$t]['class']);
+              $ot_total_tax = $this->getOrderTotalTax($order->totals[$t]['class'], $order->delivery['country_id'], $order->delivery['zone_id']);
               $easybill_export_positions[$count][$i] =  array('sku' => '',
                                                               'item_type' => 'discount',
                                                               'item_number' => '',
@@ -232,7 +232,7 @@ class easybillcsv {
               break;
 
             default:
-              $default_tax = xtc_get_tax_rate(MODULE_EASYBILL_STANDARD_TAX_CLASS, $order->customer['country_id'], $order->customer['zone_id']);
+              $default_tax = xtc_get_tax_rate(MODULE_EASYBILL_STANDARD_TAX_CLASS, $order->delivery['country_id'], $order->delivery['zone_id']);
               $easybill_export_positions[$count][$i] =  array('sku' => '',
                                                               'item_type' => 'item',
                                                               'item_number' => '',
@@ -329,12 +329,12 @@ class easybillcsv {
     }
   }
 
-  function getOrderTotalTax($type) {
+  function getOrderTotalTax($type, $country_id, $zone_id) {
   
     $type = explode('_', $type, 2);
     require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
     if (defined(strtoupper('MODULE_ORDER_TOTAL_'.$type[1].'_TAX_CLASS'))) {
-      return xtc_get_tax_rate(constant(strtoupper('MODULE_ORDER_TOTAL_'.$type[1].'_TAX_CLASS')), $this->customer['country_id'], $this->customer['zone_id']);
+      return xtc_get_tax_rate(constant(strtoupper('MODULE_ORDER_TOTAL_'.$type[1].'_TAX_CLASS')), $country_id, $zone_id);
     } else {
       return '0';
     }

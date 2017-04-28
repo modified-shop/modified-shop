@@ -465,11 +465,11 @@
                                             entry_zone_id 
                                        FROM ".TABLE_ADDRESS_BOOK." 
                                       WHERE customers_id = '".(int) $this->customer['id']."' 
-                                        AND entry_firstname = '".xtc_db_input($this->customer['firstName'])."'
-                                        AND entry_lastname = '".xtc_db_input($this->customer['lastName'])."'
-                                        AND entry_street_address = '".xtc_db_input($this->customer['street'])."'
-                                        AND entry_postcode = '".xtc_db_input($this->customer['zipCode'])."'
-                                        AND entry_company = '".xtc_db_input($this->customer['companyName'])."'
+                                        AND entry_firstname = '".xtc_db_input($this->customer['firstname'])."'
+                                        AND entry_lastname = '".xtc_db_input($this->customer['lastname'])."'
+                                        AND entry_street_address = '".xtc_db_input($this->customer['street_address'])."'
+                                        AND entry_postcode = '".xtc_db_input($this->customer['postcode'])."'
+                                        AND entry_company = '".xtc_db_input($this->customer['company'])."'
                                         AND entry_city = '".xtc_db_input($this->customer['city'])."'                                      
                                     ");
 			$country = xtc_db_fetch_array($country_query);
