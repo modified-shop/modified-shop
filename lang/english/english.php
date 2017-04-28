@@ -540,7 +540,7 @@ define('ERROR_REVIEW_RATING', 'Enter your review.');
 define('ERROR_REVIEW_AUTHOR', 'Enter your name.');
 
 define('GV_NO_PAYMENT_INFO', '<div class="infomessage">You can pay the order with your credit completely. If you do not want to redeem your balance, clear the credit selection and select a payment method!</div>');
-define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Your credit is not sufficient to pay the order completely. Please select a payment method in addition!</div>');
+define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Your credit is not sufficient or may not be used for all accounting-positions to pay the order completely. Please select a payment method in addition!</div>');
 
 define('_SHIPPING_FREE','Free Shipping');
 
