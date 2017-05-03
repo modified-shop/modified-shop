@@ -106,8 +106,8 @@
           {if $smarty.const.SHOW_IMAGES_IN_EMAIL == 'true'}
           <td style="padding:10px 5px;border-top:1px solid #999;border-bottom:1px solid #999;" align="center"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Picture</strong></font></td>
           {/if}
-          <td style="padding:10px 5px;border-top:1px solid #999;border-bottom:1px solid #999;"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Produkt</strong></font></td>
-          <td style="padding:10px 5px;border-top:1px solid #999;border-bottom:1px solid #999;white-space:nowrap" width="50"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Art.-No.</strong></font></td>
+          <td style="padding:10px 5px;border-top:1px solid #999;border-bottom:1px solid #999;"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Product</strong></font></td>
+          <td style="padding:10px 5px;border-top:1px solid #999;border-bottom:1px solid #999;white-space:nowrap" width="50"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Prod. No.</strong></font></td>
           <td style="padding:10px 5px;border-top:1px solid #999;border-bottom:1px solid #999;" width="80" align="right"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Singleprice</strong></font></td>
           <td style="padding:10px 5px;border-top:1px solid #999;border-bottom:1px solid #999;" width="80" align="right"><font size="1" face="Tahoma, Verdana, sans-serif"><strong>Price</strong></font></td>
         </tr>
@@ -130,7 +130,7 @@
             {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<div style="padding: 4px 0px 4px 0px;">Shipping time: {$order_values.PRODUCTS_SHIPPING_TIME}</div>{/if}
             </font>
           </td>
-          <td style="border-bottom:1px dotted #999;" valign="top"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_values.PRODUCTS_MODEL}</font></td>
+          <td style="border-bottom:1px dotted #999;" valign="top"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</font></td>
           <td style="border-bottom:1px dotted #999;" valign="top" align="right"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_values.PRODUCTS_SINGLE_PRICE}</font></td>
           <td style="border-bottom:1px dotted #999;" valign="top" align="right"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_values.PRODUCTS_PRICE}</font></td>
         </tr>
