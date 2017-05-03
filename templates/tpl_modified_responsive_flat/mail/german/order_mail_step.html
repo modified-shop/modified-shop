@@ -119,7 +119,7 @@
             {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<div style="padding: 4px 0px 4px 0px;">Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}</div>{/if}
             </font>
           </td>
-          <td style="border-bottom:1px dotted #999;" valign="top"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_values.PRODUCTS_MODEL}</font></td>
+          <td style="border-bottom:1px dotted #999;" valign="top"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</font></td>
           <td style="border-bottom:1px dotted #999;" valign="top" align="right"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_values.PRODUCTS_SINGLE_PRICE}</font></td>
           <td style="border-bottom:1px dotted #999;" valign="top" align="right"><font size="2" face="Tahoma, Verdana, sans-serif">{$order_values.PRODUCTS_PRICE}</font></td>
         </tr>

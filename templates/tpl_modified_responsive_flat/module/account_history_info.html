@@ -100,7 +100,7 @@
         <span class="ol_quantity ol_width1"><span class="ol_distance">{$order_values.PRODUCTS_QTY}&nbsp;x</span></span>
         <span class="ol_productsname ol_width3">
           <span class="ol_distance"><strong>{$order_values.PRODUCTS_NAME}</strong></span>
-          <p class="ol_model">{$smarty.const.HEADER_MODEL}: {$order_values.PRODUCTS_MODEL}</p>
+          <p class="ol_model">{$smarty.const.HEADER_MODEL}: {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</p>
           {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<p class="ol_model">{#text_shippingtime#} {$order_values.PRODUCTS_SHIPPING_TIME}</p>{/if}
           {if sizeof($order_values.PRODUCTS_ATTRIBUTES_ARRAY) > 0}
             <ul class="attributes_list">
