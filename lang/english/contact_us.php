@@ -7,7 +7,7 @@
  define('EMAIL_PHONE', 'Telephone: ');
  define('EMAIL_FAX', 'Fax: ');
  define('EMAIL_SENT_BY', 'Sent by %s %s at %s to %s clock');
- define('EMAIL_NOTIFY', 'Attention, this e-mail can NOT be answered with -ANSWER THE SENDER-!');
+ //define('EMAIL_NOTIFY', 'Attention, this e-mail can NOT be answered with -ANSWER THE SENDER-!'); // Not used yet
  
  //default fields
  define('EMAIL_NAME', 'Name: ');
@@ -15,9 +15,7 @@
  define('EMAIL_MESSAGE', 'Message: ');
  
  //contact-form error messages
-define('ERROR_EMAIL','<p><b>Your e-mail address:</b> None or invalid input!</p>');
-define('ERROR_VVCODE','<p><b>Security code:</b> No match, please enter your security code again!</p>');
-define('ERROR_MSG_BODY','<p><b>Your message:</b> No input!</p>');
-
-   
+ //define('ERROR_EMAIL','<p><b>Your e-mail address:</b> None or invalid input!</p>'); // already defined in english.php
+ //define('ERROR_VVCODE','<p><b>Security code:</b> No match, please enter your security code again!</p>'); // already defined in english.php
+ //define('ERROR_MSG_BODY','<p><b>Your message:</b> No input!</p>'); // already defined in english.php
 ?>
