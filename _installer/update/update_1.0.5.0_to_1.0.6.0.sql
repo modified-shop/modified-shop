@@ -58,7 +58,7 @@ UPDATE admin_access SET listproducts = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET listproducts = 3 WHERE customers_id = 'groups' LIMIT 1;
 
 #DokuMan - 2011-02-02 - added support for passwort+salt (SHA1)
-ALTER TABLE customers MODIFY customers_password varchar(50) NOT NULL;
+#ALTER TABLE customers MODIFY customers_password varchar(50) NOT NULL; # Not needed any more with the new /inc/xtc_validate_password.inc.php
 
 #DokuMan - 2011-02-03 - enlarge field for company names, firstname, lastname, street_address and city to 64 characters (instead of 32)
 ALTER TABLE address_book MODIFY entry_company VARCHAR(64);
