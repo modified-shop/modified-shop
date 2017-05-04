@@ -45,7 +45,7 @@
 
           // Check that password is good
           $check_customer = xtc_db_fetch_array($check_customer_query);      
-          if (xtc_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id']) !== true) {
+          if (xtc_validate_password($password, $check_customer['customers_password'], false) !== true) {
             return false;
           }
         } else {

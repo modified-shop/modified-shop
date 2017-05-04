@@ -284,7 +284,7 @@ ALTER TABLE newsletter_recipients ADD date_confirmed datetime NOT NULL DEFAULT '
 ALTER TABLE newsletter_recipients ADD ip_date_confirmed varchar(32) DEFAULT NULL;
 
 #Web28 - 2014-03-20 change password length
-ALTER TABLE customers MODIFY customers_password varchar(60) NOT NULL;
+#ALTER TABLE customers MODIFY customers_password varchar(60) NOT NULL; # Not needed any more with the new /inc/xtc_validate_password.inc.php
 
 #Web28 - 2014-04-14 - Added delivery time
 INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', 'SHIPPING_STATUS_INFOS', '', 17, 14, NULL, NOW(), NULL, 'xtc_cfg_select_content(\'SHIPPING_STATUS_INFOS\',');
