@@ -341,7 +341,7 @@
 
   // update.php
   define('TITLE_DELETE_SUCCESS', 'Erfolgreich gel&ouml;scht:');
-  define('TITLE_DELETE_FILES', 'Die folgenden Dateien m&uuml;ssen gel&ouml;scht werden:');
+  define('TITLE_DELETE_FILES', 'Die folgenden Dateien m&uuml;ssen gel&ouml;scht werden, falls vorhanden:');
   define('TITLE_DELETE_MANUALLY', 'Bitte folgenden Dateien und Verzeichnisse manuell l&ouml;schen:');
   define('TITLE_DELETE_DIRS', 'Die folgenden Verzeichnisse m&uuml;ssen gel&ouml;scht werden:');
   define('TEXT_DELETE_SUCCESS', 'Die Dateien und Verzeichnisse wurden erfolgreich gel&ouml;scht.<br />Bitte stellen Sie sicher, dass auch die Datei &quot;update.php&quot; vom Server entfernt wurde.');

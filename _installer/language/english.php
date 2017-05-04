@@ -339,7 +339,7 @@
 
   // update.php
   define('TITLE_DELETE_SUCCESS', 'Successfull deleted:');
-  define('TITLE_DELETE_FILES', 'The following files have to be deleted:');
+  define('TITLE_DELETE_FILES', 'The following files have to be deleted, if they exist:');
   define('TITLE_DELETE_MANUALLY', 'Please delete the following files and directories manually:');
   define('TITLE_DELETE_DIRS', 'The following directories have to be deleted:');
   define('TEXT_DELETE_SUCCESS', 'The files and directories have successfully been deleted.<br />Please make sure that also the &quot;update.php&quot; has been removed from the server.');
