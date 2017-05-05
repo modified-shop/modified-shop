@@ -15,14 +15,14 @@ Links<br />
 </a><br />
 <br />
 <b>Extern</b><br />
-<a href="http://ecommerce.micropayment.de/download/modified/micropayment_modified-shop_current.pdf">
+<a href="http://ecommerce.micropayment.de/download/modified/micropayment_modified-shop_2.x.pdf?version=2.1.0">
     <input type="button" value="Handbuch">
 </a>&nbsp;
 <a target="_new" href="https://r120.micropayment.de">
     <input type="button" value="Micropayment Registrierung">
     </a>
 ');
-define('MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE', 'micropayment Vorkasse<br /><img src="https://www.micropayment.de/resources/?what=img&group=pp&show=type-h.4" />');
+define('MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE', 'micropayment&trade; Vorkasse');
 define('MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE_EXTERN', 'Vorkasse');
 define('MODULE_PAYMENT_MCP_PREPAY_TEXT_INFO', '
 <div style="margin:10px;">

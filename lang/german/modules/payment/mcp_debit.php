@@ -15,14 +15,14 @@ Links<br />
 </a><br />
 <br />
 <b>Extern</b><br />
-<a href="http://ecommerce.micropayment.de/download/modified/micropayment_modified-shop_current.pdf">
+<a href="http://ecommerce.micropayment.de/download/modified/micropayment_modified-shop_2.x.pdf?version=2.1.0">
     <input type="button" value="Handbuch">
 </a>&nbsp;
 <a target="_new" href="https://r120.micropayment.de">
     <input type="button" value="Micropayment Registrierung">
     </a>
 ');
-define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE', 'micropayment&trade; Lastschrift<br /><img src="https://www.micropayment.de/resources/?what=img&group=dbt&show=type-h.4" />');
+define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE', 'micropayment&trade; Lastschrift');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE_EXTERN', 'Lastschrift');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_INFO', '
 <div style="margin:10px;">
