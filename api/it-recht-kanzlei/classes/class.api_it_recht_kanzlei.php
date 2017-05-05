@@ -193,17 +193,17 @@ class it_recht_kanzlei {
       if ($xml->rechtstext_type == 'agb') {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB;
         if ($pdf_file_stored === true) {
-          $pdf_file_text = '<br /><br /><a href="'.DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">AGB - PDF download!</a>';
+          $pdf_file_text = '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">AGB - PDF download!</a>';
         }
       } elseif ($xml->rechtstext_type == 'datenschutz') {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_DSE;
         if ($pdf_file_stored === true) {
-          $pdf_file_text = '<br /><br /><a href="'.DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">Datenschutz - PDF download!</a>';
+          $pdf_file_text = '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">Datenschutz - PDF download!</a>';
         }
       } elseif ($xml->rechtstext_type == 'widerruf') {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_WRB;
         if ($pdf_file_stored === true) {
-          $pdf_file_text = '<br /><br /><a href="'.DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">Widerruf - PDF download!</a>';
+          $pdf_file_text = '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">Widerruf - PDF download!</a>';
         }
       } elseif ($xml->rechtstext_type == 'impressum') {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_IMP;
