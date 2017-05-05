@@ -22,7 +22,7 @@ Links<br />
     <input type="button" value="Micropayment Registrierung">
     </a>
 ');
-define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE', 'micropayment&trade; Lastschrift<br /><img src="http://www.micropayment.de/resources/?what=img&group=dbt&show=type-h.4" />');
+define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE', 'micropayment&trade; Lastschrift<br /><img src="https://www.micropayment.de/resources/?what=img&group=dbt&show=type-h.4" />');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE_EXTERN', 'Lastschrift');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_INFO', '
 <div style="margin:10px;">
