@@ -22,7 +22,7 @@ Links<br />
     <input type="button" value="Micropayment Registrierung">
     </a>
 ');
-define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE', 'micropayment&trade; Kreditkarte<br /><img src="http://www.micropayment.de/resources/?what=img&group=cc&show=type-h.4" />');
+define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE', 'micropayment&trade; Kreditkarte<br /><img src="https://www.micropayment.de/resources/?what=img&group=cc&show=type-h.4" />');
 define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE_EXTERN', 'Kreditkarte');
 
 define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_INFO', '

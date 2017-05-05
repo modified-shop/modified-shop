@@ -22,7 +22,7 @@ links<br />
     <input type="button" value="Micropayment register">
     </a>
 ');
-define('MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE', 'micropayment&trade; Prepay<br /><img src="http://www.micropayment.de/resources/?what=img&group=pp&show=type-h.4" />');
+define('MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE', 'micropayment&trade; Prepay<br /><img src="https://www.micropayment.de/resources/?what=img&group=pp&show=type-h.4" />');
 define('MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE_EXTERN', 'Prepay');
 define('MODULE_PAYMENT_MCP_PREPAY_TEXT_INFO', '
 <div style="margin:10px;">

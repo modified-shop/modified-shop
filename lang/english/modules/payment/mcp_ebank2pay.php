@@ -22,7 +22,7 @@ links<br />
     <input type="button" value="Micropayment register">
     </a>
 ');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE', 'micropayment&trade; direct banking<br /><img src="http://www.micropayment.de/resources/?what=img&group=eb2p&show=type-h.4" />');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE', 'micropayment&trade; direct banking<br /><img src="https://www.micropayment.de/resources/?what=img&group=eb2p&show=type-h.4" />');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE_EXTERN', 'Direct banking');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO', '
 <div style="margin:10px;">

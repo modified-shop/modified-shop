@@ -21,7 +21,7 @@ links<br />
 <a target="_new" href="https://r120.micropayment.de">
     <input type="button" value="Micropayment register">
     </a>');
-define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE', 'micropayment&trade; Creditcard<br /><img src="http://www.micropayment.de/resources/?what=img&group=cc&show=type-h.4" />');
+define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE', 'micropayment&trade; Creditcard<br /><img src="https://www.micropayment.de/resources/?what=img&group=cc&show=type-h.4" />');
 define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE_EXTERN', 'Creditcard');
 define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_INFO', '
 <div style="margin:10px;">
