@@ -15,14 +15,14 @@ Links<br />
 </a><br />
 <br />
 <b>Extern</b><br />
-<a href="http://ecommerce.micropayment.de/download/modified/micropayment_modified-shop.pdf?version=2.0.0">
+<a href="http://ecommerce.micropayment.de/download/modified/micropayment_modified-shop_2.x.pdf?version=2.1.0">
     <input type="button" value="Handbuch">
 </a>&nbsp;
 <a target="_new" href="https://r120.micropayment.de">
     <input type="button" value="Micropayment Registrierung">
     </a>
 ');
-define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE', 'micropayment&trade; Kreditkarte<br /><img src="https://www.micropayment.de/resources/?what=img&group=cc&show=type-h.4" />');
+define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE', 'micropayment&trade; Kreditkarte');
 define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE_EXTERN', 'Kreditkarte');
 
 define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_INFO', '

@@ -46,7 +46,7 @@ if(isset($_REQUEST['function']) && $_REQUEST['function'] == 'test') {
 
     echo '<pre>';
     echo 'MICROPAYMENT GATEWAY TEST FUNCTION' . PHP_EOL;
-    echo 'VERSION-SHOP: ' . $version . ' ; MOD: 2.0.0' . PHP_EOL;
+    echo 'VERSION-SHOP: ' . $version . ' ; MOD: 2.1.0' . PHP_EOL;
     echo 'ACCOUNT-ID: ' . substr($accId,0,1).str_repeat('x',strlen($accId)-2).substr($accId,strlen($accId)-1) . PHP_EOL;
     echo 'BILLING-URL: ' . $billingUrl . PHP_EOL;
     echo 'ACCESSKEY: ' . substr($accKey,0,1).str_repeat('x',strlen($accKey)-2).substr($accKey,strlen($accKey)-1) . PHP_EOL;
@@ -105,6 +105,13 @@ class micropayment_callback
         }
         $this->processFunction();
         $this->sendStatus();
+
+        // Sending new order Emails
+/*        if($this->getParam('function',self::REGEX_SIMPLE_TEXT) == self::FUNCTION_BILLING) {
+            $order = $this->fetchOrder();
+            $order = $order['order'];
+
+        }*/
     }
 
     function sendStatus()
@@ -297,6 +304,11 @@ class micropayment_callback
 
         switch($function) {
             case self::FUNCTION_BILLING:
+                try {
+                    $this->sendNewOrderEmail();
+                } catch(Exception $e) {
+                    
+                }
                 $customer_notification = 0;
                 $order_status          = MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID;
                 $comment = sprintf(
@@ -510,6 +522,7 @@ class micropayment_callback
 
     function checkEventState($actualEvent,$newEvent)
     {
+        return true;
         switch($actualEvent) {
             case 'new':
                 if(!in_array($newEvent,array('init','billing','error'))) {
@@ -604,6 +617,31 @@ class micropayment_callback
                 xtc_db_prepare_input($orderId)
             )
         );
+    }
+
+    function sendNewOrderEmail()
+    {
+
+        //must be set for send_order.php (also $insert_id)
+        global $smarty, $order, $insert_id, $send_by_admin, $messageStack;
+        $send_by_admin = true;
+
+        if(!defined('COMMENT_SEND_ORDER_BY_ADMIN')) {
+            define('COMMENT_SEND_ORDER_BY_ADMIN','new order email send by notification from micropayment');
+        }
+
+        $insert_id = $this->getParam('orderid',self::REGEX_INTEGER);
+
+        if (!is_object($order)) { //$order doesnt exist if called by notification!
+            require_once(DIR_FS_CATALOG.'includes/classes/order.php');
+            $order = new order($this->getParam('orderid',self::REGEX_INTEGER));
+        }
+
+        if (!is_object($smarty)) { //$smarty doesnt exist if called by notification!
+            $smarty = new Smarty();
+        }
+
+        include (DIR_FS_EXTERNAL.'micropayment/send_order.php');
     }
 }
 

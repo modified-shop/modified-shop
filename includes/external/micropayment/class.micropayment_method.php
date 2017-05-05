@@ -17,7 +17,7 @@ class micropayment_method extends micropayment_helper
     var $sort_order;
     var $enabled = true;
     var $info;
-    var $version = '2.0.0';
+    var $version = '2.1.0';
     var $_check;
     var $rslcode = 'r120';
     var $get_url_called = false;
@@ -85,7 +85,7 @@ class micropayment_method extends micropayment_helper
                 if ($result['orders_status'] == MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID) {
                     if(isset($_GET['orderid']) && in_array($this->getLastEventFromMicropaymentLog((int) $_GET['orderid']),array('new','error'))) {
                         require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-                        xtc_remove_order((int)$_GET['orderid'], ((STOCK_LIMITED == 'true') ? 'on' : false));
+                        xtc_remove_order((int) $_GET['orderid'], ((STOCK_LIMITED == 'true') ? 'on' : false));
                     }
                     unset($_SESSION['tmp_oID']);
                 }
@@ -206,7 +206,7 @@ class micropayment_method extends micropayment_helper
             $this->createConfigParameter(self::CONFIG_NAME_BILLING_URL_SOFORT, '0', '6', '0');
             $this->createConfigParameter(self::CONFIG_NAME_BILLING_URL_PREPAY, '0', '6', '0');
             $this->createConfigParameter(self::CONFIG_NAME_REFRESH_INTERVAL, '0', '6', '0');
-            $this->createConfigParameter(self::CONFIG_NAME_CURRENT_VERSION, '2.0.0', '6', '0');
+            $this->createConfigParameter(self::CONFIG_NAME_CURRENT_VERSION, '2.1.0', '6', '0');
             $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID', '', '6', '0','');
             $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY', '', '6', '0','');
             $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE', '', '6', '0','');
@@ -290,7 +290,6 @@ class micropayment_method extends micropayment_helper
             xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE `configuration_key` LIKE 'MODULE_PAYMENT_MCP_SERVICE_%'");
         }
     }
-
 }
 
 $mcp = new micropayment_method();
