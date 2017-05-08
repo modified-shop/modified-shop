@@ -26,8 +26,10 @@ class it_recht_kanzlei {
       $user_auth_token_flag, 
       $action, 
       $post_xml;
+
+  function __construct() {}
   
-  function __construct($post_xml) {
+  function process($post_xml) {
   
     $this->set_shopversion();
     
@@ -42,6 +44,11 @@ class it_recht_kanzlei {
     if(trim($post_xml) == ''){
       $this->return_error('12');
     }
+    
+    if ($this->isXMLContentValid($post_xml) === false) {
+      $this->return_error('12');
+    }
+    
     // create xml object
     $xml = simplexml_load_string($post_xml, null, LIBXML_NOCDATA);
     
@@ -58,6 +65,22 @@ class it_recht_kanzlei {
     // return general error
     $this->return_error('99');
     exit();
+  }
+
+  function isXMLContentValid($xmlContent, $version = '1.0', $encoding = 'utf-8') {
+    if (trim($xmlContent) == '') {
+      return false;
+    }
+
+    libxml_use_internal_errors(true);
+
+    $doc = new DOMDocument($version, $encoding);
+    $doc->loadXML($xmlContent);
+
+    $errors = libxml_get_errors();
+    libxml_clear_errors();
+
+    return empty($errors);
   }
   
   function check_api_action($api_action) {
