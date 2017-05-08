@@ -25,7 +25,6 @@
   require_once(DIR_FS_BOXES . 'information.php');
   require_once(DIR_FS_BOXES . 'languages.php'); 
   require_once(DIR_FS_BOXES . 'infobox.php');
-  require_once(DIR_FS_BOXES . 'loginbox.php');
   if (!defined('MODULE_NEWSLETTER_STATUS') || MODULE_NEWSLETTER_STATUS == 'true') {
     require_once(DIR_FS_BOXES . 'newsletter.php');
   }
@@ -35,6 +34,12 @@
       ) 
   {
     require_once(DIR_FS_BOXES . 'trustedshops.php');
+  }
+// -----------------------------------------------------------------------------------------
+//	Nur sichtbar, wenn nicht auf der login.php Seite
+// -----------------------------------------------------------------------------------------
+  if (substr(basename($PHP_SELF), 0,5) != 'login') {
+    require_once(DIR_FS_BOXES . 'loginbox.php');
   }
 // -----------------------------------------------------------------------------------------
 //	Nur, wenn Preise sichtbar
