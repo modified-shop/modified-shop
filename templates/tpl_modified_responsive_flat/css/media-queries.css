@@ -160,10 +160,6 @@
   .otl_col3 { width: 76%; }
   .shipping_radio, .payment_radio { width: 20px; }
   .footer_box { width:100%; }
-  .listingcontainer .listingbox { width:100%;}
-  .listingcontainer_full .listingbox { width:100%;}
-  .pd_tabs .listingbox { width:100%; }
-  .pd_accordion .listingbox { width:100%; }
   .lr_desc_box { width: 100%; }
   .lr_price_box { width: 100%; }
   .sitemap { -moz-column-count: 1;-moz-column-gap: 0px; -moz-column-rule: 0px solid #eee; -webkit-column-count: 1; -webkit-column-gap: 0px; -webkit-column-rule: 0px solid #eee; column-count: 1; column-gap: 0px; column-rule: 0px solid #eee; }
@@ -189,4 +185,13 @@
   .rb_image img { max-width:50px; max-height:50px; }
   .rb_rating { display: block; padding: 0 0 10px 0; width: 100%; }
   .pd_small_image_tab { width:33.3333%; }
+  .lb_image img { max-width: 120px !important; }
+}
+
+
+@media screen and (max-width: 360px) {
+  .listingcontainer .listingbox { width:100%;}
+  .listingcontainer_full .listingbox { width:100%;}
+  .pd_tabs .listingbox { width:100%; }
+  .pd_accordion .listingbox { width:100%; }
 }
