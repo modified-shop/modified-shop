@@ -33,7 +33,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_languages.html', $cache
     $box_content = array();
     reset($lng->catalog_languages);
     while (list($key, $value) = each($lng->catalog_languages)) {
-      $lng_link_txt = file_exists('lang/' .  $value['directory'] .'/' . $value['image']) ? xtc_image('lang/' .  $value['directory'] .'/' . $value['image'], $value['name']) : $value['name'];
+      $lng_link_txt = file_exists('lang/' .  $value['directory'] .'/' . $value['image']) ? xtc_image('lang/' .  $value['directory'] .'/' . $value['image'], $value['name'], '', '', 'title="' . $value['name']. '"') : $value['name'];
       $lng_link_url = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type);
       if ($lng_link_url != '#') {
         $box_content[] = ' <a href="' . $lng_link_url . '">' . $lng_link_txt . '</a> ';
