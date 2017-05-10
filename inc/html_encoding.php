@@ -1,6 +1,6 @@
 <?php
 /*--------------------------------------------------------------
-  $Id: html_encoding.php 4252 2013-01-11 15:25:35Z web28 $
+  $Id$
 
   modified eCommerce Shopsoftware - community made shopping
 
