@@ -22,7 +22,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-include ('includes/application_top.php');
+require_once ('includes/application_top.php');
 
 // create smarty elements
 $smarty = new Smarty;

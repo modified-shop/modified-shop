@@ -16,7 +16,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-require ('includes/application_top.php');
+require_once ('includes/application_top.php');
 
 // redirect contact form to SSL if available
 if (ENABLE_SSL == true && $request_type == 'NONSSL' && !isset($_GET['action']) && $_GET['coID'] == '7') {

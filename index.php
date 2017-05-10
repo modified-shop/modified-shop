@@ -22,7 +22,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-include ('includes/application_top.php');
+require_once ('includes/application_top.php');
 
 // create smarty elements
 $smarty = new Smarty;
@@ -38,5 +38,5 @@ if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 
-include ('includes/application_bottom.php');  
+require ('includes/application_bottom.php');  
 ?>
