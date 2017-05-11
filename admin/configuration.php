@@ -117,7 +117,7 @@
           $handle = opendir(SQL_CACHEDIR);
           while (($file = readdir($handle)) !== false) {
             // Jump over files that are no sql-cache
-            if (strpos($file, 'sql_') !== false) continue;
+            if (strpos(basename($file), 'sql_') !== false || basename($file) == 'index.html' || (substr(basename($file), 0, 1) == '.')) continue;
             @unlink(SQL_CACHEDIR.$file);
           }
         }
