@@ -333,8 +333,8 @@ class newsletter {
                         'registered' => strtotime($newsletter['date_added']),
                         'activated' => time(),
                         'source' => MODULE_CLEVERREACH_NAME,
-                        'attributes' => array(array('key' => 'firstname', 'value' => decode_utf8($newsletter['customers_firstname'], $_SESSION['language_charset'], true)),
-                                              array('key' => 'lastname', 'value' => decode_utf8($newsletter['customers_lastname'], $_SESSION['language_charset'], true)))
+                        'attributes' => array(array('key' => 'firstname', 'value' => encode_utf8($newsletter['customers_firstname'], $_SESSION['language_charset'], true)),
+                                              array('key' => 'lastname', 'value' => encode_utf8($newsletter['customers_lastname'], $_SESSION['language_charset'], true)))
                         );
           $result = $api->receiverAdd(MODULE_CLEVERREACH_APIKEY, MODULE_CLEVERREACH_GROUP, $user);
           break; 
@@ -362,8 +362,10 @@ class newsletter {
                           );
           $return = $api->receiverGetByDate(MODULE_CLEVERREACH_APIKEY, MODULE_CLEVERREACH_GROUP, $filter);
           if ($return->status == "SUCCESS") {
-            xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
-                                WHERE customers_email_address = '".xtc_db_input($return->data['email'])."'");
+            foreach ($return->data as $data) {
+              xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
+                                  WHERE customers_email_address = '".xtc_db_input($data->email)."'");
+            }
           }        
         } while ($return->status == "SUCCESS");
       }
