@@ -15,6 +15,7 @@
 defined('TABLE_PAYPAL_PAYMENT') OR define('TABLE_PAYPAL_PAYMENT', 'paypal_payment');
 defined('TABLE_PAYPAL_CONFIG') OR define('TABLE_PAYPAL_CONFIG', 'paypal_config');
 defined('TABLE_PAYPAL_IPN') OR define('TABLE_PAYPAL_IPN', 'paypal_ipn');
+defined('TABLE_PAYPAL_INSTRUCTIONS') OR define('TABLE_PAYPAL_INSTRUCTIONS', 'paypal_instructions');
 
 
 // include needed functions
@@ -183,7 +184,7 @@ class PayPalPayment extends PayPalPaymentBase {
                 ->setQuantity(1) 
                 ->setPrice($shipping_cost); 
         $this->amount->setTotal($this->amount->getTotal() + (double)$shipping_cost);
-        $this->details->setSubtotal($this->amount->getTotal());
+        $this->details->setSubtotal($this->amount->getTotal() - $this->details->getShippingDiscount());
       }    
           
       // set amount 
@@ -688,7 +689,9 @@ class PayPalPayment extends PayPalPaymentBase {
         unset($_SESSION['paypal']);
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
       }
-
+      
+      $this->save_payment_instructions($insert_id);
+      
       $status = $this->get_orders_status($payment);
       if ($status['status_id'] < 0) {
         $check_query = xtc_db_query("SELECT orders_status
@@ -1404,7 +1407,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $payment_array = array(
       'id' => $payment->getId(),
       'payment_method' => $payer->getPaymentMethod(),
-      'email_address' => $payerinfo->getEmail(),
+      'email_address' => ((is_object($payerinfo)) ? $payerinfo->getEmail() : ''),
       'account_status' => $payer->getStatus(),
       'intent' => $payment->getIntent(),
       'state' => $payment->getState(),
@@ -1557,8 +1560,12 @@ class PayPalPayment extends PayPalPaymentBase {
     try {
       // customer details
       $payer = $payment->getPayer();
-      $customer = $payer->getPayerInfo();
-      $address = $customer->getShippingAddress();
+      if (is_object($payer)) {
+        $customer = $payer->getPayerInfo();
+      }
+      if (is_object($customer)) {
+        $address = $customer->getShippingAddress();
+      }
       
       $valid = true;
     } catch (Exception $ex) {

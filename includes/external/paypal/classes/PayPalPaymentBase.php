@@ -211,6 +211,28 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  function save_payment_instructions($orders_id) {
+    $payment = $this->get_order_details($orders_id);
+  
+    if (isset($payment['instruction'])) {
+      
+      $sql_data_array = array(
+        'orders_id' => $orders_id,
+        'amount' => $payment['instruction']['amount']['total'],
+        'currency' => $payment['instruction']['amount']['currency'],
+        'reference' => $payment['instruction']['reference'],
+        'date' => date('Y-m-d', strtotime($payment['instruction']['date'])),
+        'name' => $payment['instruction']['bank']['name'],
+        'holder' => $payment['instruction']['bank']['holder'],
+        'iban' => $payment['instruction']['bank']['iban'],
+        'bic' => $payment['instruction']['bank']['bic'],
+      );
+    
+      xtc_db_perform(TABLE_PAYPAL_INSTRUCTIONS, $sql_data_array);
+    }
+  }
+  
+  
   function admin_order($oID) {
     return false;
   }
@@ -389,6 +411,19 @@ class PayPalPaymentBase extends PayPalCommon {
                     KEY idx_orders_id (orders_id)
                   ) ENGINE = MYISAM;");
 
+    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_INSTRUCTIONS." (
+                    orders_id int(11) NOT NULL DEFAULT '0',
+                    amount decimal(15,4) DEFAULT NULL,
+                    currency varchar(8) DEFAULT NULL,
+                    reference varchar(128) DEFAULT NULL,
+                    date date DEFAULT NULL,
+                    name varchar(128) DEFAULT NULL,
+                    holder varchar(128) DEFAULT NULL,
+                    iban varchar(34) DEFAULT NULL,
+                    bic varchar(11) DEFAULT NULL,
+                    KEY idx_orders_id (orders_id)
+                  ) ENGINE=MyISAM;");
+
     $admin_access_array = array(
       'paypal_config',
       'paypal_module',
@@ -453,6 +488,7 @@ class PayPalPaymentBase extends PayPalCommon {
       xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_PAYMENT);
       xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_CONFIG);
       xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_IPN);
+      xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_INSTRUCTIONS);
 
 
   
@@ -496,40 +532,40 @@ class PayPalPaymentBase extends PayPalCommon {
         if (file_exists(DIR_FS_LANGUAGES.$languages['directory'].'/admin/paypal_config.php')) {
           include(DIR_FS_LANGUAGES.$languages['directory'].'/admin/paypal_config.php');
         }
-        if ($$statusname != '') {
+        if (${$statusname} != '') {
           $check_query = xtc_db_query("SELECT orders_status_id 
                                          FROM " . TABLE_ORDERS_STATUS . " 
-                                        WHERE orders_status_name = '" .xtc_db_input($$statusname). "' 
+                                        WHERE orders_status_name = '" .xtc_db_input(${$statusname}). "' 
                                           AND language_id = '".(int)$languages['languages_id']."' 
                                         LIMIT 1");
           $status = xtc_db_fetch_array($check_query);
-          if (xtc_db_num_rows($check_query) < 1 || ($$statusid && $status['orders_status_id'] != $$statusid) ) {
-            if (!$$statusid) {
+          if (xtc_db_num_rows($check_query) < 1 || (${$statusid} && $status['orders_status_id'] != ${$statusid}) ) {
+            if (!${$statusid}) {
               $status_query = xtc_db_query("SELECT max(orders_status_id) as status_id FROM " . TABLE_ORDERS_STATUS);
               $status = xtc_db_fetch_array($status_query);
-              $$statusid = $status['status_id'] + 1;
+              ${$statusid} = $status['status_id'] + 1;
             }
             $check_query = xtc_db_query("SELECT orders_status_id 
                                            FROM " . TABLE_ORDERS_STATUS . " 
-                                          WHERE orders_status_id = '".(int)$$statusid ."' 
+                                          WHERE orders_status_id = '".(int)${$statusid} ."' 
                                             AND language_id='".(int)$languages['languages_id']."'");
             if (xtc_db_num_rows($check_query) < 1) {
               $sql_data_array = array(
-                'orders_status_id' => (int)$$statusid,
+                'orders_status_id' => (int)${$statusid},
                 'language_id' => (int)$languages['languages_id'],
-                'orders_status_name' => $$statusname,
+                'orders_status_name' => ${$statusname},
               );
               xtc_db_perform(TABLE_ORDERS_STATUS, $sql_data_array);
               $sql_data_array = array(
                 array(
                   'config_key' => $statusid,
-                  'config_value' => (int)$$statusid,
+                  'config_value' => (int)${$statusid},
                 )
               );
               $this->save_config($sql_data_array);
             }
           } else {
-            $$statusid = $status['orders_status_id'];
+            ${$statusid} = $status['orders_status_id'];
           }
         }
       }

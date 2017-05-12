@@ -176,7 +176,7 @@ class PayPalCommon extends PayPalAuth {
       if ((string)$amount_total != (string)$total) {
         if ($this->details->getShippingDiscount() < 0) {
           $this->details->setShippingDiscount($this->details->getShippingDiscount() + ($amount_total - $total));
-        } elseif ($this->details->setHandlingFee() > 0) {
+        } elseif ($this->details->getHandlingFee() > 0) {
           $this->details->setHandlingFee($this->details->getHandlingFee() + ($amount_total - $total));
         }
       }
