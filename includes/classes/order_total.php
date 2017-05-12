@@ -82,7 +82,13 @@ class order_total {
       $output_string = '';
       while (list (, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->enabled && isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class) {
+        if ($GLOBALS[$class]->enabled 
+            && isset($GLOBALS[$class]->credit_class) 
+            && $GLOBALS[$class]->credit_class
+            && method_exists($GLOBALS[$class], 'use_credit_amount')
+            && method_exists($GLOBALS[$class], 'credit_selection')
+            ) 
+        {
           $use_credit_string = $GLOBALS[$class]->use_credit_amount();
           if ($selection_string == '') {
             $selection_string = $GLOBALS[$class]->credit_selection();
@@ -116,7 +122,11 @@ class order_total {
       reset($this->modules);
       while (list (, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if (($GLOBALS[$class]->enabled && isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class)) {
+        if ($GLOBALS[$class]->enabled 
+            && isset($GLOBALS[$class]->credit_class) 
+            && $GLOBALS[$class]->credit_class
+            && method_exists($GLOBALS[$class], 'update_credit_account')
+            ) {
           $GLOBALS[$class]->update_credit_account($i);
         }
       }
@@ -134,7 +144,12 @@ class order_total {
       reset($this->modules);
       while (list (, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if (($GLOBALS[$class]->enabled && isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class)) {
+        if ($GLOBALS[$class]->enabled 
+            && isset($GLOBALS[$class]->credit_class) 
+            && $GLOBALS[$class]->credit_class
+            && method_exists($GLOBALS[$class], 'collect_posts')
+            )
+        {
           $post_var = 'c'.$GLOBALS[$class]->code;
           if (isset($_POST[$post_var]) && $_POST[$post_var]) {
             $_SESSION[$post_var] = $_POST[$post_var];
@@ -162,7 +177,12 @@ class order_total {
       while (list (, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
         $order_total = $this->get_order_total_main($class, $this->order_total);
-        if (($GLOBALS[$class]->enabled && isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class)) {
+        if ($GLOBALS[$class]->enabled 
+            && isset($GLOBALS[$class]->credit_class) 
+            && $GLOBALS[$class]->credit_class
+            && method_exists($GLOBALS[$class], 'pre_confirmation_check')
+            )
+        {
           $total_deductions = $total_deductions + $GLOBALS[$class]->pre_confirmation_check($order_total);
           $order_total = $order_total - $GLOBALS[$class]->pre_confirmation_check($order_total);
         }
@@ -184,7 +204,12 @@ class order_total {
       reset($this->modules);
       while (list (, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if (($GLOBALS[$class]->enabled && isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class)) {
+        if ($GLOBALS[$class]->enabled 
+            && isset($GLOBALS[$class]->credit_class) 
+            && $GLOBALS[$class]->credit_class
+            && method_exists($GLOBALS[$class], 'apply_credit')
+            )
+        {
           $GLOBALS[$class]->apply_credit();
         }
       }
@@ -198,7 +223,11 @@ class order_total {
       reset($this->modules);
       while (list (, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
-        if (($GLOBALS[$class]->enabled && isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class)) {
+        if ($GLOBALS[$class]->enabled 
+            && isset($GLOBALS[$class]->credit_class) 
+            && $GLOBALS[$class]->credit_class
+            )
+        {
           $post_var = 'c'.$GLOBALS[$class]->code;
           unset ($_SESSION[$post_var]);
         }
