@@ -112,6 +112,7 @@
           }
         }
         
+        /*
         // DB Cache System [If Cache deactivated.. clean all cachefiles]
         if (isset($_POST['DB_CACHE']) && $_POST['DB_CACHE'] == 'false') {
           $handle = opendir(SQL_CACHEDIR);
@@ -121,7 +122,7 @@
             @unlink(SQL_CACHEDIR.$file);
           }
         }
-
+        */
         xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
         break;
 
