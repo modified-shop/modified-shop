@@ -27,6 +27,7 @@
       $this->description = MODULE_ORDER_TOTAL_DISCOUNT_DESCRIPTION;
       $this->enabled = ((MODULE_ORDER_TOTAL_DISCOUNT_STATUS == 'true') ? true : false);
       $this->sort_order = MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER;
+      $this->credit_class = true;
       
       $this->output = array();
     }
@@ -51,6 +52,21 @@
             'value' => $this->deduction
           );
       }
+    }
+    
+    function pre_confirmation_check($order_total) {
+      global $order, $xtPrice;
+      
+      $discount_price = 0;
+      
+      if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
+          && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+          ) 
+      {
+        $discount_price = $xtPrice->xtcFormat(($xtPrice->xtcFormat($order->info['subtotal'], false) / 100 * $_SESSION['customers_status']['customers_status_ot_discount']), false);
+      }
+
+      return $discount_price;
     }
 
     function check() {
