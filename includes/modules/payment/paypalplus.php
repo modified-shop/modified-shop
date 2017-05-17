@@ -99,6 +99,7 @@ class paypalplus extends PayPalPayment {
       </script>';
     
       $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE, 'id="continueButton"'));
+      $smarty->assign('BUTTON_CHECKOUT_STEP3', xtc_image_submit('button_checkout_step3.gif', IMAGE_BUTTON_CHECKOUT_STEP3, 'id="continueButton"'));
     
       return array(
         'id' => $this->code, 
