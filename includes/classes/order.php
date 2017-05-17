@@ -75,17 +75,18 @@
                                      FROM " . TABLE_ORDERS . "
                                     WHERE orders_id = '" . $order_id . "'");
       $order = xtc_db_fetch_array($order_query);
-
+      
+      $index = 0;
       $totals_query = xtc_db_query("SELECT *
                                       FROM " . TABLE_ORDERS_TOTAL . "
                                      WHERE orders_id = '" . $order_id . "'
                                   ORDER BY sort_order ASC, value DESC");
       while ($totals = xtc_db_fetch_array($totals_query)) {
-        $this->totals[] = array('title' => $totals['title'],
-                                'text' => $totals['text'],
-                                'value'=> $totals['value'],
-                                'class'=> $totals['class']
-                               );
+        // build totals array dynamically
+        foreach ($totals as $key => $val) {
+          $this->totals[$index][$key] = $val;
+        }
+        $index ++;
       }
 
       $order_total_query = xtc_db_query("SELECT SUM(IF(class = 'ot_tax', value, 0)) as ot_tax,
