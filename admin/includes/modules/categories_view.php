@@ -543,6 +543,12 @@
                 } 
                 $add_join .= "LEFT OUTER JOIN ".TABLE_SPECIALS." AS s ON (p.products_id = s.products_id) AND s.status = '1' AND (now() >= s.start_date OR s.start_date IS NULL) ";
                 $add_select = 's.specials_new_products_price,specials_quantity,expires_date,s.status as specials_status,';
+                
+                require_once(DIR_FS_INC.'auto_include.inc.php');
+                foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/categories_view/products_search/','php') as $file) require ($file);
+               
+                $add_select .= (defined('ADD_SELECT_PRODUCT') && ADD_SELECT_PRODUCT != '' ? ADD_SELECT_PRODUCT : '');
+                
                 $select_str = "SELECT $add_select
                                       p.products_tax_class_id,
                                       p.products_sort,
