@@ -466,7 +466,7 @@ class categories {
       $this->remove_product($product_id);
     }
     //new module support
-    $this->catModules->remove_product($product_id,$product_categories);
+    $this->catModules->delete_product($product_id, $product_categories);
   }
 
 
