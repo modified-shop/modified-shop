@@ -89,6 +89,7 @@ require (DIR_WS_INCLUDES.'head.php');
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
           <div class="flt-l">
             <div class="pageHeading pdg2"><?php echo TEXT_PAYPAL_WEBHOOK_HEADING_TITLE; ?></div>
+            <div class="main">v<?php echo $paypal->paypal_version; ?></div>
           </div>
           <?php
             $list = $paypal->list_webhooks();

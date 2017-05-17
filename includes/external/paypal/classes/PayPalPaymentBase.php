@@ -27,6 +27,7 @@ class PayPalPaymentBase extends PayPalCommon {
     global $order;
 
     $this->code = $class;
+    $this->paypal_version = '1.0';
 
     $this->title = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '');
     $this->info = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO') : '');
@@ -59,6 +60,10 @@ class PayPalPaymentBase extends PayPalCommon {
   
     if (is_object($order) && !defined('RUN_MODE_ADMIN')) {
       $this->update_status();
+    }
+    
+    if (version_compare($this->paypal_version, $this->get_config('PAYPAL_VERSION'), '>')) {
+      $this->paypal_update();
     }
   }
 
@@ -394,22 +399,23 @@ class PayPalPaymentBase extends PayPalCommon {
                     orders_id int(11) NOT NULL default '0', 
                     payment_id varchar(64) NOT NULL default '', 
                     payer_id varchar(64) NOT NULL default '', 
+                    transaction_id varchar(64) NOT NULL default '', 
                     PRIMARY KEY (paypal_id), 
                     KEY idx_orders_id (orders_id)
-                  ) ENGINE = MYISAM;");
+                  );");
   
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_CONFIG." (
                     config_key varchar(128) NOT NULL,
                     config_value text NOT NULL,
                     KEY idx_config_key (config_key)
-                  ) ENGINE = MYISAM;");
+                  );");
 
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_IPN." (
                     orders_id int(11) NOT NULL,
                     transaction_id varchar(64) NOT NULL default '',
                     payment_status varchar(64) NOT NULL default '',
                     KEY idx_orders_id (orders_id)
-                  ) ENGINE = MYISAM;");
+                  );");
 
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_INSTRUCTIONS." (
                     orders_id int(11) NOT NULL DEFAULT '0',
@@ -422,7 +428,7 @@ class PayPalPaymentBase extends PayPalCommon {
                     iban varchar(34) DEFAULT NULL,
                     bic varchar(11) DEFAULT NULL,
                     KEY idx_orders_id (orders_id)
-                  ) ENGINE=MyISAM;");
+                  );");
 
     $admin_access_array = array(
       'paypal_config',
@@ -572,5 +578,39 @@ class PayPalPaymentBase extends PayPalCommon {
     }
   }
   
+  
+  function paypal_update() {
+    $table_array = array(
+      array('column' => 'transaction_id', 'default' => "varchar(64) NOT NULL default ''"),
+    );
+    foreach ($table_array as $table) {
+      $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_PAYMENT." LIKE '".xtc_db_input($table['column'])."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_PAYMENT." ADD ".$table['column']." ".$table['default']."");
+      }
+    }
+    
+    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_INSTRUCTIONS." (
+                    orders_id int(11) NOT NULL DEFAULT '0',
+                    amount decimal(15,4) DEFAULT NULL,
+                    currency varchar(8) DEFAULT NULL,
+                    reference varchar(128) DEFAULT NULL,
+                    date date DEFAULT NULL,
+                    name varchar(128) DEFAULT NULL,
+                    holder varchar(128) DEFAULT NULL,
+                    iban varchar(34) DEFAULT NULL,
+                    bic varchar(11) DEFAULT NULL,
+                    KEY idx_orders_id (orders_id)
+                  );");
+    
+    $sql_data_array = array(
+      array(
+        'config_key' => 'PAYPAL_VERSION',
+        'config_value' => $this->paypal_version,
+      )
+    );
+    $this->save_config($sql_data_array);
+  }
+
 }
 ?>

@@ -702,6 +702,10 @@ class PayPalPayment extends PayPalPaymentBase {
       }
       $this->update_order($status['comment'], $status['status_id'], $insert_id);    
 
+      xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT." 
+                       SET transaction_id = '".xtc_db_input($status['transaction_id'])."'
+                     WHERE orders_id = '".$insert_id."'");
+
     } else {
       // redirect
       unset($_SESSION['paypal']);
@@ -918,6 +922,10 @@ class PayPalPayment extends PayPalPaymentBase {
       $status['status_id'] = $check['orders_status'];
     }
     $this->update_order($status['comment'], $status['status_id'], $insert_id);    
+
+    xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT." 
+                     SET transaction_id = '".xtc_db_input($status['transaction_id'])."'
+                   WHERE orders_id = '".$insert_id."'");
   }
     
   
@@ -1211,6 +1219,10 @@ class PayPalPayment extends PayPalPaymentBase {
       }
       $this->update_order($status['comment'], $status['status_id'], $insert_id);    
 
+      xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT." 
+                       SET transaction_id = '".xtc_db_input($status['transaction_id'])."'
+                     WHERE orders_id = '".$insert_id."'");
+
     } else {
       // redirect
       unset($_SESSION['paypal']);
@@ -1258,6 +1270,7 @@ class PayPalPayment extends PayPalPaymentBase {
       return array(
         'status_id' => $status_id,
         'comment' => 'Transaction ID: '.$resource->getId(),
+        'transaction_id' => $resource->getId(),
       );
       
     } catch (Exception $ex) {

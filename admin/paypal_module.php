@@ -115,7 +115,7 @@ if (isset($_GET['action'])) {
           foreach ($_POST['config']['profile'] as $key => $value) {
             $sql_data_array[] = array(
               'config_key' => $key,
-              'config_value' => str_replace(',', '.', preg_replace('/[^0-9,.%]/','',$value)),
+              'config_value' => ((preg_replace('/[^0-9,.]/', '', $value) == $value) ? str_replace(',', '.', $value) : $value),
             );
           }
           $paypal->save_config($sql_data_array);
@@ -175,6 +175,7 @@ require (DIR_WS_INCLUDES.'head.php');
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
           <div class="flt-l">
             <div class="pageHeading pdg2"><?php echo TEXT_PAYPAL_MODULE_HEADING_TITLE; ?></div>
+            <div class="main">v<?php echo $paypal->paypal_version; ?></div>
           </div>
           <?php
             include_once(DIR_FS_EXTERNAL.'paypal/modules/admin_menu.php');
