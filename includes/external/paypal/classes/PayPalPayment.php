@@ -1407,8 +1407,9 @@ class PayPalPayment extends PayPalPaymentBase {
 
     // customer details
     $payer = $payment->getPayer();
-    $payerinfo = $payer->getPayerInfo();
-
+    if (is_object($payer)) {
+      $payerinfo = $payer->getPayerInfo();
+    }
     $customer_data = $this->get_customer_data($payment);
 
     $message = '';
@@ -1420,7 +1421,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $payment_array = array(
       'id' => $payment->getId(),
       'payment_method' => $payer->getPaymentMethod(),
-      'email_address' => ((is_object($payerinfo)) ? $payerinfo->getEmail() : ''),
+      'email_address' => ((isset($payerinfo) && is_object($payerinfo)) ? $payerinfo->getEmail() : ''),
       'account_status' => $payer->getStatus(),
       'intent' => $payment->getIntent(),
       'state' => $payment->getState(),
