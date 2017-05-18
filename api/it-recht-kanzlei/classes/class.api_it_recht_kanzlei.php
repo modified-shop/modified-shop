@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
