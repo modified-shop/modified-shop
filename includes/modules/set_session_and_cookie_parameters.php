@@ -11,6 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 // include needed function
+require_once(DIR_FS_INC.'xtc_setcookie.inc.php');
 require_once(DIR_FS_INC.'set_session_cookie.inc.php');
 require_once(DIR_FS_INC.'redirect_invalid_session.inc.php');
 
