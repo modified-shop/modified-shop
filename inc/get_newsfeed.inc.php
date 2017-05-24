@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: get_external_content.inc.php 4202 2013-01-10 20:27:44Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware - community made shopping
    http://www.modified-shop.org
@@ -15,7 +15,7 @@
   
   function get_newsfeed() {
     // newsfeed
-    if (time() - NEWSFEED_LAST_UPDATE > 86400) {
+    if (time() - (int)NEWSFEED_LAST_UPDATE > 86400) {
       $db_version = get_database_version();
       $feed = get_external_content('http://www.modified-shop.org/feed/?v='.$db_version['plain'], 2);    
       if ($feed && class_exists('SimpleXmlElement')) {
