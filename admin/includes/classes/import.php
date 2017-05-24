@@ -417,13 +417,15 @@ class xtcImport {
         if ($this->FileSheme['p_sorting'] == 'Y')
             $products_array = array_merge($products_array, array ('products_sort' => (int)$dataArray['p_sorting']));
         //EOC strip potential slashes and type cast inputs
-        $products_array = array_merge($products_array, array ('products_date_added' => 'now()'));
+        
 
         if ($mode == 'insert') {
+            $products_array = array_merge($products_array, array ('products_date_added' => date("Y-m-d H:i:s")));
             $this->counter['prod_new']++;
             xtc_db_perform(TABLE_PRODUCTS, $products_array);
             $products_id = xtc_db_insert_id();
         } else {
+            $products_array = array_merge($products_array, array ('products_last_modified' => date("Y-m-d H:i:s")));
             $this->counter['prod_upd']++;
             xtc_db_perform(TABLE_PRODUCTS, $products_array, 'update', 'products_model = \''.xtc_db_input($dataArray['p_model']).'\'');
 
