@@ -68,16 +68,10 @@ use PayPal\Api\CreditFinancing;
 class PayPalPayment extends PayPalPaymentBase {
 
 
-  function __construct($class) {
-    $paypal_installed = false;
-    $check_installed_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_PAYPAL_CONFIG."'");
-    if (xtc_db_num_rows($check_installed_query) > 0) {
-      $paypal_installed = true;
-    }
-    
-    $this->loglevel = (($paypal_installed === true) ? $this->get_config('PAYPAL_LOG_LEVEL')  : 'FINE'); 
+  function __construct($class) {    
+    $this->loglevel = ((PayPalPaymentBase::check_install() === true) ? $this->get_config('PAYPAL_LOG_LEVEL') : 'FINE'); 
     $config = array(
-      'LogEnabled' => ((defined('MODULE_PAYMENT_'.strtoupper($class).'_STATUS' || $paypal_installed === true) && $this->get_config('PAYPAL_LOG_ENALBLED') == '1') ? true : false),
+      'LogEnabled' => ((defined('MODULE_PAYMENT_'.strtoupper($class).'_STATUS' || PayPalPaymentBase::check_install() === true) && $this->get_config('PAYPAL_LOG_ENALBLED') == '1') ? true : false),
       'SplitLogging' => true,
       'LogLevel' => $this->loglevel,
       'LogThreshold' => '2MB',
