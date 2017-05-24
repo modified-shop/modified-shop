@@ -62,7 +62,7 @@ class PayPalPaymentBase extends PayPalCommon {
       $this->update_status();
     }
     
-    if (version_compare($this->paypal_version, $this->get_config('PAYPAL_VERSION'), '>')) {
+    if ($this->check_install() && version_compare($this->paypal_version, $this->get_config('PAYPAL_VERSION'), '>')) {
       $this->paypal_update();
     }
   }
@@ -261,7 +261,7 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function check() {
-    if(!isset($this->_check)) {
+    if (!isset($this->_check)) {
       $check_query = xtc_db_query("SELECT configuration_value 
                                      FROM ".TABLE_CONFIGURATION." 
                                     WHERE configuration_key = 'MODULE_PAYMENT_".strtoupper($this->code)."_STATUS'");
@@ -272,11 +272,15 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function check_install() {
-    $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_PAYPAL_CONFIG."'");
-    if (xtc_db_num_rows($check_query) > 0) {
-      return true;
+    if (!isset($this->_check_install)) {
+      $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_PAYPAL_CONFIG."'");
+      if (xtc_db_num_rows($check_query) > 0) {
+        $this->_check_install = true;
+      } else {
+        $this->_check_install = false;
+      }
     }
-    return false;
+    return $this->_check_install;
   }
   
   
