@@ -908,15 +908,20 @@ class shoppingCart {
    * @return boolean
    */
   function check_products_status_permission($products_id) {
+    $status = false;
     $check_query = xtc_db_query("SELECT products_id 
                                    FROM ".TABLE_PRODUCTS."
                                   WHERE products_id = '".xtc_get_prid($products_id)."'
                                     AND products_status = '1'
                                         ".PRODUCTS_CONDITIONS);
     if (xtc_db_num_rows($check_query) > 0) {
-      return true;
+      $status = true;
     }
-    return false;
+    
+    //new module support 
+    $status = $this->shoppingCartModules->check_products_status_permission($products_id);
+    
+    return $status;
   }
 
   /**
