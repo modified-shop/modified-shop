@@ -180,6 +180,12 @@ class shoppingCartModules {
         return self::call_module_method($db_products_id);
     }
     
+    public static function check_products_status_permission($products_id)
+    {
+        self::$function_call = 'check_products_status_permission';
+        return self::call_module_method($products_id);
+    }
+
     public static function create_products_attributes_array($products_id)
     {
         self::$function_call = 'create_products_attributes_array';
