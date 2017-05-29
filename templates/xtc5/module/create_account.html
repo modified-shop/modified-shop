@@ -105,6 +105,7 @@
   </tr>
 </table>
 </div>
+{if $CHECKBOX_NEWSLETTER}
 <h2>{#title_newsletter#}</h2>
 <div class="highlightbox">
 <table width="100%" border="0" cellspacing="0" cellpadding="4">
@@ -114,6 +115,7 @@
   </tr>
 </table>
 </div>
+{/if}
 <h2>{#title_password#}</h2>
 <div class="highlightbox">
 {#text_password_policy#|sprintf:$smarty.const.ENTRY_PASSWORD_MIN_LENGTH}
