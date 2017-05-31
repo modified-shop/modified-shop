@@ -95,7 +95,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && isset($_PO
       $case = 'first_opt_in';
       xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
                        SET password_request_key = '".xtc_db_input($vlcode)."',
-                           password_request_time = now()
+                           password_request_time = '".date('Y-m-d H:i:00')."'
                      WHERE customers_id = '".$check_customer['customers_id']."'");
       
       // send email
