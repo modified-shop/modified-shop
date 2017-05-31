@@ -23,6 +23,7 @@
    Copyright (c) Andre ambidex@gmx.net
    Copyright (c) 2001,2002 Ian C Wilson http://www.phesis.org
    
+   Add new coupon_type = 'T' : coupon_amount percent and shipping_free (c) 2017-05-31 by web28 - www.rpa-com.de
    Fix pagination and code cleanup (c) 2013-05-21 by web28 - www.rpa-com.de
    Fix html email and error handling  (c) 2011-07-07 by web28 - www.rpa-com.de
 
@@ -87,6 +88,9 @@
     }
     if ($coupon_result['coupon_type']=='P') {
       $coupon_amount = COUPON_INFO . number_format($coupon_result['coupon_amount'], 2) . '% ';
+    }
+    if ($coupon_result['coupon_type']=='T') {
+      $coupon_amount = COUPON_INFO . COUPON_FREE_SHIPPING . ' | '. number_format($coupon_result['coupon_amount'], 2) . '% ';
     }
     if ($coupon_result['coupon_minimum_order']>0) {
       $coupon_amount .= COUPON_MINORDER_INFO . $xtPrice->xtcFormat($coupon_result['coupon_minimum_order'], true) . ' ';
@@ -218,6 +222,10 @@
         $coupon_type = "F";
         if (substr($_POST['coupon_amount'], -1) == '%') $coupon_type='P';
         if ($_POST['coupon_free_ship']) $coupon_type = 'S';
+        
+        if ($_POST['coupon_free_ship'] && substr($_POST['coupon_amount'], -1) == '%') {
+          $coupon_type = 'T';
+        }
 
         $_POST['coupon_amount'] = preg_replace('/[^0-9.]/', '', $_POST['coupon_amount']); //DokuMan - 2010-11-13 - allow numbers only
 
@@ -642,8 +650,12 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
       $coupon_amount .= '%';
     }
     if ($coupon['coupon_type']=='S') {
-      $coupon_free_ship .= true;
+      $coupon_free_ship = true;
     }
+    if ($coupon['coupon_type']=='T') {
+      $coupon_amount .= '%';
+      $coupon_free_ship = true;
+    } 
     $coupon_min_order = $coupon['coupon_minimum_order'];
     $coupon_code = $coupon['coupon_code'];
     $coupon_uses_coupon = $coupon['uses_per_coupon'];
@@ -806,6 +818,15 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
         <table class="tableCenter">
           <tr>
             <td class="boxCenterLeft">
+              <?php
+              if ($_GET['action'] == '' && !defined('MODULE_ORDER_TOTAL_COUPON_STATUS')) {
+                ?>                
+                <div class="main important_info">
+                  <?php echo TEXT_OT_COUPON_STATUS_INFO;?>
+                </div>
+                <?php
+              }
+              ?>           
               <table class="tableBoxCenter collapse">
                 <tr class="dataTableHeadingRow">
                   <td class="dataTableHeadingContent" style="width:25px"><?php echo COUPON_ID; ?></td>
@@ -838,9 +859,11 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                   $coupon_description_query = xtc_db_query("SELECT coupon_name FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE coupon_id = '" . (int)$cc_list['coupon_id'] . "' AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
                   $coupon_desc = xtc_db_fetch_array($coupon_description_query);
                   if ($cc_list['coupon_type'] == 'P') {
-                    $coupon_amount = $cc_list['coupon_amount'] . '%';
+                    $coupon_amount = number_format($cc_list['coupon_amount'], 2) . '%';
                   } elseif ($cc_list['coupon_type'] == 'S') {
-                    $coupon_amount = TEXT_FREE_SHIPPING;
+                    $coupon_amount = (($cc_list['coupon_amount'] > 0) ? $currencies->format($cc_list['coupon_amount']) . ' + ' : '') . TEXT_FREE_SHIPPING;
+                  } elseif ($cc_list['coupon_type'] == 'T') {
+                    $coupon_amount = number_format($cc_list['coupon_amount'], 2) . '%' . ' + '. TEXT_FREE_SHIPPING;
                   } else {
                     $coupon_amount = $currencies->format($cc_list['coupon_amount']);
                   }
@@ -895,10 +918,12 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                   $heading[] = array('text'=>'<b>['.$cInfo->coupon_id.']  '.$cInfo->coupon_code.'</b>');
                   $amount = $cInfo->coupon_amount;
                   if ($cInfo->coupon_type == 'P') {
-                    $amount .= '%';
+                    $amount = number_format($amount, 2).'%';
+                  } elseif ($cInfo->coupon_type == 'T') {
+                    $amount = number_format($amount, 2).'% + ' . TEXT_FREE_SHIPPING;
                     // BOF - web28 - 2010-07-22 - FIX coupon_amount
                   } elseif ($cInfo->coupon_type == 'S') {
-                    $amount = TEXT_FREE_SHIPPING;
+                    $amount = ($amount > 0 ? $currencies->format($amount) . ' + ' : '') . TEXT_FREE_SHIPPING;
                     // EOF - web28 - 2010-07-22 - FIX coupon_amount
                   } else {
                     $amount = $currencies->format($amount);

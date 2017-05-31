@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: coupon_admin.php 2094 2011-08-15 14:56:49Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -87,7 +87,7 @@ define('COUPON_AMOUNT_HELP', 'Tragen Sie hier den Rabatt f&uuml;r diesen Coupon 
 define('COUPON_CODE_HELP', 'Hier k&ouml;nnen Sie einen eigenen Code eintragen (max. 16 Zeichen). Lassen Sie das Feld frei, dann wird dieser Code automatisch generiert.');
 define('COUPON_STARTDATE_HELP', 'Das Datum ab dem der Coupon g&uuml;ltig ist.<br>');
 define('COUPON_FINISHDATE_HELP', 'Das Datum an dem der Coupon abl&auml;uft.<br>');
-define('COUPON_FREE_SHIP_HELP', 'Coupon f&uuml;r eine versandkostenfreie Lieferung. <strong>Achtung:</strong> Der Coupon Wert wird <b>nicht</b> ber&uuml;cksichtigt! Der Mindestbestellwert bleibt g&uuml;ltig.');
+define('COUPON_FREE_SHIP_HELP', 'Coupon f&uuml;r eine versandkostenfreie Lieferung. <strong>Achtung:</strong> Der Mindestbestellwert bleibt g&uuml;ltig.');
 define('COUPON_DESC_HELP', 'Beschreibung des Coupons f&uuml;r den Kunden');
 define('COUPON_MIN_ORDER_HELP', 'Mindestbestellwert ab dem dieser Coupon g&uuml;ltig ist');
 define('COUPON_USES_COUPON_HELP', 'Tragen Sie hier ein wie oft dieser Coupon eingel&ouml;st werden darf. Lassen Sie das Feld frei, dann ist die Benutzung unlimitiert.');
@@ -125,4 +125,6 @@ define('ERROR_NO_COUPON_AMOUNT', 'FEHLER: Kein Couponwert');
 define('COUPON_DATE_START_TT', 'Beginnt um 00:00:00 Uhr');
 define('COUPON_DATE_END_TT', 'Endet um Mitternacht (23:59:59 Uhr)');
 define('ERROR_COUPON_DATE', 'FEHLER: Das Enddatum ist &auml;lter als das Startdatum');
+
+define('TEXT_OT_COUPON_STATUS_INFO', 'Das Coupon Modul (ot_coupon) muss noch installiert werden (Module -> <a href="'.xtc_href_link('modules.php','set=ordertotal').'">Zusammenfassung</a>)');
 ?>

@@ -25,7 +25,8 @@
 
    Released under the GNU General Public License
 
-    BUGFIXES & MODIFIED rev1.3.10 by web28 - www.rpa-com.de
+    BUGFIXES & MODIFIED rev1.3.11 by web28 - www.rpa-com.de
+   1.3.11 add new coupon_type = 'T' : coupon_amount percent and shipping_free
    1.3.10 fix tax calculation
    1.3.9 fix linked products at categories restrictions// fix tax calculation at restrictions
    1.3.8 add minimum order message // change get_order_total() // remove get_product_price()
@@ -202,10 +203,17 @@ class ot_coupon {
           //$c_deduct = $order->info['shipping_cost'];
           $c_deduct = $this->get_shipping_cost();
         }
-
+        
+        $flag_s = false;
         if ($coupon_array['coupon_type']=='S' && $coupon_array['coupon_amount'] > 0 ) {
           $c_deduct = $c_deduct + $xtPrice->xtcCalculateCurr($coupon_array['coupon_amount']); //FIX - web28 - 2012-04-24 - calculate currencies
           $flag_s = true;
+        }
+        
+        $flag_t = false;
+        if ($coupon_array['coupon_type'] == 'T') {
+          $coupon_array['coupon_type'] = 'P'; //Berechung auf Prozent setzen
+          $flag_t = true;
         }
 
         //echo 'VK'. $c_deduct;
@@ -311,6 +319,10 @@ class ot_coupon {
 
       }
 
+      if ($flag_t) {
+        $od_amount += $this->get_shipping_cost();
+      }
+      
       if ($flag_s) {
         $amount += $this->get_shipping_cost(); //Wenn Versandkostenfrei: Versandkosten und Gutscheinwert addieren
       }

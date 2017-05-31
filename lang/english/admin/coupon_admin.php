@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: coupon_admin.php 1502 2010-11-16 18:13:52Z dokuman $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -87,7 +87,7 @@ define('COUPON_AMOUNT_HELP', 'The value of the discount for the coupon, either f
 define('COUPON_CODE_HELP', 'You can enter your own code here, or leave blank for an auto generated one.');
 define('COUPON_STARTDATE_HELP', 'The date the coupon will be valid from.<br>');
 define('COUPON_FINISHDATE_HELP', 'The date the coupon expires.<br>');
-define('COUPON_FREE_SHIP_HELP', 'The coupon gives free shipping on an order. Note. This overrides the coupon_amount figure but respects the minimum order value');
+define('COUPON_FREE_SHIP_HELP', 'The coupon gives free shipping on an order. Note. This respects the minimum order value');
 define('COUPON_DESC_HELP', 'A description of the coupon for the customer');
 define('COUPON_MIN_ORDER_HELP', 'The minimum order value before the coupon is valid');
 define('COUPON_USES_COUPON_HELP', 'The maximum number of times the coupon can be used, leave blank if you want no limit.');
@@ -127,4 +127,6 @@ define('ERROR_NO_COUPON_AMOUNT', 'ERROR: No Coupon Amount');
 define('COUPON_DATE_START_TT', 'Starting at 00:00:00');
 define('COUPON_DATE_END_TT', 'Ending at midnight (23:59:59)');
 define('ERROR_COUPON_DATE', 'ERROR: Expiry date is older than start date');
+
+define('TEXT_OT_COUPON_STATUS_INFO', 'The coupon module (ot_coupon) still needs to be installed (Module -> <a href="'.xtc_href_link('modules.php','set=ordertotal').'">Order Total</a>)');
 ?>
