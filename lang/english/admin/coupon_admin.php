@@ -87,7 +87,7 @@ define('COUPON_AMOUNT_HELP', 'The value of the discount for the coupon, either f
 define('COUPON_CODE_HELP', 'You can enter your own code here, or leave blank for an auto generated one.');
 define('COUPON_STARTDATE_HELP', 'The date the coupon will be valid from.<br>');
 define('COUPON_FINISHDATE_HELP', 'The date the coupon expires.<br>');
-define('COUPON_FREE_SHIP_HELP', 'The coupon gives free shipping on an order. Note. This respects the minimum order value');
+define('COUPON_FREE_SHIP_HELP', 'The coupon gives free shipping on an order.');
 define('COUPON_DESC_HELP', 'A description of the coupon for the customer');
 define('COUPON_MIN_ORDER_HELP', 'The minimum order value before the coupon is valid');
 define('COUPON_USES_COUPON_HELP', 'The maximum number of times the coupon can be used, leave blank if you want no limit.');

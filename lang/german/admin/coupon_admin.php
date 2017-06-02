@@ -87,7 +87,7 @@ define('COUPON_AMOUNT_HELP', 'Tragen Sie hier den Rabatt f&uuml;r diesen Coupon 
 define('COUPON_CODE_HELP', 'Hier k&ouml;nnen Sie einen eigenen Code eintragen (max. 16 Zeichen). Lassen Sie das Feld frei, dann wird dieser Code automatisch generiert.');
 define('COUPON_STARTDATE_HELP', 'Das Datum ab dem der Coupon g&uuml;ltig ist.<br>');
 define('COUPON_FINISHDATE_HELP', 'Das Datum an dem der Coupon abl&auml;uft.<br>');
-define('COUPON_FREE_SHIP_HELP', 'Coupon f&uuml;r eine versandkostenfreie Lieferung. <strong>Achtung:</strong> Der Mindestbestellwert bleibt g&uuml;ltig.');
+define('COUPON_FREE_SHIP_HELP', 'Coupon f&uuml;r eine versandkostenfreie Lieferung.');
 define('COUPON_DESC_HELP', 'Beschreibung des Coupons f&uuml;r den Kunden');
 define('COUPON_MIN_ORDER_HELP', 'Mindestbestellwert ab dem dieser Coupon g&uuml;ltig ist');
 define('COUPON_USES_COUPON_HELP', 'Tragen Sie hier ein wie oft dieser Coupon eingel&ouml;st werden darf. Lassen Sie das Feld frei, dann ist die Benutzung unlimitiert.');
@@ -108,7 +108,7 @@ define('TEXT_VIEW', 'Listenansicht');
 define('TEXT_VIEW_SHORT', 'Anzeige');
 //BOF - web28 - 2011-04-13 - ADD Coupon message infos
 define('COUPON_MINORDER_INFO', "\nMindestbestellwert: ");
-define('COUPON_RESTRICT_INFO', "\nDieser Coupon ist nur für bestimmte Artikel g&uuml;ltig!");
+define('COUPON_RESTRICT_INFO', "\nDieser Coupon ist nur f&uuml;r bestimmte Artikel g&uuml;ltig!");
 define('COUPON_INFO', "\nCouponwert: ");
 define('COUPON_FREE_SHIPPING', 'Versandkostenfrei');
 define('COUPON_LINK_TEXT', '\n\nDetails');
