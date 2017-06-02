@@ -7,7 +7,7 @@
   <tr>
     <td>
       <font size="2" face="Verdana, Arial, Helvetica, sans-serif">
-        <strong>{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},</strong><br />
+        <strong>{if $GENDER == $smarty.const.MALE}Dear Mr.{elseif $GENDER == $smarty.const.FEMALE}Dear Ms./Mrs.{else}Hello{/if} {$NAME},</strong><br />
         <br />
         The status of your order {if $ORDER_NR}No. {$ORDER_NR}{/if} {if $ORDER_DATE}from {$ORDER_DATE}{/if} has been changed.<br /><br />
         {if $ORDER_LINK}Link to order:
