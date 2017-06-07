@@ -26,7 +26,7 @@ CREATE TABLE `personal_offers_by_customers_status_0` (
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
   PRIMARY KEY (`price_id`)
-) ENGINE=MyISAM;
+);
 
 -- 
 -- Tabellenstruktur für Tabelle `personal_offers_by_customers_status_1`
@@ -39,7 +39,7 @@ CREATE TABLE `personal_offers_by_customers_status_1` (
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
   PRIMARY KEY (`price_id`)
-) ENGINE=MyISAM;
+);
 
 -- 
 -- Tabellenstruktur für Tabelle `personal_offers_by_customers_status_2`
@@ -52,7 +52,7 @@ CREATE TABLE `personal_offers_by_customers_status_2` (
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
   PRIMARY KEY (`price_id`)
-) ENGINE=MyISAM;
+);
 
 -- 
 -- Tabellenstruktur für Tabelle `personal_offers_by_customers_status_3`
@@ -65,7 +65,7 @@ CREATE TABLE `personal_offers_by_customers_status_3` (
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
   PRIMARY KEY (`price_id`)
-) ENGINE=MyISAM;
+);
 
 -- 
 -- Tabellenstruktur für Tabelle `personal_offers_by_customers_status_0`
@@ -78,5 +78,5 @@ CREATE TABLE `personal_offers_by_customers_status_4` (
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
   PRIMARY KEY (`price_id`)
-) ENGINE=MyISAM ;
+);
 

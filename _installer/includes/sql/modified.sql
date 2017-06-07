@@ -49,7 +49,7 @@ CREATE TABLE address_book (
   address_last_modified DATETIME DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (address_book_id),
   KEY idx_customers_id (customers_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS address_format;
 CREATE TABLE address_format (
@@ -57,7 +57,7 @@ CREATE TABLE address_format (
   address_format VARCHAR(128) NOT NULL,
   address_summary VARCHAR(48) NOT NULL,
   PRIMARY KEY (address_format_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS admin_access;
 CREATE TABLE admin_access (
@@ -147,7 +147,7 @@ CREATE TABLE admin_access (
   trustedshops INT(1) NOT NULL DEFAULT 0,
   blacklist_logs INT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (customers_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS banktransfer;
 CREATE TABLE banktransfer (
@@ -163,7 +163,7 @@ CREATE TABLE banktransfer (
   banktransfer_fax CHAR(2) DEFAULT NULL,
   banktransfer_owner_email VARCHAR(255) DEFAULT NULL,
   KEY idx_orders_id (orders_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS banktransfer_blz;
 CREATE TABLE banktransfer_blz (
@@ -171,7 +171,7 @@ CREATE TABLE banktransfer_blz (
   bankname varchar(255) NOT NULL DEFAULT '',
   prz char(2) NOT NULL DEFAULT '',
   PRIMARY KEY (blz)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS banners;
 CREATE TABLE banners (
@@ -189,7 +189,7 @@ CREATE TABLE banners (
   date_status_change DATETIME DEFAULT NULL,
   status INT(1) DEFAULT 1 NOT NULL,
   PRIMARY KEY (banners_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS banners_history;
 CREATE TABLE banners_history (
@@ -200,7 +200,7 @@ CREATE TABLE banners_history (
   banners_history_date DATETIME NOT NULL,
   PRIMARY KEY (banners_history_id),
   KEY idx_banners_id (banners_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS campaigns;
 CREATE TABLE campaigns (
@@ -213,7 +213,7 @@ CREATE TABLE campaigns (
   PRIMARY KEY (campaigns_id),
   KEY idx_campaigns_name (campaigns_name),
   UNIQUE idx_campaigns_refID (campaigns_refID)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS campaigns_ip;
 CREATE TABLE campaigns_ip (
@@ -221,7 +221,7 @@ CREATE TABLE campaigns_ip (
   time DATETIME NOT NULL,
   campaign VARCHAR(32) NOT NULL,
   KEY idx_campaign (campaign)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS carriers;
 CREATE TABLE carriers (
@@ -232,7 +232,7 @@ CREATE TABLE carriers (
   carrier_date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   carrier_last_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (carrier_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
@@ -254,7 +254,7 @@ CREATE TABLE categories (
   last_modified DATETIME,
   PRIMARY KEY (categories_id),
   KEY idx_categories_parent_id (parent_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS categories_description;
 CREATE TABLE categories_description (
@@ -268,14 +268,14 @@ CREATE TABLE categories_description (
   categories_meta_keywords VARCHAR(255) NOT NULL,
   PRIMARY KEY (categories_id, language_id),
   KEY idx_categories_name (categories_name)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS cm_file_flags;
 CREATE TABLE cm_file_flags (
   file_flag INT(11) NOT NULL,
   file_flag_name VARCHAR(32) NOT NULL,
   PRIMARY KEY (file_flag)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS configuration;
 CREATE TABLE configuration (
@@ -291,7 +291,7 @@ CREATE TABLE configuration (
   PRIMARY KEY (configuration_id),
   KEY idx_configuration_group_id (configuration_group_id),
   UNIQUE idx_configuration_key (configuration_key)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS configuration_group;
 CREATE TABLE configuration_group (
@@ -301,7 +301,7 @@ CREATE TABLE configuration_group (
   sort_order INT(5) NULL,
   visible INT(1) DEFAULT 1 NULL,
   PRIMARY KEY (configuration_group_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS content_manager;
 CREATE TABLE content_manager (
@@ -329,7 +329,7 @@ CREATE TABLE content_manager (
   last_modified DATETIME NULL,
   PRIMARY KEY (content_id),
   KEY idx_content_group (content_group)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS countries;
 CREATE TABLE countries (
@@ -344,7 +344,7 @@ CREATE TABLE countries (
   KEY idx_countries_name (countries_name),
   UNIQUE idx_countries_iso_code_2 (countries_iso_code_2),
   UNIQUE idx_countries_iso_code_3 (countries_iso_code_3)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS coupon_email_track;
 CREATE TABLE coupon_email_track (
@@ -357,14 +357,14 @@ CREATE TABLE coupon_email_track (
   date_sent DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (unique_id),
   UNIQUE idx_coupon_id (coupon_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS coupon_gv_customer;
 CREATE TABLE coupon_gv_customer (
   customer_id INT(5) NOT NULL DEFAULT 0,
   amount DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
   PRIMARY KEY (customer_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS coupon_gv_queue;
 CREATE TABLE coupon_gv_queue (
@@ -377,7 +377,7 @@ CREATE TABLE coupon_gv_queue (
   release_flag CHAR(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (unique_id),
   KEY idx_customer_id (customer_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS coupon_redeem_track;
 CREATE TABLE coupon_redeem_track (
@@ -388,7 +388,7 @@ CREATE TABLE coupon_redeem_track (
   redeem_ip VARCHAR(50) NOT NULL DEFAULT '',
   order_id INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (unique_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS coupons;
 CREATE TABLE coupons (
@@ -409,7 +409,7 @@ CREATE TABLE coupons (
   date_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (coupon_id),
   UNIQUE idx_coupon_code (coupon_code)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS coupons_description;
 CREATE TABLE coupons_description (
@@ -418,7 +418,7 @@ CREATE TABLE coupons_description (
   coupon_name VARCHAR(32) NOT NULL DEFAULT '',
   coupon_description text,
   PRIMARY KEY (coupon_id, language_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS currencies;
 CREATE TABLE currencies (
@@ -435,7 +435,7 @@ CREATE TABLE currencies (
   status INT(1) DEFAULT 1 NOT NULL,
   PRIMARY KEY (currencies_id),
   UNIQUE KEY idx_code (code)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS customers;
 CREATE TABLE customers (
@@ -468,7 +468,7 @@ CREATE TABLE customers (
   customers_last_modified DATETIME DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (customers_id),
   KEY idx_customers_email_address (customers_email_address)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS customers_basket;
 CREATE TABLE customers_basket (
@@ -480,7 +480,7 @@ CREATE TABLE customers_basket (
   customers_basket_date_added DATETIME,
   PRIMARY KEY (customers_basket_id),
   KEY idx_customers_id (customers_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS customers_basket_attributes;
 CREATE TABLE customers_basket_attributes (
@@ -491,7 +491,7 @@ CREATE TABLE customers_basket_attributes (
   products_options_value_id INT NOT NULL,
   PRIMARY KEY (customers_basket_attributes_id),
   KEY idx_customers_id (customers_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS customers_info;
 CREATE TABLE customers_info (
@@ -502,7 +502,7 @@ CREATE TABLE customers_info (
   customers_info_date_account_last_modified DATETIME,
   global_product_notifications INT(1) DEFAULT 0,
   PRIMARY KEY (customers_info_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS customers_ip;
 CREATE TABLE customers_ip (
@@ -515,7 +515,7 @@ CREATE TABLE customers_ip (
   customers_referer_url VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (customers_ip_id),
   KEY idx_customers_id (customers_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS customers_login;
 CREATE TABLE customers_login (
@@ -524,7 +524,7 @@ CREATE TABLE customers_login (
   customers_login_tries int(11) NOT NULL,
   KEY idx_customers_ip (customers_ip),
   KEY idx_customers_email_address (customers_email_address)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS customers_memo;
 CREATE TABLE customers_memo (
@@ -535,7 +535,7 @@ CREATE TABLE customers_memo (
   memo_text TEXT NOT NULL,
   poster_id INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (memo_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS customers_status;
 CREATE TABLE customers_status (
@@ -565,7 +565,7 @@ CREATE TABLE customers_status (
   customers_status_specials INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (customers_status_id, language_id),
   UNIQUE idx_customers_status_name (customers_status_name, language_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS customers_status_history;
 CREATE TABLE customers_status_history (
@@ -576,14 +576,14 @@ CREATE TABLE customers_status_history (
   date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   customer_notified INT(1) DEFAULT 0,
   PRIMARY KEY (customers_status_history_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS database_version;
 CREATE TABLE database_version (
   id INT(11) NOT NULL AUTO_INCREMENT,
   version VARCHAR(32) NOT NULL,
   PRIMARY KEY (id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS geo_zones;
 CREATE TABLE geo_zones (
@@ -595,7 +595,7 @@ CREATE TABLE geo_zones (
   date_added DATETIME NOT NULL,
   PRIMARY KEY (geo_zone_id),
   UNIQUE idx_geo_zone_name (geo_zone_name)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS languages;
 CREATE TABLE languages (
@@ -610,7 +610,7 @@ CREATE TABLE languages (
   status_admin INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (languages_id),
   UNIQUE idx_code (code)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS manufacturers;
 CREATE TABLE manufacturers (
@@ -621,7 +621,7 @@ CREATE TABLE manufacturers (
   last_modified DATETIME NULL,
   PRIMARY KEY (manufacturers_id),
   KEY idx_manufacturers_name (manufacturers_name)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS manufacturers_info;
 CREATE TABLE manufacturers_info (
@@ -635,7 +635,7 @@ CREATE TABLE manufacturers_info (
   url_clicked INT(5) NOT NULL DEFAULT 0,
   date_last_click DATETIME NULL,
   PRIMARY KEY (manufacturers_id, languages_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS module_backup;
 CREATE TABLE module_backup (
@@ -645,7 +645,7 @@ CREATE TABLE module_backup (
   last_modified datetime DEFAULT NULL,
   PRIMARY KEY (configuration_id),
   UNIQUE idx_configuration_key (configuration_key)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS newsfeed;
 CREATE TABLE newsfeed (
@@ -656,7 +656,7 @@ CREATE TABLE newsfeed (
   news_date INT( 11 ) NULL,
   PRIMARY KEY (news_id),
   UNIQUE idx_news_link (news_link)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS module_newsletter;
 CREATE TABLE module_newsletter (
@@ -668,7 +668,7 @@ CREATE TABLE module_newsletter (
   status INT(1) NOT NULL DEFAULT 0,
   body TEXT NOT NULL,
   PRIMARY KEY (newsletter_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS newsletter_recipients;
 CREATE TABLE newsletter_recipients (
@@ -687,7 +687,7 @@ CREATE TABLE newsletter_recipients (
   PRIMARY KEY (mail_id),
   KEY idx_mail_key (mail_key),
   UNIQUE idx_customers_email_address (customers_email_address)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS newsletters;
 CREATE TABLE newsletters (
@@ -700,7 +700,7 @@ CREATE TABLE newsletters (
   status INT(1),
   locked INT(1) DEFAULT 0,
   PRIMARY KEY (newsletters_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS newsletters_history;
 CREATE TABLE newsletters_history (
@@ -708,7 +708,7 @@ CREATE TABLE newsletters_history (
   news_hist_cs INT(11) NOT NULL DEFAULT 0,
   news_hist_cs_date_sent date DEFAULT NULL,
   PRIMARY KEY (news_hist_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS orders;
 CREATE TABLE orders (
@@ -784,7 +784,7 @@ CREATE TABLE orders (
   PRIMARY KEY (orders_id),
   KEY idx_customers_id (customers_id),
   KEY idx_orders_status (orders_status)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS orders_products;
 CREATE TABLE orders_products (
@@ -807,7 +807,7 @@ CREATE TABLE orders_products (
   PRIMARY KEY (orders_products_id),
   KEY idx_orders_id (orders_id),
   KEY idx_products_id (products_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS orders_products_attributes;
 CREATE TABLE orders_products_attributes (
@@ -827,7 +827,7 @@ CREATE TABLE orders_products_attributes (
   PRIMARY KEY (orders_products_attributes_id),
   KEY idx_orders_id (orders_id),
   KEY idx_orders_products_id (orders_products_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS orders_products_download;
 CREATE TABLE orders_products_download (
@@ -841,7 +841,7 @@ CREATE TABLE orders_products_download (
   PRIMARY KEY (orders_products_download_id),
   KEY idx_orders_id (orders_id),
   KEY idx_orders_products_id (orders_products_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS orders_recalculate;
 CREATE TABLE orders_recalculate (
@@ -853,7 +853,7 @@ CREATE TABLE orders_recalculate (
   tax_rate DECIMAL(7,4) NOT NULL DEFAULT '0.0000',
   class VARCHAR(32) NOT NULL DEFAULT '',
   PRIMARY KEY (orders_recalculate_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS orders_status;
 CREATE TABLE orders_status (
@@ -863,7 +863,7 @@ CREATE TABLE orders_status (
   sort_order INT(11) DEFAULT 0 NOT NULL,
   PRIMARY KEY (orders_status_id, language_id),
   KEY idx_orders_status_name (orders_status_name)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS orders_status_history;
 CREATE TABLE orders_status_history (
@@ -875,7 +875,7 @@ CREATE TABLE orders_status_history (
   comments text,
   comments_sent INT(1) DEFAULT 0,
   PRIMARY KEY (orders_status_history_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS orders_total;
 CREATE TABLE orders_total (
@@ -888,7 +888,7 @@ CREATE TABLE orders_total (
   sort_order INT NOT NULL,
   PRIMARY KEY (orders_total_id),
   KEY idx_orders_id (orders_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS orders_tracking;
 CREATE TABLE orders_tracking (
@@ -899,7 +899,7 @@ CREATE TABLE orders_tracking (
   date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (tracking_id),
   KEY idx_orders_id (orders_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS payment_moneybookers;
 CREATE TABLE payment_moneybookers (
@@ -911,7 +911,7 @@ CREATE TABLE payment_moneybookers (
   mb_STATUS TINYINT(1) NOT NULL DEFAULT 0,
   mb_ORDERID INT(11) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (mb_TRID)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products;
 CREATE TABLE products (
@@ -951,7 +951,7 @@ CREATE TABLE products (
   KEY idx_products_model (products_model),
   KEY idx_products_status (products_status),
   KEY idx_manufacturers_id (manufacturers_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_attributes;
 CREATE TABLE products_attributes (
@@ -972,7 +972,7 @@ CREATE TABLE products_attributes (
   PRIMARY KEY (products_attributes_id),
   KEY idx_products_id (products_id),
   KEY idx_options (options_id, options_values_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_attributes_download;
 CREATE TABLE products_attributes_download (
@@ -981,7 +981,7 @@ CREATE TABLE products_attributes_download (
   products_attributes_maxdays INT(2) DEFAULT 0,
   products_attributes_maxcount INT(2) DEFAULT 0,
   PRIMARY KEY (products_attributes_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_content;
 CREATE TABLE products_content (
@@ -996,7 +996,7 @@ CREATE TABLE products_content (
   file_comment TEXT NOT NULL,
   PRIMARY KEY (content_id),
   KEY idx_products_id (products_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_description;
 CREATE TABLE products_description (
@@ -1014,7 +1014,7 @@ CREATE TABLE products_description (
   products_order_description text,
   PRIMARY KEY (products_id, language_id),
   KEY idx_products_name (products_name)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_graduated_prices;
 CREATE TABLE products_graduated_prices (
@@ -1022,7 +1022,7 @@ CREATE TABLE products_graduated_prices (
   quantity INT(11) NOT NULL DEFAULT 0,
   unitprice DECIMAL(15,4) NOT NULL DEFAULT 0.0000,
   KEY idx_products_id (products_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_images;
 CREATE TABLE products_images (
@@ -1032,7 +1032,7 @@ CREATE TABLE products_images (
   image_name VARCHAR(254) NOT NULL,
   PRIMARY KEY (image_id),
   KEY idx_products_id (products_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_notifications;
 CREATE TABLE products_notifications (
@@ -1040,7 +1040,7 @@ CREATE TABLE products_notifications (
   customers_id INT NOT NULL,
   date_added DATETIME NOT NULL,
   PRIMARY KEY (products_id, customers_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_options;
 CREATE TABLE products_options (
@@ -1049,7 +1049,7 @@ CREATE TABLE products_options (
   products_options_name VARCHAR(255) NOT NULL DEFAULT '',
   products_options_sortorder INT(11) NOT NULL,
   PRIMARY KEY (products_options_id, language_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_options_values;
 CREATE TABLE products_options_values (
@@ -1057,7 +1057,7 @@ CREATE TABLE products_options_values (
   language_id INT(11) NOT NULL,
   products_options_values_name VARCHAR(255) NOT NULL DEFAULT '',
   PRIMARY KEY (products_options_values_id, language_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_options_values_to_products_options;
 CREATE TABLE products_options_values_to_products_options (
@@ -1066,7 +1066,7 @@ CREATE TABLE products_options_values_to_products_options (
   products_options_values_id INT NOT NULL,
   PRIMARY KEY (products_options_values_to_products_options_id),
   KEY idx_products_options_id (products_options_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_tags;
 CREATE TABLE products_tags (
@@ -1079,7 +1079,7 @@ CREATE TABLE products_tags (
   KEY idx_products_options_id (products_options_id),
   KEY idx_options_id (options_id),
   KEY idx_values_id (values_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_tags_options;
 CREATE TABLE products_tags_options (
@@ -1097,7 +1097,7 @@ CREATE TABLE products_tags_options (
   PRIMARY KEY (options_id,languages_id),
   KEY idx_products_options_id (products_options_id),
   KEY idx_filter (filter)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_tags_values;
 CREATE TABLE products_tags_values (
@@ -1118,7 +1118,7 @@ CREATE TABLE products_tags_values (
   KEY idx_options_id (options_id),
   KEY idx_products_options_values_id (products_options_values_id),
   KEY idx_filter (filter)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_to_categories;
 CREATE TABLE products_to_categories (
@@ -1126,7 +1126,7 @@ CREATE TABLE products_to_categories (
   categories_id INT NOT NULL,
   PRIMARY KEY (products_id,categories_id),
   KEY idx_categories_id (categories_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_vpe;
 CREATE TABLE products_vpe (
@@ -1134,7 +1134,7 @@ CREATE TABLE products_vpe (
   language_id INT(11) NOT NULL,
   products_vpe_name VARCHAR(32) NOT NULL DEFAULT '',
   PRIMARY KEY (products_vpe_id, language_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_xsell;
 CREATE TABLE products_xsell (
@@ -1144,7 +1144,7 @@ CREATE TABLE products_xsell (
   xsell_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
   sort_order INT(10) UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY (ID)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_xsell_grp_name;
 CREATE TABLE products_xsell_grp_name (
@@ -1153,7 +1153,7 @@ CREATE TABLE products_xsell_grp_name (
   language_id INT(11) NOT NULL,
   groupname VARCHAR(255) NOT NULL DEFAULT '',
   PRIMARY KEY (products_xsell_grp_name_id, language_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS reviews;
 CREATE TABLE reviews (
@@ -1168,7 +1168,7 @@ CREATE TABLE reviews (
   reviews_status INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (reviews_id),
   KEY idx_products_id (products_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS reviews_description;
 CREATE TABLE reviews_description (
@@ -1176,7 +1176,7 @@ CREATE TABLE reviews_description (
   languages_id INT NOT NULL,
   reviews_text text NOT NULL,
   PRIMARY KEY (reviews_id, languages_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
@@ -1186,7 +1186,7 @@ CREATE TABLE sessions (
   flag VARCHAR( 5 ) NULL DEFAULT NULL,
   PRIMARY KEY (sesskey),
   KEY idx_expiry (expiry)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS shipping_status;
 CREATE TABLE shipping_status (
@@ -1197,7 +1197,7 @@ CREATE TABLE shipping_status (
   sort_order INT(11) DEFAULT 0 NOT NULL,
   PRIMARY KEY (shipping_status_id, language_id),
   KEY idx_shipping_status_name (shipping_status_name)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS shop_configuration;
 CREATE TABLE shop_configuration (
@@ -1206,7 +1206,7 @@ CREATE TABLE shop_configuration (
   configuration_value TEXT NOT NULL,
   PRIMARY KEY (configuration_id),
   KEY idx_configuration_key (configuration_key)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS specials;
 CREATE TABLE specials (
@@ -1223,7 +1223,7 @@ CREATE TABLE specials (
   PRIMARY KEY (specials_id),
   KEY idx_products_id (products_id),
   KEY idx_status (status)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS tax_class;
 CREATE TABLE tax_class (
@@ -1233,7 +1233,7 @@ CREATE TABLE tax_class (
   last_modified DATETIME NULL,
   date_added DATETIME NOT NULL,
   PRIMARY KEY (tax_class_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS tax_rates;
 CREATE TABLE tax_rates (
@@ -1247,7 +1247,7 @@ CREATE TABLE tax_rates (
   date_added DATETIME NOT NULL,
   PRIMARY KEY (tax_rates_id),
   KEY idx_tax_zone_id (tax_zone_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS whos_online;
 CREATE TABLE whos_online (
@@ -1261,7 +1261,7 @@ CREATE TABLE whos_online (
   http_referer VARCHAR(255) NOT NULL,
   PRIMARY KEY (session_id),
   KEY idx_time_last_click (time_last_click)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS zones;
 CREATE TABLE zones (
@@ -1271,7 +1271,7 @@ CREATE TABLE zones (
   zone_name VARCHAR(64) NOT NULL,
   PRIMARY KEY (zone_id),
   UNIQUE idx_country_code (zone_country_id, zone_code)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS zones_to_geo_zones;
 CREATE TABLE zones_to_geo_zones (
@@ -1283,7 +1283,7 @@ CREATE TABLE zones_to_geo_zones (
  date_added DATETIME NOT NULL,
  PRIMARY KEY (association_id),
  KEY idx_geo_zone_id (geo_zone_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS personal_offers_by_customers_status_0;
 DROP TABLE IF EXISTS personal_offers_by_customers_status_1;

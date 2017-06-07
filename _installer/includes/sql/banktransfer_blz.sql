@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------------------
-#  $Id: banktransfer_blz.sql 3024 2012-06-13 07:29:13Z dokuman $
+#  $Id$
 #
 #  modified eCommerce Shopsoftware
 #  http://www.modified-shop.org
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS banktransfer_blz (
   bankname varchar(255) NOT NULL DEFAULT '',
   prz char(2) NOT NULL DEFAULT '',
   PRIMARY KEY (blz)
-) ENGINE=MyISAM;
+);
 
 -- 
 -- Daten für Tabelle `banktransfer_blz`
