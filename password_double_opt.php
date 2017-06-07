@@ -54,45 +54,50 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && isset($_PO
                                           FROM ".TABLE_CUSTOMERS." 
                                          WHERE customers_email_address = '".xtc_db_input($_POST['email'])."' 
                                            AND account_type != '1'");
-  $check_customer = xtc_db_fetch_array($check_customer_query);
 
-  $vlcode = xtc_random_charcode(32);
-  $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$check_customer['customers_id'].'&key='.$vlcode, 'SSL');
-
-  // assign language to template for caching
-  $smarty->assign('language', $_SESSION['language']);
-  $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-  $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-
-  // assign vars
-  $smarty->assign('EMAIL', $check_customer['customers_email_address']);
-  $smarty->assign('LINK', $link);
-  $smarty->assign('VALID_REQUEST_TIME', (VALID_REQUEST_TIME / 60));
-  
-  // dont allow cache
-  $smarty->caching = false;
-  $smarty->assign('language', $_SESSION['language']);
-
-  // create mails
-  $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/new_password_mail.html');
-  $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/new_password_mail.txt');
 
   if (check_secure_form($_POST) === false) {
     if (!in_array('password', $use_captcha)) {
-      $messageStack->add('password_double_opt_in', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
+      $messageStack->add('password_double_opt_in', TEXT_CODE_ERROR);
     } else {
       $messageStack->add('password_double_opt_in', TEXT_EMAIL_ERROR);
     }
-  } elseif (!in_array('password', $use_captcha) || (isset($_POST['vvcode']) && isset($_SESSION['vvcode']) && strtoupper($_POST['vvcode']) == strtoupper($_SESSION['vvcode']))) {
-    if (!xtc_db_num_rows($check_customer_query)) {
+  } elseif (xtc_not_null($_POST['email']) && (!in_array('password', $use_captcha) || (isset($_POST['vvcode']) && isset($_SESSION['vvcode']) && strtoupper($_POST['vvcode']) == strtoupper($_SESSION['vvcode'])))) {
+    $check_customer_query = xtc_db_query("SELECT customers_email_address, 
+                                                 customers_id 
+                                            FROM ".TABLE_CUSTOMERS." 
+                                           WHERE customers_email_address = '".xtc_db_input($_POST['email'])."' 
+                                             AND account_type != '1'");
+
+    if (xtc_db_num_rows($check_customer_query) < 1) {
       $case = 'wrong_mail';
-      if (!in_array('password', $use_captcha)) {
-        $messageStack->add('password_double_opt_in', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
-      } else {
-        $messageStack->add('password_double_opt_in', TEXT_EMAIL_ERROR);
-      }
+      $messageStack->add('password_double_opt_in', sprintf(TEXT_LINK_MAIL_SENDED, (VALID_REQUEST_TIME / 60)));
     } else {
       $case = 'first_opt_in';
+      $messageStack->add('password_double_opt_in', sprintf(TEXT_LINK_MAIL_SENDED, (VALID_REQUEST_TIME / 60)));
+      $check_customer = xtc_db_fetch_array($check_customer_query);
+    
+      $vlcode = xtc_random_charcode(32);
+      $link = xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=verified&customers_id='.$check_customer['customers_id'].'&key='.$vlcode, 'SSL');
+
+      // assign language to template for caching
+      $smarty->assign('language', $_SESSION['language']);
+      $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+      $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+
+      // assign vars
+      $smarty->assign('EMAIL', $check_customer['customers_email_address']);
+      $smarty->assign('LINK', $link);
+      $smarty->assign('VALID_REQUEST_TIME', (VALID_REQUEST_TIME / 60));
+  
+      // dont allow cache
+      $smarty->caching = false;
+      $smarty->assign('language', $_SESSION['language']);
+
+      // create mails
+      $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/new_password_mail.html');
+      $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/new_password_mail.txt');
+      
       xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
                        SET password_request_key = '".xtc_db_input($vlcode)."',
                            password_request_time = '".date('Y-m-d H:i:00')."'
@@ -114,7 +119,11 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && isset($_PO
     }
   } else {
     $case = 'code_error';
-    $messageStack->add('password_double_opt_in', TEXT_CODE_ERROR);
+    if (!in_array('password', $use_captcha)) {
+      $messageStack->add('password_double_opt_in', TEXT_CODE_ERROR);
+    } else {
+      $messageStack->add('password_double_opt_in', TEXT_EMAIL_ERROR);
+    }
   }
 }
 
@@ -211,21 +220,12 @@ switch ($case) {
     $smarty->assign('language', $_SESSION['language']);
     $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/account_password.html');
     break;
-      
-  case 'first_opt_in' :
-    $smarty->assign('text_heading', HEADING_PASSWORD_FORGOTTEN);
-    $smarty->assign('info_message', sprintf(TEXT_LINK_MAIL_SENDED, (VALID_REQUEST_TIME / 60)));
     
-    // dont allow cache
-    $smarty->caching = 0;
-    $smarty->assign('language', $_SESSION['language']);
-    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/password_messages.html');
-    break;
-
   case 'code_error' :
   case 'wrong_mail' :
   case 'no_account' :
   case 'double_opt' :
+  case 'first_opt_in' :
     if (in_array('password', $use_captcha)) {
       $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL').'" alt="Captcha" />');
       $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));

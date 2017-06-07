@@ -117,7 +117,7 @@ define('ENTRY_LAST_NAME_TEXT', '*');
 define('ENTRY_DATE_OF_BIRTH_ERROR', 'Your date of birth needs to be entered in the following form DD/MM/YYYY (e.g. 21/05/1970) '); //Dokuman - 2009-06-03 - correct english date format
 define('ENTRY_DATE_OF_BIRTH_TEXT', '* (e.g. 21/05/1970)'); //Dokuman - 2009-06-03 - correct english date format
 define('ENTRY_EMAIL_ADDRESS_ERROR', 'Your e-mail address must consist of at least  ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters.');
-define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'The e-mail address you entered is incorrect - please correct it (We currently don\'t support german umlauts in e-mail addresses.)');
+define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'Your e-mail address entered is incorrect or already registered.');
 define('ENTRY_EMAIL_ERROR_NOT_MATCHING', 'Your entered e-mail addresses do not match.'); // Hetfield - 2009-08-15 - confirm e-mail at registration
 define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', 'The e-mail address you entered already exists in our database - please correct it');
 define('ENTRY_EMAIL_ADDRESS_TEXT', '*');
@@ -414,7 +414,7 @@ define('TEXT_CUSTOMER_GUEST','Guest');
 define('TEXT_LINK_MAIL_SENDED','Your new password request must be confirmed.<br />An e-mail with a confirmation link has been send out. Click the link in order to complete your request.<br/><br/>The confirmation link is %s minutes valid.');
 define('TEXT_PASSWORD_MAIL_SENDED','You will receive an e-mail with your new password within minutes.<br />Please change your password after your first login.');
 define('TEXT_CODE_ERROR','The security code you entered was not correct.<br />Please try again.');
-define('TEXT_EMAIL_ERROR','The e-mail address is not registered in our store.<br />Please try again.');
+define('TEXT_EMAIL_ERROR','The e-mail address you entered was not correct.<br />Please try again.');
 define('TEXT_NO_ACCOUNT','Your request for a new password is either invalid or timed out.<br />Please try again.');
 define('HEADING_PASSWORD_FORGOTTEN','Password renewal?');
 define('TEXT_PASSWORD_FORGOTTEN','Change your password in three easy steps.');
