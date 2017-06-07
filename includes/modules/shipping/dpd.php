@@ -196,7 +196,7 @@
 
       // Table structure for table `dpd_country_to_postal`
       xtc_db_query("DROP TABLE IF EXISTS dpd_country_to_postal");
-      xtc_db_query("CREATE TABLE dpd_country_to_postal (dpd_country char(2) NOT NULL default '', dpd_postal_reference int(11) NOT NULL default '0', PRIMARY KEY  (dpd_country)) ENGINE=MyISAM");
+      xtc_db_query("CREATE TABLE dpd_country_to_postal (dpd_country char(2) NOT NULL default '', dpd_postal_reference int(11) NOT NULL default '0', PRIMARY KEY  (dpd_country))");
 
       // Dumping data for table `dpd_country_to_postal`
       xtc_db_query("insert into dpd_country_to_postal (dpd_country, dpd_postal_reference) values ('AE', 26)");
@@ -354,7 +354,7 @@
 
       // Table structure for table `dpd_postal_to_weight`
       xtc_db_query("DROP TABLE IF EXISTS dpd_postal_to_weight");
-      xtc_db_query("CREATE TABLE dpd_postal_to_weight (dpd_postal_reference int(11) NOT NULL default '0', dpd_from_postal varchar(10) NOT NULL default '', dpd_to_postal varchar(10) NOT NULL default '', dpd_weight_ref char(3) NOT NULL default '', PRIMARY KEY  (dpd_postal_reference,dpd_from_postal)) ENGINE=MyISAM");
+      xtc_db_query("CREATE TABLE dpd_postal_to_weight (dpd_postal_reference int(11) NOT NULL default '0', dpd_from_postal varchar(10) NOT NULL default '', dpd_to_postal varchar(10) NOT NULL default '', dpd_weight_ref char(3) NOT NULL default '', PRIMARY KEY  (dpd_postal_reference,dpd_from_postal))");
 
       // Dumping data for table `dpd_postal_to_weight`
       // GERMANY
@@ -614,7 +614,7 @@
       
       // Table structure for table `dpd_weight`
       xtc_db_query("DROP TABLE IF EXISTS dpd_weight");
-      xtc_db_query("CREATE TABLE dpd_weight (dpd_weight_ref char(3) NOT NULL default '', dpd_weight_price_string text NOT NULL, dpd_free_shipping_over decimal(15,4) NOT NULL default '-1.0000', dpd_shipping_subsidized decimal(15,4) NOT NULL default '-1.0000', PRIMARY KEY  (dpd_weight_ref)) ENGINE=MyISAM");
+      xtc_db_query("CREATE TABLE dpd_weight (dpd_weight_ref char(3) NOT NULL default '', dpd_weight_price_string text NOT NULL, dpd_free_shipping_over decimal(15,4) NOT NULL default '-1.0000', dpd_shipping_subsidized decimal(15,4) NOT NULL default '-1.0000', PRIMARY KEY  (dpd_weight_ref))");
       
       // Dumping data for table `dpd_weight`
       xtc_db_query("insert into dpd_weight (dpd_weight_ref, dpd_weight_price_string, dpd_free_shipping_over, dpd_shipping_subsidized) values ('DE1', '0-5:3.07,5-8:4.19,8-10:4.86,10-15:6.54,15-20:8.44,20-25:9.97,25-32:13.04,32-40:15.34', '350.0000', '-1.0000')");

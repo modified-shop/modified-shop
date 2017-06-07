@@ -65,7 +65,7 @@ class checkout_express
                                      checkout_payment VARCHAR(128) NOT NULL,
                                      checkout_payment_address INT(11) NOT NULL,
                                      PRIMARY KEY (customers_id)
-                                   ) ENGINE=MYISAM");
+                                   )");
     }
     
     function content_install() {

@@ -221,7 +221,7 @@ class shopgate
 					`modified` datetime DEFAULT NULL,
 					`created` datetime DEFAULT NULL,
 					PRIMARY KEY (`shopgate_order_id`)
-			) ENGINE=MyISAM; "
+			); "
         );
         
         xtc_db_query(
@@ -233,7 +233,7 @@ class shopgate
 					`modified` TIMESTAMP NULL DEFAULT NULL,
 					`created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 					PRIMARY KEY (`shopgate_customer_id`)
-			) ENGINE=MyISAM;
+			);
 		"
         );
     }

@@ -24,7 +24,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `payone_config` (
   `path` varchar(255) NOT NULL,
   `value` varchar(255) NOT NULL,
   PRIMARY KEY (`path`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
+)";
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `payone_transactions` (
   `payone_transactions_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -37,7 +37,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `payone_transactions` (
   `last_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`payone_transactions_id`),
   KEY `orders_id` (`orders_id`,`txid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;";
+)";
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `payone_txstatus` (
   `payone_txstatus_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -45,7 +45,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `payone_txstatus` (
   `received` datetime NOT NULL,
   PRIMARY KEY (`payone_txstatus_id`),
   KEY `orders_id` (`orders_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
+);";
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `payone_txstatus_data` (
   `payone_txstatus_data_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -54,7 +54,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `payone_txstatus_data` (
   `value` varchar(255) NOT NULL,
   PRIMARY KEY (`payone_txstatus_data_id`),
   KEY `payone_txstatus_id` (`payone_txstatus_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
+);";
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `payone_clearingdata` (
   `p1_clearingdata_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -69,7 +69,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `payone_clearingdata` (
   `bankname` varchar(128) NOT NULL,
   PRIMARY KEY (`p1_clearingdata_id`),
   KEY `orders_id` (`orders_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
+);";
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `payone_ac_cache` (
   `address_hash` varchar(32) NOT NULL,
@@ -88,7 +88,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `payone_ac_cache` (
   `customermessage` varchar(255) NOT NULL,
   PRIMARY KEY (`address_hash`),
   KEY `address_book_id` (`address_book_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
+);";
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `payone_cr_cache` (
   `address_hash` varchar(32) NOT NULL,
@@ -114,7 +114,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `payone_cr_cache` (
   PRIMARY KEY (`address_hash`),
   KEY `address_book_id` (`address_book_id`),
   KEY `scoretype` (`scoretype`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;";
+);";
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `payone_api_log` (
   `p1_api_log_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -126,7 +126,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `payone_api_log` (
   `customers_id` int(11) NOT NULL,
   PRIMARY KEY (`p1_api_log_id`),
   KEY `event_id` (`event_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;";
+);";
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `payone_transactions_log` (
   `p1_transactions_log_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -138,7 +138,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `payone_transactions_log` (
   `customers_id` int(11) NOT NULL,
   PRIMARY KEY (`p1_transactions_log_id`),
   KEY `event_id` (`event_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;";
+);";
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `payone_bankgroups` (
   `p1_bankgroups_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -146,7 +146,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `payone_bankgroups` (
   `bank_code` varchar(32) NOT NULL,
   `bank_name` varchar(64) NOT NULL,
   PRIMARY KEY (`p1_bankgroups_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;";
+);";
 
 $sql[] = "CREATE TABLE IF NOT EXISTS `payone_sepa_countries` (
   `p1_sepa_countries_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -155,7 +155,7 @@ $sql[] = "CREATE TABLE IF NOT EXISTS `payone_sepa_countries` (
   `countries_iban_code` varchar(2) NOT NULL,
   `countries_currency_code` varchar(4) NOT NULL,
   PRIMARY KEY (`p1_sepa_countries_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;";
+);";
 
 
 $bankgroups = array(

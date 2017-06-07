@@ -354,11 +354,11 @@
       xtc_db_query("DROP TABLE IF EXISTS `personal_offers_by_customers_status_3`");
       xtc_db_query("DROP TABLE IF EXISTS `personal_offers_by_customers_status_4`");
       
-      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_0 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ENGINE=MyISAM;");
-      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_1 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ENGINE=MyISAM;");
-      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_2 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ENGINE=MyISAM;");
-      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_3 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ENGINE=MyISAM;");
-      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_4 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ENGINE=MyISAM;");
+      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_0 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4));");
+      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_1 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4));");
+      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_2 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4));");
+      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_3 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4));");
+      xtc_db_query("CREATE TABLE personal_offers_by_customers_status_4 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4));");
       
       if (INSTALL_CHARSET == 'utf8') {
         xtc_db_query("update languages set language_charset='utf-8'");

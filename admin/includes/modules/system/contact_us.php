@@ -56,7 +56,7 @@ class contact_us
                         `customers_ip` varchar(50) NOT NULL,
                         `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
                         KEY `idx_customers_id` (`customers_id`)
-                      ) ENGINE=MyISAM;");
+                      );");
     }
 
     function remove()
