@@ -919,7 +919,7 @@ class shoppingCart {
     }
     
     //new module support 
-    $status = $this->shoppingCartModules->check_products_status_permission($products_id);
+    $status = $this->shoppingCartModules->check_products_status_permission($status, $products_id);
     
     return $status;
   }
