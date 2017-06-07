@@ -1,12 +1,13 @@
 <?php
 /**************************************************************
-$Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
+$Id$
 
-  * XTC Datenbank Manager Version 2.00  UTF-8
+  * XTC Datenbank Manager Version 2.10  UTF-8
   *(c) by  web28 - www.rpa-com.de
   * Convert UTF-8
   * Backup pro Tabelle und limitierter Zeilenzahl (Neuladen der Seite) , einstellbar mit ANZAHL_ZEILEN_BKUP
   * Restore mit limitierter Zeilennanzahl aus SQL-Datei (Neuladen der Seite), einstellbar mit ANZAHL_ZEILEN
+  * 2017-06-07 - remove_engine option
   * 2014-09-14 - jquery ajax handling
   * 2011-11-23 - restore in separate file
   * 2010-09-09 - add set_admin_access
@@ -14,7 +15,7 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
   * 2011-09-13 - fix some PHP notices
   ***************************************************************/
 
-  define ('VERSION', 'Database Backup Ver. 2.00 UTF-8');
+  define ('VERSION', 'Database Backup Ver. 2.10 UTF-8');
 
   require('includes/application_top.php');
   
@@ -128,6 +129,14 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
     //echo '<pre>' .$data .'</pre>'; EXIT;
     return $data;
   }
+  
+  function remove_engine($table,$data) {
+    $table_status = xtc_db_query("SHOW TABLE STATUS WHERE Name='".$table."'");
+    $table_status = xtc_db_fetch_array($table_status);
+    $data = str_replace(' ENGINE='.$table_status['Engine'],'',$data);
+    return $data;
+  }
+
   function GetTableInfo($table) {
     //BOF NEW TABLE  STRUCTURE  - LIKE MYSQLDUMPER -  functions_dump.php line 133
     $data = "DROP TABLE IF EXISTS `$table`;\n";
@@ -135,6 +144,9 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
     $row = @xtc_db_fetch_row($res);
     if (isset($_SESSION['dump']['remove_collate']) && $_SESSION['dump']['remove_collate'] == 'yes') {
       $row[1] = remove_collate($table,$row[1]);
+    }
+    if (isset($_SESSION['dump']['remove_engine']) && $_SESSION['dump']['remove_engine'] == 'yes') {
+      $row[1] = remove_engine($table,$row[1]);
     }
     $data .= $row[1].';'."\n\n";
 
@@ -295,10 +307,15 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
       $dump['file'] .= '.sql';
     }
 
-    if ($_POST['remove_collate'] == 'yes') {
+    if (isset($_POST['remove_collate']) && $_POST['remove_collate'] == 'yes') {
       $dump['remove_collate']  = 'yes';
     }
-    if ($_POST['complete_inserts'] == 'yes') {
+    
+    if (isset($_POST['remove_engine']) && $_POST['remove_engine'] == 'yes') {
+      $dump['remove_engine']  = 'yes';
+    }
+    
+    if (isset($_POST['complete_inserts']) && $_POST['complete_inserts'] == 'yes') {
       $dump['complete_inserts']  = 'yes';
     }
 
@@ -322,7 +339,7 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
         $data_array = xtc_db_fetch_array($data_query);
         
         $erg['Rows'] = $data_array['count_records'];
-		    $table_info .= '-- TABLE|'.$erg['Name'].'|'.(($erg['Name'] != TABLE_SESSIONS && $erg['Name'] != TABLE_WHOS_ONLINE) ? $erg['Rows'] : '0').'|'.(($erg['Name'] != TABLE_SESSIONS && $erg['Name'] != TABLE_WHOS_ONLINE) ? ($erg['Data_length']+$erg['Index_length']) : '0').'|'.$erg['Update_time'].'|'.$erg['Engine']."\n";
+        $table_info .= '-- TABLE|'.$erg['Name'].'|'.(($erg['Name'] != TABLE_SESSIONS && $erg['Name'] != TABLE_WHOS_ONLINE) ? $erg['Rows'] : '0').'|'.(($erg['Name'] != TABLE_SESSIONS && $erg['Name'] != TABLE_WHOS_ONLINE) ? ($erg['Data_length']+$erg['Index_length']) : '0').'|'.$erg['Update_time']. (!isset($_POST['remove_engine']) ? '|'.$erg['Engine'] :'') ."\n";
         
       }
       $dump['nr'] = 0;

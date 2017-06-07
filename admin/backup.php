@@ -15,7 +15,11 @@
 
    Released under the GNU General Public License
 
-   Datenbank Backup Ver. 2.00
+   Datenbank Backup Ver. 2.10
+   modified by web28 - www.rpa-com.de 07.06.2017
+   //remove_engine option
+
+  Datenbank Backup Ver. 2.00
    modified by web28 - www.rpa-com.de 14.09.2014
    //jquery ajax handling
    
@@ -50,7 +54,7 @@
   define('BK_FILENAME', 'backup_db.php'); //BACKUP
   define('RS_FILENAME', 'backup_restore.php'); //RESTORE
 
-  define ('VERSION', 'Database Backup/Restore Ver. 2.00');
+  define ('VERSION', 'Database Backup/Restore Ver. 2.10');
 
   require('includes/application_top.php');
 
@@ -91,6 +95,7 @@
     //echo '<pre>'.print_r($data,1).'</pre>';
     $newdata = array();
     foreach($data as $keys) {
+      //$newdata[] = $keys['name'] . ($keys['rows'] != '' ? ' ['.$keys['rows'].']' : '') . ($keys['data_length'] != '' ? ' ['.$keys['data_length'].']' : '') . ($keys['update_time'] != '' ? ' ['.$keys['update_time'].']' : '');
       $newdata[] = $keys['name'] . ($keys['rows'] != '' ? ' ['.$keys['rows'].']' : '');
     }
     return implode('<br>',$newdata);
@@ -238,7 +243,11 @@
                                       if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
                                       if (substr($line, 0, 9) == "-- TABLE|") {
                                         $table_info = explode('|',trim(substr($line, 9)));
-                                        $file_array['table_list'][]  = array('name' => $table_info[0] ,'rows' => $table_info[1]);
+                                        $file_array['table_list'][]  = array('name' => $table_info[0],
+                                                                             'rows' => $table_info[1],
+                                                                             'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
+                                                                             'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
+                                                                            );
                                         $file_array['tables_row_count'] += $table_info[1];
                                       }
                                     }
@@ -252,7 +261,11 @@
                                       if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
                                       if (substr($line, 0, 9) == "-- TABLE|") {
                                         $table_info = explode('|',trim(substr($line, 9)));
-                                        $file_array['table_list'][]  = array('name' => $table_info[0] ,'rows' => $table_info[1]);
+                                        $file_array['table_list'][]  = array('name' => $table_info[0],
+                                                                             'rows' => $table_info[1],
+                                                                             'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
+                                                                             'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
+                                                                            );
                                         $file_array['tables_row_count'] += $table_info[1];
                                       }
                                     }
@@ -314,6 +327,7 @@
                       }
                       $contents[] = array('text' => xtc_draw_radio_field('compress', 'no', !function_exists('gzopen')) . ' ' . TEXT_INFO_USE_NO_COMPRESSION);
                       $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('remove_collate', 'yes', false) . ' ' . TEXT_REMOVE_COLLATE);
+                      $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('remove_engine', 'yes', false) . ' ' . TEXT_REMOVE_ENGINE);
                       $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('complete_inserts', 'yes', true) . ' ' . TEXT_COMPLETE_INSERTS);
                       if (!$check_utf8) {
                         $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('utf8-convert', 'yes', false) . ' ' . TEXT_CONVERT_TO_UTF);

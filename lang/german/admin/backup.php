@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: backup.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -64,4 +64,7 @@ define('TEXT_IMPORT_UTF', 'UTF-8 Datenbank wiederherstellen');
 
 //TEXT_REMOVE_COLLATE
 define('TEXT_REMOVE_COLLATE', "<b>Ohne Zeichenkodierung 'COLLATE' und 'DEFAULT CHARSET'</b><br> - Die Angaben zur Zeichenkodierung werden nicht eingef&uuml;gt. Sinnvoll bei Migration auf eine andere DB-Zeichenkodierung.");
+
+//TEXT_REMOVE_ENGINE
+define('TEXT_REMOVE_ENGINE', "<b>Ohne Speicherengines 'ENGINE'</b><br> - Die Angaben zur Speicherengine (MyISAM,InnoDB) werden nicht eingef&uuml;gt.");
 ?>
