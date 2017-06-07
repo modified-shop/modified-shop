@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: billsafe_2.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -651,14 +651,14 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
   function install() {
     $check_query = xtc_db_query('SHOW TABLES LIKE "billsafe_orders_2"');
     if (xtc_db_num_rows($check_query) == 0) {
-      xtc_db_query('CREATE TABLE billsafe_orders_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, orderid VARCHAR(255) NOT NULL, transactionid VARCHAR(255) NOT NULL, billsafeStatus VARCHAR(255) NOT NULL, type VARCHAR(64) NOT NULL, token VARCHAR(255) NOT NULL, date TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, paymentStatus VARCHAR(255) NULL DEFAULT NULL) ENGINE = MYISAM;');
+      xtc_db_query('CREATE TABLE billsafe_orders_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, orderid VARCHAR(255) NOT NULL, transactionid VARCHAR(255) NOT NULL, billsafeStatus VARCHAR(255) NOT NULL, type VARCHAR(64) NOT NULL, token VARCHAR(255) NOT NULL, date TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, paymentStatus VARCHAR(255) NULL DEFAULT NULL);');
     } elseif (xtc_db_num_rows($check_query) != 0) {
       $check_query = xtc_db_query('SHOW COLUMNS FROM billsafe_orders_2 like "type"');
       if (xtc_db_num_rows($check_query) == 0) xtc_db_query('ALTER TABLE billsafe_orders_2 ADD type VARCHAR(64) NOT NULL AFTER billsafeStatus');
     }
     $check_query = xtc_db_query('SHOW TABLES LIKE "billsafe_orders_details_2"');
     if (xtc_db_num_rows($check_query) == 0) {
-      xtc_db_query('CREATE TABLE billsafe_orders_details_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ordernumber VARCHAR(255) NOT NULL, product_id VARCHAR(255) NOT NULL, articletype VARCHAR(64) NOT NULL, articlenumber VARCHAR(255) NOT NULL, articlename VARCHAR(255) NOT NULL, articleprice VARCHAR(64) NOT NULL, articletax VARCHAR(64) NOT NULL, bsorders_id INT NOT NULL, shipped INT NOT NULL DEFAULT "0", storno INT NOT NULL DEFAULT "0", retoure INT NOT NULL DEFAULT "0", pause INT NOT NULL DEFAULT "0") ENGINE = MYISAM;');
+      xtc_db_query('CREATE TABLE billsafe_orders_details_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ordernumber VARCHAR(255) NOT NULL, product_id VARCHAR(255) NOT NULL, articletype VARCHAR(64) NOT NULL, articlenumber VARCHAR(255) NOT NULL, articlename VARCHAR(255) NOT NULL, articleprice VARCHAR(64) NOT NULL, articletax VARCHAR(64) NOT NULL, bsorders_id INT NOT NULL, shipped INT NOT NULL DEFAULT "0", storno INT NOT NULL DEFAULT "0", retoure INT NOT NULL DEFAULT "0", pause INT NOT NULL DEFAULT "0");');
     } elseif (xtc_db_num_rows($check_query) != 0) {
       $check_query = xtc_db_query('SHOW COLUMNS FROM billsafe_orders_details_2 like "pause"');
       if (xtc_db_num_rows($check_query) == 0) xtc_db_query('ALTER TABLE billsafe_orders_details_2 ADD pause INT NOT NULL DEFAULT "0"');
@@ -675,18 +675,18 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
     }
     $check_query = xtc_db_query('SHOW TABLES LIKE "billsafe_transactions_2"');
     if (xtc_db_num_rows($check_query) == 0) {
-      xtc_db_query('CREATE TABLE billsafe_transactions_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ordernumber VARCHAR(255) NOT NULL, articlenumber VARCHAR(255) NOT NULL, transactionmethod VARCHAR(255) NOT NULL, bsorder_id INT NOT NULL, bsordersdetails_id INT(11) NOT NULL, date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP) ENGINE = MYISAM;');
+      xtc_db_query('CREATE TABLE billsafe_transactions_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ordernumber VARCHAR(255) NOT NULL, articlenumber VARCHAR(255) NOT NULL, transactionmethod VARCHAR(255) NOT NULL, bsorder_id INT NOT NULL, bsordersdetails_id INT(11) NOT NULL, date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);');
     }
     $check_query = xtc_db_query('SHOW TABLES LIKE "billsafe_orders_user_2"');
     if (xtc_db_num_rows($check_query) == 0) {
-      xtc_db_query('CREATE TABLE billsafe_orders_user_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, bsorders_id INT NOT NULL, gender VARCHAR(255) NOT NULL, company VARCHAR(255) NOT NULL, firstname VARCHAR(255) NOT NULL, lastname VARCHAR(255) NOT NULL, street VARCHAR(255) NOT NULL, housenumber VARCHAR(255) NOT NULL, postcode VARCHAR(255) NOT NULL, city VARCHAR(255) NOT NULL, country VARCHAR(255) NOT NULL, dateofbirth VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, phone VARCHAR(255) NOT NULL) ENGINE = MYISAM;');
+      xtc_db_query('CREATE TABLE billsafe_orders_user_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, bsorders_id INT NOT NULL, gender VARCHAR(255) NOT NULL, company VARCHAR(255) NOT NULL, firstname VARCHAR(255) NOT NULL, lastname VARCHAR(255) NOT NULL, street VARCHAR(255) NOT NULL, housenumber VARCHAR(255) NOT NULL, postcode VARCHAR(255) NOT NULL, city VARCHAR(255) NOT NULL, country VARCHAR(255) NOT NULL, dateofbirth VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, phone VARCHAR(255) NOT NULL);');
     } elseif (xtc_db_num_rows($check_query) != 0) {
       $check_query = xtc_db_query('SHOW COLUMNS FROM billsafe_orders_user_2 like "company"');
       if (xtc_db_num_rows($check_query) == 0) xtc_db_query('ALTER TABLE billsafe_orders_user_2 ADD company VARCHAR(255) NOT NULL AFTER gender');
     }
     $check_query = xtc_db_query('SHOW TABLES LIKE "billsafe_payinstructs_2"');
     if (xtc_db_num_rows($check_query) == 0) {
-      xtc_db_query('CREATE TABLE billsafe_payinstructs_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, bsorders_id INT NOT NULL, order_id INT NOT NULL, bankCode INT(64), accountNumber INT(64), recipient VARCHAR(255) NOT NULL, bankName VARCHAR(255) NOT NULL, bic VARCHAR(64) NOT NULL, iban VARCHAR(64) NOT NULL, reference VARCHAR(64) NOT NULL, amount DECIMAL(15,4) NOT NULL, currencyCode VARCHAR(3) NOT NULL, shopUrl VARCHAR(255) NOT NULL, paymentPeriod INT(2) NOT NULL, note VARCHAR(255) NOT NULL, legalNote VARCHAR(512) NOT NULL, date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP) ENGINE = MYISAM;');
+      xtc_db_query('CREATE TABLE billsafe_payinstructs_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, bsorders_id INT NOT NULL, order_id INT NOT NULL, bankCode INT(64), accountNumber INT(64), recipient VARCHAR(255) NOT NULL, bankName VARCHAR(255) NOT NULL, bic VARCHAR(64) NOT NULL, iban VARCHAR(64) NOT NULL, reference VARCHAR(64) NOT NULL, amount DECIMAL(15,4) NOT NULL, currencyCode VARCHAR(3) NOT NULL, shopUrl VARCHAR(255) NOT NULL, paymentPeriod INT(2) NOT NULL, note VARCHAR(255) NOT NULL, legalNote VARCHAR(512) NOT NULL, date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);');
     }
     $check_query = xtc_db_query('SHOW COLUMNS FROM admin_access like "billsafe_orders_2"');
     if (xtc_db_num_rows($check_query) == 0) {
