@@ -37,7 +37,7 @@ CREATE TABLE gls_country_to_postal (
   gls_country char(2) NOT NULL default '',
   gls_postal_reference int(11) NOT NULL default '0',
   PRIMARY KEY  (gls_country)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS gls_postal_to_weight;
 CREATE TABLE gls_postal_to_weight (
@@ -46,7 +46,7 @@ CREATE TABLE gls_postal_to_weight (
   gls_to_postal varchar(10) NOT NULL default '',
   gls_weight_ref char(3) NOT NULL default '',
   PRIMARY KEY  (gls_postal_reference,gls_from_postal)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS gls_weight;
 CREATE TABLE gls_weight (
@@ -55,7 +55,7 @@ CREATE TABLE gls_weight (
   gls_free_shipping_over decimal(15,4) NOT NULL default '-1.0000',
   gls_shipping_subsidized decimal(15,4) NOT NULL default '-1.0000',
   PRIMARY KEY  (gls_weight_ref)
-) ENGINE=MyISAM;
+);
 
 #Tomcraft - 2009-09-08 - changed database_version
 UPDATE database_version SET version = 'MOD_1.0.3.0';

@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS carriers (
   carrier_date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   carrier_last_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (carrier_id)
-) ENGINE=MyISAM;
+);
 
 INSERT INTO carriers (carrier_id, carrier_name, carrier_tracking_link, carrier_sort_order, carrier_date_added, carrier_last_modified) VALUES (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
 INSERT INTO carriers (carrier_id, carrier_name, carrier_tracking_link, carrier_sort_order, carrier_date_added, carrier_last_modified) VALUES (2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2', '20', NOW(), '');
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS orders_tracking (
   parcel_id VARCHAR(80) NOT NULL,
   PRIMARY KEY (tracking_id),
   KEY idx_orders_id (orders_id)
-) ENGINE=MyISAM;
+);
 
 ALTER TABLE admin_access ADD parcel_carriers INT(1) NOT NULL DEFAULT 0 AFTER payone_logs;
 UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 1 LIMIT 1;

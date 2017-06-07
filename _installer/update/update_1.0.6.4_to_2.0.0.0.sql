@@ -206,7 +206,7 @@ CREATE TABLE module_backup (
   last_modified datetime DEFAULT NULL,
   PRIMARY KEY (configuration_id),
   UNIQUE idx_configuration_key (configuration_key)
-) ENGINE=MyISAM;
+);
 
 #Tomcraft - 2013-08-21 - Added hidden stock feature
 ALTER TABLE admin_access ADD stats_stock_warning INT(1) NOT NULL DEFAULT 0 AFTER stats_sales_report;
@@ -359,7 +359,7 @@ DELETE FROM configuration WHERE configuration_key = 'CC_NUMBER_MIN_LENGTH';
 #  carrier_date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 #  carrier_last_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 #  PRIMARY KEY (carrier_id)
-#) ENGINE=MyISAM;
+#);
 
 # Moved to update_1.0.6.2_to_1.0.6.3.sql
 #INSERT INTO carriers (carrier_id, carrier_name, carrier_tracking_link, carrier_sort_order, carrier_date_added, carrier_last_modified) VALUES (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
@@ -382,7 +382,7 @@ DELETE FROM configuration WHERE configuration_key = 'CC_NUMBER_MIN_LENGTH';
 #  parcel_id VARCHAR(80) NOT NULL,
 #  PRIMARY KEY (tracking_id),
 #  KEY idx_orders_id (orders_id)
-#) ENGINE=MyISAM;
+#);
 
 # Moved to update_1.0.6.2_to_1.0.6.3.sql
 #ALTER TABLE admin_access ADD parcel_carriers INT(1) NOT NULL DEFAULT 0 AFTER protectedshops;
@@ -501,7 +501,7 @@ CREATE TABLE newsfeed (
   news_date INT( 11 ) NULL,
   PRIMARY KEY (news_id),
   UNIQUE idx_news_link (news_link)
-) ENGINE=MyISAM;
+);
 ALTER TABLE admin_access ADD newsfeed INT(1) NOT NULL DEFAULT 0 AFTER shopgate;
 UPDATE admin_access SET newsfeed = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET newsfeed = 1 WHERE customers_id = 'groups' LIMIT 1;
@@ -658,7 +658,7 @@ CREATE TABLE products_tags (
   products_options_values_id int(11) NOT NULL DEFAULT '0',
   KEY idx_products_options_values (products_id,options_id,values_id),
   KEY idx_products_options_id (products_options_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_tags_options;
 CREATE TABLE products_tags_options (
@@ -675,7 +675,7 @@ CREATE TABLE products_tags_options (
   products_options_id int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (options_id,languages_id),
   KEY idx_products_options_id (products_options_id)
-) ENGINE=MyISAM;
+);
 
 DROP TABLE IF EXISTS products_tags_values;
 CREATE TABLE products_tags_values (
@@ -695,7 +695,7 @@ CREATE TABLE products_tags_values (
   PRIMARY KEY (values_id,languages_id),
   KEY idx_options_id (options_id),
   KEY idx_products_options_values_id (products_options_values_id)
-) ENGINE=MyISAM;
+);
 
 #WEB28 - 2015-08-11 - add attributes_vpe
 ALTER TABLE products_attributes ADD attributes_vpe_id int(11) NOT NULL AFTER attributes_ean;

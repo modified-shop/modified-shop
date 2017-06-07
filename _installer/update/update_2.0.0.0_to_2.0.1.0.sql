@@ -240,7 +240,7 @@ CREATE TABLE customers_login (
   customers_login_tries int(11) NOT NULL, 
   KEY idx_customers_ip (customers_ip), 
   KEY idx_customers_email_address (customers_email_address) 
-) ENGINE=MyISAM; 
+); 
 ALTER TABLE newsletter_recipients MODIFY customers_email_address VARCHAR(255) NOT NULL DEFAULT '';
 ALTER TABLE newsletter_recipients MODIFY ip_date_added VARCHAR(50) DEFAULT NULL;
 ALTER TABLE newsletter_recipients MODIFY ip_date_confirmed VARCHAR(50) DEFAULT NULL;

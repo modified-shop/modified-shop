@@ -351,7 +351,7 @@ CREATE TABLE IF NOT EXISTS banktransfer_blz (
   bankname varchar(255) NOT NULL DEFAULT '',
   prz char(2) NOT NULL DEFAULT '',
   PRIMARY KEY (blz)
-) ENGINE=MyISAM;
+);
 
 #DokuMan - 2011-07-26 - allow 5 characters, so language code like 'zh-CN' can be entered
 ALTER TABLE languages MODIFY code char(5) NOT NULL;
@@ -419,7 +419,7 @@ CREATE TABLE sessions (
   value text NOT NULL,
   flag VARCHAR(5) NULL DEFAULT NULL,
   PRIMARY KEY (sesskey)
-) ENGINE=MyISAM;
+);
 
 #DokuMan - 2012-08-21 - fix default value for customer group merchants
 UPDATE customers_status SET customers_status_add_tax_ot  = '1' WHERE customers_status_id = '3';
