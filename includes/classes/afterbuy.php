@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: afterbuy.php 3072 2012-06-18 15:01:13Z hhacker $ 
+   $Id$ 
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -43,7 +43,7 @@ class xtc_afterbuy_functions {
 
 		$oID = $this->order_id;
 		$customer = array ();
-		$afterbuy_URL = 'https://api.afterbuy.de/afterbuy/ShopInterface.aspx';
+		$afterbuy_URL = 'https://api.afterbuy.de/afterbuy/ShopInterface'.((isset($_SESSION['language_charset']) && strtolower($_SESSION['language_charset']) == 'utf8') ? 'UTF8' : '').'.aspx';
 
 		// connect
 		$ch = curl_init();
