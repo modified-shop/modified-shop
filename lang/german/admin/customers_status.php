@@ -102,4 +102,6 @@ define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', 'Mindest-Kaufbetrag');
 define('TABLE_HEADING_CUSTOMERS_SPECIALS', 'Sonderangebote');
 define('TEXT_INFO_CUSTOMERS_STATUS_SPECIALS_INTRO', '<strong>Sonderangebote</strong>');
 define('ENTRY_CUSTOMERS_STATUS_SPECIALS', 'Kundengruppe erlaubt Sonderangebote zu sehen?');
+
+define('CUSTOMERS_GROUP_PUBLIC','&ouml;ffentlich');
 ?>

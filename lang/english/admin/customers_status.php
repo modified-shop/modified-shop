@@ -102,4 +102,6 @@ define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', 'Minimum Total');
 define('TABLE_HEADING_CUSTOMERS_SPECIALS', 'Special prices');
 define('TEXT_INFO_CUSTOMERS_STATUS_SPECIALS_INTRO', '<strong>Special prices</strong>');
 define('ENTRY_CUSTOMERS_STATUS_SPECIALS', 'Group allowed to see special prices?');
+
+define('CUSTOMERS_GROUP_PUBLIC','public');
 ?>
