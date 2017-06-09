@@ -50,10 +50,12 @@ class shipcloud {
     global $messageStack;
     
     // parse params
-    $this->carrier_id = (int)$params['carrier_id'];
+    $this->carrier_name = $params['carrier_id'];
     $dimension_array = explode(',', $params['parcel']);
     list($this->length, $this->width, $this->height) = $dimension_array;
     $this->description = $params['description'];
+    $this->weight = $params['weight'];
+    $this->insurance = ((isset($params['insurance']) && $params['insurance'] == '1' && $this->order->info['pp_total'] > '500') ? true : false);
     
     $this->carrier = $this->check_carrier();
     
@@ -65,10 +67,11 @@ class shipcloud {
         'reference_number'      => $this->order->info['orders_id'],
         'create_shipping_label' => 'true',
         'service'               => $params['service'],
+        'description'           => $this->description,
+        'additional_services'   => array(),
       );
       
       if (in_array($params['service'], array('books', 'letter', 'parcel_letter'))) {
-        $request_array['carrier'] = 'dpag';
         $request_array['service'] = 'standard';
         $request_array['package']['type'] = $params['service'];
       }
@@ -78,32 +81,22 @@ class shipcloud {
         $request_array['from'] = $sender_data;
       }
       
+      $request_array['additional_services'][] = array(
+        'name' => 'advance_notice',
+        'properties' => array(
+          'email' => $this->order->customer['email_address'],
+          'language' => (($this->order->info['language'] == 'german') ? 'de' : 'en'),
+        ),
+      );
+
       if ($this->order->info['payment_method'] == 'cod') {
         $bank_data = $this->bank_data();
         if ($bank_data != '') {
-          $request_array['additional_services'] = array(
-            array(
-              'name' => 'cash_on_delivery',
-              'properties' => $bank_data,
-            ),
+          $request_array['additional_services'][] = array(
+            'name' => 'cash_on_delivery',
+            'properties' => $bank_data,
           );
         }
-      }
-      
-      if ($this->carrier == 'dpd') {
-        if (!isset($request_array['additional_services']) 
-            || !is_array($request_array['additional_services'])
-            ) 
-        {
-          $request_array['additional_services'] = array();
-        }
-        $request_array['additional_services'][] = array(
-          'name' => 'advance_notice',
-          'properties' => array(
-            'email' => $this->order->customer['email_address'],
-            'language' => (($this->order->info['language'] == 'german') ? 'de' : 'en'),
-          ),
-        );
       }
       
       if (MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'shipcloud') {
@@ -112,7 +105,7 @@ class shipcloud {
       
       $request_array = $this->encode_request($request_array);
       $this->logger($request_array);
-            
+      
       if (!isset($params['quote'])) {
         $request = $this->do_request(json_encode($request_array));
         if (is_array($request) && count($request) > 0) {
@@ -136,6 +129,7 @@ class shipcloud {
         unset($request_array['from']['phone']);
         unset($request_array['from']['state']);
 
+        unset($request_array['description']);
         unset($request_array['package']['description']);
         
         $request = $this->do_request(json_encode($request_array), self::SC_URL_QUOTES);
@@ -155,28 +149,31 @@ class shipcloud {
 		$sql_data_array = array('orders_id' => $this->order->info['order_id'],
 		                        'carrier_id' => $this->carrier_id,
 		                        'parcel_id' => $request['carrier_tracking_no'],
+		                        'date_added' => 'now()',
 		                        'external' => '1',
 		                        'sc_label_url' => $request['label_url'],
 		                        'sc_id' => $request['id'],
 		                        'sc_date_added' => 'now()',
 		                        );
+				
 		xtc_db_perform(TABLE_ORDERS_TRACKING,$sql_data_array);
   }
   
   
   public function check_carrier($check = true) { 
-    $check_carrier_query = xtc_db_query("SELECT LOWER(carrier_name) as name 
-                                            FROM ".TABLE_CARRIERS." 
-                                           WHERE carrier_id = '".$this->carrier_id."'");
-    $check_carrier = xtc_db_fetch_array($check_carrier_query);
+    $request = $this->get_carriers(true);
 
-    $request = get_external_content('https://'.MODULE_SHIPCLOUD_API.'@'.self::SC_URL_CARRIERS, 3, false);
-    $request = json_decode($request, true);
-    
     if (is_array($request) && count($request) > 0) {
       if ($check === true) {
         foreach($request as $carrier) {
-          if ($carrier['name'] == $check_carrier['name']) {
+          if ($carrier['name'] == $this->carrier_name) {
+            $check_carrier_query = xtc_db_query("SELECT *
+                                                   FROM ".TABLE_CARRIERS." 
+                                                  WHERE (LOWER(carrier_name) = '".xtc_db_input($carrier['display_name'])."'
+                                                         OR LOWER(carrier_name) = '".xtc_db_input($carrier['name'])."')");
+            $check_carrier = xtc_db_fetch_array($check_carrier_query);
+            $this->carrier_id = $check_carrier['carrier_id'];
+            
             return $carrier['name'];
           }
         }
@@ -198,6 +195,7 @@ class shipcloud {
       'company'     => ((strtolower($this->carrier) == 'dhl') ? substr($this->order->delivery['company'], 0, 30) : $this->order->delivery['company']),
       'street'      => $street_address['street_name'],
       'street_no'   => $street_address['street_number'],
+      'care_of'    => $this->order->delivery['suburb'],
       'zip_code'    => $this->order->delivery['postcode'],
       'city'        => $this->order->delivery['city'],
       'state'       => $this->order->delivery['state'],
@@ -281,15 +279,16 @@ class shipcloud {
       'width'          => (($this->width != '') ? $this->width : '20'),
       'length'         => (($this->length != '') ? $this->length : '20'),
       'height'         => (($this->height != '') ? $this->height : '20'),
-      'weight'         => $this->calculate_weight(),
+      'weight'         => (double)(($this->weight != '') ? str_replace(',', '.', $this->weight) : $this->calculate_weight()),
       'description'    => $this->description,
-      /*
-      'declared_value' => array(
-        'amount'   => $this->order->info['pp_total'],
-        'currency' => $this->order->info['currency']
-      )
-      */
     );
+    
+    if ($this->insurance === true) {
+      $package_data['declared_value'] = array(
+        'amount'   => $this->order->info['pp_total'],
+        'currency' => $this->order->info['currency'],
+      );
+    }
     
     return $package_data;
   }
@@ -366,7 +365,30 @@ class shipcloud {
     }
   }
 
-
+  
+  public function get_carriers($database = false) { 
+    $request = get_external_content('https://'.MODULE_SHIPCLOUD_API.'@'.self::SC_URL_CARRIERS, 3, false);;
+    $request = json_decode($request, true);
+    
+    if ($database === true) {
+      foreach ($request as $data) {
+        $check_carrier_query = xtc_db_query("SELECT *
+                                               FROM ".TABLE_CARRIERS." 
+                                              WHERE (LOWER(carrier_name) = '".xtc_db_input($data['display_name'])."'
+                                                     OR LOWER(carrier_name) = '".xtc_db_input($data['name'])."')");
+        if (xtc_db_num_rows($check_carrier_query) < 1) {
+          $sql_data_array = array(
+            'carrier_name' => $data['display_name'],
+            'carrier_date_added' => 'now()',
+          );
+          xtc_db_perform(TABLE_CARRIERS, $sql_data_array);
+        }
+      }
+    }
+    return $request;
+  }
+  
+  
   private function encode_request($array) {
     foreach ($array as $key => $value) {
       if (is_array($value)) {
@@ -409,7 +431,7 @@ class shipcloud {
     }
 
     $response = curl_exec($ch);
-    
+        
     if (curl_errno($ch)) {
       $this->logger(curl_errno($ch), curl_error($ch));
     } elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '204' && $request == 'DELETE') {

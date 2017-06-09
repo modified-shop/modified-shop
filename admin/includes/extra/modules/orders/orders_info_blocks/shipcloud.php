@@ -52,11 +52,32 @@
       ?>
       <tr>
         <?php
-          echo '<td class="smallText" align="center" colspan="2">';
-          echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]).'&nbsp;';
-          echo xtc_draw_pull_down_menu('service', $service_array, $service_array[0]).'&nbsp;';
-          echo xtc_draw_pull_down_menu('parcel', $parcel_array, $parcel_array[0]).'&nbsp;';
-          echo xtc_draw_input_field('description', '' , 'style="width:350px;vertical-align:top;" placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"');
+          require_once(DIR_FS_EXTERNAL.'shipcloud/class.shipcloud.php');
+          $shipcloud = new shipcloud($oID);
+          
+          $sc_carriers = array();
+          $sc_carriers_array = $shipcloud->get_carriers();
+          
+          foreach ($sc_carriers_array as $sc_data) {
+            $sc_carriers[] = array(
+              'id' => $sc_data['name'],
+              'text' => $sc_data['display_name'],
+            );
+          }
+          $insurance_array = array(
+            array('id' => '0', 'text' => TEXT_SHIPCLOUD_INSURANCE_NO),
+            array('id' => '1', 'text' => TEXT_SHIPCLOUD_INSURANCE_YES),
+          );
+
+          echo '<td class="smallText" align="center" colspan="2"><span id="sc_data">';
+          echo xtc_draw_pull_down_menu('carrier_id', $sc_carriers, $sc_carriers[0]['id'], 'id="sc_carrier"').'&nbsp;';
+          echo xtc_draw_pull_down_menu('service', $service_array, $service_array[0]['id'], 'id="sc_service"').'&nbsp;';
+          echo xtc_draw_pull_down_menu('parcel', $parcel_array, $parcel_array[0]['id']).'&nbsp;';
+          if ($order->info['pp_total'] > '500') {
+            echo xtc_draw_pull_down_menu('insurance', $insurance_array, $insurance_array[0]['id'], 'id="sc_insurance"').'&nbsp;';
+          }
+          echo xtc_draw_input_field('weight', '' , 'style="width:100px;vertical-align:top;" placeholder="'.TEXT_WEIGHT_PLACEHOLDER.'"').'</span>';
+          echo xtc_draw_input_field('description', '' , 'id="sc_description" style="width:570px;vertical-align:top;" placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"');
           echo '</td>';
         ?>
         <td class="smallText" align="center">
@@ -69,3 +90,52 @@
     <?php
   }
 ?>
+<script type="text/javascript">
+  $('#sc_carrier').on('change', function() {
+    get_sc_service();
+  });
+
+  $(document).ready(function(){
+    get_sc_service();
+  });
+
+  function get_sc_service() {
+    var sc_carrier = $('#sc_carrier').val();
+    var lang = "<?php echo $_SESSION['language_code']; ?>";
+
+    $.get('../ajax.php', {ext: 'get_sc_service', carrier: sc_carrier, language: lang, speed: 1}, function(data) {
+      if (data != '' && data != undefined) { 
+        <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
+          $('#sc_service').replaceWith('<select id="sc_service" name="service" class="SlectBox" style="visibility: hidden;"></select>');
+          $('#sc_service').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="options"></ul></div>');
+        <?php } else { ?>
+          $('#sc_service').replaceWith('<select id="sc_service" name="service" class="SlectBox"></select>');
+        <?php } ?>
+                
+        $.each(data, function(id, arr) {
+          $('<option value="'+arr.id+'">'+arr.text+'</option>').appendTo('#sc_service');
+          <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
+            $('<li data-val="'+arr.id+'"><label>'+arr.text+'</label></li>').appendTo('#options');        
+          <?php } ?>
+        });
+      
+        if (sc_carrier != 'dhl') {
+          $('#sc_insurance').hide();
+        } else {
+          $('#sc_insurance').show();
+        }
+
+        <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
+          $('.SlectBox').not('.noStyling').SumoSelect({ createElems: 'mod', placeholder: '-'});
+          if (sc_carrier != 'dhl') {
+            $('#sc_insurance').nextAll('.SlectBox').hide();
+          } else {
+            $('#sc_insurance').nextAll('.SlectBox').show();
+          }
+        <?php } ?>
+        
+        $('#sc_description').css('width', $('#sc_data').width());
+      }
+    });
+  }
+</script>
