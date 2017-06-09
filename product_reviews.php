@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: product_reviews.php 4226 2013-01-11 10:38:19Z gtb-modified $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -105,6 +105,10 @@ require (DIR_WS_INCLUDES.'header.php');
 
 $smarty->assign('PRODUCTS_NAME', xtc_get_products_name($_GET['products_id'], $_SESSION['languages_id']));
 $smarty->assign('language', $_SESSION['language']);
+
+if ($messageStack->size('product_reviews') > 0) {
+  $smarty->assign('error', $messageStack->output('product_reviews'));
+}
 
 // set cache ID
 if (!CacheCheck()) {

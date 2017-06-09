@@ -639,4 +639,7 @@ define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2020', 'BIC invalid: No bank existent 
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2128', 'Internal error when checking the bank details.');
 
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_UNKNOWN', 'Unknown error when checking the bank details.');
+
+define('PRODUCT_REVIEWS_SUCCESS', 'Thank you for your review.');
+define('PRODUCT_REVIEWS_SUCCESS_WAITING', 'Thank you for your review. This will be checked before it is enabled.');
 ?>

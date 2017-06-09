@@ -639,4 +639,7 @@ define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2020', 'BIC ung&uuml;ltig: Keine Bank 
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2128', 'Interner Fehler bei Pr&uuml;fung der Bankverbindung.');
 
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_UNKNOWN', 'Unbekannter Fehler bei Pr&uuml;fung der Bankverbindung.');
+
+define('PRODUCT_REVIEWS_SUCCESS', 'Vielen Dank für ihre Rezension.');
+define('PRODUCT_REVIEWS_SUCCESS_WAITING', 'Vielen Dank für ihre Rezension. Diese wird nun geprüft bevor sie freigeschalten wird.');
 ?>

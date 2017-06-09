@@ -2,6 +2,7 @@
 {config_load file="lang_`$language`.custom"}
 {config_load file="lang_`$language`.section" section="reviews"}
 <h1>{#heading_reviews#} {$PRODUCTS_NAME}</h1>
+{if $error != ''}<div class="errormessage">{$error}</div>{/if}
 {foreach name=aussen item=module_data from=$module_content}
 <div class="reviewsbox {cycle values="rb_left,rb_right"}">
   <div class="reviewsbox_inner cf">

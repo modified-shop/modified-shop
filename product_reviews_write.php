@@ -32,6 +32,8 @@ $smarty = new Smarty;
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_reviews_write/','php') as $file) require ($file);
+
 if ($_SESSION['customers_status']['customers_status_write_reviews'] == 0) {
   if (is_object($product) && $product->isProduct() === true) {
     xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'review_prod_id=' .(int)$product->data['products_id'], 'SSL'));
@@ -98,7 +100,13 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process') {
                               'reviews_text' => $review
                               );
       xtc_db_perform(TABLE_REVIEWS_DESCRIPTION,$sql_data_array);
-
+      
+      if ($_SESSION['customers_status']['customers_status_reviews_status'] == '1') {
+        $messageStack->add('product_reviews', PRODUCT_REVIEWS_SUCCESS_WAITING);
+      } else {
+        $messageStack->add('product_reviews', PRODUCT_REVIEWS_SUCCESS);
+      }
+      
       xtc_redirect(xtc_href_link(FILENAME_PRODUCT_REVIEWS, $_POST['get_params']));
     }
   }
@@ -142,7 +150,7 @@ if ($product->isProduct() === false) {
   $smarty->assign('INPUT_AUTHOR', xtc_draw_input_field('author', $author, 'style="width:235px;"'));
   $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('review', 'soft', '60', '15', $review));
   $smarty->assign('INPUT_RATING', xtc_draw_radio_field('rating', '1', (($rating == '1') ? true : false)).' '.xtc_draw_radio_field('rating', '2', (($rating == '2') ? true : false)).' '.xtc_draw_radio_field('rating', '3', (($rating == '3') ? true : false)).' '.xtc_draw_radio_field('rating', '4', (($rating == '4') ? true : false)).' '.xtc_draw_radio_field('rating', '5', (($rating == '5') ? true : false)));
-  $smarty->assign('FORM_ACTION', xtc_draw_form('product_reviews_write', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'action=process&products_id='.$product->data['products_id']), 'post', 'onSubmit="return check_form_review();"').xtc_draw_hidden_field('get_params', xtc_get_all_get_params()));
+  $smarty->assign('FORM_ACTION', xtc_draw_form('product_reviews_write', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, xtc_get_all_get_params(array('action')).'action=process'), 'post', 'onSubmit="return check_form_review();"').xtc_draw_hidden_field('get_params', xtc_get_all_get_params(array('action'))));
   $smarty->assign('BUTTON_BACK', '<a href="'.$link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
   $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
   $smarty->assign('FORM_END', '</form>');
