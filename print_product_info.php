@@ -73,16 +73,15 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
                                        WHERE p.products_id = '" . $product->data['products_id'] . "'");
   if (xtc_db_num_rows($manufacturer_query)) {
     $manufacturer = xtc_db_fetch_array($manufacturer_query);
+
+    $image = '';
     if ($manufacturer['manufacturers_image'] != '') {
       $image = DIR_WS_IMAGES.$manufacturer['manufacturers_image'];
-      if (!file_exists(DIR_FS_CATALOG.$image)) {
-        if (MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') {
-          $image = DIR_WS_IMAGES.'manufacturers/noimage.gif';
-        } else {
-          $image = '';
-        }
-      }
+    }    
+    if (!file_exists(DIR_FS_CATALOG.$image)) {
+      $image = ((MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'manufacturers/noimage.gif' : '');
     }
+
     $info_smarty->assign('MANUFACTURER_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
     $info_smarty->assign('MANUFACTURER', $manufacturer['manufacturers_name']);
     $info_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name'])));

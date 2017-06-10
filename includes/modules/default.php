@@ -137,17 +137,15 @@ if ($category_depth == 'nested') {
     $categories_content = array();
     while ($categories = xtc_db_fetch_array($categories_query, true)) {
       $cPath_new = xtc_category_link($categories['categories_id'],$categories['categories_name']);
+
       $image = '';
       if ($categories['categories_image'] != '') {
         $image = DIR_WS_IMAGES.'categories/'.$categories['categories_image'];
-        if (!file_exists(DIR_FS_CATALOG.$image)) {
-          if (CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') {
-            $image = DIR_WS_IMAGES.'categories/noimage.gif';
-          } else {
-            $image = '';
-          }
-        }
+      }    
+      if (!file_exists(DIR_FS_CATALOG.$image)) {
+        $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
       }
+
       $categories_content[] = array ('CATEGORIES_NAME' => $categories['categories_name'],
                                      'CATEGORIES_HEADING_TITLE' => $categories['categories_heading_title'],
                                      'CATEGORIES_IMAGE' => (($image != '') ? DIR_WS_BASE . $image : ''),
@@ -162,13 +160,9 @@ if ($category_depth == 'nested') {
   $image = '';
   if ($category['categories_image'] != '') {
     $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
-    if (!file_exists(DIR_FS_CATALOG.$image)) {
-      if (CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') {
-        $image = DIR_WS_IMAGES.'categories/noimage.gif';
-      } else {
-        $image = '';
-      }
-    }
+  }    
+  if (!file_exists(DIR_FS_CATALOG.$image)) {
+    $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
   }
 
   // get default template
