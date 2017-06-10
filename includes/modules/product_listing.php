@@ -69,15 +69,13 @@ if ($listing_split->number_of_rows > 0) {
                                         ".CATEGORIES_CONDITIONS_C."
                                   LIMIT 1");
     $category = xtc_db_fetch_array($category_query, true);
+    
+    $image = '';
     if ($category['categories_image'] != '') {
       $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
-      if (!file_exists(DIR_FS_CATALOG.$image)) {
-        if (CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') {
-          $image = DIR_WS_IMAGES.'categories/noimage.gif';
-        } else {
-          $image = '';
-        }
-      }
+    }    
+    if (!file_exists(DIR_FS_CATALOG.$image)) {
+      $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
     }
   }
 
@@ -98,16 +96,15 @@ if ($listing_split->number_of_rows > 0) {
                                         AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "')
                               WHERE m.manufacturers_id = '".$manufacturers_id."'");
     $manu = xtc_db_fetch_array($manu_query, true);
+
+    $manu_image = '';
     if ($manu['manufacturers_image'] != '') {
       $manu_image = DIR_WS_IMAGES.$manu['manufacturers_image'];
-      if (!file_exists(DIR_FS_CATALOG.$manu_image)) {
-        if (MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') {
-          $manu_image = DIR_WS_IMAGES.'manufacturers/noimage.gif';
-        } else {
-          $manu_image = '';
-        }
-      }
+    }    
+    if (!file_exists(DIR_FS_CATALOG.$image)) {
+      $manu_image = ((MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'manufacturers/noimage.gif' : '');
     }
+
     if ($current_category_id != '0') {
       $module_smarty->assign('MANUFACTURER_IMAGE', ((isset($manu_image) && $manu_image != '') ? DIR_WS_BASE . $manu_image : ''));
       $module_smarty->assign('MANUFACTURER_NAME', $manu['manufacturers_name']);
@@ -218,13 +215,9 @@ if ($result != false) {
     $image = '';
     if ($category['categories_image'] != '') {
       $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
-      if (!file_exists(DIR_FS_CATALOG.$image)) {
-        if (CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') {
-          $image = DIR_WS_IMAGES.'categories/noimage.gif';
-        } else {
-          $image = '';
-        }
-      }
+    }    
+    if (!file_exists(DIR_FS_CATALOG.$image)) {
+      $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
     }
 
     $module_smarty->assign('CATEGORIES_NAME', $category['categories_name']);

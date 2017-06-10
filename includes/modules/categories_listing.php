@@ -60,15 +60,11 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
       $cPath_new = xtc_category_link($categories['categories_id'],$categories['categories_name']);
 
       $image = '';
-       if ($categories['categories_image'] != '') {
+      if ($categories['categories_image'] != '') {
         $image = DIR_WS_IMAGES.'categories/'.$categories['categories_image'];
-        if (!file_exists(DIR_FS_CATALOG.$image)) {
-          if (CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') {
-            $image = DIR_WS_IMAGES.'categories/noimage.gif';
-          } else {
-            $image = '';
-          }
-        }
+      }    
+      if (!file_exists(DIR_FS_CATALOG.$image)) {
+        $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
       }
       
       $categories_content[] = array ('CATEGORIES_NAME' => $categories['categories_name'], 
