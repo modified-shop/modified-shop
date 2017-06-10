@@ -38,6 +38,7 @@ $lang_array = array(
   // instruction
   'TEXT_PAYPAL_INSTRUCTIONS' => 'Money order',
   'TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT' => 'Please transfer the amount of %s at least to %s to the following account:',
+  'TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT_SHORT' => 'Please transfer the amount of %s to the following account:',
   'TEXT_PAYPAL_INSTRUCTIONS_AMOUNT' => 'Amount:',
   'TEXT_PAYPAL_INSTRUCTIONS_REFERENCE' => 'Usage:',
   'TEXT_PAYPAL_INSTRUCTIONS_PAYDATE' => 'Payable to:',
