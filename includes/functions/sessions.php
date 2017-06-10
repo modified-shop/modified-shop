@@ -211,9 +211,9 @@
    
     if ($session_data != '') {
       $variables = array();
-      $a = preg_split( "/(\w+)\|/", $session_data, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
-      for( $i = 0; $i < count( $a ); $i = $i+2 ) {
-        $variables[$a[$i]] = unserialize( $a[$i+1] );
+      $a = preg_split("/(\w+)\|/", $session_data, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+      for($i = 0, $n = count($a); $i < $n; $i = $i+2) {
+        $variables[$a[$i]] = unserialize($a[$i+1]);
       }
       return($variables);
     }
