@@ -203,9 +203,16 @@ class PayPalPaymentBase extends PayPalCommon {
           'field' => $payment['instruction']['bank']['bic'],
         ),
       );
-  
+      
+      $title = sprintf(TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT, $payment['instruction']['amount']['total'].' '.$payment['instruction']['amount']['currency'], $payment['instruction']['date']);
+      if ($fields[2]['field'] == '') {
+        unset($fields[2]);
+        $fields = array_values($fields);
+        $title = sprintf(TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT_SHORT, $payment['instruction']['amount']['total'].' '.$payment['instruction']['amount']['currency']);
+      }
+      
       $success = array(
-        array ('title' => sprintf(TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT, $payment['instruction']['amount']['total'].' '.$payment['instruction']['amount']['currency'], $payment['instruction']['date']),
+        array ('title' => $title,
                'class' => $this->code,
                'fields' => $fields
                ),
