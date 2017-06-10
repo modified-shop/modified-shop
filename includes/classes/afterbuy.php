@@ -24,6 +24,7 @@ class xtc_afterbuy_functions {
 	}
 
 	function process_order() {
+    global $xtPrice;
 
 		// ############ SETTINGS ################
 
@@ -50,7 +51,7 @@ class xtc_afterbuy_functions {
 
 		// This is the URL that you want PHP to fetch.
 		// You can also set this option when initializing a session with the curl_init()  function.
-		curl_setopt($ch, CURLOPT_URL, "$afterbuy_URL");
+		curl_setopt($ch, CURLOPT_URL, $afterbuy_URL);
 
 		// curl_setopt($ch, CURLOPT_CAFILE, 'D:/curl-ca.crt');
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -68,9 +69,10 @@ class xtc_afterbuy_functions {
 		$customer['firma'] = $oData['billing_company'];
 		$customer['vorname'] = $oData['billing_firstname'];
 		$customer['nachname'] = $oData['billing_lastname'];
-		$customer['strasse'] = preg_replace("/ /", "%20", $oData['billing_street_address']); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
+		$customer['strasse'] = preg_replace("/ /", "%20", $oData['billing_street_address']); 
+		$customer['strasse2'] = preg_replace("/ /", "%20", $oData['billing_suburb']); 
 		$customer['plz'] = $oData['billing_postcode'];
-		$customer['ort'] = preg_replace("/ /", "%20", $oData['billing_city']); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
+		$customer['ort'] = preg_replace("/ /", "%20", $oData['billing_city']); 
 		$customer['tel'] = $oData['customers_telephone'];
 		$customer['fax'] = "";
 		$customer['mail'] = $oData['customers_email_address'];
@@ -92,9 +94,10 @@ class xtc_afterbuy_functions {
 		$customer['d_firma'] = $oData['delivery_company'];
 		$customer['d_vorname'] = $oData['delivery_firstname'];
 		$customer['d_nachname'] = $oData['delivery_lastname'];
-		$customer['d_strasse'] = preg_replace("/ /", "%20", $oData['delivery_street_address']); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
+		$customer['d_strasse'] = preg_replace("/ /", "%20", $oData['delivery_street_address']); 
+		$customer['d_strasse2'] = preg_replace("/ /", "%20", $oData['delivery_suburb']); 
 		$customer['d_plz'] = $oData['delivery_postcode'];
-		$customer['d_ort'] = preg_replace("/ /", "%20", $oData['delivery_city']); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
+		$customer['d_ort'] = preg_replace("/ /", "%20", $oData['delivery_city']); 
 		$customer['d_land'] = $oData['delivery_country_iso_code_2'];
 
 		// get products related to order
@@ -112,6 +115,7 @@ class xtc_afterbuy_functions {
 		$DATAstring .= "KVorname=".$customer['vorname']."&";
 		$DATAstring .= "KNachname=".$customer['nachname']."&";
 		$DATAstring .= "KStrasse=".$customer['strasse']."&";
+		$DATAstring .= "KStrasse2=".$customer['strasse2']."&";
 		$DATAstring .= "KPLZ=".$customer['plz']."&";
 		$DATAstring .= "KOrt=".$customer['ort']."&";
 		$DATAstring .= "Ktelefon=".$customer['tel']."&";
@@ -125,6 +129,7 @@ class xtc_afterbuy_functions {
 		$DATAstring .= "KLVorname=".$customer['d_vorname']."&";
 		$DATAstring .= "KLNachname=".$customer['d_nachname']."&";
 		$DATAstring .= "KLStrasse=".$customer['d_strasse']."&";
+		$DATAstring .= "KLStrasse2=".$customer['d_strasse2']."&";
 		$DATAstring .= "KLPLZ=".$customer['d_plz']."&";
 		$DATAstring .= "KLOrt=".$customer['d_ort']."&";
 		$DATAstring .= "KLLand=".$customer['d_land']."&";
@@ -138,12 +143,12 @@ class xtc_afterbuy_functions {
 			if ($artnr == '')
 				$artnr = $pDATA['products_id'];
 			$DATAstring .= "Artikelnr_".$nr."=".$artnr."&";
-			$DATAstring .= "Artikelname_".$nr."=".preg_replace("/&/", "%38", preg_replace("/\"/", "", preg_replace("/ /", "%20", $pDATA['products_name'])))."&"; // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
+			$DATAstring .= "Artikelname_".$nr."=".preg_replace("/&/", "%38", preg_replace("/\"/", "", preg_replace("/ /", "%20", $pDATA['products_name'])))."&"; 
 			
-			if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) $pDATA['products_price']+=$pDATA['products_tax'];
-			if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) $pDATA['products_tax']=0; 
-			$price = preg_replace("/\./", ",", $pDATA['products_price']); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
-			$tax = preg_replace("/\./", ",", $pDATA['products_tax']); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
+			if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) $pDATA['products_price'] = $xtPrice->xtcAddTax($pDATA['products_price'], $pDATA['products_tax']);
+			if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) $pDATA['products_tax'] = 0;
+			$price = preg_replace("/\./", ",", $pDATA['products_price']); 
+			$tax = preg_replace("/\./", ",", $pDATA['products_tax']); 
 
 			$DATAstring .= "ArtikelEPreis_".$nr."=".$price."&";
 			$DATAstring .= "ArtikelMwst_".$nr."=".$tax."&";
@@ -151,7 +156,7 @@ class xtc_afterbuy_functions {
 			$url = HTTP_SERVER.DIR_WS_CATALOG.'product_info.php?products_id='.$pDATA['products_id'];
 			$DATAstring .= "ArtikelLink_".$nr."=".$url."&";
 
-			$a_query = xtc_db_query("SELECT * FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." WHERE orders_id='".(int)$oID."' AND orders_products_id='".$pDATA['orders_products_id']."'");
+			$a_query = xtc_db_query("SELECT * FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." WHERE orders_id='".(int)$oID."' AND orders_products_id='".(int)$pDATA['orders_products_id']."'");
 			$options = '';
 			while ($aDATA = xtc_db_fetch_array($a_query)) {
 				if ($options == '') {
@@ -166,16 +171,12 @@ class xtc_afterbuy_functions {
 			$anzahl += $pDATA['products_quantity'];
 		}
 
-		$order_total_query = xtc_db_query("SELECT
-						                      class,
-						                      value,
-						                      sort_order
-						                      FROM ".TABLE_ORDERS_TOTAL."
-						                      WHERE orders_id='".(int)$oID."'
-						                      ORDER BY sort_order ASC");
+		$order_total_query = xtc_db_query("SELECT *
+						                             FROM ".TABLE_ORDERS_TOTAL."
+						                            WHERE orders_id='".(int)$oID."'
+						                         ORDER BY sort_order ASC");
 
 		$order_total = array ();
-		$zk = '';
 		$cod_fee = '';
 		$cod_flag = false;
 		$discount_flag = false;
@@ -215,11 +216,11 @@ class xtc_afterbuy_functions {
 		// add cod as product
 		if ($cod_flag) {
 			// cod tax class
-			//    MODULE_ORDER_TOTAL_COD_TAX_CLASS
+			// MODULE_ORDER_TOTAL_COD_TAX_CLASS
 			$nr ++;
 			$DATAstring .= "Artikelnr_".$nr."=99999999&";
 			$DATAstring .= "Artikelname_".$nr."=Nachname&";
-			$cod_fee = preg_replace("/\./", ",", $cod_fee); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
+			$cod_fee = preg_replace("/\./", ",", $cod_fee); 
 			$DATAstring .= "ArtikelEPreis_".$nr."=".$cod_fee."&";
 			$DATAstring .= "ArtikelMwst_".$nr."=".$tax."&";
 			$DATAstring .= "ArtikelMenge_".$nr."=1&";
@@ -231,7 +232,7 @@ class xtc_afterbuy_functions {
 			$nr ++;
 			$DATAstring .= "Artikelnr_".$nr."=99999998&";
 			$DATAstring .= "Artikelname_".$nr."=Rabatt&";
-			$discount = preg_replace("/\./", ",", $discount); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
+			$discount = preg_replace("/\./", ",", $discount); 
 			$DATAstring .= "ArtikelEPreis_".$nr."=".$discount."&";
 			$DATAstring .= "ArtikelMwst_".$nr."=".$tax."&";
 			$DATAstring .= "ArtikelMenge_".$nr."=1&";
@@ -240,29 +241,31 @@ class xtc_afterbuy_functions {
 		// Gutschein
 		if ($gv_flag) {
 			$nr ++;
+			$gvtax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_GV_TAX_CLASS);
 			$DATAstring .= "Artikelnr_".$nr."=99999997&";
 			$DATAstring .= "Artikelname_".$nr."=Gutschein&";
-			$gv = preg_replace("/\./", ",", ($gv * (-1))); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
+			$gv = preg_replace("/\./", ",", ($gv * (-1))); 
 			$DATAstring .= "ArtikelEPreis_".$nr."=".$gv."&";
-			$DATAstring .= "ArtikelMwst_".$nr."=0&";
+			$DATAstring .= "ArtikelMwst_".$nr."=".$gvtax."&";
 			$DATAstring .= "ArtikelMenge_".$nr."=1&";
 			$p_count ++;
 		}
 		// Kupon
 		if ($coupon_flag) {
 			$nr ++;
+			$coupontax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COUPON_TAX_CLASS);
 			$DATAstring .= "Artikelnr_".$nr."=99999996&";
 			$DATAstring .= "Artikelname_".$nr."=Kupon&";
-			$coupon = preg_replace("/\./", ",", ($coupon * (-1))); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
+			$coupon = preg_replace("/\./", ",", ($coupon * (-1))); 
 			$DATAstring .= "ArtikelEPreis_".$nr."=".$coupon."&";
-			$DATAstring .= "ArtikelMwst_".$nr."=0&";
+			$DATAstring .= "ArtikelMwst_".$nr."=".$coupontax."&";
 			$DATAstring .= "ArtikelMenge_".$nr."=1&";
 			$p_count ++;
 		}
 
 		$DATAstring .= "PosAnz=".$p_count."&";
 
-		$vK = preg_replace("/\./", ",", $shipping); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
+		$vK = preg_replace("/\./", ",", $shipping); 
 
 		if ($oData['payment_method'] == 'cod')
 			$oData['payment_method'] = 'Nachnahme';
@@ -290,16 +293,11 @@ class xtc_afterbuy_functions {
 
 		$DATAstring .= "NoVersandCalc=1";
 
-
-
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $DATAstring);
 		$result = curl_exec($ch);
     
-    //BOF - Dokuman - 2010-01-27 - added missing escape Character to preg_match
-		//if (preg_match("/<success>1</success>/", $result)) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
-		if (preg_match("/<success>1<\/success>/", $result)) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
-    //EOF - Dokuman - 2010-01-27 - added missing escape Character to preg_match
+		if (preg_match("/<success>1<\/success>/", $result)) {
 		
 			// result ok, mark order
 			// extract ID from result
@@ -310,15 +308,13 @@ class xtc_afterbuy_functions {
 
 			//set new order status
 			if ($order_status != '') {
-				xtc_db_query("update ".TABLE_ORDERS." set orders_status='".$order_status."' where orders_id='".(int)$oID."'");
+				xtc_db_query("update ".TABLE_ORDERS." set orders_status='".(int)$order_status."' where orders_id='".(int)$oID."'");
 			}
 		} else {
-
 			// mail to shopowner
 			$mail_content = 'Fehler bei &Uuml;bertragung der Bestellung: '.$oID.chr(13).chr(10).'Folgende Fehlermeldung wurde vom afterbuy.de zur&uuml;ckgegeben:'.chr(13).chr(10).$result;
 
 			mail(EMAIL_BILLING_ADDRESS, "Afterbuy-Fehl&uuml;bertragung", $mail_content);
-
 		}
 		// close session
 		curl_close($ch);
