@@ -253,7 +253,8 @@ CREATE TABLE categories (
   date_added DATETIME,
   last_modified DATETIME,
   PRIMARY KEY (categories_id),
-  KEY idx_categories_parent_id (parent_id)
+  KEY idx_categories_parent_id (parent_id),
+  KEY idx_categories_status (categories_status)
 );
 
 DROP TABLE IF EXISTS categories_description;
@@ -328,7 +329,7 @@ CREATE TABLE content_manager (
   date_added DATETIME NOT NULL,
   last_modified DATETIME NULL,
   PRIMARY KEY (content_id),
-  KEY idx_content_group (content_group)
+  KEY idx_content_group (content_group, languages_id)
 );
 
 DROP TABLE IF EXISTS countries;
@@ -342,6 +343,7 @@ CREATE TABLE countries (
   required_zones INT(1) DEFAULT '0',
   PRIMARY KEY (countries_id),
   KEY idx_countries_name (countries_name),
+  KEY idx_status (status),
   UNIQUE idx_countries_iso_code_2 (countries_iso_code_2),
   UNIQUE idx_countries_iso_code_3 (countries_iso_code_3)
 );
@@ -467,7 +469,8 @@ CREATE TABLE customers (
   customers_date_added DATETIME DEFAULT '0000-00-00 00:00:00',
   customers_last_modified DATETIME DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (customers_id),
-  KEY idx_customers_email_address (customers_email_address)
+  KEY idx_customers_email_address (customers_email_address),
+  KEY idx_customers_default_address_id (customers_default_address_id)
 );
 
 DROP TABLE IF EXISTS customers_basket;
@@ -609,7 +612,8 @@ CREATE TABLE languages (
   status INT(1) NOT NULL DEFAULT 1,
   status_admin INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (languages_id),
-  UNIQUE idx_code (code)
+  UNIQUE idx_code (code),
+  KEY idx_status (status)
 );
 
 DROP TABLE IF EXISTS manufacturers;
@@ -1246,7 +1250,8 @@ CREATE TABLE tax_rates (
   last_modified DATETIME NULL,
   date_added DATETIME NOT NULL,
   PRIMARY KEY (tax_rates_id),
-  KEY idx_tax_zone_id (tax_zone_id)
+  KEY idx_tax_zone_id (tax_zone_id),
+  KEY idx_tax_class_id (tax_class_id)
 );
 
 DROP TABLE IF EXISTS whos_online;
@@ -1270,7 +1275,8 @@ CREATE TABLE zones (
   zone_code VARCHAR(32) NOT NULL,
   zone_name VARCHAR(64) NOT NULL,
   PRIMARY KEY (zone_id),
-  UNIQUE idx_country_code (zone_country_id, zone_code)
+  UNIQUE idx_country_code (zone_country_id, zone_code),
+  KEY idx_zone_country_id (zone_country_id)
 );
 
 DROP TABLE IF EXISTS zones_to_geo_zones;

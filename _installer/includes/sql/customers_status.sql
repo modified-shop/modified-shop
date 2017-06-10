@@ -25,7 +25,8 @@ CREATE TABLE `personal_offers_by_customers_status_0` (
   `products_id` int(11) NOT NULL,
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
-  PRIMARY KEY (`price_id`)
+  PRIMARY KEY (`price_id`),
+  KEY idx_products_id (products_id)
 );
 
 -- 
@@ -38,7 +39,8 @@ CREATE TABLE `personal_offers_by_customers_status_1` (
   `products_id` int(11) NOT NULL,
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
-  PRIMARY KEY (`price_id`)
+  PRIMARY KEY (`price_id`),
+  KEY idx_products_id (products_id)
 );
 
 -- 
@@ -51,7 +53,8 @@ CREATE TABLE `personal_offers_by_customers_status_2` (
   `products_id` int(11) NOT NULL,
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
-  PRIMARY KEY (`price_id`)
+  PRIMARY KEY (`price_id`),
+  KEY idx_products_id (products_id)
 );
 
 -- 
@@ -64,7 +67,8 @@ CREATE TABLE `personal_offers_by_customers_status_3` (
   `products_id` int(11) NOT NULL,
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
-  PRIMARY KEY (`price_id`)
+  PRIMARY KEY (`price_id`),
+  KEY idx_products_id (products_id)
 );
 
 -- 
@@ -77,6 +81,7 @@ CREATE TABLE `personal_offers_by_customers_status_4` (
   `products_id` int(11) NOT NULL,
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
-  PRIMARY KEY (`price_id`)
+  PRIMARY KEY (`price_id`),
+  KEY idx_products_id (products_id)
 );
 

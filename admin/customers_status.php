@@ -104,7 +104,14 @@
           xtc_db_query("DROP TABLE IF EXISTS personal_offers_by_customers_status_" . $customers_status_id);
 
           // We want to create a personal offer table corresponding to each customers_status
-          xtc_db_query("CREATE TABLE personal_offers_by_customers_status_" . $customers_status_id . " (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, products_id int NOT NULL, quantity int, personal_offer decimal(15,4))");
+          xtc_db_query("CREATE TABLE personal_offers_by_customers_status_" . $customers_status_id . " (
+                          price_id INT NOT NULL AUTO_INCREMENT, 
+                          products_id int NOT NULL, 
+                          quantity int, 
+                          personal_offer decimal(15,4),
+                          PRIMARY KEY (price_id),
+                          KEY idx_products_id (products_id)
+                        )");
 
           // get lat group
           $last_group_table = get_table_columns(TABLE_CATEGORIES, 'group_permission_%', true);
