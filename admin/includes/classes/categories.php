@@ -1323,7 +1323,8 @@ class categories {
       }
       
       if (substr($products_data['specials_price'], -1) != '%'){
-        $products_data['specials_price'] = $this->priceCheck($products_data['specials_price'], $products_data['tax_rate']);
+        $tax_rate = xtc_get_tax_rate($products_data['products_tax_class_id']);
+        $products_data['specials_price'] = $this->priceCheck($products_data['specials_price'], $tax_rate);
       } else {
         $products_data['specials_price'] = ($products_data['products_price'] - (($products_data['specials_price'] / 100) * $products_data['products_price']));
       }

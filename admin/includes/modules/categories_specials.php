@@ -87,7 +87,6 @@ if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0 and $sInfo
 // tell the storing script if to update existing special,
 // or to insert a new one
 echo xtc_draw_hidden_field('specials_action', ((isset($_GET['pID']) && xtc_db_num_rows($specials_query, true) > 0) ? "update" : "insert"));
-echo xtc_draw_hidden_field('tax_rate', xtc_get_tax_rate($pInfo->products_tax_class_id));
 echo xtc_draw_hidden_field('products_price_hidden', $pInfo->products_price);
 if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) {
   echo xtc_draw_hidden_field('specials_id', $sInfo->specials_id);
