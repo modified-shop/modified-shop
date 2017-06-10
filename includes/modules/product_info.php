@@ -161,7 +161,8 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $info_smarty->assign('FORM_END', '</form>');
   
   // load all definitions from product class
-  foreach ($product->buildDataArray($product->data, 'info') as $key => $value) {
+  $productDataArray = $product->buildDataArray($product->data, 'info');
+  foreach ($productDataArray as $key => $value) {
     $info_smarty->assign($key, $value);
   }
   
