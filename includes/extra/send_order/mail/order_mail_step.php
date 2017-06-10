@@ -7,6 +7,7 @@ if (defined('MODULE_ORDER_MAIL_STEP_STATUS')
         )
     )
 {
+  $smarty->caching = 0;
   $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail_step.html');
   $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail_step.txt');
   
