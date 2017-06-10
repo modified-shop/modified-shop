@@ -28,4 +28,6 @@ UPDATE content_manager SET content_text = REPLACE(content_text, '<a href="http//
 UPDATE orders_status SET orders_status_name = 'Shipped' WHERE orders_status_name = 'Delivered' AND orders_status_id = '3' AND language_id = '1';
 UPDATE orders_status SET orders_status_name = 'Canceled' WHERE orders_status_name = 'Reversed' AND orders_status_id = '4' AND language_id = '1';
 
+UPDATE admin_access SET filemanager = 1 WHERE customers_id = 1 LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
