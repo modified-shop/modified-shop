@@ -91,11 +91,6 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
   }
 }
 
-$breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_SUCCESS);
-$breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_SUCCESS);
-
-require (DIR_WS_INCLUDES.'header.php');
-
 // Downloads
 if (DOWNLOAD_ENABLED == 'true') {
 	include (DIR_WS_MODULES.'downloads.php');
@@ -132,6 +127,11 @@ if ($_SESSION['account_type'] == '1') {
   unset ($_SESSION['cc_id']);
   require (DIR_WS_INCLUDES.'write_customers_status.php');
 }
+
+$breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_SUCCESS);
+$breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_SUCCESS);
+
+require (DIR_WS_INCLUDES.'header.php');
 
 ## BILLSAFE payment module
 echo '<script type="text/javascript"> if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL').'"); </script>';
