@@ -43,6 +43,18 @@ if (isset($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 
+$account_options = ACCOUNT_OPTIONS;
+$products = $_SESSION['cart']->get_products();
+for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
+  if (preg_match('/^GIFT/', addslashes($products[$i]['model']))) {
+    $account_options = 'account';
+    break;
+  }
+}
+if ($account_options == 'guest') {
+  xtc_redirect(xtc_href_link(FILENAME_CREATE_GUEST_ACCOUNT, '', 'SSL'));
+}
+
 // create smarty elements
 $smarty = new Smarty;
 
