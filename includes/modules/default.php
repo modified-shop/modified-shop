@@ -142,7 +142,7 @@ if ($category_depth == 'nested') {
       if ($categories['categories_image'] != '') {
         $image = DIR_WS_IMAGES.'categories/'.$categories['categories_image'];
       }    
-      if (!file_exists(DIR_FS_CATALOG.$image)) {
+      if (!is_file(DIR_FS_CATALOG.$image)) {
         $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
       }
 
@@ -161,7 +161,7 @@ if ($category_depth == 'nested') {
   if ($category['categories_image'] != '') {
     $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
   }    
-  if (!file_exists(DIR_FS_CATALOG.$image)) {
+  if (!is_file(DIR_FS_CATALOG.$image)) {
     $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
   }
 

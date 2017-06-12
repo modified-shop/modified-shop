@@ -36,12 +36,13 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers_info.html
 
   if (xtc_db_num_rows($manufacturer_query, true)) {
     $manufacturer = xtc_db_fetch_array($manufacturer_query, true);
+
     $image = '';
-    if (xtc_not_null($manufacturer['manufacturers_image'])) {
-      $image = DIR_WS_IMAGES . $manufacturer['manufacturers_image'];
-      if (!file_exists($image)) {
-        $image = DIR_WS_IMAGES . 'manufacturers/noimage.gif';
-      }
+    if ($manufacturer['manufacturers_image'] != '') {
+      $image = DIR_WS_IMAGES.$manufacturer['manufacturers_image'];
+    }    
+    if (!is_file(DIR_FS_CATALOG.$image)) {
+      $image = ((MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'manufacturers/noimage.gif' : '');
     }
     $box_smarty->assign('IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
     $box_smarty->assign('NAME',$manufacturer['manufacturers_name']);

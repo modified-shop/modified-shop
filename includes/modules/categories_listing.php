@@ -63,7 +63,7 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
       if ($categories['categories_image'] != '') {
         $image = DIR_WS_IMAGES.'categories/'.$categories['categories_image'];
       }    
-      if (!file_exists(DIR_FS_CATALOG.$image)) {
+      if (!is_file(DIR_FS_CATALOG.$image)) {
         $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
       }
       

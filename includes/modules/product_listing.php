@@ -74,7 +74,7 @@ if ($listing_split->number_of_rows > 0) {
     if ($category['categories_image'] != '') {
       $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
     }    
-    if (!file_exists(DIR_FS_CATALOG.$image)) {
+    if (!is_file(DIR_FS_CATALOG.$image)) {
       $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
     }
   }
@@ -101,7 +101,7 @@ if ($listing_split->number_of_rows > 0) {
     if ($manu['manufacturers_image'] != '') {
       $manu_image = DIR_WS_IMAGES.$manu['manufacturers_image'];
     }    
-    if (!file_exists(DIR_FS_CATALOG.$manu_image)) {
+    if (!is_file(DIR_FS_CATALOG.$manu_image)) {
       $manu_image = ((MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'manufacturers/noimage.gif' : '');
     }
 
@@ -216,7 +216,7 @@ if ($result != false) {
     if ($category['categories_image'] != '') {
       $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
     }    
-    if (!file_exists(DIR_FS_CATALOG.$image)) {
+    if (!is_file(DIR_FS_CATALOG.$image)) {
       $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
     }
 
