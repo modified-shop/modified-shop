@@ -96,6 +96,11 @@ if ($reviews_split->number_of_rows > 0) {
   }
   $smarty->assign('module_content', $module_data);
 } else {
+  if ($messageStack->size('product_reviews') > 0) {
+    for ($i=0, $n=$messageStack->size('product_reviews'); $i<$n; $i++) {
+      $messageStack->add_session('product_reviews', $messageStack->messages['product_reviews']['error'][$i]);
+    }
+  }
   xtc_redirect(xtc_href_link(FILENAME_REVIEWS, '', 'NONSSL'));
 }
 
