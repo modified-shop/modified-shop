@@ -101,7 +101,7 @@ if ($listing_split->number_of_rows > 0) {
     if ($manu['manufacturers_image'] != '') {
       $manu_image = DIR_WS_IMAGES.$manu['manufacturers_image'];
     }    
-    if (!file_exists(DIR_FS_CATALOG.$image)) {
+    if (!file_exists(DIR_FS_CATALOG.$manu_image)) {
       $manu_image = ((MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'manufacturers/noimage.gif' : '');
     }
 
