@@ -38,7 +38,9 @@
 
   $module_smarty->caching = 0;
   $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/error_message.html');
-
-  $smarty->assign('bestseller', true);
-  $smarty->assign('main_content', $module);
+  
+  if (isset($smarty) && is_object($smarty)) {
+    $smarty->assign('bestseller', true);
+    $smarty->assign('main_content', $module);
+  }
 ?>
