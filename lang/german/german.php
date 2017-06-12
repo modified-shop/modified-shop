@@ -640,6 +640,6 @@ define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2128', 'Interner Fehler bei Pr&uuml;fu
 
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_UNKNOWN', 'Unbekannter Fehler bei Pr&uuml;fung der Bankverbindung.');
 
-define('PRODUCT_REVIEWS_SUCCESS', 'Vielen Dank f&uuml;r ihre Rezension.');
-define('PRODUCT_REVIEWS_SUCCESS_WAITING', 'Vielen Dank f&uuml;r ihre Rezension. Diese wird nun gepr&uuml;ft bevor sie freigeschalten wird.');
+define('PRODUCT_REVIEWS_SUCCESS', 'Vielen Dank f&uuml;r Ihre Rezension.');
+define('PRODUCT_REVIEWS_SUCCESS_WAITING', 'Vielen Dank f&uuml;r Ihre Rezension. Diese wird nun gepr&uuml;ft bevor sie freigeschaltet wird.');
 ?>
