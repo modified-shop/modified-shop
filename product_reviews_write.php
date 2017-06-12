@@ -102,9 +102,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process') {
       xtc_db_perform(TABLE_REVIEWS_DESCRIPTION,$sql_data_array);
       
       if ($_SESSION['customers_status']['customers_status_reviews_status'] == '1') {
-        $messageStack->add('product_reviews', PRODUCT_REVIEWS_SUCCESS_WAITING);
+        $messageStack->add_session('product_reviews', PRODUCT_REVIEWS_SUCCESS_WAITING);
       } else {
-        $messageStack->add('product_reviews', PRODUCT_REVIEWS_SUCCESS);
+        $messageStack->add_session('product_reviews', PRODUCT_REVIEWS_SUCCESS);
       }
       
       xtc_redirect(xtc_href_link(FILENAME_PRODUCT_REVIEWS, $_POST['get_params']));
