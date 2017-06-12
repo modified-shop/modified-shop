@@ -98,6 +98,10 @@ if ($reviews_split->number_of_rows > 0) {
 
 $smarty->assign('language', $_SESSION['language']);
 
+if ($messageStack->size('product_reviews') > 0) {
+  $smarty->assign('error', $messageStack->output('product_reviews'));
+}
+
 // set cache ID
 if (!CacheCheck()) {
   $smarty->caching = 0;
