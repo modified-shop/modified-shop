@@ -1147,7 +1147,10 @@ CREATE TABLE products_xsell (
   products_xsell_grp_name_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
   xsell_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
   sort_order INT(10) UNSIGNED NOT NULL DEFAULT 1,
-  PRIMARY KEY (ID)
+  PRIMARY KEY (ID),
+  KEY idx_xsell_id (xsell_id),
+  KEY idx_products_id (products_id),
+  KEY idx_products_xsell_grp_name_id (products_xsell_grp_name_id)
 );
 
 DROP TABLE IF EXISTS products_xsell_grp_name;
