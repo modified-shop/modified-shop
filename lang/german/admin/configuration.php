@@ -287,8 +287,8 @@ define('ACCOUNT_DOB_TITLE' , 'Geburtsdatum');
 define('ACCOUNT_DOB_DESC' , 'Geburtsdatum bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
 define('ACCOUNT_COMPANY_TITLE' , 'Firma');
 define('ACCOUNT_COMPANY_DESC' , 'Firma bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
-define('ACCOUNT_SUBURB_TITLE' , 'Vorort');
-define('ACCOUNT_SUBURB_DESC' , 'Vorort bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
+define('ACCOUNT_SUBURB_TITLE' , 'Weitere Anschrift');
+define('ACCOUNT_SUBURB_DESC' , 'Weitere Anschrift bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
 define('ACCOUNT_STATE_TITLE' , 'Bundesland');
 define('ACCOUNT_STATE_DESC' , 'Bundesland bei der Kontoer&ouml;ffnung/-bearbeitung abfragen');
 

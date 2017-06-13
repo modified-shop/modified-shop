@@ -256,7 +256,7 @@ define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', '&nbsp;<span class="errorText">This e
 define('ENTRY_COMPANY', 'Company name:');
 define('ENTRY_STREET_ADDRESS', 'Street Address:');
 define('ENTRY_STREET_ADDRESS_ERROR', '&nbsp;<span class="errorText">min. ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' Chars</span>');
-define('ENTRY_SUBURB', 'Suburb:');
+define('ENTRY_SUBURB', 'Addition to address:');
 define('ENTRY_POST_CODE', 'Postcode:');
 define('ENTRY_POST_CODE_ERROR', '&nbsp;<span class="errorText">min. ' . ENTRY_POSTCODE_MIN_LENGTH . ' chars</span>');
 define('ENTRY_CITY', 'City:');

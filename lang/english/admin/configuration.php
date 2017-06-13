@@ -288,8 +288,8 @@ define('ACCOUNT_DOB_TITLE' , 'Date of Birth');
 define('ACCOUNT_DOB_DESC' , 'Display date of birth upon customer account creation/editing');
 define('ACCOUNT_COMPANY_TITLE' , 'Company');
 define('ACCOUNT_COMPANY_DESC' , 'Display company upon customer account creation/editing');
-define('ACCOUNT_SUBURB_TITLE' , 'Suburb');
-define('ACCOUNT_SUBURB_DESC' , 'Display suburb upon customer account creation/editing');
+define('ACCOUNT_SUBURB_TITLE' , 'Addition to address');
+define('ACCOUNT_SUBURB_DESC' , 'Display addition to address upon customer account creation/editing');
 define('ACCOUNT_STATE_TITLE' , 'State');
 define('ACCOUNT_STATE_DESC' , 'Display state upon customer account creation/editing');
 

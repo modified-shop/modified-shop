@@ -62,7 +62,7 @@ define('TABLE_HEADING_DATE_ADDED', 'hinzugef&uuml;gt am:');
 define('ENTRY_CUSTOMER', 'Kunde:');
 define('ENTRY_SOLD_TO', 'Rechnungsadresse:');
 define('ENTRY_STREET_ADDRESS', 'Strasse:');
-define('ENTRY_SUBURB', 'zus. Anschrift:');
+define('ENTRY_SUBURB', 'Weitere Anschrift:');
 define('ENTRY_CITY', 'Stadt:');
 define('ENTRY_POST_CODE', 'PLZ:');
 define('ENTRY_STATE', 'Bundesland:');
