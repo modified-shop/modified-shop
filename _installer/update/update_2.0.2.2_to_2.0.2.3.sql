@@ -53,4 +53,10 @@ ADD KEY `idx_tax_class_id` (`tax_class_id`);
 ALTER TABLE `zones`
 ADD KEY `idx_zone_country_id` (`zone_country_id`);
 
+#GTB - 2017-06-13 - add index for xsell
+ALTER TABLE `products_xsell`
+ADD KEY idx_xsell_id (xsell_id),
+ADD KEY idx_products_id (products_id),
+ADD KEY idx_products_xsell_grp_name_id (products_xsell_grp_name_id);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
