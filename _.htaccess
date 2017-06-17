@@ -163,7 +163,9 @@ ErrorDocument 500 /sitemap.html?error=500
   ##----------------------------------------------------------------------------------
   ##-- When working with SEO-Urls you can decide, whether to use a colon ":" or a dash "-" symbol
   ##-- (Windows Servers might have problems with colon as delimiter!)
-  ##-- Change the delimiter symbol also in file "/inc/shopstat_functions.inc.php"
+  ##-- Change the delimiter symbol (SEO_SEPARATOR) also in file "/includes/extra/seo_url_mod/seo_url_shopstat.php"
+  ##-- or create a new file "/includes/extra/configure/seo_separator.php"
+  ##-- with the following content: <?php define('SEO_SEPARATOR','-'); ?>
   ##----------------------------------------------------------------------------------
 
   ##-- Use colon delimiter ":" for SEO-URLS (default setting)
