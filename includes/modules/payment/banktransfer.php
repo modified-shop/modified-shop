@@ -22,7 +22,7 @@
    ---------------------------------------------------------------------------------------*/
 
   class banktransfer {
-    var $code, $title, $description, $enabled;
+    var $code, $title, $description, $enabled, $extended_description;
 
     function __construct() {
       global $order;
@@ -30,6 +30,7 @@
       $this->code = 'banktransfer';
       $this->title = MODULE_PAYMENT_BANKTRANSFER_TEXT_TITLE;
       $this->description = MODULE_PAYMENT_BANKTRANSFER_TEXT_DESCRIPTION;
+      $this->extended_description = MODULE_PAYMENT_BANKTRANSFER_TEXT_EXTENDED_DESCRIPTION;
       $this->sort_order = MODULE_PAYMENT_BANKTRANSFER_SORT_ORDER;
       $this->min_order = MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER;
       $this->enabled = ((MODULE_PAYMENT_BANKTRANSFER_STATUS == 'True') ? true : false);

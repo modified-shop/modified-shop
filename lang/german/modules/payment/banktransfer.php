@@ -91,4 +91,7 @@ define('MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX_TITLE', 'Pr&auml;fix f&uuml
 define('MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX_DESC', 'Geben Sie hier ein Pr&auml;fix f&uuml;r die Mandatsreferenz ein');
 define('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY_TITLE', 'F&auml;lligkeit');
 define('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY_DESC', 'Geben Sie ein, nach welcher Frist (in Tagen) Sie die Lastschrift ausf&uuml;hren');
+
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_EXTENDED_DESCRIPTION', '<strong><font color="red">ACHTUNG:</font></strong> Bitte aktualisieren Sie noch die Bankleitzahlen unter "Hilfsprogramme" -> <a href="'.xtc_href_link('blz_update.php').'"><strong>"Bankleitzahlen aktualisieren"</strong></a>!');
+
 ?>
