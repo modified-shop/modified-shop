@@ -2654,6 +2654,10 @@ ul.pd_iconlist li.wishlist .wishlist_submit_link:hover {
 .pd_description ol{
   margin: 8px 0px 8px 15px;
 }
+.pd_description img{
+  max-width: 100%;
+  height: auto;
+}
 .pd_inforow .pd_reviews_image {
   display:inline-block;
 }
