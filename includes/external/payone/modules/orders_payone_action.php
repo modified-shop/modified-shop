@@ -22,6 +22,7 @@ if (isset($oID) && $oID != '') {
                                   'payone_elv', 
                                   'payone_prepay', 
                                   'payone_cod', 
+                                  'payone_paydirekt', 
                                   'payone_invoice');
                                 
   if (in_array($order->info['payment_method'], $payone_payment_methods)) {
