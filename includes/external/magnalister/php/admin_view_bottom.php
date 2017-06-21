@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: admin_view_bottom.php 6842 2016-07-29 10:15:21Z markus.bauer $
+ * $Id$
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -148,7 +148,13 @@ if (MAGNA_DEBUG && class_exists('MagnaDB')) {
 							|| 
 							(typeof originalOptions.type === 'string' && originalOptions.type.toLowerCase() === 'post')
 						) { // adding CSRF-token to each ajax-post-request
-							options.data = $.param($.extend(typeof originalOptions.data === 'object' ? originalOptions.data : {}, oCsrfConfig));
+							if (typeof originalOptions.data == 'string') {//serialized, we add as string
+								for (var s in oCsrfConfig) {
+									options.data = options.data + '&' + s + '=' + oCsrfConfig[s];
+								}
+							} else {
+								options.data = $.param($.extend(typeof originalOptions.data === 'object' ? originalOptions.data : {}, oCsrfConfig));
+							}
 						}
 					});
 					$(document).ready(function() { // adding CSRF-token to each post-form

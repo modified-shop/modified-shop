@@ -115,4 +115,16 @@ abstract class MLProductListHitmeisterAbstract extends MLProductList {
 		return 'prepare';
 	}
 
+	protected function isPreparedDifferently($aRow) {
+		$sPrimaryCategory = $this->getPrepareData($aRow, 'MarketplaceCategories');
+		$sCategoryDetails = $this->getPrepareData($aRow, 'CategoryAttributes');
+		if (!empty($sPrimaryCategory)) {
+			$categoryMatching = HitmeisterHelper::gi()->getCategoryMatching($sPrimaryCategory);
+			$categoryDetails = json_decode($sCategoryDetails, true);
+			return HitmeisterHelper::gi()->detectChanges($categoryMatching, $categoryDetails);
+		}
+
+		return false;
+	}
+
 }

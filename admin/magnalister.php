@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.php 6033 2015-09-22 10:12:38Z markus.bauer $
+ * $Id$
  *
  * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)

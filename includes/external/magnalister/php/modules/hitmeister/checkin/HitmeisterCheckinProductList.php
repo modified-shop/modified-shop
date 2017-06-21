@@ -66,11 +66,12 @@ class HitmeisterCheckinProductList extends MLProductListMagnaCompatibleAbstract{
 								? 'p.products_model = hp.products_model'
 								: 'p.products_id = hp.products_id'
 						).
-						" AND hp.mpID = '".$this->aMagnaSession['mpID']."'"
+						" AND hp.mpID = '".$this->aMagnaSession['mpID']."'
+						AND Verified = 'OK' "
 				),
 				ML_Database_Model_Query_Select::JOIN_TYPE_INNER
 			)
-//			->where("p.products_ean IS NOT NULL AND p.products_ean <> ''")
+//			->where("p.products_ean IS NOT NULL AND p.products_ean <> '' AND products_ean <> '0'")
 		;
 		return $this;
 	}
@@ -103,7 +104,7 @@ class HitmeisterCheckinProductList extends MLProductListMagnaCompatibleAbstract{
 				<tr><td>
 					<table class="nostyle"><tbody>
 						<tr>
-							<td class="label">'.'Kategorie'.':&nbsp;</td>
+							<td class="label">' . ML_LABEL_CATEGORY . ':&nbsp;</td>
 							<td>'.(empty($aData['MarketplaceCategories']) ? '&mdash;' : $aData['MarketplaceCategories']).(empty($aData['MarketplaceCategoriesName']) ? '' : ' '.$aData['MarketplaceCategoriesName']).'</td>
 						<tr>
 					</tbody></table>

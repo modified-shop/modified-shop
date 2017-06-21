@@ -20,20 +20,23 @@
 
 function identShopSystem() {
 	$content = file_get_contents('includes/application_top.php', 0, null, -1, 1500);
-	if (defined('_GM_VALID_CALL') || (stripos($content, 'gambio') !== false)) {
+	if (    MagnaDB::gi()->tableExists('database_version')
+	     && (MagnaDB::gi()->fetchOne("SELECT version FROM database_version WHERE `version` LIKE '%commerce:SEO v%'") !== false)) {
+		define('SHOPSYSTEM', 'commerceseo');
+	} else if (defined('_GM_VALID_CALL') || (stripos($content, 'gambio') !== false)) {
 		define('SHOPSYSTEM', 'gambio');
 	} else if (defined('PROJECT_VERSION') && (stripos(PROJECT_VERSION, 'modified') !== false || stripos($content, 'modified eCommerce Shopsoftware') !== false)) {
 		define('SHOPSYSTEM', 'xtcmodified');
 	} else if (defined('PROJECT_VERSION') && (stripos(PROJECT_VERSION, 'xt:commerce') !== false)) {
 		define('SHOPSYSTEM', 'xtcommerce');
+	} else if (defined('PROJECT_VERSION') && (stripos(PROJECT_VERSION, 'deLuxe') !== false)) {
+		define('SHOPSYSTEM', 'xonsoft');
 	} else if (stripos($content, 'xt-commerce') !== false) {
 		define('SHOPSYSTEM', 'xtcommerce');
 	} else if (stripos($content, 'xt:Commerce') !== false) {
 		define('SHOPSYSTEM', 'xtcommerce');
 	} else if (stripos($content, 'oscommerce') !== false) {
 		define('SHOPSYSTEM', 'oscommerce');
-	} else if (stripos(PROJECT_VERSION, 'deLuxe') !== false) {
-		define('SHOPSYSTEM', 'xonsoft');
 	} else {
 		/* Shop unbekannt, aber mindestens ein osC fork */
 		define('SHOPSYSTEM', 'oscommerce');
@@ -41,3 +44,27 @@ function identShopSystem() {
 }
 
 identShopSystem();
+
+/**
+ * Try to get Gambio ShopSystem Version from Database
+ * @return bool|string
+ */
+function mlGetGambioShopSystemVersion() {
+	if (MagnaDB::gi()->tableExists('version_history')) {
+		$sVersion = MagnaDB::gi()->fetchOne("
+			SELECT version
+			  FROM version_history
+			 WHERE     type IN ('service_pack', 'master_update')
+			".((MagnaDB::gi()->columnExistsInTable('installed', 'version_history'))
+				? 'AND installed = 1'
+				: 'AND (is_full_version = 0 OR (is_full_version = 1 AND history_id = 1))'
+			)."
+		  ORDER BY installation_date DESC
+			 LIMIT 1
+		");
+	} else {
+		return false;
+	}
+
+	return $sVersion;
+}

@@ -1,6 +1,6 @@
 <?php
 # PHPlot / contrib / prune_labels : Example
-# $Id: prune_labels.example.php 439 2010-10-11 14:42:53Z derpapst $
+# $Id$
 # This produces 250 data points with date-formatted labels, and sets
 # a max of 20 labels to display.
 

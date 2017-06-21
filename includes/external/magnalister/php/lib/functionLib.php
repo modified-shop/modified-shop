@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: functionLib.php 6797 2016-07-08 23:57:30Z MaW $
+ * $Id$
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -526,16 +526,22 @@ function charset_decode_utf_8($string) {
 	}
 	
 	// decode three byte unicode characters
-	$string = preg_replace(
-		"/([\340-\357])([\200-\277])([\200-\277])/e",       
-		"'&#'.((ord('\\1')-224)*4096 + (ord('\\2')-128)*64 + (ord('\\3')-128)).';'",   
+	$string = preg_replace_callback(
+		"/([\300-\337])([\200-\277])/",
+		create_function(
+			'$matches',
+			'return "&#".((ord($matches[1])-224)*4096 + (ord($matches[2])-128)*64 + (ord($matches[3])-128)).";";'
+		),
 		$string
 	);
 	
 	// decode two byte unicode characters
-	$string = preg_replace(
-		"/([\300-\337])([\200-\277])/e",
-		"'&#'.((ord('\\1')-192)*64+(ord('\\2')-128)).';'",
+	$string = preg_replace_callback(
+		"/([\300-\337])([\200-\277])/",
+		create_function(
+			'$matches',
+			'return "&#".((ord($matches[1])-192)*64 + (ord($matches[2])-128)).";";'
+		),
 		$string
 	);
 	

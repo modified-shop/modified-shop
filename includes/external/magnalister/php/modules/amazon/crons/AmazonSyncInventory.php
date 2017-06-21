@@ -30,7 +30,6 @@ class AmazonSyncInventory extends MagnaCompatibleSyncInventory {
 		MLProduct::gi()->setOptions(array(
 			'sameVariationsToAttributes' => false,
 			'useGambioProperties' => (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties'),
-			'sExtendFetchSingeVariationsQueryWhere' => AmazonHelper::getMLProductExtendFetchSingleVariationQueryWhere(),
 		));
 	}
 

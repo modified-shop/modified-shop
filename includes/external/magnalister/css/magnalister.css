@@ -169,6 +169,11 @@ body.magna.veyton a:hover {
 body.magna td.boxCenter p a {
 	text-decoration: underline;
 }
+body.magna input[type="text"],
+body.magna select {
+	color: #000;
+	background-color: #fff;
+}
 /* reset */
 body.magna input[type="text"],
 body.magna select {
@@ -352,7 +357,7 @@ div#antlogo {
 }
 div#globalButtonBox {
 	float: right;
-	height: 22px;#ebayCategorySelector ~ div button, #moda
+	height: 22px;
 	margin-top: 32px;
 	margin-right: 25px;
 	text-align: right;
@@ -372,7 +377,7 @@ body.magna div#magnafooter table td a {
 	font-family: Arial, sans-serif;
 }
 div#magnafooter table {
-	margin-bottom: 0px;
+	margin-bottom: 0;
 	border: none;
 }
 div#magnafooter table td {
@@ -1346,9 +1351,9 @@ form.config table.conftbl tr table.inlinetable td.nowrap {
 form.config table.conftbl tr.conf td.subtable table,
 form.config table.conftbl tr td.subconf table.subtable,
 form.config table.conftbl tr table.inlinetable {
-	width: 100%;
+	width: 100% !important;
 	border-collapse: collapse;
-	border-spacing: 0px;
+	border-spacing: 0;
 }
 form.config table.conftbl tr.conf td.subtable table td, 
 form.config table.conftbl tr.conf td.subtable table th,
@@ -1873,7 +1878,7 @@ table.attributesTable table.attrTable {
 	width: 100%;
 	border-spacing: 0px;
 	border-collapse: collapse;
-	border: none;
+	border: none !important;
 	padding: 0;
 	margin: 0;
 }
@@ -2784,6 +2789,9 @@ body.magna.jqueryui .ui-widget {
 	-webkit-border-radius: 0;
 	padding: 8px 26px 23px;
 }
+body.magna.jqueryui .ui-widget div.ui-widget-content {
+	font-size: 13px;
+}
 body.magna.jqueryui .ui-slider {
 	border: 1px solid #a6c9e2;
 	padding: 0;
@@ -2887,45 +2895,37 @@ body.magna table.ml-pagination input {
 
 /* Einstellvorgang */
 div#checkinSubmit {
-	text-align: center;
-	padding-top: 3em;
-	padding-top: 1.5em;
+	width: 475px;
+	padding-top: 53px;
+	padding-bottom: 36px;
+	margin: 0 auto;
 }
 div#checkinSubmit h1#threeDots {
 	font-weight: bold;
-	font-size: 170%;
-	margin-bottom: 1.4em;
+	font-size: 15.4px;
+	margin-bottom: 0.3em;
 	border: none;
+	color: #e31a1c;
 }
 div#checkinSubmit h1#threeDots span#headline {
-	margin-left: 1.5em;
+
 }
 div#checkinSubmit h1#threeDots span.alldots {
 	display: inline-block;
 	width: 1.5em;
 	text-align: left;
 }
-@-webkit-keyframes pulsar {
-	from {
-		opacity: 1;
-	}
-	to {
-		opacity: 0.3;
-	}
+div#checkinSubmit p#checkinSubmitProductsNotice {
+	line-height: 16px;
+	margin-bottom: 24px;
+	font-size: 12px;
 }
-@keyframes pulsar {
-	from {
-		opacity: 1;
-	}
-	to {
-		opacity: 0.3;
-	}
+div#checkinSubmit div#checkinSubmitStatus {
+	line-height: 24px;
+	font-size: 12px;
 }
-.pulse {
-	-webkit-animation: pulsar 1s infinite;
-	-webkit-animation-direction: alternate;
-	animation: pulsar 1s infinite;
-	animation-direction: alternate;
+div#checkinSubmit div#checkinSubmitStatus button {
+	margin-left: 8px;
 }
 div#checkinSubmit h1#threeDots span.alldots span.dot {
 	display: inline;
@@ -3037,11 +3037,10 @@ table#catMatch td.catVisual {
 div.progressBarContainer {
 	height: 17px;
 	width: 100%;
-	border: 1px solid #999;
 	padding: 0;
 	position: relative;
 	text-align: center;
-	background: #fff url('../images/progressbar.png') repeat-x 0 -15px;
+	background-color: #e2dede;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
@@ -3054,7 +3053,7 @@ div.progressBarContainer div.progressBar {
 	height: 100%;
 	width: 0%;
 	transition-property: width;
-	background: #b6cbff url('../images/progressbar.png') repeat-x 0px 0;
+	background-color: #e31a1c;
 }
 div.progressBarContainer div.progressPercent {
 	position: relative;
@@ -3064,10 +3063,10 @@ div.progressBarContainer div.progressPercent {
 	margin: 0;
 	height: 100%;
 	width: 100%;
-	font-weight: normal;
+	font-weight: bold;
 	font-size: 11px;
-	line-height: 15px;
-	color: #000;
+	line-height: 14px;
+	color: #fff;
 	text-align: center;
 }
 
@@ -3233,4 +3232,107 @@ div.ebay div.itemident span.label {
 	/*quirks fix tinymce, dropdowns (Format, Fonttype, Fontsize, ...)*/
 	padding-top: 2px;
 	padding-bottom: 2px;
+}
+
+/*amazon css*/
+input.ml-shippinglabel-size {
+    width: 50px;
+}
+div.magnamain a.breadcrumb {
+    pointer-events: none;
+}
+select.shopAttrSelector {
+	margin-bottom: 10px;
+}
+
+.disabled {
+	color: #d3d3d3;
+}
+
+.actionLeft > * {
+    float: left;
+    margin-right: 3px;
+}
+
+body.magna table#variationMatcher tr#mpVariationSelector td.input {
+    white-space: nowrap;
+}
+body.magna table#variationMatcher tr#mpVariationSelector td.input div#newCustomGroup {
+    display: inline;
+}
+body.magna table#variationMatcher tbody tr th {
+    min-width: 150px;
+}
+body.magna table#variationMatcher table.attrTable.matchingTable {
+    margin-top: 10px;
+    margin-bottom: 1.5em;
+    margin-left: -6px;
+    width: -moz-calc(100% + 12px);
+    width: -webkit-calc(100% + 12px);
+    width: calc(100% + 12px);
+    border-bottom: 2px solid #888;
+}
+body.magna table#variationMatcher table.attrTable.matchingTable tr.headline td {
+    font-weight: bold;
+}
+body.magna table#variationMatcher table.attrTable.matchingTable tr td {
+    width: 50%;
+}
+body.magna table#variationMatcher table.attrTable.matchingTable tr td.input {
+    border-right: none;
+}
+
+body.magna table#variationMatcher select.shopAttrSelector {
+    margin-bottom: 10px;
+}
+
+body.magna .list td {
+	position: relative;
+}
+
+body.magna span.ml-warning {
+    display: inline-block;
+    margin-left:10px;
+    margin-right:5px;
+    background: url("../images/info_tooltip.png") no-repeat scroll 0 0px transparent;
+    height: 16px;
+    width: 16px;
+    padding-top: 1px;
+}
+
+body.magna .productList span.ml-warning {
+	position: absolute;
+	top: 7px;
+	right: 7px;
+}
+
+body.magna .ml-collapse {
+	border: none;
+	background: transparent;
+}
+
+body.magna span.ml-collapse {
+	display: inline-block;
+	background: url("../images/collapse_arrow.png") no-repeat scroll 0 0px transparent;
+	height: 22px;
+	width: 25px;
+	margin-top: 5px;
+	float: right;
+}
+
+body.magna.jqueryui .ui-dialog p.ml-catinfo {
+	color: #FFF;
+	background-color: #AFC8E7;
+	padding-left: 40px;
+}
+
+body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ml-btnreset {
+	border-color: rgba(0, 0, 0, 0.25) rgba(0, 0, 0, 0.25) rgba(0, 0, 0, 0.35);
+	background-color: #f7f6f5;
+	color: #333333;
+}
+
+body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ml-btnreset:hover,
+body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ml-btnreset:active {
+	color: #f7f6f5;
 }

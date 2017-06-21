@@ -183,6 +183,10 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				'key' => 'orderimport.paymentmethod.name',
 				'default' => 'marketplace',
 			),
+            'OrderStatusOpen' => array (
+                'key' => 'orderstatus.open',
+                'default' => '',
+            ),
 		);
 	}
 	
@@ -1073,6 +1077,9 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		} else {
 			$this->p['products_price'] = $fPriceWithoutTax;
 			$this->p['final_price'] = $this->p['products_price'];
+			if (MagnaDB::gi()->columnExistsInTable('allow_tax', TABLE_ORDERS_PRODUCTS)) {
+				$this->p['allow_tax'] = 1;
+			}
 		}
 	}
 	
@@ -1085,7 +1092,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	 * @param string $sFieldName
 	 * @return string
 	 */
-        protected function getProductAttributeData($iProductId, $iOptionId, $iOptionValueId, $sFieldName) {
+	protected function getProductAttributeData($iProductId, $iOptionId, $iOptionValueId, $sFieldName) {
 		return MagnaDB::gi()->fetchOne("
 			SELECT ".$sFieldName."
 			  FROM ".TABLE_PRODUCTS_ATTRIBUTES."
@@ -1093,9 +1100,9 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			       AND options_id = '".$iOptionId."'
 			       AND options_values_id = '".$iOptionValueId."'
 		");
-        }
+	}
 	
-        protected function insertProductAttribute($iProductsId, $aOption, $sSKU) {
+	protected function insertProductAttribute($iProductsId, $aOption, $sSKU) {
 		if (empty($aOption['options_name'])) {
 			return;
 		}
@@ -1485,7 +1492,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		    || !class_exists('RecreateOrder')) return;
 		try {
 			$coo_recreate_order = MainFactory::create_object('RecreateOrder', array($this->cur['OrderID']));
-		} catch (MagnaException $e) {
+		} catch (Exception $e) {
 			if ((MAGNA_CALLBACK_MODE == 'STANDALONE') || $this->verbose) {
 				echo print_m($e->getErrorArray(), 'Error: '.$e->getMessage(), true);
 			}

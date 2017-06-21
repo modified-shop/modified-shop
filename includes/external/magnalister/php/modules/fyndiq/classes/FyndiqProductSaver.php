@@ -117,7 +117,7 @@ class FyndiqProductSaver {
 
 		if (!isset($aItemDetails['mpCategory']) || $aItemDetails['mpCategory'] === '') {
 			$aRow['Verified'] = 'ERROR';
-			$this->aErrors['ML_RICARDO_ERROR_CATEGORY'] = ML_RICARDO_ERROR_CATEGORY;
+			$this->aErrors['ML_FYNDIQ_ERROR_CATEGORY'] = ML_FYNDIQ_ERROR_CATEGORY;
 		} else {
 			$aRow['MarketplaceCategory'] = $aItemDetails['mpCategory'];
 			$aRow['TopMarketplaceCategory'] = $aItemDetails['mpCategory'];
@@ -126,13 +126,13 @@ class FyndiqProductSaver {
 		$aRow['Title'] = fixHTMLUTF8Entities($aItemDetails['Title'], ENT_COMPAT);
 		if (!isset($aRow['Title']) || $aRow['Title'] === '') {
 			$aRow['Verified'] = 'ERROR';
-			$this->aErrors['ML_HITMEISTER_ERROR_TITLE'] = ML_HITMEISTER_ERROR_TITLE;
+			$this->aErrors['ML_FYNDIQ_ERROR_TITLE'] = ML_FYNDIQ_ERROR_TITLE;
 		}
 
 		$aRow['Description'] = fixHTMLUTF8Entities(FyndiqHelper::fyndiqSanitizeDesc($aItemDetails['Description']), ENT_COMPAT);
 		if (!isset($aRow['Description']) || $aRow['Description'] === '') {
 			$aRow['Verified'] = 'ERROR';
-			$this->aErrors['ML_HITMEISTER_ERROR_DESCRITPION'] = ML_HITMEISTER_ERROR_DESCRITPION;
+			$this->aErrors['ML_FYNDIQ_ERROR_DESCRIPTION'] = ML_FYNDIQ_ERROR_DESCRIPTION;
 		}
 
 		$aRow['ShippingCost'] = $this->toFloat($aItemDetails['ShippingCost']);

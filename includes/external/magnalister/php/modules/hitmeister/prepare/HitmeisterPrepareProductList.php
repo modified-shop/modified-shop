@@ -84,39 +84,13 @@ class HitmeisterPrepareProductList extends MLProductList {
 			return isset($this->aPrepareData[$aRow['products_id']][$sFieldName]) ? $this->aPrepareData[$aRow['products_id']][$sFieldName] : null;
 		}
 	}
-	
-	protected function getMarketPlaceCategory($aRow) {
-		$aData = $this->getPrepareData($aRow);
-		if ($aData !== false) {
-			$matchMPShopCats = !getDBConfigValue(array(
-				$this->aMagnaSession['currentPlatform'].'.catmatch.mpshopcats', 'val'
-			), $this->aMagnaSession['mpID'], false);
-			
-			return '
-			<table class="nostyle"><tbody>
-				<tr>
-					<td>MP:</td>
-					<td>'.(empty($aData['mp_category_id']) ? '&mdash;' : $aData['mp_category_id']).(empty($aData['mp_category_name']) ? '' : ' '.$aData['mp_category_name']).'</td>
-				</tr>
-				'.($matchMPShopCats
-					? ('<tr><td>Store:</td><td>'.(
-						empty($aData['store_category_id']) 
-							? '&mdash;' 
-							: $aData['store_category_id']
-						).'</td></tr>') 
-					: ''
-				).'
-			</tbody></table>';
-		}
-		return '&mdash;';
-	}
-	
+
 	/**
 	 * adding propertiestable for filter
 	 */
 	protected function buildQuery() {
 		$oQueryBuilder = parent::buildQuery()->oQuery;
-		$oQueryBuilder->where("p.products_ean IS NOT NULL AND products_ean <> ''");
+		$oQueryBuilder->where("p.products_ean IS NOT NULL AND products_ean <> '' AND products_ean <> '0'");
 		return $this;
 	}
 	

@@ -1,0 +1,78 @@
+{
+    "orderSyncState": {
+        "headline": "",
+        "desc": "<b>Synchronisation des Bestell-Status vom Shop zu _#_platformName_#_<\/b>",
+        "fields": {
+            "syncstatus": {
+                "label": "Status Synchronisierung",
+                "desc": "<dl>\n\t\t\t\t\t\t\t\t<dt>Automatische Synchronisierung per CronJob (empfohlen)<\/dt>\n\t\t\t\t\t\t\t\t\t<dd>Die Funktion \"Automatische Synchronisierung per CronJob\" &uuml;bermittelt alle 2 Stunden den aktuellen Versendet-Status zu _#_platformName_#_.<br\/>\n\t\t\t\t\t\t\t\t\t\tDabei werden die Status-Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. eine Warenwirtschaft nur in der Datenbank erfolgten.<br\/><br\/>\n\t\t\t\t\t\t\t\t\t\tEinen manuellen Abgleich k&ouml;nnen Sie ansto&szlig;en, indem Sie die Bestellung direkt im Web-Shop bearbeiten, dort  den gew&uuml;nschten Status setzen, und dann auf \"Aktualisieren\" klicken.<br\/>\n\t\t\t\t\t\t\t\t\t\tSie k&ouml;nnen auch den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise), um den Status sofort zu &uuml;bergeben.<br\/><br\/>\n\t\t\t\t\t\t\t\t\t\tZus&auml;tzlich k&ouml;nnen Sie den Bestellstatus-Abgleich (ab Tarif Premium - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, indem Sie folgenden Link zu Ihrem Shop aufrufen: <br\/><br\/>\n\t\t\t\t\t\t\t\t\t\t<i>http:\/\/www.IhrShop.de\/plugins\/magnalister\/magnaCallback.php?do=SyncOrderStatus<\/i><br\/><br\/>\n\t\t\t\t\t\t\t\t\t\tEigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Premium sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.\n\t\t\t\t\t\t\t\t\t<\/dd>\n\t\t\t\t\t\t\t\t<!--<dt>Syncronisierung &uuml;ber Web-Shop<\/dt>\n\t\t\t\t\t\t\t\t\t<dd>Mit dieser Funktion wird der Bestellstatus direkt und ausschlie&szlig;lich &uuml;ber das Bearbeiten der Bestellung im Web-Shop\n\t\t\t\t\t\t\t\t\t(nicht &uuml;ber eine angebundene Warenwirtschaft) &uuml;bermittelt, sobald Sie den entsprechenden Status ausw&auml;hlen, und \"Aktualisieren\" klicken.<\/dd>-->\n\t\t\t\t\t\t\t<\/dl>\n\t\t\t\t",
+                "key": "_#_platform_#_.orderstatus.sync",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob (empfohlen)",
+                    "no": "Keine Synchronisierung"
+                },
+                "default": "auto"
+            },
+            "acceptstatus": {
+                "label": "Accept order with",
+                "desc": "Before confirming shipment please select default value for accepting order on _#_platformName_#_.<br/><br/>  <b>IMPORTANT:</b>  <br/><br/>\nThis acceptation must be done within 2 days after receiving order, otherwise your account on _#_platformName_#_ will be disabled.",
+                "hint": "<span style=\"color:red;\">Please read info for more explanation.</span>",
+                "key": "_#_platform_#_.orderstatus.accepted",
+                "type": "selection",
+                "values": null
+            },
+            "refusestatus": {
+                "label": "Refuse order with",
+                "desc": "Please select default value for refusing order on _#_platformName_#_ after receiving one in your shop.<br/><br/>  <b>IMPORTANT:</b>  <br/><br/>\nThis refusal must be done within 2 days after receiving order, otherwise your account on _#_platformName_#_ will be disabled.",
+                "hint": "<span style=\"color:red;\">Please read info for more explanation.</span>",
+                "key": "_#_platform_#_.orderstatus.refused",
+                "type": "selection",
+                "values": null
+            },
+            "shippedstatus": {
+                "label": "Versand best&auml;tigen mit",
+                "desc": "Setzen Sie hier den Shop-Status, der auf Rakuten automatisch den Status \"Versand best&auml;tigen\" setzen soll.",
+                "key": "_#_platform_#_.orderstatus.shipped",
+                "type": "selection",
+                "values": null
+            },
+            "cancelstatus": {
+                "label": "Bestellung stornieren mit",
+                "desc": "Setzen Sie hier den Shop-Status, der auf Rakuten automatisch den Status \"Bestellung stornieren\" setzen soll. <br\/><br\/>\n\t\t\t\t           Hinweis: Teilstorno ist hier&uuml;ber nicht m&ouml;glich. Die gesamte Bestellung wird &uuml;ber diese Funktion storniert\n\t\t\t\t           und dem K&auml;ufer gutgeschrieben.",
+                "key": "_#_platform_#_.orderstatus.cancelled",
+                "type": "selection",
+                "values": null
+            },
+            "carrier": {
+                "label": "Spediteur",
+                "desc": "Vorausgew&auml;hlter Spediteur beim Best&auml;tigen des Versandes nach _#_platformName_#_.",
+                "key": "_#_platform_#_.orderstatus.carrier",
+                "type": "selection",
+                "values": null
+            },
+            "trackingmatch": {
+                "label": "Trackingcode Matching",
+                "desc": "Falls Sie ein Contrib zur Verwaltung von Hersteller-Modellnummern verwenden, k&ouml;nnen Sie hier die Tabelle und die Spalte ausw&auml;hlen in der die",
+                "key": "_#_platform_#_.orderstatus.trackingcode.dbmatching.table",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                    "alias": {
+                    "label": "<span class='tt'>`orders_id`</span> Alias",
+                    "key": "_#_platform_#_.orderstatus.trackingcode.dbmatching.alias",
+                    "type": "text",
+                    "cssClasses": ["autoWidth"]
+                    }
+                }
+            },
+            "cancelreason": {
+                "label": "Bestellung stornieren Grund",
+                "desc": "Der Grund warum die Bestellung storniert wird.",
+                "key": "_#_platform_#_.orderstatus.cancelreason",
+                "type": "text",
+                "verify": "notempty"
+            }
+        }
+    }
+}

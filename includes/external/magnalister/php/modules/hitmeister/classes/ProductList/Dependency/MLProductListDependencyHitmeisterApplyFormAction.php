@@ -97,8 +97,8 @@ class MLProductListDependencyHitmeisterApplyFormAction extends MLProductListDepe
 					       aa.*
 					  FROM '.TABLE_MAGNA_HITMEISTER_PREPARE.' aa
 				INNER JOIN '.TABLE_PRODUCTS.' p ON p.products_model = aa.products_model
-					 WHERE p.products_id IN (\''.implode('\', \'', $pIDs).'\')
-						 AND AND aa.PrepareType=\'Apply\'
+					 WHERE     p.products_id IN (\''.implode('\', \'', $pIDs).'\')
+						   AND aa.PrepareType=\'Apply\'
 				');
 			}
 			foreach ($aProducts as $aRow) {				

@@ -161,12 +161,6 @@ class HitmeisterInventoryView extends MagnaCompatibleInventoryView {
 				'Getter' => null,
 				'Field' => 'SKU'
 			),
-			'EAN' => array (
-				'Label' => ML_LABEL_EAN,
-				'Sorter' => null,
-				'Getter' => 'getEANLink',
-				'Field' => null,
-			),
 			'Title' => array (
 				'Label' => ML_LABEL_SHOP_TITLE,
 				'Sorter' => null,
@@ -175,12 +169,18 @@ class HitmeisterInventoryView extends MagnaCompatibleInventoryView {
  			),
 			'MarketplaceTitle' => array (
 				'Label' => ML_HITMEISTER_LABEL_TITLE,
-				'Sorter' => null,
+				'Sorter' => 'title',
 				'Getter' => 'getMarketplaceTitle',
 				'Field' => null,
 			),
+			'EAN' => array (
+				'Label' => ML_LABEL_EAN,
+				'Sorter' => 'ean',
+				'Getter' => 'getEANLink',
+				'Field' => null,
+			),
  			'Price' => array (
- 				'Label' => ML_GENERIC_PRICE,
+ 				'Label' => ML_HITMEISTER_PRICE,
  				'Sorter' => 'price',
  				'Getter' => 'getItemPrice',
  				'Field' => null
@@ -207,6 +207,10 @@ class HitmeisterInventoryView extends MagnaCompatibleInventoryView {
 	}
 
 	protected function getEANLink($item) {
+		if (empty($item['EAN'])) {
+			return '<td>&mdash</td>';
+		}
+
 		return '<td><a href="http://www.hitmeister.de/item/search/?search_value='.$item['EAN'].'" target="_blank">'.$item['EAN'].'</a></td>';
 	}
 
@@ -216,6 +220,11 @@ class HitmeisterInventoryView extends MagnaCompatibleInventoryView {
 			  FROM ".TABLE_PRODUCTS."
 			 WHERE products_id = '".magnaSKU2pID($item['SKU'])."'
 		");
+
+		if ($shopQuantity == 0) {
+			$shopQuantity = '&mdash;';
+		}
+
 		return '<td>'.$shopQuantity.' / '.$item['Quantity'].'</td>';
 	}
 	
@@ -237,10 +246,6 @@ class HitmeisterInventoryView extends MagnaCompatibleInventoryView {
 		}
 		
 		return '<td>' . $status . '</td>';
-	}
-
-	protected function getMarketplaceTitle($item) {
-		return '<td title="'.fixHTMLUTF8Entities($item['Title'], ENT_COMPAT).'">'.$item['Title'].'</td>';
 	}
 
 }

@@ -166,12 +166,14 @@ class RicardoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		$simplePrice = new SimplePrice(null, getCurrencyFromMarketplace($this->_magnasession['mpID']));
 		$productTax = SimplePrice::getTaxByPID($aProduct['ProductId']);
 		$taxFromConfig = getDBConfigValue($this->marketplace . '.checkin.mwst', $this->_magnasession['mpID']);
+		$priceSignal = getDBConfigValue($this->marketplace . '.price.signal', $this->mpID);
 
 		$simplePrice->setFinalPriceFromDB($aProduct['ProductId'], $this->_magnasession['mpID']);
 		if (isset($taxFromConfig) && $taxFromConfig !== '') {
 			$simplePrice
 				->removeTax($productTax)
-				->addTax($taxFromConfig);
+				->addTax($taxFromConfig)
+				->makeSignalPrice($priceSignal);
 		}
 
 		$ricardoPrice = $simplePrice
@@ -375,101 +377,115 @@ class RicardoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		}
 	}
 
-	protected function afterPopulateSelectionWithData() {
+	protected function preSubmit(&$request) {
 		if (isset($_GET['where']) && $_GET['where'] === 'getItemsFee') {
-			$this->afterPopulateSelectionWithDataForItemsFee();
+			$this->preSubmitItemsFee($request);
 			return;
 		}
-		
-		$newSelection = array();
 
-		foreach ($this->selection as $productId => $product) {
-			if (isset($product['submit']['Variations']) === false) {
-				$newSelection[] = $product;
-				continue;
-			}
-
+		$request['DATA'] = array();
+		foreach ($this->selection as $iProductId => &$aProduct) {
 			// Prepare product
-			if (isset($product['submit']['Descriptions']['DE']['Title'])) {
+			$deDescription = '';
+			$frDescription = '';
+			if (isset($aProduct['submit']['Descriptions']['DE']['Title'])) {
+				$deDescription = $aProduct['submit']['Descriptions']['DE']['Description'];
 				MLProduct::gi()->setLanguage($this->settings['language']['DE']);
 				MLProduct::gi()->setPriceConfig(RicardoHelper::loadPriceSettings($this->mpID));
 				MLProduct::gi()->setQuantityConfig(RicardoHelper::loadQuantitySettings($this->mpID));
 
-				$productDe = MLProduct::gi()->getProductById($productId);
+				$productDe = MLProduct::gi()->getProductById($iProductId);
 			}
 
-			if (isset($product['submit']['Descriptions']['FR']['Title'])) {
+			if (isset($aProduct['submit']['Descriptions']['FR']['Title'])) {
+				$frDescription = $aProduct['submit']['Descriptions']['FR']['Description'];
 				MLProduct::gi()->setLanguage($this->settings['language']['FR']);
 				MLProduct::gi()->setPriceConfig(RicardoHelper::loadPriceSettings($this->mpID));
 				MLProduct::gi()->setQuantityConfig(RicardoHelper::loadQuantitySettings($this->mpID));
 
-				$productFr = MLProduct::gi()->getProductById($productId);
+				$productFr = MLProduct::gi()->getProductById($iProductId);
+			}
+			
+			
+			if (empty($aProduct['submit']['Variations'])) {
+				if (strpos($deDescription, '#VARIATIONDETAILS#') !== false) {
+					$aProduct['submit']['Descriptions']['DE']['Description'] = str_replace('#VARIATIONDETAILS#', '', $deDescription);
+				}
+
+				if (strpos($frDescription, '#VARIATIONDETAILS#') !== false) {
+					$aProduct['submit']['Descriptions']['FR']['Description'] = str_replace('#VARIATIONDETAILS#', '', $frDescription);
+				}
+				
+				$request['DATA'][] = $aProduct['submit'];
+				continue;
 			}
 
-			foreach ($product['submit']['Variations'] as $variation) {
-				$variationData = $product;
-				unset($variationData['submit']['Variations']);
 
-				foreach ($variation as $param => $paramValue) {
-					$variationData['submit'][$param] = $paramValue;
+			foreach ($aProduct['submit']['Variations'] as $aVariation) {
+				$aVariationData = $aProduct;
+				unset($aVariationData['submit']['Variations']);
+
+				foreach ($aVariation as $sParameter => $mParameterValue) {
+					$aVariationData['submit'][$sParameter] = $mParameterValue;
 				}
 
 				if (isset($productDe)) {
 					foreach ($productDe['Variations'] as $v) {
-						if ($v['MarketplaceSku'] === $variation['SKU']) {
+						if ($v['MarketplaceSku'] === $aVariation['SKU']) {
 							$attributes = array();
 							foreach ($v['Variation'] as $var) {
 								$attributes[] = "{$var['Name']} - {$var['Value']}";
 							}
 
-							$variationData['submit']['Descriptions']['DE']['Title'] .= ': ' . implode(', ', $attributes);
+							if (strpos($deDescription, '#VARIATIONDETAILS#') !== false)  {
+								$aVariationData['submit']['Descriptions']['DE']['Description'] =
+									str_replace('#VARIATIONDETAILS#', html_entity_decode(fixHTMLUTF8Entities(implode(' ', $attributes))), $deDescription);
+							}
 						}
 					}
 				}
 
 				if (isset($productFr)) {
 					foreach ($productFr['Variations'] as $v) {
-						if ($v['MarketplaceSku'] === $variation['SKU']) {
+						if ($v['MarketplaceSku'] === $aVariation['SKU']) {
 							$attributes = array();
 							foreach ($v['Variation'] as $var) {
 								$attributes[] = "{$var['Name']} - {$var['Value']}";
 							}
 
-							$variationData['submit']['Descriptions']['FR']['Title'] .= ': ' . implode(', ', $attributes);
+							if (strpos($frDescription, '#VARIATIONDETAILS#') !== false) {
+								$aVariationData['submit']['Descriptions']['FR']['Description'] =
+									str_replace('#VARIATIONDETAILS#', html_entity_decode(fixHTMLUTF8Entities(implode(' ', $attributes))), $frDescription);
+							}
 						}
 					}
 				}
 
-				$newSelection[] = $variationData;
+				$request['DATA'][] = $aVariationData['submit'];
 			}
-
 		}
 
-		$this->variationCount = count($newSelection) - count($this->selection);
-		$this->selection = $newSelection;
+		arrayEntitiesToUTF8($request['DATA']);
 	}
 
-	protected function afterPopulateSelectionWithDataForItemsFee() {
-		$newSelection = array();
-
-		foreach ($this->selection as $productId => $product) {
-			if (isset($product['submit']['Variations']) === false) {
-				$newSelection[] = $product;
+	protected function preSubmitItemsFee(&$request) {
+		$request['DATA'] = array();
+		foreach ($this->selection as $iProductId => &$aProduct) {
+			if (empty($aProduct['submit']['Variations'])) {
+				$request['DATA'][] = $aProduct['submit'];
 				continue;
 			}
 
-			foreach ($product['submit']['Variations'] as $variation) {
-				$variationData = $product;
-				unset($variationData['submit']['Variations']);
+			foreach ($aProduct['submit']['Variations'] as $aVariation) {
+				$aVariationData = $aProduct;
+				unset($aVariationData['submit']['Variations']);
+				$aVariationData['submit']['Quantity'] = $aVariation['Quantity'];
 
-				$variationData['submit']['Quantity'] = $variation['Quantity'];
-
-				$newSelection[] = $variationData;
+				$request['DATA'][] = $aVariationData['submit'];
 			}
 		}
 
-		$this->variationCount = count($newSelection) - count($this->selection);
-		$this->selection = $newSelection;
+		arrayEntitiesToUTF8($request['DATA']);
 	}
 
 	protected function markAsFailed($sku) {

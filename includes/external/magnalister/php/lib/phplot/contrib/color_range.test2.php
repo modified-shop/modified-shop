@@ -1,7 +1,7 @@
 <?php
 /*
   PHPlot / contrib / color_range : Unit tests
-  $Id: color_range.test2.php 439 2010-10-11 14:42:53Z derpapst $
+  $Id$
 
   Tests color.range.php functions:
       color_range($color_a, $color_b, $n_steps)

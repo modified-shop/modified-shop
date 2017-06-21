@@ -43,6 +43,7 @@ class MLConfigurator {
 	private $keyOrder = array();
 	
 	private $ajaxUpdateFuncs = array();	
+	private $descCount=0;
 	
 	public function __construct(&$form, $mpID, $id = '', $requiredConfigKeys = array()) {
 		global $_url, $magnaConfig, $_magnaQuery, $_MagnaSession, $_modules;
@@ -84,6 +85,7 @@ class MLConfigurator {
 			'notempty' => ML_CONFIG_NOT_EMPTY,
 			'contains' => ML_CONFIG_MUST_CONTAIN,
 			'regex' => ML_CONFIG_INVALID_CHARS,
+			'range' => ML_CONFIG_INVALID_RANGE,
 		);
 		
 		$this->itemSettings = array (
@@ -159,7 +161,7 @@ class MLConfigurator {
 		$this->form['invisible'] = $invisible;
 	}
 	
-	private function verify($verify, $key, $value) {
+	private function verify($verify, $key, $value, $from = false, $to = false) {
 		$correct = false;
 
 		if ($verify === false) {
@@ -184,6 +186,7 @@ class MLConfigurator {
 			}
 			if (!$correct) {
 				$this->notCorrect[$key] = $this->testingMethods[$verify];
+				$this->missingConfigKeys[] = $key;
 			}
 		}
 
@@ -200,6 +203,15 @@ class MLConfigurator {
 				$this->notCorrect[$key] = $this->testingMethods['regex'];
 			}
 		}
+
+		if ($from && $to) {
+			if ($value < $from || $value > $to) {
+				$correct = false;
+				$this->notCorrect[$key] = $this->testingMethods['range'] .  ' [' . $from . '-' . $to . ']';
+				$this->missingConfigKeys[] = $key;
+			}
+		}
+
 		return $correct;
 	}
 	
@@ -234,6 +246,8 @@ class MLConfigurator {
 			$key = trim($key);
 
 			$verify = false;
+			$verifyFrom = false;
+			$verifyTo = false;
 			$correct = false;
 
 			$settings = $this->itemSettings;
@@ -270,6 +284,10 @@ class MLConfigurator {
 				if (array_key_exists('verify', $foundItem)) {
 					$verify = $foundItem['verify'];
 				}
+				if (array_key_exists('verifyFrom', $foundItem) && array_key_exists('verifyTo', $foundItem)) {
+					$verifyFrom = $foundItem['verifyFrom'];
+					$verifyTo = $foundItem['verifyTo'];
+				}
 				if (array_key_exists('submit', $foundItem) && !empty($foundItem['submit'])) {
 					$tmpKeysToSubmit[] = array(
 						'confKey' => $foundItem['key'],
@@ -294,7 +312,7 @@ class MLConfigurator {
 				$value = '__saved__';
 			}
 
-			$correct = $this->verify($verify, $key, $value);
+			$correct = $this->verify($verify, $key, $value, $verifyFrom, $verifyTo);
 			if (!empty($foundItem) && ($foundItem['type'] == 'extern') && is_callable($foundItem['procFunc'])) {
 				#echo print_m($value, basename(__FILE__).'{L'.__LINE__.'}');
 				$correct = call_user_func_array($foundItem['procFunc'], array (
@@ -418,7 +436,6 @@ class MLConfigurator {
 					return '';
 				}
 				return $this->getDefault(str_replace('_', '.', preg_replace('/^config_/', '', $_POST['key'])));
-				break;
 			}
 			case 'update': {
 				$args = array(
@@ -443,6 +460,12 @@ class MLConfigurator {
 					return 'FALIURE';
 				}
 				return call_user_func($func, $args);
+			}
+			case 'duplicate': {
+				$args = $_REQUEST;
+				unset($args['action']);
+				return $this->renderDuplicateField($args, $args['key'], true);
+ 				
 			}
 		}
 		return '';
@@ -494,29 +517,31 @@ class MLConfigurator {
 		return $html;
 	}
 	
-	private function renderInput($item) {
+	public function renderInput($item, $value = null) {
 		#echo print_m($item);
 		
-		$value = '';
 		if (!isset($item['key'])) {
 			$item['key'] = '';
 		}
-		if (array_key_exists($item['key'], $this->config)) {
-			$value = $this->config[$item['key']];
-			if (is_array($value) && isset($item['default']) && is_array($item['default'])) {
-				//echo print_m($item['default'], 'default'); echo print_m($value, 'config');
-				//var_dump(isNumericArray($item['default']), isNumericArray($value));
-				if (isNumericArray($item['default']) && isNumericArray($value)) {
-					foreach ($item['default'] as $k => $v) {
-						if (array_key_exists($k, $value)) continue;
-						$value[$k] = $item['default'][$k];
+		if($value === null){
+			$value = '';
+			if (array_key_exists($item['key'], $this->config)) {
+				$value = $this->config[$item['key']];
+				if (is_array($value) && isset($item['default']) && is_array($item['default'])) {
+					//echo print_m($item['default'], 'default'); echo print_m($value, 'config');
+					//var_dump(isNumericArray($item['default']), isNumericArray($value));
+					if (isNumericArray($item['default']) && isNumericArray($value)) {
+						foreach ($item['default'] as $k => $v) {
+							if (array_key_exists($k, $value)) continue;
+							$value[$k] = $item['default'][$k];
+						}
+					} else {
+						$value = array_merge($item['default'], $value);
 					}
-				} else {
-					$value = array_merge($item['default'], $value);
 				}
+			} else if (isset($item['default'])) {
+				$value = $item['default'];
 			}
-		} else if (isset($item['default'])) {
-			$value = $item['default'];
 		}
 		$item['__value'] = $value;
 
@@ -573,6 +598,9 @@ class MLConfigurator {
 				$item['cssClasses'][] = 'fullwidth';
 
 				$class = ' class="'.implode(' ', $item['cssClasses']).'"';
+				if (isset($item['inputLabel']) && (!empty($item['inputLabel']))) {
+					$html .= $item['inputLabel'].': ';
+				}
 
 				$html .= '<input type="'.$item['type'].'"'.$class.$style.' id="config_'.$idkey.'" name="conf['.$item['key'].']" value="'.(string)$value.'"'.$parameters.'/>';
 				break;
@@ -787,19 +815,120 @@ class MLConfigurator {
 					}
 					$html .= 'Function <span class="tt">\''.$item['procFunc'].'\'</span> does not exists.';
 					break;
-				}
+				}				
 				$html .= call_user_func($item['procFunc'], array_merge($item['params'], array('key' => $item['key'])));
 				break;
 			}
 			case 'html': {
 				$html .= $item['value'];
 				break;
+			}			
+ 			case 'duplicate': {
+ 
+ 					 $html .= '<div id="'.$idkey.'">'. $this->renderDuplicateField($item, $idkey).'</div>';
+ 					break;
 			}
 		}
 		return $html;
 	}
 	
-	private function renderLabel($label, $idkey) {
+	private function renderDuplicateField($item, $idkey, $blAjax = false) {
+		$html = '';
+ 		ob_start();
+ 		if($blAjax){
+ 			$aValue = array("defaults"=>array(""));
+ 		} elseif(!isset($this->config[$item['key']]["defaults"])){
+			$aValue = array("defaults"=>array("1"));
+		} else {
+ 			$aValue = $this->config[$item['key']];
+ 		}
+ 		?>
+ 	<table class="<?php echo $idkey ?> inlinetable nowrap autoWidth"><tbody>
+ 			<?php
+			if(isset($aValue['defaults'])){
+ 		 for($i = 0; $i < count($aValue['defaults']); $i++) { ?>
+ 			<tr class="row1">
+ 				<td rowspan="2">
+ 		<?php
+ 		$fieldHtml = '';
+ 		$field = $item;
+ 		$field['type'] = $item['subtype'];
+		if(isset($field['params'])){
+			$field['params']['currentIndex'] = $i;
+		}
+		
+ 		unset($field['subtype']);
+		$field['key']= $item['key'].'][values][';
+		$value = null;
+		if(isset($aValue['values']) && isset($aValue['values'][$i])){
+			$value = $aValue['values'][$i];
+		}
+ 		$fieldHtml .= $this->renderInput($field, $value);
+ 		echo $fieldHtml;
+ 		?>
+ 			</td>
+ 			<td rowspan="2">
+ 				<?php echo ML_LABEL_CONFIG_TYPE_DUPLICATE_STANDARD.' '; ?><input name="<?php echo $item['key']?>" class="duplicated-default-radio" type="radio" value="1" class="" <?php echo $aValue['defaults'][$i] == "1"? ' checked=checked ':''; ?> />
+				<input value="<?php echo $aValue['defaults'][$i]; ?>" name="<?php echo 'conf['.$item['key'].'][defaults][]'?>" type="hidden"  class="<?php echo $idkey?>" />
+ 				<input type="button" value="+" class="ml-button plus" />
+ 				<input type="button" value="&#8211;" class="ml-button minus" />
+ 			</td>
+ 		</tr>
+ 		<tr class="bottomDashed">
+ 			 <td class="paddingRight" colspan="3"></td>
+ 		</tr>
+ 			<?php }
+			}?>
+ 	</tbody></table>
+ 		<?php if (!$blAjax) { ?>
+ 				<script type="text/javascript">/*<![CDATA[*/
+ 					$(document).ready(function () {
+ 						$('#<?php echo $idkey; ?>').on('click','input.duplicated-default-radio',function () {
+ 							var configDefault = $(this).parent().children('input[type=hidden]');
+ 							$('.<?php echo $idkey; ?> input[type=hidden]').val("");
+ 							configDefault.val("1");
+ 						});
+ 
+ 					    $('#<?php echo $idkey; ?>').on('click','input.ml-button.plus',function () {
+ 						var $tableBox = $('#<?php echo $idkey; ?>');
+ 						if ($tableBox.parent('td').find('table').length == 1) {
+ 						    $tableBox.find('input.ml-button.minus').fadeIn(0);
+ 						}
+ 						myConsole.log();
+ 						jQuery.blockUI(blockUILoading);
+ 						jQuery.ajax({
+ 						    type: 'POST',
+ 						    url: '<?php echo toURL($this->url, array('kind' => 'ajax'), true); ?>',
+ 						    data: <?php
+ 							echo json_encode(array_merge(
+ 									$item, array(
+ 								'action' => 'duplicate',
+ 								'kind' => 'ajax',
+ 									)
+ 							));
+ 							?>,
+ 						    success: function (data) {
+ 							jQuery.unblockUI();
+ 							$tableBox.append(data);
+ 						    },
+ 						    error: function (xhr, status, error) {
+ 							jQuery.unblockUI();
+ 						    },
+ 						    dataType: 'html'
+ 						});
+ 					    });
+ 					    $('#<?php echo $idkey; ?>').on('click', 'input.ml-button.minus', function () {
+ 
+ 						var tables = $(this).closest("table");
+ 						    tables.fadeOut(0);
+ 					    });
+ 					});
+ 					/*]]>*/</script><?php
+ 		}
+ 		$html .= ob_get_clean();
+ 		return $html;
+ 	}
+	public function renderLabel($label, $idkey) {
 		if ((strpos($label, 'const') !== false) && preg_match('/^const\((.*)\)$/', $label, $match)){
 			$label = constant($match[1]);
 		}
@@ -842,7 +971,7 @@ class MLConfigurator {
 		}
 
 		$html .= '<form id="'.($this->id ? $this->id : 'config').'" class="config" method="POST" action="'.toUrl($this->realUrl).'">'."\n";
-		$descCount = 0;
+		$this->descCount = 0;
 		$html .= '
 			<table class="conftbl'.($this->renderTabIdent ? ' tabident' : '').'">
 				<tbody>';
@@ -853,7 +982,7 @@ class MLConfigurator {
 				<tr class="conf"><th class="ml-label">
 					<label for="config_tabident">'.ML_LABEL_TAB_IDENT.'</label></th>
 					<th class="desc">
-						<div class="desc" id="desc_'.($descCount++).'" title="'.ML_LABEL_INFOS.'"><span>'.ML_TEXT_TAB_IDENT.'</span></div>
+						<div class="desc" id="desc_'.($this->descCount++).'" title="'.ML_LABEL_INFOS.'"><span>'.ML_TEXT_TAB_IDENT.'</span></div>
 					</th>
 					<td class="input" colspan="3">
 						<input type="text" id="config_tabident" name="tabident" value="'.
@@ -928,7 +1057,7 @@ class MLConfigurator {
 								$input .= $this->renderLabel($mfItem['label'], $mfidkey);
 							}
 							if (isset($mfItem['desc'])) {
-								$input .= '&nbsp;<div class="desc" id="desc_'.($descCount++).'" title="'.ML_LABEL_INFOS.'"><span>'.$mfItem['desc'].'</span></div>';
+								$input .= '&nbsp;<div class="desc" id="desc_'.($this->descCount++).'" title="'.ML_LABEL_INFOS.'"><span>'.$mfItem['desc'].'</span></div>';
 							}
 							if (isset($mfItem['label'])) {
 								$input .= ':&nbsp;';
@@ -964,7 +1093,7 @@ class MLConfigurator {
 					$cfgRow = '
 							<th class="desc">';
 					if (isset($item['desc'])) {
-						$cfgRow .= '<div class="desc" id="desc_'.($descCount++).'" title="'.ML_LABEL_INFOS.'"><span>'.$item['desc'].'</span></div>';
+						$cfgRow .= '<div class="desc" id="desc_'.($this->descCount++).'" title="'.ML_LABEL_INFOS.'"><span>'.$item['desc'].'</span></div>';
 					} else {
 						$cfgRow .= '&nbsp;';
 					}
@@ -1080,13 +1209,13 @@ class MLConfigurator {
 		$html .= '
 	        <script type="text/javascript">/*<![CDATA[*/';
 	        
-		if ($descCount > 0) {
+		if ($this->descCount > 0) {
 			$html .= '
 				$(document).ready(function() {';
-			for (; $descCount > 0; --$descCount) {
+			for (; $this->descCount > 0; --$this->descCount) {
 				$html .= '
-					$(\'#desc_'.($descCount - 1).'\').click(function () {
-						var d = $(\'#desc_'.($descCount - 1).' span\').html();
+					$(\'#desc_'.($this->descCount - 1).'\').click(function () {
+						var d = $(\'#desc_'.($this->descCount - 1).' span\').html();
 						$(\'#infodiag\').html(d).jDialog({\'width\': (d.length > 1000) ? \'700px\' : \'500px\'});
 					});';
 			}
@@ -1366,4 +1495,5 @@ class MLConfigurator {
 		ob_end_clean();
 		return $html;
 	}
+	
 }

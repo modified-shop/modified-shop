@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: AmazonCheckinSubmit.php 6027 2015-09-21 16:25:46Z tim.neumann $
+ * $Id: AmazonCheckinSubmit.php 6865 2016-08-23 08:22:31Z tim.neumann $
  *
  * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -59,7 +59,6 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				->setQuantityConfig(AmazonHelper::loadQuantitySettings($this->mpID))
 				->setOptions(array(
 					'sameVariationsToAttributes' => true,
-					'sExtendFetchSingeVariationsQueryWhere' => AmazonHelper::getMLProductExtendFetchSingleVariationQueryWhere(),
 				))
 			;
 		}
@@ -143,7 +142,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 	
 	protected function appendApplyData($pID, $product, &$data) {
 		$productApply = MagnaDB::gi()->fetchRow("
-			SELECT data, category, leadtimeToShip, ConditionType, ConditionNote
+			SELECT data, category, leadtimeToShip, ConditionType, ConditionNote, ShippingTemplate
 			  FROM `".TABLE_MAGNA_AMAZON_APPLY."`
 			 WHERE data<>''
 			       AND ".(($this->settings['keytype'] == 'artNr')
@@ -171,9 +170,42 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		if (empty($productApply['data'])) {
 			return false;
 		}
-		
+
+		if (!empty($product['Attributes'])) {
+			$data['submit']['CustomAttributes'] = array();
+			foreach ($product['Attributes'] as $attribSet) {
+				// need to convert field name to utf8 for json if its not utf8 json_encode will set it to null
+				$data['submit']['CustomAttributes'][stringToUTF8($attribSet['Name'])] = $attribSet['Value'];
+			}
+		}
+
+		$categoryAttributes = (!empty($productApply['data']['ShopVariation'])) ? $this->fixCategoryAttributes(json_decode($productApply['data']['ShopVariation'], true), $product) : '';
+
+		// ConditionType should go as regular data attribute, not product attribute
+		if (isset($categoryAttributes['ConditionType'])) {
+			$productApply['ConditionType'] = $categoryAttributes['ConditionType'];
+			unset($categoryAttributes['ConditionType']);
+		}
+
+		// ConditionNote should go as regular data attribute, not product attribute
+		if (isset($categoryAttributes['ConditionNote'])) {
+			$productApply['ConditionNote'] = $categoryAttributes['ConditionNote'];
+			unset($categoryAttributes['ConditionNote']);
+		}
+
+		if (!empty($categoryAttributes)) {
+			$data['submit']['Attributes'] = $categoryAttributes;
+			unset($productApply['data']['Attributes']);
+		}
+
 		$data['submit'] = array_merge($data['submit'], $productApply['data']);
-		
+
+		//EAN for USA is UPC
+		if (getDBConfigValue('amazon.site', $this->mpID) === 'US' && isset($categoryAttributes['UPC'])) {
+			$data['submit']['EAN'] = $categoryAttributes['UPC'];
+			unset($data['submit']['Attributes']['UPC']);
+		}
+
 		$data['submit']['SKU'] = ($this->settings['keytype'] == 'artNr')
 			? $product['MarketplaceSku']
 			: $product['MarketplaceId'];
@@ -181,12 +213,14 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		#echo print_m($productApply, '$productApply');
 		
 		$data['submit']['ConditionType'] = empty($productApply['ConditionType']) ? $data['submit']['ConditionType'] : $productApply['ConditionType'];
-		$data['submit']['ConditionNote'] = sanitizeProductDescription($productApply['ConditionNote']);
+		$data['submit']['ConditionNote'] = empty($productApply['ConditionNote']) ? sanitizeProductDescription($data['submit']['ConditionNote']) : sanitizeProductDescription($productApply['ConditionNote']);
 		
 		if (!empty($data['submit']['BrowseNodes'])) {
 			foreach ($data['submit']['BrowseNodes'] as $i => $bn) {
 				if ($bn == 'null') {
 					unset($data['submit']['BrowseNodes'][$i]);
+				} elseif (preg_match("/([0-9]*)_?/", $bn, $aOutput)) {
+					$data['submit']['BrowseNodes'][$i] = $aOutput[1];
 				}
 			}
 		}
@@ -198,14 +232,17 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				$data['submit']['CustomAttributes'][stringToUTF8($attribSet['Name'])] = $attribSet['Value'];
 			}
 		}
-		
-		$imagePath = getDBConfigValue('amazon.imagepath', $this->_magnasession['mpID'], SHOP_URL_POPUP_IMAGES);
-		$imagePath = trim($imagePath, '/ ').'/';
+
+        $imagePath = getDBConfigValue($this->_magnasession['currentPlatform'].'.imagepath', $this->_magnasession['mpID'], '');
+        if (empty($imagePath)) {
+            $imagePath = SHOP_URL_POPUP_IMAGES;
+            $imagePath = trim($imagePath, '/ ').'/';
+        }
 		$images = array();
 		if (!empty($data['submit']['Images'])) {
 			foreach ($data['submit']['Images'] as $image => $use) {
 				if ($use == 'true') {
-					$images[] = $imagePath.$image;
+                    $images[] = (preg_match('/http(s{0,1}):\/\//', $image) ? '' : $imagePath ).$image;
 				}
 			}
 			$data['submit']['Images'] = $images;
@@ -218,8 +255,10 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		if (isset($product['Weight']) && is_array($product['Weight'])) {
 			$data['submit']['Weight'] = $product['Weight'];
 		}
+
 		$data['submit']['Variations'] = (isset($product['Variations']) && is_array($product['Variations'])) ? $product['Variations'] : array();
-		foreach ($data['submit']['Variations'] as &$vItem) {
+        $preparedAttributes = $this->getPreparedAttributes($productApply);
+        foreach ($data['submit']['Variations'] as &$vItem) {
 			$vItem['SKU'] = ($this->settings['keytype'] == 'artNr')
 				? $vItem['MarketplaceSku']
 				: $vItem['MarketplaceId'];
@@ -233,10 +272,25 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			) {
 				$vItem['ManufacturerPartNumber'] = $vItem['SKU'];
 			}
-			
+
+            $vItem['Attributes'] = $this->fixVariationCategoryAttributes($preparedAttributes, $product, $vItem);
+
+			if (isset($vItem['Attributes']['ConditionType'])) {
+				unset($vItem['Attributes']['ConditionType']);
+			}
+
+			if (isset($vItem['Attributes']['ConditionNote'])) {
+				unset($vItem['Attributes']['ConditionNote']);
+			}
+
+			if (getDBConfigValue('amazon.site', $this->mpID) === 'US' && isset($vItem['Attributes']['UPC'])) {
+				$vItem['EAN'] = $vItem['Attributes']['UPC'];
+				unset($vItem['Attributes']['UPC']);
+			}
+
 			if (isset($vItem['Images']) && !empty($vItem['Images'])) {
 				foreach ($vItem['Images'] as $imgKey => $imgVal) {
-					$vItem['Images'][$imgKey] = $imagePath.$imgVal;
+					$vItem['Images'][$imgKey] = (preg_match('/http(s{0,1}):\/\//', $imgVal) ? '' : $imagePath ).$imgVal;
 				}
 			} else {
 				unset($vItem['Images']);
@@ -246,7 +300,6 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			if (isset($vItem['PriceReduced'])) {
 				$vItem['Price'] = $vItem['PriceReduced'];
 			}
-			
 		}
 		
 		if (
@@ -255,10 +308,51 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		) {
 			$data['submit']['ManufacturerPartNumber'] = $data['submit']['SKU'];
 		}
+
+		unset($data['submit']['ShopVariation']);
 		
+		
+		if(getDBConfigValue(array('amazon.shipping.template.active', 'val'), $this->mpID, false)){
+			if(!isset($data['submit']['Attributes'])){
+				$data['submit']['Attributes'] = array();
+			}
+			$aTemplates = getDBConfigValue(array('amazon.shipping.template', 'values'), $this->mpID);
+			if(isset($productApply['ShippingTemplate'])){
+				$defaultTemplateIndex = $productApply['ShippingTemplate'];
+			} else {
+				$aDefaultTemplate = getDBConfigValue(array('amazon.shipping.template', 'defaults'),  $this->mpID);
+				$defaultTemplateIndex = array_search('1', $aDefaultTemplate);
+			}
+			if(isset($aTemplates[$defaultTemplateIndex])){
+				$data['submit']['Attributes']['MerchantShippingGroupName'] = $aTemplates[$defaultTemplateIndex];
+			}
+		} else if(isset ($data['submit']['Attributes']) && isset ($data['submit']['Attributes']['MerchantShippingGroupName'])) {
+			unset($data['submit']['Attributes']['MerchantShippingGroupName']);
+		}
+
 		return true;
 	}
-	
+
+	private function getPreparedAttributes($product) {
+        $preparedAttributes = array();
+        if (empty($product['data']['ShopVariation'])) {
+            // product has been prepared before A-M is applied, so attributes are in Attributes array
+            if (!empty($product['data']['Attributes'])) {
+                $oldAttributes = $product['data']['Attributes'];
+                foreach($oldAttributes as $attributeKey => $attributeValue) {
+                    $preparedAttributes[$attributeKey] = array(
+                        'Code' => 'attribute_value',
+                        'Values' => $attributeValue,
+                    );
+                }
+            }
+        } else {
+            $preparedAttributes = json_decode($product['data']['ShopVariation'], true);
+        }
+
+        return $preparedAttributes;
+    }
+
 	protected function appendAdditionalData($pID, $product, &$data) {
 		if ($this->settings['mlProductsUseLegacy']) {
 			return $this->appendAdditionalDataOld($pID, $product, $data); 
@@ -501,13 +595,16 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 					}
 				}
 			}
-			$imagePath = getDBConfigValue('amazon.imagepath', $this->_magnasession['mpID'], SHOP_URL_POPUP_IMAGES);
-			$imagePath = trim($imagePath, '/ ').'/';
+            $imagePath = getDBConfigValue($this->_magnasession['currentPlatform'].'.imagepath', $this->_magnasession['mpID'], '');
+            if (empty($imagePath)) {
+                $imagePath = SHOP_URL_POPUP_IMAGES;
+                $imagePath = trim($imagePath, '/ ').'/';
+            }
 			$images = array();
 			if (!empty($data['submit']['Images'])) {
 				foreach ($data['submit']['Images'] as $image => $use) {
 					if ($use == 'true') {
-						$images[] = $imagePath.$image;
+						$images[] = (preg_match('/http(s{0,1}):\/\//', $image) ? '' : $imagePath ).$image;
 					}
 				}
 				$data['submit']['Images'] = $images;
@@ -573,7 +670,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			//*/
 		} catch (MagnaException $e) {
 			$this->submitSession['api']['exception'] = $e;
-			$this->submitSession['api']['html'] = MagnaError::gi()->exceptionsToHTML();			
+			$this->submitSession['api']['html'] = MagnaError::gi()->exceptionsToHTML();
 		}
 	}
 
@@ -582,5 +679,266 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			'mp' => $this->realUrl['mp'],
 			'mode' => 'listings',
 		), true);
+	}
+
+	private function fixCategoryAttributes($aCatAttributes, $product) {
+		$fixCatAttributes = array();
+		if (isset($aCatAttributes) && is_array($aCatAttributes)) {
+			foreach ($aCatAttributes as $key => &$aCatAttribute) {
+				$sCode = $aCatAttribute['Code'];
+				switch ($sCode) {
+					case 'freetext':
+					case 'attribute_value': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							$fixCatAttributes[$key] = $aCatAttribute['Values'];
+						}
+						break;
+					}
+					case 'database_value': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							$databaseValue = $this->runDbMatching(array(
+								'Table' => array(
+									'table' => $aCatAttribute['Values']['Table'],
+									'column' => $aCatAttribute['Values']['Column'],
+								),
+								'Alias' => $aCatAttribute['Values']['Alias']
+							), 'products_id', $product['ProductId']);
+
+							if ($databaseValue) {
+								$fixCatAttributes[$key] = $databaseValue;
+							}
+						}
+						break;
+					}
+					case 'category': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							if (!empty($aCatAttribute['Values']['Value'])) {
+								$fixCatAttributes[$key] = $this->getCategoryNameById($aCatAttribute['Values']['Value']);
+							}
+						}
+						break;
+					}
+					case 'title': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							$fixCatAttributes[$key] = $product['Title'];
+						}
+						break;
+					}
+					case 'description': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							$fixCatAttributes[$key] = $product['Description'];
+						}
+						break;
+					}
+					case 'ean': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							$fixCatAttributes[$key] = $product['EAN'];
+						}
+
+						break;
+					}
+					case 'weight': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							$fixCatAttributes[$key] = $product['Weight']['Value'] . $product['Weight']['Unit'];
+						}
+						break;
+					}
+					case 'contentvolume': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							$fixCatAttributes[$key] = $product['BasePrice']['Value'] . $product['BasePrice']['Unit'];
+						}
+						break;
+					}
+					default:
+						break;
+				}
+
+				if (empty($fixCatAttributes[$key])) {
+					unset($aCatAttributes[$key]);
+				}
+
+				if (!isset($fixCatAttributes[$key])) {
+					continue;
+				}
+
+				if ($this->stringStartsWith($key, 'additional_attribute')) {
+					$sNewKey = ucfirst($sCode);
+					$fixCatAttributes[$sNewKey] = $fixCatAttributes[$key];
+					unset($fixCatAttributes[$key]);
+				}
+			}
+		}
+
+		return $fixCatAttributes;
+	}
+
+	private function fixVariationCategoryAttributes($aCatAttributes, $product, &$variationDB) {
+		$fixCatAttributes = array();
+		if (isset($aCatAttributes) && is_array($aCatAttributes)) {
+			foreach ($aCatAttributes as $key => &$aCatAttribute) {
+				$sCode = $aCatAttribute['Code'];
+				switch ($sCode) {
+					case 'freetext':
+					case 'attribute_value': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							$fixCatAttributes[$key] = $aCatAttribute['Values'];
+						}
+						break;
+					}
+					case 'database_value': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							$databaseValue = $this->runDbMatching(array(
+								'Table' => array(
+									'table' => $aCatAttribute['Values']['Table'],
+									'column' => $aCatAttribute['Values']['Column'],
+								),
+								'Alias' => $aCatAttribute['Values']['Alias']
+							), 'products_id', $variationDB['VariationId']);
+
+							if ($databaseValue) {
+								$fixCatAttributes[$key] = $databaseValue;
+							}
+						}
+						break;
+					}
+					case 'category': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							if (!empty($aCatAttribute['Values']['Value'])) {
+								$fixCatAttributes[$key] = $this->getCategoryNameById($aCatAttribute['Values']['Value']);
+							}
+						}
+						break;
+					}
+					case 'title': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							$fixCatAttributes[$key] = $product['Title'];
+						}
+						break;
+					}
+					case 'description': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							$fixCatAttributes[$key] = $product['Description'];
+						}
+						break;
+					}
+					case 'ean': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							$fixCatAttributes[$key] = isset($variationDB['EAN']) ? $variationDB['EAN'] : $product['EAN'];
+						}
+
+						break;
+					}
+					case 'weight': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							if (isset($variationDB['Weight']['Value'])) {
+								$fixCatAttributes[$key] = $variationDB['Weight']['Value'].$variationDB['Weight']['Unit'];
+							} else {
+								$fixCatAttributes[$key] = $product['Weight']['Value'].$product['Weight']['Unit'];
+							}
+						}
+						break;
+					}
+					case 'contentvolume': {
+						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
+							if (isset($variationDB['BasePrice']['Value'])) {
+								$fixCatAttributes[$key] = $variationDB['BasePrice']['Value'].$variationDB['BasePrice']['Unit'];
+							} else {
+								$fixCatAttributes[$key] = $product['BasePrice']['Value'].$product['BasePrice']['Unit'];
+							}
+						}
+						break;
+					}
+					default:
+						foreach ($variationDB['Variation'] as &$variationAttribute) {
+							if ($sCode == $variationAttribute['NameId']) {
+								foreach ($aCatAttribute['Values'] as $value) {
+									if (fixHTMLUTF8Entities($variationAttribute['Value']) === fixHTMLUTF8Entities($value['Shop']['Value'])) {
+										if ($value['Marketplace']['Key'] === 'manual') {
+											$fixCatAttributes[$key] = $value['Marketplace']['Value'];
+										} else {
+											$fixCatAttributes[$key] = $value['Marketplace']['Key'];
+										}
+
+										$sCode = $variationAttribute['Name'];
+
+										$variationAttribute['Name'] = $key;
+										$variationAttribute['Value'] = $fixCatAttributes[$key];
+									}
+								}
+							}
+						}
+				}
+
+				if (empty($fixCatAttributes[$key])) {
+					unset($fixCatAttributes[$key]);
+				}
+
+				if (!isset($fixCatAttributes[$key])) {
+					continue;
+				}
+
+				if ($this->stringStartsWith($key, 'additional_attribute')) {
+					$sNewKey = ucfirst($sCode);
+					$fixCatAttributes[$sNewKey] = $fixCatAttributes[$key];
+					unset($fixCatAttributes[$key]);
+				}
+			}
+		}
+
+		return $fixCatAttributes;
+	}
+
+	/**
+	 * Helper method to execute a db matching query.
+	 * @return mixed
+	 *   A string or false if the matching config is empty.
+	 */
+	protected function runDbMatching($tableSettings, $defaultAlias, $where) {
+		if (!isset($tableSettings['Table']['table'])
+			|| empty($tableSettings['Table']['table'])
+			|| empty($tableSettings['Table']['column'])
+		) {
+			return false;
+		}
+		if (empty($tableSettings['Alias'])) {
+			$tableSettings['Alias'] = $defaultAlias;
+		}
+
+		if (!is_numeric($where)) {
+			$where = '"'.MagnaDB::gi()->escape($where).'"';
+		}
+
+		return (string)MagnaDB::gi()->fetchOne('
+			SELECT `' . $tableSettings['Table']['column'] . '`
+			FROM `' . $tableSettings['Table']['table'] . '`
+			WHERE `' . $tableSettings['Alias'] . '` = ' . $where . '
+				AND `' . $tableSettings['Table']['column'] . '` <> \'\'
+		');
+	}
+
+	private function stringStartsWith($haystack, $needle) {
+		$length = strlen($needle);
+		return (substr($haystack, 0, $length) === $needle);
+	}
+
+	private function getCategoryNameById($categoryID) {
+		try {
+			$aRequest = array(
+				'ACTION' => 'GetCategoryDetails',
+				'DATA' => array(
+					'CategoryID' => $categoryID
+				)
+			);
+
+			$aResponse = MagnaConnector::gi()->submitRequest($aRequest);
+			if ($aResponse['STATUS'] == 'SUCCESS' && isset($aResponse['DATA']) && is_array($aResponse['DATA'])) {
+				return $aResponse['DATA']['title_plural'];
+			} else {
+				return $categoryID;
+			}
+
+		} catch (MagnaException $e) {
+			return $categoryID;
+		}
 	}
 }

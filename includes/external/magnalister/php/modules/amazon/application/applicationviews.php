@@ -1,17 +1,17 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP
- * 88    `8b                88 d8'   `88                   88
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
+ * 888888ba                 dP  .88888.                    dP                
+ * 88    `8b                88 d8'   `88                   88                
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: applicationviews.php 6382 2016-01-19 12:31:41Z tim.neumann $
+ * $Id: applicationviews.php 6865 2016-08-23 08:22:31Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -19,11 +19,12 @@
  */
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+require_once(DIR_MAGNALISTER_MODULES.'amazon/AmazonHelper.php');
 
 function renderFlat($data, $prefix = '') {
 	$finalArray = array();
 	foreach ($data as $key => $value) {
-		$newKey = (empty($prefix)) ? $key : $prefix . '[' . $key . ']';
+		$newKey = empty($prefix) ? $key : $prefix . '[' . $key . ']';
 		if (is_array($value)) {
 			$finalArray = array_merge($finalArray, renderFlat($value, $newKey));
 		} else {
@@ -68,20 +69,22 @@ function getProductTypesAndAttributes($category) {
 	if ($result['ProductTypes'] !== false) {
 		$html = '';
 		foreach ($result['ProductTypes'] as $key => $value) {
-			$html .= '
-				<option value="' . $key . '">' . $value . '</option>';
+			$html .= '<option value="' . $key . '">' . $value . '</option>';
 		}
+
 		$result['ProductTypes'] = $html;
 	}
+
 	return $result;
 }
 
-function getBrowseNodes($category, $subcategory) {
+function getBrowseNodes($category, $subcategory, $selectedNode = null, $newStyle = true) {
 	try {
 		$browseNodes = MagnaConnector::gi()->submitRequest(array(
 			'ACTION' => 'GetBrowseNodes',
 			'CATEGORY' => $category,
-			'SUBCATEGORY' => $subcategory
+			'SUBCATEGORY' => $subcategory,
+			'NewResponse' => $newStyle,
 		));
 		$browseNodes = $browseNodes['DATA'];
 	} catch (MagnaException $e) {
@@ -93,8 +96,9 @@ function getBrowseNodes($category, $subcategory) {
 			<option value="null">' . ML_AMAZON_LABEL_APPLY_BROWSENODE_NOT_SELECTED . '</option>';
 	$html .= renderAmazonTopTen('topBrowseNode', array($category));
 	foreach ($browseNodes as $nodeID => $nodeName) {
+		$selected = $nodeID == $selectedNode ? 'selected="selected"' : '';
 		$html .= '
-			<option value="' . $nodeID . '">' . str_replace(
+			<option value="' . $nodeID . '" ' . $selected . '>'.str_replace(
 				array('\\/', '/', '#\\#'),
 				array('#\\#', ' &rarr; ', '/'),
 				fixHTMLUTF8Entities($nodeName)
@@ -188,7 +192,7 @@ function convertAttrArrayToHTML($data, $usrData = array()) {
 }
 
 function renderMultiApplication($data) {
-	global $_url, $applyAction, $conditionHtml;
+	global $_url, $applyAction, $conditionHtml, $_MagnaSession;
 
 	$categories = array('DATA' => array());
 	try {
@@ -198,12 +202,13 @@ function renderMultiApplication($data) {
 	} catch (MagnaException $e) {
 		//echo print_m($e->getErrorArray(), 'Error: '.$e->getMessage(), true);
 	}
-	$htmlCategories = '<option value="null">' . ML_AMAZON_LABEL_APPLY_PLEASE_SELECT . '</option>';
-	$tmpCats = array('null' => ML_AMAZON_LABEL_APPLY_PLEASE_SELECT);
+	
+	$htmlCategories = '
+				<option value="null">' . ML_AMAZON_LABEL_APPLY_PLEASE_SELECT . '</option>';
 	if (!empty($categories['DATA'])) {
 		foreach ($categories['DATA'] as $catKey => $catName) {
 			$htmlCategories .= '
-						<option value="' . $catKey . '">' . fixHTMLUTF8Entities($catName) . '</option>';
+				<option value="' . $catKey . '">' . fixHTMLUTF8Entities($catName) . '</option>';
 		}
 	}
 	if (($data['MainCategory'] != '') && ($data['MainCategory'] != 'null')) {
@@ -215,11 +220,8 @@ function renderMultiApplication($data) {
 		$cna = getProductTypesAndAttributes($data['MainCategory']);
 		$conditionHtml = checkCondition($cna, $data['ConditionType']);
 		$htmlSubCategories = $cna['ProductTypes'];
-		$htmlAdditionalAttributes = $cna['Attributes'];
-
 	} else {
 		$htmlSubCategories = '<option value="null">' . ML_AMAZON_LABEL_APPLY_SELECT_MAIN_CAT_FIRST . '</option>';
-		$htmlAdditionalAttributes = false;
 	}
 
 	if (($data['MainCategory'] != '') && ($data['MainCategory'] != 'null')
@@ -236,7 +238,14 @@ function renderMultiApplication($data) {
 		} else {
 			$data['ProductType'] = false;
 		}
-		$browseNodes = getBrowseNodes($data['MainCategory'], $data['ProductType']);
+		$bNewResponse = false;
+		if (isset($data['BrowseNodes'][0]) && !empty($data['BrowseNodes'][0])) {
+			preg_match("/([0-9]*)__([0-9]*)/", $data['BrowseNodes'][0], $aOutput);
+			if (!empty($aOutput)) {
+				$bNewResponse = true;
+			}
+		}
+		$browseNodes = getBrowseNodes($data['MainCategory'], $data['ProductType'], null, $bNewResponse);
 		$browseNodes = array(
 			0 => $browseNodes,
 			1 => $browseNodes,
@@ -244,7 +253,7 @@ function renderMultiApplication($data) {
 		for ($i = 0; $i < 2; ++$i) {
 			if (isset($data['BrowseNodes'][$i]) && $data['BrowseNodes'][$i] != '') {
 				$browseNodes[$i] = str_replace(
-					'<option value="' . $data['BrowseNodes'][$i] . '">',
+					'<option value="' . $data['BrowseNodes'][$i] . '" >',
 					'<option value="' . $data['BrowseNodes'][$i] . '" selected="selected">',
 					$browseNodes[$i]
 				);
@@ -257,8 +266,6 @@ function renderMultiApplication($data) {
 			1 => $browseNodes,
 		);
 	}
-
-	$htmlAdditionalAttributes = convertAttrArrayToHTML($htmlAdditionalAttributes, $data['Attributes']);
 
 	$html = '
 		<tbody>
@@ -282,12 +289,6 @@ function renderMultiApplication($data) {
 					</select>
 				</td>
 				<td class="info">&nbsp;</td>
-			</tr>
-			<tr id="additionalAttributes" class="even" ' . (empty($htmlAdditionalAttributes) ? 'style="display:none;"' : '') . '>
-				<th>' . ML_AMAZON_LABEL_APPLY_ATTRIBUTES . '</th>
-				<td class="input" colspan="2">
-					' . $htmlAdditionalAttributes . '
-				</td>
 			</tr>
 			<tr class="odd">
 				<th>' . ML_AMAZON_LABEL_APPLY_BROWSENODES . ' <span>&bull;</span></th>
@@ -313,7 +314,8 @@ function renderMultiApplication($data) {
 				data: {
 					'type': 'browsenodes',
 					'category': $('#maincat').val(),
-					'subcategory': subCat
+					'subcategory': subCat,
+					'selected': $('#browsenodes select').val()
 				},
 				success: function (data) {
 					$('#browsenodes select').html(data);
@@ -328,7 +330,7 @@ function renderMultiApplication($data) {
 			});
 		}
 
-		function loadProductTypesAndAttributes(mainCategory) {
+		function loadSubcategoriesAndBrowseNodes(mainCategory) {
 			jQuery.blockUI(blockUILoading);
 			jQuery.ajax({
 				type: 'POST',
@@ -346,26 +348,13 @@ function renderMultiApplication($data) {
 						$('#subCategory').css({'display': 'table-row'});
 						$('#subcat').html(data.ProductTypes)
 					}
+
 					subcatVal = $('#subcat').val();
 					if ((subcatVal == null) || (subcatVal == '') || (subcatVal == 'null')) {
 						loadBrowseNodes(false);
 					} else {
 						loadBrowseNodes(subcatVal);
 					}
-					if (data.Attributes == false) {
-						$('#additionalAttributes').css({'display': 'none'});
-						$('#additionalAttributes td.input').html('');
-					} else {
-						$('#additionalAttributes').css({'display': 'table-row'});
-						$('#additionalAttributes > td.input').html(data.Attributes);
-					}
-					if (data.ConditionType == false) {
-						$('.ArtikelConditions').css({'display': 'none'});
-					} else {
-						$('.ArtikelConditions').css({'display': 'table-row'});
-						$('#condition_type').html(data.ConditionType);
-					}
-					//jQuery.unblockUI();
 				},
 				error: function (xhr, status, error) {
 					$('#subcat').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_CAT_FIRST; ?></option>').css({'display': 'block'});
@@ -380,7 +369,7 @@ function renderMultiApplication($data) {
 		$(document).ready(function () {
 			$('#maincat').change(function () {
 				if ($(this).val() != 'null') {
-					loadProductTypesAndAttributes($(this).val());
+					loadSubcategoriesAndBrowseNodes($(this).val());
 				} else {
 					$('#subcat').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_CAT_FIRST; ?></option>').css({'display': 'block'});
 					$('#browsenodes select').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_SUB_CAT_FIRST; ?></option>');
@@ -402,10 +391,30 @@ function renderMultiApplication($data) {
 			</tr>
 		</tbody>';
 
+	$html .= '
+		<tbody id="tbodyDynamicMatchingHeadline" style="display:none;">
+			<tr class="headline">
+				<td colspan="1"><h4>' . str_replace('%marketplace%', ucfirst($_MagnaSession['currentPlatform']), ML_GENERAL_VARMATCH_MP_ATTRIBUTE) . '</h4></td>
+				<td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB .' </h4></td>
+			</tr>
+		</tbody>
+		<tbody id="tbodyDynamicMatchingInput" style="display:none;">
+			<tr>
+				<th></th>
+				<td class="input">' . ML_GENERAL_VARMATCH_SELECT_CATEGORY . '</td>
+				<td class="info"></td>
+			</tr>
+			<tr class="spacer">
+				<td colspan="3">&nbsp;</td>
+			</tr>
+		</tbody>
+		';
+
 	return $html;
 }
 
 function renderSingleApplication($data) {
+	global $_MagnaSession;
 	$productImagesHTML = '';
 	if (!empty($data['Images'])) {
 		foreach ($data['Images'] as $img => $checked) {
@@ -420,7 +429,19 @@ function renderSingleApplication($data) {
 		$productImagesHTML = '&nbsp;';
 	}
 
-	$charset = (isset($_SESSION['language_charset']) && (stripos($_SESSION['language_charset'], 'utf') !== false)) ? 'UTF-8' : 'ISO-8859-1';
+	if (getDBConfigValue('amazon.site', $_MagnaSession['mpID']) !== 'US') {
+		$eanHtml = '
+		<tr class="odd">
+				<th>' . ML_GENERIC_EAN . ' <span>&bull;</span></th>
+				<td class="input"><input class="fullwidth" type="text" name="EAN" value="' . fixHTMLUTF8Entities($data['EAN']) . '"/></td>
+				<td class="info">' . ML_AMAZON_TEXT_APPLY_REQUIERD_EAN . '</td>
+			</tr>
+		';
+	} else {
+		$eanHtml = '';
+	}
+
+	$charset = (isset($_SESSION['magna']['language_charset']) && (stripos($_SESSION['magna']['language_charset'], 'utf') !== false)) ? 'UTF-8' : 'ISO-8859-1';
 	$html = '
 		<tbody>
 			<tr class="headline">
@@ -446,11 +467,7 @@ function renderSingleApplication($data) {
 				<td class="input"><input class="fullwidth" type="text" name="ManufacturerPartNumber" value="' . fixHTMLUTF8Entities($data['ManufacturerPartNumber']) . '"/></td>
 				<td class="info">' . ML_AMAZON_TEXT_APPLY_MANUFACTURER_PARTNO . '</td>
 			</tr>
-			<tr class="odd">
-				<th>' . ML_GENERIC_EAN . ' <span>&bull;</span></th>
-				<td class="input"><input class="fullwidth" type="text" name="EAN" value="' . fixHTMLUTF8Entities($data['EAN']) . '"/></td>
-				<td class="info">' . ML_AMAZON_TEXT_APPLY_REQUIERD_EAN . '</td>
-			</tr>
+			' . $eanHtml . '
 			<tr class="spacer">
 				<td colspan="3">&nbsp;</td>
 			</tr>
@@ -475,7 +492,7 @@ function renderSingleApplication($data) {
 			<tr class="odd">
 				<th>' . ML_GENERIC_PRODUCTDESCRIPTION . '</th>
 				<td class="input"><textarea class="fullwidth" name="Description" rows="10">' .
-		html_entity_decode(fixHTMLUTF8Entities(amazonSanitizeDesc($data['Description'])), ENT_NOQUOTES, $charset) .
+		fixHTMLUTF8Entities(amazonSanitizeDesc($data['Description'])) .
 		'</textarea></td>
 		<td class="info">' . ML_AMAZON_TEXT_APPLY_PRODUCTDESCRIPTION . '</td>
 			</tr>
@@ -497,7 +514,7 @@ function renderSingleApplication($data) {
 }
 
 function renderGenericApplication($data) {
-	global $conditionStatus, $conditionHtml;
+	global $conditionStatus, $conditionHtml, $_MagnaSession;
 	$opts = array_merge(array(
 		'0' => '&mdash;',
 		'X' => ML_LABEL_DO_NOT_CHANGE,
@@ -522,25 +539,31 @@ function renderGenericApplication($data) {
 				</td>
 				<td class="info">&nbsp;</td>
 			</tr>';
-//    if(!empty($tmpData) && array_key_exists('ConditionType', $tmpData)){
-	$html .= '
-			<tr class="odd ArtikelConditions" style="display: ' . (($conditionStatus) ? 'table-row' : 'none') . ';">
-				<th>' . ML_GENERIC_CONDITION . '</th>
-				<td class="input"><select class="fullWidth" id="condition_type" name="ConditionType">' . (($conditionStatus) ? $conditionHtml : '') . '</select></td>
-				<td class="info"></td>
-			</tr>
-			<tr class="odd ArtikelConditions" style="display:' . (($conditionStatus) ? 'table-row' : 'none') . ';">
-				<th>' . ML_GENERIC_CONDITION_NOTE . '</th>
-				<td class="input"><textarea class="fullWidth" rows="10" id="condition_note" name="ConditionNote">' . (($conditionStatus) ? $data['ConditionNote'] : '') . '</textarea></td>
-				<td class="info"></td>
+	//.print_m($data);
+	
+	if(getDBConfigValue(array('amazon.shipping.template.active', 'val'), $_MagnaSession['mpID'], false) && isset($data['ShippingTemplate'])){
+		$aTemplates = getDBConfigValue(array($_MagnaSession['currentPlatform'] . '.shipping.template', 'values'), $_MagnaSession['mpID']);
+		$html .= '
+			<tr class="even">
+				<th>' . ML_AMAZON_SHIPPING_TEMPLATE . '</th>
+				<td class="input">
+					<select class="fullWidth" name="ShippingTemplate">';
+		
+				foreach ($aTemplates as $key => $name) {
+					$html .= '
+						<option value="' . $key . '"' . (($data['ShippingTemplate'] == $key) ? 'selected="selected"' : '') . '>' . $name . '</option>' . "\n";
+				}
+				$html .= '"
+					</select>
+				</td>
+				<td class="info">'.ML_AMAZON_SHIPPING_TEMPLATE_PREPARE_INFO.'</td>
 			</tr>';
-//    }
-	$html .= '
-			<tr class="spacer">
+	}
+	$html .= 
+			'<tr class="spacer">
 				<td colspan="3">&nbsp;</td>
 			</tr>
 		</tbody>';
-	//.print_m($data);
 	return $html;
 }
 
@@ -554,7 +577,13 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 		die(json_encode($caa));
 	}
 	if (isset($_POST['type']) && ($_POST['type'] == 'browsenodes') && isset($_POST['category']) && isset($_POST['subcategory'])) {
-		die(getBrowseNodes($_POST['category'], $_POST['subcategory']));
+		if (isset($_POST['selected']) && !empty($_POST['selected'])) {
+			preg_match("/([0-9]*)__([0-9]*)/", $_POST['selected'], $aOutput);
+			if (!empty($aOutput)) {
+				$bNewResponse = true;
+			}
+		}
+		die(getBrowseNodes($_POST['category'], $_POST['subcategory'], $_POST['selected'], $bNewResponse));
 	}
 	if (isset($_POST['type']) && ($_POST['type'] == 'resetToDefaults') && isset($_POST['pID']) && ctype_digit($_POST['pID'])) {
 		$pID = $_POST['pID'];
@@ -633,14 +662,26 @@ echo '
 			</td></tr>
 		</tbody>
 	</table>
-</form>';
+</form>
+<script type="text/javascript" src="' . DIR_MAGNALISTER_WS . 'js/variation_matching.js"></script>
+<script type="text/javascript" src="' . DIR_MAGNALISTER_WS . 'js/marketplaces/amazon/variation_matching.js"></script>
+<script>
+	var ml_vm_config = {
+		url: "' . toURL($_url, array('applyAction' => 'variations', 'kind' => 'ajax'), true) . '",
+		viewName: "varmatchView",
+		handleCategoryChange: false,
+		i18n: ' . json_encode(AmazonHelper::gi()->getVarMatchTranslations()) . ',
+		shopVariations : '. json_encode(AmazonHelper::gi()->getShopVariations()) . '
+	};
+	</script>
+';
 if ($applyAction != 'multiapplication') {
-	?>
+?>
 	<script type="text/javascript">/*<![CDATA[*/
 		$(document).ready(function () {
 			$('#resetToDefaults').click(function () {
-				jQuery.blockUI(blockUILoading);
-				jQuery.ajax({
+				$.blockUI(blockUILoading);
+				$.ajax({
 					type: 'POST',
 					url: '<?php echo toURL($_url, array('kind' => 'ajax', 'applyAction' => $applyAction, 'ts' => time()), true);?>',
 					dataType: 'json',
@@ -668,15 +709,15 @@ if ($applyAction != 'multiapplication') {
 								}
 							}
 						}
-						jQuery.unblockUI();
+						$.unblockUI();
 					},
 					error: function (xhr, status, error) {
 						myConsole.log(arguments);
-						jQuery.unblockUI();
+						$.unblockUI();
 					}
 				});
 			});
 		});
-		/*]]>*/</script>
+	/*]]>*/</script>
 <?php
 }

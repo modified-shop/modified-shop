@@ -87,8 +87,21 @@ function renderSinglePrepareView($data) {
 				<td class="info">'.ML_EBAY_SUBTITLE_MAX_55_CHARS.'<span style="color:red;"> '.ML_EBAY_CAUSES_COSTS.'</span></td>
 			</tr>
 			<tr class="odd">
-				<th>'.ML_EBAY_DESCRIPTION.'</th>
+				<th colspan=3 class="input">
+				<span id="sDescButtonRowStandard" name="sDescButtonRowStandard">
+				<input class="ml-button" style="float: left; position: relative; top: 7px; border-radius: 3px 3px 0px 0px;background-color: #666;border-color: #666;color: #fff !important;text-shadow: none;" type="button" value="'.ML_EBAY_DESCRIPTION.'" name="sstandardTemplateButton" id="sstandardTemplateButton" />
+				<input class="ml-button" style="float: none; position: relative; top: 7px; border-radius: 3px 3px 0px 0px;" type="button" value="'.ML_EBAY_MOBILE_DESCRIPTION.'" name="mobileTemplateButton" id="mobileTemplateButton"/>
+				</span>
+				<span id="sDescButtonRowMobile" name="sDescButtonRowMobile">
+				<input class="ml-button" style="float: left; position: relative; top: 7px; border-radius: 3px 3px 0px 0px;" type="button" value="'.ML_EBAY_DESCRIPTION.'" name="standardTemplateButton" id="standardTemplateButton" />
+				<input class="ml-button" style="float: none; position: relative; top: 7px; border-radius: 3px 3px 0px 0px;background-color: #666;border-color: #666;color: #fff !important;text-shadow: none;" type="button" value="'.ML_EBAY_MOBILE_DESCRIPTION.'" name="mmobileTemplateButton" id="mmobileTemplateButton"/>
+				</span>
+				</td>
+			</tr>
+			<tr class="even">
+				<th>&nbsp;</th>
 				<td class="input">
+					<span name="sDescription" id="sDescription">
 					'.magna_wysiwyg(array (
 						'id' => 'Description',
 						'name' => 'Description',
@@ -97,8 +110,19 @@ function renderSinglePrepareView($data) {
 						'rows'=>'40',
 						'wrap'=>'virtual'
 					), $data[0]['Description']).'
+					</span><span name="sMobileDescription" id="sMobileDescription">
+					'.magna_wysiwyg(array (
+						'id' => 'MobileDescription',
+						'name' => 'MobileDescription',
+						'class' => 'fullwidth',
+						'cols'=>'80',
+						'rows'=>'40',
+						'wrap'=>'virtual'
+					), $data[0]['MobileDescription']).'
+					</span>
 				</td>
 				<td class="info">
+				<span name="sDescInfoColStandard" id="sDescInfoColStandard">
 					'.ML_EBAY_PRODUCTS_DESCRIPTION.'<br />
 					'.ML_EBAY_PLACEHOLDERS.':
 					<dl>
@@ -117,7 +141,10 @@ function renderSinglePrepareView($data) {
 #						<dt style="font-weight:bold; color:black">#VPE#</dt>
 #							<dd>'.ML_EBAY_PRICE_PER_VPE.'</dd>';
 #	}
-
+	if (getDBConfigValue('ebay.template.usemobile', $_MagnaSession['mpID'], false) === 'true') {
+		$html .= '
+			<input type="hidden" id="usemobile" name="usemobile" value="true" />';
+	}
 	$html .= '
 						<dt style="font-weight:bold; color:black">#SHORTDESCRIPTION#</dt>
 							<dd>'.ML_EBAY_SHORTDESCRIPTION_FROM_SHOP.'</dd>
@@ -130,16 +157,44 @@ function renderSinglePrepareView($data) {
 						<dt style="font-weight:bold; color:black">#PICTURE2# etc.</dt>
 							<dd>'.ML_EBAY_MORE_PICS.'</dd>
 					</dl>
+				</span>
+				<span name="sDescInfoColMobile" id="sDescInfoColMobile">
+					'.ML_EBAY_MOBILE_DESCRIPTION.'<br />
+					'.ML_EBAY_PLACEHOLDERS.':
+					<dl>
+						<dt style="font-weight:bold; color:black">#TITLE#</dt>
+							<dd>'.ML_EBAY_ITEM_NAME_TITLE.'</dd>
+						<dt style="font-weight:bold; color:black">#ARTNR#</dt>
+							<dd>'.ML_EBAY_ARTNO.'</dd>
+						<dt style="font-weight:bold; color:black">#PID#</dt>
+							<dd>'.ML_EBAY_PRODUCTS_ID.'</dd>
+						<dt style="font-weight:bold; color:black">#SHORTDESCRIPTION#</dt>
+							<dd>'.ML_EBAY_SHORTDESCRIPTION_FROM_SHOP.'</dd>
+						<dt style="font-weight:bold; color:black">#DESCRIPTION#</dt>
+							<dd>'.ML_EBAY_DESCRIPTION_FROM_SHOP.'</dd>
+						<dt style="font-weight:bold; color:black">#WEIGHT#</dt>
+							<dd>'.ML_EBAY_WEIGHT_FROM_SHOP.'</dd>
+					</dl>
+					'.ML_EBAY_NOTE_MOBILE_DESC_CONSTRAINTS.'
+				</span>
 				</td>
 			</tr>';
 			
 	$prepareViewPrice->setPrice(makePrice($data[0]['products_id'], 'FixedPriceItem'));
 	$fixedPrice    = $prepareViewPrice->formatWOCurrency();
+	$blUseStrikePrice = false;
+	if (getDBConfigValue('ebay.strike.price.group',  $_MagnaSession['mpID'], -1) > -1) {
+		$prepareViewPrice->setPrice(makePrice($data[0]['products_id'], 'StrikePrice'));
+		$strikePrice    = $prepareViewPrice->formatWOCurrency();
+		if ($strikePrice > $fixedPrice) {
+			$blUseStrikePrice = true;
+		}
+	}
 	$prepareViewPrice->setPrice(makePrice($data[0]['products_id'], 'BuyItNowPrice', true));
 	$buyItNowPrice = $prepareViewPrice->formatWOCurrency();
 
 	$html .= '
-			<tr class="even">
+			<tr class="odd">
 				<th>eBay Preis</th>
 				<td>
 					<table class="lightstlye line15"><tbody>
@@ -150,7 +205,17 @@ function renderSinglePrepareView($data) {
 								<input type="hidden" value="'.$fixedPrice.'" name="Price" id="Price" />
 							</td>
 							<td></td>
-						</tr>
+						</tr>';
+	if ($blUseStrikePrice) $html .= '
+						<tr>
+							<td>'.ML_EBAY_STRIKEPRICE_CALCULATED.': </td>
+							<td id="showStrikePrice" name="showStrikePrice" style="text-decoration:line-through; color:red">
+								'.$strikePrice.' '.getDBConfigValue('ebay.currency', $_MagnaSession['mpID']).'
+								<input type="hidden" value="'.$strikePrice.'" name="StrikePrice" id="StrikePrice" />
+							</td>
+							<td></td>
+						</tr>';
+	$html .= '
 						<tr id="chinesePrice" style="display:none">
 							<td>
 								<span id="bidPriceLabel">'.ML_EBAY_YOUR_CHINESE_PRICE.':</span>
@@ -276,10 +341,12 @@ function renderMultiPrepareView($data) {
 	$i = 0;
 	$lastI = 0;
 
-	$ConditionIDArray = array();
-	$PaymentMethodsArray = array();
+	$ConditionIDArray     = array();
+	$PaymentMethodsArray  = array();
 	$ShippingDetailsArray = array();
+	$SellerProfilesArray  = array();
 	$DispatchTimeMaxArray = array();
+	$blBusinessPoliciesSet = geteBayBusinessPolicies();
 	
 	foreach ($data as $row) {
 		if (   isset($row['PrimaryCategory']) 
@@ -307,6 +374,9 @@ function renderMultiPrepareView($data) {
 		}
 		if ($row['DispatchTimeMax'] <= 30) { // gueltige Werte bis 30, table default == 99
 			$DispatchTimeMaxArray[] = $row['DispatchTimeMax'];
+		}
+		if (!empty($row['SellerProfiles'])) {
+			$SellerProfilesArray[] = $row['SellerProfiles'];
 		}
         $lastI = $i;
 		++$i;
@@ -389,6 +459,33 @@ function renderMultiPrepareView($data) {
 		if (1 == count($ShippingDetailsArray)) {
 			$prefilledShippingDetails = $ShippingDetailsArray[0];
 		}
+	}
+	$prefilledSellerProfiles = null;
+	if (is_array($SellerProfilesArray) && !empty($SellerProfilesArray)) {
+		$SellerProfilesArray = array_unique($SellerProfilesArray);
+		if (1 == count($SellerProfilesArray)) {
+			$prefilledSellerProfiles = json_decode($SellerProfilesArray[0], true);
+		}
+	}
+	/*
+	 * check if prefilled profiles are valid
+	 */
+	if (isset($prefilledSellerProfiles)) {
+		foreach ($prefilledSellerProfiles as $sKind => &$profileID) {
+			$getProfilesFunc = 'geteBaySeller'.$sKind.'Profiles';
+			$aProfiles = $getProfilesFunc();
+			if (!array_key_exists($profileID, $aProfiles)) {
+				$profileID = getDBConfigValue('ebay.default.'.strtolower($sKind).'sellerprofile', $_MagnaSession['mpID'], 0);
+			}
+		}
+	}
+	if ( $blBusinessPoliciesSet
+	     && !isset($prefilledSellerProfiles)) {
+		$prefilledSellerProfiles = array (
+			'Payment'  => getDBConfigValue('ebay.default.paymentsellerprofile' , $_MagnaSession['mpID']),
+			'Shipping' => getDBConfigValue('ebay.default.shippingsellerprofile', $_MagnaSession['mpID']),
+			'Return'   => getDBConfigValue('ebay.default.returnsellerprofile'  , $_MagnaSession['mpID'])
+		);
 	}
 	$prefilledDispatchTimeMax = null;
 	if (is_array($DispatchTimeMaxArray)) {
@@ -491,17 +588,41 @@ function renderMultiPrepareView($data) {
 				</td>
 				<td class="info">'.ML_EBAY_DURATION.'</td>
 			</tr>
-			<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
-				<th>'.ML_EBAY_PAYMENT_METHODS.'</th>
-				<td class="input">
-					<div id="ebay_PaymentMethods">
-					<select name="PaymentMethods[]" id="PaymentMethods" multiple>';
+			<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">';
+	if ($blBusinessPoliciesSet) {
+		$html .= '
+			<th>'.ML_EBAY_LABEL_BUSINESS_POLICIES_PAYMENT.'</th>
+			<td class="input">
+				<div id="ebay_PaymentSellerProfile">
+				<select name="paymentsellerprofile" id="paymentsellerprofile">';
+				$paymentProfiles = geteBaySellerPaymentProfiles();
+		foreach($paymentProfiles as $profileID => $profileName) {
+				$isSelected = ($profileID == $prefilledSellerProfiles['Payment']? 'selected' : '');
+				$html .= '
+						<option '.$isSelected.' value="'.$profileID.'">'.$profileName."</option>\n";
+		}
+		$html .= '
+				</select>
+				</div>
+				</td>
+				<td class="info">'.ML_EBAY_HINT_BUSINESS_POLICIES_PAYMENT.'</td>
+			</tr>
+			<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">';
+	}
+	$html .= '
+			<th>'.ML_EBAY_PAYMENT_METHODS.'</th>
+			<td class="input">
+				<div id="ebay_PaymentMethods">
+				<select name="PaymentMethods[]" id="PaymentMethods" '.($blBusinessPoliciesSet? 'disabled="disabled" style="background-color:#dfdfdf" ':'').' multiple>';
 	try {
 		$PaymentMethods = geteBayPaymentOptions();
 	} catch (MagnaException $e) {
 		echo print_m($e->getErrorArray(), 'Error');
 	}
-	if (isset($prefilledPaymentMethods)) {
+	if ($blBusinessPoliciesSet) {
+		$sellerProfileContents = getDBConfigValue('ebay.sellerprofile.contents', $_MagnaSession['mpID']);
+		$defaultPaymentMethods = $sellerProfileContents['Payment'][$prefilledSellerProfiles['Payment']]['paymentmethod'];
+	} else if (isset($prefilledPaymentMethods)) {
 		$defaultPaymentMethods = json_decode(fixBrokenJsonUmlauts($prefilledPaymentMethods));
 	} else {
 		$defaultPaymentMethods = getDBConfigValue('ebay.default.paymentmethod', $_MagnaSession['mpID']);
@@ -511,13 +632,14 @@ function renderMultiPrepareView($data) {
 			? $isSelected = 'selected'
 			: $isSelected = '';
 		$html .= '
-							<option '.$isSelected.' value="'.$method.'">'.$name."</option>\n";
+						<option '.$isSelected.' value="'.$method.'">'.$name."</option>\n";
 	}
 	$html .= '
-						</select>
-					</div>
-				</td>
-				<td class="info">'.ML_EBAY_PAYMENT_METHODS_OFFERED.'</td>
+					</select>
+				</div>
+			</td>
+			<td class="info">'.ML_EBAY_PAYMENT_METHODS_OFFERED.'</td>';
+	$html .= '
 			</tr>
 			<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 				<th>'.ML_EBAY_ITEM_CONDITION.'</th>
@@ -634,7 +756,7 @@ function renderMultiPrepareView($data) {
     ');
 	if (    ('false' == $eBayPlusSettings['eBayPlus'])
 	     || ( false  == $eBayPlusSettings['eBayPlus'])) {
-		$html .= ' disabled="disabled" ';
+		$html .= ' disabled="disabled"  style="background-color:#dfdfdf" ';
 	} else {
     	if (1 == (int)MagnaDB::gi()->foundRows()) {
 	        if ('1' == $plusSet[0]['eBayPlus']) {
@@ -855,13 +977,38 @@ function renderMultiPrepareView($data) {
 				<tbody>
 					<tr class="headline">
 						<td colspan="3"><h4>'.ML_GENERIC_SHIPPING.'</h4></td>
-					</tr>
-					<tr class="odd">
-						<th>'.ML_EBAY_SHIPPING_DOMESTIC.'</th>
-						<td class="input">';
+					</tr>';
+		if ($blBusinessPoliciesSet) {
+			$html .= '
+		<tr class="odd">
+			<th>'.ML_EBAY_LABEL_BUSINESS_POLICIES_SHIPPING.'</th>
+			<td class="input">
+				<select name="shippingsellerprofile" id="shippingsellerprofile">';
+		$shippingProfiles = geteBaySellerShippingProfiles();
+		foreach($shippingProfiles as $profileID => $profileName) {
+				$isSelected = ($profileID == $prefilledSellerProfiles['Shipping']? 'selected' : '');
+				$html .= '
+						<option '.$isSelected.' value="'.$profileID.'">'.$profileName."</option>\n";
+		}
+		$html .= '
+				</select>
+			</td>
+			<td class="info">'.ML_EBAY_HINT_BUSINESS_POLICIES_SHIPPING.'</td>
+		</tr>';
+		}
+			$html .= '
+				<tr class="odd">
+					<th>'.ML_EBAY_SHIPPING_DOMESTIC.'</th>
+					<td class="input">';
 
-				$tmpURL = $_url;
-				$tmpURL['where'] = 'prepareView';
+			$tmpURL = $_url;
+			$tmpURL['where'] = 'prepareView';
+			if ($blBusinessPoliciesSet) {
+				$sellerProfileContents = getDBConfigValue('ebay.sellerprofile.contents', $_MagnaSession['mpID']);
+				$html .= '<table id="ebay_default_shipping_local" class="shippingDetails inlinetable nowrap autoWidth"><tbody>'
+				."\n".renderReadonlyShippingDetails($sellerProfileContents['Shipping'][$prefilledSellerProfiles['Shipping']]['shipping.local'], false)
+				."\n</tbody></table>\n";
+			} else {
 				if (isset($prefilledShippingDetails)) {
 					$prefilledShippingDetailsArray = json_decode(fixBrokenJsonUmlauts($prefilledShippingDetails), true);
 					$shipProc = new eBayShippingDetailsProcessor(array(
@@ -874,91 +1021,107 @@ function renderMultiPrepareView($data) {
 					), '', $tmpURL);
 				}
 				$html .= $shipProc->process();
+			}
 
+			$html .= '
+					</td>
+					<td class="info">
+						'.ML_EBAY_SHIPPING_DOMESTIC_DESC.'<br /><br />
+						Angabe "=GEWICHT"<br />
+						bei den Versandkosten
+						setzt diese gleich dem Artikelgewicht.
+					</td>
+				</tr>
+				<tr class="even">
+					<th>'.ML_EBAY_DISPATCH_TIME.'</th>
+					<td class="input">
+						<select name="dispatchTime" id="dispatchTime" '.($blBusinessPoliciesSet? 'disabled="disabled" style="background-color:#dfdfdf" ':'').'>';
+			for ($days = 0; $days <= 30; $days++) {
+				$isSelected = ($days == $prefilledDispatchTimeMax? 'selected' : '');
+				switch ($days) {
+					case (0): $daysText = ML_EBAY_DISPATCH_ON_SAME_DAY; break;
+					case (1): $daysText = ML_EBAY_DISPATCH_ONE_DAY; break;
+					default : $daysText = $days.' '.ML_DAYS; break;
+				}
 				$html .= '
-						</td>
-						<td class="info">
-							'.ML_EBAY_SHIPPING_DOMESTIC_DESC.'<br /><br />
-							Angabe "=GEWICHT"<br />
-							bei den Versandkosten
-							setzt diese gleich dem Artikelgewicht.
-						</td>
-					</tr>
-					<tr class="even">
-						<th>'.ML_EBAY_DISPATCH_TIME.'</th>
-						<td class="input">
-							<select name="dispatchTime" id="dispatchTime">';
-				for ($days = 0; $days <= 30; $days++) {
-					$isSelected = ($days == $prefilledDispatchTimeMax? 'selected' : '');
-					switch ($days) {
-						case (0): $daysText = ML_EBAY_DISPATCH_ON_SAME_DAY; break;
-						case (1): $daysText = ML_EBAY_DISPATCH_ONE_DAY; break;
-						default : $daysText = $days.' '.ML_DAYS; break;
-					}
+							<option '.$isSelected.' value="'.$days.'">'.$daysText."</option>\n";
+				
+			}
+			$html .= '
+						</select>
+					</td>
+					<td class="info">
+						&nbsp;
+					</td>
+				</tr>
+				<tr class="odd">
+					<th>'.ML_EBAY_SHIPPING_PROFILE.'</th>
+					<td class="input">
+						<select name="localProfile" id="localProfile" '.($blBusinessPoliciesSet? 'disabled="disabled" style="background-color:#dfdfdf" ':'').'>';
+			$shippingProfiles = geteBayShippingDiscountProfiles();
+			if ($blBusinessPoliciesSet) {
+				$defaultLocalProfile = $sellerProfileContents['Shipping'][$prefilledSellerProfiles['Shipping']]['shippingprofile.local'];
+			} else if (isset($prefilledShippingDetailsArray)
+				&& array_key_exists('LocalProfile', $prefilledShippingDetailsArray)) {
+				$defaultLocalProfile = $prefilledShippingDetailsArray['LocalProfile'];
+			} else {
+				$defaultLocalProfile = getDBConfigValue('ebay.default.shippingprofile.local',$_MagnaSession['mpID'], 0);
+			}
+			foreach($shippingProfiles as $profileID => $profileName) {
+					$isSelected = ($profileID == $defaultLocalProfile? 'selected' : '');
 					$html .= '
-								<option '.$isSelected.' value="'.$days.'">'.$daysText."</option>\n";
-					
-				}
-				$html .= '
-							</select>
-						</td>
-						<td class="info">
-							&nbsp;
-						</td>
-					</tr>
-					<tr class="odd">
-						<th>'.ML_EBAY_SHIPPING_PROFILE.'</th>
-						<td class="input">
-							<select name="localProfile" id="localProfile">';
-				$shippingProfiles = geteBayShippingDiscountProfiles();
-				if (isset($prefilledShippingDetailsArray)
-					&& array_key_exists('LocalProfile', $prefilledShippingDetailsArray)) {
-					$defaultLocalProfile = $prefilledShippingDetailsArray['LocalProfile'];
-				} else {
-					$defaultLocalProfile = getDBConfigValue('ebay.default.shippingprofile.local',$_MagnaSession['mpID'], 0);
-				}
-		foreach($shippingProfiles as $profileID => $profileName) {
-				$isSelected = ($profileID == $defaultLocalProfile? 'selected' : '');
-				$html .= '
-								<option '.$isSelected.' value="'.$profileID.'">'.$profileName."</option>\n";
-		}
-		$html .= '
-							</select>
-							<input type="checkbox" name="localPromotionalDiscount" id="localPromotionalDiscount" ';
-				if (isset($prefilledShippingDetailsArray)
-				    && array_key_exists('LocalPromotionalDiscount', $prefilledShippingDetailsArray)) {
-					if ('true' == $prefilledShippingDetailsArray['LocalPromotionalDiscount']) {
-						$html .= ' checked="checked" ';
-					}
-				} else if (getDBConfigValue(array('ebay.shippingdiscount.local', 'val'), $_MagnaSession['mpID'])) {
+									<option '.$isSelected.' value="'.$profileID.'">'.$profileName."</option>\n";
+			}
+			$html .= '
+						</select>
+						<input type="checkbox" name="localPromotionalDiscount" id="localPromotionalDiscount" ';
+			if ($blBusinessPoliciesSet) {
+				if ('{"val":true}' == $sellerProfileContents['Shipping'][$prefilledSellerProfiles['Shipping']]['shippingdiscount.local']) {
 					$html .= ' checked="checked" ';
 				}
-				$html .= '/>'.ML_EBAY_SHIPPING_DISCOUNT.'
-				</td>
-				<td class="info">
-					&nbsp;
-				</td>
-			</tr>
-			<tr class="even">
-				<th>'.ML_EBAY_SHIPPING_INTL_OPTIONAL.'</th>
-				<td class="input">';
+			} else if (isset($prefilledShippingDetailsArray)
+			    && array_key_exists('LocalPromotionalDiscount', $prefilledShippingDetailsArray)) {
+				if ('true' == $prefilledShippingDetailsArray['LocalPromotionalDiscount']) {
+					$html .= ' checked="checked" ';
+				}
+			} else if (getDBConfigValue(array('ebay.shippingdiscount.local', 'val'), $_MagnaSession['mpID'])) {
+				$html .= ' checked="checked" ';
+			}
+			if ($blBusinessPoliciesSet) {
+				$html .= ' disabled="disabled"  style="background-color:#dfdfdf" ';
+			}
+			$html .= '/>'.ML_EBAY_SHIPPING_DISCOUNT.'
+			</td>
+			<td class="info">
+				&nbsp;
+			</td>
+		</tr>
+		<tr class="even">
+			<th>'.ML_EBAY_SHIPPING_INTL_OPTIONAL.'</th>
+			<td class="input">';
 
-		if (isset($prefilledShippingDetails) && isset($prefilledShippingDetailsArray['InternationalShippingServiceOption'])) {
-			$shipProc = new eBayShippingDetailsProcessor(array(
-				'key' => 'ebay.default.shipping.international',
-				'content' => $prefilledShippingDetailsArray['InternationalShippingServiceOption'],
-			), 'ebay.default.shipping.international', $tmpURL);
-		} else if (isset($prefilledShippingDetails) && !isset($prefilledShippingDetailsArray['InternationalShippingServiceOption'])) {
-			$shipProc = new eBayShippingDetailsProcessor(array(
-				'key' => 'ebay.default.shipping.international',
-				'content' => array (array('ShippingService' => '', 'ShipToLocation' => 'None')),
-			), 'ebay.default.shipping.international', $tmpURL);
+		if ($blBusinessPoliciesSet) {
+			$html .= '<table id="ebay_default_shipping_international" class="shippingDetails inlinetable nowrap autoWidth"><tbody>'
+			."\n".renderReadonlyShippingDetails($sellerProfileContents['Shipping'][$prefilledSellerProfiles['Shipping']]['shipping.international'], true)
+			."\n</tbody></table>\n";
 		} else {
-			$shipProc = new eBayShippingDetailsProcessor(array(
-				'key' => 'ebay.default.shipping.international',
-			), '', $tmpURL);
+			if (isset($prefilledShippingDetails) && isset($prefilledShippingDetailsArray['InternationalShippingServiceOption'])) {
+				$shipProc = new eBayShippingDetailsProcessor(array(
+					'key' => 'ebay.default.shipping.international',
+					'content' => $prefilledShippingDetailsArray['InternationalShippingServiceOption'],
+				), 'ebay.default.shipping.international', $tmpURL);
+			} else if (isset($prefilledShippingDetails) && !isset($prefilledShippingDetailsArray['InternationalShippingServiceOption'])) {
+				$shipProc = new eBayShippingDetailsProcessor(array(
+					'key' => 'ebay.default.shipping.international',
+					'content' => array (array('ShippingService' => '', 'ShipToLocation' => 'None')),
+				), 'ebay.default.shipping.international', $tmpURL);
+			} else {
+				$shipProc = new eBayShippingDetailsProcessor(array(
+					'key' => 'ebay.default.shipping.international',
+				), '', $tmpURL);
+			}
+			$html .= $shipProc->process();
 		}
-		$html .= $shipProc->process();
 
 		$html .= '
 				</td>
@@ -967,8 +1130,10 @@ function renderMultiPrepareView($data) {
 		<tr class="odd">
 			<th>'.ML_EBAY_SHIPPING_PROFILE.'</th>
 			<td class="input">
-				<select name="internationalProfile" id="internationalProfile">';
-				if (isset($prefilledShippingDetailsArray)
+				<select name="internationalProfile" id="internationalProfile" '.($blBusinessPoliciesSet? 'disabled="disabled" style="background-color:#dfdfdf" ':'').'>';
+				if ($blBusinessPoliciesSet) {
+					$defaultInternationalProfile = $sellerProfileContents['Shipping'][$prefilledSellerProfiles['Shipping']]['shippingprofile.international'];
+				} else if (isset($prefilledShippingDetailsArray)
 					&& array_key_exists('InternationalProfile', $prefilledShippingDetailsArray)) {
 					$defaultInternationalProfile = $prefilledShippingDetailsArray['InternationalProfile'];
 				} else {
@@ -982,7 +1147,11 @@ function renderMultiPrepareView($data) {
 		$html .= '
 				</select>
 				<input type="checkbox" name="internationalPromotionalDiscount" id="internationalPromotionalDiscount" ';
-		if (isset($prefilledShippingDetailsArray)
+		if ($blBusinessPoliciesSet) {
+			if ('{"val":true}' == $sellerProfileContents['Shipping'][$prefilledSellerProfiles['Shipping']]['shippingdiscount.international']) {
+				$html .= ' checked="checked" ';
+			}
+		} else if (isset($prefilledShippingDetailsArray)
 		    && array_key_exists('InternationalPromotionalDiscount', $prefilledShippingDetailsArray)) {
 			if ('true' == $prefilledShippingDetailsArray['InternationalPromotionalDiscount']) {
 				$html .= ' checked="checked" ';
@@ -990,12 +1159,16 @@ function renderMultiPrepareView($data) {
 		} else if (getDBConfigValue(array('ebay.shippingdiscount.international', 'val'), $_MagnaSession['mpID'])) {
 			$html .= ' checked="checked" ';
 		}
+		if ($blBusinessPoliciesSet) {
+			$html .= ' disabled="disabled style="background-color:#dfdfdf" " ';
+		}
 				$html .= '/>'.ML_EBAY_SHIPPING_DISCOUNT.'
 			</td>
 			<td class="info">
 				&nbsp;
 			</td>
-		</tr>
+		</tr>';
+		$html .= '
 		<tr class="spacer">
 			<td colspan="3">&nbsp;</td>
 		</tr>
@@ -1239,6 +1412,12 @@ $(document).ready(function() {
 	
 	$('#prepareForm').on('submit', function () {
 		jQuery.blockUI(blockUILoading);
+		$('select[id="PaymentMethods"]').prop('disabled', false);
+		$('select[id="dispatchTime"]').prop('disabled', false);
+		$('select[id="localProfile"]').prop('disabled', false);
+		$('select[id="localPromotionalDiscount"]').prop('disabled', false);
+		$('select[id="internationalProfile"]').prop('disabled', false);
+		$('select[id="internationalPromotionalDiscount"]').prop('disabled', false);
 	});
      $('select[id="GalleryType"]').data('ml-oldvalue', $('select[id="GalleryType"]').val());
 });
@@ -1263,6 +1442,93 @@ $('select[id="GalleryType"]').change(function() {
 			}
 		})
 });
+$('select[id="paymentsellerprofile"]').change(function() {
+	 var sel=$(this);
+	 jQuery.ajax({
+		type: 'POST',
+		url: '<?php echo toURL($_url, array('where' => 'prepareView', 'kind' => 'ajax'), true)?>',
+		data: {
+			'action': 'GetSellerProfileData',
+			'value': sel.val()
+		},
+		dataType: 'json',
+		success: function(data) {
+			$('select[id="PaymentMethods"]').val(data['paymentmethod']);
+		}
+	 });
+}).trigger('change');
+$('select[id="shippingsellerprofile"]').change(function() {
+	 var sel=$(this);
+	 jQuery.ajax({
+		type: 'POST',
+		url: '<?php echo toURL($_url, array('where' => 'prepareView', 'kind' => 'ajax'), true)?>',
+		data: {
+			'action': 'GetSellerProfileData',
+			'value': sel.val()
+		},
+		dataType: 'json',
+		success: function(data) {
+			$('select[id="dispatchTime"]').val(data['DispatchTimeMax']);
+			$('#ebay_default_shipping_local').html(data['ebay_default_shipping_local']);
+			$('#ebay_default_shipping_international').html(data['ebay_default_shipping_international']);
+			$('select[id="localProfile"]').val(data['shippingprofile.local']);
+			$('select[id="internationalProfile"]').val(data['shippingprofile.international']);
+			$('input[id="localPromotionalDiscount"]').prop('checked', ('{"val":true}' == data['shippingdiscount.local']));
+			$('input[id="internationalPromotionalDiscount"]').prop('checked', ('{"val":true}' == data['shippingdiscount.international']));
+		}
+	 });
+}).trigger('change');
+$(document).ready(function() {
+	if ($('input[id="usemobile"]').val()=='true') { 
+	var interval = window.setInterval(function() {
+		if (
+			typeof tinyMCE === "undefined"
+			||
+			(
+				$('#sMobileDescription').find('.mce-tinymce.mce-container').length > 0
+				&& $('#sDescription').find('.mce-tinymce.mce-container').length > 0
+			)
+		) {
+			$('#mobileTemplateButton').on('click', function() {
+				$('#sDescButtonRowMobile').show();
+				$('#sDescButtonRowStandard').hide();
+				$('#sMobileDescription').show();
+				$('#sDescription').hide();
+				$('#sDescInfoColMobile').show();
+				$('#sDescInfoColStandard').hide();
+			});
+			$('#standardTemplateButton').on('click', function() {
+				$('#sDescButtonRowMobile').hide();
+				$('#sDescButtonRowStandard').show();
+				$('#sMobileDescription').hide();
+				$('#sDescription').show();
+				$('#sDescInfoColMobile').hide();
+				$('#sDescInfoColStandard').show();
+			}).trigger('click');
+			window.clearInterval(interval);
+		}
+	}, 300);
+	} else {
+				$('#sDescButtonRowMobile').hide();
+				$('#sDescButtonRowStandard').hide();
+				$('#sMobileDescription').hide();
+				$('#sDescription').show();
+				$('#sDescInfoColMobile').hide();
+				$('#sDescInfoColStandard').show();
+	}
+});
+//$('input[id="mobileTemplateButton"]').click(function() {
+//	$(this).closest("span").css({'display': 'none'});
+//	$('input[id="standardTemplateButton"]').closest("span").css({'display': ''});
+//	$('#Description').closest("span").css({'display': 'none'});
+//	$('#MobileDescription').closest("span").css({'display': ''});
+//});
+//$('input[id="standardTemplateButton"]').click(function() {
+//	$(this).closest("span").css({'display': 'none'});
+//	$('input[id="mobileTemplateButton"]').closest("span").css({'display': ''});
+//	$('#MobileDescription').closest("span").css({'display': 'none'});
+//	$('#Description').closest("span").css({'display': ''});
+//});
 /*]]>*/</script><?php
 	$html .= ob_get_contents();
 	ob_end_clean();
@@ -1445,7 +1711,7 @@ function ebayGalleryTypeHtml($selected_type, $oddEven ){
 		<th>'.ML_EBAY_GALLERY_PICTURES.'</th>'
 		. '<td><select name="GalleryType" id="GalleryType">';
 	foreach (array (
-		'None'=>'Kein Bild', 
+		'None'=>ML_GENERIC_NO_IMAGE, 
 		'Gallery'=>'Standard', 
 		'Plus' =>'Plus' 
 	) as $value => $name){

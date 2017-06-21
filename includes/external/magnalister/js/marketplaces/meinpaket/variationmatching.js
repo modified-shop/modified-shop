@@ -35,7 +35,9 @@
 			customVariationHeaderContainer: null, // header for custom variation
 			customVariationHeaderSelect: null, //select inside customVariationHeaderContainer
 			matchingHeadline: null,
-			matchingInput: null
+			matchingCustomHeadline: null,
+			matchingInput: null,
+			matchingCustomInput: null
 		},
 		variationValues: {},
 		self: null,

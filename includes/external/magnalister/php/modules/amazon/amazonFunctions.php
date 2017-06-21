@@ -866,13 +866,41 @@ function getAmazonOfferLink($sAsin, $sTitle) {
 				}
 			case 'us': {
 					$sAmazonSite = 'com';
+					break;
 				}
 			case 'uk': {
 					$sAmazonSite = 'co.uk';
+					break;
 				}
 			default: {//fr, in, it, ca, es, cn
 				}
 		}
 		return '<a href="http://www.amazon.' . $sAmazonSite . '/gp/offer-listing/' . $sAsin . '" title="' . $sTitle . '" target="_blank">' . $sAsin . '</a>';
 	}
+}
+
+function amazonMfsGetConfigurationValues($sType = null) {
+	global $cacheMFSGetConfigurationValues;
+	if(!isset($cacheMFSGetConfigurationValues)){
+		try {
+		    $aResponse = MagnaConnector::gi()->submitRequest(array(
+			'ACTION' => 'MFS_GetConfigurationValues',
+		    ));
+		    if (array_key_exists('DATA', $aResponse)) {
+			$cacheMFSGetConfigurationValues = $aResponse['DATA'];
+		    } else {
+			$cacheMFSGetConfigurationValues =  array();
+		    }
+		} catch (Exception $oEx) {
+		    return array();
+		}
+	}
+	if ($sType === null) {
+		$return = $cacheMFSGetConfigurationValues;
+	} elseif (array_key_exists($sType, $cacheMFSGetConfigurationValues)) {
+		$return = $cacheMFSGetConfigurationValues[$sType];
+	} else {
+		$return = $sType;
+	}
+	return $return;
 }

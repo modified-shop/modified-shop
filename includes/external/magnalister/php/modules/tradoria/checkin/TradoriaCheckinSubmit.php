@@ -100,6 +100,19 @@ class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				);
 			}
 
+
+			if (    (getDBConfigValue('tradoria.strike.price.group', $this->mpID, -1) > -1)
+			     && ($v['vPricePrefix'] != '=')) {
+				$strikePriceKind = getDBConfigValue('tradoria.strike.price.kind', $this->mpID, 'OldPrice');
+				$$strikePriceKind = $this->calcVariationPrice(
+					$data['submit']["$strikePriceKind"],
+					$v['vPrice'] * (($v['vPricePrefix'] == '+') ? 1 : -1),
+					$tax
+				);
+			} else {
+				$strikePriceKind = null;
+			}
+
 			$vi = array (
 				'SKU' => magnaAID2SKU($v['aID']),
 				'Price' => $fCalcPrice,
@@ -116,6 +129,9 @@ class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			);
 			if (array_key_exists('VPE', $data['submit']) && !empty($data['submit']['VPE'])) {
 				$vi['VPE'] = $data['submit']['VPE'];
+			}
+			if ($strikePriceKind != null) {
+				$vi[$strikePriceKind] = $$strikePriceKind;
 			}
 			/*
 			if (!empty($v['variation_unit_of_measure']) && !empty($v['variation_volume'])) {
@@ -167,6 +183,11 @@ class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 	}
 	
 	protected function appendAdditionalData($pID, $product, &$data) {
+		if (getDBConfigValue('tradoria.strike.price.group', $this->mpID, -1) > -1) {
+			$strikePriceKind = getDBConfigValue('tradoria.strike.price.kind', $this->mpID, 'OldPrice');
+			$data['submit']["$strikePriceKind"] = $this->simpleprice->setFinalPriceFromDB($pID, $this->mpID, 'strike')->getPrice();
+		}
+
 		parent::appendAdditionalData($pID, $product, $data);
 		
 		$data['submit']['ShippingGroup'] = getDBConfigValue($this->marketplace.'.checkin.shippinggroup', $this->mpID, '1');

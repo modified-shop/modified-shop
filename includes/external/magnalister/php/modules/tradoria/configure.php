@@ -75,6 +75,16 @@ class TradoriaConfigure extends MagnaCompatibleConfigure {
 		if (isset($this->form['orderSyncState']['fields']['cancelstatus'])) {
 			mlGetOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
 		}
+		if (isset($this->form['price']['fields']['whichstrikeprice'])) {
+			mlGetCustomersStatus($this->form['price']['fields']['whichstrikeprice'], false);
+			if (!empty($this->form['price']['fields']['whichstrikeprice'])) {
+				$this->form['price']['fields']['whichstrikeprice']['values']['-1'] = ML_LABEL_DONT_USE;
+				$this->form['price']['fields']['whichstrikeprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
+				ksort($this->form['price']['fields']['whichstrikeprice']['values']);
+			} else {
+				unset($this->form['price']['fields']['whichstrikeprice']);
+			}
+		}
 	}
 	
 	protected function finalizeForm() {

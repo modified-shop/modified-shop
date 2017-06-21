@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: config.php 6760 2016-06-16 00:29:38Z MaW $
+ * $Id$
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -235,6 +235,28 @@ function getDBConfigValue($key, $mpID, $default = null) {
 	}
 	
 	return $magnaConfig['db'][$mpID][$key];
+}
+
+function getOneFromMultiOptionConfig($sName, $mpID, $iSelected = null) {
+	$aData = array();
+	$aDefault = getDBConfigValue($sName, $mpID);
+	if ($iSelected === null) {
+		$iDetault = 0;
+		foreach ($aDefault['defaults'] as $iKey => $sValue) {
+			if ($sValue == '1') {
+				$iDetault = $iKey;
+				break;
+			}
+		}
+	} else {
+		$iDetault = $iSelected;
+	}
+	foreach (loadDBConfig($mpID) as $sKey => $aConfig) {
+		if (strpos($sKey, $sName . '.') !== false && isset($aConfig[$iDetault])) {
+			$aData[str_replace($sName . '.', '', $sKey)] = $aConfig[$iDetault];
+		}
+	}
+	return $aData;
 }
 
 function removeDBConfigValue($key, $mpID) {

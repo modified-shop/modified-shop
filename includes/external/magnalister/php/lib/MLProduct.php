@@ -852,13 +852,13 @@ class MLProduct {
 			if (!$onlyOffer) {
 				$v['EAN'] = $vi['variation_ean'];
 				
-				if ((float)$vi['variation_weight'] > 0) {
+				if ((float)$vi['variation_weight'] != 0) {
 					$weight = (float)$vi['variation_weight'];
 					$bweight = isset($parent['Weight']['Value']) ? $parent['Weight']['Value'] : 0.0;
 					$v['Weight'] = array();
 					if (($bweight + $weight) > 0) {
-						$vi['Weight']['Unit'] = isset($parent['Weight']['Unit']) ? $parent['Weight']['Unit'] : 'kg';
-						$vi['Weight']['Value'] = ($bweight + $weight);
+						$v['Weight']['Unit'] = isset($parent['Weight']['Unit']) ? $parent['Weight']['Unit'] : 'kg';
+						$v['Weight']['Value'] = ($bweight + $weight);
 					}
 				}
 				if (!empty($vi['variation_unit_of_measure']) && ((float)$vi['variation_volume'] > 0)) {
@@ -994,7 +994,7 @@ class MLProduct {
 					$weight = (float)$v['Weight'];
 					$bweight = 0.0;
 				} else {
-					$weight = (float)$v['Weight'] * ($v['WeightPrefix'] == '+') ? 1 : -1;
+					$weight = (float)$v['Weight'] * (($v['WeightPrefix'] == '+') ? 1 : -1);
 					$bweight = isset($parent['Weight']['Value']) ? $parent['Weight']['Value'] : 0.0;
 				}
 				$v['Weight'] = array();
@@ -1918,7 +1918,7 @@ $images = array (
 		
 		$this->prepareParentPrices($product);
 		
-		$product['Variations'] = $this->fetchVariations($product, false);		
+		$product['Variations'] = $this->fetchVariations($product, false);
 		$product['VariationPictures'] = $this->fetchVariationImages($product);
 		$this->completeParentOffer($product);
 		

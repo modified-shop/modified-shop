@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketCategoryMatching.php 4900 2014-11-20 09:31:15Z derpapst $
+ * $Id$
  *
  * (c) 2011 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)

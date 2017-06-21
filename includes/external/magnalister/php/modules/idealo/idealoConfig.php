@@ -26,7 +26,7 @@ $_url['mode'] = 'conf';
 
 $form = loadConfigForm($_lang,
 	array(
-		'comparisonshopping_generic.form' => array()
+		'idealo/comparisonshopping_generic.form' => array()
 	), array(
 		'_#_platform_#_' => $_MagnaSession['currentPlatform'],
 		'_#_platformName_#_' => $_modules[$_Marketplace]['title']
@@ -49,6 +49,11 @@ $form['checkin']['fields']['imagepath']['default'] =
 	defined('DIR_WS_CATALOG_POPUP_IMAGES')	? HTTP_CATALOG_SERVER.DIR_WS_CATALOG_POPUP_IMAGES
 		: HTTP_CATALOG_SERVER.DIR_WS_CATALOG_IMAGES;
 
+mlGetCustomersStatus($form['orders']['fields']['customersgroup']);
+mlGetOrderStatus($form['orders']['fields']['openstatus']);
+mlGetOrderStatus($form['orderSyncState']['fields']['shippedstatus']);
+mlGetOrderStatus($form['orderSyncState']['fields']['cancelstatus']);
+
 $cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_idealo');
 $cG->setRenderTabIdent(true);
 
@@ -70,11 +75,86 @@ try {
 } catch (MagnaException $e) {
 }
 
-/*
- * processPOST: Handles to save the data and send them to API
- */
-if (!$cG->processPOST()) {
-	//Here you can display an error message
+$errorMessage = '';
+
+//Check if checkout token is not filled and checkout option is selected
+if(isset($_POST['conf'])){
+	$checkoutOption = $_POST['conf']['idealo.checkout.status']['val'];
+	$checkoutToken = $_POST['conf']['idealo.checkout.token'];
+	if ($checkoutOption === 'true') {
+	    if (empty($checkoutToken)) {
+		$errorMessage = '<p class="noticeBox">' . ML_IDEALO_CHECKOUT_ERROR . '</p>';
+		// reset checkout setting
+		$checkoutOption = $_POST['conf']['idealo.checkout.status']['val'] = 'false';
+	    }
+	}
+} else {
+	$checkoutOption = false;
+}
+$cG->processPOST();
+
+try {
+	$result = MagnaConnector::gi()->submitRequest(array(
+		'SUBSYSTEM' => 'ComparisonShopping',
+		'ACTION' => 'GetShippingMethods',
+	));
+
+	if (isset($result['DATA'])) {
+		$form['prepare']['fields']['shippingmethods']['values'] = $result['DATA'];
+	} else {
+		$form['prepare']['fields']['shippingmethods']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
+	}
+} catch (MagnaException $e) {
+	$form['prepare']['fields']['shippingmethods']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
+}
+
+try {
+	$result = MagnaConnector::gi()->submitRequest(array(
+		'SUBSYSTEM' => 'ComparisonShopping',
+		'ACTION' => 'GetPaymentMethods',
+	));
+
+	if (isset($result['DATA'])) {
+		$form['prepare']['fields']['paymentmethods']['values'] = $result['DATA'];
+	} else {
+		$form['prepare']['fields']['paymentmethods']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
+	}
+} catch (MagnaException $e) {
+	$form['prepare']['fields']['paymentmethods']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
+}
+
+try {
+	$result = MagnaConnector::gi()->submitRequest(array(
+		'SUBSYSTEM' => 'ComparisonShopping',
+		'ACTION' => 'GetCancellationReasons',
+	));
+
+	if (isset($result['DATA'])) {
+		$form['orderSyncState']['fields']['cancelreaason']['values'] = $result['DATA'];
+	} else {
+		$form['orderSyncState']['fields']['cancelreaason']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
+	}
+} catch (MagnaException $e) {
+	$form['orderSyncState']['fields']['cancelreaason']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
+}
+
+if ($checkoutOption === 'true') {
+    try {
+        $result = MagnaConnector::gi()->submitRequest(array(
+            'SUBSYSTEM' => 'ComparisonShopping',
+            'ACTION' => 'IsAuthed',
+        ));
+
+        if ($result['STATUS'] !== 'SUCCESS') {
+            $errorMessage = '<p class="errorBox">' . ML_GENERIC_STATUS_LOGIN_SAVEERROR . '</p>';
+        }
+    } catch (MagnaException $e) {
+        $errorMessage = '<p class="errorBox">' . ML_GENERIC_STATUS_LOGIN_SAVEERROR . '</p>';
+    }
+}
+
+if ($errorMessage) {
+    echo $errorMessage;
 }
 
 if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {

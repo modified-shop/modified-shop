@@ -344,6 +344,11 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
 			      FROM '.TABLE_ORDERS.' o, '.TABLE_MAGNA_ORDERS.' mo
 			     WHERE o.customers_id = '.$this->o['order']['customers_id'].'
 			           AND o.customers_email_address = \''.$this->o['order']['customers_email_address'].'\' 
+			           AND o.delivery_firstname = \''.$this->o['order']['delivery_firstname'].'\' 
+			           AND o.delivery_lastname = \''.$this->o['order']['delivery_lastname'].'\' 
+			           AND o.delivery_street_address = \''.$this->o['order']['delivery_street_address'].'\' 
+			           AND o.delivery_postcode = \''.$this->o['order']['delivery_postcode'].'\' 
+			           AND o.delivery_city = \''.$this->o['order']['delivery_city'].'\' 
 			           AND o.orders_status NOT IN ("'.implode('", "', $this->config['OrderStatusClosed']).'")
 			           AND mo.mpID = '.$this->mpID.'
 			           AND o.orders_id = mo.orders_id 

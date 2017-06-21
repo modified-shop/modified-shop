@@ -20,6 +20,8 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/MagnaCompatibleHelper.php');
+
 abstract class MagnaCompatibleCronBase {
 	const DBGLV_NONE = 0;
 	const DBGLV_LOW  = 1;

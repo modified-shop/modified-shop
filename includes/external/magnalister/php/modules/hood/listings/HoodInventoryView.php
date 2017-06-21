@@ -235,9 +235,23 @@ class HoodInventoryView {
 			       AND pd.language_id=' . $this->settings['language'] . '
 			       AND v.'.mlGetVariationSkuField().' IN (' . $sKUlist . ')
 		');
-		
-		if (empty($data)) {
+		$bEmpty = true;
+		$aLoaded = array();
+		if (!empty($data)) {
+			$bEmpty = false;
+			if (count($data) !== count($sKUarr)) {
+				$bEmpty = true;
+				foreach ($data as $product) {
+					$aLoaded[] = $product['SKU'];
+				}
+			}
+		}
+
+		if ($bEmpty) {
 			foreach ($sKUarr as $sku) {
+				if (in_array($sku, $aLoaded)) {
+					continue;
+				}
 				$aId = magnaSKU2aID($sku);
 				if (empty($aId)) {
 					continue;
@@ -274,13 +288,12 @@ class HoodInventoryView {
 	private function getShopDataForItems() {
 		$sKUarr = array();
 		$sKUarrEsc = array();
-		$sKUlist = '';
 		foreach ($this->renderableData as $item) {
 			$sKUarr[] = $item['SKU'];
 			$sKUarrEsc[] = MagnaDB::gi()->escape($item['SKU']);
 		}
-		$sKUlist = "'".implode("', '", $sKUarrEsc)."'";
-		if (!empty($sKUlist)) {
+		if (!empty($sKUarrEsc)) {
+			$sKUlist = "'".implode("', '", $sKUarrEsc)."'";
 			if ('artNr' == getDBConfigValue('general.keytype', '0')) {
 				$shopDataForSimpleItems = MagnaDB::gi()->fetchArray('
 					SELECT DISTINCT p.products_model SKU, p.products_id products_id, 
@@ -320,6 +333,7 @@ class HoodInventoryView {
 		} else {
 			$shopDataForItemsBySKU = array();
 		}
+
 		foreach ($this->renderableData as &$item) {
 			if (isset($shopDataForItemsBySKU[$item['SKU']])) {
 				$item['ProductsID'] = $shopDataForItemsBySKU[$item['SKU']]['products_id'];

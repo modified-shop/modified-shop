@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketCheckinSubmit.php 5936 2015-08-24 14:27:38Z tim.neumann $
+ * $Id$
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -486,13 +486,17 @@ $varConfig :: Array
 		
 		$data['submit']['ShippingTime'] = getDBConfigValue($this->settings['marketplace'].'.checkin.leadtimetoship', $this->mpID, 3);
 		$data['submit']['ShippingDetails'] = $propertiesRow['ShippingDetails'];
-		
-		$imageWSPath = getDBConfigValue($this->settings['marketplace'].'.checkin.imagepath', $this->mpID, SHOP_URL_POPUP_IMAGES);
+
+        $imageWSPath = getDBConfigValue($this->settings['marketplace'].'.checkin.imagepath', $this->mpID, '');
+        if (empty($imageWSPath)) {
+            $imageWSPath = SHOP_URL_POPUP_IMAGES;
+            $imageWSPath = trim($imageWSPath, '/ ').'/';
+        }
+
 		$images = array();
-		
 		if (!empty($product['Images'])) {
 			foreach($product['Images'] as $img) {
-				$images[] = array('URL' => $imageWSPath.$img);
+				$images[] = array('URL' => (preg_match('/http(s{0,1}):\/\//', $img) ? '' : $imageWSPath).$img);
 			}
 		}
 		$data['submit']['Images'] = $images;

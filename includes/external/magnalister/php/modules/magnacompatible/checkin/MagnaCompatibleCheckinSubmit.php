@@ -394,6 +394,7 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 		$imagePath = getDBConfigValue($this->marketplace.'.imagepath', $this->mpID, '');
 		if (empty($imagePath)) {
 			$imagePath = SHOP_URL_POPUP_IMAGES;
+			$imagePath = trim($imagePath, '/ ').'/';
 		}
 		$images = array();
 		if (!empty($product['products_allimages'])) {

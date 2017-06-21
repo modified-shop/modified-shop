@@ -23,24 +23,17 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once('magnacompatible.php');
 
 class HitmeisterMarketplace extends MagnaCompatMarketplace {
-
-	public function __construct() {
-		global $_MagnaSession;
-		parent::__construct($_MagnaSession['currentPlatform']);
-	}
-
-	# Hitmeister uses EANs to identify products. Don't allow multiple products with the same EAN,
-	# as this would make the identification unpredictable and break the synchronisation.
-
-	protected function extraChecks() {
-	  if (($hp = magnaContribVerify('HitmeisterExtraChecksReplacement', 1)) !== false) {
-		require($hp);
-	  } else {
+    # Hitmeister uses EANs to identify products. Don't allow multiple products with the same EAN,
+    # as this would make the identification unpredictable and break the synchronisation.
+    protected function extraChecks() {
+        if (($hp = magnaContribVerify('HitmeisterExtraChecksReplacement', 1)) !== false) {
+            require($hp);
+        } else {
 
 		$distinctEANCount = MagnaDB::gi()->fetchOne('SELECT COUNT(DISTINCT products_ean)
-				FROM '.TABLE_PRODUCTS.' WHERE products_ean <> \'\' AND products_ean IS NOT NULL');
+				FROM '.TABLE_PRODUCTS.' WHERE products_ean <> \'\' AND products_ean IS NOT NULL AND products_ean <> \'0\'');
 		$totalEANCount = MagnaDB::gi()->fetchOne('SELECT COUNT(*)
-				FROM '.TABLE_PRODUCTS.' WHERE products_ean <> \'\' AND products_ean IS NOT NULL');
+				FROM '.TABLE_PRODUCTS.' WHERE products_ean <> \'\' AND products_ean IS NOT NULL AND products_ean <> \'0\'');
 		if ($distinctEANCount != $totalEANCount) {
 			$this->resources['query']['mode'] = 'conf';
     		$this->resources['query']['messages'][] = '<p class="errorBox">'.ML_HITMEISTER_ERROR_PRODUCTS_WITHDOUBLE_EAN_EXIST.'</p>';
@@ -97,4 +90,4 @@ class HitmeisterMarketplace extends MagnaCompatMarketplace {
 
 }
 
-new HitmeisterMarketplace();
+new HitmeisterMarketplace($_MagnaSession['currentPlatform']);

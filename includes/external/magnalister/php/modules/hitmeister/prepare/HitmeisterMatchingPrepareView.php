@@ -20,7 +20,7 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-require_once(DIR_MAGNALISTER_MODULES.'hitmeister/catmatch/HitmeisterCategoryMatching.php');
+require_once(DIR_MAGNALISTER_MODULES.'hitmeister/prepare/HitmeisterCategoryMatching.php');
 require_once(DIR_MAGNALISTER_MODULES.'hitmeister/HitmeisterHelper.php');
 
 class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
@@ -129,10 +129,16 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 				$searchResult = false;
 				if (empty($mlProduct['products_ean']) === false) {
 					$searchResult = HitmeisterHelper::SearchOnHitmeister($mlProduct['products_ean'], 'EAN');
+					if ($searchResult){
+						$product['SearchCriteria'] = 'EAN';
+					}
 				}
 
 				if ($searchResult === false) {
 					$searchResult = HitmeisterHelper::SearchOnHitmeister($p['products_name'], 'Title');
+					if ($searchResult){
+						$product['SearchCriteria'] = 'KW';
+					}
 				}
 				
 				if ($searchResult !== false) {
@@ -194,67 +200,57 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 		?>
 
 		<h2>
-			<?= count($products) === 1 ? ML_HITMEISTER_SINGLE_MATCHING : ML_HITMEISTER_MULTI_MATCHING ?>
+			<?php echo count($products) === 1 ? ML_HITMEISTER_SINGLE_MATCHING : ML_HITMEISTER_MULTI_MATCHING ?>
 			<?php if ($totalPages > 1) : ?>
 			<span class="small right successBox" style="margin-top: -13px; font-size: 12px !important;">
-				<?= ML_LABEL_STEP . ' ' . $currentPage . ' von ' . $totalPages ?>
+				<?php echo ML_LABEL_STEP . ' ' . $currentPage . ' von ' . $totalPages ?>
 			</span>
 			<?php endif ?>
 		</h2>
 		<form name="matching" id="matching" action="" method="POST" enctype="multipart/form-data">
-			<input type="hidden" name="matching_nextpage" value="<?= $currentPage == $totalPages ? 'null' : $currentPage + 1 ?>" />
+			<input type="hidden" name="matching_nextpage" value="<?php echo $currentPage == $totalPages ? 'null' : $currentPage + 1 ?>" />
 			<table class="attributesTable">
 				<tbody>
 					<tr class="headline">
-						<td colspan="3"><h4><?= ML_HITMEISTER_UNIT_ATTRIBUTES ?></h4></td>
+						<td colspan="3"><h4><?php echo ML_HITMEISTER_UNIT_ATTRIBUTES ?></h4></td>
 					</tr>
 					<tr class="odd">
-						<th><?= ML_HITMEISTER_CONDITION ?></th>
+						<th><?php echo ML_HITMEISTER_CONDITION ?></th>
 						<td class="input">
 						<select name="unit[condition_id]" id="condition_id">
 						<?php foreach ($conditions as $condID => $condName) : ?>
-							<option <?= $condID == $defaultCondition ? 'selected' : '' ?> value="<?= $condID ?>"><?= $condName ?></option>
+							<option <?php echo $condID == $defaultCondition ? 'selected' : '' ?> value="<?php echo $condID ?>"><?php echo $condName ?></option>
 						<?php endforeach ?>
 						</select>
 						</td>
 						<td class="info">&nbsp;</td>
 					</tr>
-					<?php if (count($products) === 1) { ?>
 					<tr class="even">
-						<th><?= ML_HITMEISTER_PRICE ?></th>
-						<td class="input">
-							<input type="text" name="Price" id="Price" value="<?= $defaultPrice ?>" disabled="true"/>
-							<lable><?= ML_HITMEISTER_CURRENCY ?></lable>
-						</td>
-						<td class="info"></td>
-					</tr>
-					<?php } ?>
-					<tr class="odd">
-						<th><?= ML_HITMEISTER_SHIPPINGTIME ?></th>
+						<th><?php echo ML_HITMEISTER_SHIPPINGTIME ?></th>
 						<td class="input">
 						<select name="unit[shippingtime]" id="shippingtime">
 						<?php foreach ($shippingTimes as $shipTimeID => $shipTimeName) : ?>
-							<option <?= $shipTimeID == $defaultShippingTime ? 'selected' : '' ?> value="<?= $shipTimeID ?>"><?= fixHTMLUTF8Entities($shipTimeName, ENT_COMPAT, 'UTF-8') ?></option>
-						<?php endforeach ?>
-						</select>
-						</td>
-						<td class="info">&nbsp;</td>
-					</tr>
-					<tr class="even">
-						<th><?= ML_HITMEISTER_DELIVERY_COUNTRY ?></th>
-						<td class="input">
-						<select name="unit[deliverycountry]" id="deliverycountry">
-						<?php foreach ($deliveryCountries as $deliveryCountryID => $deliveryCountryName) : ?>
-							<option <?= $deliveryCountryID == $defaultDeliveryCountry ? 'selected' : '' ?> value="<?= $deliveryCountryID ?>"><?= fixHTMLUTF8Entities($deliveryCountryName, ENT_COMPAT, 'UTF-8') ?></option>
+							<option <?php echo $shipTimeID == $defaultShippingTime ? 'selected' : '' ?> value="<?php echo $shipTimeID ?>"><?php echo fixHTMLUTF8Entities($shipTimeName, ENT_COMPAT, 'UTF-8') ?></option>
 						<?php endforeach ?>
 						</select>
 						</td>
 						<td class="info">&nbsp;</td>
 					</tr>
 					<tr class="odd">
-						<th><?= ML_HITMEISTER_COMMENT ?></th>
+						<th><?php echo ML_HITMEISTER_DELIVERY_COUNTRY ?></th>
 						<td class="input">
-							<textarea name="unit[comment]"><?= $defaultComment ?></textarea>
+						<select name="unit[deliverycountry]" id="deliverycountry">
+						<?php foreach ($deliveryCountries as $deliveryCountryID => $deliveryCountryName) : ?>
+							<option <?php echo $deliveryCountryID == $defaultDeliveryCountry ? 'selected' : '' ?> value="<?php echo $deliveryCountryID ?>"><?php echo fixHTMLUTF8Entities($deliveryCountryName, ENT_COMPAT, 'UTF-8') ?></option>
+						<?php endforeach ?>
+						</select>
+						</td>
+						<td class="info">&nbsp;</td>
+					</tr>
+					<tr class="even">
+						<th><?php echo ML_HITMEISTER_COMMENT ?></th>
+						<td class="input">
+							<textarea name="unit[comment]"><?php echo $defaultComment ?></textarea>
 						</td>
 						<td class="info">&nbsp;</td>
 					</tr>
@@ -263,38 +259,50 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 					</tr>
 				</tbody>
 			</table>
-			<div id="productDetailContainer" class="dialog2" title="<?= ML_LABEL_DETAILS ?>"></div>
+			<div id="productDetailContainer" class="dialog2" title="<?php echo ML_LABEL_DETAILS ?>"></div>
 			<table class="matching">
 				<?php foreach ($currentChunk as $product) : ?>
 				<tbody class="product">
 					<tr>
 						<th colspan="5">
 							<div class="title">
-								<span class="darker"><?= ML_LABEL_SHOP_TITLE ?>:</span>
-								<?= $product['Title'] ?>&nbsp;&nbsp;
+								<span class="darker"><?php echo ML_LABEL_SHOP_TITLE ?>:</span>
+								<?php echo $product['Title'] ?>&nbsp;&nbsp;
 								<span>
-									[<span style="color: #ddd;"><?= ML_LABEL_ARTICLE_NUMBER ?></span>: <?= $product['Model'] ?>,
-									<span style="color: #ddd;"><?= ML_LABEL_SHOP_PRICE_BRUTTO ?></span>: <?= $product['Price'] ?>]
+									[<span style="color: #ddd;"><?php echo ML_LABEL_ARTICLE_NUMBER ?></span>: <?php echo $product['Model'] ?>,
+									<span style="color: #ddd;"><?php echo ML_LABEL_SHOP_PRICE_BRUTTO ?></span>: <?php echo $product['Price'] ?>]
 								</span>
 							</div>
-							<input type="hidden" name="match[<?= $product['Id'] ?>]" value="false">
-							<input type="hidden" name="model[<?= $product['Id'] ?>]" value="<?= $product['Model'] ?>">
-							<div id="productDetails_<?= $product['Id'] ?>" class="productDescBtn" title="<?= ML_LABEL_DETAILS ?>"><?= ML_LABEL_DETAILS ?></div>
+							<input type="hidden" name="match[<?php echo $product['Id'] ?>]" value="false">
+							<input type="hidden" name="model[<?php echo $product['Id'] ?>]" value="<?php echo $product['Model'] ?>">
+							<div id="productDetails_<?php echo $product['Id'] ?>" class="productDescBtn" title="<?php echo ML_LABEL_DETAILS ?>"><?php echo ML_LABEL_DETAILS ?></div>
 						</th>
 					</tr>
 				</tbody>
 				<tbody class="headline"><tr>
-					<th class="input"><?= ML_LABEL_CHOOSE ?></th>
-					<th class="title"><?= ML_HITMEISTER_LABEL_TITLE ?></th>
-					<th class="productGroup"><?= ML_HITMEISTER_CATEGORY ?></th>
-					<th class="asin"><?= ML_HITMEISTER_LABEL_ITEM_ID ?></th>
+					<th class="input"><?php echo ML_LABEL_CHOOSE ?></th>
+					<th class="title"><?php echo ML_HITMEISTER_LABEL_TITLE ?></th>
+					<th class="productGroup"><?php echo ML_HITMEISTER_CATEGORY ?></th>
+					<th class="asin"><?php echo ML_HITMEISTER_LABEL_ITEM_ID ?></th>
+					<input type="hidden" name="matching[<?php echo $product['Id'] ?>][title]"
+						   id="match_title_<?php echo $product['Id'] ?>"/>
+					<input type="hidden" name="matching[<?php echo $product['Id'] ?>][ean]"
+						   id="match_ean_<?php echo $product['Id'] ?>"/>
 				</tr></tbody>
-				<tbody class="options" id="matchingResults_<?= $product['Id'] ?>">
-					<?= $this->getSearchResultsHtml($product) ?>
+				<tbody class="options" id="matchingResults_<?php echo $product['Id'] ?>">
+					<?php echo $this->getSearchResultsHtml($product) ?>
 				</tbody>
 				<tbody class="func"><tr><td colspan="5">
-						<div><?= ML_HITMEISTER_SEARCH_BY_TITLE ?>: <input type="text" id="newSearch_<?= $product['Id'] ?>"> <input type="button" value="OK" id="newSearchGo_<?= $product['Id'] ?>"></div>
-						<div><?= ML_HITMEISTER_SEARCH_BY_EAN ?>: <input type="text" id="newEAN_<?= $product['Id'] ?>"> <input type="button" value="OK" id="newEANGo_<?= $product['Id'] ?>"></div>
+						<div><?php echo ML_HITMEISTER_SEARCH_BY_TITLE ?>:
+							<input type="text" id="newSearch_<?php echo $product['Id'] ?>"
+								   value="<?php echo isset($product['SearchCriteria']) && $product['SearchCriteria'] === 'KW' ? fixHTMLUTF8Entities($product['Title'], ENT_COMPAT) : ''; ?>">
+							<input type="button" value="OK" id="newSearchGo_<?php echo $product['Id'] ?>">
+						</div>
+						<div><?php echo ML_HITMEISTER_SEARCH_BY_EAN ?>:
+							<input type="text" id="newEAN_<?php echo $product['Id'] ?>"
+								   value="<?php echo isset($product['SearchCriteria']) && $product['SearchCriteria'] === 'EAN' ? $product['EAN'] : ''; ?>">
+							<input type="button" value="OK" id="newEANGo_<?php echo $product['Id'] ?>">
+						</div>
 				</td></tr></tbody>
 				<tbody class="clear">
 					<tr>
@@ -302,29 +310,29 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 					</tr>
 				</tbody>
 				<script type="text/javascript">/*<![CDATA[*/
-					var productDetailJson_<?= $product['Id'] ?> = <?php echo $this->renderDetailView($product); ?>
+					var productDetailJson_<?php echo $product['Id'] ?> = <?php echo $this->renderDetailView($product); ?>
 					
-					$('#productDetails_<?= $product['Id'] ?>').click(function() {
-						myConsole.log(productDetailJson_<?= $product['Id'] ?>);
-						$('#productDetailContainer').html(productDetailJson_<?= $product['Id'] ?>.content).jDialog({
+					$('#productDetails_<?php echo $product['Id'] ?>').click(function() {
+						myConsole.log(productDetailJson_<?php echo $product['Id'] ?>);
+						$('#productDetailContainer').html(productDetailJson_<?php echo $product['Id'] ?>.content).jDialog({
 							width: "75%",
-							title: productDetailJson_<?= $product['Id'] ?>.title
+							title: productDetailJson_<?php echo $product['Id'] ?>.title
 						});
 					});
-					$('#newSearchGo_<?= $product['Id'] ?>').click(function() {
-						newSearch = $('#newSearch_<?= $product['Id'] ?>').val();
+					$('#newSearchGo_<?php echo $product['Id'] ?>').click(function() {
+						newSearch = $('#newSearch_<?php echo $product['Id'] ?>').val();
 						if (jQuery.trim(newSearch) != '') {
 							jQuery.blockUI({ message: blockUIMessage, css: blockUICSS });
 							myConsole.log(newSearch);
 							jQuery.ajax({
 								type: 'POST',
-								url: 'magnalister.php?mp=<?= $_MagnaSession['mpID'] ?>&kind=ajax',
-								data: ({request: 'ItemSearchByTitle', 'productID': <?= $product['Id'] ?>, 'search': newSearch}),
+								url: 'magnalister.php?mp=<?php echo $_MagnaSession['mpID'] ?>&kind=ajax',
+								data: ({request: 'ItemSearchByTitle', 'productID': <?php echo $product['Id'] ?>, 'search': newSearch}),
 								dataType: "html",
 								success: function(data) {
-									$('#matchingResults_<?= $product['Id'] ?>').html(data);
+									$('#matchingResults_<?php echo $product['Id'] ?>').html(data);
 									if (function_exists("initRadioButtons")) {
-										initRadioButtons();
+										initRadioButtons('#matchingResults_<?php echo $product['Id'] ?>');
 									}
 									jQuery.unblockUI();
 								},
@@ -334,26 +342,26 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 							});
 						}
 					});
-					$('#newSearch_<?= $product['Id'] ?>').keypress(function(event) {
+					$('#newSearch_<?php echo $product['Id'] ?>').keypress(function(event) {
 						if (event.keyCode == '13') {
 							event.preventDefault();
-							$('#newSearchGo_<?= $product['Id'] ?>').click();
+							$('#newSearchGo_<?php echo $product['Id'] ?>').click();
 						}
 					});
-					$('#newEANGo_<?= $product['Id'] ?>').click(function() {
-						newEAN = $('#newEAN_<?= $product['Id'] ?>').val();
+					$('#newEANGo_<?php echo $product['Id'] ?>').click(function() {
+						newEAN = $('#newEAN_<?php echo $product['Id'] ?>').val();
 						if (jQuery.trim(newEAN) != '') {
 							myConsole.log(newEAN);
 							jQuery.blockUI({ message: blockUIMessage, css: blockUICSS });
 							jQuery.ajax({
 								type: 'POST',
-								url: 'magnalister.php?mp=<?= $_MagnaSession['mpID'] ?>&kind=ajax',
-								data: ({request: 'ItemSearchByEAN', 'productID': <?= $product['Id'] ?>, 'ean': newEAN}),
+								url: 'magnalister.php?mp=<?php echo $_MagnaSession['mpID'] ?>&kind=ajax',
+								data: ({request: 'ItemSearchByEAN', 'productID': <?php echo $product['Id'] ?>, 'ean': newEAN}),
 								dataType: "html",
 								success: function(data) {
-									$('#matchingResults_<?= $product['Id'] ?>').html(data);
+									$('#matchingResults_<?php echo $product['Id'] ?>').html(data);
 									if (function_exists("initRadioButtons")) {
-										initRadioButtons();
+										initRadioButtons('#matchingResults_<?php echo $product['Id'] ?>');
 									}
 									jQuery.unblockUI();
 								},
@@ -363,10 +371,10 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 							});
 						}
 					});
-					$('#newEAN_<?= $product['Id'] ?>').keypress(function(event) {
+					$('#newEAN_<?php echo $product['Id'] ?>').keypress(function(event) {
 						if (event.keyCode == '13') {
 							event.preventDefault();
-							$('#newEANGo_<?= $product['Id'] ?>').click();
+							$('#newEANGo_<?php echo $product['Id'] ?>').click();
 						}
 					});
 				/*]]>*/
@@ -376,7 +384,7 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 			<table class="actions">
 				<thead>
 					<tr>
-						<th><?= ML_LABEL_ACTIONS ?></th>
+						<th><?php echo ML_LABEL_ACTIONS ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -386,10 +394,10 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 								<tbody>
 									<tr>
 										<td class="first_child">
-											<a href="<?= toURL($this->resources['url']) ?>" title="<?= ML_BUTTON_LABEL_BACK ?>" class="ml-button"><?= ML_BUTTON_LABEL_BACK ?></a>
+											<a href="<?php echo toURL($this->resources['url']) ?>" title="<?php echo ML_BUTTON_LABEL_BACK ?>" class="ml-button"><?php echo ML_BUTTON_LABEL_BACK ?></a>
 										</td>
 										<td class="last_child">
-											<input type="submit" class="ml-button" name="saveMatching" value="<?= $currentPage == $totalPages ? ML_BUTTON_LABEL_SAVE_DATA : ML_BUTTON_LABEL_SAVE_AND_NEXT ?>" />
+											<input type="submit" class="ml-button" name="saveMatching" value="<?php echo $currentPage == $totalPages ? ML_BUTTON_LABEL_SAVE_DATA : ML_BUTTON_LABEL_SAVE_AND_NEXT ?>" />
 										</td>
 									</tr>
 								</tbody>
@@ -399,6 +407,22 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 				</tbody>
 			</table>
 		</form>
+		<script type="text/javascript">/*<![CDATA[*/
+			$('body').on('change', 'input:radio', function() {
+				var me = $(this);
+				var productId = me.attr('data-id');
+				$('#match_title_' + productId).val($('#title_' + me.attr('id')).attr('data-id'));
+				$('#match_ean_' + productId).val(me.attr('data-ean'));
+			});
+
+			function initRadioButtons(context) {
+				$(context + " input[type='radio']:checked").trigger('change');
+			}
+
+			$('input:radio:checked').trigger('change');
+
+			/*]]>*/
+		</script>
 
 		<?php
 		$renderedView = ob_get_contents();
@@ -426,31 +450,32 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 		<?php foreach ($product['Results'] as $result) : ?>
 		<tr class="odd last">
 			<td class="input">
-				<input type="radio" name="match[<?= $product['Id'] ?>]" id="match_<?= $product['Id'] . '_' . $result['id_item'] ?>" value="<?= $result['id_item'] ?>" <?= $checkedProductId === $result['id_item'] ? 'checked' : '' ?>>
-				<input type="hidden" name="ean[<?= $result['id_item'] ?>]" value="<?= reset($result['eans']) ?>">
+				<input type="radio" name="match[<?php echo $product['Id'] ?>]" id="match_<?php echo $product['Id'] . '_' . $result['id_item'] ?>"
+					   data-id="<?php echo $product['Id'] ?>" data-ean="<?php echo reset($result['eans']) ?>"
+					   value="<?php echo $result['id_item'] ?>" <?php echo $checkedProductId === $result['id_item'] ? 'checked' : '' ?>>
 			</td>
 			<td class="title">
-				<label for="match_<?= $product['Id'] . '_' . $result['id_item'] ?>"><?= $result['title'] ?></label>
-				<input type="hidden" name="title[<?= $result['id_item'] ?>]" value="<?= $result['title'] ?>">
+				<label for="match_<?php echo $product['Id'] . '_' . $result['id_item'] ?>" data-id="<?php echo $result['title'] ?>"
+					   id="title_match_<?php echo $product['Id'] . '_' . $result['id_item'] ?>"><?php echo $result['title'] ?></label>
 			</td>
 			<td class="productGroup">
-				<?= $result['category_name'] ?>
+				<?php echo $result['category_name'] ?>
 			</td>
 			<td class="asin">
-				<a href="<?= $result['url'] ?>" title="<?= ML_HITMEISTER_LABEL_PRODUCT_AT_HITMEISTER ?>" target="_blank" onclick="
+				<a href="<?php echo $result['url'] ?>" title="<?php echo ML_HITMEISTER_LABEL_PRODUCT_AT_HITMEISTER ?>" target="_blank" onclick="
 					(function(url) {
-						f = window.open(url, '<?= ML_HITMEISTER_LABEL_PRODUCT_AT_HITMEISTER ?>', 'width=1017, height=600, resizable=yes, scrollbars=yes');
+						f = window.open(url, '<?php echo ML_HITMEISTER_LABEL_PRODUCT_AT_HITMEISTER ?>', 'width=1017, height=600, resizable=yes, scrollbars=yes');
 						f.focus();
 					})(this.href);
 					return false;">
-					<?= $result['id_item'] ?>
+					<?php echo $result['id_item'] ?>
 				</a>
 			</td>
 		</tr>
 		<?php endforeach ?>
 		<tr class="last noItem">
-			<td class="input"><input type="radio" name="match[<?= $product['Id'] ?>]" id="match_<?= $product['Id'] ?>_false" value="false" <?= $checkedProductId === null ? 'checked' : '' ?>></td>
-			<td class="title italic"><label for="match_<?= $product['Id'] ?>_false"><?= ML_HITMEISTER_LABEL_NOT_MATCHED ?></label></td>
+			<td class="input"><input type="radio" name="match[<?php echo $product['Id'] ?>]" id="match_<?php echo $product['Id'] ?>_false" value="false" <?php echo $checkedProductId === null ? 'checked' : '' ?>></td>
+			<td class="title italic"><label for="match_<?php echo $product['Id'] ?>_false"><?php echo ML_HITMEISTER_LABEL_NOT_MATCHED ?></label></td>
 			<td class="productGroup">&nbsp;</td>
 			<td class="asin">&nbsp;</td>
 		</tr>
@@ -473,33 +498,33 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 			<tbody>
 			<?php if (empty($product['Manufacturer']) === false) : ?>
 				<tr>
-					<th class="smallwidth"><?= ML_GENERIC_MANUFACTURER_NAME ?>:</th>
-					<td><?= $product['Manufacturer'] ?></td>
+					<th class="smallwidth"><?php echo ML_GENERIC_MANUFACTURER_NAME ?>:</th>
+					<td><?php echo $product['Manufacturer'] ?></td>
 				</tr>
 			<?php endif ?>
 			<?php if (empty($product['Model']) === false) : ?>
 				<tr>
-					<th class="smallwidth"><?= ML_GENERIC_MODEL_NUMBER ?>:</th>
-					<td><?= $product['Model'] ?></td>
+					<th class="smallwidth"><?php echo ML_GENERIC_MODEL_NUMBER ?>:</th>
+					<td><?php echo $product['Model'] ?></td>
 				</tr>
 			<?php endif ?>
 			<?php if (empty($product['EAN']) === false || (SHOPSYSTEM != 'oscommerce')) : ?>
 				<tr>
-					<th class="smallwidth"><?= ML_GENERIC_EAN ?>:</th>
-					<td><?= empty($product['EAN']) === true ? '&nbsp;' : $product['EAN'] ?></td>
+					<th class="smallwidth"><?php echo ML_GENERIC_EAN ?>:</th>
+					<td><?php echo empty($product['EAN']) === true ? '&nbsp;' : $product['EAN'] ?></td>
 				</tr>
 			<?php endif ?>
 			<?php if (empty($product['Description']) === false) : ?>
 				<tr>
-					<th colspan="2"><?= ML_GENERIC_MY_PRODUCTDESCRIPTION ?></th>
+					<th colspan="2"><?php echo ML_GENERIC_MY_PRODUCTDESCRIPTION ?></th>
 				</tr>
 				<tr class="desc">
-					<td colspan="2"><div class="mlDesc"><?= $product['Description'] ?></div></td>
+					<td colspan="2"><div class="mlDesc"><?php echo $product['Description'] ?></div></td>
 				</tr>
 			<?php endif ?>
 			<?php if (empty($product['Images']) === false) : ?>
 				<tr>
-					<th colspan="2"><?= ML_LABEL_PRODUCTS_IMAGES ?></th>
+					<th colspan="2"><?php echo ML_LABEL_PRODUCTS_IMAGES ?></th>
 				</tr>
 				<tr class="images">
 					<td colspan="2">
@@ -508,8 +533,8 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 							<table>
 								<tbody>
 									<tr>
-										<td style="width: <?= $w ?>px; height: <?= $h ?>px;">
-											<?= generateProductCategoryThumb($image, $w, $h) ?>
+										<td style="width: <?php echo $w ?>px; height: <?php echo $h ?>px;">
+											<?php echo generateProductCategoryThumb($image, $w, $h) ?>
 										</td>
 									</tr>
 								</tbody>

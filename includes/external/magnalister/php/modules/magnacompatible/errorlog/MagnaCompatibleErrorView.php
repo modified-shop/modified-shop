@@ -41,6 +41,7 @@ class MagnaCompatibleErrorView {
 			'itemLimit'     => 50,
 			'hasImport' => false,
 			'hasOrigin' => false,
+			'hasBatchId' => false,
 		), $settings);
 
 		$this->url = $_url;
@@ -106,7 +107,7 @@ class MagnaCompatibleErrorView {
 		$this->offset = ($this->currentPage - 1) * $this->settings['itemLimit'];
 
 		$this->errorLog = MagnaDB::gi()->fetchArray('
-		    SELECT al.id, al.origin, al.dateadded, al.errormessage, al.additionaldata
+		    SELECT al.id, al.BatchId, al.origin, al.dateadded, al.errormessage, al.additionaldata
 		      FROM '.TABLE_MAGNA_COMPAT_ERRORLOG.' al
 		     WHERE al.mpID=\''.$this->mpID.'\'
 		  GROUP BY al.id
@@ -180,6 +181,7 @@ class MagnaCompatibleErrorView {
 				$this->processErrorAdditonalData($item['ErrorData']);
 				$data = array (
 					'mpID' => $item['MpId'],
+					'BatchId' => !empty($item['BatchId']) ? $item['BatchId'] : null,
 					'origin' => isset($item['Origin']) ? $item['Origin'] : '',
 					'dateadded' => $item['DateAdded'],
 					'errormessage' => $item['ErrorMessage'],
@@ -351,6 +353,7 @@ $(document).ready(function() {
 				<table class="datagrid" id="errorlog">
 					<thead><tr>
 						<td class="nowrap" style="width: 5px;"><input type="checkbox" id="selectAll"/><label for="selectAll">'.ML_LABEL_CHOICE.'</label></td>
+						'.($this->settings['hasBatchId'] ? '<td>'.ML_AMAZON_LABEL_BATCHID.'</td>' : '').'
 						<td>'.ML_AMAZON_LABEL_ADDITIONAL_DATA.'</td>
 						<td>'.ML_GENERIC_ERROR_MESSAGES.'&nbsp;'.$this->sortByType('errormessage').'</td>
 						'.($this->settings['hasOrigin'] ? '<td>'.ML_GENERIC_LABEL_ORIGIN.'</td>' : '').'
@@ -363,12 +366,12 @@ $(document).ready(function() {
 			$hdate = date("d.m.Y", $dateadded).' &nbsp;&nbsp;<span class="small">'.date("H:i", $dateadded).'</span>';
 			$message = $this->processErrorMessage($item);
 			$html .= '
-						<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
-							<td><input type="checkbox" name="errIDs[]" value="'.$item['id'].'"></td>
-							<td class="nopadding" style="width: 1px">'.$this->additionalDataHandler($item['additionaldata']).'</td>
-							<td class="errormessage">'.$message['short'].'<span>'.$message['long'].'</span></td>
-							'.($this->settings['hasOrigin'] ? '<td>'.$item['origin'].'</td>' : '').'
-							<td>'.$hdate.'</td>
+						<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '"><td><input type="checkbox" name="errIDs[]" value="' . $item['id'] . '"></td>
+							' . ($this->settings['hasBatchId'] && !empty($item['BatchId']) ? '<td>' . $item['BatchId'] . '</td>' : '<td>&nbsp;&nbsp;&mdash;</td>') . '
+							<td class="nopadding" style="width: 1px">' . $this->additionalDataHandler($item['additionaldata']) . '</td>
+							<td class="errormessage">' . $message['short'] . '<span>' . $message['long'] . '</span></td>
+							' . ($this->settings['hasOrigin'] && !empty($item['origin']) ? '<td>' . $item['origin'] . '</td>' : '<td>&nbsp;&nbsp;&mdash;</td>') . '
+							<td>' . $hdate . '</td>
 						</tr>';
 		}
 		$html .= '

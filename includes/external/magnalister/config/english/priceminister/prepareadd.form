@@ -1,0 +1,28 @@
+{
+	"prepare": {
+		"fields": {
+			"imagepath": {
+				"label": "Imagepath",
+				"key": "priceminister.imagepath",
+				"type": "text",
+				"expertsetting": true
+			},
+			"condition": {
+				"label": "Condition",
+				"key": "priceminister.itemcondition",
+				"type": "selection",
+				"values": null
+			},
+			"itemsPerPage": {
+				"label": "Results",
+				"desc": "",
+				"rightlabel": "per site at multi-matching",
+				"cssClasses": ["autoWidth"],
+				"key": "priceminister.multimatching.itemsperpage",
+				"type": "text",
+				"default": "10",
+				"verify": "int"
+			}
+		}
+	}
+}

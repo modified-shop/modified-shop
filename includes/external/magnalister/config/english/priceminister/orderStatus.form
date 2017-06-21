@@ -1,0 +1,78 @@
+{
+    "orderSyncState": {
+        "headline": "",
+        "desc": "<b>Synchronisation of order status from shop to _#_platformName_#_<\/b>",
+        "fields": {
+            "syncstatus": {
+                "label": "Status Synchronisation",
+                "desc": "<dl>\n\t\t\t\t\t\t\t\t<dt>Automatic Synchronisation by CronJob (recommended)<\/dt>\n\t\t\t\t\t\t\t\t\t<dd>The function \"Automatic Synchronisation by CronJob\" sends each 2 hours the current shipment state to _#_platformName_#_.<br\/>\n\t\t\t\t\t\t\t\t\t\tIt takes the values from the shop's database, no matter whether you have changed it manually or by an external tool (like an ERP).<br\/><br\/>\n\t\t\t\t\t\t\t\t\t\tYou can trigger a synchonisation every time by pressing the \"Synchronise order status\" button in the upper right corner of tha magnalister plugin.<br \/><br \/>\n\t\t\t\t\t\t\t\t\t\tAdditionally, you can use an own cronjob (if you have a Premium account, up to each 15 minutes), by executing the following link:<br\/><br\/>\n\t\t\t\t\t\t\t\t\t\t<i>http:\/\/www.YourShop.de\/plugins\/magnalister\/magnaCallback.php?do=SyncOrderStatus<\/i><br\/><br\/>\n\t\t\t\t\t\t\t\t\t\tCronjobs of Users without the Premium tarif, or when more often than each 15 minutes, will be blocked.\n\t\t\t\t\t\t\t\t\t<\/dd>\n\t\t\t\t\t\t\t<\/dl>\n\t\t\t\t",
+                "key": "_#_platform_#_.orderstatus.sync",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatic Synchronisation by CronJob (recommended)",
+                    "no": "No synchronization"
+                },
+                "default": "no"
+            },
+            "acceptstatus": {
+                "label": "Accept order with",
+                "desc": "Before confirming shipment please select default value for accepting order on _#_platformName_#_.<br/><br/>  <b>IMPORTANT:</b>  <br/><br/>\nThis acceptation must be done within 2 days after receiving order, otherwise your account on _#_platformName_#_ will be disabled.",
+                "hint": "<span style=\"color:red;\">Please read info for more explanation.</span>",
+                "key": "_#_platform_#_.orderstatus.accepted",
+                "type": "selection",
+                "values": null
+            },
+            "refusestatus": {
+                "label": "Refuse order with",
+                "desc": "Please select default value for refusing order on _#_platformName_#_ after receiving one in your shop.<br/><br/>  <b>IMPORTANT:</b>  <br/><br/>\nThis refusal must be done within 2 days after receiving order, otherwise your account on _#_platformName_#_ will be disabled.",
+                "hint": "<span style=\"color:red;\">Please read info for more explanation.</span>",
+                "key": "_#_platform_#_.orderstatus.refused",
+                "type": "selection",
+                "values": null
+            },
+            "shippedstatus": {
+                "label": "Confirm shipment with",
+                "desc": "Set the state of the order in your shop, that represents the marketplaces \"Shipped\" state.",
+                "key": "_#_platform_#_.orderstatus.shipped",
+                "type": "selection",
+                "values": null
+            },
+            "cancelstatus": {
+                "label": "Cancel Order with",
+                "desc": "Set the state of the order in your shop, that represents the marketplaces \"Cacelled\" state.",
+                "key": "_#_platform_#_.orderstatus.cancelled",
+                "type": "selection",
+                "values": null
+            },
+            "carrier": {
+                "label": "Carrier",
+                "desc": "Preselected carrier when confirming delivery to _#_platformName_#_.",
+                "key": "_#_platform_#_.orderstatus.carrier",
+                "type": "selection",
+                "values": null
+            },
+            "trackingmatch": {
+                "label": "Tracking Code Matching",
+                "desc": "If you use a contribution to manage your tracking codes, here you can select the used database table and column. By this setting, the field for the tracking code will be prefilled by the value of the used database field.<br\/><br\/>If \"orders_id\" is using another field name, please enter the alias for the alternative description.<br \/><br \/>Hint: These settings will not be verified. If they are erroneous, database errors will occur!",
+                "key": "_#_platform_#_.orderstatus.trackingcode.dbmatching.table",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                    "alias": {
+                    "label": "<span class='tt'>`orders_id`</span> Alias",
+                    "key": "_#_platform_#_.orderstatus.trackingcode.dbmatching.alias",
+                    "type": "text",
+                    "cssClasses": ["autoWidth"]
+                    }
+                }
+            },
+            "cancelreason": {
+                "label": "Order Cancellation Reason",
+                "desc": "",
+                "key": "_#_platform_#_.orderstatus.cancelreason",
+                "type": "text",
+                "verify": "notempty"
+            }
+        }
+    }
+}

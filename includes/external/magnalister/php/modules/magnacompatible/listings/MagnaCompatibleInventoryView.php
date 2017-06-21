@@ -243,12 +243,19 @@ class MagnaCompatibleInventoryView {
 				} else {
 					$iLanguageId = $this->settings['language'];
 				}
+
+				$item['MarketplaceTitle'] = $item['Title'];
+				$item['MarketplaceTitleShort'] = (mb_strlen($item['MarketplaceTitle'], 'UTF-8') > $this->settings['maxTitleChars'] + 2)
+					? (fixHTMLUTF8Entities(mb_substr($item['MarketplaceTitle'], 0, $this->settings['maxTitleChars'], 'UTF-8')) . '&hellip;')
+					: fixHTMLUTF8Entities($item['MarketplaceTitle']);
+
 				$sTitle = (string)MagnaDB::gi()->fetchOne("
 					SELECT products_name 
 					  FROM ".TABLE_PRODUCTS_DESCRIPTION."
 					 WHERE     products_id = '".$pID."'
 					       AND language_id = '".$iLanguageId."'
 				");
+				$item['Title'] = '&mdash;';
 				if (!empty($sTitle)) {
 					$item['Title'] = $sTitle;
 				}
@@ -309,6 +316,11 @@ class MagnaCompatibleInventoryView {
 	protected function getTitle($item) {
 		return '<td title="'.fixHTMLUTF8Entities($item['Title'], ENT_COMPAT).'">'.$item['TitleShort'].'</td>';
 	}
+
+	protected function getMarketplaceTitle($item)
+	{
+		return '<td title="'.fixHTMLUTF8Entities($item['MarketplaceTitle'], ENT_COMPAT).'">'.$item['MarketplaceTitleShort'].'</td>';
+	}
 	
 	protected function getItemPrice($item) {
 		$item['Currency'] = isset($item['Currency']) ? $item['Currency'] : $this->mpCurrency;
@@ -347,8 +359,11 @@ class MagnaCompatibleInventoryView {
 			 	'Price' => $item['Price'],
 			 	'Currency' => isset($item['Currency']) ? $item['Currency'] : $this->mpCurrency,
 			))));
+
+			$addStyle = ($item['Title'] === '&mdash;' && $item['SKU'] !== '&mdash;') ? 'style="color:#900;"' : '';
+
 			$html .= '
-				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
+				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'" ' . $addStyle . '>
 					<td><input type="checkbox" name="SKUs[]" value="'.$item['SKU'].'">
 						<input type="hidden" name="details['.$item['SKU'].']" value="'.$details.'"></td>';
 			foreach ($fieldsDesc as $fdesc) {

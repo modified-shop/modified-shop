@@ -88,6 +88,14 @@ class HoodConfigure extends MagnaCompatibleConfigure {
 		} else {
 			unset($this->form['fixedsettings']['fields']['whichprice']);
 		}	
+		mlGetCustomersStatus($this->form['fixedsettings']['fields']['whichstrikeprice'], true);
+		if (!empty($this->form['fixedsettings']['fields']['whichstrikeprice'])) {
+			$this->form['fixedsettings']['fields']['whichstrikeprice']['values']['-1'] = ML_LABEL_DONT_USE;
+			$this->form['fixedsettings']['fields']['whichstrikeprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
+			ksort($this->form['fixedsettings']['fields']['whichstrikeprice']['values']);
+		} else {
+			unset($this->form['fixedsettings']['fields']['whichstrikeprice']);
+		}	
 		
 		$this->form['fixedsettings']['fields']['fixedduration']['values'] = HoodApiConfigValues::gi()->getListingDurations();
 		

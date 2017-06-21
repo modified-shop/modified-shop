@@ -29,7 +29,7 @@
 				return true;
 			}
 		});
-		$('.magnaTabs2 a').click(function (e) {
+		$('.magnaTabs2 a').on("click", "a:not(.breadcrumb)", function (e) {
 			if ($(this).attr('target') != '_blank') {
 				if (isSafari) { // Same here.
 					//console.log('Safari');

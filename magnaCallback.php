@@ -1,17 +1,17 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnaCallback.php 6648 2016-04-20 13:05:21Z markus.bauer $
+ * $Id$
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -24,7 +24,7 @@ defined('E_USER_DEPRECATED')   OR define('E_USER_DEPRECATED',   0x4000);
 defined('PHP_INT_MAX')         OR define('PHP_INT_MAX',     2147483647); // for PHP < 5.0.5
 
 
-//The timestamp of the start of the request. Available since PHP 5.1.0. 
+//The timestamp of the start of the request. Available since PHP 5.1.0.
 $_SERVER['REQUEST_TIME'] = isset($_SERVER['REQUEST_TIME']) ? $_SERVER['REQUEST_TIME'] : time();
 
 if (file_exists(dirname(__FILE__).'/magnadevconf.php')) {
@@ -53,7 +53,7 @@ function magnaHandleFatalError() {
 	if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
 		$le = error_get_last();
 		if (empty($le)) return;
-		if (((E_NOTICE | E_USER_NOTICE | E_WARNING | E_USER_WARNING | 
+		if (((E_NOTICE | E_USER_NOTICE | E_WARNING | E_USER_WARNING |
 		      E_DEPRECATED | E_USER_DEPRECATED | E_STRICT) & $le['type']) == 0
 		) {
 			echo '<pre>'.print_r(error_get_last(), true).'</pre>';
@@ -97,7 +97,7 @@ if (!function_exists('ctype_digit')) {
 }
 
 /**
- * Kodiert Ergebnisse die Funktionen liefern die API-artig aufgerufen wurden. 
+ * Kodiert Ergebnisse die Funktionen liefern die API-artig aufgerufen wurden.
  */
 function magnaEncodeResult($res) {
 	return '{#'.base64_encode(serialize($res)).'#}';
@@ -167,7 +167,7 @@ function magnaCompartCheck() {
 		@set_time_limit($maxExecutionTime+5);
 		$newMaxExecutionTime = ini_get('max_execution_time');
 	}
-	
+
 	/* RAM Check */
 	$maxRam = ini_get('memory_limit');
 	ini_set('memory_limit', '247M');
@@ -178,9 +178,9 @@ function magnaCompartCheck() {
 	/* cURL Check */
 	if (function_exists('curl_version')) {
 		$url = $currentClientURL;
-	
+
 		$cURLVersion = curl_version();
-	
+
 		$ch = curl_init();
 		$hasSSL = @in_array('https', $cURLVersion['protocols']);
 		if ($hasSSL) {
@@ -192,17 +192,17 @@ function magnaCompartCheck() {
 			}
 		}
 		curl_setopt($ch, CURLOPT_URL, $url);
-		
+
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		
+
 		$localClientVersionCURL = curl_exec($ch);
 		if (curl_errno($ch) == CURLE_OPERATION_TIMEOUTED) {
 			$localClientVersionCURL = false;
 		}
 		curl_close($ch);
-	
+
 	} else {
 		$cURLVersion = array();
 		$cURLVersion['version'] = false;
@@ -241,21 +241,21 @@ function magnaCompartCheck() {
 
 function __ml_useCURL($bl = null) {
 	global $__ml_useCURL;
-	
+
 	$d = isset($_SESSION['ML_UseCURL']) && is_array($_SESSION['ML_UseCURL'])
 		? $_SESSION['ML_UseCURL']
 		: (isset($__ml_useCURL) && is_array($__ml_useCURL)
 			? $__ml_useCURL
 			: array ()
 		);
-	
+
 	if (!isset($d['ForceCURL']) || !isset($d['UseCURL'])) {
 		$d = array (
 			'ForceCURL' => false,
 			'UseCURL' => function_exists('curl_init')
 		);
 	}
-	
+
 	/* read */
 	if ($bl === null) {
 		if (defined('MAGNA_USE_CURL') && is_bool(MAGNA_USE_CURL)) {
@@ -271,7 +271,7 @@ function __ml_useCURL($bl = null) {
 		}
 		//echo "NO READ\n";
 		return function_exists('curl_init');
-		
+
 	/* write */
 	} else {
 		if ($bl === 'ForceCURL') {
@@ -293,128 +293,131 @@ function __ml_useCURL($bl = null) {
 }
 
 function fileGetContentsPHP($path, &$warnings = null, $timeout = 10) {
-	//echo __METHOD__."\n";
-	if ($timeout > 0) {
-		$context = stream_context_create(array(
-			'http' => array('timeout' => $timeout)
-		));
-	} else {
-		$context = null;
-	}
-	$timeout_ts = time() + $timeout;
-	$next_try = false;
-	
-	ob_start();
-	do {
-		if ($next_try) usleep(rand(500000, 1500000));
-		$return = file_get_contents($path, false, $context);
-		$warnings = ob_get_contents();
-		$next_try = true;
-	} while ((false === $return) && (time() < $timeout_ts));
-	ob_end_clean();
-	
-	return $return;
+        //echo __METHOD__."\n";
+        if ($timeout > 0) {
+                $context = stream_context_create(array(
+                        'http' => array('timeout' => $timeout)
+                ));
+        } else {
+                $context = null;
+        }
+        $timeout_ts = time() + $timeout;
+        $next_try = false;
+
+        ob_start();
+        do {
+                if ($next_try) usleep(rand(500000, 1500000));
+                $return = file_get_contents($path, false, $context);
+                $warnings = ob_get_contents();
+                $next_try = true;
+        } while ((false === $return) && (time() < $timeout_ts));
+        ob_end_clean();
+
+        return $return;
 }
 
 function fileGetContentsCURL($path, &$warnings = null, $timeout = 10, $forceSSLOff = false) {
-	$useCURL = __ml_useCURL();
-	if ($useCURL === false) {
-		$warnings = 'cURL disabled';
-		return false;
-	}
-	
-	//echo __METHOD__."\n";
-	if (!function_exists('curl_init') || (strpos($path, 'http') !== 0)) {
-		return false;
-	}
-	$cURLVersion = curl_version();
-	if (!is_array($cURLVersion) || !array_key_exists('version', $cURLVersion)) {
-		return false;
-	}
-	
-	$warnings = '';
-	$ch = curl_init();
-	
-	$hasSSL = is_array($cURLVersion) && array_key_exists('protocols', $cURLVersion) && in_array('https', $cURLVersion['protocols']);
-	if ($hasSSL && !$forceSSLOff) {
-		$path = str_replace('http://', 'https://', $path);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		if (defined('MAGNA_CURLOPT_SSLVERSION')) {
-			curl_setopt($ch, CURLOPT_SSLVERSION, MAGNA_CURLOPT_SSLVERSION);
-		}
-	}
-	
-	curl_setopt($ch, CURLOPT_URL, $path);
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	if ($timeout > 0) {
-		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-	}
-	//*
-	$timeout_ts = time() + $timeout;
-	$next_try = false;
-	$return = false;
-	
-	do {
-		//break;
-		if ($next_try) usleep(rand(500000, 1500000));
-		$return = curl_exec($ch);
-		$next_try = true;
-	} while (curl_errno($ch) && (time() < $timeout_ts));
-	//*/
-	if (curl_errno($ch) == CURLE_OPERATION_TIMEOUTED) {
-		__ml_useCURL(false);
-		$return = false;
-	}
-	
-	$warnings = curl_error($ch);
-	/*
-	__ml_useCURL(false);
-	$return = false;
-	$warnings = 'Timeout';
-	//*/
-	
-	if (!empty($return)) {
-		__ml_useCURL('ForceCURL');
-	}
-	
-	curl_close($ch);
-	
-	return $return;
+        $useCURL = __ml_useCURL();
+        if ($useCURL === false) {
+                $warnings = 'cURL disabled';
+                return false;
+        }
+
+        //echo __METHOD__."\n";
+        if (!function_exists('curl_init') || (strpos($path, 'http') !== 0)) {
+                return false;
+        }
+        $cURLVersion = curl_version();
+        if (!is_array($cURLVersion) || !array_key_exists('version', $cURLVersion)) {
+                return false;
+        }
+
+        $warnings = '';
+        $ch = curl_init();
+
+        $hasSSL = is_array($cURLVersion) && array_key_exists('protocols', $cURLVersion) && in_array('https', $cURLVersion['protocols']);
+        if ($hasSSL && !$forceSSLOff) {
+                $path = str_replace('http://', 'https://', $path);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                if (defined('MAGNA_CURLOPT_SSLVERSION')) {
+                        curl_setopt($ch, CURLOPT_SSLVERSION, MAGNA_CURLOPT_SSLVERSION);
+                }
+        }
+
+        curl_setopt($ch, CURLOPT_URL, $path);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if ($timeout > 0) {
+                curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        }
+        //*
+        $timeout_ts = time() + $timeout;
+        $next_try = false;
+        $return = false;
+
+        do {
+                //break;
+                if ($next_try) usleep(rand(500000, 1500000));
+                $return = curl_exec($ch);
+                $next_try = true;
+        } while (curl_errno($ch) && (time() < $timeout_ts));
+        //*/
+        if (curl_errno($ch) == CURLE_OPERATION_TIMEOUTED) {
+                __ml_useCURL(false);
+                $return = false;
+        }
+
+        $warnings = curl_error($ch);
+        /*
+        __ml_useCURL(false);
+        $return = false;
+        $warnings = 'Timeout';
+        //*/
+
+        if (!empty($return)) {
+                __ml_useCURL('ForceCURL');
+        }
+
+        curl_close($ch);
+
+        return $return;
 }
 
 function fileGetContents($path, &$warnings = null, $timeout = 10) {
-	if (($contents = fileGetContentsCURL($path, $warnings, $timeout)) !== false) {
-		return $contents;
-	}
-	return fileGetContentsPHP($path, $warnings, $timeout);
+        if (!defined('Magna_CURL_NO_SSL') && ($contents = fileGetContentsCURL($path, $warnings, $timeout)) !== false) {
+                return $contents;
+        } elseif (($contents = fileGetContentsCURL($path, $warnings, $timeout, true)) !== false) {// no-ssl
+                defined('Magna_CURL_NO_SSL') or define('Magna_CURL_NO_SSL', true);
+                return $contents;
+        }
+        return fileGetContentsPHP($path, $warnings, $timeout);
 }
 
 function defineMagnalisterDir() {
 	// Order is important here. Do not change without a good reason!
-	
+
 	// modified v >= 2.0
 	if (defined('DIR_FS_EXTERNAL') && is_dir(DIR_FS_EXTERNAL.'magnalister/') && defined('DIR_WS_EXTERNAL')) {
 		define('DIR_MAGNALISTER_FS', DIR_FS_EXTERNAL.'magnalister/');
 		define('DIR_MAGNALISTER_WS', DIR_WS_EXTERNAL.'magnalister/');
-	
+
 	// called from admin
 	} else if ((MAGNA_IN_ADMIN == true) && file_exists('includes/magnalister/')) {
 		define('DIR_MAGNALISTER_FS', 'includes/magnalister/');
 		define('DIR_MAGNALISTER_WS', 'includes/magnalister/');
-	
+
 	// fallback 1 (called from frontend)
 	} else if ((MAGNA_IN_ADMIN == false) && defined('DIR_FS_ADMIN') && file_exists(DIR_FS_ADMIN.'includes/magnalister/')) {
 		define('DIR_MAGNALISTER_FS', DIR_FS_ADMIN.'includes/magnalister/');
 		define('DIR_MAGNALISTER_WS', basename(DIR_FS_ADMIN).'/includes/magnalister/');
-	
+
 	// fallback 2
 	} else if ((MAGNA_IN_ADMIN == false) && file_exists(dirname(__FILE__).'/admin/includes/magnalister/')) {
 		define('DIR_MAGNALISTER_FS', dirname(__FILE__).'/admin/includes/magnalister/');
 		define('DIR_MAGNALISTER_WS', 'admin/includes/magnalister/');
-	
+
 	// failure
 	} else {
 		define('DIR_MAGNALISTER_FS', false);
@@ -425,8 +428,8 @@ function defineMagnalisterDir() {
 function magnalisterFilesLocated() {
 	if (!defined('DIR_MAGNALISTER_FS') || (($dir_magnalister_fs = DIR_MAGNALISTER_FS) && empty($dir_magnalister_fs))) {
 		magnaEchoDiePage(
-			'Shop Admin directory not found / Shop Admin Verzeichnis nicht gefunden.', 
-			'<p>The Shop Admin directory can not be found. To fix this open the file 
+			'Shop Admin directory not found / Shop Admin Verzeichnis nicht gefunden.',
+			'<p>The Shop Admin directory can not be found. To fix this open the file
 			<tt>' . dirname(__FILE__) . '/includes/configure.php</tt> and add the following line:</p>
 			<pre>define(\'DIR_FS_ADMIN\', \'/absolute/path/to/your/shop/admin/\');</pre>
 			<p>Please use the absolute path to your shop admin directory.</p><br/>
@@ -459,7 +462,7 @@ function magnaInstalled($woDBCheck = false) {
 		}
 	}
 
-	$_magnaFilesInstalled = file_exists(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaDB.php') 
+	$_magnaFilesInstalled = file_exists(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaDB.php')
 		&& file_exists(DIR_MAGNALISTER_FS_INCLUDES.'modules.php')
 		&& file_exists(DIR_MAGNALISTER_FS_INCLUDES.'lib/functionLib.php')
 		&& file_exists(DIR_MAGNALISTER_FS_CALLBACK.'callbackFunctions.php')
@@ -470,21 +473,12 @@ function magnaInstalled($woDBCheck = false) {
 	}
 	require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MLTables.php');
 	require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaDB.php');
+	include_once(DIR_MAGNALISTER_FS_INCLUDES.'identifyShop.php');
 	//commerce:Seo v2
 	if (defined('DB_SERVER_CHARSET')) {
 		MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
-	} elseif (SHOPSYSTEM == 'gambio' && MagnaDB::gi()->tableExists('version_history')) {
-		$sVersion = MagnaDB::gi()->fetchOne("
-			SELECT version
-			  FROM version_history
-			 WHERE     type IN ('service_pack', 'master_update')
-			".((MagnaDB::gi()->columnExistsInTable('installed', 'version_history'))
-				? 'AND installed = 1'
-				: 'AND (is_full_version = 0 OR (is_full_version = 1 AND history_id = 1))'
-			)."
-		  ORDER BY installation_date DESC
-			 LIMIT 1
-		");
+	}
+	if (SHOPSYSTEM == 'gambio' && (($sVersion = mlGetGambioShopSystemVersion()) !== false)) {
 		if (version_compare($sVersion, '2.1', '>=')) {
 			MagnaDB::gi()->setCharset('utf8');
 		}
@@ -495,7 +489,7 @@ function magnaInstalled($woDBCheck = false) {
 	}
 	$_magnaIsInstalled = MagnaDB::gi()->tableExists(TABLE_MAGNA_CONFIG);
 	if (!$_magnaIsInstalled) return $_magnaIsInstalled;
-	
+
 	$dbV = (int)MagnaDB::gi()->fetchOne('SELECT `value` FROM `'.TABLE_MAGNA_CONFIG.'` WHERE `mkey`=\'CurrentDBVersion\'');
 	if ($dbV <= 0) {
 		$_magnaIsInstalled = false;
@@ -562,8 +556,8 @@ function refreshCurrentClientVersion() {
 	) {
 		$currentClientVersion = @json_decode($currentClientVersion, true);
 	}
-	if (   !is_array($currentClientVersion) 
-		|| !array_key_exists('CLIENT_VERSION', $currentClientVersion) 
+	if (   !is_array($currentClientVersion)
+		|| !array_key_exists('CLIENT_VERSION', $currentClientVersion)
 		|| ($currentClientVersion['CLIENT_VERSION'] == 0)
 	) {
 		$currentClientVersion = array (
@@ -613,7 +607,7 @@ function magnaDetermineCurrentClientVersion() {
 	define('CURRENT_BUILD_VERSION', $cCV['CLIENT_BUILD_VERSION']);
 	if (CURRENT_CLIENT_VERSION != 0) {
 		define(
-			'MAGNA_VERSION_TOO_OLD', 
+			'MAGNA_VERSION_TOO_OLD',
 			version_compare(CURRENT_CLIENT_VERSION, LOCAL_CLIENT_VERSION, '>') && version_compare(MINIMUM_CLIENT_VERSION, LOCAL_CLIENT_VERSION, '>')
 		);
 	} else {
@@ -627,11 +621,11 @@ function magnaCallbackRun() {
 	       $_magnaIsInstalled, $_magnaIsActivated, $_magnaIsAuthed;
 
 	date_default_timezone_set(@date_default_timezone_get());
-	
+
 	if (!defined('_VALID_XTC')) {
 		define('_VALID_XTC', true);
 	}
-	
+
 	/* ZOMG... why is that even possible. This is grist to the mill of all php haters.
 	 * We have to check if the locale settings of php are converting the representation of
 	 * floats to something that contains a ',' instead of a '.'.
@@ -649,7 +643,7 @@ function magnaCallbackRun() {
 		}
 	}
 	unset($str);
-	
+
 	// detect safe mode
 	$safe_mode = strtolower(ini_get('safe_mode'));
 	switch ($safe_mode) {
@@ -665,7 +659,7 @@ function magnaCallbackRun() {
 		}
 	}
 	unset($safe_mode);
-	
+
 	// locate the magnalister files if that has not been done yet
 	if (!defined('DIR_MAGNALISTER_FS')) {
 		defineMagnalisterDir();
@@ -680,14 +674,14 @@ function magnaCallbackRun() {
 		#echo 'NO NOEZ';
 		return;
 	}
-	
+
 	#echo 'HAI :D';
 	#var_dump(DIR_MAGNALISTER_FS);
-		
+
 	if (!defined('DIR_FS_DOCUMENT_ROOT')) {
 		define('DIR_FS_DOCUMENT_ROOT', dirname(__FILE__).'/');
 	}
-	
+
 	// FS
 	define('DIR_MAGNALISTER_FS_INCLUDES',   DIR_MAGNALISTER_FS.'php/');
 	define('DIR_MAGNALISTER_FS_MODULES',    DIR_MAGNALISTER_FS_INCLUDES.'modules/');
@@ -698,7 +692,7 @@ function magnaCallbackRun() {
 	define('DIR_MAGNALISTER_FS_IMAGES',     DIR_MAGNALISTER_FS.'images/');
 	define('DIR_MAGNALISTER_FS_CONTRIBS',   DIR_MAGNALISTER_FS.'contribs/');
 	define('DIR_MAGNALISTER_FS_LOGS',       DIR_MAGNALISTER_FS.'logs/');
-	
+
 	// @deprecated
 	define('DIR_MAGNALISTER',            DIR_MAGNALISTER_FS);
 	define('DIR_MAGNALISTER_INCLUDES',   DIR_MAGNALISTER_FS_INCLUDES);
@@ -710,12 +704,12 @@ function magnaCallbackRun() {
 	define('DIR_MAGNALISTER_IMAGES',     DIR_MAGNALISTER_FS_IMAGES);
 	define('DIR_MAGNALISTER_CONTRIBS',   DIR_MAGNALISTER_FS_CONTRIBS);
 	define('DIR_MAGNALISTER_LOGS',       DIR_MAGNALISTER_FS_LOGS);
-	
+
 	// WS
 	define('DIR_MAGNALISTER_WS_CACHE',      DIR_MAGNALISTER_WS.'cache/');
 	define('DIR_MAGNALISTER_WS_IMAGECACHE', DIR_MAGNALISTER_WS_CACHE.'images/');
 	define('DIR_MAGNALISTER_WS_IMAGES',     DIR_MAGNALISTER_WS.'images/');
-	
+
 	/* Issued a compart check (eiter get or post)? */
 	if ((MAGNA_CALLBACK_MODE == 'STANDALONE') && array_key_exists('function', $_REQUEST) && ($_REQUEST['function'] == 'magnaCompartCheck')) {
 		echo magnaEncodeResult(magnaCompartCheck());
@@ -731,26 +725,16 @@ function magnaCallbackRun() {
 	}
 
 	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/classes/MLShop.php');
-	include_once(DIR_MAGNALISTER_FS_INCLUDES . 'identifyShop.php');
 	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/json_wrapper.php');
 	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/functionLib.php');
 	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MLTables.php');
 	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MagnaDB.php');
+	include_once(DIR_MAGNALISTER_FS_INCLUDES . 'identifyShop.php');
 	//commerce:Seo v2
 	if (defined('DB_SERVER_CHARSET')) {
 		MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
-	} elseif (SHOPSYSTEM == 'gambio' && MagnaDB::gi()->tableExists('version_history')) {
-		$sVersion = MagnaDB::gi()->fetchOne("
-			SELECT version
-			  FROM version_history
-			 WHERE     type IN ('service_pack', 'master_update')
-			".((MagnaDB::gi()->columnExistsInTable('installed', 'version_history'))
-				? 'AND installed = 1'
-				: 'AND (is_full_version = 0 OR (is_full_version = 1 AND history_id = 1))'
-			)."
-		  ORDER BY installation_date DESC
-			 LIMIT 1
-		");
+	}
+	if (SHOPSYSTEM == 'gambio' && (($sVersion = mlGetGambioShopSystemVersion()) !== false)) {
 		if (version_compare($sVersion, '2.1', '>=')) {
 			MagnaDB::gi()->setCharset('utf8');
 		}
@@ -761,19 +745,19 @@ function magnaCallbackRun() {
 	}
 	/* Language-Foo */
 	$_magnaAvailableLanguages = magnaGetAvailableLanguages();
-	$defaultLanguage = MagnaDB::gi()->fetchOne(' 
-	    SELECT directory 
-	      FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION.' c 
+	$defaultLanguage = MagnaDB::gi()->fetchOne('
+	    SELECT directory
+	      FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION.' c
 	     WHERE c.configuration_key = "DEFAULT_LANGUAGE"
-	           AND c.configuration_value = l.code 
-	     LIMIT 1 
+	           AND c.configuration_value = l.code
+	     LIMIT 1
 	');
 	if (in_array($defaultLanguage, $_magnaAvailableLanguages)) {
 		$_magnaLanguage = $defaultLanguage;
 	} else {
 		$_magnaLanguage = array_first($_magnaAvailableLanguages);
 	}
-	
+
 	include_once(DIR_MAGNALISTER_FS.'lang/'.$_magnaLanguage.'.php');
 	/* Description of Modules */
 	require_once(DIR_MAGNALISTER_FS_INCLUDES.'modules.php');
@@ -784,16 +768,16 @@ function magnaCallbackRun() {
 	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MagnaError.php');
 	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MagnaConnector.php');
 	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MLProduct.php');
-	
+
 	$_langISO = strtolower(magnaGetLanguageCode($_magnaLanguage));
 	MagnaConnector::gi()->setLanguage($_langISO);
 
 	require_once(DIR_MAGNALISTER_FS_CALLBACK . 'callbackFunctions.php');
-	
+
 	if (!defined('TABLE_ADMIN_ACCESS')) {
 		define('TABLE_ADMIN_ACCESS', 'admin_access');
 	}
-	
+
 	if (($localClientVersion = @file_get_contents(DIR_MAGNALISTER_FS.'ClientVersion')) !== false) {
 		$localClientVersion = @json_decode($localClientVersion, true);
 	}
@@ -851,7 +835,7 @@ function magnaCallbackRun() {
 
 	loadJSONConfig();
 	loadJSONConfig($_magnaLanguage);
-	
+
 	if ((MAGNA_CALLBACK_MODE == 'UTILITY') && !MAGNA_IN_ADMIN) {
 		MagnaConnector::gi()->setTimeOutInSeconds(2);
 	}
@@ -868,18 +852,18 @@ function magnaCallbackRun() {
 
 	/* API-Artige Funktionalitaet */
 	if ((MAGNA_CALLBACK_MODE == 'STANDALONE') &&
-		array_key_exists('passphrase', $_POST) && 
+		array_key_exists('passphrase', $_POST) &&
 		($_POST['passphrase'] == getDBConfigValue('general.passphrase', 0)) &&
 		array_key_exists('function', $_POST)
 	) {
 		$arguments = array_key_exists('arguments', $_POST) ? unserialize($_POST['arguments']) : array();
 		$arguments = is_array($arguments) ? $arguments : array();
-		
+
 		$includes = array_key_exists('includes', $_POST) ? unserialize($_POST['includes']) : array();
 		$includes = is_array($includes) ? $includes : array();
-		
+
 		MagnaDB::gi()->setShowDebugOutput(false);
-		
+
 		echo magnaEncodeResult(magnaExecute($_POST['function'], $arguments, $includes));
 
 		#ob_start(); /* Kein Output, nur ordendliches Beenden */
@@ -887,9 +871,9 @@ function magnaCallbackRun() {
 		#ob_end_clean();
 		return;
 	}
-	
+
 	ml_setMinRam('256M');
-	
+
 	/* Nur im Standalone-Modus zeitintensive Prozesse verarbeiten. */
 	if (MAGNA_CALLBACK_MODE == 'STANDALONE') {
 		if (!defined('MAGNA_EXECUTE_INSTEAD')) {
@@ -927,13 +911,13 @@ if (MAGNA_CALLBACK_MODE == 'STANDALONE') {
 		);
 		$_GET['language'] = '__notExistingLanguageToForceDefault__';
 		require_once('includes/application_top.php');
-		
+
 		/* Kein MagicQuotes mist mitmachen... */
 		$_REQUEST = $_backup['REQUEST'];
 		$_GET     = $_backup['GET'];
 		$_POST    = $_backup['POST'];
 		$_COOKIE  = $_backup['COOKIE'];
-		
+
 		unset($_backup);
 	}
 	header('Content-Type: text/plain; charset=utf-8');

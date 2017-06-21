@@ -1,6 +1,6 @@
 <?php
 # PHPlot / contrib / prune_labels : Test
-# $Id: prune_labels.test.php 439 2010-10-11 14:42:53Z derpapst $
+# $Id$
 # Test driver for contrib / prune_labels
 
 require_once 'prune_labels.php';

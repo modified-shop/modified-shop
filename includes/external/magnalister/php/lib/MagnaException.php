@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaException.php 4655 2014-09-29 13:23:38Z derpapst $
+ * $Id$
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -48,7 +48,7 @@ class MagnaException extends Exception {
 			$this->apierrors = $this->response['ERRORS'];
 		}
 		$error = array();
-		if (count($this->apierrors) == 1) {
+		if (count($this->apierrors) == 1 && isset($this->apierrors[0])) {
 			$error = $this->apierrors[0];
 		}
 

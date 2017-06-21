@@ -1,0 +1,44 @@
+{
+	"prepare": {
+		"fields": {
+			"gtincolumn": {
+				"label": "GTIN",
+				"key": "_#_platform_#_.prepare.gtincolumn.dbmatching.table",
+				"desc": "Global Trade Item number Including: EAN, ISBN, UPS and JAN. You get this number from the respective manufacturer or from your supplier. (13 digits).<br\/>This field guarantees a proper integration of your products in Crowdfox system.",
+				"type": "selection",
+				"verify": "notempty",
+				"type": "dbfieldselector",
+                "morefields": {
+                    "alias": {
+                        "label": "<span class='tt'>`products_id`</span> Alias",
+                        "key": "_#_platform_#_.prepare.gtincolumn.dbmatching.alias",
+                        "type": "text",
+                        "cssClasses": ["autoWidth"]
+                    }
+                }
+			},
+			"deliverytime": {
+				"label": "Versandzeit",
+				"key": "crowdfox.deliverytime",
+				"desc": "Delivery time of your offer. (Max. 50 characters). Example: 1-3 working days.",
+				"type": "text",
+				"verify": "notempty"
+			},
+			"deliverycost": {
+				"label": "Versandkosten (EUR)",
+				"key": "crowdfox.deliverycost",
+				"desc": "Delivery costs of your offer (the most favourable) (numeric field, period or comma separated).",
+				"type": "text",
+				"default": "0",
+				"verify": "float"
+			},
+			"shippingmethod": {
+				"label": "Versandart",
+				"key": "crowdfox.shippingmethod",
+				"desc": "One of these two values: Parcel service or Forwarding company.",
+				"type": "selection",
+				"values": null
+			}
+		}
+	}
+}

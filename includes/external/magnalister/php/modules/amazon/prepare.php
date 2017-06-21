@@ -22,7 +22,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 $_url['mode'] = 'prepare';
 
-if (!array_key_exists('view', $_GET) || !in_array($_GET['view'], array('apply', 'match'))) {
+if (!array_key_exists('view', $_GET) || !in_array($_GET['view'], array('apply', 'match', 'varmatch'))) {
 	$view = $_GET['view'] = 'apply';
 } else {
 	$view = $_GET['view'];
@@ -30,6 +30,26 @@ if (!array_key_exists('view', $_GET) || !in_array($_GET['view'], array('apply', 
 
 if ($view == 'match') {
 	require_once(DIR_MAGNALISTER_MODULES.'amazon/matching.php');
+} else if ($view === 'varmatch') {
+	require_once(DIR_MAGNALISTER_MODULES.'amazon/prepare/AmazonVariationMatching.php');
+	$varMatch = new AmazonVariationMatching(array(
+		'resources' => array(
+			'session' => array(
+				'mpID' => $_MagnaSession['mpID'],
+				'currentPlatform' => $_MagnaSession['currentPlatform'],
+			),
+			'url' => array(
+				'mode' => 'prepare',
+				'view' => 'varmatch',
+				'mp' => $_MagnaSession['mpID'],
+			),
+		),
+	));
+	if (isset($_GET['kind']) && $_GET['kind'] === 'ajax') {
+		$varMatch->renderAjax();
+	} else {
+		$varMatch->process();
+	}
 } else {
 	require_once(DIR_MAGNALISTER_MODULES.'amazon/apply.php');
 }

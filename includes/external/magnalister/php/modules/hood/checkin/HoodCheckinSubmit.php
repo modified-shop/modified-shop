@@ -360,6 +360,14 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			'Unit' => $product['products_vpe_name'],
 			'Value' => $product['products_vpe_value'],
 		);
+
+		// StrikePrice: Erschmal nur nach Konfig, TODO Vorbereitung (an/aus, Preis-Art
+		if (getDBConfigValue('hood.strike.price.group', $this->_magnasession['mpID'], -1) > -1) {
+			$data['submit']['ManufacturersPrice'] = $this->simpleprice
+				->setFinalPriceFromDB($pID, $this->_magnasession['mpID'], 
+					$this->priceConfig['Strike'])
+				->getPrice();
+		}
 		
 		$data['submit']['ShippingTime'] = array();
 		$shippingMin = getDBConfigValue('hood.ShippingTime.Min', $this->_magnasession['mpID'], '');

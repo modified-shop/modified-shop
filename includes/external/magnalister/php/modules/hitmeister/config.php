@@ -32,7 +32,7 @@ $mpconfig['pages']['conf']['class'] = 'HitmeisterConfigure';
 $mpconfig['pages']['prepare']['class'] = 'HitmeisterPrepare';
 
 $mpconfig['checkin']['Categories']['Marketplace'] = 'no';
-$mpconfig['checkin']['Variations'] = 'no';
+$mpconfig['checkin']['Variations'] = 'yes';
 
 if (false === getDBConfigValue('hitmeister.imagepath', $_MagnaSession['mpID'], false)) {
 	$form['prepare']['fields']['imagepath']['default'] = defined('DIR_WS_CATALOG_POPUP_IMAGES')

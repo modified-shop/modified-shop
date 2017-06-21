@@ -56,6 +56,15 @@ class HoodHelper extends MagnaCompatibleHelper {
 				'UseSpecialOffer' => getDBConfigValue(array($mp.'.fixed.price.usespecialoffer', 'val'), $mpId, false),
 			),
 		);
+		if (getDBConfigValue('hood.strike.price.group', $mpId, -1) > -1) {
+			$config['Strike'] = array(
+				'AddKind' => getDBConfigValue($mp.'.strike.price.addkind', $mpId, 'percent'),
+				'Factor'  => (float)getDBConfigValue($mp.'.strike.price.factor', $mpId, 0),
+				'Signal'  => getDBConfigValue($mp.'.strike.price.signal', $mpId, ''),
+				'Group'   => getDBConfigValue($mp.'.strike.price.group', $mpId, ''),
+				'UseSpecialOffer' => false
+			);
+		}
 		$config['Auction']['StartPrice']['Group'] = $config['Auction']['BuyItNow']['Group'] =
 			getDBConfigValue($mp.'.auction.price.group', $mpId, '');
 		

@@ -273,7 +273,7 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 			});
 		</script>
 		<?php
-		$renderedView .= ob_get_contents();
+		$renderedView = ob_get_contents();
 		ob_end_clean();
 
 		return $renderedView;
@@ -306,22 +306,12 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 		
 		$data['TitleDe'] = html_entity_decode($data['TitleDe'], ENT_COMPAT, 'UTF-8');
 		$data['TitleFr'] = html_entity_decode($data['TitleFr'], ENT_COMPAT, 'UTF-8');
-		$data['SubtitleDe'] = isset($data['SubtitleDe']) ? html_entity_decode($data['SubtitleDe'], ENT_COMPAT, 'UTF-8') : '';
-		$data['SubtitleFr'] = isset($data['SubtitleFr']) ? html_entity_decode($data['SubtitleFr'], ENT_COMPAT, 'UTF-8') : '';
 		if (mb_strlen($data['TitleDe'], 'UTF-8') > self::TITLE_MAX_LENGTH) {
 			$data['TitleDe'] = mb_substr($data['TitleDe'], 0, self::TITLE_MAX_LENGTH, 'UTF-8');
 		}
 		
 		if (mb_strlen($data['TitleFr'], 'UTF-8') > self::TITLE_MAX_LENGTH) {
 			$data['TitleFr'] = mb_substr($data['TitleFr'], 0, self::TITLE_MAX_LENGTH, 'UTF-8');
-		}
-		
-		if (mb_strlen($data['SubtitleDe'], 'UTF-8') > self::SUBTITLE_MAX_LENGTH) {
-			$data['SubtitleDe'] = mb_substr($data['SubtitleDe'], 0, self::SUBTITLE_MAX_LENGTH, 'UTF-8');
-		}
-		
-		if (mb_strlen($data['SubtitleFr'], 'UTF-8') > self::SUBTITLE_MAX_LENGTH) {
-			$data['SubtitleFr'] = mb_substr($data['SubtitleFr'], 0, self::SUBTITLE_MAX_LENGTH, 'UTF-8');
 		}
 
 		ob_start();
@@ -340,7 +330,9 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 			<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langde">
 				<th><?php echo ML_RICARDO_SUBTITLE ?> (<?php echo ML_RICARDO_LANGUAGE_GERMAN ?>)</th>
 				<td class="input">
-					<input type="text" class="fullwidth" name="SubtitleDe" id="SubtitleDe" maxlength="<?php echo self::SUBTITLE_MAX_LENGTH ?>" value="<?php echo fixHTMLUTF8Entities(strip_tags($data['SubtitleDe']), ENT_COMPAT, 'UTF-8') ?>"/>
+					<input type="text" class="fullwidth" name="SubtitleDe" id="SubtitleDe" 
+						   maxlength="<?php echo self::SUBTITLE_MAX_LENGTH ?>" 
+						   value="<?php echo fixHTMLUTF8Entities(RicardoHelper::ricardoSanitizeSubtitle($data['SubtitleDe']), ENT_COMPAT, 'UTF-8') ?>"/>
 				</td>
 				<td class="info"><?php echo ML_RICARDO_SUBTITLE_MAXLENGTH ?></td>
 			</tr>
@@ -363,6 +355,8 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 					<dl>
 						<dt style="font-weight:bold; color:black">#TITLE#</dt>
 							<dd><?php echo ML_EBAY_ITEM_NAME_TITLE ?></dd>
+						<dt style="font-weight:bold; color:black">#VARIATIONDETAILS#</dt>
+							<dd><?php echo ML_RICARDO_VARIATIONDETAILS_TEMPLATE ?></dd>
 						<dt style="font-weight:bold; color:black">#ARTNR#</dt>
 							<dd><?php echo ML_EBAY_ARTNO ?></dd>
 						<dt style="font-weight:bold; color:black">#PID#</dt>
@@ -388,7 +382,9 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 			<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?> langfr">
 				<th><?php echo ML_RICARDO_SUBTITLE ?> (<?php echo ML_RICARDO_LANGUAGE_FRENCH ?>)</th>
 				<td class="input">
-					<input type="text" class="fullwidth" name="SubtitleFr" id="SubtitleFr" maxlength="<?php echo self::SUBTITLE_MAX_LENGTH ?>" value="<?php echo fixHTMLUTF8Entities(strip_tags($data['SubtitleFr']), ENT_COMPAT, 'UTF-8') ?>"/>
+					<input type="text" class="fullwidth" name="SubtitleFr" id="SubtitleFr" 
+						   maxlength="<?php echo self::SUBTITLE_MAX_LENGTH ?>" 
+						   value="<?php echo fixHTMLUTF8Entities(RicardoHelper::ricardoSanitizeSubtitle($data['SubtitleFr']), ENT_COMPAT, 'UTF-8') ?>"/>
 				</td>
 				<td class="info"><?php echo ML_RICARDO_SUBTITLE_MAXLENGTH ?></td>
 			</tr>
@@ -411,6 +407,8 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 					<dl>
 						<dt style="font-weight:bold; color:black">#TITLE#</dt>
 							<dd><?php echo ML_EBAY_ITEM_NAME_TITLE ?></dd>
+						<dt style="font-weight:bold; color:black">#VARIATIONDETAILS#</dt>
+							<dd><?php echo ML_RICARDO_VARIATIONDETAILS_TEMPLATE ?></dd>
 						<dt style="font-weight:bold; color:black">#ARTNR#</dt>
 							<dd><?php echo ML_EBAY_ARTNO ?></dd>
 						<dt style="font-weight:bold; color:black">#PID#</dt>
@@ -570,12 +568,14 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 			$aProduct = MLProduct::gi()->setLanguage(getDBConfigValue($this->marketplace.'.lang', $this->mpID))->getProductById($data[0]['products_id']);
 			$productTax = SimplePrice::getTaxByPID($aProduct['ProductId']);
 			$taxFromConfig = getDBConfigValue($this->marketplace . '.checkin.mwst', $this->mpID);
-			
+			$priceSignal = getDBConfigValue($this->marketplace . '.price.signal', $this->mpID);
+
 			$this->price->setFinalPriceFromDB($aProduct['ProductId'], $this->mpID);
 			if (isset($taxFromConfig) && $taxFromConfig !== '') {
 				$this->price
 					->removeTax($productTax)
-					->addTax($taxFromConfig);
+					->addTax($taxFromConfig)
+					->makeSignalPrice($priceSignal);
 			}
 			
 			$ricardoPrice = $this->price
@@ -643,7 +643,7 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 			</tbody>
 			<tbody>
 				<tr class="headline">
-					<td colspan="3"><h4>'.'Ricardo Kategorie'.'</h4></td>
+					<td colspan="3"><h4>' . str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERIC_MP_CATEGORY) . '</h4></td>
 				</tr>
 				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 					<th>'.ML_GENERIC_CATEGORIES_MARKETPLACE_CATEGORIE.'</th>

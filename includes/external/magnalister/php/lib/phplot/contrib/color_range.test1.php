@@ -1,6 +1,6 @@
 <?php
 # PHPlot / contrib / color_range : Test 1, make a picture
-# $Id: color_range.test1.php 439 2010-10-11 14:42:53Z derpapst $
+# $Id$
 # This creates a PNG file on output with a color gradient.
 
 require_once 'color_range.php';

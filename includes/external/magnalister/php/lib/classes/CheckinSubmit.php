@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: CheckinSubmit.php 5668 2015-05-26 13:01:31Z tim.neumann $
+ * $Id$
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -152,7 +152,7 @@ abstract class CheckinSubmit {
 					'selectionname' => $this->settings['selectionName'],
 					'session_id' => session_id()
 				),
-				'AND pID IN ('.implode(', ', $this->badItems).')'
+                'AND pID IN ('.implode(', ', $this->badItems).')'
 			);
 		}
 	}
@@ -364,6 +364,7 @@ abstract class CheckinSubmit {
 			unset($_SESSION['magna_deletedFilter'][$this->mpID]);
 		}
 		$this->initSelection(0, $this->settings['itemsPerBatch']);
+		$this->ajaxReply['ignoreErrors'] = array_key_exists('ignoreErrors', $this->ajaxReply) ? $this->ajaxReply['ignoreErrors'] : $this->ignoreErrors;
 		$this->ajaxReply['itemsPerBatch'] = $this->settings['itemsPerBatch'];
 		
 		/* Spaetestens beim 2. Durchgang muessen die Artukel hinzugefuegt werden,
@@ -477,22 +478,24 @@ abstract class CheckinSubmit {
 		//$html = print_m($this->selection, '$this->selection').'
 		$html = '
 			<div id="checkinSubmit">
-				<h1 id="threeDots">
-					<span id="headline">'.ML_HEADLINE_SUBMIT_PRODUCTS.'</span><span class="alldots"
-						><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>&nbsp;
-					</span>
-				</h1>
-				<hr/>
-				<p>'.ML_NOTICE_SUBMIT_PRODUCTS.'</p>
-				<div id="apiException" style="display:none;"><p class="errorBox">'.ML_ERROR_SUBMIT_PRODUCTS.'</p></div>
-				<div id="uploadprogress" class="progressBarContainer">
-					<div class="progressBar"></div>
-					<div class="progressPercent"></div>
-				</div>
-				<br>
-				<div id="checkinSubmitStatus" class="paddingBottom"></div>
-				<div style="display: none; text-align: left; background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.2); border-radius: 3px 3px 3px 3px; margin-bottom: 1em; padding: 0 7px 7px;" id="checkinSubmitDebug">'.print_m($this->submitSession, 'submitSession').'</div>
-			</div>
+				<div id="checkinSubmitSubwrap">
+					<h1 id="threeDots">
+						<span id="headline">'.ML_HEADLINE_SUBMIT_PRODUCTS.'</span><span class="alldots"
+							><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>&nbsp;
+						</span>
+					</h1>
+					<p id="checkinSubmitProductsNotice">'.ML_NOTICE_SUBMIT_PRODUCTS.'</p>
+					<div id="apiException" style="display:none;"><p class="errorBox">'.ML_ERROR_SUBMIT_PRODUCTS.'</p></div>
+					<div id="uploadprogress" class="progressBarContainer">
+						<div class="progressBar"></div>
+						<div class="progressPercent"></div>
+					</div>
+					<br>
+					<div id="checkinSubmitStatus" class="paddingBottom"></div>
+					<div style="display: none; text-align: left; background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.2); border-radius: 3px 3px 3px 3px; margin-bottom: 1em; padding: 0 7px 7px;" id="checkinSubmitDebug">'.print_m($this->submitSession, 'submitSession').'</div>
+				 </div>
+			 </div>
+			
 		';
 		
 		ob_start();?>

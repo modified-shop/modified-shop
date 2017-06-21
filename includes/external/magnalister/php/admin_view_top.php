@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: admin_view_top.php 6246 2015-11-18 12:01:13Z tim.neumann $
+ * $Id$
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -98,7 +98,7 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset='.$_SESSION['language_charset'].'">
 		<title>'.(defined('TITLE') ? TITLE.' :: ' : '').'magnalister'.$_mainTitle.'</title>
-		<link rel="stylesheet" type="text/css" href="includes/stylesheet.css" />'."\n";
+		'.((file_exists(DIR_WS_INCLUDES.'stylesheet.css')) ? '<link rel="stylesheet" type="text/css" href="includes/stylesheet.css" />' : '').''."\n";
 }
 /* Force IE into Standards Mode */
 if (MLBrowserDetect::gi()->compare('Browser', 'msie', '==')) {

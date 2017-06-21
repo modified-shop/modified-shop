@@ -193,6 +193,14 @@ class RicardoConfigure extends MagnaCompatibleConfigure {
 			);
 			return;
 		}
+
+		if (isset($_POST['conf'][$this->marketplace.'.price.signal'])) {
+			$priceSignalLastDigit = substr((string)((int)$_POST['conf'][$this->marketplace.'.price.signal'] ), -1);
+			if ($priceSignalLastDigit != 0 && $priceSignalLastDigit != 5) {
+				$this->boxes .= '<p class="errorBox">' . ML_RICARDO_ERROR_PRICE_SIGNAL . '</p>';
+				unset($_POST['conf']);
+			}
+		}
 	}
 
 	public static function languageMatching($args, &$value = '') {

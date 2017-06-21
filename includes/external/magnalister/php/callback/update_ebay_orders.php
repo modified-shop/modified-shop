@@ -226,6 +226,12 @@ function magnaUpdateEbayOrders($mpID) {
 	            }
 				if (!array_key_exists('PaymentInstruction', $order)) {
 					$order['PaymentInstruction'] = ML_EBAY_ORDER_PAID;
+					if (    ('PayPal' == $order['PaymentMethod'])
+					     && array_key_exists('ExternalTransactionID', $order)
+					     && !empty($order['ExternalTransactionID'])) {
+						$order['PaymentInstruction'] .= "\n".ML_EBAY_PP_TRANSACTION_ID
+							.': '.$order['ExternalTransactionID'];
+					}
 				} else {
 					$order['PaymentInstruction'] = ML_EBAY_PUI_MSG_TO_BUYER.$order['PaymentInstruction'];
 				}

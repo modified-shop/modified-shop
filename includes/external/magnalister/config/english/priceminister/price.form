@@ -1,0 +1,85 @@
+{
+  "price": {
+    "headline": "Price Calculation",
+    "fields": {
+      "price": {
+        "label": "Price",
+        "desc": "You can enter a price surcharge or discount. Define a fix or percentel value. Please enter a minus (-) sign for a.",
+        "key": "_#_platform_#_.price.addkind",
+        "type": "selection",
+        "values": {
+          "percent": "x% surcharge or discount",
+          "addition": "x fix surcharge or discount"
+        },
+        "default": "percent",
+        "morefields": {
+          "cost": {
+            "key": "_#_platform_#_.price.factor",
+            "type": "text",
+            "default": "0",
+            "verify": "float",
+            "cssClasses": [
+              "autoWidth",
+              "rightSpacer"
+            ],
+            "formatstr": "%.2f"
+          },
+          "signaluse": {
+            "desc": "The threshold price replaces the decimal place of your price.<br/><br/>\n\t\t\t\t\t\t           <strong>For Example:</strong> <br />\n\t\t\t\t\t\t\t\t   Value in textfield: 99 <br />\n\t\t\t\t\t\t\t\t   Price before: 5.58 <br />\n\t\t\t\t\t\t\t\t   Price after: 5.99 <br /><br />\n\t\t\t\t\t\t           Particularly this feature helps to calculate a proper threshold price, if you use the function \"x% surcharge or discount\" .<br/>\n\t\t\t\t\t\t           Please leave the field empty, or enter a number of two digits.",
+            "key": "_#_platform_#_.price.signal",
+            "type": "text",
+            "cssClasses": [
+              "autoWidth"
+            ]
+          }
+        }
+      },
+      "whichprice": {
+        "label": "Price Option",
+        "leftlabel": "Price from Customer Group",
+        "key": "_#_platform_#_.price.group",
+        "type": "selection",
+        "values": null,
+        "cssClasses": [
+          "rightSpacer"
+        ],
+        "morefields": {
+          "cost": {
+            "key": "_#_platform_#_.price.usespecialoffer",
+            "type": "checkbox",
+            "values": {
+              "val": "use special pricing"
+            },
+            "default": {
+              "val": false
+            }
+          }
+        }
+      },
+      "exchangerate": {
+        "label": "Exchange Rate",
+        "desc": "<b>Generally:</b><br /> <br /> If the currency of the web-shop differs from the marketplace currency, during the order import process and during product uploading, magnalister calculates accordingly to the web-shop default currency.<br /> When importing marketplace orders, concerning the currency settings, magnalister simulates exactly the same behavior like the web-shop saves any frontend-orders.<br /> <br /> <b>Caution:</b><br /> <br /> By activating this function here, <span style='color:red'>the currency settings in your web-shop will be updated and overwritten with the current Yahoo Finance exchange-rate.</span> In consequence, this <span style='color:red'>affects your foreign currency in the web-shop frontend.</span><br /> <br /> The following magnalister functions trigger the exchange-rate update:<ul> <li>Order import</li> <li>Preparation of products</li> <li>Upload of products</li> <li>Synchronization of stock and prices</li> </ul><br /> If an exchange-rate of a marketplace is not configured in the web-shop currency settings, magnalister will display an error message.<br /> <b>Disclaimer:</b> RedGecko GmbH assumes no liability for the accuracy of the exchange rate. Please check the submitted values in your _#_platform_#_-Account.",
+        "key": "_#_platform_#_.exchangerate",
+        "type": "checkbox",
+        "values": {
+          "update": "Update exchange rate automatically"
+        },
+        "default": {
+          "update": false
+        }
+      },
+      "variations" : {
+          "label" : "Varianten",
+          "desc" : "Funktion aktiviert: Produkte, die in mehreren Varianten (wie Gr&ouml;&szlig;e oder Farbe) im Shop vorhanden sind, werden auch so an PriceMinister &uuml;bermittelt.<br /><br /> Die Einstellung &quot;St&uuml;ckzahl&quot; wird dann auf jede einzelne Variante angewendet.<br /><br /><b>Beispiel:</b> Sie haben einen Artikel 8 mal in blau, 5 mal in gr&uuml;n und 2 mal in schwarz, unter St&uuml;ckzahl &quot;Shop-Lagerbestand &uuml;bernehmen abzgl. Wert aus rechtem Feld&quot;, und den Wert 2 in dem Feld. Der Artikel wird dann 6 mal in blau und 3 mal in gr&uuml;n &uuml;bermittelt.<br /><br /><b>Hinweis:</b> Es kommt vor, da&szlig; etwas das Sie als Variante verwenden (z.B. Gr&ouml;&szlig;e oder Farbe) ebenfalls in der Attribut-Auswahl f&uuml;r die Kategorie erscheint. In dem Fall wird Ihre Variante verwendet, und nicht der Attributwert.",
+          "key" : "_#_platform_#_.usevariations",
+          "type" : "checkbox",
+          "values" : {
+            "val" : "Varianten &uuml;bermitteln"
+          },
+          "default" : {
+            "val" : true
+          }
+      }
+    }
+  }
+}

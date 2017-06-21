@@ -20,6 +20,7 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES . 'amazon/amazonFunctions.php');
+require_once(DIR_MAGNALISTER_MODULES . 'amazon/AmazonHelper.php');
 
 function amazonSanitizeDesc($str) {
 	# preg_replace could return NULL at 5.2.0 to 5.3.6 - "/(\s*<br[^>]*>\s*)*$/"
@@ -31,13 +32,14 @@ function amazonSanitizeDesc($str) {
 	$str = str_replace(array('&nbsp;', html_entity_decode('&nbsp;')), ' ', $str);
 	$str = sanitizeProductDescription(
 		$str,
-		'',
+		'<p><br><ul><ol><li><strong><b><em><i>',
 		'_keep_all_'
 	);
 	$str = str_replace(array('<br />', '<br/>'), '<br>', $str);
-	$str = preg_replace('/(\s*<br[^>]*>\s*)*$/', '', $str);
+	$str = str_replace(array("\n"), ' ', $str);
+	// $str = preg_replace('/(\s*<br[^>]*>\s*)*$/', ' ', $str);
 	$str = preg_replace('/\s\s+/', ' ', $str);
-	return substr($str, 0, 2000);
+	return AmazonHelper::gi()->truncateString($str, 2000);
 }
 
 function populateGenericData($pID, $edit = false) {
@@ -60,7 +62,12 @@ function populateGenericData($pID, $edit = false) {
 		'LeadtimeToShip' => getDBConfigValue('amazon.leadtimetoship', $_MagnaSession['mpID'], '0'),
 		'ConditionType' => getDBConfigValue('amazon.itemCondition', $_MagnaSession['mpID'], '0'),
 		'ConditionNote' => '',
+		'ShopVariation' => array(),
 	);
+	if(getDBConfigValue(array('amazon.shipping.template.active', 'val'), $_MagnaSession['mpID'], false)){
+		$aDefaultTemplate = getDBConfigValue(array($_MagnaSession['currentPlatform'] . '.shipping.template', 'defaults'), $_MagnaSession['mpID']);
+		$genericDataStructure['ShippingTemplate'] = array_search('1', $aDefaultTemplate);
+	}
 	if ($pID === 0) {
 		if ($edit) {
 			$genericDataStructure['LeadtimeToShip'] = 'X';
@@ -130,13 +137,13 @@ function populateGenericData($pID, $edit = false) {
 		foreach ($genericDataStructure['Keywords'] as &$keyword) {
 			$keyword = trim($keyword);
 			if (empty($keyword)) continue;
-			$keyword = substr($keyword, 0, strpos(wordwrap($keyword, 50, "\n", true) . "\n", "\n"));
+			$keyword = substr($keyword, 0, strpos(wordwrap($keyword, 1000, "\n", true) . "\n", "\n"));
 		}
 	}
 	$genericDataStructure['Keywords'] = array_pad($genericDataStructure['Keywords'], 5, '');
 
 	$prepData = MagnaDB::gi()->fetchRow('
-		SELECT category, data, leadtimeToShip, ConditionType, ConditionNote
+		SELECT category, data, leadtimeToShip, ConditionType, ConditionNote, ShippingTemplate
 		  FROM ' . TABLE_MAGNA_AMAZON_APPLY . '
 		 WHERE mpID=\'' . $_MagnaSession['mpID'] . '\' AND
 		       ' . ((getDBConfigValue('general.keytype', '0') == 'artNr')
@@ -153,6 +160,9 @@ function populateGenericData($pID, $edit = false) {
 	# Folgende 3 Zeilen auskommentieren, falls die bereits gespeicherten Produktdaten zur Beantragung
 	# nicht ueberschrieben werden sollen.
 	if (!$edit) {
+		# Attributes matching shouldn't be reset
+		$dataForShopVariation = unserialize(base64_decode($dbData));
+		$genericDataStructure['ShopVariation'] = $dataForShopVariation['ShopVariation'];
 		$dbData = false;
 	}
 
@@ -182,6 +192,10 @@ function populateGenericData($pID, $edit = false) {
 		$genericDataStructure['LeadtimeToShip'] = $prepData['leadtimeToShip'];
 		$genericDataStructure['ConditionType'] = $prepData['ConditionType'];
 		$genericDataStructure['ConditionNote'] = $prepData['ConditionNote'];
+		
+		if($prepData['ShippingTemplate'] !== null){
+			$genericDataStructure['ShippingTemplate'] = $prepData['ShippingTemplate'];
+		}
 	}
 
 	/* {Hook} "AmazonApply_populateGenericData": Enables you to extend or modifiy the product data.<br>
@@ -195,7 +209,6 @@ function populateGenericData($pID, $edit = false) {
 	if (($hp = magnaContribVerify('AmazonApply_populateGenericData', 1)) !== false) {
 		require($hp);
 	}
-
 
 	//echo print_m($genericDataStructure);
 	return $genericDataStructure;
@@ -230,7 +243,20 @@ if (!empty($_POST) && isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 /**
  * Daten speichern
  */
-if (array_key_exists('saveApplyData', $_POST)) {
+if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_POST) && $_POST['Action'] === 'SaveMatching')) {
+	$postAction = isset($_POST['Action']);
+	$invalidAttributes = false;
+	if (isset($_GET['where']) && $_GET['where'] === 'varmatchView') {
+		if (isset($_POST['Variations'])) {
+			parse_str($_POST['Variations'], $postVariables);
+			$_POST = $postVariables;
+		}
+	}
+
+	$_POST['ShopVariation'] = AmazonHelper::gi()->saveMatching($_POST['MainCategory'], $_POST['ml']['match'],
+		!$postAction, true);
+	unset($_POST['ml']);
+
 	$requiredData = array(
 		'MainCategory' => ML_LABEL_MAINCATEGORY,
 		#'ProductType' => ML_LABEL_SUBCATEGORY,
@@ -241,6 +267,16 @@ if (array_key_exists('saveApplyData', $_POST)) {
 
 	$itemDetails = $_POST;
 	unset($itemDetails['saveApplyData']);
+
+	if (isset($itemDetails['Errors'])) {
+		if (!$postAction) {
+			$errors = $itemDetails['Errors'];
+			$_POST['apply'] = true;
+		}
+
+		$invalidAttributes = true;
+		unset($itemDetails['Errors']);
+	}
 
 	$leadtimePost = $itemDetails['LeadtimeToShip'];
 	unset($itemDetails['LeadtimeToShip']);
@@ -290,6 +326,14 @@ if (array_key_exists('saveApplyData', $_POST)) {
 			unset($data['BrowseNodes']);
 			unset($data['ConditionType']);
 			unset($data['ConditionNote']);
+			$shippingTemplate = null;
+			if(isset($data['ShippingTemplate'])){
+				if(!isset($data['Attributes'])){
+					$data['Attributes'] = array();
+				}
+				$shippingTemplate = $data['Attributes']['MerchantShippingGroupName'] = $data['ShippingTemplate'];
+				unset($data['ShippingTemplate']);
+			}
 
 			#echo print_m($missingItems);
 			$data = array(
@@ -298,7 +342,7 @@ if (array_key_exists('saveApplyData', $_POST)) {
 				'products_model' => $productModel,
 				'category' => base64_encode(serialize($c)),
 				'data' => base64_encode(serialize($data)),
-				'is_incomplete' => array_key_exists($pID, $missingItems) ? 'true' : 'false',
+				'is_incomplete' => array_key_exists($pID, $missingItems) || $invalidAttributes ? 'true' : 'false',
 				'leadtimeToShip' => $leadtimeToShip,
 				'topMainCategory' => $c['MainCategory'] == null ? '' : $c['MainCategory'],
 				'topProductType' => $c['ProductType'] == null ? '' : $c['ProductType'],
@@ -308,6 +352,10 @@ if (array_key_exists('saveApplyData', $_POST)) {
 				'ConditionNote' => $c['ConditionNote'],
 				'PreparedTs' => $preparedTs,
 			);
+			
+			if($shippingTemplate !== null){
+				$data['ShippingTemplate'] = $shippingTemplate;
+			}
 			$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
 				? array('products_model' => MagnaDB::gi()->escape($data['products_model']))
 				: array('products_id' => $data['products_id']);
@@ -327,7 +375,7 @@ if (array_key_exists('saveApplyData', $_POST)) {
 			} else {
 				MagnaDB::gi()->insert(TABLE_MAGNA_AMAZON_APPLY, $data);
 			}
-			if (!array_key_exists($pID, $missingItems)) {
+			if (!array_key_exists($pID, $missingItems) && !$postAction && !isset($errors)) {
 				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
 					'pID' => $pID,
 					'mpID' => $_MagnaSession['mpID'],
@@ -336,6 +384,11 @@ if (array_key_exists('saveApplyData', $_POST)) {
 				));
 			}
 		}
+
+		if (isset($errors)) {
+			echo $errors;
+		}
+
 		if (!empty($missingItems)) {
 			echo '
 				<p class="noticeBox">' . ML_AMAZON_TEXT_APPLY_DATA_INCOMPLETE . '</p>
@@ -518,25 +571,61 @@ if (array_key_exists('apply', $_POST) && (!empty($_POST['apply']))) {
 }
 
 if (($applyAction == 'singleapplication') || ($applyAction == 'multiapplication')) {
-	include_once(DIR_MAGNALISTER_MODULES . 'amazon/application/applicationviews.php');
-
-} else {
-	if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true) {
-		require_once(DIR_MAGNALISTER_MODULES . 'amazon/prepare/AmazonApplyProductList.php');
-		$o = new AmazonApplyProductList();
-		echo $o;
-	} else {
-		require_once(DIR_MAGNALISTER_MODULES . 'amazon/classes/ApplyCategoryView.php');
-
-		$aCV = new ApplyCategoryView(
-			$current_category_id, $applySetting, /* $current_category_id is a global variable from xt:Commerce */
-			(isset($_GET['sorting']) ? $_GET['sorting'] : ''),
-			(isset($_POST['tfSearch']) ? $_POST['tfSearch'] : '')
-		);
-		if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
-			echo $aCV->renderAjaxReply();
-		} else {
-			echo $aCV->printForm();
+	include_once(DIR_MAGNALISTER_MODULES.'amazon/application/applicationviews.php');
+} else if (isset($_GET['where']) && $_GET['where'] === 'varmatchView') {
+	if (isset($_POST['Action']) && $_POST['Action'] === 'DBMatchingColumns') {
+		$columns = MagnaDB::gi()->getTableCols($_POST['Table']);
+		$editedColumns = array();
+		foreach ($columns as $column) {
+			$editedColumns[$column] = $column;
 		}
+
+		echo json_encode($editedColumns, JSON_FORCE_OBJECT);
+	} else {
+		if (isset($pIDs[0])) {
+			$pID = $pIDs[0];
+		} else {
+			$pID = MagnaDB::gi()->fetchOne('
+				SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
+				 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
+					   selectionname=\''.$applySetting['selectionName'].'\' AND
+					   session_id=\''.session_id().'\'
+			', true);
+		}
+
+		$productModel = MagnaDB::gi()->fetchOne('
+				SELECT products_model
+				  FROM '.TABLE_PRODUCTS.'
+				 WHERE products_id= ' . $pID
+		);
+
+		if (!$productModel) {
+			$productModel = $pID;
+		}
+
+		if (isset($_POST['SelectValue'])) {
+			$category = $_POST['SelectValue'];
+		} else {
+			$category = $_POST['MainCategory'];
+		}
+
+		echo json_encode(AmazonHelper::gi()->getMPVariations($category, $productModel, true));
+	}
+} else if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
+	require_once(DIR_MAGNALISTER_MODULES.'amazon/prepare/AmazonApplyProductList.php');
+	$o = new AmazonApplyProductList();
+	echo $o;
+} else {
+	require_once(DIR_MAGNALISTER_MODULES . 'amazon/classes/ApplyCategoryView.php');
+
+	$aCV = new ApplyCategoryView(
+		$current_category_id, $applySetting,  /* $current_category_id is a global variable from xt:Commerce */
+		(isset($_GET['sorting']) ? $_GET['sorting'] : ''),
+		(isset($_POST['tfSearch']) ? $_POST['tfSearch'] : '')
+	);
+	if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
+		echo $aCV->renderAjaxReply();
+	} else {
+		echo $aCV->printForm();
 	}
 }

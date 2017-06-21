@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: SimplePrice.php 6525 2016-03-01 11:56:23Z tim.neumann $
+ * $Id$
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -505,10 +505,15 @@ class SimplePrice {
 	}
 
 	public function makeSignalPrice($decimalDigits) {
-		if (empty($decimalDigits) || !ctype_digit($decimalDigits)) {
-			return $this;
+		if (isset($decimalDigits) && $decimalDigits !== '') {
+			//If price signal is single digit then just add price signal as last digit
+			if (strlen((string)$decimalDigits) == 1) {
+				$this->price = (0.1 * (int)($this->price * 10)) + ($decimalDigits / 100);
+			} else {
+				$this->price = ((int)$this->price) + ($decimalDigits / 100);
+			}
 		}
-		$this->price = floor($this->price) + (int)$decimalDigits/100;
+
 		return $this;
 	}
 

@@ -40,7 +40,7 @@ class HitmeisterCheckinCategoryView extends SimpleCheckinCategoryView {
 					: 'products_id'
 				).'
 			FROM '.TABLE_PRODUCTS.'
-			WHERE products_ean IS NOT NULL AND products_ean <> \'\'
+			WHERE products_ean IS NOT NULL AND products_ean <> \'\' AND products_ean <> \'0\'
 		', true);
 		$preparedItems = array_intersect($allPreparedItems, $itemsWithEAN);
 		#echo print_m($preparedItems, '$preparedItems');
@@ -80,10 +80,10 @@ class HitmeisterCheckinCategoryView extends SimpleCheckinCategoryView {
 		$this->productIdFilterRegister('ManufacturerFilter', array());
 	}
 
-	public function getAdditionalHeadlines() {
-		return '
-			<td>'.'Vorbereitung'.'</td>';
-	}
+    public function getAdditionalHeadlines() {
+        return '
+			<td>' . ML_GENERIC_VORBEREITUNG . '</td>';
+    }
 
 	public function getAdditionalCategoryInfo($cID, $data = false) {
 		return '
@@ -107,7 +107,7 @@ class HitmeisterCheckinCategoryView extends SimpleCheckinCategoryView {
 		return '
 			<td>
 				<table class="nostyle"><tbody>
-					<tr><td class="label">'.'Kategorie'.':&nbsp;</td><td>'.(empty($a['MarketplaceCategories']) ? '&mdash;' : $a['MarketplaceCategories']).(empty($a['MarketplaceCategoriesName']) ? '' : ' '.$a['MarketplaceCategoriesName']).'</td><tr>
+					<tr><td class="label">' . ML_LABEL_CATEGORY . ':&nbsp;</td><td>'.(empty($a['MarketplaceCategories']) ? '&mdash;' : $a['MarketplaceCategories']).(empty($a['MarketplaceCategoriesName']) ? '' : ' '.$a['MarketplaceCategoriesName']).'</td><tr>
 				</tbody></table>
 			</td>';
 	}

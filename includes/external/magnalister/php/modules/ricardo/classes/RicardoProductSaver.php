@@ -147,23 +147,23 @@ class RicardoProductSaver {
 		}
 
 		if (isset($aItemDetails['SubtitleDe']) === true) {
-			$aRow['SubtitleDe'] = $aItemDetails['SubtitleDe'];
+			$aRow['SubtitleDe'] = RicardoHelper::ricardoSanitizeSubtitle($aItemDetails['SubtitleDe']);
 		}
 
 		if (isset($aItemDetails['SubtitleFr']) === true) {
-			$aRow['SubtitleFr'] = $aItemDetails['SubtitleFr'];
+			$aRow['SubtitleFr'] = RicardoHelper::ricardoSanitizeSubtitle($aItemDetails['SubtitleFr']);
 		}
 
 		$aRow['DescriptionDe'] = $aItemDetails['DescriptionDe'];
 		if ((!isset($aRow['DescriptionDe']) || $aRow['DescriptionDe'] === '') && ($aRow['LangDe'] === 'true')) {
 			$aRow['Verified'] = 'ERROR';
-			$this->aErrors['ML_RICARDO_ERROR_DESCRITPION'] = ML_RICARDO_ERROR_DESCRITPION;
+			$this->aErrors['ML_RICARDO_ERROR_DESCRIPTION'] = ML_RICARDO_ERROR_DESCRIPTION;
 		}
 
 		$aRow['DescriptionFr'] = $aItemDetails['DescriptionFr'];
 		if ((!isset($aRow['DescriptionFr']) || $aRow['DescriptionFr'] === '') && ($aRow['LangFr'] === 'true')) {
 			$aRow['Verified'] = 'ERROR';
-			$this->aErrors['ML_RICARDO_ERROR_DESCRITPION'] = ML_RICARDO_ERROR_DESCRITPION;
+			$this->aErrors['ML_RICARDO_ERROR_DESCRIPTION'] = ML_RICARDO_ERROR_DESCRIPTION;
 		}
 		
 		$aRow['DescriptionTemplate'] = $aItemDetails['DescriptionTemplate'];

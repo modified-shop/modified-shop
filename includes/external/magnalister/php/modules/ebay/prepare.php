@@ -26,19 +26,20 @@ function eBayGetSelection() {
 	# Daten aus magnalister_ebay_properties (bereits frueher vorbereitet)
 	$keytypeIsArtNr = (getDBConfigValue('general.keytype', '0') == 'artNr');
 	$shortDescColumnExists =  MagnaDB::gi()->columnExistsInTable('products_short_description', TABLE_PRODUCTS_DESCRIPTION);
+	$blBusinessPoliciesSet = geteBayBusinessPolicies();
 	
 	if ($keytypeIsArtNr) { 
 	    $dbOldSelectionQuery = 'SELECT '
 		.' ep.products_id products_id, ep.products_model products_model, '
 		.' Price, IF(0.0=Price, 0, 1) as priceFrozen, '
-		.' ms.mpID mpID, Title, Subtitle, Description, '
+		.' ms.mpID mpID, Title, Subtitle, Description, MobileDescription, '
 		.' p.products_weight AS products_weight, '
 		.' pd.products_name products_name, pd.products_description description, '
 		.($shortDescColumnExists?' pd.products_short_description ':'\'\'').' AS shortdescription, '
 		.'PictureURL, GalleryURL, ConditionID,  '
 		.' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
 		.' Attributes, ItemSpecifics, eBayPicturePackPurge, VariationDimensionForPictures, GalleryType, '
-		.' ListingType, ListingDuration, PaymentMethods, ShippingDetails, DispatchTimeMax '
+		.' ListingType, ListingDuration, PaymentMethods, ShippingDetails, SellerProfiles, DispatchTimeMax '
 		.' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '.TABLE_MAGNA_SELECTION.' ms, '
 		. TABLE_PRODUCTS .' p, ' . TABLE_PRODUCTS_DESCRIPTION .' pd '
 		.' WHERE ep.products_model = p.products_model '
@@ -53,14 +54,14 @@ function eBayGetSelection() {
 	    $dbOldSelectionQuery = 'SELECT '
 		.' ep.products_id products_id, ep.products_model products_model, '
 		.' Price, IF(0.0=Price, 0, 1) as priceFrozen, '
-		.' ms.mpID mpID, Title, Subtitle, Description, '
+		.' ms.mpID mpID, Title, Subtitle, Description, MobileDescription, '
 		.' pd.products_name products_name, pd.products_description description, '
 		.($shortDescColumnExists?' pd.products_short_description ':'\'\'').' AS shortdescription, '
 		.' PictureURL, GalleryURL, ConditionID,  '
 		.' p.products_weight AS products_weight, '
 		.' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
 		.' Attributes, ItemSpecifics, eBayPicturePackPurge, VariationDimensionForPictures, GalleryType, '
-		.' ListingType, ListingDuration, PaymentMethods, ShippingDetails, DispatchTimeMax '
+		.' ListingType, ListingDuration, PaymentMethods, ShippingDetails, SellerProfiles, DispatchTimeMax '
 		.' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '.TABLE_MAGNA_SELECTION.' ms, '
 		. TABLE_PRODUCTS_DESCRIPTION .' pd, '.TABLE_PRODUCTS.' p '
 		.' WHERE p.products_id=pd.products_id and ep.products_id = ms.pID AND ep.mpID = ms.mpID  AND pd.products_id = ep.products_id '
@@ -98,10 +99,18 @@ function eBayGetSelection() {
 		$dbNewSelectionQuery .=
 		 ' \'\' AS shortdescription, ';
 	}
+	$sDefaultSellerProfiles = $blBusinessPoliciesSet
+		?json_encode(array (
+			'Payment'  => getDBConfigValue('ebay.default.paymentsellerprofile' , $_MagnaSession['mpID'], 0),
+			'Shipping' => getDBConfigValue('ebay.default.shippingsellerprofile', $_MagnaSession['mpID'], 0),
+			'Return'   => getDBConfigValue('ebay.default.returnsellerprofile'  , $_MagnaSession['mpID'], 0)
+		 ))
+		:'';
 	$dbNewSelectionQuery .= 
 		 ' pd.products_description AS description, '
 		.' p.products_image AS PictureURL, '
 		.' p.products_weight AS products_weight, '
+		.' \''.$sDefaultSellerProfiles.'\' AS SellerProfiles, '
 		.' \''.getDBConfigValue('ebay.DispatchTimeMax', $_MagnaSession['mpID'], 30).'\' AS DispatchTimeMax '
 		.' FROM '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd, '.TABLE_MAGNA_SELECTION.' ms '
 		.' WHERE pd.products_id = p.products_id AND ms.pID = p.products_id '
@@ -144,7 +153,8 @@ function eBayGetSelection() {
 			$current_row['PictureURL'] = $imagePath . current($aPictureUrls);
 		} else {//picture pack inactive
 			$current_row['PictureURL'] = empty($current_row['PictureURL'])? '': $current_row['PictureURL'];
-			if (false === strpos($current_row['PictureURL'], 'http')) {
+			if (    (!empty($current_row['PictureURL'])) 
+			     && (false === strpos($current_row['PictureURL'], 'http'))) {
 				$current_row['PictureURL'] = $imagePath . $current_row['PictureURL'];
 			}
 		}
@@ -174,6 +184,27 @@ function eBayGetSelection() {
 		$dbSelection[0]['Description'] = substitutePictures(eBaySubstituteTemplate(
 			$_MagnaSession['mpID'], $dbSelection[0]['products_id'], $eBayTemplate, $substitution
 		), $dbSelection[0]['products_id'], $imagePath);
+	}
+	if ((1 == $rowCount) && empty($dbSelection[0]['MobileDescription'])) {
+		$eBayMTemplate = getDBConfigValue('ebay.template.mobilecontent',$_MagnaSession['mpID']);
+		# Template fuellen
+		# bei mehreren Artikeln erst beim Speichern fuellen
+		# Preis und ggf. VPE wird erst beim Uebermitteln eingesetzt.
+		if (false) { # DEBUG
+			echo print_m($dbSelection[0], '$dbSelection[0]');
+		}
+		$substitution = array (
+			'#TITLE#' => fixHTMLUTF8Entities($dbSelection[0]['products_name']),
+			'#ARTNR#' => $dbSelection[0]['products_model'],
+			'#PID#' => $dbSelection[0]['products_id'],
+			'#SKU#' => magnaPID2SKU($dbSelection[0]['products_id']),
+			'#SHORTDESCRIPTION#' => fixHTMLUTF8Entities($dbSelection[0]['shortdescription']),
+			'#DESCRIPTION#' => fixHTMLUTF8Entities(stripLocalWindowsLinks($dbSelection[0]['description'])),
+			'#WEIGHT#' => ((float)$dbSelection[0]['products_weight']>0)?$dbSelection[0]['products_weight']:'',
+		);
+		$dbSelection[0]['MobileDescription'] = strip_tags(eBaySubstituteTemplate(
+			$_MagnaSession['mpID'], $dbSelection[0]['products_id'], $eBayMTemplate, $substitution
+		), '<ol></ol><ul></ul><li></li><br><br/><br />');
 	}
 	if ((1 == $rowCount) && empty($dbSelection[0]['Title'])) {
 		$eBayTitleTemplate = getDBConfigValue('ebay.template.name',$_MagnaSession['mpID'], '#TITLE#');
@@ -260,7 +291,7 @@ if (array_key_exists('savePrepareData', $_POST)) {
 	@set_time_limit(300);
 	$itemDetails = $_POST;
 	unset($itemDetails['savePrepareData']);
-	#echo print_m($itemDetails, '$itemDetails');
+#	echo print_m($itemDetails, '$itemDetails');
 
 	$pIDs = MagnaDB::gi()->fetchArray('
 		SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
@@ -376,7 +407,7 @@ if (!defined('MAGNA_DEV_PRODUCTLIST') || MAGNA_DEV_PRODUCTLIST === false) {// wi
 					: array ('products_id'    => $pID);
 				$where['mpID'] = $_MagnaSession['mpID'];
 
-				MagnaDB::gi()->update(TABLE_MAGNA_EBAY_PROPERTIES, array('Description' => ''), $where);
+				MagnaDB::gi()->update(TABLE_MAGNA_EBAY_PROPERTIES, array('Description' => '', 'MobileDescription' => ''), $where);
 				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
 					'pID' => $pID,
 					'mpID' => $_MagnaSession['mpID'],
@@ -482,12 +513,15 @@ if (isset($prepareAction)
 				unset($args['action']);
 				$tmpURL = $_url;
 				$tmpURL['where'] = 'prepareView';
-				if ('true' == $args['international']) {
-					$shipProc = new eBayShippingDetailsProcessor($args, 'ebay.default.shipping.international', $tmpURL);
-				} else {
-					$shipProc = new eBayShippingDetailsProcessor($args, 'ebay.default.shipping.local', $tmpURL);
+				$blBusinessPoliciesSet = geteBayBusinessPolicies();
+				if (!$blBusinessPoliciesSet) {
+					if ('true' == $args['international']) {
+						$shipProc = new eBayShippingDetailsProcessor($args, 'ebay.default.shipping.international', $tmpURL);
+					} else {
+						$shipProc = new eBayShippingDetailsProcessor($args, 'ebay.default.shipping.local', $tmpURL);
+					}
+					echo $shipProc->process();
 				}
-				echo $shipProc->process();
 				break;
 			}
 			case 'getEBayAttributes': {
@@ -497,6 +531,11 @@ if (isset($prepareAction)
 			case 'makePrice': {
 				require_once(DIR_MAGNALISTER_MODULES.'ebay/ebayFunctions.php');
 				echo makePrice($_POST['pID'], $_POST['ListingType']);
+				break;
+			}
+			case 'GetSellerProfileData': {
+				require_once(DIR_MAGNALISTER_MODULES.'ebay/ebayFunctions.php');
+				eBayGetSellerProfileData($_POST['value']);
 				break;
 			}
 			default: {

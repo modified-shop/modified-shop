@@ -2,7 +2,7 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 /* Variations-Tabelle aufbauen */
-#define('MP_DEBUG', true);
+define('MP_DEBUG', true);
 define('MP_SHOW_WARNINGS', true);
 
 if (!defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 0x1000);

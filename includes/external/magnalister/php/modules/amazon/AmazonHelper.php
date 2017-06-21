@@ -18,9 +18,21 @@
  * -----------------------------------------------------------------------------
  */
 
-require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/MagnaCompatibleHelper.php');
+require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/AttributesMatchingHelper.php');
 
-class AmazonHelper extends MagnaCompatibleHelper {
+class AmazonHelper extends AttributesMatchingHelper {
+
+    private static $instance;
+
+    public static function gi()
+    {
+        if (self::$instance === null) {
+            self::$instance = new AmazonHelper();
+        }
+
+        return self::$instance;
+    }
+
 	public static function processCheckinErrors($result, $mpID) {
 		// Empty is ok, the API has a method to fetch the error log later.
 	}
@@ -53,24 +65,151 @@ class AmazonHelper extends MagnaCompatibleHelper {
 		return $config;
 	}
 
-	/*
-	 * watch out if new ean columns are coming for attributes!!!
-	 */
-	public static function getMLProductExtendFetchSingleVariationQueryWhere() {
-		$bAttrEAN = MagnaDB::gi()->columnExistsInTable('attributes_ean', TABLE_PRODUCTS_ATTRIBUTES);
-		$bGmEAN = MagnaDB::gi()->columnExistsInTable('gm_ean', TABLE_PRODUCTS_ATTRIBUTES);
+    protected function getPreparedData($category, $prepare = false)
+    {
+        if (!$prepare) {
+            return false;
+        }
 
-		if ($bAttrEAN && $bGmEAN) {
-			$sReturn = " AND (pa.attributes_ean != '' OR gm_ean != '') ";
-		} elseif ($bAttrEAN && !$bGmEAN) {
-			$sReturn = " AND pa.attributes_ean != '' ";
-		} elseif (!$bAttrEAN && $bGmEAN) {
-			$sReturn = " AND gm_ean != '' ";
-		} else {
-			$sReturn = "";
-		}
+        $availableCustomConfigs = false;
+        $productIdCondition = is_int($prepare) ? ' OR products_id = '.$prepare : '';
+        $dataFromDB = MagnaDB::gi()->fetchRow(eecho('
+            SELECT `data`
+            FROM '.TABLE_MAGNA_AMAZON_APPLY.'
+            WHERE mpID = '.$this->mpId.'
+                AND topMainCategory = "'.$category.'"
+                AND (products_model = "'.$prepare.'"'.$productIdCondition.')
+        ', false));
 
-		return $sReturn;
-	}
+        if (!$dataFromDB) {
+            return false;
+        }
 
+        $dataDB = unserialize(base64_decode($dataFromDB['data']));
+
+        if (!empty($dataDB['ShopVariation'])) {
+            if (is_array($dataDB['ShopVariation'])) {
+                $availableCustomConfigs = $dataDB['ShopVariation'];
+            } else {
+                $availableCustomConfigs = json_decode($dataDB['ShopVariation'], true);
+            }
+        } elseif (!empty($dataDB['Attributes'])) {
+            foreach ($dataDB['Attributes'] as $attributeKey => $attributeValue) {
+                $availableCustomConfigs[$attributeKey] = array(
+                    'Kind' => 'Matching',
+                    'Values' => $attributeValue,
+                    'Error' => false
+                );
+            }
+        }
+
+        return !$availableCustomConfigs ? null : $availableCustomConfigs;
+    }
+
+    /**
+     * Gets prepared attributes data for products prepared for given category.
+     *
+     * @param string $category
+     * @return array|null
+     */
+    protected function getPreparedProductsData($category)
+    {
+        $dataFromDB = MagnaDB::gi()->fetchArray(eecho('
+				SELECT `data`
+				FROM ' . TABLE_MAGNA_AMAZON_APPLY . '
+				WHERE mpID = ' . $this->mpId . '
+					AND topMainCategory = "' . $category . '"
+			', false), true);
+
+        if ($dataFromDB) {
+            $result = array();
+            foreach ($dataFromDB as $preparedData) {
+                $data = unserialize(base64_decode($preparedData));
+                if ($data['ShopVariation']) {
+                    $result[] = json_decode($data['ShopVariation'], true);
+                }
+            }
+
+            return $result;
+        }
+
+        return null;
+    }
+
+    protected function getAttributesFromMP($category)
+    {
+        $data = false;
+        try {
+            $result = MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'GetCategoryDetails',
+                'MARKETPLACEID' => $this->mpId,
+                'CATEGORY' => $category,
+            ));
+            if (!empty($result['DATA'])) {
+                $data = $result['DATA'];
+                if (getDBConfigValue('amazon.site', $this->mpId) === 'US') {
+                    $data['attributes']['UPC'] = array(
+                        'title' => 'UPC',
+                        'mandatory' => true,
+                    );
+                }
+            }
+        } catch (MagnaException $e) {
+            $e->setCriticalStatus(false);
+        }
+
+        if (!is_array($data) || !isset($data['attributes'])) {
+            $data = array();
+        }
+
+        if (!empty($data['attributes'])) {
+            foreach ($data['attributes'] as &$value) {
+                if (!isset($value['mandatory'] )) {
+                    $value['mandatory'] = true;
+                }
+            }
+        } else {
+            $data['attributes'] = array();
+        }
+
+        return $data;
+    }
+
+    public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true)
+    {
+        // amazon does not have category pick button
+        return parent::renderMatchingTable($url, $categoryOptions, false);
+    }
+
+    public function saveMatching($category, &$matching, $savePrepare, $fromPrepare = false)
+    {
+        $errors = parent::saveMatching($category, $matching, $savePrepare, $fromPrepare);
+
+        if (!$fromPrepare) {
+            return $errors;
+        }
+
+        $result = '';
+        if (!empty($errors)) {
+            foreach ($errors as $error) {
+                $errorCssClass = 'errorBox';
+                $errorMessage = $error;
+                if (is_array($error)) {
+                    $errorCssClass = "{$error['type']}Box {$error['additionalCssClass']}";
+                    $errorMessage = $error['message'];
+                }
+
+                $result .= '<p class="'.$errorCssClass.'">' . $errorMessage . '</p>';
+            }
+        } else if (!$fromPrepare) {
+            $result = '<p class="successBox">' . ML_LABEL_SAVED_SUCCESSFULLY . '</p>';
+        }
+
+        if ($result) {
+            // on apply page we need errors in POST to display them properly
+            $_POST['Errors'] = $result;
+        }
+
+        return json_encode($matching['ShopVariation']);
+    }
 }

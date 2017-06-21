@@ -230,6 +230,8 @@ abstract class MarketplaceCategoryMatching {
 		}
 		$topLevelList = '';
 		foreach ($subCats as $item) {
+			$disabledClass = '';
+
 			$classes = array('toggle');
 			if ($item['LeafCategory'] == 1) {
 				$classes[] = 'leaf';
@@ -238,6 +240,8 @@ abstract class MarketplaceCategoryMatching {
 			}
 			if ($item['Selectable'] == '1') {
 				$classes[] = 'selectable';
+			}elseif($item['LeafCategory'] == 1){
+				$disabledClass = 'disabled';
 			}
 			$cssId = $this->cssId($item['CategoryID']);
 			$escId = htmlspecialchars($item['CategoryID']);
@@ -245,7 +249,7 @@ abstract class MarketplaceCategoryMatching {
 				<div class="catelem" id="y_'.$cssId.'">
 					<span class="'.implode(' ', $classes).'" id="y_toggle_'.$cssId.'" data-id="'.$escId.'">&nbsp;</span>
 					<div class="catname" id="y_select_'.$cssId.'" data-id="'.$escId.'">
-						<span class="catname">'.fixHTMLUTF8Entities($item['CategoryName']).'</span>
+						<span class="catname '.$disabledClass.'">'.fixHTMLUTF8Entities($item['CategoryName']).'</span>
 					</div>
 				</div>';
 		}
@@ -253,8 +257,13 @@ abstract class MarketplaceCategoryMatching {
 	}
 	
 	public function getMPCategory($categoryID, $secondCall = false) {
-		$mpID = ($this->isStoreCategory) ? $this->mpID : '0';
-		
+		if ($this->isStoreCategory) {
+			$mpID = $this->mpID;
+			$validTo = gmdate('Y-m-d H:i:s', time() - $this->getCategoryValidityPeriod());
+		} else {
+			$mpID = '0';
+			$validTo = gmdate('Y-m-d H:i:s', time() - $this->getStoreCategoryValidityPeriod());
+		}
 		# Ermittle Namen, CategoryID und ParentID,
 		# dann das gleiche fuer die ParentCategory usw.
 		# bis bei Top angelangt (CategoryID = ParentID)
@@ -263,6 +272,7 @@ abstract class MarketplaceCategoryMatching {
 			  FROM '.$this->getTableName().'
 			 WHERE CategoryID="'.$categoryID.'"
 			       AND mpID="'.$mpID.'"
+			       AND InsertTimestamp > "'.$validTo.'"
 			       '.($this->hasPlatformCol ? 'AND platform="'.$this->marketplace.'"' : '').'
 			 LIMIT 1
 		', false));
@@ -504,18 +514,25 @@ var mpCategorySelector = (function() {
 		$('#mpCategorySelector').jDialog({
 			width: '75%',
 			minWidth: '300px',
-			buttons: {
-				'<?php echo ML_BUTTON_LABEL_ABORT; ?>': function() {
-					$(this).dialog('close');
+			buttons: [
+				{
+					"text": "<?php echo ML_BUTTON_LABEL_ABORT; ?>",
+					"class": 'ml-btnreset',
+					"click": function () {
+						$(this).dialog("close");
+					}
 				},
-				'<?php echo ML_BUTTON_LABEL_OK; ?>': function() {
-					cID = returnCategoryID();
-					if (cID != false) {
-						callback(cID, tmpSelectedCat.html());
-						$(this).dialog('close');
+				{
+					"text": "<?php echo ML_BUTTON_LABEL_OK; ?>",
+					"click": function () {
+						cID = returnCategoryID();
+						if (cID != false) {
+							callback(cID, tmpSelectedCat.html());
+							$(this).dialog('close');
+						}
 					}
 				}
-			},
+			],
 			open: function(event, ui) {
 				//if (isStoreCategory) {
 				//	return;
@@ -593,16 +610,10 @@ $(document).ready(function() {
 				</table>
 			</form>';
 	}
-	
+
 	public function renderAjax() {
-		$id = '';
-		if (isset($_POST['id'])) {
-			if (($pos = strrpos($_POST['id'], '_')) !== false) {
-				$id = substr($_POST['id'], $pos+1);
-			} else {
-				$id = $_POST['id'];
-			}
-		}
+		$id = $this->getPostCategoryId();
+
 		$this->isStoreCategory = (array_key_exists('isStoreCategory', $_POST))
 			? (($_POST['isStoreCategory'] == 'false')
 				? false
@@ -636,6 +647,20 @@ $(document).ready(function() {
 				));
 			}
 		}
+	}
+
+	public function getPostCategoryId()
+	{
+		$id = '';
+		if (isset($_POST['id'])) {
+			if (($pos = strrpos($_POST['id'], '_')) !== false) {
+				$id = substr($_POST['id'], $pos + 1);
+			} else {
+				$id = $_POST['id'];
+			}
+		}
+
+		return $id;
 	}
 	
 }

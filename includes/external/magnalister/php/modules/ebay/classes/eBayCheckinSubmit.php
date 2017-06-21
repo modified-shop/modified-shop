@@ -157,6 +157,31 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		}
 		return $value;
 	}
+
+	private function appendMobileDescriptionIfConfigured(&$sDesc, $pID, $product, $data, $sWeight, $formatted_vpe) {
+		if (getDBConfigValue('ebay.template.usemobile', $this->_magnasession['mpID'], false) === 'true') {
+			$sMobileDescription = stringToUTF8(
+				eBaySubstituteTemplate(
+					$this->_magnasession['mpID'],
+					$pID,
+					getDBConfigValue('ebay.template.mobilecontent', $this->_magnasession['mpID']),
+					array(
+						'#TITLE#' => fixHTMLUTF8Entities($product['Title']),
+						'#ARTNR#' => $product['ProductsModel'],
+						'#PID#' => $pID,
+						'#SKU#' => $data['submit']['SKU'],
+						'#SHORTDESCRIPTION#' => html_entity_decode(fixHTMLUTF8Entities($product['ShortDescription'])),
+						'#WEIGHT#' => $sWeight,
+						'#DESCRIPTION#' => html_entity_decode(fixHTMLUTF8Entities($product['Description'])),
+						'#PRICE#' => $this->simpleprice->setPrice($data['submit']['Price'])->formatWOCurrency(),
+						'#VPE#' => $formatted_vpe,
+						'#BASEPRICE#' => $formatted_vpe,
+					)
+				)
+			);
+			EbayHelper::appendMobileDescription($sDesc, $sMobileDescription);
+		}
+	}
 	
 	/**
 	 * @todo check if ((masterArticle && haveVariants)||normalArticle)
@@ -178,6 +203,14 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			}
 		}
 		$isPicturePackActive = getDBConfigValue(array('ebay.picturepack', 'val'), $this->_magnasession['mpID']);
+		$blBusinessPoliciesSet = geteBayBusinessPolicies();
+		$defaultSellerProfiles = $blBusinessPoliciesSet
+			? json_encode(array(
+				'Payment'  => getDBConfigValue('ebay.default.paymentsellerprofile', $this->_magnasession['mpID']),
+				'Shipping' => getDBConfigValue('ebay.default.shippingsellerprofile', $this->_magnasession['mpID']),
+				'Return'   => getDBConfigValue('ebay.default.returnsellerprofile', $this->_magnasession['mpID']) 
+			))
+			: '';
 		//data which comes direct from variables
 		foreach (array(
 			array('var' => 'db',		'varKey' => 'ebay.country',		'submitKey' => 'Country',		'empty' => true), 
@@ -196,6 +229,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			array('var' => 'property',	'varKey' => 'HitCounter',		'submitKey' => 'HitCounter',		'empty' => false), 
 			# ShippingDetails will be manipulated later
 			array('var' => 'property',	'varKey' => 'ShippingDetails',		'submitKey' => 'ShippingDetails',		'empty' => true, 'sanitize' => 'json'), 
+			array('var' => 'property',	'varKey' => 'SellerProfiles',		'submitKey' => 'SellerProfiles',		'default' => $defaultSellerProfiles, 'empty' => false, 'sanitize' => 'json'), 
 			array('var' => 'property',	'varKey' => 'Subtitle',			'submitKey' => 'ItemSubTitle',		'empty' => false), 
 			array('var' => 'property',	'varKey' => 'ConditionID',		'submitKey' => 'ConditionID',		'empty' => false), 
 			array('var' => 'property',	'varKey' => 'SecondaryCategory',	'submitKey' => 'SecondaryCategory',		'empty' => false),
@@ -369,6 +403,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				$data['submit']['Price'] = $product['PriceReduced'][$listingMasterType];
 			}
 		}
+
 		// if only Variations have prices, use the first found as main price
 		if (    (    !array_key_exists('Price', $data['submit'])
 		          || ((float)$data['submit']['Price'] < 1.0)
@@ -383,6 +418,27 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				   ) {
 					$data['submit']['Price'] = $v['Price']['fixed'];
 					break;
+				}
+			}
+		}
+
+		// StrikePrice: nur nach Konfig
+		// "nicht verwenden": Kundenruppe = -1
+		if (getDBConfigValue('ebay.strike.price.group', $this->_magnasession['mpID'], -1) > -1) {
+			$sStrikePriceKind = getDBConfigValue('ebay.strike.price.kind', $this->_magnasession['mpID'], 'OldPrice');
+			$data['submit']["$sStrikePriceKind"] = makePrice($pID, 'StrikePrice');
+
+		// strike prices for Variations (MLProducts only sets Price['strike']
+			if (array_key_exists('Variations', $product)
+			     && is_array($product['Variations'])) {
+				foreach ($product['Variations'] as &$v) {
+					if (    array_key_exists('Price', $v)
+					     && array_key_exists('fixed', $v['Price'])
+					     && array_key_exists('strike', $v['Price'])
+					     && $v['Price']['strike'] > $v['Price']['fixed']
+					   ) {
+						$v["$sStrikePriceKind"] = $v['Price']['strike'];
+					}
 				}
 			}
 		}
@@ -417,11 +473,40 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			),
 			$formatted_vpe
 		);
-		
+
+		if (isset($product['Weight'])) {
+			if (is_array($product['Weight'])
+			    && array_key_exists('Unit',  $product['Weight'])
+			    && array_key_exists('Value', $product['Weight'])
+			    && ((float)$product['Weight']['Value'] > 0.0)
+			) {
+				$sWeight = $product['Weight']['Value']
+				.' '.$product['Weight']['Unit'];
+			} else {
+				$sWeight = '';
+			}
+		} else {
+			$fWeight = (float)MagnaDB::gi()->fetchOne("SELECT products_weight FROM ".TABLE_PRODUCTS." WHERE products_id='".$pID."'");
+			if ($fWeight > 0.0) $sWeight = (string)$fWeight;
+			else $sWeight = '';
+		}
+	
 		if (!empty($data['submit']['Description'])) {
 			$data['submit']['Description'] = stringToUTF8($data['submit']['Description']);
+			if (array_key_exists('MobileDescription', $data['submit'])
+			    && !empty($data['submit']['MobileDescription'])) {
+				EbayHelper::appendMobileDescription($data['submit']['Description'], $data['submit']['MobileDescription']);
+				unset($data['submit']['MobileDescription']);
+			} else {
+				$this->appendMobileDescriptionIfConfigured($data['submit']['Description'], $pID, $product, $data, $sWeight, $formatted_vpe);
+			}
 		} elseif (!empty($propertiesRow['Description']) && $this->verify) {
 			$data['submit']['Description'] = stringToUTF8($propertiesRow['Description']);
+			if (array_key_exists('MobileDescription', $propertiesRow)
+			    && !empty($propertiesRow['MobileDescription'])) {
+				EbayHelper::appendMobileDescription($data['submit']['Description'], $propertiesRow['MobileDescription']);
+				unset($propertiesRow['MobileDescription']);
+			}
 		} elseif(!empty($propertiesRow['Description'])) {
 			# Beim Uebermitteln Preis einsetzen
 			$data['submit']['Description'] = eBaySubstituteTemplate(
@@ -434,8 +519,22 @@ class eBayCheckinSubmit extends CheckinSubmit {
 					'#BASEPRICE#' => $formatted_vpe
 				)
 			);
+			if (array_key_exists('MobileDescription', $propertiesRow)
+			    && !empty($propertiesRow['MobileDescription'])) {
+				$data['submit']['MobileDescription'] = eBaySubstituteTemplate(
+					$this->_magnasession['mpID'],
+					$pID,
+					$propertiesRow['MobileDescription'],
+					array(
+						'#PRICE#' => $this->simpleprice->setPrice($data['submit']['Price'])->formatWOCurrency()
+					)
+				);
+				EbayHelper::appendMobileDescription($data['submit']['Description'], $data['submit']['MobileDescription']);
+				unset($data['submit']['MobileDescription']);
+			} else {
+				$this->appendMobileDescriptionIfConfigured($data['submit']['Description'], $pID, $product, $data, $sWeight, $formatted_vpe);
+			}
 		} else {
-			$fWeight = MagnaDB::gi()->fetchOne("SELECT products_weight FROM ".TABLE_PRODUCTS." WHERE products_id='".$pID."'");
 			$data['submit']['Description'] = stringToUTF8(
 				substitutePictures(
 					eBaySubstituteTemplate(
@@ -448,19 +547,42 @@ class eBayCheckinSubmit extends CheckinSubmit {
 							'#PID#' => $pID,
 							'#SKU#' => $data['submit']['SKU'],
 							'#SHORTDESCRIPTION#' => html_entity_decode(fixHTMLUTF8Entities($product['ShortDescription'])),
-							'#WEIGHT#' => ((float)$fWeight>0)?$fWeight:'',
+							'#WEIGHT#' => $sWeight,
 							'#DESCRIPTION#' => html_entity_decode(fixHTMLUTF8Entities($product['Description'])),
 							'#PICTURE1#' => is_array($propertiesRow['PictureURL']) ? current($propertiesRow['PictureURL']) : $propertiesRow['PictureURL'],
 							'#PRICE#' => $this->simpleprice->setPrice($data['submit']['Price'])->formatWOCurrency(),
 							'#VPE#' => $formatted_vpe,
 							'#BASEPRICE#' => $formatted_vpe,
-							'#WEIGHT#' => ((float)$product['products_weight']>0)?$product['products_weight']:'',
 						)
 					), 
 					$pID, 
 					getDBConfigValue('ebay.imagepath', $this->_magnasession['mpID']) 
 				)
 			);
+			$this->appendMobileDescriptionIfConfigured($data['submit']['Description'], $pID, $product, $data, $sWeight, $formatted_vpe);
+			/*if (getDBConfigValue('ebay.template.usemobile', $_MagnaSession['mpID'], false) === 'true') {
+				$data['submit']['MobileDescription'] = stringToUTF8(
+					eBaySubstituteTemplate(
+						$this->_magnasession['mpID'],
+						$pID,
+						getDBConfigValue('ebay.template.mobilecontent', $this->_magnasession['mpID']),
+						array(
+							'#TITLE#' => fixHTMLUTF8Entities($product['Title']),
+							'#ARTNR#' => $product['ProductsModel'],
+							'#PID#' => $pID,
+							'#SKU#' => $data['submit']['SKU'],
+							'#SHORTDESCRIPTION#' => html_entity_decode(fixHTMLUTF8Entities($product['ShortDescription'])),
+							'#WEIGHT#' => $sWeight,
+							'#DESCRIPTION#' => html_entity_decode(fixHTMLUTF8Entities($product['Description'])),
+							'#PRICE#' => $this->simpleprice->setPrice($data['submit']['Price'])->formatWOCurrency(),
+							'#VPE#' => $formatted_vpe,
+							'#BASEPRICE#' => $formatted_vpe,
+						)
+					)
+				);
+				EbayHelper::appendMobileDescription($data['submit']['Description'], $data['submit']['MobileDescription']);
+				unset($data['submit']['MobileDescription']);
+			}*/
 		}
 
 		# Subtitel: Wird 1:1 weitergegeben. Wenn zurückgesetzt, gibts keinen (ist nicht vorkonfigurierbar)
@@ -516,7 +638,6 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		if ('none' != ($value = getDBConfigValue('ebay.returnpolicy.warrantyduration', $this->_magnasession['mpID'], 'none'))) {
 			$data['submit']['ReturnPolicy']['WarrantyDurationOption'] = $value;
 		}
-		
 		
 		/**
 		 * @todo check configValue
@@ -670,6 +791,42 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		//echo '<table><tr><td>$data[submit]</td><td>$product</td><td>$data</td><td>$propertiesRow (<em>'.$this->properties['ListingType'].'</em>)</td></tr><tr><td style="vertical-align:top">'.print_m($data['submit']).'</td><td style="vertical-align:top">'.print_m($product).'</td><td style="vertical-align:top">'.print_m($data).'</td><td style="vertical-align:top">'.print_m($propertiesRow).'</td></tr></table>';
 
 		$aListingDetails = EbayHelper::getProductListingDetailsFromProduct($pID, $this->settings['language']);
+        
+        if (array_key_exists('ItemSpecifics', $data['submit']) && !empty($data['submit']['ItemSpecifics'])) {
+            global $_MagnaSession;
+            $aMatchingSwap = array(
+                'specific2details' => array(),
+                'details2specific' => array(),
+            );
+            foreach(array(
+                'EAN' => array('EAN', 'ISBN', 'UPC'), 
+                'MPN' => array('Herstellernummer', 'MPN')
+            ) as $sMatchingName => $aMatchingValues) {
+                $aMatching = getDBConfigValue($_MagnaSession['currentPlatform'] . '.listingdetails.'.strtolower($sMatchingName).'.dbmatching.table', $_MagnaSession['mpID'], false);
+                if(!is_array($aMatching) || empty($aMatching['column']) || empty($aMatching['table'])) {
+                    $aMatchingSwap['specific2details'][$sMatchingName] = $aMatchingValues;
+                } else {
+                    $aMatchingSwap['details2specific'][$sMatchingName] = $aMatchingValues;
+                }
+            }
+            foreach ($aMatchingSwap as $sMatchigSwapName => $aMatchingSwapValue) {
+                foreach ($data['submit']['ItemSpecifics'] as &$aSpecifics) {
+                    foreach ($aMatchingSwapValue as $sMatchingName => $aMatchingValues) {
+                        foreach ($aMatchingValues as $sSearchMatchingName) {
+                            if (array_key_exists($sSearchMatchingName, $aSpecifics)) {
+                                if ($sMatchigSwapName === 'specific2details') {
+                                    $aListingDetails[$sMatchingName] = $aSpecifics[$sSearchMatchingName];
+                                } else if (     empty($aSpecifics[$sSearchMatchingName])
+				            && !empty($aListingDetails[$sMatchingName] )  ) {
+                                    $aSpecifics[$sSearchMatchingName] = $aListingDetails[$sMatchingName];
+                                }
+                            }
+                        }
+                    }
+                    unset($aSpecifics);
+                }
+            }
+        }
 		$data['submit'] = array_merge($data['submit'], $aListingDetails);
 	}
 	

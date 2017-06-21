@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: meinpaket.php 3375 2013-12-07 14:15:05Z derpapst $
+ * $Id$
  *
  * (c) 2011 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)

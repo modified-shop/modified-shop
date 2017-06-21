@@ -246,20 +246,23 @@ var GenericCheckinSubmitAjaxController = (function (_super, $) {
 		if (this._result.uploadNotSync) {
 		    message = this.__('MessageUploadFinal') + '<br><br>' + this.__('MessageUploadNotSync');
 		}
-		
-		this._dialog({
-			'title': this.__('TitleInformation'),
+		if(this._result.showWithoutDialog !== "undefined" && $('#ml-html-content').length){
+                    $('#ml-html-content').html(this._result.showWithoutDialog)
+                }else{
+                    this._dialog({
+                            'title': this.__('TitleInformation'),
 			'message': strformat(
-				message,
-				this._result.state.success+'', this._result.state.total+''
-			),
-			'ok': function () {
-				if (this._result.redirect != undefined) {
-					window.location.href = this._result.redirect;
-					$.blockUI(blockUILoading);
-				}
-			}
-		});
+                                    message,
+                                    this._result.state.success+'', this._result.state.total+''
+                            ),
+                            'ok': function () {
+                                    if (this._result.redirect != undefined) {
+                                            window.location.href = this._result.redirect;
+                                            $.blockUI(blockUILoading);
+                                    }
+                            }
+                    });
+                }
 		if (this._result.finaldialogs.length > 0) {
 			this.processDialogs(this._result.finaldialogs);
 		}

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: order_details.php 6608 2016-04-05 16:34:46Z MaW $
+ * $Id$
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -70,7 +70,9 @@ function magnaGetOrderPlatformIcon($order) {
 	}
 	$filename = '';
 	if ($logo == 'amazon') {
-		if ($order['internaldata']['FulfillmentChannel'] != 'MFN') {
+		if ($order['internaldata']['FulfillmentChannel'] === 'MFN-Prime') {
+			$filename = 'amazon_orderview_prime';
+		} elseif ($order['internaldata']['FulfillmentChannel'] != 'MFN') {
 			$filename = 'amazon_fba_orderview';
 		} else if (isset($order['data']['ML_AMAZON_LABEL_BATCHID']) && !empty($order['data']['ML_AMAZON_LABEL_BATCHID'])) {
 			if (isset($order['data']['ML_ERROR_LABEL'])) {

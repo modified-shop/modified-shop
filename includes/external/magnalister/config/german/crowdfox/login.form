@@ -1,0 +1,22 @@
+{
+	"login": {
+		"headline": "Benutzername",
+		"fields": [{
+			"label": "Benutzername",
+			"key": "_#_platform_#_.mpusername",
+			"type": "text"
+		}, {
+			"label": "Passwort",
+			"key": "_#_platform_#_.mppassword",
+			"type": "password",
+			"settings": {
+				"save": false
+			}
+		},{
+            "label": "Firma",
+            "key": "_#_platform_#_.companyname",
+            "desc": "Firma welche bei der Registierung auf Crowdfox hinterlegt wurde.",
+            "type": "text"
+        }]
+    }
+}

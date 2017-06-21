@@ -41,7 +41,7 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 		));
 	}
 
-	protected function updateItem() {	
+	protected function updateItem() {
 		$this->cItem['SKU'] = trim($this->cItem['SKU']);
 		if (empty($this->cItem['SKU'])) {
 			$this->log("\nItemID " . $this->cItem['ItemID'] . ' has an emtpy SKU.');
@@ -102,6 +102,7 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 
 		$productTax = SimplePrice::getTaxByPID($this->cItem['pID']);
 		$taxFromConfig = getDBConfigValue($this->marketplace . '.checkin.mwst', $this->mpID);
+		$priceSignalConfig = getDBConfigValue($this->marketplace . '.price.signal', $this->mpID);
 		if ($bSyncPrice) {
 			// Check Price master
 			if (isset($this->cItem['Variations']) === false) {
@@ -110,12 +111,20 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 				// If PriceReduced is set use this one
 				if (isset($product['PriceReduced']['Price'])) {
 					$price = $product['PriceReduced']['Price'];
-				}								
+				}
 				
 				if (isset($taxFromConfig) && $taxFromConfig !== '') {
                     $price = $price * 100 / (100 + $productTax);
                     $price = round($price * (($taxFromConfig + 100) / 100), 2);
+					$price = $this->makeSignalPrice($price, $priceSignalConfig);
                 }
+
+                //Check if last digit (second decimal) is 0 or 5. If not set 5 as default last digit
+                $price =
+                    ((int)($price * 100) % 5) == 0
+                        ? $price
+                        : ((int)($price * 10) / 10) + 0.05
+                ;
 
 				// If price is lower, update it
 				if (isset($price) && (float)$price != (float)$this->cItem['Price']) {
@@ -170,7 +179,15 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 					if (isset($taxFromConfig) && $taxFromConfig !== '') {
 						$price = $price * 100 / (100 + $productTax);
 						$price = round($price * (($taxFromConfig + 100) / 100), 2);
+						$price = $this->makeSignalPrice($price, $priceSignalConfig);
 					}
+
+                    //Check if last digit (second decimal) is 0 or 5. If not set 5 as default last digit
+                    $price =
+                        ((int)($price * 100) % 5) == 0
+                            ? $price
+                            : ((int)($price * 10) / 10) + 0.05
+                    ;
 
 					if ((float)$price !== (float)$cVariation['Price']) {
 						$variant['Price'] = $price;
@@ -294,5 +311,20 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 			'Sync price: '.($this->syncPrice ? 'true' : 'false')." ==\n"
 		);
 		return true;
+	}
+
+	private function makeSignalPrice($price, $decimalDigits) {
+		if (empty($decimalDigits)) {
+			return $price;
+		}
+
+		//If price signal is single digit then just add price signal as last digit
+		if (strlen((string)$decimalDigits) == 1) {
+			$price = (0.1 * (int)($price * 10)) + ($decimalDigits / 100);
+		} else {
+			$price = ((int)$price) + ($decimalDigits / 100);
+		}
+
+		return $price;
 	}
 }

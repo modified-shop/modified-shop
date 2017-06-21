@@ -1,0 +1,140 @@
+{
+	"prepare": {
+		"fields": {
+			"imagepath": {
+				"label": "Bildpfad",
+				"key": "cdiscount.imagepath",
+				"type": "text",
+				"expertsetting": true
+			},
+			"standarddescription": {
+                "label": "Description",
+                "desc": "The product description must describe the product. It appears at the top of the product sheet under the wording. It must not content offers data. (Guarantuee, price, shipping, packaging...), html code or others codes. Description cannot exceed 420 characters.",
+                "key": "_#_platform_#_.prepare.standarddescription.dbmatching.table",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                  "alias": {
+                    "label": "<span class='tt'>`products_id`</span> Alias",
+                    "key": "_#_platform_#_.prepare.standarddescription.dbmatching.alias",
+                    "type": "text",
+                    "cssClasses": ["autoWidth"]
+                  }
+                }
+            },
+            "marketingdescription": {
+                "label": "Marketing description",
+                "desc": "The marketing description must describe the product. It appears in the tab 'Présentation produit'. It must not content offers data (guarantee, price, shipping, packaging ...). HTML code is allowed. Description cannot exceed 5000 characters.",
+                "key": "_#_platform_#_.prepare.marketingdescription.dbmatching.table",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                  "alias": {
+                    "label": "<span class='tt'>`products_id`</span> Alias",
+                    "key": "_#_platform_#_.prepare.marketingdescription.dbmatching.alias",
+                    "type": "text",
+                    "cssClasses": ["autoWidth"]
+                  }
+                }
+            },
+			"condition": {
+				"label": "Zustand",
+				"key": "cdiscount.itemcondition",
+				"type": "selection",
+				"values": null
+			},
+            "PreparationTime": {
+                "label": "Preparation Time (in days 1-10)",
+                "desc": "Preparation time for deliver product. It must be in days between 1 and 10.",
+                "key": "cdiscount.preparationtime",
+                "type": "text",
+                "default": "1",
+                "verify": "int",
+                "verifyFrom": 1,
+                "verifyTo": 10
+            },
+			"ShippingStandard": {
+				"label": "Shipping Standard",
+				"desc": "Standard way of shipping.<br>Additional shipping fee is when you allow to apply cheaper shipping fees if the customer orders several products in the same order.",
+				"cssClasses": ["autoWidth"],
+				"key": "cdiscount.shippingstandard",
+				"morefields": {
+				    "ShippingFeeStandard": {
+                        "label": "Shipping fee (&#8364;)",
+                        "cssClasses": ["autoWidth"],
+                        "key": "cdiscount.shippingfeestandard",
+                        "type": "text",
+                        "default": "0",
+                        "verify": "float"
+                    },
+				    "ShippingFeeExtraStandard": {
+                        "label": "Additional shipping fee (&#8364;)",
+                        "cssClasses": ["autoWidth"],
+                        "key": "cdiscount.shippingfeeextrastandard",
+                        "type": "text",
+                        "default": "0",
+                        "verify": "float"
+                    }
+				}
+			},
+			"ShippingTracked": {
+				"label": "Shipping Tracked",
+				"desc": "Tracked way of shipping.<br>Additional shipping fee is when you allow to apply cheaper shipping fees if the customer orders several products in the same order.",
+				"cssClasses": ["autoWidth"],
+				"key": "cdiscount.shippingtracked",
+				"morefields": {
+				    "ShippingFeeTracked": {
+                        "label": "Shipping fee (&#8364;)",
+                        "cssClasses": ["autoWidth"],
+                        "key": "cdiscount.shippingfeetracked",
+                        "type": "text",
+                        "default": "0",
+                        "verify": "float"
+                    },
+				    "ShippingFeeExtraStandard": {
+                        "label": "Additional shipping fee (&#8364;)",
+                        "cssClasses": ["autoWidth"],
+                        "key": "cdiscount.shippingfeeextratracked",
+                        "type": "text",
+                        "default": "0",
+                        "verify": "float"
+                    }
+				}
+			},
+			"ShippingRegistered": {
+				"label": "Shipping Registered",
+				"desc": "Registered way of shipping.<br>Additional shipping fee is when you allow to apply cheaper shipping fees if the customer orders several products in the same order.",
+				"cssClasses": ["autoWidth"],
+				"key": "cdiscount.shippingregistered",
+				"morefields": {
+				    "ShippingFeeRegistered": {
+                        "label": "Shipping fee (&#8364;)",
+                        "cssClasses": ["autoWidth"],
+                        "key": "cdiscount.shippingfeeregistered",
+                        "type": "text",
+                        "default": "0",
+                        "verify": "float"
+                    },
+				    "ShippingFeeExtraRegistered": {
+                        "label": "Additional shipping fee (&#8364;)",
+                        "cssClasses": ["autoWidth"],
+                        "key": "cdiscount.shippingfeeextraregistered",
+                        "type": "text",
+                        "default": "0",
+                        "verify": "float"
+                    }
+				}
+			},
+			"itemsPerPage": {
+				"label": "Ergebnisse",
+				"desc": "Hier k&ouml;nnen Sie festlegen, wie viele Produkte pro Seite beim Multimatching angezeigt werden sollen. <br\/>Je h&ouml;her die Anzahl, desto h&ouml;her auch die Ladezeit (bei 50 Ergebnissen ca. 30 Sekunden).",
+				"rightlabel": "pro Seite beim Multimatching",
+				"cssClasses": ["autoWidth"],
+				"key": "cdiscount.multimatching.itemsperpage",
+				"type": "text",
+				"default": "10",
+				"verify": "int"
+			}
+		}
+	}
+}

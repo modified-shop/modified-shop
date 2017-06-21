@@ -33,4 +33,7 @@ class_exists('MLProductList') or die();
 			</tr>
 		</tbody>
 	</table>
+	<?php if (method_exists($this, 'isPreparedDifferently') && $this->isPreparedDifferently($aRow)) { ?>
+		<span class="ml-warning" title="<?php echo ML_GENERAL_VARMATCH_ATTRIBUTE_DIFFERENT_ON_PRODUCT ?>">&nbsp;<span>
+	<?php } ?>
 </td>

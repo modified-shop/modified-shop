@@ -50,6 +50,48 @@ class TradoriaSyncInventory extends MagnaCompatibleSyncInventory {
 		if ($this->cItem['Parentage'] == 'Parent') return false;
 		return parent::updateQuantity();
 	}
+
+	protected function updateCustomFields(&$data) {
+	/* submit strikethrough prices
+	   if the main price changes
+	   (actually, we submit price and reduced_price to Rakuten API,
+	   but it's OldPrice / ManufacturersPrice and Price between our Plugins and our API)
+	*/
+		if (!$this->syncPrice) return;
+
+		/* update only, no inserting strike prices by synchro.
+		   Upload product anew to insert strike prices */
+		if (    !array_key_exists('ManufacturersPrice', $this->cItem)
+		     && !array_key_exists('OldPrice', $this->cItem)           ) return;
+
+		/* only update if the main price has changed */
+		if (!array_key_exists('Price', $data)) return;
+
+		$strikePrice = false;
+
+		$price = $this->simplePrice
+			->setPriceFromDB($this->cItem['pID'], $this->mpID, 'strike')
+			->addAttributeSurcharge($this->cItem['aID'])
+			->finalizePrice($this->cItem['pID'], $this->mpID, 'strike')
+			->getPrice();
+
+		if ($price > 0) {
+			$strikePriceKind = getDBConfigValue('tradoria.strike.price.kind', $this->mpID, 'OldPrice');
+			$this->log("\n\t".
+				'Submitting '.$strikePriceKind.' (old: '.
+				( array_key_exists('ManufacturersPrice', $this->cItem)
+				  ? $this->cItem['ManufacturersPrice']
+				  : $this->cItem['OldPrice'] )
+				.'; new: '.$price.')'
+			);
+			$strikePrice = $price;
+			$data["$strikePriceKind"] = $strikePrice;
+		} else {
+			$this->log("\n\t".
+				'No valid StrikePrice found'
+			);
+		}
+	}
 	
 	public function process() {
 		parent::process();

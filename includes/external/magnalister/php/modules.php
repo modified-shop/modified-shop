@@ -58,10 +58,18 @@ $_modules = array(
 				'views' => array (
 					'apply' => ML_AMAZON_NEW_ITMES,
 					'match' => ML_AMAZON_PRODUCT_MATCHING,
+					'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
 				)
 			),
 			#'apply' => ML_AMAZON_NEW_ITMES,
 			'checkin' => ML_GENERIC_CHECKIN,
+			'shippinglabel' => array (
+				'title' => ML_AMAZON_SHIPPINGLABEL,
+				'views' => array (
+					'upload' => ML_AMAZON_SHIPPINGLABEL_UPLOAD,
+					'overview' => ML_AMAZON_SHIPPINGLABEL_OVERVIEW,
+				),
+                        ),
 			'listings' => array (
 				'title' => ML_GENERIC_LISTINGS,
 				'views' => array (
@@ -268,7 +276,7 @@ $_modules = array(
 	),
 	'hitmeister' => array(
 		'title' => ML_MODULE_HITMEISTER,
-		'logo' => 'hitmeister',
+		'logo' => 'real_de',
 		'displayAlways' => false,
 		'requiredConfigKeys' => array (
 			'hitmeister.firstactivation',
@@ -289,7 +297,7 @@ $_modules = array(
 				'views' => array (
 					'apply' => ML_AMAZON_NEW_ITMES,
 					'match' => ML_AMAZON_PRODUCT_MATCHING,
-					//'varmatch' => ML_AYN24_VARIANT_MATCHING,
+					'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
 				)
 			),
 			'checkin' => ML_GENERIC_CHECKIN,
@@ -311,6 +319,130 @@ $_modules = array(
 		),
 		'type' => 'marketplace',
 	),
+	'cdiscount' => array(
+		'title' => ML_MODULE_CDISCOUNT,
+		'logo' => 'cdiscount',
+		'displayAlways' => false,
+		'requiredConfigKeys' => array (
+			'cdiscount.firstactivation',
+			'cdiscount.mpusername',
+			'cdiscount.mppassword',
+			'cdiscount.lang',
+			'cdiscount.itemcondition',
+			'cdiscount.import',
+			'cdiscount.multimatching.itemsperpage'
+		),
+		'pages' => array (
+			'prepare' => array (
+				'title' => ML_GENERIC_PREPARE,
+				'views' => array (
+					'apply' => ML_AMAZON_NEW_ITMES,
+//					'match' => ML_AMAZON_PRODUCT_MATCHING,
+					'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
+				)
+			),
+			'checkin' => ML_GENERIC_CHECKIN,
+			'listings' => array (
+				'title' => ML_GENERIC_LISTINGS,
+				'views' => array (
+					'inventory' => ML_GENERIC_INVENTORY,
+					'deleted' => ML_GENERIC_DELETED,
+				)
+			),
+			'errorlog' => ML_GENERIC_ERRORLOG,
+			'conf' => ML_GENERIC_CONFIGURATION,
+		),
+		'settings' => array (
+			'defaultpage' => 'prepare',
+			'subsystem' => 'Cdiscount',
+			'currency' => 'EUR',
+			'hasOrderImport' => true,
+		),
+		'type' => 'marketplace',
+	),
+    'priceminister' => array(
+        'title' => ML_MODULE_PRICEMINISTER,
+        'logo' => 'priceminister',
+        'displayAlways' => false,
+        'requiredConfigKeys' => array (
+            'priceminister.firstactivation',
+            'priceminister.apitoken',
+            'priceminister.mpusername',
+            'priceminister.mppassword',
+            'priceminister.lang',
+            'priceminister.itemcondition',
+            'priceminister.import',
+            'priceminister.multimatching.itemsperpage',
+            'priceminister.orderstatus.cancelreason'
+        ),
+        'pages' => array (
+            'prepare' => array (
+                'title' => ML_GENERIC_PREPARE,
+                'views' => array (
+                    'apply' => ML_AMAZON_NEW_ITMES,
+                    'match' => ML_AMAZON_PRODUCT_MATCHING,
+                    'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
+                )
+            ),
+            'checkin' => ML_GENERIC_CHECKIN,
+            'listings' => array (
+                'title' => ML_GENERIC_LISTINGS,
+                'views' => array (
+                    'inventory' => ML_GENERIC_INVENTORY,
+                    'deleted' => ML_GENERIC_DELETED,
+                )
+            ),
+            'errorlog' => ML_GENERIC_ERRORLOG,
+            'conf' => ML_GENERIC_CONFIGURATION,
+        ),
+        'settings' => array (
+            'defaultpage' => 'prepare',
+            'subsystem' => 'Priceminister',
+            'currency' => 'EUR',
+            'hasOrderImport' => true,
+        ),
+        'type' => 'marketplace',
+    ),
+
+    'crowdfox' => array(
+        'title' => ML_MODULE_CROWDFOX,
+        'logo' => 'crowdfox',
+        'displayAlways' => false,
+        'requiredConfigKeys' => array (
+            'crowdfox.firstactivation',
+            'crowdfox.mpusername',
+            'crowdfox.mppassword',
+            'crowdfox.companyname',
+            'crowdfox.lang',
+            'crowdfox.import',
+        ),
+        'pages' => array (
+            'prepare' => array (
+                'title' => ML_GENERIC_PREPARE,
+                'views' => array (
+                    'apply' => ML_AMAZON_NEW_ITMES,
+                    'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
+                )
+            ),
+            'checkin' => ML_GENERIC_CHECKIN,
+            'listings' => array (
+                'title' => ML_GENERIC_LISTINGS,
+                'views' => array (
+                    'inventory' => ML_GENERIC_INVENTORY,
+                    'deleted' => ML_GENERIC_DELETED,
+                )
+            ),
+            'errorlog' => ML_GENERIC_ERRORLOG,
+            'conf' => ML_GENERIC_CONFIGURATION,
+        ),
+        'settings' => array (
+            'defaultpage' => 'prepare',
+            'subsystem' => 'Crowdfox',
+            'currency' => 'EUR',
+            'hasOrderImport' => true,
+        ),
+        'type' => 'marketplace',
+    ),
 	'guenstiger' => array(
 		'title' => ML_MODULE_GUENSTIGER,
 		'logo' => 'guenstiger',
@@ -338,7 +470,7 @@ $_modules = array(
 		'settings' => array (
 			'subsystem' => 'ComparisonShopping',
 			'currency' => 'EUR',
-			'hasOrderImport' => false,
+			'hasOrderImport' => true,
 		),
 		'type' => 'marketplace',
 	),
@@ -380,12 +512,13 @@ $_modules = array(
 		'referer' => array('idealo.de'),
 		'requiredConfigKeys' => array (
 			'idealo.lang',
-			'idealo.inventorysync',
+			'idealo.inventorysync.price',
 			'idealo.shipping.country',
 			'idealo.shipping.method',
 			'idealo.shipping.cost',
 		),
 		'pages' => array (
+			'prepare' => ML_GENERIC_PREPARE,
 			'checkin' => ML_GENERIC_CHECKIN,
 			'listings' => array (
 				'title' => ML_GENERIC_LISTINGS,

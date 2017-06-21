@@ -1,0 +1,28 @@
+{
+	"prepare": {
+		"fields": {
+			"imagepath": {
+				"label": "Bildpfad",
+				"key": "priceminister.imagepath",
+				"type": "text",
+				"expertsetting": true
+			},
+			"condition": {
+				"label": "Zustand",
+				"key": "priceminister.itemcondition",
+				"type": "selection",
+				"values": null
+			},
+			"itemsPerPage": {
+				"label": "Ergebnisse",
+				"desc": "Hier k&ouml;nnen Sie festlegen, wie viele Produkte pro Seite beim Multimatching angezeigt werden sollen. <br\/>Je h&ouml;her die Anzahl, desto h&ouml;her auch die Ladezeit (bei 50 Ergebnissen ca. 30 Sekunden).",
+				"rightlabel": "pro Seite beim Multimatching",
+				"cssClasses": ["autoWidth"],
+				"key": "priceminister.multimatching.itemsperpage",
+				"type": "text",
+				"default": "10",
+				"verify": "int"
+			}
+		}
+	}
+}

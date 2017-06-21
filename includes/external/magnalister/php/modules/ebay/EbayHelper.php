@@ -180,4 +180,15 @@ class EbayHelper extends MagnaCompatibleHelper {
 
 		return $aListingDetails;
 	}
+
+	// add mobile description with the required tags at the end of the main description
+	// (when uploading product) 
+	public static function appendMobileDescription(&$mainDesc, $mobileDesc) {
+		if (empty($mobileDesc)) return;
+		$mobileDesc = trim(strip_tags($mobileDesc, '<ol></ol><ul></ul><li></li><br><br/><br />'));
+		if (empty($mobileDesc)) return;
+		$mainDesc .= '<div vocab="http://schema.org/" typeof="Product"><span property="description">'
+			.$mobileDesc
+			.'</span></div>';
+	}
 }

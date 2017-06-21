@@ -398,7 +398,9 @@ class HoodPrepareView extends MagnaCompatibleBase {
 		$fixedPrice = $this->price
 			->setFinalPriceFromDB($data['products_id'], $this->mpID, $pConf['Fixed'])
 			->format();  // fixed (will only be displayed)
-		
+		$strikePrice = $this->price
+			->setFinalPriceFromDB($data['products_id'], $this->mpID, $pConf['Strike'])
+			->format();  // strikeprice (UVP)
 		ob_start();
 		?>
 				<tr class="<?php echo (($oddEven = !$oddEven) ? 'odd' : 'even'); ?>">
@@ -434,6 +436,17 @@ class HoodPrepareView extends MagnaCompatibleBase {
 								<td></td>
 							</tr>
 						</tbody></table>
+						<?php if (getDBConfigValue('hood.strike.price.group', $this->mpID, -1) > -1): ?>
+						<table id="priceStrike" class="lightstlye line15"><tbody>
+							<tr>
+								<td><?php echo ML_HOOD_STRIKEPRICE_CALCULATED ?> : </td>
+								<td id="showCalcPrice" name="showCalcPrice">
+									<?php echo $strikePrice; ?> 
+								</td>
+								<td></td>
+							</tr>
+						</tbody></table>
+						<?php endif; ?>
 					</td>
 					<td class="info"><?php echo ML_HOOD_PRICE_FOR_HOOD ?></td>
 				</tr>

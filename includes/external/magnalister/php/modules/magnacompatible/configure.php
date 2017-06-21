@@ -296,7 +296,7 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 			$this->boxes .= '<p class="errorBox">'.ML_GENERIC_ERROR_TRACKING_CODE_MATCHING.'</p>';
 		}
 	}
-	
+
 	protected function loadChoiseValuesAfterProcessPOST() { }
 
 	public function process() {

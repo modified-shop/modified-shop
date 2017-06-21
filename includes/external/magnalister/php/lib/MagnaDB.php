@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaDB.php 6309 2015-12-17 01:05:22Z MaW $
+ * $Id$
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -460,8 +460,7 @@ class MagnaDB {
 		$this->start         = microtime(true);
 		$this->count         = 0;
 		$this->querytime     = 0;
-		// magic quotes are deprecated as of php 5.4
-		$this->escapeStrings = get_magic_quotes_gpc();
+		$this->setEscapeStrings();
 		
 		$this->access['host'] = DB_SERVER;
 		$this->access['user'] = DB_SERVER_USERNAME;
@@ -500,6 +499,18 @@ class MagnaDB {
 		$this->reloadTables();
 		
 		$this->initSession();
+	}
+	
+	/**
+	 * disables / enables stripslashes in escape()
+	 * @param bool $bl
+	 * @param null $bl default value
+	 * @return \MagnaDB
+	 */
+	public function setEscapeStrings ($bl = null) {
+		// magic quotes are deprecated as of php 5.4
+		$this->escapeStrings = $bl === null ? get_magic_quotes_gpc() : $bl;
+		return $this;
 	}
 	
 	protected function selectDriver() {

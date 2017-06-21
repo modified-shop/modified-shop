@@ -1,0 +1,19 @@
+{
+	"login": {
+		"headline": "Zugangsdaten",
+		"fields": [ {
+			"label": "Benutzername",
+			"desc": "Username is equal to your username on <a target=\"_blank\" href = \"https://seller.cdiscount.com/\">https://seller.cdiscount.com/</a>",
+			"key": "_#_platform_#_.mpusername",
+			"type": "text"
+		}, {
+			"label": "Passwort",
+			"desc": "On your Seller account page ( <a target=\"_blank\" href = \"https://seller.cdiscount.com/\">https://seller.cdiscount.com/</a> ), go to Your personal settings and there on bottom of page you can set your API password",
+			"key": "_#_platform_#_.mppassword",
+			"type": "password",
+			"settings": {
+				"save": false
+			}
+		}]
+	}
+}

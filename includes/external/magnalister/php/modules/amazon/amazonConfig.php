@@ -69,6 +69,71 @@ function amazonTopTenConfig($aArgs = array(), &$sValue = ''){
 	}
 }
 
+function AmazonShippingAddressConfig($args) {
+	global $_MagnaSession;
+	$sHtml = '<table>';
+	$form = array();
+	
+	$cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_amazon');
+	foreach ($args['subfields'] as $item){
+		$idkey = str_replace('.', '_', $item['key']);
+		$configValue = getDBConfigValue($item['key'], $_MagnaSession['mpID'],'');
+		$value = '';
+		if(isset($configValue[$args['currentIndex']])) {
+			$value = $configValue[$args['currentIndex']];
+		}
+		$item['key'] .= '][';
+		if(isset($item['params'])){
+			$item['params']['value'] = $value;
+		}
+		$sHtml .='<tr><td>'. $cG->renderLabel($item['label'], $idkey).':</td><td>'.$cG->renderInput($item,$value).'</td></tr>';
+	}
+	$sHtml .= '</table>';
+	return $sHtml;
+}
+
+function AmazonShippingLabelAddressCountryConfig($args) {
+	$sHtml = '<select name="conf['.$args['key'].']">';
+	foreach (amazonMfsGetConfigurationValues(current($args)) as $iso => $name){
+		$sHtml .='<option '.($args['value'] == $iso? 'selected=selected' : '' ).' value="'.$iso.'">'.fixHTMLUTF8Entities($name).'</option>';
+	}
+	$sHtml .= '</select>';
+	return $sHtml;
+}
+
+function AmazonShippingDimensionConfig($args) {
+	global $_MagnaSession;
+	$sHtml = '<table>';
+	$form = array();
+	
+	$cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_amazon');
+	//put description on separate that
+	$item = array_shift($args['subfields']);
+	$idkey = str_replace('.', '_', $item['key']);
+	$configValue = getDBConfigValue($item['key'], $_MagnaSession['mpID'],'');
+	$value = '';
+	if(isset($configValue[$args['currentIndex']])) {
+		$value = $configValue[$args['currentIndex']];
+	} 
+	$item['key'] .= '][';
+	$sHtml .='<tr><td>'. $cG->renderLabel($item['label'], $idkey).':</td><td  colspan="5" >'.$cG->renderInput($item,$value).'</td></tr>';
+	$sHtml .='<tr>';
+	foreach ($args['subfields'] as $item){
+		$idkey = str_replace('.', '_', $item['key']);
+		$configValue = getDBConfigValue($item['key'], $_MagnaSession['mpID'],'');
+		$value = null;
+		if(isset($configValue[$args['currentIndex']])) {
+			$value = $configValue[$args['currentIndex']];
+		}
+		$item['key'] .= '][';
+		$sHtml .='<td>'. $cG->renderLabel($item['label'], $idkey).':</td><td>'.$cG->renderInput($item,$value).'</td>';
+	}
+	$sHtml .='</tr>';
+	$sHtml .= '</table>';
+	return $sHtml;
+}
+
+
 function magnaUpdateCarrierCodes($args) {
 	global $_MagnaSession;
 
@@ -146,9 +211,49 @@ function amazonLeadtimeToShipMatching($args, &$value = '') {
 	return $html;
 }
 
-
 $aMarketplaces = amazonGetMarketplaces();
-$form['amazonaccount']['fields']['site']['values'] = $aMarketplaces['Sites'];
+
+function renderAmazonSite($args) {
+	global $_MagnaSession;
+	$aMarketplaces = amazonGetMarketplaces();
+	$values = $aMarketplaces['Sites'];
+
+	$amazonSite = getDBConfigValue($args['key'], $_MagnaSession['mpID'], array());
+	$html = '<select id="config_amazon_site" name="conf[' . $args['key'] . ']">';
+	foreach ($values as $key => $val) {
+		$html .= '<option value="' . $key . '" '.(
+			($key === $amazonSite)
+				? 'selected="selected"'
+				: ''
+			).'>'.$val.'</option>';
+	}
+	$html .= '</select>
+		<script>
+			(function($) {
+				$(document).ready(function() {
+					if ($("#config_amazon_site").val() === "US") {
+						$("#config_amazon_mwstoken").css("background-color", "buttonface");
+						$("#config_amazon_mwstoken").prop("disabled", true);
+					} else {
+						$("#config_amazon_mwstoken").css("background-color", "");
+						$("#config_amazon_mwstoken").prop("disabled", false);
+					}
+				});
+		
+				$("#config_amazon_site").change(function() {
+					if (this.value === "US") {
+						$("config_amazon_mwstoken").css("background-color", "buttonface");
+						$("#config_amazon_mwstoken").prop("disabled", true);
+					} else {
+						$("#config_amazon_mwstoken").css("background-color", "");
+						$("#config_amazon_mwstoken").prop("disabled", false);
+					}
+				});
+			})(jQuery);
+		</script>
+	';
+	return $html;
+}
 	
 $boxes = '';
 $auth = getDBConfigValue('amazon.authed', $_MagnaSession['mpID'], false);
@@ -286,6 +391,10 @@ if (!$auth['state']) {
 		// then change the default to false.
 		$form['stockCI']['fields']['manufacturerpartnumber']['default']['val'] = false;
 	}
+	$deliveryexpirience = amazonMfsGetConfigurationValues('ServiceOptions');
+	$form['shippinglabel']['fields']['deliveryexpirience']['values'] = array_key_exists('DeliveryExperience', $deliveryexpirience) ? $deliveryexpirience['DeliveryExperience'] : array();
+	$form['shippinglabel']['fields']['sizeunit']['values'] = amazonMfsGetConfigurationValues('SizeUnits');
+	$form['shippinglabel']['fields']['weightunit']['values'] = amazonMfsGetConfigurationValues('WeightUnits');
 }
 
 $cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_amazon');

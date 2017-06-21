@@ -64,11 +64,6 @@ function magnaUpdateCurrencyValues($args) {
 	return $ret;
 }
 
-/*function magnaConstraintPrefilledInfoSetting($args) {
-    global $magnaConfig;
-
-}*/
-
 function eBayGenToken($args, &$value = '') {
 	global $_MagnaSession, $_url;
 	$expires = getDBConfigValue('ebay.token.expires', $_MagnaSession['mpID'], '');
@@ -140,11 +135,32 @@ function eBayTopTenConfig($aArgs = array(), &$sValue = '') {
 
 function eBayShippingConfig($args, &$value = '') {
 	global $_MagnaSession;
-	$shipProc = new eBayShippingDetailsProcessor($args, 'conf', array(
-		'mp' => $_MagnaSession['mpID'],
-		'mode' => 'conf'
-	), $value);
-	return $shipProc->process();
+	if (geteBayBusinessPolicies(true) == false) {
+	// regular: render shipping details form
+		$shipProc = new eBayShippingDetailsProcessor($args, 'conf', array(
+			'mp' => $_MagnaSession['mpID'],
+			'mode' => 'conf'
+		), $value);
+		return $shipProc->process();
+	} else {
+	// business policies: just show the shipping services
+		if (empty($value)) {
+			$aDetails = getDBConfigValue(current($args), $_MagnaSession['mpID'], false);
+			$blInt = (current($args) == 'ebay.default.shipping.international');
+		} else {
+			$aDetails = json_decode($value, true);
+			$blInt =  (boolean)(strpos($value, 'location'));
+		}
+		if ($blInt) {
+			$sTableId = 'ebay_default_shipping_international';
+		} else {
+			$sTableId = 'ebay_default_shipping_local';
+		}
+		$html = '<table id="'.$sTableId.'" class="shippingDetails inlinetable nowrap autoWidth"><tbody>'
+		."\n".renderReadonlyShippingDetails($aDetails, $blInt)
+		."\n</tbody></table>\n";
+		return $html;
+	}
 }
 
 function tokenAvailable() {
@@ -179,8 +195,11 @@ if (isset($_GET['what'])) {
 		echo $iframeURL;
 		#require(DIR_WS_INCLUDES . 'application_bottom.php');
 		exit();
+	} elseif ($_GET['what'] == 'GetSellerProfileData'){
+		eBayGetSellerProfileData($_GET['value']);
+		exit();
 	} elseif ($_GET['what'] == 'topTenConfig'){
-		ebayTopTenConfig();
+		eBayTopTenConfig();
 		exit();
 	}
 }
@@ -246,6 +265,43 @@ if (array_key_exists('conf', $_POST)) {
 	    }
 	}
 
+	// Business Policies / Shipping Seller Profile: set the shipping discount rules as the Profile defines
+	if (array_key_exists('ebay.default.shippingsellerprofile', $_POST['conf'])) {
+		$aDiscountProfiles = getDBConfigValue('ebay.shippingprofiles', $_MagnaSession['mpID'], false);
+		if (false == $aDiscountProfiles) $aDiscountProfiles = geteBayShippingDiscountProfiles(true);
+		$aSellerProfiles = getDBConfigValue('ebay.sellerprofiles', $_MagnaSession['mpID'], false);
+		$aDefaultShippingSellerProfileData = $aSellerProfiles['Profiles'][$_POST['conf']['ebay.default.shippingsellerprofile']];
+		if (array_key_exists('ShippingDiscount', $aDefaultShippingSellerProfileData)) {
+			if (array_key_exists('local', $aDefaultShippingSellerProfileData['ShippingDiscount'])) {
+				setDBConfigValue('ebay.default.shippingprofile.local', $_MagnaSession['mpID'], $aDefaultShippingSellerProfileData['ShippingDiscount']['local'], true);
+			} else {
+				setDBConfigValue('ebay.default.shippingprofile.local', $_MagnaSession['mpID'], 0, true);
+			}
+			if (array_key_exists('international', $aDefaultShippingSellerProfileData['ShippingDiscount'])) {
+				setDBConfigValue('ebay.default.shippingprofile.international', $_MagnaSession['mpID'], $aDefaultShippingSellerProfileData['ShippingDiscount']['international'], true);
+			} else {
+				setDBConfigValue('ebay.default.shippingprofile.international', $_MagnaSession['mpID'], 0, true);
+			}
+			if (array_key_exists('LocalPromotionalDiscount', $aDefaultShippingSellerProfileData['ShippingDiscount'])
+			     && ('true' === $aDefaultShippingSellerProfileData['ShippingDiscount']['LocalPromotionalDiscount'])) {
+				setDBConfigValue('ebay.shippingdiscount.local', $_MagnaSession['mpID'], '{"val":true}', true);
+			} else {
+				setDBConfigValue('ebay.shippingdiscount.local', $_MagnaSession['mpID'], '{"val":false}', true);
+			}
+			if (array_key_exists('InternationalPromotionalDiscount', $aDefaultShippingSellerProfileData['ShippingDiscount'])
+			     && ('true' === $aDefaultShippingSellerProfileData['ShippingDiscount']['InternationalPromotionalDiscount'])) {
+				setDBConfigValue('ebay.shippingdiscount.international', $_MagnaSession['mpID'], '{"val":true}', true);
+			} else {
+				setDBConfigValue('ebay.shippingdiscount.international', $_MagnaSession['mpID'], '{"val":false}', true);
+			}
+		} else {
+			setDBConfigValue('ebay.default.shippingprofile.local', $_MagnaSession['mpID'], 0, true);
+			setDBConfigValue('ebay.default.shippingprofile.international', $_MagnaSession['mpID'], 0, true);
+			setDBConfigValue('ebay.shippingdiscount.local', $_MagnaSession['mpID'], '{"val":false}', true);
+			setDBConfigValue('ebay.shippingdiscount.international', $_MagnaSession['mpID'], '{"val":false}', true);
+		}
+	}
+
 	unset($currencyError);
 	$sp = new SimplePrice();
 	if ($auth['state'] && isset($_POST['conf']['ebay.currency']) && !$sp->currencyExists($_POST['conf']['ebay.currency'])) {
@@ -271,6 +327,11 @@ if (array_key_exists('conf', $_POST)) {
 		)
 	) {
 		$boxes .= '<p class="errorBox">'.ML_GENERIC_ERROR_TRACKING_CODE_MATCHING.'</p>';
+	}
+	if (array_key_exists('ebay.template.mobilecontent', $_POST['conf'])) {
+	// Mobile description: only list elements and linebreaks allowed
+		$_POST['conf']['ebay.template.mobilecontent'] =
+			ltrim(strip_tags($_POST['conf']['ebay.template.mobilecontent'], '<ol></ol><ul></ul><li></li><br><br/><br />'), '/ ');
 	}
 } else {
 	$nSite = getDBConfigValue('ebay.site', $_MagnaSession['mpID']);
@@ -299,12 +360,94 @@ if ($auth['state']) {
 		setDBConfigValue('ebay.authed', $_MagnaSession['mpID'], $auth, true);
 		
 	} else {
-		#$form['listingdefaults']['fields']['paymentmethod']['values'] = $payment;
 		$form['payment']['fields']['paymentmethod']['values'] = $payment;
 	
 		$shippingprofiles = geteBayShippingDiscountProfiles();
 		$form['shipping']['fields']['shippingprofilelocal']['values'] = $shippingprofiles;
 		$form['shipping']['fields']['shippingprofileinternational']['values'] = $shippingprofiles;
+	}
+	/* Business Policies / Rahmenbedingungen für Ihre Angebote */
+	$blBusinessPoliciesSet = geteBayBusinessPolicies(true);
+	if (!$blBusinessPoliciesSet) {
+		// default case (no business policies)
+		unset($form['payment']['fields']['paymentsellerprofile']    );
+		unset($form['shipping']['fields']['shippingsellerprofile']  );
+		unset($form['returnpolicy']['fields']['returnsellerprofile']);
+	} else {
+		/* if Business Policies set, use SellerProfiles to fill all payment + shipping + return fields */
+		$form['payment']['fields']['paymentsellerprofile']['values']     = geteBaySellerPaymentProfiles();
+		$form['shipping']['fields']['shippingsellerprofile']['values']   = geteBaySellerShippingProfiles();
+		$form['returnpolicy']['fields']['returnsellerprofile']['values'] = geteBaySellerReturnProfiles();
+		$sellerProfileContents = getDBConfigValue('ebay.sellerprofile.contents', $_MagnaSession['mpID']);
+		$defaultPaymentSellerProfile  =  getDBConfigValue('ebay.default.paymentsellerprofile', $_MagnaSession['mpID'], 0);
+		$defaultShippingSellerProfile =  getDBConfigValue('ebay.default.shippingsellerprofile', $_MagnaSession['mpID'], 0);
+		$defaultReturnSellerProfile   =  getDBConfigValue('ebay.default.returnsellerprofile', $_MagnaSession['mpID'], 0);
+		setDBConfigValue('ebay.default.paymentmethod', $_MagnaSession['mpID'], $sellerProfileContents['Payment'][$defaultPaymentSellerProfile]['paymentmethod'], true);
+		setDBConfigValue('ebay.paypal.address', $_MagnaSession['mpID'], $sellerProfileContents['Payment'][$defaultPaymentSellerProfile]['paypal.address'], true);
+		setDBConfigValue('ebay.paymentinstructions', $_MagnaSession['mpID'], fixHTMLUTF8Entities($sellerProfileContents['Payment'][$defaultPaymentSellerProfile]['paymentinstructions']), true);
+		if (array_key_exists('DispatchTimeMax', $sellerProfileContents['Shipping'][$defaultShippingSellerProfile])) setDBConfigValue('ebay.DispatchTimeMax', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['DispatchTimeMax'], true);
+		setDBConfigValue('ebay.default.shipping.local', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shipping.local'], true);
+		setDBConfigValue('ebay.default.shipping.international', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shipping.international'], true);
+		setDBConfigValue('ebay.default.shippingprofile.local', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingprofile.local'], true);
+		setDBConfigValue('ebay.default.shippingprofile.international', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingprofile.international'], true);
+		setDBConfigValue('ebay.shippingdiscount.local', $_MagnaSession['mpID'], (isset($sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingdiscount.local']) ? $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingdiscount.local'] : '{"val":false}'), true);
+		setDBConfigValue('default.shippingdiscount.international', $_MagnaSession['mpID'], (isset($sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingdiscount.international']) ? $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingdiscount.international'] : '{"val":false}'), true);
+		setDBConfigValue('ebay.returnpolicy.returnsaccepted', $_MagnaSession['mpID'], $sellerProfileContents['Return'][$defaultReturnSellerProfile]['returnsaccepted'], true);
+		setDBConfigValue('ebay.returnpolicy.returnswithin', $_MagnaSession['mpID'], $sellerProfileContents['Return'][$defaultReturnSellerProfile]['returnswithin'], true);
+		setDBConfigValue('ebay.returnpolicy.shippingcostpaidby', $_MagnaSession['mpID'], $sellerProfileContents['Return'][$defaultReturnSellerProfile]['shippingcostpaidby'], true);
+		setDBConfigValue('ebay.returnpolicy.description', $_MagnaSession['mpID'], fixHTMLUTF8Entities($sellerProfileContents['Return'][$defaultReturnSellerProfile]['description']), true);
+		/* disable fields which now depend from seller profiles */
+?><script>/*<!CDATA[*/
+	$(document).ready(function() {
+		$('select[id="config_ebay_DispatchTimeMax"]').prop('disabled', true);
+		$('select[id="config_ebay_default_paymentmethod"]').prop('disabled', true);
+		$('input[id="config_ebay_paypal_address"]').prop('disabled', true);
+		$('textarea[id="config_ebay_paymentinstructions"]').prop('disabled', true);
+		$('select[id="config_ebay_default_shippingprofile_local"]').prop('disabled', true);
+		$('input[id="conf_ebay.shippingdiscount.local_val"]').prop('disabled', true);
+		$('select[id="config_ebay_default_shippingprofile_international"]').prop('disabled', true);
+		$('input[id="conf_ebay.shippingdiscount.international_val"]').prop('disabled', true);
+		$('select[id="config_ebay_returnpolicy_returnsaccepted"]').prop('disabled', true);
+		$('select[id="config_ebay_returnpolicy_returnswithin"]').prop('disabled', true);
+		$('select[id="config_ebay_returnpolicy_shippingcostpaidby"]').prop('disabled', true);
+		$('textarea[id="config_ebay_returnpolicy_description"]').prop('disabled', true);
+
+		$('select[id="config_ebay_DispatchTimeMax"]').css('background-color','#dfdfdf');
+		$('select[id="config_ebay_default_paymentmethod"]').css('background-color','#dfdfdf');
+		$('input[id="config_ebay_paypal_address"]').css('background-color','#dfdfdf');
+		$('textarea[id="config_ebay_paymentinstructions"]').css('background-color','#dfdfdf');
+		$('select[id="config_ebay_default_shippingprofile_local"]').css('background-color','#dfdfdf');
+		$('input[id="conf_ebay.shippingdiscount.local_val"]').css('background-color','#dfdfdf');
+		$('select[id="config_ebay_default_shippingprofile_international"]').css('background-color','#dfdfdf');
+		$('input[id="conf_ebay.shippingdiscount.international_val"]').css('background-color','#dfdfdf');
+		$('select[id="config_ebay_returnpolicy_returnsaccepted"]').css('background-color','#dfdfdf');
+		$('select[id="config_ebay_returnpolicy_returnswithin"]').css('background-color','#dfdfdf');
+		$('select[id="config_ebay_returnpolicy_shippingcostpaidby"]').css('background-color','#dfdfdf');
+		$('textarea[id="config_ebay_returnpolicy_description"]').css('background-color','#dfdfdf');
+	});
+/*]]>*/</script><?php
+		/* add annotations to info texts for disabled fields */
+		foreach($form['payment']['fields'] as $sPaymentFieldName => &$aPaymentField) {
+			if ('paymentsellerprofile' == $sPaymentFieldName) continue;
+			$aPaymentField['desc'] =
+				'<span style="color:dimgray">'.$aPaymentField['desc'].'</span><br /><br />'
+				.ML_EBAY_NOTE_DISABLED_BC_OF_BUSINESSPOLICIES_PAYMENT; 
+		}
+		$form['listingdefaults']['fields']['dispatchtimemax']['desc'] = 
+			'<span style="color:dimgray">'.$form['listingdefaults']['fields']['dispatchtimemax']['desc'].'</span><br /><br />'
+			.ML_EBAY_NOTE_DISABLED_BC_OF_BUSINESSPOLICIES_SHIPPING;
+		foreach($form['shipping']['fields'] as $sShippingFieldName => &$aShippingField) {
+			if ('shippingsellerprofile' == $sShippingFieldName) continue;
+			$aShippingField['desc'] =
+				'<span style="color:dimgray">'.$aShippingField['desc'].'</span><br /><br />'
+				.ML_EBAY_NOTE_DISABLED_BC_OF_BUSINESSPOLICIES_SHIPPING; 
+		}
+		foreach($form['returnpolicy']['fields'] as $sReturnFieldName => &$aReturnField) {
+			if ('returnsellerprofile' == $sReturnFieldName) continue;
+			$aReturnField['desc'] =
+				'<span style="color:dimgray">'.$aReturnField['desc'].'</span><br /><br />'
+				.ML_EBAY_NOTE_DISABLED_BC_OF_BUSINESSPOLICIES_RETURN; 
+		}
 	}
 }
 
@@ -331,10 +474,8 @@ if (!$auth['state']) {
 	if (getDBConfigValue('ebay.token', $_MagnaSession['mpID'], '') !== '__saved__') {
 		tokenAvailable();
 	}
-	#if (!is_array($form['listingdefaults']['fields']['paymentmethod']['values'])) {
-	#	$form['listingdefaults']['fields']['paymentmethod']['values'] = geteBayPaymentOptions();
-	#}
-	if (!is_array($form['payment']['fields']['paymentmethod']['values'])) {
+	if (  (!$blBusinessPoliciesSet) 
+	    &&(!is_array($form['payment']['fields']['paymentmethod']['values']))) {
 		$form['payment']['fields']['paymentmethod']['values'] = geteBayPaymentOptions();
 	}
 	
@@ -352,6 +493,17 @@ if (!$auth['state']) {
 	} else {
 		unset($form['fixedsettings']['fields']['whichprice']);
 	}	
+	if (array_key_exists('whichstrikeprice', $form['fixedsettings']['fields'])) {
+	// vorerst auskommentiert aus config
+		mlGetCustomersStatus($form['fixedsettings']['fields']['whichstrikeprice'], true);
+		if (!empty($form['fixedsettings']['fields']['whichstrikeprice'])) {
+			$form['fixedsettings']['fields']['whichstrikeprice']['values']['-1'] = ML_LABEL_DONT_USE;
+			$form['fixedsettings']['fields']['whichstrikeprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
+			ksort($form['fixedsettings']['fields']['whichstrikeprice']['values']);
+		} else {
+			unset($form['fixedsettings']['fields']['whichstrikeprice']);
+		}
+	}
 	
 	mlGetCustomersStatus($form['chinesesettings']['fields']['whichprice'], true);
 	if (!empty($form['chinesesettings']['fields']['whichprice'])) {
@@ -565,6 +717,31 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 	
 
 	$cG->setRenderTabIdent(true);
+	// if Business Policies (Seller Profiles) submitted, adjust resp. fields to display
+	if (    array_key_exists('conf', $_POST)
+	     && is_array($_POST['conf'])) {
+		$sellerProfileContents = getDBConfigValue('ebay.sellerprofile.contents', $_MagnaSession['mpID']);
+		if (array_key_exists('ebay.default.paymentsellerprofile', $_POST['conf'])) {
+			$_POST['conf']['ebay.default.paymentmethod'] = $sellerProfileContents['Payment'][$_POST['conf']['ebay.default.paymentsellerprofile']]['paymentmethod'];
+			$_POST['conf']['ebay.paypal.address'] = $sellerProfileContents['Payment'][$_POST['conf']['ebay.default.paymentsellerprofile']]['paypal.address'];
+			$_POST['conf']['ebay.paymentinstructions'] = fixHTMLUTF8Entities($sellerProfileContents['Payment'][$_POST['conf']['ebay.default.paymentsellerprofile']]['paymentinstructions']);
+		}
+		if (array_key_exists('ebay.default.shippingsellerprofile', $_POST['conf'])) {
+			if (array_key_exists('DispatchTimeMax', $sellerProfileContents['Shipping'][$_POST['conf']['ebay.default.shippingsellerprofile']])) $_POST['conf']['ebay.DispatchTimeMax'] = $sellerProfileContents['Shipping'][$_POST['conf']['ebay.default.shippingsellerprofile']]['DispatchTimeMax'];
+			$_POST['conf']['ebay.default.shipping.local'] = $sellerProfileContents['Shipping'][$_POST['conf']['ebay.default.shippingsellerprofile']]['shipping.local'];
+			$_POST['conf']['ebay.default.shipping.international'] = $sellerProfileContents['Shipping'][$_POST['conf']['ebay.default.shippingsellerprofile']]['shipping.international'];
+			$_POST['conf']['ebay.default.shippingprofile.local'] = $sellerProfileContents['Shipping'][$_POST['conf']['ebay.default.shippingsellerprofile']]['shippingprofile.local'];
+			$_POST['conf']['ebay.default.shippingprofile.international'] = $sellerProfileContents['Shipping'][$_POST['conf']['ebay.default.shippingsellerprofile']]['shippingprofile.international'];
+			$_POST['conf']['ebay.shippingdiscount.local'] = $sellerProfileContents['Shipping'][$_POST['conf']['ebay.default.shippingsellerprofile']]['shippingdiscount.local'];
+			$_POST['conf']['ebay.shippingdiscount.international'] = $sellerProfileContents['Shipping'][$_POST['conf']['ebay.default.shippingsellerprofile']]['shippingdiscount.international'];
+		}
+		if (array_key_exists('ebay.default.returnsellerprofile', $_POST['conf'])) {
+			$_POST['conf']['ebay.returnpolicy.returnsaccepted'] = $sellerProfileContents['Return'][$_POST['conf']['ebay.default.returnsellerprofile']]['returnsaccepted'];
+			$_POST['conf']['ebay.returnpolicy.returnswithin'] = $sellerProfileContents['Return'][$_POST['conf']['ebay.default.returnsellerprofile']]['returnswithin'];
+			$_POST['conf']['ebay.returnpolicy.shippingcostpaidby'] = $sellerProfileContents['Return'][$_POST['conf']['ebay.default.returnsellerprofile']]['shippingcostpaidby'];
+			$_POST['conf']['ebay.returnpolicy.description'] = fixHTMLUTF8Entities($sellerProfileContents['Return'][$_POST['conf']['ebay.default.returnsellerprofile']]['description']);
+		}
+	}
 	$allCorrect = $cG->processPOST();
 
 	echo $boxes;
@@ -579,7 +756,11 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 			echo '<p class="noticeBox">'.ML_GENERIC_NO_TESTMAIL_SENT.'</p>';
 		}
 	}
-	#echo print_m($form);
+	#echo print_m($form, 'form');
+	if (array_key_exists('conf', $_POST) && is_array($_POST['conf']) &&
+	    array_key_exists('configtool', $_POST) && ($_POST['configtool'] == 'MagnaConfigurator')) {
+		geteBayBusinessPolicies(true); // refresh BusinessPolicies when form submitted
+	}
 	echo $cG->renderConfigForm();
 	$curSite = getDBConfigValue('ebay.site', $_MagnaSession['mpID'], false);
 	if (($curSite != false) || !$auth['state']) {
@@ -603,6 +784,30 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 /*]]>*/</script><?php
 	}
 ?><script>/*<!CDATA[*/
+$(document).ready(function() {
+	var standardRow = $('#conf_ebay').find('#standardTemplateButton').closest('tr');
+	var mobileRow = $('#conf_ebay').find('#standardTemplateButton_mobile').closest('tr');
+	var interval = window.setInterval(function() {
+		if (
+			typeof tinyMCE === "undefined"
+			||
+			(
+				mobileRow.next("tr").find('.mce-tinymce.mce-container').length > 0
+				&& standardRow.next("tr").find('.mce-tinymce.mce-container').length > 0
+			)
+		) {
+			standardRow.find('input[name="mobileTemplateButton"]').on('click', function() {
+				mobileRow.show().next("tr").show();
+				standardRow.hide().next("tr").hide();
+			});
+			mobileRow.find('input[name="standardTemplateButton"]').on('click', function() {
+				mobileRow.hide().next("tr").hide();
+				standardRow.show().next("tr").show();
+			}).trigger('click');
+			window.clearInterval(interval);
+		}
+	}, 300);
+});
 $('input[id="conf_ebay.usePrefilledInfo_val"]').change(function() {
     var pia = $(this);
     var eaa = $('input[id="conf_ebay.useean_val"]');
@@ -692,6 +897,53 @@ $('input[id="conf_ebay.order.importonlypaid_false"]').change(function() {
 			}
 		})
     });
+	$('select[id="config_ebay_default_paymentsellerprofile"]').change(function() {
+	 var sel=$(this);
+	 jQuery.ajax({
+		method: 'get',
+		url: '<?php echo toURL($_url, array('what' => 'GetSellerProfileData', 'kind' => 'ajax'), true)?>',
+		data: { 'value': sel.val() },
+		dataType: 'json',
+		success: function(data) {
+			$('select[id="config_ebay_default_paymentmethod"]').val(data['paymentmethod']);
+			$('input[id="config_ebay_paypal_address"]').val(data['paypal.address']);
+			$('textarea[id="config_ebay_paymentinstructions"]').val(data['paymentinstructions']);
+		}
+	 });
+	});
+	$('select[id="config_ebay_default_returnsellerprofile"]').change(function() {
+	 var sel=$(this);
+	 jQuery.ajax({
+		method: 'get',
+		url: '<?php echo toURL($_url, array('what' => 'GetSellerProfileData', 'kind' => 'ajax'), true)?>',
+		data: { 'value': sel.val() },
+		dataType: 'json',
+		success: function(data) {
+			$('select[id="config_ebay_returnpolicy_returnsaccepted"]').val(data['returnsaccepted']);
+			$('select[id="config_ebay_returnpolicy_returnswithin"]').val(data['returnswithin']);
+			$('select[id="config_ebay_returnpolicy_shippingcostpaidby"]').val(data['shippingcostpaidby']);
+			$('textarea[id="config_ebay_returnpolicy_description"]').val(data['description']);
+		}
+	 });
+	});
+	$('select[id="config_ebay_default_shippingsellerprofile"]').change(function() {
+	 var sel=$(this);
+	 jQuery.ajax({
+		method: 'get',
+		url: '<?php echo toURL($_url, array('what' => 'GetSellerProfileData', 'kind' => 'ajax'), true)?>',
+		data: { 'value': sel.val() },
+		dataType: 'json',
+		success: function(data) {
+			$('select[id="config_ebay_DispatchTimeMax"]').val(data['DispatchTimeMax']);
+			$('#ebay_default_shipping_local').html(data['ebay_default_shipping_local']);
+			$('#ebay_default_shipping_international').html(data['ebay_default_shipping_international']);
+			$('select[id="config_ebay_default_shippingprofile_local"]').val(data['shippingprofile.local']);
+			$('select[id="config_ebay_default_shippingprofile_international"]').val(data['shippingprofile.international']);
+			$('input[id="conf_ebay\.shippingdiscount\.local_val"]').prop('checked', ('{"val":true}' == data['shippingdiscount.local']));
+			$('input[id="conf_ebay\.shippingdiscount\.international_val"]').prop('checked', ('{"val":true}' == data['shippingdiscount.international']));
+		}
+	 });
+	});
 /*]]>*/</script><?php
 	echo $cG->exchangeRateAlert();
 	ML_ShopAddOns::generateConfigPopup('EbayProductIdentifierSync', 'conf_ebay.listingdetails.sync', '#conf_ebay');

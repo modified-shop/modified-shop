@@ -1,0 +1,121 @@
+{
+    "orders": {
+        "headline": "Order Import",
+        "fields": {
+            "doimport": {
+                "label": "Activate Import",
+                "desc": "Should orders from PriceMinister be imported? <br\/><br\/>\n\t\t\t\t           Orders are imported automatically every hour as the default setting.<br><br>\n\t\t\t\t           You can adjust the import-time individually, by configuring <br>\n\t\t\t\t           \"magnalister admin\" &rarr; \"Global Configuration\" &rarr; \"Orders Import\".<br><br>\n\t\t\t\t           You can manually import orders, by clicking the assigned button in the magnalister-header, next left to the ant-logo.<br><br>\n\t\t\t\t           Additionally, you can call order imports by setting a own cronjob to your following shop-link:<br>\n\t\t\t\t           <i>http:\/\/www.YourShop.com\/magnaCallback.php?do=ImportOrders<\/i><br><br>\n\t\t\t\t           Setting an own cronjob is permitted for customers within the service plan \"Flat\", only.<br><br>\n\t\t\t\t           Own cronjob-calls, exceeding a quarter of an hour, or calls from customers, who are not within the service plan \"Flat\", will be blocked.\t\t\t\t           \n\t\t\t\t           ",
+                "key": "_#_platform_#_.import",
+                "type": "radio",
+                "values": {
+                    "true": "Yes",
+                    "false": "No"
+                },
+                "default": "true",
+                "submit": "Orders.Import",
+                "morefields": {
+                    "preimportsince": {
+                        "label": "First-time order-import",
+                        "desc": "The date, an order import will be processed the first time.",
+                        "key": "_#_platform_#_.preimport.start",
+                        "type": "date",
+                        "default": "now",
+                        "submit": "Orders.Import.Start",
+                        "cssClasses": ["autoWidth", "rightSpacer"]
+                    }
+                }
+            },
+            "autoacceptance": {
+                "label": "Automatic Order Confirmation",
+                "desc": "Since PriceMinister’s API does not provide shipping costs for non-confirmed orders, orders will be imported without shipping-costs, if this function is disabled. Therefore we recommend to enable the Automatic Order Confirmation.",
+                "key": "_#_platform_#_.orderstatus.autoacceptance",
+                "type": "checkbox",
+                "values" : {
+                     "val" : "automatic Order Confirmation"
+                },
+                "default" : {
+                     "val" : true
+                },
+                "submit" : "Orders.AutoAcceptance"
+            },
+            "shop": {
+                "label": "Client-Store",
+                "desc": "Assigns the order to a client store.",
+                "key": "_#_platform_#_.shopmandant",
+                "type": "selection",
+                "values": null
+            },
+            "onlycomplete": false,
+            "customersgroup": {
+                "label": "Customer Group",
+                "desc": "Allocate customers from _#_platformName_#_ to a customer group of the shop.",
+                "key": "_#_platform_#_.CustomerGroup",
+                "type": "selection",
+                "values": null,
+                "default": "2"
+            },
+            "unpaidsatus": false,
+            "openstatus": {
+                "label": "Order Status",
+                "desc": "Status set for an imported _#_platformName_#_ order.",
+                "key": "_#_platform_#_.orderstatus.open",
+                "type": "selection",
+                "values": null,
+                "default": "2"
+            },
+            "defaultshipping": {
+                "label": "Shipping Method of Orders",
+                "desc": "Versandart, die allen _#_platformName_#_-Bestellungen zugeordnet wird. Standard: \"marketplace\".<br><br>\n\t\t\t\t           Diese Einstellung ist wichtig f&uuml;r den Rechnungs- und Lieferscheindruck und f&uuml;r die nachtr&amul;gliche\n\t\t\t\t           Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
+                "key": "_#_platform_#_.orderimport.shippingmethod",
+                "type": "selection",
+                "values": {
+                    "textfield": "From Textfield"
+                },
+                "default": "textfield",
+                "expertsetting": true,
+                "morefields": {
+                    "quantity": {
+                        "key": "_#_platform_#_.orderimport.shippingmethod.name",
+                        "type": "text",
+                        "default": "marketplace",
+                        "cssClasses": ["autoWidth"]
+                    }
+                }
+            },
+            "defaultpayment": {
+                "label": "Payment Method of Orders",
+                "desc": "Zahlart, die allen _#_platformName_#_-Bestellungen zugeordnet wird. Standard: \"marketplace\".<br><br>\n\t\t\t\t           Diese Einstellung ist wichtig f&uuml;r den Rechnungs- und Lieferscheindruck und f&uuml;r die nachtr&amul;gliche\n\t\t\t\t           Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
+                "key": "_#_platform_#_.orderimport.paymentmethod",
+                "type": "selection",
+                "values": {
+                    "textfield": "From Textfield"
+                },
+                "default": "textfield",
+                "expertsetting": true,
+                "morefields": {
+                    "quantity": {
+                        "key": "_#_platform_#_.orderimport.paymentmethod.name",
+                        "type": "text",
+                        "default": "marketplace",
+                        "cssClasses": ["autoWidth"]
+                    }
+                }
+            }
+        }
+    },
+    "vat": {
+        "headline": "",
+        "desc": "<b>V.A.T.<b>",
+        "fields": {
+            "vat_unknown": {
+                "label": "V.A.T. for Items, not Listed in the Shop",
+                "desc": "If the item is not listed by magnalister, V.A.T. can not be determined.<br\/>\n\t\t\t\t           As a solution, the V.A.T. value added here, will be inserted for all items, that are not listed in the shop.",
+                "hint": "V.A.T. in percentage: Inserted for _#_platformName_#_-items, that are not listed in the shop.",
+                "key": "_#_platform_#_.mwst.fallback",
+                "type": "text",
+                "default": "19",
+                "verify": "float"
+            }
+        }
+    }
+}

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaConnector.php 6767 2016-06-17 14:42:39Z masoud.khodaparast $
+ * $Id$
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -402,7 +402,7 @@ class MagnaConnector {
 			$msg = '';
 			if (isset($result['ERRORS'])) {
 				foreach ($result['ERRORS'] as $error) {
-					if ($error['ERRORLEVEL'] == 'FATAL') {
+					if (isset($error['ERRORLEVEL']) && $error['ERRORLEVEL'] == 'FATAL') {
 						$msg = $error['ERRORMESSAGE'];
 						break;
 					}

@@ -486,22 +486,13 @@ if (isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['reques
 	if (file_exists(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaDB.php')) {
 		require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MLTables.php');
 		require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaDB.php');
+		include_once(DIR_MAGNALISTER_FS_INCLUDES.'identifyShop.php');
 		MagnaDB::gi();
 		//commerce:Seo v2
 		if (defined('DB_SERVER_CHARSET')) {
 			MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
-		} elseif (SHOPSYSTEM == 'gambio' && MagnaDB::gi()->tableExists('version_history')) {
-			$sVersion = MagnaDB::gi()->fetchOne("
-				SELECT version
-				  FROM version_history
-				 WHERE     type IN ('service_pack', 'master_update')
-				".((MagnaDB::gi()->columnExistsInTable('installed', 'version_history'))
-					? 'AND installed = 1'
-					: 'AND (is_full_version = 0 OR (is_full_version = 1 AND history_id = 1))'
-				)."
-			  ORDER BY installation_date DESC
-				 LIMIT 1
-			");
+		}
+		if (SHOPSYSTEM == 'gambio' && (($sVersion = mlGetGambioShopSystemVersion()) !== false)) {
 			if (version_compare($sVersion, '2.1', '>=')) {
 				MagnaDB::gi()->setCharset('utf8');
 			}
@@ -509,6 +500,7 @@ if (isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['reques
 			if (version_compare($sVersion, '2.5.2.1', '>=')) {
 				define('ML_GAMBIO_USE_IFRAME', true);
 			}
+			// Store information for Gambio updater - that ml will be updated when merchants update Gambio shopsystem
 			MagnaDB::gi()->insert(TABLE_MAGNA_CONFIG, array('mpID' => '0', 'mkey' => 'ShopSystemVersion', 'value' => $sVersion), true);
 		}
 	}
@@ -578,7 +570,6 @@ mlIsCacheDirWritable();
  * Global includes and initialisation
  */
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/classes/MLShop.php');
-include_once(DIR_MAGNALISTER_FS_INCLUDES.'identifyShop.php');
 if (defined('DIR_FS_CATALOG_ORIGINAL_IMAGES')) {
 	define('SHOP_FS_PRODUCT_IMAGES',  DIR_FS_CATALOG_ORIGINAL_IMAGES);
 	define('SHOP_FS_PRODUCT_THUMBNAILS',  DIR_FS_CATALOG_THUMBNAIL_IMAGES);
@@ -600,22 +591,13 @@ if (defined('DIR_FS_CATALOG_ORIGINAL_IMAGES')) {
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/json_wrapper.php');
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MLTables.php');
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaDB.php');
+include_once(DIR_MAGNALISTER_FS_INCLUDES.'identifyShop.php');
 $magnaDB = MagnaDB::gi(); /* Database Connector */
 //commerce:Seo v2
 if (defined('DB_SERVER_CHARSET')) {
 	MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
-} elseif (SHOPSYSTEM == 'gambio' && MagnaDB::gi()->tableExists('version_history')) {
-	$sVersion = MagnaDB::gi()->fetchOne("
-		SELECT version
-		  FROM version_history
-		 WHERE     type IN ('service_pack', 'master_update')
-		".((MagnaDB::gi()->columnExistsInTable('installed', 'version_history'))
-			? 'AND installed = 1'
-			: 'AND (is_full_version = 0 OR (is_full_version = 1 AND history_id = 1))'
-		)."
-	  ORDER BY installation_date DESC
-		 LIMIT 1
-	");
+}
+if (SHOPSYSTEM == 'gambio' && (($sVersion = mlGetGambioShopSystemVersion()) !== false)) {
 	if (version_compare($sVersion, '2.1', '>=')) {
 		MagnaDB::gi()->setCharset('utf8');
 	}

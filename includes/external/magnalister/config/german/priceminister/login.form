@@ -1,0 +1,25 @@
+{
+	"login": {
+		"headline": "Benutzername",
+		"fields": [{
+			"label": "Benutzername",
+			"key": "_#_platform_#_.mpusername",
+			"type": "text"
+		}, {
+			"label": "Passwort",
+			"key": "_#_platform_#_.mppassword",
+			"type": "password",
+			"settings": {
+				"save": false
+			}
+		},  {
+           	"label": "API Token",
+           	"desc": "Die API-Zugangsdaten bekommen Sie in Ihrem PriceMinister Account. Dazu loggen Sie sich bitte bei PriceMinister ein und klicken auf <b>PriceMinister API<\/b>, im Men&uuml; links ganz unten, bei <b>Zusatzfunktionen<\/b>.",
+           	"key": "_#_platform_#_.apitoken",
+           	"type": "password",
+            "settings": {
+                "save": false
+            }
+        }]
+	}
+}
