@@ -183,10 +183,10 @@ define('SMALL_IMAGE_WIDTH_DESC' , 'Width of small images (in pixels)');
 define('SMALL_IMAGE_HEIGHT_TITLE' , 'Small Image Height');
 define('SMALL_IMAGE_HEIGHT_DESC' , 'Height of small images (in pixels)');
 
-define('HEADING_IMAGE_WIDTH_TITLE' , 'Heading Image Width');
-define('HEADING_IMAGE_WIDTH_DESC' , 'Width of heading images (in pixels)');
-define('HEADING_IMAGE_HEIGHT_TITLE' , 'Heading Image Height');
-define('HEADING_IMAGE_HEIGHT_DESC' , 'Height of heading images (in pixels)');
+//define('HEADING_IMAGE_WIDTH_TITLE' , 'Heading Image Width'); // Not used in /admin/configuration.php -> now in /admin/includes/header.php
+//define('HEADING_IMAGE_WIDTH_DESC' , 'Width of heading images (in pixels)'); // Not used in /admin/configuration.php -> now in /admin/includes/header.php
+//define('HEADING_IMAGE_HEIGHT_TITLE' , 'Heading Image Height'); // Not used in /admin/configuration.php -> now in /admin/includes/header.php
+//define('HEADING_IMAGE_HEIGHT_DESC' , 'Height of heading images (in pixels)'); // Not used in /admin/configuration.php -> now in /admin/includes/header.php
 
 define('SUBCATEGORY_IMAGE_WIDTH_TITLE' , 'Subcategory Image Width');
 define('SUBCATEGORY_IMAGE_WIDTH_DESC' , 'Width of subcategory images (in pixels)');
