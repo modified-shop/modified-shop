@@ -123,7 +123,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
       $tax_info = $main->getTaxInfo($xtPrice->TAX[$product->data['products_tax_class_id']]);
       $info_smarty->assign('PRODUCTS_TAX_INFO', $tax_info);
     }
-    $info_smarty->assign('PRODUCTS_SHIPPING_LINK', SHIPPING_EXCL.' '.SHIPPING_COSTS);
+    $info_smarty->assign('PRODUCTS_SHIPPING_LINK', SHOW_SHIPPING == 'true' ? $main->getShippingLink() : '');
   }
 
   $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes($product->data['products_description']));
