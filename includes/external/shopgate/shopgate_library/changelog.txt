@@ -1,5 +1,14 @@
+'''Version 2.9.65'''
+* adjusted internal stack trace generation in order to restore compatibility with PHP 5.2.17
+
+'''Version 2.9.64'''
+* added missing getter for review XML filename in the configuration
+
+'''Version 2.9.63'''
+* added payment method constants for Merchant Payment
+
 '''Version 2.9.62'''
-* restored compatibility for PHP versions below 5.3
+* restored compatibility for PHP 5.2.17
 
 '''Version 2.9.61'''
 * fixed a bug in stack trace generation that may appear on certain server configurations
@@ -33,7 +42,7 @@
 * added ShopgateClient to ShopgateCartBase to distinguish between the mobile clients
 * added error code to remove items silently in the cart validation
 * replaced "document.write" with asynchronous loading of mobile redirect / mobile header
-* added Content-Length header to Response objects for CSV, XML and JSON repsonses
+* added Content-Length header to Response objects for CSV, XML and JSON responses
 
 '''Version 2.9.55'''
 * refactored ShopgateLogger to be able to pass a strategy for logging

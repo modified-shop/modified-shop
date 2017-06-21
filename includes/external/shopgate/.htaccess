@@ -14,3 +14,17 @@
 </IfModule>
 
 Options -Indexes
+
+<Files api.php>
+  <IfModule mod_authz_core.c>
+    # Apache 2.4
+    <RequireAll>
+      Require all granted
+    </RequireAll>
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    # Apache 2.2
+    Order Allow,Deny
+    Allow from all
+  </IfModule>
+</Files>

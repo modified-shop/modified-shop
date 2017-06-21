@@ -23,162 +23,167 @@
  */
 abstract class ShopgateCartBase extends ShopgateContainer {
 
-	const SHOPGATE   = "SHOPGATE";
+	const SHOPGATE   = 'SHOPGATE';
 
 	// Prepayment
-	const PREPAY     = "PREPAY";
-	const PAYONE_PRP = "PAYONE_PRP";
-	const SG_PREPAY  = "SG_PREPAY";
+	const PREPAY     = 'PREPAY';
+	const PAYONE_PRP = 'PAYONE_PRP';
+	const SG_PREPAY  = 'SG_PREPAY';
 
 	// Debit
-	const DEBIT      = "DEBIT";
-	const PAYMRW_DBT = "PAYMRW_DBT";
-	const PAYONE_DBT = "PAYONE_DBT";
+	const DEBIT      = 'DEBIT';
+	const PAYMRW_DBT = 'PAYMRW_DBT';
+	const PAYONE_DBT = 'PAYONE_DBT';
 
 	// Cash On Delivery
-	const COD        = "COD";
-	const COLL_STORE = "COLL_STORE";
+	const COD        = 'COD';
+	const COLL_STORE = 'COLL_STORE';
 
 	// Installment
-	const ACCRD_INS  = "ACCRD_INS";
-	const PAYOL_INS  = "PAYOL_INS";
+	const ACCRD_INS  = 'ACCRD_INS';
+	const PAYOL_INS  = 'PAYOL_INS';
 
 	// Invoice
-	const INVOICE    = "INVOICE";
-	const ACCRD_INV  = "ACCRD_INV";
-	const KLARNA_INV = "KLARNA_INV";
-	const BILLSAFE   = "BILLSAFE";
-	const MSTPAY_INV = "MSTPAY_INV";
-	const PAYMRW_INV = "PAYMRW_INV";
-	const PAYONE_INV = "PAYONE_INV";
-	const SG_INVOICE = "SG_INVOICE";
-	const WCARD_INV  = "WCARD_INV";
-	const PAYONE_KLV = "PAYONE_KLV";
-	const PAYOL_INV  = "PAYOL_INV";
+	const INVOICE    = 'INVOICE';
+	const ACCRD_INV  = 'ACCRD_INV';
+	const KLARNA_INV = 'KLARNA_INV';
+	const BILLSAFE   = 'BILLSAFE';
+	const MSTPAY_INV = 'MSTPAY_INV';
+	const PAYMRW_INV = 'PAYMRW_INV';
+	const PAYONE_INV = 'PAYONE_INV';
+	const SG_INVOICE = 'SG_INVOICE';
+	const WCARD_INV  = 'WCARD_INV';
+	const PAYONE_KLV = 'PAYONE_KLV';
+	const PAYOL_INV  = 'PAYOL_INV';
 
 	// Paypal
-	const PAYPAL     = "PAYPAL";
-	const PPAL_PLUS  = "PPAL_PLUS";
-	const CMPTOP_PP  = "CMPTOP_PP";
-	const MASTPAY_PP = "MASTPAY_PP";
-	const PAYONE_PP  = "PAYONE_PP";
-	const SAGEPAY_PP = "SAGEPAY_PP";
-	const SG_PAYPAL  = "SG_PAYPAL";
-	const SIX_PP     = "SIX_PP";
-	const WCARD_PP   = "WCARD_PP";
+	const PAYPAL     = 'PAYPAL';
+	const PPAL_PLUS  = 'PPAL_PLUS';
+	const CMPTOP_PP  = 'CMPTOP_PP';
+	const MASTPAY_PP = 'MASTPAY_PP';
+	const PAYONE_PP  = 'PAYONE_PP';
+	const SAGEPAY_PP = 'SAGEPAY_PP';
+	const SG_PAYPAL  = 'SG_PAYPAL';
+	const SIX_PP     = 'SIX_PP';
+	const WCARD_PP   = 'WCARD_PP';
 
 	// Credit Card
-	const CC         = "CC";
-	const AUTHN_CC   = "AUTHN_CC";
-	const BCLEPDQ_CC = "BCLEPDQ_CC";
-	const BNSTRM_CC  = "BNSTRM_CC";
-	const BRAINTR_CC = "BRAINTR_CC";
-	const CHASE_CC   = "CHASE_CC";
-	const CMPTOP_CC  = "CMPTOP_CC";
-	const CONCAR_CC  = "CONCAR_CC";
-	const CRDSTRM_CC = "CRDSTRM_CC";
-	const CREDITCARD = "CREDITCARD";
-	const CYBRSRC_CC = "CYBRSRC_CC";
-	const DRCPAY_CC  = "DRCPAY_CC";
-	const DTCASH_CC  = "DTCASH_CC";
-	const DT_CC      = "DT_CC";
-	const EFSNET_CC  = "EFSNET_CC";
-	const ELAVON_CC  = "ELAVON_CC";
-	const EPAY_CC    = "EPAY_CC";
-	const EWAY_CC    = "EWAY_CC";
-	const EXACT_CC   = "EXACT_CC";
-	const FRSTDAT_CC = "FRSTDAT_CC";
-	const GAMEDAY_CC = "GAMEDAY_CC";
-	const GARANTI_CC = "GARANTI_CC";
-	const GESTPAY_CC = "GESTPAY_CC";
-	const HDLPAY_CC  = "HDLPAY_CC";
-	const HIPAY      = "HIPAY";
-	const HITRUST_CC = "HITRUST_CC";
-	const INSPIRE_CC = "INSPIRE_CC";
-	const INSTAP_CC  = "INSTAP_CC";
-	const INTUIT_CC  = "INTUIT_CC";
-	const IRIDIUM_CC = "IRIDIUM_CC";
-	const LITLE_CC   = "LITLE_CC";
-	const MASTPAY_CC = "MASTPAY_CC";
-	const MERESOL_CC = "MERESOL_CC";
-	const MERWARE_CC = "MERWARE_CC";
-	const MODRPAY_CC = "MODRPAY_CC";
-	const MONERIS_CC = "MONERIS_CC";
-	const MSTPAY_CC  = "MSTPAY_CC";
-	const NELTRAX_CC = "NELTRAX_CC";
-	const NETBILL_CC = "NETBILL_CC";
-	const NETREGS_CC = "NETREGS_CC";
-	const NOCHEX_CC  = "NOCHEX_CC";
-	const OGONE_CC   = "OGONE_CC";
-	const OPTIMAL_CC = "OPTIMAL_CC";
-	const PAY4ONE_CC = "PAY4ONE_CC";
-	const PAYBOX_CC  = "PAYBOX_CC";
-	const PAYEXPR_CC = "PAYEXPR_CC";
-	const PAYFAST_CC = "PAYFAST_CC";
-	const PAYFLOW_CC = "PAYFLOW_CC";
-	const PAYJUNC_CC = "PAYJUNC_CC";
-	const PAYONE_CC  = "PAYONE_CC";
-	const PAYZEN_CC  = "PAYZEN_CC";
-	const PLUGNPL_CC = "PLUGNPL_CC";
-	const PP_WSPP_CC = "PP_WSPP_CC";
-	const PSIGATE_CC = "PSIGATE_CC";
-	const PSL_CC     = "PSL_CC";
-	const PXPAY_CC   = "PXPAY_CC";
-	const QUIKPAY_CC = "QUIKPAY_CC";
-	const REALEX_CC  = "REALEX_CC";
-	const SAGEPAY_CC = "SAGEPAY_CC";
-	const SAGE_CC    = "SAGE_CC";
-	const SAMURAI_CC = "SAMURAI_CC";
-	const SCPTECH_CC = "SCPTECH_CC";
-	const SCP_AU_CC  = "SCP_AU_CC";
-	const SECPAY_CC  = "SECPAY_CC";
-	const SG_CC      = "SG_CC";
-	const SIX_CC     = "SIX_CC";
-	const SKIPJCK_CC = "SKIPJCK_CC";
-	const SKRILL_CC  = "SKRILL_CC";
-	const STRIPE_CC  = "STRIPE_CC";
-	const TELECSH_CC = "TELECSH_CC";
-	const TRNSFST_CC = "TRNSFST_CC";
-	const TRUSTCM_CC = "TRUSTCM_CC";
-	const USAEPAY_CC = "USAEPAY_CC";
-	const VALITOR_CC = "VALITOR_CC";
-	const VERIFI_CC  = "VERIFI_CC";
-	const VIAKLIX_CC = "VIAKLIX_CC";
-	const WCARDS_CC  = "WCARDS_CC";
-	const WIRECRD_CC = "WIRECRD_CC";
-	const WLDPDIR_CC = "WLDPDIR_CC";
-	const WLDPOFF_CC = "WLDPOFF_CC";
+	const CC         = 'CC';
+	const AUTHN_CC   = 'AUTHN_CC';
+	const BCLEPDQ_CC = 'BCLEPDQ_CC';
+	const BNSTRM_CC  = 'BNSTRM_CC';
+	const BRAINTR_CC = 'BRAINTR_CC';
+	const CHASE_CC   = 'CHASE_CC';
+	const CMPTOP_CC  = 'CMPTOP_CC';
+	const CONCAR_CC  = 'CONCAR_CC';
+	const CRDSTRM_CC = 'CRDSTRM_CC';
+	const CREDITCARD = 'CREDITCARD';
+	const CYBRSRC_CC = 'CYBRSRC_CC';
+	const DRCPAY_CC  = 'DRCPAY_CC';
+	const DTCASH_CC  = 'DTCASH_CC';
+	const DT_CC      = 'DT_CC';
+	const EFSNET_CC  = 'EFSNET_CC';
+	const ELAVON_CC  = 'ELAVON_CC';
+	const EPAY_CC    = 'EPAY_CC';
+	const EWAY_CC    = 'EWAY_CC';
+	const EXACT_CC   = 'EXACT_CC';
+	const FRSTDAT_CC = 'FRSTDAT_CC';
+	const GAMEDAY_CC = 'GAMEDAY_CC';
+	const GARANTI_CC = 'GARANTI_CC';
+	const GESTPAY_CC = 'GESTPAY_CC';
+	const HDLPAY_CC  = 'HDLPAY_CC';
+	const HIPAY      = 'HIPAY';
+	const HITRUST_CC = 'HITRUST_CC';
+	const INSPIRE_CC = 'INSPIRE_CC';
+	const INSTAP_CC  = 'INSTAP_CC';
+	const INTUIT_CC  = 'INTUIT_CC';
+	const IRIDIUM_CC = 'IRIDIUM_CC';
+	const LITLE_CC   = 'LITLE_CC';
+	const MASTPAY_CC = 'MASTPAY_CC';
+	const MERESOL_CC = 'MERESOL_CC';
+	const MERWARE_CC = 'MERWARE_CC';
+	const MODRPAY_CC = 'MODRPAY_CC';
+	const MONERIS_CC = 'MONERIS_CC';
+	const MSTPAY_CC  = 'MSTPAY_CC';
+	const NELTRAX_CC = 'NELTRAX_CC';
+	const NETBILL_CC = 'NETBILL_CC';
+	const NETREGS_CC = 'NETREGS_CC';
+	const NOCHEX_CC  = 'NOCHEX_CC';
+	const OGONE_CC   = 'OGONE_CC';
+	const OPTIMAL_CC = 'OPTIMAL_CC';
+	const PAY4ONE_CC = 'PAY4ONE_CC';
+	const PAYBOX_CC  = 'PAYBOX_CC';
+	const PAYEXPR_CC = 'PAYEXPR_CC';
+	const PAYFAST_CC = 'PAYFAST_CC';
+	const PAYFLOW_CC = 'PAYFLOW_CC';
+	const PAYJUNC_CC = 'PAYJUNC_CC';
+	const PAYONE_CC  = 'PAYONE_CC';
+	const PAYZEN_CC  = 'PAYZEN_CC';
+	const PLUGNPL_CC = 'PLUGNPL_CC';
+	const PP_WSPP_CC = 'PP_WSPP_CC';
+	const PSIGATE_CC = 'PSIGATE_CC';
+	const PSL_CC     = 'PSL_CC';
+	const PXPAY_CC   = 'PXPAY_CC';
+	const QUIKPAY_CC = 'QUIKPAY_CC';
+	const REALEX_CC  = 'REALEX_CC';
+	const SAGEPAY_CC = 'SAGEPAY_CC';
+	const SAGE_CC    = 'SAGE_CC';
+	const SAMURAI_CC = 'SAMURAI_CC';
+	const SCPTECH_CC = 'SCPTECH_CC';
+	const SCP_AU_CC  = 'SCP_AU_CC';
+	const SECPAY_CC  = 'SECPAY_CC';
+	const SG_CC      = 'SG_CC';
+	const SIX_CC     = 'SIX_CC';
+	const SKIPJCK_CC = 'SKIPJCK_CC';
+	const SKRILL_CC  = 'SKRILL_CC';
+	const STRIPE_CC  = 'STRIPE_CC';
+	const TELECSH_CC = 'TELECSH_CC';
+	const TRNSFST_CC = 'TRNSFST_CC';
+	const TRUSTCM_CC = 'TRUSTCM_CC';
+	const USAEPAY_CC = 'USAEPAY_CC';
+	const VALITOR_CC = 'VALITOR_CC';
+	const VERIFI_CC  = 'VERIFI_CC';
+	const VIAKLIX_CC = 'VIAKLIX_CC';
+	const WCARDS_CC  = 'WCARDS_CC';
+	const WIRECRD_CC = 'WIRECRD_CC';
+	const WLDPDIR_CC = 'WLDPDIR_CC';
+	const WLDPOFF_CC = 'WLDPOFF_CC';
 
 	// ClickandBuy
-	const CNB        = "CNB";
-	const SG_CNB     = "SG_CNB";
+	const CNB        = 'CNB';
+	const SG_CNB     = 'SG_CNB';
 
-	const MCM        = "MCM";
-	const UPAID_MCM  = "UPAID_MCM";
+	const MCM        = 'MCM';
+	const UPAID_MCM  = 'UPAID_MCM';
 
-	const PAYU       = "PAYU";
+	const PAYU       = 'PAYU';
 
-	const REDIRECTCC = "REDIRECTCC";
-	const WORLDLINE  = "WORLDLINE";
+	const REDIRECTCC = 'REDIRECTCC';
+	const WORLDLINE  = 'WORLDLINE';
 
 	// SOFORT Überweisung
-	const SUE        = "SUE";
-	const HDLPAY_SUE = "HDLPAY_SUE";
-	const MSTPAY_SUE = "MSTPAY_SUE";
-	const PAYONE_SUE = "PAYONE_SUE";
-	const SG_SUE     = "SG_SUE";
-	const SKRILL_SUE = "SKRILL_SUE";
-	const WCARD_SUE  = "WCARD_SUE";
+	const SUE        = 'SUE';
+	const HDLPAY_SUE = 'HDLPAY_SUE';
+	const MSTPAY_SUE = 'MSTPAY_SUE';
+	const PAYONE_SUE = 'PAYONE_SUE';
+	const SG_SUE     = 'SG_SUE';
+	const SKRILL_SUE = 'SKRILL_SUE';
+	const WCARD_SUE  = 'WCARD_SUE';
 
 	// Giropay
-	const PAYONE_GP  = "PAYONE_GP";
+	const PAYONE_GP  = 'PAYONE_GP';
 
 	// iDEAL
-	const PAYONE_IDL = "PAYONE_IDL";
-	const SIX_IDEAL  = "SIX_IDEAL";
-	const SKRILL_IDL = "SKRILL_IDL";
+	const PAYONE_IDL = 'PAYONE_IDL';
+	const SIX_IDEAL  = 'SIX_IDEAL';
+	const SKRILL_IDL = 'SKRILL_IDL';
 
-    const AMAZON_PAYMENT = "MWS";
+    const AMAZON_PAYMENT = 'MWS';
+
+    // MERCHANT_PAYMENT
+    const MERCH_PM   = 'MERCH_PM';
+    const MERCH_PM_2 = 'MERCH_PM_2';
+    const MERCH_PM_3 = 'MERCH_PM_3';
 
 	protected $customer_number;
 	protected $customer_ip;

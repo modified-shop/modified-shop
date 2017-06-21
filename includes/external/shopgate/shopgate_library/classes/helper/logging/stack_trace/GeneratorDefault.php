@@ -53,22 +53,52 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault
         $this->functionArgumentsCache = array();
     }
     
-    public function generate($e, $maxDepth = 10)
+    /**
+     * @param Exception|Throwable $exception
+     * @param int                 $maxDepth
+     *
+     * @return string
+     */
+    public function generate($exception, $maxDepth = 10)
     {
-        $msg = array($this->generateFormattedHeader($e) . "\n" . $this->generateFormattedTrace($e->getTrace()));
+        $formattedHeader = $this->generateFormattedHeader($exception);
+        $formattedTrace = $this->generateFormattedTrace($exception->getTrace());
+        $messages = array($formattedHeader . "\n" . $formattedTrace);
         
         $depthCounter = 1;
-        $previous     = $e->getPrevious();
-        while ($previous !== null && $depthCounter < $maxDepth) {
-            $msg[] =
-                $this->generateFormattedHeader($previous, false) . "\n" .
-                $this->generateFormattedTrace($previous->getTrace());
+        $previousException = $this->getPreviousException($exception);
+        
+        while ($previousException !== null && $depthCounter < $maxDepth) {
+            $messages[] =
+                $this->generateFormattedHeader($previousException, false) . "\n" .
+                $this->generateFormattedTrace($previousException->getTrace());
             
-            $previous = $previous->getPrevious();
+            $previousException = $this->getPreviousException($previousException);
             $depthCounter++;
         }
         
-        return implode("\n\n", $msg);
+        return implode("\n\n", $messages);
+    }
+    
+    
+    /**
+     * Returns previous exception.
+     * Some customers are still running PHP below version 5.3, but method Exception::getPrevious is available since
+     * version 5.3. Therefor we check if method is existent, if not method returns null
+     *
+     * @param Exception|Throwable $exception
+     *
+     * @return Exception|null
+     */
+    private function getPreviousException($exception)
+    {
+        $previousException = null;
+        
+        if (method_exists($exception, 'getPrevious')) {
+            $previousException = $exception->getPrevious();
+        }
+        
+        return $previousException;
     }
     
     /**

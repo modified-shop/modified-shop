@@ -1287,6 +1287,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		return $this->reviews_csv_filename;
 	}
 
+    public function getReviewsXmlFilename() {
+        return $this->reviews_xml_filename;
+    }
+
 	public function getAccessLogFilename() {
 		return $this->access_log_filename;
 	}
