@@ -3087,6 +3087,7 @@ ul.pd_iconlist li.wishlist .wishlist_submit_link:hover {
   margin: 8px 0px 8px 15px;
 }
 .pd_description img{
+  width: auto;
   max-width: 100%;
   height: auto;
 }
