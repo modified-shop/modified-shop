@@ -152,7 +152,7 @@ function xsb_db_query($query, $link = 'db_link')
     }
 
     do {
-    $result = mysql_query($query, ${$link});
+    $result = xtc_db_query($query, ${$link});
     } while (2006 == mysql_errno());
 
     if(0 != mysql_errno()) { xtc_db_error($query, mysql_errno(), mysql_error()); }
