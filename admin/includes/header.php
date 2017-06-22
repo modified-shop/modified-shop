@@ -19,10 +19,6 @@
 
   require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php'); 
   
-  //define with and height for xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT)
-  define('HEADING_IMAGE_WIDTH',57);
-  define('HEADING_IMAGE_HEIGHT',40);
-  
   ((isset($_GET['search']) && strip_tags($_GET['search']) != $_GET['search']) ? $_GET['search'] = NULL : false);
   ((isset($_GET['search_email']) && strip_tags($_GET['search_email']) != $_GET['search_email']) ? $_GET['search_email'] = NULL : false);
   
