@@ -148,6 +148,7 @@
       //SWITCH shipping/payment
       switch ($checkout_page) {
         case 'shipping':
+          unset ($_SESSION['shipping']);
           $_SESSION['sendto'] = xtc_db_insert_id();
           xtc_redirect(xtc_href_link($link_checkout_shipping, $params, 'SSL'));
           break;
