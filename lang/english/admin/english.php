@@ -197,7 +197,7 @@ define('TXT_TOOLS','Tools');
 define('TEXT_ACCOUNTING','Admin-access for:');
 
 /******* SHOPGATE **********/
-if (is_file(DIR_FS_CATALOG.'includes/external/shopgate/base/lang/english/admin/english.php')) {
+if (is_file(DIR_FS_CATALOG.'includes/external/shopgate/base/lang/english/admin/english.php') && (defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True')) {
   include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/lang/english/admin/english.php');
 }
 /******* SHOPGATE **********/
