@@ -12,14 +12,6 @@ chdir('../../');
 require_once 'includes/application_top.php';	# This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
 require (DIR_WS_CLASSES.'xtbooster.php');
 
-function xsb_db_affected_rows() {
-	global $db;
-	if (is_object($db) && method_exists($db, 'Affected_Rows')) {
-		return $db->Affected_Rows();
-	}
-	return xtc_db_affected_rows();
-}
-
 function xsb_session_register($var) {
 	if (!isset($_SESSION[$var])) {
 		if (isset(${$var})) {
@@ -187,7 +179,7 @@ if(isset($_GET['inquire'])) {
 			$QUERY = trim($res['QUERY']); $INQUIRY_ID = $res['INQUIRY_ID'];
 			$QUERY = str_replace("#TABLE_AUCTIONS#","xtb_auctions",$QUERY);
 			$QUERY = str_replace("#TABLE_TRANSACTIONS#","xtb_transactions",$QUERY);
-			$rs = xtc_db_query($QUERY); $SQLACTION_RESULT = xsb_db_affected_rows()." rows affected";			
+			$rs = xtc_db_query($QUERY); $SQLACTION_RESULT = xtc_db_affected_rows()." rows affected";			
 			$res = $xtb->exec("ACTION:ReportInquiredInfo\nCASE:sqlaction\nCASEACTION:report\nINQUIRY_ID:".$INQUIRY_ID."\nSQLACTION_RESULT:$SQLACTION_RESULT\nCASE_VERSION:".XTBOOSTER_VERSION."\n");
 			break;
 		default:

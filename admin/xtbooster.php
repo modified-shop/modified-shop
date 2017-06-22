@@ -25,7 +25,7 @@
   $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
   require_once(DIR_FS_INC.'xtc_wysiwyg.inc.php'); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
 
-  $character_set_client = xsb_db_query("SHOW VARIABLES LIKE 'character_set_client'");
+  $character_set_client = xtc_db_query("SHOW VARIABLES LIKE 'character_set_client'");
   $character_set_client = xtc_db_fetch_array($character_set_client);
   $character_set_client = $character_set_client['Value'];
 
@@ -84,7 +84,7 @@
       $RelistType = 0; // 0: Aktive Auktion, 1 (teilweise) erfolgreich, 2 erfolglos
 
       // Handelt es sich um eine Auktion, die erfolglos abgelaufen ist?
-      $rlResult  = xsb_db_query("SELECT * FROM xtb_auctions WHERE XTB_ITEM_ID='".$ITEM_ID."'");
+      $rlResult  = xtc_db_query("SELECT * FROM xtb_auctions WHERE XTB_ITEM_ID='".$ITEM_ID."'");
       $data    = xtc_db_fetch_array($rlResult);
 
       if ($data['_EBAY_END_TIME']<time()) {  // Auktion abgelaufen
@@ -107,7 +107,7 @@
       // Bei Erfolg Datensatz klonen und neue Auktions-ID eintragen
       if ($r['RESULT']=='SUCCESS')  {
         // Datensatz klonen
-        xsb_db_query("INSERT INTO xtb_auctions (products_id, 
+        xtc_db_query("INSERT INTO xtb_auctions (products_id, 
                                   TITLE, 
                                   SUBTITLE, 
                                   DESCRIPTION, 
@@ -152,7 +152,7 @@
                                     FROM xtb_auctions WHERE XTB_ITEM_ID='".$ITEM_ID."' LIMIT 1");
   
         // Geänderte Daten ergänzen
-        xsb_db_query("UPDATE xtb_auctions 
+        xtc_db_query("UPDATE xtb_auctions 
                          SET _EBAY_ITEM_ID='".$r['ITEMID']."',
                              _EBAY_START_TIME='".$r['STARTTIME']."',
                              _EBAY_END_TIME='".$r['ENDTIME']."',
@@ -161,11 +161,11 @@
                              QUANTITY_CHECKED_OUT='0',
                              SCHEDULETIME='".$r['STARTTIME']."',
                              _XTB_ITEM_HASH='".$r['ITEM_HASH']."'
-                       WHERE XTB_ITEM_ID='". xsb_db_first(xsb_db_query("SELECT LAST_INSERT_ID() as last_insert_id FROM xtb_auctions")) ."'");
+                       WHERE XTB_ITEM_ID='". xsb_db_first(xtc_db_query("SELECT LAST_INSERT_ID() as last_insert_id FROM xtb_auctions")) ."'");
             
         // Produktdaten abfragen
-        $auction_query =  xsb_db_query("SELECT products_id, TITLE, TYPE, QUANTITY FROM xtb_auctions WHERE XTB_ITEM_ID='".$ITEM_ID."' LIMIT 1"); $auction_data = xtc_db_fetch_array($auction_query);
-        $products_query = xsb_db_query("SELECT * FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd left join ".TABLE_PRODUCTS_IMAGES." as pi ON (pi.products_id = pd.products_id) WHERE p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' AND p.products_id = '".$auction_data['products_id']."'"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+        $auction_query =  xtc_db_query("SELECT products_id, TITLE, TYPE, QUANTITY FROM xtb_auctions WHERE XTB_ITEM_ID='".$ITEM_ID."' LIMIT 1"); $auction_data = xtc_db_fetch_array($auction_query);
+        $products_query = xtc_db_query("SELECT * FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd left join ".TABLE_PRODUCTS_IMAGES." as pi ON (pi.products_id = pd.products_id) WHERE p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' AND p.products_id = '".$auction_data['products_id']."'"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
         $x = xtc_db_fetch_array($products_query); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
 
         // Erfolgsmeldung
@@ -235,7 +235,7 @@
         $item['PRODUCT_ID'] = implode(unserialize(base64_decode($_POST['request'])));
       } else {
         $item = unserialize(base64_decode($_POST['request'])); }
-        $products_query = xsb_db_query("SELECT * FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd left join ".TABLE_PRODUCTS_IMAGES." as pi ON (pi.products_id = pd.products_id) WHERE p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' AND p.products_id = '".$item['PRODUCT_ID']."'"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+        $products_query = xtc_db_query("SELECT * FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd left join ".TABLE_PRODUCTS_IMAGES." as pi ON (pi.products_id = pd.products_id) WHERE p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' AND p.products_id = '".$item['PRODUCT_ID']."'"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
         $x = xtc_db_fetch_array($products_query); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
         // Weitere Produkt-Bilder
         $images = array();
@@ -261,7 +261,7 @@
             $item['TITLE'] = $x['products_name'];
             if(1==$_SESSION['xtb1']['multi_settings']['AUTO_SUBTITLE'][0])
               $item['SUBTITLE'] = $x['products_short_description'];
-            $tax_query = xsb_db_query("select tax_rate from " . TABLE_TAX_RATES . " where tax_class_id = '".$x['products_tax_class_id']."'"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+            $tax_query = xtc_db_query("select tax_rate from " . TABLE_TAX_RATES . " where tax_class_id = '".$x['products_tax_class_id']."'"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
             $tax = xtc_db_fetch_array($tax_query); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
             $price = $x['products_price'];
             $price = ($price*($tax['tax_rate']+100)/100);
@@ -360,7 +360,7 @@
           if(!isset($_SESSION['xtb1']['multi_settings']))
           { $item['DESCRIPTION'] = stripslashes($item['DESCRIPTION']); }
 
-          $item['POSTALCODE'] = xsb_db_first(xsb_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key='MODULE_XTBOOSTER_STDPLZ'"));
+          $item['POSTALCODE'] = xsb_db_first(xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key='MODULE_XTBOOSTER_STDPLZ'"));
 
           $title = utf8_substr(strip_tags($item['TITLE']),0,79);
   
@@ -428,7 +428,7 @@
             $request .= "BEST_OFFER:	1\n";
 
           if(defined('TECDOC_TABLE') && defined('TECDOC_COLUMN') && defined('TECDOC_PRODUCTS_ID_ALIAS')) {
-            $kTypeQuery = xsb_db_query("SELECT ".TECDOC_COLUMN." FROM ".TECDOC_TABLE." WHERE ".TECDOC_PRODUCTS_ID_ALIAS."=".$item['PRODUCT_ID']." LIMIT 1");
+            $kTypeQuery = xtc_db_query("SELECT ".TECDOC_COLUMN." FROM ".TECDOC_TABLE." WHERE ".TECDOC_PRODUCTS_ID_ALIAS."=".$item['PRODUCT_ID']." LIMIT 1");
             if(xtc_db_num_rows($kTypeQuery) > 0) {
               $kType = mysql_result($kTypeQuery, 0, 0);
             } else {
@@ -567,7 +567,7 @@
                                 '".$request['GALLERY_PICTUREURL']."',
                                 '".$_XTB_ITEM_HASH."'
                               )";
-            xsb_db_query($sql);
+            xtc_db_query($sql);
             ?>
             <div style="display:none" id="RESULT"><?php echo $r['RESULT'];?></div>
             <div class="smallText" style="font-size:arial;font-size:10px;padding:4px;background-color:#707070;color:white;border-bottom:1px solid white;">
@@ -654,36 +654,36 @@
                               if($_SERVER['REQUEST_METHOD']=='POST') {
                                 // MODULE_XTBOOSTER_SHOPKEY
                                 if( !isset($xtb_config['MODULE_XTBOOSTER_SHOPKEY']) )
-                                  xsb_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_XTBOOSTER_SHOPKEY', '".$_POST['MODULE_XTBOOSTER_SHOPKEY']."', '6', '1', '', now())");
+                                  xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_XTBOOSTER_SHOPKEY', '".$_POST['MODULE_XTBOOSTER_SHOPKEY']."', '6', '1', '', now())");
                                 else
-                                  xsb_db_query("update " . TABLE_CONFIGURATION . " SET configuration_value = '".$_POST['MODULE_XTBOOSTER_SHOPKEY']."' WHERE configuration_key = 'MODULE_XTBOOSTER_SHOPKEY'");
+                                  xtc_db_query("update " . TABLE_CONFIGURATION . " SET configuration_value = '".$_POST['MODULE_XTBOOSTER_SHOPKEY']."' WHERE configuration_key = 'MODULE_XTBOOSTER_SHOPKEY'");
                                 // MODULE_XTBOOSTER_STDSITE
                                 if(@$_POST['MODULE_XTBOOSTER_STDSITE']!='') {
                                   if( !isset($xtb_config['MODULE_XTBOOSTER_STDSITE']) )
-                                    xsb_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_XTBOOSTER_STDSITE', '".$_POST['MODULE_XTBOOSTER_STDSITE']."', '6', '1', '', now())");
+                                    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_XTBOOSTER_STDSITE', '".$_POST['MODULE_XTBOOSTER_STDSITE']."', '6', '1', '', now())");
                                   else
-                                    xsb_db_query("update " . TABLE_CONFIGURATION . " SET configuration_value = '".$_POST['MODULE_XTBOOSTER_STDSITE']."' WHERE configuration_key = 'MODULE_XTBOOSTER_STDSITE'");
+                                    xtc_db_query("update " . TABLE_CONFIGURATION . " SET configuration_value = '".$_POST['MODULE_XTBOOSTER_STDSITE']."' WHERE configuration_key = 'MODULE_XTBOOSTER_STDSITE'");
                                 }
                                 // MODULE_XTBOOSTER_STDCURRENCY
                                 if(@$_POST['MODULE_XTBOOSTER_STDCURRENCY']!='') {
                                   if( !isset($xtb_config['MODULE_XTBOOSTER_STDCURRENCY']) )
-                                    xsb_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_XTBOOSTER_STDCURRENCY', '".$_POST['MODULE_XTBOOSTER_STDCURRENCY']."', '6', '1', '', now())");
+                                    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_XTBOOSTER_STDCURRENCY', '".$_POST['MODULE_XTBOOSTER_STDCURRENCY']."', '6', '1', '', now())");
                                   else
-                                    xsb_db_query("update " . TABLE_CONFIGURATION . " SET configuration_value = '".$_POST['MODULE_XTBOOSTER_STDCURRENCY']."' WHERE configuration_key = 'MODULE_XTBOOSTER_STDCURRENCY'");
+                                    xtc_db_query("update " . TABLE_CONFIGURATION . " SET configuration_value = '".$_POST['MODULE_XTBOOSTER_STDCURRENCY']."' WHERE configuration_key = 'MODULE_XTBOOSTER_STDCURRENCY'");
                                 }
                                 // MODULE_XTBOOSTER_STDSTANDORT
                                 if(@$_POST['MODULE_XTBOOSTER_STDSTANDORT']!='') {
                                   if( !isset($xtb_config['MODULE_XTBOOSTER_STDSTANDORT']) )
-                                    xsb_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_XTBOOSTER_STDSTANDORT', '".$_POST['MODULE_XTBOOSTER_STDSTANDORT']."', '6', '1', '', now())");
+                                    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_XTBOOSTER_STDSTANDORT', '".$_POST['MODULE_XTBOOSTER_STDSTANDORT']."', '6', '1', '', now())");
                                   else
-                                    xsb_db_query("update " . TABLE_CONFIGURATION . " SET configuration_value = '".$_POST['MODULE_XTBOOSTER_STDSTANDORT']."' WHERE configuration_key = 'MODULE_XTBOOSTER_STDSTANDORT'");
+                                    xtc_db_query("update " . TABLE_CONFIGURATION . " SET configuration_value = '".$_POST['MODULE_XTBOOSTER_STDSTANDORT']."' WHERE configuration_key = 'MODULE_XTBOOSTER_STDSTANDORT'");
                                 }
                                 // MODULE_XTBOOSTER_STDPLZ
                                 if(@$_POST['MODULE_XTBOOSTER_STDPLZ']!='') {
                                   if( !isset($xtb_config['MODULE_XTBOOSTER_STDPLZ']) )
-                                    xsb_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_XTBOOSTER_STDPLZ', '".$_POST['MODULE_XTBOOSTER_STDPLZ']."', '6', '1', '', now())");
+                                    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_XTBOOSTER_STDPLZ', '".$_POST['MODULE_XTBOOSTER_STDPLZ']."', '6', '1', '', now())");
                                   else
-                                    xsb_db_query("update " . TABLE_CONFIGURATION . " SET configuration_value = '".$_POST['MODULE_XTBOOSTER_STDPLZ']."' WHERE configuration_key = 'MODULE_XTBOOSTER_STDPLZ'");
+                                    xtc_db_query("update " . TABLE_CONFIGURATION . " SET configuration_value = '".$_POST['MODULE_XTBOOSTER_STDPLZ']."' WHERE configuration_key = 'MODULE_XTBOOSTER_STDPLZ'");
                                 }
                                 $requestx = "ACTION: EmailTemplateSave
                                              TEMPLATES_LANGUAGE: -=".base64_encode($_POST['MODULE_XTBOOSTER_TEMPLATES_LANGUAGE'])."
@@ -994,7 +994,7 @@
                                       <td colspan="3" class="smallText" style="font-weight:bold;font-size:12px;color:white;background-color:#555;padding:10px;padding:10px;"><?php echo TXT_OPTION_TEMPLATES?></td>
                                     </tr>
                                     <?php
-                                    $desc_languages_query = xsb_db_query("SELECT DISTINCT l.code,l.name FROM " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_LANGUAGES . " l WHERE pd.language_id = l.languages_id AND pd.products_description != ''");
+                                    $desc_languages_query = xtc_db_query("SELECT DISTINCT l.code,l.name FROM " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_LANGUAGES . " l WHERE pd.language_id = l.languages_id AND pd.products_description != ''");
                                     if(xtc_db_num_rows($desc_languages_query) > 1) {
                                       ?>
                                       <tr class="dataTableRow">
@@ -1256,7 +1256,7 @@
                                         <select name='MODULE_XTBOOSTER_DEFAULTCUSTOMERGROUP'>
                                           <option>++ <?php echo TXT_PLEASECHOOSE?> ++</option>
                                           <?php
-                                          $customer_status = xsb_db_query("SELECT * FROM " . TABLE_CUSTOMERS_STATUS . " WHERE language_id=".(int)$_SESSION['languages_id']." AND customers_status_id!=0");
+                                          $customer_status = xtc_db_query("SELECT * FROM " . TABLE_CUSTOMERS_STATUS . " WHERE language_id=".(int)$_SESSION['languages_id']." AND customers_status_id!=0");
                                           while($d=xtc_db_fetch_array($customer_status)) {
                                             ?>
                                             <option<?php if($default_customer_group==$d['customers_status_id']) { echo " selected"; } ?> value='<?php echo $d['customers_status_id'] ?>'><?php echo utf8_encode($d['customers_status_name']); ?></option>
@@ -1373,7 +1373,7 @@
                                     $items = array();
                                     $any_description_too_long = false;
                                     foreach($multi_products as $v) {
-                                      $products_query = xsb_db_query("SELECT products_quantity FROM " . TABLE_PRODUCTS . " as p, " . TABLE_PRODUCTS_DESCRIPTION . " as pd WHERE p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' AND p.products_id = '".$v."'"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+                                      $products_query = xtc_db_query("SELECT products_quantity FROM " . TABLE_PRODUCTS . " as p, " . TABLE_PRODUCTS_DESCRIPTION . " as pd WHERE p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' AND p.products_id = '".$v."'"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
                                       $x = xtc_db_fetch_array($products_query); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
                                       if($x['products_quantity']<1)
                                         $any_products_quantity = $x['products_quantity'];
@@ -1388,7 +1388,7 @@
                                     }
                                   }
                                   if(!$multi_xtb) {
-                                    $products_query = xsb_db_query("SELECT * FROM " . TABLE_PRODUCTS . " as p, " . TABLE_PRODUCTS_DESCRIPTION . " as pd left join ".TABLE_PRODUCTS_IMAGES." as pi ON (pi.products_id = pd.products_id) WHERE p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' AND p.products_id = '".$_POST['current_product_id']."'"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+                                    $products_query = xtc_db_query("SELECT * FROM " . TABLE_PRODUCTS . " as p, " . TABLE_PRODUCTS_DESCRIPTION . " as pd left join ".TABLE_PRODUCTS_IMAGES." as pi ON (pi.products_id = pd.products_id) WHERE p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' AND p.products_id = '".$_POST['current_product_id']."'"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
                                     $images = array();
                                     $x = xtc_db_fetch_array($products_query); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
                                     // Weitere Produkt-Bilder
@@ -2055,7 +2055,7 @@
                                         <tr class="attributes<?php echo $rowi++%2==0?'-even':'-odd'; ?>">
                                           <td class="smallText" style="font-weight:bold;"><?php echo TXT_STARTPRICE?>:</td>
                                           <?php
-                                          $tax_query = xsb_db_query("select tax_rate from " . TABLE_TAX_RATES . " where tax_class_id = '".$x['products_tax_class_id']."'"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+                                          $tax_query = xtc_db_query("select tax_rate from " . TABLE_TAX_RATES . " where tax_class_id = '".$x['products_tax_class_id']."'"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
                                           $tax = xtc_db_fetch_array($tax_query); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
                                           $price = $x['products_price']*($tax['tax_rate']+100)/100;
                                           ?>
@@ -2423,8 +2423,8 @@
                                 // eBay schickt Notifications bei Verkaeufen, oder wenn eine Festpreis-Auktion ohne Verkauf zu Ende ist (ItemUnsold). 
                                 // Wenn aber nur ein Teil der Artikel verkauft wurde, und die Zeit vorbei ist, bzw. bei nicht-Fetpreiisauktionen, kommt KEINE Notification => muss man hier abfangen
                                 // 60 sek. spaeter fuer moegliche Zeitunterschiede zum eBay-Server
-                                xsb_db_query("UPDATE xtb_auctions SET _EBAY_STATUS='successful' WHERE DURATION!='GTC' AND _EBAY_END_TIME<=UNIX_TIMESTAMP(NOW())-60 AND _EBAY_QUANTITY_BUYED>0");
-                                xsb_db_query("UPDATE xtb_auctions SET _EBAY_STATUS='unsuccessful' WHERE DURATION!='GTC' AND _EBAY_END_TIME<=UNIX_TIMESTAMP(NOW())-60 AND _EBAY_QUANTITY_BUYED=0");
+                                xtc_db_query("UPDATE xtb_auctions SET _EBAY_STATUS='successful' WHERE DURATION!='GTC' AND _EBAY_END_TIME<=UNIX_TIMESTAMP(NOW())-60 AND _EBAY_QUANTITY_BUYED>0");
+                                xtc_db_query("UPDATE xtb_auctions SET _EBAY_STATUS='unsuccessful' WHERE DURATION!='GTC' AND _EBAY_END_TIME<=UNIX_TIMESTAMP(NOW())-60 AND _EBAY_QUANTITY_BUYED=0");
                                 // Listenansicht ermöglichen
                                 if ($display_type=='list') {
                                   $items_per_site = 100000;
@@ -2467,11 +2467,11 @@
                                 $add .= " AND (_EBAY_START_TIME<='".$ts_bis."')";
                               }
                               if ($filter == '4') {
-                                $products_query0 = xsb_db_query("SELECT TYPE FROM xtb_transactions t, xtb_auctions a LEFT JOIN ".TABLE_PRODUCTS." USING(products_id) WHERE $add and a._EBAY_ITEM_ID=t.XTB_ITEM_ID order by t.XTB_EBAY_TS DESC"); # This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
-                                $products_query = xsb_db_query("SELECT *, MD5(CONCAT(t.XTB_ITEM_ID,'',t.XTB_EBAY_USERID)) as HASH FROM xtb_transactions t, xtb_auctions a LEFT JOIN ".TABLE_PRODUCTS." USING(products_id) WHERE $add and a._EBAY_ITEM_ID=t.XTB_ITEM_ID order by t.XTB_EBAY_TS DESC LIMIT $offset,$items_per_site"); # This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+                                $products_query0 = xtc_db_query("SELECT TYPE FROM xtb_transactions t, xtb_auctions a LEFT JOIN ".TABLE_PRODUCTS." USING(products_id) WHERE $add and a._EBAY_ITEM_ID=t.XTB_ITEM_ID order by t.XTB_EBAY_TS DESC"); # This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+                                $products_query = xtc_db_query("SELECT *, MD5(CONCAT(t.XTB_ITEM_ID,'',t.XTB_EBAY_USERID)) as HASH FROM xtb_transactions t, xtb_auctions a LEFT JOIN ".TABLE_PRODUCTS." USING(products_id) WHERE $add and a._EBAY_ITEM_ID=t.XTB_ITEM_ID order by t.XTB_EBAY_TS DESC LIMIT $offset,$items_per_site"); # This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
                               } else {
-                                $products_query0 = xsb_db_query("SELECT TYPE FROM xtb_auctions LEFT JOIN ".TABLE_PRODUCTS." USING(products_id) WHERE $add order by XTB_ITEM_ID DESC"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
-                                $products_query = xsb_db_query("SELECT * FROM xtb_auctions LEFT JOIN ".TABLE_PRODUCTS." USING(products_id) WHERE $add order by XTB_ITEM_ID DESC LIMIT $offset,$items_per_site"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+                                $products_query0 = xtc_db_query("SELECT TYPE FROM xtb_auctions LEFT JOIN ".TABLE_PRODUCTS." USING(products_id) WHERE $add order by XTB_ITEM_ID DESC"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+                                $products_query = xtc_db_query("SELECT * FROM xtb_auctions LEFT JOIN ".TABLE_PRODUCTS." USING(products_id) WHERE $add order by XTB_ITEM_ID DESC LIMIT $offset,$items_per_site"); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
                               }
                               $num_rows = xtc_db_num_rows($products_query0);
                               $sites = ceil($num_rows/$items_per_site);
@@ -2500,7 +2500,7 @@
                                   <select name="datum_von_j">
                                     <option value="0"><?php echo TXT_YEAR?></option>
                                     <?php
-                                    $year_start = date('Y', xsb_db_first(xsb_db_query("SELECT MIN(_EBAY_START_TIME) as MinTime FROM xtb_auctions")));
+                                    $year_start = date('Y', xsb_db_first(xtc_db_query("SELECT MIN(_EBAY_START_TIME) as MinTime FROM xtb_auctions")));
                                     for ($y=date('Y');$y>=$year_start;$y--)  {
                                       ?>
                                       <option value="<?php echo $y?>"<?php echo ($datum_von_j==$y?' SELECTED="SELECTED"':(($datum_von_j==0 AND $y==date('Y'))?' SELECTED="SELECTED"':''))?>><?php echo $y?></option>
@@ -2522,7 +2522,7 @@
                                   <select name="datum_bis_j">
                                     <option value="0"><?php echo TXT_YEAR?></option>
                                     <?php
-                                    $year_start = date('Y', xsb_db_first(xsb_db_query("SELECT MIN(_EBAY_START_TIME) as MinTime FROM xtb_auctions")));
+                                    $year_start = date('Y', xsb_db_first(xtc_db_query("SELECT MIN(_EBAY_START_TIME) as MinTime FROM xtb_auctions")));
                                     for ($y=date('Y');$y>=$year_start;$y--)  {
                                       ?>
                                       <option value="<?php echo $y?>"<?php echo ($datum_bis_j==$y?' SELECTED="SELECTED"':(($datum_bis_j==0 AND $y==date('Y'))?' SELECTED="SELECTED"':''))?>><?php echo $y?></option>
@@ -2597,7 +2597,7 @@
                                       <?php
 																			if ( $filter=='1' || $filter=='2' ) {
 																				$sql = "SELECT t.XTB_ITEM_ID,t.XTB_EBAY_USERID,t.XTB_KEY,MD5(CONCAT(t.XTB_ITEM_ID,'',t.XTB_EBAY_USERID)) as HASH, t.XTB_CHECKOUT_TS,t.XTC_ORDER_ID,t.XTB_EBAY_NAME,t.XTB_EBAY_TS FROM xtb_transactions as t LEFT JOIN xtb_auctions as a ON (a._EBAY_ITEM_ID=t.XTB_ITEM_ID) WHERE t.XTB_ITEM_ID=".$x['_EBAY_ITEM_ID'];
-																				$q = xsb_db_query($sql); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+																				$q = xtc_db_query($sql); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
 																				if(xtc_db_num_rows($q)) {
 																					?>
 																					<table border="0" cellpadding="2" cellspacing="0">
