@@ -358,8 +358,8 @@ define('WARNING_NO_FILE_UPLOADED', 'Warnung: No file uploaded.');
 define('ERROR_FILE_NOT_REMOVEABLE', 'Error: File not removed.');
 
 define('DELETE_ENTRY','Delete entry?');
-define('TEXT_PAYMENT_ERROR','<b>WARNING:</b> Please activate a Payment Module!');
-define('TEXT_SHIPPING_ERROR','<b>WARNING:</b> Please activate a Shipping Module!');
+define('TEXT_PAYMENT_ERROR','<b>WARNING:</b> Please activate a <a href="'.xtc_href_link(FILENAME_MODULES, 'set=payment').'">Payment Method</a>!');
+define('TEXT_SHIPPING_ERROR','<b>WARNING:</b> Please activate a <a href="'.xtc_href_link(FILENAME_MODULES, 'set=shipping').'">Shipping Method</a>!');
 define('TEXT_PAYPAL_CONFIG','<b>WARNING:</b> Please configure the PayPal payment settings for "Live mode" here: <a href="%s"><strong>Partner -> PayPal</strong></a>.'); //DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
 define('TEXT_DUPLUCATE_CONFIG_ERROR','<b>WARNING:</b> Duplicate configuration key: ');
 

@@ -722,6 +722,11 @@ padding-left:20px;
 #security_info ul li{
 font-weight:bold;
 }
+#security_info a{
+font-size: 12px;
+font-weight: bold;
+text-decoration: underline;
+}
 .nobr{
 white-space: nowrap;
 }
