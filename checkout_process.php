@@ -48,6 +48,11 @@ if (isset($_SESSION['credit_covers'])) {
 }
 $payment_modules = new payment($_SESSION['payment']);
 
+// if no shipping method has been selected, redirect the customer to the shipping page
+if (!isset($_SESSION['shipping'])) {
+  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+}
+
 // load the selected shipping module
 require_once(DIR_WS_CLASSES.'shipping.php');
 $shipping_modules = new shipping($_SESSION['shipping']);
