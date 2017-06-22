@@ -634,7 +634,7 @@
                         <table border="0" width="100%" cellspacing="0" cellpadding="0">
                           <tr>
                             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-                            <td class="pageHeading" align="right"><?php echo xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+                            <td class="pageHeading" align="right"><?php echo xtc_draw_separator('pixel_trans.gif', '57', '40'); ?></td>
                           </tr>
                         </table>
                         <div id='content_ajx' style='display:none;'>
