@@ -9,5 +9,16 @@
       <span class="gp_price">{#pieces#} {$module_data.PRICE}</span>
       {if $module_data.VPE != ''}<span class="gp_vpe">{$module_data.VPE}</span>{/if}
     </div>
+  {if $smarty.foreach.aussen.first}
+    {assign var=maxPrice value=$module_data.PLAIN_PRICE}
+  {else if $smarty.foreach.aussen.last}
+    {assign var=minPrice value=$module_data.PLAIN_PRICE}
+  {/if}
   {/foreach}
+  <div itemprop="PriceSpecification" itemscope itemtype="http://schema.org/PriceSpecification">
+    <meta itemprop="priceCurrency" content="{$smarty.session.currency}">
+    <meta itemprop="price" content="{$maxPrice}">
+    <meta itemprop="minPrice" content="{$minPrice}">
+    <meta itemprop="maxPrice" content="{$maxPrice}">
+  </div>
 </div>
