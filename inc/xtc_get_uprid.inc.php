@@ -29,7 +29,7 @@
         reset($params);
         while (list($option, $value) = each($params)) {
           //new module support 
-          list($option, $value) = (class_exists('shoppingCartModules') ? $scModules->get_uprid(array($option, $value)) : array($option, $value));
+          list($option, $value) = (class_exists('shoppingCartModules') ? $scModules->get_uprid(array($option, $value), $prid) : array($option, $value));
           if (is_numeric($option) && is_numeric($value)) {
             $attributes_ids .= '{' . (int)$option . '}' . (int)$value;
           } else {
