@@ -16,7 +16,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 class trustedshops {
   var $code, $title, $description, $enabled;
 
-  function trustedshops() {
+  function __construct() {
      $this->code = 'trustedshops';
      $this->title = MODULE_TRUSTEDSHOPS_TEXT_TITLE;
      $this->description = MODULE_TRUSTEDSHOPS_TEXT_DESCRIPTION;
