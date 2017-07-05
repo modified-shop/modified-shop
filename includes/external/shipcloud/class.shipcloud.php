@@ -103,6 +103,26 @@ class shipcloud {
         $request_array['notification_email'] = $this->order->customer['email_address'];
       }
       
+      if ($request_array['service'] == 'returns') {
+        $from = $request_array['to'];
+        $to = $request_array['from'];
+        $request_array['to'] = $to;
+        $request_array['from'] = $from;
+        
+        if (MODULE_SHIPCLOUD_EMAIL == 'True' && MODULE_SHIPCLOUD_EMAIL_TYPE == 'shipcloud') {
+          $request_array['notification_email'] = STORE_OWNER_EMAIL_ADDRESS;
+        }
+        
+        for ($i=0, $n=count($request_array['additional_services']); $i<$n; $i++) {
+          if ($request_array['additional_services'][$i]['name'] == 'advance_notice') {
+            $request_array['additional_services'][$i]['properties']['email'] = STORE_OWNER_EMAIL_ADDRESS;
+          }
+          if ($request_array['additional_services'][$i]['name'] == 'cash_on_delivery') {
+            unset($request_array['additional_services'][$i]);
+          }          
+        }
+      }
+      
       $request_array = $this->encode_request($request_array);
       $this->logger($request_array);
       
