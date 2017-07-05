@@ -51,7 +51,7 @@ $lang_array = array(
   // refund
   'TEXT_PAYPAL_REFUND' => 'R&uuml;ckzahlung',
   'TEXT_PAYPAL_REFUND_LEFT' => 'Anzahl m&ouml;glicher R&uuml;ckzahlungen: ',
-  'TEXT_PAYPAL_REFUND_COMMENT' => 'Kommentar:',
+  'TEXT_PAYPAL_REFUND_COMMENT' => 'Kommentar:<br />(maximal 127 Zeichen)',
   'TEXT_PAYPAL_REFUND_AMOUNT' => 'Betrag:',
   'TEXT_PAYPAL_REFUND_SUBMIT' => 'R&uuml;ckzahlung',
   
