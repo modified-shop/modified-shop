@@ -259,7 +259,7 @@ if (isset($order) && is_object($order)) {
                       echo '<div class="'.(((10 - $count['refund']) > 0) ? 'info_message' : 'error_message').'">'.TEXT_PAYPAL_REFUND_LEFT . ' ' . (10 - $count['refund']).'</div>';
                       echo '<br/>';
                       echo '<label for="refund_comment" style="vertical-align: top; margin-top: 5px;">'.TEXT_PAYPAL_REFUND_COMMENT.'</label>';
-                      echo xtc_draw_textarea_field('refund_comment', '', '60', '8', '', 'id="refund_comment"');
+                      echo xtc_draw_textarea_field('refund_comment', '', '60', '8', '', 'id="refund_comment" maxlength="127"');
                       echo '<br/>';
                       echo '<label for="refund_price">'.TEXT_PAYPAL_REFUND_AMOUNT.'</label>';
                       echo xtc_draw_input_field('refund_price', '', 'id="refund_price" style="width: 135px"');
