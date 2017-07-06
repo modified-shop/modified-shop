@@ -23,8 +23,8 @@
       </div>
       {if $module_data.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
         <div class="lb_tax">{$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK}</div>
-        {if $module_data.PRODUCTS_BUTTON_BUY_NOW || ($module_data.PRODUCTS_FSK18 != '0' && $smarty.const.SHOW_BUTTON_BUY_NOW != 'false')}<div class="lb_buttons cf"><div class="cssButtonPos11">{$module_data.PRODUCTS_BUTTON_DETAILS}</div>{if $module_data.PRODUCTS_BUTTON_BUY_NOW}<div class="cssButtonPos11">{$module_data.PRODUCTS_BUTTON_BUY_NOW}</div>{/if}</div>{/if}
       {/if}
+      <div class="lb_buttons cf"><div class="cssButtonPos11">{$module_data.PRODUCTS_BUTTON_DETAILS}</div>{if $module_data.PRODUCTS_BUTTON_BUY_NOW || ($module_data.PRODUCTS_FSK18 != '0' && $smarty.const.SHOW_BUTTON_BUY_NOW != 'false')}<div class="cssButtonPos11">{$module_data.PRODUCTS_BUTTON_BUY_NOW}</div>{/if}</div>
     </div>
   </div>
   {/foreach}
@@ -57,8 +57,8 @@
           {if $module_data.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
             {if $module_data.PRODUCTS_VPE}<div class="lr_vpe">{$module_data.PRODUCTS_VPE}</div>{/if}
             <div class="lr_tax">{$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK}</div>
-            <div class="lr_buttons cf"><div class="cssButtonPos11">{$module_data.PRODUCTS_BUTTON_DETAILS}</div>{if $module_data.PRODUCTS_BUTTON_BUY_NOW}<div class="cssButtonPos11">{$module_data.PRODUCTS_BUTTON_BUY_NOW}</div>{/if}</div>
           {/if}
+          <div class="lr_buttons cf"><div class="cssButtonPos11">{$module_data.PRODUCTS_BUTTON_DETAILS}</div>{if $module_data.PRODUCTS_BUTTON_BUY_NOW || ($module_data.PRODUCTS_FSK18 != '0' && $smarty.const.SHOW_BUTTON_BUY_NOW != 'false')}<div class="cssButtonPos11">{$module_data.PRODUCTS_BUTTON_BUY_NOW}</div>{/if}</div>
         </div>
       </div>
     </div>
