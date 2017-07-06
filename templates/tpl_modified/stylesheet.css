@@ -1640,7 +1640,7 @@ a.color_more:hover {
   line-height:14px;
   font-weight:normal;
   display:block;
-  padding:6px 0 0 0;
+  padding:0;
   color:#999;
 }
 .lb_price .new_price {
