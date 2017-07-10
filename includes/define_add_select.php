@@ -38,4 +38,16 @@ $add_select_default[] = 'p.products_extra_field';
   
   // used in /includes/classes/shopping_cart.php -  used for cart details
   define('ADD_SELECT_CART', (count($add_select_cart) ? rtrim(implode(', ', $add_select_cart), ',').', ' : ''));
+  
+  
+  //PRODUCT OPTIONS
+  $add_products_options_select = array();
+  // used in /includes/modules/product_attributes.php - used for products options data
+  define('ADD_PRODUCT_OPTIONS_SELECT', (count($add_products_options_select) ? rtrim(implode(', ', $add_products_options_select), ',').', ' : ''));
+  
+  //PRODUCT TAGS
+  $add_tags_select = array();
+  // used in /includes/modules/product_tags.php - used for product tags module_content
+  define('ADD_TAGS_SELECT', (count($add_tags_select) ? rtrim(implode(', ', $add_tags_select), ',').', ' : ''));
+  
 ?>

@@ -10,12 +10,8 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-$add_tags_select = array();
-
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_tags_top/','php') as $file) require ($file);
-
-define('ADD_TAGS_SELECT', (count($add_tags_select) ? rtrim(implode(', ', $add_tags_select), ',').', ' : ''));
 
 $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');

@@ -22,12 +22,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-$add_products_options_select = ''array();
-
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_top/','php') as $file) require ($file);
-
-define('ADD_PRODUCT_OPTIONS_SELECT', (count($add_products_options_select) ? rtrim(implode(', ', $add_products_options_select), ',').', ' : ''));
 
 if ($product->getAttributesCount() > 0) {
 
