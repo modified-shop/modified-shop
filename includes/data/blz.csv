@@ -33,7 +33,7 @@
 10050008;Landesbank Berlin - E 4 -;E2
 10050020;LBB S-Kreditpartner, Berlin;B8
 10050500;LBS Ost Berlin;09
-10050999;DekaBank Berlin;09
+10050999;DekaBank;09
 10060198;Pax-Bank;06
 10061006;Bank für Kirche und Diakonie - KD-Bank Gf Sonder-BLZ;09
 10070000;Deutsche Bank Fil Berlin;63
@@ -75,7 +75,7 @@
 12030000;Deutsche Kreditbank Berlin;00
 12030900;Merck Finck Privatbankiers;10
 12040000;Commerzbank Filiale Berlin 2;13
-12050555;NLB FinanzIT;09
+12050555;ZVA Norddeutsche Landesbank Gf SA;09
 12060000;DZ BANK;09
 12070000;Deutsche Bank Ld Brandenburg;63
 12070024;Deutsche Bank Privat und Geschäftskunden;63
@@ -233,6 +233,7 @@
 20120100;M.M.Warburg & CO;09
 20120200;BHF-BANK;60
 20120400;Deutscher Ring Bausparkasse;E0
+20120520;Bank für Sozialwirtschaft;09
 20120600;Goyer & Göppel;09
 20120700;Hanseatic Bank;16
 20130400;GRENKE BANK;00
@@ -422,6 +423,7 @@
 25040066;Commerzbank;13
 25050000;Norddeutsche Landesbank Girozentrale;27
 25050055;ZVA Norddeutsche Landesbank SH;09
+25050066;ZVA Norddeutsche Landesbank Gf MV;09
 25050180;Sparkasse Hannover;A3
 25050299;Sparkasse Hannover -alt-;A3
 25055500;LBS-Norddeutsche Landesbausparkasse;26
@@ -779,6 +781,7 @@
 30010400;IKB Deutsche Industriebank;09
 30010444;IKB Privatkunden - IKB Deutsche Industriebank;09
 30010700;The Bank of Tokyo-Mitsubishi UFJ;09
+30015500;easybank Niederlassung Deutschland;01
 30019000;ipagoo - German Branch;09
 30020500;BHF-BANK;60
 30020700;Mizuho Bank Filiale Düsseldorf;09
@@ -871,7 +874,7 @@
 31470024;Deutsche Bank Privat und Geschäftskunden;63
 32040024;Commerzbank;13
 32050000;Sparkasse Krefeld;00
-32051996;Sparkasse der Stadt Straelen;00
+32051996;Sparkasse der Stadt Straelen -alt-;00
 32060362;Volksbank Krefeld;06
 32061384;Volksbank an der Niers;06
 32061414;Volksbank Kempen-Grefrath;06
@@ -880,7 +883,7 @@
 32080010;Commerzbank vormals Dresdner Bank;76
 32250050;Verbandssparkasse Goch;00
 32440023;Commerzbank;13
-32450000;Sparkasse Kleve;00
+32450000;Sparkasse Rhein-Maas;00
 32460422;Volksbank Kleverland;06
 32470024;Deutsche Bank Privat und Geschäftskunden;63
 32470077;Deutsche Bank;63
@@ -1033,7 +1036,7 @@
 37069342;Volksbank Heimbach;06
 37069354;Raiffeisenbank Selfkant Zw -alt-;06
 37069355;Spar- und Darlehnskasse Hoengen;06
-37069381;VR-Bank Rur-Wurm;06
+37069381;VR-Bank Rur-Wurm -alt-;06
 37069401;Raiffeisenbank Junkersdorf;06
 37069405;Raiffeisenbank Kaarst;06
 37069412;Volksbank Heinsberg;06
@@ -1327,7 +1330,7 @@
 44761534;Volksbank im Märkischen Kreis;34
 45000000;Bundesbank;09
 45040042;Commerzbank;13
-45050001;Sparkasse HagenHerdecke;02
+45050001;Sparkasse HagenHerdecke;09
 45051485;Stadtsparkasse Herdecke;00
 45060009;Märkische Bank;34
 45061524;Volksbank Hohenlimburg;34
@@ -1414,7 +1417,7 @@
 47691200;Volksbank Ostlippe;34
 47840065;Commerzbank;13
 47840080;Commerzbank Zw 80;09
-47850065;Sparkasse Gütersloh;03
+47850065;Sparkasse Gütersloh-Rietberg;A7
 47852760;Sparkasse Rietberg -alt-;00
 47853355;Stadtsparkasse Versmold;00
 47853520;Kreissparkasse Wiedenbrück;00
@@ -1538,6 +1541,8 @@
 50060413;DZ BANK Gf VK 2;09
 50060414;DZ BANK für Bausparkasse Schwäbisch Hall;09
 50060415;DZ BANK für Bausparkasse Schwäbisch Hall;09
+50060416;DZ BANK Gf VK 5;09
+50060417;DZ BANK Gf VK 6;09
 50060474;DZ BANK, Deutsche Zentral-Genossenschaftsbank;09
 50061741;Raiffeisenbank Oberursel;32
 50069126;VR Bank Alzey-Land-Schwabenheim;32
@@ -1616,66 +1621,6 @@
 50190400;Volksbank Griesheim;06
 50210111;SEB TZN Clearing;13
 50210112;SEB TZN MB Frankfurt;09
-50210130;SEB TZN MB Ffm.;09
-50210131;SEB TZN MB Ffm.;09
-50210132;SEB TZN MB Ffm.;09
-50210133;SEB TZN MB Ffm.;09
-50210134;SEB TZN MB Ffm.;09
-50210135;SEB TZN MB Ffm.;09
-50210136;SEB TZN MB Ffm.;09
-50210137;SEB TZN MB Ffm.;09
-50210138;SEB TZN MB Ffm.;09
-50210139;SEB TZN MB Ffm.;09
-50210140;SEB TZN MB Ffm.;09
-50210141;SEB TZN MB Ffm.;09
-50210142;SEB TZN MB Ffm.;09
-50210143;SEB TZN MB Ffm.;09
-50210144;SEB TZN MB Ffm.;09
-50210145;SEB TZN MB Ffm.;09
-50210146;SEB TZN MB Ffm.;09
-50210147;SEB TZN MB Ffm.;09
-50210148;SEB TZN MB Ffm.;09
-50210149;SEB TZN MB Ffm.;09
-50210150;SEB TZN MB Ffm.;09
-50210151;SEB TZN MB Ffm.;09
-50210152;SEB TZN MB Ffm.;09
-50210153;SEB TZN MB Ffm.;09
-50210154;SEB TZN MB Ffm.;09
-50210155;SEB TZN MB Ffm.;09
-50210156;SEB TZN MB Ffm.;09
-50210157;SEB TZN MB Ffm.;09
-50210158;SEB TZN MB Ffm.;09
-50210159;SEB TZN MB Ffm.;09
-50210160;SEB TZN MB Frankfurt;09
-50210161;SEB TZN MB Frankfurt;09
-50210162;SEB TZN MB Frankfurt;09
-50210163;SEB TZN MB Frankfurt;09
-50210164;SEB TZN MB Frankfurt;09
-50210165;SEB TZN MB Frankfurt;09
-50210166;SEB TZN MB Frankfurt;09
-50210167;SEB TZN MB Frankfurt;09
-50210168;SEB TZN MB Frankfurt;09
-50210169;SEB TZN MB Frankfurt;09
-50210170;SEB TZN MB Frankfurt;09
-50210171;SEB TZN MB Frankfurt;09
-50210172;SEB TZN MB Frankfurt;09
-50210173;SEB TZN MB Frankfurt;09
-50210174;SEB TZN MB Frankfurt;09
-50210175;SEB TZN MB Frankfurt;09
-50210176;SEB TZN MB Frankfurt;09
-50210177;SEB TZN MB Frankfurt;09
-50210178;SEB TZN MB Frankfurt;09
-50210179;SEB TZN MB Frankfurt;09
-50210180;SEB TZN MB Frankfurt;09
-50210181;SEB TZN MB Frankfurt;09
-50210182;SEB TZN MB Frankfurt;09
-50210183;SEB TZN MB Frankfurt;09
-50210184;SEB TZN MB Frankfurt;09
-50210185;SEB TZN MB Frankfurt;09
-50210186;SEB TZN MB Frankfurt;09
-50210187;SEB TZN MB Frankfurt;09
-50210188;SEB TZN MB Frankfurt;09
-50210189;SEB TZN MB Frankfurt;21
 50210200;Rabobank International Frankfurt Branch;18
 50210212;RaboDirect;18
 50210295;Rabobank International Frankfurt Branch;09
@@ -1688,7 +1633,6 @@
 50220900;Hauck & Aufhäuser Privatbankiers;00
 50230000;ABC International Bank Frankfurt am Main;00
 50230100;Morgan Stanley Bank Internaional;09
-50230400;The Royal Bank of Scotland Niederlassung Frankfurt;10
 50230600;Isbank;06
 50230700;Metzler, B. - seel Sohn & Co;00
 50230800;Ikano Bank;09
@@ -1713,67 +1657,6 @@
 50334400;The Bank of New York Mellon NL Frankfurt;09
 50400000;Bundesbank Zentrale;09
 50510111;SEB;13
-50510120;SEB TZN MB Ffm;09
-50510121;SEB TZN MB Ffm;09
-50510122;SEB TZN MB Ffm;09
-50510123;SEB TZN MB Ffm;09
-50510124;SEB TZN MB Ffm;09
-50510125;SEB TZN MB Ffm;09
-50510126;SEB TZN MB Ffm;09
-50510127;SEB TZN MB Ffm;09
-50510128;SEB TZN MB Ffm;09
-50510129;SEB TZN MB Ffm;09
-50510130;SEB TZN MB Ffm;09
-50510131;SEB TZN MB Ffm;09
-50510132;SEB TZN MB Ffm;09
-50510133;SEB TZN MB Ffm;09
-50510134;SEB TZN MB Ffm;09
-50510135;SEB TZN MB Ffm;09
-50510136;SEB TZN MB Ffm;21
-50510137;SEB TZN MB Ffm;09
-50510138;SEB TZN MB Ffm;09
-50510139;SEB TZN MB Ffm;09
-50510140;SEB TZN MB Ffm;09
-50510141;SEB TZN MB Ffm;09
-50510142;SEB TZN MB Ffm;09
-50510143;SEB TZN MB Ffm;09
-50510144;SEB TZN MB Ffm;09
-50510145;SEB TZN MB Ffm;09
-50510146;SEB TZN MB Ffm;09
-50510147;SEB TZN MB Ffm;09
-50510148;SEB TZN MB Ffm;09
-50510149;SEB TZN MB Ffm;09
-50510150;SEB TZN MB Ffm;09
-50510151;SEB TZN MB Ffm;09
-50510152;SEB TZN MB Ffm;09
-50510153;SEB TZN MB Ffm;09
-50510154;SEB TZN MB Ffm;09
-50510155;SEB TZN MB Ffm;09
-50510156;SEB TZN MB Ffm;09
-50510157;SEB TZN MB Ffm;09
-50510158;SEB TZN MB Ffm;09
-50510159;SEB TZN MB Ffm;09
-50510160;SEB TZN MB Ffm;09
-50510161;SEB TZN MB Ffm;09
-50510162;SEB TZN MB Ffm;09
-50510163;SEB TZN MB Ffm;09
-50510164;SEB TZN MB Ffm;09
-50510165;SEB TZN MB Ffm;09
-50510166;SEB TZN MB Ffm;09
-50510167;SEB TZN MB Ffm;09
-50510168;SEB TZN MB Ffm;09
-50510169;SEB TZN MB Ffm;21
-50510170;SEB TZN MB Ffm;09
-50510171;SEB TZN MB Ffm;09
-50510172;SEB TZN MB Ffm;09
-50510173;SEB TZN MB Ffm;09
-50510174;SEB TZN MB Ffm;09
-50510175;SEB TZN MB Ffm;09
-50510176;SEB TZN MB Ffm;09
-50510177;SEB TZN MB Ffm;09
-50510178;SEB TZN MB Ffm;09
-50510179;SEB TZN MB Ffm;09
-50510180;SEB TZN MB Ffm;21
 50520190;UniCredit Bank - HypoVereinsbank;99
 50522222;FIDOR Bank Zndl Frankfurt am Main;09
 50530000;Cronbank;06
@@ -1890,7 +1773,6 @@
 51220800;Banco do Brasil;09
 51220900;Morgan Stanley Bank;09
 51220910;Morgan Stanley Bank;50
-51230400;RBS ( Deutschland ) Frankfurt am Main;10
 51230500;Standard Chartered Bank Germany Branch, Frankfurt;09
 51230502;Standard Chartered Bank Germany Branch;09
 51230555;Ikano Bank;09
@@ -1988,8 +1870,8 @@
 52410300;ReiseBank;09
 52410310;ReiseBank Gf2;09
 52410400;KEB Hana Bank (Deutschland);19
-52411000;Cash Express Gesellschaft f Finanz-u Reisedienstleistungen;09
-52411010;Cash Express Gesellschaft f.Finanz-u.Reisedienstleistungen;09
+52411000;ReiseBank Gf3 vormals Cash Express;09
+52411010;ReiseBank Gf4 vormals Cash Express;09
 52420000;Credit Agricole CIB Deutschland;09
 52420300;SHINHAN BANK EUROPE;09
 52420600;Piraeus Bank Frankfurt Branch;30
@@ -2080,9 +1962,9 @@
 54850010;Sparkasse Südliche Weinstraße in Landau;00
 54851440;Sparkasse Germersheim-Kandel;00
 54861190;Raiffeisenbank Oberhaardt-Gäu -alt-;32
-54862390;Raiffeisenbank;32
+54862390;Raiffeisenbank -alt-;32
 54862500;VR Bank Südpfalz;32
-54891300;VR Bank Südliche Weinstraße;06
+54891300;VR Bank Südliche Weinstraße-Wasgau;06
 55000000;Bundesbank;09
 55010111;SEB;13
 55010400;Aareal Bank GF - BK01 -;01
@@ -2269,7 +2151,7 @@
 59040000;Commerzbank;13
 59050000;Landesbank Saar;27
 59050101;Sparkasse Saarbrücken;E3
-59051090;Stadtsparkasse Völklingen;21
+59051090;Stadtsparkasse Völklingen -alt-;21
 59070000;Deutsche Bank Saarbruecken;63
 59070070;Deutsche Bank Privat und Geschäftskunden;63
 59080090;Commerzbank vormals Dresdner Bank;76
@@ -2372,7 +2254,7 @@
 60069669;Erligheimer Bank -alt-;10
 60069673;Abtsgmünder Bank -Raiffeisen-;10
 60069680;Raiffeisenbank Bretzfeld-Neuenstein;10
-60069685;Raiffeisenbank;10
+60069685;Raiffeisenbank Wangen;10
 60069705;Raiffeisenbank Schlat -alt-;10
 60069706;Raiffeisenbank;10
 60069710;Raiffeisenbank Gammesfeld;09
@@ -2682,7 +2564,7 @@
 66490000;Volksbank in der Ortenau;06
 66491800;Volksbank Bühl Fil Kehl;06
 66492600;Volksbank Appenweier-Urloffen Appenweier -alt-;06
-66492700;Volksbank Kinzigtal;06
+66492700;Volksbank Mittlerer Schwarzwald;06
 66550070;Sparkasse Rastatt-Gernsbach;00
 66562053;Raiffeisenbank Südhardt Durmersheim;06
 66562300;VR-Bank in Mittelbaden;06
@@ -2754,7 +2636,7 @@
 68051207;Sparkasse Bonndorf-Stühlingen;00
 68052230;Sparkasse St. Blasien;00
 68052328;Sparkasse Staufen-Breisach;00
-68052863;Sparkasse Schönau-Todtnau;00
+68052863;Sparkasse Schönau-Todtnau -alt-;00
 68061505;Volksbank Breisgau-Süd;06
 68062105;Raiffeisenbank Denzlingen-Sexau;06
 68062730;Raiffeisenbank Wyhl;06
@@ -2778,7 +2660,7 @@
 68310111;SEB;13
 68340058;Commerzbank;13
 68350048;Sparkasse Lörrach-Rheinfelden;00
-68351557;Sparkasse Schopfheim-Zell;00
+68351557;Sparkasse Wiesental;00
 68351865;Sparkasse Markgräflerland;00
 68370024;Deutsche Bank Privat und Geschäftskunden;63
 68370034;Deutsche Bank;63
@@ -2820,7 +2702,7 @@
 69470024;Deutsche Bank Privat und Geschäftskunden;63
 69470039;Deutsche Bank Villingen u Schwenningen;63
 69490000;Volksbank Schwarzwald Baar Hegau;06
-69491700;Volksbank Triberg;06
+69491700;Volksbank Triberg -alt-;06
 70000000;Bundesbank;09
 70010080;Postbank (Giro);24
 70010111;SEB;13
@@ -2909,7 +2791,7 @@
 70093400;VR-Bank Ismaning Hallbergmoos Neufahrn;88
 70110088;Postbank (Spar);09
 70110500;Münchener Hypothekenbank;09
-70110600;UBI BANCA INTERNATIONAL - Ndl München;09
+70110600;UBI BANCA Niederlassung München;09
 70120100;State Street Bank International;09
 70120400;BNP Paribas Niederlassung Deutschland;00
 70120500;CACEIS Bank, Germany Branch;D2
@@ -2986,7 +2868,7 @@
 70321194;UniCredit Bank - HypoVereinsbank;99
 70322192;UniCredit Bank - HypoVereinsbank;99
 70350000;Kreissparkasse Garmisch-Partenkirchen;00
-70351030;Vereinigte Sparkassen im Landkreis Weilheim;00
+70351030;Sparkasse Oberland;00
 70362595;Raiffeisenbank Wallgau-Krün;88
 70380006;Commerzbank vormals Dresdner Bank;76
 70390000;VR-Bank Werdenfels;88
@@ -3122,7 +3004,6 @@
 73340046;Commerzbank Kempten Allgäu;13
 73350000;Sparkasse Allgäu;00
 73351635;Sparkasse Riezlern, Kleinwalsertal;00
-73362421;Bankhaus Jungholz Zndl der Raiffeisenbank Reutte;09
 73369264;Raiffeisenbank im Allgäuer Land;88
 73369821;BodenseeBank;88
 73369823;Raiffeisenbank Westallgäu;88
@@ -3143,13 +3024,12 @@
 73370024;Deutsche Bank Privat und Geschäftskunden;63
 73380004;Commerzbank vormals Dresdner Bank;76
 73390000;Allgäuer Volksbank Kempten-Sonthofen;88
-73391600;Volksbank im Kleinwalsertal;09
 73392000;Volksbank Immenstadt;88
 73420071;UniCredit Bank - HypoVereinsbank;99
 73421478;UniCredit Bank - HypoVereinsbank;99
 73440048;Commerzbank;13
 73450000;Kreis- und Stadtsparkasse Kaufbeuren;00
-73451450;Kreissparkasse Schongau;00
+73451450;Kreissparkasse Schongau -alt-;00
 73460046;VR Bank Kaufbeuren-Ostallgäu;88
 73480013;Commerzbank vormals Dresdner Bank;76
 74020074;UniCredit Bank - HypoVereinsbank;99
@@ -3577,6 +3457,7 @@
 84069065;Raiffeisenbank Schleusingen -alt-;32
 84080000;Commerzbank vormals Dresdner Bank;76
 84094754;VR-Bank Bad Salzungen Schmalkalden;32
+84094755;VR-Bank Bad Salzungen Schmalkalden GAA;32
 84094814;VR Bank Südthüringen;32
 85000000;Bundesbank eh Dresden;09
 85010500;Sächsische Aufbaubank -Förderbank-;09

@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: blz_update.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,7 +16,7 @@ require('includes/application_top.php');
 // include needed function
 require_once(DIR_FS_INC.'get_external_content.inc.php');
 
-$blz_file_default_link = 'https://www.bundesbank.de/Redaktion/DE/Downloads/Aufgaben/Unbarer_Zahlungsverkehr/Bankleitzahlen/2017_06_04/blz_2017_03_06_txt.txt?__blob=publicationFile';
+$blz_file_default_link = 'https://www.bundesbank.de/Redaktion/DE/Downloads/Aufgaben/Unbarer_Zahlungsverkehr/Bankleitzahlen/2017_09_03/blz_2017_06_05_txt.txt?__blob=publicationFile';
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
