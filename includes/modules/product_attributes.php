@@ -22,8 +22,12 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+$add_products_options_select = ''array();
+
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_top/','php') as $file) require ($file);
+
+define('ADD_PRODUCT_OPTIONS_SELECT', (count($add_products_options_select) ? rtrim(implode(', ', $add_products_options_select), ',').', ' : ''));
 
 if ($product->getAttributesCount() > 0) {
 
@@ -41,6 +45,7 @@ if ($product->getAttributesCount() > 0) {
   $module_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
   
   $products_options_name_query = xtDBquery("SELECT distinct
+                                                   ".ADD_PRODUCT_OPTIONS_SELECT."
                                                    popt.products_options_id,
                                                    popt.products_options_name,
                                                    popt.products_options_sortorder
