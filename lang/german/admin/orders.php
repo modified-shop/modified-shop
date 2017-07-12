@@ -169,7 +169,8 @@ define('CREATE_LABEL', 'Paketschein erstellen');
 define('TEXT_DELETE_SHIPMENT_SUCCESS', 'shipcloud Paketschein gel&ouml;scht.');
 define('TEXT_LABEL_CREATED', 'Paketschein erfolgreich erstellt.');
 define('TEXT_CARRIER_ERROR', 'Paketdienstleister nicht in Ihrem shipcloud Account freigeschaltet oder ung&uuml;ltiger API-Key.');
-define('TEXT_CARRIER_PLACEHOLDER', 'Beschreibung (optional)');
+define('TEXT_CARRIER_PLACEHOLDER_1', 'Paketbeschreibung');
+define('TEXT_CARRIER_PLACEHOLDER_1', 'Sendungsbeschreibung');
 
 define('TEXT_DOWNLOADS', 'Downloads');
 define('TABLE_HEADING_FILENAME', 'Dateiname');

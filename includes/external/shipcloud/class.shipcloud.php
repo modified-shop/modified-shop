@@ -53,7 +53,8 @@ class shipcloud {
     $this->carrier_name = $params['carrier_id'];
     $dimension_array = explode(',', $params['parcel']);
     list($this->length, $this->width, $this->height) = $dimension_array;
-    $this->description = $params['description'];
+    $this->description_1 = $params['description_1'];
+    $this->description_2 = $params['description_2'];
     $this->weight = $params['weight'];
     $this->insurance = ((isset($params['insurance']) && $params['insurance'] == '1' && $this->order->info['pp_total'] > '500') ? true : false);
     
@@ -67,7 +68,7 @@ class shipcloud {
         'reference_number'      => $this->order->info['orders_id'],
         'create_shipping_label' => 'true',
         'service'               => $params['service'],
-        'description'           => $this->description,
+        'description'           => $this->description_2,
         'additional_services'   => array(),
       );
       
@@ -300,7 +301,7 @@ class shipcloud {
       'length'         => (($this->length != '') ? $this->length : '20'),
       'height'         => (($this->height != '') ? $this->height : '20'),
       'weight'         => (double)(($this->weight != '') ? str_replace(',', '.', $this->weight) : $this->calculate_weight()),
-      'description'    => $this->description,
+      'description'    => $this->description_1,
     );
     
     if ($this->insurance === true) {
