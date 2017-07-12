@@ -115,7 +115,7 @@ $values_group_update = array();
 
 //configuration_group_id 8 --- "Artikel Listen Optionen"
   $values[] = "(NULL, 'SHOW_BUTTON_BUY_NOW', 'false', '8', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
-  $values[] = "(NULL, 'USE_PAGINATION_LIST', 'false', '8', '8', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  //$values[] = "(NULL, 'USE_PAGINATION_LIST', 'false', '8', '8', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');"; // Tomcraft - 2017-07-12 - Not used anymore since r10840, see: http://trac.modified-shop.org/ticket/1238
   $values[] = "(NULL, 'CATEGORIES_SHOW_PRODUCTS_SUBCATS', 'false', '8', '10', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'DISPLAY_FILTER_INDEX', '3,12,27,all', '8', '100', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'DISPLAY_FILTER_SPECIALS', '3,12,27,all', '8', '101', NULL, NOW(), NULL, NULL);";

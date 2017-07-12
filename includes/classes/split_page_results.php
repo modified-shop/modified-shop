@@ -147,7 +147,7 @@
         $display_links_string .= '&nbsp;'.$display_links_array['next'].'&nbsp;';
       }
       
-      if (USE_PAGINATION_LIST == 'true') {
+      if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
         return $display_links_array;
       }
       return $display_links_string;

@@ -812,8 +812,8 @@ define('DISPLAY_BREADCRUMB_OPTION_DESC', '<strong>name:</strong> In the breadcru
 define('EMAIL_WORD_WRAP_TITLE', 'WordWrap for text e-mails');
 define('EMAIL_WORD_WRAP_DESC', 'Indicate number of characters for one line in text e-mails before text will be wrapped (only whole numbers).<br /><strong>Attention:</strong> A character count greater than 76 may cause the shop mails to be categorized as SPAM by SpamAssassin.<br />More infos <a href="http://wiki.apache.org/spamassassin/Rules/MIME_QP_LONG_LINE" target="_blank">here</a>.');
 
-define('USE_PAGINATION_LIST_TITLE', 'Pagination List');
-define('USE_PAGINATION_LIST_DESC', 'Use a HTML list (ul / li Tag) for Pagination.<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
+//define('USE_PAGINATION_LIST_TITLE', 'Pagination List'); // Tomcraft - 2017-07-12 - Not used anymore since r10840, see: http://trac.modified-shop.org/ticket/1238
+//define('USE_PAGINATION_LIST_DESC', 'Use a HTML list (ul / li Tag) for Pagination.<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!'); // Tomcraft - 2017-07-12 - Not used anymore since r10840, see: http://trac.modified-shop.org/ticket/1238
 
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Sales Report Filter');
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Choose the order statuses which shall be considered on the admin startpage and in the sales report when choosing "Sales Report Filter" in the status dropdown.<br />(To show only the real sales volume, choose the order status for completed orders.)<br /><b>Note:</b> For the "Sales Report Filter" to be displayed in the status dropdown, you have to choose at least two statuses. Otherwise you can directly choose the desired status in the dropdown.');
