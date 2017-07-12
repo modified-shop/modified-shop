@@ -65,21 +65,21 @@ $reviews_split = new splitPageResults($reviews_query_raw, (isset($_GET['page']) 
 $module_data = array ();
 if ($reviews_split->number_of_rows > 0) {
 
-  if (USE_PAGINATION_LIST == 'false') {
-    $smarty->assign('NAVBAR', '<div style="width:100%;font-size:smaller">
-                                 <div style="float:left">'.$reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS).'</div>
-                                 <div style="float:right">'.TEXT_RESULT_PAGE.' '.$reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
-                                 <br style="clear:both" />
-                               </div>');
+  if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
+    $pagination = '<div style="width:100%;font-size:smaller">
+                     <div style="float:left">'.$reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS).'</div>
+                     <div style="float:right">'.TEXT_RESULT_PAGE.' '.$reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
+                     <br style="clear:both" />
+                   </div>';
   } else {
     $smarty->assign('DISPLAY_COUNT', $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS));
     $smarty->assign('DISPLAY_LINKS', $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
     $smarty->caching = 0;
     $pagination = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
-    $smarty->assign('NAVBAR', $pagination);
-    $smarty->assign('PAGINATION', $pagination);
   }
-
+  $smarty->assign('NAVBAR', $pagination);
+  $smarty->assign('PAGINATION', $pagination);
+  
   $reviews_query = xtc_db_query($reviews_split->sql_query);
   while ($reviews = xtc_db_fetch_array($reviews_query)) {
     $module_data[] = array (

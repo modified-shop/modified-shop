@@ -66,20 +66,20 @@ if (xtc_count_customer_orders() > 0) {
                       
   $history_split = new splitPageResults($history_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_ORDER_HISTORY);
   
-  if (USE_PAGINATION_LIST == 'false') {
-    $smarty->assign('SPLIT_BAR', '<div class="smallText" style="clear:both;">
-                                    <div style="float:left;">'.$history_split->display_count(TEXT_DISPLAY_NUMBER_OF_ORDERS).'</div>
-                                    <div align="right">'.TEXT_RESULT_PAGE.' '.$history_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
-                                    <br style="clear:both" />
-                                  </div>');
+  if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
+    $pagination = '<div class="smallText" style="clear:both;">
+                     <div style="float:left;">'.$history_split->display_count(TEXT_DISPLAY_NUMBER_OF_ORDERS).'</div>
+                     <div align="right">'.TEXT_RESULT_PAGE.' '.$history_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
+                     <br style="clear:both" />
+                   </div>';
   } else {
     $smarty->assign('DISPLAY_COUNT', $history_split->display_count(TEXT_DISPLAY_NUMBER_OF_ORDERS));
     $smarty->assign('DISPLAY_LINKS', $history_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
     $smarty->caching = 0;
     $pagination = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
-    $smarty->assign('SPLIT_BAR', $pagination);
-    $smarty->assign('PAGINATION', $pagination);
   }
+  $smarty->assign('SPLIT_BAR', $pagination);
+  $smarty->assign('PAGINATION', $pagination);
   
   $row = 0;
   $history_query = xtc_db_query($history_split->sql_query);

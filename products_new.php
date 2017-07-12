@@ -99,21 +99,21 @@ if ($language_not_found === true) {
   $module_content = array();
   if (($products_new_split->number_of_rows > 0)) {
 
-    if (USE_PAGINATION_LIST == 'false') {
-      $smarty->assign('NAVIGATION_BAR', '<div class="smallText" style="clear:both;">
-                                           <div style="float:left;">'.$products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW).'</div> 
-                                           <div align="right">'.TEXT_RESULT_PAGE.' '.$products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div> 
-                                           <br style="clear:both" />
-                                         </div>'); 
+    if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
+      $pagination = '<div class="smallText" style="clear:both;">
+                       <div style="float:left;">'.$products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW).'</div> 
+                       <div align="right">'.TEXT_RESULT_PAGE.' '.$products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div> 
+                       <br style="clear:both" />
+                     </div>'; 
     } else {
       $smarty->assign('DISPLAY_COUNT', $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW));
       $smarty->assign('DISPLAY_LINKS', $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
       $smarty->caching = 0;
       $pagination = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
-      $smarty->assign('NAVIGATION_BAR', $pagination);  
-      $smarty->assign('PAGINATION', $pagination);  
     }
-  
+    $smarty->assign('NAVIGATION_BAR', $pagination);  
+    $smarty->assign('PAGINATION', $pagination);  
+    
     $products_new_query = xtc_db_query($products_new_split->sql_query);
     while ($products_new = xtc_db_fetch_array($products_new_query)) {
       $module_content[] = $product->buildDataArray($products_new);
@@ -149,21 +149,21 @@ if ($language_not_found === true) {
     $products_new_split = new splitPageResults($new_products_query, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, 'p.products_id');
 
     if (($products_new_split->number_of_rows > 0)) {
-      if (USE_PAGINATION_LIST == 'false') {
-        $smarty->assign('NAVIGATION_BAR', '<div class="smallText" style="clear:both;">
-                                             <div style="float:left;">'.$products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW).'</div> 
-                                             <div align="right">'.TEXT_RESULT_PAGE.' '.$products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div> 
-                                             <br style="clear:both" />
-                                           </div>'); 
+      if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
+        $pagination = '<div class="smallText" style="clear:both;">
+                         <div style="float:left;">'.$products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW).'</div> 
+                         <div align="right">'.TEXT_RESULT_PAGE.' '.$products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div> 
+                         <br style="clear:both" />
+                       </div>'; 
       } else {
         $smarty->assign('DISPLAY_COUNT', $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW));
         $smarty->assign('DISPLAY_LINKS', $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
         $smarty->caching = 0;
         $pagination = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
-        $smarty->assign('NAVIGATION_BAR', $pagination);  
-        $smarty->assign('PAGINATION', $pagination);  
       }
-  
+      $smarty->assign('NAVIGATION_BAR', $pagination);  
+      $smarty->assign('PAGINATION', $pagination);  
+      
       $products_new_query = xtc_db_query($products_new_split->sql_query);
       while ($products_new = xtc_db_fetch_array($products_new_query)) {
         $module_content[] = $product->buildDataArray($products_new);
