@@ -120,7 +120,7 @@
           <?php } ?>
         });
       
-        if (sc_carrier != 'dhl') {
+        if (sc_carrier != 'dhl' && sc_carrier != 'dhl_express') {
           $('#sc_insurance').hide();
           if (sc_carrier == 'ups') {
             $('#sc_description_1').show();
