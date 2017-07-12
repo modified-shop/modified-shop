@@ -41,19 +41,19 @@ $module_content = $category = array();
 $image = '';
 
 if ($listing_split->number_of_rows > 0) {
-  if (USE_PAGINATION_LIST == 'false') {
-    $module_smarty->assign('NAVIGATION', '<div class="smallText" style="clear:both;">
-                                            <div style="float:left;">'.$listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS).'</div> 
-                                            <div style="text-align:right;">'.TEXT_RESULT_PAGE.' '.$listing_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y', 'keywords')).(isset($_GET['keywords'])?'keywords='. urlencode($_GET['keywords']):'')).'</div> 
-                                          </div>');
+  if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
+    $pagination = '<div class="smallText" style="clear:both;">
+                     <div style="float:left;">'.$listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS).'</div> 
+                     <div style="text-align:right;">'.TEXT_RESULT_PAGE.' '.$listing_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y', 'keywords')).(isset($_GET['keywords'])?'keywords='. urlencode($_GET['keywords']):'')).'</div> 
+                   </div>';
   } else {   
     $module_smarty->assign('DISPLAY_COUNT', $listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS));
     $module_smarty->assign('DISPLAY_LINKS', $listing_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y', 'keywords')).(isset($_GET['keywords'])?'keywords='. urlencode($_GET['keywords']):'')));
     $module_smarty->caching = 0;
     $pagination = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
-    $module_smarty->assign('NAVIGATION', $pagination);
-    $module_smarty->assign('PAGINATION', $pagination);
   }
+  $module_smarty->assign('NAVIGATION', $pagination);
+  $module_smarty->assign('PAGINATION', $pagination);
   
   if ($current_category_id != '0') {
 

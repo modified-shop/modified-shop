@@ -83,21 +83,21 @@ if ($language_not_found === true) {
   $module_content = array();
   if (($specials_split->number_of_rows > 0)) {
 
-    if (USE_PAGINATION_LIST == 'false') {
-      $smarty->assign('NAVBAR', '<div style="width:100%;font-size:smaller">
-                                   <div style="float:left">'.$specials_split->display_count(TEXT_DISPLAY_NUMBER_OF_SPECIALS).'</div>
-                                   <div style="float:right">'.TEXT_RESULT_PAGE.' '.$specials_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
-                                   <br style="clear:both" />
-                                 </div>');
+    if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
+      $pagination = '<div style="width:100%;font-size:smaller">
+                       <div style="float:left">'.$specials_split->display_count(TEXT_DISPLAY_NUMBER_OF_SPECIALS).'</div>
+                       <div style="float:right">'.TEXT_RESULT_PAGE.' '.$specials_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
+                       <br style="clear:both" />
+                     </div>';
     } else {
       $smarty->assign('DISPLAY_COUNT', $specials_split->display_count(TEXT_DISPLAY_NUMBER_OF_SPECIALS));
       $smarty->assign('DISPLAY_LINKS', $specials_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
       $smarty->caching = 0;
       $pagination = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
-      $smarty->assign('NAVBAR', $pagination);
-      $smarty->assign('PAGINATION', $pagination);
     }
-
+    $smarty->assign('NAVBAR', $pagination);
+    $smarty->assign('PAGINATION', $pagination);
+    
     $specials_query = xtc_db_query($specials_split->sql_query);
     while ($specials = xtc_db_fetch_array($specials_query)) {
       $module_content[] = $product->buildDataArray($specials);
