@@ -170,8 +170,8 @@ define('CREATE_LABEL', 'Create Label');
 define('TEXT_DELETE_SHIPMENT_SUCCESS', 'shipcloud Label deleted.');
 define('TEXT_LABEL_CREATED', 'Label created.');
 define('TEXT_CARRIER_ERROR', 'Carrier not activated in your shipcloud account or invalid API key.');
-define('TEXT_CARRIER_PLACEHOLDER_1', 'description package');
-define('TEXT_CARRIER_PLACEHOLDER_1', 'description shipment');
+define('TEXT_CARRIER_PLACEHOLDER_1', 'Package description');
+define('TEXT_CARRIER_PLACEHOLDER_2', 'Shipment description');
 
 define('TEXT_DOWNLOADS', 'Downloads');
 define('TABLE_HEADING_FILENAME', 'Filename');
