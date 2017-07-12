@@ -77,7 +77,8 @@
             echo xtc_draw_pull_down_menu('insurance', $insurance_array, $insurance_array[0]['id'], 'id="sc_insurance"').'&nbsp;';
           }
           echo xtc_draw_input_field('weight', '' , 'style="width:100px;vertical-align:top;" placeholder="'.TEXT_WEIGHT_PLACEHOLDER.'"').'</span>';
-          echo xtc_draw_input_field('description', '' , 'id="sc_description" style="width:570px;vertical-align:top;" placeholder="'.TEXT_CARRIER_PLACEHOLDER.'"');
+          echo xtc_draw_input_field('description_1', '' , 'id="sc_description_1" style="width:570px;vertical-align:top;" placeholder="'.TEXT_CARRIER_PLACEHOLDER_1.'"');
+          echo xtc_draw_input_field('description_2', '' , 'id="sc_description_2" style="width:570px;vertical-align:top;" placeholder="'.TEXT_CARRIER_PLACEHOLDER_2.'"');
           echo '</td>';
         ?>
         <td class="smallText" align="center">
@@ -121,8 +122,17 @@
       
         if (sc_carrier != 'dhl') {
           $('#sc_insurance').hide();
+          if (sc_carrier == 'ups') {
+            $('#sc_description_1').show();
+            $('#sc_description_2').show();
+          } else {
+            $('#sc_description_1').hide();
+            $('#sc_description_2').hide();
+          }
         } else {
           $('#sc_insurance').show();
+          $('#sc_description_1').show();
+          $('#sc_description_2').hide();
         }
 
         <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
@@ -134,7 +144,8 @@
           }
         <?php } ?>
         
-        $('#sc_description').css('width', $('#sc_data').width());
+        $('#sc_description_1').css('width', $('#sc_data').width());
+        $('#sc_description_2').css('width', $('#sc_data').width());
       }
     });
   }
