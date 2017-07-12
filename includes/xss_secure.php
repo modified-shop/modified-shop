@@ -311,15 +311,22 @@ function xss_read_blacklist()
   if (is_file($blacklist_file)) {
     $fp = fopen($blacklist_file, 'r');
     flock($fp, LOCK_EX);
+    
+    $count = 0;
     while (($blacklist_val = @fgetcsv($fp, 4096, ';')) !== false) {
       if (is_array($blacklist_val) && count($blacklist_val) == 2) {
         if (($blacklist_val[1]+XSS_BLACKLIST_TIME) > time()) {
           $blacklist_arr[$blacklist_val[0]] = $blacklist_val[1];
         }
       }
+      $count ++;
     }
     flock($fp, LOCK_UN);
     fclose($fp);
+    
+    if (count($blacklist_arr) != $count) {
+      xss_write_blacklist($blacklist_arr);
+    }
   }
   return $blacklist_arr;
 }
@@ -341,8 +348,6 @@ if (defined('XSS_BLACKLIST') && XSS_BLACKLIST) {
 
   $blacklist_arr = xss_read_blacklist();
   if (isset($blacklist_arr[$ip])) {
-    xss_write_blacklist($blacklist_arr);
-
     //Redirect
     header("Location: ".XSS_BASE."error.html");
     exit();
