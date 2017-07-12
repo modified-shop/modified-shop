@@ -25,7 +25,7 @@
 
       case 'insert':
         $blacklist_ip = xtc_db_prepare_input($_POST['blacklist_ip']);
-        $blacklist_time = strtotime($_POST['blacklist_time']);
+        $blacklist_time = strtotime($_POST['blacklist_time']) - XSS_BLACKLIST_TIME;
         if ($blacklist_ip != '' && $blacklist_time > 0) {
           $contents_array = xss_read_blacklist();
           $contents_array[$blacklist_ip] = $blacklist_time;
@@ -106,6 +106,7 @@
                         <?php
 
                         foreach ($contents_array as $ip => $time) {
+                          $time += XSS_BLACKLIST_TIME;
                           $entry = $ip;
                           $orders_action_image = '<a href="' . xtc_href_link(FILENAME_BLACKLIST_LOGS, 'ip=' . $ip) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>';
                           if ((!isset($_GET['ip']) || ($_GET['ip'] == $ip)) && !isset($buInfo)) {
