@@ -14,7 +14,7 @@
           &nbsp;am&nbsp;{$module_data.DATE} &nbsp;&nbsp;&nbsp; 
           <strong>{#text_rating#}</strong>
           <span class="stars" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
-            {$module_data.RATING|replace:".gif":".png"}
+            <span class="rating_icons"><i class="fa fa-star{if $module_data.RATING_VOTE >= 1} full{/if}"></i><i class="fa fa-star{if $module_data.RATING_VOTE >= 2} full{/if}"></i><i class="fa fa-star{if $module_data.RATING_VOTE >= 3} full{/if}"></i><i class="fa fa-star{if $module_data.RATING_VOTE >= 4} full{/if}"></i><i class="fa fa-star{if $module_data.RATING_VOTE >= 5} full{/if}"></i></span>
             <meta itemprop="worstRating" content="1">
             <meta itemprop="ratingValue" content="{$module_data.RATING_VOTE}">
             <meta itemprop="bestRating" content="5">

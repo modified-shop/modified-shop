@@ -23,7 +23,7 @@
         {if $PRODUCTS_RATING_COUNT > 1}
         <div class="pd_inforow" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
           <strong>{#info_reviews#}</strong> 
-          <span class="pd_reviews_image"><img src="{$tpl_path}img/stars_{$PRODUCTS_AVERAGE_RATING}.png" alt="" /></span> 
+          <span class="pd_rating_icons"><i class="fa fa-star{if $PRODUCTS_AVERAGE_RATING >= 1} full{/if}"></i><i class="fa fa-star{if $PRODUCTS_AVERAGE_RATING >= 2} full{/if}"></i><i class="fa fa-star{if $PRODUCTS_AVERAGE_RATING >= 3} full{/if}"></i><i class="fa fa-star{if $PRODUCTS_AVERAGE_RATING >= 4} full{/if}"></i><i class="fa fa-star{if $PRODUCTS_AVERAGE_RATING >= 5} full{/if}"></i></span>
           ({$PRODUCTS_RATING_COUNT})
           <meta itemprop="ratingValue" content="{$PRODUCTS_AVERAGE_RATING}" />
           <meta itemprop="bestRating" content="5" />
@@ -32,7 +32,7 @@
         {elseif $PRODUCTS_RATING_COUNT > 0 }
         <div class="pd_inforow" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
           <strong>{#info_review#}</strong> 
-          <span class="pd_reviews_image"><img src="{$tpl_path}img/stars_{$PRODUCTS_AVERAGE_RATING}.png" alt="" /></span> 
+          <span class="pd_rating_icons"><i class="fa fa-star{if $PRODUCTS_AVERAGE_RATING >= 1} full{/if}"></i><i class="fa fa-star{if $PRODUCTS_AVERAGE_RATING >= 2} full{/if}"></i><i class="fa fa-star{if $PRODUCTS_AVERAGE_RATING >= 3} full{/if}"></i><i class="fa fa-star{if $PRODUCTS_AVERAGE_RATING >= 4} full{/if}"></i><i class="fa fa-star{if $PRODUCTS_AVERAGE_RATING >= 5} full{/if}"></i></span>
           ({$PRODUCTS_RATING_COUNT})
           <meta itemprop="ratingValue" content="{$PRODUCTS_AVERAGE_RATING}" />
           <meta itemprop="bestRating" content="5" />

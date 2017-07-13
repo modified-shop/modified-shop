@@ -80,6 +80,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
 
       // include needed functions
       require_once(DIR_FS_INC . 'xtc_break_string.inc.php');
+      $box_smarty->assign('REVIEWS_VOTE', $reviews['reviews_rating']);
       $box_smarty->assign('REVIEWS_LINK', xtc_href_link(FILENAME_REVIEWS));
       $box_smarty->assign('PRODUCTS_IMAGE', $products_image);
       $box_smarty->assign('PRODUCTS_NAME', $reviews['products_name']);
