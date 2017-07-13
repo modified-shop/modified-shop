@@ -137,7 +137,7 @@
 
         <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
           $('.SlectBox').not('.noStyling').SumoSelect({ createElems: 'mod', placeholder: '-'});
-          if (sc_carrier != 'dhl') {
+          if (sc_carrier != 'dhl' && sc_carrier != 'dhl_express') {
             $('#sc_insurance').nextAll('.SlectBox').hide();
           } else {
             $('#sc_insurance').nextAll('.SlectBox').show();
