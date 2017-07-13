@@ -3253,15 +3253,6 @@ ul.pd_iconlist li.wishlist:before {
 .reviewrow_title {
   line-height:18px;
 }
-.reviewrow_title .stars {
-  padding-left:5px;      
-  line-height:18px;
-}
-.reviewrow_title .stars img {
-  width:91px;
-  height:18px;    
-  vertical-align:-4px;
-}
 .reviewrow_title .rating_icons {
   display:inline-block;
   font-size:15px;
