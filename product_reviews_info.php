@@ -73,6 +73,7 @@ $smarty->assign('AUTHOR', $reviews['customers_name']);
 $smarty->assign('DATE', xtc_date_long($reviews['date_added']));
 $smarty->assign('REVIEWS_TEXT', nl2br(xtc_break_string(encode_htmlspecialchars($reviews['reviews_text']), 60, '-<br />')));
 $smarty->assign('RATING', xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])));
+$smarty->assign('RATING_VOTE', $reviews['reviews_rating']);
 $smarty->assign('PRODUCTS_NAME', $reviews['products_name']);
 $smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($reviews['products_id'], $reviews['products_name'])));
 $smarty->assign('PRODUCTS_IMAGE', $product->productImage($reviews['products_image'], 'info'));
