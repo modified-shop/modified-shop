@@ -34,7 +34,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      '_installer/update_1.0.6.0_to_1.0.6.1.sql', // neu
                      '_installer/update_1.0.6.1_to_1.0.6.2.sql', // neu
                      '_installer/update_1.0.6.2_to_1.0.6.3.sql', // neu
-                     '_installer/update_1.0.6.3_to_2.0.0.0.sql', // neu
+                     '_installer/update_1.0.6.3_to_1.0.6.4.sql', // neu
                      '_installer/update_xtc3.0.4sp2.1_to_1.00.sql', // neu
                      '_installer/update_xtc3.0.4sp2.1_to_1.0.1.0.sql', // neu
                      '_installer/version106r8', // neu
@@ -97,6 +97,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/includes/modules/export/googlebase.php', // neu
                      'admin/includes/modules/export/image_processing_step.php', // neu
                      'admin/includes/modules/export/janolaw.php', // neu
+                     'admin/includes/modules/export/protectedshops.php', // neu
                      'admin/includes/modules/export/shipcloud.php', // neu
                      'admin/includes/modules/export/tag_cloud.php', // neu
                      'admin/includes/modules/export/xtbooster.php', // neu
@@ -141,6 +142,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'copyright.php',
                      'export/xml_export.php', // neu
                      'favicon.ico', // neu
+                     'google_conversiontracking.js.php', // neu
                      'google_sitemap.php', // neu
                      'images/icons/kl_epaypal_de.gif', // neu
                      'images/icons/kl_epaypal_en.gif', // neu
@@ -175,6 +177,8 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'inc/changedatain.inc.php',
                      'inc/changedataout.inc.php',
                      'inc/dectobase64.inc.php',
+                     'includes/banners.php', // neu
+                     'includes/center_modules.php', // neu
                      'includes/classes/class.easybill.php',
                      'includes/classes/class.phpmailer.php', // neu
                      'includes/classes/class.smtp.php', // neu
@@ -189,6 +193,9 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'includes/external/magnalister/config/german/hood.form', // neu
                      'includes/external/payone/modules/send_order.php', // from r9293
                      'includes/external/paypal/lib/PayPal/Core/PayPalLoggingLevel.php', // neu
+                     'includes/external/paypal/modules/cart_action.php', // neu
+                     'includes/external/paypal/modules/product_info.php', // neu
+                     'includes/external/paypal/modules/send_order.php', // neu
                      'includes/external/shopgate/api.php', // neu
                      'includes/external/shopgate/helper/ShopgateHelperLoader.php', // neu
                      'includes/external/shopgate/Model/ShopgateModelLoader.php', // neu
@@ -226,6 +233,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'includes/modules/payment/sofortueberweisungvorkasse.php', // neu
                      'includes/modules/payment/worldpay.php', // neu
                      'includes/modules/sofort_vorkasse.php', // neu
+                     'includes/modules/upcoming_products.php', // neu
                      'includes/shopgate/shopgate_library/.htaccess', // neu
                      'includes/shopgate/.htaccess', // neu
                      'INFO.txt', // neu
