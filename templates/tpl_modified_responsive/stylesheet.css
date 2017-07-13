@@ -3609,10 +3609,10 @@ p.underline {
 }
 .rb_rating .rb_rating_icons .fa {
   padding: 0 1px 0 0;
+  vertical-align:-1px
 }
 .rb_rating .rb_rating_icons .full  {
   color:#e9c559;
-  vertical-align:-1px
 }
 .rb_image {
   float:left;
