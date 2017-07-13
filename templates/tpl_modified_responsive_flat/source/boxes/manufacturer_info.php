@@ -36,7 +36,6 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers_info.html
 
   if (xtc_db_num_rows($manufacturer_query, true)) {
     $manufacturer = xtc_db_fetch_array($manufacturer_query, true);
-
     $image = '';
     if ($manufacturer['manufacturers_image'] != '') {
       $image = DIR_WS_IMAGES.$manufacturer['manufacturers_image'];

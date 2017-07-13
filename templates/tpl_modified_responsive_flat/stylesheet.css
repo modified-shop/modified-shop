@@ -3048,7 +3048,6 @@ ul.pd_iconlist li.wishlist {
   border-bottom:1px solid #eee;
   padding: 0px 0px 0px 2px;
 }
-
 ul.pd_iconlist li.wishlist .wishlist_submit_link {
   margin-left:28px;
   color:#555;
@@ -3246,6 +3245,15 @@ ul.pd_iconlist li.wishlist:before {
 }
 .reviewrow_title {
   line-height:18px;
+}
+.reviewrow_title .stars {
+  padding-left:5px;      
+  line-height:18px;
+}
+.reviewrow_title .stars img {
+  width:91px;
+  height:18px;    
+  vertical-align:-4px;
 }
 .reviewrow_title .rating_icons {
   display:inline-block;
@@ -3595,7 +3603,12 @@ p.underline {
   display:inline-block;
   font-size:12px;
   height:18px;
-  line-height:18px; 
+  line-height:18px;
+}
+.rb_rating img {
+  vertical-align:-3px;
+  height:17px;
+  width:auto;
 }
 .rb_rating .rb_rating_icons {
   display:inline-block;
@@ -4078,6 +4091,13 @@ ul.bxcarousel_slider img {
   float:left;
   display:inline-block;
   padding-right:5px;
+}
+.pri_rating_stars {
+  float:left;
+  display:inline-block;
+}
+.pri_rating_stars img {
+  float:left;
 }
 .pri_rating_icons {
   display:inline-block;

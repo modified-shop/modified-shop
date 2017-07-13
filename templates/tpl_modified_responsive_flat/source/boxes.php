@@ -13,6 +13,8 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+defined('FILENAME_CHECKOUT_PAYMENT_IFRAME') OR define('FILENAME_CHECKOUT_PAYMENT_IFRAME', 'checkout_payment_iframe.php');
+
 // css buttons
 if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/css_button.inc.php')) {
   require_once ('templates/'.CURRENT_TEMPLATE.'/source/inc/css_button.inc.php');

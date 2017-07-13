@@ -16,6 +16,12 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// Fallback for oder shopversion: Contanst MODULE_BANNER_MANAGER_STATUS and column reviews_status came both together in shopversion 2.0.1.0
+$reviews_status = '';
+if (defined('MODULE_BANNER_MANAGER_STATUS')) {
+  $reviews_status = "AND r.reviews_status = '1'";
+}
+
 // include smarty
 include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
@@ -60,7 +66,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
                               AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                      WHERE p.products_status = '1'
                            ".PRODUCTS_CONDITIONS_P."
-                       AND r.reviews_status = '1'
+                           ".$reviews_status."
                   ORDER BY MD5(CONCAT(p.products_id, CURRENT_TIMESTAMP)) 
                      LIMIT 1";
   $reviews_query = xtc_db_query($reviews_query);

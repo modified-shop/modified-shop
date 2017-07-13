@@ -3253,6 +3253,15 @@ ul.pd_iconlist li.wishlist:before {
 .reviewrow_title {
   line-height:18px;
 }
+.reviewrow_title .stars {
+  padding-left:5px;      
+  line-height:18px;
+}
+.reviewrow_title .stars img {
+  width:91px;
+  height:18px;    
+  vertical-align:-4px;
+}
 .reviewrow_title .rating_icons {
   display:inline-block;
   font-size:15px;
@@ -3599,6 +3608,9 @@ p.underline {
   font-size:12px;
   height:18px;
   line-height:18px;
+}
+.rb_rating img {
+  vertical-align:-2px;
 }
 .rb_rating .rb_rating_icons {
   display:inline-block;
@@ -4070,6 +4082,13 @@ ul.bxcarousel_slider img {
   float:left;
   display:inline-block;
   padding-right:5px;
+}
+.pri_rating_stars {
+  float:left;
+  display:inline-block;
+}
+.pri_rating_stars img {
+  float:left;
 }
 .pri_rating_icons {
   display:inline-block;
