@@ -16,7 +16,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-include('../includes/request_type.php');
+include(DIR_FS_DOCUMENT_ROOT.'includes/request_type.php');
 
 defined('TEMPLATE_HTML_ENGINE') or define('TEMPLATE_HTML_ENGINE', 'xhtml');
 ?>
