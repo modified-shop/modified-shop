@@ -3258,10 +3258,11 @@ ul.pd_iconlist li.wishlist:before {
   font-size:15px;
   line-height:15px;
   color:#ccc;
-  padding: 0px 3px 0 0;
+  padding: 0px 3px 0 5px;
 }
 .reviewrow_title .rating_icons .fa {
   padding: 0 1px 0 0;
+  vertical-align:-1px;
 }
 .reviewrow_title .rating_icons .full  {
   color:#e9c559;
