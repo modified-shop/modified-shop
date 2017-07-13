@@ -160,7 +160,7 @@ function get_sql_create_data($table) {
     $sql_data = file_get_contents(DIR_FS_CATALOG.'_installer/includes/sql/modified.sql');
   }
 
-  preg_match("/CREATE TABLE([\s]+)".$table."(.*?)\);/si", $sql_data, $sql_match);
+  preg_match("/CREATE TABLE([\s]+)".$table."(.*?\);)/si", $sql_data, $sql_match);
 
   $result = '';
   if (isset($sql_match[2])) {
