@@ -49,7 +49,8 @@ class sitemaporg {
     $this->schema .= '</urlset>'."\n";
   }
   
-  function xml_sitemap_entry($url, $lastmod = '', $products = '') {    
+  function xml_sitemap_entry($url, $lastmod = '', $products = '') { 
+    if (trim($url) == '#') return; 
     $this->schema .= "\t<url>\n";
     $this->schema .= "\t\t<loc>" . $url . "</loc>\n";
     if ($this->check_date($lastmod) === true) {
