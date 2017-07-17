@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: shopping_cart.php 3725 2012-09-30 12:53:03Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -109,6 +109,9 @@ if (isset($cc_amount_min_order_info)) {
 
 if ($messageStack->size('shopping_cart') > 0) {
   $smarty->assign('info_message', $messageStack->output('shopping_cart'));
+}
+if ($messageStack->size('shopping_cart', 'success') > 0) {
+	$smarty->assign('success_message', $messageStack->output('shopping_cart', 'success'));
 }
 
 // unset

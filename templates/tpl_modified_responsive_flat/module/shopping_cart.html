@@ -12,7 +12,8 @@
     </ul>
   </div>
   {/if}
-  {if $info_message != ''}<div class="{if $smarty.get.info && $smarty.get.info == '1'}infomessage{else}errormessage{/if}">{$info_message}</div>{/if}
+  {if $info_message != ''}<div class="errormessage">{$info_message}</div>{/if}
+  {if $success_message != ''}<div class="infomessage">{$success_message}</div>{/if}
   {if $paypal_error != ''}<div class="errormessage">{$paypal_error}</div>{/if}
 
   {if $cart_empty == true}
