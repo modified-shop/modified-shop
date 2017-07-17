@@ -55,11 +55,11 @@ if (isset($_GET['oID'])
       $paypal->complete_cart();
       
       if (isset($_SESSION['customer_id'])) {
-        $messageStack->add_session('paypalpluslink', MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_COMPLETED);
-        xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'info=1&order_id='.(int)$_GET['oID'], 'SSL'));
+        $messageStack->add_session('paypalpluslink', MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_COMPLETED, 'success');
+        xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.(int)$_GET['oID'], 'SSL'));
       } else {
-        $messageStack->add_session('logoff', MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_COMPLETED);
-        xtc_redirect(xtc_href_link(FILENAME_LOGOFF, 'info=1', 'SSL'));
+        $messageStack->add_session('logoff', MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_COMPLETED, 'success');
+        xtc_redirect(xtc_href_link(FILENAME_LOGOFF, '', 'SSL'));
       }
     } else {
       $approval = $paypal->payment_redirect(false, true, true);
