@@ -130,14 +130,18 @@
             $('#sc_description_2').hide();
           }
         } else {
-          $('#sc_insurance').show();
+          if (sc_carrier != 'dhl') {
+            $('#sc_insurance').hide();
+          } else {
+            $('#sc_insurance').show();
+          }
           $('#sc_description_1').show();
           $('#sc_description_2').hide();
         }
 
         <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
           $('.SlectBox').not('.noStyling').SumoSelect({ createElems: 'mod', placeholder: '-'});
-          if (sc_carrier != 'dhl' && sc_carrier != 'dhl_express') {
+          if (sc_carrier != 'dhl') {
             $('#sc_insurance').nextAll('.SlectBox').hide();
           } else {
             $('#sc_insurance').nextAll('.SlectBox').show();
