@@ -12,13 +12,14 @@
 {/if}
 {*EOC error message for exceeded product quantity, noRiddle*}
 {if $info_message != ''}<div class="errormessage">{$info_message}</div>{/if}
-{if $success_message != ''}<div class="infomessage">{$success_message}</div>{/if}
-{if $paypal_error != ''}<div class="errormessage">{$paypal_error}</div>{/if}
+{if $coupon_message != ''}<div class="errormessage">{$coupon_message}</div>{/if}
+{if $coupon_message_success != ''}<div class="infomessage">{$coupon_message_success}</div>{/if}
+
 {if $cart_empty == true}
   <p>{#text_empty#}</p>
   <p>{$BUTTON_CONTINUE}</p>
 {else}
-  {if $info_message_3 != ''}<div class="{if $smarty.get.info && $smarty.get.info == '1'}infomessage{else}errormessage{/if}">{$info_message_3}</div>{/if}
+  {if $info_message_3 != ''}<div class="errormessage">{$info_message_3}</div>{/if}
   {$FORM_ACTION}
   {$HIDDEN_OPTIONS}
   <p>{$MODULE_order_details}</p>

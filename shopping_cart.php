@@ -102,6 +102,9 @@ if ($messageStack->size('info_message_3') > 0) {
 if ($messageStack->size('coupon_message') > 0) {
   $smarty->assign('coupon_message', $messageStack->output('coupon_message'));
 }
+if ($messageStack->size('coupon_message', 'success') > 0) {
+	$smarty->assign('coupon_message_success', $messageStack->output('coupon_message', 'success'));
+}
 // coupon min order info
 if (isset($cc_amount_min_order_info)) {
   $messageStack->add('shopping_cart', $cc_amount_min_order_info);
@@ -109,9 +112,6 @@ if (isset($cc_amount_min_order_info)) {
 
 if ($messageStack->size('shopping_cart') > 0) {
   $smarty->assign('info_message', $messageStack->output('shopping_cart'));
-}
-if ($messageStack->size('shopping_cart', 'success') > 0) {
-	$smarty->assign('success_message', $messageStack->output('shopping_cart', 'success'));
 }
 
 // unset
