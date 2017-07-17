@@ -1,7 +1,7 @@
 <?php
 
 /* -----------------------------------------------------------------------------------------
-   $Id: gift_cart.php 10473 2016-12-01 10:20:41Z GTB $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -77,6 +77,9 @@ if (isset($_SESSION['cc_post']) && !$cc_check) {
 
 if ($messageStack->size('coupon_message') > 0) {
   $gift_smarty->assign('coupon_message', $messageStack->output('coupon_message'));
+}
+if ($messageStack->size('coupon_message', 'success') > 0) {
+	$smarty->assign('success_message', $messageStack->output('coupon_message', 'success'));
 }
 $gift_smarty->assign('LINK_ACCOUNT', xtc_href_link(FILENAME_CREATE_ACCOUNT,'','SSL'));
 $gift_smarty->assign('FORM_ACTION', xtc_draw_form('gift_coupon', xtc_href_link(FILENAME_SHOPPING_CART, 'action=check_gift', $request_type)));

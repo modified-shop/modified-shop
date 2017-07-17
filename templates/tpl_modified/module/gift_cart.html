@@ -5,7 +5,8 @@
 {$FORM_ACTION}
 <h1>{#title#}</h1>
 
-{if $coupon_message != ''}<div class="{if $smarty.get.info && $smarty.get.info == '1'}infomessage{else}errormessage{/if}">{$coupon_message}</div>{/if}
+{if $coupon_message != ''}<div class="errormessage">{$coupon_message}</div>{/if}
+{if $success_message != ''}<div class="infomessage">{$success_message}</div>{/if}
 
 {if $GV_AMOUNT neq ''}
   <p>{#text_info#}</p>

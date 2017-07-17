@@ -102,7 +102,7 @@
             );
             xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array);
           }
-          $messageStack->add_session('shopping_cart', REDEEMED_AMOUNT, 'success');
+          $messageStack->add_session('coupon_message', REDEEMED_AMOUNT, 'success');
           xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
         } else {
           $messageStack->add_session('coupon_message', GUEST_REDEEM_NOT_ALLOWED);
