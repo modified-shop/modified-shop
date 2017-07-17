@@ -67,10 +67,10 @@ if (isset($_GET['oID'])
         xtc_redirect($redirect);
       } else {
         if (isset($_SESSION['customer_id'])) {
-          $messageStack->add_session('paypallink', MODULE_PAYMENT_PAYPALLINK_TEXT_ERROR_MESSAGE, 'success');
+          $messageStack->add_session('paypallink', MODULE_PAYMENT_PAYPALLINK_TEXT_ERROR_MESSAGE);
           xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.(int)$_GET['oID'], 'SSL'));
         } else {
-          $messageStack->add_session('logoff', MODULE_PAYMENT_PAYPALLINK_TEXT_ERROR_MESSAGE, 'success');
+          $messageStack->add_session('logoff', MODULE_PAYMENT_PAYPALLINK_TEXT_ERROR_MESSAGE);
           xtc_redirect(xtc_href_link(FILENAME_LOGOFF, '', 'SSL'));
         }      
       }
