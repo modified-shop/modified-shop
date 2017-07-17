@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: logoff.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -34,6 +34,9 @@ $smarty = new Smarty;
 
 if ($messageStack->size('logoff') > 0) {
   $smarty->assign('info_message', $messageStack->output('logoff'));
+}    
+if ($messageStack->size('logoff', 'success') > 0) {
+  $smarty->assign('success_message', $messageStack->output('logoff', 'success'));
 }    
 
 if ($_SESSION['account_type'] == '1' && DELETE_GUEST_ACCOUNT == 'true') {
