@@ -80,13 +80,7 @@
 <!-- Optionsbearbeitung Ende //-->
 <!-- Artikel Einfügen Anfang //-->
 <?php
-  $products_query = xtc_db_query("SELECT
-                                         products_attributes_id,
-                                         products_id,
-                                         options_id,
-                                         options_values_id,
-                                         options_values_price,
-                                         price_prefix
+  $products_query = xtc_db_query("SELECT *
                                     FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
                                    WHERE products_id = '" . (int)$_GET['pID'] . "'
                                 ORDER BY sortorder");
@@ -96,6 +90,7 @@
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_ID;?></b></td>
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION;?></b></td>
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION_VALUE;?></b></td>
+    <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCTS_QTY;?></b></td>                                                                                                                                                 
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRICE;?></b></td>
     <td class="dataTableHeadingContent">&nbsp;</td>
   </tr>
@@ -119,6 +114,7 @@
         <td class="dataTableContent"><?php echo $products['products_attributes_id'];?></td>
         <td class="dataTableContent"><?php echo xtc_oe_get_options_name($products['options_id']);?></td>
         <td class="dataTableContent"><?php echo xtc_oe_get_options_values_name($products['options_values_id']);?></td>
+        <td class="dataTableContent"><?php echo $products['attributes_stock'];?></td>                                                                                                                                                       
         <td class="dataTableContent">
           <?php echo xtc_draw_hidden_field('options_values_price', $products['options_values_price']);?>
           <?php echo $xtPrice->xtcFormat($xtPrice->xtcCalculateCurr($options_values_price),true);?>
