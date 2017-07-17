@@ -211,6 +211,9 @@ if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
 if ($messageStack->size('login') > 0) {
 	$smarty->assign('info_message', $messageStack->output('login'));
 }
+if ($messageStack->size('login', 'success') > 0) {
+	$smarty->assign('success_message', $messageStack->output('login', 'success'));
+}
 
 $smarty->assign('account_option', $account_options);
 $smarty->assign('BUTTON_NEW_ACCOUNT', '<a href="'.xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
