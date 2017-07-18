@@ -1708,6 +1708,10 @@ table.paymentmoduledata tr td.field {
 table.paymentinfotable tr td   {
   padding: 2px 20px 2px 0px;
 }
+table.paymentinfotable.paypallink span.cssButton {
+  max-width: 165px;
+  margin: 10px 0 0 0;
+}
 /* Accordion in checkout */
 .checkout_accordion .errormessage {
   margin: 10px 0 0 0;
