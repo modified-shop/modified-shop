@@ -36,7 +36,7 @@ class fcnt_moneybookers {
 	var	$tmpOrders = true;
 	var	$repost = false;
 	var	$debug = false;
-	var $form_action_url = 'https://www.moneybookers.com/app/payment.pl';
+	var $form_action_url = 'https://pay.skrill.com';
 	var $tmpStatus = _PAYMENT_MONEYBOOKERS_TMP_STATUS_ID;
 	
 	function __construct(){
