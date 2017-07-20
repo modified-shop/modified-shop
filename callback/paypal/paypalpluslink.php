@@ -100,7 +100,7 @@ if (isset($_GET['oID'])
         $cancel_link = xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.(int)$_GET['oID'], 'SSL');
       }
       $smarty->assign('BUTTON_BACK', '<a href="'.$cancel_link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
-      $smarty->assign('BUTTON_CONTINUE', '<a href="#" onclick="ppp.doCheckout(); return false;">'.xtc_image_button('button_confirm.gif', IMAGE_BUTTON_CONFIRM_ORDER).'</a>');
+      $smarty->assign('BUTTON_CONTINUE', '<a href="#" onclick="ppp.doCheckout(); return false;">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
     
       $main_content = $smarty->fetch(DIR_FS_EXTERNAL.'paypal/templates/ppp.html');
     
