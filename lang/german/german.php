@@ -430,7 +430,7 @@ define('ERROR_NO_INVALID_REDEEM_GV', 'Ung&uuml;ltiger Gutscheincode');
 define('TABLE_HEADING_CREDIT', 'Guthaben');
 define('EMAIL_GV_TEXT_SUBJECT', 'Ein Geschenk von %s');
 define('MAIN_MESSAGE', 'Sie haben sich dazu entschieden, einen Gutschein im Wert von %s an %s zu versenden, dessen E-Mail-Adresse %s lautet.<br /><br />Folgender Text erscheint in Ihrer E-Mail:<br /><br />Hallo %s,<br /><br />Ihnen wurde ein Gutschein im Wert von %s durch %s geschickt.');
-define('REDEEMED_AMOUNT','Ihr Gutschein wurde erfolgreich auf Ihr Konto verbucht. Gutscheinwert:');
+define('REDEEMED_AMOUNT','Ihr Gutschein wurde erfolgreich auf Ihr Konto verbucht. Gutscheinwert: %s');
 define('REDEEMED_COUPON','Ihr Coupon wurde erfolgreich eingebucht und wird bei Ihrer Bestellung automatisch eingel&ouml;st.');
 
 define('ERROR_INVALID_USES_USER_COUPON','Sie k&ouml;nnen den Coupon nur ');
