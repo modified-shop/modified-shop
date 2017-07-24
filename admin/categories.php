@@ -153,7 +153,7 @@ if (xtc_not_null($action)) {
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($current_category_id).'&pID='.$result['products_id'].$catfunc->page_parameter));
       break;
     case 'edit_crossselling' :
-      $catfunc->edit_cross_sell($_GET);
+      $catfunc->edit_cross_sell($_REQUEST);
       break;
     // BOF - Tomcraft - 2009-11-28 - Included xs:booster
     case 'multi_action':
