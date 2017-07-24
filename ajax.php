@@ -1,14 +1,14 @@
 <?php
-/*
- * $Id:$
- *
- * modified eCommerce Shopsoftware
- * http://www.modified-shop.org
- *
- * Copyright (c) 2013-2016 [www.hackersolutions.com]
- *
- * Released under the GNU General Public License
- */
+/* -----------------------------------------------------------------------------------------
+   $Id$
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2013-2016 [www.hackersolutions.com]
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
 
 include 'includes/' . (isset($_REQUEST['speed']) ? (file_exists('includes/local/configure.php') ? 'local/configure.php' : 'configure.php') : 'application_top.php');
 
@@ -69,6 +69,6 @@ if (defined('GZIP_COMPRESSION') && GZIP_COMPRESSION == 'true' && $ext_zlib_loade
     xtc_gzip_output(GZIP_LEVEL);
 }
 
-function_exists('xtc_db_close') ? xtc_db_close() : null;
-
+// commented out due to errors
+//function_exists('xtc_db_close') ? xtc_db_close() : null;
 ?>
