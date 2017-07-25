@@ -28,7 +28,7 @@ class KlarnaMobile extends KlarnaMobileImpl
     protected function fetchProduct($mProductId) {
         global $currencies, $currency;
 
-        include(DIR_WS_CLASSES . 'language.php');
+        require_once(DIR_WS_CLASSES . 'language.php');
         $lng = new language();
 
         if (isset($HTTP_GET_VARS['language']) && tep_not_null($HTTP_GET_VARS['language'])) {

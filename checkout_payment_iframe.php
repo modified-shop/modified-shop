@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: checkout_payment_iframe.php 4221 2013-01-11 10:18:52Z gtb-modified $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -30,22 +30,22 @@ require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php')
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // load selected payment module
-require (DIR_WS_CLASSES.'payment.php');
+require_once (DIR_WS_CLASSES.'payment.php');
 $payment_modules = new payment($_SESSION['payment']);
 
 // load the selected shipping module
-require (DIR_WS_CLASSES.'shipping.php');
+require_once (DIR_WS_CLASSES.'shipping.php');
 $shipping_modules = new shipping($_SESSION['shipping']);
 
-require (DIR_WS_CLASSES . 'order.php');
+require_once (DIR_WS_CLASSES . 'order.php');
 $order = new order();
 
-require (DIR_WS_CLASSES . 'order_total.php');
+require_once (DIR_WS_CLASSES . 'order_total.php');
 $order_total_modules = new order_total();
 $order_total_modules->process();
 
 $iframe_url = $payment_modules->iframeAction();
-if ($iframe_url =='') {
+if ($iframe_url == '') {
 	xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
 

@@ -46,7 +46,7 @@ function smarty_function_piwik($params, &$smarty) {
     return false;
   }
 
-  include_once (DIR_WS_CLASSES.'language.php');
+  require_once (DIR_WS_CLASSES.'language.php');
   $piwik_lang = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'char', ''));
   $piwik_language_id = $piwik_lang->language['id'];
 

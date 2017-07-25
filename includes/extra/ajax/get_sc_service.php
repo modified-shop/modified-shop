@@ -36,7 +36,7 @@ function get_sc_service() {
   $language = xtc_input_validation($_GET['language'], 'char', '');
   
   if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
-    include (DIR_WS_CLASSES.'language.php');
+    require_once (DIR_WS_CLASSES.'language.php');
     $lng = new language(($language != '') ? $language : DEFAULT_LANGUAGE);
   
     require_once(DIR_WS_LANGUAGES . $lng->language['directory'] . '/admin/orders.php');

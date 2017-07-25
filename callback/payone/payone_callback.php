@@ -35,7 +35,7 @@ $payone->log("received status from ".$_SERVER['REMOTE_ADDR'], $logfile);
 $payone->log(print_r($_POST, true), $logfile);
 
 // include language
-include (DIR_WS_CLASSES.'language.php');
+require_once (DIR_WS_CLASSES.'language.php');
 $lng = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'char', ''));
 require_once (DIR_FS_EXTERNAL.'payone/lang/'.$lng->language['directory'].'.php');
 
