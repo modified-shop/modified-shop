@@ -482,7 +482,7 @@ select {
   box-sizing: border-box;
   width:100%;
 }  
-input[type=text], input[type=password] {
+input[type=text], input[type=password], input[type=email], input[type=tel] {
   background-color:#fafafa;
   border-color: #C6C6C6 #DADADA #EAEAEA;
   color: #999999;
@@ -503,15 +503,15 @@ input[type=text], input[type=password] {
 input[type=radio], input[type=checkbox] {
   margin: 0 3px;
 }
-.stern input[type=text], .stern input[type=password], .stern select, .stern textarea  {
+.stern input[type=text], .stern input[type=password], .stern input[type=email], .stern input[type=tel], .stern select, .stern textarea  {
   width:95%;
 }
-input[type=text]:hover, input[type=password]:hover, select:hover, textarea:hover {
+input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, input[type=tel]:hover, select:hover, textarea:hover {
     background-color:#FFFFFF;
     border-color: #C6C6C6 #DADADA #EAEAEA;
     color: #666666;
 }    
-input[type=text]:focus, input[type=password]:focus, select:focus, textarea:focus {
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=tel]:focus, select:focus, textarea:focus {
     background-color:#FFFFFF;
     border-color: #659EC9 #70AEDD #A8CFEC;
     color: #333333;
