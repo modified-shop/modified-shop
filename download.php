@@ -77,7 +77,7 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
     $smarty->assign('FORM_ACTION', xtc_draw_form('downloads', xtc_href_link(FILENAME_DOWNLOAD, xtc_get_all_get_params().'action=process', 'SSL')));
     $smarty->assign('INPUT_MAIL', xtc_draw_input_field('email_address'));
     $smarty->assign('FORM_END', '</form>');
-    $smarty->assign('BUTTON_LOGIN', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_LOGIN));
+    $smarty->assign('BUTTON_LOGIN', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
   } else {
     // Check that order_id, download_id and key match
     $check_status_query = xtc_db_query("SELECT o.orders_id,
