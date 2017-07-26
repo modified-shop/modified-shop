@@ -61,6 +61,7 @@ $cats = '<br />---';
 $coupon['restrict_to_categories'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_categories']);
 if (trim($coupon['restrict_to_categories'])) {
   $cat_ids = explode(",", $coupon['restrict_to_categories']);
+  $cat_ids = array_unique($cat_ids);
   $categories_query = xtc_db_query("SELECT categories_name
                                       FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                      WHERE categories_id IN ('" . implode("', '", $cat_ids) . "')
@@ -80,6 +81,7 @@ $prods = '<br />---';
 $coupon['restrict_to_products'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_products']);
 if (trim($coupon['restrict_to_products'])) {
   $pr_ids = explode(",", $coupon['restrict_to_products']);
+  $pr_ids = array_unique($pr_ids);
   $products_query = xtc_db_query("SELECT products_name
                                     FROM ".TABLE_PRODUCTS_DESCRIPTION."
                                    WHERE products_id IN ('" . implode("', '", $pr_ids) . "')
