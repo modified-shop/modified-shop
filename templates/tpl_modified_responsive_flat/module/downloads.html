@@ -7,15 +7,23 @@
   {if $FORM_ACTION}
     {if $error != ''}<div class="errormessage">{$error}</div>{/if}
     {$FORM_ACTION}
-    <p>{#text_confirm_download#}</p>
-    <div class="highlightbox">
-      <table>
-        <tr>
-          <td><span class="fieldtext">{#text_email#}</span>{$INPUT_MAIL|replace:"type=\"text\"":"type=\"email\""}</td>
-        </tr>
-      </table>
+    <div class="highlightbox cf">
+      <div class="twoColumsInner">
+        <table>
+          <tr>
+            <td>{#text_confirm_download#}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="twoColumsInner last">
+        <table>
+          <tr>
+            <td><span class="fieldtext">{#text_email#}</span>{$INPUT_MAIL|replace:"type=\"text\"":"type=\"email\""}</td>
+          </tr>
+        </table>
+        <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_LOGIN}</div></div>
+      </div>
     </div>
-    <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_LOGIN}</div></div>
     {$FORM_END}
   {else}
     {if $dl_prevented eq 'true'}
