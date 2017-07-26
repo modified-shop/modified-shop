@@ -6,7 +6,7 @@
     <div class="box_line"></div>
     {$FORM_ACTION}
     <p class="box_sub">{#text_email#}:</p>
-    {$FIELD_EMAIL}
+    {$FIELD_EMAIL|replace:"type=\"text\"":"type=\"email\""}
     <p class="box_sub">{#text_pwd#}:</p>
     {$FIELD_PWD}
     <div class="box_sub_button cf">

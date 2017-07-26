@@ -18,7 +18,7 @@
       <div class="twoColums last">
         <table>
           <tr>
-            <td><span class="fieldtext">{#text_email#}</span>{$INPUT_MAIL}</td>
+            <td><span class="fieldtext">{#text_email#}</span>{$INPUT_MAIL|replace:"type=\"text\"":"type=\"email\""}</td>
           </tr>
         </table>
         <div class="button_right">{$BUTTON_LOGIN}</div>

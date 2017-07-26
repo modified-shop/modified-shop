@@ -25,10 +25,10 @@
       </tr>
       {/if}
       <tr>
-        <td><span class="fieldtext">{#text_email#}</span><span class="stern">{$INPUT_EMAIL}</span></td>
+        <td><span class="fieldtext">{#text_email#}</span><span class="stern">{$INPUT_EMAIL|replace:"type=\"text\"":"type=\"email\""}</span></td>
       </tr>
       <tr>
-        <td><span class="fieldtext">{#text_confirm_email#}</span><span class="stern">{$INPUT_CONFIRM_EMAIL}</span></td>
+        <td><span class="fieldtext">{#text_confirm_email#}</span><span class="stern">{$INPUT_CONFIRM_EMAIL|replace:"type=\"text\"":"type=\"email\""}</span></td>
       </tr>
     </table>
     {if $company == '1'}
@@ -88,10 +88,10 @@
     <h4>{#title_contact#}</h4>
     <table>
       <tr>
-        <td><span class="fieldtext">{#text_tel#}</span><span class="stern">{$INPUT_TEL}</span></td>
+        <td><span class="fieldtext">{#text_tel#}</span><span class="stern">{$INPUT_TEL|replace:"type=\"text\"":"type=\"tel\""}</span></td>
       </tr>
       <tr>
-        <td><span class="fieldtext">{#text_fax#}</span><span class="stern">{$INPUT_FAX}</span></td>
+        <td><span class="fieldtext">{#text_fax#}</span><span class="stern">{$INPUT_FAX|replace:"type=\"text\"":"type=\"tel\""}</span></td>
       </tr>
     </table>
     <br />

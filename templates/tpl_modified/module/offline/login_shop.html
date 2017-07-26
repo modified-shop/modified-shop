@@ -165,7 +165,7 @@ table td {
             {$FORM_ACTION}
             <table>
               <tr>
-                <td><span class="fieldtext">{#text_email#}</span>{$INPUT_MAIL}</td>
+                <td><span class="fieldtext">{#text_email#}</span>{$INPUT_MAIL|replace:"type=\"text\"":"type=\"email\""}</td>
               </tr>
               <tr>
                 <td><span class="fieldtext">{#text_password#}</span>{$INPUT_PASSWORD}</td>

@@ -6,7 +6,7 @@
   <p class="box3_sub">{#text_email#}:</p>
   {$FORM_ACTION}
   <div class="newsletter_form">
-    {$FIELD_EMAIL}{$BUTTON}
+    {$FIELD_EMAIL|replace:"type=\"text\"":"type=\"email\""}{$BUTTON}
   </div>
   {$FORM_END}
   <p class="box3_sub">{#text_newsletter#}</p>
