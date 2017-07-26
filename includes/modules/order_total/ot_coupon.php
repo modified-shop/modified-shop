@@ -227,6 +227,7 @@ class ot_coupon {
           $coupon_array['restrict_to_products'] = preg_replace("'[\r\n\s]+'", '', $coupon_array['restrict_to_products']);
           if (trim($coupon_array['restrict_to_products']) != '') {
             $pr_ids = explode(",", $coupon_array['restrict_to_products']);
+            $pr_ids = array_unique($pr_ids);
             for ($i = 0, $n = sizeof($order->products); $i < $n; ++$i) {
               for ($ii = 0, $nn = count($pr_ids); $ii < $nn; $ii ++) {
                 if ($pr_ids[$ii] == xtc_get_prid($order->products[$i]['id'])) {
@@ -249,6 +250,7 @@ class ot_coupon {
           $coupon_array['restrict_to_categories'] = preg_replace("'[\r\n\s]+'", '', $coupon_array['restrict_to_categories']);
           if (trim($coupon_array['restrict_to_categories']) != '') {
             $cat_ids = explode(",", $coupon_array['restrict_to_categories']);
+            $cat_ids = array_unique($cat_ids);
             for ($i = 0, $n = sizeof($order->products); $i < $n; ++$i) {
               // web28 - 2010-06-19 - test for product_id to prevent double counting
               $p_flag = $coupon_array['restrict_to_products'] && in_array(xtc_get_prid($order->products[$i]['id']) ,$pr_ids) ? true : false;
