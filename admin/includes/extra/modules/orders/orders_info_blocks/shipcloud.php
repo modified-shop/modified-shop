@@ -68,10 +68,14 @@
             array('id' => '0', 'text' => TEXT_SHIPCLOUD_INSURANCE_NO),
             array('id' => '1', 'text' => TEXT_SHIPCLOUD_INSURANCE_YES),
           );
+          $type_array = array(
+            array('id' => 'parcel', 'text' => TEXT_SHIPCLOUD_PARCEL),
+          );
 
           echo '<td class="smallText" align="center" colspan="2"><span id="sc_data">';
           echo xtc_draw_pull_down_menu('carrier_id', $sc_carriers, $sc_carriers[0]['id'], 'id="sc_carrier"').'&nbsp;';
           echo xtc_draw_pull_down_menu('service', $service_array, $service_array[0]['id'], 'id="sc_service"').'&nbsp;';
+          echo xtc_draw_pull_down_menu('type', $type_array, $type_array[0]['id'], 'id="sc_type"').'&nbsp;';
           echo xtc_draw_pull_down_menu('parcel', $parcel_array, $parcel_array[0]['id']).'&nbsp;';
           if ($order->info['pp_total'] > '500') {
             echo xtc_draw_pull_down_menu('insurance', $insurance_array, $insurance_array[0]['id'], 'id="sc_insurance"').'&nbsp;';
@@ -108,15 +112,25 @@
       if (data != '' && data != undefined) { 
         <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
           $('#sc_service').replaceWith('<select id="sc_service" name="service" class="SlectBox" style="visibility: hidden;"></select>');
-          $('#sc_service').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="options"></ul></div>');
+          $('#sc_service').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="service"></ul></div>');
+          $('#sc_type').replaceWith('<select id="sc_type" name="type" class="SlectBox" style="visibility: hidden;"></select>');
+          $('#sc_type').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="type"></ul></div>');
         <?php } else { ?>
           $('#sc_service').replaceWith('<select id="sc_service" name="service" class="SlectBox"></select>');
+          $('#sc_type').replaceWith('<select id="sc_type" name="type" class="SlectBox"></select>');        
         <?php } ?>
-                
-        $.each(data, function(id, arr) {
+        
+        $.each(data.carrier, function(id, arr) {
           $('<option value="'+arr.id+'">'+arr.text+'</option>').appendTo('#sc_service');
           <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
-            $('<li data-val="'+arr.id+'"><label>'+arr.text+'</label></li>').appendTo('#options');        
+            $('<li data-val="'+arr.id+'"><label>'+arr.text+'</label></li>').appendTo('#service');        
+          <?php } ?>
+        });
+
+        $.each(data.parcel, function(id, arr) {
+          $('<option value="'+arr.id+'">'+arr.text+'</option>').appendTo('#sc_type');
+          <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
+            $('<li data-val="'+arr.id+'"><label>'+arr.text+'</label></li>').appendTo('#type');        
           <?php } ?>
         });
       

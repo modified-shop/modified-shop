@@ -50,22 +50,17 @@ function get_sc_service() {
       foreach ($sc_carriers_array as $sc_data) {
         if ($sc_data['name'] == $carrier) {
           for ($i=0, $n=count($sc_data['services']); $i<$n; $i++) {
-            $sc_carriers[] = array(
+            $sc_carriers['carrier'][] = array(
               'id' => $sc_data['services'][$i],
               'text' => constant('TEXT_SHIPCLOUD_'.strtoupper($sc_data['services'][$i])),
             );
           }
 
           for ($i=0, $n=count($sc_data['package_types']); $i<$n; $i++) {
-            if ($sc_data['package_types'][$i] != 'parcel'
-                && $sc_data['package_types'][$i] != 'bulk'
-                )
-            {
-              $sc_carriers[] = array(
-                'id' => $sc_data['package_types'][$i],
-                'text' => constant('TEXT_SHIPCLOUD_'.strtoupper($sc_data['package_types'][$i])),
-              );
-            }
+            $sc_carriers['parcel'][] = array(
+              'id' => $sc_data['package_types'][$i],
+              'text' => constant('TEXT_SHIPCLOUD_'.strtoupper($sc_data['package_types'][$i])),
+            );
           }
         }
       }

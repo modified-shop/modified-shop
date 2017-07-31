@@ -163,6 +163,8 @@ define('TEXT_SHIPCLOUD_PARCEL_LETTER', 'Post Warensendung');
 define('TEXT_WEIGHT_PLACEHOLDER', 'Gewicht / Kg');
 define('TEXT_SHIPCLOUD_INSURANCE_NO', 'H&ouml;herversicherung Nein');
 define('TEXT_SHIPCLOUD_INSURANCE_YES', 'H&ouml;herversicherung JA');
+define('TEXT_SHIPCLOUD_BULK', 'Sperrgut');
+define('TEXT_SHIPCLOUD_PARCEL', 'Paket');
 
 define('DOWNLOAD_LABEL', 'Paketschein herunterladen');
 define('CREATE_LABEL', 'Paketschein erstellen');

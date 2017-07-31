@@ -164,6 +164,8 @@ define('TEXT_SHIPCLOUD_PARCEL_LETTER', 'Post Parcel Letter');
 define('TEXT_WEIGHT_PLACEHOLDER', 'Weight / Kg');
 define('TEXT_SHIPCLOUD_INSURANCE_NO', 'higher insurance no');
 define('TEXT_SHIPCLOUD_INSURANCE_YES', 'higher insurance yes');
+define('TEXT_SHIPCLOUD_BULK', 'Bulk');
+define('TEXT_SHIPCLOUD_PARCEL', 'Parcel');
 
 define('DOWNLOAD_LABEL', 'Download Label');
 define('CREATE_LABEL', 'Create Label');

@@ -56,6 +56,8 @@ class shipcloud {
     $this->description_1 = $params['description_1'];
     $this->description_2 = $params['description_2'];
     $this->weight = $params['weight'];
+    $this->service = $params['service'];
+    $this->type = $params['type'];
     $this->insurance = ((isset($params['insurance']) && $params['insurance'] == '1' && $this->order->info['pp_total'] > '500') ? true : false);
     
     $this->carrier = $this->check_carrier();
@@ -67,18 +69,13 @@ class shipcloud {
         'package'               => $this->package_data(),
         'reference_number'      => $this->order->info['orders_id'],
         'create_shipping_label' => 'true',
-        'service'               => $params['service'],
+        'service'               => $this->service,
         'description'           => $this->description_2,
         'additional_services'   => array(),
       );
-      
+            
       if ($request_array['description'] == '') {
         unset($request_array['description']);
-      }
-      
-      if (in_array($params['service'], array('books', 'letter', 'parcel_letter'))) {
-        $request_array['service'] = 'standard';
-        $request_array['package']['type'] = $params['service'];
       }
       
       $sender_data = $this->sender_data();
@@ -225,7 +222,7 @@ class shipcloud {
       'company'     => ((strtolower($this->carrier) == 'dhl') ? substr($this->order->delivery['company'], 0, 30) : $this->order->delivery['company']),
       'street'      => $street_address['street_name'],
       'street_no'   => $street_address['street_number'],
-      'care_of'    => $this->order->delivery['suburb'],
+      'care_of'     => $this->order->delivery['suburb'],
       'zip_code'    => $this->order->delivery['postcode'],
       'city'        => $this->order->delivery['city'],
       'state'       => $this->order->delivery['state'],
@@ -275,8 +272,8 @@ class shipcloud {
         ) 
     {        
       $bank_data = array(
-        'amount' => $this->order->info['pp_total'],
-        'currency' => $this->order->info['currency'],
+        'amount'              => $this->order->info['pp_total'],
+        'currency'            => $this->order->info['currency'],
         'bank_account_holder' => MODULE_SHIPCLOUD_BANK_HOLDER,
         'bank_name'           => MODULE_SHIPCLOUD_BANK_NAME,
         'bank_account_number' => MODULE_SHIPCLOUD_ACCOUNT_IBAN,
@@ -311,6 +308,7 @@ class shipcloud {
       'height'         => (($this->height != '') ? $this->height : '20'),
       'weight'         => (double)(($this->weight != '') ? str_replace(',', '.', $this->weight) : $this->calculate_weight()),
       'description'    => $this->description_1,
+      'type'           => $this->type,
     );
 
     if ($package_data['description'] == '') {
