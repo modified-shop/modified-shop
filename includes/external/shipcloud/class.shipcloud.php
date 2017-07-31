@@ -72,6 +72,10 @@ class shipcloud {
         'additional_services'   => array(),
       );
       
+      if ($request_array['description'] == '') {
+        unset($request_array['description']);
+      }
+      
       if (in_array($params['service'], array('books', 'letter', 'parcel_letter'))) {
         $request_array['service'] = 'standard';
         $request_array['package']['type'] = $params['service'];
@@ -82,14 +86,19 @@ class shipcloud {
         $request_array['from'] = $sender_data;
       }
       
-      $request_array['additional_services'][] = array(
-        'name' => 'advance_notice',
-        'properties' => array(
-          'email' => $this->order->customer['email_address'],
-          'language' => (($this->order->info['language'] == 'german') ? 'de' : 'en'),
-        ),
-      );
-
+      if (strpos($this->carrier, 'dhl') !== false
+          || $this->carrier == 'dpd'
+          )
+      {
+        $request_array['additional_services'][] = array(
+          'name' => 'advance_notice',
+          'properties' => array(
+            'email' => $this->order->customer['email_address'],
+            'language' => (($this->order->info['language'] == 'german') ? 'de' : 'en'),
+          ),
+        );
+      }
+      
       if ($this->order->info['payment_method'] == 'cod') {
         $bank_data = $this->bank_data();
         if ($bank_data != '') {
@@ -303,6 +312,10 @@ class shipcloud {
       'weight'         => (double)(($this->weight != '') ? str_replace(',', '.', $this->weight) : $this->calculate_weight()),
       'description'    => $this->description_1,
     );
+
+    if ($package_data['description'] == '') {
+      unset($package_data['description']);
+    }
     
     if ($this->insurance === true) {
       $package_data['declared_value'] = array(
