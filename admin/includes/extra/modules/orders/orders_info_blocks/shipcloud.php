@@ -135,8 +135,8 @@
           } else {
             $('#sc_insurance').show();
           }
-          $('#sc_description_1').show();
-          $('#sc_description_2').hide();
+          $('#sc_description_1').hide();
+          $('#sc_description_2').show();
         }
 
         <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
