@@ -20,6 +20,21 @@ include ('includes/application_top.php');
 
 require_once (DIR_FS_INC.'xtc_update_banner_click_count.inc.php');
 
+function check_url_scheme($url) {
+  $parse_url = parse_url($url);
+  if (!isset($parse_url['scheme'])) {
+    $shop_url = xtc_get_top_level_domain((isset($parse_url['host'])) ? $parse_url['host'] : substr($parse_url['path'], 0, strpos($parse_url['path'], '/')));
+    if (strpos(HTTP_SERVER, $shop_url['new']) !== false) {
+      $parse_url_host = parse_url(HTTP_SERVER);
+      $url = $parse_url_host['scheme'].'://'.$url;
+    } else {
+      $url = 'http://'.$url;
+    }
+  }
+  
+  return $url;
+}
+
 switch ($_GET['action']) {
 	case 'banner' :
 		$banner_query = xtc_db_query("SELECT banners_url 
@@ -53,8 +68,8 @@ switch ($_GET['action']) {
           $banner['banners_url'] .= $separator . session_name() . '=' . session_id();
         }
       }
-
-			xtc_redirect('http://'.str_replace(array('http://', 'https://'), '', $banner['banners_url']));
+      
+			xtc_redirect(check_url_scheme($banner['banners_url']));
 		} else {
 			xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
 		}
@@ -70,7 +85,7 @@ switch ($_GET['action']) {
 			if (xtc_db_num_rows($product_query)) {
 				$product = xtc_db_fetch_array($product_query);
 
-				xtc_redirect('http://'.str_replace(array('http://', 'https://'), '', $product['products_url']));
+				xtc_redirect(check_url_scheme($product['products_url']));
 			} else {
 				xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
 			}
@@ -115,7 +130,7 @@ switch ($_GET['action']) {
 				                 AND languages_id = '".(int)$_SESSION['languages_id']."'");
 			}
 
-			xtc_redirect('http://'.str_replace(array('http://', 'https://'), '', $manufacturer['manufacturers_url']));
+			xtc_redirect(check_url_scheme($manufacturer['manufacturers_url']));
 		} else {
 			xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
 		}
