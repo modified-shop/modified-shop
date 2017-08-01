@@ -34,19 +34,18 @@ if (file_exists(dirname(__FILE__).'/local/configure.php')) {
   include_once(dirname(__FILE__).'/configure.php');
 }
 
-// default time zone
-if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
-  date_default_timezone_set('Europe/Berlin');
+// minimum requirement
+if (version_compare(PHP_VERSION, '5.4', '<')) {
+  die('<h1>Minimum requirement PHP Version 5.4</h1>');
 }
+
+// default time zone
+date_default_timezone_set('Europe/Berlin');
 
 // new error handling
 if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
   require_once (DIR_WS_INCLUDES.'error_reporting.php');
 }
-
-// turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
-if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
-if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
 // security inputfilter for GET/POST/COOKIE
 require_once (DIR_FS_INC.'html_encoding.php');

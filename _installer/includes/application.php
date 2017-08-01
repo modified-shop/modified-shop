@@ -32,9 +32,8 @@
 
   include('includes/version.php');
 
-  if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
-    date_default_timezone_set('Europe/Berlin');
-  }
+  // default time zone
+  date_default_timezone_set('Europe/Berlin');
     
   // Set FileSystem Directories
   if (!defined('DIR_FS_DOCUMENT_ROOT')) {   
