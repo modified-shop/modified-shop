@@ -350,7 +350,7 @@
   define('TEXT_START_DB_STRUCTURE_UPDATE', 'Datenbankstruktur-Update starten');
   define('TEXT_PERFORM_MANUAL_SQL_UPDATE', 'SQL-Befehle m&uuml;ssen mit einem Semikolon ( ; ) abgeschlossen werden!');
   define('TITLE_PERFORM_WRITE_CONFIGURE', ' Konfigurations-Datei (configure.php) aktualisieren<br />');
-  define('TITLE_PERFORM_DELETE_FILES_AND_DIRS', ' Alte Dateien und Verzeichnise l&ouml;schen<br />');
+  define('TITLE_PERFORM_DELETE_FILES_AND_DIRS', ' Alte Dateien und Verzeichnisse l&ouml;schen<br />');
   define('TITLE_PERFORM_DB_STRUCTURE_UPDATE', ' Datenbankstruktur-Update<br />');
   define('TITLE_PERFORM_DB_UPDATE', ' Datenbank-Update<br />');
   define('TITLE_PERFORM_MANUAL_SQL_UPDATE', ' Manuelle SQL-Eingabe');
