@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: account_password.php 4221 2013-01-11 10:18:52Z gtb-modified $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -60,7 +60,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
 	$error = false;
-	if (strlen($password_current) < ENTRY_PASSWORD_MIN_LENGTH) {
+	if (strlen($password_current) < 1) {
 		$error = true;
 		$messageStack->add('account_password', ENTRY_PASSWORD_CURRENT_ERROR);
 	}
