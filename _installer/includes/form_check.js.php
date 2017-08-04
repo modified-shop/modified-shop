@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: form_check.js.php 3072 2012-06-18 15:01:13Z hhacker $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -79,7 +79,7 @@
         var password_current = form.elements[field_name_1].value;
         var password_new = form.elements[field_name_2].value;
         var password_confirmation = form.elements[field_name_3].value;
-        if (password_current == '' || password_current.length < field_size) {
+        if (password_current == '') {
           error_message = error_message + "* " + message_1 + "\n";
           error = true;
         } else if (password_new == '' || password_new.length < field_size) {
