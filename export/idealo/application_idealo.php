@@ -43,10 +43,13 @@ if (file_exists('../../includes/local/configure.php')) {
 	include dirname ( __FILE__ ) . '/../../includes/configure.php';
 }
 
-// default time zone
-if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
-  date_default_timezone_set('Europe/Berlin');
+// minimum requirement
+if (version_compare(PHP_VERSION, '5.4', '<')) {
+  die('<h1>Minimum requirement PHP Version 5.4</h1>');
 }
+
+// default time zone
+date_default_timezone_set('Europe/Berlin');
 
 // set the level of error reporting
 @ini_set('display_errors', true);
@@ -65,10 +68,6 @@ if (is_file(DIR_FS_CATALOG.'export/_error_reporting.shop')) {
 if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
   require_once (DIR_WS_INCLUDES.'error_reporting.php');
 }
-
-// turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
-if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
-if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
 // include the list of project filenames
 require (DIR_WS_INCLUDES.'filenames.php');
