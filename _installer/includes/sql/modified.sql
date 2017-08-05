@@ -787,7 +787,8 @@ CREATE TABLE orders (
   orders_ident_key VARCHAR(128),
   PRIMARY KEY (orders_id),
   KEY idx_customers_id (customers_id),
-  KEY idx_orders_status (orders_status)
+  KEY idx_orders_status (orders_status),
+  KEY idx_date_purchased (date_purchased)
 );
 
 DROP TABLE IF EXISTS orders_products;

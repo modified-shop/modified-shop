@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: sales_report.php 4824 2013-05-24 09:41:50Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -158,7 +158,7 @@
       }
     }
 
-    function getNext($details=false) {
+    function getNext($details=0) {
       switch ($this->mode) {
         // yearly
         case '1':
@@ -207,7 +207,7 @@
       $rqShipping = xtc_db_query($this->queryShipping . " WHERE o.date_purchased >= '" . xtc_db_input(date("Y-m-d H:i:s", $sd)) . "' AND o.date_purchased < '" . xtc_db_input(date("Y-m-d H:i:s", $ed)) . "'" . $filterString);
       $shipping = xtc_db_fetch_array($rqShipping);
 
-      $rqItems = xtc_db_query($this->queryItemCnt . " WHERE o.date_purchased >= '" . xtc_db_input(date("Y-m-d H:i:s", $sd)) . "' AND o.date_purchased < '" . xtc_db_input(date("Y-m-d H:i:s", $ed)) . "'" . $filterString . " GROUP BY pid " . $this->sortString);
+      $rqItems = xtc_db_query($this->queryItemCnt . " WHERE o.date_purchased >= '" . xtc_db_input(date("Y-m-d H:i:s", $sd)) . "' AND o.date_purchased < '" . xtc_db_input(date("Y-m-d H:i:s", $ed)) . "'" . $filterString . (($details > 0) ? " GROUP BY pid " . $this->sortString : ""));
       $rqItems_count = xtc_db_num_rows($rqItems);
 
       // set the return values
@@ -230,7 +230,7 @@
         
         // products_attributes
         // are there any attributes for this order_id ?
-        if ($details) {
+        if ($details > 0) {
           $attr = array();
           $attributes_query = xtc_db_query("SELECT opa.*
                                               FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " opa
