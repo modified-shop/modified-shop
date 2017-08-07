@@ -62,4 +62,8 @@ ADD KEY `idx_products_xsell_grp_name_id` (`products_xsell_grp_name_id`);
 #GTB - 2017-07-12 - fix #1238
 DELETE FROM `configuration` WHERE `configuration_key` = 'USE_PAGINATION_LIST';
 
+#GTB - 2017-08-05 - optimize sales report
+ALTER TABLE `orders`
+ADD KEY `idx_date_purchased` (`date_purchased`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
