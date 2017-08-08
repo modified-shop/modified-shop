@@ -262,6 +262,8 @@ class categories {
     $sql_data_array = array('parent_id' => $dest_category_id,
                             'last_modified' => 'now()');
     xtc_db_perform(TABLE_CATEGORIES, $sql_data_array, 'update', "categories_id = '".(int)$src_category_id."'");         
+
+    $this->catModules->move_category($src_category_id, $dest_category_id);
   }
 
 

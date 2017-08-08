@@ -101,6 +101,12 @@ class categoriesModules {
         return $this->call_module_method($sql_data_array,$src_category_id,$dest_category_id,$ctype,$new_cat_id); //Return parameter must be in first place
     }
 
+    function move_category($src_category_id, $dest_category_id)
+    {
+        $this->function_call = 'move_category';
+        $this->secure_call_module_method($src_category_id, $dest_category_id);
+    }
+
     function remove_category($category_id)
     {
         $this->function_call = 'remove_category';
