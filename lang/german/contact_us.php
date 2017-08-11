@@ -1,7 +1,7 @@
 <?php
  //additional fields
  define('EMAIL_COMPANY', 'Firma: ');
- define('EMAIL_STREET', 'Strasse: ');
+ define('EMAIL_STREET', 'Stra&szlig;e: ');
  define('EMAIL_POSTCODE', 'PLZ: ');
  define('EMAIL_CITY', 'Stadt: ');
  define('EMAIL_PHONE', 'Telefon: ');
