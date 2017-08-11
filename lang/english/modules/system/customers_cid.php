@@ -12,7 +12,7 @@
 
 define('MODULE_CUSTOMERS_CID_STATUS_TITLE','Status');
 define('MODULE_CUSTOMERS_CID_STATUS_DESC','Module status');
-define('MODULE_CUSTOMERS_CID_STATUS_INFO','Activ');
+define('MODULE_CUSTOMERS_CID_STATUS_INFO','Active');
 define('MODULE_CUSTOMERS_CID_TEXT_TITLE', 'Automatic customer number');
 define('MODULE_CUSTOMERS_CID_TEXT_DESCRIPTION', 'Automatic customer number for new accounts');    
 define('MODULE_CUSTOMERS_CID_NEXT_TITLE', 'Next customer number');
