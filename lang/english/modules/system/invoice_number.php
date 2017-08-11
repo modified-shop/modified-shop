@@ -12,7 +12,7 @@
 
 define('MODULE_INVOICE_NUMBER_STATUS_TITLE','Status');
 define('MODULE_INVOICE_NUMBER_STATUS_DESC','Module status');
-define('MODULE_INVOICE_NUMBER_STATUS_INFO','Activ');
+define('MODULE_INVOICE_NUMBER_STATUS_INFO','Active');
 define('MODULE_INVOICE_NUMBER_TEXT_TITLE', 'Module Invoicenumber');
 define('MODULE_INVOICE_NUMBER_TEXT_BTN', 'Edit');
 define('MODULE_INVOICE_NUMBER_TEXT_DESCRIPTION', ' Module Invoicenumber');    
