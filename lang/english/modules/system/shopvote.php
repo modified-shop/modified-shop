@@ -11,13 +11,13 @@
    ---------------------------------------------------------------------------------------*/
 
 define('MODULE_SHOPVOTE_STATUS_TITLE','Status');
-define('MODULE_SHOPVOTE_STATUS_DESC','Modulstatus');
-define('MODULE_SHOPVOTE_STATUS_INFO','Aktiv');
+define('MODULE_SHOPVOTE_STATUS_DESC','Module status');
+define('MODULE_SHOPVOTE_STATUS_INFO','Active');
 define('MODULE_SHOPVOTE_TEXT_TITLE', 'Shopvote');
-define('MODULE_SHOPVOTE_TEXT_DESCRIPTION', 'Mit diesem Plugin integrieren Sie die besten Funktionen des SHOPVOTE- Bewertungsportals ganz einfach in Ihren Shop. Die integrierte EasyReviews-Funktion sendet an Ihre Kunden automatisch und rechtssicher eine Bewertungsanfrage. Ihre Kunden k&ouml;nnen damit schnell und unkompliziert Ihr Unternehmen bewerten. Die RatingStars-Funktion sorgt einerseits f&uuml;r die optimale Pr&auml;sentation Ihrer Bewertungen auf Ihrer Webseite und andererseits f&uuml;r die automatische Erzeugung der Bewertungssterne in den organischen Suchergebnissen bei Google.');    
+define('MODULE_SHOPVOTE_TEXT_DESCRIPTION', 'With this plugin, you can easily integrate the best features of the SHOPVOTE evaluation portal into your shop. The integrated EasyReviews function automatically sends a legally safe customer request to your customers. Your customers can quickly and easily evaluate your company. The RatingStars feature ensures the best presentation of your ratings on your website and, on the other hand, the automatic generation of the evaluation stars in Google\'s organic search results.');    
 define('MODULE_SHIPPING_EASYREVIEWS_TITLE', 'EasyReviews Code');
-define('MODULE_SHIPPING_EASYREVIEWS_DESC', 'Kopieren Sie nun den JavaScript/HTML-Code aus dem H&auml;ndlerbereich und f&uuml;gen Sie diesen hier ein. Die Variablen "CUSTOMERMAIL" und "ORDNERNUMBER" werden vom Modul automatisch mit den entsprechenden Daten ersetzt.');
+define('MODULE_SHIPPING_EASYREVIEWS_DESC', 'Copy the JavaScript/HTML-Code from the dealer area and paste it here. The module automatically replaces the variables "CUSTOMERMAIL" and "ORDERNUMBER" with the corresponding data.');
 define('MODULE_SHIPPING_RATINGSTARS_TITLE', 'RatingStars Code');
-define('MODULE_SHIPPING_RATINGSTARS_DESC', 'Die Integration erfolgt ganz einfach &uuml;ber die Verwendung folgender ShopVote-Grafiken „AllVotes I + II“ und „VoteBadge I – III“. Die Grafiken finden Sie im H&auml;ndlerbereich von SHOPVOTE unter "Grafiken &amp; Siegel". Haben Sie sich eine Grafik ausgew&auml;hlt, lassen Sie sich den Code anzeigen und f&uuml;gen Sie diesen hier ein.');
+define('MODULE_SHIPPING_RATINGSTARS_DESC', 'Integration is easy with the use of the following ShopVote graphics "AllVotes I + II" and "VoteBadge I - III". You can find the graphics in the dealer area of SHOPVOTE under "graphics & seals". If you have selected a graphic, you can display the code and paste it here.');
 
 ?>
