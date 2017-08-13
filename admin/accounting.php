@@ -137,17 +137,6 @@ require (DIR_WS_INCLUDES.'head.php');
     $(".access"+val).attr('checked', checked);
   }
 </script>
-<style>
-.multicolumn {
-  -webkit-column-count: 3; /* Chrome, Safari, Opera */
-  -moz-column-count: 3; /* Firefox */
-  column-count: 3;
-  
-  -webkit-column-gap: 20px; /* Chrome, Safari, Opera */
-  -moz-column-gap: 20px; /* Firefox */
-  column-gap: 20px;    
-}
-</style>
 </head>
 <body>
 <!-- header //-->
