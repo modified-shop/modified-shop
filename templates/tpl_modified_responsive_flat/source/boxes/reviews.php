@@ -16,7 +16,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-// Fallback for oder shopversion: Contanst MODULE_BANNER_MANAGER_STATUS and column reviews_status came both together in shopversion 2.0.1.0
+// Fallback for older shopversion: Contanst MODULE_BANNER_MANAGER_STATUS and column reviews_status came both together in shopversion 2.0.1.0
 $reviews_status = '';
 if (defined('MODULE_BANNER_MANAGER_STATUS')) {
   $reviews_status = "AND r.reviews_status = '1'";
