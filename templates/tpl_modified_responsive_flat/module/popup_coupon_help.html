@@ -1,0 +1,17 @@
+{config_load file="$language/lang_$language.conf" section="popup_coupon_help"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="popup_coupon_help"}
+<!DOCTYPE html{$doctype}>
+<html {$html_params}>
+<head>
+  <meta charset="{$charset}" />
+  <title>{$title}</title>
+  <meta name="robots" content="noindex, nofollow, noodp" />
+  {if $base}<base href="{$base}" />{/if}
+  <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet.css" />
+</head>
+<body class="popupcontent">
+<h1>{#title_help#}</h1>
+{$TEXT_HELP}
+</body>
+</html>

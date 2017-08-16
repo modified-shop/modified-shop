@@ -1,0 +1,9 @@
+
+Thank you for subscribing!
+
+Please click the following activation link to receive newsletters. If you haven't subscribed to this service, please ignore this e-mail!
+
+Your activation link:
+{$LINK}
+
+[SIGNATUR]

@@ -1,0 +1,13 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{config_load file="lang_`$language`.custom"}
+<div class="box3">
+  <div class="box3_header">{#heading_guestnewsletter#}</div>
+  <div class="box3_line"></div>
+  <p class="box3_sub">{#text_email#}:</p>
+  {$FORM_ACTION}
+  <div class="newsletter_form">
+    {$FIELD_EMAIL|replace:"type=\"text\"":"type=\"email\""}<div class="cssButtonPos1 cf">{$BUTTON}</div>
+  </div>
+  {$FORM_END}
+  <p class="box3_sub">{#text_newsletter#}</p>
+</div>

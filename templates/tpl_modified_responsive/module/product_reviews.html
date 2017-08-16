@@ -1,0 +1,26 @@
+{config_load file="$language/lang_$language.conf" section="reviews"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="reviews"}
+<h1>{#heading_reviews#} {$PRODUCTS_NAME}</h1>
+{if $error != ''}<div class="errormessage">{$error}</div>{/if}
+{foreach name=aussen item=module_data from=$module_content}
+<div class="reviewsbox {cycle values="rb_left,rb_right"}">
+  <div class="reviewsbox_inner cf">
+    <div class="rb_headline"><strong>{#title_date#}</strong> {$module_data.DATE}</div>
+    <div class="rb_autor"><strong>{#text_author#}</strong> {$module_data.AUTHOR}</div>
+    {if isset($module_data.RATING_VOTE)}
+      <div class="rb_rating"><strong>{#text_rating#}</strong> <div class="rb_rating_icons"><i class="fa fa-star{if $module_data.RATING_VOTE >= 1} full{/if}"></i><i class="fa fa-star{if $module_data.RATING_VOTE >= 2} full{/if}"></i><i class="fa fa-star{if $module_data.RATING_VOTE >= 3} full{/if}"></i><i class="fa fa-star{if $module_data.RATING_VOTE >= 4} full{/if}"></i><i class="fa fa-star{if $module_data.RATING_VOTE >= 5} full{/if}"></i></div></div>
+    {else}
+      <div class="rb_rating"><strong>{#text_rating#}</strong> {$module_data.RATING|replace:".gif":".png"}</div>
+    {/if}
+    <br class="clearfix" />
+    <div class="rb_image">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>{/if}</div>
+    <div class="rb_rezension_small">
+      <p><strong>{#text_text#}</strong></p>
+      <p>{$module_data.TEXT_PLAIN|onlytext}</p>
+    </div>
+  </div>
+</div>
+{/foreach}
+<br class="clearfix" />
+{$PAGINATION}

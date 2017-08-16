@@ -1,0 +1,83 @@
+@charset "utf-8";
+/* CSS Document for Masterpayment */
+
+.masterpayment_box { 
+	width:100%; 
+	margin:auto; 
+	padding:10px;
+}
+
+.masterpayment_frame {
+	width: 100%; 
+	border: 0px solid #FFF; 
+	height: 500px; 
+	background-color: white;
+}
+
+.masterpayment_payment_title {
+	border-bottom:1px dotted #4B4B4B; 
+	padding:3px;
+}
+
+.masterpayment_loading {
+	margin:auto;
+	padding-top:36px;
+}
+
+.masterpayment_success_box_outer {
+	width:400px; 
+	border:8px #6F6 solid;
+	-moz-border-radius:4px; /* Firefox */
+	-webkit-border-radius:4px; /* Safari, Chrome */
+	-khtml-border-radius:4px; /* Konqueror */
+	border-radius:4px; /* CSS3 */ 
+	margin:auto;
+}
+
+.masterpayment_success_box_inner {
+	border:1px #3C0 solid;
+	padding:10px;
+}
+
+.masterpayment_failed_box_outer {
+	width:400px; 
+	border:8px #FCC solid; 
+	-moz-border-radius:4px; /* Firefox */
+	-webkit-border-radius:4px; /* Safari, Chrome */
+	-khtml-border-radius:4px; /* Konqueror */
+	border-radius:4px; /* CSS3 */ 
+	margin:auto;
+}
+
+.masterpayment_failed_box_inner {
+	border:1px #C00 solid;
+	padding:10px;
+}
+
+.masterpayment_cancelled_box_outer {
+	width:400px; 
+	border:8px #C9C9C9 solid;
+	-moz-border-radius:4px; /* Firefox */
+	-webkit-border-radius:4px; /* Safari, Chrome */
+	-khtml-border-radius:4px; /* Konqueror */
+	border-radius:4px; /* CSS3 */ 
+	margin:auto;
+}
+
+.masterpayment_cancelled_box_inner {
+	border:1px #484848 solid;
+	padding:10px;
+}
+
+.masterpayment_submit_button {
+	cursor:pointer;
+	height:30px; 
+	background-color:#CCC;
+	font-family:Verdana,Arial,Helvetica,sans-serif;
+	color:#333; 
+	font-size:13px; 
+	letter-spacing:2px; 
+	border-style:solid; 
+	border-width:1px; 
+	border-color:#C0C0C0;
+}
