@@ -142,7 +142,7 @@
 
       case 'edit':
         if ($set == 'payment'
-            && strpos($module_class, 'paypal') !== false
+            && substr($module_class, 0, 6) == 'paypal'
             ) 
         {
           xtc_redirect(xtc_href_link('paypal_module.php', 'action=edit&module=' . $module_class));
