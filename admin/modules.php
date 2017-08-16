@@ -593,6 +593,9 @@ if (xtc_not_null($action) && !$box) {
               echo '<div class="modulbox">';
               $box = new box;
               echo $box->infoBox($heading, $contents);
+              if (isset($mInfo->properties['add_content'])) {
+                echo $mInfo->properties['add_content'];
+              }
               echo '</div>';
               echo '            </td>' . "\n";
             }

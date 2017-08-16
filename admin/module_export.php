@@ -546,6 +546,9 @@ if (xtc_not_null($action) && !$box) {
                     echo sprintf(MODULE_STEP_READY_STYLE_BACK,xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module='.$mInfo->code))) ;
                   }
                   //EOF NEW MODULE PROCESSING
+                  if (isset($mInfo->properties['add_content'])) {
+                    echo $mInfo->properties['add_content'];
+                  }               
                   echo '</div>' . PHP_EOL;      
                   echo '            </td>'  . PHP_EOL;
                 }
