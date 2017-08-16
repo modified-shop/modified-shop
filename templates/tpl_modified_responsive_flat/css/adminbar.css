@@ -1,0 +1,175 @@
+/* -----------------------------------------------------------------------------------------
+   $Id: adminbar.css 9098 2015-12-02 11:22:33Z Tomcraft $
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
+
+/* SPECIAL CSS */
+.adminspacer {
+  height:36px;
+}
+
+/* TOGGLE MENU CSS */
+#admin{
+  background: #222;
+	position: fixed;
+	display: block;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	z-index: 100000 !important;
+  height:36px;
+}
+#admin ul{
+	display: block;
+	margin: 0;
+	padding: 0px 10px;
+  max-width:1140px;
+	width: 100%;
+	margin: 0 auto;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#admin ul li{
+	display: block;
+	float: left;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	position: relative;
+}
+#admin ul li img{
+  float:left;
+}
+#admin ul li.logo {
+	display: block;
+  padding: 10px 40px 0px 0px;
+}
+#admin ul li.language {
+  padding: 12px 20px 0px 0px;
+}
+#admin ul li.language img {
+  float:left;
+  margin: 0px 10px 0px 0px;
+}
+#admin ul li a.togglelink{
+	display: block;
+	font-size: 12px;
+	font-weight: bold;
+	color: #fff;
+	padding: 10px 10px;
+	float: left;
+	margin-right: 0px;
+	line-height:16px;
+}
+#admin ul li:hover a.togglelink{
+	background: #333;
+	text-decoration: none;
+	color: #aaa;
+}
+#admin ul li.right {
+  float:right;
+}
+#admin ul li.right.nomargin {
+  margin-right:-10px;
+}
+.icon_count { 
+  display:block;
+  background: none repeat scroll 0 0 #dc143c;
+  border-radius: 50%;
+  color: #fff;
+  font-family: Verdana,Arial,Helvetica,sans-serif;
+  font-size: 8px;
+  height: 14px;
+  line-height: 13px;
+  margin: 1px 0 0 8px;
+  padding: 0;
+  position: absolute;
+  text-align: center;
+  top: 14px;
+  width: 14px;
+}
+#admin ul ul{
+	z-index: 100001 !important;
+	position: absolute;
+	background: #333;
+	padding: 15px;
+	width: 250px;
+	display: none;
+	top: 35px;
+	left: 0;
+	border: 1px solid transparent;
+	border-top: 0;   
+}
+#admin ul li:hover ul{
+	display: block;
+}
+#admin ul ul li{
+	display: block;
+	float: none;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	position: relative;
+}
+#admin ul ul li.info {
+  background: #3a3a3a;
+  clear: both;
+  color: #999;
+  display: block;
+  line-height: 25px;
+  margin-bottom: 5px;
+  padding: 0 0 0 5px;
+}
+#admin ul ul a{
+	display: block;
+	padding: 0;
+	line-height: 25px;
+	clear: both;
+	margin-bottom: 5px;
+	color:#fff;
+  background: #3a3a3a;
+  padding-left: 5px;
+}
+
+#admin ul ul a:hover{
+  text-decoration:none;
+  color: #fff; 
+  background: #aaa;
+  padding-left: 5px;  
+}
+
+#admin ul ul em{
+	display: block;
+	width: auto;
+	float: right;
+	background: #eee;
+	color: #333;
+	padding: 0 3px;
+	min-width: 20px;
+	text-align: center;
+	font-weight: bold;
+	font-style: normal;
+}
+#admin ul ul li a:hover em{
+	background: #999;
+	color: #fff;
+}
+#admin ul ul li.attention em{
+	background: #fbdc88;
+}
+#admin ul ul li.attention a:hover em{
+	background: #ff9900;
+}
+#admin ul ul li.finish em{
+	background: #b0fc9c;
+}
+#admin ul ul li.finish a:hover em{
+	background: #0c0;
+}
