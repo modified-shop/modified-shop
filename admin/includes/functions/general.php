@@ -1109,7 +1109,7 @@
       for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
         $option_array[] = array(
           'id' => $select_array[$i],
-          'text' => $select_array[$i],
+          'text' => xtc_multi_lang_values($select_array[$i]),
         );
       }
       $string = xtc_draw_pull_down_menu($name, $option_array, $key_value);
