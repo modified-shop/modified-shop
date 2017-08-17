@@ -316,6 +316,11 @@ $values_group_update = array();
                            'configuration_key' => 'REVOCATION_ID'
                            );
 
+  $values_update[] = array (
+                           'values' => "set_function = 'xtc_cfg_select_content(\'SHIPPING_STATUS_INFOS\','",
+                           'configuration_key' => 'SHIPPING_STATUS_INFOS'
+                           );
+
 //configuration_group_id 18 --- "UST-ID"
 
 //configuration_group_id 19 --- "Google Conversionr"
