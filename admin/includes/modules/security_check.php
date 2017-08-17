@@ -111,10 +111,10 @@ while ($check = xtc_db_fetch_array($query)) {
   if ($check['configuration_value'] == '') {
     switch($check['configuration_key']) {
     case 'MODULE_PAYMENT_INSTALLED' :
-      $warnings[] = '<p>'.TEXT_PAYMENT_ERROR.'</p>';
+      $warnings[] = '<p>'.sprintf(TEXT_PAYMENT_ERROR,xtc_href_link(FILENAME_MODULES, 'set=payment')).'</p>';
       break;
     case 'MODULE_SHIPPING_INSTALLED' :
-      $warnings[] = '<p>'.TEXT_SHIPPING_ERROR.'</p>';
+      $warnings[] = '<p>'.sprintf(TEXT_SHIPPING_ERROR,xtc_href_link(FILENAME_MODULES, 'set=shipping')).'</p>';
       break;
     }
   }
