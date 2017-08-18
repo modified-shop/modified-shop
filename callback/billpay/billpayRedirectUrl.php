@@ -1,6 +1,6 @@
 <?php
 chdir('../../');
-/** @noinspection PhpIncludeInspection */
+
 include('includes/application_top.php');
 
 $orderId = $_SESSION['tmp_oID'];
@@ -33,7 +33,7 @@ if (!empty($_GET['gcReference']))
     {
         $success = true;
     } else {
-        $error = 'Unhandled New Giropay API error. Please contact BillPay Support. Error code: '.$_GET['gcResultPayment'];
+        $error = constant('MODULE_PAYMENT_BILLPAY_GIROPAY_CANCELED');
     }
 }
 
@@ -57,7 +57,7 @@ if ($success)
 } else {
     if (empty($error))
     {
-        $error = 'Unknown Giropay API result.';
+        $error = constant('MODULE_PAYMENT_BILLPAY_GIROPAY_CANCELED');
     }
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode($error), 'SSL'));
 }

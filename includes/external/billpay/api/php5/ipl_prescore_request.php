@@ -1,9 +1,12 @@
 <?php
 
 require_once(dirname(__FILE__) . '/ipl_xml_request.php');
+require_once(dirname(__FILE__) . '/common/BpyFlightInformation.php');
+require_once(dirname(__FILE__) . '/common/BpyTripData.php');
+require_once(dirname(__FILE__) . '/common/BpyTripTraveler.php');
 
 /**
- * @author    Jan Wehrs (jan.wehrs@billpay.de)
+ * @author    Unknown Artist (support@billpay.de)
  * @copyright Copyright 2010 BillPay GmbH
  * @license   commercial
  */
@@ -22,6 +25,8 @@ class ipl_prescore_request extends ipl_xml_request
 
     private $_payment_info_params = array();
     private $_fraud_detection = array();
+
+    private $_trip_data = array();
 
     private $_payment_type;
 
@@ -141,27 +146,28 @@ class ipl_prescore_request extends ipl_xml_request
         $customer_id, $customer_type, $salutation, $title,
         $first_name, $last_name, $street, $street_no, $address_addition, $zip,
         $city, $country, $email, $phone, $cell_phone, $birthday, $language, $ip, $customerGroup
-    ) {
+    )
+    {
 
-        $this->_customer_details['customerid']      = $customer_id;
-        $this->_customer_details['customertype']    = $customer_type;
-        $this->_customer_details['salutation']      = $salutation;
-        $this->_customer_details['title']           = $title;
-        $this->_customer_details['firstName']       = $first_name;
-        $this->_customer_details['lastName']        = $last_name;
-        $this->_customer_details['street']          = $street;
-        $this->_customer_details['streetNo']        = $street_no;
+        $this->_customer_details['customerid'] = $customer_id;
+        $this->_customer_details['customertype'] = $customer_type;
+        $this->_customer_details['salutation'] = $salutation;
+        $this->_customer_details['title'] = $title;
+        $this->_customer_details['firstName'] = $first_name;
+        $this->_customer_details['lastName'] = $last_name;
+        $this->_customer_details['street'] = $street;
+        $this->_customer_details['streetNo'] = $street_no;
         $this->_customer_details['addressAddition'] = $address_addition;
-        $this->_customer_details['zip']             = $zip;
-        $this->_customer_details['city']            = $city;
-        $this->_customer_details['country']         = $country;
-        $this->_customer_details['email']           = $email;
-        $this->_customer_details['phone']           = $phone;
-        $this->_customer_details['cellPhone']       = $cell_phone;
-        $this->_customer_details['birthday']        = $birthday;
-        $this->_customer_details['language']        = $language;
-        $this->_customer_details['ip']              = $ip;
-        $this->_customer_details['customerGroup']   = $customerGroup;
+        $this->_customer_details['zip'] = $zip;
+        $this->_customer_details['city'] = $city;
+        $this->_customer_details['country'] = $country;
+        $this->_customer_details['email'] = $email;
+        $this->_customer_details['phone'] = $phone;
+        $this->_customer_details['cellPhone'] = $cell_phone;
+        $this->_customer_details['birthday'] = $birthday;
+        $this->_customer_details['language'] = $language;
+        $this->_customer_details['ip'] = $ip;
+        $this->_customer_details['customerGroup'] = $customerGroup;
     }
 
 
@@ -169,34 +175,44 @@ class ipl_prescore_request extends ipl_xml_request
         $use_billing_address, $salutation = null, $title = null, $first_name = null, $last_name = null,
         $street = null, $street_no = null, $address_addition = null, $zip = null, $city = null, $country = null,
         $phone = null, $cell_phone = null
-    ) {
+    )
+    {
 
         $this->_shippping_details['useBillingAddress'] = $use_billing_address ? '1' : '0';
-        $this->_shippping_details['salutation']        = $salutation;
-        $this->_shippping_details['title']             = $title;
-        $this->_shippping_details['firstName']         = $first_name;
-        $this->_shippping_details['lastName']          = $last_name;
-        $this->_shippping_details['street']            = $street;
-        $this->_shippping_details['streetNo']          = $street_no;
-        $this->_shippping_details['addressAddition']   = $address_addition;
-        $this->_shippping_details['zip']               = $zip;
-        $this->_shippping_details['city']              = $city;
-        $this->_shippping_details['country']           = $country;
-        $this->_shippping_details['phone']             = $phone;
-        $this->_shippping_details['cellPhone']         = $cell_phone;
+        $this->_shippping_details['salutation'] = $salutation;
+        $this->_shippping_details['title'] = $title;
+        $this->_shippping_details['firstName'] = $first_name;
+        $this->_shippping_details['lastName'] = $last_name;
+        $this->_shippping_details['street'] = $street;
+        $this->_shippping_details['streetNo'] = $street_no;
+        $this->_shippping_details['addressAddition'] = $address_addition;
+        $this->_shippping_details['zip'] = $zip;
+        $this->_shippping_details['city'] = $city;
+        $this->_shippping_details['country'] = $country;
+        $this->_shippping_details['phone'] = $phone;
+        $this->_shippping_details['cellPhone'] = $cell_phone;
     }
 
     public function add_article(
         $articleid, $articlequantity, $articlename, $articledescription,
-        $article_price, $article_price_gross
-    ) {
-        $article                       = array();
-        $article['articleid']          = $articleid;
-        $article['articlequantity']    = $articlequantity;
-        $article['articlename']        = $articlename;
+        $article_price, $article_price_gross, $articleType = null, $flightInformation = null
+    )
+    {
+        $article = array();
+        $article['articleid'] = $articleid;
+        $article['articlequantity'] = $articlequantity;
+        $article['articlename'] = $articlename;
         $article['articledescription'] = $articledescription;
-        $article['articleprice']       = $article_price;
-        $article['articlepricegross']  = $article_price_gross;
+        $article['articleprice'] = $article_price;
+        $article['articlepricegross'] = $article_price_gross;
+
+        if (empty($articleType) === false) {
+            $article['articletype'] = $articleType;
+        }
+
+        if (empty($flightInformation) === false) {
+            $article['flight_information'] = (array)$flightInformation;
+        }
 
         $this->_article_data[] = $article;
     }
@@ -205,7 +221,7 @@ class ipl_prescore_request extends ipl_xml_request
     {
         $this->_order_history_attr = array(
             'merchant_customer_limit' => (int)$iMerchantCustomerLimit,
-            'repeat_customer'         => (int)$iRepeatCustomer,
+            'repeat_customer' => (int)$iRepeatCustomer,
         );
 
         return $this;
@@ -213,13 +229,13 @@ class ipl_prescore_request extends ipl_xml_request
 
     public function add_order_history($horderid, $hdate, $hamount, $hcurrency, $hpaymenttype, $hstatus)
     {
-        $histOrder                 = array();
-        $histOrder['horderid']     = $horderid;
-        $histOrder['hdate']        = $hdate;
-        $histOrder['hamount']      = $hamount;
-        $histOrder['hcurrency']    = $hcurrency;
+        $histOrder = array();
+        $histOrder['horderid'] = $horderid;
+        $histOrder['hdate'] = $hdate;
+        $histOrder['hamount'] = $hamount;
+        $histOrder['hcurrency'] = $hcurrency;
         $histOrder['hpaymenttype'] = $hpaymenttype;
-        $histOrder['hstatus']      = $hstatus;
+        $histOrder['hstatus'] = $hstatus;
 
         $this->_order_history_data[] = $histOrder;
     }
@@ -229,29 +245,30 @@ class ipl_prescore_request extends ipl_xml_request
         $rebate, $rebate_gross, $shipping_name, $shipping_price,
         $shipping_price_gross, $cart_total_price, $cart_total_price_gross,
         $currency
-    ) {
-        $this->_totals['shippingname']        = $shipping_name;
-        $this->_totals['shippingprice']       = $shipping_price;
-        $this->_totals['shippingpricegross']  = $shipping_price_gross;
-        $this->_totals['rebate']              = $rebate;
-        $this->_totals['rebategross']         = $rebate_gross;
-        $this->_totals['carttotalprice']      = $cart_total_price;
+    )
+    {
+        $this->_totals['shippingname'] = $shipping_name;
+        $this->_totals['shippingprice'] = $shipping_price;
+        $this->_totals['shippingpricegross'] = $shipping_price_gross;
+        $this->_totals['rebate'] = $rebate;
+        $this->_totals['rebategross'] = $rebate_gross;
+        $this->_totals['carttotalprice'] = $cart_total_price;
         $this->_totals['carttotalpricegross'] = $cart_total_price_gross;
-        $this->_totals['currency']            = $currency;
+        $this->_totals['currency'] = $currency;
     }
 
     public function set_company_details($name, $legalForm, $registerNumber, $holderName, $taxNumber)
     {
-        $this->_company_details['name']           = $name;
-        $this->_company_details['legalForm']      = $legalForm;
+        $this->_company_details['name'] = $name;
+        $this->_company_details['legalForm'] = $legalForm;
         $this->_company_details['registerNumber'] = $registerNumber;
-        $this->_company_details['holderName']     = $holderName;
-        $this->_company_details['taxNumber']      = $taxNumber;
+        $this->_company_details['holderName'] = $holderName;
+        $this->_company_details['taxNumber'] = $taxNumber;
     }
 
     public function set_payment_info_params($showhtmlinfo, $showplaininfo)
     {
-        $this->_payment_info_params['htmlinfo']  = $showhtmlinfo ? "1" : "0";
+        $this->_payment_info_params['htmlinfo'] = $showhtmlinfo ? "1" : "0";
         $this->_payment_info_params['plaininfo'] = $showplaininfo ? "1" : "0";
     }
 
@@ -260,6 +277,11 @@ class ipl_prescore_request extends ipl_xml_request
         $this->_fraud_detection['session_id'] = $session_id;
     }
 
+    public function set_trip_data(ArrayObject $tripData)
+    {
+        $this->_trip_data = (array)$tripData;
+        return $this;
+    }
 
     protected function _send()
     {
@@ -278,7 +300,8 @@ class ipl_prescore_request extends ipl_xml_request
             $this->_order_history_data,
             $this->_company_details,
             $this->_payment_info_params,
-            $this->_fraud_detection
+            $this->_fraud_detection,
+            $this->_trip_data
         );
     }
 
@@ -294,5 +317,30 @@ class ipl_prescore_request extends ipl_xml_request
         if (isset($data['status'])) {
             $this->status = $data['status'];
         }
+    }
+
+    /** HIGHER FUNCTIONS */
+
+
+    /**
+     * Sets expected shipping date.
+     * Requires PHP >= 5.3
+     * @param DateTime|string $date ie. "2015-12-30" or new DateTime("2015-12-30")
+     * @throws Exception
+     */
+    public function set_shipping_date($date)
+    {
+        if (is_string($date)) {
+            $date = new DateTime($date);
+        }
+        if (get_class($date) !== 'DateTime') {
+            throw new Exception('Method `set_shipping_date` requires DateTime as an argument.');
+        }
+        $diff = $date->diff(new DateTime('today'));
+        $days = $diff->days;
+        if ($days < 0) {
+            throw new Exception('Method `set_shipping_date` requires DateTime as an argument.');
+        }
+        $this->set_expected_days_till_shipping($days);
     }
 }

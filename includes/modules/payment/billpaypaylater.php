@@ -6,7 +6,7 @@ if (!class_exists('BillpayPayLater'))
 {
     class BillpayPayLater extends BillPayBase {
 
-        const DEFAULT_MIN_AMOUNT = 120; // PL is enabled from 120EUR by default. Merchant can change it.
+        const DEFAULT_MIN_AMOUNT = 50; // PL is enabled from 50EUR by default. Merchant can change it.
 
         private $visualMode = 1;
         protected $_paymentIdentifier = BillPayBase::PAYMENT_METHOD_PAY_LATER;
@@ -100,9 +100,12 @@ if (!class_exists('BillpayPayLater'))
             $customerData = array(
                 'token'     =>  $this->token,
             );
+
+            //mysql_real_escape_string do not work - it everytime returned "false" and therefore we use the "str_replace"
             $data = array(
-                'customer_cache'    =>  mysql_real_escape_string(serialize($customerData)),
+                'customer_cache'    =>  str_replace('"', '\"', serialize($customerData)),
             );
+
             Billpay_Base_Bankdata::UpdateByTxId(self::GetTransactionId(), $data);
         }
 

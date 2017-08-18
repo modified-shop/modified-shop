@@ -1,29 +1,30 @@
 <?php
 
-require_once(dirname(__FILE__).'/ipl_xml_request.php');
+require_once(dirname(__FILE__) . '/ipl_xml_request.php');
 
 /**
- * @author Jan Wehrs (jan.wehrs@billpay.de)
+ * @author Unknown Artist (support@billpay.de)
  * @copyright Copyright 2010 BillPay GmbH
  * @license commercial
  */
-class ipl_invoice_created_request extends ipl_xml_request {
+class ipl_invoice_created_request extends ipl_xml_request
+{
 
-	private $_invoice_params      = array();
-	private $_payment_info_params = array();
-	private $_article_data        = array();
+    private $_invoice_params = array();
+    private $_payment_info_params = array();
+    private $_article_data = array();
 
-	// bank account
-	private $account_holder;
-	private $account_number;
-	private $bank_code;
-	private $bank_name;
-	private $invoice_reference;
-	private $invoice_duedate;
-	private $activation_performed;
+    // bank account
+    private $account_holder;
+    private $account_number;
+    private $bank_code;
+    private $bank_name;
+    private $invoice_reference;
+    private $invoice_duedate;
+    private $activation_performed;
 
-	private $payment_info_html;
-	private $payment_info_plain;
+    private $payment_info_html;
+    private $payment_info_plain;
 
     // rate payment specific
     private $instalment_count;
@@ -39,39 +40,57 @@ class ipl_invoice_created_request extends ipl_xml_request {
     private $surcharge;
     private $interest;
 
-	private $dues = array();
+    private $dues = array();
 
-	public function get_account_holder() {
+    public function get_account_holder()
+    {
         return $this->account_holder;
-	}
-	public function get_account_number() {
-		return $this->account_number;
-	}
-	public function get_bank_code() {
-		return $this->bank_code;
-	}
-	public function get_bank_name() {
-		return $this->bank_name;
-	}
-	public function get_invoice_reference() {
-		return $this->invoice_reference;
-	}
-	public function get_invoice_duedate() {
-		return $this->invoice_duedate;
-	}
-	public function get_activation_performed() {
-		return $this->activation_performed;
-	}
-	public function get_payment_info_html() {
-		return $this->payment_info_html;
-	}
-	public function get_payment_info_plain() {
-		return $this->payment_info_plain;
-	}
+    }
 
-	public function get_dues() {
-		return $this->dues;
-	}
+    public function get_account_number()
+    {
+        return $this->account_number;
+    }
+
+    public function get_bank_code()
+    {
+        return $this->bank_code;
+    }
+
+    public function get_bank_name()
+    {
+        return $this->bank_name;
+    }
+
+    public function get_invoice_reference()
+    {
+        return $this->invoice_reference;
+    }
+
+    public function get_invoice_duedate()
+    {
+        return $this->invoice_duedate;
+    }
+
+    public function get_activation_performed()
+    {
+        return $this->activation_performed;
+    }
+
+    public function get_payment_info_html()
+    {
+        return $this->payment_info_html;
+    }
+
+    public function get_payment_info_plain()
+    {
+        return $this->payment_info_plain;
+    }
+
+    public function get_dues()
+    {
+        return $this->dues;
+    }
 
     // ------------------ paylater specific ------------------ //
 
@@ -95,7 +114,8 @@ class ipl_invoice_created_request extends ipl_xml_request {
         return $this->fee_total;
     }
 
-    public function get_prepayment_amount() {
+    public function get_prepayment_amount()
+    {
         return $this->async_amount;
     }
 
@@ -152,49 +172,52 @@ class ipl_invoice_created_request extends ipl_xml_request {
     }
 
 
-	public function set_invoice_params($carttotalgross, $currency, $reference,
-	            $delayindays = 0, $is_partial = 0, $invoice_number = 0,
-	            $rebate = 0, $rebate_gross = 0, $shipping_name = "", $shipping_price = 0,
-	            $shipping_price_gross = 0, $cart_total_price = 0) {
+    public function set_invoice_params($carttotalgross, $currency, $reference,
+                                       $delayindays = 0, $is_partial = 0, $invoice_number = 0,
+                                       $rebate = 0, $rebate_gross = 0, $shipping_name = "", $shipping_price = 0,
+                                       $shipping_price_gross = 0, $cart_total_price = 0)
+    {
 
-	    $this->_invoice_params['carttotalgross']        = $carttotalgross;
-		$this->_invoice_params['currency']              = $currency;
-		$this->_invoice_params['reference']             = $reference;
-		$this->_invoice_params['delayindays']           = $delayindays;
+        $this->_invoice_params['carttotalgross'] = $carttotalgross;
+        $this->_invoice_params['currency'] = $currency;
+        $this->_invoice_params['reference'] = $reference;
+        $this->_invoice_params['delayindays'] = $delayindays;
         //Partial activation
-        if($is_partial == 1)
-        {
-            $this->_invoice_params['is_partial']            = $is_partial;
-            $this->_invoice_params['invoice_number']        = $invoice_number;
-            $this->_invoice_params['shippingname'] 			= $shipping_name;
-            $this->_invoice_params['shippingprice'] 		= $shipping_price;
-            $this->_invoice_params['shippingpricegross'] 	= $shipping_price_gross;
-            $this->_invoice_params['rebate']				= $rebate;
-            $this->_invoice_params['rebategross'] 			= $rebate_gross;
-            $this->_invoice_params['carttotalprice'] 		= $cart_total_price;
+        if ($is_partial == 1) {
+            $this->_invoice_params['is_partial'] = $is_partial;
+            $this->_invoice_params['invoice_number'] = $invoice_number;
+            $this->_invoice_params['shippingname'] = $shipping_name;
+            $this->_invoice_params['shippingprice'] = $shipping_price;
+            $this->_invoice_params['shippingpricegross'] = $shipping_price_gross;
+            $this->_invoice_params['rebate'] = $rebate;
+            $this->_invoice_params['rebategross'] = $rebate_gross;
+            $this->_invoice_params['carttotalprice'] = $cart_total_price;
         }
-	}
+    }
 
-	public function add_article($articleid, $articlequantity, $articlename, $articledescription,
-	        $article_price, $article_price_gross) {
-	    $article = array();
-	    $article['articleid'] 			= $articleid;
-	    $article['articlequantity'] 	= $articlequantity;
-	    $article['articlename'] 		= $articlename;
-	    $article['articledescription'] 	= $articledescription;
-	    $article['articleprice'] 		= $article_price;
-	    $article['articlepricegross'] 	= $article_price_gross;
+    public function add_article($articleid, $articlequantity, $articlename, $articledescription,
+                                $article_price, $article_price_gross)
+    {
+        $article = array();
+        $article['articleid'] = $articleid;
+        $article['articlequantity'] = $articlequantity;
+        $article['articlename'] = $articlename;
+        $article['articledescription'] = $articledescription;
+        $article['articleprice'] = $article_price;
+        $article['articlepricegross'] = $article_price_gross;
 
-	    $this->_article_data[] = $article;
-	}
+        $this->_article_data[] = $article;
+    }
 
-	public function set_payment_info_params($showhtmlinfo, $showplaininfo) {
-		$this->_payment_info_params['htmlinfo'] = $showhtmlinfo ? "1" : "0";
-		$this->_payment_info_params['plaininfo'] = $showplaininfo ? "1" : "0";
-	}
+    public function set_payment_info_params($showhtmlinfo, $showplaininfo)
+    {
+        $this->_payment_info_params['htmlinfo'] = $showhtmlinfo ? "1" : "0";
+        $this->_payment_info_params['plaininfo'] = $showplaininfo ? "1" : "0";
+    }
 
-	protected function _send() {
-		return ipl_core_send_invoice_request(
+    protected function _send()
+    {
+        return ipl_core_send_invoice_request(
             $this->_ipl_request_url,
             $this->getTraceData(),
             $this->_default_params,
@@ -202,11 +225,12 @@ class ipl_invoice_created_request extends ipl_xml_request {
             $this->_payment_info_params,
             $this->_article_data
         );
-	}
+    }
 
-	protected function _process_response_xml($data) {
-		foreach ($data as $key => $value) {
-			$this->$key = $value;
-		}
-	}
+    protected function _process_response_xml($data)
+    {
+        foreach ($data as $key => $value) {
+            $this->$key = $value;
+        }
+    }
 }

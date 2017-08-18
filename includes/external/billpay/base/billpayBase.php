@@ -9,11 +9,15 @@ require_once(DIR_FS_CATALOG . 'includes/external/billpay/base/Bankdata.php');
 
 if (!class_exists('billpayBase')) {
     /**
+     * Some hints:
+     * Parameter which are "public" can be used by PSS (see checkout_process.php with debugging)
+     *
+     *
      * Class billpayBase
      */
     class billpayBase {
 
-        const VERSION = '1.7.3'; // replaced by grunt build script
+        const VERSION = '1.7.11'; // replaced by grunt build script
         const PAYMENT_METHOD_INVOICE = 'BILLPAY';
         const PAYMENT_METHOD_DEBIT = 'BILLPAYDEBIT';
         const PAYMENT_METHOD_TRANSACTION_CREDIT = 'BILLPAYTRANSACTIONCREDIT';
@@ -63,19 +67,19 @@ if (!class_exists('billpayBase')) {
          * used by modified-shop for temporary orders
          * @var string
          */
-        private $form_action_url = '';
+        public $form_action_url = '';
 
         /**
          * status which is used for temporary orders
          * @var int
          */
-        private $tmpStatus = 101;
+        public $tmpStatus = 101;
 
         /**
          * flag which indicates if a temporary order should be created
          * @var bool
          */
-        private $tmpOrders = false;
+        public $tmpOrders = false;
 
         /** @var bool $isTestMode Indicates if payment method works in test or production mode. */
         public $isTestMode = false;
@@ -300,7 +304,7 @@ HEREDOC;
         public static function EnsureUTF8($value) {
             $trimmedValue = trim($value);
             if(defined('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE') && constant('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE') == 'local') {
-                return utf8_encode($trimmedValue);
+                return mb_convert_encoding($trimmedValue, "UTF-8", mb_detect_encoding($trimmedValue, "UTF-8, ISO-8859-1, ISO-8859-15", true));
             }
             else {
                 return $trimmedValue;
@@ -422,7 +426,28 @@ HEREDOC;
             $orderId = (int)$data['reference'];
             $this->setOrderBillpayState(billpayBase::STATE_APPROVED, $orderId);
             $this->onOrderApproved($orderId, $data);
-            // send mail?
+
+            // send confirmation mail
+            if($this->isGambio()) {
+                $coo_send_order_process = MainFactory::create_object('SendOrderProcess');
+                $coo_send_order_process->set_('order_id', $orderId);
+                $coo_send_order_process->proceed();
+            } elseif($this->isModified()) {
+                if (file_exists('../../local/configure.php')) {
+                    include('../../local/configure.php');
+                } else {
+                    include('../../configure.php');
+                }
+
+                $smarty = new Smarty;
+                $insert_id = $orderId;
+                $send_by_admin = true;
+
+                define('SEND_BY_ADMIN_PATH', DIR_FS_CATALOG);
+
+                require(DIR_WS_CLASSES . 'order.php');
+                include(DIR_FS_CATALOG . 'send_order.php');
+            }
 
             return true;
         }
@@ -879,7 +904,7 @@ JAVASCRIPT;
          * @return ipl_preauthorize_request
          */
         private function _set_shipping_details($req) {
-            $delivery = BillpayOrder::getCustomerBilling();
+            $delivery = BillpayOrder::getCustomerShipping();
             $phone = BillpayOrder::getCustomerPhone();
             $req->set_shipping_details(FALSE,
                 billpayBase::EnsureUTF8($this->_getCustomerSalutation($this->_getDataIdentifier('gender', $_POST))), // TODO: change into standard
@@ -1300,7 +1325,7 @@ JAVASCRIPT;
         }
 
         /**
-         * Saves log message to the log file (/includes/external/billpay/logs)
+         * Saves log message to the log file (/includes/external/billpay/log)
          * @param string $logMessage
          * @param string $logType
          * @return bool
@@ -1389,6 +1414,49 @@ JAVASCRIPT;
             }
         }
 
+        /**
+         * @return string
+         */
+        public function getBillPayCurrentShopVersion()
+        {
+            $table = TABLE_CONFIGURATION;
+
+            $paymentIdentifier = $this->_paymentIdentifier;
+            $key = "MODULE_PAYMENT_".$paymentIdentifier."_CURRENT_SHOP_VERSION";
+            $queryResult = xtc_db_query("SELECT configuration_value AS shopVersion FROM $table where configuration_key = '$key'");
+            $fetchResult = xtc_db_fetch_array($queryResult);
+
+            return $fetchResult['shopVersion'];
+        }
+
+        /**
+         * @param string $version
+         */
+        public function updateBillPayShopVersion($version)
+        {
+            $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_CURRENT_SHOP_VERSION";
+
+            $table = TABLE_CONFIGURATION;
+            xtc_db_query("UPDATE $table SET configuration_value='$version' WHERE configuration_key = '$configuration_key'");
+        }
+
+        /**
+         * We need the shop version to check for shop update and show a popup in the admin page
+         *
+         * @return bool|mysqli_result
+         */
+        public function insertBillPayShopVersion()
+        {
+            $table = TABLE_CONFIGURATION;
+            $shopModification = $this->getShopModification();
+            $version = $shopModification['version'];
+            $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_CURRENT_SHOP_VERSION";
+
+            $result = array();
+            $result[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', '$version', '6', '0', now())");
+
+            return $result;
+        }
 
         /**
          * installs the payment method
@@ -1449,6 +1517,10 @@ JAVASCRIPT;
             $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('$configuration_key', '0', '6', '0', 'xtc_get_order_status_name', 'xtc_cfg_pull_down_order_statuses(', now())");
             $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_TABLE";
             $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', 'payment_billpay', '6', '0', now())");
+
+            $result[$configuration_key] = $this->insertBillPayShopVersion();
+            $results = $result + $results;
+
             $configuration_key = "MODULE_PAYMENT_".$this->_paymentIdentifier."_MIN_AMOUNT";
             $min_amount = $this->_getDefaultInstallConfig('MIN_AMOUNT');
             $results[$configuration_key] = xtc_db_query("INSERT INTO $table (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('$configuration_key', '$min_amount', '6', '0', now())");
@@ -1778,7 +1850,6 @@ JAVASCRIPT;
             if (strpos($shopDomain, "localhost") !== false) {
                 $this->_logError("Shop working on localhost, cannot receive callbacks: ".$shopDomain);
                 $shopDomain = "http://billpay.de/";
-                //$shopDomain = 'http://10bddc06.ngrok.com/';
             }
             $billpay_notify_url = $shopDomain . "callback/billpay/billpayWS.php?token=".$this->token;
             $billpay_redirect_url = $shopDomain ."callback/billpay/billpayRedirectUrl.php";
@@ -2028,7 +2099,7 @@ JAVASCRIPT;
                 }
                 $req->add_article(
                     $product['opid'], round($product['qty'], 0),
-                    $product['name'], '',
+                    billpayBase::EnsureUTF8($product['name']), '',
                     $price,
                     $price
                 );
@@ -2038,7 +2109,8 @@ JAVASCRIPT;
             $rebate = billpayBase::CurrencyToSmallerUnit($rebate) * -1;
             $total = BillpayOrder::getOTById($orderId, 'ot_total');
             $total = billpayBase::CurrencyToSmallerUnit($total);
-            $shipping = $total - $subtotal + $rebate;
+            $shipping = BillpayOrder::getOTById($orderId, 'ot_shipping');
+            $shipping = billpayBase::CurrencyToSmallerUnit($shipping);
             $table = TABLE_ORDERS;
             $orders_id = (int)$orderId;
             $order = BillpayDB::DBFetchRow("SELECT shipping_method, currency FROM $table WHERE orders_id = '$orders_id'");
@@ -2920,6 +2992,24 @@ JAVASCRIPT;
         }
 
         /**
+         * @return bool
+         */
+        public function isModified()
+        {
+            $modification = $this->getShopModification();
+            return $modification['modification'] == 'xtcmod';
+        }
+
+        /**
+         * @return bool
+         */
+        public function isGambio()
+        {
+            $modification = $this->getShopModification();
+            return $modification['modification'] == 'gambio';
+        }
+
+        /**
          * Function appends additional prefix to order id to ensure unique order id.
          * Function used by CI.
          *
@@ -2951,13 +3041,20 @@ JAVASCRIPT;
          */
         private function _getCartBaseAndShipping()
         {
+            $shippingAmount = $this->_getTrueShipping();
+
             $baseAmount = 0;
             $cart = $_SESSION['cart'];
             if ($cart)
             {
-                $baseAmount = (float)$cart->total;
+                //TODO: Why do we need such a special case for the modified?
+                if($this->isModified()) {
+                    $baseAmount = (float)$cart->total - $_SESSION['shipping']['cost'];
+                } else {
+                    $baseAmount = (float)$cart->total;
+                }
             }
-            $shippingAmount = $this->_getTrueShipping();
+
             $rebateAmount = $this->_getRebateAmount();
             $ret = array(
                 'baseAmount'        => (string)$baseAmount - $rebateAmount,
@@ -3008,8 +3105,31 @@ JAVASCRIPT;
             global $order_total_modules;
             $order = new stdClass();
             $order->delivery = array();
+
+            // If we instantiate order_total_origin then the global values are empty.
+            // Therefore we want to have the list of all order total classes.
+            if (is_null($order_total_modules)) {
+                $order_total_modules = $this->getOrderTotalModuleList();
+            }
+
             $ots = $this->_calculate_billpay_totals($order_total_modules, $order, true);
             return $ots['billpayRebateGross'];
+        }
+
+        /**
+         *
+         * @return stdClass
+         */
+        private function getOrderTotalModuleList()
+        {
+            $order_total_modules = new stdClass();
+            if(defined('MODULE_ORDER_TOTAL_INSTALLED') && xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
+                $order_total_modules->modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
+            } else {
+                $order_total_modules->modules = array();
+            }
+
+            return $order_total_modules;
         }
 
         /**

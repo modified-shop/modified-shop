@@ -1,3 +1,13 @@
+version 1.6.1
+- cleanup
+
+version 1.6.0
+- added travel functionality
+
+version 1.5.19
+- new payment method type: IPL_CORE_PAYMENT_TYPE_PAY_LATER_COLLATERAL_PROMISE
+- [PHP>=5.3] ipl_preauthorize_request.set_shipping_date(DateTime)
+
 version 1.5.18
 - added ipl_create_random helper function
 

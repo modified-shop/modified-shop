@@ -1,32 +1,42 @@
 <?php
-
 /**
- * @author Jan Wehrs (jan.wehrs@billpay.de)
+ * @author Unknown Artist (support@billpay.de)
  * @copyright Copyright 2010 BillPay GmbH
  * @license commercial
  */
 
-define('IPL_CORE_XML_PROLOG', 							"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-define('IPL_CORE_API_VERSION', 							"1.5.18");
-define('IPL_CORE_HTTP_REQUEST_CHAR_SET', 				"UTF-8");
+define('IPL_CORE_XML_PROLOG', "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+define('IPL_CORE_API_VERSION', "1.6.1");
+define('IPL_CORE_HTTP_REQUEST_CHAR_SET', "UTF-8");
 
 # HTTP_CLIENT may be defined by TestRunner
 if (!defined('IPL_CORE_HTTP_CLIENT')) {
     define('IPL_CORE_HTTP_CLIENT', "curl");
 }
 
-define('IPL_CORE_XML_PARSER', 							"xmlParser");
-define('IPL_CORE_FOLLOW_REDIRECT',						true);
-define('IPL_CORE_MAX_REDIRECTS',						3);
-define('IPL_CORE_SOCKET_TIMEOUT', 						10);
-define('IPL_CORE_CURL_TIMEOUT', 						25);
-define('IPL_CORE_CURL_CONNECTION_TIMEOUT', 				10);
+define('IPL_CORE_XML_PARSER', "xmlParser");
+define('IPL_CORE_FOLLOW_REDIRECT', true);
+define('IPL_CORE_MAX_REDIRECTS', 3);
+define('IPL_CORE_SOCKET_TIMEOUT', 10);
+define('IPL_CORE_CURL_TIMEOUT', 25);
+define('IPL_CORE_CURL_CONNECTION_TIMEOUT', 10);
 
 
-define('IPL_CORE_PAYMENT_TYPE_INVOICE',					1);
-define('IPL_CORE_PAYMENT_TYPE_DIRECT_DEBIT',			2);
-define('IPL_CORE_PAYMENT_TYPE_RATE_PAYMENT',			3);
-define('IPL_CORE_PAYMENT_TYPE_PAY_LATER',	    		4);
+define('IPL_CORE_PAYMENT_TYPE_INVOICE', 1);
+define('IPL_CORE_PAYMENT_TYPE_DIRECT_DEBIT', 2);
+define('IPL_CORE_PAYMENT_TYPE_RATE_PAYMENT', 3);
+define('IPL_CORE_PAYMENT_TYPE_PAY_LATER', 4);
+define('IPL_CORE_PAYMENT_TYPE_PAY_LATER_COLLATERAL_PROMISE', 7);
+define('IPL_CORE_PAYMENT_TYPE_INVOICE_COLLATERAL_PROMISE', 8);
+define('IPL_CORE_PAYMENT_TYPE_DIRECT_DEBIT_COLLATERAL_PROMISE', 9);
+
+define('IPL_TRAVEL_TYPE_FLIGHT', 1);
+define('IPL_TRAVEL_TYPE_PACKAGE_WITH_FLIGHT', 2);
+define('IPL_TRAVEL_TYPE_ITEM_COMBINATION_WITH_FLIGHT', 3);
+define('IPL_TRAVEL_TYPE_ITEM_COMBINATION_WITHOUT_FLIGHT', 4);
+define('IPL_TRAVEL_TYPE_HOTEL', 5);
+define('IPL_TRAVEL_TYPE_TRAVEL_INSURANCE', 6);
+define('IPL_TRAVEL_TYPE_CAR_RENTAL', 7);
 
 /**
  *  0: Success
@@ -49,14 +59,14 @@ define('IPL_CORE_PAYMENT_TYPE_PAY_LATER',	    		4);
  * 17: Unsupported protocol version
  * 18: Too many redirects
  */
-$ipl_core_error_code 				= 0;
-$ipl_core_error_msg					= '';
+$ipl_core_error_code = 0;
+$ipl_core_error_msg = '';
 
-$ipl_core_api_error_code			= 0;
-$ipl_core_api_customer_message		= '';
-$ipl_core_api_merchant_message		= '';
+$ipl_core_api_error_code = 0;
+$ipl_core_api_customer_message = '';
+$ipl_core_api_merchant_message = '';
 
-$ipl_core_last_request_url 			= '';
+$ipl_core_last_request_url = '';
 
 
 /**
@@ -65,44 +75,42 @@ $ipl_core_last_request_url 			= '';
  * @param string $requestData
  * @return array|bool
  */
-function ipl_core_send($requestUrl, $requestData) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_send($requestUrl, $requestData)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	if (empty($requestUrl)) {
-		$ipl_core_error_code = 7;
-		$ipl_core_error_msg = 'IPL request url is not set';
-		return false;
-	}
+    if (empty($requestUrl)) {
+        $ipl_core_error_code = 7;
+        $ipl_core_error_msg = 'IPL request url is not set';
+        return false;
+    }
 
-	switch (IPL_CORE_HTTP_CLIENT) {
+    switch (IPL_CORE_HTTP_CLIENT) {
         case 'fake':
             $resultXml = ipl_fake_send_request($requestUrl, $requestData);
             break;
-		case 'curl':
-			$resultXml = ipl_core_send_curl_request($requestUrl, $requestData);
-			break;
-		case 'socket':
-			$resultXml = ipl_core_send_socket_request($requestUrl, $requestData);
-			break;
-		default:
-			$ipl_core_error_code = 8;
-			$ipl_core_error_msg = 'Unknown HTTP client: ' . IPL_CORE_HTTP_CLIENT;
-			return false;
-	}
+        case 'curl':
+            $resultXml = ipl_core_send_curl_request($requestUrl, $requestData);
+            break;
+        default:
+            $ipl_core_error_code = 8;
+            $ipl_core_error_msg = 'Unknown HTTP client: ' . IPL_CORE_HTTP_CLIENT;
+            return false;
+    }
 
-	if (!$resultXml) {
-		return false;
-	}
+    if (!$resultXml) {
+        return false;
+    }
 
-	// load the XML data
-	$transformedData = ipl_core_load_xml($resultXml);
+    // load the XML data
+    $transformedData = ipl_core_load_xml($resultXml);
 
-	if (!$transformedData) {
-		return false;
-	}
+    if (!$transformedData) {
+        return false;
+    }
 
-	return array($resultXml, $transformedData);
+    return array($resultXml, $transformedData);
 }
 
 /**
@@ -111,534 +119,307 @@ function ipl_core_send($requestUrl, $requestData) {
  * @param string $requestData
  * @return bool|string
  */
-function ipl_core_send_curl_request($requestUrl, $requestData) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_send_curl_request($requestUrl, $requestData)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	if (!function_exists('curl_init')) {
-		$ipl_core_error_code = 13;
-		$ipl_core_error_msg = 'cUrl lib has not been loaded';
-		return false;
-	}
-
-	$ch = curl_init();
-
-	if (!$ch) {
-		$ipl_core_error_code = 1;
-		$ipl_core_error_msg = 'Cannot initialize cUrl';
-		return false;
-	}
-
-	// 	set CURL options
-	curl_setopt($ch, CURLOPT_URL, $requestUrl);
-	curl_setopt($ch, CURLOPT_POST, true);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $requestData);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-	curl_setopt($ch, CURLOPT_TIMEOUT, IPL_CORE_CURL_TIMEOUT);
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, IPL_CORE_CURL_CONNECTION_TIMEOUT);
-
-	// This prevents a known issue with CURLOPT_FOLLOWLOCATION
-	if (ini_get('open_basedir') == '' && ini_get('safe_mode' == 'Off')) {
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, IPL_CORE_FOLLOW_REDIRECT);
-		curl_setopt($ch, CURLOPT_MAXREDIRS, IPL_CORE_MAX_REDIRECTS);
-	}
-
-	// send request
-	$result = curl_exec($ch);
-
-	if (!$result) {
-		$ipl_core_error_code = 1;
-		$ipl_core_error_msg = 'cUrl error: ' . curl_error($ch);
-		return false;
-	}
-
-	$info = curl_getinfo($ch);
-
-	curl_close($ch);
-
-	$httpCode = $info['http_code'];
-	if ($httpCode != 200) {
-		$ipl_core_error_code = 200;
-		$ipl_core_error_msg = 'Error connecting to BillPay server (HTTP status code: ' . $httpCode . ')';
-		return false;
-	}
-
-	return ipl_core_parse_result($result, $requestData);
-}
-
-/**
- * Send a HTTP request over a plain socket connection
- * @param string $requestUrl
- * @param string $requestData
- * @param Array|null $basicAuthParams
- * @param int $redirects
- * @return bool|string
- */
-function ipl_core_send_socket_request($requestUrl, $requestData, $basicAuthParams = null, $redirects = 0) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
-	global $ipl_core_last_request_url;
-
-	$url = parse_url($requestUrl);
-
-	$scheme = $url['scheme'];
-	$host = $url['host'];
-    $path = $url['path'];
-
-    if (isset($url['port'])) {
-		$port = $url['port'];
+    if (!function_exists('curl_init')) {
+        $ipl_core_error_code = 13;
+        $ipl_core_error_msg = 'cUrl lib has not been loaded';
+        return false;
     }
 
-	$protocol = "";
-	if ($scheme == "https") {
-		if (empty($port)) {
-			$port = 443;
-		}
+    $ch = curl_init();
 
-		$protocol = "ssl://";
-	}
+    if (!$ch) {
+        $ipl_core_error_code = 1;
+        $ipl_core_error_msg = 'Cannot initialize cUrl';
+        return false;
+    }
 
-	if (empty($port)) {
-		$port = 80;
-	}
+    // 	set CURL options
+    curl_setopt($ch, CURLOPT_URL, $requestUrl);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $requestData);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_TIMEOUT, IPL_CORE_CURL_TIMEOUT);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, IPL_CORE_CURL_CONNECTION_TIMEOUT);
 
-	// if the redirect url is a path (and not an url) use the last url that is known
-	$hostName = $protocol.$host;
-	if ($redirects > 0 && !empty($ipl_core_last_request_url) && empty($hostName)) {
-		$hostName = $ipl_core_last_request_url;
-	}
-	else {
-		// save the current url for following redirects
-		$ipl_core_last_request_url = $hostName;
-	}
+    // This prevents a known issue with CURLOPT_FOLLOWLOCATION
+    if (ini_get('open_basedir') == '' && ini_get('safe_mode' == 'Off')) {
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, IPL_CORE_FOLLOW_REDIRECT);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, IPL_CORE_MAX_REDIRECTS);
+    }
 
-	$socket = fsockopen($hostName, $port, $errno, $errstr, IPL_CORE_SOCKET_TIMEOUT);
+    // send request
+    $result = curl_exec($ch);
 
-	if ($socket) {
-    	fputs($socket, "POST $path HTTP/1.1\r\n");
-    	fputs($socket, "User-Agent: BillPay PHP core client\r\n");
-    	fputs($socket, "Host: $host\r\n");
-		fputs($socket, "Accept: text/xml\r\n");
-    	fputs($socket, "Content-type: text/xml; charset=" . IPL_CORE_HTTP_REQUEST_CHAR_SET . "\r\n");
-    	fputs($socket, "Content-length: ". strlen($requestData) . "\r\n");
+    if (!$result) {
+        $ipl_core_error_code = 1;
+        $ipl_core_error_msg = 'cUrl error: ' . curl_error($ch);
+        return false;
+    }
 
-		if (!is_null($basicAuthParams)) {
-			$user = $basicAuthParams["username"];
-			$pass = $basicAuthParams["password"];
-    		fputs($socket, "Authorization: Basic ".base64_encode("$user:$pass") . "\r\n");
-    	}
+    $info = curl_getinfo($ch);
 
-    	fputs($socket, "Connection: close\r\n\r\n");
-    	fputs($socket, $requestData);
+    curl_close($ch);
 
-    	return ipl_core_parse_result($socket, $requestData, $redirects);
-	}
-	else {
-		$ipl_core_error_msg = "Socket error (Code: $errno, message: $errstr)";
-		$ipl_core_error_code = 2;
-		return false;
-	}
+    $httpCode = $info['http_code'];
+    if ($httpCode != 200) {
+        $ipl_core_error_code = 200;
+        $ipl_core_error_msg = 'Error connecting to BillPay server (HTTP status code: ' . $httpCode . ')';
+        return false;
+    }
+
+    return ipl_core_parse_result($result);
 }
 
 
 /**
  *
  */
-function ipl_core_parse_result($responseData, $requestData, $redirects = 0) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_result($responseData)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	$data = '';
-	switch (IPL_CORE_HTTP_CLIENT) {
-		case 'curl':
-			$data = $responseData;
-			break;
+    $data = '';
+    switch (IPL_CORE_HTTP_CLIENT) {
+        case 'curl':
+            $data = $responseData;
+            break;
+        default:
+            $ipl_core_error_code = 8;
+            $ipl_core_error_msg = 'Unknown HTTP client: ' . IPL_CORE_HTTP_CLIENT;
+            return false;
+    }
 
-		case 'socket':
-			$socket = $responseData;
-
-	        $responseHeader = '';
-	        $prolog = '';
-
-	        $gotStatus = false;
-	        while (($line = @fgets($socket)) !== false) {
-	            $gotStatus = $gotStatus || (strpos($line, 'HTTP') !== false);
-	            if ($gotStatus) {
-	            	if ($prolog === '') {
-	            		$prolog = $line;
-	            	}
-
-	                $responseHeader .= $line;
-	                if (rtrim($line) === '') break;
-	            }
-	        }
-
-	        // extract headers
-			if (empty($responseHeader) || empty($prolog)) {
-				$ipl_core_error_code = 10;
-				$ipl_core_error_msg = 'Invalid HTTP response received';
-				return false;
-			}
-
-	        $headers = ipl_core_extract_headers($responseHeader);
-			$prologParts = explode(' ', $prolog);
-
-			if (!is_array($prologParts) || count($prologParts) < 2) {
-				$ipl_core_error_code = 10;
-				$ipl_core_error_msg = "Invalid HTTP response prolog received: $prolog";
-				return false;
-			}
-
-			// Check if protocol is supported
-			$protocol = $prologParts[0];
-			if ($protocol !== 'HTTP/1.1') {
-				$ipl_core_error_code = 17;
-				$ipl_core_error_msg = "Unsupported protocol version: $protocol";
-				return false;
-			}
-
-			// Check HTTP status code
-			$statusCode = (int) $prologParts[1];
-			if ($statusCode == 303 || $statusCode == 301) {
-				if (IPL_CORE_FOLLOW_REDIRECT) {
-					$redirects += 1;
-
-					if ($redirects > IPL_CORE_MAX_REDIRECTS) {
-						$ipl_core_error_code = 18;
-						$ipl_core_error_msg = 'Too many redirects';
-						return false;
-					}
-
-					$location = $headers['location'];
-					$data = ipl_core_send_socket_request($location, $requestData, null, $redirects + 1);
-					fclose($socket);
-					return $data;
-				}
-				else {
-					$ipl_core_error_code = 16;
-					$ipl_core_error_msg = 'Redirecting is disabled';
-					return false;
-				}
-			}
-			else if ($statusCode != 200) {
-				$ipl_core_error_code = 6;
-				$ipl_core_error_msg = "HTTP error code received: $statusCode";
-				return false;
-			}
-
-			if (isset($headers['transfer-encoding']) && $headers['transfer-encoding'] == 'chunked') {
-				do {
-                    $line  = @fgets($socket);
-                    $chunk = $line;
-
-                    $chunksize = trim($line);
-
-                    if (!ctype_xdigit($chunksize)) {
-                    	break;
-                    }
-
-                    // Convert the hexadecimal value to plain integer
-                    $chunksize = hexdec($chunksize);
-
-                    // Read chunk
-                    $readLength = $chunksize;
-                    while ($readLength > 0) {
-                        $line = fread($socket, $readLength);
-                        if ($line === false || strlen($line) === 0) {
-                            break;
-                        }
-                        else {
-                            $chunk .= $line;
-                            $readLength -= strlen($line);
-                        }
-                    }
-
-                    $chunk .= @fgets($socket);
-                    $data .= $chunk;
-                }
-                while ($chunksize > 0);
-
-                $data = ipl_core_decode_chunked_body($data);
-			}
-			else if (isset($headers['content-length'])) {
-				$contentLength = $headers['content-length'];
-
-				$readLength = $contentLength;
-	            while ($readLength > 0) {
-	                $chunk = @fread($socket, $readLength);
-	                if ($chunk === false || strlen($chunk) === 0) {
-	                    break;
-	                }
-	                else {
-	                    $readLength -= strlen($chunk);
-	                    $data .= $chunk;
-	                }
-	            }
-			}
-			else {
-				while(!feof($socket)) {
-					$buffer = fgets($socket);
-					if ($buffer === false || strlen($buffer) === 0) {
-        				break;
-        			}
-        			else {
-						$data .= $buffer;
-        			}
-				}
-			}
-
-			// close the connection (we do not handle keep alive connections so far)
-    		fclose($socket);
-
-			break;
-
-		default:
-			$ipl_core_error_code = 8;
-			$ipl_core_error_msg = 'Unknown HTTP client: ' . IPL_CORE_HTTP_CLIENT;
-			return false;
-	}
-
-	return $data;
-}
-
-function ipl_core_extract_headers($response_str) {
-	$headers = array();
-
- 	// First, split body and headers
-	$parts = preg_split('|(?:\r?\n){2}|m', $response_str, 2);
-	if (! $parts[0]) return $headers;
-
-	// Split headers part to lines
-	$lines = explode("\n", $parts[0]);
-	unset($parts);
-	$last_header = null;
-
-	foreach($lines as $line) {
-		$line = trim($line, "\r\n");
-		if ($line == "") break;
-
-		if (preg_match("|^([\w-]+):\s+(.+)|", $line, $m)) {
-			unset($last_header);
-			$h_name = strtolower($m[1]);
-			$h_value = $m[2];
-
- 			if (isset($headers[$h_name])) {
-				if (! is_array($headers[$h_name])) {
-					$headers[$h_name] = array($headers[$h_name]);
-				}
-
-				$headers[$h_name][] = $h_value;
-			}
-			else {
-				$headers[$h_name] = $h_value;
-			}
-			$last_header = $h_name;
-		}
-		elseif (preg_match("|^\s+(.+)$|", $line, $m) && $last_header !== null) {
-			if (is_array($headers[$last_header])) {
-				end($headers[$last_header]);
-				$last_header_key = key($headers[$last_header]);
-				$headers[$last_header][$last_header_key] .= $m[1];
-			}
-			else {
-				$headers[$last_header] .= $m[1];
-			}
-		}
-	}
-
-	return $headers;
-}
-
-function ipl_core_decode_chunked_body($body) {
-	$decBody = '';
-
-	while (preg_match("/^([\da-fA-F]+)[^\r\n]*\r\n/sm", trim($body), $m)) {
-		$length = hexdec(trim($m[1]));
-		$cut = strlen($m[0]);
-
-		$decBody .= substr($body, $cut, $length);
-		$body = substr($body, $cut + $length + 2);
-	}
-
-	return $decBody;
+    return $data;
 }
 
 /**
  * Load the data from the response as xml
  *
  */
-function ipl_core_load_xml($xmlDataString) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_load_xml($xmlDataString)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	global $ipl_core_api_error_code;
-	global $ipl_core_api_customer_message;
-	global $ipl_core_api_merchant_message;
+    global $ipl_core_api_error_code;
+    global $ipl_core_api_customer_message;
+    global $ipl_core_api_merchant_message;
 
-    
-    
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml':
 
-			if (!function_exists('simplexml_load_string')) {
-				$ipl_core_error_code = 15;
-				$ipl_core_error_msg = 'simpleXml lib has not been loaded';
-				return false;
-			}
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml':
 
-			$xml = simplexml_load_string($xmlDataString);
+            if (!function_exists('simplexml_load_string')) {
+                $ipl_core_error_code = 15;
+                $ipl_core_error_msg = 'simpleXml lib has not been loaded';
+                return false;
+            }
 
-			if (!$xml) {
-				$ipl_core_error_code = 10;
-				$ipl_core_error_msg = 'Invalid XML reponse received';
-				return false;
-			}
-			else {
-				$attr = $xml->attributes();
-				$ipl_core_api_error_code 		= (int)$attr->error_code;
-				$ipl_core_api_customer_message 	= (string)$attr->customer_message;
-				$ipl_core_api_merchant_message 	= (string)$attr->merchant_message;
-			}
-			break;
+            $xml = simplexml_load_string($xmlDataString);
 
-		case 'preg':
-			$errorCode = ipl_core_get_xml_attribute_value('data', 'error_code', $xmlDataString);
-			if ($errorCode === false) {
-				return false;
-			}
+            if (!$xml) {
+                $ipl_core_error_code = 10;
+                $ipl_core_error_msg = 'Invalid XML reponse received';
+                return false;
+            } else {
+                $attr = $xml->attributes();
+                $ipl_core_api_error_code = (int)$attr->error_code;
+                $ipl_core_api_customer_message = (string)$attr->customer_message;
+                $ipl_core_api_merchant_message = (string)$attr->merchant_message;
+            }
+            break;
 
-			if ($errorCode > 0) {
-				$ipl_core_api_customer_message = ipl_core_get_xml_attribute_value('data', 'customer_message', $xmlDataString);
-				$ipl_core_api_merchant_message = ipl_core_get_xml_attribute_value('data', 'merchant_message', $xmlDataString);
-			}
-			break;
+        case 'preg':
+            $errorCode = ipl_core_get_xml_attribute_value('data', 'error_code', $xmlDataString);
+            if ($errorCode === false) {
+                return false;
+            }
 
-		case 'xmlParser':
-			$parser = new XMLParser($xmlDataString);
+            if ($errorCode > 0) {
+                $ipl_core_api_customer_message = ipl_core_get_xml_attribute_value('data', 'customer_message', $xmlDataString);
+                $ipl_core_api_merchant_message = ipl_core_get_xml_attribute_value('data', 'merchant_message', $xmlDataString);
+            }
+            break;
 
-			if ($parser->Parse() == false) {
-				$xmlError = $parser->getError();
-				$ipl_core_error_code = 10;
-				$ipl_core_error_msg = "Invalid XML response received: $xmlError";
-				return false;
-			}
+        case 'xmlParser':
+            $parser = new XMLParser($xmlDataString);
 
-			$xml = $parser->document;
+            if ($parser->Parse() == false) {
+                $xmlError = $parser->getError();
+                $ipl_core_error_code = 10;
+                $ipl_core_error_msg = "Invalid XML response received: $xmlError";
+                return false;
+            }
 
-			if (!$xml) {
-				$ipl_core_error_code = 10;
-				$ipl_core_error_msg = 'Invalid XML response received';
-				return false;
-			}
-			else {
-				$ipl_core_api_error_code 		= (int)$xml->tagAttrs['error_code'];
-				$ipl_core_api_customer_message 	= ipl_core_decode((string)$xml->tagAttrs['customer_message']);
-				$ipl_core_api_merchant_message 	= ipl_core_decode((string)$xml->tagAttrs['merchant_message']);
-			}
-			break;
+            $xml = $parser->document;
 
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-			break;
-	}
-	return $xml;
+            if (!$xml) {
+                $ipl_core_error_code = 10;
+                $ipl_core_error_msg = 'Invalid XML response received';
+                return false;
+            } else {
+                $ipl_core_api_error_code = (int)$xml->tagAttrs['error_code'];
+                $ipl_core_api_customer_message = ipl_core_decode((string)$xml->tagAttrs['customer_message']);
+                $ipl_core_api_merchant_message = ipl_core_decode((string)$xml->tagAttrs['merchant_message']);
+            }
+            break;
+
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+            break;
+    }
+    return $xml;
 }
 
 // ERROR HELPER FUNCTIONS
-function ipl_core_has_api_error() {
-	global $ipl_core_api_error_code;
-	return $ipl_core_api_error_code > 0;
+function ipl_core_has_api_error()
+{
+    global $ipl_core_api_error_code;
+    return $ipl_core_api_error_code > 0;
 }
 
-function ipl_core_get_api_error_info() {
-	global $ipl_core_api_error_code;
-	global $ipl_core_api_customer_message;
-	global $ipl_core_api_merchant_message;
+function ipl_core_get_api_error_info()
+{
+    global $ipl_core_api_error_code;
+    global $ipl_core_api_customer_message;
+    global $ipl_core_api_merchant_message;
 
-	$info = array(
-		'error_code' => $ipl_core_api_error_code,
-		'customer_message' => $ipl_core_api_customer_message,
-		'merchant_message' => $ipl_core_api_merchant_message
-	);
+    $info = array(
+        'error_code' => $ipl_core_api_error_code,
+        'customer_message' => $ipl_core_api_customer_message,
+        'merchant_message' => $ipl_core_api_merchant_message
+    );
 
-	return $info;
+    return $info;
 }
 
-function ipl_core_reset_error_codes() {
-	global $ipl_core_api_error_code;
-	global $ipl_core_error_code;
-	global $ipl_core_api_error_code;
-	global $ipl_core_api_customer_message;
-	global $ipl_core_api_merchant_message;
-	global $ipl_core_last_request_url;
+function ipl_core_reset_error_codes()
+{
+    global $ipl_core_api_error_code;
+    global $ipl_core_error_code;
+    global $ipl_core_api_error_code;
+    global $ipl_core_api_customer_message;
+    global $ipl_core_api_merchant_message;
+    global $ipl_core_last_request_url;
 
-	$ipl_core_api_error_code = 0;
-	$ipl_core_error_code = 0;
+    $ipl_core_api_error_code = 0;
+    $ipl_core_error_code = 0;
 
-	$ipl_core_error_msg = '';
-	$ipl_core_api_customer_message = '';
-	$ipl_core_api_merchant_message = '';
+    $ipl_core_error_msg = '';
+    $ipl_core_api_customer_message = '';
+    $ipl_core_api_merchant_message = '';
 
-	$ipl_core_last_request_url = '';
+    $ipl_core_last_request_url = '';
 }
 
-function ipl_core_has_internal_error() {
-	global $ipl_core_error_code;
-	return $ipl_core_error_code > 0;
+function ipl_core_has_internal_error()
+{
+    global $ipl_core_error_code;
+    return $ipl_core_error_code > 0;
 }
 
-function ipl_core_get_internal_error() {
-	global $ipl_core_error_code;
-	return $ipl_core_error_code;
+function ipl_core_get_internal_error()
+{
+    global $ipl_core_error_code;
+    return $ipl_core_error_code;
 }
 
-function ipl_core_get_internal_error_msg() {
-	global $ipl_core_error_msg;
-	return $ipl_core_error_msg;
+function ipl_core_get_internal_error_msg()
+{
+    global $ipl_core_error_msg;
+    return $ipl_core_error_msg;
 }
 
 
 // XML PARSING UTILS
-function ipl_core_get_attribute_value($s) {
-	if (is_bool($s)) {
-		return ($s == true ? '1': '0');
-	}
-	else {
-		return ipl_core_xml_escape($s);
-	}
+function ipl_core_get_attribute_value($s)
+{
+    if (is_bool($s)) {
+        return ($s == true ? '1' : '0');
+    } else {
+        return ipl_core_xml_escape($s);
+    }
 }
 
-function ipl_core_append_slash($s) {
-	$s = trim($s);
-	if (substr($s, strlen($s) - 1) != "/") {
-		$s = $s . "/";
-	}
-	return $s;
+function ipl_core_append_slash($s)
+{
+    $s = trim($s);
+    if (substr($s, strlen($s) - 1) != "/") {
+        $s = $s . "/";
+    }
+    return $s;
 }
 
-function ipl_core_build_list_tag($tag_name, $child_tag_name, $a) {
-	$article_string = "<$tag_name>";
-	foreach ($a as $list_item) {
-		$attr_str =  ipl_core_build_attr_string($list_item);
-		$article_string = "$article_string<$child_tag_name $attr_str/>";
-	}
-	$article_string = "$article_string</$tag_name>";
-	return $article_string;
+function ipl_core_build_list_tag($tag_name, $child_tag_name, $a)
+{
+    $article_string = "<$tag_name>";
+    foreach ($a as $list_item) {
+        $attr_str = ipl_core_build_attr_string($list_item);
+        $article_string = "$article_string<$child_tag_name $attr_str/>";
+    }
+    $article_string = "$article_string</$tag_name>";
+    return $article_string;
 }
 
-function ipl_core_build_attr_list_tag($tagName, $attributes, $childTagName, $childAttributes) {
+/**
+ * @param SimpleXmlElement $xmlElement
+ * @param SimpleXmlElement $parentNode
+ * @param array $content
+ * @return SimpleXmlElement
+ * @internal param string $parentNodeName
+ */
+function ipl_core_build_xml_from_array($xmlElement, $parentNode, $content)
+{
+
+    foreach ($content as $contentKey => $contentItem) {
+
+        if (is_a($contentItem, 'ArrayObject')) {
+            $contentItem = (array)$contentItem;
+        }
+
+        if (is_array($contentItem)) {
+
+            if (is_int($contentKey)) {
+                $childXml = $parentNode->addChild($xmlElement->getName());
+                ipl_core_build_xml_from_array($childXml, $childXml, $contentItem);
+
+                // check if we have a sequential array or not
+            } elseif (array_keys($contentItem) === range(0, count($contentItem) - 1)) {
+                $childXml = new SimpleXMLElement("<$contentKey></$contentKey>");
+                ipl_core_build_xml_from_array($childXml, $parentNode, $contentItem);
+
+            } else {
+                $childXml = $parentNode->addChild($contentKey);
+                ipl_core_build_xml_from_array($childXml, $childXml, $contentItem);
+            }
+        } else {
+            $xmlElement->addAttribute($contentKey, $contentItem);
+        }
+    }
+    return $xmlElement;
+}
+
+function ipl_core_build_attr_list_tag($tagName, $attributes, $childTagName, $childAttributes)
+{
 
     $parentString = ipl_core_build_open_tag($tagName, $attributes)
-                  . ipl_core_build_close_tag($tagName, ipl_core_build_list($childTagName, $childAttributes));
+        . ipl_core_build_close_tag($tagName, ipl_core_build_list($childTagName, $childAttributes));
 
     return $parentString;
 }
 
-function ipl_core_build_list($tagName, $attributes) {
+function ipl_core_build_list($tagName, $attributes)
+{
 
     $list = '';
     foreach ((array)$attributes as $attribute) {
@@ -652,27 +433,29 @@ function ipl_core_build_list($tagName, $attributes) {
  * @param $a Array Values to be joined
  * @return string Joined string
  */
-function ipl_core_build_attr_string($a) {
-	$attr_str = "";
+function ipl_core_build_attr_string($a)
+{
+    $attr_str = "";
 
-	if (count($a) > 0) {
-		foreach ($a as $key => $value) {
-			$attr_str = "$attr_str$key=\"" . ipl_core_xml_escape($value) . "\" ";
-		}
-	}
-	return $attr_str;
+    if (count($a) > 0) {
+        foreach ($a as $key => $value) {
+            $attr_str = "$attr_str$key=\"" . ipl_core_xml_escape($value) . "\" ";
+        }
+    }
+    return $attr_str;
 }
 
-function ipl_core_build_request_xml($attributes, $content) {
-	$attributes['api_version'] = IPL_CORE_API_VERSION;
+function ipl_core_build_request_xml($attributes, $content)
+{
+    $attributes['api_version'] = IPL_CORE_API_VERSION;
 
-	$xml = "<data";
-	foreach ($attributes as $name => $value) {
-		$xml .= " $name=\"" . ipl_core_get_attribute_value($value) . "\"";
-	}
+    $xml = "<data";
+    foreach ($attributes as $name => $value) {
+        $xml .= " $name=\"" . ipl_core_get_attribute_value($value) . "\"";
+    }
 
-	$xml .= ">" . implode('', $content) . "</data>";
-	return IPL_CORE_XML_PROLOG . $xml;
+    $xml .= ">" . implode('', $content) . "</data>";
+    return IPL_CORE_XML_PROLOG . $xml;
 }
 
 /**
@@ -680,39 +463,45 @@ function ipl_core_build_request_xml($attributes, $content) {
  * @param $value string String to escape
  * @return string Escaped string
  */
-function ipl_core_xml_escape($value) {
-	$search = array("&", "\"", "<", ">", "'");
-	$replace = array("&amp;", "&quot;", "&lt;", "&gt;", "&apos;");
+function ipl_core_xml_escape($value)
+{
+    $search = array("&", "\"", "<", ">", "'");
+    $replace = array("&amp;", "&quot;", "&lt;", "&gt;", "&apos;");
 
-	return str_replace($search, $replace, $value);
+    return str_replace($search, $replace, $value);
 }
 
-function ipl_core_build_closed_tag($tagName, $a) {
-	if (!$a || count($a) == 0) {
-		return "";
-	}
+function ipl_core_build_closed_tag($tagName, $a)
+{
+    if (!$a || count($a) == 0) {
+        return "";
+    }
 
-	$s = ipl_core_build_attr_string($a);
-	return "<$tagName $s/>";
+    $s = ipl_core_build_attr_string($a);
+    return "<$tagName $s/>";
 }
 
-function ipl_core_build_list_ctag($tagName, $a){
-	$xml = ipl_core_build_open_tag($tagName);
-	foreach ($a as $subTagName => $content) {
-		$xml = $xml . ipl_core_build_closed_ctag($subTagName, $content);
-	}
-	return ipl_core_build_close_tag($tagName, $xml);
-}
-function ipl_core_build_closed_ctag($tagName, $a) {
-	if (!$a || count($a) == 0) {
-		return "";
-	}
-	$s = ipl_core_build_ctag_string($a);
-	return "<{$tagName}>{$s}</{$tagName}>";
+function ipl_core_build_list_ctag($tagName, $a)
+{
+    $xml = ipl_core_build_open_tag($tagName);
+    foreach ($a as $subTagName => $content) {
+        $xml = $xml . ipl_core_build_closed_ctag($subTagName, $content);
+    }
+    return ipl_core_build_close_tag($tagName, $xml);
 }
 
-function ipl_core_build_ctag_string($a){
-	return "<![CDATA[".$a."]]>";
+function ipl_core_build_closed_ctag($tagName, $a)
+{
+    if (!$a || count($a) == 0) {
+        return "";
+    }
+    $s = ipl_core_build_ctag_string($a);
+    return "<{$tagName}>{$s}</{$tagName}>";
+}
+
+function ipl_core_build_ctag_string($a)
+{
+    return "<![CDATA[" . $a . "]]>";
 }
 
 function ipl_core_build_open_tag($sTagName, $aAttributes = array())
@@ -726,25 +515,29 @@ function ipl_core_build_open_tag($sTagName, $aAttributes = array())
     return '<' . $sTagName . $sAttributes . '>';
 }
 
-function ipl_core_build_close_tag($tagName, $xml) {
+function ipl_core_build_close_tag($tagName, $xml)
+{
 
     return "$xml </$tagName>";
 }
 
-function ipl_core_add_body ($xml,$body)
+function ipl_core_add_body($xml, $body)
 {
-    return $xml.$body;
+    return $xml . $body;
 }
 
-function ipl_core_decode($s) {
-	return $s;
+function ipl_core_decode($s)
+{
+    return $s;
 }
 
-function ipl_create_hash($valueToHash) {
+function ipl_create_hash($valueToHash)
+{
     return sha1($_SERVER['SERVER_NAME'] . $valueToHash);
 }
 
-function ipl_create_random($forceFallback = false) {
+function ipl_create_random($forceFallback = false)
+{
     // possible safest way to create random strings (PHP > 5.3):
     if ($forceFallback === false && function_exists('openssl_random_pseudo_bytes')) {
         return bin2hex(openssl_random_pseudo_bytes(16)); // returns 128 character hex string
@@ -752,7 +545,7 @@ function ipl_create_random($forceFallback = false) {
 
     // fallback for php pre 5.3... we get ugly
     $randString = '';
-    for($i=0; $i<32; $i++) {
+    for ($i = 0; $i < 32; $i++) {
         mt_srand(mt_rand(0, mt_getrandmax()));
         $char = mt_rand(0, 15);
         if ($char <= 9) {
@@ -766,216 +559,218 @@ function ipl_create_random($forceFallback = false) {
 }
 
 // Simplified xml parser. tag/attribute pairs must be unique.
-function ipl_core_get_xml_attribute_value($tagName, $attributeName, $xml) {
+function ipl_core_get_xml_attribute_value($tagName, $attributeName, $xml)
+{
     global $ipl_core_error_code;
     global $ipl_core_error_msg;
-	if (preg_match("/<$tagName([^>]*)\b$attributeName\b=\"([^\"]*)\"/", $xml, $result)) {
-		if (count($result) == 0) {
-			$ipl_core_error_code = 12;
-			$ipl_core_error_msg = "Invalid xml result Attribute $attributeName not found for tag $tagName";
-			return false;
-		}
-		else {
-			return $result[2];
-		}
-	}
-	else {
-		$ipl_core_error_code = 12;
-		$ipl_core_error_msg = 'Error parsing xml result with preg';
-		return false;
-	}
+    if (preg_match("/<$tagName([^>]*)\b$attributeName\b=\"([^\"]*)\"/", $xml, $result)) {
+        if (count($result) == 0) {
+            $ipl_core_error_code = 12;
+            $ipl_core_error_msg = "Invalid xml result Attribute $attributeName not found for tag $tagName";
+            return false;
+        } else {
+            return $result[2];
+        }
+    } else {
+        $ipl_core_error_code = 12;
+        $ipl_core_error_msg = 'Error parsing xml result with preg';
+        return false;
+    }
 }
 
 
 // API XML RESPONSE PARSING
-function ipl_core_parse_module_config_response($xml) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_module_config_response($xml)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	$data = array();
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml';
-			if ($xml->minvalue) {
-				$minAttrs = $xml->minvalue->attributes();
-				$data['invoicemin'] 		= (int)$minAttrs->invoice;
-				$data['invoicebusinessmin'] = (int)$minAttrs->invoicebusiness;
-				$data['directdebitmin'] 	= (int)$minAttrs->directdebit;
-				$data['hirepurchasemin'] 	= (int)$minAttrs->hirepurchase;
-			}
+    $data = array();
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml';
+            if ($xml->minvalue) {
+                $minAttrs = $xml->minvalue->attributes();
+                $data['invoicemin'] = (int)$minAttrs->invoice;
+                $data['invoicebusinessmin'] = (int)$minAttrs->invoicebusiness;
+                $data['directdebitmin'] = (int)$minAttrs->directdebit;
+                $data['hirepurchasemin'] = (int)$minAttrs->hirepurchase;
+            }
 
-			if ($xml->limit) {
-				$limitAttr = $xml->limit->attributes();
-				$data['invoicestatic'] 		   = (int)$limitAttr->invoicestatic;
-				$data['invoicebusinessstatic'] = (int)$limitAttr->invoicebusinessstatic;
-				$data['directdebitstatic']     = (int)$limitAttr->directdebitstatic;
-				$data['hirepurchasestatic']    = (int)$limitAttr->hirepurchasestatic;
-			}
+            if ($xml->limit) {
+                $limitAttr = $xml->limit->attributes();
+                $data['invoicestatic'] = (int)$limitAttr->invoicestatic;
+                $data['invoicebusinessstatic'] = (int)$limitAttr->invoicebusinessstatic;
+                $data['directdebitstatic'] = (int)$limitAttr->directdebitstatic;
+                $data['hirepurchasestatic'] = (int)$limitAttr->hirepurchasestatic;
+            }
 
-			if ($xml->permissions) {
-				$permAttr = $xml->permissions->attributes();
-				$data['active']				    = ((int)$permAttr->active) == 1 ? true : false;
-				$data['invoiceallowed']		    = ((int)$permAttr->invoiceallowed) == 1 ? true : false;
-				$data['invoicebusinessallowed'] = ((int)$permAttr->invoicebusinessallowed) == 1 ? true : false;
-				$data['directdebitallowed']	    = ((int)$permAttr->directdebitallowed) == 1 ? true : false;
-				$data['hirepurchaseallowed']    = ((int)$permAttr->hirepurchaseallowed) == 1 ? true : false;
-			}
+            if ($xml->permissions) {
+                $permAttr = $xml->permissions->attributes();
+                $data['active'] = ((int)$permAttr->active) == 1 ? true : false;
+                $data['invoiceallowed'] = ((int)$permAttr->invoiceallowed) == 1 ? true : false;
+                $data['invoicebusinessallowed'] = ((int)$permAttr->invoicebusinessallowed) == 1 ? true : false;
+                $data['directdebitallowed'] = ((int)$permAttr->directdebitallowed) == 1 ? true : false;
+                $data['hirepurchaseallowed'] = ((int)$permAttr->hirepurchaseallowed) == 1 ? true : false;
+            }
 
-			if ($xml->hire_purchase) {
-				$data['terms'] = array();
-				foreach ($xml->hire_purchase->terms->children() as $termTag) {
-					$data['terms'][] = (int) $termTag;
-				}
-			}
-			break;
-		case 'xmlParser':
-			if (isset($xml->minvalue)) {
-				$data['invoicemin'] 		= (int)$xml->minvalue[0]->tagAttrs['invoice'];
-				$data['invoicebusinessmin'] 	= (int)$xml->minvalue[0]->tagAttrs['invoicebusiness'];
-				$data['directdebitmin'] 	= (int)$xml->minvalue[0]->tagAttrs['directdebit'];
-				$data['hirepurchasemin'] 	= (int)$xml->minvalue[0]->tagAttrs['hirepurchase'];
-			}
+            if ($xml->hire_purchase) {
+                $data['terms'] = array();
+                foreach ($xml->hire_purchase->terms->children() as $termTag) {
+                    $data['terms'][] = (int)$termTag;
+                }
+            }
+            break;
+        case 'xmlParser':
+            if (isset($xml->minvalue)) {
+                $data['invoicemin'] = (int)$xml->minvalue[0]->tagAttrs['invoice'];
+                $data['invoicebusinessmin'] = (int)$xml->minvalue[0]->tagAttrs['invoicebusiness'];
+                $data['directdebitmin'] = (int)$xml->minvalue[0]->tagAttrs['directdebit'];
+                $data['hirepurchasemin'] = (int)$xml->minvalue[0]->tagAttrs['hirepurchase'];
+            }
 
-			if (isset($xml->limit)) {
-				$data['invoicestatic'] 		   = (int)$xml->limit[0]->tagAttrs['invoicestatic'];
-				$data['invoicebusinessstatic'] = (int)$xml->limit[0]->tagAttrs['invoicebusinessstatic'];
-				$data['directdebitstatic'] 	   = (int)$xml->limit[0]->tagAttrs['directdebitstatic'];
-				$data['hirepurchasestatic']    = (int)$xml->limit[0]->tagAttrs['hirepurchasestatic'];
-			}
+            if (isset($xml->limit)) {
+                $data['invoicestatic'] = (int)$xml->limit[0]->tagAttrs['invoicestatic'];
+                $data['invoicebusinessstatic'] = (int)$xml->limit[0]->tagAttrs['invoicebusinessstatic'];
+                $data['directdebitstatic'] = (int)$xml->limit[0]->tagAttrs['directdebitstatic'];
+                $data['hirepurchasestatic'] = (int)$xml->limit[0]->tagAttrs['hirepurchasestatic'];
+            }
 
-			if (isset($xml->permissions)) {
-				$data['active']				    = ((int)$xml->permissions[0]->tagAttrs['active']) == 1 ? true : false;
-				$data['invoicebusinessallowed'] = ((int)$xml->permissions[0]->tagAttrs['invoicebusinessallowed']) == 1 ? true : false;
-				$data['invoiceallowed']		    = ((int)$xml->permissions[0]->tagAttrs['invoiceallowed']) == 1 ? true : false;
-				$data['directdebitallowed']	    = ((int)$xml->permissions[0]->tagAttrs['directdebitallowed']) == 1 ? true : false;
-				$data['hirepurchaseallowed']    = ((int)$xml->permissions[0]->tagAttrs['hirepurchaseallowed']) == 1 ? true : false;
-			}
+            if (isset($xml->permissions)) {
+                $data['active'] = ((int)$xml->permissions[0]->tagAttrs['active']) == 1 ? true : false;
+                $data['invoicebusinessallowed'] = ((int)$xml->permissions[0]->tagAttrs['invoicebusinessallowed']) == 1 ? true : false;
+                $data['invoiceallowed'] = ((int)$xml->permissions[0]->tagAttrs['invoiceallowed']) == 1 ? true : false;
+                $data['directdebitallowed'] = ((int)$xml->permissions[0]->tagAttrs['directdebitallowed']) == 1 ? true : false;
+                $data['hirepurchaseallowed'] = ((int)$xml->permissions[0]->tagAttrs['hirepurchaseallowed']) == 1 ? true : false;
+            }
 
-			if (isset($xml->hire_purchase)) {
-				$data['terms'] = array();
+            if (isset($xml->hire_purchase)) {
+                $data['terms'] = array();
 
-				foreach ($xml->hire_purchase[0]->terms[0]->tagChildren as $termTag) {
-					$data['terms'][] = $termTag->tagData;
-				}
-			}
-			break;
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-	}
+                foreach ($xml->hire_purchase[0]->terms[0]->tagChildren as $termTag) {
+                    $data['terms'][] = $termTag->tagData;
+                }
+            }
+            break;
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+    }
 
-	return $data;
+    return $data;
 }
 
-function ipl_core_parse_validation_response($xml) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_validation_response($xml)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
     # TODO: this function doesn't do anything
 
-	$data = array();
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml';
-			// Noting to do here
-			break;
-		case 'xmlParser';
-			// Noting to do here
-			break;
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-	}
+    $data = array();
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml';
+            // Noting to do here
+            break;
+        case 'xmlParser';
+            // Noting to do here
+            break;
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+    }
 
-	return $data;
+    return $data;
 }
 
-function ipl_core_parse_preauthorize_response($xml) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_preauthorize_response($xml)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	$data = array();
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml';
-			$attr = $xml->attributes();
+    $data = array();
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml';
+            $attr = $xml->attributes();
 
-			if ($attr) {
-				if ($attr->status) {
-					$data['status'] = (string)$attr->status;
-				}
+            if ($attr) {
+                if ($attr->status) {
+                    $data['status'] = (string)$attr->status;
+                }
 
-				if ($attr->bptid) {
-					$data['bptid']  = (string)$attr->bptid;
-				}
-			}
+                if ($attr->bptid) {
+                    $data['bptid'] = (string)$attr->bptid;
+                }
+            }
 
-			if ($xml->corrected_address) {
-				$correctedAttr = $xml->corrected_address->attributes();
-				$data['corrected_street'] = (string)$correctedAttr->street;
-				$data['corrected_street_no'] = (string)$correctedAttr->streetNo;
-				$data['corrected_zip'] = (string)$correctedAttr->zip;
-				$data['corrected_city'] = (string)$correctedAttr->city;
-				$data['corrected_country'] = (string)$correctedAttr->country;
-			}
+            if ($xml->corrected_address) {
+                $correctedAttr = $xml->corrected_address->attributes();
+                $data['corrected_street'] = (string)$correctedAttr->street;
+                $data['corrected_street_no'] = (string)$correctedAttr->streetNo;
+                $data['corrected_zip'] = (string)$correctedAttr->zip;
+                $data['corrected_city'] = (string)$correctedAttr->city;
+                $data['corrected_country'] = (string)$correctedAttr->country;
+            }
 
-			if ($xml->invoice_bank_account) {
-				$invoiceAttr = $xml->invoice_bank_account->attributes();
-				$data['account_holder'] = (string)$invoiceAttr->account_holder;
-				$data['account_number'] = (string)$invoiceAttr->account_number;
-				$data['bank_code'] = (string)$invoiceAttr->bank_code;
-				$data['bank_name'] = (string)$invoiceAttr->bank_name;
-				$data['invoice_reference'] = (string)$invoiceAttr->invoice_reference;
-				$data['invoice_duedate'] = (string)$invoiceAttr->invoice_duedate;
-			}
+            if ($xml->invoice_bank_account) {
+                $invoiceAttr = $xml->invoice_bank_account->attributes();
+                $data['account_holder'] = (string)$invoiceAttr->account_holder;
+                $data['account_number'] = (string)$invoiceAttr->account_number;
+                $data['bank_code'] = (string)$invoiceAttr->bank_code;
+                $data['bank_name'] = (string)$invoiceAttr->bank_name;
+                $data['invoice_reference'] = (string)$invoiceAttr->invoice_reference;
+                $data['invoice_duedate'] = (string)$invoiceAttr->invoice_duedate;
+            }
 
-			break;
-		case 'xmlParser';
-			if (isset($xml->tagAttrs['status'])) {
-				$data['status'] = ipl_core_decode((string)$xml->tagAttrs['status']);
-			}
-			
-			if (isset($xml->async_capture_params)) {
-				$data['async_amount']  = ipl_core_decode((string)$xml->async_capture_params[0]->tagAttrs['amount']);
-				$data['external_redirect_url']  = ipl_core_decode((string)$xml->async_capture_params[0]->external_redirect_url[0]->tagData);
-				$data['rate_plan_url']  = ipl_core_decode((string)$xml->async_capture_params[0]->rate_plan_url[0]->tagData);
-			}
-			if(isset($xml->campaign)){
-				$data['campaign_type']  = ipl_core_decode((string)$xml->campaign[0]->type[0]->tagData);
-				$data['campaign_display_text']  = ipl_core_decode((string)$xml->campaign[0]->display_text[0]->tagData);
-				$data['campaign_display_image_url']  = ipl_core_decode((string)$xml->campaign[0]->display_image_url[0]->tagData);
-			}
-			
-			if (isset($xml->tagAttrs['bptid'])) {
-				$data['bptid']  = ipl_core_decode((string)$xml->tagAttrs['bptid']);
-			}
+            break;
+        case 'xmlParser';
+            if (isset($xml->tagAttrs['status'])) {
+                $data['status'] = ipl_core_decode((string)$xml->tagAttrs['status']);
+            }
 
-			if (isset($xml->corrected_address)) {
-				$data['corrected_street'] = ipl_core_decode((string)$xml->corrected_address[0]->tagAttrs['street']);
-				$data['corrected_street_no'] = ipl_core_decode((string)$xml->corrected_address[0]->tagAttrs['streetno']);
-				$data['corrected_zip'] = ipl_core_decode((string)$xml->corrected_address[0]->tagAttrs['zip']);
-				$data['corrected_city'] = ipl_core_decode((string)$xml->corrected_address[0]->tagAttrs['city']);
-				$data['corrected_country'] = ipl_core_decode((string)$xml->corrected_address[0]->tagAttrs['country']);
-			}
+            if (isset($xml->async_capture_params)) {
+                $data['async_amount'] = ipl_core_decode((string)$xml->async_capture_params[0]->tagAttrs['amount']);
+                $data['external_redirect_url'] = ipl_core_decode((string)$xml->async_capture_params[0]->external_redirect_url[0]->tagData);
+                $data['rate_plan_url'] = ipl_core_decode((string)$xml->async_capture_params[0]->rate_plan_url[0]->tagData);
+            }
+            if (isset($xml->campaign)) {
+                $data['campaign_type'] = ipl_core_decode((string)$xml->campaign[0]->type[0]->tagData);
+                $data['campaign_display_text'] = ipl_core_decode((string)$xml->campaign[0]->display_text[0]->tagData);
+                $data['campaign_display_image_url'] = ipl_core_decode((string)$xml->campaign[0]->display_image_url[0]->tagData);
+            }
 
-			if (isset($xml->invoice_bank_account)) {
-				$data['account_holder'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_holder']);
-				$data['account_number'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_number']);
-				$data['bank_code'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_code']);
-				$data['bank_name'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_name']);
-				$data['invoice_reference'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_reference']);
-				$data['invoice_duedate'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_duedate']);
-			}
+            if (isset($xml->tagAttrs['bptid'])) {
+                $data['bptid'] = ipl_core_decode((string)$xml->tagAttrs['bptid']);
+            }
+
+            if (isset($xml->corrected_address)) {
+                $data['corrected_street'] = ipl_core_decode((string)$xml->corrected_address[0]->tagAttrs['street']);
+                $data['corrected_street_no'] = ipl_core_decode((string)$xml->corrected_address[0]->tagAttrs['streetno']);
+                $data['corrected_zip'] = ipl_core_decode((string)$xml->corrected_address[0]->tagAttrs['zip']);
+                $data['corrected_city'] = ipl_core_decode((string)$xml->corrected_address[0]->tagAttrs['city']);
+                $data['corrected_country'] = ipl_core_decode((string)$xml->corrected_address[0]->tagAttrs['country']);
+            }
+
+            if (isset($xml->invoice_bank_account)) {
+                $data['account_holder'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_holder']);
+                $data['account_number'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_number']);
+                $data['bank_code'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_code']);
+                $data['bank_name'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_name']);
+                $data['invoice_reference'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_reference']);
+                $data['invoice_duedate'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_duedate']);
+            }
 
             if (isset($xml->hire_purchase[0])) {
                 $data = ipl_core_parse_instalment_information($xml->hire_purchase[0], $data);
             }
-			$data = ipl_core_parse_tc_documents($xml, $data);
-			$data = ipl_core_parse_payment_infos($xml, $data);
+            $data = ipl_core_parse_tc_documents($xml, $data);
+            $data = ipl_core_parse_payment_infos($xml, $data);
 
             if (isset($xml->validation_errors[0])) {
                 $validation_errors = array(
-                    'customer'  =>  array(),
-                    'merchant'  =>  array(),
+                    'customer' => array(),
+                    'merchant' => array(),
                 );
                 foreach ($xml->validation_errors[0]->tagChildren as $error) {
                     $validation_errors['customer'][] = $error->tagAttrs['customer_message'];
@@ -983,18 +778,19 @@ function ipl_core_parse_preauthorize_response($xml) {
                 }
                 $data['validation_errors'] = $validation_errors;
             }
-			break;
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-	}
+            break;
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+    }
 
-	return $data;
+    return $data;
 }
 
 
-function ipl_core_parse_prescore_response($xml) {
+function ipl_core_parse_prescore_response($xml)
+{
     global $ipl_core_error_code;
     global $ipl_core_error_msg;
 
@@ -1009,7 +805,7 @@ function ipl_core_parse_prescore_response($xml) {
                 }
 
                 if ($attr->bptid) {
-                    $data['bptid']  = (string)$attr->bptid;
+                    $data['bptid'] = (string)$attr->bptid;
                 }
             }
 
@@ -1021,7 +817,7 @@ function ipl_core_parse_prescore_response($xml) {
                 $data['corrected_city'] = (string)$correctedAttr->city;
                 $data['corrected_country'] = (string)$correctedAttr->country;
             }
-    
+
             if ($xml->invoice_bank_account) {
                 $invoiceAttr = $xml->invoice_bank_account->attributes();
                 $data['account_holder'] = (string)$invoiceAttr->account_holder;
@@ -1032,14 +828,14 @@ function ipl_core_parse_prescore_response($xml) {
                 $data['invoice_duedate'] = (string)$invoiceAttr->invoice_duedate;
             }
             break;
-        
+
         case 'xmlParser':
             if (isset($xml->tagAttrs['status'])) {
                 $data['status'] = ipl_core_decode((string)$xml->tagAttrs['status']);
             }
 
             if (isset($xml->tagAttrs['bptid'])) {
-                $data['bptid']  = ipl_core_decode((string)$xml->tagAttrs['bptid']);
+                $data['bptid'] = ipl_core_decode((string)$xml->tagAttrs['bptid']);
             }
 
             if (isset($xml->corrected_address)) {
@@ -1062,7 +858,7 @@ function ipl_core_parse_prescore_response($xml) {
             if (isset($xml->allowed_methods)) {
 
                 $array_payments_allowed = array();
-                $array_additional_data  = array();
+                $array_additional_data = array();
                 $_terms = array();
 
                 foreach ($xml->allowed_methods[0]->payment_method as $pam) {
@@ -1070,8 +866,8 @@ function ipl_core_parse_prescore_response($xml) {
                     $array_payments_allowed[] = ipl_core_decode((string)$pam->name[0]->tagData);
 
                     $array = array();
-                    $array['payment_type']   = ipl_core_decode((string)$pam->payment_type[0]->tagData);
-                    $array['name']           = ipl_core_decode((string)$pam->name[0]->tagData);
+                    $array['payment_type'] = ipl_core_decode((string)$pam->payment_type[0]->tagData);
+                    $array['name'] = ipl_core_decode((string)$pam->name[0]->tagData);
                     $array['customer_group'] = ipl_core_decode((string)$pam->customer_group[0]->tagData);
 
                     if (isset($pam->additional_data[0]->rate_options[0])) {
@@ -1096,18 +892,18 @@ function ipl_core_parse_prescore_response($xml) {
                             $term = ipl_core_decode((string)$rate_info->tagAttrs['term']);
                             $_terms[] = $term;
 
-                            $array_additional_data[$term]['calculation'] =$array_calculation ;
-                            $array_additional_data[$term]['dues'] =$array_dues ;
+                            $array_additional_data[$term]['calculation'] = $array_calculation;
+                            $array_additional_data[$term]['dues'] = $array_dues;
                         }
 
 
                         $array['aditional_data'] = $array_additional_data;
-                        $data['_rate_info']      = $array_additional_data;
+                        $data['_rate_info'] = $array_additional_data;
                     }
-                    $data['_payments_allowed_all'][$array['name']]  = $array;
+                    $data['_payments_allowed_all'][$array['name']] = $array;
                 }
-                $data['_payments_allowed']= $array_payments_allowed;
-                $data['_terms']= $_terms;
+                $data['_payments_allowed'] = $array_payments_allowed;
+                $data['_terms'] = $_terms;
             }
 
             $data = ipl_core_parse_tc_documents($xml, $data);
@@ -1124,135 +920,136 @@ function ipl_core_parse_prescore_response($xml) {
 }
 
 
-function ipl_core_parse_capture_response($xml) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_capture_response($xml)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	$data = array();
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml';
-			if ($xml->invoice_bank_account) {
-				$invoiceAttr = $xml->invoice_bank_account->attributes();
-				$data['account_holder'] = (string)$invoiceAttr->account_holder;
-				$data['account_number'] = (string)$invoiceAttr->account_number;
-				$data['bank_code'] = (string)$invoiceAttr->bank_code;
-				$data['bank_name'] = (string)$invoiceAttr->bank_name;
-				$data['invoice_reference'] = (string)$invoiceAttr->invoice_reference;
-				$data['invoice_duedate'] = (string)$invoiceAttr->invoice_duedate;
-			}
-			break;
+    $data = array();
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml';
+            if ($xml->invoice_bank_account) {
+                $invoiceAttr = $xml->invoice_bank_account->attributes();
+                $data['account_holder'] = (string)$invoiceAttr->account_holder;
+                $data['account_number'] = (string)$invoiceAttr->account_number;
+                $data['bank_code'] = (string)$invoiceAttr->bank_code;
+                $data['bank_name'] = (string)$invoiceAttr->bank_name;
+                $data['invoice_reference'] = (string)$invoiceAttr->invoice_reference;
+                $data['invoice_duedate'] = (string)$invoiceAttr->invoice_duedate;
+            }
+            break;
 
-		case 'xmlParser';
-			if (isset($xml->invoice_bank_account)) {
-				$data['account_holder'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_holder']);
-				$data['account_number'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_number']);
-				$data['bank_code'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_code']);
-				$data['bank_name'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_name']);
-				$data['invoice_reference'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_reference']);
-				$data['invoice_duedate'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_duedate']);
-			}
+        case 'xmlParser';
+            if (isset($xml->invoice_bank_account)) {
+                $data['account_holder'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_holder']);
+                $data['account_number'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_number']);
+                $data['bank_code'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_code']);
+                $data['bank_name'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_name']);
+                $data['invoice_reference'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_reference']);
+                $data['invoice_duedate'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_duedate']);
+            }
 
-			$data = ipl_core_parse_tc_documents($xml, $data);
-			$data = ipl_core_parse_payment_infos($xml, $data);
-			break;
+            $data = ipl_core_parse_tc_documents($xml, $data);
+            $data = ipl_core_parse_payment_infos($xml, $data);
+            break;
 
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-	}
-	return $data;
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+    }
+    return $data;
 }
 
-function ipl_core_parse_async_capture_response($xml) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_async_capture_response($xml)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	$data = array();
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml';
-			$dataAttrs = $xml->data->attributes();
-			$data['error_code'] = (string)$dataAttrs->error_code;
-			$data['customer_message'] = (string)$dataAttrs->customer_message;
-			$data['merchant_message'] = (string)$dataAttrs->merchant_message;
-			$data['status'] = (string)$dataAttrs->status;
-			$data['reference'] = (string)$dataAttrs->reference;
-		
-			if ($xml->invoice_bank_account) {
-				$invoiceAttr = $xml->invoice_bank_account->attributes();
-				$data['account_holder'] = (string)$invoiceAttr->account_holder;
-				$data['account_number'] = (string)$invoiceAttr->account_number;
-				$data['bank_code'] = (string)$invoiceAttr->bank_code;
-				$data['bank_name'] = (string)$invoiceAttr->bank_name;
-				$data['invoice_reference'] = (string)$invoiceAttr->invoice_reference;
-				$data['invoice_duedate'] = (string)$invoiceAttr->invoice_duedate;
-			}
-			break;
-		case 'xmlParser';
-			$data['xml'] = $xml;
-			
-			$data['error_code'] = ipl_core_decode((string)$xml->tagAttrs['error_code']);
-			$data['customer_message'] = ipl_core_decode((string)$xml->tagAttrs['customer_message']);
-			$data['merchant_message'] = ipl_core_decode((string)$xml->tagAttrs['merchant_message']);
-			$data['status'] = ipl_core_decode((string)$xml->tagAttrs['status']);
-			$data['reference'] = ipl_core_decode((string)$xml->tagAttrs['reference']);
-			
-			$data['mid'] = ipl_core_decode((string)$xml->default_params[0]->tagAttrs['mid']);
-			$data['pid'] = ipl_core_decode((string)$xml->default_params[0]->tagAttrs['pid']);
-			$data['bpsecure'] = ipl_core_decode((string)$xml->default_params[0]->tagAttrs['bpsecure']);
-			
-			if (isset($xml->invoice_bank_account)) {
-				$data['account_holder'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_holder']);
-				$data['account_number'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_number']);
-				$data['bank_code'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_code']);
-				$data['bank_name'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_name']);
-				$data['invoice_reference'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_reference']);
-				$data['invoice_duedate'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_duedate']);
-			}
+    $data = array();
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml';
+            $dataAttrs = $xml->data->attributes();
+            $data['error_code'] = (string)$dataAttrs->error_code;
+            $data['customer_message'] = (string)$dataAttrs->customer_message;
+            $data['merchant_message'] = (string)$dataAttrs->merchant_message;
+            $data['status'] = (string)$dataAttrs->status;
+            $data['reference'] = (string)$dataAttrs->reference;
+
+            if ($xml->invoice_bank_account) {
+                $invoiceAttr = $xml->invoice_bank_account->attributes();
+                $data['account_holder'] = (string)$invoiceAttr->account_holder;
+                $data['account_number'] = (string)$invoiceAttr->account_number;
+                $data['bank_code'] = (string)$invoiceAttr->bank_code;
+                $data['bank_name'] = (string)$invoiceAttr->bank_name;
+                $data['invoice_reference'] = (string)$invoiceAttr->invoice_reference;
+                $data['invoice_duedate'] = (string)$invoiceAttr->invoice_duedate;
+            }
+            break;
+        case 'xmlParser';
+            $data['xml'] = $xml;
+
+            $data['error_code'] = ipl_core_decode((string)$xml->tagAttrs['error_code']);
+            $data['customer_message'] = ipl_core_decode((string)$xml->tagAttrs['customer_message']);
+            $data['merchant_message'] = ipl_core_decode((string)$xml->tagAttrs['merchant_message']);
+            $data['status'] = ipl_core_decode((string)$xml->tagAttrs['status']);
+            $data['reference'] = ipl_core_decode((string)$xml->tagAttrs['reference']);
+
+            if (isset($xml->invoice_bank_account)) {
+                $data['account_holder'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_holder']);
+                $data['account_number'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_number']);
+                $data['bank_code'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_code']);
+                $data['bank_name'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_name']);
+                $data['invoice_reference'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_reference']);
+                $data['invoice_duedate'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_duedate']);
+            }
 
             if (isset($xml->hire_purchase[0])) {
                 $data = ipl_core_parse_instalment_information($xml->hire_purchase[0], $data);
             }
 
-			$data = ipl_core_parse_tc_documents($xml, $data);
-			$data = ipl_core_parse_payment_infos($xml, $data);
-			break;
-		
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-	}
+            $data = ipl_core_parse_tc_documents($xml, $data);
+            $data = ipl_core_parse_payment_infos($xml, $data);
+            break;
 
-	return $data;
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+    }
+
+    return $data;
 }
 
-function ipl_core_parse_tc_documents($xml, $data) {
-	if (isset($xml->hire_purchase) &&
-		isset($xml->hire_purchase[0]->pdf)) {
+function ipl_core_parse_tc_documents($xml, $data)
+{
+    if (isset($xml->hire_purchase) &&
+        isset($xml->hire_purchase[0]->pdf)
+    ) {
 
-		if (isset($xml->hire_purchase[0]->pdf[0]->tagChildren[0])) {
-			$data['standard_information_pdf'] = ipl_core_decode((string)$xml->hire_purchase[0]->pdf[0]->tagChildren[0]->tagData);
-		}
+        if (isset($xml->hire_purchase[0]->pdf[0]->tagChildren[0])) {
+            $data['standard_information_pdf'] = ipl_core_decode((string)$xml->hire_purchase[0]->pdf[0]->tagChildren[0]->tagData);
+        }
 
-		if (isset($xml->hire_purchase[0]->pdf[0]->tagChildren[1])) {
-			$data['email_attachment_pdf'] = ipl_core_decode((string)$xml->hire_purchase[0]->pdf[0]->tagChildren[1]->tagData);
-		}
-	}
-	return $data;
+        if (isset($xml->hire_purchase[0]->pdf[0]->tagChildren[1])) {
+            $data['email_attachment_pdf'] = ipl_core_decode((string)$xml->hire_purchase[0]->pdf[0]->tagChildren[1]->tagData);
+        }
+    }
+    return $data;
 }
 
-function ipl_core_parse_payment_infos($xml, $data) {
-	if (isset($xml->payment_info)) {
-		if (isset($xml->payment_info[0]->html)) {
-			$data['payment_info_html'] = ipl_core_decode((string)$xml->payment_info[0]->html[0]->tagData);
-		}
+function ipl_core_parse_payment_infos($xml, $data)
+{
+    if (isset($xml->payment_info)) {
+        if (isset($xml->payment_info[0]->html)) {
+            $data['payment_info_html'] = ipl_core_decode((string)$xml->payment_info[0]->html[0]->tagData);
+        }
 
-		if (isset($xml->payment_info[0]->plain)) {
-			$data['payment_info_plain'] = ipl_core_decode((string)$xml->payment_info[0]->plain[0]->tagData);
-		}
-	}
-	return $data;
+        if (isset($xml->payment_info[0]->plain)) {
+            $data['payment_info_plain'] = ipl_core_decode((string)$xml->payment_info[0]->plain[0]->tagData);
+        }
+    }
+    return $data;
 }
 
 function ipl_core_parse_due_information($xml, $data)
@@ -1263,8 +1060,8 @@ function ipl_core_parse_due_information($xml, $data)
         $dues = array();
         foreach ($duesTag->tagChildren as $dueTag) {
             $dues[] = array(
-                'type'  => (string)$dueTag->tagAttrs['type'],
-                'date'  => (string)$dueTag->tagAttrs['date'],
+                'type' => (string)$dueTag->tagAttrs['type'],
+                'date' => (string)$dueTag->tagAttrs['date'],
                 'value' => (int)$dueTag->tagData
             );
         }
@@ -1280,19 +1077,19 @@ function ipl_core_parse_instalment_information($xml, $data)
     // Transaction Credit
     if (isset($xml->option)) {
         $option = $xml->option[0];
-        $data['instalment_count']   = (int)$option->tagAttrs['ratecount'];
-        $data['duration']           = (int)$option->tagAttrs['term'];
+        $data['instalment_count'] = (int)$option->tagAttrs['ratecount'];
+        $data['duration'] = (int)$option->tagAttrs['term'];
 
         $calculation = $option->calculation[0];
-        $data['base_amount']        = (int)$calculation->base[0]->tagData;
-        $data['cart_amount']        = (int)$calculation->cart[0]->tagData;
-        $data['surcharge']          = (int)$calculation->surcharge[0]->tagData;
-        $data['intermediate']       = (int)$calculation->intermediate[0]->tagData;
-        $data['total_amount']       = (int)$calculation->total[0]->tagData;
-        $data['interest']           = (int)$calculation->interest[0]->tagData;
-        $data['nominal_annual']     = (int)$calculation->anual[0]->tagData;
-        $data['fee_total']          = (int)$calculation->fee[0]->tagData;
-        $data['dues']               = array();
+        $data['base_amount'] = (int)$calculation->base[0]->tagData;
+        $data['cart_amount'] = (int)$calculation->cart[0]->tagData;
+        $data['surcharge'] = (int)$calculation->surcharge[0]->tagData;
+        $data['intermediate'] = (int)$calculation->intermediate[0]->tagData;
+        $data['total_amount'] = (int)$calculation->total[0]->tagData;
+        $data['interest'] = (int)$calculation->interest[0]->tagData;
+        $data['nominal_annual'] = (int)$calculation->anual[0]->tagData;
+        $data['fee_total'] = (int)$calculation->fee[0]->tagData;
+        $data['dues'] = array();
         $data = ipl_core_parse_due_information($option, $data);
     }
 
@@ -1300,22 +1097,22 @@ function ipl_core_parse_instalment_information($xml, $data)
     if (isset($xml->instl_plan)) {
 
         $instalmentPlan = $xml->instl_plan[0];
-        $data['instalment_count']   = (int)$instalmentPlan->tagAttrs['num_inst'];
-        $data['duration']           = (int)$instalmentPlan->calc[0]->duration[0]->tagData;
-        $data['fee_percent']        = (float)$instalmentPlan->calc[0]->fee_percent[0]->tagData;
-        $data['fee_total']          = (int)$instalmentPlan->calc[0]->fee_total[0]->tagData;
+        $data['instalment_count'] = (int)$instalmentPlan->tagAttrs['num_inst'];
+        $data['duration'] = (int)$instalmentPlan->calc[0]->duration[0]->tagData;
+        $data['fee_percent'] = (float)$instalmentPlan->calc[0]->fee_percent[0]->tagData;
+        $data['fee_total'] = (int)$instalmentPlan->calc[0]->fee_total[0]->tagData;
         $data['pre_payment_amount'] = (int)$instalmentPlan->calc[0]->pre_payment[0]->tagData;
-        $data['total_amount']       = (int)$instalmentPlan->calc[0]->total_amount[0]->tagData;
-        $data['effective_annual']   = (float)$instalmentPlan->calc[0]->eff_anual[0]->tagData;
+        $data['total_amount'] = (int)$instalmentPlan->calc[0]->total_amount[0]->tagData;
+        $data['effective_annual'] = (float)$instalmentPlan->calc[0]->eff_anual[0]->tagData;
         // TODO: this should be (int)round(100*float) to be consistent
-        $data['nominal_annual']     = (float)$instalmentPlan->calc[0]->nominal[0]->tagData;
+        $data['nominal_annual'] = (float)$instalmentPlan->calc[0]->nominal[0]->tagData;
         // TODO: response should include surcharge, base_amount and cart_amount to be consistent
 
         // parse the instalment list
         $instalmentList = $instalmentPlan->instl_list[0];
         $instalments = array();
 
-        foreach($instalmentList->instl as $instalment) {
+        foreach ($instalmentList->instl as $instalment) {
             $instalments[] = array(
                 'type' => (string)$instalment->tagAttrs['type'],
                 'date' => (string)$instalment->tagAttrs['date'],
@@ -1329,34 +1126,35 @@ function ipl_core_parse_instalment_information($xml, $data)
     return $data;
 }
 
-function ipl_core_parse_invoice_response($xml) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_invoice_response($xml)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	$data = array();
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml';
-			if ($xml->invoice_bank_account) {
-				$invoiceAttr = $xml->invoice_bank_account->attributes();
-				$data['account_holder'] = (string)$invoiceAttr->account_holder;
-				$data['account_number'] = (string)$invoiceAttr->account_number;
-				$data['bank_code'] = (string)$invoiceAttr->bank_code;
-				$data['bank_name'] = (string)$invoiceAttr->bank_name;
-				$data['invoice_reference'] = (string)$invoiceAttr->invoice_reference;
-				$data['invoice_duedate'] = (string)$invoiceAttr->invoice_duedate;
-				$data['activation_performed'] = (int)$invoiceAttr->activation_performed;
-			}
-			break;
-		case 'xmlParser';
-			if (isset($xml->invoice_bank_account)) {
-				$data['account_holder'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_holder']);
-				$data['account_number'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_number']);
-				$data['bank_code'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_code']);
-				$data['bank_name'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_name']);
-				$data['invoice_reference'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_reference']);
-				$data['invoice_duedate'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_duedate']);
-				$data['activation_performed'] = ipl_core_decode((int)$xml->invoice_bank_account[0]->tagAttrs['activation_performed']);
-			}
+    $data = array();
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml';
+            if ($xml->invoice_bank_account) {
+                $invoiceAttr = $xml->invoice_bank_account->attributes();
+                $data['account_holder'] = (string)$invoiceAttr->account_holder;
+                $data['account_number'] = (string)$invoiceAttr->account_number;
+                $data['bank_code'] = (string)$invoiceAttr->bank_code;
+                $data['bank_name'] = (string)$invoiceAttr->bank_name;
+                $data['invoice_reference'] = (string)$invoiceAttr->invoice_reference;
+                $data['invoice_duedate'] = (string)$invoiceAttr->invoice_duedate;
+                $data['activation_performed'] = (int)$invoiceAttr->activation_performed;
+            }
+            break;
+        case 'xmlParser';
+            if (isset($xml->invoice_bank_account)) {
+                $data['account_holder'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_holder']);
+                $data['account_number'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['account_number']);
+                $data['bank_code'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_code']);
+                $data['bank_name'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['bank_name']);
+                $data['invoice_reference'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_reference']);
+                $data['invoice_duedate'] = ipl_core_decode((string)$xml->invoice_bank_account[0]->tagAttrs['invoice_duedate']);
+                $data['activation_performed'] = ipl_core_decode((int)$xml->invoice_bank_account[0]->tagAttrs['activation_performed']);
+            }
             // Transaction Credit
             if (isset($xml->option[0])) {
                 $data = ipl_core_parse_instalment_information($xml, $data);
@@ -1366,270 +1164,278 @@ function ipl_core_parse_invoice_response($xml) {
                 $data = ipl_core_parse_instalment_information($xml->hire_purchase[0], $data);
             }
             $data = ipl_core_parse_due_information($xml, $data);
-			$data = ipl_core_parse_payment_infos($xml, $data);
-			break;
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-	}
+            $data = ipl_core_parse_payment_infos($xml, $data);
+            break;
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+    }
 
-	return $data;
+    return $data;
 }
 
-function ipl_core_parse_cancel_response($xml) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_cancel_response($xml)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
     # TODO: this function doesn't do anything
 
-	$data = array();
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml';
-			// Nothing to do here
-			break;
-		case 'xmlParser';
-			// Nothing to do here
-			break;
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-	}
+    $data = array();
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml';
+            // Nothing to do here
+            break;
+        case 'xmlParser';
+            // Nothing to do here
+            break;
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+    }
 
-	return $data;
+    return $data;
 }
 
-function ipl_core_parse_get_billpay_bank_data_response($xml) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_get_billpay_bank_data_response($xml)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	$data = array();
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml';
-		if ($xml->invoice_bank_account) {
-				$invoiceAttr = $xml->invoice_bank_account->attributes();
-				$data['account_holder'] = (string)$invoiceAttr->account_holder;
-				$data['account_number'] = (string)$invoiceAttr->account_number;
-				$data['bank_code'] = (string)$invoiceAttr->bank_code;
-				$data['bank_name'] = (string)$invoiceAttr->bank_name;
-				$data['invoice_reference'] = (string)$invoiceAttr->invoice_reference;
-				$data['invoice_duedate'] = (string)$invoiceAttr->invoice_duedate;
-				$data['activation_performed'] = (int)$invoiceAttr->activation_performed;
-			}
-			break;
-		case 'xmlParser';
-			if (isset($xml->bank_account)) {
-				$data['account_holder'] = ipl_core_decode((string)$xml->bank_account [0]->tagAttrs['account_holder']);
-				$data['account_number'] = ipl_core_decode((string)$xml->bank_account [0]->tagAttrs['account_number']);
-				$data['bank_code'] = ipl_core_decode((string)$xml->bank_account [0]->tagAttrs['bank_code']);
-				$data['bank_name'] = ipl_core_decode((string)$xml->bank_account [0]->tagAttrs['bank_name']);
-				$data['invoice_reference'] = ipl_core_decode((string)$xml->bank_account [0]->tagAttrs['invoice_reference']);
-				if(isset($xml->bank_account [0]->tagAttrs['invoice_duedate'])) {
-					$data['invoice_duedate'] = ipl_core_decode((string)$xml->bank_account [0]->tagAttrs['invoice_duedate']);
-				}
-			}
+    $data = array();
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml';
+            if ($xml->invoice_bank_account) {
+                $invoiceAttr = $xml->invoice_bank_account->attributes();
+                $data['account_holder'] = (string)$invoiceAttr->account_holder;
+                $data['account_number'] = (string)$invoiceAttr->account_number;
+                $data['bank_code'] = (string)$invoiceAttr->bank_code;
+                $data['bank_name'] = (string)$invoiceAttr->bank_name;
+                $data['invoice_reference'] = (string)$invoiceAttr->invoice_reference;
+                $data['invoice_duedate'] = (string)$invoiceAttr->invoice_duedate;
+                $data['activation_performed'] = (int)$invoiceAttr->activation_performed;
+            }
+            break;
+        case 'xmlParser';
+            if (isset($xml->bank_account)) {
+                $data['account_holder'] = ipl_core_decode((string)$xml->bank_account [0]->tagAttrs['account_holder']);
+                $data['account_number'] = ipl_core_decode((string)$xml->bank_account [0]->tagAttrs['account_number']);
+                $data['bank_code'] = ipl_core_decode((string)$xml->bank_account [0]->tagAttrs['bank_code']);
+                $data['bank_name'] = ipl_core_decode((string)$xml->bank_account [0]->tagAttrs['bank_name']);
+                $data['invoice_reference'] = ipl_core_decode((string)$xml->bank_account [0]->tagAttrs['invoice_reference']);
+                if (isset($xml->bank_account [0]->tagAttrs['invoice_duedate'])) {
+                    $data['invoice_duedate'] = ipl_core_decode((string)$xml->bank_account [0]->tagAttrs['invoice_duedate']);
+                }
+            }
 
-			$data = ipl_core_parse_payment_infos($xml, $data);
+            $data = ipl_core_parse_payment_infos($xml, $data);
 
-			break;
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-	}
+            break;
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+    }
 
-	return $data;
+    return $data;
 }
 
-function ipl_core_parse_partialcancel_response($xml) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_partialcancel_response($xml)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	$data = array();
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml';
-			// Nothing to do here
-			// TODO: transaction credit
-			break;
-		case 'xmlParser';
-			if (isset($xml->due_update)) {
-				$res = ipl_core_parse_transaction_credit_option($xml->due_update[0]);
-				$data['due_update'] = $res['value'];
-				$data['number_of_rates'] = $res['key'];
-			}
+    $data = array();
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml';
+            // Nothing to do here
+            // TODO: transaction credit
+            break;
+        case 'xmlParser';
+            if (isset($xml->due_update)) {
+                $res = ipl_core_parse_transaction_credit_option($xml->due_update[0]);
+                $data['due_update'] = $res['value'];
+                $data['number_of_rates'] = $res['key'];
+            }
 
-			break;
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-	}
+            break;
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+    }
 
-	return $data;
+    return $data;
 }
 
-function ipl_core_parse_edit_cart_content_response($xml) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_edit_cart_content_response($xml)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	$data = array();
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml';
-			// Nothing to do here
-			// TODO: transaction credit
-			break;
-		case 'xmlParser';
-			if (isset($xml->due_update)) {
-				$res = ipl_core_parse_transaction_credit_option($xml->due_update[0]);
-				$data['due_update'] = $res['value'];
-				$data['number_of_rates'] = $res['key'];
-			}
+    $data = array();
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml';
+            // Nothing to do here
+            // TODO: transaction credit
+            break;
+        case 'xmlParser';
+            if (isset($xml->due_update)) {
+                $res = ipl_core_parse_transaction_credit_option($xml->due_update[0]);
+                $data['due_update'] = $res['value'];
+                $data['number_of_rates'] = $res['key'];
+            }
             if (isset($xml->hire_purchase[0])) {
                 $data = ipl_core_parse_instalment_information($xml->hire_purchase[0], $data);
             }
-			break;
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-	}
+            break;
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+    }
 
-	return $data;
+    return $data;
 }
 
-function ipl_core_parse_update_order_response($xml) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_update_order_response($xml)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
     # TODO: this function doesn't do anything
 
-	$data = array();
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml';
-			// Nothing to do here
-			break;
-		case 'xmlParser';
-			// Nothing to do here
-			break;
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-	}
+    $data = array();
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml';
+            // Nothing to do here
+            break;
+        case 'xmlParser';
+            // Nothing to do here
+            break;
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+    }
 
-	return $data;
+    return $data;
 }
 
-function ipl_core_parse_calculate_rates_response($xml) {
-	global $ipl_core_error_code;
-	global $ipl_core_error_msg;
+function ipl_core_parse_calculate_rates_response($xml)
+{
+    global $ipl_core_error_code;
+    global $ipl_core_error_msg;
 
-	$options = array();
-	switch (IPL_CORE_XML_PARSER) {
-		case 'simpleXml';
-			if ($xml->option) {
+    $options = array();
+    switch (IPL_CORE_XML_PARSER) {
+        case 'simpleXml';
+            if ($xml->option) {
 
-				foreach ($xml->option as $optionTag) {
-					$option = array();
+                foreach ($xml->option as $optionTag) {
+                    $option = array();
 
-					if ($optionTag->calculation) {
+                    if ($optionTag->calculation) {
                         $calcTag = $optionTag->calculation;
 
-						$calculation = array();
-						foreach ($calcTag->children() as $calcChildTag) {
-							$name = $calcChildTag->getName();
-							$value = (string)$calcChildTag;
+                        $calculation = array();
+                        foreach ($calcTag->children() as $calcChildTag) {
+                            $name = $calcChildTag->getName();
+                            $value = (string)$calcChildTag;
                             $calculation[$name] = $value;
-						}
+                        }
 
-						$option['calculation'] = $calculation;
-					}
+                        $option['calculation'] = $calculation;
+                    }
 
-					if ($optionTag->dues) {
-						$duesTag = $optionTag->dues;
+                    if ($optionTag->dues) {
+                        $duesTag = $optionTag->dues;
 
-						$dues = array();
-						foreach ($duesTag->children() as $dueTag) {
-							$dues[] = array(
-								'type'  => (string)$dueTag['type'],
-								'value' => (int)$dueTag
-							);
-						}
+                        $dues = array();
+                        foreach ($duesTag->children() as $dueTag) {
+                            $dues[] = array(
+                                'type' => (string)$dueTag['type'],
+                                'value' => (int)$dueTag
+                            );
+                        }
 
-						$option['dues'] = $dues;
-					}
+                        $option['dues'] = $dues;
+                    }
 
-					$term = (int)$optionTag['term'];
-					$options[$term] = $option;
-				}
-			}
+                    $term = (int)$optionTag['term'];
+                    $options[$term] = $option;
+                }
+            }
 
-			break;
-		case 'xmlParser';
-			if (isset($xml->option)) {
-				foreach ($xml->option as $optionTag) {
-					$res = ipl_core_parse_transaction_credit_option($optionTag);
-					$options[$res['key']] = $res['value'];
-				}
-			}
-			break;
-		default:
-			$ipl_core_error_code = 9;
-			$ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
-			return false;
-	}
+            break;
+        case 'xmlParser';
+            if (isset($xml->option)) {
+                foreach ($xml->option as $optionTag) {
+                    $res = ipl_core_parse_transaction_credit_option($optionTag);
+                    $options[$res['key']] = $res['value'];
+                }
+            }
+            break;
+        default:
+            $ipl_core_error_code = 9;
+            $ipl_core_error_msg = 'Unknown XML parser lib: ' . IPL_CORE_XML_PARSER;
+            return false;
+    }
 
-	$data = array('options' => $options);
+    $data = array('options' => $options);
 
-	return $data;
+    return $data;
 }
 
-function ipl_core_parse_transaction_credit_option($optionTag) {
-	$option = array();
+function ipl_core_parse_transaction_credit_option($optionTag)
+{
+    $option = array();
 
-	if (isset($optionTag->calculation)) {
-		$calcTag = $optionTag->calculation[0];
+    if (isset($optionTag->calculation)) {
+        $calcTag = $optionTag->calculation[0];
 
-		$calculation = array();
-		foreach ($calcTag->tagChildren as $calcChildTag) {
-			$name = $calcChildTag->tagName;
-			$value = $calcChildTag->tagData;
-			$calculation[$name] = $value;
-		}
+        $calculation = array();
+        foreach ($calcTag->tagChildren as $calcChildTag) {
+            $name = $calcChildTag->tagName;
+            $value = $calcChildTag->tagData;
+            $calculation[$name] = $value;
+        }
 
-		$option['calculation'] = $calculation;
-	}
+        $option['calculation'] = $calculation;
+    }
 
-	if (isset($optionTag->dues)) {
-		$duesTag = $optionTag->dues[0];
+    if (isset($optionTag->dues)) {
+        $duesTag = $optionTag->dues[0];
 
-		$dues = array();
-		foreach ($duesTag->tagChildren as $dueTag) {
-			$dues[] = array(
-				'type'  => (string)$dueTag->tagAttrs['type'],
-				'date'  => (string)$dueTag->tagAttrs['date'],
-				'value' => (int)$dueTag->tagData
-			);
-		}
+        $dues = array();
+        foreach ($duesTag->tagChildren as $dueTag) {
+            $dues[] = array(
+                'type' => (string)$dueTag->tagAttrs['type'],
+                'date' => (string)$dueTag->tagAttrs['date'],
+                'value' => (int)$dueTag->tagData
+            );
+        }
 
-		$option['dues'] = $dues;
-	}
+        $option['dues'] = $dues;
+    }
 
-	$term = (int)$optionTag->tagAttrs['term'];
-	$option['rateCount'] = (int)$optionTag->tagAttrs['ratecount'];
-	return array('key' => $term, 'value' => $option);
+    $term = (int)$optionTag->tagAttrs['term'];
+    $option['rateCount'] = (int)$optionTag->tagAttrs['ratecount'];
+    return array('key' => $term, 'value' => $option);
 }
 
 
 // SEND AND PARSE API CALLS
-function ipl_core_send_module_config_request($requestUrlBase, $aTraceData, $defaultParams, $locale) {
+function ipl_core_send_module_config_request($requestUrlBase, $aTraceData, $defaultParams, $locale)
+{
 
-    $sTraceDataXml    = ipl_core_build_closed_tag('trace', $aTraceData);
-	$defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
-	$localeXml = ipl_core_build_closed_tag('locale', $locale);
+    $sTraceDataXml = ipl_core_build_closed_tag('trace', $aTraceData);
+    $defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
+    $localeXml = ipl_core_build_closed_tag('locale', $locale);
 
-	return ipl_core_generic_send_request(
+    return ipl_core_generic_send_request(
         $requestUrlBase,
         'moduleConfig',
         array(),
@@ -1643,102 +1449,145 @@ function ipl_core_send_module_config_request($requestUrlBase, $aTraceData, $defa
 }
 
 function ipl_core_send_preauthorize_request($requestUrlBase, $attributes, $aTraceData, $defaultParams, $preauthParams,
-    $customerDetails, $shippingDetails, $bankAccount, $totals, $articleData, $orderHistoryData, $orderHistoryDataContent,
-    $rateRequestData, $companyDetails, $paymentInfoParams, $fraudDetectionParams, $asyncCaptureParams
-) {
-    $sTraceDataXml              = ipl_core_build_closed_tag('trace', $aTraceData);
-	$defaultParamsXml 			= ipl_core_build_closed_tag("default_params", $defaultParams);
-	$preauthParamsXml 		    = ipl_core_build_closed_tag("preauth_params", $preauthParams);
-	$customerDetailsXml 		= ipl_core_build_closed_tag("customer_details", $customerDetails);
-	$shippingDetailsXml 		= ipl_core_build_closed_tag("shipping_details", $shippingDetails);
-	$bankAccountXml				= ipl_core_build_closed_tag("bank_account", $bankAccount);
-	$totalsXml 					= ipl_core_build_closed_tag("total", $totals);
-	$rateRequestXml				= ipl_core_build_closed_tag("rate_request", $rateRequestData);
-	$companyDetailsXml			= ipl_core_build_closed_tag("company_details", $companyDetails);
-	$articleDataXml 			= ipl_core_build_list_tag("article_data", "article", $articleData);
-    $historyDataXml             = ipl_core_build_attr_list_tag(
+                                            $customerDetails, $shippingDetails, $bankAccount, $totals, $articleData, $orderHistoryData, $orderHistoryDataContent,
+                                            $rateRequestData, $companyDetails, $paymentInfoParams, $fraudDetectionParams, $asyncCaptureParams, $travelData
+)
+{
+    $sTraceDataXml = ipl_core_build_closed_tag('trace', $aTraceData);
+    $defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
+    $preauthParamsXml = ipl_core_build_closed_tag("preauth_params", $preauthParams);
+    $customerDetailsXml = ipl_core_build_closed_tag("customer_details", $customerDetails);
+    $shippingDetailsXml = ipl_core_build_closed_tag("shipping_details", $shippingDetails);
+    $bankAccountXml = ipl_core_build_closed_tag("bank_account", $bankAccount);
+    $totalsXml = ipl_core_build_closed_tag("total", $totals);
+    $rateRequestXml = ipl_core_build_closed_tag("rate_request", $rateRequestData);
+    $companyDetailsXml = ipl_core_build_closed_tag("company_details", $companyDetails);
+
+    $parentNode = new SimpleXMLElement('<article_data></article_data>');
+    $articleDataXml = ipl_core_build_xml_from_array(
+        $parentNode,
+        $parentNode,
+        array('article' => $articleData)
+    )->asXML();
+    $articleDataXml = preg_replace('~^<\?xml version="1.0"\?>\s*(.*)\s*$~', '$1', $articleDataXml);
+
+    $historyDataXml = ipl_core_build_attr_list_tag(
         'order_history_data',
         $orderHistoryData,
         'order_history',
         $orderHistoryDataContent
     );
-	$paymentInfoXml 			= ipl_core_build_closed_tag("payment_info", $paymentInfoParams);
-	$fraudDetectionXml			= ipl_core_build_closed_tag("fraud_detection", $fraudDetectionParams);
-	$asyncCaptureXml			= ipl_core_build_list_ctag("async_capture_request", $asyncCaptureParams);
+    $paymentInfoXml = ipl_core_build_closed_tag("payment_info", $paymentInfoParams);
+    $fraudDetectionXml = ipl_core_build_closed_tag("fraud_detection", $fraudDetectionParams);
+    $asyncCaptureXml = ipl_core_build_list_ctag("async_capture_request", $asyncCaptureParams);
 
-	return ipl_core_generic_send_request(
-		$requestUrlBase,
-		'preauthorize',
-		$attributes,
-		array(
+    $travelDataXml = "";
+    $parentNode = new SimpleXMLElement('<trip_data></trip_data>');
+    if (empty($travelData) === false) {
+        $travelDataXml = ipl_core_build_xml_from_array(
+            $parentNode,
+            $parentNode,
+            $travelData
+        )->asXML();
+        $travelDataXml = preg_replace('~^<\?xml version="1.0"\?>\s*(.*)\s*$~', '$1', $travelDataXml);
+    }
+
+    return ipl_core_generic_send_request(
+        $requestUrlBase,
+        'preauthorize',
+        $attributes,
+        array(
             $sTraceDataXml,
-			$defaultParamsXml,
-		    $preauthParamsXml,
-			$customerDetailsXml,
-			$shippingDetailsXml,
-			$rateRequestXml,
-			$bankAccountXml,
-			$companyDetailsXml,
-			$totalsXml,
-			$articleDataXml,
-			$historyDataXml,
-			$paymentInfoXml,
-			$fraudDetectionXml,
-			$asyncCaptureXml
-		),
-		'ipl_core_parse_preauthorize_response'
-	);
+            $defaultParamsXml,
+            $preauthParamsXml,
+            $customerDetailsXml,
+            $shippingDetailsXml,
+            $rateRequestXml,
+            $bankAccountXml,
+            $companyDetailsXml,
+            $totalsXml,
+            $articleDataXml,
+            $historyDataXml,
+            $paymentInfoXml,
+            $fraudDetectionXml,
+            $asyncCaptureXml,
+            $travelDataXml
+        ),
+        'ipl_core_parse_preauthorize_response'
+    );
 }
 
 function ipl_core_send_prescore_request($requestUrlBase, $attributes, $aTraceData, $defaultParams, $customerDetails,
-        $shippingDetails, $totals, $articleData, $orderHistoryData, $orderHistoryDataContent,
-        $companyDetails, $paymentInfoParams, $fraudDetectionParams
-) {
-    $sTraceDataXml              = ipl_core_build_closed_tag('trace', $aTraceData);
-    $defaultParamsXml 			= ipl_core_build_closed_tag("default_params", $defaultParams);
-    $customerDetailsXml 		= ipl_core_build_closed_tag("customer_details", $customerDetails);
-    $shippingDetailsXml 		= ipl_core_build_closed_tag("shipping_details", $shippingDetails);
-    $totalsXml 					= ipl_core_build_closed_tag("total", $totals);
-    $companyDetailsXml			= ipl_core_build_closed_tag("company_details", $companyDetails);
-    $articleDataXml 			= ipl_core_build_list_tag("article_data", "article", $articleData);
-    $historyDataXml             = ipl_core_build_attr_list_tag(
+                                        $shippingDetails, $totals, $articleData, $orderHistoryData, $orderHistoryDataContent,
+                                        $companyDetails, $paymentInfoParams, $fraudDetectionParams, $travelData
+)
+{
+    $sTraceDataXml = ipl_core_build_closed_tag('trace', $aTraceData);
+    $defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
+    $customerDetailsXml = ipl_core_build_closed_tag("customer_details", $customerDetails);
+    $shippingDetailsXml = ipl_core_build_closed_tag("shipping_details", $shippingDetails);
+    $totalsXml = ipl_core_build_closed_tag("total", $totals);
+    $companyDetailsXml = ipl_core_build_closed_tag("company_details", $companyDetails);
+
+    $parentNode = new SimpleXMLElement('<article_data></article_data>');
+    $articleDataXml = ipl_core_build_xml_from_array(
+        $parentNode,
+        $parentNode,
+        array('article' => $articleData)
+    )->asXML();
+    $articleDataXml = preg_replace('~^<\?xml version="1.0"\?>\s*(.*)\s*$~', '$1', $articleDataXml);
+
+    $historyDataXml = ipl_core_build_attr_list_tag(
         'order_history_data',
         $orderHistoryData,
         'order_history',
         $orderHistoryDataContent
     );
-    $paymentInfoXml 			= ipl_core_build_closed_tag("payment_info", $paymentInfoParams);
-    $fraudDetectionXml			= ipl_core_build_closed_tag("fraud_detection", $fraudDetectionParams);
+    $paymentInfoXml = ipl_core_build_closed_tag("payment_info", $paymentInfoParams);
+    $fraudDetectionXml = ipl_core_build_closed_tag("fraud_detection", $fraudDetectionParams);
+
+    $travelDataXml = "";
+    $parentNode = new SimpleXMLElement('<trip_data></trip_data>');
+    if (empty($travelData) === false) {
+        $travelDataXml = ipl_core_build_xml_from_array(
+            $parentNode,
+            $parentNode,
+            $travelData
+        )->asXML();
+        $travelDataXml = preg_replace('~^<\?xml version="1.0"\?>\s*(.*)\s*$~', '$1', $travelDataXml);
+    }
 
     return ipl_core_generic_send_request(
-            $requestUrlBase,
-            'prescore',
-            $attributes,
-            array(
-                    $sTraceDataXml,
-                    $defaultParamsXml,
-                    $customerDetailsXml,
-                    $shippingDetailsXml,
-                    $companyDetailsXml,
-                    $totalsXml,
-                    $articleDataXml,
-                    $historyDataXml,
-                    $paymentInfoXml,
-                    $fraudDetectionXml
-            ),
-            'ipl_core_parse_prescore_response'
+        $requestUrlBase,
+        'prescore',
+        $attributes,
+        array(
+            $sTraceDataXml,
+            $defaultParamsXml,
+            $customerDetailsXml,
+            $shippingDetailsXml,
+            $companyDetailsXml,
+            $totalsXml,
+            $articleDataXml,
+            $historyDataXml,
+            $paymentInfoXml,
+            $fraudDetectionXml,
+            $travelDataXml
+        ),
+        'ipl_core_parse_prescore_response'
     );
 }
 
 function ipl_core_send_validation_request($requestUrlBase, $aTraceData, $defaultParams, $customerDetails,
-        $shipppingDetails
-) {
-    $sTraceDataXml              = ipl_core_build_closed_tag('trace', $aTraceData);
-	$defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
-	$customerDetaisXml = ipl_core_build_closed_tag("customer_details", $customerDetails);
-	$shippingDetailsXml = ipl_core_build_closed_tag("shipping_details", $shipppingDetails);
+                                          $shipppingDetails
+)
+{
+    $sTraceDataXml = ipl_core_build_closed_tag('trace', $aTraceData);
+    $defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
+    $customerDetaisXml = ipl_core_build_closed_tag("customer_details", $customerDetails);
+    $shippingDetailsXml = ipl_core_build_closed_tag("shipping_details", $shipppingDetails);
 
-	return ipl_core_generic_send_request(
+    return ipl_core_generic_send_request(
         $requestUrlBase,
         'validate',
         array(),
@@ -1752,13 +1601,14 @@ function ipl_core_send_validation_request($requestUrlBase, $aTraceData, $default
     );
 }
 
-function ipl_core_send_capture_request($requestUrlBase, $aTraceData, $defaultParams, $captureParams, $paymentInfoParams) {
-    $sTraceDataXml    = ipl_core_build_closed_tag('trace', $aTraceData);
-	$defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
-	$captureParamsXml = ipl_core_build_closed_tag("capture_params", $captureParams);
-	$paymentInfoParamsXml 	= ipl_core_build_closed_tag("payment_info", $paymentInfoParams);
+function ipl_core_send_capture_request($requestUrlBase, $aTraceData, $defaultParams, $captureParams, $paymentInfoParams)
+{
+    $sTraceDataXml = ipl_core_build_closed_tag('trace', $aTraceData);
+    $defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
+    $captureParamsXml = ipl_core_build_closed_tag("capture_params", $captureParams);
+    $paymentInfoParamsXml = ipl_core_build_closed_tag("payment_info", $paymentInfoParams);
 
-	return ipl_core_generic_send_request(
+    return ipl_core_generic_send_request(
         $requestUrlBase,
         'capture',
         array(),
@@ -1773,16 +1623,17 @@ function ipl_core_send_capture_request($requestUrlBase, $aTraceData, $defaultPar
 }
 
 function ipl_core_send_invoice_request($requestUrlBase, $aTraceData, $defaultParams, $invoiceParams, $paymentInfoParams,
-        $articleData = null) {
+                                       $articleData = null)
+{
 
-    $sTraceDataXml          = ipl_core_build_closed_tag('trace', $aTraceData);
-	$defaultParamsXml 		= ipl_core_build_closed_tag("default_params", $defaultParams);
-	$invoiceParamsXml 		= ipl_core_build_closed_tag("invoice_params", $invoiceParams);
-	$paymentInfoParamsXml 	= ipl_core_build_closed_tag("payment_info", $paymentInfoParams);
+    $sTraceDataXml = ipl_core_build_closed_tag('trace', $aTraceData);
+    $defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
+    $invoiceParamsXml = ipl_core_build_closed_tag("invoice_params", $invoiceParams);
+    $paymentInfoParamsXml = ipl_core_build_closed_tag("payment_info", $paymentInfoParams);
 
-	if($articleData != null && is_array($articleData)) {
-	    $articleDataXml = ipl_core_build_list_tag("article_data", "article", $articleData);
-	    return ipl_core_generic_send_request(
+    if ($articleData != null && is_array($articleData)) {
+        $articleDataXml = ipl_core_build_list_tag("article_data", "article", $articleData);
+        return ipl_core_generic_send_request(
             $requestUrlBase,
             'invoiceCreated',
             array(),
@@ -1796,8 +1647,8 @@ function ipl_core_send_invoice_request($requestUrlBase, $aTraceData, $defaultPar
             'ipl_core_parse_invoice_response'
         );
 
-	} else {
-	    return ipl_core_generic_send_request(
+    } else {
+        return ipl_core_generic_send_request(
             $requestUrlBase,
             'invoiceCreated',
             array(),
@@ -1809,17 +1660,18 @@ function ipl_core_send_invoice_request($requestUrlBase, $aTraceData, $defaultPar
             ),
             'ipl_core_parse_invoice_response'
         );
-	}
+    }
 }
 
-function ipl_core_send_update_order_request($requestUrlBase, $aTraceData, $defaultParams, $updateParams, $idUpdateList) {
+function ipl_core_send_update_order_request($requestUrlBase, $aTraceData, $defaultParams, $updateParams, $idUpdateList)
+{
 
-    $sTraceDataXml     = ipl_core_build_closed_tag('trace', $aTraceData);
-	$defaultParamsXml  = ipl_core_build_closed_tag("default_params", $defaultParams);
-	$udpateParamsXml   = ipl_core_build_closed_tag("update_params", $updateParams);
-	$idUpdateDataXml   = ipl_core_build_list_tag("id_update_list", "id_update", $idUpdateList);
+    $sTraceDataXml = ipl_core_build_closed_tag('trace', $aTraceData);
+    $defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
+    $udpateParamsXml = ipl_core_build_closed_tag("update_params", $updateParams);
+    $idUpdateDataXml = ipl_core_build_list_tag("id_update_list", "id_update", $idUpdateList);
 
-	return ipl_core_generic_send_request(
+    return ipl_core_generic_send_request(
         $requestUrlBase,
         'updateOrder',
         array(),
@@ -1833,13 +1685,14 @@ function ipl_core_send_update_order_request($requestUrlBase, $aTraceData, $defau
     );
 }
 
-function ipl_core_send_cancel_request($requestUrlBase, $aTraceData, $defaultParams, $cancelParams) {
+function ipl_core_send_cancel_request($requestUrlBase, $aTraceData, $defaultParams, $cancelParams)
+{
 
-    $sTraceDataXml    = ipl_core_build_closed_tag('trace', $aTraceData);
-	$defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
-	$cancelParamsXml  = ipl_core_build_closed_tag("cancel_params", $cancelParams);
+    $sTraceDataXml = ipl_core_build_closed_tag('trace', $aTraceData);
+    $defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
+    $cancelParamsXml = ipl_core_build_closed_tag("cancel_params", $cancelParams);
 
-	return ipl_core_generic_send_request(
+    return ipl_core_generic_send_request(
         $requestUrlBase,
         'cancel',
         array(),
@@ -1852,13 +1705,14 @@ function ipl_core_send_cancel_request($requestUrlBase, $aTraceData, $defaultPara
     );
 }
 
-function ipl_core_send_get_billpay_bank_data_request($requestUrlBase, $aTraceData, $defaultParams, $order_params) {
+function ipl_core_send_get_billpay_bank_data_request($requestUrlBase, $aTraceData, $defaultParams, $order_params)
+{
 
-    $sTraceDataXml    = ipl_core_build_closed_tag('trace', $aTraceData);
-	$defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
-	$getBillPayBankDataParamsXml = ipl_core_build_closed_tag("order_params", $order_params);
+    $sTraceDataXml = ipl_core_build_closed_tag('trace', $aTraceData);
+    $defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
+    $getBillPayBankDataParamsXml = ipl_core_build_closed_tag("order_params", $order_params);
 
-	return ipl_core_generic_send_request(
+    return ipl_core_generic_send_request(
         $requestUrlBase,
         'getBillPayBankData',
         array(),
@@ -1872,14 +1726,15 @@ function ipl_core_send_get_billpay_bank_data_request($requestUrlBase, $aTraceDat
 }
 
 function ipl_core_send_partialcancel_request($requestUrlBase, $aTraceData, $defaultParams, $cancelParams,
-        $cancelledArticles
-) {
-    $sTraceDataXml    = ipl_core_build_closed_tag('trace', $aTraceData);
-	$defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
-	$cancelParamsXml = ipl_core_build_closed_tag("cancel_params", $cancelParams);
-	$cancelledArticlesXml = ipl_core_build_list_tag("canceled_articles", "article", $cancelledArticles);
+                                             $cancelledArticles
+)
+{
+    $sTraceDataXml = ipl_core_build_closed_tag('trace', $aTraceData);
+    $defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
+    $cancelParamsXml = ipl_core_build_closed_tag("cancel_params", $cancelParams);
+    $cancelledArticlesXml = ipl_core_build_list_tag("canceled_articles", "article", $cancelledArticles);
 
-	return ipl_core_generic_send_request(
+    return ipl_core_generic_send_request(
         $requestUrlBase,
         'partialcancel',
         array(),
@@ -1893,14 +1748,15 @@ function ipl_core_send_partialcancel_request($requestUrlBase, $aTraceData, $defa
     );
 }
 
-function ipl_core_send_calculate_rates_request($requestUrlBase, $aTraceData, $defaultParams, $rateParams, $locale) {
+function ipl_core_send_calculate_rates_request($requestUrlBase, $aTraceData, $defaultParams, $rateParams, $locale)
+{
 
-    $sTraceDataXml    = ipl_core_build_closed_tag('trace', $aTraceData);
-	$defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
-	$rateParamsXml = ipl_core_build_closed_tag("rate_params", $rateParams);
-	$localeXml = ipl_core_build_closed_tag('locale', $locale);
+    $sTraceDataXml = ipl_core_build_closed_tag('trace', $aTraceData);
+    $defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
+    $rateParamsXml = ipl_core_build_closed_tag("rate_params", $rateParams);
+    $localeXml = ipl_core_build_closed_tag('locale', $locale);
 
-	return ipl_core_generic_send_request(
+    return ipl_core_generic_send_request(
         $requestUrlBase,
         'calculateRates',
         array(),
@@ -1915,18 +1771,18 @@ function ipl_core_send_calculate_rates_request($requestUrlBase, $aTraceData, $de
 }
 
 function ipl_core_send_edit_cart_content_request($requestUrlBase, $aTraceData, $defaultParams, $totals, $articleData,
-        $invoiceList = null
-) {
-    $sTraceDataXml    = ipl_core_build_closed_tag('trace', $aTraceData);
-	$defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
-	$totalsXml = ipl_core_build_closed_tag("total", $totals);
-	$articleDataXml = ipl_core_build_list_tag("article_data", "article", $articleData);
+                                                 $invoiceList = null
+)
+{
+    $sTraceDataXml = ipl_core_build_closed_tag('trace', $aTraceData);
+    $defaultParamsXml = ipl_core_build_closed_tag("default_params", $defaultParams);
+    $totalsXml = ipl_core_build_closed_tag("total", $totals);
+    $articleDataXml = ipl_core_build_list_tag("article_data", "article", $articleData);
 
-	if ($invoiceList != null && is_array($invoiceList)) {
+    if ($invoiceList != null && is_array($invoiceList)) {
         $invoiceListXml = ipl_core_build_open_tag("invoice_list");
-        foreach($invoiceList as $key => $invoice)
-        {
-            $articleInvoiceDataXml 			= ipl_core_build_list_tag("article_data", "article", $invoice['article_data']);
+        foreach ($invoiceList as $key => $invoice) {
+            $articleInvoiceDataXml = ipl_core_build_list_tag("article_data", "article", $invoice['article_data']);
             unset($invoice['article_data']);
             $invoiceParamsXml = ipl_core_build_closed_tag("invoice_params", $invoice);
 
@@ -1935,11 +1791,11 @@ function ipl_core_send_edit_cart_content_request($requestUrlBase, $aTraceData, $
             $invoiceXml = ipl_core_build_open_tag("invoice", $invoice_tag_atr);
             $invoiceXml = ipl_core_add_body($invoiceXml, $invoiceParamsXml);
             $invoiceXml = ipl_core_add_body($invoiceXml, $articleInvoiceDataXml);
-            $invoiceXml = ipl_core_build_close_tag('invoice',$invoiceXml);
+            $invoiceXml = ipl_core_build_close_tag('invoice', $invoiceXml);
 
             $invoiceListXml = ipl_core_add_body($invoiceListXml, $invoiceXml);
         }
-        $invoiceListXml = ipl_core_build_close_tag('invoice_list',$invoiceListXml);
+        $invoiceListXml = ipl_core_build_close_tag('invoice_list', $invoiceListXml);
         return ipl_core_generic_send_request(
             $requestUrlBase,
             'editCartContent',
@@ -1954,7 +1810,7 @@ function ipl_core_send_edit_cart_content_request($requestUrlBase, $aTraceData, $
             'ipl_core_parse_edit_cart_content_response'
         );
 
-	} else {
+    } else {
         return ipl_core_generic_send_request(
             $requestUrlBase,
             'editCartContent',
@@ -1967,55 +1823,53 @@ function ipl_core_send_edit_cart_content_request($requestUrlBase, $aTraceData, $
             ),
             'ipl_core_parse_edit_cart_content_response'
         );
-	}
+    }
 }
 
 
-function ipl_core_generic_send_request($requestUrlBase, $requestUrlSuffix, $attributes, $xmlData, $parseFunction) 
+function ipl_core_generic_send_request($requestUrlBase, $requestUrlSuffix, $attributes, $xmlData, $parseFunction)
 {
     global $ipl_core_error_code;
     global $ipl_core_error_msg;
-    
-	ipl_core_reset_error_codes();
 
-	$requestUrl = ipl_core_append_slash($requestUrlBase) . $requestUrlSuffix;
-	$requestXml = ipl_core_build_request_xml($attributes, $xmlData);
+    ipl_core_reset_error_codes();
 
-	// send the request
-	$res = ipl_core_send($requestUrl, $requestXml);
+    $requestUrl = ipl_core_append_slash($requestUrlBase) . $requestUrlSuffix;
+    $requestXml = ipl_core_build_request_xml($attributes, $xmlData);
 
-	if ($res) {
+    // send the request
+    $res = ipl_core_send($requestUrl, $requestXml);
 
-		// parse the response
-		if (function_exists($parseFunction)) {
-			$data = $parseFunction($res[1]);
-		}
-		else {
-			$ipl_core_error_code = 14;
-			$ipl_core_error_msg = "Parse function not found ($parseFunction)";
-			return false;
-		}
+    if ($res) {
 
-		return array($requestXml, $res[0], $data);
-	}
-	else {
-		return false;
-	}
+        // parse the response
+        if (function_exists($parseFunction)) {
+            $data = $parseFunction($res[1]);
+        } else {
+            $ipl_core_error_code = 14;
+            $ipl_core_error_msg = "Parse function not found ($parseFunction)";
+            return false;
+        }
+
+        return array($requestXml, $res[0], $data);
+    } else {
+        return false;
+    }
 }
 
 /**
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published
-    by the Free Software Foundation; either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    For Support, please visit http://www.criticaldevelopment.net/xml/
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * For Support, please visit http://www.criticaldevelopment.net/xml/
+ */
 
 /**
  * XML Parser Class (php4)
@@ -2037,24 +1891,24 @@ class XMLParser
     var $parser;
 
     /**
-    * The XML document
-    *
-    * @var string
-    */
+     * The XML document
+     *
+     * @var string
+     */
     var $xml;
 
     /**
-    * Document tag
-    *
-    * @var object
-    */
+     * Document tag
+     *
+     * @var object
+     */
     var $document;
 
     /**
-    * Current object depth
-    *
-    * @var array
-    */
+     * Current object depth
+     *
+     * @var array
+     */
     var $stack;
     /**
      * Whether or not to replace dashes and colons in tag
@@ -2074,7 +1928,7 @@ class XMLParser
      * @param string $xml
      * @param bool $cleanTagNames
      */
-    function XMLParser($xml = '', $cleanTagNames = true)
+    function __construct($xml = '', $cleanTagNames = true)
     {
         //Load XML document
         $this->xml = $xml;
@@ -2112,7 +1966,7 @@ class XMLParser
 
     function getError()
     {
-    	return $this->error;
+        return $this->error;
     }
 
     /**
@@ -2124,7 +1978,7 @@ class XMLParser
      */
     function HandleError($code, $line, $col)
     {
-    	$this->error = 'XML Parsing Error at '.$line.':'.$col.'. Error '.$code.': '.xml_error_string($code);
+        $this->error = 'XML Parsing Error at ' . $line . ':' . $col . '. Error ' . $code . ': ' . xml_error_string($code);
     }
 
 
@@ -2147,8 +2001,8 @@ class XMLParser
     {
         $return = '';
 
-        foreach($this->stack as $stack)
-            $return .= $stack.'->';
+        foreach ($this->stack as $stack)
+            $return .= $stack . '->';
 
         return rtrim($return, '->');
     }
@@ -2166,30 +2020,27 @@ class XMLParser
         $name = strtolower($name);
 
         //Check to see if tag is root-level
-        if (count($this->stack) == 0)
-        {
+        if (count($this->stack) == 0) {
             //If so, set the document as the current tag
             $this->document = new XMLTag($name, $attrs);
 
             //And start out the stack with the document tag
             $this->stack = array('document');
-        }
-        //If it isn't root level, use the stack to find the parent
-        else
-        {
+        } //If it isn't root level, use the stack to find the parent
+        else {
             //Get the name which points to the current direct parent, relative to $this
             $parent = $this->GetStackLocation();
 
             //Add the child
-            eval('$this->'.$parent.'->AddChild($name, $attrs, '.count($this->stack).', $this->cleanTagNames);');
+            eval('$this->' . $parent . '->AddChild($name, $attrs, ' . count($this->stack) . ', $this->cleanTagNames);');
 
             //If the cleanTagName feature is on, replace colons and dashes with underscores
-            if($this->cleanTagNames)
+            if ($this->cleanTagNames)
                 $name = str_replace(array(':', '-'), '_', $name);
 
 
             //Update the stack
-            eval('$this->stack[] = $name.\'[\'.(count($this->'.$parent.'->'.$name.') - 1).\']\';');
+            eval('$this->stack[] = $name.\'[\'.(count($this->' . $parent . '->' . $name . ') - 1).\']\';');
         }
     }
 
@@ -2217,7 +2068,7 @@ class XMLParser
         $tag = $this->GetStackLocation();
 
         //Assign data to it
-        eval('$this->'.$tag.'->tagData .= trim($data);');
+        eval('$this->' . $tag . '->tagData .= trim($data);');
     }
 }
 
@@ -2288,7 +2139,7 @@ class XMLTag
      * @param int $parents
      * @return XMLTag
      */
-    function XMLTag($name, $attrs = array(), $parents = 0)
+    function __construct($name, $attrs = array(), $parents = 0)
     {
         //Make the keys of the attr array lower case, and store the value
         $this->tagAttrs = array_change_key_case($attrs, CASE_LOWER);
@@ -2315,9 +2166,8 @@ class XMLTag
     function AddChild($name, $attrs, $parents, $cleanTagName = true)
     {
         //If the tag is a reserved name, output an error
-        if(in_array($name, array('tagChildren', 'tagAttrs', 'tagParents', 'tagData', 'tagName')))
-        {
-            trigger_error('You have used a reserved name as the name of an XML tag. Please consult the documentation (http://www.criticaldevelopment.net/xml/) and rename the tag named "'.$name.'" to something other than a reserved name.', E_USER_ERROR);
+        if (in_array($name, array('tagChildren', 'tagAttrs', 'tagParents', 'tagData', 'tagName'))) {
+            trigger_error('You have used a reserved name as the name of an XML tag. Please consult the documentation (http://www.criticaldevelopment.net/xml/) and rename the tag named "' . $name . '" to something other than a reserved name.', E_USER_ERROR);
 
             return;
         }
@@ -2326,16 +2176,16 @@ class XMLTag
         $child = new XMLTag($name, $attrs, $parents);
 
         //If the cleanTagName feature is on, replace colons and dashes with underscores
-        if($cleanTagName)
+        if ($cleanTagName)
             $name = str_replace(array(':', '-'), '_', $name);
 
         //Toss up a notice if someone's trying to to use a colon or dash in a tag name
-        elseif(strstr($name, ':') || strstr($name, '-'))
-            trigger_error('Your tag named "'.$name.'" contains either a dash or a colon. Neither of these characters are friendly with PHP variable names, and, as such, they cannot be accessed and will cause the parser to not work. You must enable the cleanTagName feature (pass true as the second argument of the XMLParser constructor). For more details, see http://www.criticaldevelopment.net/xml/', E_USER_ERROR);
+        elseif (strstr($name, ':') || strstr($name, '-'))
+            trigger_error('Your tag named "' . $name . '" contains either a dash or a colon. Neither of these characters are friendly with PHP variable names, and, as such, they cannot be accessed and will cause the parser to not work. You must enable the cleanTagName feature (pass true as the second argument of the XMLParser constructor). For more details, see http://www.criticaldevelopment.net/xml/', E_USER_ERROR);
 
         //If there is no array already set for the tag name being added,
         //create an empty array for it
-        if(!isset($this->$name))
+        if (!isset($this->$name))
             $this->$name = array();
 
         //Add the reference of it to the end of an array member named for the tag's name
@@ -2361,42 +2211,37 @@ class XMLTag
     function GetXML()
     {
         //Start a new line, indent by the number indicated in $this->parents, add a <, and add the name of the tag
-        $out = "\n".str_repeat("\t", $this->tagParents).'<'.$this->tagName;
+        $out = "\n" . str_repeat("\t", $this->tagParents) . '<' . $this->tagName;
 
         //For each attribute, add attr="value"
-        foreach($this->tagAttrs as $attr => $value)
-            $out .= ' '.$attr.'="'.$value.'"';
+        foreach ($this->tagAttrs as $attr => $value)
+            $out .= ' ' . $attr . '="' . $value . '"';
 
         //If there are no children and it contains no data, end it off with a />
-        if(empty($this->tagChildren) && empty($this->tagData))
+        if (empty($this->tagChildren) && empty($this->tagData))
             $out .= " />";
 
         //Otherwise...
-        else
-        {
+        else {
             //If there are children
-            if(!empty($this->tagChildren))
-            {
+            if (!empty($this->tagChildren)) {
                 //Close off the start tag
                 $out .= '>';
 
                 //For each child, call the GetXML function (this will ensure that all children are added recursively)
-                foreach($this->tagChildren as $child)
-                {
-                    if(is_object($child))
+                foreach ($this->tagChildren as $child) {
+                    if (is_object($child))
                         $out .= $child->GetXML();
                 }
 
                 //Add the newline and indentation to go along with the close tag
-                $out .= "\n".str_repeat("\t", $this->tagParents);
-            }
-
-            //If there is data, close off the start tag and add the data
-            elseif(!empty($this->tagData))
-                $out .= '>'.$this->tagData;
+                $out .= "\n" . str_repeat("\t", $this->tagParents);
+            } //If there is data, close off the start tag and add the data
+            elseif (!empty($this->tagData))
+                $out .= '>' . $this->tagData;
 
             //Add the end tag
-            $out .= '</'.$this->tagName.'>';
+            $out .= '</' . $this->tagName . '>';
         }
 
         //Return the final output
@@ -2423,9 +2268,8 @@ class XMLTag
 
         //Loop through the tagChildren array and remove any null
         //values left behind from the above operation
-        for($x = 0; $x < count($this->tagChildren); $x ++)
-        {
-            if(is_null($this->tagChildren[$x]))
+        for ($x = 0; $x < count($this->tagChildren); $x++) {
+            if (is_null($this->tagChildren[$x]))
                 unset($this->tagChildren[$x]);
         }
     }
@@ -2436,8 +2280,7 @@ class XMLTag
     function DeleteChildren()
     {
         //Loop through all child tags
-        for($x = 0; $x < count($this->tagChildren); $x ++)
-        {
+        for ($x = 0; $x < count($this->tagChildren); $x++) {
             //Do this recursively
             $this->tagChildren[$x]->DeleteChildren();
 

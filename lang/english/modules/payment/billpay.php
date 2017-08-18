@@ -10,7 +10,7 @@ define('MODULE_PAYMENT_BILLPAY_ALLOWED_TITLE' , 'Allowed countries');
 define('MODULE_PAYMENT_BILLPAY_ALLOWED_DESC' , 'Enter countries (eg. AT, DE) allowed for use this payment method. If empty, all countries are allowed');
 
 define('MODULE_PAYMENT_BILLPAY_LOGGING_TITLE' , 'Absolute path for log-file');
-define('MODULE_PAYMENT_BILLPAY_LOGGING_DESC' , 'Payment module will write all communication with BillPay server to the file. If empty, it will use default path (/includes/external/billpay/logs).');
+define('MODULE_PAYMENT_BILLPAY_LOGGING_DESC' , 'Payment module will write all communication with BillPay server to the file. If empty, it will use default path (/includes/external/billpay/log).');
 
 define('MODULE_PAYMENT_BILLPAY_DATA_PROVIDED_BY_BILLPAY' , 'Data provided by BillPay');
 define('MODULE_PAYMENT_BILLPAY_GS_MERCHANT_ID_TITLE' , 'Merchant ID');

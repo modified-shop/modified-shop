@@ -60,6 +60,40 @@ class BillpayOrder
         return $ret;
     }
 
+    public static function getCustomerShipping()
+    {
+        global $order;
+        if(!isset($order->delivery) || empty($order->delivery)) {
+            return BillpayOrder::getCustomerBilling();
+        }
+
+        if ($order) {
+            return array(
+                'firstName' =>  billpayBase::EnsureUTF8($order->delivery['firstname']),
+                'lastName'  =>  billpayBase::EnsureUTF8($order->delivery['lastname']),
+                'address'   =>  billpayBase::EnsureUTF8($order->delivery['street_address']
+                    . (isset($order->billing['suburb']) ? ' '.$order->billing['suburb'] : '')),
+                'postCode'  =>  billpayBase::EnsureUTF8($order->delivery['postcode']),
+                'city'      =>  billpayBase::EnsureUTF8($order->delivery['city']),
+                'country2'  =>  billpayBase::EnsureUTF8($order->delivery['country']['iso_code_2']),
+                'country3'  =>  billpayBase::EnsureUTF8($order->delivery['country']['iso_code_3']),
+            );
+        }
+        $table = TABLE_COUNTRIES;
+        $country = (int)$_SESSION['customer_country_id'];
+        $countries = BillpayDB::DBFetchRow("SELECT countries_iso_code_2, countries_iso_code_3 FROM $table WHERE countries_id = $country");
+        $ret = array(
+            'firstName' =>  '',
+            'lastName'  =>  '',
+            'address'   =>  '',
+            'postCode'  =>  '',
+            'city'      =>  '',
+            'country2'  =>  $countries['countries_iso_code_2'],
+            'country3'  =>  $countries['countries_iso_code_3'],
+        );
+        return $ret;
+    }
+
     public static function getCustomerDelivery()
     {
         global $order;

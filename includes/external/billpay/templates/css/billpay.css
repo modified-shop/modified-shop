@@ -160,7 +160,7 @@ a.bpy-back-link {
   font-size: 14px;
   padding: 6px;
   cursor: pointer;
-  height: 18px;
+  /*height: 18px;*/
   text-decoration: none;
   display: block;
   text-indent: 0;
@@ -184,7 +184,7 @@ a.bpy-continue-link {
   font-size: 14px;
   padding: 6px;
   cursor: pointer;
-  height: 18px;
+  /*height: 18px;*/
   text-decoration: none;
   display: block;
   text-indent: 0;
