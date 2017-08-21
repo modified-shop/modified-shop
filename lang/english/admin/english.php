@@ -361,7 +361,7 @@ define('DELETE_ENTRY','Delete entry?');
 define('TEXT_PAYMENT_ERROR','<b>WARNING:</b> Please activate a <a href="%s">Payment Method</a>!');
 define('TEXT_SHIPPING_ERROR','<b>WARNING:</b> Please activate a <a href="%s">Shipping Method</a>!');
 define('TEXT_PAYPAL_CONFIG','<b>WARNING:</b> Please configure the PayPal payment settings for "Live mode" here: <a href="%s"><strong>Partner -> PayPal</strong></a>.'); //DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
-define('TEXT_DUPLUCATE_CONFIG_ERROR','<b>WARNING:</b> Duplicate configuration key: ');
+define('TEXT_DUPLICATE_CONFIG_ERROR','<b>WARNING:</b> Duplicate configuration key: ');
 
 define('TEXT_NETTO','net: ');
 

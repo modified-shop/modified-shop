@@ -362,7 +362,7 @@ define('TEXT_PAYMENT_ERROR','<b>WARNUNG:</b> Bitte aktivieren Sie ein <a href="%
 define('TEXT_SHIPPING_ERROR','<b>WARNUNG:</b> Bitte aktivieren Sie ein <a href="%s">Versandmodul</a>!');
 define('TEXT_PAYPAL_CONFIG','<b>WARNUNG:</b> Bitte konfigurieren Sie die PayPal-Zahlungseinstellungen f&uuml;r den "Live Modus" unter: <a href="%s"><strong>Partner -> PayPal</strong></a>'); //DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
 define('TEXT_NETTO','Netto: ');
-define('TEXT_DUPLUCATE_CONFIG_ERROR','<b>WARNUNG:</b> Duplicate configuration key: ');
+define('TEXT_DUPLICATE_CONFIG_ERROR','<b>WARNUNG:</b> Doppelter Konfigurationsschl&uuml;ssel: ');
 
 define('ENTRY_CID','Kundennummer:');
 define('IP','Bestell IP:');
