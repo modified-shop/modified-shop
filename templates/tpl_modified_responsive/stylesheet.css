@@ -2389,23 +2389,28 @@ a.color_more:hover {
   float:right;
 }
 .sort_bar_item.right a {
-  float:right;
-  width:32px;
-  height:32px;
-  display:block;
+  float: right;
+  display: block;
+  padding: 0px 5px;
+  line-height: 32px;
+  font-size: 18px;
+  height: 32px;
+}
+.sort_bar_item.right .fa {
+  vertical-align:-2px;
 }
 a.view_list {
-  background: transparent url(img/bg_list-box-select.gif) no-repeat 0px 0px;
+  color:#b3b3b3
 }
 a.view_list:hover, a.view_list.active {
-  background: transparent url(img/bg_list-box-select.gif) no-repeat 0px -32px;
+  color:#6c6c6c;
   text-decoration:none;
 }
 a.view_box {
-  background: transparent url(img/bg_list-box-select.gif) no-repeat -32px 0px;
+  color:#b3b3b3
 }
 a.view_box:hover, a.view_box.active {
-  background: transparent url(img/bg_list-box-select.gif) no-repeat -32px -32px;
+  color:#6c6c6c;
   text-decoration:none;
 }
 
