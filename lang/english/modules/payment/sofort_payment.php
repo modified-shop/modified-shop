@@ -17,8 +17,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_TITLE', 'SOFORT Banking<br /><img src="https://images.sofort.com/en/su/logo_90x30.png" alt="SOFORT Banking"/>');
-define('MODULE_PAYMENT_'.$sofort_code.'_KS_TEXT_TITLE', 'SOFORT Banking with customer protection<br /><img src="https://images.sofort.com/de/su/logo_90x30.png" alt="Logo SOFORT &Uuml;berweisung"/>');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_TITLE', 'Online bank transfer.<br /><img src="https://cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/pay_now/standard/pink.svg" alt="Logo SOFORT Banking"/>');
+define('MODULE_PAYMENT_'.$sofort_code.'_KS_TEXT_TITLE', 'Online bank transfer. with customer protection<br /><img src="https://cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/pay_now/standard/pink.svg" alt="Logo SOFORT Banking"/>');
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION', 'SOFORT Banking is the free of charge, T&Uuml;V certified payment method by SOFORT AG.');
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_INFO', 'You can pay with the T&Uuml;V certified online banking system SOFORT Banking of SOFORT AG.');
 
@@ -37,7 +37,7 @@ define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE'
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT', 'SOFORT Banking');
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT', '
   <ul>
-    <li>Payment system with data protection certified by TÜV</li>
+    <li>Payment system with data protection certified by T&Uuml;V</li>
     <li>No registration required</li>
     <li>Immediate shipping of stock goods</li>
     <li>Please keep your online banking login data ready</li>
@@ -45,7 +45,7 @@ define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT',
 define('MODULE_PAYMENT_'.$sofort_code.'_KS_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT', '
   <ul>
     <li>If paying with SOFORT Banking you enjoy [[link_beginn]]buyer protection![[link_end]]</li>
-    <li>Payment system with TÜV-certified privacy policy</li>
+    <li>Payment system with T&Uuml;V-certified privacy policy</li>
     <li>No registration needed</li>
     <li>Goods/service will be shipped immediately, if available</li>
     <li>Please keep your online banking data ready</li>
