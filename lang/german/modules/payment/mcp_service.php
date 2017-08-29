@@ -75,7 +75,7 @@ define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_DESC','Wie lang kann eine Bestell
 
 define('MODULE_PAYMENT_MCP_SERVICE_NEW_VERSION','%s<div class="mcp_notice_register">Es steht eine neue micropayment&trade; Modul-Version mit neuen Funktionen und Features f&uuml;r Ihr Shopsystem zur Verf&uuml;gung. <a href="http://ecommerce.micropayment.de/modifiedshop/" target="_new">Zur neuen Modulversion.</a></div>');
 
-define('MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT','%s<div class="mcp_notice_register">Damit die Bezahlmodule von Micropayment&trade; funktionieren, m&uuml;ssen Sie einen Account bei Micropayment&trade; anlegen und ein Projekt erstellen.<a href="https://%s.micropayment.de" target="blank">Klicken Sie hier um sich zu Registrieren.</a></div>');
+define('MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT','%s<div class="mcp_notice_register">Damit die Bezahlmodule von Micropayment&trade; funktionieren, m&uuml;ssen Sie einen Account bei Micropayment&trade; anlegen und ein Projekt erstellen. <a href="https://%s.micropayment.de" target="blank">Klicken Sie hier um sich zu Registrieren.</a></div>');
 define('MODULE_PAYMENT_MCP_SERVICE_CSS','
 <style type="text/css">
 .mcp_notice_register {

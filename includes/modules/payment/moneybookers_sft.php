@@ -36,7 +36,7 @@ if (file_exists('includes/classes/class.moneybookers.php')) {
 
 class moneybookers_sft extends fcnt_moneybookers {
 
-	var $images='sofort.gif';
+	var $images='//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/pay_now/standard/pink.svg';
 
 	// class constructor
 	function __construct() {
@@ -58,7 +58,7 @@ class moneybookers_sft extends fcnt_moneybookers {
 		$accepted = '';
 		$icons = explode(',', $this->images);
 		foreach ($icons as $key => $val)
-			$accepted .= xtc_image(DIR_WS_ICONS .'moneybookers/'. $val) . ' ';
+			$accepted .= '<img src="'.$val.'" />' . ' ';
 
 
 

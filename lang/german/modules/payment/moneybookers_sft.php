@@ -13,8 +13,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('MODULE_PAYMENT_MONEYBOOKERS_SFT_TEXT_TITLE', 'Sofort&uuml;berweisung');
-$_var = 'Sofortueberweisung &uuml;ber Skrill';
+define('MODULE_PAYMENT_MONEYBOOKERS_SFT_TEXT_TITLE', 'Sofort.');
+$_var = 'Sofort. &uuml;ber Skrill';
 if (_PAYMENT_MONEYBOOKERS_EMAILID=='') {
   $_var.='<br /><br /><b><font color="red">Bitte nehmen Sie zuerst die Einstellungen unter<br /> Erw. Konfiguration -> Partner -> Skrill.com vor!</font></b>';
 }

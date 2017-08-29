@@ -6,7 +6,7 @@
  * @author     micropayment GmbH <shop-plugins@micropayment.de>
  */
 require_once('mcp_service.php');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_DESCRIPTION', 'micropayment&trade; Sofort&uuml;berweisung Modul
+define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_DESCRIPTION', 'micropayment&trade; Sofort. Modul
 <br /><br />
 Links<br />
 <b>Tools</b><br />
@@ -22,8 +22,8 @@ Links<br />
     <input type="button" value="Micropayment Registrierung">
     </a>
 ');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE', 'micropayment&trade; Sofort&uuml;berweisung');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE_EXTERN', 'Sofort&uuml;berweisung');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE', 'micropayment&trade; Sofort.');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE_EXTERN', 'Sofort.');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO', '
 <div style="margin:10px;">
 <div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div><div style="float:left;">
@@ -33,8 +33,8 @@ define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO', '
 </div>
 ');
 
-define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_TITLE','Sofort&uuml;berweisung');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_DESC','Sofort&uuml;berweisung-Modul von micropayment&trade;');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_TITLE','Sofort.');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_DESC','Sofort. Modul von micropayment&trade;');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_MINIMUM_AMOUNT_TITLE','Minimum Warenkorbwert');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_MINIMUM_AMOUNT_DESC','Mindestwert des Warenkorbs für diese Bezahlmethode');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_MAXIMUM_AMOUNT_TITLE','Maximum Warenkorbwert');

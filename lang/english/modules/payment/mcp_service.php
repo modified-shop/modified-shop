@@ -76,7 +76,7 @@ define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID_DESC','this order has
 
 define('MODULE_PAYMENT_MCP_SERVICE_NEW_VERSION','%s<div class="mcp_notice_register">New version of micropayment&trade; Payment modules are avaiable. <a href="http://ecommerce.micropayment.de/modifiedshop/?lang=EN" target="_new">Click here for Download.</a></div>');
 
-define('MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT','%s<div class="mcp_notice_register">In order to ensure functionality of the micropayment&trade; Payment modules, please first register an account and create a project.<a href="https://%s.micropayment.de" target="blank">Click here to register.</a></div>');
+define('MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT','%s<div class="mcp_notice_register">In order to ensure functionality of the micropayment&trade; Payment modules, please first register an account and create a project. <a href="https://%s.micropayment.de" target="blank">Click here to register.</a></div>');
 define('MODULE_PAYMENT_MCP_SERVICE_CSS','
 <style type="text/css">
 .mcp_notice_register {
