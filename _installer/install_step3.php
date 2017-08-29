@@ -81,7 +81,7 @@
                   $db['DB_DATABASE'] = trim(stripslashes($_POST['DB_DATABASE']));
                   xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD'], $db['DB_MYSQL_TYPE']);
                   
-                  @xtc_db_query_installer('ALTER DATABASE '.$db['DB_DATABASE'].' DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
+                  @xtc_db_query_installer('ALTER DATABASE `'.$db['DB_DATABASE'].'` DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
                   @xtc_db_query_installer('SET NAMES '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
 
                   $db_error = false;

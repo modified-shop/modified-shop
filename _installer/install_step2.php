@@ -84,12 +84,12 @@
   $db_error = false;
   xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD'], $db['DB_MYSQL_TYPE']);
   
-  $check_query = xtc_db_query_installer("SHOW TABLES FROM ".$db['DB_DATABASE'], $db['DB_MYSQL_TYPE']);
+  $check_query = xtc_db_query_installer("SHOW TABLES FROM `".$db['DB_DATABASE']."`", $db['DB_MYSQL_TYPE']);
   if (xtc_db_num_row_installer($check_query, $db['DB_MYSQL_TYPE']) > 0 && (isset($_POST['install_db']) && $_POST['install_db'] == 1)) {
     $messageStack->add('db_warning', '<strong>' . TEXT_DB_NOT_EMPTY . '</strong>');
   }
   
-  @xtc_db_query_installer('ALTER DATABASE '.$db['DB_DATABASE'].' DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
+  @xtc_db_query_installer('ALTER DATABASE `'.$db['DB_DATABASE'].'` DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
   @xtc_db_query_installer('SET NAMES '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
 
   //check MySQL *server* version
