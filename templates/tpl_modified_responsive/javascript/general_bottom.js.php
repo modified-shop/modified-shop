@@ -44,10 +44,10 @@ foreach ($script_array as $script) {
     $(".unveil").unveil(200);
   });
   $(document).ready(function(){
-    $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true});
-    $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true});
+    $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fa fa-times"></i>', next: '<i class="fa fa-chevron-right"></i>', previous: '<i class="fa fa-chevron-left"></i>'});
+    $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fa fa-times"></i>'});
     $("#print_order_layer").on('submit', function(event) {
-      $.colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", href:$(this).attr("action") + '&' + $(this).serialize()});
+      $.colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", close: '<i class="fa fa-times"></i>', href:$(this).attr("action") + '&' + $(this).serialize()});
       return false;
     });
     $('select').SumoSelect();
