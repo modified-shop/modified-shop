@@ -12,8 +12,7 @@
 #colorbox, #cboxContent, #cboxLoadedContent{box-sizing:content-box; -moz-box-sizing:content-box; -webkit-box-sizing:content-box;}
 #colorbox { -webkit-border-radius: 8px; -moz-border-radius: 8px; border-radius: 8px; }
 #cboxOverlay{background:url(images/overlay.png) repeat 0 0;}
-#colorbox{outline:0; -webkit-box-shadow: 0px 0px 15px #3d3d3d; -moz-box-shadow: 0px 0px 15px #3d3d3d; box-shadow: 0px 0px 15px #3d3d3d;
-}
+#colorbox{outline:0; -webkit-box-shadow: 0px 0px 15px #3d3d3d; -moz-box-shadow: 0px 0px 15px #3d3d3d; box-shadow: 0px 0px 15px #3d3d3d;}
 #cboxTopLeft{width:21px; height:21px; background:#ffffff;}
 #cboxTopRight{width:21px; height:21px; background:#ffffff;}
 #cboxBottomLeft{width:21px; height:21px; background:#ffffff;}
