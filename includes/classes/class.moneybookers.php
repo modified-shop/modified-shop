@@ -68,7 +68,7 @@ class fcnt_moneybookers {
 			$icons = explode(',', $this->images);
 			$accepted='';
 			foreach ($icons as $key => $val)
-				$accepted .= xtc_image('../images/icons/moneybookers/'. $val) . ' ';
+				$accepted .= '<img src="'.$val.'" />' . ' ';
 			if ($this->allowed!='') $this->title.=' ('.$this->allowed.')';
 				$this->title .='<br />'.$accepted;
 		}
