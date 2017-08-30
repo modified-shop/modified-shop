@@ -56,6 +56,7 @@
     44. Last viewed in account
     45. Account cart and click buttons
     46. Miscellaneous
+    47. CSS Write reviews
    ---------------------------------------------------------------------------------------*/
 
 /* 1. START fonts */
@@ -4011,7 +4012,7 @@ ul.resp-tabs-list{
 
 /* END miscellaneous */
 
-/* START CSS Write reviews */
+/* 47. START CSS Write reviews */
 .show_rating {
   unicode-bidi: bidi-override;
   direction: rtl;

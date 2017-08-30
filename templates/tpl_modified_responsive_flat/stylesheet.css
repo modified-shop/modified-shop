@@ -57,6 +57,7 @@
     45. Account cart and click buttons
     46. Miscellaneous
     47. CSS Buttons
+    48. CSS Write reviews
 
    ---------------------------------------------------------------------------------------*/
 
@@ -4991,7 +4992,7 @@ ul.tc_list li .tc_delete .cssButton .fa {
 
 /* END CSS Buttons */
 
-/* START CSS Write reviews */
+/* 48. START CSS Write reviews */
 .show_rating {
   unicode-bidi: bidi-override;
   direction: rtl;
