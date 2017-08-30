@@ -47,6 +47,16 @@ foreach ($script_array as $script) {
   });
 </script>
 
+<script type="text/javascript">
+  $(window).on('load',function() {
+    $('.show_rating input').change(function () {
+      var $radio = $(this);
+      $('.show_rating .selected').removeClass('selected');
+      $radio.closest('label').addClass('selected');
+    });
+  });
+</script>
+
 <?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { // TABS/ACCORDION in product_info - web28 ?>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery-ui.js" type="text/javascript"></script>
 <script type="text/javascript">

@@ -2083,3 +2083,44 @@ a.autocomplete:hover {
   outline:none !important;
 }
 /* END autocomplete */
+
+/* START CSS Write reviews */
+.show_rating {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+  display:inline-block;
+  padding: 0px 15px;
+  position:relative;
+  bottom:-2px;
+}
+.show_rating input {
+  position: absolute;
+  left: -999999px;
+}
+.show_rating label {
+  display: inline-block;
+  font-size: 0;
+  padding: 0px 1px;
+  vertical-align:bottom;
+}
+.show_rating > label:before {
+  height:14px;
+  width:14px;
+  position: relative;
+  display: block;
+  content: " ";
+  color: transparent;
+  background: transparent url(img/stars_rating.gif) no-repeat 0 0;
+  -webkit-text-fill-color: transparent;
+}
+.show_rating > label:hover:before,
+.show_rating > label:hover ~ label:before,
+.show_rating > label.selected:before,
+.show_rating > label.selected ~ label:before {
+  color: transparent;
+  height:14px;
+  width:14px;
+  background: transparent url(img/stars_rating.gif) no-repeat 0 -14px;
+  -webkit-text-fill-color: transparent;
+}
+/* END CSS Write reviews */
