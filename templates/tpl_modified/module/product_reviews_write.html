@@ -11,7 +11,7 @@
     <h4>{#text_product#} {$PRODUCTS_NAME}</h4>  
     <table>
       <tr>
-        <td><span class="fieldtext">{#text_rating#}</span><span class="stern">{#text_bad#}<span class="show_rating">{if isset($INPUT_RATING_ARRAY)}{foreach item=rating from=$INPUT_RATING_ARRAY|array_reverse}<label>{$rating}</label>{/foreach}{else}&nbsp;{$INPUT_RATING}&nbsp;{/if}</span>{#text_good#}</span></td>
+        <td><span class="fieldtext">{#text_rating#}</span><span class="stern">{#text_bad#}{if isset($INPUT_RATING_ARRAY)}<span class="show_rating">{foreach item=rating from=$INPUT_RATING_ARRAY|array_reverse}<label>{$rating}</label>{/foreach}</span>{else}&nbsp;{$INPUT_RATING}&nbsp;{/if}{#text_good#}</span></td>
       </tr>
       <tr>
         <td><span class="fieldtext">{#text_author#}</span><span class="stern">{$INPUT_AUTHOR}</span></td>
