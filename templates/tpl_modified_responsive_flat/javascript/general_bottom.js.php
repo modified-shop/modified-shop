@@ -42,6 +42,11 @@ foreach ($script_array as $script) {
   $(window).on('load',function() {
     $(".unveil").show();
     $(".unveil").unveil(200);
+    $('.show_rating input').change(function () {
+      var $radio = $(this);
+      $('.show_rating .selected').removeClass('selected');
+      $radio.closest('label').addClass('selected');
+    });
   });
   $(document).ready(function(){
     $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fa fa-times"></i>', next: '<i class="fa fa-chevron-right"></i>', previous: '<i class="fa fa-chevron-left"></i>'});
