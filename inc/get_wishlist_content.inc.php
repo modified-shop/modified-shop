@@ -23,6 +23,10 @@
     $products = $_SESSION['wishlist']->get_products();
 
     for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
+      foreach((array)$products[$i] as $key => $entry) {                  
+        $module_data[$i]['PRODUCTS_'.strtoupper($key)] = $entry;
+      }
+
       $del_button = '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'box', 'prd_id')).'action=remove_product&wishlist=true&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . xtc_image_button('wishlist_del.gif', IMAGE_BUTTON_DELETE) . '</a>';
       $cart_del_button = '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'box', 'prd_id')).'action=remove_product&wishlist=true&box=cart&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . xtc_image_button('cart_del.gif', IMAGE_BUTTON_DELETE) . '</a>';
 
@@ -34,7 +38,7 @@
         $shipping_status_link = $main->getShippingStatusName($products[$i]['shippingtime'], true);      
       }
   
-      $module_data[$i] = array (
+      $module_content_add = array (
         'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])),
         'PRODUCTS_NAME' => $products[$i]['name'],
         'PRODUCTS_IMAGE' => $product->productImage(xtc_get_products_image(xtc_get_prid($products[$i]['id'])), 'thumbnail'),
@@ -54,6 +58,7 @@
         'PRODUCTS_DESCRIPTION' => $products[$i]['description'],
         'ATTRIBUTES' => array()
       );
+      $module_data[$i] = array_merge($module_data[$i], $module_content_add);
 
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/wishlist_content/','php') as $file) require ($file);
       
