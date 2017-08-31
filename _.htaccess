@@ -22,7 +22,11 @@ FileETag None
 ##-- when using Provider 1&1 set the following lines to activate PHP5
 #AddType x-mapp-php5 .php
 #AddHandler x-mapp-php5 .php
-AddType application/font-woff2 .woff2
+
+##-- Add Mime Types
+<IfModule mod_mime.c>
+  AddType application/font-woff2 .woff2
+</IfModule>
 
 # Disable directory browsing (disabled by default as this causes problems on some servers because they don't allow AllowOverride Directive for Options)
 #Options -Indexes
