@@ -22,13 +22,14 @@ FileETag None
 ##-- when using Provider 1&1 set the following lines to activate PHP5
 #AddType x-mapp-php5 .php
 #AddHandler x-mapp-php5 .php
+AddType application/font-woff2 .woff2
 
 # Disable directory browsing (disabled by default as this causes problems on some servers because they don't allow AllowOverride Directive for Options)
 #Options -Indexes
 
 ##-- Enable the compression for any type of content
 <IfModule mod_deflate.c>
-  <FilesMatch "\\.(js|css|html|htm|php|xml|jpg|jpeg|png|gif|svg|woff)$">
+  <FilesMatch "\\.(js|css|html|htm|php|xml|jpg|jpeg|png|gif|svg|woff|woff2|ttf|otf)$">
     SetOutputFilter DEFLATE
   </FilesMatch>
 </IfModule>
@@ -38,7 +39,7 @@ FileETag None
   <FilesMatch "\\.(ico|jpe?g|png|gif|swf|flv|svg)$">
     Header set Cache-Control "max-age=2592000, public"
   </FilesMatch>
-  <FilesMatch "\\.(css|woff)$">
+  <FilesMatch "\\.(css|woff|woff2)$">
     Header set Cache-Control "max-age=604800, public"
   </FilesMatch>
   <FilesMatch "\\.(js)$">
