@@ -47,6 +47,9 @@ $hidden_options = '';
 
 $products = $_SESSION['cart']->get_products();
 for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
+  foreach((array)$products[$i] as $key => $entry) {
+    $module_content[$i]['PRODUCTS_'.strtoupper($key)] = $entry;
+  }
 
   if (STOCK_CHECK == 'true') {
     $mark_stock = xtc_check_stock($products[$i]['id'], $products[$i]['quantity']);
@@ -69,8 +72,8 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
 
   $del_button = '<a href="' . xtc_href_link(FILENAME_SHOPPING_CART, 'action=remove_product&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . xtc_image_button('cart_del.gif', IMAGE_BUTTON_DELETE) . '</a>';
   $del_link = '<a href="' . xtc_href_link(FILENAME_SHOPPING_CART, 'action=remove_product&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . IMAGE_BUTTON_DELETE . '</a>';
-
-  $module_content[$i] = array(
+    
+  $module_content_add = array(
     'PRODUCTS_NAME' => $products[$i]['name'].$mark_stock,
     'PRODUCTS_QTY' => xtc_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="2"').
                       xtc_draw_hidden_field('products_id[]', $products[$i]['id']).
@@ -92,7 +95,8 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
     'BUTTON_WISHLIST' => $product->getCartToWishlistLink($products[$i]['id'], $products[$i]['name']), 
     'ATTRIBUTES' => array(),
   );
-
+  $module_content[$i] = array_merge($module_content[$i], $module_content_add);
+  
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/order_details_cart_content/','php') as $file) require ($file);
   
   //products attributes
