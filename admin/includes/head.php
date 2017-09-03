@@ -29,14 +29,14 @@
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>">
   <title><?php echo TITLE; ?></title>
   <meta http-equiv="pragma" content="no-cache">
-  <link rel="stylesheet" type="text/css" href="includes/stylesheet.css?v=<?php filemtime(DIR_FS_ADMIN.'includes/stylesheet.css'); ?>">  
-  <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css?v=<?php filemtime(DIR_FS_ADMIN.'includes/searchbar_menu/searchbar_menu.css'); ?>" />
-  <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css?v=<?php filemtime(DIR_FS_ADMIN.'includes/css/tooltip.css'); ?>">
-  <link rel="stylesheet" type="text/css" href="includes/css/jquery-confirm.css?v=<?php filemtime(DIR_FS_ADMIN.'includes/css/jquery-confirm.css'); ?>" />
+  <link rel="stylesheet" type="text/css" href="includes/stylesheet.css?v=<?php echo filemtime(DIR_FS_ADMIN.'includes/stylesheet.css'); ?>">  
+  <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css?v=<?php echo filemtime(DIR_FS_ADMIN.'includes/searchbar_menu/searchbar_menu.css'); ?>" />
+  <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css?v=<?php echo filemtime(DIR_FS_ADMIN.'includes/css/tooltip.css'); ?>">
+  <link rel="stylesheet" type="text/css" href="includes/css/jquery-confirm.css?v=<?php echo filemtime(DIR_FS_ADMIN.'includes/css/jquery-confirm.css'); ?>" />
   <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
-  <link rel="stylesheet" type="text/css" href="includes/css/sumoselect_mod.css?v=<?php filemtime(DIR_FS_ADMIN.'includes/css/sumoselect_mod.css'); ?>" />
-  <link rel="stylesheet" type="text/css" href="includes/css/checks.css?v=<?php filemtime(DIR_FS_ADMIN.'includes/css/checks.css'); ?>" />
-  <link rel="stylesheet" type="text/css" href="includes/css/fileinput.css?v=<?php filemtime(DIR_FS_ADMIN.'includes/css/fileinput.css'); ?>" />
+  <link rel="stylesheet" type="text/css" href="includes/css/sumoselect_mod.css?v=<?php echo filemtime(DIR_FS_ADMIN.'includes/css/sumoselect_mod.css'); ?>" />
+  <link rel="stylesheet" type="text/css" href="includes/css/checks.css?v=<?php echo filemtime(DIR_FS_ADMIN.'includes/css/checks.css'); ?>" />
+  <link rel="stylesheet" type="text/css" href="includes/css/fileinput.css?v=<?php echo filemtime(DIR_FS_ADMIN.'includes/css/fileinput.css'); ?>" />
   <?php } ?>
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
