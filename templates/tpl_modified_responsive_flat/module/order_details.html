@@ -52,22 +52,22 @@
     {if sizeof($shipping_content) > 0}
       {if $SELECT_COUNTRY}
       <li class="otl_row2 cf">
-        <span class="otl_col1 ">{$smarty.const._SHIPPING_TO}</span>
-        <span class="otl_col2 ">{$SELECT_COUNTRY_PLAIN}</span>
+        <span class="otl_col1">{$smarty.const._SHIPPING_TO}</span>
+        <span class="otl_col2">{$SELECT_COUNTRY_PLAIN}</span>
       </li>
       {/if}
       {foreach name=aussen item=shipping_data from=$shipping_content}
       <li class="otl_row3 cf">
-        <span class="otl_col3 ">{$shipping_data.NAME} ({$COUNTRY}):</span>
-        <span class="otl_col4 ">{$shipping_data.VALUE}</span>
+        <span class="otl_col3">{$shipping_data.NAME} ({$COUNTRY}):</span>
+        <span class="otl_col4">{$shipping_data.VALUE}</span>
       </li>
       {/foreach}
     {/if}
 
     {if $total}
     <li class="otl_row4 cf">
-      <span class="otl_col1 "><strong>{#text_total#}:</strong></span>
-      <span class="otl_col2 "><strong>{$total}</strong></span>
+      <span class="otl_col1"><strong>{#text_total#}:</strong></span>
+      <span class="otl_col2"><strong>{$total}</strong></span>
     </li>
     {/if}
   </ul>
