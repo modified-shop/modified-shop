@@ -6,7 +6,7 @@
   {foreach name=aussen item=module_data from=$module_content}
   <ul class="nocolumnbreak cf">
     <li class="sitemap_header"><a href="{$module_data.CAT_LINK}">{$module_data.CAT_NAME}</a>
-    {if $module_data.SCATS|@sizeof!=0}
+    {if $module_data.SCATS|@sizeof != 0}
     <ul>
       {foreach key=key_data item=item_data from=$module_data.SCATS}
       <li><a href="{$item_data.link}">{$item_data.text}</a></li>
