@@ -11,7 +11,7 @@
   <div class="box_sidebar cf">
     <div class="box_line"></div>
     <div class="box_title"><a href="{$box_content.PRODUCTS_LINK}"><strong>{$box_content.PRODUCTS_NAME}</strong></a></div>
-    {if $box_content.PRODUCTS_IMAGE!=''}<div class="box_image"><a href="{$box_content.PRODUCTS_LINK}"><img src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME|onlytext}" /></a></div>{/if}
+    {if $box_content.PRODUCTS_IMAGE != ''}<div class="box_image"><a href="{$box_content.PRODUCTS_LINK}"><img src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME|onlytext}" /></a></div>{/if}
     <div class="box_price">
       {foreach name=inner item=price_data from=$box_content.PRODUCTS_PRICE_ARRAY}
         {include file="module/includes/price_box.html"}
