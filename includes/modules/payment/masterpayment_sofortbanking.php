@@ -76,7 +76,8 @@ require_once(DIR_FS_CATALOG . 'includes/external/masterpayment/MasterpaymentActi
 			$content = array_merge($content, array (
 				array (
 					'title' => ' ',
-					'field' => xtc_image(DIR_WS_ICONS. 'masterpayment_sofortbanking.gif')
+					//'field' => xtc_image(DIR_WS_ICONS. 'masterpayment_sofortbanking.gif')
+					'field' => xtc_image(DIR_WS_ICONS. 'masterpayment_sofortbanking.svg')
 				)
 			));			
 		}	  

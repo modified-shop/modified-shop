@@ -149,6 +149,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'images/icons/luupay.gif', // neu
                      'images/icons/moneybookers/sofort.gif', // neu
                      'images/icons/sofortueberweisung_icon.gif', // neu
+                     'images/icons/masterpayment_sofortbanking.gif', // neu
                      'inc/search_replace_iso-8859-1.php', // neu
                      'inc/search_replace_iso-8859-15.php', // neu
                      'inc/shopstat_functions.inc.php', // neu
