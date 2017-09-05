@@ -62,7 +62,7 @@ class ot_klarna_fee
         ) {
             //echo "<link href='" . KlarnaUtils::getStaticPath() .
             //    "images.css' type='text/css' rel='stylesheet'/>";
-            echo "<link href='" . DIR_WS_BASE .
+            echo "<link href='" . DIR_WS_CATALOG .
                 "includes/external/klarna/KITT/css/images.css' type='text/css' rel='stylesheet'/>";
             $this->title
                 = "<span class='klarna_icon'></span> Klarna - {$invFee}";
