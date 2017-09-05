@@ -60,8 +60,10 @@ class ot_klarna_fee
             && (!array_key_exists('action', $_GET)
             || !in_array($_GET['action'], array('install', 'remove')))
         ) {
-            echo "<link href='" . KlarnaUtils::getStaticPath() .
-                "images.css' type='text/css' rel='stylesheet'/>";
+            //echo "<link href='" . KlarnaUtils::getStaticPath() .
+            //    "images.css' type='text/css' rel='stylesheet'/>";
+            echo "<link href='" . DIR_WS_BASE .
+                "includes/external/klarna/KITT/css/images.css' type='text/css' rel='stylesheet'/>";
             $this->title
                 = "<span class='klarna_icon'></span> Klarna - {$invFee}";
         } else {

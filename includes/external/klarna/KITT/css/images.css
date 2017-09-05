@@ -1,0 +1,841 @@
+.klarna_logo_small {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/logo/se_se/basic/logo_black.png?height=22")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 101px!important;
+    height: 22px!important;
+    display: inline-block
+}
+
+.klarna_logo {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/logo/se_se/basic/logo_black.png?height=44")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_icon {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/logo/se_se/basic/logo_black.png?height=17")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 17px!important;
+    height: 17px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_invoice_se,
+.klarna_payment_info .klarna_logo_invoice_se,
+.klarna_thankyou .klarna_logo_invoice_se,
+#payment_form_klarna_specpayment .klarna_logo_invoice_se,
+#payment_form_klarna_partpayment .klarna_logo_invoice_se,
+#payment_form_klarna_invoice .klarna_logo_invoice_se,
+.order-info-box .box-payment .klarna_logo_invoice_se,
+#checkout-progress-wrapper .klarna_logo_invoice_se,
+#thankyouPage .klarna_logo_invoice_se {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/se_se/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_account_se,
+.klarna_payment_info .klarna_logo_account_se,
+.klarna_thankyou .klarna_logo_account_se,
+#payment_form_klarna_specpayment .klarna_logo_account_se,
+#payment_form_klarna_partpayment .klarna_logo_account_se,
+#payment_form_klarna_invoice .klarna_logo_account_se,
+.order-info-box .box-payment .klarna_logo_account_se,
+#checkout-progress-wrapper .klarna_logo_account_se,
+#thankyouPage .klarna_logo_account_se {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/se_se/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_special_se,
+.klarna_payment_info .klarna_logo_special_se,
+.klarna_thankyou .klarna_logo_special_se,
+#payment_form_klarna_specpayment .klarna_logo_special_se,
+#payment_form_klarna_partpayment .klarna_logo_special_se,
+#payment_form_klarna_invoice .klarna_logo_special_se,
+.order-info-box .box-payment .klarna_logo_special_se,
+#checkout-progress-wrapper .klarna_logo_special_se,
+#thankyouPage .klarna_logo_special_se {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/se_se/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_invoice_de,
+.klarna_payment_info .klarna_logo_invoice_de,
+.klarna_thankyou .klarna_logo_invoice_de,
+#payment_form_klarna_specpayment .klarna_logo_invoice_de,
+#payment_form_klarna_partpayment .klarna_logo_invoice_de,
+#payment_form_klarna_invoice .klarna_logo_invoice_de,
+.order-info-box .box-payment .klarna_logo_invoice_de,
+#checkout-progress-wrapper .klarna_logo_invoice_de,
+#thankyouPage .klarna_logo_invoice_de {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_account_de,
+.klarna_payment_info .klarna_logo_account_de,
+.klarna_thankyou .klarna_logo_account_de,
+#payment_form_klarna_specpayment .klarna_logo_account_de,
+#payment_form_klarna_partpayment .klarna_logo_account_de,
+#payment_form_klarna_invoice .klarna_logo_account_de,
+.order-info-box .box-payment .klarna_logo_account_de,
+#checkout-progress-wrapper .klarna_logo_account_de,
+#thankyouPage .klarna_logo_account_de {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_special_de,
+.klarna_payment_info .klarna_logo_special_de,
+.klarna_thankyou .klarna_logo_special_de,
+#payment_form_klarna_specpayment .klarna_logo_special_de,
+#payment_form_klarna_partpayment .klarna_logo_special_de,
+#payment_form_klarna_invoice .klarna_logo_special_de,
+.order-info-box .box-payment .klarna_logo_special_de,
+#checkout-progress-wrapper .klarna_logo_special_de,
+#thankyouPage .klarna_logo_special_de {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_invoice_nl,
+.klarna_payment_info .klarna_logo_invoice_nl,
+.klarna_thankyou .klarna_logo_invoice_nl,
+#payment_form_klarna_specpayment .klarna_logo_invoice_nl,
+#payment_form_klarna_partpayment .klarna_logo_invoice_nl,
+#payment_form_klarna_invoice .klarna_logo_invoice_nl,
+.order-info-box .box-payment .klarna_logo_invoice_nl,
+#checkout-progress-wrapper .klarna_logo_invoice_nl,
+#thankyouPage .klarna_logo_invoice_nl {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/nl_nl/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_account_nl,
+.klarna_payment_info .klarna_logo_account_nl,
+.klarna_thankyou .klarna_logo_account_nl,
+#payment_form_klarna_specpayment .klarna_logo_account_nl,
+#payment_form_klarna_partpayment .klarna_logo_account_nl,
+#payment_form_klarna_invoice .klarna_logo_account_nl,
+.order-info-box .box-payment .klarna_logo_account_nl,
+#checkout-progress-wrapper .klarna_logo_account_nl,
+#thankyouPage .klarna_logo_account_nl {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/nl_nl/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_special_nl,
+.klarna_payment_info .klarna_logo_special_nl,
+.klarna_thankyou .klarna_logo_special_nl,
+#payment_form_klarna_specpayment .klarna_logo_special_nl,
+#payment_form_klarna_partpayment .klarna_logo_special_nl,
+#payment_form_klarna_invoice .klarna_logo_special_nl,
+.order-info-box .box-payment .klarna_logo_special_nl,
+#checkout-progress-wrapper .klarna_logo_special_nl,
+#thankyouPage .klarna_logo_special_nl {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/nl_nl/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_invoice_dk,
+.klarna_payment_info .klarna_logo_invoice_dk,
+.klarna_thankyou .klarna_logo_invoice_dk,
+#payment_form_klarna_specpayment .klarna_logo_invoice_dk,
+#payment_form_klarna_partpayment .klarna_logo_invoice_dk,
+#payment_form_klarna_invoice .klarna_logo_invoice_dk,
+.order-info-box .box-payment .klarna_logo_invoice_dk,
+#checkout-progress-wrapper .klarna_logo_invoice_dk,
+#thankyouPage .klarna_logo_invoice_dk {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_account_dk,
+.klarna_payment_info .klarna_logo_account_dk,
+.klarna_thankyou .klarna_logo_account_dk,
+#payment_form_klarna_specpayment .klarna_logo_account_dk,
+#payment_form_klarna_partpayment .klarna_logo_account_dk,
+#payment_form_klarna_invoice .klarna_logo_account_dk,
+.order-info-box .box-payment .klarna_logo_account_dk,
+#checkout-progress-wrapper .klarna_logo_account_dk,
+#thankyouPage .klarna_logo_account_dk {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_special_dk,
+.klarna_payment_info .klarna_logo_special_dk,
+.klarna_thankyou .klarna_logo_special_dk,
+#payment_form_klarna_specpayment .klarna_logo_special_dk,
+#payment_form_klarna_partpayment .klarna_logo_special_dk,
+#payment_form_klarna_invoice .klarna_logo_special_dk,
+.order-info-box .box-payment .klarna_logo_special_dk,
+#checkout-progress-wrapper .klarna_logo_special_dk,
+#thankyouPage .klarna_logo_special_dk {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_invoice_fi,
+.klarna_payment_info .klarna_logo_invoice_fi,
+.klarna_thankyou .klarna_logo_invoice_fi,
+#payment_form_klarna_specpayment .klarna_logo_invoice_fi,
+#payment_form_klarna_partpayment .klarna_logo_invoice_fi,
+#payment_form_klarna_invoice .klarna_logo_invoice_fi,
+.order-info-box .box-payment .klarna_logo_invoice_fi,
+#checkout-progress-wrapper .klarna_logo_invoice_fi,
+#thankyouPage .klarna_logo_invoice_fi {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/fi_fi/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_account_fi,
+.klarna_payment_info .klarna_logo_account_fi,
+.klarna_thankyou .klarna_logo_account_fi,
+#payment_form_klarna_specpayment .klarna_logo_account_fi,
+#payment_form_klarna_partpayment .klarna_logo_account_fi,
+#payment_form_klarna_invoice .klarna_logo_account_fi,
+.order-info-box .box-payment .klarna_logo_account_fi,
+#checkout-progress-wrapper .klarna_logo_account_fi,
+#thankyouPage .klarna_logo_account_fi {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/fi_fi/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_special_fi,
+.klarna_payment_info .klarna_logo_special_fi,
+.klarna_thankyou .klarna_logo_special_fi,
+#payment_form_klarna_specpayment .klarna_logo_special_fi,
+#payment_form_klarna_partpayment .klarna_logo_special_fi,
+#payment_form_klarna_invoice .klarna_logo_special_fi,
+.order-info-box .box-payment .klarna_logo_special_fi,
+#checkout-progress-wrapper .klarna_logo_special_fi,
+#thankyouPage .klarna_logo_special_fi {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/fi_fi/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_invoice_no,
+.klarna_payment_info .klarna_logo_invoice_no,
+.klarna_thankyou .klarna_logo_invoice_no,
+#payment_form_klarna_specpayment .klarna_logo_invoice_no,
+#payment_form_klarna_partpayment .klarna_logo_invoice_no,
+#payment_form_klarna_invoice .klarna_logo_invoice_no,
+.order-info-box .box-payment .klarna_logo_invoice_no,
+#checkout-progress-wrapper .klarna_logo_invoice_no,
+#thankyouPage .klarna_logo_invoice_no {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/no_no/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_account_no,
+.klarna_payment_info .klarna_logo_account_no,
+.klarna_thankyou .klarna_logo_account_no,
+#payment_form_klarna_specpayment .klarna_logo_account_no,
+#payment_form_klarna_partpayment .klarna_logo_account_no,
+#payment_form_klarna_invoice .klarna_logo_account_no,
+.order-info-box .box-payment .klarna_logo_account_no,
+#checkout-progress-wrapper .klarna_logo_account_no,
+#thankyouPage .klarna_logo_account_no {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/no_no/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_special_no,
+.klarna_payment_info .klarna_logo_special_no,
+.klarna_thankyou .klarna_logo_special_no,
+#payment_form_klarna_specpayment .klarna_logo_special_no,
+#payment_form_klarna_partpayment .klarna_logo_special_no,
+#payment_form_klarna_invoice .klarna_logo_special_no,
+.order-info-box .box-payment .klarna_logo_special_no,
+#checkout-progress-wrapper .klarna_logo_special_no,
+#thankyouPage .klarna_logo_special_no {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/no_no/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_invoice_at,
+.klarna_payment_info .klarna_logo_invoice_at,
+.klarna_thankyou .klarna_logo_invoice_at,
+#payment_form_klarna_specpayment .klarna_logo_invoice_at,
+#payment_form_klarna_partpayment .klarna_logo_invoice_at,
+#payment_form_klarna_invoice .klarna_logo_invoice_at,
+.order-info-box .box-payment .klarna_logo_invoice_at,
+#checkout-progress-wrapper .klarna_logo_invoice_at,
+#thankyouPage .klarna_logo_invoice_at {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/de_at/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_account_at,
+.klarna_payment_info .klarna_logo_account_at,
+.klarna_thankyou .klarna_logo_account_at,
+#payment_form_klarna_specpayment .klarna_logo_account_at,
+#payment_form_klarna_partpayment .klarna_logo_account_at,
+#payment_form_klarna_invoice .klarna_logo_account_at,
+.order-info-box .box-payment .klarna_logo_account_at,
+#checkout-progress-wrapper .klarna_logo_account_at,
+#thankyouPage .klarna_logo_account_at {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/de_at/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_special_at,
+.klarna_payment_info .klarna_logo_special_at,
+.klarna_thankyou .klarna_logo_special_at,
+#payment_form_klarna_specpayment .klarna_logo_special_at,
+#payment_form_klarna_partpayment .klarna_logo_special_at,
+#payment_form_klarna_invoice .klarna_logo_special_at,
+.order-info-box .box-payment .klarna_logo_special_at,
+#checkout-progress-wrapper .klarna_logo_special_at,
+#thankyouPage .klarna_logo_special_at {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/de_at/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_invoice_default,
+.klarna_payment_info .klarna_logo_invoice_default,
+.klarna_thankyou .klarna_logo_invoice_default,
+#payment_form_klarna_specpayment .klarna_logo_invoice_default,
+#payment_form_klarna_partpayment .klarna_logo_invoice_default,
+#payment_form_klarna_invoice .klarna_logo_invoice_default,
+.order-info-box .box-payment .klarna_logo_invoice_default,
+#checkout-progress-wrapper .klarna_logo_invoice_default,
+#thankyouPage .klarna_logo_invoice_default {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/se_se/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_account_default,
+.klarna_payment_info .klarna_logo_account_default,
+.klarna_thankyou .klarna_logo_account_default,
+#payment_form_klarna_specpayment .klarna_logo_account_default,
+#payment_form_klarna_partpayment .klarna_logo_account_default,
+#payment_form_klarna_invoice .klarna_logo_account_default,
+.order-info-box .box-payment .klarna_logo_account_default,
+#checkout-progress-wrapper .klarna_logo_account_default,
+#thankyouPage .klarna_logo_account_default {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/se_se/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo_special_default,
+.klarna_payment_info .klarna_logo_special_default,
+.klarna_thankyou .klarna_logo_special_default,
+#payment_form_klarna_specpayment .klarna_logo_special_default,
+#payment_form_klarna_partpayment .klarna_logo_special_default,
+#payment_form_klarna_invoice .klarna_logo_special_default,
+.order-info-box .box-payment .klarna_logo_special_default,
+#checkout-progress-wrapper .klarna_logo_special_default,
+#thankyouPage .klarna_logo_special_default {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/se_se/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_box_container .klarna_logo,
+.klarna_payment_info .klarna_logo,
+.klarna_thankyou .klarna_logo,
+#payment_form_klarna_specpayment .klarna_logo,
+#payment_form_klarna_partpayment .klarna_logo,
+#payment_form_klarna_invoice .klarna_logo,
+.order-info-box .box-payment .klarna_logo,
+#checkout-progress-wrapper .klarna_logo,
+#thankyouPage .klarna_logo {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/logo/se_se/basic/logo_black.png?height=44")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_invoice_se {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/se_se/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_account_se {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/se_se/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_special_se {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/se_se/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_invoice_de {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_account_de {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_special_de {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/de_de/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_invoice_nl {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/nl_nl/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_account_nl {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/nl_nl/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_special_nl {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/nl_nl/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_invoice_dk {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_account_dk {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_special_dk {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_invoice_fi {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/fi_fi/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_account_fi {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/fi_fi/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_special_fi {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/fi_fi/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_invoice_no {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/no_no/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_account_no {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/no_no/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_special_no {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/no_no/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_invoice_at {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/de_at/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_account_at {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/de_at/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_special_at {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/de_at/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_invoice_default {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/se_se/pay_later/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_account_default {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/se_se/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_logo_special_default {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/badge/se_se/slice_it/standard/pink.svg")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 175px!important;
+    height: 44px!important;
+    display: inline-block
+}
+
+.klarna_round_flag_sv {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/round_sv.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 20px!important;
+    height: 20px!important;
+    display: inline-block
+}
+
+.klarna_round_flag_nb {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/round_nb.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 20px!important;
+    height: 20px!important;
+    display: inline-block
+}
+
+.klarna_round_flag_nl {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/round_nl.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 20px!important;
+    height: 20px!important;
+    display: inline-block
+}
+
+.klarna_round_flag_de {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/round_de.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 20px!important;
+    height: 20px!important;
+    display: inline-block
+}
+
+.klarna_round_flag_da {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/round_da.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 20px!important;
+    height: 20px!important;
+    display: inline-block
+}
+
+.klarna_round_flag_en {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/round_en.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 20px!important;
+    height: 20px!important;
+    display: inline-block
+}
+
+.klarna_round_flag_fi {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/round_fi.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 20px!important;
+    height: 20px!important;
+    display: inline-block
+}
+
+.klarna_flag_se,
+.klarna_flag_sv {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/se.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 16px!important;
+    height: 11px!important;
+    display: inline-block
+}
+
+.klarna_flag_no,
+.klarna_flag_nb {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/no.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 16px!important;
+    height: 11px!important;
+    display: inline-block
+}
+
+.klarna_flag_en {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/en.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 16px!important;
+    height: 11px!important;
+    display: inline-block
+}
+
+.klarna_flag_dk,
+.klarna_flag_da {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/dk.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 16px!important;
+    height: 11px!important;
+    display: inline-block
+}
+
+.klarna_flag_de {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/de.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 16px!important;
+    height: 11px!important;
+    display: inline-block
+}
+
+.klarna_flag_fi {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/fi.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 16px!important;
+    height: 11px!important;
+    display: inline-block
+}
+
+.klarna_flag_nb {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/nb.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 16px!important;
+    height: 11px!important;
+    display: inline-block
+}
+
+.klarna_flag_nl {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/nl.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 16px!important;
+    height: 11px!important;
+    display: inline-block
+}
+
+.klarna_flag_at {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/flags/at.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 16px!important;
+    height: 11px!important;
+    display: inline-block
+}
+
+.klarna_pclass_selected {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/checkout/ok.gif")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 11px!important;
+    height: 10px!important;
+    display: inline-block
+}
+
+.klarna_notice_icon {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/checkout/notice.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 16px!important;
+    height: 22px!important;
+    display: inline-block
+}
+
+.klarna_update_available {
+    background-image: url("//cdn.klarna.com/public/kitt/res/v1.1/img/klarna_update_available.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 85px!important;
+    height: 82px!important;
+    display: inline-block
+}

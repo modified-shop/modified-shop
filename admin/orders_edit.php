@@ -205,7 +205,8 @@
                 $orderStatus->checkOrder($_GET['oID'], $order->info['payment_method']);
               }
               if ($order->info['payment_method'] == 'klarna_partPayment' || $order->info['payment_method'] == 'klarna_invoice' || $order->info['payment_method'] == 'klarna_SpecCamp') {
-                echo "<link href='" . KlarnaUtils::getStaticPath() . "images.css' type='text/css' rel='stylesheet'/>";
+                //echo "<link href='" . KlarnaUtils::getStaticPath() . "images.css' type='text/css' rel='stylesheet'/>";
+                echo "<link href='" . DIR_WS_BASE . "includes/external/klarna/KITT/css/images.css' type='text/css' rel='stylesheet'/>";
                 $contents[] = array ('align' => 'center',
                                      'text' => '<br /><span class="klarna_logo_small"></span><br /><br />'.'<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=klarna_check_orderstatus&oID='.$_GET['oID']).'">Check Order Status</a><br /><br />'
                                      );

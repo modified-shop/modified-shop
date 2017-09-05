@@ -124,8 +124,10 @@ class KlarnaBase
             && (!array_key_exists('action', $_GET)
             || !in_array($_GET['action'], array('install', 'remove', 'removeconfirm')))
         ) {
-            $css = "<link href='" . KlarnaUtils::getStaticPath() .
-            "images.css' type='text/css' rel='stylesheet'/>";
+            //$css = "<link href='" . KlarnaUtils::getStaticPath() .
+            //"images.css' type='text/css' rel='stylesheet'/>";
+            $css = "<link href='" . DIR_WS_BASE .
+            "includes/external/klarna/KITT/css/images.css' type='text/css' rel='stylesheet'/>";
             $this->_checkForLatestVersion();
             $this->description = $this->_buildDescription();
         }
@@ -259,7 +261,8 @@ class KlarnaBase
             );
 
             $styles = array(
-                EXTERNAL_KITT . "res/v1.1/checkout.css?eid=" . $merchantID,
+                //EXTERNAL_KITT . "res/v1.1/checkout.css?eid=" . $merchantID,
+                DIR_WS_BASE."includes/external/klarna/KITT/css/checkout.css",
                 DIR_WS_BASE."includes/modules/payment/klarna/checkout/style.css",
                 DIR_WS_BASE."includes/external/klarna/template/css/xtcstyle.css"
             );
@@ -397,8 +400,9 @@ class KlarnaBase
         }
 
         $cdn = KlarnaUtils::getStaticPath();
+        $kitt_css = DIR_WS_BASE . "includes/external/klarna/KITT/css/";
         $title = <<<TITLE
-<link href='{$cdn}images.css' type='text/css' rel='stylesheet'/>
+<link href='{$kitt_css}images.css' type='text/css' rel='stylesheet'/>
 <a href='http://www.klarna.com' target='_blank'>
     <div class='klarna_payment_info'>
         <span class='klarna_logo_{$type}_{$country}'></span>
