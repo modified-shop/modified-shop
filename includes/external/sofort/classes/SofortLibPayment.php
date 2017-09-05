@@ -107,16 +107,20 @@ class SofortLibPayment {
 		switch (constant('MODULE_PAYMENT_'.strtoupper($this->code).'_IMAGE')) {
 			case 'Logo & Text':
 				if ($this->ks_status === true) {
-					$description = $this->_setImageText('logo_155x50.png', constant('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT'));
+					//$description = $this->_setImageText('logo_155x50.png', constant('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT'));
+					$description = $this->_setImageText('pink.svg', constant('MODULE_PAYMENT_'.strtoupper($this->code).'_KS_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT'));
 				} else {
-					$description = $this->_setImageText('logo_155x50.png', constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT'));
+					//$description = $this->_setImageText('logo_155x50.png', constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT'));
+					$description = $this->_setImageText('pink.svg', constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT'));
 				}
 				break;
 			case 'Infographic':
 				if ($this->ks_status === true) {
-					$description = $this->_setImageText('banner_400x100_ks.png');
+					//$description = $this->_setImageText('banner_400x100_ks.png');
+					$description = $this->_setImageText('pink.svg');
 				} else {
-					$description = $this->_setImageText('banner_300x100.png');
+					//$description = $this->_setImageText('banner_300x100.png');
+					$description = $this->_setImageText('pink.svg');
 				}
 				break;
 		}
@@ -364,15 +368,16 @@ class SofortLibPayment {
 	function _setImageText($image, $text='') {
 	  switch ($_SESSION['language_code']) {
 	    case 'de':
-	      $code = 'de';
+	      $code = 'de_de';
 	      $lang = 'ger';
 	      break;
 	    default:
-	      $code = 'en';
+	      $code = 'en_gb';
 	      $lang = 'eng';
 	      break;
 	  }
-		$image = 'https://images.sofort.com/'.$code.((isset($this->ideal) && $this->ideal === true) ? '/ideal/' : '/su/').$image;
+		//$image = 'https://images.sofort.com/'.$code.((isset($this->ideal) && $this->ideal === true) ? '/ideal/' : '/su/').$image;
+		$image = 'http://cdn.klarna.com/1.0/shared/image/generic/badge/'.$code.'/pay_now/standard/'.$image;
 		$title = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT');
 		$image = '<img src="'.$image.'" '.(($title != '') ? 'alt="'.$title.'" title="'.$title.'"' : '').' />';
 		$description = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE');
@@ -509,7 +514,7 @@ class SofortLibPayment {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_LOSS_STATUS_ID', '0',  '6', '12', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_REASON_1', 'Nr. {{order_id}} Kd-Nr. {{customer_id}}',  '6', '4', 'xtc_cfg_select_option(array(\'Nr. {{order_id}} Kd-Nr. {{customer_id}}\',\'-TRANSACTION-\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_REASON_2', '" . xtc_db_input(STORE_NAME) . "', '6', '4', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_IMAGE', 'Infographic',  '6', '6', 'xtc_cfg_select_option(array(\'Infographic\',\'Logo & Text\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_IMAGE', 'Logo & Text',  '6', '6', 'xtc_cfg_select_option(array(\'Infographic\',\'Logo & Text\'), ', now())");
 
 	  xtc_db_query("CREATE TABLE IF NOT EXISTS `".$this->code."` (
                   `transaction_id` VARCHAR( 128 ) NOT NULL ,
