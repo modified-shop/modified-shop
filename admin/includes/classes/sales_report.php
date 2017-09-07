@@ -133,6 +133,12 @@
                                 JOIN " . TABLE_ORDERS_TOTAL . " ot 
                                      ON (ot.orders_id = o.orders_id AND  ot.class = 'ot_shipping')";
 
+      // query for shipping
+      $this->queryAdditional = "SELECT sum(ot.value/o.currency_value) as additional 
+                                  FROM " . TABLE_ORDERS . " o
+                                  JOIN " . TABLE_ORDERS_TOTAL . " ot 
+                                       ON (ot.orders_id = o.orders_id AND  ot.class NOT IN ('ot_subtotal', 'ot_shipping', 'ot_subtotal_no_tax', 'ot_tax', 'ot_total', 'ot_z_bpytc_total', 'ot_z_paylater_total'))";
+
       switch ($sort) {
         case '0':
           $this->sortString = "";
@@ -206,6 +212,9 @@
 
       $rqShipping = xtc_db_query($this->queryShipping . " WHERE o.date_purchased >= '" . xtc_db_input(date("Y-m-d H:i:s", $sd)) . "' AND o.date_purchased < '" . xtc_db_input(date("Y-m-d H:i:s", $ed)) . "'" . $filterString);
       $shipping = xtc_db_fetch_array($rqShipping);
+
+      $rqAdditional = xtc_db_query($this->queryAdditional . " WHERE o.date_purchased >= '" . xtc_db_input(date("Y-m-d H:i:s", $sd)) . "' AND o.date_purchased < '" . xtc_db_input(date("Y-m-d H:i:s", $ed)) . "'" . $filterString);
+      $additional = xtc_db_fetch_array($rqAdditional);
 
       $rqItems = xtc_db_query($this->queryItemCnt . " WHERE o.date_purchased >= '" . xtc_db_input(date("Y-m-d H:i:s", $sd)) . "' AND o.date_purchased < '" . xtc_db_input(date("Y-m-d H:i:s", $ed)) . "'" . $filterString . (($details > 0) ? " GROUP BY pid " . $this->sortString : ""));
       $rqItems_count = xtc_db_num_rows($rqItems);
@@ -299,6 +308,7 @@
         $resp['psum'] = $resp['pquant'] * $price;
         $resp['order'] = $order['order_cnt'];
         $resp['shipping'] = $shipping['shipping'];
+        $resp['additional'] = $additional['additional'];
 
         // values per date and item
         $sumTot += $resp['psum'];

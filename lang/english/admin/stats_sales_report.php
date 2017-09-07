@@ -43,6 +43,8 @@ define('TABLE_HEADING_ORDERS', '# Orders');
 define('TABLE_HEADING_ITEMS', '# Products');
 define('TABLE_HEADING_REVENUE', 'Revenue');
 define('TABLE_HEADING_SHIPPING', 'Shipping');
+define('TABLE_HEADING_ADDITIONAL', 'Others');
+define('TABLE_HEADING_TOTAL', 'Total');
 
 define('DET_HEAD_ONLY', 'no details');
 define('DET_DETAIL', 'show details');
