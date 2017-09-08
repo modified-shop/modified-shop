@@ -118,11 +118,15 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   require_once (DIR_FS_INC . 'get_lang_id_by_directory.inc.php');
   $lang_id = ((isset($order->info['languages_id']) && $order->info['languages_id'] != '0')  ? $order->info['languages_id'] : get_lang_id_by_directory($order->info['language']));
   $shop_content_data = $main->getContentData(REVOCATION_ID, $lang_id, $order->info['status']);
+  //Image path correction - absolute path needed
+  $shop_content_data = str_replace('src="'.DIR_WS_CATALOG.'images/', 'src="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'images/', $shop_content_data);
   $smarty->assign('REVOCATION_HTML', $shop_content_data['content_text']);
   $smarty->assign('REVOCATION_TXT', $shop_content_data['content_text']);
 
   // agb to email 
   $shop_content_data = $main->getContentData(3, $lang_id, $order->info['status']);
+  //Image path correction - absolute path needed
+  $shop_content_data = str_replace('src="'.DIR_WS_CATALOG.'images/', 'src="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'images/', $shop_content_data);
   $smarty->assign('AGB_HTML', $shop_content_data['content_text']);
   $smarty->assign('AGB_TXT', $shop_content_data['content_text']);
 
