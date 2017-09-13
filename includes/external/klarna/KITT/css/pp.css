@@ -1,0 +1,51 @@
+.klarna_PPBox_pull_img {
+    background-image: url("//cdn.klarna.com/public/kitt/pp/v1.0/img/pullUp.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 14px!important;
+    height: 10px!important;
+    display: inline-block
+}
+
+.klarna_PPBox_pullDown_img {
+    background-image: url("pullDown.png")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 14px!important;
+    height: 10px!important;
+    display: inline-block
+}
+
+.klarna_PPBox .klarna_PPBox_top {
+    background: #dbdbe0;
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorStr=#ffffff, EndColorStr=#dbdbe0);
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dbdbe0));
+    background: -moz-linear-gradient(top, #fff, #dbdbe0);
+    border: 1px solid #c2c2c7
+}
+
+.klarna_PPBox .klarna_PPBox_topMid {
+    border-left: 1px solid #c2c2c7
+}
+
+.klarna_PPBox .klarna_PPBox_topLeft {
+    background-image: url("//cdn.klarna.com/1.0/shared/image/generic/logo/de_de/basic/logo_black.png?height=17")!important;
+    background-repeat: no-repeat!important;
+    background-position: 0 bottom!important;
+    width: 76px!important;
+    height: 17px!important;
+    display: inline-block;
+    margin: 9px 0 0 9px
+}
+
+.klarna_PPBox .klarna_PPBox_bottomMid {
+    background: #484848;
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorStr=#333333, EndColorStr=#484848);
+    background: -webkit-gradient(linear, left top, left bottom, from(#333), to(#484848));
+    background: -moz-linear-gradient(top, #333, #484848);
+    border: 1px solid #c2c2c7
+}
+
+.klarna_PPBox .klarna_PPBox_topRight {
+    display: none!important
+}

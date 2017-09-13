@@ -109,7 +109,8 @@ class Klarna_PPbox
         $styles = array(
             DIR_WS_BASE."includes/external/klarna/template/css/oscstyle.css",
             DIR_WS_BASE."includes/modules/payment/klarna/productprice/style.css",
-            EXTERNAL_KITT . "pp/v1.0/pp.css?eid=" . $merchantID
+            //EXTERNAL_KITT . "pp/v1.0/pp.css?eid=" . $merchantID
+            DIR_WS_BASE."includes/external/klarna/KITT/css/pp.css",
         );
         if (KlarnaConstant::isLegacyShop()) {
             $styles[] = "includes/external/klarna/template/css/klarna22rc2a.css";

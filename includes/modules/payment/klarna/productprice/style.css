@@ -10,7 +10,7 @@
 .klarna_PPBox .klarna_PPBox_inner {
     width: 100%;
     float: right;
-    min-width: 160px;
+    min-width: 219px;
 }
 
 .klarna_PPBox .klarna_PPBox_top {
@@ -46,7 +46,7 @@
 }
 
 .klarna_PPBox .klarna_PPBox_topMid {
-    margin-left: 32px;
+    margin-left: 91px;
     margin-right: 6px;
     height: 35px;
     background-repeat: repeat-x;
@@ -61,7 +61,7 @@
 }
 
 .klarna_PPBox .klarna_PPBox_topMid span label {
-    color: #009EDA;
+    color: #fa82a0;
     padding: 0 2px 0 2px;
     cursor: pointer;
     float: none;
@@ -94,7 +94,7 @@
 }
 
 .klarna_PPBox .klarna_PPBox_pricetag {
-    color: #009EDA;
+    color: #fa82a0;
 }
 
 .klarna_PPBox .klarna_PPBox_bottomMid_readMore {
