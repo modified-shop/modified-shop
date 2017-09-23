@@ -19,8 +19,8 @@
 
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_TITLE', 'Online bank transfer.<br /><img src="https://cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/pay_now/standard/pink.svg" alt="Logo SOFORT Banking"/>');
 define('MODULE_PAYMENT_'.$sofort_code.'_KS_TEXT_TITLE', 'Online bank transfer. with customer protection<br /><img src="https://cdn.klarna.com/1.0/shared/image/generic/badge/en_gb/pay_now/standard/pink.svg" alt="Logo SOFORT Banking"/>');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION', 'SOFORT Banking is the free of charge, T&Uuml;V certified payment method by SOFORT AG.');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_INFO', 'You can pay with the T&Uuml;V certified online banking system SOFORT Banking of SOFORT AG.');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION', 'SOFORT Banking is the free of charge, T&Uuml;V certified payment method by SOFORT GmbH.');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_INFO', 'You can pay with the T&Uuml;V certified online banking system SOFORT Banking of SOFORT GmbH.');
 
 // checkout
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE', '
