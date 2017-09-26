@@ -116,7 +116,7 @@ class ShopgateItemXmlModel extends ShopgateItemModel
     public function setInternalOrderInfo()
     {
         if ($this->getIsChild()) {
-            $orderInfo = "";
+            $orderInfo = array();
             $i         = 0;
             
             foreach ($this->cache['currentChild'] as $variation) {
@@ -321,21 +321,30 @@ class ShopgateItemXmlModel extends ShopgateItemModel
     public function setIdentifiers()
     {
         $identifierData = array();
+        $ean            = null;
+        $sku            = null;
 
-        if (!empty($this->item["products_ean"])) {
-            $ean = preg_replace("/\s+/i", '', $this->item["products_ean"]);
-            if (!empty($ean)) {
-                $identifier = new Shopgate_Model_Catalog_Identifier();
-                $identifier->setType("ean");
-                $identifier->setValue($ean);
-                $identifierData[] = $identifier;
+        if ($this->getIsChild()) {
+            foreach ($this->cache['currentChild'] as $variation) {
+                $ean = $variation['attributes_ean'];
+                $sku = $variation['attributes_model'];
             }
+        } else {
+            $ean = preg_replace("/\s+/i", '', $this->item["products_ean"]);
+            $sku = $this->item['products_model'];
         }
 
-        if (!empty($this->item['products_model'])) {
+        if (!empty($ean)) {
+            $identifier = new Shopgate_Model_Catalog_Identifier();
+            $identifier->setType("ean");
+            $identifier->setValue($ean);
+            $identifierData[] = $identifier;
+        }
+        
+        if (!empty($sku)) {
             $identifierModel = new Shopgate_Model_Catalog_Identifier();
             $identifierModel->setType('sku');
-            $identifierModel->setValue($this->item['products_model']);
+            $identifierModel->setValue($sku);
             $identifierData[] = $identifierModel;
         }
 

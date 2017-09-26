@@ -1,3 +1,8 @@
+'''Version 2.9.39'''
+* export EAN and SKU for child products
+* insert used coupon code in order total title
+* fixed a type inconsistency in child product export
+
 '''Version 2.9.38'''
 * restored compatibility with PHP 5.2.17
 * uses Shopgate Library 2.9.65

@@ -68,13 +68,13 @@ define('SHOPGATE_CONFIG_SHOP_NUMBER', 'Shopnummer');
 define('SHOPGATE_CONFIG_SHOP_NUMBER_DESCRIPTION', 'Tragen Sie hier die Shopnummer Ihres Shops ein. Sie finden diese im Tab &quot;Integration&quot; Ihres Shops.');
 
 define('SHOPGATE_CONFIG_APIKEY', 'API-Key');
-define('SHOPGATE_CONFIG_APIKEY_DESCRIPTION', 'Tragen Sie hier den API-Key Ihres Shops ein. Sie finden diese im Tab &quot;Integration&quot; Ihres Shops.');
+define('SHOPGATE_CONFIG_APIKEY_DESCRIPTION', 'Tragen Sie hier den API-Key Ihres Shops ein. Sie finden diesen im Tab &quot;Integration&quot; Ihres Shops.');
 
 ### Mobile Weiterleitung ###
 define('SHOPGATE_CONFIG_MOBILE_REDIRECT_SETTINGS', 'Mobile Weiterleitung');
 
 define('SHOPGATE_CONFIG_ALIAS', 'Shop-Alias');
-define('SHOPGATE_CONFIG_ALIAS_DESCRIPTION', 'Tragen Sie hier den Alias Ihres Shops ein. Sie finden diese im Tab &quot;Integration&quot; Ihres Shops.');
+define('SHOPGATE_CONFIG_ALIAS_DESCRIPTION', 'Tragen Sie hier den Alias Ihres Shops ein. Sie finden diesen im Tab &quot;Integration&quot; Ihres Shops.');
 
 define('SHOPGATE_CONFIG_CNAME', 'Eigene URL zur mobilen Webseite (mit http://)');
 define(
@@ -134,16 +134,16 @@ define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_DESCRIPTION', 'W&auml;hlen
 define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_OFF', '-- Deaktiviert --');
 
 define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY', 'Export der "Neu" Kategorie');
-define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_DESCRIPTION', 'Dieses Shopsystem bietet die M&ouml;glichekeit eine virtuelle Kategorie f&uuml;r neue Produkte anzulegen. Diese kann mit Hilfe dieser Option als Kategorie exportiert werden. Weiterhin ist es m&ouml;glich, im Eingabefeld, eine einzigartige ID f&uuml;r diese Kategorie festzulegen.');
+define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_DESCRIPTION', 'Dieses Shopsystem bietet die M&ouml;glichkeit eine virtuelle Kategorie f&uuml;r neue Produkte anzulegen. Diese kann mit Hilfe dieser Option als Kategorie exportiert werden. Weiterhin ist es m&ouml;glich, im Eingabefeld eine einzigartige ID f&uuml;r diese Kategorie festzulegen.');
 define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_ON', 'Ja');
 define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_OFF', 'Nein');
-define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_MAX_ID', 'Aktuell h&ouml;chste Kategorie Id ihres Shopsystems');
+define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_MAX_ID', 'Aktuell h&ouml;chste Kategorie ID Ihres Shopsystems');
 
 define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY', 'Export der "Spezial" Kategorie');
 define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_DESCRIPTION', 'Dieses Shopsystem bietet die M&ouml;glichekeit eine virtuelle Kategorie f&uuml;r Spezial-Produkte anzulegen. Diese kann mit Hilfe dieser Option als Kategorie exportiert werden. Weiterhin ist es m&ouml;glich, im Eingabefeld, eine einzigartige ID f&uuml;r diese Kategorie festzulegen.');
 define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_ON', 'Ja');
 define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_OFF', 'Nein');
-define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_MAX_ID', 'Aktuell h&ouml;chste Kategorie Id ihres Shopsystems');
+define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_MAX_ID', 'Aktuell h&ouml;chste Kategorie ID Ihres Shopsystems');
 
 define('SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD', 'Export von Produkoptionen als Eingabefelder');
 define('SHOPGATE_CONFIG_EXPORT_OPTIONS_AS_INPUT_FIELD_DESCRIPTION', 'Die IDs der Produktoptionen (siehe "Artikelmerkmale"), die als Eingabefelder exportiert werden m&uuml;ssen. Beispiel: 1,2,3');
@@ -180,10 +180,10 @@ define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED', 'Storniert');
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED_NOT_SET', '- Status nicht ausgew&auml;hlt -');
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED_DESCRIPTION', 'W&auml;hlen Sie den Status f&uuml;r stornierte Bestellungen.');
 
-define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL', 'Best&auml;tigunsemail');
+define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL', 'Bestellbest&auml;tigungs-Email');
 define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL_ON', 'Ja');
 define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL_OFF', 'Nein');
-define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL_DESCRIPTION', 'Nachdem eine Bestellung &uuml;ber Shopgate abgeschlossen wurde, bekommt der Kunde eine Best&auml;tigungsmail. Sollte der Shop Produkte zum Kauf anbieten, welche Heruntergeladen werden k&ouml;nnen, enth&auml;lt diese Mail den Downloadlink');
+define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL_DESCRIPTION', 'Nachdem eine Bestellung &uuml;ber Shopgate abgeschlossen wurde, bekommt der Kunde eine Bestellbest&auml;tigungs-Email. Sollte der Shop Produkte zum Kauf anbieten, welche heruntergeladen werden k&ouml;nnen, enth&auml;lt diese Mail den Downloadlink.');
 
 define('SHOPGATE_CONFIG_PAYMENT_NAME_MAPPING', 'Anzeigenamen f&uuml;r Zahlungsweisen');
 define('SHOPGATE_CONFIG_PAYMENT_NAME_MAPPING_DESCRIPTION', "Individuelle Namen f&uuml;r Zahlungsweisen, die beim Bestellungsimport verwendet werden. Definiert durch '=' und getrennt durch ';'.<br/>(Beispiel: PREPAY=Vorkasse;SHOPGATE=Abwicklung durch Shopgate)<br/>");
