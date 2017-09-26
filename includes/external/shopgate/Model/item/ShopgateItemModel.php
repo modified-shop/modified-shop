@@ -720,6 +720,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
                     pa.price_prefix,
                     pa.options_values_weight,
                     pa.attributes_stock,
+                    pa.attributes_ean,
+                    pa.attributes_model,
                     pa.weight_prefix
             FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
             INNER JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON (pa.options_id = po.products_options_id AND po.language_id = {$this->languageId})

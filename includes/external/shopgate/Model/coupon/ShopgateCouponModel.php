@@ -180,7 +180,7 @@ class ShopgateCouponModel extends ShopgateObject
         
         $orderTotal = array(
             'orders_id'  => $orderId,
-            'title'      => MODULE_ORDER_TOTAL_COUPON_TITLE,
+            'title'      => MODULE_ORDER_TOTAL_COUPON_TITLE . ' ' . $sgCoupon->getCode() . ':',
             'text'       => '<strong><span style="color:#ff0000">' . $insertAmount . '</span></strong>',
             'value'      => $insertAmount,
             'class'      => 'ot_coupon',
