@@ -522,7 +522,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_COUNTRY; ?></td>
                       <td class="dataTableConfig col-single-right">
                       <?php
-                        echo xtc_draw_pull_down_menu('entry_country_id', xtc_get_countries(xtc_get_country_name(STORE_COUNTRY)), isset($entry_country_id)?$entry_country_id:'');
+                        echo xtc_draw_pull_down_menu('entry_country_id', xtc_get_countries(xtc_get_country_name(STORE_COUNTRY), '1'), isset($entry_country_id)?$entry_country_id:'');
                         if ($error && $entry_country_error) echo '&nbsp;'.ENTRY_COUNTRY_ERROR;
                       ?>
                       </td>
