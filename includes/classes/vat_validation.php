@@ -169,7 +169,14 @@ class vat_validation {
     
     // check country 
     $country_check = xtc_get_countriesList($country_id, true);
-    if ($country_check['countries_iso_code_2'] != strtoupper($country)) {
+
+    // fix for Greece
+    $search_array = array('gr');
+    $replace_array = array('el');
+    $country = str_replace($search_array, $replace_array, $country);
+    $country_check['countries_iso_code_2'] = str_replace($search_array, $replace_array, $country);
+
+    if (strtoupper($country_check['countries_iso_code_2']) != strtoupper($country)) {
       return $results[0];
     }
     
@@ -182,12 +189,7 @@ class vat_validation {
         return $results[0];
       }
     }
-    
-    // fix for Greece
-    $search_array = array('gr');
-    $replace_array = array('el');
-    $country = str_replace($search_array, $replace_array, $country);
-    
+        
     $country_iso_code = strtoupper($country);
     
     if ($this->live_check == 'true') {
