@@ -2,11 +2,12 @@
 /**************************************************************
 $Id$
 
-  * XTC Datenbank Manager Version 2.10  UTF-8
+  * XTC Datenbank Manager Version 2.20  UTF-8
   *(c) by  web28 - www.rpa-com.de
   * Convert UTF-8
   * Backup pro Tabelle und limitierter Zeilenzahl (Neuladen der Seite) , einstellbar mit ANZAHL_ZEILEN_BKUP
   * Restore mit limitierter Zeilennanzahl aus SQL-Datei (Neuladen der Seite), einstellbar mit ANZAHL_ZEILEN
+  * 2017-09-29 - better remove engine, remove collation
   * 2017-06-07 - remove_engine option
   * 2014-09-14 - jquery ajax handling
   * 2011-11-23 - restore in separate file
@@ -15,7 +16,7 @@ $Id$
   * 2011-09-13 - fix some PHP notices
   ***************************************************************/
 
-  define ('VERSION', 'Database Backup Ver. 2.10 UTF-8');
+  define ('VERSION', 'Database Backup Ver. 2.20 UTF-8');
 
   require('includes/application_top.php');
   
@@ -118,22 +119,30 @@ $Id$
   }
 
   function remove_collate($table,$data) {
-    $table_status = xtc_db_query("SHOW TABLE STATUS WHERE Name='".$table."'");
-    $table_status = xtc_db_fetch_array($table_status);
-    //echo '<pre>' .print_r($table_status,1) .'</pre>';
-    $collation = $table_status['Collation'];
-    $data = str_replace(' COLLATE '.$collation,'',$data);
-    $data = str_replace(' COLLATE='.$collation,'',$data);
-    $collation = explode('_',$collation);
-    $data = str_replace(' DEFAULT CHARSET='.$collation[0],'',$data);
-    //echo '<pre>' .$data .'</pre>'; EXIT;
+    global $dump;
+    if (isset($dump['collations']) && count($dump['collations'])) {
+      foreach ($dump['collations'] as $collation) {
+        if ($collation != '') {
+          $data = str_ireplace(' COLLATE '.$collation,'',$data);
+          $data = str_ireplace(' COLLATE='.$collation,'',$data);
+          $collation = explode('_',$collation);
+          $data = str_ireplace(' CHARACTER SET '.$collation[0],'',$data);
+          $data = str_ireplace(' DEFAULT CHARSET='.$collation[0],'',$data);
+        }
+      }
+    }
     return $data;
   }
   
   function remove_engine($table,$data) {
-    $table_status = xtc_db_query("SHOW TABLE STATUS WHERE Name='".$table."'");
-    $table_status = xtc_db_fetch_array($table_status);
-    $data = str_replace(' ENGINE='.$table_status['Engine'],'',$data);
+    global $dump;
+    if (isset($dump['engines']) && count($dump['engines'])) {
+      foreach ($dump['engines'] as $engine) {
+        if ($engine != '') {
+          $data = str_ireplace(' ENGINE='.$engine,'',$data);
+        }
+      }
+    }
     return $data;
   }
 
@@ -319,35 +328,8 @@ $Id$
       $dump['complete_inserts']  = 'yes';
     }
 
-    $tables_query = xtc_db_query('SHOW TABLE STATUS');
-    $dump['num_tables'] = xtc_db_num_rows($tables_query);
+    $table_collations = $table_engines = array();
 
-    $table_info = '--' . "\n";
-    $table_info .= '-- TABLE-INFO' . "\n";
-    //Tabellennamen in Array einlesen
-    $dump['tables'] = array();
-    if ($dump['num_tables'] > 0){
-      for ($i=0; $i < $dump['num_tables']; $i++){
-        $erg = xtc_db_fetch_array($tables_query);
-        //echo '<pre>'.print_r($erg,1).'</pre>';
-        $dump['tables'][$i] = $erg['Name'];
-        // Get nr of records -> need to do it this way because of incorrect returns when using InnoDBs
-        $data_query = xtc_db_query(
-            "SELECT count(*) as `count_records` 
-               FROM `". $erg['Name'] ."`
-            ");
-        $data_array = xtc_db_fetch_array($data_query);
-        
-        $erg['Rows'] = $data_array['count_records'];
-        $table_info .= '-- TABLE|'.$erg['Name'].'|'.(($erg['Name'] != TABLE_SESSIONS && $erg['Name'] != TABLE_WHOS_ONLINE) ? $erg['Rows'] : '0').'|'.(($erg['Name'] != TABLE_SESSIONS && $erg['Name'] != TABLE_WHOS_ONLINE) ? ($erg['Data_length']+$erg['Index_length']) : '0').'|'.$erg['Update_time']. (!isset($_POST['remove_engine']) ? '|'.$erg['Engine'] :'') ."\n";
-        
-      }
-      $dump['nr'] = 0;
-    } //else ERROR
-    $table_info .= '-- EOF TABLE-INFO' . "\n";
-    $table_info .= '--' . "\n\n";
-    
-    $dump['ready'] = 0;
     $dump['table_offset'] = 0;
 
     $_SESSION['dump'] = $dump;
