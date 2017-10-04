@@ -94,6 +94,8 @@
       if (isset($_POST['complete_inserts']) && $_POST['complete_inserts'] == 'yes') {
         $dump['complete_inserts'] = 'yes';
       }
+      
+      $table_collations = $table_engines = array();
 
       $tables_query = xtc_db_query('SHOW TABLE STATUS');
       $dump['num_tables'] = xtc_db_num_rows($tables_query);
@@ -102,10 +104,24 @@
       $table_info .= '-- TABLE-INFO' . "\n";
       //Tabellennamen in Array einlesen
       $dump['tables'] = array();
-      if ($dump['num_tables'] > 0) {
-        for ($i=0; $i < $dump['num_tables']; $i++) {
+      if ($dump['num_tables'] > 0){
+        for ($i=0; $i < $dump['num_tables']; $i++){
           $erg = xtc_db_fetch_array($tables_query);
           //echo '<pre>'.print_r($erg,1).'</pre>';
+          if ($erg['Collation'] != '') {
+            $table_collations[$erg['Collation']] = 1;
+          }
+          if ($erg['Engine'] != '') {
+            $table_engines[$erg['Engine']] = 1;
+          }
+          $data_query = xtc_db_query(
+             "SHOW FULL COLUMNS FROM `". $erg['Name'] ."`
+               WHERE Collation != ''
+               AND Collation != '". $erg['Collation']."'
+             ");
+          while ($fields = xtc_db_fetch_array($data_query)) {
+              $table_collations[$fields['Collation']] = 1;
+          }
           $dump['tables'][$i] = $erg['Name'];
           // Get nr of records -> need to do it this way because of incorrect returns when using InnoDBs
           $data_query = xtc_db_query(
@@ -113,16 +129,19 @@
                  FROM `". $erg['Name'] ."`
               ");
           $data_array = xtc_db_fetch_array($data_query);
-        
+          
           $erg['Rows'] = $data_array['count_records'];
           $table_info .= '-- TABLE|'.$erg['Name'].'|'.(($erg['Name'] != TABLE_SESSIONS && $erg['Name'] != TABLE_WHOS_ONLINE) ? $erg['Rows'] : '0').'|'.(($erg['Name'] != TABLE_SESSIONS && $erg['Name'] != TABLE_WHOS_ONLINE) ? ($erg['Data_length']+$erg['Index_length']) : '0').'|'.$erg['Update_time']. (!isset($_POST['remove_engine']) ? '|'.$erg['Engine'] :'') ."\n";
-        
+          
         }
         $dump['nr'] = 0;
       } //else ERROR
       $table_info .= '-- EOF TABLE-INFO' . "\n";
       $table_info .= '--' . "\n\n";
-    
+      
+      $dump['collations'] = array_keys($table_collations);
+      $dump['engines'] = array_keys($table_engines);
+      
       $dump['ready'] = 0;
       $dump['table_offset'] = 0;
 

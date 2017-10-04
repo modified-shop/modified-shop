@@ -1,5 +1,7 @@
 <?php
 /**************************************************************
+$Id$
+
 *Script von MySQLDumper 1.24 
 * Pfad und Dateiname MySQLDumper 1.24: inc/functions_restore.php
 * Angepasst für XTC Datenbank Manager von web28
@@ -8,7 +10,7 @@
 * Version 1.0.3
 * 2012-01-11 encode_htmlspecialchars
 * Version 1.0.2
-* 2010-09-09 - - add set_admin_access
+* 2010-09-09 - - add set_admin_access                          
 ***************************************************************/
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
@@ -592,24 +594,32 @@ function WriteToDumpFile($data) {
 }
 
 function remove_collate($table,$data) {
-  $table_status = xtc_db_query("SHOW TABLE STATUS WHERE Name='".$table."'");
-  $table_status = xtc_db_fetch_array($table_status);
-
-  $data = preg_replace('/\sCOLLATE\s(.*?)_(ci|cs|bin)/', ' ', $data);
-  $data = preg_replace('/\sCOLLATE=(.*?)_(ci|cs|bin)/', '', $data);
-  $collation = explode('_', $table_status['Collation']);
-  $data = preg_replace('/\sDEFAULT\sCHARSET=('.$collation[0].')/', '', $data);
-  
-  //echo '<pre>' .$data .'</pre>'; EXIT;
-  return $data;
+    global $dump;
+    if (stripos($table,'magnalister') === false && isset($dump['collations']) && count($dump['collations'])) {
+      foreach ($dump['collations'] as $collation) {
+        if ($collation != '') {
+          $data = str_ireplace(' COLLATE '.$collation,'',$data);
+          $data = str_ireplace(' COLLATE='.$collation,'',$data);
+          $collation = explode('_',$collation);
+          $data = str_ireplace(' CHARACTER SET '.$collation[0],'',$data);
+          $data = str_ireplace(' DEFAULT CHARSET='.$collation[0],'',$data);
+        }
+      }
+    }
+    return $data;
 }
 
 function remove_engine($table,$data) {
-  $table_status = xtc_db_query("SHOW TABLE STATUS WHERE Name='".$table."'");
-  $table_status = xtc_db_fetch_array($table_status);
-  $data = preg_replace('/\sTYPE=('.$table_status['Engine'].')/', '', $data);
-  $data = preg_replace('/\sENGINE=('.$table_status['Engine'].')/', '', $data);
-  return $data;
+    global $dump;
+    if (stripos($table,'magnalister') === false && isset($dump['engines']) && count($dump['engines'])) {
+      foreach ($dump['engines'] as $engine) {
+        if ($engine != '') {
+          $data = str_ireplace(' TYPE='.$engine,'',$data);
+          $data = str_ireplace(' ENGINE='.$engine,'',$data);
+        }
+      }
+    }
+    return $data;
 }
 
 function GetTableInfo($table) {
