@@ -132,7 +132,7 @@
   if (!defined('TITLE')) {
     define('TITLE', HEADING_TITLE);
   }
-  include ('includes/functions/db_restore.php');
+  include ('includes/functions/db_functions.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -140,137 +140,7 @@
   $info_wait = '<img src="images/loading.gif"> '. TEXT_INFO_WAIT ;
   $button_back = '';
 
-  //#### RESTORE ANFANG ########
-  $restore = array();
-  $restore['file'] = '';
-  if (isset($_SESSION['restore'])) {
-    $restore=$_SESSION['restore'];
-  }
-
-  if (RESTORE_TEST) $sim = TEXT_SIMULATION; else $sim = '';
-
-  if ($action == 'restorenow') {
-    $info_text = TEXT_INFO_DO_RESTORE . $sim;
-    
-    $restore = array();
-    unset($_SESSION['restore']);
-    
-    $restore['starttime'] = time();
-    
-    xtc_set_time_limit(0);
-    //BOF Disable "STRICT" mode!
-    $vers = @xtc_db_get_client_info();
-    if(substr($vers,0,1) > 4) {
-      @xtc_db_query("SET SESSION sql_mode=''");
-    }
-    //EOF Disable "STRICT" mode!
-    $_GET['file'] = isset($_GET['file']) ? basename($_GET['file']) : '';
-    $_GET['file'] = preg_replace('/[^0-9a-zA-Z._-]/','',$_GET['file']);
-    $restore['file'] = DIR_FS_BACKUP . $_GET['file'];
-
-    //Testen ob Backupdatei existiert, bei nein Abbruch
-    if (!is_file($restore['file'])) {
-      die('Direct Access to this location is not allowed.');
-    }
-
-    //Protokollfatei löschen wenn sie schon existiert
-    $extension = substr($restore['file'], -3);
-    if($extension == '.gz') {
-      $protdatei = substr($restore['file'],0, -3). '.log.gz';
-    } else {
-      $protdatei = $restore['file'] . '.log';
-    }
-    if (RESTORE_TEST && is_file($protdatei) ) {
-      unlink ($protdatei);
-    }
-    $extension = substr($_GET['file'], -3);
-    if($extension == 'sql') {
-      $restore['compressed'] = false;
-    }
-    if($extension == '.gz') {
-      $restore['compressed'] = true;
-    }
-    $_SESSION['restore']= isset($restore)?$restore:'';
-  }
-
-  //Testen ob Backupdatei existiert, bei nein Abbruch
-  if (!is_file($restore['file'])) {
-    die('Direct Access to this location is not allowed.');
-  }
-
-  if (!empty($restore['file']) && $action == 'restoredb'){
-    $info_text = TEXT_INFO_DO_RESTORE . $sim;
-    $restore['filehandle']=($restore['compressed'] == true) ? gzopen($restore['file'],'r') : fopen($restore['file'],'r');
-    if (!$restore['compressed'])
-      $filegroesse = filesize($restore['file']);
-    // Dateizeiger an die richtige Stelle setzen
-    ($restore['compressed']) ? gzseek($restore['filehandle'],$restore['offset']) : fseek($restore['filehandle'],$restore['offset']);
-    // Jetzt basteln wir uns mal unsere Befehle zusammen...
-    $a=0;
-    $restore['EOB']=false;
-    $config['minspeed'] = ANZAHL_ZEILEN;
-    $restore['anzahl_zeilen']= $config['minspeed'];
-
-    // Disable Keys of actual table to speed up restoring
-    if (sizeof($restore['tables_to_restore']) == 0 && ($restore['actual_table'] > '' && $restore['actual_table'] != 'unbekannt')) {
-      @xtc_db_query('/*!40000 ALTER TABLE `'.$restore['actual_table'].'` DISABLE KEYS */;');
-    }
-    
-    $actual_table = '';
-    while (($a < $restore['anzahl_zeilen']) && (!$restore['fileEOF']) && !$restore['EOB']) {
-      xtc_set_time_limit(0);
-      $sql_command = get_sqlbefehl();
-      //Echo $sql_command;
-      if ($sql_command > '') {
-        $actual_table = $restore['actual_table'];
-        if (!RESTORE_TEST) {
-          $res = xtc_db_query($sql_command);
-          if ($res===false) {
-            // Bei MySQL-Fehlern sofort abbrechen und Info ausgeben
-            $meldung=((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? @xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link})) : @xtc_db_error($query, mysql_errno(${$link}), mysql_error(${$link})));
-            if ($meldung!='')
-              die($sql_command.' -> '.$meldung);
-          }
-        } else {
-          protokoll($sql_command);
-        }
-      }
-      $a++;
-    }
-    $restore['offset']=($restore['compressed']) ? gztell($restore['filehandle']) : ftell($restore['filehandle']);
-    $restore['compressed'] ? gzclose($restore['filehandle']) : fclose($restore['filehandle']);
-    $restore['aufruf']++;
-
-    $_SESSION['restore'] = $restore;
-        
-    $sec = time() - $restore['starttime']; 
-    $time = sprintf('%d:%02d Min.', floor($sec/60), $sec % 60);
-    
-    $json_output = array();
-    $json_output['aufruf'] = $restore['aufruf'];
-    $json_output['table_ready'] = ($restore['table_ready'] > 0) ? $restore['table_ready'] : '0';
-    $json_output['time'] = $time;
-    $json_output['actual_table'] = $restore['fileEOF'] ? '' : $actual_table;
-    $json_output['fileEOF'] = $restore['fileEOF'] ? 1 : 0;
-    $json_output['filesize'] = filesize($restore['file']);
-    $json_output['offset'] = $restore['offset'];
-    if (isset($_SESSION['SECName']) && isset($_SESSION['SECToken'])) {
-      $json_output[$_SESSION['SECName']] = $_SESSION['SECToken'];
-    }
-    
-    //$restore['fileEOF'] = true;
-    if ($restore['fileEOF'])  {
-      $restore= array();
-      unset($_SESSION['restore']);
-    }
-   
-    //$json_output = $export;
-    $json_output = json_encode($json_output);
-    echo $json_output;
-    EXIT;
-  }
-
-  //#### RESTORE ENDE ########
+  include ('includes/db_actions.php');
   
 if(is_file(DIR_WS_INCLUDES.'head.php')) {
     require (DIR_WS_INCLUDES.'head.php');
