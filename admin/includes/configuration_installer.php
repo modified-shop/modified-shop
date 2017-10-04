@@ -143,6 +143,8 @@ $values_group_update = array();
 
 //configuration_group_id 12 --- "Email Optionen"
   $values[] = "(NULL, 'SMTP_SECURE', 'none', 12, 8, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'none\', \'ssl\', \'tls\'),');";
+  $values[] = "(NULL, 'SMTP_AUTO_TLS', 'false', 12, 8, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'SMTP_DEBUG', '0', 12, 8, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\'),');";
   $values[] = "(NULL, 'EMAIL_SQL_ERRORS', 'false', '12', '14', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'EMAIL_BILLING_ATTACHMENTS', '', '12', '39', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'SHOW_IMAGES_IN_EMAIL', 'false', '12', '15', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
