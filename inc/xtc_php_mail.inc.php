@@ -147,6 +147,8 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $mail->Username = SMTP_USERNAME; // SMTP username
     $mail->Password = SMTP_PASSWORD; // SMTP password
     $mail->Host = SMTP_MAIN_SERVER.';'.SMTP_BACKUP_SERVER; // specify main and backup server "smtp1.example.com;smtp2.example.com"
+    $mail->SMTPAutoTLS = (defined('SMTP_AUTO_TLS') && SMTP_AUTO_TLS == 'true') ? true : false; // turn on SMTPAutoTLS authentication true/false
+    $mail->SMTPDebug = (defined('SMTP_DEBUG')) ? (int)SMTP_DEBUG : 0; //SMTP class debug output mode, output level: 0 - 4
   }
 
   if (EMAIL_TRANSPORT == 'sendmail') { // set mailer to use SMTP

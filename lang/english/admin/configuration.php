@@ -378,6 +378,10 @@ define('SMTP_AUTH_TITLE' , 'SMTP-Auth');
 define('SMTP_AUTH_DESC' , 'Enable secure authentication for your SMTP Server');
 define('SMTP_PORT_TITLE' , 'SMTP Port');
 define('SMTP_PORT_DESC' , 'Please enter the SMTP port of your SMTP server(default: 25)?');
+define('SMTP_AUTO_TLS_TITLE' , 'SMTP-Automatic TLS connection');
+define('SMTP_AUTO_TLS_DESC' , 'Connection automatically with STARTTLS if SMTP-SECURE is deactivated? <br> In case of transmission problems deactivate the automatic TLS connection!');
+define('SMTP_DEBUG_TITLE' , 'SMTP-Debug Log-Level');
+define('SMTP_DEBUG_DESC' , '<b>0</b>: no output; <b>1</b>: commands; <b>2</b>: data and commands; <b>3</b>: as 2 plus connection status; <b>4</b>: as 3 plus low-level data output<br>In case of sending problems set to 2, a log is created in the log directory.');
 
 //DokuMan - 2011-09-20 - E-Mail SQL errors
 define('EMAIL_SQL_ERRORS_TITLE','Send SQL error messages to shop owner via email');
