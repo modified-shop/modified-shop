@@ -17,7 +17,7 @@
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE', 'EU-Standard Bank Transfer');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION', 
-          '<br />Die billigste und einfachste Zahlungsmethode innerhalb der EU ist die &Uuml;berweisung mittels IBAN und BIC.' .
+          '<br />Die g&uuml;nstigste und einfachste Zahlungsmethode innerhalb der EU ist die &Uuml;berweisung mittels IBAN und BIC.' .
 					'<br />Bitte verwenden Sie folgende Daten f&uuml;r die &Uuml;berweisung des Gesamtbetrages:<br />' .
           '<br />Name der Bank: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM : '') .
           '<br />Empf&auml;nger: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH : '') .
