@@ -307,7 +307,9 @@ if ($category_depth == 'nested') {
   */
 } else {
 
-  $shop_content_data = $main->getContentData(5, '', '', false);
+  $shop_content_data = $main->getContentData(5, '', '', false, ADD_SELECT_CONTENT);
+  
+  $content_main_template = 'main_content.html';
 
   $default_smarty->assign('title', $shop_content_data['content_heading']);
 
@@ -318,13 +320,13 @@ if ($category_depth == 'nested') {
   // set cache ID
   if (!CacheCheck()) {
     $default_smarty->caching = 0;
-    $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/main_content.html');
+    $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/',$content_main_template);
   } else {
     $default_smarty->caching = 1;
     $default_smarty->cache_lifetime = CACHE_LIFETIME;
     $default_smarty->cache_modified_check = CACHE_CHECK;
     $cache_id = md5($_SESSION['language'].$_SESSION['currency'].((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : ''));
-    $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/main_content.html', $cache_id);
+    $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_main_template, $cache_id);
   }
   $smarty->assign('main_content', $main_content);
 }

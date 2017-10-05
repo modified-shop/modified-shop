@@ -39,7 +39,8 @@ if ($language_not_found === true) {
 
 } else {
 
-  $shop_content_query = xtc_db_query("SELECT content_id, 
+  $shop_content_query = xtc_db_query("SELECT ". ADD_SELECT_CONTENT . "
+                                             content_id, 
                                              content_title, 
                                              content_heading, 
                                              content_text, 
@@ -92,18 +93,22 @@ if ($language_not_found === true) {
       $link = xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL');
     } 
     $smarty->assign('BUTTON_CONTINUE', '<a href="'.$link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
-    $smarty->assign('language', $_SESSION['language']);
+     $smarty->assign('language', $_SESSION['language']);
+    
+    $content_template = 'content.html';
+    
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/shop_content_end/','php') as $file) require_once ($file);
 
     // set cache ID
      if (!CacheCheck()) {
       $smarty->caching = 0;
-      $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/content.html');
+      $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template);
     } else {
       $smarty->caching = 1;
       $smarty->cache_lifetime = CACHE_LIFETIME;
       $smarty->cache_modified_check = CACHE_CHECK;
       $cache_id = md5($_SESSION['language'].$_SESSION['customers_status']['customers_status'].$shop_content_data['content_id'].((isset($_REQUEST['error'])) ? $_REQUEST['error'] : ''));
-      $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/content.html', $cache_id);
+      $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template, $cache_id);
     }
   }
 

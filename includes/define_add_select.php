@@ -21,6 +21,9 @@ $add_select_default[] = 'p.products_extra_field';
   $add_where_search = array();
   $add_select_product = array();
   $add_select_cart = array();
+  $add_select_content = array();
+  $add_products_options_select = array();
+  $add_tags_select = array();  
   
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/define_add_select/','php') as $file) require ($file);
 
@@ -39,14 +42,14 @@ $add_select_default[] = 'p.products_extra_field';
   // used in /includes/classes/shopping_cart.php -  used for cart details
   define('ADD_SELECT_CART', (count($add_select_cart) ? rtrim(implode(', ', $add_select_cart), ',').', ' : ''));
   
+  // used in shop_content.php -  used for shop_content
+  define('ADD_SELECT_CONTENT', (count($add_select_content) ? rtrim(implode(', ', $add_select_content), ',').', ' : ''));
   
   //PRODUCT OPTIONS
-  $add_products_options_select = array();
   // used in /includes/modules/product_attributes.php - used for products options data
   define('ADD_PRODUCT_OPTIONS_SELECT', (count($add_products_options_select) ? rtrim(implode(', ', $add_products_options_select), ',').', ' : ''));
   
   //PRODUCT TAGS
-  $add_tags_select = array();
   // used in /includes/modules/product_tags.php - used for product tags module_content
   define('ADD_TAGS_SELECT', (count($add_tags_select) ? rtrim(implode(', ', $add_tags_select), ',').', ' : ''));
   
