@@ -103,7 +103,7 @@ define('BOX_CONFIGURATION_14', 'Komprimierung');
 define('BOX_CONFIGURATION_15', 'Sessions');
 define('BOX_CONFIGURATION_16', 'Meta-Tags/Suchmaschinen');
 define('BOX_CONFIGURATION_17', 'Zusatzmodule');
-define('BOX_CONFIGURATION_18', 'UST ID');
+define('BOX_CONFIGURATION_18', 'USt-IdNr.');
 define('BOX_CONFIGURATION_19', 'Partner');
 define('BOX_CONFIGURATION_22', 'Such-Optionen');
 define('BOX_CONFIGURATION_24', 'Google, Piwik &amp; Facebook');
@@ -411,12 +411,12 @@ define('TEXT_VALID_CATEGORIES_ID', 'Kategorie-ID');
 define('TEXT_VALID_CATEGORIES_NAME', 'Kategoriename');
 
 define('SECURITY_CODE_LENGTH_TITLE', 'L&auml;nge des Gutscheincodes');
-define('SECURITY_CODE_LENGTH_DESC', 'Geben Sie hier die L&auml;nge des Gutscheincode ein. (max. 16 Zeichen)');
+define('SECURITY_CODE_LENGTH_DESC', 'Geben Sie hier die L&auml;nge des Gutscheincodes ein. (max. 16 Zeichen)');
 
 define('NEW_SIGNUP_GIFT_VOUCHER_AMOUNT_TITLE', 'Willkommens-Geschenk Gutschein Wert');
-define('NEW_SIGNUP_GIFT_VOUCHER_AMOUNT_DESC', 'Willkommens-Geschenk Gutschein Wert: Wenn Sie keinen Gutschein in Ihrer Willkommens-E-Mail versenden wollen, tragen Sie hier 0 ein, ansonsten geben Sie den Wert des Gutscheins an, z.B. 10.00 oder 50.00, aber keine W&auml;hrungszeichen');
+define('NEW_SIGNUP_GIFT_VOUCHER_AMOUNT_DESC', 'Willkommens-Geschenk Gutschein Wert: Wenn Sie keinen Gutschein in Ihrer Willkommens-E-Mail versenden wollen, tragen Sie hier 0 ein, ansonsten geben Sie den Wert des Gutscheins an, z.B. 10.00 oder 50.00, aber keine W&auml;hrungszeichen.');
 define('NEW_SIGNUP_DISCOUNT_COUPON_TITLE', 'Willkommens-Rabatt Coupon Code');
-define('NEW_SIGNUP_DISCOUNT_COUPON_DESC', 'Willkommens-Rabatt Coupon Code: Wenn Sie keinen Coupon in Ihrer Willkommens-E-Mail versenden wollen, lassen Sie dieses Feld leer, ansonsten tragen Sie den Coupon Code ein, den Sie verwenden wollen');
+define('NEW_SIGNUP_DISCOUNT_COUPON_DESC', 'Willkommens-Rabatt Coupon Code: Wenn Sie keinen Coupon in Ihrer Willkommens-E-Mail versenden wollen, lassen Sie dieses Feld leer, ansonsten tragen Sie den Coupon Code ein, den Sie verwenden wollen.');
 
 define('TXT_ALL','Alle');
 
@@ -424,10 +424,10 @@ define('TXT_ALL','Alle');
 define('HEADING_TITLE_VAT','USt-IdNr.');
 define('ENTRY_VAT_ID','USt-IdNr.:');
 define('ENTRY_CUSTOMERS_VAT_ID', 'USt-IdNr.:');
-define('TEXT_VAT_FALSE','<span class="messageStackError">Gepr&uuml;ft/USTID ist ung&uuml;ltig!</span>');
-define('TEXT_VAT_TRUE','<span class="messageStackSuccess">Gepr&uuml;ft/USTID ist g&uuml;ltig</span>');
+define('TEXT_VAT_FALSE','<span class="messageStackError">Gepr&uuml;ft/USt-IdNr. ist ung&uuml;ltig!</span>');
+define('TEXT_VAT_TRUE','<span class="messageStackSuccess">Gepr&uuml;ft/USt-IdNr. ist g&uuml;ltig</span>');
 define('TEXT_VAT_UNKNOWN_COUNTRY','<span class="messageStackError">Nicht gepr&uuml;ft/Land unbekannt!</span>');
-define('TEXT_VAT_INVALID_INPUT','<span class="messageStackError">Nicht gepr&uuml;ft/Der &uuml;bergebene L&auml;ndercode ist ung&uuml;ltig oder die USTID ist leer!</span>');
+define('TEXT_VAT_INVALID_INPUT','<span class="messageStackError">Nicht gepr&uuml;ft/Der &uuml;bergebene L&auml;ndercode ist ung&uuml;ltig oder die USt-IdNr. ist leer!</span>');
 define('TEXT_VAT_SERVICE_UNAVAILABLE','<span class="messageStackError">Nicht gepr&uuml;ft/Der SOAP Service ist nicht erreichbar, versuchen Sie es sp&auml;ter noch einmal!</span>');
 define('TEXT_VAT_MS_UNAVAILABLE','<span class="messageStackError">Nicht gepr&uuml;ft/Der Service des Mitgliedsstaats ist nicht erreichbar, versuchen Sie es sp&auml;ter noch einmal oder mit einem anderen Mitgliedsstaat!</span>');
 define('TEXT_VAT_TIMEOUT','<span class="messageStackError">Nicht gepr&uuml;ft/Der Service des Mitgliedsstaats konnte nicht erreicht werden (timeout), versuchen Sie es sp&auml;ter noch einmal oder mit einem anderen Mitgliedsstaat!</span>');
