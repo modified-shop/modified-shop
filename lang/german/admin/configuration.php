@@ -497,7 +497,7 @@ define('MODULE_SHIPPING_INSTALLED_TITLE' , 'Installierte Versand Module');
 define('MODULE_SHIPPING_INSTALLED_DESC' , 'Liste der Versandmodul-Dateinamen (getrennt durch einen Strichpunkt (;)). Diese wird automatisch aktualisiert, daher ist es nicht notwendig diese zu editieren. (Beispiel: ups.php;flat.php;item.php)');
 
 define('CACHE_LIFETIME_TITLE','Cache Lebenszeit');
-define('CACHE_LIFETIME_DESC','Zeit in Sekunden, bevor Cache Datein automatisch &uuml;berschrieben werden.');
+define('CACHE_LIFETIME_DESC','Zeit in Sekunden, bevor Cache Dateien automatisch &uuml;berschrieben werden.');
 define('CACHE_CHECK_TITLE','Pr&uuml;fe ob Cache modifiziert');
 define('CACHE_CHECK_DESC','Wenn "true", dann werden If-Modified-Since headers bei gecachetem Content ber&uuml;cksichtigt und passende HTTP headers werden ausgegeben. Somit werden regelm&auml;ssig aufgerufene Seiten nicht jedesmal neu an den Client versandt.');
 
@@ -810,7 +810,7 @@ define('DISPLAY_ERROR_REPORTING_TITLE', 'Error Reporting');
 define('DISPLAY_ERROR_REPORTING_DESC', 'Soll das Error Reporting als formatierte Liste im Footer angezeigt werden?');
 
 define('DISPLAY_BREADCRUMB_OPTION_TITLE', 'Breadcrumb Navigation');
-define('DISPLAY_BREADCRUMB_OPTION_DESC', '<strong>name:</strong> In der Breadcrumb Navigation wird der komplette Artikelname angezeigt angezeigt.<br /><strong>model:</strong> In der Breadcrumb Navigation wird die Artikelnummer angezeigt, sofern sie vorhanden ist. Ansonsten Fallback auf auf Artikelname.');
+define('DISPLAY_BREADCRUMB_OPTION_DESC', '<strong>name:</strong> In der Breadcrumb Navigation wird der komplette Artikelname angezeigt.<br /><strong>model:</strong> In der Breadcrumb Navigation wird die Artikelnummer angezeigt, sofern sie vorhanden ist. Ansonsten Fallback auf Artikelname.');
 
 define('EMAIL_WORD_WRAP_TITLE', 'WordWrap f&uuml;r Text-E-Mails');
 define('EMAIL_WORD_WRAP_DESC', 'Hier die Anzahl der Zeichen f&uuml;r eine Zeile in Text-E-Mails eingeben, bevor Text umgebrochen werden soll (nur ganze Zahlen).<br /><strong>Achtung:</strong> Eine Zeichenzahl &uuml;ber 76 kann dazu f&uuml;hren, dass die E-Mails des Shops durch SpamAssassin als SPAM eingestuft werden! Weitere Infos dazu <a href="http://wiki.apache.org/spamassassin/Rules/MIME_QP_LONG_LINE" target="_blank">hier</a>.');
@@ -1038,7 +1038,7 @@ define('STORE_PAGE_PARSE_TIME_THRESHOLD_DESC' , 'Legt den Schwellwert in Sekunde
 define('SEARCH_IN_FILTER_TITLE', 'Suche in Artikeleigenschaften');
 define('SEARCH_IN_FILTER_DESC', 'Aktivieren, um die Suche in den Artikeleigenschaften zu erm&ouml;glichen.');
 define('SEARCH_AC_STATUS_TITLE','Autocomplete Suche');
-define('SEARCH_AC_STATUS_DESC','Aktivieren. um die Autocomplete Suche zu aktivieren.<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
+define('SEARCH_AC_STATUS_DESC','Aktivieren, um die Autocomplete Suche zu aktivieren.<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete Suche Zeichenanzahl');
 define('SEARCH_AC_MIN_LENGTH_DESC', 'Ab welcher Zeichenanzahl sollen die ersten Suchergebnisse angezeigt werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 
