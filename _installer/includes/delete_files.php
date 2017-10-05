@@ -79,6 +79,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'admin/includes/classes/phpmailer.lang-de.php', // neu
                      'admin/includes/classes/phpmailer.lang-en.php', // neu
                      'admin/includes/configure.org.php',
+                     'admin/includes/functions/db_restore.php', // neu
                      'admin/includes/functions/languages.php', // neu
                      'admin/includes/functions/validations.php', // neu
                      'admin/includes/haendlerbund/css/ui_custom.css', // neu
