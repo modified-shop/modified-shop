@@ -46,7 +46,7 @@ define('EXPECTED_PRODUCTS_FIELD_TITLE' , 'Sortierfeld f&uuml;r Artikelank&uuml;n
 define('EXPECTED_PRODUCTS_FIELD_DESC' , 'Das ist die Spalte, die zum Sortieren angek&uuml;ndigter Artikel benutzt wird.');
 
 define('USE_DEFAULT_LANGUAGE_CURRENCY_TITLE' , 'Auf die Landesw&auml;hrung automatisch umstellen');
-define('USE_DEFAULT_LANGUAGE_CURRENCY_DESC' , 'Automatisch auf die Landesw&auml;hrung des Kunden umstellen sofern verf&uuml;gbar.');
+define('USE_DEFAULT_LANGUAGE_CURRENCY_DESC' , 'Automatisch auf die Landesw&auml;hrung des Kunden umstellen, sofern verf&uuml;gbar.');
 
 define('SEND_EXTRA_ORDER_EMAILS_TO_TITLE' , 'Senden einer extra Bestell-E-Mail an:');
 define('SEND_EXTRA_ORDER_EMAILS_TO_DESC' , 'Wenn zus&auml;tzlich eine Kopie des Bestell-E-Mails versendet werden soll, bitte in dieser Weise die Empfangs-Adressen auflisten: Name 1 &lt;E-Mail@adresse1&gt;, Name 2 &lt;E-Mail@adresse2&gt;');
@@ -67,13 +67,13 @@ define('STORE_NAME_ADDRESS_TITLE' , 'Gesch&auml;ftsadresse und Telefonnummer etc
 define('STORE_NAME_ADDRESS_DESC' , 'Tragen Sie hier Ihre Gesch&auml;ftsadresse wie in einem Briefkopf ein.');
 
 define('SHOW_COUNTS_TITLE' , 'Artikelanzahl hinter Kategorienamen?');
-define('SHOW_COUNTS_DESC' , 'Z&auml;hlt rekursiv die Anzahl der verschiedenen Artikel pro Warengruppe, und zeigt die Anzahl (x) hinter jedem Kategorienamen');
+define('SHOW_COUNTS_DESC' , 'Z&auml;hlt rekursiv die Anzahl der verschiedenen Artikel pro Warengruppe und zeigt die Anzahl (x) hinter jedem Kategorienamen.');
 
 define('DISPLAY_PRICE_WITH_TAX_TITLE' , 'Preis inkl. MwSt. anzeigen');
 define('DISPLAY_PRICE_WITH_TAX_DESC' , 'Preise inklusive Steuer anzeigen (true) oder am Ende aufrechnen (false)');
 
 define('DEFAULT_CUSTOMERS_STATUS_ID_ADMIN_TITLE' , 'Kundenstatus(Kundengruppe) f&uuml;r Administratoren im Frontend');
-define('DEFAULT_CUSTOMERS_STATUS_ID_ADMIN_DESC' , 'W&auml;hlen Sie den Kundenstatus(Gruppe) mit welchen Kundengruppen-Berechtigungen der Admin im Frontend ist.');
+define('DEFAULT_CUSTOMERS_STATUS_ID_ADMIN_DESC' , 'W&auml;hlen Sie den Kundenstatus(Gruppe), mit welchen Kundengruppen-Berechtigungen der Admin das Frontend sieht.');
 define('DEFAULT_CUSTOMERS_STATUS_ID_GUEST_TITLE' , 'Kundenstatus(Kundengruppe) f&uuml;r G&auml;ste');
 define('DEFAULT_CUSTOMERS_STATUS_ID_GUEST_DESC' , 'W&auml;hlen Sie den Kundenstatus(Gruppe) f&uuml;r G&auml;ste anhand der jeweiligen ID!');
 define('DEFAULT_CUSTOMERS_STATUS_ID_TITLE' , 'Kundenstatus f&uuml;r Neukunden');
@@ -113,9 +113,9 @@ define('REVIEW_TEXT_MIN_LENGTH_TITLE' , 'Rezensionen');
 define('REVIEW_TEXT_MIN_LENGTH_DESC' , 'Minimum L&auml;nge der Texteingabe bei Rezensionen');
 
 define('MIN_DISPLAY_BESTSELLERS_TITLE' , 'Bestseller');
-define('MIN_DISPLAY_BESTSELLERS_DESC' , 'Minimum Anzahl der Bestseller, die angezeigt werden sollen');
+define('MIN_DISPLAY_BESTSELLERS_DESC' , 'Minimum Anzahl der Bestseller, die angezeigt werden sollen.');
 define('MIN_DISPLAY_ALSO_PURCHASED_TITLE' , 'Ebenfalls gekauft');
-define('MIN_DISPLAY_ALSO_PURCHASED_DESC' , 'Minimum Anzahl der ebenfalls gekauften Artikel, die bei der Artikelansicht angezeigt werden sollen');
+define('MIN_DISPLAY_ALSO_PURCHASED_DESC' , 'Minimum Anzahl der ebenfalls gekauften Artikel, die bei der Artikelansicht angezeigt werden sollen.');
 
 define('MAX_ADDRESS_BOOK_ENTRIES_TITLE' , 'Adressbuch Eintr&auml;ge');
 define('MAX_ADDRESS_BOOK_ENTRIES_DESC' , 'Maximum Anzahl an Adressbucheintr&auml;gen pro Kunde');
@@ -124,35 +124,35 @@ define('MAX_DISPLAY_SEARCH_RESULTS_DESC' , 'Anzahl der Artikel im Produktlisting
 define('MAX_DISPLAY_PAGE_LINKS_TITLE' , 'Seiten bl&auml;ttern');
 define('MAX_DISPLAY_PAGE_LINKS_DESC' , 'Anzahl der Einzelseiten, f&uuml;r die ein Link angezeigt werden soll im Seitennavigationsmen&uuml;');
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_TITLE' , 'Sonderangebote');
-define('MAX_DISPLAY_SPECIAL_PRODUCTS_DESC' , 'Maximum Anzahl an Sonderangeboten, die angezeigt werden sollen');
+define('MAX_DISPLAY_SPECIAL_PRODUCTS_DESC' , 'Maximum Anzahl an Sonderangeboten, die angezeigt werden sollen.');
 define('MAX_DISPLAY_NEW_PRODUCTS_TITLE' , 'Neue Artikel Anzeigemodul');
-define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum Anzahl an neuen Artikeln, die bei den Warenkategorien angezeigt werden sollen');
+define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum Anzahl an neuen Artikeln, die bei den Warenkategorien angezeigt werden sollen.');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_TITLE' , 'Erwartete Artikel Anzeigemodul');
-define('MAX_DISPLAY_UPCOMING_PRODUCTS_DESC' , 'Maximum Anzahl an erwarteten Artikeln die auf der Startseite angezeigt werden sollen');
+define('MAX_DISPLAY_UPCOMING_PRODUCTS_DESC' , 'Maximum Anzahl an erwarteten Artikeln die auf der Startseite angezeigt werden sollen.');
 define('MAX_DISPLAY_MANUFACTURERS_IN_A_LIST_TITLE' , 'Hersteller-Liste Schwellenwert');
 define('MAX_DISPLAY_MANUFACTURERS_IN_A_LIST_DESC' , 'In der Hersteller Box; Wenn die Anzahl der Hersteller diese Schwelle &uuml;bersteigt wird anstatt der &uuml;blichen Link-Liste eine Drop Down Liste oder Listen-Box angezeigt (abh&auml;ngig von dem was unter "Hersteller Liste" eingetragen wurde).');
 define('MAX_MANUFACTURERS_LIST_TITLE' , 'Hersteller Liste');
 define('MAX_MANUFACTURERS_LIST_DESC' , 'In der Hersteller Box; Wenn der Wert auf "1" gesetzt wird, wird die Herstellerbox als Drop Down Liste angezeigt. Andernfalls als Listen-Box mit der angegebenen Anzahl an Reihen.');
 define('MAX_DISPLAY_MANUFACTURER_NAME_LEN_TITLE' , 'L&auml;nge des Herstellernamens');
-define('MAX_DISPLAY_MANUFACTURER_NAME_LEN_DESC' , 'In der Hersteller Box; Maximum L&auml;nge von Namen in der Herstellerbox');
+define('MAX_DISPLAY_MANUFACTURER_NAME_LEN_DESC' , 'In der Hersteller Box; Maximum L&auml;nge von Namen in der Herstellerbox.');
 define('MAX_DISPLAY_NEW_REVIEWS_TITLE' , 'Neue Rezensionen');
-define('MAX_DISPLAY_NEW_REVIEWS_DESC' , 'Maximum Anzahl an neuen Rezensionen die angezeigt werden sollen');
+define('MAX_DISPLAY_NEW_REVIEWS_DESC' , 'Maximum Anzahl an neuen Rezensionen die angezeigt werden sollen.');
 define('MAX_RANDOM_SELECT_REVIEWS_TITLE' , 'Auswahlpool der Rezensionen');
 define('MAX_RANDOM_SELECT_REVIEWS_DESC' , 'Aus wie vielen Rezensionen sollen die zuf&auml;llig angezeigten Rezensionen in der Box ausgew&auml;hlt werden?');
 define('MAX_RANDOM_SELECT_NEW_TITLE' , 'Auswahlpool der Neuen Artikel');
-define('MAX_RANDOM_SELECT_NEW_DESC' , 'Aus wieviel neuen Artikeln sollen die zuf&auml;llig angezeigten neuen Artikel in der Box ausgew&auml;hlt werden?');
+define('MAX_RANDOM_SELECT_NEW_DESC' , 'Aus wie vielen neuen Artikeln sollen die zuf&auml;llig angezeigten neuen Artikel in der Box ausgew&auml;hlt werden?');
 define('MAX_RANDOM_SELECT_SPECIALS_TITLE' , 'Auswahlpool der Sonderangebote');
-define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'Aus wieviel Sonderangeboten sollen die zuf&auml;llig angezeigten Sonderangebote in der Box ausgew&auml;hlt werden?');
+define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'Aus wie vielen Sonderangeboten sollen die zuf&auml;llig angezeigten Sonderangebote in der Box ausgew&auml;hlt werden?');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_TITLE' , 'Anzahl Kategorien pro Zeile');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'Anzahl an Kategorien, die pro Zeile in den &Uuml;bersichten angezeigt werden sollen.');
 define('MAX_DISPLAY_PRODUCTS_NEW_TITLE' , 'Neue Artikel Liste');
 define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum Anzahl neuer Artikel die in der Liste angezeigt werden sollen.');
 define('MAX_DISPLAY_BESTSELLERS_TITLE' , 'Bestsellers');
-define('MAX_DISPLAY_BESTSELLERS_DESC' , 'Maximum Anzahl an Bestsellern die angezeigt werden sollen');
+define('MAX_DISPLAY_BESTSELLERS_DESC' , 'Maximum Anzahl an Bestsellern die angezeigt werden sollen.');
 define('MAX_DISPLAY_BESTSELLERS_DAYS_TITLE' , 'Anzahl der Tage f&uuml;r Bestsellers');
-define('MAX_DISPLAY_BESTSELLERS_DAYS_DESC' , 'Maximum Anzahl an Tagen die Bestseller Artikel angezeigt werden sollen');
+define('MAX_DISPLAY_BESTSELLERS_DAYS_DESC' , 'Maximum Anzahl an Tagen die Bestseller Artikel angezeigt werden sollen.');
 define('MAX_DISPLAY_ALSO_PURCHASED_TITLE' , 'Ebenfalls gekauft');
-define('MAX_DISPLAY_ALSO_PURCHASED_DESC' , 'Maximum Anzahl der ebenfalls gekauften Artikel, die bei der Artikelansicht angezeigt werden sollen');
+define('MAX_DISPLAY_ALSO_PURCHASED_DESC' , 'Maximum Anzahl der ebenfalls gekauften Artikel, die bei der Artikelansicht angezeigt werden sollen.');
 define('MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX_TITLE' , 'Bestell&uuml;bersichts Box');
 define('MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX_DESC' , 'Maximum Anzahl an Artikeln die in der pers&ouml;nlichen Bestell&uuml;bersichts Box des Kunden angezeigt werden sollen.');
 define('MAX_DISPLAY_ORDER_HISTORY_TITLE' , 'Bestell&uuml;bersicht');
@@ -160,32 +160,32 @@ define('MAX_DISPLAY_ORDER_HISTORY_DESC' , 'Maximum Anzahl an Bestellungen die in
 define('MAX_PRODUCTS_QTY_TITLE', 'Maximale Produktanzahl');
 define('MAX_PRODUCTS_QTY_DESC', 'Maximale Anzahl eines Artikels im Warenkorb');
 define('MAX_DISPLAY_NEW_PRODUCTS_DAYS_TITLE' , 'Anzahl der Tage f&uuml;r Neue Produkte');
-define('MAX_DISPLAY_NEW_PRODUCTS_DAYS_DESC' , 'Maximum Anzahl an Tagen die neue Artikel angezeigt werden sollen');
+define('MAX_DISPLAY_NEW_PRODUCTS_DAYS_DESC' , 'Maximum Anzahl an Tagen die neue Artikel angezeigt werden sollen.');
 
 define('PRODUCT_IMAGE_THUMBNAIL_WIDTH_TITLE' , 'Breite der Artikel-Thumbnails');
-define('PRODUCT_IMAGE_THUMBNAIL_WIDTH_DESC' , 'Maximale Breite der Artikel-Thumbnails in Pixel (Standard: 160). Bei gr&ouml;&szlig;eren Werten ist evtl. "productPreviewImage" in der stylesheet.css Datei des Templates anzupassen.');
+define('PRODUCT_IMAGE_THUMBNAIL_WIDTH_DESC' , 'Maximale Breite der Artikel-Thumbnails in Pixeln. (Standard: 160). Bei gr&ouml;&szlig;eren Werten ist evtl. "productPreviewImage" in der stylesheet.css Datei des Templates anzupassen.');
 define('PRODUCT_IMAGE_THUMBNAIL_HEIGHT_TITLE' , 'H&ouml;he der Artikel-Thumbnails');
-define('PRODUCT_IMAGE_THUMBNAIL_HEIGHT_DESC' , 'Maximale H&ouml;he der Artikel-Thumbnails in Pixel (Standard: 160)');
+define('PRODUCT_IMAGE_THUMBNAIL_HEIGHT_DESC' , 'Maximale H&ouml;he der Artikel-Thumbnails in Pixeln. (Standard: 160)');
 
 define('PRODUCT_IMAGE_INFO_WIDTH_TITLE' , 'Breite der Artikel-Info Bilder');
-define('PRODUCT_IMAGE_INFO_WIDTH_DESC' , 'Maximale Breite der Artikel-Info Bilder in Pixel (Standard: 230).');
+define('PRODUCT_IMAGE_INFO_WIDTH_DESC' , 'Maximale Breite der Artikel-Info Bilder in Pixeln. (Standard: 230).');
 define('PRODUCT_IMAGE_INFO_HEIGHT_TITLE' , 'H&ouml;he der Artikel-Info Bilder');
-define('PRODUCT_IMAGE_INFO_HEIGHT_DESC' , 'Maximale H&ouml;he der Artikel-Info Bilder in Pixel (Standard: 230)');
+define('PRODUCT_IMAGE_INFO_HEIGHT_DESC' , 'Maximale H&ouml;he der Artikel-Info Bilder in Pixeln. (Standard: 230)');
 
 define('PRODUCT_IMAGE_POPUP_WIDTH_TITLE' , 'Breite der Artikel-Popup Bilder');
-define('PRODUCT_IMAGE_POPUP_WIDTH_DESC' , 'Maximale Breite der Artikel-Popup Bilder in Pixel (Standard: 800)');
+define('PRODUCT_IMAGE_POPUP_WIDTH_DESC' , 'Maximale Breite der Artikel-Popup Bilder in Pixeln. (Standard: 800)');
 define('PRODUCT_IMAGE_POPUP_HEIGHT_TITLE' , 'H&ouml;he der Artikel-Popup Bilder');
-define('PRODUCT_IMAGE_POPUP_HEIGHT_DESC' , 'Maximale H&ouml;he der Artikel-Popup Bilder in Pixel (Standard: 800)');
+define('PRODUCT_IMAGE_POPUP_HEIGHT_DESC' , 'Maximale H&ouml;he der Artikel-Popup Bilder in Pixeln. (Standard: 800)');
 
 define('SMALL_IMAGE_WIDTH_TITLE' , 'Breite der Artikel Bilder');
-define('SMALL_IMAGE_WIDTH_DESC' , 'Maximale Breite der Artikel Bilder in Pixel');
+define('SMALL_IMAGE_WIDTH_DESC' , 'Maximale Breite der Artikel Bilder in Pixeln.');
 define('SMALL_IMAGE_HEIGHT_TITLE' , 'H&ouml;he der Artikel Bilder');
-define('SMALL_IMAGE_HEIGHT_DESC' , 'Maximale H&ouml;he der Artikel Bilderin Pixel');
+define('SMALL_IMAGE_HEIGHT_DESC' , 'Maximale H&ouml;he der Artikel Bilderin Pixeln.');
 
 define('SUBCATEGORY_IMAGE_WIDTH_TITLE' , 'Breite der Subkategorie-(Warengruppen-) Bilder');
-define('SUBCATEGORY_IMAGE_WIDTH_DESC' , 'Maximale Breite der Subkategorie-(Warengruppen-) Bilder in Pixel');
+define('SUBCATEGORY_IMAGE_WIDTH_DESC' , 'Maximale Breite der Subkategorie-(Warengruppen-) Bilder in Pixeln.');
 define('SUBCATEGORY_IMAGE_HEIGHT_TITLE' , 'H&ouml;he der Subkategorie-(Warengruppen-) Bilder');
-define('SUBCATEGORY_IMAGE_HEIGHT_DESC' , 'Maximale H&ouml;he der Subkategorie-(Warengruppen-) Bilder in Pixel');
+define('SUBCATEGORY_IMAGE_HEIGHT_DESC' , 'Maximale H&ouml;he der Subkategorie-(Warengruppen-) Bilder in Pixeln.');
 
 define('CONFIG_CALCULATE_IMAGE_SIZE_TITLE' , 'Bildgr&ouml;sse berechnen');
 define('CONFIG_CALCULATE_IMAGE_SIZE_DESC' , 'Sollen die Bildgr&ouml;ssen berechnet werden?');
@@ -311,7 +311,7 @@ define('PRODUCT_LIST_FILTER_TITLE' , 'Anzeige der Sortierungsfilter in Produktli
 define('PRODUCT_LIST_FILTER_DESC' , 'Anzeige der Sortierungsfilter f&uuml;r Warengruppen/Hersteller etc. Filter (false=inaktiv; true=aktiv)');
 
 define('STOCK_CHECK_TITLE' , '&Uuml;berpr&uuml;fen des Warenbestandes');
-define('STOCK_CHECK_DESC' , 'Pr&uuml;fen ob noch genug Ware zum Ausliefern von Bestellungen verf&uuml;gbar ist.');
+define('STOCK_CHECK_DESC' , 'Pr&uuml;fen, ob noch genug Ware zum Ausliefern von Bestellungen verf&uuml;gbar ist.');
 
 define('ATTRIBUTE_STOCK_CHECK_TITLE' , '&Uuml;berpr&uuml;fen des Artikelattribut Bestandes');
 define('ATTRIBUTE_STOCK_CHECK_DESC' , '&Uuml;berpr&uuml;fen des Bestandes an Ware mit bestimmten Artikelattributen');
@@ -324,11 +324,11 @@ define('STOCK_MARK_PRODUCT_OUT_OF_STOCK_DESC' , 'Dem Kunden kenntlich machen, we
 define('STOCK_REORDER_LEVEL_TITLE' , 'Meldung an den Admin dass ein Artikel nachbestellt werden muss');
 define('STOCK_REORDER_LEVEL_DESC' , 'Ab welcher St&uuml;ckzahl soll diese Meldung erscheinen? (GEPLANTE FUNKTION)');
 define('STORE_PAGE_PARSE_TIME_TITLE' , 'Speichern der Berechnungszeit des Shop-Seitenaufbaus');
-define('STORE_PAGE_PARSE_TIME_DESC' , 'Speicher der Zeit die ben&ouml;tigt wird, um Skripte bis zum Output der Seite zu berechnen');
+define('STORE_PAGE_PARSE_TIME_DESC' , 'Speichern der Zeit, die ben&ouml;tigt wird, um Skripte bis zum Output der Seite zu berechnen');
 define('STORE_PARSE_DATE_TIME_FORMAT_TITLE' , 'Datumsformat in der Log-Datei');
 define('STORE_PARSE_DATE_TIME_FORMAT_DESC' , 'Das Datumsformat f&uuml;r Logging (Standard: %d/%m/%Y %H:%M:%S)');
 define('STORE_DB_SLOW_QUERY_TITLE' , 'Slow Query Log');
-define('STORE_DB_SLOW_QUERY_DESC' , 'Sollen nur SQL Queries gespeichert werden die eine l&auml;ngere Zeit ben&ouml;tigen.<br/><strong>Achtung: Es muss das Speichern der Datenbank Abfragen aktiviert sein!</strong>.<br/><strong>Achtung: Datei kann bei l&auml;ngerer Laufzeit sehr gro&szlig; werden!</strong>.<br/><br/>Die Logdatei wird im Ordner /log im Hauptverzeichnis gespeichert.');
+define('STORE_DB_SLOW_QUERY_DESC' , 'Sollen nur SQL Queries gespeichert werden die eine l&auml;ngere Zeit ben&ouml;tigen?<br/><strong>Achtung: Es muss das Speichern der Datenbank Abfragen aktiviert sein!</strong>.<br/><strong>Achtung: Datei kann bei l&auml;ngerer Laufzeit sehr gro&szlig; werden!</strong>.<br/><br/>Die Logdatei wird im Ordner /log im Hauptverzeichnis gespeichert.');
 define('STORE_DB_SLOW_QUERY_TIME_TITLE' , 'Slow Query Log - Zeit');
 define('STORE_DB_SLOW_QUERY_TIME_DESC' , 'Bitte die Zeit eintragen, ab welcher die SQL Queries in das Logfile geschrieben werden.');
 
@@ -338,16 +338,16 @@ define('STORE_DB_TRANSACTIONS_TITLE' , 'Speichern der Datenbank Abfragen');
 define('STORE_DB_TRANSACTIONS_DESC' , 'Speichern der einzelnen Datenbank Abfragen im Logfile f&uuml;r Berechnungszeiten<br/><strong>Achtung: Datei kann bei l&auml;ngerer Laufzeit sehr gro&szlig; werden!</strong>.<br/><br/>Die Logdatei wird im Ordner /log im Hauptverzeichnis gespeichert.');
 
 define('USE_CACHE_TITLE' , 'Cache benutzen');
-define('USE_CACHE_DESC' , 'Die Cache Features verwenden');
+define('USE_CACHE_DESC' , 'Die Cache Features verwenden.');
 
 define('DB_CACHE_TITLE','DB Cache');
-define('DB_CACHE_DESC','Datenbank-Abfragen k&ouml;nnen vom Shop gecached werden, um die Datenbank-Last zu verringern und die Geschwindigkeit zu erh&ouml;hen');
+define('DB_CACHE_DESC','Datenbank-Abfragen k&ouml;nnen vom Shop gecached werden, um die Datenbank-Last zu verringern und die Geschwindigkeit zu erh&ouml;hen.');
 
 define('DB_CACHE_EXPIRE_TITLE','DB Cache Lebenszeit');
-define('DB_CACHE_EXPIRE_DESC','Zeit in Sekunden, bevor Cache Datein mit Daten aus der Datenbank automatisch &Uuml;berschrieben werden.');
+define('DB_CACHE_EXPIRE_DESC','Zeit in Sekunden, bevor Cache Dateien mit Daten aus der Datenbank automatisch &uuml;berschrieben werden.');
 
 define('DIR_FS_CACHE_TITLE' , 'Cache Ordner');
-define('DIR_FS_CACHE_DESC' , 'Der Ordner, wo die gecachten Files gespeichert werden sollen');
+define('DIR_FS_CACHE_DESC' , 'Der Ordner, in dem die gecachten Files gespeichert werden sollen.');
 
 define('ACCOUNT_OPTIONS_TITLE','Art der Kontoerstellung');
 define('ACCOUNT_OPTIONS_DESC','Wie m&ouml;chten Sie die Anmeldeprozedur in Ihrem Shop gestalten?<br />Sie haben die Wahl zwischen regul&auml;ren Kundenkonten und "Einmalbestellungen" ohne Erstellung eines Kundenkontos (es wird ein Konto erstellt, aber dies ist f&uuml;r den Kunden nicht ersichtlich)');
@@ -441,12 +441,12 @@ define('DOWNLOAD_MAX_DAYS_DESC' , 'Anzahl an Tagen, die ein Download Link f&uuml
 define('DOWNLOAD_MAX_COUNT_TITLE' , 'Maximale Anzahl der Downloads eines gekauften Medienproduktes');
 define('DOWNLOAD_MAX_COUNT_DESC' , 'Stellen Sie die maximale Anzahl an Downloads ein, die Sie dem Kunden erlauben, der einen Artikel dieser Art erworben hat. 0 bedeutet kein Download.');
 define('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED_TITLE' , 'Mehrfache Attribute f&uuml;r Downloads');
-define('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED_DESC' , 'Sollen mehrfache Attribute bei Download Artikeln erlaubt sein, damit die Versandart &uuml;bersprungen wird.');
+define('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED_DESC' , 'Sollen mehrfache Attribute bei Download Artikeln erlaubt sein, damit die Versandart &uuml;bersprungen wird?');
 
 define('GZIP_COMPRESSION_TITLE' , 'GZip Komprimierung einschalten');
-define('GZIP_COMPRESSION_DESC' , 'Schalten Sie HTTP GZip Komprimierung ein um die Seitenaufbaugeschwindigkeit zu optimieren.');
+define('GZIP_COMPRESSION_DESC' , 'Schalten Sie HTTP GZip Komprimierung ein, um die Seitenaufbaugeschwindigkeit zu optimieren.');
 define('GZIP_LEVEL_TITLE' , 'Komprimierungs-Level');
-define('GZIP_LEVEL_DESC' , 'W&auml;hlen Sie einen Komprimierung-Level zwischen 0-9 (0 = Minimum, 9 = Maximum).');
+define('GZIP_LEVEL_DESC' , 'W&auml;hlen Sie ein Komprimierungs-Level zwischen 0-9 (0 = Minimum, 9 = Maximum).');
 
 define('SESSION_WARNING', '<br /><br /><span class="col-red"><strong>ACHTUNG:</strong></span> Diese Funktion kann eventuell die Funktionsf&auml;higkeit des Shops beeinflussen. Bitte nur &auml;ndern, wenn man sich &uuml;ber die m&ouml;glichen Folgen im Klaren ist und der Server diese Funktion auch wirklich unterst&uuml;tzt!');
 
@@ -464,7 +464,7 @@ define('SESSION_RECREATE_TITLE' , 'Session erneuern');
 define('SESSION_RECREATE_DESC' , 'Erneuern der Session und Zuweisung einer neuen Session-ID sobald sich ein Benutzer einloggt oder registriert (PHP >=4.1 needed). (Standard &quot;false&quot;)'.SESSION_WARNING);
 
 define('DISPLAY_CONDITIONS_ON_CHECKOUT_TITLE' , 'Unterzeichnen der AGB');
-define('DISPLAY_CONDITIONS_ON_CHECKOUT_DESC' , 'Anzeigen und Unterzeichnen der AGB beim Bestellvorgang');
+define('DISPLAY_CONDITIONS_ON_CHECKOUT_DESC' , 'Anzeigen und Unterzeichnen der AGB beim Bestellvorgang.');
 
 define('META_MIN_KEYWORD_LENGTH_TITLE' , 'Minimum L&auml;nge Meta-Keywords');
 define('META_MIN_KEYWORD_LENGTH_DESC' , 'Minimum L&auml;nge der automatisch erzeugten Meta-Keywords (Artikelbeschreibung)');
@@ -499,7 +499,7 @@ define('MODULE_SHIPPING_INSTALLED_DESC' , 'Liste der Versandmodul-Dateinamen (ge
 define('CACHE_LIFETIME_TITLE','Cache Lebenszeit');
 define('CACHE_LIFETIME_DESC','Zeit in Sekunden, bevor Cache Datein automatisch &uuml;berschrieben werden.');
 define('CACHE_CHECK_TITLE','Pr&uuml;fe ob Cache modifiziert');
-define('CACHE_CHECK_DESC','Wenn "true", dann werden If-Modified-Since headers bei ge-cache-tem Content ber&uuml;cksichtigt, und passende HTTP headers werden ausgegeben. Somit werden regelm&auml;ssig aufgerufene Seiten nicht jedesmal neu an den Client versandt.');
+define('CACHE_CHECK_DESC','Wenn "true", dann werden If-Modified-Since headers bei gecachetem Content ber&uuml;cksichtigt und passende HTTP headers werden ausgegeben. Somit werden regelm&auml;ssig aufgerufene Seiten nicht jedesmal neu an den Client versandt.');
 
 define('PRODUCT_REVIEWS_VIEW_TITLE','Rezensionen in Artikeldetails');
 define('PRODUCT_REVIEWS_VIEW_DESC','Anzahl der angezeigten Rezensionen in der Artikeldetailansicht');
@@ -525,19 +525,19 @@ define('ACTIVATE_GIFT_SYSTEM_TITLE','Gutscheinsystem aktivieren?');
 define('ACTIVATE_GIFT_SYSTEM_DESC','Gutscheinsystem aktivieren?<br/><br/><b>Hinweis: </b>Es m&uuml;ssen noch die Module ot_coupon <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal&module=ot_coupon').'"><b>hier</b></a> und ot_gv <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal&module=ot_gv').'"><b>hier</b></a> aktiviert werden.');
 
 define('ACTIVATE_SHIPPING_STATUS_TITLE','Versandstatusanzeige aktivieren?');
-define('ACTIVATE_SHIPPING_STATUS_DESC','Versandstatusanzeige aktivieren? (Verschiedene Versandzeiten k&ouml;nnen f&uuml;r einzelne Artikel festgelegt werden. Nach Aktivierung erscheint ein neuer Punkt <b>Lieferstatus</b> bei der Artikeleingabe)');
+define('ACTIVATE_SHIPPING_STATUS_DESC','Versandstatusanzeige aktivieren? (Verschiedene Versandzeiten k&ouml;nnen f&uuml;r einzelne Artikel festgelegt werden. Nach Aktivierung erscheint ein neuer Punkt <b>Lieferstatus</b> bei der Artikeleingabe.)');
 
 define('IMAGE_QUALITY_TITLE','Bildqualit&auml;t');
 define('IMAGE_QUALITY_DESC','Bildqualit&auml;t (0= h&ouml;chste Kompression, 100=beste Qualit&auml;t)');
 
 define('GROUP_CHECK_TITLE','Kundengruppencheck');
-define('GROUP_CHECK_DESC','Nur bestimmten Kundengruppen Zugang zu einzelnen Kategorien, Produkten, Contentelementen erlauben? (Nach Aktivierung erscheinen Eingabem&ouml;glichkeiten bei Artikeln, Kategorien und im Contentmanager)');
+define('GROUP_CHECK_DESC','Nur bestimmten Kundengruppen Zugang zu einzelnen Kategorien, Produkten, Contentelementen erlauben? (Nach Aktivierung erscheinen Eingabem&ouml;glichkeiten bei Artikeln, Kategorien und im Contentmanager.)');
 
 define('ACTIVATE_NAVIGATOR_TITLE','Artikelnavigator aktivieren?');
-define('ACTIVATE_NAVIGATOR_DESC','Artikelnavigator in der Artikeldetailansicht aktivieren/deaktivieren (aus Performancegr&uuml;nden bei hoher Artikelanzahl)');
+define('ACTIVATE_NAVIGATOR_DESC','Artikelnavigator in der Artikeldetailansicht aktivieren/deaktivieren. (aus Performancegr&uuml;nden bei hoher Artikelanzahl)');
 
 define('QUICKLINK_ACTIVATED_TITLE','Multilink/Kopierfunktion aktivieren');
-define('QUICKLINK_ACTIVATED_DESC','Die Multilink/Kopierfunktion erleichtert das Kopieren/Verlinken eines Artikels in mehrere Kategorien, durch die M&ouml;glichkeit einzelne Kategorien per Checkbox zu selektieren');
+define('QUICKLINK_ACTIVATED_DESC','Die Multilink/Kopierfunktion erleichtert das Kopieren/Verlinken eines Artikels in mehrere Kategorien, durch die M&ouml;glichkeit einzelne Kategorien per Checkbox zu selektieren.');
 
 define('ACTIVATE_REVERSE_CROSS_SELLING_TITLE','Reverse Cross-Marketing');
 define('ACTIVATE_REVERSE_CROSS_SELLING_DESC','Reverse Cross-Marketing Funktion aktivieren?');
@@ -548,24 +548,24 @@ define('DOWNLOAD_MIN_ORDERS_STATUS_TITLE', 'Bestellstatus');
 define('DOWNLOAD_MIN_ORDERS_STATUS_DESC', 'Bestellstatus, mit dem bestellte Downloads freigegeben sind.');
 
 // Vat ID
-define('STORE_OWNER_VAT_ID_TITLE' , 'UST ID des Shopbetreibers');
-define('STORE_OWNER_VAT_ID_DESC' , 'Die Umsatzsteuer ihres Unternehmens');
-define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_TITLE' , 'Kundenstatus f&uuml;r UST ID gepr&uuml;fte Kunden (Ausland)');
-define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_DESC' , 'W&auml;hlen Sie den Kundenstatus(Gruppe) f&uuml;r UST ID gepr&uuml;fte Kunden aus!');
-define('ACCOUNT_COMPANY_VAT_CHECK_TITLE' , 'Umsatzsteuer ID abfragen');
-define('ACCOUNT_COMPANY_VAT_CHECK_DESC' , 'Die Umsatzsteuer ID soll durch Kunden eingegeben werden k&ouml;nnen. Bei false wird das Eingabefeld nicht mehr angezeigt.');
-define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_TITLE' , 'Umsatzsteuer ID online auf Plausibilit&auml;t &uuml;berpr&uuml;fen');
-define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_DESC' , 'Die Umsatzsteuer ID wird online auf Plausibilit&auml;t &uuml;berpr&uuml;ft. Dazu wird der Webservice des Steuerportals der EU (<a href="http://ec.europa.eu/taxation_customs" style="font-style:italic">http://ec.europa.eu/taxation_customs</a>).<br/>Ben&ouml;tigt PHP5 mit aktivierter "SOAP" Unterst&uuml;tzung!<br/><br/><span class="messageStackSuccess">Die "PHP5 SOAP"-Unterst&uuml;tzung ist derzeit '.(in_array ('soap', get_loaded_extensions()) ? '' : '<span class="messageStackError">NICHT</span>').' aktiviert!</span><br/><br/>');
-define('ACCOUNT_COMPANY_VAT_GROUP_TITLE' , 'Kundengruppe nach UST ID Check anpassen?');
-define('ACCOUNT_COMPANY_VAT_GROUP_DESC' , 'Durch Einschalten dieser Option wird die Kundengruppe nach einen postiven UST ID Check ge&auml;ndert');
+define('STORE_OWNER_VAT_ID_TITLE' , 'USt-IdNr. des Shopbetreibers');
+define('STORE_OWNER_VAT_ID_DESC' , 'Die USt-IdNr. Ihres Unternehmens');
+define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_TITLE' , 'Kundenstatus f&uuml;r USt-IdNr. gepr&uuml;fte Kunden (Ausland)');
+define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_DESC' , 'W&auml;hlen Sie den Kundenstatus(Gruppe) f&uuml;r USt-IdNr. gepr&uuml;fte Kunden aus!');
+define('ACCOUNT_COMPANY_VAT_CHECK_TITLE' , 'USt-IdNr. abfragen');
+define('ACCOUNT_COMPANY_VAT_CHECK_DESC' , 'Die USt-IdNr. soll durch Kunden eingegeben werden k&ouml;nnen. Bei false wird das Eingabefeld nicht mehr angezeigt.');
+define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_TITLE' , 'USt-IdNr. online auf Plausibilit&auml;t &uuml;berpr&uuml;fen');
+define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_DESC' , 'Die USt-IdNr. wird online auf Plausibilit&auml;t &uuml;berpr&uuml;ft. Dazu wird der Webservice des Steuerportals der EU (<a href="http://ec.europa.eu/taxation_customs" style="font-style:italic">http://ec.europa.eu/taxation_customs</a>).<br/>Ben&ouml;tigt PHP5 mit aktivierter "SOAP" Unterst&uuml;tzung!<br/><br/><span class="messageStackSuccess">Die "PHP5 SOAP"-Unterst&uuml;tzung ist derzeit '.(in_array ('soap', get_loaded_extensions()) ? '' : '<span class="messageStackError">NICHT</span>').' aktiviert!</span><br/><br/>');
+define('ACCOUNT_COMPANY_VAT_GROUP_TITLE' , 'Kundengruppe nach USt-IdNr. Check anpassen?');
+define('ACCOUNT_COMPANY_VAT_GROUP_DESC' , 'Durch Einschalten dieser Option wird die Kundengruppe nach einem postiven USt-IdNr. Check ge&auml;ndert');
 define('ACCOUNT_VAT_BLOCK_ERROR_TITLE' , 'Eintragung falscher oder ungepr&uuml;fter USt-IdNr. Nummern sperren?');
 define('ACCOUNT_VAT_BLOCK_ERROR_DESC' , 'Durch Einschalten dieser Option werden nur gepr&uuml;fte und richtige USt-IdNr. eingetragen');
-define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_TITLE','Kundenstatus f&uuml;r UST ID gepr&uuml;fte Kunden (Inland)');
-define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_DESC','W&auml;hlen Sie den Kundenstatus(Gruppe) f&uuml;r UST ID gepr&uuml;fte Kunden aus!');
+define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_TITLE','Kundenstatus f&uuml;r USt-IdNr. gepr&uuml;fte Kunden (Inland)');
+define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_DESC','W&auml;hlen Sie den Kundenstatus(Gruppe) f&uuml;r USt-IdNr. gepr&uuml;fte Kunden aus!');
 
 // Google Conversion
 define('GOOGLE_CONVERSION_TITLE','Google Conversion-Tracking');
-define('GOOGLE_CONVERSION_DESC','Die Aufzeichnung von Conversions-Keywords bei Bestellungen');
+define('GOOGLE_CONVERSION_DESC','Die Aufzeichnung von Conversion-Keywords bei Bestellungen');
 define('GOOGLE_CONVERSION_ID_TITLE','Conversion ID');
 define('GOOGLE_CONVERSION_ID_DESC','Ihre Google Conversion ID');
 define('GOOGLE_LANG_TITLE','Google Sprache');
@@ -583,7 +583,7 @@ define('AFTERBUY_PARTNERPASS_DESC','Ihr Partner Passwort f&uuml;r die Afterbuy X
 define('AFTERBUY_USERID_TITLE','User ID');
 define('AFTERBUY_USERID_DESC','Ihre Afterbuy User ID');
 define('AFTERBUY_ORDERSTATUS_TITLE','Bestellstatus');
-define('AFTERBUY_ORDERSTATUS_DESC','Bestellstatus nach erfolgreicher &Uuml;betragung der Bestelldaten');
+define('AFTERBUY_ORDERSTATUS_DESC','Bestellstatus nach erfolgreicher &Uuml;bertragung der Bestelldaten');
 define('AFTERBUY_URL','Eine Beschreibung von Afterbuy finden Sie hier: <a href="http://www.afterbuy.de" target="new">http://www.afterbuy.de</a>');
 define('AFTERBUY_DEALERS_TITLE', 'Als H&auml;ndler markieren');
 define('AFTERBUY_DEALERS_DESC', 'geben Sie hier die Gruppen IDs der H&auml;ndler ein, die in Afterbuy als H&auml;ndler eingehen sollen.<br />Beispiel: <em>6,5,8</em>. Es d&uuml;rfen keine Leerzeichen enhalten sein!');
@@ -592,17 +592,17 @@ define('AFTERBUY_IGNORE_GROUPE_DESC', 'welche Kundengruppen sollen ignoiert werd
 
 // Search-Options
 define('SEARCH_IN_DESC_TITLE','Suche in Produktbeschreibungen');
-define('SEARCH_IN_DESC_DESC','Aktivieren um die Suche in den Produktbeschreibungen (Kurz + Lang) zu erm&ouml;glichen');
+define('SEARCH_IN_DESC_DESC','Aktivieren, um die Suche in den Produktbeschreibungen (Kurz + Lang) zu erm&ouml;glichen.');
 define('SEARCH_IN_ATTR_TITLE','Suche in Produkt- Attributen');
-define('SEARCH_IN_ATTR_DESC','Aktivieren um die Suche in den Produktattributen (z.B. Farbe, L&auml;nge) zu erm&ouml;glichen');
+define('SEARCH_IN_ATTR_DESC','Aktivieren, um die Suche in den Produktattributen (z.B. Farbe, L&auml;nge) zu erm&ouml;glichen.');
 define('SEARCH_IN_MANU_TITLE','Suche in Hersteller');
-define('SEARCH_IN_MANU_DESC','Aktivieren um die Suche in den Herstellern zu erm&ouml;glichen');
+define('SEARCH_IN_MANU_DESC','Aktivieren, um die Suche in den Herstellern zu erm&ouml;glichen.');
 
 // changes for 3.0.4 SP2
 define('REVOCATION_ID_TITLE','Widerrufsrecht');
-define('REVOCATION_ID_DESC','W&auml;hle den Content zur Anzeige des Widerrufrechts');
-define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Anzeige Widerrufrecht?');
-define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Widerrufrecht auf checkout_confirmation anzeigen?');
+define('REVOCATION_ID_DESC','W&auml;hle den Content zur Anzeige des Widerrufsrechts.');
+define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Anzeige Widerrufsrecht?');
+define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Widerrufsrecht auf checkout_confirmation anzeigen?');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 define('PAYPAL_MODE_TITLE','PayPal-Modus:');
@@ -720,9 +720,9 @@ define('WHOS_ONLINE_TIME_LAST_CLICK_DESC', 'Anzeigedauer der Online-Benutzer in 
 
 //sessions
 define('SESSION_LIFE_ADMIN_TITLE', 'Session Lebenszeit Admin');
-define('SESSION_LIFE_ADMIN_DESC', 'Zeitdauer in Sekunden nach der die Sessionzeit f&uuml;r Admins abl&auml;uft (wird ausgeloggt) - Standard 7200<br />Der hier gesetzte Wert greift nur wenn das Session-Handling db-basiert ist (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />H&ouml;chstwert: 14400');
+define('SESSION_LIFE_ADMIN_DESC', 'Zeitdauer in Sekunden, nach der die Sessionzeit f&uuml;r Admins abl&auml;uft (wird ausgeloggt) - Standard 7200<br />Der hier gesetzte Wert greift nur, wenn das Session-Handling db-basiert ist. (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />H&ouml;chstwert: 14400');
 define('SESSION_LIFE_CUSTOMERS_TITLE', 'Session Lebenszeit Kunden');
-define('SESSION_LIFE_CUSTOMERS_DESC', 'Zeitdauer in Sekunden nach der die Sessionzeit f&uuml;r Kunden abl&auml;uft (wird ausgeloggt) - Standard 1440<br />Der hier gesetzte Wert greift nur wenn das Session-Handling db-basiert ist (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />H&ouml;chstwert: 14400');
+define('SESSION_LIFE_CUSTOMERS_DESC', 'Zeitdauer in Sekunden, nach der die Sessionzeit f&uuml;r Kunden abl&auml;uft (wird ausgeloggt) - Standard 1440<br />Der hier gesetzte Wert greift nur, wenn das Session-Handling db-basiert ist. (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />H&ouml;chstwert: 14400');
 
 //checkout confirmation options
 define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_TITLE','Bestellbest&auml;tigungsseite: Kurzbeschreibung');
@@ -852,49 +852,49 @@ define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Zus&auml;tzliche Anzahl der Staffelpreis
 define('MODULE_CAPTCHA_ACTIVE_TITLE', 'Captcha aktivieren');
 define('MODULE_CAPTCHA_ACTIVE_DESC', 'F&uuml;r welche Shopsektionen soll das Captcha aktiviert werden?');
 define('MODULE_CAPTCHA_LOGGED_IN_TITLE', 'Angemeldete Kunden');
-define('MODULE_CAPTCHA_LOGGED_IN_DESC', 'Anzeige des Captcha f&uuml;r angemeldete Kunden');
+define('MODULE_CAPTCHA_LOGGED_IN_DESC', 'Anzeige des Captcha f&uuml;r angemeldete Kunden.');
 define('MODULE_CAPTCHA_USE_COLOR_TITLE', 'Zuf&auml;llige Farben');
-define('MODULE_CAPTCHA_USE_COLOR_DESC', 'Anzeige der Linien und Zeichen in zuf&auml;lligen Farben');
+define('MODULE_CAPTCHA_USE_COLOR_DESC', 'Anzeige der Linien und Zeichen in zuf&auml;lligen Farben.');
 define('MODULE_CAPTCHA_USE_SHADOW_TITLE', 'Schatten');
 define('MODULE_CAPTCHA_USE_SHADOW_DESC', 'Zus&auml;tzliche Schatten der Zeichen im Captcha.');
 define('MODULE_CAPTCHA_CODE_LENGTH_TITLE', 'Captcha L&auml;nge');
-define('MODULE_CAPTCHA_CODE_LENGTH_DESC', 'Anzahl der Zeichen im Captcha<br/>(default: 6)');
+define('MODULE_CAPTCHA_CODE_LENGTH_DESC', 'Anzahl der Zeichen im Captcha.<br/>(default: 6)');
 define('MODULE_CAPTCHA_NUM_LINES_TITLE', 'Anzahl an Linien');
-define('MODULE_CAPTCHA_NUM_LINES_DESC', 'Anzahl der Linien im Captcha<br/>(default: 70)');
+define('MODULE_CAPTCHA_NUM_LINES_DESC', 'Anzahl der Linien im Captcha.<br/>(default: 70)');
 define('MODULE_CAPTCHA_MIN_FONT_TITLE', 'Minimale Schriftgr&ouml;sse');
-define('MODULE_CAPTCHA_MIN_FONT_DESC', 'Angabe in Pixel f&uuml;r die kleinsten Zeichen im Captcha.<br/>(default: 24)');
+define('MODULE_CAPTCHA_MIN_FONT_DESC', 'Angabe in Pixeln f&uuml;r die kleinsten Zeichen im Captcha.<br/>(default: 24)');
 define('MODULE_CAPTCHA_MAX_FONT_TITLE', 'Maximale Schriftgr&ouml;sse');
-define('MODULE_CAPTCHA_MAX_FONT_DESC', 'Angabe in Pixel f&uuml;r die gr&ouml;ssten Zeichen im Captcha.<br/>(default: 28)');
+define('MODULE_CAPTCHA_MAX_FONT_DESC', 'Angabe in Pixeln f&uuml;r die gr&ouml;ssten Zeichen im Captcha.<br/>(default: 28)');
 define('MODULE_CAPTCHA_BACKGROUND_RGB_TITLE', 'Hintergrundfarbe');
-define('MODULE_CAPTCHA_BACKGROUND_RGB_DESC', 'Angabe der Hintergrundfarbe in RGB erfolgen.<br/>(default: 192,192,192)');
+define('MODULE_CAPTCHA_BACKGROUND_RGB_DESC', 'Angabe der Hintergrundfarbe in RGB-Werten.<br/>(default: 192,192,192)');
 define('MODULE_CAPTCHA_LINES_RGB_TITLE', 'Linienfarbe');
-define('MODULE_CAPTCHA_LINES_RGB_DESC', 'Angabe der Linienfarbe in RGB erfolgen.<br/>(default: 220,148,002)');
+define('MODULE_CAPTCHA_LINES_RGB_DESC', 'Angabe der Linienfarbe in RGB-Werten.<br/>(default: 220,148,002)');
 define('MODULE_CAPTCHA_CHARS_RGB_TITLE', 'Zeichenfarbe');
-define('MODULE_CAPTCHA_CHARS_RGB_DESC', 'Angabe der Zeichenfarbe in RGB erfolgen.<br/>(default: 112,112,112)');
+define('MODULE_CAPTCHA_CHARS_RGB_DESC', 'Angabe der Zeichenfarbe in RGB-Werten.<br/>(default: 112,112,112)');
 define('MODULE_CAPTCHA_WIDTH_TITLE', 'Breite');
-define('MODULE_CAPTCHA_WIDTH_DESC', 'Angabe in Pixel f&uuml;r die Breite des Captcha.');
+define('MODULE_CAPTCHA_WIDTH_DESC', 'Angabe in Pixeln f&uuml;r die Breite des Captcha.');
 define('MODULE_CAPTCHA_HEIGHT_TITLE', 'H&ouml;he');
-define('MODULE_CAPTCHA_HEIGHT_DESC', 'Angabe in Pixel f&uuml;r die H&ouml;he des Captcha.');
+define('MODULE_CAPTCHA_HEIGHT_DESC', 'Angabe in Pixeln f&uuml;r die H&ouml;he des Captcha.');
 
 define('SHIPPING_STATUS_INFOS_TITLE', 'Lieferzeit');
-define('SHIPPING_STATUS_INFOS_DESC', 'W&auml;hle den Content zur Anzeige der Informationen zur Lieferzeit');
+define('SHIPPING_STATUS_INFOS_DESC', 'W&auml;hle den Content zur Anzeige der Informationen zur Lieferzeit.');
 
 define('USE_SHORT_DATE_FORMAT_TITLE', 'Datum im Kurzformat anzeigen');
 define('USE_SHORT_DATE_FORMAT_DESC', 'Datum immer im Kurzformat anzeigen: <b>01.03.2014</b> anstatt <b>Samstag, 01. M&auml;rz 2014</b><br />Empfohlen bei Darstellungsfehlern mit dem langen Datumsformat, wie falscher Sprache oder Umlautproblemem!');
 
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximale Artikel');
-define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximale Anzahl an Artikeln aus der gleichen Kategorie');
+define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximale Anzahl an Artikeln aus der gleichen Kategorie.');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Anzahl Suchergebnisse');
-define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Anzahl der Artikel in den Suchergebnissen');
+define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Anzahl der Artikel in den Suchergebnissen.');
 define('MAX_DISPLAY_PRODUCTS_HISTORY_TITLE' , 'Anzahl der History');
-define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum Anzahl an Artikel die zuletzt besucht wurden im Account anzeigen');
+define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum Anzahl an Artikeln, die zuletzt besucht wurden, im Account anzeigen.');
 
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Artikel noimage.gif');
-define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Artikelbild angegeben wurde');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif, wenn kein Artikelbild angegeben wurde.');
 define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_TITLE', 'Kategorie noimage.gif');
-define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Kategoriebild angegeben wurde');
+define('CATEGORIES_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif, wenn kein Kategoriebild angegeben wurde.');
 define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_TITLE', 'Hersteller noimage.gif');
-define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Herstellerbild angegeben wurde');
+define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif, wenn kein Herstellerbild angegeben wurde.');
 
 define('MODULE_SMALL_BUSINESS_TITLE', 'Kleinunternehmer');
 define('MODULE_SMALL_BUSINESS_DESC', 'Soll der Shop umgestellt werden auf Kleinunternehmer nach &sect; 19 UStG.?<br /><b>Wichtig:</b> Unter "Module" -> "Zusammenfassung" muss das Modul "ot_tax" <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal&module=ot_tax').'"><b>hier</b></a> deaktiviert oder deinstalliert werden. Zudem muss in den einzelnen <a href="'.xtc_href_link(FILENAME_CUSTOMERS_STATUS, '').'"><b>Kundengruppen</b></a> "Preise inkl. MwSt." auf "Nein" gesetzt werden.');
@@ -919,7 +919,7 @@ define('STATUS_EMAIL_SENT_COPY_TO_ADMIN_TITLE', 'E-Mail bei Status&auml;nderung'
 define('STATUS_EMAIL_SENT_COPY_TO_ADMIN_DESC', 'Soll eine E-Mail an den Admin versendet werden, wenn der Status einer Bestellung ge&auml;ndert wird?');
 
 define('STOCK_CHECK_SPECIALS_TITLE', '&Uuml;berpr&uuml;fen der Sonderangebote');
-define('STOCK_CHECK_SPECIALS_DESC', 'Pr&uuml;fen ob noch genug Sonderangebote zum Ausliefern der Bestellung verf&uuml;gbar sind.<br/><br/><b>ACHTUNG:</b> Sollten nicht gen&uuml;gend Sonderangebote zur Verf&uuml;gung stehen, kann die Bestellung erst nach einer Reduzierung der Menge abgeschlossen werden.');
+define('STOCK_CHECK_SPECIALS_DESC', 'Pr&uuml;fen, ob noch genug Sonderangebote zum Ausliefern der Bestellung verf&uuml;gbar sind.<br/><br/><b>ACHTUNG:</b> Sollten nicht gen&uuml;gend Sonderangebote zur Verf&uuml;gung stehen, kann die Bestellung erst nach einer Reduzierung der Menge abgeschlossen werden.');
 
 define('DOWNLOAD_SHOW_LANG_DROPDOWN_TITLE', 'L&auml;nderdropdown im Warenkorb');
 define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Soll das L&auml;nderdropdown im Warenkorb angezeigt werden, wenn nur Download Artikel gekauft werden?');
@@ -950,26 +950,26 @@ define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Soll die Telefonnummer nur optional a
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Universal Analytics');
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Soll der Google Universal Analytics Code verwendet werden?<br/><br/><b>Achtung:</b> Sobald Sie in Ihrem Google Analytics Konto auf den neuen Google Universal Analytics Code umstellen, kann das bisherige Google Analytics nicht mehr verwendet werden!<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Shop-URL');
-define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Tragen Sie hier Standard-Shop-URL ein (example.com oder www.example.com). Funktioniert nur f&uuml;r Google Universal Analytics.');
+define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Tragen Sie hier Ihre Standard-Shop-URL ein (example.com oder www.example.com). Funktioniert nur f&uuml;r Google Universal Analytics.');
 define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics LinkID');
 define('TRACKING_GOOGLE_LINKID_DESC' , 'Sie k&ouml;nnen separate Informationen zu mehreren Links auf einer Seite sehen, die alle dasselbe Ziel haben. Wenn es zum Beispiel zwei Links auf derselben Seite gibt, die beide auf die Seite Kontakt f&uuml;hren, sehen Sie separate Klickinformationen f&uuml;r jeden Link. Funktioniert nur f&uuml;r Google Universal Analytics.');
 define('TRACKING_GOOGLE_DISPLAY_TITLE' , 'Google Universal Analytics Displayfeature');
 define('TRACKING_GOOGLE_DISPLAY_DESC' , 'Die Bereiche zu demografischen Merkmalen und zum Interesse enthalten eine &Uuml;bersicht sowie neue Berichte zur Leistung nach Alter, Geschlecht und Interessenkategorien. Funktioniert nur f&uuml;r Google Universal Analytics.');
 define('TRACKING_GOOGLE_ECOMMERCE_TITLE' , 'Google E-Commerce-Tracking');
-define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Setzen Sie E-Commerce-Tracking ein, um herauszufinden, was Besucher &uuml;ber Ihre Website oder App kaufen. Zudem erhalten Sie folgende Informationen:<br><br><strong>Produkte:</strong> Gekaufte Produkte sowie die Mengen und die mit diesen Produkten erzielten Ums&auml;tze<br><strong>Transaktionen:</strong> Informationen zu Umsatz, Steuern, Versandkosten und Mengen f&uuml;r jede Transaktion<br><strong>Zeit bis zum Kauf:</strong> Anzahl von Tagen und Besuchen, beginnend von der aktuellen Kampagne bis zum Abschluss der Transaktion.');
+define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Setzen Sie E-Commerce-Tracking ein, um herauszufinden, was Besucher &uuml;ber Ihre Website oder App kaufen. Zudem erhalten Sie folgende Informationen:<br><br><strong>Produkte:</strong> Gekaufte Produkte, sowie die Mengen und die mit diesen Produkten erzielten Ums&auml;tze<br><strong>Transaktionen:</strong> Informationen zu Umsatz, Steuern, Versandkosten und Mengen f&uuml;r jede Transaktion<br><strong>Zeit bis zum Kauf:</strong> Anzahl von Tagen und Besuchen, beginnend von der aktuellen Kampagne bis zum Abschluss der Transaktion.');
 
 define('NEW_ATTRIBUTES_STYLING_TITLE', 'Attribut Verwaltung Styling');
 define('NEW_ATTRIBUTES_STYLING_DESC', 'In der Attribut Verwaltung das Styling bei den Checkboxen/Dropdowns aktivieren? Bei sehr vielen Attributen und Performanceproblemen auf Nein/false setzen.');
 
 define('DB_CACHE_TYPE_TITLE', 'Cache Engine');
-define('DB_CACHE_TYPE_DESC', 'W&auml;hlen Sie eine der verf&uuml;gbaren Engines zum Cachen');
+define('DB_CACHE_TYPE_DESC', 'W&auml;hlen Sie eine der verf&uuml;gbaren Engines zum Cachen.');
 
 define('META_PRODUCTS_KEYWORDS_LENGTH_TITLE', 'L&auml;nge der Zusatz-Begriffe f&uuml;r Suche');
-define('META_PRODUCTS_KEYWORDS_LENGTH_DESC', 'Maximum L&auml;nge der Zusatz-Begriffe f&uuml;r Suche (in Buchstaben)');
+define('META_PRODUCTS_KEYWORDS_LENGTH_DESC', 'Maximum L&auml;nge der Zusatz-Begriffe f&uuml;r Suche (in Buchstaben).');
 define('META_KEYWORDS_LENGTH_TITLE', 'L&auml;nge Meta-Keywords');
-define('META_KEYWORDS_LENGTH_DESC', 'Maximum L&auml;nge der Keywords (in Buchstaben)');
+define('META_KEYWORDS_LENGTH_DESC', 'Maximum L&auml;nge der Keywords (in Buchstaben).');
 define('META_TITLE_LENGTH_TITLE', 'L&auml;nge Meta-Title');
-define('META_TITLE_LENGTH_DESC', 'Maximum L&auml;nge des Titles (in Buchstaben)');
+define('META_TITLE_LENGTH_DESC', 'Maximum L&auml;nge des Titles (in Buchstaben).');
 define('META_CAT_SHOP_TITLE_TITLE', 'Shop-Titel Kategorien');
 define('META_CAT_SHOP_TITLE_DESC', 'Shop-Titel bei Kategorien anh&auml;ngen?');
 define('META_PROD_SHOP_TITLE_TITLE', 'Shop-Titel Produkte');
@@ -1030,15 +1030,15 @@ define('ATTRIBUTES_VALID_CHECK_TITLE', 'Attribute validieren');
 define('ATTRIBUTES_VALID_CHECK_DESC', 'Pr&uuml;ft Artikel im Warenkorb des Kunden auf nicht mehr g&uuml;ltige Attribute.<br/>(Das kann vorkommen, wenn sich ein Kunde nach l&auml;ngerer Zeit wieder in den Shop einloggt und einen aus einem fr&uuml;heren Besuch im Warenkorb verbliebenen Artikel kaufen m&ouml;chte.)<br/><b>Hinweis:</b> Bei Erweiterungen, die im Nachhinein Attribute erweitern, wie z.B. Textfeld, muss dieser Check deaktiviert werden.');
 
 define('ATTRIBUTE_MODEL_DELIMITER_TITLE', 'Artikel-/Attribut-Nr.-Trennzeichen');
-define('ATTRIBUTE_MODEL_DELIMITER_DESC', 'Trennzeichen zwischen Artikelnummer &amp; Attribut-Artikelnummer');
+define('ATTRIBUTE_MODEL_DELIMITER_DESC', 'Trennzeichen zwischen Artikelnummer &amp; Attribut-Artikelnummer.');
 
 define('STORE_PAGE_PARSE_TIME_THRESHOLD_TITLE' , 'Schwellwert f&uuml;r das Speichern der Berechnungszeit des Seitenaufbaus');
 define('STORE_PAGE_PARSE_TIME_THRESHOLD_DESC' , 'Legt den Schwellwert in Sekunden fest, ab dem ein Eintrag f&uuml;r die Berechnungszeit des Seitenaufbaus geschrieben werden soll.');
 
 define('SEARCH_IN_FILTER_TITLE', 'Suche in Artikeleigenschaften');
-define('SEARCH_IN_FILTER_DESC', 'Aktivieren um die Suche in den Artikeleigenschaften zu erm&ouml;glichen');
+define('SEARCH_IN_FILTER_DESC', 'Aktivieren, um die Suche in den Artikeleigenschaften zu erm&ouml;glichen.');
 define('SEARCH_AC_STATUS_TITLE','Autocomplete Suche');
-define('SEARCH_AC_STATUS_DESC','Aktivieren um die Autocomplete Suche zu aktivieren<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
+define('SEARCH_AC_STATUS_DESC','Aktivieren. um die Autocomplete Suche zu aktivieren.<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete Suche Zeichenanzahl');
 define('SEARCH_AC_MIN_LENGTH_DESC', 'Ab welcher Zeichenanzahl sollen die ersten Suchergebnisse angezeigt werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 
