@@ -320,7 +320,7 @@ if ($category_depth == 'nested') {
   // set cache ID
   if (!CacheCheck()) {
     $default_smarty->caching = 0;
-    $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/',$content_main_template);
+    $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_main_template);
   } else {
     $default_smarty->caching = 1;
     $default_smarty->cache_lifetime = CACHE_LIFETIME;
