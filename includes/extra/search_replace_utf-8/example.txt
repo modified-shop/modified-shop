@@ -1,0 +1,16 @@
+<?php
+# MUSTER für DATEI in includes\extra\search_replace_utf-8\ - Dateiname 01_example.php
+# Damit ist es möglich weitere Zeichensätze beliebig zu ergänzen
+# Die Reihenfolge der neuen Einträge kann mit einer vorangestellten Nummer im Dateinamen gesteuert werden
+# http://unicode.e-workers.de/kyrillisch.php
+
+$sr_array_add =
+      array("'&#1047;|З'i" => 'Z', 
+            "'&#1048;|И'i" => 'I', 
+            "'&#1049;|Й'i" => 'J', 
+            );
+            
+foreach ($sr_array_add as $sr => $rp ) {
+        $search[] = $sr;
+        $replace[] = $rp;
+    }
