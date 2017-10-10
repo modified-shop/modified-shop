@@ -68,6 +68,7 @@ define('CHMOD_WRITEABLE', 0775);
           'images/product_images/original_images',
           'images/product_images/popup_images',
           'images/product_images/thumbnail_images',
+          'images/tags',
           'import',
           'log',
           'media/content',
