@@ -128,7 +128,10 @@
           if (!in_array($include_modules[$i]['class'], $unallowed_modules)) {
             // check if zone is alowed to see module
             $unallowed_zones = array();
-            if (constant('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED') != '') {
+            if (defined('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED')
+                && constant('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED') != ''
+                ) 
+            {
               $unallowed_zones = explode(',', constant('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'));
             }
             if ((isset($_SESSION['delivery_zone']) 
