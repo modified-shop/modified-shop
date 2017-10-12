@@ -377,7 +377,7 @@ class SofortLibPayment {
 	      break;
 	  }
 		//$image = 'https://images.sofort.com/'.$code.((isset($this->ideal) && $this->ideal === true) ? '/ideal/' : '/su/').$image;
-		$image = 'http://cdn.klarna.com/1.0/shared/image/generic/badge/'.$code.'/pay_now/standard/'.$image;
+		$image = 'https://cdn.klarna.com/1.0/shared/image/generic/badge/'.$code.'/pay_now/standard/'.$image;
 		$title = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT');
 		$image = '<img src="'.$image.'" '.(($title != '') ? 'alt="'.$title.'" title="'.$title.'"' : '').' />';
 		$description = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE');
