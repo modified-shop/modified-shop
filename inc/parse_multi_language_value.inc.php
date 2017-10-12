@@ -27,21 +27,21 @@
       
       if (count($lang_array) == 0) {
         if ($admin === true && $lang_code == DEFAULT_LANGUAGE) {
-          return $text;
+          return decode_htmlentities($text);
         } elseif ($admin === false) {
-          return $text;
+          return decode_htmlentities($text);
         }
       }
       
       if (isset($lang_array[$lang_code])) {
-        return $lang_array[$lang_code];
+        return decode_htmlentities($lang_array[$lang_code]);
       } elseif ($admin === false) {
         if (isset($lang_array['en'])) {
-          return $lang_array['en'];
+          return decode_htmlentities($lang_array['en']);
         } elseif (isset($lang_array[DEFAULT_LANGUAGE])) {
-          return $lang_array[DEFAULT_LANGUAGE];
+          return decode_htmlentities($lang_array[DEFAULT_LANGUAGE]);
         } else {
-          return array_shift($lang_array);
+          return decode_htmlentities(array_shift($lang_array));
         }
       }
     }
