@@ -83,7 +83,7 @@
   }
 
   if ($_GET['mail_sent_to']) {
-    $messageStack->add(sprintf(NOTICE_EMAIL_SENT_TO, $_GET['mail_sent_to']), 'notice');
+    $messageStack->add(sprintf(NOTICE_EMAIL_SENT_TO, $_GET['mail_sent_to']), 'success');
   }
   
   if (isset($_POST['customers_email_address']) && !empty($_POST['customers_email_address'])) {

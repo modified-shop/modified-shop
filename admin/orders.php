@@ -159,7 +159,7 @@ if ($action == 'search' && $oID && $customer == '') {
      $_GET['action'] = 'edit';
      $action = 'edit';
      $_GET['oID'] = $oID;
-     //$messageStack->add('1 Treffer: ' . $oID, 'notice');
+     //$messageStack->add('1 Treffer: ' . $oID, 'success');
   }
 }
 
