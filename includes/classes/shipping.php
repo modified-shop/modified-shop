@@ -75,13 +75,13 @@
 
         for ($i = 0, $n = sizeof($include_modules); $i < $n; $i++) {
           if (!in_array($include_modules[$i]['class'], $unallowed_modules)) {
-            // check if zone is alowed to see module
-             $unallowed_zones = array();
+            // check if zone is allowed to see module
+            $allowed_zones = array();
             if (constant('MODULE_SHIPPING_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED') != '') {
-              $unallowed_zones = explode(',', constant('MODULE_SHIPPING_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'));
+              $allowed_zones = explode(',', constant('MODULE_SHIPPING_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'));
             }
-            if (in_array($_SESSION['delivery_zone'], $unallowed_zones) 
-                || count($unallowed_zones) == 0
+            if (in_array($_SESSION['delivery_zone'], $allowed_zones) 
+                || count($allowed_zones) == 0
                 ) 
             {
               include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
