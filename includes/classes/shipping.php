@@ -16,7 +16,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define ('IGNORE_CHEAPEST_MODULES', 'selfpickup');
+  defined('IGNORE_CHEAPEST_MODULES') OR define ('IGNORE_CHEAPEST_MODULES', 'selfpickup');
 
   class shipping {
     var $modules;
