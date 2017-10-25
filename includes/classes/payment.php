@@ -126,17 +126,17 @@
 
         for ($i = 0, $n = sizeof($include_modules); $i < $n; $i++) {
           if (!in_array($include_modules[$i]['class'], $unallowed_modules)) {
-            // check if zone is alowed to see module
-            $unallowed_zones = array();
+            // check if zone is allowed to see module
+            $allowed_zones = array();
             if (defined('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED')
                 && constant('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED') != ''
                 ) 
             {
-              $unallowed_zones = explode(',', constant('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'));
+              $allowed_zones = explode(',', constant('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'));
             }
             if ((isset($_SESSION['delivery_zone']) 
-                 && in_array($_SESSION['delivery_zone'], $unallowed_zones) == true
-                 ) || count($unallowed_zones) == 0
+                 && in_array($_SESSION['delivery_zone'], $allowed_zones) == true
+                 ) || count($allowed_zones) == 0
                 )
             {
               if ($include_modules[$i]['file'] != 'no_payment') {
