@@ -532,6 +532,7 @@ class ot_coupon {
                                     AND p.products_status = '1'");
     if (xtc_db_num_rows($category_query, true)) {
       while ($category = xtc_db_fetch_array($category_query, true)) {
+        $categories = array();
         xtc_get_parent_categories($categories, $category['categories_id']);
         $categories[] = $category['categories_id'];
         $categories = array_reverse($categories);
