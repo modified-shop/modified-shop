@@ -121,7 +121,7 @@
         $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.txt');
         $txt_mail = str_replace(array('<br />', '<br/>', '<br>'), '', $txt_mail);
       } else {
-        $txt_mail = sprintf(EMAIL_SENT_BY, CONTACT_US_NAME, CONTACT_US_EMAIL_ADDRESS, $datum , $uhrzeit) . "\n" .
+        $txt_mail = sprintf(EMAIL_SENT_BY, parse_multi_language_value(CONTACT_US_NAME, $_SESSION['language_code']), parse_multi_language_value(CONTACT_US_EMAIL_ADDRESS, $_SESSION['language_code']), $datum , $uhrzeit) . "\n" .
                 "--------------------------------------------------------------" . "\n" .
                 EMAIL_NAME. $name . "\n" .
                 EMAIL_EMAIL. trim($email) . "\n" .
