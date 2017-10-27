@@ -189,16 +189,16 @@
                 <?php
                 if ($error == true) {
                   if ($entry_email_address_error == true) {
-                    echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR;
+                    echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');" maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR;
                   } elseif ($entry_email_address_check_error == true) {
-                    echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+                    echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');" maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
                   } elseif ($entry_email_address_exists == true) {
-                    echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
+                    echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');" maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
                   } else {
                     echo $cInfo->customers_email_address.xtc_draw_hidden_field('customers_email_address', $cInfo->customers_email_address);
                   }
                 } else {
-                  echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"', true);
+                  echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');" maxlength="96"', true);
                 }
                 ?>
               </td>
