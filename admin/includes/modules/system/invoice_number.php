@@ -74,8 +74,18 @@ if (!class_exists('invoice_number')) {
         
         function install_db() 
         {
-            xtc_db_query("ALTER TABLE " . TABLE_ORDERS . " ADD `ibn_billnr` VARCHAR(32);");
-            xtc_db_query("ALTER TABLE " . TABLE_ORDERS . " ADD `ibn_billdate` DATE NOT NULL;");
+            $db_table_rows = array();
+            $query_result = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS." LIKE 'ibn_bill%'");
+            while ($row = xtc_db_fetch_array($query_result)) {
+              $db_table_rows[] = $row['Field'];
+            }
+            if(!in_array('ibn_billnr', $db_table_rows)) {
+                xtc_db_query("ALTER TABLE `" . TABLE_ORDERS . "` ADD `ibn_billnr` VARCHAR(32);");
+            }
+            if(!in_array('ibn_billdate', $db_table_rows)) {
+                xtc_db_query("ALTER TABLE `" . TABLE_ORDERS . "` ADD `ibn_billdate` DATE NOT NULL;");
+            }
+
         }
         
         function uninstall_db() 
