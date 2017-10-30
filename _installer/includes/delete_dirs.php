@@ -1,13 +1,13 @@
 <?php
 // set all directories to be deleted                     
 $unlink_dir = array('_installer/buttons', // neu
-                    'admin/includes/local', // neu
-                    'admin/includes/modules/carp',
-                    'admin/includes/modules/export/idealo_lib', // neu
-                    'admin/includes/modules/fckeditor',
-                    'admin/includes/modules/magpierss',
-                    'admin/includes/modules/magpierss/extlib',
-                    'admin/rss',
+                    DIR_ADMIN.'includes/local', // neu
+                    DIR_ADMIN.'includes/modules/carp',
+                    DIR_ADMIN.'includes/modules/export/idealo_lib', // neu
+                    DIR_ADMIN.'includes/modules/fckeditor',
+                    DIR_ADMIN.'includes/modules/magpierss',
+                    DIR_ADMIN.'includes/modules/magpierss/extlib',
+                    DIR_ADMIN.'rss',
                     'callback/pn_sofortueberweisung', // neu
                     'images/infobox', // neu
                     'includes/classes/nusoap', // neu

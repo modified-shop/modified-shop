@@ -41,98 +41,98 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      '_installer/version106r9', // neu
                      '_installer/version.php', // neu
                      '_unterverzeichnis_.htaccess',
-                     'admin/billsafe_orders_2hp.php',
-                     'admin/blacklist.php', // neu
-                     'admin/cleverreach.html', // neu
-                     'admin/sofortueberweisung_install.php', // neu
-                     'admin/stock_list.php', // neu
-                     'admin/fck_wrapper.php',
-                     'admin/images/icons/fastnav/icon_backup.jpg', // neu
-                     'admin/images/icons/fastnav/icon_categories.jpg', // neu
-                     'admin/images/icons/fastnav/icon_content.jpg', // neu
-                     'admin/images/icons/fastnav/icon_credits.jpg', // neu
-                     'admin/images/icons/fastnav/icon_credits2.jpg', // neu
-                     'admin/images/icons/fastnav/icon_customers.jpg', // neu
-                     'admin/images/icons/fastnav/icon_logout.jpg', // neu
-                     'admin/images/icons/fastnav/icon_newsletter.jpg', // neu
-                     'admin/images/icons/fastnav/icon_order_status.jpg', // neu
-                     'admin/images/icons/fastnav/icon_orders.jpg', // neu
-                     'admin/images/icons/fastnav/icon_shipping_status.jpg', // neu
-                     'admin/images/icons/fastnav/icon_shop.jpg', // neu
-                     'admin/images/icons/heading_configuration.gif', // neu
-                     'admin/images/icons/heading_content.gif', // neu
-                     'admin/images/icons/heading_customers.gif', // neu
-                     'admin/images/icons/heading_modules.gif', // neu
-                     'admin/images/icons/heading_news.gif', // neu
-                     'admin/images/icons/heading_statistic.gif', // neu
-                     'admin/images/icons/sofortueberweisung_autoinstaller.gif', // neu
-                     'admin/images/icons/sofortueberweisung_icon.gif', // neu
-                     'admin/images/icon_info.gif.jpg', // neu
-                     'admin/images/top_credits.gif', // neu
-                     'admin/images/top_end.jpg', // neu
-                     'admin/images/top_index.gif', // neu
-                     'admin/images/top_logout.gif', // neu
-                     'admin/images/top_shop.gif', // neu
-                     'admin/images/top_support.gif', // neu
-                     'admin/includes/classes/class.paypal.php', // neu
-                     'admin/includes/classes/sessions.php', // neu
-                     'admin/includes/classes/phpmailer.lang-de.php', // neu
-                     'admin/includes/classes/phpmailer.lang-en.php', // neu
-                     'admin/includes/configure.org.php',
-                     'admin/includes/functions/db_restore.php', // neu
-                     'admin/includes/functions/languages.php', // neu
-                     'admin/includes/functions/validations.php', // neu
-                     'admin/includes/haendlerbund/css/ui_custom.css', // neu
-                     'admin/includes/haendlerbund/jquery-1.4.4.js', // neu
-                     'admin/includes/modules/carp/carp.php',
-                     'admin/includes/modules/carp/carpconf.php',
-                     'admin/includes/modules/carp/carpinc.php',
-                     'admin/includes/modules/carp/carpsetupinc.php',
-                     'admin/includes/modules/easybill.action.php',
-                     'admin/includes/modules/easybill.button.php',
-                     'admin/includes/modules/easybill.info.php',
-                     'admin/includes/modules/export/easybill.php', // neu
-                     'admin/includes/modules/export/easymarketing.php', // neu
-                     'admin/includes/modules/export/it_recht_kanzlei.php', // neu
-                     'admin/includes/modules/export/froogle.php', // neu
-                     'admin/includes/modules/export/googlebase.php', // neu
-                     'admin/includes/modules/export/image_processing_step.php', // neu
-                     'admin/includes/modules/export/janolaw.php', // neu
-                     'admin/includes/modules/export/protectedshops.php', // neu
-                     'admin/includes/modules/export/shipcloud.php', // neu
-                     'admin/includes/modules/export/tag_cloud.php', // neu
-                     'admin/includes/modules/export/xtbooster.php', // neu
-                     'admin/includes/modules/export/image_processing.php',
-                     'admin/includes/modules/export/image_processing_new.php',
-                     'admin/includes/modules/export/image_processing_new_step.php',
-                     'admin/includes/modules/export/image_processing_new_step2.php',
-                     'admin/includes/modules/fckeditor/editor/filemanager/browser/default/frmactualfolder.html',
-                     'admin/includes/modules/fckeditor/editor/filemanager/browser/default/frmcreatefolder.html',
-                     'admin/includes/modules/fckeditor/editor/filemanager/browser/default/frmfolders.html',
-                     'admin/includes/modules/fckeditor/editor/filemanager/browser/default/frmresourceslist.html',
-                     'admin/includes/modules/fckeditor/editor/filemanager/browser/default/frmresourcetype.html',
-                     'admin/includes/modules/fckeditor/editor/filemanager/browser/default/frmupload.html',
-                     'admin/includes/modules/graduated-prices-edit.php', // neu
-                     'admin/includes/modules/magpierss/AUTHORS',
-                     'admin/includes/modules/magpierss/ChangeLog',
-                     'admin/includes/modules/magpierss/CHANGES',
-                     'admin/includes/modules/magpierss/rss_cache.inc',
-                     'admin/includes/modules/magpierss/rss_fetch.inc',
-                     'admin/includes/modules/magpierss/rss_parse.inc',
-                     'admin/includes/modules/magpierss/rss_utils.inc',
-                     'admin/includes/modules/magpierss/extlib/Snoopy.class.inc',
-                     'admin/includes/modules/paypal_capturetransaction.php', // neu
-                     'admin/includes/modules/paypal_listtransactions.php', // neu
-                     'admin/includes/modules/paypal_refundtransaction.php', // neu
-                     'admin/includes/modules/paypal_searchtransaction.php', // neu
-                     'admin/includes/modules/paypal_transactiondetail.php', // neu
-                     'admin/includes/stylesheet_stocklist.css', // neu
-                     'admin/includes/stylesheet_stocklist_print.css', // neu
-                     'admin/paypal.php', // neu
-                     'admin/popup_image.php', // neu
-                     'admin/rss/index.html',
-                     'admin/rss/xt-news.cache',
-                     'admin/rss/xtc.cache',
+                     DIR_ADMIN.'billsafe_orders_2hp.php',
+                     DIR_ADMIN.'blacklist.php', // neu
+                     DIR_ADMIN.'cleverreach.html', // neu
+                     DIR_ADMIN.'sofortueberweisung_install.php', // neu
+                     DIR_ADMIN.'stock_list.php', // neu
+                     DIR_ADMIN.'fck_wrapper.php',
+                     DIR_ADMIN.'images/icons/fastnav/icon_backup.jpg', // neu
+                     DIR_ADMIN.'images/icons/fastnav/icon_categories.jpg', // neu
+                     DIR_ADMIN.'images/icons/fastnav/icon_content.jpg', // neu
+                     DIR_ADMIN.'images/icons/fastnav/icon_credits.jpg', // neu
+                     DIR_ADMIN.'images/icons/fastnav/icon_credits2.jpg', // neu
+                     DIR_ADMIN.'images/icons/fastnav/icon_customers.jpg', // neu
+                     DIR_ADMIN.'images/icons/fastnav/icon_logout.jpg', // neu
+                     DIR_ADMIN.'images/icons/fastnav/icon_newsletter.jpg', // neu
+                     DIR_ADMIN.'images/icons/fastnav/icon_order_status.jpg', // neu
+                     DIR_ADMIN.'images/icons/fastnav/icon_orders.jpg', // neu
+                     DIR_ADMIN.'images/icons/fastnav/icon_shipping_status.jpg', // neu
+                     DIR_ADMIN.'images/icons/fastnav/icon_shop.jpg', // neu
+                     DIR_ADMIN.'images/icons/heading_configuration.gif', // neu
+                     DIR_ADMIN.'images/icons/heading_content.gif', // neu
+                     DIR_ADMIN.'images/icons/heading_customers.gif', // neu
+                     DIR_ADMIN.'images/icons/heading_modules.gif', // neu
+                     DIR_ADMIN.'images/icons/heading_news.gif', // neu
+                     DIR_ADMIN.'images/icons/heading_statistic.gif', // neu
+                     DIR_ADMIN.'images/icons/sofortueberweisung_autoinstaller.gif', // neu
+                     DIR_ADMIN.'images/icons/sofortueberweisung_icon.gif', // neu
+                     DIR_ADMIN.'images/icon_info.gif.jpg', // neu
+                     DIR_ADMIN.'images/top_credits.gif', // neu
+                     DIR_ADMIN.'images/top_end.jpg', // neu
+                     DIR_ADMIN.'images/top_index.gif', // neu
+                     DIR_ADMIN.'images/top_logout.gif', // neu
+                     DIR_ADMIN.'images/top_shop.gif', // neu
+                     DIR_ADMIN.'images/top_support.gif', // neu
+                     DIR_ADMIN.'includes/classes/class.paypal.php', // neu
+                     DIR_ADMIN.'includes/classes/sessions.php', // neu
+                     DIR_ADMIN.'includes/classes/phpmailer.lang-de.php', // neu
+                     DIR_ADMIN.'includes/classes/phpmailer.lang-en.php', // neu
+                     DIR_ADMIN.'includes/configure.org.php',
+                     DIR_ADMIN.'includes/functions/db_restore.php', // neu
+                     DIR_ADMIN.'includes/functions/languages.php', // neu
+                     DIR_ADMIN.'includes/functions/validations.php', // neu
+                     DIR_ADMIN.'includes/haendlerbund/css/ui_custom.css', // neu
+                     DIR_ADMIN.'includes/haendlerbund/jquery-1.4.4.js', // neu
+                     DIR_ADMIN.'includes/modules/carp/carp.php',
+                     DIR_ADMIN.'includes/modules/carp/carpconf.php',
+                     DIR_ADMIN.'includes/modules/carp/carpinc.php',
+                     DIR_ADMIN.'includes/modules/carp/carpsetupinc.php',
+                     DIR_ADMIN.'includes/modules/easybill.action.php',
+                     DIR_ADMIN.'includes/modules/easybill.button.php',
+                     DIR_ADMIN.'includes/modules/easybill.info.php',
+                     DIR_ADMIN.'includes/modules/export/easybill.php', // neu
+                     DIR_ADMIN.'includes/modules/export/easymarketing.php', // neu
+                     DIR_ADMIN.'includes/modules/export/it_recht_kanzlei.php', // neu
+                     DIR_ADMIN.'includes/modules/export/froogle.php', // neu
+                     DIR_ADMIN.'includes/modules/export/googlebase.php', // neu
+                     DIR_ADMIN.'includes/modules/export/image_processing_step.php', // neu
+                     DIR_ADMIN.'includes/modules/export/janolaw.php', // neu
+                     DIR_ADMIN.'includes/modules/export/protectedshops.php', // neu
+                     DIR_ADMIN.'includes/modules/export/shipcloud.php', // neu
+                     DIR_ADMIN.'includes/modules/export/tag_cloud.php', // neu
+                     DIR_ADMIN.'includes/modules/export/xtbooster.php', // neu
+                     DIR_ADMIN.'includes/modules/export/image_processing.php',
+                     DIR_ADMIN.'includes/modules/export/image_processing_new.php',
+                     DIR_ADMIN.'includes/modules/export/image_processing_new_step.php',
+                     DIR_ADMIN.'includes/modules/export/image_processing_new_step2.php',
+                     DIR_ADMIN.'includes/modules/fckeditor/editor/filemanager/browser/default/frmactualfolder.html',
+                     DIR_ADMIN.'includes/modules/fckeditor/editor/filemanager/browser/default/frmcreatefolder.html',
+                     DIR_ADMIN.'includes/modules/fckeditor/editor/filemanager/browser/default/frmfolders.html',
+                     DIR_ADMIN.'includes/modules/fckeditor/editor/filemanager/browser/default/frmresourceslist.html',
+                     DIR_ADMIN.'includes/modules/fckeditor/editor/filemanager/browser/default/frmresourcetype.html',
+                     DIR_ADMIN.'includes/modules/fckeditor/editor/filemanager/browser/default/frmupload.html',
+                     DIR_ADMIN.'includes/modules/graduated-prices-edit.php', // neu
+                     DIR_ADMIN.'includes/modules/magpierss/AUTHORS',
+                     DIR_ADMIN.'includes/modules/magpierss/ChangeLog',
+                     DIR_ADMIN.'includes/modules/magpierss/CHANGES',
+                     DIR_ADMIN.'includes/modules/magpierss/rss_cache.inc',
+                     DIR_ADMIN.'includes/modules/magpierss/rss_fetch.inc',
+                     DIR_ADMIN.'includes/modules/magpierss/rss_parse.inc',
+                     DIR_ADMIN.'includes/modules/magpierss/rss_utils.inc',
+                     DIR_ADMIN.'includes/modules/magpierss/extlib/Snoopy.class.inc',
+                     DIR_ADMIN.'includes/modules/paypal_capturetransaction.php', // neu
+                     DIR_ADMIN.'includes/modules/paypal_listtransactions.php', // neu
+                     DIR_ADMIN.'includes/modules/paypal_refundtransaction.php', // neu
+                     DIR_ADMIN.'includes/modules/paypal_searchtransaction.php', // neu
+                     DIR_ADMIN.'includes/modules/paypal_transactiondetail.php', // neu
+                     DIR_ADMIN.'includes/stylesheet_stocklist.css', // neu
+                     DIR_ADMIN.'includes/stylesheet_stocklist_print.css', // neu
+                     DIR_ADMIN.'paypal.php', // neu
+                     DIR_ADMIN.'popup_image.php', // neu
+                     DIR_ADMIN.'rss/index.html',
+                     DIR_ADMIN.'rss/xt-news.cache',
+                     DIR_ADMIN.'rss/xtc.cache',
                      'callback/paypal/ipn.php', // neu
                      'callback/sofort/callback.php', // neu
                      'callback/sofort/helperFunctions.php', // neu
