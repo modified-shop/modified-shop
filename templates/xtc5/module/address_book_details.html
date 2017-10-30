@@ -59,7 +59,7 @@
     <td class="inputRequirement">{$SELECT_COUNTRY}</td>
   </tr>
   {if $state == '1'} 
-  <tr> 
+  <tr{if $display_state}{$display_state}{/if}>
     <td>{#text_state#}</td>
     <td class="inputRequirement">{$INPUT_STATE}</td>
   </tr>
