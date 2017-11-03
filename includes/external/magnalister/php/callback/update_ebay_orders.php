@@ -369,7 +369,9 @@ function magnaUpdateEbayOrders($mpID) {
 					$sMagnaOrdersData = serialize(array_merge($aOldMagnaOrdersData, $order['magnaOrders']));
 					$MagnaDB->update(TABLE_MAGNA_ORDERS, array ('data' => $sMagnaOrdersData), array('orders_id' => $currentOrderID));
 				}
-				
+
+	            $blUpdateMainAddress = array_key_exists('MainAddressTakenFromShippingAddress', $order);
+
 	            ## Werte aus der Tabelle holen fuer die Info-mail was sich geaendert hat
 				## Mail noch zu bauen
 				$order = array_filter_keys($order, MagnaDB::gi()->getTableColumns(TABLE_ORDERS));
@@ -381,6 +383,10 @@ function magnaUpdateEbayOrders($mpID) {
 	           	if ($verbose) echo print_m($oldValues, '$oldValues');
 	            $updatedValues = array_diff_assoc($order, $oldValues);
 	            $MagnaDB->update(TABLE_ORDERS, $order, array('orders_id' => $currentOrderID));
+	            if (    $blUpdateMainAddress
+	                 && (get_class($MagnaDB) != 'MagnaTestDB')) {
+	                updateMainAddressFromOrder($currentOrderID);
+	            }
 	            $processedOrderIDs[] = $currentOrderID;
 	
 				/* {Hook} "UpdateeBayOrders_PostOrderUpdate": Is called after the eBay order in <code>$order</code> is updated.

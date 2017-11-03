@@ -40,7 +40,7 @@ class HitmeisterMarketplace extends MagnaCompatMarketplace {
     		$dblEANQuery = MagnaDB::gi()->query('
 				SELECT products_ean, COUNT(products_ean) as cnt
           		FROM '.TABLE_PRODUCTS.' 
-         		WHERE products_ean <> \'\' AND products_ean IS NOT NULL
+         		WHERE products_ean <> \'\' AND products_ean IS NOT NULL AND products_ean <> \'0\'
       		GROUP BY products_ean
         		HAVING cnt > 1'
     		);

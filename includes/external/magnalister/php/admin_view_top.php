@@ -111,6 +111,9 @@ if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 		<link rel="stylesheet" type="text/css" href="<?php echo DIR_MAGNALISTER_WS; ?>css/jqueryui/jquery-ui-1.9.1.custom.css" />
 		<link rel="stylesheet" type="text/css" href="<?php echo DIR_MAGNALISTER_WS; ?>css/magnalister.css?<?php echo CLIENT_BUILD_VERSION?>" />
 <?php
+    if (SHOPSYSTEM == 'commerceseo') {
+        echo '<link rel="stylesheet" type="text/css" href="'.DIR_MAGNALISTER_WS.'css/commerceSEOV3.css?'.CLIENT_BUILD_VERSION.'" />';
+    }
 			if (isset($_pageCSS) && ($_pageCSS = trim($_pageCSS)) && !empty($_pageCSS)) {
 				echo '
 		<style type="text/css">

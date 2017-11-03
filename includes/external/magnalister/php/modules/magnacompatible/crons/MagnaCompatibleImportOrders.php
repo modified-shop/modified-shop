@@ -467,6 +467,22 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		
 		# Kunden-ID herausfinden
 		$customer['ID'] = $this->db->getLastInsertID();
+		# Falls es doch verlorengeht (passiert)
+		if (empty($customer['ID'])) {
+			$iCustomerId = (int)$this->db->fetchOne("SELECT LAST_INSERT_ID()");
+			$sCustomerId = (int)$this->db->fetchOne("
+				SELECT customers_id
+				  FROM ".TABLE_CUSTOMERS."
+				 WHERE customers_email_address = '".MagnaDB::gi()->escape($this->o['customer']['customers_email_address'])."'
+				ORDER BY customers_id DESC
+				LIMIT 1
+			");
+			if ($iCustomerId == $sCustomerId) {
+				$customer['ID'] = $iCustomerId;
+			} elseif (isset($sCustomerId)) {
+				$customer['ID'] = $sCustomerId;
+			}
+		}
 		# customers_cid bestimmen
 		if ($this->config['DBColumnExists']['customers.customers_cid']) {
 			switch ($this->config['CIDAssignment']) {
@@ -504,6 +520,22 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 
 		# Adressbuchdatensatz-Id herausfinden.
 		$abId = $this->db->getLastInsertID();
+		# Falls es doch verlorengeht (passiert)
+		if (!isset($abId)) {
+			$iAbId = (int)$this->db->fetchOne("SELECT LAST_INSERT_ID()");
+			$sAbId = (int)$this->db->fetchOne("
+				SELECT address_book_id
+				  FROM ".TABLE_ADDRESS_BOOK."
+				 WHERE customers_id = ".$customer['ID']."
+				ORDER BY address_book_id DESC
+				LIMIT 1
+			");
+			if ($iAbId == $sAbId) {
+				$abId = $iAbId;
+			} elseif (isset($sAbId)) {
+				$abId = $sAbId;
+			}
+		}
 		// echo 'DELETE FROM '.TABLE_ADDRESS_BOOK.' WHERE customers_id="'.$customersId.'";'."\n\n";
 
 		# Kundendatensatz updaten.
@@ -796,6 +828,22 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		# OrderId merken
 		$this->cur['OrderID'] = $this->db->getLastInsertID();
 		// echo 'DELETE FROM '.TABLE_ORDERS.' WHERE orders_id="'.$this->cur['OrderID'].'";'."\n\n";
+		# Falls es doch verlorengeht (passiert)
+		if (empty($this->cur['OrderID'])) {
+			$iInsertId = (int)$this->db->fetchOne("SELECT LAST_INSERT_ID()");
+			$sOrderId = (int)$this->db->fetchOne("
+				SELECT orders_id
+				  FROM ".TABLE_ORDERS."
+				 WHERE customers_email_address = '".MagnaDB::gi()->escape($this->o['order']['customers_email_address'])."'
+				ORDER BY orders_id DESC
+				LIMIT 1
+			");
+			if ($iInsertId == $sOrderId) {
+				$this->cur['OrderID'] = $iInsertId;
+			} elseif (isset($sOrderId)) {
+				$this->cur['OrderID'] = $sOrderId;
+			}
+		}
 
 		$this->insertBankData();
 
@@ -1051,7 +1099,14 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			  FROM ".TABLE_PRODUCTS."
 			 WHERE products_id = '".(int)$this->p['products_id']."'
 		", false));
-		if ($iTaxID !== false) {
+		if (
+			$iTaxID !== false
+			&& (
+				$fTax === false 
+				|| !array_key_exists('ForceMPTax', $this->o['orderInfo']) 
+				|| !$this->o['orderInfo']['ForceMPTax']
+			)
+		) {
 			$fTax = SimplePrice::getTaxByClassID((int)$iTaxID, (int)$this->cur['ShippingCountry']['ID']);
 		}
 
@@ -1092,7 +1147,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	 * @param string $sFieldName
 	 * @return string
 	 */
-	protected function getProductAttributeData($iProductId, $iOptionId, $iOptionValueId, $sFieldName) {
+        protected function getProductAttributeData($iProductId, $iOptionId, $iOptionValueId, $sFieldName) {
 		return MagnaDB::gi()->fetchOne("
 			SELECT ".$sFieldName."
 			  FROM ".TABLE_PRODUCTS_ATTRIBUTES."
@@ -1100,9 +1155,9 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			       AND options_id = '".$iOptionId."'
 			       AND options_values_id = '".$iOptionValueId."'
 		");
-	}
+        }
 	
-	protected function insertProductAttribute($iProductsId, $aOption, $sSKU) {
+        protected function insertProductAttribute($iProductsId, $aOption, $sSKU) {
 		if (empty($aOption['options_name'])) {
 			return;
 		}
@@ -1499,6 +1554,43 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			return;
 		}
 	}
+
+	/*
+	 * For newer Gambio versions: set total weight in the orders table
+	 */
+	protected function setOrderWeight() {
+		if (!MagnaDB::gi()->columnExistsInTable('order_total_weight', TABLE_ORDERS)) {
+			return;
+		}
+		$iTotalWeight = 0.0;
+		foreach ($this->o['products'] as $p) {
+			$iCurrSingleWeight = MagnaDB::gi()->fetchOne('SELECT products_weight
+				FROM '.TABLE_PRODUCTS.'
+				WHERE products_id = '.magnaSKU2pID($p['products_id']));
+			$iTotalWeight += $iCurrSingleWeight * $p['products_quantity'];
+		}
+		$this->db->update(TABLE_ORDERS, array('order_total_weight' => $iTotalWeight),
+			array('orders_id' => $this->cur['OrderID']));
+	}
+
+	/*
+	 * For newer Gambio versions
+	 */
+	protected function setTransportConditionsAccepted() {
+		if (
+			class_exists('IdType') && class_exists('StringType')
+			&& class_exists('StaticGXCoreLoader') && method_exists('StaticGXCoreLoader', 'getService')
+		) {
+			try {
+				$orderId           = new IdType($this->cur['OrderID']);
+				$orderReadService  = StaticGXCoreLoader::getService('OrderRead');
+				$order             = $orderReadService->getOrderById($orderId);
+				$transportConditions = $order->setAddonValue(new StringType('transportConditions'), new StringType('accepted'));
+			} catch (Exception $ex) {
+				//something happen perhaps OrderRead-Service dont exists
+			}
+		}
+	}
 	
 	protected function processSingleOrder() {
 		if ($this->verbose) echo print_m($this->o, 'order');
@@ -1572,6 +1664,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		/* Gambio: create order confirmation PDF */
 		if (SHOPSYSTEM == 'gambio') {
 			$this->createGambioOrderConfirmation();
+			$this->setOrderWeight();
+			$this->setTransportConditionsAccepted();
 		}
 		
 		$this->sendPromoMail();

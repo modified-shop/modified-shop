@@ -326,6 +326,9 @@ $(document).ready(function() {
 				(substr($ret['long'], 0, $this->settings['maxTitleChars']).'&hellip;') : 
 				$ret['long']
 		);
+		if (strpos($ret['long'], '&lt;div') !== false) {
+			$ret['long'] = html_entity_decode($ret['long']);
+		}
 		return $ret;
 	}
 
@@ -366,8 +369,17 @@ $(document).ready(function() {
 			$hdate = date("d.m.Y", $dateadded).' &nbsp;&nbsp;<span class="small">'.date("H:i", $dateadded).'</span>';
 			$message = $this->processErrorMessage($item);
 			$html .= '
-						<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '"><td><input type="checkbox" name="errIDs[]" value="' . $item['id'] . '"></td>
-							' . ($this->settings['hasBatchId'] && !empty($item['BatchId']) ? '<td>' . $item['BatchId'] . '</td>' : '<td>&nbsp;&nbsp;&mdash;</td>') . '
+						<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '"><td><input type="checkbox" name="errIDs[]" value="' . $item['id'] . '"></td>';
+			if ($this->settings['hasBatchId']) {
+				if (!empty($item['BatchId'])) {
+					$html .= '
+							<td>' . $item['BatchId'] . '</td>';
+				} else {
+					$html .= '
+							<td>&nbsp;&nbsp;&mdash;</td>';
+				}
+			}
+			$html .= '
 							<td class="nopadding" style="width: 1px">' . $this->additionalDataHandler($item['additionaldata']) . '</td>
 							<td class="errormessage">' . $message['short'] . '<span>' . $message['long'] . '</span></td>
 							' . ($this->settings['hasOrigin'] && !empty($item['origin']) ? '<td>' . $item['origin'] . '</td>' : '<td>&nbsp;&nbsp;&mdash;</td>') . '

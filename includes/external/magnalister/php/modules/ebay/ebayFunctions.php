@@ -34,6 +34,18 @@ function eBayTimeToTs($eBayTime) {
 	);
 }
 
+/**
+ * encodes special signs
+ * @param string $sUrlPart
+ * @return string
+ */
+function ebayEncodeImageUrl($sUrlPart) {
+    foreach (str_split(' &äöüß') as $sSearch) {
+        $sUrlPart = str_replace($sSearch, rawurlencode($sSearch), $sUrlPart);
+    }
+    return $sUrlPart;
+}
+
 function getDebugDataForUpdateRequests($products_id) {
 	$products_query = "
 		SELECT products_id, products_model, products_quantity, products_price, products_status
@@ -452,21 +464,24 @@ return geteBaySellerProfiles($forceRefresh, 'Return');
 
 /* Helper function for config + prepare */
 function eBayGetSellerProfileData($sProfile) {
-global $_MagnaSession;
-$aSellerProfiles = getDBConfigValue('ebay.sellerprofile.contents', $_MagnaSession['mpID'], false);
-if (empty($aSellerProfiles)) return;
-if(array_key_exists($sProfile, $aSellerProfiles['Payment'])) {
-	echo json_encode($aSellerProfiles['Payment'][$sProfile]);
-	return;
-} else if(array_key_exists($sProfile, $aSellerProfiles['Return'])) {
-	echo json_encode($aSellerProfiles['Return'][$sProfile]);
-	return;
-} else if(array_key_exists($sProfile, $aSellerProfiles['Shipping'])) {
-	$aSellerProfiles['Shipping'][$sProfile]['ebay_default_shipping_local'] = renderReadonlyShippingDetails($aSellerProfiles['Shipping'][$sProfile]['shipping.local'], false);
-	$aSellerProfiles['Shipping'][$sProfile]['ebay_default_shipping_international'] = renderReadonlyShippingDetails($aSellerProfiles['Shipping'][$sProfile]['shipping.international'], true);
-	echo json_encode($aSellerProfiles['Shipping'][$sProfile]);
-	return;
-}
+	global $_MagnaSession;
+	$aSellerProfiles = getDBConfigValue('ebay.sellerprofile.contents', $_MagnaSession['mpID'], false);
+	if (empty($aSellerProfiles)) return;
+	if(array_key_exists($sProfile, $aSellerProfiles['Payment'])) {
+		echo json_encode($aSellerProfiles['Payment'][$sProfile]);
+		return;
+	} else if(array_key_exists($sProfile, $aSellerProfiles['Return'])) {
+		echo json_encode($aSellerProfiles['Return'][$sProfile]);
+		return;
+	} else if(array_key_exists($sProfile, $aSellerProfiles['Shipping'])) {
+		$aSellerProfiles['Shipping'][$sProfile]['ebay_default_shipping_local'] = renderReadonlyShippingDetails($aSellerProfiles['Shipping'][$sProfile]['shipping.local'], false);
+		$aSellerProfiles['Shipping'][$sProfile]['ebay_default_shipping_international'] = renderReadonlyShippingDetails($aSellerProfiles['Shipping'][$sProfile]['shipping.international'], true);
+		echo json_encode($aSellerProfiles['Shipping'][$sProfile]);
+		return;
+	} else {
+		echo "EMPTY\n"; // show something to prevent eternal waiting for the ajax response
+		return;
+	}
 }
 
 /* Helper function for config + prepare */
@@ -890,8 +905,9 @@ $pics = MLProduct::gi()->getProductImagesByID($pID);
 $i = 2;
 # Ersetze #PICTURE2# usw. (#PICTURE1# ist das Hauptbild und wird vorher ersetzt)
 foreach($pics as $pic) {
-	$tmplStr = str_replace('#PICTURE'.$i.'#', "<img src=\"".$imagePath.$pic."\" style=\"border:0;\" alt=\"\" title=\"\" />",
-		 preg_replace( '/(src|SRC|href|HREF|rev|REV)(\s*=\s*)(\'|")(#PICTURE'.$i.'#)/', '\1\2\3'.$imagePath.$pic, $tmplStr));
+    $tmplStr = preg_replace( '/(url|URL)(\s*)(\()([\'"]{0,1})#PICTURE'.$i.'#([\'"]{0,1})(\))/', '\1\2\3\4'.$imagePath.$pic.'\5\6', $tmplStr);
+    $tmplStr = preg_replace( '/(src|SRC|href|HREF|rev|REV)(\s*=\s*)(\'|")(#PICTURE'.$i.'#)/', '\1\2\3'.$imagePath.$pic, $tmplStr);
+	$tmplStr = str_replace('#PICTURE'.$i.'#', "<img src=\"".$imagePath.$pic."\" style=\"border:0;\" alt=\"\" title=\"\" />", $tmplStr);
 	$i++;
 }
 # Uebriggebliebene #PICTUREx# loeschen
@@ -1313,28 +1329,30 @@ function prepareEBayPropertiesRow($pID, $itemDetails) {
 	}
 	$ShippingDetails = array();
 	$ShippingDetails['ShippingServiceOptions'] = array();
-	foreach($itemDetails['ebay_default_shipping_local'] as $key => $localService) {
-		$ShippingDetails['ShippingServiceOptions'][$key] = array(
-			'ShippingService' => $localService['service'],
-			'ShippingServiceCost' => priceToFloat($localService['cost']),
-		);
-		if (   array_key_exists('addcost', $localService)
-			&& isset($localService['addcost'])
-		) {
-			$ShippingDetails['ShippingServiceOptions'][$key]['ShippingServiceAdditionalCost'] = priceToFloat($localService['addcost']);
+	if (is_array($itemDetails['ebay_default_shipping_local'])) {
+		foreach($itemDetails['ebay_default_shipping_local'] as $key => $localService) {
+			$ShippingDetails['ShippingServiceOptions'][$key] = array(
+				'ShippingService' => $localService['service'],
+				'ShippingServiceCost' => priceToFloat($localService['cost']),
+			);
+			if (   array_key_exists('addcost', $localService)
+				&& isset($localService['addcost'])
+			) {
+				$ShippingDetails['ShippingServiceOptions'][$key]['ShippingServiceAdditionalCost'] = priceToFloat($localService['addcost']);
+			}
+			if ('=GEWICHT' == strtoupper($localService['cost'])) {
+				$ShippingDetails['ShippingServiceOptions'][$key]['ShippingServiceCost'] = '=GEWICHT';
+				$ShippingDetails['ShippingServiceOptions'][$key]['ShippingServiceAdditionalCost'] = 0.0;
+			}
+			if (   !isset($next_service)
+				&& (is_numeric($ShippingDetails['ShippingServiceOptions'][$key]['ShippingServiceCost']))
+				&& (0.0 == $ShippingDetails['ShippingServiceOptions'][$key]['ShippingServiceCost'])
+				&& (0.0 == $ShippingDetails['ShippingServiceOptions'][$key]['ShippingServiceAdditionalCost'])
+			) {
+				$ShippingDetails['ShippingServiceOptions'][$key]['FreeShipping'] = 1;
+			}
+			$next_service = true; # FreeShipping darf nur beim 1ten Service gesetzt sein
 		}
-		if ('=GEWICHT' == strtoupper($localService['cost'])) {
-			$ShippingDetails['ShippingServiceOptions'][$key]['ShippingServiceCost'] = '=GEWICHT';
-			$ShippingDetails['ShippingServiceOptions'][$key]['ShippingServiceAdditionalCost'] = 0.0;
-		}
-		if (   !isset($next_service)
-		    && (is_numeric($ShippingDetails['ShippingServiceOptions'][$key]['ShippingServiceCost']))
-		    && (0.0 == $ShippingDetails['ShippingServiceOptions'][$key]['ShippingServiceCost'])
-		    && (0.0 == $ShippingDetails['ShippingServiceOptions'][$key]['ShippingServiceAdditionalCost'])
-		) {
-			$ShippingDetails['ShippingServiceOptions'][$key]['FreeShipping'] = 1;
-		}
-		$next_service = true; # FreeShipping darf nur beim 1ten Service gesetzt sein
 	}
 	$row['DispatchTimeMax'] = $itemDetails['dispatchTime'];
 	if (isset($itemDetails['localProfile'])) {
@@ -1361,15 +1379,15 @@ function prepareEBayPropertiesRow($pID, $itemDetails) {
 				'ShippingServiceCost' => priceToFloat($intlService['cost']),
 				'ShipToLocation' => $intlService['location']
 			);
-		}
-		if (   array_key_exists('addcost', $intlService)
-			&& isset($intlService['addcost'])
-		) {
-			$ShippingDetails['InternationalShippingServiceOption'][$key]['ShippingServiceAdditionalCost'] = priceToFloat($intlService['addcost']);
-		}
-		if ('=GEWICHT' == strtoupper($intlService['cost'])) {
-			$ShippingDetails['InternationalShippingServiceOption'][$key]['ShippingServiceCost'] = '=GEWICHT';
-			$ShippingDetails['InternationalShippingServiceOption'][$key]['ShippingServiceAdditionalCost'] = 0.0;
+			if (   array_key_exists('addcost', $intlService)
+				&& isset($intlService['addcost'])
+			) {
+				$ShippingDetails['InternationalShippingServiceOption'][$key]['ShippingServiceAdditionalCost'] = priceToFloat($intlService['addcost']);
+			}
+			if ('=GEWICHT' == strtoupper($intlService['cost'])) {
+				$ShippingDetails['InternationalShippingServiceOption'][$key]['ShippingServiceCost'] = '=GEWICHT';
+				$ShippingDetails['InternationalShippingServiceOption'][$key]['ShippingServiceAdditionalCost'] = 0.0;
+			}
 		}
 	}
 	if (0 == count($ShippingDetails['InternationalShippingServiceOption'])) {
@@ -1485,7 +1503,7 @@ function SaveEBaySingleProductProperties($pID, $itemDetails) {
 			$row['BuyItNowPrice'] = priceToFloat($itemDetails['BuyItNowPrice']);
 		}
 	}
-	$row['Description'] = trim($itemDetails['Description']);
+	$row['Description'] = htmlEncodeUmlauts(trim($itemDetails['Description']));
 	if(getDBConfigValue('ebay.template.usemobile', $_MagnaSession['mpID'], false) === 'true') {
 		$row['MobileDescription'] = trim(strip_tags($itemDetails['MobileDescription'], '<ol></ol><ul></ul><li></li><br><br/><br />'));
 	} else {
@@ -1596,19 +1614,19 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
 		}
 		if (    (ML_ShopAddOns::mlAddOnIsBooked('EbayPicturePack'))
 		     && (getDBConfigValue(array('ebay.picturepack', 'val'), $_MagnaSession['mpID'], false))) {
-			$aPictureUrls = MLProduct::gi()->getAllImagesByProductsId($dataRow['products_id']);
+			$aPictureUrls = array_unique(MLProduct::gi()->getAllImagesByProductsId($dataRow['products_id']));
 			if (is_array($aPictureUrls) && (count($aPictureUrls) > 1)) {
 				foreach ($aPictureUrls as &$image) {
-					$image = str_replace(array(' ','&'),array('%20','%26'), $image);
+					$image = ebayEncodeImageUrl($image);
 				}
 				$row['PictureURL'] = json_encode($aPictureUrls);
 			} else if (is_array($aPictureUrls) && !empty($aPictureUrls)) {
-				$row['PictureURL'] = $imagePath . str_replace(array(' ','&'),array('%20','%26'), current($aPictureUrls));
+				$row['PictureURL'] = $imagePath . ebayEncodeImageUrl(current($aPictureUrls));
 			} else {
 				$row['PictureURL'] = '';
 			}
 		} else {
-			$row['PictureURL'] = empty($dataRow['image'])? '': $imagePath . $dataRow['image'];
+			$row['PictureURL'] = empty($dataRow['image'])? '': $imagePath . ebayEncodeImageUrl($dataRow['image']);
 		}
 		#if ('on' == $itemDetails['enableGallery']) {
 		#	$galleryPath = getDBConfigValue('ebay.gallery.imagepath',$_MagnaSession['mpID']);
@@ -1815,3 +1833,73 @@ function getPaymentClassForEbayPaymentMethod($paymentMethod) {
     return $class;
 }
 
+/*
+  Alle Adressen anhand der Versandadresse updaten
+  nötig wenn wir von eBay nur die Versandadresse haben (bei ausländicshen Bestellungen)
+*/
+function updateMainAddressFromOrder($iOrdersId) {
+	$aOrder = MagnaDB::gi()->fetchRow('SELECT *
+		 FROM '.TABLE_ORDERS.'
+		WHERE orders_id = '.$iOrdersId);
+
+	MagnaDB::gi()->query('UPDATE '.TABLE_ORDERS.'
+		SET customers_name              = delivery_name,
+		    customers_company           = delivery_company,
+		    customers_street_address    = delivery_street_address,
+		    customers_suburb            = delivery_suburb,
+		    customers_city              = delivery_city,
+		    customers_postcode          = delivery_postcode,
+		    customers_state             = delivery_state,
+		    customers_country           = delivery_country,
+		    customers_address_format_id = delivery_address_format_id,
+		    billing_name                = delivery_name,
+		    billing_company             = delivery_company,
+		    billing_street_address      = delivery_street_address,
+		    billing_suburb              = delivery_suburb,
+		    billing_city                = delivery_city,
+		    billing_postcode            = delivery_postcode,
+		    billing_state               = delivery_state,
+		    billing_country             = delivery_country,
+		    billing_address_format_id   = delivery_address_format_id'
+		    .(  (SHOPSYSTEM == 'oscommerce')
+		    ?''
+		    :',
+		    customers_firstname         = delivery_firstname,
+		    customers_lastname          = delivery_lastname,
+		    billing_firstname           = delivery_firstname,
+		    billing_lastname            = delivery_lastname,
+		    billing_country_iso_code_2  = delivery_country_iso_code_2'
+		    ).'
+		WHERE orders_id = '.$iOrdersId);
+
+	MagnaDB::gi()->query('UPDATE '.TABLE_CUSTOMERS.'
+		SET customers_firstname = \''.$aOrder['delivery_firstname'].'\',
+		    customers_lastname  = \''.$aOrder['delivery_lastname'].'\'
+		WHERE customers_id = '.$aOrder['customers_id']);
+
+	$iCountryId = (int)MagnaDB::gi()->fetchOne('SELECT countries_id
+		 FROM '.TABLE_COUNTRIES.'
+		WHERE countries_iso_code_2 = \''.$aOrder['delivery_country_iso_code_2'].'\'');
+	$iZoneId = (int)MagnaDB::gi()->fetchOne('SELECT zone_id
+		 FROM '.TABLE_ZONES.'
+		WHERE zone_country_id = '.$iCountryId.'
+		AND   zone_name = \''.$aOrder['delivery_state'].'\'');
+
+	MagnaDB::gi()->query('UPDATE '.TABLE_ADDRESS_BOOK.'
+		SET entry_company         = \''.$aOrder['delivery_company'].'\',
+		    entry_firstname       = \''.$aOrder['delivery_firstname'].'\',
+		    entry_lastname        = \''.$aOrder['delivery_lastname'].'\',
+		    entry_street_address  = \''.$aOrder['delivery_street_address'].'\',
+		    entry_suburb          = \''.$aOrder['delivery_suburb'].'\',
+		    entry_postcode        = \''.$aOrder['delivery_postcode'].'\',
+		    entry_city            = \''.$aOrder['delivery_city'].'\',
+		    entry_state           = \''.$aOrder['delivery_state'].'\',
+		    entry_country_id      = '.$iCountryId.',
+		    entry_zone_id         = '.$iZoneId
+		    .(  (SHOPSYSTEM == 'oscommerce')
+		    ?''
+		    :',
+		    address_last_modified = NOW()'
+		    ).'
+		WHERE customers_id = '.$aOrder['customers_id']);
+}

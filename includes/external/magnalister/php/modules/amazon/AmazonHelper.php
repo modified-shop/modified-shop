@@ -65,41 +65,164 @@ class AmazonHelper extends AttributesMatchingHelper {
 		return $config;
 	}
 
-    protected function getPreparedData($category, $prepare = false)
+    public function getCustomIdentifiers($category, $prepare = false, $getDate = false)
     {
+        return $this->getProductTypes($category);
+    }
+
+    private function getProductTypes($category)
+    {
+        $productTypes = array();
+
+        if (empty($category)) {
+            return $productTypes;
+        }
+
+        try {
+            $result = MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'GetCategoryDetails',
+                'MARKETPLACEID' => $this->mpId,
+                'CATEGORY' => $category,
+            ));
+
+            if (!empty($result['DATA']['productTypes'])) {
+                $productTypes = $result['DATA']['productTypes'];
+            }
+
+        } catch (MagnaException $e) {
+            // No product types in this case
+        }
+
+        return $productTypes;
+    }
+
+    public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true, $customIdentifierHtml = '')
+    {
+        $customIdentifierHtml = '
+            <tr id="mpCustomIdentifierSelector">
+                <th>'.ML_LABEL_SUBCATEGORY.'</th>
+                <td class="input">
+                    <table class="inner middle fullwidth customIdentifierSelect">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div class="hoodCatVisual" id="CustomIdentifierVisual">
+                                    <select id="CustomIdentifier" name="CustomIdentifier" style="width:100%">
+                                        '. $this->renderCustomIdentifierOptions() .'
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td class="info"></td>
+            </tr>
+        ';
+        // amazon does not have category pick button
+        return parent::renderMatchingTable($url, $categoryOptions, false, $customIdentifierHtml);
+    }
+
+    private function renderCustomIdentifierOptions()
+    {
+        $noProductTypeOption = '<option value="">'.ML_AMAZON_LABEL_APPLY_PLEASE_SELECT.'</option>' . "\n";
+
+        $category = $_POST['PrimaryCategory'];
+        $customIdentifier = $_POST['CustomIdentifier'];
+        if (empty($category)) {
+            return $noProductTypeOption;
+        }
+
+        $productTypes = $this->getProductTypes($category);
+
+        $out = '';
+        foreach ($productTypes as $productTypeKey => $productType) {
+            $selected = ($productTypeKey == $customIdentifier) ? 'selected="selected"' : '';
+            $out .= '<option value="'.fixHTMLUTF8Entities($productTypeKey).'" '.$selected.'>'.fixHTMLUTF8Entities($productType).'</option>' . "\n";
+        }
+
+        return !empty($out) ? $out : $noProductTypeOption;
+    }
+
+    public function saveMatching($category, &$matching, $savePrepare, $fromPrepare = false, $sCustomIdentifier = '')
+    {
+        $errors = parent::saveMatching($category, $matching, $savePrepare, $fromPrepare, $sCustomIdentifier);
+
+        if (!$fromPrepare) {
+            return $errors;
+        }
+
+        $result = '';
+        if (!empty($errors)) {
+            foreach ($errors as $error) {
+                $errorCssClass = 'errorBox';
+                $errorMessage = $error;
+                if (is_array($error)) {
+                    $errorCssClass = "{$error['type']}Box {$error['additionalCssClass']}";
+                    $errorMessage = $error['message'];
+                }
+
+                $result .= '<p class="'.$errorCssClass.'">' . $errorMessage . '</p>';
+            }
+        } else if (!$fromPrepare) {
+            $result = '<p class="successBox">' . ML_LABEL_SAVED_SUCCESSFULLY . '</p>';
+        }
+
+        if ($result) {
+            // on apply page we need errors in POST to display them properly
+            $_POST['Errors'] = $result;
+        }
+
+        return json_encode($matching['ShopVariation']);
+    }
+
+    protected function getPreparedData($category, $prepare = false, $customIdentifier = '') {
         if (!$prepare) {
             return false;
         }
 
         $availableCustomConfigs = false;
-        $productIdCondition = is_int($prepare) ? ' OR products_id = '.$prepare : '';
-        $dataFromDB = MagnaDB::gi()->fetchRow(eecho('
-            SELECT `data`
-            FROM '.TABLE_MAGNA_AMAZON_APPLY.'
-            WHERE mpID = '.$this->mpId.'
-                AND topMainCategory = "'.$category.'"
-                AND (products_model = "'.$prepare.'"'.$productIdCondition.')
-        ', false));
 
-        if (!$dataFromDB) {
-            return false;
+        if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+            $sSQLAnd = ' AND products_model = "'.$prepare.'"';
+        } else {
+            $sSQLAnd = ' AND products_id = "'. $prepare . '"';
         }
 
-        $dataDB = unserialize(base64_decode($dataFromDB['data']));
+        if ($prepare) {
+            $dataFromDB = MagnaDB::gi()->fetchRow(eecho('
+				SELECT `data`, `topProductType`
+				FROM ' . TABLE_MAGNA_AMAZON_APPLY . '
+				WHERE mpID = ' . $this->mpId . '
+					AND topMainCategory = "' . $category . '"
+					'.$sSQLAnd.'
+			', false));
 
-        if (!empty($dataDB['ShopVariation'])) {
-            if (is_array($dataDB['ShopVariation'])) {
-                $availableCustomConfigs = $dataDB['ShopVariation'];
-            } else {
-                $availableCustomConfigs = json_decode($dataDB['ShopVariation'], true);
+            if (!$dataFromDB) {
+                return false;
             }
-        } elseif (!empty($dataDB['Attributes'])) {
-            foreach ($dataDB['Attributes'] as $attributeKey => $attributeValue) {
-                $availableCustomConfigs[$attributeKey] = array(
-                    'Kind' => 'Matching',
-                    'Values' => $attributeValue,
-                    'Error' => false
-                );
+
+            $dataDB = unserialize(base64_decode($dataFromDB['data']));
+
+            // fix for prepare because it was set as an attribute (but we have separate column in db)
+            if (isset($dataDB['Attributes']) && (count($dataDB['Attributes']) == 1) && isset($dataDB['Attributes']['MerchantShippingGroupName'])) {
+                unset($dataDB['Attributes']['MerchantShippingGroupName']);
+            }
+
+            if (!empty($dataDB['Attributes'])) {
+                foreach ($dataDB['Attributes'] as $attributeKey => $attributeValue) {
+                    $availableCustomConfigs[$attributeKey] = array(
+                        'Kind' => 'Matching',
+                        'Values' => $attributeValue,
+                        'Error' => false
+                    );
+                }
+            } else {
+                if (is_array($dataDB['ShopVariation'])) {
+                    $availableCustomConfigs = $dataDB['ShopVariation'];
+                } else if ($customIdentifier == $dataFromDB['topProductType']) {
+                    $availableCustomConfigs = json_decode($dataDB['ShopVariation'], true);
+                }
             }
         }
 
@@ -110,12 +233,13 @@ class AmazonHelper extends AttributesMatchingHelper {
      * Gets prepared attributes data for products prepared for given category.
      *
      * @param string $category
+     * @param string $customIdentifier
      * @return array|null
      */
-    protected function getPreparedProductsData($category)
+    protected function getPreparedProductsData($category, $customIdentifier = '')
     {
         $dataFromDB = MagnaDB::gi()->fetchArray(eecho('
-				SELECT `data`
+				SELECT `data`, `topProductType`
 				FROM ' . TABLE_MAGNA_AMAZON_APPLY . '
 				WHERE mpID = ' . $this->mpId . '
 					AND topMainCategory = "' . $category . '"
@@ -124,8 +248,8 @@ class AmazonHelper extends AttributesMatchingHelper {
         if ($dataFromDB) {
             $result = array();
             foreach ($dataFromDB as $preparedData) {
-                $data = unserialize(base64_decode($preparedData));
-                if ($data['ShopVariation']) {
+                $data = unserialize(base64_decode($preparedData['data']));
+                if ($data['ShopVariation'] && ($customIdentifier == $dataFromDB['topProductType'])) {
                     $result[] = json_decode($data['ShopVariation'], true);
                 }
             }
@@ -136,7 +260,7 @@ class AmazonHelper extends AttributesMatchingHelper {
         return null;
     }
 
-    protected function getAttributesFromMP($category)
+    protected function getAttributesFromMP($category, $customIdentifier = '')
     {
         $data = false;
         try {
@@ -144,6 +268,7 @@ class AmazonHelper extends AttributesMatchingHelper {
                 'ACTION' => 'GetCategoryDetails',
                 'MARKETPLACEID' => $this->mpId,
                 'CATEGORY' => $category,
+                'PRODUCTTYPE' => $customIdentifier,
             ));
             if (!empty($result['DATA'])) {
                 $data = $result['DATA'];
@@ -173,43 +298,5 @@ class AmazonHelper extends AttributesMatchingHelper {
         }
 
         return $data;
-    }
-
-    public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true)
-    {
-        // amazon does not have category pick button
-        return parent::renderMatchingTable($url, $categoryOptions, false);
-    }
-
-    public function saveMatching($category, &$matching, $savePrepare, $fromPrepare = false)
-    {
-        $errors = parent::saveMatching($category, $matching, $savePrepare, $fromPrepare);
-
-        if (!$fromPrepare) {
-            return $errors;
-        }
-
-        $result = '';
-        if (!empty($errors)) {
-            foreach ($errors as $error) {
-                $errorCssClass = 'errorBox';
-                $errorMessage = $error;
-                if (is_array($error)) {
-                    $errorCssClass = "{$error['type']}Box {$error['additionalCssClass']}";
-                    $errorMessage = $error['message'];
-                }
-
-                $result .= '<p class="'.$errorCssClass.'">' . $errorMessage . '</p>';
-            }
-        } else if (!$fromPrepare) {
-            $result = '<p class="successBox">' . ML_LABEL_SAVED_SUCCESSFULLY . '</p>';
-        }
-
-        if ($result) {
-            // on apply page we need errors in POST to display them properly
-            $_POST['Errors'] = $result;
-        }
-
-        return json_encode($matching['ShopVariation']);
     }
 }

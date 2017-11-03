@@ -21,7 +21,12 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 function mlGetLanguages(&$form) {
-	$langs = MagnaDB::gi()->fetchArray('SELECT * FROM '.TABLE_LANGUAGES);
+	$sSql = 'SELECT * FROM '.TABLE_LANGUAGES;
+	if (SHOPSYSTEM === 'xtcmodified' && MagnaDB::gi()->columnExistsInTable('status_admin', TABLE_LANGUAGES)) {
+		$sSql .= " WHERE status_admin='1'"; // admin can view and edit
+	}
+	
+	$langs = MagnaDB::gi()->fetchArray($sSql);
 	$form['values'] = array();
 	foreach ($langs as $lang) {
 		$form['values'][$lang['languages_id']] = $lang['name'].' ('.$lang['code'].')';

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: applicationviews.php 6865 2016-08-23 08:22:31Z tim.neumann $
+ * $Id: applicationviews.php 2454 2013-05-07 21:53:33Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -52,7 +52,7 @@ function renderAmazonTopTen($sField, $aConfig = array()) {
 	return $sOut;
 }
 
-function getProductTypesAndAttributes($category) {
+function getProductTypesAndAttributes($category, $selected = null) {
 	try {
 		$result = MagnaConnector::gi()->submitRequest(array(
 			'ACTION' => 'GetProductTypesAndAttributes',
@@ -69,7 +69,8 @@ function getProductTypesAndAttributes($category) {
 	if ($result['ProductTypes'] !== false) {
 		$html = '';
 		foreach ($result['ProductTypes'] as $key => $value) {
-			$html .= '<option value="' . $key . '">' . $value . '</option>';
+			$setSelected = $key == $selected ? ' selected="selected"' : '';
+			$html .= '<option value="' . $key . '"' . $setSelected . '>' . $value . '</option>';
 		}
 
 		$result['ProductTypes'] = $html;
@@ -99,10 +100,10 @@ function getBrowseNodes($category, $subcategory, $selectedNode = null, $newStyle
 		$selected = $nodeID == $selectedNode ? 'selected="selected"' : '';
 		$html .= '
 			<option value="' . $nodeID . '" ' . $selected . '>'.str_replace(
-				array('\\/', '/', '#\\#'),
-				array('#\\#', ' &rarr; ', '/'),
+				array('\\/',  '/',        '#\\#'),
+				array('#\\#', ' &rarr; ', '/'   ),
 				fixHTMLUTF8Entities($nodeName)
-			) . '</option>';
+			).'</option>';
 	}
 	return $html;
 }
@@ -202,7 +203,7 @@ function renderMultiApplication($data) {
 	} catch (MagnaException $e) {
 		//echo print_m($e->getErrorArray(), 'Error: '.$e->getMessage(), true);
 	}
-	
+
 	$htmlCategories = '
 				<option value="null">' . ML_AMAZON_LABEL_APPLY_PLEASE_SELECT . '</option>';
 	if (!empty($categories['DATA'])) {
@@ -217,7 +218,7 @@ function renderMultiApplication($data) {
 			'<option value="' . $data['MainCategory'] . '" selected="selected">',
 			$htmlCategories
 		);
-		$cna = getProductTypesAndAttributes($data['MainCategory']);
+		$cna = getProductTypesAndAttributes($data['MainCategory'], $data['ProductType']);
 		$conditionHtml = checkCondition($cna, $data['ConditionType']);
 		$htmlSubCategories = $cna['ProductTypes'];
 	} else {
@@ -227,8 +228,8 @@ function renderMultiApplication($data) {
 	if (($data['MainCategory'] != '') && ($data['MainCategory'] != 'null')
 		&& (array_key_exists('ProductType', $data) || !empty($data['Attributes']))
 	) {
-		if (array_key_exists('ProductType', $data) && ($data['ProductType'] != '')
-			&& ($data['ProductType'] != 'null') && ($data['ProductType'] != false)
+		if (!array_key_exists('ProductType', $data) || ($data['ProductType'] == '')
+			|| ($data['ProductType'] == 'null')
 		) {
 			$htmlSubCategories = str_replace(
 				'<option value="' . $data['ProductType'] . '">',
@@ -238,6 +239,7 @@ function renderMultiApplication($data) {
 		} else {
 			$data['ProductType'] = false;
 		}
+
 		$bNewResponse = false;
 		if (isset($data['BrowseNodes'][0]) && !empty($data['BrowseNodes'][0])) {
 			preg_match("/([0-9]*)__([0-9]*)/", $data['BrowseNodes'][0], $aOutput);
@@ -330,47 +332,9 @@ function renderMultiApplication($data) {
 			});
 		}
 
-		function loadSubcategoriesAndBrowseNodes(mainCategory) {
-			jQuery.blockUI(blockUILoading);
-			jQuery.ajax({
-				type: 'POST',
-				url: '<?php echo toURL($_url, array('kind' => 'ajax', 'applyAction' => $applyAction, 'ts' => time()), true);?>',
-				dataType: 'json',
-				data: {
-					'type': 'subcategories',
-					'category': mainCategory
-				},
-				success: function (data) {
-					if (data.ProductTypes == false) {
-						$('#subCategory').css({'display': 'none'});
-						$('#subcat').html('');
-					} else {
-						$('#subCategory').css({'display': 'table-row'});
-						$('#subcat').html(data.ProductTypes)
-					}
-
-					subcatVal = $('#subcat').val();
-					if ((subcatVal == null) || (subcatVal == '') || (subcatVal == 'null')) {
-						loadBrowseNodes(false);
-					} else {
-						loadBrowseNodes(subcatVal);
-					}
-				},
-				error: function (xhr, status, error) {
-					$('#subcat').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_CAT_FIRST; ?></option>').css({'display': 'block'});
-					$('#browsenodes select').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_SUB_CAT_FIRST; ?></option>');
-					$('#maincat').val('null');
-					myConsole.log(arguments);
-					jQuery.unblockUI();
-				}
-			});
-		}
-
 		$(document).ready(function () {
 			$('#maincat').change(function () {
-				if ($(this).val() != 'null') {
-					loadSubcategoriesAndBrowseNodes($(this).val());
-				} else {
+				if ($(this).val() == 'null') {
 					$('#subcat').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_CAT_FIRST; ?></option>').css({'display': 'block'});
 					$('#browsenodes select').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_SUB_CAT_FIRST; ?></option>');
 					$('#additionalAttributes').css({'display': 'none'});
@@ -408,6 +372,22 @@ function renderMultiApplication($data) {
 				<td colspan="3">&nbsp;</td>
 			</tr>
 		</tbody>
+        <tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
+            <tr class="headline">
+                <td colspan="1"><h4>' . str_replace('%marketplace%', ucfirst($_MagnaSession['currentPlatform']), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE) . '</h4></td>
+                <td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB .' </h4></td>
+            </tr>
+        </tbody>
+        <tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
+            <tr>
+                <th></th>
+                <td class="input">' . ML_GENERAL_VARMATCH_SELECT_CATEGORY . '</td>
+                <td class="info"></td>
+            </tr>
+            <tr class="spacer">
+                <td colspan="3">&nbsp;</td>
+            </tr>
+        </tbody>
 		';
 
 	return $html;
@@ -513,6 +493,216 @@ function renderSingleApplication($data) {
 	return $html;
 }
 
+function renderB2B($data) {
+	global $_MagnaSession;
+	if (getDBConfigValue('amazon.b2b.active', $_MagnaSession['mpID'], 'false') === 'false') {
+		$data['B2BActive'] = 'false';
+		$data['B2BDisableActivation'] = true;
+	}
+
+	$enabled = isset($data['B2BActive']) ? $data['B2BActive'] : 'false';
+	$disableActivation = isset($data['B2BDisableActivation']) ? $data['B2BDisableActivation'] : false;
+	ob_start();
+	?>
+		<tbody>
+			<tr class="headline">
+				<td colspan="3"><h4><?php echo ML_AMAZON_B2B_TITLE ?></h4></td>
+			</tr>
+			<tr class="odd">
+				<th>
+					<table class="nostyle actions">
+						<tr>
+							<td><?php echo ML_AMAZON_B2B_ACTIVATE ?></td>
+							<td style="width: 20px;">
+								<div class="desc" title="<?php echo ML_LABEL_INFO ?>">
+									<span style="display: none"><?php echo ML_AMAZON_B2B_ACTIVATE_INFO ?></span>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</th>
+				<td class="input">
+					<input type="radio" value="true" id="B2BActiveTrue" name="B2BActive"
+						<?php echo $enabled === 'true' ? 'checked' : '';?>>
+					<label for="B2BActiveTrue"><?php echo ML_BUTTON_LABEL_YES ?></label>
+					<input type="radio" value="false" id="B2BActiveFalse" name="B2BActive"
+						<?php echo $enabled === 'false' ? 'checked' : '';?>>
+					<label for="B2BActiveFalse"><?php echo ML_BUTTON_LABEL_NO ?></label>
+				</td>
+				<td class="info"> </td>
+			</tr>
+			<tr class="even">
+				<th>
+					<table class="nostyle actions">
+						<tr>
+							<td><?php echo ML_AMAZON_B2B_SELL_TO ?></td>
+							<td style="width: 20px;">
+								<div class="desc" title="<?php echo ML_LABEL_INFO ?>">
+									<span style="display: none"><?php echo ML_AMAZON_B2B_SELL_TO_INFO ?></span>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</th>
+				<td class="input">
+					<select name="B2BSellTo" class="fullWidth js-b2b" title="<?php echo ML_AMAZON_B2B_SELL_TO ?>">
+						<option value="b2b_b2c" <?php echo isset($data['B2BSellTo']) && $data['B2BSellTo'] === 'b2b_b2c' ? 'selected' : '';?>><?php echo ML_AMAZON_B2B_SELL_TO_ALL ?></option>
+						<option value="b2b_only" <?php echo isset($data['B2BSellTo']) && $data['B2BSellTo'] === 'b2b_only' ? 'selected' : '';?>><?php echo ML_AMAZON_B2B_SELL_TO_B2B ?></option>
+					</select>
+				</td>
+				<td class="info"> </td>
+			</tr>
+			<tr class="odd">
+				<th>
+					<table class="nostyle actions">
+						<tr>
+							<td><?php echo ML_AMAZON_B2B_QUANTITY_DISCOUNT_TYPE ?></td>
+							<td style="width: 20px;">
+								<div class="desc" title="<?php echo ML_LABEL_INFO ?>">
+									<span style="display: none"><?php echo ML_AMAZON_B2B_QUANTITY_DISCOUNT_TYPE_INFO ?></span>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</th>
+				<td class="input">
+					<select name="QuantityPriceType" id="QuantityPriceType" class="fullWidth js-b2b"
+							title="<?php echo ML_AMAZON_B2B_QUANTITY_DISCOUNT_TYPE ?>">
+						<?php $quantityPriceType = isset($data['QuantityPriceType']) ? $data['QuantityPriceType'] : '' ?>
+						<option value="" <?php echo $quantityPriceType === '' ? 'selected' : '';?>><?php
+							echo ML_AMAZON_B2B_QUANTITY_DISCOUNT_DO_NOT_USE ?></option>
+						<option value="percent" <?php echo $quantityPriceType === 'percent' ? 'selected' : '';?>><?php
+							echo ML_AMAZON_B2B_QUANTITY_DISCOUNT_PERCENT ?></option>
+						<option value="fixed" <?php echo $quantityPriceType === 'fixed' ? 'selected' : '';?>><?php
+							echo ML_AMAZON_B2B_QUANTITY_DISCOUNT_FIXED ?></option>
+					</select>
+				</td>
+				<td class="info">&nbsp;</td>
+			</tr>
+			<tr class="even">
+				<th><?php echo ML_AMAZON_B2B_QUANTITY_DISCOUNT_TIER ?> 1</th>
+				<td class="input">
+					<label for="QuantityLowerBound1"><?php echo ML_LABEL_QUANTITY ?></label>:&nbsp;
+					<input type="text" class="autoWidth rightSpacer js-b2b js-b2b-tier" id="QuantityLowerBound1"
+						   name="QuantityLowerBound1"
+						   value="<?php echo isset($data['QuantityLowerBound1']) ? $data['QuantityLowerBound1'] : ''; ?>">
+					<label for="QuantityPrice1"><?php echo ML_LABEL_ORDER_TOTAL_DISCOUNT ?></label>:&nbsp;
+					<input type="text" class="autoWidth rightSpacer js-b2b js-b2b-tier" id="QuantityLowerBound1"
+						   name="QuantityPrice1"
+						   value="<?php echo isset($data['QuantityLowerBound1']) ? $data['QuantityLowerBound1'] : ''; ?>">
+				</td>
+				<td class="info">&nbsp;</td>
+			</tr>
+			<tr class="odd">
+				<th><?php echo ML_AMAZON_B2B_QUANTITY_DISCOUNT_TIER ?> 2</th>
+				<td class="input">
+					<label for="QuantityLowerBound2"><?php echo ML_LABEL_QUANTITY ?></label>:&nbsp;
+					<input type="text" class="autoWidth rightSpacer js-b2b js-b2b-tier" id="QuantityLowerBound2"
+						   name="QuantityLowerBound2"
+						   value="<?php echo isset($data['QuantityLowerBound2']) ? $data['QuantityLowerBound2'] : ''; ?>">
+					<label for="QuantityPrice2"><?php echo ML_LABEL_ORDER_TOTAL_DISCOUNT ?></label>:&nbsp;
+					<input type="text" class="autoWidth rightSpacer js-b2b js-b2b-tier" id="QuantityPrice2"
+						   name="QuantityPrice2"
+						   value="<?php echo isset($data['QuantityPrice2']) ? $data['QuantityPrice2'] : ''; ?>">
+				</td>
+				<td class="info">&nbsp;</td>
+			</tr>
+			<tr class="even">
+				<th><?php echo ML_AMAZON_B2B_QUANTITY_DISCOUNT_TIER ?> 3</th>
+				<td class="input">
+					<label for="QuantityLowerBound3"><?php echo ML_LABEL_QUANTITY ?></label>:&nbsp;
+					<input type="text" class="autoWidth rightSpacer js-b2b js-b2b-tier" id="QuantityLowerBound3"
+						   name="QuantityLowerBound3"
+						   value="<?php echo isset($data['QuantityLowerBound3']) ? $data['QuantityLowerBound3'] : ''; ?>">
+					<label for="QuantityPrice3"><?php echo ML_LABEL_ORDER_TOTAL_DISCOUNT ?></label>:&nbsp;
+					<input type="text" class="autoWidth rightSpacer js-b2b js-b2b-tier" id="QuantityPrice3"
+						   name="QuantityPrice3"
+						   value="<?php echo isset($data['QuantityPrice3']) ? $data['QuantityPrice3'] : ''; ?>">
+				</td>
+				<td class="info">&nbsp;</td>
+			</tr>
+			<tr class="odd">
+				<th><?php echo ML_AMAZON_B2B_QUANTITY_DISCOUNT_TIER ?> 4</th>
+				<td class="input">
+					<label for="QuantityLowerBound4"><?php echo ML_LABEL_QUANTITY ?></label>:&nbsp;
+					<input type="text" class="autoWidth rightSpacer js-b2b js-b2b-tier" id="QuantityLowerBound4"
+						   name="QuantityLowerBound4"
+						   value="<?php echo isset($data['QuantityLowerBound4']) ? $data['QuantityLowerBound4'] : ''; ?>">
+					<label for="QuantityPrice4"><?php echo ML_LABEL_ORDER_TOTAL_DISCOUNT ?></label>:&nbsp;
+					<input type="text" class="autoWidth rightSpacer js-b2b js-b2b-tier" id="QuantityPrice4"
+						   name="QuantityPrice4"
+						   value="<?php echo isset($data['QuantityPrice4']) ? $data['QuantityPrice4'] : ''; ?>">
+				</td>
+				<td class="info">&nbsp;</td>
+			</tr>
+			<tr class="even">
+				<th><?php echo ML_AMAZON_B2B_QUANTITY_DISCOUNT_TIER ?> 5</th>
+				<td class="input">
+					<label for="QuantityLowerBound5"><?php echo ML_LABEL_QUANTITY ?></label>:&nbsp;
+					<input type="text" class="autoWidth rightSpacer js-b2b js-b2b-tier" id="QuantityLowerBound5"
+						   name="QuantityLowerBound5"
+						   value="<?php echo isset($data['QuantityLowerBound5']) ? $data['QuantityLowerBound5'] : ''; ?>">
+					<label for="QuantityPrice5"><?php echo ML_LABEL_ORDER_TOTAL_DISCOUNT ?></label>:&nbsp;
+					<input type="text" class="autoWidth rightSpacer js-b2b js-b2b-tier" id="QuantityPrice5"
+						   name="QuantityPrice5"
+						   value="<?php echo isset($data['QuantityPrice5']) ? $data['QuantityPrice5'] : ''; ?>">
+				</td>
+				<td class="info">&nbsp;</td>
+			</tr>
+			<tr class="spacer">
+				<td colspan="3">&nbsp;</td>
+			</tr>
+		</tbody>
+	<script>
+		if (window['jQuery']) {
+			(function ($) {
+				function enableB2B(enable, cls) {
+					$(cls).parent().find('input, select').prop('disabled', !enable);
+				}
+
+				function showMessage(message) {
+					$('<div class="ml-modal dialog2" title="<?php echo ML_LABEL_INFORMATION ?>"></div>').html(message)
+						.jDialog({
+							width: (message.length > 1000) ? '700px' : '500px'
+						});
+				}
+
+				$('#B2BActiveTrue').click(function() {
+					<?php if (!$disableActivation) { ?>
+					enableB2B(true, '.js-b2b');
+					showMessage('<?php echo addslashes(ML_AMAZON_B2B_ACTIVATE_NOTIFICATION) ?>');
+					$('#QuantityPriceType').change();
+					<?php } else { ?>
+					showMessage('<?php echo addslashes(ML_AMAZON_B2B_ACTIVATE_DISABLED_NOTIFICATION) ?>');
+					$('#B2BActiveFalse').click();
+					<?php } ?>
+				});
+				$('#B2BActiveFalse').click(function() {
+					enableB2B(false, '.js-b2b');
+				});
+
+				$('#QuantityPriceType').change(function() {
+					enableB2B($(this).val() !== '', '.js-b2b-tier');
+				}).change();
+
+				<?php if ($enabled === 'false') { ?>
+				enableB2B(false, '.js-b2b');
+				<?php } ?>
+
+				$('table.actions div.desc').click(function () {
+					var d = $(this).find('span').html();
+					$('<div class="dialog2" title="<?php echo ML_LABEL_INFORMATION ?>"></div>').html(d)
+						.jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
+				});
+			})(jQuery);
+		}
+	</script>
+	<?php
+	$html = ob_get_clean();
+
+	return $html;
+}
+
 function renderGenericApplication($data) {
 	global $conditionStatus, $conditionHtml, $_MagnaSession;
 	$opts = array_merge(array(
@@ -570,11 +760,8 @@ function renderGenericApplication($data) {
 $conditionStatus = false;
 $conditionHtml = '';
 if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
-	if (isset($_POST['type']) && ($_POST['type'] == 'subcategories') && isset($_POST['category'])) {
-		$caa = getProductTypesAndAttributes($_POST['category']);
-		checkCondition($caa);
-		$caa['Attributes'] = convertAttrArrayToHTML($caa['Attributes']);
-		die(json_encode($caa));
+	if (isset($_POST['type']) && ($_POST['type'] == 'LoadCustomIdentifiers') && isset($_POST['SelectValue'])) {
+		die(json_encode(AmazonHelper::gi()->getCustomIdentifiers($_POST['SelectValue'])));
 	}
 	if (isset($_POST['type']) && ($_POST['type'] == 'browsenodes') && isset($_POST['category']) && isset($_POST['subcategory'])) {
 		if (isset($_POST['selected']) && !empty($_POST['selected'])) {
@@ -643,9 +830,8 @@ echo '
 	<p>' . ML_AMAZON_TEXT_APPLY_REQUIERD_FIELDS . '</p>
 	<table class="attributesTable">
 		' . renderMultiApplication($data) . '
-		' . (($applyAction != 'multiapplication') ? (
-	renderSingleApplication($data)
-	) : '') . '
+		' . (($applyAction != 'multiapplication') ? renderSingleApplication($data) : '') . '
+		' . renderB2B($data) . '
 		' . renderGenericApplication($data) . '
 	</table>
 	<table class="actions">
@@ -663,8 +849,8 @@ echo '
 		</tbody>
 	</table>
 </form>
-<script type="text/javascript" src="' . DIR_MAGNALISTER_WS . 'js/variation_matching.js"></script>
-<script type="text/javascript" src="' . DIR_MAGNALISTER_WS . 'js/marketplaces/amazon/variation_matching.js"></script>
+<script type="text/javascript" src="' . DIR_MAGNALISTER_WS . 'js/variation_matching.js?'.CLIENT_BUILD_VERSION.'"></script>
+<script type="text/javascript" src="' . DIR_MAGNALISTER_WS . 'js/marketplaces/amazon/variation_matching.js?'.CLIENT_BUILD_VERSION.'"></script>
 <script>
 	var ml_vm_config = {
 		url: "' . toURL($_url, array('applyAction' => 'variations', 'kind' => 'ajax'), true) . '",

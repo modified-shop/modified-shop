@@ -222,7 +222,11 @@ function substituteTemplate($tmplStr, $substitution) {
 			preg_replace(
 				'/(src|SRC|href|HREF|rev|REV)(\s*=\s*)(\'|")(#PICTURE1#)/',
 				'\1\2\3'.$substitution['#PICTURE1#'],
-				$tmplStr
+				preg_replace(
+                    '/(url|URL)(\s*)(\()([\'"]{0,1})#PICTURE1#([\'"]{0,1})(\))/', 
+                    '\1\2\3\4'.$substitution['#PICTURE1#'].'\5\6', 
+                    $tmplStr
+                )
 			)
 		);
 	}
@@ -549,42 +553,44 @@ function generateUniqueProductModels() {
 		}
 	}
 	# Varianten
-	MagnaDB::gi()->query('
-		UPDATE '.TABLE_PRODUCTS_ATTRIBUTES.'
-		   SET attributes_model=CONCAT(\'p\', products_id, \'_\', products_attributes_id)
-		 WHERE attributes_model=\'\' OR attributes_model IS NULL
-	');
-	$q = MagnaDB::gi()->query('
-	    SELECT attributes_model, COUNT(attributes_model) as cnt
-	      FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
-	     WHERE attributes_model <> \'\'
-	  GROUP BY attributes_model
-	    HAVING cnt > 1
-	');
-	$dblAttrModel = array();
-	while ($row = MagnaDB::gi()->fetchNext($q)) {
-		$dblAttrModel[] = $row['attributes_model'];
-	}
-
-	$q = MagnaDB::gi()->query('
-		SELECT products_attributes_id, attributes_model
-		  FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
-		 WHERE attributes_model IN (\''.implode('\', \'', $dblAttrModel).'\')
-	');
-	$dblAttrModel = array();
-	while ($row = MagnaDB::gi()->fetchNext($q)) {
-		$dblAttrModel[$row['attributes_model']][] = $row['products_attributes_id'];
-	}
-	//echo print_m($dblProdModel);
-	if (!empty($dblAttrModel)) {
-		foreach ($dblAttrModel as $pMod => $pIDs) {
-			$i = 1;
-			foreach ($pIDs as $pID) {
-				MagnaDB::gi()->update(TABLE_PRODUCTS_ATTRIBUTES, array(
-					'attributes_model' => $pMod.'_'.($i++)
-				), array(
-					'products_attributes_id' => $pID
-				));
+	if (MagnaDB::gi()->columnExistsInTable('attributes_model', TABLE_PRODUCTS_ATTRIBUTES)) {
+		MagnaDB::gi()->query('
+			UPDATE '.TABLE_PRODUCTS_ATTRIBUTES.'
+			   SET attributes_model=CONCAT(\'p\', products_id, \'_\', products_attributes_id)
+			 WHERE attributes_model=\'\' OR attributes_model IS NULL
+		');
+		$q = MagnaDB::gi()->query('
+		    SELECT attributes_model, COUNT(attributes_model) as cnt
+		      FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
+		     WHERE attributes_model <> \'\'
+		  GROUP BY attributes_model
+		    HAVING cnt > 1
+		');
+		$dblAttrModel = array();
+		while ($row = MagnaDB::gi()->fetchNext($q)) {
+			$dblAttrModel[] = $row['attributes_model'];
+		}
+	
+		$q = MagnaDB::gi()->query('
+			SELECT products_attributes_id, attributes_model
+			  FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
+			 WHERE attributes_model IN (\''.implode('\', \'', $dblAttrModel).'\')
+		');
+		$dblAttrModel = array();
+		while ($row = MagnaDB::gi()->fetchNext($q)) {
+			$dblAttrModel[$row['attributes_model']][] = $row['products_attributes_id'];
+		}
+		//echo print_m($dblProdModel);
+		if (!empty($dblAttrModel)) {
+			foreach ($dblAttrModel as $pMod => $pIDs) {
+				$i = 1;
+				foreach ($pIDs as $pID) {
+					MagnaDB::gi()->update(TABLE_PRODUCTS_ATTRIBUTES, array(
+						'attributes_model' => $pMod.'_'.($i++)
+					), array(
+						'products_attributes_id' => $pID
+					));
+				}
 			}
 		}
 	}
@@ -1988,8 +1994,11 @@ function renderDateTimePicker($key, $default = false, $alwaysDalete = false, $cl
 
 /**
  *clean corrupted data from prepare tables
+ * @deprecated since new productlist-filters. they should handle date correctlys
+ * @bug queries dont take care about mpid.So prepare data will deleted for other mp's
  */
 function cleanPrepareData() {
+    return;
 	$aQueries = array();
 	$sIdent = (getDBConfigValue('general.keytype', '0') == 'artNr')
 		? 'products_model'

@@ -25,6 +25,7 @@ require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ShopAddOns.php');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
 include_once(DIR_MAGNALISTER_INCLUDES.'lib/configFunctions.php');
 require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/eBayShippingDetailsProcessor.php');
+require_once(DIR_MAGNALISTER_MODULES.'ebay/EbayHelper.php');
 
 function renderAuthError($authError) {
 	global $_MagnaSession;
@@ -332,6 +333,12 @@ if (array_key_exists('conf', $_POST)) {
 	// Mobile description: only list elements and linebreaks allowed
 		$_POST['conf']['ebay.template.mobilecontent'] =
 			ltrim(strip_tags($_POST['conf']['ebay.template.mobilecontent'], '<ol></ol><ul></ul><li></li><br><br/><br />'), '/ ');
+	// and filter out double content, if mobile content active
+		if ($_POST['conf']['ebay.template.usemobile']) {
+			EbayHelper::filterDoubleContentFromDescTemplate($_POST['conf']['ebay.template.content'],
+			    $_POST['conf']['ebay.template.mobilecontent']);
+		}
+		
 	}
 } else {
 	$nSite = getDBConfigValue('ebay.site', $_MagnaSession['mpID']);
@@ -497,9 +504,10 @@ if (!$auth['state']) {
 	// vorerst auskommentiert aus config
 		mlGetCustomersStatus($form['fixedsettings']['fields']['whichstrikeprice'], true);
 		if (!empty($form['fixedsettings']['fields']['whichstrikeprice'])) {
-			$form['fixedsettings']['fields']['whichstrikeprice']['values']['-1'] = ML_LABEL_DONT_USE;
 			$form['fixedsettings']['fields']['whichstrikeprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
 			ksort($form['fixedsettings']['fields']['whichstrikeprice']['values']);
+			// add "don't use" at the beginning of the strikepricekind array
+			$form['fixedsettings']['fields']['whichstrikeprice']['morefields']['strikepricekind']['values'] = array_merge(array('DontUse' => ML_LABEL_DONT_USE), $form['fixedsettings']['fields']['whichstrikeprice']['morefields']['strikepricekind']['values']);
 		} else {
 			unset($form['fixedsettings']['fields']['whichstrikeprice']);
 		}
@@ -756,7 +764,6 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 			echo '<p class="noticeBox">'.ML_GENERIC_NO_TESTMAIL_SENT.'</p>';
 		}
 	}
-	#echo print_m($form, 'form');
 	if (array_key_exists('conf', $_POST) && is_array($_POST['conf']) &&
 	    array_key_exists('configtool', $_POST) && ($_POST['configtool'] == 'MagnaConfigurator')) {
 		geteBayBusinessPolicies(true); // refresh BusinessPolicies when form submitted
@@ -830,6 +837,58 @@ $('input[id="conf_ebay.usePrefilledInfo_val"]').change(function() {
 });
 /*]]>*/</script><?php
 ?><script>/*<!CDATA[*/
+/*
+if ($('input[id="conf_ebay.strike.price.active_val"]').attr('checked') != 'checked') {
+    	$('select[id="config_ebay_strike_price_addkind"]').prop('disabled', true);
+    	$('input[id="config_ebay_strike_price_factor"]').prop('disabled', true);
+    	$('input[id="config_ebay_strike_price_signal"]').prop('disabled', true);
+    	$('select[id="config_ebay_strike_price_group"]').prop('disabled', true);
+    	$('select[id="config_ebay_strike_price_kind"]').prop('disabled', true);
+    	$('select[id="config_ebay_strike_price_kind"]').val('<?php echo ML_LABEL_DONT_USE;?>');
+
+	$('select[id="config_ebay_strike_price_addkind"]').css('background-color','#dfdfdf');
+    	$('input[id="config_ebay_strike_price_factor"]').css('background-color','#dfdfdf');
+    	$('input[id="config_ebay_strike_price_signal"]').css('background-color','#dfdfdf');
+    	$('select[id="config_ebay_strike_price_group"]').css('color','#dfdfdf');
+    	$('select[id="config_ebay_strike_price_group"]').css('background-color','#dfdfdf');
+    	$('select[id="config_ebay_strike_price_kind"]').css('background-color','#dfdfdf');
+}
+$('input[id="conf_ebay.strike.price.active_val"]').change(function() {
+    	var chbx = $(this);
+    	if (chbx.attr('checked') == 'checked') {
+	    	$('select[id="config_ebay_strike_price_addkind"]').prop('disabled', false);
+	    	$('input[id="config_ebay_strike_price_factor"]').prop('disabled', false);
+	    	$('input[id="config_ebay_strike_price_signal"]').prop('disabled', false);
+	    	$('select[id="config_ebay_strike_price_group"]').prop('disabled', false);
+	    	$('select[id="config_ebay_strike_price_kind"]').prop('disabled', false);
+		if (typeof strike_price_kind_oldval != "undefined") {
+    			$('select[id="config_ebay_strike_price_kind"]').val(strike_price_kind_oldval);
+		}
+
+		$('select[id="config_ebay_strike_price_addkind"]').css('background-color','#fff');
+    		$('input[id="config_ebay_strike_price_factor"]').css('background-color','#fff');
+    		$('input[id="config_ebay_strike_price_signal"]').css('background-color','#fff');
+    		$('select[id="config_ebay_strike_price_group"]').css('color','#000');
+    		$('select[id="config_ebay_strike_price_group"]').css('background-color','#fff');
+    		$('select[id="config_ebay_strike_price_kind"]').css('background-color','#fff');
+	} else {
+		strike_price_kind_oldval=$('select[id="config_ebay_strike_price_kind"]').val();
+	    	$('select[id="config_ebay_strike_price_addkind"]').prop('disabled', true);
+	    	$('input[id="config_ebay_strike_price_factor"]').prop('disabled', true);
+	    	$('input[id="config_ebay_strike_price_signal"]').prop('disabled', true);
+	    	$('select[id="config_ebay_strike_price_group"]').prop('disabled', true);
+	    	$('select[id="config_ebay_strike_price_kind"]').prop('disabled', true);
+    		$('select[id="config_ebay_strike_price_kind"]').val('<?php echo ML_LABEL_DONT_USE;?>');
+
+		$('select[id="config_ebay_strike_price_addkind"]').css('background-color','#dfdfdf');
+    		$('input[id="config_ebay_strike_price_factor"]').css('background-color','#dfdfdf');
+    		$('input[id="config_ebay_strike_price_signal"]').css('background-color','#dfdfdf');
+    		$('select[id="config_ebay_strike_price_group"]').css('color','#dfdfdf');
+    		$('select[id="config_ebay_strike_price_group"]').css('background-color','#dfdfdf');
+    		$('select[id="config_ebay_strike_price_kind"]').css('background-color','#dfdfdf');
+	}
+});
+*/
 if ($('input[id="conf_ebay.order.importonlypaid_true"]').attr('checked') == 'checked') {
     	$('select[id="config_ebay_orderstatus_closed"]').prop('disabled', true);
     	$('select[id="config_ebay_orderstatus_paid"]').prop('disabled', true);
@@ -946,6 +1005,7 @@ $('input[id="conf_ebay.order.importonlypaid_false"]').change(function() {
 	});
 /*]]>*/</script><?php
 	echo $cG->exchangeRateAlert();
+	echo $cG->radioAlert('conf_ebay.template.usemobile', ML_LABEL_IMPORTANT, ML_EBAY_POPUP_MOBILEDESC);
 	ML_ShopAddOns::generateConfigPopup('EbayProductIdentifierSync', 'conf_ebay.listingdetails.sync', '#conf_ebay');
 	ML_ShopAddOns::generateConfigPopup('EbayZeroStockAndRelisting', 'conf_ebay.autorelist', '#conf_ebay');
 	ML_ShopAddOns::generateConfigPopup('EbayZeroStockAndRelisting', 'conf_ebay.zerostockontrol', '#conf_ebay');

@@ -139,7 +139,7 @@ class MLProductListDependencyCdiscountApplyFormAction extends MLProductListDepen
 		$prod = MagnaDB::gi()->fetchArray('
 			SELECT p.products_model,
 				   pd.products_name as Title,
-				   pd.products_short_description as Subtitle,
+				   '.(MagnaDB::gi()->columnExistsInTable('products_short_description', TABLE_PRODUCTS_DESCRIPTION) ? 'pd.products_short_description' : '"" AS Subtitle').',
 				   pd.products_description as Description
 			  FROM ' . TABLE_PRODUCTS . ' p
 		 LEFT JOIN ' . TABLE_PRODUCTS_DESCRIPTION . ' pd ON pd.products_id = p.products_id AND pd.language_id = "' . $lang . '"

@@ -140,7 +140,7 @@ abstract class MarketplaceCategoryMatching {
 		return true;
 	}
 
-	private function getMPCategories($parentID = 0, $purge = false) {
+	protected function getMPCategories($parentID = 0, $purge = false) {
 		if ($purge) {
 			$where = array (
 				'ParentID' => $parentID,

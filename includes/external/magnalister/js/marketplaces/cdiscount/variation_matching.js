@@ -60,7 +60,8 @@ $(document).ready(function() {
         _buildShopVariationSelector: function (data) {
             var self = this,
                 kind = 'FreeText',
-                baseName = 'ml[match][ShopVariation][' + data.AttributeCode + ']';
+                baseName = 'ml[match][ShopVariation][' + data.AttributeCode + ']',
+                isSelectAndText = data.DataType === 'selectAndText';
 
             data.id = data.AttributeCode.replace(/[^A-Za-z0-9_]/g, '_'); // css selector-save.
             data.AttributeName = data.AttributeName || data.AttributeCode;
@@ -78,29 +79,20 @@ $(document).ready(function() {
                 data.style = '';
             }
 
-            if (data.AllowedValues.length > 0 || Object.keys(data.AllowedValues).length > 0) {
-                kind = 'Matching';
-                variationsDropDown.children("option[data-custom='true']").attr('disabled', 'disabled');
-                variationsDropDown.children("option[value='freetext']").attr('disabled', 'disabled');
-                variationsDropDown.children("option[value='database_value']").attr('disabled', 'disabled');
-                variationsDropDown.children("option[value='attribute_value']").attr('disabled', null);
-            } else {
-                if (data.AttributeCode.substring(0, 20) === 'additional_attribute') {
-                    variationsDropDown.children("option[value='freetext']").attr('disabled', 'disabled');
-                    variationsDropDown.children("option[value='database_value']").attr('disabled', 'disabled');
-                } else {
-                    variationsDropDown.children("option[value='freetext']").attr('disabled', null);
-                    variationsDropDown.children("option[value='database_value']").attr('disabled', null);
-                }
-
-                variationsDropDown.children("option[value='attribute_value']").attr('disabled', 'disabled');
-                variationsDropDown.children("option[data-custom='true']").attr('disabled', null);
+            // If attribute is already matched add options
+            if (typeof data.CurrentValues.Values !== 'undefined'
+                && (data.CurrentValues.Values.length > 0 || Object.keys(data.CurrentValues.Values).length > 0)) {
+                self._addShopOptions(self, variationsDropDown, data, isSelectAndText);
             }
 
             if (data.Required == true) {
                 data.redDot = '<span class="bull">&bull;</span>';
             } else {
                 data.redDot = '';
+            }
+
+            if (data.AllowedValues.length > 0 || Object.keys(data.AllowedValues).length > 0) {
+                kind = 'Matching';
             }
 
             data.shopVariationsDropDown = $('<div>')
@@ -112,6 +104,15 @@ $(document).ready(function() {
                 .append('<div id="infodiagmandatory" class="ml-modal dialog2" title="Hinweis"></div><span id="mandatoryfieldsinfo" style="display: none">' + self.i18n.mandatoryInfo + '</span>')
                 .html()
             ;
+
+            setTimeout(function() {
+                var selectElement = document.getElementById('sel_' + data.id);
+                selectElement.addEventListener('mousedown', function() {
+                    if (this.options.length === 1) {
+                        self._addShopOptions(self, this, data, isSelectAndText);
+                    }
+                });
+            }, 0);
 
             return data;
         },
@@ -127,8 +128,10 @@ $(document).ready(function() {
             mainSelectElement: '#PrimaryCategory',
             matchingHeadline: '#tbodyDynamicMatchingHeadline',
             matchingCustomHeadline: '#tbodyDynamicMatchingCustomHeadline',
+            matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
             matchingInput: '#tbodyDynamicMatchingInput',
             matchingCustomInput: '#tbodyDynamicMatchingCustomInput',
+            matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
             categoryInfo: '#categoryInfo'
         },
         shopVariations: ml_vm_config.shopVariations

@@ -45,6 +45,10 @@ class InventoryView {
 	private $inventoryPurged = false;
 
 	private $search = '';
+	private $businessFeature = '';
+	private $inventoryType;
+	private $itemSkus = array();
+	private $itemMFNFBASkus = array();
 
 	private $batchesProcessed = 0;
 
@@ -76,6 +80,15 @@ class InventoryView {
 		} else if (array_key_exists('search', $_GET) && !empty($_GET['search'])) {
 			$this->search = $_GET['search'];
 		}
+
+		if (array_key_exists('businessFeature', $_POST) && !empty($_POST['businessFeature'])) {
+			$this->businessFeature = $_POST['businessFeature'];
+		}
+
+		if (array_key_exists('inventoryType', $_POST) && !empty($_POST['inventoryType'])) {
+			$this->inventoryType = $_POST['inventoryType'];
+		}
+
 		initArrayIfNecessary($_MagnaShopSession, array($this->magnaSession['mpID'], 'InventoryView', 'Add'));
 		$this->add = &$_MagnaShopSession[$this->magnaSession['mpID']]['InventoryView']['Add'];
 		#$this->add = array();
@@ -100,6 +113,15 @@ class InventoryView {
 			if (!empty($this->search)) {
 				$request['SEARCH'] = $this->search;
 			}
+
+			if (!empty($this->businessFeature)) {
+				$request['FILTERBUSINESS'] = $this->businessFeature;
+			}
+
+			if (!empty($this->inventoryType)) {
+				$request['FILTERINVENTORYTYPE'] = $this->inventoryType;
+			}
+
 			#echo print_m($request);
 			$result = MagnaConnector::gi()->submitRequest($request);
 			if ($result['LATESTCHANGE']) {
@@ -132,11 +154,20 @@ class InventoryView {
 		/* Gibt es neue Listings? */
 		$this->add = array();
 		$this->updatedelete = array();
+		$request = array(
+			'ACTION' => 'GetPendingItems',
+		);
+
+		if (!empty($this->businessFeature)) {
+			$request['FILTERBUSINESS'] = $this->businessFeature;
+		}
+
+		if (!empty($this->inventoryType)) {
+			$request['FILTERINVENTORYTYPE'] = $this->inventoryType;
+		}
 
 		try {
-			$result = MagnaConnector::gi()->submitRequest(array(
-				'ACTION' => 'GetPendingItems',
-			));
+			$result = MagnaConnector::gi()->submitRequest($request);
 		} catch (MagnaException $e) {
 			$result = array('DATA' => false);
 		}
@@ -174,6 +205,7 @@ class InventoryView {
 			'itemtitle' => 'ItemTitle',
 			'asin' => 'ASIN',
 			'price' => 'Price',
+			'businessprice' => 'BusinessPrice',
 			'quantity' => 'Quantity',
 			'dateadded' => 'DateAdded'
 		);
@@ -273,7 +305,14 @@ class InventoryView {
 		}
 		if (array_key_exists('DATA', $result) && !empty($result['DATA'])) {
 			foreach ($result['DATA'] as $item) {
-				if (array_key_exists($item['SKU'], $this->add)) continue;
+				if (array_key_exists($item['SKU'], $this->add)) {
+					continue;
+				}
+
+				if (in_array($item['SKU'], $this->itemSkus)) {
+					$this->itemMFNFBASkus[] = $item['SKU'];
+				}
+
 				unset($item['ConditionType']);
 				unset($item['ConditionNote']);
 				unset($item['Description']);
@@ -354,6 +393,7 @@ class InventoryView {
 					? 0
 					: strtotime($item['DateAdded']);
 
+				$this->itemSkus[] = $item['SKU'];
 				$this->renderableData[] = $item;
 			}
 		}
@@ -369,8 +409,11 @@ class InventoryView {
 					<td>'.ML_AMAZON_LABEL_TITLE.' '.$this->sortByType('itemtitle').'</td>
 					<td>ASIN '.$this->sortByType('asin').'</td>
 					<td>'.ML_AMAZON_LABEL_AMAZON_PRICE.' '.$this->sortByType('price').'</td>
+					<td>'.ML_AMAZON_BUSINESS_LABEL_PRICE.' '.$this->sortByType('businessprice').'</td>
 					<td>'.ML_LABEL_QUANTITY.' '.$this->sortByType('quantity').'</td>
 					<td>'.ML_GENERIC_CHECKINDATE.' '.$this->sortByType('dateadded').'</td>
+					<td>'.ML_AMAZON_BUSINESS_LABEL_FEATURE.'</td>
+					<td>'.ML_AMAZON_LABEL_INVENTORY_TYPE.'</td>
 					<td>'.ML_GENERIC_STATUS.'</td>
 				</tr></thead>
 				<tbody>
@@ -418,8 +461,34 @@ class InventoryView {
 			if ($item['ItemTitle'] == 'incomplete') {
 				$class .= ' incomplete';
 			}
+
+			if (isset($item['BusinessFeature'])) {
+				$businessFeature = constant('ML_' . $item['BusinessFeature']);
+			} else {
+				$businessFeature = '&mdash;';
+			}
+
+			if (isset($item['BusinessPrice'])) {
+				$businessPrice = $this->simpleprice->setPrice($item['BusinessPrice'])->format();
+			} else {
+				$businessPrice = '&mdash;';
+			}
+
+			if (isset($item['InventoryType'])) {
+				$inventoryType = constant('ML_AMAZON_INVENTORY_TYPE_' . $item['InventoryType']);
+			} else {
+				$inventoryType = '&mdash;';
+			}
+
+			$addStyle = '';
+			if ($item['ShopItemNameShort'] === '&mdash;' && $item['SKU'] !== '&mdash;') {
+				$addStyle = 'style="color:#900;"';
+			} else if (in_array($item['SKU'], $this->itemMFNFBASkus)) {
+				$addStyle = 'style="color:#0000ff;"';
+			}
+
 			$html .= '
-				<tr class="'.$class.'">
+				<tr class="'.$class.'" '.$addStyle.'>
 					<td><input type="checkbox" name="skus[]" value="'.$item['SKU'].'" '.((in_array($item['Type'], array(
 						'add', 'delete', 'sysdelete'
 					))) ? 'disabled="disabled"' : '').'/></td>
@@ -431,11 +500,14 @@ class InventoryView {
 					).'
 					<td>'.getAmazonOfferLink($item['ASIN'], ML_AMAZON_LABEL_PRODUCT_IN_AMAZON).'</td>
 					<td>'.$this->simpleprice->setPrice($item['Price'])->format().'</td>
+					<td>'.$businessPrice.'</td>
 					<td>'.(($item['Quantity'] > 0) ? $item['Quantity'] : ML_LABEL_SOLD_OUT).'</td>
 					<td>'.(($item['DateAdded'] == 0)
 						? '&mdash;'
 						: (date("d.m.Y", $item['DateAdded']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateAdded']).'</span>')
-					).'</td>';
+					).'</td>
+					<td>'.$businessFeature.'</td>
+					<td>'.$inventoryType.'</td>';
 
 			switch ($item['Type']) {
 				case 'add': {
@@ -543,6 +615,78 @@ class InventoryView {
 
 		$offset = $currentPage * $this->settings['itemLimit'] - $this->settings['itemLimit'] + 1;
 		$limit = $offset + count($this->renderableData) - 1;
+
+		ob_start();
+		?>
+		<table class="fullWidth nospacing nopadding valigntop topControls"><tbody><tr>
+				<td class="actionLeft">
+				</td>
+				<td>
+					<table class="nospacing nopadding right"><tbody><tr>
+							<td class="filterRight">
+								<div class="filterWrapper">
+									<select id="filter_business_feature_select" class="n">
+										<option value="AMAZON_BUSINESS_ALL"
+											<?php if (isset($this->businessFeature) && $this->businessFeature === 'AMAZON_BUSINESS_ALL') {
+												echo 'selected="selected"';
+											}?>
+										><?php echo ML_AMAZON_BUSINESS_ALL ?></option>
+										<option value="AMAZON_BUSINESS_STANDARD"
+											<?php if (isset($this->businessFeature) && $this->businessFeature === 'AMAZON_BUSINESS_STANDARD') {
+												echo 'selected="selected"';
+											}?>
+										><?php echo ML_AMAZON_BUSINESS_STANDARD ?></option>
+										<option value="AMAZON_BUSINESS_B2B"
+											<?php if (isset($this->businessFeature) && $this->businessFeature === 'AMAZON_BUSINESS_B2B') {
+												echo 'selected="selected"';
+											}?>
+										><?php echo ML_AMAZON_BUSINESS_B2B ?></option>
+										<option value="AMAZON_BUSINESS_B2B_B2C"
+											<?php if (isset($this->businessFeature) && $this->businessFeature === 'AMAZON_BUSINESS_B2B_B2C') {
+												echo 'selected="selected"';
+											}?>
+										><?php echo ML_AMAZON_BUSINESS_B2B_B2C ?></option>
+									</select>
+									<input type="hidden" id="filter_business_feature_input" name="businessFeature" value="">
+									<select id="filter_inventory_type_select" class="n">
+										<option value="ALL"
+											<?php if (isset($this->inventoryType) && $this->inventoryType === 'ALL') {
+												echo 'selected="selected"';
+											}?>
+										><?php echo ML_AMAZON_INVENTORY_TYPE_ALL ?></option>
+										<option value="MFN"
+											<?php if (isset($this->inventoryType) && $this->inventoryType === 'MFN') {
+												echo 'selected="selected"';
+											}?>
+										><?php echo ML_AMAZON_INVENTORY_TYPE_MFN ?></option>
+										<option value="FBA"
+											<?php if (isset($this->inventoryType) && $this->inventoryType === 'FBA') {
+												echo 'selected="selected"';
+											}?>
+										><?php echo ML_AMAZON_INVENTORY_TYPE_FBA ?></option>
+									</select>
+									<input type="hidden" id="filter_inventory_type_input" name="inventoryType" value="">
+								</div>
+							</td>
+						</tr></tbody></table>
+				</td>
+			</tr></tbody></table>
+		<script type="text/javascript">/*<![CDATA[*/
+			$('#filter_business_feature_select').change(function () {
+				$('#filter_business_feature_input').val(this.value);
+				this.closest('form').submit();
+			});
+
+			$('#filter_inventory_type_select').change(function () {
+				$('#filter_inventory_type_input').val(this.value);
+				this.closest('form').submit();
+			});
+			/*]]>*/</script>
+		<br>
+		<?php
+		$html .= ob_get_contents();
+		ob_end_clean();
+
 		$html .= '<table class="listingInfo"><tbody><tr>
 					<td class="ml-pagination">
 						'.(($this->numberofitems > 0)

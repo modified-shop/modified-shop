@@ -275,7 +275,7 @@ class HitmeisterHelper extends AttributesMatchingHelper {
 		return '';
 	}
 
-	protected function getPreparedData($category, $prepare = false)
+	protected function getPreparedData($category, $prepare = false, $customIdentifier = '')
 	{
 		$availableCustomConfigs = false;
 		if ($prepare) {
@@ -283,21 +283,26 @@ class HitmeisterHelper extends AttributesMatchingHelper {
 				SELECT CategoryAttributes
 				FROM ' . TABLE_MAGNA_HITMEISTER_PREPARE . '
 				WHERE MpId = ' . $this->mpId . '
-					AND products_model = \'' . $prepare. '\'
+					AND ' .(
+						getDBConfigValue('general.keytype', '0') == 'artNr'
+						? 'products_model = \'' . $prepare. '\''
+						: 'products_id = \'' . $prepare. '\''
+					). '
 					AND MarketplaceCategories = "' . $category . '"
-			', false), true), true);
+			', false)), true);
 		}
 
 		return !$availableCustomConfigs ? false : $availableCustomConfigs;
 	}
 
-	/**
-	 * Gets prepared attributes data for products prepared for given category.
-	 *
-	 * @param string $category
-	 * @return array|null
-	 */
-	protected function getPreparedProductsData($category)
+    /**
+     * Gets prepared attributes data for products prepared for given category.
+     *
+     * @param string $category
+     * @param string $customIdentifier
+     * @return array|null
+     */
+	protected function getPreparedProductsData($category, $customIdentifier = '')
 	{
 		$dataFromDB = MagnaDB::gi()->fetchArray(eecho('
 				SELECT `CategoryAttributes`
@@ -320,7 +325,7 @@ class HitmeisterHelper extends AttributesMatchingHelper {
 		return null;
 	}
 
-	protected function getAttributesFromMP($category)
+	protected function getAttributesFromMP($category, $customIdentifier = '')
 	{
 		$data = HitmeisterApiConfigValues::gi()->getVariantConfigurationDefinition($category);
 		if (!is_array($data) || !isset($data['attributes'])) {

@@ -26,22 +26,6 @@ require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncO
 class HitmeisterSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 
 	/**
-	 * Builds an element for the ConfirmShipment request.
-	 * @return array
-	 */
-	protected function confirmShipment($date) {
-		$cfirm = array (
-			'MOrderID' => $this->oOrder['special'],
-			'ShippingDate' => localTimeToMagnaTime($date)
-		);
-		$this->oOrder['data']['ML_LABEL_SHIPPING_DATE'] = $cfirm['ShippingDate'];
-
-		// flag order as dirty, meaning that it has to be saved.
-		$this->oOrder['__dirty'] = true;
-		return $cfirm;
-	}
-
-	/**
 	 * Builds an element for the CancelShipment request
 	 * @return array
 	 */

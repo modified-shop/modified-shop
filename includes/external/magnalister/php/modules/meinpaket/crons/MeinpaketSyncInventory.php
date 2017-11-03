@@ -36,6 +36,11 @@ class MeinpaketSyncInventory extends MagnaCompatibleSyncInventory {
 		MLProduct::gi()->setLanguage(getDBConfigValue($this->marketplace.'.lang', $this->mpID, 1))
 			->setPriceConfig(MeinpaketHelper::loadPriceSettings($this->mpID))
 			->setQuantityConfig(MeinpaketHelper::loadQuantitySettings($this->mpID))
+			->setOptions(array(
+				'sameVariationsToAttributes' => false,
+				'purgeVariations' => true,
+				'useGambioProperties' => (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties')
+			));
 		;
 	}
 	

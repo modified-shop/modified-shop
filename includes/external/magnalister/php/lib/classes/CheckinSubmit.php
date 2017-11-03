@@ -252,7 +252,20 @@ abstract class CheckinSubmit {
 		foreach ($requirements as $req => $needed) {
 			if (!$needed) continue;
 			if (empty($product[$req]) && ($product[$req] !== '0')) {
-				$failed[] = $req;
+				if (array_key_exists('Variations', $product)) {
+					$blFail = false;
+					foreach ($product['Variations'] as $variation) {
+						if (empty($variation[$req]) && ($variation[$req] !== '0')) {
+							$blFail = true;
+							break;
+						}
+					}
+				} else {
+					$blFail = true;
+				}
+				if ($blFail) {
+					$failed[] = $req;
+				}
 			}
 		}
 		return empty($failed);

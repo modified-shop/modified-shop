@@ -55,6 +55,7 @@ class CrowdfoxProductSaver {
      */
     protected function preparePropertiesRow($iProductId, $aItemDetails) {
         $aRow = array();
+        $bVerifiedError = false;
         $aRow['mpID'] = $this->mpId;
         $aRow['products_id'] = $iProductId;
         $result = MagnaDB::gi()->fetchArray('
@@ -113,8 +114,10 @@ class CrowdfoxProductSaver {
 
             if (count($aPictureURL) === 0) {
                 $this->aErrors['ML_CROWDFOX_IMAGES_REQUIRE_ERROR'] = ML_CROWDFOX_IMAGES_REQUIRE_ERROR;
+                $bVerifiedError = true;
             } else if (count($aPictureURL) > CrowdfoxHelper::$MAX_NUMBER_OF_IMAGES) {
                 $this->aErrors['ML_CROWDFOX_MAX_IMAGES_ERROR'] = ML_CROWDFOX_MAX_IMAGES_ERROR;
+                $bVerifiedError = true;
             } else {
                 $aRow['Images'] = json_encode($aPictureURL);
             }
@@ -135,6 +138,7 @@ class CrowdfoxProductSaver {
 
             if (count($images) === 0) {
                 $this->aErrors['ML_CROWDFOX_IMAGES_REQUIRE_ERROR'] = ML_CROWDFOX_IMAGES_REQUIRE_ERROR;
+                $bVerifiedError = true;
             } else {
                 $aRow['Images'] = json_encode($images);
             }
@@ -143,6 +147,7 @@ class CrowdfoxProductSaver {
         $aRow['ItemTitle'] = CrowdfoxHelper::sanitizeTitle($aItemDetails['ItemTitle'], CrowdfoxHelper::$TITLE_MAX_LENGTH);
         if (!isset($aRow['ItemTitle']) || $aRow['ItemTitle'] === '') {
             $this->aErrors['ML_CROWDFOX_ERROR_TITLE'] = ML_CROWDFOX_ERROR_TITLE;
+            $bVerifiedError = true;
         }
 
         // In case if client directly on prepare form entered new line
@@ -150,17 +155,20 @@ class CrowdfoxProductSaver {
         $aRow['Description'] = str_replace("\n", ' ', $aRow['Description']);
         if (!isset($aRow['Description']) || $aRow['Description'] === '') {
             $this->aErrors['ML_CROWDFOX_ERROR_DESCRIPTION'] = ML_CROWDFOX_ERROR_DESCRIPTION;
+            $bVerifiedError = true;
         }
 
         $aRow['GTIN'] = $aItemDetails['GTIN'];
         $aRow['DeliveryTime'] = empty($aItemDetails['deliverytime']) ? '' : $aItemDetails['deliverytime'];
         if (empty($aItemDetails['deliverytime'])) {
             $this->aErrors['ML_CROWDFOX_ERROR_SHIPPING_TIME'] = ML_CROWDFOX_ERROR_SHIPPING_TIME;
+            $bVerifiedError = true;
         }
 
         $aRow['DeliveryCost'] =$aItemDetails['deliverycost'];
         if (!is_numeric($aRow['DeliveryCost'])) {
             $this->aErrors['ML_CROWDFOX_ERROR_SHIPPING_COST'] = ML_CROWDFOX_ERROR_SHIPPING_COST;
+            $bVerifiedError = true;
         }
 
         $aRow['ShippingMethod'] = empty($aItemDetails['shippingmethod_id']) ? '' : $aItemDetails['shippingmethod_id'];
@@ -168,7 +176,7 @@ class CrowdfoxProductSaver {
         $aRow['MPN'] = empty($aItemDetails['MPN']) ? '' : $aItemDetails['MPN'];
         $aRow['ShopVariation'] = empty($aItemDetails['AdditionalAttributes']) ? '' : $aItemDetails['AdditionalAttributes'];
 
-        if (!empty($this->aErrors)) {
+        if ($bVerifiedError) {
             $aRow['Verified'] = 'ERROR';
         }
 

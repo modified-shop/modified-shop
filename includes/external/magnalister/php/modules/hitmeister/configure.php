@@ -122,7 +122,8 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 			$this->form['prepare']['fields']['shippingtimeMatching']['procFunc'] = array($this, 'confShippingtimeMatching');
 			mlGetOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);
 			mlGetOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
-			
+            mlPresetTrackingCodeMatching($this->mpID, 'hitmeister.orderstatus.carrier.dbmatching', 'hitmeister.orderstatus.trackingcode.dbmatching');
+
 			try {
 				$orderStatusConditions = MagnaConnector::gi()->submitRequest(array('ACTION' => 'GetOrderStatusData'));
 			} catch (MagnaException $me) {

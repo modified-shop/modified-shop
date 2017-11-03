@@ -665,7 +665,6 @@ function autoupdateAmazonOrdersStatus($mpID) {
 	     WHERE mo.orders_id=o.orders_id
 	           AND mo.mpID=\''.$mpID.'\'
 	           AND mo.orders_status<>o.orders_status
-	     LIMIT 100
 	', function_exists('ml_debug_out')));
 	if (function_exists('ml_debug_out')) ml_debug_out(print_m($orders, '$orders'));
 	if (empty($orders)) return true;
@@ -682,6 +681,7 @@ function autoupdateAmazonOrdersStatus($mpID) {
 
 	$preparedOrders = array();
 
+	$iCounter = 0;
 	foreach ($orders as $key => &$order) {
 		$order['data'] = @unserialize($order['data']);
 		if (!is_array($order['data'])) {
@@ -702,6 +702,7 @@ function autoupdateAmazonOrdersStatus($mpID) {
 			unset($orders[$key]);
 			continue;
 		}
+		$iCounter++;
 
 		$date = MagnaDB::gi()->fetchOne('
 		    SELECT date_added FROM `'.TABLE_ORDERS_STATUS_HISTORY.'`
@@ -752,11 +753,14 @@ function autoupdateAmazonOrdersStatus($mpID) {
 		}
 		$order['orders_tmp_status'] = $status;
 		//$order['internaldata'] = serialize($order['internaldata']);
-		if (isset($preparedOrders[$order['data']['AmazonOrderID']])) {
+		if (isset($preparedOrders[$order['data']['AmazonOrderID']]) && ($status != $shippedState)) {
 			/* This is a lie, but meh... the result will be correct. */
 			$unprocessed[] = $preparedOrders[$order['data']['AmazonOrderID']]['orders_id'];
 		}
 		$preparedOrders[$order['data']['AmazonOrderID']] = &$order;
+		if ($iCounter > 99) {
+			break;
+		}
 	}
 	$confirmedOrders = array();
 	$cancelledOrders = array();

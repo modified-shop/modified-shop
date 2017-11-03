@@ -81,7 +81,7 @@ function renderSinglePrepareView($data) {
 			<tr class="even">
 				<th>'.ML_EBAY_SUBTITLE.'</th>
 				<td class="input">
-					<input class="fullwidth" type="text" maxlength="55" value="'.$data[0]['Subtitle'].'" name="Subtitle" id="Subtitle" />
+					<input class="fullwidth" type="text" maxlength="55" value="'.((array_key_exists('Subtitle', $data[0])) ? $data[0]['Subtitle'] : '').'" name="Subtitle" id="Subtitle" />
 					<input type="checkbox" name="enableSubtitle" id="enableSubtitle" />'.ML_EBAY_LABEL_USE_SUBTITLE_YES_NO.'
 				</td>
 				<td class="info">'.ML_EBAY_SUBTITLE_MAX_55_CHARS.'<span style="color:red;"> '.ML_EBAY_CAUSES_COSTS.'</span></td>
@@ -150,6 +150,8 @@ function renderSinglePrepareView($data) {
 							<dd>'.ML_EBAY_SHORTDESCRIPTION_FROM_SHOP.'</dd>
 						<dt style="font-weight:bold; color:black">#DESCRIPTION#</dt>
 							<dd>'.ML_EBAY_DESCRIPTION_FROM_SHOP.'</dd>
+						<dt style="font-weight:bold; color:black">#MOBILEDESCRIPTION#</dt>
+							<dd>'.ML_EBAY_MOBILEDESCRIPTION_IF_DEFINED.'</dd>
 						<dt style="font-weight:bold; color:black">#WEIGHT#</dt>
 							<dd>'.ML_EBAY_WEIGHT_FROM_SHOP.'</dd>
 						<dt style="font-weight:bold; color:black">#PICTURE1#</dt>
@@ -183,7 +185,8 @@ function renderSinglePrepareView($data) {
 	$prepareViewPrice->setPrice(makePrice($data[0]['products_id'], 'FixedPriceItem'));
 	$fixedPrice    = $prepareViewPrice->formatWOCurrency();
 	$blUseStrikePrice = false;
-	if (getDBConfigValue('ebay.strike.price.group',  $_MagnaSession['mpID'], -1) > -1) {
+	if (    getDBConfigValue(array('ebay.strike.price.active', 'val'), $_MagnaSession['mpID'], false)
+	     && (($sStrikePriceKind = getDBConfigValue('ebay.strike.price.kind', $_MagnaSession['mpID'], 'DontUse')) != 'DontUse')) {
 		$prepareViewPrice->setPrice(makePrice($data[0]['products_id'], 'StrikePrice'));
 		$strikePrice    = $prepareViewPrice->formatWOCurrency();
 		if ($strikePrice > $fixedPrice) {
@@ -984,7 +987,7 @@ function renderMultiPrepareView($data) {
 			<th>'.ML_EBAY_LABEL_BUSINESS_POLICIES_SHIPPING.'</th>
 			<td class="input">
 				<select name="shippingsellerprofile" id="shippingsellerprofile">';
-		$shippingProfiles = geteBaySellerShippingProfiles();
+				$shippingProfiles = geteBaySellerShippingProfiles();
 		foreach($shippingProfiles as $profileID => $profileName) {
 				$isSelected = ($profileID == $prefilledSellerProfiles['Shipping']? 'selected' : '');
 				$html .= '
@@ -1672,7 +1675,7 @@ function ebayPictureUrlHtml($products_id, $selected_images,$oddEven ){
 	
 	if (is_array($selected_images)){
 		$imagePath = getDBConfigValue('ebay.imagepath',$_MagnaSession['mpID']);
-		$aShopProductImage = MLProduct::gi()->getAllImagesByProductsId($products_id);
+		$aShopProductImage = array_unique(MLProduct::gi()->getAllImagesByProductsId($products_id));
 		if (current($selected_images) == '__use_all__') $selected_images = $aShopProductImage;
 		foreach($aShopProductImage as $image){
 			$imagelist .= 

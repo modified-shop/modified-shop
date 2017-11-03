@@ -174,18 +174,41 @@ function magnaImportAllOrders() {
 	$doImports = false;
 	usleep(rand(0, $verbose ? 2000 : 2000000)); // sleep for 0 to max 2 seconds
 	$lockName = DIR_MAGNALISTER_FS.'OrderImportLock';
-	$myTime = time();
+	
+	$aMutex = array(
+		'time' => time(),
+	);
+	$sRandom = '';
+	if (function_exists('random_bytes') && function_exists('bin2hex')) {
+		try {
+			$sRandom = bin2hex(random_bytes(32));
+		} catch (Exception $oEx) {
+		}
+	} 
+	if (empty($sRandom) && function_exists('openssl_random_pseudo_bytes') && function_exists('bin2hex')) {
+		$sRandom = bin2hex(openssl_random_pseudo_bytes(32));
+	}
+	if (empty($sRandom)) {
+		$sRandom = uniqid('', true);
+	}
+	$aMutex['unique'] = $sRandom;
 	if (!file_exists($lockName)) {
-		file_put_contents($lockName, $myTime);
+		file_put_contents($lockName, json_encode($aMutex));
 		chmod($lockName, 0666);
 		$doImports = true;
 	} else {
-		$time = (int)@file_get_contents($lockName);
-		if (($time + 1200) < time()) { // if the last lock is older than 20 minutes replace the log and continue.
-			file_put_contents($lockName, $myTime);
+		$aGetted = json_decode(@file_get_contents($lockName), true);
+		$time = (int)$aGetted['time'];
+		if (($time + 1200) < time()) {
+			file_put_contents($lockName, json_encode($aMutex));
 			chmod($lockName, 0666);
 			$doImports = true;
 		}
+	}
+	usleep(rand(20000, 80000));
+	$aGetted = json_decode(@file_get_contents($lockName), true);
+	if ($aMutex['unique'] !== $aGetted['unique']) {
+		$doImports = false;
 	}
 	
 	/* {Hook} "PreOrderImport": Runs before the order import starts. */
@@ -245,7 +268,8 @@ function magnaImportAllOrders() {
 					continue;
 				}
 
-				if ( @file_get_contents($lockName) != $myTime ) {
+				$aGetted = json_decode(@file_get_contents($lockName), true);
+				if ($aMutex['unique'] !== $aGetted['unique']) {
 					# Sollte ein anderer Prozess gestartet sein, hoere hier auf
 					# und vermerke dass nach doppelten Bestellungen geschaut werden soll
 					setDBConfigValue('deletedoubleorders', 0, 'true', true);

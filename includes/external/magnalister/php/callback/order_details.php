@@ -70,17 +70,27 @@ function magnaGetOrderPlatformIcon($order) {
 	}
 	$filename = '';
 	if ($logo == 'amazon') {
-		if ($order['internaldata']['FulfillmentChannel'] === 'MFN-Prime') {
-			$filename = 'amazon_orderview_prime';
-		} elseif ($order['internaldata']['FulfillmentChannel'] != 'MFN') {
+		$fulfillment = $order['internaldata']['FulfillmentChannel'];
+
+		if ($fulfillment !== 'MFN-Prime' && $fulfillment != 'MFN' && $fulfillment != 'Business') {
 			$filename = 'amazon_fba_orderview';
-		} else if (isset($order['data']['ML_AMAZON_LABEL_BATCHID']) && !empty($order['data']['ML_AMAZON_LABEL_BATCHID'])) {
-			if (isset($order['data']['ML_ERROR_LABEL'])) {
-				$filename = 'amazon_orderview_error';
-			} else if (isset($order['data']['ML_LABEL_ORDER_CANCELLED'])) {
-				$filename = 'amazon_orderview_cancelled';
-			} else if (isset($order['data']['ML_LABEL_SHIPPING_DATE'])) {
-				$filename = 'amazon_orderview_shipped';
+		} else {
+			$suffix = '';
+			if ($fulfillment === 'MFN-Prime') {
+				$suffix = '_prime';
+			} elseif ($fulfillment === 'Business') {
+				$suffix = '_business';
+			}
+
+			$filename = 'amazon_orderview'.$suffix;
+			if (isset($order['data']['ML_AMAZON_LABEL_BATCHID']) && !empty($order['data']['ML_AMAZON_LABEL_BATCHID'])) {
+				if (isset($order['data']['ML_ERROR_LABEL'])) {
+					$filename = 'amazon_orderview_error';
+				} else if (isset($order['data']['ML_LABEL_ORDER_CANCELLED'])) {
+					$filename = 'amazon_orderview_cancelled'.$suffix;
+				} else if (isset($order['data']['ML_LABEL_SHIPPING_DATE'])) {
+					$filename = 'amazon_orderview_shipped'.$suffix;
+				}
 			}
 		}
 	}

@@ -22,23 +22,51 @@ $(document).ready(function() {
             var self = this,
                 colTemplate = self._getMatchingAttributeColumnTemplate(),
                 deletedAttrTemplate = self._getDeletedAttributeColumnTemplate(),
+                attributeColumnEl = null,
+                attributesSelectorOptions = [{key: 'dont_use', value: self.i18n.pleaseSelect}],
                 isCategoryEmpty = true,
-                i,
+                i, matchingInputEl,
                 attributes = data.Attributes;
 
             self.elements.matchingInput.html('');
+            self.elements.matchingOptionalInput.html('');
 
-            for(i in attributes) {
-                if(attributes.hasOwnProperty(i)) {
+            var attributesSize = 0, key;
+            for (key in attributes) {
+                if (attributes.hasOwnProperty(key) && !attributes[key].Required) {
+                    attributesSize++;
+                }
+            }
+
+            for (i in attributes) {
+                if (attributes.hasOwnProperty(i)) {
                     isCategoryEmpty = false;
-                    if(attributes[i].Deleted) {
+                    if (attributes[i].Deleted) {
                         self.elements.matchingInput.append($(self._render(deletedAttrTemplate, [attributes[i]])))
                     } else {
                         attributes[i] = self._buildShopVariationSelector(attributes[i]);
-                        self.elements.matchingInput.append($(self._render(colTemplate, [attributes[i]])));
+
+                        matchingInputEl = self.elements.matchingInput;
+                        attributeColumnEl = $(self._render(colTemplate, [attributes[i]]));
+
+                        if (!attributes[i].Required) {
+                            matchingInputEl = self.elements.matchingOptionalInput;
+
+                            if (!attributes[i].CurrentValues.Code) {
+                                if (attributesSize > self.optionalAttributesMaxSize) {
+                                    attributeColumnEl.hide();
+                                }
+
+                                attributeColumnEl.addClass('optionalAttribute');
+                                attributesSelectorOptions.push({key: attributes[i].id, value: attributes[i].AttributeName});
+                            }
+                        }
+
+
+                        matchingInputEl.append(attributeColumnEl);
 
                         // add warning box if attribute changed on Marketplace
-                        if(attributes[i].ChangeDate && data.ModificationDate
+                        if (attributes[i].ChangeDate && data.ModificationDate
                             && new Date(data.ModificationDate) < new Date(attributes[i].ChangeDate)
                         ) {
                             $('div#extraFieldsInfo_' + attributes[i].id)
@@ -46,7 +74,7 @@ $(document).ready(function() {
                         }
 
                         // add warning box if attribute is different from one matched in Variation matching tab
-                        if(attributes[i].Modified) {
+                        if (attributes[i].Modified) {
                             $('div#extraFieldsInfo_' + attributes[i].id)
                                 .append('<span id="' + attributes[i].id + '_warningMatching" class="ml-warning" title="' + self.i18n.attributeDifferentOnProduct + '">&nbsp;<span>');
                         }
@@ -55,7 +83,7 @@ $(document).ready(function() {
             }
 
             self.elements.mainSelectElement.closest('.magnamain').find('.jsNoticeBox').remove();
-            if(data.DifferentProducts) {
+            if (data.DifferentProducts) {
                 var categoryName = self.elements.mainSelectElement.find('option:selected').html();
                 self.elements.mainSelectElement.closest('.magnamain')
                     .prepend('<p class="noticeBox jsNoticeBox">'
@@ -63,13 +91,13 @@ $(document).ready(function() {
                         + '</p>');
             }
 
-            if(resetNotice) {
+            if (resetNotice) {
                 self.elements.mainSelectElement.closest('.magnamain').find('.notAllAttributeValuesMatched').remove();
             }
 
-            if(data.notice && data.notice.length) {
-                for(i = 0; i < data.notice.length; i++) {
-                    if(data.notice.hasOwnProperty(i)) {
+            if (data.notice && data.notice.length) {
+                for (i = 0; i < data.notice.length; i++) {
+                    if (data.notice.hasOwnProperty(i)) {
                         self.elements.mainSelectElement.closest('.magnamain')
                             .prepend('<p class="noticeBox notAllAttributeValuesMatched">'
                                 + data.notice[i]
@@ -80,26 +108,55 @@ $(document).ready(function() {
 
             data.Attributes = attributes;
 
-            if(isCategoryEmpty) {
+            if (isCategoryEmpty) {
                 self.elements.matchingInput.append('<tr><th></th><td class="input">'
                     + self.i18n.categoryWithoutAttributesInfo
                     + '</td><td class="info"></td></tr>');
+                self.elements.matchingOptionalHeadline.css('display', 'none');
+                self.elements.matchingOptionalInput.css('display', 'none');
+            }
+
+            if (!$.trim(self.elements.matchingInput.html())) {
+                self.elements.matchingHeadline.css('display', 'none');
+                self.elements.matchingInput.css('display', 'none');
+            }
+
+            if (!$.trim(self.elements.matchingOptionalInput.html())) {
+                self.elements.matchingOptionalHeadline.css('display', 'none');
+                self.elements.matchingOptionalInput.css('display', 'none');
+            } else if (attributesSize > self.optionalAttributesMaxSize) {
+                self.elements.matchingOptionalInput.append($([
+                    '<tr id="selRow_dont_use">',
+                        '<th></th>',
+                        '<td id="selCell_dont_use">',
+                            '<div id="attributeList_dont_use"></div>',
+                            '<div id="match_dont_use"></div>',
+                        '</td>',
+                        '<td class="info"></td>',
+                    '</tr>'
+                ].join('')));
             }
 
             self.elements.matchingInput.append('<tr class="spacer"><td colspan="3">&nbsp;</td></tr>');
-            self.elements.matchingInput.find('select[id^=sel_]').each(function() {
+            self.elements.matchingOptionalInput.append('<tr class="spacer"><td colspan="3">&nbsp;</td></tr>');
+
+            function addShopVariationSelectorChangeListener() {
                 var previous;
-                $(this).on('focus', function() {
+                $(this).on('focus', function () {
                     previous = $(this).val();
-                }).change(function() {
+                }).change(function () {
                     self._handleAttributeSelectorChange(this, data, previous, savePrepare);
                 });
-            });
+            }
 
-            for(i in attributes) {
-                if(attributes.hasOwnProperty(i)) {
-                    if(typeof attributes[i].CurrentValues.Code !== 'undefined') {
+            self.elements.matchingInput.find('select[id^=sel_]').each(addShopVariationSelectorChangeListener);
+            self.elements.matchingOptionalInput.find('select[id^=sel_]').each(addShopVariationSelectorChangeListener);
+
+            for (i in attributes) {
+                if (attributes.hasOwnProperty(i)) {
+                    if (typeof attributes[i].CurrentValues.Code !== 'undefined') {
                         self.elements.matchingInput.find('select[id=sel_' + attributes[i].id + ']').val(attributes[i].CurrentValues.Code).trigger('change');
+                        self.elements.matchingOptionalInput.find('select[id=sel_' + attributes[i].id + ']').val(attributes[i].CurrentValues.Code).trigger('change');
                     }
                 }
             }
@@ -140,6 +197,7 @@ $(document).ready(function() {
                 $('#tbodySubcategoriesInput').html('');
             }
 
+            self._attachAttributeSelector(attributesSelectorOptions, addShopVariationSelectorChangeListener);
         },
 
         _getSubcategoryTemplate: function() {
@@ -158,6 +216,75 @@ $(document).ready(function() {
                 + '         </td>'
                 + '         <td class="info">{AttributeDescription}</td>'
                 + '	</tr>';
+        },
+
+        _attachAttributeSelector: function(attributesSelectorOptions, addShopVariationSelectorChangeListener) {
+            var self = this,
+                currentlySelectedAttribute,
+                attributesSelectorEl = $([
+                    '<select name="optional_selector" style="width: 100%">',
+                    self._render('<option value="{key}">{value}</option>', attributesSelectorOptions),
+                    '</select>'
+                ].join(''));
+
+            function showConfirmationDialog(attributeIdToShow) {
+                var d = self.i18n.resetInfo;
+                $('<div class="ml-modal dialog2" title="' + self.i18n.note + '"></div>').html(d).jDialog({
+                    width: (d.length > 1000) ? '700px' : '500px',
+                    buttons: {
+                        Cancel: {
+                            'text': self.i18n.buttonCancel,
+                            click: function() {
+                                // Reset attribute selector to previous value silently
+                                attributesSelectorEl.val(currentlySelectedAttribute);
+                                $(this).dialog('close');
+                            }
+                        },
+                        Ok: {
+                            'text': self.i18n.buttonOk,
+                            click: function() {
+                                $('#sel_' + currentlySelectedAttribute).val('');
+                                self._saveMatching(true, function() {
+                                    self.elements.matchingOptionalInput.find('select[name="optional_selector"]').val(attributeIdToShow).change();//trigger('change', [attributeIdToShow]);
+                                });
+
+                                $(this).dialog('close');
+                            }
+                        }
+                    }
+                });
+            }
+
+            function changeCurrentAttribute(attributeIdToShow) {
+                // Minus 1 goes for "Bitte wahlen"
+                if (attributesSelectorOptions.length - 1 > self.optionalAttributesMaxSize) {
+                    self.elements.matchingOptionalInput.find('.optionalAttribute').hide();
+                }
+
+                currentlySelectedAttribute = attributeIdToShow;
+
+                var attributeRowEl = self.elements.matchingOptionalInput.find('#selRow_' + currentlySelectedAttribute);
+
+                attributeRowEl.children('th').html('').append(attributesSelectorEl);
+                attributeRowEl.remove().show().insertBefore(self.elements.matchingOptionalInput.find('.spacer').last());
+                attributeRowEl.find('#sel_' + currentlySelectedAttribute).each(addShopVariationSelectorChangeListener).change();
+
+                attributesSelectorEl.change(attributeSelectorOnChange);
+            }
+
+            function attributeSelectorOnChange() {
+                if (currentlySelectedAttribute) {
+                    var attributeValue = $('#sel_' + currentlySelectedAttribute).val();
+                    if (attributeValue != null && attributeValue !== '' &&  attributeValue != 'null') {
+                        showConfirmationDialog($(this).val());
+                        return;
+                    }
+                }
+
+                changeCurrentAttribute($(this).val());
+            }
+
+            attributesSelectorEl.change(attributeSelectorOnChange).change();
         }
     });
 
@@ -172,8 +299,10 @@ $(document).ready(function() {
             mainSelectElement: '#PrimaryCategory',
             matchingHeadline: '#tbodyDynamicMatchingHeadline',
             matchingCustomHeadline: '#tbodyDynamicMatchingCustomHeadline',
+            matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
             matchingInput: '#tbodyDynamicMatchingInput',
             matchingCustomInput: '#tbodyDynamicMatchingCustomInput',
+            matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
             categoryInfo: '#categoryInfo'
         },
         shopVariations: ml_vm_config.shopVariations

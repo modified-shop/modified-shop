@@ -41,6 +41,36 @@ class AmazonSyncInventory extends MagnaCompatibleSyncInventory {
 		if ($timeToShip > 0) {
 			$data['LeadtimeToShip'] = $timeToShip;
 		}
+
+		$businessPrice = $this->updateBusinessPrice();
+		if ($businessPrice) {
+			$data['BusinessPrice'] = $businessPrice;
+		}
+	}
+
+	protected function updateBusinessPrice() {
+		if (!$this->syncPrice || !isset($this->cItem['BusinessPrice'])) {
+			return false;
+		}
+
+		$data = false;
+
+		$price = $this->simplePrice
+			->setFinalPriceFromDB($this->cItem['pID'], $this->mpID, 'b2b.')
+			->getPrice();
+
+		if (($price > 0) && ((float)$this->cItem['BusinessPrice'] != $price)) {
+			$this->log("\n\t".
+				'Business Price changed (old: ' . $this->cItem['BusinessPrice'] . '; new: ' . $price . ')'
+			);
+			$data = $price;
+		} else {
+			$this->log("\n\t" .
+				'Business Price not changed (' . $price . ')'
+			);
+		}
+
+		return $data;
 	}
 
 }

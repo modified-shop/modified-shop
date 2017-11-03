@@ -83,7 +83,7 @@ class CdiscountProductSaver {
 					p.products_ean as EAN,
 					p.products_image as PictureUrl,
 					pd.products_name as Title,
-					pd.products_short_description as Subtitle,
+					'.(MagnaDB::gi()->columnExistsInTable('products_short_description', TABLE_PRODUCTS_DESCRIPTION) ? 'pd.products_short_description' : '"" AS Subtitle').',
 					pd.products_description as Description
 				FROM ' . TABLE_PRODUCTS . ' p
 				LEFT JOIN ' . TABLE_PRODUCTS_DESCRIPTION . ' pd ON pd.products_id = p.products_id AND pd.language_id = "' . $lang . '"
@@ -164,12 +164,14 @@ class CdiscountProductSaver {
 		}
 
 		$aRow['CategoryAttributes'] = $aItemDetails['CategoryAttributes'];
-		$aRow['ShippingFeeStandard'] = $aItemDetails['ShippingFeeStandard'];
-		$aRow['ShippingFeeExtraStandard'] = $aItemDetails['ShippingFeeExtraStandard'];
-		$aRow['ShippingFeeTracked'] = $aItemDetails['ShippingFeeTracked'];
-		$aRow['ShippingFeeExtraTracked'] = $aItemDetails['ShippingFeeExtraTracked'];
-		$aRow['ShippingFeeRegistered'] = $aItemDetails['ShippingFeeRegistered'];
-		$aRow['ShippingFeeExtraRegistered'] = $aItemDetails['ShippingFeeExtraRegistered'];
+		
+		$aRow['ShippingFeeStandard'] = $this->toFloat($aItemDetails['ShippingFeeStandard']);
+		$aRow['ShippingFeeExtraStandard'] = $this->toFloat($aItemDetails['ShippingFeeExtraStandard']);
+		$aRow['ShippingFeeTracked'] = $this->toFloat($aItemDetails['ShippingFeeTracked']);
+		$aRow['ShippingFeeExtraTracked'] = $this->toFloat($aItemDetails['ShippingFeeExtraTracked']);
+		$aRow['ShippingFeeRegistered'] = $this->toFloat($aItemDetails['ShippingFeeRegistered']);
+		$aRow['ShippingFeeExtraRegistered'] = $this->toFloat($aItemDetails['ShippingFeeExtraRegistered']);
+
 		$aRow['ConditionType'] = $aItemDetails['condition_id'];
 		$aRow['Comment'] = $aItemDetails['comment'];
 
@@ -250,4 +252,27 @@ class CdiscountProductSaver {
 
 		}
 	}
+
+	/**
+	 * Converts string to float
+	 * 
+	 * @param $num
+	 * @return float
+	 */
+	private function toFloat($num) {
+		$dotPos = strrpos($num, '.');
+		$commaPos = strrpos($num, ',');
+		$sep = (($dotPos > $commaPos) && $dotPos) ? $dotPos :
+			((($commaPos > $dotPos) && $commaPos) ? $commaPos : false);
+
+		if (!$sep) {
+			return floatval(preg_replace("/[^0-9]/", "", $num));
+		}
+
+		return floatval(
+			preg_replace("/[^0-9]/", "", substr($num, 0, $sep)) . '.' .
+			preg_replace("/[^0-9]/", "", substr($num, $sep+1, strlen($num)))
+		);
+	}
+	
 }

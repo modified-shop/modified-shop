@@ -115,6 +115,15 @@ class SimplePrice {
 		');
 	}
 
+	public function tryGetSpecialOffer($iProductId) {
+        return MagnaDB::gi()->fetchOne('
+            SELECT specials_new_products_price 
+              FROM '.TABLE_SPECIALS.'
+             WHERE     products_id = "'.$iProductId.'"
+                   AND status = 1
+        ');
+    }
+
 	public function getSpecialOffer($pID) {
 		return (float)MagnaDB::gi()->fetchOne('
 		    SELECT specials_new_products_price 

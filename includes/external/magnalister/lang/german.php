@@ -88,6 +88,7 @@ define('ML_LABEL_LISTINGS_USED_THIS_MONTH', 'Verbrauchte Uploads/Imports diesen 
 define('ML_LABEL_LISTINGS_UPGRADE_HEADLINE', 'Upgrade?');
 define('ML_LABEL_RATE', 'Tarif');
 define('ML_LABEL_NOTE', 'Hinweis');
+define('ML_LABEL_IMPORTANT', 'Wichtig');
 define('ML_LABEL_UNKNOWN', 'unbekannt');
 define('ML_LABEL_CURRENT_PAGE', 'Aktuelle Seite');
 define('ML_LABEL_PAGE', 'Seite');
@@ -111,7 +112,7 @@ define('ML_LABEL_ACCOUNTING_BLZ', 'Bankleitzahl');
 define('ML_LABEL_ACCOUNTING_NAME', 'Kreditinstitut');
 define('ML_LABEL_ORDER_TOTAL_COD_FEE', 'Nachnahmegeb&uuml;hr');	/* nur fuer osC */
 define('ML_LABEL_ORDER_TOTAL_COUPON', 'Coupon');				/* nur fuer osC */
-define('ML_LABEL_ORDER_TOTAL_DISCOUNT', 'Discount');			/* nur fuer osC */
+define('ML_LABEL_ORDER_TOTAL_DISCOUNT', 'Abschlag');			/* nur fuer osC */
 define('ML_LABEL_ORDER_TOTAL_COUNTRY_CHARGE', 'L&auml;nderzuschlag');	/* gibbet nich als ot_modul */
 define('ML_LABEL_IN_QUEUE', 'in Warteschlange');
 define('ML_LABEL_REFRESH', 'Werte aus Konfig &uuml;bernehmen');
@@ -832,6 +833,52 @@ define('ML_AMAZONSHIPPINGLABEL_LABEL_TO_SELECTION_SELECT_SUB_ALL', 'Auswahl alle
 define('ML_AMAZON_SHIPPING_TEMPLATE', 'Verk&auml;uferversandgruppe');
 define('ML_AMAZON_SHIPPING_TEMPLATE_PREPARE_INFO', 'Unter &quot;Konfiguration -&gt; Artikelvorbereitung&quot; k&ouml;nnen Sie die verschiedenen Versandgruppen anlegen');
 
+# Amazon B2B
+define('ML_AMAZON_CONF_QUANTITY_TIER_ERROR', 'Amazon Business (B2B): Konfiguration f&uuml;r die B2B Staffelpreis-Ebene %s is nicht korrekt!');
+define('ML_AMAZON_B2B_TITLE', 'Amazon Business (B2B)');
+define('ML_AMAZON_B2B_ACTIVATE', 'B2B aktivieren');
+define('ML_AMAZON_B2B_ACTIVATE_INFO', 'Wenn aktiviert, k&ouml;nnen Artikel f&uuml;r den Business-to-Business Verkauf an Amazon &uuml;bermittelt werden, wie unten konfiguriert. <b>Bitte stellen Sie sicher, dass Ihr Amazon Konto f&uuml;r Amazon Business freigeschaltet ist.</b> Andernfalls wird das Hochladen von B2B-Artikeln zu Fehlern f&uuml;hren.');
+define('ML_AMAZON_B2B_ACTIVATE_NOTIFICATION', 'Um Amazon Business zu nutzen, brauchen Sie eine Aktivierung in Ihrem Amazon-Konto.  <b>Bitte stellen Sie sicher, dass Ihr Amazon Konto f&uuml;r Amazon Business freigeschaltet ist.</b> Andernfalls wird das Hochladen von B2B-Artikeln zu Fehlern f&uuml;hren.<br>Um Ihr Konto f&uuml;r Amazon Business freizuschalten, folgen Sie bitte der Anleitung unter <a href="https://sellercentral.amazon.de/business/b2bregistration" target="_blank">diesem Link</a>.');
+define('ML_AMAZON_B2B_ACTIVATE_DISABLED_NOTIFICATION', 'Um Amazon Business zu nutzen, aktivieren Sie es bitte erst in der Konfiguration.');
+define('ML_AMAZON_B2B_PRODUCT_TAX_CODE', 'Product Tax Code');
+define('ML_AMAZON_B2B_SELL_TO', 'Verkauf an');
+define('ML_AMAZON_B2B_SELL_TO_INFO', 'Wenn <i>B2B Only</i> ausgew&auml;hlt, werden hochgeladene Produkte nur f&uuml;r Gesch&auml;ftskunden sichtbar sein. Andernfalls sowohl f&uuml;r Gesch&auml;fts- als auch Privatkunden.');
+define('ML_AMAZON_B2B_SELL_TO_B2B', 'B2B Only');
+define('ML_AMAZON_B2B_SELL_TO_ALL', 'B2B Und B2C');
+define('ML_AMAZON_B2B_QUANTITY_DISCOUNT_TYPE', 'Berechnung der Staffelpreise');
+define('ML_AMAZON_B2B_QUANTITY_DISCOUNT_TYPE_INFO', '<b>Staffelpreise</b><br>
+          Staffelpreise sind erm&auml;&szlig;igte Preise, die f&uuml;r Business-Kunden beim Kauf
+          gr&ouml;&szlig;erer St&uuml;ckzahlen verf&uuml;gbar sind. Verk&auml;ufer, die am Amazon
+          Business Seller Program teilnehmen, k&ouml;nnen entsprechende Mindestmengen
+          und Preisabschl&auml;ge definieren.<br><br>
+          <b>Beispiel</b>:
+          F&uuml;r ein Produkt, das 100 &euro; kostet, k&ouml;nnten folgende
+          Prozent-Abschl&auml;ge (f&uuml;r Gesch&auml;ftskunden) definiert werden:
+          <table><tr>
+              <th style="background-color: #ddd;">Mindestmenge</th>
+              <th style="background-color: #ddd;">Abschlag</th>
+              <th style="background-color: #ddd;">Endpreis pro St&uuml;ck</th>
+		  <tr><td>5 (or more)</td><td style="text-align: right;">10</td><td style="text-align: right;">$90</td></tr>
+		  <tr><td>8 (or more)</td><td style="text-align: right;">12</td><td style="text-align: right;">$88</td></tr>
+		  <tr><td>12 (or more)</td><td style="text-align: right;">15</td><td style="text-align: right;">$85</td></tr>
+		  <tr><td>20 (or more)</td><td style="text-align: right;">20</td><td style="text-align: right;">$80</td></tr>
+	  </table>');
+define('ML_AMAZON_B2B_QUANTITY_DISCOUNT_DO_NOT_USE', ' Nicht verwenden');
+define('ML_AMAZON_B2B_QUANTITY_DISCOUNT_TIER', 'Staffelpreis Ebene');
+define('ML_AMAZON_B2B_QUANTITY_DISCOUNT_PERCENT', 'Prozent');
+define('ML_AMAZON_B2B_QUANTITY_DISCOUNT_FIXED', 'Fixed');
+define('ML_AMAZON_TAX_CLASSES', 'Amazon Steuerklasse');
+define('ML_AMAZON_BUSINESS_LABEL_FEATURE', 'Business Feature');
+define('ML_AMAZON_BUSINESS_LABEL_PRICE', 'Business Preis');
+define('ML_AMAZON_BUSINESS_ALL', 'Filter (Business Feature)');
+define('ML_AMAZON_BUSINESS_STANDARD', 'Standard');
+define('ML_AMAZON_BUSINESS_B2B', 'B2B');
+define('ML_AMAZON_BUSINESS_B2B_B2C', 'B2B and B2C');
+define('ML_AMAZON_LABEL_INVENTORY_TYPE', 'Inventar Typ');
+define('ML_AMAZON_INVENTORY_TYPE_ALL', 'Filter (Inventar Typ)');
+define('ML_AMAZON_INVENTORY_TYPE_MFN', 'MFN');
+define('ML_AMAZON_INVENTORY_TYPE_FBA', 'FBA');
+
 /*
  * comparison shopping
  */
@@ -894,7 +941,7 @@ define('ML_BILLIGER_SAME_PRODUCT_THERE', 'Dieser Artikel bei billiger.de');
 /* idealo.de */
 define('ML_IDEALO_SAME_PRODUCT_THERE', 'Dieser Artikel bei idealo.de');
 define('ML_IDEALO_CHECKOUT_ERROR', 'Unter „Artikelvorbereitung" wollen Sie den „Idealo Direktkauf“ f&uuml;r die Artikelvorbereitung aktivieren. Dies ist nur m&ouml;glich, wenn Sie von Idealo f&uuml;r den Direktkauf freigeschaltet sind und die entsprechenden Zugangsdaten unter „Bestellimport“ hinterlegt haben.');
-define('ML_IDEALO_METHODS_NOT_AVAILABLE', 'bitte hinterlegen und speichern Sie erst den Direktkauf-Token unter „Zugangsdaten"');
+define('ML_IDEALO_METHODS_NOT_AVAILABLE', 'Bitte hinterlegen und speichern Sie erst den Direktkauf-Token unter "Bestellimport-Zugangsdaten"');
 define('ML_IDEALO_PRODUCT_DETAILS', 'Produktdetails');
 define('ML_IDEALO_ITEM_NAME_TITLE', 'Titel');
 define('ML_IDEALO_DESCRIPTION', 'Beschreibung');
@@ -911,6 +958,26 @@ define('ML_IDEALO_INFO_SHIPPING_COST', 'Es wird zun&auml;chst versucht die Versa
 Bei Versandkostenmodul "Pauschal" wird ebenfalls der hier angegebene Wert verwendet.');
 define('ML_IDEALO_LABEL_SHIPPING_CURRENCY', 'EUR');
 define('ML_IDEALO_TEXT_APPLY_PRODUCTS_IMAGES', 'Maximal 3 Produktbilder');
+define('ML_IDEALO_PAYMENTMETHOD_OPTION_GROUPS', '
+    {
+        "Direktkauf & Suchmaschine:": {
+            "PAYPAL": "PayPal",
+            "CREDITCARD": "Kreditkarte",
+            "SOFORT": "Sofort&uuml;berweisung"
+        },
+        "Nur Suchmaschine:": {
+            "PRE": "Vorkasse",
+            "COD": "Nachnahme",
+            "BANKENTER": "Bankeinzug",
+            "BILL": "Rechnung",
+            "GIROPAY": "Giropay",
+            "CLICKBUY": "Click&Buy",
+            "SKRILL": "Skrill"
+        }
+    }
+');
+define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_TITLE', 'idealo Direktkauf');
+define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_CONTENT', 'Zur Nutzung dieser Funktion aktivieren Sie bitte unter "idealo Account" den idealo Direktkauf.');
 
 /* preissuchmaschnine.de */
 define('ML_PREISSUCHMASCHINE_SAME_PRODUCT_THERE', 'Dieser Artikel bei preissuchmaschnine.de');
@@ -1085,7 +1152,8 @@ define('ML_EBAY_MAIN_GALLERY_PICTURE_CAUSES_COSTS', 'Gallerie-Bild (kostenpflich
 define('ML_EBAY_DESCRIPTION', 'Beschreibung');
 define('ML_EBAY_MOBILE_DESCRIPTION', 'Kurzbeschreibung f&uuml;r mobile Ger&auml;te');
 define('ML_EBAY_EDIT_MOBILE_DESCRIPTION', 'Kurzbeschreibung f&uuml;r mobile Ger&auml;te bearbeiten');
-define('ML_EBAY_NOTE_MOBILE_DESC_CONSTRAINTS', '<span style="color:red">Hinweis</span>: An HTML-Elementen sind nur Zeilenumbr&uuml;che und Listen erlaubt, alles andere wird herausgefiltert. Die Beschreibung darf h&ouml;chstens 800 Zeichen lang sein, dabei z&auml;hlt ein Zeilenumbruch als 50 Zeichen.');
+define('ML_EBAY_NOTE_MOBILE_DESC_CONSTRAINTS', '<span style="color:red">Hinweise</span>:<ul><li>An HTML-Elementen sind nur Zeilenumbr&uuml;che und Listen erlaubt, alles andere wird herausgefiltert. Die Beschreibung darf h&ouml;chstens 800 Zeichen lang sein, dabei z&auml;hlt ein Zeilenumbruch als 50 Zeichen.</li><li>Die mobile Beschreibung wird beim Hochladen in die Hauptbeschreibung integriert. Mit dem Platzhalter #MOBILEDESCRIPTION# bestimmen Sie, an welcher Stelle sie angezeigt wird.</li></ul>');
+define('ML_EBAY_POPUP_MOBILEDESC', 'Die mobile Beschreibung wird innerhalb der Hauptbeschreibung an eBay &uuml;bermittelt und auch dort mit angezeigt. Mit dem Platzhalter #MOBILEDESCRIPTION# bestimmen Sie, an welcher Stelle sie angezeigt wird. <br/><br />Bitte verwenden Sie nicht dieselben Platzhalter in der Hauptbeschreibung und der mobilen Beschreibung, andernfalls filtern wir diese aus der Hauptbeschreibung heraus, um doppelten Content zu vermeiden.<br /><br />&nbsp;Aktivieren?');
 define('ML_EBAY_EDIT_MAIN_DESCRIPTION', 'Haupt-Artikelbeschreibung bearbeiten');
 define('ML_EBAY_PRODUCTS_DESCRIPTION', 'Produktbeschreibung');
 define('ML_EBAY_PLACEHOLDERS', 'Verf&uuml;gbare Platzhalter');
@@ -1109,6 +1177,7 @@ define('ML_EBAY_YOUR_FIXED_PRICE', 'Ihr eBay Preis');
 define('ML_EBAY_PRICE_PER_VPE', 'Preis pro Verpackungseinheit');
 define('ML_EBAY_SHORTDESCRIPTION_FROM_SHOP', 'Kurzbeschreibung aus dem Shop');
 define('ML_EBAY_DESCRIPTION_FROM_SHOP', 'Beschreibung aus dem Shop');
+define('ML_EBAY_MOBILEDESCRIPTION_IF_DEFINED', 'Mobile Kurzbeschreibung, falls hinterlegt');
 define('ML_EBAY_WEIGHT_FROM_SHOP', 'Produktgewicht');
 define('ML_EBAY_FIRST_PIC', 'erstes Produktbild');
 define('ML_EBAY_MORE_PICS', 'zweites Produktbild; mit #PICTURE3#, #PICTURE4# usw. k&ouml;nnen weitere Bilder &uuml;bermittelt werden, so viele wie im Shop vorhanden.');
@@ -1232,6 +1301,7 @@ define('ML_PRICEMINISTER_CURRENCY', 'EUR');
 define('ML_PRICEMINISTER_PRODUCT_DETAILS', 'Produktdetails');
 define('ML_PRICEMINISTER_ITEM_NAME_TITLE', 'Titel');
 define('ML_PRICEMINISTER_DESCRIPTION', 'Beschreibung');
+define('ML_PRICEMINISTER_PICTURE_SIZE', 'Maximum 10 images. Images should be at least 480x640 in resolution.');
 define('ML_PRICEMINISTER_EAN', 'EAN');
 define('ML_PRICEMINISTER_ERROR_EAN', 'Bitte geben Sie eine EAN an.');
 define('ML_PRICEMINISTER_ERROR_TITLE', 'Bitte geben Sie einen Titel an.');
@@ -1256,7 +1326,6 @@ define('ML_PRICEMINISTER_SEARCH_BY_CATEGORY', 'Suche nach Category');
 define('ML_PRICEMINISTER_SEARCH_BY_MPPRODUCTID', 'Suche nach PriceMinister productID');
 define('ML_PRICEMINISTER_MULTI_MATCHING', 'Multi matching');
 define('ML_PRICEMINISTER_SUBCATEGORIES', 'PriceMinister subcategories');
-define('ML_PRICEMINISTER_LABEL_ITEM_ID', 'PriceMinister Item ID');
 define('ML_PRICEMINISTER_NOT_MATCHED_CATEGORY', 'In order to perform product matching for selected products, please first match category attributes in "Varianten Matching" tab for following categories:');
 define('ML_PRICEMINISTER_TEXT_AUTOMATIC_MATCHING_CONFIRM', 'Bitte beachten Sie, dass das automatische Matching auschlie&szlig;lich &uuml;ber den Abgleich der EAN Nummer
 	erfolgt. M&ouml;glicherweise werden Artikel aus PriceMinister gematcht, deren Beschreibungen oder Produktbilder eine mindere Qualit&auml;t aufweisen. Daher kann das
@@ -1266,7 +1335,6 @@ define('ML_PRICEMINISTER_TEXT_AUTOMATIC_MATCHING_SUMMARY', '%d Artikel wurden er
 	%d Artikel konnten nicht erfolgreich gematcht werden.<br />
 	Davon %d mit mehrfachen Ergebnissen.%s');
 define('ML_PRICEMINISTER_TEXT_AUTOMATIC_MATCHING_SUMMARY_CATEGORIES', '<br/>You need to match this categories: %s.');
-define('ML_PRICEMINISTER_TITLE_MAXLENGTH', 'Titel max. 200 Zeichen');
 define('ML_PRICEMINISTER_DESCRIPTION_MAXLENGTH', 'Maximal 4000 Zeichen.');
 define('ML_PRICEMINISTER_ERROR_PRODUCTS_WITHDOUBLE_EAN_EXIST','Es sind Produkte mit mehrfach vergebener EAN vorhanden.<br />
 PriceMinister use EAN to matching products automatically, therefore a multiple assignments can cause wrong product matching.<br /><br />
@@ -1391,8 +1459,8 @@ define('ML_HITMEISTER_TEXT_CHECKIN_DELAY', 'Bitte beachten Sie, dass es bis zu z
 
 /* VARIATION MATCHING */
 define('ML_GENERAL_VARMATCH_TITLE', 'Variantengruppe von %marketplace% ausw&auml;hlen');
-define('ML_GENERAL_VARMATCH_MP_ATTRIBUTE', '%marketplace% Erforderliche Attribut');
-define('ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE', '%marketplace% Maßgeschneidert Attribut');
+define('ML_GENERAL_VARMATCH_MP_ATTRIBUTE', '%marketplace% Erforderliche Attribute');
+define('ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE', '%marketplace% Optionale Attribute');
 define('ML_GENERAL_VARMATCH_DEFINE_NAME', 'Bitte geben Sie einen Bezeichner ein.');
 define('ML_GENERAL_VARMATCH_AJAX_ERROR', 'Ein Fehler ist aufgetreten.');
 define('ML_GENERAL_VARMATCH_SELECT_VARIANT_GROUP', 'Bitte w&auml;hlen Sie eine Variantengruppe aus.');
@@ -1439,7 +1507,7 @@ define('ML_GENERAL_VARMATCH_CATEGORY_WITHOUT_ATTRIBUTES_INFO', 'F&uuml;r die aus
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_VALUE', 'W&auml;hle Datenbank-Werte (f&uuml;r Experten)');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_TABLE', 'Choose table: ');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_COLUMN', 'Choose column: ');
-define('ML_GENERAL_VARMATCH_CHOOSE_DB_ALIAS', 'Alias id ');
+define('ML_GENERAL_VARMATCH_CHOOSE_DB_ALIAS', 'Alias products_id: ');
 define('ML_GENERAL_VARMATCH_ALREADY_MATCHED', '(bereits gematcht)');
 define('ML_GENERAL_VARMATCH_PRODUCTS_PREPARED_DIFFERENTLY', 'Bitte beachten Sie, dass Sie einige Artikel der gew&auml;hlten Kategorie "%category_name%" abweichend unter „Produkte vorbereiten“ gematcht haben. Es werden die dort gespeicherten Werte zum Marktplatz &uuml;bermittelt.');
 
@@ -1471,7 +1539,6 @@ EAN-Artikel, die noch nicht auf Cdiscount gelistet sind, &uuml;bermittelt magnal
 <br /><br />
 Zur Qualit&auml;tssicherung werden die Daten von Cdiscount manuell gesichtet und verarbeitet. Die Verarbeitung dort kann 2-4 Werktage dauern. Sie k&ouml;nnen den Status jederzeit auf Ihrer Cdiscount Verwaltung einsehen.');
 define('ML_STOCK_SHOP_STOCK_CDISCOUNT', 'Bestand<br />Shop / Cdiscount');
-define('ML_LABEL_PRODUCTS_WITH_MULTIPLE_EAN', 'Produkte mit mehrfach vergebener EAN');
 define('ML_CDISCOUNT_ERROR_PRODUCTS_WITHDOUBLE_EAN_EXIST','Es sind Produkte mit mehrfach vergebener EAN vorhanden.<br />
 Cdiscount ordnet Produkte nach der EAN zu, daher kann ein mehrfaches Vergeben dazu f&uuml;hren, dass Lageranzahlen und Preise nicht korrekt zugewiesen werden k&ouml;nnen.<br /><br />
 Bitte &auml;ndern Sie die EANs, so dass keine davon mehrfach vergeben wird.');
@@ -1533,9 +1600,6 @@ define('ML_CDISCOUNT_LABEL_SHIPPING_TRACKED', 'Shipping Tracked');
 define('ML_CDISCOUNT_LABEL_SHIPPING_REGISTERED', 'Shipping Registered');
 define('ML_CDISCOUNT_LABEL_PRICE', 'Cdiscount Preis');
 define('ML_CDISCOUNT_HELP_PREPARATION_TIME', 'Preparation time for deliver product. It must be in days between 1 and 10.');
-define('ML_CDISCOUNT_HELP_SHIPPING_STANDARD', 'Standard way of shipping. Additional shipping fee is when you allow to apply cheaper shipping fees if the customer orders several products in the same order.');
-define('ML_CDISCOUNT_HELP_SHIPPING_TRACKED', 'Tracked way of shipping. Additional shipping fee is when you allow to apply cheaper shipping fees if the customer orders several products in the same order.');
-define('ML_CDISCOUNT_HELP_SHIPPING_REGISTERED', 'Registered way of shipping. Additional shipping fee is when you allow to apply cheaper shipping fees if the customer orders several products in the same order.');
 define('ML_CDISCOUNT_VARMATCH_MANDATORY_INFO', 'Size and color attributes are mandatory for Cdiscount variations.<br> 
 If you want your item to be uploaded as item with variations, please provide both size and color. <br>
 Otherwise if one of these two attributes is missing, your variations will be uploaded as separate items with attribute list in item title (e.g. Item title "Nike T-Shirt Size: M"). ');
@@ -1937,6 +2001,7 @@ define('ML_RICARDO_CUMULATIVE', 'Separate Lieferkosten f&uuml;r jeden einzelnen 
 define('ML_RICARDO_PICTURE_PATH', 'Bildpfad');
 define('ML_RICARDO_PICTURE', 'Bild');
 define('ML_RICARDO_LABEL_ITEM_ID', 'Artikelnummer');
+define('ML_RICARDO_LABEL_BID_COUNT', 'Bid count');
 define('ML_RICARDO_LABEL_SHIPPINGTIME', 'Versand');
 define('ML_RICARDO_LABEL_DESCRIPTIONTEMPLATES', 'Template f&uuml;r Artikelbeschreibung');
 define('ML_RICARDO_LABEL_TEMPLATES', 'Verf&uuml;gbare Templates');

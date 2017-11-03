@@ -40,8 +40,8 @@ class YategoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 		$imageWSPath = SHOP_URL_POPUP_IMAGES;
 		$images = array();
 		
-		if (!empty($product['products_allimages'])) {
-			foreach($product['products_allimages'] as $img) {
+		if (!empty($product['Images'])) {
+			foreach($product['Images'] as $img) {
 				if (file_exists($imageFSPath.$img)) {
 					$images[] = $imageWSPath.$img;
 				}
@@ -73,20 +73,20 @@ class YategoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 		$data['submit']['ShortDescription']	= short_str(
 			str_replace(
 				array("\r\n", "\r", "\n"), "\\n", 
-				sanitizeProductDescription($product['products_short_description'])
+				sanitizeProductDescription($product['ShortDescription'])
 			), 130
 		);
 		$data['submit']['Description']	= str_replace(
 			array("\r\n", "\r", "\n"), "\\n", 
 			sanitizeProductDescription(
-				$product['products_description'],
+				$product['Description'],
 				'<a><b><i><u><p><br><hr><h1><h2><h3><h4><h5><h6><ul><ol><li><span><font>'.
 				'<table><thead><tbody><tfoot><tr><td><th><colgroup><col>',
 				'_keep_all_'
 			)
 		);
 
-		$tax = $this->simpleprice->getTaxByClassID($product['products_tax_class_id']);
+		$tax = $this->simpleprice->getTaxByClassID($product['TaxClass']);
 
 		if(($tax - (int)$tax) > 0) {
 			$decimalPlaces = 2;
@@ -118,11 +118,8 @@ class YategoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 				 LIMIT 1
 			');
 		}
-		if (isset($product['products_vpe_status']) && !empty($product['products_vpe_status']) && $product['products_vpe_status'] == 1) {
-			$data['submit']['BasePrice'] = array (
-				'Unit' => $product['products_vpe_name'],
-				'Value' => $product['products_vpe_value'],
-			);
+		 if (isset($product['BasePrice']) && !empty($product['BasePrice'])) {
+			$data['submit']['BasePrice'] = $product['BasePrice'];
 		}
 	}
 

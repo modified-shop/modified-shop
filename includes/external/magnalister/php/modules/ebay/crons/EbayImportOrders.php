@@ -339,16 +339,24 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
 			# don't merge if "don't megre" array empty, or if we import only complete orders
 			$existingOpenOrder = false;
 		} else {
+			if (   MagnaDB::gi()->columnExistsInTable('delivery_firstname', TABLE_ORDERS)
+			    && MagnaDB::gi()->columnExistsInTable('delivery_lastname', TABLE_ORDERS)) {
+				$sAndDeliveryName = 
+			           'AND o.delivery_firstname = \''.$this->o['order']['delivery_firstname'].'\' 
+			           AND o.delivery_lastname = \''.MagnaDB::gi()->escape($this->o['order']['delivery_lastname']).'\'';
+			} elseif (MagnaDB::gi()->columnExistsInTable('delivery_name', TABLE_ORDERS)) {
+				$sAndDeliveryName = 
+			           'AND o.delivery_name = \''.$this->o['order']['delivery_name'].'\''; 
+			}
 			$existingOpenOrder = MagnaDB::gi()->fetchRow(eecho('
 			    SELECT o.orders_id, mo.special, mo.data, mo.internaldata
 			      FROM '.TABLE_ORDERS.' o, '.TABLE_MAGNA_ORDERS.' mo
 			     WHERE o.customers_id = '.$this->o['order']['customers_id'].'
 			           AND o.customers_email_address = \''.$this->o['order']['customers_email_address'].'\' 
-			           AND o.delivery_firstname = \''.$this->o['order']['delivery_firstname'].'\' 
-			           AND o.delivery_lastname = \''.$this->o['order']['delivery_lastname'].'\' 
-			           AND o.delivery_street_address = \''.$this->o['order']['delivery_street_address'].'\' 
+			           '.$sAndDeliveryName.'
+			           AND o.delivery_street_address = \''.MagnaDB::gi()->escape($this->o['order']['delivery_street_address']).'\' 
 			           AND o.delivery_postcode = \''.$this->o['order']['delivery_postcode'].'\' 
-			           AND o.delivery_city = \''.$this->o['order']['delivery_city'].'\' 
+			           AND o.delivery_city = \''.MagnaDB::gi()->escape($this->o['order']['delivery_city']).'\' 
 			           AND o.orders_status NOT IN ("'.implode('", "', $this->config['OrderStatusClosed']).'")
 			           AND mo.mpID = '.$this->mpID.'
 			           AND o.orders_id = mo.orders_id 
@@ -372,6 +380,20 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
 			# filter keys (if hooks have changed sth.)
 			$this->db->insert(TABLE_ORDERS, array_filter_keys($this->o['order'], MagnaDB::gi()->getTableColumns(TABLE_ORDERS)));
 			$this->cur['OrderID'] = $this->db->getLastInsertID();
+			# Falls es doch verlorengeht (passiert)
+			if (empty($this->cur['OrderID'])) {
+				$iInsertId = (int)$this->db->fetchOne("SELECT LAST_INSERT_ID()");
+				$sOrderId = (int)$this->db->fetchOne("
+					SELECT orders_id
+					  FROM ".TABLE_ORDERS."
+					 WHERE customers_email_address = '".MagnaDB::gi()->escape($this->o['order']['customers_email_address'])."'
+					ORDER BY orders_id DESC
+					LIMIT 1
+				");
+				if ($iInsertId == $sOrderId) {
+					$this->cur['OrderID'] = $iInsertId;
+				}
+			}
 			$magnaOrdersData = serialize($this->o['magnaOrders']);
 			$magnaOrdersSpecial = $this->getMarketplaceOrderID();
 			$this->o['internaldata'] = $this->calculateInternalData($this->o['orderTotal']['Shipping']['value']);
@@ -1004,4 +1026,43 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
 		);
 	}
 	
+	protected function insertProductAttribute($iProductsId, $aOption, $sSKU) {
+		if (empty($aOption['options_name'])) {
+			return;
+		}
+
+		$aOrderProductsAttribute = array(
+			'orders_id' => $this->p['orders_id'],
+			'orders_products_id' => $iProductsId,
+			'products_options' => $aOption['options_name'],
+			'products_options_values' => $aOption['options_values_name'],
+			'options_values_price' => 0.0,
+			'price_prefix' => ''
+		);
+
+		if ($this->config['DBColumnExists']['orders_products_attributes.products_options_id']) {
+			$aOrderProductsAttribute['products_options_id'] = $aOption['options_id'];
+			$aOrderProductsAttribute['products_options_values_id'] = $aOption['options_values_id'];
+		}
+		/**
+		 * ebay supports multiple variations so attribute-sku will be calculated like this
+		 */
+		if ($this->config['DBColumnExists']['orders_products_attributes.products_attributes_model']) {
+			$aOrderProductsAttribute['products_attributes_model'] = $this->getProductAttributeData((int) $this->p['products_id'], (int) $aOption['options_id'], (int) $aOption['options_values_id'], 'attributes_model');
+		}
+		
+		if ($this->config['DBColumnExists']['orders_products_attributes.attributes_model']) {//modified 2.0.0
+			$aOrderProductsAttribute['attributes_model'] = $this->getProductAttributeData((int) $this->p['products_id'], (int) $aOption['options_id'], (int) $aOption['options_values_id'], 'attributes_model');
+		}
+		
+		if ($this->config['DBColumnExists']['orders_products_attributes.attributes_ean']) {//modified 2.0.0
+			$aOrderProductsAttribute['attributes_ean'] = $this->getProductAttributeData((int)$this->p['products_id'],(int)$aOption['options_id'], (int)$aOption['options_values_id'], 'attributes_ean');
+		}
+
+		if ($this->config['DBColumnExists']['orders_products_attributes.products_attributes_id']) {
+			$aOrderProductsAttribute['products_attributes_id'] = ($aOption['id'] == false) ? 0 : $aOption['id'];
+		}
+
+		$this->insert(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $aOrderProductsAttribute);
+	}
 }

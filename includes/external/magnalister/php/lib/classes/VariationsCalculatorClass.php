@@ -132,6 +132,8 @@ class VariationsCalculator {
 					$permutations[$offset]['variation_attributes'] .= $oID.','.$vID.'|';
 					if ($dimensions === 1 && $attr['price_prefix'] == '=') {
 						$permutations[$offset]['variation_price'] += (float)$attr['options_values_price'] - (float)$fBaseProductPrice;
+					} else if ('%' == $attr['price_prefix']) {
+						 $permutations[$offset]['variation_price'] += (float)(($fBaseProductPrice * $attr['options_values_price']) / 100.0);
 					} else {
 						$permutations[$offset]['variation_price'] += (float)$attr['options_values_price'] * ($attr['price_prefix'] == '+' ? 1 : -1);
 					}
@@ -167,7 +169,7 @@ class VariationsCalculator {
 					$permutations[$offset]['marketplace_sku'] .= $tModel;
 					$permutations[$offset]['marketplace_id'] .= '_'.$oID.'.'.$vID;
 					
-					if ($dimensions === 1) {
+					if (empty($permutations[$offset]['variation_ean'])) {
 						$permutations[$offset]['variation_ean'] = isset($attr['attributes_ean'])
 							? $attr['attributes_ean']
 							: (isset($attr['gm_ean'])

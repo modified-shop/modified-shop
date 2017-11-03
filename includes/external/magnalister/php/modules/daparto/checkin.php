@@ -30,7 +30,7 @@ class DapartoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 	protected function appendAdditionalData($pID, $product, &$data) {
 		parent::appendAdditionalData($pID, $product, $data);
 		
-		$data['submit']['DapartoUsage']     = $product['products_ean'];
+		$data['submit']['DapartoUsage']     = $data['submit']['EAN'];
 		$data['submit']['DapartoCondition'] = getDBConfigValue('daparto.condition', $this->mpID);
 		$data['submit']['DapartoExchange']  = null;
 		$data['submit']['DapartoTecDoc']    = getDBConfigValue('daparto.tecdoc', $this->mpID);

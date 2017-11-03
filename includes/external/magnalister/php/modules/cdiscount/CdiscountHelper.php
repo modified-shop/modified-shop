@@ -301,7 +301,7 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		');
 	}
 
-	protected function getPreparedData($category, $prepare = false)
+	protected function getPreparedData($category, $prepare = false, $customIdentifier = '')
 	{
 		$availableCustomConfigs = false;
 		if ($prepare) {
@@ -311,19 +311,20 @@ class CdiscountHelper extends AttributesMatchingHelper {
 				WHERE MpId = ' . $this->mpId . '
 					AND products_model = \'' . $prepare. '\'
 					AND PrimaryCategory = "' . $category . '"
-			', false), true), true);
+			', false)), true);
 		}
 
 		return !$availableCustomConfigs ? false : $availableCustomConfigs;
 	}
 
-	/**
-	 * Gets prepared attributes data for products prepared for given category.
-	 *
-	 * @param string $category
-	 * @return array|null
-	 */
-	protected function getPreparedProductsData($category)
+    /**
+     * Gets prepared attributes data for products prepared for given category.
+     *
+     * @param string $category
+     * @param string $customIdentifier
+     * @return array|null
+     */
+	protected function getPreparedProductsData($category, $customIdentifier = '')
 	{
 		$dataFromDB = MagnaDB::gi()->fetchArray(eecho('
 				SELECT `CategoryAttributes`
@@ -346,7 +347,7 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		return null;
 	}
 
-	protected function getAttributesFromMP($category)
+	protected function getAttributesFromMP($category, $customIdentifier = '')
     {
         $data = CdiscountApiConfigValues::gi()->getVariantConfigurationDefinition($category);
         if (!is_array($data) || !isset($data['attributes'])) {
@@ -367,10 +368,11 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		return $data;
     }
 
-	public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true)
+	public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true, $customIdentifierHtml = '')
 	{
 		$mpTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_TITLE);
 		$mpAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_CDISCOUNT_VARMATCH_MP_ATTRIBUTE);
+		$mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
 
 		ob_start();
 		?>
@@ -421,6 +423,19 @@ class CdiscountHelper extends AttributesMatchingHelper {
 					<td class="input"><?php echo ML_GENERAL_VARMATCH_SELECT_CATEGORY ?></td>
 					<td class="info"></td>
 				</tr>
+				</tbody>
+				<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
+					<tr class="headline">
+						<td colspan="1"><h4><?php echo $mpOptionalAttributeTitle ?></h4></td>
+						<td colspan="2"><h4><?php echo ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB ?></h4></td>
+					</tr>
+				</tbody>
+				<tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
+					<tr>
+						<th></th>
+						<td class="input"><?php echo ML_GENERAL_VARMATCH_SELECT_CATEGORY ?></td>
+						<td class="info"></td>
+					</tr>
 				</tbody>
 			</table>
 			<p id="categoryInfo" style="display: none"><?php echo ML_GENERAL_VARMATCH_CATEGORY_INFO ?></p>

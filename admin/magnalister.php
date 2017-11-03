@@ -115,6 +115,16 @@ $_COOKIE  = $_backup['COOKIE'];
 
 unset($_backup);
 
+// remove CSRF Token from magnalister post data -> used to store date directly into database
+//  IdealoProductPrepare L58 saveProperties($_POST)
+if (   array_key_exists('CSRFName', $_SESSION)
+    && array_key_exists('CSRFToken', $_SESSION)
+    && array_key_exists($_SESSION['CSRFName'], $_POST)
+) {
+    $_postCSRFBackup = $_POST;
+    unset($_POST[$_SESSION['CSRFName']]);
+}
+
 /* Allow setting a different Update-Paths */
 if (isset($_GET['UPDATE_PATH'])) {
 	$_SESSION['magna_UPDATE_PATH'] = ltrim(rtrim($_GET['UPDATE_PATH'], '/'), '/').'/';
@@ -455,5 +465,10 @@ if (!MAGNA_SAFE_MODE) {
  * Magnalister Core
  */
 include_once(DIR_MAGNALISTER_FS.'init.php');
+
+// restore post date of removed CSRF Token from magnalister post data -> used to store date directly into database L118
+if (isset($_postCSRFBackup)) {
+    $_POST = $_postCSRFBackup;
+}
 
 include_once(DIR_WS_INCLUDES.'application_bottom.php');

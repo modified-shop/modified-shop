@@ -34,181 +34,6 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
     /** @var $oCategoryMatching CdiscountCategoryMatching */
     protected $oCategoryMatching = null;
 
-    protected function initCatMatching() {
-        $this->price = new SimplePrice(null, getCurrencyFromMarketplace($this->mpID));
-        $params = array();
-        foreach (array('mpID', 'marketplace', 'marketplaceName', 'prepareSettings') as $attr) {
-            if (isset($this->$attr)) {
-                $params[$attr] = &$this->$attr;
-            }
-        }
-    }
-
-    protected function showProductDetails($data) {
-        if (1 != count($data)) {
-            return '';
-        }
-        $preSelected = $this->getPreSelectedData($data);
-        $data = $data[0];
-        $oddEven = false;
-        $pictureUrls = array();
-        $aProduct = MLProduct::gi()->setLanguage(getDBConfigValue($this->marketplace . '.lang', $this->mpID))
-            ->getProductById($data['products_id']);
-        if (isset($data['PictureUrl']) && empty($data['PictureUrl']) === false) {
-            $pictureUrls = json_decode($data['PictureUrl'], true);
-        }
-
-        if (empty($pictureUrls) || !is_array($pictureUrls)) {
-            $pictureUrls = array();
-            foreach ($aProduct['Images'] as $img) {
-                $pictureUrls[$img] = 'true';
-            }
-        }
-
-        foreach ($aProduct['Images'] as $img) {
-            $img = fixHTMLUTF8Entities($img, ENT_COMPAT);
-            $data['Images'][$img] = (isset($pictureUrls[$img]) && ($pictureUrls[$img] === 'true')) ? 'true' : 'false';
-        }
-
-        $this->price->setFinalPriceFromDB($data['products_id'], $this->mpID);
-        $defaultPrice = $this->price->roundPrice()->getPrice();
-
-        ob_start();
-        ?>
-
-        <tbody>
-        <tr class="headline">
-            <td colspan="3"><h4><?php echo ML_CDISCOUNT_PRODUCT_DETAILS ?></h4></td>
-        </tr>
-        <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
-            <th><?php echo ML_CDISCOUNT_ITEM_NAME_TITLE ?></th>
-            <td class="input">
-                <input type="text" class="fullwidth" name="Title" id="Title"
-                       maxlength="<?php echo CdiscountHelper::TITLE_MAX_LENGTH ?>"
-                       value="<?php echo fixHTMLUTF8Entities(CdiscountHelper::cdiscountSanitizeTitle($data['Title']),
-                           ENT_COMPAT) ?>"/>
-            </td>
-            <td class="info"><?php echo ML_CDISCOUNT_TITLE_VALIDATION ?></td>
-        </tr>
-        <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
-            <th><?php echo ML_CDISCOUNT_SUBTITLE ?></th>
-            <td class="input">
-                <input type="text" class="fullwidth" name="Subtitle" id="Subtitle"
-                       maxlength="<?php echo CdiscountHelper::SUBTITLE_MAX_LENGTH ?>"
-                       value="<?php echo fixHTMLUTF8Entities(CdiscountHelper::cdiscountSanitizeSubtitle($data['Subtitle']),
-                           ENT_COMPAT) ?>"/>
-            </td>
-            <td class="info"><?php echo ML_CDISCOUNT_SUBTITLE_VALIDATION ?></td>
-        </tr>
-        <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
-            <th>
-                <div style="float: left;"><?php echo ML_CDISCOUNT_DESCRIPTION ?></div>
-                <div
-                    style="float: right; width: 16px; height: 16px; background: transparent url('<?php echo DIR_MAGNALISTER_WS ?>images/information.png') no-repeat 0 0;
-                        cursor: pointer; display: inline-block; vertical-align: top;" class="desc" id="desc_1" title="Infos">
-                    <span style="display: none"><?php echo ML_CDISCOUNT_DESCRIPTION_HELP ?></span>
-                </div>
-            </th>
-            <td class="input">
-                <textarea class="fullwidth" name="Description" id="Description" rows="20"
-                          cols="80"><?php echo fixHTMLUTF8Entities(CdiscountHelper::cdiscountSanitizeDesc($data['Description']),
-                        ENT_COMPAT); ?></textarea>
-            </td>
-            <td class="info"><?php echo ML_CDISCOUNT_DESCRIPTION_VALIDATION ?></td>
-        </tr>
-        <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
-            <th>
-                <div style="float: left;"><?php echo ML_CDISCOUNT_MARKETING_DESCRIPTION ?></div>
-                <div
-                    style="float: right; width: 16px; height: 16px; background: transparent url('<?php echo DIR_MAGNALISTER_WS ?>images/information.png') no-repeat 0 0;
-                        cursor: pointer; display: inline-block; vertical-align: top;" class="desc" id="desc_2" title="Infos">
-                    <span style="display: none"><?php echo ML_CDISCOUNT_MARKETING_DESCRIPTION_HELP ?></span>
-                </div>
-            </th>
-            <td class="input">
-                <?php echo magna_wysiwyg(array(
-                    'id' => 'MarketingDescription',
-                    'name' => 'MarketingDescription',
-                    'class' => 'fullwidth',
-                    'cols' => '80',
-                    'rows' => '20',
-                    'wrap' => 'virtual',
-                ), fixHTMLUTF8Entities(CdiscountHelper::truncateString($data['MarketingDescription'],
-                    self::MARKETING_DESC_MAX_LENGTH), ENT_COMPAT)) ?>
-            </td>
-            <td class="info"><?php echo ML_CDISCOUNT_MARKETING_DESCRIPTION_VALIDATION ?></td>
-        </tr>
-        <tr class="even">
-            <th><?php echo ML_GENERIC_PRICE ?></th>
-            <td class="input">
-                <table class="lightstlye line15">
-                    <tbody>
-                    <tr>
-                        <td><?php echo ML_CDISCOUNT_LABEL_CDISCOUNT_PRICE ?>:</td>
-                        <td>
-                            <?php echo $defaultPrice . ' ' . ML_CDISCOUNT_CURRENCY ?>
-                            <input type="hidden" value="'.$defaultPrice.'" name="Price" id="Price"/>
-                        </td>
-                        <td></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </td>
-            <td class="info"></td>
-        </tr>
-        <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
-            <th><?php echo ML_LABEL_PRODUCTS_IMAGES ?></th>
-            <td class="input">
-                <input type="hidden" id="image_hidden" name="Images[]" value="false"/>
-                <?php
-                if (!empty($data['Images'])) :
-                    foreach ($data['Images'] as $img => $checked) : ?>
-                        <table class="imageBox">
-                            <tbody>
-                            <tr>
-                                <td class="image"><label
-                                        for="image_<?php echo $img ?>"><?php echo generateProductCategoryThumb($img, 60,
-                                            60) ?></label></td>
-                            </tr>
-                            <tr>
-                                <td class="cb"><input type="checkbox" id="image_<?php echo $img ?>"
-                                                      name="Images[<?php echo urlencode($img) ?>]"
-                                                      value="true" <?php echo $checked == 'true' ? 'checked="checked"' : '' ?> />
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <?php
-                    endforeach;
-                endif; ?>
-            </td>
-            <td class="info"></td>
-        </tr>
-        <tr class="spacer">
-            <td colspan="3">&nbsp;</td>
-        </tr>
-        </tbody>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('#desc_1').click(function() {
-                    var d = $('#desc_1 span').html();
-                    $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
-                });
-
-                $('#desc_2').click(function() {
-                    var d = $('#desc_2 span').html();
-                    $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
-                });
-            });
-        </script>
-
-        <?php
-        $html = ob_get_contents();
-        ob_end_clean();
-
-        return $html;
-    }
-
     public function process() {
         $oddEven = false;
         $this->oCategoryMatching = new CdiscountCategoryMatching();
@@ -231,6 +56,8 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
         $defaultComment = $preSelected['Comment'];
 
         $prepareView = (1 == count($data)) ? 'single' : 'multiple';
+        $mpAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_CDISCOUNT_VARMATCH_MP_ATTRIBUTE);
+        $mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
 
         $attributeMatchingTableHtml = '
 			<tbody id="variationMatcher" class="attributesTable">
@@ -264,8 +91,7 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
 			</tbody>
 			<tbody id="tbodyDynamicMatchingHeadline" style="display:none;">
 				<tr class="headline">
-					<td colspan="1"><h4>' .
-            str_replace('%marketplace%', ucfirst($this->marketplace), ML_CDISCOUNT_VARMATCH_MP_ATTRIBUTE) . '</h4></td>
+					<td colspan="1"><h4>' . $mpAttributeTitle . '</h4></td>
 					<td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
 				</tr>
 			</tbody>
@@ -276,6 +102,19 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
 					<td class="info"></td>
 				</tr>
 			</tbody>
+			<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
+			    <tr class="headline">
+			        <td colspan="1"><h4>'.$mpOptionalAttributeTitle.'</h4></td>
+			        <td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
+			     </tr>
+			</tbody>
+			<tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
+			    <tr>
+			        <th></th>
+			        <td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+			        <td class="info"></td>
+			     </tr>
+			</tbody>
 			<tbody id="categoryInfo" style="display:none;">
 				<tr class="spacer"><td colspan="3">' . ML_GENERAL_VARMATCH_CATEGORY_INFO . '</td></tr>
 				<tr class="spacer"><td colspan="3">&nbsp;</td></tr>
@@ -283,9 +122,9 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
 
         ob_start();
         ?>
-        <script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS ?>js/variation_matching.js"></script>
+        <script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS ?>js/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
         <script type="text/javascript"
-                src="<?php echo DIR_MAGNALISTER_WS ?>js/marketplaces/cdiscount/variation_matching.js"></script>
+                src="<?php echo DIR_MAGNALISTER_WS ?>js/marketplaces/cdiscount/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
         <script type="text/javascript">
             /*<![CDATA[*/
             var ml_vm_config = {
@@ -491,57 +330,112 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
         return $html;
     }
 
-    /**
-     * Fetches the options for the top 20 category selectors
-     * @param string $sType
-     *     Type of category (PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, StoreCategory3)
-     * @param string $sCategory
-     *     the selected category (empty for newly prepared items)
-     * @returns string
-     *     option tags for the select element
-     */
-    protected function renderCategoryOptions($sType, $sCategory) {
-        if ($this->topTen === null) {
-            $this->topTen = new CdiscountTopTenCategories();
-            $this->topTen->setMarketPlaceId($this->mpID);
+    protected function initCatMatching() {
+        $this->price = new SimplePrice(null, getCurrencyFromMarketplace($this->mpID));
+        $params = array();
+        foreach (array('mpID', 'marketplace', 'marketplaceName', 'prepareSettings') as $attr) {
+            if (isset($this->$attr)) {
+                $params[$attr] = &$this->$attr;
+            }
         }
-        $opt = '<option value="">&mdash;</option>' . "\n";
-
-        $aTopTenCatIds = $this->topTen->getTopTenCategories($sType, 'getMPCategoryPath');
-
-        foreach ($aTopTenCatIds as $sKey => $sValue) {
-            $blSelected = (!empty($sCategory) && ($sCategory == $sKey));
-            $opt .= '<option value="' . $sKey . '"' . ($blSelected ? ' selected="selected"' : '') . '>' . $sValue . '</option>' .
-                "\n";
-        }
-
-        return $opt;
     }
 
-    public function renderAjax() {
-        if (isset($_GET['where']) && ($_GET['where'] == 'catMatchView')) {
-            $this->initCatMatching();
-            $this->oCategoryMatching = new CdiscountCategoryMatching();
-            echo $this->oCategoryMatching->renderAjax();
-        } else if ($_POST['prepare'] === 'prepare' || (isset($_POST['Action']) && ($_POST['Action'] == 'LoadMPVariations'))) {
-            if (isset($_POST['SelectValue'])) {
-                $select = $_POST['SelectValue'];
-            } else {
-                $select = $_POST['PrimaryCategory'];
-            }
+    protected function getSelection() {
+        $sLanguageCode = getDBConfigValue($this->marketplace . '.lang', $this->mpID);
+        $keytypeIsArtNr = (getDBConfigValue('general.keytype', '0') == 'artNr');
 
-            $productModel = CdiscountHelper::gi()->getProductModel('apply');
+        $dbOldSelectionQuery = '
+			SELECT *
+			FROM ' . TABLE_MAGNA_CDISCOUNT_PREPARE . ' dp
+		';
 
-            return json_encode(CdiscountHelper::gi()->getMPVariations($select, $productModel, true));
-        } else if (isset($_POST['Action']) && ($_POST['Action'] === 'DBMatchingColumns')) {
-            $columns = MagnaDB::gi()->getTableCols($_POST['Table']);
-            $editedColumns = array();
-            foreach ($columns as $column) {
-                $editedColumns[$column] = $column;
-            }
-
-            echo json_encode($editedColumns, JSON_FORCE_OBJECT);
+        if ($keytypeIsArtNr) {
+            $dbOldSelectionQuery .= '
+				INNER JOIN ' . TABLE_PRODUCTS . ' p ON dp.products_model = p.products_model
+				INNER JOIN ' . TABLE_MAGNA_SELECTION . ' ms ON p.products_id = ms.pID AND dp.mpID = ms.mpID
+			';
+        } else {
+            $dbOldSelectionQuery .= '
+				INNER JOIN ' . TABLE_MAGNA_SELECTION . ' ms ON dp.products_id = ms.pID AND dp.mpID = ms.mpID
+			';
         }
+
+        $dbOldSelectionQuery .= '
+		    WHERE selectionname = "apply"
+				AND ms.mpID = "' . $this->mpID . '"
+				AND session_id="' . session_id() . '"
+				AND dp.products_id IS NOT NULL
+				AND TRIM(dp.products_id) <> ""
+				AND dp.PrepareType = "Apply"
+		';
+        $dbOldSelection = MagnaDB::gi()->fetchArray($dbOldSelectionQuery);
+        $oldProducts = array();
+        if (is_array($dbOldSelection)) {
+            foreach ($dbOldSelection as $row) {
+                $oldProducts[] = MagnaDB::gi()->escape($keytypeIsArtNr ? $row['products_model'] : $row['products_id']);
+            }
+        }
+
+        # Daten fuer properties Tabelle
+        # die Namen schon fuer diese Tabelle
+        # products_short_description nicht bei OsC, nur bei xtC, Gambio und Klonen
+        $dbNewSelectionQuery = '
+			SELECT	ms.mpID mpID,
+					p.products_id,
+					p.products_model,
+					p.products_image as PictureUrl,
+					pd.products_name as Title,
+					'.(MagnaDB::gi()->columnExistsInTable('products_short_description', TABLE_PRODUCTS_DESCRIPTION) ? 'pd.products_short_description' : '"" AS Subtitle').',
+					pd.products_description as Description
+			FROM ' . TABLE_PRODUCTS . ' p
+			INNER JOIN ' . TABLE_MAGNA_SELECTION . ' ms ON ms.pID = p.products_id
+			LEFT JOIN ' . TABLE_PRODUCTS_DESCRIPTION . ' pd ON pd.products_id = p.products_id AND pd.language_id = "' .
+            $sLanguageCode . '"
+			WHERE ' . ($keytypeIsArtNr ? 'p.products_model' : 'p.products_id') . ' NOT IN ("' . implode('", "', $oldProducts) . '")
+				AND ms.mpID = "' . $this->mpID . '"
+				AND selectionname="apply"
+				AND session_id="' . session_id() . '"
+		';
+        $dbNewSelection = MagnaDB::gi()->fetchArray($dbNewSelectionQuery);
+
+        foreach ($dbNewSelection as &$productFromDB) {
+            CdiscountHelper::setDescriptionAndMarketingDescription($productFromDB['products_id'], $productFromDB['Description'],
+                $productFromDB['Description'], $productFromDB['MarketingDescription']);
+        }
+
+        $dbSelection = array_merge(is_array($dbOldSelection) ? $dbOldSelection : array(),
+            is_array($dbNewSelection) ? $dbNewSelection : array());
+
+        // For debug purpose
+        if (false) {
+            echo '<span id="shMlDebug">X</span>';
+            echo '<div id="mlDebug">';
+
+            echo print_m("dbOldSelectionQuery == \n$dbOldSelectionQuery\n");
+            echo print_m($dbOldSelection, '$dbOldSelection');
+
+            echo print_m("dbNewSelectionQuery == \n$dbNewSelectionQuery\n");
+            echo print_m($dbNewSelection, '$dbNewSelection');
+
+            echo print_m($dbSelection, '$dbSelectionMerged');
+            echo '</div>';
+            ob_start();
+            ?>
+            <script type="text/javascript">/*<![CDATA[*/
+                $('#mlDebug').fadeOut(0);
+                $('#shMlDebug').on('click', function() {
+                    $('#mlDebug:visible').fadeOut();
+                    $('#mlDebug:hidden').fadeIn();
+                });
+                /*]]>*/</script>
+
+            <?php
+            $content = ob_get_contents();
+            ob_end_clean();
+            echo $content;
+        }
+
+        return $dbSelection;
     }
 
     protected function getPreSelectedData($data) {
@@ -596,102 +490,222 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
         return $preSelected;
     }
 
-    protected function getSelection() {
-        $sLanguageCode = getDBConfigValue($this->marketplace . '.lang', $this->mpID);
-        $keytypeIsArtNr = (getDBConfigValue('general.keytype', '0') == 'artNr');
+    /**
+     * Fetches the options for the top 20 category selectors
+     * @param string $sType
+     *     Type of category (PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, StoreCategory3)
+     * @param string $sCategory
+     *     the selected category (empty for newly prepared items)
+     * @returns string
+     *     option tags for the select element
+     */
+    protected function renderCategoryOptions($sType, $sCategory) {
+        if ($this->topTen === null) {
+            $this->topTen = new CdiscountTopTenCategories();
+            $this->topTen->setMarketPlaceId($this->mpID);
+        }
+        $opt = '<option value="">&mdash;</option>' . "\n";
 
-        $dbOldSelectionQuery = '
-			SELECT *
-			FROM ' . TABLE_MAGNA_CDISCOUNT_PREPARE . ' dp
-		';
+        $aTopTenCatIds = $this->topTen->getTopTenCategories($sType, 'getMPCategoryPath');
 
-        if ($keytypeIsArtNr) {
-            $dbOldSelectionQuery .= '
-				INNER JOIN ' . TABLE_PRODUCTS . ' p ON dp.products_model = p.products_model
-				INNER JOIN ' . TABLE_MAGNA_SELECTION . ' ms ON p.products_id = ms.pID AND dp.mpID = ms.mpID
-			';
-        } else {
-            $dbOldSelectionQuery .= '
-				INNER JOIN ' . TABLE_MAGNA_SELECTION . ' ms ON dp.products_id = ms.pID AND dp.mpID = ms.mpID
-			';
+        foreach ($aTopTenCatIds as $sKey => $sValue) {
+            $blSelected = (!empty($sCategory) && ($sCategory == $sKey));
+            $opt .= '<option value="' . $sKey . '"' . ($blSelected ? ' selected="selected"' : '') . '>' . $sValue . '</option>' .
+                "\n";
         }
 
-        $dbOldSelectionQuery .= '
-		    WHERE selectionname = "apply"
-				AND ms.mpID = "' . $this->mpID . '"
-				AND session_id="' . session_id() . '"
-				AND dp.products_id IS NOT NULL
-				AND TRIM(dp.products_id) <> ""
-				AND dp.PrepareType = "Apply"
-		';
-        $dbOldSelection = MagnaDB::gi()->fetchArray($dbOldSelectionQuery);
-        $oldProducts = array();
-        if (is_array($dbOldSelection)) {
-            foreach ($dbOldSelection as $row) {
-                $oldProducts[] = MagnaDB::gi()->escape($keytypeIsArtNr ? $row['products_model'] : $row['products_id']);
+        return $opt;
+    }
+
+    protected function showProductDetails($data) {
+        if (1 != count($data)) {
+            return '';
+        }
+        $preSelected = $this->getPreSelectedData($data);
+        $data = $data[0];
+        $oddEven = false;
+        $pictureUrls = array();
+        $aProduct = MLProduct::gi()->setLanguage(getDBConfigValue($this->marketplace . '.lang', $this->mpID))
+            ->getProductById($data['products_id']);
+        if (isset($data['PictureUrl']) && empty($data['PictureUrl']) === false) {
+            $pictureUrls = json_decode($data['PictureUrl'], true);
+        }
+
+        if (empty($pictureUrls) || !is_array($pictureUrls)) {
+            $pictureUrls = array();
+            foreach ($aProduct['Images'] as $img) {
+                $pictureUrls[$img] = 'true';
             }
         }
 
-        # Daten fuer properties Tabelle
-        # die Namen schon fuer diese Tabelle
-        # products_short_description nicht bei OsC, nur bei xtC, Gambio und Klonen
-        $dbNewSelectionQuery = '
-			SELECT	ms.mpID mpID,
-					p.products_id,
-					p.products_model,
-					p.products_image as PictureUrl,
-					pd.products_name as Title,
-					pd.products_short_description as Subtitle,
-					pd.products_description as Description
-			FROM ' . TABLE_PRODUCTS . ' p
-			INNER JOIN ' . TABLE_MAGNA_SELECTION . ' ms ON ms.pID = p.products_id
-			LEFT JOIN ' . TABLE_PRODUCTS_DESCRIPTION . ' pd ON pd.products_id = p.products_id AND pd.language_id = "' .
-            $sLanguageCode . '"
-			WHERE ' . ($keytypeIsArtNr ? 'p.products_model' : 'p.products_id') . ' NOT IN ("' . implode('", "', $oldProducts) . '")
-				AND ms.mpID = "' . $this->mpID . '"
-				AND selectionname="apply"
-				AND session_id="' . session_id() . '"
-		';
-        $dbNewSelection = MagnaDB::gi()->fetchArray($dbNewSelectionQuery);
-
-        foreach ($dbNewSelection as &$productFromDB) {
-            CdiscountHelper::setDescriptionAndMarketingDescription($productFromDB['products_id'], $productFromDB['Description'],
-                $productFromDB['Description'], $productFromDB['MarketingDescription']);
+        foreach ($aProduct['Images'] as $img) {
+            $img = fixHTMLUTF8Entities($img, ENT_COMPAT);
+            $data['Images'][$img] = (isset($pictureUrls[$img]) && ($pictureUrls[$img] === 'true')) ? 'true' : 'false';
         }
 
-        $dbSelection = array_merge(is_array($dbOldSelection) ? $dbOldSelection : array(),
-            is_array($dbNewSelection) ? $dbNewSelection : array());
+        $this->price->setFinalPriceFromDB($data['products_id'], $this->mpID);
+        $defaultPrice = $this->price->roundPrice()->getPrice();
 
-        // For debug purpose
-        if (false) {
-            echo '<span id="shMlDebug">X</span>';
-            echo '<div id="mlDebug">';
+        ob_start();
+        ?>
 
-            echo print_m("dbOldSelectionQuery == \n$dbOldSelectionQuery\n");
-            echo print_m($dbOldSelection, '$dbOldSelection');
-
-            echo print_m("dbNewSelectionQuery == \n$dbNewSelectionQuery\n");
-            echo print_m($dbNewSelection, '$dbNewSelection');
-
-            echo print_m($dbSelection, '$dbSelectionMerged');
-            echo '</div>';
-            ob_start();
-            ?>
-            <script type="text/javascript">/*<![CDATA[*/
-                $('#mlDebug').fadeOut(0);
-                $('#shMlDebug').on('click', function() {
-                    $('#mlDebug:visible').fadeOut();
-                    $('#mlDebug:hidden').fadeIn();
+        <tbody>
+        <tr class="headline">
+            <td colspan="3"><h4><?php echo ML_CDISCOUNT_PRODUCT_DETAILS ?></h4></td>
+        </tr>
+        <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+            <th><?php echo ML_CDISCOUNT_ITEM_NAME_TITLE ?></th>
+            <td class="input">
+                <input type="text" class="fullwidth" name="Title" id="Title"
+                       maxlength="<?php echo CdiscountHelper::TITLE_MAX_LENGTH ?>"
+                       value="<?php echo fixHTMLUTF8Entities(CdiscountHelper::cdiscountSanitizeTitle($data['Title']),
+                           ENT_COMPAT) ?>"/>
+            </td>
+            <td class="info"><?php echo ML_CDISCOUNT_TITLE_VALIDATION ?></td>
+        </tr>
+        <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+            <th><?php echo ML_CDISCOUNT_SUBTITLE ?></th>
+            <td class="input">
+                <input type="text" class="fullwidth" name="Subtitle" id="Subtitle"
+                       maxlength="<?php echo CdiscountHelper::SUBTITLE_MAX_LENGTH ?>"
+                       value="<?php echo fixHTMLUTF8Entities(CdiscountHelper::cdiscountSanitizeSubtitle($data['Subtitle']),
+                           ENT_COMPAT) ?>"/>
+            </td>
+            <td class="info"><?php echo ML_CDISCOUNT_SUBTITLE_VALIDATION ?></td>
+        </tr>
+        <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+            <th>
+                <div style="float: left;"><?php echo ML_CDISCOUNT_DESCRIPTION ?></div>
+                <div
+                    style="float: right; width: 16px; height: 16px; background: transparent url('<?php echo DIR_MAGNALISTER_WS ?>images/information.png') no-repeat 0 0;
+                        cursor: pointer; display: inline-block; vertical-align: top;" class="desc" id="desc_1" title="Infos">
+                    <span style="display: none"><?php echo ML_CDISCOUNT_DESCRIPTION_HELP ?></span>
+                </div>
+            </th>
+            <td class="input">
+                <textarea class="fullwidth" name="Description" id="Description" rows="20"
+                          cols="80"><?php echo fixHTMLUTF8Entities(CdiscountHelper::cdiscountSanitizeDesc($data['Description']),
+                        ENT_COMPAT); ?></textarea>
+            </td>
+            <td class="info"><?php echo ML_CDISCOUNT_DESCRIPTION_VALIDATION ?></td>
+        </tr>
+        <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+            <th>
+                <div style="float: left;"><?php echo ML_CDISCOUNT_MARKETING_DESCRIPTION ?></div>
+                <div
+                    style="float: right; width: 16px; height: 16px; background: transparent url('<?php echo DIR_MAGNALISTER_WS ?>images/information.png') no-repeat 0 0;
+                        cursor: pointer; display: inline-block; vertical-align: top;" class="desc" id="desc_2" title="Infos">
+                    <span style="display: none"><?php echo ML_CDISCOUNT_MARKETING_DESCRIPTION_HELP ?></span>
+                </div>
+            </th>
+            <td class="input">
+                <?php echo magna_wysiwyg(array(
+                    'id' => 'MarketingDescription',
+                    'name' => 'MarketingDescription',
+                    'class' => 'fullwidth',
+                    'cols' => '80',
+                    'rows' => '20',
+                    'wrap' => 'virtual',
+                ), fixHTMLUTF8Entities(CdiscountHelper::truncateString($data['MarketingDescription'],
+                    self::MARKETING_DESC_MAX_LENGTH), ENT_COMPAT)) ?>
+            </td>
+            <td class="info"><?php echo ML_CDISCOUNT_MARKETING_DESCRIPTION_VALIDATION ?></td>
+        </tr>
+        <tr class="even">
+            <th><?php echo ML_GENERIC_PRICE ?></th>
+            <td class="input">
+                <table class="lightstlye line15">
+                    <tbody>
+                    <tr>
+                        <td><?php echo ML_CDISCOUNT_LABEL_CDISCOUNT_PRICE ?>:</td>
+                        <td>
+                            <?php echo $defaultPrice . ' ' . ML_CDISCOUNT_CURRENCY ?>
+                            <input type="hidden" value="'.$defaultPrice.'" name="Price" id="Price"/>
+                        </td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td class="info"></td>
+        </tr>
+        <tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
+            <th><?php echo ML_LABEL_PRODUCTS_IMAGES ?></th>
+            <td class="input">
+                <input type="hidden" id="image_hidden" name="Images[]" value="false"/>
+                <?php
+                if (!empty($data['Images'])) :
+                    foreach ($data['Images'] as $img => $checked) : ?>
+                        <table class="imageBox">
+                            <tbody>
+                            <tr>
+                                <td class="image"><label
+                                        for="image_<?php echo $img ?>"><?php echo generateProductCategoryThumb($img, 60,
+                                            60) ?></label></td>
+                            </tr>
+                            <tr>
+                                <td class="cb"><input type="checkbox" id="image_<?php echo $img ?>"
+                                                      name="Images[<?php echo urlencode($img) ?>]"
+                                                      value="true" <?php echo $checked == 'true' ? 'checked="checked"' : '' ?> />
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <?php
+                    endforeach;
+                endif; ?>
+            </td>
+            <td class="info"></td>
+        </tr>
+        <tr class="spacer">
+            <td colspan="3">&nbsp;</td>
+        </tr>
+        </tbody>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#desc_1').click(function() {
+                    var d = $('#desc_1 span').html();
+                    $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
                 });
-                /*]]>*/</script>
 
-            <?php
-            $content = ob_get_contents();
-            ob_end_clean();
-            echo $content;
+                $('#desc_2').click(function() {
+                    var d = $('#desc_2 span').html();
+                    $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
+                });
+            });
+        </script>
+
+        <?php
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        return $html;
+    }
+
+    public function renderAjax() {
+        if (isset($_GET['where']) && ($_GET['where'] == 'catMatchView')) {
+            $this->initCatMatching();
+            $this->oCategoryMatching = new CdiscountCategoryMatching();
+            echo $this->oCategoryMatching->renderAjax();
+        } else if ($_POST['prepare'] === 'prepare' || (isset($_POST['Action']) && ($_POST['Action'] == 'LoadMPVariations'))) {
+            if (isset($_POST['SelectValue'])) {
+                $select = $_POST['SelectValue'];
+            } else {
+                $select = $_POST['PrimaryCategory'];
+            }
+
+            $productModel = CdiscountHelper::gi()->getProductModel('apply');
+
+            return json_encode(CdiscountHelper::gi()->getMPVariations($select, $productModel, true));
+        } else if (isset($_POST['Action']) && ($_POST['Action'] === 'DBMatchingColumns')) {
+            $columns = MagnaDB::gi()->getTableCols($_POST['Table']);
+            $editedColumns = array();
+            foreach ($columns as $column) {
+                $editedColumns[$column] = $column;
+            }
+
+            echo json_encode($editedColumns, JSON_FORCE_OBJECT);
         }
-
-        return $dbSelection;
     }
 
 }

@@ -698,13 +698,14 @@ class MLProduct {
 		$variation['Price'] = array();
 		$variation['PriceReduced'] = array();
 		foreach ($this->priceConfig['values'] as $name => $config) {
-			$variation['Price'][$name] = $this->calcPrice($parentPrices[$name]['Price'] + $surcharge, $tax, $config);
-			if ($parentPrices[$name]['Reduced'] > 0) {
-				$variation['PriceReduced'][$name] = $this->calcPrice($parentPrices[$name]['Reduced'] + $surcharge, $tax, $config);
-				if (($variation['PriceReduced'][$name] > $variation['Price'][$name]) || ($variation['PriceReduced'][$name] <= 0)) {
-					unset($variation['PriceReduced'][$name]);
-				}
-			}
+            $variation['Price'][$name] = $this->calcPrice($parentPrices[$name]['Price'] + $surcharge, $tax, $config);
+            // null means no special price
+            if ($parentPrices[$name]['Reduced'] !== null) {
+                $variation['PriceReduced'][$name] = $this->calcPrice($parentPrices[$name]['Reduced'] + $surcharge, $tax, $config);
+                if (($variation['PriceReduced'][$name] > $variation['Price'][$name]) || ($variation['PriceReduced'][$name] <= 0)) {
+                    unset($variation['PriceReduced'][$name]);
+                }
+            }
 		}
 		if ($this->priceConfig['type'] == 'single') {
 			$variation['Price'] = current($variation['Price']);
@@ -838,6 +839,7 @@ class MLProduct {
 				'MarketplaceSku' => $vi['marketplace_sku'],
 				'Variation' => $this->translateProductsOptions($vi['variation_attributes']),
 				'Price' => $vi['variation_price'],
+				'Surcharge' => $vi['variation_price'],
 				'Quantity' => $vi['variation_quantity'],
 				'Status' => $vi['variation_status'],
 				'ShippingTimeId' => $vi['variation_shipping_time'],
@@ -974,14 +976,19 @@ class MLProduct {
 			unset($v['VariationValueId']);
 
 			if ($v['PricePrefix'] == '=') {
-				$aPrices = $parent['Prices'];
+				$v['Surcharge'] = $v['Price'];
+			    $aPrices = $parent['Prices'];
 				foreach ($aPrices as &$aPrice) {
 					$aPrice['Price'] = 0.00;
-					$aPrice['Reduced'] = 0.00;
+					$aPrice['Reduced'] = null;
 				}
 				$this->calcPriceVariation($v, $v['Price'], $aPrices, $parent['TaxPercent']);
+            } elseif ($v['PricePrefix'] == '%') {
+                $v['Surcharge'] = (float)($parent['Price'] * ($v['Price'] / 100));
+                $this->calcPriceVariation($v, $v['Surcharge'], $parent['Prices'], $parent['TaxPercent']);
 			} else {
 				$vPriceSurcharge = $v['Price'] * (($v['PricePrefix'] == '+') ? 1 : -1);
+                $v['Surcharge'] = $vPriceSurcharge;
 				$this->calcPriceVariation($v, $vPriceSurcharge, $parent['Prices'], $parent['TaxPercent']);
 			}
 			unset($v['PricePrefix']);
@@ -1127,6 +1134,7 @@ class MLProduct {
 				'MarketplaceSku' => $parent['ProductsModel'].'-'.$combi['combi_model'], // '-' instead of '_', because Gambio expects '-' in its orders module.
 				'Variation' => $this->translateProductsProperties($combi['products_properties_combis_id']),
 				'Price' => $combi['combi_price'],
+				'Surcharge' => $combi['combi_price'],
 				'PriceReduced' => 0,
 				'Quantity' => $combi['combi_quantity'],
 				'Status' => true, // I can't find a status flag.
@@ -1527,15 +1535,21 @@ $images = array (
 	protected function prepareParentPrices(&$product) {
 		foreach ($this->priceConfig['values'] as $name => $config) {
 			$price = is_array($product['Price']) ? $product['Price'][$name] : $product['Price'];
+			$product['Currency'] = is_array($product['Currency']) ? $product['Currency'] : array();
 			$product['Currency'][$name] = $config['Currency'];
 			$product['Prices'][$name] = array (
 				'Price' => $config['Group'] > 0
 					? $this->simpleprice->setCurrency($config['Currency'])->getGroupPrice($config['Group'], $product['ProductId'])
 					: $price,
 				'Reduced' => $config['UseSpecialOffer']
-					? $this->simpleprice->setCurrency($config['Currency'])->getSpecialOffer($product['ProductId'], $config['Group'])
-					: 0.0
+					? $this->simpleprice->setCurrency($config['Currency'])->tryGetSpecialOffer($product['ProductId'])
+					: null
 			);
+
+            // if special offer is not set
+            if ($product['Prices'][$name]['Reduced'] === false) {
+                $product['Prices'][$name]['Reduced'] = null;
+            }
 
 			if (($hp = magnaContribVerify('CustomizePrice', 1)) !== false) {
 				$product['Prices'][$name]['Price'] = $this->simpleprice->setCurrency($config['Currency'])->getCustomizedPrice($product['ProductId']);
@@ -1547,8 +1561,10 @@ $images = array (
 			}
 
 			// Make sure the reduced price is not greater than the normal price.
-			if ($product['Prices'][$name]['Reduced'] > $product['Prices'][$name]['Price']) {
-				$product['Prices'][$name]['Reduced'] = 0;
+			if (   $product['Prices'][$name]['Reduced'] !== null
+			    && ($product['Prices'][$name]['Reduced'] > $product['Prices'][$name]['Price'])
+            ) {
+				$product['Prices'][$name]['Reduced'] = null;
 			}
 		}
 	}
@@ -1562,6 +1578,7 @@ $images = array (
 	 * @return void
 	 */
 	protected function completeParentOffer(&$product) {
+		$product['PriceReduced'] = array();
 		$product['Price'] = array();
 		foreach ($this->priceConfig['values'] as $name => $config) {
 			// Price foo

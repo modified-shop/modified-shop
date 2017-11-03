@@ -111,7 +111,7 @@ class Check24CheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			}
 		}
 
-		$aData['submit']['ProductUrl'] = $_SERVER['SERVER_NAME'] . DIR_WS_CATALOG . $aProduct['ProductUrl'];
+		$aData['submit']['ProductUrl'] = $aProduct['ProductUrl'];
 		$aData['submit']['Quantity'] = $aData['quantity'];
 		$aData['submit']['Price'] = $aData['price'];
 		$aData['submit']['BasePrice'] = $aProduct['BasePrice'];

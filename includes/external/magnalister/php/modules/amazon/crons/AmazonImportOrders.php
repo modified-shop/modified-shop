@@ -115,11 +115,11 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 	}
 
 	private function getMarketplaceTitle() {
-		return $this->marketplaceTitle.(
-		($this->o['orderInfo']['FulfillmentChannel'] == 'AFN')
-			? 'FBA'
-			: ''
-		);
+		switch ($this->o['orderInfo']['FulfillmentChannel']) {
+			case 'AFN':       return $this->marketplaceTitle.'FBA'; break;
+			case 'MFN-Prime': return $this->marketplaceTitle.' Prime'; break;
+			default:          return $this->marketplaceTitle; break;
+		}
 	}
 	
 	protected function generateOrderComment() {

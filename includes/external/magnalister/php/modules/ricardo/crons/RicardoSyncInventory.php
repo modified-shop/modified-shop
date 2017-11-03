@@ -23,6 +23,10 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncInventory.php');
 
 class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
+
+	// process every item only once (all variations are checked each time)
+	protected $itemsProcessed = array();
+
 	protected function identifySKU() {
 		if (!empty($this->cItem['MasterSKU'])) {
 			$this->cItem['pID'] = (int)magnaSKU2pID($this->cItem['MasterSKU'], true);
@@ -58,6 +62,11 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 			return;
 		} else {
 			$this->log("\n" . $title . ' found (pID: ' . $this->cItem['pID'] . ')');
+		}
+
+		if (in_array($this->cItem['pID'], $this->itemsProcessed)) {
+			$this->log("\n" . $title . ' already processed.');
+			return;
 		}
 
 		// Get lang
@@ -126,6 +135,7 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
                         : ((int)($price * 10) / 10) + 0.05
                 ;
 
+				$price = round($price, 2);
 				// If price is lower, update it
 				if (isset($price) && (float)$price != (float)$this->cItem['Price']) {
 					$data['Price'] = $price;
@@ -189,6 +199,7 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
                             : ((int)($price * 10) / 10) + 0.05
                     ;
 
+					$price = round($price, 2);
 					if ((float)$price !== (float)$cVariation['Price']) {
 						$variant['Price'] = $price;
 						$variant['Process'] = true;
@@ -293,6 +304,7 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 			unset($data['Process']);
 			$this->updateItems(array($data));
 		}
+		$this->itemsProcessed[] = $this->cItem['pID'];
 	}
 	
 	protected function isAutoSyncEnabled() {
