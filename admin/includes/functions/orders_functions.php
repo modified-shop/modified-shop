@@ -972,10 +972,6 @@
     $lang = xtc_db_fetch_array($lang_query);
 
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_RECALCULATE." WHERE orders_id = '".(int)($oID)."'");
-
-    if (file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
-      $billpayOrderEdit->onAfterUpdate();
-    }
   
     $status_query = xtc_db_query("SELECT customers_status_show_price_tax,
                                          customers_status_add_tax_ot
@@ -995,6 +991,28 @@
       'text' => xtc_db_prepare_input($subtotal_text),
       'value' => xtc_db_prepare_input($subtotal_final)
     );
+    
+    if (file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
+      require_once DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php';
+      $billpayOrderEdit = new BillpayOrderEdit();
+      if($billpayOrderEdit->isBillpay) {
+        $oldSubtotal = BillpayOrder::getOTById($oID, 'ot_subtotal');
+        $newSubTotal = xtc_db_prepare_input($subtotal_final);
+        if($newSubTotal > $oldSubtotal) {
+          $language = $_SESSION['language'];
+          $path = DIR_FS_CATALOG . 'lang/' . $language . '/admin/orders.php';
+          if (file_exists($path)) {
+            require_once($path);
+          } else {
+            require_once(DIR_FS_CATALOG . 'lang/english/admin/orders.php');
+          }
+          global $messageStack;
+
+          $messageStack->add_session(BILLPAY_ORDER_UPDATE_HIGH, 'warning');
+          return;
+        }
+      }
+    }
     
     xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id ='". (int)($oID). "' AND class = 'ot_subtotal'");
 
@@ -1292,5 +1310,11 @@
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_RECALCULATE." WHERE orders_id = '".xtc_db_input($oID)."'");
 
     xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
+    
+    if (file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
+      require_once DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php';
+      $billpayOrderEdit = new BillpayOrderEdit();
+      $billpayOrderEdit->onAfterUpdate();
+    }
   }
 ?>
