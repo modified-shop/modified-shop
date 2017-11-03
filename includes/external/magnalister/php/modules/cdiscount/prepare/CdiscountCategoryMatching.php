@@ -66,4 +66,16 @@ class CdiscountCategoryMatching extends MarketplaceCategoryMatching {
 
 		return $html;
 	}
+    
+    protected function getMPCategories($parentID = 0, $purge = false) {
+        if ($purge) {
+            try {
+                MagnaConnector::gi()->submitRequest(array('ACTION' => 'SaveCustomersCategories'));
+            } catch (Exception $oEx) {
+                // do nothing perhaps next request works
+            }
+        }
+        return parent::getMPCategories($parentID, $purge);
+    }
+    
 }

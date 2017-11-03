@@ -335,6 +335,9 @@ class MLConfigurator {
 				if (empty($value) && ($value !== '0')) $value = '';
 				if (($value === 'null') || ($value === null)) $value = '';
 				$data = array('mpID' => $this->mpID, 'mkey' => $key, 'value' => $value);
+				if (strpos($key, '.template.content')) {
+					$data['value'] = htmlEncodeUmlauts($data['value']);
+				}
 				if (MagnaDB::gi()->recordExists(TABLE_MAGNA_CONFIG, array(
 					'mpID' => $this->mpID,
 					'mkey' => $key,
@@ -635,7 +638,15 @@ class MLConfigurator {
 					$html .= '<option>&mdash;</option>';
 				} else {
 					foreach ($item['values'] as $k => $v) {
-						$html .= '<option value="'.$k.'"'.(in_array($k, $value) ? ' selected="selected"' : '').'>'.$v.'</option>'."\n";
+						if (is_array($v)) {
+							$html .= '<optgroup label="'.$k.'">';
+							foreach ($v as $gk => $gv) {
+								$html .= '<option value="'.$gk.'"'.(in_array($gk, (array) $value) ? ' selected="selected"' : '').'>'.$gv.'</option>'."\n";
+							}
+							$html .= '</optgroup>';
+						} else {
+							$html .= '<option value="'.$k.'"'.(in_array($k, $value) ? ' selected="selected"' : '').'>'.$v.'</option>'."\n";
+						}
 					}
 				}
 				$html .= '</select>'."\n";
@@ -781,8 +792,8 @@ class MLConfigurator {
 				$deleteButton = '';
 
 				$html .= '
-					<input type="text" id="config_'.$idkey.'_visual" value="" readonly="readonly" '.$class.$style.'/>
-					<input type="hidden" id="config_'.$idkey.'" name="conf['.$item['key'].']" value="'.$default.'"/>
+					<input type="text" id="config_'.$idkey.'_visual" value="" readonly="readonly" '.$class.$style.$parameters.' />
+					<input type="hidden" id="config_'.$idkey.'" name="conf['.$item['key'].']" value="'.$default.'"'.$parameters.' />
 					'.$deleteButton.'
 					<script type="text/javascript">/*<![CDATA[*/
 						$(document).ready(function() {
@@ -832,102 +843,109 @@ class MLConfigurator {
 		return $html;
 	}
 	
-	private function renderDuplicateField($item, $idkey, $blAjax = false) {
+	private function renderDuplicateField($item, $idKey, $blAjax = false)
+	{
 		$html = '';
- 		ob_start();
- 		if($blAjax){
- 			$aValue = array("defaults"=>array(""));
- 		} elseif(!isset($this->config[$item['key']]["defaults"])){
-			$aValue = array("defaults"=>array("1"));
+		ob_start();
+		if ($blAjax) {
+			$aValue = array('defaults' => array(''));
+		} elseif (!isset($this->config[$item['key']]['defaults'])) {
+			$aValue = array('defaults' => array('1'));
 		} else {
- 			$aValue = $this->config[$item['key']];
- 		}
- 		?>
- 	<table class="<?php echo $idkey ?> inlinetable nowrap autoWidth"><tbody>
- 			<?php
-			if(isset($aValue['defaults'])){
- 		 for($i = 0; $i < count($aValue['defaults']); $i++) { ?>
- 			<tr class="row1">
- 				<td rowspan="2">
- 		<?php
- 		$fieldHtml = '';
- 		$field = $item;
- 		$field['type'] = $item['subtype'];
-		if(isset($field['params'])){
-			$field['params']['currentIndex'] = $i;
+			$aValue = $this->config[$item['key']];
 		}
-		
- 		unset($field['subtype']);
-		$field['key']= $item['key'].'][values][';
-		$value = null;
-		if(isset($aValue['values']) && isset($aValue['values'][$i])){
-			$value = $aValue['values'][$i];
+
+		$cssClasses = !empty($item['cssClasses']) ? implode(' ', $item['cssClasses']) : '';
+		?>
+		<table class="<?php echo $idKey ?> nostyle nowrap valigntop <?php echo $cssClasses ?>" width="100%">
+			<tbody>
+			<?php
+			if (isset($aValue['defaults'])) {
+				for ($i = 0; $i < count($aValue['defaults']); $i++) { ?>
+					<tr class="row1 bottomDashed">
+						<td>
+							<?php
+							$field = $item;
+							$field['type'] = $item['subtype'];
+							if (isset($field['params'])) {
+								$field['params']['currentIndex'] = $i;
+							}
+
+							unset($field['subtype']);
+							$field['key'] = $item['key'].'][values][';
+							$value = null;
+							if (isset($aValue['values']) && isset($aValue['values'][$i])) {
+								$value = $aValue['values'][$i];
+							}
+
+							echo $this->renderInput($field, $value);
+							?>
+						</td>
+						<td>
+							<?php if (!isset($item['skipRadio'])) {
+								echo ML_LABEL_CONFIG_TYPE_DUPLICATE_STANDARD.' ';
+								?><input name="<?php echo $item['key'] ?>" class="duplicated-default-radio" type="radio" value="1"
+										 class="" <?php echo $aValue['defaults'][$i] == "1" ? ' checked=checked ' : ''; ?>>
+							<?php } ?>
+							<input value="<?php echo $aValue['defaults'][$i]; ?>"
+								   name="<?php echo 'conf['.$item['key'].'][defaults][]' ?>" type="hidden"
+								   class="<?php echo $idKey ?>"/>
+							<input type="button" value="+" class="ml-button plus">
+							<input type="button" value="&#8211;" class="ml-button minus">
+						</td>
+					</tr>
+				<?php }
+			} ?>
+			</tbody>
+		</table>
+		<?php if (!$blAjax) { ?>
+		<script type="text/javascript">/*<![CDATA[*/
+			$(document).ready(function () {
+				$('#<?php echo $idKey; ?>').on('click', 'input.duplicated-default-radio', function () {
+					var configDefault = $(this).parent().children('input[type=hidden]');
+					$('.<?php echo $idKey; ?> input[type=hidden]').val("");
+					configDefault.val("1");
+				});
+
+				$('#<?php echo $idKey; ?>').on('click', 'input.ml-button.plus', function () {
+					var $tableBox = $('#<?php echo $idKey; ?>');
+					if ($tableBox.parent('td').find('table').length == 1) {
+						$tableBox.find('input.ml-button.minus').fadeIn(0);
+					}
+					myConsole.log();
+					jQuery.blockUI(blockUILoading);
+					jQuery.ajax({
+						type: 'POST',
+						url: '<?php echo toURL($this->url, array('kind' => 'ajax'), true); ?>',
+						data: <?php echo json_encode(array_merge(
+								$item,
+								array(
+									'action' => 'duplicate',
+									'kind' => 'ajax',
+								)
+							)); ?>,
+						success: function (data) {
+							jQuery.unblockUI();
+							$tableBox.append(data);
+						},
+						error: function () {
+							jQuery.unblockUI();
+						},
+						dataType: 'html'
+					});
+				});
+				$('#<?php echo $idKey; ?>').on('click', 'input.ml-button.minus', function () {
+					$(this).closest('tr').remove();
+				});
+			});
+			/*]]>*/</script><?php
 		}
- 		$fieldHtml .= $this->renderInput($field, $value);
- 		echo $fieldHtml;
- 		?>
- 			</td>
- 			<td rowspan="2">
- 				<?php echo ML_LABEL_CONFIG_TYPE_DUPLICATE_STANDARD.' '; ?><input name="<?php echo $item['key']?>" class="duplicated-default-radio" type="radio" value="1" class="" <?php echo $aValue['defaults'][$i] == "1"? ' checked=checked ':''; ?> />
-				<input value="<?php echo $aValue['defaults'][$i]; ?>" name="<?php echo 'conf['.$item['key'].'][defaults][]'?>" type="hidden"  class="<?php echo $idkey?>" />
- 				<input type="button" value="+" class="ml-button plus" />
- 				<input type="button" value="&#8211;" class="ml-button minus" />
- 			</td>
- 		</tr>
- 		<tr class="bottomDashed">
- 			 <td class="paddingRight" colspan="3"></td>
- 		</tr>
- 			<?php }
-			}?>
- 	</tbody></table>
- 		<?php if (!$blAjax) { ?>
- 				<script type="text/javascript">/*<![CDATA[*/
- 					$(document).ready(function () {
- 						$('#<?php echo $idkey; ?>').on('click','input.duplicated-default-radio',function () {
- 							var configDefault = $(this).parent().children('input[type=hidden]');
- 							$('.<?php echo $idkey; ?> input[type=hidden]').val("");
- 							configDefault.val("1");
- 						});
- 
- 					    $('#<?php echo $idkey; ?>').on('click','input.ml-button.plus',function () {
- 						var $tableBox = $('#<?php echo $idkey; ?>');
- 						if ($tableBox.parent('td').find('table').length == 1) {
- 						    $tableBox.find('input.ml-button.minus').fadeIn(0);
- 						}
- 						myConsole.log();
- 						jQuery.blockUI(blockUILoading);
- 						jQuery.ajax({
- 						    type: 'POST',
- 						    url: '<?php echo toURL($this->url, array('kind' => 'ajax'), true); ?>',
- 						    data: <?php
- 							echo json_encode(array_merge(
- 									$item, array(
- 								'action' => 'duplicate',
- 								'kind' => 'ajax',
- 									)
- 							));
- 							?>,
- 						    success: function (data) {
- 							jQuery.unblockUI();
- 							$tableBox.append(data);
- 						    },
- 						    error: function (xhr, status, error) {
- 							jQuery.unblockUI();
- 						    },
- 						    dataType: 'html'
- 						});
- 					    });
- 					    $('#<?php echo $idkey; ?>').on('click', 'input.ml-button.minus', function () {
- 
- 						var tables = $(this).closest("table");
- 						    tables.fadeOut(0);
- 					    });
- 					});
- 					/*]]>*/</script><?php
- 		}
- 		$html .= ob_get_clean();
- 		return $html;
- 	}
+
+		$html .= ob_get_clean();
+
+		return $html;
+	}
+
 	public function renderLabel($label, $idkey) {
 		if ((strpos($label, 'const') !== false) && preg_match('/^const\((.*)\)$/', $label, $match)){
 			$label = constant($match[1]);

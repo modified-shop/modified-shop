@@ -107,12 +107,12 @@ class Shipping {
 				// check if zone is alowed to see module
 				$const = 'MODULE_SHIPPING_'.strtoupper(str_replace('.php', '', $include_modules[$i]['file'])).'_ALLOWED';
 				if (defined($const) && constant($const) != '') {
-					$unallowed_zones = explode(',', constant($const));
+					$allowed_zones = explode(',', constant($const));
 				} else {
-					$unallowed_zones = array();
+					$allowed_zones = array();
 				}
-				if ((array_key_exists('delivery_zone', $_SESSION) && in_array($_SESSION['delivery_zone'], $unallowed_zones))
-					|| (count($unallowed_zones) == 0)
+				if ((array_key_exists('delivery_zone', $_SESSION) && in_array($_SESSION['delivery_zone'], $allowed_zones))
+					|| (count($allowed_zones) == 0)
 				) {
 					if (!class_exists($include_modules[$i]['class'])) {
 						mlLoadModuleLanguageDefines($langPath.$include_modules[$i]['file']);

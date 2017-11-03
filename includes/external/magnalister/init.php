@@ -74,8 +74,11 @@ function encodeClientVersion($arr) {
  * Diese Funktion ruft andere hier hinterlegte Funktionen auf. Sinn ist den zu
  * aendernden Code in Shop eigenen Scripten so gering wie moeglich zu halten.
  *
- * @param $functionName	Name der auszufuehrenden Funktion oder Aktion
- * @param $arguments	Assoziatives Array mit Parametern
+ * @param string $functionName Name der auszufuehrenden Funktion oder Aktion
+ * @param array $arguments Assoziatives Array mit Parametern
+ * @param array $includes
+ * @param int $opts
+ * @return bool
  */
 function magnaExecute($functionName, $arguments = array(), $includes = array(), $opts = 0) {
  	global $magnaConfig;
@@ -921,6 +924,18 @@ if (!isset($_SESSION['magnaRunOnce']) || isset($_GET['magnaRunOnce'])) {
 }
 
 $GLOBALS['MagnaAjax'] = (isset($_GET['kind']) && ($_GET['kind'] == 'ajax'));
+
+# prevent the "not yet booked" message if the mpID gets lost / access via ?module= for some reason
+if (    !array_key_exists('mp', $_GET)
+     &&  array_key_exists('module', $_GET)
+     &&  in_array($_GET['module'], $magnaConfig['maranon']['Marketplaces'])) {
+	foreach ($magnaConfig['maranon']['Marketplaces'] as $currMp => $currModule) {
+		if ($currModule == $_GET['module']) {
+			$_GET['mp'] = $currMp ;
+			break;
+		}
+	}
+}
 
 if (array_key_exists('mp', $_GET) && array_key_exists($_GET['mp'], $magnaConfig['maranon']['Marketplaces'])
 	&& ($mp = $magnaConfig['maranon']['Marketplaces'][$_GET['mp']])

@@ -28,96 +28,6 @@ class PriceministerMatchingPrepareView extends MagnaCompatibleBase {
 	protected $catMatch = null;
 	protected $prepareSettings = array();
 
-	public function getSelection($skipSearch = false) {
-		global $_MagnaSession;
-
-		if (isset($_POST['match']) && $_POST['match'] === 'notmatched') {
-			$alreadyMatched = MagnaDB::gi()->fetchArray('
-				SELECT products_id
-				  FROM `' . TABLE_MAGNA_PRICEMINISTER_PREPARE . '`
-				 WHERE mpID = "' . $this->mpID . '"
-					   AND Verified = "OK"
-			', true);
-
-			MagnaDB::gi()->query('
-				DELETE FROM ' . TABLE_MAGNA_SELECTION . '
-				 WHERE mpID = "' . $this->mpID . '"
-				   AND selectionname = "match"
-				   AND session_id = "' . session_id() . '"
-				   AND pID IN ("' . implode('", "', $alreadyMatched) . '")
-			');
-		}
-
-		$sLanguageCode = getDBConfigValue($this->marketplace . '.lang', $this->mpID);
-
-		$query = '
-			SELECT	ms.mpID mpID,
-					p.products_id,
-					p.products_model,
-					p.products_price,
-					pd.products_name,
-					pr.ConditionType
-			  FROM ' . TABLE_PRODUCTS . ' p
-		INNER JOIN ' . TABLE_MAGNA_SELECTION . ' ms ON ms.pID = p.products_id
-		 LEFT JOIN ' . TABLE_PRODUCTS_DESCRIPTION . ' pd ON pd.products_id = p.products_id AND pd.language_id = "' . $sLanguageCode . '"
-		 LEFT JOIN ' . TABLE_MAGNA_PRICEMINISTER_PREPARE . ' pr ON pr.products_id = p.products_id AND pr.mpID = "' . $this->mpID . '"
-			 WHERE ms.mpID = "' . $this->mpID . '"
-			   AND selectionname = "match"
-			   AND session_id = "' . session_id() . '"
-		';
-
-		$selection = MagnaDB::gi()->fetchArray(eecho($query, false));
-
-		$products = array();
-
-		$price = new SimplePrice();
-		$price->setCurrency(getCurrencyFromMarketplace($_MagnaSession['mpID']));
-
-		foreach ($selection as $p) {
-			$mlProduct = MLProduct::gi()->getProductByIdOld($p['products_id']);
-
-			$price->setPrice($mlProduct['products_price'])->calculateCurr();
-			$price->addTaxByTaxID($mlProduct['products_tax_class_id']);
-			$p['ConditionType'] = getDBConfigValue($this->marketplace . '.itemcondition', $this->mpID, 0);
-
-			$product = array(
-				'Id'			=> $p['products_id'],
-				'Model'			=> $p['products_model'],
-				'Title'			=> $p['products_name'],
-				'Description'	=> $mlProduct['products_description'],
-				'Images'		=> $mlProduct['products_allimages'],
-				'Price'			=> $price->format(),
-				'EAN'			=> $mlProduct['products_ean'],
-				'Condition'		=> $p['ConditionType'],
-			);
-
-			if ($skipSearch === false) {
-				$searchResult = false;
-				if (empty($mlProduct['products_ean']) === false) {
-					$searchResult = PriceministerHelper::SearchOnPriceminister($mlProduct['products_ean'], 'EAN');
-                    if ($searchResult){
-                        $product['SearchCriteria'] = 'EAN';
-                    }
-                }
-
-                if ($searchResult === false){
-					$searchResult = PriceministerHelper::SearchOnPriceminister($p['products_name'], 'KW');
-                    if ($searchResult){
-                        $product['SearchCriteria'] = 'KW';
-                    }
-                }
-
-                if ($searchResult !== false){
-					$product['Results'] = $searchResult;
-				}
-			}
-
-			$products[] = $product;
-		}
-
-		return $products;
-	}
-	
 	public function process() {
 		global $_MagnaSession;
 
@@ -127,11 +37,11 @@ class PriceministerMatchingPrepareView extends MagnaCompatibleBase {
 		} else {
 			$currentPage = 1;
 		}
-		
+
 		$products = $this->getSelection();
 
 		$itemsPerPage = getDBConfigValue($this->marketplace . '.multimatching.itemsperpage', $this->mpID);
-		
+
 		$productChunks = array_chunk($products, $itemsPerPage);
 
 		$totalPages = count($productChunks);
@@ -254,7 +164,7 @@ class PriceministerMatchingPrepareView extends MagnaCompatibleBase {
 				</tbody>
 				<script type="text/javascript">/*<![CDATA[*/
 					var productDetailJson_<?php echo $product['Id'] ?> = <?php echo $this->renderDetailView($product); ?>
-					
+
 					$('#productDetails_<?php echo $product['Id'] ?>').click(function() {
 						myConsole.log(productDetailJson_<?php echo $product['Id'] ?>);
 						$('#productDetailContainer').html(productDetailJson_<?php echo $product['Id'] ?>.content).jDialog({
@@ -400,7 +310,7 @@ class PriceministerMatchingPrepareView extends MagnaCompatibleBase {
 				</script>
 
                 <?php endforeach ?>
-                <script type="text/javascript" src="includes/magnalister/js/marketplaces/priceminister/product_variation_matching.js"></script>
+                <script type="text/javascript" src="includes/magnalister/js/marketplaces/priceminister/product_variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
                 <script type="text/javascript">
                     /*<![CDATA[*/
                     var ml_vm_config = {
@@ -411,7 +321,9 @@ class PriceministerMatchingPrepareView extends MagnaCompatibleBase {
                             newCustomGroupContainer: '#newCustomGroup',
                             mainSelectElement: '#PrimaryCategory',
                             matchingHeadline: '#tbodyDynamicMatchingHeadline',
+                            matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
                             matchingInput: '#tbodyDynamicMatchingInput',
+                            matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
                             categoryInfo: '#categoryInfo'
                         },
                         viewName: 'prepareView',
@@ -423,20 +335,22 @@ class PriceministerMatchingPrepareView extends MagnaCompatibleBase {
                         singleMatching: <?php echo(count($products) === 1 ? 'true' : 'false'); ?>
                     };
 
-					$(ml_vm_config.formName).ml_product_variation_matching({
-						urlPostfix: '&kind=ajax&where=' + ml_vm_config.viewName,
-						i18n: ml_vm_config.i18n,
-						elements: {
-							newGroupIdentifier: '#newGroupIdentifier',
-							customVariationHeaderContainer: '#tbodyVariationConfigurationSelector',
-							newCustomGroupContainer: '#newCustomGroup',
-							mainSelectElement: '#PrimaryCategory',
-							matchingHeadline: '#tbodyDynamicMatchingHeadline',
-							matchingInput: '#tbodyDynamicMatchingInput',
-							categoryInfo: '#categoryInfo'
-						},
-						shopVariations: ml_vm_config.shopVariations
-					});
+                    $(ml_vm_config.formName).ml_product_variation_matching({
+                        urlPostfix: '&kind=ajax&where=' + ml_vm_config.viewName,
+                        i18n: ml_vm_config.i18n,
+                        elements: {
+                            newGroupIdentifier: '#newGroupIdentifier',
+                            customVariationHeaderContainer: '#tbodyVariationConfigurationSelector',
+                            newCustomGroupContainer: '#newCustomGroup',
+                            mainSelectElement: '#PrimaryCategory',
+                            matchingHeadline: '#tbodyDynamicMatchingHeadline',
+                            matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
+                            matchingInput: '#tbodyDynamicMatchingInput',
+                            matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
+                            categoryInfo: '#categoryInfo'
+                        },
+                        shopVariations: ml_vm_config.shopVariations
+                    });
 
                     $(document).ready(function() {
                         $('input:radio:checked').trigger('change');
@@ -478,32 +392,103 @@ class PriceministerMatchingPrepareView extends MagnaCompatibleBase {
 
 		return $renderedView;
 	}
+	
+	public function getSelection($skipSearch = false) {
+		global $_MagnaSession;
 
-    public function renderAjax()
-    {
-        if (isset($_GET['where']) && ($_GET['where'] == 'catMatchView')){
-            $this->initCatMatching();
-            $this->oCategoryMatching = new PriceministerCategoryMatching();
-            echo $this->oCategoryMatching->renderAjax();
-        } else if ($_POST['prepare'] === 'prepare' || (isset($_POST['Action']) && ($_POST['Action'] == 'LoadMPVariations'))){
-            if (isset($_POST['SelectValue'])){
-                $select = $_POST['SelectValue'];
-            } else {
-                $select = $_POST['PrimaryCategory'];
-            }
+		if (isset($_POST['match']) && $_POST['match'] === 'notmatched') {
+			$alreadyMatched = MagnaDB::gi()->fetchArray('
+				SELECT products_id
+				  FROM `' . TABLE_MAGNA_PRICEMINISTER_PREPARE . '`
+				 WHERE mpID = "' . $this->mpID . '"
+					   AND Verified = "OK"
+			', true);
 
-            $productModel = PriceministerHelper::gi()->getProductModel('match');
+			MagnaDB::gi()->query('
+				DELETE FROM ' . TABLE_MAGNA_SELECTION . '
+				 WHERE mpID = "' . $this->mpID . '"
+				   AND selectionname = "match"
+				   AND session_id = "' . session_id() . '"
+				   AND pID IN ("' . implode('", "', $alreadyMatched) . '")
+			');
+		}
 
-            return json_encode(PriceministerHelper::gi()->getMPVariations($select, $productModel, true, true));
-        }
-    }
+		$sLanguageCode = getDBConfigValue($this->marketplace . '.lang', $this->mpID);
+
+		$query = '
+			SELECT	ms.mpID mpID,
+					p.products_id,
+					p.products_model,
+					p.products_price,
+					pd.products_name,
+					pr.ConditionType
+			  FROM ' . TABLE_PRODUCTS . ' p
+		INNER JOIN ' . TABLE_MAGNA_SELECTION . ' ms ON ms.pID = p.products_id
+		 LEFT JOIN ' . TABLE_PRODUCTS_DESCRIPTION . ' pd ON pd.products_id = p.products_id AND pd.language_id = "' . $sLanguageCode . '"
+		 LEFT JOIN ' . TABLE_MAGNA_PRICEMINISTER_PREPARE . ' pr ON pr.products_id = p.products_id AND pr.mpID = "' . $this->mpID . '"
+			 WHERE ms.mpID = "' . $this->mpID . '"
+			   AND selectionname = "match"
+			   AND session_id = "' . session_id() . '"
+		';
+
+		$selection = MagnaDB::gi()->fetchArray(eecho($query, false));
+
+		$products = array();
+
+		$price = new SimplePrice();
+		$price->setCurrency(getCurrencyFromMarketplace($_MagnaSession['mpID']));
+
+		foreach ($selection as $p) {
+			$mlProduct = MLProduct::gi()->getProductByIdOld($p['products_id']);
+
+			$price->setPrice($mlProduct['products_price'])->calculateCurr();
+			$price->addTaxByTaxID($mlProduct['products_tax_class_id']);
+			$p['ConditionType'] = getDBConfigValue($this->marketplace . '.itemcondition', $this->mpID, 0);
+
+			$product = array(
+				'Id'			=> $p['products_id'],
+				'Model'			=> $p['products_model'],
+				'Title'			=> $p['products_name'],
+				'Description'	=> $mlProduct['products_description'],
+				'Images'		=> $mlProduct['products_allimages'],
+				'Price'			=> $price->format(),
+				'EAN'			=> $mlProduct['products_ean'],
+				'Condition'		=> $p['ConditionType'],
+			);
+
+			if ($skipSearch === false) {
+				$searchResult = false;
+				if (empty($mlProduct['products_ean']) === false) {
+					$searchResult = PriceministerHelper::SearchOnPriceminister($mlProduct['products_ean'], 'EAN');
+                    if ($searchResult){
+                        $product['SearchCriteria'] = 'EAN';
+                    }
+                }
+
+                if ($searchResult === false){
+					$searchResult = PriceministerHelper::SearchOnPriceminister($p['products_name'], 'KW');
+                    if ($searchResult){
+                        $product['SearchCriteria'] = 'KW';
+                    }
+                }
+
+                if ($searchResult !== false){
+					$product['Results'] = $searchResult;
+				}
+			}
+
+			$products[] = $product;
+		}
+
+		return $products;
+	}
 
     public function getSearchResultsHtml($product, $singlePrepare = false)
     {
         if (!isset($product['Results']) || is_array($product['Results']) === false || count($product['Results']) === 0){
 			$product['Results'] = array();
 		}
-		
+
 		$checkedProductId = count($product['Results']) > 0 ? $product['Results'][0]['id_item'] : null;
 
         foreach ($product['Results'] as $result){
@@ -640,4 +625,23 @@ class PriceministerMatchingPrepareView extends MagnaCompatibleBase {
 			'content' => utf8_encode($html),
 		));
 	}
+
+    public function renderAjax()
+    {
+        if (isset($_GET['where']) && ($_GET['where'] == 'catMatchView')){
+            $this->initCatMatching();
+            $this->oCategoryMatching = new PriceministerCategoryMatching();
+            echo $this->oCategoryMatching->renderAjax();
+        } else if ($_POST['prepare'] === 'prepare' || (isset($_POST['Action']) && ($_POST['Action'] == 'LoadMPVariations'))){
+            if (isset($_POST['SelectValue'])){
+                $select = $_POST['SelectValue'];
+            } else {
+                $select = $_POST['PrimaryCategory'];
+            }
+
+            $productModel = PriceministerHelper::gi()->getProductModel('match');
+
+            return json_encode(PriceministerHelper::gi()->getMPVariations($select, $productModel, true, true));
+        }
+    }
 }

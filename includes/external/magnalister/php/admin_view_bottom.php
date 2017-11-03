@@ -1,11 +1,11 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
@@ -72,7 +72,7 @@ if (class_exists('MagnaDB') && class_exists('MagnaConnector')) {
 }
 echo '
 												<span class="customerinfo">
-													'.ML_LABEL_CUSTOMERSID.': '.((isset($magnaConfig['maranon']['CustomerID'])) ? $magnaConfig['maranon']['CustomerID'] : ML_LABEL_UNKNOWN).' :: 
+													'.ML_LABEL_CUSTOMERSID.': '.((isset($magnaConfig['maranon']['CustomerID'])) ? $magnaConfig['maranon']['CustomerID'] : ML_LABEL_UNKNOWN).' ::
 													Shop ID: '.((isset($magnaConfig['maranon']['ShopID'])) ? $magnaConfig['maranon']['ShopID'] : ML_LABEL_UNKNOWN).'
 												</span>
 											</td>
@@ -83,7 +83,7 @@ echo '
 											</td>
 											<td rowspan="2" class="ml-td-right">
 												<span class="build">
-													Build: '.((defined('CLIENT_BUILD_VERSION')) ? CLIENT_BUILD_VERSION : ML_LABEL_UNKNOWN).' :: 
+													Build: '.((defined('CLIENT_BUILD_VERSION')) ? CLIENT_BUILD_VERSION : ML_LABEL_UNKNOWN).' ::
 													<a href="'.toURL(array('module' => 'viewchangelog')).'" title="Changelog">Current: '.((defined('CURRENT_BUILD_VERSION')) ? CURRENT_BUILD_VERSION : ML_LABEL_UNKNOWN).'</a>
 												</span>
 											</td>
@@ -134,7 +134,7 @@ if (MAGNA_DEBUG && class_exists('MagnaDB')) {
 		?>
 		<!-- footer_eof //-->
 		<script type="text/javascript">
-			var magnaErrors = <?php echo MagnaError::gi()->exceptionsToHTML(); ?>;
+			var magnaErrors = '<?php echo '';//echo MagnaError::gi()->exceptionsToHTML(); ?>';
 			$('#magnaErrors div').append(magnaErrors);
 			if (magnaErrors.length >= 1) {
 				$('#magnaErrors').css({'display':'block'});
@@ -145,7 +145,7 @@ if (MAGNA_DEBUG && class_exists('MagnaDB')) {
 					$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
 						if(
 							(typeof options.type === 'string' && options.type.toLowerCase() === 'post')
-							|| 
+							||
 							(typeof originalOptions.type === 'string' && originalOptions.type.toLowerCase() === 'post')
 						) { // adding CSRF-token to each ajax-post-request
 							if (typeof originalOptions.data == 'string') {//serialized, we add as string
@@ -160,7 +160,7 @@ if (MAGNA_DEBUG && class_exists('MagnaDB')) {
 					$(document).ready(function() { // adding CSRF-token to each post-form
 						for (var sCsrfName in oCsrfConfig) {
 							$('#content.magnamain form[method="post"]').prepend('<input type="hidden" name="'+sCsrfName+'" value="'+oCsrfConfig[sCsrfName]+'" >');
-						} 
+						}
 					});
 				})(jQuery);
 			<?php } ?>

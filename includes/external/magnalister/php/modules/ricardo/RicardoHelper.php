@@ -50,7 +50,7 @@ class RicardoHelper extends MagnaCompatibleHelper {
 		$config = array(
 			'Type'  => getDBConfigValue($mp.'.quantity.type', $mpId, 'lump'),
 			'Value' => (int)getDBConfigValue($mp.'.quantity.value', $mpId, 0),
-			'MaxQuantity' => (int)getDBConfigValue($mp.'.quantity.maxquantity', $mpId, 0),
+			'MaxQuantity' => (int)getDBConfigValue($mp.'.quantity.maxquantity', $mpId, 999),
 		);
 		
 		return $config;

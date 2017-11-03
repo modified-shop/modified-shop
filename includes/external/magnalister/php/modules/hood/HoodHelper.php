@@ -118,6 +118,14 @@ class HoodHelper extends MagnaCompatibleHelper {
 	}
 	
 	public static function substituteTemplate($mpId, $pID, $template, $substitution) {
+        /* {Hook} "HoodSubstituteTemplate": Enables you to extend the Hood Template substitution (e.g. use your own placeholders).<br>
+           Variables that can be used:
+           <ul><li><code>$mpID</code>: The ID of the marketplace.</li>
+               <li><code>$pID</code>: The ID of the product (Table <code>products.products_id</code>).</li>
+               <li><code>$template</code>: The Hood product template.</li>
+               <li><code>$substitution</code>: Associative array. Keys are placeholders, Values are their content.</li>
+           </ul>
+         */
 		if (($hp = magnaContribVerify('HoodSubstituteTemplate', 1)) !== false) {
 			require($hp);
 		}

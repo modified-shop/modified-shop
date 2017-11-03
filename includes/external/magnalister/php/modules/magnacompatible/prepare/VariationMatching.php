@@ -21,24 +21,18 @@
 
 abstract class VariationMatching
 {
+    public $aErrors = array();
     protected $resources = array();
-
     protected $mpId = 0;
     protected $marketplace = '';
-
     protected $isAjax = false;
     protected $catMatch = null;
     protected $topTen = null;
-
     /** @var MarketplaceCategoryMatching $oCategoryMatching */
     protected $oCategoryMatching = null;
-
     protected $availableVariationConfigs = array();
     protected $availableCustomConfigs = array();
-
     protected $languageId = 0;
-
-    public $aErrors = array();
 
     public function __construct($params)
     {
@@ -52,17 +46,22 @@ abstract class VariationMatching
         $this->languageId = getDBConfigValue($this->marketplace . '.keytype', $this->mpId, 2);
     }
 
-    /**
-     * @return AttributesMatchingHelper
-     */
-    protected abstract function getAttributesMatchingHelper();
-
-    /**
-     * @return TopTen
-     */
-    protected function getTopTenCategoriesHandler()
+    public function process()
     {
-        return null;
+        $this->oCategoryMatching = $this->getCategoryMatchingHandler();
+        $categoryId = '';
+        $this->saveMatching();
+        if (count($this->aErrors) > 0) {
+            $categoryId = $_POST['PrimaryCategory'];
+        }
+
+        $this->loadAvailableVariationGroups();
+        echo $this->renderJs();
+        if ($this->oCategoryMatching) {
+            echo $this->oCategoryMatching->renderMatching();
+        }
+
+        echo $this->renderMatchingTable($categoryId);
     }
 
     protected function getCategoryMatchingHandler()
@@ -70,19 +69,95 @@ abstract class VariationMatching
         return null;
     }
 
+    protected function saveMatching($redirect = true)
+    {
+        if (isset($_POST['ml']['match'])) {
+            $sIdentifier = $_POST['PrimaryCategory'];
+            $sCustomIdentifier = isset($_POST['CustomIdentifier']) ? $_POST['CustomIdentifier'] : '';
+            $matching = $_POST['ml']['match'];
+            MagnaDB::gi()->delete($this->getVariantMatchingTableName(), array(
+                'MpId' => $this->mpId,
+                'MpIdentifier' => $sIdentifier,
+                'CustomIdentifier' => $sCustomIdentifier,
+            ));
+
+            if (!isset($_POST['Action']) || $_POST['Action'] !== 'ResetMatching') {
+                $this->aErrors = array_merge($this->aErrors,
+                    $this->getAttributesMatchingHelper()->saveMatching($sIdentifier, $matching, $redirect, false, $sCustomIdentifier));
+            }
+
+            if ($redirect) {
+                if (!empty($this->aErrors)) {
+                    foreach ($this->aErrors as $error) {
+                        $errorCssClass = 'errorBox';
+                        $errorMessage = $error;
+                        if (is_array($error)) {
+                            $errorCssClass = "{$error['type']}Box {$error['additionalCssClass']}";
+                            $errorMessage = $error['message'];
+                        }
+
+                        echo '<p class="'.$errorCssClass.'">' . $errorMessage . '</p>';
+                    }
+                } else {
+                    echo '<p class="successBox">' . ML_GENERAL_VARMATCH_SAVED_SUCCESSFULLY . '</p>';
+                }
+            }
+        }
+    }
+
     protected function getVariantMatchingTableName()
     {
         return 'magnalister_' . $this->marketplace . '_variantmatching';
     }
 
-    protected function initCatMatching()
+    /**
+     * @return AttributesMatchingHelper
+     */
+    protected abstract function getAttributesMatchingHelper();
+
+    protected function loadAvailableVariationGroups()
     {
-        $params = array();
-        foreach (array('mpID', 'marketplace', 'marketplaceName') as $attr) {
-            if (isset($this->$attr)) {
-                $params[$attr] = &$this->$attr;
+        $this->availableVariationConfigs = array();
+
+        $availableCustomConfigs = MagnaDB::gi()->fetchArray('
+			SELECT CustomIdentifier, MpIdentifier
+			  FROM ' . $this->getVariantMatchingTableName() . '
+			 WHERE MpId = ' . $this->mpId . '
+			       AND CustomIdentifier<>""
+		');
+        if (!empty($availableCustomConfigs)) {
+            foreach ($availableCustomConfigs as $cfg) {
+                $this->availableCustomConfigs[$cfg['CustomIdentifier'] . ':' . ($cfg['MpIdentifier'] == '' ? 'null' : $cfg['MpIdentifier'])] = $cfg['CustomIdentifier'];
             }
+            asort($this->availableCustomConfigs);
         }
+        #echo print_m($this->availableCustomConfigs);
+    }
+
+    protected function renderJs()
+    {
+        ob_start();
+        ?>
+        <script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS ?>js/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
+        <script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS ?>js/marketplaces/<?php echo $this->marketplace?>/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
+        <script>
+            var ml_vm_config = {
+                url: '<?php echo toURL($this->resources['url'], array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
+                viewName: 'varmatchView',
+                formName: '#matchingForm',
+                handleCategoryChange: <?php echo $this->getCategoryMatchingHandler() !== null ? 'true' : 'false'?>,
+                i18n: <?php echo json_encode($this->getAttributesMatchingHelper()->getVarMatchTranslations());?>,
+                shopVariations: <?php echo json_encode($this->getAttributesMatchingHelper()->getShopVariations()); ?>
+            };
+        </script>
+        <?php
+        return ob_get_clean();
+    }
+
+    protected function renderMatchingTable($categoryId = '')
+    {
+        return $this->getAttributesMatchingHelper()->renderMatchingTable($this->resources['url'],
+            $this->renderCategoryOptions('MarketplaceCategories', $categoryId));
     }
 
     /**
@@ -117,101 +192,12 @@ abstract class VariationMatching
         return $opt;
     }
 
-    protected function loadAvailableVariationGroups()
+    /**
+     * @return TopTen
+     */
+    protected function getTopTenCategoriesHandler()
     {
-        $this->availableVariationConfigs = array();
-
-        $availableCustomConfigs = MagnaDB::gi()->fetchArray('
-			SELECT CustomIdentifier, MpIdentifier
-			  FROM ' . $this->getVariantMatchingTableName() . '
-			 WHERE MpId = ' . $this->mpId . '
-			       AND CustomIdentifier<>""
-		');
-        if (!empty($availableCustomConfigs)) {
-            foreach ($availableCustomConfigs as $cfg) {
-                $this->availableCustomConfigs[$cfg['CustomIdentifier'] . ':' . ($cfg['MpIdentifier'] == '' ? 'null' : $cfg['MpIdentifier'])] = $cfg['CustomIdentifier'];
-            }
-            asort($this->availableCustomConfigs);
-        }
-        #echo print_m($this->availableCustomConfigs);
-    }
-
-    protected function renderJs()
-    {
-        ob_start();
-        ?>
-        <script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS ?>js/variation_matching.js"></script>
-        <script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS ?>js/marketplaces/<?php echo $this->marketplace?>/variation_matching.js"></script>
-        <script>
-            var ml_vm_config = {
-                url: '<?php echo toURL($this->resources['url'], array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
-                viewName: 'varmatchView',
-                formName: '#matchingForm',
-                handleCategoryChange: <?php echo $this->getCategoryMatchingHandler() !== null ? 'true' : 'false'?>,
-                i18n: <?php echo json_encode($this->getAttributesMatchingHelper()->getVarMatchTranslations());?>,
-                shopVariations: <?php echo json_encode($this->getAttributesMatchingHelper()->getShopVariations()); ?>
-            };
-        </script>
-        <?php
-        return ob_get_clean();
-    }
-
-    protected function renderMatchingTable($categoryId = '')
-    {
-        return $this->getAttributesMatchingHelper()->renderMatchingTable($this->resources['url'],
-            $this->renderCategoryOptions('MarketplaceCategories', $categoryId));
-    }
-
-    protected function saveMatching($redirect = true)
-    {
-        if (isset($_POST['ml']['match'])) {
-            $sIdentifier = $_POST['PrimaryCategory'];
-            $matching = $_POST['ml']['match'];
-            MagnaDB::gi()->delete($this->getVariantMatchingTableName(), array(
-                'MpId' => $this->mpId,
-                'MpIdentifier' => $sIdentifier
-            ));
-
-            if (!isset($_POST['Action']) || $_POST['Action'] !== 'ResetMatching') {
-                $this->aErrors = array_merge($this->aErrors,
-                    $this->getAttributesMatchingHelper()->saveMatching($sIdentifier, $matching, $redirect, false));
-            }
-
-            if ($redirect) {
-                if (!empty($this->aErrors)) {
-                    foreach ($this->aErrors as $error) {
-                        $errorCssClass = 'errorBox';
-                        $errorMessage = $error;
-                        if (is_array($error)) {
-                            $errorCssClass = "{$error['type']}Box {$error['additionalCssClass']}";
-                            $errorMessage = $error['message'];
-                        }
-
-                        echo '<p class="'.$errorCssClass.'">' . $errorMessage . '</p>';
-                    }
-                } else {
-                    echo '<p class="successBox">' . ML_GENERAL_VARMATCH_SAVED_SUCCESSFULLY . '</p>';
-                }
-            }
-        }
-    }
-
-    public function process()
-    {
-        $this->oCategoryMatching = $this->getCategoryMatchingHandler();
-        $categoryId = '';
-        $this->saveMatching();
-        if (count($this->aErrors) > 0) {
-            $categoryId = $_POST['PrimaryCategory'];
-        }
-
-        $this->loadAvailableVariationGroups();
-        echo $this->renderJs();
-        if ($this->oCategoryMatching) {
-            echo $this->oCategoryMatching->renderMatching();
-        }
-
-        echo $this->renderMatchingTable($categoryId);
+        return null;
     }
 
     public function renderAjax()
@@ -223,7 +209,12 @@ abstract class VariationMatching
             }
         } else if (isset($_POST['Action']) && ($_POST['Action'] == 'LoadMPVariations')) {
             $select = $_POST['SelectValue'];
-            $data = $this->getAttributesMatchingHelper()->getMPVariations($select, false, true);
+            $customIdentifier = !empty($_POST['CustomIdentifierValue']) ? $_POST['CustomIdentifierValue'] : '';
+            $data = $this->getAttributesMatchingHelper()->getMPVariations($select, false, true, $customIdentifier);
+            echo json_encode($data);
+        } else if (isset($_POST['Action']) && ($_POST['Action'] == 'LoadCustomIdentifiers')) {
+            $select = $_POST['SelectValue'];
+            $data = $this->getAttributesMatchingHelper()->getCustomIdentifiers($select, false, true);
             echo json_encode($data);
         } else if (isset($_POST['Action']) && ($_POST['Action'] == 'SaveMatching')) {
             $params = array();
@@ -232,7 +223,7 @@ abstract class VariationMatching
             $_POST['Action'] = 'SaveMatching';
 
             $this->saveMatching(false);
-            $data = $this->getAttributesMatchingHelper()->getMPVariations($params['PrimaryCategory'], false, true);
+            $data = $this->getAttributesMatchingHelper()->getMPVariations($params['PrimaryCategory'], false, true, $params['CustomIdentifier']);
 
             $data['notice'] = array();
             foreach ($this->aErrors as $error) {
@@ -250,6 +241,16 @@ abstract class VariationMatching
             }
 
             echo json_encode($editedColumns, JSON_FORCE_OBJECT);
+        }
+    }
+
+    protected function initCatMatching()
+    {
+        $params = array();
+        foreach (array('mpID', 'marketplace', 'marketplaceName') as $attr) {
+            if (isset($this->$attr)) {
+                $params[$attr] = &$this->$attr;
+            }
         }
     }
 }

@@ -45,9 +45,9 @@
             mainSelectElement: null,
             newGroupIdentifier: null, //hidden input for transport
             matchingHeadline: null,
-            matchingCustomHeadline: null,
+            matchingOptionalHeadline: null,
             matchingInput: null,
-            matchingCustomInput: null,
+            matchingOptionalInput: null,
             categoryInfo: null
         },
         variationValues: {},
@@ -81,6 +81,7 @@
             }
 
             self.html.valuesBackup = self.elements.matchingInput.html();
+            self.html.valuesOptionalBackup = self.elements.matchingOptionalInput.html();
             self._initMainSelectElement();
 
             $('body')
@@ -161,8 +162,14 @@
                             self.elements.matchingHeadline = $(ml_vm_config.elements.matchingHeadline);
                             self.elements.matchingHeadline.css('display', 'table-row-group');
 
+                            self.elements.matchingOptionalHeadline = $(ml_vm_config.elements.matchingOptionalHeadline);
+                            self.elements.matchingOptionalHeadline.css('display', 'table-row-group');
+
                             self.elements.matchingInput = $(ml_vm_config.elements.matchingInput);
                             self.elements.matchingInput.css('display', 'table-row-group');
+
+                            self.elements.matchingOptionalInput = $(ml_vm_config.elements.matchingOptionalInput);
+                            self.elements.matchingOptionalInput.css('display', 'table-row-group');
 
                             self.elements.categoryInfo = $(ml_vm_config.elements.categoryInfo);
                             self.elements.categoryInfo.css('display', 'block');
@@ -207,18 +214,16 @@
             if(self.html.shopVariationsDropDown === '') {
                 self.html.shopVariationsDropDown =
                     '<select class="shopAttrSelector">'
-                    + self._render('<option {Disabled} data-custom="{Custom}" value="{Code}">{Name}</option>', $.extend(
-                        {0: {Code: 'null', Name: self.i18n.pleaseSelect, Disabled: '', Custom: ''}},
-                        self.options.shopVariations
-                        )
+                    + self._render(
+                        '<option {Disabled} data-custom="{Custom}" value="{Code}">{Name}</option>',
+                        {0: {Code: 'null', Name: self.i18n.pleaseSelect, Disabled: '', Custom: ''}}
                     )
                     + '</select>'
                 ;
             }
 
             return $(self.html.shopVariationsDropDown);
-        }
-        ,
+        },
 
         _load: function(data, success) {
             var self = this;
@@ -286,6 +291,7 @@
 
         _buildSelectMatching: function(elem, selector, matchDiv, attributeListDiv) {
             var self = this;
+            var deleteButton = $('#'+selector.AttributeCode+'_deleteMatching');
 
             var addAfterWarning = false;
             var spanWarning = $('span#' + selector.AttributeCode + '_warningMatching');
@@ -299,23 +305,25 @@
                     freetext = selector.CurrentValues.Values;
                     attributeListDiv.attr('style', 'background-color: #e9e9e9');
 
-                    if(addAfterWarning) {
-                        spanWarning.before(
-                            '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                            '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
-                            '<span>' + self.i18n.alreadyMatched + '</span>' +
-                            '</span>'
-                        );
-                    } else {
-                        $('div#extraFieldsInfo_' + selector.AttributeCode).append(
-                            '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                            '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
-                            '<span>' + self.i18n.alreadyMatched + '</span>' +
-                            '</span>'
-                        );
+                    if (!deleteButton.length) {
+                        if (addAfterWarning) {
+                            spanWarning.before(
+                                '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                                '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
+                                '<span>' + self.i18n.alreadyMatched + '</span>' +
+                                '</span>'
+                            );
+                        } else {
+                            $('div#extraFieldsInfo_' + selector.AttributeCode).append(
+                                '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                                '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
+                                '<span>' + self.i18n.alreadyMatched + '</span>' +
+                                '</span>'
+                            );
+                        }
                     }
                 } else {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).hide();
+                    $('div#extraFieldsInfo_' + selector.AttributeCode).children('*:not(.doNotHide)').hide();
                 }
 
                 matchDiv.css('display', 'inline-block').css('width', '40%');
@@ -325,27 +333,29 @@
             if(elem.val() === 'attribute_value') {
                 var attr_value = selector.CurrentValues.Values;
                 attributeListDiv.attr('style', 'background-color: #e9e9e9');
-                if(addAfterWarning) {
-                    spanWarning.before(
-                        '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                        '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
-                        '<span>' + self.i18n.alreadyMatched + '</span>' +
-                        '</span>'
-                    );
-                } else {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).append(
-                        '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                        '<button type="button" id="selector.CurrentValues.Code" class="ml-button mlbtn-action ml-delete-matching"value="' + elem.attr('id') + '">-</button>' +
-                        '<span>' + self.i18n.alreadyMatched + '</span>' +
-                        '</span>'
-                    );
+                if (!deleteButton.length) {
+                    if (addAfterWarning) {
+                        spanWarning.before(
+                            '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                            '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
+                            '<span>' + self.i18n.alreadyMatched + '</span>' +
+                            '</span>'
+                        );
+                    } else {
+                        $('div#extraFieldsInfo_' + selector.AttributeCode).append(
+                            '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                            '<button type="button" id="selector.CurrentValues.Code" class="ml-button mlbtn-action ml-delete-matching"value="' + elem.attr('id') + '">-</button>' +
+                            '<span>' + self.i18n.alreadyMatched + '</span>' +
+                            '</span>'
+                        );
+                    }
                 }
 
                 matchDiv.css('display', 'inline-block').css('width', '40%');
                 var style = selector.CurrentValues.Error ? ' style="border-color:red;"' : '';
 
-                if((typeof selector.CurrentValues.Code !== 'undefined') && (elem.val() !== selector.CurrentValues.Code)) {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).hide();
+                if ((typeof selector.CurrentValues.Code !== 'undefined') && (elem.val() !== selector.CurrentValues.Code)) {
+                    $('div#extraFieldsInfo_' + selector.AttributeCode).children('*:not(.doNotHide)').hide();
                 }
 
                 return matchDiv.append(
@@ -416,24 +426,26 @@
 
                     if(allMatched) {
                         attributeListDiv.attr('style', 'background-color: #e9e9e9');
-                        if(addAfterWarning) {
-                            spanWarning.before(
-                                '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                                '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
-                                '<span>' + self.i18n.alreadyMatched + '</span>' +
-                                '</span>'
-                            );
-                        } else {
-                            $('div#extraFieldsInfo_' + selector.AttributeCode).append(
-                                '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                                '<button type="button" id="selector.CurrentValues.Code" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
-                                '<span>' + self.i18n.alreadyMatched + '</span>' +
-                                '</span>'
-                            );
+                        if (!deleteButton.length) {
+                            if (addAfterWarning) {
+                                spanWarning.before(
+                                    '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                                    '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
+                                    '<span>' + self.i18n.alreadyMatched + '</span>' +
+                                    '</span>'
+                                );
+                            } else {
+                                $('div#extraFieldsInfo_' + selector.AttributeCode).append(
+                                    '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                                    '<button type="button" id="selector.CurrentValues.Code" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
+                                    '<span>' + self.i18n.alreadyMatched + '</span>' +
+                                    '</span>'
+                                );
+                            }
                         }
 
-                        if((typeof selector.CurrentValues.Code !== 'undefined') && (elem.val() !== selector.CurrentValues.Code)) {
-                            $('div#extraFieldsInfo_' + selector.AttributeCode).hide();
+                        if ((typeof selector.CurrentValues.Code !== 'undefined') && (elem.val() !== selector.CurrentValues.Code)) {
+                            $('div#extraFieldsInfo_' + selector.AttributeCode).children('*:not(.doNotHide)').hide();
                         }
                     }
 
@@ -543,6 +555,7 @@
                 values = self.options.shopVariations[elem.val()],
                 matchDiv = $('div#match_' + selector.id),
                 attributeListDiv = $('div#attributeList_' + selector.id),
+                deleteButton = $('#'+selector.AttributeCode+'_deleteMatching'),
                 mpValues = $.extend({}, selector.AllowedValues),
                 style = '',
                 removeFreeTextOption = true;
@@ -561,7 +574,16 @@
             attributeListDiv.removeAttr('style');
             matchDiv.removeAttr('style');
 
-            if(elem.find(":selected").attr('data-custom') == "true") {
+            if ($('#selRow_'+selector.id).hasClass('optionalAttribute')) {
+                var saveButton = $('div#extraFieldsInfo_' + selector.AttributeCode + ' button.ml-save-matching');
+                if (!saveButton.length) {
+                    $('div#extraFieldsInfo_' + selector.AttributeCode).prepend(
+                        '<button type="button" class="ml-button mlbtn-action ml-save-matching doNotHide" value="' + selector.AttributeCode + '">+</button>'
+                    );
+                }
+            }
+
+            if (elem.find(":selected").attr('data-custom') == "true") {
                 if (elem.val() === selector.CurrentValues.Code) {
                     attributeListDiv.attr('style', 'background-color: #e9e9e9');
 
@@ -571,27 +593,29 @@
                         addSpanDelete = false;
                     }
 
-                    if (addAfterWarning) {
-                        if (addSpanDelete) {
-                            spanWarning.before(
-                                '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                                '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
-                                '<span>' + self.i18n.alreadyMatched + '</span>' +
-                                '</span>'
-                            );
+                    if (!deleteButton.length) {
+                        if (addAfterWarning) {
+                            if (addSpanDelete) {
+                                spanWarning.before(
+                                    '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                                    '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
+                                    '<span>' + self.i18n.alreadyMatched + '</span>' +
+                                    '</span>'
+                                );
+                            } else {
+                                $('div#extraFieldsInfo_' + selector.AttributeCode).show();
+                            }
                         } else {
-                            $('div#extraFieldsInfo_' + selector.AttributeCode).show();
-                        }
-                    } else {
-                        if (addSpanDelete) {
-                            $('div#extraFieldsInfo_' + selector.AttributeCode).append(
-                                '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                                '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
-                                '<span>' + self.i18n.alreadyMatched + '</span>' +
-                                '</span>'
-                            );
-                        } else {
-                            $('div#extraFieldsInfo_' + selector.AttributeCode).show();
+                            if (addSpanDelete) {
+                                $('div#extraFieldsInfo_' + selector.AttributeCode).append(
+                                    '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                                    '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
+                                    '<span>' + self.i18n.alreadyMatched + '</span>' +
+                                    '</span>'
+                                );
+                            } else {
+                                $('div#extraFieldsInfo_' + selector.AttributeCode).show();
+                            }
                         }
                     }
                 } else {
@@ -667,6 +691,7 @@
 
         _buildMatchingTableBody: function(selector, elem, savePrepare) {
             var self = this;
+            var deleteButton = $('#'+selector.AttributeCode+'_deleteMatching');
 
             if(typeof selector.CurrentValues.Values !== 'undefined'
                 && (selector.CurrentValues.Values.length > 0 || Object.keys(selector.CurrentValues.Values).length > 0)
@@ -706,20 +731,22 @@
                 }
 
                 $('div#attributeList_' + selector.id).attr('style', 'background-color: #e9e9e9');
-                if(addAfterWarning) {
-                    spanWarning.before(
-                        '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                        '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
-                        '<span>' + self.i18n.alreadyMatched + '</span>' +
-                        '</span>'
-                    );
-                } else {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).append(
-                        '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                        '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
-                        '<span>' + self.i18n.alreadyMatched + '</span>' +
-                        '</span>'
-                    );
+                if (!deleteButton.length) {
+                    if (addAfterWarning) {
+                        spanWarning.before(
+                            '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                            '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
+                            '<span>' + self.i18n.alreadyMatched + '</span>' +
+                            '</span>'
+                        );
+                    } else {
+                        $('div#extraFieldsInfo_' + selector.AttributeCode).append(
+                            '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                            '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
+                            '<span>' + self.i18n.alreadyMatched + '</span>' +
+                            '</span>'
+                        );
+                    }
                 }
 
                 var tabType = self.elements.form.attr('action').split('view=')[1];
@@ -742,8 +769,8 @@
                     $('div#match_' + selector.AttributeCode).hide();
                 }
 
-                if((typeof selector.CurrentValues.Code !== 'undefined') && (elem.val() !== selector.CurrentValues.Code)) {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).hide();
+                if ((typeof selector.CurrentValues.Code !== 'undefined') && (elem.val() !== selector.CurrentValues.Code)) {
+                    $('div#extraFieldsInfo_' + selector.AttributeCode).children('*:not(.doNotHide)').hide();
                 }
 
                 return $(
@@ -809,7 +836,8 @@
         _buildShopVariationSelector: function(data) {
             var self = this,
                 kind = 'FreeText',
-                baseName = 'ml[match][ShopVariation][' + data.AttributeCode + ']';
+                baseName = 'ml[match][ShopVariation][' + data.AttributeCode + ']',
+                isSelectAndText = data.DataType === 'selectAndText';
 
             data.id = data.AttributeCode.replace(/[^A-Za-z0-9_]/g, '_'); // css selector-save.
             data.AttributeName = data.AttributeName || data.AttributeCode;
@@ -827,29 +855,20 @@
                 data.style = '';
             }
 
-            if(data.AllowedValues.length > 0 || Object.keys(data.AllowedValues).length > 0) {
-                kind = 'Matching';
-                variationsDropDown.children("option[data-custom='true']").attr('disabled', 'disabled');
-                variationsDropDown.children("option[value='freetext']").attr('disabled', 'disabled');
-                variationsDropDown.children("option[value='database_value']").attr('disabled', 'disabled');
-                variationsDropDown.children("option[value='attribute_value']").attr('disabled', null);
-            } else {
-                if(data.AttributeCode.substring(0, 20) === 'additional_attribute') {
-                    variationsDropDown.children("option[value='freetext']").attr('disabled', 'disabled');
-                    variationsDropDown.children("option[value='database_value']").attr('disabled', 'disabled');
-                } else {
-                    variationsDropDown.children("option[value='freetext']").attr('disabled', null);
-                    variationsDropDown.children("option[value='database_value']").attr('disabled', null);
-                }
-
-                variationsDropDown.children("option[value='attribute_value']").attr('disabled', 'disabled');
-                variationsDropDown.children("option[data-custom='true']").attr('disabled', null);
+            // If attribute is already matched add options
+            if (typeof data.CurrentValues.Values !== 'undefined'
+                && (data.CurrentValues.Values.length > 0 || Object.keys(data.CurrentValues.Values).length > 0)) {
+                self._addShopOptions(self, variationsDropDown, data, isSelectAndText);
             }
 
             if(data.Required == true) {
                 data.redDot = '<span class="bull">&bull;</span>';
             } else {
                 data.redDot = '';
+            }
+
+            if (data.AllowedValues.length > 0 || Object.keys(data.AllowedValues).length > 0) {
+                kind = 'Matching';
             }
 
             data.shopVariationsDropDown = $('<div>')
@@ -861,28 +880,101 @@
                 .html()
             ;
 
+            setTimeout(function() {
+                var selectElement = document.getElementById('sel_' + data.id);
+                selectElement.addEventListener('mousedown', function() {
+                    if (this.options.length === 1) {
+                        self._addShopOptions(self, this, data, isSelectAndText);
+                    }
+                });
+            }, 0);
+
             return data;
+        },
+
+        _addShopOptions: function(self, select, data, isSelectAndText) {
+            var optionsSelect = self._render(
+                '<option {Disabled} data-custom="{Custom}" value="{Code}">{Name}</option>',
+                self.options.shopVariations
+            );
+
+            $(select).append(optionsSelect);
+
+            if (data.CurrentValues.Error == true) {
+                $(select).attr('style', 'border-color:red');
+                data.style = 'style="color:red"';
+            } else {
+                data.style = '';
+            }
+
+            if (data.AllowedValues.length > 0 || Object.keys(data.AllowedValues).length > 0) {
+                if (isSelectAndText) {
+                    $(select).children("option[data-custom='true']").attr('disabled', null);
+                    $(select).children("option[value='freetext']").attr('disabled', null);
+                    $(select).children("option[value='database_value']").attr('disabled', null);
+                } else {
+                    $(select).children("option[data-custom='true']").attr('disabled', 'disabled');
+                    $(select).children("option[value='freetext']").attr('disabled', 'disabled');
+                    $(select).children("option[value='database_value']").attr('disabled', 'disabled');
+                }
+
+                $(select).children("option[value='attribute_value']").attr('disabled', null);
+            } else {
+                if (data.AttributeCode.substring(0, 20) === 'additional_attribute') {
+                    $(select).children("option[value='freetext']").attr(
+                        'disabled',
+                        isSelectAndText ? null : 'disabled'
+                    );
+                    $(select).children("option[value='database_value']").attr('disabled', 'disabled');
+                } else {
+                    $(select).children("option[value='freetext']").attr('disabled', null);
+                    $(select).children("option[value='database_value']").attr('disabled', null);
+                }
+
+                $(select).children("option[value='attribute_value']").attr('disabled', 'disabled');
+                $(select).children("option[data-custom='true']").attr('disabled', null);
+            }
         },
 
         _buildShopVariationSelectors: function(data, resetNotice, savePrepare) {
             var self = this,
                 colTemplate = self._getMatchingAttributeColumnTemplate(),
                 deletedAttrTemplate = self._getDeletedAttributeColumnTemplate(),
-                i,
+                attributeColumnEl = null,
+                attributesSelectorOptions = [{key: 'dont_use', value: self.i18n.pleaseSelect}],
+                isCategoryEmpty = true,
+                i, matchingInputEl,
                 attributes = data.Attributes;
 
             self.elements.matchingInput.html('');
+            self.elements.matchingOptionalInput.html('');
 
-            for(i in attributes) {
-                if(attributes.hasOwnProperty(i)) {
-                    if(attributes[i].Deleted) {
+            for (i in attributes) {
+                if (attributes.hasOwnProperty(i)) {
+                    isCategoryEmpty = false;
+                    if (attributes[i].Deleted) {
                         self.elements.matchingInput.append($(self._render(deletedAttrTemplate, [attributes[i]])))
                     } else {
                         attributes[i] = self._buildShopVariationSelector(attributes[i]);
-                        self.elements.matchingInput.append($(self._render(colTemplate, [attributes[i]])));
+
+                        matchingInputEl = self.elements.matchingInput;
+                        attributeColumnEl = $(self._render(colTemplate, [attributes[i]]));
+
+                        if (!attributes[i].Required) {
+                            matchingInputEl = self.elements.matchingOptionalInput;
+
+                            if (!attributes[i].CurrentValues.Code) {
+                                attributeColumnEl.hide();
+                                attributeColumnEl.addClass('optionalAttribute');
+                                attributesSelectorOptions.push({key: attributes[i].id, value: attributes[i].AttributeName});
+                            }
+                        }
+
+
+                        matchingInputEl.append(attributeColumnEl);
 
                         // add warning box if attribute changed on Marketplace
-                        if(attributes[i].ChangeDate && data.ModificationDate
+                        if (attributes[i].ChangeDate && data.ModificationDate
                             && new Date(data.ModificationDate) < new Date(attributes[i].ChangeDate)
                         ) {
                             $('div#extraFieldsInfo_' + attributes[i].id)
@@ -890,7 +982,7 @@
                         }
 
                         // add warning box if attribute is different from one matched in Variation matching tab
-                        if(attributes[i].Modified) {
+                        if (attributes[i].Modified) {
                             $('div#extraFieldsInfo_' + attributes[i].id)
                                 .append('<span id="' + attributes[i].id + '_warningMatching" class="ml-warning" title="' + self.i18n.attributeDifferentOnProduct + '">&nbsp;<span>');
                         }
@@ -899,7 +991,7 @@
             }
 
             self.elements.mainSelectElement.closest('.magnamain').find('.jsNoticeBox').remove();
-            if(data.DifferentProducts) {
+            if (data.DifferentProducts) {
                 var categoryName = self.elements.mainSelectElement.find('option:selected').html();
                 self.elements.mainSelectElement.closest('.magnamain')
                     .prepend('<p class="noticeBox jsNoticeBox">'
@@ -907,13 +999,13 @@
                         + '</p>');
             }
 
-            if(resetNotice) {
+            if (resetNotice) {
                 self.elements.mainSelectElement.closest('.magnamain').find('.notAllAttributeValuesMatched').remove();
             }
 
-            if(data.notice && data.notice.length) {
-                for(i = 0; i < data.notice.length; i++) {
-                    if(data.notice.hasOwnProperty(i)) {
+            if (data.notice && data.notice.length) {
+                for (i = 0; i < data.notice.length; i++) {
+                    if (data.notice.hasOwnProperty(i)) {
                         self.elements.mainSelectElement.closest('.magnamain')
                             .prepend('<p class="noticeBox notAllAttributeValuesMatched">'
                                 + data.notice[i]
@@ -924,29 +1016,126 @@
 
             data.Attributes = attributes;
 
-            if(!attributes) {
+            if (isCategoryEmpty) {
                 self.elements.matchingInput.append('<tr><th></th><td class="input">'
                     + self.i18n.categoryWithoutAttributesInfo
                     + '</td><td class="info"></td></tr>');
+                self.elements.matchingOptionalHeadline.css('display', 'none');
+                self.elements.matchingOptionalInput.css('display', 'none');
+            }
+
+            if (!$.trim(self.elements.matchingInput.html())) {
+                self.elements.matchingHeadline.css('display', 'none');
+                self.elements.matchingInput.css('display', 'none');
+            }
+
+            if (!$.trim(self.elements.matchingOptionalInput.html())) {
+                self.elements.matchingOptionalHeadline.css('display', 'none');
+                self.elements.matchingOptionalInput.css('display', 'none');
+            } else {
+                self.elements.matchingOptionalInput.append($([
+                    '<tr id="selRow_dont_use">',
+                        '<th></th>',
+                        '<td id="selCell_dont_use">',
+                            '<div id="attributeList_dont_use"></div>',
+                            '<div id="match_dont_use"></div>',
+                        '</td>',
+                        '<td class="info"></td>',
+                    '</tr>'
+                ].join('')));
             }
 
             self.elements.matchingInput.append('<tr class="spacer"><td colspan="3">&nbsp;</td></tr>');
-            self.elements.matchingInput.find('select[id^=sel_]').each(function() {
+            self.elements.matchingOptionalInput.append('<tr class="spacer"><td colspan="3">&nbsp;</td></tr>');
+
+            function addShopVariationSelectorChangeListener() {
                 var previous;
-                $(this).on('focus', function() {
+                $(this).on('focus', function () {
                     previous = $(this).val();
-                }).change(function() {
+                }).change(function () {
                     self._handleAttributeSelectorChange(this, data, previous, savePrepare);
                 });
-            });
+            }
 
-            for(i in attributes) {
-                if(attributes.hasOwnProperty(i)) {
-                    if(typeof attributes[i].CurrentValues.Code !== 'undefined') {
+            self.elements.matchingInput.find('select[id^=sel_]').each(addShopVariationSelectorChangeListener);
+            self.elements.matchingOptionalInput.find('select[id^=sel_]').each(addShopVariationSelectorChangeListener);
+
+            for (i in attributes) {
+                if (attributes.hasOwnProperty(i)) {
+                    if (typeof attributes[i].CurrentValues.Code !== 'undefined') {
                         self.elements.matchingInput.find('select[id=sel_' + attributes[i].id + ']').val(attributes[i].CurrentValues.Code).trigger('change');
+                        self.elements.matchingOptionalInput.find('select[id=sel_' + attributes[i].id + ']').val(attributes[i].CurrentValues.Code).trigger('change');
                     }
                 }
             }
+
+            self._attachAttributeSelector(attributesSelectorOptions, addShopVariationSelectorChangeListener);
+        },
+
+        _attachAttributeSelector: function(attributesSelectorOptions, addShopVariationSelectorChangeListener) {
+            var self = this,
+                currentlySelectedAttribute,
+                attributesSelectorEl = $([
+                    '<select name="optional_selector" style="width: 100%">',
+                        self._render('<option value="{key}">{value}</option>', attributesSelectorOptions),
+                    '</select>'
+                ].join(''));
+
+            function showConfirmationDialog(attributeIdToShow) {
+                var d = self.i18n.resetInfo;
+                $('<div class="ml-modal dialog2" title="' + self.i18n.note + '"></div>').html(d).jDialog({
+                    width: (d.length > 1000) ? '700px' : '500px',
+                    buttons: {
+                        Cancel: {
+                            'text': self.i18n.buttonCancel,
+                            click: function() {
+                                // Reset attribute selector to previous value silently
+                                attributesSelectorEl.val(currentlySelectedAttribute);
+                                $(this).dialog('close');
+                            }
+                        },
+                        Ok: {
+                            'text': self.i18n.buttonOk,
+                            click: function() {
+                                $('#sel_' + currentlySelectedAttribute).val('');
+                                self._saveMatching(true, function() {
+                                    self.elements.matchingOptionalInput.find('select[name="optional_selector"]').val(attributeIdToShow).change();//trigger('change', [attributeIdToShow]);
+                                });
+
+                                $(this).dialog('close');
+                            }
+                        }
+                    }
+                });
+            }
+
+            function changeCurrentAttribute(attributeIdToShow) {
+                self.elements.matchingOptionalInput.find('.optionalAttribute').hide();
+
+                currentlySelectedAttribute = attributeIdToShow;
+
+                var attributeRowEl = self.elements.matchingOptionalInput.find('#selRow_' + currentlySelectedAttribute);
+
+                attributeRowEl.children('th').html('').append(attributesSelectorEl);
+                attributeRowEl.remove().show().insertBefore(self.elements.matchingOptionalInput.find('.spacer').last());
+                attributeRowEl.find('#sel_' + currentlySelectedAttribute).each(addShopVariationSelectorChangeListener).change();
+
+                attributesSelectorEl.change(attributeSelectorOnChange);
+            }
+
+            function attributeSelectorOnChange() {
+                if (currentlySelectedAttribute) {
+                    var attributeValue = $('#sel_' + currentlySelectedAttribute).val();
+                    if (attributeValue != null && attributeValue !== '' &&  attributeValue != 'null') {
+                        showConfirmationDialog($(this).val());
+                        return;
+                    }
+                }
+
+                changeCurrentAttribute($(this).val());
+            }
+
+            attributesSelectorEl.change(attributeSelectorOnChange).change();
         },
 
         _handleAttributeSelectorChange: function(selectElement, data, lastSelection, savePrepare) {
@@ -999,8 +1188,9 @@
             var self = this;
 
             self._resetMPVariation();
-            if(val === 'null') {
+            if (val === 'null') {
                 self.elements.matchingInput.html(self.html.valuesBackup);
+                self.elements.matchingOptionalInput.html(self.html.valuesOptionalBackup);
                 return;
             }
 
@@ -1012,7 +1202,7 @@
             });
         },
 
-        _saveMatching: function(savePrepare) {
+        _saveMatching: function(savePrepare, callback) {
             var self = this;
             if(!self.saveInProgress) {
                 self.saveInProgress = true;
@@ -1022,6 +1212,9 @@
                 }, function(data) {
                     self._buildShopVariationSelectors(data, true, savePrepare);
                     self.saveInProgress = false;
+                    if ($.isFunction(callback)) {
+                        callback.call(self);
+                    }
                 });
             }
         },

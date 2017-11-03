@@ -91,6 +91,11 @@ class IdealoPrepareView extends MagnaCompatibleBase {
             is_array($dbOldSelection) ? $dbOldSelection : array(),
             is_array($dbNewSelection) ? $dbNewSelection : array()
         );
+        foreach ($dbSelection as &$dbSelectionRow) {
+            $aPaymentMethods = json_decode($dbSelectionRow['PaymentMethod'], true);
+            $dbSelectionRow['PaymentMethod'] = is_array($aPaymentMethods) ? $aPaymentMethods : (array)$dbSelectionRow['PaymentMethod'];
+        }
+        unset($dbSelectionRow);
         if (false) { # DEBUG
             echo '<span id="shMlDebug">X</span>';
             echo '<div id="mlDebug">';
@@ -115,8 +120,6 @@ class IdealoPrepareView extends MagnaCompatibleBase {
             ob_end_clean();
             echo $content;
         }
-
-        #echo print_m($dbSelection, __METHOD__);
         return $dbSelection;
     }
 
@@ -360,15 +363,21 @@ class IdealoPrepareView extends MagnaCompatibleBase {
                 </th>
                 <td class="input">
                     <?php
-                    $paymentMethodsSelect = '<select id="PaymentMethod" name="PaymentMethod">'
-                        . '<option value="noselection">' . ML_AMAZON_LABEL_APPLY_PLEASE_SELECT . '</option>' . "\n";
-
-                    foreach ($paymentMethods as $key => $paymentMethod) {
-                        $paymentMethodsSelect .= '<option value="'.$key.'"'.(
-                        ($preSelected['PaymentMethod'] == $key)
-                        ? ' selected="selected"'
-                        : ''
-                        ).'>'.$paymentMethod.'</option>'."\n";
+                    $paymentMethodsSelect = '<select id="PaymentMethod" name="PaymentMethod[]" multiple="multiple" size="12">';
+                    foreach ($paymentMethods as $label => $paymentMethodGroup) {
+                        $paymentMethodsSelect .= '<optgroup label="'.$label.'">';
+                        foreach ($paymentMethodGroup as $key => $paymentMethod) {
+                            $paymentMethodsSelect .= '<option value="'.$key.'"'.(
+                            (
+                                    (is_array($preSelected['PaymentMethod']) && in_array($key, $preSelected['PaymentMethod']))
+                                    ||
+                                    ($preSelected['PaymentMethod'] == $key)
+                            )
+                            ? ' selected="selected"'
+                            : ''
+                            ).'>'.$paymentMethod.'</option>'."\n";
+                        }
+                        $paymentMethodsSelect .= '</optgroup>';
                     }
 
                     echo $paymentMethodsSelect;
@@ -520,17 +529,7 @@ class IdealoPrepareView extends MagnaCompatibleBase {
     }
 
     private function getPaymentMethods() {
-        try {
-            $result = MagnaConnector::gi()->submitRequest(array(
-                'SUBSYSTEM' => 'ComparisonShopping',
-                'ACTION' => 'GetPaymentMethods',
-            ));
-
-            if (isset($result['DATA'])) {
-                return $result['DATA'];
-            }
-        } catch (MagnaException $e) {
-        }
+        return json_decode(ML_IDEALO_PAYMENTMETHOD_OPTION_GROUPS, true);
     }
 
     private function getShippingMethods() {

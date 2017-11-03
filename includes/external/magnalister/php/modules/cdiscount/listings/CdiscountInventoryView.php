@@ -81,7 +81,11 @@ class CdiscountInventoryView extends MagnaCompatibleInventoryView {
 			return '<td>&mdash</td>';
 		}
 
-		return '<td><a href="http://www.cdiscount.com/item/search/?search_value='.$item['EAN'].'" target="_blank">'.$item['EAN'].'</a></td>';
+		if (empty($item['CdiscountSKU'])) {
+			return '<td>' . $item['EAN'] . '</td>';
+		} else {
+			return '<td><a href="http://www.cdiscount.com/search/' . $item['CdiscountSKU'] . ' . html" target="_blank">' . $item['EAN'] . '</a></td>';
+		}
 	}
 
 	protected function getQuantities($item)

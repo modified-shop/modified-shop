@@ -166,7 +166,7 @@ class IdealoProductPrepareSaver {
 			} else {
 				$set['Checkout'] = json_encode(array('val' => false));
 			}
-
+			$set['PaymentMethod'] = json_encode((array)$set['PaymentMethod']);
 			MagnaDB::gi()->insert(TABLE_MAGNA_IDEALO_PROPERTIES, $set, true);
 		}
 		

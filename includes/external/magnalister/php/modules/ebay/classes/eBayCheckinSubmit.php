@@ -146,14 +146,14 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		$imagePath = getDBConfigValue('ebay.imagepath',$this->_magnasession['mpID']);
 		if($blPicturePack && is_array($aPictureUrls)){
 			foreach ($aPictureUrls as &$image) {
-				$image = str_replace(array(' ','&'),array('%20','%26'), trim($imagePath.$image));
+				$image = trim($imagePath.ebayEncodeImageUrl($image));
 			}
 			$value = $aPictureUrls;
 		} else {
 			if(is_array($aPictureUrls)){
 				$value = $imagePath.current($aPictureUrls);
 			}
-			$value = str_replace(array(' ','&'),array('%20','%26'), trim($value));
+			$value = ebayEncodeImageUrl(trim($value));
 		}
 		return $value;
 	}
@@ -285,10 +285,6 @@ class eBayCheckinSubmit extends CheckinSubmit {
 					}
 					case 'json' : {
 						$value = json_decode(fixBrokenJsonUmlauts($value), true);
-						break;
-					}
-					case 'picture' : {
-						$value = str_replace(array(' ','&'),array('%20','%26'), trim($value));
 						break;
 					}
 					case 'bool' : {
@@ -423,9 +419,8 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		}
 
 		// StrikePrice: nur nach Konfig
-		// "nicht verwenden": Kundenruppe = -1
-		if (getDBConfigValue('ebay.strike.price.group', $this->_magnasession['mpID'], -1) > -1) {
-			$sStrikePriceKind = getDBConfigValue('ebay.strike.price.kind', $this->_magnasession['mpID'], 'OldPrice');
+		if (    getDBConfigValue(array('ebay.strike.price.active', 'val'), $this->_magnasession['mpID'], false)
+		     && (($sStrikePriceKind = getDBConfigValue('ebay.strike.price.kind', $this->_magnasession['mpID'], 'DontUse')) != 'DontUse')) {
 			$data['submit']["$sStrikePriceKind"] = makePrice($pID, 'StrikePrice');
 
 		// strike prices for Variations (MLProducts only sets Price['strike']
@@ -546,9 +541,9 @@ class eBayCheckinSubmit extends CheckinSubmit {
 							'#ARTNR#' => $product['ProductsModel'],
 							'#PID#' => $pID,
 							'#SKU#' => $data['submit']['SKU'],
-							'#SHORTDESCRIPTION#' => html_entity_decode(fixHTMLUTF8Entities($product['ShortDescription'])),
+							'#SHORTDESCRIPTION#' => html_entity_decode(fixHTMLUTF8Entities($product['ShortDescription']), null, iconv_get_encoding('output_encoding')),
 							'#WEIGHT#' => $sWeight,
-							'#DESCRIPTION#' => html_entity_decode(fixHTMLUTF8Entities($product['Description'])),
+							'#DESCRIPTION#' => html_entity_decode(fixHTMLUTF8Entities($product['Description']), null, iconv_get_encoding('output_encoding')),
 							'#PICTURE1#' => is_array($propertiesRow['PictureURL']) ? current($propertiesRow['PictureURL']) : $propertiesRow['PictureURL'],
 							'#PRICE#' => $this->simpleprice->setPrice($data['submit']['Price'])->formatWOCurrency(),
 							'#VPE#' => $formatted_vpe,
@@ -830,6 +825,9 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		$data['submit'] = array_merge($data['submit'], $aListingDetails);
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	protected function appendAdditionalDataOld($pID, $product, &$data) {
 		$propertiesRow = MagnaDB::gi()->fetchRow('SELECT * FROM '.TABLE_MAGNA_EBAY_PROPERTIES
 				.' WHERE '

@@ -45,7 +45,7 @@ if (!empty($form['price']['fields']['whichprice'])) {
 	unset($form['price']['fields']['whichprice']);
 }
 
-$form['checkin']['fields']['imagepath']['default'] =
+$form['shop']['fields']['imagepath']['default'] =
 	defined('DIR_WS_CATALOG_POPUP_IMAGES')	? HTTP_CATALOG_SERVER.DIR_WS_CATALOG_POPUP_IMAGES
 		: HTTP_CATALOG_SERVER.DIR_WS_CATALOG_IMAGES;
 
@@ -54,8 +54,8 @@ mlGetOrderStatus($form['orders']['fields']['openstatus']);
 mlGetOrderStatus($form['orderSyncState']['fields']['shippedstatus']);
 mlGetOrderStatus($form['orderSyncState']['fields']['cancelstatus']);
 
-$cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_idealo');
-$cG->setRenderTabIdent(true);
+//$cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_idealo');
+//$cG->setRenderTabIdent(true);
 
 try {
 	$result = MagnaConnector::gi()->submitRequest(array(
@@ -63,17 +63,69 @@ try {
 		'ACTION' => 'GetCSInfo',
 	));
 	if ($result['DATA']['HasUpload'] == 'no') {
-		$cG->setTopHTML('
-			<h3>'.ML_COMPARISON_SHOPPING_LABEL_PATH_TO_CSV_TABLE.'</h3>
-			<input type="text" class="fullwidth" value="'.(
-				!empty($result['DATA']['CSVPath']) 
-					? $result['DATA']['CSVPath'] 
-					: ML_COMPARISON_SHOPPING_TEXT_NO_CSV_TABLE_YET
-			).'" /><br/><br/>
-		');
+//		$cG->setTopHTML('
+//			<h3>'.ML_COMPARISON_SHOPPING_LABEL_PATH_TO_CSV_TABLE.'</h3>
+//			<input type="text" class="fullwidth" value="'.(
+//				!empty($result['DATA']['CSVPath']) 
+//					? $result['DATA']['CSVPath'] 
+//					: ML_COMPARISON_SHOPPING_TEXT_NO_CSV_TABLE_YET
+//			).'" /><br/><br/>
+//		');
+        $form['account']['fields']['csvpath'] = array(
+            'label' => ML_COMPARISON_SHOPPING_LABEL_PATH_TO_CSV_TABLE,
+            'type' => 'text',
+            'default' => empty($result['DATA']['CSVPath']) 
+                ? ML_COMPARISON_SHOPPING_TEXT_NO_CSV_TABLE_YET
+                : $result['DATA']['CSVPath']
+            ,
+            'key' => 'idealo.csvpath',
+            'parameters' => array(
+                'readonly' => 'readonly'
+            ),
+        );
+        unset($_POST['conf']['idealo.csvpath']);
+        unset($magnaConfig['db'][$_MagnaSession['mpID']]['idealo.csvpath']);
 	}
 } catch (MagnaException $e) {
 }
+$cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_idealo');
+$cG->setRenderTabIdent(true);
+
+
+ob_start();
+?>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    (function($) {
+        $(document).ready(function() {
+            var formElement = $('#conf_idealo');
+            var dialog = $('<div style="display:none" title="<?php echo ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_TITLE; ?>"><?php echo ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_CONTENT; ?></div>');
+            var tokenElement = formElement.find('[name="conf[idealo.checkout.token]"]');
+            var activateDirectInput = formElement.find('[name="conf[idealo.checkout.status][val]"][value="true"]');
+            var activateDirectSubElements = formElement.find('[data-direct="true"]');
+            $('<div class="ml-disable-panel" style="position:absolute; left:0; right:0; top:0; bottom:0; display: none; background: white; opacity:.6;"></div>')
+                .appendTo(activateDirectSubElements.closest('td.input'))
+                .on('click', function() {
+                    dialog.jDialog();
+                })
+            ;
+            activateDirectSubElements.closest('td.input').wrapInner('<div style="display:inline-block; position:relative;"></div>');
+            var disableElement = function(element, disable) {
+                element.next('.ml-disable-panel').css('display', disable ? "inherit" : "none");
+            }
+            activateDirectInput.change(function() {
+                    disableElement(activateDirectSubElements, !activateDirectInput.prop("checked") || activateDirectInput.prop("disabled"));
+            });
+            tokenElement.change(function() {
+                disableElement(activateDirectInput, tokenElement.val() === '');
+                activateDirectInput.trigger("change");
+            }).trigger('change');
+        });
+    })(jQuery);
+    /*]]>*/
+</script>
+<?php
+$cG->setTopHTML(ob_get_clean());
 
 $errorMessage = '';
 
@@ -94,33 +146,38 @@ if(isset($_POST['conf'])){
 $cG->processPOST();
 
 try {
-	$result = MagnaConnector::gi()->submitRequest(array(
-		'SUBSYSTEM' => 'ComparisonShopping',
-		'ACTION' => 'GetShippingMethods',
-	));
-
-	if (isset($result['DATA'])) {
-		$form['prepare']['fields']['shippingmethods']['values'] = $result['DATA'];
-	} else {
-		$form['prepare']['fields']['shippingmethods']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
-	}
+//	$result = MagnaConnector::gi()->submitRequest(array(
+//		'SUBSYSTEM' => 'ComparisonShopping',
+//		'ACTION' => 'GetShippingMethods',
+//	));
+//
+//	if (isset($result['DATA'])) {
+//		$form['prepare']['fields']['shippingmethods']['values'] = $result['DATA'];
+//	} else {
+//		$form['prepare']['fields']['shippingmethods']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
+//	}
+    $aResponse = MagnaConnector::gi()->submitRequest(array('ACTION' => 'IsAuthed', 'disableCache' => uniqid()));
+    $blDirectBuy = array_key_exists('STATUS', $aResponse) && $aResponse['STATUS'] === 'SUCCESS';
 } catch (MagnaException $e) {
-	$form['prepare']['fields']['shippingmethods']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
+//	$form['prepare']['fields']['shippingmethods']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
+    $blDirectBuy = false;
 }
 
-try {
-	$result = MagnaConnector::gi()->submitRequest(array(
-		'SUBSYSTEM' => 'ComparisonShopping',
-		'ACTION' => 'GetPaymentMethods',
-	));
-
-	if (isset($result['DATA'])) {
-		$form['prepare']['fields']['paymentmethods']['values'] = $result['DATA'];
-	} else {
-		$form['prepare']['fields']['paymentmethods']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
-	}
-} catch (MagnaException $e) {
-	$form['prepare']['fields']['paymentmethods']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
+//try {
+//	$result = MagnaConnector::gi()->submitRequest(array(
+//		'SUBSYSTEM' => 'ComparisonShopping',
+//		'ACTION' => 'GetPaymentMethods',
+//	));
+//
+//	if (isset($result['DATA'])) {
+//		$form['prepare']['fields']['paymentmethods']['values'] = $result['DATA'];
+//	} else {
+//		$form['prepare']['fields']['paymentmethods']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
+//	}
+//} catch (MagnaException $e) {
+//	$form['prepare']['fields']['paymentmethods']['values'] = array('noselection' => ML_IDEALO_METHODS_NOT_AVAILABLE);
+if (!$blDirectBuy) {
+    $form['account']['fields']['checkoutcredentials']['parameters'] =  array('style' => 'border: 1px solid red;');
 }
 
 try {

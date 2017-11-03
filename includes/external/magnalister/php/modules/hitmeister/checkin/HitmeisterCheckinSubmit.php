@@ -414,6 +414,28 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 						}
 						break;
 					}
+					case 'database_value': {
+						if (
+							array_key_exists('Values', $aCatAttribute)
+							&& array_key_exists('Table', $aCatAttribute['Values']) && MagnaDB::gi()->tableExists($aCatAttribute['Values']['Table'])
+							&& array_key_exists('Column', $aCatAttribute['Values']) && MagnaDB::gi()->columnExistsInTable($aCatAttribute['Values']['Column'], $aCatAttribute['Values']['Table'])
+						) {
+							$sAlias = array_key_exists('Alias', $aCatAttribute['Values']) && !empty($aCatAttribute['Values']['Alias'])
+								? $aCatAttribute['Values']['Alias']
+								: 'products_id'
+							;
+							
+							if (MagnaDB::gi()->columnExistsInTable($sAlias, $aCatAttribute['Values']['Table'])) {
+								$fixCatAttributes[$key] = MagnaDB::gi()->fetchOne(eecho('
+									SELECT `'.$aCatAttribute['Values']['Column'].'`
+									  FROM `'.$aCatAttribute['Values']['Table'].'`
+									 WHERE `'.$sAlias.'`=\''.MagnaDB::gi()->escape($product['ProductId']).'\'
+									 LIMIT 1
+								', false));
+							}
+						}
+						break;
+					}
 					default:
 						break;
 				}
@@ -493,6 +515,28 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 								$fixCatAttributes[$key] = $variationDB['BasePrice']['Value'].$variationDB['BasePrice']['Unit'];
 							} else {
 								$fixCatAttributes[$key] = $product['BasePrice']['Value'].$product['BasePrice']['Unit'];
+							}
+						}
+						break;
+					}
+					case 'database_value': {
+						if (
+							array_key_exists('Values', $aCatAttribute)
+							&& array_key_exists('Table', $aCatAttribute['Values']) && MagnaDB::gi()->tableExists($aCatAttribute['Values']['Table'])
+							&& array_key_exists('Column', $aCatAttribute['Values']) && MagnaDB::gi()->columnExistsInTable($aCatAttribute['Values']['Column'], $aCatAttribute['Values']['Table'])
+						) {
+							$sAlias = array_key_exists('Alias', $aCatAttribute['Values']) && !empty($aCatAttribute['Values']['Alias'])
+								? $aCatAttribute['Values']['Alias']
+								: 'products_id'
+							;
+							
+							if (MagnaDB::gi()->columnExistsInTable($sAlias, $aCatAttribute['Values']['Table'])) {
+								$fixCatAttributes[$key] = MagnaDB::gi()->fetchOne(eecho('
+									SELECT `'.$aCatAttribute['Values']['Column'].'`
+									  FROM `'.$aCatAttribute['Values']['Table'].'`
+									 WHERE `'.$sAlias.'`=\''.MagnaDB::gi()->escape($product['ProductId']).'\'
+									 LIMIT 1
+								', false));
 							}
 						}
 						break;

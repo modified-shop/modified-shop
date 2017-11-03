@@ -7,11 +7,15 @@ $(document).ready(function() {
             customVariationHeaderContainer: '#tbodyVariationConfigurationSelector',
             newCustomGroupContainer: '#newCustomGroup',
             mainSelectElement: '#PrimaryCategory',
+            customIdentifierSelectElement: '#CustomIdentifier',
             matchingHeadline: '#tbodyDynamicMatchingHeadline',
             matchingCustomHeadline: '#tbodyDynamicMatchingCustomHeadline',
+            matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
             matchingInput: '#tbodyDynamicMatchingInput',
             matchingCustomInput: '#tbodyDynamicMatchingCustomInput',
-            categoryInfo: '#categoryInfo'
+            matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
+            categoryInfo: '#categoryInfo',
+            customIdentifierWrapper: '#mpCustomIdentifierSelector'
         },
         shopVariations: ml_vm_config.shopVariations
     };
@@ -34,9 +38,13 @@ $(document).ready(function() {
                 customVariationHeaderContainer: '#tbodyVariationConfigurationSelector',
                 newCustomGroupContainer: '#newCustomGroup',
                 mainSelectElement: '#maincat',
+                customIdentifierSelectElement: '#subcat',
                 matchingHeadline: '#tbodyDynamicMatchingHeadline',
+                matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
                 matchingInput: '#tbodyDynamicMatchingInput',
-                categoryInfo: '#categoryInfo'
+                matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
+                categoryInfo: '#categoryInfo',
+                customIdentifierWrapper: '#subCategory'
             },
             shopVariations: ml_vm_config.shopVariations
         });

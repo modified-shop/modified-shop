@@ -190,7 +190,9 @@ class MeinpaketCheckinSubmit extends CheckinSubmit {
 		// Use multi dimensional variations
 		MLProduct::gi()->useMultiDimensionalVariations(true);
 		MLProduct::gi()->setOptions(array(
+			'sameVariationsToAttributes' => false,
 			'purgeVariations' => true,
+			'useGambioProperties' => (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties'),
 		));
 		
 		// Set Price and Quantity settings
@@ -229,12 +231,28 @@ class MeinpaketCheckinSubmit extends CheckinSubmit {
 			
 			// translate free text matching
 			if ($varConfig[$newkey]['Kind'] == 'FreeText') {
-				$trans = MagnaDB::gi()->fetchArray('
-				    SELECT DISTINCT products_options_values_id AS Id, products_options_values_name As Name
-				      FROM '.TABLE_PRODUCTS_OPTIONS_VALUES.'
-				     WHERE language_id = "'.$this->settings['language'].'"
-				           AND products_options_values_id IN ("'.implode('", "', $varConfig[$newkey]['Values']).'")
-				');
+				switch (getDBConfigValue('general.options', '0')) {
+				case ('gambioProperties'):
+					$trans = MagnaDB::gi()->fetchArray(eecho('
+					    SELECT pov.properties_values_id Id, pov.values_name AS Name
+					      FROM ' . TABLE_MAGNA_PROPERTIES_DESCRIPTION_VALUES . ' pov
+					    INNER JOIN ' . TABLE_MAGNA_PROPERTIES_VALUES . ' ov2po ON
+					      ov2po.properties_values_id = pov.properties_values_id
+					      AND ov2po.properties_values_id IN ("'.implode('", "', $varConfig[$newkey]['Values']).'")
+					      WHERE pov.language_id = "' . $this->settings['language'] . '"
+					      ORDER BY pov.values_name ASC
+					', false));
+					break;
+				case ('old'):
+				default:
+					$trans = MagnaDB::gi()->fetchArray('
+					    SELECT DISTINCT products_options_values_id AS Id, products_options_values_name As Name
+					      FROM '.TABLE_PRODUCTS_OPTIONS_VALUES.'
+					     WHERE language_id = "'.$this->settings['language'].'"
+					           AND products_options_values_id IN ("'.implode('", "', $varConfig[$newkey]['Values']).'")
+					');
+					break;
+				}
 				if (!empty($trans)) {
 					foreach ($trans as $row) {
 						$varConfig[$newkey]['Values'][$row['Id']] = ($varConfig[$newkey]['Values'][$row['Id']] == 'null')
@@ -390,14 +408,12 @@ $varConfig :: Array
 			return false;
 		}
 		
-		#echo print_m($varConfig, '$varConfig');
-		#echo print_m($data['submit'], 'Submit');
 		
 		return true;
 	}
 	
 	protected function appendAdditionalData($pID, $product, &$data) {
-		$propertiesRow = MagnaDB::gi()->fetchRow(eecho('
+		$propertiesRow = MagnaDB::gi()->fetchRow('
 			SELECT *
 			  FROM ' . TABLE_MAGNA_MEINPAKET_PROPERTIES . '
 			 WHERE ' . ((getDBConfigValue('general.keytype', '0') == 'artNr') 
@@ -405,8 +421,7 @@ $varConfig :: Array
 						: 'products_id="' . $pID . '"'
 					) . ' 
 			       AND mpID = ' . $this->_magnasession['mpID']
-		));
-		#echo print_m($propertiesRow, '$propertiesRow');
+		);
 		
 		// Will not happen in sumbit cycle but can happen in loadProductByPId.
 		if (empty($propertiesRow)) {

@@ -128,6 +128,11 @@ class HoodImportOrders extends MagnaCompatibleImportOrders {
 				if (in_array('billsafe_3_installment.php', $paymentModules))
 					$class = 'billsafe_3_installment';
 			
+			} else if (stripos($paymentMethod, 'Amazon') !== false) {
+				# Amazon Pay
+				if (in_array('amazonadvpay.php', $paymentModules))
+					$class = 'amazonadvpay';
+			
 			} else if (stripos($paymentMethod, 'Bezahlung per Nachnahme') !== false) {
 				# Nachnahme
 				if (in_array('cod.php', $paymentModules))
@@ -141,9 +146,9 @@ class HoodImportOrders extends MagnaCompatibleImportOrders {
 					$class = 'uos_vorkasse_modul';
 				
 			} else if (stripos($paymentMethod, 'Kauf auf Rechnung') !== false) {
-				# Nachnahme
-				if (in_array('cod.php', $paymentModules))
-					$class = 'cod';
+				# Rechnung
+				if (in_array('invoice.php', $paymentModules))
+					$class = 'invoice';
 				
 			}
 			return $class;

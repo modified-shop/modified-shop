@@ -237,19 +237,35 @@ class PriceministerPrepare extends MagnaCompatibleBase {
             }
 
             if ($_POST['request'] === 'AdvertAttrForCategory'){
+                $mpAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
+                $mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
+
                 $html = '
 <table id="variationMatcher" class="attributesTable">
    <input type="hidden" name="PrimaryCategory" id="PrimaryCategory"/> 
    <tbody id="tbodyDynamicMatchingHeadline" style="display:none;">
 	    <tr class="headline">
-		    <td colspan="1"><h4>Priceminister Attribut</h4></td>
+		    <td colspan="1"><h4>'.$mpAttributeTitle.'</h4></td>
 		    <td colspan="2"><h4>Mein Web-Shop Attribut</h4></td>
 	    </tr>
 	</tbody>
 	<tbody id="tbodyDynamicMatchingInput" style="display:none;">
 		<tr>
 			<th></th>
-			<td class="input">Bitte w&auml;hlen sie eine Variantengruppe.</td>
+			<td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+			<td class="info"></td>
+		</tr>
+	</tbody>
+	<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
+	    <tr class="headline">
+		    <td colspan="1"><h4>'.$mpOptionalAttributeTitle.'</h4></td>
+		    <td colspan="2"><h4>Mein Web-Shop Attribut</h4></td>
+	    </tr>
+	</tbody>
+	<tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
+		<tr>
+			<th></th>
+			<td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
 			<td class="info"></td>
 		</tr>
 	</tbody>

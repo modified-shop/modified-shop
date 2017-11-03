@@ -134,7 +134,7 @@ function eBayGetSelection() {
 		++$rowCount;
 		// Filter JNH Tab
 		$current_row['description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $current_row['description']);
-		$product_images = MLProduct::gi()->getAllImagesByProductsId($current_row['products_id']);
+		$product_images = array_unique(MLProduct::gi()->getAllImagesByProductsId($current_row['products_id']));
 		if(empty($current_row['PictureURL'])){//if product images was reset
 			$aPictureUrls = $product_images;
 		} else {
@@ -302,6 +302,10 @@ if (array_key_exists('savePrepareData', $_POST)) {
 	if (1 == count($pIDs)) {
 		SaveEBaySingleProductProperties($pIDs[0], $itemDetails);
 	} else if (!empty($pIDs)) {
+		/* hack für den Fall dass die Verarbeitung wg großer Datenmenge abbricht */
+		if (0 != getDBConfigValue('ebay.maxPreparationsToSaveAtOnce', 0, 0)) {
+			$pIDs = array_slice($pIDs, 0, getDBConfigValue('ebay.maxPreparationsToSaveAtOnce', 0, 0));
+		}
 		SaveEBayMultipleProductProperties($pIDs, $itemDetails);
 	}
 	require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/eBayCheckinSubmit.php');

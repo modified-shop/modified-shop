@@ -312,7 +312,11 @@ class PriceministerHelper extends AttributesMatchingHelper
             }
         }
 
-        $this->addAdditionalAttributesMP($attributes, $dbData);
+        $numberOfAdditionalAttributes = $this->getNumberOfMaxAdditionalAttributes();
+
+        if ($numberOfAdditionalAttributes > 0 || $numberOfAdditionalAttributes === -1) {
+            $this->addAdditionalAttributesMP($attributes, $dbData);
+        }
 
         $hasDifferentlyPreparedProducts = false;
         if (!$usedGlobal && !empty($globalMatching)){
@@ -356,7 +360,7 @@ class PriceministerHelper extends AttributesMatchingHelper
                     FROM ' . $tableName . '
                     WHERE MpId = ' . $this->mpId . '
                         AND MpIdentifier = "' . $category . '"
-                ', false), true),
+                ', false)),
                 'DifferentProducts' => $hasDifferentlyPreparedProducts,
                 'Subcategories' => $subs
             );
@@ -367,22 +371,25 @@ class PriceministerHelper extends AttributesMatchingHelper
 
     /**
      * Truncates HTML text without breaking HTML structure.
+     * Source: https://dodona.wordpress.com/2009/04/05/how-do-i-truncate-an-html-string-without-breaking-the-html-code
      *
      * @param string $text String to truncate.
      * @param integer $length Length of returned string, including ellipsis.
-     *
+     * @param string $ending Ending to be appended to the trimmed string.
+     * @param boolean $exact If false, $text will not be cut mid-word
+     * @param boolean $considerHtml If true, HTML tags would be handled correctly
      * @return string Trimmed string.
      */
-    public static function truncateString($text, $length = 100) {
+    public static function truncateString($text, $length = 100, $ending = '...', $exact = false, $considerHtml = true) {
         if (strlen($text) <= $length) {
             return $text;
         }
 
         $textLength = min($length, strlen(preg_replace('/<.*?>/', '', $text)));
-        $resultText = parent::truncateString($text, $textLength);
+        $resultText = parent::truncateString($text, $textLength, $ending, $exact, $considerHtml);
         while (strlen($resultText) > $length) {
             $textLength -= 100;
-            $resultText = parent::truncateString($text, $textLength);
+            $resultText = parent::truncateString($text, $textLength, $ending, $exact, $considerHtml);
         }
 
         return $resultText;
@@ -415,7 +422,7 @@ class PriceministerHelper extends AttributesMatchingHelper
         return $_MagnaSession[$mpID][$action];
     }
 
-    protected function getPreparedData($category, $prepare = false)
+    protected function getPreparedData($category, $prepare = false, $customIdentifier = '')
     {
         $availableCustomConfigs = false;
         if ($prepare){
@@ -425,7 +432,7 @@ class PriceministerHelper extends AttributesMatchingHelper
 				WHERE MpId = ' . $this->mpId . '
 					AND products_model IN("' . implode('", "', $prepare) . '")
 					AND MarketplaceCategories = "' . $category . '"
-			', false), true), true);
+			', false)), true);
         }
         
         return !$availableCustomConfigs ? false : $availableCustomConfigs;
@@ -435,9 +442,10 @@ class PriceministerHelper extends AttributesMatchingHelper
      * Gets prepared attributes data for products prepared for given category.
      *
      * @param string $category
+     * @param string $customIdentifier
      * @return array|null
      */
-    protected function getPreparedProductsData($category)
+    protected function getPreparedProductsData($category, $customIdentifier = '')
     {
         $dataFromDB = MagnaDB::gi()->fetchArray(eecho('
 				SELECT `CategoryAttributes`
@@ -502,11 +510,12 @@ class PriceministerHelper extends AttributesMatchingHelper
         return false;
     }
 
-    public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true)
+    public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true, $customIdentifierHtml = '')
     {
         // $mpTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERIC_MP_CATEGORY);
         $mpTitle = str_replace('%marketplace%', 'PriceMinister', ML_GENERIC_MP_CATEGORY);
         $mpAttributeTitle = str_replace('%marketplace%', 'PriceMinister', ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
+        $mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
 
         ob_start();
         ?>
@@ -553,6 +562,19 @@ class PriceministerHelper extends AttributesMatchingHelper
                 </tr>
                 </tbody>
                 <tbody id="tbodyDynamicMatchingInput" style="display:none;">
+                <tr>
+                    <th></th>
+                    <td class="input"><?php echo ML_GENERAL_VARMATCH_SELECT_CATEGORY ?></td>
+                    <td class="info"></td>
+                </tr>
+                </tbody>
+                <tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
+                <tr class="headline">
+                    <td colspan="1"><h4><?php echo $mpOptionalAttributeTitle ?></h4></td>
+                    <td colspan="2"><h4><?php echo ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB ?></h4></td>
+                </tr>
+                </tbody>
+                <tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
                 <tr>
                     <th></th>
                     <td class="input"><?php echo ML_GENERAL_VARMATCH_SELECT_CATEGORY ?></td>

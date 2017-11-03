@@ -24,18 +24,40 @@ require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/CheckinSubmit.php');
 class ComparisonShoppingCheckinSubmit extends CheckinSubmit {
 	protected $firstRun = false;
 	protected $priceConfig = array();
+    
+	protected $quantitySub = false;
+	protected $quantityLumb = false;
 
 	public function __construct($settings = array()) {
 		global $_MagnaSession, $_modules;
 
 		$settings = array_merge(array(
-			'language' => getDBConfigValue($settings['marketplace'].'.lang', $_MagnaSession['mpID']),
+			'language' => getDBConfigValue($_MagnaSession['currentPlatform'].'.lang', $_MagnaSession['mpID']),
 			'currency' => getCurrencyFromMarketplace($_MagnaSession['mpID']),
+			'keytype' => getDBConfigValue('general.keytype', '0'),
+			'itemsPerBatch' => 100,
+			'mlProductsUseLegacy' => false,
 		), $settings);
-		
-		parent::__construct($settings);
-		
+
 		$this->priceConfig = self::loadPriceSettings($_MagnaSession['mpID']);
+
+		$stockSetting = getDBConfigValue($this->marketplace.'.quantity.type', $this->mpID);
+		if ($stockSetting == 'stocksub') {
+			$this->quantitySub = -getDBConfigValue(
+				$this->marketplace.'.quantity.value',
+				$this->mpID,
+				0
+			);
+			$this->quantityLumb = false;
+		} else if ($stockSetting == 'lump') {
+			$this->quantitySub = false;
+			$this->quantityLumb = getDBConfigValue(
+				$this->marketplace.'.quantity.value',
+				$this->mpID,
+				0
+			);
+		}
+		parent::__construct($settings);
 	}
 	
 	public static function loadPriceSettings($mpId) {
@@ -161,7 +183,21 @@ class ComparisonShoppingCheckinSubmit extends CheckinSubmit {
 			'ACTION' => 'AddItems',
 			'MODE' => $this->submitSession['mode']
 		);
-	}
+	}	
+    
+    protected function setUpMLProduct() {
+        parent::setUpMLProduct();
+        $mp = magnaGetMarketplaceByID($this->mpID);
+        $config = array(
+            'Type'  => getDBConfigValue($mp.'.quantity.type', $this->mpID, 'stock'),
+            'Value' => (int)getDBConfigValue($mp.'.quantity.value', $this->mpID, 0),
+        );
+        $iMaxQuantity = (int)getDBConfigValue($mp.'.quantity.maxquantity', $this->mpID, 0);
+        if ($iMaxQuantity > 0) {
+            $config['MaxQuantity'] = $iMaxQuantity;
+        }
+        MLProduct::gi()->setQuantityConfig($config);
+    }
 
 	protected function appendAdditionalData($pID, $product, &$data) {
 		$finalPrice = $this->simpleprice->setFinalPriceFromDB($pID, $this->mpID, $this->priceConfig)->roundPrice()->getPrice();
@@ -198,17 +234,20 @@ class ComparisonShoppingCheckinSubmit extends CheckinSubmit {
 			$shippingTime = MagnaDB::gi()->fetchOne('
 			     SELECT shipping_status_name 
 			       FROM '.TABLE_SHIPPING_STATUS.' 
-			      WHERE shipping_status_id=\''.$product['products_shippingtime'].'\'
+			      WHERE shipping_status_id=\''.$product['ShippingTimeId'].'\'
 			            AND language_id=\''.getDBConfigValue($this->settings['marketplace'].'.lang', $this->_magnasession['mpID']).'\'
 			      LIMIT 1
 			');
 		} else {
 			$shippingTime = '';
 		}
+		if (empty($shippingTime)) {
+			$shippingTime = (string)getDBConfigValue($this->settings['marketplace'] . '.shipping.time', $this->_magnasession['mpID'], '');
+		}
 
-		if ($product['manufacturers_id'] > 0) {
+		if ($product['ManufacturerId'] > 0) {
 			$manufacturerName = MagnaDB::gi()->fetchOne(
-				'SELECT manufacturers_name FROM '.TABLE_MANUFACTURERS.' WHERE manufacturers_id=\''.$product['manufacturers_id'].'\''
+				'SELECT manufacturers_name FROM '.TABLE_MANUFACTURERS.' WHERE manufacturers_id=\''.$product['ManufacturerId'].'\''
 			);
 		} else {
 			$manufacturerName = '';
@@ -229,41 +268,42 @@ class ComparisonShoppingCheckinSubmit extends CheckinSubmit {
 			');
 		}
 
-		$itemUrl = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'product_info.php?products_id='.$product['products_id'];
+		$itemUrl = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'product_info.php?products_id='.$product['ProductId'];
 		if (($campaign = getDBConfigValue($this->settings['marketplace'].'.campaignlink', $this->_magnasession['mpID'], '')) != '') {
 			$itemUrl .= '&mlcampaign='.trim($campaign);
 		}
 
 		$imagePath = getDBConfigValue('comparisonshopping.imagepath', $this->_magnasession['mpID'], SHOP_URL_POPUP_IMAGES);
 		$imagePath = trim($imagePath, '/ ').'/';
-		if (!empty($product['products_image'])) {
-			$imageUrl = $imagePath.$product['products_image'];
+		if (!empty($product['Images'][0])) {
+			$imageUrl = (!empty($product['Images'][0]) ? $imagePath : '') . $product['Images'][0];
 		} else {
 			$imageUrl = '';
 		}
 
-		$data['submit']['SKU']				= magnaPID2SKU($product['products_id']);
-		$data['submit']['ItemTitle']		= $product['products_name'];
+
+		$data['submit']['SKU']				= magnaPID2SKU($product['ProductId']);
+		$data['submit']['ItemTitle']		= $product['Title'];
 		$data['submit']['Price']			= $finalPrice;
 		$data['submit']['Currency']			= $this->settings['currency'];
-		$data['submit']['Description']		= sanitizeProductDescription($product['products_description']);
+		$data['submit']['Description']		= sanitizeProductDescription($product['Description']);
 		$data['submit']['ItemUrl']			= $itemUrl;						# Vollstaendiger Link zum Artikel im Shop.
 		$data['submit']['Manufacturer']	    = $manufacturerName;
 		$data['submit']['Image']			= $imageUrl;					# Vollstaendiger Pfad zum Bild im Shop.
 		$data['submit']['ShippingCost']		= (string)$data['shippingcost'];
 		$data['submit']['ShippingTime']		= $shippingTime;				# in Tagen
-		$data['submit']['ItemWeight']		= $product['products_weight'];	# in kg
-		if (defined('MAGNA_FIELD_PRODUCTS_EAN') && array_key_exists(MAGNA_FIELD_PRODUCTS_EAN, $product)) {
-			$data['submit']['EAN']			= $product[MAGNA_FIELD_PRODUCTS_EAN];
+		$data['submit']['ItemWeight']		= ($product['Weight']['Value'] != 'null') ? $product['Weight']['Value'] : '';	# in kg
+        $data['submit']['Quantity']			= $product['Quantity'];
+        if (defined('MAGNA_FIELD_PRODUCTS_EAN') && array_key_exists('EAN', $product)) {
+			$data['submit']['EAN']			= $product['EAN'];
 		}
 		// BasePrice
-		if (isset($product['products_vpe_name']) && (0 <> $product['products_vpe_value'])) {
+		if (isset($product['BasePrice']) && isset($product['BasePrice']['Value']) && (0 <> $product['BasePrice']['Value'])) {
 			$data['submit']['BasePrice'] = array (
-				'Unit' => $product['products_vpe_name'],
-				'Value' => $product['products_vpe_value'],
+				'Unit' => $product['BasePrice']['Unit'],
+				'Value' => $product['BasePrice']['Value'],
 			);
 		}
-
 	}
 	
 	protected function generateErrorSaveArray(&$data) {

@@ -266,40 +266,107 @@ body.magna table#variationMatcher table.attrTable.matchingTable tr td.input {
 	}
 	
 	protected function loadShopVariations() {
-		$groups = MagnaDB::gi()->fetchArray('
-		    SELECT products_options_id AS Code, products_options_name AS Name
-		      FROM '.TABLE_PRODUCTS_OPTIONS.'
-		     WHERE language_id = "'.$this->languageId.'"
-		  ORDER BY products_options_name ASC
-		');
-		if (empty($groups)) {
-			return;
-		}
-		foreach ($groups as $k => &$g) {
-			$values = MagnaDB::gi()->fetchArray('
-			    SELECT pov.products_options_values_id Id, pov.products_options_values_name AS Value
-			      FROM '.TABLE_PRODUCTS_OPTIONS_VALUES.' pov
-			INNER JOIN '.TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS.' ov2po ON
-			                    ov2po.products_options_values_id = pov.products_options_values_id
-			                AND ov2po.products_options_id = "'.$g['Code'].'"
-			     WHERE pov.language_id = "'.$this->languageId.'"
-			  ORDER BY pov.products_options_values_name ASC
-			');
-			if (empty($values)) {
-				unset($groups[$k]);
-				continue;
-			}
-			$g['Values'] = array();
-			foreach ($values as $v) {
-				$g['Values'][$v['Id']] = $v['Value'];
-			}
-		}
-		arrayEntitiesToUTF8($groups);
-		$aOut = array();
-		foreach ($groups as $aGroup) {
-			$aOut[$aGroup['Code']] = $aGroup;
-		}
-		return $aOut;
+	    $languageId = getDBConfigValue($this->marketplace . '.keytype', $this->mpId, 2);
+
+
+	    if (    'old' == getDBConfigValue('general.options', '0', 'old')
+	         && defined('TABLE_PRODUCTS_OPTIONS')
+	     && MagnaDB::gi()->tableExists(TABLE_PRODUCTS_OPTIONS)) {
+	        $groupsOptions = MagnaDB::gi()->fetchArray('
+	            SELECT products_options_id AS Code, products_options_name AS Name
+	            FROM ' . TABLE_PRODUCTS_OPTIONS . '
+	            WHERE language_id = "' . $languageId . '"
+	            ORDER BY products_options_name ASC
+	        ');
+
+	        if (!empty($groupsOptions)) {
+	            foreach ($groupsOptions as $k => &$g) {
+	                $values = MagnaDB::gi()->fetchArray('
+	                    SELECT pov.products_options_values_id Id, pov.products_options_values_name AS Value
+	                      FROM ' . TABLE_PRODUCTS_OPTIONS_VALUES . ' pov
+	                INNER JOIN ' . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . ' ov2po ON
+	                                    ov2po.products_options_values_id = pov.products_options_values_id
+	                                AND ov2po.products_options_id = "' . $g['Code'] . '"
+	                     WHERE pov.language_id = "' . $languageId . '"
+	                  ORDER BY pov.products_options_values_name ASC
+	                ');
+	                if (empty($values)) {
+	                    unset($groupsOptions[$k]);
+	                    continue;
+	                }
+	                $g['Values'] = array();
+	                foreach ($values as $v) {
+	                    $g['Values'][$v['Id']] = $v['Value'];
+	                }
+	            }
+	        } else {
+	            $groupsOptions = array();
+	        }
+	    } else {
+	        $groupsOptions = array();
+	    }
+
+	    if (    'gambioProperties' == getDBConfigValue('general.options', '0', 'old')
+	         && defined('TABLE_MAGNA_PROPERTIES_DESCRIPTION')
+	     && MagnaDB::gi()->tableExists(TABLE_MAGNA_PROPERTIES_DESCRIPTION)) {
+	        $groupsProperties = MagnaDB::gi()->fetchArray('
+	            SELECT properties_id AS Code, properties_name AS Name, properties_admin_name AS AdminName
+	            FROM ' . TABLE_MAGNA_PROPERTIES_DESCRIPTION . '
+	            WHERE language_id = "' . $languageId . '"
+	            ORDER BY properties_name ASC
+	        ');
+
+	        if (!empty($groupsProperties)) {
+	            foreach ($groupsProperties as $k => &$g) {
+	                if (isset($g['AdminName']) && !empty($g['AdminName'])) {
+	                    $g['Name'] = $g['AdminName'];
+	                    unset($g['AdminName']);
+	                }
+
+	                $values = MagnaDB::gi()->fetchArray('
+	                    SELECT pov.properties_values_id Id, pov.values_name AS Value
+	                      FROM ' . TABLE_MAGNA_PROPERTIES_DESCRIPTION_VALUES . ' pov
+	                INNER JOIN ' . TABLE_MAGNA_PROPERTIES_VALUES . ' ov2po ON
+	                                    ov2po.properties_values_id = pov.properties_values_id
+	                                AND ov2po.properties_id = "' . $g['Code'] . '"
+	                     WHERE pov.language_id = "' . $languageId . '"
+	                  ORDER BY pov.values_name ASC
+	                ');
+
+	                if (empty($values)) {
+	                    unset($groupsProperties[$k]);
+	                    continue;
+	                }
+
+	                $g['Values'] = array();
+	                foreach ($values as $v) {
+	                    $g['Values'][$v['Id']] = $v['Value'];
+	                }
+	            }
+	        } else {
+	            $groupsProperties = array();
+	        }
+	    } else {
+	        $groupsProperties = array();
+	    }
+
+	    $groups = array_merge($groupsOptions, $groupsProperties);
+
+	    arrayEntitiesToUTF8($groups);
+	    $aOut = array();
+	    foreach ($groups as $aGroup) {
+	        if (!isset($aGroup['Disabled'])) {
+	            $aGroup['Disabled'] = '';
+	        }
+
+	        if (!isset($aGroup['Custom'])) {
+	            $aGroup['Custom'] = '';
+	        }
+
+	        $aOut[$aGroup['Code']] = $aGroup;
+	    }
+
+	    return $aOut;
 	}
 	
 	protected function loadShopVariationData($which) {

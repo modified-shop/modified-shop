@@ -84,8 +84,8 @@ class CrowdfoxHelper extends AttributesMatchingHelper {
         if (array_key_exists('ERRORS', $result) && is_array($result['ERRORS']) && !empty($result['ERRORS'])) {
             foreach ($result['ERRORS'] as $err) {
                 $ad = array();
-                if (isset($err['DETAILS']['SKU'])) {
-                    $ad['SKU'] = $err['DETAILS']['SKU'];
+                if (isset($err['ERRORDATA']['SKU'])) {
+                    $ad['SKU'] = $err['ERRORDATA']['SKU'];
                 }
                 $err = array(
                     'mpID' => $mpID,
@@ -200,7 +200,7 @@ class CrowdfoxHelper extends AttributesMatchingHelper {
         return self::getDataFromConfig($product_id, $mfrmd, $mfrmd['alias']);
     }
 
-    public function getMPVariations($category, $prepare = false, $getDate = false) {
+    public function getMPVariations($category, $prepare = false, $getDate = false, $customIdentifier = '') {
         $dbData = $this->getPreparedData($category, $prepare);
         $tableName = $this->getVariationMatchingTableName();
 
@@ -252,7 +252,7 @@ class CrowdfoxHelper extends AttributesMatchingHelper {
                     FROM ' . $tableName . '
                     WHERE MpId = ' . $this->mpId . '
                         AND MpIdentifier = "' . $category . '"
-                ', false), true),
+                ', false)),
                 'DifferentProducts' => $hasDifferentlyPreparedProducts,
             );
         }
@@ -310,14 +310,20 @@ class CrowdfoxHelper extends AttributesMatchingHelper {
         return $_MagnaSession[$mpID][$action];
     }
 
-    protected function getPreparedData($category, $prepare = false) {
+    /**
+     * @param $category
+     * @param bool|array $prepare
+     * @param string $customIdentifier
+     * @return bool|mixed
+     */
+    protected function getPreparedData($category, $prepare = false, $customIdentifier = '') {
         $availableCustomConfigs = false;
         if ($prepare) {
             $availableCustomConfigs = MagnaDB::gi()->fetchOne(eecho('
 				SELECT DISTINCT ShopVariation
 				FROM ' . TABLE_MAGNA_CROWDFOX_PREPARE . '
 				WHERE MpId = ' . $this->mpId . '
-					AND products_model IN("' . implode('", "', $prepare) . '")', false), true);
+					AND products_model IN("' . implode('", "', $prepare) . '")', false));
         }
 
         return $availableCustomConfigs ? json_decode($availableCustomConfigs, true) : false;
@@ -327,10 +333,10 @@ class CrowdfoxHelper extends AttributesMatchingHelper {
      * Gets prepared attributes data for products prepared for given category.
      *
      * @param string $category
-     *
+     * @param string $customIdentifier
      * @return array|null
      */
-    protected function getPreparedProductsData($category) {
+    protected function getPreparedProductsData($category, $customIdentifier = '') {
         $dataFromDB = MagnaDB::gi()->fetchArray(eecho('
 				SELECT `CategoryAttributes`
 				FROM ' . TABLE_MAGNA_CROWDFOX_PREPARE . '
@@ -373,7 +379,7 @@ class CrowdfoxHelper extends AttributesMatchingHelper {
         return false;
     }
 
-    public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true) {
+    public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true, $customIdentifierHtml = '') {
         $mpTitle = str_replace('%marketplace%', 'Crowdfox', ML_GENERIC_MP_CATEGORY);
         $mpAttributeTitle = str_replace('%marketplace%', 'Crowdfox', ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
         $mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);

@@ -35,8 +35,13 @@ class EbayHelper extends MagnaCompatibleHelper {
 	public static function getPriceSettingsByListingType($mpId, $listingType){
 		if ($listingType == 'Chinese') {
 			$priceTypes = array('chinese.buyitnow', 'chinese');
-		} else {//StoresFixedPrice, FixedPriceItem
+		} else { //StoresFixedPrice, FixedPriceItem
 			$priceTypes = array('fixed');
+			if (    getDBConfigValue(array('ebay.strike.price.active','val'), $mpId, false)
+			     && (($sStrikePriceKind = getDBConfigValue('ebay.strike.price.kind', $mpId, 'DontUse')) != 'DontUse')) {
+				$priceTypes[] = 'strike';
+			}
+
 		}
 		$priceConfigs = array();
 		foreach ($priceTypes as $priceType) {
@@ -181,14 +186,42 @@ class EbayHelper extends MagnaCompatibleHelper {
 		return $aListingDetails;
 	}
 
-	// add mobile description with the required tags at the end of the main description
+	// add mobile description with the required tags within the main description
 	// (when uploading product) 
 	public static function appendMobileDescription(&$mainDesc, $mobileDesc) {
 		if (empty($mobileDesc)) return;
 		$mobileDesc = trim(strip_tags($mobileDesc, '<ol></ol><ul></ul><li></li><br><br/><br />'));
 		if (empty($mobileDesc)) return;
-		$mainDesc .= '<div vocab="http://schema.org/" typeof="Product"><span property="description">'
+		if (strpos($mainDesc, '#MOBILEDESCRIPTION#') == false) return;
+		$mainDesc = str_replace('#MOBILEDESCRIPTION#', '<div vocab="http://schema.org/" typeof="Product"><span property="description">'
 			.$mobileDesc
-			.'</span></div>';
+			.'</span></div>', $mainDesc);
+	}
+
+	// if mobile template is in use, and a placeholder is used in mobile template
+	// check if the same is also used in main template, and remove it from there
+	// Additionally, remove PICTURE placeholders from the mobile template (not allowed)
+	public static function filterDoubleContentFromDescTemplate(&$mainDesc, &$mobileDesc) {
+		if (strpos($mainDesc, '#MOBILEDESCRIPTION#') === false) return;
+		if (empty($mobileDesc)) return;
+		$aPlaceholders = array (
+			'#TITLE#',
+			'#ARTNR#',
+			'#PID#',
+			'#PRICE#',
+			'#VPE#',
+			'#BASEPRICE#',
+			'#SHORTDESCRIPTION#',
+			'#DESCRIPTION#',
+			'#WEIGHT#');
+		foreach ($aPlaceholders as $sPlaceholder) {
+			if (   (strpos($mainDesc,   $sPlaceholder) !== false)
+			    && (strpos($mobileDesc, $sPlaceholder) !== false) ) {
+				$mainDesc = str_replace($sPlaceholder, '', $mainDesc);
+			} 
+		}
+		if (strpos($mobileDesc, '#PICTURE') !== false) {
+			$mobileDesc = preg_replace('/#PICTURE(\d+)#/', '', $mobileDesc);
+		}
 	}
 }

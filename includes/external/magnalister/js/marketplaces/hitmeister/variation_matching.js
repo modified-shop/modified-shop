@@ -22,8 +22,10 @@ $(document).ready(function() {
             mainSelectElement: '#PrimaryCategory',
             matchingHeadline: '#tbodyDynamicMatchingHeadline',
             matchingCustomHeadline: '#tbodyDynamicMatchingCustomHeadline',
+            matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
             matchingInput: '#tbodyDynamicMatchingInput',
             matchingCustomInput: '#tbodyDynamicMatchingCustomInput',
+            matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
             categoryInfo: '#categoryInfo'
         },
         shopVariations: ml_vm_config.shopVariations

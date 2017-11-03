@@ -1505,6 +1505,12 @@ form.categoryView table.list thead tr td input[type="checkbox"] {
 	margin: -1px 4px 0 4px;
 	vertical-align: sub;
 }
+table.datagrid thead tr td input[type="checkbox"]#selectAll {
+	vertical-align: middle;
+}
+table.datagrid thead tr td label[for="selectAll"] {
+	font-weight: bold;
+}
 table.datagrid thead tr td a.sorting,
 table.datagrid thead tr td a.sorting:active,
 table.datagrid thead tr td a.sorting:hover,
