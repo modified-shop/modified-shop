@@ -30,7 +30,7 @@
   // include needed classes
   require_once (DIR_WS_CLASSES.'order.php');
   require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
-  if (file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
+  if (defined('MODULE_PAYMENT_BILLPAY_STATUS') && MODULE_PAYMENT_BILLPAY_STATUS == 'True' && file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
     require_once (DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php');
     $billpayOrderEdit = new BillpayOrderEdit();
     $billpayOrderEdit->onBeforeUpdate();
@@ -992,7 +992,7 @@
       'value' => xtc_db_prepare_input($subtotal_final)
     );
     
-    if (file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
+    if (defined('MODULE_PAYMENT_BILLPAY_STATUS') && MODULE_PAYMENT_BILLPAY_STATUS == 'True' && file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
       require_once DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php';
       $billpayOrderEdit = new BillpayOrderEdit();
       if($billpayOrderEdit->isBillpay) {
@@ -1311,7 +1311,7 @@
 
     xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
     
-    if (file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
+    if (defined('MODULE_PAYMENT_BILLPAY_STATUS') && MODULE_PAYMENT_BILLPAY_STATUS == 'True' && file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
       require_once DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php';
       $billpayOrderEdit = new BillpayOrderEdit();
       $billpayOrderEdit->onAfterUpdate();
