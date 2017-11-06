@@ -205,7 +205,7 @@ class xtcPrice {
    * @return Double price
    */
   function getPprice($pID) {
-    $pQuery = xtDBquery("SELECT products_price FROM ".TABLE_PRODUCTS." WHERE products_id='".$pID."'");
+    $pQuery = xtDBquery("SELECT products_price FROM ".TABLE_PRODUCTS." WHERE products_id='".(int)$pID."'");
     $pData = xtc_db_fetch_array($pQuery, true);
     return $pData['products_price'];
   }
