@@ -17,6 +17,7 @@
 
   //use contact_us.php language file
   require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
+  require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
   
   // captcha
   $use_captcha = array('contact');
