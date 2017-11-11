@@ -144,7 +144,7 @@
                                              FROM ".TABLE_ORDERS." o
                                         LEFT JOIN ".TABLE_ORDERS_STATUS." s
                                                ON (o.orders_status = s.orders_status_id
-                                                    AND s.orders_status_id = '".xtc_db_input($status)."')
+                                                    AND s.language_id = '".(int)$_SESSION['languages_id']."')
                                             WHERE (o.customers_name LIKE '%".xtc_db_input($customer)."%'
                                                OR o.customers_firstname LIKE '%".xtc_db_input($customer)."%'
                                                OR o.customers_lastname LIKE '%".xtc_db_input($customer)."%'
