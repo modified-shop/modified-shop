@@ -70,6 +70,7 @@
                                   OR CONCAT(customers_firstname,' ',customers_lastname) LIKE '%".$keywords."%'
                                   OR CONCAT(customers_lastname,' ',customers_firstname) LIKE '%".$keywords."%'
                                   OR c.customers_email_address LIKE '%".$keywords."%'
+                                  OR c.customers_cid LIKE '%".$keywords."%'
                                   OR a.entry_company LIKE '%".$keywords."%'
                                  )";
                   //BOF - web28 - 2010-05-29 added for ADMIN SEARCH BAR
@@ -78,6 +79,8 @@
                                     OR c.customers_firstname LIKE '%".$keywords."%'
                                     OR CONCAT(customers_firstname,' ',customers_lastname) LIKE '%".$keywords."%'
                                     OR CONCAT(customers_lastname,' ',customers_firstname) LIKE '%".$keywords."%'
+                                    OR c.customers_email_address LIKE '%".$keywords."%'
+                                    OR c.customers_cid LIKE '%".$keywords."%'
                                     OR a.entry_company LIKE '%".$keywords."%'
                                    )";
                   }
