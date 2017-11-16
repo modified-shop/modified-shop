@@ -83,6 +83,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      DIR_ADMIN.'includes/functions/languages.php', // neu
                      DIR_ADMIN.'includes/functions/validations.php', // neu
                      DIR_ADMIN.'includes/haendlerbund/css/ui_custom.css', // neu
+                     DIR_ADMIN.'includes/haendlerbund/images/groesster-onlinehandelsverband-europas.png', // neu
                      DIR_ADMIN.'includes/haendlerbund/jquery-1.4.4.js', // neu
                      DIR_ADMIN.'includes/modules/carp/carp.php',
                      DIR_ADMIN.'includes/modules/carp/carpconf.php',

@@ -61,8 +61,8 @@ if($_GET["api_konfiguration"] == 1) {
 							<td>
 								<table border="0" width="100%" cellspacing="0" cellpadding="0">
 									<tr>
-										<td width="237"><a href="https://partner.haendlerbund.de/partnerdoor.php?partnerid=partner_modified&bannerid=64" target="_blank"><img src="includes/haendlerbund/images/haendlerbund_logo.png" hspace="0" vspace="0" style="padding:10px" /></a></td>
-										<td valign="bottom"><a href="https://partner.haendlerbund.de/partnerdoor.php?partnerid=partner_modified&bannerid=64" target="_blank"><img src="includes/haendlerbund/images/groesster-onlinehandelsverband-europas.png" style="padding:10px" /></a></td>
+										<td width="290"><a href="https://partner.haendlerbund.de/partnerdoor.php?partnerid=partner_modified&bannerid=64" target="_blank"><img src="includes/haendlerbund/images/haendlerbund_logo.png" hspace="0" vspace="0" style="padding:10px" /></a></td>
+										<td valign="middle"><a href="https://partner.haendlerbund.de/partnerdoor.php?partnerid=partner_modified&bannerid=64" target="_blank"><span id="claimTop">Das E-Commerce Netzwerk</span><br /><span id="claimBottom">mit &uuml;ber 70.000 betreuten Onlinepr&auml;senzen</span></a></td>
 									</tr>
 								</table>
 							</td>
