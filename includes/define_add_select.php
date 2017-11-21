@@ -14,6 +14,7 @@ example for default.php
 can be used in extra/define_add_select/yourfile.php
 
 $add_select_default[] = 'p.products_extra_field';
+$add_select_categories[] = 'c.categories_extra_field';
 
 */
   $add_select_default = array();
@@ -24,6 +25,7 @@ $add_select_default[] = 'p.products_extra_field';
   $add_select_content = array();
   $add_products_options_select = array();
   $add_tags_select = array();  
+  $add_select_categories = array();      
   
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/define_add_select/','php') as $file) require ($file);
 
@@ -45,6 +47,8 @@ $add_select_default[] = 'p.products_extra_field';
   // used in shop_content.php -  used for shop_content
   define('ADD_SELECT_CONTENT', (count($add_select_content) ? rtrim(implode(', ', array_unique($add_select_content)), ',').', ' : ''));
   
+  // used in default.php -  used for categorie/products listing
+  define('ADD_SELECT_CATEGORIES', (count($add_select_categories) ? rtrim(implode(', ', array_unique($add_select_categories)), ',').', ' : ''));
   //PRODUCT OPTIONS
   // used in /includes/modules/product_attributes.php - used for products options data
   define('ADD_PRODUCT_OPTIONS_SELECT', (count($add_products_options_select) ? rtrim(implode(', ', array_unique($add_products_options_select)), ',').', ' : ''));

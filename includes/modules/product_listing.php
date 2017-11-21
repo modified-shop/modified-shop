@@ -57,7 +57,8 @@ if ($listing_split->number_of_rows > 0) {
   
   if ($current_category_id != '0') {
 
-    $category_query = xtDBquery("SELECT cd.categories_description,
+    $category_query = xtDBquery("SELECT ".ADD_SELECT_CATEGORIES."
+                                        cd.categories_description,
                                         cd.categories_name,
                                         cd.categories_heading_title,
                                         c.listing_template,
@@ -195,7 +196,8 @@ if ($result != false) {
   }
   $smarty->assign('main_content', $module);
 } elseif (isset($current_category_id) && $current_category_id > 0) {
-  $category_query = xtDBquery("SELECT c.categories_image,
+  $category_query = xtDBquery("SELECT ".ADD_SELECT_CATEGORIES."
+                                      c.categories_image,
                                       c.categories_template,
                                       cd.categories_name,
                                       cd.categories_heading_title,

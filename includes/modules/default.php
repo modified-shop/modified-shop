@@ -100,7 +100,8 @@ if ($language_not_found === true) {
  */
 if ($category_depth == 'nested') {
 
-  $category_query = "SELECT c.categories_image,
+  $category_query = "SELECT ".ADD_SELECT_CATEGORIES."
+                            c.categories_image,
                             c.categories_template,
                             cd.categories_name,
                             cd.categories_heading_title,
@@ -118,7 +119,8 @@ if ($category_depth == 'nested') {
 
   if (MAX_DISPLAY_CATEGORIES_PER_ROW > 0) {
     // check to see if there are deeper categories within the current category
-    $categories_query = "SELECT c.categories_id,
+    $categories_query = "SELECT ".ADD_SELECT_CATEGORIES."
+                                c.categories_id,
                                 c.categories_image,
                                 c.parent_id,
                                 cd.categories_name,
@@ -135,6 +137,7 @@ if ($category_depth == 'nested') {
                        ORDER BY c.sort_order, cd.categories_name";
     $categories_query = xtDBquery($categories_query);
     $categories_content = array();
+    $cindex = 0;
     while ($categories = xtc_db_fetch_array($categories_query, true)) {
       $cPath_new = xtc_category_link($categories['categories_id'],$categories['categories_name']);
 
@@ -146,11 +149,15 @@ if ($category_depth == 'nested') {
         $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
       }
 
-      $categories_content[] = array ('CATEGORIES_NAME' => $categories['categories_name'],
+      $categories_content[$cindex] = array ('CATEGORIES_NAME' => $categories['categories_name'],
                                      'CATEGORIES_HEADING_TITLE' => $categories['categories_heading_title'],
                                      'CATEGORIES_IMAGE' => (($image != '') ? DIR_WS_BASE . $image : ''),
                                      'CATEGORIES_LINK' => xtc_href_link(FILENAME_DEFAULT, $cPath_new),
                                      'CATEGORIES_DESCRIPTION' => $categories['categories_description']);
+                                     
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/categories_content/','php') as $file) require ($file);
+      
+      $cindex++;
     }
   }
 
@@ -184,6 +191,8 @@ if ($category_depth == 'nested') {
   $default_smarty->assign('language', $_SESSION['language']);
   $default_smarty->assign('module_content', $categories_content);
   $default_smarty->caching = 0;
+  
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/categories_smarty/','php') as $file) require_once ($file);
   $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$category['categories_template']);
   $smarty->assign('main_content', $main_content);
 
