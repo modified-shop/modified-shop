@@ -307,6 +307,8 @@ if ($category_depth == 'nested') {
                          ".$where."
                 GROUP BY p.products_id
                          ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting);
+                         
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/listing_sql/','php') as $file) require ($file);
 
   include (DIR_WS_MODULES.FILENAME_PRODUCT_LISTING);
 

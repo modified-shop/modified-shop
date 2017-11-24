@@ -35,7 +35,11 @@ if (strpos($PHP_SELF, FILENAME_ADVANCED_SEARCH_RESULT) !== false && defined('MAX
   $module_smarty->assign('SEARCH_RESULT', true);
 }
 
-$listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, 'p.products_id');
+$list_count_key = 'p.products_id';
+
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_listing_split/','php') as $file) require ($file);
+
+$listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, $list_count_key);
 
 $module_content = $category = array();
 $image = '';
