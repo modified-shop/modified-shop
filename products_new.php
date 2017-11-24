@@ -93,8 +93,12 @@ if ($language_not_found === true) {
                                              ".$days."
                                              ".$where."
                                              ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_date_added DESC');
-
-  $products_new_split = new splitPageResults($products_new_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, 'p.products_id');
+  
+  $products_new_count_key = 'p.products_id';
+  
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_new_split/','php') as $file) require ($file);                                             
+  
+  $products_new_split = new splitPageResults($products_new_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, $products_new_count_key);
 
   $module_content = array();
   if (($products_new_split->number_of_rows > 0)) {
@@ -146,7 +150,11 @@ if ($language_not_found === true) {
                                            ".$where."
                                            ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_date_added DESC');
 
-    $products_new_split = new splitPageResults($new_products_query, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, 'p.products_id');
+    $products_new_count_key = 'p.products_id';
+  
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_new_split/','php') as $file) require ($file); 
+    
+    $products_new_split = new splitPageResults($new_products_query, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, $products_new_count_key);
 
     if (($products_new_split->number_of_rows > 0)) {
       if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
