@@ -126,28 +126,28 @@ foreach ($script_array as $script) {
     }
     ac_showPage(ac_page);
   }
-	function ac_lookup(inputString) {
-		if(inputString.length == 0) {
-			$('#suggestions').hide();
-		} else {
-			$.post("<?php echo xtc_href_link('api/autocomplete/autocomplete.php', '', $request_type); ?>", {queryString: ""+inputString+""}, function(data) {
-				if(data.length > 0) {
-					$('#suggestions').slideDown();
-					$('#autoSuggestionsList').html(data);
-					ac_showPage(1);
-					$('#autocomplete_prev').click(ac_prevPage);
+  function ac_lookup(inputString) {
+    if(inputString.length == 0) {
+      $('#suggestions').hide();
+    } else {
+      $.post("<?php echo xtc_href_link('api/autocomplete/autocomplete.php', '', $request_type); ?>", {queryString: ""+inputString+""}, function(data) {
+        if(data.length > 0) {
+          $('#suggestions').slideDown();
+          $('#autoSuggestionsList').html(data);
+          ac_showPage(1);
+          $('#autocomplete_prev').click(ac_prevPage);
           $('#autocomplete_next').click(ac_nextPage);
-				}
-			});
-		}
-	}
+        }
+      });
+    }
+  }
 </script>
 <?php } ?>
-<?php if (SEARCH_AC_STATUS == 'true' || (!strstr($PHP_SELF, FILENAME_SHOPPING_CART) && !strstr($PHP_SELF, 'checkout'))) { ?>	
+<?php if (SEARCH_AC_STATUS == 'true' || (!strstr($PHP_SELF, FILENAME_SHOPPING_CART) && !strstr($PHP_SELF, 'checkout'))) { ?>  
 <script type="text/javascript">
-	function ac_closing() {
-		setTimeout("$('#suggestions').slideUp();", 100);
-		ac_page = 1;
-	}
+  function ac_closing() {
+    setTimeout("$('#suggestions').slideUp();", 100);
+    ac_page = 1;
+  }
 </script>
 <?php } ?>
