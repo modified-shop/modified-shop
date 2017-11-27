@@ -2735,20 +2735,30 @@ ul.ord_total_list li {
 
 
 /* 26. START Product details */
+.product_headline {
+  margin: 20px 0 15px 0;
+  border: #ddd solid;
+  border-width: 0 0 1px 0;
+  padding: 0 0 5px 0;
+}
+.product_headline h1 {
+  margin: 0px 0 0px 0;
+  padding: 0 0 0px;
+  border-width: 0 0 0 0;
+}
+.pd_manu_image {
+  float:right;
+  display:inline-block;
+  height:30px;
+  margin: -3px 0 3px 20px;
+}
+.pd_manu_image img {
+  max-height:30px;
+  width:auto;
+}
 #product_details {
   position:relative;
   padding: 0 0 20px 0;
-}
-.pd_manu_image {
-  position:absolute;
-  display:inline-block;
-  height:30px;
-  top:-50px;
-  right:5px;
-}
-.pd_manu_image img {
-  max-height:30px; 
-  width:auto;
 }
 .pd_imagebox {
   float:left;
