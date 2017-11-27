@@ -141,8 +141,10 @@ foreach ($script_array as $script) {
 			});
 		}
 	}
-  <?php } ?>
-	<?php if (SEARCH_AC_STATUS == 'true' || (!strstr($PHP_SELF, FILENAME_SHOPPING_CART) && !strstr($PHP_SELF, 'checkout'))) { ?>	
+</script>
+<?php } ?>
+<?php if (SEARCH_AC_STATUS == 'true' || (!strstr($PHP_SELF, FILENAME_SHOPPING_CART) && !strstr($PHP_SELF, 'checkout'))) { ?>	
+<script type="text/javascript">
 	function ac_closing() {
 		setTimeout("$('#suggestions').slideUp();", 100);
 		ac_page = 1;
