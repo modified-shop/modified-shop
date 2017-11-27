@@ -3,7 +3,11 @@
 {config_load file="lang_`$language`.section" section="product_info"}
 <div itemscope itemtype="http://schema.org/Product">
   {$FORM_ACTION}
-  <h1 itemprop="name">{$PRODUCTS_NAME}</h1>
+  <div class="product_headline cf">
+    {if isset($MANUFACTURER_IMAGE) && $MANUFACTURER_IMAGE != ''}<div class="pd_manu_image"><a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" /></a></div>{/if}
+    <h1 itemprop="name">{$PRODUCTS_NAME}</h1>
+  </div>
+
   <div id="product_details">
     {if $PRODUCTS_IMAGE != ''}
     <div class="pd_imagebox">
@@ -133,7 +137,6 @@
       {/if}      
     </div>  
     <br class="clearfix" />
-    {if isset($MANUFACTURER_IMAGE) && $MANUFACTURER_IMAGE != ''}<div class="pd_manu_image"><a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" /></a></div>{/if}
   </div>
   {$FORM_END}
 
