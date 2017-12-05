@@ -8,8 +8,10 @@
 ##
 
 @set_time_limit(0);
-chdir('../../');
-require_once 'includes/application_top.php';	# This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+if (!defined('DIR_FS_DOCUMENT_ROOT')) {
+    chdir('../../');
+    require_once 'includes/application_top.php';	# This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
+}
 require (DIR_WS_CLASSES.'xtbooster.php');
 
 function xsb_session_register($var) {
