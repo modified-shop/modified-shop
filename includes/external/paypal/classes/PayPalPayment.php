@@ -466,7 +466,10 @@ class PayPalPayment extends PayPalPaymentBase {
     
     // set shipping address
     $shipping_address = new ShippingAddress();      
-
+    
+    if (trim($order->delivery['name']) == '') {
+      $order->delivery = $order->billing;
+    }
     $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
                      ->setLine1($this->encode_utf8($order->delivery['street_address']))
                      ->setCity($this->encode_utf8($order->delivery['city']))
@@ -475,7 +478,7 @@ class PayPalPayment extends PayPalPaymentBase {
                      ->setState($this->encode_utf8((($order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
 
     if ($order->delivery['suburb'] != '') {
-      $shipping_address->setLine2($this->encode_utf8($order->billdeliverying['suburb']));
+      $shipping_address->setLine2($this->encode_utf8($order->delivery['suburb']));
     }
 
     $patch_shipping = new Patch();
@@ -770,7 +773,10 @@ class PayPalPayment extends PayPalPaymentBase {
 
     // set address
     $shipping_address = new ShippingAddress();      
-
+    
+    if (trim($order->delivery['name']) == '') {
+      $order->delivery = $order->billing;
+    }
     $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
                      ->setLine1($this->encode_utf8($order->delivery['street_address']))
                      ->setCity($this->encode_utf8($order->delivery['city']))
