@@ -239,7 +239,7 @@ class PayPalPayment extends PayPalPaymentBase {
       }
       
       if ($this->code == 'paypalinstallment') {
-        $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true', 'SSL')));
+        $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&&pp_conditions=true', 'SSL')));
       }
     }
 

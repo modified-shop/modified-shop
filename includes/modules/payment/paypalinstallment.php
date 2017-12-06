@@ -82,12 +82,25 @@ class paypalinstallment extends PayPalPayment {
     global $order, $request_type;
     
     $presentment = $this->get_presentment_details($this->total_amount, $order->info['currency'], $order->billing['country']['iso_code_2'], 'payment');
+    $presentment .= '<br/><br/><input type="checkbox" value="pp_conditions" name="pp_conditions" id="pp_conditions" />&nbsp;<strong><label for="pp_conditions">'.MODULE_PAYMENT_PAYPALINSTALLMENT_TEXT_CHECKBOX.'</label></strong>';
 
     return array(
       'id' => $this->code, 
       'module' => $this->title, 
       'description' => $presentment,
     );
+  }
+
+
+  function javascript_validation() {
+    $js = 'if (payment_value == "' . $this->code . '") {' . "\n" .
+          '  if (!document.getElementById("checkout_payment").pp_conditions.checked) {' . "\n" .
+          '    error_message = error_message + unescape("' . xtc_js_lang(MODULE_PAYMENT_PAYPALINSTALLMENT_TEXT_ERROR_CHECKBOX) . '");' . "\n" .
+          '    error = 1;' . "\n" .
+          '  }' . "\n" .
+          '}' . "\n";
+    
+    return $js;
   }
 
 
@@ -108,6 +121,11 @@ class paypalinstallment extends PayPalPayment {
    		return;
 		}
 		
+    if ((!isset($_POST['pp_conditions']) || $_POST['pp_conditions'] == false) && !isset($_GET['pp_conditions'])) {
+      $error = str_replace('\n', '<br />', MODULE_PAYMENT_PAYPALINSTALLMENT_TEXT_ERROR_CHECKBOX);
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($error), 'SSL', true, false));
+    }
+
     // load the selected shipping module
     require_once (DIR_WS_CLASSES . 'shipping.php');
     $shipping_modules = new shipping($_SESSION['shipping']);
