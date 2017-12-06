@@ -29,6 +29,10 @@ class paypalcart extends PayPalPayment {
 
 		$this->tmpOrders = true;
 		$this->messageStack = false;
+		
+		if (isset($_POST['comments'])) {
+		  $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
+		}
   }
 
 
