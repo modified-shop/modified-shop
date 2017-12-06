@@ -112,7 +112,7 @@ class PayPalAdmin extends PayPalPayment {
     $inputFields = new InputFields();
     $inputFields->setAllowNote(0)
                 ->setNoShipping(0)
-                ->setAddressOverride((int)$addess_override);
+                ->setAddressOverride(1);
 
     // set WebProfile
     $webProfile = new WebProfile();
@@ -158,7 +158,7 @@ class PayPalAdmin extends PayPalPayment {
     $inputFields = new InputFields();
     $inputFields->setAllowNote(0)
                 ->setNoShipping(0)
-                ->setAddressOverride((int)$addess_override);
+                ->setAddressOverride(1);
 
     // set WebProfile
     $webProfile = new WebProfile();

@@ -27,7 +27,7 @@ class PayPalPaymentBase extends PayPalCommon {
     global $order;
 
     $this->code = $class;
-    $this->paypal_version = '1.0';
+    $this->paypal_version = '1.1';
 
     $this->title = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '');
     $this->info = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO') : '');
@@ -280,7 +280,6 @@ class PayPalPaymentBase extends PayPalCommon {
 
   function check_install() {
     if (!isset($this->_check_install)) {
-      $this->check_update();
       $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_PAYPAL_CONFIG."'");
       if (xtc_db_num_rows($check_query) > 0) {
         $this->_check_install = true;
@@ -290,66 +289,7 @@ class PayPalPaymentBase extends PayPalCommon {
     }
     return $this->_check_install;
   }
-  
-  
-  function check_update() {
-    if (!defined('MODULE_PAYPAL_VERSION') || MODULE_PAYPAL_VERSION != $this->paypal_version) {
-      if (!defined('MODULE_PAYPAL_VERSION')) {
-        $sql_data_array = array(
-          'configuration_key' => 'MODULE_PAYPAL_VERSION',
-          'configuration_value' => $this->paypal_version,
-          'configuration_group_id' => '1000',
-          'sort_order' => '-1',
-          'last_modified' => 'now()',
-          'date_added' => 'now()'
-        );
-        xtc_db_perform(TABLE_CONFIGURATION, $sql_data_array);   
-      } else {
-        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
-                         SET configuration_value = '" . xtc_db_input($this->paypal_version) . "', 
-                             last_modified = NOW()
-                       WHERE configuration_key = 'MODULE_PAYPAL_VERSION'");
-      }
-      
-      // add new column
-      $table_array = array(
-        array('column' => 'transaction_id', 'default' => "varchar(64) NOT NULL default ''"),
-      );
-      foreach ($table_array as $table) {
-        $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_PAYMENT." LIKE '".xtc_db_input($table['column'])."'");
-        if (xtc_db_num_rows($check_query) < 1) {
-          xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_PAYMENT." ADD ".$table['column']." ".$table['default']."");
-        }
-      }
-      
-      // add new column
-      $admin_access_array = array(
-        'paypal_info',
-        'paypal_module',
-      );
-      $admin_query = xtc_db_query("SELECT * 
-                                     FROM ".TABLE_ADMIN_ACCESS."
-                                    LIMIT 1");
-      $admin = xtc_db_fetch_array($admin_query);
-      foreach ($admin_access_array as $admin_access) {
-        if (!isset($admin[$admin_access])) {
-          xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." ADD `".$admin_access."` INT(1) DEFAULT '0' NOT NULL");
-          xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$admin_access." = '9' WHERE customers_id = 'groups' LIMIT 1");        
-          xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$admin_access." = '1' WHERE customers_id = '1' LIMIT 1");        
-          if ($_SESSION['customer_id'] > 1) {
-            xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$admin_access." = '1' WHERE customers_id = '".$_SESSION['customer_id']."' LIMIT 1") ;
-          }
-        }
-      }
-
-      // drop old column
-      $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ADMIN_ACCESS." LIKE 'paypal_payment'");
-      if (xtc_db_num_rows($check_query) == 1) {
-        xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." DROP `paypal_payment`");
-      }
-    }
-  }
-  
+    
   
   function checkout_button() {
     global $PHP_SELF;
@@ -545,9 +485,6 @@ class PayPalPaymentBase extends PayPalCommon {
         xtc_db_perform(TABLE_PAYPAL_CONFIG, $sql_data_array);
       }
     }
-    
-    // check updates
-    $this->check_update();
   }
 
 
@@ -676,6 +613,32 @@ class PayPalPaymentBase extends PayPalCommon {
                     bic varchar(11) DEFAULT NULL,
                     KEY idx_orders_id (orders_id)
                   );");
+    
+    // add new column
+    $admin_access_array = array(
+      'paypal_info',
+      'paypal_module',
+    );
+    $admin_query = xtc_db_query("SELECT * 
+                                   FROM ".TABLE_ADMIN_ACCESS."
+                                  LIMIT 1");
+    $admin = xtc_db_fetch_array($admin_query);
+    foreach ($admin_access_array as $admin_access) {
+      if (!isset($admin[$admin_access])) {
+        xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." ADD `".$admin_access."` INT(1) DEFAULT '0' NOT NULL");
+        xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$admin_access." = '9' WHERE customers_id = 'groups' LIMIT 1");        
+        xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$admin_access." = '1' WHERE customers_id = '1' LIMIT 1");        
+        if ($_SESSION['customer_id'] > 1) {
+          xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$admin_access." = '1' WHERE customers_id = '".$_SESSION['customer_id']."' LIMIT 1") ;
+        }
+      }
+    }
+
+    // drop old column
+    $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ADMIN_ACCESS." LIKE 'paypal_payment'");
+    if (xtc_db_num_rows($check_query) == 1) {
+      xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." DROP `paypal_payment`");
+    }
     
     $sql_data_array = array(
       array(
