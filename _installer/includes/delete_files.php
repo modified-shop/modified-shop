@@ -130,6 +130,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      DIR_ADMIN.'includes/stylesheet_stocklist.css', // neu
                      DIR_ADMIN.'includes/stylesheet_stocklist_print.css', // neu
                      DIR_ADMIN.'paypal.php', // neu
+                     DIR_ADMIN.'paypal_payment.php', // neu
                      DIR_ADMIN.'popup_image.php', // neu
                      DIR_ADMIN.'rss/index.html',
                      DIR_ADMIN.'rss/xt-news.cache',

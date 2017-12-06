@@ -12,7 +12,7 @@
 
 
 $lang_array = array(
-  'TEXT_PAYPAL_MODULE_HEADING_TITLE' => 'PayPal Module',
+  'TEXT_PAYPAL_MODULE_HEADING_TITLE' => 'PayPal Produkte',
   
   'TABLE_HEADING_MODULES' => 'Modul',
   'TABLE_HEADING_FILENAME' => 'Modulname (f&uuml;r internen Gebrauch)',

@@ -594,8 +594,8 @@ define('CHECK_LABEL_PRICE', 'Check price');
 define('TEXT_PAYPAL_TAB_CONFIG', 'PayPal Configuration');
 define('TEXT_PAYPAL_TAB_PROFILE', 'PayPal Profile');
 define('TEXT_PAYPAL_TAB_WEBHOOK', 'PayPal Webhook');
-define('TEXT_PAYPAL_TAB_MODULE', 'PayPal Module');
-define('TEXT_PAYPAL_TAB_TRANSACTIONS', 'PayPal Transactions');
+define('TEXT_PAYPAL_TAB_MODULE', 'PayPal Products');
+define('TEXT_PAYPAL_TAB_INFO', 'PayPal Informations');
 
 define('TEXT_DEFAULT_SORT_ORDER_TITLE', 'Sort order');
 define('TEXT_DEFAULT_SORT_ORDER_DESC', 'Order of processing. Smallest number is executed first.');
