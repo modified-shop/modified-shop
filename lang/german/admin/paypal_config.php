@@ -33,7 +33,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX_INFO' => 'Frei w&auml;hlbare Zeichenfolge (Pr&auml;fix), die der Bestellnummer vorangestellt und f&uuml;r die Erzeugung der PayPal-Rechnungsnummer genutzt wird.<br />Dadurch k&ouml;nnen mehrere Shops mit nur einer PayPal App arbeiten. Konflikte bei gleichen Bestellnummern werden vermieden. Jede Bestellung erh&auml;lt eine eigene Rechnungs-Nummer im PayPal Konto.',
 
   'TEXT_PAYPAL_CONFIG_TRANSACTION' => 'Transaktion:',
-  'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'W&auml;hlen Sie die Art der Transaktion.<br/><br/><b>Hinweis:</b> Bei PayPal Plus und PayPal Ratenzahlung wird immer ein Sale gemacht.',
+  'TEXT_PAYPAL_CONFIG_TRANSACTION_INFO' => 'W&auml;hlen Sie die Art der Transaktion.<br/><br/><b>Hinweis:</b> Bei PayPal Plus und Ratenzahlung Powered by PayPal wird immer ein Sale gemacht.',
 
   'TEXT_PAYPAL_CONFIG_CAPTURE' => 'Manuell erfassen:',
   'TEXT_PAYPAL_CONFIG_CAPTURE_INFO' => 'Wollen Sie Zahlungen bei PayPal manuell erfassen (Capture)?<br/><br/><b>Hinweis:</b> Dazu ist es notwendig, dass die Transaktion auf Authorize gesetzt ist.',
