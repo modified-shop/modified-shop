@@ -280,6 +280,7 @@ class PayPalPaymentBase extends PayPalCommon {
 
   function check_install() {
     if (!isset($this->_check_install)) {
+      $this->check_update();
       $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_PAYPAL_CONFIG."'");
       if (xtc_db_num_rows($check_query) > 0) {
         $this->_check_install = true;
@@ -288,6 +289,19 @@ class PayPalPaymentBase extends PayPalCommon {
       }
     }
     return $this->_check_install;
+  }
+  
+  
+  function check_update() {
+    $table_array = array(
+      array('column' => 'transaction_id', 'default' => "varchar(64) NOT NULL default ''"),
+    );
+    foreach ($table_array as $table) {
+      $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_PAYMENT." LIKE '".xtc_db_input($table['column'])."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_PAYMENT." ADD ".$table['column']." ".$table['default']."");
+      }
+    }
   }
   
   
@@ -485,6 +499,9 @@ class PayPalPaymentBase extends PayPalCommon {
         xtc_db_perform(TABLE_PAYPAL_CONFIG, $sql_data_array);
       }
     }
+    
+    // check updates
+    $this->check_update();
   }
 
 
