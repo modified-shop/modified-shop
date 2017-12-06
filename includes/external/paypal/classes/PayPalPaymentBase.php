@@ -325,8 +325,8 @@ class PayPalPaymentBase extends PayPalCommon {
       // add new column
       $admin_access_array = array(
         'paypal_info',
+        'paypal_module',
       );
-  
       $admin_query = xtc_db_query("SELECT * 
                                      FROM ".TABLE_ADMIN_ACCESS."
                                     LIMIT 1");
