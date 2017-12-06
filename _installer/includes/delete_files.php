@@ -244,6 +244,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'INFO.txt', // neu
                      'lang/english/admin/blacklist.php', // neu
                      'lang/english/admin/paypal.php', // neu
+                     'lang/english/admin/paypal_payment.php', // neu
                      'lang/english/checkout_confirmation.php', // neu
                      'lang/english/sofortueberweisung_abort.php', // neu
                      'lang/english/easybill.php',
@@ -269,6 +270,7 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'lang/english/modules/payment/worldpay.php', // neu
                      'lang/german/admin/blacklist.php', // neu
                      'lang/german/admin/paypal.php', // neu
+                     'lang/german/admin/paypal_payment.php', // neu
                      'lang/german/checkout_confirmation.php', // neu
                      'lang/german/sofortueberweisung_abort.php', // neu
                      'lang/german/easybill.php',
