@@ -75,13 +75,7 @@ if ($listing_split->number_of_rows > 0) {
                                   LIMIT 1");
     $category = xtc_db_fetch_array($category_query, true);
     
-    $image = '';
-    if ($category['categories_image'] != '') {
-      $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
-    }    
-    if (!is_file(DIR_FS_CATALOG.$image)) {
-      $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
-    }
+    $image = $main->getImage($category['categories_image']);
   }
 
   if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
@@ -102,13 +96,7 @@ if ($listing_split->number_of_rows > 0) {
                               WHERE m.manufacturers_id = '".$manufacturers_id."'");
     $manu = xtc_db_fetch_array($manu_query, true);
 
-    $manu_image = '';
-    if ($manu['manufacturers_image'] != '') {
-      $manu_image = DIR_WS_IMAGES.$manu['manufacturers_image'];
-    }    
-    if (!is_file(DIR_FS_CATALOG.$manu_image)) {
-      $manu_image = ((MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'manufacturers/noimage.gif' : '');
-    }
+    $manu_image = $main->getImage($manu['manufacturers_image'],'',MANUFACTURER_IMAGE_SHOW_NO_IMAGE,'manufacturers/noimage.gif');
 
     if ($current_category_id != '0') {
       $module_smarty->assign('MANUFACTURER_IMAGE', ((isset($manu_image) && $manu_image != '') ? DIR_WS_BASE . $manu_image : ''));
@@ -217,14 +205,8 @@ if ($result != false) {
                                       ".CATEGORIES_CONDITIONS_C);
   if (xtc_db_num_rows($category_query, true) > 0) {
     $category = xtc_db_fetch_array($category_query, true);
-
-    $image = '';
-    if ($category['categories_image'] != '') {
-      $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
-    }    
-    if (!is_file(DIR_FS_CATALOG.$image)) {
-      $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
-    }
+    
+    $image = $main->getImage($category['categories_image']);
 
     $module_smarty->assign('CATEGORIES_NAME', $category['categories_name']);
     $module_smarty->assign('CATEGORIES_HEADING_TITLE', $category['categories_heading_title']);

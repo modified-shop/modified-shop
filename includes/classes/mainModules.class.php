@@ -111,4 +111,10 @@ class mainModules {
         return $this->call_module_method($attributes,$paramsArr,$paramsArrOrigin);
     }
     
+    function getImage($image, $dir, $check, $noImg, $imageOrigin)
+    {
+        $this->function_call = 'getImage';
+        return $this->call_module_method($image, $dir, $check, $noImg, $imageOrigin);
+    }
+    
 }
