@@ -64,7 +64,7 @@ class Currency extends PayPalModel
     {
         return $this->currency_code;
     }
-
+    
     /**
      * amount up to N digit after the decimals separator as defined in ISO 4217 for the appropriate currency code.
      *
