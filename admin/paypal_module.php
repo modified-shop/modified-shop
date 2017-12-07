@@ -39,6 +39,12 @@ function get_module_info($module) {
     }
     $keys_extra[$module_keys[$j]]['use_function'] = $key_value['use_function'];
     $keys_extra[$module_keys[$j]]['set_function'] = $key_value['set_function'];
+
+    if ($module->code == 'paypalinstallment') {
+      if ($module_keys[$j] == 'MODULE_PAYMENT_PAYPALINSTALLMENT_ALLOWED') {
+        unset($keys_extra[$module_keys[$j]]);
+      }
+    }
   }
   $module_info['keys'] = $keys_extra;
   
