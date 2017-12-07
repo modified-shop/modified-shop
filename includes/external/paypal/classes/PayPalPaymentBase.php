@@ -29,6 +29,14 @@ class PayPalPaymentBase extends PayPalCommon {
     $this->code = $class;
     $this->paypal_version = '1.1';
 
+    $this->admin_access_array = array(
+      'paypal_info',
+      'paypal_config',
+      'paypal_module',
+      'paypal_profile',
+      'paypal_webhook',
+    );
+
     $this->title = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '');
     $this->info = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO') : '');
     $this->description = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION').((defined('_VALID_XTC') && defined('MODULE_PAYMENT_'.strtoupper($this->code).'_LP')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_LP') : '') : '');
@@ -399,9 +407,9 @@ class PayPalPaymentBase extends PayPalCommon {
 
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_STATUS', 'True', '6', '1', NULL, now(), '', 'xtc_cfg_select_option(array(\'True\', \'False\'),' )");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_SORT_ORDER', '0', '6', '2', NULL, now(), '', '')");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_ALLOWED', '', '6', '3', NULL, now(), '', '')");
     
     if ($this->code != 'paypalinstallment') {
-      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_ALLOWED', '', '6', '3', NULL, now(), '', '')");
       xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_ZONE', '0', '6', '4', NULL, now(), 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(')");
     }
     
@@ -440,20 +448,12 @@ class PayPalPaymentBase extends PayPalCommon {
                     bic varchar(11) DEFAULT NULL,
                     KEY idx_orders_id (orders_id)
                   );");
-
-    $admin_access_array = array(
-      'paypal_info',
-      'paypal_config',
-      'paypal_module',
-      'paypal_profile',
-      'paypal_webhook',
-    );
   
     $admin_query = xtc_db_query("SELECT * 
                                    FROM ".TABLE_ADMIN_ACCESS."
                                   LIMIT 1");
     $admin = xtc_db_fetch_array($admin_query);
-    foreach ($admin_access_array as $admin_access) {
+    foreach ($this->admin_access_array as $admin_access) {
       if (!isset($admin[$admin_access])) {
         xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." ADD `".$admin_access."` INT(1) DEFAULT '0' NOT NULL");
         xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$admin_access." = '9' WHERE customers_id = 'groups' LIMIT 1");        
@@ -489,15 +489,6 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function remove() {
-
-    $admin_access_array = array(
-      'paypal_config',
-      'paypal_module',
-      'paypal_payment',
-      'paypal_profile',
-      'paypal_webhook',
-    );
-
     $check_query = xtc_db_query("SELECT configuration_key 
                                    FROM ".TABLE_CONFIGURATION." 
                                   WHERE configuration_key LIKE 'MODULE_PAYMENT_PAYPAL%_STATUS'");
@@ -513,8 +504,12 @@ class PayPalPaymentBase extends PayPalCommon {
                                      FROM ".TABLE_ADMIN_ACCESS."
                                     LIMIT 1");
       $admin = xtc_db_fetch_array($admin_query);
-      foreach ($admin_access_array as $admin_access) {
-        if (isset($admin[$admin_access])) {
+      foreach ($this->admin_access_array as $admin_access) {
+        if ($admin_access != 'paypal_info' 
+            && $admin_access != 'paypal_module' 
+            && isset($admin[$admin_access])
+            )
+        {
           xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." DROP COLUMN `".$admin_access."`");
         }
       }
@@ -615,15 +610,11 @@ class PayPalPaymentBase extends PayPalCommon {
                   );");
     
     // add new column
-    $admin_access_array = array(
-      'paypal_info',
-      'paypal_module',
-    );
     $admin_query = xtc_db_query("SELECT * 
                                    FROM ".TABLE_ADMIN_ACCESS."
                                   LIMIT 1");
     $admin = xtc_db_fetch_array($admin_query);
-    foreach ($admin_access_array as $admin_access) {
+    foreach ($this->admin_access_array as $admin_access) {
       if (!isset($admin[$admin_access])) {
         xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." ADD `".$admin_access."` INT(1) DEFAULT '0' NOT NULL");
         xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$admin_access." = '9' WHERE customers_id = 'groups' LIMIT 1");        
