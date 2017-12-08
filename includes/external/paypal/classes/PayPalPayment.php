@@ -1413,12 +1413,6 @@ class PayPalPayment extends PayPalPaymentBase {
       $payerinfo = $payer->getPayerInfo();
     }
     $customer_data = $this->get_customer_data($payment);
-
-    $message = '';
-    if (isset($_SESSION['pp_error']) && $_SESSION['pp_error'] != '') {
-      $message = $_SESSION['pp_error'];
-      unset($_SESSION['pp_error']);
-    }
         
     $payment_array = array(
       'id' => $payment->getId(),
@@ -1427,7 +1421,6 @@ class PayPalPayment extends PayPalPaymentBase {
       'account_status' => ((is_object($payer)) ? $payer->getStatus() : ''),
       'intent' => $payment->getIntent(),
       'state' => $payment->getState(),
-      'message' => $message,
       'address' => $customer_data['plain'],
       'transactions' => array(),
     );

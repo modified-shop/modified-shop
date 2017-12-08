@@ -413,6 +413,10 @@ class PayPalPaymentBase extends PayPalCommon {
       xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_ZONE', '0', '6', '4', NULL, now(), 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(')");
     }
     
+    if (!defined('MODULE_PAYMENT_PAYPAL_SECRET')) {
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_PAYPAL_SECRET', '".md5(uniqid())."', '6', '3', NULL, now(), '', '')");
+    }
+    
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_PAYMENT." ( 
                     paypal_id int(11) NOT NULL auto_increment, 
                     orders_id int(11) NOT NULL default '0', 
@@ -638,6 +642,10 @@ class PayPalPaymentBase extends PayPalCommon {
       )
     );
     $this->save_config($sql_data_array);
+
+    if (!defined('MODULE_PAYMENT_PAYPAL_SECRET')) {
+      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_PAYPAL_SECRET', '".md5(uniqid())."', '6', '3', NULL, now(), '', '')");
+    }
   }
 
 }
