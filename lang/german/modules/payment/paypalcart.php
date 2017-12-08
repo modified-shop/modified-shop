@@ -14,7 +14,7 @@
 $lang_array = array(
   'MODULE_PAYMENT_PAYPALCART_TEXT_TITLE' => 'PayPal Express',
   'MODULE_PAYMENT_PAYPALCART_TEXT_INFO' => '<img src="https://www.paypal.com/de_DE/DE/i/logo/lockbox_150x47.gif" />',
-  'MODULE_PAYMENT_PAYPALCART_TEXT_DESCRIPTION' => 'Sie werden nach dem "Best&auml;tigen" zu PayPal geleitet, um hier Ihre Bestellung zu bezahlen.<br />Danach gelangen Sie zur&uuml;ck in den Shop und erhalten Ihre Bestell-Best&auml;tigung.<br />Jetzt schneller bezahlen mit unbegrenztem PayPal-K&auml;uferschutz - nat&uuml;rlich kostenlos.',
+  'MODULE_PAYMENT_PAYPALCART_TEXT_DESCRIPTION' => 'PayPal Express Checkout - der PayPal Button im Warenkorb und auf der Artikelseite f&uuml;r maximale Konversion.<br/>Mehr Infos zu PayPal Express Shortcut finden Sie <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/express-checkout">hier</a>.',
   'MODULE_PAYMENT_PAYPALCART_ALLOWED_TITLE' => 'Erlaubte Zonen',
   'MODULE_PAYMENT_PAYPALCART_ALLOWED_DESC' => 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))',
   'MODULE_PAYMENT_PAYPALCART_STATUS_TITLE' => 'PayPal Express aktivieren',

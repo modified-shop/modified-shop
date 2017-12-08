@@ -53,9 +53,7 @@ require (DIR_WS_INCLUDES.'head.php');
             include_once(DIR_FS_EXTERNAL.'paypal/modules/admin_menu.php');
           ?>
           <div class="clear div_box mrg5" style="margin-top:-1px;">
-            <table class="clear tableConfig">
-
-            </table>
+            <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/merchant-info-center"><img src="images/paypal/paypal_info.jpg" style="max-width: 1000px;" /></a>
           </div>
         </td>
         <!-- body_text_eof //-->
