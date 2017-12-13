@@ -48,7 +48,7 @@ if (isset($order) && is_object($order)) {
           div.refund_row { border-bottom: 1px dotted #999; padding:3px 0px; }
           div.pp_refund label, div.refund_row label { display: inline-block; width: 12em; }
           #refund_comment { width: 340px; resize: none; }
-          div#pp { display:none; min-height: 100px; background: url(../includes/external/paypal/css/loading-paypal.gif) no-repeat; background-position: center center; background-color: #fff; }
+          div#pp { display:none; min-height: 44px; background: url(../includes/external/paypal/css/processing.gif) no-repeat; background-position: center center; background-color: #E2E2E2; border-left: 2px solid #bbb; border-right: 2px solid #bbb; border-bottom: 2px solid #bbb;}
           div#pp_error { background: #bbb;padding: 3px; }
         </style>
         <table border="0" width="100%" cellspacing="0" cellpadding="0">
