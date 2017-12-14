@@ -56,7 +56,7 @@
  define('TEXT_NO_FILE','Delete Selection');
  define('TEXT_CHOOSE_FILE_SERVER','(If you uploaded your files already via FTP to <i>(media/content)</i>, you can select the file here.');
  define('TEXT_CURRENT_FILE','Current File:');
- define('TEXT_FILE_DESCRIPTION','<b>Info:</b><br />You also got the opportunity to upload a <b>.html</b> or <b>.htm</b> file and display it as shop content.<br /> If you select or upload a file, the text in the box will be ignored.<br /><br />');
+ define('TEXT_FILE_DESCRIPTION','<b>Info:</b><br />You also have the option to include a <b>.html</b> or <b>.htm</b> file as content.<br />If you select or upload a file, you have the option to create additional text in the text box.<br />This will then appear before the text from the uploaded file.<br />If you do not want additional text, please leave the text field empty.');
  define('ERROR_FILE','Wrong file format (only .html or .htm)');
  define('ERROR_TITLE','Please enter a title');
  define('ERROR_COMMENT','Please enter a file description!');

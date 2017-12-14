@@ -56,7 +56,7 @@
  define('TEXT_NO_FILE','Auswahl L&ouml;schen');
  define('TEXT_CHOOSE_FILE_SERVER','(Falls Sie Ihre Dateien selbst via FTP auf Ihren Server gespeichert haben <i>(media/content)</i>, k&ouml;nnen Sie hier die Datei ausw&auml;hlen.');
  define('TEXT_CURRENT_FILE','Aktuelle Datei:');
- define('TEXT_FILE_DESCRIPTION','<b>Info:</b><br />Sie haben ebenfalls die M&ouml;glichkeit eine <b>.html</b> oder <b>.htm</b> Datei als Content einzubinden.<br /> Falls Sie eine Datei ausw&auml;hlen oder hochladen, wird der Text im Textfeld ignoriert.<br /><br />');
+ define('TEXT_FILE_DESCRIPTION','<b>Info:</b><br />Sie haben ebenfalls die M&ouml;glichkeit eine <b>.html</b> oder <b>.htm</b> Datei als Content einzubinden.<br />Falls Sie eine Datei ausw&auml;hlen oder hochladen, haben Sie die M&ouml;glichkeit zus&auml;tzlichen Text im Textfeld zu erstellen.<br />Dieser erscheint dann vor dem Text aus der hochgeladenen Datei.<br />Sollten Sie keine zus&auml;tzlichen Text w&uuml;nschen, lassen Sie das Textfeld bitte leer.');
  define('ERROR_FILE','Falsches Dateiformat (nur .html od .htm)');
  define('ERROR_TITLE','Bitte geben Sie einen Titel ein');
  define('ERROR_COMMENT','Bitte geben Sie eine Dateibeschreibung ein!');
