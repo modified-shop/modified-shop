@@ -57,6 +57,17 @@ class paypalclassic extends PayPalPayment {
 	}
 
 
+	function install() {
+	  parent::install();
+	  
+	  require_once(DIR_FS_CATALOG.'includes/modules/payment/paypalcart.php');
+	  $paypalcart = new paypalcart();
+	  if ($paypalcart->check() != 1) {
+	    $paypalcart->install();
+	  }
+	}
+
+
 	function keys() {
 		return array('MODULE_PAYMENT_PAYPALCLASSIC_STATUS', 
 		             'MODULE_PAYMENT_PAYPALCLASSIC_ALLOWED', 
