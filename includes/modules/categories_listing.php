@@ -10,12 +10,13 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-$categorie_smarty = new Smarty;
-$categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLATE.'/');
+  $categorie_smarty = new Smarty;
+  $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLATE.'/');
 
   if (isset ($cPath) && preg_match('/_/', $cPath)) { 
     $category_links = array_reverse($cPath_array);
-    $categories_query = "SELECT cd.categories_description,
+    $categories_query = "SELECT ".ADD_SELECT_CATEGORIES."
+                                cd.categories_description,
                                 c.categories_id,
                                 cd.categories_name,
                                 cd.categories_heading_title,
@@ -32,7 +33,8 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
                        ORDER BY sort_order, cd.categories_name";
     $categories_query = xtDBquery($categories_query); 
   } else {
-    $categories_query = "select cd.categories_description,
+    $categories_query = "select ".ADD_SELECT_CATEGORIES."
+                                cd.categories_description,
                                 c.categories_id,
                                 cd.categories_name,
                                 cd.categories_heading_title,
@@ -55,23 +57,20 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
   if ( xtc_db_num_rows($categories_query, true) >= 1 ) {
     $rows = 0;
     while ($categories = xtc_db_fetch_array($categories_query, true)) {
-      $rows ++;
      
       $cPath_new = xtc_category_link($categories['categories_id'],$categories['categories_name']);
-
-      $image = '';
-      if ($categories['categories_image'] != '') {
-        $image = DIR_WS_IMAGES.'categories/'.$categories['categories_image'];
-      }    
-      if (!is_file(DIR_FS_CATALOG.$image)) {
-        $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
-      }
+     
+      $image = $main->getImage($categories['categories_image']);
       
-      $categories_content[] = array ('CATEGORIES_NAME' => $categories['categories_name'], 
-                                     'CATEGORIES_HEADING_TITLE' => $categories['categories_heading_title'],
-                                     'CATEGORIES_IMAGE' => (($image != '') ? DIR_WS_BASE . $image : ''),
-                                     'CATEGORIES_LINK' => xtc_href_link(FILENAME_DEFAULT, $cPath_new), 
-                                     'CATEGORIES_DESCRIPTION' => $categories['categories_description']);
+      $categories_content[$rows] = array ('CATEGORIES_NAME' => $categories['categories_name'], 
+                                         'CATEGORIES_HEADING_TITLE' => $categories['categories_heading_title'],
+                                         'CATEGORIES_IMAGE' => (($image != '') ? DIR_WS_BASE . $image : ''),
+                                         'CATEGORIES_LINK' => xtc_href_link(FILENAME_DEFAULT, $cPath_new), 
+                                         'CATEGORIES_DESCRIPTION' => $categories['categories_description']);
+                                         
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/categories_listing/categories_content/','php') as $file) require ($file);
+                                     
+      $rows ++;
     }  
     $categorie_smarty->assign('categories_content', $categories_content);
   }
@@ -86,7 +85,9 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
 
   $categorie_smarty->assign('language', $_SESSION['language']);
   $categorie_smarty->caching = 0;
-  $categories_listing = $categorie_smarty->fetch(CURRENT_TEMPLATE.'/module/sub_categories_listing.html');
+  $categorie_template = 'sub_categories_listing.html';
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/categories_listing/categories_smarty/','php') as $file) require_once ($file);
+  $categories_listing = $categorie_smarty->fetch(CURRENT_TEMPLATE.'/module/'.$categorie_template);
 
-$module_smarty->assign('CATEGORIES_LISTING', $categories_listing);
+  $module_smarty->assign('CATEGORIES_LISTING', $categories_listing);
 ?>

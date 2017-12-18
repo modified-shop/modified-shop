@@ -13,14 +13,14 @@
 	(c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
 	(c) 2002-2003 osCommerce(ot_cod_fee.php,v 1.02 2003/02/24); www.oscommerce.com
 	(C) 2001 - 2003 TheMedia, Dipl.-Ing Thomas Plänkers ; http://www.themedia.at & http://www.oscommerce.at
-	(c) 2003 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id: payone_wlt.php 11025 2017-12-06 16:23:38Z GTB $)
+	(c) 2003 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id$)
 
 	Released under the GNU General Public License
 	---------------------------------------------------------------------------------------*/
 
 require_once (dirname(__FILE__).'/payone.php');
 
-define('MODULE_PAYMENT_PAYONE_WLT_TEXT_TITLE', 'PayPal');
+define('MODULE_PAYMENT_PAYONE_WLT_TEXT_TITLE', 'PayPal via Payone');
 define('MODULE_PAYMENT_PAYONE_WLT_TEXT_DESCRIPTION', 'Payment via e-Wallet through PayOne');
 define('MODULE_PAYMENT_PAYONE_WLT_TEXT_INFO', 'Payment via e-Wallet (PayPal)');
 define('MODULE_PAYMENT_PAYONE_WLT_STATUS_TITLE', MODULE_PAYMENT_PAYONE_STATUS_TITLE);

@@ -140,14 +140,8 @@ if ($category_depth == 'nested') {
     $cindex = 0;
     while ($categories = xtc_db_fetch_array($categories_query, true)) {
       $cPath_new = xtc_category_link($categories['categories_id'],$categories['categories_name']);
-
-      $image = '';
-      if ($categories['categories_image'] != '') {
-        $image = DIR_WS_IMAGES.'categories/'.$categories['categories_image'];
-      }    
-      if (!is_file(DIR_FS_CATALOG.$image)) {
-        $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
-      }
+      
+      $image = $main->getImage($categories['categories_image']);
 
       $categories_content[$cindex] = array ('CATEGORIES_NAME' => $categories['categories_name'],
                                      'CATEGORIES_HEADING_TITLE' => $categories['categories_heading_title'],
@@ -164,13 +158,7 @@ if ($category_depth == 'nested') {
   $new_products_category_id = $current_category_id;
   include (DIR_WS_MODULES.FILENAME_NEW_PRODUCTS);
 
-  $image = '';
-  if ($category['categories_image'] != '') {
-    $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
-  }    
-  if (!is_file(DIR_FS_CATALOG.$image)) {
-    $image = ((CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'categories/noimage.gif' : '');
-  }
+  $image = $main->getImage($category['categories_image']);
 
   // get default template
   if ($category['categories_template'] == '' || $category['categories_template'] == 'default') {
