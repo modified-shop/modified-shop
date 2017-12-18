@@ -375,32 +375,5 @@ class main {
     
     return xtc_db_fetch_array($attributes);  
   }
-  
-  /**
-   * get image
-   *
-   * @param string $image
-   * @param string $dir
-   * @param string $check
-   * @param string $noImg
-   *
-   * @return string
-   */
-  function getImage($image, $dir = 'categories/', $check = CATEGORIES_IMAGE_SHOW_NO_IMAGE, $noImg = 'categories/noimage.gif') {
-
-    $imageOrigin = $image;
-    
-    if ($image != '') {
-      $image = DIR_WS_IMAGES . $dir . $image;
-    }   
-    if (!is_file(DIR_FS_CATALOG.$image)) {
-      $image = (($check == 'true') ? DIR_WS_IMAGES . $dir . $noImg : '');
-    }
-    
-    //new module support
-    $image = $this->mainModules->getImage($image, $dir, $check, $noImg, $imageOrigin);
-    
-    return $image;
-  }
 }
 ?>
