@@ -100,7 +100,13 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   if (xtc_db_num_rows($manufacturer_query, true)) {
     $manufacturer = xtc_db_fetch_array($manufacturer_query, true);
 
-    $image = $main->getImage($manufacturer['manufacturers_image'],'',MANUFACTURER_IMAGE_SHOW_NO_IMAGE,'manufacturers/noimage.gif');
+    $image = '';
+    if ($manufacturer['manufacturers_image'] != '') {
+      $image = DIR_WS_IMAGES.$manufacturer['manufacturers_image'];
+    }    
+    if (!is_file(DIR_FS_CATALOG.$image)) {
+      $image = ((MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'manufacturers/noimage.gif' : '');
+    }
 
     $info_smarty->assign('MANUFACTURER_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
     $info_smarty->assign('MANUFACTURER', $manufacturer['manufacturers_name']);
