@@ -21,7 +21,7 @@ define('MODULE_PAYMENT_INVOICE_TEXT_INFO','');
 define('MODULE_PAYMENT_INVOICE_STATUS_TITLE' , 'Rechnungsmodul aktivieren');
 define('MODULE_PAYMENT_INVOICE_STATUS_DESC' , 'M&ouml;chten Sie Zahlungen per Rechnung akzeptieren?');
 define('MODULE_PAYMENT_INVOICE_ORDER_STATUS_ID_TITLE' , 'Bestellstatus festlegen');
-define('MODULE_PAYMENT_INVOICE_ORDER_STATUS_ID_DESC' , 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen');
+define('MODULE_PAYMENT_INVOICE_ORDER_STATUS_ID_DESC' , 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen.');
 define('MODULE_PAYMENT_INVOICE_SORT_ORDER_TITLE' , 'Anzeigereihenfolge');
 define('MODULE_PAYMENT_INVOICE_SORT_ORDER_DESC' , 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt.');
 define('MODULE_PAYMENT_INVOICE_ZONE_TITLE' , 'Zahlungszone');
@@ -29,9 +29,9 @@ define('MODULE_PAYMENT_INVOICE_ZONE_DESC' , 'Wenn eine Zone ausgew&auml;hlt ist,
 define('MODULE_PAYMENT_INVOICE_ALLOWED_TITLE' , 'Erlaubte Zonen');
 define('MODULE_PAYMENT_INVOICE_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))');
 define('MODULE_PAYMENT_INVOICE_MIN_ORDER_TITLE' , 'Notwendige Bestellungen');
-define('MODULE_PAYMENT_INVOICE_MIN_ORDER_DESC' , 'Die Mindestanzahl an Bestellungen die ein Kunden haben muss damit die Option zur Verf&uuml;gung steht.');
+define('MODULE_PAYMENT_INVOICE_MIN_ORDER_DESC' , 'Die Mindestanzahl an Bestellungen, die ein Kunden haben muss, damit die Zahlungsmethode zur Verf&uuml;gung steht.');
 define('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID_TITLE' , 'Bestellstatus Anzahl Bestellungen');
-define('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID_DESC' , 'Bestellstatus einer Bestellung damit Sie zur Berechnung der erfolgten Bestellungen verwendet wird.');
+define('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID_DESC' , 'Wählen Sie hier den Status der Bestellungen aus, der für die unter "Notwendige Bestellungen" eingetragene Anzahl berücksichtigt werden soll.');
 define('MODULE_PAYMENT_INVOICE_MAX_AMOUNT_TITLE' , 'H&ouml;chstbetrag');
 define('MODULE_PAYMENT_INVOICE_MAX_AMOUNT_DESC' , 'Geben Sie hier den H&ouml;chstbetrag f&uuml;r die Bezahlung auf Rechnung an.');
 ?>
