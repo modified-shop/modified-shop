@@ -33,8 +33,8 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_LINK_ACCOUNT' => 'Link im Account',
   'TEXT_PAYPAL_MODULE_LINK_ACCOUNT_INFO' => 'Soll der Zahllink im Account angezeigt werden?',
 
-  'TEXT_PAYPAL_MODULE_LINK_PRODUCT' => 'Button beim Artikel',
-  'TEXT_PAYPAL_MODULE_LINK_PRODUCT_INFO' => 'Soll der PayPal Button in den Artikel Infos angezeigt werden?',
+  'TEXT_PAYPAL_MODULE_LINK_PRODUCT' => 'Express Button beim Artikel',
+  'TEXT_PAYPAL_MODULE_LINK_PRODUCT_INFO' => 'Soll der PayPal Express Button in den Artikel Infos angezeigt werden?',
 
   'TEXT_PAYPAL_MODULE_USE_TABS' => 'Accordion / Tabs',
   'TEXT_PAYPAL_MODULE_USE_TABS_INFO' => 'Verwendet das Template Accordion oder Tabs im Checkout?',
@@ -45,13 +45,13 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_ORDER_STATUS_ACCEPTED' => 'Bestellstatus',
   'TEXT_PAYPAL_MODULE_ORDER_STATUS_ACCEPTED_INFO' => 'W&auml;hlen Sie den Bestellstatus.<br/><b>Wichtig:</b> die Bezeichnung darf nicht das Wort "bezahlt" enthalten.',
   
-  'TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT' => 'Anzeige beim Artikel',
+  'TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT' => 'Finanzierungsbox beim Artikel',
   'TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT_INFO' => 'Sollen Details zur Ratenzahlung beim Artikel angezeigt werden?',
 
-  'TEXT_PAYPAL_MODULE_UPSTREAM_CART' => 'Anzeige im Warenkorb',
+  'TEXT_PAYPAL_MODULE_UPSTREAM_CART' => 'Finanzierungsbox im Warenkorb',
   'TEXT_PAYPAL_MODULE_UPSTREAM_CART_INFO' => 'Sollen Details zur Ratenzahlung im Warenkorb angezeigt werden?',
 
-  'TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT' => 'Anzeige im Checkout',
+  'TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT' => 'Finanzierungsbox im Checkout',
   'TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT_INFO' => 'Sollen Details zur Ratenzahlung im Checkout angezeigt werden?',
 );
 
