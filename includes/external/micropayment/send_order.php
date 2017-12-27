@@ -139,8 +139,8 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     // PAYMENT MODUL TEXTS
     // EU Bank Transfer
     if ($order->info['payment_method'] == 'eustandardtransfer') {
-        $smarty->assign('PAYMENT_INFO_HTML', MODULE_PAYMENT_EUTRANSFER_TEXT_DESCRIPTION);
-        $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", MODULE_PAYMENT_EUTRANSFER_TEXT_DESCRIPTION));
+        $smarty->assign('PAYMENT_INFO_HTML', MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION);
+        $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION));
     }
 
     // MONEYORDER
