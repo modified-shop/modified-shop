@@ -324,8 +324,8 @@ class product {
           }
         }
       }
-      return $cross_sell_data;
     }
+    return $cross_sell_data;
   }
 
   /**
