@@ -46,6 +46,7 @@ $products_query = xtDBquery("SELECT p2c.products_id,
                                     ".$sorting);
 
 $i = 0;
+$p_data = array();
 while ($products_data = xtc_db_fetch_array($products_query, true)) {
 	$p_data[$i] = array ('pID' => $products_data['products_id'], 'pName' => $products_data['products_name']);
 	if ($products_data['products_id'] == $product->data['products_id']) {
