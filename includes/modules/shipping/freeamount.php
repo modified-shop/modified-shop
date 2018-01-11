@@ -54,10 +54,10 @@
           xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES', '1', '6', '0', now())");
           if (defined('MODULE_SHIPPING_FREEAMOUNT_AMOUNT')) {
             if (!defined('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_1')) {
-              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_1', ". MODULE_SHIPPING_FREEAMOUNT_ALLOWED .", '6', '0', 'xtc_cfg_textarea(', now())");
+              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_1', '". MODULE_SHIPPING_FREEAMOUNT_ALLOWED ."', '6', '0', 'xtc_cfg_textarea(', now())");
             }
             if (!defined('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_1')) {
-              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_1', ". MODULE_SHIPPING_FREEAMOUNT_AMOUNT .", '6', '0', now())");
+              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_1', '". MODULE_SHIPPING_FREEAMOUNT_AMOUNT ."', '6', '0', now())");
             }
           }
         }
