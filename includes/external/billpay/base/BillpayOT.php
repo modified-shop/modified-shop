@@ -200,8 +200,9 @@ class BillpayOT
         global $order;
 
         /** @noinspection PhpIncludeInspection */
-        require_once(DIR_FS_INC . 'xtc_calculate_tax.inc.php');
-
+        if (!function_exists('xtc_calculate_tax')) { //fix #1309
+          require_once(DIR_FS_INC . 'xtc_calculate_tax.inc.php');
+        }
         $billpay_tax = xtc_get_tax_rate(constant($this->_configPrefix.'TAX_CLASS'), $order->delivery['country']['id'], $order->delivery['zone_id']);
         $value = xtc_calculate_tax($this->calculateFee($total), $billpay_tax);
         $value = round($value, 2);

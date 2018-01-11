@@ -34,7 +34,7 @@
       global $order, $xtPrice;
       
       //include needed functions
-      require_once(DIR_FS_INC . 'xtc_calculate_tax.inc.php');
+      //require_once(DIR_FS_INC . 'xtc_calculate_tax.inc.php'); //fix #1309
       
       if (MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE == 'true') {
 
