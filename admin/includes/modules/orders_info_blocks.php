@@ -177,8 +177,9 @@
             echo '            <td class="dataTableContent" valign="top" align="right">'.$order->products[$i]['qty'].'&nbsp;x&nbsp;</td>'.PHP_EOL;
             echo '            <td class="dataTableContent" valign="top">'.PHP_EOL;
             echo '              <a href="'.HTTP_CATALOG_SERVER.DIR_WS_CATALOG.'product_info.php?products_id='.$order->products[$i]['id'].'" target="_blank">'.$order->products[$i]['name'].'</a>';
-            if (isset($order->products[$i]['attributes']) && sizeof($order->products[$i]['attributes']) > 0) {
-              for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j ++) {
+            $attr_count = isset($order->products[$i]['attributes']) ? count($order->products[$i]['attributes']) : 0;
+            if ($attr_count > 0) {
+              for ($j = 0; $j < $attr_count; $j ++) {
                 echo '<br /><nobr><i>&nbsp; - '.$order->products[$i]['attributes'][$j]['option'].': '.$order->products[$i]['attributes'][$j]['value'].'</i></nobr> ';
               }
             }
@@ -187,8 +188,8 @@
             echo ($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : '<br />';
             // attribute models
             $attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
-            if (isset($order->products[$i]['attributes']) && sizeof($order->products[$i]['attributes']) > 0) {
-              for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j ++) {
+            if ($attr_count > 0) {
+              for ($j = 0; $j < $attr_count; $j ++) {
                 $model = $order->products[$i]['attributes'][$j]['attributes_model'];
                 if ($model == '') {
                   $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
