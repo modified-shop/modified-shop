@@ -471,13 +471,14 @@ class shoppingCart {
     while (list ($products_id) = each($this->contents)) {
       $qty = $this->contents[$products_id]['qty'];
       // products price
-      $product_query = xtc_db_query("SELECT products_id,
-                                            products_price,
-                                            products_discount_allowed,
-                                            products_tax_class_id,
-                                            products_weight
-                                       FROM ".TABLE_PRODUCTS."
-                                      WHERE products_id='".xtc_get_prid($products_id)."'");
+      $product_query = xtc_db_query("SELECT ".ADD_SELECT_CART."
+                                            p.products_id,
+                                            p.products_price,
+                                            p.products_discount_allowed,
+                                            p.products_tax_class_id,
+                                            p.products_weight
+                                       FROM ".TABLE_PRODUCTS." p
+                                      WHERE p.products_id='".xtc_get_prid($products_id)."'");
       if ($product = xtc_db_fetch_array($product_query)) {
 
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
