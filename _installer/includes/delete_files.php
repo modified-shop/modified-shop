@@ -250,6 +250,9 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'lang/english/easybill.php',
                      'lang/english/modules/order_total/ot_sofort.php', // neu
                      'lang/english/modules/payment/images/logo_750.gif', // neu
+                     'lang/english/modules/payment/images/sofortueberweisung_info.gif', // neu
+                     'lang/english/modules/payment/images/sofortueberweisung_logo.gif', // neu
+                     'lang/english/modules/payment/images/sofortueberweisungk_banner.gif', // neu
                      'lang/english/modules/payment/billsafe_2hp.php',
                      'lang/english/modules/payment/cc.php',
                      'lang/english/modules/payment/iclear.php',
@@ -276,6 +279,9 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'lang/german/easybill.php',
                      'lang/german/modules/order_total/ot_sofort.php', // neu
                      'lang/german/modules/payment/images/logo_750.gif', // neu
+                     'lang/german/modules/payment/images/sofortueberweisung_info.gif', // neu
+                     'lang/german/modules/payment/images/sofortueberweisung_logo.gif', // neu
+                     'lang/german/modules/payment/images/sofortueberweisungk_banner.gif', // neu
                      'lang/german/modules/payment/billsafe_2hp.php',
                      'lang/german/modules/payment/cc.php',
                      'lang/german/modules/payment/iclear.php',
