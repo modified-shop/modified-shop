@@ -164,7 +164,8 @@ if (xtc_not_null($action)) {
 
     // customer wants to add a quickie to the cart (called from a box)
     case 'add_a_quickie' :
-      if (isset($_POST['quickie']) && $_POST['quickie'] != '') {
+        foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/add_a_quickie_prepare_post/','php') as $file) require ($file);
+       if (isset($_POST['quickie']) && $_POST['quickie'] != '') {
         $quicky = addslashes($_POST['quickie']);
         $quickie_query = xtc_db_query("SELECT products_fsk18,
                                               products_id
@@ -217,6 +218,7 @@ if (xtc_not_null($action)) {
 
     // performed by the 'buy now' button in product listings and review page
     case 'buy_now':
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/buy_now_prepare_get/','php') as $file) require ($file);
       if (isset($_GET['BUYproducts_id'])) {
         $_GET['BUYproducts_id'] = (int)$_GET['BUYproducts_id'];
         // check permission to view product
