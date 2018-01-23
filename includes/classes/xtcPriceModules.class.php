@@ -104,4 +104,11 @@ class priceModules {
         $this->function_call = 'checkAttributes';
         return $this->call_module_method($pID); //Return parameter must be in first place
     }
+    
+    function getPprice($pData,$pID)
+    {
+        $this->function_call = 'getPprice';
+        return $this->call_module_method($pData,$pID); //Return parameter must be in first place
+    }
+    
 }

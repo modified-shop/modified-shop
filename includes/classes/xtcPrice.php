@@ -207,6 +207,8 @@ class xtcPrice {
   function getPprice($pID) {
     $pQuery = xtDBquery("SELECT products_price FROM ".TABLE_PRODUCTS." WHERE products_id='".(int)$pID."'");
     $pData = xtc_db_fetch_array($pQuery, true);
+    //new module support
+    $pData = $this->priceModules->getPprice($pData,$pID);                                                   
     return $pData['products_price'];
   }
   
