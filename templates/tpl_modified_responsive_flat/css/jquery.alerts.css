@@ -105,17 +105,17 @@
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
-	border:1px solid #242424;
+	border:1px solid #ccc;
 	text-decoration:none;
-	background-color:#242424;
-	color:#ffffff;
+	background-color:#eee;
+	color:#666;
 	display:inline-block;
   outline:none;
 }
 #js_popup_panel input[type=button]:hover{
-	background-color:#494949;
-	border:1px solid #494949;
-  color:#eee;
+	background-color:#eee;
+	border:1px solid #aaa;
+  color:#222;
   text-decoration:none !important;
 }
 
