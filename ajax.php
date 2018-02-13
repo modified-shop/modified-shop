@@ -64,11 +64,4 @@ if (defined('STORE_PAGE_PARSE_TIME') && STORE_PAGE_PARSE_TIME == 'true') {
         error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $parse_time . 's] ' . getenv('REQUEST_URI') . "\n", 3, DIR_FS_LOG.'mod_parsetime_'. date('Y-m-d') .'.log');
     }
 }
-
-if (defined('GZIP_COMPRESSION') && GZIP_COMPRESSION == 'true' && $ext_zlib_loaded == true && $ini_zlib_output_compression < 1) {
-    xtc_gzip_output(GZIP_LEVEL);
-}
-
-// commented out due to errors
-//function_exists('xtc_db_close') ? xtc_db_close() : null;
 ?>
