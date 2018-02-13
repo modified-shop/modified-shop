@@ -16,8 +16,8 @@ $fs_dir = DIR_FS_CATALOG.$ws_dir;
 if (is_dir($fs_dir)) {
   // favicon
   $favicon_array = glob($fs_dir.'favicon*');
-  natcasesort($favicon_array);
-  if (count($favicon_array) > 0) {
+  if (is_array($favicon_array) && count($favicon_array) > 0) {
+    natcasesort($favicon_array);
     foreach ($favicon_array as $favicon) {
       $favicon_type = pathinfo($favicon);
       $favicon = basename($favicon);
@@ -37,8 +37,8 @@ if (is_dir($fs_dir)) {
 
   // apple touch icon
   $apple_touch_icon_array = glob($fs_dir.'apple-touch-icon*');
-  natcasesort($apple_touch_icon_array);
-  if (count($apple_touch_icon_array) > 0) {
+  if (is_array($apple_touch_icon_array) && count($apple_touch_icon_array) > 0) {
+    natcasesort($apple_touch_icon_array);
     foreach ($apple_touch_icon_array as $apple_touch_icon) {
       $apple_touch_icon = basename($apple_touch_icon);
       preg_match('/(\d+)x(\d+)/', $apple_touch_icon, $match);
@@ -53,8 +53,8 @@ if (is_dir($fs_dir)) {
 
   // windows icon
   $mstile_array = glob($fs_dir.'mstile*');
-  natcasesort($mstile_array);
-  if (count($mstile_array) > 0) {
+  if (is_array($mstile_array) && count($mstile_array) > 0) {
+    natcasesort($mstile_array);
     $browserconfig = '<?xml version="1.0" encoding="utf-8"?><browserconfig><msapplication><tile>';
     foreach ($mstile_array as $mstile) {
       $mstile = basename($mstile);
@@ -87,8 +87,8 @@ if (is_dir($fs_dir)) {
 
   // android touch icon
   $android_touch_icon_array = glob($fs_dir.'android-chrome*');
-  natcasesort($android_touch_icon_array);
-  if (count($android_touch_icon_array) > 0) {
+  if (is_array($android_touch_icon_array) && count($android_touch_icon_array) > 0) {
+    natcasesort($android_touch_icon_array);
     $manifest_array = array('name' => encode_htmlspecialchars(TITLE),
                             'icons' => array()
                             );
