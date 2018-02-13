@@ -71,6 +71,7 @@ class checkout_express
     }
     
     function content_install() {
+      if (!defined('MODULE_CHECKOUT_EXPRESS_CONTENT_INSTALLED') || MODULE_CHECKOUT_EXPRESS_CONTENT_INSTALLED != '1') {
         $content_query = xtc_db_query("SELECT MAX(content_id)+1 as content_id,
                                               MAX(content_group)+1 as content_group
                                          FROM ".TABLE_CONTENT_MANAGER);
@@ -113,6 +114,7 @@ class checkout_express
         xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                          SET configuration_value = '1'
                        WHERE configuration_key = 'MODULE_CHECKOUT_EXPRESS_CONTENT_INSTALLED'");
+      }
     }
     
     function remove()
