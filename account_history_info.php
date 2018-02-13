@@ -58,6 +58,7 @@ if ($customer_info['customers_id'] != $_SESSION['customer_id']) {
 
 require (DIR_WS_CLASSES.'order.php');
 $order = new order((int)$_GET['order_id']);
+$xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
 
 $breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_HISTORY_INFO, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_HISTORY_INFO, xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
