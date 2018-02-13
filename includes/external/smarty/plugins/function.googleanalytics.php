@@ -104,7 +104,7 @@ function smarty_function_googleanalytics($params, &$smarty) {
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script',".((isset($gs)) ? "'".$gs."'" : '//www.google-analytics.com/analytics.js').",'ga');
   
-        ga('create', '".$account."', '".$account_domain."');
+        ga('create', '".$account."', '".TRACKING_GOOGLEANALYTICS_DOMAIN."');
         ga('set', 'anonymizeIp', true);\n";
   
     if (TRACKING_GOOGLE_LINKID == 'true'){
