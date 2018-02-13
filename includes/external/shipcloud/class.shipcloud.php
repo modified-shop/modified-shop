@@ -398,8 +398,16 @@ class shipcloud {
   }
 
   
-  public function get_carriers($database = false) { 
-    $request = get_external_content('https://'.MODULE_SHIPCLOUD_API.'@'.self::SC_URL_CARRIERS, 3, false);;
+  public function get_carriers($database = false) {
+    if (!is_file(SQL_CACHEDIR.'shipcloud.txt') 
+        || time() - filemtime(SQL_CACHEDIR.'shipcloud.txt') > 86400
+        )
+    {
+      $request = get_external_content('https://'.MODULE_SHIPCLOUD_API.'@'.self::SC_URL_CARRIERS, 3, false);
+      file_put_contents(SQL_CACHEDIR.'shipcloud.txt', $request, LOCK_EX);
+    } else {
+      $request = file_get_contents(SQL_CACHEDIR.'shipcloud.txt');
+    }
     $request = json_decode($request, true);
     
     if ($database === true) {
