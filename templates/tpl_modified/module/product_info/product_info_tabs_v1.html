@@ -52,7 +52,9 @@
 
         <ul class="pd_iconlist">
           <li class="print">{$PRODUCTS_PRINT_LAYER}</li>
-          <li class="vote">{$PRODUCTS_WRITE_REVIEW}</li>
+          {if $smarty.session.customers_status.customers_status_write_reviews == 1}
+           <li class="vote">{$PRODUCTS_WRITE_REVIEW}</li>
+          {/if}
           {if isset($EXPRESS_LINK)}<li class="express">{$EXPRESS_LINK}</li>{/if}
           {if $ADD_CART_BUTTON_WISHLIST_TEXT}<li class="wishlist">{$ADD_CART_BUTTON_WISHLIST_TEXT}</li>{/if}
         </ul>
