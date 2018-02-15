@@ -130,6 +130,14 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->assign('AGB_HTML', $shop_content_data['content_text']);
   $smarty->assign('AGB_TXT', $shop_content_data['content_text']);
 
+  // privacy policy to email 
+  $shop_content_data = $main->getContentData(2, $lang_id, $order->info['status']);
+  //Image path correction - absolute path needed
+  $shop_content_data = str_replace('src="'.DIR_WS_CATALOG.'images/', 'src="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'images/', $shop_content_data);
+  $smarty->assign('PRIVACY_POLICY_HTML', $shop_content_data['content_text']);
+  $smarty->assign('PRIVACY_POLICY_TXT', $shop_content_data['content_text']);
+
+
   if (DOWNLOAD_ENABLED == 'true') {
     $send_order = true;
     $_GET['order_id'] = $order->info['order_id'];

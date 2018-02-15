@@ -736,7 +736,7 @@ define('CHECKOUT_SHOW_PRODUCTS_MODEL_DESC','Sollen auf der Bestellbest&auml;tigu
 
 // email billing attachments
 define('EMAIL_BILLING_ATTACHMENTS_TITLE', 'Verrechnungs-E-Mail-Anh&auml;nge f&uuml;r Bestellungen ');
-define('EMAIL_BILLING_ATTACHMENTS_DESC', 'Beispiel f&uuml;r Anh&auml;nge - vorausgesetzt die Dateien befinden sich im Shopverzeichnis <b>/media/content/</b>. Mehrere Anh&auml;nge mit Komma ohne Leerzeichen trennen:<br /> media/content/agb.pdf,media/content/widerruf.pdf');
+define('EMAIL_BILLING_ATTACHMENTS_DESC', 'Beispiel f&uuml;r Anh&auml;nge - vorausgesetzt die Dateien befinden sich im Shopverzeichnis <b>/media/content/</b>. Mehrere Anh&auml;nge mit Komma ohne Leerzeichen trennen:<br />media/content/agb.pdf,media/content/widerruf.pdf,media/content/datenschutz.pdf');
 
 // email images
 define('SHOW_IMAGES_IN_EMAIL_TITLE', 'Artikelbilder in Bestell-E-Mail einf&uuml;gen');
