@@ -737,7 +737,7 @@ define ('CHECKOUT_SHOW_PRODUCTS_MODEL_DESC', 'on the order confirmation page you
 
 // Billing email attachments
 define ('EMAIL_BILLING_ATTACHMENTS_TITLE', 'Billing - E-Mail attachments for orders');
-define ('EMAIL_BILLING_ATTACHMENTS_DESC', 'Example of attachments - assumed that the files are in the shop directory <b>/media/content/</b>, separate multiple attachments with comma and no space:<br /> media/content/agb.pdf,media/content/widerruf.pdf.');
+define ('EMAIL_BILLING_ATTACHMENTS_DESC', 'Example of attachments - assumed that the files are in the shop directory <b>/media/content/</b>, separate multiple attachments with comma and no space:<br />media/content/agb.pdf,media/content/widerruf.pdf,media/content/datenschutz.pdf');
 
 // email images
 define ('SHOW_IMAGES_IN_EMAIL_TITLE', 'Product Images in Order - Insert email');

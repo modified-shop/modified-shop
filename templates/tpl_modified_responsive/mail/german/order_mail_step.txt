@@ -64,3 +64,5 @@ Versandadresse
 {$REVOCATION_TXT}
 
 {$AGB_TXT}
+
+{$PRIVACY_POLICY_TXT}
