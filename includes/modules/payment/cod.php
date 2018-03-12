@@ -33,7 +33,7 @@ class cod {
     $this->description = MODULE_PAYMENT_COD_TEXT_DESCRIPTION;
     $this->sort_order = MODULE_PAYMENT_COD_SORT_ORDER;
     $this->enabled = ((MODULE_PAYMENT_COD_STATUS == 'True') ? true : false);
-    $this->info = MODULE_PAYMENT_COD_TEXT_INFO;
+    $this->info = ((MODULE_PAYMENT_COD_DISPLAY_INFO == 'True') ? MODULE_PAYMENT_COD_TEXT_DESCRIPTION.'<br />'.MODULE_PAYMENT_COD_TEXT_INFO : MODULE_PAYMENT_COD_TEXT_DESCRIPTION);
     $this->cost = '';    
     $this->limit_subtotal = MODULE_PAYMENT_COD_LIMIT_ALLOWED; // for comparison to be able to limit order subtotal sum where cod allowed
 
