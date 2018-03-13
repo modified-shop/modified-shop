@@ -3,42 +3,48 @@
 {#heading_text#}<br />
 <br />
 {if $info_message != ''}<div class="{if $message_class}{$message_class}{else}info{/if}message">{$info_message}</div>{/if}
-{$FORM_ACTION}
-<div class="highlightbox">
-<table border="0" cellspacing="0" cellpadding="4">
-  {if $INPUT_CODE}
-    <tr>
-      <td width="140"><strong>{#text_sec_code#}:</strong></td>
-      <td>{$VVIMG}</td>
-    </tr>
-    <tr>
-      <td><strong>{#text_sec_code#}:</strong></td>
-      <td>{$INPUT_CODE}</td>
-    </tr>
-  {/if}
-  <tr>
-    <td><strong>{#text_email#}:</strong></td>
-    <td>{$INPUT_EMAIL}</td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>
-      <table cellspacing="0" cellpadding="0">
+{if !isset($activated)}
+  {$FORM_ACTION}
+  <div class="highlightbox">
+    <table border="0" cellspacing="0" cellpadding="4">
+      {if $INPUT_CODE}
         <tr>
-          <td>{$CHECK_INP}</td>
-          <td>{#text_in#}</td>
+          <td width="140"><strong>{#text_sec_code#}:</strong></td>
+          <td>{$VVIMG}</td>
         </tr>
         <tr>
-          <td>{$CHECK_DEL}</td>
-          <td>{#text_out#}</td>
+          <td><strong>{#text_sec_code#}:</strong></td>
+          <td>{$INPUT_CODE}</td>
         </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>{$BUTTON_SEND}</td>
-  </tr>
-</table>
-</div>
-{$FORM_END}
+      {/if}
+      <tr>
+        <td><strong>{#text_email#}:</strong></td>
+        <td>{$INPUT_EMAIL}</td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td>{$CHECK_INP}</td>
+              <td>{#text_in#}</td>
+            </tr>
+            <tr>
+              <td>{$CHECK_DEL}</td>
+              <td>{#text_out#}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>{$BUTTON_SEND}</td>
+      </tr>
+    </table>
+  </div>
+  {$FORM_END}
+{else}
+  <div class="highlightbox">
+    <h4>{#heading_text#}</h4>
+    <p>{#text_zusatz#}</p>
+  </div>
+{/if}
