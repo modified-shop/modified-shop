@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: best_sellers.php 6176 2013-12-15 15:10:00Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -110,6 +110,7 @@ if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/b
                              JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                   ON p.products_id = pd.products_id
                                      AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                     AND trim(pd.products_name) != ''
                             WHERE p.products_status = 1
                               AND p.products_ordered > 0
                                   ".$where."
