@@ -1082,4 +1082,9 @@ define('EMAIL_ARCHIVE_ADDRESS_DESC', 'Please enter an e-mail address for archivi
 
 define('DISPLAY_HEADQUARTER_ON_CHECKOUT_TITLE', 'Company Headquarter on Checkout');
 define('DISPLAY_HEADQUARTER_ON_CHECKOUT_DESC', 'Display Company Headquarter during checkout?');
+
+define('MODULE_NEWSLETTER_VOUCHER_AMOUNT_TITLE', 'Newsletter Voucher Amount');
+define('MODULE_NEWSLETTER_VOUCHER_AMOUNT_DESC', 'For newsletter registration gift voucher place the amount, put 0 for no amount.');
+define('MODULE_NEWSLETTER_DISCOUNT_COUPON_TITLE', 'Newsletter Coupon Code');
+define('MODULE_NEWSLETTER_DISCOUNT_COUPON_DESC', 'For newsletter registration coupon place the coupon code you wish to use or leave this field blank to disable.');
 ?>

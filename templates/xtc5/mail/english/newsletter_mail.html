@@ -1,6 +1,22 @@
 <p><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><b>Thank you for subscribing!</b></p>
+{if isset($LINK)}
 <p>Please click the following activation link to receive newsletters. If you haven't subscribed to this service, please ignore this e-mail!</p>
 <p><b>Your activation link:</b></p>
 <p><a href="{$LINK}">{$LINK}</a></p>
+{/if}
+{if $SEND_GIFT == true}
+<br />
+As a thank you for creating your account, you've received a <b>{$GIFT_AMMOUNT}</b> gift voucher!<br />
+<br />
+Redeem your voucher with the following code <b>{$GIFT_CODE}</b> when placing an order or simply by clicking the following link <a href="{$GIFT_LINK}">[redeem Voucher]</a>.<br />
+{/if}
+{if $SEND_COUPON == true}
+<br />
+As a thank you for creating your account, you've recieved a discount voucher!<br />
+<br />
+The voucher details are: <b>{$COUPON_DESC}</b><br />
+<br />
+Redeem your voucher by entering the code <b>{$COUPON_CODE}</b> during checkout process, when asked for it.<br />
+{/if}
 
 [SIGNATUR]

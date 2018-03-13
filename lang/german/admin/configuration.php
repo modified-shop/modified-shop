@@ -1074,4 +1074,9 @@ define('EMAIL_ARCHIVE_ADDRESS_DESC', 'Bitte geben Sie eine E-Mail-Adresse f&uuml
 
 define('DISPLAY_HEADQUARTER_ON_CHECKOUT_TITLE', 'Firmensitz im Checkout');
 define('DISPLAY_HEADQUARTER_ON_CHECKOUT_DESC', 'Soll der Firmensitz im Checkout angezeigt werden?');
+
+define('MODULE_NEWSLETTER_VOUCHER_AMOUNT_TITLE', 'Newsletter Gutschein Wert');
+define('MODULE_NEWSLETTER_VOUCHER_AMOUNT_DESC', 'Für einen Gutschein bei der Newsletter Registrierung geben Sie den Wert des Gutscheins an, ansonsten tragen Sie hier 0 ein.');
+define('MODULE_NEWSLETTER_DISCOUNT_COUPON_TITLE', 'Newsletter Coupon Code');
+define('MODULE_NEWSLETTER_DISCOUNT_COUPON_DESC', 'Für einen Coupon bei der Newsletter Registrierung geben Sie den Coupon Code ein, ansonsten lassen Sie dieses Feld leer.');
 ?>

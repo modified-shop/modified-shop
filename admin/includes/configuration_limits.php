@@ -28,3 +28,6 @@ $value_limits['STORE_PAGE_PARSE_TIME_THRESHOLD'] = array('min' => 0);
 $value_limits['SECURITY_CODE_LENGTH'] = array('min' => 0);
 
 $value_limits['REVIEW_TEXT_MIN_LENGTH'] = array('min' => 0);
+
+$value_limits['NEW_SIGNUP_GIFT_VOUCHER_AMOUNT'] = array('min' => 0);
+$value_limits['MODULE_NEWSLETTER_VOUCHER_AMOUNT'] = array('min' => 0);
