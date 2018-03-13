@@ -43,15 +43,12 @@ class newsletter {
                                                mail_key
                                           FROM ".TABLE_NEWSLETTER_RECIPIENTS."
                                          WHERE customers_email_address = '".xtc_db_input($mail)."'
-                                           AND mail_key = '".xtc_db_input($key)."'
-                                       ");
+                                           AND mail_key = '".xtc_db_input($key)."'");
       if (xtc_db_num_rows($check_mail_query) > 0) {
-        // extern Mailer
-        $this->_externmailer($mail, 'unsubscribe');
+        $this->sendRequestMail($mail, 'unsubscribe');
         $del_query = xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS."
                                          WHERE customers_email_address ='".xtc_db_input($mail)."'
-                                           AND mail_key = '".xtc_db_input($key)."'
-                                  ");
+                                           AND mail_key = '".xtc_db_input($key)."'");
         $this->message = TEXT_EMAIL_DEL;
         $this->message_class = 'info';
       } else {
@@ -62,7 +59,7 @@ class newsletter {
   }
 
 
-  function ActivateAddress($key, $email) {
+  function ActivateAddress($key, $mail) {
     if (!xtc_not_null($key)) {
       $this->message = TEXT_EMAIL_ACTIVE_ERROR;
       $this->message_class = 'error';
@@ -70,10 +67,9 @@ class newsletter {
       $check_mail_query = xtc_db_query("SELECT mail_key,
                                                mail_status
                                           FROM ".TABLE_NEWSLETTER_RECIPIENTS."
-                                         WHERE customers_email_address = '".xtc_db_input($email)."'
+                                         WHERE customers_email_address = '".xtc_db_input($mail)."'
                                        ");
       if (xtc_db_num_rows($check_mail_query) > 0) {
-
         $check_mail = xtc_db_fetch_array($check_mail_query);
         if($check_mail['mail_status'] == '1') {
           $this->message = TEXT_EMAIL_EXIST_NEWSLETTER;
@@ -86,11 +82,10 @@ class newsletter {
                                   'date_confirmed' => 'now()',
                                   'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
                                   );
-          xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($email)."'");
-          // extern Mailer
-          $this->_externmailer($email, 'subscribe');
+          xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
+          $this->sendRequestMail($mail, 'subscribe');
           $this->message = TEXT_EMAIL_ACTIVE;
-          $this->message_class = 'info';
+          $this->message_class = 'info';          
         }
       } else {
         $this->message = TEXT_EMAIL_NOT_EXIST;
@@ -116,13 +111,10 @@ class newsletter {
       $this->message = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
       $this->message_class = 'error';
     } else {
-
       $this->generateCode();
-
       if ((isset($_SESSION['vvcode']) && strtoupper($postCode) == $_SESSION['vvcode'] && $_SESSION['vvcode'] != '') || $this->auto==true) {
 
         if ($check == 'inp') {
-          // Check if email exists
           $check_mail_query = xtc_db_query("SELECT customers_email_address,
                                                    mail_status 
                                               FROM ".TABLE_NEWSLETTER_RECIPIENTS."
@@ -148,8 +140,7 @@ class newsletter {
                                         'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
                                         );
                 xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
-                // extern Mailer
-                $this->_externmailer($mail, 'subscribe');
+                $this->sendRequestMail($mail, 'subscribe');
                 $this->message = TEXT_EMAIL_ACTIVE;
                 $this->message_class = 'info';
               }
@@ -203,8 +194,7 @@ class newsletter {
                                       'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
                                       );
               xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
-              // extern Mailer
-              $this->_externmailer($mail, 'subscribe');
+              $this->sendRequestMail($mail, 'subscribe');
               $this->message = TEXT_EMAIL_ACTIVE;
               $this->message_class = 'info';
             }
@@ -212,14 +202,12 @@ class newsletter {
         }
 
         if ($check == 'del') {
-
           $check_mail_query = xtc_db_query("SELECT customers_email_address
                                               FROM ".TABLE_NEWSLETTER_RECIPIENTS."
                                              WHERE customers_email_address = '".xtc_db_input($mail)."'
                                            ");
           if (xtc_db_num_rows($check_mail_query) > 0) {
-            // extern Mailer
-            $this->_externmailer($mail, 'unsubscribe');
+            $this->sendRequestMail($mail, 'unsubscribe');
             $del_query = xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS."
                                              WHERE customers_email_address ='".xtc_db_input($mail)."'
                                       ");
@@ -240,39 +228,116 @@ class newsletter {
   }
 
 
-  function sendRequestMail($mail) {
-
+  function sendRequestMail($mail, $action = 'opt_in') {
+    $sendmail = false;
     $smarty = new Smarty;
-    $link = xtc_href_link(FILENAME_NEWSLETTER, 'action=activate&email='.xtc_db_input($mail).'&key='.$this->vlCode, 'NONSSL');
+    
+    switch ($action) {
+      case 'opt_in':
+        $sendmail = true;
+        $link = xtc_href_link(FILENAME_NEWSLETTER, 'action=activate&email='.xtc_db_input($mail).'&key='.$this->vlCode, 'NONSSL');
+        $smarty->assign('EMAIL', xtc_db_input($mail));
+        $smarty->assign('LINK', $link);
+        break;
+      
+      case 'unsubscribe':
+        $this->_externmailer($mail, $action);
+        break;
+        
+      case 'subscribe':
+        $this->_externmailer($mail, $action);
 
-    // assign language to template for caching
-    $smarty->assign('language', $_SESSION['language']);
-    $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-    $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+        if (ACTIVATE_GIFT_SYSTEM == 'true') {
+          if (defined('MODULE_NEWSLETTER_VOUCHER_AMOUNT')
+              && MODULE_NEWSLETTER_VOUCHER_AMOUNT > '0'
+              && $this->check_gv_coupon_sendt($mail) === false
+              ) 
+          {
+            $sendmail = true;
+            require_once (DIR_FS_INC.'create_coupon_code.inc.php');
 
-    // assign vars
-    $smarty->assign('EMAIL', xtc_db_input($mail));
-    $smarty->assign('LINK', $link);
+            $coupon_code = create_coupon_code();
+            $sql_data_array = array('coupon_code' => $coupon_code,
+                                    'coupon_type' => 'G',
+                                    'coupon_amount' => MODULE_NEWSLETTER_VOUCHER_AMOUNT,
+                                    'date_created' => $mail
+                                    );
+            xtc_db_perform(TABLE_COUPONS, $sql_data_array);
 
-    // dont allow cache
-    $smarty->caching = false;
+            $insert_id = xtc_db_insert_id();
+            $sql_data_array = array('coupon_id' => $insert_id,
+                                    'customer_id_sent' => '0',
+                                    'sent_firstname' => 'Admin',
+                                    'emailed_to' => $mail,
+                                    'date_sent' => 'now()'
+                                    );
+            xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
 
-    $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.html');
-    $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.txt');
-
-    xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
-                 EMAIL_SUPPORT_NAME,
-                 xtc_db_input($mail),
-                 '',
-                 '',
-                 EMAIL_SUPPORT_REPLY_ADDRESS,
-                 EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
-                 NL_REG_MAIL_ADMIN === true ? EMAIL_SUPPORT_ADDRESS : '',
-                 NL_REG_MAIL_ADMIN === true ? EMAIL_SUPPORT_NAME : '',
-                 TEXT_EMAIL_SUBJECT,
-                 $html_mail,
-                 $txt_mail
-                 );
+            $smarty->assign('SEND_GIFT', 'true');
+            $smarty->assign('GIFT_AMMOUNT', $xtPrice->xtcFormat(MODULE_NEWSLETTER_VOUCHER_AMOUNT, true));
+            $smarty->assign('GIFT_CODE', $coupon_code);
+            $smarty->assign('GIFT_LINK', xtc_href_link(FILENAME_GV_REDEEM, 'gv_no='.$coupon_code, 'NONSSL', false));
+          }
+          
+          if (defined('MODULE_NEWSLETTER_DISCOUNT_COUPON')
+              && MODULE_NEWSLETTER_DISCOUNT_COUPON != ''
+              && $this->check_gv_coupon_sendt($mail) === false
+              ) 
+          {
+            $coupon_code = MODULE_NEWSLETTER_DISCOUNT_COUPON;
+            $coupon_query = xtc_db_query("SELECT * 
+                                            FROM ".TABLE_COUPONS." 
+                                           WHERE coupon_code = '".xtc_db_input($coupon_code)."'");
+            if (xtc_db_num_rows($coupon_query) > 0) {
+              $sendmail = true;
+              $coupon = xtc_db_fetch_array($coupon_query);
+              $coupon_id = $coupon['coupon_id'];
+              $coupon_desc_query = xtc_db_query("SELECT * 
+                                                   FROM ".TABLE_COUPONS_DESCRIPTION." 
+                                                  WHERE coupon_id = '".$coupon_id."' 
+                                                    AND language_id = '".(int)$_SESSION['languages_id']."'");
+              $coupon_desc = xtc_db_fetch_array($coupon_desc_query);
+        
+              $sql_data_array = array('coupon_id' => $coupon_id,
+                                      'customer_id_sent' => '0',
+                                      'sent_firstname' => 'Admin',
+                                      'emailed_to' => $mail,
+                                      'date_sent' => 'now()'
+                                      );
+              xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
+        
+              $smarty->assign('SEND_COUPON', 'true');
+              $smarty->assign('COUPON_DESC', $coupon_desc['coupon_description']);
+              $smarty->assign('COUPON_CODE', $coupon['coupon_code']);
+            }
+          }
+        }
+        break;
+    }
+    
+    if ($sendmail === true) {
+      $smarty->assign('language', $_SESSION['language']);
+      $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+      $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+      
+      $smarty->caching = false;
+      $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.html');
+      $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.txt');
+      
+      xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
+                   EMAIL_SUPPORT_NAME,
+                   xtc_db_input($mail),
+                   '',
+                   '',
+                   EMAIL_SUPPORT_REPLY_ADDRESS,
+                   EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
+                   NL_REG_MAIL_ADMIN === true ? EMAIL_SUPPORT_ADDRESS : '',
+                   NL_REG_MAIL_ADMIN === true ? EMAIL_SUPPORT_NAME : '',
+                   TEXT_EMAIL_SUBJECT,
+                   $html_mail,
+                   $txt_mail
+                   );
+    }
   }
 
 
@@ -286,7 +351,18 @@ class newsletter {
     return HTTP_CATALOG_SERVER.DIR_WS_CATALOG.FILENAME_CATALOG_NEWSLETTER.'?action=remove&email='.$mail.'&key='.$key;
   }
 
-
+  
+  function check_gv_coupon_sendt($mail) {
+    $check_query = xtc_db_query("SELECT *
+                                   FROM ".TABLE_COUPON_EMAIL_TRACK."
+                                  WHERE emailed_to = '".xtc_db_input($mail)."'");
+    if (xtc_db_num_rows($check_query) > 0) {
+      return true;
+    }
+    return false;
+  }
+  
+  
   function _externmailer($mail, $type) {
     $newsletter_query = xtc_db_query("SELECT * 
                                         FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
