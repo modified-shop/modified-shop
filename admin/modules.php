@@ -23,6 +23,7 @@
     'cash',
     'cod',
     'invoice',
+    'easycredit',
     'eustandardtransfer',
     'moneyorder',
     'paypalcart',
