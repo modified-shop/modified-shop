@@ -297,8 +297,8 @@ class easycredit {
   function get_presentment($amount) {
     global $xtPrice;
     
-    if ($amount > $this->config->getMinOrderAmount()
-        && $amount < $this->config->getMaxOrderAmount()
+    if ($amount >= $this->config->getMinOrderAmount()
+        && $amount <= $this->config->getMaxOrderAmount()
         )
     {
       $modelCalculation = $this->ecProcess->getModelCalculation($amount);
@@ -336,8 +336,8 @@ class easycredit {
   function get_presentment_product($amount) {
     global $xtPrice;
     
-    if ($amount > $this->config->getMinOrderAmount()
-        && $amount < $this->config->getMaxOrderAmount()
+    if ($amount >= $this->config->getMinOrderAmount()
+        && $amount <= $this->config->getMaxOrderAmount()
         )
     {
       $monthlyCosts = $this->apiClient->getBest($amount);
