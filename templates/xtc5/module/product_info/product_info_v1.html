@@ -117,6 +117,11 @@
         {$PAYPAL_INSTALLMENT}
       {/if}
 
+      {if $EASYCREDIT}
+        <br class="clearfix" />
+        {$EASYCREDIT}
+      {/if}
+
       {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<p>{#products_gift_forbidden#}</p>{/if}
     </div>
     {if $PRODUCTS_DESCRIPTION != ''}<div>{$PRODUCTS_DESCRIPTION}</div>{/if}

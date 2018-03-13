@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="{$smarty.const.DIR_WS_BASE}includes/external/easycredit/css/presentment.css?t=1" type="text/css" media="screen" />
+{foreach name=aussen key=key_data item=item_data from=$module_content}
+  <div class="ec_payment_info_block">
+    <strong>{$item_data.title}</strong>
+    <ul>
+      <li>{$item_data.number_of_rates}</li>
+      <li>{$item_data.monthly_payment}</li>
+      <li>{$item_data.monthly_plan}</li>
+      <li>{$item_data.last_payment}</li>
+      <li>{$item_data.last_plan}</li>
+    </ul>
+  </div>
+{/foreach}
+<div class="ec_payment_info_link">
+  <a class="{$link_class}" href="{$contract_info_url}">{$smarty.const.MODULE_PAYMENT_EASYCREDIT_TEXT_LEGAL}</a>
+</div>

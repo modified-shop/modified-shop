@@ -109,12 +109,23 @@
             <td>{$ADD_CART_BUTTON_PAYPAL}</td>
           </tr>
         {/if}
+        {if $EASYCREDIT}
+          <tr>
+            <td style="width:100%; padding-right:5px;">&nbsp;</td>
+            <td>{$EASYCREDIT}</td>
+          </tr>
+        {/if}
       </table>
       {/if}
 
       {if $PAYPAL_INSTALLMENT}
         <br class="clearfix" />
         {$PAYPAL_INSTALLMENT}
+      {/if}
+
+      {if $EASYCREDIT}
+        <br class="clearfix" />
+        {$EASYCREDIT}
       {/if}
 
       {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<p>{#products_gift_forbidden#}</p>{/if}

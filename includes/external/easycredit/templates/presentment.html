@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="{$smarty.const.DIR_WS_BASE}includes/external/easycredit/css/presentment.css?t=1" type="text/css" media="screen" />
+<div class="ec_short_container_outer ec_checkout cf">
+  <div class="ec_short_container ec_checkout cf">
+    {if isset($presentment)}
+      <img src="{$smarty.const.DIR_WS_BASE}includes/external/easycredit/images/ratenkauf_200_43.png" style="float:right;" />
+      <select name="ec_term" id="ec_term">
+      {foreach name=aussen key=key_data item=item_data from=$presentment}
+        <option value="{$item_data.number_of_rates}">{$item_data.number_of_rates} Raten x {$item_data.monthly_payment}</option>
+      {/foreach}
+      </select>
+
+      {foreach name=aussen key=key_data item=item_data from=$presentment}
+        <div id="presentment_{$item_data.number_of_rates}" class="ec_short_container_item cf" {if $smarty.foreach.aussen.iteration > 1}style="display:none;"{/if}>
+          <div class="ec_rating_plan_heading">{$smarty.const.TEXT_EASYCREDIT_RATING_PLAN|sprintf:$item_data.monthly_payment:$item_data.number_of_rates}</div>
+          <div class="ec_rating_plan_example">{$smarty.const.TEXT_EASYCREDIT_LEGAL}</div>
+          <table>
+            <tr>
+              <td>{$smarty.const.TEXT_EASYCREDIT_NOMINAL_RATE}:</td>
+              <td class="td_total">{$item_data.nominal_rate|number_format:"2":",":""} %</td>
+            </tr>
+            <tr>
+              <td>{$smarty.const.TEXT_EASYCREDIT_EFFECTIVE_RATE}:</td>
+              <td class="td_total">{$item_data.effective_rate|number_format:"2":",":""} %</td>
+            </tr>
+            <tr>
+              <td>{$smarty.const.TEXT_EASYCREDIT_TOTAL_COST}:</td>
+              <td class="td_total"><b>{$item_data.total_payment}</b></td>
+            </tr>
+            <tr>
+              <td>{$item_data.number_of_rates} {$smarty.const.TEXT_EASYCREDIT_MONTHLY_PAYMENT}</td>
+              <td class="td_total"><b>{$item_data.monthly_payment}</b></td>
+            </tr>
+            <tr>
+              <td>{$smarty.const.TEXT_EASYCREDIT_LAST_PAYMENT}:</td>
+              <td class="td_total"><b>{$item_data.last_payment}</b></td>
+            </tr>
+          </table>
+        </div>
+      {/foreach}
+     
+    {/if}
+  </div>
+  <div class="ec_checkout_agb cf">{$conditions}<label for="ec_conditions">{$conditions_text}</label></div>
+</div>
+
+<script type="text/javascript">
+  $('#ec_term').change(function() {
+    var selected = $("#ec_term option:checked").val();
+    $('[id^="presentment_"]').hide();
+    $('#presentment_' + selected).show();
+  });
+</script>

@@ -127,6 +127,11 @@
           {$PAYPAL_INSTALLMENT}
         {/if}
 
+        {if $EASYCREDIT}
+          <br class="clearfix" />
+          {$EASYCREDIT}
+        {/if}
+
         {if $ADD_CART_BUTTON == '' && $PRODUCTS_FSK18 == 'true'}<div class="pd_inforow_message">{#products_fsk18_check#}</div>{/if}
         {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<div class="pd_inforow_message">{#products_gift_forbidden#}</div>{/if}
         {if isset($PRODUCTS_DATE_AVAILABLE) && $PRODUCTS_DATE_AVAILABLE != ''}<div class="pd_inforow_message">{$PRODUCTS_DATE_AVAILABLE}</div>{/if}
