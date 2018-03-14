@@ -80,7 +80,7 @@ define('BOX_LOGINBOX_DISCOUNT_TEXT','Rabatt');
 define('BOX_LOGINBOX_DISCOUNT_OT','');
 
 // reviews box text in includes/boxes/reviews.php
-define('BOX_REVIEWS_WRITE_REVIEW', 'Schreiben Sie eine Rezension zu diesen Artikel!');
+define('BOX_REVIEWS_WRITE_REVIEW', 'Schreiben Sie eine Rezension zu diesem Artikel!');
 define('BOX_REVIEWS_NO_WRITE_REVIEW', 'Keine Rezension m&ouml;glich.');
 define('BOX_REVIEWS_TEXT_OF_5_STARS', '%s von 5 Sternen!');
 
