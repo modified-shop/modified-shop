@@ -61,7 +61,22 @@ foreach ($script_array as $script) {
     $('.filter_bar .SumoSelect').each(function(index){
       ($(this).find('select').val() == '') ? $(this).find('p').removeClass("Selected") : $(this).find('p').addClass("Selected");
     });
-
+    // BOF - Fix bxslider for firefox 59, see: https://github.com/stevenwanderski/bxslider-4/issues/1188
+    if (navigator.userAgent.search("Firefox") >= 0) {
+      var ff_version = navigator.userAgent.match(/Firefox\/([\d]+\.[\d])+/);
+      ff_version = parseFloat(ff_version[1]);
+      if(ff_version == 0 || ff_version >= 59) {
+        $('body').on('mousedown', '.bx-viewport a', function() {
+          var ff_link = $(this);
+          var ff_href = ff_link.attr('href');
+          if(ff_href) {
+            location.href = ff_href;
+            return false;
+          }
+        });
+      }
+    }
+    // EOF - Fix bxslider for firefox 59, see: https://github.com/stevenwanderski/bxslider-4/issues/1188
     $('.bxcarousel_bestseller').bxSlider({
       minSlides: 2,
       maxSlides: 8,
