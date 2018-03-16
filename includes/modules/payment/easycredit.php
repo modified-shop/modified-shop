@@ -325,7 +325,7 @@ class easycredit {
       $ec_smarty = new Smarty();
       $ec_smarty->assign('presentment', $presentment_array);
       $ec_smarty->assign('language', $_SESSION['language']);
-      $ec_smarty->assign('conditions_text', $this->ecProcess->getLegislativeText()->getDataProcessingPaymentPage());
+      $ec_smarty->assign('conditions_text', decode_utf8($this->ecProcess->getLegislativeText()->getDataProcessingPaymentPage()));
       $ec_smarty->assign('conditions', '<input type="checkbox" value="ec_conditions" name="ec_conditions" id="ec_conditions" />');
       $presentment = $ec_smarty->fetch(DIR_FS_EXTERNAL.'easycredit/templates/presentment.html');
     
