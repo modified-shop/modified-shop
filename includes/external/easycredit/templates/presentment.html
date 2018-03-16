@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{$smarty.const.DIR_WS_BASE}includes/external/easycredit/css/presentment.css?t=1" type="text/css" media="screen" />
+<link rel="stylesheet" href="{$smarty.const.DIR_WS_BASE}includes/external/easycredit/css/presentment.css" type="text/css" media="screen" />
 <div class="ec_short_container_outer ec_checkout cf">
   <div class="ec_short_container ec_checkout cf">
     {if isset($presentment)}
@@ -42,7 +42,7 @@
   </div>
   <div class="ec_checkout_agb cf">{$conditions}<label for="ec_conditions">{$conditions_text}</label></div>
 </div>
-
+{literal}
 <script type="text/javascript">
   $('#ec_term').change(function() {
     var selected = $("#ec_term option:checked").val();
@@ -50,3 +50,4 @@
     $('#presentment_' + selected).show();
   });
 </script>
+{/literal}
