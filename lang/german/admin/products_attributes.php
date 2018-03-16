@@ -1,19 +1,14 @@
 <?php
-/* --------------------------------------------------------------
-   $Id: products_attributes.php 1101 2005-07-24 14:51:13Z mz $   
+/* -----------------------------------------------------------------------------------------
+   $Id$
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
-   --------------------------------------------------------------
-   based on: 
-   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(products_attributes.php,v 1.9 2002/03/30); www.oscommerce.com 
-   (c) 2003	 nextcommerce (products_attributes.php,v 1.4 2003/08/1); www.nextcommerce.org
-
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
    Released under the GNU General Public License 
-   --------------------------------------------------------------*/
+   ---------------------------------------------------------------------------------------*/
 
 define('HEADING_TITLE_OPT', 'Artikelmerkmale');
 define('HEADING_TITLE_VAL', 'Optionswert');
@@ -23,25 +18,30 @@ define('TABLE_HEADING_ID', 'ID');
 define('TABLE_HEADING_PRODUCT', 'Artikelname');
 define('TABLE_HEADING_OPT_NAME', 'Optionsname');
 define('TABLE_HEADING_OPT_VALUE', 'Optionswert');
-define('TABLE_HEADING_OPT_PRICE', 'Preis');
-define('TABLE_HEADING_OPT_PRICE_PREFIX', 'Vorzeichen (+/-)');
 define('TABLE_HEADING_ACTION', 'Aktion');
-define('TABLE_HEADING_DOWNLOAD', 'Downloadbare Artikel:');
-define('TABLE_TEXT_FILENAME', 'Dateiname:');
-define('TABLE_TEXT_MAX_DAYS', 'Zeitspanne:');
-define('TABLE_TEXT_MAX_COUNT', 'Maximale Anzahl des herunterladens:');
-
-define('MAX_ROW_LISTS_OPTIONS', 10);
-
-define('TEXT_WARNING_OF_DELETE', 'Mit dieser Option sind Artikel, sowie Optionsmerkmale verbunden - L&ouml;schen wird nicht empfohlen.');
-define('TEXT_OK_TO_DELETE', 'Mit dieser Option sind keine Artikel, sowie Optionsmerkmale verbunden - Sie kann gel&ouml;scht werden.');
-define('TEXT_SEARCH','Suche:');
-define('TEXT_OPTION_ID', 'Options ID');
-define('TEXT_OPTION_NAME', 'Optionsname');
-
-// BOF - Tomcraft - 2009-11-07 - Added sortorder to products_options
 define('TABLE_HEADING_SORTORDER', 'Sortierung');
-define('TEXT_SORTORDER', 'Sortierung');
-// EOF - Tomcraft - 2009-11-07 - Added sortorder to products_options
-define('TEXT_OPTION_ID_FILTER', 'Filter: ');
+
+define('TEXT_INFO_SEARCH', 'Suche: ');
+
+define('TEXT_INFO_OPTION_NAME', 'Name:');
+define('TEXT_INFO_OPTION_SORT', 'Sortierung:');
+define('TEXT_INFO_NUMBER_OPTION', 'Anzahl der Werte:');
+define('TEXT_INFO_HEADING_NEW_OPTION', 'Neue Eigenschaft');
+define('TEXT_INFO_NEW_OPTION_INTRO', 'Bitte geben Sie den neue Eigenschaft mit allen relevanten Daten ein');
+define('TEXT_INFO_HEADING_EDIT_OPTION', 'Eigenschaft bearbeiten');
+define('TEXT_INFO_EDIT_OPTION_INTRO', 'Bitte f&uuml;hren Sie alle notwendigen &Auml;nderungen durch.');
+define('TEXT_INFO_HEADING_DELETE_OPTION', 'Eigenschaft l&ouml;schen');
+define('TEXT_INFO_DELETE_OPTION_INTRO', 'Sind Sie sicher, dass Sie diese Eigenschaft l&ouml;schen wollen?');
+define('TEXT_WARNING_OF_DELETE', 'Mit dieser Option sind Artikel, sowie Optionsmerkmale verbunden - L&ouml;schen wird nicht empfohlen.');
+define('TEXT_DISPLAY_NUMBER_OF_OPTIONS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Eigenschaften)');
+
+define('TEXT_INFO_VALUE_NAME', 'Wert:');
+define('TEXT_INFO_VALUE_SORT', 'Sortierung:');
+define('TEXT_INFO_HEADING_NEW_VALUE', 'Neuer Wert');
+define('TEXT_INFO_NEW_VALUE_INTRO', 'Bitte geben Sie den neuen Wert mit allen relevanten Daten ein');
+define('TEXT_INFO_HEADING_EDIT_VALUE', 'Wert bearbeiten');
+define('TEXT_INFO_EDIT_VALUE_INTRO', 'Bitte f&uuml;hren Sie alle notwendigen &Auml;nderungen durch.');
+define('TEXT_INFO_HEADING_DELETE_VALUE', 'Wert l&ouml;schen');
+define('TEXT_INFO_DELETE_VALUE_INTRO', 'Sind Sie sicher, dass Sie diesen Wert l&ouml;schen wollen?');
+define('TEXT_DISPLAY_NUMBER_OF_VALUES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Werten)');
 ?>
