@@ -13,4 +13,7 @@ INSERT INTO `database_version` (`version`) VALUES ('MOD_2.0.4.0');
 #Tomcraft - 2018-02-06 - change Online Dispute Resolution (odr) links from http to https
 UPDATE content_manager SET content_text = REPLACE(content_text, 'http://ec.europa.eu/consumers/odr', 'https://ec.europa.eu/consumers/odr');
 
+#GTB - 2018-03-16 - new products attributes handling
+ALTER TABLE products_options_values ADD products_options_values_sortorder INT(11) NOT NULL AFTER products_options_values_name;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
