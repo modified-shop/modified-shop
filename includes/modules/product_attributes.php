@@ -80,7 +80,7 @@ if ($product->getAttributesCount() > 0) {
                                                    AND trim(pov.products_options_values_name) != ''
                                           WHERE pa.products_id = '".$product->data['products_id']."'
                                             AND pa.options_id = '".$products_options_name['products_options_id']."'                                            
-                                       ORDER BY pa.sortorder, pa.options_values_id
+                                       ORDER BY pa.sortorder, pov.products_options_values_sortorder, pa.options_values_id
                                         ");
     $col = 0;
     while ($products_options = xtc_db_fetch_array($products_options_query,true)) {

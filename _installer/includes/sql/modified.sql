@@ -1063,6 +1063,7 @@ CREATE TABLE products_options_values (
   products_options_values_id INT NOT NULL DEFAULT 0,
   language_id INT(11) NOT NULL,
   products_options_values_name VARCHAR(255) NOT NULL DEFAULT '',
+  products_options_values_sortorder INT(11) NOT NULL,
   PRIMARY KEY (products_options_values_id, language_id)
 );
 
