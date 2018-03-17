@@ -2459,6 +2459,10 @@ a.tags_bar_reset {
 .content_site ol {
   margin-left:28px;
 }
+.content_site img {
+  max-width:100% !important;
+  height:auto !important;
+}
 /* END content sites (AGB, Datenschutz, etc.) */
 
 
