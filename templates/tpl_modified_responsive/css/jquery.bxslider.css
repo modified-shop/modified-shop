@@ -53,13 +53,13 @@ ul.bxslider {
 .bx-wrapper .bx-pager,
 .bx-wrapper .bx-controls-auto {
 	position: absolute;
-	bottom: -32px;
+	bottom: -23px;
 	width: 100%;
 }
 /* LOADER */
 .bx-wrapper .bx-loading {
 	min-height: 50px;
-	background: url(images/loading.gif) center center no-repeat #fff;
+	background: url(images/loading.gif) center center no-repeat transparent;
 	height: 100%;
 	width: 100%;
 	position: absolute;
@@ -107,19 +107,23 @@ ul.bxslider {
 /* DIRECTION CONTROLS (NEXT / PREV) */
 .bx-wrapper .bx-prev {
 	left: 0px;
-	background: url(images/carousel_controls.png) no-repeat 0 -32px;
+  text-align:left;
+  line-height:36px;
+  font-size:16px;
 }
 .bx-wrapper .bx-prev:hover,
 .bx-wrapper .bx-prev:focus {
-	background-position: 0 0;
+  color:#6d2551;
 }
 .bx-wrapper .bx-next {
 	right: 0px;
-	background: url(images/carousel_controls.png) no-repeat -43px -32px;
+  text-align:right;
+  line-height:36px;
+  font-size:16px;
 }
 .bx-wrapper .bx-next:hover,
 .bx-wrapper .bx-next:focus {
-	background-position: -43px 0;
+ color:#6d2551;
 }
 .bx-wrapper .bx-controls-direction a {
 	position: absolute;
@@ -127,8 +131,8 @@ ul.bxslider {
 	outline: 0;
 	width: 32px;
 	height: 32px;
-	text-indent: -9999px;
 	z-index: 3;
+  color:#555;
 }
 .bx-wrapper .bx-controls-direction a.disabled {
 	display: none;
@@ -143,7 +147,6 @@ ul.bxslider {
 	width: 10px;
 	height: 11px;
 	outline: 0;
-	background: url(images/carousel_controls.png) -86px -11px no-repeat;
 	margin: 0 3px;
 }
 .bx-wrapper .bx-controls-auto .bx-start:hover,
@@ -157,7 +160,6 @@ ul.bxslider {
 	width: 9px;
 	height: 11px;
 	outline: 0;
-	background: url(images/carousel_controls.png) -86px -44px no-repeat;
 	margin: 0 3px;
 }
 .bx-wrapper .bx-controls-auto .bx-stop:hover,

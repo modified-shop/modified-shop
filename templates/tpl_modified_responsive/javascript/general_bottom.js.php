@@ -63,6 +63,8 @@ foreach ($script_array as $script) {
     });
 
     $('.bxcarousel_bestseller').bxSlider({
+      nextText: '<i class="fa fa-chevron-right"></i>',
+      prevText: '<i class="fa fa-chevron-left"></i>',
       minSlides: 2,
       maxSlides: 8,
       pager: ($(this).children('li').length > 1), //FIX for only one entry
@@ -70,6 +72,8 @@ foreach ($script_array as $script) {
       slideMargin: 18
     });
     $('.bxcarousel_slider').bxSlider({
+      nextText: '<i class="fa fa-chevron-right"></i>',
+      prevText: '<i class="fa fa-chevron-left"></i>',
       adaptiveHeight: false,
       mode: 'fade',
       auto: true,
