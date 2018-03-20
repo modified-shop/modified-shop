@@ -199,7 +199,7 @@
                   <td class="dataTableContent" align="right"><?php echo $orders['delivery_country']; ?>&nbsp;</td>
                   <td class="dataTableContent" align="right"><?php echo format_price(get_order_total($orders['orders_id']), 1, $orders['currency'], 0, 0); ?></td>
                   <td class="dataTableContent" align="center"><?php echo xtc_datetime_short($orders['date_purchased']); ?></td>
-                  <td class="dataTableContent" align="center"><?php echo get_payment_name($orders['payment_method'], $orders['orders_id']); ?></td>
+                  <td class="dataTableContent" align="center"><?php echo get_payment_name($orders['payment_method']); ?></td>
                   <td class="dataTableContent" align="right"><?php if($orders['orders_status']!='0') { echo $orders['orders_status_name']; }else{ echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';}?></td>
                   <?php if (AFTERBUY_ACTIVATED=='true') { ?>
                   <td class="dataTableContent" align="right"><?php  echo ($orders['afterbuy_success'] == 1) ? $orders['afterbuy_id'] : 'TRANSMISSION_ERROR'; ?></td>
