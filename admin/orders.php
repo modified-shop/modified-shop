@@ -68,7 +68,7 @@ function get_payment_name($payment_method, $order_id = '') {
     }
   }
   
-  return $static_payment_array[$payment_method] . $text;
+  return strip_tags($static_payment_array[$payment_method] . $text);
 }
 function get_shipping_name($shipping_class) {
   $shipping_class_array = explode('_', $shipping_class);
