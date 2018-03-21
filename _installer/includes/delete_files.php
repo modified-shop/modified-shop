@@ -158,7 +158,6 @@ $unlink_file = array('_installer/images/icons/error.gif', // neu
                      'inc/shopstat_functions.inc.php', // neu
                      'inc/tld.txt', // neu
                      'inc/xtc_convert_linefeeds.inc.php', // neu
-                     'inc/xtc_delete_file.inc.php', // neu
                      'inc/xtc_db_connect_installer.inc.php',
                      'inc/xtc_db_install.inc.php',
                      'inc/xtc_db_query_installer.inc.php',
