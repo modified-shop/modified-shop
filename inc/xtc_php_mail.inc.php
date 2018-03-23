@@ -14,6 +14,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 // include the mail classes
 function xtc_php_mail($from_email_address, $from_email_name,
                       $to_email_address, $to_name, $forwarding_to,
@@ -22,7 +25,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
                       $email_subject, $message_body_html, $message_body_plain
                      )
 {
-  global $order, $main;
+  global $order, $main, $LoggingManager;
 
   // include needed function
   require_once(DIR_FS_INC.'xtc_not_null.inc.php');
@@ -131,35 +134,6 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $txt_signatur = "\n".$txt_signatur;  
   }
 
-  require_once (DIR_FS_EXTERNAL.'phpmailer/PHPMailerAutoload.php');
-
-  $mail = new PHPMailer();
-  $mail->PluginDir = DIR_FS_EXTERNAL.'phpmailer/';
-  $mail->CharSet = $lang_data['language_charset'];
-  $mail->SetLanguage($lang_data['code'], DIR_FS_EXTERNAL.'phpmailer/language/');
-
-  if (EMAIL_TRANSPORT == 'smtp') {
-    $mail->IsSMTP();
-    $mail->SMTPKeepAlive = true; // set mailer to use SMTP
-    $mail->SMTPAuth = (SMTP_AUTH == 'true') ? true : false; // turn on SMTP authentication true/false
-    $mail->SMTPSecure = (defined('SMTP_SECURE') && SMTP_SECURE != 'none') ? SMTP_SECURE : ''; // turn on SMTP secure ssl or tls
-    $mail->Port = SMTP_PORT; // SMTP port
-    $mail->Username = SMTP_USERNAME; // SMTP username
-    $mail->Password = SMTP_PASSWORD; // SMTP password
-    $mail->Host = SMTP_MAIN_SERVER.';'.SMTP_BACKUP_SERVER; // specify main and backup server "smtp1.example.com;smtp2.example.com"
-    $mail->SMTPAutoTLS = (defined('SMTP_AUTO_TLS') && SMTP_AUTO_TLS == 'true') ? true : false; // turn on SMTPAutoTLS authentication true/false
-    $mail->SMTPDebug = (defined('SMTP_DEBUG')) ? (int)SMTP_DEBUG : 0; //SMTP class debug output mode, output level: 0 - 4
-  }
-
-  if (EMAIL_TRANSPORT == 'sendmail') { // set mailer to use SMTP
-    $mail->IsSendmail();
-    $mail->Sendmail = SENDMAIL_PATH;
-  }
-  
-  if (EMAIL_TRANSPORT == 'mail') {
-    $mail->IsMail();
-  }
-
   // decode html2txt
   $html_array = array('<br />', '<br/>', '<br>');
   $txt_array = array(" \n", " \n", " \n");
@@ -169,6 +143,73 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $message_body_plain = strip_tags($message_body_plain);
   $message_body_plain = html_entity_decode($message_body_plain, ENT_NOQUOTES, $lang_data['language_charset']);
 
+  require_once (DIR_FS_EXTERNAL.'phpmailer/PHPMailer.php');
+  require_once (DIR_FS_EXTERNAL.'phpmailer/Exception.php');
+
+  $mail = new PHPMailer(false);
+  $mail->Debugoutput = 'error_log';
+  $mail->loggerFile = DIR_FS_LOG.'mod_mailer_'.date('Y-m-d') .'.log';
+  $mail->CharSet = $lang_data['language_charset'];
+  
+  if (EMAIL_TRANSPORT == 'smtp') {
+    require_once (DIR_FS_EXTERNAL.'phpmailer/SMTP.php');
+    
+    $mail->IsSMTP();
+    $mail->SMTPKeepAlive = true;
+    $mail->SMTPAuth = (SMTP_AUTH == 'true') ? true : false;
+    $mail->SMTPSecure = (defined('SMTP_SECURE') && SMTP_SECURE != 'none') ? SMTP_SECURE : '';
+    $mail->Port = SMTP_PORT;
+    $mail->Username = SMTP_USERNAME;
+    $mail->Password = SMTP_PASSWORD;
+    $mail->Host = SMTP_MAIN_SERVER.';'.SMTP_BACKUP_SERVER;
+    $mail->SMTPAutoTLS = (defined('SMTP_AUTO_TLS') && SMTP_AUTO_TLS == 'true') ? true : false;
+    $mail->SMTPDebug = (defined('SMTP_DEBUG')) ? (int)SMTP_DEBUG : 0;
+    $mail->SMTPOptions = array(
+      'ssl' => array(
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+        'allow_self_signed' => true
+      )
+    );
+  }
+
+  if (EMAIL_TRANSPORT == 'sendmail') {
+    $mail->isSendmail();
+    $mail->Sendmail = SENDMAIL_PATH;
+  }
+
+  if (EMAIL_TRANSPORT == 'mail') {
+    $mail->isMail();
+  }
+
+  //Recipients
+  $mail->setFrom($from_email_address, $from_email_name);
+  $mail->addAddress($to_email_address, $to_name);
+  $mail->addReplyTo($reply_address, $reply_address_name);
+
+  if ($forwarding_to != '') {
+    $forwarding = explode(',', $forwarding_to);
+    foreach ($forwarding as $forwarding_address) {
+      $mail->addBCC(trim($forwarding_address));
+    }
+  }
+  if (defined('EMAIL_ARCHIVE_ADDRESS')) {
+    $email_archive_address = parse_multi_language_value(trim(EMAIL_ARCHIVE_ADDRESS), $lang_data['code']);
+    if (trim($email_archive_address) != '') {
+      $mail->addBCC(trim($email_archive_address));
+    }
+  }
+
+  //create attachments array for better handling
+  $attachments = attachments_array($path_to_attachments,$path_to_more_attachments);
+  // add attachments
+  for( $i = 0, $n = count($attachments); $i < $n; $i++) {
+    $mail->addAttachment($attachments[$i]);
+  }
+
+  //Content
+  $mail->Subject = $email_subject;
+  $mail->setWordWrap((int)EMAIL_WORD_WRAP);
   if (EMAIL_USE_HTML == 'true') { // set email format to HTML
     $mail->IsHTML(true);
     $mail->Body = $message_body_html.$html_signatur;//DPW Signatur ergänzt.
@@ -178,33 +219,6 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $mail->Body = $message_body_plain;
   }
 
-  $mail->From = $from_email_address;
-  $mail->Sender = $from_email_address;
-  $mail->FromName = $from_email_name;
-  $mail->AddAddress($to_email_address, $to_name);
-  if ($forwarding_to != '') {
-    $forwarding = explode(',', $forwarding_to);
-    foreach ($forwarding as $forwarding_address) {
-      $mail->AddBCC(trim($forwarding_address));
-    }
-  }
-  if (defined('EMAIL_ARCHIVE_ADDRESS')) {
-    $email_archive_address = parse_multi_language_value(trim(EMAIL_ARCHIVE_ADDRESS), $lang_data['code']);
-    if (trim($email_archive_address) != '') {
-      $mail->AddBCC(trim($email_archive_address));
-    }
-  }
-  $mail->AddReplyTo($reply_address, $reply_address_name);
-
-  $mail->WordWrap = (int)EMAIL_WORD_WRAP; // set word wrap
-  //create attachments array for better handling
-  $attachments = attachments_array($path_to_attachments,$path_to_more_attachments);
-  // add attachments
-  for( $i = 0, $n = count($attachments); $i < $n; $i++) {
-    $mail->AddAttachment($attachments[$i]);
-  }
-  $mail->Subject = $email_subject;
-  
   require_once(DIR_FS_INC.'auto_include.inc.php');
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/php_mail/','php') as $file) require ($file);
 
