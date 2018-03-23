@@ -4254,8 +4254,8 @@ class PHPMailer
                 $date_header = $header;
                 $current = 'date_header';
             } else {
-                if (!empty($$current) and strpos($header, ' =?') === 0) {
-                    $$current .= $header;
+                if (!empty(${$current}) and strpos($header, ' =?') === 0) {
+                    ${$current} .= $header;
                 } else {
                     $current = '';
                 }
