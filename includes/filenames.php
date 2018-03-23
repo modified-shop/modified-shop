@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: filenames.php 1295 2005-10-08 16:59:56Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -14,6 +14,9 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
+
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/filenames/','php') as $file) require ($file);
 
 //compatibility for modified eCommerce Shopsoftware 1.06 files
 if (!defined('DIR_ADMIN')) {
@@ -90,7 +93,4 @@ define('FILENAME_FINDOLOGIC', 'findologic.php');
 define('FILENAME_WISHLIST', 'wishlist.php');
 define('FILENAME_ACCOUNT_CHECKOUT_EXPRESS', 'account_checkout_express.php');
 define('FILENAME_CHECKOUT_PAYMENT_IFRAME', 'checkout_payment_iframe.php');
-
-require_once(DIR_FS_INC.'auto_include.inc.php');
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/filenames/','php') as $file) require ($file);
 ?>
