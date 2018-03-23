@@ -11,7 +11,12 @@
    ---------------------------------------------------------------------------------------*/
 
 
+defined('DIR_FS_EXTERNAL') OR define('DIR_FS_EXTERNAL', DIR_FS_CATALOG.'includes/external/');
+defined('DIR_FS_LOG') OR define('DIR_FS_LOG', DIR_FS_CATALOG.'log/');
+defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
+
 // needed functions
+require_once(DIR_FS_INC.'html_encoding.php');
 if (!function_exists('xtc_date_short')) {
   require_once(DIR_FS_INC.'xtc_date_short.inc.php');
 }
@@ -277,7 +282,7 @@ class easycredit {
           'orders_status_id' => $this->order_status_success,
           'date_added' => 'now()',
           'customer_notified' => 0,
-          'comments' => '',
+          'comments' => 'Vorgangskennung: '.$this->ecProcess->getProcessData()->getTechnicalTbaId(),
         );
         xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         
