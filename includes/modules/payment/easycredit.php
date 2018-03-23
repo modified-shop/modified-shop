@@ -486,7 +486,7 @@ class easycredit {
       foreach ($processData->getMessages() as $key => $message) {
         $error[] = $message;
       }
-      $redirect = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, ((count($error) > 0) ? 'error_message=' . urlencode(encode_htmlentities(implode('<br/>', $error))) : 'payment_error='.$this->code), 'SSL', true, false);
+      $redirect = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, ((count($error) > 0) ? 'error_message=' . urlencode(encode_htmlentities(decode_utf8(implode('<br/>', $error)))) : 'payment_error='.$this->code), 'SSL', true, false);
     }
     
     xtc_redirect($redirect);
