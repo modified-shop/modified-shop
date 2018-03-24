@@ -11,7 +11,7 @@
    --------------------------------------------------------------*/
 
   define('SSL_VERSION_MIN', '1.2');
-  define('PHP_VERSION_MIN', '5.4.0');
+  define('PHP_VERSION_MIN', '5.5.0');
   define('PHP_VERSION_MAX', '7.1.99');
 
   //BOF *************  check PHP-Version *************
