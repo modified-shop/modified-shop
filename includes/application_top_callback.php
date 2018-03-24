@@ -35,8 +35,8 @@ if (file_exists(dirname(__FILE__).'/local/configure.php')) {
 }
 
 // minimum requirement
-if (version_compare(PHP_VERSION, '5.4', '<')) {
-  die('<h1>Minimum requirement PHP Version 5.4</h1>');
+if (version_compare(PHP_VERSION, '5.5', '<')) {
+  die('<h1>Minimum requirement PHP Version 5.5</h1>');
 }
 
 // default time zone
