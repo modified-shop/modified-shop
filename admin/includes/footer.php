@@ -33,7 +33,7 @@
       from LG Hamburg from 28th February 2003 / AZ 308 O 70/03
     */
       ?>
-      <a style="text-decoration:none;" href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">&nbsp;&copy;2009-<?php echo date("Y"); ?>&nbsp;provides no warranty and is redistributable under the <a style="color:#555555;text-decoration:none;" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a><br />eCommerce Engine 2006 based on <a style="text-decoration:none; color:#555555;" href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a></span>
+      <a style="text-decoration:none;" href="https://www.modified-shop.org" rel="nofollow noopener" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">&nbsp;&copy;2009-<?php echo date("Y"); ?>&nbsp;provides no warranty and is redistributable under the <a style="color:#555555;text-decoration:none;" href="http://www.gnu.org/licenses/gpl-2.0.html" rel="nofollow noopener" target="_blank">GNU General Public License (Version 2)</a><br />eCommerce Engine 2006 based on <a style="text-decoration:none; color:#555555;" href="http://www.xt-commerce.com/" rel="nofollow noopener" target="_blank">xt:Commerce</a></span>
     </div>  
     <?php
       if (DISPLAY_PAGE_PARSE_TIME == 'all' || DISPLAY_PAGE_PARSE_TIME == 'admin') {

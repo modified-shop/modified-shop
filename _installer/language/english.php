@@ -14,7 +14,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
   // Global
-  define('TEXT_FOOTER','<a style="text-decoration:none;" href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">' . '&nbsp;' . '&copy;2009-' . date('Y'));
+  define('TEXT_FOOTER','<a style="text-decoration:none;" href="https://www.modified-shop.org" rel="nofollow noopener" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">' . '&nbsp;' . '&copy;2009-' . date('Y'));
 
   // meta title
   define('TITLE_INDEX','modified eCommerce Shopsoftware Installer');
@@ -121,7 +121,7 @@
   define('TEXT_ENGLISH','English');
   define('TITLE_UPGRADE','Execute:');
   define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
-  define('BUTTON_DONATE','<a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
+  define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" rel="nofollow noopener" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_WELCOME_INDEX','<b>Welcome to the modified eCommerce Shopsoftware installation process</b><br /><br />The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP 5.3 and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
   define('TEXT_WELCOME_STEP1','<b>Main database and webserver settings</b><br /><br />Please enter your Database and webserver settings.<br /><b>Note:</b> When the necessary rights exist, the installer can also create a new database.');
   define('TEXT_WELCOME_STEP2','<b>Install database</b><br /><br />The modified eCommerce Shopsoftware installer will automatically install the modified eCommerce Shopsoftware database.');
@@ -314,11 +314,11 @@
 
   // install_finished.php
   define('TEXT_SHOP_CONFIG_SUCCESS','The <strong>modified eCommerce Shopsoftware</strong> Shop configuration was successful.');
-  define('TEXT_TEAM','Thank you for chosing the modified eCommerce Shopsoftware. Please visit the modified eCommerce Shopsoftware developer team at the <a href="http://www.modified-shop.org">modified eCommerce Shopsoftware support site</a>.<br /><br />If you like the modified eCommerce Shopsoftware, we would appreciate a small donation.<br />');
+  define('TEXT_TEAM','Thank you for chosing the modified eCommerce Shopsoftware. Please visit the modified eCommerce Shopsoftware developer team at the <a href="https://www.modified-shop.org" rel="nofollow noopener" target="_blank">modified eCommerce Shopsoftware support site</a>.<br /><br />If you like the modified eCommerce Shopsoftware, we would appreciate a small donation.<br />');
 
   // BOC flth new permission change system
   define ('FTP_CHANGE_PERM_EXPLAIN', 'To set the file and directory permissions, you can either use your FTP program or enter your FTP information here to have set the required access permissions automatically.');
-         // Depending on the server configuration, you can try it directly on PHP, for this please click <a href="index.php?action=fixperms"> here </ a>. <br />
+         // Depending on the server configuration, you can try it directly on PHP, for this please click <a href="index.php?action=fixperms">here</a>. <br />
          // If the voting rights it still is not always the only solution method via FTP right. ');
   define ('LOGIN_NOT_POSSIBLE', 'Incorrect FTP credentials, Host not reachable');
   define ('CHMOD_WAS_NOT_SUCCESSFUL', 'Changing the directory permissions was NOT successful');

@@ -14,7 +14,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
   // Global
-  define('TEXT_FOOTER','<a style="text-decoration:none;" href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">' . '&nbsp;' . '&copy;2009-' . date('Y'));
+  define('TEXT_FOOTER','<a style="text-decoration:none;" href="https://www.modified-shop.org" rel="nofollow noopener" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">' . '&nbsp;' . '&copy;2009-' . date('Y'));
 
   // meta title
   define('TITLE_INDEX','modified eCommerce Shopsoftware Installer');
@@ -121,7 +121,7 @@
   define('TEXT_ENGLISH','Englisch');
   define('TITLE_UPGRADE','Ausf&uuml;hren:');
   define('TEXT_INFO_DONATIONS_IMG_ALT','Unterst&uuml;tzen Sie dieses Projekt mit Ihrer Spende');
-  define('BUTTON_DONATE','<a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
+  define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" rel="nofollow noopener" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_WELCOME_INDEX','<b>Willkommen zur modified eCommerce Shopsoftware Installation</b><br /><br />Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP 5.3.0) und MySQL (ab MySQL 5.0.0) zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.<br /><br />' . BUTTON_DONATE);
   define('TEXT_WELCOME_STEP1','<b>Datenbank- und Webservereinstellungen</b><br /><br />Der Installer ben&ouml;tigt hier einige Informationen bez&uuml;glich Ihrer Datenbank und Ihrer Verzeichnisstruktur.<br /><b>Hinweis:</b> Sofern die erforderlichen Rechte vorhanden sind, kann der Installer auch eine neue Datenbank erzeugen.');
   define('TEXT_WELCOME_STEP2','<b>Datenbank Installation</b><br /><br />Der modified eCommerce Shopsoftware Installer installiert automatisch die modified eCommerce Shopsoftware Datenbank.');
@@ -316,7 +316,7 @@
 
   // install_finished.php
   define('TEXT_SHOP_CONFIG_SUCCESS','Die <strong>modified eCommerce Shopsoftware</strong> Konfiguration war erfolgreich');
-  define('TEXT_TEAM','Vielen Dank, dass Sie sich f&uuml;r die modified eCommerce Shopsoftware entschieden haben. Besuchen Sie uns auf der <a href="http://www.modified-shop.org">modified eCommerce Shopsoftware Supportseite</a>.<br /><br />Alles Gute und viel Erfolg w&uuml;nscht Ihnen das gesamte modified eCommerce Shopsoftware Team.<br /><br />Wenn Sie uns unterst&uuml;tzen wollen, w&uuml;rden wir uns &uuml;ber eine kleine Spende freuen.<br />');
+  define('TEXT_TEAM','Vielen Dank, dass Sie sich f&uuml;r die modified eCommerce Shopsoftware entschieden haben. Besuchen Sie uns auf der <a href="https://www.modified-shop.org" rel="nofollow noopener" target="_blank">modified eCommerce Shopsoftware Supportseite</a>.<br /><br />Alles Gute und viel Erfolg w&uuml;nscht Ihnen das gesamte modified eCommerce Shopsoftware Team.<br /><br />Wenn Sie uns unterst&uuml;tzen wollen, w&uuml;rden wir uns &uuml;ber eine kleine Spende freuen.<br />');
 
   // BOC flth new permission change system
   define('FTP_CHANGE_PERM_EXPLAIN', 'Um die Datei- und Verzeichnisrechte zu setzen, benutzen Sie entweder Ihr FTP-Programm oder geben Sie Ihre FTP-Daten hier ein, um die ben&ouml;tigten Dateirechte automatisch setzen zu lassen.');

@@ -16,4 +16,12 @@ UPDATE content_manager SET content_text = REPLACE(content_text, 'http://ec.europ
 #GTB - 2018-03-16 - new products attributes handling
 ALTER TABLE products_options_values ADD products_options_values_sortorder INT(11) NOT NULL AFTER products_options_values_name;
 
+#Tomcraft - 2018-03-26 - change project links to https
+UPDATE content_manager SET content_text = REPLACE(content_text, '<a href="http://www.modified-shop.org" target="_blank">', '<a href="https://www.modified-shop.org" target="_blank">');
+
+#Tomcraft - 2018-03-26 - added rel="nofollow noopener" to external links
+UPDATE content_manager SET content_text = REPLACE(content_text, '<a href="https://ec.europa.eu/consumers/odr/" target="_blank">', '<a href="https://ec.europa.eu/consumers/odr/" rel="nofollow noopener" target="_blank">');
+UPDATE content_manager SET content_text = REPLACE(content_text, '<a href="https://ec.europa.eu/consumers/odr/" target="_blank">', '<a href="https://ec.europa.eu/consumers/odr/" rel="nofollow noopener" target="_blank">');
+UPDATE content_manager SET content_text = REPLACE(content_text, '<a href="https://www.modified-shop.org" target="_blank">', '<a href="https://www.modified-shop.org" rel="nofollow noopener" target="_blank">');
+
 # Keep an empty line at the end of this file for the db_updater to work properly
