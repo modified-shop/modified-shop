@@ -31,8 +31,6 @@ define('MODULE_SHIPPING_FREEAMOUNT_ALLOWED_TITLE' , 'Allowed Zones');
 define('MODULE_SHIPPING_FREEAMOUNT_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_FREEAMOUNT_STATUS_TITLE' , 'Enable Free Shipping with Minimum Purchase');
 define('MODULE_SHIPPING_FREEAMOUNT_STATUS_DESC' , 'Do you want to offer free shipping?');
-define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_TITLE' , 'Enable Display');
-define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_DESC' , 'Do you want to display text way if the minimum amount is not reached?');
 define('MODULE_SHIPPING_FREEAMOUNT_ZONE_TITLE' , 'Shipping Zone');
 define('MODULE_SHIPPING_FREEAMOUNT_ZONE_DESC' , 'If you choose a zone only this shipping zones used.');
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_TITLE' , 'Display order');

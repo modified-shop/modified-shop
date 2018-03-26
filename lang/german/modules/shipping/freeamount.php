@@ -31,8 +31,6 @@ define('MODULE_SHIPPING_FREEAMOUNT_ALLOWED_TITLE' , 'Erlaubte Versandzonen');
 define('MODULE_SHIPPING_FREEAMOUNT_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
 define('MODULE_SHIPPING_FREEAMOUNT_STATUS_TITLE' , 'Versandkostenfreie Lieferung aktivieren');
 define('MODULE_SHIPPING_FREEAMOUNT_STATUS_DESC' , 'M&ouml;chten Sie Versandkostenfreie Lieferung anbieten?');
-define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_TITLE' , 'Anzeige aktivieren');
-define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_DESC' , 'M&ouml;chten Sie anzeigen, wenn der Mindestbetrag zur VK-freien Lieferung nicht erreicht ist?');
 define('MODULE_SHIPPING_FREEAMOUNT_ZONE_TITLE' , 'Versand Zone');
 define('MODULE_SHIPPING_FREEAMOUNT_ZONE_DESC' , 'Wenn Sie eine Zone ausw&auml;hlen, wird diese Versandart nur in dieser Zone angeboten.');
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_TITLE' , 'Sortierreihenfolge');
