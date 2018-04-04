@@ -18,7 +18,7 @@
    ---------------------------------------------------------------------------------------*/
 
 define('MODULE_FINDOLOGIC_TEXT_TITLE', 'FINDOLOGIC Shopsuche - stop searching - find!');
-define('MODULE_FINDOLOGIC_TEXT_DESCRIPTION', 'FINDOLOGIC ist die ultimative Suchl&ouml;sung f&uuml;r Ihren Online-Shop. Ihre Kunden finden blitzschnell den gew&uuml;nschten Artikel und kaufen ihn! <span style="color: #ff8c00;">Dabei sind Umsatzsteigerungen unserer Kunden im zweistelligen Prozentbereich belegt.</span><br /><br />Mit dem Partnercode <span class="col-red" style="font-weight:bold;">qXgXj</span> sparen Sie 50&euro; Aktivierungsgeb&uuml;hr!<br /><br /><a href="https://secure.findologic.com/bestellung?partner=qXgXj" target="_blank"><strong><u>Jetzt anmelden!</u></strong></a>');
+define('MODULE_FINDOLOGIC_TEXT_DESCRIPTION', 'FINDOLOGIC ist die ultimative Suchl&ouml;sung f&uuml;r Ihren Online-Shop. Ihre Kunden finden blitzschnell den gew&uuml;nschten Artikel und kaufen ihn! <span style="color: #ff8c00;">Dabei sind Umsatzsteigerungen unserer Kunden im zweistelligen Prozentbereich belegt.</span><br /><br /><a href="https://www.findologic.com/kontakt/" target="_blank"><strong><u>Jetzt Angebot anfordern!</u></strong></a>');
 define('MODULE_FINDOLOGIC_LANG_TITLE' , '<hr noshade>Sprache');
 define('MODULE_FINDOLOGIC_LANG_DESC' , 'Sprache der Artikel, die Sie exportieren wollen.<br/><br/><b>Wichtig:</b> Diese Auswahl ist nur notwendig, wenn Sie nur 1 Service gebucht haben.');
 define('MODULE_FINDOLOGIC_CUSTOMER_GROUP_TITLE' , '<hr noshade>Kundengruppe:');
