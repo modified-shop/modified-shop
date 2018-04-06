@@ -3981,6 +3981,9 @@ ul.resp-tabs-list{
 .autocompletecloser {
   cursor:pointer;
 }
+#autocomplete_pagination {
+  position:relative;
+}
 #autocomplete_pagination li {
   float:left;
   border: 0;
