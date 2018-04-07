@@ -174,7 +174,7 @@ if ($user == '' || $password == '') {
 <h4>Mehr dazu im <a href="http://www.cao-faktura.de/index.php?option=com_forum&Itemid=44">Forum</a></h4>
 <h4>Version <?php echo $version_nr; ?> Stand : <?php echo $version_datum; ?></h4>
 <br><br>
-Aufruf des Scriptes mit <br><b><?php echo $PHP_SELF; ?>?user=<font color="red">ADMIN-EMAIL</font>&password=<font color="red">ADMIN-PASSWORD-IM-KLARTEXT</font>
+Aufruf des Scriptes mit <br><b><?php echo $PHP_SELF; ?>?user=<font color="red">ADMIN-EMAIL</font>&password=<font color="red">ADMIN-PASSWORD-ALS-MD5</font>
 </b>
 </body></html>
 <?php
