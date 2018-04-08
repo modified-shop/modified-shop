@@ -665,8 +665,9 @@ p.box3_sub {
   position:relative;
   overflow:hidden;
 }
-.newsletter_form input[type=text] {
-  padding-right:48px;
+.newsletter_form input[type=text],
+.newsletter_form input[type=email] {
+  padding-right:60px;
 }
 .newsletter_form input[type=image] {
   position:absolute;
