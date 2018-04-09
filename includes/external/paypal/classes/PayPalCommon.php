@@ -62,7 +62,7 @@ class PayPalCommon extends PayPalAuth {
         $string[$key] = $this->decode_utf8($value);
       }
     } else {
-      $string = decode_utf8($string);
+      $string = encode_htmlentities(decode_utf8($string));
     }
     
     return $string;
