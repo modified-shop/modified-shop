@@ -143,7 +143,11 @@ include (DIR_WS_MODULES. 'categories_listing.php');
 if ($result != false) {
 
   // get default template
-  if ($category['listing_template'] == '' || $category['listing_template'] == 'default') {
+  if ($category['listing_template'] == '' 
+      || $category['listing_template'] == 'default'
+      || !is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'])
+      )
+  {
     $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/','html'), function($file) {
       return false === strpos($file, 'index.html');
     });
@@ -216,7 +220,11 @@ if ($result != false) {
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_listing_end/','php') as $file) require ($file);
 
     // get default template
-    if ($category['categories_template'] == '' || $category['categories_template'] == 'default') {
+    if ($category['listing_template'] == '' 
+        || $category['listing_template'] == 'default'
+        || !is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'])
+        )
+    {
       $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/','html'), function($file) {
         return false === strpos($file, 'index.html');
       });

@@ -156,7 +156,11 @@ if ($product->getAttributesCount() > 0) {
   }
 
 
-  if ($product->data['options_template'] == '' || $product->data['options_template'] == 'default') {
+  if ($product->data['options_template'] == '' 
+      || $product->data['options_template'] == 'default'
+      || !is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/'.$product->data['options_template'])
+      )
+  {
     $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/','html'), function($file) {
       return false === strpos($file, 'index.html');
     });
