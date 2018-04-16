@@ -138,7 +138,7 @@ class modified_seo_url {
   protected function seo_url_href_mask($link) {
     include_once (DIR_FS_INC . 'seo_url_href_mask.php');
   
-    return seo_url_href_mask($link);
+    return seo_url_href_mask($link, true);
   }
 
 
