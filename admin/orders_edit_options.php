@@ -25,6 +25,16 @@
   --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
+  define('ATTR_EQ_PREFIX', (defined('MODULE_PRICE_WEIGHT_PREFIX_STATUS') && MODULE_PRICE_WEIGHT_PREFIX_STATUS == 'true'  ? true : false));
+
+  $prefix_array = array(
+    array('id' => '+', 'text' => '&nbsp;+&nbsp;'),
+    array('id' => '-', 'text' => '&nbsp;-&nbsp;')
+  );
+  if (ATTR_EQ_PREFIX === true) {
+    $prefix_array[] = array('id' => '=', 'text' => '&nbsp;=&nbsp;');
+  }
+
   $products_query = xtc_db_query("select * from " . TABLE_ORDERS_PRODUCTS . " where orders_id = '" . (int)$_GET['oID'] . "' and orders_products_id = '" . (int)$_GET['opID'] . "'");
   $products = xtc_db_fetch_array($products_query);
 ?>
@@ -54,7 +64,7 @@
           <td class="dataTableContent"><?php echo xtc_draw_input_field('products_options', $attributes['products_options'], 'size="20"');?></td>
           <td class="dataTableContent"><?php echo xtc_draw_input_field('products_options_values', $attributes['products_options_values'], 'size="20"');?></td>
           <td class="dataTableContent"><?php echo xtc_draw_input_field('options_values_price',$attributes['options_values_price'], 'size="10"');?></td>
-          <td class="dataTableContent txta-c"><?php echo xtc_draw_pull_down_menu('prefix', array(array('id' => '+', 'text' => '+'),array('id' => '-', 'text' => '-')), $attributes['price_prefix']); ?></td>
+          <td class="dataTableContent txta-c"><?php echo xtc_draw_pull_down_menu('prefix', $prefix_array, $attributes['price_prefix']); ?></td>
           <td class="dataTableContent">
             <?php
               echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
