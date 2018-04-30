@@ -431,7 +431,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
           $sql_data_array = array('coupon_code' => $coupon_code,
                                   'coupon_type' => 'G',
                                   'coupon_amount' => NEW_SIGNUP_GIFT_VOUCHER_AMOUNT,
-                                  'date_created' => $email_address
+                                  'date_created' => 'now()'
                                   );
           xtc_db_perform(TABLE_COUPONS, $sql_data_array);
 
