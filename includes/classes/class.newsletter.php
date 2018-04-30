@@ -260,14 +260,14 @@ class newsletter {
             $sql_data_array = array('coupon_code' => $coupon_code,
                                     'coupon_type' => 'G',
                                     'coupon_amount' => MODULE_NEWSLETTER_VOUCHER_AMOUNT,
-                                    'date_created' => $mail
+                                    'date_created' => 'now()'
                                     );
             xtc_db_perform(TABLE_COUPONS, $sql_data_array);
 
             $insert_id = xtc_db_insert_id();
             $sql_data_array = array('coupon_id' => $insert_id,
                                     'customer_id_sent' => '0',
-                                    'sent_firstname' => 'Admin',
+                                    'sent_firstname' => 'Newsletter',
                                     'emailed_to' => $mail,
                                     'date_sent' => 'now()'
                                     );
@@ -300,7 +300,7 @@ class newsletter {
         
               $sql_data_array = array('coupon_id' => $coupon_id,
                                       'customer_id_sent' => '0',
-                                      'sent_firstname' => 'Admin',
+                                      'sent_firstname' => 'Newsletter',
                                       'emailed_to' => $mail,
                                       'date_sent' => 'now()'
                                       );
@@ -355,7 +355,8 @@ class newsletter {
   function check_gv_coupon_sendt($mail) {
     $check_query = xtc_db_query("SELECT *
                                    FROM ".TABLE_COUPON_EMAIL_TRACK."
-                                  WHERE emailed_to = '".xtc_db_input($mail)."'");
+                                  WHERE emailed_to = '".xtc_db_input($mail)."'
+                                    AND sent_firstname = 'Newsletter'");
     if (xtc_db_num_rows($check_query) > 0) {
       return true;
     }
