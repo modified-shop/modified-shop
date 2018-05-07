@@ -74,7 +74,7 @@ function JStoPHPResponse(data) {
     //$.each(response, function( key, value ) {
       //console.log('key: ' + key + ' | value: ' + value);
     //});
-$('.ajax_imgname').html(response.imgname);
+    $('.ajax_imgname').html(response.imgname);
     $('.ajax_count').html(response.count);
     updateProgressBar(response.total,'image',response.start);
     //return;
