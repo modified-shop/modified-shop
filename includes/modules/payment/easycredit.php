@@ -104,7 +104,7 @@ class easycredit {
       if (!defined('POPUP_CONTENT_LINK_CLASS')) {
         define('POPUP_CONTENT_LINK_CLASS', 'thickbox');
       }
-      $this->link_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS;
+      $this->link_parameters = ltrim(defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS, '&');
       $this->link_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS;
     }
   }
