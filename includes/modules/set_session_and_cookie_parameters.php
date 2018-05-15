@@ -53,12 +53,14 @@ if (STORE_SESSIONS == 'mysql') {
 set_session_cookie(0, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''), ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false), true);
 
 // set the session ID if it exists
-if (isset($_POST[xtc_session_name()])) {
-  xtc_session_id($_POST[xtc_session_name()]);
-}
-elseif ($request_type == 'SSL' && isset($_GET[xtc_session_name()])) {
-  if (!isset($_COOKIE[xtc_session_name()]) || $_GET[xtc_session_name()] != $_COOKIE[xtc_session_name()]) {
-    xtc_session_id($_GET[xtc_session_name()]);
+if (SESSION_FORCE_COOKIE_USE != 'True') {
+  if (isset($_POST[xtc_session_name()])) {
+    xtc_session_id($_POST[xtc_session_name()]);
+  }
+  elseif ($request_type == 'SSL' && isset($_GET[xtc_session_name()])) {
+    if (!isset($_COOKIE[xtc_session_name()]) || $_GET[xtc_session_name()] != $_COOKIE[xtc_session_name()]) {
+      xtc_session_id($_GET[xtc_session_name()]);
+    }
   }
 }
 
