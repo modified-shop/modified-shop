@@ -53,7 +53,7 @@ $orders_query = xtc_db_query("SELECT orders_id,
                                      payment_class
                                 FROM ".TABLE_ORDERS."
                                WHERE customers_id = '".(int)$_SESSION['customer_id']."'
-                                 AND unix_timestamp(date_purchased) > (unix_timestamp(now()) - '".SESSION_LIFE_CUSTOMERS."')
+                                 AND unix_timestamp(date_purchased) > (unix_timestamp(now()) - '".(int)SESSION_LIFE_CUSTOMERS."')
                             ORDER BY orders_id DESC
                                LIMIT 1");
 
@@ -83,7 +83,7 @@ $smarty->assign('FORM_END', '</form>');
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
   $gv_query = xtc_db_query("SELECT amount 
                               FROM ".TABLE_COUPON_GV_CUSTOMER." 
-                             WHERE customer_id='".$_SESSION['customer_id']."'");
+                             WHERE customer_id='".(int)$_SESSION['customer_id']."'");
   if ($gv_result = xtc_db_fetch_array($gv_query)) {
     if ($gv_result['amount'] > 0) {
       $smarty->assign('GV_SEND_LINK', xtc_href_link(FILENAME_GV_SEND));
@@ -103,10 +103,10 @@ if (isset($_SESSION['NO_SHIPPING']) && $_SESSION['NO_SHIPPING'] === true) {
 //delete Guests from Database
 if ($_SESSION['account_type'] == '1') {
   if (DELETE_GUEST_ACCOUNT == 'true') {
-    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".$_SESSION['customer_id']."'");
-    xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".$_SESSION['customer_id']."'");
-    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".$_SESSION['customer_id']."'");
-    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".$_SESSION['customer_id']."'");
+    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$_SESSION['customer_id']."'");
+    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
   } 
   xtc_session_destroy();
 
