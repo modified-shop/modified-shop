@@ -24,4 +24,11 @@ UPDATE content_manager SET content_text = REPLACE(content_text, '<a href="https:
 UPDATE content_manager SET content_text = REPLACE(content_text, '<a href="https://ec.europa.eu/consumers/odr/" target="_blank">', '<a href="https://ec.europa.eu/consumers/odr/" rel="nofollow noopener" target="_blank">');
 UPDATE content_manager SET content_text = REPLACE(content_text, '<a href="https://www.modified-shop.org" target="_blank">', '<a href="https://www.modified-shop.org" rel="nofollow noopener" target="_blank">');
 
+#GTB - 2018-05-25 - performance tweaks for admin
+ALTER TABLE `orders`
+ADD KEY `idx_payment_class` (`payment_class`);
+
+ALTER TABLE `orders_status_history`
+ADD KEY `idx_orders_id` (`orders_id`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
