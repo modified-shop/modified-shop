@@ -96,7 +96,7 @@ require (DIR_WS_INCLUDES.'head.php');
               </font>
               <p align="left">
                 <br />
-                <a href="http://www.janolaw.de/internetrecht/agb/agb-hosting-service/modified/index.html?partnerid=8764#menu" target="_blank"><font size="3" color="#893769"><u><strong>Jetzt buchen und Online-Shop dauerhaft rechtssicher gestalten</strong></u></font></a> 
+                <a href="https://www.janolaw.de/internetrecht/agb/agb-hosting-service/modified/index.html?partnerid=8764#menu" target="_blank"><font size="3" color="#893769"><u><strong>Jetzt buchen und Online-Shop dauerhaft rechtssicher gestalten</strong></u></font></a> 
               </p>
             </td>
           </tr>
