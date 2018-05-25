@@ -114,7 +114,7 @@ class janolaw_content {
         
         $language = $this->get_language($key);
         
-        $url = 'http://www.janolaw.de/agb-service/shops/'.
+        $url = 'https://www.janolaw.de/agb-service/shops/'.
                $this->user_id .'/'.
                $this->shop_id .'/'.
                $language .'/';
