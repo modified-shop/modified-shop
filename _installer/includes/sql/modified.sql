@@ -790,7 +790,8 @@ CREATE TABLE orders (
   PRIMARY KEY (orders_id),
   KEY idx_customers_id (customers_id),
   KEY idx_orders_status (orders_status),
-  KEY idx_date_purchased (date_purchased)
+  KEY idx_date_purchased (date_purchased),
+  KEY idx_payment_class (payment_class)
 );
 
 DROP TABLE IF EXISTS orders_products;
@@ -881,7 +882,8 @@ CREATE TABLE orders_status_history (
   customer_notified INT(1) DEFAULT 0,
   comments text,
   comments_sent INT(1) DEFAULT 0,
-  PRIMARY KEY (orders_status_history_id)
+  PRIMARY KEY (orders_status_history_id),
+  KEY idx_orders_id (orders_id)
 );
 
 DROP TABLE IF EXISTS orders_total;

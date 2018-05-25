@@ -105,69 +105,49 @@
                 if (isset($_GET['cID'])) {
                   $cID = (int) $_GET['cID'];
                   $orders_query_raw = "-- /admin/orders.php
-                                       SELECT ".$order_select_fields.",
-                                              s.orders_status_name
+                                       SELECT ".$order_select_fields."
                                          FROM ".TABLE_ORDERS." o
-                                    LEFT JOIN ".TABLE_ORDERS_STATUS." s
-                                              ON (((o.orders_status = s.orders_status_id)
-                                                   OR (o.orders_status = '0' 
-                                                       AND s.orders_status_id = '1'))
-                                                   AND s.language_id = '".(int)$_SESSION['languages_id']."')
                                         WHERE o.customers_id = '".xtc_db_input($cID)."'
-                                               ".$filter.$sort;
+                                              ".$filter.$sort;
 
-                } elseif (isset($_GET['status']) && $_GET['status']=='0') {
-                    $orders_query_raw = "-- /admin/orders.php
-                                         SELECT ".$order_select_fields."
-                                           FROM ".TABLE_ORDERS." o
-                                           WHERE o.orders_status = '0'
-                                                 ".$filter.$sort;
+                } elseif (isset($_GET['status']) && $_GET['status'] == '0') {
+                  $orders_query_raw = "-- /admin/orders.php
+                                       SELECT ".$order_select_fields."
+                                         FROM ".TABLE_ORDERS." o
+                                        WHERE o.orders_status = '0'
+                                              ".$filter.$sort;
 
                 } elseif (isset($_GET['status']) && xtc_not_null($_GET['status']) && $_GET['status'] != '-1') {
-                    $status = xtc_db_prepare_input($_GET['status']);
-                    $orders_query_raw = "-- /admin/orders.php
-                                         SELECT ".$order_select_fields.",
-                                                s.orders_status_name
-                                           FROM ".TABLE_ORDERS." o
-                                      LEFT JOIN ".TABLE_ORDERS_STATUS." s
-                                                ON (o.orders_status = s.orders_status_id
-                                                    AND s.orders_status_id = '".xtc_db_input($status)."')
-                                          WHERE s.language_id = '".(int)$_SESSION['languages_id']."'
-                                                ".$filter.$sort;
+                  $status = xtc_db_prepare_input($_GET['status']);
+                  $orders_query_raw = "-- /admin/orders.php
+                                       SELECT ".$order_select_fields."
+                                         FROM ".TABLE_ORDERS." o
+                                        WHERE o.orders_status = '".(int)$status."'
+                                              ".$filter.$sort;
 
                 } elseif ($action == 'search' && $oID && $customer == '') {
-                     // ADMIN SEARCH BAR $orders_query_raw moved it to the top
+                   // ADMIN SEARCH BAR $orders_query_raw moved it to the top
                 } elseif ($action == 'search' && $customer) {
-                      $orders_query_raw = "-- /admin/orders.php
-                                           SELECT ".$order_select_fields.",
-                                                  s.orders_status_name
-                                             FROM ".TABLE_ORDERS." o
-                                        LEFT JOIN ".TABLE_ORDERS_STATUS." s
-                                               ON (o.orders_status = s.orders_status_id
-                                                    AND s.language_id = '".(int)$_SESSION['languages_id']."')
-                                            WHERE (o.customers_name LIKE '%".xtc_db_input($customer)."%'
-                                               OR o.customers_firstname LIKE '%".xtc_db_input($customer)."%'
-                                               OR o.customers_lastname LIKE '%".xtc_db_input($customer)."%'
-                                               OR o.customers_company LIKE '%".xtc_db_input($customer)."%')                       
-                                         ".$filter.$sort;
+                  $orders_query_raw = "-- /admin/orders.php
+                                       SELECT ".$order_select_fields."
+                                         FROM ".TABLE_ORDERS." o
+                                        WHERE o.orders_status = '".(int)$status."'
+                                          AND (o.customers_name LIKE '%".xtc_db_input($customer)."%'
+                                           OR o.customers_firstname LIKE '%".xtc_db_input($customer)."%'
+                                           OR o.customers_lastname LIKE '%".xtc_db_input($customer)."%'
+                                           OR o.customers_company LIKE '%".xtc_db_input($customer)."%')                       
+                                              ".$filter.$sort;
                 } else {
-                      $filter = strpos($filter,' AND') !== false ? substr_replace($filter,' WHERE',0,strlen(' AND')) : ''; //replace ONLY FIRST occurrence of a string within a string
-                      $default_status = '';
-                      if (defined('ORDER_STATUSES_DISPLAY_DEFAULT') && ORDER_STATUSES_DISPLAY_DEFAULT != '' && (!isset($_GET['status']) || $_GET['status'] == '')) {
-                        $default_status_array = explode(',', ORDER_STATUSES_DISPLAY_DEFAULT);
-                        $default_status = ((strpos($filter, 'WHERE') !== false) ? " AND " : " WHERE ")."o.orders_status IN ('".implode("', '", $default_status_array)."') ";
-                      }
-                      $orders_query_raw = "-- /admin/orders.php
-                                           SELECT ".$order_select_fields.",
-                                                  s.orders_status_name
-                                             FROM ".TABLE_ORDERS." o
-                                        LEFT JOIN ".TABLE_ORDERS_STATUS." s
-                                               ON (((o.orders_status = s.orders_status_id)
-                                                    OR (o.orders_status = '0' 
-                                                        AND s.orders_status_id = '1'))
-                                                    AND s.language_id = '".(int)$_SESSION['languages_id']."'
-                                                   )
-                                                  ".$filter.$default_status.$sort;                  
+                  $filter = strpos($filter,' AND') !== false ? substr_replace($filter,' WHERE',0,strlen(' AND')) : ''; //replace ONLY FIRST occurrence of a string within a string
+                  $default_status = '';
+                  if (defined('ORDER_STATUSES_DISPLAY_DEFAULT') && ORDER_STATUSES_DISPLAY_DEFAULT != '' && (!isset($_GET['status']) || $_GET['status'] == '')) {
+                    $default_status_array = explode(',', ORDER_STATUSES_DISPLAY_DEFAULT);
+                    $default_status = ((strpos($filter, 'WHERE') !== false) ? " AND " : " WHERE ")."o.orders_status IN ('".implode("', '", $default_status_array)."') ";
+                  }
+                  $orders_query_raw = "-- /admin/orders.php
+                                       SELECT ".$order_select_fields."
+                                         FROM ".TABLE_ORDERS." o
+                                              ".$filter.$default_status.$sort;                  
                 }
                 $orders_split = new splitPageResults($_GET['page'], $page_max_display_results, $orders_query_raw, $orders_query_numrows);
                 $orders_query = xtc_db_query($orders_query_raw);
@@ -200,7 +180,7 @@
                   <td class="dataTableContent" align="right"><?php echo format_price(get_order_total($orders['orders_id']), 1, $orders['currency'], 0, 0); ?></td>
                   <td class="dataTableContent" align="center"><?php echo xtc_datetime_short($orders['date_purchased']); ?></td>
                   <td class="dataTableContent" align="center"><?php echo get_payment_name($orders['payment_method']); ?></td>
-                  <td class="dataTableContent" align="right"><?php if($orders['orders_status']!='0') { echo $orders['orders_status_name']; }else{ echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';}?></td>
+                  <td class="dataTableContent" align="right"><?php if($orders['orders_status']!='0') { echo $orders_status_array[$orders['orders_status']]; }else{ echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';}?></td>
                   <?php if (AFTERBUY_ACTIVATED=='true') { ?>
                   <td class="dataTableContent" align="right"><?php  echo ($orders['afterbuy_success'] == 1) ? $orders['afterbuy_id'] : 'TRANSMISSION_ERROR'; ?></td>
                   <?php } ?>

@@ -231,8 +231,7 @@ switch ($action) {
         xtc_db_query("UPDATE ".TABLE_ORDERS."
                          SET orders_status = ".$status.",
                              last_modified = now()
-                       WHERE orders_id = ".$oID
-                    );
+                       WHERE orders_id = '".$oID."'");
       }
 
       $customer_notified = 0;

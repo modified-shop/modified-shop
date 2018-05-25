@@ -73,7 +73,7 @@
                                   OR c.customers_cid LIKE '%".$keywords."%'
                                   OR a.entry_company LIKE '%".$keywords."%'
                                  )";
-                  //BOF - web28 - 2010-05-29 added for ADMIN SEARCH BAR
+
                   if(isset($_GET['asb']) && $_GET['asb'] == 'asb') {
                     $search = "AND (c.customers_lastname LIKE '%".$keywords."%'
                                     OR c.customers_firstname LIKE '%".$keywords."%'
@@ -84,14 +84,11 @@
                                     OR a.entry_company LIKE '%".$keywords."%'
                                    )";
                   }
-                  //EOF - web28 - 2010-05-29 added for ADMIN SEARCH BAR
                 }
-                //BOF - web28 - 2010-05-29 added for ADMIN SEARCH BAR
                 if (isset($_GET['search_email']) && (xtc_not_null($_GET['search_email']))) {
                   $keywords = xtc_db_input(xtc_db_prepare_input($_GET['search_email']));
                   $search = "AND (c.customers_email_address LIKE '%".$keywords."%')";
                 }
-                //EOF - web28 - 2010-05-29 added for ADMIN SEARCH BAR
                 if (isset($_GET['status']) && ($_GET['status'] != '100' || $_GET['status'] == '0')) {
                   $status = xtc_db_prepare_input($_GET['status']);
                   $search = "AND c.customers_status = '".$status."'";
@@ -118,12 +115,11 @@
                       $sort = 'ORDER BY a.entry_country_id DESC';
                       break;
                     case 'date_account_created' :
-                      $sort = 'ORDER BY ci.customers_info_date_account_created';
+                      $sort = 'ORDER BY c.customers_date_added';
                       break;
                     case 'date_account_created-desc' :
-                      $sort = 'ORDER BY ci.customers_info_date_account_created DESC';
+                      $sort = 'ORDER BY c.customers_date_added DESC';
                       break;
-                      // BOF - DokuMan - 2012-02-06 - added customers_cid
                     case 'customers_cid' :
                       $sort = 'ORDER BY c.customers_cid';
                       break;
@@ -138,10 +134,9 @@
                       break;
                   }
                 } else {
-                  $sort = 'ORDER BY ci.customers_info_date_account_created DESC'; // vr - 2010-02-22 - default sort order
+                  $sort = 'ORDER BY c.customers_date_added DESC';
                 }
 
-                // BOF - vr - 2010-02-22 - removed group by part to prevent folding of customers records with the same creation timestamp
                 $customers_query_raw = "-- admin/customers.php
                                         SELECT c.customers_id,
                                                c.customers_cid,
@@ -152,51 +147,53 @@
                                                c.customers_lastname,
                                                c.customers_email_address,
                                                c.customers_default_address_id,
+                                               c.customers_date_added as date_account_created,
+                                               c.customers_last_modified as date_account_last_modified,
                                                c.member_flag,
                                                c.account_type,
                                                a.entry_company,
                                                a.entry_country_id,
-                                               ci.customers_info_date_account_created as date_account_created,
-                                               ci.customers_info_date_account_last_modified as date_account_last_modified,
-                                               ci.customers_info_date_of_last_logon as date_last_logon,
-                                               ci.customers_info_number_of_logons as number_of_logons,
                                                cgc.amount
                                           FROM ".TABLE_CUSTOMERS." c
                                           JOIN ".TABLE_ADDRESS_BOOK." a
                                                ON c.customers_id = a.customers_id
-                                     LEFT JOIN ".TABLE_CUSTOMERS_INFO." ci
-                                               ON ci.customers_info_id = c.customers_id
                                      LEFT JOIN ".TABLE_COUPON_GV_CUSTOMER." cgc
                                                ON c.customers_id = cgc.customer_id
                                          WHERE c.customers_default_address_id = a.address_book_id
                                                ".$search."
                                                ".$sort;
-                // EOF - vr - 2010-02-22 - removed group by part to prevent folding of customers records with the same creation timestamp
+
                 $customers_split = new splitPageResults($_GET['page'], $page_max_display_results, $customers_query_raw, $customers_query_numrows);
                 $customers_query = xtc_db_query($customers_query_raw);
                 while ($customers = xtc_db_fetch_array($customers_query)) {
-                  // vr - 2012-10-27 moved info query into raw query
-                  // BOF - DokuMan - 2011-09-12 - optimize sql query for customers sales volume - thx to GTB
                   $umsatz_query = xtc_db_query("-- admin/customers.php
                                                 SELECT SUM(op.final_price) as ordersum
                                                   FROM ".TABLE_ORDERS_PRODUCTS." op
                                                   JOIN ".TABLE_ORDERS." o ON o.orders_id = op.orders_id
-                                                 WHERE '".(int)$customers['customers_id']."' = o.customers_id");
+                                                 WHERE o.customers_id = '".(int)$customers['customers_id']."'");
                   $umsatz = xtc_db_fetch_array($umsatz_query);
-                  // EOF - DokuMan - 2011-09-12 - optimize sql query for customers sales volume - thx to GTB
 
                   if ((!isset($_GET['cID']) || (@$_GET['cID'] == $customers['customers_id'])) && !isset($cInfo)) {
-                    $country_query = xtc_db_query("SELECT countries_name FROM ".TABLE_COUNTRIES." WHERE countries_id = '".(int)$customers['entry_country_id']."'");
+                    $country_query = xtc_db_query("SELECT countries_name 
+                                                     FROM ".TABLE_COUNTRIES." 
+                                                    WHERE countries_id = '".(int)$customers['entry_country_id']."'");
                     $country = xtc_db_fetch_array($country_query);
-
-                    $reviews_query = xtc_db_query("SELECT count(*) as number_of_reviews FROM ".TABLE_REVIEWS." WHERE customers_id = '".(int)$customers['customers_id']."'");
+                    $customers = array_merge($customers, $country);                    
+                    
+                    $reviews_query = xtc_db_query("SELECT count(*) as number_of_reviews 
+                                                     FROM ".TABLE_REVIEWS." 
+                                                     WHERE customers_id = '".(int)$customers['customers_id']."'");
                     $reviews = xtc_db_fetch_array($reviews_query);
+                    $customers = array_merge($customers, $reviews);
 
-                    // vr - 2012-10-27 moved info query into raw query, $info is now part in $customers
-                    $customer_info = xtc_array_merge($country, $reviews);
+                    $customers_info_query = xtc_db_query("SELECT customers_info_date_of_last_logon as date_last_logon,
+                                                                 customers_info_number_of_logons as number_of_logons 
+                                                            FROM ".TABLE_CUSTOMERS_INFO." 
+                                                           WHERE customers_info_id = '".(int)$customers['customers_id']."'");
+                    $customers_info = xtc_db_fetch_array($customers_info_query);
+                    $customers = array_merge($customers, $customers_info);
 
-                    $cInfo_array = xtc_array_merge($customers, $customer_info);
-                    $cInfo = new objectInfo($cInfo_array);
+                    $cInfo = new objectInfo($customers);
                   }
 
                   if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id)) {
@@ -361,7 +358,13 @@
 
                   case 'editstatus' :
                     if ($_GET['cID'] != 1) {
-                      $customers_history_query = xtc_db_query("SELECT new_value, old_value, date_added, customer_notified FROM ".TABLE_CUSTOMERS_STATUS_HISTORY." WHERE customers_id = '".xtc_db_input($_GET['cID'])."' ORDER BY customers_status_history_id desc");
+                      $customers_history_query = xtc_db_query("SELECT new_value, 
+                                                                      old_value, 
+                                                                      date_added, 
+                                                                      customer_notified 
+                                                                 FROM ".TABLE_CUSTOMERS_STATUS_HISTORY." 
+                                                                WHERE customers_id = '".xtc_db_input($_GET['cID'])."' 
+                                                             ORDER BY customers_status_history_id desc");
                       $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_STATUS_CUSTOMER.'</b>');
                       $contents = array ('form' => xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=statusconfirm'));
                       $contents[] = array ('text' => '<br />'.xtc_draw_pull_down_menu('customers_status', $customers_statuses_array, $cInfo->customers_status));
@@ -436,36 +439,12 @@
                                            'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=iplog').'">'.BUTTON_IPLOG.'</a>
                                                       <a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=new_order').'">'.BUTTON_NEW_ORDER.'</a>'
                                           );
-
-                      if ($action == 'iplog') {
-                        $info_query = xtc_db_query("SELECT
-                                                          customers_info_date_account_created as date_account_created,
-                                                          customers_info_date_account_last_modified as date_account_last_modified,
-                                                          customers_info_date_of_last_logon as date_last_logon,
-                                                          customers_info_number_of_logons as number_of_logons
-                                                     FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".$cInfo->customers_id."'");
-                        $info = xtc_db_fetch_array($info_query);
-
-                        $country_query = xtc_db_query("SELECT countries_name FROM ".TABLE_COUNTRIES." WHERE countries_id = '".(int)$cInfo->entry_country_id."'");
-                        $country = xtc_db_fetch_array($country_query);
-
-                        $reviews_query = xtc_db_query("SELECT COUNT(*) as number_of_reviews FROM ".TABLE_REVIEWS." WHERE customers_id = '".(int)$cInfo->customers_id."'");
-                        $reviews = xtc_db_fetch_array($reviews_query);
-
-                        $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_CREATED.' '.xtc_datetime_short($info['date_account_created']));
-                        $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_LAST_MODIFIED.' '.xtc_datetime_short($info['date_account_last_modified']));
-                        $contents[] = array ('text' => '<br />'.TEXT_INFO_DATE_LAST_LOGON.' '.xtc_datetime_short($info['date_last_logon']));
-                        $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_LOGONS.' '.$info['number_of_logons']);
-                        $contents[] = array ('text' => '<br />'.TEXT_INFO_COUNTRY.' '.$country['countries_name']);
-                        $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_REVIEWS.' '.$reviews['number_of_reviews']);
-                      } else {
-                        $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_CREATED.' '.xtc_datetime_short($cInfo->date_account_created));
-                        $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_LAST_MODIFIED.' '.xtc_datetime_short($cInfo->date_account_last_modified));
-                        $contents[] = array ('text' => '<br />'.TEXT_INFO_DATE_LAST_LOGON.' '.xtc_datetime_short($cInfo->date_last_logon));
-                        $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_LOGONS.' '.$cInfo->number_of_logons);
-                        $contents[] = array ('text' => '<br />'.TEXT_INFO_COUNTRY.' '.$cInfo->countries_name);
-                        $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_REVIEWS.' '.$cInfo->number_of_reviews);
-                      }
+                      $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_CREATED.' '.xtc_datetime_short($cInfo->date_account_created));
+                      $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_LAST_MODIFIED.' '.xtc_datetime_short($cInfo->date_account_last_modified));
+                      $contents[] = array ('text' => '<br />'.TEXT_INFO_DATE_LAST_LOGON.' '.xtc_datetime_short($cInfo->date_last_logon));
+                      $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_LOGONS.' '.$cInfo->number_of_logons);
+                      $contents[] = array ('text' => '<br />'.TEXT_INFO_COUNTRY.' '.$cInfo->countries_name);
+                      $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_REVIEWS.' '.$cInfo->number_of_reviews);
                     }
 
                     if ($action == 'iplog') {
@@ -482,7 +461,7 @@
                     }
                     break;
                 }
-                // display right box
+
                 if ((xtc_not_null($heading)) && (xtc_not_null($contents))) {
                   echo '            <td class="boxRight">'."\n";
                   $box = new box;
