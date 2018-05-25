@@ -483,7 +483,7 @@ define('SHIPPING_COSTS','Shipping costs');
 define('SHIPPING_TIME','Shipping time: ');
 define('MORE_INFO','[More]');
 
-define('ENTRY_PRIVACY_ERROR','Please accept our privacy policy!');
+define('ENTRY_PRIVACY_ERROR','Please confirm that you have read our privacy policy!');
 define('TEXT_PAYMENT_FEE','Paymentfee');
 
 define('_MODULE_INVALID_SHIPPING_ZONE', 'Unfortunately we do not deliver to the chosen country.');
