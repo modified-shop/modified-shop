@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------------
  */
 
-require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/AttributesMatchingHelper.php');
+require_once(DIR_MAGNALISTER_MODULES . 'magnacompatible/AttributesMatchingHelper.php');
 
 class PriceministerHelper extends AttributesMatchingHelper
 {
@@ -197,7 +197,8 @@ class PriceministerHelper extends AttributesMatchingHelper
         return '';
     }
 
-    public static function getTitleAndDescription(&$selection, $mpID) {
+    public static function getTitleAndDescription(&$selection, $mpID)
+    {
         $imagePath = getDBConfigValue('priceminister.imagepath', $mpID);
         if (empty($imagePath)) {
             $imagePath = defined('DIR_WS_CATALOG_POPUP_IMAGES')
@@ -217,7 +218,7 @@ class PriceministerHelper extends AttributesMatchingHelper
         # Template fuellen
         # bei mehreren Artikeln erst beim Speichern fuellen
         # Preis und ggf. VPE wird erst beim Uebermitteln eingesetzt.
-        $substitution = array (
+        $substitution = array(
             '#TITLE#' => fixHTMLUTF8Entities($selection[0]['Title']),
             '#ARTNR#' => $selection[0]['products_model'],
             '#PID#' => $selection[0]['products_id'],
@@ -238,7 +239,7 @@ class PriceministerHelper extends AttributesMatchingHelper
         # Titel-Template fuellen
         # bei mehreren Artikeln erst beim Speichern fuellen
         # Preis und ggf. VPE wird erst beim Uebermitteln eingesetzt.
-        $substitution = array (
+        $substitution = array(
             '#TITLE#' => fixHTMLUTF8Entities($selection[0]['Title']),
             '#BASEPRICE#' => $simplePrice->roundPrice()->getPrice(),
         );
@@ -247,126 +248,55 @@ class PriceministerHelper extends AttributesMatchingHelper
         );
     }
 
-    public static function substitutePictures($tmplStr, $pID, $imagePath) {
+    public static function substitutePictures($tmplStr, $pID, $imagePath)
+    {
         # Tabelle nur bei xtCommerce- und Gambio- Shops vorhanden (nicht OsC)
-        if (   defined('TABLE_MEDIA')      && MagnaDB::gi()->tableExists(TABLE_MEDIA)
+        if (defined('TABLE_MEDIA') && MagnaDB::gi()->tableExists(TABLE_MEDIA)
             && defined('TABLE_MEDIA_LINK') && MagnaDB::gi()->tableExists(TABLE_MEDIA_LINK)
         ) {
             $pics = MagnaDB::gi()->fetchArray('SELECT
 				id as image_nr, file as image_name
-				FROM '.TABLE_MEDIA.' m, '.TABLE_MEDIA_LINK.' ml
-				WHERE m.type=\'images\' AND ml.class=\'product\' AND m.id=ml.m_id AND ml.link_id='.$pID);
+				FROM ' . TABLE_MEDIA . ' m, ' . TABLE_MEDIA_LINK . ' ml
+				WHERE m.type=\'images\' AND ml.class=\'product\' AND m.id=ml.m_id AND ml.link_id=' . $pID);
             $i = 2;
             # Ersetze #PICTURE2# usw. (#PICTURE1# ist das Hauptbild und wird vorher ersetzt)
-            foreach($pics as $pic) {
-                $tmplStr = str_replace('#PICTURE'.$i.'#', "<img src=\"".$imagePath.$pic['image_name']."\" style=\"border:0;\" alt=\"\" title=\"\" />",
-                    preg_replace( '/(src|SRC|href|HREF)(\s*=\s*)(\'|")(#PICTURE'.$i.'#)/', '\1\2\3'.$imagePath.$pic['image_name'], $tmplStr));
+            foreach ($pics as $pic){
+                $tmplStr = str_replace('#PICTURE' . $i . '#', "<img src=\"" . $imagePath . $pic['image_name'] . "\" style=\"border:0;\" alt=\"\" title=\"\" />",
+                    preg_replace('/(src|SRC|href|HREF)(\s*=\s*)(\'|")(#PICTURE' . $i . '#)/', '\1\2\3' . $imagePath . $pic['image_name'], $tmplStr));
                 $i++;
             }
             # Uebriggebliebene #PICTUREx# loeschen
-            $str = preg_replace(	'/#PICTURE\d+#/','', $tmplStr);
+            $str = preg_replace('/#PICTURE\d+#/', '', $tmplStr);
             #		str_replace($find, $replace, $tmplStr));
         } else {
-            $str = preg_replace(	'/#PICTURE\d+#/','', $tmplStr);
+            $str = preg_replace('/#PICTURE\d+#/', '', $tmplStr);
         }
         return $str;
     }
 
-    public function getMPVariations($category, $prepare = false, $getDate = false, $onlyAdvert = false)
+    public function getMPVariations($category, $prepare = false, $getDate = false, $additionalData = null, $customIdentifier = '')
     {
-        $mpData = $this->getAttributesFromMP($category, $onlyAdvert);
-        $dbData = $this->getPreparedData($category, $prepare);
-        $tableName = $this->getVariationMatchingTableName();
-        $subcategories = $this->getSubcategories($category);
+        $result = parent::getMPVariations($category, $prepare, $getDate, $additionalData, $customIdentifier);
 
-        // load default values from Variation Matching tab (global matching)
-        $usedGlobal = false;
-        $globalMatching = $this->getCategoryMatching($category);
-
-        if ($dbData === false){
-            $dbData = $globalMatching;
-            $usedGlobal = true;
-        }
-
-        arrayEntitiesToUTF8($mpData);
-        $attributes = array();
-        foreach ($mpData['attributes'] as $code => $value){
-            $attributes[$code] = array(
-                'AttributeCode' => $code,
-                'AttributeName' => $value['title'],
-                'AllowedValues' => isset($value['values']) ? $value['values'] : array(),
-                'AttributeDescription' => isset($value['desc']) ? $value['desc'] : '',
-                'CurrentValues' => isset($dbData[$code]) ? $dbData[$code] : array('Values' => array()),
-                'ChangeDate' => isset($value['changed']) ? $value['changed'] : false,
-                'Required' => isset($value['mandatory']) ? $value['mandatory'] : false,
-            );
-
-            if (isset($dbData[$code])){
-                if (!isset($dbData[$code]['Required'])){
-                    $dbData[$code]['Required'] = isset($value['mandatory']) ? $value['mandatory'] : true;
-                    $dbData[$code]['Code'] = !empty($value['values']) ? 'attribute_value' : 'freetext';
-                    $dbData[$code]['AttributeName'] = $value['title'];
-                }
-
-                $attributes[$code]['CurrentValues'] = $dbData[$code];
-            }
-        }
-
-        $numberOfAdditionalAttributes = $this->getNumberOfMaxAdditionalAttributes();
-
-        if ($numberOfAdditionalAttributes > 0 || $numberOfAdditionalAttributes === -1) {
-            $this->addAdditionalAttributesMP($attributes, $dbData);
-        }
-
-        $hasDifferentlyPreparedProducts = false;
-        if (!$usedGlobal && !empty($globalMatching)){
-            $this->detectChanges($globalMatching, $attributes);
-        } else if (!$prepare && !empty($globalMatching)){
-            // on variation matching tab. Check whether some products are prepared differently
-            $hasDifferentlyPreparedProducts = $this->areProductsDifferentlyPrepared($category, $globalMatching);
-        }
-
-        if(!$onlyAdvert){
-            // if there are saved values but they were removed from Marketplace, display warning to user
-            foreach ($dbData as $code => $value){
-                if (!isset($attributes[$code]) && strpos($code, 'additional_attribute_') === false){
-                    $attributes[$code] = array(
-                        'Deleted' => true,
-                        'AttributeCode' => $code,
-                        'AttributeName' => !empty($value['AttributeName']) ? $value['AttributeName'] : $code,
-                        'AllowedValues' => array(),
-                        'AttributeDescription' => '',
-                        'CurrentValues' => array('Values' => array()),
-                        'ChangeDate' => '',
-                        'Required' => isset($value['mandatory']) ? $value['mandatory'] : false,
-                    );
-                }
-            }
-        }
+        $attributes = $getDate ? $result['Attributes'] : $result;
 
         $subs = array();
-        foreach ($subcategories as $attrKey){
-            if(!empty($attributes[$attrKey])){
+        $subcategories = $this->getSubcategories($category);
+        foreach ($subcategories as $attrKey) {
+            if (!empty($attributes[$attrKey])) {
                 $subs[] = $attributes[$attrKey];
                 unset($attributes[$attrKey]);
             }
         }
 
-        if ($getDate){
-            return array(
-                'Attributes' => $attributes,
-                'ModificationDate' => MagnaDB::gi()->fetchOne(eecho('
-                    SELECT ModificationDate
-                    FROM ' . $tableName . '
-                    WHERE MpId = ' . $this->mpId . '
-                        AND MpIdentifier = "' . $category . '"
-                ', false)),
-                'DifferentProducts' => $hasDifferentlyPreparedProducts,
-                'Subcategories' => $subs
-            );
+        if ($getDate) {
+            $result['Attributes'] = $attributes;
+            $result['Subcategories'] = $subs;
+        } else {
+            $result = $attributes;
         }
 
-        return $attributes;
+        return $result;
     }
 
     /**
@@ -422,20 +352,50 @@ class PriceministerHelper extends AttributesMatchingHelper
         return $_MagnaSession[$mpID][$action];
     }
 
-    protected function getPreparedData($category, $prepare = false, $customIdentifier = '')
+    protected function isProductPrepared($category, $prepare = false)
     {
-        $availableCustomConfigs = false;
-        if ($prepare){
+        if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+            $sSQLAnd = ' AND products_model = "'.$prepare.'"';
+        } else {
+            $sSQLAnd = ' AND products_id = "'. $prepare . '"';
+        }
+        
+        if ($prepare) {
+            $productsId = MagnaDB::gi()->fetchOne(eecho('
+                    SELECT products_id
+                    FROM ' . TABLE_MAGNA_PRICEMINISTER_PREPARE . '
+                    WHERE MpId = ' . $this->mpId . '
+                        AND MarketplaceCategories = "' . $category . '"
+                        ' . $sSQLAnd . '
+                    LIMIT 1
+                ', false));
+
+            return !empty($productsId);
+        }
+
+        return false;
+    }
+
+	protected function getPreparedData($category, $prepare = false, $customIdentifier = '')
+    {
+        if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+            $sSQLAnd = ' AND products_model = "'.$prepare.'"';
+        } else {
+            $sSQLAnd = ' AND products_id = "'. $prepare . '"';
+        }
+        
+        $availableCustomConfigs = array();
+        if ($prepare) {
             $availableCustomConfigs = json_decode(MagnaDB::gi()->fetchOne(eecho('
 				SELECT DISTINCT CategoryAttributes
 				FROM ' . TABLE_MAGNA_PRICEMINISTER_PREPARE . '
 				WHERE MpId = ' . $this->mpId . '
-					AND products_model IN("' . implode('", "', $prepare) . '")
 					AND MarketplaceCategories = "' . $category . '"
+					' . $sSQLAnd . '
 			', false)), true);
         }
-        
-        return !$availableCustomConfigs ? false : $availableCustomConfigs;
+
+        return !$availableCustomConfigs ? array() : $availableCustomConfigs;
     }
 
     /**
@@ -468,10 +428,10 @@ class PriceministerHelper extends AttributesMatchingHelper
         return null;
     }
 
-    protected function getAttributesFromMP($category, $onlyAdvert = false)
+    protected function getAttributesFromMP($category, $additionalData = null, $customIdentifier = '')
     {
-        $data = PriceministerApiConfigValues::gi()->getVariantConfigurationDefinition($category, $onlyAdvert);
-        if (!is_array($data) || !isset($data['attributes'])){
+        $data = PriceministerApiConfigValues::gi()->getVariantConfigurationDefinition($category, $additionalData);
+        if (!is_array($data) || !isset($data['attributes'])) {
             $data = array();
         }
 
@@ -486,134 +446,5 @@ class PriceministerHelper extends AttributesMatchingHelper
         }
 
         return $data;
-    }
-
-    public function getProductModel($selectionName)
-    {
-        $pIDs = MagnaDB::gi()->fetchArray('
-             SELECT pID FROM ' . TABLE_MAGNA_SELECTION . '
-             WHERE mpID=\'' . $this->mpId . '\' AND
-                  selectionname=\'' . $selectionName . '\' AND
-                  session_id=\'' . session_id() . '\'
-        ', true);
-
-        $productModels = MagnaDB::gi()->fetchArray('
-            SELECT products_model
-            FROM ' . TABLE_PRODUCTS . '
-            WHERE products_id IN("' . implode('", "',$pIDs) . '")
-        ', true);
-
-        if ($productModels) {
-            return $productModels;
-        }
-
-        return false;
-    }
-
-    public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true, $customIdentifierHtml = '')
-    {
-        // $mpTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERIC_MP_CATEGORY);
-        $mpTitle = str_replace('%marketplace%', 'PriceMinister', ML_GENERIC_MP_CATEGORY);
-        $mpAttributeTitle = str_replace('%marketplace%', 'PriceMinister', ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
-        $mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
-
-        ob_start();
-        ?>
-        <form method="post" id="matchingForm" action="<?php echo toURL($url, array(), true); ?>">
-            <table id="variationMatcher" class="attributesTable">
-                <tbody>
-                <tr class="headline">
-                    <td colspan="3"><h4><?php echo $mpTitle ?></h4></td>
-                </tr>
-                <tr id="mpVariationSelector">
-                    <th><?php echo ML_LABEL_MAINCATEGORY ?></th>
-                    <td class="input">
-                        <table class="inner middle fullwidth categorySelect">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <div class="hoodCatVisual" id="PrimaryCategoryVisual">
-                                        <select id="PrimaryCategory" name="PrimaryCategory" style="width:100%">
-                                            <?php echo $categoryOptions ?>
-                                        </select>
-                                    </div>
-                                </td>
-                                <?php if ($addCategoryPick){ ?>
-                                    <td class="buttons">
-                                        <input class="fullWidth ml-button smallmargin mlbtn-action" type="button"
-                                               value="<?php echo ML_GENERIC_CATEGORIES_CHOOSE ?>"
-                                               id="selectPrimaryCategory"/>
-                                    </td>
-                                <?php } ?>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                    <td class="info"></td>
-                </tr>
-                <tr class="spacer">
-                    <td colspan="3">&nbsp;</td>
-                </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingHeadline" style="display:none;">
-                <tr class="headline">
-                    <td colspan="1"><h4><?php echo $mpAttributeTitle ?></h4></td>
-                    <td colspan="2"><h4><?php echo ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB ?></h4></td>
-                </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingInput" style="display:none;">
-                <tr>
-                    <th></th>
-                    <td class="input"><?php echo ML_GENERAL_VARMATCH_SELECT_CATEGORY ?></td>
-                    <td class="info"></td>
-                </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
-                <tr class="headline">
-                    <td colspan="1"><h4><?php echo $mpOptionalAttributeTitle ?></h4></td>
-                    <td colspan="2"><h4><?php echo ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB ?></h4></td>
-                </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
-                <tr>
-                    <th></th>
-                    <td class="input"><?php echo ML_GENERAL_VARMATCH_SELECT_CATEGORY ?></td>
-                    <td class="info"></td>
-                </tr>
-                </tbody>
-            </table>
-            <p id="categoryInfo" style="display: none"><?php echo ML_GENERAL_VARMATCH_CATEGORY_INFO ?></p>
-            <br><br><br>
-            <table class="actions">
-                <thead>
-                <tr>
-                    <th><?php echo ML_LABEL_ACTIONS ?></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="firstChild">
-                    <td>
-                        <table>
-                            <tbody>
-                            <tr>
-                                <td class="firstChild">
-                                    <button type="button" class="ml-button ml-reset-matching">
-                                        <?php echo ML_GENERAL_VARMATCH_RESET_MATCHING ?></button>
-                                </td>
-                                <td></td>
-                                <td class="lastChild">
-                                    <input type="submit" value="<?php echo ML_GENERAL_VARMATCH_SAVE_BUTTON ?>"
-                                           class="ml-button mlbtn-action">
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
-        <?php
-        return ob_get_clean();
     }
 }

@@ -161,7 +161,12 @@ class VariationsCalculator {
 							break;
 						}
 					}
-					$tModel = trim(str_replace($base['marketplace_sku'], '', $attr['attributes_model']), "\n\r\t _,.");
+					if (strpos(trim($attr['attributes_model']), trim($base['marketplace_sku'])) === 0) {
+						$tModel = substr(trim($attr['attributes_model']), strlen(trim($base['marketplace_sku'])));
+					} else {
+						$tModel = $attr['attributes_model'];
+					}
+					$tModel = str_replace(array("\n", "\r", "\t" , ' '), array('', '', '', ''), $tModel);
 					if (empty($tModel)) {
 						$tModel = '_'.$oID.'.'.$vID;
 					}
@@ -183,6 +188,10 @@ class VariationsCalculator {
 				++$attrC;
 			}
 		}
+		foreach ($permutations as &$permutation) {
+			$permutation['marketplace_sku'] = trim($permutation['marketplace_sku'], " _,.");
+		}
+		unset($permutation);
 		
 		#echo print_m($permutations, '$permutations');
 		
@@ -225,19 +234,21 @@ class VariationsCalculator {
 	
 	function getAttributesByPID($pID) {
 		if ($GLOBALS['SDB']->columnExistsInTable('sortorder', TABLE_PRODUCTS_ATTRIBUTES)) {
-			$attributesOrderBy = ' sortorder, options_id, options_values_id ';
+			$attributesOrderBy = ' a.sortorder, a.options_id, a.options_values_id ';
 		} else {
-			$attributesOrderBy = ' options_id, options_values_id ';
+			$attributesOrderBy = ' a.options_id, a.options_values_id ';
 		}
 		if (!empty ($this->optionsWhitelist)) {
-			$optConstr = 'AND options_id IN ("'.implode('", "', $this->optionsWhitelist).'")';
+			$optConstr = 'AND a.options_id IN ("'.implode('", "', $this->optionsWhitelist).'")';
 		} else {
 			$optConstr = '';
 		}
 		$attributes = $GLOBALS['SDB']->fetchArray('
-		    SELECT * 
-		      FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
-		     WHERE products_id='.$pID.'
+		    SELECT DISTINCT a.* 
+		      FROM '.TABLE_PRODUCTS_ATTRIBUTES.' a
+		      INNER JOIN '.TABLE_PRODUCTS_OPTIONS.' o on a.options_id = o.products_options_id
+		      INNER JOIN '.TABLE_PRODUCTS_OPTIONS_VALUES.' v ON a.options_values_id = v.products_options_values_id
+		     WHERE a.products_id='.$pID.'
 		           '.$optConstr.'
 		  ORDER BY '.$attributesOrderBy.'
 		');

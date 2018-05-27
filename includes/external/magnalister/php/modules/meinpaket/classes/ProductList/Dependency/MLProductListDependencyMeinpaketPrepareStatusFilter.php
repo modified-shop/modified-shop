@@ -23,9 +23,9 @@ class MLProductListDependencyMeinpaketPrepareStatusFilter extends MLProductListD
 
 	protected function getPrepareCondition() {
 		return array(
-		    'failed' => "AND MarketplaceCategory IS NULL OR MarketplaceCategory = '' ",
-		    'prepared' => "AND MarketplaceCategory IS NOT NULL AND MarketplaceCategory <> '' ",
-		    'notprepared' => ""
+			'failed' => "AND Verified <> 'OK' AND Verified <> 'EMPTY' ",
+			'prepared' => "AND Verified = 'OK' ",
+			'notprepared' => "AND Verified != 'EMPTY' "
 		);
 	}
 

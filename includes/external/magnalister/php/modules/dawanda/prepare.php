@@ -26,22 +26,28 @@ class DawandaPrepare extends MagnaCompatibleBase {
 	protected $prepareSettings = array();
 
 	public function __construct(&$params) {
+		if (!empty($_POST['FullSerializedForm'])) {
+			$newPost = array();
+			parse_str_unlimited($_POST['FullSerializedForm'], $newPost);
+
+			$_POST = array_merge($_POST, $newPost);
+		}
+
 		parent::__construct($params);
 
-		$this->prepareSettings['selectionName'] = 'prepare';
-		$this->resources['url']['mode'] = $this->prepareSettings['selectionName'];
+		$this->prepareSettings['selectionName'] = isset($_GET['view']) ? $_GET['view'] : 'apply';
+		$this->resources['url']['mode'] = 'prepare';
+		$this->resources['url']['view'] = $this->prepareSettings['selectionName'];
 	}
 
 	protected function saveMatching() {
-		if (!array_key_exists('savePrepareData', $_POST)) {
-			return;
+		if (!array_key_exists('saveMatching', $_POST)) {
+			if (!isset($_POST['Action']) || $_POST['Action'] !== 'SaveMatching' || $_GET['where'] === 'varmatchView') {
+				return;
+			}
 		}
 
 		require_once(DIR_MAGNALISTER_MODULES . 'dawanda/classes/DawandaProductSaver.php');
-		require_once(DIR_MAGNALISTER_MODULES . 'dawanda/checkin/DawandaCheckinSubmit.php');
-
-		$itemDetails = $_POST;
-		unset($itemDetails['savePrepareData']);
 
 		$oDaWandaProductSaver = new DawandaProductSaver($this->resources['session']);
 
@@ -52,43 +58,46 @@ class DawandaPrepare extends MagnaCompatibleBase {
 				   session_id="' . session_id() . '"
 		', true);
 
+		$isSinglePrepare = 1 == count($aProductIDs);
+		$shopVariations = $this->saveMatchingAttributes($oDaWandaProductSaver, $isSinglePrepare);
+		$itemDetails = $_POST;
+		unset($itemDetails['savePrepareData']);
+		$itemDetails['CategoryAttributes'] = $shopVariations;
+
 		if (1 == count($aProductIDs)) {
 			$oDaWandaProductSaver->saveSingleProductProperties($aProductIDs[0], $itemDetails);
 		} else if (!empty($aProductIDs)) {
 			$oDaWandaProductSaver->saveMultipleProductProperties($aProductIDs, $itemDetails);
 		}
 
-		$oDCS = new DawandaCheckinSubmit(array(
-			'selectionName' => $this->prepareSettings['selectionName'],
-			'marketplace' => 'dawanda',
-		));
+		$saveMatching = array_key_exists('saveMatching', $_POST);
 
-		#echo print_m($oDCS->verifyOneItem(), '$oDCS->verifyOneItem()');
-		$aVerified = $oDCS->verifyOneItem(false);
-		if ('SUCCESS' == $aVerified['STATUS']) {
-			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
-				'mpID' => $this->mpID,
-				'selectionname' => $this->prepareSettings['selectionName'],
-				'session_id' => session_id()
-			));
-		} else if ('ERROR' == $aVerified['STATUS']) {
-			# noch mal in der Maske bleiben
+		if (count($oDaWandaProductSaver->aErrors) === 0 || !$saveMatching) {
+			$isAjax = false;
+			if (!$saveMatching) {
+				# stay on prepare product form
+				$_POST['prepare'] = 'prepare';
+				$isAjax = true;
+			}
+
+			$matchingNotFinished = isset($_POST['matching_nextpage']) && ctype_digit($_POST['matching_nextpage']) || $isAjax;
+			if ($matchingNotFinished === false) {
+				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+					'mpID' => $this->mpID,
+					'selectionname' => $this->prepareSettings['selectionName'],
+					'session_id' => session_id()
+				));
+			}
+		} else {
+			# stay on prepare product form
 			$_POST['prepare'] = 'prepare';
 
-			/* Letzte Exception holen */
-			$oException = $oDCS->getLastException();
-			if (is_object($oException) && ($aErrors = $oException->getErrorArray())) {
-				$oException->setCriticalStatus(false);
-				foreach ($aErrors['ERRORS'] as $aError) {
-					echo '
-						<div class="dawanda errorBox">
-							<span class="error">' . sprintf(ML_DAWANDA_LABEL_ERROR, $aError['ERRORCODE']) . '</span>:
-							'.fixHTMLUTF8Entities($aError['ERRORMESSAGE']).'
-						</div>';
+			if ($saveMatching) {
+				foreach ($oDaWandaProductSaver->aErrors as $sError) {
+					echo '<div class="errorBox">' . $sError . '</div>';
 				}
 			}
 		}
-		//echo print_m(json_indent($ecs->getLastRequest()));
 	}
 
 	protected function deleteMatching() {
@@ -128,7 +137,13 @@ class DawandaPrepare extends MagnaCompatibleBase {
 	}
 
 	protected function processMatching() {
-		if (($class = $this->loadResource('prepare', 'PrepareView')) === false) {
+		if ($this->prepareSettings['selectionName'] === 'varmatch') {
+			$className = 'VariationMatching';
+		} else {
+			$className = 'PrepareView';
+		}
+		
+		if (($class = $this->loadResource('prepare', $className)) === false) {
 			if ($this->isAjax) {
 				echo '{"error": "'.__METHOD__.' This is not supported"}';
 			} else {
@@ -187,6 +202,11 @@ class DawandaPrepare extends MagnaCompatibleBase {
 	}
 
 	protected function processProductList() {
+		if ($this->prepareSettings['selectionName'] === 'varmatch') {
+			$this->processMatching();
+			return;
+		}
+		
 		if (($sClass = $this->loadResource('prepare', 'PrepareProductList')) === false) {
 			if ($this->isAjax) {
 				echo '{"error": "This is not supported"}';
@@ -206,7 +226,7 @@ class DawandaPrepare extends MagnaCompatibleBase {
 				isset($_POST['prepare'])
 				|| (
 					isset($_GET['where'])
-					&& in_array($_GET['where'], array('prepareView', 'catMatchView'))
+					&& in_array($_GET['where'], array('prepareView', 'catMatchView', 'varmatchView'))
 				)
 			)
 			&& ($this->getSelectedProductsCount() > 0)
@@ -220,6 +240,32 @@ class DawandaPrepare extends MagnaCompatibleBase {
 				$this->processSelection();
 			}
 		}
+	}
+
+	protected function saveMatchingAttributes($oProductSaver, $isSinglePrepare) {
+		if (isset($_POST['Variations'])) {
+			parse_str_unlimited($_POST['Variations'], $params);
+			$_POST = $params;
+			if (isset($_POST['saveMatching'])) {
+				unset($_POST['saveMatching']);
+			}
+		}
+
+		$sIdentifier = $_POST['PrimaryCategory'];
+		$matching = isset($_POST['ml']['match']) ? $_POST['ml']['match'] : false;
+		$savePrepare = isset($_POST['saveMatching']) ? $_POST['saveMatching'] : false;
+
+		if (!is_array($matching)) {
+            $match = 'false';
+        } else {
+		    $match = reset($matching);
+        }
+		if ($match != 'false') {
+			$oProductSaver->aErrors = array_merge($oProductSaver->aErrors,
+				DawandaHelper::gi()->saveMatching($sIdentifier, $matching, $savePrepare, true, $isSinglePrepare));
+		}
+
+		return $matching ? json_encode($matching['ShopVariation']) : false;
 	}
 
 }

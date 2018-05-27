@@ -102,7 +102,14 @@ class CdiscountCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		');
 		
 		if (is_array($prepare)) {
-			$categoryAttributes = (!empty($prepare['CategoryAttributes'])) ? $this->fixCategoryAttributes(json_decode($prepare['CategoryAttributes'], true), $product) : '';
+			$categoryAttributes = '';
+			if (!empty($prepare['CategoryAttributes'])) {
+				$categoryAttributes = CdiscountHelper::gi()->convertMatchingToNameValue(
+					json_decode($prepare['CategoryAttributes'], true),
+					$product
+				);
+			}
+
 			$data['submit']['SKU'] = magnaPID2SKU($pID);
 			$data['submit']['ParentSKU'] = magnaPID2SKU($pID);
 			$data['submit']['EAN'] = isset($prepare['EAN']) ? $prepare['EAN'] : $ean;
@@ -144,9 +151,13 @@ class CdiscountCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			}					
 
 			$data['submit']['OfferCondition'] = $prepare['ConditionType'];
-//			$data['submit']['Location'] = isset($prepare['Location']) ? $prepare['Location'] : $defaultLocation;
 			$data['submit']['OfferComment'] = isset($prepare['Comment']) ? $prepare['Comment'] : '';
-//			$data['submit']['Matched'] = $prepare['PrepareType'] === 'Match' ? true : false;
+
+			$variationTheme = array();
+			if (isset($prepare['variation_theme'])) {
+				$variationTheme = json_decode($prepare['variation_theme'], true);
+			}
+			$product['variation_theme'] = $variationTheme;
 		} else {
 			$data['submit']['OfferCondition'] = getDBConfigValue($this->settings['marketplace'].'.itemcondition', $this->_magnasession['mpID']);
 		}
@@ -198,48 +209,90 @@ class CdiscountCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			');
 		}
 
+		$data['submit']['IsSplit'] = false;
+
+		if (!empty($product['variation_theme'])) {
+			$data['submit']['variation_theme'] = $product['variation_theme'];
+		}
+
 		if (!$this->getCategoryMatching($pID, $product, $data)) {
 			return;
 		}
 
-		if (!$this->getCdiscountVariations($product, $data, $imagePath, json_decode($prepare['CategoryAttributes'], true))) {
-			return;
-		}
+		$allMatchedAttributes = json_decode($prepare['CategoryAttributes'], true);
+
+		$this->getCdiscountVariations($product, $data, $allMatchedAttributes);
+
 	}
 
 	protected function preSubmit(&$request) {
 		$request['DATA'] = array();
-		foreach ($this->selection as $iProductId => &$aProduct) {
-			if (empty($aProduct['submit']['Variations'])) {
-				$request['DATA'][] = $aProduct['submit'];
-				continue;
-			}
 
-			foreach ($aProduct['submit']['Variations'] as $aVariation) {
-				$aVariationData = $aProduct;
-				unset($aVariationData['submit']['Variations']);
-				foreach ($aVariation as $sParameter => $mParameterValue) {
-					$aVariationData['submit'][$sParameter] = $mParameterValue;
+		if (count($this->additionalSplitProducts) > 0) {
+			$request['DATA'] = $this->setSplitRequestData();
+		} else {
+			foreach ($this->selection as $iProductId => &$aProduct) {
+				if (empty($aProduct['submit']['Variations'])) {
+					$request['DATA'][] = $aProduct['submit'];
+					continue;
 				}
 
-				$request['DATA'][] = $aVariationData['submit'];
+				foreach ($aProduct['submit']['Variations'] as $aVariation) {
+					$aVariationData = $aProduct;
+					unset($aVariationData['submit']['Variations']);
+					foreach ($aVariation as $sParameter => $mParameterValue) {
+						$aVariationData['submit'][$sParameter] = $mParameterValue;
+					}
+
+					unset($aVariationData['submit']['Variation']);
+					$request['DATA'][] = $aVariationData['submit'];
+				}
 			}
 		}
 
 		arrayEntitiesToUTF8($request['DATA']);
 	}
 
+	protected function setSplitRequestData()
+	{
+		$data = array();
+		foreach ($this->additionalSplitProducts as $iProductId => &$aProduct) {
+			if (empty($aProduct['Variations'])) {
+				$data[] = $aProduct;
+				continue;
+			}
 
-	protected function getCdiscountVariations($product, &$data, $imagePath, $categoryAttributes) {
+			foreach ($aProduct['Variations'] as $aVariation) {
+				$aVariationData = $aProduct;
+				unset($aVariationData['Variations']);
+				foreach ($aVariation as $sParameter => $mParameterValue) {
+					$aVariationData[$sParameter] = $mParameterValue;
+				}
+
+				$aVariationData['ParentSKU'] = $aProduct['SKU'];
+				$aVariationData['Title'] = $aVariationData['ItemTitle'];
+				unset($aVariationData['Variation']);
+				unset($aVariationData['ItemTitle']);
+				$data[] = $aVariationData;
+			}
+		}
+
+		return $data;
+	}
+
+	protected function getCdiscountVariations($product, &$data, $allMatchedAttributes)
+	{
 		if ($this->checkinSettings['Variations'] !== 'yes') {
 			return true;
 		}
 
+		$matchedAttributesCodeValueId = $this->getMatchedVariationAttributesCodeValueId($allMatchedAttributes, $product['variation_theme']);
 		$variations = array();
+
 		foreach ($product['Variations'] as $v) {
 			$this->simpleprice->setPrice($v['Price']['Price']);
 			$price = $this->simpleprice->roundPrice()->makeSignalPrice(
-				getDBConfigValue($this->marketplace.'.price.signal', $this->mpID, '')
+				getDBConfigValue($this->marketplace . '.price.signal', $this->mpID, '')
 			)->getPrice();
 
 			$vi = array(
@@ -252,49 +305,88 @@ class CdiscountCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				'EAN' => $v['EAN']
 			);
 
-//			$variation = MLProduct::gi()->getProductById($v['VariationId']);
-//			$vi['Title'] = $variation['Title'];
-
 			$vi['Title'] = $product['Title'];
 			$vi['VariantTitle'] = $product['Title'];
 
-			foreach ($v['Variation'] as $varAttribute) {
-				$vi['VariantTitle'] .= ' ' . $varAttribute['Name'] . ' - ' . $varAttribute['Value'];
-			}
+			// Only those attributes that are matched and all their values are matched will be in $convertedShopToMpAttributes.
+			// This will be used for checking if all values are matched for matched attribute.
+			$vi['CategoryAttributes'] = $this->fixVariationCategoryAttributes($allMatchedAttributes, $product, $v);
 
-			$vi['VariantTitle'] = CdiscountHelper::cdiscountSanitizeTitle($vi['VariantTitle']);
-
-			if (empty($product['ManufacturerPartNumber']) === false) {
-				$vi['Mpn'] = $product['ManufacturerPartNumber'];
-			}
-
-			if (empty($v['Images'])) {
-				$vi['Images'] = $data['submit']['Images'];
-			} else {
-				foreach ($v['Images'] as $image) {
-					$vi['Images'][] = array(
-						'URL' => $imagePath . $image,
-						'id' => $image
-					);
-				}
-			}
-
-			//implementing the base price
-			if( isset( $v['BasePrice']) && empty($v['BasePrice']) === false ){
-				$vi['BasePrice']['Unit'] = $v['BasePrice']['Unit'];
-				$vi['BasePrice']['Value'] = number_format((float)$v['BasePrice']['Value'], 2, '.','');
-			}
-
-			$vi['CategoryAttributes'] = $this->fixVariationCategoryAttributes($categoryAttributes, $product, $v, $vi);
-
-			$variations[] = $vi;
+			$vi['Variation'] = array();
+			$masterProductSku = $data['submit']['SKU'];
+			$this->setAllVariationsDataAndMasterProductsSKUs(
+				$v,
+				$vi,
+				$variations,
+				$matchedAttributesCodeValueId,
+				$allMatchedAttributes,
+				$masterProductSku,
+				$data,
+				$product
+			);
 		}
 
-		if (!empty($variations)) {
-			$data['submit']['Variations'] = $variations;
-		}
-
+		$this->prepareVariationDataForSubmitRequest($variations, $data);
+		
 		return true;
+	}
+
+	protected function setProductVariant(&$productVariant, $varAttribute, $rawAmConfiguration, $variations)
+	{
+		$fixCatAttributes = CdiscountHelper::gi()->convertMatchingToNameValue($rawAmConfiguration, array(
+			"variant_{$varAttribute['NameId']}" => $varAttribute['ValueId']
+		));
+
+		if (empty($fixCatAttributes)) {
+			$fixCatAttributes = array($varAttribute['Name'] => $varAttribute['Value']);
+		}
+
+		$productVariant['Variation'] = array_merge($productVariant['Variation'], $fixCatAttributes);
+	}
+
+	protected function setAdditionalVariantProperties($variantForSubmit, $data, $product, $productVariations)
+	{
+		foreach ($productVariations['Variation'] as $varAttribute) {
+			$variantForSubmit['VariantTitle'] .= ' ' . $varAttribute['Name'] . ' - ' . $varAttribute['Value'];
+		}
+		
+		$variantForSubmit['VariantTitle'] = CdiscountHelper::cdiscountSanitizeTitle($variantForSubmit['VariantTitle']);
+
+		if (!empty($product['ManufacturerPartNumber'])) {
+			$variantForSubmit['Mpn'] = $product['ManufacturerPartNumber'];
+		}
+
+		if (empty($productVariations['Images'])) {
+			$variantForSubmit['Images'] = $data['submit']['Images'];
+		} else {
+			$imagePath = getDBConfigValue($this->marketplace . '.imagepath', $this->_magnasession['mpID'], SHOP_URL_POPUP_IMAGES);
+			$imagePath = trim($imagePath, '/ ').'/';
+			foreach ($productVariations['Images'] as $image) {
+				$variantForSubmit['Images'][] = array(
+					'URL' => $imagePath . $image,
+					'id' => $image
+				);
+			}
+		}
+
+		//implementing the base price
+		if( isset($productVariations['BasePrice']) && empty($productVariations['BasePrice']) === false ){
+			$variantForSubmit['BasePrice']['Unit'] = $productVariations['BasePrice']['Unit'];
+			$variantForSubmit['BasePrice']['Value'] = number_format((float)$productVariations['BasePrice']['Value'], 2, '.','');
+		}
+		
+		return $variantForSubmit;
+	}
+
+	protected function createVariantMasterProduct($dimensions, $variationMasterSku, $itemTitle, $productToClone)
+	{
+		$masterProduct = $productToClone;
+		$masterProduct['SKU'] = $variationMasterSku;
+		$masterProduct['ItemTitle'] = $itemTitle;
+		$masterProduct['Variations'] = $dimensions;
+		// If product is split add flag for product.
+		$masterProduct['IsSplit'] = intval($variationMasterSku != $productToClone['SKU']);
+		return $masterProduct;
 	}
 
 	protected function filterItem($pID, $data) {
@@ -378,197 +470,29 @@ class CdiscountCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		), true);
 	}
 
-	private function fixCategoryAttributes($aCatAttributes, $product) {
-		$fixCatAttributes = array();
-		if (isset($aCatAttributes) && is_array($aCatAttributes)) {
-			foreach ($aCatAttributes as $key => &$aCatAttribute) {
-				$sCode = $aCatAttribute['Code'];
-				switch ($sCode) {
-					case 'freetext':
-					case 'attribute_value': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $aCatAttribute['Values'];
-						}
-						break;
-					}
-					case 'category': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							if (!empty($aCatAttribute['Values']['Value'])) {
-								$fixCatAttributes[$key] = $this->getCategoryNameById($aCatAttribute['Values']['Value']);
-							}
-						}
-						break;
-					}
-					case 'title': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['Title'];
-						}
-						break;
-					}
-					case 'description': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['Description'];
-						}
-						break;
-					}
-					case 'ean': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['EAN'];
-						}
+	private function fixVariationCategoryAttributes($aCatAttributes, $product, $variationDB)
+	{
+		$productDataForMatching = array_merge($product, $variationDB);
+		$productDataForMatching['ProductId'] = $variationDB['VariationId'];
+		$productDataForMatching['ProductsModel'] = $variationDB['MarketplaceSku'];
 
-						break;
-					}
-					case 'weight': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['Weight']['Value'].$product['Weight']['Unit'];
-						}
-						break;
-					}
-					case 'contentvolume': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['BasePrice']['Value'].$product['BasePrice']['Unit'];
-						}
-						break;
-					}
-					default:
-						break;
-				}
-
-				if (empty($fixCatAttributes[$key])) {
-					unset($aCatAttributes[$key]);
-				}
-
-				if (!isset($fixCatAttributes[$key])) {
-					continue;
-				}
-
-				if ($this->stringStartsWith($key, 'additional_attribute')) {
-					$sNewKey = ucfirst($sCode);
-					$fixCatAttributes[$sNewKey] = $fixCatAttributes[$key];
-					unset($fixCatAttributes[$key]);
-				}
-			}
+		if (!isset($variationDB['Weight']['Value'])) {
+			$productDataForMatching['Weight'] = $product['Weight'];
 		}
+
+		if (!isset($variationDB['BasePrice']['Value'])) {
+			$productDataForMatching['BasePrice'] = $product['BasePrice'];
+		}
+
+		// Since variation attributes are not set directly on product and their key is number, we should prefix them for
+		// standard AM conversion because otherwise variation attributes are no different from any other shop attribute
+		foreach ($variationDB['Variation'] as $variationAttribute) {
+			$productDataForMatching["variant_{$variationAttribute['NameId']}"] = $variationAttribute['ValueId'];
+		}
+
+		$fixCatAttributes = CdiscountHelper::gi()->convertMatchingToNameValue($aCatAttributes, $productDataForMatching);
 
 		return $fixCatAttributes;
-	}
-
-	private function fixVariationCategoryAttributes($aCatAttributes, $product, $variationDB, $variation) {
-		$fixCatAttributes = array();
-		if (isset($aCatAttributes) && is_array($aCatAttributes)) {
-			foreach ($aCatAttributes as $key => &$aCatAttribute) {
-				$sCode = $aCatAttribute['Code'];
-				switch ($sCode) {
-					case 'freetext':
-					case 'attribute_value': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $aCatAttribute['Values'];
-						}
-						break;
-					}
-					case 'category': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							if (!empty($aCatAttribute['Values']['Value'])) {
-								$fixCatAttributes[$key] = $this->getCategoryNameById($aCatAttribute['Values']['Value']);
-							}
-						}
-						break;
-					}
-					case 'title': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['Title'];
-						}
-						break;
-					}
-					case 'description': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['Description'];
-						}
-						break;
-					}
-					case 'ean': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = isset($variationDB['EAN']) ? $variationDB['EAN'] : $product['EAN'];
-						}
-
-						break;
-					}
-					case 'weight': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							if (isset($variationDB['Weight']['Value'])) {
-								$fixCatAttributes[$key] = $variationDB['Weight']['Value'].$variationDB['Weight']['Unit'];
-							} else {
-								$fixCatAttributes[$key] = $product['Weight']['Value'].$product['Weight']['Unit'];
-							}
-						}
-						break;
-					}
-					case 'contentvolume': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							if (isset($variationDB['BasePrice']['Value'])) {
-								$fixCatAttributes[$key] = $variationDB['BasePrice']['Value'].$variationDB['BasePrice']['Unit'];
-							} else {
-								$fixCatAttributes[$key] = $product['BasePrice']['Value'].$product['BasePrice']['Unit'];
-							}
-						}
-						break;
-					}
-					default:
-						foreach ($variationDB['Variation'] as $variationAttribute) {
-							if ($sCode == $variationAttribute['NameId']) {
-								foreach ($aCatAttribute['Values'] as $value) {
-									if ($variationAttribute['Value'] === $value['Shop']['Value']) {
-										$fixCatAttributes[$key] = str_replace(array(ML_GENERAL_VARMATCH_MANUALY_MATCHED, ML_GENERAL_VARMATCH_AUTO_MATCHED, ML_GENERAL_VARMATCH_FREE_TEXT), '', $value['Marketplace']['Value']);
-										$sCode = $variationAttribute['Name'];
-									}
-								}
-							}
-						}
-				}
-
-				if (empty($fixCatAttributes[$key])) {
-					unset($fixCatAttributes[$key]);
-				}
-
-				if (!isset($fixCatAttributes[$key])) {
-					continue;
-				}
-
-				if ($this->stringStartsWith($key, 'additional_attribute')) {
-					$sNewKey = ucfirst($sCode);
-					$fixCatAttributes[$sNewKey] = $fixCatAttributes[$key];
-					unset($fixCatAttributes[$key]);
-				}
-			}
-		}
-
-		return $fixCatAttributes;
-	}
-
-	private function stringStartsWith($haystack, $needle) {
-		$length = strlen($needle);
-		return (substr($haystack, 0, $length) === $needle);
-	}
-
-	private function getCategoryNameById($categoryID) {
-		try {
-			$aRequest = array(
-				'ACTION' => 'GetCategoryDetails',
-				'DATA' => array(
-					'CategoryID' => $categoryID
-				)
-			);
-
-			$aResponse = MagnaConnector::gi()->submitRequest($aRequest);
-			if ($aResponse['STATUS'] == 'SUCCESS' && isset($aResponse['DATA']) && is_array($aResponse['DATA'])) {
-				return $aResponse['DATA']['title_plural'];
-			} else {
-				return $categoryID;
-			}
-
-		} catch (MagnaException $e) {
-			return $categoryID;
-		}
 	}
 
 	protected function processSubmitResult($result) {

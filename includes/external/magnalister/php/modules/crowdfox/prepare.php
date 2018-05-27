@@ -24,7 +24,15 @@ class CrowdfoxPrepare extends MagnaCompatibleBase {
 
     protected $prepareSettings = array();
 
-    public function __construct(&$params) {
+    public function __construct(&$params)
+    {
+	    if (!empty($_POST['FullSerializedForm'])) {
+		    $newPost = array();
+		    parse_str_unlimited($_POST['FullSerializedForm'], $newPost);
+
+		    $_POST = array_merge($_POST, $newPost);
+	    }
+
         parent::__construct($params);
 
         $this->prepareSettings['selectionName'] = isset($_GET['view']) ? $_GET['view'] : 'apply';
@@ -50,11 +58,12 @@ class CrowdfoxPrepare extends MagnaCompatibleBase {
 				   AND session_id = '" . session_id() . "'
 		", true);
 
-        $shopVariations = $this->saveMatchingAttributes($oProductSaver);
+	    $isSinglePrepare = 1 == count($aProductIDs);
+        $shopVariations = $this->saveMatchingAttributes($oProductSaver, $isSinglePrepare);
         $itemDetails = $_POST;
-        $itemDetails['AdditionalAttributes'] = $shopVariations;
+        $itemDetails['CategoryAttributes'] = $shopVariations;
 
-        if (1 == count($aProductIDs)) {
+        if ($isSinglePrepare) {
             $oProductSaver->saveSingleProductProperties($aProductIDs[0], $itemDetails, $this->prepareSettings['selectionName'],
                 $this->isAjax);
         } else if (!empty($aProductIDs)) {
@@ -235,9 +244,10 @@ class CrowdfoxPrepare extends MagnaCompatibleBase {
         }
     }
 
-    protected function saveMatchingAttributes($oProductSaver) {
+    protected function saveMatchingAttributes($oProductSaver, $isSinglePrepare)
+    {
         if (isset($_POST['Variations'])) {
-            parse_str($_POST['Variations'], $params);
+            parse_str_unlimited($_POST['Variations'], $params);
             $_POST = $params;
         }
 
@@ -248,7 +258,7 @@ class CrowdfoxPrepare extends MagnaCompatibleBase {
         $match = reset($_POST['ml']['match']);
         if ($match != 'false') {
             $oProductSaver->aErrors = array_merge($oProductSaver->aErrors,
-                CrowdfoxHelper::gi()->saveMatching($sIdentifier, $matching, $savePrepare, true));
+	            CrowdfoxHelper::gi()->saveMatching($sIdentifier, $matching, $savePrepare, true, $isSinglePrepare));
         }
 
         return $matching ? json_encode($matching['ShopVariation']) : false;

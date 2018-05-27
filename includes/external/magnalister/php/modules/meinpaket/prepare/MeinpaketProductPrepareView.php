@@ -21,7 +21,9 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+require_once(DIR_MAGNALISTER_MODULES . 'meinpaket/classes/MeinpaketApiConfigValues.php');
 require_once(DIR_MAGNALISTER_MODULES.'meinpaket/prepare/MeinpaketCategoryMatching.php');
+require_once(DIR_MAGNALISTER_MODULES . 'meinpaket/MeinpaketHelper.php');
 
 class MeinpaketProductPrepareView {
 	protected $resources = array();
@@ -31,11 +33,12 @@ class MeinpaketProductPrepareView {
 	
 	protected $isAjax = false;
 	
-	public function __construct(&$resources) {
-		$this->resources = &$resources;
+	public function __construct(&$params)
+	{
+		$this->resources = &$params['resources'];
 		
-		$this->mpId = $this->resources['session']['mpID'];
-		$this->marketplace = $this->resources['session']['currentPlatform'];
+		$this->mpId = $params['mpID'];
+		$this->marketplace = $params['marketplace'];
 		
 		$this->isAjax = isset($_GET['kind']) && ($_GET['kind'] == 'ajax');
 		
@@ -43,6 +46,101 @@ class MeinpaketProductPrepareView {
 	}
 	
 	protected function renderCategoryMatching($data) {
+		$oddEven = false;
+		$mpOptionalAttributeTitle = str_replace('%marketplace%', ML_MODULE_MEINPAKET, ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
+		$mpCustomAttributeTitle = str_replace('%marketplace%', ML_MODULE_MEINPAKET, ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE);
+
+		$attributeMatchingTableHtml = '
+			<tbody id="variationMatcher" class="attributesTable">
+				<tr class="headline">
+					<td colspan="3"><h4>' . ML_MEINPAKET_VARIATIONCONFIG . '</h4></td>
+				</tr>
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_MEINPAKET_VARIATIONCONFIG . '</th>
+					<td class="input">
+						<table class="inner middle fullwidth categorySelect"><tbody>
+							<tr>
+								<td>
+									<div class="hoodCatVisual" id="PrimaryCategoryVisual">
+										<select id="VariationConfiguration" name="VariationConfiguration" style="width:100%">
+											'.$this->renderCategoryOptions('VariationConfiguration', $data['VariationConfiguration']).'
+										</select>
+									</div>
+								</td>
+							</tr>
+						</tbody></table>
+					</td>
+					<td class="info"><span style="color:red;"></span></td>
+				</tr>
+				<tr class="spacer">
+					<td colspan="3">&nbsp;</td>
+				</tr>
+			</tbody>
+			<tbody id="tbodyDynamicMatchingHeadline" style="display:none;">
+				<tr class="headline">
+					<td colspan="1"><h4>' . str_replace('%marketplace%', ML_MODULE_MEINPAKET, ML_GENERAL_VARMATCH_MP_ATTRIBUTE) . '</h4></td>
+					<td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
+				</tr>
+			</tbody>
+			<tbody id="tbodyDynamicMatchingInput" style="display:none;">
+				<tr>
+					<th></th>
+					<td class="input">' . ML_GENERAL_VARMATCH_SELECT_CATEGORY . '</td>
+					<td class="info"></td>
+				</tr>
+			</tbody>
+			<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
+                <tr class="headline">
+                    <td colspan="1"><h4>' . $mpOptionalAttributeTitle . '</h4></td>
+                    <td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
+                </tr>
+            </tbody>
+            <tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
+                <tr>
+                    <th></th>
+                    <td class="input">' . ML_GENERAL_VARMATCH_SELECT_CATEGORY . '</td>
+                    <td class="info"></td>
+                </tr>
+            </tbody>
+            <tbody id="tbodyDynamicMatchingCustomHeadline" style="display:none;">
+                <tr class="headline">
+                    <td colspan="1"><h4>' . $mpCustomAttributeTitle . '</h4></td>
+                    <td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
+                </tr>
+            </tbody>
+            <tbody id="tbodyDynamicMatchingCustomInput" style="display:none;">
+                <tr>
+                    <th></th>
+                    <td class="input">' . ML_GENERAL_VARMATCH_SELECT_CATEGORY . '</td>
+                    <td class="info"></td>
+                </tr>
+            </tbody>
+			<tbody id="categoryInfo" style="display:none;">
+				<tr class="spacer"><td colspan="3">' . ML_GENERAL_VARMATCH_CATEGORY_INFO . '</td></tr>
+				<tr class="spacer"><td colspan="3">&nbsp;</td></tr>
+			</tbody>';
+
+		ob_start();
+		?>
+		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS ?>js/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
+		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS ?>js/marketplaces/meinpaket/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
+		<script type="text/javascript">
+			/*<![CDATA[*/
+			var ml_vm_config = {
+				url: '<?php echo toURL($this->resources['url'], array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
+				viewName: 'prepareView',
+				formName: '#prepareForm',
+				handleCategoryChange: false,
+				i18n: <?php echo json_encode(MeinpaketHelper::gi()->getVarMatchTranslations());?>,
+				shopVariations : <?php echo json_encode(MeinpaketHelper::gi()->getShopVariations()); ?>
+			};
+			/*]]>*/
+		</script>
+		<?php
+		$attributeMatchingTableHtml .= ob_get_contents();
+		ob_end_clean();
+
+
 		$html = '
 				<tr class="headline">
 					<td colspan="3"><h4>' . ML_MEINPAKET_CATEGORY_MATCHING . '</h4></td>
@@ -149,54 +247,8 @@ $(document).ready(function() {
 				<tr class="spacer">
 					<td colspan="3">&nbsp;</td>
 				</tr>';
-		return $html;
-	}
-	
-	protected function renderVariationConfigSelection($data) {
-		$available = MagnaDB::gi()->fetchArray('
-			SELECT MpIdentifier, CustomIdentifier
-			  FROM '.TABLE_MAGNA_MEINPAKET_VARIANTMATCHING.'
-			 WHERE MpId = '.$this->mpId.'
-			       AND MpIdentifier <> ""
-				   AND IsValid = 1
-		');
-		
-		$html = '
-				<tr class="headline">
-					<td colspan="3"><h4>' . ML_MEINPAKET_VARIATIONCONFIG . '</h4></td>
-				</tr>
-				<tr class="even">
-					<th>' . ML_MEINPAKET_VARIATIONCONFIG . '</th>
-					<td class="input">
-						<select name="prepare[VariationConfiguration]">
-							<option value="">Keine Varianten &uuml;bertragen</option>';
-		if (!empty($available)) {
-			foreach ($available as $row) {
-				$key = json_encode(array (
-					'MpIdentifier' => $row['MpIdentifier'],
-					'CustomIdentifier' => $row['CustomIdentifier']
-				));
-				$name = fixHTMLUTF8Entities(base64_decode(
-					empty($row['CustomIdentifier'])
-						? $row['MpIdentifier']
-						: $row['CustomIdentifier']
-				));
-				
-				$selected = $data['VariationConfiguration'] == $key;
-				$html .= '
-							<option value="'.htmlspecialchars($key).'" '.($selected ? 'selected' : '').'>'.$name.'</option>';
-			}
-		}
-		$html .= '
-						</select>
-					</td>
-					<td class="info">' . '' . '</td>
-				</tr>
-				<tr class="spacer">
-					<td colspan="3">&nbsp;</td>
-				</tr>';
-		
-		return $html;
+
+		return $html . $attributeMatchingTableHtml;
 	}
 	
 	protected function renderShippingDetailsJs() {
@@ -286,13 +338,12 @@ $(document).ready(function() {
 		$prepareView = (1 == count($data)) ? 'single' : 'multiple';
 	
 		$renderedView = '
-			<form method="post" action="' . toURL($this->resources['url']) . '">
+			<form method="post" id="prepareForm" name="prepareForm" action="' . toURL($this->resources['url']) . '">
 				<table class="attributesTable">
 					<tbody>';
 
 		#$renderedView .= print_m($data, __METHOD__);
 		$renderedView .= $this->renderCategoryMatching($data);
-		$renderedView .= $this->renderVariationConfigSelection($data);
 		$renderedView .= $this->renderShippingDetails($data);
 		$renderedView .= '
 					</tbody>
@@ -309,7 +360,7 @@ $(document).ready(function() {
 									).'
 								</td>
 								<td class="lastChild">
-									<input class="ml-button mlbtn-action" type="submit" name="savePrepareData" id="savePrepareData" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>
+									<input class="ml-button mlbtn-action" type="submit" name="saveMatching" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>
 								</td>
 							</tr></tbody></table>
 						</td></tr>
@@ -322,9 +373,52 @@ $(document).ready(function() {
 	public function renderAjax() {
 		if (isset($_GET['where']) && ($_GET['where'] == 'catMatchView')) {
 			echo $this->categoryMatcher->renderAjax();
-		} else {
-			echo __METHOD__;
+		} else if ($_POST['prepare'] === 'prepare' || (isset($_POST['Action']) && ($_POST['Action'] == 'LoadMPVariations'))) {
+			if (isset($_POST['SelectValue'])) {
+				$select = $_POST['SelectValue'];
+			} else {
+				$select = $_POST['VariationConfiguration'];
+			}
+
+			$productModel = MeinpaketHelper::gi()->getProductModel('apply');
+
+			return json_encode(MeinpaketHelper::gi()->getMPVariations($select, $productModel, true));
+		} else if (isset($_POST['Action']) && ($_POST['Action'] === 'DBMatchingColumns')) {
+			$columns = MagnaDB::gi()->getTableCols($_POST['Table']);
+			$editedColumns = array();
+			foreach ($columns as $column) {
+				$editedColumns[$column] = $column;
+			}
+
+			echo json_encode($editedColumns, JSON_FORCE_OBJECT);
 		}
+	}
+
+	/**
+	 * Fetches the options for the top 20 category selectors
+	 * @param string $sType
+	 *     Type of category (PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, StoreCategory3)
+	 * @param string $sCategory
+	 *     the selected category (empty for newly prepared items)
+	 * @returns string
+	 *     option tags for the select element
+	 */
+	protected function renderCategoryOptions($sType, $sCategory)
+	{
+		$categories = MeinpaketApiConfigValues::gi()->getAvailableVariantConfigurations();
+
+		$htmlCategories = '<option value="">' . ML_GENERAL_VARMATCH_PLEASE_SELECT . '</option>';
+		if (!empty($categories)) {
+			foreach ($categories as $catKey => $catName) {
+				if ($catKey === $sCategory) {
+					$htmlCategories .= '<option value="' . fixHTMLUTF8Entities($catKey) . '" selected="selected">' . $catName['Name'] . '</option>';
+				} else {
+					$htmlCategories .= '<option value="' . fixHTMLUTF8Entities($catKey) . '">' . $catName['Name'] . '</option>';
+				}
+			}
+		}
+
+		return $htmlCategories;
 	}
 	
 }

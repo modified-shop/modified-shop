@@ -87,6 +87,11 @@ $(document).ready(function() {
 			\'method\': \'get\',
 			\'url\': \''.toURL($_url, array('what' => 'GetTokenCreationLink', 'kind' => 'ajax'), true).'\',
 			\'success\': function (data) {
+				// some shop systems attach error messages, warnings or even notices
+				// to the output, which would be fatal here, so we strip it away
+				if (data.indexOf(\'<style\') > 0) {
+					data=data.substring(0, data.indexOf(\'<style\'));
+				}
 				jQuery.unblockUI();
 				myConsole.log(\'ajax.success\', data);
 				if (data == \'error\') {
@@ -647,11 +652,6 @@ if (!$auth['state']) {
 	$carriers = EbayApiConfigValues::gi()->getCarriers();
 	foreach ($carriers as $carKey => $carName) {
 		$form['orderSyncState']['fields']['carrier']['values'][$carKey] = $carName;
-	}
-
-	// only show matching options if booked
-	if (!ML_ShopAddOns::mlAddOnIsBooked('EbayProductIdentifierSync')) {
-		unset($form['stocksync']['fields']['propertiesMatching']);
 	}
 
 	// PicturePack: show only if bookable

@@ -22,5 +22,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require(DIR_MAGNALISTER_MODULES.'magnacompatible/config.php');
 $mpconfig['pages']['conf']['class'] = 'TradoriaConfigure';
+$mpconfig['pages']['prepare']['class'] = 'TradoriaPrepare';
 $mpconfig['checkin']['Categories']['Shop'] = 'optional';
+$mpconfig['checkin']['Categories']['Marketplace'] = 'no';
 $mpconfig['auth']['authkeys'] = array('apikey', 'mpusername', 'mppassword');

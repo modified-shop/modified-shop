@@ -420,6 +420,7 @@ class RicardoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			//add variations
 			$product = MLProduct::gi()->getProductById($iProductId);
 			if (array_key_exists('Variations', $product)) {
+				unset($aProduct['submit']['Variations']);// avoid double entries
 				foreach ($product['Variations'] as $variation) {
 					$variation['Price'] = $variation['Price']['Price'];
 					$variation['SKU'] = ($this->settings['keytype'] == 'artNr') ? $variation['MarketplaceSku'] : $variation['MarketplaceId'];
@@ -445,7 +446,7 @@ class RicardoCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			foreach ($aProduct['submit']['Variations'] as $aVariation) {
 				$aVariationData = $aProduct;
 				unset($aVariationData['submit']['Variations']);
-
+				unset($aVariation['ShippingTime']);// get matched shipping time from article
 				foreach ($aVariation as $sParameter => $mParameterValue) {
 					if (array_key_exists($sParameter, $aVariationData['submit'])) {
 						$aVariationData['submit'][$sParameter] = $mParameterValue;

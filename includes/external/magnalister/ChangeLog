@@ -211,7 +211,7 @@
 		* Verpackungseinheit-Übergabe bei Artikel-Upload
 		* Versendet-Status: Erfolg/Misserfolg visualisiert
 
-	=== MeinPaket.de-Modul ===
+	=== Allyouneed-Modul ===
 		* Bestellimport: Firmenadresse und Paketstation besser platziert
 		* Promotion-E-Mail eingeführt
 
@@ -224,7 +224,7 @@
 		* eBay: Preise einfrieren in Vorbereitung stabil sichern (1419)
 		* eBay: & in Bildernamen zulassen (1380)
 		* Amazon: Bugfix für AJAX-Request (1398)
-		* MeinPaket.de: Diverse Sonderzeichen für stabilen Upload gekapselt
+		* Allyouneed: Diverse Sonderzeichen für stabilen Upload gekapselt
 
 
 == 2.5.1 ==
@@ -273,7 +273,7 @@
 		* Neue Standard-Platzhalter wie z.B. Artikelnummer im Template (1108)
 		* Galerie-Bild vorkonfigurierbar übermitteln (1062)
 
-	=== MeinPaket.de-Modul ===
+	=== Allyouneed-Modul ===
 		* Neue Löschen-Funktion erweitert (1174)
 		* Synchronisation von Titel und Beschreibung reaktiviert (1221)
 		* HTML-Tags in Kurzbeschreibung erhalten, durch Übernahme der Langbeschreibung (1212)
@@ -291,7 +291,7 @@
 		* eBay: MwSt Shop-fremder Artikel richtig berechnen (1061)
 		* eBay: Anführungszeichen im Artikelnamen richtig übermitteln (1055)
 		* eBay: Leerzeichen in Bildnamen richtig übermitteln (1045)
-		* MeinPaket.de: Steuerklassen korrekt aus Konfiguration übernehmen (1207)
+		* Allyouneed: Steuerklassen korrekt aus Konfiguration übernehmen (1207)
 		* Darstellungsfehler im Internet Explorer behoben (1192)
 
 

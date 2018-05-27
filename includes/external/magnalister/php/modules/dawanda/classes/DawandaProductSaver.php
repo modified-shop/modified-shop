@@ -22,6 +22,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 class DawandaProductSaver {
 	const DEBUG = false;
+	public $aErrors = array();
 
 	protected $aMagnaSession = array();
 	protected $sMarketplace = '';
@@ -87,24 +88,23 @@ class DawandaProductSaver {
 			  FROM '.TABLE_PRODUCTS.'
 			 WHERE products_id =' . $iProductId
 		);
+		$aRow['Verified'] = 'OK';
 		$aRow['ListingDuration'] = $aItemDetails['ListingDuration'];
 		$aRow['ShippingService'] = $aItemDetails['ShippingService'];
 
 		$aRow['ProductType'] = $aItemDetails['ProductType'];
 		$aRow['ReturnPolicy'] = $aItemDetails['ReturnPolicy'];
-
-		$aRow['MpColors'] = DawandaHelper::checkProductSaveJsonArray(array($aItemDetails['MarketplaceColors1'], $aItemDetails['MarketplaceColors2']));
-		$aRow['MarketplaceCategories'] = DawandaHelper::checkProductSaveJsonArray(array(
-			'primary' => $aItemDetails['PrimaryCategory'],
-			'secondary' => isset($aItemDetails['SecondaryCategory']) ? $aItemDetails['SecondaryCategory'] : ''
-		));
-		$aRow['StoreCategories'] = DawandaHelper::checkProductSaveJsonArray(array('primary' => $aItemDetails['StoreCategory']));
+		$aRow['MarketplaceCategories'] = $aItemDetails['PrimaryCategory'];
+		$aRow['StoreCategories'] = $aItemDetails['StoreCategory'];
 
 		//TopTenCategories
 		$aRow['TopMarketplaceCategory'] = $aItemDetails['PrimaryCategory'];
 		$aRow['TopStoreCategory'] = $aItemDetails['StoreCategory'];
-		
-		$aRow['Attributes'] = json_encode(isset($aItemDetails['Attributes']) ? $aItemDetails['Attributes'] : array());
+
+		$aRow['CategoryAttributes'] = $aItemDetails['CategoryAttributes'];
+		// Reset MpColors and Attributes if new prepare is done
+		$aRow['MpColors'] = '';
+		$aRow['Attributes'] = '';
 
 		return $aRow;
 	}

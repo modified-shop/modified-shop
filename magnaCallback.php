@@ -131,7 +131,7 @@ function magnaExecute($functionName, $arguments = array(), $includes = array(), 
 		}
 	}
 
-	if (function_exists($functionName)) {
+	if (function_exists($functionName) && is_string($functionName)) {
 		return $functionName($arguments);
 	}
 	return false;

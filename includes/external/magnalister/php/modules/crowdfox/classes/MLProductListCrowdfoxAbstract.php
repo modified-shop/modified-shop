@@ -97,10 +97,9 @@ abstract class MLProductListCrowdfoxAbstract extends MLProductList {
 	}
 
 	protected function isPreparedDifferently($aRow) {
-		$sPrimaryCategory = $this->getPrepareData($aRow, 'MarketplaceCategories');
-		$sCategoryDetails = $this->getPrepareData($aRow, 'CategoryAttributes');
-		if (!empty($sPrimaryCategory)) {
-			$categoryMatching = CrowdfoxHelper::gi()->getCategoryMatching($sPrimaryCategory);
+		$sCategoryDetails = $this->getPrepareData($aRow, 'ShopVariation');
+		if (!empty($sCategoryDetails)) {
+			$categoryMatching = CrowdfoxHelper::gi()->getCategoryMatching('CrowdfoxPlaceholderCategory');
 			$categoryDetails = json_decode($sCategoryDetails, true);
 			return CrowdfoxHelper::gi()->detectChanges($categoryMatching, $categoryDetails);
 		}

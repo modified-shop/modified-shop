@@ -52,6 +52,20 @@ abstract class MagnaCompatibleCronBase {
 		$this->marketplace = $marketplace;
 		$this->marketplaceTitle = $_modules[$marketplace]['title'];
 
+		if (!is_array($_MagnaSession)) {
+			$_MagnaSession = array (
+				'mpID' => $this->mpID,
+				'currentPlatform' => $this->marketplace,
+			);
+		} else {
+			if (!isset($_MagnaSession['mpID'])) {
+				$_MagnaSession['mpID'] = $this->mpID;
+			}
+			if (!isset($_MagnaSession['currentPlatform'])) {
+				$_MagnaSession['currentPlatform'] = $this->marketplace;
+			}
+		}
+
 		// $this->specificResource can be set by the inheriting class!
 		if ($this->specificResource === false) {
 			$this->specificResource = strtolower($this->marketplace);

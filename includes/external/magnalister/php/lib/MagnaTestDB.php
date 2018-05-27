@@ -49,6 +49,13 @@ class MagnaTestDB extends MagnaDB {
 	}
 
 	/**
+	 * dummy, to prevent PHP errors
+	 */
+	public function affectedRows() {
+		return false;
+	}
+
+	/**
 	 * Send a query
 	 */
 	public function query($query, $verbose = false) {

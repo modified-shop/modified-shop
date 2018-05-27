@@ -920,7 +920,7 @@ function strip_tags_attributes($string, $allowtags = '', $allowattributes = '') 
     }
     array_walk($allowattributes, create_function('&$a', '$a = trim($a);'));
     if (is_array($allowattributes)) {
-        $allowattributes = "(?<!".implode(")(?<!",$allowattributes).")";
+        $allowattributes = "(?<!".implode(")(?<!",$allowattributes).")";;
     }
 	$string = preg_replace_callback("/<(\/?[a-zA-Z0-9]*)([^>]*)>/i", create_function(
 	    '$matches',
@@ -949,7 +949,7 @@ function stripLinks($str, $sTarget = '') {
 		// strip the opening Link tag, then the next closing tag, one by one, until none found
 		// there can be everything between the tags
 		$iOldLength = $iLength;
-		$str = preg_replace("/(\<[aA] *)([0-9a-zA-Z;:\.#'\" =_-]*)(href *= *|HREF *= *)('|\")".$sTarget."([0-9a-zA-Z:\.\/\?\&;# =_-]*)('|\")([0-9a-zA-Z;:\.#'\" =_-]*\>)/", '', $str, 1);
+		$str = preg_replace("/(\<[aA] *)([0-9a-zA-Z;:\.#'\" =_-]*)(href *= *|HREF *= *)('|\")".$sTarget."([0-9a-zA-Z:\.\/\?\&;# =_+-]*)('|\")([0-9a-zA-Z;:\.#'\" =_+-]*\>)/", '', $str, 1);
 		$iLength = strlen($str);
 		if ($iLength == $iOldLength) break;
 		$str = preg_replace("/\<\/[aA]\>/", '', $str, 1);
@@ -1327,7 +1327,7 @@ function magnaGetAvailableLanguages() {
 	$handle = opendir(DIR_MAGNALISTER_FS.'lang/');
 	
 	while (false !== ($file = readdir($handle))) {
-		if (@is_dir($file)) continue;
+		if ($file == '.' || $file == '..' || @is_dir($file)) continue;
 		if (preg_match('/^(.*)\.php$/', $file, $match)) {
 			$langs[] = $match[1];
 		}
@@ -1400,7 +1400,7 @@ function mlFloatalize($sFloat) {
 
 	return $sFloat;
 }
-
+   
 function magnaPreparePlainTextMode() {
 	$iObLevel = ob_get_level();
 	$sOutHandler = ini_get('output_handler');
@@ -1413,4 +1413,59 @@ function magnaPreparePlainTextMode() {
 		header('Content-Encoding: none');
 		header('Content-Type: text/plain; charset="utf-8"');
 	}
+}
+
+function parse_str_unlimited($sUrlString, &$result) { 
+        $aArray = array();
+        if ($sUrlString != '') {
+            $aPairs = explode('&', $sUrlString);
+            $blIsUrlEncoded = (strpos($sUrlString, '%5B') !== false);
+            foreach ($aPairs as $sPair) {
+                $aKeyValue = explode('=', $sPair);
+                if (is_array($aKeyValue)) {
+                    $mKey = isset($aKeyValue[0]) ? ($blIsUrlEncoded ? urldecode($aKeyValue[0]) : $aKeyValue[0]) : null;
+                    $mValue = isset($aKeyValue[1]) ? ($blIsUrlEncoded ? urldecode($aKeyValue[1]) : $aKeyValue[0]) : null;
+                    if (strpos($mKey, '[') !== false) {                       
+                        $aKeys = explode('[', $mKey);
+                        $aArray = mlSetArrayKeysOfEachUrlParameter($aKeys, $aArray, $mValue);
+                    } else {
+                        $aArray[$mKey] = $mValue;
+                    }
+                }
+            }
+        }
+    $result = $aArray;
+    return $result;
+}
+
+/**
+ * for a string like this ml[material][]=asdf 
+ * it fill array like this
+ * array(
+ *     material 
+ *        => array(
+ *               0 => asdf
+ *           )
+ * )
+ * 
+ * @param array $aKeys
+ * @param array $aArray
+ * @param mix $mValue
+ * @return array
+ */
+function mlSetArrayKeysOfEachUrlParameter($aKeys, $aArray, $mValue) {
+    if (count($aKeys) > 0) {
+        $sKey = array_shift($aKeys);// get key in frist level of hirarchy of array, e.g. ml[first][second][third]
+        $sKey = str_replace(']', '', $sKey);
+        if ($sKey == '') {//dynamic key
+            $sKey = (is_array($aArray) && is_int(max(array_keys($aArray)))) ? (max(array_keys($aArray)) + 1) : 0;
+        }
+        if (!isset($aArray[$sKey])) {//if it is new key
+            $aArray[$sKey] = null;
+        }
+        $aArray[$sKey] = mlSetArrayKeysOfEachUrlParameter($aKeys, $aArray[$sKey], $mValue);
+        return $aArray;
+    } else {
+        return $mValue;
+    }
 }

@@ -26,7 +26,7 @@ $magnaConfig = array();
 /* DB Config */
 function loadDBConfig($mpID = '0') {
 	global $magnaConfig;
-	if (!array_key_exists('db', $magnaConfig)) {
+	if (!isset($magnaConfig) || !is_array($magnaConfig) || !array_key_exists('db', $magnaConfig)) {
 		$magnaConfig['db'] = array();
 	}
 	if (!array_key_exists($mpID, $magnaConfig['db'])) {

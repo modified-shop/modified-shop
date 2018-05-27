@@ -203,8 +203,8 @@ class HoodPrepareView extends MagnaCompatibleBase {
 					'#ARTNR#' => $dbSelection[0]['products_model'],
 					'#PID#' => $dbSelection[0]['products_id'],
 					'#SKU#' => magnaPID2SKU($dbSelection[0]['products_id']),
-					'#SHORTDESCRIPTION#' => stripLocalWindowsLinks($dbSelection[0]['products_short_description']),
-					'#DESCRIPTION#' => stripLocalWindowsLinks($dbSelection[0]['products_description']),
+					'#SHORTDESCRIPTION#' => fixHTMLUTF8Entities(stripLocalWindowsLinks($dbSelection[0]['products_short_description'])),
+					'#DESCRIPTION#' => fixHTMLUTF8Entities(stripLocalWindowsLinks($dbSelection[0]['products_description'])),
 				);
 				
 				$dbSelection[0]['Description'] = HoodHelper::getSubstitutePictures(HoodHelper::substituteTemplate(
@@ -246,9 +246,13 @@ class HoodPrepareView extends MagnaCompatibleBase {
 			$this->topTen = new HoodTopTenCategories();
 			$this->topTen->setMarketPlaceId($this->mpID);
 		}
-		$opt = '<option value="">&mdash;</option>'."\n";
 		
 		$aTopTenCatIds = $this->topTen->getTopTenCategories($type);
+		if (!empty($aTopTenCatIds)) {
+			$opt = '<option value="">&mdash;</option>'."\n";
+		} else {
+			$opt = '<option value=""> -- '.ML_GENERIC_USE_CATEGORY_BUTTON.' -- &gt; </option>'."\n";
+		}
 		
 		if (!empty($selectedCat) && !array_key_exists($selectedCat, $aTopTenCatIds)) {
 			$opt .= '<option value="'.$selectedCat.'" selected="selected">'.$selectedCatName.'</option>'."\n";

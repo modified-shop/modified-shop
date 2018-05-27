@@ -25,7 +25,14 @@ function identShopSystem() {
 		define('SHOPSYSTEM', 'commerceseo');
 	} else if (defined('_GM_VALID_CALL') || (stripos($content, 'gambio') !== false)) {
 		define('SHOPSYSTEM', 'gambio');
-	} else if (defined('PROJECT_VERSION') && (stripos(PROJECT_VERSION, 'modified') !== false || stripos($content, 'modified eCommerce Shopsoftware') !== false)) {
+	} else if (defined('PROJECT_VERSION')
+	            && (
+	                   stripos(PROJECT_VERSION, 'modified') !== false
+	                || stripos(PROJECT_VERSION, 'shophelfer') !== false
+	                || stripos(PROJECT_VERSION, 'fishnet shop') !== false
+	                || stripos($content, 'modified eCommerce Shopsoftware') !== false
+	               )
+	          ) {
 		define('SHOPSYSTEM', 'xtcmodified');
 	} else if (defined('PROJECT_VERSION') && (stripos(PROJECT_VERSION, 'xt:commerce') !== false)) {
 		define('SHOPSYSTEM', 'xtcommerce');

@@ -1,11 +1,11 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
@@ -305,11 +305,11 @@ define('ML_TEXT_MAKE_YOUR_CHOISE', 'Bitte w&auml;hlen Sie oben Ihren Marketplace
 define('ML_TEXT_PLEASE_WAIT', 'Bitte warten&hellip;');
 define('ML_TEXT_FILLOUT_CONFIG_FORM', 'Bitte f&uuml;llen Sie alle Felder aus.');
 define('ML_TEXT_GENERIC_SAFE_MODE', 'Auf Ihrem System ist die Safe-Mode Beschr&auml;nkung aktiviert.<br/><br/>
-	Um den magnalister manuell zu aktualisieren, laden Sie sich bitte die aktuelle Version auf der 
-	<a href="'.MAGNA_PUBLIC_SERVER.'" title="magnalister Seite">magnalister Seite</a> herunter, und kopieren Sie das Verzeichnis 
-	<i>files/</i> aus dem Archiv in das  Wurzelverzeichnis Ihres Shops. Kontaktieren Sie alternativ Ihren Server-Administrator 
+	Um den magnalister manuell zu aktualisieren, laden Sie sich bitte die aktuelle Version auf der
+	<a href="'.MAGNA_PUBLIC_SERVER.'" title="magnalister Seite">magnalister Seite</a> herunter, und kopieren Sie das Verzeichnis
+	<i>files/</i> aus dem Archiv in das  Wurzelverzeichnis Ihres Shops. Kontaktieren Sie alternativ Ihren Server-Administrator
 	und bitten Sie ihn, den Safe-Mode dauerhaft abzuschalten, um das Update per Knopfdruck auszuf&uuml;hren.<br /><br />
-	Wenn Sie w&uuml;nschen, k&ouml;nnen wir Ihnen das manuelle Update f&uuml;r eine Unkostenpauschale aufspielen (siehe 
+	Wenn Sie w&uuml;nschen, k&ouml;nnen wir Ihnen das manuelle Update f&uuml;r eine Unkostenpauschale aufspielen (siehe
 	<a href="'.MAGNA_PUBLIC_SERVER.'frontend/installation_pricing.php" title="magnalister Seite">Preisliste</a>).');
 define('ML_TEXT_NEW_VERSION', 'Eine neue Version (%s) des magnalisters ist verf&uuml;gbar.
 	Um den magnalister zu aktualisieren, klicken Sie bitte #hier#.<br/>
@@ -335,13 +335,13 @@ define('ML_TEXT_IMPORTANT_UPDATE_SAFE_MODE', 'Eine neue Version des magnalisters
 	<b>Wichtig:</b> Erstellen Sie zuvor ein Backup Ihres Shops (Dateien und Datenbank).
 	Selbst gemachte &Auml;nderungen am magnalister gehen durch das Update verloren.
 	Anpassungen durch Hook-Points gehen nicht verloren und sind update-sicher.');
-define('ML_TEXT_UPDATE_SUCCESS', 'Das Update wurde erfolgreich durchgef&uuml;hrt. Eine Liste der wichtigsten &Auml;nderungen k&ouml;nnen Sie im 
+define('ML_TEXT_UPDATE_SUCCESS', 'Das Update wurde erfolgreich durchgef&uuml;hrt. Eine Liste der wichtigsten &Auml;nderungen k&ouml;nnen Sie im
 	<a href="'.toURL(array('module' => 'viewchangelog')).'" title="Changelog">Changelog</a> einsehen.');
 define('ML_TEXT_UPDATE_SHOP_CHANGES', 'Bei diesem Update sind &Auml;nderungen an den Original-Quelltexten Ihres Shops n&ouml;tig.<br /><br />
 	Bitte laden Sie die <a target="_blank" href="'.MAGNA_PUBLIC_SERVER.'frontend/download.php" title="aktuelle Version">aktuelle Version</a>
 	des magnalisters herunter und lesen Sie die Upgrade-Anleitung.<br /><br />
 	Alternativ k&ouml;nnen Sie auch unser Fachteam mit dem Upgrade beauftragen:<br />
-	Loggen Sie sich hierzu einfach unter 
+	Loggen Sie sich hierzu einfach unter
 	<a href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php" title="Kunden Login" target=_blank">'.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'login</a> ein,
 	und &uuml;bermitteln &uuml;ber den Men&uuml;punkt "Installation" den Upgrade-Auftrag.<br />
 	F&uuml;r weitere Fragen steht Ihnen unser Support zur Verf&uuml;gung:
@@ -355,23 +355,23 @@ define('ML_TEXT_LISTING_ALMOST_EMPTY', '
 	r&uuml;ckwirkend zum Monatsanfang vornehmen und haben damit volle Kostenkontrolle.');
 define('ML_TEXT_LISTING_GOING_TO_EXCEED', '
 	<p>Sie sind dabei Ihre Uploads/Imports um %d zu &uuml;berschreiten. Bei einer &Uuml;berschreitung der Uploads/Imports
-	   werden zus&auml;tzliche Geb&uuml;hren f&auml;llig. Die zus&auml;tzlichen Geb&uuml;hren k&ouml;nnen Sie 
+	   werden zus&auml;tzliche Geb&uuml;hren f&auml;llig. Die zus&auml;tzlichen Geb&uuml;hren k&ouml;nnen Sie
 	   <a target="_blank" href="'.MAGNA_PUBLIC_SERVER.'frontend/rate.php" title="Preis&uuml;bersicht">hier</a> entnehmen.</p>
 	<p>Sie k&ouml;nnen einfach ein <a target="_blank" href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php/rateupgrade:%d" title="Tarif-Upgrade">Tarif-Upgrade</a>
 	   r&uuml;ckwirkend zum Monatsanfang vornehmen und haben damit volle Kostenkontrolle.</p>');
-define('ML_TEXT_CURRENT_MODULE_NOT_BOOKED', 'Zur Aktivierung von <b>%s</b> loggen Sie sich unter 
-	<a href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php" title="Kunden Login" target=_blank">'.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'login</a> ein, 
+define('ML_TEXT_CURRENT_MODULE_NOT_BOOKED', 'Zur Aktivierung von <b>%s</b> loggen Sie sich unter
+	<a href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php" title="Kunden Login" target=_blank">'.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'login</a> ein,
 	w&auml;hlen "Meine Shops" und beantragen &uuml;ber den "Bearbeiten-Button" weitere Marketplaces.');
-define('ML_TEXT_MORE_MODULES', '<p>Sie haben keine weiteren Anbindungen gebucht, 
+define('ML_TEXT_MORE_MODULES', '<p>Sie haben keine weiteren Anbindungen gebucht,
 	oder es sind keine weiteren Marketplaces zur Anbindung vorhanden.</p>
-	<p>Zur Buchung weiterer Anbindungen loggen Sie sich unter 
-	   <a href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php" title="Kunden Login" target=_blank">'.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'login</a> ein, 
+	<p>Zur Buchung weiterer Anbindungen loggen Sie sich unter
+	   <a href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php" title="Kunden Login" target=_blank">'.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'login</a> ein,
 	   w&auml;hlen "Meine Shops" und beantragen &uuml;ber den "Bearbeiten-Button" weitere Marketplaces.</p>
-	<p>Sollten Sie eine Anbindung w&uuml;nschen, die wir noch nicht im Programm haben, senden Sie uns bitte eine Nachricht &ndash; 
+	<p>Sollten Sie eine Anbindung w&uuml;nschen, die wir noch nicht im Programm haben, senden Sie uns bitte eine Nachricht &ndash;
 	   wir sind f&uuml;r Ihre Anregungen und Vorschl&auml;ge dankbar:<br />
 	   <a href="'.MAGNA_PUBLIC_SERVER.'support" title="Support" target="_blank">'.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'support</a></p>');
 define('ML_TEXT_BUTTON_CHECKIN_ADD', 'Wenn Sie auf <span class="ml-button">'.ML_BUTTON_LABEL_CHECKIN_ADD.'</span> klicken,
-	wird die CSV um	die &uuml;bermittelten Artikel erg&auml;nzt. Bzw. wenn die Artikel schon in der CSV sind, werden sie 
+	wird die CSV um	die &uuml;bermittelten Artikel erg&auml;nzt. Bzw. wenn die Artikel schon in der CSV sind, werden sie
 	&uuml;berschrieben/aktualisiert.');
 define('ML_TEXT_BUTTON_CHECKIN_PURGE', 'Wenn Sie auf <span class="ml-button">'.ML_BUTTON_LABEL_CHECKIN_PURGE.'</span> klicken,
 	wird die alte CSV gel&ouml;scht und nur die &uuml;bermittelten Artikel sind enthalten');
@@ -379,16 +379,16 @@ define('ML_TEXT_CONFIG_SAVED_SUCCESSFULLY', 'Die Konfiguration wurde erfolgreich
 define('ML_TEXT_CONFIG_SAVED_SEMI_SUCCESSFULLY', 'Einige &Auml;nderungen konnten nicht gespeichert werden, da diese fehlerhaft sind.
 	Bitte korrigieren Sie alle Werte, die auf der linken Seite rot hervorgehobene Fehlerbeschreibungen haben.<br />
 	Die alten Werte wurden an diesen Stellen wiederhergestellt.');
-define('ML_TEXT_TEMPLATE_INFO', 'In den Vorauswahlen speichern Sie eine Auswahl an Produkten mit verschiedenen Werten, die nachtr&auml;glich vor dem Einstellprozess 
+define('ML_TEXT_TEMPLATE_INFO', 'In den Vorauswahlen speichern Sie eine Auswahl an Produkten mit verschiedenen Werten, die nachtr&auml;glich vor dem Einstellprozess
 	teilweise &auml;nderbar sind.');
-define('ML_TEXT_CONFIRM_PURGE', '<strong>Hinweis:</strong> Sie sind dabei Ihr Inventar vollst&auml;ndig zu ersetzen. 
+define('ML_TEXT_CONFIRM_PURGE', '<strong>Hinweis:</strong> Sie sind dabei Ihr Inventar vollst&auml;ndig zu ersetzen.
 	Dieser Vorgang l&ouml;scht erst <strong>komplett</strong> Ihren Marketplace-Bestand, und ersetzt ihn dann mit den hier ausgew&auml;hlten Artikeln.<br/><br/>
 	Wollen Sie wirklich fortfahren?');
 define('ML_TEXT_TAB_IDENT', 'Legt die Bezeichnung des Tabs f&uuml;r diesen Marketplace fest, um ihn besser von den anderen Marketplace-Tabs unterscheiden zu k&ouml;nnen (optional).');
 define('ML_TEXT_FTP_CORRECT', 'FTP Zugangsdaten &uuml;berpr&uuml;ft und gespeichert.');
 define('ML_TEXT_ORDERS_IMPORTED', 'Bestellungen wurden Importiert');
 define('ML_TEXT_CONFIRM_SKU_CHANGE_TITLE', 'Warnung!');
-define('ML_TEXT_CONFIRM_SKU_CHANGE_TEXT', 'Seien Sie sich bewusst, dass sich diese Funktion ma&szlig;geblich auf die Weiterverarbeitung &uuml;ber 
+define('ML_TEXT_CONFIRM_SKU_CHANGE_TEXT', 'Seien Sie sich bewusst, dass sich diese Funktion ma&szlig;geblich auf die Weiterverarbeitung &uuml;ber
 	eine Warenwirtschaft, sowie auf den Abgleich der Shop- und Marketplace-Inventare auswirkt. <br><br>Wenn Sie diese Optionen nachtr&auml;glich
 	&auml;ndern, nach dem Sie bereits Artikel mit einer der beiden Einstellungen &uuml;bertragen haben, zerst&ouml;ren Sie die Nummernkreise, somit
 	kann dann kein Abgleich mehr zwischen magnalister, dem Shop und den Marktpl&auml;tzen erfolgen.');
@@ -414,10 +414,10 @@ steht f&uuml;r Programmierungen xt:Commerce 4 betreffend und <i>V3</i>
 steht f&uuml;r alle anderen Shop-System wie Shopware, Prestashop oder Magento.');
 
 /* NOTICES */
-define('ML_NOTICE_PLACE_PASSPHRASE', 'Bitte hinterlegen Sie Ihre PassPhrase. Diese erhalten Sie nach der 
+define('ML_NOTICE_PLACE_PASSPHRASE', 'Bitte hinterlegen Sie Ihre PassPhrase. Diese erhalten Sie nach der
 	<a href="'.MAGNA_PUBLIC_SERVER.'freetest/%s" title="Jetzt kostenlos testen" target="_blank">Registrierung</a>
 	auf '.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'login, sowie per E-Mail.');
-define('ML_NOTICE_SUBMIT_PRODUCTS', 'Dieser Vorgang kann je nach Anzahl der Artikel einige Minuten in Anspruch nehmen. 
+define('ML_NOTICE_SUBMIT_PRODUCTS', 'Dieser Vorgang kann je nach Anzahl der Artikel einige Minuten in Anspruch nehmen.
 	Bitte laden Sie den Browser w&auml;hrend dieser Zeit nicht neu!');
 
 /* STATUS Messages */
@@ -438,10 +438,10 @@ define('ML_ERROR_LABEL_TYPE', 'Typ');
 define('ML_ERROR_LABEL_SUBSYSTEM', 'Subsystem');
 define('ML_ERROR_LABEL_MESSAGE', 'Meldung');
 define('ML_ERROR_CANNOT_CONNECT_TO_SERVICE_LAYER_HEADLINE', 'Fehler bei Anfrage an den magnalister-Service Layer');
-define('ML_ERROR_CANNOT_CONNECT_TO_SERVICE_LAYER_TEXT', 'Der magnalister-Service-Layer ist entweder nicht erreichbar oder die 
+define('ML_ERROR_CANNOT_CONNECT_TO_SERVICE_LAYER_TEXT', 'Der magnalister-Service-Layer ist entweder nicht erreichbar oder die
 	Anfrage schlug fehl. Sollte der Fehler weiterhin bestehen wenden Sie sich bitte an den Support von '.MAGNA_SUPPORT_URL.'.'
 );
-define('ML_ERROR_ACCESS_DENIED_TO_SERVICE_LAYER_TEXT', 'Sie sind nicht berechtigt den magnalister-Service-Layer zu verwenden. 
+define('ML_ERROR_ACCESS_DENIED_TO_SERVICE_LAYER_TEXT', 'Sie sind nicht berechtigt den magnalister-Service-Layer zu verwenden.
 	Bitte wenden Sie sich an den Support von '.MAGNA_SUPPORT_URL.'.'
 );
 define('ML_ERROR_AMAZON_WRONG_SELLER_CENTRAL_LOGIN', 'Die Zugangsdaten zu der Amazon-Seller-Central scheinen nicht zu stimmen: Der
@@ -477,30 +477,30 @@ define('ML_SUCCESS_CS_CHECKIN_ALL', 'Es wurden alle %d Artikel erfolgreich einge
 define('ML_ERROR_CS_CHECKIN_FEW', 'Beim Einstellvorgang sind Fehler aufgetreten. Es konnten nur %d von %d Artikel eingestellt werden.');
 define('ML_ERROR_CS_CHECKIN_NONE', 'Beim Einstellvorgang sind Fehler aufgetreten. Von %d Artikeln konnte keiner eingestellt werden.');
 define('ML_ERROR_API', 'Beim magnalister-Service-Layer ist ein Fehler aufgetreten. Die Anfrage konnte nicht erfolgreich verarbeitet werden.');
-define('ML_ERROR_UNAUTHED', 'Ihr Shop konnte nicht authentifiziert werden. Bitte stellen Sie sicher, dass der von Ihnen eingegebene PassPhrase 
+define('ML_ERROR_UNAUTHED', 'Ihr Shop konnte nicht authentifiziert werden. Bitte stellen Sie sicher, dass der von Ihnen eingegebene PassPhrase
 	und die hinterlegte Shop-URL (Kundenlogin bei magnalister.com) korrekt sind.');
-define('ML_ERROR_SUBMIT_PRODUCTS', 'Bei der &Uuml;bermittlung der Produkte an den magnalister-Service-Layer ist ein Fehler aufgetreten. 
-	 Bitte versuchen Sie es in einigen Minuten noch einmal. Sollte der Fehler weiterhin bestehen, wenden 
+define('ML_ERROR_SUBMIT_PRODUCTS', 'Bei der &Uuml;bermittlung der Produkte an den magnalister-Service-Layer ist ein Fehler aufgetreten.
+	 Bitte versuchen Sie es in einigen Minuten noch einmal. Sollte der Fehler weiterhin bestehen, wenden
 	 Sie sich bitte an den Support von '.MAGNA_SUPPORT_URL.'.');
-define('ML_ERROR_MISSING_CURRENCY', 'Die W&auml;hrung des Marketplaces (%s) den Sie in der Konfiguration ausgew&auml;hlt haben, unterscheidet sich von der 
+define('ML_ERROR_MISSING_CURRENCY', 'Die W&auml;hrung des Marketplaces (%s) den Sie in der Konfiguration ausgew&auml;hlt haben, unterscheidet sich von der
 	Standardw&auml;hrung dieses Shops (%s). In den W&auml;hrungstabellen des Shops ist die W&auml;hrung des Marketplaces nicht enthalten. Solange dies der Fall ist,
 	kann der Marketplace nicht verwendet werden.');
-define('ML_ERROR_INVALID_PASSWORD', 'Passwort falsch. Bitte &uuml;berpr&uuml;fen Sie Ihre Zugangsdaten. 
+define('ML_ERROR_INVALID_PASSWORD', 'Passwort falsch. Bitte &uuml;berpr&uuml;fen Sie Ihre Zugangsdaten.
     Bitte kopieren Sie keinen Text, sondern schreiben das Passwort aus, um Fehlerquellen auszuschlie&szlig;en.');
 define('ML_ERROR_MISSING_PRODUCTS_EAN', 'Ihr Shop ist leider nicht in der Lage EANs bei den Produktinformationen zu speichern. Um neue Produkte bei Amazon einstellen zu k&ouml;nnen
 	werden jedoch EANs ben&ouml;tigt. Bitte erweitern Sie Ihren Shop um diese Funktionalit&auml;t. magnalister hilft Ihnen bei der Installation. Support: '.MAGNA_SUPPORT_URL.'.');
 define('ML_ERROR_COULD_NOT_LOAD_LOCAL_CLIENTVERSION', 'Konnte die Datei ClientVersion nicht von diesem Server laden.');
-define('ML_ERROR_FTP_CANNOT_CONNECT', 'Es kann &uuml;ber die von Ihnen angegeben Zugangsdaten keine Verbindung zu Ihrem Server hergestellt werden. 
+define('ML_ERROR_FTP_CANNOT_CONNECT', 'Es kann &uuml;ber die von Ihnen angegeben Zugangsdaten keine Verbindung zu Ihrem Server hergestellt werden.
 	Bitte &uuml;berpr&uuml;fen Sie die FTP-Zugangsdaten. Sollte der Fehler weiterhin bestehen, wenden Sie sich bitte an den Support von '.MAGNA_SUPPORT_URL.'.');
-define('ML_ERROR_FTP_PATH_DOES_NOT_MATCH', 'Es konnte eine FTP-Verbindung hergestellt werden, jedoch konnte das Shop-Verzeichnis nicht ermittelt werden. 
+define('ML_ERROR_FTP_PATH_DOES_NOT_MATCH', 'Es konnte eine FTP-Verbindung hergestellt werden, jedoch konnte das Shop-Verzeichnis nicht ermittelt werden.
 	Bitte &uuml;berpr&uuml;fen Sie das Shop-Verzeichnis. Sollte der Fehler weiterhin bestehen, wenden Sie sich bitte an den Support von '.MAGNA_SUPPORT_URL.'.');
-define('ML_ERROR_FTP_PERMISSION_DENIED', 'Eine FTP-Verbindung konnte hergestellt werden. Jedoch hat der FTP-Benutzer keine Schreibrechte. 
+define('ML_ERROR_FTP_PERMISSION_DENIED', 'Eine FTP-Verbindung konnte hergestellt werden. Jedoch hat der FTP-Benutzer keine Schreibrechte.
     Bitte hinterlegen Sie einen Benutzer mit Schreibrechten. Sollte der Fehler weiterhin bestehen, wenden Sie sich bitte an den Support von '.MAGNA_SUPPORT_URL.'.');
-define('ML_ERROR_FTP_INCOMPLETE_DATA', 'Die FTP-Zugangsdaten sind unvollst&auml;ndig. Automatische Updates sind daher nicht m&ouml;glich. 
+define('ML_ERROR_FTP_INCOMPLETE_DATA', 'Die FTP-Zugangsdaten sind unvollst&auml;ndig. Automatische Updates sind daher nicht m&ouml;glich.
 	F&uuml;r weitere Fragen wenden Sie sich bitte an den Support von '.MAGNA_SUPPORT_URL.'.');
-define('ML_ERROR_FTP_NOT_WORKY_CAUSE_OF_RETARDED_PHPCONFIG', 'Die FTP Daten konnten wegen Servereinschr&auml;nkungen nicht gespeichert werden. 
+define('ML_ERROR_FTP_NOT_WORKY_CAUSE_OF_RETARDED_PHPCONFIG', 'Die FTP Daten konnten wegen Servereinschr&auml;nkungen nicht gespeichert werden.
     Automatisierte Updates sind wegen der Safe Mode Einstellungen nur &uuml;ber FTP-Client m&ouml;glich. Alternativ k&ouml;nnen Sie Ihren Server-Provider bitten,
-    den Safe Mode zu deaktivieren, um automatische Updates ausf&uuml;hren zu k&ouml;nnen. Sollte Sie Fragen haben, wenden Sie sich bitte an den Support 
+    den Safe Mode zu deaktivieren, um automatische Updates ausf&uuml;hren zu k&ouml;nnen. Sollte Sie Fragen haben, wenden Sie sich bitte an den Support
     von '.MAGNA_SUPPORT_URL.' oder Ihren Server-Provider.');
 define('ML_ERROR_MARKETPLACE_TIMEOUT', 'Zurzeit ist die Schnittstelle dieses Marketplaces nicht erreichbar. Sollte diese Meldung nach l&auml;ngerer Wartezeit noch angezeigt werden,
 	&uuml;berpr&uuml;fen Sie bitte, ob es auf der Startseite des magnalister Plugins eine Meldung zu diesem Marketplace gibt oder kontaktieren Sie den magnalister Support.');
@@ -529,6 +529,7 @@ define('ML_GENERIC_FAILED', 'Fehlgeschlagene');
 define('ML_GENERIC_ERRORLOG', 'Fehlerlog');
 define('ML_GENERIC_VARIANTEN_MATCHING', 'Attributes Matching');
 define('ML_GENERIC_MP_CATEGORY', '%marketplace% Kategorie');
+define('ML_GENERIC_USE_CATEGORY_BUTTON', 'Bitte Auswahlbutton rechts verwenden');
 define('ML_GENERIC_STORE', 'Store');
 define('ML_GENERIC_VORBEREITUNG', 'Vorbereitung');
 
@@ -604,15 +605,15 @@ define('ML_GENERIC_CONFIRM_DELETE_ENTIRE_ERROR_PROTOCOL', 'M&ouml;chten Sie wirk
 define('ML_GENERIC_ORDER_DETAILS_CURRENCY_CONVERSION_LABEL', 'W&auml;hrungsumrechnung');
 define('ML_GENERIC_ORDER_DETAILS_CURRENCY_CONVERSION_TEXT',  'W&auml;hrung: {#Currency#} &nbsp;&nbsp;&nbsp;&nbsp; Umrechnungsfaktor: {#CurrencyValue#} &nbsp;&nbsp;&nbsp;&nbsp; Wert in Standard-W&auml;hrung ({#DefaultCurrency#}): {#Value#}');
 
-define('ML_GENERIC_ERROR_WRONG_CURRENCY', 'Die W&auml;hrung des Marketplaces (%s) unterscheidet sich von der Standardw&auml;hrung dieses Shops (%s). 
+define('ML_GENERIC_ERROR_WRONG_CURRENCY', 'Die W&auml;hrung des Marketplaces (%s) unterscheidet sich von der Standardw&auml;hrung dieses Shops (%s).
 	Der Preis wird automatisch in die entsprechende W&auml;hrung umgerechnet. Der Umrechnungsfaktor wird den W&auml;hrungseinstellungen	entnommen.');
 define('ML_GENERIC_ERROR_CURRENCY_NOT_IN_SHOP', 'Die zu dem gew&auml;hlten Marketplace geh&ouml;rende W&auml;hrung (%s) existiert in diesem Shop nicht.
 	Bitte legen Sie die W&auml;hrung in Ihrem Shop an, um in diesem Marketplace einstellen zu k&ouml;nnen.');
-define('ML_GENERIC_ERROR_UNABLE_TO_LOAD_PREPARE_DATA', 'Konnte die vorbereiteten Daten f&uuml;r das Produkt nicht laden. 
+define('ML_GENERIC_ERROR_UNABLE_TO_LOAD_PREPARE_DATA', 'Konnte die vorbereiteten Daten f&uuml;r das Produkt nicht laden.
 	Dies h&auml;tte nicht passieren d&uuml;rfen. Bitte setzen Sie sich mit dem Support in Verbindung.');
 define('ML_GENERIC_TEXT_NO_PREPARED_PRODUCTS', 'Es sind noch keine Produkte vorbereitet worden. Bevor Sie Produkte hier hochladen k&ouml;nnen, m&uuml;ssen Sie diese unter dem Reiter "Produkte vorbereiten" bzw. "Kategorie Matching" bearbeiten.<br>
       Falls Sie an der Stelle Artikel vermissen sollten, die Sie bereits vorbereitet haben, &uuml;berpr&uuml;fen Sie, ob diese ggf. auf Inaktiv gesetzt sind und Sie die Konfiguration entsprechend eingestellt haben.');
-define('ML_GENERIC_ERROR_PRODUCTS_WITHOUT_MODEL_EXIST','Es sind Produkte ohne oder mit doppelter Artikelnummer vorhanden. Die Produkte k&ouml;nnen daher nicht &uuml;bermittelt werden: 
+define('ML_GENERIC_ERROR_PRODUCTS_WITHOUT_MODEL_EXIST','Es sind Produkte ohne oder mit doppelter Artikelnummer vorhanden. Die Produkte k&ouml;nnen daher nicht &uuml;bermittelt werden:
 	Sie haben in der Konfiguration unter "Synchronisation Nummernkreise" die Option "Artikelnummer" gew&auml;hlt. Klicken Sie <a href="#LINK#"><b>hier</b></a>, um automatisiert
 	die	Artikelnummern zu korrigieren! <br/>
 	Alternativ k&ouml;nnen Sie die Nummernkreissynchronisation in der Konfiguration auf "Produkt ID" &auml;ndern.');
@@ -685,7 +686,7 @@ define('ML_AMAZON_LABEL_APPLY_NOT_PREPARED', 'Nicht vorbereitet');
 define('ML_AMAZON_LABEL_APPLY_PREPARE_COMPLETE', 'Vollst&auml;ndig');
 define('ML_AMAZON_LABEL_APPLY_PREPARE_INCOMPLETE', 'Unvollst&auml;ndig');
 define('ML_AMAZON_LABEL_ADDITIONAL_DATA', 'Weitere Daten');
-define('ML_AMAZON_LABEL_LEADTIME_TO_SHIP', 'Bearbeitungszeit');
+define('ML_AMAZON_LABEL_LEADTIME_TO_SHIP', 'Bearbeitungszeit (in Tagen)');
 
 define('ML_AMAZON_LABEL_GIFT_PAPER', 'Geschenkpapier');
 define('ML_AMAZON_LABEL_GIFT_MESSAGE', 'Geschenknachricht');
@@ -704,12 +705,12 @@ define('ML_AMAZON_PRODUCT_MATHCED_NO', 'Nicht vorbereitet');
 define('ML_AMAZON_PRODUCT_MATCHED_FAULTY', 'Nicht erfolgreich vorbereitet');
 define('ML_AMAZON_PRODUCT_MATCHED_OK', 'Erfolgreich vorbereitet');
 
-define('ML_AMAZON_TEXT_REMATCH', 'Die ausgew&auml;hlten Produkte wurden bereits gematcht. Um diese per Multimatching neu 
-	zu matchen m&uuml;ssen Sie zuvor die Option &quot;'.ML_LABEL_ALL.'&quot; neben der Schaltfl&auml;che 
+define('ML_AMAZON_TEXT_REMATCH', 'Die ausgew&auml;hlten Produkte wurden bereits gematcht. Um diese per Multimatching neu
+	zu matchen m&uuml;ssen Sie zuvor die Option &quot;'.ML_LABEL_ALL.'&quot; neben der Schaltfl&auml;che
 	&quot;'.ML_AMAZON_LABEL_MANUAL_MATCHING.'&quot; anw&auml;hlen.');
 define('ML_AMAZON_TEXT_CHECKIN_DELAY', 'Bitte beachten Sie, dass es bis zu zwei Stunden dauern kann bis Einstell- und L&ouml;schvorg&auml;nge
 	vollst&auml;ndig von Amazon verarbeitet werden.');
-define('ML_AMAZON_TEXT_REFRESH_REQUEST_SEND', 'Ihre Aktualisierungsanfrage wurde gesendet. Bitte beachten Sie, dass es bis zu einer Stunden dauern kann 
+define('ML_AMAZON_TEXT_REFRESH_REQUEST_SEND', 'Ihre Aktualisierungsanfrage wurde gesendet. Bitte beachten Sie, dass es bis zu einer Stunden dauern kann
 	bis von Amazon ein neuer Bericht eintrifft.');
 define('ML_AMAZON_TEXT_NO_MATCHED_PRODUCTS', 'Es sind noch keine Produkte f&uuml;r Amazon vorbereitet worden. Bevor Sie Produkte hier hochladen k&ouml;nnen, m&uuml;ssen Sie diese unter dem Reiter "Produkte vorbereiten" bearbeiten.<br>
     Falls Sie an der Stelle Artikel vermissen sollten, die Sie bereits vorbereitet haben, &uuml;berpr&uuml;fen Sie, ob diese ggf. auf Inaktiv gesetzt sind und Sie die Konfiguration entsprechend eingestellt haben.');
@@ -718,10 +719,10 @@ define('ML_AMAZON_TEXT_MANUALLY_MATCHING_DESC', 'Die per Checkbox ausgew&auml;hl
 	Sie erhalten ein detailiertes Ergebnis &uuml;ber erfolgreiche oder erfolglose Suchtreffer und k&ouml;nnen individuell ausw&auml;hlen,
 	mit welchem Treffer gematcht werden soll.<br/ ><br/ >
 	Die Verarbeitung ist sehr genau, aber auch zeitaufw&auml;ndig.');
-define('ML_AMAZON_TEXT_AUTOMATIC_MATCHING_DESC', 'Die per Checkbox ausgew&auml;hlten Shop-Artikel werden automatisch im Hintergrund verarbeitet: 
+define('ML_AMAZON_TEXT_AUTOMATIC_MATCHING_DESC', 'Die per Checkbox ausgew&auml;hlten Shop-Artikel werden automatisch im Hintergrund verarbeitet:
 	Der Artikel wird &uuml;ber die hinterlegte EAN automatisch mit der EAN eines bestehenden Amazon Artikels gematcht.<br/ ><br/ >
 	Voraussetzung ist die Pflege der EAN-Nummern je Artikel.');
-define('ML_AMAZON_TEXT_AUTOMATIC_MATCHING_CONFIRM', 'Bitte beachten Sie, dass das automatische Matching auschlie&szlig;lich &uuml;ber den Abgleich der EAN Nummer 
+define('ML_AMAZON_TEXT_AUTOMATIC_MATCHING_CONFIRM', 'Bitte beachten Sie, dass das automatische Matching auschlie&szlig;lich &uuml;ber den Abgleich der EAN Nummer
 	erfolgt. M&ouml;glicherweise werden Artikel aus Amazon gematcht, deren Beschreibungen oder Produktbilder eine mindere Qualit&auml;t aufweisen. Daher kann das
 	Matching zu einem schlechteren Ergebnis f&uuml;hren, als das manuelle Matching.<br/ ><br/ >
 	RedGecko GmbH &uuml;bernimmt daher keine Haftung f&uuml;r die Korrektheit der gematchten Produkte.');
@@ -746,7 +747,7 @@ define('ML_AMAZON_TEXT_APPLY_DATA_INCOMPLETE', 'Einige Pflichtfelder wurden nich
 	ML_AMAZON_BUTTON_PREPARE.'"');
 define('ML_AMAZON_TEXT_APPLY_REQUIERD_EAN', 'Nicht relevant, wenn an den Varianten EAN hinterlegt ist');
 
-define('ML_AMAZON_ERROR_WRONG_CURRENCY', 'Die W&auml;hrung des Amazon-Marketplaces (%s) den Sie in der Konfiguration ausgew&auml;hlt haben unterscheidet sich von der 
+define('ML_AMAZON_ERROR_WRONG_CURRENCY', 'Die W&auml;hrung des Amazon-Marketplaces (%s) den Sie in der Konfiguration ausgew&auml;hlt haben unterscheidet sich von der
 	Standardw&auml;hrung dieses Shops (%s). Der Preis wird automatisch in die entsprechende W&auml;hrung umgerechnet. Der Umrechnungsfaktor wird den W&auml;hrungseinstellungen
 	entnommen.');
 
@@ -761,7 +762,7 @@ define('ML_AMAZON_LABEL_STRIKEPRICE_ONLYIF_SPECIALPRICE', 'Sonderpreise aktivier
  * shipping label
  */
 
-define('AMAZON_ORDERLIST_CUSTOMER_NAME_LABEL',                 'Kunde Name');
+define('AMAZON_ORDERLIST_CUSTOMER_NAME_LABEL', 'Kunde Name');
 define('ML_AMAZON_SHIPPINGLABEL', 'Versandentgelt');
 define('ML_AMAZON_SHIPPINGLABEL_OVERVIEW', '&Uuml;bersicht Pakete');
 define('ML_AMAZON_SHIPPINGLABEL_UPLOAD', 'Versandentgelt anfordern');
@@ -906,6 +907,13 @@ define('ML_COMPARISON_SHOPPING_FIELD_ITEM_STOCK_QTY', ML_COMPARISON_SHOPPING_FIE
 define('ML_COMPARISON_SHOPPING_FIELD_ITEM_STOCK_QTY_HOVER', ML_COMPARISON_SHOPPING_FIELD_QUANTITY_HOVER);
 define('ML_COMPARISON_SHOPPING_FIELD_DAPARTO_USAGE', 'Verwendung (KBA)');
 define('ML_COMPARISON_SHOPPING_FIELD_DAPARTO_USAGE_HOVER', 'Identisch mit EAN');
+define('ML_COMPARISON_SHOPPING_FIELD_WEIGHT', 'Artikelgewicht');
+define('ML_COMPARISON_SHOPPING_FIELD_VPE', 'VPE');
+define('ML_COMPARISON_SHOPPING_FIELD_FSK_18', 'FSK 18');
+define('ML_COMPARISON_SHOPPING_FIELD_PRICE_STATUS', 'Artikelpreisstatus');
+define('ML_COMPARISON_SHOPPING_FIELD_DELIVERY_TIME', 'Lieferstatus');
+define('ML_COMPARISON_SHOPPING_FIELD_MINIMUM_ORDER_QUANTITY', 'Mindestbestellmenge');
+define('ML_COMPARISON_SHOPPING_FIELD_POSSIBLE_AMOUNT_INTERVAL', 'M&ouml;gliche Mengenstaffelung');
 
 define('ML_COMPARISON_SHOPPING_LABEL_MISSING_FIELDS', 'Fehlende Felder');
 define('ML_COMPARISON_SHOPPING_LABEL_LUMP', 'Pauschal (aus rechtem Feld)');
@@ -915,7 +923,7 @@ define('ML_COMPARISON_SHOPPING_LABEL_PATH_TO_CSV_TABLE', 'Pfad zu Ihrer CSV-Tabe
 
 define('ML_COMPARISON_SHOPPING_TEXT_NO_CSV_TABLE_YET', 'Noch keine CSV-Tabelle erstellt: Bitte stellen Sie zuerst Artikel ein. Danach finden Sie hier den CSV-Pfad.');
 define('ML_CSHOPPING_TEXT_RECONCILIATION_OF_INVENTORY', '
-	Die Verarbeitung des Inventars erfolgt bei der Preissuchmaschine zeitverz&ouml;gert (i.d.R. max. 24 Stunden). 
+	Die Verarbeitung des Inventars erfolgt bei der Preissuchmaschine zeitverz&ouml;gert (i.d.R. max. 24 Stunden).
 	Kurzzeitige Abweichungen sind m&ouml;glich.');
 define('ML_CSHOPPING_TEXT_FIRST_CHECKIN', 'Ihre Artikel wurden erfolgreich &uuml;bermittelt.
 	Als letzten Schritt &uuml;bermitteln Sie bitte den Pfad Ihrer neuen CSV-Tabelle noch an %1$s, damit die Artikel dort aktiviert werden:
@@ -1003,7 +1011,7 @@ define('ML_YATEGO_LABEL_YATEGO_PRICE', 'Mein Yatego Preis');
 
 define('ML_YATEGO_MESSAGE_NOT_YET_SAVED', 'Die Yategokategorien wurden noch nicht gespeichert. Verwerfen und fortfahren?');
 define('ML_YATEGO_MESSAGE_SELECT_SHOP_CAT_FIRST', 'Bitte zun&auml;chst Shop Kategorie ausw&auml;hlen.');
-define('ML_YATEGO_MESSAGE_SAVE_SELECT_SHOP_CAT_FIRST', 'Es kann nichts gespeichert werden, da Sie noch keine Shop-Kategorie ausgew&auml;hlt 
+define('ML_YATEGO_MESSAGE_SAVE_SELECT_SHOP_CAT_FIRST', 'Es kann nichts gespeichert werden, da Sie noch keine Shop-Kategorie ausgew&auml;hlt
 	und dieser Yatego-Kategorien hinzugef&uuml;gt haben.');
 define('ML_YATEGO_MESSAGE_MATCHING_SAVED', 'Das Matching wurde erfolgreich gespeichert.');
 define('ML_YATEGO_MESSAGE_ONLY_ONE_SUBCAT', 'Einer Shop-Kategorie darf maximal eine Unterkategorie aus der selben Mittelkategorie zugewiesen werden.');
@@ -1011,7 +1019,7 @@ define('ML_YATEGO_MESSAGE_ONLY_ONE_SUBCAT', 'Einer Shop-Kategorie darf maximal e
 define('ML_YATEGO_ERROR_WHILE_SAVING', 'Speichervorgang konnte nicht ausgef&uuml;hrt werden. Bitte versuchen Sie es erneut.');
 define('ML_YATEGO_ERROR_SAVING_INVALID_YATEGO_CATS', 'Die Anfrage war fehlerhaft (Yatego-Kategorien fehlerhaft). Bitte wiederholen Sie den Matching-Vorgang.');
 define('ML_YATEGO_ERROR_SAVING_INVALID_SHOP_CAT', 'Die Anfrage war fehlerhaft (Shop-Kategorie ung&uuml;ltig). Bitte wiederholen Sie den Matching-Vorgang.');
-define('ML_YATEGO_ERROR_SAVING_INVALID_YATEGO_CATS_ALL', 'Die Anfrage war fehlerhaft (Alle Yatego-Kategorien ung&uuml;ltig). 
+define('ML_YATEGO_ERROR_SAVING_INVALID_YATEGO_CATS_ALL', 'Die Anfrage war fehlerhaft (Alle Yatego-Kategorien ung&uuml;ltig).
 	Bitte wiederholen Sie den  Matching-Vorgang.');
 define('ML_YATEGO_ERROR_REQUEST_INVALID', 'Anfrage ist ung&uuml;ltig.');
 define('ML_YAGETO_ERROR_CANNOT_DL_CATEGORIES', 'Die Yatego-Kategorien konnten nicht vom Yatego-Server heruntergeladen werden.');
@@ -1257,6 +1265,7 @@ define('ML_EBAY_SUBMIT_ADD_TEXT_ASYNC_EXPLANATION','<b>Hinweis</b><br /><br />F&
 
 /* Status-Aenderung bei Bestellungen */
 define('ML_EBAY_ORDER_PAID', "magnalister-Verarbeitung:\nZahlung bei eBay eingegangen.");
+define('ML_EBAY_ORDER_PAID_PUI', "magnalister-Verarbeitung:\nZahlung bei eBay eingegangen\n(PayPal Rechnungskauf).");
 
 /* eBay Nachricht an Kunden (bei PayUponInvoice) */
 define('ML_EBAY_PUI_MSG_TO_BUYER', "eBay Rechnungskauf, eBay Nachricht an den Kunden:\n");
@@ -1346,7 +1355,7 @@ define('ML_PRICEMINISTER_TEXT_MANUALLY_MATCHING_DESC', 'Die per Checkbox ausgew&
 	Sie erhalten ein detailiertes Ergebnis &uuml;ber erfolgreiche oder erfolglose Suchtreffer und k&ouml;nnen individuell ausw&auml;hlen,
 	mit welchem Treffer gematcht werden soll.<br/ ><br/ >
 	Die Verarbeitung ist sehr genau, aber auch zeitaufw&auml;ndig.');
-define('ML_PRICEMINISTER_TEXT_AUTOMATIC_MATCHING_DESC', 'Die per Checkbox ausgew&auml;hlten Shop-Artikel werden automatisch im Hintergrund verarbeitet: 
+define('ML_PRICEMINISTER_TEXT_AUTOMATIC_MATCHING_DESC', 'Die per Checkbox ausgew&auml;hlten Shop-Artikel werden automatisch im Hintergrund verarbeitet:
 	Der Artikel wird &uuml;ber die hinterlegte EAN automatisch mit der EAN eines bestehenden PriceMinister Artikels gematcht.<br/ ><br/ >
 	Voraussetzung ist die Pflege der EAN-Nummern je Artikel.');
 define('ML_PRICEMINISTER_ERROR_ORDERSTATUS_AUTOACCEPTANCE', 'Bitte beachten: Sie haben die Automatische Bestellbest&auml;tigung deaktiviert. Da PriceMinisters API die Versandkosten f&uuml;r nicht-best&auml;tigte Bestellungen nicht bereitstellt, werden Bestellungen ohne Versandkosten in Ihrem Web-Shop angelegt. Wir empfehlen daher die Bestellbest&auml;tigung zu aktivieren.');
@@ -1445,10 +1454,10 @@ define('ML_HITMEISTER_TEXT_MANUALLY_MATCHING_DESC', 'Die per Checkbox ausgew&aum
 	Sie erhalten ein detailiertes Ergebnis &uuml;ber erfolgreiche oder erfolglose Suchtreffer und k&ouml;nnen individuell ausw&auml;hlen,
 	mit welchem Treffer gematcht werden soll.<br/ ><br/ >
 	Die Verarbeitung ist sehr genau, aber auch zeitaufw&auml;ndig.');
-define('ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_DESC', 'Die per Checkbox ausgew&auml;hlten Shop-Artikel werden automatisch im Hintergrund verarbeitet: 
+define('ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_DESC', 'Die per Checkbox ausgew&auml;hlten Shop-Artikel werden automatisch im Hintergrund verarbeitet:
 	Der Artikel wird &uuml;ber die hinterlegte EAN automatisch mit der EAN eines bestehenden real.de Artikels gematcht.<br/ ><br/ >
 	Voraussetzung ist die Pflege der EAN-Nummern je Artikel.');
-define('ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_CONFIRM', 'Bitte beachten Sie, dass das automatische Matching auschlie&szlig;lich &uuml;ber den Abgleich der EAN Nummer 
+define('ML_HITMEISTER_TEXT_AUTOMATIC_MATCHING_CONFIRM', 'Bitte beachten Sie, dass das automatische Matching auschlie&szlig;lich &uuml;ber den Abgleich der EAN Nummer
 	erfolgt. M&ouml;glicherweise werden Artikel aus real.de gematcht, deren Beschreibungen oder Produktbilder eine mindere Qualit&auml;t aufweisen. Daher kann das
 	Matching zu einem schlechteren Ergebnis f&uuml;hren, als das manuelle Matching.<br/ ><br/ >
 	RedGecko GmbH &uuml;bernimmt daher keine Haftung f&uuml;r die Korrektheit der gematchten Produkte.');
@@ -1459,8 +1468,14 @@ define('ML_HITMEISTER_TEXT_CHECKIN_DELAY', 'Bitte beachten Sie, dass es bis zu z
 
 /* VARIATION MATCHING */
 define('ML_GENERAL_VARMATCH_TITLE', 'Variantengruppe von %marketplace% ausw&auml;hlen');
-define('ML_GENERAL_VARMATCH_MP_ATTRIBUTE', '%marketplace% Erforderliche Attribute');
-define('ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE', '%marketplace% Optionale Attribute');
+define('ML_VARIATION', 'Varianten');
+define('ML_GENERAL_VARIATION_THEME', 'Varianten-Design');
+define('ML_GENERAL_VARIATION_THEME_SKIP_VARIATIONS', 'Nur Stammartikel übergeben');
+define('ML_PROPERTY', 'Eigenschaften');
+define('ML_PRODUCT_DEFAULT_FIELDS', 'Produkt Angaben');
+define('ML_GENERAL_VARMATCH_MP_ATTRIBUTE', '%marketplace%s Pflicht-Attribute');
+define('ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE', '%marketplace% optionale Attribute');
+define('ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE', 'Eigene Attribute');
 define('ML_GENERAL_VARMATCH_DEFINE_NAME', 'Bitte geben Sie einen Bezeichner ein.');
 define('ML_GENERAL_VARMATCH_AJAX_ERROR', 'Ein Fehler ist aufgetreten.');
 define('ML_GENERAL_VARMATCH_SELECT_VARIANT_GROUP', 'Bitte w&auml;hlen Sie eine Variantengruppe aus.');
@@ -1481,11 +1496,15 @@ define('ML_GENERAL_VARMATCH_WEBSHOP_ATTRIB', 'Web-Shop Attribut');
 define('ML_GENERAL_VARMATCH_DELETE_CUSTOM_BTN_TITLE', 'Varianten-Matching-Gruppe l&ouml;schen');
 define('ML_GENERAL_VARMATCH_DELETE_CUSTOM_BTN_CONTENT', 'Wollen Sie die eigene Gruppe wirklich l&ouml;schen?<br />Alle zugeh&ouml;rigen Variantenmatchings werden dann ebenfalls gel&ouml;scht.');
 define('ML_GENERAL_VARMATCH_ERROR_MESSAGE_REQUIRED', 'Das Attribut "%attribute_name%" ist ein Pflichtfeld. Bitte ordnen Sie alle Werte zu.');
+define('ML_GENERAL_VARMATCH_ERROR_EMPTY_CUSTOM_ATTRIBUTE_NAME', 'Name of custom attribute cannot be empty. Please choose the attribute name.');
+define('ML_GENERAL_VARMATCH_MAX_NUMBER_OF_ADDITIONAL_ATTRIBUTES_EXCEEDED', 'Maximal number of additional attributes is %number_of_attributes%. Please choose %number_of_attributes% additional attributes.');
+define('ML_GENERAL_VARMATCH_CHOOSE_VARIATION_THEME', 'Please choose variations option');
+define('ML_GENERAL_VARMATCH_ERROR_CUSTOM_ATTRIBUTE_NAME_INVALID', 'Custom attribute %attributeName% can not be the same as any predefined %marketplace% attribute or other custom attribute. Please choose different name.');
 define('ML_GENERAL_VARMATCH_ERROR_MESSAGE_FREE_TEXT', ': Das Freitext Feld darf nicht leer sein.');
 define('ML_GENERAL_VARMATCH_SAVED_SUCCESSFULLY', 'Es wurden alle ausgew&auml;hlten Werte erfolgreich gematcht. Sie k&ouml;nnen nun Produkte mit den gematchten Attributen vorbereiten, oder mit dem Matching hier fortfahren.');
 define('ML_GENERAL_VARMATCH_NOTICE_NOT_ALL_AUTO_MATCHED', 'Es konnten nicht alle ausgew&auml;hlten Werte gematcht werden. Nicht-gematchte Werte werden weiterhin in den DropDown-Feldern angezeigt. Bereits gematchte Werte werden in der Produktvorbereitung ber&uuml;cksichtigt.');
 define('ML_GENERAL_VARMATCH_MATCHNIG_TABLE', 'Gematchte');
-define('ML_GENERAL_VARMATCH_MANUALY_MATCHED', ' - (manuel zugeordnet)');
+define('ML_GENERAL_VARMATCH_MANUALY_MATCHED', ' - (manuell zugeordnet)');
 define('ML_GENERAL_VARMATCH_AUTO_MATCHED', ' - (automatisch zugeordnet)');
 define('ML_GENERAL_VARMATCH_FREE_TEXT', ' - (eigene angaben)');
 define('ML_GENERAL_VARMATCH_SEPARATOR_LINE', '------------------------------------------------------');
@@ -1495,21 +1514,28 @@ define('ML_GENERAL_VARMATCH_CATEGORY_INFO', '<b>Hinweis:</b> Die mit <span class
 define('ML_GENERAL_VARMATCH_CHOOSE_MP_VALUE', 'Verwende %marketplace% Attributswert');
 define('ML_GENERAL_VARMATCH_CHANGE_ATTRIBUTE_INFO', 'Bevor Sie Attribute &auml;ndern k&ouml;nnen, heben Sie bitte alle Matchings zuvor auf.');
 define('ML_GENERAL_VARMATCH_MP_VALUE', '%marketplace%-Wert');
-define('ML_GENERAL_VARMATCH_ATTRIBUTE_CHANGED_ON_MP', 'Achtung: %marketplace% hat einige bereits gematchte Attributswerte nachtr&auml;glich entfernt oder ge&auml;ndert. 
+define('ML_GENERAL_VARMATCH_ATTRIBUTE_CHANGED_ON_MP', 'Achtung: %marketplace% hat einige bereits gematchte Attributswerte nachtr&auml;glich entfernt oder ge&auml;ndert.
 Bitte &uuml;berpr&uuml;fen Sie Ihre Zuordnungen und matchen die betroffenen Werte bei Bedarf erneut.');
-define('ML_GENERAL_VARMATCH_ATTRIBUTE_DIFFERENT_ON_PRODUCT', 'Hinweis: Sie haben diesen Wert abweichend zum globalen Attributs-Matching gespeichert. 
+define('ML_GENERAL_VARMATCH_ATTRIBUTE_DIFFERENT_ON_PRODUCT', 'Hinweis: Sie haben diesen Wert abweichend zum globalen Attributs-Matching gespeichert.
 Es werden die hier abweichend gespeicherten Werte zum Marktplatz &uuml;bertragen.');
-define('ML_GENERAL_VARMATCH_ATTRIBUTE_DELETED_ON_MP', 'Dieses Attribut wurde von %marketplace% gel&ouml;scht oder ge&auml;ndert. Matchings dazu wurden daher aufgehoben. 
+define('ML_GENERAL_VARMATCH_ATTRIBUTE_DELETED_ON_MP', 'Dieses Attribut wurde von %marketplace% gel&ouml;scht oder ge&auml;ndert. Matchings dazu wurden daher aufgehoben.
 Bitte matchen Sie bei Bedarf erneut auf ein geeignetes %marketplace% Attribut.');
-define('ML_GENERAL_VARMATCH_ATTRIBUTE_VALUE_DELETED_ON_MP', 'Dieser Attributswert wurde von %marketplace% gel&ouml;scht oder ge&auml;ndert. Matchings dazu wurden daher aufgehoben. 
+define('ML_GENERAL_VARMATCH_ATTRIBUTE_DELETED_ON_SHOP', 'Dieses Attribut wurde vom Shop gel&ouml;scht oder ge&auml;ndert. Matchings dazu wurden daher aufgehoben.
+Bitte matchen Sie bei Bedarf erneut auf ein geeignetes shop Attribut.');
+define('ML_GENERAL_VARMATCH_ATTRIBUTE_VALUE_DELETED_ON_MP', 'Dieser Attributswert wurde von %marketplace% gel&ouml;scht oder ge&auml;ndert. Matchings dazu wurden daher aufgehoben.
 Bitte matchen Sie bei Bedarf erneut auf einen geeigneten %marketplace% Attributswert.');
+define('ML_GENERAL_VARMATCH_ATTRIBUTE_VALUE_DELETED_ON_SHOP', 'Dieses Attributwert wurde vom Shop gel&ouml;scht oder ge&auml;ndert. Matchings dazu wurden daher aufgehoben.
+Bitte matchen Sie bei Bedarf erneut auf ein geeignetes shop Attribut.');
 define('ML_GENERAL_VARMATCH_CATEGORY_WITHOUT_ATTRIBUTES_INFO', 'F&uuml;r die ausgew&auml;hlte Kategorie unterst&uuml;tzt %marketplace% keine Attribute.');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_VALUE', 'W&auml;hle Datenbank-Werte (f&uuml;r Experten)');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_TABLE', 'Choose table: ');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_COLUMN', 'Choose column: ');
 define('ML_GENERAL_VARMATCH_CHOOSE_DB_ALIAS', 'Alias products_id: ');
 define('ML_GENERAL_VARMATCH_ALREADY_MATCHED', '(bereits gematcht)');
+define('ML_GENERAL_VARMATCH_MULTI_SELECT', 'Multiselect');
 define('ML_GENERAL_VARMATCH_PRODUCTS_PREPARED_DIFFERENTLY', 'Bitte beachten Sie, dass Sie einige Artikel der gew&auml;hlten Kategorie "%category_name%" abweichend unter „Produkte vorbereiten“ gematcht haben. Es werden die dort gespeicherten Werte zum Marktplatz &uuml;bermittelt.');
+define('ML_GENERAL_INVENTORY_IS_SPLIT', 'Is split');
+define('ML_GENERAL_VARMATCH_MULTISELECTHINT', 'Dr&uuml;cke CMD und w&auml;hlen alle zur Übermittlung gew&uuml;nschten Attribute');
 
 /* Cdiscount */
 
@@ -1545,7 +1571,7 @@ Bitte &auml;ndern Sie die EANs, so dass keine davon mehrfach vergeben wird.');
 define('ML_CDISCOUNT_UNIT_ATTRIBUTES', 'Allgemeine Einstellungen');
 define('ML_CDISCOUNT_PRODUCT_DETAILS', 'Produktdetails');
 define('ML_CDISCOUNT_ITEM_NAME_TITLE', 'Titel');
-define('ML_CDISCOUNT_SUBTITLE', 'Untertitel');
+define('ML_CDISCOUNT_SUBTITLE', 'Warenkorb/Rechnungs-Titel');
 define('ML_CDISCOUNT_DESCRIPTION', 'Beschreibung');
 define('ML_CDISCOUNT_MARKETING_DESCRIPTION', 'Marketing beschreibung');
 define('ML_CDISCOUNT_PRICE', 'Preis');
@@ -1605,7 +1631,7 @@ If you want your item to be uploaded as item with variations, please provide bot
 Otherwise if one of these two attributes is missing, your variations will be uploaded as separate items with attribute list in item title (e.g. Item title "Nike T-Shirt Size: M"). ');
 define('ML_CDISCOUNT_VARMATCH_MP_VALUE', 'Cdiscount-Wert');
 define('ML_CDISCOUNT_TITLE_VALIDATION', 'Titel max. 132 Zeichen');
-define('ML_CDISCOUNT_SUBTITLE_VALIDATION', 'Untertitel max. 132 Zeichen');
+define('ML_CDISCOUNT_SUBTITLE_VALIDATION', 'Titel der im Warenkorb und auf der Rechnung angezeigt wird (max. 30 Zeichen)');
 define('ML_CDISCOUNT_DESCRIPTION_VALIDATION', 'Maximal 420 Zeichen.');
 define('ML_CDISCOUNT_MARKETING_DESCRIPTION_VALIDATION', 'Maximal 5000 Zeichen.');
 define('ML_CDISCOUNT_DESCRIPTION_HELP', 'The product description must describe the product. It appears at the top of the product sheet under the wording. It must not content offers data. (Guarantuee, price, shipping, packaging...), html code or others codes.');
@@ -1613,48 +1639,50 @@ define('ML_CDISCOUNT_MARKETING_DESCRIPTION_HELP', 'The marketing description mus
 define('ML_CDISCOUNT_VARMATCH_MP_ATTRIBUTE', '%marketplace% Pflichtattribut');
 define('ML_CDISCOUNT_CATEGORY_INFO', 'Info: F&uuml;r die hellgrau-markierten Kategorien sind Sie von Cdiscount nicht freigeschaltet. Bitte wenden Sie sich zur Freischaltung direkt an Cdiscount.');
 
-/* MeinPaket.de */
+/* Allyouneed.de */
 
 define('ML_MEINPAKET_CATEGORY_MATCHING', 'Kategorie Matching');
 define('ML_MEINPAKET_VARIANT_MATCHING', 'Varianten-Matching');
 define('ML_MEINPAKET_LABEL_SHOP_VARIANTS', 'Shop-Varianten');
-define('ML_MEINPAKET_LABEL_MEINPAKET_VARIANTS', 'Meinpaket-Varianten');
+define('ML_MEINPAKET_LABEL_MEINPAKET_VARIANTS', 'Allyouneed-Varianten');
 define('ML_MEINPAKET_LABEL_SELECTED_SHOP_VAR', 'Gew&auml;hlte Shopvariante');
-define('ML_MEINPAKET_LABEL_SELECTED_MEINPAKET_VARS', 'Dazu gew&auml;hlte Meinpaket Variante');
-define('ML_MEINPAKET_LABEL_PURGE_VARIANTS', 'Meinpaket-Varianten aktualisieren');
+define('ML_MEINPAKET_LABEL_SELECTED_MEINPAKET_VARS', 'Dazu gew&auml;hlte Allyouneed Variante');
+define('ML_MEINPAKET_LABEL_PURGE_VARIANTS', 'Allyouneed-Varianten aktualisieren');
 
 define('ML_MEINPAKET_LABEL_CATMATCH_NOT_PREPARED', 'Nicht vorbereitet');
 define('ML_MEINPAKET_LABEL_CATMATCH_PREPARE_COMPLETE', 'Vollst&auml;ndig');
 define('ML_MEINPAKET_LABEL_CATMATCH_PREPARE_INCOMPLETE', 'Unvollst&auml;ndig');
-define('ML_MEINPAKET_CATEGORYMATCHING_ASSIGN_MP_CAT', 'Meinpaket Kategorie zuweisen');
-define('ML_MEINPAKET_CATEGORYMATCHING_ASSIGN_SHOP_CAT', 'Meinpaket-Shop Kategorie zuweisen');
-define('ML_MEINPAKET_LABEL_CATEGORY', 'Meinpaket Kategorie');
-define('ML_MEINPAKET_LABEL_MEINPAKET_CATEGORY', 'Meinpaket Kategorie');
-define('ML_MEINPAKET_LABEL_SHOP_CATEGORY', 'Meinpaket-Shop Kategorie');
+define('ML_MEINPAKET_CATEGORYMATCHING_ASSIGN_MP_CAT', 'Allyouneed Kategorie zuweisen');
+define('ML_MEINPAKET_CATEGORYMATCHING_ASSIGN_SHOP_CAT', 'Allyouneed-Shop Kategorie zuweisen');
+define('ML_MEINPAKET_LABEL_CATEGORY', 'Allyouneed Kategorie');
+define('ML_MEINPAKET_LABEL_MEINPAKET_CATEGORY', 'Allyouneed Kategorie');
+define('ML_MEINPAKET_LABEL_SHOP_CATEGORY', 'Allyouneed-Shop Kategorie');
 define('ML_MEINPAKET_SHIPPING_DETAILS', 'Versandoptionen');
 define('ML_MEINPAKET_SHIPPING_DETAILS_SHIPPINGCOST', 'Versandkosten');
 define('ML_MEINPAKET_SHIPPING_DETAILS_SHIPPINGCOSTFIXED', 'Fixe Versandkosten');
 define('ML_MEINPAKET_SHIPPING_DETAILS_SHIPPINGTYPE', 'Versandtyp');
 define('ML_MEINPAKET_LABEL_PREPARED', 'Vorbereitet');
 define('ML_MEINPAKET_VARIATIONCONFIG', 'Variantenkonfiguration');
-define('ML_MEINPAKET_LABEL_MP_PRICE_SHORT', 'Mein MeinPaket Preis');
-define('ML_MEINPAKET_LABEL_MEINPAKETID', 'MeinPaketID');
-define('ML_MEINPAKET_LABEL_ORDER_ID', 'MeinPaket-Bestellnummer');
+define('ML_MEINPAKET_LABEL_MP_PRICE_SHORT', 'Mein Allyouneed Preis');
+define('ML_MEINPAKET_LABEL_MEINPAKETID', 'AllyouneedID');
+define('ML_MEINPAKET_LABEL_ORDER_ID', 'Allyouneed-Bestellnummer');
 define('ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_EMPTY', 'Variationen sind nicht konfiguriert.');
-define('ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_MISSING_NAMEID', 'Es konnte keine Zuordnung f&uuml;r das Shop Attribut "{#Attribute#}" bei der gew&auml;hlten Meinpaket Variantengruppe "{#MpIdentifier#}" f&uuml;r den Varianten Artikel mit der SKU "{#SKU#}" gefunden werden.');
+define('ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_MISSING_NAMEID', 'Es konnte keine Zuordnung f&uuml;r das Shop Attribut "{#Attribute#}" bei der gew&auml;hlten Allyouneed Variantengruppe "{#MpIdentifier#}" f&uuml;r den Varianten Artikel mit der SKU "{#SKU#}" gefunden werden.');
 define('ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_CANNOT_CALC_VARIATIONS', 'Es konnten keine Variationen errechnet werden.');
-define('ML_MEINPAKET_ERROR_ACCESS_DENIED', 'Die Zugangsdaten zum MeinPaket.de-Admin scheinen nicht zu stimmen: Der
+define('ML_MEINPAKET_ERROR_ACCESS_DENIED', 'Die Zugangsdaten zum Allyouneed.de-Admin scheinen nicht zu stimmen: Der
 	magnalister-Server kann mit den Zugangsdaten keine Verbindung herstellen.
 	Bitte &uuml;berpr&uuml;fen Sie die bei der Konfiguration hinterlegten Zugangsdaten und
 	korrigieren Sie diese gegebenenfalls.');
+define('ML_MEINPAKET_DO_NOT_USE_VARIATIONS', 'Do not use variations');
+define('ML_MEINPAKET_ERROR_CATEGORY', 'Bitte geben Sie eine Kategorie an.');
 
 define('ML_MEINPAKET_VARMATCH_DEFINE_NAME', 'Bitte geben Sie einen Bezeichner ein.');
 define('ML_MEINPAKET_VARMATCH_AJAX_ERROR', 'Ein Fehler ist aufgetreten.');
 define('ML_MEINPAKET_VARMATCH_SELECT_VARIANT_GROUP', 'Bitte w&auml;hlen Sie eine Variantengruppe aus.');
-define('ML_MEINPAKET_VARMATCH_ALL_ATTRIBS_MUST_BE_DEFINED', 'Bitte weisen Sie allen Meinpaket Attributen ein Shop-Attribut zu.');
+define('ML_MEINPAKET_VARMATCH_ALL_ATTRIBS_MUST_BE_DEFINED', 'Bitte weisen Sie allen Allyouneed Attributen ein Shop-Attribut zu.');
 define('ML_MEINPAKET_VARMATCH_PLEASE_SELECT', 'Bitte w&auml;hlen...');
 define('ML_MEINPAKET_VARMATCH_SHOP_VALUE', 'Shop-Wert');
-define('ML_MEINPAKET_VARMATCH_MP_VALUE', 'Meinpaket-Wert');
+define('ML_MEINPAKET_VARMATCH_MP_VALUE', 'Allyouneed-Wert');
 define('ML_MEINPAKET_VARMATCH_DONT_TRANSMIT', 'Nicht &uuml;bertragen');
 define('ML_MEINPAKET_VARMATCH_WEBSHOP_ATTRIB', 'Web-Shop Attribut');
 define('ML_MEINPAKET_VARMATCH_DELETE_CUSTOM_BTN_TITLE', 'Varianten-Matching-Gruppe l&ouml;schen');
@@ -1666,10 +1694,10 @@ define('ML_MEINPAKET_VARMATCH_DELETE_CUSTOM_BTN_CANCEL', 'Abbrechen');
 define('ML_AYN24_CATEGORY_MATCHING', 'Kategorie Matching');
 define('ML_AYN24_VARIANT_MATCHING', 'Varianten-Matching');
 define('ML_AYN24_LABEL_SHOP_VARIANTS', 'Shop-Varianten');
-define('ML_AYN24_LABEL_MEINPAKET_VARIANTS', 'Meinpaket-Varianten');
+define('ML_AYN24_LABEL_MEINPAKET_VARIANTS', 'Allyouneed-Varianten');
 define('ML_AYN24_LABEL_SELECTED_SHOP_VAR', 'Gew&auml;hlte Shopvariante');
-define('ML_AYN24_LABEL_SELECTED_MEINPAKET_VARS', 'Dazu gew&auml;hlte Meinpaket Variante');
-define('ML_AYN24_LABEL_PURGE_VARIANTS', 'Meinpaket-Varianten aktualisieren');
+define('ML_AYN24_LABEL_SELECTED_MEINPAKET_VARS', 'Dazu gew&auml;hlte Allyouneed Variante');
+define('ML_AYN24_LABEL_PURGE_VARIANTS', 'Allyouneed-Varianten aktualisieren');
 
 define('ML_AYN24_LABEL_CATMATCH_NOT_PREPARED', 'Nicht vorbereitet');
 define('ML_AYN24_LABEL_CATMATCH_PREPARE_COMPLETE', 'Vollst&auml;ndig');
@@ -1725,7 +1753,7 @@ define('ML_MAGNACOMPAT_ERROR_ACCESS_DENIED', 'Die Zugangsdaten zu %s scheinen ni
 	Bitte &uuml;berpr&uuml;fen Sie die bei der Konfiguration hinterlegten Zugangsdaten und
 	korrigieren Sie diese gegebenenfalls.');
 define('ML_MAGNACOMPAT_LABEL_ERROR', '%s meldet: ');
-	
+
 /* Laary */
 define('ML_LAARY_ERROR_NO_REGION_SELECTED', 'Bitte w&auml;hlen Sie in der Konfiguration mindestens eine Einstellregion aus.');
 
@@ -1959,6 +1987,7 @@ define('ML_GENERIC_CATEGORIES_CHOOSE', 'W&auml;hlen');
 define('ML_GENERIC_PREPARE_BUTTON_UNPREPARE', 'Vorbereitung f&uuml;r komplette Auswahl aufheben');
 define('ML_GENERIC_BUTTON_RESET_DESCRIPTION', 'Vorbereitung f&uuml;r Artikelbeschreibung aufheben');
 define('ML_GENERIC_ERROR_ORDERSYNC_FAILED', 'Der Bestellstatus konnte nicht synchronisiert werden.');
+define('ML_GENERIC_ERROR_TRACKING_CODE_MATCHING', 'Um das Tacking-Code-Matching zu verwenden m&uuml;ssen Sie einen Spediteur angegeben oder diesen auch matchen.');
 
 /* Ricardo */
 define('ML_RICARDO_LABEL_TEXT', 'Ricardo');
@@ -2076,3 +2105,8 @@ define('ML_FYNDIQ_PRE_UPLOAD_POPUP', 'Fyndiq beschr&auml;nkt derzeit auf maximal
 define('ML_FYNDIQ_ERROR_DESCRIPTION', 'Bitte geben Sie eine Artikelbeschreibung an.');
 define('ML_FYNDIQ_ERROR_TITLE', 'Bitte geben Sie einen Titel an.');
 define('ML_FYNDIQ_ERROR_CATEGORY_ATTRIBUTE', ' (Kategorie Attribute) ist erforderlich und kann nicht leer sein.');
+
+/* Tradoria */
+define('ML_TRADORIA_UPLOAD_EXPLANATION', '<b>Hinweis</b>:<br /><br />
+Uploaded items are usually placed within one hour on Rakuten. After that, you can see items on your Rakuten management page.');
+

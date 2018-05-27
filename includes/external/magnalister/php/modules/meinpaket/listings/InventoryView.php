@@ -209,22 +209,26 @@ class InventoryView {
 			$this->renderableData = $result['DATA'];
 			foreach ($this->renderableData as &$item) {
 				$pID = magnaSKU2pID($item['SKU']);
-				$item['ItemTitle'] = MagnaDB::gi()->fetchOne('
-					SELECT products_name 
-					  FROM '.TABLE_PRODUCTS_DESCRIPTION.'
-					 WHERE products_id=\''.$pID.'\' 
-					       AND language_id = \''.$this->settings['language'].'\'
-				');
 				if (empty($item['ItemTitle'])) {
-					$item['ItemTitle'] = "\xE2\x80\x94"; #&mdash;
+					$item['ItemTitle'] = MagnaDB::gi()->fetchOne('
+						SELECT products_name 
+						  FROM '.TABLE_PRODUCTS_DESCRIPTION.'
+						 WHERE products_id=\''.$pID.'\' 
+							   AND language_id = \''.$this->settings['language'].'\'
+					');
 				}
+
+				if (empty($item['ItemTitle'])) {
+					$item['Ite
+					mTitle'] = "\xE2\x80\x94"; #&mdash;
+				}
+
 				$item['ItemTitleShort'] = (strlen($item['ItemTitle']) > $this->settings['maxTitleChars'] + 2)
 						? (fixHTMLUTF8Entities(substr($item['ItemTitle'], 0, $this->settings['maxTitleChars'])).'&hellip;')
 						: fixHTMLUTF8Entities($item['ItemTitle']);
 				$item['DateAdded'] = strtotime($item['DateAdded']);
-				
-				
 			}
+			
 			unset($result);
 		}
 
@@ -252,6 +256,7 @@ class InventoryView {
 					<td>'.ML_LABEL_QUANTITY.' '.$this->sortByType('quantity').'</td>
 					'.$this->additionalHeaders().'
 					<td>'.ML_GENERIC_CHECKINDATE.' '.$this->sortByType('dateadded').'</td>
+					<td>'.ML_GENERAL_INVENTORY_IS_SPLIT.'</td>
 				</tr></thead>
 				<tbody>
 		';
@@ -271,7 +276,8 @@ class InventoryView {
 					<td>'.$this->simplePrice->setPrice($item['Price'])->format().'</td>
 					<td>'.$item['Quantity'].'</td>
 					'.($this->additionalValues($item)).'
-					<td>'.date("d.m.Y", $item['DateAdded']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateAdded']).'</span>'.'</td>';
+					<td>'.date("d.m.Y", $item['DateAdded']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateAdded']).'</span>'.'</td>
+					<td>' . (empty($item['IsSplit']) ? ML_BUTTON_LABEL_NO : ML_BUTTON_LABEL_YES) . '</td>';
 			$html .= '	
 				</tr>';
 		}

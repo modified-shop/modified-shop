@@ -417,6 +417,11 @@ class SimplePrice {
 					'Type' => 'fix',
 					'Price' => $attr['price'],
 				);
+			} else if ($attr['prefix'] == '%') {
+				$attr = array (
+					'Type' => 'calc',
+					'Price' => $this->price * $attr['price'] / 100,
+				);
 			} else {
 				$attr = array (
 					'Type' => 'calc',

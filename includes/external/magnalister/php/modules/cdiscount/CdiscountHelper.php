@@ -36,11 +36,12 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		return self::$instance;
 	}
 
-	public static function processCheckinErrors($result, $mpID) {
+	public static function processCheckinErrors($result, $mpID)
+	{
 		$fieldname = 'MARKETPLACEERRORS';
 		$dbCharSet = MagnaDB::gi()->mysqlVariableValue('character_set_connection');
-    	if (('utf8mb3' == $dbCharSet) || ('utf8mb4' == $dbCharSet)) {
-		# means the same for us
+		if (('utf8mb3' == $dbCharSet) || ('utf8mb4' == $dbCharSet)) {
+			# means the same for us
 			$dbCharSet = 'utf8';
 		}
 		if ($dbCharSet != 'utf8') {
@@ -60,7 +61,7 @@ class CdiscountHelper extends AttributesMatchingHelper {
 					unset($err[$key]);
 				}
 			}
-			$err = array (
+			$err = array(
 				'mpID' => $mpID,
 				'errormessage' => $err['ErrorMessage'],
 				'dateadded' => $err['DateAdded'],
@@ -70,27 +71,28 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		}
 	}
 
-	public static function loadPriceSettings($mpId) {
+	public static function loadPriceSettings($mpId)
+	{
 		$mp = magnaGetMarketplaceByID($mpId);
 
 		$currency = getCurrencyFromMarketplace($mpId);
-		$convertCurrency = getDBConfigValue(array($mp.'.exchangerate', 'update'), $mpId, false);
+		$convertCurrency = getDBConfigValue(array($mp . '.exchangerate', 'update'), $mpId, false);
 
 		$config = array(
 			'Price' => array(
-				'AddKind' => getDBConfigValue($mp.'.price.addkind', $mpId, 'percent'),
-				'Factor'  => (float)getDBConfigValue($mp.'.price.factor', $mpId, 0),
-				'Signal'  => getDBConfigValue($mp.'.price.signal', $mpId, ''),
-				'Group'   => getDBConfigValue($mp.'.price.group', $mpId, ''),
-				'UseSpecialOffer' => getDBConfigValue(array($mp.'.price.usespecialoffer', 'val'), $mpId, false),
+				'AddKind' => getDBConfigValue($mp . '.price.addkind', $mpId, 'percent'),
+				'Factor' => (float)getDBConfigValue($mp . '.price.factor', $mpId, 0),
+				'Signal' => getDBConfigValue($mp . '.price.signal', $mpId, ''),
+				'Group' => getDBConfigValue($mp . '.price.group', $mpId, ''),
+				'UseSpecialOffer' => getDBConfigValue(array($mp . '.price.usespecialoffer', 'val'), $mpId, false),
 				'Currency' => $currency,
 				'ConvertCurrency' => $convertCurrency,
 			),
 			'PurchasePrice' => array(
-				'AddKind' => getDBConfigValue($mp.'.purchaseprice.addkind', $mpId, 'percent'),
-				'Factor'  => (float)getDBConfigValue($mp.'.purchaseprice.factor', $mpId, 0),
-				'Signal'  => getDBConfigValue($mp.'.purchaseprice.signal', $mpId, ''),
-				'Group'   => getDBConfigValue($mp.'.purchaseprice.group', $mpId, ''),
+				'AddKind' => getDBConfigValue($mp . '.purchaseprice.addkind', $mpId, 'percent'),
+				'Factor' => (float)getDBConfigValue($mp . '.purchaseprice.factor', $mpId, 0),
+				'Signal' => getDBConfigValue($mp . '.purchaseprice.signal', $mpId, ''),
+				'Group' => getDBConfigValue($mp . '.purchaseprice.group', $mpId, ''),
 				'UseSpecialOffer' => false,
 				'Currency' => $currency,
 				'ConvertCurrency' => $convertCurrency,
@@ -101,26 +103,28 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		return $config;
 	}
 
-	public static function loadQuantitySettings($mpId) {
+	public static function loadQuantitySettings($mpId)
+	{
 		$mp = magnaGetMarketplaceByID($mpId);
 
 		$config = array(
-			'Type'  => getDBConfigValue($mp.'.quantity.type', $mpId, 'lump'),
-			'Value' => (int)getDBConfigValue($mp.'.quantity.value', $mpId, 0),
-			'MaxQuantity' => (int)getDBConfigValue($mp.'.quantity.maxquantity', $mpId, 0),
+			'Type' => getDBConfigValue($mp . '.quantity.type', $mpId, 'lump'),
+			'Value' => (int)getDBConfigValue($mp . '.quantity.value', $mpId, 0),
+			'MaxQuantity' => (int)getDBConfigValue($mp . '.quantity.maxquantity', $mpId, 0),
 		);
 
 		return $config;
 	}
 
-	public static function GetConditionTypes() {
+	public static function GetConditionTypes()
+	{
 		global $_MagnaSession;
-	
+
 		$mpID = $_MagnaSession['mpID'];
-	
+
 		$types['values'] = array();
-	
-		if (   isset($_MagnaSession[$mpID]['ConditionTypes'])
+
+		if (isset($_MagnaSession[$mpID]['ConditionTypes'])
 			&& !empty($_MagnaSession[$mpID]['ConditionTypes'])
 		) {
 			return $_MagnaSession[$mpID]['ConditionTypes'];
@@ -140,12 +144,14 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		$_MagnaSession[$mpID]['ConditionTypes'] = $typesData['DATA'];
 		return $typesData['DATA'];
 	}
-	
-	public static function GetConditionTypesConfig(&$types) {
+
+	public static function GetConditionTypesConfig(&$types)
+	{
 		$types['values'] = self::GetConditionTypes();
 	}
 
-	public static function SearchOnCdiscount($search = '', $searchBy = 'EAN') {
+	public static function SearchOnCdiscount($search = '', $searchBy = 'EAN')
+	{
 		try {
 			$data = MagnaConnector::gi()->submitRequest(array(
 				'ACTION' => 'GetItemsFromMarketplace',
@@ -166,14 +172,15 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		return $data['DATA'];
 	}
 
-	public static function GetWeightFromShop($itemId) {
+	public static function GetWeightFromShop($itemId)
+	{
 		$result = MagnaDB::gi()->fetchOne('
 			SELECT products_weight
-			FROM ' . TABLE_PRODUCTS. '
+			FROM ' . TABLE_PRODUCTS . '
 			WHERE products_id = "' . $itemId . '"
 		');
 
-		if ($result && (int) $result > 0) {
+		if ($result && (int)$result > 0) {
 			$weight = round($result, 2);
 			return $weight . 'kg';
 		}
@@ -187,7 +194,8 @@ class CdiscountHelper extends AttributesMatchingHelper {
 	 * @param string $sDescription
 	 * @return string $sDescription
 	 */
-	public static function cdiscountSanitizeDesc($sDescription) {
+	public static function cdiscountSanitizeDesc($sDescription)
+	{
 		# preg_replace could return NULL at 5.2.0 to 5.3.6 - "/(\s*<br[^>]*>\s*)*$/"
 		# tested at: http://3v4l.org/WGcod
 		if (version_compare(PHP_VERSION, '5.2.0', '>=') && version_compare(PHP_VERSION, '5.3.6', '<=')) {
@@ -203,10 +211,10 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		$sDescription = str_replace("\r", "\n", $sDescription);
 		$sDescription = preg_replace("/\n{3,}/", "\n\n", $sDescription);
 
-		if(strlen($sDescription) > self::DESC_MAX_LENGTH){
-			$sDescription = mb_substr($sDescription,0,self::DESC_MAX_LENGTH - 3, 'UTF-8') . '...';
-		}else{
-			$sDescription = mb_substr($sDescription,0,self::DESC_MAX_LENGTH, 'UTF-8');
+		if (strlen($sDescription) > self::DESC_MAX_LENGTH) {
+			$sDescription = mb_substr($sDescription, 0, self::DESC_MAX_LENGTH - 3, 'UTF-8') . '...';
+		} else {
+			$sDescription = mb_substr($sDescription, 0, self::DESC_MAX_LENGTH, 'UTF-8');
 		}
 
 		return $sDescription;
@@ -218,7 +226,8 @@ class CdiscountHelper extends AttributesMatchingHelper {
 	 * @param $sSubtitle
 	 * @return mixed
 	 */
-	public static function cdiscountSanitizeSubtitle($sSubtitle){
+	public static function cdiscountSanitizeSubtitle($sSubtitle)
+	{
 		$sSubtitle= preg_replace(array('/<\/?font>/','/<\/?div>/','/<\/?li>/','/<\/?p>/','/<\/?h1>/','/<\/?h2>/','/<\/?h3>/','/<\/?h4>/','/<\/?h5>/','/<\/?blockquote>/','/<\/?br>/')," ", $sSubtitle);
 		$sSubtitle = preg_replace('/&nbsp;/', " ", $sSubtitle);
 		// Replace <br> tags with new lines
@@ -227,7 +236,7 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		// Normalize space
 		$sSubtitle = str_replace("\r", "\n", $sSubtitle);
 		$sSubtitle = preg_replace("/\n{3,}/", "\n\n", $sSubtitle);
-		
+
 		if (isset($sSubtitle) && mb_strlen($sSubtitle, 'UTF-8') > self::SUBTITLE_MAX_LENGTH) {
 			$sSubtitle = mb_substr($sSubtitle, 0, self::SUBTITLE_MAX_LENGTH - 3, 'UTF-8') . '...';
 		}
@@ -238,13 +247,15 @@ class CdiscountHelper extends AttributesMatchingHelper {
 	/**
 	 * Check length of the title slice it and adds dots if is needed.
 	 *
-	 * @param $sSubtitle
+	 * @param string $sTitle
 	 * @return mixed
 	 */
-	public static function cdiscountSanitizeTitle($sTitle){
+	public static function cdiscountSanitizeTitle($sTitle)
+	{
 		if (isset($sTitle) && mb_strlen($sTitle, 'UTF-8') > self::TITLE_MAX_LENGTH) {
 			$sTitle = mb_substr($sTitle, 0, self::TITLE_MAX_LENGTH - 3, 'UTF-8') . '...';
 		}
+
 		return $sTitle;
 	}
 
@@ -301,20 +312,69 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		');
 	}
 
+	protected function isProductPrepared($category, $prepare = false)
+	{
+		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+			$sKeyType = 'products_model';
+		} else {
+			$sKeyType = 'products_id';
+		}
+		
+		return MagnaDB::gi()->recordExists(TABLE_MAGNA_CDISCOUNT_PREPARE, array(
+			'MpId' => $this->mpId,
+			$sKeyType => $prepare,
+			'PrimaryCategory' => $category,
+		));
+	}
+
 	protected function getPreparedData($category, $prepare = false, $customIdentifier = '')
 	{
-		$availableCustomConfigs = false;
+		$availableCustomConfigs = array();
+
+		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+			$sSQLAnd = ' AND products_model = "'.$prepare.'"';
+		} else {
+			$sSQLAnd = ' AND products_id = "'. $prepare . '"';
+		}
+
 		if ($prepare) {
-			$availableCustomConfigs = json_decode(MagnaDB::gi()->fetchOne(eecho('
+		    $query = eecho('
 				SELECT CategoryAttributes
 				FROM ' . TABLE_MAGNA_CDISCOUNT_PREPARE . '
 				WHERE MpId = ' . $this->mpId . '
-					AND products_model = \'' . $prepare. '\'
 					AND PrimaryCategory = "' . $category . '"
-			', false)), true);
+					' . $sSQLAnd . '
+			');
+
+			$availableCustomConfigs = json_decode(MagnaDB::gi()->fetchOne($query), true);
 		}
 
-		return !$availableCustomConfigs ? false : $availableCustomConfigs;
+		return !$availableCustomConfigs ? array() : $availableCustomConfigs;
+	}
+
+	protected function getSavedVariationThemeCode($category, $prepare = false)
+	{
+		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+			$sSQLAnd = ' AND products_model = "'.$prepare. '"';
+		} else {
+			$sSQLAnd = ' AND products_id = "'. $prepare . '"';
+		}
+
+		$variationTheme = null;
+		if ($prepare) {
+			$variationTheme = MagnaDB::gi()->fetchOne(eecho('
+				SELECT variation_theme
+				FROM ' . TABLE_MAGNA_CDISCOUNT_PREPARE . '
+				WHERE MpId = ' . $this->mpId . '
+						AND PrimaryCategory = "' . $category . '"
+						'. $sSQLAnd
+				)
+			);
+		}
+
+		$variationTheme = json_decode($variationTheme, true);
+
+		return is_array($variationTheme) ? key($variationTheme) : '';
 	}
 
     /**
@@ -347,7 +407,7 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		return null;
 	}
 
-	protected function getAttributesFromMP($category, $customIdentifier = '')
+	protected function getAttributesFromMP($category, $additionalData = null, $customIdentifier = '')
     {
         $data = CdiscountApiConfigValues::gi()->getVariantConfigurationDefinition($category);
         if (!is_array($data) || !isset($data['attributes'])) {
@@ -368,7 +428,7 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		return $data;
     }
 
-	public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true, $customIdentifierHtml = '')
+	public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true, $displayCategory = true, $customIdentifierHtml = '')
 	{
 		$mpTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_TITLE);
 		$mpAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_CDISCOUNT_VARMATCH_MP_ATTRIBUTE);

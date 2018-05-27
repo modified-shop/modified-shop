@@ -22,10 +22,12 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require(DIR_MAGNALISTER_MODULES.'magnacompatible/config.php');
 
+global $_MagnaSession;
+
 $mpconfig['auth']['authkeys'] = array('apikey', 'mpusername', 'mppassword');
 
 $mpconfig['pages']['conf']['class'] = 'DawandaConfigure';
 $mpconfig['pages']['prepare']['class'] = 'DawandaPrepare';
 
-$mpconfig['checkin']['Variations'] = 'no';
+$mpconfig['checkin']['Variations'] = getDBConfigValue(array($_MagnaSession['currentPlatform'].'.usevariations', 'val'), $_MagnaSession['mpID'], true) ? 'yes':'no';
 $mpconfig['checkin']['Categories']['Marketplace'] = 'no';

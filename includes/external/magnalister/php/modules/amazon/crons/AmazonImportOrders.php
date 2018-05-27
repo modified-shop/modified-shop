@@ -87,6 +87,10 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 			$this->config['PaymentMethodFBA'] = $k['PaymentMethodNameFBA']['default'];
 		}
 	}
+
+    protected function getPastTimeOffset() {
+        return 60 * 60 * 24 * 14;
+    }
 	
 	protected function getOrdersStatus() {
 		return ($this->o['orderInfo']['FulfillmentChannel'] == 'AFN')

@@ -1642,6 +1642,8 @@ $images = array (
 			'VpeValue' => 'products_vpe_value',
 			'VpeStatus' => 'products_vpe_status',
 			'ProductUrl' => '',
+			'MinOrderQuantity' => 'gm_min_order',
+			'PossibleAmountInterval' => 'gm_graduated_qty',
 		);
 		$descriptionFields = array ( // Some of these fields don't exist in every osC fork.
 			'Title' => 'products_name',

@@ -27,4 +27,14 @@ class DawandaSyncInventory extends MagnaCompatibleSyncInventory {
 	protected function uploadItems() {
 		return true;
 	}
+
+	protected function initMLProduct() {
+		global $_MagnaSession;
+		parent::initMLProduct();
+		if (!getDBConfigValue(array($_MagnaSession['currentPlatform'].'.usevariations', 'val'), $_MagnaSession['mpID'], true)) {
+			MLProduct::gi()->setOptions(array(
+				'includeVariations' => false
+			));
+		}
+	}
 }

@@ -1306,6 +1306,9 @@ form.config table.conftbl tr.conf td label.savedPassword.partial span {
 form.config table.conftbl tr.conf td label.savedPassword.hidden span {
 	display: none;
 }
+.ml-hidden{
+	display: none;
+}
 form.config table.conftbl tr.conf td.hint,
 form.config table.conftbl tr.conf td.error {
 	white-space: nowrap;
@@ -1919,6 +1922,9 @@ table.attributesTable table.attrTable td.info {
 table.attributesTable table.attrTable td select,
 table.attributesTable table.attrTable td input[type="text"] {
 	width: 100%;
+}
+table.attributesTable table.attrTable td select.multiSelect{
+	margin-top: 6px;
 }
 table.attributesTable table.attrTable.noborder tr td {
 	border: none;
@@ -3310,6 +3316,18 @@ body.magna .productList span.ml-warning {
 	position: absolute;
 	top: 7px;
 	right: 7px;
+}
+
+body.magna .productList div.warning-wrapper {
+	position: absolute;
+	top: 7px;
+	right: 7px;
+}
+
+body.magna .productList div.warning-wrapper span.ml-warning {
+	position: relative;
+	top: 0;
+	right: 0;
 }
 
 body.magna .ml-collapse {

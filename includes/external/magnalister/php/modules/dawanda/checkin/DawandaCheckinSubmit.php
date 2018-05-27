@@ -98,9 +98,6 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
 		foreach (array('MarketplaceCategories', 'StoreCategories', 'MpColors', 'Attributes') as $jsonKey) {
 			$aPropertiesRow[$jsonKey] = json_decode($aPropertiesRow[$jsonKey], true);
-			if (!is_array($aPropertiesRow[$jsonKey])) {
-				$aPropertiesRow[$jsonKey] = array();
-			}
 		}
 		
 		#echo print_m(func_get_args());
@@ -128,6 +125,16 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				'Tags' => $aProduct['Keywords'][$sLangCode],
 			);
 		}
+
+		$categoryAttributes = '';
+		if (!empty($aPropertiesRow['CategoryAttributes'])) {
+			$categoryAttributes = DawandaHelper::gi()->convertMatchingToNameValue(
+				json_decode($aPropertiesRow['CategoryAttributes'], true),
+				$aProduct
+			);
+		}
+
+		$aData['submit']['CategoryAttributes'] = $categoryAttributes;
 
 		//Images
 		$sImagePath = getDBConfigValue($this->marketplace.'.imagepath', $this->mpID, '');
@@ -172,11 +179,15 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			if (isset($aData['submit']['MarketplaceCategories'][0])) {
 				$aData['submit']['MarketplaceCategories'] = array($aData['submit']['MarketplaceCategories'][0]);
 			}
+		} else {
+			$aData['submit']['MarketplaceCategories'] = array($aPropertiesRow['MarketplaceCategories']);
 		}
 		
 		// StoreCategories
 		if (is_array($aPropertiesRow['StoreCategories'])) {
 			$aData['submit']['StoreCategories'] = array_values($aPropertiesRow['StoreCategories']);
+		} else {
+			$aData['submit']['StoreCategories'] = array($aPropertiesRow['StoreCategories']);
 		}
 		
 		// ShippingTime
@@ -220,6 +231,126 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		
 		$aData['submit']['ProductType'] = $aPropertiesRow['ProductType'];
 		$aData['submit']['ReturnPolicy'] = $aPropertiesRow['ReturnPolicy'];
+
+		if (!$this->getDawandaVariations($aProduct, $aData, $sImagePath, json_decode($aPropertiesRow['CategoryAttributes'], true))) {
+			return;
+		}
+	}
+
+	protected function getDawandaVariations($product, &$data, $imagePath, $categoryAttributes) {
+		if ($this->checkinSettings['Variations'] !== 'yes') {
+			return true;
+		}
+
+		$variations = array();
+		foreach ($product['Variations'] as $v) {
+			$this->simpleprice->setPrice($v['Price']);
+			$price = $this->simpleprice->roundPrice()->makeSignalPrice(
+				getDBConfigValue($this->marketplace.'.price.signal', $this->mpID, '')
+			)->getPrice();
+
+			$vi = array(
+				'SKU' => ($this->settings['keytype'] == 'artNr') ? $v['MarketplaceSku'] : $v['MarketplaceId'],
+				'Price' => $price,
+				'Quantity' => ($this->quantityLumb === false)
+					? max(0, $v['Quantity'] - (int)$this->quantitySub)
+					: $this->quantityLumb,
+			);
+
+			foreach ($this->settings['additionalLanguages'] as $sLangId) {
+				$sLangCode = MLProduct::gi()->languageIdToCode($sLangId);
+				$viTitle = $product['Title'][$sLangCode];
+				foreach ($v['Variation'] as $varAttribute) {
+					$viTitle .= ' ' . $varAttribute['Name'][$sLangCode] . ' - ' . $varAttribute['Value'][$sLangCode];
+				}
+
+				$vi['Descriptions'][$sLangCode] = array(
+					'Title' => $viTitle,
+					'Description' => isset($v['Description'][$sLangCode]) ? $v['Description'][$sLangCode] : $product['Description'][$sLangCode],
+					/*
+                    'Manufacturing' => '',
+                    'Customization' => '',
+                    'Material' => '',
+                    'Size' => '',
+                    */
+					'Tags' => isset($v['Keywords'][$sLangCode]) ? $v['Keywords'][$sLangCode] : $product['Keywords'][$sLangCode],
+				);
+			}
+
+
+			if (empty($v['Images'])) {
+				$vi['Images'] = $data['submit']['Images'];
+			} else {
+				foreach ($v['Images'] as $image) {
+					$vi['Images'][] = array(
+						'URL' => $imagePath . $image
+					);
+				}
+			}
+
+			//implementing the base price
+			if (isset($v['BasePrice']) && empty($v['BasePrice']) === false ) {
+				$vi['BasePrice']['Unit'] = $v['BasePrice']['Unit'];
+				$vi['BasePrice']['Value'] = number_format((float)$v['BasePrice']['Value'], 2, '.','');
+			}
+
+			$vi['CategoryAttributes'] = $this->fixVariationCategoryAttributes($categoryAttributes, $product, $v);
+
+			$variations[] = $vi;
+		}
+
+		if (!empty($variations)) {
+			$data['submit']['Variations'] = $variations;
+		}
+
+		return true;
+	}
+
+	private function fixVariationCategoryAttributes($aCatAttributes, $product, $variationDB)
+	{
+		$productDataForMatching = array_merge($product, $variationDB);
+		$productDataForMatching['ProductId'] = $variationDB['VariationId'];
+		$productDataForMatching['ProductsModel'] = $variationDB['MarketplaceSku'];
+
+		if (!isset($variationDB['Weight']['Value'])) {
+			$productDataForMatching['Weight'] = $product['Weight'];
+		}
+
+		if (!isset($variationDB['BasePrice']['Value'])) {
+			$productDataForMatching['BasePrice'] = $product['BasePrice'];
+		}
+
+		// Since variation attributes are not set directly on product and their key is number, we should prefix them for
+		// standard AM conversion because otherwise variation attributes are no different from any other shop attribute
+		foreach ($variationDB['Variation'] as $variationAttribute) {
+			$productDataForMatching["variant_{$variationAttribute['NameId']}"] = $variationAttribute['ValueId'];
+		}
+
+		$fixCatAttributes = DawandaHelper::gi()->convertMatchingToNameValue($aCatAttributes, $productDataForMatching);
+
+		return $fixCatAttributes;
+	}
+
+	protected function preSubmit(&$request) {
+		$request['DATA'] = array();
+		foreach ($this->selection as $iProductId => &$aProduct) {
+			if (empty($aProduct['submit']['Variations'])) {
+				$request['DATA'][] = $aProduct['submit'];
+				continue;
+			}
+
+			foreach ($aProduct['submit']['Variations'] as $aVariation) {
+				$aVariationData = $aProduct;
+				unset($aVariationData['submit']['Variations']);
+				foreach ($aVariation as $sParameter => $mParameterValue) {
+					$aVariationData['submit'][$sParameter] = $mParameterValue;
+				}
+
+				$request['DATA'][] = $aVariationData['submit'];
+			}
+		}
+
+		arrayEntitiesToUTF8($request['DATA']);
 	}
 
 	protected function markAsFailed($sku) {

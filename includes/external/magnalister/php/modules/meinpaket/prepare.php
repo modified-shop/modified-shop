@@ -18,14 +18,12 @@
  * -----------------------------------------------------------------------------
  */
  
-$_url['mode'] = $_magnaQuery['mode'];
+$_url['mode'] = 'prepare';
 
-$_url['view'] = isset($_GET['view'])
-	? $_GET['view']
-	: 'apply';
-
-if (!in_array($_url['view'], array('apply', 'varmatch'))) {
-	$_url['view'] = 'apply';
+if (!array_key_exists('view', $_GET) || !in_array($_GET['view'], array('apply', 'varmatch'))) {
+	$_url['view'] = $_GET['view'] = 'apply';
+} else {
+	$_url['view'] = $_GET['view'];
 }
 
 $resources = array (
@@ -35,12 +33,6 @@ $resources = array (
 	'moduleConf' => $_modules[$_Marketplace],
 );
 
-if ($_url['view'] == 'varmatch') {
-	require_once(DIR_MAGNALISTER_MODULES.'meinpaket/prepare/MeinpaketVariationMatching.php');
-	$mlc = new MeinpaketVariationMatching($resources);
-	$mlc->process();
-} else {
 	require_once(DIR_MAGNALISTER_MODULES.'meinpaket/prepare/MeinpaketProductPrepare.php');
 	$mlc = new MeinpaketProductPrepare($resources);
 	$mlc->process();
-}

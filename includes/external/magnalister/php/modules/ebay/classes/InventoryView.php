@@ -450,6 +450,7 @@ class InventoryView {
 					<td>'.ML_STOCK_SHOP_STOCK_EBAY.'<br />'.ML_LAST_SYNC.'</td>
 					<td>'.ML_LABEL_EBAY_LISTINGTIME.' '.$this->sortByType('dateadded').'</td>
 					<td>'.ML_GENERIC_STATUS.'</td>
+					<td>'.ML_GENERAL_INVENTORY_IS_SPLIT.'</td>
 				</tr></thead>
 				<tbody>
 		';
@@ -496,6 +497,7 @@ class InventoryView {
 						}
 					}
 			$html .= '	
+	                <td>'.(empty($item['IsSplit']) ? ML_BUTTON_LABEL_NO : ML_BUTTON_LABEL_YES).'</td>
 				</tr>';
 		}
 		$html .= '

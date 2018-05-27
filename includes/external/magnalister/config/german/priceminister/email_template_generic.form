@@ -1,11 +1,11 @@
 {
     "mail": {
-        "headline": "Promotion-E-Mail Template",
-        "desc": "Template f&uuml;r die Promotion-E-Mail, die der Kunde nach Kauf zugesendet bekommen soll.",
+        "headline": "E-Mail an K&auml;ufer",
+        "desc": "Template f&uuml;r die E-Mail an K&auml;ufer, die der Kunde nach Kauf zugesendet bekommen soll.",
         "fields": {
             "sendmail": {
                 "label": "E-Mail versenden?",
-                "desc": "Soll von Ihrem Shop eine E-Mail an den K&auml;ufer gesendet werden um Ihren Shop zu promoten?",
+                "desc": "Soll von Ihrem Shop eine E-Mail an den K&auml;ufer gesendet werden?",
                 "key": "_#_platform_#_.mail.send",
                 "type": "radio",
                 "default": "false",

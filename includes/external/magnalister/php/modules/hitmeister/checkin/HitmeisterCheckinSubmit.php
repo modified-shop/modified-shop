@@ -103,7 +103,14 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		');
 		
 		if (is_array($prepare)) {
-			$categoryAttributes = (!empty($prepare['CategoryAttributes'])) ? $this->fixCategoryAttributes(json_decode($prepare['CategoryAttributes'], true), $product) : '';
+			$categoryAttributes = '';
+			if (!empty($prepare['CategoryAttributes'])) {
+				$categoryAttributes = HitmeisterHelper::gi()->convertMatchingToNameValue(
+					json_decode($prepare['CategoryAttributes'], true),
+					$product
+				);
+			}
+
 			$data['submit']['SKU'] = magnaPID2SKU($pID);
 			$data['submit']['ParentSKU'] = magnaPID2SKU($pID);
 			$data['submit']['EAN'] = isset($prepare['EAN']) ? $prepare['EAN'] : $product['EAN'];
@@ -353,7 +360,7 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				}
 			}
 
-			$vi['CategoryAttributes'] = $this->fixVariationCategoryAttributes($categoryAttributes, $product, $v, $vi);
+			$vi['CategoryAttributes'] = $this->fixVariationCategoryAttributes($categoryAttributes, $product, $v);
 
 			$variations[] = $vi;
 		}
@@ -362,241 +369,28 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		return true;
 	}
 
-	private function fixCategoryAttributes($aCatAttributes, $product) {
-		$fixCatAttributes = array();
-		if (isset($aCatAttributes) && is_array($aCatAttributes)) {
-			foreach ($aCatAttributes as $key => &$aCatAttribute) {
-				$sCode = $aCatAttribute['Code'];
-				switch ($sCode) {
-					case 'freetext':
-					case 'attribute_value': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $aCatAttribute['Values'];
-						}
-						break;
-					}
-					case 'category': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							if (!empty($aCatAttribute['Values']['Value'])) {
-								$fixCatAttributes[$key] = $this->getCategoryNameById($aCatAttribute['Values']['Value']);
-							}
-						}
-						break;
-					}
-					case 'title': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['Title'];
-						}
-						break;
-					}
-					case 'description': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['Description'];
-						}
-						break;
-					}
-					case 'ean': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['EAN'];
-						}
+	private function fixVariationCategoryAttributes($aCatAttributes, $product, $variationDB)
+	{
+		$productDataForMatching = array_merge($product, $variationDB);
+		$productDataForMatching['ProductId'] = $variationDB['VariationId'];
+		$productDataForMatching['ProductsModel'] = $variationDB['MarketplaceSku'];
 
-						break;
-					}
-					case 'weight': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['Weight']['Value'].$product['Weight']['Unit'];
-						}
-						break;
-					}
-					case 'contentvolume': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['BasePrice']['Value'].$product['BasePrice']['Unit'];
-						}
-						break;
-					}
-					case 'database_value': {
-						if (
-							array_key_exists('Values', $aCatAttribute)
-							&& array_key_exists('Table', $aCatAttribute['Values']) && MagnaDB::gi()->tableExists($aCatAttribute['Values']['Table'])
-							&& array_key_exists('Column', $aCatAttribute['Values']) && MagnaDB::gi()->columnExistsInTable($aCatAttribute['Values']['Column'], $aCatAttribute['Values']['Table'])
-						) {
-							$sAlias = array_key_exists('Alias', $aCatAttribute['Values']) && !empty($aCatAttribute['Values']['Alias'])
-								? $aCatAttribute['Values']['Alias']
-								: 'products_id'
-							;
-							
-							if (MagnaDB::gi()->columnExistsInTable($sAlias, $aCatAttribute['Values']['Table'])) {
-								$fixCatAttributes[$key] = MagnaDB::gi()->fetchOne(eecho('
-									SELECT `'.$aCatAttribute['Values']['Column'].'`
-									  FROM `'.$aCatAttribute['Values']['Table'].'`
-									 WHERE `'.$sAlias.'`=\''.MagnaDB::gi()->escape($product['ProductId']).'\'
-									 LIMIT 1
-								', false));
-							}
-						}
-						break;
-					}
-					default:
-						break;
-				}
-
-				if (empty($fixCatAttributes[$key])) {
-					unset($aCatAttributes[$key]);
-				}
-
-				if (!isset($fixCatAttributes[$key])) {
-					continue;
-				}
-
-				if ($this->stringStartsWith($key, 'additional_attribute')) {
-					$sNewKey = ucfirst($sCode);
-					$fixCatAttributes[$sNewKey] = $fixCatAttributes[$key];
-					unset($fixCatAttributes[$key]);
-				}
-			}
+		if (!isset($variationDB['Weight']['Value'])) {
+			$productDataForMatching['Weight'] = $product['Weight'];
 		}
+
+		if (!isset($variationDB['BasePrice']['Value'])) {
+			$productDataForMatching['BasePrice'] = $product['BasePrice'];
+		}
+
+		// Since variation attributes are not set directly on product and their key is number, we should prefix them for
+		// standard AM conversion because otherwise variation attributes are no different from any other shop attribute
+		foreach ($variationDB['Variation'] as $variationAttribute) {
+			$productDataForMatching["variant_{$variationAttribute['NameId']}"] = $variationAttribute['ValueId'];
+		}
+
+		$fixCatAttributes = HitmeisterHelper::gi()->convertMatchingToNameValue($aCatAttributes, $productDataForMatching);
 
 		return $fixCatAttributes;
 	}
-
-	private function fixVariationCategoryAttributes($aCatAttributes, $product, $variationDB, $variation) {
-		$fixCatAttributes = array();
-		if (isset($aCatAttributes) && is_array($aCatAttributes)) {
-			foreach ($aCatAttributes as $key => &$aCatAttribute) {
-				$sCode = $aCatAttribute['Code'];
-				switch ($sCode) {
-					case 'freetext':
-					case 'attribute_value': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $aCatAttribute['Values'];
-						}
-						break;
-					}
-					case 'category': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							if (!empty($aCatAttribute['Values']['Value'])) {
-								$fixCatAttributes[$key] = $this->getCategoryNameById($aCatAttribute['Values']['Value']);
-							}
-						}
-						break;
-					}
-					case 'title': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['Title'];
-						}
-						break;
-					}
-					case 'description': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = $product['Description'];
-						}
-						break;
-					}
-					case 'ean': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							$fixCatAttributes[$key] = isset($variationDB['EAN']) ? $variationDB['EAN'] : $product['EAN'];
-						}
-
-						break;
-					}
-					case 'weight': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							if (isset($variationDB['Weight']['Value'])) {
-								$fixCatAttributes[$key] = $variationDB['Weight']['Value'].$variationDB['Weight']['Unit'];
-							} else {
-								$fixCatAttributes[$key] = $product['Weight']['Value'].$product['Weight']['Unit'];
-							}
-						}
-						break;
-					}
-					case 'contentvolume': {
-						if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-							if (isset($variationDB['BasePrice']['Value'])) {
-								$fixCatAttributes[$key] = $variationDB['BasePrice']['Value'].$variationDB['BasePrice']['Unit'];
-							} else {
-								$fixCatAttributes[$key] = $product['BasePrice']['Value'].$product['BasePrice']['Unit'];
-							}
-						}
-						break;
-					}
-					case 'database_value': {
-						if (
-							array_key_exists('Values', $aCatAttribute)
-							&& array_key_exists('Table', $aCatAttribute['Values']) && MagnaDB::gi()->tableExists($aCatAttribute['Values']['Table'])
-							&& array_key_exists('Column', $aCatAttribute['Values']) && MagnaDB::gi()->columnExistsInTable($aCatAttribute['Values']['Column'], $aCatAttribute['Values']['Table'])
-						) {
-							$sAlias = array_key_exists('Alias', $aCatAttribute['Values']) && !empty($aCatAttribute['Values']['Alias'])
-								? $aCatAttribute['Values']['Alias']
-								: 'products_id'
-							;
-							
-							if (MagnaDB::gi()->columnExistsInTable($sAlias, $aCatAttribute['Values']['Table'])) {
-								$fixCatAttributes[$key] = MagnaDB::gi()->fetchOne(eecho('
-									SELECT `'.$aCatAttribute['Values']['Column'].'`
-									  FROM `'.$aCatAttribute['Values']['Table'].'`
-									 WHERE `'.$sAlias.'`=\''.MagnaDB::gi()->escape($product['ProductId']).'\'
-									 LIMIT 1
-								', false));
-							}
-						}
-						break;
-					}
-					default:
-						foreach ($variationDB['Variation'] as $variationAttribute) {
-							if ($sCode == $variationAttribute['NameId']) {
-								foreach ($aCatAttribute['Values'] as $value) {
-									if ($variationAttribute['Value'] === $value['Shop']['Value']) {
-										$fixCatAttributes[$key] = str_replace(array(ML_GENERAL_VARMATCH_MANUALY_MATCHED, ML_GENERAL_VARMATCH_AUTO_MATCHED, ML_GENERAL_VARMATCH_FREE_TEXT), '', $value['Marketplace']['Value']);
-										$sCode = $variationAttribute['Name'];
-									}
-								}
-							}
-						}
-				}
-
-				if (empty($fixCatAttributes[$key])) {
-					unset($fixCatAttributes[$key]);
-				}
-
-				if (!isset($fixCatAttributes[$key])) {
-					continue;
-				}
-
-				if ($this->stringStartsWith($key, 'additional_attribute')) {
-					$sNewKey = ucfirst($sCode);
-					$fixCatAttributes[$sNewKey] = $fixCatAttributes[$key];
-					unset($fixCatAttributes[$key]);
-				}
-			}
-		}
-
-		return $fixCatAttributes;
-	}
-
-	private function stringStartsWith($haystack, $needle) {
-		$length = strlen($needle);
-		return (substr($haystack, 0, $length) === $needle);
-	}
-
-	private function getCategoryNameById($categoryID) {
-		try {
-			$aRequest = array(
-				'ACTION' => 'GetCategoryDetails',
-				'DATA' => array(
-					'CategoryID' => $categoryID
-				)
-			);
-
-			$aResponse = MagnaConnector::gi()->submitRequest($aRequest);
-			if ($aResponse['STATUS'] == 'SUCCESS' && isset($aResponse['DATA']) && is_array($aResponse['DATA'])) {
-				return $aResponse['DATA']['title_plural'];
-			} else {
-				return $categoryID;
-			}
-
-		} catch (MagnaException $e) {
-			return $categoryID;
-		}
-	}
-
 }

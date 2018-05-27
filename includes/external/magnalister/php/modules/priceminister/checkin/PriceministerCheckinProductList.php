@@ -105,6 +105,39 @@ class PriceministerCheckinProductList extends MLProductListMagnaCompatibleAbstra
 			return isset($this->aPrepareData[$aRow['products_id']][$sFieldName]) ? $this->aPrepareData[$aRow['products_id']][$sFieldName] : null;
 		}
 	}
+
+	protected function isPreparedDifferently($aRow) {
+		$sPrimaryCategory = $this->getPrepareData($aRow, 'MarketplaceCategories');
+		if (!empty($sPrimaryCategory)) {
+			$sCategoryDetails = $this->getPrepareData($aRow, 'CategoryAttributes');
+			$categoryMatching = PriceministerHelper::gi()->getCategoryMatching($sPrimaryCategory);
+			$categoryDetails = json_decode($sCategoryDetails, true);
+			return PriceministerHelper::gi()->detectChanges($categoryMatching, $categoryDetails);
+		}
+
+		return false;
+	}
+
+	protected function isDeletedAttributeFromShop($aRow, &$message) {
+	    $aMarketplaceCategories = $this->getPrepareData($aRow, 'MarketplaceCategories');
+		if (!empty($aMarketplaceCategories)) {
+			$matchedAttributes = $this->getPrepareData($aRow, 'CategoryAttributes');
+			$matchedAttributes = json_decode($matchedAttributes, true);
+			$shopAttributes = PriceministerHelper::gi()->flatShopVariations();
+
+            if (!is_array($matchedAttributes)) {
+                $matchedAttributes = array();
+            }
+
+			foreach ($matchedAttributes as $matchedAttribute) {
+				if (PriceministerHelper::gi()->detectIfAttributeIsDeletedOnShop($shopAttributes, $matchedAttribute, $message)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
 	
 	protected function getMarketPlaceCategory($aRow) {
 		$aData = $this->getPrepareData($aRow);

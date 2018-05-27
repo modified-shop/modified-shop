@@ -20,11 +20,20 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-class CdiscountPrepare extends MagnaCompatibleBase {
+class CdiscountPrepare extends MagnaCompatibleBase
+{
 
 	protected $prepareSettings = array();
 
-	public function __construct(&$params) {
+	public function __construct(&$params)
+	{
+		if (!empty($_POST['FullSerializedForm'])) {
+			$newPost = array();
+			parse_str_unlimited($_POST['FullSerializedForm'], $newPost);
+
+			$_POST = array_merge($_POST, $newPost);
+		}
+
 		parent::__construct($params);
 
 		$this->prepareSettings['selectionName'] = isset($_GET['view']) ? $_GET['view'] : 'apply';
@@ -32,7 +41,8 @@ class CdiscountPrepare extends MagnaCompatibleBase {
 		$this->resources['url']['view'] = $this->prepareSettings['selectionName'];
 	}
 
-	protected function saveMatching() {
+	protected function saveMatching()
+	{
 		if (!array_key_exists('saveMatching', $_POST)) {
 			if (!isset($_POST['Action']) || $_POST['Action'] !== 'SaveMatching' || $_GET['where'] === 'varmatchView') {
 				return;
@@ -42,9 +52,6 @@ class CdiscountPrepare extends MagnaCompatibleBase {
 		require_once(DIR_MAGNALISTER_MODULES . 'cdiscount/classes/CdiscountProductSaver.php');
 
 		$oProductSaver = new CdiscountProductSaver($this->resources['session']);
-		$shopVariations = $this->saveMatchingAttributes($oProductSaver);
-		$itemDetails = $_POST;
-		$itemDetails['CategoryAttributes'] = $shopVariations;
 
 		$aProductIDs = MagnaDB::gi()->fetchArray("
 			SELECT pID
@@ -54,7 +61,19 @@ class CdiscountPrepare extends MagnaCompatibleBase {
 				   AND session_id = '".session_id()."'
 		", true);
 
-		if (1 == count($aProductIDs)) {
+		$isSinglePrepare = 1 == count($aProductIDs);
+		$variationThemeAttributes = array();
+
+		$shopVariations = $this->saveMatchingAttributes($oProductSaver, $isSinglePrepare, $variationThemeAttributes);
+		$itemDetails = $_POST;
+		
+		if (isset($itemDetails['variationTheme'])) {
+			$itemDetails['variationTheme'] = json_encode(array($itemDetails['variationTheme'] => $variationThemeAttributes));
+		}
+
+		$itemDetails['CategoryAttributes'] = $shopVariations;
+
+		if ($isSinglePrepare) {
 			$oProductSaver->saveSingleProductProperties($aProductIDs[0], $itemDetails, $this->prepareSettings['selectionName']);
 		} else if (!empty($aProductIDs)) {
 			$oProductSaver->saveMultipleProductProperties($aProductIDs, $itemDetails, $this->prepareSettings['selectionName']);
@@ -90,9 +109,10 @@ class CdiscountPrepare extends MagnaCompatibleBase {
 		}
 	}
 
-	protected function saveMatchingAttributes($oProductSaver) {
+	protected function saveMatchingAttributes($oProductSaver, $isSinglePrepare, &$variationThemeAttributes = null)
+	{
 		if (isset($_POST['Variations'])) {
-			parse_str($_POST['Variations'], $params);
+			parse_str_unlimited($_POST['Variations'], $params);
 			$_POST = $params;
 			if (isset($_POST['saveMatching'])) {
 				unset($_POST['saveMatching']);
@@ -101,16 +121,26 @@ class CdiscountPrepare extends MagnaCompatibleBase {
 
 		$sIdentifier = $_POST['PrimaryCategory'];
 		$matching = $_POST['ml']['match'];
-
 		$savePrepare = isset($_POST['saveMatching']) ? $_POST['saveMatching'] : false;
 
+        if ($variationThemeAttributes !== null && isset($_POST['variationTheme'])) {
+            if ($_POST['variationTheme'] !== 'null') {
+                $variationThemes = json_decode($_POST['variationThemes'], true);
+                $variationThemeAttributes = $variationThemes[$_POST['variationTheme']]['attributes'];
+            } else {
+                $variationThemeAttributes = 'null';
+            }
+        }
+
 		$oProductSaver->aErrors = array_merge($oProductSaver->aErrors,
-			CdiscountHelper::gi()->saveMatching($sIdentifier, $matching, $savePrepare, true));
+			CdiscountHelper::gi()->saveMatching($sIdentifier, $matching, $savePrepare, true, $isSinglePrepare,
+				$variationThemeAttributes));
 
 		return json_encode($matching['ShopVariation']);
 	}
 
-	protected function deleteMatching() {
+	protected function deleteMatching()
+	{
 		if (!(array_key_exists('unprepare', $_POST)) || empty($_POST['unprepare'])) {
 			return;
 		}
@@ -145,7 +175,8 @@ class CdiscountPrepare extends MagnaCompatibleBase {
 		unset($_POST['unprepare']);
 	}
 
-	protected function processMatching() {
+	protected function processMatching()
+	{
 		if ($this->prepareSettings['selectionName'] === 'match') {
 			$className = 'MatchingPrepareView';
 		} elseif ($this->prepareSettings['selectionName'] === 'varmatch') {
@@ -176,7 +207,8 @@ class CdiscountPrepare extends MagnaCompatibleBase {
 		echo $this->isAjax ? $cMDiag->renderAjax() : $cMDiag->process();
 	}
 
-	protected function processSelection() {
+	protected function processSelection()
+	{
 		if (($class = $this->loadResource('prepare', 'PrepareCategoryView')) === false) {
 			if ($this->isAjax) {
 				echo '{"error": "This is not supported"}';
@@ -193,7 +225,8 @@ class CdiscountPrepare extends MagnaCompatibleBase {
 		}
 	}
 
-	protected function processProductList() {
+	protected function processProductList()
+	{
 		if ($this->prepareSettings['selectionName'] === 'match') {
 			$className = 'MatchingProductList';
 		} elseif ($this->prepareSettings['selectionName'] === 'varmatch') {
@@ -216,7 +249,8 @@ class CdiscountPrepare extends MagnaCompatibleBase {
 		echo $o;
 	}
 
-	public function process() {
+	public function process()
+	{
 		if (   isset($_POST['request'])
 			&& ($_POST['request'] === 'ItemSearchByTitle' || $_POST['request'] === 'ItemSearchByEAN')
 		) {
@@ -293,7 +327,8 @@ class CdiscountPrepare extends MagnaCompatibleBase {
 		}
 	}
 	
-	protected function getSelectedProductsCount() {
+	protected function getSelectedProductsCount()
+	{
 		$query = '
 			SELECT COUNT(*)
 			FROM ' . TABLE_MAGNA_SELECTION . ' s
@@ -310,7 +345,8 @@ class CdiscountPrepare extends MagnaCompatibleBase {
 		return (int) MagnaDB::gi()->fetchOne($query);
 	}
 
-	private function insertAutoMatchProduct() {
+	private function insertAutoMatchProduct()
+	{
 		$autoMatchingStats = array (
 			'success' => 0,
 			'almost' => 0,

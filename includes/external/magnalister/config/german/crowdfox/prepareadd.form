@@ -4,7 +4,7 @@
 			"gtincolumn": {
 				"label": "GTIN",
 				"key": "_#_platform_#_.prepare.gtincolumn.dbmatching.table",
-				"desc": "Global Trade Item number Including: EAN, ISBN, UPS and JAN. You get this number from the respective manufacturer or from your supplier. (13 digits).<br\/>This field guarantees a proper integration of your products in Crowdfox system.",
+				"desc": "Global Trade Item number: Hierzu z&auml;hlt die EAN sowie ISBN, UPS und JAN. Diese erhalten Sie vom jeweiligen Hersteller oder Lieferanten. (13 Ziffern)<br/>Durch f&uuml;llen dieser Daten, werden Ihre Produkte optimal auf Crowdfox angelegt.",
 				"type": "selection",
 				"verify": "notempty",
 				"type": "dbfieldselector",

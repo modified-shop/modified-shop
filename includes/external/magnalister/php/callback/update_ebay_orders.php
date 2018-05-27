@@ -216,6 +216,12 @@ function magnaUpdateEbayOrders($mpID) {
 	                unset($order['delivery_firstname']);
 	                unset($order['delivery_lastname']);
 	            }
+	            if (    (!MagnaDB::gi()->columnExistsInTable('delivery_additional_info', TABLE_ORDERS)) 
+	                 || ((SHOPSYSTEM == 'gambio') && (@constant('ACCOUNT_ADDITIONAL_INFO') !== 'true'))) {
+	                if(!empty($order['delivery_additional_info']))
+	                	$order['delivery_street_address'] .= ' '.$order['delivery_additional_info'];
+	                	unset($order['delivery_additional_info']);
+	            }
 	            if ($paymentMethod == 'matching') {
 	            	$order['payment_method'] = getPaymentClassForEbayPaymentMethod($order['PaymentMethod']);
 	            } else {
@@ -224,7 +230,30 @@ function magnaUpdateEbayOrders($mpID) {
 	            if (MagnaDB::gi()->columnExistsInTable('payment_class', TABLE_ORDERS)) {
 	                $order['payment_class'] = $order['payment_method'];
 	            }
-				if (!array_key_exists('PaymentInstruction', $order)) {
+				if (array_key_exists('PaymentInstruction', $order)) {
+					$blPaymentInstructionSet = false;
+					if (MagnaDB::gi()->tableExists('orders_payment_instruction')) {
+						$blPaymentInstructionSet = fillOrdersPaymentInstructionTable($order['PaymentInstruction'], $order['orders_id']);
+					}
+					if ($blPaymentInstructionSet) {
+						# eBay PayUponInvoice ist an sich PayPal, nur dass der Kunde
+						# spaeter an payPal zahlt. Wenn die OrderInstruction
+						# korrekt uebernommen werden konnte (entspr. Tabelle ist da),
+						# behandle es weiter wie payPal.
+						if ('PayUponInvoice' == $order['PaymentMethod']) {
+							$order['PaymentMethod'] = 'PayPal';
+						}
+						$order['PaymentInstruction'] = ML_EBAY_ORDER_PAID_PUI;
+						if (    ('PayPal' == $order['PaymentMethod'])
+					     	&& array_key_exists('ExternalTransactionID', $order)
+					     	&& !empty($order['ExternalTransactionID'])) {
+							$order['PaymentInstruction'] .= "\n".ML_EBAY_PP_TRANSACTION_ID
+							.': '.$order['ExternalTransactionID'];
+						}
+					} else {
+						$order['PaymentInstruction'] = ML_EBAY_PUI_MSG_TO_BUYER.$order['PaymentInstruction'];
+					}
+				} else {
 					$order['PaymentInstruction'] = ML_EBAY_ORDER_PAID;
 					if (    ('PayPal' == $order['PaymentMethod'])
 					     && array_key_exists('ExternalTransactionID', $order)
@@ -232,8 +261,6 @@ function magnaUpdateEbayOrders($mpID) {
 						$order['PaymentInstruction'] .= "\n".ML_EBAY_PP_TRANSACTION_ID
 							.': '.$order['ExternalTransactionID'];
 					}
-				} else {
-					$order['PaymentInstruction'] = ML_EBAY_PUI_MSG_TO_BUYER.$order['PaymentInstruction'];
 				}
 	            unset ($order['PaymentMethod']);
 	            if ($updateOrdersStatus && in_array($order['orders_id'], $paidOrders)) {
@@ -254,7 +281,9 @@ function magnaUpdateEbayOrders($mpID) {
 					$PaymentInstructionAlreadyInserted = (boolean)MagnaDB::gi()->fetchOne('SELECT COUNT(*)
 						FROM '.TABLE_ORDERS.'
 					   WHERE orders_id = '.$order['orders_id'].'
-						 AND comments LIKE \''.ML_EBAY_PUI_MSG_TO_BUYER.'%\'');
+						 AND (    comments LIKE \''.ML_EBAY_PUI_MSG_TO_BUYER.'%\'
+						       OR comments LIKE \''.ML_EBAY_ORDER_PAID.'%\' )'
+						);
 						# Keine Status-Aenderung, aber PaymentInstruction uebermittelt
 						# (bei PayUponInvoice, nur wenn wir die payment_method updaten
 						#  - ggf. gibt es für beide Zahlarten kein match, daher

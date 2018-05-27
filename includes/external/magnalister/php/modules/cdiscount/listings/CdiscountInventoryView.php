@@ -72,7 +72,13 @@ class CdiscountInventoryView extends MagnaCompatibleInventoryView {
  				'Sorter' => 'status',
  				'Getter' => 'getStatus',
  				'Field' => null
-			)
+			),
+			'IsSplit' => array(
+				'Label' => ML_GENERAL_INVENTORY_IS_SPLIT,
+				'Sorter' => 'isSplit',
+				'Getter' => 'isSplit',
+				'Field' => null
+			),
 		);
 	}
 
@@ -135,6 +141,11 @@ class CdiscountInventoryView extends MagnaCompatibleInventoryView {
 		}
 		
 		return '<td>' . $status . '</td>';
+	}
+
+	protected function isSplit($item)
+	{
+		return '<td>' . (empty($item['IsSplit']) ? ML_BUTTON_LABEL_NO : ML_BUTTON_LABEL_YES) . '</td>';
 	}
 
 }

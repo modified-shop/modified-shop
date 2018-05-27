@@ -82,6 +82,7 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 
 		$bSyncStock = ($this->config['StockSync'] != 'no');
 		$bSyncPrice = ($this->config['PriceSync'] != 'no');
+		$bLeadTimeToShipSync = ($this->config['LeadTimeToShipSync'] === true);
 		$data['Process'] = false;
 
 		$data = array();
@@ -283,7 +284,7 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 				}
 			}
 		}
-
+		
 		if (isset($this->cItem['Variations']) === true) {
 			// Variation product update
 			$variationsToUpdate = array();
@@ -292,6 +293,11 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 					unset($variation['Process']);
 					unset($variation['Variation']);
 					$variation['ParentSKU'] = $data['SKU'];
+					foreach ($product['Variations'] as $aShopVariantData) {
+						if ($bLeadTimeToShipSync && $variation['SKU'] == $aShopVariantData[((getDBConfigValue('general.keytype', '0') == 'artNr') ? 'MarketplaceSku' : 'MarketplaceId')]) {
+							$variation['ShippingTime'] = $this->getShippingTime($product['ShippingTimeId']);
+						}
+					}
 					$variationsToUpdate[] = $variation;
 				}
 			}
@@ -302,11 +308,36 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 		} else if ($data['Process'] === true) {
 			// Simple product update
 			unset($data['Process']);
+			if ($bLeadTimeToShipSync) {
+                $data['ShippingTime'] = $this->getShippingTime($product['ShippingTimeId']);
+			}
 			$this->updateItems(array($data));
 		}
 		$this->itemsProcessed[] = $this->cItem['pID'];
 	}
 	
+	protected function getShippingTime ($iShippingTimeId) {	
+		$iDefaultShippingTime = getDBConfigValue($this->marketplace.'.checkin.availability', $this->mpID, false);
+		return
+			getDBConfigValue(array($this->marketplace.'.leadtimetoshipmatching.prefer', 'val'), $this->mpID, false)
+			? getDBConfigValue(
+				array($this->marketplace.'.leadtimetoshipmatching.values', $iShippingTimeId),
+				$this->mpID,
+				$iDefaultShippingTime
+			)
+			: $iDefaultShippingTime
+		;
+	}
+	
+	protected function getConfigKeys() {
+        $aParent = parent::getConfigKeys();
+        $aParent['LeadTimeToShipSync'] = array(
+            'key' => array('inventorysync.leadtimetoship', 'val'),
+            'default' => false,
+        );
+        return $aParent;
+    }
+    
 	protected function isAutoSyncEnabled() {
 		$this->syncStock = ($this->config['StockSync'] == 'auto') || ($this->config['StockSync'] == 'auto_reduce')  || ($this->config['StockSync'] == 'auto_fast');
 		$this->syncPrice = ($this->config['PriceSync'] == 'auto') || ($this->config['PriceSync'] == 'auto_reduce');

@@ -1,11 +1,11 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
@@ -32,13 +32,17 @@
 function eBayRenderCategoryOptions($type = 'PrimaryCategory', $selectedCat, $selectedCatName) {
 	global $_MagnaSession;
 	# echo print_m(func_get_args(), __FUNCTION__);
-	$opt = '<option value="">..</option>'."\n";
 	require_once DIR_MAGNALISTER_FS.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'ebay'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'ebayTopTen.php';
 	$oTopTen = new ebayTopTen();
 	$oTopTen->setMarketPlaceId($_MagnaSession['mpID']);
 	$aTopTenCatIds = $oTopTen->getTopTenCategories($type);
+	if (!empty($aTopTenCatIds)) {
+		$opt = '<option value="">..</option>'."\n";
+	} else {
+		$opt = '<option value=""> -- '.ML_GENERIC_USE_CATEGORY_BUTTON.' -- &gt; </option>'."\n";
+	}
 	if (
-		   !empty($selectedCat) 
+		   !empty($selectedCat)
 		&& !array_key_exists($selectedCat, $aTopTenCatIds)
 	) {
 	    $opt .= '<option value="'.$selectedCat.'" selected="selected">'.$selectedCatName.'</option>'."\n";
@@ -70,7 +74,7 @@ function renderSinglePrepareView($data) {
 		<tbody>
 			<tr class="headline">
 				<td colspan="3"><h4>'.ML_EBAY_PRODUCT_DETAILS.'</h4></td>
-			</tr>			
+			</tr>
 			<tr class="odd">
 				<th>'.ML_LABEL_PRODUCT_NAME.'</th>
 				<td class="input">
@@ -132,7 +136,7 @@ function renderSinglePrepareView($data) {
 							<dd>'.ML_EBAY_ARTNO.'</dd>
 						<dt style="font-weight:bold; color:black">#PID#</dt>
 							<dd>'.ML_EBAY_PRODUCTS_ID.'</dd>';
-							
+
 # Preis und VPE: Vorerst nicht anbieten, kann ja geaendert werden
 #						<dt style="font-weight:bold; color:black">#PRICE#</dt>
 #							<dd>'.ML_EBAY_PRICE.'</dd>';
@@ -181,7 +185,7 @@ function renderSinglePrepareView($data) {
 				</span>
 				</td>
 			</tr>';
-			
+
 	$prepareViewPrice->setPrice(makePrice($data[0]['products_id'], 'FixedPriceItem'));
 	$fixedPrice    = $prepareViewPrice->formatWOCurrency();
 	$blUseStrikePrice = false;
@@ -287,7 +291,7 @@ function renderSinglePrepareView($data) {
 		<tbody>
 			<tr class="headline">
 				<td colspan="3"><h4>'.ML_EBAY_PICTURE_SETTINGS.'</h4></td>
-			</tr>			
+			</tr>
 			'.ebayPictureUrlHtml($data[0]['products_id'],
 				// wenn noch nicht vorbereitet UND PictureURL is array:
 				// klicke alle Bilder an
@@ -301,11 +305,11 @@ function renderSinglePrepareView($data) {
 /*
 	// Purge: immer an (zu viel Verwirrung sonst. Kann man noch nachpflegen.)
 	//        Müßte man auch anders für Single und Multiple machen, zu viel Aufwand.
-	if (getDBConfigValue(array('ebay.picturepack', 'val'), $_MagnaSession['mpID'])){			
+	if (getDBConfigValue(array('ebay.picturepack', 'val'), $_MagnaSession['mpID'])){
 		$html .='<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 				<th>'.ML_EBAY_LABEL_PICTUREPACK_PURGE.'</th>
 				<td class="input">
-					<input type="checkbox" name="PicturePackPurge" id="PicturePackPurge" ';	
+					<input type="checkbox" name="PicturePackPurge" id="PicturePackPurge" ';
 		$picturePackPurge = MagnaDB::gi()->fetchArray(eecho('
 			SELECT SQL_CALC_FOUND_ROWS DISTINCT eBayPicturePackPurge
 			FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
@@ -318,7 +322,7 @@ function renderSinglePrepareView($data) {
 			    $html .= ' checked="checked" ';
 			}
 		} else {
-			    $html .= ' checked="checked" '; 
+			    $html .= ' checked="checked" ';
 		}
 		$html .= '/><label for="PicturePackPurge" >'.ML_EBAY_LABEL_PICTUREPACK_PURGE_TEXT.'</label>
 					</td>
@@ -350,9 +354,9 @@ function renderMultiPrepareView($data) {
 	$SellerProfilesArray  = array();
 	$DispatchTimeMaxArray = array();
 	$blBusinessPoliciesSet = geteBayBusinessPolicies();
-	
+
 	foreach ($data as $row) {
-		if (   isset($row['PrimaryCategory']) 
+		if (   isset($row['PrimaryCategory'])
 		    && (0 != $row['PrimaryCategory'])
 		    && (     (0 == $i)
                   || ($prefilledCatsArray[$lastI]['PrimaryCategory']   != $row['PrimaryCategory'])
@@ -390,7 +394,7 @@ function renderMultiPrepareView($data) {
 		$currCatsKey = key($prefilledCatsArray);
 		$PrimaryCategory     = trim($prefilledCatsArray[$currCatsKey]['PrimaryCategory']);
 		$PrimaryCategoryName = (!empty($PrimaryCategory))
-			? geteBayCategoryPath($PrimaryCategory) 
+			? geteBayCategoryPath($PrimaryCategory)
 			: '';
 		$SecondaryCategory   = trim($prefilledCatsArray[$currCatsKey]['SecondaryCategory']);
 		$SecondaryCategoryName = (!empty($SecondaryCategory))
@@ -563,7 +567,7 @@ function renderMultiPrepareView($data) {
 					<select name="ListingType" id="ListingType">';
 	try {
 		$eBayStoreData = MagnaConnector::gi()->submitRequest(array('ACTION' => 'HasStore'));
-	} catch (MagnaException $e) { 
+	} catch (MagnaException $e) {
 		echo print_m($e->getErrorArray(), 'Error');
 	}
 	if('True' == $eBayStoreData['DATA']['Answer']) {
@@ -626,7 +630,7 @@ function renderMultiPrepareView($data) {
 		$sellerProfileContents = getDBConfigValue('ebay.sellerprofile.contents', $_MagnaSession['mpID']);
 		$defaultPaymentMethods = $sellerProfileContents['Payment'][$prefilledSellerProfiles['Payment']]['paymentmethod'];
 	} else if (isset($prefilledPaymentMethods)) {
-		$defaultPaymentMethods = json_decode(fixBrokenJsonUmlauts($prefilledPaymentMethods));
+		$defaultPaymentMethods = json_decode(fixBrokenJsonUmlauts($prefilledPaymentMethods), true);
 	} else {
 		$defaultPaymentMethods = getDBConfigValue('ebay.default.paymentmethod', $_MagnaSession['mpID']);
 	}
@@ -721,7 +725,7 @@ function renderMultiPrepareView($data) {
         if ('1' == $bestOfferEnabledSet[0]['BestOfferEnabled']) {
             $html .= ' checked="checked" ';
         }
-    } else { 
+    } else {
         if (getDBConfigValue(array('ebay.bestprice', 'val'), $_MagnaSession['mpID'])) {
             $html .= ' checked="checked" ';
         }
@@ -830,7 +834,7 @@ function renderMultiPrepareView($data) {
 				}
 				if (
 					MagnaDB::gi()->fetchOne('
-						SELECT count(*) 
+						SELECT count(*)
 						  FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
 						 WHERE products_id IN ('.$products_id_list.')
 							   AND Subtitle <> \'\'
@@ -892,7 +896,7 @@ function renderMultiPrepareView($data) {
 									</td>
 									<td class="buttons">
 										<input type="hidden" id="PrimaryPreselectedValues" name="PrimaryPreselectedValues" '.(
-											(!empty($PrimaryPreselectedValues)) 
+											(!empty($PrimaryPreselectedValues))
 												? 'value=\''.str_replace("'","%27", $PrimaryPreselectedValues).'\''
 												: ''
 										).' />
@@ -911,12 +915,11 @@ function renderMultiPrepareView($data) {
 									</td>
 									<td class="buttons">
 										<input type="hidden" id="SecondaryPreselectedValues" name="SecondaryPreselectedValues" '.(
-											(!empty($SecondaryPreselectedValues)) 
+											(!empty($SecondaryPreselectedValues))
 												? 'value=\''.str_replace("'","%27", $SecondaryPreselectedValues).'\''
 												: ''
 										).' />
 										<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_EBAY_CHOOSE.'" id="selectSecondaryCategory"/>
-										<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_EBAY_DELETE.'" id="deleteSecondaryCategory"/>
 									</td>
 								</tr>';
 			if ($hasStore) {
@@ -964,6 +967,10 @@ function renderMultiPrepareView($data) {
 									</div>
 								</td></tr>';
 
+			$mpAttributeTitle = str_replace('%marketplace%', 'eBay', ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
+            $mpOptionalAttributeTitle = str_replace('%marketplace%', 'eBay', ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
+            $mpCustomAttributeTitle = str_replace('%marketplace%', 'eBay', ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE);
+
 			$html .= '
 							</tbody></table>
 						</td>
@@ -973,9 +980,48 @@ function renderMultiPrepareView($data) {
 						<td colspan="3">&nbsp;</td>
 					</tr>
 				</tbody>
-				<tbody id="attr_1" style="display:none">
+				<tbody id="tbodyDynamicMatchingHeadline" style="display:none;">
+					<tr class="headline">
+						<td colspan="1"><h4>'.$mpAttributeTitle.'</h4></td>
+						<td colspan="2"><h4>'.ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB.'</h4></td>
+					</tr>
 				</tbody>
-				<tbody id="attr_2" style="display:none">
+				<tbody id="tbodyDynamicMatchingInput" style="display:none;">
+					<tr>
+						<th></th>
+						<td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+						<td class="info"></td>
+					</tr>
+				</tbody>
+				<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
+                    <tr class="headline">
+                        <td colspan="1"><h4>'.$mpOptionalAttributeTitle.'</h4></td>
+                        <td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
+                    </tr>
+                </tbody>
+                <tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
+                    <tr>
+                        <th></th>
+                        <td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+                        <td class="info"></td>
+                    </tr>
+                </tbody>
+                <tbody id="tbodyDynamicMatchingCustomHeadline" style="display:none;">
+                    <tr class="headline">
+                        <td colspan="1"><h4>'.$mpCustomAttributeTitle.'</h4></td>
+                        <td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
+                    </tr>
+                </tbody>
+                <tbody id="tbodyDynamicMatchingCustomInput" style="display:none;">
+                    <tr>
+                        <th></th>
+                        <td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+                        <td class="info"></td>
+                    </tr>
+                </tbody>
+				<tbody id="categoryInfo" style="display:none;">
+					<tr class="spacer"><td colspan="3">' . ML_GENERAL_VARMATCH_CATEGORY_INFO . '</td></tr>
+					<tr class="spacer"><td colspan="3">&nbsp;</td></tr>
 				</tbody>
 				<tbody>
 					<tr class="headline">
@@ -1039,7 +1085,8 @@ function renderMultiPrepareView($data) {
 					<th>'.ML_EBAY_DISPATCH_TIME.'</th>
 					<td class="input">
 						<select name="dispatchTime" id="dispatchTime" '.($blBusinessPoliciesSet? 'disabled="disabled" style="background-color:#dfdfdf" ':'').'>';
-			for ($days = 0; $days <= 30; $days++) {
+			$aDispatchTimeMaxAllowedValues = array (0,1,2,3,4,5,6,7,10,15,20,30,40);
+			foreach($aDispatchTimeMaxAllowedValues as $days) {
 				$isSelected = ($days == $prefilledDispatchTimeMax? 'selected' : '');
 				switch ($days) {
 					case (0): $daysText = ML_EBAY_DISPATCH_ON_SAME_DAY; break;
@@ -1048,7 +1095,7 @@ function renderMultiPrepareView($data) {
 				}
 				$html .= '
 							<option '.$isSelected.' value="'.$days.'">'.$daysText."</option>\n";
-				
+
 			}
 			$html .= '
 						</select>
@@ -1247,6 +1294,7 @@ div.ebayCatVisual {
 }
 </style>
 <script type="text/javascript">/*<![CDATA[*/
+
 function getListingDurations() {
 	var preselectedDuration='<?php echo $ListingDuration; ?>';
 	if ($('#ListingType').val() != '<?php echo $ListingType; ?>') {
@@ -1280,35 +1328,10 @@ function updatePrice() {
 		data: {
 			'action': 'makePrice',
 			'pID': $('#pID').val(),
-			'ListingType': $('#ListingType').val() 
+			'ListingType': $('#ListingType').val()
 		},
 		success: function(data) {
 			$('#Price').val(data);
-			$('#showCalcPrice').val(data);
-		},
-		error: function() {
-		},
-		dataType: 'html'
-	});
-}
-
-function getEBayCategoryAttributes(cID, aMode, preselectedValues) {
-	jQuery.ajax({
-		type: 'POST',
-		url: '<?php echo toURL($_url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
-		data: {
-			'action': 'getEBayAttributes',
-			'CategoryID': cID,
-			'Mode': aMode,
-			'preselectedValues': preselectedValues
-		},
-		success: function(data) {
-			$('#attr_'+aMode).html(data+'');
-			if (data == '') {
-				$('#attr_'+aMode).css({'display':'none'});
-			} else {
-				$('#attr_'+aMode).css({'display':'table-row-group'});
-			}
 		},
 		error: function() {
 		},
@@ -1347,35 +1370,27 @@ $(document).ready(function() {
 		var cID = this.value;
 		if (cID != '') {
 			generateEbayCategoryPath(cID, $('#PrimaryCategoryVisual'));
-			getEBayCategoryAttributes(cID, 1, $('#PrimaryPreselectedValues').val());
 			VariationsEnabled(cID, $('#noteVariationsEnabled'));
 			GetConditionValues(cID, $('#ebay_Condition'), <?php if(isset($defaultConditionID)) echo $defaultConditionID; else echo '1000'; ?>);
 			return true;
-		} else {
-			$('#attr_1').css({'display':'none'});
 		}
 	});
-	
+
 	$('#SecondaryCategoryVisual > select').change(function() {
 		var cID = this.value;
 		if (cID != '') {
 			$('#SecondaryCategory').val(cID);
 			generateEbayCategoryPath(cID, $('#SecondaryCategoryVisual'));
-			getEBayCategoryAttributes(cID, 2, $('#SecondaryPreselectedValues').val());
 			return true;
-		} else {
-			$('#attr_2').css({'display':'none'});
 		}
 	});
-
 	$('#PrimaryCategoryVisual > select').trigger('change');
 	$('#SecondaryCategoryVisual > select').trigger('change');
-	
+
 	$('#selectPrimaryCategory').click(function() {
 		startCategorySelector(function(cID) {
 			$('#PrimaryCategory').val(cID);
 			generateEbayCategoryPath(cID, $('#PrimaryCategoryVisual'));
-			getEBayCategoryAttributes(cID, 1, $('#PrimaryPreselectedValues').val());
 			VariationsEnabled(cID, $('#noteVariationsEnabled'));
 			GetConditionValues(cID, $('#ebay_Condition'), <?php if(isset($defaultConditionID)) echo $defaultConditionID; else echo '1000'; ?>);
 			return true;
@@ -1385,17 +1400,7 @@ $(document).ready(function() {
 		startCategorySelector(function(cID) {
 			$('#SecondaryCategory').val(cID);
 			generateEbayCategoryPath(cID, $('#SecondaryCategoryVisual'));
-			getEBayCategoryAttributes(cID, 2, $('#SecondaryPreselectedValues').val());
 		}, 'eBay');
-	});
-	$('#deleteSecondaryCategory').click(function() {
-		$('#SecondaryCategory').html(null);
-		$('#SecondaryCategory').val(null);
-		$('#SecondaryCategoryVisual').find('option').attr('selected', '');
-		$('#SecondaryCategoryVisual').find('option')[0].selected = 'selected';
-		
-		$('#attr_2').css({'display': 'none'});
-		$('#attr_2').html('');
 	});
 	$('#selectStoreCategory').click(function() {
 		startCategorySelector(function(cID) {
@@ -1409,10 +1414,10 @@ $(document).ready(function() {
 			generateEbayCategoryPath(cID, $('#StoreCategory2Visual'));
 		}, 'store');
 	});
-	
+
 	$('#ListingType').change(onListingTypeChange);
 	onListingTypeChange();
-	
+
 	$('#prepareForm').on('submit', function () {
 		jQuery.blockUI(blockUILoading);
 		$('select[id="PaymentMethods"]').prop('disabled', false);
@@ -1482,7 +1487,7 @@ $('select[id="shippingsellerprofile"]').change(function() {
 	 });
 }).trigger('change');
 $(document).ready(function() {
-	if ($('input[id="usemobile"]').val()=='true') { 
+	if ($('input[id="usemobile"]').val()=='true') {
 	var interval = window.setInterval(function() {
 		if (
 			typeof tinyMCE === "undefined"
@@ -1532,7 +1537,23 @@ $(document).ready(function() {
 //	$('#MobileDescription').closest("span").css({'display': 'none'});
 //	$('#Description').closest("span").css({'display': ''});
 //});
-/*]]>*/</script><?php
+/*]]>*/</script>
+	<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
+	<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/marketplaces/ebay/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
+	<script type="text/javascript">
+		/*<![CDATA[*/
+		var ml_vm_config = {
+			url: '<?php echo toURL($_url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
+			viewName: 'prepareView',
+			secondaryCategory: true,
+			formName: '#prepareForm',
+			handleCategoryChange: false,
+			i18n: <?php echo json_encode(EbayHelper::gi()->getVarMatchTranslations());?>,
+			shopVariations : <?php echo json_encode(EbayHelper::gi()->getShopVariations()); ?>
+		};
+		/*]]>*/
+	</script>
+<?php
 	$html .= ob_get_contents();
 	ob_end_clean();
 
@@ -1553,7 +1574,7 @@ function renderPrepareView($data) {
 	if (($hp = magnaContribVerify('EbayPrepareView_renderPrepareView', 1)) !== false) {
 		require($hp);
 	}
-	
+
 	/**
 	 * Check ob einer oder mehrere Artikel
 	 */
@@ -1565,8 +1586,8 @@ function renderPrepareView($data) {
 		'.ML_EBAY_ERROR_NO_SUITABLE_ITEMS_CHECK_LANGUAGE.'
 		</p>';
 	}
-	
-	
+
+
 	ob_start();
 ?>
 <script type="text/javascript">/*<![CDATA[*/
@@ -1582,7 +1603,7 @@ jQuery.blockUI(blockUILoading);
 
 /*]]>*/</script><?php
 	$renderedView = ob_get_clean();
-	
+
 	$renderedView .= '
 		<form method="post" id="prepareForm" action="'.toURL($_url).'">
 			<table class="attributesTable">';
@@ -1598,10 +1619,7 @@ jQuery.blockUI(blockUILoading);
 				<tbody>
 					<tr class="firstChild"><td>
 						<table><tbody><tr>
-							<td class="firstChild">'.(($prepareView == 'single')
-								? '<input class="ml-button" type="submit" name="unprepare" id="unprepare" value="'.ML_BUTTON_LABEL_REVERT.'"/>'
-								: ''
-							).'</td>
+							<td class="firstChild"></td>
 							<td class="lastChild">'.'<input class="ml-button mlbtn-action" type="submit" name="savePrepareData" id="savePrepareData" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>'.'</td>
 						</tr></tbody></table>
 					</td></tr>
@@ -1620,7 +1638,7 @@ function ebayPicturePackPropertiesListHtml($products_id, $selected_property ){
 	if (!MAGNA_GAMBIO_VARIATIONS && MagnaDb::gi()->columnExistsInTable('attributes_image', TABLE_PRODUCTS_ATTRIBUTES)) {
 		$blUseProperties = false;
 	}
-	
+
 		$aProductProperties = array();
 		if (is_array($products_id)) {
 			foreach ($products_id as $id) {
@@ -1672,28 +1690,28 @@ function ebayPictureUrlHtml($products_id, $selected_images,$oddEven ){
 		';
 	$imagelist = '';
 	$checkboxlist = '';
-	
+
 	if (is_array($selected_images)){
 		$imagePath = getDBConfigValue('ebay.imagepath',$_MagnaSession['mpID']);
 		$aShopProductImage = array_unique(MLProduct::gi()->getAllImagesByProductsId($products_id));
 		if (current($selected_images) == '__use_all__') $selected_images = $aShopProductImage;
-		foreach($aShopProductImage as $image){
-			$imagelist .= 
+		foreach($aShopProductImage as $iImgNo=>$image){
+			$imagelist .=
 			'<td class="image">
 			    <label for="PictureURL_'.$image.'">
 				    <img height="40" width="40" alt="'.$image.'" src="'.$imagePath.$image.'" />
 			    </label>
 			</td>';
-			$checkboxlist .= '<td class="checkboxofimage"><input type="checkbox" id="PictureURL_'.$image.'" value="'.$image.'" '.(in_array($image,$selected_images)?' checked="checked"':'').' name="PictureURL[]"></td>';
+			$checkboxlist .= '<td class="checkboxofimage"><input type="checkbox" id="PictureURL_'.$image.'" value="'.$image.'" '.(in_array($image,$selected_images)?' checked="checked"':'').' name="PictureURL['.$iImgNo.']"></td>';
 		}
-		$html .= 
+		$html .=
 		'<table>
 			<tr>'.$imagelist.'</tr>
 			<tr>'.$checkboxlist.'</tr>
 		</table>';
 	} else {
 		$html .= '<input type="text" class="fullwidth" value="'.$selected_images.'" name="PictureURL" id="PictureURL"/><br />&nbsp;<br />';
-		
+
 	}
 	$html .= '</td>';
 	if (getDBConfigValue(array('ebay.picturepack', 'val'), $_MagnaSession['mpID'])) {
@@ -1714,9 +1732,9 @@ function ebayGalleryTypeHtml($selected_type, $oddEven ){
 		<th>'.ML_EBAY_GALLERY_PICTURES.'</th>'
 		. '<td><select name="GalleryType" id="GalleryType">';
 	foreach (array (
-		'None'=>ML_GENERIC_NO_IMAGE, 
-		'Gallery'=>'Standard', 
-		'Plus' =>'Plus' 
+		'None'=>ML_GENERIC_NO_IMAGE,
+		'Gallery'=>'Standard',
+		'Plus' =>'Plus'
 	) as $value => $name){
 		$html .= '<option value="'.$value.'" '.(($selected_type == $value)?'selected=selected':'').'>'.$name.'</option>'."\n";
 	}

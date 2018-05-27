@@ -223,7 +223,7 @@ class RicardoShippingDetailsProcessor {
 		if ($shippingCostDefault === null) {
 			$shippingCostDefault = getDBConfigValue($shippingCostKeys, $this->mpID);
 		}
-
+		$shippingCostDefault = mlfloatalize($shippingCostDefault);
 		return array(
 			'text' => '<label for="' . $shippingCostIdKey . '">' . ML_GENERIC_SHIPPING_COST . ': </label><input type="text" class="autoWidth fullwidth" id="' . $shippingCostIdKey . '" name="' . $shippingCostNameKey . '" value="' . $shippingCostDefault . '"/><span style="margin-left: 3px;">' . ML_RICARDO_CURRENCY . '</span>',
 			'id' => $shippingCostIdKey,

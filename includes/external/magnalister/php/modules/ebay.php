@@ -100,7 +100,7 @@ if (!MagnaDB::gi()->recordExists(TABLE_CURRENCIES, array (
 $includes = array();
 # in prepare passiert categoriematching
 if ($_magnaQuery['mode'] == 'prepare') {
-	$includes[] = DIR_MAGNALISTER_MODULES.'ebay/prepare.php';
+	$includes[] = DIR_MAGNALISTER_MODULES.'ebay/pre_prepare.php';
 	
 } else if ($_magnaQuery['mode'] == 'checkin') {
 	$includes[] = DIR_MAGNALISTER_MODULES.'ebay/checkin.php';

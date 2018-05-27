@@ -113,8 +113,13 @@ class CrowdfoxCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             $data['submit']['ShippingMethod'] = isset($prepare['ShippingMethod']) ? $prepare['ShippingMethod'] : '';
             $data['submit']['Brand'] = isset($prepare['Brand']) ? $prepare['Brand'] : '';
             $data['submit']['ManufacturerNumber'] = isset($prepare['MPN']) ? $prepare['MPN'] : '';
-            $data['submit']['AdditionalAttributes'] = !empty($prepare['ShopVariation']) ? $this->fixCategoryAttributes(json_decode($prepare['ShopVariation'],
-                true), $product) : '';
+            $data['submit']['AdditionalAttributes'] = '';
+            if (!empty($prepare['ShopVariation'])) {
+	            $data['submit']['AdditionalAttributes'] = CrowdfoxHelper::gi()->convertMatchingToNameValue(
+	            	json_decode($prepare['ShopVariation'],true),
+		            $product
+	            );
+            }
             $data['submit']['AdditionalAttributes'] = $this->prepareAttributesForMP($data['submit']['AdditionalAttributes']);
         }
 
@@ -315,165 +320,28 @@ class CrowdfoxCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         }
     }
 
-    private function fixCategoryAttributes($aCatAttributes, $product) {
-        $fixCatAttributes = array();
-        if (isset($aCatAttributes) && is_array($aCatAttributes)) {
-            foreach ($aCatAttributes as $key => &$aCatAttribute) {
-                $sCode = $aCatAttribute['Code'];
-                switch ($sCode) {
-                    case 'freetext':
-                    case 'attribute_value': {
-                        if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-                            $fixCatAttributes[$key] = $aCatAttribute['Values'];
-                        }
-                        break;
-                    }
-                    case 'title': {
-                        if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-                            $fixCatAttributes[$key] = $product['Title'];
-                        }
-                        break;
-                    }
-                    case 'description': {
-                        if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-                            $fixCatAttributes[$key] = $product['Description'];
-                        }
-                        break;
-                    }
-                    case 'ean': {
-                        if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-                            $fixCatAttributes[$key] = $product['EAN'];
-                        }
-
-                        break;
-                    }
-                    case 'weight': {
-                        if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-                            $fixCatAttributes[$key] = $product['Weight']['Value'] . $product['Weight']['Unit'];
-                        }
-                        break;
-                    }
-                    case 'contentvolume': {
-                        if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-                            $fixCatAttributes[$key] = $product['BasePrice']['Value'] . $product['BasePrice']['Unit'];
-                        }
-                        break;
-                    }
-                    default:
-                        break;
-                }
-
-                if (empty($fixCatAttributes[$key])) {
-                    unset($aCatAttributes[$key]);
-                }
-
-                if (!isset($fixCatAttributes[$key])) {
-                    continue;
-                }
-
-                if ($this->stringStartsWith($key, 'additional_attribute')) {
-                    $sNewKey = empty($aCatAttribute['CustomAttributeValue']) ? ucfirst($sCode) : ucfirst($aCatAttribute['CustomAttributeValue']);
-                    $fixCatAttributes[$sNewKey] = $fixCatAttributes[$key];
-                    unset($fixCatAttributes[$key]);
-                }
-            }
-        }
-
-        return $fixCatAttributes;
-    }
-
     private function fixVariationCategoryAttributes($aCatAttributes, $product, $variationDB, $variation) {
-        $fixCatAttributes = array();
-        if (isset($aCatAttributes) && is_array($aCatAttributes)) {
-            foreach ($aCatAttributes as $key => &$aCatAttribute) {
-                $sCode = $aCatAttribute['Code'];
-                switch ($sCode) {
-                    case 'freetext':
-                    case 'attribute_value': {
-                        if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-                            $fixCatAttributes[$key] = $aCatAttribute['Values'];
-                        }
-                        break;
-                    }
-                    case 'title': {
-                        if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-                            $fixCatAttributes[$key] = $product['Title'];
-                        }
-                        break;
-                    }
-                    case 'description': {
-                        if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-                            $fixCatAttributes[$key] = $product['Description'];
-                        }
-                        break;
-                    }
-                    case 'ean': {
-                        if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-                            $fixCatAttributes[$key] = isset($variationDB['EAN']) ? $variationDB['EAN'] : $product['EAN'];
-                        }
+	    $productDataForMatching = array_merge($product, $variationDB);
+	    $productDataForMatching['ProductId'] = $variationDB['VariationId'];
+	    $productDataForMatching['ProductsModel'] = $variationDB['MarketplaceSku'];
 
-                        break;
-                    }
-                    case 'weight': {
-                        if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-                            if (isset($variationDB['Weight']['Value'])) {
-                                $fixCatAttributes[$key] = $variationDB['Weight']['Value'] . $variationDB['Weight']['Unit'];
-                            } else {
-                                $fixCatAttributes[$key] = $product['Weight']['Value'] . $product['Weight']['Unit'];
-                            }
-                        }
-                        break;
-                    }
-                    case 'contentvolume': {
-                        if (isset($aCatAttribute['Values']) && !empty($aCatAttribute['Values'])) {
-                            if (isset($variationDB['BasePrice']['Value'])) {
-                                $fixCatAttributes[$key] = $variationDB['BasePrice']['Value'] . $variationDB['BasePrice']['Unit'];
-                            } else {
-                                $fixCatAttributes[$key] = $product['BasePrice']['Value'] . $product['BasePrice']['Unit'];
-                            }
-                        }
-                        break;
-                    }
-                    default:
-                        foreach ($variationDB['Variation'] as $variationAttribute) {
-                            if ($sCode == $variationAttribute['NameId']) {
-                                foreach ($aCatAttribute['Values'] as $value) {
-                                    if ($variationAttribute['Value'] === $value['Shop']['Value']) {
-                                        $fixCatAttributes[$key] = str_replace(array(
-                                            ML_GENERAL_VARMATCH_MANUALY_MATCHED,
-                                            ML_GENERAL_VARMATCH_AUTO_MATCHED,
-                                            ML_GENERAL_VARMATCH_FREE_TEXT,
-                                        ), '', $value['Marketplace']['Value']);
-                                        $sCode = $variationAttribute['Name'];
-                                    }
-                                }
-                            }
-                        }
-                }
+	    if (!isset($variationDB['Weight']['Value'])) {
+		    $productDataForMatching['Weight'] = $product['Weight'];
+	    }
 
-                if (empty($fixCatAttributes[$key])) {
-                    unset($fixCatAttributes[$key]);
-                }
+	    if (!isset($variationDB['BasePrice']['Value'])) {
+		    $productDataForMatching['BasePrice'] = $product['BasePrice'];
+	    }
 
-                if (!isset($fixCatAttributes[$key])) {
-                    continue;
-                }
+	    // Since variation attributes are not set directly on product and their key is number, we should prefix them for
+	    // standard AM conversion because otherwise variation attributes are no different from any other shop attribute
+	    foreach ($variationDB['Variation'] as $variationAttribute) {
+		    $productDataForMatching["variant_{$variationAttribute['NameId']}"] = $variationAttribute['ValueId'];
+	    }
 
-                if ($this->stringStartsWith($key, 'additional_attribute')) {
-                    $sNewKey = empty($aCatAttribute['CustomAttributeValue']) ? ucfirst($sCode) : ucfirst($aCatAttribute['CustomAttributeValue']);
-                    $fixCatAttributes[$sNewKey] = $fixCatAttributes[$key];
-                    unset($fixCatAttributes[$key]);
-                }
-            }
-        }
+	    $fixCatAttributes = CrowdfoxHelper::gi()->convertMatchingToNameValue($aCatAttributes, $productDataForMatching);
 
-        return $fixCatAttributes;
-    }
-
-    private function stringStartsWith($haystack, $needle) {
-        $length = strlen($needle);
-
-        return (substr($haystack, 0, $length) === $needle);
+	    return $fixCatAttributes;
     }
 
     private function prepareAttributesForMP($additionalAttributes) {

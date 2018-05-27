@@ -57,7 +57,10 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 	}
 
 	protected function setupQuery($addFields = '', $addFrom = '', $addWhere = '') {
-		$addFields .= (empty($addFields) ? '' : ',').' p.products_shippingtime, '.
+		$addFields .= (empty($addFields) ? '' : ',').
+		(MagnaDB::gi()->columnExistsInTable('products_shippingtime', TABLE_PRODUCTS)
+		? ' p.products_shippingtime, '
+		: '\' '.getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID, 0).'\' AS `p.products_shippingtime`, ').
 							'hp.MarketplaceCategories, hp.MarketplaceCategoriesName, hp.ConditionType, hp.ShippingTime, '.
 							'hp.Comment
 		              ';

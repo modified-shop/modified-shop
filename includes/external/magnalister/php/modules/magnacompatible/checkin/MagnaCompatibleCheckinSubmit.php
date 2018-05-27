@@ -28,7 +28,7 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 
 	protected $checkinDetails = array();
 	protected $checkinSettings = array();
-	
+
 	protected $quantitySub = false;
 	protected $quantityLumb = false;
 
@@ -454,7 +454,6 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 			}
 		}
 	}
-
 	protected function filterSelection() {
 		/* false is good! It indicates nothing bad happend. */
 		return false;
@@ -474,4 +473,5 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 			'mode'   => ($state == 'fail') ? 'errorlog' : 'inventory'
 		), true);
 	}
+	
 }

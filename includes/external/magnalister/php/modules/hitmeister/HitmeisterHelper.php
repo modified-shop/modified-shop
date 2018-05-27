@@ -20,7 +20,9 @@
 
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/AttributesMatchingHelper.php');
 
-class HitmeisterHelper extends AttributesMatchingHelper {
+class HitmeisterHelper extends AttributesMatchingHelper
+{
+	protected $numberOfMaxAdditionalAttributes = self::UNLIMITED_ADDITIONAL_ATTRIBUTES;
 
 	private static $instance;
 
@@ -275,24 +277,41 @@ class HitmeisterHelper extends AttributesMatchingHelper {
 		return '';
 	}
 
+	protected function isProductPrepared($category, $prepare = false, $customIdentifier = '')
+	{
+		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+			$sKeyType = 'products_model';
+		} else {
+			$sKeyType = 'products_id';
+		}
+
+		return MagnaDB::gi()->recordExists(TABLE_MAGNA_HITMEISTER_PREPARE, array(
+			'MpId' => $this->mpId,
+			$sKeyType => $prepare,
+			'MarketplaceCategories' => $category,
+		));
+	}
+
 	protected function getPreparedData($category, $prepare = false, $customIdentifier = '')
 	{
-		$availableCustomConfigs = false;
+		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+			$sSQLAnd = ' AND products_model = "' . $prepare . '"';
+		} else {
+			$sSQLAnd = ' AND products_id = "' . $prepare . '"';
+		}
+		
+		$availableCustomConfigs = array();
 		if ($prepare) {
 			$availableCustomConfigs = json_decode(MagnaDB::gi()->fetchOne(eecho('
 				SELECT CategoryAttributes
 				FROM ' . TABLE_MAGNA_HITMEISTER_PREPARE . '
 				WHERE MpId = ' . $this->mpId . '
-					AND ' .(
-						getDBConfigValue('general.keytype', '0') == 'artNr'
-						? 'products_model = \'' . $prepare. '\''
-						: 'products_id = \'' . $prepare. '\''
-					). '
 					AND MarketplaceCategories = "' . $category . '"
+					' . $sSQLAnd . '
 			', false)), true);
 		}
 
-		return !$availableCustomConfigs ? false : $availableCustomConfigs;
+		return !$availableCustomConfigs ? array() : $availableCustomConfigs;
 	}
 
     /**
@@ -325,7 +344,7 @@ class HitmeisterHelper extends AttributesMatchingHelper {
 		return null;
 	}
 
-	protected function getAttributesFromMP($category, $customIdentifier = '')
+	protected function getAttributesFromMP($category, $additionalData = null, $customIdentifier = '')
 	{
 		$data = HitmeisterApiConfigValues::gi()->getVariantConfigurationDefinition($category);
 		if (!is_array($data) || !isset($data['attributes'])) {

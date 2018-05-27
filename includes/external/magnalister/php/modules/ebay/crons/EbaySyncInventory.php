@@ -363,8 +363,7 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 			$process = $process || (isset($data['Price']) && (float)$this->cItem['Price'] != (float)$data['Price']);
 		}
 		$aMatching = getDBConfigValue($_MagnaSession['currentPlatform'] . '.listingdetails.'.strtolower('EAN').'.dbmatching.table', $_MagnaSession['mpID'], false);
-		if (   ML_ShopAddOns::mlAddOnIsBooked('EbayProductIdentifierSync')
-		    && array_key_exists('EAN', $product)
+		if (   array_key_exists('EAN', $product)
 		    && !empty($product['EAN'])
 		    && is_array($aMatching)
 		    && !empty($aMatching['column'])

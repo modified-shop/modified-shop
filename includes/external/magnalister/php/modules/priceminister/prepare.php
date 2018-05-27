@@ -20,11 +20,20 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-class PriceministerPrepare extends MagnaCompatibleBase {
+class PriceministerPrepare extends MagnaCompatibleBase
+{
 
 	protected $prepareSettings = array();
 
-	public function __construct(&$params) {
+	public function __construct(&$params)
+	{
+		if (!empty($_POST['FullSerializedForm'])) {
+			$newPost = array();
+			parse_str_unlimited($_POST['FullSerializedForm'], $newPost);
+
+			$_POST = array_merge($_POST, $newPost);
+		}
+
 		parent::__construct($params);
 
 		$this->prepareSettings['selectionName'] = isset($_GET['view']) ? $_GET['view'] : 'apply';
@@ -32,7 +41,8 @@ class PriceministerPrepare extends MagnaCompatibleBase {
 		$this->resources['url']['view'] = $this->prepareSettings['selectionName'];
 	}
 
-	protected function saveMatching() {
+    protected function saveMatching()
+    {
 		if (!array_key_exists('saveMatching', $_POST)) {
 			if (!isset($_POST['Action']) || $_POST['Action'] !== 'SaveMatching' || $_GET['where'] === 'varmatchView') {
 				return;
@@ -50,12 +60,13 @@ class PriceministerPrepare extends MagnaCompatibleBase {
 				   AND session_id = '".session_id()."'
 		", true);
 
-        $shopVariations = $this->saveMatchingAttributes($oProductSaver, 1 == count($aProductIDs));
+		$isSinglePrepare = 1 == count($aProductIDs);
+        $shopVariations = $this->saveMatchingAttributes($oProductSaver, $isSinglePrepare);
         $itemDetails = $_POST;
 
         $itemDetails['CategoryAttributes'] = $shopVariations;
 
-        if (1 == count($aProductIDs)){
+        if ($isSinglePrepare){
             $oProductSaver->saveSingleProductProperties($aProductIDs[0], $itemDetails, $this->prepareSettings['selectionName'], $this->isAjax);
         } else if (!empty($aProductIDs)){
 			$oProductSaver->saveMultipleProductProperties($aProductIDs, $itemDetails, $this->prepareSettings['selectionName']);
@@ -80,13 +91,20 @@ class PriceministerPrepare extends MagnaCompatibleBase {
 				));
                 
                 if (!empty($oProductSaver->aErrors)) {
-							foreach ($oProductSaver->aErrors as $sError) {
+                    foreach ($oProductSaver->aErrors as $sError) {
 						echo '<div class="errorBox">' . $sError . '</div>';
 					}
 				}
             } else if ($saveMatching && $matchingNotFinished && !empty($oProductSaver->aErrors)) {
                 foreach ($oProductSaver->aErrors as $sError) {
                     echo '<div class="errorBox">' . $sError . '</div>';
+                }
+            } elseif ($matchingNotFinished && !empty($oProductSaver->aErrors)) {
+                $_POST['notice'] = array();
+                foreach ($oProductSaver->aErrors as $aError) {
+                    if (is_array($aError) && ('notice' === $aError['type'])) {
+                        $_POST['notice'][] = $aError['message'];
+                    }
                 }
             }
         } else {
@@ -101,21 +119,24 @@ class PriceministerPrepare extends MagnaCompatibleBase {
         }
     }
 
-    protected function saveMatchingAttributes($oProductSaver)
+    protected function saveMatchingAttributes($oProductSaver, $isSinglePrepare)
     {
         if (isset($_POST['Variations'])){
-			parse_str($_POST['Variations'], $params);
+			parse_str_unlimited($_POST['Variations'], $params);
 			$_POST = $params;
 		}
 
 		$sIdentifier = $_POST['PrimaryCategory'];
-        $matching = isset($_POST['ml']['match']) ? $_POST['ml']['match'] : false;
+        $matching = isset($_POST['ml']['match']) ? $_POST['ml']['match'] : null;
+		$variationThemeAttributes = null;
+
 		$savePrepare = isset($_POST['saveMatching']) ? $_POST['saveMatching'] : false;
 		$match = isset($_POST['match']) ? reset($_POST['match']) : '';
-		if($match != 'false'){
-			$oProductSaver->aErrors = array_merge($oProductSaver->aErrors,
-			PriceministerHelper::gi()->saveMatching($sIdentifier, $matching, $savePrepare, true));
-		}
+        if ($match != 'false'){
+            $oProductSaver->aErrors = array_merge($oProductSaver->aErrors,
+                PriceministerHelper::gi()->saveMatching($sIdentifier, $matching, $savePrepare, true, $isSinglePrepare, $variationThemeAttributes)
+            );
+        }
 
         return $matching ? json_encode($matching['ShopVariation']) : false;
     }
@@ -237,16 +258,16 @@ class PriceministerPrepare extends MagnaCompatibleBase {
             }
 
             if ($_POST['request'] === 'AdvertAttrForCategory'){
-                $mpAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
-                $mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
-
+				$mpAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
+				$mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
+				$mpCustomAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE);
                 $html = '
 <table id="variationMatcher" class="attributesTable">
    <input type="hidden" name="PrimaryCategory" id="PrimaryCategory"/> 
    <tbody id="tbodyDynamicMatchingHeadline" style="display:none;">
 	    <tr class="headline">
 		    <td colspan="1"><h4>'.$mpAttributeTitle.'</h4></td>
-		    <td colspan="2"><h4>Mein Web-Shop Attribut</h4></td>
+		    <td colspan="2"><h4>'.ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB.'</h4></td>
 	    </tr>
 	</tbody>
 	<tbody id="tbodyDynamicMatchingInput" style="display:none;">
@@ -259,16 +280,29 @@ class PriceministerPrepare extends MagnaCompatibleBase {
 	<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
 	    <tr class="headline">
 		    <td colspan="1"><h4>'.$mpOptionalAttributeTitle.'</h4></td>
-		    <td colspan="2"><h4>Mein Web-Shop Attribut</h4></td>
+		    <td colspan="2"><h4>'.ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB.'</h4></td>
 	    </tr>
 	</tbody>
 	<tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
 		<tr>
 			<th></th>
 			<td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
-			<td class="info"></td>
-		</tr>
+				<td class="info"></td>
+	 	</tr>
+ 	</tbody>
+ 	<tbody id="tbodyDynamicMatchingCustomHeadline" style="display:none;">
+	    <tr class="headline">
+		    <td colspan="1"><h4>'.$mpCustomAttributeTitle.'</h4></td>
+		    <td colspan="2"><h4>'.ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB.'</h4></td>
+	    </tr>
 	</tbody>
+	<tbody id="tbodyDynamicMatchingCustomInput" style="display:none;">
+		<tr>
+			<th></th>
+			<td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+				<td class="info"></td>
+	 	</tr>
+ 	</tbody>
 </table>
 <p id="categoryInfo" style="display: none">' . ML_GENERAL_VARMATCH_CATEGORY_INFO . '</p>';
                 echo $html;

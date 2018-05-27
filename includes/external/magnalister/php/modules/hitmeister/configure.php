@@ -71,7 +71,14 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 	
 	public function confShippingtimeMatching($args, &$value = '') {
 		if (!defined('TABLE_SHIPPING_STATUS') || !MagnaDB::gi()->tableExists(TABLE_SHIPPING_STATUS)) {
-			return ML_ERROR_NO_SHIPPINGTIME_MATCHING;
+			setDBConfigValue('hitmeister.shippingtimematching.prefer', $this->mpID, false, true);
+			return ML_ERROR_NO_SHIPPINGTIME_MATCHING.'
+<script type="text/javascript">/*<![CDATA[*/
+	$(document).ready(function() {
+		$(\'input[id="conf_hitmeister.shippingtimematching.prefer_val"]\').prop(\'checked\', false);
+		$(\'input[id="conf_hitmeister.shippingtimematching.prefer_val"]\').prop(\'disabled\', true);
+	});
+/*]]>*/</script>';
 		}
 		$shippingtimes = MagnaDB::gi()->fetchArray('
 		    SELECT shipping_status_id as id, shipping_status_name as name

@@ -1,11 +1,11 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
@@ -23,7 +23,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 class eBayCategoryMatching {
 	const EBAY_CAT_VALIDITY_PERIOD = 86400; # Nach welcher Zeit werden Kategorien ungueltig (Sekunden)
 	const EBAY_STORE_CAT_VALIDITY_PERIOD = 600; # Nach welcher Zeit werden Store-Kategorien ungueltig (Sekunden)
-	
+
 	private $request = 'view';
 	private $isStoreCategory = false;
 
@@ -32,13 +32,13 @@ class eBayCategoryMatching {
 
 	public function __construct($request = 'view') {
 		global $_url;
-		
+
 		$this->request = $request;
 		$this->url = $_url;
 
         $this->SiteID = geteBaySiteID();
 	}
-	
+
 	# Die Funktion wird verwendet beim Aufruf der Kategorie-Zuordnung, nicht vorher.
 	# Beim Aufruf werden die Hauptkategorien gezogen,
 	# und beim Anklicken der einzelnen Kategorie die Kind-Kategorien, falls noch nicht vorhanden.
@@ -75,7 +75,7 @@ class eBayCategoryMatching {
 		MagnaDB::gi()->batchinsert(TABLE_MAGNA_EBAY_CATEGORIES, $categories['DATA'], true);
 		return true;
 	}
-	
+
 	# Das gleiche fuer Store-Categories.
 	# Nur: Es wird immer der ganze Kategorie-Baum abgerufen (die Datenmenge ist uebersichtlich)
 	public static function importeBayStoreCategories() {
@@ -105,7 +105,7 @@ class eBayCategoryMatching {
 		MagnaDB::gi()->batchinsert(TABLE_MAGNA_EBAY_CATEGORIES, $categories, true);
 		return true;
 	}
-	
+
 	private function geteBayCategories($ParentID = 0, $purge = false) {
 		if ($purge) {
 			MagnaDB::gi()->delete(TABLE_MAGNA_EBAY_CATEGORIES, array (
@@ -118,7 +118,7 @@ class eBayCategoryMatching {
 		} else {
 			$whereCondition = "CategoryID != ParentID AND ParentID = $ParentID";
 		}
-		
+
 		$ebayCategories = MagnaDB::gi()->fetchArray('
 		    SELECT SQL_CALC_FOUND_ROWS DISTINCT CategoryID, SiteID, CategoryName,
 		           CategoryLevel, ParentID, LeafCategory
@@ -130,7 +130,7 @@ class eBayCategoryMatching {
 		  ORDER BY CategoryName ASC
 		');
         $countFoundCategories = (int)MagnaDB::gi()->foundRows();
-		
+
 		# nichts gefunden? vom Server abrufen
         # Mit < 5 fuer den Fall dass Kategoriepfade zu einzelnen Kategorien geholt wurden
 		if ($countFoundCategories < 5) {
@@ -166,7 +166,7 @@ class eBayCategoryMatching {
 			$whereCondition = 'CategoryID != ParentID AND ParentID = '.$ParentID;
 		}
 		# echo print_m(func_get_args(), __METHOD__);
-		
+
 		$ebayCategories = MagnaDB::gi()->fetchArray(eecho('
 			SELECT DISTINCT CategoryID, SiteID, CategoryName,
 				CategoryLevel, ParentID, LeafCategory
@@ -176,7 +176,7 @@ class eBayCategoryMatching {
 			 AND InsertTimestamp > UNIX_TIMESTAMP() - '.self::EBAY_STORE_CAT_VALIDITY_PERIOD.'
 			 ORDER BY CategoryName ASC
 		', false));
-		
+
 		# nichts gefunden? vom Server abrufen
 		if (empty($ebayCategories)) {
 			if (self::importeBayStoreCategories($ParentID)) {
@@ -225,7 +225,7 @@ class eBayCategoryMatching {
 		}
 		return $ebayTopLevelList;
 	}
-	
+
 	# dummy
 	private function renderShopCategories() {
 		return '';
@@ -248,7 +248,7 @@ class eBayCategoryMatching {
 				</div>';
 		}
 		return $itemList;
-	
+
 	}
 
 	private function rendereBayCategoryItem($id) {
@@ -278,6 +278,7 @@ class eBayCategoryMatching {
 var selectedEBayCategory = '';
 var madeChanges = false;
 var isStoreCategory = false;
+var finalEbayCategoryPath = '';
 
 function collapseAllNodes(elem) {
 	$('div.catelem span.toggle:not(.leaf)', $(elem)).each(function() {
@@ -306,7 +307,7 @@ function selectEBayCategory(yID, html) {
 	//$('#ebayCats div.catname span.catname.selected').removeClass('selected').css({'font-weight':'normal'});
 	$('#ebayCats div.catView').find('span.catname.selected').removeClass('selected').css({'font-weight':'normal'});
 	$('#ebayCats div.catView').find('span.toggle.tick').removeClass('tick');
-	
+
 	$('#'+yID+' span.catname').addClass('selected').css({'font-weight':'bold'});
 	$('#'+yID+' span.catname').parents().prevAll('span.catname').addClass('selected').css({'font-weight':'bold'});
 	$('#'+yID+' span.catname').parents().prev('span.toggle').addClass('tick');
@@ -340,7 +341,7 @@ function addeBayCategoriesEventListener(elem) {
 			if ($(this).hasClass('plus')) {
 				tmpElem = $(this);
 				tmpElem.removeClass('plus').addClass('minus');
-				
+
 				if (tmpElem.parent().children('div.catname').children('div.catelem').length == 0) {
 					jQuery.ajax({
 						type: 'POST',
@@ -368,7 +369,7 @@ function addeBayCategoriesEventListener(elem) {
 				$(this).parent().children('div.catname').children('div.catelem').css({display: 'none'});
 			}
 		});
-	});	
+	});
 	$('div.catelem span.toggle.leaf', $(elem)).each(function() {
 		$(this).click(function () {
 			clickEBayCategory($(this).parent().children('div.catname').children('span.catname'));
@@ -378,7 +379,7 @@ function addeBayCategoriesEventListener(elem) {
 				clickEBayCategory($(this));
 			});
 			if ($(this).parent().attr('id') == selectedEBayCategory) {
-				$(this).addClass('selected').css({'font-weight':'bold'});	
+				$(this).addClass('selected').css({'font-weight':'bold'});
 			}
 		});
 	});
@@ -413,8 +414,9 @@ function generateEbayCategoryPath(cID, viewElem) {
 			'isStoreCategory': isStoreCategory
 		},
 		success: function(data) {
+			finalEbayCategoryPath = data;
 //			viewElem.html(data);
-			viewElem.find('select').append('<option selected="selected" value="'+cID+'">'+data+'</option>');
+			viewElem.find('select').append('<option selected="selected" value="'+cID+'">'+data+'</option>').change();
 		},
 		error: function() {
 		},
@@ -523,17 +525,26 @@ function startCategorySelector(callback, kind) {
 	});
 }
 
+	var mpCategorySelector = (function() {
+		return {
+			addCategoriesEventListener: addeBayCategoriesEventListener,
+			getCategoryPath: function(e) {
+				e.html(finalEbayCategoryPath);
+			},
+			startCategorySelector: startCategorySelector
+		}
+	})();
 $(document).ready(function() {
-	addeBayCategoriesEventListener($('#ebayCats'));
+		mpCategorySelector.addCategoriesEventListener($('#ebayCats'));
 });
 /*]]>*/</script>
 <?php
-		$html .= ob_get_contents();	
+		$html .= ob_get_contents();
 		ob_end_clean();
 
 		return $html;
 	}
-	
+
 	public function renderAjax() {
 		$id = '';
 		if (isset($_POST['id'])) {
@@ -547,7 +558,7 @@ $(document).ready(function() {
 			? (($_POST['isStoreCategory'] == 'false')
 				? false
 				: true
-			  ) 
+			  )
 			: false;
 
 		switch ($_POST['action']) {
@@ -555,7 +566,7 @@ $(document).ready(function() {
 				$_timer = microtime(true);
 				$cID = (int)$id;
 				$yIDs = MagnaDB::gi()->fetchArray('
-					SELECT ebay_category_id 
+					SELECT ebay_category_id
 					  FROM '.TABLE_MAGNA_EBAY_CATEGORYMATCHING.'
 					 WHERE category_id=\''.$cID.'\'', true
 				);
@@ -621,7 +632,7 @@ $(document).ready(function() {
 				return $html;
 			}
 			case 'saveCategoryMatching': {
-				if (!isset($_POST['selectedShopCategory']) || empty($_POST['selectedShopCategory']) || 
+				if (!isset($_POST['selectedShopCategory']) || empty($_POST['selectedShopCategory']) ||
 					(isset($_POST['selectedeBayCategories']) && !is_array($_POST['selectedeBayCategories']))
 				) {
 					return json_encode(array(
@@ -629,7 +640,7 @@ $(document).ready(function() {
 						'error' => preg_replace('/\s\s+/', ' ', ML_EBAY_ERROR_SAVING_INVALID_EBAY_CATS)
 					));
 				}
- 
+
 				$cID = str_replace('s_select_', '', $_POST['selectedShopCategory']);
 				if (!ctype_digit($cID)) {
 					return json_encode(array(
@@ -638,7 +649,7 @@ $(document).ready(function() {
 					));
 				}
 				$cID = (int)$cID;
-				
+
 				if (isset($_POST['selectedeBayCategories']) && !empty($_POST['selectedeBayCategories'])) {
 					$ebayIDs = array();
 					foreach ($_POST['selectedeBayCategories'] as $tmpYID) {
@@ -679,6 +690,15 @@ $(document).ready(function() {
 
 				break;
 			}
+            case 'DBMatchingColumns':
+                $columns = MagnaDB::gi()->getTableCols($_POST['Table']);
+                $editedColumns = array();
+                foreach ($columns as $column) {
+                    $editedColumns[$column] = $column;
+                }
+
+                return json_encode($editedColumns, JSON_FORCE_OBJECT);
+                break;
 			default: {
 				return json_encode(array(
 					'error' => ML_EBAY_ERROR_REQUEST_INVALID
@@ -686,13 +706,21 @@ $(document).ready(function() {
 			}
 		}
 	}
-	
+
 	public function render() {
 		if ($this->request == 'ajax') {
 			return $this->renderAjax();
 		} else {
 			return $this->renderView();
 		}
-		
+
+	}
+
+	public function getMPCategoryPath($id) {
+		return geteBayCategoryPath($id, false);
+	}
+
+	public function renderMatching() {
+		return $this->renderView();
 	}
 }

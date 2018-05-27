@@ -22,6 +22,10 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_top.php');
 
+if (($hp = magnaContribVerify('StatisticsExtension', 2)) !== false) {
+    require($hp);
+}
+
 if (!empty($globalStats)) {
 	$statisticsHTML = '
 		<p>&nbsp;</p><div id="stats">';

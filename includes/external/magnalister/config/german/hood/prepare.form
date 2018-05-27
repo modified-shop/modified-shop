@@ -43,6 +43,23 @@
                 "default": [],
                 "expertsetting": true
             },
+            "mfnpartno": {
+                "label": "Hersteller-Modellnummer",
+                "desc": "Falls Sie ein Contrib zur Verwaltung von Hersteller-Modellnummern verwenden, k&ouml;nnen Sie hier die Tabelle und die Spalte ausw&auml;hlen in der die \r\n\t\t\t\t           Hersteller-Modellnummer gespeichert wird. Dadurch wird das Feld f&uuml;r die Hersteller-Modellnummern bei Vorbereitung vorausgef&uuml;llt. <br\/>\r\n\t\t\t\t           Sollte in der Tabelle die Spalte \"products_id\" anders benannt sein, geben Sie bitte bei Alias die alternative Bezeichnung f&uuml;r die Spalte mit der gleichen \r\n\t\t\t\t           Bedeutung an.<br\/><br\/>\r\n\t\t\t\t           <b>Hinweis:<\/b> Diese Daten werden nicht &uuml;berpr&uuml;ft. Sollten Sie fehlerhaft sein, wird es zu Datenbankfehlern kommen!",
+                "key": "_#_platform_#_.checkin.manufacturerpartnumber.table",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                    "alias": {
+                        "label": "<span class=\"tt\">`products_id`<\/span> Alias",
+                        "key": "_#_platform_#_.checkin.manufacturerpartnumber.alias",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
             "language": {
                 "label": "Sprache",
                 "key": "_#_platform_#_.lang",

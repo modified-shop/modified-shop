@@ -117,13 +117,34 @@ abstract class MLProductListHitmeisterAbstract extends MLProductList {
 
 	protected function isPreparedDifferently($aRow) {
 		$sPrimaryCategory = $this->getPrepareData($aRow, 'MarketplaceCategories');
-		$sCategoryDetails = $this->getPrepareData($aRow, 'CategoryAttributes');
 		if (!empty($sPrimaryCategory)) {
+			$sCategoryDetails = $this->getPrepareData($aRow, 'CategoryAttributes');
 			$categoryMatching = HitmeisterHelper::gi()->getCategoryMatching($sPrimaryCategory);
 			$categoryDetails = json_decode($sCategoryDetails, true);
 			return HitmeisterHelper::gi()->detectChanges($categoryMatching, $categoryDetails);
 		}
 
+		return false;
+	}
+
+	protected function isDeletedAttributeFromShop($aRow, &$message) {
+	    $aMarketplaceCategories = $this->getPrepareData($aRow, 'MarketplaceCategories');
+		if (!empty($aMarketplaceCategories)) {
+			$matchedAttributes = $this->getPrepareData($aRow, 'CategoryAttributes');
+			$matchedAttributes = json_decode($matchedAttributes, true);
+			$shopAttributes = HitmeisterHelper::gi()->flatShopVariations();
+
+            if (!is_array($matchedAttributes)) {
+                $matchedAttributes = array();
+            }
+			
+			foreach ($matchedAttributes as $matchedAttribute) {
+				if (HitmeisterHelper::gi()->detectIfAttributeIsDeletedOnShop($shopAttributes, $matchedAttribute, $message)) {
+					return true;
+				}
+			}
+		}
+		
 		return false;
 	}
 

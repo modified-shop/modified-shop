@@ -29,10 +29,25 @@ class EbayApiConfigValues extends MagnaCompatibleApiConfigValues {
 		}
 		return self::$instance;
 	}
-	
+
 	public function getCarriers() {
 		$data = $this->fetchDataFromApi('GetCarriers');
 		return $data;
 	}
-	
+
+	public function getVariantConfigurationDefinition($category, $secondaryCategory = null) {
+		$requestParams = array(
+			'DATA' => array(
+				'CategoryID' => $category,
+			)
+		);
+
+		if (!empty($secondaryCategory)) {
+			$requestParams['DATA']['SecondaryCategoryID'] = $secondaryCategory;
+		}
+
+		$data = $this->fetchDataFromApi('GetCategoryDetails', $requestParams);
+		return $data;
+	}
+
 }

@@ -22,6 +22,14 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 $_url['mode'] = 'prepare';
 
+if (!empty($_POST['FullSerializedForm'])) {
+	$newPost = array();
+	parse_str_unlimited($_POST['FullSerializedForm'], $newPost);
+
+	$_POST = array_merge($_POST, $newPost);
+	unset($_POST['FullSerializedForm']);
+}
+
 if (!array_key_exists('view', $_GET) || !in_array($_GET['view'], array('apply', 'match', 'varmatch'))) {
 	$view = $_GET['view'] = 'apply';
 } else {

@@ -53,4 +53,41 @@ abstract class MLProductListMeinpaketAbstract extends MLProductList {
                         }
                         return '&mdash;';
             }
+
+	protected function getSelectionName() {
+		return 'apply';
+	}
+
+	protected function isPreparedDifferently($aRow) {
+		$sPrimaryCategory = $this->getPrepareData($aRow, 'VariationConfiguration');
+		if (!empty($sPrimaryCategory)) {
+			$sCategoryDetails = $this->getPrepareData($aRow, 'CategoryAttributes');
+			$categoryMatching = MeinpaketHelper::gi()->getCategoryMatching($sPrimaryCategory);
+			$categoryDetails = json_decode($sCategoryDetails, true);
+			return MeinpaketHelper::gi()->detectChanges($categoryMatching, $categoryDetails);
+		}
+
+		return false;
+	}
+
+	protected function isDeletedAttributeFromShop($aRow, &$message) {
+	    $aVariationConfiguration = $this->getPrepareData($aRow, 'VariationConfiguration');
+		if (!empty($aVariationConfiguration)) {
+			$matchedAttributes = $this->getPrepareData($aRow, 'CategoryAttributes');
+			$matchedAttributes = json_decode($matchedAttributes, true);
+			$shopAttributes = MeinpaketHelper::gi()->flatShopVariations();
+
+            if (!is_array($matchedAttributes)) {
+                $matchedAttributes = array();
+            }
+
+			foreach ($matchedAttributes as $matchedAttribute) {
+				if (MeinpaketHelper::gi()->detectIfAttributeIsDeletedOnShop($shopAttributes, $matchedAttribute, $message)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
 }
