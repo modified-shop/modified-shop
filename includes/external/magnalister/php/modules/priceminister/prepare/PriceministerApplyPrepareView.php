@@ -51,6 +51,7 @@ class PriceministerApplyPrepareView extends MagnaCompatibleBase {
 
         $mpAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
         $mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
+        $mpCustomAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE);
 
         $attributeMatchingTableHtml = '
 			<tbody id="variationMatcher" class="attributesTable">
@@ -104,18 +105,31 @@ class PriceministerApplyPrepareView extends MagnaCompatibleBase {
 			</tbody>
 			<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
 			    <tr class="headline">
-			        <td colspan="1"><h4>'.$mpOptionalAttributeTitle.'</h4></td>
-			        <td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
-			    </tr>
-			</tbody>
-			<tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
-			    <tr>
-			        <th></th>
-			        <td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
-			        <td class="info"></td>
-			    </tr>
-			</tbody>
-			<tbody id="categoryInfo" style="display:none;">
+                   <td colspan="1"><h4>'.$mpOptionalAttributeTitle.'</h4></td>
+                   <td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
+                </tr>
+           </tbody>
+           <tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
+               <tr>
+                   <th></th>
+                   <td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+                   <td class="info"></td>
+               </tr>
+           </tbody>
+           <tbody id="tbodyDynamicMatchingCustomHeadline" style="display:none;">
+               <tr class="headline">
+                   <td colspan="1"><h4>'.$mpCustomAttributeTitle.'</h4></td>
+                   <td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
+               </tr>
+           </tbody>
+           <tbody id="tbodyDynamicMatchingCustomInput" style="display:none;">
+               <tr>
+                   <th></th>
+                   <td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+                   <td class="info"></td>
+               </tr>
+           </tbody>
+           <tbody id="categoryInfo" style="display:none;">
 				<tr class="spacer"><td colspan="3">' . ML_GENERAL_VARMATCH_CATEGORY_INFO . '</td></tr>
 				<tr class="spacer"><td colspan="3">&nbsp;</td></tr>
 			</tbody>';
@@ -533,7 +547,10 @@ class PriceministerApplyPrepareView extends MagnaCompatibleBase {
 
             $productModel = PriceministerHelper::gi()->getProductModel('apply');
 
-            return json_encode(PriceministerHelper::gi()->getMPVariations($select, $productModel, true));
+            $aMarketplaceVariations = PriceministerHelper::gi()->getMPVariations($select, $productModel, true);
+            $aNotice = array('notice' => $_POST['notice']);
+            $aFinal = array_merge($aMarketplaceVariations, $aNotice);
+            return json_encode($aFinal);
         } else if (isset($_POST['Action']) && ($_POST['Action'] === 'DBMatchingColumns')) {
             $columns = MagnaDB::gi()->getTableCols($_POST['Table']);
             $editedColumns = array();

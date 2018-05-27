@@ -39,6 +39,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	protected $cur = array();
 	protected $o = array(); /* the current order */
 	protected $p = array(); /* the current product */
+	protected $stock_left = 0; /* the stock of current product or variation */
 	protected $taxValues = array(); /* tax values for the current order */
 	protected $mailOrderSummary = array();
 	protected $comment = '';
@@ -977,6 +978,10 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			}
 		}
 
+		if (    ($reduceStock)
+		     && (SHOPSYSTEM == 'gambio')) {
+			$this->sendGambioOutOfStockNotification();
+		}
 	}
 
 	/*
@@ -1031,13 +1036,24 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			   SET products_quantity = products_quantity - ".(int)$this->p['products_quantity']."
 			 WHERE products_id = '".(int)$this->p['products_id']."'
 		");
+		$this->stock_left = MagnaDB::gi()->fetchOne("
+			SELECT products_quantity FROM ".TABLE_PRODUCTS."
+			 WHERE products_id = '".(int)$this->p['products_id']."'
+		");
 		if ($this->multivariationsEnabled) {
 			$this->db->query("
 				UPDATE ".TABLE_MAGNA_VARIATIONS."
 				   SET variation_quantity = variation_quantity - ".(int)$this->p['products_quantity']."
 				 WHERE     products_id = '".(int)$this->p['products_id']."'
-				       AND ".mlGetVariationSkuField()." = '".MagnaDB::gi()->escape($sSKU)."'
+				 AND ".mlGetVariationSkuField()." = '".MagnaDB::gi()->escape($sSKU)."'
 			");
+			if ($this->db->affectedRows() > 0) {
+				$this->stock_left = MagnaDB::gi()->fetchOne("
+					SELECT variation_quantity FROM ".TABLE_MAGNA_VARIATIONS."
+					 WHERE     products_id = '".(int)$this->p['products_id']."'
+					 AND ".mlGetVariationSkuField()." = '".MagnaDB::gi()->escape($sSKU)."'
+				");
+			}
 		}
 	}
 
@@ -1067,6 +1083,15 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				       AND options_id = '".(int)$aOption['options_id']."'
 				       AND options_values_id = '".(int)$aOption['options_values_id']."'
 			");
+			if ($this->db->affectedRows() > 0) {
+				$this->stock_left = MagnaDB::gi()->fetchOne("
+					SELECT attributes_stock FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+					 WHERE     products_id = '".(int)$this->p['products_id']."'
+					       AND options_id = '".(int)$aOption['options_id']."'
+					       AND options_values_id = '".(int)$aOption['options_values_id']."'
+				");
+			}
+
 		}
 	}
 
@@ -1080,6 +1105,12 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				   SET combi_quantity = combi_quantity - ".(int)$this->p['products_quantity']."
 				 WHERE products_properties_combis_id = '".$iOptionsId."'
 			", false));
+			if ($this->db->affectedRows() > 0) {
+				$this->stock_left = MagnaDB::gi()->fetchOne("
+					SELECT combi_quantity FROM products_properties_combis
+					 WHERE products_properties_combis_id = '".$iOptionsId."'
+				");
+			}
 		}
 	}
 
@@ -1237,7 +1268,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			$sku = $this->p['products_id']; 
 		}
 		$customersLanguage = getLanguageIsoForCountryIso($this->o['orderInfo']['BuyerCountryISO']);
-		#if ($this->verbose) echo "magnaSKU2pOpt($sku, $customersLanguage, multivariationsEnabled == ".$this->multivariationsEnabled.")\n";
+		#if ($this->verbose) echo "magnaSKU2pOpt($sku, $customersLanguage, multivariationsEnabled == ".$this->multivariationsEnabled.")\n";;
 		$attrValues = magnaSKU2pOpt($sku, $customersLanguage, $this->multivariationsEnabled);
 		if (array_key_exists('options_name', $attrValues)) {
 			$attrValues = array($attrValues);
@@ -1555,6 +1586,54 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		}
 	}
 
+	/**
+	 * send out of stock warning e-mail
+	 * if configured so
+	 *
+	 * Gambio only (uses Gambio functionality)
+	 */
+	private function sendGambioOutOfStockNotification() {
+		if (!defined('STOCK_REORDER_LEVEL')) return;
+		if (!defined('GM_OUT_OF_STOCK_NOTIFY_TEXT')) return;
+		if ($this->p['products_id'] == 0) return; // foreign item
+		$blUseCheckoutProcessProcess = false; // don't create object if not necessary (performance)
+		if (   (!function_exists('xtc_php_mail'))
+		    || (!function_exists('htmlentities_wrapper'))) {
+			if (file_exists(DIR_FS_CATALOG.'system/classes/checkout/CheckoutProcessProcess.inc.php')) {
+				require_once(DIR_FS_CATALOG.'system/classes/checkout/CheckoutProcessProcess.inc.php');
+				$blUseCheckoutProcessProcess = true;
+			} else {
+				return;
+			}
+		}
+		if (STOCK_CHECK == false) return;
+		if (SEND_EMAILS == false) return;
+		if ($this->stock_left > STOCK_REORDER_LEVEL) return;
+		$iLanguageId = MagnaDB::gi()->fetchOne("
+			SELECT languages_id FROM ".TABLE_LANGUAGES." WHERE directory = '".$this->language."'
+		");
+		$sProductName = MagnaDB::gi()->fetchOne("
+			SELECT products_name FROM ".TABLE_PRODUCTS_DESCRIPTION."
+			 WHERE products_id = ".$this->p['products_id']." AND language_id = $iLanguageId
+		");
+		$sSubject = GM_OUT_OF_STOCK_NOTIFY_TEXT . ' ' . $sProductName;
+		$sBody = $sProductName . "\n" . $this->p['products_model'] . "\n"
+			. GM_OUT_OF_STOCK_NOTIFY_TEXT . ': ' . (double)$this->stock_left . "\n" . HTTP_SERVER
+			. DIR_WS_CATALOG . 'product_info.php?info=p' . xtc_get_prid($this->p['products_id'])
+			. "\n" . HTTP_SERVER . DIR_WS_CATALOG . 'admin/categories.php?pID='
+			. xtc_get_prid($this->p['products_id']) . '&action=new_product';
+
+		if ($blUseCheckoutProcessProcess) {
+			$coo_cpp = MainFactory::create_object('CheckoutProcessProcess'); 
+			if (!method_exists($coo_cpp, 'send_mail')) return;
+			$coo_cpp->send_mail($sSubject, $sBody);
+		} else {
+		xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, '',
+			STORE_OWNER_EMAIL_ADDRESS, STORE_NAME, '', '', $sSubject,
+			nl2br(htmlentities_wrapper($sBody)), $sBody);
+		}
+	}
+
 	/*
 	 * For newer Gambio versions: set total weight in the orders table
 	 */
@@ -1619,6 +1698,19 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 						: ''
 					).$this->o[$sArrayKey][$sStateKey];
 					$this->o[$sArrayKey][$sStateKey] = '';
+				}
+			}
+			if (    (!MagnaDB::gi()->columnExistsInTable('entry_additional_info', TABLE_ADDRESS_BOOK)) 
+			     || (@constant('ACCOUNT_ADDITIONAL_INFO') !== 'true')) {
+				if (!empty($this->o['adress']['entry_additional_info'])) {
+					$this->o['adress']['entry_street_address'] .= ' '.$this->o['adress']['entry_additional_info'];
+					unset($this->o['adress']['entry_additional_info']);
+				}
+				foreach(array('customers','billing','delivery') as $addrPurpose) {
+					if (!empty($this->o['order'][$addrPurpose.'_additional_info'])) {
+						$this->o['order'][$addrPurpose.'_street_address'] .= ' '.$this->o['order'][$addrPurpose.'_additional_info'];
+						unset($this->o['order'][$addrPurpose.'_additional_info']);
+					}
 				}
 			}
 		}

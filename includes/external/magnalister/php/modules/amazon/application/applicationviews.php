@@ -79,7 +79,7 @@ function getProductTypesAndAttributes($category, $selected = null) {
 	return $result;
 }
 
-function getBrowseNodes($category, $subcategory, $selectedNode = null, $newStyle = true) {
+function getBrowseNodes($category, $subcategory, $selectedNode = null, $newStyle = 'ALL') {
 	try {
 		$browseNodes = MagnaConnector::gi()->submitRequest(array(
 			'ACTION' => 'GetBrowseNodes',
@@ -240,14 +240,19 @@ function renderMultiApplication($data) {
 			$data['ProductType'] = false;
 		}
 
-		$bNewResponse = false;
+		$mNewResponse = false;
 		if (isset($data['BrowseNodes'][0]) && !empty($data['BrowseNodes'][0])) {
-			preg_match("/([0-9]*)__([0-9]*)/", $data['BrowseNodes'][0], $aOutput);
+			preg_match("/([0-9]*)__([0-9]*)__([0-9]*)/", $data['BrowseNodes'][0], $aOutput);
 			if (!empty($aOutput)) {
-				$bNewResponse = true;
-			}
+                $mNewResponse = 'ALL';
+            } else {
+                preg_match("/([0-9]*)__([0-9]*)/", $data['BrowseNodes'][0], $aOutput);
+                if (!empty($aOutput)) {
+                    $mNewResponse = true;
+                }
+            }
 		}
-		$browseNodes = getBrowseNodes($data['MainCategory'], $data['ProductType'], null, $bNewResponse);
+		$browseNodes = getBrowseNodes($data['MainCategory'], $data['ProductType'], null, $mNewResponse);
 		$browseNodes = array(
 			0 => $browseNodes,
 			1 => $browseNodes,
@@ -270,7 +275,7 @@ function renderMultiApplication($data) {
 	}
 
 	$html = '
-		<tbody>
+		<tbody id="variationMatcher" class="attributesTable">
 			<tr class="headline">
 				<td colspan="3"><h4>' . ML_LABEL_CATEGORY . '</h4></td>
 			</tr>
@@ -372,22 +377,38 @@ function renderMultiApplication($data) {
 				<td colspan="3">&nbsp;</td>
 			</tr>
 		</tbody>
-        <tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
-            <tr class="headline">
-                <td colspan="1"><h4>' . str_replace('%marketplace%', ucfirst($_MagnaSession['currentPlatform']), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE) . '</h4></td>
-                <td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB .' </h4></td>
-            </tr>
-        </tbody>
-        <tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
-            <tr>
-                <th></th>
-                <td class="input">' . ML_GENERAL_VARMATCH_SELECT_CATEGORY . '</td>
-                <td class="info"></td>
-            </tr>
-            <tr class="spacer">
-                <td colspan="3">&nbsp;</td>
-            </tr>
-        </tbody>
+		<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
+           <tr class="headline">
+               <td colspan="1"><h4>' . str_replace('%marketplace%', ucfirst($_MagnaSession['currentPlatform']), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE) . '</h4></td>
+              <td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB .' </h4></td>
+           </tr>
+      </tbody>
+      <tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
+      	<tr>
+      		<th></th>
+            <td class="input">' . ML_GENERAL_VARMATCH_SELECT_CATEGORY . '</td>
+            <td class="info"></td>
+        </tr>
+        <tr class="spacer">
+        	<td colspan="3">&nbsp;</td>
+		</tr>
+	  </tbody>
+	  <tbody id="tbodyDynamicMatchingCustomHeadline" style="display:none;">
+           <tr class="headline">
+               <td colspan="1"><h4>' . str_replace('%marketplace%', ucfirst($_MagnaSession['currentPlatform']), ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE) . '</h4></td>
+              <td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB .' </h4></td>
+           </tr>
+      </tbody>
+      <tbody id="tbodyDynamicMatchingCustomInput" style="display:none;">
+      	<tr>
+      		<th></th>
+            <td class="input">' . ML_GENERAL_VARMATCH_SELECT_CATEGORY . '</td>
+            <td class="info"></td>
+        </tr>
+        <tr class="spacer">
+        	<td colspan="3">&nbsp;</td>
+		</tr>
+	  </tbody>
 		';
 
 	return $html;
@@ -716,7 +737,7 @@ function renderGenericApplication($data) {
 				<td colspan="3"><h4>' . ML_LABEL_GENERIC_SETTINGS . '</h4></td>
 			</tr>
 			<tr class="odd">
-				<th>' . ML_GENERIC_SHIPPING_TIME . '</th>
+				<th>' . ML_AMAZON_LABEL_LEADTIME_TO_SHIP . '</th>
 				<td class="input">
 					<select class="fullWidth" name="LeadtimeToShip">';
 	$usrValue = $data['LeadtimeToShip'];
@@ -764,13 +785,19 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 		die(json_encode(AmazonHelper::gi()->getCustomIdentifiers($_POST['SelectValue'])));
 	}
 	if (isset($_POST['type']) && ($_POST['type'] == 'browsenodes') && isset($_POST['category']) && isset($_POST['subcategory'])) {
+        $mNewResponse = false;
 		if (isset($_POST['selected']) && !empty($_POST['selected'])) {
-			preg_match("/([0-9]*)__([0-9]*)/", $_POST['selected'], $aOutput);
-			if (!empty($aOutput)) {
-				$bNewResponse = true;
-			}
+            preg_match("/([0-9]*)__([0-9]*)__([0-9]*)/", $_POST['selected'], $aOutput);
+            if (!empty($aOutput)) {
+                $mNewResponse = 'ALL';
+            } else {
+                preg_match("/([0-9]*)__([0-9]*)/", $_POST['selected'], $aOutput);
+                if (!empty($aOutput)) {
+                    $mNewResponse = true;
+                }
+            }
 		}
-		die(getBrowseNodes($_POST['category'], $_POST['subcategory'], $_POST['selected'], $bNewResponse));
+		die(getBrowseNodes($_POST['category'], $_POST['subcategory'], $_POST['selected'], $mNewResponse));
 	}
 	if (isset($_POST['type']) && ($_POST['type'] == 'resetToDefaults') && isset($_POST['pID']) && ctype_digit($_POST['pID'])) {
 		$pID = $_POST['pID'];

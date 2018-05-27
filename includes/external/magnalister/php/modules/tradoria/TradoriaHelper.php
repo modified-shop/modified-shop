@@ -18,9 +18,24 @@
  * -----------------------------------------------------------------------------
  */
 
-require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/MagnaCompatibleHelper.php');
+require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/AttributesMatchingHelper.php');
 
-class TradoriaHelper extends MagnaCompatibleHelper {
+class TradoriaHelper extends AttributesMatchingHelper {
+
+	private static $instance;
+	protected $marketplaceTitle = 'Rakuten';
+
+	protected $numberOfMaxAdditionalAttributes = self::UNLIMITED_ADDITIONAL_ATTRIBUTES;
+
+	public static function gi()
+	{
+		if (self::$instance === null) {
+			self::$instance = new TradoriaHelper();
+		}
+
+		return self::$instance;
+	}
+
 	public static function processCheckinErrors($result, $mpID) {
 		$fieldname = 'MARKETPLACEERRORS';
 		if (!isset($result[$fieldname])) {
@@ -53,5 +68,95 @@ class TradoriaHelper extends MagnaCompatibleHelper {
 			);
 			MagnaDB::gi()->insert(TABLE_MAGNA_COMPAT_ERRORLOG, $err);
 		}
+	}
+
+	protected function isProductPrepared($category, $prepare = false)
+	{
+		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+			$sKeyType = 'products_model';
+		} else {
+			$sKeyType = 'products_id';
+		}
+
+		return MagnaDB::gi()->recordExists(TABLE_MAGNA_TRADORIA_PREPARE, array(
+			'MpId' => $this->mpId,
+			$sKeyType => $prepare,
+			'MarketplaceCategoriesName' => $category,
+		));
+	}
+
+	protected function getPreparedData($category, $prepare = false, $customIdentifier = '')
+	{
+		$availableCustomConfigs = array();
+
+		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+			$sSQLAnd = ' AND products_model = "'.$prepare.'"';
+		} else {
+			$sSQLAnd = ' AND products_id = "'. $prepare . '"';
+		}
+
+		if ($prepare) {
+			$availableCustomConfigs = json_decode(MagnaDB::gi()->fetchOne(eecho('
+				SELECT CategoryAttributes
+				FROM ' . TABLE_MAGNA_TRADORIA_PREPARE . '
+				WHERE MpId = ' . $this->mpId . '
+					AND MarketplaceCategoriesName = "' . $category . '"
+					' . $sSQLAnd . '
+			', false), true), true);
+		}
+
+		return !$availableCustomConfigs ? array() : $availableCustomConfigs;
+	}
+
+	/**
+	 * Gets prepared attributes data for products prepared for given category.
+	 *
+	 * @param string $category
+	 * @return array|null
+	 */
+	protected function getPreparedProductsData($category) {
+		$dataFromDB = MagnaDB::gi()->fetchArray(eecho('
+				SELECT `CategoryAttributes`
+				FROM ' . TABLE_MAGNA_TRADORIA_PREPARE . '
+				WHERE mpID = ' . $this->mpId . '
+					AND MarketplaceCategoriesName = "' . $category . '"
+			', false), true);
+
+		if ($dataFromDB) {
+			$result = array();
+			foreach ($dataFromDB as $preparedData) {
+				if ($preparedData) {
+					$result[] = json_decode($preparedData, true);
+				}
+			}
+
+			return $result;
+		}
+
+		return null;
+	}
+
+	protected function getAttributesFromMP($category, $additionalData = null, $customIdentifier = '') {
+		return array('attributes' => array());
+	}
+
+	protected function setMatchingTableTranslations() {
+		return array(
+			'mpTitle' => str_replace('%marketplace%', ucfirst($this->marketplaceTitle), ML_GENERAL_VARMATCH_TITLE),
+			'mpAttributeTitle' => str_replace('%marketplace%', ucfirst($this->marketplaceTitle), ML_GENERAL_VARMATCH_MP_ATTRIBUTE),
+			'mpOptionalAttributeTitle' => str_replace('%marketplace%', ucfirst($this->marketplaceTitle), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE),
+			'mpCustomAttributeTitle' => str_replace('%marketplace%', ucfirst($this->marketplaceTitle), ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE),
+		);
+	}
+
+	public function getVarMatchTranslations() {
+		$translations = parent::getVarMatchTranslations();
+		$translations['mpValue'] = str_replace('%marketplace%', ucfirst($this->marketplaceTitle), ML_GENERAL_VARMATCH_MP_VALUE);
+		$translations['attributeChangedOnMp'] = str_replace('%marketplace%', ucfirst($this->marketplaceTitle), ML_GENERAL_VARMATCH_ATTRIBUTE_CHANGED_ON_MP);
+		$translations['attributeDeletedOnMp'] = str_replace('%marketplace%', ucfirst($this->marketplaceTitle), ML_GENERAL_VARMATCH_ATTRIBUTE_DELETED_ON_MP);
+		$translations['attributeValueDeletedOnMp'] = str_replace('%marketplace%', ucfirst($this->marketplaceTitle), ML_GENERAL_VARMATCH_ATTRIBUTE_VALUE_DELETED_ON_MP);;
+		$translations['categoryWithoutAttributesInfo'] = str_replace('%marketplace%', ucfirst($this->marketplaceTitle), ML_GENERAL_VARMATCH_CATEGORY_WITHOUT_ATTRIBUTES_INFO);
+
+		return $translations;
 	}
 }

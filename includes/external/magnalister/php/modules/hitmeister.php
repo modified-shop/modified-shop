@@ -73,7 +73,7 @@ class HitmeisterMarketplace extends MagnaCompatMarketplace {
 								<td style="width: 1px;">'.$item['products_id'].'</td>
 								<td style="width: 1px;">'.(empty($item['products_model']) ? '<i class="grey">'.ML_LABEL_NOT_SET.'</i>' : $item['products_model']).'</td>
 								<td style="width: 1px;"><a href="http://www.hitmeister.de/item/search/?search_value='.$item['products_ean'].'" target="_blank">'.$item['products_ean'].'</a></td>
-								<td>'.(empty($item['products_name']) ? '<i class="grey">'.ML_LABEL_UNKNOWN.'</i>' : $item['products_name']).'</td>
+								<td>'.(empty($item['products_name']) ? '<i class="grey">'.ML_LABEL_UNKNOWN.'</i>' : fixHTMLUTF8Entities($item['products_name'])).'</td>
 								<td class="textcenter" style="width: 1px;">
 									<a class="gfxbutton edit" title="'.ML_LABEL_EDIT.'" target="_blank" href="categories.php?pID='.$item['products_id'].'&action=new_product">&nbsp;</a>
 								</td>

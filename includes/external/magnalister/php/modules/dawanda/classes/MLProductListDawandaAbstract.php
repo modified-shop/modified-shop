@@ -47,4 +47,44 @@ abstract class MLProductListDawandaAbstract extends MLProductList {
 			->setFinalPriceFromDB($aRow['products_id'], $this->aMagnaSession['mpID'])
 			->format();
 	}
+
+	protected function getSelectionName() {
+		return 'apply';
+	}
+
+	protected function isPreparedDifferently($aRow) {
+		$sPrimaryCategory = $this->getPrepareData($aRow, 'MarketplaceCategories');
+		if (!empty($sPrimaryCategory)) {
+			$sPrimaryCategory = json_decode($sPrimaryCategory, true);
+			$sPrimaryCategory = is_array($sPrimaryCategory) ? $sPrimaryCategory['primary'] : $sPrimaryCategory;
+			$sCategoryDetails = $this->getPrepareData($aRow, 'CategoryAttributes');
+			$categoryMatching = DawandaHelper::gi()->getCategoryMatching($sPrimaryCategory);
+			$categoryDetails = json_decode($sCategoryDetails, true);
+			return DawandaHelper::gi()->detectChanges($categoryMatching, $categoryDetails);
+		}
+
+		return false;
+	}
+
+	protected function isDeletedAttributeFromShop($aRow, &$message) {
+	    $aMarketplaceCategories = $this->getPrepareData($aRow, 'MarketplaceCategories');
+		if (!empty($aMarketplaceCategories)) {
+			$matchedAttributes = $this->getPrepareData($aRow, 'CategoryAttributes');
+			$matchedAttributes = json_decode($matchedAttributes, true);
+			$shopAttributes = DawandaHelper::gi()->flatShopVariations();
+
+            if (!is_array($matchedAttributes)) {
+                $matchedAttributes = array();
+            }
+
+			foreach ($matchedAttributes as $matchedAttribute) {
+				if (DawandaHelper::gi()->detectIfAttributeIsDeletedOnShop($shopAttributes, $matchedAttribute, $message)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+	
 }

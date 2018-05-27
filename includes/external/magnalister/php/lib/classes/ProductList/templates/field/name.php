@@ -33,7 +33,13 @@ class_exists('MLProductList') or die();
 			</tr>
 		</tbody>
 	</table>
-	<?php if (method_exists($this, 'isPreparedDifferently') && $this->isPreparedDifferently($aRow)) { ?>
-		<span class="ml-warning" title="<?php echo ML_GENERAL_VARMATCH_ATTRIBUTE_DIFFERENT_ON_PRODUCT ?>">&nbsp;<span>
-	<?php } ?>
+	<div class="warning-wrapper">
+		<?php if (method_exists($this, 'isPreparedDifferently') && $this->isPreparedDifferently($aRow)) { ?>
+			<span class="ml-warning" title="<?php echo ML_GENERAL_VARMATCH_ATTRIBUTE_DIFFERENT_ON_PRODUCT; ?>">&nbsp;</span>
+		<?php }
+		$message = '';
+		if (method_exists($this, 'isDeletedAttributeFromShop') && $this->isDeletedAttributeFromShop($aRow, $message)) { ?>
+			<span class="ml-warning" title="<?php echo $message; ?>">&nbsp;</span>
+		<?php } ?>
+	</div>
 </td>

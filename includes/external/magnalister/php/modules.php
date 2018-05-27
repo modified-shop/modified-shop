@@ -1,11 +1,11 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
@@ -32,23 +32,23 @@ $_modules = array(
 			'amazon.marketplaceid',
 			'amazon.mwstoken',
 			'amazon.lang',
-			'amazon.internationalShipping', 
-			'amazon.mwstfallback', 
+			'amazon.internationalShipping',
+			'amazon.mwstfallback',
 			/*//
-			{search: 1427198983}'amazon.mwst.shipping', 
-			//*/			
-			'amazon.quantity.type', 
-			'amazon.leadtimetoship', 
-			'amazon.price.addkind', 
-			'amazon.import', 
-			'amazon.orderstatus.open', 
-			'amazon.orderstatus.fba', 
-			'amazon.orderstatus.sync', 
-			'amazon.orderstatus.shipped', 
-			'amazon.orderstatus.carrier.default', 
-			'amazon.orderstatus.cancelled', 
-			'amazon.stocksync.tomarketplace', 
-			'amazon.stocksync.frommarketplace', 
+			{search: 1427198983}'amazon.mwst.shipping',
+			//*/
+			'amazon.quantity.type',
+			'amazon.leadtimetoship',
+			'amazon.price.addkind',
+			'amazon.import',
+			'amazon.orderstatus.open',
+			'amazon.orderstatus.fba',
+			'amazon.orderstatus.sync',
+			'amazon.orderstatus.shipped',
+			'amazon.orderstatus.carrier.default',
+			'amazon.orderstatus.cancelled',
+			'amazon.stocksync.tomarketplace',
+			'amazon.stocksync.frommarketplace',
 			'amazon.mail.send'
 			//'amazon.CustomerGroup', /* gibt es nicht in osCommerce */
 		),
@@ -100,7 +100,13 @@ $_modules = array(
 			'ebay.postalcode',
 		),
 		'pages' => array (
-			'prepare' => ML_GENERIC_PREPARE,
+            'prepare' => array (
+                'title' => ML_GENERIC_PREPARE,
+                'views' => array (
+                    'apply' => ML_AMAZON_NEW_ITMES,
+                    'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
+                )
+            ),
 			'checkin' => ML_GENERIC_CHECKIN,
 			'listings' => array (
 				'title' => ML_GENERIC_LISTINGS,
@@ -172,7 +178,7 @@ $_modules = array(
 		'title' => ML_MODULE_MEINPAKET,
 		'logo' => 'ayn',
 		'displayAlways' => true,
-		'referer' => array('meinpaket.de'),
+		'referer' => array('allyouneed.com'),
 		'requiredConfigKeys' => array (
 			'meinpaket.username',
 			'meinpaket.password',
@@ -199,7 +205,7 @@ $_modules = array(
 				'title' => ML_GENERIC_PREPARE,
 				'views' => array (
 					'apply' => ML_AMAZON_NEW_ITMES,
-					'varmatch' => ML_MEINPAKET_VARIANT_MATCHING,
+					'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
 				),
 			),
 			'checkin' => ML_GENERIC_CHECKIN,
@@ -504,7 +510,7 @@ $_modules = array(
 			'hasOrderImport' => false,
 		),
 		'type' => 'marketplace',
-	),	
+	),
 	'idealo' => array(
 		'title' => ML_MODULE_IDEALO,
 		'logo' => 'idealo',
@@ -708,7 +714,13 @@ $_modules = array(
 			'tradoria.import',
 		),
 		'pages' => array (
-			'catmatch' => ML_MEINPAKET_CATEGORY_MATCHING,
+			'prepare' => array (
+				'title' => ML_GENERIC_PREPARE,
+				'views' => array (
+					'apply' => ML_AMAZON_NEW_ITMES,
+					'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
+				)
+			),
 			'checkin' => ML_GENERIC_CHECKIN,
 			'listings' => array (
 				'title' => ML_GENERIC_LISTINGS,
@@ -721,7 +733,7 @@ $_modules = array(
 			'conf' => ML_GENERIC_CONFIGURATION,
 		),
 		'settings' => array (
-			'defaultpage' => 'catmatch',
+			'defaultpage' => 'prepare',
 			'subsystem' => 'Tradoria',
 			'currency' => 'EUR',
 			'hasOrderImport' => true,
@@ -829,7 +841,13 @@ $_modules = array(
 			'dawanda.apikey',
 		),
 		'pages' => array (
-			'prepare' => ML_GENERIC_PREPARE,
+			'prepare' => array (
+				'title' => ML_GENERIC_PREPARE,
+				'views' => array (
+					'apply' => ML_AMAZON_NEW_ITMES,
+					'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
+				)
+			),
 			'checkin' => ML_GENERIC_CHECKIN,
 			'listings' => array (
 				'title' => ML_GENERIC_LISTINGS,

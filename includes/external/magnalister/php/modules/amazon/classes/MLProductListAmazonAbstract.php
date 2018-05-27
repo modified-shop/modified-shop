@@ -18,7 +18,7 @@ abstract class MLProductListAmazonAbstract extends MLProductList {
 					)."
 					AND mpID = '".$this->aMagnaSession['mpID']."'
 			");
-			if(empty($this->aPrepareData[$aRow['products_id']])){//not in apply maybe in properties?
+			if (empty($this->aPrepareData[$aRow['products_id']])) {//not in apply maybe in properties?
 				$this->aPrepareData[$aRow['products_id']] = MagnaDB::gi()->fetchRow("
 					SELECT * 
 					FROM ".TABLE_MAGNA_AMAZON_PROPERTIES." 
@@ -30,16 +30,16 @@ abstract class MLProductListAmazonAbstract extends MLProductList {
 						)."
 						AND mpID = '".$this->aMagnaSession['mpID']."'
 				");
-                                                if(!empty($this->aPrepareData[$aRow['products_id']])){
-                                                            $this->aPrepareData[$aRow['products_id']]['preparetype'] = 'matched';
-                                                }				
+                if (!empty($this->aPrepareData[$aRow['products_id']])) {
+                    $this->aPrepareData[$aRow['products_id']]['preparetype'] = 'matched';
+                }
 			} else {
 				$this->aPrepareData[$aRow['products_id']]['preparetype'] = 'applied';
 			}
 		}
-		if($sFieldName === null){
+		if ($sFieldName === null) {
 			return $this->aPrepareData[$aRow['products_id']];
-		}else{
+		} else {
 			return isset($this->aPrepareData[$aRow['products_id']][$sFieldName]) ? $this->aPrepareData[$aRow['products_id']][$sFieldName] : null;
 		}
 	}
@@ -82,5 +82,25 @@ abstract class MLProductListAmazonAbstract extends MLProductList {
 	protected function getLowestPrice($aRow){
 		$fLowestPrice = $this->getPrepareData($aRow, 'lowestprice');
 		return $fLowestPrice > 0 ? $this->getPrice()->setPrice($fLowestPrice)->format() : '&mdash;';
+	}
+
+	protected function isDeletedAttributeFromShop($aRow, &$message) {
+		$categoryData = $this->getPrepareData($aRow, 'category');
+		$aPrepareData = $this->getPrepareData($aRow, 'data');
+
+		if (!empty($aPrepareData) && !empty($categoryData)) {
+			$categoryData = unserialize(base64_decode($categoryData));
+			$matchedAttributes = $categoryData['MainCategory'];
+			$matchedAttributes = AmazonHelper::gi()->getCategoryMatching($matchedAttributes);
+			$shopAttributes = AmazonHelper::gi()->flatShopVariations();
+
+			foreach ($matchedAttributes as $matchedAttribute) {
+				if (AmazonHelper::gi()->detectIfAttributeIsDeletedOnShop($shopAttributes, $matchedAttribute, $message)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 }

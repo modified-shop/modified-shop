@@ -254,6 +254,9 @@ function magnaGetCartContents() {
 					case '=': {
 						$price['price'] = $aPrice['price'];
 					}
+					case '%': {
+						$price['price'] = $price['price'] * (100 + $aPrice['price']) / 100.0;
+					}
 				}
 			}
 		}

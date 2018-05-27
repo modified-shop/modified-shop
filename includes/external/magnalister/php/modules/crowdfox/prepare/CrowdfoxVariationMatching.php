@@ -43,6 +43,6 @@ class CrowdfoxVariationMatching extends VariationMatching {
     }
 
     protected function renderCategoryOptions($sType, $sCategory) {
-        return '<option value="CrowdfoxPlaceholderCategory">CrowdfoxPlaceholderCategory</option>';
+        return '<option value="CrowdfoxPlaceholderCategory" selected="selected">CrowdfoxPlaceholderCategory</option>';
     }
 }

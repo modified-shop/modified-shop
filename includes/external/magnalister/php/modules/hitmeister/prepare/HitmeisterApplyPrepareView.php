@@ -75,6 +75,7 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 
 		$mpAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
 		$mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
+		$mpCustomAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE);
 
 		$attributeMatchingTableHtml = '
 			<tbody id="variationMatcher" class="attributesTable">
@@ -121,10 +122,23 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
 				<tr class="headline">
 					<td colspan="1"><h4>'.$mpOptionalAttributeTitle.'</h4></td>
-					<td colspan="2"><h4>Mein Web-Shop Attribut</h4></td>
+					<td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
 				</tr>
 			</tbody>
 			<tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
+				<tr>
+					<th></th>
+					<td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
+					<td class="info"></td>
+				</tr>
+			</tbody>
+			<tbody id="tbodyDynamicMatchingCustomHeadline" style="display:none;">
+				<tr class="headline">
+					<td colspan="1"><h4>'.$mpCustomAttributeTitle.'</h4></td>
+					<td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
+				</tr>
+			</tbody>
+			<tbody id="tbodyDynamicMatchingCustomInput" style="display:none;">
 				<tr>
 					<th></th>
 					<td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
@@ -414,9 +428,13 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			$this->topTen = new HitmeisterTopTenCategories();
 			$this->topTen->setMarketPlaceId($this->mpID);
 		}
-		$opt = '<option value="">&mdash;</option>'."\n";
 
 		$aTopTenCatIds = $this->topTen->getTopTenCategories($sType, 'getMPCategoryPath');
+		if (!empty($aTopTenCatIds)) {
+			$opt = '<option value="">&mdash;</option>'."\n";
+		} else {
+			$opt = '<option value=""> -- '.ML_GENERIC_USE_CATEGORY_BUTTON.' -- &gt; </option>'."\n";
+		}
 
 		if (!empty($sCategory) && !array_key_exists($sCategory, $aTopTenCatIds)) {
 			$sCategoryName = $this->oCategoryMatching->getMPCategoryPath($sCategory);

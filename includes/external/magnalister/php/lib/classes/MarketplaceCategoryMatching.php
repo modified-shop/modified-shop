@@ -34,6 +34,13 @@ abstract class MarketplaceCategoryMatching {
 	
 	protected $hasPlatformCol = true;
 	protected $columns = array();
+	
+	/**
+	 * caches calcluted categoriepaths for dont get multiple parents everytime from database
+	 * 
+	 * @var array
+	 */
+	public static $aCategoriePathCache = array();
 
 	public function __construct() {
 		global $_url, $_MagnaSession;
@@ -296,11 +303,19 @@ abstract class MarketplaceCategoryMatching {
 		}
 		$appendedText = '&nbsp;<span class="cp_next">&gt;</span>&nbsp;';
 		$catPath = '';
+		$sCatIdent = get_class($this).'-'.$this->isStoreCategory ? 'store' : 'mp';
+		self::$aCategoriePathCache[$sCatIdent] = array_key_exists($sCatIdent, self::$aCategoriePathCache) ? self::$aCategoriePathCache[$sCatIdent] : array();
 		do {
-			$yCP = $this->getMPCategory($categoryID);
+			if (array_key_exists($categoryID, self::$aCategoriePathCache[$sCatIdent])) {
+				$yCP = self::$aCategoriePathCache[$sCatIdent][$categoryID];
+			} else {
+				$yCP = $this->getMPCategory($categoryID);
+			}
 			if ($yCP === false) {
+				self::$aCategoriePathCache[$sCatIdent][$categoryID] = false;
 				break;
 			}
+			self::$aCategoriePathCache[$sCatIdent][$categoryID] = array('CategoryName' => $yCP['CategoryName'], 'ParentID' => $yCP['ParentID']);
 			if (empty($catPath)) {
 				$catPath = fixHTMLUTF8Entities($yCP['CategoryName']);
 			} else {
@@ -308,7 +323,6 @@ abstract class MarketplaceCategoryMatching {
 			}
 			$categoryID = $yCP['ParentID'];
 		} while ($yCP['ParentID'] != '0');
-
 		if ($yCP === false) {
 			return '<span class="invalid">'.ML_LABEL_INVALID.'</span>';
 		}

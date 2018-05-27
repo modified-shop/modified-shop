@@ -161,7 +161,7 @@ $_modules = array(
 		'title' => ML_MODULE_MEINPAKET,
 		'logo' => 'meinpaket',
 		'displayAlways' => true,
-		'referer' => array('meinpaket.de'),
+		'referer' => array('allyouneed.com'),
 		'requiredConfigKeys' => array (
 			'meinpaket.username',
 			'meinpaket.password',

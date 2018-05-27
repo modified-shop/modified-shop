@@ -144,4 +144,15 @@ class CrowdfoxCheckinProductList extends MLProductListMagnaCompatibleAbstract{
     {
         return $aRow['products_ean'];
     }
+
+	protected function isPreparedDifferently($aRow) {
+		$sCategoryDetails = $this->getPrepareData($aRow, 'ShopVariation');
+		if (!empty($sCategoryDetails)) {
+			$categoryMatching = CrowdfoxHelper::gi()->getCategoryMatching('CrowdfoxPlaceholderCategory');
+			$categoryDetails = json_decode($sCategoryDetails, true);
+			return CrowdfoxHelper::gi()->detectChanges($categoryMatching, $categoryDetails);
+		}
+
+		return false;
+	}
 }

@@ -244,8 +244,18 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
 	protected function generateOrdersStatusComment() {
 		if ('true' === $this->config['ImportOnlyPaid']) {
 			if (strpos($this->o['orderComment'], 'PayPal')) {
-				$PUIcomment = ML_EBAY_PUI_MSG_TO_BUYER.
-				$this->o['orderComment'];
+				/*
+				 * eBay PUI is PayPal with instruction
+				 * If the table orders_payment_instruction exists, use it
+				 */
+				$blPaymentInstructionSet = false;
+				if (MagnaDB::gi()->tableExists('orders_payment_instruction')) {
+					$blPaymentInstructionSet = fillOrdersPaymentInstructionTable($this->o['orderComment'], $this->cur['OrderID']);
+				}
+				if (!$blPaymentInstructionSet) {
+					$PUIcomment = ML_EBAY_PUI_MSG_TO_BUYER.
+					$this->o['orderComment'];
+				} 
 			}
 		}
 		return trim(

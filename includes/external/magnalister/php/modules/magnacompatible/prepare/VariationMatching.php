@@ -83,7 +83,8 @@ abstract class VariationMatching
 
             if (!isset($_POST['Action']) || $_POST['Action'] !== 'ResetMatching') {
                 $this->aErrors = array_merge($this->aErrors,
-                    $this->getAttributesMatchingHelper()->saveMatching($sIdentifier, $matching, $redirect, false, $sCustomIdentifier));
+                    $this->getAttributesMatchingHelper()->saveMatching($sIdentifier, $matching, $redirect, false, false, null, $sCustomIdentifier)
+                );
             }
 
             if ($redirect) {
@@ -175,9 +176,13 @@ abstract class VariationMatching
             $this->topTen = $this->getTopTenCategoriesHandler();
             $this->topTen->setMarketPlaceId($this->mpId);
         }
-        $opt = '<option value="">&mdash;</option>' . "\n";
 
         $aTopTenCatIds = $this->topTen->getTopTenCategories($sType, 'getMPCategoryPath');
+        if (!empty($aTopTenCatIds)) {
+            $opt = '<option value="">&mdash;</option>' . "\n";
+        } else {
+            $opt = '<option value=""> -- '.ML_GENERIC_USE_CATEGORY_BUTTON.' -- &gt; </option>'."\n";
+        }
 
         if (!empty($sCategory) && !array_key_exists($sCategory, $aTopTenCatIds)) {
             $sCategoryName = $this->oCategoryMatching->getMPCategoryPath($sCategory);
@@ -210,7 +215,7 @@ abstract class VariationMatching
         } else if (isset($_POST['Action']) && ($_POST['Action'] == 'LoadMPVariations')) {
             $select = $_POST['SelectValue'];
             $customIdentifier = !empty($_POST['CustomIdentifierValue']) ? $_POST['CustomIdentifierValue'] : '';
-            $data = $this->getAttributesMatchingHelper()->getMPVariations($select, false, true, $customIdentifier);
+            $data = $this->getAttributesMatchingHelper()->getMPVariations($select, false, true, null, $customIdentifier);
             echo json_encode($data);
         } else if (isset($_POST['Action']) && ($_POST['Action'] == 'LoadCustomIdentifiers')) {
             $select = $_POST['SelectValue'];
@@ -218,12 +223,12 @@ abstract class VariationMatching
             echo json_encode($data);
         } else if (isset($_POST['Action']) && ($_POST['Action'] == 'SaveMatching')) {
             $params = array();
-            parse_str($_POST['Variations'], $params);
+            parse_str_unlimited($_POST['Variations'], $params);
             $_POST = $params;
             $_POST['Action'] = 'SaveMatching';
 
             $this->saveMatching(false);
-            $data = $this->getAttributesMatchingHelper()->getMPVariations($params['PrimaryCategory'], false, true, $params['CustomIdentifier']);
+            $data = $this->getAttributesMatchingHelper()->getMPVariations($params['PrimaryCategory'], false, true, null, $params['CustomIdentifier']);
 
             $data['notice'] = array();
             foreach ($this->aErrors as $error) {

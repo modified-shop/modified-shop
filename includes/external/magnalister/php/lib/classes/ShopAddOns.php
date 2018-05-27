@@ -32,7 +32,7 @@ class ML_ShopAddOns {
 		global $_url;
 		if (!self::mlAddOnIsBooked($sSKU)) {
 			$aAddOnInfo = self::getAddOnInfo($sSKU);
-			if (!array_key_exists('DATA', $aAddOnInfo)) {
+			if (!is_array($aAddOnInfo) || !array_key_exists('DATA', $aAddOnInfo)) {
 				return;
 			}
 			ob_start();?>

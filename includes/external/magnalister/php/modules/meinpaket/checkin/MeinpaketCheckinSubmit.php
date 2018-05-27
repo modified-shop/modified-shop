@@ -20,11 +20,11 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/CheckinSubmit.php');
+require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/checkin/MagnaCompatibleCheckinSubmit.php');
 require_once(DIR_MAGNALISTER_MODULES.'meinpaket/MeinpaketHelper.php');
 
-class MeinpaketCheckinSubmit extends CheckinSubmit {
-	private $checkinDetails = array();
+class MeinpaketCheckinSubmit extends MagnaCompatibleCheckinSubmit
+{
 	
 	protected $varMatchingCache = array();
 	
@@ -189,227 +189,15 @@ class MeinpaketCheckinSubmit extends CheckinSubmit {
 		
 		// Use multi dimensional variations
 		MLProduct::gi()->useMultiDimensionalVariations(true);
+		
+		// Set Price and Quantity settings
+		MLProduct::gi()->setPriceConfig(MeinpaketHelper::loadPriceSettings($this->mpID));
+		MLProduct::gi()->setQuantityConfig(MeinpaketHelper::loadQuantitySettings($this->mpID));
 		MLProduct::gi()->setOptions(array(
 			'sameVariationsToAttributes' => false,
 			'purgeVariations' => true,
 			'useGambioProperties' => (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties'),
 		));
-		
-		// Set Price and Quantity settings
-		MLProduct::gi()->setPriceConfig(MeinpaketHelper::loadPriceSettings($this->mpID));
-		MLProduct::gi()->setQuantityConfig(MeinpaketHelper::loadQuantitySettings($this->mpID));
-	}
-	
-	protected function loadVariationMatching($variationConfiguration) {
-		$key = md5($variationConfiguration['MpIdentifier'].$variationConfiguration['CustomIdentifier']);
-		
-		if (isset($this->varMatchingCache[$key])) {
-			return $this->varMatchingCache[$key];
-		}
-		
-		// Load variation configuration
-		$varConfig = @json_decode(MagnaDB::gi()->fetchOne('
-			SELECT ShopVariation
-			 FROM '.TABLE_MAGNA_MEINPAKET_VARIANTMATCHING.'
-			 WHERE MpId = '.$this->mpID.'
-			       AND MpIdentifier="'.$variationConfiguration['MpIdentifier'].'"
-			       AND CustomIdentifier="'.$variationConfiguration['CustomIdentifier'].'"
-		'), true);
-		
-		if (empty($varConfig)) {
-			return false;
-		}
-		
-		$keys = array_keys($varConfig);
-		foreach ($keys as $key) {
-			$mpname = base64_decode($key);
-			$newkey = $varConfig[$key]['Code'];
-			$varConfig[$key]['MPName'] = $mpname;
-			
-			$varConfig[$newkey] = $varConfig[$key];
-			unset($varConfig[$key]);
-			
-			// translate free text matching
-			if ($varConfig[$newkey]['Kind'] == 'FreeText') {
-				switch (getDBConfigValue('general.options', '0')) {
-				case ('gambioProperties'):
-					$trans = MagnaDB::gi()->fetchArray(eecho('
-					    SELECT pov.properties_values_id Id, pov.values_name AS Name
-					      FROM ' . TABLE_MAGNA_PROPERTIES_DESCRIPTION_VALUES . ' pov
-					    INNER JOIN ' . TABLE_MAGNA_PROPERTIES_VALUES . ' ov2po ON
-					      ov2po.properties_values_id = pov.properties_values_id
-					      AND ov2po.properties_values_id IN ("'.implode('", "', $varConfig[$newkey]['Values']).'")
-					      WHERE pov.language_id = "' . $this->settings['language'] . '"
-					      ORDER BY pov.values_name ASC
-					', false));
-					break;
-				case ('old'):
-				default:
-					$trans = MagnaDB::gi()->fetchArray('
-					    SELECT DISTINCT products_options_values_id AS Id, products_options_values_name As Name
-					      FROM '.TABLE_PRODUCTS_OPTIONS_VALUES.'
-					     WHERE language_id = "'.$this->settings['language'].'"
-					           AND products_options_values_id IN ("'.implode('", "', $varConfig[$newkey]['Values']).'")
-					');
-					break;
-				}
-				if (!empty($trans)) {
-					foreach ($trans as $row) {
-						$varConfig[$newkey]['Values'][$row['Id']] = ($varConfig[$newkey]['Values'][$row['Id']] == 'null')
-							? 'null'
-							: $row['Name'];
-					}
-				}
-			}
-		}
-		
-		arrayEntitiesToUTF8($varConfig);
-		
-		$this->varMatchingCache[$key] = $varConfig;
-		
-		return $this->varMatchingCache[$key];
-	}
-	
-	protected function processVariations($propertiesRow, &$data) {
-		if (empty($data['submit']['Variations'])) {
-			unset($data['submit']['Variations']);
-			return true;
-		}
-		
-		if (empty($propertiesRow['VariationConfiguration'])) {
-			// means submit no variations
-			unset($data['submit']['Variations']);
-			return true;
-		}
-		
-		$varConfig = $this->loadVariationMatching($propertiesRow['VariationConfiguration']);
-		if (empty($varConfig)) {
-			$this->addToErrorLog($data['submit']['SKU'], ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_EMPTY);
-			$this->markAsFailed($propertiesRow['products_id']);
-			$this->ajaxReply['ignoreErrors'] = true;
-			return false;
-		}
-		
-		/*
-[0] => Array
-    (
-        [VariationId] => 1757
-        [VariationModel] => CoolPantsS:LC:Blu
-        [MarketplaceId] => ML4641_1.3_2.12
-        [MarketplaceSku] => CoolPantsS:LC:Blu
-        [Variation] => Array
-            (
-                [0] => Array
-                    (
-                        [NameId] => 1
-                        [Name] => Größe
-                        [ValueId] => 3
-                        [Value] => L
-                    )
-
-                [1] => Array
-                    (
-                        [NameId] => 2
-                        [Name] => Farbe
-                        [ValueId] => 12
-                        [Value] => blau
-                    )
-
-            )
-
-        [Price] => 109.9
-        [Quantity] => 1
-        [Status] => 1
-        [ShippingTimeId] => 1
-        [ShippingTime] => ca. 3-4 Tage
-        [EAN] => 
-    )
--------------------------------------------
-$varConfig :: Array
-(
-    [2] => Array
-        (
-            [Code] => 2
-            [Kind] => FreeText
-            [Values] => Array
-                (
-                    [10] => 10
-                    [11] => 11
-                    [12] => 12
-                    ...
-                    [49] => 49
-                )
-
-            [MPName] => Farbe
-        )
--------------------------------------------
-{
-    "Name": "Gr\u00f6\u00dfe",
-    "MPName": "Gr\u00f6\u00dfe",
-    "Value": "L",
-    "MPValue:" "190",
-},
--------------------------------------------
-*/
-		
-		foreach ($propertiesRow['VariationConfiguration'] as &$sBaseItem) {
-			$sBaseItem = base64_decode($sBaseItem);
-		}
-		$data['submit']['MPVariationConfiguration'] = $propertiesRow['VariationConfiguration'];
-		
-		foreach ($data['submit']['Variations'] as $key => &$vItem) {
-			foreach ($vItem['Variation'] as &$vSet) {
-				if (!isset($varConfig[$vSet['NameId']])) {
-					$msg = $this->strreplace(ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_MISSING_NAMEID, array (
-						'Attribute' => $vSet['Name'],
-						'SKU' => ((getDBConfigValue('general.keytype', '0') == 'artNr')
-							? $vItem['MarketplaceSku']
-							: $vItem['MarketplaceId']
-						),
-						'MpIdentifier' => fixHTMLUTF8Entities($propertiesRow['VariationConfiguration']['MpIdentifier']),
-					));
-					$this->addToErrorLog($data['submit']['SKU'], $msg);
-					$this->markAsFailed($propertiesRow['products_id']);
-					$this->ajaxReply['ignoreErrors'] = true;
-					return false;
-				}
-				$matching = $varConfig[$vSet['NameId']];
-				
-				$vSet['MPName'] = $matching['MPName'];
-				
-				if (!isset($matching['Values'][$vSet['ValueId']]) || ($matching['Values'][$vSet['ValueId']] == 'null')) {
-					unset($data['submit']['Variations'][$key]);
-					break;
-				}
-				$vSet['MPValue'] = $matching['Values'][$vSet['ValueId']];
-			}
-			
-			$vItem['SKU'] = (getDBConfigValue('general.keytype', '0') == 'artNr')
-				? $vItem['MarketplaceSku']
-				: $vItem['MarketplaceId'];
-			
-			$vItem['ShippingTime'] = getDBConfigValue($this->settings['marketplace'].'.checkin.leadtimetoship', $this->mpID, 3);
-			
-			// if the reduced price is available here it has been enabled in the module configuration and should be used.
-			if (isset($vItem['PriceReduced'])) {
-				$vItem['Price'] = $vItem['PriceReduced'];
-			}
-			
-			// remove stuff we do not want.
-			foreach (array('ShippingTimeId') as $key) {
-				unset($vItem[$key]);
-			}
-		}
-		
-		if (empty($data['submit']['Variations'])) {
-			$this->addToErrorLog($data['submit']['SKU'], ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_CANNOT_CALC_VARIATIONS);
-			$this->markAsFailed($propertiesRow['products_id']);
-			$this->ajaxReply['ignoreErrors'] = true;
-			return false;
-		}
-		
-		
-		return true;
 	}
 	
 	protected function appendAdditionalData($pID, $product, &$data) {
@@ -430,25 +218,58 @@ $varConfig :: Array
 			$this->markAsFailed($pID);
 			return;
 		}
-		$propertiesRow['VariationConfiguration'] = @json_decode($propertiesRow['VariationConfiguration'], true);
+
+		$categoryAttributes = '';
+		if (!empty($propertiesRow['CategoryAttributes'])) {
+			$categoryAttributes = MeinpaketHelper::gi()->convertMatchingToNameValue(
+				json_decode($propertiesRow['CategoryAttributes'], true),
+				$product
+			);
+		}
+
+		$variationTheme = array();
+		if (isset($propertiesRow['variation_theme'])) {
+			$variationTheme = json_decode($propertiesRow['variation_theme'], true);
+
+			// Unset all variation theme attributes from category attributes
+			$variationThemeKey = key($variationTheme);
+			if (is_array($variationTheme[$variationThemeKey])) {
+				foreach ($variationTheme[$variationThemeKey] as $variationThemeAttribute) {
+					unset($categoryAttributes[$variationThemeAttribute]);
+				}
+			}
+		}
+
+		$product['variation_theme'] = $variationTheme;
+
 		$propertiesRow['ShippingDetails'] = @json_decode($propertiesRow['ShippingDetails'], true);
 		
 		if ($data['quantity'] < 0) {
 			$data['quantity'] = 0;
 		}
-		
-		// remove stuff we do not want.
-		foreach (array('ProductId', 'ProductsModel', 'ManufacturerId', 'ShippingTimeId', 'DateAdded', 'LastModified') as $key) {
-			unset($product[$key]);
-		}
-		
+
 		// if the reduced price is available here it has been enabled in the module configuration and should be used.
 		if (isset($product['PriceReduced'])) {
 			$product['Price'] = $product['PriceReduced'];
 		}
 		
 		$data['submit'] = $product;
-		
+
+		// remove stuff we do not want.
+		$productFieldsToUnset = array(
+			'ProductId',
+			'ProductsModel',
+			'ManufacturerId',
+			'ShippingTimeId',
+			'DateAdded',
+			'LastModified',
+			'VariationPictures',
+		);
+
+		foreach ($productFieldsToUnset as $key) {
+			unset($data['submit'][$key]);
+		}
+
 		$data['submit']['SKU'] = magnaPID2SKU($pID);
 		
 		$data['submit']['ItemTitle'] = $product['Title'];
@@ -501,6 +322,13 @@ $varConfig :: Array
 		
 		$data['submit']['ShippingTime'] = getDBConfigValue($this->settings['marketplace'].'.checkin.leadtimetoship', $this->mpID, 3);
 		$data['submit']['ShippingDetails'] = $propertiesRow['ShippingDetails'];
+		$data['submit']['CategoryAttributes'] = $categoryAttributes;
+		if (!empty($propertiesRow['VariationConfiguration'])) {
+			$data['submit']['MPVariationConfiguration'] = array(
+				'MpIdentifier' => $propertiesRow['VariationConfiguration'],
+				'CustomIdentifier' => '',
+			);
+		}
 
         $imageWSPath = getDBConfigValue($this->settings['marketplace'].'.checkin.imagepath', $this->mpID, '');
         if (empty($imageWSPath)) {
@@ -531,20 +359,125 @@ $varConfig :: Array
 		} else if (!empty($catMatching['StoreCategory'])) {
 			$data['submit']['MarketplaceShopCategory'] = $propertiesRow['StoreCategory'];
 		}
-		
-		if (!$this->processVariations($propertiesRow, $data)) {
-			$data['submit'] = array();
-			//$this->addToErrorLog(magnaPID2SKU($pID));
-			//$this->markAsFailed($pID);
-			return;
+
+		$data['submit']['IsSplit'] = false;
+
+		if (!empty($product['variation_theme'])) {
+			$data['submit']['variation_theme'] = $product['variation_theme'];
 		}
 		
+		$allMatchedAttributes = json_decode($propertiesRow['CategoryAttributes'], true);
+
+		$this->getMeinpaketVariations($product, $data, $allMatchedAttributes);
+
 		//echo print_m($product, '$product');
 		//echo print_m($propertiesRow, '$propertiesRow');
 		
 		return;
 	}
 	
+	protected function getMeinpaketVariations($product, &$data, $allMatchedAttributes)
+	{
+		$matchedAttributesCodeValueId = $this->getMatchedVariationAttributesCodeValueId($allMatchedAttributes, $product['variation_theme']);
+		$variations = array();
+
+		// This flag is necessary for checking if master product should be sent at all and will be used in
+		// pre-submit algorithm.
+		$data['HasVariations'] = count($product['Variations']) > 0;
+
+		foreach ($product['Variations'] as $v) {
+			$this->simpleprice->setPrice($v['Price']);
+			$price = $this->simpleprice->roundPrice()->makeSignalPrice(
+				getDBConfigValue($this->marketplace . '.price.signal', $this->mpID, '')
+			)->getPrice();
+
+			$vi = array(
+				'SKU' => (getDBConfigValue('general.keytype', '0') == 'artNr') ? $v['MarketplaceSku'] : $v['MarketplaceId'],
+				'Price' => $price,
+				'Currency' => $this->settings['currency'],
+				'Quantity' => ($this->quantityLumb === false)
+					? max(0, $v['Quantity'] - (int)$this->quantitySub)
+					: $this->quantityLumb,
+				'EAN' => $v['EAN']
+			);
+
+			$vi['Title'] = $product['Title'];
+			$vi['VariantTitle'] = $product['Title'];
+
+			// Only those attributes that are matched and all their values are matched will be in $convertedShopToMpAttributes.
+			// This will be used for checking if all values are matched for matched attribute.
+			$vi['CategoryAttributes'] = $this->fixVariationCategoryAttributes($allMatchedAttributes, $product, $v);
+
+
+			$vi['Variation'] = array();
+			$masterProductSku = $data['submit']['SKU'];
+			$this->setAllVariationsDataAndMasterProductsSKUs(
+				$v,
+				$vi,
+				$variations,
+				$matchedAttributesCodeValueId,
+				$allMatchedAttributes,
+				$masterProductSku,
+				$data,
+				$product
+			);
+		}
+
+		$this->prepareVariationDataForSubmitRequest($variations, $data);
+
+		return true;
+	}
+
+	private function fixVariationCategoryAttributes($aCatAttributes, $product, $variationDB)
+	{
+		$productDataForMatching = array_merge($product, $variationDB);
+		$productDataForMatching['ProductId'] = $variationDB['VariationId'];
+		$productDataForMatching['ProductsModel'] = $variationDB['MarketplaceSku'];
+
+		if (!isset($variationDB['Weight']['Value'])) {
+			$productDataForMatching['Weight'] = $product['Weight'];
+		}
+
+		if (!isset($variationDB['BasePrice']['Value'])) {
+			$productDataForMatching['BasePrice'] = $product['BasePrice'];
+		}
+
+		// Since variation attributes are not set directly on product and their key is number, we should prefix them for
+		// standard AM conversion because otherwise variation attributes are no different from any other shop attribute
+		foreach ($variationDB['Variation'] as $variationAttribute) {
+			$productDataForMatching["variant_{$variationAttribute['NameId']}"] = $variationAttribute['ValueId'];
+		}
+
+
+		$fixCatAttributes = MeinpaketHelper::gi()->convertMatchingToNameValue($aCatAttributes, $productDataForMatching);
+
+		// Unset all variation theme attributes from category attributes
+		if (isset($product['variation_theme'])) {
+			$variationThemeKey = key($product['variation_theme']);
+			foreach ($product['variation_theme'][$variationThemeKey] as $variationThemeAttribute) {
+				unset($fixCatAttributes[$variationThemeAttribute]);
+			}
+		}
+
+		return $fixCatAttributes;
+	}
+
+	protected function setProductVariant(&$productVariant, $varAttribute, $rawAmConfiguration, $variations)
+	{
+		$fixCatAttributes = MeinpaketHelper::gi()->convertMatchingToNameValue($rawAmConfiguration, array(
+			"variant_{$varAttribute['NameId']}" => $varAttribute['ValueId']
+		), true);
+
+		if (!empty($fixCatAttributes)) {
+			$fixCatAttributes = array(
+				'MPName' => array_pop(array_keys($fixCatAttributes)),
+				'MPValue' => array_pop($fixCatAttributes)
+			);
+		}
+
+		$productVariant['Variation'][] = $fixCatAttributes;
+	}
+
 	protected function processSubmitResult($result) {
 		if (array_key_exists('ERRORS', $result)
 			&& is_array($result['ERRORS'])
@@ -570,7 +503,25 @@ $varConfig :: Array
 	protected function filterSelection() { }
 
 	protected function preSubmit(&$request) {
-		MagnaConnector::gi()->setTimeOutInSeconds(600);
+		$request['DATA'] = array();
+
+		if (count($this->additionalSplitProducts) > 0) {
+			foreach ($this->additionalSplitProducts as $additionalSplitProduct) {
+				$request['DATA'][] = $additionalSplitProduct;
+			}
+		}
+
+		foreach ($this->selection as $iProductId => &$aProduct) {
+			// If product has variations, but all variations are skipped because none of the values
+			// is matched, master product should not be sent at all.
+			if (empty($aProduct['submit']['Variations']) && !empty($aProduct['HasVariations'])) {
+				continue;
+			}
+
+			$request['DATA'][] = $aProduct['submit'];
+		}
+
+		arrayEntitiesToUTF8($request['DATA']);
 	}
 
 	protected function postSubmit() {
@@ -581,6 +532,10 @@ $varConfig :: Array
 			(array_key_exists('UPLOADERRORS', $this->lastResponse)
 			&& is_array($this->lastResponse['UPLOADERRORS'])
 			&& !empty($this->lastResponse['UPLOADERRORS']))
+			||
+			(array_key_exists('ERRORS', $this->lastResponse)
+			&& is_array($this->lastResponse['ERRORS'])
+			&& !empty($this->lastResponse['ERRORS']))
 		) {
 			$this->ajaxReply['redirect'] = $this->generateRedirectURL('fail');
 		}

@@ -24,16 +24,18 @@ require_once(DIR_MAGNALISTER_MODULES.'dawanda/classes/DawandaApiConfigValues.php
 require_once(DIR_MAGNALISTER_MODULES.'dawanda/classes/DawandaShippingDetailsProcessor.php');
 require_once(DIR_MAGNALISTER_MODULES.'dawanda/classes/DawandaTopTenCategories.php');
 require_once(DIR_MAGNALISTER_MODULES.'dawanda/prepare/DawandaCategoryMatching.php');
+require_once(DIR_MAGNALISTER_MODULES.'dawanda/DawandaHelper.php');
 
 class DawandaPrepareView extends MagnaCompatibleBase {
 
 	protected $catMatch = null;
 	protected $topTen = null;
 	protected $oCategoryMatching = null;
+	protected $prepareSettings = array();
 
 	protected function initCatMatching() {
 		$params = array();
-		foreach (array('mpID', 'marketplace', 'marketplaceName') as $attr) {
+		foreach (array('mpID', 'marketplace', 'marketplaceName', 'prepareSettings') as $attr) {
 			if (isset($this->$attr)) {
 				$params[$attr] = &$this->$attr;
 			}
@@ -60,7 +62,7 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 			';
 		}
 		$dbOldSelectionQuery .='
-		     WHERE selectionname = "prepare"
+		     WHERE selectionname = "apply"
 		           AND ms.mpID = "' . $this->mpID . '"
 		           AND session_id="' . session_id() . '"
 		           AND dp.products_id IS NOT NULL
@@ -82,7 +84,7 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 		      FROM ' . TABLE_PRODUCTS . ' p
 		INNER JOIN ' . TABLE_MAGNA_SELECTION . ' ms ON ms.pID = p.products_id
 		     WHERE '.($keytypeIsArtNr ? 'p.products_model' : 'p.products_id').' NOT IN ("' . implode('", "', $oldProducts) . '")
-		           AND selectionname="prepare"
+		           AND selectionname="apply"
 		           AND session_id="' . session_id() . '"
 		';
 		$dbNewSelection = MagnaDB::gi()->fetchArray($dbNewSelectionQuery);
@@ -121,12 +123,10 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 
 	/**
 	 * Fetches the options for the top 20 category selectors
-	 * @param string $type
+	 * @param string $sType
 	 *     Type of category (PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, StoreCategory3)
-	 * @param string $selectedCat
+	 * @param string $sCategory
 	 *     the selected category (empty for newly prepared items)
-	 * @param string $selectedCatName
-	 *     the category path of the selected category
 	 * @returns string
 	 *     option tags for the select element
 	 */
@@ -143,14 +143,12 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 				break;
 		}
 
-		if (isset($aCategories[$sCategoryArrayKey])) {
-			$aCategory = array (
-				'Id' => $aCategories[$sCategoryArrayKey],
-				'Name' => $this->oCategoryMatching->$sCMFunc($aCategories[$sCategoryArrayKey]),
-			);
-		} else {
-			$aCategory = array();
-		}
+		$sCategoryId = isset($aCategories[$sCategoryArrayKey]) ? $aCategories[$sCategoryArrayKey] : $aCategories;
+
+		$aCategory = array (
+			'Id' => $sCategoryId,
+			'Name' => $this->oCategoryMatching->$sCMFunc($sCategoryId),
+		);
 
 		if ($this->topTen === null) {
 			$this->topTen = new DawandaTopTenCategories();
@@ -182,7 +180,7 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 		$prepareView = (1 == count($data)) ? 'single' : 'multiple';
 
 		$renderedView = $this->oCategoryMatching->renderMatching().'
-			<form method="post" action="' . toURL($this->resources['url']) . '">
+			<form method="post" id="prepareForm" action="' . toURL($this->resources['url']) . '">
 				<table class="attributesTable">';
 		if ('single' == $prepareView) {
 			//$renderedView .= $this->renderSinglePrepareView($data[0]);
@@ -205,7 +203,8 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 			).'
 								</td>
 								<td class="lastChild">
-									<input class="ml-button mlbtn-action" type="submit" name="savePrepareData" id="savePrepareData" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>
+									<input type="submit" class="ml-button mlbtn-action" name="saveMatching" value="' .
+			ML_BUTTON_LABEL_SAVE_DATA . '"/>
 								</td>
 							</tr></tbody></table>
 						</td></tr>
@@ -232,12 +231,10 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 		
 		// Check which values all prepared products have in common to preselect the values.
 		$preSelected = array (
-			'MarketplaceCategories' => array(),
-			'StoreCategories' => array(),
+			'MarketplaceCategories' => null,
+			'StoreCategories' => null,
 			'ListingDuration' => array(),
 			'ShippingService' => array(),
-			'MpColors' => array(),
-			'Attributes' => array(),
 			'ProductType' => array(),
 			'ReturnPolicy' => array(),
 		);
@@ -247,10 +244,8 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 			'ReturnPolicy' => getDBConfigValue($this->marketplace.'.prepare.returnpolicy', $this->mpID, ''),
 			'ListingDuration' => getDBConfigValue($this->marketplace.'.listing_duration', $this->mpID, '120'),
 			'ShippingService' => getDBConfigValue($this->marketplace.'.shipping_service', $this->mpID, ''),
-			'MarketplaceCategories' => '[]',
-			'StoreCategories' => '[]',
-			'MpColors' => '[]',
-			'Attributes' => '[]',
+			'MarketplaceCategories' => null,
+			'StoreCategories' => null,
 		);
 
 		$loadedPIds = array();
@@ -277,37 +272,125 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 		#echo print_m($preSelected, '$preSelected{'.__LINE__.'}');
 		
 		$preSelected['MarketplaceCategories'] = json_decode($preSelected['MarketplaceCategories'], true);
-		if (!is_array($preSelected['MarketplaceCategories'])) {
-			$preSelected['MarketplaceCategories'] = array();
-		}
 		$preSelected['StoreCategories'] = json_decode($preSelected['StoreCategories'], true);
-		if (!is_array($preSelected['StoreCategories'])) {
-			$preSelected['StoreCategories'] = array();
-		}
-		
-		$preSelected['MpColors'] = json_decode($preSelected['MpColors'], true);
-		if (!isset($preSelected['MpColors'][0])) {
-			$preSelected['MpColors'][0] = 'X';
-		}
-		if (!isset($preSelected['MpColors'][1])) {
-			$preSelected['MpColors'][1] = 'X';
-		}
-		
-		$preSelected['Attributes'] = json_decode($preSelected['Attributes'], true);
-		if (!is_array($preSelected['Attributes'])) {
-			$preSelected['Attributes'] = array();
-		}
-		foreach (array('primary', 'secondary') as $attribGroup) {
-			if (!isset($preSelected['Attributes'][$attribGroup])) {
-				$preSelected['Attributes'][$attribGroup] = array();
-			}
-		}
+
+		$oddEven = false;
+
+		$mpAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
+		$mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
+		$mpCustomAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE);
+
+		$attributeMatchingTableHtml = '
+			<tbody id="variationMatcher" class="attributesTable">
+				<tr class="headline">
+					<td colspan="3"><h4>' . str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERIC_MP_CATEGORY) . '</h4></td>
+				</tr>
+				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
+					<th>' . ML_DAWANDA_CATEGORY . '</th>
+					<td class="input">
+						<table class="inner middle fullwidth categorySelect"><tbody>
+							<tr>
+								<td class="label"><!--1. -->'.ML_GENERIC_CATEGORIES_MARKETPLACE_CATEGORIE.':</td>
+								<td>
+									<div class="hoodCatVisual" id="PrimaryCategoryVisual">
+										<select id="PrimaryCategory" name="PrimaryCategory" style="width:100%">
+											' . $this->renderCategoryOptions('MarketplaceCategories', $preSelected['MarketplaceCategories'], 'primary') . '
+										</select>
+									</div>
+								</td>
+								<td class="buttons">
+									<input class="fullWidth ml-button smallmargin mlbtn-action" type="button" value="' . ML_GENERIC_CATEGORIES_CHOOSE . '" id="selectPrimaryCategory" name="selectPrimaryCategory"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="label">' . ML_GENERIC_CATEGORIES_MARKETPLACE_STORE_CATEGORIE . ':</td>
+								<td>
+									<div class="hoodCatVisual" id="StoreCategoryVisual">
+										<select id="StoreCategory" name="StoreCategory" style="width:100%">
+											' . $this->renderCategoryOptions('StoreCategories', $preSelected['StoreCategories'], 'primary') . '
+										</select>
+									</div>
+								</td>
+								<td class="buttons">
+									<input class="fullWidth ml-button smallmargin mlbtn-action" type="button" value="' . ML_GENERIC_CATEGORIES_CHOOSE . '" id="selectStoreCategory"/>
+								</td>
+							</tr>
+						</tbody></table>
+					</td>
+					<td class="info"></td>
+				</tr>
+				<tr class="spacer">
+					<td colspan="3">&nbsp;</td>
+				</tr>
+			</tbody>
+			<tbody id="tbodyDynamicMatchingHeadline" style="display:none;">
+				<tr class="headline">
+					<td colspan="1"><h4>' . $mpAttributeTitle . '</h4></td>
+					<td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
+				</tr>
+			</tbody>
+			<tbody id="tbodyDynamicMatchingInput" style="display:none;">
+				<tr>
+					<th></th>
+					<td class="input">' . ML_GENERAL_VARMATCH_SELECT_CATEGORY . '</td>
+					<td class="info"></td>
+				</tr>
+			</tbody>
+			<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
+				<tr class="headline">
+					<td colspan="1"><h4>' . $mpOptionalAttributeTitle . '</h4></td>
+					<td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
+				</tr>
+			</tbody>
+			<tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
+				<tr>
+					<th></th>
+					<td class="input">' . ML_GENERAL_VARMATCH_SELECT_CATEGORY . '</td>
+					<td class="info"></td>
+				</tr>
+			</tbody>
+			<tbody id="tbodyDynamicMatchingCustomHeadline" style="display:none;">
+				<tr class="headline">
+					<td colspan="1"><h4>' . $mpCustomAttributeTitle . '</h4></td>
+					<td colspan="2"><h4>' . ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB . '</h4></td>
+				</tr>
+			</tbody>
+			<tbody id="tbodyDynamicMatchingCustomInput" style="display:none;">
+				<tr>
+					<th></th>
+					<td class="input">' . ML_GENERAL_VARMATCH_SELECT_CATEGORY . '</td>
+					<td class="info"></td>
+				</tr>
+			</tbody>
+			<tbody id="categoryInfo" style="display:none;">
+				<tr class="spacer"><td colspan="3">' . ML_GENERAL_VARMATCH_CATEGORY_INFO . '</td></tr>
+				<tr class="spacer"><td colspan="3">&nbsp;</td></tr>
+			</tbody>';
+
+		ob_start();
+		?>
+		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS ?>js/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
+		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS ?>js/marketplaces/dawanda/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
+		<script type="text/javascript">
+			/*<![CDATA[*/
+			var ml_vm_config = {
+				url: '<?php echo toURL($this->resources['url'], array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
+				viewName: 'prepareView',
+				formName: '#prepareForm',
+				handleCategoryChange: false,
+				i18n: <?php echo json_encode(DawandaHelper::gi()->getVarMatchTranslations());?>,
+				shopVariations : <?php echo json_encode(DawandaHelper::gi()->getShopVariations()); ?>
+			};
+			/*]]>*/
+		</script>
+		<?php
+		$attributeMatchingTableHtml .= ob_get_contents();
+		ob_end_clean();
 
 		#Show $preSelected
 		#echo print_m($preSelected, '$preSelected{'.__LINE__.'}');
 
 		// Feldbezeichner | Eingabefeld | Beschreibung
-		$oddEven = false;
 		$html = '
 			<tbody>
 				<tr class="headline">
@@ -373,130 +456,18 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 					</td>
 					<td class="info">'.'</td>
 				</tr>
-				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'" id="TrMarketplaceColors">
-					<th>'.ML_DAWANDA_MARKETPLACE_PRODUCT_COLORS.'</th>
-					<td class="input">
-						<div id="dawanda_MarketplaceColors">
-							1. '.ML_DAWANDA_MARKETPLACE_PRODUCT_COLOR.'
-							<select name="MarketplaceColors1" id="MarketplaceColors">';
-		foreach(DawandaApiConfigValues::gi()->getMarketplaceColors() as $sKey => $sValue) {
-			$html .= '
-								<option value="'.$sKey.'" '.(($sKey == $preSelected['MpColors'][0]) ? 'selected="selected"' : '').'>'.$sValue.'</option>';
-		}
-		$html .= '
-							</select>
-							<br>
-							<br>
-							2. '.ML_DAWANDA_MARKETPLACE_PRODUCT_COLOR.'
-							<select name="MarketplaceColors2" id="MarketplaceColors">';
-		foreach(DawandaApiConfigValues::gi()->getMarketplaceColors() as $sKey => $sValue) {
-			$html .= '
-								<option value="'.$sKey.'" '.(($sKey == $preSelected['MpColors'][1]) ? 'selected="selected"' : '').'>'.$sValue.'</option>';
-		}
-		$html .= '			</select>
-						</div>
-					</td>
-					<td class="info">'.'</td>
-				</tr>
 				<tr class="spacer">
 					<td colspan="3">&nbsp;</td>
 				</tr>
-				<tr class="headline">
-					<td colspan="3"><h4>'.ML_DAWANDA_CATEGORY.'</h4></td>
-				</tr>
-				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
-					<th>'.ML_DAWANDA_CATEGORY.'</th>
-					<td class="input">
-						<table class="inner middle fullwidth categorySelect"><tbody>
-							<tr>
-								<td class="label"><!--1. -->'.ML_GENERIC_CATEGORIES_MARKETPLACE_CATEGORIE.':</td>
-								<td>
-									<div class="hoodCatVisual" id="PrimaryCategoryVisual">
-										<select id="PrimaryCategory" name="PrimaryCategory" style="width:100%">
-											'.$this->renderCategoryOptions('MarketplaceCategories', $preSelected['MarketplaceCategories'], 'primary').'
-										</select>
-									</div>
-								</td>
-								<td class="buttons">
-									<input class="fullWidth ml-button smallmargin mlbtn-action" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectPrimaryCategory"/>
-								</td>
-							</tr>
-							<!--<tr> Currently not supported by dawanda.
-								<td class="label">2. '.ML_GENERIC_CATEGORIES_MARKETPLACE_CATEGORIE.':</td>
-								<td>
-									<div class="hoodCatVisual" id="SecondaryCategoryVisual">
-										<select id="SecondaryCategory" name="SecondaryCategory" style="width:100%">
-											' . $this->renderCategoryOptions('MarketplaceCategories', $preSelected['MarketplaceCategories'], 'secondary') . '
-										</select>
-									</div>
-								</td>
-								<td class="buttons">
-									<input class="fullWidth ml-button smallmargin mlbtn-action" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectSecondaryCategory"/>
-								</td>
-							</tr>-->
-							<tr>
-								<td class="label">'.ML_GENERIC_CATEGORIES_MARKETPLACE_STORE_CATEGORIE.':</td>
-								<td>
-									<div class="hoodCatVisual" id="StoreCategoryVisual">
-										<select id="StoreCategory" name="StoreCategory" style="width:100%">
-											'.$this->renderCategoryOptions('StoreCategories', $preSelected['StoreCategories'], 'primary').'
-										</select>
-									</div>
-								</td>
-								<td class="buttons">
-									<input class="fullWidth ml-button smallmargin mlbtn-action" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectStoreCategory"/>
-								</td>
-							</tr>
-						</tbody></table>
-					</td>
-					<td class="info"><span style="color:red;"></span></td>
-				</tr>
+				'. $attributeMatchingTableHtml . '
 				<tr class="spacer">
 					<td colspan="3">&nbsp;</td>
 				</tr>
 			</tbody>';
-		foreach ($preSelected['Attributes'] as $attribGroup => $attribSets) {
-			$cId = isset($preSelected['MarketplaceCategories'][$attribGroup])
-				? $preSelected['MarketplaceCategories'][$attribGroup]
-				: '';
-			
-			$catAttribHtml = '';
-			if (!empty($cId)) {
-				$catAttribHtml = $this->getMpCategoryAttributes($cId, $attribGroup, $attribSets);
-			}
-			$html .= '
-			<tbody id="ml-js-attributes'.$attribGroup.'" style="display:'.(empty($catAttribHtml) ? 'none' : 'table-row-group').'">
-				'.$catAttribHtml.'
-			</tbody>';
-		}
 
 		ob_start();
 		?>
 		<script type="text/javascript">/*<![CDATA[*/
-			function getMpCategoryAttributes(cID, aMode, preselectedValues) {
-				jQuery.ajax({
-					type: 'POST',
-					url: '<?php echo toURL($this->resources['url'], array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
-					data: {
-						'action': 'GetMpCategoryAttributes',
-						'cId': cID,
-						'mode': aMode,
-						'preselectedValues': preselectedValues || {}
-					},
-					success: function(data) {
-						$('#ml-js-attributes'+aMode).html(data+'');
-						if (data == '') {
-							$('#ml-js-attributes'+aMode).css({'display':'none'});
-						} else {
-							$('#ml-js-attributes'+aMode).css({'display':'table-row-group'});
-						}
-					},
-					error: function() {
-					},
-					dataType: 'html'
-				});
-			}
-			
 			function generateCategoryPath(dropDown, categoryPath) {
 				dropDown.find('option').attr('selected', '');
 				if (dropDown.find('[value='+cID+']').length > 0) {
@@ -520,15 +491,6 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 			});
 			
 			$(document).ready(function() {
-				$('#selectPrimaryCategory').click(function() {
-					mpCategorySelector.startCategorySelector(function(cID, categoryPath) {
-						generateCategoryPath($('#PrimaryCategory'), categoryPath);
-						$('#PrimaryCategory').trigger('change');
-					}, 'mp');
-				});
-				$('#PrimaryCategory').change(function () {
-					getMpCategoryAttributes($(this).val(), 'primary', $('#primaryPreselectedValues').val());
-				});
 				$('#selectSecondaryCategory').click(function() {
 					mpCategorySelector.startCategorySelector(function(cID, categoryPath) {
 						generateCategoryPath($('#SecondaryCategory'), categoryPath);
@@ -553,42 +515,6 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 		ob_end_clean();
 
 		return $html;
-	}
-
-	protected function getMpCategoryAttributes($cId, $mode, $preselectedValues) {
-		try {
-			$specsOptions = MagnaConnector::gi()->submitRequest(array(
-				'ACTION' => 'GetItemSpecifics',
-				'DATA' => array (
-					'CategoryID' => $cId,
-					'FormStructure' => true,
-				)
-			));
-		} catch (MagnaException $e) {
-			return '';
-		}
-		if (!array_key_exists('specifics', $specsOptions['DATA'])
-			|| empty($specsOptions['DATA']['specifics'])
-		) {
-			return '';
-		}
-		$specsOptions = $specsOptions['DATA'];
-		$specsOptions['specifics']['key'] = array('Attributes', $mode);
-		$const = 'ML_LABEL_EBAY_'.strtoupper($mode).'_CATEGORY';
-		$specsOptions['specifics']['head'] = ML_EBAY_LABEL_ATTRIBUTES_FOR.' '.(defined($const)
-			? constant($const)
-			: ML_LABEL_EBAY_PRIMARY_CATEGORY
-		);
-		if (!is_array($preselectedValues)) {
-			$preselectedValues = json_decode($preselectedValues, true);
-		}
-		require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/GenerateProductsDetailInput.php');
-		if (!empty($preselectedValues)) {
-			$gPDI = new GenerateProductsDetailInput($specsOptions, $preselectedValues);
-		} else {
-			$gPDI = new GenerateProductsDetailInput($specsOptions);
-		}
-		return $gPDI->render();
 	}
 	
 	protected function processMagnaExceptions() {
@@ -620,16 +546,24 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 		if (isset($_GET['where']) && ($_GET['where'] == 'catMatchView')) {
 			$this->oCategoryMatching = new DawandaCategoryMatching();
 			echo $this->oCategoryMatching->renderAjax();
-		} else if (array_key_exists('action', $_POST)) {
-			switch ($_POST['action']) {
-				case 'GetMpCategoryAttributes': {
-					echo $this->getMpCategoryAttributes($_POST['cId'], $_POST['mode'], isset($_POST['preselectedValues']) ? $_POST['preselectedValues'] : array());
-					break;
-				}
-				default: {
-					break;
-				}
+		} else if ($_POST['prepare'] === 'prepare' || (isset($_POST['Action']) && ($_POST['Action'] == 'LoadMPVariations'))) {
+			if (isset($_POST['SelectValue'])) {
+				$select = $_POST['SelectValue'];
+			} else {
+				$select = $_POST['PrimaryCategory'];
 			}
+
+			$productModel = DawandaHelper::gi()->getProductModel('apply');
+
+			return json_encode(DawandaHelper::gi()->getMPVariations($select, $productModel, true));
+		} else if (isset($_POST['Action']) && ($_POST['Action'] === 'DBMatchingColumns')) {
+			$columns = MagnaDB::gi()->getTableCols($_POST['Table']);
+			$editedColumns = array();
+			foreach ($columns as $column) {
+				$editedColumns[$column] = $column;
+			}
+
+			echo json_encode($editedColumns, JSON_FORCE_OBJECT);
 		}
 	}
 }

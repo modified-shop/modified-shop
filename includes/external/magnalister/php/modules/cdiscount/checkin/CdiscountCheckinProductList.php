@@ -117,4 +117,37 @@ class CdiscountCheckinProductList extends MLProductListMagnaCompatibleAbstract{
 	protected function getPrepareType($aRow){
 		return $this->getPrepareData($aRow, 'PrepareType') == 'Apply' ? ML_AMAZON_LABEL_PREPARE_IS_APPLIED : ML_AMAZON_LABEL_PREPARE_IS_MATCHED;
 	}
+
+	protected function isPreparedDifferently($aRow) {
+		$sPrimaryCategory = $this->getPrepareData($aRow, 'PrimaryCategory');
+		if (!empty($sPrimaryCategory)) {
+			$sCategoryDetails = $this->getPrepareData($aRow, 'CategoryAttributes');
+			$categoryMatching = CdiscountHelper::gi()->getCategoryMatching($sPrimaryCategory);
+			$sCategoryDetails = json_decode($sCategoryDetails, true);
+			return CdiscountHelper::gi()->detectChanges($categoryMatching, $sCategoryDetails);
+		}
+
+		return false;
+	}
+
+	protected function isDeletedAttributeFromShop($aRow, &$message) {
+	    $aPrimaryCategories = $this->getPrepareData($aRow, 'PrimaryCategory');
+		if (!empty($aPrimaryCategories)) {
+			$matchedAttributes = $this->getPrepareData($aRow, 'CategoryAttributes');
+			$matchedAttributes = json_decode($matchedAttributes, true);
+			$shopAttributes = CdiscountHelper::gi()->flatShopVariations();
+
+            if (!is_array($matchedAttributes)) {
+                $matchedAttributes = array();
+            }
+
+            foreach ($matchedAttributes as $matchedAttribute) {
+				if (CdiscountHelper::gi()->detectIfAttributeIsDeletedOnShop($shopAttributes, $matchedAttribute, $message)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
 }

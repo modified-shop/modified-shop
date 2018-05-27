@@ -166,7 +166,7 @@ echo '
 					echo '
 				</select>
 				&nbsp;&nbsp;&nbsp;
-				'.ML_GENERIC_SHIPPING_TIME.': 
+				'.ML_AMAZON_LABEL_LEADTIME_TO_SHIP.': 
 				<select name="amazonProperties[leadtimeToShip]" id="amazon_leadtimeToShip">';
 					$leadtimeToShipOpts = array_merge(array (
 						'0' => '&mdash;',

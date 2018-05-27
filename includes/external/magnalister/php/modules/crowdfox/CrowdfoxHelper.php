@@ -26,12 +26,13 @@ class CrowdfoxHelper extends AttributesMatchingHelper {
     public static $DESC_MAX_LENGTH = 5000;
     public static $MAX_NUMBER_OF_IMAGES = 4;
 
+	protected $numberOfMaxAdditionalAttributes = self::UNLIMITED_ADDITIONAL_ATTRIBUTES;
+
     private static $instance;
 
     public static function gi() {
         if (self::$instance === null) {
             self::$instance = new CrowdfoxHelper();
-            self::$instance->numberOfMaxAdditionalAttributes = -1;
         }
 
         return self::$instance;
@@ -200,23 +201,46 @@ class CrowdfoxHelper extends AttributesMatchingHelper {
         return self::getDataFromConfig($product_id, $mfrmd, $mfrmd['alias']);
     }
 
-    public function getMPVariations($category, $prepare = false, $getDate = false, $customIdentifier = '') {
-        $dbData = $this->getPreparedData($category, $prepare);
+	protected function isProductPrepared($category, $prepare = false)
+	{
+        if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+            $sSQLAnd = ' AND products_model = "'.$prepare.'"';
+        } else {
+            $sSQLAnd = ' AND products_id = "'. $prepare . '"';
+        }
+
+		if ($prepare) {
+			$productsId = MagnaDB::gi()->fetchOne(eecho('
+                SELECT products_id
+                FROM ' . TABLE_MAGNA_CROWDFOX_PREPARE . '
+                WHERE MpId = ' . $this->mpId . '
+                    ' . $sSQLAnd . '
+                LIMIT 1
+            '));
+
+			return !empty($productsId);
+		}
+
+		return false;
+	}
+
+    public function getMPVariations($category, $prepare = false, $getDate = false, $additionalData = null, $customIdentifier = '') {
+        $dbData = $this->getPreparedData($category, $prepare, $customIdentifier);
         $tableName = $this->getVariationMatchingTableName();
+		$shopAttributes = $this->flatShopVariations();
 
-        // load default values from Variation Matching tab (global matching)
+		// load default values from Attributes Matching tab (global matching)
         $usedGlobal = false;
-        $globalMatching = $this->getCategoryMatching($category);
+		$globalMatching = $this->getCategoryMatching($category, $customIdentifier);
 
-        if ($dbData === false) {
+		if (!$this->isProductPrepared($category, $prepare)) {
             $dbData = $globalMatching;
             $usedGlobal = true;
         }
 
         $attributes = array();
-        $numberOfAdditionalAttributes = $this->getNumberOfMaxAdditionalAttributes();
 
-        if ($numberOfAdditionalAttributes > 0 || $numberOfAdditionalAttributes === -1) {
+		if ($this->getNumberOfMaxAdditionalAttributes() > 0) {
             $this->addAdditionalAttributesMP($attributes, $dbData);
         }
 
@@ -225,35 +249,51 @@ class CrowdfoxHelper extends AttributesMatchingHelper {
             $this->detectChanges($globalMatching, $attributes);
         } else if (!$prepare && !empty($globalMatching)) {
             // on variation matching tab. Check whether some products are prepared differently
-            $hasDifferentlyPreparedProducts = $this->areProductsDifferentlyPrepared($category, $globalMatching);
+            $hasDifferentlyPreparedProducts = $this->areProductsDifferentlyPrepared($category, $globalMatching, $customIdentifier);
         }
 
-        // if there are saved values but they were removed from Marketplace, display warning to user
-        foreach ($dbData as $code => $value) {
-            if (!isset($attributes[$code]) && strpos($code, 'additional_attribute_') === false) {
-                $attributes[$code] = array(
-                    'Deleted' => true,
-                    'AttributeCode' => $code,
-                    'AttributeName' => !empty($value['AttributeName']) ? $value['AttributeName'] : $code,
-                    'AllowedValues' => array(),
-                    'AttributeDescription' => '',
-                    'CurrentValues' => array('Values' => array()),
-                    'ChangeDate' => '',
-                    'Required' => isset($value['mandatory']) ? $value['mandatory'] : false,
-                );
-            }
-        }
+		// If there are saved values but they were removed either from Marketplace or Shop, display warning to user.
+		if (is_array($dbData)) {
+			foreach ($dbData as $utf8Code => $value) {
+				$isAdditionalAttribute = strpos($utf8Code, 'additional_attribute_') !== false;
+				if (!isset($attributes[$utf8Code]) && !$isAdditionalAttribute) {
+					$attributes[$utf8Code] = array(
+						'Deleted' => true,
+						'AttributeCode' => $utf8Code,
+						'AttributeName' => !empty($value['AttributeName']) ? $value['AttributeName'] : $utf8Code,
+						'AllowedValues' => array(),
+						'AttributeDescription' => '',
+						'CurrentValues' => array('Values' => array()),
+						'ChangeDate' => '',
+						'Required' => isset($value['mandatory']) ? $value['mandatory'] : false,
+						'DataType' => 'text',
+					);
+				} else {
+					if ($isAdditionalAttribute && $this->getNumberOfMaxAdditionalAttributes() <= 0) {
+						continue;
+					}
+
+					$attributes[$utf8Code]['WarningMessage'] = '';
+					$attributes[$utf8Code]['IsDeletedOnShop'] = $this->detectIfAttributeIsDeletedOnShop($shopAttributes,
+						$value, $attributes[$utf8Code]['WarningMessage']);
+				}
+			}
+		}
 
         if ($getDate) {
-            return array(
-                'Attributes' => $attributes,
-                'ModificationDate' => MagnaDB::gi()->fetchOne(eecho('
+			$modificationDate = MagnaDB::gi()->fetchOne(eecho('
                     SELECT ModificationDate
                     FROM ' . $tableName . '
                     WHERE MpId = ' . $this->mpId . '
                         AND MpIdentifier = "' . $category . '"
-                ', false)),
+						AND CustomIdentifier = "' . $customIdentifier . '"
+				', false));
+
+			return array(
+				'Attributes' => $attributes,
+				'ModificationDate' => $modificationDate,
                 'DifferentProducts' => $hasDifferentlyPreparedProducts,
+				'variation_theme_code' => $this->getSavedVariationThemeCode($category, $prepare),
             );
         }
 
@@ -317,13 +357,24 @@ class CrowdfoxHelper extends AttributesMatchingHelper {
      * @return bool|mixed
      */
     protected function getPreparedData($category, $prepare = false, $customIdentifier = '') {
+        if (!$prepare) {
+            return false;
+        }
+
+        if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+            $sSQLAnd = ' AND products_model = "'.$prepare.'"';
+        } else {
+            $sSQLAnd = ' AND products_id = "'. $prepare . '"';
+        }
+
         $availableCustomConfigs = false;
         if ($prepare) {
             $availableCustomConfigs = MagnaDB::gi()->fetchOne(eecho('
 				SELECT DISTINCT ShopVariation
 				FROM ' . TABLE_MAGNA_CROWDFOX_PREPARE . '
 				WHERE MpId = ' . $this->mpId . '
-					AND products_model IN("' . implode('", "', $prepare) . '")', false));
+					' . $sSQLAnd . '
+			'));
         }
 
         return $availableCustomConfigs ? json_decode($availableCustomConfigs, true) : false;
@@ -338,10 +389,9 @@ class CrowdfoxHelper extends AttributesMatchingHelper {
      */
     protected function getPreparedProductsData($category, $customIdentifier = '') {
         $dataFromDB = MagnaDB::gi()->fetchArray(eecho('
-				SELECT `CategoryAttributes`
+				SELECT `ShopVariation`
 				FROM ' . TABLE_MAGNA_CROWDFOX_PREPARE . '
 				WHERE mpID = ' . $this->mpId . '
-					AND MarketplaceCategories = "' . $category . '"
 			', false), true);
 
         if ($dataFromDB) {
@@ -358,143 +408,8 @@ class CrowdfoxHelper extends AttributesMatchingHelper {
         return null;
     }
 
-    public function getProductModel($selectionName) {
-        $pIDs = MagnaDB::gi()->fetchArray('
-             SELECT pID FROM ' . TABLE_MAGNA_SELECTION . '
-             WHERE mpID=\'' . $this->mpId . '\' AND
-                  selectionname=\'' . $selectionName . '\' AND
-                  session_id=\'' . session_id() . '\'
-        ', true);
-
-        $productModels = MagnaDB::gi()->fetchArray('
-            SELECT products_model
-            FROM ' . TABLE_PRODUCTS . '
-            WHERE products_id IN("' . implode('", "', $pIDs) . '")
-        ', true);
-
-        if ($productModels) {
-            return $productModels;
-        }
-
-        return false;
-    }
-
-    public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true, $customIdentifierHtml = '') {
-        $mpTitle = str_replace('%marketplace%', 'Crowdfox', ML_GENERIC_MP_CATEGORY);
-        $mpAttributeTitle = str_replace('%marketplace%', 'Crowdfox', ML_GENERAL_VARMATCH_MP_ATTRIBUTE);
-        $mpOptionalAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
-        $mpCustomAttributeTitle = str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE);
-
-        ob_start();
-        ?>
-        <form method="post" id="matchingForm" action="<?php echo toURL($url, array(), true); ?>">
-            <table id="variationMatcher" class="attributesTable">
-                <tbody style="display: none">
-                <tr class="headline">
-                    <td colspan="3"><h4><?php echo $mpTitle ?></h4></td>
-                </tr>
-                <tr id="mpVariationSelector">
-                    <th><?php echo ML_LABEL_MAINCATEGORY ?></th>
-                    <td class="input">
-                        <table class="inner middle fullwidth categorySelect">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <div class="hoodCatVisual" id="PrimaryCategoryVisual">
-                                        <select id="PrimaryCategory" name="PrimaryCategory" style="width:100%">
-                                            <?php echo $categoryOptions ?>
-                                        </select>
-                                    </div>
-                                </td>
-                                <?php if ($addCategoryPick) { ?>
-                                    <td class="buttons">
-                                        <input class="fullWidth ml-button smallmargin mlbtn-action" type="button"
-                                               value="<?php echo ML_GENERIC_CATEGORIES_CHOOSE ?>"
-                                               id="selectPrimaryCategory"/>
-                                    </td>
-                                <?php } ?>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                    <td class="info"></td>
-                </tr>
-                <tr class="spacer">
-                    <td colspan="3">&nbsp;</td>
-                </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingHeadline" style="display:none;">
-                <tr class="headline">
-                    <td colspan="1"><h4><?php echo $mpAttributeTitle ?></h4></td>
-                    <td colspan="2"><h4><?php echo ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB ?></h4></td>
-                </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingInput" style="display:none;">
-                <tr>
-                    <th></th>
-                    <td class="input"><?php echo ML_GENERAL_VARMATCH_SELECT_CATEGORY ?></td>
-                    <td class="info"></td>
-                </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
-                <tr class="headline">
-                    <td colspan="1"><h4><?php echo $mpOptionalAttributeTitle ?></h4></td>
-                    <td colspan="2"><h4><?php echo ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB ?></h4></td>
-                </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingOptionalInput" style="display:none;">
-                <tr>
-                    <th></th>
-                    <td class="input"><?php echo ML_GENERAL_VARMATCH_SELECT_CATEGORY ?></td>
-                    <td class="info"></td>
-                </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingCustomHeadline" style="display:none;">
-                <tr class="headline">
-                    <td colspan="1"><h4><?php echo $mpCustomAttributeTitle ?></h4></td>
-                    <td colspan="2"><h4><?php echo ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB ?></h4></td>
-                </tr>
-                </tbody>
-                <tbody id="tbodyDynamicMatchingCustomInput" style="display:none;">
-                <tr>
-                    <th></th>
-                    <td class="input"><?php echo ML_GENERAL_VARMATCH_SELECT_CATEGORY ?></td>
-                    <td class="info"></td>
-                </tr>
-                </tbody>
-            </table>
-            <p id="categoryInfo" style="display: none"><?php echo ML_GENERAL_VARMATCH_CATEGORY_INFO ?></p>
-            <br><br><br>
-            <table class="actions">
-                <thead>
-                <tr>
-                    <th><?php echo ML_LABEL_ACTIONS ?></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="firstChild">
-                    <td>
-                        <table>
-                            <tbody>
-                            <tr>
-                                <td class="firstChild">
-                                    <button type="button" class="ml-button ml-reset-matching">
-                                        <?php echo ML_GENERAL_VARMATCH_RESET_MATCHING ?></button>
-                                </td>
-                                <td></td>
-                                <td class="lastChild">
-                                    <input type="submit" value="<?php echo ML_GENERAL_VARMATCH_SAVE_BUTTON ?>"
-                                           class="ml-button mlbtn-action">
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
-        <?php
-        return ob_get_clean();
+    public function renderMatchingTable($url, $categoryOptions, $addCategoryPick = true, $displayCategory = true, $customIdentifierHtml = '') {
+        // Crowdfox does not have categories.
+        return parent::renderMatchingTable($url, $categoryOptions, $addCategoryPick, false, $customIdentifierHtml);
     }
 }

@@ -51,6 +51,7 @@ function populateGenericData($pID, $edit = false) {
 		'MainCategory' => '',
 		'ProductType' => '',
 		'BrowseNodes' => array(),
+		'variationTheme' => array(),
 		'ItemTitle' => '',
 		'Manufacturer' => '',
 		'Brand' => '',
@@ -306,28 +307,54 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 	$invalidAttributes = false;
 	if (isset($_GET['where']) && $_GET['where'] === 'varmatchView') {
 		if (isset($_POST['Variations'])) {
-			parse_str($_POST['Variations'], $postVariables);
+			parse_str_unlimited($_POST['Variations'], $postVariables);
 			$_POST = $postVariables;
 		}
 	}
 
-	$sMainCategory = $_POST['MainCategory'];
-	$sProductType = $_POST['ProductType'];
-	$_POST['ShopVariation'] = AmazonHelper::gi()->saveMatching($sMainCategory, $_POST['ml']['match'],
-		!$postAction, true, $sProductType);
-	unset($_POST['ml']);
-
 	$requiredData = array(
 		'MainCategory' => ML_LABEL_MAINCATEGORY,
-		#'ProductType' => ML_LABEL_SUBCATEGORY,
 		'BrowseNodes' => ML_AMAZON_LABEL_APPLY_BROWSENODES,
 		'ItemTitle' => ML_LABEL_PRODUCT_NAME,
 		'Manufacturer' => ML_GENERIC_MANUFACTURER_NAME,
 	);
 
+	$sMainCategory = $_POST['MainCategory'];
+	$sProductType = $_POST['ProductType'];
+
+	$pIDs = MagnaDB::gi()->fetchArray('
+		SELECT pID FROM ' . TABLE_MAGNA_SELECTION . '
+		 WHERE mpID=\'' . $_MagnaSession['mpID'] . '\' AND
+		       selectionname=\'' . $applySetting['selectionName'] . '\' AND
+		       session_id=\'' . session_id() . '\'
+	', true);
+
+	$variationThemeAttributes = array();
+
+	if (isset($_POST['variationTheme'])) {
+		if ($_POST['variationTheme'] !== 'null') {
+			$variationThemes = json_decode($_POST['variationThemes'], true);
+			$variationThemeAttributes = $variationThemes[$_POST['variationTheme']]['attributes'];
+		} else {
+			$variationThemeAttributes = 'null';
+		}
+	}
+
+	$_POST['ShopVariation'] = AmazonHelper::gi()->saveMatching(
+		$sMainCategory,
+		$_POST['ml']['match'],
+		!$postAction,
+		true,
+		count($pIDs) == 1,
+		$variationThemeAttributes,
+		$sProductType
+	);
+
+	unset($_POST['ml']);
+
 	$itemDetails = $_POST;
 	unset($itemDetails['saveApplyData']);
-	
+
 	$errors = (!$postAction ? $errors . validateB2BTierPrices($itemDetails) : '');
 	if (isset($itemDetails['Errors'])) {
 		if (!$postAction) {
@@ -342,12 +369,12 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 	$leadtimePost = $itemDetails['LeadtimeToShip'];
 	unset($itemDetails['LeadtimeToShip']);
 
-	$pIDs = MagnaDB::gi()->fetchArray('
-		SELECT pID FROM ' . TABLE_MAGNA_SELECTION . '
-		 WHERE mpID=\'' . $_MagnaSession['mpID'] . '\' AND
-		       selectionname=\'' . $applySetting['selectionName'] . '\' AND
-		       session_id=\'' . session_id() . '\'
-	', true);
+	if (isset($itemDetails['variationTheme'])) {
+		$itemDetails['variationTheme'] = json_encode(array($itemDetails['variationTheme'] => $variationThemeAttributes));
+	} else {
+		$itemDetails['variationTheme'] = null;
+	}
+
 	if (!empty($pIDs)) {
 		$missingItems = array();
 		$preparedTs = date('Y-m-d H:i:s');
@@ -396,6 +423,9 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 				unset($data['ShippingTemplate']);
 			}
 
+			// recreate indexes from 0 (because if u select a top ten category you have index keys like 6 or 9)
+            $c['BrowseNodes'] = array_values($c['BrowseNodes']);
+
 			#echo print_m($missingItems);
 			$data = array(
 				'mpID' => $_MagnaSession['mpID'],
@@ -412,9 +442,10 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 				'ConditionType' => $c['ConditionType'],
 				'ConditionNote' => $c['ConditionNote'],
 				'PreparedTs' => $preparedTs,
+				'variation_theme' => $data['variationTheme']
 			);
 			
-			if ($shippingTemplate !== null){
+			if ($shippingTemplate !== null) {
 				$data['ShippingTemplate'] = $shippingTemplate;
 			}
 			$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
@@ -426,6 +457,7 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 			foreach ($where as $key => $value) {
 				$swhere .= '`' . $key . '` = \'' . $value . '\' AND ';
 			}
+
 			$swhere = rtrim($swhere, ' AND ');
 
 			if (($count = (int)MagnaDB::gi()->fetchOne('SELECT count(*) FROM `' . TABLE_MAGNA_AMAZON_APPLY . '` ' . $swhere)) > 0) {
@@ -450,7 +482,7 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 			echo $errors;
 		}
 
-		if (!$postAction && !empty($missingItems)) {
+		if (!$postAction && !empty($missingItems) && $_GET['kind'] !== 'ajax') {
 			echo '
 				<p class="noticeBox">' . ML_AMAZON_TEXT_APPLY_DATA_INCOMPLETE . '</p>
 				<table class="datagrid">
@@ -654,19 +686,19 @@ if (($applyAction == 'singleapplication') || ($applyAction == 'multiapplication'
 			', true);
 		}
 
-        if (getDBConfigValue('general.keytype', '0') == 'artNr') {
-            $productModel = MagnaDB::gi()->fetchOne('
+		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+			$productModel = MagnaDB::gi()->fetchOne('
                 SELECT products_model
                   FROM '.TABLE_PRODUCTS.'
                  WHERE products_id=\''.$pID.'\' LIMIT 1
             ');
 
-            if (!$productModel) {
-                $productModel = false;
-            }
-        } else {
-            $productModel = (int)$pID;
-        }
+			if (!$productModel) {
+				$productModel = false;
+			}
+		} else {
+			$productModel = (int)$pID;
+		}
 
 		if (isset($_POST['SelectValue'])) {
 			$category = $_POST['SelectValue'];
@@ -679,7 +711,7 @@ if (($applyAction == 'singleapplication') || ($applyAction == 'multiapplication'
 			$customIdentifier = !empty($_POST['ProductType']) ? $_POST['ProductType'] : '';
 		}
 
-		echo json_encode(AmazonHelper::gi()->getMPVariations($category, $productModel, true, $customIdentifier));
+		echo json_encode(AmazonHelper::gi()->getMPVariations($category, $productModel, true, null,$customIdentifier));
 	}
 } else if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
 	require_once(DIR_MAGNALISTER_MODULES.'amazon/prepare/AmazonApplyProductList.php');

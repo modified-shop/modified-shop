@@ -704,11 +704,16 @@ function autoupdateAmazonOrdersStatus($mpID) {
 		}
 		$iCounter++;
 
+		if ($status == $shippedState) {
+			$sSortOrder = 'ASC';
+		} else {
+			$sSortOrder = 'DESC';
+		}
 		$date = MagnaDB::gi()->fetchOne('
 		    SELECT date_added FROM `'.TABLE_ORDERS_STATUS_HISTORY.'`
 		     WHERE orders_id='.$order['orders_id'].'
 		           AND orders_status_id='.$status.'
-		  ORDER BY date_added DESC
+		  ORDER BY date_added '.$sSortOrder.'
 		     LIMIT 1
 		');
 
@@ -726,6 +731,11 @@ function autoupdateAmazonOrdersStatus($mpID) {
 			}
 			if (isset($order['internaldata']['Request']['Data'])) {
 				$cfirm = $order['internaldata']['Request']['Data'];
+				if (   array_key_exists('ShippingDate', $cfirm)
+				    && ($cfirm['ShippingDate'] > $date)) {
+					// use the first found ShippingDate for Shipping confirmations
+					$cfirm['ShippingDate'] = $date;
+				}
 				$cfirm['AmazonOrderID'] = $order['data']['AmazonOrderID'];
 				unset($order['internaldata']['Request']);
 			} else {

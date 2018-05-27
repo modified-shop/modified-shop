@@ -310,6 +310,7 @@ class PriceministerMatchingPrepareView extends MagnaCompatibleBase {
 				</script>
 
                 <?php endforeach ?>
+                <script type="text/javascript" src="includes/magnalister/js/variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
                 <script type="text/javascript" src="includes/magnalister/js/marketplaces/priceminister/product_variation_matching.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
                 <script type="text/javascript">
                     /*<![CDATA[*/
@@ -321,9 +322,11 @@ class PriceministerMatchingPrepareView extends MagnaCompatibleBase {
                             newCustomGroupContainer: '#newCustomGroup',
                             mainSelectElement: '#PrimaryCategory',
                             matchingHeadline: '#tbodyDynamicMatchingHeadline',
-                            matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
+							matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
+							matchingCustomHeadline: '#tbodyDynamicMatchingCustomHeadline',
                             matchingInput: '#tbodyDynamicMatchingInput',
-                            matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
+							matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
+							matchingCustomInput: '#tbodyDynamicMatchingCustomInput',
                             categoryInfo: '#categoryInfo'
                         },
                         viewName: 'prepareView',
@@ -335,22 +338,24 @@ class PriceministerMatchingPrepareView extends MagnaCompatibleBase {
                         singleMatching: <?php echo(count($products) === 1 ? 'true' : 'false'); ?>
                     };
 
-                    $(ml_vm_config.formName).ml_product_variation_matching({
-                        urlPostfix: '&kind=ajax&where=' + ml_vm_config.viewName,
-                        i18n: ml_vm_config.i18n,
-                        elements: {
-                            newGroupIdentifier: '#newGroupIdentifier',
-                            customVariationHeaderContainer: '#tbodyVariationConfigurationSelector',
-                            newCustomGroupContainer: '#newCustomGroup',
-                            mainSelectElement: '#PrimaryCategory',
-                            matchingHeadline: '#tbodyDynamicMatchingHeadline',
-                            matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
-                            matchingInput: '#tbodyDynamicMatchingInput',
-                            matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
-                            categoryInfo: '#categoryInfo'
-                        },
-                        shopVariations: ml_vm_config.shopVariations
-                    });
+					$(ml_vm_config.formName).ml_product_variation_matching({
+						urlPostfix: '&kind=ajax&where=' + ml_vm_config.viewName,
+						i18n: ml_vm_config.i18n,
+						elements: {
+							newGroupIdentifier: '#newGroupIdentifier',
+							customVariationHeaderContainer: '#tbodyVariationConfigurationSelector',
+							newCustomGroupContainer: '#newCustomGroup',
+							mainSelectElement: '#PrimaryCategory',
+							matchingHeadline: '#tbodyDynamicMatchingHeadline',
+							matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
+							matchingCustomHeadline: '#tbodyDynamicMatchingCustomHeadline',
+							matchingInput: '#tbodyDynamicMatchingInput',
+							matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
+							matchingCustomInput: '#tbodyDynamicMatchingCustomInput',
+							categoryInfo: '#categoryInfo'
+						},
+						shopVariations: ml_vm_config.shopVariations
+					});
 
                     $(document).ready(function() {
                         $('input:radio:checked').trigger('change');
@@ -392,7 +397,7 @@ class PriceministerMatchingPrepareView extends MagnaCompatibleBase {
 
 		return $renderedView;
 	}
-	
+
 	public function getSelection($skipSearch = false) {
 		global $_MagnaSession;
 

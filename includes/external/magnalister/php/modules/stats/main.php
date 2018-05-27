@@ -135,6 +135,10 @@ $phPlotSettings = array(
 	)
 );
 
+if (($hp = magnaContribVerify('StatisticsExtensionSettings', 1)) !== false) {
+    require($hp);
+}
+
 /* Berechnet Farben anhand der Einstellungen neu. */
 foreach ($phPlotSettings['colorMap']['data']['colors'] as $key => &$color) {
 	$hsv = rgb2hsv($color);
@@ -182,6 +186,10 @@ if (isset($_GET['view'])) {
 			die();
 		}
 	}
+}
+
+if (($hp = magnaContribVerify('StatisticsExtension', 1)) !== false) {
+    require($hp);
 }
 
 renderTextImage(

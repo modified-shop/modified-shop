@@ -32,7 +32,7 @@ $(document).ready(function() {
                 self.elements.mainSelectElement.closest('.magnamain').find('.jsNoticeBox').remove();
                 if (val != null && val !== '' && val != 'null') {
                     self.elements.mainSelectElement.closest('.magnamain').find('.successBox').remove();
-                    self._loadMPVariation(val, initial);
+                    self._loadMPVariation(val, '', initial);
                     self.elements.matchingCustomHeadline.css('display', 'table-row-group');
                     self.elements.matchingCustomInput.css('display', 'table-row-group');
                     self.elements.categoryInfo.css('display', 'table-row-group');
@@ -50,8 +50,10 @@ $(document).ready(function() {
             newCustomGroupContainer: '#newCustomGroup',
             mainSelectElement: '#PrimaryCategory',
             matchingHeadline: '#tbodyDynamicMatchingHeadline',
+            matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
             matchingCustomHeadline: '#tbodyDynamicMatchingCustomHeadline',
             matchingInput: '#tbodyDynamicMatchingInput',
+            matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
             matchingCustomInput: '#tbodyDynamicMatchingCustomInput',
             categoryInfo: '#categoryInfo'
         },

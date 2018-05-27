@@ -175,6 +175,14 @@ class CdiscountProductSaver {
 		$aRow['ConditionType'] = $aItemDetails['condition_id'];
 		$aRow['Comment'] = $aItemDetails['comment'];
 
+		if (isset($aItemDetails['variationTheme'])) {
+			$aRow['variation_theme'] = $aItemDetails['variationTheme'];
+		}
+
+		if (!empty($this->aErrors)) {
+			$aRow['Verified'] = 'ERROR';
+		}
+
 		return $aRow;
 	}
 

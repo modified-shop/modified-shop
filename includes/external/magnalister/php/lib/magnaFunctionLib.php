@@ -460,7 +460,12 @@ function delete_double_customers() {
 }
 
 function delete_double_ot_lines() {
-	$aMLorders = MagnaDB::gi()->fetchArray ('SELECT orders_id FROM '.TABLE_MAGNA_ORDERS, true);
+	// for performance reasons, take only the last 7 days + no more than 50 magnalister orders
+	$iStartFrom = MagnaDB::gi()->fetchOne('SELECT MIN(orders_id) FROM '.TABLE_ORDERS.' 
+		WHERE UNIX_TIMESTAMP(date_purchased) >= (UNIX_TIMESTAMP() - (7 * 86400))');
+	$aMLorders = MagnaDB::gi()->fetchArray ('SELECT orders_id FROM '.TABLE_MAGNA_ORDERS.'
+		WHERE orders_id >= '.$iStartFrom.' 
+		ORDER BY orders_id DESC LIMIT 50', true);
 	if (count($aMLorders) == 0) return;
 	$doubleOTLines = MagnaDB::gi()->fetchArray ('
 		SELECT ot.orders_id, MAX(ot.orders_total_id) max_orders_total_id, COUNT(*) as cnt
@@ -755,8 +760,11 @@ function magnaSKU2pID($sku, $mainOnly = false) {
 			$aID = magnaSKU2aID($skuOriginal);
 			if ($aID !== false) {
 				$pID = (int)MagnaDB::gi()->fetchOne('
-					SELECT products_id FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
-					 WHERE products_attributes_id = \''.$aID.'\' LIMIT 1
+					SELECT products_id 
+					  FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
+					 WHERE products_attributes_id = \''.$aID.'\'
+					       AND products_id != 0
+					 LIMIT 1
 				');
 				if ($pID > 0)  {
 					return $pID;
@@ -873,7 +881,7 @@ function magnaSKU2aID($sku, $pId = false, $multiple = false) {
 					SELECT products_attributes_id
 					  FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
 					 WHERE attributes_model = "'.MagnaDB::gi()->escape($sku).'"
-						   '.($pId > 0 ? 'AND products_id = "'.$pId.'"' : '').'
+						   '.($pId > 0 ? 'AND products_id = "'.$pId.'"' : 'AND products_id != 0').'
 					 LIMIT 1
 				', false));
 				if ($aID > 0) return $aID;

@@ -174,7 +174,7 @@ class CrowdfoxProductSaver {
         $aRow['ShippingMethod'] = empty($aItemDetails['shippingmethod_id']) ? '' : $aItemDetails['shippingmethod_id'];
         $aRow['Brand'] = empty($aItemDetails['Brand']) ? '' : $aItemDetails['Brand'];
         $aRow['MPN'] = empty($aItemDetails['MPN']) ? '' : $aItemDetails['MPN'];
-        $aRow['ShopVariation'] = empty($aItemDetails['AdditionalAttributes']) ? '' : $aItemDetails['AdditionalAttributes'];
+        $aRow['ShopVariation'] = empty($aItemDetails['CategoryAttributes']) ? '' : $aItemDetails['CategoryAttributes'];
 
         if ($bVerifiedError) {
             $aRow['Verified'] = 'ERROR';

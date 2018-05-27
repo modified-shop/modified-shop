@@ -288,17 +288,23 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	}
 	
 	/**
-	 * Tries to get the timestamp of the last status change. Returns now if it can not be determined.
+	 * Tries to get the timestamp of the first status change for Shipped status, else last status change.
+	 * Returns now if it can not be determined.
 	 * @return string
 	 *   A mysql datetime
 	 */
 	protected function getStatusChangeTimestamp() {
+		if ($this->oOrder['orders_status_shop'] == $this->config['StatusShipped']) {
+			$sSortOrder = 'ASC';
+		} else {
+			$sSortOrder = 'DESC';
+		}
 		$date = MagnaDB::gi()->fetchOne('
 		    SELECT date_added
 		      FROM `'.TABLE_ORDERS_STATUS_HISTORY.'`
 		     WHERE orders_id='.$this->oOrder['orders_id'].'
 		           AND orders_status_id = '.$this->oOrder['orders_status_shop'].'
-		  ORDER BY date_added DESC
+		  ORDER BY date_added '.$sSortOrder.'
 		     LIMIT 1
 		');
 		if ($date === false) {

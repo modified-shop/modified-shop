@@ -69,6 +69,9 @@
                 self.elements.form = self.element.find('form').andSelf().filter('form');
             }
 
+            self.options.groupedShopVariations = JSON.parse(JSON.stringify(self.options.shopVariations));
+            self._flat_attributes(self.options.shopVariations);
+
             self.html.valuesBackup = self.elements.matchingInput.html();
             self._initCustomVariationContainer();
             self._initNewCustomGroupElement();
@@ -233,19 +236,33 @@
             return out;
         },
 
-        _getShopVariationsDropDownElement: function() {
+        _getShopVariationsDropDownElement: function () {
+            var self = this,
+                counter = 1,
+                numberOfOptGroups = 2;
+
             if (self.html.shopVariationsDropDown === '') {
                 self.html.shopVariationsDropDown = 
-                    '<select class="shopAttrSelector">'
-                    + self._render(
-                        '<option value="{Code}">{Name}</option>', $.extend(
-                            {0: {Code: 'null', Name: self.i18n.pleaseSelect}},
-                            self.options.shopVariations
-                        )
-                    )
-                    + '</select>'
-                ;
-                myConsole.log('_getShopVariationsDropDownElement()');
+                    '<select class="shopAttrSelector">' + self._render('<option value="{Code}">{Name}</option>',
+                        {0: {Code: 'null', Name: self.i18n.pleaseSelect}});
+
+                for (var property in self.options.groupedShopVariations) {
+                    if (self.options.groupedShopVariations.hasOwnProperty(property)) {
+                        if (counter++ <= numberOfOptGroups) {
+                            var options = self._render('<option value="{Code}">{Name}</option>',
+                                self.options.groupedShopVariations[property]);
+    
+                            self.html.shopVariationsDropDown += '<optgroup label="' + property +'"> '
+                                + options +
+                                '</optgroup>';
+                            continue;
+                        }
+                        self.html.shopVariationsDropDown += self._render('<option value="{Code}">{Name}</option>',
+                            self.options.groupedShopVariations[property]);
+                    }
+                }
+
+                self.html.shopVariationsDropDown += '</select>';
             }
             return $(self.html.shopVariationsDropDown);
         },
@@ -410,6 +427,7 @@
                     self.elements.matchingInput.find('select[id^=sel_' + data[i].id + ']').val(data[i].CurrentValues.Code).trigger('change');
                 }
             }
+            self._prefix_option();
         },
 
         _loadMPVariation: function(val) {

@@ -152,6 +152,8 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		} else {
 			if(is_array($aPictureUrls)){
 				$value = $imagePath.current($aPictureUrls);
+			} elseif (is_string($aPictureUrls)){
+				$value = $imagePath.$aPictureUrls;
 			}
 			$value = ebayEncodeImageUrl(trim($value));
 		}
@@ -182,6 +184,14 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			EbayHelper::appendMobileDescription($sDesc, $sMobileDescription);
 		}
 	}
+
+    /**
+     * If non of the shop variations attributes are matched then it will submitted like in shop
+     * @return bool
+     */
+    protected function shouldSendShopData() {
+        return true;
+    }
 	
 	/**
 	 * @todo check if ((masterArticle && haveVariants)||normalArticle)
@@ -307,7 +317,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		//if picture was reset in ebay_properties_table
 		$propertiesRow['PictureURL'] = $data['submit']['PictureURL'];
 		// DispatchTimeMax: use default if property not set properly
-		if ($data['submit']['DispatchTimeMax'] > 30) {
+		if ($data['submit']['DispatchTimeMax'] > 40) {
 			$data['submit']['DispatchTimeMax'] = getDBConfigValue('ebay.DispatchTimeMax', $this->_magnasession['mpID'], 30);
 		}
 		
@@ -633,7 +643,16 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		if ('none' != ($value = getDBConfigValue('ebay.returnpolicy.warrantyduration', $this->_magnasession['mpID'], 'none'))) {
 			$data['submit']['ReturnPolicy']['WarrantyDurationOption'] = $value;
 		}
-		
+
+		$amConfiguration = array();
+		if (!empty($data['submit']['ItemSpecifics']) && !empty($data['submit']['ItemSpecifics']['ShopVariation'])) {
+			$amConfiguration = $data['submit']['ItemSpecifics']['ShopVariation'];
+			$data['submit']['ItemSpecifics']['ShopVariation'] = EbayHelper::gi()->convertMatchingToNameValue(
+				$data['submit']['ItemSpecifics']['ShopVariation'],
+				$product
+			);
+		}
+
 		/**
 		 * @todo check configValue
 		 * add marketplacesku to variations
@@ -647,15 +666,75 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			$skuField = (getDBConfigValue('general.keytype', '0') == 'artNr') ? 'MarketplaceSku' : 'MarketplaceId';
 			$data['submit']['Variations'] = array();
 			$data['submit']['Quantity'] = $product['QuantityTotal'];
-			foreach ($product['Variations'] as $variation) {
-				$variation['StartPrice'] = $variation['Price'][$listingMasterType];
-				if (isset($variation['PriceReduced'][$listingMasterType])) {
-					$variation['StartPrice'] = $variation['PriceReduced'][$listingMasterType];
+
+			if (!empty($data['submit']['ItemSpecifics']) && isset($data['submit']['ItemSpecifics']['ShopVariation'])) {
+				$data['submit']['IsSplit'] = false;
+				$data['submit']['ItemTitle'] = $data['submit']['Title'];
+				$data['HasVariations'] = count($product['Variations']) > 0;
+				$variationThemeBlacklist = array();
+				if (!empty($propertiesRow['VariationThemeBlacklist'])) {
+					$variationThemeBlacklist = json_decode(fixBrokenJsonUmlauts($propertiesRow['VariationThemeBlacklist']), true);
 				}
-				$variation['SKU'] = $variation[$skuField];
-				$data['submit']['Variations'][] = $variation;
-				if (!isset ($product['QuantityTotal'])) {
-					$data['submit']['Quantity'] += $variation['Quantity'];
+
+				$variationsForSubmit = array();
+				$matchedAttributesNameIdValueId = $this->getMatchedVariationAttributesCodeValueId(
+					$amConfiguration,
+					array(),
+					$variationThemeBlacklist
+				);
+
+				$isFirstVariation = true;
+				foreach ($product['Variations'] as $dbVariation) {
+					$dbVariation['StartPrice'] = $dbVariation['Price'][$listingMasterType];
+					if (isset($dbVariation['PriceReduced'][$listingMasterType])) {
+						$dbVariation['StartPrice'] = $dbVariation['PriceReduced'][$listingMasterType];
+					}
+					$dbVariation['SKU'] = $dbVariation[$skuField];
+
+					$variation = $dbVariation;
+					$variation['ItemTitle'] = $data['submit']['Title'];
+					$variation['Variation'] = array();
+
+					$productDataForMatching = array_merge($product, $dbVariation);
+					foreach ($dbVariation['Variation'] as $variationAttribute) {
+						$productDataForMatching["variant_{$variationAttribute['NameId']}"] = $variationAttribute['ValueId'];
+					}
+					$variation['ItemSpecifics']['ShopVariation'] = EbayHelper::gi()->convertMatchingToNameValue(
+						$amConfiguration,
+						$productDataForMatching
+					);
+
+					if ($isFirstVariation) {
+						$isFirstVariation = false;
+						$data['submit']['ItemSpecifics'] = $variation['ItemSpecifics'];
+					}
+
+					$this->setAllVariationsDataAndMasterProductsSKUs(
+						$dbVariation,
+						$variation,
+						$variationsForSubmit,
+						$matchedAttributesNameIdValueId,
+						$amConfiguration,
+						$data['submit']['SKU'],
+						$data,
+						$product,
+						$variationThemeBlacklist
+					);
+				}
+
+				$this->prepareVariationDataForSubmitRequest($variationsForSubmit, $data);
+			} else {
+				foreach ($product['Variations'] as $variation) {
+					$variation['StartPrice'] = $variation['Price'][$listingMasterType];
+					if (isset($variation['PriceReduced'][$listingMasterType])) {
+						$variation['StartPrice'] = $variation['PriceReduced'][$listingMasterType];
+					}
+					$variation['SKU'] = $variation[$skuField];
+
+					$data['submit']['Variations'][] = $variation;
+					if (!isset ($product['QuantityTotal'])) {
+						$data['submit']['Quantity'] += $variation['Quantity'];
+					}
 				}
 			}
 		}
@@ -824,7 +903,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
         }
 		$data['submit'] = array_merge($data['submit'], $aListingDetails);
 	}
-	
+
 	/**
 	 * @deprecated
 	 */
@@ -1112,8 +1191,80 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		return $str;
 	}
 
+	protected function createVariantMasterProduct($dimensions, $variationMasterSku, $itemTitle, $productToClone) {
+		if (count($dimensions) === 1 && isset($dimensions[0]['Variation']) && $dimensions[0]['Variation'] == array()) {
+			// If everything is split and there are no variation dimensions set leave only data that should go to master product
+			$dimensions[0] = array(
+				'Quantity' => $dimensions[0]['Quantity'],
+				'EAN' => $dimensions[0]['EAN'],
+				'StartPrice' => $dimensions[0]['StartPrice'],
+				'SKU' => $dimensions[0]['SKU'],
+				'Variation' => array(),
+			);
+		}
+
+		$masterProduct = parent::createVariantMasterProduct($dimensions, $variationMasterSku, $itemTitle, $productToClone);
+
+		$masterProduct['Title'] = $masterProduct['ItemTitle'];
+		unset($masterProduct['ItemTitle']);
+
+        if (!empty($masterProduct['Variations'])) {
+            $oFirstVariant = reset($masterProduct['Variations']);
+            if (!empty($oFirstVariant['ItemSpecifics'])) {
+                $masterProduct['ItemSpecifics'] = $oFirstVariant['ItemSpecifics'];
+                foreach ($oFirstVariant['Variation'] as $variationDefinition) {
+                    unset($masterProduct['ItemSpecifics']['ShopVariation'][$variationDefinition['Name']]);
+                }
+            }
+
+            foreach ($masterProduct['Variations'] as $key => $variation) {
+                unset($masterProduct['Variations'][$key]['ItemTitle']);
+                unset($masterProduct['Variations'][$key]['ItemSpecifics']);
+                if (!isset($masterProduct['QuantityTotal'])) {
+                    $masterProduct['Quantity'] += $variation['Quantity'];
+                }
+            }
+        }
+
+		return $masterProduct;
+	}
+
+	protected function setProductVariant(&$productVariant, $varAttribute, $rawAmConfiguration, $variations)
+	{
+		$fixCatAttributes = EbayHelper::gi()->convertMatchingToNameValue($rawAmConfiguration, array(
+			"variant_{$varAttribute['NameId']}" => $varAttribute['ValueId']
+		), true);
+
+		if (!empty($fixCatAttributes)) {
+			$varAttribute['Name'] = array_pop(array_keys($fixCatAttributes));
+			$varAttribute['Value'] = array_pop($fixCatAttributes);
+		}
+
+		$productVariant['Variation'][] = $varAttribute;
+	}
+
 	protected function preSubmit(&$request) {
 		MagnaConnector::gi()->setTimeOutInSeconds(600);
+
+		$request['DATA'] = array();
+
+		if (count($this->additionalSplitProducts) > 0) {
+			foreach ($this->additionalSplitProducts as $additionalSplitProduct) {
+				$request['DATA'][] = $additionalSplitProduct;
+			}
+		}
+
+		foreach ($this->selection as $iProductId => &$aProduct) {
+			// If product has variations, but all variations are skipped because none of the values
+			// is matched, master product should not be sent at all.
+			if (empty($aProduct['submit']['Variations']) && !empty($aProduct['HasVariations'])) {
+				continue;
+			}
+
+			$request['DATA'][] = $aProduct['submit'];
+		}
+
+		arrayEntitiesToUTF8($request['DATA']);
 	}
 
 	protected function postSubmit() {
@@ -1328,5 +1479,20 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		}
 		
 		return $result;
+	}
+
+	protected function isVariationInBlacklist($variationThemeBlacklist, $varAttribute, $rawAmConfiguration)
+	{
+		$mpVariation = EbayHelper::gi()->convertMatchingToNameValue($rawAmConfiguration, array(
+			"variant_{$varAttribute['NameId']}" => $varAttribute['ValueId']
+		), true);
+
+		foreach ($mpVariation as $mpCode => $mpValue) {
+			if (!in_array($mpCode, $variationThemeBlacklist)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

@@ -21,9 +21,11 @@ $(document).ready(function() {
             newCustomGroupContainer: '#newCustomGroup',
             mainSelectElement: '#PrimaryCategory',
             matchingHeadline: '#tbodyDynamicMatchingHeadline',
+            matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
             matchingCustomHeadline: '#tbodyDynamicMatchingCustomHeadline',
             matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
             matchingInput: '#tbodyDynamicMatchingInput',
+            matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
             matchingCustomInput: '#tbodyDynamicMatchingCustomInput',
             matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
             categoryInfo: '#categoryInfo'

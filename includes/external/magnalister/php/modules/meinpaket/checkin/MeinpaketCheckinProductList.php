@@ -62,10 +62,43 @@ class MeinpaketCheckinProductList extends MLProductListMeinpaketAbstract{
 					"
 						AND mcc.mpID = '".$this->aMagnaSession['mpID']."'
 						AND mcc.MarketplaceCategory <> ''
-					"
+						AND Verified = 'OK' "
 				),
 				ML_Database_Model_Query_Select::JOIN_TYPE_INNER
 			);
 		return $this;
+	}
+
+	protected function isPreparedDifferently($aRow) {
+		$sPrimaryCategory = $this->getPrepareData($aRow, 'VariationConfiguration');
+		if (!empty($sPrimaryCategory)) {
+			$sCategoryDetails = $this->getPrepareData($aRow, 'CategoryAttributes');
+			$categoryMatching = MeinpaketHelper::gi()->getCategoryMatching($sPrimaryCategory);
+			$sCategoryDetails = json_decode($sCategoryDetails, true);
+			return MeinpaketHelper::gi()->detectChanges($categoryMatching, $sCategoryDetails);
+		}
+
+		return false;
+	}
+
+	protected function isDeletedAttributeFromShop($aRow, &$message) {
+	    $aVariationConfiguration = $this->getPrepareData($aRow, 'VariationConfiguration');
+		if (!empty($aVariationConfiguration)) {
+			$matchedAttributes = $this->getPrepareData($aRow, 'CategoryAttributes');
+			$matchedAttributes = json_decode($matchedAttributes, true);
+			$shopAttributes = MeinpaketHelper::gi()->flatShopVariations();
+
+            if (!is_array($matchedAttributes)) {
+                $matchedAttributes = array();
+            }
+
+			foreach ($matchedAttributes as $matchedAttribute) {
+				if (MeinpaketHelper::gi()->detectIfAttributeIsDeletedOnShop($shopAttributes, $matchedAttribute, $message)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }

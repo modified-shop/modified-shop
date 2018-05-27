@@ -26,6 +26,9 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 //	(SELECT * FROM magnalister_meinpaket_categorymatching)
 
 class MeinpaketProductPrepareSaver {
+
+	public $aErrors = array();
+
 	protected $resources = array();
 	
 	protected $mpId = 0;
@@ -123,6 +126,16 @@ class MeinpaketProductPrepareSaver {
 		$pIds = $this->loadProductsModel($pIds);
 		
 		$data['PreparedTs'] = date('Y-m-d H:i:s');
+		$data['Verified'] = 'OK';
+
+		if (empty($data['MarketplaceCategory'])) {
+			$this->aErrors['ML_MEINPAKET_ERROR_CATEGORY'] = ML_MEINPAKET_ERROR_CATEGORY;
+		}
+
+		if (!empty($this->aErrors)) {
+			$data['Verified'] = 'ERROR';
+		}
+
 		foreach ($pIds as $row) {
 			$set = array_replace_recursive(
 				array (

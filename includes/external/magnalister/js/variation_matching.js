@@ -2,6 +2,7 @@
     $.widget("ui.ml_variation_matching", {
         options: {
             urlPostfix: '&ajax=true',
+            attributesNamePrefix: '[ShopVariation]',
             i18n: {},
             elements: {}
         },
@@ -25,19 +26,24 @@
             buttonOk: 'OK',
             buttonCancel: 'Cancel',
             note: 'Hinweis',
+            variations: 'Variations',
             attributeChangedOnMp: '',
             attributeDifferentOnProduct: '',
             attributeDeletedOnMp: '',
             attributeValueDeletedOnMp: '',
             categoryWithoutAttributesInfo: '',
             differentAttributesOnProducts: '',
+            variationTheme: '',
             dbtable: 'dbtable',
             dbcolumn: 'dbcolumn',
             dbalias: 'dbalias',
-            alreadyMatched: 'alreadyMatched'
+            alreadyMatched: 'alreadyMatched',
+            multiSelect: '',
+            multiselectHint: ''
         },
         html: {
             shopVariationsDropDown: '',
+            shopVariationsCustomDropDown: '',
             valuesBackup: '',
             valuesCustomBackup: ''
         },
@@ -47,20 +53,47 @@
             customIdentifierSelectElement: null,
             newGroupIdentifier: null, //hidden input for transport
             matchingHeadline: null,
-            matchingCustomHeadline: null,
             matchingOptionalHeadline: null,
+            matchingCustomHeadline: null,
             matchingInput: null,
-            matchingCustomInput: null,
             matchingOptionalInput: null,
+            matchingCustomInput: null,
             categoryInfo: null,
             customIdentifierWrapper: null
         },
         variationValues: {},
         optionalAttributesMaxSize: 5,
+        multiSelectDataTypeCode: 'multiselect',
+        multiSelectAndTextDataTypeCode: 'multiselectandtext',
+        attributesNamePrefix: null,
 
         _init: function() {
             var self = this,
                 i;
+
+            // Reset configuration
+            self.attributesNamePrefix = self.options.attributesNamePrefix;
+            self.html = {
+                shopVariationsDropDown: '',
+                shopVariationsCustomDropDown: '',
+                valuesBackup: '',
+                valuesCustomBackup: ''
+            };
+
+            self.elements.form = null;
+            self.elements.mainSelectElement = null;
+            self.elements.customIdentifierSelectElement = null;
+            self.elements.newGroupIdentifier = null; //hidden input for transport
+            self.elements.matchingHeadline = null;
+            self.elements.matchingOptionalHeadline = null;
+            self.elements.matchingCustomHeadline = null;
+            self.elements.matchingInput = null;
+            self.elements.matchingOptionalInput = null;
+            self.elements.matchingCustomInput = null;
+            self.elements.categoryInfo = null;
+            self.elements.customIdentifierWrapper = null;
+
+            self.variationValues = {};
 
             for (i in self.options.i18n) {
                 if (self.options.i18n.hasOwnProperty(i)) {
@@ -86,9 +119,21 @@
                 self.elements.form = self.element.find('form').andSelf().filter('form');
             }
 
+            self.initSubmitFormInSingleParameter();
+
+            // Breaking the reference between the two variables. Setting groupedShopVariations to shopVariations by value.
+            self.options.groupedShopVariations = JSON.parse(JSON.stringify(self.options.shopVariations));
+            self._flat_attributes(self.options.shopVariations);
             self.html.valuesBackup = self.elements.matchingInput.html();
             self.html.valuesOptionalBackup = self.elements.matchingOptionalInput.html();
-            self._initCustomInputElements();
+            self.html.valuesCustomBackup = self.elements.matchingCustomInput.html();
+            self.isPrepareForm = self.elements.form.attr('action').split('view=')[1] === 'apply';
+
+            // Get tbody parent of category select and append on it additional select field for choosing the marketplace
+            // variation pattern. This appending is done in buildCategorySelectors method. This should only be done on
+            // prepare form.
+            self.elements.mainTable = self.elements.mainSelectElement.closest('tbody #variationMatcher');
+
             self._initMainSelectElement();
             if (self.elements.customIdentifierSelectElement) {
                 self._initCustomIdentifierSelectElement();
@@ -116,9 +161,10 @@
                             Ok: {
                                 'text': self.i18n.buttonOk,
                                 click: function() {
-                                    var selectId = button.value;
+                                    var selectId = button.value,
+                                        savePrepare = selectId.substr(selectId.lastIndexOf('_') + 1, selectId.length);
                                     $('select#' + selectId).val('');
-                                    self._saveMatching(true);
+                                    self._saveMatching(savePrepare);
                                     $(this).dialog('close');
                                 }
                             }
@@ -131,24 +177,10 @@
                         $('span.ml-collapse[name="' + this.value + '_collapse_span_name"]').css('background-position', '0 -23px');
                         matchedTable.show();
                     } else {
-                        $('span.ml-collapse[name="' + this.value + '_collapse_span_name"]').css('background-position', '0 3px');
+                        $('span.ml-collapse[name="' + this.value + '_collapse_span_name"]').css('background-position', '0 0px');
                         matchedTable.hide();
                     }
                 });
-        },
-
-        _initCustomInputElements: function() {
-            var self = this;
-
-            if (!self.elements.matchingCustomHeadline) {
-                self.elements.matchingCustomHeadline = $('<div/>');
-            }
-
-            if (!self.elements.matchingCustomInput) {
-                self.elements.matchingCustomInput = $('<div/>');
-            }
-
-            self.html.valuesCustomBackup = self.elements.matchingCustomInput.html();
         },
 
         _initMainSelectElement: function() {
@@ -156,10 +188,11 @@
 
             self.elements.mainSelectElement.change(function(event, initial) {
                 self.elements.matchingHeadline.css('display', 'none');
-                self.elements.matchingCustomHeadline.css('display', 'none');
                 self.elements.matchingOptionalHeadline.css('display', 'none');
+                self.elements.matchingCustomHeadline.css('display', 'none');
                 self.elements.matchingInput.html(self.html.valuesBackup).css('display', 'none');
                 self.elements.matchingOptionalInput.html(self.html.valuesOptionalBackup).css('display', 'none');
+                self.elements.matchingCustomInput.html(self.html.valuesOptionalBackup).css('display', 'none');
                 self.elements.categoryInfo.css('display', 'none');
 
                 var val = $(this).val();
@@ -168,11 +201,11 @@
                 if (val != null && val !== '' && val != 'null') {
                     self.elements.mainSelectElement.closest('.magnamain').find('.successBox').remove();
                     self.elements.matchingHeadline.css('display', 'table-row-group');
-                    self.elements.matchingCustomHeadline.css('display', 'table-row-group');
                     self.elements.matchingOptionalHeadline.css('display', 'table-row-group');
+                    self.elements.matchingCustomHeadline.css('display', 'table-row-group');
                     self.elements.matchingInput.css('display', 'table-row-group');
-                    self.elements.matchingCustomInput.css('display', 'table-row-group');
                     self.elements.matchingOptionalInput.css('display', 'table-row-group');
+                    self.elements.matchingCustomInput.css('display', 'table-row-group');
                     self.elements.categoryInfo.css('display', 'table-row-group');
 
                     if (self.elements.customIdentifierSelectElement) {
@@ -182,6 +215,11 @@
                     }
                 } else if (self.elements.customIdentifierSelectElement) {
                     self._loadCustomIdentifiers(val, initial);
+                }
+                var variationPatternElement = self.elements.mainTable.find('#variation-pattern');
+
+                if (variationPatternElement.length > 0) {
+                    variationPatternElement.remove();
                 }
             }).trigger('change', [true]);
         },
@@ -278,29 +316,52 @@
             return out;
         },
 
-        _getShopVariationsDropDownElement: function() {
-            var self = this;
+        _getShopVariationsDropDownElement: function(dropDownProperty) {
+            var self = this,
+                counter = 1,
+                numberOfOptGroups = 2,
+                // Breaking the reference between the two variables. Setting groupedShopVariations to shopVariations by value.
+                shopVariations = JSON.parse(JSON.stringify(self.options.groupedShopVariations));
 
-            if (self.html.shopVariationsDropDown === '') {
-                self.html.shopVariationsDropDown =
-                    '<select class="shopAttrSelector">'
-                    + self._render(
-                        '<option {Disabled} data-custom="{Custom}" value="{Code}">{Name}</option>',
-                        {0: {Code: 'null', Name: self.i18n.pleaseSelect, Disabled: '', Custom: ''}}
-                    )
-                    + '</select>'
-                ;
+            if (dropDownProperty === 'shopVariationsCustomDropDown') {
+                delete shopVariations['no_opt_group']['attribute_value'];
+                delete shopVariations['no_opt_group']['database_value'];
+                delete shopVariations['no_opt_group']['separator_line3'];
             }
 
-            return $(self.html.shopVariationsDropDown);
+            if (self.html[dropDownProperty] === '') {
+                self.html[dropDownProperty] = '<select class="shopAttrSelector">' +
+                    self._render('<option {Disabled} data-custom="{Custom}" value="{Code}">{Name}</option>',
+                        {0: {Code: 'null', Name: self.i18n.pleaseSelect, Disabled: '', Custom: ''}});
+
+                if (dropDownProperty === 'shopVariationsCustomDropDown') {
+                    for (var property in  shopVariations) {
+                        if (shopVariations.hasOwnProperty(property)) {
+                            if (counter++ <= numberOfOptGroups) {
+                                var options = self._render('<option {Disabled} data-custom="{Custom}" data-type="{Type}" value="{Code}">{Name}</option>',
+                                    shopVariations[property]);
+
+                                self.html[dropDownProperty] += '<optgroup label="' + property + '">' + options + '</optgroup>';
+                                continue;
+                            }
+                            self.html[dropDownProperty] += self._render('<option {Disabled} data-custom="{Custom}" value="{Code}">{Name}</option>',
+                                shopVariations[property]);
+                        }
+                    }
+                }
+
+                self.html[dropDownProperty] += '</select>';
+            }
+
+            return $(self.html[dropDownProperty]);
         },
 
         _load: function(data, success) {
-            var self = this;
-
+            var self = this,
             // some systems (Magento) have additional params that must be appended to each request
             // if so, object window.ml_config.postParams should have them all
-            var additionalParams = window.ml_config ? window.ml_config.postParams : null;
+                additionalParams = window.ml_config ? window.ml_config.postParams : null;
+
             if (additionalParams) {
                 for (var key in additionalParams) {
                     if (additionalParams.hasOwnProperty(key) && !data.hasOwnProperty(key)) {
@@ -334,7 +395,7 @@
         _renderOptions: function(options, selectedValue, firstOption, addSeparator) {
             var self = this,
                 data = firstOption ? [firstOption] : [],
-                i, key;
+                i, key, selected;
             if (addSeparator) {
                 data.push({
                     key: 'separator_line',
@@ -347,10 +408,17 @@
             for (i in options) {
                 if (options.hasOwnProperty(i)) {
                     key = options[i].key ? options[i].key : i;
+                    var selected = "";
+                    if($.isArray(selectedValue)){//multiselect
+                        selected = $.inArray(key, selectedValue) >=0 ? 'selected' : '';
+                    } else {
+                        selected = key === selectedValue ? 'selected' : '';
+                    }
+
                     data.push({
                         key: key,
                         value: options[i].value ? options[i].value : options[i],
-                        selected: key === selectedValue ? 'selected' : '',
+                        selected: selected,
                         disabled: ''
                     });
                 }
@@ -360,11 +428,11 @@
         },
 
         _buildSelectMatching: function(elem, selector, matchDiv, attributeListDiv) {
-            var self = this;
-            var deleteButton = $('#' + selector.AttributeCode + '_deleteMatching');
+            var self = this,
+                deleteButton = $('#' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching'),
+                addAfterWarning = false,
+                spanWarning = $('span#' + self.generateAttributeCodeId(selector.AttributeCode) + '_warningMatching');
 
-            var addAfterWarning = false;
-            var spanWarning = $('span#' + selector.AttributeCode + '_warningMatching');
             if (typeof spanWarning.html() !== 'undefined') {
                 addAfterWarning = true;
             }
@@ -378,14 +446,14 @@
                     if (!deleteButton.length) {
                         if (addAfterWarning) {
                             spanWarning.before(
-                                '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                                '<span id="' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching">' +
                                 '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
                                 '<span>' + self.i18n.alreadyMatched + '</span>' +
                                 '</span>'
                             );
                         } else {
-                            $('div#extraFieldsInfo_' + selector.AttributeCode).append(
-                                '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                            $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).append(
+                                '<span id="' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching">' +
                                 '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
                                 '<span>' + self.i18n.alreadyMatched + '</span>' +
                                 '</span>'
@@ -393,11 +461,11 @@
                         }
                     }
                 } else {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).children('*:not(.doNotHide)').hide();
+                    $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).children('*:not(.add-matching)').hide();
                 }
 
                 matchDiv.css('display', 'inline-block').css('width', '40%');
-                return matchDiv.append('<input type="text" style="width:100%" name="ml[match][ShopVariation][' + selector.AttributeCode + '][Values]" value="' + freetext + '">');
+                return matchDiv.append('<input type="text" style="width:100%" name="ml[match]' + self.attributesNamePrefix + '[' + selector.AttributeCode + '][Values]" value="' + freetext + '">');
             }
 
             if (elem.val() === 'attribute_value') {
@@ -406,15 +474,15 @@
                 if (!deleteButton.length) {
                     if (addAfterWarning) {
                         spanWarning.before(
-                            '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                            '<span id="' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching">' +
                             '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
                             '<span>' + self.i18n.alreadyMatched + '</span>' +
                             '</span>'
                         );
                     } else {
-                        $('div#extraFieldsInfo_' + selector.AttributeCode).append(
-                            '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                            '<button type="button" id="selector.CurrentValues.Code" class="ml-button mlbtn-action ml-delete-matching"value="' + elem.attr('id') + '">-</button>' +
+                        $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).append(
+                            '<span id="' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching">' +
+                            '<button type="button" id="selector.CurrentValues.Code" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
                             '<span>' + self.i18n.alreadyMatched + '</span>' +
                             '</span>'
                         );
@@ -423,28 +491,49 @@
 
                 matchDiv.css('display', 'inline-block').css('width', '40%');
                 var style = selector.CurrentValues.Error ? ' style="border-color:red;"' : '';
-                
-                if ((typeof selector.CurrentValues.Code !== 'undefined') && (elem.val() !== selector.CurrentValues.Code)) {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).children('*:not(.doNotHide)').hide();
-                }
-                
-                return matchDiv.append(
-                    '<select' + style + ' name="ml[match][ShopVariation][' + selector.AttributeCode + '][Values]">'
-                    + self._renderOptions(selector.AllowedValues, attr_value, {
-                        key: '',
-                        value: self.i18n.pleaseSelect,
-                        selected: '',
-                        disabled: ''
-                    }, false)
-                    + '</select>');
-            }
-            
-            if (elem.val() === 'database_value') {
-                var values = self.options.shopVariations[elem.val()];
 
-                var allMatched = true;
-                var selectedAlias = '';
-                var selectedTable = false;
+                if ((typeof selector.CurrentValues.Code !== 'undefined') && (elem.val() !== selector.CurrentValues.Code)) {
+                    $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).children('*:not(.add-matching)').hide();
+                }
+
+                var multiple = '';
+                var name = 'ml[match]' + self.attributesNamePrefix + '[' + selector.AttributeCode + '][Values]';
+                var firstOption = { key: '', value: self.i18n.pleaseSelect, selected: '', disabled: ''};
+                if (self.isMultiSelectType(selector.DataType)) {
+                    multiple = 'multiple';
+                    name += '[]';
+                    firstOption = false;
+                }
+
+                var out = '<select' + style + ' name="'+name+'" '+ multiple +'>'
+                + self._renderOptions(selector.AllowedValues, attr_value, firstOption, false)
+                + '</select>'
+
+
+                if (typeof selector.Limit !== 'undefined' && multiple === 'multiple') {
+                    out += '<script type="text/javascript">'
+                        + '     $(document).ready(function() {'
+                        + '         var last_valid_selection = null;'
+                        + '         $(\'select[name="'+ name +'"]\').change(function(event) {'
+                        + '             var selectValue = $(this).val();'
+                        + '             if (typeof(selectValue) != "undefined" && selectValue !== null && selectValue.length > ' + selector.Limit + ') {'
+                        + '                 $(this).val(last_valid_selection);'
+                        + '             } else {'
+                        + '                 last_valid_selection = $(this).val();'
+                        + '             }'
+                        + '         });'
+                        + '     });'
+                        + '</script>';
+                }
+
+                return matchDiv.append(out);
+            }
+
+            if (elem.val() === 'database_value') {
+                var values = self.options.shopVariations[elem.val()],
+                    allMatched = true,
+                    selectedAlias = '',
+                    selectedTable = false;
 
                 if (typeof selector.CurrentValues.Values !== 'undefined') {
                     if (typeof selector.CurrentValues.Values.Alias !== 'undefined') {
@@ -465,7 +554,7 @@
                 var html = matchDiv.append(
                     '<div style="display:inline-block;margin-top:10px">'
                     + self.i18n.dbtable
-                    + '<select style="width:180px;" name="ml[match][ShopVariation][' + selector.AttributeCode + '][Values][Table]">'
+                    + '<select style="width:180px;" name="ml[match]' + self.attributesNamePrefix + '[' + selector.AttributeCode + '][Values][Table]">'
                     + self._renderOptions(values.Values, selectedTable, {
                         key: '',
                         value: self.i18n.pleaseSelect,
@@ -476,17 +565,17 @@
                     + '</div>'
                     + '<div style="display:inline-block;margin-left:10px">'
                     + self.i18n.dbcolumn
-                    + '<select style="width:100px;" name="ml[match][ShopVariation][' + selector.AttributeCode + '][Values][Column]">'
-                    + '<option value="null">Please choose</option>'
+                    + '<select style="width:100px;" name="ml[match]' + self.attributesNamePrefix + '[' + selector.AttributeCode + '][Values][Column]">'
+                    + '<option value="">Please choose</option>'
                     + '</select>'
                     + '</div>'
                     + '<div style="display:inline-block;margin-left:10px">'
                     + self.i18n.dbalias
-                    + '<input type="text" name="ml[match][ShopVariation][' + selector.AttributeCode + '][Values][Alias]" value="' + selectedAlias + '">'
+                    +   '<input type="text" name="ml[match]' + self.attributesNamePrefix + '[' + selector.AttributeCode + '][Values][Alias]" value="' + selectedAlias + '">'
                     + '</div>'
                 );
 
-                $('select[name="ml[match][ShopVariation][' + selector.AttributeCode + '][Values][Table]"]').change(function() {
+                $('select[name="ml[match]' + self.attributesNamePrefix + '[' + selector.AttributeCode + '][Values][Table]"]').change(function() {
                     var selectedColumn = '';
                     if (typeof selector.CurrentValues.Values !== 'undefined' && typeof selector.CurrentValues.Values.Column !== 'undefined') {
                         selectedColumn = selector.CurrentValues.Values.Column;
@@ -499,14 +588,14 @@
                         if (!deleteButton.length) {
                             if (addAfterWarning) {
                                 spanWarning.before(
-                                    '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                                    '<span id="' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching">' +
                                     '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
                                     '<span>' + self.i18n.alreadyMatched + '</span>' +
                                     '</span>'
                                 );
                             } else {
-                                $('div#extraFieldsInfo_' + selector.AttributeCode).append(
-                                    '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                                $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).append(
+                                    '<span id="' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching">' +
                                     '<button type="button" id="selector.CurrentValues.Code" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
                                     '<span>' + self.i18n.alreadyMatched + '</span>' +
                                     '</span>'
@@ -515,10 +604,10 @@
                         }
 
                         if ((typeof selector.CurrentValues.Code !== 'undefined') && (elem.val() !== selector.CurrentValues.Code)) {
-                            $('div#extraFieldsInfo_' + selector.AttributeCode).children('*:not(.doNotHide)').hide();
+                            $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).children('*:not(.add-matching)').hide();
                         }
                     }
-                    
+
                     self._getTableColumns(selector.AttributeCode, selectedColumn, $(this).find(':selected').text());
                 }).trigger('change');
 
@@ -540,49 +629,98 @@
         },
 
         _addOptionsToSelect: function(code, selectedColumn, data) {
-            $('option', 'select[name="ml[match][ShopVariation][' + code + '][Values][Column]"]').not(':eq(0)').remove();
             var self = this;
-            if (!$.trim(self.elements.matchingInput.html())) {
-                self.elements.matchingHeadline.css('display', 'none');
-                self.elements.matchingInput.css('display', 'none');
-            }
 
-            if (!$.trim(self.elements.matchingCustomInput.html())) {
-                self.elements.matchingCustomHeadline.css('display', 'none');
-                self.elements.matchingCustomInput.css('display', 'none');
-            }
+            $('option', 'select[name="ml[match]' + self.attributesNamePrefix + '[' + code + '][Values][Column]"]').not(':eq(0)').remove();
+
             $.each(data, function(key, value) {
                 var selected = '';
                 if (selectedColumn === value) {
                     selected = 'selected="selected"';
                 }
 
-                $('select[name="ml[match][ShopVariation][' + code + '][Values][Column]"]')
+                $('select[name="ml[match]' + self.attributesNamePrefix + '[' + code + '][Values][Column]"]')
                     .append($('<option ' + selected + '></option>')
                         .attr("value", key)
                         .text(value));
             })
         },
 
-        _getMatchingTableTemplate: function(attributeCode) {
+        _getMatchingTableTemplate: function(attributeCode, valueShopKey, valueMarketplaceKey, isShopMultiSelect,
+                                                    isMPMultiSelect) {
+            var self = this;
+
+            // Shop and marketplace matching template strings, when there is no multi-matching, extracted into variables.
+            var shopMatchingTemplate =
+                '<input type="hidden" name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][{key}][Shop][Key]" value="{valueShopKey}">' +
+                '<input type="hidden" name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][{key}][Shop][Value]" value="{valueShopValue}">' +
+                '{valueShopValue}',
+
+                mpMatchingTemplate =
+                    '<select id="ml_matched_value_' + self.generateAttributeCodeId(attributeCode) + '_{valueShopKey}" style="width: 100%">' +
+                        '<option {disabled} value="freetext">' + this.i18n.manualMatching + '</option>' +
+                        '<option selected="selected" value="{valueMarketplaceKey}">{valueMarketplaceInfo}</option>' +
+                    '</select>' +
+                    '<input type="hidden" name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][{key}][Marketplace][Key]" value="{valueMarketplaceKey}">' +
+                    '<input type="hidden" name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][{key}][Marketplace][Value]" value="{valueMarketplaceValue}">' +
+                    '<input type="hidden" name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][{key}][Marketplace][Info]" value="{valueMarketplaceInfo}">';
+
+            // If shop value is multiValue (array of keys and values) shop matching template should be changed. It is
+            // changed in a way that it submits values in the same way as for initial saving.
+            if (isShopMultiSelect) {
+
+                // Forming shop multi select options which should be submitted.
+                var shopMultiOptions = formMultiSelectOptions(valueShopKey);
+
+                // Shop matching template will have hidden select multiple which will carry data about shop keys codes.
+                // Shop values will be serialized as array into hidden input.
+                shopMatchingTemplate =
+                    '<select multiple="multiple" class="ml-hidden" name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][{key}][Shop][Key][]">' +
+                        shopMultiOptions +
+                    '</select>' +
+                    '<input type="hidden" name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][{key}][Shop][Value]" value={valueShopValueSerialized}>' +
+                    '{valueShopValue}';
+            }
+
+            // If marketplace value is multiValue (array of keys and values) marketplace matching template should be changed.
+            // It is changed in a way that it submits values in the same way as for initial saving.
+            if (isMPMultiSelect) {
+                // Forming MP multi select options which should be submitted.
+                var mpMultiOptions = formMultiSelectOptions(valueMarketplaceKey);
+
+                mpMatchingTemplate =
+                    '<select id="ml_matched_value_' + self.generateAttributeCodeId(attributeCode) + '_{valueShopKey}" style="width: 100%">' +
+                    '   <option {disabled} value="freetext">' + this.i18n.manualMatching + '</option>' +
+                    '   <option selected="selected" value="{valueMarketplaceKey}">{valueMarketplaceInfo}</option>' +
+                    '</select>' +
+                    '<select multiple="multiple" class="ml-hidden" name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][{key}][Marketplace][Key][]">' +
+                        mpMultiOptions +
+                    '</select>' +
+                    '<input type="hidden" name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][{key}][Marketplace][Value]" value={valueMarketplaceValueSerialized}>' +
+                    '<input type="hidden" name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][{key}][Marketplace][Info]" value="{valueMarketplaceInfo}">';
+            }
+
+            // Helper function for making options in multi select.
+            function formMultiSelectOptions(sourceValues) {
+                var destination = '';
+                $.each(sourceValues, function (index, sourceValue) {
+                    destination += '<option value="' + sourceValue + '" selected></option>';
+                });
+
+                return destination;
+            }
+
+            // Final value of template string for rendering returned.
             return '<tr>' +
                 '   <td style="width: 35%">' +
-                '       <input type="hidden" name="ml[match][ShopVariation][' + attributeCode + '][Values][{key}][Shop][Key]" value="{valueShopKey}">' +
-                '       <input type="hidden" name="ml[match][ShopVariation][' + attributeCode + '][Values][{key}][Shop][Value]" value="{valueShopValue}">' +
-                '       {valueShopValue}' +
+                        shopMatchingTemplate +
                 '   </td>' +
                 '   <td style="width: 35%">' +
-                '       <select id="ml_matched_value_' + attributeCode + '_{valueShopKey}" style="width: 100%">' +
-                '           <option {disabled} value="freetext">' + this.i18n.manualMatching + '</option>' +
-                '           <option selected="selected" value="{valueMarketplaceKey}">{valueMarketplaceInfo}</option>' +
-                '       </select>' +
-                '       <input type="hidden" name="ml[match][ShopVariation][' + attributeCode + '][Values][{key}][Marketplace][Key]" value="{valueMarketplaceKey}">' +
-                '       <input type="hidden" name="ml[match][ShopVariation][' + attributeCode + '][Values][{key}][Marketplace][Value]" value="{valueMarketplaceValue}">' +
-                '       <input type="hidden" name="ml[match][ShopVariation][' + attributeCode + '][Values][{key}][Marketplace][Info]" value="{valueMarketplaceInfo}">' +
+                        mpMatchingTemplate +
                 '   </td>' +
-                '   <td id="ml_freetext_value_' + attributeCode + '_{valueShopKey}" style="border: none; display: none;">' +
-                '       <input type="hidden" disabled="disabled" id="ml_key_' + attributeCode + '_{valueShopKey}" name="ml[match][ShopVariation][' + attributeCode + '][Values][{key}][Marketplace][Key]" value="manual">' +
-                '       <input type="text" id="ml_value_' + attributeCode + '_{valueShopKey}" style="width:100%;">' +
+                '   <td id="ml_freetext_value_' + self.generateAttributeCodeId(attributeCode) + '_{valueShopKey}" style="border: none; display: none;">' +
+                '       <input type="hidden" disabled="disabled" id="ml_key_' + self.generateAttributeCodeId(attributeCode) + '_{valueShopKey}" name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][{key}][Marketplace][Key]" value="manual">' +
+                '       <input type="text" id="ml_value_' + self.generateAttributeCodeId(attributeCode) + '_{valueShopKey}" style="width:100%;">' +
                 '   </td>' +
                 '   <td style="border: none">' +
                 '       <button type="button" class="ml-button mlbtn-action ml-save-matching" value="' + attributeCode + '" style="display: none;">+</button>' +
@@ -590,14 +728,28 @@
                 '   </td>' +
                 '</tr>' +
                 '<script>' +
-                '   $("#matched_value_' + attributeCode + '_{valueShopKey}").change();' +
-                '   $("#value_' + attributeCode + '_{valueShopKey}").change();' +
+                '   $("#matched_value_' + self.generateAttributeCodeId(attributeCode) + '_{valueShopKey}").change();' +
+                '   $("#value_' + self.generateAttributeCodeId(attributeCode) + '_{valueShopKey}").change();' +
                 '</script>';
         },
 
         _getMatchingAttributeColumnTemplate: function() {
             return '	<tr id="selRow_{id}">'
                 + '         <th {style}>{AttributeName} {redDot}</th>'
+                + '         <td id="selCell_{id}">'
+                + '             <div id="attributeList_{id}">'
+                + '                 <label>' + this.i18n.webShopAttribute + ':</label>'
+                + '                 {shopVariationsDropDown}'
+                + '             </div>'
+                + '             <div id="match_{id}"></div>'
+                + '         </td>'
+                + '         <td class="info">{AttributeDescription}</td>'
+                + '	</tr>';
+        },
+
+        _getMatchingCustomAttributeColumnTemplate: function() {
+            return '	<tr id="selRow_{id}">'
+                + '         <th {style}>{shopVariationsCustomDropDown}</th>'
                 + '         <td id="selCell_{id}">'
                 + '             <div id="attributeList_{id}">'
                 + '                 <label>' + this.i18n.webShopAttribute + ':</label>'
@@ -634,14 +786,14 @@
                 values = self.options.shopVariations[elem.val()],
                 matchDiv = $('div#match_' + selector.id),
                 attributeListDiv = $('div#attributeList_' + selector.id),
-                deleteButton = $('#' + selector.AttributeCode + '_deleteMatching'),
+                deleteButton = $('#' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching'),
                 mpValues = $.extend({}, selector.AllowedValues),
                 style = '',
-                removeFreeTextOption = true,
+                removeFreeTextOption = selector.DataType.toLowerCase().indexOf('text') === -1,
                 addAfterWarning = false,
-                spanWarning = $('span#' + selector.AttributeCode + '_warningMatching'),
-                selectorRow = $('#selRow_' + selector.id),
-                saveButton;
+                spanWarning = $('span#' + self.generateAttributeCodeId(selector.AttributeCode) + '_warningMatching'),
+                attributeRow = $('#selRow_' + selector.id),
+                isDataCustom = elem.find(":selected").attr('data-custom') == "true";
 
             if (typeof spanWarning.html() !== 'undefined') {
                 addAfterWarning = true;
@@ -655,73 +807,47 @@
             attributeListDiv.removeAttr('style');
             matchDiv.removeAttr('style');
 
-            if (selectorRow.hasClass('customAttribute')) {
-                saveButton = $('div#extraFieldsInfo_' + selector.AttributeCode + ' button.ml-save-matching');
+            if (attributeRow.hasClass('optionalAttribute') || (attributeRow.hasClass('customAttribute') &&
+                !selector.CurrentValues.Code) || attributeRow.hasClass('Attribute')) {
+
+                var saveButton = $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode) + ' button.ml-save-matching');
                 if (!saveButton.length) {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).prepend(
-                        '<button type="button" class="ml-button mlbtn-action ml-save-matching doNotHide" value="' + selector.AttributeCode + '">+</button>'
+                    $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).prepend(
+                        '<button type="button" class="ml-button mlbtn-action ml-save-matching add-matching" value="' + selector.AttributeCode + '">+</button>'
                     );
                 }
             }
 
-            if (selectorRow.hasClass('Attribute')) {
-                saveButton = $('div#extraFieldsInfo_' + selector.AttributeCode + ' button.ml-save-matching');
-                if (!saveButton.length) {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).prepend(
-                        '<button type="button" class="ml-button mlbtn-action ml-save-matching doNotHide" value="' + selector.AttributeCode + '">+</button>'
-                    );
-                }
-            }
-
-            if ($('#selRow_'+selector.id).hasClass('optionalAttribute')) {
-                var saveButton = $('div#extraFieldsInfo_' + selector.AttributeCode + ' button.ml-save-matching');
-                if (!saveButton.length) {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).prepend(
-                        '<button type="button" class="ml-button mlbtn-action ml-save-matching doNotHide" value="' + selector.AttributeCode + '">+</button>'
-                    );
-                }
-            }
-
-            if (elem.find(":selected").attr('data-custom') == "true") {
-                if (elem.val() === selector.CurrentValues.Code) {
-                    attributeListDiv.attr('style', 'background-color: #e9e9e9');
-
-                    var addSpanDelete = true;
-                    var spanDelete = $('span#' + selector.AttributeCode + '_deleteMatching');
-                    if (typeof spanDelete.html() !== 'undefined') {
-                        addSpanDelete = false;
+            if (elem.val() === selector.CurrentValues.Code) {
+                attributeListDiv.attr('style', 'background-color: #e9e9e9');
+                if (!deleteButton.length) {
+                    if (addAfterWarning) {
+                        spanWarning.before(
+                            '<span id="' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching">' +
+                            '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
+                            '<span>' + self.i18n.alreadyMatched + '</span>' +
+                            '</span>'
+                        );
+                    } else {
+                        $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).append(
+                            '<span id="' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching">' +
+                            '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
+                            '<span>' + self.i18n.alreadyMatched + '</span>' +
+                            '</span>'
+                        );
                     }
-
-                    if (!deleteButton.length) {
-                        if (addAfterWarning) {
-                            if (addSpanDelete) {
-                                spanWarning.before(
-                                    '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                                    '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
-                                    '<span>' + self.i18n.alreadyMatched + '</span>' +
-                                    '</span>'
-                                );
-                            } else {
-                                $('div#extraFieldsInfo_' + selector.AttributeCode).show();
-                            }
-                        } else {
-                            if (addSpanDelete) {
-                                $('div#extraFieldsInfo_' + selector.AttributeCode).append(
-                                    '<span id="' + selector.AttributeCode + '_deleteMatching">' +
-                                    '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
-                                    '<span>' + self.i18n.alreadyMatched + '</span>' +
-                                    '</span>'
-                                );
-                            } else {
-                                $('div#extraFieldsInfo_' + selector.AttributeCode).children('*:not(.doNotHide)').show();
-                            }
-                        }
-                    }
-                } else {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).children('*:not(.doNotHide)').hide();
                 }
+                if ((typeof selector.CurrentValues.Code !== 'undefined') && (elem.val() !== selector.CurrentValues.Code)) {
+                    $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).children('*:not(.add-matching)').hide();
+                }
+            } else {
+                if (!attributeRow.hasClass('customAttribute')) {
+                    $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).children('*:not(.add-matching)').hide();
+                }
+            }
 
-                return matchDiv.append('<input type="hidden" name="ml[match][ShopVariation][' + selector.AttributeCode + '][Values]" value="true">');
+            if (isDataCustom) {
+                return matchDiv.append('<input type="hidden" name="ml[match]' + self.attributesNamePrefix + '[' + selector.AttributeCode + '][Values]" value="true">');
             }
 
             if (elem.val() === 'freetext' || elem.val() === 'attribute_value' || elem.val() === 'database_value') {
@@ -743,21 +869,25 @@
                 removeFreeTextOption = false;
             }
 
-            matchDiv.append(self._buildMatchingTableSelectors(selector.AttributeCode, values.Values, mpValues, selector.CurrentValues.Error))
+            matchDiv.append(self._buildMatchingTableSelectors(selector, values.Values, mpValues, selector.CurrentValues.Error))
                 .append(self._buildMatchingTableBody(selector, elem, savePrepare));
 
             self._changeTriggerVariationMarketplace(selector.AttributeCode);
-            self._orderSelectOptions(selector.AttributeCode, removeFreeTextOption);
+            self._orderSelectOptions(selector, removeFreeTextOption);
 
             return matchDiv;
         },
 
-        _buildMatchingTableSelectors: function(attributeCode, shopValues, mpValues, error) {
-            var self = this,
-                baseName = 'ml[match][ShopVariation][' + attributeCode + '][Values]',
-                style = error ? 'style="border-color:red"' : '';
+        // This will be different for product matching js and class will be input because of the way of displaying.
+        _getAppropriateAttributeMatchingTableRowClass: function() {
+            return "key";
+        },
 
-            var out = '<table class="attrTable matchingTable">'
+        _buildMatchingTableSelectors: function(attribute, shopValues, mpValues, error) {
+            var self = this,
+                baseName = 'ml[match]' + self.attributesNamePrefix + '[' + attribute.AttributeCode + '][Values]',
+                style = error ? 'style="border-color:red"' : '',
+                out = '<table class="attrTable matchingTable">'
                 + '    <tbody>'
                 + '        <tr class="headline">'
                 + '            <td class="key" style="width: 35%">' + self.i18n.shopValue + '</td>'
@@ -766,52 +896,86 @@
                 + '    </tbody>'
                 + '    <tbody>'
                 + '        <tr>'
-                + '            <td class="key" style="width: 35%">'
+                + '            <td class="' + self._getAppropriateAttributeMatchingTableRowClass() + '" style="width: 35%">'
                 + '                <select ' + style + ' name="' + baseName + '[0][Shop][Key]">'
                 +                      self._renderOptions(shopValues, '', null, true)
                 + '                </select>'
+                + '                <div id="' + baseName + '[Shop][Values][Container]" style="display: none">'
+                + '                     <select class="multiSelect" multiple="multiple" ' + style + ' id="' + baseName + '[Shop][Keys]"'
+                + '                        name="' + baseName + '[0][Shop][Key][]">'
+                +                           self._renderOptions(shopValues, '', null, false)
+                + '                     </select>'
+                + '                </div>'
                 + '                <input type="hidden" name="' + baseName + '[0][Shop][Value]">'
                 + '            </td>'
                 + '            <td class="input" style="width: 35%">'
                 + '                <select ' + style + ' name="' + baseName + '[0][Marketplace][Key]">'
                 +                      self._renderOptions(mpValues, '', null, true)
                 + '                </select>'
+                + '                <div id="' + baseName + '[Shop][Values][Container]" style="display: none">'
+                + '                     <select class="multiSelect" multiple="multiple" ' + style + ' id="' + baseName + '[Marketplace][Keys]"'
+                + '                        name="' + baseName + '[0][Marketplace][Key][]">'
+                +                           self._renderOptions(mpValues, '', null, false)
+                + '                     </select>'
+                + '                </div>'
                 + '                <input type="hidden" name="' + baseName + '[0][Marketplace][Value]">'
                 + '            </td>'
-                + '            <td id="freetext_' + attributeCode + '" style="border: none; display: none;">'
+                + '            <td id="freetext_' + self.generateAttributeCodeId(attribute.AttributeCode) + '" style="border: none; display: none;">'
                 + '                <input type="text" name="' + baseName + '[FreeText]" style="width:100%;">'
                 + '            </td>'
-                + '            <td style="border: none"><button type="button" class="ml-button mlbtn-action ml-save-matching" value="' + attributeCode + '">+</button></td>'
+                + '            <td style="border: none">'
+                + '                 <button type="button" class="ml-button mlbtn-action ml-save-matching" value="' + attribute.AttributeCode + '">+'
+                + '                 </button>'
+                + '            </td>'
                 + '        <tr>'
                 + '    </tbody>'
                 + '</table>';
+
+            if (typeof attribute.Limit !== 'undefined' && self.isMultiSelectType(attribute.DataType)) {
+                out += '<script type="text/javascript">'
+                    + '     $(document).ready(function() {'
+                    + '         var last_valid_selection = null;'
+                    + '         $(\'select[name="'+ baseName +'[0][Marketplace][Key][]"]\').change(function(event) {'
+                    + '             var selectValue = $(this).val();'
+                    + '             if (typeof(selectValue) != "undefined" && selectValue !== null && selectValue.length > ' + attribute.Limit + ') {'
+                    + '                 $(this).val(last_valid_selection);'
+                    + '             } else {'
+                    + '                 last_valid_selection = $(this).val();'
+                    + '             }'
+                    + '         });'
+                    + '     });'
+                    + '</script>';
+            }
+
             return $(out);
         },
 
         _buildMatchingTableBody: function(selector, elem, savePrepare) {
-            var self = this;
-            var deleteButton = $('#' + selector.AttributeCode + '_deleteMatching');
+            var self = this,
+                deleteButton = $('#' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching');
+
             if (typeof selector.CurrentValues.Values !== 'undefined'
                 && (selector.CurrentValues.Values.length > 0 || Object.keys(selector.CurrentValues.Values).length > 0)
                 && elem.val() === selector.CurrentValues.Code) {
                 // reload saved values
                 var tableBody = '',
                     i = 1,
-                    disableFreeTextOption = selector.AllowedValues.length !== 0 ? 'disabled' : '';
+                    disableFreeTextOption = selector.DataType.toLowerCase().indexOf('text') === -1 ? 'disabled' : '',
+                    addAfterWarning = false,
+                    spanWarning = $('span#' + self.generateAttributeCodeId(selector.AttributeCode) + '_warningMatching');
 
-                var addAfterWarning = false;
-                var spanWarning = $('span#' + selector.AttributeCode + '_warningMatching');
                 if (typeof spanWarning.html() !== 'undefined') {
                     addAfterWarning = true;
                 }
 
                 for (var code in selector.CurrentValues.Values) {
                     if (selector.CurrentValues.Values.hasOwnProperty(code)) {
-                        var entry = selector.CurrentValues.Values[code];
-                        // if there are not predefined values or current value is in predefined values, render regularly
-                        // otherwise, attribute value has been deleted from marketplace
-                        if (selector.AllowedValues.length === 0 || selector.AllowedValues[entry.Marketplace.Key] !== undefined) {
-                            tableBody += self._render(self._getMatchingTableTemplate(selector.AttributeCode), [{
+                        var entry = selector.CurrentValues.Values[code],
+                            isShopMultiValue = entry.Shop.Key.constructor === Array,
+                            isMPMultiValue = entry.Marketplace.Key.constructor === Array,
+                            notDeletedOnMarketplace = false,
+                            checkDeletedOnMarketplace = selector.DataType.toLowerCase().indexOf('text') === -1,
+                            matchingTemplateInformation = {
                                 key: i++,
                                 valueShopKey: entry.Shop.Key,
                                 valueShopValue: entry.Shop.Value,
@@ -819,7 +983,43 @@
                                 valueMarketplaceValue: entry.Marketplace.Value,
                                 valueMarketplaceInfo: entry.Marketplace.Info,
                                 disabled: disableFreeTextOption
-                            }]);
+                            };
+
+                        // Different conditions for marketplace multi value and single value.
+                        if (isMPMultiValue) {
+                            var allowedValues = Object.keys(selector.AllowedValues);
+                            // ($(entry.Marketplace.Key).not(allowedValues).get().length === 0) is simulation of array_diff in javascript.
+                            notDeletedOnMarketplace = allowedValues.length === 0 || $(entry.Marketplace.Key).not(allowedValues).get().length === 0;
+                        } else {
+                            notDeletedOnMarketplace = selector.AllowedValues.length === 0 || selector.AllowedValues[entry.Marketplace.Key] !== undefined;
+                        }
+
+                        if (notDeletedOnMarketplace || !checkDeletedOnMarketplace) {
+                            // if there are not predefined values or current value is in predefined values, render regularly
+                            // otherwise, attribute value has been deleted from marketplace
+
+                            if (isShopMultiValue) {
+                                // When shop value is multi, keys and values should be transformed to string, because
+                                // they will be an array. (entry.Shop.Key = ["1", "2", "3"], entry.Shop.Value = ["Red", "Black", "Green"]).
+                                // Values should be serialized because they will be hiddens' input value (serialized array).
+                                matchingTemplateInformation['valueShopKey'] = entry.Shop.Key.join(', ');
+                                matchingTemplateInformation['valueShopValue'] = entry.Shop.Value.join(', ');
+                                matchingTemplateInformation['valueShopValueSerialized'] = JSON.stringify(entry.Shop.Value);
+                            }
+
+                            if (isMPMultiValue) {
+                                // When marketplace value is multi, keys and values should be transformed to string, because
+                                // they will be an array. (entry.Marketplace.Key = ["Autre", "Bouche"],
+                                // entry.Marketplace.Value = ["Autre", "Bouche"]). Values should be serialized because they will
+                                // be hiddens' input value (serialized array).
+                                matchingTemplateInformation['valueMarketplaceKey'] = entry.Marketplace.Key.join(', ');
+                                matchingTemplateInformation['valueMarketplaceValue'] = entry.Marketplace.Key.join(', ');
+                                matchingTemplateInformation['valueMarketplaceValueSerialized'] = JSON.stringify(entry.Marketplace.Value);
+                            }
+
+                            tableBody += self._render(self._getMatchingTableTemplate(selector.AttributeCode,
+                                entry.Shop.Key, entry.Marketplace.Key, isShopMultiValue, isMPMultiValue), [matchingTemplateInformation]);
+
                         } else {
                             tableBody += self._render(self._getDeletedAttributeValueColumnTemplate(), [{
                                 AttributeName: entry.Shop.Value
@@ -832,14 +1032,14 @@
                 if (!deleteButton.length) {
                     if (addAfterWarning) {
                         spanWarning.before(
-                            '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                            '<span id="' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching">' +
                             '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
                             '<span>' + self.i18n.alreadyMatched + '</span>' +
                             '</span>'
                         );
                     } else {
-                        $('div#extraFieldsInfo_' + selector.AttributeCode).append(
-                            '<span id="' + selector.AttributeCode + '_deleteMatching">' +
+                        $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).append(
+                            '<span id="' + self.generateAttributeCodeId(selector.AttributeCode) + '_deleteMatching">' +
                             '<button type="button" class="ml-button mlbtn-action ml-delete-matching" value="' + elem.attr('id') + '">-</button>' +
                             '<span>' + self.i18n.alreadyMatched + '</span>' +
                             '</span>'
@@ -847,34 +1047,32 @@
                     }
                 }
 
-                var tabType = self.elements.form.attr('action').split('view=')[1];
-
-                if (tabType === 'apply') {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).append(
-                        '<span id="' + selector.AttributeCode + '_collapseMatching" style="float: right">' +
-                            '<button type="button" class="ml-collapse" value="' + selector.AttributeCode + '" name="' + selector.AttributeCode + '_collapse_button_name">' +
-                                '<span class="ml-collapse" name="'+ selector.AttributeCode + '_collapse_span_name"></span>' +
-                            '</button>' +
+                if (self.isPrepareForm) {
+                    $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).append(
+                        '<span id="' + self.generateAttributeCodeId(selector.AttributeCode) + '_collapseMatching" style="float: right">' +
+                        '<button type="button" class="ml-collapse" value="' + self.generateAttributeCodeId(selector.AttributeCode) + '" name="' + self.generateAttributeCodeId(selector.AttributeCode) + '_collapse_button_name">' +
+                        '<span class="ml-collapse" name="' + self.generateAttributeCodeId(selector.AttributeCode) + '_collapse_span_name"></span>' +
+                        '</button>' +
                         '</span>'
                     );
                 }
 
-                if (savePrepare === selector.AttributeCode || tabType !== 'apply') {
-                    $('span.ml-collapse[name="' + selector.AttributeCode + '_collapse_span_name"]').css('background-position', '0 -23px');
-                    $('div#match_' + selector.AttributeCode).show();
+                if (savePrepare === selector.AttributeCode || !self.isPrepareForm) {
+                    $('span.ml-collapse[name="' + self.generateAttributeCodeId(selector.AttributeCode) + '_collapse_span_name"]').css('background-position', '0 -23px');
+                    $('div#match_' + self.generateAttributeCodeId(selector.AttributeCode)).show();
                 } else {
-                    $('span.ml-collapse[name="' + selector.AttributeCode + '_collapse_span_name"]').css('background-position', '0 3px');
-                    $('div#match_' + selector.AttributeCode).hide();
+                    $('span.ml-collapse[name="' + self.generateAttributeCodeId(selector.AttributeCode) + '_collapse_span_name"]').css('background-position', '0 0px');
+                    $('div#match_' + self.generateAttributeCodeId(selector.AttributeCode)).hide();
                 }
 
                 if ((typeof selector.CurrentValues.Code !== 'undefined') && (elem.val() !== selector.CurrentValues.Code)) {
-                    $('div#extraFieldsInfo_' + selector.AttributeCode).children('*:not(.doNotHide)').hide();
+                    $('div#extraFieldsInfo_' + self.generateAttributeCodeId(selector.AttributeCode)).children('*:not(.add-matching)').hide();
                 }
 
                 return $(
                     '<span id="spanMatchingTable" style="padding-right:2em;">' +
                     '   <div style="font-weight: bold; background-color: #e9e9e9">' + self.i18n.matchingTable + '</div>' +
-                    '   <table id="' + selector.AttributeCode + '_button_matched_table" style="width:100%; background-color: #e9e9e9">' +
+                    '   <table id="' + self.generateAttributeCodeId(selector.AttributeCode) + '_button_matched_table" style="width:100%; background-color: #e9e9e9">' +
                     '       <tbody>' +
                                 tableBody +
                     '       </tbody>' +
@@ -887,13 +1085,20 @@
 
         _changeTriggerVariationMarketplace: function(attributeCode) {
             var self = this,
-                shopKeySelector = '[name="ml[match][ShopVariation][' + attributeCode + '][Values][0][Shop][Key]"]',
-                shopValueSelector = '[name="ml[match][ShopVariation][' + attributeCode + '][Values][0][Shop][Value]"]',
-                mpKeySelector = '[name="ml[match][ShopVariation][' + attributeCode + '][Values][0][Marketplace][Key]"]',
-                mpValueSelector = '[name="ml[match][ShopVariation][' + attributeCode + '][Values][0][Marketplace][Value]"]';
+                shopKeySelector = '[name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][0][Shop][Key]"]',
+                shopValueSelector = '[name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][0][Shop][Value]"]',
+                shopKeysSelector = '[name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][0][Shop][Key][]"]',
+                mpKeySelector = '[name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][0][Marketplace][Key]"]',
+                mpValueSelector = '[name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][0][Marketplace][Value]"]',
+                mpKeysSelector = '[name="ml[match]' + self.attributesNamePrefix + '[' + attributeCode + '][Values][0][Marketplace][Key][]"]';
 
             $(shopKeySelector).change(function() {
                 $(shopValueSelector).val($(shopKeySelector + ' option:selected').html());
+                $(shopKeysSelector).parent().hide();
+
+                if ($(this).val() === 'multiSelect') {
+                    $(shopKeysSelector).parent().show();
+                }
             }).trigger('change');
 
             $(mpKeySelector).change(function() {
@@ -924,30 +1129,72 @@
                 }
 
                 if ($(this).val() === 'manual') {
-                    $('td #freetext_' + attributeCode).show();
+                    $('td #freetext_' + self.generateAttributeCodeId(attributeCode)).show();
                 } else {
-                    $('td #freetext_' + attributeCode).hide();
+                    $('td #freetext_' + self.generateAttributeCodeId(attributeCode)).hide();
+                }
+
+                $(mpKeysSelector).parent().hide();
+
+                if ($(this).val() === 'multiSelect') {
+                    $(mpKeysSelector).parent().show();
                 }
             }).trigger('change');
+
+            $(shopKeysSelector).change(function() {
+                // When value is changed in shop multi select, value should be formed as array and serialized.
+                // Then it should be set in hidden input for shop value as value. this = shop multiple select control
+                $(shopValueSelector).val(JSON.stringify(formatMultiValues(this)));
+            });
+
+            $(mpKeysSelector).change(function() {
+                // When value is changed in shop multi select, value should be formed as array and serialized.
+                // Then it should be set in hidden input for shop value as value. this = mp multiple select control
+                $(mpValueSelector).val(JSON.stringify(formatMultiValues(this)));
+            });
+
+            // Helper function for forming values array both for shop and marketplace attributes.
+            function formatMultiValues(multipleSelect) {
+                var allCheckedValues = [];
+
+                $.each($(multipleSelect).find('option:checked'), function(index, element) {
+                    allCheckedValues.push($(element).text());
+                });
+
+                return allCheckedValues;
+            }
         },
 
-        _buildShopVariationSelector: function(data) {
-            var self = this,
-                kind = 'FreeText',
-                baseName = 'ml[match][ShopVariation][' + data.AttributeCode + ']',
-                isSelectAndText = data.DataType === 'selectAndText';
+        generateAttributeCodeId: function(AttributeCode) {
+            var self = this;
+            return ('' + self.attributesNamePrefix + AttributeCode).replace(/[^A-Za-z0-9_]/g, '_');
+        },
 
-            data.id = data.AttributeCode.replace(/[^A-Za-z0-9_]/g, '_'); // css selector-save.
+        _buildShopVariationSelector: function(attributes, attributesName) {
+            var self = this,
+                data = attributes[attributesName],
+                allowedValuesNotEmpty = (data.AllowedValues.length > 0 || Object.keys(data.AllowedValues).length > 0),
+                kind = allowedValuesNotEmpty ? 'Matching' : 'FreeText',
+                baseName = 'ml[match]' + self.attributesNamePrefix + '[' + data.AttributeCode + ']',
+                mpDataType = data.DataType.toLowerCase();
+
+            data.AttributeCode = data.AttributeCode + '';
+            data.id = self.generateAttributeCodeId(data.AttributeCode); // css selector-save.
             data.AttributeName = data.AttributeName || data.AttributeCode;
             data.AttributeDescription = data.AttributeDescription || ' ';
             self.variationValues[data.AttributeCode] = data.AllowedValues;
             var variationsDropDown =
-                self._getShopVariationsDropDownElement()
-                    .attr('id', 'sel_' + data.id)
-                    .attr('name', baseName + '[Code]');
+                    self._getShopVariationsDropDownElement('shopVariationsDropDown')
+                        .attr('id', 'sel_' + data.id)
+                        .attr('name', baseName + '[Code]'),
+                variationsCustomDropDown =
+                    self._getShopVariationsDropDownElement('shopVariationsCustomDropDown')
+                        .attr('id', 'sel_' + data.id + '_custom_name')
+                        .attr('name', baseName + '[CustomAttributeValue]');
 
             if (data.CurrentValues.Error == true) {
                 variationsDropDown.attr('style', 'border-color:red');
+                variationsCustomDropDown.attr('style', 'border-color:red');
                 data.style = 'style="color:red"';
             } else {
                 data.style = '';
@@ -956,7 +1203,29 @@
             // If attribute is already matched add options
             if (typeof data.CurrentValues.Values !== 'undefined'
                 && (data.CurrentValues.Values.length > 0 || Object.keys(data.CurrentValues.Values).length > 0)) {
-                self._addShopOptions(self, variationsDropDown, data, isSelectAndText);
+                self._addShopOptions(self, variationsDropDown, data, attributes, mpDataType);
+            }
+
+            if (data.AttributeCode.substring(0, 20) === 'additional_attribute') {
+                for (var i in attributes) {
+                    if (attributes.hasOwnProperty(i)) {
+                        var customName = attributes[i].CurrentValues.CustomName,
+                            nameToCheck = customName ? customName : attributes[i].AttributeName,
+                            valueToCheck = $('<textarea />').html(nameToCheck).text(),
+                            optionToCheck = null;
+
+                        $.each(variationsCustomDropDown.find("option"), function(index, option) {
+                            option = $(option);
+                            if (option.text() === valueToCheck) {
+                                optionToCheck = option;
+                            }
+                        });
+
+                        if (optionToCheck && optionToCheck.text() !== data.CurrentValues.CustomName) {
+                            optionToCheck.attr('disabled', 'disabled');
+                        }
+                    }
+                }
             }
 
             if (data.Required == true) {
@@ -965,16 +1234,28 @@
                 data.redDot = '';
             }
 
-            if (data.AllowedValues.length > 0 || Object.keys(data.AllowedValues).length > 0) {
-                kind = 'Matching';
-            }
-
             data.shopVariationsDropDown = $('<div>')
                 .append(variationsDropDown)
-                .append('<div id="extraFieldsInfo_' + data.AttributeCode + '" style="display: inline;"></div>')
+                .append('<div id="extraFieldsInfo_' +  self.generateAttributeCodeId(data.AttributeCode) + '" style="display: inline;"></div>')
                 .append('<input type="hidden" name="' + baseName + '[Kind]" value="' + kind + '">')
                 .append('<input type="hidden" name="' + baseName + '[Required]" value="' + (data.Required ? 1 : 0) + '">')
                 .append('<input type="hidden" name="' + baseName + '[AttributeName]" value="' + data.AttributeName + '">')
+                .html()
+            ;
+
+            var customAttributeName = $('<input>').attr({
+                type: 'text',
+                id: 'input_' + self.generateAttributeCodeId(data.AttributeCode) + '_custom_name',
+                value: data.CustomName,
+                name: baseName + '[CustomName]',
+                style: (data.CurrentValues.Error == true) ?
+                    'width:100%; padding-left: 3px; display:none; border-color:red' :
+                    'width:100%; padding-left: 3px; display:none;'
+            });
+
+            data.shopVariationsCustomDropDown = $('<div>')
+                .append(variationsCustomDropDown)
+                .append(customAttributeName)
                 .html()
             ;
 
@@ -982,7 +1263,7 @@
                 var selectElement = document.getElementById('sel_' + data.id);
                 selectElement.addEventListener('mousedown', function() {
                     if (this.options.length === 1) {
-                        self._addShopOptions(self, this, data, isSelectAndText);
+                        self._addShopOptions(self, this, data, attributes, mpDataType);
                     }
                 });
             }, 0);
@@ -990,108 +1271,94 @@
             return data;
         },
 
-        _addShopOptions: function(self, select, data, isSelectAndText) {
-            var optionsSelect = self._render(
-                '<option {Disabled} data-custom="{Custom}" value="{Code}">{Name}</option>',
-                self.options.shopVariations
-            );
+        _addShopOptions: function(self, select, data, attributes, mpDataType) {
+            var renderOptions = '',
+                counter = 1,
+                numberOfOptGroups = 2,
+                shopVariations = JSON.parse(JSON.stringify(self.options.groupedShopVariations));
 
-            $(select).append(optionsSelect);
+            for (var property in  shopVariations) {
+                if (shopVariations.hasOwnProperty(property)) {
+                    if (counter++ <= numberOfOptGroups) {
+                        var options = self._render('<option {Disabled} data-custom="{Custom}" data-type="{Type}" value="{Code}">{Name}</option>',
+                            shopVariations[property]);
 
-            if (data.CurrentValues.Error == true) {
-                $(select).attr('style', 'border-color:red');
-                data.style = 'style="color:red"';
-            } else {
-                data.style = '';
+                        renderOptions += '<optgroup label="' + property + '">' + options + '</optgroup>';
+                        continue;
+                    }
+
+                    renderOptions += self._render('<option {Disabled} data-custom="{Custom}" value="{Code}">{Name}</option>',
+                        shopVariations[property]);
+                }
             }
 
-            if (data.AllowedValues.length > 0 || Object.keys(data.AllowedValues).length > 0) {
-                if (isSelectAndText) {
-                    $(select).children("option[data-custom='true']").attr('disabled', null);
-                    $(select).children("option[value='freetext']").attr('disabled', null);
-                    $(select).children("option[value='database_value']").attr('disabled', null);
-                } else {
-                    $(select).children("option[data-custom='true']").attr('disabled', 'disabled');
-                    $(select).children("option[value='freetext']").attr('disabled', 'disabled');
-                    $(select).children("option[value='database_value']").attr('disabled', 'disabled');
-                }
+            $(select).append(renderOptions);
 
-                $(select).children("option[value='attribute_value']").attr('disabled', null);
-            } else {
-                if (data.AttributeCode.substring(0, 20) === 'additional_attribute') {
-                    $(select).children("option[value='freetext']").attr(
-                        'disabled',
-                        isSelectAndText ? null : 'disabled'
-                    );
-                    $(select).children("option[value='database_value']").attr('disabled', 'disabled');
-                } else {
-                    $(select).children("option[value='freetext']").attr('disabled', null);
-                    $(select).children("option[value='database_value']").attr('disabled', null);
-                }
-
-                $(select).children("option[value='attribute_value']").attr('disabled', 'disabled');
-                $(select).children("option[data-custom='true']").attr('disabled', null);
+            if (['select', 'multiSelect'.toLowerCase()].indexOf(mpDataType) != -1) {
+                $(select).find("option[data-type='text']").attr('disabled', 'disabled');
+                $(select).find('option[value=freetext]').attr('disabled', 'disabled');
+                $(select).find("option[value='database_value']").attr('disabled', 'disabled');
             }
+
+            if ('text' == mpDataType) {
+                $(select).find('option[value=attribute_value]').attr('disabled', 'disabled');
+            }
+
+            /*if (data.AttributeCode.substring(0, 20) === 'additional_attribute') {
+                $(select).find("option[value='database_value']").attr('disabled', 'disabled');
+            }*/
         },
 
         _buildShopVariationSelectors: function(data, resetNotice, savePrepare) {
             var self = this,
                 colTemplate = self._getMatchingAttributeColumnTemplate(),
+                customAttributeColTemplate = self._getMatchingCustomAttributeColumnTemplate(),
                 deletedAttrTemplate = self._getDeletedAttributeColumnTemplate(),
                 attributeColumnEl = null,
                 attributesSelectorOptions = [{key: 'dont_use', value: self.i18n.pleaseSelect}],
                 isCategoryEmpty = true,
                 i, matchingInputEl,
-                attributes = data.Attributes;
+                attributes = data.Attributes,
+                variationDetails = data.variation_details ? data.variation_details : null,
+                variationDetailsBlacklist = data.variation_details_blacklist ? data.variation_details_blacklist : null,
+                attributesSize = 0;
 
             self.elements.matchingInput.html('');
-            self.elements.matchingCustomInput.html('');
             self.elements.matchingOptionalInput.html('');
+            self.elements.matchingCustomInput.html('');
 
-            var attributesSize = 0, key;
-            for (key in attributes) {
+            for (var key in attributes) {
                 if (attributes.hasOwnProperty(key) && !attributes[key].Required) {
                     attributesSize++;
                 }
             }
 
             for (i in attributes) {
-                var attributeName = attributes[i].AttributeName;
                 if (attributes.hasOwnProperty(i)) {
+                    var attributeName = attributes[i].AttributeName;
                     isCategoryEmpty = false;
                     if (attributes[i].Deleted) {
                         attributes[i].AttributeName = attributes[i].CustomAttributeValue ?
                             attributes[i].CustomAttributeValue : attributes[i].AttributeName;
                         self.elements.matchingInput.append($(self._render(deletedAttrTemplate, [attributes[i]])))
                     } else {
-                        attributes[i] = self._buildShopVariationSelector(attributes[i]);
-
+                        attributes[i] = self._buildShopVariationSelector(attributes, i);
                         matchingInputEl = self.elements.matchingInput;
                         attributes[i].AttributeName = attributes[i].CustomAttributeValue ?
                             attributes[i].CustomAttributeValue : attributes[i].AttributeName;
-                        attributeColumnEl = $(self._render(colTemplate, [attributes[i]]));
 
-                        if (attributes[i].Custom) {
-                            matchingInputEl = self.elements.matchingCustomInput;
-                            var customAttributeNameInput = $('<input>').attr({
-                                type: 'text',
-                                id: 'input_' + attributes[i].id,
-                                name: 'ml[match][ShopVariation][' + attributes[i].id + '][CustomAttributeValue]',
-                                value: attributes[i].CustomAttributeValue
-                            });
-                            customAttributeNameInput.css('display', 'none');
-                            if (!attributes[i].CurrentValues.Code) {
-                                customAttributeNameInput.css({
-                                    'display' : 'inline',
-                                    'margin-left' : '5px'
-                                });
-                                attributeColumnEl.addClass('customAttribute');
+                        if (self.isMultiSelectType(attributes[i].DataType)) {
+                            attributes[i].AttributeDescription = $.trim(attributes[i].AttributeDescription);
+                            if (attributes[i].AttributeDescription) {
+                                attributes[i].AttributeDescription += '<br>' + self.i18n.multiselectHint;
+                            } else {
+                                attributes[i].AttributeDescription += self.i18n.multiselectHint;
                             }
-                            var selectSelector = '#sel_' + attributes[i].id;
-                            customAttributeNameInput.insertAfter(attributeColumnEl.find(selectSelector));
                         }
 
-                        if (!attributes[i].Required) {
+                        attributeColumnEl = $(self._render(colTemplate, [attributes[i]]));
+
+                        if (!attributes[i].Required && !attributes[i].Custom) {
                             matchingInputEl = self.elements.matchingOptionalInput;
 
                             if (!attributes[i].CurrentValues.Code) {
@@ -1100,11 +1367,16 @@
                                 }
 
                                 attributeColumnEl.addClass('optionalAttribute');
-                                attributesSelectorOptions.push({key: attributes[i].id, value: attributes[i].AttributeName});
+                                attributesSelectorOptions.push({
+                                    key: attributes[i].id,
+                                    value: attributes[i].AttributeName
+                                });
                             }
+                        } else if (attributes[i].Custom) {
+                            matchingInputEl = self.elements.matchingCustomInput;
+                            attributeColumnEl = $(self._render(customAttributeColTemplate, [attributes[i]]));
+                            attributeColumnEl.addClass('customAttribute');
                         }
-
-
                         matchingInputEl.append(attributeColumnEl);
 
                         // add warning box if attribute changed on Marketplace
@@ -1120,10 +1392,26 @@
                             $('div#extraFieldsInfo_' + attributes[i].id)
                                 .append('<span id="' + attributes[i].id + '_warningMatching" class="ml-warning" title="' + self.i18n.attributeDifferentOnProduct + '">&nbsp;<span>');
                         }
+
+                        // add warning box if attribute is different from one matched in Variation matching tab
+                        if (attributes[i].IsDeletedOnShop) {
+                            var warningSpan = (attributes[i].Modified) ? '<span class="ml-warning" title="' + attributes[i].WarningMessage + '">&nbsp;<span>' :
+                                '<span id="' + attributes[i].id + '_warningMatching" class="ml-warning" title="' + attributes[i].WarningMessage + '">&nbsp;<span>';
+                            $('div#extraFieldsInfo_' + attributes[i].id).append(warningSpan);
+                        }
                     }
+                    attributes[i].AttributeName = attributeName;
                 }
-                attributes[i].AttributeName = attributeName;
             }
+
+            self._setVariationThemeField(variationDetails, self, data);
+
+            var variationThemeBlacklistEl = self.elements.form.find('#VariationThemeBlacklist');
+            if (!variationThemeBlacklistEl.length) {
+                self.elements.form.append('<input type="hidden" name="VariationThemeBlacklist" id="VariationThemeBlacklist">');
+            }
+
+            self.elements.form.find('#VariationThemeBlacklist').val(JSON.stringify(variationDetailsBlacklist));
 
             self.elements.mainSelectElement.closest('.magnamain').find('.jsNoticeBox').remove();
             if (data.DifferentProducts) {
@@ -1147,6 +1435,8 @@
                                 + '</p>');
                     }
                 }
+                // scroll to top (modified, etc..) not working in gambio because of iframe
+                window.scrollTo(0, 0);
             }
 
             data.Attributes = attributes;
@@ -1155,10 +1445,10 @@
                 self.elements.matchingInput.append('<tr><th></th><td class="input">'
                     + self.i18n.categoryWithoutAttributesInfo
                     + '</td><td class="info"></td></tr>');
-                self.elements.matchingCustomHeadline.css('display', 'none');
                 self.elements.matchingOptionalHeadline.css('display', 'none');
-                self.elements.matchingCustomInput.css('display', 'none');
                 self.elements.matchingOptionalInput.css('display', 'none');
+                self.elements.matchingCustomHeadline.css('display', 'none');
+                self.elements.matchingCustomInput.css('display', 'none');
             }
 
             if (!$.trim(self.elements.matchingInput.html())) {
@@ -1166,15 +1456,10 @@
                 self.elements.matchingInput.css('display', 'none');
             }
 
-            if (!$.trim(self.elements.matchingCustomInput.html())) {
-                self.elements.matchingCustomHeadline.css('display', 'none');
-                self.elements.matchingCustomInput.css('display', 'none');
-            }
-
             if (!$.trim(self.elements.matchingOptionalInput.html())) {
                 self.elements.matchingOptionalHeadline.css('display', 'none');
                 self.elements.matchingOptionalInput.css('display', 'none');
-            } else if (attributesSize > self.optionalAttributesMaxSize) {
+            } else if (attributesSize > self.optionalAttributesMaxSize && attributesSelectorOptions.length > 1) {
                 self.elements.matchingOptionalInput.append($([
                     '<tr id="selRow_dont_use">',
                         '<th></th>',
@@ -1187,9 +1472,13 @@
                 ].join('')));
             }
 
+            if (!$.trim(self.elements.matchingCustomInput.html())) {
+                self.elements.matchingCustomHeadline.css('display', 'none');
+                self.elements.matchingCustomInput.css('display', 'none');
+            }
             self.elements.matchingInput.append('<tr class="spacer"><td colspan="3">&nbsp;</td></tr>');
-            self.elements.matchingCustomInput.append('<tr class="spacer"><td colspan="3">&nbsp;</td></tr>');
             self.elements.matchingOptionalInput.append('<tr class="spacer"><td colspan="3">&nbsp;</td></tr>');
+            self.elements.matchingCustomInput.append('<tr class="spacer"><td colspan="3">&nbsp;</td></tr>');
 
             function addShopVariationSelectorChangeListener() {
                 var previous;
@@ -1201,20 +1490,87 @@
             }
 
             self.elements.matchingInput.find('select[id^=sel_]').each(addShopVariationSelectorChangeListener);
-            self.elements.matchingCustomInput.find('select[id^=sel_]').each(addShopVariationSelectorChangeListener);
             self.elements.matchingOptionalInput.find('select[id^=sel_]').each(addShopVariationSelectorChangeListener);
-
+            self.elements.matchingCustomInput.find('select[id^=sel_]').each(addShopVariationSelectorChangeListener);
             for (i in attributes) {
                 if (attributes.hasOwnProperty(i)) {
                     if (typeof attributes[i].CurrentValues.Code !== 'undefined') {
+                        var customAttributeValue = (self.options.shopVariations[attributes[i].CurrentValues.CustomAttributeValue]) ?
+                            attributes[i].CurrentValues.CustomAttributeValue : 'freetext';
                         self.elements.matchingInput.find('select[id=sel_' + attributes[i].id + ']').val(attributes[i].CurrentValues.Code).trigger('change');
-                        self.elements.matchingCustomInput.find('select[id=sel_' + attributes[i].id + ']').val(attributes[i].CurrentValues.Code).trigger('change');
                         self.elements.matchingOptionalInput.find('select[id=sel_' + attributes[i].id + ']').val(attributes[i].CurrentValues.Code).trigger('change');
+                        self.elements.matchingCustomInput.find('select[id=sel_' + attributes[i].id + ']').val(attributes[i].CurrentValues.Code).trigger('change');
+                        self.elements.matchingCustomInput.find('select[id=sel_' + attributes[i].id + '_custom_name]').val(customAttributeValue).trigger('change');
                     }
                 }
             }
-
+            self._prefix_option();
             self._attachAttributeSelector(attributesSelectorOptions, addShopVariationSelectorChangeListener);
+        },
+
+        _setVariationThemeField: function(variationDetails, self, data) {
+            var selectedVariationTheme = data.variation_theme_code ? data.variation_theme_code : null,
+                variationPatternElement = $('#variation-pattern');
+
+            if (self.elements.customIdentifierSelectElement) {
+                variationPatternElement.remove();
+                variationPatternElement = [];
+            }
+
+            if (variationDetails && self.isPrepareForm && !variationPatternElement.length) {
+                var allVariationOptions = [{key : 'null', value: self.i18n.pleaseSelect}],
+                    lastElementInVariationMatcher = self.elements.mainTable.children().last(),
+                    oddOrEven = lastElementInVariationMatcher.prev('tr').attr('class') === 'odd' ? 'even' : 'odd';
+
+                for (var property in variationDetails) {
+                    if (variationDetails.hasOwnProperty(property)) {
+                        var variationOption = {key : property, value : variationDetails[property]['name']};
+
+                        if (selectedVariationTheme === property) {
+                            variationOption.selected = 'selected';
+                        }
+                        allVariationOptions.push(variationOption);
+                    }
+                }
+
+                $(['<tr class="' + oddOrEven + '" id="variation-pattern">',
+                        '<th>',
+                            self._getVariationThemeHeader(self),
+                            '<span class="bull">',
+                                '&bull;',
+                            '</span>',
+                        '</th>',
+                        '<td class="input">',
+                            '<table class="inner middle fullwidth categorySelect">',
+                                '<tbody>',
+                                    '<tr>',
+                                        '<td>',
+                                            '<div class="hoodCatVisual">',
+                                                '<select id="variation-theme" name="variationTheme" onchange="" ' + 'style="width:100%;">',
+                                                    self._render('<option {selected} value="{key}">{value}</option>', allVariationOptions),
+                                                '</select>',
+                                                '<input type="hidden" name="variationThemes" id="variation-themes">',
+                                            '</div>',
+                                        '</td>',
+                                        '<td class="buttons">',
+                                        '</td>',
+                                    '</tr>',
+                                '<tbody>',
+                            '</table>',
+                        '</td>',
+                        '<td class="info">',
+                        '</td>',
+                    '</tr>'
+                ].join('')).insertBefore(lastElementInVariationMatcher);
+                // Last element is row which represents spacer, so before that element, variation details element should
+                // be inserted.
+
+                $('#variation-themes').val(JSON.stringify(variationDetails));
+            }
+        },
+
+        _getVariationThemeHeader: function (self) {
+            return self.i18n.variationTheme;
         },
 
         _attachAttributeSelector: function(attributesSelectorOptions, addShopVariationSelectorChangeListener) {
@@ -1244,7 +1600,7 @@
                             click: function() {
                                 $('#sel_' + currentlySelectedAttribute).val('');
                                 self._saveMatching(true, function() {
-                                    self.elements.matchingOptionalInput.find('select[name="optional_selector"]').val(attributeIdToShow).change();//trigger('change', [attributeIdToShow]);
+                                    self.elements.matchingOptionalInput.find('select[name="optional_selector"]').val(attributeIdToShow).change();
                                 });
 
                                 $(this).dialog('close');
@@ -1255,19 +1611,20 @@
             }
 
             function changeCurrentAttribute(attributeIdToShow) {
-                // Minus 1 goes for "Bitte wahlen"
+                self.elements.matchingOptionalInput.find('#selRow_' + currentlySelectedAttribute).hide();
+                currentlySelectedAttribute = attributeIdToShow;
+                var attributeRowEl = self.elements.matchingOptionalInput.find('#selRow_' + currentlySelectedAttribute),
+                    selectId = '#sel_' + currentlySelectedAttribute;
+
+                //Minus 1 goes for "Bitte wahlen"
                 if (attributesSelectorOptions.length - 1 > self.optionalAttributesMaxSize) {
                     self.elements.matchingOptionalInput.find('.optionalAttribute').hide();
                 }
 
-                currentlySelectedAttribute = attributeIdToShow;
-
-                var attributeRowEl = self.elements.matchingOptionalInput.find('#selRow_' + currentlySelectedAttribute);
-
                 attributeRowEl.children('th').html('').append(attributesSelectorEl);
                 attributeRowEl.remove().show().insertBefore(self.elements.matchingOptionalInput.find('.spacer').last());
-                attributeRowEl.find('#sel_' + currentlySelectedAttribute).each(addShopVariationSelectorChangeListener).change();
-
+                attributeRowEl.find(selectId).each(addShopVariationSelectorChangeListener).change();
+                self._prefix_option(selectId);
                 attributesSelectorEl.change(attributeSelectorOnChange);
             }
 
@@ -1286,55 +1643,76 @@
             attributesSelectorEl.change(attributeSelectorOnChange).change();
         },
 
+        _buildMPShopMatchingCustom: function(selectElement, attribute) {
+            var self = this;
+
+            selectElement.parent().find('#input_' + self.generateAttributeCodeId(attribute.AttributeCode) + '_custom_name').hide();
+            if (selectElement.val() === 'freetext' || selectElement.val() === 'attribute_value' ||
+                selectElement.val() === 'database_value') {
+                selectElement.parent().find('#input_' + self.generateAttributeCodeId(attribute.AttributeCode) + '_custom_name')
+                    .val(attribute.CurrentValues.CustomName ? attribute.CurrentValues.CustomName : '').show();
+            } else {
+                var selectedOption = selectElement.find('option:selected'),
+                    attributeName = (selectedOption.index() > 0 || selectedOption.parent().is("optgroup")) ?
+                    selectedOption.text() : '';
+                selectElement.parent().find('#input_' + self.generateAttributeCodeId(attribute.AttributeCode) + '_custom_name').val(attributeName);
+            }
+        },
+
         _handleAttributeSelectorChange: function(selectElement, data, lastSelection, savePrepare) {
             var self = this,
                 attributes = data.Attributes;
             selectElement = $(selectElement);
-            var selectedOption = selectElement.find('option:selected');
-            var customInputId = '#input' + selectElement.attr('id').substr(selectElement.attr('id').indexOf('_'));
-            var customInput = selectElement.parent().find(customInputId);
-            // when nothing is selected textbox should be empty, that is currently checked by selected index
-            // if index of not selected value changes it should be also fixed here
-            var initialOptionIndex = 0;
-            if (customInput.css('display') !== 'none') {
-                customInput.val(selectedOption.index() === initialOptionIndex ? null : selectedOption.text());
-            }
             for (var i in attributes) {
                 if (attributes.hasOwnProperty(i)) {
-                    if ('sel_' + attributes[i].id === selectElement.attr('id')) {
-                        if ($.trim($('#' + attributes[i].id + '_button_matched_table').html())) {
-                            var d = self.i18n.beforeAttributeChange;
-                            $('<div class="ml-modal dialog2" title="' + self.i18n.note + '"></div>').html(d).jDialog({
-                                width: (d.length > 1000) ? '700px' : '500px',
-                                buttons: {
-                                    Ok: {
-                                        'text': self.i18n.buttonOk,
-                                        click: function() {
-                                            selectElement.val(lastSelection);
-                                            $(this).dialog('close');
-                                        }
+                    var matchedTableButton = $('#' + attributes[i].id + '_button_matched_table');
+
+                    if ('sel_' + attributes[i].id === selectElement.attr('id') &&
+                        $.trim(matchedTableButton.html())) {
+                        var d = self.i18n.beforeAttributeChange;
+                        $('<div class="ml-modal dialog2" title="' + self.i18n.note + '"></div>').html(d).jDialog({
+                            width: (d.length > 1000) ? '700px' : '500px',
+                            buttons: {
+                                Ok: {
+                                    'text': self.i18n.buttonOk,
+                                    click: function() {
+                                        var lastSelectedOption = selectElement.find('option[value=' + lastSelection + ']'),
+                                            optGroup = lastSelectedOption.closest('optgroup').attr('label'),
+                                            optionText = lastSelectedOption.text().split(':')[1] ?
+                                            lastSelectedOption.text().split(':')[1] : lastSelectedOption.text();
+                                        lastSelectedOption.text(optGroup ? optGroup + ': ' + optionText : optionText);
+                                        selectElement.val(lastSelection);
+                                        $(this).dialog('close');
                                     }
                                 }
-                            });
-                        } else {
-                            self._buildMPShopMatching(selectElement, attributes[i], savePrepare);
-
-                            if (typeof attributes[i].CurrentValues.Values == 'undefined' || attributes[i].CurrentValues.Values.constructor === String) {
-                                break;
                             }
+                        });
+                    }
 
-                            var currentValues = $.map(attributes[i].CurrentValues.Values, function(value) {
-                                return [value];
-                            });
+                    if (('sel_' + attributes[i].id === selectElement.attr('id') && !$.trim(matchedTableButton.html())) ||
+                        ('sel_' + attributes[i].id + '_custom_name' === selectElement.attr('id'))) {
 
-                            currentValues.forEach(function(entry) {
-                                // remove set values but not ones that were deleted on marketplace
-                                if (typeof entry.Shop != 'undefined' && !attributes[i].Deleted) {
-                                    self._removeAttributeFromDropDown(attributes[i].AttributeCode, entry.Shop.Key);
-                                }
-                            });
+                        if (selectElement.attr('id').indexOf('custom_name') === -1) {
+                            self._buildMPShopMatching(selectElement, attributes[i], savePrepare);
+                        }
+                        else {
+                            self._buildMPShopMatchingCustom(selectElement, attributes[i]);
                         }
 
+                        if (typeof attributes[i].CurrentValues.Values == 'undefined' || attributes[i].CurrentValues.Values.constructor === String) {
+                            break;
+                        }
+
+                        var currentValues = $.map(attributes[i].CurrentValues.Values, function(value) {
+                            return [value];
+                        });
+
+                        currentValues.forEach(function(entry) {
+                            // remove set values but not ones that were deleted on marketplace
+                            if (typeof entry.Shop != 'undefined' && !attributes[i].Deleted) {
+                                self._removeAttributeFromDropDown(attributes[i].AttributeCode, entry.Shop.Key);
+                            }
+                        });
                         break;
                     }
                 }
@@ -1347,8 +1725,8 @@
             self._resetMPVariation();
             if (val === 'null') {
                 self.elements.matchingInput.html(self.html.valuesBackup);
-                self.elements.matchingCustomInput.html(self.html.valuesCustomBackup);
                 self.elements.matchingOptionalInput.html(self.html.valuesOptionalBackup);
+                self.elements.matchingCustomInput.html(self.html.valuesCustomBackup);
                 return;
             }
 
@@ -1367,6 +1745,7 @@
                 self.saveInProgress = true;
                 self._load({
                     'Action': 'SaveMatching',
+                    'AttributeCodeKey' : savePrepare,
                     'Variations': $(self.elements.form).serialize()
                 }, function(data) {
                     self._buildShopVariationSelectors(data, true, savePrepare);
@@ -1384,13 +1763,27 @@
         },
 
         _removeAttributeFromDropDown: function(code, key) {
-            $('select[name="ml[match][ShopVariation][' + code + '][Values][0][Shop][Key]"] option[value="' + key + '"]').hide();
+            var self = this;
+            $('select[name="ml[match]' + self.attributesNamePrefix + '[' + code + '][Values][0][Shop][Key]"] option[value="' + key + '"]').hide();
         },
 
-        _orderSelectOptions: function(code, removeFreeText) {
+        isMultiSelectType: function(type) {
             var self = this,
-                shopKeySelector = 'select[name="ml[match][ShopVariation][' + code + '][Values][0][Shop][Key]"]',
-                mpKeySelector = 'select[name="ml[match][ShopVariation][' + code + '][Values][0][Marketplace][Key]"]';
+                loverCaseType = type.toLowerCase();
+
+            return loverCaseType === self.multiSelectDataTypeCode || loverCaseType === self.multiSelectAndTextDataTypeCode;
+        },
+
+        _orderSelectOptions: function(attribute, removeFreeText) {
+            var self = this,
+                shopKeySelector = 'select[name="ml[match]' + self.attributesNamePrefix + '[' + attribute.AttributeCode + '][Values][0][Shop][Key]"]',
+                shopCodeSelector = 'select[name="ml[match]' + self.attributesNamePrefix + '[' + attribute.AttributeCode + '][Code]"]',
+                mpKeySelector = 'select[name="ml[match]' + self.attributesNamePrefix + '[' + attribute.AttributeCode + '][Values][0][Marketplace][Key]"]',
+                shopAttributeCode = $(shopCodeSelector).val(),
+                shopAttributes = self.options.shopVariations,
+                shopAttributeDataType = shopAttributes[shopAttributeCode] ? shopAttributes[shopAttributeCode]['Type'] : '',
+                isShopMultiSelect = self.isMultiSelectType(shopAttributeDataType),
+                isMPMultiSelect = self.isMultiSelectType(attribute.DataType);
 
             $(shopKeySelector).append($(shopKeySelector + ' option').remove().sort(function(a, b) {
                 var at = $(a).text().toLowerCase(), bt = $(b).text().toLowerCase();
@@ -1398,19 +1791,140 @@
             }));
 
             $(shopKeySelector)
+                .prepend('<option ' + (!isShopMultiSelect ? 'disabled' : '') +' value="multiSelect">' + self.i18n.multiSelect + '</option>')
                 .prepend('<option value="all">' + self.i18n.allSelect + '</option>')
                 .prepend('<option selected="selected" value="null">' + self.i18n.pleaseSelect + '</option>');
 
             $(mpKeySelector).append($(mpKeySelector + ' option').remove().sort(function(a, b) {
                 var at = $(a).text().toLowerCase(), bt = $(b).text().toLowerCase();
-                return (at > bt) ? 1 : ((at < bt) ? -1 : 0);
+                return (at > bt)?1:((at < bt)?-1:0);
             }));
 
             $(mpKeySelector)
+                .prepend('<option ' + (!isMPMultiSelect ? 'disabled' : '') +' value="multiSelect">' + self.i18n.multiSelect + '</option>')
                 .prepend('<option ' + (removeFreeText ? 'disabled' : '') + ' value="manual">' + self.i18n.manualMatching + '</option>')
                 .prepend('<option value="reset">' + self.i18n.resetMatching + '</option>')
                 .prepend('<option value="auto">' + self.i18n.autoMatching + '</option>')
                 .prepend('<option selected="selected" value="null">' + self.i18n.pleaseSelect + '</option>');
+        },
+
+        _flat_attributes: function(attributes) {
+            for (var optGroup in attributes) {
+                if (attributes.hasOwnProperty(optGroup)) {
+                    for (var attributeName in attributes[optGroup]) {
+                        if (attributes[optGroup].hasOwnProperty(attributeName)) {
+                            attributes[attributeName] = attributes[optGroup][attributeName];
+                        }
+                    }
+                    delete(attributes[optGroup]);
+                }
+            }
+        },
+
+        _prefix_option : function(elementId) {
+            var selectBoxes = (elementId === undefined) ? $('.shopAttrSelector') : $(elementId),
+                disabledSelect = false;
+
+            selectBoxes.mouseup(addPrefix)
+                .mouseleave(addPrefix)
+                .keyup(doPrefixing)
+                .mousedown(removePrefix);
+
+            $.each(selectBoxes, function(index, selectBox) {
+                disabledSelect = false;
+                addPrefix.call(selectBox);
+            });
+
+            function addPrefix() {
+                if (!disabledSelect) {
+                    var selectedOption = $(this).find(':selected'),
+                        selectedOptionText = selectedOption.text(),
+                        optGroup = selectedOption.closest('optgroup').attr('label');
+
+                    $(this).find(':selected').text(optGroup ? optGroup + ': ' + selectedOptionText : selectedOptionText);
+                }
+                disabledSelect = true;
+            }
+
+            function removePrefix() {
+                disabledSelect = false;
+                $(this).find('option').each(function() {
+                    var optionText = $(this).text().split(':');
+                    $(this).text(optionText[1]);
+                });
+            }
+
+            function doPrefixing() {
+                removePrefix.call(this);
+                addPrefix.call(this);
+            }
+        },
+        initSubmitFormInSingleParameter: function () {
+            var self = this;
+
+            self.elements.form.on('click', '[type=submit]', function() {
+                $('[type=submit]', self.elements.form).removeAttr('data-clicked');
+                $(this).attr('data-clicked', 'true');
+            });
+
+            self.elements.form.submit($.proxy(self.onFormSubmit, self));
+        },
+        onFormSubmit: function(e) {
+            e.preventDefault();
+
+            if (typeof tinymce === 'object') {
+                // copy values from tinymce iframe to real textarea before serializion
+                $('td.input textarea.tinymce').each(function() {
+                    $(this).val(tinymce.get($(this).attr('name')).getContent());
+                });
+            }
+            
+            var newForm,
+                self = this,
+                clickedActionButton = $('[type=submit][data-clicked=true]'),
+                clickedActionButtonName = clickedActionButton.attr('name') || 'mlSubmitButton',
+                clickedActionButtonValue = clickedActionButton.val();
+            
+            // add index to multipleselects
+            $('td.input select[name$="[]"]').each(function() {
+                var options = $(this).find('option');
+                for (var i in options) {
+                    if ($.isNumeric(i) && $(options[i]).is(':selected')) {
+                        self.elements.form.prepend('<input type="hidden" value="' + $(options[i]).attr('value') + '" name="' + $(this).attr('name').replace('[]', '['+ i +']') + '">');
+                    }
+                }
+                $(this).removeAttr('name');
+            });
+            // add index to other inputs
+            var settedArrays = {}
+            $('td.input [name$="[]"]').each(function() {
+                var name = $(this).attr('name');
+                settedArrays[name] = settedArrays[name] === undefined ? 0 : settedArrays[name] + 1;
+                $(this).attr('name',  name.replace('[]', '['+ settedArrays[name] +']'));
+            });
+            
+            if (clickedActionButtonValue) {
+                self.elements.form.append('<input type="hidden" value="' + clickedActionButtonValue + '" name="' + clickedActionButtonName + '">');
+            }
+
+            newForm = $([
+                '<form action="' + self.elements.form.attr('action') + '" method="' + self.elements.form.attr('method') + '" style="display:none">',
+                '<input type="hidden" name="FullSerializedForm" value="' + self.elements.form.serialize() + '">',
+                '</form>'
+            ].join());
+
+            if (clickedActionButtonValue && clickedActionButtonName.search('ml\\[') === 0) {
+                newForm.append('<input type="hidden" value="' + clickedActionButtonValue + '" name="' + clickedActionButtonName + '">');
+            }
+
+            self.elements.form.find("input[type='hidden']:not([name^='ml['])").each(function() {
+                var newHiddenEl = $('<input type="hidden" name="' + $(this).attr('name') + '">').val($(this).val());
+                newForm.append(newHiddenEl);
+            });
+
+            newForm.appendTo('body').submit().remove();
+
+            return false;
         }
     });
 
@@ -1437,10 +1951,10 @@
 
     function ml_vm_config_generateCategoryPath(dropDown, categoryPath) {
         dropDown.find('option').attr('selected', '');
-        if (dropDown.find('[value=' + cID + ']').length > 0) {
-            dropDown.find('[value=' + cID + ']').attr('selected', 'selected');
+        if (dropDown.find('[value='+cID+']').length > 0) {
+            dropDown.find('[value='+cID+']').attr('selected','selected');
         } else {
-            dropDown.append('<option selected="selected" value="' + cID + '">' + categoryPath + '</option>');
+            dropDown.append('<option selected="selected" value="'+cID+'">'+categoryPath+'</option>');
         }
     }
 
@@ -1478,7 +1992,7 @@
             });
         }
 
-        $('button.ml-reset-matching').click(function() {
+        $('button.ml-reset-matching').click(function(){
             var me = $(this),
                 d = ml_vm_config.i18n.resetInfo;
 

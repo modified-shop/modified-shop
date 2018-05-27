@@ -22,4 +22,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once('magnacompatible.php');
 
-new MagnaCompatMarketplace($_MagnaSession['currentPlatform']);
+class TradoriaMarketplace extends MagnaCompatMarketplace {
+}
+
+new TradoriaMarketplace($_MagnaSession['currentPlatform']);

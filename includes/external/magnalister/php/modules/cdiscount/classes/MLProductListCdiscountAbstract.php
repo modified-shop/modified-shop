@@ -118,13 +118,34 @@ abstract class MLProductListCdiscountAbstract extends MLProductList {
 
 	protected function isPreparedDifferently($aRow) {
 		$sPrimaryCategory = $this->getPrepareData($aRow, 'PrimaryCategory');
-		$sCategoryDetails = $this->getPrepareData($aRow, 'CategoryAttributes');
 		if (!empty($sPrimaryCategory)) {
+			$sCategoryDetails = $this->getPrepareData($aRow, 'CategoryAttributes');
 			$categoryMatching = CdiscountHelper::gi()->getCategoryMatching($sPrimaryCategory);
 			$sCategoryDetails = json_decode($sCategoryDetails, true);
 			return CdiscountHelper::gi()->detectChanges($categoryMatching, $sCategoryDetails);
 		}
 
+		return false;
+	}
+
+	protected function isDeletedAttributeFromShop($aRow, &$message) {
+	    $aPrimaryCategory = $this->getPrepareData($aRow, 'PrimaryCategory');
+		if (!empty($aPrimaryCategory)) {
+			$matchedAttributes = $this->getPrepareData($aRow, 'CategoryAttributes');
+			$matchedAttributes = json_decode($matchedAttributes, true);
+			$shopAttributes = CdiscountHelper::gi()->flatShopVariations();
+
+            if (!is_array($matchedAttributes)) {
+                $matchedAttributes = array();
+            }
+			
+			foreach ($matchedAttributes as $matchedAttribute) {
+				if (CdiscountHelper::gi()->detectIfAttributeIsDeletedOnShop($shopAttributes, $matchedAttribute, $message)) {
+					return true;
+				}
+			}
+		}
+		
 		return false;
 	}
 
