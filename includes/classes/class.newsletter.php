@@ -42,12 +42,13 @@ class newsletter {
                                                customers_id,
                                                mail_key
                                           FROM ".TABLE_NEWSLETTER_RECIPIENTS."
-                                         WHERE customers_email_address = '".xtc_db_input($mail)."'
+                                         WHERE MD5(customers_email_address) = '".xtc_db_input($mail)."'
                                            AND mail_key = '".xtc_db_input($key)."'");
       if (xtc_db_num_rows($check_mail_query) > 0) {
-        $this->sendRequestMail($mail, 'unsubscribe');
+        $check_mail = xtc_db_fetch_array($check_mail_query);
+        $this->sendRequestMail($check_mail['customers_email_address'], 'unsubscribe');
         $del_query = xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS."
-                                         WHERE customers_email_address ='".xtc_db_input($mail)."'
+                                         WHERE customers_email_address ='".xtc_db_input($check_mail['customers_email_address'])."'
                                            AND mail_key = '".xtc_db_input($key)."'");
         $this->message = TEXT_EMAIL_DEL;
         $this->message_class = 'info';
@@ -65,9 +66,10 @@ class newsletter {
       $this->message_class = 'error';
     } else {
       $check_mail_query = xtc_db_query("SELECT mail_key,
-                                               mail_status
+                                               mail_status,
+                                               customers_email_address
                                           FROM ".TABLE_NEWSLETTER_RECIPIENTS."
-                                         WHERE customers_email_address = '".xtc_db_input($mail)."'
+                                         WHERE MD5(customers_email_address) = '".xtc_db_input($mail)."'
                                        ");
       if (xtc_db_num_rows($check_mail_query) > 0) {
         $check_mail = xtc_db_fetch_array($check_mail_query);
@@ -82,8 +84,8 @@ class newsletter {
                                   'date_confirmed' => 'now()',
                                   'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
                                   );
-          xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
-          $this->sendRequestMail($mail, 'subscribe');
+          xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($check_mail['customers_email_address'])."'");
+          $this->sendRequestMail($check_mail['customers_email_address'], 'subscribe');
           $this->message = TEXT_EMAIL_ACTIVE;
           $this->message_class = 'info';          
         }
@@ -235,7 +237,7 @@ class newsletter {
     switch ($action) {
       case 'opt_in':
         $sendmail = true;
-        $link = xtc_href_link(FILENAME_NEWSLETTER, 'action=activate&email='.xtc_db_input($mail).'&key='.$this->vlCode, 'NONSSL');
+        $link = xtc_href_link(FILENAME_NEWSLETTER, 'action=activate&email='.md5($mail).'&key='.$this->vlCode, 'NONSSL');
         $smarty->assign('EMAIL', xtc_db_input($mail));
         $smarty->assign('LINK', $link);
         break;
@@ -348,7 +350,7 @@ class newsletter {
 
 
   function RemoveLinkAdmin($key,$mail) {
-    return HTTP_CATALOG_SERVER.DIR_WS_CATALOG.FILENAME_CATALOG_NEWSLETTER.'?action=remove&email='.$mail.'&key='.$key;
+    return HTTP_CATALOG_SERVER.DIR_WS_CATALOG.FILENAME_CATALOG_NEWSLETTER.'?action=remove&email='.md5($mail).'&key='.$key;
   }
 
   
