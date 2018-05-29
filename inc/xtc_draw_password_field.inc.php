@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_draw_password_field.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -16,11 +16,11 @@
    ---------------------------------------------------------------------------------------*/
    
 // Output a form password field
-  function xtc_draw_password_field($name, $value = '', $parameters = 'maxlength="40"') {
+  function xtc_draw_password_field($name, $value = '', $parameters = 'maxlength="30"') {
     return xtc_draw_input_field($name, $value, $parameters, 'password', false);
   }
   
-    function xtc_draw_password_fieldNote($name, $value = '', $parameters = 'maxlength="40"') {
+  function xtc_draw_password_fieldNote($name, $value = '', $parameters = 'maxlength="30"') {
     return xtc_draw_input_fieldNote($name, $value, $parameters, 'password', false);
   }
  ?>
