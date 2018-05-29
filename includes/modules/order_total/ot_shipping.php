@@ -69,7 +69,11 @@ class ot_shipping {
       }
     }
 
-    if (!isset($_SESSION['shipping']) || $_SESSION['shipping'] === false) {
+    if (!isset($_SESSION['shipping']) 
+        || $_SESSION['shipping'] === false 
+        || !isset($_SESSION['shipping']['id'])
+        )
+    {
       return;
     }
    
