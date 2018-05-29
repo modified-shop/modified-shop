@@ -1,0 +1,691 @@
+/* -----------------------------------------------------------------------------------------
+   $Id: stylesheet.css 9098 2015-12-02 11:22:33Z Tomcraft $
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('css/fonts/opensans-light-webfont.eot');
+    src: url('css/fonts/opensans-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/opensans-light-webfont.woff2') format('woff2'),
+         url('css/fonts/opensans-light-webfont.woff') format('woff'),
+         url('css/fonts/opensans-light-webfont.ttf') format('truetype'),
+         url('css/fonts/opensans-light-webfont.svg#open_sanslight') format('svg');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('css/fonts/opensans-regular-webfont.eot');
+    src: url('css/fonts/opensans-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/opensans-regular-webfont.woff2') format('woff2'),
+         url('css/fonts/opensans-regular-webfont.woff') format('woff'),
+         url('css/fonts/opensans-regular-webfont.ttf') format('truetype'),
+         url('css/fonts/opensans-regular-webfont.svg#open_sansregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('css/fonts/opensans-semibold-webfont.eot');
+    src: url('css/fonts/opensans-semibold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/opensans-semibold-webfont.woff2') format('woff2'),
+         url('css/fonts/opensans-semibold-webfont.woff') format('woff'),
+         url('css/fonts/opensans-semibold-webfont.ttf') format('truetype'),
+         url('css/fonts/opensans-semibold-webfont.svg#open_sanssemibold') format('svg');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('css/fonts/opensans-bold-webfont.eot');
+    src: url('css/fonts/opensans-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/opensans-bold-webfont.woff2') format('woff2'),
+         url('css/fonts/opensans-bold-webfont.woff') format('woff'),
+         url('css/fonts/opensans-bold-webfont.ttf') format('truetype'),
+         url('css/fonts/opensans-bold-webfont.svg#open_sansbold') format('svg');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('css/fonts/opensans-extrabold-webfont.eot');
+    src: url('css/fonts/opensans-extrabold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/opensans-extrabold-webfont.woff2') format('woff2'),
+         url('css/fonts/opensans-extrabold-webfont.woff') format('woff'),
+         url('css/fonts/opensans-extrabold-webfont.ttf') format('truetype'),
+         url('css/fonts/opensans-extrabold-webfont.svg#open_sansextrabold') format('svg');
+    font-weight: 800;
+    font-style: normal;
+}
+
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: normal;
+  font-size:13px;
+  background-color:#eee;
+  color:#555;
+  line-height:19px;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust:     100%;
+}
+.clearfix, .clear, .clearer {
+  line-height:0px;
+  height:0px;
+  clear:both;
+}
+
+.cf:before, .cf:after { content: ""; display: table; }
+.cf:after { clear: both; }
+.cf { zoom: 1; }
+
+p {
+  margin: 8px 0px;
+}
+
+a, a:link, a:visited, a:active, a:hover {
+  background:transparent;
+  text-decoration:none;
+  outline:none;
+  cursor:pointer;
+}
+a:link {
+  color:#6d2551;
+  outline:none;
+}
+a:visited {
+  color:#6d2551;
+  outline:none;
+}
+a:hover, a:active {
+  color:#6d2551;
+  outline:none;
+}
+a:hover {
+  color:#555;
+  text-decoration:underline;
+  outline:none;
+}
+a img {
+  border:none;
+  outline:none;
+}
+
+h2 {
+  color:#111;
+  font-size:13px;
+  font-weight:700;
+  text-transform:uppercase;
+  border-bottom: 1px solid #ddd;
+  padding: 0 0 2px 0;
+  margin: 0 0 15px 0;
+
+}
+
+
+/* remove standard-styles */
+input, select, textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border:none;
+  border-radius: 0;
+  font-size: 13px;
+  width: 100%
+}
+/* Hide browser-styling in IE10 */
+select::-ms-expand {
+  display:none;
+}
+
+/* Hide custom-icons in lower versions of Internet Explorer (< IE10). */
+.lt-ie10 select {
+    background-image: none;
+}
+
+input {
+  font-family: 'Open Sans', sans-serif;
+}
+
+input[type=text], input[type=password], input[type=email], input[type=tel] {
+  background-color:#f9f9f9;
+  border-color: #dddddd;
+  color: #999999;
+  border-style: solid;
+  border-width: 1px;
+  vertical-align: middle;
+	padding: 8px 8px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width:100%;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  width:auto;
+  float:left;
+  margin-right: 14px;
+  background:transparent;
+  border:none;
+}
+
+input[type='checkbox']:checked,
+input[type='checkbox']:not(:checked),
+input[type='radio']:checked,
+input[type='radio']:not(:checked) {
+  background: transparent;
+  position: relative;
+  visibility: hidden;
+  margin:0;
+  padding:0;
+}
+
+input[type='checkbox'] + label,
+input[type='radio'] + label {
+  cursor: pointer;
+}
+
+input[type='checkbox']:checked + label::before,
+input[type='checkbox']:not(:checked) + label::before,
+input[type='radio']:checked + label::before,
+input[type='radio']:not(:checked) + label::before {
+  content:' ';
+  display:inline-block;
+  width: 15px;
+  height:15px;
+  position: relative;
+  top:4px;
+  border: 1px solid #bbb;
+  background: white;
+  margin-right: 14px;
+}
+
+input[type=radio]:checked + label::before,
+input[type=radio]:not(:checked) + label::before {
+  border-radius: 30px;
+}
+
+input[type='checkbox']:hover  + label::before,
+input[type='radio']:hover  + label::before {
+  background:#ddd;
+  box-shadow: inset 0 0 0 2px white;
+}
+
+input[type='checkbox']:checked  + label::before,
+input[type='radio']:checked  + label::before {
+  background:#6D2551;
+  box-shadow: inset 0 0 0 2px white;
+}
+
+textarea {
+  font-family: "Courier New", Courier, monospace;
+  font-size:13px;
+  background-color:#f9f9f9;
+  border-color: #dddddd;
+  color: #999999;
+  border-style: solid;
+  border-width: 1px;
+  vertical-align: middle;
+	padding: 8px 8px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width:100%;
+}
+
+select {
+  font-family: 'Open Sans', sans-serif;
+  font-size:13px;
+  background-color:#f9f9f9;
+  border-color: #dddddd;
+  color: #999999;
+  border-style: solid;
+  border-width: 1px;
+  vertical-align: middle;
+	padding: 7px 8px 7px 4px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width:100%;
+  background-image:url(../images/select-arrow.png);
+  background-position: right;
+  background-repeat: no-repeat;
+}
+
+input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, input[type=tel]:hover, select:hover, textarea:hover {
+  background-color:#ffffff;
+  border-color: #666666;
+  color: #333333;
+}
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=tel]:focus, select:focus, textarea:focus {
+  background-color:#ffffff;
+  border-color: #666666;
+  color: #333333;
+  outline: 0 none;
+}
+
+.sql_textarea textarea {
+  height:180px;
+  line-height:19px;
+}
+
+
+
+.copyright {
+  text-align:center;
+  margin: -10px auto 5px auto;
+  width:100%;
+  max-width:500px
+  text-align:center;
+  font-size:11px;
+  line-height:15px;
+}
+
+
+.wrap_installer {
+  background:#fff;
+  width:100%;
+  max-width:800px;
+  border: 1px solid #ddd;
+  padding: 10px 10px;;
+  margin: 20px auto;
+  min-height:300px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.wrap_installer_inner {
+
+}
+
+.installer_logo {
+  position:relative;
+  padding:0px 0px 10px 0px;
+  border-bottom: 1px solid #ddd;
+  text-align:center;
+}
+.installer_logo img {
+  display:inline-block;
+  width:100%;
+  max-width:150px;
+  height:auto;
+  vertical-align:top;
+}
+.installer_languages {
+  display:inline-block;
+
+}
+.installer_languages {
+  position:absolute;
+  top:25px;
+  right:0px;
+  display:inline-block;
+}
+.installer_languages img {
+  float:left;
+  margin: 0 0 0 5px;
+}
+
+
+.installer_content {
+  margin: 20px 0 0 0;
+}
+
+
+.field_row {
+  margin: 0px -7px 0px -7px;
+}
+
+
+.field_item {
+  float:left;
+  width:50%;
+  padding: 5px 7px 5px 7px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.field_heading {
+  font-size:10px;
+  line-height:16px;
+  font-weight:700;
+}
+
+
+
+
+
+.errormessage {
+  border:solid #DCA7A7 1px;
+  padding:10px;
+  font-size:11px !important;
+  line-height:15px;
+  color:#A94442;
+  background-color:#F2DEDE;
+  margin-bottom:15px;
+}
+.errormessage p {
+  margin: 0px 0px;
+}
+
+.successmessage {
+  border: 1px solid #b2dba1;
+  padding: 10px;
+  font-size:11px !important;
+  line-height:15px;
+  color: #3c763d;
+  background-color: #d4ebcb;
+  margin-bottom: 15px;
+}
+.successmessage p {
+  margin: 0px 0px;
+}
+
+
+
+
+
+.info_require_box {
+  margin: 0 0 20px 0;
+}
+.info_require_box .headline {
+  font-weight:700;
+  border-bottom: 1px solid #ddd;
+  padding: 0 0 2px 0;
+  margin: 0 0 12px 0;
+}
+
+
+.info_require_list {
+  margin: -12px 0 0 0;
+}
+
+.info_require_list span {
+  float:left;
+  display:inline-block;
+  padding: 5px 0px;
+}
+
+.icol_1 { width:30%;}
+.icol_2 { width:30%;}
+.icol_3 { width:20%;}
+.icol_4 { width:20%;}
+
+.mcol_head {
+  display:block;
+}
+
+.mcol_1 { width:50%; display: inline-block;  }
+.mcol_2 { width:22%; display: inline-block; float:right;text-align:right; position:relative; }
+.mcol_3 { width:22%; display: inline-block; float:right;text-align:right; position:relative; }
+
+.mcol .mcol_2 { top:3px; }
+.mcol .mcol_3 { top:3px; }
+
+
+
+.info_require_heading {
+  font-size:11px;
+  font-weight:700;
+  color:#555;
+  border-bottom: 1px solid #ddd;
+}
+
+
+.info_require_line {
+  border-bottom: 1px solid #ddd;
+}
+
+.stat_ok {
+  background:#f0f8ec;
+  color:#3C763D;
+}
+.stat_fail {
+  background:#f7eaea;
+  color:#A94442;
+}
+
+
+
+
+
+
+.info_red_box {
+  margin: 20px 0px;
+  color:#A94442;
+}
+.info_red_box .headline {
+  font-weight:700;
+  color:#555;
+  border-bottom: 1px solid #ddd;
+  padding: 0 0 2px 0;
+  margin: 0 0 8px 0;
+}
+.info_ftp_box {
+  margin: 20px 0px;
+}
+.info_ftp_box .headline {
+  font-weight:700;
+  color:#555;
+  border-bottom: 1px solid #ddd;
+  padding: 0 0 2px 0;
+  margin: 0 0 12px 0;
+}
+
+
+.cssButtonRow {
+  text-align:center;
+  display:block;
+  margin: 20px -5px 0 -5px;
+}
+.cssButton {
+  display:inline-block;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  min-width:220px;
+  padding: 5px 5px;
+}
+
+.cssButton a,
+.cssButton button {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid;
+  display:block;
+  width:100%;
+  padding: 10px;
+  font-size:12px;
+  line-height:16px;
+  font-weight: 800;
+  text-decoration:none;
+  text-align:center;
+  text-transform:uppercase;
+  outline:none;
+  cursor: pointer;
+}
+
+
+
+.cssColor_1 a,
+.cssColor_1 button {
+  border-color:#222;
+  background:#222;
+  color:#fff;
+}
+.cssColor_1 a:hover,
+.cssColor_1 button:hover {
+  border-color:#222;
+  background:#333;
+  color:#fff;
+}
+
+
+.cssColor_2 a,
+.cssColor_2 button {
+  border-color:#999;
+  background:#eee;
+  color:#333;
+}
+.cssColor_2 a:hover,
+.cssColor_2 button:hover {
+  border-color:#999;
+  background:#e6e6e6;
+  color:#333;
+}
+
+
+.cssColor_3 a,
+.cssColor_3 button {
+  border-color:#6D2551;
+  background:#6D2551;
+  color:#fff;
+}
+.cssColor_3 a:hover,
+.cssColor_3 button:hover {
+  border-color:#7b305e;
+  background:#7b305e;
+  color:#fff;
+}
+
+
+
+
+ul.modulelist {
+  list-style-type:none;
+  margin: -15px 0 0 0;
+  padding: 0px;
+}
+ul.modulelist li {
+  display:block;
+  padding: 8px 0px;
+  border-bottom: 1px solid #ddd;
+  font-size:13px;
+  line-height:19px;
+  background:#fff;
+}
+ul.modulelist li:hover {
+  background: #f9f9f9;
+}
+
+ul.modulelist li.installed {
+  color:#3c763d;
+  background: #f2f9f0;
+}
+ul.modulelist li label {
+  display:block;
+  width:100%;
+}
+ul.modulelist li input[type="checkbox"]:checked+label {
+  font-weight: 600;
+  color:#6D2551;
+}
+ul.modulelist li input[type="radio"]:checked+label {
+  font-weight: 600;
+  color:#6D2551;
+}
+
+ul.modulelist li a {
+  text-transform:uppercase;
+  color: #6D2551;
+  font-size:12px;
+  line-height:19px;
+  float:right;
+  text-decoration:none;
+  font-weight:700;
+}
+
+.processingmessage {
+  border:solid #88abcf 1px;
+  padding:10px;
+  font-size:11px !important;
+  line-height:15px;
+  color:#4b80b7;
+  background-color:#e9eff6;
+  margin-bottom:15px;
+  text-align:center;
+}
+.processingmessage p {
+  margin: 0px 0px;
+}
+.processing_bar {
+  vertical-align:top;
+  text-align:center;
+  padding: 0 0 10px 0;
+  opacity:0.4;
+}
+
+#process_info_wait {
+  text-transform:uppercase;
+  font-weight:700;
+  padding: 0 0 10px 0;
+  font-size:13px;
+  line-height:17px;
+  text-align:center;
+}
+
+.process_wrapper {
+  margin: 0px auto;
+  width: 80%;
+  height: 10px;
+  display:block;
+  text-align: left;
+  border: 1px solid #fff;
+}
+
+.process_inner_wrapper {
+  width: 100%;
+  height: 10px;
+  background: #94b2d4;
+  display:block;
+  text-align: left;
+  float:left;
+}
+
+#backup_process {
+  width: 0;
+  height: 10px;
+  background: #4c7eb4;
+}
+
+#backup_precents{
+  display:block;
+  text-align:center;
+  font-weight: 700;
+  margin: 5px 0 10px 0;
+}
+
+
+
+@media screen and (max-width: 400px) {
+  .field_item { width:100%; }
+
+}
+
+@media screen and (max-width: 630px) {
+  .mcol_1 { width:90%; }
+  .mcol_2 { white-space:nowrap;width:150px;padding-top:5px; }
+  .mcol_3 { white-space:nowrap;width:auto;padding-top:5px; }
+  .mcol_head .mcol_2 { display:none;}
+  .mcol_head .mcol_3 { display:none;}
+}
+
+
+
+
+
+
+

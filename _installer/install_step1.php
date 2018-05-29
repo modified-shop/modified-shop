@@ -1,217 +1,312 @@
 <?php
-  /* --------------------------------------------------------------
+/* -----------------------------------------------------------------------------------------
    $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   --------------------------------------------------------------
-   based on:
-   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(install.php,v 1.7 2002/08/14); www.oscommerce.com
-   (c) 2003 nextcommerce (install_step1.php,v 1.10 2003/08/17); www.nextcommerce.org
-   (c) 2006 XT-Commerce www.xt-commerce.com
-
+   -----------------------------------------------------------------------------------------
    Released under the GNU General Public License
-   --------------------------------------------------------------*/
+   ---------------------------------------------------------------------------------------*/
+  
 
-  require('includes/application.php');
+  require_once ('includes/application_top.php');
 
-  if (!isset($_SESSION['auth'])) {
-    header('Location: index.php');
-  }
+  // language
+  require_once(DIR_FS_INSTALLER.'lang/'.$_SESSION['language'].'.php');
 
-  include('language/'.$lang.'.php');
+  // smarty
+  $smarty = new Smarty();
+  $smarty->setTemplateDir(__DIR__.'/templates')
+         ->registerResource('file', new EvaledFileResource())
+         ->setConfigDir(__DIR__.'/lang')
+         ->SetCaching(0);
+  
+  // default
+  $db_server = ((defined('DB_SERVER')) ? DB_SERVER : '');
+  $db_database = ((defined('DB_DATABASE')) ? DB_DATABASE : '');
+  $db_username = ((defined('DB_SERVER_USERNAME')) ? DB_SERVER_USERNAME : '');
+  $db_password = ((defined('DB_SERVER_PASSWORD')) ? DB_SERVER_PASSWORD : '');
+  
+  $db_type = ((defined('DB_MYSQL_TYPE')) ? DB_MYSQL_TYPE : '');
+  $db_charset = (($upgrade === true && defined('DB_SERVER_CHARSET')) ? DB_SERVER_CHARSET : 'utf8');
+  $db_pconnect = ((defined('USE_PCONNECT')) ? USE_PCONNECT : 'false');
 
-  if (!$script_filename = str_replace('\\', '/', getenv('PATH_TRANSLATED'))) {
-    $script_filename = getenv('SCRIPT_FILENAME');
-  }
-  $script_filename = str_replace('//', '/', $script_filename);
+  $http_server = HTTP_SERVER;
+  $https_server = HTTPS_SERVER;
+  $use_ssl = ((defined('ENABLE_SSL') && ENABLE_SSL == true) ? 'true' : 'false');
+  $session = 'mysql';
 
-  if (!$request_uri = getenv('REQUEST_URI')) {
-    if (!$request_uri = getenv('PATH_INFO')) {
-      $request_uri = getenv('SCRIPT_NAME');
+  $sql_file_array = array(
+    'modified.sql',
+    'banktransfer_blz.sql',
+    'customers_status.sql',            
+  );
+
+  if (isset($_POST['action']) && $_POST['action'] == 'process') {
+    $valid_params = array(
+      'db_server',
+      'db_username',
+      'db_password',
+      'db_database',
+      'db_type',
+      'db_charset',
+      'db_pconnect',
+      'db_install',
+      
+      'http_server',
+      'https_server',
+      'session',
+      'use_ssl',
+    );
+
+    // prepare variables
+    foreach ($_POST as $key => $value) {
+      if (!is_object(${$key}) && in_array($key , $valid_params)) {
+        ${$key} = addslashes($value);
+      }
     }
+    
+    // Database
+    require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
+    require_once (DIR_FS_INC.'db_functions.inc.php');
+    
+    $connection = xtc_db_connect($db_server, $db_username, $db_password, $db_database, 'db_link');
+    if (is_object($connection) || is_resource($connection)) {
+      $error = false;
+      if (!isset($db_install)) {
+        $check_query = xtc_db_query("SHOW TABLES FROM `".$db_database."`");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $messageStack->add('install_step1', ERROR_DATABASE_NOT_EMPTY);
+          $error = true;
+        }
+      }
+      
+      if ($error === false) {
+        $_SESSION['language_charset'] = $db_charset;
+        
+        $collation = 'latin1_german1_ci';
+        if ($_SESSION['language_charset'] == 'utf8') {
+          $collation = 'utf8_general_ci';
+        }
+        xtc_db_query('ALTER DATABASE `'.$db_database.'` DEFAULT CHARACTER SET '.$db_charset.' COLLATE '.$collation);
+        xtc_db_query('SET NAMES '.$db_charset.' COLLATE '.$collation);
+        
+        $engine = '';
+        xtc_db_query("CREATE TABLE IF NOT EXISTS `engine` (`type` VARCHAR( 16 ) NOT NULL)");
+        $check_query = xtc_db_query("SHOW CREATE TABLE `engine`");
+        $check = xtc_db_fetch_array($check_query);
+        
+        $pos = stripos($check['Create Table'], 'engine=');
+        if ($pos !== false) {
+          $engine = trim(substr($check['Create Table'], ($pos + 7), (strpos($check['Create Table'], ' ', $pos) - $pos - 7)));
+        }
+        if ($engine == '') {
+          $pos = stripos($check['Create Table'], 'type=');
+          if ($pos !== false) {
+            $engine = trim(substr($check['Create Table'], ($pos + 5), (strpos($check['Create Table'], ' ', $pos) - $pos - 5)));
+          }
+        }
+        xtc_db_query("TRUNCATE `engine`");
+        xtc_db_query("INSERT INTO `engine` VALUES ('".xtc_db_input($engine)."')");
+        
+        //create  includes/configure.php
+        include (DIR_FS_INSTALLER.'templates/configure.php');
+        if (file_exists(DIR_FS_CATALOG.'/includes/local/configure.php')) {
+          $fp = fopen(DIR_FS_CATALOG . 'includes/local/configure.php', 'w');
+        } else {
+          $fp = fopen(DIR_FS_CATALOG . 'includes/configure.php', 'w');
+        }
+        fputs($fp, $file_contents);
+        fclose($fp);
+        
+        xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', 'action=restorenow&sql=0', $request_type));
+      }
+    } else {
+      $messageStack->add('install_step1', ERROR_DATABASE_CONNECTION);
+    }
+  } elseif (isset($_GET['action'])) {
+    // Database
+    require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+    require_once (DIR_FS_INC.'db_functions.inc.php');
 
-    if (getenv('QUERY_STRING')) $request_uri .=  '?' . getenv('QUERY_STRING');
-  }
+    // make a connection to the database... now
+    xtc_db_connect() or die('Unable to connect to database server!');
+    xtc_db_query("SET storage_engine = MYISAM");
+    
+    if ($_GET['action'] == 'restorenow' || $_GET['action'] == 'restoredb') {
+      define('_VALID_XTC', true);
+      $action = (isset($_GET['action']) ? $_GET['action'] : '');
+      if (isset($_POST['action']) && $_POST['action'] == 'restorenow') {
+        $action = 'restorenow';
+      }
+      $_GET['file'] = $sql_file_array[$_GET['sql']];
+      $_GET['convert'] = $_SESSION['language_charset'];
+      
+      include (DIR_FS_CATALOG.DIR_ADMIN.'includes/functions/db_functions.php');
+      include (DIR_FS_CATALOG.DIR_ADMIN.'includes/db_actions.php');
 
-  $dir_fs_www_root_array = explode('/', dirname($script_filename));
-  $dir_fs_www_root = array();
-  for ($i=0; $i<sizeof($dir_fs_www_root_array)-2; $i++) {
-    $dir_fs_www_root[] = $dir_fs_www_root_array[$i];
-  }
-  $dir_fs_www_root = implode('/', $dir_fs_www_root);
+      $javascript = '
+      <script type="text/javascript">
+        var debug = true;
+        var continue_url = \''.((isset($sql_file_array[($_GET['sql'] + 1)])) ? xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=restorenow&sql='.($_GET['sql'] + 1), $request_type) : xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', 'action=convertnow', $request_type)).'\';
+        var ajax_url = \''.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=restoredb&sql='.$_GET['sql'], $request_type).'\';
+        var maxReloads = '.MAX_RELOADS.';
+      </script>
+      ';
 
-  //DIR_WS_CATALOG
-  $dir_ws_www_root_array = explode('/', dirname($request_uri));
-  $dir_ws_www_root = array();
-  for ($i=0; $i<sizeof($dir_ws_www_root_array)-1; $i++) {
-    if ($dir_ws_www_root_array[$i] != '.' && $dir_ws_www_root_array[$i] != '..') { // web28 - 2010-03-18 - Fix Dir
-      $dir_ws_www_root[] = $dir_ws_www_root_array[$i];
+      ob_start();
+      $process = 'restore';
+      require(DIR_FS_INSTALLER.'templates/javascript/jquery.database.js.php');
+      $javascript .= ob_get_contents();
+      ob_end_clean();
+      $smarty->assign('JAVASCRIPT', $javascript);
+      
+      $smarty->assign('PROCESSING', 'db_restore');
+      $smarty->clear_assign('BUTTON_SUBMIT');
+      $smarty->clear_assign('BUTTON_BACK');
+      
+    } elseif ($_GET['action'] == 'convertnow' || $_GET['action'] == 'convertdb') {
+      
+      $engine_query = xtc_db_query("SELECT * FROM `engine`");
+      $engine = xtc_db_fetch_array($engine_query);
+      if ($engine['type'] != '') {
+        if ($_GET['action'] == 'convertdb') {
+          $convert = $_SESSION['convert'];
+          if (isset($convert['tables'][$convert['aufruf']])) {
+            xtc_db_query("ALTER TABLE ".$convert['tables'][$convert['aufruf']]." ENGINE = ".$engine['type']);
+          }
+          $convert['aufruf']++;
+          $_SESSION['convert'] = $convert;
+          
+          $sec = time() - $convert['starttime']; 
+          $time = sprintf('%d:%02d Min.', floor($sec/60), $sec % 60);
+    
+          $json_output = array();
+          $json_output['aufruf'] = $convert['aufruf'];
+          $json_output['table_ready'] = $convert['aufruf'];
+          $json_output['time'] = $time;
+          $json_output['actual_table'] = (($convert['aufruf'] > $convert['num_tables']) ? '' : $convert['tables'][$convert['aufruf']]);
+          $json_output['fileEOF'] = (($convert['aufruf'] > $convert['num_tables']) ? 1 : 0);
+          $json_output['nr'] = $convert['aufruf'];
+          $json_output['num_tables'] = $convert['num_tables'];
+
+          if ($json_output['fileEOF'])  {
+            if (isset($_SESSION['convert'])) {
+              unset($_SESSION['convert']);
+            }
+          }
+          
+          $json_output = json_encode($json_output);
+          echo $json_output;
+          exit();
+        } elseif ($_GET['action'] == 'convertnow') {
+          $convert = array(
+            'starttime' => time(),
+            'aufruf' => 0,
+            'table' => array(),
+          );
+          $check_query = xtc_db_query("SHOW TABLES");
+          while ($check = xtc_db_fetch_array($check_query)) {
+            $convert['tables'][] = $check['Tables_in_'.DB_DATABASE];
+          }
+          $convert['num_tables'] = count($convert['tables']);
+          $_SESSION['convert'] = $convert;
+          
+          $javascript = '
+          <script type="text/javascript">
+            var debug = true;
+            var continue_url = \''.xtc_href_link(DIR_WS_INSTALLER.'install_step2.php', '', $request_type).'\';
+            var ajax_url = \''.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=convertdb', $request_type).'\';
+            var maxReloads = '.MAX_RELOADS.';
+          </script>
+          ';
+
+          ob_start();
+          $process = 'restore';
+          require(DIR_FS_INSTALLER.'templates/javascript/jquery.database.js.php');
+          $javascript .= ob_get_contents();
+          ob_end_clean();
+          $smarty->assign('JAVASCRIPT', $javascript);
+      
+          $smarty->assign('UPDATE_ACTION', 'convert');
+          $smarty->assign('PROCESSING', 'db_restore');
+          $smarty->clear_assign('BUTTON_SUBMIT');
+          $smarty->clear_assign('BUTTON_BACK');
+        }
+      } else {
+        xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_step2.php', '', $request_type));
+      }
     }
   }
-  $dir_ws_www_root = implode('/', $dir_ws_www_root);
-
-  //BOF - web28 - 2010-03-18 - RESTORE POST  & GET DATA
-  $inst_db = true;
-  $config = true;
-  if(isset($_POST['DB_SERVER'])){
-    //echo 'TEST' . $_POST['install_db'];
-    if($_POST['install_db'] == 1) $inst_db = true; else $inst_db = false;
-    if($_POST['install_cfg'] == 1) $config = true; else $config = false;
+  
+  if ($messageStack->size('install_step1') > 0) {
+    $smarty->assign('error', $messageStack->output('install_step1'));
   }
-  if(isset($_GET['insdb']) && $_GET['insdb'] !=1 ) $inst_db = false;
-  if(isset($_GET['cfg']) && $_GET['cfg'] !=1 ) $config = false;
-  //EOF - web28 - 2010-03-18 - RESTORE POST  & GET DATA
 
+  // database 
+  $db_type_array = array();
+  if (function_exists('mysqli_connect')) {
+    $db_type_array[] = array('id' => 'mysqli', 'text' => 'MySQLi');
+  }
+  if (function_exists('mysql_connect')) {
+    $db_type_array[] = array('id' => 'mysql', 'text' => 'MySQL');
+  }
+
+  $db_charset_array = array(
+    array('id' => 'latin1', 'text' => 'ISO-8859-15'),
+    array('id' => 'utf8', 'text' => 'UTF-8'),
+  );
+  $session_array = array(
+    array('id' => 'mysql', 'text' => 'Datenbank'),
+    array('id' => 'files', 'text' => 'Datei'),
+  );
+  $boolean_array = array(
+    array('id' => 'true', 'text' => 'Ja'),
+    array('id' => 'false', 'text' => 'Nein'),
+  );
+  $smarty->assign('INPUT_DB_SERVER', xtc_draw_input_fieldNote(array('name' => 'db_server')));
+  $smarty->assign('INPUT_DB_USERNAME', xtc_draw_input_fieldNote(array('name' => 'db_username')));
+  $smarty->assign('INPUT_DB_PASSWORD', xtc_draw_input_fieldNote(array('name' => 'db_password')));
+  $smarty->assign('INPUT_DB_DATABSE', xtc_draw_input_fieldNote(array('name' => 'db_database')));    
+  $smarty->assign('INPUT_DB_MYSQL_TYPE', xtc_draw_pull_down_menuNote(array ('name' => 'db_type'), $db_type_array, $db_type));
+  $smarty->assign('INPUT_DB_CHARSET', xtc_draw_pull_down_menuNote(array ('name' => 'db_charset'), $db_charset_array, $db_charset));
+  $smarty->assign('INPUT_DB_PCONNECT', xtc_draw_pull_down_menuNote(array ('name' => 'db_pconnect'), $boolean_array, $db_pconnect));
+  
+  // server
+  $smarty->assign('INPUT_HTTP_SERVER', xtc_draw_input_fieldNote(array('name' => 'http_server')));    
+  $smarty->assign('INPUT_HTTPS_SERVER', xtc_draw_input_fieldNote(array('name' => 'https_server')));    
+  $smarty->assign('INPUT_SESSION', xtc_draw_pull_down_menuNote(array ('name' => 'session'), $session_array, $session));
+  $smarty->assign('INPUT_USE_SSL', xtc_draw_pull_down_menuNote(array ('name' => 'use_ssl'), $boolean_array, $use_ssl));
+  
+  if ($upgrade === true) {
+    $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.'index.php', '', $request_type).'">'.BUTTON_BACK.'</a>');
+  }
+  if (isset($error) && $error === true) {
+    $hidden_fields = xtc_draw_hidden_field('db_install', '1');
+    foreach ($_POST as $key => $value) {
+      $hidden_fields .= xtc_draw_hidden_field($key, $value);
+    }
+    $smarty->assign('INPUT_DB_INSTALL', $hidden_fields);
+    $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>');
+  }
+  
+  // form
+  $smarty->assign('FORM_ACTION', xtc_draw_form('db_connection', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type), 'post').xtc_draw_hidden_field('action', 'process').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
+  $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_SUBMIT.'</button>');
+  $smarty->assign('FORM_END', '</form>');
+
+  $smarty->assign('language', $_SESSION['language']);
+  $module_content = $smarty->fetch('install_step1.html');
+  
   require ('includes/header.php');
+  $smarty->assign('module_content', $module_content);
+  $smarty->assign('logo', xtc_href_link(DIR_WS_INSTALLER.'images/logo_head.png', '', $request_type));
+    
+  if (!defined('RM')) {
+    $smarty->load_filter('output', 'note');
+  }
+  $smarty->display('index.html');
+  require_once ('includes/application_bottom.php');
 ?>
-    <table width="803" style="border:10px solid #fff;" bgcolor="#ffffff" border="0" align="center" cellpadding="0" cellspacing="0">
-      <tr>
-        <td height="95" colspan="2" >
-          <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
-            <tr>
-              <td><img src="images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td align="left" valign="top">
-          <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
-            <tr>
-              <td>
-                <ul id="navigation" class="cf">
-                  <li class="inactive"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_INDEX; ?></span><br /><span class="description"><?php echo NAV_DESC_INDEX; ?></span></li>
-                  <li class="active"><span class="number">1.</span> <span class="title"><?php echo NAV_TITLE_STEP1; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP1; ?></span></li>
-                  <li class="inactive"><span class="number">2.</span> <span class="title"><?php echo NAV_TITLE_STEP2; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP2; ?></span></li>
-                  <li class="inactive last"><span class="number">3.</span> <span class="title"><?php echo NAV_TITLE_STEP3; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP3; ?></span></li>
-                  <li class="inactive second_line"><span class="number">4.</span> <span class="title"><?php echo NAV_TITLE_STEP4; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP4; ?></span></li>
-                  <li class="inactive second_line"><span class="number">5.</span> <span class="title"><?php echo NAV_TITLE_STEP5; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP5; ?></span></li>
-                  <li class="inactive second_line"><span class="number">6.</span> <span class="title"><?php echo NAV_TITLE_STEP6; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP6; ?></span></li>
-                  <!--
-                  <li class="inactive second_line"><span class="number">7.</span> <span class="title"><?php echo NAV_TITLE_STEP7; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP7; ?></span></li>
-                  //-->
-                  <li class="inactive second_line last"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_FINISHED; ?></span><br /><span class="description"><?php echo NAV_DESC_FINISHED; ?></span></li>
-                </ul>
-                <br />
-                <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;"><?php echo TEXT_WELCOME_STEP1; ?></div>
-              </td>
-            </tr>
-          </table>
-          <br />
-          <form name="install" method="post" action="install_step2.php">
-            <?php echo $input_lang; 
-                  echo draw_hidden_fields(); ?>
-            <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
-              <tr>
-                <td>
-                  <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td><h1><?php echo TITLE_CUSTOM_SETTINGS; ?></h1></td>
-                    </tr>
-                  </table>
-                  <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
-                    <?php //BOF - web28 - 2010-03-18 - change install[]  to install_db and install_cfg - restore data - 2010-07-07 FIX for PHP5.3?>
-                    <p><?php echo xtc_draw_checkbox_field_installer('install_db', 1, $inst_db); ?>
-                    <b><?php echo TEXT_IMPORT_DB; ?></b><br />
-                    <?php echo TEXT_IMPORT_DB_LONG; ?></p>
-                    <p><?php echo xtc_draw_checkbox_field_installer('install_cfg', 1, $config); ?>
-                    <?php //BOF - web28 - 2010-03-18 - change install[]  to install_db and install_cfg - restore data - 2010-07-07 FIX for PHP5.3?>
-                    <b><?php echo TEXT_AUTOMATIC; ?></b><br />
-                    <?php echo TEXT_AUTOMATIC_LONG; ?></p>
-                  </div>
-                </td>
-              </tr>
-            </table>
-            <br />
-            <br />
-            <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
-              <tr>
-                <td>
-                  <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td><h1><?php echo TITLE_DATABASE_SETTINGS; ?></h1></td>
-                    </tr>
-                  </table>
-                  <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
-                    <?php
-                    if (function_exists('mysql_connect')) {
-                    ?>
-                      <p><b><?php echo TEXT_DATABASE_TYPE; ?></b><br />
-                      <table width="300" border="0" cellpadding="0" cellspacing="4">
-                        <tr>
-                          <td width="98"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysql</td>
-                          <td width="192">
-                            <?php echo xtc_draw_radio_field_installer('DB_MYSQL_TYPE', 'mysql', false); ?>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />mysqli <?php echo TEXT_DATABASE_TYPE_PREFERRED; ?></td>
-                          <td>
-                          <?php echo xtc_draw_radio_field_installer('DB_MYSQL_TYPE', 'mysqli', true); ?> </td>
-                        </tr>
-                      </table>
-                      <?php echo TEXT_DATABASE_TYPE_LONG; ?></p>
-                    <?php
-                    } else {
-                      echo xtc_draw_hidden_field_installer('DB_MYSQL_TYPE', 'mysqli');
-                    }
-                    ?>
-                    <p><b><?php echo TEXT_DATABASE_SERVER; ?></b><br />
-                    <?php echo xtc_draw_input_field_installer('DB_SERVER'); ?><br />
-                    <?php echo TEXT_DATABASE_SERVER_LONG; ?></p>
-                    <p><b><?php echo TEXT_USERNAME; ?></b><br />
-                    <?php echo xtc_draw_input_field_installer('DB_SERVER_USERNAME'); ?><br />
-                    <?php echo TEXT_USERNAME_LONG; ?></p>
-                    <p><b><?php echo TEXT_PASSWORD; ?></b><br />
-                    <?php echo xtc_draw_password_field_installer('DB_SERVER_PASSWORD'); ?><br />
-                    <?php echo TEXT_PASSWORD_LONG; ?></p>
-                    <p><b><?php echo TEXT_DATABASE; ?></b><br />
-                    <?php echo xtc_draw_input_field_installer('DB_DATABASE'); ?><br />
-                    <?php echo TEXT_DATABASE_LONG; ?></p>
-                  </div>
-                </td>
-              </tr>
-            </table>
-            <br />
-            <br />
-            <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
-              <tr>
-                <td>
-                  <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td><h1><?php echo TITLE_WEBSERVER_SETTINGS; ?> </h1></td>
-                    </tr>
-                  </table>
-                  <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
-                    <?php //BOF - web28 - 2010.02.20 -  NEW ROOT INFO ?>
-                    <p><b><?php echo TEXT_WS_ROOT; ?></b></p>
-                    <?php echo xtc_draw_hidden_field_installer('DIR_FS_DOCUMENT_ROOT', DIR_FS_DOCUMENT_ROOT); ?>
-                    <span style="border: #a3a3a3 1px solid; padding: 3px; background-color: #f4f4f4;"><?php echo DIR_FS_DOCUMENT_ROOT; ?></span>
-                    <p><?php echo TEXT_WS_ROOT_INFO; ?></p>
-                    <p><b><?php echo TEXT_WS_CATALOG; ?></b></p>
-                    <?php echo xtc_draw_hidden_field_installer('DIR_WS_CATALOG', $dir_ws_www_root . '/'); ?>
-                    <span style="border: #a3a3a3 1px solid; padding: 3px; background-color: #f4f4f4;"><?php echo $dir_ws_www_root . '/'; ?></span>
-                    <p><?php echo TEXT_WS_ROOT_INFO; ?></p>
-                    <?php //EOF - web28 - 2010.02.20 -  NEW ROOT INFO ?>                    
-                  </div>
-                </td>
-              </tr>
-            </table>
-            <br />
-            <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
-              <tr>
-                <td align="right"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a> <input type="image" src="images/buttons/<?php echo $lang;?>/button_continue.gif" border="0" alt="Continue"></td>
-              </tr>
-            </table>
-          </form>
-        </td>
-      </tr>
-    </table>
-    <br />
-    <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?></div>
-  </body>
-</html>

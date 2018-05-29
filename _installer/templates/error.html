@@ -1,0 +1,83 @@
+<div class="info_require_box">
+  <h2>{$smarty.const.TEXT_ERROR_REQUIREMENTS}</h2>
+  <div class="info_require_list cf">
+    <div class="info_require_heading cf">
+      <span class="icol_1">{$smarty.const.TEXT_ERROR_REQUIREMENTS_NAME}</span>
+      <span class="icol_2">{$smarty.const.TEXT_ERROR_REQUIREMENTS_VERSION}</span>
+      <span class="icol_3">{$smarty.const.TEXT_ERROR_REQUIREMENTS_MIN}</span>
+      <span class="icol_4">{$smarty.const.TEXT_ERROR_REQUIREMENTS_MAX}</span>
+    </div>
+    {foreach name=aussen item=requirement from=$REQUIREMENT_ARRAY}
+      <div class="info_require_line{if $requirement.status === true} stat_ok{else} stat_fail{/if} cf">
+        <span class="icol_1">{$requirement.name}</span>
+        <span class="icol_2">{if $requirement.version != ''}{$requirement.version}{else}&nbsp;{/if}</span>
+        <span class="icol_3">{if $requirement.version_min != ''}{$requirement.version_min}{else}&nbsp;{/if}</span>
+        <span class="icol_4">{if $requirement.version_max != ''}{$requirement.version_max}{else}&nbsp;{/if}</span>
+      </div>
+    {/foreach}
+  </div>
+</div>
+
+{if count($PERMISSION_ARRAY.file_permission) > 0}
+  <div class="info_red_box">
+    <h2>{$smarty.const.TEXT_ERROR_PERMISSION_FILES}</h2>
+    {foreach name=aussen item=files from=$PERMISSION_ARRAY.file_permission}
+      {$files}<br />
+    {/foreach}
+  </div>
+{/if}
+
+{if count($PERMISSION_ARRAY.folder_permission) > 0}
+  <div class="info_red_box">
+    <h2>{$smarty.const.TEXT_ERROR_PERMISSION_FOLDER}</h2>
+    {foreach name=aussen item=files from=$PERMISSION_ARRAY.folder_permission}
+      {$files}<br />
+    {/foreach}
+  </div>
+{/if}
+
+{if count($PERMISSION_ARRAY.rfolder_permission) > 0}
+  <div class="info_red_box">
+    <h2>{$smarty.const.TEXT_ERROR_PERMISSION_RFOLDER}</h2>
+    {foreach name=aussen item=files from=$PERMISSION_ARRAY.rfolder_permission}
+      {$files}<br />
+    {/foreach}
+  </div>
+{/if}
+
+{if isset($FORM_ACTION)}
+  {$FORM_ACTION}
+    <div class="info_ftp_box">
+      <h2>{$smarty.const.TEXT_ERROR_FTP}</h2>
+      {if isset($error)}<div class="errormessage cf">{$error}</div>{/if}
+      <div class="field_row cf">
+        <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ERROR_FTP_HOST}</div>{$INPUT_FTP_HOST}</div>
+        <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ERROR_FTP_PORT}</div>{$INPUT_FTP_PORT}</div>
+        <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ERROR_FTP_PATH}</div>{$INPUT_FTP_PATH}</div>
+        <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ERROR_FTP_USER}</div>{$INPUT_FTP_USER}</div>
+        <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ERROR_FTP_PASS}</div>{$INPUT_FTP_PASS}</div>
+      </div>
+      <div class="cssButtonRow cf">
+        <div class="cssButton cssColor_3">{$BUTTON_SUBMIT}</div>
+      </div>
+    </div>
+  {$FORM_END}
+{/if}
+
+{if count($UNLINKED_ARRAY.error.files) > 0}
+  <div class="info_red_box">
+    <h2>{$smarty.const.TEXT_ERROR_UNLINK_FILES}</h2>
+    {foreach name=aussen item=files from=$UNLINKED_ARRAY.error.files}
+      {$files}<br />
+    {/foreach}
+  </div>
+{/if}
+
+{if count($UNLINKED_ARRAY.error.dir) > 0}
+  <div class="info_red_box">
+    <h2>{$smarty.const.TEXT_ERROR_UNLINK_FOLDER}</h2>
+    {foreach name=aussen item=files from=$UNLINKED_ARRAY.error.dir}
+      {$files}<br />
+    {/foreach}
+  </div>
+{/if}

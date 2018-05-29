@@ -1,261 +1,382 @@
 <?php
-  /* --------------------------------------------------------------
+/* -----------------------------------------------------------------------------------------
    $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   --------------------------------------------------------------
-   based on:
-   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(install_2.php,v 1.4 2002/08/12); www.oscommerce.com
-   (c) 2003 nextcommerce (install_step2.php,v 1.16 2003/08/1); www.nextcommerce.org
-   (c) 2006 XT-Commerce www.xt-commerce.com
-
+   -----------------------------------------------------------------------------------------
    Released under the GNU General Public License
-   --------------------------------------------------------------*/
+   ---------------------------------------------------------------------------------------*/
+  
 
-  require('includes/application.php');
+  require_once ('includes/application_top.php');
+  
+  // Database
+  require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+  require_once (DIR_FS_INC.'db_functions.inc.php');
 
-  if (!isset($_SESSION['auth'])) {
-    header('Location: index.php');
+  // make a connection to the database... now
+  xtc_db_connect() or die('Unable to connect to database server!');
+
+  // load configuration
+  $configuration_query = xtc_db_query('SELECT configuration_key, configuration_value FROM '.TABLE_CONFIGURATION);
+  while ($configuration = xtc_db_fetch_array($configuration_query)) {
+    defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
   }
-
-  // include Database functions for installer
-  require_once(DIR_FS_INC_INSTALLER.'xtc_db_connect_installer.inc.php');
-  require_once(DIR_FS_INC_INSTALLER.'xtc_db_select_db.inc.php');
-  require_once(DIR_FS_INC_INSTALLER.'xtc_db_query_installer.inc.php');
-  require_once(DIR_FS_INC_INSTALLER.'xtc_db_test_create_db_permission.inc.php');
-  require_once(DIR_FS_INC_INSTALLER.'xtc_db_test_connection.inc.php');
-  require_once(DIR_FS_INC_INSTALLER.'xtc_db_install.inc.php');
+  
+  // language
+  require_once(DIR_FS_INSTALLER.'lang/'.$_SESSION['language'].'.php');
 
   // include needed functions
-  require_once(DIR_FS_INC.'xtc_redirect.inc.php');
-  require_once(DIR_FS_INC.'xtc_href_link.inc.php');
-  require_once(DIR_FS_INC.'xtc_not_null.inc.php');
+  require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
+  require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
+  require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 
-  include('language/'.$lang.'.php');
+  require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
 
-  if (!$script_filename = str_replace('\\', '/', getenv('PATH_TRANSLATED'))) {
-    $script_filename = getenv('SCRIPT_FILENAME');
-  }
-  $script_filename = str_replace('//', '/', $script_filename);
-
-  if (!$request_uri = getenv('REQUEST_URI')) {
-    if (!$request_uri = getenv('PATH_INFO')) {
-      $request_uri = getenv('SCRIPT_NAME');
-    }
-    if (getenv('QUERY_STRING'))
-      $request_uri .=  '?' . getenv('QUERY_STRING');
-  }
-
-  $dir_fs_www_root_array = explode('/', dirname($script_filename));
-  $dir_fs_www_root = array();
-  for ($i=0; $i<sizeof($dir_fs_www_root_array)-2; $i++) {
-    $dir_fs_www_root[] = $dir_fs_www_root_array[$i];
-  }
-  $dir_fs_www_root = implode('/', $dir_fs_www_root);
-
-  $dir_ws_www_root_array = explode('/', dirname($request_uri));
-  $dir_ws_www_root = array();
-  for ($i=0; $i<sizeof($dir_ws_www_root_array)-1; $i++) {
-    $dir_ws_www_root[] = $dir_ws_www_root_array[$i];
-  }
-  $dir_ws_www_root = implode('/', $dir_ws_www_root);
-
-  //  NEW STEP2-4 Handling
-  if(isset($_POST['install_db']) && $_POST['install_db'] == 1) {
-   $test_welcome_step2 = TEXT_WELCOME_STEP2;
-  } else {
-   $test_welcome_step2 = TEXT_WELCOME_STEP2A;
-  }
-
-  $messageStack = new messageStack();
-
-  //connect to database
-  $db = array();
-  $db['DB_MYSQL_TYPE'] = trim(stripslashes($_POST['DB_MYSQL_TYPE']));
-  $db['DB_SERVER'] = trim(stripslashes($_POST['DB_SERVER']));
-  $db['DB_SERVER_USERNAME'] = trim(stripslashes($_POST['DB_SERVER_USERNAME']));
-  $db['DB_SERVER_PASSWORD'] = trim(stripslashes($_POST['DB_SERVER_PASSWORD']));
-  $db['DB_DATABASE'] = trim(stripslashes($_POST['DB_DATABASE']));
-
-  $db_error = false;
-  xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD'], $db['DB_MYSQL_TYPE']);
+  // smarty
+  $smarty = new Smarty();
+  $smarty->setTemplateDir(__DIR__.'/templates')
+         ->registerResource('file', new EvaledFileResource())
+         ->setConfigDir(__DIR__.'/lang')
+         ->SetCaching(0);
   
-  $check_query = xtc_db_query_installer("SHOW TABLES FROM `".$db['DB_DATABASE']."`", $db['DB_MYSQL_TYPE']);
-  if (xtc_db_num_row_installer($check_query, $db['DB_MYSQL_TYPE']) > 0 && (isset($_POST['install_db']) && $_POST['install_db'] == 1)) {
-    $messageStack->add('db_warning', '<strong>' . TEXT_DB_NOT_EMPTY . '</strong>');
-  }
-  
-  @xtc_db_query_installer('ALTER DATABASE `'.$db['DB_DATABASE'].'` DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
-  @xtc_db_query_installer('SET NAMES '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
+  $country = 81;
+  if (isset($_POST['action']) && $_POST['action'] == 'process') {
+    $valid_params = array(
+      'firstname',
+      'lastname',
+      'company',
+      'street_address',
+      'postcode',
+      'city',
+      'country',
+      'password',
+      'confirm_password',
+      'email_address',
+      'confirm_email_address',
+    );
 
-  //check MySQL *server* version
-  if (!$db_error) {
-    if (function_exists('version_compare')) {
-      if(version_compare(xtc_db_get_server_info($db['DB_MYSQL_TYPE']), "5.0.0", "<=") && strpos(strtolower(xtc_db_get_server_info($db['DB_MYSQL_TYPE'])), 'native')=== false){
-        $messageStack->add('db_warning', '<strong>' . TEXT_DB_SERVER_VERSION_ERROR . ' 5.0.0.<br/>' . TEXT_DB_SERVER_VERSION . xtc_db_get_server_info($db['DB_MYSQL_TYPE']) . '</strong>');
+    // prepare variables
+    foreach ($_POST as $key => $value) {
+      if (!is_object(${$key}) && in_array($key , $valid_params)) {
+        ${$key} = addslashes($value);
       }
     }
-  }
-  
-  //check MySQL *client* version
-  if (!$db_error) {
-    if (function_exists('version_compare')) {
-      preg_match("/[0-9]\.[0-9]\.[0-9]/",xtc_db_get_client_info($db['DB_MYSQL_TYPE']), $client_info);
-      if(version_compare($client_info[0], "5.0.0", "<=") && strpos(strtolower(xtc_db_get_client_info($db['DB_MYSQL_TYPE'])), 'native') === false){
-        $messageStack->add('db_warning', '<strong>' . TEXT_DB_CLIENT_VERSION_WARNING . ' 5.0.0.<br/>' . TEXT_DB_CLIENT_VERSION . xtc_db_get_client_info($db['DB_MYSQL_TYPE']) . '</strong>');
-        $messageStack->add('db_warning', '<strong>' . TEXT_DB_CLIENT_VERSION_NOTE . '</strong>');
+    
+    $error = false;
+    
+    if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
+      $error = true;
+      $messageStack->add('install_step2', ENTRY_FIRST_NAME_ERROR);
+    }
+
+    if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
+      $error = true;
+      $messageStack->add('install_step2', ENTRY_LAST_NAME_ERROR);
+    }
+
+    // email check
+    if (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
+      $error = true;
+      $messageStack->add('install_step2', ENTRY_EMAIL_ADDRESS_ERROR);
+    } elseif (xtc_validate_email($email_address) == false) {
+      $error = true;
+      $messageStack->add('install_step2', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
+    } elseif ($email_address != $confirm_email_address) {
+      $error = true;
+      $messageStack->add('install_step2', ENTRY_EMAIL_ERROR_NOT_MATCHING);
+    } else {
+      $check_email_query = xtc_db_query("SELECT count(*) as total
+                                           FROM ".TABLE_CUSTOMERS."
+                                          WHERE customers_email_address = '".xtc_db_input($email_address)."'
+                                            AND account_type = '0'");
+      $check_email = xtc_db_fetch_array($check_email_query);
+      if ($check_email['total'] > 0) {
+        $error = true;
+        $messageStack->add('install_step2', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
       }
     }
-  }
+
+    if (strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
+      $error = true;
+      $messageStack->add('install_step2', ENTRY_STREET_ADDRESS_ERROR);
+    }
+
+    if (strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
+      $error = true;
+      $messageStack->add('install_step2', ENTRY_POST_CODE_ERROR);
+    }
+
+    if (strlen($city) < ENTRY_CITY_MIN_LENGTH) {
+      $error = true;
+      $messageStack->add('install_step2', ENTRY_CITY_ERROR);
+    }
+
+    if (is_numeric($country) == false) {
+      $error = true;
+      $messageStack->add('install_step2', ENTRY_COUNTRY_ERROR);
+    } else {
+      $check_country_query = xtc_db_query("SELECT countries_id
+                                             FROM ".TABLE_COUNTRIES."
+                                            WHERE countries_id = '".(int)$country."'
+                                              AND status = '1'");
+      if (xtc_db_num_rows($check_country_query) < 1) {
+        $error = true;
+        $messageStack->add('install_step2', ENTRY_COUNTRY_ERROR);
+      }
+    }
+
+    $policy = new password_policy();
+    if (!$policy->validate($password)) {
+      $error = true;
+      foreach ($policy->get_errors() as $k => $pwd_error) {
+        $messageStack->add('install_step2', $pwd_error);
+      }
+    }
+    elseif ($password != $confirm_password) {
+      $error = true;
+      $messageStack->add('install_step2', ENTRY_PASSWORD_ERROR_NOT_MATCHING);
+    }
+    
+    if ($error === false) {
+      $sql_data_array = array(
+        'delete_user' => '0',
+        'customers_status' => '0',
+        'customers_firstname' => $firstname,
+        'customers_lastname' => $lastname,
+        'customers_email_address' => $email_address,
+        'customers_password' => xtc_encrypt_password($password),
+        'customers_date_added' => 'now()',
+        'customers_last_modified' => 'now()',
+      );
+      xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
       
-  //check db permission
-  if (!$db_error) {    
-    xtc_db_test_create_db_permission($db['DB_DATABASE'], $db['DB_MYSQL_TYPE']);
+      $customer_id = xtc_db_insert_id();    
+      $sql_data_array = array('customers_id' => $customer_id,
+                              'entry_firstname' => $firstname,
+                              'entry_lastname' => $lastname,
+                              'entry_street_address' => $street_address,
+                              'entry_postcode' => $postcode,
+                              'entry_city' => $city,
+                              'entry_country_id' => (int)$country,
+                              'address_date_added' => 'now()',
+                              'address_last_modified' => 'now()'
+                              );
+      xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
+      
+      $address_id = xtc_db_insert_id();
+      xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
+                       SET customers_default_address_id = '".(int)$address_id."' 
+                     WHERE customers_id = '".(int)$customer_id."'");
+    
+      $sql_data_array = array('customers_info_id' => (int)$customer_id,
+                              'customers_info_number_of_logons' => '1',
+                              'customers_info_date_account_created' => 'now()'
+                              );
+      xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
+      
+      $store_name = $company;
+      $email_from = $email_address;
+      xtc_db_query("UPDATE " .TABLE_COUNTRIES . " SET status='0'");
+      xtc_db_query("UPDATE " .TABLE_COUNTRIES . " SET status='1' WHERE countries_id = '". (int)$country ."'");
+
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_address). "' WHERE configuration_key = 'STORE_OWNER_EMAIL_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($store_name). "' WHERE configuration_key = 'STORE_NAME'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_from). "' WHERE configuration_key = 'EMAIL_FROM'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($country). "' WHERE configuration_key = 'SHIPPING_ORIGIN_COUNTRY'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($postcode). "' WHERE configuration_key = 'SHIPPING_ORIGIN_ZIP'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($company). "' WHERE configuration_key = 'STORE_OWNER'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". (int)$country. "' WHERE configuration_key = 'STORE_COUNTRY'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". (int)$zone_id. "' WHERE configuration_key = 'STORE_ZONE'");
+
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". /*xtc_db_input($store_name) . '\n' .*/ xtc_db_input($company) . '\n' . xtc_db_input($firstname) . ' ' . xtc_db_input($lastname) . '\n' . xtc_db_input($street_address) . '\n' . xtc_db_input($postcode) . ' ' . xtc_db_input($city) . '\n\n' . /*xtc_db_input($telephone) . '\n' .*/ xtc_db_input($email_address)."' WHERE configuration_key = 'STORE_NAME_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_address). "' WHERE configuration_key = 'META_REPLY_TO'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($company). "' WHERE configuration_key = 'META_COMPANY'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($store_name). "' WHERE configuration_key = 'META_PUBLISHER'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($firstname) . ' ' . xtc_db_input($lastname). "' WHERE configuration_key = 'META_AUTHOR'");
+
+      $multilanguage_email = 'DE::'.$email_from.'||EN::'.$email_from;
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'CONTACT_US_EMAIL_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'CONTACT_US_REPLY_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_SUPPORT_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_SUPPORT_REPLY_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_REPLY_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_FORWARDING_STRING'");
+
+      if ($_SESSION['language_charset'] == 'utf8') {
+        xtc_db_query("UPDATE " .TABLE_LANGUAGES . " SET language_charset='utf-8'");
+      }
+
+      // tax rates
+      xtc_db_query("TRUNCATE `tax_rates`");
+      xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (3, 6, 1, 1, '0.0000', 'EU-AUS-UST 0%', NULL, now())");
+      xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (4, 6, 2, 1, '0.0000', 'EU-AUS-UST 0%', NULL, now())");
+      
+      $tax_text = 'UST %s%%';
+      $sql_file = 'tax_zones_standard.sql';
+      
+      switch ($country) {
+        case '14':
+          // Austria
+          $tax_normal = '20.0000';
+          $tax_special = '10.0000';
+          break;
+        case '21':
+          // Belgium
+          $tax_normal = '21.0000';
+          $tax_special = '6.0000';
+          break;
+        case '57':
+          // Denmark
+          $tax_normal = '25.0000';
+          $tax_special = '25.0000';
+          break;
+        case '72':
+          // Finnland
+          $tax_normal = '22.0000';
+          $tax_special = '8.0000';
+          break;
+        case '73':
+          // French
+          $tax_normal = '19.6000';
+          $tax_special = '2.1000';
+           break;
+        case '81':
+          // Germany
+          $tax_text = 'MwSt. %s%%';
+          $tax_normal = '19.0000';
+          $tax_special = '7.0000';
+          break;
+        case '84':
+          // Greece
+          $tax_normal = '18.0000';
+          $tax_special = '4.0000';
+          break;
+        case '103':
+          // Irland
+          $tax_normal = '21.0000';
+          $tax_special = '4.2000';
+          break;
+        case '105':
+          // Italy
+          $tax_normal = '20.0000';
+          $tax_special = '4.0000';
+          break;
+        case '124':
+          // Luxemborg
+          $tax_normal = '15.0000';
+          $tax_special = '3.0000';
+          break;
+        case '150':
+          // Niederlande
+          $tax_normal = '19.0000';
+          $tax_special = '6.0000';
+          break;
+        case '171':
+          // Portugal
+          $tax_normal = '17.0000';
+          $tax_special = '5.0000';
+          break;
+        case '195':
+          // Spain
+          $tax_normal = '16.0000';
+          $tax_special = '4.0000';
+          break;
+        case '203':
+          // Schweden
+          $tax_normal = '25.0000';
+          $tax_special = '6.0000';
+          break;
+        case '204':
+          // Switzerland
+          $tax_normal = '7.7000';
+          $tax_special = '2.5000';
+
+          $tax_zero = '0.0000';
+          $tax_germany_normal = '19.0000';
+          $tax_germany_special = '7.0000';
+          
+          $sql_file = 'tax_zones_switzerland.sql';
+          break;
+        case '222':
+          // UK
+          $tax_normal = '17.5000';
+          $tax_special = '5.0000';
+          break;
+      }
+      
+      $tax_normal_text = sprintf($tax_text, round($tax_normal, 2));
+      $tax_special_text = sprintf($tax_text, round($tax_special, 2));
+      
+      // switzerland
+      if ($country == '204') {
+        $tax_zero_text = sprintf($tax_text, $tax_zero);
+        $tax_germany_normal = sprintf($tax_text, $tax_germany_normal);
+        $tax_germany_special = sprintf($tax_text, $tax_germany_special);
+        
+        xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (5, 8, 1, 1, '".$tax_normal."', '".$tax_normal_text."', NULL, now())");
+        xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (6, 8, 2, 1, '".$tax_special."', '".$tax_special_text."', NULL, now())");
+        xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (1, 5, 1, 1, '".$tax_zero."', '".$tax_zero_text."', NULL, now())");
+        xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (2, 5, 2, 1, '".$tax_zero."', '".$tax_zero_text."', NULL, now())");
+        xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (7, 9, 1, 1, '".$tax_germany_normal."', '".$tax_germany_normal_text."', NULL, now())");
+        xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (8, 9, 2, 1, '".$tax_germany_special."', '".$tax_germany_special_text."', NULL, now())");
+      } else {  
+        xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (1, 5, 1, 1, '".$tax_normal."', '".$tax_normal_text."', NULL, now())");
+        xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (2, 5, 2, 1, '".$tax_special."', '".$tax_special_text."', NULL, now())");
+      }
+
+      $sql_array = parse_sql_file(DIR_FS_INSTALLER.'includes/sql/'.$sql_file);
+
+      for ($i=0, $n=count($sql_array); $i<$n; $i++) {
+        if ($_SESSION['language_charset'] == 'utf8') {
+          $sql_array[$i] = mb_convert_encoding($sql_array[$i], 'utf-8', 'ISO-8859-15');
+        }
+        xtc_db_query($sql_array[$i]);
+      }
+
+      // redirect
+      xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_finished.php', '', $request_type));
+    }
+  } else {
+    xtc_db_query("DROP TABLE IF EXISTS `engine`");
   }
+  
+  if ($messageStack->size('install_step2') > 0) {
+    $smarty->assign('error', $messageStack->output('install_step2'));
+  }
+  
+  // account
+  $smarty->assign('INPUT_FIRSTNAME', xtc_draw_input_fieldNote(array ('name' => 'firstname')));
+  $smarty->assign('INPUT_LASTNAME', xtc_draw_input_fieldNote(array ('name' => 'lastname')));
+  $smarty->assign('INPUT_COMPANY', xtc_draw_input_fieldNote(array ('name' => 'company')));
+  $smarty->assign('INPUT_STREET', xtc_draw_input_fieldNote(array ('name' => 'street_address')));
+  $smarty->assign('INPUT_CODE', xtc_draw_input_fieldNote(array ('name' => 'postcode')));
+  $smarty->assign('INPUT_CITY', xtc_draw_input_fieldNote(array ('name' => 'city')));
+  $smarty->assign('INPUT_PASSWORD', xtc_draw_password_fieldNote(array ('name' => 'password')));
+  $smarty->assign('INPUT_CONFIRM_PASSWORD', xtc_draw_password_fieldNote(array ('name' => 'confirm_password')));
+  $smarty->assign('INPUT_EMAIL', xtc_draw_input_fieldNote(array ('name' => 'email_address')));
+  $smarty->assign('INPUT_CONFIRM_EMAIL', xtc_draw_input_fieldNote(array ('name' => 'confirm_email_address')));
+  $smarty->assign('INPUT_COUNTRY', xtc_get_country_list(array ('name' => 'country'), (int)$country));
+  
+  // form
+  $smarty->assign('FORM_ACTION', xtc_draw_form('install_step2', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type), 'post').xtc_draw_hidden_field('action', 'process'));
+  $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_SUBMIT.'</button>');
+  $smarty->assign('FORM_END', '</form>');
+
+  $smarty->assign('language', $_SESSION['language']);
+  $module_content = $smarty->fetch('install_step2.html');
 
   require ('includes/header.php');
+  $smarty->assign('module_content', $module_content);
+  $smarty->assign('logo', xtc_href_link(DIR_WS_INSTALLER.'images/logo_head.png', '', $request_type));
+
+  if (!defined('RM')) {
+    $smarty->load_filter('output', 'note');
+  }
+  $smarty->display('index.html');
+  require_once ('includes/application_bottom.php');
 ?>
-    <table width="803" style="border:10px solid #fff;" bgcolor="#ffffff" border="0" align="center" cellpadding="0" cellspacing="0">
-      <tr>
-        <td height="95" colspan="2" >
-          <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
-            <tr>
-              <td><img src="images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td align="left" valign="top">
-          <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
-            <tr>
-              <td>
-                <ul id="navigation" class="cf">
-                  <li class="inactive"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_INDEX; ?></span><br /><span class="description"><?php echo NAV_DESC_INDEX; ?></span></li>
-                  <li class="inactive"><span class="number">1.</span> <span class="title"><?php echo NAV_TITLE_STEP1; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP1; ?></span></li>
-                  <li class="active"><span class="number">2.</span> <span class="title"><?php echo NAV_TITLE_STEP2; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP2; ?></span></li>
-                  <li class="inactive last"><span class="number">3.</span> <span class="title"><?php echo NAV_TITLE_STEP3; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP3; ?></span></li>
-                  <li class="inactive second_line"><span class="number">4.</span> <span class="title"><?php echo NAV_TITLE_STEP4; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP4; ?></span></li>
-                  <li class="inactive second_line"><span class="number">5.</span> <span class="title"><?php echo NAV_TITLE_STEP5; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP5; ?></span></li>
-                  <li class="inactive second_line"><span class="number">6.</span> <span class="title"><?php echo NAV_TITLE_STEP6; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP6; ?></span></li>
-                  <!--
-                  <li class="inactive second_line"><span class="number">7.</span> <span class="title"><?php echo NAV_TITLE_STEP7; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP7; ?></span></li>
-                  //-->
-                  <li class="inactive second_line last"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_FINISHED; ?></span><br /><span class="description"><?php echo NAV_DESC_FINISHED; ?></span></li>
-                </ul>
-                <br />
-                <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;"><?php echo $test_welcome_step2; ?></div>
-              </td>
-            </tr>
-          </table>
-          <br />
-          <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
-            <tr>
-              <td>
-                <?php
-                  if ($db_error) {
-                ?>
-                <br />
-                <table width="95%" border="0" align="left" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td><h1><?php echo TEXT_CONNECTION_ERROR; ?></h1></td>
-                  </tr>
-                </table>
-                <table width="100%" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td>
-                      <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
-                        <p><?php echo TEXT_DB_ERROR; ?></p>
-                      </div>
-                      <p class="boxme">
-                        <table border="0" width="100%" cellpadding="0" cellspacing="0" bgcolor="f4f4f4">
-                          <tr>
-                            <td>
-                              <div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;">
-                                <?php echo $db_error; ?>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </p>
-                      <div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;">
-                        <p><?php echo TEXT_DB_ERROR_1; ?></p>
-                        <p><?php echo TEXT_DB_ERROR_2; ?></p>
-                      </div>
-                      <form name="install" action="install_step1.php" method="post">
-                      <?php echo $input_lang; 
-                            echo draw_hidden_fields(); ?>
-                        <br />
-                        <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                          <tr>
-                            <td align="right"><a href="index.php?lg=<?php echo $lang.'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a> <input type="image" src="images/buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
-                          </tr>
-                        </table>
-                      </form>
-                      <br />
-                    </td>
-                  </tr>
-                </table>
-              <?php
-                } else {
-              ?>
-                <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td><h1><?php echo TEXT_CONNECTION_SUCCESS; ?></h1></td>
-                  </tr>
-                </table>
-                <?php
-                  if($_POST['install_db'] == 1) {
-                ?>
-                  <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
-                    <p><?php echo TEXT_PROCESS_1; ?></p>
-                    <p><?php echo TEXT_PROCESS_2; ?></p>
-                    <p><?php echo TEXT_PROCESS_3; ?> <b><?php echo DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/'.MODIFIED_SQL; ?></b>.</p>
-                  </div>
-                <?php
-                  }
-                 // DB CLIENT WARNING
-                  if ($messageStack->size('db_warning') > 0 ) {
-                ?>
-                  <div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;"><?php echo $messageStack->output('db_warning'); ?></div>
-                <?php
-                  }
-                  if($_POST['install_db'] == 1) {
-                     echo '<form name="install" action="install_step3.php" method="post">';
-                     $install_db = 1;
-                  } else {
-                     echo '<form name="install" action="install_step4.php" method="post">';
-                  }
-                  if($_POST['install_cfg'] == 1) {
-                    $create_config = 1;
-                  }
-                  echo $input_lang; 
-                  echo draw_hidden_fields(); 
-                ?>
-                <br />
-                <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td align="right">
-                      <a href="install_step1.php?lg=<?php echo $lang.'&char='.INSTALL_CHARSET; ?>&db=<?php echo $install_db;?>&cfg=<?php echo $create_config;?>"><img src="images/buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a>
-                      <input type="image" src="images/buttons/<?php echo $lang;?>/button_continue.gif">
-                    </td>
-                  </tr>
-                </table>
-              </form>
-              <?php
-                }
-              ?>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
-    <br />
-    <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?></div>
-  </body>
-</html>

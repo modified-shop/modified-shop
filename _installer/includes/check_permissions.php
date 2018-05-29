@@ -1,90 +1,64 @@
 <?php
-  /* --------------------------------------------------------------
-   $Id: check_permissions.php 3584 2012-08-31 12:47:10Z web28 $
-   
-   modified 1.06 rev8
+/* -----------------------------------------------------------------------------------------
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   --------------------------------------------------------------*/
-define('CHMOD_WRITEABLE', 0775);
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
 
-  function scanDirectories($dir, $allData=array()) {
-      foreach (glob($dir.'/*') as $file) {
-          if (is_dir($file)) {
-              $allData['dirs'][] = str_replace(DIR_FS_CATALOG, '', $file);
-              $allData = scanDirectories($file, $allData);
-          } else {
-              $allData['files'][] = str_replace(DIR_FS_CATALOG, '', $file);
-          }
-      }
-      return $allData;
-  }
 
-  function is_make_writeable($filename) {
-    return (
-      is_writable($filename)
-      ? true
-      : ( @chmod($filename, CHMOD_WRITEABLE) && is_writable($filename)
-          ? true
-          : false
-        )
-    );
-  }
-
-  // file and folder permission checks
-  $error_flag = false;
-  $folder_flag = false;
-  $message_arr = array();
-  $ok_message = '';
-
-  //new permission handling and auto change system
-  $file_flag = false;
-
+  $permission_array = array(
+    'file_permission' => array(),
+    'folder_permission' => array(),
+    'rfolder_permission' => array(),
+  );
+  
   $files_to_check = array(
-      'files' => array(
-          DIR_ADMIN.'magnalister.php',
-          'includes/configure.php',
-          'magnaCallback.php',
-          'sitemap.xml'
-      ),
-      'dirs' => array(
-          DIR_ADMIN.'backups',
-          DIR_ADMIN.'images/graphs',
-          DIR_ADMIN.'images/icons',
-          'cache',
-          'export',
-          'export/easybill',
-          'export/idealo_realtime',
-          'images',
-          'images/banner',
-          'images/categories',
-          'images/content',
-          'images/icons',
-          'images/manufacturers',
-          'images/product_images/info_images',
-          'images/product_images/original_images',
-          'images/product_images/popup_images',
-          'images/product_images/thumbnail_images',
-          'images/tags',
-          'import',
-          'log',
-          'media/content',
-          'media/products',
-          'media/products/backup',
-          'templates_c'
-      ),
-      'adirs' => array(
-          'includes/external/magnalister',
-          'includes/external/shopgate/shopgate_library/config',
-          'templates/tpl_modified',
-          'templates/xtc5'
-      ),
-      'rdirs' => array(
-          'includes/external/magnalister'
-      )
+    'files' => array(
+        DIR_ADMIN.'magnalister.php',
+        'includes/configure.php',
+        'magnaCallback.php',
+        'sitemap.xml'
+    ),
+    'dirs' => array(
+        DIR_ADMIN.'backups',
+        DIR_ADMIN.'images/graphs',
+        DIR_ADMIN.'images/icons',
+        'cache',
+        'export',
+        'export/easybill',
+        'export/idealo_realtime',
+        'images',
+        'images/banner',
+        'images/categories',
+        'images/content',
+        'images/icons',
+        'images/manufacturers',
+        'images/product_images/info_images',
+        'images/product_images/original_images',
+        'images/product_images/popup_images',
+        'images/product_images/thumbnail_images',
+        'images/tags',
+        'import',
+        'log',
+        'media/content',
+        'media/products',
+        'media/products/backup',
+        'templates_c'
+    ),
+    'adirs' => array(
+        'includes/external/magnalister',
+        'includes/external/shopgate/shopgate_library/config',
+        'templates/tpl_modified',
+        'templates/xtc5'
+    ),
+    'rdirs' => array(
+        'includes/external/magnalister'
+    )
   );
 
   foreach ($files_to_check['adirs'] as $dir) {
@@ -97,27 +71,27 @@ define('CHMOD_WRITEABLE', 0775);
   // login as ftp user to change permissions of every file and directory
   if (isset($_POST['action']) && $_POST['action']=='ftp') {
     $anonymous = false;
-    if (empty($_POST['login'])) {
-      $_POST['login'] = 'anonymous';
+    if (empty($_POST['ftp_user'])) {
+      $_POST['ftp_user'] = 'anonymous';
       $anonymous = true;
     }
-    $host = $_POST['host'];
-    $port = $_POST['port'];
-    $path = trim($_POST['path'], '/');
-    $user = $_POST['login'];
-    $pass = $_POST['password'];
+    $ftp_host = $_POST['ftp_host'];
+    $ftp_port = $_POST['ftp_port'];
+    $ftp_path = trim($_POST['ftp_path'], '/');
+    $ftp_user = $_POST['ftp_user'];
+    $ftp_pass = $_POST['ftp_pass'];
     
 
-    $ftp = ftp_connect($host, $port);
-    if (!ftp_login($ftp, $user, $pass) || !is_resource($ftp)) {
-      $error_flag = true;
-      $messageStack->add('ftp_message', LOGIN_NOT_POSSIBLE);
+    $ftp = ftp_connect($ftp_host, $ftp_port);
+    if (!ftp_login($ftp, $ftp_user, $ftp_pass) || !is_resource($ftp)) {
+      $error = true;
+      $messageStack->add('ftp_message', ERROR_FTP_LOGIN_NOT_POSSIBLE);
       if ($anonymous === true) {
-        $_POST['login'] = '';
+        $_POST['ftp_user'] = '';
       }
     }
     
-    if ($error_flag === false) {
+    if ($error === false) {
       foreach ($files_to_check['rdirs'] as $dir) {
         if (is_dir(DIR_FS_CATALOG.$dir)) {
           $files_to_check = scanDirectories(DIR_FS_CATALOG.$dir, $files_to_check);
@@ -127,10 +101,8 @@ define('CHMOD_WRITEABLE', 0775);
       foreach ($files_to_check as $type => $files) {
         if ($type != 'rdirs') {
           foreach ($files as $file) {
-            if (ftp_chmod($ftp, CHMOD_WRITEABLE, '/'.$path.'/'.ltrim($file, '/')) === false) {
-              if ($type == 'files') $error_flag = true;
-              if ($type == 'dirs') $folder_flag = true;
-              $messageStack->add('ftp_message', CHMOD_WAS_NOT_SUCCESSFUL);
+            if (ftp_chmod($ftp, CHMOD_WRITEABLE, '/'.$ftp_path.'/'.ltrim($file, '/')) === false) {
+              $messageStack->add('ftp_message', ERROR_FTP_CHMOD_WAS_NOT_SUCCESSFUL);
               break 2;
             }
           }
@@ -147,14 +119,12 @@ define('CHMOD_WRITEABLE', 0775);
         $current_permission = substr(sprintf('%o', fileperms(DIR_FS_CATALOG.$file)), -4);
         if (!is_make_writeable(DIR_FS_CATALOG.$file)) {
           if ($type == 'files') {
-            $error_flag = true;
-            $file_flag = true;
-            $message_arr['file_permission'][] = '<img src="images/icons/error.png" />&nbsp;['.$current_permission.'] '.DIR_FS_CATALOG.$file;
+            $error = true;
+            $permission_array['file_permission'][] = $file;
           }
           if ($type == 'dirs') {
-            $error_flag = true;
-            $folder_flag = true;
-            $message_arr['folder_permission'][] = '<img src="images/icons/error.png" />&nbsp;['.$current_permission.'] '.DIR_FS_CATALOG.$file;
+            $error = true;
+            $permission_array['folder_permission'][] = $file;
           }
         }
       } else {
@@ -168,9 +138,9 @@ define('CHMOD_WRITEABLE', 0775);
             foreach ($rdir as $type => $files) {
               foreach ($files as $file) {
                 if (!is_make_writeable(DIR_FS_CATALOG.$file) && $rfolder_flag != $key) {
-                  $error_flag = true;
+                  $error = true;
                   $rfolder_flag = true;
-                  $message_arr['rfolder_permission'][] = '<img src="images/icons/error.png" />&nbsp;'.DIR_FS_CATALOG.$key;
+                  $permission_array['rfolder_permission'][] = $key;
                 }
               }
             }
@@ -179,16 +149,4 @@ define('CHMOD_WRITEABLE', 0775);
       }
     }
   }
-  if (isset($message_arr['file_permission'])) {
-    $messageStack->add('file_permission', implode('<br>', $message_arr['file_permission']));
-  }
-
-  if (isset($message_arr['folder_permission'])) {
-    $messageStack->add('folder_permission', implode('<br>', $message_arr['folder_permission']));
-  }
-
-  if (isset($message_arr['rfolder_permission'])) {
-    $messageStack->add('rfolder_permission', implode('<br>', $message_arr['rfolder_permission']));
-  }
-
 ?>

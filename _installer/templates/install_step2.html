@@ -1,0 +1,28 @@
+{$FORM_ACTION}
+  {if isset($error)}<div class="errormessage cf">{$error}</div>{/if}
+  
+  <p>{$smarty.const.TEXT_ACCOUNT}</p>
+  <br />
+  <br />
+  <h2>{$smarty.const.TEXT_ACCOUNT_HEADING}</h2>
+  <div class="field_row cf">
+    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_FIRSTNAME}</div>{$INPUT_FIRSTNAME}</div>
+    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_LASTNAME}</div>{$INPUT_LASTNAME}</div>
+    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_COMPANY}</div>{$INPUT_COMPANY}</div>
+    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_STREET}</div>{$INPUT_STREET}</div>
+    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CODE}</div>{$INPUT_CODE}</div>
+    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CITY}</div>{$INPUT_CITY}</div>
+    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_COUNTRY}</div>{$INPUT_COUNTRY}</div>
+  </div>
+  <div class="field_row cf">
+    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_EMAIL}</div>{$INPUT_EMAIL}</div>
+    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CONFIRM_EMAIL}</div>{$INPUT_CONFIRM_EMAIL}</div>
+    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_PASSWORD}</div>{$INPUT_PASSWORD}</div>
+    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CONFIRMATION}</div>{$INPUT_CONFIRM_PASSWORD}</div>
+  </div>
+
+  <div class="cssButtonRow cf">
+    <div class="cssButton cssColor_3">{$BUTTON_SUBMIT}</div>
+  </div>
+
+{$FORM_END}

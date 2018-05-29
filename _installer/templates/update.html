@@ -1,0 +1,195 @@
+{if isset($error)}<div class="errormessage cf">{$error}</div>{/if}
+{if isset($success)}<div class="successmessage cf">{$success}</div>{/if}
+
+{if !isset($UPDATE_ACTION)}
+
+  <p>{$smarty.const.TEXT_UPDATER}</p>
+  <br />
+  <br />
+  <h2>{$smarty.const.TEXT_UPDATER_HEADING}</h2>
+  <ul class="modulelist">
+    <li>{$smarty.const.TEXT_WRITE_CONFIG} {$BUTTON_CONFIGURE}</li>
+    <li>{$smarty.const.TEXT_SQL_UPDATE} {$BUTTON_SQL_UPDATE}</li>
+    <li>{$smarty.const.TEXT_SQL_MANUELL} {$BUTTON_SQL_MANUELL}</li>
+    <li>{$smarty.const.TEXT_DB_UPDATE} {$BUTTON_DB_UPDATE}</li>
+    <li>{$smarty.const.TEXT_DB_BACKUP} {$BUTTON_DB_BACKUP}</li>
+    <li>{$smarty.const.TEXT_DB_RESTORE} {$BUTTON_DB_RESTORE}</li>
+  </ul>
+  <br />
+  <div class="cssButtonRow cf">
+    <div class="cssButton cssColor_2">{$BUTTON_BACK}</div>
+  </div>
+
+{else}
+  {$FORM_ACTION}
+
+    {if $UPDATE_ACTION == 'configure'}
+      <p>{$smarty.const.TEXT_CONFIGURE_DESC}</p>
+      <br />
+      <br />
+      <h2>{$smarty.const.TEXT_CONFIGURE}</h2>
+
+    {elseif $UPDATE_ACTION == 'sql_update'}
+
+      <p>{$smarty.const.TEXT_SQL_UPDATE_DESC}</p>
+      <br />
+      <br />
+      <h2>{$smarty.const.TEXT_SQL_UPDATE_HEADING}</h2>
+      {if isset($sql_data_array)}
+        <ul class="modulelist">
+          {foreach name=aussen item=sql_data from=$sql_data_array}
+            <li>
+              <div>
+                {$sql_data.CHECKBOX}
+                <label for="{$sql_data.NAME}">{$sql_data.NAME}</label>
+              </div>
+            </li>
+          {/foreach}
+        </ul>
+      {/if}
+
+    {elseif $UPDATE_ACTION == 'sql_manuell'}
+
+      <p>{$smarty.const.TEXT_SQL_MANUELL_DESC}</p>
+      <br />
+      <br />
+      <h2>{$smarty.const.TEXT_SQL_MANUELL_HEADING}</h2>
+      <div class="sql_textarea">{$SQL_MANUELL}</div>
+
+    {elseif $UPDATE_ACTION == 'db_update'}
+
+      {if isset($PROCESSING)}
+        <div id="info_text">{$smarty.const.TEXT_INFO_DO_UPDATE}</div>
+        <br />
+        <div class="processingmessage">
+          <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
+          <div class="process_wrapper">
+            <div class="process_inner_wrapper">
+              <div id="backup_process"></div>
+            </div>
+          </div>
+          <div id="backup_precents">0%</div>
+          <div id="data_ok"></div>
+          {$JAVASCRIPT}
+        </div>
+      {else}
+        {$smarty.const.TEXT_DB_UPDATE_DESC}
+      {/if}
+      
+    {elseif $UPDATE_ACTION == 'db_backup'}
+
+      {if isset($PROCESSING)}
+        <div id="info_text">{$smarty.const.TEXT_INFO_DO_BACKUP}</div>
+        <br />
+        <div class="processingmessage">
+          <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
+          <div class="process_wrapper">
+            <div class="process_inner_wrapper">
+              <div id="backup_process"></div>
+            </div>
+          </div>
+          <div id="backup_precents">0%</div>
+          <div id="data_ok"></div>
+          {$JAVASCRIPT}
+        </div>
+      {else}
+        <p>{$smarty.const.TEXT_DB_BACKUP_DESC}</p>
+        <br />
+        <br />
+        <h2>{$smarty.const.TEXT_DB_BACKUP}</h2>
+        <ul class="modulelist">
+          <li>
+            <div>
+              {$INPUT_COMPRESS_GZIP}
+              <label for="compress_gzip">{$smarty.const.TEXT_DB_COMPRESS_GZIP}</label>
+            </div>
+          </li>
+          <li>
+            <div>
+              {$INPUT_COMPRESS_RAW}
+              <label for="compress_raw">{$smarty.const.TEXT_DB_COMPRESS_RAW}</label>
+            </div>
+          </li>
+
+          <li>
+            <div>
+              {$INPUT_REMOVE_COLLATE}
+              <label for="remove_collate">{$smarty.const.TEXT_DB_REMOVE_COLLATE}</label>
+            </div>
+          </li>
+          <li>
+            <div>
+              {$INPUT_REMOVE_ENGINE}
+              <label for="remove_engine">{$smarty.const.TEXT_DB_REMOVE_ENGINE}</label>
+            </div>
+          </li>
+          <li>
+            <div>
+              {$INPUT_COMPLETE_INSERTS}
+              <label for="complete_inserts">{$smarty.const.TEXT_DB_COMPLETE_INSERTS}</label>
+            </div>
+          </li>
+          {if isset($INPUT_UFT8_CONVERT)}
+          <li>
+            <div>
+              {$INPUT_UFT8_CONVERT}
+              <label for="utf8-convert">{$smarty.const.TEXT_DB_UFT8_CONVERT}</label>
+            </div>
+          </li>
+          {/if}
+        </ul>
+      {/if}
+    {elseif $UPDATE_ACTION == 'db_restore'}
+      {if isset($PROCESSING)}
+        <div id="info_text">{$smarty.const.TEXT_INFO_DO_RESTORE}</div>
+        <br />
+        <div class="processingmessage">
+          <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
+          <div class="processing_bar"><img src="images/processing.gif" alt="" /></div>
+          <div class="process_wrapper" style="display:none;">
+            <div class="process_inner_wrapper">
+              <div id="backup_process" style="width:100%"></div>
+            </div>
+          </div>
+          <div id="backup_precents" style="display:none;">100%</div>
+          <div id="data_ok"></div>
+          {$JAVASCRIPT}
+        </div>
+      {else}
+        <p>{$smarty.const.TEXT_DB_RESTORE_DESC}</p>
+        <br />
+        <br />
+        <h2>
+          <span class="mcol_head cf">
+            <span class="mcol_1">{$smarty.const.TEXT_DB_RESTORE}</span>
+            <span class="mcol_2">{$smarty.const.TEXT_DB_SIZE}</span>
+            <span class="mcol_3">{$smarty.const.TEXT_DB_DATE}</span>
+          </span>
+        </h2>
+        {if isset($sql_data_array)}
+          <ul class="modulelist">
+            {foreach name=aussen item=sql_data from=$sql_data_array}
+              <li>
+                <div class="mcol cf">
+                  {$sql_data.CHECKBOX}
+                  <label for="{$sql_data.NAME}">
+                    <span class="mcol_1">{$sql_data.NAME}</span>
+                    <span class="mcol_2">{$sql_data.SIZE}</span>
+                    <span class="mcol_3">{$sql_data.DATE}</span>
+                  </label>
+                </div>
+              </li>
+            {/foreach}
+          </ul>
+        {/if}
+      {/if}
+    {/if}
+
+    <div class="cssButtonRow cf">
+      <div class="cssButton cssColor_2"><span id="button_back">{if isset($BUTTON_BACK)}{$BUTTON_BACK}{/if}</span></div>
+      {if isset($BUTTON_SUBMIT)}<div class="cssButton cssColor_3">{$BUTTON_SUBMIT}</div>{/if}
+    </div>
+
+
+  {$FORM_END}
+{/if}

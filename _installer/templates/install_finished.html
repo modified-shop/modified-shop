@@ -1,0 +1,33 @@
+{if isset($error)}<div class="errormessage cf">{$error}</div>{/if}
+
+<p>{$smarty.const.TEXT_FINISHED}</p>
+<br />
+<br />
+
+{if count($payment_methods.installed) > 0}
+  <h2>{$smarty.const.TEXT_MODULES_INSTALLED}</h2>
+  <ul class="modulelist">
+  {foreach name=aussen item=payment from=$payment_methods.installed}
+    <li class="installed">{$payment.NAME}</li>
+  {/foreach}
+  <br />
+  <br />
+{/if}
+
+{if count($payment_methods.uninstalled) > 0}
+  <h2>{$smarty.const.TEXT_MODULES_UNINSTALLED}</h2>
+  <ul class="modulelist">
+  {foreach name=aussen item=payment from=$payment_methods.uninstalled}
+    <li>{$payment.NAME} {$payment.BUTTON_INSTALL}</li>
+  {/foreach}
+  </ul>
+{/if}
+
+<br />
+<div class="cssButtonRow cf">
+  <div class="cssButton cssColor_2">{$BUTTON_SHOP}</div>
+</div>
+
+<br />
+{* Tracking Image *}
+{$modified}

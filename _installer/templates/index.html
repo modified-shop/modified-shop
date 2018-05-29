@@ -1,0 +1,17 @@
+<div class="wrap_installer">
+  <div class="wrap_installer_inner">
+    <div class="installer_logo">
+      <img src="{$logo}" alt="" />
+      {if isset($language_array)}
+        <div class="installer_languages cf">
+          {foreach name=aussen item=language from=$language_array}
+            <a href="{$language.link}"><img src="images/icons/{$language.code}.gif" style="width:20px;" /></a>
+          {/foreach}
+        </div>
+      {/if}
+    </div>
+    <div class="installer_content cf">
+      {$module_content}
+    </div>
+  </div>
+</div>
