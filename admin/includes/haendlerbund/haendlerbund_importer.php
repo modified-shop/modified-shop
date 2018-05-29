@@ -105,7 +105,7 @@
     function getFormData($array) {
       $data = array();
       foreach($array as $key=>$dataname){
-        $data[$dataname] = mysql_real_escape_string($_POST[$dataname]);
+        $data[$dataname] = xtc_db_input($_POST[$dataname]);
       }
       return $data;
     }
@@ -138,9 +138,6 @@
     #updateContent Methode: Eigentliche Import-Methode fuer die Texte in die DB
     function updateContent($content_id, $content_text) {
       $return = xtc_db_query("UPDATE content_manager SET content_text='".$content_text."' WHERE content_id=".$content_id." LIMIT 1");
-     	if(!mysql_error()) {
-	 			$return = 1;
-	 		}
       return $return;
     }
 	
