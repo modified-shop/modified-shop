@@ -29,7 +29,7 @@
   // text
   define('TEXT_SQL_SUCCESS', '%s');
   define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
-  define('BUTTON_DONATE','<a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
+  define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_START', '<b>Welcome to the modified eCommerce Shopsoftware installation process</b><br /><br />The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP '.PHP_VERSION_MIN.' and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
   define('TEXT_UPDATER_HEADING', 'Please Choose');
   define('TEXT_UPDATER', 'This is the Updater....');
@@ -120,7 +120,8 @@
   define('TEXT_FINISHED', 'This is the last step....');
   define('TEXT_MODULES_INSTALLED', 'Intalled:');
   define('TEXT_MODULES_UNINSTALLED', 'Not installed:');
-
+  define('TEXT_INFO_DO_INSTALL', 'The database is being installed.');
+  
   define('TEXT_ERROR_PERMISSION_FILES', 'The following files require write permissions (CHMOD 777):');
   define('TEXT_ERROR_PERMISSION_FOLDER', 'The following folders require write permissions (CHMOD 777):');
   define('TEXT_ERROR_PERMISSION_RFOLDER', 'The following folders including all files and subfolders require recursive write permissions (CHMOD 777):');
