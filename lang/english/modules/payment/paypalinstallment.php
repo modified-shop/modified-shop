@@ -30,8 +30,8 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALINSTALLMENT_TEXT_ERROR_HEADING' => 'Hinweis',
   'MODULE_PAYMENT_PAYPALINSTALLMENT_TEXT_ERROR_MESSAGE' => 'PayPal Zahlung wurde abgebrochen',
 
-  'MODULE_PAYMENT_PAYPALINSTALLMENT_TEXT_CHECKBOX' => 'I accept...',
-  'MODULE_PAYMENT_PAYPALINSTALLMENT_TEXT_ERROR_CHECKBOX' => 'Please accept...',
+  'MODULE_PAYMENT_PAYPALINSTALLMENT_TEXT_CHECKBOX' => 'I accept that my data will be shared with PayPal.',
+  'MODULE_PAYMENT_PAYPALINSTALLMENT_TEXT_ERROR_CHECKBOX' => 'Please accept that your data will be shared with PayPal.',
 );
 
 
