@@ -102,6 +102,7 @@ if (xtc_db_num_rows($downloads_query) > 0) {
       $dl[$jj]['pic_link'] = xtc_href_link(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($last_order.$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename']));
     }
     $dl[$jj]['download_link'] = '<a href="'.$dl[$jj]['pic_link'].'">'.$downloads['products_name'].'</a>';
+    $dl[$jj]['download_link_plain'] = $downloads['products_name'].': '.$dl[$jj]['pic_link'];
     $dl[$jj]['date'] = xtc_date_long($downloads['download_expiry']);
     $dl[$jj]['count'] = $downloads['download_count'];
     $jj ++;

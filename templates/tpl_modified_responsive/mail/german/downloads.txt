@@ -3,7 +3,7 @@
   {#heading_download#}
   {if $dl|@sizeof > 0}
     {foreach name=aussen item=dl_data from=$dl}
-      {$dl_data.download_link}
+      {$dl_data.download_link_plain}
       {#table_heading_download_date#} {$dl_data.date}, {$dl_data.count} {#table_heading_download_count#}
     {/foreach}
   {/if}
