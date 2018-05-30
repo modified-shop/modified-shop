@@ -25,6 +25,8 @@ if (!defined('MODULE_NEWSLETTER_STATUS') || MODULE_NEWSLETTER_STATUS == 'false')
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
 }
 
+defined('DISPLAY_PRIVACY_CHECK') or define('DISPLAY_PRIVACY_CHECK', 'true');
+
 // captcha
 $use_captcha = array('newsletter');
 if (defined('MODULE_CAPTCHA_ACTIVE')) {
@@ -46,21 +48,40 @@ require_once (DIR_WS_CLASSES.'class.newsletter.php');
 
 $info_message = '';
 $newsletter = new newsletter();
+$privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? true : false;
 
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
+  $error = false;
   $email = xtc_db_prepare_input($_POST['email']);
+  if (DISPLAY_PRIVACY_CHECK == 'true' && empty($privacy)) {
+    $error = true;
+    $messageStack->add('newsletter', ENTRY_PRIVACY_ERROR);
+  }
+
+  if (strlen($email) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
+    $error = true;
+    $messageStack->add('newsletter', ENTRY_EMAIL_ADDRESS_ERROR);
+  } elseif (xtc_validate_email($email) == false) {
+    $error = true;
+    $messageStack->add('newsletter', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
+  }
+  
   if (check_secure_form($_POST) === false) {
-    $info_message = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
-    $newsletter->message_class = 'error';
-  } elseif (xtc_validate_email($email) != false) {
+    $messageStack->add('newsletter', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
+    $error = true;
+  }
+  
+  if ($error === false) {
     if (!in_array('newsletter', $use_captcha) || (isset($_SESSION['customer_id']) && MODULE_CAPTCHA_LOGGED_IN == 'False')) {
       $newsletter->auto = true;
     }
     $newsletter->AddUser($_POST['check'], strtoupper($_POST['vvcode']), $email);
     $info_message = $newsletter->message;
   } else {
-    $info_message = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
-    $newsletter->message_class = 'error';
+    if ($messageStack->size('newsletter') > 0) {
+      $info_message = $messageStack->output('newsletter');
+      $newsletter->message_class = 'error';
+    }
   }
 }
 
@@ -103,6 +124,10 @@ $smarty->assign('CHECK_INP', xtc_draw_radio_field('check', 'inp', $inp));
 $smarty->assign('CHECK_DEL', xtc_draw_radio_field('check', 'del', $del));
 $smarty->assign('BUTTON_SEND', xtc_image_submit('button_send.gif', IMAGE_BUTTON_SEND));
 $smarty->assign('FORM_END', '</form>');
+if (DISPLAY_PRIVACY_CHECK == 'true') {
+  $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', $privacy, 'id="privacy"'));
+  $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
+}
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;

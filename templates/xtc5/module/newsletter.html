@@ -1,3 +1,4 @@
+{config_load file="$language/lang_$language.conf" section="create_account"}
 {config_load file="$language/lang_$language.conf" section="newsletter"}
 <h1>{#heading_title#}</h1>
 {#heading_text#}<br />
@@ -40,6 +41,15 @@
         <td>{$BUTTON_SEND}</td>
       </tr>
     </table>
+    {if $PRIVACY_CHECKBOX}
+    <br />
+    <table>
+      <tr>
+        <td class="checkbox">{$PRIVACY_CHECKBOX}</td>
+        <td class="midi td_full"><strong><label for="privacy">{#text_privacy_accept#}</label></strong> {$PRIVACY_LINK}</td>
+      </tr>
+    </table>
+    {/if}
   </div>
   {$FORM_END}
 {else}
