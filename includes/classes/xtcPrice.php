@@ -120,7 +120,7 @@ class xtcPrice {
    * @param Integer $cedit_id customer specify tax conditions
    * @return String/Array Price (if format = true both plain and formatted)
    */
-  function xtcGetPrice($pID, $format = true, $qty, $tax_class, $pPrice, $vpeStatus = 0, $cedit_id = 0) {
+  function xtcGetPrice($pID, $format = true, $qty, $tax_class, $pPrice = 0, $vpeStatus = 0, $cedit_id = 0) {
     
     $this->tax_class = $tax_class;
     
@@ -159,7 +159,7 @@ class xtcPrice {
     }
     
     if ($this->cStatus['customers_status_show_price_tax'] == '0') {
-      $products_tax = '';
+      $products_tax = 0;
     }
     
     // add taxes
@@ -610,7 +610,7 @@ class xtcPrice {
       $price = $this->xtcCalculateCurr($price);
     }
     if ($tax_class != 0) {
-      $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '0') ? '' : $this->TAX[$tax_class];
+      $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '0') ? 0 : $this->TAX[$tax_class];
       $price = $this->xtcAddTax($price, $products_tax);
     }
     $decimal_places = ($decimal_places > 0) ? $decimal_places : $this->currencies[$this->actualCurr]['decimal_places'];
@@ -631,7 +631,7 @@ class xtcPrice {
           $price = $this->xtcCalculateCurr($price);
         }
         if ($sQuery['products_tax_class_id'] != 0) {
-          $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '0') ? '' : $this->TAX[$sQuery['products_tax_class_id']];
+          $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '0') ? 0 : $this->TAX[$sQuery['products_tax_class_id']];
           $price = $this->xtcAddTax($price, $products_tax);
         }
       }

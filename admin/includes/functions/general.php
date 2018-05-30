@@ -1821,7 +1821,7 @@
    * @return float
    */
   function xtc_spaceUsed($dir) {
-    $totalspaceUsed = '';
+    $totalspaceUsed = 0;
 
     if (is_dir($dir)) {
       if ($dh = opendir($dir)) {
