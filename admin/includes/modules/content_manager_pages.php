@@ -377,11 +377,11 @@ if (!$action) {
         </tr>
           <tr>
             <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_TITLE; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_title['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_title'])) ? $content_lang['content_title'] : ''), 'size="60"'); ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_title['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_title'])) ? $content_lang['content_title'] : ''), 'style="width:100%"'); ?></td>
           </tr>
           <tr>
             <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_HEADING; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_heading['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_heading'])) ? $content_lang['content_heading'] : ''), 'size="60"'); ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_heading['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_heading'])) ? $content_lang['content_heading'] : ''), 'style="width:100%"'); ?></td>
           </tr>
           <?php
           if (GROUP_CHECK=='true') {
@@ -408,16 +408,16 @@ if (!$action) {
           }
           ?>
           <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Title:'; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_title['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_title'])) ? $content_lang['content_meta_title'] : ''), 'size="60"'); ?></td>
+            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Title:<br/>(max. ' . META_TITLE_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_title['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_title'])) ? $content_lang['content_meta_title'] : ''), 'style="width:100%" maxlength="' . META_TITLE_LENGTH . '"'); ?></td>
           </tr>
           <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Description:'; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_description['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_description'])) ? $content_lang['content_meta_description'] : ''), 'size="60"'); ?></td>
+            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Description:<br/>(max. ' . META_DESCRIPTION_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_description['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_description'])) ? $content_lang['content_meta_description'] : ''), 'style="width:100%" maxlength="' . META_DESCRIPTION_LENGTH . '"'); ?></td>
           </tr>
           <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Keywords:'; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_keywords['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_keywords'])) ? $content_lang['content_meta_keywords'] : ''), 'size="60"'); ?></td>
+            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Keywords:<br/>(max. ' . META_KEYWORDS_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_keywords['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_keywords'])) ? $content_lang['content_meta_keywords'] : ''), 'style="width:100%" maxlength="' . META_KEYWORDS_LENGTH . '"'); ?></td>
           </tr>
           <tr>
             <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_UPLOAD_FILE; ?></td>

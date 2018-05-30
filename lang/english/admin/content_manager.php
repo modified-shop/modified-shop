@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: content_manager.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -84,5 +84,5 @@
  define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Enable content?');
  
  define('TEXT_CONTENT_DOUBLE_GROUP_INDEX', 'Duplicate Content Group Index! Please save again. The problem is thus automatically corrected!');
- 
+ define('TEXT_CHARACTERS','Signs');
 ?>
