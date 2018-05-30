@@ -31,4 +31,15 @@ ADD KEY `idx_payment_class` (`payment_class`);
 ALTER TABLE `orders_status_history`
 ADD KEY `idx_orders_id` (`orders_id`);
 
+#GTB - 2018-05-30 - fix #1412
+ALTER TABLE categories_description MODIFY categories_meta_title text NOT NULL;
+ALTER TABLE categories_description MODIFY categories_meta_description text NOT NULL;
+ALTER TABLE categories_description MODIFY categories_meta_keywords text NOT NULL;
+ALTER TABLE content_manager MODIFY content_meta_title text NOT NULL;
+ALTER TABLE content_manager MODIFY content_meta_description text NOT NULL;
+ALTER TABLE content_manager MODIFY content_meta_keywords text NOT NULL;
+ALTER TABLE manufacturers_info MODIFY manufacturers_meta_title text NOT NULL;
+ALTER TABLE manufacturers_info MODIFY manufacturers_meta_description text NOT NULL;
+ALTER TABLE manufacturers_info MODIFY manufacturers_meta_keywords text NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
