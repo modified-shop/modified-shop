@@ -463,7 +463,7 @@ class Smarty extends Smarty_Compatibility
      *
      * @var string
      */
-    public $caching_type = 'file';
+    public $caching_type = 'phpfastcache';
     /**
      * config type
      *
