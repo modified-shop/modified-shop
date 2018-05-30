@@ -116,6 +116,8 @@ require_once SMARTY_SYSPLUGINS_DIR . 'smarty_variable.php';
 require_once SMARTY_SYSPLUGINS_DIR . 'smarty_template_source.php';
 require_once SMARTY_SYSPLUGINS_DIR . 'smarty_template_resource_base.php';
 require_once SMARTY_SYSPLUGINS_DIR . 'smarty_internal_resource_file.php';
+include_once SMARTY_SYSPLUGINS_DIR . 'smarty_compatibility.php';
+include_once SMARTY_SYSPLUGINS_DIR . 'smarty_cacheresource_phpfastcache.php';
 
 /**
  * This is the main Smarty class
@@ -131,7 +133,7 @@ require_once SMARTY_SYSPLUGINS_DIR . 'smarty_internal_resource_file.php';
  * @method int compileAllConfig(string $extension = '.conf', bool $force_compile = false, int $time_limit = 0, $max_errors = null)
  * @method int clearCompiledTemplate($resource_name = null, $compile_id = null, $exp_time = null)
  */
-class Smarty extends Smarty_Internal_TemplateBase
+class Smarty extends Smarty_Compatibility
 {
     /**
      * smarty version
