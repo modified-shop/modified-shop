@@ -12,7 +12,6 @@
  * @param string $contents
  * @param boolean $create_dirs
  * @return boolean
- * Modified Shop 2016-08-05
  */
 function smarty_core_write_file($params, &$smarty)
 {
@@ -42,9 +41,7 @@ function smarty_core_write_file($params, &$smarty)
         // On platforms and filesystems that cannot overwrite with rename() 
         // delete the file before renaming it -- because windows always suffers
         // this, it is short-circuited to avoid the initial rename() attempt
-        if (is_file($params['filename'])) { //modified shop
-          @unlink($params['filename']);
-        }
+        @unlink($params['filename']);
         @rename($_tmp_file, $params['filename']);
     }
     @chmod($params['filename'], $smarty->_file_perms);
