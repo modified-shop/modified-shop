@@ -59,17 +59,20 @@
          ->SetCaching(0);
   
   $payment_methods_array = array(
-    'paypalcart',
-    'paypalplus',
-    'paypalpluslink',
     'paypalclassic',
+    'paypalplus',
+    'paypalinstallment',
+
     'paypallink',
+    'paypalpluslink',
   );
   
   $directory_array = array(
     'installed' => array(),
     'uninstalled' => array(),
   );
+  
+  define('_VALID_XTC', true);
   foreach ($payment_methods_array as $payment_method) {
     if (is_file(DIR_WS_MODULES.'payment/'.$payment_method.'.php')) {
       include_once(DIR_WS_MODULES.'payment/'.$payment_method.'.php');
