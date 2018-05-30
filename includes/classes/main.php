@@ -386,7 +386,7 @@ class main {
    *
    * @return string
    */
-  function getImage($image, $dir = 'categories/', $check = CATEGORIES_IMAGE_SHOW_NO_IMAGE, $noImg = 'categories/noimage.gif') {
+  function getImage($image, $dir = 'categories/', $check = CATEGORIES_IMAGE_SHOW_NO_IMAGE, $noImg = 'noimage.gif') {
 
     $imageOrigin = $image;
     
