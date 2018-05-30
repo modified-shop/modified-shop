@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id: print_packingslip.php 3419 2012-08-11 12:17:52Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -49,8 +49,8 @@
   $smarty->assign('charset', $langcode['language_charset']);
   $smarty->assign('language', $order->info['language']);
 
-  $smarty->assign('logo_path',HTTP_SERVER  . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-  $smarty->assign('tpl_path',HTTP_SERVER . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+  $smarty->assign('logo_path', DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+  $smarty->assign('tpl_path', DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
 
   $smarty->assign('oID',$order->info['order_id']);
   if ($order->info['payment_method']!='' && $order->info['payment_method']!='no_payment') {
