@@ -89,8 +89,8 @@
           if (count($_POST['configuration'])) {
             while (list($key, $value) = each($_POST['configuration'])) {
               $value = is_array($_POST['configuration'][$key]) ? implode(',', $_POST['configuration'][$key]) : $value;
-              xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '" . $value . "' WHERE configuration_key = '" . $key . "'");
-              if (@strpos($key,'FILE') !== false) $file=$value; //GTB - 2010-08-06 - start Download Problem PHP > 5.3
+              xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($value) . "' WHERE configuration_key = '" . $key . "'");
+              if (@strpos($key,'FILE') !== false) $file = $value;
             }
           }
         }
