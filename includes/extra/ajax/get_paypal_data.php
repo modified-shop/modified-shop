@@ -1,6 +1,6 @@
 <?php
 /**
- * $Id: get_sc_service.php 10886 2017-07-31 15:27:19Z GTB $
+ * $Id$
  *
  * modified eCommerce Shopsoftware
  * http://www.modified-shop.org
@@ -46,6 +46,8 @@ function get_paypal_data() {
   ob_end_clean();  
   
   $output = encode_htmlspecialchars($output);
+  $output = base64_encode($output);
+
   return $output;
 }
 

@@ -80,7 +80,7 @@ if (isset($order) && is_object($order)) {
                       var secret = '".MODULE_PAYMENT_PAYPAL_SECRET."';
                       $.get('../ajax.php', {ext: 'get_paypal_data', oID: order_id, language: lang, sec: secret}, function(data) {
                         if (data != '' && data != undefined) { 
-                          $('#pp').html(decodeEntities(data));
+                          $('#pp').html(decodeEntities(atob(data)));
                           $('.paypal_data').toggleClass('paypal_active');
                           $('.paypal_data').show();
                         }
