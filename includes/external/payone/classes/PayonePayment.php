@@ -556,12 +556,26 @@ class PayonePayment {
   function _request_parameters($clearingtype) {
 	  global $order, $insert_id;
 
+    $amount = 0;
+    if (isset($order->info['pp_total'])) {
+      $amount = $order->info['pp_total'];
+    } else {
+      $amount = $order->info['total'];
+      
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0'
+          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == '1'
+          )
+      {
+        $amount += $order->info['tax'];
+      }
+    }
+    
 		$request_parameters = array(
 			'aid' => $this->global_config['subaccount_id'],
 			'key' => $this->global_config['key'],
 			'clearingtype' => $clearingtype,
 			'reference' => $insert_id,
-			'amount' => round(((isset($order->info['pp_total'])) ? $order->info['pp_total'] : $order->info['total']), 2),
+			'amount' => round($amount, 2),
 			'currency' => $order->info['currency'],
 			'personal_data' => $this->personal_data,
 			'delivery_data' => $this->delivery_data,
