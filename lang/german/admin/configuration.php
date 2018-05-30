@@ -949,8 +949,8 @@ define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Soll die Telefonnummer nur optional a
 
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Universal Analytics');
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Soll der Google Universal Analytics Code verwendet werden?<br/><br/><b>Achtung:</b> Sobald Sie in Ihrem Google Analytics Konto auf den neuen Google Universal Analytics Code umstellen, kann das bisherige Google Analytics nicht mehr verwendet werden!<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
-define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Shop-URL');
-define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Tragen Sie hier Ihre Standard-Shop-URL ein (example.com oder www.example.com). Funktioniert nur f&uuml;r Google Universal Analytics.');
+define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Cookie Domain');
+define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Tragen Sie hier Ihre Cookie Domain ein (<i>auto</i> oder <i>example.com</i> oder <i>www.example.com</i>). Funktioniert nur f&uuml;r Google Universal Analytics.');
 define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics LinkID');
 define('TRACKING_GOOGLE_LINKID_DESC' , 'Sie k&ouml;nnen separate Informationen zu mehreren Links auf einer Seite sehen, die alle dasselbe Ziel haben. Wenn es zum Beispiel zwei Links auf derselben Seite gibt, die beide auf die Seite Kontakt f&uuml;hren, sehen Sie separate Klickinformationen f&uuml;r jeden Link. Funktioniert nur f&uuml;r Google Universal Analytics.');
 define('TRACKING_GOOGLE_DISPLAY_TITLE' , 'Google Universal Analytics Displayfeature');

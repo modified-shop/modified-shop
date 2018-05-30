@@ -952,8 +952,8 @@ define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Telephone number only optional on reg
 
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Universal Analytics');
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Use Google Universal Analytics Code?<br/><br/><b>Attention:</b> After switching to Google Universal Analytics it is not possible to go back to the old one!<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
-define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Shop-URL');
-define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Please enter the Shop-URL (example.com oder www.example.com). Only works with Google Universal Analytics.');
+define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Cookie Domain');
+define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Please enter the Cookie Domain (<i>auto</i> or <i>example.com</i> or <i>www.example.com</i>). Only works with Google Universal Analytics.');
 define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics LinkID');
 define('TRACKING_GOOGLE_LINKID_DESC' , 'You can see separate information on multiple links on a page that all have the same goal. If there is for example two links are on the same side, both lead to the contact page, you will see separate click information for each link. Only works with Google Universal Analytics.');
 define('TRACKING_GOOGLE_DISPLAY_TITLE' , 'Google Universal Analytics Displayfeature');
