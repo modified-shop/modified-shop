@@ -42,6 +42,9 @@ if ($messageStack->size('logoff', 'success') > 0) {
 $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 $smarty->assign('language', $_SESSION['language']);
 
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 if ($_SESSION['account_type'] == '1' && DELETE_GUEST_ACCOUNT == 'true') {
   xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
   xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
@@ -56,9 +59,6 @@ xtc_session_destroy();
 
 // write customers status guest in session again
 require (DIR_WS_INCLUDES.'write_customers_status.php');
-
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_TITLE_LOGOFF);
 
