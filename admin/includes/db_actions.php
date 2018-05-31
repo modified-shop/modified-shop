@@ -34,7 +34,7 @@
         unset($_SESSION['dump']);
       }
     
-      if (!isset($dump['$check_utf8'])) {
+      if (!isset($dump['check_utf8'])) {
         $utf8_query = xtc_db_query("SHOW TABLE STATUS WHERE Name='customers'");
         $utf8_array = xtc_db_fetch_array($utf8_query);
         $check_utf8 = strpos($utf8_array['Collation'], 'utf8') === false ? false : true;
@@ -235,6 +235,11 @@
       if($extension == '.gz') {
         $restore['compressed'] = true;
       }
+      
+      $restore['utf8'] = false;
+      if(isset($_GET['convert']) && $_GET['convert'] == 'utf8') {
+        $restore['utf8'] = true;
+      }
     
       //Testen ob Backupdatei existiert, bei nein Abbruch
       if (!is_file($restore['file'])) {
@@ -274,6 +279,9 @@
         if ($sql_command > '') {
           $actual_table = $restore['actual_table'];
           if (!RESTORE_TEST) {
+            if ($restore['utf8'] == true) {
+              $sql_command = mb_convert_encoding($sql_command, 'utf-8', 'ISO-8859-15');
+            }
             $res = xtc_db_query($sql_command);
             if ($res===false) {
               // Bei MySQL-Fehlern sofort abbrechen und Info ausgeben
