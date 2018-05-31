@@ -54,6 +54,36 @@
     '_installer/version106r8', // neu
     '_installer/version106r9', // neu
     '_installer/version.php', // neu
+    '_installer/debug.php', // neu
+    '_installer/images/bg_left_blocktitle.gif', // neu
+    '_installer/images/bg_top.jpg', // neu
+    '_installer/images/break-el.gif', // neu
+    '_installer/images/icons/arrow-setup.jpg', // neu
+    '_installer/images/icons/arrow02.gif', // neu
+    '_installer/images/icons/big_warning.png', // neu
+    '_installer/images/icons/error.png', // neu
+    '_installer/images/icons/icon-deu.gif', // neu
+    '_installer/images/icons/icon-eng.gif', // neu
+    '_installer/images/icons/icon-setup.gif', // neu
+    '_installer/images/icons/icon-spa.gif', // neu
+    '_installer/images/icons/login_keys.gif', // neu
+    '_installer/images/icons/ok.gif', // neu
+    '_installer/images/icons/success.gif', // neu
+    '_installer/images/icons/warning.gif', // neu
+    '_installer/images/icons/x.jpg', // neu
+    '_installer/images/install.gif', // neu
+    '_installer/images/loading.gif', // neu
+    '_installer/images/logo.gif', // neu
+    '_installer/images/logo.png', // neu
+    '_installer/includes/application.php', // neu
+    '_installer/includes/favicon.ico', // neu
+    '_installer/includes/form_check.js.php', // neu
+    '_installer/includes/version.php', // neu
+    '_installer/install_step3.php', // neu
+    '_installer/install_step4.php', // neu
+    '_installer/install_step5.php', // neu
+    '_installer/install_step6.php', // neu
+    '_installer/install_step7.php', // neu
     '_unterverzeichnis_.htaccess',
     DIR_ADMIN.'billsafe_orders_2hp.php',
     DIR_ADMIN.'blacklist.php', // neu
