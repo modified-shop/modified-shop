@@ -32,28 +32,28 @@
   define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_START', '<b>Welcome to the modified eCommerce Shopsoftware installation process</b><br /><br />The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP '.PHP_VERSION_MIN.' and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
   define('TEXT_UPDATER_HEADING', 'Please Choose');
-  define('TEXT_UPDATER', 'This is the Updater....');
-  define('TEXT_WRITE_CONFIG', 'Recreate configuration file (configure.php)');
+  define('TEXT_UPDATER', 'Welcome to the new Updater of the modified eComemrce Shopsoftware');
+  define('TEXT_UPDATE_CONFIG', 'Update configuration file (configure.php)');
   
   define('TEXT_CONFIGURE', 'Recreate configuration file (configure.php)');
-  define('TEXT_CONFIGURE_DESC', 'Description for recreate configuration file');
+  define('TEXT_CONFIGURE_DESC', 'Here you can update the configure.php file to make sure it is up to date.');
   define('TEXT_CONFIGURE_SUCCESS', 'configure.php written!');
   
   define('TEXT_SQL_UPDATE', 'Database Update');
   define('TEXT_SQL_UPDATE_HEADING', 'Choose SQL Update');
-  define('TEXT_SQL_UPDATE_DESC', 'Description for SQL Update');
+  define('TEXT_SQL_UPDATE_DESC', 'Please select only the update files, which are necessary for your current Shopversion.');
 
   define('TEXT_SQL_MANUELL', 'Manual SQL input');
   define('TEXT_SQL_MANUELL_HEADING', 'Enter SQL command:');
   define('TEXT_SQL_MANUELL_DESC', 'SQL commands have to be enclosed with a semicolon ( ; )!');
 
   define('TEXT_DB_RESTORE', 'Database restore');
-  define('TEXT_DB_RESTORE_DESC', 'Description for DB Restore');
+  define('TEXT_DB_RESTORE_DESC', 'You can restore your database from an existing backup here.');
   define('TEXT_INFO_DO_RESTORE', 'The database is being restored!');
   define('TEXT_INFO_DO_RESTORE_OK', 'The database was restored successfully!');
   
   define('TEXT_DB_BACKUP', 'Database backup');
-  define('TEXT_DB_BACKUP_DESC', 'Description for DB Backup');
+  define('TEXT_DB_BACKUP_DESC', 'You can backup your database here.');
   define('TEXT_DB_COMPRESS', 'Compress backup');
   define('TEXT_DB_REMOVE_COLLATE', 'Without encoding \'COLLATE\' and \'DEFAULT CHARSET\'');
   define('TEXT_DB_REMOVE_ENGINE', 'Without storage engines \'ENGINE\'');
@@ -80,11 +80,11 @@
   define('TEXT_INFO_MAX_RELOADS', 'Maximum page reloads were reached: ');
   
   define('TEXT_DB_UPDATE', 'Database structure update');
-  define('TEXT_DB_UPDATE_DESC', 'Description for DB structure update');
+  define('TEXT_DB_UPDATE_DESC', 'Here you can bring the database of your shop installation up to date.');
   define('TEXT_DB_UPDATE_FINISHED', 'DB structure update successfully completed!');
   define('TEXT_FROM', ' of ');
-  define('TEXT_DB_UPDATE_BEFORE', 'Text before');
-  define('TEXT_DB_UPDATE_AFTER', 'Text after');
+  //define('TEXT_DB_UPDATE_BEFORE', 'Text before'); // Not used yet
+  //define('TEXT_DB_UPDATE_AFTER', 'Text after'); // Not used yet
 
   define('TEXT_DB_HEADING', 'Information about the database:');
   define('TEXT_DB_SERVER', 'Server:');
@@ -103,7 +103,7 @@
   define('TEXT_SERVER_USE_SSL', 'SSL:');
   define('TEXT_SERVER_SESSION', 'Session:');
 
-  define('TEXT_ACCOUNT', 'This is the account...');
+  define('TEXT_ACCOUNT','The installer will create the admin account and will perform some db actions.<br /> The given information for <b>Country</b> and <b>Post Code</b> are used for shipping and tax callculations.');
   define('TEXT_ACCOUNT_HEADING', 'Account details:');
   define('TEXT_ACCOUNT_FIRSTNAME', 'First name:');
   define('TEXT_ACCOUNT_LASTNAME', 'Last name:');
@@ -117,7 +117,7 @@
   define('TEXT_ACCOUNT_PASSWORD', 'Password:');
   define('TEXT_ACCOUNT_CONFIRMATION', 'Confirm Password:');
   
-  define('TEXT_FINISHED', 'This is the last step....');
+  define('TEXT_FINISHED', 'Here you can already install the popular PayPal payment methods.');
   define('TEXT_MODULES_INSTALLED', 'Intalled:');
   define('TEXT_MODULES_UNINSTALLED', 'Not installed:');
   define('TEXT_INFO_DO_INSTALL', 'The database is being installed.');
