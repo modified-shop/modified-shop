@@ -84,8 +84,8 @@ if (isset($_GET['oID'])
         "buttonLocation": "outside",
         "preselection": "paypal",
         "useraction": "continue",
-        "showLoadingIndicator": "true",
-        "showPuiOnSandbox": "true"
+        "showLoadingIndicator": true,
+        "showPuiOnSandbox": true
       });
       </script>'."\n";
       $smarty->assign('javascript', $javascript);
