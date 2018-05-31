@@ -1,0 +1,16 @@
+{if $options != ''}
+<div class="productoptions">
+  {foreach name=outer item=options_data from=$options}
+  <div class="options_row_multi">
+    <div class="options_name">{$options_data.NAME}</div>
+    <div class="options_select">
+      <select name="id[{$options_data.ID}]" id="sel_{$options_data.ID}">
+      {foreach key=key_data item=item_data from=$options_data.DATA}
+        <option value="{$item_data.ID}"{if $item_data.CHECKED == '1'} selected="selected"{/if}>{$item_data.TEXT} {if $item_data.PRICE != ''}{$item_data.PREFIX} {$item_data.PRICE}{/if} </option>
+      {/foreach}
+      </select>
+    </div>
+  </div>
+  {/foreach}
+</div>
+{/if}

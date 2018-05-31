@@ -1,0 +1,27 @@
+{config_load file="$language/lang_$language.conf" section="reviews"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="reviews"}
+<h1>{#heading_product_reviews#} {$PRODUCTS_NAME}</h1>
+<div class="pri_imagebox">
+  <div class="pri_big_image">
+    {if $PRODUCTS_IMAGE != ''}<a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a>{/if}
+  </div>
+  <div class="pri_zoomtext">{#zoomtext#}</div>
+</div>
+<div class="pri_content">
+  <p><strong>{#text_date#}</strong> {$DATE}</p>
+  <p><strong>{#text_author#}</strong> {$AUTHOR}</p>
+  <p class="cf"><span class="pri_rating_text"><strong>{#text_rating#}</strong></span>
+  {if isset($RATING_VOTE)}
+    <span class="pri_rating_icons"><i class="fa fa-star{if $RATING_VOTE >= 1} full{/if}"></i><i class="fa fa-star{if $RATING_VOTE >= 2} full{/if}"></i><i class="fa fa-star{if $RATING_VOTE >= 3} full{/if}"></i><i class="fa fa-star{if $RATING_VOTE >= 4} full{/if}"></i><i class="fa fa-star{if $RATING_VOTE >= 5} full{/if}"></i></span>
+  {else}
+    <span class="pri_rating_stars">{$RATING|replace:".gif":".png"}</span>
+  {/if}
+  </p>
+  <br />
+  <h4>{#heading_product_reviews#} {$PRODUCTS_NAME}</h4>
+  <p>{$REVIEWS_TEXT}</p>
+</div>
+<br class="clearfix" />
+<div class="button_left cf"><div class="cssButtonPos4">{$BUTTON_BACK}</div></div>
+<div class="button_right cf"><div class="cssButtonPos4">{$PRODUCTS_BUTTON_DETAILS}</div></div>

@@ -1,0 +1,46 @@
+{config_load file="$language/lang_$language.conf" section="gift_cart"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="gift_cart"}
+{if $ACTIVATE_GIFT == 'true'}
+{$FORM_ACTION}
+<h1>{#title#}</h1>
+
+{if $coupon_message != ''}<div class="errormessage">{$coupon_message}</div>{/if}
+{if $success_message != ''}<div class="infomessage">{$success_message}</div>{/if}
+
+{if $C_FLAG == 'true'}
+  <div class="twoColumsInner cf">
+    {if $GV_AMOUNT neq ''}
+      <p>{#text_info#}<br />{#voucher_balance#} <strong>{$GV_AMOUNT}</strong></p>
+      <p>{#text_send_to_friend#} <a href="{$GV_SEND_TO_FRIEND_LINK}">{#box_send_to_friend#}</a></p>
+    {/if}
+
+    {if $COUPON_AMOUNT2 neq ''}
+      <p>{#voucher_redeemed#}</p>
+      <p>{$COUPON_AMOUNT2}</p>
+    {/if}
+
+    {if $COUPON_HELP_LINK neq ''}
+      <br />
+      <div class="infomessage">{*#cart_coupon#*} {$smarty.const.REDEEMED_COUPON} {$COUPON_HELP_LINK} {#cart_coupon_info#}</a></div>
+    {/if}
+
+    {#text_gift#}
+  </div>
+
+  <div class="twoColumsInner last">
+    <div class="highlightbox grey cf">
+      <table class="table_gift">
+        <tr>
+          <td class="gift_field"><span class="fieldtext">{#text_code#}</span>{$INPUT_CODE}</td>
+          <td class="gift_button">{$BUTTON_SUBMIT}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+{else}
+  <p>{#create_account#}<br />
+  <a href="{$LINK_ACCOUNT}"><strong>{#text_create_account#}</strong></a></p>
+{/if}
+{$FORM_END}
+{/if}

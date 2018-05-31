@@ -1,0 +1,29 @@
+<div style="width:700px;margin: 0px auto;">
+<table width="700" border="0" align="center" cellpadding="5" cellspacing="0">
+	<tr> 
+    	<td align="center" style="padding: 10px 0px;"><img src="{$logo_path}logo.gif" /></td>
+	</tr>
+	<tr> 
+    	<td style="font-size:14px;text-transform:uppercase;padding:10px 5px;border-top: 1px dotted #999;border-bottom: 1px dotted #999;">
+        <font face="Tahoma, Verdana, sans-serif">Ihr Gutschein</font>
+      </td>
+	</tr>
+	<tr> 
+		<td>
+        <br />
+        <font size="2" face="Tahoma, Verdana, sans-serif"><b>{if $GENDER == 'm'}Sehr geehrter Herr{elseif $GENDER == 'f'}Sehr geehrte Frau{else}Hallo{/if} {$NAME},</b>
+        <br /><br />
+        Sie haben k&uuml;rzlich in unserem Online-Shop einen Gutschein bestellt, welcher aus Sicherheitsgr&uuml;nden nicht sofort freigeschaltet wurde.
+        <br /><br />
+        Dieses Guthaben steht Ihnen nun zur Verf&uuml;gung. Sie k&ouml;nnen Ihren Gutschein verbuchen und per E-Mail versenden.
+        <br /><br />
+        Der von Ihnen bestellte Gutschein hat einen Wert von {$AMMOUNT}.
+
+        </font>
+
+		</td>
+	</tr>
+</table>
+
+[SIGNATUR]
+</div>

@@ -1,0 +1,23 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{config_load file="lang_`$language`.custom"}
+{if isset($REVIEWS_WRITE_REVIEW) || isset($RANDOM)}
+<div class="box1">
+  <div class="box_header">
+    <span class="show_title"><i class="fa fa-chevron-down"></i>{#heading_reviews#}</span>
+    <a class="show_all" href="{$REVIEWS_LINK}">{#show_all#} <span class="arrow">&raquo;</span></a>
+    <br class="clearfix" />
+  </div>
+  <div class="box_sidebar cf">
+    <div class="box_line"></div>
+    {if isset($RANDOM)}
+      <div class="box_title"><a href="{$PRODUCTS_LINK}"><strong>{$PRODUCTS_NAME}</strong></a></div>
+      {if $PRODUCTS_IMAGE != ''}<div class="box_image"><a href="{$PRODUCTS_LINK}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a></div>{/if}
+      <div class="box_line abstand"></div>
+      <div class="box_text">{$REVIEWS|onlytext}</div>
+      <div class="box_reviews_icons"><i class="fa fa-star{if $REVIEWS_VOTE >= 1} full{/if}"></i><i class="fa fa-star{if $REVIEWS_VOTE >= 2} full{/if}"></i><i class="fa fa-star{if $REVIEWS_VOTE >= 3} full{/if}"></i><i class="fa fa-star{if $REVIEWS_VOTE >= 4} full{/if}"></i><i class="fa fa-star{if $REVIEWS_VOTE >= 5} full{/if}"></i></div>
+    {else}
+      <p class="onlytop"><a href="{$PRODUCTS_LINK}">{$REVIEWS_WRITE_REVIEW}</a></p>
+    {/if}
+  </div>
+</div>
+{/if}
