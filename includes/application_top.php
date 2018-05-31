@@ -50,8 +50,8 @@ if ((DB_DATABASE == '' || !defined('DB_MYSQL_TYPE')) && is_dir('./_installer')) 
 }
 
 // minimum requirement
-if (version_compare(PHP_VERSION, '5.5', '<')) {
-  die('<h1>Minimum requirement PHP Version 5.5</h1>');
+if (version_compare(PHP_VERSION, '5.6', '<')) {
+  die('<h1>Minimum requirement PHP Version 5.6</h1>');
 }
 
 // default time zone
