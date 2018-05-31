@@ -39,6 +39,9 @@ if ($messageStack->size('logoff', 'success') > 0) {
   $smarty->assign('success_message', $messageStack->output('logoff', 'success'));
 }    
 
+$smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
+$smarty->assign('language', $_SESSION['language']);
+
 if ($_SESSION['account_type'] == '1' && DELETE_GUEST_ACCOUNT == 'true') {
   xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
   xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
@@ -46,25 +49,10 @@ if ($_SESSION['account_type'] == '1' && DELETE_GUEST_ACCOUNT == 'true') {
   xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
 }
 
-xtc_session_destroy();
-
-unset ($_SESSION['customer_id']);
-unset ($_SESSION['customer_default_address_id']);
-unset ($_SESSION['customer_first_name']);
-unset ($_SESSION['customer_country_id']);
-unset ($_SESSION['customer_zone_id']);
-unset ($_SESSION['comments']);
-unset ($_SESSION['user_info']);
-unset ($_SESSION['customers_status']);
-unset ($_SESSION['selected_box']);
-unset ($_SESSION['navigation']);
-unset ($_SESSION['shipping']);
-unset ($_SESSION['payment']);
-unset ($_SESSION['ccard']);
-unset ($_SESSION['gv_id']);
-unset ($_SESSION['cc_id']);
-
 $_SESSION['cart']->reset();
+$_SESSION = array();
+
+xtc_session_destroy();
 
 // write customers status guest in session again
 require (DIR_WS_INCLUDES.'write_customers_status.php');
@@ -76,8 +64,6 @@ $breadcrumb->add(NAVBAR_TITLE_LOGOFF);
 
 require (DIR_WS_INCLUDES.'header.php');
 
-$smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
-$smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/logoff.html');
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;

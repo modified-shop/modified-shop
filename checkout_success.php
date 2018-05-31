@@ -67,6 +67,7 @@ if (xtc_db_num_rows($orders_query) < 1) {
   $payment_class = $orders['payment_class'];
 }
 
+
 // load the selected payment module
 require_once (DIR_WS_CLASSES . 'payment.php');
 $payment_modules = new payment($payment_class);
@@ -74,10 +75,10 @@ $smarty->assign('PAYMENT_INFO', $payment_modules->success());
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('order', xtc_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=update', 'SSL')).xtc_draw_hidden_field('account_type', $_SESSION['account_type']));
 $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
-$smarty->assign('FORM_ACTION_PRINT', xtc_draw_form('print_order', xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.$last_order, 'SSL'), 'post', 'target="popup" onsubmit="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.$last_order, 'SSL').'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, '.POPUP_PRINT_ORDER_SIZE.'\')"').xtc_draw_hidden_field('customer_id', $_SESSION['customer_id']));
-$smarty->assign('FORM_ACTION_PRINT_LAYER', xtc_draw_form('print_order_layer', xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.$last_order, 'SSL', 'post', 'target="popup"')).xtc_draw_hidden_field('customer_id', $_SESSION['customer_id']));
-$smarty->assign('BUTTON_PRINT', xtc_image_submit('print.gif', TEXT_PRINT));
 $smarty->assign('FORM_END', '</form>');
+
+$smarty->assign('BUTTON_PRINT', xtc_image_button('print.gif', TEXT_PRINT, 'style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$last_order, 'SSL').'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,  '.(defined('TPL_POPUP_PRODUCT_PRINT_SIZE') ? TPL_POPUP_PRODUCT_PRINT_SIZE : POPUP_PRINT_ORDER_SIZE).'\')"'));
+$smarty->assign('BUTTON_PRINT_LAYER', '<a class="iframe" target="_blank" rel="nofollow" href="'.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$last_order, 'SSL'). '" title="'.TEXT_PRINT.'" />'. xtc_image_button('print.gif', TEXT_PRINT) .'</a>');
 
 // GV Code
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
@@ -108,23 +109,11 @@ if ($_SESSION['account_type'] == '1') {
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$_SESSION['customer_id']."'");
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
   } 
-  xtc_session_destroy();
-
-  unset ($_SESSION['customer_id']);
-  unset ($_SESSION['customer_default_address_id']);
-  unset ($_SESSION['customer_first_name']);
-  unset ($_SESSION['customer_country_id']);
-  unset ($_SESSION['customer_zone_id']);
-  unset ($_SESSION['comments']);
-  unset ($_SESSION['user_info']);
-  unset ($_SESSION['customers_status']);
-  unset ($_SESSION['selected_box']);
-  unset ($_SESSION['navigation']);
-  unset ($_SESSION['shipping']);
-  unset ($_SESSION['payment']);
-  unset ($_SESSION['ccard']);
-  unset ($_SESSION['gv_id']);
-  unset ($_SESSION['cc_id']);
+  
+  $customer_id = $_SESSION['customer_id'];
+  
+  $_SESSION = array();
+  $_SESSION['customer_gid'] = $customer_id;
   require (DIR_WS_INCLUDES.'write_customers_status.php');
 }
 

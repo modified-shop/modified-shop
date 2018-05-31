@@ -28,12 +28,11 @@ $oID = (int) $_GET['oID'];
 // check if custmer is allowed to see this order!
 $order_query_check = xtc_db_query("SELECT customers_id
                                      FROM ".TABLE_ORDERS."
-                                    WHERE orders_id=".$oID);
+                                    WHERE orders_id = '".$oID."'");
 $order_check = xtc_db_fetch_array($order_query_check);
 
 if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check['customers_id']) 
-    || (isset($_POST['customer_id']) && $_POST['customer_id'] == $order_check['customers_id'])
-    || (isset($_GET['customer_id']) && $_GET['customer_id'] == $order_check['customers_id'])
+    || (isset($_SESSION['customer_gid']) && $_SESSION['customer_gid'] == $order_check['customers_id'])
     ) 
 {
 
