@@ -1,0 +1,9 @@
+
+{if $GENDER == 'm'}Sehr geehrter Herr{elseif $GENDER == 'f'}Sehr geehrte Frau{else}Hallo{/if} {$NAME},
+
+Sie haben kürzlich in unserem Online-Shop einen Gutschein bestellt,
+welcher aus Sicherheitsgründen nicht sofort freigeschaltet wurde.
+Dieses Guthaben steht Ihnen nun zur Verfügung.
+Sie können Ihren Gutschein verbuchen und per E-Mail versenden. Der von Ihnen bestellte Gutschein hat einen Wert von {$AMMOUNT}.
+
+[SIGNATUR]

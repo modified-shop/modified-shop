@@ -1,0 +1,17 @@
+----------------------------------------------------------------------------------------
+  Herzlichen Glückwunsch, Sie haben einen Gutschein über {$AMMOUNT} erhalten !
+----------------------------------------------------------------------------------------
+
+Dieser Gutschein wurde Ihnen übermittelt von {$FROM_NAME},
+Mit der Nachricht:
+
+{$MESSAGE}
+
+Ihr persönlicher Gutscheincode lautet {$GIFT_CODE}. Sie können diese Gutschrift während des Bestellvorgangs verbuchen.
+
+Um den Gutschein einzulösen, klicken Sie bitte auf {$GIFT_LINK}
+
+Falls es mit dem obigen Link zu Problemen beim Einlösen kommen sollte,
+können Sie den Betrag während des Bestellvorganges verbuchen.
+
+[SIGNATUR]

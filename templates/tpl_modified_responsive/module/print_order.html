@@ -1,0 +1,115 @@
+{config_load file="$language/lang_$language.conf" section="print_order"}
+{config_load file="$language/lang_$language.conf" section="duty_info"} 
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="print_order"}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="{$charset}" />
+  <title>{#title#} {$oID}</title>
+  <meta name="robots" content="noindex, nofollow, noodp" />
+  {if $base_href}<base href="{$base_href}" />{/if}
+  <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet.css" />
+  <script src="{$tpl_path}javascript/jquery-1.8.3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    {literal}
+    $(document).ready(function(){
+      window.onload = function () {
+        window.focus();
+        window.print();
+      }
+    });
+    {/literal}
+  </script>
+</head>
+<body class="popupprint">
+  <div class="printwrap">
+    <div class="printlogo"><img src="{$tpl_path}img/logo.gif" alt="{$smarty.const.STORE_NAME}" /></div>
+    <div class="printColumsLeft">
+      {$address_label_customer}
+    </div>
+    <div class="printColumsRight">
+      {if $csID}<strong>{#csID#}</strong> {$csID}<br />{/if}
+      {if $PAYMENT_METHOD}<strong>{#payment#}</strong> {$PAYMENT_METHOD}<br />{/if}
+      <strong>{#order#}</strong> {$oID}<br />
+      <strong>{#date#}</strong> {$DATE}
+    </div>
+    <br class="clearfix" />
+    <div class="hr_15"></div>
+    <div class="printColumsLeft">
+      <strong>{#shipping_address#}</strong><br />{$address_label_shipping}
+    </div>
+    <div class="printColumsRight">
+      {if $address_label_payment}<strong>{#payment_address#}</strong>{/if}<br />{$address_label_payment}
+    </div>
+    <br class="clearfix" />
+    <div class="hr_15"></div>
+    <br />
+    <p><strong>{#heading_products#}</strong></p>
+    <div class="hr_1"></div>
+    <table class="order_table">
+      <tr class="headerrow">
+        <td class="ord_table_left">{$smarty.const.HEADER_QTY}</td>
+        <td class="ord_table_left">{$smarty.const.HEADER_ARTICLE}</td>
+        <td class="ord_table_right">{$smarty.const.HEADER_MODEL}</td>
+        <td class="ord_table_right">{$smarty.const.HEADER_SINGLE}</td>
+        <td class="ord_table_right">{$smarty.const.HEADER_TOTAL}</td>
+      </tr>
+      {foreach name=aussen item=order_values from=$order_data}
+      <tr class="mainrow {cycle values="m_row1,m_row2"}">
+        <td class="ord_table_left ord_width40">{$order_values.PRODUCTS_QTY}&nbsp;x</td>
+        <td class="ord_table_left">
+          <strong>{$order_values.PRODUCTS_NAME}</strong>
+          {if $order_values.PRODUCTS_ORDER_DESCRIPTION}<div class="description">{$order_values.PRODUCTS_ORDER_DESCRIPTION}</div>{/if}
+          {if sizeof($order_values.PRODUCTS_ATTRIBUTES_ARRAY) > 0}
+            <ul class="attributes_list">
+              {foreach key=a_data item=attrib_data from=$order_values.PRODUCTS_ATTRIBUTES_ARRAY}
+              <li><strong>{$attrib_data.option}:</strong> {$attrib_data.value}</li>
+              {/foreach} 
+            </ul>
+          {/if}
+        </td>
+        <td class="ord_table_right ord_width120">{$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</td>
+        <td class="ord_table_right ord_width110">{$order_values.PRODUCTS_SINGLE_PRICE}</td>
+        <td class="ord_table_right ord_width120">{$order_values.PRODUCTS_PRICE}</td>
+      </tr>
+      {/foreach}    
+    </table>
+    <div class="hr_5"></div>
+    {if sizeof($order_total) > 0}
+    <div class="total_table_right">
+      <table class="total_table">
+        {foreach name=aussen item=order_total_values from=$order_total}
+        <tr>
+          <td class="ord_table_right">{$order_total_values.TITLE}</td>
+          <td class="ord_table_right ord_width120">{$order_total_values.TEXT}</td>
+        </tr>
+        {/foreach}
+      </table>
+    </div>
+    <br class="clearfix" />
+    {/if}
+    {if $DELIVERY_DUTY_INFO}
+    <div class="dutyinfo">{#text_duty_info#}</div>
+    {/if}
+    {if count($PAYMENT_INFO) > 0}
+    <br /><br />
+    <div class="highlightbox">
+      {foreach name=aussen item=data from=$PAYMENT_INFO}
+        <strong>{$data.title|stripslashes}</strong>
+        <table class="paymentinfotable {$data.class}">
+          {foreach name=aussen item=info from=$data.fields}
+            <tr>
+              {if $info.title != ''}<td>{$info.title|stripslashes}</td>{/if}
+              <td>{if $info.field}{$info.field|stripslashes}{else}&nbsp;{/if}</td>
+            </tr>
+          {/foreach}
+        </table>
+      {/foreach}
+    </div>
+    <br class="clearfix" />
+    {/if}
+    <br />
+  </div>
+</body>
+</html>

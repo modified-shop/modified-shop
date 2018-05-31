@@ -1,0 +1,15 @@
+
+---------------------------------------------------------------------------------------- 
+YOU'VE RECEIVED A {$AMMOUNT} GIFT VOUCHER!
+----------------------------------------------------------------------------------------
+
+This gift voucher was sent to you by: {$FROM_NAME}
+
+Message:
+{$MESSAGE}
+
+Your voucher code is: {$GIFT_CODE}
+
+Redeem your voucher when placing an order or simply by clicking the following link - {$GIFT_LINK}.
+
+[SIGNATUR]
