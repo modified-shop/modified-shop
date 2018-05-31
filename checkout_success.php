@@ -67,6 +67,7 @@ if (xtc_db_num_rows($orders_query) < 1) {
   $payment_class = $orders['payment_class'];
 }
 
+$_SESSION['customer_gid'] = $_SESSION['customer_id'];
 
 // load the selected payment module
 require_once (DIR_WS_CLASSES . 'payment.php');
@@ -79,7 +80,6 @@ $smarty->assign('FORM_END', '</form>');
 
 $smarty->assign('BUTTON_PRINT', xtc_image_button('print.gif', TEXT_PRINT, 'style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$last_order, 'SSL').'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,  '.(defined('TPL_POPUP_PRODUCT_PRINT_SIZE') ? TPL_POPUP_PRODUCT_PRINT_SIZE : POPUP_PRINT_ORDER_SIZE).'\')"'));
 $smarty->assign('BUTTON_PRINT_LAYER', '<a class="iframe" target="_blank" rel="nofollow" href="'.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$last_order, 'SSL'). '" title="'.TEXT_PRINT.'" />'. xtc_image_button('print.gif', TEXT_PRINT) .'</a>');
-$smarty->assign('language', $_SESSION['language']);
 
 // GV Code
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
@@ -110,11 +110,24 @@ if ($_SESSION['account_type'] == '1') {
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$_SESSION['customer_id']."'");
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
   } 
+  $_SESSION['customer_gid'] = $_SESSION['customer_id'];
   
-  $customer_id = $_SESSION['customer_id'];
+  unset ($_SESSION['customer_id']);
+  unset ($_SESSION['customer_default_address_id']);
+  unset ($_SESSION['customer_first_name']);
+  unset ($_SESSION['customer_country_id']);
+  unset ($_SESSION['customer_zone_id']);
+  unset ($_SESSION['comments']);
+  unset ($_SESSION['user_info']);
+  unset ($_SESSION['customers_status']);
+  unset ($_SESSION['selected_box']);
+  unset ($_SESSION['navigation']);
+  unset ($_SESSION['shipping']);
+  unset ($_SESSION['payment']);
+  unset ($_SESSION['ccard']);
+  unset ($_SESSION['gv_id']);
+  unset ($_SESSION['cc_id']);
   
-  $_SESSION = array();
-  $_SESSION['customer_gid'] = $customer_id;
   require (DIR_WS_INCLUDES.'write_customers_status.php');
 }
 
@@ -127,6 +140,7 @@ require (DIR_WS_INCLUDES.'header.php');
 echo '<script type="text/javascript"> if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL').'"); </script>';
 ## BILLSAFE payment module
 
+$smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_success.html');
 $smarty->assign('main_content', $main_content.(isset($_SESSION['xtb2'])?"<div style=\"text-align:center;padding:3px;margin-top:10px;font-weight:bold;\"><a style=\"text-decoration:underline;color:blue;\" href=\"./callback/xtbooster/xtbcallback.php?reverse=true\">Zur&uuml;ck zur xs:booster Auktions&uuml;bersicht..</a></div>":""));
 
