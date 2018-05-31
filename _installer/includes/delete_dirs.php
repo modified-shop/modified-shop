@@ -14,6 +14,12 @@
   // set all directories to be deleted                     
   $unlink_dir = array(
     '_installer/buttons', // neu
+    '_installer/images/buttons', // neu
+    '_installer/inc', // neu
+    '_installer/includes/css', // neu
+    '_installer/includes/javascript', // neu
+    '_installer/includes/templates', // neu
+    '_installer/language', // neu
     DIR_ADMIN.'includes/local', // neu
     DIR_ADMIN.'includes/modules/carp',
     DIR_ADMIN.'includes/modules/export/idealo_lib', // neu
