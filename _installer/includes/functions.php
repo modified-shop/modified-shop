@@ -187,7 +187,7 @@
         xtc_db_query($sql);
       
         if (xtc_db_affected_rows() > 0) {
-          $messageStack->add_session('update', sprintf(TEXT_SQL_SUCCESS, $sql), 'success');
+          $messageStack->add_session('update', sprintf(TEXT_SQL_SUCCESS, encode_htmlspecialchars($sql)), 'success');
         }
       }
     }

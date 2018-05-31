@@ -65,7 +65,7 @@
   require_once (DIR_FS_INC.'xtc_not_null.inc.php');
   require_once (DIR_FS_INC.'xtc_href_link.inc.php');
   require_once (DIR_FS_INC.'xtc_redirect.inc.php');
-  //require_once (DIR_FS_INC.'html_encoding.php');
+  require_once (DIR_FS_INC.'html_encoding.php');
   
   // delete dir
   clear_dir(DIR_FS_DOCUMENT_ROOT.'cache/');
