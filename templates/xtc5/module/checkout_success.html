@@ -31,7 +31,13 @@
 </div>
 <br class="clearfix" />
 {/if}
-<div style="float:left;">{if isset($BUTTON_PRINT_LAYER)}{$BUTTON_PRINT_LAYER}{else}{$BUTTON_PRINT}{/if}</div>
+
+{if isset($BUTTON_PRINT_LAYER)}
+  <div style="float:left;">{$BUTTON_PRINT_LAYER}</div>
+{else}
+  {if isset($FORM_ACTION_PRINT_LAYER)}{$FORM_ACTION_PRINT_LAYER}{else}{$FORM_ACTION_PRINT}{/if}<div style="float:left;">{$BUTTON_PRINT}</div>{$FORM_END}
+{/if}
+
 {$FORM_ACTION}
 <div style="float:left; padding-left:5px;">{$BUTTON_CONTINUE}</div>
 <div style="clear:left;"></div>

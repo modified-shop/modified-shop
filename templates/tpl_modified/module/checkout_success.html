@@ -54,7 +54,13 @@
 <br class="clearfix" />
 {/if}
 
-<div class="button_left">{if isset($BUTTON_PRINT_LAYER)}{$BUTTON_PRINT_LAYER}{else}{$BUTTON_PRINT}{/if}</div>
+<div class="button_left">
+  {if isset($BUTTON_PRINT_LAYER)}
+    {$BUTTON_PRINT_LAYER}
+  {else}
+    {if isset($FORM_ACTION_PRINT_LAYER)}{$FORM_ACTION_PRINT_LAYER}{else}{$FORM_ACTION_PRINT}{/if}{$BUTTON_PRINT}{$FORM_END}
+  {/if}
+</div>
 <div class="button_right">{$FORM_ACTION}{$BUTTON_CONTINUE}{$FORM_END}</div>
 <br class="clearfix" />
 
