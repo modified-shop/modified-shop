@@ -1,0 +1,24 @@
+{if $options != ''}
+{config_load file="$language/lang_$language.conf" section="product_info"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="product_info"}
+<div class="productoptions">
+  {foreach name=outer item=options_data from=$options}
+  <div class="options_row_selection">
+    <div class="options_name">{$options_data.NAME}</div>
+      {foreach key=key_data name=key_data item=item_data from=$options_data.DATA}
+      <div class="options_selection {cycle values="option_bg1,option_bg2"}">
+        <label for="rdb_{$item_data.ID}">
+          <span class="label_row1 cf">
+            <span class="options_selection_input"><input type="radio" name="id[{$options_data.ID}]" id="rdb_{$item_data.ID}" value="{$item_data.ID}"{if $item_data.CHECKED == '1'} checked="checked"{/if} /></span>
+            <span class="options_selection_text">{$item_data.TEXT}</span>
+            {if $item_data.FULL_PRICE && $options|count == 1}<span class="options_selection_price">{$item_data.FULL_PRICE}</span>{elseif $item_data.PRICE}<span class="options_selection_price">{$item_data.PREFIX}{$item_data.PRICE}</span>{/if}
+          </span>
+          <span class="label_row2">{#model#} {$item_data.MODEL}</span>
+        </label>
+      </div>
+      {/foreach}
+  </div>
+  {/foreach}
+</div>
+{/if}

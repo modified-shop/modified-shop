@@ -1,0 +1,42 @@
+{config_load file="$language/lang_$language.conf" section="checkout_shipping"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="checkout_shipping"}
+{literal}
+<noscript>
+<style type="text/css">
+  .nonjs-fallback {display:none !important;}
+  .nonjs-heading {margin:10px 0px 5px 0px; font-weight:bold;}
+</style>
+</noscript>
+{/literal}
+
+<ul id="checkoutnavigation" class="cf">
+  <li><span class="active cf"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></span></li>
+  <li><span class="inactive cf"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></span></li>
+  <li><span class="inactive cf"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></span></li>
+  <li><span class="inactive cf"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></span></li>
+</ul>
+
+<h1 class="checkout">{#heading_shipping#}</h1>
+{if $error != ''}<div class="errormessage">{$error}</div>{/if}
+
+{$FORM_ACTION}
+<div class="twoColums">
+  <div class="highlightbox">
+    <h4>{#title_shipping#}</h4>
+    <p>{#text_shipping#}</p>
+    <div>{$SHIPPING_BLOCK}</div>
+  </div>
+</div>
+
+<div class="twoColums last">
+  <div class="highlightbox">
+    <h4>{#title_address#}</h4>
+    <p class="cf"><span class="button_right_checkout_small">{$BUTTON_ADDRESS}</span>{$ADDRESS_LABEL}</p>
+  </div>
+</div>
+<br class="clearfix" />
+{if isset($BUTTON_BACK)}<div class="button_left"><div class="cssButtonPos12">{$BUTTON_BACK}</div></div>{/if}
+<div class="button_right_checkout"><div class="cssButtonPos12">{$BUTTON_CHECKOUT_STEP2}</div></div>
+{$FORM_END}

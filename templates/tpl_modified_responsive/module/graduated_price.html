@@ -1,0 +1,24 @@
+{config_load file="$language/lang_$language.conf" section="graduated_price"} 
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="graduated_price"}
+<div class="graduated_prices cf">
+  <div class="gp_headline">{#heading_text#}</div>
+  {foreach name=aussen item=module_data from=$module_content}
+    <div class="gp_box{if $module_data.VPE != ''} vpe{/if}{if ($module_data.VPE != '' && $smarty.foreach.aussen.iteration is div by 2) || ($module_data.VPE == '' && $smarty.foreach.aussen.iteration is div by 3) || $smarty.foreach.aussen.last} last{/if}">
+      <span class="gp_title">{$module_data.FROM_QUANTITY} {$module_data.PLAIN_QUANTITY} {#unit#}</span>
+      <span class="gp_price">{#pieces#} {$module_data.PRICE}</span>
+      {if $module_data.VPE != ''}<span class="gp_vpe">{$module_data.VPE}</span>{/if}
+    </div>
+  {if $smarty.foreach.aussen.first}
+    {assign var=maxPrice value=$module_data.PLAIN_PRICE}
+  {else if $smarty.foreach.aussen.last}
+    {assign var=minPrice value=$module_data.PLAIN_PRICE}
+  {/if}
+  {/foreach}
+  <div itemprop="PriceSpecification" itemscope itemtype="http://schema.org/PriceSpecification">
+    <meta itemprop="priceCurrency" content="{$smarty.session.currency}">
+    <meta itemprop="price" content="{$maxPrice}">
+    <meta itemprop="minPrice" content="{$minPrice}">
+    <meta itemprop="maxPrice" content="{$maxPrice}">
+  </div>
+</div>
