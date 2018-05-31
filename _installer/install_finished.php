@@ -111,7 +111,7 @@
   
   if (!isset($_SESSION['installed'])) {
     $version = get_database_version();
-    $img_link = 'http://images.modified-shop.org/modified'.preg_replace('/\D/', '', $version['plain']).'.gif';
+    $img_link = 'https://images.modified-shop.org/modified'.preg_replace('/\D/', '', $version['plain']).'.gif';
     $smarty->assign('logo', $img_link);
     $_SESSION['installed'] = true;
   }
