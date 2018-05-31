@@ -25,7 +25,7 @@
         || $cache === false
         )
     {
-      $check_version = get_external_content('http://www.modified-shop.org/VERSION', 3, false);
+      $check_version = get_external_content('https://www.modified-shop.org/VERSION', 3, false);
       file_put_contents($filename, $check_version);
     }
   
