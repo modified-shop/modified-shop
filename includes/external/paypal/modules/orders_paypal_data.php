@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: orders_paypal.php 10830 2017-07-05 08:26:47Z GTB $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -173,7 +173,7 @@ if (isset($order) && is_object($order)) {
               <div class="pp_capture pp_box">
                 <div class="pp_boxheading"><?php echo TEXT_PAYPAL_CAPTURE; ?></div>
                 <?php 
-                  if (defined('_VALID_XTC')) {
+                  if (defined('RUN_MODE_ADMIN')) {
                     echo xtc_draw_form('capture', FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction')).'action=custom&subaction=paypalaction');
                   } else {
                     echo xtc_draw_form('capture', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
@@ -209,7 +209,7 @@ if (isset($order) && is_object($order)) {
               <div class="pp_capture pp_box">
                 <div class="pp_boxheading"><?php echo TEXT_PAYPAL_REFUND; ?></div>
                 <?php 
-                  if (defined('_VALID_XTC')) {
+                  if (defined('RUN_MODE_ADMIN')) {
                     echo xtc_draw_form('capture', FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction')).'action=custom&subaction=paypalaction');
                   } else {
                     echo xtc_draw_form('capture', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
