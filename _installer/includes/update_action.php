@@ -34,6 +34,7 @@
     foreach ($modified_drop_table_array as $table) {
       xtc_db_query("DROP TABLE IF EXISTS ".$table);
     }
+    xtc_db_query("TRUNCATE `session`");
     clear_dir(DIR_FS_DOCUMENT_ROOT.'cache/');
     clear_dir(DIR_FS_DOCUMENT_ROOT.'templates_c/');
   }
