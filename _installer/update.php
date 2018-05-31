@@ -90,6 +90,7 @@
             foreach ($_POST['sql_files'] as $sql_file) {
               sql_update(DIR_FS_INSTALLER.'update/'.$sql_file);
             }
+            xtc_db_query("TRUNCATE `session`");
           } else {
             $messageStack->add_session('update', ERROR_SQL_UPDATE_NO_FILE);
           }
