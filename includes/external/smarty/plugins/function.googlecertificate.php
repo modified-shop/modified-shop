@@ -14,7 +14,7 @@
 
 require_once (DIR_FS_INC.'get_order_total.inc.php');
 
-function smarty_function_googlecertificate($params, &$smarty) {
+function smarty_function_googlecertificate($params, $smarty) {
   global $PHP_SELF;
   
   if (!isset($params['account']) && !isset($params['subaccount'])) {
