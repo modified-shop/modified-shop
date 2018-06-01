@@ -35,7 +35,7 @@ require_once (DIR_FS_INC.'xtc_get_prid.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_name.inc.php');
 require_once (DIR_FS_INC.'xtc_get_product_path.inc.php');
 
-function smarty_function_piwik($params, &$smarty) {
+function smarty_function_piwik($params, $smarty) {
   global $PHP_SELF, $piwik_language_id;
   
   $url = isset($params['url']) ? $params['url'] : false;

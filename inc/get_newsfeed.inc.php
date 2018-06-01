@@ -17,7 +17,7 @@
     // newsfeed
     if (time() - (int)NEWSFEED_LAST_UPDATE > 86400) {
       $db_version = get_database_version();
-      $feed = get_external_content('http://www.modified-shop.org/feed/?v='.$db_version['plain'], 2);    
+      $feed = get_external_content('https://www.modified-shop.org/feed/?v='.$db_version['plain'], 2);    
       if ($feed && class_exists('SimpleXmlElement')) {
         $rss = new SimpleXmlElement($feed, LIBXML_NOCDATA);
         $rss->addAttribute('encoding', 'UTF-8');

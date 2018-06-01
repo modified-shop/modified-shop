@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: outputfilter.note.php 1554 2010-12-05 15:23:03Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -23,7 +23,7 @@
 # http://www.modified-shop.org/spenden.html
 # Vielen Dank für Ihre Fairness!
 
-function smarty_outputfilter_note($tpl_output, &$smarty) {
+function smarty_outputfilter_note($tpl_output, $smarty) {
   global $PHP_SELF;
   
   $cop = PHP_EOL.'<div class="copyright">'.((MODULE_SMALL_BUSINESS == 'true') ? '<span class="small_bussiness">'.TAX_INFO_SMALL_BUSINESS_FOOTER.'</span><br/>' : '').((basename($PHP_SELF)=='index.php' && $_SERVER['QUERY_STRING']=='')?'<a rel="nofollow noopener" href="https://www.modified-shop.org" target="_blank">':'').'<span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware &copy; 2009-' . date('Y') . '</span>'.((basename($PHP_SELF)=='index.php' && $_SERVER['QUERY_STRING']=='')?'</a>':'').'</div>';

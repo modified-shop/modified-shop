@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: function.facebook.php 2147 2011-09-01 07:15:14Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -20,7 +20,7 @@
 
 require_once (DIR_FS_INC.'get_order_total.inc.php');
 
-function smarty_function_facebook($params, &$smarty) {
+function smarty_function_facebook($params, $smarty) {
   global $PHP_SELF;
   global $last_order; // from checkout_success.php
 
