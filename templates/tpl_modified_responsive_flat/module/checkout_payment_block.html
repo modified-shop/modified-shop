@@ -1,0 +1,37 @@
+<div id="horizontalAccordion" class="checkout_accordion">
+  <ul class="resp-tabs-list nonjs-fallback">
+    {foreach name=outer item=gift_data from=$module_gift}
+      <li><span class="payment_radio">{$gift_data.selection}</span>{$gift_data.module|onlytext}<span class="payment_costs">{$gift_data.credit_amount}</span></li>
+    {/foreach}
+    
+    {foreach name=outer item=module_data from=$module_content}
+      <li><span class="payment_radio">{$module_data.selection}</span>{$module_data.module|onlytext}<span class="payment_costs">{$module_data.module_cost}</span></li>
+    {/foreach}
+  </ul>
+  <div class="resp-tabs-container">
+    {foreach name=outer item=gift_data from=$module_gift}
+      <div>{if $gift_data.description != ''}{$gift_data.description}<br />{/if}{$credit_amount_payment_info}</div>
+    {/foreach}
+
+    {foreach name=outer item=module_data from=$module_content}
+      <div>
+        <noscript>
+          <div class="nonjs-heading"><span class="payment_radio">{$module_data.selection}</span>{$module_data.module|onlytext}<span class="payment_costs">{$module_data.module_cost}</span></div>
+        </noscript>
+        {if $module_data.description}{$module_data.description}<br />{/if}
+        {if $module_data.error != ''}
+          {$module_data.error}<br />
+        {elseif $module_data.fields}
+          <table class="paymentmoduledata">
+            {foreach name=inner item=method_data from=$module_data.fields}
+              <tr>
+                <td class="title">{$method_data.title}</td>
+                <td class="field">{$method_data.field}</td>
+               </tr>
+            {/foreach}
+          </table>
+        {/if}    
+      </div>
+    {/foreach}    
+  </div>
+</div>

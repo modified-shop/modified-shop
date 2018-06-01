@@ -1,0 +1,94 @@
+{config_load file="$language/lang_$language.conf" section="shopping_cart"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="shopping_cart"}
+<ul class="orderlist">
+  <li>
+    <div class="orderlist_header cf">
+      <span class="ol_quantity ol_width1">{#text_qty#}</span>
+      <span class="ol_image ol_width2">&nbsp;</span>
+      <span class="ol_productsname ol_width3">{#text_article#}</span>
+      <span class="ol_price_row ol_width4_header cf">
+        <span class="ol_totalprice ol_width5">{#text_total#}</span>
+        <span class="ol_singleprice ol_width6">{#text_single#}</span>
+        <span class="ol_delete ol_width7">{#text_remove#}</span>
+      </span>
+    </div>
+  </li>
+  {foreach name=aussen item=module_data from=$module_content}
+  <li>
+    <div class="orderlist_row {cycle values="ol_row1,ol_row2"} cf">
+      <span class="ol_quantity ol_width1">{$module_data.PRODUCTS_QTY}</span>
+      <span class="ol_image ol_width2">&nbsp;<img src="{$module_data.PRODUCTS_IMAGE}" alt="" /></span>
+      <span class="ol_productsname ol_width3">
+        <span class="ol_distance"><a class="ord_prdoducts_name" href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></span>
+        {if $module_data.ATTRIBUTES != ''}
+        <ul class="attributes_list">
+          {foreach key=key_data item=item_data from=$module_data.ATTRIBUTES}
+          <li><strong>{$item_data.NAME}:</strong> {$item_data.VALUE_NAME}</li>
+          {/foreach}
+        </ul>
+        {/if}
+        {if $module_data.BUTTON_WISHLIST != ''}<span class="ord_wishlist"><i class="fa fa-angle-left"></i>{$module_data.BUTTON_WISHLIST}</span>{/if}
+      </span>
+      <span class="ol_price_row ol_width4 cf">
+        <span class="ol_totalprice ol_width5"><span class="ol_distance">{$module_data.PRODUCTS_PRICE}</span></span>
+        <span class="ol_singleprice ol_width6"><span class="ol_distance">{$module_data.PRODUCTS_SINGLE_PRICE}</span></span>
+        <span class="ol_delete ol_width7"><span class="cssButtonPos13">{$module_data.BUTTON_DELETE}</span></span>
+      </span>
+    </div>
+  </li>
+  {/foreach}
+</ul>
+
+<div class="ord_subtotal cf">
+  {if sizeof($TOTAL_BLOCK_ARRAY) > 0}
+  <ul class="ord_total_list">
+    {foreach name=aussen item=order_total_values from=$TOTAL_BLOCK_ARRAY}
+    <li class="otl_row1 cf">
+      <span class="otl_col1">{$order_total_values.title}</span>
+      <span class="otl_col2"><strong>{$order_total_values.text}</strong></span>
+    </li>
+    {/foreach}
+    {if sizeof($shipping_content) > 0}
+      {if $SELECT_COUNTRY}
+      <li class="otl_row2 cf">
+        <span class="otl_col1">{$smarty.const._SHIPPING_TO}</span>
+        <span class="otl_col2">{$SELECT_COUNTRY_PLAIN}</span>
+      </li>
+      {/if}
+      {foreach name=aussen item=shipping_data from=$shipping_content}
+      <li class="otl_row3 cf">
+        <span class="otl_col3">{$shipping_data.NAME} ({$COUNTRY}):</span>
+        <span class="otl_col4">{$shipping_data.VALUE}</span>
+      </li>
+      {/foreach}
+    {/if}
+
+    {if $total}
+    <li class="otl_row4 cf">
+      <span class="otl_col1"><strong>{#text_total#}:</strong></span>
+      <span class="otl_col2"><strong>{$total}</strong></span>
+    </li>
+    {/if}
+  </ul>
+  {else}
+    {if $smarty.const.MODULE_SMALL_BUSINESS != 'true'}
+      {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
+    {/if}
+    <strong>{$TOTAL_CONTENT}</strong>
+    {if sizeof($shipping_content) > 0}
+      {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY}</div>{else}<br />{/if}
+      {foreach name=aussen item=shipping_data from=$shipping_content}
+        <div class="shipping_hinweis">{$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}</div>
+      {/foreach}
+    {/if}
+    {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
+  {/if}
+
+  {if isset($FREE_SHIPPING_INFO)}{$FREE_SHIPPING_INFO}{/if}
+
+  {*if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT|number_format:2:",":"."} kg{/if*}
+  {if $KLARNA_PPBOX}<div class="karna_container cf">{$KLARNA_PPBOX}</div>{/if}
+  {if $PAYPAL_INSTALLMENT}{$PAYPAL_INSTALLMENT}{/if}
+</div>
+<div class="clearer"></div>

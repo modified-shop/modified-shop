@@ -1,0 +1,46 @@
+{config_load file="$language/lang_$language.conf" section="shopping_cart"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="shopping_cart"}
+
+  <h1>{#heading_cart#}</h1>
+  {if $error_max_prod}
+  <div class="errormessage">
+    <ul>
+      {foreach item=err_max_data from=$error_max_prod}
+      <li>{$err_max_data.E_MSG}</li>
+      {/foreach}
+    </ul>
+  </div>
+  {/if}
+  {if $info_message != ''}<div class="errormessage">{$info_message}</div>{/if}
+  {if $paypal_error != ''}<div class="errormessage">{$paypal_error}</div>{/if}
+
+  {if $cart_empty == true}
+    <p>{#text_empty#}</p>
+    <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_CONTINUE}</div></div>
+  {else}
+    {if $info_message_3 != ''}<div class="errormessage">{$info_message_3}</div>{/if}
+    {$FORM_ACTION}
+    {$HIDDEN_OPTIONS}
+    <div class="highlightbox cf">{$MODULE_order_details}</div>
+    {if $info_message_1 != ''}<div class="errormessage">{$info_message_1}{$min_order}{$info_message_2}{$order_amount}</div>{/if}
+    <div class="button_left_cart cf">
+      {if $CONTINUE_LINK}<div class="cssButtonPos9"><a href="{$CONTINUE_LINK}">{$BUTTON_CONTINUE_SHOPPING}</a></div>{/if}
+      <div class="cssButtonPos9">{$BUTTON_RELOAD}</div>
+    </div>
+    <div class="button_right_cart cf">
+      <div class="cssButtonPos8">{$BUTTON_CHECKOUT}</div>
+      {if $BUTTON_PAYPAL != ''}<div class="cssButtonPos8">{$BUTTON_PAYPAL}</div>{/if}
+      {if isset($BUTTON_CHECKOUT_EXPRESS)}<div class="cssButtonPos8">{$BUTTON_CHECKOUT_EXPRESS}</div>{/if}
+    </div>
+    <br class="clearfix" />
+    {if isset($ACTIVATE_EXPRESS_LINK)}<span class="express_info_cart"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></span>{/if}
+    {$FORM_END}
+  {/if}
+  <br class="clearfix" />
+  {$MODULE_gift_cart}
+
+  {if $MODULE_wishlist}
+    <br class="clearfix" />
+    {$MODULE_wishlist}
+  {/if}

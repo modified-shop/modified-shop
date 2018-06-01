@@ -1,0 +1,43 @@
+# Die lang_german.custom wird nur eingebunden, wenn in der "../config/config.php" die "TEMPLATE_ENGINE" auf "smarty_3" gesetzt ist!
+
+zoomtext = 'F&uuml;r eine gr&ouml;&szlig;ere Ansicht klicken Sie auf das Vorschaubild'
+products_desc = 'Produktbeschreibung'
+products_fsk18_check = 'Dieser Artikel kann erst nach erfolgter Altersverifikation gekauft werden.'
+products_manufacturer_model = 'HAN:'
+products_tags = 'Eigenschaften'
+heading_products_tags = 'Produkteigenschaften'
+
+first = '&laquo; Erster'
+back = '&laquo; vorheriger'
+overview = '&Uuml;bersicht'
+next = 'n&auml;chster &raquo;'
+last = 'Letzter &raquo;'
+
+heading_miscellaneous = 'Zahlungsmethoden'
+text_miscellaneous = 'Die Box kann unter tpl_modified/boxes/box_miscellaneous.html ver&auml;ndert werden. Die Sprachvariablen befinden sich in der Datei tpl_modified/lang/german/lang_german.custom.'
+
+ab_admin = 'Adminbereich'
+ab_orders = 'Bestellungen'
+ab_contentmanager = 'Content Manager'
+ab_customers = 'Kunden'
+ab_category = 'Kategorien/Artikel'
+ab_logoff = 'Abmelden'
+ab_news = 'News'
+ab_offline = 'Shop Offline'
+ab_update = 'Update'
+
+ab_edit_content = 'Content bearbeiten'
+ab_edit_product = 'Artikel bearbeiten'
+ab_edit_attributes = 'Attribute editieren'
+ab_edit_category = 'Kategorie bearbeiten'
+ab_edit_xsell = 'Cross Selling bearbeiten'
+
+info_reviews = 'Bewertungen:'
+info_review = 'Bewertung:'
+
+heading_trustedshops = 'Trusted Shops'
+
+text_search_again = 'Die Suche ergab keine genauen Treffer'
+
+listing_listview = 'Listenansicht'
+listing_boxview = 'Boxansicht'

@@ -1,0 +1,12 @@
+{config_load file="$language/lang_$language.conf" section="new_products"}
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="new_products"}
+<h1>{#heading_text#}</h1>
+{if $NO_NEW_PRODUCTS}<div class="infomessage">{$NO_NEW_PRODUCTS}</div>{/if}
+{$LISTING_FILTER}
+{$PAGINATION}
+<div class="listingcontainer cf">
+  {include file="module/includes/product_listing_include.html"}
+</div>
+{$PAGINATION}

@@ -1,0 +1,12 @@
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="index"}
+{if isset($MODULE_error)}{$MODULE_error}{/if}
+{if isset($title) && $title != ''}<h1>{$title}</h1>{/if}
+{if isset($text) && $text != ''}<div class="homesite cf">{$text}</div>{/if}
+{if isset($MODULE_new_products)}
+{$MODULE_new_products}
+{/if}
+{if isset($MODULE_upcoming_products)}
+{$MODULE_upcoming_products}
+{/if}
