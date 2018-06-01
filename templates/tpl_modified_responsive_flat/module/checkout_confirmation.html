@@ -1,0 +1,179 @@
+{config_load file="$language/lang_$language.conf" section="checkout_confirmation"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+{config_load file="$language/lang_$language.conf" section="duty_info"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="checkout_confirmation"}
+{if isset($NO_SHIPPING)}
+  <ul id="checkoutnavigation" class="cn_no_shipping cf">
+    <li><span class="inactive cf"><span class="title">1. {#title_payment#}</span><span class="description">{#desc_payment#}</span></span></li>
+    <li><span class="active cf"><span class="title">2. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></span></li>
+    <li><span class="inactive cf"><span class="title">3. {#title_success#}</span><span class="description">{#desc_success#}</span></span></li>
+  </ul>
+{else}
+  <ul id="checkoutnavigation" class="cf">
+    <li><span class="inactive cf"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></span></li>
+    <li><span class="inactive cf"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></span></li>
+    <li><span class="active cf"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></span></li>
+    <li><span class="inactive cf"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></span></li>
+  </ul>
+{/if}
+
+<h1 class="checkout">{#heading_confirmation#}</h1>
+
+{if $error != ''}<div class="errormessage">{$error}</div>{/if}
+
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    {#text_information#|sprintf:$HEADQUARTER}
+    {if $IP_LOG == 'true'}
+    <p>{#text_ip#}&nbsp;<strong>{$CUSTOMERS_IP}</strong></p>
+    {/if}
+  </div>
+</div>
+<div class="twoColums last">
+  <div class="highlightbox plainright">
+    {if $REVOCATION}
+      {$TEXT_AGB_CHECKOUT}
+    {/if}  
+  </div>
+  {if isset($EXPRESS)}
+  <div class="highlightbox plainright">
+    <h4>{#heading_checkout_express#}</h4>
+    {if isset($success_message)}
+      <div class="infomessage">{$success_message}</div>
+    {else}
+      {$FORM_ACTION}
+      <span class="button_right_checkout_small">{$BUTTON_SUBMIT}</span>
+      {#text_express_checkout_information#} {if isset($EXPRESS_LINK)}{$EXPRESS_LINK}{/if}
+      {$FORM_END}
+    {/if}
+  </div>
+  {/if}
+</div>
+<br class="clearfix" />  
+{if $DELIVERY_LABEL}
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4>{#text_shipping_address#} <a class="midi" href="{$SHIPPING_ADDRESS_EDIT}">{#text_edit#}</a></h4>
+    {$DELIVERY_LABEL} 
+  </div>
+</div>
+{/if}
+{if $BILLING_LABEL}
+<div class="twoColums last">
+  <div class="highlightbox plainright">
+    <h4 class="checkout">{#text_payment_address#} <a class="midi" href="{$BILLING_ADDRESS_EDIT}">{#text_edit#}</a></h4>
+    {$BILLING_LABEL}
+  </div>
+</div>
+{/if}
+<br class="clearfix" /> 
+
+{if $SHIPPING_METHOD}
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4 class="checkout">{#text_shipping_method#}{if isset($SHIPPING_EDIT)} <a class="midi" href="{$SHIPPING_EDIT}">{#text_edit#}</a>{/if}</h4>
+    {$SHIPPING_METHOD}
+  </div>
+</div>
+{/if}
+{if $PAYMENT_METHOD != ''}
+<div class="twoColums{if $SHIPPING_METHOD} last{/if}">
+  <div class="highlightbox {if $SHIPPING_METHOD}plainright{else}plainleft{/if}">
+    <h4 class="checkout">{#text_payment_method#}{if isset($PAYMENT_EDIT)} <a class="midi" href="{$PAYMENT_EDIT}">{#text_edit#}</a>{/if}</h4>
+    {$PAYMENT_METHOD}
+  </div>
+</div>
+{/if}
+<br class="clearfix" /> 
+
+{if $ORDER_COMMENTS != ''}
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4 class="checkout">{#text_comments#}{if isset($PAYMENT_EDIT)} <a class="midi" href="{$PAYMENT_EDIT}">{#text_edit#}</a>{/if}</h4>
+    {$ORDER_COMMENTS}  
+  </div>
+</div>
+{/if}
+{if $PAYMENT_INFORMATION != ''}
+<div class="twoColums{if $ORDER_COMMENTS != ''} last stickyright{/if}">
+  <div class="highlightbox {if $ORDER_COMMENTS != ''}plainright{else}plainleft{/if}">
+    <h4 class="checkout">{#text_payment_info#}</h4>
+    <table class="paymentinfotable">
+      {foreach name=aussen item=data from=$PAYMENT_INFORMATION}
+        <tr>
+          <td>{if $data.title != ''}{$data.title|stripslashes}{else}&nbsp;{/if}</td>
+          <td>{if $data.field != ''}{$data.field|stripslashes}{else}&nbsp;{/if}</td>
+        </tr>
+      {/foreach}
+    </table>
+  </div>
+</div>
+{/if}
+<br class="clearfix" /> 
+
+<br />
+<div class="highlightbox checkoutborder cf">  
+  <h4 class="checkout">{#text_products#} <a class="midi" href="{$PRODUCTS_EDIT}">{#text_edit#}</a></h4>
+  <ul class="orderlist">
+    <li>
+      <div class="orderlist_header cf">
+        <span class="ol_quantity ol_width1">{$smarty.const.HEADER_QTY}</span>
+        {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true'}<span class="ol_image ol_width2">&nbsp;</span>{/if}
+        <span class="ol_productsname ol_width3">{$smarty.const.HEADER_ARTICLE}</span>
+        <span class="ol_price_row ol_width4_header cf">
+          <span class="ol_totalprice ol_width5">{$smarty.const.HEADER_TOTAL}</span>
+          <span class="ol_singleprice ol_width6">{$smarty.const.HEADER_SINGLE}</span>
+        </span>
+      </div>
+    </li>
+    {foreach name=aussen item=data from=$PRODUCTS_ARRAY}
+    <li>
+      <div class="orderlist_row {cycle values="ol_row1,ol_row2"} cf">
+        <span class="ol_quantity ol_width1"><span class="ol_distance">{$data.qty}</span></span>
+        {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true'}<span class="ol_image ol_width2">{$data.image}</span>{/if}
+        <span class="ol_productsname ol_width3">
+          <span class="ol_distance">{$data.link}</span>
+          <p class="ol_short_desc">{$data.order_description}</p>
+          <p class="ol_model">{$smarty.const.HEADER_MODEL}: {$data.model}</p>
+          {if $data.shipping_time}<p class="ol_model">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</p>{/if}
+          {if $data.attributes != ''}
+          <ul class="attributes_list">
+            {foreach key=a_data item=attrib_data from=$data.attributes}
+            <li><strong>{$attrib_data.option}:</strong> {$attrib_data.value}</li>
+            {/foreach}
+          </ul>
+          {/if}
+        </span>
+        <span class="ol_price_row ol_width4 cf">
+          <span class="ol_singleprice ol_width6"><span class="ol_distance">{$data.final_price_formated}{if $ORDER_TAX_GROUPS > 1}<br /><span class="mini">{$data.tax_info}</span>{/if}</span></span>
+          <span class="ol_totalprice ol_width5"><span class="ol_distance">{$data.price_formated}</span></span>
+        </span>
+      </div>
+    </li>
+    {/foreach}
+  </ul>
+
+  {if sizeof($TOTAL_BLOCK_ARRAY) > 0}
+  <div class="ord_subtotal cf">
+    <ul class="ord_total_list">
+      {foreach name=aussen item=order_total_values from=$TOTAL_BLOCK_ARRAY}
+      <li class="otl_row1 cf">
+        <span class="otl_col3 ">{$order_total_values.title}</span>
+        <span class="otl_col4 "><strong>{$order_total_values.text}</strong></span>
+      </li>
+      {/foreach}
+    </ul>
+  </div>
+  {/if}
+
+  {if $DELIVERY_DUTY_INFO == true}
+    <div class="clearer"></div>
+    <div class="hr_10"></div>
+    <div class="dutyinfo">{#text_duty_info#}</div>
+  {/if}
+  
+  <div class="clearer" style="height:15px;"></div>
+  <div class="button_right_checkout">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}{$MODULE_BUTTONS}{/if}<div class="cssButtonPos12">{$CHECKOUT_BUTTON}</div></div>
+
+</div>

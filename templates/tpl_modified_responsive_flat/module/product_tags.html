@@ -1,0 +1,30 @@
+{config_load file="$language/lang_$language.conf" section="reviews"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="product_tags"}
+<h4 class="detailbox">{#heading_products_tags#}</h4>
+<div class="tags_block cf">
+  {foreach name=aussen item=module_data from=$module_content}
+  <div class="tags_row {cycle values="tags_bg1,tags_bg2"} cf">
+    <span class="tags_options">
+      <span class="tags_options_tooltip{if $module_data.OPTIONS_DESCRIPTION != ''} tags_values_name_tooltip{/if}">{$module_data.OPTIONS_NAME}{if $module_data.OPTIONS_DESCRIPTION != ''}<span class="tags_options_tooltip_hover">{$module_data.OPTIONS_DESCRIPTION}</span>{/if}</span>:
+      {if $module_data.OPTIONS_CONTENT_LINK != ''}<a class="iframe" target="_blank" title="{$module_data.OPTIONS_NAME|onlytext}" href="{$module_data.OPTIONS_CONTENT_LINK}"><img src="{$tpl_path}img/icon_tags_info.png" alt="" /></a>{/if}
+    </span>
+
+    <span class="tags_values cf">
+    {foreach name=inner item=item_data from=$module_data.DATA}
+      {if $item_data.VALUES_IMAGE != ''}
+        <span class="tags_values_icon_row cf">
+          <span class="tags_values_icon"><span class="tags_icons_tooltip cf">{if $item_data.VALUES_CONTENT_LINK != ''}<a class="iframe" target="_blank" href="{$item_data.VALUES_CONTENT_LINK}" title="{$item_data.VALUES_NAME|onlytext}">{/if}<img src="{$item_data.VALUES_IMAGE}" alt="{$item_data.VALUES_NAME|onlytext}" />{if $item_data.VALUES_CONTENT_LINK != ''}</a>{/if}{if $item_data.VALUES_DESCRIPTION != ''}<span class="tags_icons_tooltip_hover">{$item_data.VALUES_DESCRIPTION}</span>{/if}</span></span>
+        </span>
+      {else}
+        <span class="tags_values_text_row">
+          <span class="tags_values_name{if $item_data.VALUES_DESCRIPTION != ''} tags_values_name_tooltip{/if}">{$item_data.VALUES_NAME}{if $item_data.VALUES_DESCRIPTION != ''}<span class="tags_values_desc_hover">{$item_data.VALUES_DESCRIPTION}</span>{/if}</span>
+          {if $item_data.VALUES_CONTENT_LINK != ''}<span class="tags_values_info"><a class="iframe" target="_blank" href="{$item_data.VALUES_CONTENT_LINK}"><img src="{$tpl_path}img/icon_tags_info.png" alt="" /></a></span>{/if}
+          {if !$smarty.foreach.inner.last}<span class="tags_values_diff">, </span>{/if}
+        </span>
+      {/if}
+    {/foreach}
+    </span>
+  </div>
+  {/foreach}
+</div>

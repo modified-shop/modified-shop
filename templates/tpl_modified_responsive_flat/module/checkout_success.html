@@ -1,0 +1,81 @@
+{config_load file="$language/lang_$language.conf" section="checkout_success"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="checkout_success"}
+{if isset($NO_SHIPPING)}
+  <ul id="checkoutnavigation" class="cn_no_shipping cf">
+    <li><span class="inactive cf"><span class="title">1. {#title_payment#}</span><span class="description">{#desc_payment#}</span></span></li>
+    <li><span class="inactive cf"><span class="title">2. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></span></li>
+    <li><span class="active cf"><span class="title">3. {#title_success#}</span><span class="description">{#desc_success#}</span></span></li>
+  </ul>
+{else}
+  <ul id="checkoutnavigation" class="cf">
+    <li><span class="inactive cf"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></span></li>
+    <li><span class="inactive cf"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></span></li>
+    <li><span class="inactive cf"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></span></li>
+    <li><span class="active cf"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></span></li>
+  </ul>
+{/if}
+
+<h1 class="checkout">{#heading_success#}</h1>
+
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4>{#title_printorder#}</h4>
+    <p>{#text_printorder#}<br />
+    <strong>{#text_thankyou#}</strong></p>
+  </div>
+</div>
+
+<div class="twoColums last">
+  <div class="highlightbox plainright">
+    <h4>{#heading_success#}</h4>
+    <p>{#text_success#}</p>
+  </div>
+</div>
+<br class="clearfix" />
+
+{if $GV_SEND_LINK}
+<p>{#gv_has_vouchera#} {$GV_SEND_LINK} {#gv_has_voucherb#}</p>
+{/if}
+
+{if count($PAYMENT_INFO) > 0}
+<div class="highlightbox">
+  {foreach name=aussen item=data from=$PAYMENT_INFO}
+    <h4>{$data.title|stripslashes}</h4>
+    <table class="paymentinfotable {$data.class}">
+      {foreach name=aussen item=info from=$data.fields}
+        <tr>
+          {if $info.title != ''}<td>{$info.title|stripslashes}</td>{/if}
+          {if $info.field != ''}<td>{$info.field|stripslashes}</td>{/if}
+        </tr>      
+      {/foreach}
+    </table>
+  {/foreach}
+</div>
+<br class="clearfix" />
+{/if}
+
+<div class="button_left cf">
+  {if isset($BUTTON_PRINT_LAYER)}
+    <div class="cssButtonPos4">{$BUTTON_PRINT_LAYER}</div>
+  {else}
+    {if isset($FORM_ACTION_PRINT_LAYER)}{$FORM_ACTION_PRINT_LAYER}{else}{$FORM_ACTION_PRINT}{/if}<div class="cssButtonPos4">{$BUTTON_PRINT}</div>{$FORM_END}
+  {/if}
+</div>
+<div class="button_right cf">{$FORM_ACTION}<div class="cssButtonPos4">{$BUTTON_CONTINUE}</div>{$FORM_END}</div>
+<br class="clearfix" />
+
+
+{if $downloads_content neq ''}
+  <br />
+  {if $title_downloadfiles != ''}
+  <h1>{#title_downloadfiles#}</h1>
+  {/if}
+  {$downloads_content}
+{/if}
+
+{if $google_tracking eq 'true'}
+{$tracking_code}
+{/if}
+
