@@ -251,6 +251,15 @@
     'includes/external/shopgate/shopgate_library/build_config.php', // neu
     'includes/external/shopgate/shopgate_library/build.properties', // neu
     'includes/external/shopgate/shopgate_library/vendors/mobile_redirect.class.php', // neu
+    'includes/external/smarty/smarty_3/plugins/shared.mb_wordwrap.php', // neu
+    'includes/external/smarty/smarty_3/sysplugins/smarty_compatibility.php', // neu
+    'includes/external/smarty/smarty_3/sysplugins/smarty_config_source.php', // neu
+    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_config.php', // neu
+    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_filter_handler.php', // neu
+    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_function_call_handler.php', // neu
+    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_get_include_path.php', // neu
+    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_utility.php', // neu
+    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_write_file.php', // neu
     'includes/extra/send_order/banktransfer.php', // neu
     'includes/extra/send_order/billpay.php', // neu
     'includes/extra/send_order/index.html', // neu
