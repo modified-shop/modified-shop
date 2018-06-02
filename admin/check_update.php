@@ -118,7 +118,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <dl id="person"> <!-- sorted by board user-id -->
                         <dt>Tomcraft</dt><dd>&lt;tomcraft@modified-shop.org&gt;</dd> <!-- 88 -->
                         <dt>DokuMan</dt><dd>&lt;dokuman@modified-shop.org&gt;</dd> <!-- 190 -->
-                        <dt><s>web28</s></dt><dd><s>&lt;web28@modified-shop.org&gt;</s> &dagger;26.01.2018</dd> <!-- 308 -->
+                        <dt><s>web28</s></dt><dd><s>&lt;web28@modified-shop.org&gt;</s> &dagger; 26.01.2018</dd> <!-- 308 -->
                         <dt>GTB</dt><dd>&lt;gtb@modified-shop.org&gt;</dd> <!-- 595 -->
                         <dt>Hetfield</dt><dd>&lt;hetfield@modified-shop.org&gt;</dd> <!-- 1027 -->
                         <dt>Markus</dt><dd>&lt;markus@modified-shop.org&gt;</dd> <!-- 1255 -->
