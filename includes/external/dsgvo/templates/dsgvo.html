@@ -1,0 +1,13 @@
+<h1>{$smarty.const.TEXT_DSGVO_HEADING}</h1>
+{if $error!=''}<div class="errormessage">{$error}</div>{/if}
+<p>{$smarty.const.TEXT_DSGVO_DESCRIPTION}</p>
+{$FORM_ACTION}
+  {foreach name=aussen item=module_data from=$module_content}
+    <h2>{$module_data.TITLE}</h2>
+    <div class="agbframe">{$module_data.TEXT}</div>
+    {$module_data.CHECKBOX} <strong><label for="conditions">{$module_data.CONDITION}</label></strong>&nbsp;{$module_data.LINK}
+  {/foreach}
+  <br class="clearfix" />
+  {*<div class="button_left">{$BUTTON_BACK}</div>*}
+  <div class="button_right">{$BUTTON_CONFIRM}</div>
+{$FORM_END}
