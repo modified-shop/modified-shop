@@ -41,23 +41,23 @@
   
   define('TEXT_SQL_UPDATE', 'Datenbank Update');
   define('TEXT_SQL_UPDATE_HEADING', 'SQL Update ausw&auml;hlen');
-  define('TEXT_SQL_UPDATE_DESC', 'Bitte wählen Sie hier nur die Update-Dateien aus, die für Ihre derzeitige Shopversion notwendig sind.');
+  define('TEXT_SQL_UPDATE_DESC', 'Bitte w&auml;hlen Sie hier nur die Update-Dateien aus, die f&uuml;r Ihre derzeitige Shopversion notwendig sind.');
 
   define('TEXT_SQL_MANUELL', 'Manuelle SQL-Eingabe');
   define('TEXT_SQL_MANUELL_HEADING', 'SQL Befehl eingeben:');
   define('TEXT_SQL_MANUELL_DESC', 'SQL-Befehle m&uuml;ssen mit einem Semikolon ( ; ) abgeschlossen werden!');
 
   define('TEXT_DB_RESTORE', 'Datenbank Wiederherstellung');
-  define('TEXT_DB_RESTORE_DESC', 'Sie können hier Ihre Datenbank aus einem vorhandenen Backup wiederherstellen.');
+  define('TEXT_DB_RESTORE_DESC', 'Sie k&ouml;nnen hier Ihre Datenbank aus einem vorhandenen Backup wiederherstellen.');
   define('TEXT_INFO_DO_RESTORE', 'Die Datenbank wird wiederhergestellt!');
   define('TEXT_INFO_DO_RESTORE_OK', 'Die Datenbank wurde erfolgreich wiederhergestellt!');
   
   define('TEXT_DB_BACKUP', 'Datenbank-Backup');
-  define('TEXT_DB_BACKUP_DESC', 'Sie können hier Ihre Datenbank sichern.');
+  define('TEXT_DB_BACKUP_DESC', 'Sie k&ouml;nnen hier Ihre Datenbank sichern.');
   define('TEXT_DB_COMPRESS', 'Backup komprimieren');
   define('TEXT_DB_REMOVE_COLLATE', 'Ohne Zeichenkodierung \'COLLATE\' und \'DEFAULT CHARSET\'');
   define('TEXT_DB_REMOVE_ENGINE', 'Ohne Speicherengines \'ENGINE\'');
-  define('TEXT_DB_COMPLETE_INSERTS', 'Vollständige \'INSERT\'s');
+  define('TEXT_DB_COMPLETE_INSERTS', 'Vollst&auml;ndige \'INSERT\'s');
   define('TEXT_DB_UFT8_CONVERT', 'Datenbank auf UTF-8 konvertieren');
   define('TEXT_DB_COMPRESS_GZIP', 'Mit GZIP');
   define('TEXT_DB_COMPRESS_RAW', 'Keine Komprimierung (Raw SQL)');
@@ -80,7 +80,7 @@
   define('TEXT_INFO_MAX_RELOADS', 'Maximale Seitenreloads wurden erreicht: ');
   
   define('TEXT_DB_UPDATE', 'Datenbankstruktur Update');
-  define('TEXT_DB_UPDATE_DESC', 'Hier können Sie die Datenbank Ihrer Shopinstallation auf den aktuellen Stand bringen.');
+  define('TEXT_DB_UPDATE_DESC', 'Hier k&ouml;nnen Sie die Datenbank Ihrer Shopinstallation auf den aktuellen Stand bringen.');
   define('TEXT_DB_UPDATE_FINISHED', 'DB Update erfolgreich abgesclossen!');
   define('TEXT_FROM', ' von ');
   //define('TEXT_DB_UPDATE_BEFORE', 'Text davor'); // Not used yet
