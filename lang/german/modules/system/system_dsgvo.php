@@ -15,6 +15,8 @@ define('MODULE_SYSTEM_DSGVO_STATUS_DESC','Modulstatus');
 define('MODULE_SYSTEM_DSGVO_STATUS_INFO','Aktiv');
 define('MODULE_SYSTEM_DSGVO_TEXT_TITLE', 'DSGVO');
 define('MODULE_SYSTEM_DSGVO_TEXT_DESCRIPTION', 'Es wird geloggt, welche Datenschutzbestimmungen der Kunde aktzeptiert hat.');
+define('MODULE_SYSTEM_DSGVO_CONTENT_TITLE', 'Privatsph&auml;re &amp; Datenschutz');
+define('MODULE_SYSTEM_DSGVO_CONTENT_DESC', 'W&auml;hlen Sie den Content für Ihre Datenschutzbestimmungen');
 
 define('TEXT_DSGVO_HEADING', 'Aktualisierung erforderlich');
 define('TEXT_DSGVO_DESCRIPTION', 'Neue gesetzliche Bestimmungen erfordern, dass wir eine erneute Zustimmung unserer Kunden f&uuml;r folgende Punkte einholen:');
