@@ -16,7 +16,7 @@
    ---------------------------------------------------------------------------------------*/
 
   define('MODULE_ORDER_TOTAL_DISCOUNT_TITLE', 'Rabatt');
-  define('MODULE_ORDER_TOTAL_DISCOUNT_DESCRIPTION', 'Rabbat auf Bestellung');
+  define('MODULE_ORDER_TOTAL_DISCOUNT_DESCRIPTION', 'Rabatt auf Bestellung');
   
   define('MODULE_ORDER_TOTAL_DISCOUNT_STATUS_TITLE', 'Rabatt');
   define('MODULE_ORDER_TOTAL_DISCOUNT_STATUS_DESC', 'Anzeige des Rabattes?');
