@@ -268,7 +268,7 @@
   );
   $smarty->assign('INPUT_DB_SERVER', xtc_draw_input_fieldNote(array('name' => 'db_server')));
   $smarty->assign('INPUT_DB_USERNAME', xtc_draw_input_fieldNote(array('name' => 'db_username')));
-  $smarty->assign('INPUT_DB_PASSWORD', xtc_draw_input_fieldNote(array('name' => 'db_password')));
+  $smarty->assign('INPUT_DB_PASSWORD', xtc_draw_password_fieldNote(array('name' => 'db_password')));
   $smarty->assign('INPUT_DB_DATABSE', xtc_draw_input_fieldNote(array('name' => 'db_database')));    
   $smarty->assign('INPUT_DB_MYSQL_TYPE', xtc_draw_pull_down_menuNote(array ('name' => 'db_type'), $db_type_array, $db_type));
   $smarty->assign('INPUT_DB_CHARSET', xtc_draw_pull_down_menuNote(array ('name' => 'db_charset'), $db_charset_array, $db_charset));
