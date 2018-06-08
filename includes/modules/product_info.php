@@ -249,7 +249,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   }
   $products_reviews_count = 0;
   if ($_SESSION['customers_status']['customers_status_read_reviews'] == '1') {
-    $reviews_count = $product->getReviewsCount();
+    $products_reviews_count = $product->getReviewsCount();
     $info_smarty->assign('PRODUCTS_AVERAGE_RATING', $product->getReviewsAverage());
     $info_smarty->assign('PRODUCTS_RATING_COUNT', $products_reviews_count);
     include (DIR_WS_MODULES.'product_reviews.php');
