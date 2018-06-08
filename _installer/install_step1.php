@@ -84,10 +84,10 @@
       }
       
       if ($error === false) {
-        $_SESSION['language_charset'] = $db_charset;
+        $_SESSION['language_charset'] = (($db_charset == 'utf8') ? 'utf-8' : 'ISO-8859-15');
         
         $collation = 'latin1_german1_ci';
-        if ($_SESSION['language_charset'] == 'utf8') {
+        if ($_SESSION['language_charset'] == 'utf-8') {
           $collation = 'utf8_general_ci';
         }
         xtc_db_query('ALTER DATABASE `'.$db_database.'` DEFAULT CHARACTER SET '.$db_charset.' COLLATE '.$collation);
