@@ -90,7 +90,7 @@
                   $keywords = xtc_db_input(xtc_db_prepare_input($_GET['search_email']));
                   $search = "AND (c.customers_email_address LIKE '%".$keywords."%')";
                 }
-                if (isset($_GET['status']) && (int)$_GET['status'] >= 0) {
+                if (isset($_GET['status']) && $_GET['status'] != '') {
                   $search = "AND c.customers_status = '".(int)$_GET['status']."'";
                 }
 
