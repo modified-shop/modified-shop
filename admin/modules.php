@@ -95,7 +95,20 @@
       case 'save':
         reset($_POST['configuration']); //DokuMan - 2011-09-29 - reset $_POST array
         while (list($key, $value) = each($_POST['configuration'])) {
-          $value = is_array($_POST['configuration'][$key]) ? implode(',', $_POST['configuration'][$key]) : $value;
+          if (is_array($_POST['configuration'][$key])) {
+            // multi language config
+            if (gettype(array_shift(array_keys($_POST['configuration'][$key]))) == 'string') {
+              $config_value = array();
+              foreach ($_POST['configuration'][$key] as $k => $v) {
+                if (xtc_not_null($v)) {
+                  $config_value[] =  $k . '::' . $v;
+                }
+              }
+              $value = implode('||', $config_value);
+            } else {
+              $value = implode(',', $_POST['configuration'][$key]);
+            }
+          }
           xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($value) . "' where configuration_key = '" . $key . "'");
         }
         xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class));
